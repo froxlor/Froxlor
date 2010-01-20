@@ -290,13 +290,13 @@ class bind
 					$max_dkim_id = $this->db->query_first("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
 					$domain['dkim_id'] = (int)$max_dkim_id['max_dkim_id'] + 1;
 					$privkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id'] . '.private');
-					safe_exec('openssl genrsa -out ' . escapeshellcmd($privkey_filename) . ' 1024');
+					safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' 1024');
 					$domain['dkim_privkey'] = file_get_contents($privkey_filename);
-					safe_exec("chmod 0640 " . escapeshellcmd($privkey_filename));
+					safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
 					$pubkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id'] . '.public');
-					safe_exec('openssl rsa -in ' . escapeshellcmd($privkey_filename) . ' -pubout -outform pem -out ' . escapeshellcmd($pubkey_filename));
+					safe_exec('openssl rsa -in ' . escapeshellarg($privkey_filename) . ' -pubout -outform pem -out ' . escapeshellarg($pubkey_filename));
 					$domain['dkim_pubkey'] = file_get_contents($pubkey_filename);
-					safe_exec("chmod 0664 " . escapeshellcmd($pubkey_filename));
+					safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
 					$this->db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `dkim_id` = '" . $domain['dkim_id'] . "', `dkim_privkey` = '" . $domain['dkim_privkey'] . "', `dkim_pubkey` = '" . $domain['dkim_pubkey'] . "' WHERE `id` = '" . $domain['id'] . "'");
 				}
 
@@ -306,7 +306,7 @@ class bind
 					$privkey_file_handler = fopen($privkey_filename, "w");
 					fwrite($privkey_file_handler, $domain['dkim_privkey']);
 					fclose($privkey_file_handler);
-					safe_exec("chmod 0640 " . escapeshellcmd($privkey_filename));
+					safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
 				}
 
 				if(!file_exists($pubkey_filename)
@@ -315,7 +315,7 @@ class bind
 					$pubkey_file_handler = fopen($pubkey_filename, "w");
 					fwrite($pubkey_file_handler, $domain['dkim_pubkey']);
 					fclose($pubkey_file_handler);
-					safe_exec("chmod 0664 " . escapeshellcmd($pubkey_filename));
+					safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
 				}
 
 				$dkimdomains.= $domain['domain'] . "\n";

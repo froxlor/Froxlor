@@ -135,7 +135,7 @@ class ApsInstaller extends ApsParser
 			chdir($this->RealPath . $this->DomainPath . '/install_scripts/');
 			$Return = array();
 			$ReturnStatus = 0;
-			$Return = safe_exec('php ' . escapeshellcmd($this->RealPath . $this->DomainPath . '/install_scripts/configure install'), $ReturnStatus);
+			$Return = safe_exec('php ' . escapeshellarg($this->RealPath . $this->DomainPath . '/install_scripts/configure install'), $ReturnStatus);
 
 			if($ReturnStatus != 0)
 			{

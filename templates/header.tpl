@@ -11,14 +11,14 @@
 </head>
 <body style="margin: 0; padding: 0;"<if !isset($userinfo['loginname']) && !(isset($userinfo['loginname']) && $userinfo['loginname'] == '')> onload="document.loginform.loginname.focus()"</if>>
 <!--
-    We request you retain the full copyright notice below including the link to www.syscp.org.
+    We request you retain the full copyright notice below including the link to www.froxlor.org.
     This not only gives respect to the large amount of time given freely by the developers
-    but also helps build interest, traffic and use of SysCP. If you refuse
+    but also helps build interest, traffic and use of Froxlor. If you refuse
     to include even this then support on our forums may be affected.
-    The SysCP Team : 2003-2007
+    The Froxlor Team : 2009-2010
 // -->
 <!--
-	Templates by Luca Piona (info@havanastudio.ch) and Luca Longinotti (chtekk@gentoo.org)
+	Templates based on work by Luca Piona (info@havanastudio.ch) and Luca Longinotti (chtekk@gentoo.org)
 // -->
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>

@@ -287,6 +287,9 @@ class lighttpd
 		$query = "SELECT * FROM " . TABLE_PANEL_HTACCESS . " WHERE `path` LIKE '" . $domain['documentroot'] . "%'";
 		$result = $this->db->query($query);
 
+		$path_options = '';
+		$error_string = '';
+		
 		while($row = $this->db->fetch_array($result))
 		{
 			if(!empty($row['error404path']))
@@ -301,13 +304,21 @@ class lighttpd
 				// We need to remove the last slash, otherwise the regex wouldn't work
 
 				$path = substr($path, 0, -1);
-				$error_string.= '$HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
-				$error_string.= "\t" . 'dir-listing.activate = "enable"' . "\n";
-				$error_string.= '}' . "\n";
+				$path_options.= '$HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
+				$path_options.= "\t" . 'dir-listing.activate = "enable"' . "\n";
+				if(!empty($error_string))
+				{
+					$path_options.= $error_string;
+				}
+				$path_options.= '}' . "\n";
+			}
+			else
+			{
+				$path_options = $error_string;
 			}
 		}
 
-		return $error_string;
+		return $path_options;
 	}
 
 	protected function getDirOptions($domain)
