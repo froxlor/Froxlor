@@ -19,11 +19,17 @@ return array(
 	'groups' => array(
 		'version' => array(
 			'fields' => array(
-				'system_dbversion' => array(
-					'settinggroup' => 'system',
-					'varname' => 'dbversion',
+				'panel_version' => array(
+					'settinggroup' => 'panel',
+					'varname' => 'version',
 					'type' => 'hidden',
 					'default' => '',
+					),
+				'panel_frontend' => array(
+					'settinggroup' => 'panel',
+					'varname' => 'frontend',
+					'type' => 'hidden',
+					'default' => 'syscp',
 					),
 				'system_last_tasks_run' => array(
 					'settinggroup' => 'system',

@@ -16,7 +16,7 @@
  */
 
 
-$updateto = '1.0';
+$updateto = '0.9';
 $frontend = 'froxlor';
 
 $updatelog->logAction(ADM_ACTION, LOG_WARNING, "Upgrading SysCP ".$settings['panel']['version']." to Froxlor ". $updateto);
@@ -33,7 +33,7 @@ $db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname
  * this is the main upgrade
  */
 if($settings['panel']['frontend'] == 'froxlor'
-&& $settings['panel']['version'] == '1.0')
+&& $settings['panel']['version'] == '0.9')
 {
 
 	/*

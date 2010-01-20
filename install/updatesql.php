@@ -31,7 +31,7 @@ require ('../lib/tables.inc.php');
  * Inlcudes the MySQL-Connection-Class
  */
 
-require ('../lib/class_mysqldb.php');
+require ('../lib/classes/database/class.db.php');
 $db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
 unset($sql['password']);
 unset($db->password);
@@ -112,7 +112,7 @@ if(!isset($settings['panel']['frontend'])
 	}
 
 	/**
-	 * Upgrading SysCP to Froxlor-1.0
+	 * Upgrading SysCP to Froxlor-0.9
 	 *
 	 * when we reach this part, all necessary updates
 	 * should have been installes automatically by the
