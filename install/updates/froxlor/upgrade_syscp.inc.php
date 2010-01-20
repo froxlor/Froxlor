@@ -28,6 +28,7 @@ $db->query($query);
 $settings['panel']['version'] = $updateto;
 // add field frontend
 $db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system','frontend','froxlor')");
+$settings['panel']['frontend'] = 'froxlor';
 
 /*
  * this is the main upgrade

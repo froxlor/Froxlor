@@ -131,7 +131,7 @@ $header
 		</if>
 		<tr>
 			<td class="field_name_border_left">{$lng['admin']['installedversion']}:</td>
-			<td class="field_display">{$version} ({$dbversion})</td>
+			<td class="field_display">{$version}</td>
 		</tr>
 		<tr>
 			<td class="field_name_border_left">{$lng['admin']['latestversion']}:</td>
