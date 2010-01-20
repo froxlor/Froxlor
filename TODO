@@ -118,6 +118,6 @@ WONTFIX 	 	0001098 		Possibillity to dissable "Catchall" for mails
  	 	 	0001058 		Add id/class attributs in <img> tag (left navigation)
  	 	 	0001043 		When creating customer it should also be possible to add domains (merge customer & domain menu)
  	 	 	0001035 		PHP-Error-Log | Adminpanel & CronTask
- 	 	 	0001033 		Cron-Tasks: creating of php.ini
+WONTFIX 	 	0001033 		Cron-Tasks: creating of php.ini
  	 	 	0001010 		Send info mail to customer if webspace is exceeded
  	 	 	0001004 		Ressources / Domains - Standard subdomains should be separrated from normal Domains
