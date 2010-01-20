@@ -309,6 +309,8 @@ class lighttpd
 				if(!empty($error_string))
 				{
 					$path_options.= $error_string;
+					// reset $error_string here to prevent duplicate entries
+					$error_string = '';
 				}
 				$path_options.= '}' . "\n";
 			}
