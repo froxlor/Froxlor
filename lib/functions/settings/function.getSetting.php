@@ -27,3 +27,5 @@ function getSetting($settinggroup, $varname)
 		return false;
 	}
 }
+
+?>

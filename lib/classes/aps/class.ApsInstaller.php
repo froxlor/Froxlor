@@ -135,7 +135,7 @@ class ApsInstaller extends ApsParser
 			chdir($this->RealPath . $this->DomainPath . '/install_scripts/');
 			$Return = array();
 			$ReturnStatus = 0;
-			$Return = safe_exec('php ' . escapeshellcmd($this->RealPath . $this->DomainPath . '/install_scripts/configure install'), $ReturnStatus);
+			$Return = safe_exec('php ' . escapeshellarg($this->RealPath . $this->DomainPath . '/install_scripts/configure install'), $ReturnStatus);
 
 			if($ReturnStatus != 0)
 			{
@@ -247,9 +247,9 @@ class ApsInstaller extends ApsParser
 			//skip APS internal data
 
 			if($Row2['Name'] == 'main_location'
-			   || $Row2['Name'] == 'main_domain'
-			   || $Row2['Name'] == 'main_database_password'
-			   || $Row2['Name'] == 'license')continue;
+			|| $Row2['Name'] == 'main_domain'
+			|| $Row2['Name'] == 'main_database_password'
+			|| $Row2['Name'] == 'license')continue;
 			putenv('SETTINGS_' . $Row2['Name'] . '=' . $Row2['Value']);
 		}
 	}
@@ -275,7 +275,7 @@ class ApsInstaller extends ApsParser
 			//extract all files and chown them to the customer guid
 
 			if(self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], $Xml->mapping['path'], $this->RealPath . $this->DomainPath . '/') == false
-			   || self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], 'scripts', $this->RealPath . $this->DomainPath . '/install_scripts/') == false)
+			|| self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], 'scripts', $this->RealPath . $this->DomainPath . '/install_scripts/') == false)
 			{
 				$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
 
@@ -507,6 +507,12 @@ class ApsInstaller extends ApsParser
 
 						if(zip_entry_open($ZipHandle, $ZipEntry))
 						{
+							// handle new directory
+							$dir = dirname($Destination.$NewPath);
+							if (!file_exists($dir)) {
+								mkdir ($dir, 0777, true);
+							}
+
 							$File = fopen($Destination . $NewPath, "wb");
 
 							if($File)

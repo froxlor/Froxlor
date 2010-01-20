@@ -42,3 +42,5 @@ function storeSettingMysqlAccessHost($fieldname, $fielddata, $newfieldvalue)
 	
 	return $returnvalue;
 }
+
+?>

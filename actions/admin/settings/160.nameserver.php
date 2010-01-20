@@ -45,7 +45,7 @@ return array(
 					'string_regexp' => '/^(([a-z0-9\-\._]+, ?)*[a-z0-9\-\._]+)?$/i',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingFieldInsertBindTask',
 					),
 				'system_mxservers' => array(
 					'label' => $lng['serversettings']['mxservers'],

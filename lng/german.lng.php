@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2003-2009 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
@@ -309,7 +309,7 @@ $lng['admin']['templates']['templates'] = 'E-Mail-Vorlagen';
 $lng['admin']['templates']['template_add'] = 'Vorlage hinzuf&uuml;gen';
 $lng['admin']['templates']['template_edit'] = 'Vorlage bearbeiten';
 $lng['admin']['templates']['action'] = 'Aktion';
-$lng['admin']['templates']['email'] = 'E-Mail- &amp; Dateivorlagen';
+$lng['admin']['templates']['email'] = 'E-Mail &amp; Dateivorlagen';
 $lng['admin']['templates']['subject'] = 'Betreff';
 $lng['admin']['templates']['mailbody'] = 'Mailtext';
 $lng['admin']['templates']['createcustomer'] = 'Willkommensmail f&uuml;r neue Kunden';
@@ -745,7 +745,7 @@ $lng['traffic']['summail'] = 'Summe Mail-Traffic in';
 
 // ADDED IN 1.2.19-svn4.5
 
-$lng['serversettings']['no_robots']['title'] = 'Erlaube die Indizierung Ihres SysCP durch Suchmaschinen';
+$lng['serversettings']['no_robots']['title'] = 'Erlaube die Indizierung Ihres Froxlor durch Suchmaschinen';
 
 // ADDED IN 1.2.19-svn6
 
@@ -868,8 +868,8 @@ $lng['login']['presend'] = 'Passwort zur&uuml;cksetzen';
 $lng['login']['email'] = 'E-Mail Adresse';
 $lng['login']['remind'] = 'Passwort zur&uuml;cksetzen';
 $lng['login']['usernotfound'] = 'Fehler: Unbekannter Benutzer!';
-$lng['pwdreminder']['subject'] = 'SysCP - Passwort zur&uuml;ckgesetzt';
-$lng['pwdreminder']['body'] = 'Hallo %s,\n\nIhr SysCP Passwort wurde zur&uuml;ckgesetzt!\nDas neue Passwort lautet: %p\n\nVielen Dank,\nIhr SysCP-Team';
+$lng['pwdreminder']['subject'] = 'Froxlor - Passwort zur&uuml;ckgesetzt';
+$lng['pwdreminder']['body'] = 'Hallo %s,\n\nIhr Froxlor Passwort wurde zur&uuml;ckgesetzt!\nDas neue Passwort lautet: %p\n\nVielen Dank,\nIhr SysCP-Team';
 $lng['pwdreminder']['success'] = 'Passwort erfolgreich zur&uuml;ckgesetzt.<br />Sie sollten nun eine E-Mail mit dem neuen Passwort erhalten.';
 
 // ADDED IN 1.2.19-svn18
@@ -902,7 +902,7 @@ $lng['panel']['never'] = 'Nie';
 $lng['panel']['active'] = 'Aktiv';
 $lng['panel']['please_choose'] = 'Bitte ausw&auml;hlen';
 $lng['panel']['allow_modifications'] = '&Auml;nderungen zulassen';
-$lng['domains']['add_date'] = 'Zu SysCP hinzugef&uuml;gt';
+$lng['domains']['add_date'] = 'Zu Froxlor hinzugef&uuml;gt';
 $lng['domains']['registration_date'] = 'Bei Registry hinzugef&uuml;gt';
 $lng['domains']['topleveldomain'] = 'Top-Level-Domain';
 
@@ -956,12 +956,12 @@ $lng['error']['invalidautoresponder'] = 'Das angegebene Konto ist ung&uuml;ltig.
 $lng['serversettings']['autoresponder_active']['title'] = 'Abwesenheitsnachrichten-Modul verwenden';
 $lng['serversettings']['autoresponder_active']['description'] = 'M&ouml;chten Sie das Abwesenheitsnachrichten-Modul verwenden? Dazu muss ein separater Cronjob eingerichtet sein.';
 $lng['invoice']['active'] = 'Rechnung aktiviert';
-$lng['admin']['show_version_login']['title'] = 'Zeige SysCP Version beim Login';
-$lng['admin']['show_version_login']['description'] = 'Zeige SysCP Version in der Fu&szlig;zeile der Loginseite';
-$lng['admin']['show_version_footer']['title'] = 'Zeige SysCP Version in Fu&szlig;zeile';
-$lng['admin']['show_version_footer']['description'] = 'Zeige SysCP Version in der Fu&szlig;zeile aller anderen Seiten';
+$lng['admin']['show_version_login']['title'] = 'Zeige Froxlor Version beim Login';
+$lng['admin']['show_version_login']['description'] = 'Zeige Froxlor Version in der Fu&szlig;zeile der Loginseite';
+$lng['admin']['show_version_footer']['title'] = 'Zeige Froxlor Version in Fu&szlig;zeile';
+$lng['admin']['show_version_footer']['description'] = 'Zeige Froxlor Version in der Fu&szlig;zeile aller anderen Seiten';
 $lng['admin']['syscp_graphic']['title'] = 'Grafik im Kopfbereich des Panels';
-$lng['admin']['syscp_graphic']['description'] = 'Welche Grafik soll im Kopfbereich des Panels anstatt des SysCP Logos angezeigt werden?';
+$lng['admin']['syscp_graphic']['description'] = 'Welche Grafik soll im Kopfbereich des Panels anstatt des Froxlor Logos angezeigt werden?';
 
 //improved syscp
 
@@ -986,6 +986,7 @@ $lng['error']['info'] = 'Info';
 $lng['admin']['phpconfig']['template_replace_vars'] = 'Variablen, die in den Konfigurationen ersetzt werden';
 $lng['admin']['phpconfig']['safe_mode'] = 'Wird mit der safe_mode Einstellung der Domain ersetzt.';
 $lng['admin']['phpconfig']['pear_dir'] = 'Wird mit dem globalen Wert f&uuml;r das Include Verzeichnis ersetzt.';
+$lng['admin']['phpconfig']['open_basedir_c'] = 'Wird mit einem ; (Semikolon) ersetzt, um open_basedir auszukommentieren/deaktivieren, wenn eingestellt.';
 $lng['admin']['phpconfig']['open_basedir'] = 'Wird mit der open_basedir Einstellung der Domain ersetzt.';
 $lng['admin']['phpconfig']['tmp_dir'] = 'Wird mit der Einstellung f&uuml;r das tempor&auml;re Verzeichnis der Domain ersetzt.';
 $lng['admin']['phpconfig']['open_basedir_global'] = 'Wird mit der globalen Einstellung des Pfades ersetzt, der dem open_basedir hinzugef&uuml;gt wird.';
@@ -1004,7 +1005,7 @@ $lng['admin']['know_what_youre_doing'] = '&Auml;ndern Sie diese Einstellungen nu
 $lng['serversettings']['mod_fcgid']['peardir']['title'] = 'Globale PEAR Verzeichnisse';
 $lng['serversettings']['mod_fcgid']['peardir']['description'] = 'Welche globalen PEAR Verzeichnisse sollen in den php.ini Einstellungen ersetzt werden? Einzelne Verzeichnisse sind mit einem Doppelpunkt zu trennen.';
 
-//improved syscp 2
+//improved Froxlor 2
 
 $lng['admin']['templates']['index_html'] = 'index.html Datei f&uuml;r neu erzeugte Kundenverzeichnisse';
 $lng['admin']['templates']['SERVERNAME'] = 'Wird mit dem Servernamen ersetzt.';
@@ -1103,7 +1104,7 @@ $lng['aps']['php_general_new'] = 'PHP - Generell - PHP Version zu neu.';
 $lng['aps']['db_mysql_support'] = 'Datenbank - Das Paket ben&ouml;tigt eine andere Datenbank Engine als MySQL.';
 $lng['aps']['db_mysql_version'] = 'Datenbank - MySQL Server zu alt.';
 $lng['aps']['webserver_module'] = 'Webserver - Modul "%s" fehlt.';
-$lng['aps']['webserver_fcgid'] = 'Webserver - Von diesem Paket werden einige Webserver Module ben&ouml;tigt. Da Sie SysCP in einer FastCGI/mod_fcgid Umgebung verwenden existiert die Funktion "apache_get_modules" nicht. Es kann also nicht ermittelt werden ob das Paket unterst&uuml;tzt wird.';
+$lng['aps']['webserver_fcgid'] = 'Webserver - Von diesem Paket werden einige Webserver Module ben&ouml;tigt. Da Sie Froxlor in einer FastCGI/mod_fcgid Umgebung verwenden existiert die Funktion "apache_get_modules" nicht. Es kann also nicht ermittelt werden ob das Paket unterst&uuml;tzt wird.';
 $lng['aps']['webserver_htaccess'] = 'Webserver - Dieses Paket ben&ouml;tigt dass .htaccess Dateien vom Webserver geparst werden. Das Paket kann nicht installiert werden, da nicht ermittelt werden kann ob diese Funktion aktiviert ist.';
 $lng['aps']['misc_configscript'] = 'Sonstiges - Die Sprache des Konfigurationsskriptes wird nicht unterst&uuml;tzt.';
 $lng['aps']['misc_charset'] = 'Sonstiges - In der aktuellen Version wird eine Validierung gegen einen gewissen Zeichensatz im Installationsassitenten nicht unterst&uuml;tzt.';
@@ -1172,7 +1173,7 @@ $lng['aps']['numerofpackagesenabled'] = '%s Pakete freigegeben<br/>';
 $lng['aps']['numerofpackageslocked'] = '%s Pakete gesperrt<br/>';
 $lng['aps']['numerofinstances'] = '%s Instanzen installiert<br/>';
 $lng['question']['reallydoaction'] = '<strong>Wollen Sie die gew&auml;hlten Aktionen wirklich durchf&uuml;hren?</strong><br/><br/>Daten, die durch diese Vorg&auml;nge m&ouml;glicherweise gel&ouml;scht werden, k&ouml;nnen anschlie&szlig;end nicht wieder hergestellt werden.<br/><br/>';
-$lng['aps']['initerror_customer'] = 'Es gibt momentan ein Problem mit dieser SysCP Erweiterung. Wenden Sie sich an Ihren Administrator f&uuml;r weitere Informationen.';
+$lng['aps']['initerror_customer'] = 'Es gibt momentan ein Problem mit dieser Froxlor Erweiterung. Wenden Sie sich an Ihren Administrator f&uuml;r weitere Informationen.';
 $lng['aps']['numerofinstances'] = '%s Installationen insgesamt<br/>';
 $lng['aps']['numerofinstancessuccess'] = '%s erfolgreiche Installationen<br/>';
 $lng['aps']['numerofinstanceserror'] = '%s fehlgeschlagene Installationen<br/>';
@@ -1195,7 +1196,7 @@ $lng['error']['admindoesntexist'] = 'Der ausgew&auml;hlte Admin existiert nicht.
 // ADDED IN 1.2.19-svn37
 
 $lng['serversettings']['system_realtime_port']['title'] = 'Port f&uuml;r Realtime SysCP';
-$lng['serversettings']['system_realtime_port']['description'] = 'Dieser Port auf localhost wird bei jedem neuen Cron-Task kontaktiert. Wenn der Wert 0 (Null) ist, dann ist dieses Feature deaktiviert.<br />Siehe dazu auch: <a href="https://wiki.syscp.org/contrib/realtime">Make SysCP work in realtime (SysCP Wiki)</a>';
+$lng['serversettings']['system_realtime_port']['description'] = 'Dieser Port auf localhost wird bei jedem neuen Cron-Task kontaktiert. Wenn der Wert 0 (Null) ist, dann ist dieses Feature deaktiviert.<br />Siehe dazu auch: <a href="https://wiki.syscp.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Erlaube gleichzeitigen Login';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Wenn diese Option aktiviert ist, k&ouml;nnen sich Nutzer mehrmals gleichzeitig anmelden.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Erlaube Verschieben von Domains unter Admins';
@@ -1223,6 +1224,6 @@ $lng['aps']['license_link'] = 'Link zur Lizenz';
 
 // ADDED IN 1.4.2.1 
 $lng['admin']['thankyou'] = 'Vielen Dank';
-$lng['admin']['contributors'] = 'Diese Leute haben zum SysCP Projekt beigetragen (keine besondere Ordnung)';
+$lng['admin']['contributors'] = 'Diese Leute haben zum Froxlor Projekt beigetragen (keine besondere Ordnung)';
 
 ?>

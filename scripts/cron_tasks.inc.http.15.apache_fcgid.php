@@ -87,6 +87,8 @@ class apache_fcgid extends apache
 				}
 
 				$php_options_text.= '    Options +ExecCGI' . "\n";
+				$php_options_text.= '    Order allow,deny' . "\n";
+				$php_options_text.= '    allow from all' . "\n";
 				$php_options_text.= '  </Directory>' . "\n";
 			}
 
@@ -161,9 +163,11 @@ class apache_fcgid extends apache
 			// define the php.ini
 
 			$openbasedir = '';
+			$openbasedirc = ';';
 
 			if($domain['openbasedir'] == '1')
 			{
+				$openbasedirc = '';
 				if($domain['openbasedir_path'] == '0')
 				{
 					$openbasedir = $domain['documentroot'] . ':' . $tmpdir . ':' . $this->settings['system']['mod_fcgid_peardir'] . ':' . $this->settings['system']['phpappendopenbasedir'];
@@ -184,6 +188,7 @@ class apache_fcgid extends apache
 			else
 			{
 				$openbasedir = 'none';
+				$openbasedirc = ';';
 			}
 
 			$admin = $this->getAdminData($domain['adminid']);
@@ -191,6 +196,7 @@ class apache_fcgid extends apache
 				'SAFE_MODE' => ($domain['safemode'] == '0' ? 'Off' : 'On'),
 				'PEAR_DIR' => $this->settings['system']['mod_fcgid_peardir'],
 				'OPEN_BASEDIR' => $openbasedir,
+				'OPEN_BASEDIR_C' => $openbasedirc,
 				'OPEN_BASEDIR_GLOBAL' => $this->settings['system']['phpappendopenbasedir'],
 				'TMP_DIR' => $tmpdir,
 				'CUSTOMER_EMAIL' => $domain['email'],

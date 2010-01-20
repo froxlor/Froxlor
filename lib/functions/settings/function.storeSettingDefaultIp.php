@@ -41,3 +41,5 @@ function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue)
 	
 	return $returnvalue;
 }
+
+?>

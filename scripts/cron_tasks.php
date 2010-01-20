@@ -68,7 +68,14 @@ while($row = $db->fetch_array($result_tasks))
 			}
 			elseif($settings['system']['webserver'] == "lighttpd")
 			{
-				$webserver = new lighttpd($db, $cronlog, $debugHandler, $settings);
+				if($settings['system']['mod_fcgid'] == 1)
+				{
+					$webserver = new lighttpd_fcgid($db, $cronlog, $debugHandler, $settings);
+				}
+				else
+				{				
+					$webserver = new lighttpd($db, $cronlog, $debugHandler, $settings);
+				}
 			}
 		}
 

@@ -21,8 +21,8 @@
  */
 
 if(@php_sapi_name() != 'cli'
-   && @php_sapi_name() != 'cgi'
-   && @php_sapi_name() != 'cgi-fcgi')
+&& @php_sapi_name() != 'cgi'
+&& @php_sapi_name() != 'cgi-fcgi')
 {
 	die('This script only works in the shell.');
 }
@@ -202,13 +202,13 @@ class lighttpd
 	protected function getVhostContent($domain, $ssl_vhost = false)
 	{
 		if($ssl_vhost === true
-		   && $domain['ssl'] != '1')
+		&& $domain['ssl'] != '1')
 		{
 			return '';
 		}
 
 		if($ssl_vhost === true
-		   && $domain['ssl'] == '1')
+		&& $domain['ssl'] == '1')
 		{
 			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ssl_ipandport'] . "'";
 		}
@@ -287,6 +287,9 @@ class lighttpd
 		$query = "SELECT * FROM " . TABLE_PANEL_HTACCESS . " WHERE `path` LIKE '" . $domain['documentroot'] . "%'";
 		$result = $this->db->query($query);
 
+		$path_options = '';
+		$error_string = '';
+
 		while($row = $this->db->fetch_array($result))
 		{
 			if(!empty($row['error404path']))
@@ -301,13 +304,23 @@ class lighttpd
 				// We need to remove the last slash, otherwise the regex wouldn't work
 
 				$path = substr($path, 0, -1);
-				$error_string.= '$HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
-				$error_string.= "\t" . 'dir-listing.activate = "enable"' . "\n";
-				$error_string.= '}' . "\n";
+				$path_options.= '$HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
+				$path_options.= "\t" . 'dir-listing.activate = "enable"' . "\n";
+				if(!empty($error_string))
+				{
+					$path_options.= $error_string;
+					// reset $error_string here to prevent duplicate entries
+					$error_string = '';
+				}
+				$path_options.= '}' . "\n";
+			}
+			else
+			{
+				$path_options = $error_string;
 			}
 		}
 
-		return $error_string;
+		return $path_options;
 	}
 
 	protected function getDirOptions($domain)
@@ -318,7 +331,7 @@ class lighttpd
 		while($row_htpasswds = $this->db->fetch_array($result))
 		{
 			if($auth_backend_loaded[$domain['ipandport']] != 'yes'
-			   && $auth_backend_loaded[$domain['ssl_ipandport']] != 'yes')
+			&& $auth_backend_loaded[$domain['ssl_ipandport']] != 'yes')
 			{
 				$filename = $domain['customerid'] . '.htpasswd';
 
@@ -441,7 +454,7 @@ class lighttpd
 		$webroot_text = '';
 
 		if($domain['deactivated'] == '1'
-		   && $this->settings['system']['deactivateddocroot'] != '')
+		&& $this->settings['system']['deactivateddocroot'] != '')
 		{
 			$webroot_text.= '  # Using docroot for deactivated users...' . "\n";
 			$webroot_text.= '  server.document-root = "' . $this->settings['system']['deactivateddocroot'] . "\"\n";
@@ -449,7 +462,7 @@ class lighttpd
 		else
 		{
 			if($ssl === false
-			   && $domain['ssl_redirect'] == '1')
+			&& $domain['ssl_redirect'] == '1')
 			{
 				$webroot_text.= '  url.redirect = ( "^/(.*)" => "https://' . $domain['domain'] . '/$1" )' . "\n";
 			}
@@ -544,18 +557,18 @@ class lighttpd
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost']);
 
 		if(isConfigDir($this->settings['system']['apacheconf_vhost'])
-		   && file_exists($this->settings['system']['apacheconf_vhost'])
-		   && is_dir($this->settings['system']['apacheconf_vhost']))
+		&& file_exists($this->settings['system']['apacheconf_vhost'])
+		&& is_dir($this->settings['system']['apacheconf_vhost']))
 		{
 			$vhost_file_dirhandle = opendir($this->settings['system']['apacheconf_vhost']);
 
 			while(false !== ($vhost_filename = readdir($vhost_file_dirhandle)))
 			{
 				if($vhost_filename != '.'
-				   && $vhost_filename != '..'
-				   && !in_array($vhost_filename, $this->known_filenames)
-				   && preg_match('/^(10|20|30)_syscp_ipandport_(.+)\.conf$/', $vhost_filename)
-				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
+				&& $vhost_filename != '..'
+				&& !in_array($vhost_filename, $this->known_filenames)
+				&& preg_match('/^(10|20|30)_syscp_ipandport_(.+)\.conf$/', $vhost_filename)
+				&& file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
 				{
 					fwrite($this->debugHandler, '  apache::wipeOutOldConfigs: unlinking ' . $vhost_filename . "\n");
 					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $vhost_filename);

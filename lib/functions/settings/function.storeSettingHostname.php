@@ -41,3 +41,5 @@ function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)
 	
 	return $returnvalue;
 }
+
+?>

@@ -54,3 +54,5 @@ function loadSettings($settings_data, $db)
 
 	return $settings;
 }
+
+?>
