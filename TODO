@@ -18,7 +18,7 @@ FIXED	 	 	0001276 		Bind Zones Not Updated on Nameserver Change
  	 	 	0001041 		Customer should have access to his webserver logs.
  	 	 	0001267 		Domain-Aliases also create a HOST-entry
  	 	 	0001266 		Lighttpd has a internal limit of regex-hits which limits max amount of domain-aliases
- 	 	 	0001263 		Cosmettic Change
+FIXED	 	 	0001263 		Cosmettic Change
 WONTFIX 	 	0001056 	 	Need extra payment methods
 WONTFIX 	 	0001262 		Currency type modification.
 WONTFIX 	 	0001257 		Fee is recalculated with current contract data although interval is over
