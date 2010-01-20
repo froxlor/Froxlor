@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2003-2009 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
@@ -47,7 +47,7 @@ $filename = basename($_SERVER['PHP_SELF']);
 
 if(!file_exists('./lib/userdata.inc.php'))
 {
-	die('You have to <a href="./install/install.php">configure</a> SysCP first!');
+	die('You have to <a href="./install/install.php">configure</a> Froxlor first!');
 }
 
 if(!is_readable('./lib/userdata.inc.php'))

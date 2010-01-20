@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2003-2009 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
@@ -270,7 +270,7 @@ $lng['mails']['createcustomer']['subject'] = 'Account information';
 $lng['admin']['overview'] = 'Overview';
 $lng['admin']['ressourcedetails'] = 'Used resources';
 $lng['admin']['systemdetails'] = 'System Details';
-$lng['admin']['syscpdetails'] = 'SysCP Details';
+$lng['admin']['syscpdetails'] = 'Froxlor Details';
 $lng['admin']['installedversion'] = 'Installed version';
 $lng['admin']['latestversion'] = 'Latest version';
 $lng['admin']['lookfornewversion']['clickhere'] = 'search via webservice';
@@ -495,7 +495,7 @@ $lng['panel']['pathDescription'] = 'If the directory doesn\'t exist, it will be 
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Dear {NAME},\n\nYou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\nThis is more than 90%.\n\nYours sincerely, the SysCP-Team';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'Dear {NAME},\n\nYou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\nThis is more than 90%.\n\nYours sincerely, the Froxlor-Team';
 $lng['mails']['trafficninetypercent']['subject'] = 'Reaching your traffic limit';
 $lng['admin']['templates']['trafficninetypercent'] = 'Notification mail for customers when ninety percent of traffic is exhausted';
 $lng['admin']['templates']['TRAFFIC'] = 'Replaced with the traffic, which was assigned to the customer.';
@@ -540,13 +540,13 @@ $lng['panel']['back'] = 'Back';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Temporary save logs in the database';
-$lng['serversettings']['mod_log_sql']['description'] = 'Use <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
+$lng['serversettings']['mod_log_sql']['description'] = 'Use <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Include PHP via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libnss_mysql to run PHP with the corresponding useraccount.<br/><b>This needs a special Apache configuration. All following options are only valid if the module is enabled.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Hello,\n\nyour Mail account {EMAIL}\nwas set up successfully.\nYour password is {PASSWORD}.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, the SysCP-Team';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Hello,\n\nyour Mail account {EMAIL}\nwas set up successfully.\nYour password is {PASSWORD}.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, the Froxlor-Team';
 $lng['mails']['pop_success_alternative']['subject'] = 'Mail account set up successfully';
 $lng['admin']['templates']['pop_success_alternative'] = 'Welcome mail for new email accounts sent to alternative address';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Replaced with the POP3/IMAP account password.';
@@ -589,7 +589,7 @@ $lng['serversettings']['webalizer_quiet']['description'] = 'Verbosity of the web
 // ADDED IN 1.2.18-svn3
 
 $lng['ticket']['admin_email'] = 'root@localhost';
-$lng['ticket']['noreply_email'] = 'tickets@syscp';
+$lng['ticket']['noreply_email'] = 'tickets@froxlor';
 $lng['admin']['ticketsystem'] = 'Support-tickets';
 $lng['menue']['ticket']['ticket'] = 'Support tickets';
 $lng['menue']['ticket']['categories'] = 'Support categories';
@@ -650,15 +650,15 @@ $lng['admin']['templates']['new_ticket_by_customer'] = 'Admin-notification for a
 $lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Admin-notification for a ticket-reply by a customer';
 $lng['admin']['templates']['new_ticket_by_staff'] = 'Customer-notification for a ticket opened by a staff';
 $lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Customer-notification for a ticket-reply by a staff';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nyour support-ticket with the subject "{SUBJECT}" has been sent.\n\nYou will be notified when your ticket has been answered.\n\nThank you,\nthe SysCP-Team';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nyour support-ticket with the subject "{SUBJECT}" has been sent.\n\nYou will be notified when your ticket has been answered.\n\nThank you,\nthe Froxlor-Team';
 $lng['mails']['new_ticket_for_customer']['subject'] = 'Your support ticket has been sent';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hello admin,\n\na new support-ticket with the subject "{SUBJECT}" has been submitted.\n\nPlease login to open the ticket.\n\nThank you,\nthe SysCP-Team';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hello admin,\n\na new support-ticket with the subject "{SUBJECT}" has been submitted.\n\nPlease login to open the ticket.\n\nThank you,\nthe Froxlor-Team';
 $lng['mails']['new_ticket_by_customer']['subject'] = 'New support ticket submitted';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hello admin,\n\nthe support-ticket "{SUBJECT}" has been answered by a customer.\n\nPlease login to open the ticket.\n\nThank you,\nthe SysCP-Team';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hello admin,\n\nthe support-ticket "{SUBJECT}" has been answered by a customer.\n\nPlease login to open the ticket.\n\nThank you,\nthe Froxlor-Team';
 $lng['mails']['new_reply_ticket_by_customer']['subject'] = 'New reply to support ticket';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\na support-ticket with the subject "{SUBJECT}" has been opened for you.\n\nPlease login to open the ticket.\n\nThank you,\nthe SysCP-Team';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\na support-ticket with the subject "{SUBJECT}" has been opened for you.\n\nPlease login to open the ticket.\n\nThank you,\nthe Froxlor-Team';
 $lng['mails']['new_ticket_by_staff']['subject'] = 'New support ticket submitted';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nthe support-ticket with the subject "{SUBJECT}" has been answered by our staff.\n\nPlease login to view the ticket.\n\nThank you,\nthe SysCP-Team';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nthe support-ticket with the subject "{SUBJECT}" has been answered by our staff.\n\nPlease login to view the ticket.\n\nThank you,\nthe Froxlor-Team';
 $lng['mails']['new_reply_ticket_by_staff']['subject'] = 'New reply to support ticket';
 $lng['question']['ticket_reallyclose'] = 'Do you really want to close the ticket "%s"?';
 $lng['question']['ticket_reallydelete'] = 'Do you really want to delete the ticket "%s"?';
@@ -741,7 +741,7 @@ $lng['traffic']['summail'] = 'Summation Mail-Traffic in';
 
 // ADDED IN 1.2.19-svn4.5
 
-$lng['serversettings']['no_robots']['title'] = 'Allow searchengine-robots to index your SysCP';
+$lng['serversettings']['no_robots']['title'] = 'Allow searchengine-robots to index your Froxlor installation';
 
 // ADDED IN 1.2.19-svn6
 
@@ -864,8 +864,8 @@ $lng['login']['presend'] = 'Reset password';
 $lng['login']['email'] = 'E-mail address';
 $lng['login']['remind'] = 'Reset my password';
 $lng['login']['usernotfound'] = 'User not found!';
-$lng['pwdreminder']['subject'] = 'SysCP - Password reset';
-$lng['pwdreminder']['body'] = 'Hello %s,\n\nyour syscp password has been reset!\nThe new password is: %p\n\nThank you,\nthe SysCP-Team';
+$lng['pwdreminder']['subject'] = 'Froxlor - Password reset';
+$lng['pwdreminder']['body'] = 'Hello %s,\n\nyour froxlor password has been reset!\nThe new password is: %p\n\nThank you,\nthe Froxlor-Team';
 $lng['pwdreminder']['success'] = 'Password reset successfully.<br />You now should receive an email with your new password.';
 
 // ADDED IN 1.2.19-svn18
@@ -898,7 +898,7 @@ $lng['panel']['never'] = 'Never';
 $lng['panel']['active'] = 'Active';
 $lng['panel']['please_choose'] = 'Please choose';
 $lng['panel']['allow_modifications'] = 'Allow modifications';
-$lng['domains']['add_date'] = 'Added to SysCP';
+$lng['domains']['add_date'] = 'Added to Froxlor';
 $lng['domains']['registration_date'] = 'Added at registry';
 $lng['domains']['topleveldomain'] = 'Top-Level-Domain';
 
@@ -953,10 +953,10 @@ $lng['serversettings']['autoresponder_active']['description'] = 'Do you want to 
 $lng['invoice']['active'] = 'Billing active';
 $lng['admin']['security_settings'] = 'Security Options';
 $lng['admin']['know_what_youre_doing'] = 'Change only, if you know what you\'re doing!';
-$lng['admin']['show_version_login']['title'] = 'Show SysCP version on login';
-$lng['admin']['show_version_login']['description'] = 'Show the SysCP version in the footer on the login page';
-$lng['admin']['show_version_footer']['title'] = 'Show SysCP version in footer';
-$lng['admin']['show_version_footer']['description'] = 'Show the SysCP version in the footer on the rest of the pages';
+$lng['admin']['show_version_login']['title'] = 'Show Froxlor version on login';
+$lng['admin']['show_version_login']['description'] = 'Show the Froxlor version in the footer on the login page';
+$lng['admin']['show_version_footer']['title'] = 'Show Froxlor version in footer';
+$lng['admin']['show_version_footer']['description'] = 'Show the Froxlor version in the footer on the rest of the pages';
 $lng['admin']['syscp_graphic']['title'] = 'Header graphic for SysCP';
 $lng['admin']['syscp_graphic']['description'] = 'What graphic should be shown in the header';
 
@@ -1001,7 +1001,7 @@ $lng['serversettings']['mod_fcgid']['tmpdir']['description'] = 'Where should the
 $lng['serversettings']['mod_fcgid']['peardir']['title'] = 'Global PEAR directories';
 $lng['serversettings']['mod_fcgid']['peardir']['description'] = 'Which global PEAR directories should be replaced in every php.ini config? Different directories must be separated by a colon.';
 
-//improved syscp 2
+//improved Froxlor  2
 
 $lng['admin']['templates']['index_html'] = 'index file for newly created customer directories';
 $lng['admin']['templates']['SERVERNAME'] = 'Replaced with the servername.';
@@ -1169,7 +1169,7 @@ $lng['aps']['numerofpackageslocked'] = '%s Packages locked<br/>';
 $lng['aps']['numerofinstances'] = '%s Instances installed<br/>';
 $lng['question']['reallydoaction'] = '<strong>Do you really want to execute the selected actions?</strong><br/><br/>Data which can be lost by continuing, cannot be restored later.<br/><br/>';
 $lng['aps']['linktolicense'] = 'Link to license';
-$lng['aps']['initerror_customer'] = 'There is currently a problem with this SysCP extension. Contact your administrator for further information.';
+$lng['aps']['initerror_customer'] = 'There is currently a problem with this Froxlor extension. Contact your administrator for further information.';
 $lng['aps']['numerofinstances'] = '%s Installations at all<br/>';
 $lng['aps']['numerofinstancessuccess'] = '%s successful Installations<br/>';
 $lng['aps']['numerofinstanceserror'] = '%s failed Installations<br/>';
@@ -1192,13 +1192,13 @@ $lng['error']['admindoesntexist'] = 'The admin you have chosen doesn\'t exist.';
 // ADDED IN 1.2.19-svn37
 
 $lng['serversettings']['system_realtime_port']['title'] = 'Port for realtime SysCP';
-$lng['serversettings']['system_realtime_port']['description'] = 'SysCP connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature ist deactivated.<br />See also: <a href="https://wiki.syscp.org/contrib/realtime">Make SysCP work in realtime (SysCP Wiki)</a>';
+$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature ist deactivated.<br />See also: <a href="https://wiki.syscp.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Allow multiple login';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'If activated a user could login multiple times.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Allow moving domains between admins';
 $lng['serversettings']['panel_allow_domain_change_admin']['description'] = 'If activated you can change the admin of a domain at domainsettings.<br /><b>Attention:</b> If a customer isn\'t assigned to the same admin as the domain, the admin can see every other domain of that customer!';
 $lng['serversettings']['panel_allow_domain_change_customer']['title'] = 'Allow moving domains between customers';
-$lng['serversettings']['panel_allow_domain_change_customer']['description'] = 'If activated you can change the customer of a domain at domainsettings.<br /><b>Attention:</b> SysCP won\'t change any paths. This could render a domain unusable!';
+$lng['serversettings']['panel_allow_domain_change_customer']['description'] = 'If activated you can change the customer of a domain at domainsettings.<br /><b>Attention:</b> Froxlor won\'t change any paths. This could render a domain unusable!';
 $lng['domains']['associated_with_domain'] = 'Associated';
 $lng['domains']['aliasdomains'] = 'Alias domains';
 $lng['error']['ipportdoesntexist'] = 'The ip/port combination you have chosen doesn\'t exist.';
@@ -1220,7 +1220,7 @@ $lng['aps']['license_link'] = 'Link to the license';
 
 // ADDED IN 1.4.2.1 
 $lng['admin']['thankyou'] = 'Thank you';
-$lng['admin']['contributors'] = 'All these people contributed to the SysCP Project (no particular order)';
+$lng['admin']['contributors'] = 'All these people contributed to the Froxlor Project (no particular order)';
 
 // ADDED IN 1.4.2.1-1
 
