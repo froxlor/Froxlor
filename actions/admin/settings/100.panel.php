@@ -1,0 +1,163 @@
+<?php
+
+/**
+ * This file is part of the SysCP project.
+ * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Florian Lippert <flo@syscp.org>
+ * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @package    Panel
+ * @version    $Id: 100.panel.php 2724 2009-06-07 14:18:02Z flo $
+ */
+
+return array(
+	'groups' => array(
+		'panel' => array(
+			'title' => $lng['admin']['panelsettings'],
+			'fields' => array(
+				'panel_standardlanguage' => array(
+					'label' => array('title' => $lng['login']['language'], 'description' => $lng['serversettings']['language']['description']),
+					'settinggroup' => 'panel',
+					'varname' => 'standardlanguage',
+					'type' => 'option',
+					'default' => 'English',
+					'option_mode' => 'one',
+					'option_options_method' => 'getLanguages',
+					'save_method' => 'storeSettingField',
+					),
+				'panel_natsorting' => array(
+					'label' => $lng['serversettings']['natsorting'],
+					'settinggroup' => 'panel',
+					'varname' => 'natsorting',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
+				'panel_no_robots' => array(
+					'label' => $lng['serversettings']['no_robots'],
+					'settinggroup' => 'panel',
+					'varname' => 'no_robots',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
+				'panel_paging' => array(
+					'label' => $lng['serversettings']['paging'],
+					'settinggroup' => 'panel',
+					'varname' => 'paging',
+					'type' => 'int',
+					'int_min' => 0,
+					'default' => 0,
+					'save_method' => 'storeSettingField',
+					),
+				'panel_pathedit' => array(
+					'label' => $lng['serversettings']['pathedit'],
+					'settinggroup' => 'panel',
+					'varname' => 'pathedit',
+					'type' => 'option',
+					'default' => 'Manual',
+					'option_mode' => 'one',
+					'option_options' => array('Manual' => 'Manual', 'Dropdown' => 'Dropdown'),
+					'save_method' => 'storeSettingField',
+					),
+				'panel_adminmail' => array(
+					'label' => $lng['serversettings']['adminmail'],
+					'settinggroup' => 'panel',
+					'varname' => 'adminmail',
+					'type' => 'string',
+					'string_type' => 'mail',
+					'string_emptyallowed' => false,
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					),
+				'panel_decimal_places' => array(
+					'label' => $lng['serversettings']['decimal_places'],
+					'settinggroup' => 'panel',
+					'varname' => 'decimal_places',
+					'type' => 'int',
+					'int_min' => 0,
+					'int_max' => 15,
+					'default' => 4,
+					'save_method' => 'storeSettingField',
+					),
+				'panel_phpmyadmin_url' => array(
+					'label' => $lng['serversettings']['phpmyadmin_url'],
+					'settinggroup' => 'panel',
+					'varname' => 'phpmyadmin_url',
+					'type' => 'string',
+					'string_type' => 'url',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					),
+				'panel_webmail_url' => array(
+					'label' => $lng['serversettings']['webmail_url'],
+					'settinggroup' => 'panel',
+					'varname' => 'webmail_url',
+					'type' => 'string',
+					'string_type' => 'url',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					),
+				'panel_webftp_url' => array(
+					'label' => $lng['serversettings']['webftp_url'],
+					'settinggroup' => 'panel',
+					'varname' => 'webftp_url',
+					'type' => 'string',
+					'string_type' => 'url',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					),
+				'admin_show_version_login' => array(
+					'label' => $lng['admin']['show_version_login'],
+					'settinggroup' => 'admin',
+					'varname' => 'show_version_login',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
+				'admin_show_version_footer' => array(
+					'label' => $lng['admin']['show_version_footer'],
+					'settinggroup' => 'admin',
+					'varname' => 'show_version_footer',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
+				'admin_syscp_graphic' => array(
+					'label' => $lng['admin']['syscp_graphic'],
+					'settinggroup' => 'admin',
+					'varname' => 'syscp_graphic',
+					'type' => 'string',
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					),
+				'panel_allow_domain_change_admin' => array(
+					'label' => $lng['serversettings']['panel_allow_domain_change_admin'],
+					'settinggroup' => 'panel',
+					'varname' => 'allow_domain_change_admin',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
+				'panel_allow_domain_change_customer' => array(
+					'label' => $lng['serversettings']['panel_allow_domain_change_customer'],
+					'settinggroup' => 'panel',
+					'varname' => 'allow_domain_change_customer',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
+				),
+			),
+		),
+	);
+
+?>

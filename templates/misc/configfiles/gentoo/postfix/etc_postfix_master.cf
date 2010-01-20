@@ -1,0 +1,4 @@
+# Add this lines to be able to use dovecot as delivery agent
+# Dovecot LDA
+dovecot	  unix	-	n	n	-	-	pipe
+	flags=DRhu user=vmail:vmail argv=/usr/libexec/dovecot/deliver -d ${recipient}

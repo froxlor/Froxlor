@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * This file is part of the SysCP project.
+ * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Florian Lippert <flo@syscp.org>
+ * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @package    Functions
+ * @version    $Id: function.getFormFieldOutputHidden.php 2733 2009-11-06 09:32:00Z flo $
+ */
+
+function getFormFieldOutputHidden($fieldname, $fielddata)
+{
+	$returnvalue = '<input type="hidden" name="' . $fieldname . '" value="' . htmlentities($fielddata['value']) . '" />';
+
+	if(isset($fielddata['label']) && $fielddata['label'] != '')
+	{
+		$label = $fielddata['label'];
+		$value = htmlentities($fielddata['value']);
+		eval("\$returnvalue .= \"" . getTemplate("formfields/hidden", true) . "\";");
+	}
+
+	return $returnvalue;
+}

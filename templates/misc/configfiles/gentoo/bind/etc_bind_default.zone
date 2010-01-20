@@ -1,0 +1,21 @@
+$TTL 1W 
+@ IN SOA ns root ( 
+	2004060501 ; serial 
+	8H ; refresh 
+	2H ; retry 
+	1W ; expiry 
+	11h) ; minimum 
+
+	IN		NS		ns 
+	IN		MX		10 mail 
+
+	IN		A		<SERVERIP> 
+	IN		MX		10 mail 
+
+*	IN		A		<SERVERIP>
+	IN		MX		10 mail 
+
+ns	IN		A		<SERVERIP> 
+
+mail	IN		A		<SERVERIP>
+		IN		MX	10 mail 

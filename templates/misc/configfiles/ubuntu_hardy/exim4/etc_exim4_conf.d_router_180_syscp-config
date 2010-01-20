@@ -1,0 +1,12 @@
+syscp_mailalias:
+  debug_print = "R: syscp_mailalias for $local_part@$domain"
+  driver = redirect
+  domains = +syscp_domain
+  data = ${lookup mysql {SYSCP_MAILALIAS}{$value}fail}
+
+syscp_mailuser:
+  debug_print = "R: syscp_mailuser for $local_part@$domain"
+  driver = redirect
+  domains = +syscp_domain
+  data = ${lookup mysql {SYSCP_MAILUSER}{$value}fail}
+  directory_transport = maildir_syscp

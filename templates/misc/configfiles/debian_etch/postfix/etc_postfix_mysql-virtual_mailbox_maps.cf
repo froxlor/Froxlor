@@ -1,0 +1,7 @@
+user = <SQL_UNPRIVILEGED_USER>
+password = <SQL_UNPRIVILEGED_PASSWORD>
+dbname = <SQL_DB>
+table = mail_users
+select_field = maildir
+where_field = email
+hosts = <SQL_HOST> 

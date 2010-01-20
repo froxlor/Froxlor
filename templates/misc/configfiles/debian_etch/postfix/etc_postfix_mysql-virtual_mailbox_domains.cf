@@ -1,0 +1,8 @@
+user = <SQL_UNPRIVILEGED_USER>
+password = <SQL_UNPRIVILEGED_PASSWORD>
+dbname = <SQL_DB>
+table = panel_domains
+select_field = domain
+where_field = domain
+additional_conditions = and isemaildomain = '1'
+hosts = <SQL_HOST> 

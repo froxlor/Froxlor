@@ -1,0 +1,11 @@
+service syscp
+{
+        id              = syscp
+        socket_type     = dgram
+        protocol        = tcp
+        wait            = no
+        user            = root
+        server          = /usr/bin/php
+        server_args     = -q /var/www/syscp/scripts/cron_tasks.php
+        only_from       = 127.0.0.1
+}

@@ -1,0 +1,127 @@
+##VERSION: $Id: pop3d.dist.in,v 1.11 2004/10/30 15:39:38 mrsam Exp $
+#
+# pop3d created from pop3d.dist by sysconftool
+#
+# Do not alter lines that begin with ##, they are used when upgrading
+# this configuration.
+#
+#  Copyright 1998 - 2004 Double Precision, Inc.  See COPYING for
+#  distribution information.
+#
+#  Courier POP3 daemon configuration
+#
+##NAME: PIDFILE:0
+#
+
+PIDFILE=/var/run/pop3d.pid
+
+##NAME: MAXDAEMONS:0
+#
+#  Maximum number of POP3 servers started
+#
+
+MAXDAEMONS=50
+
+##NAME: MAXPERIP:4
+#
+#  Maximum number of connections to accept from the same IP address
+
+MAXPERIP=5
+
+##NAME: POP3AUTH:1
+#
+# To advertise the SASL capability, per RFC 2449, uncomment the POP3AUTH
+# variable:
+#
+# POP3AUTH="LOGIN"
+#
+# If you have configured the CRAM-MD5 or CRAM-SHA1, set POP3AUTH to something
+# like this:
+#
+# POP3AUTH="LOGIN CRAM-MD5 CRAM-SHA1"
+
+POP3AUTH=""
+
+##NAME: POP3AUTH_ORIG:0
+#
+# For use by webadmin
+
+POP3AUTH_ORIG="LOGIN CRAM-MD5 CRAM-SHA1"
+
+##NAME: POP3AUTH_TLS:1
+#
+# To also advertise SASL PLAIN if SSL is enabled, uncomment the
+# POP3AUTH_TLS environment variable:
+#
+# POP3AUTH_TLS="LOGIN PLAIN"
+
+POP3AUTH_TLS=""
+
+##NAME: POP3AUTH_TLS_ORIG:0
+#
+# For use by webadmin
+
+POP3AUTH_TLS_ORIG="LOGIN PLAIN"
+
+##NAME: POP3_PROXY:0
+#
+# Enable proxying.  See README.proxy
+
+POP3_PROXY=0
+
+##NAME: PORT:1
+#
+# Port to listen on for connections.  The default is port 110.
+#
+#  Multiple port numbers can be separated by commas.  When multiple port
+#  numbers are used it is possibly to select a specific IP address for a
+#  given port as "ip.port".  For example, "127.0.0.1.900,192.68.0.1.900"
+#  accepts connections on port 900 on IP addresses 127.0.0.1 and 192.68.0.1
+#  The ADDRESS setting is a default for ports that do not have a specified
+#  IP address.
+
+PORT=110
+
+##NAME: ADDRESS:0
+#
+# IP address to listen on.  0 means all IP addresses.
+
+ADDRESS=0
+
+##NAME: TCPDOPTS:0
+#
+# Other couriertcpd(1) options.  The following defaults should be fine.
+#
+
+TCPDOPTS="-nodnslookup -noidentlookup"
+
+##NAME: POP3DSTART:0
+#
+# POP3DSTART is not referenced anywhere in the standard Courier programs
+# or scripts.  Rather, this is a convenient flag to be read by your system
+# startup script in /etc/rc.d, like this:
+#
+#  . /etc/courier-imap/pop3d
+#  case x$POP3DSTART in
+#  x[yY]*)
+#        /usr/lib/courier-imap/pop3d.rc start
+#        ;;
+#  esac
+#
+# The default setting is going to be NO, until Courier is shipped by default
+# with enough platforms so that people get annoyed with having to flip it to
+# YES every time.
+
+POP3DSTART=YES
+
+##NAME: MAILDIRPATH:0
+#
+# MAILDIRPATH - directory name of the maildir directory.
+#
+MAILDIRPATH=Maildir
+
+#Hardwire a value for ${MAILDIR}
+MAILDIR=.maildir
+MAILDIRPATH=.maildir
+#Put any program for ${PRERUN} here
+PRERUN=

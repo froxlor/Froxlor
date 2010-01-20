@@ -1,0 +1,376 @@
+##VERSION: $Id: imapd.dist.in,v 1.32 2004/11/25 04:57:04 mrsam Exp $
+#
+# imapd created from imapd.dist by sysconftool
+#
+# Do not alter lines that begin with ##, they are used when upgrading
+# this configuration.
+#
+#  Copyright 1998 - 2004 Double Precision, Inc.  See COPYING for
+#  distribution information.
+#
+#  This configuration file sets various options for the Courier-IMAP server
+#  when used with the couriertcpd server.
+#  A lot of the stuff here is documented in the manual page for couriertcpd.
+#
+#  NOTE - do not use \ to split long variable contents on multiple lines.
+#  This will break the default imapd.rc script, which parses this file.
+#
+##NAME: ADDRESS:0
+#
+#  Address to listen on, can be set to a single IP address.
+#
+# ADDRESS=127.0.0.1
+
+ADDRESS=0
+
+##NAME: PORT:1
+#
+#  Port numbers that connections are accepted on.  The default is 143,
+#  the standard IMAP port.
+#
+#  Multiple port numbers can be separated by commas.  When multiple port
+#  numbers are used it is possible to select a specific IP address for a
+#  given port as "ip.port".  For example, "127.0.0.1.900,192.68.0.1.900"
+#  accepts connections on port 900 on IP addresses 127.0.0.1 and 192.68.0.1
+#  The previous ADDRESS setting is a default for ports that do not have
+#  a specified IP address.
+
+PORT=143
+
+##NAME: AUTHSERVICE:0
+#
+#  It's possible to authenticate using a different 'service' parameter
+#  depending on the connection's port.  This only works with authentication
+#  modules that use the 'service' parameter, such as PAM.  Example:
+#
+#  AUTHSERVICE143=imap
+#  AUTHSERVICE993=imaps
+
+##NAME: MAXDAEMONS:0
+#
+#  Maximum number of IMAP servers started
+#
+
+MAXDAEMONS=50
+
+##NAME: MAXPERIP:0
+#
+#  Maximum number of connections to accept from the same IP address
+
+MAXPERIP=10
+
+##NAME: PIDFILE:0
+#
+#  File where couriertcpd will save its process ID
+#
+
+PIDFILE=/var/run/imapd.pid
+
+##NAME: TCPDOPTS:0
+#
+# Miscellaneous couriertcpd options that shouldn't be changed.
+#
+
+TCPDOPTS="-nodnslookup -noidentlookup"
+
+##NAME: IMAP_CAPABILITY:1
+#
+# IMAP_CAPABILITY specifies what most of the response should be to the
+# CAPABILITY command.
+#
+# If you have properly configured Courier to use CRAM-MD5 or CRAM-SHA1
+# authentication (see INSTALL), set IMAP_CAPABILITY as follows:
+#
+# IMAP_CAPABILITY="IMAP4rev1 UIDPLUS CHILDREN NAMESPACE THREAD=ORDEREDSUBJECT THREAD=REFERENCES SORT QUOTA AUTH=CRAM-MD5 AUTH=CRAM-SHA1 IDLE"
+#
+
+IMAP_CAPABILITY="IMAP4rev1 UIDPLUS CHILDREN NAMESPACE THREAD=ORDEREDSUBJECT THREAD=REFERENCES SORT QUOTA IDLE"
+
+##NAME: KEYWORDS_CAPABILITY:0
+#
+# IMAP_KEYWORDS=1 enables custom IMAP keywords.  Set this option to 0 to
+# disable custom keywords.
+
+IMAP_KEYWORDS=1
+
+##NAME: SMAP1_CAPABILITY:0
+#
+# EXPERIMENTAL
+#
+# To enable the experimental "Simple Mail Access Protocol" extensions,
+# uncomment the following setting.
+#
+# SMAP_CAPABILITY=SMAP1
+
+##NAME: IMAP_CAPABILITY_ORIG:1
+#
+# For use by webadmin
+
+IMAP_CAPABILITY_ORIG="IMAP4rev1 UIDPLUS CHILDREN NAMESPACE THREAD=ORDEREDSUBJECT THREAD=REFERENCES SORT QUOTA AUTH=CRAM-MD5 AUTH=CRAM-SHA1 IDLE"
+
+##NAME: IMAP_PROXY:0
+#
+# Enable proxying.  See README.proxy
+
+IMAP_PROXY=0
+
+##NAME: IMAP_PROXY_FOREIGN:0
+#
+# Proxying to non-Courier servers.  Re-sends the CAPABILITY command after
+# logging in to the remote server.  May not work with all IMAP clients.
+
+IMAP_PROXY_FOREIGN=0
+
+##NAME: IMAP_IDLE_TIMEOUT:0
+#
+# This setting controls how often
+# the server polls for changes to the folder, in IDLE mode (in seconds).
+
+IMAP_IDLE_TIMEOUT=60
+
+##NAME: IMAP_CAPABILITY_TLS:0
+#
+# The following setting will advertise SASL PLAIN authentication after
+# STARTTLS is established.  If you want to allow SASL PLAIN authentication
+# with or without TLS then just comment this out, and add AUTH=PLAIN to
+# IMAP_CAPABILITY
+
+IMAP_CAPABILITY_TLS="$IMAP_CAPABILITY AUTH=PLAIN"
+
+##NAME: IMAP_TLS_ORIG:0
+#
+# For use by webadmin
+
+IMAP_CAPABILITY_TLS_ORIG="$IMAP_CAPABILITY_ORIG AUTH=PLAIN"
+
+##NAME: IMAP_DISABLETHREADSORT:0
+#
+# Set IMAP_DISABLETHREADSORT to disable the THREAD and SORT commands -
+# server side sorting and threading.
+#
+# Those capabilities will still be advertised, but the server will reject
+# them.  Set this option if you want to disable all the extra load from
+# server-side threading and sorting.  Not advertising those capabilities
+# will simply result in the clients reading the entire folder, and sorting
+# it on the client side.  That will still put some load on the server.
+# advertising these capabilities, but rejecting the commands, will stop this
+# silliness.
+#
+
+IMAP_DISABLETHREADSORT=0
+
+##NAME: IMAP_CHECK_ALL_FOLDERS:0
+#
+# Set IMAP_CHECK_ALL_FOLDERS to 1 if you want the server to check for new
+# mail in every folder.  Not all IMAP clients use the IMAP's new mail
+# indicator, but some do.  Normally new mail is checked only in INBOX,
+# because it is a comparatively time consuming operation, and it would be
+# a complete waste of time unless mail filters are used to deliver
+# mail directly to folders.
+#
+# When IMAP clients are used which support new mail indication, and when
+# mail filters are used to sort incoming mail into folders, setting
+# IMAP_CHECK_ALL_FOLDERS to 1 will allow IMAP clients to announce new
+# mail in folders.  Note that this will result in slightly more load on the
+# server.
+#
+
+IMAP_CHECK_ALL_FOLDERS=0
+
+##NAME: IMAP_OBSOLETE_CLIENT:0
+#
+# Set IMAP_OBSOLETE_CLIENT if your IMAP client expects \\NoInferiors to mean
+# what \\HasNoChildren really means.
+
+IMAP_OBSOLETE_CLIENT=0
+
+##NAME: IMAP_UMASK:0
+#
+# IMAP_UMASK sets the umask of the server process.  The value of IMAP_UMASK is
+# simply passed to the "umask" command.  The default value is 022.
+#
+# This feature is mostly useful for shared folders, where the file permissions
+# of the messages may be important.
+
+IMAP_UMASK=027
+
+##NAME: IMAP_ULIMITD:0
+#
+# IMAP_ULIMITD sets the maximum size of the data segment of the server
+# process.  The value of IMAP_ULIMITD is simply passed to the "ulimit -d"
+# command (or ulimit -v).  The argument to ulimi sets the upper limit on the
+# size of the data segment of the server process, in kilobytes.  The default
+# value of 65536 sets a very generous limit of 64 megabytes, which should
+# be more than plenty for anyone.
+#
+# This feature is used as an additional safety check that should stop
+# any potential denial-of-service attacks that exploit any kind of
+# a memory leak to exhaust all the available memory on the server.
+# It is theoretically possible that obscenely huge folders will also
+# result in the server running out of memory when doing server-side
+# sorting (by my calculations you have to have at least 100,000 messages
+# in a single folder, for that to happen).
+
+IMAP_ULIMITD=65536
+
+##NAME: IMAP_USELOCKS:0
+#
+# Setting IMAP_USELOCKS to 1 will use dot-locking to support concurrent
+# multiple access to the same folder.  This incurs slight additional
+# overhead.  Concurrent multiple access will still work without this setting,
+# however occasionally a minor race condition may result in an IMAP client
+# downloading the same message twice, or a keyword update will fail.
+#
+# IMAP_USELOCKS=1 is strongly recommended when shared folders are used.
+
+IMAP_USELOCKS=1
+
+##NAME: IMAP_SHAREDINDEXFILE:0
+#
+# The index of all accessible folders.  Do not change this setting unless
+# you know what you're doing.  See README.sharedfolders for additional
+# information.
+
+IMAP_SHAREDINDEXFILE=/etc/courier-imap/shared/index
+
+##NAME: IMAP_ENHANCEDIDLE:0
+#
+# If Courier was compiled with the File Alteration Monitor, setting
+# IMAP_ENHANCEDIDLE to 1 enables enhanced IDLE mode, where multiple
+# clients may open the same folder concurrently, and receive updates to
+# folder contents in realtime.  See the imapd(8) man page for additional
+# information.
+#
+# IMPORTANT: IMAP_USELOCKS *MUST* also be set to 1, and IDLE must be included
+# in the IMAP_CAPABILITY list.
+#
+
+IMAP_ENHANCEDIDLE=0
+
+##NAME: IMAP_TRASHFOLDERNAME:0
+#
+# The name of the magic trash Folder.  For MSOE compatibility,
+# you can set IMAP_TRASHFOLDERNAME="Deleted Items".
+#
+# IMPORTANT:  If you change this, you must also change IMAP_EMPTYTRASH
+
+IMAP_TRASHFOLDERNAME=Trash
+
+##NAME: IMAP_EMPTYTRASH:0
+#
+# The following setting is optional, and causes messages from the given
+# folder to be automatically deleted after the given number of days.
+# IMAP_EMPTYTRASH is a comma-separated list of folder:days.  The default
+# setting, below, purges 7 day old messages from the Trash folder.
+# Another useful setting would be:
+#
+# IMAP_EMPTYTRASH=Trash:7,Sent:30
+#
+# This would also delete messages from the Sent folder (presumably copies
+# of sent mail) after 30 days.  This is a global setting that is applied to
+# every mail account, and is probably useful in a controlled, corporate
+# environment.
+#
+# Important: the purging is controlled by CTIME, not MTIME (the file time
+# as shown by ls).  It is perfectly ordinary to see stuff in Trash that's
+# a year old.  That's the file modification time, MTIME, that's displayed.
+# This is generally when the message was originally delivered to this
+# mailbox.  Purging is controlled by a different timestamp, CTIME, which is
+# changed when the file is moved to the Trash folder (and at other times too).
+#
+# You might want to disable this setting in certain situations - it results
+# in a stat() of every file in each folder, at login and logout.
+#
+
+IMAP_EMPTYTRASH=Trash:7
+
+##NAME: IMAP_MOVE_EXPUNGE_TO_TRASH:0
+#
+# Set IMAP_MOVE_EXPUNGE_TO_TRASH to move expunged messages to Trash.  This
+# effectively allows an undo of message deletion by fishing the deleted
+# mail from trash.  Trash can be manually expunged as usually, and mail
+# will get automatically expunged from Trash according to IMAP_EMPTYTRASH.
+#
+# NOTE: shared folders are still expunged as usual.  Shared folders are
+# not affected.
+#
+
+IMAP_MOVE_EXPUNGE_TO_TRASH=0
+
+
+##NAME: OUTBOX:0
+#
+# The next set of options deal with the "Outbox" enhancement.
+# Uncomment the following setting to create a special folder, named
+# INBOX.Outbox
+#
+# OUTBOX=.Outbox
+
+##NAME: SENDMAIL:0
+#
+# If OUTBOX is defined, mail can be sent via the IMAP connection by copying
+# a message to the INBOX.Outbox folder.  For all practical matters,
+# INBOX.Outbox looks and behaves just like any other IMAP folder.  If this
+# folder doesn't exist it must be created by the IMAP mail client, just
+# like any other IMAP folder.  The kicker: any message copied or moved to
+# this folder is will be E-mailed by the Courier-IMAP server, by running
+# the SENDMAIL program.  Therefore, messages copied or moved to this
+# folder must be well-formed RFC-2822 messages, with the recipient list
+# specified in the To:, Cc:, and Bcc: headers.  Courier-IMAP relies on
+# SENDMAIL to read the recipient list from these headers (and delete the Bcc:
+# header) by running the command "$SENDMAIL -oi -t -f $SENDER", with the
+# message piped on standard input.  $SENDER will be the return address
+# of the message, which is set by the authentication module.
+#
+# DO NOT MODIFY SENDMAIL, below, unless you know what you're doing.
+#
+
+SENDMAIL=/usr/sbin/sendmail
+
+##NAME: HEADERFROM:0
+#
+# For administrative and oversight purposes, the return address, $SENDER
+# will also be saved in the X-IMAP-Sender mail header.  This header gets
+# added to the sent E-mail (but it doesn't get saved in the copy of the
+# message that's saved in the folder)
+#
+# WARNING - By enabling OUTBOX above, *every* IMAP mail client will receive
+# the magic OUTBOX treatment.  Therefore advance LARTing is in order for
+# _all_ of your lusers, until every one of them is aware of this.  Otherwise if
+# OUTBOX is left at its default setting - a folder name that might be used
+# accidentally - some people may be in for a rude surprise.  You can redefine
+# the name of the magic folder by changing OUTBOX, above.  You should do that
+# and pick a less-obvious name.  Perhaps brand it with your organizational
+# name ( OUTBOX=.WidgetsAndSonsOutbox )
+
+HEADERFROM=X-IMAP-Sender
+
+##NAME: IMAPDSTART:0
+#
+# IMAPDSTART is not used directly.  Rather, this is a convenient flag to
+# be read by your system startup script in /etc/rc.d, like this:
+#
+#  . /etc/courier-imap/imapd
+#
+#  case x$IMAPDSTART in
+#  x[yY]*)
+#        /usr/lib/courier-imap/imapd.rc start
+#        ;;
+#  esac
+#
+# The default setting is going to be NO, so you'll have to manually flip
+# it to yes.
+
+IMAPDSTART=YES
+
+##NAME: MAILDIRPATH:0
+#
+# MAILDIRPATH - directory name of the maildir directory.
+#
+MAILDIRPATH=Maildir
+
+#Hardwire a value for ${MAILDIR}
+MAILDIR=.maildir
+MAILDIRPATH=.maildir
+#Put any program for ${PRERUN} here
+PRERUN=

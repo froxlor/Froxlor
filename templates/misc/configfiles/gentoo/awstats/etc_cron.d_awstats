@@ -1,0 +1,6 @@
+#
+# Set PATH, otherwise restart-scripts won't find start-stop-daemon
+#
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+*/10 * * * * apache [ -x /usr/bin/awstats_updateall.pl ] && /usr/bin/awstats_updateall.pl now -awstatsprog=/usr/lib/cgi-bin/awstats.pl -configdir=/etc/awstats -excludeconf=awstats.model.conf.syscp,awstats.conf

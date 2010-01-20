@@ -1,0 +1,93 @@
+##VERSION: $Id: authdaemonrc.in,v 1.12 2005/07/05 12:25:08 mrsam Exp $
+#
+# Copyright 2000-2005 Double Precision, Inc.  See COPYING for
+# distribution information.
+#
+# authdaemonrc created from authdaemonrc.dist by sysconftool
+#
+# Do not alter lines that begin with ##, they are used when upgrading
+# this configuration.
+#
+# This file configures authdaemond, the resident authentication daemon.
+#
+# Comments in this file are ignored.  Although this file is intended to
+# be sourced as a shell script, authdaemond parses it manually, so
+# the acceptable syntax is a bit limited.  Multiline variable contents,
+# with the \ continuation character, are not allowed.  Everything must
+# fit on one line.  Do not use any additional whitespace for indentation,
+# or anything else.
+
+##NAME: authmodulelist:2
+#
+# The authentication modules that are linked into authdaemond.  The
+# default list is installed.  You may selectively disable modules simply
+# by removing them from the following list.  The available modules you
+# can use are: authuserdb authpam authshadow authmysql authcustom authpipe
+
+authmodulelist="authmysql"
+
+##NAME: authmodulelistorig:3
+#
+# This setting is used by Courier's webadmin module, and should be left
+# alone
+
+authmodulelistorig="authuserdb authpam authshadow authmysql authcustom authpipe"
+
+##NAME: daemons:0
+#
+# The number of daemon processes that are started.  authdaemon is typically
+# installed where authentication modules are relatively expensive: such
+# as authldap, or authmysql, so it's better to have a number of them running.
+# PLEASE NOTE:  Some platforms may experience a problem if there's more than
+# one daemon.  Specifically, SystemV derived platforms that use TLI with
+# socket emulation.  I'm suspicious of TLI's ability to handle multiple
+# processes accepting connections on the same filesystem domain socket.
+#
+# You may need to increase daemons if as your system load increases.  Symptoms
+# include sporadic authentication failures.  If you start getting
+# authentication failures, increase daemons.  However, the default of 5
+# SHOULD be sufficient.  Bumping up daemon count is only a short-term
+# solution.  The permanent solution is to add more resources: RAM, faster
+# disks, faster CPUs...
+
+daemons=5
+
+##NAME: authdaemonvar:2
+#
+# authdaemonvar is here, but is not used directly by authdaemond.  It's
+# used by various configuration and build scripts, so don't touch it!
+
+authdaemonvar=/var/lib/courier/authdaemon
+
+##NAME: DEBUG_LOGIN:0
+#
+# Dump additional diagnostics to syslog
+#
+# DEBUG_LOGIN=0   - turn off debugging
+# DEBUG_LOGIN=1   - turn on debugging
+# DEBUG_LOGIN=2   - turn on debugging + log passwords too
+#
+# ** YES ** - DEBUG_LOGIN=2 places passwords into syslog.
+#
+# Note that most information is sent to syslog at level 'debug', so
+# you may need to modify your /etc/syslog.conf to be able to see it.
+
+DEBUG_LOGIN=0
+
+##NAME: DEFAULTOPTIONS:0
+#
+# A comma-separated list of option=value pairs. Each option is applied
+# to an account if the account does not have its own specific value for
+# that option. So for example, you can set
+#   DEFAULTOPTIONS="disablewebmail=1,disableimap=1"
+# and then enable webmail and/or imap on individual accounts by setting
+# disablewebmail=0 and/or disableimap=0 on the account.
+
+DEFAULTOPTIONS=""
+
+##NAME: LOGGEROPTS:0
+#
+# courierlogger(1) options, e.g. to set syslog facility
+#
+
+LOGGEROPTS=""
