@@ -33,3 +33,25 @@ function storeSettingField($fieldname, $fielddata, $newfieldvalue)
 		return false;
 	}
 }
+
+function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue)
+{
+	if(is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] != '' && isset($fielddata['varname']) && $fielddata['varname'] != '')
+	{
+		if(saveSetting($fielddata['settinggroup'], $fielddata['varname'], $newfieldvalue) != false)
+		{
+			inserttask('4');
+			return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
+		}
+		else
+		{
+			return false;
+		}	
+	}
+	else
+	{
+		return false;
+	}
+}
+
+?>

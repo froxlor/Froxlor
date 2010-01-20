@@ -31,3 +31,5 @@ function storeSettingIpAddress($fieldname, $fielddata, $newfieldvalue)
 	
 	return $returnvalue;
 }
+
+?>
