@@ -6,7 +6,7 @@ FIXED	 	 	0001272 		Default Config for libnss incomplete (debian/lenny)
 FIXED	 	 	0001281 		Wrong open_basedir directive
  	 	 	0001280 		deb packet 1.4.2.1-2 fu*ked
 FIXED	 	 	0001279 		incorrect usage of escapeshellcmd
- 	 	 	0001269 		AWStats RewriteRule is wrong
+FIXED	 	 	0001269 		AWStats RewriteRule is wrong
  	 	 	0001278 		Customer and domain directories are not created
  	 	 	0001277 		Apache Redirect => permanent 301
  	 	 	0001276 		Bind Zones Not Updated on Nameserver Change

@@ -29,8 +29,8 @@ function createAWStatsVhost($siteDomain, $settings = null)
 	{
 		$vhosts_file = '  # AWStats statistics' . "\n";
 		$vhosts_file.= '  RewriteEngine On' . "\n";
-		$vhosts_file.= '  RewriteRule ^/awstats(/.*)? /awstats/awstats.pl?config=' . $siteDomain . ' [L,PT]' . "\n";
-		$vhosts_file.= '  RewriteRule ^/awstats.pl(.*)* /awstats/awstats.pl$1 [QSA,L,PT]' . "\n";
+		$vhosts_file.= '  RewriteRule ^/awstats(/.*)?$ /awstats/awstats.pl?config=' . $siteDomain . ' [L,PT]' . "\n";
+		$vhosts_file.= '  RewriteRule ^/awstats.pl(.*)$ /awstats/awstats.pl$1 [QSA,L,PT]' . "\n";
 	}
 	else
 	{
