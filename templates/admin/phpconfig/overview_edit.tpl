@@ -53,6 +53,10 @@ $header
 			<td class="field_name">{$lng['admin']['phpconfig']['pear_dir']}</td>
 		</tr>
 		<tr>
+			<td class="field_name_border_left"><i>{OPEN_BASEDIR_C}</i></td>
+			<td class="field_name">{$lng['admin']['phpconfig']['open_basedir_c']}</td>
+		</tr>
+		<tr>
 			<td class="field_name_border_left"><i>{OPEN_BASEDIR}</i></td>
 			<td class="field_name">{$lng['admin']['phpconfig']['open_basedir']}</td>
 		</tr>
