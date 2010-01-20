@@ -7,8 +7,8 @@ FIXED	 	 	0001281 		Wrong open_basedir directive
  	 	 	0001280 		deb packet 1.4.2.1-2 fu*ked
 FIXED	 	 	0001279 		incorrect usage of escapeshellcmd
 FIXED	 	 	0001269 		AWStats RewriteRule is wrong
- 	 	 	0001278 		Customer and domain directories are not created
- 	 	 	0001277 		Apache Redirect => permanent 301
+WONFIX 	 	0001278 		Customer and domain directories are not created
+FIXED	 	 	0001277 		Apache Redirect => permanent 301
  	 	 	0001276 		Bind Zones Not Updated on Nameserver Change
  	 	 	0001275 		Setting up Traffic limit is limited to 999 GB
  	 	 	0001273 		APS-Installer

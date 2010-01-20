@@ -482,7 +482,7 @@ class apache
 
 		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
 		{
-			$vhost_content.= '  Redirect / ' . $domain['documentroot'] . "\n";
+			$vhost_content.= '  Redirect 301 / ' . $domain['documentroot'] . "\n";
 		}
 		else
 		{
