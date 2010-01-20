@@ -2,7 +2,7 @@ FIXED	 	 	0001282 		Homedirs von Dovecot identisch
  	 	 	0001274 		Option to mark a Domain as Subdomain possible or not
 FIXED	 	 	0001283 		SysCP creating broken lighttpd config files
 FIXED	 	 	0001213 		APS class_apsinstaller.php on line 510 - error installing different apps
- 	 	 	0001272 		Default Config for libnss incomplete (debian/lenny)
+FIXED	 	 	0001272 		Default Config for libnss incomplete (debian/lenny)
 FIXED	 	 	0001281 		Wrong open_basedir directive
  	 	 	0001280 		deb packet 1.4.2.1-2 fu*ked
 FIXED	 	 	0001279 		incorrect usage of escapeshellcmd
