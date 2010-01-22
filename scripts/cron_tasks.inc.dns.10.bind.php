@@ -79,8 +79,8 @@ class bind
 
 	public function writeConfigs()
 	{
-		fwrite($this->debugHandler, '  cron_tasks: Task4 started - Rebuilding syscp_bind.conf' . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Rebuilding syscp_bind.conf');
+		fwrite($this->debugHandler, '  cron_tasks: Task4 started - Rebuilding froxlor_bind.conf' . "\n");
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Rebuilding froxlor_bind.conf');
 
 		if(!file_exists(makeCorrectDir($this->settings['system']['bindconf_directory'] . '/domains/')))
 		{
@@ -90,7 +90,7 @@ class bind
 
 		$known_filenames = array();
 
-		$bindconf_file = '# ' . $this->settings['system']['bindconf_directory'] . 'syscp_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";
+		$bindconf_file = '# ' . $this->settings['system']['bindconf_directory'] . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";
 		$result_domains = $this->db->query("SELECT `d`.`id`, `d`.`domain`, `d`.`iswildcarddomain`, `d`.`customerid`, `d`.`zonefile`, `d`.`bindserial`, `d`.`dkim`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `ip`.`ip`, `c`.`loginname`, `c`.`guid` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_IPSANDPORTS . "` AS `ip` ON(`d`.`ipandport`=`ip`.`id`) WHERE `d`.`isbinddomain` = '1' ORDER BY `d`.`domain` ASC");
 
 		while($domain = $this->db->fetch_array($result_domains))
@@ -131,11 +131,11 @@ class bind
 			$bindconf_file.= "\n";
 		}
 
-		$bindconf_file_handler = fopen(makeCorrectFile($this->settings['system']['bindconf_directory'] . '/syscp_bind.conf'), 'w');
+		$bindconf_file_handler = fopen(makeCorrectFile($this->settings['system']['bindconf_directory'] . '/froxlor_bind.conf'), 'w');
 		fwrite($bindconf_file_handler, $bindconf_file);
 		fclose($bindconf_file_handler);
-		fwrite($this->debugHandler, '  cron_tasks: Task4 - syscp_bind.conf written' . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'syscp_bind.conf written');
+		fwrite($this->debugHandler, '  cron_tasks: Task4 - froxlor_bind.conf written' . "\n");
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
 		safe_exec($this->settings['system']['bindreload_command']);
 		fwrite($this->debugHandler, '  cron_tasks: Task4 - Bind9 reloaded' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
@@ -216,7 +216,14 @@ class bind
 			}
 		}
 
-		$zonefile.= '@	IN	TXT	"v=spf1 a mx -all"' . "\n";
+		/*
+		 * @TODO domain-based spf-settings
+		 */
+		if($this->settings['spf']['use_spf'] == '1'
+		   /*&& $domain['spf'] == '1' */)
+		{
+			$zonefile.= $this->settings['spf']['spf_entry'] . "\n";
+		}
 
 		if($this->settings['dkim']['use_dkim'] == '1'
 		   && $domain['dkim'] == '1'

@@ -94,7 +94,8 @@ if($userinfo['change_serversettings'] == '1')
 			'<VIRTUAL_UID_MAPS>' => $settings['system']['vmail_uid'],
 			'<VIRTUAL_GID_MAPS>' => $settings['system']['vmail_gid'],
 			'<AWSTATS_PATH>' => $settings['system']['awstats_path'],
-			'<SSLPROTOCOLS>' => ($settings['system']['use_ssl'] == '1') ? 'imaps pop3s' : ''
+			'<SSLPROTOCOLS>' => ($settings['system']['use_ssl'] == '1') ? 'imaps pop3s' : '',
+			'<REALTIME_PORT>' => $settings['system']['realtime_port']
 		);
 		$files = '';
 		$configpage = '';

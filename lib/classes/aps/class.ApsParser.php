@@ -2924,7 +2924,7 @@ class ApsParser
 						$Groupname = '';
 					}
 
-					$Value = GetInstallationValue($PackageId, $CustomerId, strval($Setting['id']));
+					$Value = self::GetInstallationValue($PackageId, $CustomerId, strval($Setting['id']));
 
 					if($Value)
 					{

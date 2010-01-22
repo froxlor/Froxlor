@@ -1,19 +1,19 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2009-2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org>
- * @author     Florian Aders <eleras@syscp.org>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @author     Michael Kaufmann <d00p@froxlor.org>
+ * @author     Florian Aders <eleras@froxlor.org>
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: cron_init.php 2724 2009-06-07 14:18:02Z flo $
+ * @version    $Id: $
  */
 
 if(@php_sapi_name() != 'cli'
@@ -25,25 +25,25 @@ if(@php_sapi_name() != 'cli'
 
 $cronscriptDebug = false;
 $lockdir = '/var/run/';
-$lockFilename = 'syscp_' . basename($_SERVER['PHP_SELF'], '.php') . '.lock-';
+$lockFilename = 'froxlor_' . basename($_SERVER['PHP_SELF'], '.php') . '.lock-';
 $lockfName = $lockFilename . getmypid();
 $lockfile = $lockdir . $lockfName;
 
-// guess the syscp installation path
+// guess the froxlor installation path
 // normally you should not need to modify this script anymore, if your
-// syscp installation isn't in /var/www/syscp
+// froxlor installation isn't in /var/www/froxlor
 
 $pathtophpfiles = dirname(dirname(__FILE__));
 
-// should the syscp installation guessing not work correctly,
+// should the froxlor installation guessing not work correctly,
 // uncomment the following line, and put your path in there!
-//$pathtophpfiles = '/var/www/syscp/';
+//$pathtophpfiles = '/var/www/froxlor/';
 // create and open the lockfile!
 
 $keepLockFile = false;
 $debugHandler = fopen($lockfile, 'w');
 fwrite($debugHandler, 'Setting Lockfile to ' . $lockfile . "\n");
-fwrite($debugHandler, 'Setting SysCP installation path to ' . $pathtophpfiles . "\n");
+fwrite($debugHandler, 'Setting Froxlor installation path to ' . $pathtophpfiles . "\n");
 
 // open the lockfile directory and scan for existing lockfiles
 
@@ -168,7 +168,7 @@ if($db->link_id == 0)
 
 	fclose($debugHandler);
 	unlink($lockfile);
-	die('SysCP can\'t connect to mysqlserver. Please check userdata.inc.php! Exiting...');
+	die('Froxlor can\'t connect to mysqlserver. Please check userdata.inc.php! Exiting...');
 }
 
 fwrite($debugHandler, 'Database-connection established' . "\n");
@@ -183,10 +183,10 @@ while($row = $db->fetch_array($result))
 
 unset($row);
 unset($result);
-fwrite($debugHandler, 'SysCP Settings has been loaded from the database' . "\n");
+fwrite($debugHandler, 'Froxlor Settings has been loaded from the database' . "\n");
 
-if(!isset($settings['system']['dbversion'])
-   || $settings['system']['dbversion'] != $dbversion)
+if(!isset($settings['panel']['version'])
+   || $settings['panel']['version'] != $version)
 {
 	/**
 	 * Do not proceed further if the Database version is not the same as the script version
@@ -197,7 +197,7 @@ if(!isset($settings['system']['dbversion'])
 	die('Version of File doesnt match Version of Database. Exiting...');
 }
 
-fwrite($debugHandler, 'SysCP Version and Database Version are correct' . "\n");
+fwrite($debugHandler, 'Froxlor Version and Database Version are correct' . "\n");
 
 $cronbasedir = makeCorrectDir($pathtophpfiles . '/scripts/');
 $crondir = new DirectoryIterator($cronbasedir);
@@ -237,6 +237,12 @@ if(isset($inc_crons[0]))
 
 unset($file, $crondir, $cronname, $cronscriptFullName, $cronfilename, $cronbasedir);
 fwrite($debugHandler, 'Functions have been included' . "\n");
+
+/**
+ * Create a new idna converter
+ */
+
+$idna_convert = new idna_convert_wrapper();
 
 /**
  * Initialize logging

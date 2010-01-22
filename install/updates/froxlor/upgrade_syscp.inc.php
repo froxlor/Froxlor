@@ -194,6 +194,12 @@ if($settings['panel']['frontend'] == 'froxlor'
 	$db->query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "`
 		WHERE `settinggroup` = 'billing';");
 
+	$db->query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "`
+		  MODIFY `traffic` BIGINT(30),
+		  MODIFY `traffic_used` BIGINT(30)");
+	
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (119, 'spf', 'use_spf', '0');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (120, 'spf', 'spf_entry', '@	IN	TXT	\"v=spf1 a mx -all\"');");	
 }
 
 ?>

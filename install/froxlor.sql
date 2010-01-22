@@ -154,8 +154,8 @@ CREATE TABLE `panel_admins` (
   `tickets_used` int(15) NOT NULL default '0',
   `subdomains` int(15) NOT NULL default '0',
   `subdomains_used` int(15) NOT NULL default '0',
-  `traffic` int(15) NOT NULL default '0',
-  `traffic_used` int(15) NOT NULL default '0',
+  `traffic` bigint(30) NOT NULL default '0',
+  `traffic_used` bigint(30) NOT NULL default '0',
   `deactivated` tinyint(1) NOT NULL default '0',
   `lastlogin_succ` int(11) unsigned NOT NULL default '0',
   `lastlogin_fail` int(11) unsigned NOT NULL default '0',
@@ -488,7 +488,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (57, 'system', 'last_archive_run', '000000');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (58, 'ticket', 'enabled', '1');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (59, 'ticket', 'concurrently_open', '5');
-INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (60, 'ticket', 'noreply_name', 'SysCP Support');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (60, 'ticket', 'noreply_name', 'Froxlor Support');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (61, 'system', 'mod_fcgid_configdir', '/var/www/php-fcgi-scripts');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (62, 'system', 'mod_fcgid_tmpdir', '/var/customers/tmp');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (63, 'ticket', 'reset_cycle', '2');
@@ -500,7 +500,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (69, 'logger', 'severity', '1');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (70, 'system','ssl_cert_file','/etc/apache2/apache2.pem');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (71, 'system','use_ssl','1');
-INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (72, 'system','openssl_cnf','[ req ]\r\ndefault_bits = 1024\r\ndistinguished_name = req_distinguished_name\r\nattributes = req_attributes\r\nprompt = no\r\noutput_password =\r\ninput_password =\r\n[ req_distinguished_name ]\r\nC = DE\r\nST = syscp\r\nL = syscp    \r\nO = Testcertificate\r\nOU = syscp        \r\nCN = @@domain_name@@\r\nemailAddress = @@email@@    \r\n[ req_attributes ]\r\nchallengePassword =\r\n');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (72, 'system','openssl_cnf','[ req ]\r\ndefault_bits = 1024\r\ndistinguished_name = req_distinguished_name\r\nattributes = req_attributes\r\nprompt = no\r\noutput_password =\r\ninput_password =\r\n[ req_distinguished_name ]\r\nC = DE\r\nST = froxlor\r\nL = froxlor    \r\nO = Testcertificate\r\nOU = froxlor        \r\nCN = @@domain_name@@\r\nemailAddress = @@email@@    \r\n[ req_attributes ]\r\nchallengePassword =\r\n');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (73, 'system', 'default_vhostconf', '');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (74, 'system', 'mail_quota_enabled', '0');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (75, 'system', 'mail_quota', '100');
@@ -509,7 +509,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (78, 'system', 'webalizer_enabled', '1');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (79, 'system', 'awstats_enabled', '0');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (80, 'system', 'awstats_domain_file', '/etc/awstats/');
-INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (81, 'system', 'awstats_model_file', '/etc/awstats/awstats.model.conf.syscp');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (81, 'system', 'awstats_model_file', '/etc/awstats/awstats.model.conf.froxlor');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (82, 'dkim', 'dkim_prefix', '/etc/postfix/dkim/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (83, 'dkim', 'dkim_domains', 'domains');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (84, 'dkim', 'dkim_dkimkeys', 'dkim-keys.conf');
@@ -547,6 +547,8 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (116, 'system','ssl_key_file','/etc/apache2/apache2.key');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (117, 'system','ssl_ca_file','');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (118, 'panel', 'frontend', 'froxlor');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (119, 'spf', 'use_spf', '0');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (120, 'spf', 'spf_entry', '@	IN	TXT	"v=spf1 a mx -all"');
 
 # --------------------------------------------------------
 

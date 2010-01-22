@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta name="Publisher" content="SysCP" />
+    <meta name="Publisher" content="Froxlor" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
-    <title>Attention: SysCP has not been confiured yet!</title>
+    <title>Attention: Froxlor has not been configured yet!</title>
         <style type="text/css">
         body {
                 font-family: Verdana, Helvetica, sans-serif;
@@ -55,12 +55,12 @@
 
         <div class="default">
                 <ul>
-                        <li>You have to <a href="./install/install.php">configure SysCP</a> first.</li>
+                        <li>You have to <a href="./install/install.php">configure Froxlor</a> first.</li>
                 </ul>
         </div>
 
         <div class="footer">
-                <ul><li>&copy; 2003-2009 by <a href="http://www.syscp.org">the SysCP Team</a></li></ul>
+                <ul><li>&copy; 2009-2010 by <a href="http://www.froxlor.org">the Froxlor Team</a></li></ul>
         </div>
 
 </body>

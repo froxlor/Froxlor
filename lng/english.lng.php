@@ -252,7 +252,7 @@ $lng['question']['extras_reallydelete'] = 'Do you really want to delete the dire
 $lng['question']['extras_reallydelete_pathoptions'] = 'Do you really want to delete the path options for %s?';
 $lng['question']['ftp_reallydelete'] = 'Do you really want to delete the FTP account %s?';
 $lng['question']['mysql_reallydelete'] = 'Do you really want to delete the database %s? This cannot be undone!';
-$lng['question']['admin_configs_reallyrebuild'] = 'Do you really want to rebuild your apache and bind config files?';
+$lng['question']['admin_configs_reallyrebuild'] = 'Do you really want to rebuild all config files?';
 
 /**
  * Mails
@@ -1218,10 +1218,6 @@ $lng['admin']['webserver'] = 'Webserver';
 $lng['error']['admin_domain_emailsystemhostname'] = 'The server-hostname cannot be used as email-domain.';
 $lng['aps']['license_link'] = 'Link to the license';
 
-// ADDED IN 1.4.2.1 
-$lng['admin']['thankyou'] = 'Thank you';
-$lng['admin']['contributors'] = 'All these people contributed to the Froxlor Project (no particular order)';
-
 // ADDED IN 1.4.2.1-1
 
 $lng['mysql']['mysql_server'] = 'MySQL-Server';
@@ -1245,4 +1241,11 @@ $lng['error']['errorwhensaving'] = 'An error occured when saving the field %s';
 $lng['success']['success'] = 'Information';
 $lng['success']['clickheretocontinue'] = 'Click here to continue';
 $lng['success']['settingssaved'] = 'The settings have been successfully saved.';
+
+// ADDED IN FROXLOR 0.9
+
+$lng['admin']['spfsettings'] = 'Domain SPF settings';
+$lng['spf']['use_spf'] = 'Activate SPF for domains?';
+$lng['spf']['spf_entry'] = 'SPF entry for all domains';
+
 ?>

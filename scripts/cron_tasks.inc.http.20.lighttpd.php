@@ -32,6 +32,7 @@ class lighttpd
 	private $db = false;
 	private $logger = false;
 	private $debugHandler = false;
+	private $idnaConvert = false;
 	private $settings = array();
 
 	//	protected
@@ -42,11 +43,12 @@ class lighttpd
 	public $mod_accesslog_loaded = "0";
 	protected $lighttpd_data = array();
 
-	function __construct($db, $logger, $debugHandler, $settings)
+	function __construct($db, $logger, $debugHandler, $idnaConvert, $settings)
 	{
 		$this->db = $db;
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
+		$this->idnaConvert = $idnaConvert;
 		$this->settings = $settings;
 	}
 
@@ -77,7 +79,7 @@ class lighttpd
 
 			fwrite($this->debugHandler, '  lighttpd::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ip . ":" . $port);
-			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/10_syscp_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
+			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 			$this->lighttpd_data[$vhost_filename].= '$SERVER["socket"] == "' . $ip . ':' . $port . '" {' . "\n";
 
 			if($row_ipsandports['listen_statement'] == '1')
@@ -159,6 +161,10 @@ class lighttpd
 	{
 	}
 
+	protected function composePhpOptions()
+	{
+	}
+
 	protected function createLighttpdHosts($ip, $port, $ssl, $vhost_filename)
 	{
 		$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `ip`='" . $ip . "' AND `port`='" . $port . "'";
@@ -235,6 +241,7 @@ class lighttpd
 		$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
 		$vhost_content.= $this->create_htaccess($domain);
 		$vhost_content.= $this->create_pathOptions($domain);
+		$vhost_content.= $this->composePhpOptions($domain);
 		$vhost_content.= $this->getLogFiles($domain);
 		$vhost_content.= '}' . "\n";
 		return $vhost_content;
@@ -393,6 +400,7 @@ class lighttpd
 			}
 			else
 			{
+				$server_string[] = $domain_name;
 			}
 		}
 
@@ -445,7 +453,13 @@ class lighttpd
 		}
 
 		unset($data);
-		$servernames_text = '$HTTP["host"] =~ "' . $servernames_text . '"';
+
+		if($servernames_text != '') {
+			$servernames_text = '$HTTP["host"] =~ "' . $servernames_text . '"';
+		} else {
+			$servernames_text = '$HTTP["host"] == "' . $domain['domain'] . '"';
+		}
+
 		return $servernames_text;
 	}
 
@@ -464,11 +478,21 @@ class lighttpd
 			if($ssl === false
 			&& $domain['ssl_redirect'] == '1')
 			{
-				$webroot_text.= '  url.redirect = ( "^/(.*)" => "https://' . $domain['domain'] . '/$1" )' . "\n";
+				$redirect_domain = $this->idnaConvert->encode('https://' . $domain['domain']);
+				$webroot_text.= '  url.redirect = ('."\n";
+				$webroot_text.= "\t" . '"^/(.*)" => "' . $redirect_domain . '/$1",' . "\n";
+				$webroot_text.= "\t" . '"" => "' . $redirect_domain . '",' . "\n";
+				$webroot_text.= "\t" . '"/" => "' . $redirect_domain . '"' . "\n";
+				$webroot_text.= '  )'."\n";
 			}
 			elseif(preg_match("#^https?://#i", $domain['documentroot']))
 			{
-				$webroot_text.= '  url.redirect = ( "^/(.*)" => "' . $domain['documentroot'] . '/$1" )' . "\n";
+				$redirect_domain = $this->idnaConvert->encode($domain['documentroot']);
+				$webroot_text.= '  url.redirect = ('."\n";
+				$webroot_text.= "\t" . '"^/(.*)" => "' . $redirect_domain . '/$1",' . "\n";
+				$webroot_text.= "\t" . '"" => "' . $redirect_domain . '",' . "\n";
+				$webroot_text.= "\t" . '"/" => "' . $redirect_domain . '"' . "\n";
+				$webroot_text.= '  )'."\n";
 			}
 			else
 			{
@@ -553,7 +577,7 @@ class lighttpd
 
 	private function wipeOutOldConfigs()
 	{
-		fwrite($this->debugHandler, '  apache::wipeOutOldConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n");
+		fwrite($this->debugHandler, '  lighttpd::wipeOutOldConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost']);
 
 		if(isConfigDir($this->settings['system']['apacheconf_vhost'])
@@ -567,10 +591,10 @@ class lighttpd
 				if($vhost_filename != '.'
 				&& $vhost_filename != '..'
 				&& !in_array($vhost_filename, $this->known_filenames)
-				&& preg_match('/^(10|20|30)_syscp_ipandport_(.+)\.conf$/', $vhost_filename)
+				&& preg_match('/^(10|20|30)_froxlor_ipandport_(.+)\.conf$/', $vhost_filename)
 				&& file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
 				{
-					fwrite($this->debugHandler, '  apache::wipeOutOldConfigs: unlinking ' . $vhost_filename . "\n");
+					fwrite($this->debugHandler, '  lighttpd::wipeOutOldConfigs: unlinking ' . $vhost_filename . "\n");
 					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $vhost_filename);
 					unlink(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename));
 				}

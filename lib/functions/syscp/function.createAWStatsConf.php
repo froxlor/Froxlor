@@ -52,7 +52,7 @@ function createAWStatsConf($logFile, $siteDomain, $hostAliases)
 	// File names
 
 	$domain_file = '/etc/awstats/awstats.' . $siteDomain . '.conf';
-	$model_file = '/etc/awstats/awstats.model.conf.syscp';
+	$model_file = '/etc/awstats/awstats.model.conf.froxlor';
 
 	// Test if the file exists
 

@@ -84,7 +84,7 @@ if($page == 'overview')
 	if((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes')
 	   || (isset($lookfornewversion) && $lookfornewversion == 'yes'))
 	{
-		$latestversion = @file('http://version.syscp.org/SysCP/legacy/' . $version . '-' . $dbversion );
+		$latestversion = @file('http://version.froxlor.org/legacy/' . $version);
 
 		if(is_array($latestversion)
 		   && count($latestversion) >= 2)
@@ -103,7 +103,7 @@ if($page == 'overview')
 		}
 		else
 		{
-			redirectTo('http://version.syscp.org/SysCP/legacy/' . $version . '-' . $dbversion . '/pretty', NULL);
+			redirectTo('http://version.froxlor.org/legacy/' . $version . '/pretty', NULL);
 		}
 	}
 	else

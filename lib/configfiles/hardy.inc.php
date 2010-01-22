@@ -60,7 +60,7 @@ return Array(
 						'label' => 'PowerDNS',
 						'files' => Array(
 							'etc_powerdns_pdns.conf' => '/etc/powerdns/pdns.conf',
-							'etc_powerdns_pdns-syscp.conf' => '/etc/powerdns/pdns_syscp.conf',
+							'etc_powerdns_pdns-froxlor.conf' => '/etc/powerdns/pdns_froxlor.conf',
 						),
 						'restart' => Array(
 							'/etc/init.d/pdns restart'
@@ -121,14 +121,14 @@ return Array(
 						),
 						'files' => Array(
 							'etc_exim4_conf.d_acl_30_exim4-config_check_rcpt.rul' => '/etc/exim4/conf.d/acl/30_exim4-config_check_rcpt.rul',
-							'etc_exim4_conf.d_auth_30_syscp-config' => '/etc/exim4/conf.d/auth/30_syscp-config',
-							'etc_exim4_conf.d_main_10_syscp-config_options' => '/etc/exim4/conf.d/main/10_syscp-config_options',
-							'etc_exim4_conf.d_router_180_syscp-config' => '/etc/exim4/conf.d/router/180_syscp-config',
-							'etc_exim4_conf.d_transport_30_syscp-config' => '/etc/exim4/conf.d/transport/30_syscp-config'
+							'etc_exim4_conf.d_auth_30_froxlor-config' => '/etc/exim4/conf.d/auth/30_froxlor-config',
+							'etc_exim4_conf.d_main_10_froxlor-config_options' => '/etc/exim4/conf.d/main/10_froxlor-config_options',
+							'etc_exim4_conf.d_router_180_froxlor-config' => '/etc/exim4/conf.d/router/180_froxlor-config',
+							'etc_exim4_conf.d_transport_30_froxlor-config' => '/etc/exim4/conf.d/transport/30_froxlor-config'
 						),
 						'commands_2' => Array(
 							'chmod o-rx /var/lib/exim4',
-							'chmod o-rx /etc/exim4/conf.d/main/10_syscp-config_options'
+							'chmod o-rx /etc/exim4/conf.d/main/10_froxlor-config_options'
 						),
 						'restart' => Array(
 							'/etc/init.d/exim4 restart'
@@ -204,20 +204,19 @@ return Array(
 					'cron' => Array(
 						'label' => 'Crond (cronscript)',
 						'files' => Array(
-							'etc_cron.d_syscp' => '/etc/cron.d/syscp'
+							'etc_cron.d_froxlor' => '/etc/cron.d/froxlor'
 						),
 						'restart' => Array(
 							'/etc/init.d/cron restart'
 						)
 					),
 					'xinetd' => Array(
-						'label' => 'xinet.d (syscp updates in realtime)',
+						'label' => 'xinet.d (froxlor updates in realtime)',
 						'commands' => Array(
-							'apt-get install xinetd',
-							'echo -e "syscp ' . $settings['system']['realtime_port'] . '/tcp # SysCP Realtime" >> /etc/services'
+							'apt-get install xinetd'
 						),
 						'files' => Array(
-							'etc_xinet.d_syscp' => '/etc/xinetd.d/syscp'
+							'etc_xinet.d_froxlor' => '/etc/xinetd.d/froxlor'
 						),
 						'restart' => Array(
 							'/etc/init.d/xinetd restart'
@@ -226,12 +225,12 @@ return Array(
 					'awstats' => Array(
 						'label' => 'Awstats',
 						'files' => Array(
-							($settings['system']['mod_log_sql'] == 1 ? 'etc_awstats_awstats.model_log_sql.conf.syscp' : 'etc_awstats_awstats.model.conf.syscp') => '/etc/awstats/awstats.model.conf.syscp',
+							($settings['system']['mod_log_sql'] == 1 ? 'etc_awstats_awstats.model_log_sql.conf.froxlor' : 'etc_awstats_awstats.model.conf.froxlor') => '/etc/awstats/awstats.model.conf.froxlor',
 							($settings['system']['mod_log_sql'] == 1 ? 'etc_cron.d_awstats_log_sql' : 'etc_cron.d_awstats') => '/etc/cron.d/awstats',
-							($settings['system']['webserver'] == 'lighttpd' ? 'etc_lighttpd_syscp-awstats.conf' : 'etc_apache_vhosts_05_awstats.conf') => ($settings['system']['webserver'] == 'lighttpd' ? '/etc/lighttpd/syscp-awstats.conf' : '/etc/apache2/sites-enabled/05_awstats.conf')
+							($settings['system']['webserver'] == 'lighttpd' ? 'etc_lighttpd_froxlor-awstats.conf' : 'etc_apache_vhosts_05_awstats.conf') => ($settings['system']['webserver'] == 'lighttpd' ? '/etc/lighttpd/froxlor-awstats.conf' : '/etc/apache2/sites-enabled/05_awstats.conf')
 						),
 						'commands' => Array(
-							($settings['system']['webserver'] == 'lighttpd' ? 'echo "include \"syscp-awstats.conf\"" >> /etc/lighttpd/lighttpd.conf' : '')
+							($settings['system']['webserver'] == 'lighttpd' ? 'echo "include \"froxlor-awstats.conf\"" >> /etc/lighttpd/lighttpd.conf' : '')
 						),
 						'restart' => Array(
 							($settings['system']['webserver'] == 'lighttpd' ? '/etc/init.d/lighttpd restart' : '/etc/init.d/apache2 restart')

@@ -26,10 +26,14 @@ if(@php_sapi_name() != 'cli'
 
 class apache
 {
-	protected $db = false;
-	protected $logger = false;
-	protected $debugHandler = false;
-	protected $settings = array();
+	private $db = false;
+	private $logger = false;
+	private $debugHandler = false;
+	private $idnaConvert = false;
+	private $settings = array();
+	
+	//	protected
+		
 	protected $known_vhostfilenames = array();
 	protected $known_diroptionsfilenames = array();
 	protected $known_htpasswdsfilenames = array();
@@ -37,11 +41,12 @@ class apache
 	protected $diroptions_data = array();
 	protected $htpasswds_data = array();
 
-	public function __construct($db, $logger, $debugHandler, $settings)
+	public function __construct($db, $logger, $debugHandler, $idnaConvert, $settings)
 	{
 		$this->db = $db;
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
+		$this->idnaConvert = $idnaConvert;
 		$this->settings = $settings;
 	}
 
@@ -293,7 +298,7 @@ class apache
 
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					$stats_text.= createAWStatsVhost($domain['domain']);
+					$stats_text.= createAWStatsVhost($domain['domain'], $this->settings);
 				}
 			}
 			else
@@ -302,7 +307,7 @@ class apache
 
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					$stats_text.= createAWStatsVhost($domain['parentdomain']);
+					$stats_text.= createAWStatsVhost($domain['parentdomain'], $this->settings);
 				}
 			}
 		}
@@ -315,7 +320,7 @@ class apache
 
 			if($this->settings['system']['awstats_enabled'] == '1')
 			{
-				$stats_text.= createAWStatsVhost($domain['domain']);
+				$stats_text.= createAWStatsVhost($domain['domain'], $this->settings);
 			}
 		}
 
@@ -482,7 +487,7 @@ class apache
 
 		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
 		{
-			$vhost_content.= '  Redirect 301 / ' . $domain['documentroot'] . "\n";
+			$vhost_content.= '  Redirect 301 / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
 		}
 		else
 		{

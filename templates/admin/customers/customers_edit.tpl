@@ -104,7 +104,7 @@ $header
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['customer']['traffic']}: *</td>
-				<td class="main_field_display" nowrap="nowrap"><input type="text" class="textul" name="traffic" value="{$result['traffic']}" maxlength="3" />&nbsp;{$traffic_ul}</td>
+				<td class="main_field_display" nowrap="nowrap"><input type="text" class="textul" name="traffic" value="{$result['traffic']}" maxlength="4" />&nbsp;{$traffic_ul}</td>
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['customer']['subdomains']}: *</td>

@@ -16,7 +16,7 @@ $header
 		</if>
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle" colspan="3"><b><img src="images/title.gif" alt="" />&nbsp;SysCP&nbsp;-&nbsp;Login</b></td>
+				<td class="maintitle" colspan="3"><b><img src="images/title.gif" alt="" />&nbsp;Froxlor&nbsp;-&nbsp;Login</b></td>
 			</tr>
 			<tr>
 				<td rowspan="3" class="field_name_center"><img src="images/login.gif" alt="" /></td>

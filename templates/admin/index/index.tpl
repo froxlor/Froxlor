@@ -142,12 +142,6 @@ $header
 			<td class="field_name_border_left" colspan="2">$lookfornewversion_addinfo</td>
 		</tr>
 		</if>
-		<tr>
-			<td colspan="2" class="maintitle"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['thankyou']}</b></td>
-		</tr>
-		<tr>
-			<td class="field_name_border_left" colspan="2"><b>{$lng['admin']['contributors']}:</b><br />Florian Lippert, Tim Zielosko, Martin Burchert, Ron Brand, Michael Duergner, Wolfgang Ziegler, Patrick Brueckner, Florian Aders, Luca Longinotti, Manuel Bernhardt, Janky Jay, Thomas Peterhans, Benjamin B&ouml;rngen-Schmidt, Philipp Haefelfinger, Michael Kaufmannk, Sven Skrabal</td>
-		</tr>
 	</table>
 	<br />
 	<br />

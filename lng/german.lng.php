@@ -252,7 +252,7 @@ $lng['question']['extras_reallydelete'] = 'Wollen Sie den Verzeichnisschutz f&uu
 $lng['question']['extras_reallydelete_pathoptions'] = 'Wollen Sie die Optionen f&uuml;r den Pfad %s wirklich l&ouml;schen?';
 $lng['question']['ftp_reallydelete'] = 'Wollen Sie das FTP-Benutzerkonto %s wirklich l&ouml;schen?';
 $lng['question']['mysql_reallydelete'] = 'Wollen Sie die Datenbank %s wirklich l&ouml;schen?<br />ACHTUNG! Alle Daten gehen unwiderruflich verloren!';
-$lng['question']['admin_configs_reallyrebuild'] = 'Wollen Sie wirklich Ihre Apache und Bind Konfigurationsdateien neu erstellen lassen?';
+$lng['question']['admin_configs_reallyrebuild'] = 'Wollen Sie wirklich alle Konfigurationsdateien neu erstellen lassen?';
 
 /**
  * Mails
@@ -270,7 +270,7 @@ $lng['mails']['createcustomer']['subject'] = 'Kontoinformationen';
 $lng['admin']['overview'] = '&Uuml;bersicht';
 $lng['admin']['ressourcedetails'] = 'Verbrauchte Ressourcen';
 $lng['admin']['systemdetails'] = 'Systemdetails';
-$lng['admin']['syscpdetails'] = 'SysCP-Details';
+$lng['admin']['syscpdetails'] = 'Froxlor-Details';
 $lng['admin']['installedversion'] = 'Installierte Version';
 $lng['admin']['latestversion'] = 'Neueste Version';
 $lng['admin']['lookfornewversion']['clickhere'] = 'per Webservice abfragen';
@@ -1222,8 +1222,10 @@ $lng['admin']['webserver'] = 'Webserver';
 $lng['error']['admin_domain_emailsystemhostname'] = 'Der Server-Hostname kann leider nicht als E-Mail-Domain verwendet werden.';
 $lng['aps']['license_link'] = 'Link zur Lizenz';
 
-// ADDED IN 1.4.2.1 
-$lng['admin']['thankyou'] = 'Vielen Dank';
-$lng['admin']['contributors'] = 'Diese Leute haben zum Froxlor Projekt beigetragen (keine besondere Ordnung)';
+// ADDED IN FROXLOR 0.9
+
+$lng['admin']['spfsettings'] = 'Domain SPF Einstellungen';
+$lng['spf']['use_spf'] = 'Aktiviere SPF f&uuml;r Domains?';
+$lng['spf']['spf_entry'] = 'SPF Eintrag f&uuml;r alle Domains';
 
 ?>

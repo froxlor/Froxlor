@@ -9,7 +9,7 @@
 						 {$version}
 					</if>
 					&copy; 2009-2010 by <a href="http://www.froxlor.org/" target="_blank">the Froxlor Team</a>
-					<br />Theme: Luca Piona and Luca Longinotti
+					<br />Theme based on work by: Luca Piona and Luca Longinotti
 					<if $lng['translator'] != ''>
 					<br />{$lng['panel']['translator']}: {$lng['translator']}
 					</if>

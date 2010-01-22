@@ -1,0 +1,13 @@
+maildir_froxlor:
+  debug_print = "T: maildir_froxlor for $local_part@$domain"
+  driver = appendfile
+  create_directory
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+  maildir_format
+  directory_mode = 0770
+  mode = 0660
+  mode_fail_narrower = false
+  user = 2000
+  group = 2000

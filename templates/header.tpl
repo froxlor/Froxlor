@@ -7,7 +7,7 @@
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	</if>
 	<link rel="stylesheet" href="templates/main.css" type="text/css" />
-	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>SysCP</title>
+	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor</title>
 </head>
 <body style="margin: 0; padding: 0;"<if !isset($userinfo['loginname']) && !(isset($userinfo['loginname']) && $userinfo['loginname'] == '')> onload="document.loginform.loginname.focus()"</if>>
 <!--

@@ -18,7 +18,7 @@ $header
 		<if $settings['panel']['allow_preset'] == '1'>
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle" colspan="3"><b><img src="images/title.gif" alt="" />&nbsp;SysCP&nbsp;-&nbsp;{$lng['login']['presend']}</b></td>
+				<td class="maintitle" colspan="3"><b><img src="images/title.gif" alt="" />&nbsp;Froxlor&nbsp;-&nbsp;{$lng['login']['presend']}</b></td>
 			</tr>
 			<tr>
 				<td rowspan="2" class="field_name_center"><img src="images/login.gif" alt="" /></td>

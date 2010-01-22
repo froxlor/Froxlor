@@ -11,7 +11,7 @@ acl_check_rcpt:
 
   .ifdef CHECK_RCPT_LOCAL_LOCALPARTS
   deny
-    domains = +local_domains:+syscp_domain
+    domains = +local_domains:+froxlor_domain
     local_parts = CHECK_RCPT_LOCAL_LOCALPARTS
     message = restricted characters in address
   .endif
@@ -29,7 +29,7 @@ acl_check_rcpt:
     .else
     local_parts = CHECK_RCPT_POSTMASTER
     .endif
-    domains = +local_domains:+syscp_domain
+    domains = +local_domains:+froxlor_domain
 
   deny
     message = sender envelope address $sender_address is locally blacklisted here. If you think this is wrong, get in touch with postmaster
@@ -95,7 +95,7 @@ acl_check_rcpt:
   .endif
 
   accept
-    domains = +local_domains:+syscp_domain
+    domains = +local_domains:+froxlor_domain
     endpass
     message = unknown user
     verify = recipient

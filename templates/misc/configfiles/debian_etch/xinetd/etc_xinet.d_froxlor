@@ -1,0 +1,22 @@
+service froxlor
+{
+        id              = froxlor
+        socket_type     = dgram
+        protocol        = udp
+        wait            = no
+
+        user            = root
+        server          = /usr/bin/php
+        server_args     = -q /var/www/froxlor/scripts/cron_tasks.php
+
+        bind 		= 127.0.0.1
+        only_from       = 127.0.0.1
+
+        type = UNLISTED
+        port = <REALTIME_PORT>
+        disable = no
+
+        log_type = SYSLOG daemon info
+        log_on_success = HOST DURATION
+        log_on_failure = HOST ATTEMPT
+}

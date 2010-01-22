@@ -99,14 +99,14 @@ function page_header()
 </head>
 	<body style="margin: 0; padding: 0;" onload="document.loginform.loginname.focus()">
 		<!--
-			We request you retain the full copyright notice below including the link to www.syscp.org.
+			We request you retain the full copyright notice below including the link to www.froxlor.org.
 			This not only gives respect to the large amount of time given freely by the developers
-			but also helps build interest, traffic and use of SysCP. If you refuse
+			but also helps build interest, traffic and use of Froxlor. If you refuse
 			to include even this then support on our forums may be affected.
-			The SysCP Team : 2003-2009
+			The Froxlor Team : 2009-2010
 		// -->
 		<!--
-			Templates by Luca Piona (info@havanastudio.ch) and Luca Longinotti (chtekk@gentoo.org)
+			Templates based on work by Luca Piona (info@havanastudio.ch) and Luca Longinotti (chtekk@gentoo.org)
 		// -->
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
@@ -132,7 +132,7 @@ function page_footer()
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
 				<td width="100%" class="footer">
-					<br />SysCP &copy; 2003-2009 by <a href="http://www.syscp.org/" target="_blank">the SysCP Team</a>
+					<br />Froxlor &copy; 2009-2010 by <a href="http://www.froxlor.org/" target="_blank">the Froxlor Team</a>
 					<br /><br/>
 				</td>
 			</tr>
@@ -370,6 +370,21 @@ if(isset($_POST['installstep'])
 		</tr>
 <?php
 	$_die = false;
+	
+	// check for correct php version
+	status_message('begin', $lng['install']['phpversion']);
+
+	if(version_compare("5.2.0", PHP_VERSION, ">="))
+	{
+		status_message('red', $lng['install']['notinstalled']);
+		$_die = true;
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
+
+
 	status_message('begin', $lng['install']['phpmysql']);
 
 	if(!extension_loaded('mysql'))
@@ -394,6 +409,18 @@ if(isset($_POST['installstep'])
 		status_message('green', 'OK');
 	}
 
+	status_message('begin', $lng['install']['phpposix']);	
+
+	if(!extension_loaded('posix'))
+	{
+		status_message('red', $lng['install']['notinstalled']);
+		$_die = true;
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
+	
 	status_message('begin', $lng['install']['phpbcmath']);
 
 	if(!extension_loaded('bcmath'))
@@ -422,7 +449,7 @@ if(isset($_POST['installstep'])
 
 	if($_die)
 	{
-		status_message('begin', $lng['install']['diedbecauseofextensions']);
+		status_message('begin', $lng['install']['diedbecauseofrequirements']);
 		die();
 	}
 
@@ -442,7 +469,7 @@ if(isset($_POST['installstep'])
 
 	if($result)
 	{
-		$filename = "/tmp/syscp_backup_" . date(YmdHi) . ".sql";
+		$filename = "/tmp/froxlor_backup_" . date(YmdHi) . ".sql";
 
 		if(is_file("/usr/bin/mysqldump"))
 		{
@@ -475,7 +502,7 @@ if(isset($_POST['installstep'])
 	$db_root->query("FLUSH PRIVILEGES;");
 	status_message('green', 'OK');
 
-	//then we have to create a new user and database for the syscp unprivileged mysql access
+	//then we have to create a new user and database for the froxlor unprivileged mysql access
 
 	status_message('begin', $lng['install']['create_mysqluser_and_db']);
 	$db_root->query("CREATE DATABASE `" . $db_root->escape(str_replace('`', '', $mysql_database)) . "`");
@@ -504,13 +531,13 @@ if(isset($_POST['installstep'])
 	$mysql_access_host = implode(',', $mysql_access_host_array);
 	status_message('green', 'OK');
 
-	//now a new database and the new syscp-unprivileged-mysql-account have been created and we can fill it now with the data.
+	//now a new database and the new froxlor-unprivileged-mysql-account have been created and we can fill it now with the data.
 
 	status_message('begin', $lng['install']['testing_new_db']);
 	$db = new db($mysql_host, $mysql_unpriv_user, $mysql_unpriv_pass, $mysql_database);
 	status_message('green', 'OK');
 	status_message('begin', $lng['install']['importing_data']);
-	$db_schema = './syscp.sql';
+	$db_schema = './froxlor.sql';
 	$sql_query = @file_get_contents($db_schema, 'r');
 	$sql_query = remove_remarks($sql_query);
 	$sql_query = split_sql_file($sql_query, ';');
@@ -555,14 +582,14 @@ if(isset($_POST['installstep'])
 	{
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/apache2/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_vhost'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/apache2/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_diroptions'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/apache2/syscp-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/apache2/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/apache2 reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
 	}
 	elseif($webserver == "lighttpd")
 	{
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/conf-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_vhost'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/syscp-diroptions/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_diroptions'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/syscp-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/froxlor-diroptions/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_diroptions'");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/lighttpd reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/lighttpd.pem' WHERE `settinggroup` = 'system' AND `varname` = 'ssl_cert_file'");
 	}
@@ -632,7 +659,7 @@ if(isset($_POST['installstep'])
 
 	status_message('begin', $lng['install']['creating_configfile']);
 	$userdata = "<?php\n";
-	$userdata.= "//automatically generated userdata.inc.php for SysCP\n";
+	$userdata.= "//automatically generated userdata.inc.php for Froxlor\n";
 	$userdata.= "\$sql['host']='" . addcslashes($mysql_host, "'\\") . "';\n";
 	$userdata.= "\$sql['user']='" . addcslashes($mysql_unpriv_user, "'\\") . "';\n";
 	$userdata.= "\$sql['password']='" . addcslashes($mysql_unpriv_pass, "'\\") . "';\n";

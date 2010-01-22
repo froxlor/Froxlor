@@ -78,7 +78,7 @@ if(!is_null($month)
 	                     AND `month` = '" . $month . "'
 	                     AND `year` = '" . $year . "'");
 	rsort($row = mysql_fetch_row($result));
-	$traf['max'] = $row[0];
+	$traf['max'] = ($row[0] > $row[1] ? ($row[0] > $row[2] ? $row[0] : $row[2]) : ($row[1] > $row[2] ? $row[1] : $row[2]));;
 	$result = $db->query("SELECT
                                 SUM(`http`) as 'http', SUM(`ftp_up`) AS 'ftp_up', SUM(`ftp_down`) as 'ftp_down', SUM(`mail`) as 'mail',
                                 `day`, `month`, `year`
@@ -185,7 +185,7 @@ else
 	                      WHERE `customerid` = '" . $userinfo['customerid'] . "'
 	                      GROUP BY CONCAT(`year`,`month`) ORDER BY CONCAT(`year`,`month`) DESC LIMIT 12) ORDER BY sum DESC LIMIT 1");
 	$row = $db->fetch_array($result);
-	$traf['max'] = $row['sum'];
+	$traf['max'] = ($row[0] > $row[1] ? ($row[0] > $row[2] ? $row[0] : $row[2]) : ($row[1] > $row[2] ? $row[1] : $row[2]));;
 	$result = $db->query("SELECT `month`, `year`, SUM(`http`) AS http, SUM(`ftp_up`) AS ftp_up, SUM(`ftp_down`) AS ftp_down, SUM(`mail`) AS mail
 	                     FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid` = '" . $userinfo['customerid'] . "'
 	                     GROUP BY CONCAT(`year`,`month`) ORDER BY CONCAT(`year`,`month`) DESC LIMIT 12");

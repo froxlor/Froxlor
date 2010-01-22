@@ -220,18 +220,12 @@ milter_default_action = accept\n" >> /etc/postfix/main.cf'
 					'cron' => Array(
 						'label' => 'Crond (cronscript)',
 						'files' => Array(
-							'etc_php_syscp-cronjob_php.ini' => '/etc/php/syscp-cronjob/php.ini',
-							'etc_cron.d_syscp' => '/etc/cron.d/syscp'
+							'etc_cron.d_froxlor' => '/etc/cron.d/froxlor'
 						),
 						'commands' => Array(
-							'touch /etc/cron.d/syscp',
-							'chown root:0 /etc/cron.d/syscp',
-							'chmod 0640 /etc/cron.d/syscp',
-							'mkdir -p /etc/php/syscp-cronjob',
-							'touch /etc/php/syscp-cronjob/php.ini',
-							'chown -R root:0 /etc/php/syscp-cronjob',
-							'chmod 0750 /etc/php/syscp-cronjob',
-							'chmod 0640 /etc/php/syscp-cronjob/php.ini'
+							'touch /etc/cron.d/froxlor',
+							'chown root:0 /etc/cron.d/froxlor',
+							'chmod 0640 /etc/cron.d/froxlor',
 						),
 						'restart' => Array(
 							'rc-update add vixie-cron default',
@@ -239,13 +233,12 @@ milter_default_action = accept\n" >> /etc/postfix/main.cf'
 						)
 					),
 					'xinetd' => Array(
-						'label' => 'xinet.d (syscp updates in realtime)',
+						'label' => 'xinet.d (froxlor updates in realtime)',
 						'commands' => Array(
-							'emerge -av xinetd',
-							'echo -e "syscp ' . $settings['system']['realtime_port'] . '/tcp # SysCP Realtime" >> /etc/services'
+							'emerge -av xinetd'
 						),
 						'files' => Array(
-							'etc_xinet.d_syscp' => '/etc/xinetd.d/syscp'
+							'etc_xinet.d_froxlor' => '/etc/xinetd.d/froxlor'
 						),
 						'restart' => Array(
 							'/etc/init.d/xinetd restart'
@@ -254,12 +247,12 @@ milter_default_action = accept\n" >> /etc/postfix/main.cf'
 					'awstats' => Array(
 						'label' => 'Awstats',
 						'files' => Array(
-							($settings['system']['mod_log_sql'] == 1 ? 'etc_awstats_awstats.model_log_sql.conf.syscp' : 'etc_awstats_awstats.model.conf.syscp') => '/etc/awstats/awstats.model.conf.syscp',
+							($settings['system']['mod_log_sql'] == 1 ? 'etc_awstats_awstats.model_log_sql.conf.froxlor' : 'etc_awstats_awstats.model.conf.froxlor') => '/etc/awstats/awstats.model.conf.froxlor',
 							($settings['system']['mod_log_sql'] == 1 ? 'etc_cron.d_awstats_log_sql' : 'etc_cron.d_awstats') => '/etc/cron.d/awstats',
-							($settings['system']['webserver'] == 'lighttpd' ? 'etc_lighttpd_syscp-awstats.conf' : 'etc_apache_vhosts_05_awstats.conf') => ($settings['system']['webserver'] == 'lighttpd' ? '/etc/lighttpd/syscp-awstats.conf' : '/etc/apache2/sites-enabled/05_awstats.conf')
+							($settings['system']['webserver'] == 'lighttpd' ? 'etc_lighttpd_froxlor-awstats.conf' : 'etc_apache_vhosts_05_awstats.conf') => ($settings['system']['webserver'] == 'lighttpd' ? '/etc/lighttpd/froxlor-awstats.conf' : '/etc/apache2/sites-enabled/05_awstats.conf')
 						),
 						'commands' => Array(
-							($settings['system']['webserver'] == 'lighttpd' ? 'echo "include \"syscp-awstats.conf\"" >> /etc/lighttpd/lighttpd.conf' : '')
+							($settings['system']['webserver'] == 'lighttpd' ? 'echo "include \"froxlor-awstats.conf\"" >> /etc/lighttpd/lighttpd.conf' : '')
 						),
 						'restart' => Array(
 							($settings['system']['webserver'] == 'lighttpd' ? '/etc/init.d/lighttpd restart' : '/etc/init.d/apache2 restart')

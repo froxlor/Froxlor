@@ -58,7 +58,7 @@ $lng['install']['syscp_succ_installed'] = 'SysCP wurde erfolgreich installiert.'
 $lng['install']['click_here_to_login'] = 'Hier geht es weiter zum Login-Fenster.';
 $lng['install']['phpmysql'] = 'Teste, ob die PHP MySQL-Erweiterung installiert ist...';
 $lng['install']['phpfilter'] = 'Teste, ob die PHP Filter-Erweiterung installiert ist...';
-$lng['install']['diedbecauseofextensions'] = 'Kann SysCP ohne diese Erweiterungen nicht installieren! Breche ab...';
+$lng['install']['diedbecauseofrequirements'] = 'Kann SysCP ohne diese Voraussetzungen nicht installieren! Breche ab...';
 $lng['install']['notinstalled'] = 'nicht installiert!';
 $lng['install']['phpbcmath'] = 'Teste, ob die PHP bcmath-Erweiterung installiert ist...';
 $lng['install']['bcmathdescription'] = 'Traffic-Berechnungs bezogene Funktionen stehen nicht vollst&auml;ndig zur Verf&uuml;gung!';
@@ -72,5 +72,11 @@ $lng['install']['httpgroup'] = 'HTTP Gruppenname';
  */
 
 $lng['install']['webserver'] = 'Webserver';
+
+/*
+ * Added in Froxlor 0.9
+ */
+$lng['install']['phpversion'] = 'Pr&uuml;fe PHP Version >= 5.2';
+$lng['install']['phpposix'] = 'Teste, ob die PHP Posix-Erweiterung installiert ist...';
 
 ?>

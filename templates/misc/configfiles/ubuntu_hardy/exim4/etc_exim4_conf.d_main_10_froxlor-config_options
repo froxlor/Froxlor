@@ -1,0 +1,20 @@
+hide mysql_servers = <SQL_HOST>/<SQL_DB>/<SQL_UNPRIVILEGED_USER>/<SQL_UNPRIVILEGED_PASSWORD>
+
+FROXLOR_LOCAL_DOMAIN	= SELECT domain FROM panel_domains WHERE domain = '${quote_mysql:$domain}' AND isemaildomain = '1'
+
+FROXLOR_MAILALIAS		= SELECT REPLACE(destination,' ',',') FROM mail_virtual WHERE \
+				(( email = '${quote_mysql:$local_part}@${quote_mysql:$domain}' ) \
+				OR ( email = '@${quote_mysql:$domain}' AND iscatchall > 0 )) \
+				AND destination <> '' AND destination <> ' ' ORDER BY iscatchall ASC LIMIT 1
+
+FROXLOR_MAILUSER		= SELECT CONCAT(homedir,maildir) FROM mail_users WHERE \
+				email = '${quote_mysql:$local_part}@${quote_mysql:$domain}' AND postfix = 'y'
+
+FROXLOR_PARENT_DOMAIN	= SELECT parent.domain FROM `panel_domains` AS parent INNER JOIN panel_domains AS alias \
+				ON alias.domain = '${quote_mysql:$domain}' AND parent.id = alias.aliasdomain
+
+FROXLOR_AUTH_PLAIN	= SELECT password_enc FROM mail_users WHERE username = '${quote_mysql:$2}'
+
+FROXLOR_AUTH_LOGIN	= SELECT password_enc FROM mail_users WHERE username = '${quote_mysql:$1}'
+
+domainlist froxlor_domain = mysql;FROXLOR_LOCAL_DOMAIN

@@ -52,16 +52,22 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '')
 		$doupdate = true;
 	}
 
-	// Taken from https://wiki.syscp.org/contrib/realtime
-
 	if($doupdate === true
 	   && (int)$settings['system']['realtime_port'] !== 0)
 	{
 		$timeout = 15;
-		$socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+		$socket = @socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
 
 		if($socket !== false)
 		{
+			// create the request packet
+			$packet = chr(0) . chr(1) . 'RUN' . chr(0);
+			// UDP is connectionless, so we just send on it.
+			@socket_sendto($socket, $packet, strlen($packet), 0x100, '127.0.0.1', (int)$settings['system']['realtime_port']);			
+
+			/*
+			 * this is for TCP-Connections
+			 * 
 			$time = time();
 
 			while(!@socket_connect($socket, '127.0.0.1', (int)$settings['system']['realtime_port']))
@@ -80,7 +86,7 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '')
 					continue;
 				}
 			}
-
+			*/
 			@socket_close($socket);
 		}
 	}

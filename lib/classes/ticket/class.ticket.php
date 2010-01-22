@@ -135,7 +135,7 @@ class ticket
 	private function readData()
 	{
 		if(isset($this->tid)
-		   && $this->tid != - 1)
+		&& $this->tid != - 1)
 		{
 			$_ticket = $this->db->query_first('SELECT * FROM `' . TABLE_PANEL_TICKETS . '` WHERE `id` = "' . $this->tid . '"');
 			$this->Set('customer', $_ticket['customerid'], true, false);
@@ -161,7 +161,7 @@ class ticket
 
 	public function Insert()
 	{
-		$this->db->query("INSERT INTO `" . TABLE_PANEL_TICKETS . "` 
+		$this->db->query("INSERT INTO `" . TABLE_PANEL_TICKETS . "`
                 (`customerid`,  
                  `adminid`,
                  `category`, 
@@ -201,7 +201,7 @@ class ticket
 	{
 		// Update "main" ticket
 
-		$this->db->query('UPDATE `' . TABLE_PANEL_TICKETS . '` SET   
+		$this->db->query('UPDATE `' . TABLE_PANEL_TICKETS . '` SET
                 `priority` = "' . (int)$this->Get('priority') . '",  
                 `lastchange` = "' . (int)$this->Get('lastchange') . '", 
                 `status` = "' . (int)$this->Get('status') . '", 
@@ -256,7 +256,7 @@ class ticket
 		{
 			// Get e-mail message for customer
 
-			$usr = $this->db->query_first('SELECT `name`, `firstname`, `email` 
+			$usr = $this->db->query_first('SELECT `name`, `firstname`, `email`
                                FROM `' . TABLE_PANEL_CUSTOMERS . '` 
                                WHERE `customerid` = "' . (int)$customerid . '"');
 			$replace_arr = array(
@@ -272,13 +272,13 @@ class ticket
 			);
 		}
 
-		$result = $this->db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` 
+		$result = $this->db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
                                 WHERE `adminid`=\'' . (int)$this->userinfo['adminid'] . '\' 
                                 AND `language`=\'' . $this->db->escape($this->userinfo['def_language']) . '\' 
                                 AND `templategroup`=\'mails\' 
                                 AND `varname`=\'' . $template_subject . '\'');
 		$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $default_subject), $replace_arr));
-		$result = $this->db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` 
+		$result = $this->db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
                                 WHERE `adminid`=\'' . (int)$this->userinfo['adminid'] . '\' 
                                 AND `language`=\'' . $this->db->escape($this->userinfo['def_language']) . '\' 
                                 AND `templategroup`=\'mails\' 
@@ -325,7 +325,7 @@ class ticket
 	static public function addCategory($_db, $_category = null, $_admin = 1)
 	{
 		if($_category != null
-		   && $_category != '')
+		&& $_category != '')
 		{
 			$_db->query('INSERT INTO `' . TABLE_PANEL_TICKET_CATS . '` (`name`, `adminid`) VALUES ("' . $_db->escape($_category) . '", "' . (int)$_admin . '")');
 			return true;
@@ -341,10 +341,10 @@ class ticket
 	static public function editCategory($_db, $_category = null, $_id = 0)
 	{
 		if($_category != null
-		   && $_category != ''
-		   && $_id != 0)
+		&& $_category != ''
+		&& $_id != 0)
 		{
-			$_db->query('UPDATE `' . TABLE_PANEL_TICKET_CATS . '` SET `name` = "' . $_db->escape($_category) . '" 
+			$_db->query('UPDATE `' . TABLE_PANEL_TICKET_CATS . '` SET `name` = "' . $_db->escape($_category) . '"
                    WHERE `id` = "' . (int)$_id . '"');
 			return true;
 		}
@@ -360,7 +360,7 @@ class ticket
 	{
 		if($_id != 0)
 		{
-			$result = $_db->query_first('SELECT COUNT(`id`) as `numtickets` FROM `' . TABLE_PANEL_TICKETS . '` 
+			$result = $_db->query_first('SELECT COUNT(`id`) as `numtickets` FROM `' . TABLE_PANEL_TICKETS . '`
                                    WHERE `category` = "' . (int)$_id . '"');
 
 			if($result['numtickets'] == "0")
@@ -402,7 +402,7 @@ class ticket
 		{
 			$archived = array();
 			$counter = 0;
-			$result = $_db->query('SELECT *, 
+			$result = $_db->query('SELECT *,
                               (SELECT COUNT(`sub`.`id`) 
                                 FROM `' . TABLE_PANEL_TICKETS . '` `sub` 
                                 WHERE `sub`.`answerto` = `main`.`id`) as `ticket_answers`  
@@ -446,42 +446,42 @@ class ticket
 
 	static public function getArchiveSearchStatement($subject = NULL, $priority = NULL, $fromdate = NULL, $todate = NULL, $message = NULL, $customer = - 1, $admin = 1, $categories = NULL)
 	{
-		$query = 'SELECT `main`.*, 
+		$query = 'SELECT `main`.*,
                 (SELECT COUNT(`sub`.`id`) FROM `' . TABLE_PANEL_TICKETS . '` `sub` 
                  WHERE `sub`.`answerto` = `main`.`id`) as `ticket_answers` 
               FROM `' . TABLE_PANEL_TICKETS . '` `main` 
               WHERE `main`.`archived` = "1" AND `main`.`answerto` = "0" AND `main`.`adminid` = "' . (int)$admin . '"';
 
 		if($subject != NULL
-		   && $subject != '')
+		&& $subject != '')
 		{
 			$query.= 'AND `main`.`subject` LIKE "%' . $subject . '%" ';
 		}
 
 		if($priority != NULL
-		   && isset($priority[0])
-		   && $priority[0] != '')
+		&& isset($priority[0])
+		&& $priority[0] != '')
 		{
 			if(isset($priority[1])
-			   && $priority[1] != '')
+			&& $priority[1] != '')
 			{
 				if(isset($priority[2])
-				   && $priority[2] != '')
+				&& $priority[2] != '')
 				{
-					$query.= 'AND (`main`.`priority` = "1" 
+					$query.= 'AND (`main`.`priority` = "1"
                      OR `main`.`priority` = "2" 
                      OR `main`.`priority` = "3") ';
 				}
 				else
 				{
-					$query.= 'AND (`main`.`priority` = "1" 
+					$query.= 'AND (`main`.`priority` = "1"
                      OR `main`.`priority` = "2") ';
 				}
 			}
 			elseif(isset($priority[2])
-			       && $priority[2] != '')
+			&& $priority[2] != '')
 			{
-				$query.= 'AND (`main`.`priority` = "1" 
+				$query.= 'AND (`main`.`priority` = "1"
                      OR `main`.`priority` = "3") ';
 			}
 			else
@@ -490,13 +490,13 @@ class ticket
 			}
 		}
 		elseif($priority != NULL
-		       && isset($priority[1])
-		       && $priority[1] != '')
+		&& isset($priority[1])
+		&& $priority[1] != '')
 		{
 			if(isset($priority[2])
-			   && $priority[2] != '')
+			&& $priority[2] != '')
 			{
-				$query.= 'AND (`main`.`priority` = "2" 
+				$query.= 'AND (`main`.`priority` = "2"
                      OR `main`.`priority` = "3") ';
 			}
 			else
@@ -507,26 +507,26 @@ class ticket
 		elseif($priority != NULL)
 		{
 			if(isset($priority[3])
-			   && $priority[3] != '')
+			&& $priority[3] != '')
 			{
 				$query.= 'AND `main`.`priority` = "3" ';
 			}
 		}
 
 		if($fromdate != NULL
-		   && $fromdate > 0)
+		&& $fromdate > 0)
 		{
 			$query.= 'AND `main`.`lastchange` > "' . $fromdate . '" ';
 		}
 
 		if($todate != NULL
-		   && $todate > 0)
+		&& $todate > 0)
 		{
 			$query.= 'AND `main`.`lastchange` < "' . $todate . '" ';
 		}
 
 		if($message != NULL
-		   && $message != '')
+		&& $message != '')
 		{
 			$query.= 'AND `main`.`message` LIKE "%' . $message . '%" ';
 		}
@@ -546,7 +546,7 @@ class ticket
 			foreach($categories as $catid)
 			{
 				if(isset($catid)
-				   && $catid > 0)
+				&& $catid > 0)
 				{
 					$query.= '`main`.`category` = "' . $catid . '" OR ';
 				}
@@ -605,6 +605,27 @@ class ticket
 		}
 	}
 
+	private function convertLatin1ToHtml($str)
+	{
+		$html_entities = array (
+					"Ä" =>  "&Auml;",
+					"ä" =>  "&auml;",
+					"Ö" =>  "&Ouml;",
+					"ö" =>  "&ouml;",
+					"Ü" =>  "&Uuml;",
+					"ü" =>  "&uuml;",
+					"ß" =>  "&szlig;"
+					/*
+					 * @TODO continue this table for all the special-characters
+					 */
+		);
+
+		foreach ($html_entities as $key => $value) {
+			$str = str_replace($key, $value, $str);
+		}
+		return $str;
+	}
+
 	/**
 	 * Get a data-var
 	 */
@@ -643,7 +664,7 @@ class ticket
 	public function Set($_var = '', $_value = '', $_vartrusted = false, $_valuetrusted = false)
 	{
 		if($_var != ''
-		   && $_value != '')
+		&& $_value != '')
 		{
 			if(!$_vartrusted)
 			{
@@ -653,6 +674,11 @@ class ticket
 			if(!$_valuetrusted)
 			{
 				$_value = htmlspecialchars($_value);
+			}
+
+			if(strtolower($_var) == 'message' || strtolower($_var) == 'subject')
+			{
+				$_value = $this->convertLatin1ToHtml($_value);
 			}
 
 			$this->t_data[$_var] = $_value;

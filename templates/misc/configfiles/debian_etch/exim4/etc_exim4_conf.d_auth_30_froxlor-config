@@ -1,0 +1,30 @@
+### auth/30_froxlor-config
+#################################
+
+plain_server:
+  driver = plaintext
+  public_name = PLAIN
+  server_condition = "${if and { \
+                        {!eq{$2}{}} \
+                        {!eq{$3}{}} \
+                        {crypteq{$3}{${lookup mysql{FROXLOR_AUTH_PLAIN}{$value}fail}}} \
+                        } {yes}{no}}"
+  server_set_id = $2
+  server_prompts = :
+#   .ifndef AUTH_SERVER_ALLOW_NOTLS_PASSWORDS
+#   server_advertise_condition = ${if eq{$tls_cipher}{}{}{*}}
+#   .endif
+
+login_server:
+  driver = plaintext
+  public_name = LOGIN
+  server_prompts = "Username:: : Password::"
+  server_condition = "${if and { \
+                        {!eq{$1}{}} \
+                        {!eq{$2}{}} \
+                        {crypteq{$2}{${lookup mysql{FROXLOR_AUTH_LOGIN}{$value}fail}}} \
+                        } {yes}{no}}"
+  server_set_id = $1
+#   .ifndef AUTH_SERVER_ALLOW_NOTLS_PASSWORDS
+#   server_advertise_condition = ${if eq{$tls_cipher}{}{}{*}}
+#   .endif
