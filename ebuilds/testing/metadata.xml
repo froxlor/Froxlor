@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<herd>no-herd</herd>
+<maintainer>
+  <email>gentoo@froxlor.org</email>
+    <description>Upstream Maintainer</description>
+</maintainer>
+<longdescription>A PHP-based webhosting-oriented control panel for servers.</longdescription>
+<use>
+  <flag name='aps'>Support for the Application Packaging Standard</flag>
+  <flag name='autoresponder'>E-Mail Autoresponder Support for Customers</flag>
+  <flag name='bind'>Adds support for writing BIND configuration files</flag>
+  <flag name='domainkey'>Adds support for writing DKIM DNS-Records and
+	  Filters for them</flag>
+  <flag name='dovecot'>use Dovecot instead of Courier</flag>
+  <flag name='fcgid'>Adds support for FCGId</flag>
+  <flag name='lighttpd'>use ligHTTPd instead of Apache</flag>
+  <flag name='log'>Adds support for logging actions in the Panel</flag>
+  <flag name='mailquota'>Adds support for Quotas for the maildirs of
+	  Customers</flag>
+  <flag name='tickets'>Adds support for the Ticket System</flag>
+</use>
+</pkgmetadata>

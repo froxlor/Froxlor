@@ -1,12 +1,12 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="2"
 
-inherit eutils depend.php subversion 
+inherit eutils subversion depend.php
 
-KEYWORDS="~x86 ~amd64"
+KEYWORDS=""
 DESCRIPTION="A PHP-based webhosting-oriented control panel for servers."
 HOMEPAGE="http://www.froxlor.org/"
 LICENSE="GPL-2"
@@ -15,49 +15,46 @@ SLOT="0"
 IUSE="aps autoresponder bind domainkey dovecot fcgid lighttpd +log mailquota ssl +tickets"
 
 # we need that to set the standardlanguage later
-LANGS="bg ca cz de dk en es fr hu it nl pt ru se sl zh-cn"
+LANGS="bg ca cs de da en es fr hu it nl pt ru se sl zh_CN"
 for X in ${LANGS} ; do
 	IUSE="${IUSE} linguas_${X}"
 done
 
-ESVN_REPO_URI="https://svn.froxlor.org/trunk/"
+ESVN_REPO_URI="http://svn.froxlor.org/branches/d00p/"
 ESVN_PROJECT="froxlor"
 
 DEPEND="
 	>=mail-mta/postfix-2.4[mysql,ssl=]
 	sys-process/vixie-cron
 	dev-db/mysql
-	dev-lang/php[bcmath,cli,ctype,fastbuild,filter,ftp,gd,mysql,nls,pcre,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
+	dev-lang/php[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,pcre,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
 	net-ftp/proftpd[mysql,ssl=]
 	app-admin/webalizer
-	bind? ( net-dns/bind 
+	bind? ( net-dns/bind
 		domainkey? ( mail-filter/dkim-milter )
-		)
+	)
 	ssl? ( dev-libs/openssl )
-	lighttpd? ( www-servers/lighttpd[fastcgi,php,ssl=]
-			dev-lang/php[cgi,force-cgi-redirect]
-		    )
-	!lighttpd? ( www-servers/apache[ssl=] 
+	lighttpd? ( www-servers/lighttpd[fastcgi,php,ssl=] )
+	!lighttpd? ( www-servers/apache[ssl=]
 		     dev-lang/php[apache2]
-		    )
-	fcgid? ( dev-lang/php[cgi,force-cgi-redirect] 
+	)
+	fcgid? ( dev-lang/php[cgi,force-cgi-redirect]
 		 www-servers/apache[suexec]
-		 sys-auth/libnss-mysql 
-		 ( !lighttpd? ( www-apache/mod_fcgid ) )
-		)
+		 sys-auth/libnss-mysql
+			( !lighttpd? ( www-apache/mod_fcgid ) )
+	)
 	dovecot? ( net-mail/dovecot[mysql,pop3d,ssl=]
 		   >=mail-mta/postfix-2.4[dovecot-sasl]
-		 ) 
+	)
 	!dovecot? ( dev-libs/cyrus-sasl[crypt,mysql,ssl=]
 		    net-libs/courier-authlib[crypt,mysql]
 		    net-mail/courier-imap
 		    >=mail-mta/postfix-2.4[sasl]
-		  )
+	)
 	aps? ( dev-lang/php[zip]
-	       ( amd64? ( app-arch/unzip ) )
-	    )
-	mailquota? ( >=mail-mta/postfix-2.4[vda] )
-      "
+		( amd64? ( app-arch/unzip ) )
+	)
+	mailquota? ( >=mail-mta/postfix-2.4[vda] )"
 
 RDEPEND="${DEPEND}"
 
@@ -67,29 +64,30 @@ need_php5_cli
 S="${WORKDIR}/${PN}"
 
 src_unpack() {
-        subversion_src_unpack
+	subversion_src_unpack
 
-        cd "${S}"
+	cd "${S}"
+}
 
+src_prepare() {
 	# Delete any mention of inserttask('4') if no Bind is used
 	if ! use bind ; then
-		find "${S}/" -type f -exec sed -e "s|inserttask('4');||g" -i {} \; 
+		find "${S}/" -type f -exec sed -e "s|inserttask('4');||g" -i {} \;
 	fi
 }
 
 src_install() {
-
 	# set default language
 	local MYLANG=""
 	if useq linguas_bg ; then
 		MYLANG="Bulgarian"
 	elif useq linguas_ca ; then
 		MYLANG="Catalan"
-	elif useq linguas_cz ; then
+	elif useq linguas_cs ; then
 		MYLANG="Czech"
 	elif useq linguas_de ; then
 		MYLANG="Deutsch"
-	elif useq linguas_dk ; then
+	elif useq linguas_da ; then
 		MYLANG="Danish"
 	elif useq linguas_es ; then
 		MYLANG="Espa&ntilde;ol"
@@ -109,7 +107,7 @@ src_install() {
 		MYLANG="Swedish"
 	elif useq linguas_sl ; then
 		MYLANG="Slovak"
-	elif useq linguas_zh-cn ; then
+	elif useq linguas_zh_CN ; then
 		MYLANG="Chinese"
 	fi
 
@@ -176,7 +174,7 @@ src_install() {
 	fi
 
 	# default value is logging_enabled='1'
-	if ! useq log ; then	
+	if ! useq log ; then
 		einfo "Switching 'log' to 'Off'"
 		sed -e "s|'logger', 'enabled', '1'|'logger', 'enabled', '0'|g" -i "${S}/install/froxlor.sql" || die "Unable to set logging to 'Off'"
 		# fix menu
@@ -554,42 +552,42 @@ EOF
 
 	einfo "Adding Froxlor admin-user"
 	touch "${ROOT}/tmp/froxlor-install-by-emerge/admin.sql"
-	cat > "${ROOT}/tmp/froxlor-install-by-emerge/admin.sql" <<EOF 
+	cat > "${ROOT}/tmp/froxlor-install-by-emerge/admin.sql" <<EOF
 INSERT INTO \`panel_admins\` SET
-        \`loginname\` = '${adminuser}',
-        \`password\` = MD5('${adminpw}'),
-        \`name\` = 'Siteadmin',
-        \`email\` = 'admin@${servername}',
-        \`customers\` = -1,
-        \`customers_used\` = 0,
-        \`customers_see_all\` = 1,
-        \`caneditphpsettings\` = 1,
-        \`domains\` = -1,
-        \`domains_used\` = 0,
-        \`domains_see_all\` = 1,
-        \`change_serversettings\` = 1,
-        \`diskspace\` = -1024,
-        \`diskspace_used\` = 0,
-        \`mysqls\` = -1,
-        \`mysqls_used\` = 0,
-        \`emails\` = -1,
-        \`emails_used\` = 0,
-        \`email_accounts\` = -1,
-        \`email_accounts_used\` = 0,
-        \`email_forwarders\` = -1,
-        \`email_forwarders_used\` = 0,
-        \`email_quota\` = -1,
-        \`email_quota_used\` = 0,
-        \`ftps\` = -1,
-        \`ftps_used\` = 0,
-        \`tickets\` = -1,
-        \`tickets_used\` = 0,
-        \`subdomains\` = -1,
-        \`subdomains_used\` = 0,
-        \`traffic\` = -1048576,
-        \`traffic_used\` = 0,
-        \`deactivated\` = 0,
-        \`aps_packages\` = -1;
+	\`loginname\` = '${adminuser}',
+	\`password\` = MD5('${adminpw}'),
+	\`name\` = 'Siteadmin',
+	\`email\` = 'admin@${servername}',
+	\`customers\` = -1,
+	\`customers_used\` = 0,
+	\`customers_see_all\` = 1,
+	\`caneditphpsettings\` = 1,
+	\`domains\` = -1,
+	\`domains_used\` = 0,
+	\`domains_see_all\` = 1,
+	\`change_serversettings\` = 1,
+	\`diskspace\` = -1024,
+	\`diskspace_used\` = 0,
+	\`mysqls\` = -1,
+	\`mysqls_used\` = 0,
+	\`emails\` = -1,
+	\`emails_used\` = 0,
+	\`email_accounts\` = -1,
+	\`email_accounts_used\` = 0,
+	\`email_forwarders\` = -1,
+	\`email_forwarders_used\` = 0,
+	\`email_quota\` = -1,
+	\`email_quota_used\` = 0,
+	\`ftps\` = -1,
+	\`ftps_used\` = 0,
+	\`tickets\` = -1,
+	\`tickets_used\` = 0,
+	\`subdomains\` = -1,
+	\`subdomains_used\` = 0,
+	\`traffic\` = -1048576,
+	\`traffic_used\` = 0,
+	\`deactivated\` = 0,
+	\`aps_packages\` = -1;
 EOF
 
 	mysql -u ${mysqlrootuser} -p${mysqlrootpw} ${mysqldbname} < "${ROOT}/tmp/froxlor-install-by-emerge/admin.sql"
@@ -716,13 +714,13 @@ EOF
 		sed -e "s|<SERVERIP>|${serverip}|g" -i "${ROOT}/etc/lighttpd/lighttpd.conf"
 
 		touch "${ROOT}/etc/lighttpd/froxlor-vhosts.conf"
-		echo -e "\ninclude \"95_${servername}.conf\"" >> "${ROOT}/etc/lighttpd/lighttpd.conf"	
+		echo -e "\ninclude \"95_${servername}.conf\"" >> "${ROOT}/etc/lighttpd/lighttpd.conf"
 
 		echo -e "# Froxlor default vhost
 \$HTTP[\"host\"] == \"${servername}\" {
 	server.document-root = var.basedir + \"/froxlor\"
 	server.name = \"${servername}\"" > "${ROOT}/etc/lighttpd/95_${servername}.conf"
-		
+
 		if useq ssl ; then
 			echo -e "
 	\$HTTP[\"scheme\"] == \"http\" {
@@ -735,9 +733,9 @@ EOF
 
 		if useq ssl ; then
 		    echo -e "\n\$SERVER[\"socket\"] == \"${serverip}:443\" {
-    ssl.engine = \"enable\"
-    ssl.pemfile = \"${ROOT}etc/ssl/server/${servername}.pem\"
-    ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
+ssl.engine = \"enable\"
+ssl.pemfile = \"${ROOT}etc/ssl/server/${servername}.pem\"
+ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 }" >> "${ROOT}/etc/lighttpd/lighttpd.conf"
 
 		fi
@@ -822,7 +820,7 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 <VirtualHost ${serverip}:80>
 	RedirectPermanent / https://${servername}/index.php
 </VirtualHost>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
-		
+
 		else
 
 			echo "# Gentoo-Froxlor VirtualHost
@@ -888,7 +886,7 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/libnss-mysql.cfg"
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/libnss-mysql.cfg"
 		sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/libnss-mysql.cfg"
-	
+
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/libnss-mysql-root.cfg"
 		sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/libnss-mysql-root.cfg"
 		eend 0
@@ -1034,7 +1032,7 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 		sed -e "s|#smtpd_sasl_path = private/auth|smtpd_sasl_path = private/auth|g" -i "${ROOT}/etc/postfix/main.cf"
 		sed -e "s|#virtual_transport = dovecot|virtual_transport = dovecot|g" -i "${ROOT}/etc/postfix/main.cf"
 		sed -e "s|#dovecot_destination_recipient_limit = 1|dovecot_destination_recipient_limit = 1|g" -i "${ROOT}/etc/postfix/main.cf"
-		
+
 		# add line to master.cf
 		local MASTER_DOVECOT=""
 		MASTER_DOVECOT=`cat ${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_master.cf`
@@ -1084,7 +1082,7 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 	sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
 	sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
 	sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
-	
+
 	chown root:postfix "${ROOT}/etc/postfix/mysql-virtual_alias_maps.cf"
 	chown root:postfix "${ROOT}/etc/postfix/mysql-virtual_mailbox_domains.cf"
 	chown root:postfix "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
@@ -1122,7 +1120,7 @@ milter_default_action = accept" >> "${ROOT}/etc/postfix/main.cf"
 		chown root:0 "${ROOT}/etc/bind/froxlor_bind.conf"
 		chmod 0655 "${ROOT}/etc/bind/froxlor_bind.conf"
 		eend 0
-	fi 
+	fi
 
 	srv_add_restart() {
 		einfo "Adding ${1} to 'default' runlevel ..."
@@ -1164,7 +1162,7 @@ milter_default_action = accept" >> "${ROOT}/etc/postfix/main.cf"
 	srv_add_restart postfix
 
 	einfo "Configuration completed successfully!"
-	einfo 
+	einfo
 	local URL=""
 	if useq ssl ; then
 		URL="https://${servername}/index.php"
