@@ -27,7 +27,7 @@ DEPEND="
 	>=mail-mta/postfix-2.4[mysql,ssl=]
 	sys-process/vixie-cron
 	dev-db/mysql
-	dev-lang/php[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,pcre,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
+	dev-lang/php[bcmath,cli,ctype,fastbuild,filter,ftp,gd,mysql,nls,pcre,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
 	net-ftp/proftpd[mysql,ssl=]
 	app-admin/webalizer
 	bind? ( net-dns/bind 
