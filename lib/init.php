@@ -318,7 +318,7 @@ if(isset($userinfo['loginname'])
 	 * Initialize logging
 	 */
 
-	$log = SysCPLogger::getInstanceOf($userinfo, $db, $settings);
+	$log = FroxlorLogger::getInstanceOf($userinfo, $db, $settings);
 }
 
 /**

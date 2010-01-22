@@ -1,16 +1,18 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @author     Florian Lippert <flo@syscp.org> (2003-2009)
+ * @author     Froxlor Team <team@froxlor.org> (2010)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Panel
  * @version    $Id: index.php 2693 2009-03-27 19:31:48Z flo $
  */
@@ -211,11 +213,11 @@ if($action == 'forgotpwd')
 							AND `email`='" . $user['email'] . "'");
 				}
 
-				$rstlog = SysCPLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
 				$rstlog->logAction(USR_ACTION, LOG_WARNING, "Password for user '" . $user['loginname'] . "' has been reset!");
 				$body = strtr($lng['pwdreminder']['body'], array('%s' => $user['firstname'] . ' ' . $user['name'], '%p' => $password));
 				$mail->From = $settings['panel']['adminmail'];
-				$mail->FromName = 'SysCP';
+				$mail->FromName = 'Froxlor';
 				$mail->Subject = $lng['pwdreminder']['subject'];
 				$mail->Body = $body;
 				$mail->AddAddress($user['email'], $user['firstname'] . ' ' . $user['name']);
@@ -231,7 +233,7 @@ if($action == 'forgotpwd')
 						$mailerr_msg = $email;
 					}
 
-					$rstlog = SysCPLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
+					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
 					$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 					redirectTo('index.php', Array('showmessage' => '4'), true);
 					exit;
@@ -243,7 +245,7 @@ if($action == 'forgotpwd')
 			}
 			else
 			{
-				$rstlog = SysCPLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
 				$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to reset pwd but wasn't found in database!");
 				$message = $lng['login']['usernotfound'];
 			}

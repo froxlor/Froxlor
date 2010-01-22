@@ -1,12 +1,13 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
  * @author     Florian Aders <eleras@syscp.org>
@@ -14,7 +15,7 @@
  * @author     Michael Kaufmann <mk@syscp-help.org>
  * @author     Sven Skrabal <info@nexpa.de>
  * @author     Florian Lippert <flo@syscp.org>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    System
  * @version    $Id: cron_tasks.inc.http.15.apache_fcgid.php 2714 2009-04-17 10:02:03Z flo $
  */
@@ -97,7 +98,7 @@ class apache_fcgid extends apache
 			$starter_file = "#!/bin/sh\n\n";
 			$starter_file.= "#\n";
 			$starter_file.= "# starter created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $domain['domain'] . "' with id #" . $domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
-			$starter_file.= "# Do not change anything in this file, it will be overwritten by the SysCP Cronjob!\n";
+			$starter_file.= "# Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
 			$starter_file.= "#\n\n";
 			$starter_file.= "PHPRC=" . escapeshellarg($configdir) . "\n";
 			$starter_file.= "export PHPRC\n";
@@ -210,7 +211,7 @@ class apache_fcgid extends apache
 
 			$phpini_file = ";\n";
 			$phpini_file.= "; php.ini created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $domain['domain'] . "' with id #" . $domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
-			$phpini_file.= "; Do not change anything in this file, it will be overwritten by the SysCP Cronjob!\n";
+			$phpini_file.= "; Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
 			$phpini_file.= ";\n\n";
 			$phpini_file.= replace_variables($phpconfig['phpsettings'], $php_ini_variables);
 			$phpini_file = str_replace('"none"', 'none', $phpini_file);

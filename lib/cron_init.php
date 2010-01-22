@@ -248,7 +248,7 @@ $idna_convert = new idna_convert_wrapper();
  * Initialize logging
  */
 
-$cronlog = SysCPLogger::getInstanceOf(array('loginname' => 'cronjob'), $db, $settings);
+$cronlog = FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'), $db, $settings);
 fwrite($debugHandler, 'Logger has been included' . "\n");
 
 ?>

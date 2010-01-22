@@ -119,7 +119,7 @@ class lighttpd_fcgid extends lighttpd
 			$starter_file = "#!/bin/sh\n\n";
 			$starter_file.= "#\n";
 			$starter_file.= "# starter created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $domain['domain'] . "' with id #" . $domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
-			$starter_file.= "# Do not change anything in this file, it will be overwritten by the SysCP Cronjob!\n";
+			$starter_file.= "# Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
 			$starter_file.= "#\n\n";
 			$starter_file.= "PHPRC=" . escapeshellarg($configdir) . "\n";
 			$starter_file.= "export PHPRC\n";
@@ -232,7 +232,7 @@ class lighttpd_fcgid extends lighttpd
 
 			$phpini_file = ";\n";
 			$phpini_file.= "; php.ini created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $domain['domain'] . "' with id #" . $domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
-			$phpini_file.= "; Do not change anything in this file, it will be overwritten by the SysCP Cronjob!\n";
+			$phpini_file.= "; Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
 			$phpini_file.= ";\n\n";
 			$phpini_file.= replace_variables($phpconfig['phpsettings'], $php_ini_variables);
 			$phpini_file = str_replace('"none"', 'none', $phpini_file);

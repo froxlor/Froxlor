@@ -108,7 +108,7 @@ class SysLogger extends AbstractLogger
 				$name = " (" . $this->userinfo['loginname'] . ")";
 			}
 
-			openlog("SysCP", LOG_NDELAY, LOG_USER);
+			openlog("Froxlor", LOG_NDELAY, LOG_USER);
 
 			if($text != null
 			   && $text != '')
