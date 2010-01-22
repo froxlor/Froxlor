@@ -22,7 +22,7 @@
 // -->
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>
-		<td width="800"><img src="{$settings['admin']['syscp_graphic']}" width="800" height="90" alt="" /></td>
+		<td width="800"><img src="{$settings['admin']['froxlor_graphic']}" width="800" height="90" alt="" /></td>
 		<td class="header">&nbsp;</td>
 	</tr>
 </table>

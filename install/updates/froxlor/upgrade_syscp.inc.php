@@ -249,6 +249,8 @@ if($settings['panel']['frontend'] == 'froxlor'
 			}
 		}
 	}
+
+	$db->query("UPDATE `panel_settings` SET `varname` = 'froxlor_graphic' WHERE `varname` = 'syscp_graphic'");
 }
 
 ?>

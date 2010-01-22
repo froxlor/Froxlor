@@ -222,7 +222,7 @@ if(!empty($_POST['mysql_database']))
 }
 else
 {
-	$mysql_database = 'syscp';
+	$mysql_database = 'froxlor';
 }
 
 if(!empty($_POST['mysql_unpriv_user']))
@@ -231,7 +231,7 @@ if(!empty($_POST['mysql_unpriv_user']))
 }
 else
 {
-	$mysql_unpriv_user = 'syscp';
+	$mysql_unpriv_user = 'froxlor';
 }
 
 if(!empty($_POST['mysql_unpriv_pass']))
@@ -697,7 +697,7 @@ if(isset($_POST['installstep'])
 ?>
 		<tr>
 			<td class="main_field_display" align="center">
-				<?php echo $lng['install']['syscp_succ_installed']; ?><br />
+				<?php echo $lng['install']['froxlor_succ_installed']; ?><br />
 				<a href="../index.php"><?php echo $lng['install']['click_here_to_login']; ?></a>
 			</td>
 		</tr>

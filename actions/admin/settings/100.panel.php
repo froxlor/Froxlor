@@ -131,10 +131,10 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					),
-				'admin_syscp_graphic' => array(
-					'label' => $lng['admin']['syscp_graphic'],
+				'admin_froxlor_graphic' => array(
+					'label' => $lng['admin']['froxlor_graphic'],
 					'settinggroup' => 'admin',
-					'varname' => 'syscp_graphic',
+					'varname' => 'froxlor_graphic',
 					'type' => 'string',
 					'default' => '',
 					'save_method' => 'storeSettingField',

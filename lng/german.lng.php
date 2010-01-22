@@ -960,8 +960,8 @@ $lng['admin']['show_version_login']['title'] = 'Zeige Froxlor Version beim Login
 $lng['admin']['show_version_login']['description'] = 'Zeige Froxlor Version in der Fu&szlig;zeile der Loginseite';
 $lng['admin']['show_version_footer']['title'] = 'Zeige Froxlor Version in Fu&szlig;zeile';
 $lng['admin']['show_version_footer']['description'] = 'Zeige Froxlor Version in der Fu&szlig;zeile aller anderen Seiten';
-$lng['admin']['syscp_graphic']['title'] = 'Grafik im Kopfbereich des Panels';
-$lng['admin']['syscp_graphic']['description'] = 'Welche Grafik soll im Kopfbereich des Panels anstatt des Froxlor Logos angezeigt werden?';
+$lng['admin']['froxlor_graphic']['title'] = 'Grafik im Kopfbereich des Panels';
+$lng['admin']['froxlor_graphic']['description'] = 'Welche Grafik soll im Kopfbereich des Panels anstatt des Froxlor Logos angezeigt werden?';
 
 //improved syscp
 

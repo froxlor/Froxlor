@@ -957,8 +957,8 @@ $lng['admin']['show_version_login']['title'] = 'Show Froxlor version on login';
 $lng['admin']['show_version_login']['description'] = 'Show the Froxlor version in the footer on the login page';
 $lng['admin']['show_version_footer']['title'] = 'Show Froxlor version in footer';
 $lng['admin']['show_version_footer']['description'] = 'Show the Froxlor version in the footer on the rest of the pages';
-$lng['admin']['syscp_graphic']['title'] = 'Header graphic for SysCP';
-$lng['admin']['syscp_graphic']['description'] = 'What graphic should be shown in the header';
+$lng['admin']['froxlor_graphic']['title'] = 'Header graphic for Froxlor';
+$lng['admin']['froxlor_graphic']['description'] = 'What graphic should be shown in the header';
 
 //improved syscp
 

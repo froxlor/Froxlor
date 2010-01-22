@@ -70,7 +70,7 @@ $lng['install']['notinstalled'] = 'not installed!';
 $lng['install']['phpbcmath'] = 'Testing if PHP bcmath-extension is installed...';
 $lng['install']['bcmathdescription'] = 'Traffic-calculation related functions will not work correctly!';
 $lng['install']['openbasedir'] = 'Testing if open_basedir is enabled...';
-$lng['install']['openbasedirenabled'] = 'enabled. Froxlor will not work properly with open_basedir enabled. Please disable open_basedir for syscp';
+$lng['install']['openbasedirenabled'] = 'enabled. Froxlor will not work properly with open_basedir enabled. Please disable open_basedir for Froxlor';
 
 /**
  * Renamed in 1.2.19-svn40
