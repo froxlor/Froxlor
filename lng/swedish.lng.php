@@ -1,16 +1,18 @@
 <?php
 
 /** 
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
  * @author     Staffan Starberg <staff@starberg.com>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @author     Froxlor Team <team@froxlor.org>
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  * @version    $Id: swedish.lng.php 2724 2009-06-07 14:18:02Z flo $
  */
@@ -271,10 +273,10 @@ $lng['admin']['overview'] = 'Översikt';
 $lng['admin']['ressourcedetails'] = 'Använda resurser';
 $lng['admin']['systemdetails'] = 'System Detaljer';
 $lng['admin']['froxlordetails'] = 'Froxlor Detaljer';
-$lng['admin']['installedversion'] = 'Installerad version av SysCP';
-$lng['admin']['latestversion'] = 'Senaste version av SysCP';
-$lng['admin']['lookfornewversion']['clickhere'] = '[Sök senaste verison av SysCP via Internet]';
-$lng['admin']['lookfornewversion']['error'] = 'Fel vid läsning, kontrollera uppkopplingen mot SysCP';
+$lng['admin']['installedversion'] = 'Installerad version av Froxlor';
+$lng['admin']['latestversion'] = 'Senaste version av Froxlor';
+$lng['admin']['lookfornewversion']['clickhere'] = '[Sök senaste verison av Froxlor via Internet]';
+$lng['admin']['lookfornewversion']['error'] = 'Fel vid läsning, kontrollera uppkopplingen mot Froxlor';
 $lng['admin']['resources'] = 'Resurser';
 $lng['admin']['customer'] = 'Kunder';
 $lng['admin']['customers'] = 'Kunder';
@@ -493,7 +495,7 @@ $lng['panel']['pathDescription'] = 'Katalogen kommer att skapas om den inte reda
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Varning {NAME},\n\nDu har nu använt {TRAFFICUSED} MB av ditt tillgängliga {TRAFFIC} MB för trafik.\nDetta är mer än 90%.\n\nHälsningar, SysCP team';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'Varning {NAME},\n\nDu har nu använt {TRAFFICUSED} MB av ditt tillgängliga {TRAFFIC} MB för trafik.\nDetta är mer än 90%.\n\nHälsningar, Froxlor team';
 $lng['mails']['trafficninetypercent']['subject'] = 'Du är på väg att nå din tillåtna trafikgräns';
 $lng['admin']['templates']['trafficninetypercent'] = 'Meddelande till kund när mer än nittio procent av trafiken utnyttjas';
 $lng['admin']['templates']['TRAFFIC'] = 'Ersatt med trafikbegrnsningen som var tilldelad till kunden.';
@@ -538,13 +540,13 @@ $lng['panel']['back'] = 'Tillbaka';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Tillfälligt spara loggfiler i databasen';
-$lng['serversettings']['mod_log_sql']['description'] = 'Använd <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> för att spara webfrågor tillfälligt<br /><b>Detta behöver en special <a href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
+$lng['serversettings']['mod_log_sql']['description'] = 'Använd <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> för att spara webfrågor tillfälligt<br /><b>Detta behöver en special <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Inkludera PHP via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Använd mod_fcgid/suexec/libnss_mysql för att köra PHP med tillhörande användarkonto.<br/><b>Denna inställning behöver en speciell apache-konfiguration!</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Använd en alternativ E-postadress';
 $lng['serversettings']['sendalternativemail']['description'] = 'Skicka lösenord med E-post till adressen under email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Hej,\n\nditt E-postkonto {EMAIL}\nhar ny skapats.\nDitt lösenord är {PASSWORD}.\n\nDetta är ett automatgenererat E-postmeddelande som det INTE går att svara på!\n\nLycka till önskar, SysCP';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Hej,\n\nditt E-postkonto {EMAIL}\nhar ny skapats.\nDitt lösenord är {PASSWORD}.\n\nDetta är ett automatgenererat E-postmeddelande som det INTE går att svara på!\n\nLycka till önskar, Froxlor';
 $lng['mails']['pop_success_alternative']['subject'] = 'E-postkontot är nu skapat';
 $lng['admin']['templates']['pop_success_alternative'] = 'Välkommstmeddelande för nya E-post konton som skickas till den alternativa adressen';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Ersatt med POP3/IMAP kontots lösenord.';
@@ -564,7 +566,7 @@ $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Var skall htp
 
 // ADDED IN 1.2.16-svn15
 
-$lng['error']['formtokencompromised'] = 'Den säkra anslutningen till SysCP har avslutats och du har av säkerhetsskäl automatiskt loggats ur.';
+$lng['error']['formtokencompromised'] = 'Den säkra anslutningen till Froxlor har avslutats och du har av säkerhetsskäl automatiskt loggats ur.';
 $lng['serversettings']['mysql_access_host']['title'] = 'MySQL-Access-Hosts';
 $lng['serversettings']['mysql_access_host']['description'] = 'En kommaseparerad lista med datornamn som tillåts att kontakta MySQL servern.';
 
@@ -587,7 +589,7 @@ $lng['serversettings']['webalizer_quiet']['description'] = 'Verbosity of the web
 // ADDED IN 1.2.18-svn3
 
 $lng['ticket']['admin_email'] = 'root@localhost';
-$lng['ticket']['noreply_email'] = 'tickets@syscp';
+$lng['ticket']['noreply_email'] = 'tickets@froxlor';
 $lng['admin']['ticketsystem'] = 'Support';
 $lng['menue']['ticket']['ticket'] = 'Supportärenden';
 $lng['menue']['ticket']['categories'] = 'Kategorier';
@@ -648,15 +650,15 @@ $lng['admin']['templates']['new_ticket_by_customer'] = 'Admininformation för ett
 $lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Admininformation för ett svar från kund';
 $lng['admin']['templates']['new_ticket_by_staff'] = 'Kundinformation för ett ärende öppnat av ledningen';
 $lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Kundinformation för ett ärende besvarat av ledningen';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nDitt supportärende med rubriken "{SUBJECT}" har skickats till supporten.\n\nVi meddelar dig när ditt ärende har blivit besvarat.\n\nMed vänliga hälsningar,\n SysCP';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nDitt supportärende med rubriken "{SUBJECT}" har skickats till supporten.\n\nVi meddelar dig när ditt ärende har blivit besvarat.\n\nMed vänliga hälsningar,\n Froxlor';
 $lng['mails']['new_ticket_for_customer']['subject'] = 'Ditt supportärende har nu skickats';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hej admin,\n\nEtt nytt supportärende med rubriken "{SUBJECT}" har nu skapats.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n SysCP';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hej admin,\n\nEtt nytt supportärende med rubriken "{SUBJECT}" har nu skapats.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
 $lng['mails']['new_ticket_by_customer']['subject'] = 'Nytt supportärende skapat';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hej admin,\n\nDitt supportärende "{SUBJECT}" har blivit besvarat an en kund.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n SysCP';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hej admin,\n\nDitt supportärende "{SUBJECT}" har blivit besvarat an en kund.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
 $lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nytt svar för supportärendet';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nEtt nytt supportärende har öppnats med rubriken "{SUBJECT}".\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n SysCP';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nEtt nytt supportärende har öppnats med rubriken "{SUBJECT}".\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
 $lng['mails']['new_ticket_by_staff']['subject'] = 'Nytt supportärede behandlat';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nSupportärendet med rubriken "{SUBJECT}" har besvarats av vår personal.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n SysCP';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nSupportärendet med rubriken "{SUBJECT}" har besvarats av vår personal.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
 $lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Svar på ert supportärende';
 $lng['question']['ticket_reallyclose'] = 'Är du säker på att du vill stänga supportärendet "%s"?';
 $lng['question']['ticket_reallydelete'] = 'Är du säker på att du vill radera supportärendet "%s"?';
@@ -672,7 +674,7 @@ $lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopenticke
 $lng['admin']['ticketsettings'] = 'Supportärende inställningar';
 $lng['admin']['archivelastrun'] = 'Sista supportärende som arkiverats';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Svara-Inte E-post adress';
-$lng['serversettings']['ticket']['noreply_email']['description'] = 'Avsändaradressen för support-ticket, exempel: inget-svar@syscp.se';
+$lng['serversettings']['ticket']['noreply_email']['description'] = 'Avsändaradressen för support-ticket, exempel: inget-svar@example.org';
 $lng['serversettings']['ticket']['worktime_begin']['title'] = 'Start av support-tid (hh:mm)';
 $lng['serversettings']['ticket']['worktime_begin']['description'] = 'Start-tid, när supporten är tillgänglig';
 $lng['serversettings']['ticket']['worktime_end']['title'] = 'Slut på support-tid (hh:mm)';

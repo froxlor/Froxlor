@@ -1,8 +1,9 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
@@ -259,9 +260,9 @@ $lng['question']['admin_configs_reallyrebuild'] = '&#191;Realmente desea elabora
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Hola,\n\nsu cuenta del correo {EMAIL}\nfue instalada con &eacute;xito .\n\nEsto es un email autom&aacute;ticamente creado,\n\nno conteste por favor!\n\nSinceramente suyo, el SysCP-Equipo';
+$lng['mails']['pop_success']['mailbody'] = 'Hola,\n\nsu cuenta del correo {EMAIL}\nfue instalada con &eacute;xito .\n\nEsto es un email autom&aacute;ticamente creado,\n\nno conteste por favor!\n\nSinceramente suyo, el Froxlor-Equipo';
 $lng['mails']['pop_success']['subject'] = 'cuenta del email instalada con &eacute;xito';
-$lng['mails']['createcustomer']['mailbody'] = 'Hola {FIRSTNAME} {NAME},\n\naqu&Atilde; est&aacute; su informaci&oacute;n de la cuenta:\n\nNombre del usuario: {USERNAME}\nContrase&ntilde;a: {PASSWORD}\n\nGracias,\nel SysCP-Equipo';
+$lng['mails']['createcustomer']['mailbody'] = 'Hola {FIRSTNAME} {NAME},\n\naqu&Atilde; est&aacute; su informaci&oacute;n de la cuenta:\n\nNombre del usuario: {USERNAME}\nContrase&ntilde;a: {PASSWORD}\n\nGracias,\nel Froxlor-Equipo';
 $lng['mails']['createcustomer']['subject'] = 'Informaci&oacute;n de la cuenta';
 
 /**

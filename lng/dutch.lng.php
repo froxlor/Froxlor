@@ -1,16 +1,17 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
  * @author     Sander Klein <roedie@roedie.nl>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  * @version    $Id: dutch.lng.php 2692 2009-03-27 18:04:47Z flo $
  */
@@ -258,9 +259,9 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Weet u zeker dat u de configu
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Hallo,\n\nUw mail account {EMAIL}\nis succesvol aangemaakt.\n\nDit is een automatisch verstuurde\ne-mail, beantwoord deze niet AUB!\n\nMet vriendelijke groet, het SysCP-Team';
+$lng['mails']['pop_success']['mailbody'] = 'Hallo,\n\nUw mail account {EMAIL}\nis succesvol aangemaakt.\n\nDit is een automatisch verstuurde\ne-mail, beantwoord deze niet AUB!\n\nMet vriendelijke groet, het Froxlor-Team';
 $lng['mails']['pop_success']['subject'] = 'Mail account succesvol aangemaakt';
-$lng['mails']['createcustomer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhierbij uw account informatie:\n\nGebruikersnaam: {USERNAME}\nWachtwoord: {PASSWORD}\n\nMet vriendelijke groet,\nhet SysCP-Team';
+$lng['mails']['createcustomer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhierbij uw account informatie:\n\nGebruikersnaam: {USERNAME}\nWachtwoord: {PASSWORD}\n\nMet vriendelijke groet,\nhet Froxlor-Team';
 $lng['mails']['createcustomer']['subject'] = 'Account informatie';
 
 /**

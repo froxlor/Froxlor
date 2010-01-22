@@ -1,18 +1,20 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
  * @author     Tim Zielosko <tim.zielosko@syscp.de>
  * @author     Aldo Reset <aldo.reset@placenet.org>
  * @author     Romain MARIADASSOU <roms2000@free.fr>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @author     Froxlor Team <team@froxlor.org>
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  * @version    $Id: french.lng.php 2724 2009-06-07 14:18:02Z flo $
  */
@@ -272,10 +274,10 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Etes-vous sûr de vouloir régé
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Bonjour,\n\nvotre accès POP3 / IMAP {EMAIL}\na été créé avec succès.\n\nCeci est un e-mail généré automatiquement, veuillez ne pas répondre à ce message.\n\nCordialement,\nL\'équipe SysCP\nhttp://www.syscp.org';
+$lng['mails']['pop_success']['mailbody'] = 'Bonjour,\n\nvotre accès POP3 / IMAP {EMAIL}\na été créé avec succès.\n\nCeci est un e-mail généré automatiquement, veuillez ne pas répondre à ce message.\n\nCordialement,\nL\'équipe Froxlor\nhttp://www.froxlor.org';
 $lng['mails']['pop_success']['subject'] = 'Accès POP3 / IMAP créé';
-$lng['mails']['createcustomer']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVous trouverez ci-dessous vos informations d\'accès au panel d\'administration :\n\nAdresse d\'administration : http://demo.syscp.org\n\nIdentifiant : {USERNAME}\nMot de passe : {PASSWORD}\n\nCordialement,\nL\'équipe SysCP\nhttp://www.syscp.org\n';
-$lng['mails']['createcustomer']['subject'] = 'SysCP : Informations pour votre accès au panel d\'administration';
+$lng['mails']['createcustomer']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVous trouverez ci-dessous vos informations d\'accès au panel d\'administration :\n\nAdresse d\'administration : http://demo.froxlor.org\n\nIdentifiant : {USERNAME}\nMot de passe : {PASSWORD}\n\nCordialement,\nL\'équipe Froxlor\nhttp://www.froxlor.org\n';
+$lng['mails']['createcustomer']['subject'] = 'Froxlor : Informations pour votre accès au panel d\'administration';
 
 /**
  * Admin
@@ -372,7 +374,7 @@ $lng['serversettings']['vmail_gid']['description'] = 'Quel GID doivent avoir les
 $lng['serversettings']['vmail_homedir']['title'] = 'Emplacement des e-mails';
 $lng['serversettings']['vmail_homedir']['description'] = 'Dans quel dossier doivent être stocker les e-mails ?';
 $lng['serversettings']['adminmail']['title'] = 'Adresse e-mail de l\'administrateur';
-$lng['serversettings']['adminmail']['description'] = 'Quelle est l\'adresse e-mail par défaut des e-mails envoyés par SysCP ?';
+$lng['serversettings']['adminmail']['description'] = 'Quelle est l\'adresse e-mail par défaut des e-mails envoyés par Froxlor ?';
 $lng['serversettings']['phpmyadmin_url']['title'] = 'Adresse URL de phpMyAdmin';
 $lng['serversettings']['phpmyadmin_url']['description'] = 'A quelle adresse se trouve phpMyAdmin ?';
 $lng['serversettings']['webmail_url']['title'] = 'Adresse URL du WebMail';
@@ -510,7 +512,7 @@ $lng['panel']['pathDescription'] = 'Si le dossier n\'existe pas, il sera créé au
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVous utilisez {TRAFFICUSED} Mo sur {TRAFFIC} Mo de votre quota de trafic.\nCe dernier est à plus de 90%.\n\nCordialement,\nL\'équipe SysCP.';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVous utilisez {TRAFFICUSED} Mo sur {TRAFFIC} Mo de votre quota de trafic.\nCe dernier est à plus de 90%.\n\nCordialement,\nL\'équipe Froxlor.';
 $lng['mails']['trafficninetypercent']['subject'] = 'Limite de trafic bientôt atteinte.';
 $lng['admin']['templates']['trafficninetypercent'] = 'E-mail de notification pour les utilisateurs, lorsque leur taux de trafic atteint plus de 90%.';
 $lng['admin']['templates']['TRAFFIC'] = 'Sera remplacé par le taux de trafic qui a été attribué à l\'utilisateur.';
@@ -555,13 +557,13 @@ $lng['panel']['back'] = 'Retour';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Sauvegarder temporairement les logs dans la base de données';
-$lng['serversettings']['mod_log_sql']['description'] = 'Utiliser <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> pour sauvegarder temporairement les requêtes Web.<br /><b>Cela à besoin d\'une configuration spécifique <a href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - documentation">d\'Apache</a> !</b>';
+$lng['serversettings']['mod_log_sql']['description'] = 'Utiliser <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> pour sauvegarder temporairement les requêtes Web.<br /><b>Cela à besoin d\'une configuration spécifique <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">d\'Apache</a> !</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Utiliser PHP par mod_fcgid / suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Utiliser mod_fcgid / suexec / libnss_mysql pour lancer PHP avec le compte correspondant à l\'utilisateur ?<br/><b>Cela à besoin d\'une configuration spécifique d\'Apache !</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Utiliser une adresse e-mail alternative';
 $lng['serversettings']['sendalternativemail']['description'] = 'Envoyer le mot de passe du compte e-mail à une adresse différents pour la création du compte e-mail ?';
 $lng['emails']['alternative_emailaddress'] = 'Adresse e-mail alternative';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Bonjour,\n\nVotre compte e-mail {EMAIL} a été correctement créé.\n\nVotre mot de passe est : {PASSWORD}.\n\nCeci est un message généré automatiquemenent, veuillez ne pas répondre à cet e-mail car il ne serait être consulter.\n\nCordialement,\nL\'équipe SysCP.';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Bonjour,\n\nVotre compte e-mail {EMAIL} a été correctement créé.\n\nVotre mot de passe est : {PASSWORD}.\n\nCeci est un message généré automatiquemenent, veuillez ne pas répondre à cet e-mail car il ne serait être consulter.\n\nCordialement,\nL\'équipe Froxlor.';
 $lng['mails']['pop_success_alternative']['subject'] = 'Compte e-mail correctement créé';
 $lng['admin']['templates']['pop_success_alternative'] = 'Message de bienvenue envoyé à l\'adresse e-mail alternative pour les nouveaux comptes e-mails';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Remplacer par le mot de passe du compte POP3 / IMAP.';
@@ -604,7 +606,7 @@ $lng['serversettings']['webalizer_quiet']['description'] = 'Verbosité du program
 // ADDED IN 1.2.18-svn3
 
 $lng['ticket']['admin_email'] = 'root@localhost';
-$lng['ticket']['noreply_email'] = 'billets@syscp';
+$lng['ticket']['noreply_email'] = 'billets@froxlor';
 $lng['admin']['ticketsystem'] = 'Système de billets';
 $lng['menue']['ticket']['ticket'] = 'Billets de support';
 $lng['menue']['ticket']['categories'] = 'Catégories de support';
@@ -665,15 +667,15 @@ $lng['admin']['templates']['new_ticket_by_customer'] = 'Notifie l\'administrateu
 $lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Notifie l\'administrateur d\'une réponse du client au billet';
 $lng['admin']['templates']['new_ticket_by_staff'] = 'Informe le client qu\'un billet a été ouvert par l\'équipe de support';
 $lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Informe le client d\'une réponse de l\'équipe de support au billet';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVotre demande de billet de support ayant comme sujet "{SUBJECT}" a été envoyé.\n\nVous receverez une notification lorsque votre billet aura une réponse.\n\nMerci,\nL\'équipe SysCP.';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVotre demande de billet de support ayant comme sujet "{SUBJECT}" a été envoyé.\n\nVous receverez une notification lorsque votre billet aura une réponse.\n\nMerci,\nL\'équipe Froxlor.';
 $lng['mails']['new_ticket_for_customer']['subject'] = 'Votre billet de support a été envoyé';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Bonjour administrateur,\n\nUn nouveau billet de support ayant comme sujet "{SUBJECT}" a été ouvert.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nl\'équipe SysCP.';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Bonjour administrateur,\n\nUn nouveau billet de support ayant comme sujet "{SUBJECT}" a été ouvert.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nl\'équipe Froxlor.';
 $lng['mails']['new_ticket_by_customer']['subject'] = 'Nouveau billet de support soumis';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Bonjour administrateur,\n\nLe billet de support "{SUBJECT}" a reçu une réponse de la part du client.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\'équipe SysCP.';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Bonjour administrateur,\n\nLe billet de support "{SUBJECT}" a reçu une réponse de la part du client.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\'équipe Froxlor.';
 $lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nouvelle réponse au billet de support';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nUn billet de support ayant comme sujet "{SUBJECT}" a été ouvert pour vous par notre équipe.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\'équipe SysCP.';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nUn billet de support ayant comme sujet "{SUBJECT}" a été ouvert pour vous par notre équipe.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\'équipe Froxlor.';
 $lng['mails']['new_ticket_by_staff']['subject'] = 'Nouvelle demande de support soumise';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nLe billet de support ayant comme sujet "{SUBJECT}" a reçu une réponse par notre équipe.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\équipe SysCP.';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nLe billet de support ayant comme sujet "{SUBJECT}" a reçu une réponse par notre équipe.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\équipe Froxlor.';
 $lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Nouvelle réponse au billet de support';
 $lng['question']['ticket_reallyclose'] = 'Etes-vous sûr de vouloir clôturer le billet "%s" ?';
 $lng['question']['ticket_reallydelete'] = 'Etes-vous sûr de vouloir supprimer le billet "%s" ?';
@@ -756,7 +758,7 @@ $lng['traffic']['summail'] = 'Trafic E-mail total entrant';
 
 // ADDED IN 1.2.19-svn4.5
 
-$lng['serversettings']['no_robots']['title'] = 'Permettre aux robots des moteurs de recherche d\'indexer l\'installation de SysCP';
+$lng['serversettings']['no_robots']['title'] = 'Permettre aux robots des moteurs de recherche d\'indexer l\'installation de Froxlor';
 
 // ADDED IN 1.2.19-svn6
 
@@ -896,8 +898,8 @@ $lng['login']['presend'] = 'Réinitialiser le mot de passe';
 $lng['login']['email'] = 'Adresse e-mail';
 $lng['login']['remind'] = 'Réinitialiser mon mot de passe';
 $lng['login']['usernotfound'] = 'Erreur : utilisateur inconnu !';
-$lng['pwdreminder']['subject'] = 'SysCP - réinitialisation du mot de passe';
-$lng['pwdreminder']['body'] = 'Bonjour %s,\n\nVotre mot de passe pour SysCP a été réinitialiser !\nLe nouveau mot de passe est : %p\n\nCordialement,\nL\'équipe SysCP.';
+$lng['pwdreminder']['subject'] = 'Froxlor - réinitialisation du mot de passe';
+$lng['pwdreminder']['body'] = 'Bonjour %s,\n\nVotre mot de passe pour Froxlor a été réinitialiser !\nLe nouveau mot de passe est : %p\n\nCordialement,\nL\'équipe Froxlor.';
 $lng['pwdreminder']['success'] = 'Mot de passe correctement réinitialiser.<br />Vous devriez recevoir un e-mail avec votre nouveau mot de passe d\'ici quelques minutes.';
 
 // ADDED IN 1.2.19-svn18
@@ -937,7 +939,7 @@ $lng['panel']['intervalfee_type_one']['m'] = 'Mois';
 $lng['panel']['intervalfee_type_one']['d'] = 'Jour';
 $lng['panel']['service_still_active'] = 'Le service est toujours actif';
 $lng['panel']['allow_modifications'] = 'Permettre les modifications';
-$lng['domains']['add_date'] = 'Ajouter à SysCP';
+$lng['domains']['add_date'] = 'Ajouter à Froxlor';
 $lng['domains']['registration_date'] = 'Ajouter à l\'enregistrement';
 $lng['domains']['topleveldomain'] = 'Domaine de premier niveau';
 $lng['admin']['accountdata'] = 'Informations du compte';

@@ -1,16 +1,17 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
  * @author     Laszlo (Laci) Puchner <puchnerl@konyvbroker.hu>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  * @version    $Id: hungarian.lng.php 2692 2009-03-27 18:04:47Z flo $
  */
@@ -259,9 +260,9 @@ $lng['question']['admin_configs_reallyrebuild'] = 'T&eacute;nyleg &uacute;jra sz
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = '&Uuml;dv&ouml;zl&ouml;m!\n\nE-mail fi&oacute;kja {EMAIL} l&eacute;trej&ouml;tt.\n\nEz egy automatikusan k&uuml;ld&ouml;tt\ne-mail, k&eacute;rem, ne v&aacute;laszoljon r&aacute;!\n\nTisztelettel: a SysCP csapata';
+$lng['mails']['pop_success']['mailbody'] = '&Uuml;dv&ouml;zl&ouml;m!\n\nE-mail fi&oacute;kja {EMAIL} l&eacute;trej&ouml;tt.\n\nEz egy automatikusan k&uuml;ld&ouml;tt\ne-mail, k&eacute;rem, ne v&aacute;laszoljon r&aacute;!\n\nTisztelettel: a Froxlor csapata';
 $lng['mails']['pop_success']['subject'] = 'E-mail fi&oacute;k l&eacute;trehozva.';
-$lng['mails']['createcustomer']['mailbody'] = 'Tisztelt {FIRSTNAME} {NAME}!\n\nAz &Ouml;n postafi&oacute;k adatai:\n\nFelhaszn&aacute;l&oacute;n&eacute;v: {USERNAME}\nJelsz&oacute;: {PASSWORD}\n\nK&ouml;sz&ouml;nj&uuml;k:\na SysCP csapata';
+$lng['mails']['createcustomer']['mailbody'] = 'Tisztelt {FIRSTNAME} {NAME}!\n\nAz &Ouml;n postafi&oacute;k adatai:\n\nFelhaszn&aacute;l&oacute;n&eacute;v: {USERNAME}\nJelsz&oacute;: {PASSWORD}\n\nK&ouml;sz&ouml;nj&uuml;k:\na Froxlor csapata';
 $lng['mails']['createcustomer']['subject'] = 'Postafi&oacute;k inform&aacute;ci&oacute;';
 
 /**

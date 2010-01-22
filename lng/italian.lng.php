@@ -1,17 +1,19 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
  * @author     Luca Piona <info@havanastudio.ch>
  * @author     Luca Longinotti <chtekk@gentoo.org>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @author     Froxlor Team <team@froxlor.org>
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  * @version    $Id: italian.lng.php 2692 2009-03-27 18:04:47Z flo $
  */
@@ -260,9 +262,9 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Sei sicuro di voler rigenerar
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Salve,\n\nil tuo indirizzo Email {EMAIL}\nè stato configurato con successo.\n\nQuesta è un\'Email creata automaticamente,\n per favore non rispondere!\n\nCordiali saluti, SysCP-Team.';
+$lng['mails']['pop_success']['mailbody'] = 'Salve,\n\nil tuo indirizzo Email {EMAIL}\nè stato configurato con successo.\n\nQuesta è un\'Email creata automaticamente,\n per favore non rispondere!\n\nCordiali saluti, Froxlor-Team.';
 $lng['mails']['pop_success']['subject'] = 'Indirizzo Email configurato con successo';
-$lng['mails']['createcustomer']['mailbody'] = 'Salve {FIRSTNAME} {NAME},\n\nqueste sono le informazioni per il tuo account:\n\nNome Utente: {USERNAME}\nPassword: {PASSWORD}\n\nGrazie,\nSysCP-Team.';
+$lng['mails']['createcustomer']['mailbody'] = 'Salve {FIRSTNAME} {NAME},\n\nqueste sono le informazioni per il tuo account:\n\nNome Utente: {USERNAME}\nPassword: {PASSWORD}\n\nGrazie,\nFroxlor-Team.';
 $lng['mails']['createcustomer']['subject'] = 'Informazioni account';
 
 /**
@@ -303,7 +305,7 @@ $lng['admin']['deactivated_user'] = 'Disattiva utente';
 $lng['admin']['sendpassword'] = 'Invia password';
 $lng['admin']['ownvhostsettings'] = 'Impostazioni vHost speciali';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configurazione servizi';
-$lng['admin']['configfiles']['files'] = '<b>File di configurazione:</b> Per favore cambia questi file o creali<br />se non esistono, con il seguente contenuto.<br /><b>NOTA:</b> La password di MySQL non è stata rimpiazzata per ragioni di sicurezza.<br />Per favore rimpiazza &quot;MYSQL_PASSWORD&quot; con la password MySQL dell\'utente syscp. Se hai dimenticato la password per MySQL<br />la trovi in &quot;lib/userdata.inc.php&quot;.';
+$lng['admin']['configfiles']['files'] = '<b>File di configurazione:</b> Per favore cambia questi file o creali<br />se non esistono, con il seguente contenuto.<br /><b>NOTA:</b> La password di MySQL non è stata rimpiazzata per ragioni di sicurezza.<br />Per favore rimpiazza &quot;MYSQL_PASSWORD&quot; con la password MySQL dell\'utente Froxlor. Se hai dimenticato la password per MySQL<br />la trovi in &quot;lib/userdata.inc.php&quot;.';
 $lng['admin']['configfiles']['commands'] = '<b>Comandi:</b> Per favore esegui i seguenti comandi in una shell.';
 $lng['admin']['configfiles']['restart'] = '<b>Ricarica:</b> Per favore esegui i seguenti comandi (in ordine) in una shell per ricaricare la configurazione.';
 $lng['admin']['templates']['templates'] = 'Template';
@@ -430,7 +432,7 @@ $lng['panel']['used'] = 'utilizzato';
 $lng['panel']['translator'] = 'Traduttore';
 $lng['error']['stringformaterror'] = 'Il valore per il campo &quot;%s&quot; non è nel formato atteso.';
 
-// Translated by marone42@googlemail.com on 03/15/2007 (see https://trac.syscp.org/ticket/126#comment:21)
+// Translated by marone42@googlemail.com on 03/15/2007 (see https://trac.froxlor.org/ticket/126#comment:21)
 
 $lng['admin']['serversoftware'] = 'Serversoftware';
 $lng['admin']['phpversion'] = 'Versione PHP';

@@ -1,16 +1,18 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2007 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @author     Florian Lippert <flo@syscp.org> (2003-2007)
+ * @author     Froxlor Team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  * @version    $Id: czech.lng.php 2724 2009-06-07 14:18:02Z flo $
  */
@@ -258,9 +260,9 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Opravdu chcete rebuildovat ap
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Dobrý den,\n\nVáš e-mailový úèet {EMAIL}\nbyl v poøádku nastaven.\n\nToto je automaticky vytvoøený\ne-mail, prosím neodpovídejte na nìj!\n\nPøejeme hezký den, SysCP-Team';
+$lng['mails']['pop_success']['mailbody'] = 'Dobrý den,\n\nVáš e-mailový úèet {EMAIL}\nbyl v poøádku nastaven.\n\nToto je automaticky vytvoøený\ne-mail, prosím neodpovídejte na nìj!\n\nPøejeme hezký den, Froxlor-Team';
 $lng['mails']['pop_success']['subject'] = 'Poštovní úèet byl úspìšnì nastaven';
-$lng['mails']['createcustomer']['mailbody'] = 'Dobrý den, {FIRSTNAME} {NAME},\n\nzde jsou informace o Vašem úètu:\n\nUživatel: {USERNAME}\nHeslo: {PASSWORD}\n\nDìkujeme,\nSysCP-Team';
+$lng['mails']['createcustomer']['mailbody'] = 'Dobrý den, {FIRSTNAME} {NAME},\n\nzde jsou informace o Vašem úètu:\n\nUživatel: {USERNAME}\nHeslo: {PASSWORD}\n\nDìkujeme,\nFroxlor-Team';
 $lng['mails']['createcustomer']['subject'] = 'Informace o úètu';
 
 /**
@@ -493,7 +495,7 @@ $lng['panel']['pathDescription'] = 'Pokud adresáø neexistuje, bude vytvoøen auto
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Vážený uživateli {NAME},\n\nPoužil jste {TRAFFICUSED} MB z Vámi dostupných {TRAFFIC} MB pøenosù.\nTo je více jak 90%.\n\nPøejeme hezký den, SysCP-Team';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'Vážený uživateli {NAME},\n\nPoužil jste {TRAFFICUSED} MB z Vámi dostupných {TRAFFIC} MB pøenosù.\nTo je více jak 90%.\n\nPøejeme hezký den, Froxlor-Team';
 $lng['mails']['trafficninetypercent']['subject'] = 'Dosahujíc vašeho limitu pøenosù';
 $lng['admin']['templates']['trafficninetypercent'] = 'Upozoròovací mail pro zákazníky, pokud vyèerpají 90% z pøenosù';
 $lng['admin']['templates']['TRAFFIC'] = 'Nahrazeno pøenosy, které byly pøidìleny uživateli.';
@@ -544,7 +546,7 @@ $lng['serversettings']['mod_fcgid']['description'] = 'Použij mod_fcgid/suexec/li
 $lng['serversettings']['sendalternativemail']['title'] = 'Použij alternativní e-mailovou adresu';
 $lng['serversettings']['sendalternativemail']['description'] = 'Pošli email s heslem na jinou adresu pøi vytváøení emailového úètu';
 $lng['emails']['alternative_emailaddress'] = 'Alternativní e-mailová adresa';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Vážený uživateli,\n\nVáš emailový úèet {EMAIL}\nbyl úspìšnì nastaven.\nVaše heslo je {PASSWORD}.\n\nTento e-mail byl automaticky vygenerován,\nprosím neodpovídejte na nìj!\n\nPøejeme Vám hezký den, SysCP-Team';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Vážený uživateli,\n\nVáš emailový úèet {EMAIL}\nbyl úspìšnì nastaven.\nVaše heslo je {PASSWORD}.\n\nTento e-mail byl automaticky vygenerován,\nprosím neodpovídejte na nìj!\n\nPøejeme Vám hezký den, Froxlor-Team';
 $lng['mails']['pop_success_alternative']['subject'] = 'E-mailový úèet byl úspìšnì vytvoøen';
 $lng['admin']['templates']['pop_success_alternative'] = 'Uvítací e-mail pro nové úèty byl odeslán na alternativní adresu';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Nahrazeno heslem úètu POP3/IMAP.';
@@ -587,7 +589,7 @@ $lng['serversettings']['webalizer_quiet']['description'] = 'Povídavost webalizer
 // ADDED IN 1.2.18-svn3
 
 $lng['ticket']['admin_email'] = 'root@localhost';
-$lng['ticket']['noreply_email'] = 'tikety@syscp';
+$lng['ticket']['noreply_email'] = 'tikety@froxlor';
 $lng['admin']['ticketsystem'] = 'Support-tikety';
 $lng['menue']['ticket']['ticket'] = 'Support tikety';
 $lng['menue']['ticket']['categories'] = 'Kategorie podpory';
@@ -648,15 +650,15 @@ $lng['admin']['templates']['new_ticket_by_customer'] = 'Administrátorské upozorn
 $lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Administrátorské upozornìní, že pøišla odpovìï na tiket od zákazníka';
 $lng['admin']['templates']['new_ticket_by_staff'] = 'Zákaznické upozornìní, že byl tiket otevøen personálem';
 $lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Zákaznické upozornìní na odpovìï na tiket od personálu';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\nVáš tiket podpory s pøedmìtem "{SUBJECT}" byl odeslán.\n\nAž pøijde odpovìï na Váš tiket, budete upozornìni.\n\nDìkujeme,\n SysCP-Team';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\nVáš tiket podpory s pøedmìtem "{SUBJECT}" byl odeslán.\n\nAž pøijde odpovìï na Váš tiket, budete upozornìni.\n\nDìkujeme,\n Froxlor-Team';
 $lng['mails']['new_ticket_for_customer']['subject'] = 'Váš tiket na podporu byl odeslán';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Milý administrátore,\n\nbyl odeslán nový tiket s pøedmìtem "{SUBJECT}".\n\nProsím pøihlašte se pro otevøení tiketu.\n\nDìkujeme,\n SysCP-Team';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Milý administrátore,\n\nbyl odeslán nový tiket s pøedmìtem "{SUBJECT}".\n\nProsím pøihlašte se pro otevøení tiketu.\n\nDìkujeme,\n Froxlor-Team';
 $lng['mails']['new_ticket_by_customer']['subject'] = 'Nový tiket podpory byl odeslán';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Milý administrátore,\n\ntiket podpory "{SUBJECT}" byl zodpovìzen zákazníkem.\n\nProsím pøihlašte se pro otevøení tiketu.\n\nDìkujeme,\n SysCP-Team';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Milý administrátore,\n\ntiket podpory "{SUBJECT}" byl zodpovìzen zákazníkem.\n\nProsím pøihlašte se pro otevøení tiketu.\n\nDìkujeme,\n Froxlor-Team';
 $lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nová odpovìï na tiket podpory';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\nbyl pro Vás otevøen tiket podpory s pøedmìtem "{SUBJECT}".\n\nProsím pøihlašte se pro otevøení tiketu.\n\nDìkujeme,\n SysCP-Team';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\nbyl pro Vás otevøen tiket podpory s pøedmìtem "{SUBJECT}".\n\nProsím pøihlašte se pro otevøení tiketu.\n\nDìkujeme,\n Froxlor-Team';
 $lng['mails']['new_ticket_by_staff']['subject'] = 'Nový tiket podpory byl odeslán';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\ntiket podpory s pøedmìtem "{SUBJECT}" byl zodpovìzen naším personálem.\n\nPro pøeètení tiketu se prosím pøihlašte.\n\nDìkujem,\n SysCP-Team';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\ntiket podpory s pøedmìtem "{SUBJECT}" byl zodpovìzen naším personálem.\n\nPro pøeètení tiketu se prosím pøihlašte.\n\nDìkujem,\n Froxlor-Team';
 $lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Nová odpovìï na tiket podpory';
 $lng['question']['ticket_reallyclose'] = 'Opravdu chcete zavøít tiket "%s"?';
 $lng['question']['ticket_reallydelete'] = 'Opravdu chcete smazat tiket "%s"?';

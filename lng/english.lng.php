@@ -2,15 +2,17 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the Froxlor Team (see authors).
+ * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
  * @author     Florian Lippert <flo@syscp.org>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @author     Froxlor Team <team@froxlor.org>
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  * @version    $Id: english.lng.php 2724 2009-06-07 14:18:02Z flo $
  */
@@ -258,9 +260,9 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Do you really want to rebuild
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Hello,\n\nyour Mail account {EMAIL}\nwas set up successfully.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, the SysCP-Team';
+$lng['mails']['pop_success']['mailbody'] = 'Hello,\n\nyour Mail account {EMAIL}\nwas set up successfully.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, the Froxlor-Team';
 $lng['mails']['pop_success']['subject'] = 'Mail account set up successfully';
-$lng['mails']['createcustomer']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nhere is your account information:\n\nUsername: {USERNAME}\nPassword: {PASSWORD}\n\nThank you,\nthe SysCP-Team';
+$lng['mails']['createcustomer']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nhere is your account information:\n\nUsername: {USERNAME}\nPassword: {PASSWORD}\n\nThank you,\nthe Froxlor-Team';
 $lng['mails']['createcustomer']['subject'] = 'Account information';
 
 /**
@@ -960,7 +962,7 @@ $lng['admin']['show_version_footer']['description'] = 'Show the Froxlor version 
 $lng['admin']['froxlor_graphic']['title'] = 'Header graphic for Froxlor';
 $lng['admin']['froxlor_graphic']['description'] = 'What graphic should be shown in the header';
 
-//improved syscp
+//improved froxlor
 
 $lng['menue']['phpsettings']['maintitle'] = 'PHP Configurations';
 $lng['admin']['phpsettings']['title'] = 'PHP Configuration';
@@ -1110,7 +1112,7 @@ $lng['aps']['invalidzipfile'] = '<strong>Errors for <em>%s</em></strong><br/><ul
 $lng['aps']['successpackageupdate'] = '<strong><em>%s</em> successfully installed as a Package update</strong>';
 $lng['aps']['successpackageinstall'] = '<strong><em>%s</em> successfully installed as a new Package</strong>';
 $lng['aps']['class_zip_missing'] = 'SimpleXML Class, exec function or ZIP Functions missing or not enabled! For further information about this problem look into the handbook for this module.';
-$lng['aps']['dir_permissions'] = 'The PHP/Webserver process must be able to write in the directory /var/www/syscp/temp/ and /var/www/syscp/packages/';
+$lng['aps']['dir_permissions'] = 'The PHP/Webserver process must be able to write in the directory /var/www/froxlor/temp/ and /var/www/froxlor/packages/';
 $lng['aps']['initerror'] = '<strong>There are some problems with this module:</strong><ul>%s</ul>Fix these problems, otherwise the module cannot be used!';
 $lng['aps']['iderror'] = 'Wrong id specified!';
 $lng['aps']['nopacketsforinstallation'] = 'There are no packages to install.';
@@ -1185,14 +1187,14 @@ $lng['aps']['numberofapspackages'] = 'Amount of APS installations';
 $lng['aps']['allpackagesused'] = '<strong>Error</strong><br/><br/>You have already reached the number of installable APS applications.';
 $lng['aps']['noinstancesexisting'] = 'There are currently no instances which could be managed. There must be installed at least one application by a customer.';
 $lng['aps']['lightywarning'] = 'Warning';
-$lng['aps']['lightywarningdescription'] = 'You are using the lighttpd webserver together with SysCP. The APS module was mainly written for Apache, so it can be possible that some features do not work with lighttpd. Please remember this when using the APS module. If you have found or experienced any problems in connection with lighttpd and the APS module please report them to the developers that they can be fixed within the next release if SysCP.';
+$lng['aps']['lightywarningdescription'] = 'You are using the lighttpd webserver together with Froxlor. The APS module was mainly written for Apache, so it can be possible that some features do not work with lighttpd. Please remember this when using the APS module. If you have found or experienced any problems in connection with lighttpd and the APS module please report them to the developers that they can be fixed within the next release if Froxlor.';
 $lng['error']['customerdoesntexist'] = 'The customer you have chosen doesn\'t exist.';
 $lng['error']['admindoesntexist'] = 'The admin you have chosen doesn\'t exist.';
 
 // ADDED IN 1.2.19-svn37
 
-$lng['serversettings']['system_realtime_port']['title'] = 'Port for realtime SysCP';
-$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature ist deactivated.<br />See also: <a href="https://wiki.syscp.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
+$lng['serversettings']['system_realtime_port']['title'] = 'Port for realtime Froxlor';
+$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature ist deactivated.<br />See also: <a href="https://wiki.froxlor.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Allow multiple login';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'If activated a user could login multiple times.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Allow moving domains between admins';

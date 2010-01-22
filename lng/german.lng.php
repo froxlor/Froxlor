@@ -2,15 +2,17 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the Froxlor Team (see authors).
+ * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @author     Florian Lippert <flo@syscp.org> (2003-2009)
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  * @version    $Id: german.lng.php 2724 2009-06-07 14:18:02Z flo $
  */
@@ -258,9 +260,9 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Wollen Sie wirklich alle Konf
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Hallo,\n\nIhr E-Mail-Konto {USERNAME}\nwurde erfolgreich eingerichtet.\n\nDies ist eine automatisch generierte\nE-Mail, bitte antworten Sie nicht auf\ndiese Mitteilung.\n\nIhr SysCP-Team';
+$lng['mails']['pop_success']['mailbody'] = 'Hallo,\n\nIhr E-Mail-Konto {USERNAME}\nwurde erfolgreich eingerichtet.\n\nDies ist eine automatisch generierte\nE-Mail, bitte antworten Sie nicht auf\ndiese Mitteilung.\n\nIhr Froxlor-Team';
 $lng['mails']['pop_success']['subject'] = 'E-Mail-Konto erfolgreich eingerichtet';
-$lng['mails']['createcustomer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhier ihre Accountinformationen:\n\nBenutzername: {USERNAME}\nPassword: {PASSWORD}\n\nVielen Dank,\nIhr SysCP-Team';
+$lng['mails']['createcustomer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhier ihre Accountinformationen:\n\nBenutzername: {USERNAME}\nPassword: {PASSWORD}\n\nVielen Dank,\nIhr Froxlor-Team';
 $lng['mails']['createcustomer']['subject'] = 'Kontoinformationen';
 
 /**
@@ -494,7 +496,7 @@ $lng['panel']['pathDescription'] = 'Wenn das Verzeichnis nicht existiert, wird e
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Sehr geehrte(r) {NAME},\n\nSie haben bereits {TRAFFICUSED} MB von Ihren insgesamt {TRAFFIC} MB Traffic verbraucht.\nDies sind mehr als 90%.\n\nVielen Dank,\ndas SysCP-Team';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'Sehr geehrte(r) {NAME},\n\nSie haben bereits {TRAFFICUSED} MB von Ihren insgesamt {TRAFFIC} MB Traffic verbraucht.\nDies sind mehr als 90%.\n\nVielen Dank,\ndas Froxlor-Team';
 $lng['mails']['trafficninetypercent']['subject'] = 'Sie erreichen bald Ihr Traffic-Limit';
 $lng['admin']['templates']['trafficninetypercent'] = 'Hinweismail f&uuml;r Kunden, wenn sie 90% des Traffics verbraucht haben';
 $lng['admin']['templates']['TRAFFIC'] = 'Wird mit Traffic, der dem Kunden zugewiesen wurde, ersetzt.';
@@ -511,7 +513,7 @@ $lng['changepassword']['also_change_webalizer'] = ' Auch Passwort vom Webalizer 
 // ADDED IN 1.2.16-svn8
 
 $lng['serversettings']['mailpwcleartext']['title'] = 'Passw&ouml;rter der Mail-Konten auch im Klartext in der Datenbank speichern';
-$lng['serversettings']['mailpwcleartext']['description'] = 'Wenn diese Einstellung auf Ja gesetzt wird, werden alle Passw&ouml;rter auch unverschl&uuml;sselt (also im Klartext, f&uuml;r jeden mit Zugriff auf die SysCP-Datenbank sofort lesbar) in der mail_users-Tabelle gespeichert. Aktivieren Sie diese Option nur dann, wenn Sie sie wirklich gebrauchen!';
+$lng['serversettings']['mailpwcleartext']['description'] = 'Wenn diese Einstellung auf Ja gesetzt wird, werden alle Passw&ouml;rter auch unverschl&uuml;sselt (also im Klartext, f&uuml;r jeden mit Zugriff auf die Froxlor-Datenbank sofort lesbar) in der mail_users-Tabelle gespeichert. Aktivieren Sie diese Option nur dann, wenn Sie sie wirklich gebrauchen!';
 $lng['serversettings']['mailpwcleartext']['removelink'] = 'Klicken Sie hier, um alle unverschl&uuml;sselten Passw&ouml;rter aus der Tabelle zu entfernen.';
 $lng['question']['admin_cleartextmailpws_reallywipe'] = 'Wollen Sie wirklich alle unverschl&uuml;sselten Passw&ouml;rter aus der Tabelle mail_users entfernen? Dieser Schritt kann nicht r&uuml;ckg&auml;ngig gemacht werden!';
 $lng['admin']['configfiles']['overview'] = '&Uuml;bersicht';
@@ -541,11 +543,11 @@ $lng['panel']['back'] = 'Zur&uuml;ck';
 $lng['serversettings']['mod_log_sql']['title'] = 'Logs in Datenbank zwischenspeichern';
 $lng['serversettings']['mod_log_sql']['description'] = '<a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle Apache-Konfiguration</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP &uuml;ber mod_fcgid/suexec einbinden';
-$lng['serversettings']['mod_fcgid']['description'] = 'mod_fcgid/suexec/libnss_mysql benutzen um PHP unter dem jeweiligen Useraccount laufen zu lassen<br /><b>Dies ben&ouml;tigt eine spezielle <a href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'mod_fcgid/suexec/libnss_mysql benutzen um PHP unter dem jeweiligen Useraccount laufen zu lassen<br /><b>Dies ben&ouml;tigt eine spezielle <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Alternative E-Mail-Adresse benutzen';
 $lng['serversettings']['sendalternativemail']['description'] = 'W&auml;hrend des Erstellens eines Accounts das Passwort an eine andere E-Mail-Adresse senden';
 $lng['emails']['alternative_emailaddress'] = 'Alternative E-Mail-Adresse';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Hallo,\n\nihr E-Mail-Konto {USERNAME}\nwurde erfolgreich eingerichtet.\nIhr Passwort lautet {PASSWORD}.\n\nDies ist eine automatisch generierte\neMail, bitte antworten Sie nicht auf\ndiese Mitteilung.\n\nIhr SysCP-Team';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Hallo,\n\nihr E-Mail-Konto {USERNAME}\nwurde erfolgreich eingerichtet.\nIhr Passwort lautet {PASSWORD}.\n\nDies ist eine automatisch generierte\neMail, bitte antworten Sie nicht auf\ndiese Mitteilung.\n\nIhr Froxlor-Team';
 $lng['mails']['pop_success_alternative']['subject'] = 'E-Mail-Konto erfolgreich eingerichtet';
 $lng['admin']['templates']['pop_success_alternative'] = 'Willkommensmail f&uuml;r neue E-Mail Konten f&uuml;r die alternative Email Addresse';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Wird mit dem Passwort des neuen POP3/IMAP Kontos ersetzt.';
@@ -571,7 +573,7 @@ $lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma g
 
 // CHANGED IN 1.2.18
 
-$lng['serversettings']['mod_log_sql']['description'] = '<a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle <a href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
+$lng['serversettings']['mod_log_sql']['description'] = '<a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
 $lng['serversettings']['mod_fcgid']['description'] = 'mod_fcgid/suexec/libnss_mysql benutzen um PHP unter dem jeweiligen Useraccount laufen zu lassen<br /><b>Dies ben&ouml;tigt eine spezielle Webserver-Konfiguration. Alle nachfolgenden Optionen sind nur g&uuml;ltig wenn das Modul aktiviert wird.</b>';
 
 // ADDED IN 1.2.18-svn1
@@ -593,7 +595,7 @@ $lng['serversettings']['webalizer_quiet']['description'] = 'Ausgabefreudigkeit d
 // ADDED IN 1.2.18-svn3
 
 $lng['ticket']['admin_email'] = 'root@localhost';
-$lng['ticket']['noreply_email'] = 'tickets@syscp';
+$lng['ticket']['noreply_email'] = 'tickets@froxlor';
 $lng['admin']['ticketsystem'] = 'Support-Tickets';
 $lng['menue']['ticket']['ticket'] = 'Support Tickets';
 $lng['menue']['ticket']['categories'] = 'Support Kategorien';
@@ -654,15 +656,15 @@ $lng['admin']['templates']['new_ticket_by_customer'] = 'Admin-Benachrichtigung f
 $lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Admin-Benachrichtigung f&uuml;r ein beantwortetes Ticket';
 $lng['admin']['templates']['new_ticket_by_staff'] = 'Kunden-Benachrichtigung f&uuml;r ein Ticket eines Mitarbeiters';
 $lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Kunden-Benachrichtigung f&uuml;r ein beantwortetes Ticket';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nihr Support-Ticket mit dem Betreff "{SUBJECT}" wurde erfolgreich gesendet.\n\nSobald ihr Ticket beantwortet wurde, werden Sie per E-Mail benachrichtigt.\n\nVielen Dank,\nthe SysCP-Team';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nihr Support-Ticket mit dem Betreff "{SUBJECT}" wurde erfolgreich gesendet.\n\nSobald ihr Ticket beantwortet wurde, werden Sie per E-Mail benachrichtigt.\n\nVielen Dank,\nthe Froxlor-Team';
 $lng['mails']['new_ticket_for_customer']['subject'] = 'Wir haben Ihr Support-Ticket erhalten.';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hallo Admin,\n\nein neues Support-Ticket wurde uebermittelt.\n\nBitte melde Dich an um es aufzurufen.\n\nVielen Dank,\ndas SysCP-Team';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hallo Admin,\n\nein neues Support-Ticket wurde uebermittelt.\n\nBitte melde Dich an um es aufzurufen.\n\nVielen Dank,\ndas Froxlor-Team';
 $lng['mails']['new_ticket_by_customer']['subject'] = 'Neues Support-Ticket';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hallo Admin,\n\ndas Support-Ticket "{SUBJECT}" wurde von einem Kunden beantwortet.\n\nBitte melde Dich an um es aufzurufen.\n\nVielen Dank,\ndas SysCP-Team';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hallo Admin,\n\ndas Support-Ticket "{SUBJECT}" wurde von einem Kunden beantwortet.\n\nBitte melde Dich an um es aufzurufen.\n\nVielen Dank,\ndas Froxlor-Team';
 $lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Neue Antwort zu einem Support-Ticket';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nein Support-Ticket mit dem Betreff "{SUBJECT}" wurde an Sie &uuml;bermittelt.\n\nBitte melden Sie sich an, um das Ticket aufzurufen.\n\nVielen Dank,\ndas SysCP-Team';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nein Support-Ticket mit dem Betreff "{SUBJECT}" wurde an Sie &uuml;bermittelt.\n\nBitte melden Sie sich an, um das Ticket aufzurufen.\n\nVielen Dank,\ndas Froxlor-Team';
 $lng['mails']['new_ticket_by_staff']['subject'] = 'Neues Support-Ticket';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\ndas Support-Ticket mit dem Betreff "{SUBJECT}" wurde von einem Mitarbeiter beantwortet.\n\nBitte melden Sie sich an, um das Ticket aufzurufen.\n\nVielen Dank,\ndas SysCP-Team';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\ndas Support-Ticket mit dem Betreff "{SUBJECT}" wurde von einem Mitarbeiter beantwortet.\n\nBitte melden Sie sich an, um das Ticket aufzurufen.\n\nVielen Dank,\ndas Froxlor-Team';
 $lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Neue Antwort zu einem Support-Ticket';
 $lng['question']['ticket_reallyclose'] = 'Wollen Sie das Ticket "%s" wirklich schlie&szlig;en?';
 $lng['question']['ticket_reallydelete'] = 'Wollen Sie das Ticket "%s" wirklich l&ouml;schen?';
@@ -869,7 +871,7 @@ $lng['login']['email'] = 'E-Mail Adresse';
 $lng['login']['remind'] = 'Passwort zur&uuml;cksetzen';
 $lng['login']['usernotfound'] = 'Fehler: Unbekannter Benutzer!';
 $lng['pwdreminder']['subject'] = 'Froxlor - Passwort zur&uuml;ckgesetzt';
-$lng['pwdreminder']['body'] = 'Hallo %s,\n\nIhr Froxlor Passwort wurde zur&uuml;ckgesetzt!\nDas neue Passwort lautet: %p\n\nVielen Dank,\nIhr SysCP-Team';
+$lng['pwdreminder']['body'] = 'Hallo %s,\n\nIhr Froxlor Passwort wurde zur&uuml;ckgesetzt!\nDas neue Passwort lautet: %p\n\nVielen Dank,\nIhr Froxlor-Team';
 $lng['pwdreminder']['success'] = 'Passwort erfolgreich zur&uuml;ckgesetzt.<br />Sie sollten nun eine E-Mail mit dem neuen Passwort erhalten.';
 
 // ADDED IN 1.2.19-svn18
@@ -963,7 +965,7 @@ $lng['admin']['show_version_footer']['description'] = 'Zeige Froxlor Version in 
 $lng['admin']['froxlor_graphic']['title'] = 'Grafik im Kopfbereich des Panels';
 $lng['admin']['froxlor_graphic']['description'] = 'Welche Grafik soll im Kopfbereich des Panels anstatt des Froxlor Logos angezeigt werden?';
 
-//improved syscp
+//improved froxlor
 
 $lng['menue']['phpsettings']['maintitle'] = 'PHP Konfigurationen';
 $lng['admin']['phpsettings']['title'] = 'PHP Konfiguration';
@@ -1065,7 +1067,7 @@ $lng['aps']['notazipfile'] = 'Die hochgeladene Datei ist keine g&uuml;ltige ZIP-
 $lng['aps']['filetoobig'] = 'Die Datei ist zu gro&szlig;.';
 $lng['aps']['filenotcomplete'] = 'Die Datei wurde nicht vollst&auml;ndig hochgeladen.';
 $lng['aps']['phperror'] = 'Es trat ein PHP interner Fehler auf. Der Upload Fehlercode lautet #';
-$lng['aps']['moveproblem'] = 'Die hochgeladene Datei konnte nicht aus dem tempor&auml;ren Ordner verschoben werden. Pr&uuml;fen Sie ob alle Rechte korrekt gesetzt sind. Dies gilt insbesondere f&uuml; die Ordner /var/www/syscp/temp/ und /var/www/syscp/packages/.';
+$lng['aps']['moveproblem'] = 'Die hochgeladene Datei konnte nicht aus dem tempor&auml;ren Ordner verschoben werden. Pr&uuml;fen Sie ob alle Rechte korrekt gesetzt sind. Dies gilt insbesondere f&uuml; die Ordner /var/www/froxlor/temp/ und /var/www/froxlor/packages/.';
 $lng['aps']['uploaderrors'] = '<strong>Fehler f&uuml;r die Datei <em>%s</em></strong><br/><ul>%s</ul>';
 $lng['aps']['nospecialchars'] = 'Sonderzeichen sind im Suchausdruck nicht erlaubt!';
 $lng['aps']['noitemsfound'] = 'Es wurden keine Pakete gefunden!';
@@ -1115,7 +1117,7 @@ $lng['aps']['invalidzipfile'] = '<strong>Fehler f&uuml;r <em>%s</em></strong><br
 $lng['aps']['successpackageupdate'] = '<strong><em>%s</em> erfolgreich als Paketupdate installiert</strong>';
 $lng['aps']['successpackageinstall'] = '<strong><em>%s</em> erfolgreich als neues Paket installiert</strong>';
 $lng['aps']['class_zip_missing'] = 'SimpleXML Klasse, exec Funktion oder ZIP Funktionen nicht vorhanden bzw. aktiviert! F&uuml;r genauere Informationen zu diesem Problem schauen Sie bitte in das Handbuch zu diesem Modul.';
-$lng['aps']['dir_permissions'] = 'Der PHP bzw. Webserver Prozess muss Schreibrechte f&uuml;r /var/www/syscp/temp/ und /var/www/syscp/packages/ haben.';
+$lng['aps']['dir_permissions'] = 'Der PHP bzw. Webserver Prozess muss Schreibrechte f&uuml;r /var/www/froxlor/temp/ und /var/www/froxlor/packages/ haben.';
 $lng['aps']['initerror'] = '<strong>Es gibt ein paar Probleme mit diesem Modul:</strong><ul>%s</ul>Beheben Sie diese Probleme oder das Modul kann nicht genutzt werden!';
 $lng['aps']['iderror'] = 'Es wurde eine falsche Id &uuml;bergeben!';
 $lng['aps']['nopacketsforinstallation'] = 'Es wurden keine Pakete zur Installation gefunden.';
@@ -1189,14 +1191,14 @@ $lng['aps']['numberofapspackages'] = 'Anzahl an APS Installationen';
 $lng['aps']['allpackagesused'] = '<strong>Fehler</strong><br/><br/>Sie haben bereits die Anzahl an installierbaren APS Anwendungen erreicht bzw. &uuml;berschritten.';
 $lng['aps']['noinstancesexisting'] = 'Es gibt momentan noch keine Instanzen, die verwaltet werden k&ouml;nnten. Es muss mindestens eine Anwendung von einem Kunden installiert worden sein.';
 $lng['aps']['lightywarning'] = 'Warnung';
-$lng['aps']['lightywarningdescription'] = 'Sie verwenden den lighttpd Webserver zusammen mit SysCP. Da das APS Modul haupts&auml;chlich f&uuml;r den Apache Webserver geschrieben wurde, kann es unter Umst&auml;nden vorkommen, dass gewisse Features mit lighttpd nicht funktionieren. Bitte beachten Sie dies bei der Verwendung des APS Moduls. Sollten Sie Fehler bei der Verwendung oder Probleme bei der Nutzung haben, so leiten Sie diese bitte an die Entwickler weiter, damit diese Probleme in der n&auml;chsten Version behoben werden k&ouml;nnen.';
+$lng['aps']['lightywarningdescription'] = 'Sie verwenden den lighttpd Webserver zusammen mit Froxlor. Da das APS Modul haupts&auml;chlich f&uuml;r den Apache Webserver geschrieben wurde, kann es unter Umst&auml;nden vorkommen, dass gewisse Features mit lighttpd nicht funktionieren. Bitte beachten Sie dies bei der Verwendung des APS Moduls. Sollten Sie Fehler bei der Verwendung oder Probleme bei der Nutzung haben, so leiten Sie diese bitte an die Entwickler weiter, damit diese Probleme in der n&auml;chsten Version behoben werden k&ouml;nnen.';
 $lng['error']['customerdoesntexist'] = 'Der ausgew&auml;hlte Kunde existiert nicht.';
 $lng['error']['admindoesntexist'] = 'Der ausgew&auml;hlte Admin existiert nicht.';
 
 // ADDED IN 1.2.19-svn37
 
-$lng['serversettings']['system_realtime_port']['title'] = 'Port f&uuml;r Realtime SysCP';
-$lng['serversettings']['system_realtime_port']['description'] = 'Dieser Port auf localhost wird bei jedem neuen Cron-Task kontaktiert. Wenn der Wert 0 (Null) ist, dann ist dieses Feature deaktiviert.<br />Siehe dazu auch: <a href="https://wiki.syscp.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
+$lng['serversettings']['system_realtime_port']['title'] = 'Port f&uuml;r Realtime Froxlor';
+$lng['serversettings']['system_realtime_port']['description'] = 'Dieser Port auf localhost wird bei jedem neuen Cron-Task kontaktiert. Wenn der Wert 0 (Null) ist, dann ist dieses Feature deaktiviert.<br />Siehe dazu auch: <a href="https://wiki.froxlor.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Erlaube gleichzeitigen Login';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Wenn diese Option aktiviert ist, k&ouml;nnen sich Nutzer mehrmals gleichzeitig anmelden.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Erlaube Verschieben von Domains unter Admins';

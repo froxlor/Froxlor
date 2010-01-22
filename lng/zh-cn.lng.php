@@ -1,8 +1,9 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
@@ -13,7 +14,7 @@
  * @author     Wang Changyi <wangchangyi@hotmail.com>
  * @author     Patrick Brueckner <patrick_brueckner@yahoo.de>
  * @author     Yuan Yang <melodieyy@web.de>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  * @version    $Id: zh-cn.lng.php 2692 2009-03-27 18:04:47Z flo $
  */
