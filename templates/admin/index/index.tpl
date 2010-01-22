@@ -113,7 +113,7 @@ $header
 		</tr>
 		</if>
 		<tr>
-			<td colspan="2" class="maintitle"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['syscpdetails']}</b></td>
+			<td colspan="2" class="maintitle"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['froxlordetails']}</b></td>
 		</tr>
 		<tr>
 			<td class="field_name_border_left">{$lng['admin']['cronlastrun']}:</td>
