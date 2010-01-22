@@ -132,6 +132,8 @@ class db
 				$this->showerror('Trying to use database ' . $this->database . ' failed, exiting');
 			}
 		}
+		mysql_query("SET NAMES utf8", $this->link_id);
+		mysql_query("SET CHARACTER SET utf8", $this->link_id);
 	}
 
 	/**

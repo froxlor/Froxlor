@@ -342,8 +342,8 @@ $lng['serversettings']['ipaddress']['title'] = 'IP-Address';
 $lng['serversettings']['ipaddress']['description'] = 'What\'s the IP-address of this server?';
 $lng['serversettings']['hostname']['title'] = 'Hostname';
 $lng['serversettings']['hostname']['description'] = 'What\'s the Hostname of this server?';
-$lng['serversettings']['apachereload_command']['title'] = 'Apache reload command';
-$lng['serversettings']['apachereload_command']['description'] = 'What\'s the apache command to reload apache configfiles?';
+$lng['serversettings']['apachereload_command']['title'] = 'Webserver reload command';
+$lng['serversettings']['apachereload_command']['description'] = 'What\'s the webserver command to reload configfiles?';
 $lng['serversettings']['bindconf_directory']['title'] = 'Bind config directory';
 $lng['serversettings']['bindconf_directory']['description'] = 'Where should bind configfiles be saved?';
 $lng['serversettings']['bindreload_command']['title'] = 'Bind reload command';
@@ -542,7 +542,7 @@ $lng['panel']['back'] = 'Back';
 $lng['serversettings']['mod_log_sql']['title'] = 'Temporary save logs in the database';
 $lng['serversettings']['mod_log_sql']['description'] = 'Use <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Include PHP via mod_fcgid/suexec';
-$lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libnss_mysql to run PHP with the corresponding useraccount.<br/><b>This needs a special Apache configuration. All following options are only valid if the module is enabled.</b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libnss_mysql to run PHP with the corresponding useraccount.<br/><b>This needs a special Webserver configuration. All following options are only valid if the module is enabled.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
@@ -557,11 +557,11 @@ $lng['error']['documentrootexists'] = 'The directory &quot;%s&quot; already exis
 
 // ADDED IN 1.2.16-svn14
 
-$lng['serversettings']['apacheconf_vhost']['title'] = 'Apache vhost configuration file/dirname';
+$lng['serversettings']['apacheconf_vhost']['title'] = 'Webserver vhost configuration file/dirname';
 $lng['serversettings']['apacheconf_vhost']['description'] = 'Where should the vhost configuration be stored? You could either specify a file (all vhosts in one file) or directory (each vhost in his own file) here.';
-$lng['serversettings']['apacheconf_diroptions']['title'] = 'Apache diroptions configuration file/dirname';
+$lng['serversettings']['apacheconf_diroptions']['title'] = 'Webserver diroptions configuration file/dirname';
 $lng['serversettings']['apacheconf_diroptions']['description'] = 'Where should the diroptions configuration be stored? You could either specify a file (all diroptions in one file) or directory (each diroption in his own file) here.';
-$lng['serversettings']['apacheconf_htpasswddir']['title'] = 'Apache htpasswd dirname';
+$lng['serversettings']['apacheconf_htpasswddir']['title'] = 'Webserver htpasswd dirname';
 $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Where should the htpasswd files for directory protection be stored?';
 
 // ADDED IN 1.2.16-svn15
@@ -793,7 +793,7 @@ $lng['admin']['sslsettings'] = 'SSL settings';
 $lng['cronjobs']['notyetrun'] = 'Not yet run';
 $lng['install']['servername_should_be_fqdn'] = 'The servername should be a FQDN and not an IP address';
 $lng['serversettings']['default_vhostconf']['title'] = 'Default vhost-settings';
-$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into the domain vhost container directly. Attention: The code won\'t be checked for any errors. If it contains errors, apache might ot start again!';
+$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into the domain vhost container directly. Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['error']['invalidip'] = 'Invalid IP address: %s';
 $lng['serversettings']['decimal_places'] = 'Number of decimal places in traffic/webspace output';
 

@@ -242,7 +242,7 @@ class apache_fcgid extends apache
 
 		if(!isset($this->php_configs_cache[$php_config_id]))
 		{
-			$this->php_configs_cache[$php_config_id] = $this->db->query_first("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = " . (int)$php_config_id);
+			$this->php_configs_cache[$php_config_id] = $this->getDB()->query_first("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = " . (int)$php_config_id);
 		}
 
 		return $this->php_configs_cache[$php_config_id];
@@ -254,7 +254,7 @@ class apache_fcgid extends apache
 
 		if(!isset($this->admin_cache[$adminid]))
 		{
-			$this->admin_cache[$adminid] = $this->db->query_first("SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = " . (int)$adminid);
+			$this->admin_cache[$adminid] = $this->getDB()->query_first("SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = " . (int)$adminid);
 		}
 
 		return $this->admin_cache[$adminid];

@@ -1,16 +1,18 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.syscp.org/misc/COPYING.txt
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @author     Florian Lippert <flo@syscp.org> (2003-2009)
+ * @author     Froxlor Team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    System
  * @version    $Id: install.php 2724 2009-06-07 14:18:02Z flo $
  */
@@ -23,7 +25,7 @@
 if(file_exists('../lib/userdata.inc.php'))
 {
 	/**
-	 * Includes the Usersettings eg. MySQL-Username/Passwort etc. to test if SysCP is already installed
+	 * Includes the Usersettings eg. MySQL-Username/Passwort etc. to test if Froxlor is already installed
 	 */
 
 	require ('../lib/userdata.inc.php');
@@ -31,7 +33,7 @@ if(file_exists('../lib/userdata.inc.php'))
 	if(isset($sql)
 	   && is_array($sql))
 	{
-		die('Sorry, SysCP is already configured...');
+		die('Sorry, Froxlor is already configured...');
 	}
 }
 
@@ -95,7 +97,7 @@ function page_header()
 <head>
 	<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
 	<link rel="stylesheet" href="../templates/main.css" type="text/css" />
-	<title>SysCP</title>
+	<title>Froxlor</title>
 </head>
 	<body style="margin: 0; padding: 0;" onload="document.loginform.loginname.focus()">
 		<!--
@@ -366,7 +368,7 @@ if(isset($_POST['installstep'])
 ?>
 	<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable">
 		<tr>
-			<td class="maintitle"><b><img src="../images/title.gif" alt="" />&nbsp;SysCP Installation</b></td>
+			<td class="maintitle"><b><img src="../images/title.gif" alt="" />&nbsp;Froxlor Installation</b></td>
 		</tr>
 <?php
 	$_die = false;

@@ -30,10 +30,10 @@ class apache
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
-	private $settings = array();
 	
 	//	protected
 		
+	protected $settings = array();	
 	protected $known_vhostfilenames = array();
 	protected $known_diroptionsfilenames = array();
 	protected $known_htpasswdsfilenames = array();
@@ -49,10 +49,11 @@ class apache
 		$this->idnaConvert = $idnaConvert;
 		$this->settings = $settings;
 	}
-
-	/*
-	*	We compose the namevirtualhost entries
-	*/
+	
+	protected function getDB()
+	{
+		return $this->db;
+	}
 
 	public function reload()
 	{

@@ -72,22 +72,22 @@ class lighttpd_fcgid extends lighttpd
 			{
 				$php_options_text.=	"\t".'".'.$f_extension.'" => ('."\n";
 				$php_options_text.=	"\t\t".'"localhost" => ('."\n";
-				$php_options_text.=	"\t\t".'"socket" => "/var/run/lighttpd/'.$domain['loginname'].'-php.socket",'."\n";
+				$php_options_text.=	"\t\t".'"socket" => "/var/run/lighttpd/'.$domain['loginname'].'-'.$domain['domain'].'-php.socket",'."\n";
 				$php_options_text.=	"\t\t".'"bin-path" => "'.$phpconfig['binary'].' -c '.$phpini_filename.'",'."\n";
 				$php_options_text.=	"\t\t".'"bin-environment" => ('."\n";
 				if((int)$domain['mod_fcgid_starter'] != - 1)
 				{
-					$php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)$domain['mod_fcgid_starter'] . '"'."\n";
+					$php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)$domain['mod_fcgid_starter'] . '",'."\n";
 				}
 				else
 				{
 					if((int)$phpconfig['mod_fcgid_starter'] != - 1)
 					{
-						$php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)$phpconfig['mod_fcgid_starter'] . '"'."\n";
+						$php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)$phpconfig['mod_fcgid_starter'] . '",'."\n";
 					}
 					else
 					{
-						$php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)$this->settings['system']['mod_fcgid_starter'] . '"'."\n";
+						$php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)$this->settings['system']['mod_fcgid_starter'] . '",'."\n";
 					}
 				}
 
@@ -264,7 +264,7 @@ class lighttpd_fcgid extends lighttpd
 
 		if(!isset($this->php_configs_cache[$php_config_id]))
 		{
-			$this->php_configs_cache[$php_config_id] = $this->db->query_first("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = " . (int)$php_config_id);
+			$this->php_configs_cache[$php_config_id] = $this->getDB()->query_first("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = " . (int)$php_config_id);
 		}
 
 		return $this->php_configs_cache[$php_config_id];
@@ -276,7 +276,7 @@ class lighttpd_fcgid extends lighttpd
 
 		if(!isset($this->admin_cache[$adminid]))
 		{
-			$this->admin_cache[$adminid] = $this->db->query_first("SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = " . (int)$adminid);
+			$this->admin_cache[$adminid] = $this->getDB()->query_first("SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = " . (int)$adminid);
 		}
 
 		return $this->admin_cache[$adminid];

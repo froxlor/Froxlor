@@ -336,14 +336,14 @@ $lng['serversettings']['ftpprefix']['title'] = 'FTP-Prefix';
 $lng['serversettings']['ftpprefix']['description'] = 'Welchen Prefix sollen die FTP-Benutzerkonten haben?';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Heimatverzeichnis';
 $lng['serversettings']['documentroot_prefix']['description'] = 'Wo sollen alle Heimatverzeichnisse der Kunden liegen?';
-$lng['serversettings']['logfiles_directory']['title'] = 'Apache-Logdateien-Verzeichnis';
-$lng['serversettings']['logfiles_directory']['description'] = 'Wo sollen alle Logdateien des Apache liegen?';
+$lng['serversettings']['logfiles_directory']['title'] = 'Webserver-Logdateien-Verzeichnis';
+$lng['serversettings']['logfiles_directory']['description'] = 'Wo sollen alle Logdateien des Webservers liegen?';
 $lng['serversettings']['ipaddress']['title'] = 'IP-Adresse';
 $lng['serversettings']['ipaddress']['description'] = 'Welche IP-Adresse hat der Server?';
 $lng['serversettings']['hostname']['title'] = 'Hostname';
 $lng['serversettings']['hostname']['description'] = 'Welchen Hostnamen hat der Server?';
-$lng['serversettings']['apachereload_command']['title'] = 'Apache-Reload-Command';
-$lng['serversettings']['apachereload_command']['description'] = 'Wie heisst das Skript zum Neuladen der Apache-Konfigurationsdateien?';
+$lng['serversettings']['apachereload_command']['title'] = 'Webserver-Reload-Command';
+$lng['serversettings']['apachereload_command']['description'] = 'Wie heisst das Skript zum Neuladen der Webserver-Konfigurationsdateien?';
 $lng['serversettings']['bindconf_directory']['title'] = 'Bind-Config-Directory';
 $lng['serversettings']['bindconf_directory']['description'] = 'Wo liegen die Bind-Konfigurationsdateien?';
 $lng['serversettings']['bindreload_command']['title'] = 'Bind-Reload-Command';
@@ -556,11 +556,11 @@ $lng['error']['documentrootexists'] = 'Es existiert noch ein Verzeichnis &quot;%
 
 // ADDED IN 1.2.16-svn14
 
-$lng['serversettings']['apacheconf_vhost']['title'] = 'Apache vHost-Konfigurations-Datei/Verzeichnis-Name';
+$lng['serversettings']['apacheconf_vhost']['title'] = 'Webserver vHost-Konfigurations-Datei/Verzeichnis-Name';
 $lng['serversettings']['apacheconf_vhost']['description'] = 'Wo soll die vHost-Konfigurationen abgelegt werden? Sie k&ouml;nnen entweder eine Datei (also mit allen vhosts) oder einen Ordner (mit einer Datei pro vhost) angeben.';
-$lng['serversettings']['apacheconf_diroptions']['title'] = 'Apache Verzeichnisoption-Konfigurations-Datei/Verzeichnis-Name';
+$lng['serversettings']['apacheconf_diroptions']['title'] = 'Webserver Verzeichnisoption-Konfigurations-Datei/Verzeichnis-Name';
 $lng['serversettings']['apacheconf_diroptions']['description'] = 'Wo soll die Verzeichnisoption-Konfigurationen abgelegt werden? Sie k&ouml;nnen entweder eine Datei (also mit allen vhosts) oder einen Ordner (mit einer Datei pro vhost) angeben.';
-$lng['serversettings']['apacheconf_htpasswddir']['title'] = 'Apache htpasswd Verzeichnisname';
+$lng['serversettings']['apacheconf_htpasswddir']['title'] = 'Webserver htpasswd Verzeichnisname';
 $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Wo sollen die htpasswd-Dateien f&uuml; den Verzeichnisschutz abgelegt werden?';
 
 // ADDED IN 1.2.16-svn15
@@ -572,7 +572,7 @@ $lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma g
 // CHANGED IN 1.2.18
 
 $lng['serversettings']['mod_log_sql']['description'] = '<a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle <a href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
-$lng['serversettings']['mod_fcgid']['description'] = 'mod_fcgid/suexec/libnss_mysql benutzen um PHP unter dem jeweiligen Useraccount laufen zu lassen<br /><b>Dies ben&ouml;tigt eine spezielle Apache-Konfiguration. Alle nachfolgenden Optionen sind nur g&uuml;ltig wenn das Modul aktiviert wird.</b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'mod_fcgid/suexec/libnss_mysql benutzen um PHP unter dem jeweiligen Useraccount laufen zu lassen<br /><b>Dies ben&ouml;tigt eine spezielle Webserver-Konfiguration. Alle nachfolgenden Optionen sind nur g&uuml;ltig wenn das Modul aktiviert wird.</b>';
 
 // ADDED IN 1.2.18-svn1
 
@@ -797,7 +797,7 @@ $lng['admin']['sslsettings'] = 'SSL Einstellungen';
 $lng['cronjobs']['notyetrun'] = 'Bisher nicht gestartet';
 $lng['install']['servername_should_be_fqdn'] = 'Der Servername sollte eine FQDN sein und keine IP Adresse';
 $lng['serversettings']['default_vhostconf']['title'] = 'Standard Vhost-Einstellungen';
-$lng['serversettings']['default_vhostconf']['description'] = 'Der Inhalt dieses Feldes wird direkt in jeden Domain-vHost-Container &uuml;bernommen. Achtung: Der Code wird nicht auf Fehler gepr&uuml;ft. Etwaige Fehler werden also auch &uuml;bernommen. Apache k&ouml;nnte nicht mehr starten!';
+$lng['serversettings']['default_vhostconf']['description'] = 'Der Inhalt dieses Feldes wird direkt in jeden Domain-vHost-Container &uuml;bernommen. Achtung: Der Code wird nicht auf Fehler gepr&uuml;ft. Etwaige Fehler werden also auch &uuml;bernommen. Der Webserver k&ouml;nnte nicht mehr starten!';
 $lng['error']['invalidip'] = 'Ung&uuml;ltige IP Adresse: %s';
 $lng['serversettings']['decimal_places'] = 'Nachkommastellen bei der Ausgabe von Traffic/Webspace';
 

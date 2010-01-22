@@ -33,23 +33,29 @@ class lighttpd
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
-	private $settings = array();
 
 	//	protected
 
-	public $needed_htpasswds = array();
-	public $auth_backend_loaded = false;
-	public $htpasswd_files = array();
-	public $mod_accesslog_loaded = "0";
+	protected $settings = array(); 
 	protected $lighttpd_data = array();
+	protected $needed_htpasswds = array();
+	protected $auth_backend_loaded = false;
+	protected $htpasswd_files = array();
+	protected $mod_accesslog_loaded = "0";
 
-	function __construct($db, $logger, $debugHandler, $idnaConvert, $settings)
+
+	public function __construct($db, $logger, $debugHandler, $idnaConvert, $settings)
 	{
 		$this->db = $db;
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
 		$this->settings = $settings;
+	}
+
+	protected function getDB()
+	{
+		return $this->db;
 	}
 
 	public function reload()
@@ -80,6 +86,12 @@ class lighttpd
 			fwrite($this->debugHandler, '  lighttpd::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ip . ":" . $port);
 			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
+
+			if(!isset($this->lighttpd_data[$vhosts_filename]))
+			{
+				$this->lighttpd_data[$vhosts_filename] = '';
+			}
+
 			$this->lighttpd_data[$vhost_filename].= '$SERVER["socket"] == "' . $ip . ':' . $port . '" {' . "\n";
 
 			if($row_ipsandports['listen_statement'] == '1')
@@ -87,7 +99,7 @@ class lighttpd
 				$this->lighttpd_data[$vhost_filename].= 'server.port = ' . $port . "\n";
 				$this->lighttpd_data[$vhost_filename].= 'server.bind = "' . $ip . '"' . "\n";
 			}
-
+				
 			if($row_ipsandports['ssl'] == '1')
 			{
 				$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
@@ -153,11 +165,11 @@ class lighttpd
 		return $htaccess_text;
 	}
 
-	function createVirtualHosts()
+	public function createVirtualHosts()
 	{
 	}
 
-	function createFileDirOptions()
+	public function createFileDirOptions()
 	{
 	}
 
@@ -575,7 +587,7 @@ class lighttpd
 		}
 	}
 
-	private function wipeOutOldConfigs()
+	protected function wipeOutOldConfigs()
 	{
 		fwrite($this->debugHandler, '  lighttpd::wipeOutOldConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost']);

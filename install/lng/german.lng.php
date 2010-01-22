@@ -1,16 +1,18 @@
 <?php
 
 /**
- * This file is part of the SysCP project.
+ * This file is part of the Froxlor project.
  * Copyright (c) 2003-2007 the SysCP Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.syscp.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
+ * @author     Florian Lippert <flo@syscp.org> (2003-2007)
+ * @author     Froxlor Team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  * @version    $Id: german.lng.php 2452 2008-11-30 13:12:36Z flo $
  */
@@ -20,8 +22,8 @@
  */
 
 $lng['install']['language'] = 'Installations - Sprache';
-$lng['install']['welcome'] = 'Willkommen zur SysCP Installation';
-$lng['install']['welcometext'] = 'Vielen Dank dass Sie sich f&uuml;r SysCP entschieden haben. Um Ihre Installation von SysCP zu starten, f&uuml;llen Sie bitte alle Felder unten mit den geforderten Angaben.<br /><b>Achtung:</b> Eine eventuell bereits existierende Datenbank, die den selben Namen hat wie den, den Sie unten eingeben werden, wird mit allen enthaltenen Daten gel&ouml;scht!';
+$lng['install']['welcome'] = 'Willkommen zur Froxlor Installation';
+$lng['install']['welcometext'] = 'Vielen Dank dass Sie sich f&uuml;r Froxlor entschieden haben. Um Ihre Installation von Froxlor zu starten, f&uuml;llen Sie bitte alle Felder unten mit den geforderten Angaben.<br /><b>Achtung:</b> Eine eventuell bereits existierende Datenbank, die den selben Namen hat wie den, den Sie unten eingeben werden, wird mit allen enthaltenen Daten gel&ouml;scht!';
 $lng['install']['database'] = 'Datenbank';
 $lng['install']['mysql_hostname'] = 'MySQL-Hostname';
 $lng['install']['mysql_database'] = 'MySQL-Datenbank';
@@ -54,16 +56,16 @@ $lng['install']['creating_configfile'] = 'Erstelle Konfigurationsdatei...';
 $lng['install']['creating_configfile_succ'] = 'OK, userdata.inc.php wurde in lib/ gespeichert.';
 $lng['install']['creating_configfile_temp'] = 'Datei wurde in /tmp/userdata.inc.php gespeichert, bitte nach lib/ verschieben.';
 $lng['install']['creating_configfile_failed'] = 'Konnte lib/userdata.inc.php nicht erstellen, bitte manuell mit folgendem Inhalt anlegen:';
-$lng['install']['syscp_succ_installed'] = 'SysCP wurde erfolgreich installiert.';
+$lng['install']['froxlor_succ_installed'] = 'Froxlor wurde erfolgreich installiert.';
 $lng['install']['click_here_to_login'] = 'Hier geht es weiter zum Login-Fenster.';
 $lng['install']['phpmysql'] = 'Teste, ob die PHP MySQL-Erweiterung installiert ist...';
 $lng['install']['phpfilter'] = 'Teste, ob die PHP Filter-Erweiterung installiert ist...';
-$lng['install']['diedbecauseofrequirements'] = 'Kann SysCP ohne diese Voraussetzungen nicht installieren! Breche ab...';
+$lng['install']['diedbecauseofrequirements'] = 'Kann Froxlor ohne diese Voraussetzungen nicht installieren! Breche ab...';
 $lng['install']['notinstalled'] = 'nicht installiert!';
 $lng['install']['phpbcmath'] = 'Teste, ob die PHP bcmath-Erweiterung installiert ist...';
 $lng['install']['bcmathdescription'] = 'Traffic-Berechnungs bezogene Funktionen stehen nicht vollst&auml;ndig zur Verf&uuml;gung!';
 $lng['install']['openbasedir'] = 'Teste, ob open_basedir genutzt wird...';
-$lng['install']['openbasedirenabled'] = 'aktiviert. SysCP wird mit aktiviertem open_basedir nicht vollst&auml;ndig funktionieren. Bitte deaktivieren Sie open_basedir f&uuml;r SysCP';
+$lng['install']['openbasedirenabled'] = 'aktiviert. Froxlor wird mit aktiviertem open_basedir nicht vollst&auml;ndig funktionieren. Bitte deaktivieren Sie open_basedir f&uuml;r Froxlor';
 $lng['install']['httpuser'] = 'HTTP Username';
 $lng['install']['httpgroup'] = 'HTTP Gruppenname';
 
