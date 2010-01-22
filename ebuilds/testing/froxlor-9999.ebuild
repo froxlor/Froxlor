@@ -191,17 +191,6 @@ src_install() {
 		eend 0
 	fi
 
-	# default value is billing_enabled='0'
-	if useq billing ; then
-		einfo "Switching 'billing' to 'On'"
-		sed -e "s|'billing', 'activate_billing', '0'|'billing', 'activate_billing', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set billing to 'On'"
-		eend 0
-
-		einfo "Fixing menu-entries for billing-module"
-		sed -e "s|'100', 'billing.activate_billing'|'100', 'edit_billingdata'|g" -i "${S}/install/froxlor.sql" || die "Unable to fix billing menu-entry"
-		eend 0
-	fi
-
 	# default value is mailquota='0'
 	if useq mailquota ; then
 		einfo "Switching 'mailquota' to 'On'"
@@ -579,7 +568,6 @@ INSERT INTO \`panel_admins\` SET
         \`domains_used\` = 0,
         \`domains_see_all\` = 1,
         \`change_serversettings\` = 1,
-        \`edit_billingdata\` = 1,
         \`diskspace\` = -1024,
         \`diskspace_used\` = 0,
         \`mysqls\` = -1,
