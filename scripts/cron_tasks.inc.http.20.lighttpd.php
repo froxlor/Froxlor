@@ -173,7 +173,7 @@ class lighttpd
 	{
 	}
 
-	protected function composePhpOptions()
+	protected function composePhpOptions($domain)
 	{
 	}
 
