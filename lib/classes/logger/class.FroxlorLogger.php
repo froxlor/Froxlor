@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Logger - SysCP-Logger Class
+ * Logger - Froxlor-Logger Class
  *
  *
  * This program is free software; you can redistribute it and/or modify
@@ -16,11 +16,11 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @license    http://www.gnu.org/licenses/gpl.txt
  * @package    Functions
- * @version    CVS: $Id: class.SysCPLogger.php 2724 2009-06-07 14:18:02Z flo $
+ * @version    CVS: $Id: class.froxlorLogger.php 2724 2009-06-07 14:18:02Z flo $
  * @link       http://www.nutime.de/
  */
 
-class SysCPLogger
+class FroxlorLogger
 {
 	/**
 	 * Userinfo
@@ -109,7 +109,7 @@ class SysCPLogger
 
 		if(!isset(self::$loggers[$_usernfo['loginname']]))
 		{
-			self::$loggers[$_usernfo['loginname']] = new SysCPLogger($_usernfo, $_db, $_settings);
+			self::$loggers[$_usernfo['loginname']] = new FroxlorLogger($_usernfo, $_db, $_settings);
 		}
 
 		return self::$loggers[$_usernfo['loginname']];
