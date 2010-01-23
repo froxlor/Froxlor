@@ -39,9 +39,11 @@ DEPEND="
 		     dev-lang/php[apache2]
 	)
 	fcgid? ( dev-lang/php[cgi,force-cgi-redirect]
-		 www-servers/apache[suexec]
 		 sys-auth/libnss-mysql
-			( !lighttpd? ( www-apache/mod_fcgid ) )
+			( !lighttpd? ( 
+				www-server/apache[suexec]
+				www-apache/mod_fcgid ) 
+			)
 	)
 	dovecot? ( net-mail/dovecot[mysql,pop3d,ssl=]
 		   >=mail-mta/postfix-2.4[dovecot-sasl]
