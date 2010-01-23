@@ -37,6 +37,8 @@ if($settings['panel']['frontend'] == 'froxlor'
 && $settings['panel']['version'] == '0.9')
 {
 
+	$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9 to 0.9-r1");
+
 	/*
 	 * add missing database-updates if necessary (old: update/update_database.php
 	 */
@@ -197,60 +199,13 @@ if($settings['panel']['frontend'] == 'froxlor'
 	$db->query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "`
 		  MODIFY `traffic` BIGINT(30),
 		  MODIFY `traffic_used` BIGINT(30)");
+	// set new version
+
+	$query = 'UPDATE `%s` SET `value` = \'0.9-r1\' WHERE `settinggroup` = \'panel\' AND `varname` = \'version\'';
+	$query = sprintf($query, TABLE_PANEL_SETTINGS);
+	$db->query($query);
+	$settings['panel']['version'] = '0.9-r1';
 	
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (119, 'spf', 'use_spf', '0');");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (120, 'spf', 'spf_entry', '@	IN	TXT	\"v=spf1 a mx -all\"');");
-
-	// Convert all data to UTF-8 to have a sane standard across all data
-	$tables = $db->fetch_array("SHOW TABLES");
-	foreach ($tables as $table)
-	{
-		$db->query("ALTER TABLE " . $table[0] . " CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;");
-		$db->query("ALTER TABLE " . $table[0] . " DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci");
-
-		$columns = $db->fetch_array("SHOW COLUMNS FROM ".$table[0]);
-
-		$affected_columns = array();
-
-		$primarykey = "";
-		foreach ($columns as $column)
-		{
-			if (!(strpos($column['Type'], "char") === false) || !(strpos($column['Type'], "text") === false))
-			{
-				$affected_columns[] = $column['Field'];
-			}
-
-			if ($column['Key'] == 'PRI') {
-				$primarykey = $column['Field'];
-			}
-		}
-
-		$count_cols = count($affected_columns);
-		if ($count_cols > 0)
-		{
-			$load = "";
-			foreach($affected_columns as $col)
-			{
-				$load .= ", " . $col;
-			}
-
-			$rows = $db->fetch_array("SELECT $primarykey" . $load . " FROM " . $table[0]);
-
-			foreach($rows as $row)
-			{
-				$changes = "";
-				for ($i = 0; $i < $count_cols; $i++)
-				{
-					$base = $affected_columns[$i] . " = " . $db->escape(convertUtf8($row[$affected_columns[$i]])) ;
-					$changes .= ($i == ($count_cols-1)) ? $base : $base . ", ";
-				}
-
-				$db->query("UPDATE " . $table[0] . " SET " . $changes . " WHERE $primarykey = " . $db->escape($row['id']) . ";");
-			}
-		}
-	}
-
-	$db->query("UPDATE `panel_settings` SET `varname` = 'froxlor_graphic' WHERE `varname` = 'syscp_graphic'");
 }
 
 ?>

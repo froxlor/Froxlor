@@ -51,7 +51,7 @@ unset($result);
 
 require ('../lib/functions.php');
 
-$updatelog = SysCPLogger::getInstanceOf(array('loginname' => 'updater'), $db, $settings);
+$updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'), $db, $settings);
 
 /*
  * since froxlor, we have to check if there's still someone
@@ -68,7 +68,7 @@ if(!isset($settings['panel']['frontend'])
 	|| (substr($settings['panel']['version'], 0, 3) == '1.0' && $settings['panel']['version'] != '1.0.10'))
 	{
 		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 1.0 to 1.0.10");
-		include_once ('./updates/1.0/update_1.0_1.0.10.inc.php');
+		include_once ('./updates/syscp/1.0/update_1.0_1.0.10.inc.php');
 	}
 
 	/**
@@ -78,7 +78,7 @@ if(!isset($settings['panel']['frontend'])
 	if($settings['panel']['version'] == '1.0.10')
 	{
 		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 1.0.10 to 1.2-beta1");
-		include_once ('./updates/1.0/update_1.0.10_1.2-beta1.inc.php');
+		include_once ('./updates/syscp/1.0/update_1.0.10_1.2-beta1.inc.php');
 	}
 
 	/**
@@ -88,7 +88,7 @@ if(!isset($settings['panel']['frontend'])
 	if(substr($settings['panel']['version'], 0, 3) == '1.2')
 	{
 		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 1.2-beta1 to 1.2.19");
-		include_once ('./updates/1.2/update_1.2-beta1_1.2.19.inc.php');
+		include_once ('./updates/syscp/1.2/update_1.2-beta1_1.2.19.inc.php');
 	}
 
 	/**
@@ -98,7 +98,7 @@ if(!isset($settings['panel']['frontend'])
 	if(substr($settings['panel']['version'], 0, 6) == '1.2.19')
 	{
 		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 1.2.19 to 1.4");
-		include_once ('./updates/1.2/update_1.2.19_1.4.inc.php');
+		include_once ('./updates/syscp/1.2/update_1.2.19_1.4.inc.php');
 	}
 
 	/**
@@ -108,7 +108,7 @@ if(!isset($settings['panel']['frontend'])
 	if(substr($settings['panel']['version'], 0, 3) == '1.4')
 	{
 		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 1.4");
-		include_once ('./updates/1.4/update_1.4.inc.php');
+		include_once ('./updates/syscp/1.4/update_1.4.inc.php');
 	}
 
 	/**
@@ -119,6 +119,16 @@ if(!isset($settings['panel']['frontend'])
 	 * update scripts.
 	 */
 	include_once ('./updates/froxlor/upgrade_syscp.inc.php');
+
+}
+if(!isset($settings['panel']['frontend'])
+  || $settings['panel']['frontend'] == 'froxlor')
+{
+	if($settings['panel']['version'] == '0.9-r1')
+	{
+		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9");
+		include_once ('./updates/froxlor/0.9/update_0.9.inc.php');
+	}
 
 }
 
