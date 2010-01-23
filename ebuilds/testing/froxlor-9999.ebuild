@@ -20,7 +20,7 @@ for X in ${LANGS} ; do
 	IUSE="${IUSE} linguas_${X}"
 done
 
-ESVN_REPO_URI="http://svn.froxlor.org/branches/d00p/"
+ESVN_REPO_URI="http://svn.froxlor.org/trunk/"
 ESVN_PROJECT="froxlor"
 
 DEPEND="
@@ -40,9 +40,9 @@ DEPEND="
 	)
 	fcgid? ( dev-lang/php[cgi,force-cgi-redirect]
 		 sys-auth/libnss-mysql
-			( !lighttpd? ( 
+			( !lighttpd? (
 				www-server/apache[suexec]
-				www-apache/mod_fcgid ) 
+				www-apache/mod_fcgid )
 			)
 	)
 	dovecot? ( net-mail/dovecot[mysql,pop3d,ssl=]
