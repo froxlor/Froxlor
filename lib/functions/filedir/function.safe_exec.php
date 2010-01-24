@@ -52,7 +52,8 @@ function safe_exec($exec_string, &$return_value = false)
 		$settings['system']['awstats_updateall_command'],
 		'openssl',
 		'unzip',
-		'php'
+		'php',
+		'rm'
 	);
 
 	//

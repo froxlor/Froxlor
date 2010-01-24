@@ -255,6 +255,7 @@ $lng['question']['extras_reallydelete_pathoptions'] = 'Do you really want to del
 $lng['question']['ftp_reallydelete'] = 'Do you really want to delete the FTP account %s?';
 $lng['question']['mysql_reallydelete'] = 'Do you really want to delete the database %s? This cannot be undone!';
 $lng['question']['admin_configs_reallyrebuild'] = 'Do you really want to rebuild all config files?';
+$lng['question']['admin_customer_alsoremovefiles'] = 'Remove user files too?';
 
 /**
  * Mails

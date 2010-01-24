@@ -255,6 +255,7 @@ $lng['question']['extras_reallydelete_pathoptions'] = 'Wollen Sie die Optionen f
 $lng['question']['ftp_reallydelete'] = 'Wollen Sie das FTP-Benutzerkonto %s wirklich l&ouml;schen?';
 $lng['question']['mysql_reallydelete'] = 'Wollen Sie die Datenbank %s wirklich l&ouml;schen?<br />ACHTUNG! Alle Daten gehen unwiderruflich verloren!';
 $lng['question']['admin_configs_reallyrebuild'] = 'Wollen Sie wirklich alle Konfigurationsdateien neu erstellen lassen?';
+$lng['question']['admin_customer_alsoremovefiles'] = 'Auch Kunden-Daten l&ouml;schen?';
 
 /**
  * Mails

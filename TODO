@@ -29,7 +29,7 @@ WONTFIX 	 	0001260 		2x F5 causes bigger fonts
 WONTFIX  	 	0001259 		contract-changes optional with cron to the end of the interval
 WONTFIX  	 	0001258 		Make invoices immediately
  	 	 	0001120 		Missing function to calculate the mail traffic
- 	 	 	0001236 		the cron doesnt delete user directories
+FIXED	 	 	0001236 		the cron doesnt delete user directories
  	 	 	0001244 		customer view too wide for 1024x768 resolutions
  	 	 	0001229 		subdomains and Own vHost-Settings
 FIXED	 	 	0001254 		Installation no next button
@@ -67,7 +67,7 @@ FIXED	 	 	0001209 	 	APS crashs when installing magento
  	 	 	0001185 		Autoreponder - send mails via sendmail to set correct Return-Path header
  	 	 	0001211 		Generated MySQL username too long
  	 	 	0001208 		HTML Tags in Support Tickets
- 	 	 	0001207 		FTP Passwörter mit Umlauten
+ 	 	 	0001207 		FTP Passwï¿½rter mit Umlauten
  	 		0001201 		Virtualusers conflict with local users when using libnss-mysql
  	 	 	0001204 		php5-suhosin
 FIXED	 	 	0001203 		Add check for PHP version and required PHP modules in install script

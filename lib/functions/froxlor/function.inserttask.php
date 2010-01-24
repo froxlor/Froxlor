@@ -51,6 +51,15 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '')
 		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("2", "' . $db->escape($data) . '")');
 		$doupdate = true;
 	}
+	elseif($type == '6'
+			&& $param1 != '')
+	{
+		$data = Array();
+		$data['loginname'] = $param1;
+		$data = serialize($data);
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("6", "' . $db->escape($data) . '")');
+		$doupdate = true;
+	}
 
 	if($doupdate === true
 	   && (int)$settings['system']['realtime_port'] !== 0)

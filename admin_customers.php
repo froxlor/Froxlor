@@ -228,11 +228,18 @@ if($page == 'customers'
 				$log->logAction(ADM_ACTION, LOG_INFO, "deleted user '" . $result['loginname'] . "'");
 				inserttask('1');
 				inserttask('4');
+				
+				if(isset($_POST['delete_userfiles'])
+				  && (int)$_POST['delete_userfiles'] == 1)
+				{
+					inserttask('6', $result['loginname']);
+				}
+				
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 			else
 			{
-				ask_yesno('admin_customer_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['loginname']);
+				ask_yesno_withcheckbox('admin_customer_reallydelete', 'admin_customer_alsoremovefiles', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['loginname']);
 			}
 		}
 	}
