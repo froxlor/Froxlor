@@ -14,13 +14,16 @@ $header
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['emails']['to']}:</td>
-				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="destination" size="30" /></td>
+				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" id="destination" name="destination" size="30" /></td>
 			</tr>
 			<tr>
-				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['emails']['forwarder_add']}" /></td>
+				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['emails']['forwarder_add']}" />&nbsp;<input type="button" class="bottom" value="{$lng['panel']['abort']}" onclick="history.back();" /></td>
 			</tr>
 		</table>
 	</form>
 	<br />
 	<br />
+	<script type="text/javascript">
+		document.forms[0].elements.destination.focus();
+	</script>
 $footer

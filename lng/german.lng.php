@@ -1232,5 +1232,6 @@ $lng['spf']['use_spf'] = 'Aktiviere SPF f&uuml;r Domains?';
 $lng['spf']['spf_entry'] = 'SPF Eintrag f&uuml;r alle Domains';
 $lng['panel']['dirsmissing'] = 'Das angegebene Verzeichnis konnte nicht gefunden werden.';
 $lng['panel']['toomanydirs'] = 'Zu viele Unterverzeichnisse. Weiche auf manuelle Verzeichniseingabe aus.';
+$lng['panel']['abort'] = 'Abbrechen';
 
 ?>

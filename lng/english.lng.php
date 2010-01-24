@@ -1252,5 +1252,6 @@ $lng['spf']['use_spf'] = 'Activate SPF for domains?';
 $lng['spf']['spf_entry'] = 'SPF entry for all domains';
 $lng['panel']['dirsmissing'] = 'The given directory could not be found.';
 $lng['panel']['toomanydirs'] = 'Too many subdirectories. Falling back to manual path-select.';
+$lng['panel']['abort'] = 'Abort';
 
 ?>
