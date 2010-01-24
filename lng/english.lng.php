@@ -1250,5 +1250,7 @@ $lng['success']['settingssaved'] = 'The settings have been successfully saved.';
 $lng['admin']['spfsettings'] = 'Domain SPF settings';
 $lng['spf']['use_spf'] = 'Activate SPF for domains?';
 $lng['spf']['spf_entry'] = 'SPF entry for all domains';
+$lng['panel']['dirsmissing'] = 'The given directory could not be found.';
+$lng['panel']['toomanydirs'] = 'Too many subdirectories. Falling back to manual path-select.';
 
 ?>

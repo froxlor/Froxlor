@@ -46,18 +46,25 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 
 		if(sizeof($dirList) > 0)
 		{
-			$field = '<select name="path">';
-			foreach($dirList as $key => $dir)
+			if(sizeof(dirList) <= 100)
 			{
-				if(strpos($dir, $path) === 0)
+				$field = '<select name="path">';
+				foreach($dirList as $key => $dir)
 				{
-					$dir = makeCorrectDir(substr($dir, strlen($path)));
+					if(strpos($dir, $path) === 0)
+					{
+						$dir = makeCorrectDir(substr($dir, strlen($path)));
+					}
+	
+					$field.= makeoption($dir, $dir, $value);
 				}
-
-				$field.= makeoption($dir, $dir, $value);
+				$field.= '</select>';
 			}
-
-			$field.= '</select>';
+			else
+			{
+				$field = $lng['panel']['toomanydirs'];
+				$field.= '<input type="text" name="path" value="' . htmlspecialchars($value) . '" size="30" />';
+			}
 		}
 		else
 		{

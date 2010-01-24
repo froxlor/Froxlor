@@ -43,10 +43,20 @@ function findDirs($path, $uid, $gid)
 	{
 		$path = array_pop($list);
 		$path = makeCorrectDir($path);
+		
+		if(!is_readable($path))
+		{
+			return $_fileList;
+		}
+
 		$dh = opendir($path);
 
 		if($dh === false)
 		{
+			/*
+			 * this should never be called because we checked
+			 * 'is_readable' before...but we never know what might happen
+			 */
 			standard_error('cannotreaddir', $path);
 			return null;
 		}
