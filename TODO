@@ -40,7 +40,7 @@ FIXED	 	 	0001250 		Apache redirect to Umlautdomains does not work
 FIXED	 	 	0001249 		SysCP SVN(!) settings loader doesn't load some settings
 WONTFIX 	 	0001248 		blog.syscp.org
  	 	 	0001042 		Webalizer dir should not be deletable
- 	 	 	0001247 		tab order problems at email forward mask
+FIXED 	 	 	0001247 		tab order problems at email forward mask
 FIXED	 	 	0001246 		wrong variable assigned in /templates/admin/customers/customers_add.tpl
  	 	 	0001245 		Password Protect /awstats/ when using awstats and fcgid
  	 	 	0001156 		Repairing use of awstats and awstats-icons with fcgi
