@@ -199,15 +199,15 @@ while($row = $db->fetch_array($result_tasks))
 			mkDirWithCorrectOwnership($directory['customerroot'], $directory['homedir'], $directory['uid'], $directory['gid']);
 		}
 	}
-	
+
 	/**
 	 * TYPE=6 MEANS THAT A CUSTOMER HAS BEEN DELETED AND THAT WE HAVE TO REMOVE ITS FILES
 	 */
 	elseif ($row['type'] == '6')
 	{
 		fwrite($debugHandler, '  cron_tasks: Task6 started - deleting customer data' . "\n");
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task6 started - deleting customer data');		
-		
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task6 started - deleting customer data');
+
 		if(is_array($row['data']))
 		{
 			if(isset($row['data']['loginname']))
@@ -215,13 +215,28 @@ while($row = $db->fetch_array($result_tasks))
 				/*
 				 * remove homedir
 				 */
-				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname']));
-				safe_exec('rm -rf '.escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname']));
+				$homedir = makeCorrectDir($settings['system']['documentroot_prefix'] . $row['data']['loginname']);
+
+				if($homedir != '/'
+				&& $homedir != $settings['system']['documentroot_prefix']
+				&& substr($homedirdir, 0, strlen($settings['system']['documentroot_prefix'])) == $settings['system']['documentroot_prefix'])
+				{
+					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($homedir));
+					safe_exec('rm -rf '.escapeshellarg($homedir));
+				}
+
 				/*
 				 * remove maildir
 				 */
-				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($settings['system']['vmail_homedir'] . $row['data']['loginname']));
-				safe_exec('rm -rf '.escapeshellarg($settings['system']['vmail_homedir'] . $row['data']['loginname']));
+				$maildir = makeCorrectDir($settings['system']['vmail_homedir'] . $row['data']['loginname']);
+
+				if($maildir != '/'
+				&& $maildir != $settings['system']['vmail_homedir']
+				&& substr($maildir, 0, strlen($settings['system']['vmail_homedir'])) == $settings['system']['vmail_homedir'])
+				{
+					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
+					safe_exec('rm -rf '.escapeshellarg($maildir));
+				}
 			}
 		}
 	}
