@@ -24,7 +24,7 @@
  */
 function getNextCronjobs()
 {
-	$sql = "SELECT `cronfile` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `interval` <> '0' AND (";
+	$sql = "SELECT `id`, `cronfile` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `interval` <> '0' AND (";
 	/*
 	 * 5M - 5 minute cronjob (reqular)
 	 */
@@ -51,6 +51,7 @@ function getNextCronjobs()
 	while($row = $db->fetch_array($result))
 	{
 		$cron_files[] = $row['cronfile'];
+		$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = UNIX_TIMESTAMP() WHERE `id` ='".(int)$result['id']."';");
 	}
 	
 	return $cron_files;
