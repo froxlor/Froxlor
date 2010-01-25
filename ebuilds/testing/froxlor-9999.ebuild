@@ -4,24 +4,24 @@
 
 EAPI="2"
 
-inherit eutils subversion depend.php
+inherit eutils depend.php
 
-KEYWORDS=""
+if [[ ${PV} == "9999" ]] ; then
+	ESVN_REPO_URI="http://svn.froxlor.org/trunk"
+	ESVN_PROJECT="froxlor"
+	inherit subversion
+	#KEYWORDS=""
+else
+	SRC_URI="http://files.froxlor.org/releases/tgz/${PN}-${PV}.tar.gz"
+	KEYWORDS="~amd64 ~x86"
+	S="${WORKDIR}/${PN}"
+fi
+
 DESCRIPTION="A PHP-based webhosting-oriented control panel for servers."
 HOMEPAGE="http://www.froxlor.org/"
 LICENSE="GPL-2"
 SLOT="0"
-
 IUSE="aps autoresponder bind domainkey dovecot fcgid lighttpd +log mailquota ssl +tickets"
-
-# we need that to set the standardlanguage later
-LANGS="bg ca cs de da en es fr hu it nl pt ru se sl zh_CN"
-for X in ${LANGS} ; do
-	IUSE="${IUSE} linguas_${X}"
-done
-
-ESVN_REPO_URI="http://svn.froxlor.org/trunk/"
-ESVN_PROJECT="froxlor"
 
 DEPEND="
 	>=mail-mta/postfix-2.4[mysql,ssl=]
@@ -60,14 +60,21 @@ DEPEND="
 
 RDEPEND="${DEPEND}"
 
+# we need that to set the standardlanguage later
+LANGS="bg ca cs de da en es fr hu it nl pt ru se sl zh_CN"
+for X in ${LANGS} ; do
+	IUSE="${IUSE} linguas_${X}"
+done
+
 need_php5_httpd
 need_php5_cli
 
-S="${WORKDIR}/${PN}"
-
 src_unpack() {
-	subversion_src_unpack
-
+	if [[ ${PV} == "9999" ]] ; then
+		subversion_src_unpack
+	else
+		unpack ${A}
+	fi
 	cd "${S}"
 }
 
@@ -250,7 +257,6 @@ src_install() {
 }
 
 pkg_preinst() {
-
 	# Create the user and group that will own the Froxlor files
 	einfo "Creating froxlor user ..."
 	enewgroup froxlor 9995
@@ -750,7 +756,6 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	else
 		einfo "Configuring apache2"
 		if useq fcgid ; then
-
 			# create php-starter file
 			mkdir -p "${ROOT}/var/www/froxlor/php-fcgi-script"
 			mkdir -p "${ROOT}/var/www/froxlor/php-fcgi-script/tmp"
@@ -767,7 +772,6 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 			chown froxlor:froxlor -R "${ROOT}/var/www/froxlor/php-fcgi-script" || die "Unable to fix owner for php-fcgi-script folder"
 			chmod 0750 "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
 			chattr +i "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
-
 		fi
 
 		if useq ssl ; then
@@ -920,25 +924,8 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 	eend 0
 
 	einfo "Configuring Gentoo-Froxlor cronjob ..."
-	rm -f "${ROOT}/etc/cron.d/froxlor"
-	touch "${ROOT}/etc/cron.d/froxlor"
-	chown root:0 "${ROOT}/etc/cron.d/froxlor"
-	chmod 0640 "${ROOT}/etc/cron.d/froxlor"
-	echo -e "#
-# Set PATH, otherwise restart-scripts won't find start-stop-daemon
-#
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
-#
-# Regular cron jobs for the froxlor package
-#
-*/5 * * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_tasks.php
-0 0 * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_traffic.php
-30 0 * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_ticketarchive.php
-0 1 * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_used_tickets_reset.php
-*/5 * * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_autoresponder.php
-*/5 * * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_apsinstaller.php
-*/30 * * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_apsupdater.php
-" > "${ROOT}/etc/cron.d/froxlor"
+	exeinto /etc/cron.d
+	newexe "{$FILESDIR}"/froxlor.cron froxlor
 	eend 0
 
 	if ! useq dovecot ; then
