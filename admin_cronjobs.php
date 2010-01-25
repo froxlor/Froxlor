@@ -11,18 +11,44 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
+ * @package    Panel
  * @version    $Id: $
  */
 
-/*
- * Function getNextCronjobs
- *
- * checks which cronjobs have to be executed 
- *
- * @return	array	array of cron-files which are to be executed
- */
-function getNextCronjobs()
+define('AREA', 'admin');
+
+require_once("./lib/init.php");
+
+if(isset($_POST['id']))
 {
-	// SELECT `interval`, `lastrun` FROM `".PANEL_TABLE_CRONRUNS."`
+	$id = intval($_POST['id']);
 }
+elseif(isset($_GET['id']))
+{
+	$id = intval($_GET['id']);
+}
+
+if($page == 'cronjobs'
+&& $userinfo['customers'] != '0')
+{
+	if($action == '')
+	{
+		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_cronjobs");
+	}
+	elseif($action == 'new')
+	{
+
+	}
+	elseif($action == 'edit'
+	&& $id != 0)
+	{
+
+	}
+	elseif($action == 'delete'
+	&& $id != 0)
+	{
+		
+	}
+}
+
+?>

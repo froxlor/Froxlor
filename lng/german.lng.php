@@ -1239,5 +1239,6 @@ $lng['autoresponder']['date_from'] = 'Start-Datum';
 $lng['autoresponder']['date_until'] = 'End-Datum';
 $lng['autoresponder']['startenddate'] = 'Start/End-Datum';
 $lng['panel']['not_activated'] = 'Nicht aktiviert';
+$lng['panel']['off'] = 'aus';
 
 ?>

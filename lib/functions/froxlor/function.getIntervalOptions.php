@@ -11,17 +11,24 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
+ * @package    Settings
  * @version    $Id: $
  */
 
-function includeCronjobs($debugHandler)
+function getIntervalOptions()
 {
-	$cronjobs = getNextCronjobs();
-	
-	if($cronjobs !== false)
+	global $db, $lng;
+
+	$query = "SELECT DISTINCT `interval` FROM `" . TABLE_PANEL_CRONRUNS . "` ORDER BY `interval` ASC;";
+	$result = $db->query($query);
+	$cron_intervals = array();
+
+	$cron_intervals['0'] = $lng['panel']['off'];
+
+	while($row = $db->fetch_array($result))
 	{
-		// [...]
-		$cron_path = dirname(__FILE__).'/../../../scripts/jobs/';
+		$cron_intervals[$row['interval']] = $row['interval'];
 	}
+	
+	return $cron_intervals;
 }

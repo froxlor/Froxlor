@@ -48,6 +48,7 @@ define('TABLE_APS_INSTANCES', 'aps_instances');
 define('TABLE_APS_SETTINGS', 'aps_settings');
 define('TABLE_APS_TASKS', 'aps_tasks');
 define('TABLE_APS_TEMP_SETTINGS', 'aps_temp_settings');
+define('TABLE_PANEL_CRONRUNS', 'cronjobs_run');
 
 // APS constants
 
