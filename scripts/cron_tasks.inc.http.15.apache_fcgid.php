@@ -10,13 +10,10 @@
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Florian Aders <eleras@syscp.org>
- * @author     Luca Longinotti <chtekk@syscp.org>
- * @author     Michael Kaufmann <mk@syscp-help.org>
- * @author     Sven Skrabal <info@nexpa.de>
- * @author     Florian Lippert <flo@syscp.org>
+ * @author     Florian Lippert <flo@syscp.org> (2003-2009)
+ * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    System
+ * @package    Cron
  * @version    $Id$
  */
 

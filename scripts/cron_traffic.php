@@ -10,10 +10,10 @@
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org>
- * @author     Martin Burchert <eremit@syscp.org>
+ * @author     Florian Lippert <flo@syscp.org> (2003-2009)
+ * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    System
+ * @package    Cron
  * @version    $Id$
  */
 
