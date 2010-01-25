@@ -414,7 +414,7 @@ class lighttpd
 			}
 			else
 			{
-				$server_string[] = $domain_name;
+				$server_string[] = '^'.$domain_name.'$';
 			}
 		}
 
@@ -432,11 +432,11 @@ class lighttpd
 			{
 				if($alias_domain['wwwserveralias'] == '1')
 				{
-					$server_string[] = '^(www.)?' . $alias_domain_name;
+					$server_string[] = '^(www\.|)' . $alias_domain_name . '$';
 				}
 				else
 				{
-					$server_string[] = $alias_domain_name;
+					$server_string[] = '^'.$alias_domain_name . '$';
 				}
 			}
 		}
