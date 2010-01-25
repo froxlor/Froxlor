@@ -128,7 +128,7 @@ if(!isset($settings['panel']['frontend'])
 {
 	if($settings['panel']['version'] == '0.9-r1')
 	{
-		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9");
+		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9-r1");
 		include_once ('./updates/froxlor/0.9/update_0.9.inc.php');
 	}
 
