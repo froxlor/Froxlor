@@ -930,7 +930,7 @@ CREATE TABLE IF NOT EXISTS `cronjobs_run` (
   `id` bigint(20) NOT NULL auto_increment,
   `cronfile` varchar(250) NOT NULL,
   `lastrun` int(15) NOT NULL DEFAULT '0',
-  `interval` varchar(100) DEFAULT '5 MINUTES',
+  `interval` varchar(100) DEFAULT '5 MINUTE',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM;
 
@@ -938,10 +938,10 @@ CREATE TABLE IF NOT EXISTS `cronjobs_run` (
 # Dumping data for table `panel_phpconfigs`
 #
 
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (1, 'cron_tasks.php', '5 MINUTES');
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (2, 'cron_legacy.php', '5 MINUTES');
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (3, 'cron_apsinstaller.php', '5 MINUTES');
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (4, 'cron_autoresponder.php', '5 MINUTES');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (1, 'cron_tasks.php', '5 MINUTE');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (2, 'cron_legacy.php', '5 MINUTE');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (3, 'cron_apsinstaller.php', '5 MINUTE');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (4, 'cron_autoresponder.php', '5 MINUTE');
 INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (5, 'cron_apsupdater.php', '1 HOUR');
 INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (6, 'cron_traffic.php', '1 DAY');
 INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (7, 'cron_used_tickets_reset.php', '1 MONTH');

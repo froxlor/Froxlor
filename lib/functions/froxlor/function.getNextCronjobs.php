@@ -36,9 +36,9 @@ function getNextCronjobs()
 		if($name == '0') continue;
 
 		if($x == 0) {
-			$sql.= 'DATE_ADD(FROM_UNIXTIME(`lastrun`), INTERVAL '.$ival.') <= CURDATE()';
+			$sql.= 'DATE_ADD(FROM_UNIXTIME(`lastrun`), INTERVAL '.$ival.') <= UTC_TIMESTAMP()';
 		} else {	
-			$sql.= ' OR DATE_ADD(UNIX_TIMESTAMP(`lastrun`), INTERVAL '.$ival.') <= CURDATE()';
+			$sql.= ' OR DATE_ADD(UNIX_TIMESTAMP(`lastrun`), INTERVAL '.$ival.') <= UTC_TIMESTAMP()';
 		}
 		$x++;
 	}

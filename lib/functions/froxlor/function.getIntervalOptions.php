@@ -11,7 +11,7 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
+ * @package    Functions
  * @version    $Id: $
  */
 
@@ -27,7 +27,14 @@ function getIntervalOptions()
 
 	while($row = $db->fetch_array($result))
 	{
-		$cron_intervals[$row['interval']] = $row['interval'];
+		if(validateSqlInterval($row['interval']))
+		{
+			$cron_intervals[$row['interval']] = $row['interval'];
+		}
+		else
+		{
+			$log->logAction(ADM_ACTION, LOG_ERROR, "Invalid SQL-Interval ".$row['interval']." detected. Please fix this in the database.");
+		}
 	}
 	
 	return $cron_intervals;
