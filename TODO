@@ -62,7 +62,7 @@ FIXED	 	 	0001209 	 	APS crashs when installing magento
  	 	 	0001017 		Proftpd - Quota should be added
  	 	 	0001016 		Pureftpd - quota should be added
  	 	 	0001206 		crontabs not terminating
- 	 	 	0001210 		Add start- and endtime to autoresponder
+FIXED	 	 	0001210 		Add start- and endtime to autoresponder
  	 	 	0001212 		retain form input
  	 	 	0001185 		Autoreponder - send mails via sendmail to set correct Return-Path header
  	 	 	0001211 		Generated MySQL username too long
