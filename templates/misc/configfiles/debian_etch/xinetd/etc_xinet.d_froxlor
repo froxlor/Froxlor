@@ -7,7 +7,7 @@ service froxlor
 
         user            = root
         server          = /usr/bin/php
-        server_args     = -q /var/www/froxlor/scripts/cron_tasks.php
+        server_args     = -q /var/www/froxlor/scripts/froxlor_master_cronjob.php
 
         bind 		= 127.0.0.1
         only_from       = 127.0.0.1
