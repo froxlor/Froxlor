@@ -46,4 +46,12 @@ function getNextCronjobs()
 	$sql.= ');';	
 	
 	$result = $db->query($query);
+	
+	$cron_files = array();
+	while($row = $db->fetch_array($result))
+	{
+		$cron_files[] = $row['cronfile'];
+	}
+	
+	return $cron_files;
 }

@@ -19,9 +19,19 @@ function includeCronjobs($debugHandler)
 {
 	$cronjobs = getNextCronjobs();
 	
-	if($cronjobs !== false)
+	if($cronjobs !== false
+	&& is_array($cronjobs)
+	&& isset($cronjobs[0]))
 	{
-		// [...]
+		/*
+		 * @TODO find a better way for the path
+		 */
 		$cron_path = dirname(__FILE__).'/../../../scripts/jobs/';
+		
+		foreach($cronjobs as $cronjob)
+		{
+			$cron_file = makeCorrectFile($cron_path.$cronjob);
+			include_once($cron_file);
+		}
 	}
 }
