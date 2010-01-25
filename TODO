@@ -44,7 +44,7 @@ FIXED 	 	 	0001247 		tab order problems at email forward mask
 FIXED	 	 	0001246 		wrong variable assigned in /templates/admin/customers/customers_add.tpl
  	 	 	0001245 		Password Protect /awstats/ when using awstats and fcgid
  	 	 	0001156 		Repairing use of awstats and awstats-icons with fcgi
- 	 	 	0001243 		Wrong uid and gid for php-fcgi-starter
+WONTFIX  	 	0001243 		Wrong uid and gid for php-fcgi-starter
  	 	 	0001242 		When email qouta is enabled, you cannot add more resources to a client.
 WONTIFX 	 	0001241 		Patch for facilate customizing syscp
  	 	 	0001240 		Wrong php.ini for subdomains with fastCGI
