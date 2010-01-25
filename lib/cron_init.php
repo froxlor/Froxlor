@@ -136,27 +136,6 @@ fwrite($debugHandler, 'Table definitions included' . "\n");
 fwrite($debugHandler, 'Database Class has been loaded' . "\n");
 $db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
 
-// If one cronscript needs root, it should say $needrootdb = true before the include
-if(isset($needrootdb)
-   && $needrootdb === true)
-{
-	$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
-
-	if($db_root->link_id == 0)
-	{
-		/**
-		 * Do not proceed further if no database connection could be established
-		 */
-
-		fclose($debugHandler);
-		unlink($lockfile);
-		die('root can\'t connect to mysqlserver. Please check userdata.inc.php! Exiting...');
-	}
-
-	unset($db_root->password);
-	fwrite($debugHandler, 'Database-rootconnection established' . "\n");
-}
-
 if($db->link_id == 0)
 {
 	/**
@@ -197,45 +176,6 @@ if(!isset($settings['panel']['version'])
 fwrite($debugHandler, 'Froxlor Version and Database Version are correct' . "\n");
 
 $cronscriptDebug = ($settings['system']['debug_cron'] == '1') ? true : false;
-
-$cronbasedir = makeCorrectDir($pathtophpfiles . '/scripts/');
-$crondir = new DirectoryIterator($cronbasedir);
-$cronfilename = basename($_SERVER['PHP_SELF'], '.php');
-$cronscriptFullName = makeCorrectFile($cronbasedir . basename($_SERVER['PHP_SELF']));
-$inc_crons = array();
-foreach($crondir as $file)
-{
-	if(!$file->isDot()
-	   && !$file->isDir()
-	   && preg_match("/^" . $cronfilename . "\.inc\.(.*)\.php$/D", $file->getFilename()))
-	{
-		if(fileowner($cronscriptFullName) == $file->getOwner()
-		   && filegroup($cronscriptFullName) == $file->getGroup()
-		   && $file->isReadable())
-		{
-			$inc_crons[] = $file->getPathname();
-		}
-		else
-		{
-			fwrite($debugHandler, 'WARNING! uid and/or gid of "' . $cronscriptFullName . '" and "' . $file->getPathname() . '" don\'t match! Execution aborted!' . "\n");
-			fclose($debugHandler);
-			die('WARNING! uid and/or gid of "' . $cronscriptFullName . '" and "' . $file->getPathname() . '" don\'t match! Execution aborted!');
-		}
-	}
-}
-
-if(isset($inc_crons[0]))
-{
-	natsort($inc_crons);
-	foreach($inc_crons as $cfile)
-	{
-		fwrite($debugHandler, 'Including ...' . $cfile . "\n");
-		include_once ($cfile);
-	}
-}
-
-unset($file, $crondir, $cronname, $cronscriptFullName, $cronfilename, $cronbasedir);
-fwrite($debugHandler, 'Functions have been included' . "\n");
 
 /**
  * Create a new idna converter

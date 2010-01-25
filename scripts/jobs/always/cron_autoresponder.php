@@ -21,8 +21,6 @@
  * @todo	   skip mail parsing after x bytes for large mails
  */
 
-$needrootdb = false;
-require (dirname(__FILE__) . '/../lib/cron_init.php');
 $mail = new PHPMailer();
 
 //dont do anything when module is disabled
@@ -228,15 +226,5 @@ if($db->num_rows($result) > 0)
 		}
 	}
 }
-
-/**
- * STARTING CRONSCRIPT FOOTER
- */
-
-include ($pathtophpfiles . '/lib/cron_shutdown.php');
-
-/**
- * END CRONSCRIPT FOOTER
- */
 
 ?>

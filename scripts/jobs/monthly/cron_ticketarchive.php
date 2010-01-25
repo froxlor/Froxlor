@@ -18,21 +18,6 @@
  */
 
 /**
- * STARTING REDUNDANT CODE, WHICH IS SOME KINDA HEADER FOR EVERY CRON SCRIPT.
- * When using this "header" you have to change $lockFilename for your needs.
- * Don't forget to also copy the footer which closes database connections
- * and the lockfile! (Note: This "header" also establishes a mysql-root-
- * connection, if you don't need it, see for the header in cron_tasks.php)
- */
-
-$needrootdb = false;
-include (dirname(__FILE__) . '/../lib/cron_init.php');
-
-/**
- * END REDUNDANT CODE (CRONSCRIPT "HEADER")
- */
-
-/**
  * ARCHIVING CLOSED TICKETS
  */
 
@@ -62,15 +47,5 @@ while($row_ticket = $db->fetch_array($result_tickets))
 
 fwrite($debugHandler, 'Archived ' . $archiving_count . ' tickets' . "\n");
 $db->query('UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = \'system\'   AND `varname`      = \'last_archive_run\' ');
-
-/**
- * STARTING CRONSCRIPT FOOTER
- */
-
-include ($pathtophpfiles . '/lib/cron_shutdown.php');
-
-/**
- * END CRONSCRIPT FOOTER
- */
 
 ?>

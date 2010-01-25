@@ -18,19 +18,6 @@
  */
 
 /**
- * STARTING REDUNDANT CODE, WHICH IS SOME KINDA HEADER FOR EVERY CRON SCRIPT.
- * When using this "header" you have to change $lockFilename for your needs.
- * Don't forget to also copy the footer which closes database connections
- * and the lockfile!
- */
-
-include (dirname(__FILE__) . '/../lib/cron_init.php');
-
-/**
- * END REDUNDANT CODE (CRONSCRIPT "HEADER")
- */
-
-/**
  * LOOK INTO EVERY CUSTOMER DIR TO SEE IF THERE ARE ANY .HTACCESS FILE TO "TRANSLATE"
  */
 
@@ -53,16 +40,6 @@ else
 {
 	fwrite($debugHandler, '  cron_lighttp.htaccess: You don\'t use Lighttpd, you do not have to run this cronscript!' . "\n");
 }
-
-/**
- * STARTING CRONSCRIPT FOOTER
- */
-
-include ($pathtophpfiles . '/lib/cron_shutdown.php');
-
-/**
- * END CRONSCRIPT FOOTER
- */
 
 /**
  * FUNCTIONS

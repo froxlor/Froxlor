@@ -123,8 +123,9 @@ if(!isset($settings['panel']['frontend'])
 	include_once ('./updates/froxlor/upgrade_syscp.inc.php');
 
 }
-if(!isset($settings['panel']['frontend'])
-  || $settings['panel']['frontend'] == 'froxlor')
+
+if(isset($settings['panel']['frontend'])
+  && $settings['panel']['frontend'] == 'froxlor')
 {
 	if($settings['panel']['version'] == '0.9-r1')
 	{

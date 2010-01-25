@@ -17,10 +17,9 @@
  * @version    $Id$
  */
 
-$needrootdb = false;
-require (dirname(__FILE__) . '/../lib/cron_init.php');
-$Aps = new ApsUpdater($db);
-$Aps->UpdateHandler();
-require (dirname(__FILE__) . '/../lib/cron_shutdown.php');
+openRootDB($debugHandler, $lockfile);
+$Aps = new ApsInstaller($settings, $db, $db_root);
+$Aps->InstallHandler();
+closeRootDB();
 
 ?>

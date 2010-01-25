@@ -18,21 +18,6 @@
  */
 
 /**
- * STARTING REDUNDANT CODE, WHICH IS SOME KINDA HEADER FOR EVERY CRON SCRIPT.
- * When using this "header" you have to change $lockFilename for your needs.
- * Don't forget to also copy the footer which closes database connections
- * and the lockfile! (Note: This "header" also establishes a mysql-root-
- * connection, if you don't need it, see for the header in cron_tasks.php)
- */
-
-$needrootdb = false;
-include (dirname(__FILE__) . '/../lib/cron_init.php');
-
-/**
- * END REDUNDANT CODE (CRONSCRIPT "HEADER")
- */
-
-/**
  * RESET USED TICKETS COUNTER
  */
 
@@ -48,15 +33,5 @@ if($cycle == '0'
 	fwrite($debugHandler, 'Resetting customers used ticket counter' . "\n");
 	$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `tickets_used` = '0'");
 }
-
-/**
- * STARTING CRONSCRIPT FOOTER
- */
-
-include ($pathtophpfiles . '/lib/cron_shutdown.php');
-
-/**
- * END CRONSCRIPT FOOTER
- */
 
 ?>

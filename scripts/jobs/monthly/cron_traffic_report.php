@@ -17,19 +17,6 @@
  * @version    $Id$
  */
 
-/**
- * STARTING REDUNDANT CODE, WHICH IS SOME KINDA HEADER FOR EVERY CRON SCRIPT.
- * When using this "header" you have to change $lockFilename for your needs.
- * Don't forget to also copy the footer which closes database connections
- * and the lockfile!
- */
-
-include (dirname(__FILE__) . '/../lib/cron_init.php');
-
-/**
- * END REDUNDANT CODE (CRONSCRIPT "HEADER")
- */
-
 fwrite($debugHandler, 'Trafficreport run started...' . "\n");
 $yesterday = time() - (60 * 60 * 24);
 
@@ -229,14 +216,5 @@ if(date('d') == '01')
 $db->query('UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = UNIX_TIMESTAMP()
             WHERE `settinggroup` = \'system\' AND `varname` = \'last_traffic_report_run\' ');
 
-/**
- * STARTING CRONSCRIPT FOOTER
- */
-
-include ($pathtophpfiles . '/lib/cron_shutdown.php');
-
-/**
- * END CRONSCRIPT FOOTER
- */
 
 ?>

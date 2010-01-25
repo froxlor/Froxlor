@@ -17,20 +17,7 @@
  * @version    $Id$
  */
 
-/**
- * STARTING REDUNDANT CODE, WHICH IS SOME KINDA HEADER FOR EVERY CRON SCRIPT.
- * When using this "header" you have to change $lockFilename for your needs.
- * Don't forget to also copy the footer which closes database connections
- * and the lockfile! (Note: This "header" also establishes a mysql-root-
- * connection, if you don't need it, see for the header in cron_tasks.php)
- */
-
-$needrootdb = true;
-include (dirname(__FILE__) . '/../lib/cron_init.php');
-
-/**
- * END REDUNDANT CODE (CRONSCRIPT "HEADER")
- */
+openRootDB($debugHandler, $lockfile);
 
 /**
  * TRAFFIC AND DISKUSAGE MESSURE
@@ -388,14 +375,6 @@ while($row = $db->fetch_array($result))
 
 $db->query('UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = \'system\'   AND `varname`      = \'last_traffic_run\' ');
 
-/**
- * STARTING CRONSCRIPT FOOTER
- */
-
-include ($pathtophpfiles . '/lib/cron_shutdown.php');
-
-/**
- * END CRONSCRIPT FOOTER
- */
+closeRootDB();
 
 ?>

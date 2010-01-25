@@ -7,10 +7,4 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 #
 # Please check that all following paths are correct
 #
-*/5 * * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_tasks.php
-0 0 * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_traffic.php
-30 0 * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_ticketarchive.php
-0 1 * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_used_tickets_reset.php
-*/5 * * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_autoresponder.php
-*/5 * * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_apsinstaller.php
-*/30 * * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/cron_apsupdater.php
+*/5 * * * *	root	/usr/lib/php5/bin/php -q /var/www/froxlor/scripts/froxlor_master_cronjob.php
