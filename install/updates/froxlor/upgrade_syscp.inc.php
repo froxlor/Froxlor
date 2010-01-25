@@ -15,7 +15,7 @@
  * @version    $Id$
  */
 
-$updateto = '0.9';
+$updateto = '0.9-r0';
 $frontend = 'froxlor';
 
 $updatelog->logAction(ADM_ACTION, LOG_WARNING, "Upgrading SysCP ".$settings['panel']['version']." to Froxlor ". $updateto);
@@ -33,10 +33,10 @@ $settings['panel']['frontend'] = 'froxlor';
  * this is the main upgrade
  */
 if($settings['panel']['frontend'] == 'froxlor'
-&& $settings['panel']['version'] == '0.9')
+&& $settings['panel']['version'] == '0.9-r0')
 {
 
-	$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9 to 0.9-r1");
+	$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9-r0 to 0.9-r1");
 
 	/*
 	 * add missing database-updates if necessary (old: update/update_database.php
