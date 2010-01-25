@@ -259,6 +259,14 @@ if($db->num_rows($result_tasks) != 0)
 
 $db->query('UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = \'system\'   AND `varname`      = \'last_tasks_run\' ');
 
+/*
+ * we have to check the system's last guid with every cron run
+ * in case the admin installed new software which added a new user
+ * so users in the database don't conflict with system users
+ */
+$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
+checkLastGuid($settings['system']['lastguid']);
+
 /**
  * STARTING CRONSCRIPT FOOTER
  */

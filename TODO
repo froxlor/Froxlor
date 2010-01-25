@@ -68,7 +68,7 @@ FIXED	 	 	0001210 		Add start- and endtime to autoresponder
  	 	 	0001211 		Generated MySQL username too long
  	 	 	0001208 		HTML Tags in Support Tickets
  	 	 	0001207 		FTP Passw�rter mit Umlauten
- 	 		0001201 		Virtualusers conflict with local users when using libnss-mysql
+FIXED	 	 	0001201 		Virtualusers conflict with local users when using libnss-mysql
  	 	 	0001204 		php5-suhosin
 FIXED	 	 	0001203 		Add check for PHP version and required PHP modules in install script
  	 	 	0001198 		More online help wanted
