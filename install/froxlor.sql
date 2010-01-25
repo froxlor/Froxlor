@@ -811,6 +811,8 @@ CREATE TABLE `mail_autoresponder` (
   `email` varchar(255) NOT NULL default '',
   `message` text NOT NULL,
   `enabled` tinyint(1) NOT NULL default '0',
+  `date_from` int(15) NOT NULL default '-1',
+  `date_until` int(15) NOT NULL default '-1',
   `subject` varchar(255) NOT NULL default '',
   `customerid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`email`),

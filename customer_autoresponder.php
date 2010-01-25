@@ -32,6 +32,26 @@ if($action == "add")
 		$account = trim($_POST['account']);
 		$subject = trim($_POST['subject']);
 		$message = trim($_POST['message']);
+		
+		$date_from_off = isset($_POST['date_from_off']) ? -1 : 0;
+		$date_until_off = isset($_POST['date_from_off']) ? -1 : 0;
+		
+		/*
+		 * @TODO validate date (DD-MM-YYYY) 
+		 */	
+		$ts_from = -1;
+		$ts_until = -1;
+
+		if($date_from_off > -1)
+		{
+			$date_from = $_POST['date_from'];
+			$ts_from = mktime(0, 0, 0, substr($date_from, 3, 2), substr($date_from, 0, 2), substr($date_from, 6, 4));
+		}
+		if($date_until_off > -1)
+		{
+			$date_until = $_POST['date_until'];
+			$ts_until = mktime(0, 0, 0, substr($date_until, 3, 2), substr($date_until, 0, 2), substr($date_until, 6, 4));
+		}
 
 		if(empty($account)
 		   || empty($subject)
@@ -62,6 +82,8 @@ if($action == "add")
 			SET `email` = '" . $db->escape($account) . "',
 			`message` = '" . $db->escape($message) . "',
 			`enabled` = '" . (int)$_POST['active'] . "',
+			`ts_from` = '" . (int)$ts_from . "',
+			`ts_until` = '" . (int)$ts_until . "',
 			`subject` = '" . $db->escape($subject) . "',
 			`customerid` = '" . $db->escape((int)$userinfo['customerid']) . "'
 			");
@@ -83,6 +105,9 @@ if($action == "add")
 	{
 		$accounts.= "<option value=\"" . $row['email'] . "\">" . $row['email'] . "</option>";
 	}
+	
+	$date_from_off = makecheckbox('date_from_off', $lng['panel']['not_activated'], '-1', false, '-1', true, true);
+	$date_until_off = makecheckbox('date_from_off', $lng['panel']['not_activated'], '-1', false, '-1', true, true);
 
 	eval("echo \"" . getTemplate("email/autoresponder_add") . "\";");
 }
@@ -99,6 +124,26 @@ if($action == "edit")
 		$account = trim($_POST['account']);
 		$subject = trim($_POST['subject']);
 		$message = trim($_POST['message']);
+
+		$date_from_off = isset($_POST['date_from_off']) ? -1 : 0;
+		$date_until_off = isset($_POST['date_from_off']) ? -1 : 0;
+				
+		/*
+		 * @TODO validate date (DD-MM-YYYY) 
+		 */	
+		$ts_from = -1;
+		$ts_until = -1;
+
+		if($date_from_off > -1)
+		{
+			$date_from = $_POST['date_from'];
+			$ts_from = mktime(0, 0, 0, substr($date_from, 3, 2), substr($date_from, 0, 2), substr($date_from, 6, 4));
+		}
+		if($date_until_off > -1)
+		{
+			$date_until = $_POST['date_until'];
+			$ts_until = mktime(0, 0, 0, substr($date_until, 3, 2), substr($date_until, 0, 2), substr($date_until, 6, 4));
+		}	
 
 		if(empty($account)
 		   || empty($subject)
@@ -136,6 +181,8 @@ if($action == "edit")
 		$db->query("UPDATE `" . TABLE_MAIL_AUTORESPONDER . "`
 			SET `message` = '" . $db->escape($message) . "',
 			`enabled` = '" . (int)$ResponderActive . "',
+			`ts_from` = '" . (int)$ts_from . "',
+			`ts_until` = '" . (int)$ts_until . "',			
 			`subject` = '" . $db->escape($subject) . "'
 			WHERE `email` = '" . $db->escape($account) . "'
 			AND `customerid` = '" . $db->escape((int)$userinfo['customerid']) . "'
@@ -157,6 +204,33 @@ if($action == "edit")
 	$row = $db->fetch_array($result);
 	$subject = htmlspecialchars($row['subject']);
 	$message = htmlspecialchars($row['message']);
+	
+	$date_from = (int)$row['date_from'];
+	$date_until = (int)$row['date_until'];
+	
+	if($date_from == -1)
+	{
+		$deactivated = '-1';
+	}
+	else
+	{
+		$deactivated = '0';
+		$date_from = date('d-m-Y', $date_from);
+	}
+	$date_from_off = makecheckbox('date_from_off', $lng['panel']['not_activated'], '-1', false, $deactivated, true, true);
+	
+	if($date_until == -1)
+	{
+		$deactivated = '-1';
+		$date_until = '-1';
+	}
+	else
+	{
+		$deactivated = '0';
+		$date_until = date('d-m-Y', $date_until);
+	}
+	$date_from_off = makecheckbox('date_until_off', $lng['panel']['not_activated'], '-1', false, $deactivated, true, true);
+
 	$checked = '';
 
 	if($row['enabled'] == 1)
@@ -207,8 +281,24 @@ else
 
 	while($row = $db->fetch_array($result))
 	{
+		if($result['date_from'] == -1 && $result['date_until'] == -1)
+		{
+			$activated_date = $lng['panel']['not_activated'];
+		}
+		elseif($result['date_from'] == -1 && $result['date_until'] != -1)
+		{
+			$activated_date = $lng['autoresponder']['date_until'].': '.date('d-m-Y', $result['date_until']);
+		}
+		elseif($result['date_from'] != -1 && $result['date_until'] == -1)
+		{
+			$activated_date = $lng['autoresponder']['date_from'].': '.date('d-m-Y', $result['date_from']);
+		}	
+		else
+		{
+			$activated_date = $date('d-m-Y', $result['date_from']) . ' - ' . date('d-m-Y', $result['date_until']);
+		}
 		eval("\$autoresponder.=\"" . getTemplate("email/autoresponder_autoresponder") . "\";");
-	}
+	}	
 
 	eval("echo \"" . getTemplate("email/autoresponder") . "\";");
 }

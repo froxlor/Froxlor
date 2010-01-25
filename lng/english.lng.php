@@ -1255,5 +1255,9 @@ $lng['panel']['toomanydirs'] = 'Too many subdirectories. Falling back to manual 
 $lng['panel']['abort'] = 'Abort';
 $lng['serversettings']['cron']['debug']['title'] = 'Cronscript debugging';
 $lng['serversettings']['cron']['debug']['description'] = 'Activate to keep the lockfile after a cron-run for debugging.<br /><b>Attention:</b>Keeping the lockfile can cause the next scheduled cron not to run properly.';
+$lng['autoresponder']['date_from'] = 'Start date';
+$lng['autoresponder']['date_until'] = 'End date';
+$lng['autoresponder']['startenddate'] = 'Start/end date';
+$lng['panel']['not_activated'] = 'not activated';
 
 ?>

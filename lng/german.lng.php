@@ -1235,5 +1235,9 @@ $lng['panel']['toomanydirs'] = 'Zu viele Unterverzeichnisse. Weiche auf manuelle
 $lng['panel']['abort'] = 'Abbrechen';
 $lng['serversettings']['cron']['debug']['title'] = 'Debuggen des Cronscripts';
 $lng['serversettings']['cron']['debug']['description'] = 'Wenn aktiviert, wird die Lockdatei nach dem Cronlauf zum Debuggen nicht gel&ouml;scht<br /><b>Achtung:</b>Eine alte Lockdatei kann weitere Cronjobs behindern und daf&uuml;r sorgen, dass diese nicht vollst&auml;ndig ausgef&uuml;hrt werden.';
+$lng['autoresponder']['date_from'] = 'Start-Datum';
+$lng['autoresponder']['date_until'] = 'End-Datum';
+$lng['autoresponder']['startenddate'] = 'Start/End-Datum';
+$lng['panel']['not_activated'] = 'Nicht aktiviert';
 
 ?>

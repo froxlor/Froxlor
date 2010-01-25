@@ -71,7 +71,9 @@ if($settings['panel']['frontend'] == 'froxlor'
 	$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9-r2 to 0.9-r3");
 	
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'debug_cron', '0');");
-		
+	$db->query("ALTER TABLE `" . TABLE_MAIL_AUTORESPONDER . "` ADD `date_from` int(15) NOT NULL default '-1' AFTER `enabled`");
+	$db->query("ALTER TABLE `" . TABLE_MAIL_AUTORESPONDER . "` ADD `date_until` int(15) NOT NULL default '-1' AFTER `date_from`");
+	
 	// set new version
 
 	$query = 'UPDATE `%s` SET `value` = \'0.9-r3\' WHERE `settinggroup` = \'panel\' AND `varname` = \'version\'';

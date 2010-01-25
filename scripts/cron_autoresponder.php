@@ -68,6 +68,18 @@ if($db->num_rows($result) > 0)
 {
 	while($row = $db->fetch_array($result))
 	{
+		/*
+		 * check if specific autoresponder should be used
+		 */
+		$ts_now = time();
+		$ts_start = (int)$row['date_from'];
+		$ts_end = (int)$row['date_until'];
+		
+		// not yet
+		if($ts_start != -1 && $ts_start > $ts_now) continue;
+		// already ended
+		if($ts_end != -1 && $ts_end < $ts_now) continue;
+		
 		$path = $row['homedir'] . $row['maildir'] . "new/";
 		$files = scandir($path);
 		foreach($files as $entry)
