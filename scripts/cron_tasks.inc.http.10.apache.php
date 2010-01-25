@@ -363,9 +363,17 @@ class apache
 		else
 		{
 			// The normal access/error - logging is enabled
+			$error_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-error.log');
+			chown($error_log, $this->settings['system']['httpuser']);
+			chgrp($error_log, $this->settings['system']['httpgroup']);
+			
+			$access_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
+			chown($access_log, $this->settings['system']['httpuser']);
+			chgrp($access_log, $this->settings['system']['httpgroup']);
+					
+			$logfiles_text.= '  ErrorLog "' . $error_log . "\"\n";
+			$logfiles_text.= '  CustomLog "' . $access_log .'" combined' . "\n";
 
-			$logfiles_text.= '  ErrorLog "' . $this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-error.log' . "\"\n";
-			$logfiles_text.= '  CustomLog "' . $this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log" combined' . "\n";
 		}
 
 		if($this->settings['system']['awstats_enabled'] == '1')

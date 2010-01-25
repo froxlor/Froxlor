@@ -549,6 +549,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (118, 'panel', 'frontend', 'froxlor');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (119, 'spf', 'use_spf', '0');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (120, 'spf', 'spf_entry', '@	IN	TXT	"v=spf1 a mx -all"');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (121, 'system', 'debug_cron', '0');
 
 # --------------------------------------------------------
 

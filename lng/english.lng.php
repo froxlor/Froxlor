@@ -1253,5 +1253,7 @@ $lng['spf']['spf_entry'] = 'SPF entry for all domains';
 $lng['panel']['dirsmissing'] = 'The given directory could not be found.';
 $lng['panel']['toomanydirs'] = 'Too many subdirectories. Falling back to manual path-select.';
 $lng['panel']['abort'] = 'Abort';
+$lng['serversettings']['cron']['debug']['title'] = 'Cronscript debugging';
+$lng['serversettings']['cron']['debug']['description'] = 'Activate to keep the lockfile after a cron-run for debugging.<br /><b>Attention:</b>Keeping the lockfile can cause the next scheduled cron not to run properly.';
 
 ?>

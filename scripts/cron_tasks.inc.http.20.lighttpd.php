@@ -272,7 +272,7 @@ class lighttpd
 		{
 			// The normal access/error - logging is enabled
 
-			$filename = $this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-error.log';
+			$filename = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-error.log');
 
 			if(!is_file($filename))
 			{
@@ -280,12 +280,12 @@ class lighttpd
 				fclose($ourFileHandle);
 			}
 
-			chown($filename, $this->settings[system]['httpuser']);
-			chgrp($filename, $this->settings[system]['httpgroup']);
+			chown($filename, $this->settings['system']['httpuser']);
+			chgrp($filename, $this->settings['system']['httpgroup']);
 
 			//access log
 
-			$filename = $this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log';
+			$filename = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
 
 			if(!is_file($filename))
 			{
@@ -294,8 +294,9 @@ class lighttpd
 			}
 
 			$logfiles_text.= '  accesslog.filename	= "' . $filename . '"' . "\n";
-			chown($filename, $this->settings[system]['httpuser']);
-			chgrp($filename, $this->settings[system]['httpgroup']);
+
+			chown($filename, $this->settings['system']['httpuser']);
+			chgrp($filename, $this->settings['system']['httpgroup']);
 		}
 
 		return $logfiles_text;

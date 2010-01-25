@@ -5,8 +5,8 @@ if($settings['panel']['frontend'] == 'froxlor'
 {
 	$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9-r1 to 0.9-r2");
 
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (119, 'spf', 'use_spf', '0');");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (120, 'spf', 'spf_entry', '@	IN	TXT	\"v=spf1 a mx -all\"');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'use_spf', '0');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'spf_entry', '@	IN	TXT	\"v=spf1 a mx -all\"');");
 
 	// Convert all data to UTF-8 to have a sane standard across all data
 	$result = $db->query("SHOW TABLES");
@@ -64,3 +64,21 @@ if($settings['panel']['frontend'] == 'froxlor'
 	$db->query($query);
 	$settings['panel']['version'] = '0.9-r2';
 }
+
+if($settings['panel']['frontend'] == 'froxlor'
+&& $settings['panel']['version'] == '0.9-r2')
+{
+	$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9-r2 to 0.9-r3");
+	
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'debug_cron', '0');");
+		
+	// set new version
+
+	$query = 'UPDATE `%s` SET `value` = \'0.9-r3\' WHERE `settinggroup` = \'panel\' AND `varname` = \'version\'';
+	$query = sprintf($query, TABLE_PANEL_SETTINGS);
+	$db->query($query);
+	$settings['panel']['version'] = '0.9-r3';	
+}
+
+?>
+

@@ -1233,5 +1233,7 @@ $lng['spf']['spf_entry'] = 'SPF Eintrag f&uuml;r alle Domains';
 $lng['panel']['dirsmissing'] = 'Das angegebene Verzeichnis konnte nicht gefunden werden.';
 $lng['panel']['toomanydirs'] = 'Zu viele Unterverzeichnisse. Weiche auf manuelle Verzeichniseingabe aus.';
 $lng['panel']['abort'] = 'Abbrechen';
+$lng['serversettings']['cron']['debug']['title'] = 'Debuggen des Cronscripts';
+$lng['serversettings']['cron']['debug']['description'] = 'Wenn aktiviert, wird die Lockdatei nach dem Cronlauf zum Debuggen nicht gel&ouml;scht<br /><b>Achtung:</b>Eine alte Lockdatei kann weitere Cronjobs behindern und daf&uuml;r sorgen, dass diese nicht vollst&auml;ndig ausgef&uuml;hrt werden.';
 
 ?>

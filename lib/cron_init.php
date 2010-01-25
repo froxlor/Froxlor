@@ -23,7 +23,6 @@ if(@php_sapi_name() != 'cli'
 	die('This script will only work in the shell.');
 }
 
-$cronscriptDebug = false;
 $lockdir = '/var/run/';
 $lockFilename = 'froxlor_' . basename($_SERVER['PHP_SELF'], '.php') . '.lock-';
 $lockfName = $lockFilename . getmypid();
@@ -158,8 +157,6 @@ if(isset($needrootdb)
 	fwrite($debugHandler, 'Database-rootconnection established' . "\n");
 }*/
 
-unset($sql['root_user'], $sql['root_password']);
-
 if($db->link_id == 0)
 {
 	/**
@@ -198,6 +195,8 @@ if(!isset($settings['panel']['version'])
 }
 
 fwrite($debugHandler, 'Froxlor Version and Database Version are correct' . "\n");
+
+$cronscriptDebug = ($settings['system']['debug_cron'] == '1') ? true : false;
 
 $cronbasedir = makeCorrectDir($pathtophpfiles . '/scripts/');
 $crondir = new DirectoryIterator($cronbasedir);
