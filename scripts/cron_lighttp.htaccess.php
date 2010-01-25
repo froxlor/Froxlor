@@ -12,7 +12,7 @@
  * @author     Michael Kaufmann <mk@syscp-help.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: cron_lighttp.htaccess.php 2692 2009-03-27 18:04:47Z flo $
+ * @version    $Id$
  */
 
 /**

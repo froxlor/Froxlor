@@ -13,7 +13,7 @@
  * @author     Jordi Romero (jordi@jrom.net)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id: catalan.lng.php 2692 2009-03-27 18:04:47Z flo $
+ * @version    $Id$
  */
 
 /**

@@ -12,7 +12,7 @@
  * @author     Michael Kaufmann <mk@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: $
+ * @version    $Id$
  */
 
 /*

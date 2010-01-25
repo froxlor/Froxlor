@@ -14,7 +14,7 @@
  * @author     Froxlor Teami <team@froxlor.org.org> (2010)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id: init.php 2733 2009-11-06 09:32:00Z flo $
+ * @version    $Id$
  */
 
 // prevent Froxlor pages from being cached

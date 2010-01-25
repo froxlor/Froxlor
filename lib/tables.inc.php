@@ -12,7 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id: tables.inc.php 2722 2009-05-04 18:59:28Z flo $
+ * @version    $Id$
  */
 
 define('TABLE_FTP_GROUPS', 'ftp_groups');

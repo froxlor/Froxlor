@@ -16,7 +16,7 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @license    http://www.gnu.org/licenses/gpl.txt
  * @package    Panel
- * @version    CVS: $Id: admin_tickets.php 2537 2008-12-12 15:30:38Z flo $
+ * @version    CVS: $Id$
  * @link       http://www.nutime.de/
  * @since      File available since Release 1.2.18
  */

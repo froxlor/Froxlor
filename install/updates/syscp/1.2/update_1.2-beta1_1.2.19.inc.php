@@ -12,7 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: update_1.2-beta1_1.2.19.inc.php 2722 2009-05-04 18:59:28Z flo $
+ * @version    $Id$
  */
 
 if($settings['panel']['version'] == '1.2-beta1'

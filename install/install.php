@@ -14,7 +14,7 @@
  * @author     Froxlor Team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: install.php 2724 2009-06-07 14:18:02Z flo $
+ * @version    $Id$
  */
 
 /**

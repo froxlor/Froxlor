@@ -15,7 +15,7 @@
  * @author		Sven Skrabal <info@nexpa.de>
  * @license		GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package		System
- * @version		$Id: cron_autoresponder.php 2724 2009-06-07 14:18:02Z flo $
+ * @version		$Id$
  * @todo		skip mail parsing after x bytes for large mails
  *				implement start and end date for autoresponder mails
  */

@@ -14,7 +14,7 @@
  * @author     Froxlor Team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id: german.lng.php 2452 2008-11-30 13:12:36Z flo $
+ * @version    $Id$
  */
 
 /**

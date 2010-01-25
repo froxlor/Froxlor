@@ -12,7 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Functions
- * @version    $Id: constant.formfields.php 2724 2009-06-07 14:18:02Z flo $
+ * @version    $Id$
  */
 
 if(!defined('FORMFIELDS_PLAUSIBILITY_CHECK_OK'))

@@ -12,7 +12,7 @@
  * @author     Michael Duergner <michael@duergner.com>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Functions
- * @version    $Id: class.idna_convert_wrapper.php 2724 2009-06-07 14:18:02Z flo $
+ * @version    $Id$
  */
 
 /**

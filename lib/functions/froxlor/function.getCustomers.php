@@ -12,7 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Functions
- * @version    $Id: function.getCustomers.php 2735 2009-11-06 09:52:59Z flo $
+ * @version    $Id$
  */
 
 function getCustomers($limit_resource = '')

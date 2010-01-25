@@ -12,7 +12,7 @@
  * @author     Florian Aders <eleras@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: update_1.4.inc.php 2722 2009-05-04 18:59:28Z flo $
+ * @version    $Id$
  */
 
 if($settings['panel']['version'] == '1.4')

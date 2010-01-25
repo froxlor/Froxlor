@@ -14,7 +14,7 @@
  * @author     Froxlor Team <team@froxlor.org> (2010)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id: index.php 2693 2009-03-27 19:31:48Z flo $
+ * @version    $Id$
  */
 
 define('AREA', 'login');

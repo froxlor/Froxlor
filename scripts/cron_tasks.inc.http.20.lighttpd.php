@@ -13,7 +13,7 @@
  * @author     Martin Burchert <eremit@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: cron_tasks.inc.http.20.lighttpd.php 2715 2009-04-28 14:24:46Z flo $
+ * @version    $Id$
  */
 
 /*

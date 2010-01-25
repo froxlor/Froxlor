@@ -17,7 +17,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: cron_tasks.inc.http.15.apache_fcgid.php 2714 2009-04-17 10:02:03Z flo $
+ * @version    $Id$
  */
 
 if(@php_sapi_name() != 'cli'

@@ -14,7 +14,7 @@
  * @author     Froxlor Team <team@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id: english.lng.php 2724 2009-06-07 14:18:02Z flo $
+ * @version    $Id$
  */
 
 /**

@@ -12,7 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: updatesql.php 2724 2009-06-07 14:18:02Z flo $
+ * @version    $Id$
  */
 
 /**

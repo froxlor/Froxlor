@@ -14,7 +14,7 @@
  * @author		Sven Skrabal <info@nexpa.de>
  * @license		GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package		Panel
- * @version		$Id: class.ApsParser.php 2724 2009-06-07 14:18:02Z flo $
+ * @version		$Id$
  * @todo		implement charset validation
  *				reconfigure
  *				patch- and versionmanagement

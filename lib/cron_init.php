@@ -13,7 +13,7 @@
  * @author     Florian Aders <eleras@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: $
+ * @version    $Id$
  */
 
 if(@php_sapi_name() != 'cli'

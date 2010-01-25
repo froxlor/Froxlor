@@ -12,7 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: update_1.0_1.0.10.inc.php 2692 2009-03-27 18:04:47Z flo $
+ * @version    $Id$
  */
 
 define('TABLE_POSTFIX_TRANSPORT', 'postfix_transport');

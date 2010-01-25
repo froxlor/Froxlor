@@ -12,7 +12,7 @@
  * @author		Sven Skrabal <info@nexpa.de>
  * @license		GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package		Panel
- * @version		$Id: admin_aps.php 2692 2009-03-27 18:04:47Z flo $
+ * @version		$Id$
  * @todo
  */
 

@@ -12,7 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Functions
- * @version    $Id: function.processForm.php 2733 2009-11-06 09:32:00Z flo $
+ * @version    $Id$
  */
 
 function processForm($form, $input, $url_params = array())

@@ -15,7 +15,7 @@
  * @author     Sandra Aders
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id: spanish.lng.php 2692 2009-03-27 18:04:47Z flo $
+ * @version    $Id$
  */
 
 /**

@@ -14,7 +14,7 @@
  * @author     Luca Longinotti <chtekk@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id: admin_ipsandports.php 2699 2009-04-14 11:21:26Z flo $
+ * @version    $Id$
  */
 
 define('AREA', 'admin');

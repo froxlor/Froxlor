@@ -11,7 +11,7 @@
  * @copyright  (c) the authors
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Functions
- * @version    $Id: function.sys_get_temp_dir.php 2724 2009-06-07 14:18:02Z flo $
+ * @version    $Id$
  */
 
 if(!function_exists('sys_get_temp_dir'))

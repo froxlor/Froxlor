@@ -12,7 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id: customer_ftp.php 2707 2009-04-17 07:47:29Z flo $
+ * @version    $Id$
  */
 
 define('AREA', 'customer');

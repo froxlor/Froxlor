@@ -12,7 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Functions
- * @version    $Id: function.validateFormField.php 2724 2009-06-07 14:18:02Z flo $
+ * @version    $Id$
  */
 
 function validateFormField($fieldname, $fielddata, $newfieldvalue)

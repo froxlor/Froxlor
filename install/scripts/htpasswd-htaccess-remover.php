@@ -12,7 +12,7 @@
  * @author     Michael Duergner <michael@duergner.com>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: htpasswd-htaccess-remover.php 2244 2008-10-06 11:01:18Z EleRas $
+ * @version    $Id$
  */
 
 if(@php_sapi_name() != 'cli'

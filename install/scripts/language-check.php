@@ -12,7 +12,7 @@
  * @author     Martin Burchert <eremit@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: language-check.php 2244 2008-10-06 11:01:18Z EleRas $
+ * @version    $Id$
  */
 
 // some configs

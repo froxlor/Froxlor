@@ -16,7 +16,7 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @license    http://www.gnu.org/licenses/gpl.txt
  * @package    Functions
- * @version    CVS: $Id: class.FileLogger.php 2724 2009-06-07 14:18:02Z flo $
+ * @version    CVS: $Id$
  * @link       http://www.nutime.de/
  */
 

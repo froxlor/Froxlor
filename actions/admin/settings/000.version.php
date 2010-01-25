@@ -14,7 +14,7 @@
  * @author     Froxlor Team <team@froxlor.org> (2010)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id: 000.version.php 2733 2009-11-06 09:32:00Z flo $
+ * @version    $Id$
  */
 
 return array(

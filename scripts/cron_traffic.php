@@ -14,7 +14,7 @@
  * @author     Martin Burchert <eremit@syscp.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: cron_traffic.php 2739 2009-11-06 14:46:30Z flo $
+ * @version    $Id$
  */
 
 /**

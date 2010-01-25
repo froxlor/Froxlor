@@ -12,7 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id: 150.mail.php 2729 2009-09-20 10:33:50Z flo $
+ * @version    $Id$
  */
 
 return array(

@@ -14,7 +14,7 @@
  * @author		Sven Skrabal <info@nexpa.de>
  * @license		GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package		Cron
- * @version		$Id: class.ApsInstaller.php 2724 2009-06-07 14:18:02Z flo $
+ * @version		$Id$
  * @todo		logging
  *				run with user uid/gid
  *				folder truncation/tar all files

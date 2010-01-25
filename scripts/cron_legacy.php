@@ -13,7 +13,7 @@
  * @author     Martin Burchert <eremit@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id: cron_legacy.php 2692 2009-03-27 18:04:47Z flo $
+ * @version    $Id$
  */
 
 /**
