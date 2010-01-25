@@ -17,40 +17,8 @@
 
 include_once(dirname(__FILE__) . '/../lib/cron_init.php');
 
-/*
- * include jobs that run always (5 minutes if cron is setup that way)
- */
-includeCronjobs($pathtophpfiles . '/scripts/jobs/always/', $debugHandler);
-
-/*
- * include hourly jobs
- */
-$today = time();
-if(date('i', $today) == '00')
-{
-	includeCronjobs($pathtophpfiles . '/scripts/jobs/hourly/', $debugHandler);
-}
-
-/*
- * include daily jobs (once a day)
- */
-$today = time();
-if(date('Hi', $today) == '0000')
-{
-	includeCronjobs($pathtophpfiles . '/scripts/jobs/daily/', $debugHandler);
-}
-
-/*
- * include daily jobs (once a day)
- */
-$today = time();
-if(date('dHi', $today) == '010000')
-{
-	includeCronjobs($pathtophpfiles . '/scripts/jobs/monthly/', $debugHandler);
-}
-
+includeCronjobs($debugHandler);
 fwrite($debugHandler, 'Cronfiles have been included' . "\n");
-
 
 /*
  * we have to check the system's last guid with every cron run

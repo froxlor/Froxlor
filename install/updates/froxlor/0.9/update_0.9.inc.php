@@ -84,18 +84,47 @@ if($settings['panel']['frontend'] == 'froxlor'
 && $settings['panel']['version'] == '0.9-r2')
 {
 	$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9-r2 to 0.9-r3");
-	
+
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'debug_cron', '0');");
 	$db->query("ALTER TABLE `" . TABLE_MAIL_AUTORESPONDER . "` ADD `date_from` int(15) NOT NULL default '-1' AFTER `enabled`");
 	$db->query("ALTER TABLE `" . TABLE_MAIL_AUTORESPONDER . "` ADD `date_until` int(15) NOT NULL default '-1' AFTER `date_from`");
-	
+
 	// set new version
 
 	$query = 'UPDATE `%s` SET `value` = \'0.9-r3\' WHERE `settinggroup` = \'panel\' AND `varname` = \'version\'';
 	$query = sprintf($query, TABLE_PANEL_SETTINGS);
 	$db->query($query);
-	$settings['panel']['version'] = '0.9-r3';	
+	$settings['panel']['version'] = '0.9-r3';
 }
 
+if($settings['panel']['frontend'] == 'froxlor'
+&& $settings['panel']['version'] == '0.9-r3')
+{
+	$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9-r3 to 0.9-r4");
+
+	$db->query("CREATE TABLE IF NOT EXISTS `cronjobs_run` (
+				`id` bigint(20) NOT NULL auto_increment,
+				`cronfile` varchar(250) NOT NULL,
+				`lastrun` int(15) NOT NULL DEFAULT '0',
+				`interval` INTERVAL DEFAULT '5M',
+				PRIMARY KEY  (`id`)
+				) ENGINE=MyISAM;");
+
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (1, 'cron_tasks.php', '5M');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (2, 'cron_legacy.php', '5M');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (3, 'cron_apsinstaller.php', '5M');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (4, 'cron_autoresponder.php', '5M');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (5, 'cron_apsupdater.php', '1H');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (6, 'cron_traffic.php', '1D');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (7, 'cron_used_tickets_reset.php', '1M');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (8, 'cron_ticketarchive.php', '1M');");
+	
+	// set new version
+
+	$query = 'UPDATE `%s` SET `value` = \'0.9-r4\' WHERE `settinggroup` = \'panel\' AND `varname` = \'version\'';
+	$query = sprintf($query, TABLE_PANEL_SETTINGS);
+	$db->query($query);
+	$settings['panel']['version'] = '0.9-r4';
+}
 ?>
 

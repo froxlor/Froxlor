@@ -15,12 +15,14 @@
  * @version    $Id: $
  */
 
-function includeCronjobs($debugHandler)
+/*
+ * Function getNextCronjobs
+ *
+ * checks which cronjobs have to be executed 
+ *
+ * @return	array	array of cron-files which are to be executed
+ */
+function getNextCronjobs()
 {
-	$cronjobs = getNextCronjobs();
-	
-	if($cronjobs !== false)
-	{
-		// [...]
-	}
+	// SELECT `interval`, `lastrun` FROM `".PANEL_TABLE_CRONRUNS."`
 }

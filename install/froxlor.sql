@@ -919,3 +919,30 @@ CREATE TABLE IF NOT EXISTS `aps_temp_settings` (
   `Value` varchar(250) NOT NULL,
   PRIMARY KEY  (`ID`)
 ) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur fuer Tabelle `cronjobs_run`
+#
+
+CREATE TABLE IF NOT EXISTS `cronjobs_run` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `cronfile` varchar(250) NOT NULL,
+  `lastrun` int(15) NOT NULL DEFAULT '0',
+  `interval` INTERVAL DEFAULT '5M',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM;
+
+#
+# Dumping data for table `panel_phpconfigs`
+#
+
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (1, 'cron_tasks.php', '5M');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (2, 'cron_legacy.php', '5M');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (3, 'cron_apsinstaller.php', '5M');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (4, 'cron_autoresponder.php', '5M');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (5, 'cron_apsupdater.php', '1H');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (6, 'cron_traffic.php', '1D');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (7, 'cron_used_tickets_reset.php', '1M');
+INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (8, 'cron_ticketarchive.php', '1M');
