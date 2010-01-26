@@ -162,7 +162,7 @@ function lastStepStatus($status = -1)
 			break;
 	}
 	// output
-	echo "<span style=\"margin-left: 5em; color: #".$status_color."\">".$status_sign."</span>";	
+	echo "<span style=\"margin-left: 5em; font-weight: bold; color: #".$status_color."\">".$status_sign."</span>";	
 	
 	if($status == -1)
 	{

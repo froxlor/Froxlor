@@ -23,8 +23,7 @@ $updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'), $db, 
  * since froxlor, we have to check if there's still someone
  * out there using syscp and needs to upgrade
  */
-if(!isset($settings['panel']['frontend'])
-  || $settings['panel']['frontend'] != 'froxlor')
+if(!isFroxlor())
 {
 	/**
 	 * First case: We are updating from a version < 1.0.10
@@ -83,20 +82,13 @@ if(!isset($settings['panel']['frontend'])
 	 * when we reach this part, all necessary updates
 	 * should have been installes automatically by the
 	 * update scripts.
-	 * 
-	 * From now on, these update-scripts will not
-	 * do their work on their own...they will ask!
 	 */
 	include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/upgrade_syscp.inc.php'));
 
 }
-
-if(isFroxlor())
+else
 {
-	if(isFroxlorVersion('0.9-r0'))
-	{
-		include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/0.9/update_0.9.inc.php'));
-	}
+	include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/0.9/update_0.9.inc.php'));
 }
 
 ?>
