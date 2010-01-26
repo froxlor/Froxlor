@@ -292,7 +292,7 @@ if(isFroxlorVersion('0.9-r3'))
 	lastStepStatus(0);
 	showUpdateStep("Updating old settings values");
 	
-	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = 'Froxlor Support' WHERE `settinggroup`='ticket' AND varname` = 'noreply_name' AND `value`='SysCP Support'");
+	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = 'Froxlor Support' WHERE `settinggroup`='ticket' AND `varname`='noreply_name' AND `value`='SysCP Support'");
 
 	lastStepStatus(0);	
 	updateToVersion('0.9-r4');
