@@ -27,7 +27,6 @@ $mail = new PHPMailer();
 
 if((int)$settings['autoresponder']['autoresponder_active'] == 0)
 {
-	include ($pathtophpfiles . '/lib/cron_shutdown.php');
 	return;
 }
 
@@ -199,13 +198,15 @@ if($db->num_rows($result) > 0)
 				}
 
 				//send mail with mailer class
-
 				$mail->From = $to;
 				$mail->FromName = $to;
 				$mail->Subject = $row['subject'];
 				$mail->Body = html_entity_decode($message);
 				$mail->AddAddress($from, $from);
 				$mail->AddCustomHeader('Precedence: bulk');
+
+				// set correct return path
+				$mail->Sender = $to;
 
 				if(!$mail->Send())
 				{
