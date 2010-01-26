@@ -192,7 +192,7 @@ if(isFroxlorVersion('0.9-r1'))
 	
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'use_spf', '0');");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'spf_entry', '@	IN	TXT	\"v=spf1 a mx -all\"');");
-	$db->query("UPDATE `panel_settings` SET `varname` = 'froxlor_graphic' WHERE `varname` = 'syscp_graphic'");
+	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `varname` = 'froxlor_graphic' WHERE `varname` = 'syscp_graphic'");
 
 	lastStepStatus(0);
 	
@@ -290,7 +290,11 @@ if(isFroxlorVersion('0.9-r3'))
 	$db->query("INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (8, 'cron_ticketarchive.php', '1 MONTH');");
 	
 	lastStepStatus(0);
+	showUpdateStep("Updating old settings values");
+	
+	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = 'Froxlor Support' WHERE `settinggroup`='noreply_name' AND varname` = 'noreply_name' AND `value`='SysCP Support'");
 
+	lastStepStatus(0);	
 	updateToVersion('0.9-r4');
 }
 ?>
