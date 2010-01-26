@@ -64,7 +64,7 @@ FIXED	 	 	0001209 	 	APS crashs when installing magento
  	 	 	0001206 		crontabs not terminating
 FIXED	 	 	0001210 		Add start- and endtime to autoresponder
  	 	 	0001212 		retain form input
- 	 	 	0001185 		Autoreponder - send mails via sendmail to set correct Return-Path header
+FIXED	 	 	0001185 		Autoreponder - send mails via sendmail to set correct Return-Path header
  	 	 	0001211 		Generated MySQL username too long
  	 	 	0001208 		HTML Tags in Support Tickets
  	 	 	0001207 		FTP Passw�rter mit Umlauten
@@ -85,8 +85,8 @@ FIXED	 	 	0001080 		host of third level gets overridden by second-level when www
 FIXED	 	 	0001159 		serveral errors for lighttpd
 FIXED	 	 	0001181 		lighttpd cronjob config for subdomains is empty
  	 	 	0001034 		Cron-Tasks: apache-logfiles directory
- 	 	 	0001136 		Configuration of "dead" mail adresses
- 	 	 	0001176 		libnss-mysql and conflicting usernames/groups
+WONTFIX 	 	0001136 		Configuration of "dead" mail adresses
+FIXED	 	 	0001176 		libnss-mysql and conflicting usernames/groups
 FIXED	 	 	0001154 		Wrong configuration set with AWstats an fcgi
  	 	 	0001150 		Wrong configuration of awstats
  	 	 	0001083 		awstats.model.conf.syscp should include awstats.conf
