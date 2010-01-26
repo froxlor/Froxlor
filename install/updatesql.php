@@ -17,42 +17,6 @@
  * @version    $Id$
  */
 
-/**
- * Includes the Usersettings eg. MySQL-Username/Passwort etc.
- */
-
-require ('../lib/userdata.inc.php');
-
-/**
- * Includes the MySQL-Tabledefinitions etc.
- */
-
-require ('../lib/tables.inc.php');
-
-/**
- * Inlcudes the MySQL-Connection-Class
- */
-
-require ('../lib/classes/database/class.db.php');
-$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
-unset($sql['password']);
-unset($db->password);
-$result = $db->query("SELECT `settinggroup`, `varname`, `value` FROM `" . TABLE_PANEL_SETTINGS . "`");
-
-while($row = $db->fetch_array($result))
-{
-	$settings[$row['settinggroup']][$row['varname']] = $row['value'];
-}
-
-unset($row);
-unset($result);
-
-/**
- * Inlcudes the Functions
- */
-
-require ('../lib/functions.php');
-
 $updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'), $db, $settings);
 
 /*
@@ -119,25 +83,20 @@ if(!isset($settings['panel']['frontend'])
 	 * when we reach this part, all necessary updates
 	 * should have been installes automatically by the
 	 * update scripts.
+	 * 
+	 * From now on, these update-scripts will not
+	 * do their work on their own...they will ask!
 	 */
 	include_once ('./updates/froxlor/upgrade_syscp.inc.php');
 
 }
 
-if(isset($settings['panel']['frontend'])
-  && $settings['panel']['frontend'] == 'froxlor')
+if(isFroxlor())
 {
-	if($settings['panel']['version'] == '0.9-r1')
+	if(isFroxlorVersion('0.9-r0'))
 	{
-		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 0.9-r1");
 		include_once ('./updates/froxlor/0.9/update_0.9.inc.php');
 	}
-
 }
-
-updateCounters();
-inserttask('1');
-@chmod('../lib/userdata.inc.php', 0440);
-header('Location: ../index.php');
 
 ?>

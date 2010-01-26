@@ -151,13 +151,6 @@ if(get_magic_quotes_gpc())
 $settings_data = loadConfigArrayDir('./actions/admin/settings/');
 $settings = loadSettings(&$settings_data, &$db);
 
-if(!isset($settings['panel']['version'])
-   || $settings['panel']['version'] != $version)
-{
-	redirectTo('install/updatesql.php');
-	exit;
-}
-
 /**
  * SESSION MANAGEMENT
  */

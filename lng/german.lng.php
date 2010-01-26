@@ -1240,5 +1240,10 @@ $lng['autoresponder']['date_until'] = 'End-Datum';
 $lng['autoresponder']['startenddate'] = 'Start/End-Datum';
 $lng['panel']['not_activated'] = 'Nicht aktiviert';
 $lng['panel']['off'] = 'aus';
+$lng['update']['updateinprogress_onlyadmincanlogin'] = 'Eine neuere Version von Froxlor wurde installiert, aber noch nicht eingerichtet.<br />Nur der Administrator kann sich anmelden und die Aktualisierung abschlie&szlig;en.';
+$lng['update']['update'] = 'Froxlor Aktualisierung';
+$lng['update']['proceed'] = 'Ausf&uuml;hren';
+$lng['update']['update_information'] = 'Die Froxlor Dateien wurden aktualisiert. Neue Version ist <strong>%newversion</strong>. Die bisher installierte Version ist <strong>%curversion</strong><br /><br />Ein Kunden-Login ist vor Abschluss des Aktualisierungsvorganges nicht m&oouml;glich.<br /><strong>Aktualisierung ausf&uuml;hren?</strong>';
+$lng['update']['noupdatesavail'] = '<strong>Ihre Froxlor-Version ist aktuell.</strong>';
 
 ?>

@@ -39,6 +39,11 @@ $header
 				<td class="field_name_center" colspan="3"><a href="$filename?action=forgotpwd">{$lng['login']['forgotpwd']}</a></td>
 			</tr>
 			</if>
+			<if $update_in_progress !== ''>
+			<tr>
+				<td class="field_name_center" colspan="3">{$update_in_progress}</td>
+			</tr>
+			</if>			
 		</table>
 	</form>
 	<br />

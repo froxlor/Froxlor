@@ -37,18 +37,48 @@ if($action == 'login')
 	{
 		$loginname = validate($_POST['loginname'], 'loginname');
 		$password = validate($_POST['password'], 'password');
-		$row = $db->query_first("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
-
-		if($row['customer'] == $loginname)
+		
+		if(!hasUpdates($version))
 		{
-			$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
-			$uid = 'customerid';
-			$adminsession = '0';
+			$row = $db->query_first("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
+	
+			if($row['customer'] == $loginname)
+			{
+				$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
+				$uid = 'customerid';
+				$adminsession = '0';
+				$is_admin = false;
+			}
+			else
+			{
+				$is_admin = true;
+			}
 		}
 		else
 		{
-			$row = $db->query_first("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
-
+			redirectTo('index.php');
+			exit;
+		}
+		
+		if($is_admin)
+		{
+			if(hasUpdates($version))
+			{
+				$row = $db->query_first("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname`='" . $db->escape($loginname) . "' AND `change_serversettings` = '1'");
+				/*
+				 * not an admin who can see updates
+				 */
+				if(!isset($row['admin']))
+				{
+					redirectTo('index.php');
+					exit;
+				}
+			}
+			else
+			{
+				$row = $db->query_first("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
+			}
+			
 			if($row['admin'] == $loginname)
 			{
 				$table = "`" . TABLE_PANEL_ADMINS . "`";
@@ -121,8 +151,16 @@ if($action == 'login')
 
 			if($userinfo['adminsession'] == '1')
 			{
-				redirectTo('admin_index.php', Array('s' => $s), true);
-				exit;
+				if(hasUpdates($version))
+				{
+					redirectTo('admin_updates.php', Array('s' => $s), true);
+					exit;
+				}
+				else
+				{
+					redirectTo('admin_index.php', Array('s' => $s), true);
+					exit;
+				}
 			}
 			else
 			{
@@ -164,6 +202,13 @@ if($action == 'login')
 				$message = $lng['error']['errorsendingmail'];
 				break;
 		}
+		
+		$update_in_progress = '';
+		if(hasUpdates($version))
+		{
+			$update_in_progress_msg = $lng['update']['updateinprogress_onlyadmincanlogin'];
+			$update_in_progress = getTemplate("updateinprogress");
+		}		
 
 		eval("echo \"" . getTemplate("login") . "\";");
 	}
