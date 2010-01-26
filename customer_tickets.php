@@ -302,7 +302,7 @@ elseif($page == 'tickets')
 		{
 			$ticket_replies = '';
 			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
-			$lastchange = date("d.m.Y H:i\h", $mainticket->Get('lastchange'));
+			$dt = date("d.m.Y H:i\h", $mainticket->Get('dt'));
 			$status = ticket::getStatusText($lng, $mainticket->Get('status'));
 
 			if($mainticket->Get('status') >= 0
@@ -330,7 +330,7 @@ elseif($page == 'tickets')
 			$result = $db->query('SELECT `name` FROM `' . TABLE_PANEL_TICKET_CATS . '`
                                 WHERE `id`="' . (int)$mainticket->Get('category') . '"');
 			$row = $db->fetch_array($result);
-			$andere = $db->query('SELECT * FROM `' . TABLE_PANEL_TICKETS . '` WHERE `answerto`="' . (int)$id . '" ORDER BY `lastchange` DESC');
+			$andere = $db->query('SELECT * FROM `' . TABLE_PANEL_TICKETS . '` WHERE `answerto`="' . (int)$id . '" ORDER BY `lastchange` ASC');
 
 			while($row2 = $db->fetch_array($andere))
 			{
