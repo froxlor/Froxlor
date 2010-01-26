@@ -27,12 +27,6 @@ return array(
 					'type' => 'hidden',
 					'default' => '',
 					),
-				'panel_frontend' => array(
-					'settinggroup' => 'panel',
-					'varname' => 'frontend',
-					'type' => 'hidden',
-					'default' => 'froxlor',
-					),
 				'system_last_tasks_run' => array(
 					'settinggroup' => 'system',
 					'varname' => 'last_tasks_run',

@@ -86,7 +86,8 @@ if(!isFroxlor())
 	include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/upgrade_syscp.inc.php'));
 
 }
-else
+
+if(isFroxlor())
 {
 	include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/0.9/update_0.9.inc.php'));
 }
