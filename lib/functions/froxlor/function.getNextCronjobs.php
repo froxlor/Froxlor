@@ -24,10 +24,10 @@
  */
 function getNextCronjobs()
 {
+	global $db;
+	
 	$sql = "SELECT `id`, `cronfile` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `interval` <> '0' AND (";
-	/*
-	 * 5M - 5 minute cronjob (reqular)
-	 */
+
 	$intervals = getIntervalOptions();
 	
 	$x = 0;
@@ -43,7 +43,7 @@ function getNextCronjobs()
 		$x++;
 	}
 	
-	$sql.= ');';	
+	$sql.= ');';
 	
 	$result = $db->query($query);
 	

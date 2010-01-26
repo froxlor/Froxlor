@@ -17,7 +17,7 @@
 
 function getIntervalOptions()
 {
-	global $db, $lng;
+	global $db, $lng, $cronlog;
 
 	$query = "SELECT DISTINCT `interval` FROM `" . TABLE_PANEL_CRONRUNS . "` ORDER BY `interval` ASC;";
 	$result = $db->query($query);
@@ -33,7 +33,7 @@ function getIntervalOptions()
 		}
 		else
 		{
-			$log->logAction(ADM_ACTION, LOG_ERROR, "Invalid SQL-Interval ".$row['interval']." detected. Please fix this in the database.");
+			$cronlog->logAction(CRON_ACTION, LOG_ERROR, "Invalid SQL-Interval ".$row['interval']." detected. Please fix this in the database.");
 		}
 	}
 	
