@@ -18,8 +18,6 @@
 define('AREA', 'admin');
 require ("./lib/init.php");
 
-if($page == '') $page = 'overview';
-
 if($page == 'overview')
 {
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
@@ -30,11 +28,11 @@ if($page == 'overview')
 		&& $_POST['send'] == 'send')
 		{
 	
-			echo getTemplate("update/update_start");
+			eval("echo \"" . getTemplate("update/update_start") . "\";");
 			
 			include_once('./install/updatesql.php');
 			
-			echo getTemplate("update/update_end");
+			eval("echo \"" . getTemplate("update/update_end") . "\";");
 	
 			updateCounters();
 			inserttask('1');

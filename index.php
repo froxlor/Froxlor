@@ -33,33 +33,31 @@ if($action == '')
 if($action == 'login')
 {
 	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
+	&& $_POST['send'] == 'send')
 	{
 		$loginname = validate($_POST['loginname'], 'loginname');
 		$password = validate($_POST['password'], 'password');
-		
-		if(!hasUpdates($version))
+
+		$row = $db->query_first("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
+
+		if($row['customer'] == $loginname)
 		{
-			$row = $db->query_first("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
-	
-			if($row['customer'] == $loginname)
-			{
-				$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
-				$uid = 'customerid';
-				$adminsession = '0';
-				$is_admin = false;
-			}
-			else
-			{
-				$is_admin = true;
-			}
+			$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
+			$uid = 'customerid';
+			$adminsession = '0';
+			$is_admin = false;
 		}
 		else
+		{
+			$is_admin = true;
+		}
+
+		if(hasUpdates($version) && $is_admin == false)
 		{
 			redirectTo('index.php');
 			exit;
 		}
-		
+
 		if($is_admin)
 		{
 			if(hasUpdates($version))
@@ -78,7 +76,7 @@ if($action == 'login')
 			{
 				$row = $db->query_first("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
 			}
-			
+
 			if($row['admin'] == $loginname)
 			{
 				$table = "`" . TABLE_PANEL_ADMINS . "`";
@@ -95,7 +93,7 @@ if($action == 'login')
 		$userinfo = $db->query_first("SELECT * FROM $table WHERE `loginname`='" . $db->escape($loginname) . "'");
 
 		if($userinfo['loginfail_count'] >= $settings['login']['maxloginattempts']
-		   && $userinfo['lastlogin_fail'] > (time() - $settings['login']['deactivatetime']))
+		&& $userinfo['lastlogin_fail'] > (time() - $settings['login']['deactivatetime']))
 		{
 			redirectTo('index.php', Array('showmessage' => '3'), true);
 			exit;
@@ -120,7 +118,7 @@ if($action == 'login')
 		}
 
 		if(isset($userinfo['userid'])
-		   && $userinfo['userid'] != '')
+		&& $userinfo['userid'] != '')
 		{
 			$s = md5(uniqid(microtime(), 1));
 
@@ -202,13 +200,12 @@ if($action == 'login')
 				$message = $lng['error']['errorsendingmail'];
 				break;
 		}
-		
+
 		$update_in_progress = '';
 		if(hasUpdates($version))
 		{
-			$update_in_progress_msg = $lng['update']['updateinprogress_onlyadmincanlogin'];
-			$update_in_progress = getTemplate("updateinprogress");
-		}		
+			$update_in_progress = $lng['update']['updateinprogress_onlyadmincanlogin'];
+		}
 
 		eval("echo \"" . getTemplate("login") . "\";");
 	}
@@ -217,7 +214,7 @@ if($action == 'login')
 if($action == 'forgotpwd')
 {
 	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
+	&& $_POST['send'] == 'send')
 	{
 		$adminchecked = false;
 		$loginname = validate($_POST['loginname'], 'loginname');
@@ -239,7 +236,7 @@ if($action == 'forgotpwd')
 		$user = $db->fetch_array($result);
 
 		if(($adminchecked && $settings['panel']['allow_preset_admin'] == '1')
-		   || $adminchecked == false)
+		|| $adminchecked == false)
 		{
 			if($user !== false)
 			{

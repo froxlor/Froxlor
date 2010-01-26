@@ -632,7 +632,6 @@ if(isset($_POST['installstep'])
 		`domains_used` = 0,
 		`domains_see_all` = 1,
 		`change_serversettings` = 1,
-		`edit_billingdata` = 1,
 		`diskspace` = -1024,
 		`diskspace_used` = 0,
 		`mysqls` = -1,

@@ -118,6 +118,12 @@ function showUpdateStep($task = null, $needs_status = true)
 	global $updatelog;
 	
 	// output
+	echo $task;
+	
+	if(!$needs_status)
+	{
+		echo "<br />";
+	}
 	
 	$updatelog->logAction(ADM_ACTION, LOG_WARNING, $task);
 }
@@ -136,7 +142,27 @@ function lastStepStatus($status = -1)
 {
 	global $updatelog;
 	
+	switch($status)
+	{
+		case 0:
+			$status_sign = '[OK]';
+			$status_color = '1dcd00';
+			break;
+		case 1:
+			$status_sign = '[??]';
+			$status_color = 'db7100';			
+			break;
+		case 2:
+			$status_sign = '[!!]';
+			$status_color = 'ff0000';			
+			break;
+		default:
+			$status_sign = '[unknown]';
+			$status_color = '000000';			
+			break;
+	}
 	// output
+	echo "<span style=\"margin-left: 5em; color: #".$status_color."\">".$status_sign."</span>";	
 	
 	if($status == -1)
 	{

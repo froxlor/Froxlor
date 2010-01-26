@@ -436,3 +436,10 @@ TR.RowOverSelected {
 	margin-right: 3px;
 	background-color: #C6DEFF;
 }
+
+.update_progess
+{
+        padding: 2em;
+        text-align: left;
+}
+
