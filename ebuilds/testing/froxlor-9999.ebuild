@@ -168,9 +168,7 @@ src_install() {
 		sed -e "s|'mod_fcgid_wrapper', '0'|'mod_fcgid_wrapper', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set fcgi-wrapper to 'FCGIWrapper'"
 		eend 0
 		einfo "Creating tmp-directory"
-		mkdir -p "${D}/var/kunden/tmp"
-		chown root:root "${D}/var/kunden/tmp" || die "Unable to fix user:group permissions"
-		chmod 0755 "${D}/var/kunden/tmp" || die "Unable to fix user:group permissions"
+		dodir "/var/kunden/tmp"
 		eend 0
 		ewarn "You have to remove the '-D PHP5' entry from /etc/conf.d/apache2 if it exists!"
 	fi
@@ -250,7 +248,7 @@ src_install() {
 
 	# Install the Froxlor files
 	einfo "Installing Froxlor files"
-	dodir "/var/www"
+	dodir /var/www
 	cp -Rf "${S}/" "${D}/var/www/" || die "Installation of the Froxlor files failed"
 	eend 0
 
@@ -295,40 +293,34 @@ pkg_postinst() {
 	# Fix the permissions for the Froxlor files
 	einfo "Fixing permission of Froxlor files"
 	if useq lighttpd ; then
-		chown -R froxlor:lighttpd "${ROOT}"var/www/froxlor || die "Unable to fix user:group ownership"
+		fowners -R froxlor:lighttpd /var/www/froxlor
 	else
-		chown -R froxlor:apache "${ROOT}"var/www/froxlor || die "Unable to fix user:group ownership"
+		fowners -R froxlor:apache /var/www/froxlor
 	fi
-	find "${ROOT}"var/www/froxlor -type d -exec chmod 0755 {} \; || die "Unable to fix directory permissions"
-	find "${ROOT}"var/www/froxlor -type f -exec chmod 0444 {} \; || die "Unable to fix file permissions"
 	if useq fcgid ; then
 		if ! useq lighttpd ; then
-			chown -R froxlor:froxlor "${ROOT}"var/www/froxlor || die "Unable to fix user:group ownership"
+			fownwers -R froxlor:froxlor /var/www/froxlor
 		else
 			einfo "lighttpd overwrites fcgid USE-flag!"
-			#chown froxlor:lighttpd "${ROOT}/var/www/froxlor" || die "Unable to fix user:group ownership"
+			#fowners froxlor:lighttpd /var/www/froxlor
 		fi
-		chmod 0750 "${ROOT}"var/www/froxlor || die "Unable to fix directory permissions"
+		fperms 0750 /var/www/froxlor
 	else
 		if useq lighttpd ; then
-			chown -R froxlor:lighttpd "${ROOT}"var/www/froxlor/{temp,packages} || "Unable to fix user:group ownership"
+			fowners -R froxlor:lighttpd /var/www/froxlor/{temp,packages}
 		else
-			chown -R froxlor:apache "${ROOT}"var/www/froxlor/{temp,packages} || "Unable to fix user:group ownership"
+			fowners -R froxlor:apache /var/www/froxlor/{temp,packages}
 		fi
 	fi
-	chmod 0775 "${ROOT}"var/www/froxlor/{temp,packages} || die "Unable to fix directory permissions"
+	fperms 0775 /var/www/froxlor/{temp,packages}
 	eend 0
 
 	# Create the main directories for customer data
-	mkdir -p "${ROOT}"var/kunden/webs
-	chown root:root "${ROOT}"var/kunden/webs || die "Unable to fix user:group ownership"
-	chmod 0755 "${ROOT}"var/kunden/webs || die "Unable to fix directory permissions"
-	mkdir -p "${ROOT}"var/kunden/mail
-	chown vmail:vmail "${ROOT}"var/kunden/mail || die "Unable to fix user:group ownership"
-	chmod 0750 "${ROOT}"var/kunden/mail || die "Unable to fix directory permissions"
-	mkdir -p "${ROOT}"var/kunden/logs
-	chown root:root "${ROOT}"var/kunden/logs || die "Unable to fix user:group ownership"
-	chmod 0755 "${ROOT}"var/kunden/logs || die "Unable to fix directory permissions"
+	dodir /var/kunden/webs
+	dodir /var/kunden/mail
+	fowners vmail:vmail /var/kunden/mail
+	fperms 0750 /var/kunden/mail
+	dodir /var/kunden/logs
 
 	einfo
 	einfo "Please run 'emerge --config =${PF}' to continue with"
