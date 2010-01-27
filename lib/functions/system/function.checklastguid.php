@@ -12,7 +12,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id: 185.spf.php 106 2010-01-25 10:06:34Z d00p $
+ * @version    $Id$
  */
 
 /*
