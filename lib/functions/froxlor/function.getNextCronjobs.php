@@ -51,7 +51,7 @@ function getNextCronjobs()
 	while($row = $db->fetch_array($result))
 	{
 		$cron_files[] = $row['cronfile'];
-		$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = UNIX_TIMESTAMP() WHERE `id` ='".(int)$result['id']."';");
+		$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = UNIX_TIMESTAMP() WHERE `id` ='".(int)$row['id']."';");
 	}
 	
 	return $cron_files;
