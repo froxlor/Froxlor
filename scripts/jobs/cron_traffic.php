@@ -18,6 +18,7 @@
  */
 
 openRootDB($debugHandler, $lockfile);
+require_once(makeCorrectFile(dirname(__FILE__) . '/cron_traffic.inc.functions.php'));
 
 /**
  * TRAFFIC AND DISKUSAGE MESSURE

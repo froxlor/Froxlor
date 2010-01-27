@@ -64,8 +64,6 @@ if(isFroxlorVersion('0.9-r0'))
 	$db->query("DROP TABLE  `" . TABLE_BILLING_INVOICES_ADMINS . "`;");
 	$db->query("DROP TABLE  `" . TABLE_BILLING_INVOICE_CHANGES . "`;");
 	$db->query("DROP TABLE  `" . TABLE_BILLING_INVOICE_CHANGES_ADMINS . "`;");
-	$db->query("DROP TABLE `" . TABLE_PANEL_DISKSPACE . "`;");
-	$db->query("DROP TABLE `" . TABLE_PANEL_DISKSPACE_ADMINS . "`;");
 
 	/*
 	 * update panel_domains, panel_customers, panel_admins

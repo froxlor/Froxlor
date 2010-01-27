@@ -17,7 +17,13 @@
 
 include_once(dirname(__FILE__) . '/../lib/cron_init.php');
 
-includeCronjobs($debugHandler);
+$jobs_to_run = includeCronjobs($debugHandler, $pathtophpfiles);
+
+foreach($jobs_to_run as $cron)
+{
+	require_once($cron);
+}
+
 fwrite($debugHandler, 'Cronfiles have been included' . "\n");
 
 /*

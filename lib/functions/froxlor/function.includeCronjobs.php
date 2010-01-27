@@ -15,23 +15,24 @@
  * @version    $Id: $
  */
 
-function includeCronjobs($debugHandler)
+function includeCronjobs($debugHandler, $pathtophpfiles)
 {
 	$cronjobs = getNextCronjobs();
+	
+	$jobs_to_run = array();
 	
 	if($cronjobs !== false
 	&& is_array($cronjobs)
 	&& isset($cronjobs[0]))
 	{
-		/*
-		 * @TODO find a better way for the path
-		 */
-		$cron_path = dirname(__FILE__).'/../../../scripts/jobs/';
+		$cron_path = makeCorrectDir($pathtophpfiles.'/scripts/jobs/');
 		
 		foreach($cronjobs as $cronjob)
 		{
 			$cron_file = makeCorrectFile($cron_path.$cronjob);
-			include_once($cron_file);
+			$jobs_to_run[] = $cron_file;
 		}
 	}
+	
+	return $jobs_to_run;
 }

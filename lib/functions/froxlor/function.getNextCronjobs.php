@@ -26,7 +26,7 @@ function getNextCronjobs()
 {
 	global $db;
 	
-	$sql = "SELECT `id`, `cronfile` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `interval` <> '0' AND (";
+	$query = "SELECT `id`, `cronfile` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `interval` <> '0' AND (";
 
 	$intervals = getIntervalOptions();
 	
@@ -36,14 +36,14 @@ function getNextCronjobs()
 		if($name == '0') continue;
 
 		if($x == 0) {
-			$sql.= 'DATE_ADD(FROM_UNIXTIME(`lastrun`), INTERVAL '.$ival.') <= UTC_TIMESTAMP()';
+			$query.= 'DATE_ADD(FROM_UNIXTIME(`lastrun`), INTERVAL '.$ival.') <= UTC_TIMESTAMP()';
 		} else {	
-			$sql.= ' OR DATE_ADD(UNIX_TIMESTAMP(`lastrun`), INTERVAL '.$ival.') <= UTC_TIMESTAMP()';
+			$query.= ' OR DATE_ADD(UNIX_TIMESTAMP(`lastrun`), INTERVAL '.$ival.') <= UTC_TIMESTAMP()';
 		}
 		$x++;
 	}
 	
-	$sql.= ');';
+	$query.= ');';
 	
 	$result = $db->query($query);
 	

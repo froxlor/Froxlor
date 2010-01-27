@@ -17,6 +17,15 @@
  * @version    $Id$
  */
 
+/*
+ * necessary includes
+ */
+require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.dns.10.bind.php'));
+require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.10.apache.php'));
+require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.15.apache_fcgid.php'));
+require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.20.lighttpd.php'));
+require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.25.lighttpd_fcgid.php'));
+
 /**
  * LOOK INTO TASKS TABLE TO SEE IF THERE ARE ANY UNDONE JOBS
  */
