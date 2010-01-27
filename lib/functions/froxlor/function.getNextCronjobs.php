@@ -26,7 +26,7 @@ function getNextCronjobs()
 {
 	global $db;
 	
-	$query = "SELECT `id`, `cronfile` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `interval` <> '0' AND (";
+	$query = "SELECT `id`, `cronfile` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `interval` <> '0' AND `isactive` = '1' AND (";
 
 	$intervals = getIntervalOptions();
 	

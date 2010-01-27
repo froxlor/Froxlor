@@ -1245,5 +1245,11 @@ $lng['update']['update'] = 'Froxlor Aktualisierung';
 $lng['update']['proceed'] = 'Ausf&uuml;hren';
 $lng['update']['update_information'] = 'Die Froxlor Dateien wurden aktualisiert. Neue Version ist <strong>%newversion</strong>. Die bisher installierte Version ist <strong>%curversion</strong><br /><br />Ein Kunden-Login ist vor Abschluss des Aktualisierungsvorganges nicht m&oouml;glich.<br /><strong>Aktualisierung ausf&uuml;hren?</strong>';
 $lng['update']['noupdatesavail'] = '<strong>Ihre Froxlor-Version ist aktuell.</strong>';
+$lng['admin']['cron']['cronsettings'] = 'Cronjob Einstellungen';
+$lng['cron']['cronname'] = 'Cronjob-Name';
+$lng['cron']['lastrun'] = 'zuletzt gestartet';
+$lng['cron']['interval'] = 'Interval';
+$lng['cron']['isactive'] = 'Aktiv';
+$lng['admin']['cron']['add'] = 'Cronjob hinzuf&uuml;gen';
 
 ?>

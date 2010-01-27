@@ -29,25 +29,80 @@ elseif(isset($_GET['id']))
 }
 
 if($page == 'cronjobs'
-&& $userinfo['customers'] != '0')
+  || $page == 'overview')
 {
 	if($action == '')
 	{
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_cronjobs");
+
+		$fields = array(
+			'c.cronfile' => $lng['cron']['cronname'],
+			'c.lastrun' => $lng['cron']['lastrun'],
+			'c.interval' => $lng['cron']['interval'],
+			'c.isactive' => $lng['cron']['isactive']
+		);
+		$paging = new paging($userinfo, $db, TABLE_PANEL_CRONRUNS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+
+		/*
+		 * @TODO Fix sorting
+		 */
+		$crons = '';
+		$result = $db->query("SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` ORDER BY `cronfile` ASC " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+		$paging->setEntries($db->num_rows($result));
+		$sortcode = $paging->getHtmlSortCode($lng);
+		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+		$searchcode = $paging->getHtmlSearchCode($lng);
+		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+
+		$i = 0;
+		$count = 0;
+
+		while($row = $db->fetch_array($result))
+		{
+			if($paging->checkDisplay($i))
+			{
+				$row = htmlentities_array($row);
+				
+				$row['lastrun'] = date('d.m.Y H:i', $row['lastrun']);
+				
+				if((int)$row['isactive'] == 1)
+				{
+					$row['isactive'] = $lng['panel']['yes'];
+				}
+				else
+				{
+					$row['isactive'] = $lng['panel']['no'];
+				}
+
+				eval("\$crons.=\"" . getTemplate("cronjobs/cronjobs_cronjob") . "\";");
+				$count++;
+			}
+
+			$i++;
+		}
+
+		eval("echo \"" . getTemplate("cronjobs/cronjobs") . "\";");
+
 	}
 	elseif($action == 'new')
 	{
-
+		/*
+		 * @TODO Finish me
+		 */
 	}
 	elseif($action == 'edit'
 	&& $id != 0)
 	{
-
+		/*
+		 * @TODO Finish me
+		 */
 	}
 	elseif($action == 'delete'
 	&& $id != 0)
 	{
-		
+		/*
+		 * @TODO Finish me
+		 */
 	}
 }
 

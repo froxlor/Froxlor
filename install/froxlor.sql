@@ -700,6 +700,49 @@ CREATE TABLE `panel_diskspace_admins` (
 # --------------------------------------------------------
 
 #
+# Table structure for table `panel_diskspace`
+#
+
+CREATE TABLE `panel_diskspace` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `customerid` int(11) unsigned NOT NULL default '0',
+  `year` int(4) unsigned zerofill NOT NULL default '0000',
+  `month` int(2) unsigned zerofill NOT NULL default '00',
+  `day` int(2) unsigned zerofill NOT NULL default '00',
+  `stamp` int(11) unsigned NOT NULL default '0',
+  `webspace` bigint(30) unsigned NOT NULL default '0',
+  `mail` bigint(30) unsigned NOT NULL default '0',
+  `mysql` bigint(30) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `customerid` (`customerid`)
+) TYPE=MyISAM ;
+
+#
+# Dumping data for table `panel_diskspace`
+#
+
+
+# --------------------------------------------------------
+
+#
+# Table structure for table `panel_diskspace_admins`
+#
+
+CREATE TABLE `panel_diskspace_admins` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `adminid` int(11) unsigned NOT NULL default '0',
+  `year` int(4) unsigned zerofill NOT NULL default '0000',
+  `month` int(2) unsigned zerofill NOT NULL default '00',
+  `day` int(2) unsigned zerofill NOT NULL default '00',
+  `stamp` int(11) unsigned NOT NULL default '0',
+  `webspace` bigint(30) unsigned NOT NULL default '0',
+  `mail` bigint(30) unsigned NOT NULL default '0',
+  `mysql` bigint(30) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `adminid` (`adminid`)
+) TYPE=MyISAM ;
+
+#
 # Table structure for table `panel_languages`
 #
 
@@ -931,6 +974,7 @@ CREATE TABLE IF NOT EXISTS `cronjobs_run` (
   `cronfile` varchar(250) NOT NULL,
   `lastrun` int(15) NOT NULL DEFAULT '0',
   `interval` varchar(100) DEFAULT '5 MINUTE',
+  `isactive` tinyint(1) DEFAULT '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM;
 

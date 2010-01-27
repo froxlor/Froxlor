@@ -272,6 +272,7 @@ if(isFroxlorVersion('0.9-r3'))
 				`cronfile` varchar(250) NOT NULL,
 				`lastrun` int(15) NOT NULL DEFAULT '0',
 				`interval` varchar(100) DEFAULT '5 MINUTE',
+				`isactive` tinyint(1) DEFAULT '1',
 				PRIMARY KEY  (`id`)
 				) ENGINE=MyISAM;");
 

@@ -5,7 +5,7 @@ $header
 		</tr>
 		<tr>
 			<td class="field_name_center_noborder"><img src="images/info.png" alt="" /></td>
-			<td class="field_name">$success_message<if $redirect_url != ''><br /><a href="{$redirect_url}">{$lng['success']['clickheretocontinue']}</if></td>
+			<td class="field_name">$success_message<if $redirect_url != ''><br /><a href="{$redirect_url}">{$lng['success']['clickheretocontinue']}</a></if></td>
 		</tr>
 	</table>
 	<br />

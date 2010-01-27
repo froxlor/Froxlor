@@ -322,8 +322,48 @@ if(isset($userinfo['loginname'])
 
 if(AREA == 'admin' || AREA == 'customer')
 {
-	$navigation_data = loadConfigArrayDir('./lib/navigation/');
-	$navigation = buildNavigation($navigation_data[AREA], $userinfo);
+	if(hasUpdates($version))
+	{
+		/*
+		 * if froxlor-files have been updated 
+		 * but not yet configured by the admin
+		 * we only show logout and the update-page
+		 */
+		$navigation_data = array (
+			'admin' => array (
+				'index' => array (
+					'url' => 'admin_index.php',
+					'label' => $lng['admin']['overview'],
+					'elements' => array (
+						array (
+							'label' => $lng['menue']['main']['username'],
+						),
+						array (
+							'url' => 'admin_index.php?action=logout',
+							'label' => $lng['login']['logout'],
+						),
+					),
+				),		
+				'server' => array (
+					'label' => $lng['admin']['server'],
+					'required_resources' => 'change_serversettings',
+					'elements' => array (
+						array (
+							'url' => 'admin_updates.php?page=overview',
+							'label' => $lng['update']['update'],
+							'required_resources' => 'change_serversettings',
+						),
+					),
+				),
+			),
+		);
+		$navigation = buildNavigation($navigation_data['admin'], $userinfo);
+	}
+	else
+	{
+		$navigation_data = loadConfigArrayDir('./lib/navigation/');
+		$navigation = buildNavigation($navigation_data[AREA], $userinfo);
+	}
 	unset($navigation_data);
 }
 
