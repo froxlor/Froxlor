@@ -252,6 +252,9 @@ class lighttpd
 
 		$vhost_content.= $this->getServerNames($domain) . " {\n";
 		$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
+		if ($domain['specialsettings'] != "") {
+			$vhost_content.= $domain['specialsettings'] . "\n";
+		}
 		$vhost_content.= $this->create_htaccess($domain);
 		$vhost_content.= $this->create_pathOptions($domain);
 		$vhost_content.= $this->composePhpOptions($domain);
