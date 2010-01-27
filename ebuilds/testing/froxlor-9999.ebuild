@@ -14,7 +14,6 @@ if [[ ${PV} == "9999" ]] ; then
 else
 	SRC_URI="http://files.froxlor.org/releases/tgz/${PN}-${PV}.tar.gz"
 	KEYWORDS="~amd64 ~x86"
-	S="${WORKDIR}/${PN}"
 fi
 
 DESCRIPTION="A PHP-based webhosting-oriented control panel for servers."
@@ -68,6 +67,8 @@ done
 
 need_php5_httpd
 need_php5_cli
+
+S="${WORKDIR}/${PN}"
 
 src_unpack() {
 	if [[ ${PV} == "9999" ]] ; then
