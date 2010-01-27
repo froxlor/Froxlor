@@ -86,26 +86,34 @@ if($page == 'overview')
 	if((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes')
 	   || (isset($lookfornewversion) && $lookfornewversion == 'yes'))
 	{
-		$latestversion = @file('http://version.froxlor.org/legacy/' . $version);
-
-		if(is_array($latestversion)
-		   && count($latestversion) >= 2)
+		$update_check_uri = 'http://version.froxlor.org/Froxlor/legacy/' . $version;
+		
+		if(strtolower(ini_get('allow_url_fopen')) == 'on')
 		{
-			$lookfornewversion_lable = $latestversion[0];
-			$lookfornewversion_link = $latestversion[1];
-			$lookfornewversion_addinfo = '';
-
-			if(count($latestversion) >= 3)
+			$latestversion = @file($update_check_uri);
+	
+			$latestversion = explode(':', $latestversion);
+	
+			if(is_array($latestversion)
+			   && count($latestversion) >= 2)
 			{
-				$addinfo = $latestversion;
-				unset($addinfo[0]);
-				unset($addinfo[1]);
-				$lookfornewversion_addinfo = implode("\n", $addinfo);
+				$lookfornewversion_lable = $latestversion[0];
+				$lookfornewversion_link = $latestversion[1];
+				$lookfornewversion_addinfo = '';
+	
+				if(count($latestversion) >= 3)
+				{
+					$lookfornewversion_addinfo = $latestversion[2];
+				}
+			}
+			else
+			{
+				redirectTo($update_check_uri.'/pretty', NULL);
 			}
 		}
 		else
 		{
-			redirectTo('http://version.froxlor.org/legacy/' . $version . '/pretty', NULL);
+			redirectTo($update_check_uri.'/pretty', NULL);
 		}
 	}
 	else
