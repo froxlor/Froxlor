@@ -281,14 +281,35 @@ if(isFroxlorVersion('0.9-r3'))
 	lastStepStatus(0);
 	showUpdateStep("Inserting new values into table");
 	
-	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (1, 'froxlor/core', 'cron_tasks.php', '5 MINUTE', 'cron_tasks');");
-	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (2, 'froxlor/core', 'cron_legacy.php', '5 MINUTE', 'cron_legacy');");
-	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (3, 'froxlor/aps', 'cron_apsinstaller.php', '5 MINUTE', 'cron_apsinstaller');");
-	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (4, 'froxlor/autoresponder', 'cron_autoresponder.php', '5 MINUTE', 'cron_autoresponder');");
-	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (5, 'froxlor/aps', 'cron_apsupdater.php', '1 HOUR', 'cron_apsupdater');");
-	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (6, 'froxlor/core', 'cron_traffic.php', '1 DAY', 'cron_traffic');");
-	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (7, 'froxlor/ticket', 'cron_used_tickets_reset.php', '1 MONTH', 'cron_ticketsreset');");
-	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (8, 'froxlor/ticket', 'cron_ticketarchive.php', '1 MONTH', 'cron_ticketarchive');");
+	// checking for active ticket-module
+	$ticket_active = 0;
+	if((int)$settings['ticket']['enabled'] == 1)
+	{
+		$ticket_active = 1;
+	}
+	
+	// checking for active aps-module
+	$aps_active = 0;
+	if((int)$settings['aps']['aps_active'] == 1)
+	{
+		$aps_active = 1;
+	}	
+	
+	// checking for active autoresponder-module
+	$ar_active = 0;
+	if((int)$settings['autoresponder']['autoresponder_active'] == 1)
+	{
+		$ar_active = 1;
+	}
+	
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (1, 'froxlor/core', 'cron_tasks.php', '5 MINUTE', '1', cron_tasks');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (2, 'froxlor/core', 'cron_legacy.php', '5 MINUTE', '1', 'cron_legacy');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (3, 'froxlor/aps', 'cron_apsinstaller.php', '5 MINUTE', ".$aps_active.", 'cron_apsinstaller');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (4, 'froxlor/autoresponder', 'cron_autoresponder.php', '5 MINUTE', ".$ar_active.", 'cron_autoresponder');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (5, 'froxlor/aps', 'cron_apsupdater.php', '1 HOUR', ".$aps_active.", 'cron_apsupdater');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (6, 'froxlor/core', 'cron_traffic.php', '1 DAY', '1', 'cron_traffic');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (7, 'froxlor/ticket', 'cron_used_tickets_reset.php', '1 MONTH', '".$ticket_active."', 'cron_ticketsreset');");
+	$db->query("INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (8, 'froxlor/ticket', 'cron_ticketarchive.php', '1 MONTH', '".$ticket_active."', 'cron_ticketarchive');");
 	
 	lastStepStatus(0);
 	showUpdateStep("Updating old settings values");
