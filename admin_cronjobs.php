@@ -36,7 +36,6 @@ if($page == 'cronjobs'
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_cronjobs");
 
 		$fields = array(
-			'c.cronfile' => $lng['cron']['cronname'],
 			'c.lastrun' => $lng['cron']['lastrun'],
 			'c.interval' => $lng['cron']['interval'],
 			'c.isactive' => $lng['cron']['isactive']
