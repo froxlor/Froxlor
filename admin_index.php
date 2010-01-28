@@ -129,32 +129,7 @@ if($page == 'overview')
 	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
 	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains aps_packages');
 
-	if($settings['system']['last_tasks_run'] == 0)
-	{
-		$cronlastrun = $lng['cronjobs']['notyetrun'];
-	}
-	else
-	{
-		$cronlastrun = date("d.m.Y H:i:s", $settings['system']['last_tasks_run']);
-	}
-
-	if($settings['system']['last_traffic_run'] == 0)
-	{
-		$trafficlastrun = $lng['cronjobs']['notyetrun'];
-	}
-	else
-	{
-		$trafficlastrun = date("d.m.Y H:i:s", $settings['system']['last_traffic_run']);
-	}
-
-	if($settings['system']['last_archive_run'] == 0)
-	{
-		$archivelastrun = $lng['cronjobs']['notyetrun'];
-	}
-	else
-	{
-		$archivelastrun = date("d.m.Y H:i:s", $settings['system']['last_archive_run']);
-	}
+	$cron_last_runs = getCronjobsLastRun();
 
 	$opentickets = 0;
 	$opentickets = $db->query_first('SELECT COUNT(`id`) as `count` FROM `' . TABLE_PANEL_TICKETS . '`

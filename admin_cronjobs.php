@@ -47,7 +47,7 @@ if($page == 'cronjobs'
 		 * @TODO Fix sorting
 		 */
 		$crons = '';
-		$result = $db->query("SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` ORDER BY `cronfile` ASC " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+		$result = $db->query("SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` ORDER BY `cronfile` ASC");
 		$paging->setEntries($db->num_rows($result));
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
@@ -73,6 +73,8 @@ if($page == 'cronjobs'
 				{
 					$row['isactive'] = $lng['panel']['no'];
 				}
+				
+				$description = $lng['crondesc'][$row['desc_lng_key']];
 
 				eval("\$crons.=\"" . getTemplate("cronjobs/cronjobs_cronjob") . "\";");
 				$count++;

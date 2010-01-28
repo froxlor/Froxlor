@@ -81,6 +81,7 @@ return array(
 					'varname' => 'autoresponder_active',
 					'type' => 'bool',
 					'default' => false,
+					'cronmodule' => 'froxlor/autoresponder',
 					'save_method' => 'storeSettingField',
 					),
 				'systen_last_autoresponder_run' => array(

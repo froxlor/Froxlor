@@ -389,7 +389,6 @@ $lng['mysql']['description'] = 'Hier k&ouml;nnen Sie MySQL-Datenbanken anlegen u
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = 'Letzter Cronjob';
 $lng['serversettings']['paging']['title'] = 'Eintr&auml;ge pro Seite';
 $lng['serversettings']['paging']['description'] = 'Wieviele Eintr&auml;ge sollen auf einer Seite gezeigt werden? (0 = Paging deaktivieren)';
 $lng['error']['ipstillhasdomains'] = 'Die IP/Port Kombination, die Sie l&ouml;schen wollen ist noch bei einer oder mehreren Domains eingetragen. Bitte &auml;ndern sie die Domains vorher auf eine andere IP/Port Kombination um diese l&ouml;schen zu k&ouml;nnen.';
@@ -531,7 +530,6 @@ $lng['admin']['configfiles']['etc'] = 'Sonstige (System)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Distribution w&auml;hlen --';
 $lng['admin']['configfiles']['chooseservice'] = '-- Service w&auml;hlen --';
 $lng['admin']['configfiles']['choosedaemon'] = '-- Daemon w&auml;hlen --';
-$lng['admin']['trafficlastrun'] = 'Letzte Trafficberechnung';
 
 // ADDED IN 1.2.16-svn10
 
@@ -1251,5 +1249,15 @@ $lng['cron']['lastrun'] = 'zuletzt gestartet';
 $lng['cron']['interval'] = 'Interval';
 $lng['cron']['isactive'] = 'Aktiv';
 $lng['admin']['cron']['add'] = 'Cronjob hinzuf&uuml;gen';
+$lng['cron']['description'] = 'Beschreibung';
+$lng['crondesc']['cron_unknown_desc'] = 'Keine Beschreibung angegeben';
+$lng['crondesc']['cron_tasks'] = 'Erstellen von Konfigurationsdateien';
+$lng['crondesc']['cron_legacy'] = 'Legacy (alter) Cronjob';
+$lng['crondesc']['cron_apsinstaller'] = 'APS-Installer';
+$lng['crondesc']['cron_autoresponder'] = 'E-Mail Autoresponder';
+$lng['crondesc']['cron_apsupdater'] = 'Aktualisieren der APS Pakete';
+$lng['crondesc']['cron_traffic'] = 'Traffic-Berechnung';
+$lng['crondesc']['cron_ticketsreset'] = 'Zur&uuml;cksetzen der Ticket-Z&auml;hler';
+$lng['crondesc']['cron_ticketarchive'] = 'Archivieren alter Tickets';
 
 ?>

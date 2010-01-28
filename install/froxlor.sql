@@ -971,10 +971,12 @@ CREATE TABLE IF NOT EXISTS `aps_temp_settings` (
 
 CREATE TABLE IF NOT EXISTS `cronjobs_run` (
   `id` bigint(20) NOT NULL auto_increment,
+  `module` varchar(250) NOT NULL,  
   `cronfile` varchar(250) NOT NULL,
   `lastrun` int(15) NOT NULL DEFAULT '0',
-  `interval` varchar(100) DEFAULT '5 MINUTE',
+  `interval` varchar(100) NOT NULL DEFAULT '5 MINUTE',
   `isactive` tinyint(1) DEFAULT '1',
+  `desc_lng_key` varchar(100) NOT NULL DEFAULT 'cron_unknown_desc',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM;
 
@@ -982,11 +984,11 @@ CREATE TABLE IF NOT EXISTS `cronjobs_run` (
 # Dumping data for table `panel_phpconfigs`
 #
 
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (1, 'cron_tasks.php', '5 MINUTE');
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (2, 'cron_legacy.php', '5 MINUTE');
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (3, 'cron_apsinstaller.php', '5 MINUTE');
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (4, 'cron_autoresponder.php', '5 MINUTE');
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (5, 'cron_apsupdater.php', '1 HOUR');
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (6, 'cron_traffic.php', '1 DAY');
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (7, 'cron_used_tickets_reset.php', '1 MONTH');
-INSERT INTO `cronjobs_run` (`id`, `cronfile`, `interval`) VALUES (8, 'cron_ticketarchive.php', '1 MONTH');
+INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (1, 'froxlor/core', 'cron_tasks.php', '5 MINUTE', 'cron_tasks');
+INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (2, 'froxlor/core', 'cron_legacy.php', '5 MINUTE', 'cron_legacy');
+INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (3, 'froxlor/aps', 'cron_apsinstaller.php', '5 MINUTE', 'cron_apsinstaller');
+INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (4, 'froxlor/autoresponder', 'cron_autoresponder.php', '5 MINUTE', 'cron_autoresponder');
+INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (5, 'froxlor/aps', 'cron_apsupdater.php', '1 HOUR', 'cron_apsupdater');
+INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (6, 'froxlor/core', 'cron_traffic.php', '1 DAY', 'cron_traffic');
+INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (7, 'froxlor/ticket', 'cron_used_tickets_reset.php', '1 MONTH', 'cron_ticketsreset');
+INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `desc_lng_key`) VALUES (8, 'froxlor/ticket', 'cron_ticketarchive.php', '1 MONTH', 'cron_ticketarchive');

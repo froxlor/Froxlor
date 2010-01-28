@@ -389,7 +389,6 @@ $lng['mysql']['description'] = 'Here you can create and change your MySQL-Databa
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = 'Last generating of configfiles';
 $lng['serversettings']['paging']['title'] = 'Entries per page';
 $lng['serversettings']['paging']['description'] = 'How many entries shall be shown on one page? (0 = disable paging)';
 $lng['error']['ipstillhasdomains'] = 'The IP/Port combination you want to delete still has domains assigned to it, please reassign those to other IP/Port combinations before deleting this IP/Port combination.';
@@ -532,7 +531,6 @@ $lng['admin']['configfiles']['etc'] = 'Others (System)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Choose a distribution --';
 $lng['admin']['configfiles']['chooseservice'] = '-- Choose a service --';
 $lng['admin']['configfiles']['choosedaemon'] = '-- Choose a daemon --';
-$lng['admin']['trafficlastrun'] = 'Last traffic calculation';
 
 // ADDED IN 1.2.16-svn10
 
@@ -1271,5 +1269,15 @@ $lng['cron']['lastrun'] = 'last run';
 $lng['cron']['interval'] = 'interval';
 $lng['cron']['isactive'] = 'enabled';
 $lng['admin']['cron']['add'] = 'Add a new cronjob';
+$lng['cron']['description'] = 'description';
+$lng['crondesc']['cron_unknown_desc'] = 'no description given';
+$lng['crondesc']['cron_tasks'] = 'generating of configfiles';
+$lng['crondesc']['cron_legacy'] = 'legacy (old) cronjob';
+$lng['crondesc']['cron_apsinstaller'] = 'APS-installer';
+$lng['crondesc']['cron_autoresponder'] = 'e-mail autoresponder';
+$lng['crondesc']['cron_apsupdater'] = 'updating APS packages';
+$lng['crondesc']['cron_traffic'] = 'traffic calculation';
+$lng['crondesc']['cron_ticketsreset'] = 'resetting ticket-counters';
+$lng['crondesc']['cron_ticketarchive'] = 'archiving old tickets';
 
 ?>

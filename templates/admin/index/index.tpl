@@ -115,20 +115,7 @@ $header
 		<tr>
 			<td colspan="2" class="maintitle"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['froxlordetails']}</b></td>
 		</tr>
-		<tr>
-			<td class="field_name_border_left">{$lng['admin']['cronlastrun']}:</td>
-			<td class="field_display">$cronlastrun</td>
-		</tr>
-		<tr>
-			<td class="field_name_border_left">{$lng['admin']['trafficlastrun']}:</td>
-			<td class="field_display">$trafficlastrun</td>
-		</tr>
-		<if $settings['ticket']['enabled'] == 1>
-		<tr>
-			<td class="field_name_border_left">{$lng['admin']['archivelastrun']}:</td>
-			<td class="field_display">$archivelastrun</td>
-		</tr>
-		</if>
+		{$cron_last_runs}
 		<tr>
 			<td class="field_name_border_left">{$lng['admin']['installedversion']}:</td>
 			<td class="field_display">{$version}</td>

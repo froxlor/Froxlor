@@ -28,6 +28,7 @@ return array(
 					'varname' => 'enabled',
 					'type' => 'bool',
 					'default' => false,
+					'cronmodule' => 'froxlor/ticket',
 					'save_method' => 'storeSettingField',
 					),
 				'ticket_noreply_email' => array(

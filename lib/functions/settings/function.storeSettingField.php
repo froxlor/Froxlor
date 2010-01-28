@@ -23,6 +23,14 @@ function storeSettingField($fieldname, $fielddata, $newfieldvalue)
 	{
 		if(saveSetting($fielddata['settinggroup'], $fielddata['varname'], $newfieldvalue) != false)
 		{
+			/*
+			 * when fielddata[cronmodule] is set, this means enable/disable a cronjob
+			 */
+			if(isset($fielddata['cronmodule']) && $fielddata['cronmodule'] != '')
+			{
+				toggleCronStatus($fielddata['cronmodule'], $newfieldvalue);
+			}
+
 			return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
 		}
 		else

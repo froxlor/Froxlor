@@ -28,6 +28,7 @@ return array(
 					'varname' => 'aps_active',
 					'type' => 'bool',
 					'default' => false,
+					'cronmodule' => 'froxlor/aps',
 					'save_method' => 'storeSettingField',
 					),
 				'aps_items_per_page' => array(
