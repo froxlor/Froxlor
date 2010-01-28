@@ -79,13 +79,25 @@ if($db->num_rows($result) > 0)
 		if($ts_end != -1 && $ts_end < $ts_now) continue;
 		
 		$path = $row['homedir'] . $row['maildir'] . "new/";
+		
+		if(!is_dir($paht) || !is_readable($path))
+		{
+			$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Error accessing maildir: " . $path);
+			continue;
+		}
+		
 		$files = scandir($path);
 		foreach($files as $entry)
 		{
 			if($entry == '.'
 			   || $entry == '..')continue;
 
-			if(time() - filemtime($path . $entry) - $cycle <= 0)
+			/*
+			 * is the time passed between now and
+			 * the time we received the mail lower/equal
+			 * than our cycle-seconds?
+			 */
+			if(time() - filemtime($path . $entry) <= $cycle)
 			{
 				$content = file($path . $entry);
 
@@ -93,7 +105,7 @@ if($db->num_rows($result) > 0)
 
 				if(count($content) == 0)
 				{
-					$cronlog->logAction(LOG_ERROR, LOG_WARNING, "Unable to read mail from maildir: " . $entry);
+					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Unable to read mail from maildir: " . $entry);
 					continue;
 				}
 
@@ -174,7 +186,7 @@ if($db->num_rows($result) > 0)
 				if($to == ''
 				   || $from == '')
 				{
-					$cronlog->logAction(LOG_ERROR, LOG_WARNING, "No valid headers found in mail to parse: " . $entry);
+					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "No valid headers found in mail to parse: " . $entry);
 					continue;
 				}
 
@@ -219,7 +231,7 @@ if($db->num_rows($result) > 0)
 						$mailerr_msg = $from;
 					}
 
-					$cronlog->logAction(LOG_ERROR, LOG_WARNING, "Error sending autoresponder mail: " . $mailerr_msg);
+					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Error sending autoresponder mail: " . $mailerr_msg);
 				}
 
 				$mail->ClearAddresses();

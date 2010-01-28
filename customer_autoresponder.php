@@ -34,7 +34,7 @@ if($action == "add")
 		$message = trim($_POST['message']);
 		
 		$date_from_off = isset($_POST['date_from_off']) ? -1 : 0;
-		$date_until_off = isset($_POST['date_from_off']) ? -1 : 0;
+		$date_until_off = isset($_POST['date_until_off']) ? -1 : 0;
 		
 		/*
 		 * @TODO validate date (DD-MM-YYYY) 
@@ -82,8 +82,8 @@ if($action == "add")
 			SET `email` = '" . $db->escape($account) . "',
 			`message` = '" . $db->escape($message) . "',
 			`enabled` = '" . (int)$_POST['active'] . "',
-			`ts_from` = '" . (int)$ts_from . "',
-			`ts_until` = '" . (int)$ts_until . "',
+			`date_from` = '" . (int)$ts_from . "',
+			`date_until` = '" . (int)$ts_until . "',
 			`subject` = '" . $db->escape($subject) . "',
 			`customerid` = '" . $db->escape((int)$userinfo['customerid']) . "'
 			");
@@ -126,7 +126,7 @@ if($action == "edit")
 		$message = trim($_POST['message']);
 
 		$date_from_off = isset($_POST['date_from_off']) ? -1 : 0;
-		$date_until_off = isset($_POST['date_from_off']) ? -1 : 0;
+		$date_until_off = isset($_POST['date_until_off']) ? -1 : 0;
 				
 		/*
 		 * @TODO validate date (DD-MM-YYYY) 
@@ -181,8 +181,8 @@ if($action == "edit")
 		$db->query("UPDATE `" . TABLE_MAIL_AUTORESPONDER . "`
 			SET `message` = '" . $db->escape($message) . "',
 			`enabled` = '" . (int)$ResponderActive . "',
-			`ts_from` = '" . (int)$ts_from . "',
-			`ts_until` = '" . (int)$ts_until . "',			
+			`date_from` = '" . (int)$ts_from . "',
+			`date_until` = '" . (int)$ts_until . "',			
 			`subject` = '" . $db->escape($subject) . "'
 			WHERE `email` = '" . $db->escape($account) . "'
 			AND `customerid` = '" . $db->escape((int)$userinfo['customerid']) . "'
@@ -281,21 +281,21 @@ else
 
 	while($row = $db->fetch_array($result))
 	{
-		if($result['date_from'] == -1 && $result['date_until'] == -1)
+		if($row['date_from'] == -1 && $row['date_until'] == -1)
 		{
 			$activated_date = $lng['panel']['not_activated'];
 		}
-		elseif($result['date_from'] == -1 && $result['date_until'] != -1)
+		elseif($row['date_from'] == -1 && $row['date_until'] != -1)
 		{
-			$activated_date = $lng['autoresponder']['date_until'].': '.date('d-m-Y', $result['date_until']);
+			$activated_date = $lng['autoresponder']['date_until'].': '.date('d-m-Y', $row['date_until']);
 		}
-		elseif($result['date_from'] != -1 && $result['date_until'] == -1)
+		elseif($row['date_from'] != -1 && $row['date_until'] == -1)
 		{
-			$activated_date = $lng['autoresponder']['date_from'].': '.date('d-m-Y', $result['date_from']);
+			$activated_date = $lng['autoresponder']['date_from'].': '.date('d-m-Y', $row['date_from']);
 		}	
 		else
 		{
-			$activated_date = $date('d-m-Y', $result['date_from']) . ' - ' . date('d-m-Y', $result['date_until']);
+			$activated_date = date('d-m-Y', $row['date_from']) . ' - ' . date('d-m-Y', $row['date_until']);
 		}
 		eval("\$autoresponder.=\"" . getTemplate("email/autoresponder_autoresponder") . "\";");
 	}	

@@ -16,11 +16,11 @@ $header
 				<td class="main_field_display" nowrap="nowrap"><input type="checkbox" name="active" value="1"{$checked} /></td>
 			</tr>
 			<tr>
-				<td class="main_field_name">{$lng['autoresponder']['date_from']}:</td>
+				<td class="main_field_name">{$lng['autoresponder']['date_from']} (dd-mm-yyyy):</td>
 				<td class="main_field_display" nowrap="nowrap"><input type="text" name="date_from" maxlength="10" value="{$date_from}" />&nbsp;{$date_from_off}</td>
 			</tr>
 			<tr>
-				<td class="main_field_name">{$lng['autoresponder']['date_until']}:</td>
+				<td class="main_field_name">{$lng['autoresponder']['date_until']} (dd-mm-yyyy):</td>
 				<td class="main_field_display" nowrap="nowrap"><input type="text" name="date_until" maxlength="10" value="{$date_until}" />&nbsp;{$date_until_off}</td>
 			</tr>			
  			<tr>
