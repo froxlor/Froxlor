@@ -74,7 +74,13 @@ if($page == 'cronjobs'
 				}
 				
 				$description = $lng['crondesc'][$row['desc_lng_key']];
-
+				
+				/*
+				 * don't allow deletion of 'froxlor' cronjobs
+				 */
+				$vendor_a = explode('/', $row['module']);
+				$vendor = $vendor_a[0];
+				
 				eval("\$crons.=\"" . getTemplate("cronjobs/cronjobs_cronjob") . "\";");
 				$count++;
 			}
