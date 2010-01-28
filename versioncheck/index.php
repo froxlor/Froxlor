@@ -22,7 +22,7 @@ if($pretty)
 	echo htmlHeader('checking '.$version);
 
 /*
- * validate valiues
+ * validate values
  */
 if(!preg_match('/^[a-z0-9\-\.]+$/Di',$vendor))
 {
@@ -59,13 +59,21 @@ else
 			$out .= '<ul>
 				<li>Your version: <strong>'.$version.'</strong></li>
 				<li>Latest version: <strong>'.$recent['version'].'</strong></li>
-				<li>&nbsp;</li>			
-				<li><strong>You already have the latest version of Froxlor installed.</strong></li>
-			</ul>';
+				<li>&nbsp;</li>';
+				if($recent['is_testing']) {
+					$out .= '<li><strong>You already have the latest testing version of Froxlor installed.</strong></li>';
+				} else {
+					$out .= '<li><strong>You already have the latest version of Froxlor installed.</strong></li>';
+				}
+			$out .= '</ul>';
 				
 			showSuccess($out);
 		} else {
-			echo $version.':You already have the latest version of Froxlor installed.';
+			if($recent['is_testing']) {
+				echo $version.':You already have the latest testing version of Froxlor installed.';
+			} else {
+				echo $version.':You already have the latest version of Froxlor installed.';
+			}
 		}
 	}
 	else
@@ -74,8 +82,12 @@ else
 			$out .= '<ul>
 			<li>Your version: <strong>'.$version.'</strong></li>
 			<li>Latest version: <strong>'.$recent['version'].'</strong></li>
-			<li>&nbsp;</li>
-			<li><strong>There is a newer version of Froxlor available, please update.</strong></li>';
+			<li>&nbsp;</li>';
+			if($recent['is_testing']) {
+				$out .= '<li><strong>There is a newer testing version of Froxlor available, please update.</strong></li>';
+			} else {
+				$out .= '<li><strong>There is a newer version of Froxlor available, please update.</strong></li>';
+			}
 				
 			if($recent['uri'] != '') {
 				$out .= '<li>&nbsp;</li>

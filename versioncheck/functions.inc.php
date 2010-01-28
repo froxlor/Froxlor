@@ -72,10 +72,8 @@ function dienice($message = null)
 	die($err);
 }
 
-function getLatestFroxlorVersion($vendor, $module, $version)
+function getVersionInfoFromFile($version_file)
 {
-	$version_file = dirname(__FILE__).'/vfiles/'.strtolower($vendor).'_'.strtolower($module).'.version';
-
 	if(file_exists($version_file))
 	{
 		if(is_readable($version_file))
@@ -85,41 +83,91 @@ function getLatestFroxlorVersion($vendor, $module, $version)
 			if($vf !== false && $vf != '')
 			{
 				$vf_data = explode(':', $vf);
+				return $vf_data;
+			}
+		}
+		return array('error' => true, 'message' => 'Cannot read version-file. Please contact the Froxlor-Team to fix this.');
+	}
+	return array('error' => true, 'message' => 'Unknown vendor/module combination');
+}
+
+function getLatestFroxlorTestingVersion()
+{
+	$version_file = dirname(__FILE__).'/vfiles/froxlor_legacy_testing.version';
+	$vf_data = getVersionInfoFromFile($version_file);
+	return $vf_data;
+}
+
+function getLatestFroxlorVersion($vendor, $module, $version)
+{
+	$version_file = dirname(__FILE__).'/vfiles/'.strtolower($vendor).'_'.strtolower($module).'.version';
+	$vf_data = getVersionInfoFromFile($version_file);
+
+	$return = array();
+
+	if(!isset($vf_data['error']))
+	{
+		$v = $vf_data[0];
+		$u = isset($vf_data[1]) ? $vf_data[1] : '';
+		$m = isset($vf_data[2]) ? $vf_data[2] : '';
+
+		$vc = version_compare2($v, $version);
+
+		if($vc == 0) {
+			$return['has_latest'] = true;
+			$return['version'] = $v;
+		}
+		elseif($vc == 1) {
+			$return['has_latest'] = false;
+			$return['version'] = $v;
+			$return['uri'] = $u;
+			$return['message'] = $m;
+		}
+		else
+		{
+			/*
+			 * maybe testing version?
+			 */
+			$vf_data = getLatestFroxlorTestingVersion();
+			if(!isset($vf_data['error']))
+			{
 				$v = $vf_data[0];
 				$u = isset($vf_data[1]) ? $vf_data[1] : '';
 				$m = isset($vf_data[2]) ? $vf_data[2] : '';
 
-				/*
-				 * version check
-				 */
 				$vc = version_compare2($v, $version);
 
-				$return = array();
-				if($vc == 0)
-				{
+				if($vc == 0) {
 					$return['has_latest'] = true;
+					$return['is_testing'] = true;
 					$return['version'] = $v;
 				}
-				elseif($vc == 1)
-				{
+				elseif($vc == 1) {
 					$return['has_latest'] = false;
+					$return['is_testing'] = true;
 					$return['version'] = $v;
 					$return['uri'] = $u;
 					$return['message'] = $m;
 				}
 				else
 				{
-					/*
-					 * what about this?
-					 */
-					return array('error' => true, 'message' => 'you messed with your Froxlor installation...');
+					return array('error' => true, 'message' => 'It looks like your Froxlor installation has been customized, no support sorry.');
 				}
-				return $return;
+			}
+			else
+			{
+				/*
+				 * return error
+				 */
+				$return = $vf_data;
 			}
 		}
-		return array('error' => true, 'message' => 'Cannot read version-file. Please contact the Froxlor-Team to fix this.');
 	}
-	return array('error' => true, 'message' => 'Unknown vendor/module ('.$vendor.'/'.$module.')');
+	else
+	{
+		$return = $vf_data;
+	}
+	return $return;
 }
 
 //Compare two sets of versions, where major/minor/etc. releases are separated by dots.
