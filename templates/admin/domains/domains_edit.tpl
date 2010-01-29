@@ -5,7 +5,6 @@ $header
 		<input type="hidden" name="action" value="$action" />
 		<input type="hidden" name="id" value="$id" />
 		<input type="hidden" name="send" value="send" />
-		<if $override_billing_data_edit === true><input type="hidden" name="override_billing_data_edit" value="1" /></if>
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable">
 			<tr>
 				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['domain_edit']}</b></td>
