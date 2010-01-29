@@ -159,7 +159,7 @@ while($row = $db->fetch_array($result))
 
 unset($row);
 unset($result);
-fwrite($debugHandler, 'Froxlor Settings has been loaded from the database' . "\n");
+fwrite($debugHandler, 'Froxlor settings have been loaded from the database' . "\n");
 
 if(!isset($settings['panel']['version'])
    || $settings['panel']['version'] != $version)
@@ -170,10 +170,10 @@ if(!isset($settings['panel']['version'])
 
 	fclose($debugHandler);
 	unlink($lockfile);
-	die('Version of File doesnt match Version of Database. Exiting...');
+	die('Version of file doesnt match version of database. Exiting...');
 }
 
-fwrite($debugHandler, 'Froxlor Version and Database Version are correct' . "\n");
+fwrite($debugHandler, 'Froxlor version and database version are correct' . "\n");
 
 $cronscriptDebug = ($settings['system']['debug_cron'] == '1') ? true : false;
 
