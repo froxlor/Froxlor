@@ -1279,5 +1279,7 @@ $lng['crondesc']['cron_apsupdater'] = 'updating APS packages';
 $lng['crondesc']['cron_traffic'] = 'traffic calculation';
 $lng['crondesc']['cron_ticketsreset'] = 'resetting ticket-counters';
 $lng['crondesc']['cron_ticketarchive'] = 'archiving old tickets';
+$lng['admin']['specialsettingsforsubdomains'] = 'Apply specialsettings to all subdomains (*.example.com)';
+$lng['serversettings']['specialsettingsforsubdomains']['description'] = 'If yes these custom vhost-settings will be added to all subdomains; if no subdomain-specialsettings are being removed.';
 
 ?>

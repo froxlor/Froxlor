@@ -8,7 +8,7 @@ FIXED	 	 	0001281 		Wrong open_basedir directive
  	 	 	0001280 		deb packet 1.4.2.1-2 fu*ked
 FIXED	 	 	0001279 		incorrect usage of escapeshellcmd
 FIXED	 	 	0001269 		AWStats RewriteRule is wrong
-WONFIX 	 	0001278 		Customer and domain directories are not created
+WONFIX	 	 	0001278 		Customer and domain directories are not created
 FIXED	 	 	0001277 		Apache Redirect => permanent 301
 FIXED	 	 	0001276 		Bind Zones Not Updated on Nameserver Change
 FIXED	 	 	0001275 		Setting up Traffic limit is limited to 999 GB
@@ -17,8 +17,8 @@ FIXED	 	 	0001271 		cant install the package magento
 FIXED	 	 	0001270 		xinet reltime update mistake
 FIXED	 	 	0001268 		SysCP Funktion: aktualisierung in Real-Time
  	 	 	0001041 		Customer should have access to his webserver logs.
- 	 	 	0001267 		Domain-Aliases also create a HOST-entry
- 	 	 	0001266 		Lighttpd has a internal limit of regex-hits which limits max amount of domain-aliases
+FIXED	 	 	0001267 		Domain-Aliases also create a HOST-entry
+FIXED	 	 	0001266 		Lighttpd has a internal limit of regex-hits which limits max amount of domain-aliases
 FIXED	 	 	0001263 		Cosmettic Change
 WONTFIX 	 	0001056 	 	Need extra payment methods
 WONTFIX 	 	0001262 		Currency type modification.

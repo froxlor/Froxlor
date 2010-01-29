@@ -407,13 +407,13 @@ class lighttpd
 
 		if($domain['iswildcarddomain'] == '1')
 		{
-			$server_string[] = '(^|\.)' . $domain_name . '$';
+			$server_string[] = '(?:^|\.)' . $domain_name . '$';
 		}
 		else
 		{
 			if($domain['wwwserveralias'] == '1')
 			{
-				$server_string[] = '^(www\.|)' . $domain_name . '$';
+				$server_string[] = '^(?:www\.|)' . $domain_name . '$';
 			}
 			else
 			{
@@ -429,13 +429,13 @@ class lighttpd
 
 			if($alias_domain['iswildcarddomain'] == '1')
 			{
-				$server_string[] = '(^|\.)' . $alias_domain_name . '$';
+				$server_string[] = '(?:^|\.)' . $alias_domain_name . '$';
 			}
 			else
 			{
 				if($alias_domain['wwwserveralias'] == '1')
 				{
-					$server_string[] = '^(www\.|)' . $alias_domain_name . '$';
+					$server_string[] = '^(?:www\.|)' . $alias_domain_name . '$';
 				}
 				else
 				{

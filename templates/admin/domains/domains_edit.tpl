@@ -105,6 +105,10 @@ $header
 				<td class="main_field_name" valign="top">{$lng['admin']['ownvhostsettings']}:<br /><font size="1">{$lng['serversettings']['default_vhostconf']['description']}</font></td>
 				<td class="main_field_display" nowrap="nowrap"><textarea class="textarea_border" rows="12" cols="60" name="specialsettings">{$result['specialsettings']}</textarea></td>
 			</tr>
+			<tr>
+				<td class="main_field_name" valign="top">{$lng['admin']['specialsettingsforsubdomains']}:<br /><font size="1">{$lng['serversettings']['specialsettingsforsubdomains']['description']}</font></td>
+				<td class="main_field_display" nowrap="nowrap">{$specialsettingsforsubdomains}</td>
+			</tr>
 			</if>
 			<if $userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1'>
 			<tr>

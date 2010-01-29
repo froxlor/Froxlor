@@ -996,8 +996,20 @@ if($page == 'domains'
 					$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` - 1 WHERE `adminid` = '" . (int)$result['adminid'] . "' ");
 				}
 
+				$ssfs = isset($_POST['specialsettingsforsubdomains']) ? intval($_POST['specialsettingsforsubdomains']) : 1;
+				if($ssfs == 1)
+				{
+					$upd_specialsettings = ", `specialsettings`='" . $db->escape($specialsettings) . "' ";
+				} 
+				else 
+				{
+					$upd_specialsettings = '';
+					$db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `specialsettings`='' WHERE `parentdomainid`='" . (int)$id . "'");
+					$log->logAction(ADM_ACTION, LOG_INFO, "removed specialsettings on all subdomains of domain #" . $id);
+				}
+				
 				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `documentroot`='" . $db->escape($documentroot) . "', `ipandport`='" . $db->escape($ipandport) . "', `ssl`='" . (int)$ssl . "', `ssl_redirect`='" . (int)$ssl_redirect . "', `ssl_ipandport`='" . (int)$ssl_ipandport . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", `isbinddomain`='" . $db->escape($isbinddomain) . "', `isemaildomain`='" . $db->escape($isemaildomain) . "', `email_only`='" . $db->escape($email_only) . "', `subcanemaildomain`='" . $db->escape($subcanemaildomain) . "', `dkim`='" . $db->escape($dkim) . "', `caneditdomain`='" . $db->escape($caneditdomain) . "', `zonefile`='" . $db->escape($zonefile) . "', `wwwserveralias`='" . $db->escape($wwwserveralias) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "', `specialsettings`='" . $db->escape($specialsettings) . "', `registration_date`='" . $db->escape($registration_date) . "' WHERE `id`='" . (int)$id . "'");
-				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `ipandport`='" . $db->escape($ipandport) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "', `specialsettings`='" . $db->escape($specialsettings) . "'" . $updatechildren . " WHERE `parentdomainid`='" . (int)$id . "'");
+				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `ipandport`='" . $db->escape($ipandport) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "'" . $upd_specialsettings . $updatechildren . " WHERE `parentdomainid`='" . (int)$id . "'");
 				$log->logAction(ADM_ACTION, LOG_INFO, "edited domain #" . $id);
 				$redirect_props = Array(
 					'page' => $page,
@@ -1114,6 +1126,8 @@ if($page == 'domains'
 					$phpconfigs.= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true);
 				}
 
+				$specialsettingsforsubdomains = makeyesno('specialsettingsforsubdomains', '1', '0', '1');
+				
 				$result = htmlentities_array($result);
 				eval("echo \"" . getTemplate("domains/domains_edit") . "\";");
 			}

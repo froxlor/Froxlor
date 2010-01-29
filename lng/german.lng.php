@@ -1259,5 +1259,7 @@ $lng['crondesc']['cron_apsupdater'] = 'Aktualisieren der APS Pakete';
 $lng['crondesc']['cron_traffic'] = 'Traffic-Berechnung';
 $lng['crondesc']['cron_ticketsreset'] = 'Zur&uuml;cksetzen der Ticket-Z&auml;hler';
 $lng['crondesc']['cron_ticketarchive'] = 'Archivieren alter Tickets';
+$lng['admin']['specialsettingsforsubdomains'] = '&Uuml;bernehme Einstellungen f&uuml;r alle Subdomains (*.beispiel.de)';
+$lng['serversettings']['specialsettingsforsubdomains']['description'] = 'Wenn ja, werden die individuellen Einstellungen f&uuml;r alle Subdomains &uuml;bernommen; wenn nein, werden Subdomain-Specialsettings entfernt.';
 
 ?>
