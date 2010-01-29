@@ -144,3 +144,86 @@ function toggleCronStatus($module = null, $isactive = 0)
 	$db->query($query);
 
 }
+
+function getOutstandingTasks()
+{
+	global $db, $lng;
+	
+	$query = "SELECT * FROM `".TABLE_PANEL_TASKS."` ORDER BY `type` ASC";
+	$result = $db->query($query);
+	
+	$outstanding_tasks = '<tr>
+			<td class="field_name_border_left">'.$lng['tasks']['outstanding_tasks'].':</td>
+			<td class="field_display" colspan="2"><ul>';
+
+	$tasks = '';
+	while($row = $db->fetch_array($result))
+	{
+		if($row['data'] != '')
+		{
+			$row['data'] = unserialize($row['data']);
+		}
+		
+		/*
+		 * rebuilding webserver-configuration
+		 */
+		if($row['type'] == '1')
+		{
+			$task_desc = $lng['tasks']['rebuild_webserverconfig'];
+		}
+		/*
+		 * adding new user
+		 */
+		elseif($row['type'] == '2')
+		{
+			$loginname = '';
+			if(is_array($row['data']))
+			{
+				$loginname = $row['data']['loginname'];
+			}
+			$task_desc = $lng['tasks']['adding_customer'];
+			$task_desc = str_replace('%loginname%', $loginname, $task_desc);
+		}
+		/*
+		 * rebuilding bind-configuration
+		 */
+		elseif($row['type'] == '4')
+		{
+			$task_desc = $lng['tasks']['rebuild_bindconfig'];
+		}
+		/*
+		 * creating ftp-user directory
+		 */
+		elseif($row['type'] == '5')
+		{
+			$task_desc = $lng['tasks']['creating_ftpdir'];
+		}
+		/*
+		 * deleting user-files
+		 */
+		elseif($row['type'] == '6')
+		{
+			$loginname = '';
+			if(is_array($row['data']))
+			{
+				$loginname = $row['data']['loginname'];
+			}
+			$task_desc = $lng['tasks']['deleting_customerfiles'];
+			$task_desc = str_replace('%loginname%', $loginname, $task_desc);
+		}		
+
+		if($task_desc != '') {
+			$tasks .= '<li>'.$task_desc.'</li>';
+		}
+	}
+	
+	if(trim($tasks) == '') {
+		$outstanding_tasks .= '<li>'.$lng['tasks']['noneoutstanding'].'</li>';
+	} else {
+		$outstanding_tasks .= $tasks;
+	}
+	
+	$outstanding_tasks .= '</ul></td></tr>';
+		
+	return $outstanding_tasks;
+}

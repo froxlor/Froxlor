@@ -130,6 +130,7 @@ if($page == 'overview')
 	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains aps_packages');
 
 	$cron_last_runs = getCronjobsLastRun();
+	$outstanding_tasks = getOutstandingTasks();
 
 	$opentickets = 0;
 	$opentickets = $db->query_first('SELECT COUNT(`id`) as `count` FROM `' . TABLE_PANEL_TICKETS . '`

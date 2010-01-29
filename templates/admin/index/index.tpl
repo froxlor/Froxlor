@@ -115,6 +115,7 @@ $header
 		<tr>
 			<td colspan="2" class="maintitle"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['froxlordetails']}</b></td>
 		</tr>
+		{$outstanding_tasks}		
 		{$cron_last_runs}
 		<tr>
 			<td class="field_name_border_left">{$lng['admin']['installedversion']}:</td>

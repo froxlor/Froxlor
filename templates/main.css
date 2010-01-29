@@ -81,6 +81,12 @@ input.bottom {
 	background-color	: #C6DEFF;
 }
 
+ul {
+	list-style			: none;
+	padding				: 0;
+	margin				: 0;
+}
+
 .title {
 	background-color	: #ABC9E8;
 	border-color		: #B7B7B7;

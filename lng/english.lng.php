@@ -1281,5 +1281,12 @@ $lng['crondesc']['cron_ticketsreset'] = 'resetting ticket-counters';
 $lng['crondesc']['cron_ticketarchive'] = 'archiving old tickets';
 $lng['admin']['specialsettingsforsubdomains'] = 'Apply specialsettings to all subdomains (*.example.com)';
 $lng['serversettings']['specialsettingsforsubdomains']['description'] = 'If yes these custom vhost-settings will be added to all subdomains; if no subdomain-specialsettings are being removed.';
+$lng['tasks']['outstanding_tasks'] = 'Outstanding cron-tasks';
+$lng['tasks']['rebuild_webserverconfig'] = 'Rebuilding webserver-configuration';
+$lng['tasks']['adding_customer'] = 'Adding new customer %loginname%';
+$lng['tasks']['rebuild_bindconfig'] = 'Rebuilding bind-configuration';
+$lng['tasks']['creating_ftpdir'] = 'Creating directory for new ftp-user';
+$lng['tasks']['deleting_customerfiles'] = 'Deleting customer-files %loginname%';
+$lng['tasks']['noneoutstanding'] = 'There are currently no outstanding tasks for Froxlor';
 
 ?>
