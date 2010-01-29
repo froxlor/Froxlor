@@ -32,7 +32,7 @@ if(!preg_match('/^[a-z0-9\-\.]+$/Di',$module))
 {
 	vdie('Unknown module', $pretty);
 }
-if(!preg_match('/^[0-9\.(\-r|\-rc|\-svn|)]+$/Di',$version))
+if(!preg_match('/^[0-9\.(\-rc|\-svn|)]+$/Di',$version))
 {
 	vdie('Unknown version for '.$vendor.'/'.$module, $pretty);
 }
@@ -58,15 +58,15 @@ else
 		if($pretty) {
 			$out .= '<ul>
 				<li>Your version: <strong>'.$version.'</strong></li>
-				<li>Latest version: <strong>'.$recent['version'].'</strong></li>
+				<li>Latest version: <strong>'.trim($recent['version']).'</strong></li>
 				<li>&nbsp;</li>';
-				if($recent['is_testing']) {
-					$out .= '<li><strong>You already have the latest testing version of Froxlor installed.</strong></li>';
-				} else {
-					$out .= '<li><strong>You already have the latest version of Froxlor installed.</strong></li>';
-				}
+			if($recent['is_testing']) {
+				$out .= '<li><strong>You already have the latest testing version of Froxlor installed.</strong></li>';
+			} else {
+				$out .= '<li><strong>You already have the latest version of Froxlor installed.</strong></li>';
+			}
 			$out .= '</ul>';
-				
+
 			showSuccess($out);
 		} else {
 			if($recent['is_testing']) {
@@ -78,35 +78,40 @@ else
 	}
 	else
 	{
+		$ver = trim($recent['version']);
+		$uri = trim($recent['uri']);
+		$msg = trim($recent['message']);
+
 		if($pretty) {
 			$out .= '<ul>
 			<li>Your version: <strong>'.$version.'</strong></li>
-			<li>Latest version: <strong>'.$recent['version'].'</strong></li>
+			<li>Latest version: <strong>'.$ver.'</strong></li>
 			<li>&nbsp;</li>';
 			if($recent['is_testing']) {
 				$out .= '<li><strong>There is a newer testing version of Froxlor available, please update.</strong></li>';
 			} else {
 				$out .= '<li><strong>There is a newer version of Froxlor available, please update.</strong></li>';
 			}
-				
-			if($recent['uri'] != '') {
+
+			if($uri != '') {
 				$out .= '<li>&nbsp;</li>
-				<li><a href="'.$recent['uri'].'">'.$recent['uri'].'</a></li>';
+				<li><a href="'.$uri.'">'.$uri.'</a></li>';
 			}
-			if($recent['message'] != '') {
+
+			if($msg != '') {
 				$out .= '<li>&nbsp;</li>
-				<li>Info: '.$recent['message'].'</li>';
+				<li>Info: '.$msg.'</li>';
 			}
 			$out .= '</ul>';
-				
+
 			showWarning($out);
 		} else {
-			echo $recent['version'].':'.$recent['uri'].':'.$recent['message'];
+			echo $ver.':'.$uri.':'.$msg;
 		}
 	}
 }
 
 if($pretty)
-echo htmlFooter();
+	echo htmlFooter();
 
 ?>
