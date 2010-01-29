@@ -5,7 +5,7 @@ $header
 		$hiddenparams
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable_60">
 			<tr>
-				<td class="maintitle"><b>&nbsp;<img src="images/title.gif" alt="" />&nbsp;{$lng['question']['question']}</b></td>
+				<td class="maintitle" colspan="2"><b>&nbsp;<img src="images/title.gif" alt="" />&nbsp;{$lng['question']['question']}</b></td>
 			</tr>
 			<tr>
 				<td class="field_name_center_noborder">$text</td>
