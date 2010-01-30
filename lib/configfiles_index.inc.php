@@ -23,7 +23,7 @@ if(isConfigDir($settings['system']['apacheconf_vhost']))
 {
 	$configcommand['vhost'] = 'mkdir -p ' . $settings['system']['apacheconf_vhost'];
 	$configcommand['include'] = 'echo -e "\\nInclude ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . '*.conf" >> ' . makeCorrectFile(makeCorrectDir($settings['system']['apacheconf_vhost']) . '/httpd.conf');
-	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude_shell "find ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . ' -maxdepth 1 -name \'*.conf\' -exec cat {} \;"\' >> /etc/lighttpd/lighttpd.conf';
+	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude_shell "cat ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . '*.conf"\' >> /etc/lighttpd/lighttpd.conf';
 }
 else
 {
@@ -35,7 +35,7 @@ else
 if(isConfigDir($settings['system']['apacheconf_diroptions']))
 {
 	$configcommand['diroptions'] = 'mkdir -p ' . $settings['system']['apacheconf_diroptions'];
-	$configcommand['d_inclighty'] = 'echo -e \'\\ninclude_shell "find ' . makeCorrectDir($settings['system']['apacheconf_diroptions']) . ' -maxdepth 1 -name \'*.conf\' -exec cat {} \;"\' >> /etc/lighttpd/lighttpd.conf';
+	$configcommand['d_inclighty'] = 'echo -e \'\\ninclude_shell "cat ' . makeCorrectDir($settings['system']['apacheconf_diroptions']) . '*.conf"\' >> /etc/lighttpd/lighttpd.conf';
 }
 else
 {

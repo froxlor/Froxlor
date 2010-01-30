@@ -46,6 +46,7 @@ FIXED	 	 	0001154 		Wrong configuration set with AWstats an fcgi
 FIXED	 	 	0001149 		Create a Configuration-Option for SPF Records in Zonefiles
 FIXED	 	 	0001095 		lighttpd - redirection - "/" slash is added to end of url
 FIXED	 	 	0001148 		Show info for inactive modifications
+FIXED	 	 	0001051 		include_shell issue in lighttpd 1.4.20
 --------------------------------------------------------------------------------------------------------------
 WONFIX	 	 	0001278 		Customer and domain directories are not created
 WONTFIX 	 	0001056 	 	Need extra payment methods
@@ -117,7 +118,6 @@ WONTFIX 	 	0001033 		Cron-Tasks: creating of php.ini
  	 	 	0001109 		no mail traffic is shown and calculated without third party module
  	 	 	0001101 		Default mail qouta - possibillity to set new accounts to amount of webspace
  	 	 	0001084 		Add select box to change special logfile setting on domain edit
- 	 	 	0001051 		include_shell issue in lighttpd 1.4.20
  	 	 	0001058 		Add id/class attributs in <img> tag (left navigation)
  	 	 	0001043 		When creating customer it should also be possible to add domains (merge customer & domain menu)
  	 	 	0001035 		PHP-Error-Log | Adminpanel & CronTask
