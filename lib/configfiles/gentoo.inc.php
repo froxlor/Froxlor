@@ -151,15 +151,7 @@ milter_default_action = accept\n" >> /etc/postfix/main.cf'
 				'daemons' => Array(
 					'courier' => Array(
 						'label' => 'Courier-IMAP (POP3/IMAP)',
-						'files' => Array(
-							'etc_courier_authlib_authdaemonrc' => '/etc/courier/authlib/authdaemonrc',
-							'etc_courier_authlib_authmysqlrc' => '/etc/courier/authlib/authmysqlrc',
-							'etc_courier-imap_pop3d' => '/etc/courier-imap/pop3d',
-							'etc_courier-imap_imapd' => '/etc/courier-imap/imapd',
-							'etc_courier-imap_pop3d-ssl' => '/etc/courier-imap/pop3d-ssl',
-							'etc_courier-imap_imapd-ssl' => '/etc/courier-imap/imapd-ssl'
-						),
-						'commands' => Array(
+						'commands_1' => Array(
 							'rm /etc/courier/authlib/authdaemonrc',
 							'rm /etc/courier/authlib/authmysqlrc',
 							'rm /etc/courier-imap/pop3d',
@@ -171,7 +163,17 @@ milter_default_action = accept\n" >> /etc/postfix/main.cf'
 							'touch /etc/courier-imap/pop3d',
 							'touch /etc/courier-imap/imapd',
 							'touch /etc/courier-imap/pop3d-ssl',
-							'touch /etc/courier-imap/imapd-ssl',
+							'touch /etc/courier-imap/imapd-ssl'
+						),
+						'files' => Array(
+							'etc_courier_authlib_authdaemonrc' => '/etc/courier/authlib/authdaemonrc',
+							'etc_courier_authlib_authmysqlrc' => '/etc/courier/authlib/authmysqlrc',
+							'etc_courier-imap_pop3d' => '/etc/courier-imap/pop3d',
+							'etc_courier-imap_imapd' => '/etc/courier-imap/imapd',
+							'etc_courier-imap_pop3d-ssl' => '/etc/courier-imap/pop3d-ssl',
+							'etc_courier-imap_imapd-ssl' => '/etc/courier-imap/imapd-ssl'
+						),
+						'commands_2' => Array(
 							'chown root:0 /etc/courier/authlib/authdaemonrc',
 							'chown root:0 /etc/courier/authlib/authmysqlrc',
 							'chown root:0 /etc/courier-imap/pop3d',
