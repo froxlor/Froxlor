@@ -367,6 +367,7 @@ elseif($action == 'edit'
 		}
 		else
 		{
+			$row = htmlentities_array($row);
 			eval("echo \"" . getTemplate("templates/filetemplates_edit") . "\";");
 		}
 	}
