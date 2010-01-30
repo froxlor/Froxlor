@@ -237,6 +237,25 @@ if($page == 'customers'
 					inserttask('6', $result['loginname']);
 				}
 				
+				/*
+				 * move old tickets to archive
+				 */
+				$tickets = ticket::customerHasTickets($db, $id);
+				if($tickets !== false && isset($tickets[0]))
+				{
+					foreach($tickets as $ticket)
+					{
+						$now = time();
+						$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$ticket);
+						$mainticket->Set('lastchange', $now, true, true);
+						$mainticket->Set('lastreplier', '1', true, true);
+						$mainticket->Set('status', '3', true, true);
+						$mainticket->Update();
+						$mainticket->Archive();
+						$log->logAction(ADM_ACTION, LOG_NOTICE, "archived ticket '" . $mainticket->Get('subject') . "'");
+					}
+				}				
+				
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 			else

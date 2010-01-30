@@ -99,7 +99,12 @@ if($page == 'tickets'
 						$cid = $row['customerid'];
 						$usr = $db->query_first('SELECT `firstname`, `name`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
                                      WHERE `customerid` = "' . (int)$cid . '"');
-						$customer = $usr['firstname'] . " " . $usr['name'] . " (" . $usr['loginname'] . ")";
+						
+						if(isset($usr['loginname'])) {
+							$customer = $usr['firstname'] . " " . $usr['name'] . " (" . $usr['loginname'] . ")";
+						} else {
+							$customer = $lng['ticket']['nonexistingcustomer'];
+						}
 						eval("\$tickets.=\"" . getTemplate("ticket/tickets_customer") . "\";");
 					}
 
@@ -626,7 +631,12 @@ elseif($page == 'archive'
 							$cid = $ticket['customerid'];
 							$usr = $db->query_first('SELECT `firstname`, `name`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
                                        WHERE `customerid` = "' . (int)$cid . '"');
-							$customer = $usr['firstname'] . " " . $usr['name'] . " (" . $usr['loginname'] . ")";
+							
+							if(isset($usr['loginname'])) {
+								$customer = $usr['firstname'] . " " . $usr['name'] . " (" . $usr['loginname'] . ")";
+							} else {
+								$customer = $lng['ticket']['nonexistingcustomer'];
+							}
 							eval("\$tickets.=\"" . getTemplate("ticket/tickets_customer") . "\";");
 						}
 

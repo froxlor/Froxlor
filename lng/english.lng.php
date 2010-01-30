@@ -1287,5 +1287,6 @@ $lng['tasks']['rebuild_bindconfig'] = 'Rebuilding bind-configuration';
 $lng['tasks']['creating_ftpdir'] = 'Creating directory for new ftp-user';
 $lng['tasks']['deleting_customerfiles'] = 'Deleting customer-files %loginname%';
 $lng['tasks']['noneoutstanding'] = 'There are currently no outstanding tasks for Froxlor';
+$lng['ticket']['nonexistingcustomer'] = '(deleted customer)';
 
 ?>

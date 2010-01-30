@@ -625,6 +625,32 @@ class ticket
 		return $str;
 	}
 
+	/*
+	 * function customerHasTickets
+	 * 
+	 * @param	object	mysql-db-object
+	 * @param	int		customer-id
+	 * 
+	 * @return	array/bool	array of ticket-ids if customer has any, else false
+	 */
+	static public function customerHasTickets($_db = null, $_cid = 0)
+	{
+		if($_cid != 0)
+		{	
+			$result = $_db->query('SELECT `id` FROM `' . TABLE_PANEL_TICKETS . '` WHERE `customer` ="'.(int)$_cid.'"');
+
+			$tickets = array();
+			while($row = $_db->fetch_array($result))
+			{
+				$tickets[] = $row['id'];
+			}
+			
+			return $tickets;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Get a data-var
 	 */
