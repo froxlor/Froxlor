@@ -78,7 +78,7 @@ src_unpack() {
 	fi
 	cd "${S}"
 }
-pkg_preinst() {
+pkg_setup() {
 	# Create the user and group that will own the Froxlor files
 	einfo "Creating froxlor user ..."
 	enewgroup froxlor 9995

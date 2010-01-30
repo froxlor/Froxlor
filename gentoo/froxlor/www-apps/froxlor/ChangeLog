@@ -1,0 +1,8 @@
+# ChangeLog for www-apps/froxlor
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+  30 Jan 2010; Froxlor Release Team <release@froxlor.org>
+  froxlor-9999.ebuild:
+  pkg_preinst -> pkg_setup
+
