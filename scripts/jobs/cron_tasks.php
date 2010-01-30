@@ -216,7 +216,7 @@ while($row = $db->fetch_array($result_tasks))
 
 				if($homedir != '/'
 				&& $homedir != $settings['system']['documentroot_prefix']
-				&& substr($homedirdir, 0, strlen($settings['system']['documentroot_prefix'])) == $settings['system']['documentroot_prefix'])
+				&& substr($homedir, 0, strlen($settings['system']['documentroot_prefix'])) == $settings['system']['documentroot_prefix'])
 				{
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($homedir));
 					safe_exec('rm -rf '.escapeshellarg($homedir));
