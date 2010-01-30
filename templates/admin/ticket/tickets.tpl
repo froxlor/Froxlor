@@ -28,11 +28,16 @@ $header
 				<td class="field_display_border_left" colspan="10" style=" text-align: center; ">{$pagingcode}</td>
 			</tr>
 			</if>
-			<if ($userinfo['tickets_used'] < $userinfo['tickets'] || $userinfo['tickets'] == '-1') >
+			<if ($userinfo['tickets_used'] < $userinfo['tickets'] || $userinfo['tickets'] == '-1') && $countcustomers !=0 >
 			<tr>
 				<td class="field_display_border_left" colspan="10"><a href="$filename?page=tickets&amp;action=new&amp;s=$s">{$lng['ticket']['ticket_new']}</a></td>
 			</tr>
 			</if>
+			<if $countcustomers == 0 >
+			<tr>
+				<td class="field_display_border_left" colspan="10"><a href="admin_customers.php?s=$s&amp;page=customers&amp;action=add">{$lng['admin']['domain_nocustomeraddingavailable']}</a></td>
+			</tr>
+			</if>			
 		</table>
 	</form>
 	<br />

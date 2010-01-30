@@ -37,6 +37,11 @@ elseif(isset($_GET['id']))
 if($page == 'tickets'
    && $userinfo['customers'] != '0')
 {
+	// Let's see how many customers we have
+
+	$countcustomers = $db->query_first("SELECT COUNT(`customerid`) as `countcustomers` FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int)$userinfo['adminid'] . "' ") . "");
+	$countcustomers = (int)$countcustomers['countcustomers'];
+	
 	if($action == '')
 	{
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_tickets");
