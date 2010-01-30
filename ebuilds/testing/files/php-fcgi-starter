@@ -1,0 +1,8 @@
+#!/bin/sh
+PHPRC='/var/www/froxlor/php-fcgi-script/'
+export PHPRC
+PHP_FCGI_CHILDREN=0
+export PHP_FCGI_CHILDREN
+PHP_FCGI_MAX_REQUESTS=250
+export PHP_FCGI_MAX_REQUESTS
+exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'

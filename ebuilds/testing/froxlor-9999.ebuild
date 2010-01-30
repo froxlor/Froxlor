@@ -78,6 +78,22 @@ src_unpack() {
 	fi
 	cd "${S}"
 }
+pkg_preinst() {
+	# Create the user and group that will own the Froxlor files
+	einfo "Creating froxlor user ..."
+	enewgroup froxlor 9995
+	enewuser froxlor 9995 -1 /var/www/froxlor froxlor
+
+	# Create the user and group that will run the FTPd
+	einfo "Creating froxlorftpd user ..."
+	enewgroup froxlorftpd 9996
+	enewuser froxlorftpd 9996 -1 /var/kunden/webs froxlorftpd
+
+	# Create the user and group that will run the virtual MTA
+	einfo "Creating vmail user ..."
+	enewgroup vmail 9997
+	enewuser vmail 9997 -1 /var/kunden/mail vmail
+}
 
 src_prepare() {
 	# Delete any mention of inserttask('4') if no Bind is used
@@ -124,19 +140,16 @@ src_install() {
 	if [[ ${MYLANG} != '' ]] ; then
 		einfo "Setting standardlanguage to '${MYLANG}'"
 		sed -e "s|'standardlanguage', 'English'|'standardlanguage', '${MYLANG}'|g" -i "${S}/install/froxlor.sql" || die "Unable to change default language"
-		eend 0
 	fi
 
 	# set lastguid to 10000
 	einfo "Setting 'lastguid' to '10000'"
 	sed -e "s|'lastguid', '9999'|'lastguid', '10000'|g" -i "${S}/install/froxlor.sql" || die "Unable to change lastguid"
-	eend 0
 
 	# set vmail uid/gid to 9997
 	einfo "Setting 'vmail_uid' and 'vmail_gid' to '9997'"
 	sed -e "s|'vmail_uid', '2000'|'vmail_uid', '9997'|g" -i "${S}/install/froxlor.sql" || die "Unable to change uid for user vmail"
 	sed -e "s|'vmail_gid', '2000'|'vmail_gid', '9997'|g" -i "${S}/install/froxlor.sql" || die "Unable to change gid for user vmail"
-	eend 0
 
 	# set correct webserver reload
 	if useq lighttpd; then
@@ -148,7 +161,6 @@ src_install() {
 		sed -e "s|'apacheconf_htpasswddir', '/etc/apache/htpasswd/'|'apacheconf_htpasswddir', '/etc/lighttpd/htpasswd/'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver htpasswd directory"
 		sed -e "s|'httpuser', 'www-data'|'httpuser', 'lighttpd'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver user"
 		sed -e "s|'httpgroup', 'www-data'|'httpgroup', 'lighttpd'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver group"
-		eend 0
 	else
 		einfo "Switching settings to fit 'apache2'"
 		sed -e "s|/etc/init.d/apache reload|/etc/init.d/apache2 reload|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver restart-command"
@@ -157,20 +169,19 @@ src_install() {
 		sed -e "s|'apacheconf_htpasswddir', '/etc/apache/htpasswd/'|'apacheconf_htpasswddir', '/etc/apache2/htpasswd/'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver htpasswd directory"
 		sed -e "s|'httpuser', 'www-data'|'httpuser', 'apache'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver user"
 		sed -e "s|'httpgroup', 'www-data'|'httpgroup', 'apache'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver group"
-		eend 0
 	fi
 
 	# set mod_fcgid to "1" if it's wanted
 	if useq fcgid && ! useq lighttpd ; then
 		einfo "Switching 'fcgid' to 'On'"
 		sed -e "s|'mod_fcgid', '0'|'mod_fcgid', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set fcgid to 'On'"
-		eend 0
+
 		einfo "Setting wrapper to FCGIWrapper"
 		sed -e "s|'mod_fcgid_wrapper', '0'|'mod_fcgid_wrapper', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set fcgi-wrapper to 'FCGIWrapper'"
-		eend 0
+
 		einfo "Creating tmp-directory"
 		dodir "/var/kunden/tmp"
-		eend 0
+
 		ewarn "You have to remove the '-D PHP5' entry from /etc/conf.d/apache2 if it exists!"
 	fi
 
@@ -178,7 +189,6 @@ src_install() {
 	if ! useq bind ; then
 		einfo "Switching 'bind' to 'Off'"
 		sed -e 's|/etc/init.d/named reload|/bin/true|g' -i "${S}/install/froxlor.sql" || die "Unable to change reload path for Bind"
-		eend 0
 	fi
 
 	# default value is logging_enabled='1'
@@ -187,21 +197,18 @@ src_install() {
 		sed -e "s|'logger', 'enabled', '1'|'logger', 'enabled', '0'|g" -i "${S}/install/froxlor.sql" || die "Unable to set logging to 'Off'"
 		# fix menu
 		sed -e "s|'10', 'change_serversettings'|'10', 'logger.enabled'|g" -i "${S}/install/froxlor.sql" || die "Unable to fix logging menu-entry"
-		eend 0
 	fi
 
 	# default value is tickets_enabled='1'
 	if ! useq tickets ; then
 		einfo "Switching 'tickets' to 'Off'"
 		sed -e "s|'ticket', 'enabled', '1'|'ticket', 'enabled', '0'|g" -i "${S}/install/froxlor.sql" || die "Unable to set ticketsystem to 'Off'"
-		eend 0
 	fi
 
 	# default value is mailquota='0'
 	if useq mailquota ; then
 		einfo "Switching 'mailquota' to 'On'"
 		sed -e "s|'mail_quota_enabled', '0'|'mail_quota_enabled', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set mailquota to 'On'"
-		eend 0
 	fi
 
 	# default value is autoresponder='0'
@@ -210,18 +217,15 @@ src_install() {
 		sed -e "s|'autoresponder_active', '0'|'autoresponder_active', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set autoresponder to 'On'"
 		# fix menu
 		sed -e "s|40, 'autoresponder.autoresponder_active'|40, 'mails'|g" -i "${S}/install/froxlor.sql" || die "Unable to fix autoresponder menu-entry"
-		eend 0
 	fi
 
 	# default value is dkim_enabled='0'
 	if useq domainkey && useq bind ; then
 		einfo "Switching 'domainkey' to 'On'"
 		sed -e "s|'use_dkim', '0'|'use_dkim', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set domainkey to 'On'"
-		eend 0
 
 		einfo "Setting dkim-path to gentoo value"
 		sed -e "s|'dkim_prefix', '/etc/postfix/dkim/'|'dkim_prefix', '/etc/mail/dkim-filter/'|g" -i "${S}/install/froxlor.sql" || die "Unable to set domainkey prefix"
-		eend 0
 	fi
 
 	# default value is aps_enabled='0'
@@ -231,7 +235,7 @@ src_install() {
 		# fix menu
 		sed -e "s|'admin_aps.nourl', 45, 'aps.aps_active'|'admin_aps.nourl', 45, 'can_manage_aps_packages'|g" -i "${S}/install/froxlor.sql" || die "Unable to fix aps admin-menu-entry"
 		sed -e "s|'customer_aps.nourl', 50, 'aps.aps_active'|'customer_aps.nourl', 50, 'phpenabled'|g" -i "${S}/install/froxlor.sql" || die "Unable to fix aps customer-menu-entry"
-		eend 0
+
 		# if aps is used we enable required features in the php-cli php.ini
 		ewarn
 		ewarn "Please run the following command in your shell to change the php-cli php.ini file for APS"
@@ -244,52 +248,12 @@ src_install() {
 	if ! useq ssl ; then
 		einfo "Switching 'SSL' to 'Off'"
 		sed -e "s|'use_ssl','1'|'use_ssl','0'|g" -i "${S}/install/froxlor.sql" || die "Unable to set ssl to 'Off'"
-		eend 0
 	fi
 
 	# Install the Froxlor files
 	einfo "Installing Froxlor files"
 	dodir /var/www
 	cp -Rf "${S}/" "${D}/var/www/" || die "Installation of the Froxlor files failed"
-	eend 0
-
-}
-
-pkg_preinst() {
-	# Create the user and group that will own the Froxlor files
-	einfo "Creating froxlor user ..."
-	enewgroup froxlor 9995
-	enewuser froxlor 9995 -1 /var/www/froxlor froxlor
-	eend 0
-
-	# Create the user and group that will run the FTPd
-	einfo "Creating froxlorftpd user ..."
-	enewgroup froxlorftpd 9996
-	enewuser froxlorftpd 9996 -1 /var/kunden/webs froxlorftpd
-	eend 0
-
-	# Create the user and group that will run the virtual MTA
-	einfo "Creating vmail user ..."
-	enewgroup vmail 9997
-	enewuser vmail 9997 -1 /var/kunden/mail vmail
-	eend 0
-
-	# we need to check if this is going to be an update or a fresh install!
-	if [[ -f "${ROOT}var/www/froxlor/lib/userdata.inc.php" ]] ; then
-		ewarn
-		ewarn "Froxlor is already installed on this system!"
-		ewarn
-		ewarn "In this case 'emerge --config' mustn't be executed!"
-		ewarn "Any configurationfiles will stay untouched!"
-		ewarn
-		ewarn "Froxlor will update the database when you open"
-		ewarn "Froxlor in your browser the first time after the update-process"
-		ewarn
-		sleep 2
-	fi
-}
-
-pkg_postinst() {
 
 	# Fix the permissions for the Froxlor files
 	einfo "Fixing permission of Froxlor files"
@@ -314,7 +278,6 @@ pkg_postinst() {
 		fi
 	fi
 	fperms 0775 /var/www/froxlor/{temp,packages}
-	eend 0
 
 	# Create the main directories for customer data
 	dodir /var/kunden/webs
@@ -323,12 +286,25 @@ pkg_postinst() {
 	fperms 0750 /var/kunden/mail
 	dodir /var/kunden/logs
 
-	einfo
-	einfo "Please run 'emerge --config =${PF}' to continue with"
-	einfo "the basic setup of Gentoo-Froxlor, *after* you have"
-	einfo "setup your MySQL databases root user and password"
-	einfo "like the MySQL ebuild tells you to do."
-	einfo
+}
+
+pkg_postinst() {
+	# we need to check if this is going to be an update or a fresh install!
+	if [[ -f "${ROOT}/var/www/froxlor/lib/userdata.inc.php" ]] ; then
+		elog "Froxlor is already installed on this system!"
+		elog
+		elog "In this case 'emerge --config' mustn't be executed!"
+		elog "Any configurationfiles will stay untouched!"
+		elog
+		elog "Froxlor will update the database when you open"
+		elog "it in your browser the first time after the update-process"
+		sleep 2
+	else
+		elog "Please run 'emerge --config =${PF}' to continue with"
+		elog "the basic setup of Gentoo-Froxlor, *after* you have"
+		elog "setup your MySQL databases root user and password"
+		elog "like the MySQL ebuild tells you to do."
+	fi
 }
 
 pkg_config() {
@@ -705,9 +681,7 @@ EOF
 		chmod 0600 "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
 	fi
 
-	# erstellen der vhosts
 	if useq lighttpd ; then
-
 		einfo "Configuring lighttpd"
 		rm -f "${ROOT}/etc/lighttpd/lighttpd.conf"
 		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/lighttpd/etc_lighttpd.conf" "${ROOT}/etc/lighttpd/lighttpd.conf"
@@ -716,6 +690,7 @@ EOF
 
 		touch "${ROOT}/etc/lighttpd/froxlor-vhosts.conf"
 		echo -e "\ninclude \"95_${servername}.conf\"" >> "${ROOT}/etc/lighttpd/lighttpd.conf"
+		echo -e "\ninclude \"froxlor-vhosts.conf\"" >> "${ROOT}/etc/lighttpd/lighttpd.conf"
 
 		echo -e "# Froxlor default vhost
 \$HTTP[\"host\"] == \"${servername}\" {
@@ -745,7 +720,6 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		    echo -e "\nserver.modules += ("mod_cgi")" >> "${ROOT}/etc/lighttpd/lighttpd.conf"
 		fi
 
-		eend 0
 	else
 		einfo "Configuring apache2"
 		if useq fcgid ; then
@@ -754,14 +728,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 			mkdir -p "${ROOT}/var/www/froxlor/php-fcgi-script/tmp"
 			chmod 0750 "${ROOT}/var/www/froxlor/php-fcgi-script/tmp"
 			touch "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
-			echo "#!/bin/sh
-PHPRC='/var/www/froxlor/php-fcgi-script/'
-export PHPRC
-PHP_FCGI_CHILDREN=0
-export PHP_FCGI_CHILDREN
-PHP_FCGI_MAX_REQUESTS=250
-export PHP_FCGI_MAX_REQUESTS
-exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
+			echo "${FILESDIR}/php-fcgi-starter" >> "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
 			chown froxlor:froxlor -R "${ROOT}/var/www/froxlor/php-fcgi-script" || die "Unable to fix owner for php-fcgi-script folder"
 			chmod 0750 "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
 			chattr +i "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
@@ -844,7 +811,6 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 
 			echo "</VirtualHost>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
 		fi
-		eend 0
 	fi
 
 	if ! useq lighttpd ; then
@@ -852,7 +818,6 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 		sed -e "s|^\#ServerName localhost.*|ServerName ${servername}|g" -i "${ROOT}/etc/apache2/httpd.conf" || ewarn "Please make sure that the ServerName directive in ${ROOT}/etc/apache${USE_APACHE2}/httpd.conf is set to a valid value!"
 		sed -e "s|^ServerAdmin root\@localhost.*|ServerAdmin root\@${servername}|g" -i "${ROOT}/etc/apache2/httpd.conf" || ewarn "Please make sure that the ServerAdmin directive in ${ROOT}/etc/apache${USE_APACHE2}/httpd.conf is set to a valid value!"
 		sed -e "s|\*:80|${serverip}:80|g" -i "${ROOT}/etc/apache2/vhosts.d/00_default_vhost.conf" || ewarn "Please make sure the NameVirtualHost and VirtualHost directives in ${ROOT}/etc/apache${USE_APACHE2}/vhosts.d/00_default_vhost.conf are set to the Gentoo-Froxlor IP and Port 80!"
-		eend 0
 	fi
 
 	if ! useq lighttpd ; then
@@ -868,7 +833,6 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 		if [[ ${DFCGID} != "" ]] ; then
 			einfo "Attempting to add FCGID to ${ROOT}/etc/conf.d/apache2 ..."
 			sed -e "s|^APACHE2_OPTS=\"|APACHE2_OPTS=\"${DFCGID}|g" -i "${ROOT}/etc/conf.d/apache2" || ewarn "Unable to change APACHE2_OPTS in ${ROOT}/etc/conf.d/apache2, please change it manually to add '${DFCGID}'"
-			eend 0
 		fi
 	fi
 
@@ -888,7 +852,6 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/libnss-mysql-root.cfg"
 		sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/libnss-mysql-root.cfg"
-		eend 0
 	fi
 
 	einfo "Configuring ProFTPd ..."
@@ -914,12 +877,10 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 	fi
 	chown root:0 "${ROOT}/etc/proftpd/proftpd.conf"
 	chmod 0600 "${ROOT}/etc/proftpd/proftpd.conf"
-	eend 0
 
 	einfo "Configuring Gentoo-Froxlor cronjob ..."
 	exeinto /etc/cron.d
-	newexe "{$FILESDIR}"/froxlor.cron froxlor
-	eend 0
+	newexe "${FILESDIR}/froxlor.cron" froxlor
 
 	if ! useq dovecot ; then
 		einfo "Configuring Courier-IMAP ..."
@@ -968,7 +929,6 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 			chmod 0600 "${ROOT}/etc/courier-imap/pop3d-ssl"
 			chmod 0600 "${ROOT}/etc/courier-imap/imapd-ssl"
 		fi
-		eend 0
 	else
 		einfo "Configuring Dovecot-IMAP ..."
 		rm -f "${ROOT}/etc/dovecot/dovecot.conf"
@@ -997,8 +957,6 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 		chown root:0 "${ROOT}/etc/dovecot/dovecot-sql.conf"
 		chmod 0600 "${ROOT}/etc/dovecot/dovecot-sql.conf"
 		chmod 0600 "${ROOT}/etc/dovecot/dovecot-sql.conf"
-
-		eend 0
 	fi
 
 	einfo "Configuring Postfix ..."
@@ -1072,22 +1030,20 @@ exec /usr/bin/php-cgi -c '/var/www/froxlor/php-fcgi-script/'" >> "${ROOT}/var/ww
 	chmod 0640 "${ROOT}/etc/postfix/mysql-virtual_mailbox_domains.cf"
 	chmod 0640 "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
 
-	rm -f "${ROOT}/etc/sasl2/smtpd.conf"
-	cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/etc_sasl2_smtpd.conf" "${ROOT}/etc/sasl2/smtpd.conf"
-	sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
-	sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
-	sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
-	sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
-	chown root:0 "${ROOT}/etc/sasl2/smtpd.conf"
-	chmod 0600 "${ROOT}/etc/sasl2/smtpd.conf"
-
-	if useq domainkey && useq bind ; then
-		echo "smtpd_milters = inet:localhost:8891
-milter_macro_daemon_name = SIGNING
-milter_default_action = accept" >> "${ROOT}/etc/postfix/main.cf"
+	if useq ! dovecot ; then
+		rm -f "${ROOT}/etc/sasl2/smtpd.conf"
+		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/etc_sasl2_smtpd.conf" "${ROOT}/etc/sasl2/smtpd.conf"
+		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
+		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
+		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
+		sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
+		chown root:0 "${ROOT}/etc/sasl2/smtpd.conf"
+		chmod 0600 "${ROOT}/etc/sasl2/smtpd.conf"
 	fi
 
-	eend 0
+	if useq domainkey && useq bind ; then
+		echo "${FILESDIR}/domainkey.conf" >> "${ROOT}/etc/postfix/main.cf"
+	fi
 
 	# Automatical Bind configuration, if Bind is installed
 	if useq bind ; then
@@ -1095,13 +1051,12 @@ milter_default_action = accept" >> "${ROOT}/etc/postfix/main.cf"
 		rm -f "${ROOT}/etc/bind/default.zone"
 		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/bind/etc_bind_default.zone" "${ROOT}/etc/bind/default.zone"
 		sed -e "s|<SERVERIP>|${serverip}|g" -i "${ROOT}/etc/bind/default.zone"
-		eend 0
+
 		einfo "Add Gentoo-Froxlor include to Bind configuration ..."
 		echo "include \"/etc/bind/froxlor_bind.conf\";" >> "${ROOT}/etc/bind/named.conf"
 		touch "${ROOT}/etc/bind/froxlor_bind.conf"
 		chown root:0 "${ROOT}/etc/bind/froxlor_bind.conf"
 		chmod 0655 "${ROOT}/etc/bind/froxlor_bind.conf"
-		eend 0
 	fi
 
 	srv_add_restart() {
