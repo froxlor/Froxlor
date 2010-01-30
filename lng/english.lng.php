@@ -951,7 +951,6 @@ $lng['error']['autoresponderalreadyexists'] = 'There is already an autoresponder
 $lng['error']['invalidautoresponder'] = 'The given account is invalid.';
 $lng['serversettings']['autoresponder_active']['title'] = 'Use autoresponder module';
 $lng['serversettings']['autoresponder_active']['description'] = 'Do you want to use the autoresponder module? Therefore an extra cronjob must be set up.';
-$lng['invoice']['active'] = 'Billing active';
 $lng['admin']['security_settings'] = 'Security Options';
 $lng['admin']['know_what_youre_doing'] = 'Change only, if you know what you\'re doing!';
 $lng['admin']['show_version_login']['title'] = 'Show Froxlor version on login';

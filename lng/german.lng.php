@@ -956,7 +956,6 @@ $lng['error']['autoresponderalreadyexists'] = 'F&uuml;r dieses Konto existiert b
 $lng['error']['invalidautoresponder'] = 'Das angegebene Konto ist ung&uuml;ltig.';
 $lng['serversettings']['autoresponder_active']['title'] = 'Abwesenheitsnachrichten-Modul verwenden';
 $lng['serversettings']['autoresponder_active']['description'] = 'M&ouml;chten Sie das Abwesenheitsnachrichten-Modul verwenden? Dazu muss ein separater Cronjob eingerichtet sein.';
-$lng['invoice']['active'] = 'Rechnung aktiviert';
 $lng['admin']['show_version_login']['title'] = 'Zeige Froxlor Version beim Login';
 $lng['admin']['show_version_login']['description'] = 'Zeige Froxlor Version in der Fu&szlig;zeile der Loginseite';
 $lng['admin']['show_version_footer']['title'] = 'Zeige Froxlor Version in Fu&szlig;zeile';
