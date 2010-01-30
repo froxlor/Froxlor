@@ -87,12 +87,12 @@ pkg_preinst() {
 	# Create the user and group that will run the FTPd
 	einfo "Creating froxlorftpd user ..."
 	enewgroup froxlorftpd 9996
-	enewuser froxlorftpd 9996 -1 /var/kunden/webs froxlorftpd
+	enewuser froxlorftpd 9996 -1 /var/customers/webs froxlorftpd
 
 	# Create the user and group that will run the virtual MTA
 	einfo "Creating vmail user ..."
 	enewgroup vmail 9997
-	enewuser vmail 9997 -1 /var/kunden/mail vmail
+	enewuser vmail 9997 -1 /var/customers/mail vmail
 }
 
 src_prepare() {
@@ -180,7 +180,7 @@ src_install() {
 		sed -e "s|'mod_fcgid_wrapper', '0'|'mod_fcgid_wrapper', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set fcgi-wrapper to 'FCGIWrapper'"
 
 		einfo "Creating tmp-directory"
-		dodir "/var/kunden/tmp"
+		dodir "/var/customers/tmp"
 
 		ewarn "You have to remove the '-D PHP5' entry from /etc/conf.d/apache2 if it exists!"
 	fi
@@ -280,11 +280,11 @@ src_install() {
 	fperms 0775 /var/www/froxlor/{temp,packages}
 
 	# Create the main directories for customer data
-	dodir /var/kunden/webs
-	dodir /var/kunden/mail
-	fowners vmail:vmail /var/kunden/mail
-	fperms 0750 /var/kunden/mail
-	dodir /var/kunden/logs
+	dodir /var/customers/webs
+	dodir /var/customers/mail
+	fowners vmail:vmail /var/customers/mail
+	fperms 0750 /var/customers/mail
+	dodir /var/customers/logs
 
 }
 
@@ -898,7 +898,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
 		sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
-		sed -e "s|<VIRTUAL_MAILBOX_BASE>|/var/kunden/mail|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
+		sed -e "s|<VIRTUAL_MAILBOX_BASE>|/var/customers/mail|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
 		sed -e "s|<VIRTUAL_UID_MAPS>|9997|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
 		sed -e "s|<VIRTUAL_GID_MAPS>|9997|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
 
@@ -963,7 +963,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	rm -f "${ROOT}/etc/postfix/main.cf"
 	cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_main.cf" "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/postfix/main.cf"
-	sed -e "s|<VIRTUAL_MAILBOX_BASE>|/var/kunden/mail|g" -i "${ROOT}/etc/postfix/main.cf"
+	sed -e "s|<VIRTUAL_MAILBOX_BASE>|/var/customers/mail|g" -i "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<VIRTUAL_UID_MAPS>|9997|g" -i "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<VIRTUAL_GID_MAPS>|9997|g" -i "${ROOT}/etc/postfix/main.cf"
 	if useq dovecot ; then

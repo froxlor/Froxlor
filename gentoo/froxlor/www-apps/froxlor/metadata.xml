@@ -3,7 +3,7 @@
 <pkgmetadata>
 <herd>no-herd</herd>
 <maintainer>
-  <email>gentoo@froxlor.org</email>
+  <email>release@froxlor.org</email>
     <description>Upstream Maintainer</description>
 </maintainer>
 <longdescription>A PHP-based webhosting-oriented control panel for servers.</longdescription>
