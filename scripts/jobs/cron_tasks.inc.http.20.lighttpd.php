@@ -121,6 +121,9 @@ class lighttpd
 
 		while($row_htpasswds = $this->db->fetch_array($result_htpasswds))
 		{
+			$row_htpasswds['path'] = makeCorrectDir($row_htpasswds['path']);
+			mkDirWithCorrectOwnership($domain['documentroot'], $row_htpasswds['path'], $domain['guid'], $domain['guid']);
+			
 			$filename = $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd';
 
 			if(!in_array($row_htpasswds['path'], $needed_htpasswds))
@@ -324,6 +327,8 @@ class lighttpd
 			if($row['options_indexes'] != '0')
 			{
 				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
+				
+				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
 
