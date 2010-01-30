@@ -564,7 +564,20 @@ if($page == 'customers'
 
 					if($createstdsubdomain == '1')
 					{
-						$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` " . "(`domain`, `customerid`, `adminid`, `parentdomainid`, `ipandport`, `documentroot`, `zonefile`, `isemaildomain`, `caneditdomain`, `openbasedir`, `safemode`, `speciallogfile`, `specialsettings`) " . "VALUES ('" . $db->escape($loginname . '.' . $settings['system']['hostname']) . "', '" . (int)$customerid . "', '" . (int)$userinfo['adminid'] . "', '-1', '" . $db->escape($settings['system']['defaultip']) . "', '" . $db->escape($documentroot) . "', '', '0', '0', '1', '1', '0', '')");
+						$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET " . 
+							"`domain` = '". $db->escape($loginname . '.' . $settings['system']['hostname']) . "', " .
+							"`customerid` = '" . (int)$customerid . "', " .
+							"`adminid` = '" . (int)$userinfo['adminid'] . "', " . 
+							"`parentdomainid` = '-1', " .
+							"`ipandport` = '" . $db->escape($settings['system']['defaultip']) . "', " . 
+							"`documentroot` = '" . $db->escape($documentroot) . "', " . 
+							"`zonefile` = '', " .
+							"`isemaildomain` = '0', " .
+							"`caneditdomain` = '0', " . 
+							"`openbasedir` = '1', " .
+							"`safemode` = '1', " .
+							"`speciallogfile` = '0', " .
+							"`specialsettings` = ''");
 						$domainid = $db->insert_id();
 						$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `standardsubdomain`=\'' . (int)$domainid . '\' WHERE `customerid`=\'' . (int)$customerid . '\'');
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added standardsubdomain for user '" . $loginname . "'");
