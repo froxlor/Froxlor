@@ -1268,5 +1268,6 @@ $lng['tasks']['creating_ftpdir'] = 'Erstelle Verzeichnis f&uuml;r neuen FTP-Benu
 $lng['tasks']['deleting_customerfiles'] = 'L&ouml;schen von Kunden-Dateien %loginname%';
 $lng['tasks']['noneoutstanding'] = 'Zur Zeit gibt es keine ausstehenden Aufgaben f&uuml;r Froxlor';
 $lng['ticket']['nonexistingcustomer'] = '(gel&ouml;schter Kunde)';
+$lng['admin']['ticket_nocustomeraddingavailable'] = 'Es k&ouml;nnen derzeit keine neuen Support-Tickets er&ouml;ffnet werden. Sie m&uuml;ssen zuerst einen Kunden anlegen';
 
 ?>

@@ -1288,5 +1288,6 @@ $lng['tasks']['creating_ftpdir'] = 'Creating directory for new ftp-user';
 $lng['tasks']['deleting_customerfiles'] = 'Deleting customer-files %loginname%';
 $lng['tasks']['noneoutstanding'] = 'There are currently no outstanding tasks for Froxlor';
 $lng['ticket']['nonexistingcustomer'] = '(deleted customer)';
+$lng['admin']['ticket_nocustomeraddingavailable'] = 'It\'s not possible to open a new support-ticket currently. You first need to add at least one customer.';
 
 ?>
