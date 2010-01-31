@@ -151,6 +151,13 @@ if(get_magic_quotes_gpc())
 $settings_data = loadConfigArrayDir('./actions/admin/settings/');
 $settings = loadSettings(&$settings_data, &$db);
 
+/*
+ * when upgrading from syscp, the header-graphic gets lost
+ */
+if(!isset($settings['admin']['froxlor_graphic'])) {
+	$settings['admin']['froxlor_graphic'] = $settings['admin']['syscp_graphic'];
+}
+
 /**
  * SESSION MANAGEMENT
  */
