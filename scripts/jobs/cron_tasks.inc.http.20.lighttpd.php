@@ -253,6 +253,8 @@ class lighttpd
 			$ipport = $domain['ip'] . ':' . $domain['port'];
 		}
 
+		mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid']);
+
 		$vhost_content.= $this->getServerNames($domain) . " {\n";
 		$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
 		if ($domain['specialsettings'] != "") {
