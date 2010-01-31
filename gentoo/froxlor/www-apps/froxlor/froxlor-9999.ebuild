@@ -142,11 +142,9 @@ src_install() {
 		sed -e "s|'standardlanguage', 'English'|'standardlanguage', '${MYLANG}'|g" -i "${S}/install/froxlor.sql" || die "Unable to change default language"
 	fi
 
-	# set lastguid to 10000
 	einfo "Setting 'lastguid' to '10000'"
 	sed -e "s|'lastguid', '9999'|'lastguid', '10000'|g" -i "${S}/install/froxlor.sql" || die "Unable to change lastguid"
 
-	# set vmail uid/gid to 9997
 	einfo "Setting 'vmail_uid' and 'vmail_gid' to '9997'"
 	sed -e "s|'vmail_uid', '2000'|'vmail_uid', '9997'|g" -i "${S}/install/froxlor.sql" || die "Unable to change uid for user vmail"
 	sed -e "s|'vmail_gid', '2000'|'vmail_gid', '9997'|g" -i "${S}/install/froxlor.sql" || die "Unable to change gid for user vmail"
