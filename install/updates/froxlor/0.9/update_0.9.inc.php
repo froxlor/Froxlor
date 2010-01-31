@@ -319,4 +319,18 @@ if(isFroxlorVersion('0.9-r3'))
 	lastStepStatus(0);	
 	updateToVersion('0.9-r4');
 }
+
+if(isFroxlorVersion('0.9-r4'))
+{
+	showUpdateStep("Updating from 0.9-r4 to 0.9 final", false);
+	
+	if($settings['admin']['froxlor_graphic'] == 'images/header.gif')
+	{
+		showUpdateStep("Changing header graphic");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = 'images/header.png' WHERE `settinggroup`='admin' AND `varname`='froxlor_graphic'");		
+		lastStepStatus(0);
+	}
+	updateToVersion('0.9');
+}
+
 ?>
