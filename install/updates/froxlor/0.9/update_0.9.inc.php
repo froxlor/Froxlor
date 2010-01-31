@@ -191,7 +191,8 @@ if(isFroxlorVersion('0.9-r1'))
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'use_spf', '0');");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'spf_entry', '@	IN	TXT	\"v=spf1 a mx -all\"');");
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `varname` = 'froxlor_graphic' WHERE `varname` = 'syscp_graphic'");
-
+	$settings['admin']['froxlor_graphic'] = $settings['admin']['syscp_graphic'];
+	
 	lastStepStatus(0);
 	
 	showUpdateStep("Converting database tables to UTF-8");
