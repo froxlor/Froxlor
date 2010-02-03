@@ -1,0 +1,24 @@
+ -----------------------------------------------------------------------
+ Configuration-file for the Password Plugin for Roundcube
+ -----------------------------------------------------------------------
+
+ This configuration file is for the password plugin for Roundcube and
+ allows Froxlor users to change their e-mail password within Roundcube.
+
+ -----------------------------------------------------------------------
+
+ You only have to edit one thing:
+
+ Look for:
+
+ $rcmail_config['password_db_dsn'] = 'mysql://froxlor:MYSQL_PASSWORD@localhost/froxlor';
+
+ and replace MYSQL_PASSWORD with the password for the froxlor-database-user.
+
+ 
+ If you do not want plaintext-passwords to be stored in the database,
+ edit $rcmail_config['password_query'] and remove "`password` = \'%p\',"
+
+ -----------------------------------------------------------------------
+ 2010, the Froxlor Team
+ http://www.froxlor.org/
