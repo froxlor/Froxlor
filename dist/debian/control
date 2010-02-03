@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: Froxlor Release Team <release@froxlor.org>
 Build-Depends: debhelper (>= 7)
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Homepage: http://www.froxlor.org
 
 Package: froxlor
