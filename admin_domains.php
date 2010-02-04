@@ -570,8 +570,6 @@ if($page == 'domains'
 					$ssl_ipsandports.= makeoption($row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'], $row_ssl_ipandport['id'], $settings['system']['defaultip']);
 				}
 
-				$ssl = makeyesno('ssl', '1', '0', $result['ssl']);
-				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
 				$standardsubdomains = array();
 				$result_standardsubdomains = $db->query('SELECT `id` FROM `' . TABLE_PANEL_DOMAINS . '` `d`, `' . TABLE_PANEL_CUSTOMERS . '` `c` WHERE `d`.`id`=`c`.`standardsubdomain`');
 
@@ -615,6 +613,8 @@ if($page == 'domains'
 				$openbasedir = makeyesno('openbasedir', '1', '0', '1');
 				$safemode = makeyesno('safemode', '1', '0', '1');
 				$speciallogfile = makeyesno('speciallogfile', '1', '0', '0');
+				$ssl = makeyesno('ssl', '1', '0', '0');
+				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', '0');				
 				$add_date = date('Y-m-d');
 
 				eval("echo \"" . getTemplate("domains/domains_add") . "\";");

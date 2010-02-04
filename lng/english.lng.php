@@ -1290,4 +1290,10 @@ $lng['tasks']['noneoutstanding'] = 'There are currently no outstanding tasks for
 $lng['ticket']['nonexistingcustomer'] = '(deleted customer)';
 $lng['admin']['ticket_nocustomeraddingavailable'] = 'It\'s not possible to open a new support-ticket currently. You first need to add at least one customer.';
 
+// ADDED IN FROXLOR 0.9.1
+
+$lng['admin']['accountdata'] = 'Account Data';
+$lng['admin']['contactdata'] = 'Contact Data';
+$lng['admin']['servicedata'] = 'Service Data';
+
 ?>

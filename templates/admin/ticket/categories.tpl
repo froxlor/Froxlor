@@ -15,7 +15,7 @@ $header
 			</if>
 			<tr>
 				<td class="field_display_border_left">{$lng['ticket']['category']}&nbsp;&nbsp;{$arrowcode['name']}</td>
-				<td class="field_display">{$lng['ticket']['ticketcount']}&nbsp;&nbsp;{$arrowcode['ticketcount']}</td>
+				<td class="field_display">{$lng['ticket']['ticketcount']}&nbsp;&nbsp;<if $categories_count < 0 >{$arrowcode['ticketcount']}</if></td>
 				<td class="field_display_search" colspan="2">{$sortcode}</td>
 			</tr>
 			$ticketcategories

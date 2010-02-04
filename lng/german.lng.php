@@ -1270,4 +1270,10 @@ $lng['tasks']['noneoutstanding'] = 'Zur Zeit gibt es keine ausstehenden Aufgaben
 $lng['ticket']['nonexistingcustomer'] = '(gel&ouml;schter Kunde)';
 $lng['admin']['ticket_nocustomeraddingavailable'] = 'Es k&ouml;nnen derzeit keine neuen Support-Tickets er&ouml;ffnet werden. Sie m&uuml;ssen zuerst einen Kunden anlegen';
 
+// ADDED IN FROXLOR 0.9.1
+
+$lng['admin']['accountdata'] = 'Benutzerdaten';
+$lng['admin']['contactdata'] = 'Kontaktdaten';
+$lng['admin']['servicedata'] = 'Dienstleistungsdaten';
+
 ?>
