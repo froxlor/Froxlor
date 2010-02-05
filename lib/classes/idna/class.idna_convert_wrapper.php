@@ -29,13 +29,13 @@ class idna_convert_wrapper
 	 * @var object
 	 */
 
-	var $idna_converter;
+	private $idna_converter;
 
 	/**
 	 * Class constructor. Creates a new idna converter
 	 */
 
-	function idna_convert_wrapper()
+	public function __construct()
 	{
 		$this->idna_converter = new idna_convert();
 	}
@@ -50,7 +50,7 @@ class idna_convert_wrapper
 	 * both seperated by the same string as the input.
 	 */
 
-	function encode($to_encode)
+	public function encode($to_encode)
 	{
 		return $this->_do_action('encode', $to_encode);
 	}
@@ -65,7 +65,7 @@ class idna_convert_wrapper
 	 * both seperated by the same string as the input.
 	 */
 
-	function decode($to_decode)
+	public function decode($to_decode)
 	{
 		return $this->_do_action('decode', $to_decode);
 	}
@@ -80,7 +80,7 @@ class idna_convert_wrapper
 	 * @return string The input string after being processed.
 	 */
 
-	function _do_action($action, $string)
+	private function _do_action($action, $string)
 	{
 		$string = trim($string);
 
