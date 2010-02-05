@@ -21,7 +21,6 @@
 
 define('AREA', 'admin');
 require ("./lib/init.php");
-require ("./lib/class_apsparser.php");
 $Id = 0;
 
 if(isset($_GET['id']))$Id = (int)$_GET['id'];

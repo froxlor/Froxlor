@@ -47,7 +47,7 @@ if($page == 'message')
 			   && $userinfo['customers_see_all'] == '1')
 			{
 				$log->logAction(ADM_ACTION, LOG_NOTICE, "sending messages to admins");
-				$result = $db->query('SELECT `firstname`, `name`, `email`  FROM `' . TABLE_PANEL_ADMINS . "`");
+				$result = $db->query('SELECT `name`, `email`  FROM `' . TABLE_PANEL_ADMINS . "`");
 			}
 			elseif($_POST['receipient'] == 1)
 			{
@@ -78,9 +78,9 @@ if($page == 'message')
 
 				while($row = $db->fetch_array($result))
 				{
-					$mail->AddAddress($row['email'], $row['firstname'] . ' ' . $row['name']);
+					$mail->AddAddress($row['email'], (isset($row['firstname']) ? $row['firstname'] . ' ' : '') . $row['name']);
 					$mail->From = $userinfo['email'];
-					$mail->FromName = $userinfo['firstname'] . ' ' . $userinfo['name'];
+					$mail->FromName = (isset($userinfo['firstname']) ? $userinfo['firstname'] . ' ' : '') . $userinfo['name'];
 
 					if(!$mail->Send())
 					{

@@ -742,6 +742,7 @@ elseif($page == 'archive'
 		$ticket_replies = '';
 		$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
 		$lastchange = date("d.m.Y H:i\h", $mainticket->Get('lastchange'));
+		$dt = date("d.m.Y H:i\h", $mainticket->Get('dt'));
 		$status = ticket::getStatusText($lng, $mainticket->Get('status'));
 		$isclosed = 1;
 

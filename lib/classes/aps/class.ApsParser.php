@@ -1710,7 +1710,14 @@ class ApsParser
 			return;
 		}
 
-		$CustomerId = $this->userinfo['customerid'];
+		if(isset($this->userinfo['customerid']))
+		{		
+			$CustomerId = $this->userinfo['customerid'];
+		}
+		else
+		{
+			$CustomerId = -1;
+		}
 		$AdminId = $this->userinfo['adminid'];
 		$PackagesPerSite = $this->settings['aps']['items_per_page'];
 
