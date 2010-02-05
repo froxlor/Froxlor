@@ -75,7 +75,8 @@ if(!is_null($month)
 	                     WHERE `customerid`='" . $userinfo['customerid'] . "'
 	                     AND `month` = '" . $month . "'
 	                     AND `year` = '" . $year . "'");
-	rsort($row = mysql_fetch_row($result));
+	$row = mysql_fetch_row($result);
+	rsort($row);
 	$traf['max'] = ($row[0] > $row[1] ? ($row[0] > $row[2] ? $row[0] : $row[2]) : ($row[1] > $row[2] ? $row[1] : $row[2]));;
 	$result = $db->query("SELECT
                                 SUM(`http`) as 'http', SUM(`ftp_up`) AS 'ftp_up', SUM(`ftp_down`) as 'ftp_down', SUM(`mail`) as 'mail',

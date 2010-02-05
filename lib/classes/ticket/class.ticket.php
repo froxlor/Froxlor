@@ -301,12 +301,12 @@ class ticket
 		}
 		else
 		{
-			$admin = $this->db->query_first("SELECT `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`='" . (int)$this->userinfo['adminid'] . "'");
+			$admin = $this->db->query_first("SELECT `name`, email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`='" . (int)$this->userinfo['adminid'] . "'");
 			$mail->From = $this->settings['ticket']['noreply_email'];
 			$mail->FromName = $this->settings['ticket']['noreply_name'];
 			$mail->Subject = $mail_subject;
 			$mail->Body = $mail_body;
-			$mail->AddAddress($admin['email'], $admin['firstname'] . ' ' . $admin['name']);
+			$mail->AddAddress($admin['email'], $admin['name']);
 
 			if(!$mail->Send())
 			{
