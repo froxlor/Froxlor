@@ -82,7 +82,7 @@ function getVersionInfoFromFile($version_file)
 
 			if($vf !== false && $vf != '')
 			{
-				$vf_data = explode(':', $vf);
+				$vf_data = explode('|', $vf);
 				return $vf_data;
 			}
 		}
