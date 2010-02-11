@@ -93,7 +93,7 @@ return Array(
 					'postfix' => Array(
 						'label' => 'Postfix',
 						'commands' => Array(
-							'apt-get install postfix postfix-mysql libsasl2 libsasl2-modules libsasl2-modules-sql',
+							'apt-get install postfix postfix-mysql libsasl2-2 libsasl2-modules libsasl2-modules-sql',
 							'mkdir -p /etc/postfix/sasl',
 							'mkdir -p /var/spool/postfix/etc/pam.d',
 							'mkdir -p /var/spool/postfix/var/run/mysqld',
