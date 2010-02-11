@@ -276,4 +276,15 @@ if(isFroxlorVersion('0.9-r4'))
 	updateToVersion('0.9');
 }
 
+if(isFroxlorVersion('0.9'))
+{
+	showUpdateStep("Updating from 0.9 to 0.9.1", false);
+	
+	showUpdateStep("Updating settings values");
+	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = 'images/header.gif' WHERE `varname` = 'froxlor_graphic' AND `value` = 'images/header.png'");
+	
+	lastStepStatus(0);
+	updateToVersion('0.9.1');
+}
+
 ?>
