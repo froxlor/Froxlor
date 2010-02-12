@@ -2,7 +2,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="field_name"><a href="{$redirect_url}">{$lng['success']['clickheretocontinue']}</a></td>
+			<td class="field_name_center"><a href="{$redirect_url}">{$lng['success']['clickheretocontinue']}</a></td>
 		</tr>		
 	</table>
 	<br />
