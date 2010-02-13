@@ -21,7 +21,7 @@
 
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
-header("Content-type: text/html; charset=utf-8");
+header("Content-type: text/html; charset=iso-8859-1");
 
 // ensure that default timezone is set
 if(function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get"))
