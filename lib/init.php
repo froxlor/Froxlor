@@ -49,7 +49,8 @@ $filename = basename($_SERVER['PHP_SELF']);
 
 if(!file_exists('./lib/userdata.inc.php'))
 {
-	die('You have to <a href="./install/install.php">configure</a> Froxlor first!');
+	$config_hint = file_get_contents('./templates/misc/configurehint.tpl');
+	die($config_hint);
 }
 
 if(!is_readable('./lib/userdata.inc.php'))

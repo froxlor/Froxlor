@@ -47,6 +47,9 @@ $lng['install']['next'] = 'Fortfahren';
 
 $lng['install']['testing_mysql'] = 'Teste, ob die MySQL-Root-Benutzerdaten richtig sind...';
 $lng['install']['erasing_old_db'] = 'Entferne alte Datenbank...';
+$lng['install']['backup_old_db'] = 'Sichere bisherige Datenbank...';
+$lng['install']['backing_up'] = 'Sicherung l&auml;ft';
+$lng['install']['backing_up_binary_missing'] = '/usr/bin/mysqldump nicht vorhanden';
 $lng['install']['create_mysqluser_and_db'] = 'Erstelle Datenbank und Benutzer...';
 $lng['install']['testing_new_db'] = 'Teste, ob die Datenbank und Passwort korrekt angelegt wurden...';
 $lng['install']['importing_data'] = 'Importiere Daten in die MySQL-Datenbank...';
