@@ -135,10 +135,20 @@ class ApsInstaller extends ApsParser
 		{
 			//setup right path and run installation script
 
+			if(!is_dir($this->RealPath . $this->DomainPath . '/install_scripts/'))
+			{
+				echo 'Directory: '. $this->RealPath . $this->DomainPath . '/install_scripts/ does not exist';
+				return;
+			}
+
 			chdir($this->RealPath . $this->DomainPath . '/install_scripts/');
 			$Return = array();
 			$ReturnStatus = 0;
-			$Return = safe_exec('php ' . escapeshellarg($this->RealPath . $this->DomainPath . '/install_scripts/configure install'), $ReturnStatus);
+
+			// make configure-script executable
+			chmod($this->RealPath . $this->DomainPath . '/install_scripts/configure', 0755);
+
+			$Return = safe_exec('php ' . escapeshellarg($this->RealPath . $this->DomainPath . '/install_scripts/configure') . ' install', $ReturnStatus);
 
 			if($ReturnStatus != 0)
 			{
