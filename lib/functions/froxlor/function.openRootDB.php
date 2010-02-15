@@ -30,26 +30,24 @@ function openRootDB($debugHandler, $lockfile)
 {
 	global $db_root;
 
-	// If one cronscript needs root, it should say $needrootdb = true before the include
-	if(isset($needrootdb)
-	&& $needrootdb === true)
+	require ('./lib/userdata.inc.php');
+	$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
+
+	if($db_root->link_id == 0)
 	{
-		$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
+		/**
+		 * Do not proceed further if no database connection could be established
+		 */
 
-		if($db_root->link_id == 0)
-		{
-			/**
-			 * Do not proceed further if no database connection could be established
-			 */
-
-			fclose($debugHandler);
-			unlink($lockfile);
-			die('root can\'t connect to mysqlserver. Please check userdata.inc.php! Exiting...');
-		}
-
-		unset($db_root->password);
-		fwrite($debugHandler, 'Database-rootconnection established' . "\n");
+		fclose($debugHandler);
+		unlink($lockfile);
+		die('root can\'t connect to mysqlserver. Please check userdata.inc.php! Exiting...');
 	}
+
+	unset($db_root->password);
+	fwrite($debugHandler, 'Database-rootconnection established' . "\n");
+	
+	unset($sql);
 }
 
 function closeRootDB()

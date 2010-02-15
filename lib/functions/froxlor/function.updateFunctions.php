@@ -134,7 +134,7 @@ function showUpdateStep($task = null, $needs_status = true)
  * outputs [OK] (success), [??] (warning) or [!!] (failure)
  * of the last update-step
  * 
- * @param	int			status	(0 = success, 1 = warning, -1 = failure)
+ * @param	int			status	(0 = success, 1 = warning, 2 = failure)
  * 
  * @return	string		formatted output and log-entry
  */

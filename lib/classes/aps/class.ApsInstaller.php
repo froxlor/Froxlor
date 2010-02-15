@@ -45,7 +45,7 @@ class ApsInstaller extends ApsParser
 	{
 		$this->db = $db;
 		$this->db_root = $db_root;
-		$this->RootDir = dirname(dirname(__FILE__)) . '/';
+		$this->RootDir = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
 		$this->Hosts = $settings['system']['mysql_access_host'];
 	}
 

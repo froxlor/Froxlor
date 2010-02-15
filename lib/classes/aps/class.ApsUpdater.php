@@ -43,7 +43,7 @@ class ApsUpdater extends ApsParser
 		$this->db = $db;
 		$this->RequestDomain = 'apscatalog.com';
 		$this->RootUrl = '/1/';
-		$this->RootDir = dirname(dirname(__FILE__)) . '/';
+		$this->RootDir = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
 	}
 
 	/**
@@ -56,9 +56,9 @@ class ApsUpdater extends ApsParser
 
 		//return if allow_url_fopen is disabled
 
-		if(ini_get('allow_url_fopen') == '0')
+		if(!ini_get('allow_url_fopen'))
 		{
-			echo ("The APS updater cronjob requires that allow_url_fopen is enabled for the PHP CLI binary!\n");
+			echo "The APS updater cronjob requires that allow_url_fopen is enabled for the PHP CLI binary!\n";
 			return;
 		}
 
@@ -79,87 +79,96 @@ class ApsUpdater extends ApsParser
 		//fetch all vendors
 
 		$Vendors = self::FetchSubUrls($this->RootUrl);
-		foreach($Vendors as $Vendor)
+		if($Vendors !== false)
 		{
-			//fetch all applications from vendors
-
-			$Applications = self::FetchSubUrls($this->RootUrl . $Vendor);
-			foreach($Applications as $Application)
+			foreach($Vendors as $Vendor)
 			{
-				//get newest version of package which is already installed
+				//fetch all applications from vendors
 
-				$CurrentVersion = '';
-				$Result = $this->db->query('SELECT * FROM `' . TABLE_APS_PACKAGES . '` WHERE `Name` = "' . $this->db->escape(substr($Application, 0, -1)) . '"');
-
-				while($Row = $this->db->fetch_array($Result))
+				$Applications = self::FetchSubUrls($this->RootUrl . $Vendor);
+				if($Applications !== false)
 				{
-					if(version_compare($Row['Version'] . '-' . $Row['Release'], $CurrentVersion) == 1)
+					foreach($Applications as $Application)
 					{
-						$CurrentVersion = $Row['Version'] . '-' . $Row['Release'];
-					}
-				}
+						//get newest version of package which is already installed
 
-				if($this->db->num_rows($Result) != 0)
-				{
-					//package already installed in system, search for newer version
+						$CurrentVersion = '';
+						$Result = $this->db->query('SELECT * FROM `' . TABLE_APS_PACKAGES . '` WHERE `Name` = "' . $this->db->escape(substr($Application, 0, -1)) . '"');
 
-					if($Task['Task'] != TASK_SYSTEM_UPDATE)continue;
-
-					//fetch different versions of application from distribution server
-
-					$NewerVersion = '';
-					$Versions = self::FetchSubUrls($this->RootUrl . $Vendor . $Application);
-					foreach($Versions as $Version)
-					{
-						$OnlineVersion = substr($Version, 0, -1);
-
-						//is package newer than current version?
-
-						if(version_compare($OnlineVersion, $CurrentVersion) == 1)
+						while($Row = $this->db->fetch_array($Result))
 						{
-							//is new package newer than another one found before?
-
-							if(version_compare($OnlineVersion, $NewerVersion) == 1)
+							if(version_compare($Row['Version'] . '-' . $Row['Release'], $CurrentVersion) == 1)
 							{
-								$NewerVersion = $OnlineVersion;
+								$CurrentVersion = $Row['Version'] . '-' . $Row['Release'];
 							}
 						}
-					}
 
-					if($NewerVersion != '')
-					{
-						//download package as an update
-
-						self::DownloadPackage($this->RootUrl . $Vendor . $Application . $NewerVersion, substr($Application, 0, -1), $NewerVersion);
-						continue;
-					}
-				}
-				else
-				{
-					if($Task['Task'] != TASK_SYSTEM_DOWNLOAD)continue;
-
-					//new packages
-
-					$NewVersion = '';
-					$Versions = self::FetchSubUrls($this->RootUrl . $Vendor . $Application);
-					foreach($Versions as $Version)
-					{
-						$OnlineVersion = substr($Version, 0, -1);
-
-						//is package newer than another one found before?
-
-						if(version_compare($OnlineVersion, $NewVersion) == 1)
+						if($this->db->num_rows($Result) != 0)
 						{
-							$NewVersion = $OnlineVersion;
+							//package already installed in system, search for newer version
+
+							if($Task['Task'] != TASK_SYSTEM_UPDATE)continue;
+
+							//fetch different versions of application from distribution server
+
+							$NewerVersion = '';
+							$Versions = self::FetchSubUrls($this->RootUrl . $Vendor . $Application);
+							if($Versions !== false)
+							{
+								foreach($Versions as $Version)
+								{
+									$OnlineVersion = substr($Version, 0, -1);
+
+									//is package newer than current version?
+
+									if(version_compare($OnlineVersion, $CurrentVersion) == 1)
+									{
+										//is new package newer than another one found before?
+
+										if(version_compare($OnlineVersion, $NewerVersion) == 1)
+										{
+											$NewerVersion = $OnlineVersion;
+										}
+									}
+								}
+
+								if($NewerVersion != '')
+								{
+									//download package as an update
+
+									self::DownloadPackage($this->RootUrl . $Vendor . $Application . $NewerVersion, substr($Application, 0, -1), $NewerVersion);
+									continue;
+								}
+							}
 						}
-					}
+						else
+						{
+							if($Task['Task'] != TASK_SYSTEM_DOWNLOAD)continue;
 
-					if($NewVersion != '')
-					{
-						//download package as a new one
+							//new packages
 
-						self::DownloadPackage($this->RootUrl . $Vendor . $Application . $NewVersion, substr($Application, 0, -1), $NewVersion);
-						continue;
+							$NewVersion = '';
+							$Versions = self::FetchSubUrls($this->RootUrl . $Vendor . $Application);
+							foreach($Versions as $Version)
+							{
+								$OnlineVersion = substr($Version, 0, -1);
+
+								//is package newer than another one found before?
+
+								if(version_compare($OnlineVersion, $NewVersion) == 1)
+								{
+									$NewVersion = $OnlineVersion;
+								}
+							}
+
+							if($NewVersion != '')
+							{
+								//download package as a new one
+
+								self::DownloadPackage($this->RootUrl . $Vendor . $Application . $NewVersion, substr($Application, 0, -1), $NewVersion);
+								continue;
+							}
+						}
 					}
 				}
 			}
@@ -236,16 +245,16 @@ class ApsUpdater extends ApsParser
 
 		$Content = @file('http://' . $this->RequestDomain . $Url);
 
-		if($Content != false)
+		if($Content !== false)
 		{
 			foreach($Content as $Temp)
 			{
 				//skip empty lines
 
 				if($Temp != "\r\n"
-				   && $Temp != "\r"
-				   && $Temp != "\n"
-				   && $Temp != "")
+				&& $Temp != "\r"
+				&& $Temp != "\n"
+				&& $Temp != "")
 				{
 					//remove unwanted characters
 
