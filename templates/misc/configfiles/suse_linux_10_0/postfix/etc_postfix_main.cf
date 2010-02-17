@@ -60,4 +60,5 @@ broken_sasl_auth_clients = yes
 #smtp_use_tls = no
 alias_maps = $alias_database
 mailbox_size_limit = 0
+virtual_mailbox_limit = 0
 message_size_limit = 10240000

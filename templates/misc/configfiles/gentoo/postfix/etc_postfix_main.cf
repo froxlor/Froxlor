@@ -72,6 +72,7 @@ alias_maps = $alias_database
 
 # Default Mailbox size, is set to 0 which means unlimited!
 mailbox_size_limit = 0
+virtual_mailbox_limit = 0
 
 ### TLS settings
 ###
