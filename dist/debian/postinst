@@ -20,6 +20,22 @@ set -e
 
 case "$1" in
     configure)
+            if [ -f /var/www/syscp/lib/userdata.inc.php ];
+            then
+               echo "Your SysCP configuration file still exists."
+               echo "to proceed with the Froxlor upgrade move it to"
+               echo "/var/www/froxlor/lib/"
+               ISUPGRADE='true'
+            fi
+            if [ $ISUPGRADE == "true" ]
+            then
+               chown -R www-data:www-data /var/www/froxlor/packages/
+               chown -R www-data:www-data /var/www/froxlor/temp/
+               echo "after moving the configuration file, ensure"
+               echo "it has the right permissions by running this two commands:"
+               echo "chmod 660 /var/www/froxlor/lib/userdata.inc.php"
+               echo "chown www-data:www-data /var/www/froxlor/lib/userdata.inc.php"
+               else
         CONFFILE='/var/www/froxlor/lib/userdata.inc.php'
         touch $CONFFILE
         chmod 660 $CONFFILE
