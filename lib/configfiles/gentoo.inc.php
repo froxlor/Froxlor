@@ -72,10 +72,10 @@ return Array(
 							'etc_bind_default.zone' => '/etc/bind/default.zone'
 						),
 						'commands' => Array(
-							'echo "include \"' . $settings['system']['bindconf_directory'] . 'syscp_bind.conf\";" >> /etc/bind/named.conf',
-							'touch ' . $settings['system']['bindconf_directory'] . 'syscp_bind.conf',
-							'chown root:0 ' . $settings['system']['bindconf_directory'] . 'syscp_bind.conf',
-							'chmod 0600 ' . $settings['system']['bindconf_directory'] . 'syscp_bind.conf'
+							'echo "include \"' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf\";" >> /etc/bind/named.conf',
+							'touch ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
+							'chown root:0 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
+							'chmod 0600 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf'
 						),
 						'restart' => Array(
 							'rc-update add named default',

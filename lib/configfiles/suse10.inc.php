@@ -45,8 +45,8 @@ return Array(
 					'bind' => Array(
 						'label' => 'Bind9',
 						'commands' => Array(
-							'echo "include \"' . $settings['system']['bindconf_directory'] . 'syscp_bind.conf\";" >> /etc/named.conf',
-							'touch ' . $settings['system']['bindconf_directory'] . 'syscp_bind.conf'
+							'echo "include \"' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf\";" >> /etc/named.conf',
+							'touch ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf'
 						),
 						'restart' => Array(
 							'/etc/init.d/named restart'
