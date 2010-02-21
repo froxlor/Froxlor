@@ -21,7 +21,7 @@ DESCRIPTION="A PHP-based webhosting-oriented control panel for servers."
 HOMEPAGE="http://www.froxlor.org/"
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="aps autoresponder bind domainkey dovecot fcgid lighttpd +log mailquota ssl +tickets"
+IUSE="aps autoresponder bind domainkey dovecot fcgid lighttpd +log mailquota realtime ssl +tickets"
 
 DEPEND="
 	>=mail-mta/postfix-2.4[mysql,ssl=]
@@ -56,7 +56,8 @@ DEPEND="
 	aps? ( dev-lang/php[zip]
 		( amd64? ( app-arch/unzip ) )
 	)
-	mailquota? ( >=mail-mta/postfix-2.4[vda] )"
+	mailquota? ( >=mail-mta/postfix-2.4[vda] )
+	realtime?  ( dev-lang/php[sockets] )"
 
 RDEPEND="${DEPEND}"
 

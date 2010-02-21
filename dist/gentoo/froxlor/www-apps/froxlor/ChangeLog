@@ -2,6 +2,11 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  21 Feb 2010; Froxlor Release Team <release@froxlor.org>
+  froxlor-0.9.1.ebuild, froxlor-9999.ebuild, metadata.xml:
+  add realtime useflag (no configuration yet, just ensure we have the right
+  php useflag to even make it work)
+
 *froxlor-0.9.1 (15 Feb 2010)
 
   15 Feb 2010; Froxlor Release Team <release@froxlor.org>
