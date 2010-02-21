@@ -781,11 +781,18 @@ if($page == 'customers'
 					$mysqls = - 1;
 				}
 
-				$number_of_aps_packages = intval_ressource($_POST['number_of_aps_packages']);
+				if($settings['aps']['aps_active'] == '1')
+				{				
+					$number_of_aps_packages = intval_ressource($_POST['number_of_aps_packages']);
 
-				if(isset($_POST['number_of_aps_packages_ul']))
+					if(isset($_POST['number_of_aps_packages_ul']))
+					{
+						$number_of_aps_packages = - 1;
+					}
+				}
+				else
 				{
-					$number_of_aps_packages = - 1;
+					$number_of_aps_packages = 0;
 				}
 
 				$createstdsubdomain = intval($_POST['createstdsubdomain']);

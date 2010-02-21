@@ -71,7 +71,7 @@ return array(
 					'label' => $lng['serversettings']['system_realtime_port'],
 					'settinggroup' => 'system',
 					'varname' => 'realtime_port',
-					'type' => 'int',
+					'type' => (function_exists('socket_create') ? 'int' : 'hidden'),
 					'int_max' => 65535,
 					'default' => 0,
 					'save_method' => 'storeSettingField',

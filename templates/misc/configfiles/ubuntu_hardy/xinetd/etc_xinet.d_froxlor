@@ -1,8 +1,8 @@
 service froxlor
 {
         id              = froxlor
-        socket_type     = dgram
-        protocol        = udp
+        socket_type     = stream
+        protocol        = tcp
         wait            = no
 
         user            = root

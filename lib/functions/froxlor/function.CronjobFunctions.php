@@ -60,19 +60,31 @@ function getNextCronjobs()
 
 function includeCronjobs($debugHandler, $pathtophpfiles)
 {
+	global $settings;
+
 	$cronjobs = getNextCronjobs();
 	
 	$jobs_to_run = array();
+	$cron_path = makeCorrectDir($pathtophpfiles.'/scripts/jobs/');
 	
 	if($cronjobs !== false
 	&& is_array($cronjobs)
 	&& isset($cronjobs[0]))
 	{
-		$cron_path = makeCorrectDir($pathtophpfiles.'/scripts/jobs/');
-		
 		foreach($cronjobs as $cronjob)
 		{
 			$cron_file = makeCorrectFile($cron_path.$cronjob);
+			$jobs_to_run[] = $cron_file;
+		}
+	}
+	
+	/**
+	 * if we're on realtime and cron_tasks is not one
+	 * of the jobs to run, we add it so the changes are being applied
+	 */
+	if ($settings['system']['realtime_port'] !== 0) {
+		$cron_file = makeCorrectFile($cron_path.'/cron_tasks.php');
+		if (!in_array($cron_file, $jobs_to_run)) {
 			$jobs_to_run[] = $cron_file;
 		}
 	}

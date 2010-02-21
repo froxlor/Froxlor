@@ -48,7 +48,7 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 
 		if(sizeof($dirList) > 0)
 		{
-			if(sizeof(dirList) <= 100)
+			if(sizeof($dirList) <= 100)
 			{
 				$field = '<select name="path">';
 				foreach($dirList as $key => $dir)

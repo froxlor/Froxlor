@@ -30,7 +30,16 @@ function openRootDB($debugHandler, $lockfile)
 {
 	global $db_root;
 
-	require ('./lib/userdata.inc.php');
+	require dirname(dirname(dirname(__FILE__))).'/userdata.inc.php';
+	
+	// Legacy sql-root-information
+	if(isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root)))
+	{
+		$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+		unset($sql['root_user']);
+		unset($sql['root_password']);
+	}
+
 	$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
 
 	if($db_root->link_id == 0)
