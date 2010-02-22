@@ -637,7 +637,7 @@ class ticket
 	{
 		if($_cid != 0)
 		{	
-			$result = $_db->query('SELECT `id` FROM `' . TABLE_PANEL_TICKETS . '` WHERE `customer` ="'.(int)$_cid.'"');
+			$result = $_db->query('SELECT `id` FROM `' . TABLE_PANEL_TICKETS . '` WHERE `customerid` ="'.(int)$_cid.'"');
 
 			$tickets = array();
 			while($row = $_db->fetch_array($result))
