@@ -54,7 +54,17 @@ function checkLastGuid($froxlor_guid = 0)
 
 				foreach($group_guids as $idx => $group)
 				{
-					$guid = $group[2];
+					/**
+					 * nogroup | nobody have very high guids
+					 * ignore them
+					 */
+					if($group[0] == 'nogroup'
+						|| $group[0] == 'nobody'
+					) {
+						continue;
+					}
+
+					$guid = (int)$group[2];
 
 					if($guid > $froxlor_guid)
 					{
