@@ -243,7 +243,7 @@ $lng['error']['domainname'] = $lng['domains']['domainname'];
 $lng['question']['question'] = 'Security question';
 $lng['question']['admin_customer_reallydelete'] = 'Do you really want to delete the customer %s? This cannot be undone!';
 $lng['question']['admin_domain_reallydelete'] = 'Do you really want to delete the domain %s?';
-$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Do you really want to deactivate these Security settings (OpenBasedir and/or SafeMode)?';
+$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Do you really want to disable these Security settings (OpenBasedir and/or SafeMode)?';
 $lng['question']['admin_admin_reallydelete'] = 'Do you really want to delete the admin %s? Every customer and domain will be reassigned to your account.';
 $lng['question']['admin_template_reallydelete'] = 'Do you really want to delete the template \'%s\'?';
 $lng['question']['domains_reallydelete'] = 'Do you really want to delete the domain %s?';
@@ -369,9 +369,9 @@ $lng['serversettings']['webftp_url']['title'] = 'WebFTP URL';
 $lng['serversettings']['webftp_url']['description'] = 'What\'s the URL to  WebFTP? (has to start with http(s)://)';
 $lng['serversettings']['language']['description'] = 'What\'s your standard server language?';
 $lng['serversettings']['maxloginattempts']['title'] = 'Max Login Attempts';
-$lng['serversettings']['maxloginattempts']['description'] = 'Maximum login attempts after which the account gets deactivated.';
-$lng['serversettings']['deactivatetime']['title'] = 'Deactivate Time';
-$lng['serversettings']['deactivatetime']['description'] = 'Time (sec.) an account gets deactivated after too many login tries.';
+$lng['serversettings']['maxloginattempts']['description'] = 'Maximum login attempts after which the account gets disabled.';
+$lng['serversettings']['deactivatetime']['title'] = 'Deactivation Time';
+$lng['serversettings']['deactivatetime']['description'] = 'Time (sec.) an account gets disabled after too many login tries.';
 $lng['serversettings']['pathedit']['title'] = 'Type of path input';
 $lng['serversettings']['pathedit']['description'] = 'Should a path be selected by a dropdown menu or by an input field?';
 $lng['serversettings']['nameservers']['title'] = 'Nameservers';
@@ -425,7 +425,7 @@ $lng['panel']['urloverridespath'] = 'URL (overrides path)';
 $lng['panel']['pathorurl'] = 'Path or URL';
 $lng['error']['sessiontimeoutiswrong'] = 'Only numerical &quot;Session Timeout&quot; is allowed.';
 $lng['error']['maxloginattemptsiswrong'] = 'Only numerical &quot;Max Login Attempts&quot; are allowed.';
-$lng['error']['deactivatetimiswrong'] = 'Only numerical &quot;Deactivate Time&quot; is allowed.';
+$lng['error']['deactivatetimiswrong'] = 'Only numerical &quot;Deactivation Time&quot; is allowed.';
 $lng['error']['accountprefixiswrong'] = 'The &quot;Customerprefix&quot; is wrong.';
 $lng['error']['mysqlprefixiswrong'] = 'The &quot;SQL Prefix&quot; is wrong.';
 $lng['error']['ftpprefixiswrong'] = 'The &quot;FTP Prefix&quot; is wrong.';
@@ -872,7 +872,7 @@ $lng['pwdreminder']['success'] = 'Password reset successfully.<br />You now shou
 // ADDED IN 1.2.19-svn18
 
 $lng['serversettings']['allow_password_reset']['title'] = 'Allow password reset by customers';
-$lng['pwdreminder']['notallowed'] = 'Password reset is deactivated';
+$lng['pwdreminder']['notallowed'] = 'Password reset is disabled';
 
 // ADDED IN 1.2.19-svn20
 
@@ -983,7 +983,7 @@ $lng['error']['info'] = 'Info';
 $lng['admin']['phpconfig']['template_replace_vars'] = 'Variables that will be replaced in the configs';
 $lng['admin']['phpconfig']['safe_mode'] = 'Will be replaced with the safe_mode setting of the domain.';
 $lng['admin']['phpconfig']['pear_dir'] = 'Will be replaced with the global setting for the pear directory.';
-$lng['admin']['phpconfig']['open_basedir_c'] = 'Will insert a ; (semicolon) to comment-out/deactivate open_basedir when set';
+$lng['admin']['phpconfig']['open_basedir_c'] = 'Will insert a ; (semicolon) to comment-out/disable open_basedir when set';
 $lng['admin']['phpconfig']['open_basedir'] = 'Will be replaced with the open_basedir setting of the domain.';
 $lng['admin']['phpconfig']['tmp_dir'] = 'Will be replaced with the temporary directory of the domain.';
 $lng['admin']['phpconfig']['open_basedir_global'] = 'Will be replaced with the global value of the path which will be attached to the open_basedir.';
@@ -1192,7 +1192,7 @@ $lng['error']['admindoesntexist'] = 'The admin you have chosen doesn\'t exist.';
 // ADDED IN 1.2.19-svn37
 
 $lng['serversettings']['system_realtime_port']['title'] = 'Port for realtime Froxlor';
-$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature ist deactivated.<br />See also: <a href="https://wiki.froxlor.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
+$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature is disabled.<br />See also: <a href="https://wiki.froxlor.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Allow multiple login';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'If activated a user could login multiple times.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Allow moving domains between admins';
