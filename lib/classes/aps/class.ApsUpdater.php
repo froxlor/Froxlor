@@ -41,7 +41,8 @@ class ApsUpdater extends ApsParser
 	/**
 	 * constructor of class. setup some basic variables needed by class
 	 *
-	 * @param	db			instance of the database class from syscp
+	 * @param	db			instance of the database class
+	 * @param	cronlog		instance of the froxlor logger
 	 */
 
 	public function __construct($db, $cronlog)
@@ -201,11 +202,13 @@ class ApsUpdater extends ApsParser
 
 		//make url valid
 
-		$Url = str_replace(' ', '%20', $Url);
+		$path = dirname($Url);
+		$file = urlencode(basename($Url));
+		$file_url = 'http://' . $this->RequestDomain . $file . '.aps' . $Downloads[0];
 
 		//get content from website url
-		$this->_cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Downloading '" . 'http://' . $this->RequestDomain . $Url . '.aps' . $Downloads[0] . "'");
-		$Content = @file_get_contents('http://' . $this->RequestDomain . $Url . '.aps' . $Downloads[0]);
+		$this->_cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Downloading '" . $file_url . "'");
+		$Content = @file_get_contents($file_url);
 
 		if($Content != false)
 		{
@@ -251,10 +254,11 @@ class ApsUpdater extends ApsParser
 		//make url valid
 
 		$Url = str_replace(' ', '%20', $Url);
+		$file_url = 'http://' . $this->RequestDomain . $Url;
 
 		//get content from website url
 
-		$Content = @file('http://' . $this->RequestDomain . $Url);
+		$Content = @file($file_url);
 
 		if($Content !== false)
 		{
