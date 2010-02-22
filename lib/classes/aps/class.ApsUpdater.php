@@ -31,6 +31,12 @@ class ApsUpdater extends ApsParser
 	private $RequestDomain = '';
 	private $RootUrl = '';
 	private $RootDir = '';
+	
+	/**
+	 * FroxlorLogger
+	 * @var FroxlorLogger
+	 */
+	private $_cronlog = null;
 
 	/**
 	 * constructor of class. setup some basic variables needed by class
@@ -38,12 +44,13 @@ class ApsUpdater extends ApsParser
 	 * @param	db			instance of the database class from syscp
 	 */
 
-	public function __construct($db)
+	public function __construct($db, $cronlog)
 	{
 		$this->db = $db;
 		$this->RequestDomain = 'apscatalog.com';
 		$this->RootUrl = '/1/';
 		$this->RootDir = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
+		$this->_cronlog = $cronlog;
 	}
 
 	/**
@@ -52,12 +59,14 @@ class ApsUpdater extends ApsParser
 
 	public function UpdateHandler()
 	{
+		$this->_cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Changing directory to '" . $this->RootDir . "'");
 		chdir($this->RootDir);
 
 		//return if allow_url_fopen is disabled
 
 		if(!ini_get('allow_url_fopen'))
 		{
+			$this->_cronlog->logAction(CRON_ACTION, LOG_ERROR, "The APS updater cronjob requires that allow_url_fopen is enabled for the PHP CLI binary!");
 			echo "The APS updater cronjob requires that allow_url_fopen is enabled for the PHP CLI binary!\n";
 			return;
 		}
@@ -68,6 +77,7 @@ class ApsUpdater extends ApsParser
 
 		if($this->db->num_rows($Result) == 0)
 		{
+			$this->_cronlog->logAction(CRON_ACTION, LOG_NOTICE, "No tasks for ApsUpdater");
 			return;
 		}
 
@@ -77,20 +87,21 @@ class ApsUpdater extends ApsParser
 		$this->db->query('DELETE FROM `' . TABLE_APS_TASKS . '` WHERE `Task` = ' . $Task['Task']);
 
 		//fetch all vendors
-
+		$this->_cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Fetching all Vendors from '" . $this->RootUrl . "'");
 		$Vendors = self::FetchSubUrls($this->RootUrl);
 		if($Vendors !== false)
 		{
 			foreach($Vendors as $Vendor)
 			{
 				//fetch all applications from vendors
-
+				$this->_cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Fetching all from Vendor '" . $Vendor. "'");
 				$Applications = self::FetchSubUrls($this->RootUrl . $Vendor);
 				if($Applications !== false)
 				{
 					foreach($Applications as $Application)
 					{
 						//get newest version of package which is already installed
+						$this->_cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Checking application '" . substr($Application, 0, -1) . "'");
 
 						$CurrentVersion = '';
 						$Result = $this->db->query('SELECT * FROM `' . TABLE_APS_PACKAGES . '` WHERE `Name` = "' . $this->db->escape(substr($Application, 0, -1)) . '"');
@@ -193,7 +204,7 @@ class ApsUpdater extends ApsParser
 		$Url = str_replace(' ', '%20', $Url);
 
 		//get content from website url
-
+		$this->_cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Downloading '" . 'http://' . $this->RequestDomain . $Url . '.aps' . $Downloads[0] . "'");
 		$Content = @file_get_contents('http://' . $this->RequestDomain . $Url . '.aps' . $Downloads[0]);
 
 		if($Content != false)

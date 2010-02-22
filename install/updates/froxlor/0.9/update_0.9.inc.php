@@ -287,4 +287,15 @@ if(isFroxlorVersion('0.9'))
 	updateToVersion('0.9.1');
 }
 
+if(isFroxlorVersion('0.9.1'))
+{
+	showUpdateStep("Updating from 0.9.1 to 0.9.2", false);
+	
+	showUpdateStep("Checking wether last-system-guid is sane");
+	checkLastGuid($settings['system']['lastguid']);
+	
+	lastStepStatus(0);
+	updateToVersion('0.9.2');
+}
+
 ?>

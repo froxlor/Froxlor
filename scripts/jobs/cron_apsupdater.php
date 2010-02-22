@@ -17,7 +17,7 @@
  * @version    $Id$
  */
 
-$Aps = new ApsUpdater($db);
+$Aps = new ApsUpdater($db, $cronlog);
 $Aps->UpdateHandler();
 
 ?>
