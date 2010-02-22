@@ -45,7 +45,8 @@ DEPEND="
 				www-apache/mod_fcgid )
 			)
 	)
-	dovecot? ( net-mail/dovecot[mysql,pop3d,ssl=]
+	dovecot? ( || ( <net-mail/dovecot-1.1.99[mysql,pop3d,ssl=]
+		   >=net-mail/dovecot-1.2.0[mysql,ssl=] )
 		   >=mail-mta/postfix-2.4[dovecot-sasl]
 	)
 	!dovecot? ( dev-libs/cyrus-sasl[crypt,mysql,ssl=]
