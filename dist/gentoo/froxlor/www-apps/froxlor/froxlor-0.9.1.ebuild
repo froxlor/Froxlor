@@ -58,7 +58,8 @@ DEPEND="
 		( amd64? ( app-arch/unzip ) )
 	)
 	mailquota? ( >=mail-mta/postfix-2.4[vda] )
-	realtime?  ( dev-lang/php[sockets] )"
+	realtime?  ( dev-lang/php[sockets] )
+	!www-apps/syscp"
 
 RDEPEND="${DEPEND}"
 
@@ -299,6 +300,10 @@ pkg_postinst() {
 		elog "Froxlor will update the database when you open"
 		elog "it in your browser the first time after the update-process"
 		sleep 2
+	elif [[ -f "${ROOT}/var/www/syscp/lib/userdata.inc.php" ]] ; then
+		elog This seems to be an upgrade from syscp
+		elog please move /var/www/syscp/lib/userdata.inc.php to
+		elog /var/www/froxlor/lib/
 	else
 		elog "Please run 'emerge --config =${PF}' to continue with"
 		elog "the basic setup of Gentoo-Froxlor, *after* you have"
