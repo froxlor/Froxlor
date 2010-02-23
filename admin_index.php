@@ -84,26 +84,38 @@ if($page == 'overview')
 	$webserverinterface = strtoupper(@php_sapi_name());
 
 	if((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes')
-	   || (isset($lookfornewversion) && $lookfornewversion == 'yes'))
+	|| (isset($lookfornewversion) && $lookfornewversion == 'yes'))
 	{
 		$update_check_uri = 'http://version.froxlor.org/Froxlor/legacy/' . $version;
-		
-		if(strtolower(ini_get('allow_url_fopen')) == 'on')
+
+		if(ini_get('allow_url_fopen'))
 		{
 			$latestversion = @file($update_check_uri);
-	
-			$latestversion = explode(':', $latestversion);
-	
-			if(is_array($latestversion)
-			   && count($latestversion) >= 2)
+
+			if (isset($latestversion[0]))
 			{
-				$lookfornewversion_lable = $latestversion[0];
-				$lookfornewversion_link = $latestversion[1];
-				$lookfornewversion_addinfo = '';
-	
-				if(count($latestversion) >= 3)
+				$latestversion = explode('|', $latestversion[0]);
+
+				if(is_array($latestversion)
+				&& count($latestversion) >= 1)
 				{
-					$lookfornewversion_addinfo = $latestversion[2];
+					$_version = $latestversion[0];
+					$_message = $latestversion[1];
+					$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
+
+					$lookfornewversion_lable = $_version;
+					$lookfornewversion_link = $_link;
+					$lookfornewversion_addinfo = $_message;
+					
+					if (version_compare($version, $_version) == -1) {
+						$isnewerversion = 1;
+					} else {
+						$isnewerversion = 0;
+					}
+				}
+				else
+				{
+					redirectTo($update_check_uri.'/pretty', NULL);
 				}
 			}
 			else
@@ -121,6 +133,7 @@ if($page == 'overview')
 		$lookfornewversion_lable = $lng['admin']['lookfornewversion']['clickhere'];
 		$lookfornewversion_link = htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
 		$lookfornewversion_addinfo = '';
+		$isnewerversion = 0;
 	}
 
 	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, $settings['panel']['decimal_places']);
@@ -177,8 +190,8 @@ if($page == 'overview')
 	$uptime_array = explode(" ", @file_get_contents("/proc/uptime"));
 
 	if(is_array($uptime_array)
-	   && isset($uptime_array[0])
-	   && is_numeric($uptime_array[0]))
+	&& isset($uptime_array[0])
+	&& is_numeric($uptime_array[0]))
 	{
 		// Some calculatioon to get a nicly formatted display
 
@@ -207,7 +220,7 @@ if($page == 'overview')
 elseif($page == 'change_password')
 {
 	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
+	&& $_POST['send'] == 'send')
 	{
 		$old_password = validate($_POST['old_password'], 'old password');
 
@@ -251,7 +264,7 @@ elseif($page == 'change_password')
 elseif($page == 'change_language')
 {
 	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
+	&& $_POST['send'] == 'send')
 	{
 		$def_language = validate($_POST['def_language'], 'default language');
 
