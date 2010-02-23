@@ -70,9 +70,9 @@ else
 			showSuccess($out);
 		} else {
 			if($recent['is_testing']) {
-				echo $version.':You already have the latest testing version of Froxlor installed.';
+				echo $version.'|You already have the latest testing version of Froxlor installed.';
 			} else {
-				echo $version.':You already have the latest version of Froxlor installed.';
+				echo $version.'|You already have the latest version of Froxlor installed.';
 			}
 		}
 	}
@@ -106,7 +106,7 @@ else
 
 			showWarning($out);
 		} else {
-			echo $ver.':'.$uri.':'.$msg;
+			echo $ver.'|'.$uri.'|'.$msg;
 		}
 	}
 }
