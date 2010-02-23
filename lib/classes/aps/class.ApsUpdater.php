@@ -204,7 +204,7 @@ class ApsUpdater extends ApsParser
 
 		$path = dirname($Url);
 		$file = urlencode(basename($Url));
-		$file_url = 'http://' . $this->RequestDomain . $file . '.aps' . $Downloads[0];
+		$file_url = 'http://' . $this->RequestDomain . $path . '/' . $file . '.aps' . $Downloads[0];
 
 		//get content from website url
 		$this->_cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Downloading '" . $file_url . "'");
