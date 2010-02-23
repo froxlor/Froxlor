@@ -27,15 +27,18 @@ if($page == 'overview')
 	 * has any version/dbversion in the database (don't know why)
 	 * so we have to set them both to run a correct upgrade
 	 */
-	if (!isset($settings['panel']['version'])
-	|| $settings['panel']['version'] == ''
-	) {
-		$settings['panel']['version'] = '1.4.2.1';
-	}
-	if (!isset($settings['system']['dbversion'])
-	|| $settings['system']['dbversion'] == ''
-	) {
-		$settings['system']['dbversion'] = 2;
+	if (!isFroxlor()) {
+		if (!isset($settings['panel']['version'])
+		|| $settings['panel']['version'] == ''
+		) {
+			$settings['panel']['version'] = '1.4.2.1';
+			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel','version','".$settings['panel']['version']."')");
+		}
+		if (!isset($settings['system']['dbversion'])
+		|| $settings['system']['dbversion'] == ''
+		) {
+			$settings['system']['dbversion'] = 2;
+		}
 	}
 
 	if(hasUpdates($version))
