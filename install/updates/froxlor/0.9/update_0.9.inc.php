@@ -20,13 +20,13 @@ if(isFroxlorVersion('0.9-r0'))
 	showUpdateStep("Updating from 0.9-r0 to 0.9-r1", false);
 	showUpdateStep("Performing database updates");
 	/*
-	 * add missing database-updates if necessary (old: update/update_database.php
+	 * add missing database-updates if necessary (old: update/update_database.php)
 	 */
-	if(!isset($settings['system']['dbversion']) || $settings['system']['dbversion'] < '1')
+	if(isset($settings['system']['dbversion']) && (int)$settings['system']['dbversion'] < 1)
 	{
 		$db->query("ALTER TABLE `panel_databases` ADD `dbserver` INT( 11 ) UNSIGNED NOT NULL default '0';");
 	}
-	if(!isset($settings['system']['dbversion']) || $settings['system']['dbversion'] < '2')
+	if(isset($settings['system']['dbversion']) && (int)$settings['system']['dbversion'] < 2)
 	{
 		$db->query("ALTER TABLE `panel_ipsandports` CHANGE `ssl_cert` `ssl_cert_file` VARCHAR( 255 ) NOT NULL,
 						ADD `ssl_key_file` VARCHAR( 255 ) NOT NULL, 

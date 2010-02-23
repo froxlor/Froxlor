@@ -21,20 +21,36 @@ require ("./lib/init.php");
 if($page == 'overview')
 {
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
-	
+
+	/**
+	 * this is a dirty hack but syscp 1.4.2.1 does not
+	 * has any version/dbversion in the database (don't know why)
+	 * so we have to set them both to run a correct upgrade
+	 */
+	if (!isset($settings['panel']['version'])
+	|| $settings['panel']['version'] == ''
+	) {
+		$settings['panel']['version'] = '1.4.2.1';
+	}
+	if (!isset($settings['system']['dbversion'])
+	|| $settings['system']['dbversion'] == ''
+	) {
+		$settings['system']['dbversion'] = 2;
+	}
+
 	if(hasUpdates($version))
 	{
 		if(isset($_POST['send'])
 		&& $_POST['send'] == 'send')
 		{
-	
+
 			eval("echo \"" . getTemplate("update/update_start") . "\";");
-			
+
 			include_once('./install/updatesql.php');
-			
+
 			$redirect_url = 'admin_index.php';
 			eval("echo \"" . getTemplate("update/update_end") . "\";");
-	
+
 			updateCounters();
 			inserttask('1');
 			@chmod('./lib/userdata.inc.php', 0440);
@@ -43,19 +59,19 @@ if($page == 'overview')
 		{
 			$current_version = $settings['panel']['version'];
 			$new_version = $version;
-			
+
 			$ui_text = $lng['update']['update_information'];
 			$ui_text = str_replace('%curversion', $current_version, $ui_text);
 			$ui_text = str_replace('%newversion', $new_version, $ui_text);
 			$update_information = $ui_text;
-			
+
 			eval("echo \"" . getTemplate("update/index") . "\";");
 		}
 	}
 	else
 	{
 		/*
-		 * @TODO version-webcheck check here 
+		 * @TODO version-webcheck check here
 		 */
 
 		$success_message = $lng['update']['noupdatesavail'];
@@ -63,5 +79,5 @@ if($page == 'overview')
 		eval("echo \"" . getTemplate("update/noupdatesavail") . "\";");
 	}
 }
-	
+
 ?>
