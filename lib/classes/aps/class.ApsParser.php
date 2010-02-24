@@ -37,6 +37,7 @@ class ApsParser
 	private $userinfo = array();
 	private $settings = array();
 	private $db = false;
+	private $RootDir = '';
 
 	/**
 	 * Constructor of class, setup basic variables needed by the class
@@ -51,6 +52,7 @@ class ApsParser
 		$this->settings = $settings;
 		$this->userinfo = $userinfo;
 		$this->db = $db;
+		$this->RootDir = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
 	}
 
 	/**
@@ -793,7 +795,8 @@ class ApsParser
 						}
 						else
 						{
-							$Errors[] = $lng['aps']['moveproblem'];
+							$moveproblem = str_replace('{$path}', $this->RootDir, $lng['aps']['moveproblem']);
+							$Errors[] = $moveproblem;
 						}
 					}
 
@@ -1688,10 +1691,11 @@ class ApsParser
 			$Error.= '<li>' . $lng['aps']['class_zip_missing'] . '</li>';
 		}
 
-		if(!is_writable('./temp/')
-		   || !is_writable('./packages/'))
+		if(!is_writable($this->RootDir.'temp/')
+		   || !is_writable($this->RootDir.'packages/'))
 		{
-			$Error.= '<li>' . $lng['aps']['dir_permissions'] . '</li>';
+			$dirpermission = str_replace('{$path}', $this->RootDir, $lng['aps']['dir_permissions']);
+			$Error.= '<li>' . $dirpermission . '</li>';
 		}
 
 		if($Error != '')
