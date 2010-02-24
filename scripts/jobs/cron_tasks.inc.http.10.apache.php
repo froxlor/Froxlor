@@ -61,6 +61,25 @@ class apache
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading apache');
 		safe_exec($this->settings['system']['apachereload_command']);
 	}
+	
+	/**
+	 * define a standard <Directory>-statement, bug #32
+	 */
+	private function _createStandardDirectoryEntry()
+	{
+		$vhosts_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/05_froxlor_dirfix_nofcgid.conf');
+
+		if(!isset($this->virtualhosts_data[$vhosts_filename]))
+		{
+			$this->virtualhosts_data[$vhosts_filename] = '';
+		}
+
+		$this->virtualhosts_data[$vhosts_filename].= '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";	
+		$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->settings['system']['documentroot_prefix'] . '">' . "\n";
+		$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+		$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+		$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
+	}
 
 	public function createIpPort()
 	{
@@ -79,7 +98,7 @@ class apache
 
 			fwrite($this->debugHandler, '  apache::createIpPort: creating ip/port settings for  ' . $ipport . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ipport);
-			$vhosts_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/10_syscp_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
+			$vhosts_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
 			if(!isset($this->virtualhosts_data[$vhosts_filename]))
 			{
@@ -149,9 +168,13 @@ class apache
 				$this->virtualhosts_data[$vhosts_filename].= '</VirtualHost>' . "\n";
 				$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted vhostcontainer');
 			}
-
 			unset($vhosts_filename);
 		}
+		
+		/**
+		 * bug #32
+		 */
+		$this->_createStandardDirectoryEntry();
 	}
 
 	/*
@@ -436,11 +459,11 @@ class apache
 	{
 		if($ssl_vhost === true)
 		{
-			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/20_syscp_ssl_vhost_' . $domain['domain'] . '.conf');
+			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/20_froxlor_ssl_vhost_' . $domain['domain'] . '.conf');
 		}
 		else
 		{
-			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/20_syscp_normal_vhost_' . $domain['domain'] . '.conf');
+			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/20_froxlor_normal_vhost_' . $domain['domain'] . '.conf');
 		}
 
 		return $vhost_filename;
@@ -646,7 +669,7 @@ class apache
 		{
 			$row_diroptions['path'] = makeCorrectDir($row_diroptions['path']);
 			mkDirWithCorrectOwnership($row_diroptions['customerroot'], $row_diroptions['path'], $row_diroptions['guid'], $row_diroptions['guid']);
-			$diroptions_filename = makeCorrectFile($this->settings['system']['apacheconf_diroptions'] . '/40_syscp_diroption_' . md5($row_diroptions['path']) . '.conf');
+			$diroptions_filename = makeCorrectFile($this->settings['system']['apacheconf_diroptions'] . '/40_froxlor_diroption_' . md5($row_diroptions['path']) . '.conf');
 
 			if(!isset($this->diroptions_data[$diroptions_filename]))
 			{
@@ -891,7 +914,7 @@ class apache
 				if($vhost_filename != '.'
 				   && $vhost_filename != '..'
 				   && !in_array($vhost_filename, $this->known_vhostfilenames)
-				   && preg_match('/^(10|20|30)_syscp_(ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
+				   && preg_match('/^(05|10|20|30)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
 				{
 					fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking ' . $vhost_filename . "\n");
@@ -922,7 +945,7 @@ class apache
 				if($diroptions_filename != '.'
 				   && $diroptions_filename != '..'
 				   && !in_array($diroptions_filename, $this->known_diroptionsfilenames)
-				   && preg_match('/^40_syscp_diroption_(.+)\.conf$/', $diroptions_filename)
+				   && preg_match('/^40_(froxlor|syscp)_diroption_(.+)\.conf$/', $diroptions_filename)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_diroptions'] . '/' . $diroptions_filename)))
 				{
 					fwrite($this->debugHandler, '  apache::wipeOutOldDiroptionConfigs: unlinking ' . $diroptions_filename . "\n");
