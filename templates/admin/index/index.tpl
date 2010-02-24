@@ -129,10 +129,15 @@ $header
 				<td class="field_display"><a href="$lookfornewversion_link">$lookfornewversion_lable</a></td>
 			</if>
 		</tr>
-		<if $lookfornewversion_addinfo != ''>
+		<if $isnewerversion != 0 >
 		<tr>
-			<td class="field_name_border_left" colspan="2"><strong>$lookfornewversion_addinfo</strong></td>
+			<td class="field_name_border_left" colspan="2"><strong>{$lng['admin']['newerversionavailable']}</strong></td>
 		</tr>
+			<if $lookfornewversion_addinfo != ''>
+			<tr>
+				<td class="field_name_border_left" colspan="2">$lookfornewversion_addinfo</td>
+			</tr>
+			</if>
 		</if>
 	</table>
 	<br />

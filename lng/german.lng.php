@@ -1276,4 +1276,8 @@ $lng['admin']['accountdata'] = 'Benutzerdaten';
 $lng['admin']['contactdata'] = 'Kontaktdaten';
 $lng['admin']['servicedata'] = 'Dienstleistungsdaten';
 
+// ADDED IN FROXLOR 0.9.2
+
+$lng['admin']['newerversionavailable'] = 'Eine neuere Version von Froxlor wurde ver&ouml;ffentlicht';
+
 ?>
