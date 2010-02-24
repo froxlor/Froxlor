@@ -248,6 +248,7 @@ return Array(
 							($settings['system']['webserver'] == 'lighttpd' ? 'etc_lighttpd_froxlor-awstats.conf' : 'etc_apache_vhosts_05_awstats.conf') => ($settings['system']['webserver'] == 'lighttpd' ? '/etc/lighttpd/froxlor-awstats.conf' : '/etc/apache2/sites-enabled/05_awstats.conf')
 						),
 						'commands' => Array(
+							'apt-get install awstats',
 							($settings['system']['webserver'] == 'lighttpd' ? 'echo "include \"froxlor-awstats.conf\"" >> /etc/lighttpd/lighttpd.conf' : '')
 						),
 						'restart' => Array(
