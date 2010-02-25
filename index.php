@@ -226,7 +226,7 @@ if($action == 'forgotpwd')
 
 		if($db->num_rows() == 0)
 		{
-			$sql = "SELECT `adminid`, `firstname`, `name`, `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "`
+			$sql = "SELECT `adminid`, `name`, `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "`
 				WHERE `loginname`='" . $db->escape($loginname) . "'
 				AND `email`='" . $db->escape($email) . "'";
 			$result = $db->query($sql);
@@ -292,7 +292,7 @@ if($action == 'forgotpwd')
 				$message = $lng['login']['usernotfound'];
 			}
 
-			unset($user, $adminchecked);
+			unset($user);
 		}
 		else
 		{
@@ -304,6 +304,12 @@ if($action == 'forgotpwd')
 		$message = '';
 	}
 
+	if($adminchecked)
+		if($settings['panel']['allow_preset_admin'] != '1')
+		{
+			$message = $lng['pwdreminder']['notallowed'];
+			unset ($adminchecked);
+		}
 	if($settings['panel']['allow_preset'] != '1')
 	{
 		$message = $lng['pwdreminder']['notallowed'];
