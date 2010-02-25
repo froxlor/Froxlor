@@ -155,8 +155,10 @@ $settings = loadSettings(&$settings_data, &$db);
 /*
  * when upgrading from syscp, the header-graphic gets lost
  */
-if(!isset($settings['admin']['froxlor_graphic'])) {
-	$settings['admin']['froxlor_graphic'] = $settings['admin']['syscp_graphic'];
+if(!isset($settings['admin']['froxlor_graphic'])
+	|| $settings['admin']['froxlor_graphic'] == ''
+) {
+	$settings['admin']['froxlor_graphic'] = ($settings['admin']['syscp_graphic'] != '') ? $settings['admin']['syscp_graphic'] : 'images/header.gif';
 }
 
 /**
