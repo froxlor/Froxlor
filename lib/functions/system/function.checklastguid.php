@@ -64,7 +64,7 @@ function checkLastGuid($froxlor_guid = 0)
 						continue;
 					}
 
-					$guid = (int)$group[2];
+					$guid = isset($group[2]) ? (int)$group[2] : 0;
 
 					if($guid > $froxlor_guid)
 					{
@@ -76,6 +76,7 @@ function checkLastGuid($froxlor_guid = 0)
 				{
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Updating froxlor last guid to '.$update_to_guid);
 					saveSetting('system', 'lastguid', $update_to_guid);
+					$settings['system']['lastguid'] = $update_to_guid;
 				}
 			}
 			else

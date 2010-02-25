@@ -843,7 +843,7 @@ class ApsParser
 		{
 			//split all keywords
 
-			$Elements = split('[ ,;]', trim($_GET['keyword']));
+			$Elements = preg_split('/[ ,;]/', trim($_GET['keyword']));
 
 			if(count($Elements) == 1
 			   && strlen($Elements[0]) == 0)

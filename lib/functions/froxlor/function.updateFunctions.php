@@ -138,22 +138,22 @@ function showUpdateStep($task = null, $needs_status = true)
  * 
  * @return	string		formatted output and log-entry
  */
-function lastStepStatus($status = -1)
+function lastStepStatus($status = -1, $message = '')
 {
 	global $updatelog;
 	
 	switch($status)
 	{
 		case 0:
-			$status_sign = '[OK]';
+			$status_sign = ($message != '') ? '['.$message.']' : '[OK]';
 			$status_color = '1dcd00';
 			break;
 		case 1:
-			$status_sign = '[??]';
+			$status_sign = ($message != '') ? '['.$message.']' : '[??]';
 			$status_color = 'db7100';			
 			break;
 		case 2:
-			$status_sign = '[!!]';
+			$status_sign = ($message != '') ? '['.$message.']' : '[!!]';
 			$status_color = 'ff0000';			
 			break;
 		default:

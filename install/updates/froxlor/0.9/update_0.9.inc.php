@@ -292,9 +292,18 @@ if(isFroxlorVersion('0.9.1'))
 	showUpdateStep("Updating from 0.9.1 to 0.9.2", false);
 	
 	showUpdateStep("Checking whether last-system-guid is sane");
-	checkLastGuid($settings['system']['lastguid']);
 	
-	lastStepStatus(0);
+	$result = $db->query_first("SELECT MAX(`guid`) as `latestguid` FROM `".TABLE_PANEL_CUSTOMERS."`");
+	
+	if (isset($result['latestguid']) 
+		&& (int)$result['latestguid'] > 0 
+		&& $result['latestguid'] != $settings['system']['lastguid']
+	) {
+		checkLastGuid($result['latestguid']);
+		lastStepStatus(1, 'fixed');
+	} else {
+		lastStepStatus(0);
+	}
 	updateToVersion('0.9.2');
 }
 
