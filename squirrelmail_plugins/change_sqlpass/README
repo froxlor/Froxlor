@@ -1,0 +1,25 @@
+ -----------------------------------------------------------------------
+ Configuration-file for the change_sqlpass Plugin for Squirrelmail
+ -----------------------------------------------------------------------
+
+ This configuration file is for the change_sqlpass plugin for 
+ Squirrelmail and allows Froxlor users to change their e-mail 
+ password within Squirrelmail.
+
+ -----------------------------------------------------------------------
+
+ You only have to edit one thing:
+
+ Look for:
+
+ $csp_dsn = 'mysql://froxlor:MYSQL_PASSWORD@localhost/froxlor';
+
+ and replace MYSQL_PASSWORD with the password for the froxlor-database-user.
+
+ 
+ If you do not want plaintext-passwords to be stored in the database,
+ edit $password_update_queries and remove "password = %5, "
+ 
+ -----------------------------------------------------------------------
+ 2010, the Froxlor Team
+ http://www.froxlor.org/

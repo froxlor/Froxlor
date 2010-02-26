@@ -1,0 +1,258 @@
+<?php
+
+/**
+  * SquirrelMail Change SQL Password Plugin
+  * Copyright (C) 2001-2002 Tyler Akins
+  *               2002 Thijs Kinkhorst <kink@users.sourceforge.net>
+  *               2002-2005 Paul Lesneiwski <paul@openguild.net>
+  * This program is licensed under GPL. See COPYING for details
+  *
+  * @package plugins
+  * @subpackage Change SQL Password
+  *
+  */
+
+
+   // Global Variables, don't touch these unless you want to break the plugin
+   //
+   global $csp_dsn, $password_update_queries, $lookup_password_query,
+          $force_change_password_check_query, $password_encryption,
+          $csp_salt_query, $csp_salt_static, $csp_secure_port,
+          $csp_non_standard_http_port, $csp_delimiter, $csp_debug,
+          $min_password_length, $max_password_length, $include_digit_in_password,
+          $include_uppercase_letter_in_password, $include_lowercase_letter_in_password,
+          $include_nonalphanumeric_in_password;
+
+
+
+   // csp_dsn
+   //
+   // Theoretically, any SQL database supported by Pear should be supported
+   // here.  The DSN (data source name) must contain the information needed
+   // to connect to your database backend. A MySQL example is included below.
+   // For more details about DSN syntax and list of supported database types,
+   // please see:
+   //   http://pear.php.net/manual/en/package.database.db.intro-dsn.php
+   //
+   $csp_dsn = 'mysql://froxlor:MYSQL_PASSWORD@localhost/froxlor';
+
+
+
+   // lookup_password_query
+   //
+   // This plugin will always verify the user's old password
+   // against their login password, but an extra check can also
+   // be done against the database for more security if you
+   // desire.  If you do not need the extra password check,
+   // make sure this setting is empty.
+   //
+   // This is a query that returns a positive value if a user
+   // and password pair are found in the database.
+   //
+   // This query should return one value (one row, one column), the
+   // value being ideally a one or a zero, simply indicating that 
+   // the user/password pair does in fact exist in the database.
+   //
+   //   %1 in this query will be replaced with the full username
+   //      (including domain), such as "jose@example.com"
+   //   %2 in this query will be replaced with the username (without
+   //      any domain portion), such as "jose"
+   //   %3 in this query will be replaced with the domain name,
+   //      such as "example.com"
+   //   %4 in this query will be replaced with the current (old)
+   //      password in whatever encryption format is needed per other
+   //      plugin configuration settings (Note that the syntax of
+   //      the password will be provided depending on your encryption
+   //      choices, so you NEVER need to provide quotes around this
+   //      value in the query here.)
+   //   %5 in this query will be replaced with the current (old)
+   //      password in unencrypted plain text.  If you do not use any
+   //      password encryption, %4 and %5 will be the same values,
+   //      except %4 will have double quotes around it and %5 will not.
+   //
+   //$lookup_password_query = '';
+   // TERRIBLE SECURITY: $lookup_password_query = 'SELECT count(*) FROM users WHERE username = "%1" AND plain_password = "%5"';
+   $lookup_password_query = 'SELECT count(*) FROM mail_users AS a WHERE a.username = "%1" AND a.password_enc = %4';
+
+
+
+   // password_update_queries
+   //
+   // An array of SQL queries that will all be executed 
+   // whenever a password change attempt is made.
+   //
+   // Any number of queries may be included here.
+   // The queries will be executed in the order given here.
+   //
+   //   %1 in all queries will be replaced with the full username
+   //      (including domain), such as "jose@example.com" 
+   //   %2 in all queries will be replaced with the username (without 
+   //      any domain portion), such as "jose"
+   //   %3 in all queries will be replaced with the domain name, 
+   //      such as "example.com"
+   //   %4 in all queries will be replaced with the new password
+   //      in whatever encryption format is needed per other
+   //      plugin configuration settings (Note that the syntax of 
+   //      the password will be provided depending on your 
+   //      encryption choices, so you NEVER need to provide quotes 
+   //      around this value in the queries here.)
+   //   %5 in all queries will be replaced with the new password
+   //      in unencrypted plain text - BEWARE!  If you do not use
+   //      any password encryption, %4 and %5 will be the same 
+   //      values, except %4 will have double quotes around it
+   //      and %5 will not.
+   //
+   $password_update_queries = array('UPDATE mail_users SET password = %5, password_enc = %4 WHERE username = "%1"');
+
+
+
+   // force_change_password_check_query
+   //
+   // A query that checks for a flag that indicates if a user
+   // should be forced to change their password.  This query
+   // should return one value (one row, one column) which is
+   // zero if the user does NOT need to change their password, 
+   // or one if the user should be forced to change it now. 
+   //
+   // This setting should be an empty string if you do not wish
+   // to enable this functionality.
+   //
+   //   %1 in this query will be replaced with the full username
+   //      (including domain), such as "jose@example.com" 
+   //   %2 in this query will be replaced with the username (without 
+   //      any domain portion), such as "jose"
+   //   %3 in this query will be replaced with the domain name, 
+   //      such as "example.com"
+   //
+   //$force_change_password_check_query = 'SELECT IF(force_change_pwd = "yes", 1, 0) FROM users WHERE username = "%1"';
+   //$force_change_password_check_query = 'SELECT force_change_pwd FROM users WHERE username = "%1"';
+   $force_change_password_check_query = '';
+
+
+
+   // password_encryption
+   //
+   // What encryption method do you use to store passwords
+   // in your database?  Please use one of the following,
+   // exactly as you see it:
+   //
+   //   NONE          Passwords are stored as plain text only
+   //   MYSQLPWD      Passwords are stored using the MySQL password() function
+   //   MYSQLENCRYPT  Passwords are stored using the MySQL encrypt() function 
+   //   PHPCRYPT      Passwords are stored using the PHP crypt() function 
+   //   MD5CRYPT      Passwords are stored using encrypted MD5 algorithm
+   //   MD5           Passwords are stored as MD5 hash
+   //
+   $password_encryption = 'MYSQLENCRYPT';
+
+
+
+   // csp_salt_query
+   // csp_salt_static
+   //
+   // Encryption types that need a salt need to know where to get
+   // that salt.  If you have a constant, known salt value, you
+   // should define it in $csp_salt_static.  Otherwise, leave that
+   // value empty and define a value for the $csp_salt_query.
+   //
+   // Leave both values empty if you do not need (or use) salts
+   // to encrypt your passwords.
+   //
+   // The query should return one value (one row, one column) which 
+   // is the salt value for the current user's password.  This
+   // query is ignored if $csp_salt_static is anything but empty.
+   //
+   //   %1 in this query will be replaced with the full username
+   //      (including domain), such as "jose@example.com"
+   //   %2 in this query will be replaced with the username (without
+   //      any domain portion), such as "jose"
+   //   %3 in this query will be replaced with the domain name,
+   //      such as "example.com"
+   //
+   //$csp_salt_static = 'LEFT(crypt_password, 2)';
+   //$csp_salt_static = '"a4"';  // use this format with MYSQLENCRYPT
+   //$csp_salt_static = '$2$blowsomefish$';  // use this format with PHPCRYPT
+   $csp_salt_static = '';
+
+   //$csp_salt_query = 'SELECT SUBSTRING_INDEX(crypt_password, '$', 1) FROM users WHERE username = "%1"';
+   //$csp_salt_query = 'SELECT SUBSTRING(crypt_password, (LENGTH(SUBSTRING_INDEX(crypt_password, '$', 2)) + 2)) FROM users WHERE username = "%1"';
+   //$csp_salt_query = 'SELECT salt FROM users WHERE username = "%1"';
+   $csp_salt_query = '';
+
+
+
+   // csp_secure_port
+   // 
+   // You may ensure that SSL encryption is used during password 
+   // change by setting this to the port that your HTTPS is served
+   // on (443 is typical).  Set to zero if you do not wish to force
+   // an HTTPS connection when users are changing their passwords.
+   //
+   // You may override this value for certain domains, users, or
+   // service levels through the Virtual Host Login (vlogin) plugin 
+   // by setting a value(s) for $vlogin_csp_secure_port in the vlogin
+   // configuration.
+   //
+   $csp_secure_port = 0;
+   //$csp_secure_port = 443;
+
+
+
+   // csp_non_standard_http_port
+   //
+   // If you serve standard HTTP web requests on a non-standard
+   // port (anything other than port 80), you should specify that
+   // port number here.  Set to zero otherwise.
+   //
+   // You may override this value for certain domains, users, or
+   // service levels through the Virtual Host Login (vlogin) plugin 
+   // by setting a value(s) for $vlogin_csp_non_standard_http_port 
+   // in the vlogin configuration.
+   //
+   //$csp_non_standard_http_port = 8080;
+   $csp_non_standard_http_port = 0;
+
+
+
+   // min_password_length
+   // max_password_length
+   // include_digit_in_password
+   // include_uppercase_letter_in_password
+   // include_lowercase_letter_in_password
+   // include_nonalphanumeric_in_password
+   //
+   // You can set the minimum and maximum password lengths that
+   // you accept or leave those settings as zero to indicate that
+   // no limit should be applied.
+   //
+   // Turn on any of the other settings here to check that the
+   // new password contains at least one digit, upper case letter,
+   // lower case letter and/or one non-alphanumeric character.
+   //
+   $min_password_length = 6;
+   $max_password_length = 0;
+   $include_digit_in_password = 0;
+   $include_uppercase_letter_in_password = 0;
+   $include_lowercase_letter_in_password = 0;
+   $include_nonalphanumeric_in_password = 0;
+
+
+
+   // csp_delimiter
+   //
+   // if your system has usernames with something other than
+   // an "@" sign separating the user and domain portion,
+   // specify that character here
+   //
+   //$csp_delimiter = '|';
+   $csp_delimiter = '@';
+   
+
+
+   // debug mode
+   //
+   $csp_debug = 0;
+
+
+
+?>
