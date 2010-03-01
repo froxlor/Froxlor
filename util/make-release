@@ -1,0 +1,51 @@
+#!/bin/bash
+# $1 = version with dots
+
+set -e
+
+WORKDIR="./"
+
+if [ -z $1 ]; then
+    echo You need to specify the version to be released:
+    echo make-release 0.9.5
+    exit
+fi
+
+echo == Releasing version $1 ==
+
+echo -- making dir --
+rm -rf $WORKDIR/$1
+mkdir -p $WORKDIR/$1
+echo -- cding to dir --
+cd $WORKDIR/$1
+
+echo -- exporting svn --
+svn export https://svn.froxlor.org/tags/$1 froxlor-$1
+
+echo -- cding to checkout --
+cd froxlor-$1
+
+echo -- removing .anything files \(except .ht*\) --
+find -iregex '.*/\.[^ht].*' -exec rm -rf {} \;
+
+echo -- setting general permissions --
+find -exec chmod ugo+r,u+w,go-w {} \;
+
+echo -- setting general file permissions --
+find -type f -exec chmod ugo-x {} \;
+
+echo -- setting general directory permissions --
+find -type d  -exec chmod ugo+x {} \;
+
+echo -- setting +w on special directories --
+chmod ug+w ./temp ./packages
+
+echo -- cding up --
+cd ..
+
+echo -- making .tar.gz --
+tar cvf froxlor-$1.tar froxlor-$1
+gzip -9 froxlor-$1.tar
+md5sum froxlor-$1.tar.gz > froxlor-$1.tar.gz.md5
+sha1sum froxlor-$1.tar.gz > froxlor-$1.tar.gz.sha1
+echo -- done --
