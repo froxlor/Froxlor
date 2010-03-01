@@ -95,6 +95,14 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
+					'dependency' => array(
+							'fieldname' => 'panel_allow_preset_admin',
+							'fielddata' => array(
+								'settinggroup' => 'panel',
+								'varname' => 'allow_preset_admin',
+							),
+							'onlyif' => 0
+						)
 					),
 				'panel_allow_preset_admin' => array(
 					'label' => $lng['serversettings']['allow_password_reset_admin'],
@@ -103,6 +111,14 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
+					'dependency' => array(
+							'fieldname' => 'panel_allow_preset',
+							'fielddata' => array(
+								'settinggroup' => 'panel',
+								'varname' => 'allow_preset',
+							),
+							'onlyif' => 1
+						)
 					),
 				),
 			),

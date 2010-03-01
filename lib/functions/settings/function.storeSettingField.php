@@ -30,6 +30,17 @@ function storeSettingField($fieldname, $fielddata, $newfieldvalue)
 			{
 				toggleCronStatus($fielddata['cronmodule'], $newfieldvalue);
 			}
+			
+			/*
+			 * satisfy dependencies
+			 */
+			if(isset($fielddata['dependency']) && is_array($fielddata['dependency']))
+			{
+				if((int)$fielddata['dependency']['onlyif'] == (int)$newfieldvalue)
+				{
+					storeSettingField($fielddata['dependency']['fieldname'], $fielddata['dependency']['fielddata'], $newfieldvalue);
+				}
+			}
 
 			return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
 		}

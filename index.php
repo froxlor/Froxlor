@@ -305,14 +305,19 @@ if($action == 'forgotpwd')
 	}
 
 	if($adminchecked)
+	{
 		if($settings['panel']['allow_preset_admin'] != '1')
 		{
 			$message = $lng['pwdreminder']['notallowed'];
 			unset ($adminchecked);
 		}
-	if($settings['panel']['allow_preset'] != '1')
+	}
+	else
 	{
-		$message = $lng['pwdreminder']['notallowed'];
+		if($settings['panel']['allow_preset'] != '1')
+		{
+			$message = $lng['pwdreminder']['notallowed'];
+		}
 	}
 
 	eval("echo \"" . getTemplate("fpwd") . "\";");
