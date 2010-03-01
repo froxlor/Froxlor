@@ -32,7 +32,7 @@ fwrite($debugHandler, 'Cronfiles have been included' . "\n");
  * so users in the database don't conflict with system users
  */
 $cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
-checkLastGuid($settings['system']['lastguid']);
+checkLastGuid();
 
 /*
  * shutdown cron

@@ -299,7 +299,7 @@ if(isFroxlorVersion('0.9.1'))
 		&& (int)$result['latestguid'] > 0 
 		&& $result['latestguid'] != $settings['system']['lastguid']
 	) {
-		checkLastGuid($result['latestguid']);
+		checkLastGuid();
 		lastStepStatus(1, 'fixed');
 	} else {
 		lastStepStatus(0);
