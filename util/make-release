@@ -20,10 +20,10 @@ echo -- cding to dir --
 cd $WORKDIR/$1
 
 echo -- exporting svn --
-svn export https://svn.froxlor.org/tags/$1 froxlor-$1
+svn export https://svn.froxlor.org/tags/$1 froxlor
 
 echo -- cding to checkout --
-cd froxlor-$1
+cd froxlor
 
 echo -- removing .anything files \(except .ht*\) --
 find -iregex '.*/\.[^ht].*' -exec rm -rf {} \;
@@ -44,7 +44,7 @@ echo -- cding up --
 cd ..
 
 echo -- making .tar.gz --
-tar cvf froxlor-$1.tar froxlor-$1
+tar cvf froxlor-$1.tar froxlor
 gzip -9 froxlor-$1.tar
 md5sum froxlor-$1.tar.gz > froxlor-$1.tar.gz.md5
 sha1sum froxlor-$1.tar.gz > froxlor-$1.tar.gz.sha1
