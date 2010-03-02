@@ -287,6 +287,10 @@ src_install() {
 	fperms 0750 /var/customers/mail
 	dodir /var/customers/logs
 
+	dodir /usr/share/${PN}
+	cp "${FILESDIR}/domainkey.conf" "${D}/usr/share/${PN}"
+	cp "${FILESDIR}/froxlor.cron" "${D}/usr/share/${PN}"
+	cp "${FILESDIR}/php-fcgi-starter" "${D}/usr/share/${PN}"
 }
 
 pkg_postinst() {
@@ -733,7 +737,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 			mkdir -p "${ROOT}/var/www/froxlor/php-fcgi-script/tmp"
 			chmod 0750 "${ROOT}/var/www/froxlor/php-fcgi-script/tmp"
 			touch "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
-			echo "${FILESDIR}/php-fcgi-starter" >> "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
+			echo "${ROOT}/usr/share/${PN}/php-fcgi-starter" >> "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
 			chown froxlor:froxlor -R "${ROOT}/var/www/froxlor/php-fcgi-script" || die "Unable to fix owner for php-fcgi-script folder"
 			chmod 0750 "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
 			chattr +i "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
@@ -884,8 +888,8 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	chmod 0600 "${ROOT}/etc/proftpd/proftpd.conf"
 
 	einfo "Configuring Gentoo-Froxlor cronjob ..."
-	exeinto /etc/cron.d
-	newexe "${FILESDIR}/froxlor.cron" froxlor
+	exeinto "${ROOT}/etc/cron.d"
+	newexe "${ROOT}/usr/share/{PN}/froxlor.cron" froxlor
 
 	if ! useq dovecot ; then
 		einfo "Configuring Courier-IMAP ..."
@@ -1047,7 +1051,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	fi
 
 	if useq domainkey && useq bind ; then
-		echo "${FILESDIR}/domainkey.conf" >> "${ROOT}/etc/postfix/main.cf"
+		echo "${ROOT}/usr/share/${PN}/domainkey.conf" >> "${ROOT}/etc/postfix/main.cf"
 	fi
 
 	# Automatical Bind configuration, if Bind is installed
