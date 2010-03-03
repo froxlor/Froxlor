@@ -1,0 +1,19 @@
+# Copyright 1999-2010 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License v2
+# $Header$
+# This file contains descriptions of local USE flags, and the ebuilds which
+# contain them.
+# Keep it sorted (use "LC_ALL=C sort -t: -k1,1 -k2 | LC_ALL=C sort -s -t/ -k1,1")
+# Declaring the locale for the sort is critical to avoid flapping.
+
+www-apps/froxlor:aps - Support for the Application Packaging Standard
+www-apps/froxlor:autoresponder - E-Mail Autoresponder Support for Customers
+www-apps/froxlor:bind - Adds support for writing BIND configuration files
+www-apps/froxlor:domainkey - Adds support for writing DKIM DNS-Records and Filters for them
+www-apps/froxlor:dovecot - use Dovecot instead of Courier
+www-apps/froxlor:fcgid - Adds support for FCGId
+www-apps/froxlor:lighttpd - use ligHTTPd instead of Apache
+www-apps/froxlor:log - Adds support for logging actions in the Panel
+www-apps/froxlor:mailquota - Adds support for Quotas for the maildirs of Customers
+www-apps/froxlor:realtime - Executes Cron Tasks in Realtime
+www-apps/froxlor:tickets - Adds support for the Ticket System
