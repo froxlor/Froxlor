@@ -102,10 +102,10 @@ return Array(
 						),
 						'files' => Array(
 							'etc_periodic.conf' => '/etc/periodic.conf',
-							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
-							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
-							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
-							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf'
+							'usr_local_etc_postfix_main.cf' => '/usr/local/etc/postfix/main.cf',
+							'usr_local_etc_postfix_mysql-virtual_alias_maps.cf' => '/usr/local/etc/postfix/mysql-virtual_alias_maps.cf',
+							'usr_local_etc_postfix_mysql-virtual_mailbox_domains.cf' => '/usr/local/etc/postfix/mysql-virtual_mailbox_domains.cf',
+							'usr_local_etc_postfix_mysql-virtual_mailbox_maps.cf' => '/usr/local/etc/postfix/mysql-virtual_mailbox_maps.cf'
 						),
 						'restart' => Array(
 							'sh /usr/local/etc/rc.d/postfix restart'
