@@ -387,10 +387,14 @@ class apache
 		{
 			// The normal access/error - logging is enabled
 			$error_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-error.log');
+			// Create the logfile if it does not exist (fixes #46)
+			touch($error_log);
 			chown($error_log, $this->settings['system']['httpuser']);
 			chgrp($error_log, $this->settings['system']['httpgroup']);
 			
 			$access_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
+			// Create the logfile if it does not exist (fixes #46)
+			touch($access_log);
 			chown($access_log, $this->settings['system']['httpuser']);
 			chgrp($access_log, $this->settings['system']['httpgroup']);
 					
