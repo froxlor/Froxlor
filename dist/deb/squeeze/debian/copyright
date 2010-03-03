@@ -1,0 +1,31 @@
+This work was packaged for Debian by:
+
+    Froxlor Release Team <release@froxlor.org> on Mon, 15 Feb 2010 02:23:46 -0500
+
+It was downloaded from:
+
+    <url://www.froxlor.org>
+
+Upstream Author(s):
+
+    Froxlor Release Team <release@froxlor.org>
+
+Copyright:
+
+    <Copyright (C) 2009-2010 The Froxlor Team>
+
+License:
+
+    This package is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as
+    published by the Free Software Foundation.
+
+On Debian systems, the complete text of the GNU General
+License version 2 can be found in `/usr/share/common-licenses/GPL-2'.
+
+The Debian packaging is:
+
+    Copyright (C) 2010 Robert Förster <dessa@froxlor.org>
+
+and is licensed under the GPL version 2,
+see "/usr/share/common-licenses/GPL-2".
