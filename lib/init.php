@@ -416,6 +416,6 @@ if($page == '')
  */
 
 $mail = new PHPMailer();
-$mail->From = $settings['panel']['adminmail'];
-
+$mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
+ 
 ?>

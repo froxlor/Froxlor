@@ -427,23 +427,24 @@ elseif($page == 'accounts')
 						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['pop_success']['subject']), $replace_arr));
 						$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$userinfo['adminid'] . '\' AND `language`=\'' . $db->escape($userinfo['def_language']) . '\' AND `templategroup`=\'mails\' AND `varname`=\'pop_success_mailbody\'');
 						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['pop_success']['mailbody']), $replace_arr));
-						$mail->From = $admin['email'];
-						$mail->FromName = getCorrectUserSalutation($admin);
-						$mail->Subject = $mail_subject;
-						$mail->Body = $mail_body;
-						$mail->AddAddress($email_full, getCorrectUserSalutation($userinfo));
+						
+						$_mailerror = false;
+						try {
+							$mail->SetFrom($admin['email'], getCorrectUserSalutation($admin));
+							$mail->Subject = $mail_subject;
+							$mail->AltBody = $mail_body;
+							$mail->MsgHTML($mail_body);
+							$mail->AddAddress($email_full, getCorrectUserSalutation($userinfo));
+							$mail->Send();
+						} catch(phpmailerException $e) {
+							$mailerr_msg = $e->errorMessage();
+							$_mailerror = true;
+						} catch (Exception $e) {
+							$mailerr_msg = $e->getMessage();
+							$_mailerror = true;
+						}
 
-						if(!$mail->Send())
-						{
-							if($mail->ErrorInfo != '')
-							{
-								$mailerr_msg = $mail->ErrorInfo;
-							}
-							else
-							{
-								$mailerr_msg = $email;
-							}
-
+						if ($_mailerror) {	
 							$log->logAction(USR_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 							standard_error('errorsendingmail', $email);
 						}
@@ -457,23 +458,24 @@ elseif($page == 'accounts')
 							$mail_subject = replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['pop_success_alternative']['subject']), $replace_arr);
 							$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$userinfo['adminid'] . '\' AND `language`=\'' . $db->escape($userinfo['def_language']) . '\' AND `templategroup`=\'mails\' AND `varname`=\'pop_success_alternative_mailbody\'');
 							$mail_body = replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['pop_success_alternative']['mailbody']), $replace_arr);
-							$mail->From = $admin['email'];
-							$mail->FromName = getCorrectUserSalutation($admin);
-							$mail->Subject = $mail_subject;
-							$mail->Body = $mail_body;
-							$mail->AddAddress($idna_convert->encode($alternative_email), getCorrectUserSalutation($userinfo));
-
-							if(!$mail->Send())
-							{
-								if($mail->ErrorInfo != '')
-								{
-									$mailerr_msg = $mail->ErrorInfo;
-								}
-								else
-								{
-									$mailerr_msg = $alternative_email;
-								}
-
+							
+							$_mailerror = false;
+							try {
+								$mail->SetFrom($admin['email'], getCorrectUserSalutation($admin));
+								$mail->Subject = $mail_subject;
+								$mail->AltBody = $mail_body;
+								$mail->MsgHTML($mail_body);
+								$mail->AddAddress($idna_convert->encode($alternative_email), getCorrectUserSalutation($userinfo));
+								$mail->Send();
+							} catch(phpmailerException $e) {
+								$mailerr_msg = $e->errorMessage();
+								$_mailerror = true;
+							} catch (Exception $e) {
+								$mailerr_msg = $e->getMessage();
+								$_mailerror = true;
+							}
+	
+							if ($_mailerror) {	
 								$log->logAction(USR_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 								standard_error(array('errorsendingmail', $alternative_email));
 							}

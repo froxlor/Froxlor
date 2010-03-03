@@ -622,23 +622,23 @@ if($page == 'customers'
 						$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$userinfo['adminid'] . '\' AND `language`=\'' . $db->escape($def_language) . '\' AND `templategroup`=\'mails\' AND `varname`=\'createcustomer_mailbody\'');
 						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['createcustomer']['mailbody']), $replace_arr));
 
-						$mail->From = $userinfo['email'];
-						$mail->FromName = $userinfo['name'];
-						$mail->Subject = $mail_subject;
-						$mail->Body = $mail_body;
-						$mail->AddAddress($email, getCorrectUserSalutation(array('firstname' => $firstname, 'name' => $name, 'company' => $company)));
+						$_mailerror = false;
+						try {
+							$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
+							$mail->Subject = $mail_subject;
+							$mail->AltBody = $mail_body;
+							$mail->MsgHTML($mail_body);
+							$mail->AddAddress($email, getCorrectUserSalutation(array('firstname' => $firstname, 'name' => $name, 'company' => $company)));
+							$mail->Send();
+						} catch(phpmailerException $e) {
+							$mailerr_msg = $e->errorMessage();
+							$_mailerror = true;
+						} catch (Exception $e) {
+							$mailerr_msg = $e->getMessage();
+							$_mailerror = true;
+						}
 
-						if(!$mail->Send())
-						{
-							if($mail->ErrorInfo != '')
-							{
-								$mailerr_msg = $mail->ErrorInfo;
-							}
-							else
-							{
-								$mailerr_msg = $email;
-							}
-
+						if ($_mailerror) {
 							$log->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 							standard_error('errorsendingmail', $email);
 						}

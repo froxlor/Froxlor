@@ -286,14 +286,25 @@ class ticket
 
 		if($customerid != - 1)
 		{
-			$mail->From = $this->settings['ticket']['noreply_email'];
-			$mail->FromName = $this->settings['ticket']['noreply_name'];
-			$mail->Subject = $mail_subject;
-			$mail->Body = $mail_body;
-			$mail->AddAddress($usr['email'], $usr['firstname'] . ' ' . $usr['name']);
-
-			if(!$mail->Send())
-			{
+			$_mailerror = false;
+			try {
+				$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
+				$mail->Subject = $mail_subject;
+				$mail->AltBody = $mail_body;
+				$mail->MsgHTML($mail_body);
+				$mail->AddAddress($usr['email'], $usr['firstname'] . ' ' . $usr['name']);
+				$mail->Send();
+			} catch(phpmailerException $e) {
+				$mailerr_msg = $e->errorMessage();
+				$_mailerror = true;
+			} catch (Exception $e) {
+				$mailerr_msg = $e->getMessage();
+				$_mailerror = true;
+			}
+	
+			if ($_mailerror) {
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->db, $this->settings);
+				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 				standard_error(array('errorsendingmail', $usr['email']));
 			}
 
@@ -302,14 +313,26 @@ class ticket
 		else
 		{
 			$admin = $this->db->query_first("SELECT `name`, email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`='" . (int)$this->userinfo['adminid'] . "'");
-			$mail->From = $this->settings['ticket']['noreply_email'];
-			$mail->FromName = $this->settings['ticket']['noreply_name'];
-			$mail->Subject = $mail_subject;
-			$mail->Body = $mail_body;
-			$mail->AddAddress($admin['email'], $admin['name']);
-
-			if(!$mail->Send())
-			{
+			
+			$_mailerror = false;
+			try {		
+				$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
+				$mail->Subject = $mail_subject;
+				$mail->AltBody = $mail_body;
+				$mail->MsgHTML($mail_body);
+				$mail->AddAddress($admin['email'], $admin['name']);
+				$mail->Send();
+			} catch(phpmailerException $e) {
+				$mailerr_msg = $e->errorMessage();
+				$_mailerror = true;
+			} catch (Exception $e) {
+				$mailerr_msg = $e->getMessage();
+				$_mailerror = true;
+			}
+	
+			if ($_mailerror) {
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->db, $this->settings);
+				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 				standard_error(array('errorsendingmail', $admin['email']));
 			}
 

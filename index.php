@@ -258,23 +258,23 @@ if($action == 'forgotpwd')
 				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
 				$rstlog->logAction(USR_ACTION, LOG_WARNING, "Password for user '" . $user['loginname'] . "' has been reset!");
 				$body = strtr($lng['pwdreminder']['body'], array('%s' => $user['firstname'] . ' ' . $user['name'], '%p' => $password));
-				$mail->From = $settings['panel']['adminmail'];
-				$mail->FromName = 'Froxlor';
-				$mail->Subject = $lng['pwdreminder']['subject'];
-				$mail->Body = $body;
-				$mail->AddAddress($user['email'], $user['firstname'] . ' ' . $user['name']);
+				
+				$_mailerror = false;
+				try {
+					$mail->Subject = $lng['pwdreminder']['subject'];
+					$mail->AltBody = $body;
+					$mail->MsgHTML($body);
+					$mail->AddAddress($user['email'], $user['firstname'] . ' ' . $user['name']);
+					$mail->Send();
+				} catch(phpmailerException $e) {
+					$mailerr_msg = $e->errorMessage();
+					$_mailerror = true;
+				} catch (Exception $e) {
+					$mailerr_msg = $e->getMessage();
+					$_mailerror = true;
+				}
 
-				if(!$mail->Send())
-				{
-					if($mail->ErrorInfo != '')
-					{
-						$mailerr_msg = $mail->ErrorInfo;
-					}
-					else
-					{
-						$mailerr_msg = $email;
-					}
-
+				if ($_mailerror) {
 					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
 					$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 					redirectTo('index.php', Array('showmessage' => '4'), true);

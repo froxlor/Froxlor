@@ -26,7 +26,7 @@ $yesterday = time() - (60 * 60 * 24);
 
 require (dirname(__FILE__) . '/../lib/class.phpmailer.php');
 $mail = new PHPMailer();
-$mail->From = $settings['panel']['adminmail'];
+$mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
 
 // Warn the customers at 90% traffic-usage
 
@@ -82,15 +82,26 @@ while($row = $db->fetch_array($result))
                                 AND `templategroup`='mails'
                                 AND `varname`='trafficninetypercent_mailbody'");
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficninetypercent']['mailbody']), $replace_arr));
-		$mail->From = $row['adminmail'];
-		$mail->FromName = $row['adminname'];
-		$mail->Subject = $mail_subject;
-		$mail->Body = $mail_body;
-		$mail->AddAddress($row['email'], $row['firstname'] . ' ' . $row['name']);
+		
+		$_mailerror = false;
+		try {
+			$mail->SetFrom($row['adminmail'], $row['adminname']);
+			$mail->Subject = $mail_subject;
+			$mail->AltBody = $mail_body;
+			$mail->MsgHTML($mail_body);
+			$mail->AddAddress($row['email'], $row['firstname'] . ' ' . $row['name']);
+			$mail->Send();
+		} catch(phpmailerException $e) {
+			$mailerr_msg = $e->errorMessage();
+			$_mailerror = true;
+		} catch (Exception $e) {
+			$mailerr_msg = $e->getMessage();
+			$_mailerror = true;
+		}
 
-		if(!$mail->Send())
+		if($_mailerror)
 		{
-			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mail->ErrorInfo);
+			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $_mailerror);
 			standard_error('errorsendingmail', $row["email"]);
 		}
 
@@ -150,15 +161,25 @@ while($row = $db->fetch_array($result))
                                 AND `templategroup`='mails'
                                 AND `varname`='trafficninetypercent_mailbody'");
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficninetypercent']['mailbody']), $replace_arr));
-		$mail->From = $row['email'];
-		$mail->FromName = $row['firstname'] . " " . $row['name'];
-		$mail->Subject = $mail_subject;
-		$mail->Body = $mail_body;
-		$mail->AddAddress($row['email'], $row['name']);
+		
+		$_mailerror = false;
+		try {
+			$mail->SetFrom($row['email'], $row['firstname'] . " " . $row['name']);
+			$mail->Subject = $mail_subject;
+			$mail->AltBody = $mail_body;
+			$mail->MsgHTML($mail_body);
+			$mail->AddAddress($row['email'], $row['name']);
+			$mail->Send();
+		} catch(phpmailerException $e) {
+			$mailerr_msg = $e->errorMessage();
+			$_mailerror = true;
+		} catch (Exception $e) {
+			$mailerr_msg = $e->getMessage();
+			$_mailerror = true;
+		}
 
-		if(!$mail->Send())
-		{
-			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mail->ErrorInfo);
+		if ($_mailerror) {
+			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 			standard_error('errorsendingmail', $row["email"]);
 		}
 
@@ -189,15 +210,25 @@ while($row = $db->fetch_array($result))
 
 		$mail_body.= '---------------------------------------------' . "\n";
 		$mail_body.= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-12d', $row['traffic_used_total']) . ' (' . sprintf('%00.3f%%', (($row['traffic_used_total'] * 100) / $row['traffic'])) . ')   ' . $row['traffic'] . "\n";
-		$mail->From = $row['email'];
-		$mail->FromName = $row['name'];
-		$mail->Subject = $mail_subject;
-		$mail->Body = $mail_body;
-		$mail->AddAddress($row['email'], $row['name']);
+		
+		$_mailerror = false;
+		try {
+			$mail->SetFrom($row['email'], $row['name']);
+			$mail->Subject = $mail_subject;
+			$mail->AltBody = $mail_body;
+			$mail->MsgHTML($mail_body);
+			$mail->AddAddress($row['email'], $row['name']);
+			$mail->Send();
+		} catch(phpmailerException $e) {
+			$mailerr_msg = $e->errorMessage();
+			$_mailerror = true;
+		} catch (Exception $e) {
+			$mailerr_msg = $e->getMessage();
+			$_mailerror = true;
+		}
 
-		if(!$mail->Send())
-		{
-			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mail->ErrorInfo);
+		if ($_mailerror) {
+			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 			standard_error('errorsendingmail', $row["email"]);
 		}
 

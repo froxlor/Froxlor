@@ -209,28 +209,25 @@ if($db->num_rows($result) > 0)
 					continue;
 				}
 
-				//send mail with mailer class
-				$mail->From = $to;
-				$mail->FromName = $to;
-				$mail->Subject = $row['subject'];
-				$mail->Body = html_entity_decode($message);
-				$mail->AddAddress($from, $from);
-				$mail->AddCustomHeader('Precedence: bulk');
-
-				// set correct return path
-				$mail->Sender = $to;
-
-				if(!$mail->Send())
-				{
-					if($mail->ErrorInfo != '')
-					{
-						$mailerr_msg = $mail->ErrorInfo;
-					}
-					else
-					{
-						$mailerr_msg = $from;
-					}
-
+				$_mailerror = false;
+				try {
+					$mail->SetFrom($to, $to);
+					$mail->AddReplyTo($to, $to);
+					$mail->Subject = $row['subject'];
+					$mail->AltBody = $message;
+					$mail->MsgHTML(html_entity_decode($message));
+					$mail->AddAddress($from, $from);
+					$mail->AddCustomHeader('Precedence: bulk');
+					$mail->Send();
+				} catch(phpmailerException $e) {
+					$mailerr_msg = $e->errorMessage();
+					$_mailerror = true;
+				} catch (Exception $e) {
+					$mailerr_msg = $e->getMessage();
+					$_mailerror = true;
+				}
+		
+				if ($_mailerror) {
 					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Error sending autoresponder mail: " . $mailerr_msg);
 				}
 
