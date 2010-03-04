@@ -312,7 +312,7 @@ class ticket
 		}
 		else
 		{
-			$admin = $this->db->query_first("SELECT `name`, email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`='" . (int)$this->userinfo['adminid'] . "'");
+			$admin = $this->db->query_first("SELECT `name`, `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`='" . (int)$this->userinfo['adminid'] . "'");
 			
 			$_mailerror = false;
 			try {		
