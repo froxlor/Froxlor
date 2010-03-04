@@ -1,0 +1,20 @@
+#!/bin/bash
+
+E_WRONGARGS=65 # Bad argument error
+E_FAILURE=-1
+E_SUCCESS=0 
+
+PHP_PATH=0
+
+# check for php
+if [ -e "/usr/bin/php" ]; then
+   PHP_PATH="/usr/bin/php"
+elif [ -e "/usr/lib/php5/bin/php" ]; then
+   PHP_PATH="/usr/lib/php5/bin/php"
+else
+   echo "Sorry, PHP could not be found! Please check if you have installed the required packages."
+   exit $E_FAILURE
+fi
+
+# now run the installer
+$PHP_PATH -q lib/create_module.php $@
