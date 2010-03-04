@@ -17,7 +17,7 @@
 
  
  If you do not want plaintext-passwords to be stored in the database,
- edit $rcmail_config['password_query'] and remove "`password` = \'%p\',"
+ edit $rcmail_config['password_query'] and remove "`password` = %p,"
 
  -----------------------------------------------------------------------
  2010, the Froxlor Team

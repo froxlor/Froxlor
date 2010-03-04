@@ -34,9 +34,9 @@ $rcmail_config['password_db_dsn'] = 'mysql://froxlor:MYSQL_PASSWORD@localhost/fr
 // The SQL query used to change the password.
 //
 // If you do not want to have plaintext-passwords in your database (AND you know what
-// it means to turn this off, remove "`password` = '%p'," from the query.
+// it means to turn this off, remove "`password` = %p," from the query.
 //
-$rcmail_config['password_query'] = 'UPDATE `mail_users` SET `password` = \'%p\', `password_enc` = ENCRYPT(\'%p\') WHERE `username`=\'%u\'';
+$rcmail_config['password_query'] = 'UPDATE `mail_users` SET `password` = %p, `password_enc` = ENCRYPT(%p) WHERE `username`=%u';
 
 /*
  * End of Froxlor settings
