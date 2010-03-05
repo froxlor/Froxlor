@@ -291,7 +291,7 @@ class ticket
 				$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
 				$mail->Subject = $mail_subject;
 				$mail->AltBody = $mail_body;
-				$mail->MsgHTML($mail_body);
+				$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 				$mail->AddAddress($usr['email'], $usr['firstname'] . ' ' . $usr['name']);
 				$mail->Send();
 			} catch(phpmailerException $e) {
@@ -319,7 +319,7 @@ class ticket
 				$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
 				$mail->Subject = $mail_subject;
 				$mail->AltBody = $mail_body;
-				$mail->MsgHTML($mail_body);
+				$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 				$mail->AddAddress($admin['email'], $admin['name']);
 				$mail->Send();
 			} catch(phpmailerException $e) {
@@ -691,7 +691,7 @@ class ticket
 			{
 				if(strtolower($_var) == 'message')
 				{
-					return htmlspecialchars_decode(nl2br($this->t_data[$_var]));
+					return str_replace('script>', 'pre>', htmlspecialchars_decode(nl2br($this->t_data[$_var])));
 				}
 				else
 				{

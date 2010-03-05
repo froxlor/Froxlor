@@ -15,13 +15,13 @@ $header
 					<td class="field_display">{$lng['ticket']['subject']}</td>
 					<td class="field_display">{$lng['ticket']['lastreplier']}</td>
 					<td class="field_display">{$lng['ticket']['priority']}</td>
-	        		<td class="field_display_search">&nbsp;</td>
+	        			<td class="field_display_search">&nbsp;</td>
 				</tr>
 				$tickets
       		</if>
       		<if $tickets_count < 1 >
         		<tr>
-				<td class="field_display_border_left" colspan="5">{$lng['ticket']['noresults']}</td>
+				<td class="field_display_border_left" colspan="6">{$lng['ticket']['noresults']}</td>
 				</tr>
 			</if>
 		</table>
