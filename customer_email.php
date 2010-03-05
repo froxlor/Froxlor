@@ -433,7 +433,7 @@ elseif($page == 'accounts')
 							$mail->SetFrom($admin['email'], getCorrectUserSalutation($admin));
 							$mail->Subject = $mail_subject;
 							$mail->AltBody = $mail_body;
-							$mail->MsgHTML($mail_body);
+							$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 							$mail->AddAddress($email_full, getCorrectUserSalutation($userinfo));
 							$mail->Send();
 						} catch(phpmailerException $e) {
@@ -464,7 +464,7 @@ elseif($page == 'accounts')
 								$mail->SetFrom($admin['email'], getCorrectUserSalutation($admin));
 								$mail->Subject = $mail_subject;
 								$mail->AltBody = $mail_body;
-								$mail->MsgHTML($mail_body);
+								$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 								$mail->AddAddress($idna_convert->encode($alternative_email), getCorrectUserSalutation($userinfo));
 								$mail->Send();
 							} catch(phpmailerException $e) {

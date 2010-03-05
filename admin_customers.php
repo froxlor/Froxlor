@@ -624,10 +624,9 @@ if($page == 'customers'
 
 						$_mailerror = false;
 						try {
-							$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
 							$mail->Subject = $mail_subject;
 							$mail->AltBody = $mail_body;
-							$mail->MsgHTML($mail_body);
+							$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 							$mail->AddAddress($email, getCorrectUserSalutation(array('firstname' => $firstname, 'name' => $name, 'company' => $company)));
 							$mail->Send();
 						} catch(phpmailerException $e) {

@@ -7,17 +7,23 @@ $header
 			<tr>
 				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['emails']['emails_add']}</b></td>
 			</tr>
-			<tr>
-				<td class="main_field_name">{$lng['emails']['emailaddress']}:</td>
-				<td class="main_field_display" nowrap="nowrap"><input type="text" name="email_part" value="" size="15" /> @ <select class="dropdown_noborder" name="domain">$domains</select></td>
-			</tr>
-			<tr>
-				<td class="main_field_name">{$lng['emails']['iscatchall']}</td>
-				<td class="main_field_display" nowrap="nowrap">$iscatchall</td>
-			</tr>
-			<tr>
-				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['emails']['emails_add']}" /></td>
-			</tr>
+			<if $domains != '' >
+				<tr>
+					<td class="main_field_name">{$lng['emails']['emailaddress']}:</td>
+					<td class="main_field_display" nowrap="nowrap"><input type="text" name="email_part" value="" size="15" /> @ <select class="dropdown_noborder" name="domain">$domains</select></td>
+				</tr>
+				<tr>
+					<td class="main_field_name">{$lng['emails']['iscatchall']}</td>
+					<td class="main_field_display" nowrap="nowrap">$iscatchall</td>
+				</tr>
+				<tr>
+					<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['emails']['emails_add']}" /></td>
+				</tr>
+			<else
+				<tr>
+					<td class="main_field_name" colspan="2">{$lng['emails']['noemaildomainaddedyet']}</td>
+				</tr>
+			</if>
 		</table>
 	</form>
 	<br />

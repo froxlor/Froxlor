@@ -263,7 +263,7 @@ if($action == 'forgotpwd')
 				try {
 					$mail->Subject = $lng['pwdreminder']['subject'];
 					$mail->AltBody = $body;
-					$mail->MsgHTML($body);
+					$mail->MsgHTML(str_replace("\\n", "<br />", $body));
 					$mail->AddAddress($user['email'], $user['firstname'] . ' ' . $user['name']);
 					$mail->Send();
 				} catch(phpmailerException $e) {

@@ -1300,4 +1300,8 @@ $lng['admin']['servicedata'] = 'Service Data';
 
 $lng['admin']['newerversionavailable'] = 'There is a newer version of Froxlor available';
 
+// ADDED IN FROXLOR 0.9.3
+
+$lng['emails']['noemaildomainaddedyet'] = 'You do not have a (email-)domain in your account yet.';
+
 ?>
