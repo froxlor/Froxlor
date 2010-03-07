@@ -32,7 +32,7 @@ return Array(
 							$configcommand['include'],
 							'mkdir -p ' . $settings['system']['documentroot_prefix'],
 							'mkdir -p ' . $settings['system']['logfiles_directory'],
-							'mkdir -p ' . $settings['system']['deactivateddocroot']
+							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p ' . $settings['system']['deactivateddocroot'] : ''
 						),
 						'restart' => Array(
 							'/etc/init.d/apache2 restart'

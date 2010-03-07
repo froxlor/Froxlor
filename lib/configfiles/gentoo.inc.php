@@ -34,7 +34,7 @@ return Array(
 							'chown root:0 ' . $settings['system']['apacheconf_diroptions'],
 							'chmod 0600 ' . $settings['system']['apacheconf_diroptions'],
 							'mkdir -p ' . $settings['system']['documentroot_prefix'],
-							'mkdir -p ' . $settings['system']['deactivateddocroot'],
+							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p ' . $settings['system']['deactivateddocroot'] : '',
 							'mkdir -p ' . $settings['system']['logfiles_directory'],
 							'mkdir -p ' . $settings['system']['mod_fcgid_tmpdir'],
 							'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir']
@@ -56,7 +56,7 @@ return Array(
 							$configcommand['d_inclighty'],
 							'mkdir -p ' . $settings['system']['documentroot_prefix'],
 							'mkdir -p ' . $settings['system']['logfiles_directory'],
-							'mkdir -p ' . $settings['system']['deactivateddocroot']
+							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p ' . $settings['system']['deactivateddocroot'] : ''
 						),
 						'restart' => Array(
 							'rc-update add lighttpd default',
