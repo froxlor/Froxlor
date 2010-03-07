@@ -29,9 +29,10 @@ return Array(
 						'commands' => Array(
 							'mkdir -p ' . $settings['system']['documentroot_prefix'],
 							'mkdir -p ' . $settings['system']['logfiles_directory'],
+							'mkdir -p ' . $settings['system']['deactivateddocroot'],
 							'mkdir -p ' . $settings['system']['mod_fcgid_tmpdir'],
 							'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir'],
-							'a2dismod userdir',
+							'a2dismod userdir'
 						),
 						'restart' => Array(
 							'/etc/init.d/apache2 restart'
@@ -52,8 +53,9 @@ return Array(
 							$configcommand['d_inclighty'],
 							'mkdir -p ' . $settings['system']['documentroot_prefix'],
 							'mkdir -p ' . $settings['system']['logfiles_directory'],
+							'mkdir -p ' . $settings['system']['deactivateddocroot'],
 							'mkdir -p ' . $settings['system']['mod_fcgid_tmpdir'],
-							'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir'],
+							'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir']
 						),
 						'restart' => Array(
 							'/etc/init.d/lighttpd restart'
