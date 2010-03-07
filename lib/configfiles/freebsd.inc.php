@@ -36,7 +36,7 @@ return Array(
 							'chmod 0600 ' . $settings['system']['apacheconf_diroptions'],
 							'mkdir -p ' . $settings['system']['documentroot_prefix'],
 							'mkdir -p ' . $settings['system']['logfiles_directory'],
-							'mkdir -p ' . $settings['system']['deactivateddocroot'],
+							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p ' . $settings['system']['deactivateddocroot'] : '',
 							'mkdir -p ' . $settings['system']['mod_fcgid_tmpdir'],
 							'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir'],
 							'echo "accf_http_load=\"YES\"" >> /boot/loader.conf',
