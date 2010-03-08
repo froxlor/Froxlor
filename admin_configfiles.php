@@ -97,7 +97,8 @@ if($userinfo['change_serversettings'] == '1')
 			'<VIRTUAL_GID_MAPS>' => $settings['system']['vmail_gid'],
 			'<AWSTATS_PATH>' => $settings['system']['awstats_path'],
 			'<SSLPROTOCOLS>' => ($settings['system']['use_ssl'] == '1') ? 'imaps pop3s' : '',
-			'<REALTIME_PORT>' => $settings['system']['realtime_port']
+			'<REALTIME_PORT>' => $settings['system']['realtime_port'],
+			'<CUSTOMER_TMP>' => ($settings['system']['mod_fcgid_tmpdir'] != '') ? $settings['system']['mod_fcgid_tmpdir'] : '/tmp/'
 		);
 		$files = '';
 		$configpage = '';
