@@ -1303,5 +1303,6 @@ $lng['admin']['newerversionavailable'] = 'There is a newer version of Froxlor av
 // ADDED IN FROXLOR 0.9.3
 
 $lng['emails']['noemaildomainaddedyet'] = 'You do not have a (email-)domain in your account yet.';
+$lng['error']['hiddenfieldvaluechanged'] = 'The value for the hidden field &quot;%s&quot; changed while editing the settings.<br /><br />This is usually not a big problem but the settings could not be saved because of this.';
 
 ?>

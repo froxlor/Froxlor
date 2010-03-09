@@ -19,13 +19,20 @@
 
 function validateFormFieldHidden($fieldname, $fielddata, $newfieldvalue)
 {
-	if($newfieldvalue === $fielddata['value'])
-	{
+	/**
+	 * don't show error on cronjob-timestamps changing
+	 * because it might be possible that the cronjob ran
+	 * while settings have been edited (bug #52)
+	 */
+	if($newfieldvalue === $fielddata['value']
+		|| $fieldname == 'system_last_tasks_run'
+		|| $fieldname == 'system_last_traffic_run'
+		|| $fieldname == 'system_lastcronrun'
+	) {
 		return true;
 	}
 	else
 	{
-		// TODO: Throw some error that actually makes sense - false would just throw unknown error
-		return false;
+		return 'hiddenfieldvaluechanged';
 	}
 }

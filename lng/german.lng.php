@@ -1283,5 +1283,6 @@ $lng['admin']['newerversionavailable'] = 'Eine neuere Version von Froxlor wurde 
 // ADDED IN FROXLOR 0.9.3
 
 $lng['emails']['noemaildomainaddedyet'] = 'Sie haben bisher noch keine (E-Mail-)Domain in Ihrem Konto.';
+$lng['error']['hiddenfieldvaluechanged'] = 'Der Wert des verborgenen Feldes &quot;%s&quot; hat sich w&auml;hrend dem &Auml;ndern der Einstellungen ge&auml;ndert.<br /><br />Dies ist im Grunde kein schwerwiegendes Problem, allerdings konnten so die Einstellungen nicht gespeichert werden.';
 
 ?>
