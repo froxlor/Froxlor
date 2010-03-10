@@ -37,7 +37,21 @@ if($page == 'overview')
 		if (!isset($settings['system']['dbversion'])
 		|| $settings['system']['dbversion'] == ''
 		) {
-			$settings['system']['dbversion'] = 2;
+			/**
+			 * for syscp-stable (1.4.2.1) this value has to be 0
+			 * so the required table-fields are added correctly
+			 * and the svn-version has its value in the database
+			 * -> bug #54
+			 */
+			
+			$result = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `varname` = 'dbversion'");
+			
+			if(isset($result['value']))
+			{
+				$settings['system']['dbversion'] = (int)$result['value'];
+			} else {
+				$settings['system']['dbversion'] = 0;
+			}
 		}
 	}
 
