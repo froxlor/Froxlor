@@ -428,7 +428,6 @@ if(isset($_POST['installstep'])
 	if(!extension_loaded('bcmath'))
 	{
 		status_message('orange', $lng['install']['notinstalled'] . '<br />' . $lng['install']['bcmathdescription']);
-		$_die = false;
 	}
 	else
 	{
@@ -442,7 +441,6 @@ if(isset($_POST['installstep'])
 	   && $php_ob != '')
 	{
 		status_message('orange', $lng['install']['openbasedirenabled']);
-		$_die = false;
 	}
 	else
 	{
