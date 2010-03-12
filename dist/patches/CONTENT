@@ -1,0 +1,4 @@
+This File contains descriptions of the patches in this directory.
+
+- use-libphp-phpmailer-instead-of-prepackaged-version.patch: This patch, which was initially written for Debian Squeeze and higher, enables the use the the system provided phpmailer package instead of using the version that we provide in the tarball.
+NB: we need at least version 5.1.  

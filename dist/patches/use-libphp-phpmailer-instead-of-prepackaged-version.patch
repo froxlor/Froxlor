@@ -1,0 +1,37 @@
+#
+# Description: Modify froxlor so it uses the debian version of libphp-phpmailer, 
+#    instead of a froxlor-supplied one
+# Author: Froxlor Release Team <release@froxlor.org>
+# Bug-Debian: NONE
+# Last-Update: 2010-03-12
+#
+Index: lib/functions.php
+===================================================================
+--- lib/functions.php	(revision 573)
++++ lib/functions.php	(working copy)
+@@ -32,6 +32,12 @@
+ 			{
+ 				include($dirname . $filename);
+ 			}
++      
++      // added for using the system copy of PHPMailer
++      if ($classname == 'phpMailer' || 'SMTP' then)
++      {
++        include '/usr/share/php/libphp-phpmailer/' . $filename;
++      }
+ 
+ 			if(is_dir($dirname . $filename))
+ 			{
+Index: scripts/jobs/cron_traffic_report.php
+===================================================================
+--- scripts/jobs/cron_traffic_report.php	(revision 573)
++++ scripts/jobs/cron_traffic_report.php	(working copy)
+@@ -24,7 +24,7 @@
+  * Initialize the mailingsystem
+  */
+ 
+-require (dirname(__FILE__) . '/../lib/class.phpmailer.php');
++require '/usr/share/php/libphp-phpmailer/class.phpmailer.php';
+ $mail = new PHPMailer();
+ $mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
+ 
