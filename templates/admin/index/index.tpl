@@ -119,7 +119,7 @@ $header
 		{$cron_last_runs}
 		<tr>
 			<td class="field_name_border_left">{$lng['admin']['installedversion']}:</td>
-			<td class="field_display">{$version}</td>
+			<td class="field_display">{$version}{$branding}</td>
 		</tr>
 		<tr>
 			<td class="field_name_border_left">{$lng['admin']['latestversion']}:</td>
