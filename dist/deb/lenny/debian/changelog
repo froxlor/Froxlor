@@ -1,3 +1,12 @@
+froxlor (0.9.3-1) stable; urgency=low
+
+  * new upstream release
+  * add Vcs-Browser and Vcs-Svn fields
+  * move section from net to admin
+  * move priority from optional to extra
+
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 15 Mar 2010 00:38:20 +0100
+
 froxlor (0.9.2.1-1) unstable; urgency=low
 
   * new upstream release
