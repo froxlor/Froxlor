@@ -1,13 +1,14 @@
 --- a/lib/functions.php
 +++ b/lib/functions.php
-@@ -61,6 +61,12 @@
+@@ -61,6 +61,13 @@
  				return;
  			}
  
 +			// added for using the system copy of PHPMailer
 +			if ($classname == 'phpMailer' || 'SMTP' then)
 +			{
-+				include '/usr/share/php/libphp-phpmailer/' . $filename;
++				include '/usr/share/php/libphp-phpmailer/' . strtolower($filename);
++				return;
 +			}
 +
  			if(is_dir($dirname . $filename))
