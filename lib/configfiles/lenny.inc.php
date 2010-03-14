@@ -193,6 +193,9 @@ return Array(
 				'daemons' => Array(
 					'proftpd' => Array(
 						'label' => 'ProFTPd',
+						'commands' => Array(
+							'apt-get install proftpd-basic proftpd-mod-mysql'
+						),
 						'files' => Array(
 							'etc_proftpd_sql.conf' => '/etc/proftpd/sql.conf',
 							'etc_proftpd_modules.conf' => '/etc/proftpd/modules.conf',
