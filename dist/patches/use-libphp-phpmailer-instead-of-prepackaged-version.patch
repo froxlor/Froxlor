@@ -5,7 +5,7 @@
  			}
  
 +			// added for using the system copy of PHPMailer
-+			if ($classname == 'phpMailer' || 'SMTP' then)
++			if ($classname == 'PHPMailer' || 'SMTP' then)
 +			{
 +				include '/usr/share/php/libphp-phpmailer/' . strtolower($filename);
 +				return;
