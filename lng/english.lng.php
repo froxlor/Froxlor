@@ -1192,7 +1192,7 @@ $lng['error']['admindoesntexist'] = 'The admin you have chosen doesn\'t exist.';
 // ADDED IN 1.2.19-svn37
 
 $lng['serversettings']['system_realtime_port']['title'] = 'Port for realtime Froxlor';
-$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature is disabled.<br />See also: <a href="https://wiki.froxlor.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
+$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature is disabled.<br />See also: <a href="http://wiki.froxlor.org/doc/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Allow multiple login';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'If activated a user could login multiple times.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Allow moving domains between admins';
