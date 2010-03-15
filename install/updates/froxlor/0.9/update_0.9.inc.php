@@ -307,4 +307,10 @@ if(isFroxlorVersion('0.9.1'))
 	updateToVersion('0.9.2');
 }
 
+if(isFroxlorVersion('0.9.2'))
+{
+	showUpdateStep("Updating from 0.9.2 to 0.9.3", false);
+	updateToVersion('0.9.3');
+}
+
 ?>
