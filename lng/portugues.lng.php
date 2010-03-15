@@ -1084,7 +1084,7 @@ $lng['aps']['noinstancesexisting'] = 'N&atilde;o existem est&acirc;ncias para ad
 $lng['error']['customerdoesntexist'] = 'O cliente que voc&ecirc; escolheu n&atilde;o existe';
 $lng['error']['admindoesntexist'] = 'O administrador que voc&ecirc; escolheu n&atilde;o existe';
 $lng['serversettings']['system_realtime_port']['title'] = 'Porta para Froxlor em tempo real';
-$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature ist deactivated.<br />See also: <a href="https://wiki.froxlor.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
+$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature is disabled.<br />See also: <a href="http://wiki.froxlor.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'AAtiva login m&uacute;ltiplo';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Se ativado um usu&aacute;rio pode ter m&uacute;ltiplos logins';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Ativa mover dom&iacute;nios entre admins';
