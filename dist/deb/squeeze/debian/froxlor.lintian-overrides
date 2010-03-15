@@ -1,8 +1,6 @@
 # there is no ITP bug, we are not sending this downstream, kill.
 froxlor: new-package-should-close-itp-bug
 
-# can't use the debian package for it, its too old
-froxlor: embedded-php-library var/www/froxlor/lib/classes/phpmailer/class.PHPMailer.php
-
 # TODO: fix probably, i. e. try to install it to /usr/share/froxlor like phpmyadmin for example
+# NB: not before 1.0
 froxlor: dir-or-file-in-var-www

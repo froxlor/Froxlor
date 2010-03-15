@@ -1,3 +1,16 @@
+froxlor (0.9.3-1+squeeze1) testing; urgency=low
+
+  * new upstream release
+  * add Vcs-Browser and Vcs-Svn fields
+  * move section from net to admin
+  * move priority from optional to extra
+  * add quilt and >=cdbs-0.4.70 to Build-Depends
+  * convert package to the 3.0 (quilt) format
+  * add 01-use-libphp-phpmailer-instead-of-prepackaged-version.patch and
+    add Depends on >=libphp-phpmailer-5.1
+
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 15 Mar 2010 00:58:48 +0100
+
 froxlor (0.9.2.1-1) unstable; urgency=low
 
   * new upstream release

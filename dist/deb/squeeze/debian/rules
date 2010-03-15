@@ -9,5 +9,12 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+include /usr/share/cdbs/1/rules/upstream-tarball.mk
+DEB_UPSTREAM_URL = http://files.froxlor.org/releases
+DEB_UPSTREAM_REPACKAGE_EXCLUDE = lib/classes/phpmailer
+# as upstream, kill the package tagging.
+unset DEB_UPSTREAM_REPACKAGE_TAG
+unset DEB_UPSTREAM_REPACKAGE_DELIMITER
+
 %:
 	dh  $@
