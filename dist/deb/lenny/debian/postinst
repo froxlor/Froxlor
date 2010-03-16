@@ -33,6 +33,8 @@ case "$1" in
                echo "chown www-data:www-data /var/www/froxlor/lib/userdata.inc.php"
                echo "Please run Froxlor afterwards by opening it via your Webbrowser."
                echo "http://<YOURIP>/froxlor/"
+               echo "don't forget to setup the cronjob again,"
+               echo "since the directory name changed."
                else
         CONFFILE='/var/www/froxlor/lib/userdata.inc.php'
         touch $CONFFILE

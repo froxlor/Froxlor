@@ -1,0 +1,17 @@
+Origin: froxlor.org
+Label: Froxlor
+Suite: stable
+Codename: lenny
+Architectures: all
+Components: main
+Description: Froxlor repository
+SignWith: release@froxlor.org
+
+Origin: froxlor.org
+Label: Froxlor
+Suite: testing
+Codename: squeeze
+Architectures: all
+Components: main
+Description: Froxlor repository
+SignWith: release@froxlor.org
