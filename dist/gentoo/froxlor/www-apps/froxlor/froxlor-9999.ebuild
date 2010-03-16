@@ -100,6 +100,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch_user
 	# Delete any mention of inserttask('4') if no Bind is used
 	if ! use bind ; then
 		find "${S}/" -type f -exec sed -e "s|inserttask('4');||g" -i {} \;
