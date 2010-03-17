@@ -12,8 +12,9 @@ function getLoginNameByUid($uid = null)
 	global $db;
 	
 	$result = $db->query_first("SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `guid` = '".(int)$uid."'");
-	if($db->num_rows($result) > 0)
-	{
+	if(is_array($result) 
+		&& isset($result['loginname'])
+	) {
 		return $result['loginname'];
 	}
 	return false;
