@@ -379,6 +379,7 @@ if($page == 'customers'
 
 				$createstdsubdomain = intval($_POST['createstdsubdomain']);
 				$password = validate($_POST['customer_password'], 'password');
+				$password = validatePassword($password);
 				$sendpassword = intval($_POST['sendpassword']);
 				$phpenabled = intval($_POST['phpenabled']);
 				$diskspace = $diskspace * 1024;
@@ -849,6 +850,7 @@ if($page == 'customers'
 				{
 					if($password != '')
 					{
+						$password = validatePassword($password);
 						$password = md5($password);
 					}
 					else

@@ -139,6 +139,7 @@ elseif($page == 'mysqls')
 			   && $_POST['send'] == 'send')
 			{
 				$password = validate($_POST['mysql_password'], 'password');
+				$password = validatePassword($password);
 
 				if($password == '')
 				{
@@ -219,6 +220,7 @@ elseif($page == 'mysqls')
 				// Only change Password if it is set, do nothing if it is empty! -- PH 2004-11-29
 
 				$password = validate($_POST['mysql_password'], 'password');
+				$password = validatePassword($password);
 
 				if($password != '')
 				{

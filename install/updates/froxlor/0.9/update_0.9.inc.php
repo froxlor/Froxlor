@@ -314,4 +314,15 @@ if(isFroxlorVersion('0.9.2'))
 	updateToVersion('0.9.3');
 }
 
+if(isFroxlorVersion('0.9.3'))
+{
+	showUpdateStep("Updating from 0.9.3 to 0.9.3-svn1", false);
+
+	showUpdateStep("Updating tables");	
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'password_min_length', '0');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.3-svn1');
+}
+
 ?>

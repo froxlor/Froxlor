@@ -54,6 +54,14 @@ return array(
 					'default' => 900,
 					'save_method' => 'storeSettingField',
 					),
+				'panel_password_min_length' => array(
+					'label' => $lng['serversettings']['panel_password_min_length'],
+					'settinggroup' => 'panel',
+					'varname' => 'password_min_length',
+					'type' => 'int',
+					'default' => 0,
+					'save_method' => 'storeSettingField',
+					),
 				'customer_accountprefix' => array(
 					'label' => $lng['serversettings']['accountprefix'],
 					'settinggroup' => 'customer',

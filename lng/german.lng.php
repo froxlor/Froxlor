@@ -1285,4 +1285,10 @@ $lng['admin']['newerversionavailable'] = 'Eine neuere Version von Froxlor wurde 
 $lng['emails']['noemaildomainaddedyet'] = 'Sie haben bisher noch keine (E-Mail-)Domain in Ihrem Konto.';
 $lng['error']['hiddenfieldvaluechanged'] = 'Der Wert des verborgenen Feldes &quot;%s&quot; hat sich w&auml;hrend dem &Auml;ndern der Einstellungen ge&auml;ndert.<br /><br />Dies ist im Grunde kein schwerwiegendes Problem, allerdings konnten so die Einstellungen nicht gespeichert werden.';
 
+// ADDED IN FROXLOR 0.9.3-svn1
+
+$lng['serversettings']['panel_password_min_length']['title'] = 'Mindestl&auml;nge von Passw&ouml;rtern';
+$lng['serversettings']['panel_password_min_length']['description'] = 'Hier k&ouml;nnen Sie die Mindestl&auml;nge f&uuml;r Passw&ouml;rter festlegen. \'0\' bedeutet: Keine Mindestl&auml;nge';
+$lng['error']['notrequiredpasswordlength'] = 'Das Passwort ist zu kurz. Bitte geben Sie mindestens %s Zeichen an.';
+
 ?>

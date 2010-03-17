@@ -372,6 +372,7 @@ elseif($page == 'accounts')
 					$email_full = $result['email_full'];
 					$username = $idna_convert->decode($email_full);
 					$password = validate($_POST['email_password'], 'password');
+					$password = validatePassword($password);
 
 					if($settings['panel']['sendalternativemail'] == 1)
 					{
@@ -518,12 +519,12 @@ elseif($page == 'accounts')
 					standard_error(array('stringisempty', 'mypassword'));
 					exit;
 				}
-				else
-				{
-					$log->logAction(USR_ACTION, LOG_NOTICE, "changed email password for '" . $result['email_full'] . "'");
-					$result = $db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET " . ($settings['system']['mailpwcleartext'] == '1' ? "`password` = '" . $db->escape($password) . "', " : '') . " `password_enc`=ENCRYPT('" . $db->escape($password) . "') WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$result['popaccountid'] . "'");
-					redirectTo($filename, Array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
-				}
+				
+				$password = validatePassword($password);
+				
+				$log->logAction(USR_ACTION, LOG_NOTICE, "changed email password for '" . $result['email_full'] . "'");
+				$result = $db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET " . ($settings['system']['mailpwcleartext'] == '1' ? "`password` = '" . $db->escape($password) . "', " : '') . " `password_enc`=ENCRYPT('" . $db->escape($password) . "') WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$result['popaccountid'] . "'");
+				redirectTo($filename, Array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 			}
 			else
 			{

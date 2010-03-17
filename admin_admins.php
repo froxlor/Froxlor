@@ -154,6 +154,7 @@ if($page == 'admins'
 
 			$loginname = validate($_POST['loginname'], 'loginname');
 			$password = validate($_POST['admin_password'], 'password');
+			$password = validatePassword($password);
 			$def_language = validate($_POST['def_language'], 'default language');
 			$customers = intval_ressource($_POST['customers']);
 
@@ -560,6 +561,7 @@ if($page == 'admins'
 				{
 					if($password != '')
 					{
+						$password = validatePassword($password);
 						$password = md5($password);
 					}
 					else

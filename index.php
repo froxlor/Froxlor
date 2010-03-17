@@ -240,7 +240,18 @@ if($action == 'forgotpwd')
 		{
 			if($user !== false)
 			{
-				$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
+				if ($settings['panel']['password_min_length'] <= 6) {
+					$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
+				} else {
+					// make it two times larger than password_min_length
+					$rnd = '';
+					$minlength = $settings['panel']['password_min_length'];
+					while (strlen($rnd) < ($minlength * 2))
+					{
+						$rnd .= md5(uniqid(microtime(), 1));
+					}
+					$password = substr($rnd, (int)($minlength / 2), $minlength);
+				}
 
 				if($adminchecked)
 				{

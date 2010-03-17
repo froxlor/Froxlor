@@ -135,6 +135,7 @@ elseif($page == 'accounts')
 			{
 				$path = validate($_POST['path'], 'path');
 				$password = validate($_POST['ftp_password'], 'password');
+				$password = validatePassword($password);
 
 				if($settings['customer']['ftpatdomain'] == '1')
 				{
