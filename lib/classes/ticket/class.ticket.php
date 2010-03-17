@@ -693,6 +693,10 @@ class ticket
 				{
 					return str_replace('script>', 'pre>', htmlspecialchars_decode(nl2br($this->t_data[$_var])));
 				}
+				elseif(strtolower($_var) == 'subject')
+				{
+					return str_replace('script>', 'pre>', htmlspecialchars_decode(nl2br($this->t_data[$_var])));
+				}
 				else
 				{
 					return $this->t_data[$_var];
