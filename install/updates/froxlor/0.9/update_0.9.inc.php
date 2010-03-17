@@ -320,6 +320,7 @@ if(isFroxlorVersion('0.9.3'))
 
 	showUpdateStep("Updating tables");	
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'password_min_length', '0');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'store_index_file_subs', '1');");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.3-svn1');

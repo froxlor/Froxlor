@@ -85,6 +85,14 @@ return array(
 					'default' => 'html',
 					'save_method' => 'storeSettingField',
 					),
+				'system_store_index_file_subs' => array(
+					'label' => $lng['serversettings']['system_store_index_file_subs'],
+					'settinggroup' => 'system',
+					'varname' => 'store_index_file_subs',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					),
 				'system_httpuser' => array(
 					'settinggroup' => 'system',
 					'varname' => 'httpuser',

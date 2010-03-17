@@ -144,31 +144,8 @@ while($row = $db->fetch_array($result_tasks))
 			safe_exec('mkdir -p ' . escapeshellarg($settings['system']['vmail_homedir'] . $row['data']['loginname']));
 
 			//check if admin of customer has added template for new customer directories
-
-			$result = $db->query("SELECT `t`.`value`, `c`.`email` AS `customer_email`, `a`.`email` AS `admin_email`, `c`.`loginname` AS `customer_login`, `a`.`loginname` AS `admin_login` FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c` INNER JOIN `" . TABLE_PANEL_ADMINS . "` AS `a` ON `c`.`adminid` = `a`.`adminid` INNER JOIN `" . TABLE_PANEL_TEMPLATES . "` AS `t` ON `a`.`adminid` = `t`.`adminid` WHERE `varname` = 'index_html' AND `c`.`loginname` = '" . $db->escape($row['data']['loginname']) . "'");
-
-			if($db->num_rows($result) > 0)
-			{
-				$template = $db->fetch_array($result);
-				$replace_arr = array(
-					'SERVERNAME' => $settings['system']['hostname'],
-					'CUSTOMER' => $template['customer_login'],
-					'ADMIN' => $template['admin_login'],
-					'CUSTOMER_EMAIL' => $template['customer_email'],
-					'ADMIN_EMAIL' => $template['admin_email']
-				);
-				$htmlcontent = replace_variables($template['value'], $replace_arr);
-				$indexhtmlpath = $settings['system']['documentroot_prefix'] . $row['data']['loginname'] . '/index.' . $settings['system']['index_file_extension'];
-				$index_html_handler = fopen($indexhtmlpath, 'w');
-				fwrite($index_html_handler, $htmlcontent);
-				fclose($index_html_handler);
-				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Creating \'index.' . $settings['system']['index_file_extension'] . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath));
-			}
-			else
-			{
-				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: cp -a ' . $pathtophpfiles . '/templates/misc/standardcustomer/* ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname'] . '/'));
-				safe_exec('cp -a ' . $pathtophpfiles . '/templates/misc/standardcustomer/* ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname'] . '/'));
-			}
+			$destdir = makeCorrectDir($settings['system']['documentroot_prefix'] . $loginname);
+			storeDefaultIndex($row['data']['loginname'], $destdir, $cronlog, true);
 
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname']));
 			safe_exec('chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname']));

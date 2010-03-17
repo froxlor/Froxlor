@@ -1310,5 +1310,7 @@ $lng['error']['hiddenfieldvaluechanged'] = 'The value for the hidden field &quot
 $lng['serversettings']['panel_password_min_length']['title'] = 'Minimum password length';
 $lng['serversettings']['panel_password_min_length']['description'] = 'Here you can set a minimum length for passwords. \'0\' means: no minimum length required.';
 $lng['error']['notrequiredpasswordlength'] = 'The given password is too short. Please enter at least %s characters.';
+$lng['serversettings']['system_store_index_file_subs']['title'] = 'Store default index file also to new subfolders';
+$lng['serversettings']['system_store_index_file_subs']['description'] = 'If enabled, the default index-file is being stored to every subdomain-path newly created (not if the folder already exists!)'; 
 
 ?>

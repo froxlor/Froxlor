@@ -1290,5 +1290,7 @@ $lng['error']['hiddenfieldvaluechanged'] = 'Der Wert des verborgenen Feldes &quo
 $lng['serversettings']['panel_password_min_length']['title'] = 'Mindestl&auml;nge von Passw&ouml;rtern';
 $lng['serversettings']['panel_password_min_length']['description'] = 'Hier k&ouml;nnen Sie die Mindestl&auml;nge f&uuml;r Passw&ouml;rter festlegen. \'0\' bedeutet: Keine Mindestl&auml;nge';
 $lng['error']['notrequiredpasswordlength'] = 'Das Passwort ist zu kurz. Bitte geben Sie mindestens %s Zeichen an.';
+$lng['serversettings']['system_store_index_file_subs']['title'] = 'Erstelle Index-Datei auch in neuen Unterordnern';
+$lng['serversettings']['system_store_index_file_subs']['description'] = 'Wenn aktiviert, wird f&uuml;r jede Subdomain mit neuem Unterordner die Standard-Index Datei angelegt.';
 
 ?>

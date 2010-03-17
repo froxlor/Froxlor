@@ -26,13 +26,15 @@
  * @param  string The dir which should be created
  * @param  int    The uid of the user
  * @param  int    The gid of the user
+ * @param  bool   Place standard-index.html into the new folder
+ * 
  * @return bool   true if everything went okay, false if something went wrong
  *
  * @author Florian Lippert <flo@syscp.org>
  * @author Martin Burchert <martin.burchert@syscp.org>
  */
 
-function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid)
+function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeindex = false)
 {
 	$returncode = true;
 
@@ -73,6 +75,17 @@ function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid)
 			{
 				$sdir = makeCorrectDir($sdir);
 				safe_exec('mkdir -p ' . escapeshellarg($sdir));
+				
+				/**
+				 * #68
+				 */
+				if ($placeindex) {
+					$loginname = getLoginNameByUid($uid);
+					if ($loginname !== false) {
+						storeDefaultIndex($loginname, $sdir, null);
+					}
+				}
+
 				safe_exec('chown -R ' . (int)$uid . ':' . (int)$gid . ' ' . escapeshellarg($sdir));
 			}
 		}
