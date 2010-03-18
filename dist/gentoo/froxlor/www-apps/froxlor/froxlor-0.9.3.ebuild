@@ -306,9 +306,11 @@ pkg_postinst() {
 		elog "it in your browser the first time after the update-process"
 		sleep 2
 	elif [[ -f "${ROOT}/var/www/syscp/lib/userdata.inc.php" ]] ; then
-		elog This seems to be an upgrade from syscp
-		elog please move /var/www/syscp/lib/userdata.inc.php to
-		elog /var/www/froxlor/lib/
+		elog "This seems to be an upgrade from syscp"
+		elog "please move /var/www/syscp/lib/userdata.inc.php to"
+		elog "/var/www/froxlor/lib/"
+		elog "and don't forget to copy "${ROOT}/usr/share/{PN}/froxlor.cron""
+		elog "to /etc/cron.d/froxlor and remove /etc/cron.d/syscp"
 	else
 		elog "Please run 'emerge --config =${PF}' to continue with"
 		elog "the basic setup of Gentoo-Froxlor, *after* you have"
