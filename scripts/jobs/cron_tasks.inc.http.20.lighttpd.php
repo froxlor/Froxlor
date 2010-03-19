@@ -113,7 +113,7 @@ class lighttpd
 				/**
 				 * dirprotection, see #72
 				 */
-				$this->lighttpd_data[$vhost_filename].= '  $HTTP["url"] =~ "^/(actions|install|lib|lng|scripts|temp)" {' . "\n";
+				$this->lighttpd_data[$vhost_filename].= '  $HTTP["url"] =~ "^/(.+)\/(.+)\.php" {' . "\n";
 				$this->lighttpd_data[$vhost_filename].= '    url.access-deny = ("")' . "\n";
 				$this->lighttpd_data[$vhost_filename].= '  }' . "\n";
 
