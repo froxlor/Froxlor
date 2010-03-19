@@ -111,6 +111,21 @@ return Array(
 						'restart' => Array(
 							'sh /usr/local/etc/rc.d/postfix restart'
 						)
+					),
+					'dkim' => Array(
+						'label' => 'DomainKey filter',
+						'commands' => Array(
+							'cd /usr/ports/mail/dkim-milter/',
+							'make install clean',
+							'touch /usr/local/etc/mail/dkim-filter.conf'
+						),
+						'files' => Array(
+							'dkim-filter.conf' => '/usr/local/etc/mail/dkim-filter.conf',
+							'postfix_dkim_addition.cf' => '/usr/local/etc/postfix/main.cf'
+						),
+						'restart' => Array(
+							'/usr/local/etc/rc.d/milter-dkim restart '
+						)
 					)
 				)
 			),
