@@ -107,8 +107,19 @@ class lighttpd
 				$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . $row_ipsandports['ssl_cert_file'] . '"' . "\n";
 			}
 
-			$this->createLighttpdHosts($row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'], $vhost_filename);
-			$this->lighttpd_data[$vhost_filename].= $this->needed_htpasswds[$row_ipsandports['id']] . "\n";
+			/**
+			 * this function will create a new file which will be included
+			 * if $this->settings['system']['apacheconf_vhost'] is a folder
+			 * refs #70
+			 */
+			$vhosts = $this->createLighttpdHosts($row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'], $vhost_filename);
+			if($vhosts !== null && is_array($vhosts) && isset($vhosts[0]))
+			{
+				foreach($vhosts as $vhost) {
+					$this->lighttpd_data[$vhost_filename].= ' include "vhosts/'.basename($vhost).'"'."\n";
+				}
+			}
+			
 			$this->lighttpd_data[$vhost_filename].= '}' . "\n";
 		}
 	}
@@ -195,18 +206,32 @@ class lighttpd
 			$query2 = "SELECT `d`.`id`, `d`.`domain`, `d`.`customerid`, `d`.`documentroot`, `d`.`ssl`, `d`.`parentdomainid`, `d`.`ipandport`, `d`.`ssl_ipandport`, `d`.`ssl_redirect`, `d`.`isemaildomain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`openbasedir`, `d`.`openbasedir_path`, `d`.`safemode`, `d`.`speciallogfile`, `d`.`specialsettings`, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ssl_ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL ORDER BY `d`.`iswildcarddomain`, `d`.`domain` ASC";
 		}
 
+		$included_vhosts = array();
 		$result_domains = $this->db->query($query2);
-
 		while($domain = $this->db->fetch_array($result_domains))
 		{
+			
+			if (is_dir($this->settings['system']['apacheconf_vhost']))
+			{
+				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'].'/vhosts/')));
+				$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'].'/vhosts/50_'.$domain['domain'].'.conf');
+				$included_vhosts[] = $vhost_filename;
+			}
+			if(!isset($this->lighttpd_data[$vhost_filename]))
+			{
+				$this->lighttpd_data[$vhost_filename] = '';
+			}
+					
 			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ipandport'] . "'";
 			$ipandport = $this->db->query_first($query);
 			$domain['ip'] = $ipandport['ip'];
 			$domain['port'] = $ipandport['port'];
 			$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
 
-			if(!empty($this->lighttpd_data[$vhost_filename]))
-			{
+			if((!empty($this->lighttpd_data[$vhost_filename])
+				&& !is_dir($this->settings['system']['apacheconf_vhost']))
+				|| is_dir($this->settings['system']['apacheconf_vhost'])
+			) {
 				if($ssl == '1')
 				{
 					$ssl_vhost = true;
@@ -217,8 +242,10 @@ class lighttpd
 				}
 
 				$this->lighttpd_data[$vhost_filename].= $this->getVhostContent($domain, $ssl_vhost);
+				$this->lighttpd_data[$vhost_filename].= $this->needed_htpasswds[$row_ipsandports['id']] . "\n";
 			}
 		}
+		return $included_vhosts;
 	}
 
 	protected function getVhostContent($domain, $ssl_vhost = false)
@@ -280,32 +307,16 @@ class lighttpd
 		else
 		{
 			// The normal access/error - logging is enabled
+			// error log cannot be set conditionally see
+			// https://redmine.lighttpd.net/issues/665
 
-			$filename = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-error.log');
-
-			if(!is_file($filename))
-			{
-				$ourFileHandle = fopen($filename, 'w') or die("can't open file");
-				fclose($ourFileHandle);
-			}
-
-			chown($filename, $this->settings['system']['httpuser']);
-			chgrp($filename, $this->settings['system']['httpgroup']);
-
-			//access log
-
-			$filename = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
-
-			if(!is_file($filename))
-			{
-				$ourFileHandle = fopen($filename, 'w') or die("can't open file");
-				fclose($ourFileHandle);
-			}
+			$access_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
+			// Create the logfile if it does not exist (fixes #46)
+			touch($access_log);
+			chown($access_log, $this->settings['system']['httpuser']);
+			chgrp($access_log, $this->settings['system']['httpgroup']);
 
 			$logfiles_text.= '  accesslog.filename	= "' . $filename . '"' . "\n";
-
-			chown($filename, $this->settings['system']['httpuser']);
-			chgrp($filename, $this->settings['system']['httpgroup']);
 		}
 
 		return $logfiles_text;
