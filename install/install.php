@@ -602,8 +602,11 @@ if(isset($_POST['installstep'])
 
 	// and lets insert the default ip and port
 
-	$query = 'INSERT INTO `%s`  SET `ip`   = \'%s\',  `port` = \'80\' ';
-	$query = sprintf($query, TABLE_PANEL_IPSANDPORTS, $db->escape($serverip));
+	$query = "INSERT INTO `".TABLE_PANEL_IPSANDPORTS."` 
+			 SET `ip`= '".$db->escape($serverip)."', 
+			 `port` = '80', 
+			 `vhostcontainer` = '1', 
+			 `vhostcontainer_servername_statement` = '1'";
 	$db->query($query);
 	$defaultip = $db->insert_id();
 

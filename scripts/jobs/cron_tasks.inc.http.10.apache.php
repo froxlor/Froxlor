@@ -121,10 +121,32 @@ class apache
 			{
 				$this->virtualhosts_data[$vhosts_filename].= '<VirtualHost ' . $ipport . '>' . "\n";
 
+				/**
+				 * add 'real'-vhost content here, like doc-root :)
+				 */
+				$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+				$this->virtualhosts_data[$vhosts_filename].= 'DocumentRoot "'.$mypath.'"'."\n";
+				
 				if($row_ipsandports['vhostcontainer_servername_statement'] == '1')
 				{
 					$this->virtualhosts_data[$vhosts_filename].= ' ServerName ' . $this->settings['system']['hostname'] . "\n";
 				}
+
+				/**
+				 * dirprotection, see #72
+				 */
+				$this->virtualhosts_data[$vhosts_filename].= "\t<Directory \"'.$mypath.'(images|packages|templates)\">\n";
+				$this->virtualhosts_data[$vhosts_filename].= "\t\tAllow from all\n";
+				$this->virtualhosts_data[$vhosts_filename].= "\t\tOptions -Indexes\n";
+				$this->virtualhosts_data[$vhosts_filename].= "\t</Directory>\n";
+				
+				$this->virtualhosts_data[$vhosts_filename].= "\t<Directory \"'.$mypath.'*\">\n";
+				$this->virtualhosts_data[$vhosts_filename].= "\t\tOrder Deny,Allow\n";
+				$this->virtualhosts_data[$vhosts_filename].= "\t\tDeny from All\n";
+				$this->virtualhosts_data[$vhosts_filename].= "\t</Directory>\n";
+				/**
+				 * end of dirprotection
+				 */
 
 				if($row_ipsandports['specialsettings'] != '')
 				{

@@ -68,7 +68,7 @@ class lighttpd
 
 	public function createIpPort()
 	{
-		$query = "SELECT `id`, `ip`, `port`, `listen_statement`, `namevirtualhost_statement`, `vhostcontainer`, " . " `vhostcontainer_servername_statement`, `specialsettings`, `ssl`, `ssl_cert_file` " . " FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC";
+		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC";
 		$result_ipsandports = $this->db->query($query);
 
 		while($row_ipsandports = $this->db->fetch_array($result_ipsandports))
@@ -100,7 +100,31 @@ class lighttpd
 				$this->lighttpd_data[$vhost_filename].= 'server.port = ' . $port . "\n";
 				$this->lighttpd_data[$vhost_filename].= 'server.bind = "' . $ip . '"' . "\n";
 			}
-				
+			
+			if($row_ipsandports['vhostcontainer'] == '1')
+			{
+				$myhost = str_replace('.', '\.', $this->settings['system']['hostname']);
+				$this->lighttpd_data[$vhost_filename].= '# Froxlor default vhost' . "\n";
+				$this->lighttpd_data[$vhost_filename].= '$HTTP["host"] =~ "^(?:www\.|)' . $myhost . '$" {' . "\n";
+
+				$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+				$this->lighttpd_data[$vhost_filename].= '  server.document-root = "'.$mypath.'"'."\n";
+
+				/**
+				 * dirprotection, see #72
+				 */
+				$this->lighttpd_data[$vhost_filename].= '  $HTTP["url"] =~ "^/(actions|install|lib|lng|scripts|temp)" {' . "\n";
+				$this->lighttpd_data[$vhost_filename].= '    url.access-deny = ("")' . "\n";
+				$this->lighttpd_data[$vhost_filename].= '  }' . "\n";
+
+				if($row_ipsandports['specialsettings'] != '')
+				{
+					$this->lighttpd_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";
+				}
+
+				$this->lighttpd_data[$vhost_filename].= '}' . "\n";
+			}
+	
 			if($row_ipsandports['ssl'] == '1')
 			{
 				$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
@@ -116,7 +140,7 @@ class lighttpd
 			if($vhosts !== null && is_array($vhosts) && isset($vhosts[0]))
 			{
 				foreach($vhosts as $vhost) {
-					$this->lighttpd_data[$vhost_filename].= ' include "vhosts/'.basename($vhost).'"'."\n";
+					$this->lighttpd_data[$vhost_filename].= ' include "'.$vhost.'"'."\n";
 				}
 			}
 			
