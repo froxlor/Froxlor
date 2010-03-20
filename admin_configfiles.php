@@ -111,6 +111,7 @@ if($userinfo['change_serversettings'] == '1')
 				if(is_array($value))
 				{
 					$commands = implode("\n", $value);
+					$commands = str_replace("\n\n", "\n", $commands);
 
 					if($commands != '')
 					{
