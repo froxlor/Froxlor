@@ -144,7 +144,7 @@ while($row = $db->fetch_array($result_tasks))
 			safe_exec('mkdir -p ' . escapeshellarg($settings['system']['vmail_homedir'] . $row['data']['loginname']));
 
 			//check if admin of customer has added template for new customer directories
-			$destdir = makeCorrectDir($settings['system']['documentroot_prefix'] . $loginname);
+			$destdir = makeCorrectDir($settings['system']['documentroot_prefix'] . '/' . $row['data']['loginname']);
 			storeDefaultIndex($row['data']['loginname'], $destdir, $cronlog, true);
 
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname']));
