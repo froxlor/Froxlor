@@ -340,7 +340,7 @@ class lighttpd
 			chown($access_log, $this->settings['system']['httpuser']);
 			chgrp($access_log, $this->settings['system']['httpgroup']);
 
-			$logfiles_text.= '  accesslog.filename	= "' . $filename . '"' . "\n";
+			$logfiles_text.= '  accesslog.filename	= "' . $access_log . '"' . "\n";
 		}
 
 		return $logfiles_text;
