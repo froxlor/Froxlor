@@ -156,6 +156,121 @@ function status_message($case, $text)
 	}
 }
 
+function requirement_checks()
+{
+	global $lng;
+	page_header();
+
+?>
+	<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable">
+		<tr>
+			<td class="maintitle"><b><img src="../images/title.gif" alt="" />&nbsp;Froxlor Installation</b></td>
+		</tr>
+<?php
+	$_die = false;
+	
+	// check for correct php version
+	status_message('begin', $lng['install']['phpversion']);
+
+	if(version_compare("5.2.0", PHP_VERSION, ">="))
+	{
+		status_message('red', $lng['install']['notinstalled']);
+		$_die = true;
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
+
+
+	status_message('begin', $lng['install']['phpmysql']);
+
+	if(!extension_loaded('mysql'))
+	{
+		status_message('red', $lng['install']['notinstalled']);
+		$_die = true;
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
+
+	status_message('begin', $lng['install']['phpfilter']);
+
+	if(!extension_loaded('filter'))
+	{
+		status_message('red', $lng['install']['notinstalled']);
+		$_die = true;
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
+
+	status_message('begin', $lng['install']['phpposix']);	
+
+	if(!extension_loaded('posix'))
+	{
+		status_message('red', $lng['install']['notinstalled']);
+		$_die = true;
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
+	
+	status_message('begin', $lng['install']['phpbcmath']);
+
+	if(!extension_loaded('bcmath'))
+	{
+		status_message('orange', $lng['install']['notinstalled'] . '<br />' . $lng['install']['bcmathdescription']);
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
+
+	status_message('begin', $lng['install']['openbasedir']);
+	$php_ob = @ini_get("open_basedir");
+
+	if(!empty($php_ob)
+	   && $php_ob != '')
+	{
+		status_message('orange', $lng['install']['openbasedirenabled']);
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
+
+	if($_die)
+	{
+?>
+		<tr>
+			<td class="main_field_display" align="center">
+				<?php echo $lng['install']['diedbecauseofrequirements']; ?><br />
+				<a href="install.php"><?php echo $lng['install']['click_here_to_refresh']; ?></a>
+			</td>
+		</tr>
+<?php 
+	} else {
+?>
+		<tr>
+			<td class="main_field_display" align="center">
+				<?php echo $lng['install']['froxlor_succ_checks']; ?><br />
+				<a href="install.php?check=1"><?php echo $lng['install']['click_here_to_continue']; ?></a>
+			</td>
+		</tr>
+<?php
+	}
+?>
+	</table>
+	<br />
+	<br />
+<?php 
+	page_footer();
+}
+
 /**
  * END FUNCTIONS ---------------------------------------------------
  */
@@ -371,87 +486,6 @@ if(isset($_POST['installstep'])
 			<td class="maintitle"><b><img src="../images/title.gif" alt="" />&nbsp;Froxlor Installation</b></td>
 		</tr>
 <?php
-	$_die = false;
-	
-	// check for correct php version
-	status_message('begin', $lng['install']['phpversion']);
-
-	if(version_compare("5.2.0", PHP_VERSION, ">="))
-	{
-		status_message('red', $lng['install']['notinstalled']);
-		$_die = true;
-	}
-	else
-	{
-		status_message('green', 'OK');
-	}
-
-
-	status_message('begin', $lng['install']['phpmysql']);
-
-	if(!extension_loaded('mysql'))
-	{
-		status_message('red', $lng['install']['notinstalled']);
-		$_die = true;
-	}
-	else
-	{
-		status_message('green', 'OK');
-	}
-
-	status_message('begin', $lng['install']['phpfilter']);
-
-	if(!extension_loaded('filter'))
-	{
-		status_message('red', $lng['install']['notinstalled']);
-		$_die = true;
-	}
-	else
-	{
-		status_message('green', 'OK');
-	}
-
-	status_message('begin', $lng['install']['phpposix']);	
-
-	if(!extension_loaded('posix'))
-	{
-		status_message('red', $lng['install']['notinstalled']);
-		$_die = true;
-	}
-	else
-	{
-		status_message('green', 'OK');
-	}
-	
-	status_message('begin', $lng['install']['phpbcmath']);
-
-	if(!extension_loaded('bcmath'))
-	{
-		status_message('orange', $lng['install']['notinstalled'] . '<br />' . $lng['install']['bcmathdescription']);
-	}
-	else
-	{
-		status_message('green', 'OK');
-	}
-
-	status_message('begin', $lng['install']['openbasedir']);
-	$php_ob = @ini_get("open_basedir");
-
-	if(!empty($php_ob)
-	   && $php_ob != '')
-	{
-		status_message('orange', $lng['install']['openbasedirenabled']);
-	}
-	else
-	{
-		status_message('green', 'OK');
-	}
-
-	if($_die)
-	{
-		status_message('begin', $lng['install']['diedbecauseofrequirements']);
-		die();
-	}
 
 	//first test if we can access the database server with the given root user and password
 
@@ -709,6 +743,10 @@ if(isset($_POST['installstep'])
 }
 else
 {
+	
+	if(isset($_GET['check'])
+		&& $_GET['check'] == '1')
+	{
 	page_header();
 
 ?>
@@ -822,6 +860,11 @@ else
 	<br />
 <?php
 	page_footer();
+	}
+	else
+	{
+		requirement_checks();
+	}		
 }
 
 /**

@@ -84,4 +84,11 @@ $lng['install']['webserver'] = 'Webserver';
 $lng['install']['phpversion'] = 'Checking for PHP version >= 5.2';
 $lng['install']['phpposix'] = 'Testing if PHP posix-extension is installed...';
 
+/*
+ * Added in Froxlor 0.9.4
+ */
+$lng['install']['click_here_to_refresh'] = 'Re-check';
+$lng['install']['click_here_to_continue'] = 'Continue installation';
+$lng['install']['froxlor_succ_checks'] = 'All requirements are satisfied';
+
 ?>
