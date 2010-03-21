@@ -112,10 +112,12 @@ class lighttpd
 
 				/**
 				 * dirprotection, see #72
-				 */
+				 * @TODO use better regex for this
+				 *
 				$this->lighttpd_data[$vhost_filename].= '  $HTTP["url"] =~ "^/(.+)\/(.+)\.php" {' . "\n";
 				$this->lighttpd_data[$vhost_filename].= '    url.access-deny = ("")' . "\n";
 				$this->lighttpd_data[$vhost_filename].= '  }' . "\n";
+				*/
 
 				if($row_ipsandports['specialsettings'] != '')
 				{
@@ -238,8 +240,15 @@ class lighttpd
 			if (is_dir($this->settings['system']['apacheconf_vhost']))
 			{
 				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'].'/vhosts/')));
+				
+				// determine correct include-path:
+				// e.g. '/etc/lighttpd/conf-enabled/vhosts/ has to become'
+				// 'conf-enabled/vhosts/' (damn debian, but luckily works too on other distros)
+				$_tmp_path = substr(makeCorrectDir($this->settings['system']['apacheconf_vhost']), 0, -1);
+				$_pos = strrpos($_tmp_path, '/');
+				$_inc_path = substr($_tmp_path, $_pos+1);
 				$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'].'/vhosts/50_'.$domain['domain'].'.conf');
-				$included_vhosts[] = $vhost_filename;
+				$included_vhosts[] = $_inc_path.'/vhosts/50_'.$domain['domain'].'.conf';
 			}
 			if(!isset($this->lighttpd_data[$vhost_filename]))
 			{
