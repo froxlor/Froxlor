@@ -416,6 +416,10 @@ if($page == '')
  */
 
 $mail = new PHPMailer();
-$mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
+// set return-to address and custom sender-name, see #76
+$mail->SetFrom($settings['panel']['adminmail'], $settings['panel']['adminmail_defname']);
+if ($settings['panel']['adminmail_return'] != '') {
+	$mail->AddReplyTo($settings['panel']['adminmail_return'], $settings['panel']['adminmail_defname']);
+}
  
 ?>

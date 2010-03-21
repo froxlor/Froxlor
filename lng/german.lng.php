@@ -1293,4 +1293,10 @@ $lng['error']['notrequiredpasswordlength'] = 'Das Passwort ist zu kurz. Bitte ge
 $lng['serversettings']['system_store_index_file_subs']['title'] = 'Erstelle Index-Datei auch in neuen Unterordnern';
 $lng['serversettings']['system_store_index_file_subs']['description'] = 'Wenn aktiviert, wird f&uuml;r jede Subdomain mit neuem Unterordner die Standard-Index Datei angelegt.';
 
+// ADDED IN FROXLOR 0.9.3-svn2
+
+$lng['serversettings']['adminmail_return']['title'] = 'Antwort-Adresse';
+$lng['serversettings']['adminmail_return']['description'] = 'Standard-Antwort-Adresse f&uuml;r E-Mails aus dem Panel.';
+$lng['serversettings']['adminmail_defname'] = 'Panel Absender Name';
+
 ?>

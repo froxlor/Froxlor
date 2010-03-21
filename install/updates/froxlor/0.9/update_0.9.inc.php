@@ -326,4 +326,16 @@ if(isFroxlorVersion('0.9.3'))
 	updateToVersion('0.9.3-svn1');
 }
 
+if(isFroxlorVersion('0.9.3-svn1'))
+{
+	showUpdateStep("Updating from 0.9.3-svn1 to 0.9.3-svn2", false);
+
+	showUpdateStep("Updating tables");	
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'adminmail_defname', 'Froxlor Administrator');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'adminmail_return', '');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.3-svn2');
+}
+
 ?>
