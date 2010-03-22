@@ -27,6 +27,10 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 		$returnvalue = true;
 		foreach($newfieldvalues as $single_newfieldvalue)
 		{
+			/**
+	 		 * don't use tabs in value-fields, #81
+	 		 */
+			$single_newfieldvalue = str_replace("\t", " ", $single_newfieldvalue);
 			$single_returnvalue = validateFormFieldString($fieldname, $fielddata, $single_newfieldvalue);
 			if($single_returnvalue !== true)
 			{
@@ -38,6 +42,11 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 	else
 	{
 		$returnvalue = false;
+
+		/**
+ 		 * don't use tabs in value-fields, #81
+ 		 */
+		$newfieldvalue = str_replace("\t", " ", $newfieldvalue);
 
 		if(isset($fielddata['string_type']) && $fielddata['string_type'] == 'mail')
 		{
