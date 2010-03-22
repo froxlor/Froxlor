@@ -1315,8 +1315,8 @@ $lng['serversettings']['system_store_index_file_subs']['description'] = 'If enab
 
 // ADDED IN FROXLOR 0.9.3-svn2
 
-$lng['serversettings']['adminmail_return']['title'] = 'Answert-To address';
-$lng['serversettings']['adminmail_return']['description'] = 'Define an e-mail address as answer-to-address for mails sent by the panel.';
+$lng['serversettings']['adminmail_return']['title'] = 'Reply-To address';
+$lng['serversettings']['adminmail_return']['description'] = 'Define an e-mail address as reply-to-address for mails sent by the panel.';
 $lng['serversettings']['adminmail_defname'] = 'Panel e-mail sender name';
 
 ?>
