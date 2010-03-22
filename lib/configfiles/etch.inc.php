@@ -257,7 +257,7 @@ return Array(
 							'apt-get install awstats'
 						),
 						'files' => Array(
-							'etc_awstats.model.conf' => '/etc/awstats.model.conf'
+							'etc_awstats.model.conf' => '/etc/awstats/awstats.conf'
 						),
 					),
 					'libnss' => Array(

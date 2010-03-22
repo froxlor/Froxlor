@@ -137,8 +137,11 @@ return Array(
 					),
 					'awstats' => Array(
 						'label' => 'Awstats',
+						'commands' => Array(
+							'awstats_configure.pl'
+						),
 						'files' => Array(
-							'etc_awstats.model.conf' => '/etc/awstats.model.conf'
+							'etc_awstats.model.conf' => '/etc/awstats/awstats.conf'
 						)
 					)
 				)

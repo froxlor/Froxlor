@@ -269,10 +269,11 @@ milter_default_action = accept\n" >> /etc/postfix/main.cf'
 					'awstats' => Array(
 						'label' => 'Awstats',
 						'commands' => Array(
-							'emerge awstats'
+							'emerge awstats',
+							'awstats_configure.pl'
 						),
 						'files' => Array(
-							'etc_awstats.model.conf' => '/etc/awstats.model.conf'
+							'etc_awstats.model.conf' => '/etc/awstats/awstats.model.conf'
 						),
 					),
 					'libnss' => Array(
