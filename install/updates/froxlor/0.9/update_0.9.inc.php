@@ -338,4 +338,20 @@ if(isFroxlorVersion('0.9.3-svn1'))
 	updateToVersion('0.9.3-svn2');
 }
 
+if(isFroxlorVersion('0.9.3-svn2'))
+{
+	showUpdateStep("Updating from 0.9.3-svn2 to 0.9.3-svn3", false);
+
+	showUpdateStep("Correcting cron start-times");	
+	// set specific times for some crons (traffic only at night, etc.)
+	$ts = mktime(0, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
+	$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_traffic.php';");
+	$ts = mktime(1, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
+	$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_used_tickets_reset.php';");
+	$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_ticketarchive.php';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.3-svn3');
+}
+
 ?>

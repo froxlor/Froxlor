@@ -607,8 +607,6 @@ if(isset($_POST['installstep'])
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($webserver) . "' WHERE `settinggroup` = 'system' AND `varname` = 'webserver'");
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($webserver) . "' WHERE `settinggroup` = 'system' AND `varname` = 'webserver'");
 
-	//FIXME
-
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($httpuser) . "' WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($httpgroup) . "' WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
 
@@ -633,6 +631,13 @@ if(isset($_POST['installstep'])
 	$query = 'UPDATE `%s` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = \'system\'  AND `varname` = \'lastcronrun\'';
 	$query = sprintf($query, TABLE_PANEL_SETTINGS);
 	$db->query($query);
+	
+	// set specific times for some crons (traffic only at night, etc.)
+	$ts = mktime(0, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
+	$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_traffic.php';");
+	$ts = mktime(1, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
+	$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_used_tickets_reset.php';");
+	$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_ticketarchive.php';");
 
 	// and lets insert the default ip and port
 
