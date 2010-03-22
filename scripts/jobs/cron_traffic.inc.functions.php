@@ -17,6 +17,114 @@
  * @version    $Id$
  */
 
+function awstatsDoSingleDomain($domain, $outputdir)
+{
+	global $cronlog;
+	$returnval = 0;
+
+	$domainconfig = '/etc/awstats/awstats.' . $domain . '.conf';
+	if(file_exists($domainconfig))
+	{
+		$outputdir = makeCorrectDir($outputdir . '/' . $domain);
+
+		if(!is_dir($outputdir))
+		{
+			safe_exec('mkdir -p ' . escapeshellarg($outputdir));
+		}
+
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '".$domain."' (Output: '".$outputdir."')");
+		safe_exec('awstats_buildstaticpages.pl -update -config=' . $domain . ' -dir='.escapeshellarg($outputdir));
+		
+		/**
+		 * index file is saved like 'awstats.[domain].html',
+		 * so link a index.html to it
+		 */
+		$original_index = makeCorrectFile($outputdir.'/awstats.'.$domain.'.html');
+		$new_index = makeCorrectFile($outputdir.'/index.html');
+		if(!file_exists($new_index)) {
+			safe_exec('ln -s '.escapeshellarg($original_index).' '.escapeshellarg($new_index));
+		}
+
+		/**
+		 * statistics file looks like: 'awstats[month][year].[domain].txt'
+		 */
+		$file = makeCorrectFile($outputdir.'/awstats'.date('mY', time()).'.'.$domain.'.txt');
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '".$file."'");
+
+		if (file_exists($file)) {
+			$content = @file_get_contents($file);
+			if ($content !== false) {
+				$content_array = explode("\n", $content);
+				
+				$count_bdw = false;
+				foreach($content_array as $line)
+				{
+					if(trim($line) == '') {
+						continue;
+					}
+					
+					$parts = explode(' ', $line);
+					
+					if(isset($line[0])
+						&& strtoupper($line[0]) == 'BEGIN_DOMAIN'
+					) {
+						$count_bdw = true;
+					}
+					elseif(isset($line[0])
+						&& strtoupper($line[0]) == 'END_DOMAIN'
+					) {
+						$count_bdw = false;
+					}
+					
+					if ($count_bdw) {
+						if (isset($line[3])) {
+							$returnval += floatval($line[3]);
+						}
+					}
+				}
+			}
+		}
+	}
+	return $returnval;
+}
+
+function callAwstatsGetTraffic($domain, $outputdir, $caption, $usersdomainlist)
+{
+	global $settings, $db, $cronlog;
+	$returnval = 0;
+
+	foreach($usersdomainlist as $domainid => $singledomain)
+	{
+		// as we check for the config-model awstats will only parse
+		// 'real' domains and no subdomains which are aliases in the
+		// model-config-file.
+		$returnval += awstatsDoSingleDomain($singledomain, $outputdir);
+	}
+
+	/**
+	 * now, because this traffic is being saved daily, we have to
+	 * subtract the values  from all the month's values to return
+	 * a sane value for our panel_traffic and to remain the whole stats
+	 * (awstats overwrites the customers .html stats-files)
+	 */
+	$customerid = getCustomerIdByDomain($domain);
+	
+	if($customerid !== false)
+	{
+		$result = $db->query_first("SELECT SUM(`http`) as `trafficmonth` FROM `" . TABLE_PANEL_TRAFFIC . "` 
+							WHERE `customerid` = '".(int)$customerid."'  
+							AND `year`='".date('Y', time())."'
+							AND `month`='".date('m', time())."'");
+		if(is_array($result) 
+			&& isset($result['trafficmonth'])
+		) {
+			$returnval = ($returnval - floatval($result['trafficmonth']));
+		}
+	}
+
+	return floatval($returnval);
+}
+
 /**
  * Function which make webalizer statistics and returns used traffic since last run
  *
@@ -29,7 +137,7 @@
 
 function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlist)
 {
-	global $settings;
+	global $settings, $cronlog;
 	$returnval = 0;
 
 	if(file_exists($settings['system']['logfiles_directory'] . $logfile . '-access.log'))
@@ -37,6 +145,7 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 		$domainargs = '';
 		foreach($usersdomainlist as $domainid => $domain)
 		{
+			// hide referer
 			$domainargs.= ' -r ' . escapeshellarg($domain);
 		}
 
@@ -69,6 +178,7 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 			$verbosity = '-Q';
 		}
 
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running webalizer for domain '".$caption."'");
 		safe_exec('webalizer ' . $verbosity . ' -p -o ' . escapeshellarg($outputdir) . ' -n ' . escapeshellarg($caption) . $domainargs . ' ' . escapeshellarg($settings['system']['logfiles_directory'] . $logfile . '-access.log'));
 
 		/**
@@ -80,6 +190,7 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 
 		$httptraffic = array();
 		$webalizer_hist = @file_get_contents($outputdir . 'webalizer.hist');
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '".$webalizer_hist."'");
 		$webalizer_hist_rows = explode("\n", $webalizer_hist);
 		foreach($webalizer_hist_rows as $webalizer_hist_row)
 		{
@@ -108,6 +219,7 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 		reset($httptraffic);
 		$httptrafficlast = array();
 		$webalizer_lasthist = @file_get_contents($outputdir . 'webalizer.hist.1');
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '".$webalizer_lasthist."'");
 		$webalizer_lasthist_rows = explode("\n", $webalizer_lasthist);
 		foreach($webalizer_lasthist_rows as $webalizer_lasthist_row)
 		{
@@ -229,4 +341,3 @@ function safeSQLLogfile($domains, $loginname)
 	$db->query("DELETE FROM access_log " . $where);
 	return true;
 }
-

@@ -138,15 +138,7 @@ return Array(
 					'awstats' => Array(
 						'label' => 'Awstats',
 						'files' => Array(
-							($settings['system']['mod_log_sql'] == 1 ? 'etc_awstats_awstats.model_log_sql.conf.froxlor' : 'etc_awstats_awstats.model.conf.froxlor') => '/etc/awstats/awstats.model.conf.froxlor',
-							($settings['system']['mod_log_sql'] == 1 ? 'etc_cron.d_awstats_log_sql' : 'etc_cron.d_awstats') => '/etc/cron.d/awstats',
-							($settings['system']['webserver'] == 'lighttpd' ? 'etc_lighttpd_froxlor-awstats.conf' : 'etc_apache_vhosts_05_awstats.conf') => ($settings['system']['webserver'] == 'lighttpd' ? '/etc/lighttpd/froxlor-awstats.conf' : '/etc/apache2/sites-enabled/05_awstats.conf')
-						),
-						'commands' => Array(
-							($settings['system']['webserver'] == 'lighttpd' ? 'echo "include \"froxlor-awstats.conf\"" >> /etc/lighttpd/lighttpd.conf' : '')
-						),
-						'restart' => Array(
-							($settings['system']['webserver'] == 'lighttpd' ? '/etc/init.d/lighttpd restart' : '/etc/init.d/apache2 restart')
+							'etc_awstats.model.conf' => '/etc/awstats.model.conf'
 						)
 					)
 				)

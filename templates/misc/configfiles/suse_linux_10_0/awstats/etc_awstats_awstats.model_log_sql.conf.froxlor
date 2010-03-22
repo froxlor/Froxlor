@@ -1,9 +1,0 @@
-LogFile="{LOG_FILE}"
-LogType=W
-LogFormat = "%host %virtualname %logname %time1 %methodurl %code %bytesd %refererquot %uaquot"
-LogSeparator=" "
-SiteDomain="{SITE_DOMAIN}"
-HostAliases="{HOST_ALIASES}"
-
-# Include local configuration options identical for all virtual hosts
-Include "/etc/awstats/awstats.conf.local"

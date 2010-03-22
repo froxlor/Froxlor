@@ -51,11 +51,12 @@ function safe_exec($exec_string, &$return_value = false)
 		$settings['system']['apachereload_command'],
 		$settings['system']['bindreload_command'],
 		$settings['dkim']['dkimrestart_command'],
-		$settings['system']['awstats_updateall_command'],
 		'openssl',
 		'unzip',
 		'php',
-		'rm'
+		'rm',
+		'awstats_buildstaticpages.pl',
+		'ln'
 	);
 
 	//

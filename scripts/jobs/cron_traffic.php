@@ -165,7 +165,14 @@ while($row = $db->fetch_array($result))
 					unset($domainlist[$row['customerid']][$domainid]);
 				}
 
-				$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
+				if($this->settings['system']['awstats_enabled'] == '1')
+				{
+					$httptraffic+= floatval(callAwstatsGetTraffic($domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domainlist[$row['customerid']]));
+				} 
+				else
+				{
+					$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
+				}
 			}
 		}
 
@@ -176,7 +183,14 @@ while($row = $db->fetch_array($result))
 			safeSQLLogfile($domainlist[$row['customerid']], $row['loginname']);
 		}
 
-		$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
+		if($settings['system']['awstats_enabled'] == '1')
+		{
+			$httptraffic+= floatval(callAwstatsGetTraffic($caption, $row['documentroot'] . '/awstats/', $caption, $domainlist[$row['customerid']]));
+		}
+		else
+		{
+			$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
+		}
 	}
 
 	/**

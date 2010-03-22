@@ -61,7 +61,7 @@ while($row = $db->fetch_array($result_tasks))
 			 * (e.g. awstats not installed yet or whatever)
 			 * fixes #45
 			 */
-			if (is_dir($awstatsclean['dir'])) 
+			if (is_dir($awstatsclean['path'])) 
 			{
 				$awstatsclean['dir'] = dir($awstatsclean['path']);
 				while($awstatsclean['entry'] = $awstatsclean['dir']->read()) {
@@ -75,6 +75,7 @@ while($row = $db->fetch_array($result_tasks))
 						$awstatsclean['headerRead'] = fgets($awstatsclean['fh'], strlen($awstatsclean['header'])+1);
 						fclose($awstatsclean['fh']);
 						if($awstatsclean['headerRead'] == $awstatsclean['header']) {
+							$cronlog->logAction(CRON_ACTION, LOG_INFO, "Removing awstats configuration ".$awstatsclean['fullentry']." for re-creation");
 							@unlink($awstatsclean['fullentry']);
 						}
 					}
@@ -140,6 +141,8 @@ while($row = $db->fetch_array($result_tasks))
 		{
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname'] . '/webalizer'));
 			safe_exec('mkdir -p ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname'] . '/webalizer'));
+			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname'] . '/awstats'));
+			safe_exec('mkdir -p ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname'] . '/awstats'));
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($settings['system']['vmail_homedir'] . $row['data']['loginname']));
 			safe_exec('mkdir -p ' . escapeshellarg($settings['system']['vmail_homedir'] . $row['data']['loginname']));
 
@@ -162,7 +165,7 @@ while($row = $db->fetch_array($result_tasks))
 	}
 
 	/**
-	 * TYPE=4 MEANS THAT SOMETHING IN THE BIND CONFIG HAS CHANGED. REBUILD syscp_bind.conf
+	 * TYPE=4 MEANS THAT SOMETHING IN THE BIND CONFIG HAS CHANGED. REBUILD froxlor_bind.conf
 	 */
 	elseif ($row['type'] == '4')
 	{

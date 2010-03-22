@@ -125,6 +125,11 @@ elseif($page == 'domains')
 			if($paging->checkDisplay($i))
 			{
 				$row = htmlentities_array($domain_array[$sortkey]);
+				if($settings['system']['awstats_enabled'] == '1') {
+					$statsapp = 'awstats/'.$row['domain'].'/';
+				} else {
+					$statsapp = 'webalizer';
+				}
 				eval("\$domains.=\"" . getTemplate("domains/domains_delimiter") . "\";");
 
 				if($paging->sortfield == 'd.domain'

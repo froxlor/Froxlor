@@ -62,7 +62,7 @@ class lighttpd
 	public function reload()
 	{
 		fwrite($this->debugHandler, '   lighttpd::reload: reloading lighttpd' . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading apache');
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading lighttpd');
 		safe_exec($this->settings['system']['apachereload_command']);
 	}
 
@@ -225,11 +225,11 @@ class lighttpd
 
 		if($ssl == '0')
 		{
-			$query2 = "SELECT `d`.`id`, `d`.`domain`, `d`.`customerid`, `d`.`documentroot`, `d`.`ssl`, `d`.`parentdomainid`, `d`.`ipandport`, `d`.`ssl_ipandport`, `d`.`ssl_redirect`, `d`.`isemaildomain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`openbasedir`, `d`.`openbasedir_path`, `d`.`safemode`, `d`.`speciallogfile`, `d`.`specialsettings`, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL ORDER BY `d`.`iswildcarddomain`, `d`.`domain` ASC";
+			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL ORDER BY `d`.`iswildcarddomain`, `d`.`domain` ASC";
 		}
 		else
 		{
-			$query2 = "SELECT `d`.`id`, `d`.`domain`, `d`.`customerid`, `d`.`documentroot`, `d`.`ssl`, `d`.`parentdomainid`, `d`.`ipandport`, `d`.`ssl_ipandport`, `d`.`ssl_redirect`, `d`.`isemaildomain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`openbasedir`, `d`.`openbasedir_path`, `d`.`safemode`, `d`.`speciallogfile`, `d`.`specialsettings`, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ssl_ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL ORDER BY `d`.`iswildcarddomain`, `d`.`domain` ASC";
+			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ssl_ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL ORDER BY `d`.`iswildcarddomain`, `d`.`domain` ASC";
 		}
 
 		$included_vhosts = array();
@@ -323,6 +323,7 @@ class lighttpd
 		$vhost_content.= $this->create_htaccess($domain);
 		$vhost_content.= $this->create_pathOptions($domain);
 		$vhost_content.= $this->composePhpOptions($domain);
+		$vhost_content.= $this->getStats($domain);
 		$vhost_content.= $this->getLogFiles($domain);
 		$vhost_content.= '}' . "\n";
 		return $vhost_content;
@@ -350,6 +351,60 @@ class lighttpd
 			chgrp($access_log, $this->settings['system']['httpgroup']);
 
 			$logfiles_text.= '  accesslog.filename	= "' . $access_log . '"' . "\n";
+		}
+		
+		if($this->settings['system']['awstats_enabled'] == '1')
+		{
+			if((int)$domain['parentdomainid'] == 0) 
+			{
+				// prepare the aliases and subdomains for stats config files
+	
+				$server_alias = '';
+				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` 
+												WHERE `aliasdomain`=\'' . $domain['id'] . '\'
+												OR `parentdomainid` =\''. $domain['id']. '\'');
+	
+				while(($alias_domain = $this->db->fetch_array($alias_domains)) !== false)
+				{
+					$server_alias.= ' ' . $alias_domain['domain'] . ' ';
+	
+					if($alias_domain['iswildcarddomain'] == '1')
+					{
+						$server_alias.= '*.' . $domain['domain'];
+					}
+					else
+					{
+						if($alias_domain['wwwserveralias'] == '1')
+						{
+							$server_alias.= 'www.' . $alias_domain['domain'];
+						}
+						else
+						{
+							$server_alias.= '';
+						}
+					}
+				}
+	
+				if($domain['iswildcarddomain'] == '1')
+				{
+					$alias = '*.' . $domain['domain'];
+				}
+				else
+				{
+					if($domain['wwwserveralias'] == '1')
+					{
+						$alias = 'www.' . $domain['domain'];
+					}
+					else
+					{
+						$alias = '';
+					}
+				}
+	
+				// After inserting the AWStats information, 
+				// be sure to build the awstats conf file as well
+				createAWStatsConf($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot']);
+			}
 		}
 
 		return $logfiles_text;
@@ -569,6 +624,60 @@ class lighttpd
 		}
 
 		return $webroot_text;
+	}
+	
+	/*
+	*	Lets set the text part for the stats software
+	*/
+
+	protected function getStats($domain)
+	{
+		$stats_text = '';
+
+		if($domain['speciallogfile'] == '1'
+		   && $this->settings['system']['mod_log_sql'] != '1')
+		{
+			if($domain['parentdomainid'] == '0')
+			{
+				if($this->settings['system']['awstats_enabled'] == '1')
+				{
+					// @TODO see if this is correct for awstats
+					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
+				}
+				else
+				{
+					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']).'" )' . "\n";					
+				}
+			}
+			else
+			{
+				if($this->settings['system']['awstats_enabled'] == '1')
+				{
+					// @TODO see if this is correct for awstats
+					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']).'" )' . "\n";
+				}
+				else
+				{
+					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']).'" )' . "\n";
+				}
+			}
+		}
+		else
+		{
+			if($domain['customerroot'] != $domain['documentroot'])
+			{
+				if($this->settings['system']['awstats_enabled'] == '1')
+				{
+					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
+				} 
+				else
+				{
+					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer').'" )' . "\n";
+				}
+			}
+		}
+
+		return $stats_text;
 	}
 
 	public function writeConfigs()

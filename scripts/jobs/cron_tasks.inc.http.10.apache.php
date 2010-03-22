@@ -340,20 +340,26 @@ class apache
 		{
 			if($domain['parentdomainid'] == '0')
 			{
-				$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . '"' . "\n";
-
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					$stats_text.= createAWStatsVhost($domain['domain'], $this->settings);
+					// @TODO see if this is correct for awstats
+					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
+				}
+				else
+				{
+					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . '"' . "\n";					
 				}
 			}
 			else
 			{
-				$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . '"' . "\n";
-
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					$stats_text.= createAWStatsVhost($domain['parentdomain'], $this->settings);
+					// @TODO see if this is correct for awstats
+					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . '"' . "\n";
+				}
+				else
+				{
+					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . '"' . "\n";
 				}
 			}
 		}
@@ -361,12 +367,14 @@ class apache
 		{
 			if($domain['customerroot'] != $domain['documentroot'])
 			{
-				$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer') . '"' . "\n";
-			}
-
-			if($this->settings['system']['awstats_enabled'] == '1')
-			{
-				$stats_text.= createAWStatsVhost($domain['domain'], $this->settings);
+				if($this->settings['system']['awstats_enabled'] == '1')
+				{
+					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
+				} 
+				else
+				{
+					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer') . '"' . "\n";
+				}
 			}
 		}
 
@@ -427,51 +435,56 @@ class apache
 
 		if($this->settings['system']['awstats_enabled'] == '1')
 		{
-			// prepare the aliases for stats config files
-
-			$server_alias = '';
-			$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . $domain['id'] . '\'');
-
-			while(($alias_domain = $this->db->fetch_array($alias_domains)) !== false)
+			if((int)$domain['parentdomainid'] == 0) 
 			{
-				$server_alias.= ' ' . $alias_domain['domain'] . ' ';
+				// prepare the aliases and subdomains for stats config files
 
-				if($alias_domain['iswildcarddomain'] == '1')
+				$server_alias = '';
+				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` 
+												WHERE `aliasdomain`=\'' . $domain['id'] . '\'
+												OR `parentdomainid` =\''. $domain['id']. '\'');
+	
+				while(($alias_domain = $this->db->fetch_array($alias_domains)) !== false)
 				{
-					$server_alias.= '*.' . $domain['domain'];
-				}
-				else
-				{
-					if($alias_domain['wwwserveralias'] == '1')
+					$server_alias.= ' ' . $alias_domain['domain'] . ' ';
+	
+					if($alias_domain['iswildcarddomain'] == '1')
 					{
-						$server_alias.= 'www.' . $alias_domain['domain'];
+						$server_alias.= '*.' . $domain['domain'];
 					}
 					else
 					{
-						$server_alias.= '';
+						if($alias_domain['wwwserveralias'] == '1')
+						{
+							$server_alias.= 'www.' . $alias_domain['domain'];
+						}
+						else
+						{
+							$server_alias.= '';
+						}
 					}
 				}
-			}
-
-			if($domain['iswildcarddomain'] == '1')
-			{
-				$alias = '*.' . $domain['domain'];
-			}
-			else
-			{
-				if($domain['wwwserveralias'] == '1')
+	
+				if($domain['iswildcarddomain'] == '1')
 				{
-					$alias = 'www.' . $domain['domain'];
+					$alias = '*.' . $domain['domain'];
 				}
 				else
 				{
-					$alias = '';
+					if($domain['wwwserveralias'] == '1')
+					{
+						$alias = 'www.' . $domain['domain'];
+					}
+					else
+					{
+						$alias = '';
+					}
 				}
+	
+				// After inserting the AWStats information, 
+				// be sure to build the awstats conf file as well
+				createAWStatsConf($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot']);
 			}
-
-			// After inserting the AWStats information, be sure to build the awstats conf file as well
-
-			createAWStatsConf($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias);
 		}
 
 		return $logfiles_text;
@@ -617,7 +630,7 @@ class apache
 
 	public function createVirtualHosts()
 	{
-		$result_domains = $this->db->query("SELECT `d`.`id`, `d`.`domain`, `d`.`customerid`, `d`.`documentroot`, `d`.`ssl`, `d`.`parentdomainid`, `d`.`ipandport`, `d`.`ssl_ipandport`, `d`.`ssl_redirect`, `d`.`isemaildomain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`openbasedir`, `d`.`openbasedir_path`, `d`.`safemode`, `d`.`speciallogfile`, `d`.`specialsettings`, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, `d`.`mod_fcgid_maxrequests` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) " . "LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) " . "WHERE `d`.`aliasdomain` IS NULL ORDER BY `d`.`iswildcarddomain`, `d`.`domain` ASC");
+		$result_domains = $this->db->query("SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, `d`.`mod_fcgid_maxrequests` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) " . "LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) " . "WHERE `d`.`aliasdomain` IS NULL ORDER BY `d`.`iswildcarddomain`, `d`.`domain` ASC");
 
 		while($domain = $this->db->fetch_array($result_domains))
 		{
