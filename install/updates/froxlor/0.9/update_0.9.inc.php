@@ -351,6 +351,10 @@ if(isFroxlorVersion('0.9.3-svn2'))
 	$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_ticketarchive.php';");
 	lastStepStatus(0);
 
+	showUpdateStep("Adding new language: Polish");
+	$db->query("INSERT INTO `".TABLE_PANEL_LANGUAGE."` SET `language` = 'Polska', `file` = 'lng/polish.lng.php'");
+	lastStepStatus(0);
+
 	updateToVersion('0.9.3-svn3');
 }
 
