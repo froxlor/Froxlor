@@ -756,6 +756,7 @@ else
 
 ?>
 	<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get">
+		<input type="hidden" name="check" value="1" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_40">
 			<tr>
 				<td class="maintitle" colspan="2"><b><img src="../images/title.gif" alt="" />&nbsp;<?php echo $lng['install']['welcome']; ?></b></td>
@@ -790,6 +791,7 @@ else
 	</form>
 	<br />
 	<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
+		<input type="hidden" name="check" value="1" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_40">
 			<tr>
 				<td class="maintitle" colspan="2"><b><img src="../images/title.gif" alt="" />&nbsp;<?php echo $lng['install']['database']; ?></b></td>
