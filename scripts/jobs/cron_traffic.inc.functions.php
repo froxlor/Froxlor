@@ -77,26 +77,28 @@ function awstatsDoSingleDomain($domain, $outputdir)
 				$count_bdw = false;
 				foreach($content_array as $line)
 				{
-					if(trim($line) == '') {
+					if(trim($line) == ''					// skip empty lines
+						|| substr(trim($line), 0, 1) == '#' // skip comments
+					) {
 						continue;
 					}
 					
 					$parts = explode(' ', $line);
 					
-					if(isset($line[0])
-						&& strtoupper($line[0]) == 'BEGIN_DOMAIN'
+					if(isset($parts[0])
+						&& strtoupper($parts[0]) == 'BEGIN_DOMAIN'
 					) {
 						$count_bdw = true;
 					}
-					elseif(isset($line[0])
-						&& strtoupper($line[0]) == 'END_DOMAIN'
-					) {
-						$count_bdw = false;
-					}
-					
+
 					if ($count_bdw) {
-						if (isset($line[3])) {
-							$returnval += floatval($line[3]);
+						if(isset($parts[0])
+							&& strtoupper($parts[0]) == 'END_DOMAIN'
+						) {
+							$count_bdw = false;
+							break;
+						} elseif (isset($parts[3])) {
+							$returnval += floatval($parts[3]);
 						}
 					}
 				}
