@@ -51,6 +51,8 @@ return Array(
 							$configcommand['diroptions'],
 							$configcommand['v_inclighty'],
 							$configcommand['d_inclighty'],
+							'lighty-disable-mod cgi',
+							'lighty-disable-mod fastcgi',
 							'mkdir -p ' . $settings['system']['documentroot_prefix'],
 							'mkdir -p ' . $settings['system']['logfiles_directory'],
 							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p ' . $settings['system']['deactivateddocroot'] : '',
