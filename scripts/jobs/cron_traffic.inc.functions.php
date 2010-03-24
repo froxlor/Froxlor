@@ -32,8 +32,26 @@ function awstatsDoSingleDomain($domain, $outputdir)
 			safe_exec('mkdir -p ' . escapeshellarg($outputdir));
 		}
 
+		/**
+		 * check for correct paths of awstats_buildstaticpages.pl
+		 */
+		$awbsp = '/usr/bin/awstats_buildstaticpages.pl';
+
+		/**
+		 * debian...pffff, #87
+		 */
+		if (!file_exists($awbsp)) {
+			$awbsp = '/usr/lib/cgi-bin/awstats_buildstaticpages.pl';
+		}
+		
+		if (!file_exists($awbsp)) {
+			echo "WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated";
+			$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated");
+			exit;	
+		}
+
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '".$domain."' (Output: '".$outputdir."')");
-		safe_exec('awstats_buildstaticpages.pl -update -config=' . $domain . ' -dir='.escapeshellarg($outputdir));
+		safe_exec($awbsp.' -update -config=' . $domain . ' -dir='.escapeshellarg($outputdir));
 		
 		/**
 		 * index file is saved like 'awstats.[domain].html',

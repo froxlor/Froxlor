@@ -167,7 +167,7 @@ while($row = $db->fetch_array($result))
 
 				if($settings['system']['awstats_enabled'] == '1')
 				{
-					$httptraffic+= floatval(callAwstatsGetTraffic($domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domainlist[$row['customerid']]));
+					$httptraffic+= floatval(callAwstatsGetTraffic($domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
 				} 
 				else
 				{

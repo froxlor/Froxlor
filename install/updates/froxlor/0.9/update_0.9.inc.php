@@ -342,7 +342,7 @@ if(isFroxlorVersion('0.9.3-svn2'))
 {
 	showUpdateStep("Updating from 0.9.3-svn2 to 0.9.3-svn3", false);
 
-	showUpdateStep("Correcting cron start-times");	
+	showUpdateStep("Correcting cron start-times");
 	// set specific times for some crons (traffic only at night, etc.)
 	$ts = mktime(0, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
 	$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_traffic.php';");

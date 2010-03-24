@@ -254,7 +254,8 @@ return Array(
 					'awstats' => Array(
 						'label' => 'Awstats',
 						'commands' => Array(
-							'apt-get install awstats'
+							'apt-get install awstats',
+							'cp /usr/share/doc/awstats/examples/awstats_buildstaticpages.pl /usr/lib/cgi-bin/'
 						),
 						'files' => Array(
 							'etc_awstats.model.conf' => '/etc/awstats/awstats.conf'
