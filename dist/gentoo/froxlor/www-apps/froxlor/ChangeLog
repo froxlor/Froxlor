@@ -2,6 +2,11 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  25 Mar 2010; Froxlor Release Team <release@froxlor.org>
+  froxlor-0.9.3.ebuild, froxlor-9999.ebuild:
+  adding ability to define the docroot in /etc/make.conf with
+  FROXLOR_DOCROOT
+
   18 Mar 2010; Froxlor Release Team <release@froxlor.org>
   froxlor-0.9.3.ebuild, froxlor-9999.ebuild:
   add note for cron changes and fix messed up quoting
