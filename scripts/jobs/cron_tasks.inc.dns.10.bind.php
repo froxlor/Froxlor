@@ -226,12 +226,10 @@ class bind
 			$zonefile.= $this->settings['spf']['spf_entry'] . "\n";
 		}
 
-		if($this->settings['dkim']['use_dkim'] == '1'
-		   && $domain['dkim'] == '1'
-		   && $domain['dkim_pubkey'] != '')
-		{
-			$zonefile.= 'dkim_' . $domain['dkim_id'] . '._domainkey	IN	TXT	"v=DKIM1; k=rsa; p=' . trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))) . '"' . "\n";
-		}
+		/**
+		 * generate dkim-zone-entries
+		 */
+		$zonefile.= $this->generateDkim($domain);
 
 		$nssubdomains = $this->db->query('SELECT `domain` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `isbinddomain`=\'1\' AND `domain` LIKE \'%.' . $domain['domain'] . '\'');
 
@@ -272,6 +270,88 @@ class bind
 
 		return $zonefile;
 	}
+	
+	private function generateDkim($domain)
+	{
+		$zone_dkim = '';
+
+		if($this->settings['dkim']['use_dkim'] == '1'
+		   && $domain['dkim'] == '1'
+		   && $domain['dkim_pubkey'] != '')
+		{
+			// start
+			$dkim_txt = 'v=DKIM1;';
+
+			// algorithm
+			$algorithm = explode(',', $this->settings['dkim']['dkim_algorithm']);
+			$alg = '';
+			foreach($algorithm as $a)
+			{
+				if($a == 'all')
+				{
+					break;
+				}
+				else
+				{
+					$alg.=$a.':';
+				}
+			}
+			if($alg != '') 
+			{
+				$alg = substr($alg, 0, -1);
+				$dkim_txt.= 'h='.$alg.';';
+			}
+			
+			// notes
+			if(trim($this->settings['dkim']['dkim_notes'] != ''))
+			{
+				$dkim_txt.= 'n='.trim($this->settings['dkim']['dkim_notes']).';';
+			}
+
+			// key
+			$dkim_txt.= 'k=rsa;p='.trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))).';';
+			
+			// service-type
+			if($this->settings['dkim']['dkim_servicetype'] == '1')
+			{
+				$dkim_txt.=	's=email;';
+			}
+			
+			// end-part
+			$dkim_txt.='t=s';
+			
+			// split if necessary
+			$txt_record_split='';
+			$lbr=50;
+			for($pos=0; $pos<=strlen($dkim_txt)-1; $pos+=$lbr)
+			{
+				$txt_record_split.= (($pos==0) ? '("' : "\t\t\t\t\t \"") . substr($dkim_txt, $pos, $lbr) . (($pos>=strlen($dkim_txt)-$lbr) ? '")' : '"' ) ."\n";
+			}
+
+			// dkim-entry
+			$zone_dkim .= 'dkim_' . $domain['dkim_id'] . '._domainkey IN TXT ' . $txt_record_split;
+			
+			// adsp-entry
+			if($this->settings['dkim']['dkim_add_adsp'] == "1")
+			{
+				$zone_dkim .= '_adsp._domainkey IN TXT "dkim=';
+				switch((int)$this->settings['dkim']['dkim_add_adsppolicy'])
+				{
+					case 0:
+						$zone_dkim .= 'unknown"'. "\n";
+						break;
+					case 1:
+						$zone_dkim .= 'all"'. "\n";
+						break;
+					case 2:
+						$zone_dkim .= 'discardable"'. "\n";
+						break;
+				}
+			}
+		}
+
+		return $zone_dkim;
+	}
 
 	public function writeDKIMconfigs()
 	{
@@ -298,7 +378,7 @@ class bind
 					$max_dkim_id = $this->db->query_first("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
 					$domain['dkim_id'] = (int)$max_dkim_id['max_dkim_id'] + 1;
 					$privkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id']);
-					safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' 1024');
+					safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . $this->settings['dkim']['dkim_keylength']);
 					$domain['dkim_privkey'] = file_get_contents($privkey_filename);
 					safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
 					$pubkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id'] . '.public');

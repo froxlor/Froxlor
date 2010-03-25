@@ -451,7 +451,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (18, 'system', 'vmail_homedir', '/var/customers/mail/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (19, 'system', 'bindconf_directory', '/etc/bind/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (20, 'system', 'bindreload_command', '/etc/init.d/bind9 reload');
-INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (22, 'panel', 'version', '0.9.3-svn3');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (22, 'panel', 'version', '0.9.3-svn4');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (23, 'system', 'hostname', 'SERVERNAME');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (24, 'login', 'maxloginattempts', '3');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (25, 'login', 'deactivatetime', '900');
@@ -550,6 +550,11 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (119, 'system', 'store_index_file_subs', '1');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (120, 'panel', 'adminmail_defname', 'Froxlor Administrator');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (121, 'panel', 'adminmail_return', '');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (122, 'dkim', 'dkim_algorithm', 'all');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (123, 'dkim', 'dkim_add_adsp', '1');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (124, 'dkim', 'dkim_keylength', '1024');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (125, 'dkim', 'dkim_servicetype', '0');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (126, 'dkim', 'dkim_add_adsppolicy', '1');
 
 # --------------------------------------------------------
 

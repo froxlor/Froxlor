@@ -1319,4 +1319,16 @@ $lng['serversettings']['adminmail_return']['title'] = 'Reply-To address';
 $lng['serversettings']['adminmail_return']['description'] = 'Define an e-mail address as reply-to-address for mails sent by the panel.';
 $lng['serversettings']['adminmail_defname'] = 'Panel e-mail sender name';
 
+// ADDED IN FROXLOR 0.9.3-svn3
+$lng['dkim']['dkim_algorithm']['title'] = 'Allowed Hash Algorithms';
+$lng['dkim']['dkim_algorithm']['description'] = 'Define allowed hash algorithms, chose "All" for all algorithms or one or more from the other available algorithms';
+$lng['dkim']['dkim_servicetype'] = 'Service Types';
+$lng['dkim']['dkim_keylength'] = 'Key-length';
+$lng['dkim']['dkim_notes']['title'] = 'DKIM Notes';
+$lng['dkim']['dkim_notes']['description'] = 'Notes that might be of interest to a human, e.g. a URL like http://www.dnswatch.info. No interpretation is made by any program. This tag should be used sparingly due to space limitations in DNS. This is intended for use by administrators, not end users.';
+$lng['dkim']['dkim_add_adsp']['title'] = 'Add DKIM ADSP entry';
+$lng['dkim']['dkim_add_adsp']['description'] = 'If you don\'t know what this is, leave it "enabled"';
+$lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP policy';
+$lng['dkim']['dkim_add_adsppolicy']['description'] = 'For more information about this setting see <a href="http://wiki.froxlor.org/contrib/dkim-adsp-policies">http://wiki.froxlor.org/contrib/dkim-adsp-policies</a>';
+
 ?>

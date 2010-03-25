@@ -131,19 +131,21 @@ return Array(
 					'dkim' => Array(
 						'label' => 'DomainKey filter',
 						'commands_1' => Array(
+							'emerge dkim-milter',
+							'emerge --config mail-filter/dkim-milter',
 							'mkdir -p /etc/postfix/dkim'
 						),
 						'files' => Array(
-							'dkim-filter.conf' => '/etc/postfix/dkim/dkim-filter.conf'
+							'dkim-filter.conf' => '/etc/mail/dkim-filter/dkim-filter.conf'
 						),
 						'commands_2' => Array(
-							'chgrp postfix /etc/postfix/dkim/dkim-filter.conf',
-							'echo "smtpd_milters = inet:localhost:8891\n
-milter_macro_daemon_name = SIGNING\n
-milter_default_action = accept\n" >> /etc/postfix/main.cf'
+							'echo "smtpd_milters = inet:localhost:8891
+milter_macro_daemon_name = SIGNING
+milter_default_action = accept" >> /etc/postfix/main.cf'
 						),
 						'restart' => Array(
-							'/etc/init.d/dkim-filter restart'
+							'rc-update add dkim-filter default',
+							'/etc/init.d/postfix restart'
 						)
 					)
 				)
