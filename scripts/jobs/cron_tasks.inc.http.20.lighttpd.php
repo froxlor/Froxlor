@@ -313,19 +313,31 @@ class lighttpd
 			$ipport = $domain['ip'] . ':' . $domain['port'];
 		}
 
-		mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
-
 		$vhost_content.= $this->getServerNames($domain) . " {\n";
-		$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
+		
+		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
+		{
+			$vhost_content.= '  url.redirect = (' . "\n";
+			$vhost_content.= '     "^/(.*)$" => "'. $this->idnaConvert->encode($domain['documentroot']) . '"/$1'. "\n";
+			$vhost_content.= '  )' . "\n";
+		}
+		else
+		{
+			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
+
+			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
+			$vhost_content.= $this->create_htaccess($domain);
+			$vhost_content.= $this->create_pathOptions($domain);
+			$vhost_content.= $this->composePhpOptions($domain);
+			$vhost_content.= $this->getStats($domain);
+			$vhost_content.= $this->getLogFiles($domain);
+		}
+
 		if ($domain['specialsettings'] != "") {
 			$vhost_content.= $domain['specialsettings'] . "\n";
 		}
-		$vhost_content.= $this->create_htaccess($domain);
-		$vhost_content.= $this->create_pathOptions($domain);
-		$vhost_content.= $this->composePhpOptions($domain);
-		$vhost_content.= $this->getStats($domain);
-		$vhost_content.= $this->getLogFiles($domain);
 		$vhost_content.= '}' . "\n";
+
 		return $vhost_content;
 	}
 
