@@ -69,6 +69,9 @@ for X in ${LANGS} ; do
 	IUSE="${IUSE} linguas_${X}"
 done
 
+# lets check user defined variables
+FROXLOR_DOCROOT="${FROXLOR_DOCROOT:-/var/www}"
+
 need_php5_httpd
 need_php5_cli
 
@@ -86,7 +89,7 @@ pkg_setup() {
 	# Create the user and group that will own the Froxlor files
 	einfo "Creating froxlor user ..."
 	enewgroup froxlor 9995
-	enewuser froxlor 9995 -1 /var/www/froxlor froxlor
+	enewuser froxlor 9995 -1 ${FROXLOR_DOCROOT}/froxlor froxlor
 
 	# Create the user and group that will run the FTPd
 	einfo "Creating froxlorftpd user ..."
@@ -254,32 +257,32 @@ src_install() {
 
 	# Install the Froxlor files
 	einfo "Installing Froxlor files"
-	dodir /var/www
-	cp -Rf "${S}/" "${D}/var/www/" || die "Installation of the Froxlor files failed"
+	dodir ${FROXLOR_DOCROOT}
+	cp -Rf "${S}/" "${D}${FROXLOR_DOCROOT}/" || die "Installation of the Froxlor files failed"
 
 	# Fix the permissions for the Froxlor files
 	einfo "Fixing permission of Froxlor files"
 	if useq lighttpd ; then
-		fowners -R froxlor:lighttpd /var/www/froxlor
+		fowners -R froxlor:lighttpd ${FROXLOR_DOCROOT}/froxlor
 	else
-		fowners -R froxlor:apache /var/www/froxlor
+		fowners -R froxlor:apache ${FROXLOR_DOCROOT}/froxlor
 	fi
 	if useq fcgid ; then
 		if ! useq lighttpd ; then
-			fownwers -R froxlor:froxlor /var/www/froxlor
+			fownwers -R froxlor:froxlor ${FROXLOR_DOCROOT}/froxlor
 		else
 			einfo "lighttpd overwrites fcgid USE-flag!"
-			#fowners froxlor:lighttpd /var/www/froxlor
+			#fowners froxlor:lighttpd ${FROXLOR_DOCROOT}/froxlor
 		fi
-		fperms 0750 /var/www/froxlor
+		fperms 0750 ${FROXLOR_DOCROOT}/froxlor
 	else
 		if useq lighttpd ; then
-			fowners -R froxlor:lighttpd /var/www/froxlor/{temp,packages}
+			fowners -R froxlor:lighttpd ${FROXLOR_DOCROOT}/froxlor/{temp,packages}
 		else
-			fowners -R froxlor:apache /var/www/froxlor/{temp,packages}
+			fowners -R froxlor:apache ${FROXLOR_DOCROOT}/froxlor/{temp,packages}
 		fi
 	fi
-	fperms 0775 /var/www/froxlor/{temp,packages}
+	fperms 0775 ${FROXLOR_DOCROOT}/froxlor/{temp,packages}
 
 	# Create the main directories for customer data
 	dodir /var/customers/webs
@@ -296,7 +299,7 @@ src_install() {
 
 pkg_postinst() {
 	# we need to check if this is going to be an update or a fresh install!
-	if [[ -f "${ROOT}/var/www/froxlor/lib/userdata.inc.php" ]] ; then
+	if [[ -f "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php" ]] ; then
 		elog "Froxlor is already installed on this system!"
 		elog
 		elog "In this case 'emerge --config' mustn't be executed!"
@@ -305,11 +308,11 @@ pkg_postinst() {
 		elog "Froxlor will update the database when you open"
 		elog "it in your browser the first time after the update-process"
 		sleep 2
-	elif [[ -f "${ROOT}/var/www/syscp/lib/userdata.inc.php" ]] ; then
+	elif [[ -f "${ROOT}${FROXLOR_DOCROOT}/syscp/lib/userdata.inc.php" ]] ; then
 		elog "This seems to be an upgrade from syscp"
-		elog "please move /var/www/syscp/lib/userdata.inc.php to"
-		elog "/var/www/froxlor/lib/"
-		elog "and don't forget to copy "${ROOT}/usr/share/{PN}/froxlor.cron""
+		elog "please move ${FROXLOR_DOCROOT}/syscp/lib/userdata.inc.php to"
+		elog "${FROXLOR_DOCROOT}/froxlor/lib/"
+		elog "and don't forget to copy "${ROOT}/usr/share/${PN}/froxlor.cron""
 		elog "to /etc/cron.d/froxlor and remove /etc/cron.d/syscp"
 	else
 		elog "Please run 'emerge --config =${PF}' to continue with"
@@ -506,7 +509,7 @@ pkg_config() {
 	chmod 0700 "${ROOT}/tmp/froxlor-install-by-emerge"
 
 	einfo "Preparing SQL database files ..."
-	cp -f "${ROOT}/var/www/froxlor/install/froxlor.sql" "${ROOT}/tmp/froxlor-install-by-emerge/"
+	cp -f "${ROOT}${FROXLOR_DOCROOT}/froxlor/install/froxlor.sql" "${ROOT}/tmp/froxlor-install-by-emerge/"
 	chown root:0 "${ROOT}/tmp/froxlor-install-by-emerge/froxlor.sql"
 	chmod 0600 "${ROOT}/tmp/froxlor-install-by-emerge/froxlor.sql"
 	sed -e "s|SERVERNAME|${servername}|g" -i "${ROOT}/tmp/froxlor-install-by-emerge/froxlor.sql"
@@ -585,9 +588,9 @@ EOF
 	rm -f "${ROOT}/tmp/froxlor-install-by-emerge/*.sql"
 
 	einfo "Installing Froxlor data file ..."
-	rm -f "${ROOT}/var/www/froxlor/lib/userdata.inc.php"
-	touch "${ROOT}/var/www/froxlor/lib/userdata.inc.php"
-	chmod 0440 "${ROOT}/var/www/froxlor/lib/userdata.inc.php"
+	rm -f "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
+	touch "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
+	chmod 0440 "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
 	echo "<?php
 //automatically generated userdata.inc.php for Froxlor
 \$sql['host']='${mysqlhost}';
@@ -596,20 +599,20 @@ EOF
 \$sql['db']='${mysqldbname}';
 \$sql['root_user']='${mysqlrootuser}';
 \$sql['root_password']='${mysqlrootpw}';
-?>" > "${ROOT}/var/www/froxlor/lib/userdata.inc.php"
+?>" > "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
 
 	if ! useq fcgid ; then
 		if ! useq lighttpd ; then
-			chown froxlor:apache "${ROOT}/var/www/froxlor/lib/userdata.inc.php"
+			chown froxlor:apache "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
 		else
-			chown froxlor:lighttpd "${ROOT}/var/www/froxlor/lib/userdata.inc.php"
+			chown froxlor:lighttpd "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
 		fi
 	else
 		if ! useq lighttpd ; then
-			chown froxlor:froxlor "${ROOT}/var/www/froxlor/lib/userdata.inc.php"
+			chown froxlor:froxlor "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
 		else
 			# this stays as lighty doesn't use fcgid
-			chown froxlor:lighttpd "${ROOT}/var/www/froxlor/lib/userdata.inc.php"
+			chown froxlor:lighttpd "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
 		fi
 	fi
 
@@ -696,7 +699,7 @@ EOF
 	if useq lighttpd ; then
 		einfo "Configuring lighttpd"
 		rm -f "${ROOT}/etc/lighttpd/lighttpd.conf"
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/lighttpd/etc_lighttpd.conf" "${ROOT}/etc/lighttpd/lighttpd.conf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/lighttpd/etc_lighttpd.conf" "${ROOT}/etc/lighttpd/lighttpd.conf"
 		sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/lighttpd/lighttpd.conf"
 		sed -e "s|<SERVERIP>|${serverip}|g" -i "${ROOT}/etc/lighttpd/lighttpd.conf"
 
@@ -736,14 +739,14 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		einfo "Configuring apache2"
 		if useq fcgid ; then
 			# create php-starter file
-			mkdir -p "${ROOT}/var/www/froxlor/php-fcgi-script"
-			mkdir -p "${ROOT}/var/www/froxlor/php-fcgi-script/tmp"
-			chmod 0750 "${ROOT}/var/www/froxlor/php-fcgi-script/tmp"
-			touch "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
-			echo "${ROOT}/usr/share/${PN}/php-fcgi-starter" >> "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
-			chown froxlor:froxlor -R "${ROOT}/var/www/froxlor/php-fcgi-script" || die "Unable to fix owner for php-fcgi-script folder"
-			chmod 0750 "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
-			chattr +i "${ROOT}/var/www/froxlor/php-fcgi-script/php-fcgi-starter"
+			mkdir -p "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script"
+			mkdir -p "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/tmp"
+			chmod 0750 "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/tmp"
+			touch "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
+			echo "${ROOT}/usr/share/${PN}/php-fcgi-starter" >> "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
+			chown froxlor:froxlor -R "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script" || die "Unable to fix owner for php-fcgi-script folder"
+			chmod 0750 "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
+			chattr +i "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
 		fi
 
 		if useq ssl ; then
@@ -751,7 +754,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 <IfDefine SSL>
 		<IfModule mod_ssl.c>
 			<VirtualHost ${serverip}:443>
-				DocumentRoot \"/var/www/froxlor\"
+				DocumentRoot \"${FROXLOR_DOCROOT}/froxlor\"
 				ServerName ${servername}" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
 
 			echo "				ErrorLog /var/log/apache2/froxlor_ssl_error_log
@@ -776,14 +779,14 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 
 			if useq fcgid ; then
 				echo "SuexecUserGroup \"froxlor\" \"froxlor\"
-	<Directory \"/var/www/froxlor\">
+	<Directory \"${FROXLOR_DOCROOT}/froxlor\">
 		AddHandler fcgid-script .php
-		FCGIWrapper /var/www/froxlor/php-fcgi-script/php-fcgi-starter .php
+		FCGIWrapper ${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter .php
 		Options +ExecCGI
 </Directory>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
 
 			else
-				echo "	<Directory \"/var/www/froxlor\">
+				echo "	<Directory \"${FROXLOR_DOCROOT}/froxlor\">
 						Order allow,deny
 						allow from all
 					</Directory>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
@@ -803,19 +806,19 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 
 			echo "# Gentoo-Froxlor VirtualHost
 	<VirtualHost ${serverip}:80>
-		DocumentRoot \"/var/www/froxlor\"
+		DocumentRoot \"${FROXLOR_DOCROOT}/froxlor\"
 		ServerName ${servername}" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
 
 			if useq fcgid ; then
 				echo "SuexecUserGroup \"froxlor\" \"froxlor\"
-	<Directory \"/var/www/froxlor\">
+	<Directory \"${FROXLOR_DOCROOT}/froxlor\">
 		AddHandler fcgid-script .php
-		FCGIWrapper /var/www/froxlor/php-fcgi-script/php-fcgi-starter .php
+		FCGIWrapper ${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter .php
 		Options +ExecCGI
 </Directory>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
 
 			else
-				echo "	<Directory \"/var/www/froxlor\">
+				echo "	<Directory \"${FROXLOR_DOCROOT}/froxlor\">
 						Order allow,deny
 						allow from all
 					</Directory>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
@@ -854,8 +857,8 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		sed -e "s|compat|compat mysql|g" -i "${ROOT}/etc/nsswitch.conf"
 		rm -f "${ROOT}/etc/libnss-mysql.cfg"
 		rm -f "${ROOT}/etc/libnss-mysql-root.cfg"
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/libnss/etc_libnss-mysql.cfg" "${ROOT}/etc/libnss-mysql.cfg"
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/libnss/etc_libnss-mysql-root.cfg" "${ROOT}/etc/libnss-mysql-root.cfg"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/libnss/etc_libnss-mysql.cfg" "${ROOT}/etc/libnss-mysql.cfg"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/libnss/etc_libnss-mysql-root.cfg" "${ROOT}/etc/libnss-mysql-root.cfg"
 
 		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/libnss-mysql.cfg"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/libnss-mysql.cfg"
@@ -868,7 +871,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 
 	einfo "Configuring ProFTPd ..."
 	rm -f "${ROOT}/etc/proftpd/proftpd.conf"
-	cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/proftpd/etc_proftpd_proftpd.conf" "${ROOT}/etc/proftpd/proftpd.conf"
+	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/proftpd/etc_proftpd_proftpd.conf" "${ROOT}/etc/proftpd/proftpd.conf"
 	sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 	sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 	sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
@@ -903,8 +906,8 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		rm -f "${ROOT}/etc/courier-imap/pop3d-ssl"
 		rm -f "${ROOT}/etc/courier-imap/imapd-ssl"
 
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier_authlib_authdaemonrc" "${ROOT}/etc/courier/authlib/authdaemonrc"
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier_authlib_authmysqlrc" "${ROOT}/etc/courier/authlib/authmysqlrc"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier_authlib_authdaemonrc" "${ROOT}/etc/courier/authlib/authdaemonrc"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier_authlib_authmysqlrc" "${ROOT}/etc/courier/authlib/authmysqlrc"
 
 		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
@@ -914,12 +917,12 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		sed -e "s|<VIRTUAL_UID_MAPS>|9997|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
 		sed -e "s|<VIRTUAL_GID_MAPS>|9997|g" -i "${ROOT}/etc/courier/authlib/authmysqlrc"
 
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_pop3d" "${ROOT}/etc/courier-imap/pop3d"
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_imapd" "${ROOT}/etc/courier-imap/imapd"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_pop3d" "${ROOT}/etc/courier-imap/pop3d"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_imapd" "${ROOT}/etc/courier-imap/imapd"
 
 		if useq ssl ; then
-			cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_pop3d-ssl" "${ROOT}/etc/courier-imap/pop3d-ssl"
-			cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_imapd-ssl" "${ROOT}/etc/courier-imap/imapd-ssl"
+			cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_pop3d-ssl" "${ROOT}/etc/courier-imap/pop3d-ssl"
+			cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_imapd-ssl" "${ROOT}/etc/courier-imap/imapd-ssl"
 
 			sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/courier-imap/pop3d-ssl"
 			sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/courier-imap/imapd-ssl"
@@ -946,8 +949,8 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		rm -f "${ROOT}/etc/dovecot/dovecot.conf"
 		rm -f "${ROOT}/etc/dovecot/dovecot-sql.conf"
 
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/dovecot/etc_dovecot_dovecot.conf" "${ROOT}/etc/dovecot/dovecot.conf"
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/dovecot/etc_dovecot_dovecot-sql.conf" "${ROOT}/etc/dovecot/dovecot-sql.conf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/dovecot/etc_dovecot_dovecot.conf" "${ROOT}/etc/dovecot/dovecot.conf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/dovecot/etc_dovecot_dovecot-sql.conf" "${ROOT}/etc/dovecot/dovecot-sql.conf"
 
 		if useq ssl ; then
 			sed -e "s|<SSLPROTOCOLS>|imaps pop3s|g" -i "${ROOT}/etc/dovecot/dovecot.conf"
@@ -973,7 +976,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 
 	einfo "Configuring Postfix ..."
 	rm -f "${ROOT}/etc/postfix/main.cf"
-	cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_main.cf" "${ROOT}/etc/postfix/main.cf"
+	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_main.cf" "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<VIRTUAL_MAILBOX_BASE>|/var/customers/mail|g" -i "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<VIRTUAL_UID_MAPS>|9997|g" -i "${ROOT}/etc/postfix/main.cf"
@@ -987,11 +990,11 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 
 		# add line to master.cf
 		local MASTER_DOVECOT=""
-		MASTER_DOVECOT=`cat ${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_master.cf`
+		MASTER_DOVECOT=`cat ${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_master.cf`
 		echo -e "\n${MASTER_DOVECOT}" >> "${ROOT}/etc/postfix/master.cf"
 	fi
 	if useq mailquota ; then
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/mysql-virtual_mailbox_limit_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/mysql-virtual_mailbox_limit_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
@@ -1018,9 +1021,9 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		sed -e "s|#tls_random_source|tls_random_source|g" -i "${ROOT}/etc/postfix/main.cf"
 	fi
 
-	cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_mysql-virtual_alias_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_alias_maps.cf"
-	cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_mysql-virtual_mailbox_domains.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_domains.cf"
-	cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_mysql-virtual_mailbox_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
+	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_mysql-virtual_alias_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_alias_maps.cf"
+	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_mysql-virtual_mailbox_domains.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_domains.cf"
+	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_mysql-virtual_mailbox_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
 
 	sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/postfix/mysql-virtual_alias_maps.cf"
 	sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/postfix/mysql-virtual_alias_maps.cf"
@@ -1044,7 +1047,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 
 	if useq ! dovecot ; then
 		rm -f "${ROOT}/etc/sasl2/smtpd.conf"
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/postfix/etc_sasl2_smtpd.conf" "${ROOT}/etc/sasl2/smtpd.conf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_sasl2_smtpd.conf" "${ROOT}/etc/sasl2/smtpd.conf"
 		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
@@ -1061,7 +1064,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	if useq bind ; then
 		einfo "Configuring Bind .."
 		rm -f "${ROOT}/etc/bind/default.zone"
-		cp -L "${ROOT}/var/www/froxlor/templates/misc/configfiles/gentoo/bind/etc_bind_default.zone" "${ROOT}/etc/bind/default.zone"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/bind/etc_bind_default.zone" "${ROOT}/etc/bind/default.zone"
 		sed -e "s|<SERVERIP>|${serverip}|g" -i "${ROOT}/etc/bind/default.zone"
 
 		einfo "Add Gentoo-Froxlor include to Bind configuration ..."
