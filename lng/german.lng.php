@@ -1283,6 +1283,19 @@ $lng['serversettings']['adminmail_return']['title'] = 'Antwort-Adresse';
 $lng['serversettings']['adminmail_return']['description'] = 'Standard-Antwort-Adresse f&uuml;r E-Mails aus dem Panel.';
 $lng['serversettings']['adminmail_defname'] = 'Panel Absender Name';
 
+// ADDED IN FROXLOR 0.9.3-svn3
+$lng['dkim']['dkim_algorithm']['title'] = 'G&uuml;ltige Hash Algorithmen';
+$lng['dkim']['dkim_algorithm']['description'] = 'W&auml;hlen sie einen Algorithmus, "All" f&uuml;r alle Algorithmen oder Einen oder Mehrere von den verf&uuml;gbaren Algorithmen';
+$lng['dkim']['dkim_servicetype'] = 'Service Typen';
+$lng['dkim']['dkim_keylength']['title'] = 'Schl&uuml;ssel-L&auml;nge';
+$lng['dkim']['dkim_keylength']['description'] = 'Achtung: Bei &Auml;nderung dieser Einstellung m&uuml;ssen alle private/public Schl&uuml;ssel in "'.$settings['dkim']['dkim_prefix'].'" gel&ouml;scht werden.';
+$lng['dkim']['dkim_notes']['title'] = 'DKIM Notiz';
+$lng['dkim']['dkim_notes']['description'] = 'Eine Notiz, welche f&uuml;r Menschen interessant sein k&ouml;nnte, Z.B. eine URL wie http://www.dnswatch.info. Es gibt keine programmgesteuerte Interpretation f&uuml;r dieses Feld. Gehen sie sparsam mit der Anzahl der Zeichen um, da es Einschr&auml;nkungen seitens des DNS Dienstes gibt. Dieses Feld ist f&uuml;r Administratoren gedacht, nicht f&uuml;r Benutzer.';
+$lng['dkim']['dkim_add_adsp']['title'] = 'DKIM ADSP Eintrag hinzuf&uuml;gen';
+$lng['dkim']['dkim_add_adsp']['description'] = 'Wenn unsicher oder unbekannt, belassen sie es auf "aktiviert"';
+$lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP Richtlinie';
+$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Mehr Informationen zu dieser Einstellung (englisch) <a href="http://wiki.froxlor.org/contrib/dkim-adsp-policies">http://wiki.froxlor.org/contrib/dkim-adsp-policies</a>';
+
 $lng['admin']['cron']['cronsettings'] = 'Cronjob Einstellungen';
 $lng['cron']['cronname'] = 'Cronjob-Name';
 $lng['cron']['lastrun'] = 'zuletzt gestartet';
