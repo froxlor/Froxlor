@@ -200,15 +200,11 @@ return array (
 					'label' => $lng['admin']['ipsandports']['ipsandports'],
 					'required_resources' => 'change_serversettings',
 				),
-				/*
-				 * @TODO this is for Froxlor-1.0
-				 *
 				array (
 					'url' => 'admin_cronjobs.php?page=overview',
 					'label' => $lng['admin']['cron']['cronsettings'],
 					'required_resources' => 'change_serversettings',
 				),
-				*/
 				array (
 					'url' => 'admin_settings.php?page=rebuildconfigs',
 					'label' => $lng['admin']['rebuildconf'],

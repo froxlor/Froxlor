@@ -75,12 +75,6 @@ if($page == 'cronjobs'
 				
 				$description = $lng['crondesc'][$row['desc_lng_key']];
 				
-				/*
-				 * don't allow deletion of 'froxlor' cronjobs
-				 */
-				$vendor_a = explode('/', $row['module']);
-				$vendor = $vendor_a[0];
-				
 				eval("\$crons.=\"" . getTemplate("cronjobs/cronjobs_cronjob") . "\";");
 				$count++;
 			}
@@ -94,21 +88,68 @@ if($page == 'cronjobs'
 	elseif($action == 'new')
 	{
 		/*
-		 * @TODO Finish me
+		 * @TODO later
 		 */
 	}
 	elseif($action == 'edit'
 	&& $id != 0)
 	{
-		/*
-		 * @TODO Finish me
-		 */
+		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `id`='" . (int)$id . "'");
+		
+		if ($result['cronfile'] != '')
+		{
+			if(isset($_POST['send'])
+			   && $_POST['send'] == 'send')
+			{
+				$isactive = intval($_POST['isactive']);
+				$interval_value = validate($_POST['interval_value'], 'interval_value', '/^([0-9]+)$/Di', 'stringisempty');
+				$interval_interval = validate($_POST['interval_interval'], 'interval_interval');
+				
+				if($isactive != 1)
+				{
+					$isactive = 0;
+				}
+				
+				$interval = $interval_value.' '.strtoupper($interval_interval);
+				
+				$db->query("UPDATE `" . TABLE_PANEL_CRONRUNS . "` 
+							SET `isactive` = '".(int)$isactive."',
+							`interval` = '".$interval."'
+							WHERE `id` = '" . (int)$id . "'");
+
+				redirectTo($filename, Array('page' => $page, 's' => $s));
+			}
+			else
+			{
+				$isactive = makeyesno('isactive', '1', '0', $result['isactive']);
+				// interval
+				$interval_nfo = explode(' ', $result['interval']);
+				$interval_value = $interval_nfo[0];
+
+				$interval_interval = '';
+				$interval_interval.= makeoption($lng['cronmgmt']['seconds'], 'SECOND', $interval_nfo[1]);
+				$interval_interval.= makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
+				$interval_interval.= makeoption($lng['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
+				$interval_interval.= makeoption($lng['cronmgmt']['days'], 'DAY', $interval_nfo[1]);
+				$interval_interval.= makeoption($lng['cronmgmt']['weeks'], 'WEEK', $interval_nfo[1]);
+				$interval_interval.= makeoption($lng['cronmgmt']['months'], 'MONTH', $interval_nfo[1]);
+				// end of interval
+				
+				$change_cronfile = false;
+				if (substr($result['module'], 0, strpos($result['module'], '/')) != 'froxlor')
+				{
+					$change_cronfile = true;
+				}
+				
+				eval("echo \"" . getTemplate("cronjobs/cronjob_edit") . "\";");
+			}
+		}
 	}
 	elseif($action == 'delete'
 	&& $id != 0)
 	{
 		/*
-		 * @TODO Finish me
+		 * @TODO later
 		 */
 	}
 }

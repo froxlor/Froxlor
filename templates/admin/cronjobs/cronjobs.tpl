@@ -4,25 +4,30 @@ $header
 		<input type="hidden" name="page" value="$page"/>
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle_search_left" colspan="4"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['cron']['cronsettings']}</b></td>
-				<td class="maintitle_search_right" colspan="2">{$searchcode}</td>
+				<td class="maintitle"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['warning']}</b></td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left">
+					<span style="font-weight: bold; color: #ff0000;">
+						{$lng['cron']['changewarning']}
+					</span>
+				</td>
+			</tr>
+		</table>
+		<br />
+		<br />
+		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
+			<tr>
+				<td class="maintitle" colspan="5"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['cron']['cronsettings']}</b></td>
 			</tr>
 			<tr>
 				<td class="field_display_border_left">{$lng['cron']['description']}</td>
-				<td class="field_display">{$lng['cron']['lastrun']}&nbsp;&nbsp;{$arrowcode['c.lastrun']}</td>
-				<td class="field_display">{$lng['cron']['interval']}&nbsp;&nbsp;{$arrowcode['c.interval']}</td>
-				<td class="field_display">{$lng['cron']['isactive']}&nbsp;&nbsp;{$arrowcode['c.isactive']}</td>
-				<td class="field_display_search" colspan="2">{$sortcode}</td>
+				<td class="field_display">{$lng['cron']['lastrun']}</td>
+				<td class="field_display">{$lng['cron']['interval']}</td>
+				<td class="field_display">{$lng['cron']['isactive']}</td>
+				<td class="field_display">{$lng['panel']['options']}</td>
 			</tr>
 			$crons
-			<if $pagingcode != ''>
-			<tr>
-				<td class="field_display_border_left" colspan="6" style=" text-align: center; ">{$pagingcode}</td>
-			</tr>
-			</if>
-			<tr>
-				<td class="field_display_border_left" colspan="6"><a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['cron']['add']}</a></td>
-			</tr>
 		</table>
 	</form>
 	<br />

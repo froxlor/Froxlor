@@ -4,5 +4,4 @@
 	<td class="field_name">{$row['interval']}</td>
 	<td class="field_name">{$row['isactive']}</td>
 	<td class="field_name"><a href="$filename?s=$s&amp;page=$page&amp;action=edit&amp;id={$row['id']}">{$lng['panel']['edit']}</a></td>
-	<td class="field_name"><if $vendor != 'froxlor'><a href="$filename?s=$s&amp;page=$page&amp;action=delete&amp;id={$row['id']}">{$lng['panel']['delete']}</a></if></td>
 </tr>
