@@ -20,10 +20,10 @@ $header
 			<tr>
 				<td class="main_field_name">Cronjob:</td>
 				<if $change_cronfile == 1 >
-					<td class="main_field_display" nowrap="nowrap">"><input type="text" name="cronfile" value="{$result['cronfile']}" /></td>
+					<td class="main_field_display" nowrap="nowrap"><input type="text" name="cronfile" value="{$result['cronfile']}" /></td>
 				<else>
 					<td class="main_field_display" nowrap="nowrap">{$result['cronfile']}</td>
-				<if>
+				</if>
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['admin']['activated']}:</td>
