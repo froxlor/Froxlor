@@ -41,7 +41,7 @@ function awstatsDoSingleDomain($domain, $outputdir)
 		 * debian...pffff, #87
 		 */
 		if (!file_exists($awbsp)) {
-			$awbsp = '/usr/lib/cgi-bin/awstats_buildstaticpages.pl';
+			$awbsp = '/usr/share/doc/awstats/examples/awstats_buildstaticpages.pl';
 		}
 		
 		if (!file_exists($awbsp)) {
