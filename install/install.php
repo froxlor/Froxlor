@@ -507,7 +507,23 @@ if(isset($_POST['installstep'])
 
 		if(is_file("/usr/bin/mysqldump"))
 		{
-			$command = "/usr/bin/mysqldump " . $mysql_database . " -u " . $mysql_root_user . " --password='" . $mysql_root_pass . "' --result-file=" . $filename;
+			$do_backup = true;
+			$mysql_dump = '/usr/bin/mysqldump';
+		}
+		elseif(is_file("/usr/local/bin/mysqldump"))
+		{
+			$do_backup = true;
+			$mysql_dump = '/usr/local/bin/mysqldump';
+		}
+		else
+		{
+			$do_backup = false;
+			status_message('red', $lng['install']['backing_up_binary_missing']);
+		}
+		
+		if($do_backup) {
+			
+			$command = $mysql_dump . " " . $mysql_database . " -u " . $mysql_root_user . " --password='" . $mysql_root_pass . "' --result-file=" . $filename;
 			$output = exec($command);
 
 			if(stristr($output, "error"))
@@ -518,10 +534,7 @@ if(isset($_POST['installstep'])
 			{
 				status_message('green', 'OK');
 			}
-		}
-		else
-		{
-			status_message('red', $lng['install']['backing_up_binary_missing']);
+
 		}
 	}
 
