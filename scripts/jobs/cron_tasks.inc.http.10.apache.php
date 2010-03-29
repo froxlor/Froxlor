@@ -134,7 +134,7 @@ class apache
 
 				/**
 				 * dirprotection, see #72
-				 */
+				 * @TODO deferred until 0.9.5, needs more testing
 				$this->virtualhosts_data[$vhosts_filename].= "\t<Directory \"'.$mypath.'(images|packages|templates)\">\n";
 				$this->virtualhosts_data[$vhosts_filename].= "\t\tAllow from all\n";
 				$this->virtualhosts_data[$vhosts_filename].= "\t\tOptions -Indexes\n";
@@ -144,7 +144,6 @@ class apache
 				$this->virtualhosts_data[$vhosts_filename].= "\t\tOrder Deny,Allow\n";
 				$this->virtualhosts_data[$vhosts_filename].= "\t\tDeny from All\n";
 				$this->virtualhosts_data[$vhosts_filename].= "\t</Directory>\n";
-				/**
 				 * end of dirprotection
 				 */
 

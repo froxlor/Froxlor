@@ -112,7 +112,7 @@ class lighttpd
 
 				/**
 				 * dirprotection, see #72
-				 * @TODO use better regex for this
+				 * @TODO use better regex for this, deferred until 0.9.5
 				 *
 				$this->lighttpd_data[$vhost_filename].= '  $HTTP["url"] =~ "^/(.+)\/(.+)\.php" {' . "\n";
 				$this->lighttpd_data[$vhost_filename].= '    url.access-deny = ("")' . "\n";
