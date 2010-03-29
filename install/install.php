@@ -289,7 +289,7 @@ else
 {
 	if(!empty($_SERVER['SERVER_NAME']))
 	{
-		if(validate_ip($_SERVER['SERVER_NAME'], true) == false)
+		if(preg_match('/^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/', $_SERVER['SERVER_NAME']) === false)
 		{
 			$servername = $_SERVER['SERVER_NAME'];
 		}
