@@ -88,9 +88,9 @@ class lighttpd
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ip . ":" . $port);
 			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
-			if(!isset($this->lighttpd_data[$vhosts_filename]))
+			if(!isset($this->lighttpd_data[$vhost_filename]))
 			{
-				$this->lighttpd_data[$vhosts_filename] = '';
+				$this->lighttpd_data[$vhost_filename] = '';
 			}
 
 			$this->lighttpd_data[$vhost_filename].= '$SERVER["socket"] == "' . $ip . ':' . $port . '" {' . "\n";
@@ -156,6 +156,7 @@ class lighttpd
 		$htpasswd_query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `path` LIKE '" . $domain['documentroot'] . "%'";
 		$result_htpasswds = $this->db->query($htpasswd_query);
 
+		$htaccess_text = '';
 		while($row_htpasswds = $this->db->fetch_array($result_htpasswds))
 		{
 			$row_htpasswds['path'] = makeCorrectDir($row_htpasswds['path']);
@@ -275,7 +276,7 @@ class lighttpd
 				}
 
 				$this->lighttpd_data[$vhost_filename].= $this->getVhostContent($domain, $ssl_vhost);
-				$this->lighttpd_data[$vhost_filename].= $this->needed_htpasswds[$row_ipsandports['id']] . "\n";
+				$this->lighttpd_data[$vhost_filename].= $this->needed_htpasswds[$ipandport['id']] . "\n";
 			}
 		}
 		return $included_vhosts;
@@ -313,6 +314,7 @@ class lighttpd
 			$ipport = $domain['ip'] . ':' . $domain['port'];
 		}
 
+		$vhost_content = '';
 		$vhost_content.= $this->getServerNames($domain) . " {\n";
 		
 		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
@@ -344,6 +346,23 @@ class lighttpd
 	protected function getLogFiles($domain)
 	{
 		$logfiles_text = '';
+		
+		if($domain['speciallogfile'] == '1'
+		   && $this->settings['system']['mod_log_sql'] != '1')
+		{
+			if($domain['parentdomainid'] == '0')
+			{
+				$speciallogfile = '-' . $domain['domain'];
+			}
+			else
+			{
+				$speciallogfile = '-' . $domain['parentdomain'];
+			}
+		}
+		else
+		{
+			$speciallogfile = '';
+		}
 
 		if($this->settings['system']['mod_log_sql'] == 1)
 		{

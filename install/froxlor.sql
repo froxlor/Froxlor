@@ -555,6 +555,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (124, 'dkim', 'dkim_keylength', '1024');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (125, 'dkim', 'dkim_servicetype', '0');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (126, 'dkim', 'dkim_add_adsppolicy', '1');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (127, 'dkim', 'dkim_notes', '');
 
 # --------------------------------------------------------
 

@@ -24,6 +24,12 @@ if(@php_sapi_name() != 'cli'
 	die('This script will only work in the shell.');
 }
 
+// ensure that default timezone is set
+if(function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get"))
+{
+	@date_default_timezone_set(@date_default_timezone_get());
+}
+
 $lockdir = '/var/run/';
 $lockFilename = 'froxlor_' . basename($_SERVER['PHP_SELF'], '.php') . '.lock-';
 $lockfName = $lockFilename . getmypid();
