@@ -183,6 +183,10 @@ class lighttpd
 					$htaccess_text.= '  ,' . "\n";
 				}
 
+				if(!isset($this->needed_htpasswds[$filename])) {
+					$this->needed_htpasswds[$filename] = '';
+				}
+
 				if(!strstr($this->needed_htpasswds[$filename], $row_htpasswds['username'] . ':' . $row_htpasswds['password']))
 				{
 					$this->needed_htpasswds[$filename].= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
@@ -194,7 +198,7 @@ class lighttpd
 				$htaccess_text.= '    (' . "\n";
 				$htaccess_text.= '       "method"  => "basic",' . "\n";
 				$htaccess_text.= '       "realm"   => "Restricted Area",' . "\n";
-				$htaccess_text.= '       "require" => "user=' . $row_htpasswds[username] . '"' . "\n";
+				$htaccess_text.= '       "require" => "user=' . $row_htpasswds['username'] . '"' . "\n";
 				$htaccess_text.= '    )' . "\n";
 			}
 		}
@@ -269,14 +273,16 @@ class lighttpd
 				if($ssl == '1')
 				{
 					$ssl_vhost = true;
+					$ips_and_ports_index = 'ssl_ipandport';
 				}
 				else
 				{
 					$ssl_vhost = false;
+					$ips_and_ports_index = 'ipandport';
 				}
 
 				$this->lighttpd_data[$vhost_filename].= $this->getVhostContent($domain, $ssl_vhost);
-				$this->lighttpd_data[$vhost_filename].= $this->needed_htpasswds[$ipandport['id']] . "\n";
+				$this->lighttpd_data[$vhost_filename].= isset($this->needed_htpasswds[$domain[$ips_and_ports_index]]) ? $this->needed_htpasswds[$domain[$ips_and_ports_index]] . "\n" : '';
 			}
 		}
 		return $included_vhosts;
