@@ -805,7 +805,7 @@ class lighttpd
 				if($vhost_filename != '.'
 				&& $vhost_filename != '..'
 				&& !in_array($vhost_filename, $this->known_filenames)
-				&& preg_match('/^(05|10|20|30)_(froxlor|syscp)_ipandport_(.+)\.conf$/', $vhost_filename)
+				&& preg_match('/^(05|10|20|30)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
 				&& file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
 				{
 					fwrite($this->debugHandler, '  lighttpd::wipeOutOldConfigs: unlinking ' . $vhost_filename . "\n");
