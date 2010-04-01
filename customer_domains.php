@@ -291,7 +291,31 @@ elseif($page == 'domains')
 				}
 				else
 				{
-					$result = $db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` (`customerid`, `domain`, `documentroot`, `ipandport`, `aliasdomain`, `parentdomainid`, `isemaildomain`, `openbasedir`, `openbasedir_path`, `safemode`, `speciallogfile`, `specialsettings`, `ssl_redirect`) VALUES ('" . (int)$userinfo['customerid'] . "', '" . $db->escape($completedomain) . "', '" . $db->escape($path) . "', '" . $db->escape($domain_check['ipandport']) . "', " . (($aliasdomain != 0) ? "'" . $db->escape($aliasdomain) . "'" : "NULL") . ", '" . (int)$domain_check['id'] . "', '" . ($domain_check['subcanemaildomain'] == '3' ? '1' : '0') . "', '" . $db->escape($domain_check['openbasedir']) . "', '" . $db->escape($openbasedir_path) . "', '" . $db->escape($domain_check['safemode']) . "', '" . $db->escape($domain_check['speciallogfile']) . "', '" . $db->escape($domain_check['specialsettings']) . "', '" . $ssl_redirect . "')");
+					// get the phpsettingid from parentdomain, #107
+					$phpsid_result = $db->query_first("SELECT `phpsettingid` FROM `".TABLE_PANEL_DOMAINS."` WHERE `id` = '".(int)$domain_check['id']."'");
+					if(!isset($phpsid_result['phpsettingid'])
+						|| (int)$phpsid_result['phpsettingid'] <= 0
+					) {
+						// assign default config
+						$phpsid_result['phpsettingid'] = 1;
+					}
+
+					$result = $db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET 
+								`customerid` = '" . (int)$userinfo['customerid'] . "',
+								`domain` = '" . $db->escape($completedomain) . "', 
+								`documentroot` = '" . $db->escape($path) . "', 
+								`ipandport` = '" . $db->escape($domain_check['ipandport']) . "', 
+								`aliasdomain` = ".(($aliasdomain != 0) ? "'" . $db->escape($aliasdomain) . "'" : "NULL") .", 
+								`parentdomainid` = '" . (int)$domain_check['id'] . "', 
+								`isemaildomain` = '" . ($domain_check['subcanemaildomain'] == '3' ? '1' : '0') . "', 
+								`openbasedir` = '" . $db->escape($domain_check['openbasedir']) . "', 
+								`openbasedir_path` = '" . $db->escape($openbasedir_path) . "', 
+								`safemode` = '" . $db->escape($domain_check['safemode']) . "', 
+								`speciallogfile` = '" . $db->escape($domain_check['speciallogfile']) . "', 
+								`specialsettings` = '" . $db->escape($domain_check['specialsettings']) . "', 
+								`ssl_redirect` = '" . $ssl_redirect . "', 
+								`phpsettingid` = '" . $phpsid_result['phpsettingid'] . "'");
+
 					$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used`=`subdomains_used`+1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 					$log->logAction(USR_ACTION, LOG_INFO, "added subdomain '" . $completedomain . "'");
 					inserttask('1');
