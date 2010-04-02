@@ -58,6 +58,14 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingHostname',
 					),
+				'system_stdsubdomain' => array(
+					'label' => $lng['serversettings']['stdsubdomainhost'],
+					'settinggroup' => 'system',
+					'varname' => 'stdsubdomain',
+					'type' => 'string',
+					'default' => '',
+					'save_method' => 'storeSettingHostname',
+					),
 				'system_mysql_access_host' => array(
 					'label' => $lng['serversettings']['mysql_access_host'],
 					'settinggroup' => 'system',

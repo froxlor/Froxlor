@@ -586,8 +586,18 @@ if($page == 'customers'
 
 					if($createstdsubdomain == '1')
 					{
+						if (isset($settings['system']['stdsubdomain'])
+							&& $settings['system']['stdsubdomain'] != ''
+						) {
+							$_stdsubdomain = $loginname . '.' . $settings['system']['stdsubdomain'];
+						}
+						else
+						{
+							$_stdsubdomain = $loginname . '.' . $settings['system']['hostname'];
+						}
+
 						$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET " . 
-							"`domain` = '". $db->escape($loginname . '.' . $settings['system']['hostname']) . "', " .
+							"`domain` = '". $db->escape($_stdsubdomain) . "', " .
 							"`customerid` = '" . (int)$customerid . "', " .
 							"`adminid` = '" . (int)$userinfo['adminid'] . "', " . 
 							"`parentdomainid` = '-1', " .
@@ -868,7 +878,17 @@ if($page == 'customers'
 					if($createstdsubdomain == '1'
 					   && $result['standardsubdomain'] == '0')
 					{
-						$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` " . "(`domain`, `customerid`, `adminid`, `parentdomainid`, `ipandport`, `documentroot`, `zonefile`, `isemaildomain`, `caneditdomain`, `openbasedir`, `safemode`, `speciallogfile`, `specialsettings`) " . "VALUES ('" . $db->escape($result['loginname'] . '.' . $settings['system']['hostname']) . "', '" . (int)$result['customerid'] . "', '" . (int)$userinfo['adminid'] . "', '-1', '" . $db->escape($settings['system']['defaultip']) . "', '" . $db->escape($result['documentroot']) . "', '', '0', '0', '1', '1', '0', '')");
+						if (isset($settings['system']['stdsubdomain'])
+							&& $settings['system']['stdsubdomain'] != ''
+						) {
+							$_stdsubdomain = $result['loginname'] . '.' . $settings['system']['stdsubdomain'];
+						}
+						else
+						{
+							$_stdsubdomain = $result['loginname'] . '.' . $settings['system']['hostname'];
+						}
+
+						$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` " . "(`domain`, `customerid`, `adminid`, `parentdomainid`, `ipandport`, `documentroot`, `zonefile`, `isemaildomain`, `caneditdomain`, `openbasedir`, `safemode`, `speciallogfile`, `specialsettings`) " . "VALUES ('" . $db->escape($_stdsubdomain) . "', '" . (int)$result['customerid'] . "', '" . (int)$userinfo['adminid'] . "', '-1', '" . $db->escape($settings['system']['defaultip']) . "', '" . $db->escape($result['documentroot']) . "', '', '0', '0', '1', '1', '0', '')");
 						$domainid = $db->insert_id();
 						$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `standardsubdomain`=\'' . (int)$domainid . '\' WHERE `customerid`=\'' . (int)$result['customerid'] . '\'');
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added standardsubdomain for user '" . $result['loginname'] . "'");

@@ -1325,4 +1325,7 @@ $lng['panel']['options'] = 'Optionen';
 $lng['admin']['warning'] = 'ACHTUNG - Wichtiger Hinweis!';
 $lng['cron']['changewarning'] = '&Auml;nderungen an diesen Werten kann einen negativen Effekt auf das Verhalten von Froxlor und seinen automatisierten Aufgaben haben.<br /><br />Also bitte nur etwas &auml;ndern, wenn du dir *verdammt sicher* bist das du weisst was du tust.';
 
+$lng['serversettings']['stdsubdomainhost']['title'] = 'Kunden Standard-Subdomain';
+$lng['serversettings']['stdsubdomainhost']['description'] = 'Welcher Hostname soll f&uuml;r das Erstellen der Kunden-Standard-Subdomain verwendet werden? Falls leer wird der System-Hostname verwendet.';
+
 ?>
