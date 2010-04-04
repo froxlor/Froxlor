@@ -2415,7 +2415,8 @@ class ApsParser
 				{
 					if(isset($_POST[$FieldId]))
 					{
-						if(!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/", $_POST[$FieldId]))
+						$email = strtolower($_POST[$FieldId]);
+						if(filter_var($email, FILTER_VALIDATE_EMAIL) === false)
 						{
 							if(!in_array($FieldId, $Error))$Error[] = $FieldId;
 						}
