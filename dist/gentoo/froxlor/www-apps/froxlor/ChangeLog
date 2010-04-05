@@ -2,6 +2,12 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+*froxlor-0.9.4 (05 Apr 2010)
+
+  05 Apr 2010; Froxlor Release Team <release@froxlor.org>
+  -froxlor-0.9.3.ebuild, +froxlor-0.9.4.ebuild:
+  version bump, remove old
+
   25 Mar 2010; Froxlor Release Team <release@froxlor.org>
   froxlor-0.9.3.ebuild, froxlor-9999.ebuild:
   adding ability to define the docroot in /etc/make.conf with
