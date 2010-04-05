@@ -385,4 +385,11 @@ if(isFroxlorVersion('0.9.3-svn4'))
 	updateToVersion('0.9.3-svn5');
 }
 
+if(isFroxlorVersion('0.9.3-svn5'))
+{
+	showUpdateStep("Updating from 0.9.3-svn5 to 0.9.4 final");
+	lastStepStatus(0);
+	updateToVersion('0.9.4');
+}
+
 ?>
