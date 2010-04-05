@@ -76,6 +76,8 @@ function safe_exec($exec_string, &$return_value = false)
 		die('SECURITY CHECK FAILED!' . "\n" . 'The execute string "' . htmlspecialchars($exec_string) . '" is a possible security risk!' . "\n" . 'Please check your whole server for security problems by hand!' . "\n");
 	}
 
+	/*
+	 * This is not needed anymore, we allow all commands and just check for pipes and stuff
 	//
 	// check if command is allowed here
 	//
@@ -94,6 +96,7 @@ function safe_exec($exec_string, &$return_value = false)
 	{
 		die('SECURITY CHECK FAILED!' . "\n" . 'Your command "' . htmlspecialchars($exec_string) . '" is not allowed!' . "\n" . 'Please check your whole server for security problems by hand!' . "\n");
 	}
+	*/
 
 	//
 	// execute the command and return output
