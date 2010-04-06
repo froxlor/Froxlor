@@ -725,6 +725,7 @@ class lighttpd
 		if(!isConfigDir($this->settings['system']['apacheconf_vhost']))
 		{
 			// Save one big file
+			$vhosts_file = '';
 
 			foreach($this->lighttpd_data as $vhosts_filename => $vhost_content)
 			{
