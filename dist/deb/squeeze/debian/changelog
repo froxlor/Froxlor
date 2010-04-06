@@ -1,3 +1,13 @@
+froxlor (0.9.4-1+squeeze1) testing; urgency=low
+
+  * new upstream release
+  * add a note to debian/postinst for the cronjob, thanks to El Rico for
+    the suggestion
+  * add a Conflicts line to debian/control too, so it will actually
+    replace syscp, thanks to El Rico for the report
+
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 06 Apr 2010 03:39:18 -0400
+
 froxlor (0.9.3-1+squeeze1) testing; urgency=low
 
   * new upstream release

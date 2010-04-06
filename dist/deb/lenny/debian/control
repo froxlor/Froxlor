@@ -10,7 +10,7 @@ Vcs-Svn: http://svn.froxlor.org/branches/extras/dist/deb/
 
 Package: froxlor
 Architecture: all
-Depends: apache2 | lighttpd, php5, php5-cli, php5-mysql, mysql-server, mysql-client, mysql-common, webalizer
+Depends: apache2 | lighttpd, php5, php5-cli, php5-mysql, mysql-server, mysql-client, mysql-common, webalizer | awstats
 Recommends: postfix, postfix-mysql, libsasl2-2, libsasl2-modules, libsasl2-modules-sql, maildrop, courier-authlib-mysql | dovecot-common, courier-imap | dovecot-imapd, courier-pop | dovecot-pop3d, php5-gd, php5-suhosin, php5-imap, proftpd-mod-mysql | pure-ftpd-mysql, bind9
 Conflicts: syscp
 Replaces: syscp
