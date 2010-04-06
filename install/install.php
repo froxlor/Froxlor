@@ -656,7 +656,8 @@ if(isset($_POST['installstep'])
 
 	$query = "INSERT INTO `".TABLE_PANEL_IPSANDPORTS."` 
 			 SET `ip`= '".$db->escape($serverip)."', 
-			 `port` = '80', 
+			 `port` = '80',
+			 `namevirtualhost_statement` = '1',
 			 `vhostcontainer` = '1', 
 			 `vhostcontainer_servername_statement` = '1'";
 	$db->query($query);
