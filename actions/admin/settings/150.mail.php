@@ -75,7 +75,7 @@ return array(
 					'default' => 100,
 					'save_method' => 'storeSettingField',
 					),
-				'systen_autoresponder_enabled' => array(
+				'system_autoresponder_enabled' => array(
 					'label' => $lng['serversettings']['autoresponder_active'],
 					'settinggroup' => 'autoresponder',
 					'varname' => 'autoresponder_active',
@@ -84,7 +84,7 @@ return array(
 					'cronmodule' => 'froxlor/autoresponder',
 					'save_method' => 'storeSettingField',
 					),
-				'systen_last_autoresponder_run' => array(
+				'system_last_autoresponder_run' => array(
 					'settinggroup' => 'autoresponder',
 					'varname' => 'last_autoresponder_run',
 					'type' => 'hidden',
