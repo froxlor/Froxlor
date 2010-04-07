@@ -135,6 +135,19 @@ return Array(
 							'newaliases'
 						)
 					),
+					'postfix_mxaccess' => Array(
+						'label' => 'Postfix MX-Access (anti spam)',
+						'files' => Array(
+							'etc_postfix_mx_access' => '/etc/postfix/mx_access',
+							'etc_postfix_main.cf' => '/etc/postfix/main.cf'
+						),
+						'commands_1' => Array(
+							'postmap /etc/postfix/mx_access'
+						),
+						'restart' => Array(
+							'/etc/init.d/postfix restart'
+						)
+					),
 					'exim4' => Array(
 						'label' => 'Exim4',
 						'commands_1' => Array(
