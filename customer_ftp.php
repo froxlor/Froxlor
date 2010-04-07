@@ -173,17 +173,11 @@ elseif($page == 'accounts')
 				}
 				else
 				{
-					$userpath = makeCorrectDir($path);
 					$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 					
 					$db->query("INSERT INTO `" . TABLE_FTP_USERS . "` (`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) VALUES ('" . (int)$userinfo['customerid'] . "', '" . $db->escape($username) . "', ENCRYPT('" . $db->escape($password) . "'), '" . $db->escape($path) . "', 'y', '" . (int)$userinfo['guid'] . "', '" . (int)$userinfo['guid'] . "')");
 					$db->query("UPDATE `" . TABLE_FTP_GROUPS . "` SET `members`=CONCAT_WS(',',`members`,'" . $db->escape($username) . "') WHERE `customerid`='" . $userinfo['customerid'] . "' AND `gid`='" . (int)$userinfo['guid'] . "'");
-
-					//						$db->query("INSERT INTO `".TABLE_FTP_GROUPS."` (`customerid`, `groupname`, `gid`, `members`) VALUES ('".$userinfo['customerid']."', '$username', '$uid', '$username')");
-
 					$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `ftps_used`=`ftps_used`+1, `ftp_lastaccountnumber`=`ftp_lastaccountnumber`+1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
-
-					//						$db->query("UPDATE `".TABLE_PANEL_SETTINGS."` SET `value`='$uid' WHERE settinggroup='ftp' AND varname='lastguid'");
 
 					$log->logAction(USR_ACTION, LOG_INFO, "added ftp-account '" . $username . " (" . $path . ")'");
 					inserttask(5);
@@ -213,7 +207,7 @@ elseif($page == 'accounts')
 	elseif($action == 'edit'
 	       && $id != 0)
 	{
-		$result = $db->query_first("SELECT `id`, `username`, `homedir` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+		$result = $db->query_first("SELECT `id`, `username`, `homedir`, `uid`, `gid` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 
 		if(isset($result['username'])
 		   && $result['username'] != '')
@@ -221,22 +215,74 @@ elseif($page == 'accounts')
 			if(isset($_POST['send'])
 			   && $_POST['send'] == 'send')
 			{
-				$password = validate($_POST['ftp_password'], 'password');
+				$path = validate($_POST['path'], 'path');
+				
+				$_setnewpass = false;
+				if(isset($_POST['ftp_password']) && $_POST['ftp_password'] != '')
+				{
+					$password = validate($_POST['ftp_password'], 'password');
+					$password = validatePassword($password);
+					$_setnewpass = true;
+				}
 
-				if($password == '')
+				if($_setnewpass)
 				{
-					standard_error(array('stringisempty', 'mypassword'));
-					exit;
+					if($password == '')
+					{
+						standard_error(array('stringisempty', 'mypassword'));
+						exit;
+					}
+					else
+					{
+						$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account password for '" . $result['username'] . "'");
+						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`=ENCRYPT('" . $db->escape($password) . "') WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+					}
 				}
-				else
+				
+				if($path != '')
 				{
-					$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`=ENCRYPT('" . $db->escape($password) . "') WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
-					$log->logAction(USR_ACTION, LOG_INFO, "edited ftp-account '" . $result['username'] . "'");
-					redirectTo($filename, Array('page' => $page, 's' => $s));
+					$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
+					
+					if($path != $result['homedir'])
+					{
+						if(!file_exists($path))
+						{
+							mkDirWithCorrectOwnership($userinfo['documentroot'], $path, $result['uid'], $result['gid']);
+						}
+
+						$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account homdir for '" . $result['username'] . "'");
+						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `homedir`= '" . $db->escape($path) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");						
+					}
 				}
+
+				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 			else
 			{
+				if(strpos($result['homedir'], $userinfo['documentroot']) === 0)
+				{
+					$homedir = substr($result['homedir'], strlen($userinfo['documentroot']));
+				}
+				else
+				{
+					$homedir = $result['homedir'];
+				}
+				$homedir = makeCorrectDir($homedir);
+
+				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $homedir);
+
+				if($settings['customer']['ftpatdomain'] == '1')
+				{
+					$domains = '';
+
+					$result_domains = $db->query("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
+
+					while($row_domain = $db->fetch_array($result_domains))
+					{
+						$domains.= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['domain']);
+					}
+				}
+				
 				eval("echo \"" . getTemplate("ftp/accounts_edit") . "\";");
 			}
 		}

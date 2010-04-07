@@ -38,7 +38,7 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 
 	if($fieldType == 'Manual')
 	{
-		$field = '<input type="text" name="path" value="' . htmlspecialchars($value) . '" size="30" />';
+		$field = '<input type="text" name="path" value="' . htmlspecialchars($value) . '" />';
 	}
 	elseif($fieldType == 'Dropdown')
 	{
@@ -65,7 +65,7 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 			else
 			{
 				$field = $lng['panel']['toomanydirs'];
-				$field.= '<input type="text" name="path" value="' . htmlspecialchars($value) . '" size="30" />';
+				$field.= '<input type="text" name="path" value="' . htmlspecialchars($value) . '" />';
 			}
 		}
 		else

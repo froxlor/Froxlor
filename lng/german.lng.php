@@ -1328,4 +1328,8 @@ $lng['cron']['changewarning'] = '&Auml;nderungen an diesen Werten kann einen neg
 $lng['serversettings']['stdsubdomainhost']['title'] = 'Kunden Standard-Subdomain';
 $lng['serversettings']['stdsubdomainhost']['description'] = 'Welcher Hostname soll f&uuml;r das Erstellen der Kunden-Standard-Subdomain verwendet werden? Falls leer wird der System-Hostname verwendet.';
 
+// ADDED IN FROXLOR 0.9.4-1
+$lng['ftp']['account_edit'] = 'FTP Konto bearbeiten';
+$lng['ftp']['editpassdescription'] = 'Neues Passwort setzen oder leer f&uuml;r keine &Auml;nderung.';
+
 ?>
