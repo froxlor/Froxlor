@@ -183,6 +183,14 @@ elseif($page == 'domains')
 					}
 				}
 
+				/*
+				 * check for APS packages used with this domain, #110
+				 */
+				if(domainHasApsInstances($id))
+				{
+					standard_error('domains_cantdeletedomainwithapsinstances');
+				}
+
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted subdomain '" . $idna_convert->decode($result['domain']) . "'");
 				$result = $db->query("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 				$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used`=`subdomains_used`-1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");

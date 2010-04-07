@@ -147,6 +147,14 @@ if($page == 'domains'
 			if(isset($_POST['send'])
 			   && $_POST['send'] == 'send')
 			{
+				/*
+				 * check for APS packages used with this domain, #110
+				 */
+				if(domainHasApsInstances($id))
+				{
+					standard_error('domains_cantdeletedomainwithapsinstances');
+				}
+
 				$query = 'SELECT `id` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE (`id`="' . (int)$id . '" OR `parentdomainid`="' . (int)$id . '")  AND  `isemaildomain`="1"';
 				$subResult = $db->query($query);
 				$idString = array();
