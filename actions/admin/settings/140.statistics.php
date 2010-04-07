@@ -40,9 +40,18 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					),
-				),
-			),
-		),
+				'system_awstats_path' => array(
+					'label' => $lng['serversettings']['awstats_path'],
+					'settinggroup' => 'system',
+					'varname' => 'awstats_path',
+					'type' => 'string',
+					'string_type' => 'dir',
+					'default' => '/usr/bin/',
+					'save_method' => 'storeSettingField',
+					)
+				)
+			)
+		)
 	);
 
 ?>

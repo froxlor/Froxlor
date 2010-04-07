@@ -1336,5 +1336,6 @@ $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Neue Datenbank er
 $lng['customer']['mysql_add']['infomail_body']['pma'] = "\nDie Datenbank kann mit phpMyAdmin via {URI} verwaltet werden.\n";
 $lng['customer']['mysql_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade eine neue Datenbank angelegt. Hier die angegebenen Informationen:\n\nDatenbankname: {DB_NAME}\nPasswort: {DB_PASS}\nBeschreibung: {DB_DESC}\n{PMA_URI}\nVielen Dank, das Froxlor-Team";
 $lng['error']['domains_cantdeletedomainwithapsinstances'] = 'Sie k&ouml;nnen keine Domain l&ouml;schen, die noch von APS Paketen verwendet wird. L&ouml;schen Sie zuerst alle installierten APS Pakete dieser Domain.';
+$lng['serversettings']['awstats_path'] = 'Pfad zu AWStats \'awstats_buildstaticpages.pl\'';
 
 ?>

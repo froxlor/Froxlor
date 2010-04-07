@@ -392,4 +392,15 @@ if(isFroxlorVersion('0.9.3-svn5'))
 	updateToVersion('0.9.4');
 }
 
+if(isFroxlorVersion('0.9.4'))
+{
+	showUpdateStep("Updating from 0.9.4 to 0.9.4-svn1", true);
+	
+	showUpdateStep("Adding new settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_path', '/usr/bin/');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.4-svn1');
+}
+
 ?>

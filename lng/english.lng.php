@@ -1355,5 +1355,6 @@ $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] New database crea
 $lng['customer']['mysql_add']['infomail_body']['pma'] = "\nYou can access your databases using phpMyAdmin via {URI}\n";
 $lng['customer']['mysql_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nyou have just added a new database. Here is the entered information:\n\nDatabasename: {DB_NAME}\nPassword: {DB_PASS}\nDescription: {DB_DESC}\n{PMA_URI}\nYours sincerely, the Froxlor-Team";
 $lng['error']['domains_cantdeletedomainwithapsinstances'] = 'You cannot delete a domain which is used by an installed APS package. You have to uninstall it first.';
+$lng['serversettings']['awstats_path'] = 'Path to AWStats \'awstats_buildstaticpages.pl\'';
 
 ?>

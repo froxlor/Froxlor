@@ -19,7 +19,7 @@
 
 function awstatsDoSingleDomain($domain, $outputdir)
 {
-	global $cronlog;
+	global $cronlog, $settings;
 	$returnval = 0;
 
 	$domainconfig = '/etc/awstats/awstats.' . $domain . '.conf';
@@ -33,20 +33,13 @@ function awstatsDoSingleDomain($domain, $outputdir)
 		}
 
 		/**
-		 * check for correct paths of awstats_buildstaticpages.pl
+		 * check for correct path of awstats_buildstaticpages.pl
 		 */
-		$awbsp = '/usr/bin/awstats_buildstaticpages.pl';
-
-		/**
-		 * debian...pffff, #87
-		 */
-		if (!file_exists($awbsp)) {
-			$awbsp = '/usr/lib/cgi-bin/awstats_buildstaticpages.pl';
-		}
+		$awbsp = makeCorrectFile($settings['system']['awstats_path'].'/awstats_buildstaticpages.pl');
 		
 		if (!file_exists($awbsp)) {
-			echo "WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated";
-			$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated");
+			echo "WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting";
+			$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting");
 			exit;	
 		}
 
