@@ -22,6 +22,10 @@ $header
 				<td class="main_field_display" nowrap="nowrap"><input type="password" name="mysql_password" maxlength="50" /></td>
 			</tr>
 			<tr>
+				<td class="main_field_name">{$lng['mysql']['sendinfomail']}:</td>
+				<td class="main_field_display" nowrap="nowrap">{$sendinfomail}</td>
+			</tr>
+			<tr>
 				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['mysql']['database_create']}" /></td>
 			</tr>
 		</table>

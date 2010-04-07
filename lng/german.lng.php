@@ -1331,5 +1331,8 @@ $lng['serversettings']['stdsubdomainhost']['description'] = 'Welcher Hostname so
 // ADDED IN FROXLOR 0.9.4-1
 $lng['ftp']['account_edit'] = 'FTP Konto bearbeiten';
 $lng['ftp']['editpassdescription'] = 'Neues Passwort setzen oder leer f&uuml;r keine &Auml;nderung.';
-
+$lng['mysql']['sendinfomail'] = 'Send data via email to me';
+$lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Neue Datenbank erstellt';
+$lng['customer']['mysql_add']['infomail_body']['pma'] = "\nDie Datenbank kann mit phpMyAdmin via {URI} verwaltet werden.\n";
+$lng['customer']['mysql_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade eine neue Datenbank angelegt. Hier die angegebenen Informationen:\n\nDatenbankname: {DB_NAME}\nPasswort: {DB_PASS}\nBeschreibung: {DB_DESC}\n{PMA_URI}\nVielen Dank, das Froxlor-Team";
 ?>

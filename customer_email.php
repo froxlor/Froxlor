@@ -447,7 +447,7 @@ elseif($page == 'accounts')
 
 						if ($_mailerror) {	
 							$log->logAction(USR_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-							standard_error('errorsendingmail', $email);
+							standard_error('errorsendingmail', $email_full);
 						}
 
 						$mail->ClearAddresses();

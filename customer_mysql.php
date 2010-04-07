@@ -141,6 +141,12 @@ elseif($page == 'mysqls')
 				$password = validate($_POST['mysql_password'], 'password');
 				$password = validatePassword($password);
 
+				$sendinfomail = intval($_POST['sendinfomail']);
+				if($sendinfomail != 1)
+				{
+					$sendinfomail = 0;
+				}
+
 				if($password == '')
 				{
 					standard_error(array('stringisempty', 'mypassword'));
@@ -185,6 +191,49 @@ elseif($page == 'mysqls')
 					$databasedescription = validate($_POST['description'], 'description');
 					$result = $db->query('INSERT INTO `' . TABLE_PANEL_DATABASES . '` (`customerid`, `databasename`, `description`, `dbserver`) VALUES ("' . (int)$userinfo['customerid'] . '", "' . $db->escape($username) . '", "' . $db->escape($databasedescription) . '", "' . $db->escape($dbserver) . '")');
 					$result = $db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`+1, `mysql_lastaccountnumber`=`mysql_lastaccountnumber`+1 WHERE `customerid`="' . (int)$userinfo['customerid'] . '"');
+
+					if($sendinfomail == 1)
+					{
+						$pma = '';
+						if($settings['panel']['phpmyadmin_url'] != '')
+						{
+							$r_arr = array('URI' => $settings['panel']['phpmyadmin_url']);
+							$pma = replace_variables($lng['customer']['mysql_add']['infomail_body']['pma'], $r_arr);
+						}
+
+						$replace_arr = array(
+							'CUST_NAME' => getCorrectUserSalutation($userinfo),
+							'DB_NAME' => $username,
+							'DB_PASS' => $password,
+							'DB_DESC' => $databasedescription,
+							'PMA_URI' => $pma 
+						);
+						
+						$mail_body = replace_variables($lng['customer']['mysql_add']['infomail_body']['main'], $replace_arr);
+						
+						$_mailerror = false;
+						try {
+							$mail->Subject = $lng['customer']['mysql_add']['infomail_subject'];
+							$mail->AltBody = $mail_body;
+							$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
+							$mail->AddAddress($userinfo['email'], getCorrectUserSalutation($userinfo));
+							$mail->Send();
+						} catch(phpmailerException $e) {
+							$mailerr_msg = $e->errorMessage();
+							$_mailerror = true;
+						} catch (Exception $e) {
+							$mailerr_msg = $e->getMessage();
+							$_mailerror = true;
+						}
+
+						if ($_mailerror) {
+							$log->logAction(USR_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+							standard_error('errorsendingmail', $userinfo['email']);
+						}
+
+						$mail->ClearAddresses();
+					}
+
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
 			}
@@ -196,6 +245,8 @@ elseif($page == 'mysqls')
 				{
 					$mysql_servers .= makeoption($mysql_server_details['caption'], $mysql_server);
 				}
+
+				$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
 
 				eval("echo \"" . getTemplate("mysql/mysqls_add") . "\";");
 			}
