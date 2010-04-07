@@ -1,6 +1,5 @@
 0.0.0.0/8         REJECT Domain MX in broadcast network
 10.0.0.0/8        REJECT Domain MX in RFC 1918 private network
-127.0.0.0/8       REJECT Domain MX in loopback network
 169.254.0.0/16    REJECT Domain MX in link local network
 172.16.0.0/12     REJECT Domain MX in RFC 1918 private network
 192.0.2.0/24      REJECT Domain MX in TEST-NET network
