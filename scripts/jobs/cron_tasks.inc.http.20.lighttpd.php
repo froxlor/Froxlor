@@ -459,7 +459,7 @@ class lighttpd
 		{
 			if(!empty($row['error404path']))
 			{
-				$error_string.= '  server.error-handler-404 = "' . makeCorrectFile($row['documentroot'] . '/' . $row['error404path']) . '"' . "\n";
+				$error_string.= '  server.error-handler-404 = "' . makeCorrectFile($domain['documentroot'] . '/' . $row['error404path']) . '"' . "\n";
 			}
 
 			if($row['options_indexes'] != '0')
@@ -492,7 +492,7 @@ class lighttpd
 
 	protected function getDirOptions($domain)
 	{
-		$query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `customerid`='" . $domain[customerid] . "'";
+		$query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `customerid`='" . $domain['customerid'] . "'";
 		$result = $this->db->query($query);
 
 		while($row_htpasswds = $this->db->fetch_array($result))
