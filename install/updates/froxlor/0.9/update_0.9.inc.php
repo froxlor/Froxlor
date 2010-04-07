@@ -396,8 +396,22 @@ if(isFroxlorVersion('0.9.4'))
 {
 	showUpdateStep("Updating from 0.9.4 to 0.9.4-svn1", false);
 	
-	showUpdateStep("Adding new settings");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_path', '/usr/bin/');");
+	/**
+	 * some users might still have the setting in their database
+	 * because we already had this back in older versions.
+	 * To not confuse Froxlor, we just update old settings.
+	 */
+	if(isset($settings['system']['awstats_path'])
+		&& $settings['system']['awstats_path'] != ''
+	) {
+		showUpdateStep("Updating settings");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/usr/bin/' WHERE `settinggroup` = 'system' AND `varname` = 'awstats_path';");
+	}
+	else
+	{
+		showUpdateStep("Adding new settings");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_path', '/usr/bin/');");
+	}
 	lastStepStatus(0);
 
 	updateToVersion('0.9.4-svn1');
