@@ -75,7 +75,8 @@ while($row = $db->fetch_array($result_tasks))
 						$awstatsclean['fh'] = fopen($awstatsclean['fullentry'], 'r');
 						$awstatsclean['headerRead'] = fgets($awstatsclean['fh'], strlen($awstatsclean['header'])+1);
 						fclose($awstatsclean['fh']);
-						if($awstatsclean['headerRead'] == $awstatsclean['header'] || $awstatsclean['headerRead'] == $awstatsclean['headeroöd']) {
+						if($awstatsclean['headerRead'] == $awstatsclean['header'] || $awstatsclean['headerRead'] == 
+$awstatsclean['headerold']) {
 							$cronlog->logAction(CRON_ACTION, LOG_INFO, "Removing awstats configuration ".$awstatsclean['fullentry']." for re-creation");
 							@unlink($awstatsclean['fullentry']);
 						}
