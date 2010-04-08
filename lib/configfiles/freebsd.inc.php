@@ -189,6 +189,22 @@ return Array(
 						)
 					)
 				)
+			),
+			'etc' => Array(
+				'label' => $lng['admin']['configfiles']['etc'],
+				'daemons' => Array(
+					'awstats' => Array(
+						'label' => 'Awstats',
+						'commands' => Array(
+							'cd /usr/ports/www/awstats/',
+							'make install clean',
+							'cp /usr/local/www/awstats/cgi-bin/awstats.model.conf '.makeCorrectDir($settings['system']['awstats_conf'])
+						),
+						'files' => Array(
+							'etc_awstats.model.conf' => makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
+						)
+					)
+				)
 			)
 		)
 	)
