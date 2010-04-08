@@ -22,7 +22,7 @@ function awstatsDoSingleDomain($domain, $outputdir)
 	global $cronlog, $settings;
 	$returnval = 0;
 
-	$domainconfig = '/etc/awstats/awstats.' . $domain . '.conf';
+	$domainconfig = makeCorrectFile($settings['system']['awstats_conf'].'/awstats.' . $domain . '.conf');
 	if(file_exists($domainconfig))
 	{
 		$outputdir = makeCorrectDir($outputdir . '/' . $domain);

@@ -826,8 +826,6 @@ $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'You cannot enable Weba
 $lng['serversettings']['webalizer_enabled'] = 'Enable webalizer statistics';
 $lng['serversettings']['awstats_enabled'] = 'Enable awstats statistics';
 $lng['admin']['awstatssettings'] = 'Awstats settings';
-$lng['serversettings']['awstats_domain_file']['title'] = 'Awstats domainfiles directory';
-$lng['serversettings']['awstats_model_file']['title'] = 'Awstats model file';
 
 // ADDED IN 1.2.19-svn16
 
@@ -1356,5 +1354,6 @@ $lng['customer']['mysql_add']['infomail_body']['pma'] = "\nYou can access your d
 $lng['customer']['mysql_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nyou have just added a new database. Here is the entered information:\n\nDatabasename: {DB_NAME}\nPassword: {DB_PASS}\nDescription: {DB_DESC}\n{PMA_URI}\nYours sincerely, the Froxlor-Team";
 $lng['error']['domains_cantdeletedomainwithapsinstances'] = 'You cannot delete a domain which is used by an installed APS package. You have to uninstall it first.';
 $lng['serversettings']['awstats_path'] = 'Path to AWStats \'awstats_buildstaticpages.pl\'';
+$lng['serversettings']['awstats_conf'] = 'AWStats configuration path';
 
 ?>

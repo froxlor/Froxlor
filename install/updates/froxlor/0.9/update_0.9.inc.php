@@ -404,13 +404,26 @@ if(isFroxlorVersion('0.9.4'))
 	if(isset($settings['system']['awstats_path'])
 		&& $settings['system']['awstats_path'] != ''
 	) {
-		showUpdateStep("Updating settings");
+		showUpdateStep("Updating awstats path setting");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/usr/bin/' WHERE `settinggroup` = 'system' AND `varname` = 'awstats_path';");
 	}
 	else
 	{
-		showUpdateStep("Adding new settings");
+		showUpdateStep("Adding new awstats path setting");
 		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_path', '/usr/bin/');");
+	}
+	lastStepStatus(0);
+
+	if(isset($settings['system']['awstats_domain_file'])
+		&& $settings['system']['awstats_domain_file'] != ''
+	) {
+		showUpdateStep("Updating awstats configuration path setting");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `varname` = 'awstats_conf' WHERE `varname` = 'awstats_domain_file';");
+	}
+	else
+	{
+		showUpdateStep("Adding awstats configuration path settings");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_conf', '/etc/awstats/');");
 	}
 	lastStepStatus(0);
 

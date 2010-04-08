@@ -274,7 +274,7 @@ return Array(
 							'cp /usr/share/doc/awstats/examples/awstats_buildstaticpages.pl /usr/lib/cgi-bin/'
 						),
 						'files' => Array(
-							'etc_awstats.model.conf' => '/etc/awstats/awstats.conf'
+							'etc_awstats.model.conf' => makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf')
 						),
 					),
 					'libnss' => Array(

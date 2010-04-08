@@ -288,7 +288,7 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 							'awstats_configure.pl'
 						),
 						'files' => Array(
-							'etc_awstats.model.conf' => '/etc/awstats/awstats.model.conf'
+							'etc_awstats.model.conf' => makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
 						),
 					),
 					'libnss' => Array(

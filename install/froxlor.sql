@@ -558,6 +558,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (127, 'dkim', 'dkim_notes', '');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (128, 'system', 'stdsubdomain', '');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (129, 'system', 'awstats_path', '/usr/bin/');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (130, 'system', 'awstats_conf', '/etc/awstats/');
 
 # --------------------------------------------------------
 

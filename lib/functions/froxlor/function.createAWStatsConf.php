@@ -48,18 +48,20 @@ function createAWStatsConf($logFile, $siteDomain, $hostAliases, $customerDocroot
 		'/\{LOG_FILE\}/',
 		'/\{SITE_DOMAIN\}/',
 		'/\{HOST_ALIASES\}/',
-		'/\{CUSTOMER_DOCROOT\}/'
+		'/\{CUSTOMER_DOCROOT\}/',
+		'/\{AWSTATS_CONF\}/'
 	);
 	$replace = array(
 		makeCorrectFile($logFile),
 		$siteDomain,
 		$hostAliases,
-		$awstats_dir
+		$awstats_dir,
+		makeCorrectDir($settings['system']['awstats_conf'])
 	);
 
 	// File names
 
-	$domain_file = '/etc/awstats/awstats.' . $siteDomain . '.conf';
+	$domain_file = makeCorrectFile($settings['system']['awstats_conf'].'/awstats.' . $siteDomain . '.conf');
 	$model_file = dirname(dirname(dirname(dirname(__FILE__))));
 	$model_file.= '/templates/misc/awstatsmodel/';
 	
