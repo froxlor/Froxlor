@@ -206,6 +206,7 @@ elseif($page == 'mysqls')
 							'DB_NAME' => $username,
 							'DB_PASS' => $password,
 							'DB_DESC' => $databasedescription,
+							'DB_SRV' => $sql_root[$dbserver]['host'],
 							'PMA_URI' => $pma 
 						);
 						
