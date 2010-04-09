@@ -378,7 +378,6 @@ $lng['serversettings']['pathedit']['description'] = 'Un percorso/cartella andrà 
  * New strings
  */
 
-$lng['admin']['cronlastrun'] = 'Ultimo Cronjob';
 $lng['serversettings']['paging']['title'] = 'Elementi da visualizzare per pagina';
 $lng['serversettings']['paging']['description'] = 'Quanti elementi dovrebbero essere visualizzati su una pagina? (0 = disattiva impaginazione)';
 $lng['error']['ipstillhasdomains'] = 'La combinazione IP/Porta che vuoi eliminare ha ancora dei domini assegnati, per favore riassegna questi domini ad altre combinazioni IP/Porta prima di eliminare questa.';

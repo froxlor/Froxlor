@@ -375,7 +375,6 @@ $lng['serversettings']['pathedit']['description'] = 'Vols que la ruta sigui escr
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = '&Uacute;ltima volta';
 $lng['serversettings']['paging']['title'] = 'Entrades per p&agrave;gina';
 $lng['serversettings']['paging']['description'] = 'Entrades per p&agrave;gina? (0 = sense paginar)';
 $lng['error']['ipstillhasdomains'] = 'La combinaci&oacute; IP/Port que vols esborrar t&eacute; dominis assignats. Si us plau, reassigna els dominis a una altra IP/Port abans d\'esborrar.';

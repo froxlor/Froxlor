@@ -387,7 +387,6 @@ $lng['mysql']['description'] = 'Här ändras eller skapas MySQL-Databaser.<br />Än
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = 'Konfigurerinsfilerna skapades sist';
 $lng['serversettings']['paging']['title'] = 'Antal rader per sida';
 $lng['serversettings']['paging']['description'] = 'Hur många rader skall det vara på en sida? (0 = Stäng av sidbrytning)';
 $lng['error']['ipstillhasdomains'] = 'IP/Port kombinationen som du vill radera har fortfarande domäner anslutna till sig, Flytta dessa till någon annan IP/Port kombination innan du raderar denna IP/Port kombination.';
@@ -529,7 +528,6 @@ $lng['admin']['configfiles']['etc'] = 'Others (System)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Choose a distribution --';
 $lng['admin']['configfiles']['chooseservice'] = '-- Choose a service --';
 $lng['admin']['configfiles']['choosedaemon'] = '-- Choose a daemon --';
-$lng['admin']['trafficlastrun'] = 'Senaste trafikberäkningen gjordes';
 
 // ADDED IN 1.2.16-svn10
 

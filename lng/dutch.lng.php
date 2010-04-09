@@ -381,7 +381,6 @@ $lng['mysql']['description'] = 'Hier kunt u MySQL-Databases maken en wijzigen.<b
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = 'Laatste Cron-run';
 $lng['serversettings']['paging']['title'] = 'Vermeldingen per pagina';
 $lng['serversettings']['paging']['description'] = 'Hoeveel vermeldingen er getoond moeten worden per pagina? (0 = alles laten zien)';
 $lng['error']['ipstillhasdomains'] = 'De IP/Port combinatie die u verwijderen wilt heeft nog domeinen toegewezen, wijs deze opnieuw to aan andere IP/Poort combinaties voordat u deze IP/Poort combinatie verwijderd.';

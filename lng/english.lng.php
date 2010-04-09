@@ -1321,6 +1321,7 @@ $lng['cron']['interval'] = 'interval';
 $lng['cron']['isactive'] = 'enabled';
 $lng['cron']['description'] = 'description';
 $lng['crondesc']['cron_unknown_desc'] = 'no description given';
+$lng['admin']['cron']['add'] = 'Add cronjob';
 $lng['crondesc']['cron_tasks'] = 'generating of configfiles';
 $lng['crondesc']['cron_legacy'] = 'legacy (old) cronjob';
 $lng['crondesc']['cron_apsinstaller'] = 'APS-installer';

@@ -1299,9 +1299,9 @@ $lng['cron']['cronname'] = 'Cronjob-Name';
 $lng['cron']['lastrun'] = 'zuletzt gestartet';
 $lng['cron']['interval'] = 'Intervall';
 $lng['cron']['isactive'] = 'Aktiv';
-$lng['admin']['cron']['add'] = 'Cronjob hinzuf&uuml;gen';
 $lng['cron']['description'] = 'Beschreibung';
 $lng['crondesc']['cron_unknown_desc'] = 'Keine Beschreibung angegeben';
+$lng['admin']['cron']['add'] = 'Cronjob hinzuf&uuml;gen';
 $lng['crondesc']['cron_tasks'] = 'Erstellen von Konfigurationsdateien';
 $lng['crondesc']['cron_legacy'] = 'Legacy (alter) Cronjob';
 $lng['crondesc']['cron_apsinstaller'] = 'APS-Installer';
@@ -1336,5 +1336,21 @@ $lng['customer']['mysql_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\n
 $lng['error']['domains_cantdeletedomainwithapsinstances'] = 'Sie k&ouml;nnen keine Domain l&ouml;schen, die noch von APS Paketen verwendet wird. L&ouml;schen Sie zuerst alle installierten APS Pakete dieser Domain.';
 $lng['serversettings']['awstats_path'] = 'Pfad zu AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'AWStats Konfigurations-Pfad';
+
+$lng['mysql']['mysql_server'] = 'MySQL-Server';
+$lng['admin']['ipsandports']['webserverdefaultconfig'] = 'Webserver Standard Konfiguration';
+$lng['admin']['ipsandports']['webserverdomainconfig'] = 'Webserver Domain Konfiguration';
+$lng['admin']['ipsandports']['webserverssldomainconfig'] = 'Webserver SSL Konfiguration';
+$lng['admin']['ipsandports']['ssl_key_file'] = 'Pfad zu der SSL Schl&uuml;sseldatei';
+$lng['admin']['ipsandports']['ssl_ca_file'] = 'Pfad zu dem SSL CA Zertifikat';
+$lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Standard vHost - Einstellungen f&uuml;r jeden Domain - Kontainer';
+$lng['serversettings']['ssl']['ssl_key_file'] = 'Pfad zu der SSL Schl&uuml;sseldatei';
+$lng['serversettings']['ssl']['ssl_ca_file'] = 'Pfad zu dem SSL CA Zertifikat';
+$lng['error']['usernamealreadyexists'] = 'Der Benutzername %s existiert bereits.';
+$lng['error']['plausibilitychecknotunderstood'] = 'Die Antwort des Plausibilit&auml;tschecks wurde nicht verstanden';
+$lng['error']['errorwhensaving'] = 'Bei dem Speichern des Feldes %s trat ein Fehler auf';
+$lng['success']['success'] = 'Information';
+$lng['success']['clickheretocontinue'] = 'Hier klicken um fortzufahren';
+$lng['success']['settingssaved'] = 'Die Einstellungen wurden erfolgreich gespeichert.';
 
 ?>

@@ -246,7 +246,6 @@ $lng['error']['destinationalreadyexistasmail'] = 'Le renvoi vers l\'adresse "%s"
 $lng['error']['destinationalreadyexist'] = 'Il existe déjà une réexpédition vers l\'adresse "%s".';
 $lng['error']['destinationiswrong'] = 'L\'adresse "%s" contient des signes invalides ou est incomplète.';
 $lng['error']['domainname'] = $lng['domains']['domainname'];
-$lng['error']['youcantdeletechangemainadmin'] = 'Pour des raisons de sécurité, il n\'est pas possible de supprimer ou modifier l\'administrateur principal.';
 $lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer un compte identique au compte système, veuillez réessayer avec un autre nom.';
 
 /**
@@ -255,7 +254,6 @@ $lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer un compte 
 
 $lng['question']['question'] = 'Question de sécurité';
 $lng['question']['admin_customer_reallydelete'] = 'Etes-vous sûr de vouloir supprimer le compte "%s" ?<br />ATTENTION ! Toutes ses informations seront supprimées ! Une fois fait, il vous appartiendra de supprimer manuellement tous les dossiers du compte sur le système de fichiers.';
-$lng['question']['admin_domain_reallyenablemailsystemhostname'] = 'Etes-vous sûr de vouloir activé le serveur de nom en tant que serveur de mails ?';
 $lng['question']['admin_domain_reallydelete'] = 'Etes-vous sûr de vouloir supprimer le domaine "%s" ?';
 $lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Etes-vous sûr de vouloir désactiver les modes de sécurité suivants : OpenBasedir et / où SafeMode ?';
 $lng['question']['admin_admin_reallydelete'] = 'Etes-vous sûr de vouloir supprimer l\'administrateur "%s" ?<br />Tous ses comptes seront affectés à l\'administrateur principal.';
@@ -359,8 +357,6 @@ $lng['serversettings']['hostname']['title'] = 'Nom d\'hôte';
 $lng['serversettings']['hostname']['description'] = 'Quel est le nom d\'hôte (hostname) du serveur ?';
 $lng['serversettings']['apachereload_command']['title'] = 'Commande de rechargement d\'Apache';
 $lng['serversettings']['apachereload_command']['description'] = 'Quelle est la commande pour recharger / redémarrer Apache ?';
-$lng['serversettings']['apacheconf_filename']['title'] = 'Nom du fichier de configuration Apache';
-$lng['serversettings']['apacheconf_filename']['description'] = 'Dans quel fichier souhaitez-vous enregistrer la configuration Apache ?';
 $lng['serversettings']['bindconf_directory']['title'] = 'Emplacement du dossier de configuration de Bind / Named';
 $lng['serversettings']['bindconf_directory']['description'] = 'Où doit être stocké la configuration de Bind / Named ?';
 $lng['serversettings']['bindreload_command']['title'] = 'Commande de rechargement de Bind / Named';
@@ -403,7 +399,6 @@ $lng['mysql']['description'] = 'Ici, vous pouvez ajouter et effacer des bases de
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = 'Dernière tâche "cron"';
 $lng['serversettings']['paging']['title'] = 'Nombre de résultats par page';
 $lng['serversettings']['paging']['description'] = 'Nombre de résultats par page ? (0 = Désactive la pagination)';
 $lng['error']['ipstillhasdomains'] = 'La combinaison IP / port est encore utilisée, veuillez réassigner le ou les domaines existant(s) avec cette adresse IP / port concerné(s) à une autre combinaison IP / port avant de supprimer celle-ci.';
@@ -452,7 +447,6 @@ $lng['error']['phpmyadminiswrong'] = 'Le lien pour phpMyAdmin n\'est pas valide.
 $lng['error']['webmailiswrong'] = 'Le lien pour le WebMail n\'est pas valide.';
 $lng['error']['webftpiswrong'] = 'Le lien pour le WebFTP n\'est pas valide.';
 $lng['domains']['hasaliasdomains'] = 'Le domaine possède un ou des alias.';
-$lng['domains']['istopleveldomain'] = 'Est le nom de domaine principal';
 $lng['serversettings']['defaultip']['title'] = 'IP / Port par défaut';
 $lng['serversettings']['defaultip']['description'] = 'Quel est l\'IP / Port par défaut ?';
 $lng['domains']['statstics'] = 'Fréquentation';
@@ -546,7 +540,6 @@ $lng['admin']['configfiles']['etc'] = 'Autres (Système)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Choisissez une distribution --';
 $lng['admin']['configfiles']['chooseservice'] = '-- Choisissez un service --';
 $lng['admin']['configfiles']['choosedaemon'] = '-- Choisissez un démon --';
-$lng['admin']['trafficlastrun'] = 'Dernier calcul du trafic';
 
 // ADDED IN 1.2.16-svn10
 
@@ -811,10 +804,6 @@ $lng['cronjobs']['notyetrun'] = 'Pas encore lancé';
 $lng['install']['servername_should_be_fqdn'] = 'Le nom du serveur doit être un nom FQDN, pas une adresse IP';
 $lng['serversettings']['default_vhostconf']['title'] = 'Paramètres par défaut pour les vHosts';
 $lng['emails']['quota'] = 'Quota';
-$lng['emails']['quota_type']['byte'] = 'octet(s)';
-$lng['emails']['quota_type']['kilobyte'] = 'Ko';
-$lng['emails']['quota_type']['megabyte'] = 'Mo';
-$lng['emails']['quota_type']['gigabyte'] = 'Go';
 $lng['emails']['noquota'] = 'Pas de quota';
 $lng['emails']['updatequota'] = 'Mise à jour';
 $lng['serversettings']['mail_quota']['title'] = 'Quota de la boîte aux lettres';
@@ -859,8 +848,6 @@ $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'Vous ne pouvez pas act
 $lng['serversettings']['webalizer_enabled'] = 'Activer les statistiques Webalizer';
 $lng['serversettings']['awstats_enabled'] = 'Activer les statistiques AWStats';
 $lng['admin']['awstatssettings'] = 'Paramètres Awstats';
-$lng['serversettings']['awstats_domain_file']['title'] = 'Dossier domaines pour AWStats';
-$lng['serversettings']['awstats_model_file']['title'] = 'Fichier modèle pour AWStats';
 
 // ADDED IN 1.2.19-svn16
 

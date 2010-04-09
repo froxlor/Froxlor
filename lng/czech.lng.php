@@ -387,7 +387,6 @@ $lng['mysql']['description'] = 'Zde m&ugrave;&#382;ete vytv&aacute;&oslash;et a 
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = 'Posledn&iacute; generov&aacute;n&iacute; konfigura&egrave;n&iacute;ch soubor&ugrave;';
 $lng['serversettings']['paging']['title'] = 'Z&aacute;znam&ugrave; na str&aacute;nku';
 $lng['serversettings']['paging']['description'] = 'Kolik z&aacute;znam&ugrave; by m&igrave; lo b&yacute;t zobrazeno na str&aacute;nce? (0 = zru&#353;it str&aacute;nkov&aacute;n&iacute;)';
 $lng['error']['ipstillhasdomains'] = 'IP/Port kombinace, kterou chcete smazat m&aacute; st&aacute;le p&oslash;i&oslash;azen&eacute; dom&eacute;ny, pros&iacute;m p&oslash;e&oslash;a&iuml;te je k jin&eacute; IP/Port kombinaci ne&#382; sma&#382;ete tuto IP/Port kombinaci.';
@@ -529,7 +528,6 @@ $lng['admin']['configfiles']['etc'] = 'Ostatn&iacute; (System)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Vyberte distribuci --';
 $lng['admin']['configfiles']['chooseservice'] = '-- Vyberte slu&#382;bu --';
 $lng['admin']['configfiles']['choosedaemon'] = '-- Vyberte daemona --';
-$lng['admin']['trafficlastrun'] = 'Posledn&iacute; kalkulace p&oslash;enos&ugrave;';
 
 // ADDED IN 1.2.16-svn10
 

@@ -382,7 +382,6 @@ $lng['mysql']['description'] = 'Her kan du oprette og editere dine MySQL-Databas
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = 'Sidste Cron';
 $lng['serversettings']['paging']['title'] = 'Genstande per side';
 $lng['serversettings']['paging']['description'] = 'Hvor mange genstande skal vises per side? (0 = brug ikke side inddeling)';
 $lng['error']['ipstillhasdomains'] = 'IP/Port kombinationen du vil slette har stadig dom&aelig;ner tilknyttet. Overf&oslash;r disse dom&aelig;ner til en anden IP/Port kombination for at slette denne.';

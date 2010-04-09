@@ -191,7 +191,6 @@ $lng['error']['youhavealreadyacatchallforthisdomain'] = '&Ouml;n m&aacute;r megh
 $lng['error']['ftp_cantdeletemainaccount'] = 'Nem t&ouml;r&ouml;lheti f&#337; FTP hozz&aacute;f&eacute;r&eacute;s&eacute;t.';
 $lng['error']['login'] = 'Helytelen a felhaszn&aacute;l&oacute;n&eacute;v vagy a jelsz&oacute;, amelyet beg&eacute;pelt. K&eacute;rem, pr&oacute;b&aacute;lja &uacute;jra!';
 $lng['error']['login_blocked'] = 'Ezt a hozz&aacute;f&eacute;r&eacute;s fel lett f&uuml;ggesztve a t&uacute;l sok bejelentkez&eacute;si hiba miatt. K&eacute;rem, pr&oacute;b&aacute;lja &uacute;jra!';
-$settings['login']['deactivatetime'] . ' seconds.';
 $lng['error']['notallreqfieldsorerrors'] = 'Nem teljesen vagy helytelen&uuml;l t&ouml;lt&ouml;tte ki a mez&#337;ket.';
 $lng['error']['oldpasswordnotcorrect'] = 'A r&eacute;gi jelsz&oacute; helytelen.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Nem oszthat ki t&ouml;bb er&#337;forr&aacute;st, mint amennyit birtokol.';
@@ -386,7 +385,6 @@ $lng['mysql']['description'] = 'Itt hozhatja l&eacute;tre &eacute;s v&aacute;lto
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = 'Utols&oacute; Cron fut&aacute;s';
 $lng['serversettings']['paging']['title'] = 'Bejegyz&eacute;sek sz&aacute;ma egy lapon';
 $lng['serversettings']['paging']['description'] = 'H&aacute;ny bejegyz&eacute;s jelenjen meg egy lapon? (0 = lapoz&aacute;s kikapcsol&aacute;sa)';
 $lng['error']['ipstillhasdomains'] = 'A t&ouml;r&ouml;lni k&iacute;v&aacute;nt IP/Port kombin&aacute;ci&oacute;hoz domainek vannak rendelve. Rendelje hozz&aacute; ezeket egy m&aacute;sik IP/Port kombin&aacute;ci&oacute;hoz, miel&#337;tt a jelenlegi IP/Port kombin&aacute;ci&oacute;t t&ouml;rli.';

@@ -376,7 +376,6 @@ $lng['serversettings']['pathedit']['description'] = 'Prefiere seleccionar un tra
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = '&Uacute;ltimo Cron';
 $lng['serversettings']['paging']['title'] = 'Entradas por p&aacute;gina';
 $lng['serversettings']['paging']['description'] = '&iquest;Cuantas entradas deben ser mostradas en una p&aacute;gina? (0=desactivar paginaci&oacute;n)';
 $lng['error']['ipstillhasdomains'] = 'La combinaci&oacute;n IP/Puerto que Usted quiere eliminar todav&iacute;a tiene dominios asignados, por favor vuelva a reasignar estas combinaciones IP/Puerto antes de eliminar esta combinaci&oacute;n IP/Puerto.';

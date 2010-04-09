@@ -369,7 +369,6 @@ $lng['admin']['templates']['USERNAME'] = 'Ще бъде заменено с по
 $lng['admin']['templates']['PASSWORD'] = 'Ще бъде заменено с паролата за сметката на клиента.';
 $lng['admin']['templates']['EMAIL'] = 'Ще бъде заменено със сметка за POP3/IMAP.';
 $lng['admin']['rebuildconf'] = 'Възстановяване на конфигурационни файлове';
-$lng['admin']['cronlastrun'] = 'Последен cron';
 $lng['admin']['ipsandports']['ipsandports'] = 'IP адреси и портове';
 $lng['admin']['ipsandports']['add'] = 'Добавяне на IP/порт';
 $lng['admin']['ipsandports']['edit'] = 'Редакция на на IP/порт';
