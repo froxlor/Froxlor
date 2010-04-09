@@ -41,6 +41,12 @@ function createAWStatsConf($logFile, $siteDomain, $hostAliases, $customerDocroot
 	{
 		safe_exec('mkdir -p '.escapeshellarg($awstats_dir));
 	}
+	
+	// weird but could happen...
+	if(!is_dir($settings['system']['awstats_conf']))
+	{
+		safe_exec('mkdir -p '.escapeshellarg($settings['system']['awstats_conf']));
+	}
 
 	// These are the variables we will replace
 
