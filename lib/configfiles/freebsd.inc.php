@@ -177,15 +177,15 @@ return Array(
 					'proftpd' => Array(
 						'label' => 'ProFTPd',
 						'files' => Array(
-							'etc_proftpd_proftpd.conf' => '/etc/proftpd/proftpd.conf'
+							'etc_proftpd_proftpd.conf' => '/usr/local/etc/proftpd.conf'
 						),
 						'commands' => Array(
-							'touch /etc/proftpd/proftpd.conf',
-							'chown root:0 /etc/proftpd/proftpd.conf',
-							'chmod 0600 /etc/proftpd/proftpd.conf'
+							'touch /usr/local/etc/proftpd.conf',
+							'chown root:0 /usr/local/etc/proftpd.conf',
+							'chmod 0600 /usr/local/etc/proftpd.conf'
 						),
 						'restart' => Array(
-							'/etc/init.d/proftpd restart'
+							'/usr/local/etc/rc.d/proftpd restart'
 						)
 					)
 				)
