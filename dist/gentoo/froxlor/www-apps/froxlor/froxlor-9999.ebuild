@@ -21,7 +21,7 @@ DESCRIPTION="A PHP-based webhosting-oriented control panel for servers."
 HOMEPAGE="http://www.froxlor.org/"
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="aps autoresponder bind domainkey dovecot fcgid lighttpd +log mailquota realtime ssl +tickets"
+IUSE="aps autoresponder awstats bind domainkey dovecot fcgid lighttpd +log mailquota realtime ssl +tickets"
 
 DEPEND="
 	>=mail-mta/postfix-2.4[mysql,ssl=]
@@ -29,7 +29,16 @@ DEPEND="
 	dev-db/mysql
 	dev-lang/php[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,pcre,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
 	net-ftp/proftpd[mysql,ssl=]
-	app-admin/webalizer
+	awstats? (
+		www-misc/awstats
+		( !lighttpd? (
+			www-misc/awstats[apache2]
+			)
+		)
+	)
+	!awstats? (
+		app-admin/webalizer
+	)
 	bind? ( net-dns/bind
 		domainkey? ( mail-filter/dkim-milter )
 	)
@@ -253,6 +262,12 @@ src_install() {
 	if ! useq ssl ; then
 		einfo "Switching 'SSL' to 'Off'"
 		sed -e "s|'use_ssl','1'|'use_ssl','0'|g" -i "${S}/install/froxlor.sql" || die "Unable to set ssl to 'Off'"
+	fi
+
+	if useq awstats ; then
+		einfo "Switching from 'Webalizer' to 'AWStats'"
+		sed -e "s|'webalizer_quiet', '2'|'webalizer_quiet', '0'|g" -i "${S}/install/froxlor.sql"
+		sed -e "s|'awstats_enabled', '0'|'awstats_enabled', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to enable AWStats"
 	fi
 
 	# Install the Froxlor files
