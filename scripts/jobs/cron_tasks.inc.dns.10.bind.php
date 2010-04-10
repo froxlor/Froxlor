@@ -207,7 +207,14 @@ class bind
 
 		if(count($this->mxservers) == 0)
 		{
-			$zonefile.= '@	IN	MX	10 mail' . "\n" . 'mail	IN	' . $ip_a_record . "\n";
+			$zonefile.= '@	IN	MX	10 mail' . "\n";
+			$zonefile.= 'mail	IN	' . $ip_a_record . "\n";
+			if($domain['iswildcarddomain'] != '1')
+			{
+				$zonefile.= 'imap	IN	' . $ip_a_record . "\n";
+				$zonefile.= 'smtp	IN	' . $ip_a_record . "\n";
+				$zonefile.= 'pop3	IN	' . $ip_a_record . "\n";
+			}
 		}
 		else
 		{
