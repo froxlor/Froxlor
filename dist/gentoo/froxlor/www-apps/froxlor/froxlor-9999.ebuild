@@ -63,9 +63,7 @@ DEPEND="
 		    net-mail/courier-imap
 		    >=mail-mta/postfix-2.4[sasl]
 	)
-	aps? ( dev-lang/php[zip]
-		( amd64? ( app-arch/unzip ) )
-	)
+	aps? ( dev-lang/php[zip] )
 	mailquota? ( >=mail-mta/postfix-2.4[vda] )
 	realtime?  ( dev-lang/php[sockets] )
 	!www-apps/syscp"
@@ -73,7 +71,7 @@ DEPEND="
 RDEPEND="${DEPEND}"
 
 # we need that to set the standardlanguage later
-LANGS="bg ca cs de da en es fr hu it nl pt ru se sl zh_CN"
+LANGS="bg ca cs de da en es fr hu it nl pl pt ru se sl zh_CN"
 for X in ${LANGS} ; do
 	IUSE="${IUSE} linguas_${X}"
 done
@@ -142,6 +140,8 @@ src_install() {
 		MYLANG="Italian"
 	elif useq linguas_nl ; then
 		MYLANG="Dutch"
+	elif useq linguas_pl ; then
+		MYLANG="Polski"
 	elif useq linguas_pt ; then
 		MYLANG="Portugu&ecirc;s"
 	elif useq linguas_ru ; then
