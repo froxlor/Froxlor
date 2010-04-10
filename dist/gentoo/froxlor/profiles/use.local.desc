@@ -8,6 +8,7 @@
 
 www-apps/froxlor:aps - Support for the Application Packaging Standard
 www-apps/froxlor:autoresponder - E-Mail Autoresponder Support for Customers
+www-apps/froxlor:awstats - use AWStats instead of Webalizer
 www-apps/froxlor:bind - Adds support for writing BIND configuration files
 www-apps/froxlor:domainkey - Adds support for writing DKIM DNS-Records and Filters for them
 www-apps/froxlor:dovecot - use Dovecot instead of Courier

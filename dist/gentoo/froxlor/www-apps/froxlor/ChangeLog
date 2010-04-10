@@ -4,6 +4,10 @@
 
 *froxlor-0.9.4 (05 Apr 2010)
 
+  10 Apr 2010; Froxlor Release Team <release@froxlor.org>
+  froxlor-0.9.4.ebuild, froxlor-9999.ebuild:
+  add AWStats useflag
+
   05 Apr 2010; Froxlor Release Team <release@froxlor.org>
   -froxlor-0.9.3.ebuild, +froxlor-0.9.4.ebuild:
   version bump, remove old

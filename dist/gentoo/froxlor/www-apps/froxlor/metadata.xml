@@ -10,6 +10,7 @@
 <use>
   <flag name='aps'>Support for the Application Packaging Standard</flag>
   <flag name='autoresponder'>E-Mail Autoresponder Support for Customers</flag>
+  <flag name='awstats'>use AWStats instead of Webalizer</flag>
   <flag name='bind'>Adds support for writing BIND configuration files</flag>
   <flag name='domainkey'>Adds support for writing DKIM DNS-Records and
 	  Filters for them</flag>
