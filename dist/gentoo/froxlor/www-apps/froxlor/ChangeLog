@@ -2,6 +2,10 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  11 Apr 2010; Froxlor Release Team <release@froxlor.org>
+  froxlor-0.9.4.ebuild, froxlor-9999.ebuild:
+  fixup bind permissions, bug 135
+
   10 Apr 2010; Froxlor Release Team <release@froxlor.org>
   froxlor-0.9.4.ebuild, froxlor-9999.ebuild:
   add pl to linguas, drop app-arch/unzip depend, we just expect people to

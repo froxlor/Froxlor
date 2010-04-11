@@ -1085,8 +1085,8 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		einfo "Add Gentoo-Froxlor include to Bind configuration ..."
 		echo "include \"/etc/bind/froxlor_bind.conf\";" >> "${ROOT}/etc/bind/named.conf"
 		touch "${ROOT}/etc/bind/froxlor_bind.conf"
-		chown root:0 "${ROOT}/etc/bind/froxlor_bind.conf"
-		chmod 0655 "${ROOT}/etc/bind/froxlor_bind.conf"
+		chown named:0 "${ROOT}/etc/bind/froxlor_bind.conf"
+		chmod 0600 "${ROOT}/etc/bind/froxlor_bind.conf"
 	fi
 
 	srv_add_restart() {
