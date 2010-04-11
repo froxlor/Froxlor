@@ -72,7 +72,9 @@ return Array(
 						'label' => 'Bind9',
 						'commands' => Array(
 							'echo "include \"' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf\";" >> /etc/bind/named.conf',
-							'touch ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf'
+							'touch ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
+							'chown root:bind ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
+							'chmod 0644 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf'
 						),
 						'restart' => Array(
 							'/etc/init.d/bind9 restart'

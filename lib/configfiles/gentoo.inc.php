@@ -76,7 +76,7 @@ return Array(
 						'commands' => Array(
 							'echo "include \"' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf\";" >> /etc/bind/named.conf',
 							'touch ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
-							'chown root:0 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
+							'chown named:0 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
 							'chmod 0600 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf'
 						),
 						'restart' => Array(
