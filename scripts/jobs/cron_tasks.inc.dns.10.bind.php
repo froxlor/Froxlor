@@ -149,10 +149,13 @@ class bind
 
 			while(false !== ($domain_filename = readdir($domain_file_dirhandle)))
 			{
+				$full_filename = makeCorrectFile($domains_dir . '/' . $domain_filename);
+
 				if($domain_filename != '.'
 				   && $domain_filename != '..'
 				   && !in_array($domain_filename, $known_filenames)
-				   && file_exists(makeCorrectFile($domains_dir . '/' . $domain_filename)))
+				   && is_file($full_filename)
+				   && file_exists($full_filename))
 				{
 					fwrite($this->debugHandler, '  cron_tasks: Task4 - unlinking ' . $domain_filename . "\n");
 					$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'Deleting ' . $domain_filename);
