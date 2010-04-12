@@ -341,7 +341,6 @@ class apache
 			{
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					// @TODO see if this is correct for awstats
 					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
 				}
 				else
@@ -353,7 +352,6 @@ class apache
 			{
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					// @TODO see if this is correct for awstats
 					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . '"' . "\n";
 				}
 				else

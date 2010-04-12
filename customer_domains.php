@@ -126,7 +126,7 @@ elseif($page == 'domains')
 			{
 				$row = htmlentities_array($domain_array[$sortkey]);
 				if($settings['system']['awstats_enabled'] == '1') {
-					$statsapp = 'awstats/'.$row['domain'].'/';
+					$statsapp = 'awstats';
 				} else {
 					$statsapp = 'webalizer';
 				}
