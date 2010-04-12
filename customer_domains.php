@@ -75,6 +75,7 @@ elseif($page == 'domains')
 			}
 
 			$domains_count++;
+/*
 			$domainparts = explode('.', $row['domain']);
 			$domainparts = array_reverse($domainparts);
 			$sortkey = '';
@@ -82,8 +83,9 @@ elseif($page == 'domains')
 			{
 				$sortkey.= $part . '.';
 			}
-
 			$domain_array[$sortkey] = $row;
+*/
+			$domain_array[$row['domain']] = $row;
 		}
 
 		ksort($domain_array);

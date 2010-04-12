@@ -425,6 +425,10 @@ class bind
 			$dkimkeys_file_handler = fopen($dkimkeys_filename, "w");
 			fwrite($dkimkeys_file_handler, $dkimkeys);
 			fclose($dkimkeys_file_handler);
+
+			safe_exec(escapeshellcmd($this->settings['dkim']['dkimrestart_command']));
+			fwrite($this->debugHandler, '  cron_tasks: Task4 - Dkim-milter reloaded' . "\n");
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Dkim-milter reloaded');
 		}
 	}
 }
