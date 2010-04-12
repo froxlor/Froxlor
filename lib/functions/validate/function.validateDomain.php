@@ -37,12 +37,24 @@ function validateDomain($domainname)
 	// If FILTER_VALIDATE_URL is good, but FILTER_VALIDATE_URL with FILTER_FLAG_PATH_REQUIRED or FILTER_FLAG_QUERY_REQUIRED is also good, it isn't just a domain.
 	// This is a ugly hack, maybe a good regex would be better?
 
-	if(filter_var($domainname_tmp, FILTER_VALIDATE_URL) !== false && filter_var($domainname_tmp, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED) === false && filter_var($domainname_tmp, FILTER_VALIDATE_URL, FILTER_FLAG_QUERY_REQUIRED) === false)
+	// there is a bug in php 5.2.13 - 5.3.2 which
+	// lets filter_var fail if the domain has
+	// a dash (-) in it. #
+	if(version_compare("5.2.13", PHP_VERSION, ">=")
+		&& version_compare("5.3.2", PHP_VERSION, "<="))
 	{
-		return $domainname;
+		if(filter_var($domainname_tmp, FILTER_VALIDATE_URL) !== false && filter_var($domainname_tmp, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED) === false && filter_var($domainname_tmp, FILTER_VALIDATE_URL, FILTER_FLAG_QUERY_REQUIRED) === false)
+		{
+			return $domainname;
+		}
 	}
 	else
 	{
-		return false;
+		$pattern = '/^([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,6}$/i';
+		if(preg_match($pattern, $domainname_tmp))
+		{	
+			return $domainname;
+		}
 	}
+	return false;
 }

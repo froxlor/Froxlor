@@ -191,6 +191,14 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 			$verbosity = '-Q';
 		}
 
+		$we = '/usr/bin/webalizer';
+		
+		// FreeBSD uses other paths, #140
+		if(!file_exists($we))
+		{
+			$we = '/usr/local/bin/webalizer';
+		}
+
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running webalizer for domain '".$caption."'");
 		safe_exec('webalizer ' . $verbosity . ' -p -o ' . escapeshellarg($outputdir) . ' -n ' . escapeshellarg($caption) . $domainargs . ' ' . escapeshellarg($settings['system']['logfiles_directory'] . $logfile . '-access.log'));
 
