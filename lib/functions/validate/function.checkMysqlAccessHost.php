@@ -25,6 +25,7 @@ function checkMysqlAccessHost($fieldname, $fielddata, $newfieldvalue, $allnewfie
 	{
 		if(validate_ip($host_entry, true) == false
 		   && validateDomain($host_entry) == false
+		   && validateLocalHostname($host_entry) == false
 		   && $host_entry != '%')
 		{
 			return array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'invalidmysqlhost', $host_entry);

@@ -40,21 +40,31 @@ function validateDomain($domainname)
 	// there is a bug in php 5.2.13 - 5.3.2 which
 	// lets filter_var fail if the domain has
 	// a dash (-) in it. #
-	if(version_compare("5.2.13", PHP_VERSION, ">=")
-		&& version_compare("5.3.2", PHP_VERSION, "<="))
-	{
-		if(filter_var($domainname_tmp, FILTER_VALIDATE_URL) !== false && filter_var($domainname_tmp, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED) === false && filter_var($domainname_tmp, FILTER_VALIDATE_URL, FILTER_FLAG_QUERY_REQUIRED) === false)
-		{
-			return $domainname;
-		}
-	}
-	else
+	if(version_compare("5.2.13", PHP_VERSION, "=")
+		|| version_compare("5.3.2", PHP_VERSION, "="))
 	{
 		$pattern = '/^([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,6}$/i';
 		if(preg_match($pattern, $domainname_tmp))
 		{	
 			return $domainname;
 		}
+	}
+	else
+	{
+		if(filter_var($domainname_tmp, FILTER_VALIDATE_URL) !== false && filter_var($domainname_tmp, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED) === false && filter_var($domainname_tmp, FILTER_VALIDATE_URL, FILTER_FLAG_QUERY_REQUIRED) === false)
+		{
+			return $domainname;
+		}
+	}
+	return false;
+}
+
+function validateLocalHostname($hostname)
+{
+	$pattern = '/^([a-zA-Z0-9\-])+$/i';
+	if(preg_match($pattern, $hostname))
+	{	
+		return $hostname;
 	}
 	return false;
 }
