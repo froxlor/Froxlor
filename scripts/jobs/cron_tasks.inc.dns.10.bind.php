@@ -137,7 +137,7 @@ class bind
 		fclose($bindconf_file_handler);
 		fwrite($this->debugHandler, '  cron_tasks: Task4 - froxlor_bind.conf written' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
-		safe_exec($this->settings['system']['bindreload_command']);
+		safe_exec(escapeshellcmd($this->settings['system']['bindreload_command']));
 		fwrite($this->debugHandler, '  cron_tasks: Task4 - Bind9 reloaded' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
 		$domains_dir = makeCorrectDir($this->settings['system']['bindconf_directory'] . '/domains/');

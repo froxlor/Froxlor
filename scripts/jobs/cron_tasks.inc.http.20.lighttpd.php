@@ -63,7 +63,7 @@ class lighttpd
 	{
 		fwrite($this->debugHandler, '   lighttpd::reload: reloading lighttpd' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading lighttpd');
-		safe_exec($this->settings['system']['apachereload_command']);
+		safe_exec(escapeshellcmd($this->settings['system']['apachereload_command']));
 	}
 
 	public function createIpPort()

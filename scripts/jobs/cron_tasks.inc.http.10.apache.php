@@ -59,7 +59,7 @@ class apache
 	{
 		fwrite($this->debugHandler, '   apache::reload: reloading apache' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading apache');
-		safe_exec($this->settings['system']['apachereload_command']);
+		safe_exec(escapeshellcmd($this->settings['system']['apachereload_command']));
 	}
 	
 	/**
