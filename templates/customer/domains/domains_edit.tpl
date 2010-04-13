@@ -12,6 +12,10 @@ $header
 				<td class="main_field_name">{$lng['domains']['domainname']}:</td>
 				<td class="main_field_display" nowrap="nowrap">{$result['domain']}</td>
 			</tr>
+			<tr>
+				<td class="main_field_name">{$lng['dns']['destinationip']}:</td>
+				<td class="main_field_display" nowrap="nowrap">{$domainip}</td>
+			</tr>
 			<if $alias_check == '0'><tr>
 				<td class="main_field_name">{$lng['domains']['aliasdomain']}:</td>
 				<td class="main_field_display" nowrap="nowrap"><select class="tendina_nobordo" name="alias">$domains</select></td>
