@@ -459,27 +459,26 @@ class lighttpd
 		{
 			if(!empty($row['error404path']))
 			{
-				$error_string.= '  server.error-handler-404 = "' . makeCorrectFile($domain['documentroot'] . '/' . $row['error404path']) . '"' . "\n";
+				$error_string.= '  server.error-handler-404 = "' . makeCorrectFile($domain['documentroot'] . '/' . $row['error404path']) . '"' . "\n\n";
 			}
 
 			if($row['options_indexes'] != '0')
 			{
-				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
-				
-				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
-
-				// We need to remove the last slash, otherwise the regex wouldn't work
-
-				$path = substr($path, 0, -1);
-				$path_options.= '$HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
-				$path_options.= "\t" . 'dir-listing.activate = "enable"' . "\n";
 				if(!empty($error_string))
 				{
 					$path_options.= $error_string;
 					// reset $error_string here to prevent duplicate entries
 					$error_string = '';
 				}
-				$path_options.= '}' . "\n";
+
+				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
+				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
+
+				// We need to remove the last slash, otherwise the regex wouldn't work
+				$path = substr($path, 0, -1);
+				$path_options.= '  $HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
+				$path_options.= "\t" . 'dir-listing.activate = "enable"' . "\n";
+				$path_options.= '  }' . "\n\n";
 			}
 			else
 			{

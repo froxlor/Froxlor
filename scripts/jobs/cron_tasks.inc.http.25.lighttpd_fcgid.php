@@ -66,7 +66,7 @@ class lighttpd_fcgid extends lighttpd
 
 			$phpconfig = $this->getPhpConfig((int)$domain['phpsettingid']);
 
-			$php_options_text = 'fastcgi.server = ( '."\n";
+			$php_options_text = '  fastcgi.server = ( '."\n";
 			$file_extensions = explode(' ', $phpconfig['file_extensions']);
 			foreach($file_extensions as $f_extension)
 			{
@@ -109,10 +109,10 @@ class lighttpd_fcgid extends lighttpd
 
 				$php_options_text.=	"\t\t".')'."\n";
 				$php_options_text.=	"\t".')'."\n";
-				$php_options_text.=	"".')'."\n";
+				$php_options_text.=	"\t".')'."\n";
 
 			} // foreach extension
-			$php_options_text.=	"".')'."\n";
+			$php_options_text.=	'  )'."\n";
 
 			// create starter
 
