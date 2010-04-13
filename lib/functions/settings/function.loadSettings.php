@@ -17,7 +17,7 @@
  * @version    $Id$
  */
 
-function loadSettings($settings_data, $db)
+function loadSettings(&$settings_data, $db)
 {
 	$settings = array();
 

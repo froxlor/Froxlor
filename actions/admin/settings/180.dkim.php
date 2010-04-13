@@ -29,6 +29,7 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingFieldInsertBindTask',
+					'overview_option' => true
 					),
 				'dkim_prefix' => array(
 					'label' => $lng['dkim']['dkim_prefix'],

@@ -752,7 +752,7 @@ $lng['serversettings']['logger']['severity'] = 'Logging level';
 $lng['admin']['logger']['normal'] = 'normal';
 $lng['admin']['logger']['paranoid'] = 'paranoid';
 $lng['serversettings']['logger']['types']['title'] = 'Log-type(s)';
-$lng['serversettings']['logger']['types']['description'] = 'Specify logtypes seperated by comma.<br />Available logtypes are: syslog, file, mysql';
+$lng['serversettings']['logger']['types']['description'] = 'Specify logtypes. To select multiple types, hold down CTRL while selecting.<br />Available logtypes are: syslog, file, mysql';
 $lng['serversettings']['logger']['logfile'] = 'Logfile path including filename';
 $lng['error']['logerror'] = 'Log-Error: %s';
 $lng['serversettings']['logger']['logcron'] = 'Log cronjobs (one run)';
@@ -1356,5 +1356,7 @@ $lng['customer']['mysql_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\n
 $lng['error']['domains_cantdeletedomainwithapsinstances'] = 'You cannot delete a domain which is used by an installed APS package. You have to uninstall it first.';
 $lng['serversettings']['awstats_path'] = 'Path to AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'AWStats configuration path';
+$lng['error']['overviewsettingoptionisnotavalidfield'] = 'Woops, a field that should be displayed as an option in the settings-overview is not an excepted type. You can blame the developers for this. This should not happen!';
+$lng['admin']['configfiles']['compactoverview'] = 'Compact-overview';
 
 ?>

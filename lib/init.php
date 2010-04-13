@@ -150,7 +150,7 @@ if(get_magic_quotes_gpc())
  */
 
 $settings_data = loadConfigArrayDir('./actions/admin/settings/');
-$settings = loadSettings(&$settings_data, &$db);
+$settings = loadSettings($settings_data, $db);
 
 /*
  * when upgrading from syscp, the header-graphic gets lost

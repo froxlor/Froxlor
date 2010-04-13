@@ -30,6 +30,7 @@ return array(
 					'default' => false,
 					'cronmodule' => 'froxlor/aps',
 					'save_method' => 'storeSettingField',
+					'overview_option' => true
 					),
 				'aps_items_per_page' => array(
 					'label' => $lng['aps']['packages_per_page'],

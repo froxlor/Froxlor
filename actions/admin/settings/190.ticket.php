@@ -30,6 +30,7 @@ return array(
 					'default' => false,
 					'cronmodule' => 'froxlor/ticket',
 					'save_method' => 'storeSettingField',
+					'overview_option' => true
 					),
 				'ticket_noreply_email' => array(
 					'label' => $lng['serversettings']['ticket']['noreply_email'],

@@ -31,6 +31,7 @@ return array(
 					'option_mode' => 'one',
 					'option_options' => array('apache2' => 'Apache 2', 'lighttpd' => 'ligHTTPd'),
 					'save_method' => 'storeSettingField',
+					'overview_option' => true
 					),
 				'system_apacheconf_vhost' => array(
 					'label' => $lng['serversettings']['apacheconf_vhost'],

@@ -23,3 +23,54 @@ function getFormGroupOutput($groupname, $groupdetails)
 	eval("\$group = \"" . getTemplate("settings/settings_group") . "\";");
 	return $group;
 }
+
+function getFormOverviewGroupOutput($groupname, $groupdetails)
+{
+	global $lng, $settings, $filename, $s;
+	
+	$group = '';
+	$title = $groupdetails['title'];
+	$part = $groupname;
+
+	$activated = true;
+	$option = '';
+	if(isset($groupdetails['fields']))
+	{
+		foreach($groupdetails['fields'] as $fieldname => $fielddetails)
+		{
+			if(isset($fielddetails['overview_option'])
+				&& $fielddetails['overview_option'] == true
+			) {
+				if($fielddetails['type'] != 'option'
+					&& $fielddetails['type'] != 'bool')
+				{
+					standard_error('overviewsettingoptionisnotavalidfield');
+				}
+
+				if($fielddetails['type'] == 'option')
+				{
+					$options_array = $fielddetails['option_options'];		
+					$options = '';
+					foreach($options_array as $value => $vtitle)
+					{
+						$options .= makeoption($vtitle, $value, $settings[$fielddetails['settinggroup']][$fielddetails['varname']]);
+					}
+					$option.= $fielddetails['label'].':&nbsp;';
+					$option.= '<select class="dropdown_noborder" name="'.$fieldname.'">';
+					$option.= $options;
+					$option.= '</select>';
+					$activated = true;
+				}
+				else
+				{
+					$option.= $lng['admin']['activated'].':&nbsp;';
+					$option.= makeyesno($fieldname, '1', '0', $settings[$fielddetails['settinggroup']][$fielddetails['varname']]);
+					$activated = (int)$settings[$fielddetails['settinggroup']][$fielddetails['varname']];
+				}
+			}
+		}
+	}
+
+	eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
+	return $group;
+}

@@ -756,7 +756,7 @@ $lng['serversettings']['logger']['severity'] = 'Logging Level';
 $lng['admin']['logger']['normal'] = 'Normal';
 $lng['admin']['logger']['paranoid'] = 'Paranoid';
 $lng['serversettings']['logger']['types']['title'] = 'Log-Art(en)';
-$lng['serversettings']['logger']['types']['description'] = 'Tragen Sie hier die gew&uuml;nschten Logtypen kommagetrennt ein.<br />M&ouml;gliche Logtypen sind: syslog, file, mysql';
+$lng['serversettings']['logger']['types']['description'] = 'W&auml;hlen Sie hier die gew&uuml;nschten Logtypen. F&uuml;r Mehrfachauswahl, halten Sie w&auml;ghrend der Auswahl STRG gedr&uuml;ckt<br />M&ouml;gliche Logtypen sind: syslog, file, mysql';
 $lng['serversettings']['logger']['logfile'] = 'Log-Datei Pfad inklusive Dateinamen';
 $lng['error']['logerror'] = 'Log-Fehler: %s';
 $lng['serversettings']['logger']['logcron'] = 'Log Cronjobs (einen Durchgang)';
@@ -1336,6 +1336,7 @@ $lng['customer']['mysql_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\n
 $lng['error']['domains_cantdeletedomainwithapsinstances'] = 'Sie k&ouml;nnen keine Domain l&ouml;schen, die noch von APS Paketen verwendet wird. L&ouml;schen Sie zuerst alle installierten APS Pakete dieser Domain.';
 $lng['serversettings']['awstats_path'] = 'Pfad zu AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'AWStats Konfigurations-Pfad';
+$lng['admin']['configfiles']['compactoverview'] = 'Kompakt-&Uuml;bersicht';
 
 $lng['mysql']['mysql_server'] = 'MySQL-Server';
 $lng['admin']['ipsandports']['webserverdefaultconfig'] = 'Webserver Standard Konfiguration';

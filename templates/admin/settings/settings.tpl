@@ -1,12 +1,7 @@
-$header
-	<form method="post" action="$filename">
-		<input type="hidden" name="s" value="$s" />
-		<input type="hidden" name="page" value="$page" />
-		<input type="hidden" name="action" value="$action" />
-		<input type="hidden" name="send" value="send" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['serversettings']}</b></td>
+				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['serversettings']}</b>
+				[<a href="$filename?page=overview&amp;part=&amp;s=$s">{$lng['admin']['configfiles']['compactoverview']}</a>]</td>
 			</tr>
 			$fields
 			<tr>
@@ -15,7 +10,3 @@ $header
 				</td>
 			</tr>
 		</table>
-	</form>
-	<br />
-	<br />
-$footer

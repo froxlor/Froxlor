@@ -31,20 +31,78 @@ if(($page == 'settings' || $page == 'overview')
    && $userinfo['change_serversettings'] == '1')
 {
 	$settings_data = loadConfigArrayDir('./actions/admin/settings/');
-	$settings = loadSettings(&$settings_data, &$db);
+	$settings = loadSettings($settings_data, $db);
 	
 	if(isset($_POST['send'])
 	   && $_POST['send'] == 'send')
 	{
-		if(processForm(&$settings_data, &$_POST, array('filename' => $filename, 'action' => $action, 'page' => $page)))
+		$_part = isset($_GET['part']) ? $_GET['part'] : '';
+
+		if($_part == '')
 		{
+			$_part = isset($_POST['part']) ? $_POST['part'] : '';
+		}
+
+		if($_part != '')
+		{
+			if($_part == 'all')
+			{
+				$settings_all = true;
+				$settings_part = false;
+			}
+			else
+			{
+				$settings_all = false;
+				$settings_part = true;
+			}
+
+			$only_enabledisable = false;
+		}
+		else
+		{
+			$settings_all = false;
+			$settings_part = false;
+			$only_enabledisable = true;
+		}
+		
+		if(processFormEx(
+			$settings_data, 
+			$_POST, 
+			array('filename' => $filename, 'action' => $action, 'page' => $page),
+			$_part,
+			$settings_all,
+			$settings_part,
+			$only_enabledisable
+			)
+		) {
 			standard_success('settingssaved', '', array('filename' => $filename, 'action' => $action, 'page' => $page));
 		}
 	}
 	else
 	{
-		$fields = buildForm(&$settings_data);
-		eval("echo \"" . getTemplate("settings/settings") . "\";");
+		$_part = isset($_GET['part']) ? $_GET['part'] : '';
+		
+		if($_part == '')
+		{
+			$_part = isset($_POST['part']) ? $_POST['part'] : '';
+		}
+
+		$fields = buildFormEx($settings_data, $_part);
+		
+		$settings_page = '';
+		if($_part == '')
+		{
+			eval("\$settings_page .= \"" . getTemplate("settings/settings_overview") . "\";");
+		} 
+		else
+		{
+			eval("\$settings_page .= \"" . getTemplate("settings/settings") . "\";");
+		}
+		
+		eval("echo \"" . getTemplate("settings/settings_form_begin") . "\";");
+		eval("echo \$settings_page;");
+		eval("echo \"" . getTemplate("settings/settings_form_end") . "\";");
+
 	}
 }
 elseif($page == 'rebuildconfigs'

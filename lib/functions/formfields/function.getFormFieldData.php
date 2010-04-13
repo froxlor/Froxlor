@@ -17,7 +17,7 @@
  * @version    $Id$
  */
 
-function getFormFieldData($fieldname, $fielddata, $input)
+function getFormFieldData($fieldname, $fielddata, &$input)
 {
 	if(is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('getFormFieldData' . ucfirst($fielddata['type'])))
 	{

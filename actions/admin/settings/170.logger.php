@@ -29,6 +29,7 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
+					'overview_option' => true
 					),
 				'logger_severity' => array(
 					'label' => $lng['serversettings']['logger']['severity'],

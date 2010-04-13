@@ -26,7 +26,8 @@ return array(
 					'varname' => 'use_spf',
 					'type' => 'bool',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'overview_option' => true
 					),
 				'spf_entry' => array(
 					'label' => $lng['spf']['spf_entry'],
