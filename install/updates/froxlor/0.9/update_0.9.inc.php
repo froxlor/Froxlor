@@ -430,4 +430,40 @@ if(isFroxlorVersion('0.9.4'))
 	updateToVersion('0.9.4-svn1');
 }
 
+if(isFroxlorVersion('0.9.4-svn1'))
+{
+	showUpdateStep("Updating from 0.9.4-svn1 to 0.9.4-svn2", false);
+	
+	$update_domains = isset($_POST['update_domainwildcardentry']) ? intval($_POST['update_domainwildcardentry']) : 0;
+	
+	if($update_domains != 1) 
+	{
+		$update_domains = 0;
+	}
+	
+	if($update_domains == 1) 
+	{
+		showUpdateStep("Updating domains with iswildcarddomain=yes");
+		$query = "SELECT `d`.`id` FROM `".TABLE_PANEL_DOMAINS."` `d`, `".TABLE_PANEL_CUSTOMERS."` `c` ";
+		$query.= "WHERE `parentdomainid`='0' AND `email_only` = '0' AND `d`.`customerid` = `c`.`customerid` AND `d`.`id` <> `c`.`standardsubdomain`";
+		$result = $db->query($query);
+		$updated_domains = 0;
+		while($domain = $db->fetch_array($result))
+		{
+			$db->query("UPDATE `".TABLE_PANEL_DOMAINS."` SET `iswildcarddomain` = '1' WHERE `id` ='".(int)$domain['id']."'");
+			$updated_domains++;
+		}
+		lastStepStatus(0, 'Updated '.$updated_domains.' domain(s)');
+	} else {
+		showUpdateStep("Won't update domains with iswildcarddomain=yes as requested");
+		lastStepStatus(1);
+	}
+	
+	showUpdateStep("Updating database table definition for panel_domains");
+	$db->query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` MODIFY `iswildcarddomain` tinyint(1) NOT NULL default '1';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.4-svn2');
+}
+
 ?>

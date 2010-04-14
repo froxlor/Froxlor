@@ -274,7 +274,7 @@ CREATE TABLE `panel_domains` (
   `isbinddomain` tinyint(1) NOT NULL default '0',
   `isemaildomain` tinyint(1) NOT NULL default '0',
   `email_only` tinyint(1) NOT NULL default '0',
-  `iswildcarddomain` tinyint(1) NOT NULL default '0',
+  `iswildcarddomain` tinyint(1) NOT NULL default '1',
   `subcanemaildomain` tinyint(1) NOT NULL default '0',
   `caneditdomain` tinyint(1) NOT NULL default '1',
   `zonefile` varchar(255) NOT NULL default '',

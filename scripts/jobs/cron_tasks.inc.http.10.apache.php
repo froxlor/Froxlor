@@ -493,13 +493,22 @@ class apache
 
 	protected function getVhostFilename($domain, $ssl_vhost = false)
 	{
-		if($ssl_vhost === true)
+		if((int)$domain['parentdomainid'] == 0)
 		{
-			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/20_froxlor_ssl_vhost_' . $domain['domain'] . '.conf');
+			$vhost_no = '21';
 		}
 		else
 		{
-			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/20_froxlor_normal_vhost_' . $domain['domain'] . '.conf');
+			$vhost_no = '20';
+		}
+
+		if($ssl_vhost === true)
+		{
+			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/'.$vhost_no.'_froxlor_ssl_vhost_' . $domain['domain'] . '.conf');
+		}
+		else
+		{
+			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/'.$vhost_no.'_froxlor_normal_vhost_' . $domain['domain'] . '.conf');
 		}
 
 		return $vhost_filename;
@@ -627,7 +636,7 @@ class apache
 
 	public function createVirtualHosts()
 	{
-		$result_domains = $this->db->query("SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, `d`.`mod_fcgid_maxrequests` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) " . "LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) " . "WHERE `d`.`aliasdomain` IS NULL ORDER BY `d`.`iswildcarddomain`, `d`.`domain` ASC");
+		$result_domains = $this->db->query("SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, `d`.`mod_fcgid_maxrequests` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) " . "LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) " . "WHERE `d`.`aliasdomain` IS NULL ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC");
 
 		while($domain = $this->db->fetch_array($result_domains))
 		{
@@ -950,7 +959,7 @@ class apache
 				if($vhost_filename != '.'
 				   && $vhost_filename != '..'
 				   && !in_array($vhost_filename, $this->known_vhostfilenames)
-				   && preg_match('/^(05|10|20|30)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
+				   && preg_match('/^(05|10|20|21|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
 				{
 					fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking ' . $vhost_filename . "\n");

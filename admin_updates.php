@@ -57,30 +57,54 @@ if($page == 'overview')
 
 	if(hasUpdates($version))
 	{
+		$successful_update = false;
+		$message = '';
+
 		if(isset($_POST['send'])
 		&& $_POST['send'] == 'send')
 		{
-
-			eval("echo \"" . getTemplate("update/update_start") . "\";");
-
-			include_once('./install/updatesql.php');
-
-			$redirect_url = 'admin_index.php';
-			eval("echo \"" . getTemplate("update/update_end") . "\";");
-
-			updateCounters();
-			inserttask('1');
-			@chmod('./lib/userdata.inc.php', 0440);
+			if((isset($_POST['update_preconfig'])
+				&& isset($_POST['update_changesagreed'])
+				&& intval($_POST['update_changesagreed']) != 0)
+				|| !isset($_POST['update_preconfig'])
+			) {
+				eval("echo \"" . getTemplate("update/update_start") . "\";");
+	
+				include_once './install/updatesql.php';
+	
+				$redirect_url = 'admin_index.php';
+				eval("echo \"" . getTemplate("update/update_end") . "\";");
+	
+				updateCounters();
+				inserttask('1');
+				@chmod('./lib/userdata.inc.php', 0440);
+				
+				$successful_update = true;
+			}
+			else
+			{
+				$message = '<br /><strong style="color:#ff0000;">You have to agree that you have read the update notifications.</strong>';
+			}
 		}
-		else
+
+		if(!$successful_update)
 		{
 			$current_version = $settings['panel']['version'];
 			$new_version = $version;
 
-			$ui_text = $lng['update']['update_information'];
+			$ui_text = $lng['update']['update_information']['part_a'];
 			$ui_text = str_replace('%curversion', $current_version, $ui_text);
 			$ui_text = str_replace('%newversion', $new_version, $ui_text);
 			$update_information = $ui_text;
+			
+			include_once './install/updates/preconfig.php';
+			$preconfig = getPreConfig($new_version);
+			if($preconfig != '')
+			{
+				$update_information .= '<br />'.$preconfig.$message;
+			}
+			
+			$update_information .= $lng['update']['update_information']['part_b'];
 
 			eval("echo \"" . getTemplate("update/index") . "\";");
 		}

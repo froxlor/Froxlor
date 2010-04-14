@@ -26,7 +26,6 @@
  *
  * @return boolean
  */
-
 function domainHasApsInstances($domainid = 0)
 {
 	global $db, $settings;

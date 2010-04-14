@@ -449,3 +449,12 @@ TR.RowOverSelected {
         text-align: left;
 }
 
+.preconfig
+{
+        text-align: left;
+        margin-top: 20px;
+        margin-bottom: 5px;
+        margin-right: 15px;
+        margin-left: 15px;
+}
+

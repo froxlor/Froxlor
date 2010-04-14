@@ -335,7 +335,7 @@ elseif($page == 'domains')
 			}
 			else
 			{
-				$result = $db->query("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `parentdomainid`='0' AND `email_only`='0' AND `iswildcarddomain`='0' AND `caneditdomain`='1' ORDER BY `domain` ASC");
+				$result = $db->query("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `parentdomainid`='0' AND `email_only`='0' AND `caneditdomain`='1' ORDER BY `domain` ASC");
 				$domains = '';
 
 				while($row = $db->fetch_array($result))
@@ -394,16 +394,7 @@ elseif($page == 'domains')
 				if(isset($_POST['iswildcarddomain'])
 				   && $_POST['iswildcarddomain'] == '1'
 				   && $result['parentdomainid'] == '0'
-				   && $userinfo['subdomains'] != '0')
-				{
-					$wildcarddomaincheck = $db->query("SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `parentdomainid` = '" . (int)$result['id'] . "'");
-
-					if($db->num_rows($wildcarddomaincheck) != '0')
-					{
-						standard_error('firstdeleteallsubdomains');
-						exit;
-					}
-
+				){
 					$iswildcarddomain = '1';
 				}
 				else
