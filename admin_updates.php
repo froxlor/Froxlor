@@ -98,7 +98,7 @@ if($page == 'overview')
 			$update_information = $ui_text;
 			
 			include_once './install/updates/preconfig.php';
-			$preconfig = getPreConfig($new_version);
+			$preconfig = getPreConfig($current_version);
 			if($preconfig != '')
 			{
 				$update_information .= '<br />'.$preconfig.$message;

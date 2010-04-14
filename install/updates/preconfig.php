@@ -25,20 +25,13 @@
  *
  * @return string
  */
-function getPreConfig($version)
+function getPreConfig($current_version)
 {
 	$has_preconfig = false;
 	$return = '<div class="preconfig"><h3 style="color:#ff0000;">PLEASE NOTE - Important update notifications</h3>';
 
-	if($version == '0.9.4-svn2')
-	{
-		$has_preconfig = true;
-		$return .= 'Froxlor-0.9.4-svn2 now enabled the usage of a domain-wildcard entry and subdomains for this domain at once (subdomains are parsed before the main vhost container). ';
-		$return .= 'This makes it possible to catch all non-existing subdomains with the main vhost but also have the ability to use subdomains for that domain.<br />';
-		$return .= 'If you would like Froxlor to do so with your domains, the update script can set the correct values for existing domains for you. Note: future domains will have wildcard-entries enabled by default no matter how you decide here.<br /><br />';
-		$return .= '<strong>Do you want to use wildcard-entries for existing domains?:</strong>&nbsp;';
-		$return .= makeyesno('update_domainwildcardentry', '1', '0', '1');
-	}
+	include_once makeCorrectFile(dirname(__FILE__).'/preconfig/0.9/preconfig_0.9.inc.php');
+	parseAndOutputPreconfig($has_preconfig, $return, $current_version);
 
 	$return .= '<br /><br />'.makecheckbox('update_changesagreed', '<strong>I have read the update notifications and I am aware of the changes made to my system.</strong>', '1', true, '0', true);
 	$return .= '</div>';
@@ -49,4 +42,18 @@ function getPreConfig($version)
 	} else {
 		return '';
 	}
+}
+
+function versionInUpdate($current_version, $version_to_check)
+{
+	$pos_a = strpos($current_version, '-svn');
+	$pos_b = strpos($current_version, '-svn');
+	// if we compare svn-versions, we have to add -svn0 to the version
+	// to compare it correctly	
+	if($pos_a === false && $pos_b !== false)
+	{
+		$current_version.= '-svn0';
+	}
+	
+	return version_compare($current_version, $version_to_check, '<=');
 }
