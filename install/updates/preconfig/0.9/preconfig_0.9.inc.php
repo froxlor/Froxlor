@@ -29,7 +29,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	if(versionInUpdate($current_version, '0.9.4-svn2'))
 	{
 		$has_preconfig = true;
-		$return .= 'Froxlor-0.9.4-svn2 now enabled the usage of a domain-wildcard entry and subdomains for this domain at once (subdomains are parsed before the main vhost container). ';
+		$return .= 'Froxlor now enables the usage of a domain-wildcard entry and subdomains for this domain at the same time (subdomains are parsed before the main-domain vhost container). ';
 		$return .= 'This makes it possible to catch all non-existing subdomains with the main vhost but also have the ability to use subdomains for that domain.<br />';
 		$return .= 'If you would like Froxlor to do so with your domains, the update script can set the correct values for existing domains for you. Note: future domains will have wildcard-entries enabled by default no matter how you decide here.<br /><br />';
 		$return .= '<strong>Do you want to use wildcard-entries for existing domains?:</strong>&nbsp;';
