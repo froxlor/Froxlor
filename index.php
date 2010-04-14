@@ -213,10 +213,11 @@ if($action == 'login')
 
 if($action == 'forgotpwd')
 {
+	$adminchecked = false;
+	
 	if(isset($_POST['send'])
 	&& $_POST['send'] == 'send')
 	{
-		$adminchecked = false;
 		$loginname = validate($_POST['loginname'], 'loginname');
 		$email = validateEmail($_POST['loginemail'], 'email');
 		$sql = "SELECT `customerid`, `firstname`, `name`, `email`, `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "`
