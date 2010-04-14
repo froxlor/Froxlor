@@ -55,5 +55,5 @@ function versionInUpdate($current_version, $version_to_check)
 		$current_version.= '-svn0';
 	}
 	
-	return version_compare($current_version, $version_to_check, '<=');
+	return version_compare($current_version, $version_to_check, '<');
 }
