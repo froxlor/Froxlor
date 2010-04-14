@@ -214,7 +214,8 @@ if($action == 'login')
 if($action == 'forgotpwd')
 {
 	$adminchecked = false;
-	
+	$message = '';
+
 	if(isset($_POST['send'])
 	&& $_POST['send'] == 'send')
 	{
@@ -231,90 +232,94 @@ if($action == 'forgotpwd')
 				WHERE `loginname`='" . $db->escape($loginname) . "'
 				AND `email`='" . $db->escape($email) . "'";
 			$result = $db->query($sql);
-			$adminchecked = true;
-		}
-
-		$user = $db->fetch_array($result);
-
-		if(($adminchecked && $settings['panel']['allow_preset_admin'] == '1')
-		|| $adminchecked == false)
-		{
-			if($user !== false)
-			{
-				if ($settings['panel']['password_min_length'] <= 6) {
-					$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
-				} else {
-					// make it two times larger than password_min_length
-					$rnd = '';
-					$minlength = $settings['panel']['password_min_length'];
-					while (strlen($rnd) < ($minlength * 2))
-					{
-						$rnd .= md5(uniqid(microtime(), 1));
-					}
-					$password = substr($rnd, (int)($minlength / 2), $minlength);
-				}
-
-				if($adminchecked)
-				{
-					$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `password`='" . md5($password) . "'
-							WHERE `loginname`='" . $user['loginname'] . "'
-							AND `email`='" . $user['email'] . "'");
-				}
-				else
-				{
-					$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `password`='" . md5($password) . "'
-							WHERE `loginname`='" . $user['loginname'] . "'
-							AND `email`='" . $user['email'] . "'");
-				}
-
-				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
-				$rstlog->logAction(USR_ACTION, LOG_WARNING, "Password for user '" . $user['loginname'] . "' has been reset!");
-				$body = strtr($lng['pwdreminder']['body'], array('%s' => $user['firstname'] . ' ' . $user['name'], '%p' => $password));
 				
-				$_mailerror = false;
-				try {
-					$mail->Subject = $lng['pwdreminder']['subject'];
-					$mail->AltBody = $body;
-					$mail->MsgHTML(str_replace("\\n", "<br />", $body));
-					$mail->AddAddress($user['email'], $user['firstname'] . ' ' . $user['name']);
-					$mail->Send();
-				} catch(phpmailerException $e) {
-					$mailerr_msg = $e->errorMessage();
-					$_mailerror = true;
-				} catch (Exception $e) {
-					$mailerr_msg = $e->getMessage();
-					$_mailerror = true;
-				}
-
-				if ($_mailerror) {
-					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
-					$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-					redirectTo('index.php', Array('showmessage' => '4'), true);
-					exit;
-				}
-
-				$mail->ClearAddresses();
-				redirectTo('index.php', Array('showmessage' => '1'), true);
-				exit;
+			if($db->num_rows() > 0)
+			{
+				$adminchecked = true;
 			}
 			else
 			{
-				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
-				$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to reset pwd but wasn't found in database!");
-				$message = $lng['login']['usernotfound'];
+				$result = null;
 			}
+		}
 
-			unset($user);
-		}
-		else
+		if($result !== null)
 		{
-			$message = '';
+			$user = $db->fetch_array($result);
+
+			if(($adminchecked && $settings['panel']['allow_preset_admin'] == '1')
+			|| $adminchecked == false)
+			{
+				if($user !== false)
+				{
+					if ($settings['panel']['password_min_length'] <= 6) {
+						$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
+					} else {
+						// make it two times larger than password_min_length
+						$rnd = '';
+						$minlength = $settings['panel']['password_min_length'];
+						while (strlen($rnd) < ($minlength * 2))
+						{
+							$rnd .= md5(uniqid(microtime(), 1));
+						}
+						$password = substr($rnd, (int)($minlength / 2), $minlength);
+					}
+
+					if($adminchecked)
+					{
+						$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `password`='" . md5($password) . "'
+								WHERE `loginname`='" . $user['loginname'] . "'
+								AND `email`='" . $user['email'] . "'");
+					}
+					else
+					{
+						$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `password`='" . md5($password) . "'
+								WHERE `loginname`='" . $user['loginname'] . "'
+								AND `email`='" . $user['email'] . "'");
+					}
+
+					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
+					$rstlog->logAction(USR_ACTION, LOG_WARNING, "Password for user '" . $user['loginname'] . "' has been reset!");
+					$body = strtr($lng['pwdreminder']['body'], array('%s' => $user['firstname'] . ' ' . $user['name'], '%p' => $password));
+						
+					$_mailerror = false;
+					try {
+						$mail->Subject = $lng['pwdreminder']['subject'];
+						$mail->AltBody = $body;
+						$mail->MsgHTML(str_replace("\\n", "<br />", $body));
+						$mail->AddAddress($user['email'], $user['firstname'] . ' ' . $user['name']);
+						$mail->Send();
+					} catch(phpmailerException $e) {
+						$mailerr_msg = $e->errorMessage();
+						$_mailerror = true;
+					} catch (Exception $e) {
+						$mailerr_msg = $e->getMessage();
+						$_mailerror = true;
+					}
+
+					if ($_mailerror) {
+						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
+						$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+						redirectTo('index.php', Array('showmessage' => '4'), true);
+						exit;
+					}
+
+					$mail->ClearAddresses();
+					redirectTo('index.php', Array('showmessage' => '1'), true);
+					exit;
+				}
+				else
+				{
+					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
+					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to reset pwd but wasn't found in database!");
+					$message = $lng['login']['usernotfound'];
+				}
+
+				unset($user);
+			}
 		}
 	}
-	else
-	{
-		$message = '';
-	}
+
 
 	if($adminchecked)
 	{
