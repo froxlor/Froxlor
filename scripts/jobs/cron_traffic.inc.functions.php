@@ -113,6 +113,12 @@ function callAwstatsGetTraffic($domain, $outputdir, $caption, $usersdomainlist)
 		// model-config-file.
 		$returnval += awstatsDoSingleDomain($singledomain, $outputdir);
 	}
+	
+	/**
+	 * as of #124, awstats traffic is saved in bytes instead
+	 * of kilobytes (like webalizer does)
+	 */
+	$returnval = floatval($returnval / 1024);
 
 	/**
 	 * now, because this traffic is being saved daily, we have to
