@@ -17,7 +17,7 @@
  * @version    $Id$
  */
 
-function getFormFieldDataBool($fieldname, $fielddata, $input)
+function getFormFieldDataBool($fieldname, $fielddata, &$input)
 {
 	if(isset($input[$fieldname]) && ($input[$fieldname] === '1' || $input[$fieldname] === 1 || $input[$fieldname] === true || strtolower($input[$fieldname]) === 'yes' || strtolower($input[$fieldname]) === 'ja'))
 	{

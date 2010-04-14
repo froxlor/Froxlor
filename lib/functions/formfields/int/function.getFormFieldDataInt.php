@@ -17,7 +17,7 @@
  * @version    $Id$
  */
 
-function getFormFieldDataInt($fieldname, $fielddata, $input)
+function getFormFieldDataInt($fieldname, $fielddata, &$input)
 {
 	if(isset($input[$fieldname]))
 	{

@@ -17,7 +17,7 @@
  * @version    $Id$
  */
 
-function getFormFieldDataOption($fieldname, $fielddata, $input)
+function getFormFieldDataOption($fieldname, $fielddata, &$input)
 {
 	if(isset($input[$fieldname]))
 	{
