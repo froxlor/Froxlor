@@ -289,7 +289,7 @@ else
 {
 	if(!empty($_SERVER['SERVER_NAME']))
 	{
-		if(preg_match('/^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/', $_SERVER['SERVER_NAME']) === false)
+		if(preg_match('/^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/', $_SERVER['SERVER_NAME']) == false)
 		{
 			$servername = $_SERVER['SERVER_NAME'];
 		}
@@ -422,12 +422,12 @@ if(!empty($_POST['webserver']))
 else
 {
 	if(strtoupper(@php_sapi_name()) == "APACHE2HANDLER"
-	   || stristr($_SERVER[SERVER_SOFTWARE], "apache/2"))
+	   || stristr($_SERVER['SERVER_SOFTWARE'], "apache/2"))
 	{
 		$webserver = 'apache2';
 	}
 	elseif(substr(strtoupper(@php_sapi_name()), 0, 8) == "LIGHTTPD"
-	       || stristr($_SERVER[SERVER_SOFTWARE], "lighttpd"))
+	       || stristr($_SERVER['SERVER_SOFTWARE'], "lighttpd"))
 	{
 		$webserver = 'lighttpd';
 	}
@@ -763,9 +763,11 @@ if(isset($_POST['installstep'])
 else
 {
 	
-	if(isset($_GET['check'])
+	if((isset($_GET['check'])
 		&& $_GET['check'] == '1')
-	{
+		|| (isset($_POST['installstep']) 
+		&& $_POST['installstep'] == '1')
+	) {
 	page_header();
 
 ?>
