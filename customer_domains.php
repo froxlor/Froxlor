@@ -68,7 +68,6 @@ elseif($page == 'domains')
 			$row['domainalias'] = $idna_convert->decode($row['domainalias']);
 
 			if($row['parentdomainid'] == '0'
-			   && $row['iswildcarddomain'] != '1'
 			   && $row['caneditdomain'] == '1')
 			{
 				$parentdomains_count++;
@@ -220,7 +219,7 @@ elseif($page == 'domains')
 			{
 				$subdomain = $idna_convert->encode(preg_replace(Array('/\:(\d)+$/', '/^https?\:\/\//'), '', validate($_POST['subdomain'], 'subdomain', '', 'subdomainiswrong')));
 				$domain = $idna_convert->encode($_POST['domain']);
-				$domain_check = $db->query_first("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `domain`='" . $db->escape($domain) . "' AND `customerid`='" . (int)$userinfo['customerid'] . "' AND `parentdomainid`='0' AND `email_only`='0' AND `iswildcarddomain`='0' AND `caneditdomain`='1' ");
+				$domain_check = $db->query_first("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `domain`='" . $db->escape($domain) . "' AND `customerid`='" . (int)$userinfo['customerid'] . "' AND `parentdomainid`='0' AND `email_only`='0' AND `caneditdomain`='1' ");
 				$completedomain = $subdomain . '.' . $domain;
 				$completedomain_check = $db->query_first("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `domain`='" . $db->escape($completedomain) . "' AND `customerid`='" . (int)$userinfo['customerid'] . "' AND `email_only`='0' AND `caneditdomain` = '1'");
 				$aliasdomain = intval($_POST['alias']);
