@@ -1359,5 +1359,7 @@ $lng['serversettings']['awstats_path'] = 'Path to AWStats \'awstats_buildstaticp
 $lng['serversettings']['awstats_conf'] = 'AWStats configuration path';
 $lng['error']['overviewsettingoptionisnotavalidfield'] = 'Woops, a field that should be displayed as an option in the settings-overview is not an excepted type. You can blame the developers for this. This should not happen!';
 $lng['admin']['configfiles']['compactoverview'] = 'Compact-overview';
+$lng['admin']['lastlogin_succ'] = 'Last login';
+$lng['panel']['neverloggedin'] = 'No login yet';
 
 ?>

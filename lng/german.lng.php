@@ -1354,5 +1354,7 @@ $lng['error']['errorwhensaving'] = 'Bei dem Speichern des Feldes %s trat ein Feh
 $lng['success']['success'] = 'Information';
 $lng['success']['clickheretocontinue'] = 'Hier klicken um fortzufahren';
 $lng['success']['settingssaved'] = 'Die Einstellungen wurden erfolgreich gespeichert.';
+$lng['admin']['lastlogin_succ'] = 'Letzte Anmeldung';
+$lng['panel']['neverloggedin'] = 'Keine Anmeldung bisher';
 
 ?>

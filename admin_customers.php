@@ -66,6 +66,7 @@ if($page == 'customers'
 			'c.email_quota' => $lng['customer']['email_quota'],
 			'c.email_quota_used' => $lng['customer']['email_quota'] . ' (' . $lng['panel']['used'] . ')',
 			'c.deactivated' => $lng['admin']['deactivated'],
+			'c.lastlogin_succ' => $lng['admin']['lastlogin_succ'],
 			'c.phpenabled' => $lng['admin']['phpenabled']
 		);
 
@@ -96,6 +97,7 @@ if($page == 'customers'
 				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
 				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
 				$row['diskspace'] = round($row['diskspace'] / 1024, $settings['panel']['decimal_places']);
+				$last_login = ((int)$row['lastlogin_succ'] == 0) ? $lng['panel']['neverloggedin'] : date('d.m.Y', $row['lastlogin_succ']);
 				$row = str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps tickets subdomains');
 				$row = htmlentities_array($row);
 				eval("\$customers.=\"" . getTemplate("customers/customers_customer") . "\";");

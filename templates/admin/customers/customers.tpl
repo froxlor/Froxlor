@@ -22,7 +22,7 @@ $header
 				<td class="field_display">{$lng['customer']['mysqls']}<br />{$lng['customer']['ftps']}</td>
 				<td class="field_display">{$lng['customer']['emails']}<br />{$lng['customer']['subdomains']}</td>
 				<td class="field_display">{$lng['customer']['accounts']}<br />{$lng['customer']['forwarders']}</td>
-				<td class="field_display">{$lng['admin']['deactivated']}</td>
+				<td class="field_display">{$lng['admin']['deactivated']}<br />{$lng['admin']['lastlogin_succ']}</td>
 				<td class="field_display_search">{$sortcode}</td>
 			</tr>
 			$customers
