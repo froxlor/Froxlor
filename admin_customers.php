@@ -98,6 +98,14 @@ if($page == 'customers'
 				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
 				$row['diskspace'] = round($row['diskspace'] / 1024, $settings['panel']['decimal_places']);
 				$last_login = ((int)$row['lastlogin_succ'] == 0) ? $lng['panel']['neverloggedin'] : date('d.m.Y', $row['lastlogin_succ']);
+
+				$column_style = '';
+				if($row['loginfail_count'] >= $settings['login']['maxloginattempts']
+					&& $row['lastlogin_fail'] > (time() - $settings['login']['deactivatetime'])
+				) {
+					$column_style = ' style="background-color: #f99122;"';
+				}
+
 				$row = str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps tickets subdomains');
 				$row = htmlentities_array($row);
 				eval("\$customers.=\"" . getTemplate("customers/customers_customer") . "\";");

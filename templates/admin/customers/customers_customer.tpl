@@ -1,5 +1,5 @@
 <tr>
-	<td class="field_name_border_left"><a href="$filename?s=$s&amp;page=$page&amp;action=su&amp;id={$row['customerid']}" target="_blank">{$row['loginname']}</a></td>
+	<td class="field_name_border_left"{$column_style}><a href="$filename?s=$s&amp;page=$page&amp;action=su&amp;id={$row['customerid']}" target="_blank">{$row['loginname']}</a></td>
 	<td class="field_name">{$row['adminname']}</td>
 	<td class="field_name"><if $row['name'] != '' && $row['firstname'] != ''>{$row['name']}<br />{$row['firstname']}</if><if ($row['name'] == '' || $row['firstname'] == '') && $row['company'] != ''>{$row['company']}</if></td>
 	<td class="field_name"><if $row['domains'] != 0><a href="admin_domains.php?s=$s&amp;page=domains&amp;searchfield=c.loginname&amp;searchtext={$row['loginname']}">{$row['domains']}</a><else>{$row['domains']}</if></td>
