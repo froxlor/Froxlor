@@ -27,7 +27,8 @@ DEPEND="
 	>=mail-mta/postfix-2.4[mysql,ssl=]
 	sys-process/vixie-cron
 	dev-db/mysql
-	dev-lang/php[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,pcre,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
+	|| ( <dev-lang/php-5.2.99[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,pcre,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
+	>=dev-lang/php-5.3.2[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib] )
 	net-ftp/proftpd[mysql,ssl=]
 	awstats? (
 		www-misc/awstats
@@ -47,7 +48,8 @@ DEPEND="
 	!lighttpd? ( www-servers/apache[ssl=]
 		     dev-lang/php[apache2]
 	)
-	fcgid? ( dev-lang/php[cgi,force-cgi-redirect]
+	fcgid? ( <dev-lang/php-5.2.99[cgi,force-cgi-redirect]
+		 >=dev-lang/php-5.3.2[cgi] )
 		 sys-auth/libnss-mysql
 			( !lighttpd? (
 				www-servers/apache[suexec]
