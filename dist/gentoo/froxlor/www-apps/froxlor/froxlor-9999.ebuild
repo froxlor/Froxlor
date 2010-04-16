@@ -48,7 +48,7 @@ DEPEND="
 	!lighttpd? ( www-servers/apache[ssl=]
 		     dev-lang/php[apache2]
 	)
-	fcgid? ( <dev-lang/php-5.2.99[cgi,force-cgi-redirect]
+	fcgid? ( || ( <dev-lang/php-5.2.99[cgi,force-cgi-redirect]
 		 >=dev-lang/php-5.3.2[cgi] )
 		 sys-auth/libnss-mysql
 			( !lighttpd? (
