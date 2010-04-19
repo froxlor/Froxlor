@@ -1347,7 +1347,7 @@ $lng['cron']['changewarning'] = 'Changing these values can have a negative cause
 $lng['serversettings']['stdsubdomainhost']['title'] = 'Customer standard subdomain';
 $lng['serversettings']['stdsubdomainhost']['description'] = 'What hostname should be used to create standard subdomains for customer. If empty, the system-hostname is used.';
 
-// ADDED IN FROXLOR 0.9.4-1
+// ADDED IN FROXLOR 0.9.4-svn1
 $lng['ftp']['account_edit'] = 'Edit ftp account';
 $lng['ftp']['editpassdescription'] = 'Set new password or leave blank for no change.';
 $lng['mysql']['sendinfomail'] = 'Send data via email to me';
