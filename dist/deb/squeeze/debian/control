@@ -2,7 +2,7 @@ Source: froxlor
 Section: admin
 Priority: extra
 Maintainer: Froxlor Release Team <release@froxlor.org>
-Build-Depends: debhelper (>= 7), quilt, cdbs (>= 0.4.70)
+Build-Depends: debhelper (>= 7), quilt, cdbs
 Standards-Version: 3.8.4
 Homepage: http://www.froxlor.org
 Vcs-Browser: http://websvn.froxlor.org/listing.php?repname=Froxlor&path=%2Fbranches%2Fextras%2Fdist%2Fdeb%2F
