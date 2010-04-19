@@ -1327,7 +1327,7 @@ $lng['cron']['changewarning'] = '&Auml;nderungen an diesen Werten kann einen neg
 $lng['serversettings']['stdsubdomainhost']['title'] = 'Kunden Standard-Subdomain';
 $lng['serversettings']['stdsubdomainhost']['description'] = 'Welcher Hostname soll f&uuml;r das Erstellen der Kunden-Standard-Subdomain verwendet werden? Falls leer wird der System-Hostname verwendet.';
 
-// ADDED IN FROXLOR 0.9.4-1
+// ADDED IN FROXLOR 0.9.4-svn1
 $lng['ftp']['account_edit'] = 'FTP Konto bearbeiten';
 $lng['ftp']['editpassdescription'] = 'Neues Passwort setzen oder leer f&uuml;r keine &Auml;nderung.';
 $lng['mysql']['sendinfomail'] = 'Daten per E-Mail an mich senden';
@@ -1337,6 +1337,7 @@ $lng['customer']['mysql_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\n
 $lng['error']['domains_cantdeletedomainwithapsinstances'] = 'Sie k&ouml;nnen keine Domain l&ouml;schen, die noch von APS Paketen verwendet wird. L&ouml;schen Sie zuerst alle installierten APS Pakete dieser Domain.';
 $lng['serversettings']['awstats_path'] = 'Pfad zu AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'AWStats Konfigurations-Pfad';
+$lng['error']['overviewsettingoptionisnotavalidfield'] = 'Hoppla, ein Feld, dass als Option in der Konfigurations&uuml;bersicht angezeigt werden soll, hat nicht den erwarteten Wert. Sie k&ouml;nnen den Entwicklern die Schuld geben. Dies sollte nicht passieren!';
 $lng['admin']['configfiles']['compactoverview'] = 'Kompakt-&Uuml;bersicht';
 
 $lng['mysql']['mysql_server'] = 'MySQL-Server';
