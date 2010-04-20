@@ -1362,6 +1362,6 @@ $lng['admin']['configfiles']['compactoverview'] = 'Compact-overview';
 $lng['admin']['lastlogin_succ'] = 'Last login';
 $lng['panel']['neverloggedin'] = 'No login yet';
 
-$lng['serversettings']['defaultttl'] = 'Domain TTL for bind (default \'604800\' = 1 week)';
+$lng['serversettings']['defaultttl'] = 'Domain TTL for bind in seconds (default \'604800\' = 1 week)';
 
 ?>
