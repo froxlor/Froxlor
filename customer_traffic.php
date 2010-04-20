@@ -178,9 +178,18 @@ else
 	                     FROM `" . TABLE_PANEL_TRAFFIC . "`
 	                     WHERE `customerid`='" . $userinfo['customerid'] . "'
 	                     GROUP BY CONCAT(`year`,`month`) ORDER BY CONCAT(`year`,`month`) DESC LIMIT 12");
-	$row = mysql_fetch_row($result);
-	rsort($row);
-	$traf['max'] = ($row[0] > $row[1] ? ($row[0] > $row[2] ? $row[0] : $row[2]) : ($row[1] > $row[2] ? $row[1] : $row[2]));
+	
+	$nums = mysql_num_rows($result);
+	if($nums > 0)
+	{
+		$row = mysql_fetch_row($result);
+		rsort($row);
+		$traf['max'] = ($row[0] > $row[1] ? ($row[0] > $row[2] ? $row[0] : $row[2]) : ($row[1] > $row[2] ? $row[1] : $row[2]));
+	} else {
+		// no records yet
+		$traf['max'] = 0;
+	}
+	
 	$result = $db->query("SELECT `month`, `year`, SUM(`http`) AS http, SUM(`ftp_up`) AS ftp_up, SUM(`ftp_down`) AS ftp_down, SUM(`mail`) AS mail
 	                     FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid` = '" . $userinfo['customerid'] . "'
 	                     GROUP BY CONCAT(`year`,`month`) ORDER BY CONCAT(`year`,`month`) DESC LIMIT 12");
