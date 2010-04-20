@@ -69,16 +69,29 @@ class apache
 	{
 		$vhosts_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/05_froxlor_dirfix_nofcgid.conf');
 
-		if(!isset($this->virtualhosts_data[$vhosts_filename]))
+		if($this->settings['system']['mod_fcgid'] == '1')
 		{
-			$this->virtualhosts_data[$vhosts_filename] = '';
+			// if we use fcgid we don't need this file
+			if(file_exists($vhosts_filename))
+			{
+				fwrite($this->debugHandler, '  apache::_createStandardDirectoryEntry: unlinking ' . basename($vhost_filename) . "\n");
+				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . basename($vhost_filename));
+				unlink(makeCorrectFile($vhost_filename));
+			}			
 		}
+		else
+		{
+			if(!isset($this->virtualhosts_data[$vhosts_filename]))
+			{
+				$this->virtualhosts_data[$vhosts_filename] = '';
+			}
 
-		$this->virtualhosts_data[$vhosts_filename].= '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";	
-		$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->settings['system']['documentroot_prefix'] . '">' . "\n";
-		$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
-		$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
-		$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
+			$this->virtualhosts_data[$vhosts_filename].= '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";	
+			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->settings['system']['documentroot_prefix'] . '">' . "\n";
+			$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+			$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+			$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
+		}
 	}
 
 	public function createIpPort()
