@@ -183,7 +183,7 @@ class bind
 		$date = date('Ymd');
 		$bindserial = (preg_match('/^' . $date . '/', $domain['bindserial']) ? $domain['bindserial'] + 1 : $date . '00');
 		$this->db->query('UPDATE `' . TABLE_PANEL_DOMAINS . '` SET `bindserial`=\'' . $bindserial . '\' WHERE `id`=\'' . $domain['id'] . '\'');
-		$zonefile = '$TTL 1W' . "\n";
+		$zonefile = '$TTL ' . (int)$this->settings['system']['defaultttl'] . "\n";
 
 		if(count($this->nameservers) == 0)
 		{

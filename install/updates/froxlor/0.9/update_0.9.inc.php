@@ -472,4 +472,15 @@ if(isFroxlorVersion('0.9.4-svn2'))
 	lastStepStatus(0);
 	updateToVersion('0.9.5');
 }
+
+if(isFroxlorVersion('0.9.5'))
+{
+	showUpdateStep("Updating from 0.9.5 to 0.9.6-svn1", true);
+	
+	showUpdateStep("Adding time-to-live configuration setting");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'defaultttl', '604800');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.6-svn1');
+}
 ?>

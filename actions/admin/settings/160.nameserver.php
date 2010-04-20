@@ -59,6 +59,16 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					),
+				'system_defaultttl' => array(
+					'label' => $lng['serversettings']['defaultttl'],
+					'settinggroup' => 'system',
+					'varname' => 'defaultttl',
+					'type' => 'int',
+					'default' => 604800, /* 1 week */
+					'int_min' => 86400, /* 1 day */
+					'int_max' => 2147483647, /* integer max */
+					'save_method' => 'storeSettingField',
+					),
 				),
 			),
 		),

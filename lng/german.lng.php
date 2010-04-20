@@ -1358,4 +1358,6 @@ $lng['success']['settingssaved'] = 'Die Einstellungen wurden erfolgreich gespeic
 $lng['admin']['lastlogin_succ'] = 'Letzte Anmeldung';
 $lng['panel']['neverloggedin'] = 'Keine Anmeldung bisher';
 
+$lng['serversettings']['defaultttl'] = 'Domain TTL f&uuml;r Bind (default \'604800\' = 1 Woche)';
+
 ?>
