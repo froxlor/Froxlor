@@ -43,7 +43,7 @@ function validateDomain($domainname)
 	if(version_compare("5.2.13", PHP_VERSION, "=")
 		|| version_compare("5.3.2", PHP_VERSION, "="))
 	{
-		$pattern = '/^([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,6}$/i';
+		$pattern = '/^http:\/\/([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,6}$/i';
 		if(preg_match($pattern, $domainname_tmp))
 		{	
 			return $domainname;
