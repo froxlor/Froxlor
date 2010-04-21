@@ -47,7 +47,7 @@ function getPreConfig($current_version)
 function versionInUpdate($current_version, $version_to_check)
 {
 	$pos_a = strpos($current_version, '-svn');
-	$pos_b = strpos($current_version, '-svn');
+	$pos_b = strpos($version_to_check, '-svn');
 	// if we compare svn-versions, we have to add -svn0 to the version
 	// to compare it correctly	
 	if($pos_a === false && $pos_b !== false)
