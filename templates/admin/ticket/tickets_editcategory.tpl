@@ -9,8 +9,12 @@ $header
 				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['ticket']['ticket_editcateory']}</b></td>
 			</tr>
 			<tr>
-				<td class="main_field_name">{$lng['ticket']['category']}:</td>
+				<td class="main_field_name"><b>{$lng['ticket']['category']}:</b></td>
 				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="category" maxlength="50" value="{$row['name']}" /></td>
+			</tr>
+			<tr>
+				<td class="main_field_name"><b>{$lng['ticket']['logicalorder']}:</b><br />{$lng['ticket']['orderdesc']}</td>
+				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="logicalorder" maxlength="3" value="{$row['logicalorder']}" /></td>
 			</tr>
 			<tr>
 				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['ticket']['ticket_editcateory']}" /></td>

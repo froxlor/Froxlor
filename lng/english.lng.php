@@ -1362,6 +1362,9 @@ $lng['admin']['configfiles']['compactoverview'] = 'Compact-overview';
 $lng['admin']['lastlogin_succ'] = 'Last login';
 $lng['panel']['neverloggedin'] = 'No login yet';
 
+// ADDED IN FROXLOR 0.9.6-svn1
 $lng['serversettings']['defaultttl'] = 'Domain TTL for bind in seconds (default \'604800\' = 1 week)';
+$lng['ticket']['logicalorder'] = 'Logical order';
+$lng['ticket']['orderdesc'] = 'Here you can define your own logical order for the ticket-category. Use 1 - 999, lower numbers are displayed first.';
 
 ?>

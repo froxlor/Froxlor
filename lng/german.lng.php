@@ -1358,6 +1358,9 @@ $lng['success']['settingssaved'] = 'Die Einstellungen wurden erfolgreich gespeic
 $lng['admin']['lastlogin_succ'] = 'Letzte Anmeldung';
 $lng['panel']['neverloggedin'] = 'Keine Anmeldung bisher';
 
+// ADDED IN FROXLOR 0.9.6-svn1
 $lng['serversettings']['defaultttl'] = 'Domain TTL f&uuml;r Bind in Sekunden (default \'604800\' = 1 Woche)';
+$lng['ticket']['logicalorder'] = 'Logische Sortierung';
+$lng['ticket']['orderdesc'] = 'Hier kann eine logische Sortierung f&uuml;r die Ticket-Kategorien angegeben werden. Benutze 1 - 999, niedrigere Zahlen werden zuerst angezeigt.';
 
 ?>

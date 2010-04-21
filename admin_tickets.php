@@ -197,12 +197,12 @@ if($page == 'tickets'
 			else
 			{
 				$categories = '';
-				$result = $db->query_first('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `adminid` = "' . $userinfo['adminid'] . '" ORDER BY `name` ASC');
+				$result = $db->query_first('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `adminid` = "' . $userinfo['adminid'] . '" ORDER BY `logicalorder`, `name` ASC');
 
 				if(isset($result['name'])
 				   && $result['name'] != '')
 				{
-					$result2 = $db->query('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `adminid` = "' . $userinfo['adminid'] . '" ORDER BY `name` ASC');
+					$result2 = $db->query('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `adminid` = "' . $userinfo['adminid'] . '" ORDER BY `logicalorder`, `name` ASC');
 
 					while($row = $db->fetch_array($result2))
 					{
@@ -435,10 +435,11 @@ elseif($page == 'categories'
 	{
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_tickets::categories");
 		$fields = array(
-			'name' => $lng['ticket']['category']
+			'name' => $lng['ticket']['category'],
+			'logicalorder' => $lng['ticket']['logicalorder']
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_TICKET_CATS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$result = $db->query("SELECT `main`.`id`, `main`.`name`, (
+		$result = $db->query("SELECT `main`.`id`, `main`.`name`, `main`.`logicalorder`, (
                               SELECT COUNT(`sub`.`id`) FROM `" . TABLE_PANEL_TICKETS . "` `sub`
                               WHERE `sub`.`category` = `main`.`id`
                               AND `sub`.`answerto` = '0' AND `sub`.`adminid` = '" . $userinfo['adminid'] . "')
@@ -481,6 +482,12 @@ elseif($page == 'categories'
 		   && $_POST['send'] == 'send')
 		{
 			$category = validate($_POST['category'], 'category');
+			$order = validate($_POST['logicalorder'], 'logicalorder');
+			
+			if($order < 1 || $order >= 1000)
+			{
+				$order = 1;
+			}
 
 			if($category == '')
 			{
@@ -488,7 +495,7 @@ elseif($page == 'categories'
 			}
 			else
 			{
-				ticket::addCategory($db, $category, $userinfo['adminid']);
+				ticket::addCategory($db, $category, $userinfo['adminid'], $order);
 				$log->logAction(ADM_ACTION, LOG_INFO, "added ticket-category '" . $category . "'");
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
@@ -505,6 +512,12 @@ elseif($page == 'categories'
 		   && $_POST['send'] == 'send')
 		{
 			$category = validate($_POST['category'], 'category');
+			$order = validate($_POST['logicalorder'], 'logicalorder');
+
+			if($order < 1 || $order >= 1000)
+			{
+				$order = 1;
+			}
 
 			if($category == '')
 			{
@@ -512,7 +525,7 @@ elseif($page == 'categories'
 			}
 			else
 			{
-				ticket::editCategory($db, $category, $id);
+				ticket::editCategory($db, $category, $id, $order);
 				$log->logAction(ADM_ACTION, LOG_INFO, "edited ticket-category '" . $category . "'");
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}

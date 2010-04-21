@@ -8,8 +8,12 @@ $header
 				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['ticket']['ticket_newcateory']}</b></td>
 			</tr>
 			<tr>
-				<td class="main_field_name">{$lng['ticket']['category']}:</td>
+				<td class="main_field_name"><b>{$lng['ticket']['category']}:</b></td>
 				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="category" maxlength="50" /></td>
+			</tr>
+			<tr>
+				<td class="main_field_name"><b>{$lng['ticket']['logicalorder']}:</b><br />{$lng['ticket']['orderdesc']}</td>
+				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="logicalorder" maxlength="3" value="1" /></td>
 			</tr>
 			<tr>
 				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['ticket']['ticket_newcateory']}" /></td>

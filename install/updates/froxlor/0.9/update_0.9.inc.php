@@ -481,6 +481,11 @@ if(isFroxlorVersion('0.9.5'))
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'defaultttl', '604800');");
 	lastStepStatus(0);
 
+	showUpdateStep("Updating database table structure for panel_ticket_categories");
+	$db->query("ALTER TABLE `" . TABLE_PANEL_TICKET_CATS . "` ADD `logicalorder` int(3) NOT NULL default '1' AFTER `adminid`;");
+	lastStepStatus(0);
+
 	updateToVersion('0.9.6-svn1');
 }
+
 ?>

@@ -782,6 +782,7 @@ CREATE TABLE `panel_ticket_categories` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
   `name` varchar(60) NOT NULL,
   `adminid` int(11) NOT NULL,
+  `logicalorder` int(3) NOT NULL default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM;
 

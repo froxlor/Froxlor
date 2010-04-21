@@ -344,12 +344,19 @@ class ticket
 	 * Add a support-categories
 	 */
 
-	static public function addCategory($_db, $_category = null, $_admin = 1)
+	static public function addCategory($_db, $_category = null, $_admin = 1, $_order = 1)
 	{
 		if($_category != null
 		&& $_category != '')
 		{
-			$_db->query('INSERT INTO `' . TABLE_PANEL_TICKET_CATS . '` (`name`, `adminid`) VALUES ("' . $_db->escape($_category) . '", "' . (int)$_admin . '")');
+			if($_order < 1) {
+				$_order = 1;
+			}
+
+			$_db->query('INSERT INTO `' . TABLE_PANEL_TICKET_CATS . '` SET 
+						`name` = "' . $_db->escape($_category) . '", 
+						`adminid` = "' . (int)$_admin . '", 
+						`logicalorder` = "' . (int)$_order . '"');
 			return true;
 		}
 
@@ -360,13 +367,19 @@ class ticket
 	 * Edit a support-categories
 	 */
 
-	static public function editCategory($_db, $_category = null, $_id = 0)
+	static public function editCategory($_db, $_category = null, $_id = 0, $_order = 1)
 	{
 		if($_category != null
 		&& $_category != ''
 		&& $_id != 0)
 		{
-			$_db->query('UPDATE `' . TABLE_PANEL_TICKET_CATS . '` SET `name` = "' . $_db->escape($_category) . '"
+			if($_order < 1) {
+				$_order = 1;
+			}
+			
+			$_db->query('UPDATE `' . TABLE_PANEL_TICKET_CATS . '` SET 
+					`name` = "' . $_db->escape($_category) . '",
+					`logicalorder` = "' . (int)$_order . '"
                    WHERE `id` = "' . (int)$_id . '"');
 			return true;
 		}
