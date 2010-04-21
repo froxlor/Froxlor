@@ -29,44 +29,56 @@
 function validateUrl($url)
 {
 	if(strtolower(substr($url, 0, 7)) != "http://"
-	   && strtolower(substr($url, 0, 8)) != "https://")
+	&& strtolower(substr($url, 0, 8)) != "https://")
 	{
 		$url = 'http://' . $url;
 	}
 
-	if(filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED) !== false)
+	if(version_compare("5.2.13", PHP_VERSION, "=")
+		|| version_compare("5.3.2", PHP_VERSION, "="))
 	{
-		return true;
+		$pattern = '/^https?:\/\/([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,6}$/i';
+		if(preg_match($pattern, $url))
+		{
+			return true;
+		}
 	}
 	else
 	{
-		if(strtolower(substr($url, 0, 7)) == "http://"
-		   || strtolower(substr($url, 0, 8)) == "https://")
+		if(filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED) !== false)
 		{
-			if(strtolower(substr($url, 0, 7)) == "http://")
-			{
-				$ip = strtolower(substr($url, 7));
-			}
+			return true;
+		}
+	}
 
-			if(strtolower(substr($url, 0, 8)) == "https://")
-			{
-				$ip = strtolower(substr($url, 8));
-			}
+	// not an fqdn
+	if(strtolower(substr($url, 0, 7)) == "http://"
+		|| strtolower(substr($url, 0, 8)) == "https://")
+	{
+		if(strtolower(substr($url, 0, 7)) == "http://")
+		{
+			$ip = strtolower(substr($url, 7));
+		}
 
-			$ip = substr($ip, 0, strpos($ip, '/'));
+		if(strtolower(substr($url, 0, 8)) == "https://")
+		{
+			$ip = strtolower(substr($url, 8));
+		}
 
-			if(validate_ip($ip, true) !== false)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+		$ip = substr($ip, 0, strpos($ip, '/'));
+
+		if(validate_ip($ip, true) !== false)
+		{
+			return true;
 		}
 		else
 		{
 			return false;
 		}
 	}
+	else
+	{
+		return false;
+	}
 }
+
