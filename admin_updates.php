@@ -72,7 +72,7 @@ if($page == 'overview')
 	
 				include_once './install/updatesql.php';
 	
-				$redirect_url = 'admin_index.php';
+				$redirect_url = 'admin_index.php?s=' . $s;
 				eval("echo \"" . getTemplate("update/update_end") . "\";");
 	
 				updateCounters();
