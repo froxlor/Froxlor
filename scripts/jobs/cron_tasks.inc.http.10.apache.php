@@ -961,9 +961,7 @@ class apache
 		fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost']);
 
-		if(isConfigDir($this->settings['system']['apacheconf_vhost'])
-		   && file_exists($this->settings['system']['apacheconf_vhost'])
-		   && is_dir($this->settings['system']['apacheconf_vhost']))
+		if(isConfigDir($this->settings['system']['apacheconf_vhost']))
 		{
 			$vhost_file_dirhandle = opendir($this->settings['system']['apacheconf_vhost']);
 
@@ -971,7 +969,9 @@ class apache
 			{
 				if($vhost_filename != '.'
 				   && $vhost_filename != '..'
-				   && !in_array($vhost_filename, $this->known_vhostfilenames)
+				   // this would lead to not delete config from
+				   // maybe removed domains, etc. so comment it out, #102
+				   //&& !in_array($vhost_filename, $this->known_vhostfilenames)
 				   && preg_match('/^(05|10|20|21|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
 				{
@@ -992,9 +992,7 @@ class apache
 		fwrite($this->debugHandler, '  apache::wipeOutOldDiroptionConfigs: cleaning ' . $this->settings['system']['apacheconf_diroptions'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_diroptions']);
 
-		if(isConfigDir($this->settings['system']['apacheconf_diroptions'])
-		   && file_exists($this->settings['system']['apacheconf_diroptions'])
-		   && is_dir($this->settings['system']['apacheconf_diroptions']))
+		if(isConfigDir($this->settings['system']['apacheconf_diroptions']))
 		{
 			$diroptions_file_dirhandle = opendir($this->settings['system']['apacheconf_diroptions']);
 
@@ -1002,7 +1000,9 @@ class apache
 			{
 				if($diroptions_filename != '.'
 				   && $diroptions_filename != '..'
-				   && !in_array($diroptions_filename, $this->known_diroptionsfilenames)
+				   // this would lead to not delete config from
+				   // maybe removed domains, etc. so comment it out, #102
+				   //&& !in_array($diroptions_filename, $this->known_diroptionsfilenames)
 				   && preg_match('/^40_(froxlor|syscp)_diroption_(.+)\.conf$/', $diroptions_filename)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_diroptions'] . '/' . $diroptions_filename)))
 				{
@@ -1023,9 +1023,7 @@ class apache
 		fwrite($this->debugHandler, '  apache::wipeOutOldHtpasswdConfigs: cleaning ' . $this->settings['system']['apacheconf_htpasswddir'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_htpasswddir']);
 
-		if(isConfigDir($this->settings['system']['apacheconf_htpasswddir'])
-		   && file_exists($this->settings['system']['apacheconf_htpasswddir'])
-		   && is_dir($this->settings['system']['apacheconf_htpasswddir']))
+		if(isConfigDir($this->settings['system']['apacheconf_htpasswddir']))
 		{
 			$htpasswds_file_dirhandle = opendir($this->settings['system']['apacheconf_htpasswddir']);
 
@@ -1033,7 +1031,9 @@ class apache
 			{
 				if($htpasswd_filename != '.'
 				   && $htpasswd_filename != '..'
-				   && !in_array($htpasswd_filename, $this->known_htpasswdsfilenames)
+				   // this would lead to not delete config from
+				   // maybe removed domains, etc. so comment it out, #102				   
+				   //&& !in_array($htpasswd_filename, $this->known_htpasswdsfilenames)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $htpasswd_filename)))
 				{
 					fwrite($this->debugHandler, '  apache::wipeOutOldHtpasswdConfigs: unlinking ' . $htpasswd_filename . "\n");

@@ -807,9 +807,7 @@ class lighttpd
 		fwrite($this->debugHandler, '  lighttpd::wipeOutOldConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost']);
 
-		if(isConfigDir($this->settings['system']['apacheconf_vhost'])
-		&& file_exists($this->settings['system']['apacheconf_vhost'])
-		&& is_dir($this->settings['system']['apacheconf_vhost']))
+		if(isConfigDir($this->settings['system']['apacheconf_vhost']))
 		{
 			$vhost_file_dirhandle = opendir($this->settings['system']['apacheconf_vhost']);
 
@@ -817,7 +815,9 @@ class lighttpd
 			{
 				if($vhost_filename != '.'
 				&& $vhost_filename != '..'
-				&& !in_array($vhost_filename, $this->known_filenames)
+				// this would lead to not delete config from
+				// maybe removed domains, etc. so comment it out, #102				
+				// && !in_array($vhost_filename, $this->known_filenames)
 				&& preg_match('/^(05|10|20|21|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
 				&& file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
 				{
