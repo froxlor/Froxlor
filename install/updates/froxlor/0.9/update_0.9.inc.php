@@ -488,4 +488,31 @@ if(isFroxlorVersion('0.9.5'))
 	updateToVersion('0.9.6-svn1');
 }
 
+if(isFroxlorVersion('0.9.6-svn1'))
+{
+	showUpdateStep("Updating from 0.9.6-svn1 to 0.9.6-svn2", false);
+	
+	$update_adminmail = isset($_POST['update_adminmail']) ? validate($_POST['update_adminmail'], 'update_adminmail') : false;
+	$do_update = true;
+
+	if($update_adminmail !== false)
+	{
+		showUpdateStep("Checking newly entered admin-mail");
+		if(!PHPMailer::ValidateAddress($update_adminmail))
+		{
+			$do_update = false;
+			lastStepStatus(2, 'E-Mail still not valid, go back and try again');
+		}
+		else
+		{
+			lastStepStatus(0);
+		}
+	}
+	
+	if($do_update)
+	{
+		updateToVersion('0.9.6-svn2');
+	}
+}
+
 ?>
