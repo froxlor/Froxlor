@@ -153,10 +153,11 @@ return Array(
 					'awstats' => Array(
 						'label' => 'Awstats',
 						'commands' => Array(
-							'awstats_configure.pl'
+							'awstats_configure.pl',
+							makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf').' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
 						),
 						'files' => Array(
-							'etc_awstats.model.conf' => makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf')
+							'etc_awstats.model.conf' => makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
 						)
 					)
 				)
