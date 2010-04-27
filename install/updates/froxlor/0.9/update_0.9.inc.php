@@ -505,6 +505,7 @@ if(isFroxlorVersion('0.9.6-svn1'))
 		}
 		else
 		{
+			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '".$db->escape($update_adminmail)."' WHERE `settinggroup` = 'panel' AND `varname` = 'adminmail';");
 			lastStepStatus(0);
 		}
 	}
