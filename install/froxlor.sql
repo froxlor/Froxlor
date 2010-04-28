@@ -560,6 +560,12 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (129, 'system', 'awstats_path', '/usr/bin/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (130, 'system', 'awstats_conf', '/etc/awstats/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (131, 'system', 'defaultttl', '604800');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (132, 'defaultwebsrverrhandler', 'enabled', '0');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (133, 'defaultwebsrverrhandler', 'err401', '');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (134, 'defaultwebsrverrhandler', 'err403', '');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (135, 'defaultwebsrverrhandler', 'err404', '');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (136, 'defaultwebsrverrhandler', 'err500', '');
+
 
 # --------------------------------------------------------
 

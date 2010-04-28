@@ -86,11 +86,51 @@ class apache
 				$this->virtualhosts_data[$vhosts_filename] = '';
 			}
 
-			$this->virtualhosts_data[$vhosts_filename].= '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";	
 			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->settings['system']['documentroot_prefix'] . '">' . "\n";
 			$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
 			$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
 			$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
+		}
+	}
+
+	/**
+	 * define a default ErrorDocument-statement, bug #unknown-yet
+	 */
+	private function _createStandardErrorHandler()
+	{
+		if($this->settings['defaultwebsrverrhandler']['enabled'] == '1'
+			&& ($this->settings['defaultwebsrverrhandler']['err401'] != ''
+			|| $this->settings['defaultwebsrverrhandler']['err403'] != ''
+			|| $this->settings['defaultwebsrverrhandler']['err404'] != ''
+			|| $this->settings['defaultwebsrverrhandler']['err500'] != '')
+		) {
+			$vhosts_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/05_froxlor_default_errorhandler.conf');
+
+			if(!isset($this->virtualhosts_data[$vhosts_filename]))
+			{
+				$this->virtualhosts_data[$vhosts_filename] = '';
+			}
+	
+			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
+			{
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 ' . $this->settings['defaultwebsrverrhandler']['err401'] . "\n";
+			}
+
+			if($this->settings['defaultwebsrverrhandler']['err403'] != '')
+			{
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 ' . $this->settings['defaultwebsrverrhandler']['err403'] . "\n";
+			}
+
+			if($this->settings['defaultwebsrverrhandler']['err404'] != '')
+			{
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 ' . $this->settings['defaultwebsrverrhandler']['err404'] . "\n";
+			}
+			
+			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
+			{
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 ' . $this->settings['defaultwebsrverrhandler']['err500'] . "\n";
+			}
+
 		}
 	}
 
@@ -209,6 +249,11 @@ class apache
 		 * bug #32
 		 */
 		$this->_createStandardDirectoryEntry();
+
+		/**
+		 * bug #unknown-yet
+		 */
+		$this->_createStandardErrorHandler();
 	}
 
 	/*
@@ -969,9 +1014,7 @@ class apache
 			{
 				if($vhost_filename != '.'
 				   && $vhost_filename != '..'
-				   // this would lead to not delete config from
-				   // maybe removed domains, etc. so comment it out, #102
-				   //&& !in_array($vhost_filename, $this->known_vhostfilenames)
+				   && !in_array($vhost_filename, $this->known_vhostfilenames)
 				   && preg_match('/^(05|10|20|21|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
 				{
@@ -1000,9 +1043,7 @@ class apache
 			{
 				if($diroptions_filename != '.'
 				   && $diroptions_filename != '..'
-				   // this would lead to not delete config from
-				   // maybe removed domains, etc. so comment it out, #102
-				   //&& !in_array($diroptions_filename, $this->known_diroptionsfilenames)
+				   && !in_array($diroptions_filename, $this->known_diroptionsfilenames)
 				   && preg_match('/^40_(froxlor|syscp)_diroption_(.+)\.conf$/', $diroptions_filename)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_diroptions'] . '/' . $diroptions_filename)))
 				{
@@ -1030,10 +1071,8 @@ class apache
 			while(false !== ($htpasswd_filename = readdir($htpasswds_file_dirhandle)))
 			{
 				if($htpasswd_filename != '.'
-				   && $htpasswd_filename != '..'
-				   // this would lead to not delete config from
-				   // maybe removed domains, etc. so comment it out, #102				   
-				   //&& !in_array($htpasswd_filename, $this->known_htpasswdsfilenames)
+				   && $htpasswd_filename != '..'		   
+				   && !in_array($htpasswd_filename, $this->known_htpasswdsfilenames)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $htpasswd_filename)))
 				{
 					fwrite($this->debugHandler, '  apache::wipeOutOldHtpasswdConfigs: unlinking ' . $htpasswd_filename . "\n");

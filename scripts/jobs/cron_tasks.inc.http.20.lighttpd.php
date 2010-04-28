@@ -151,6 +151,30 @@ class lighttpd
 			
 			$this->lighttpd_data[$vhost_filename].= '}' . "\n";
 		}
+
+		/**
+		 * bug #unknown-yet
+		 */
+		$this->_createStandardErrorHandler();
+	}
+
+	/**
+	 * define a default server.error-handler-404-statement, bug #unknown-yet
+	 */
+	private function _createStandardErrorHandler()
+	{
+		if($this->settings['defaultwebsrverrhandler']['enabled'] == '1'
+			&& $this->settings['defaultwebsrverrhandler']['err404'] != ''
+		) {
+			$vhosts_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/05_froxlor_default_errorhandler.conf');
+
+			if(!isset($this->lighttpd_data[$vhost_filename]))
+			{
+				$this->lighttpd_data[$vhost_filename] = '';
+			}
+
+			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "'.$this->settings['defaultwebsrverrhandler']['err404'].'"';
+		}
 	}
 
 	protected function create_htaccess($domain)
@@ -815,9 +839,7 @@ class lighttpd
 			{
 				if($vhost_filename != '.'
 				&& $vhost_filename != '..'
-				// this would lead to not delete config from
-				// maybe removed domains, etc. so comment it out, #102				
-				// && !in_array($vhost_filename, $this->known_filenames)
+				&& !in_array($vhost_filename, $this->known_filenames)
 				&& preg_match('/^(05|10|20|21|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
 				&& file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
 				{
