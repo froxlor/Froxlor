@@ -27,7 +27,7 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function isConfigDir($dir)
+function isConfigDir($dir, $ifexists = false)
 {
 	if(file_exists($dir))
 	{
@@ -42,9 +42,16 @@ function isConfigDir($dir)
 	}
 	else
 	{
-		if(substr($dir, -1) == '/')
+		if(!$ifexists)
 		{
-			$returnval = true;
+			if(substr($dir, -1) == '/')
+			{
+				$returnval = true;
+			}
+			else
+			{
+				$returnval = false;
+			}
 		}
 		else
 		{

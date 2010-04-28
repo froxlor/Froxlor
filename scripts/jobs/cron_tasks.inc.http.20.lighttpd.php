@@ -831,7 +831,7 @@ class lighttpd
 		fwrite($this->debugHandler, '  lighttpd::wipeOutOldConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost']);
 
-		if(isConfigDir($this->settings['system']['apacheconf_vhost']))
+		if(isConfigDir($this->settings['system']['apacheconf_vhost'], true))
 		{
 			$vhost_file_dirhandle = opendir($this->settings['system']['apacheconf_vhost']);
 

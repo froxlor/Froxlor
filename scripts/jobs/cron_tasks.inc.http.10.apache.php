@@ -914,14 +914,8 @@ class apache
 				mkdir($this->settings['system']['apacheconf_htpasswddir'], 0751);
 				umask($umask);
 			}
-			elseif(!is_dir($this->settings['system']['apacheconf_htpasswddir']))
-			{
-				fwrite($this->debugHandler, '  cron_tasks: WARNING!!! ' . $this->settings['system']['apacheconf_htpasswddir'] . ' is not a directory. htpasswd directory protection is disabled!!!' . "\n");
-				echo 'WARNING!!! ' . $this->settings['system']['apacheconf_htpasswddir'] . ' is not a directory. htpasswd directory protection is disabled!!!';
-				$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . $this->settings['system']['apacheconf_htpasswddir'] . ' is not a directory. htpasswd directory protection is disabled!!!');
-			}
 
-			if(is_dir($this->settings['system']['apacheconf_htpasswddir']))
+			if(isConfigDir($this->settings['system']['apacheconf_htpasswddir'], true))
 			{
 				foreach($this->htpasswds_data as $htpasswd_filename => $htpasswd_file)
 				{
@@ -932,6 +926,12 @@ class apache
 				}
 
 				$this->wipeOutOldHtpasswdConfigs();
+			}
+			else
+			{
+				fwrite($this->debugHandler, '  cron_tasks: WARNING!!! ' . $this->settings['system']['apacheconf_htpasswddir'] . ' is not a directory. htpasswd directory protection is disabled!!!' . "\n");
+				echo 'WARNING!!! ' . $this->settings['system']['apacheconf_htpasswddir'] . ' is not a directory. htpasswd directory protection is disabled!!!';
+				$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . $this->settings['system']['apacheconf_htpasswddir'] . ' is not a directory. htpasswd directory protection is disabled!!!');
 			}
 		}
 
@@ -1006,7 +1006,7 @@ class apache
 		fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost']);
 
-		if(isConfigDir($this->settings['system']['apacheconf_vhost']))
+		if(isConfigDir($this->settings['system']['apacheconf_vhost'], true))
 		{
 			$vhost_file_dirhandle = opendir($this->settings['system']['apacheconf_vhost']);
 
@@ -1035,7 +1035,7 @@ class apache
 		fwrite($this->debugHandler, '  apache::wipeOutOldDiroptionConfigs: cleaning ' . $this->settings['system']['apacheconf_diroptions'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_diroptions']);
 
-		if(isConfigDir($this->settings['system']['apacheconf_diroptions']))
+		if(isConfigDir($this->settings['system']['apacheconf_diroptions'], true))
 		{
 			$diroptions_file_dirhandle = opendir($this->settings['system']['apacheconf_diroptions']);
 
@@ -1064,7 +1064,7 @@ class apache
 		fwrite($this->debugHandler, '  apache::wipeOutOldHtpasswdConfigs: cleaning ' . $this->settings['system']['apacheconf_htpasswddir'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_htpasswddir']);
 
-		if(isConfigDir($this->settings['system']['apacheconf_htpasswddir']))
+		if(isConfigDir($this->settings['system']['apacheconf_htpasswddir'], true))
 		{
 			$htpasswds_file_dirhandle = opendir($this->settings['system']['apacheconf_htpasswddir']);
 
