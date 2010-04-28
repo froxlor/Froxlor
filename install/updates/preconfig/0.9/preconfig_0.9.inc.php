@@ -51,7 +51,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	if(versionInUpdate($current_version, '0.9.6-svn3'))
 	{
 		$has_preconfig = true;
-		$return .= 'You now have the possibility to define default error-documents for your webserver which replace the default webserver output.<br />';
+		$return .= 'You now have the possibility to define default error-documents for your webserver which replace the default webserver output.<br /><br />';
 		$return .= '<strong>Do you want to enable default error-documents?:</strong>&nbsp;';
 		$return .= makeyesno('update_deferr_enable', '1', '0', '9').'<br /><br />';
 		if($settings['system']['webserver'] == 'apache2')
