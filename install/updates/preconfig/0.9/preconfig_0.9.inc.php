@@ -44,7 +44,22 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		{
 			$has_preconfig = true;
 			$return .= 'Froxlor uses a newer version of the phpMailerClass and determined that your current admin-mail address is invalid.';
-			$return .= '<br /><br /><strong>Please specify a new admin-email address:</strong>&nbsp;<input type="text" name="update_adminmail" value="'.$settings['panel']['adminmail'].'" />';
+			$return .= '<br /><br /><strong>Please specify a new admin-email address:</strong>&nbsp;<input type="text" name="update_adminmail" value="'.$settings['panel']['adminmail'].'" /><br /><br />';
 		}
+	}
+
+	if(versionInUpdate($current_version, '0.9.6-svn3'))
+	{
+		$has_preconfig = true;
+		$return .= 'You now have the possibility to define default error-documents for your webserver which replace the default webserver output.<br />';
+		$return .= '<strong>Do you want to enable default error-documents?:</strong>&nbsp;';
+		$return .= makeyesno('update_deferr_enable', '1', '0', '9').'<br /><br />';
+		if($settings['system']['webserver'] == 'apache2')
+		{
+			$return .= '<strong>Path/URL for error 500:</strong>&nbsp;<input type="text" name="update_deferr_500" /><br />';
+			$return .= '<strong>Path/URL for error 401:</strong>&nbsp;<input type="text" name="update_deferr_401" /><br />';
+			$return .= '<strong>Path/URL for error 403:</strong>&nbsp;<input type="text" name="update_deferr_403" /><br />';
+		}
+		$return .= '<strong>Path/URL for error 404:</strong>&nbsp;<input type="text" name="update_deferr_404" /><br /><br />';
 	}
 }

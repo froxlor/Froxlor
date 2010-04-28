@@ -516,4 +516,52 @@ if(isFroxlorVersion('0.9.6-svn1'))
 	}
 }
 
+if(isFroxlorVersion('0.9.6-svn2'))
+{
+	showUpdateStep("Updating from 0.9.6-svn2 to 0.9.6-svn3", false);
+	
+	$update_deferr_enable = isset($_POST['update_deferr_enable']) ? true : false;
+
+	showUpdateStep("Adding new webserver configurations to database");
+	if($update_deferr_enable == true)
+	{
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'enabled', '1');");
+		
+		if(isset($_POST['update_deferr_500'])
+			&& trim($_POST['update_deferr_500']) != ''
+		) {
+			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '".$db->escape($_POST['update_deferr_500'])."');");
+		}
+		
+		if(isset($_POST['update_deferr_401'])
+			&& trim($_POST['update_deferr_401']) != ''
+		) {
+			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '".$db->escape($_POST['update_deferr_401'])."');");
+		}
+		
+		if(isset($_POST['update_deferr_403'])
+			&& trim($_POST['update_deferr_403']) != ''
+		) {
+			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '".$db->escape($_POST['update_deferr_403'])."');");
+		}
+		
+		if(isset($_POST['update_deferr_404'])
+			&& trim($_POST['update_deferr_404']) != ''
+		) {
+			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '".$db->escape($_POST['update_deferr_404'])."');");
+		}
+	} 
+	else
+	{
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'enabled', '0');");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err401', '');");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err403', '');");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err404', '');");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '');");	
+	}
+	lastStepStatus(0);
+
+	updateToVersion('0.9.6-svn3');
+}
+
 ?>

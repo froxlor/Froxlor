@@ -1363,4 +1363,14 @@ $lng['serversettings']['defaultttl'] = 'Domain TTL f&uuml;r Bind in Sekunden (de
 $lng['ticket']['logicalorder'] = 'Logische Sortierung';
 $lng['ticket']['orderdesc'] = 'Hier kann eine logische Sortierung f&uuml;r die Ticket-Kategorien angegeben werden. Benutze 1 - 999, niedrigere Zahlen werden zuerst angezeigt.';
 
+// ADDED IN FROXLOR 0.9.6-svn3
+$lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Verwende Standard-Fehlerdokumente f&uuml;r alle Kunden';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'Datei/URL f&uuml;r Fehler 401';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'Datei/URL f&uuml;r Fehler 403';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Datei/URL f&uuml;r Fehler 404';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Datei/URL f&uuml;r Fehler 500';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+
 ?>
