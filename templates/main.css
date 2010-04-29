@@ -458,3 +458,14 @@ TR.RowOverSelected {
         margin-left: 15px;
 }
 
+.preconfigitem 
+{
+        padding: 0.15em;
+        border-bottom: 1px solid #cccccc;
+}
+
+.preconfdesc 
+{
+        display: block;
+        margin-bottom: 0.5em;
+}

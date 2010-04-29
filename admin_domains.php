@@ -563,7 +563,7 @@ if($page == 'domains'
 						$row_ipandport['ip'] = '[' . $row_ipandport['ip'] . ']';
 					}
 
-					$ipsandports.= makeoption($row_ipandport['ip'] . ':' . $row_ipandport['port'], $row_ipandport['id']);
+					$ipsandports.= makeoption($row_ipandport['ip'] . ':' . $row_ipandport['port'], $row_ipandport['id'], $settings['system']['defaultip']);
 				}
 
 				$ssl_ipsandports = '';
