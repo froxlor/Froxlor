@@ -62,4 +62,16 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		}
 		$return .= '<strong>Path/URL for error 404:</strong>&nbsp;<input type="text" name="update_deferr_404" /><br /><br />';
 	}
+
+	if(versionInUpdate($current_version, '0.9.6-svn4'))
+	{
+		$has_preconfig = true;
+		$return .= 'You can define a default support-ticket priority level which is pre-selected for new support-tickets.<br /><br />';
+		$return .= '<strong>Which should be the default ticket-priority?:</strong>&nbsp;';
+		$return .= '<select name="update_deftic_priority">';
+		$priorities = makeoption($lng['ticket']['unf_high'], '1', '2');
+		$priorities.= makeoption($lng['ticket']['unf_normal'], '2', '2');
+		$priorities.= makeoption($lng['ticket']['unf_low'], '3', '2');
+		$return .= $priorities.'</select><br /><br />';
+	}
 }

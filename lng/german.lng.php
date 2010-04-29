@@ -1373,4 +1373,7 @@ $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Datei/URL f&uuml;r F
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Datei/URL f&uuml;r Fehler 500';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
 
+// ADDED IN FROXLOR 0.9.6-svn4
+$lng['serversettings']['ticket']['default_priority'] = 'Voreingestellte Support-Ticket Priorit&auml;t';
+
 ?>

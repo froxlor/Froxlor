@@ -125,6 +125,16 @@ return array(
 					'type' => 'hidden',
 					'default' => '',
 					),
+				'ticket_default_priority' => array(
+					'label' => $lng['serversettings']['ticket']['default_priority'],
+					'settinggroup' => 'ticket',
+					'varname' => 'default_priority',
+					'type' => 'option',
+					'default' => 2,
+					'option_mode' => 'one',
+					'option_options' => array(1 => $lng['ticket']['unf_high'], 2 => $lng['ticket']['unf_normal'], 3 => $lng['ticket']['unf_low']),
+					'save_method' => 'storeSettingField', 
+					),
 				),
 			),
 		)

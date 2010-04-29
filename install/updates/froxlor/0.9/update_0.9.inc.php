@@ -582,4 +582,17 @@ if(isFroxlorVersion('0.9.6-svn2'))
 	updateToVersion('0.9.6-svn3');
 }
 
+if(isFroxlorVersion('0.9.6-svn3'))
+{
+	showUpdateStep("Updating from 0.9.6-svn3 to 0.9.6-svn4", false);
+	
+	$update_deftic_priority = isset($_POST['update_deftic_priority']) ? intval($_POST['update_deftic_priority']) : 2;
+
+	showUpdateStep("Setting default support-ticket priority");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'default_priority', '".(int)$update_deftic_priority."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.6-svn4');
+}
+
 ?>

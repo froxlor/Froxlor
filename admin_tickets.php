@@ -237,9 +237,9 @@ if($page == 'tickets'
 					}
 				}
 
-				$priorities = makeoption($lng['ticket']['unf_high'], '1');
-				$priorities.= makeoption($lng['ticket']['unf_normal'], '2');
-				$priorities.= makeoption($lng['ticket']['unf_low'], '3');
+				$priorities = makeoption($lng['ticket']['unf_high'], '1', $settings['ticket']['default_priority']);
+				$priorities.= makeoption($lng['ticket']['unf_normal'], '2', $settings['ticket']['default_priority']);
+				$priorities.= makeoption($lng['ticket']['unf_low'], '3', $settings['ticket']['default_priority']);
 				eval("echo \"" . getTemplate("ticket/tickets_new") . "\";");
 			}
 		}
