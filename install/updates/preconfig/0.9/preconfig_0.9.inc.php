@@ -26,7 +26,7 @@
  */
 function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 {
-	global $settings;
+	global $settings, $lng;
 
 	if(versionInUpdate($current_version, '0.9.4-svn2'))
 	{
