@@ -116,7 +116,7 @@ if($page == 'overview')
 		 */
 
 		$success_message = $lng['update']['noupdatesavail'];
-		$redirect_url = 'admin_index.php';
+		$redirect_url = 'admin_index.php?s=' . $s;
 		eval("echo \"" . getTemplate("update/noupdatesavail") . "\";");
 	}
 }
