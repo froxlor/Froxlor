@@ -1376,4 +1376,7 @@ $lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Voreingestellte Support-Ticket Priorit&auml;t';
 
+// ADDED IN FROXLOR 0.9.6-svn5
+$lng['serversettings']['mod_fcgid']['defaultini'] = 'Voreingestellte PHP Konfiguration f&uuml;r neue Domains';
+
 ?>

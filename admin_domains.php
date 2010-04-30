@@ -306,7 +306,7 @@ if($page == 'domains'
 					}
 					else
 					{
-						$phpsettingid = '1';
+						$phpsettingid = $settings['system']['mod_fcgid_defaultini'];
 						$mod_fcgid_starter = '-1';
 						$mod_fcgid_maxrequests = '-1';
 					}
@@ -315,7 +315,7 @@ if($page == 'domains'
 				{
 					$openbasedir = '1';
 					$safemode = '1';
-					$phpsettingid = '1';
+					$phpsettingid = $settings['system']['mod_fcgid_defaultini'];
 					$mod_fcgid_starter = '-1';
 					$mod_fcgid_maxrequests = '-1';
 				}
@@ -609,7 +609,7 @@ if($page == 'domains'
 
 				while($row = $db->fetch_array($configs))
 				{
-					$phpconfigs.= makeoption($row['description'], $row['id'], '1', true, true);
+					$phpconfigs.= makeoption($row['description'], $row['id'], $settings['system']['mod_fcgid_defaultini'], true, true);
 				}
 
 				$isbinddomain = makeyesno('isbinddomain', '1', '0', '1');

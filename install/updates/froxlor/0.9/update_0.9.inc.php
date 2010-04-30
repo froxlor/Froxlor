@@ -595,4 +595,22 @@ if(isFroxlorVersion('0.9.6-svn3'))
 	updateToVersion('0.9.6-svn4');
 }
 
+if(isFroxlorVersion('0.9.6-svn4'))
+{
+	showUpdateStep("Updating from 0.9.6-svn4 to 0.9.6-svn5", false);
+	
+	$update_defsys_phpconfig = isset($_POST['update_defsys_phpconfig']) ? intval($_POST['update_defsys_phpconfig']) : 1;
+
+	if($update_defsys_phpconfig != 1) {
+		showUpdateStep("Setting default php-configuration to user defined config #".$update_defsys_phpconfig);
+	} else {
+		showUpdateStep("Adding default php-configuration setting to the database");
+	}
+
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_defaultini', '".(int)$update_defsys_phpconfig."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.6-svn5');
+}
+
 ?>
