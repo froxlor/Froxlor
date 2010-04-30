@@ -97,7 +97,7 @@ if($page == 'overview')
 
 				$db->query("INSERT INTO `" . TABLE_PANEL_PHPCONFIGS . "` SET `description` = '" . $db->escape($description) . "', `binary` = '" . $db->escape($binary) . "', `file_extensions` = '" . $db->escape($file_extensions) . "', `mod_fcgid_starter` = '" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests` = '" . $db->escape($mod_fcgid_maxrequests) . "', `phpsettings` = '" . $db->escape($phpsettings) . "'");
 				inserttask('1');
-				$log->logAction(ADM_ACTION, LOG_INFO, "php.ini setting with description '" . $value . "' has been created by '" . $userinfo['loginname'] . "'");
+				$log->logAction(ADM_ACTION, LOG_INFO, "php.ini setting with description '" . $description . "' has been created by '" . $userinfo['loginname'] . "'");
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 			else
