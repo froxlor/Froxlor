@@ -95,30 +95,26 @@ return Array(
 			'smtp' => Array(
 				'label' => $lng['admin']['configfiles']['smtp'],
 				'daemons' => Array(
-					'postfix' => Array(
-						'label' => 'Postfix',
-						'commands_1' => Array(
-							'mkdir -p /etc/postfix/sasl',
+					'postfix_courier' => Array(
+						'label' => 'Postfix/Courier',
+						'commands' => Array(
+							'apt-get install postfix postfix-mysql libsasl2-2 libsasl2-modules libsasl2-modules-sql',
 							'mkdir -p /var/spool/postfix/etc/pam.d',
 							'mkdir -p /var/spool/postfix/var/run/mysqld',
 							'groupadd -g ' . $settings['system']['vmail_gid'] . ' vmail',
 							'useradd -u ' . $settings['system']['vmail_uid'] . ' -g vmail vmail',
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
 							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
-							'mv /etc/postfix/main.cf /etc/postfix/main.cf.ubuntu',
-							'touch /etc/postfix/main.cf',
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
 							'touch /etc/postfix/sasl/smtpd.conf',
 							'chown root:root /etc/postfix/main.cf',
-							'chown root:root /etc/postfix/master.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_alias_maps.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_maps.cf',
 							'chown root:root /etc/postfix/sasl/smtpd.conf',
 							'chmod 0644 /etc/postfix/main.cf',
-							'chmod 0644 /etc/postfix/master.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_alias_maps.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_maps.cf',
@@ -126,11 +122,46 @@ return Array(
 						),
 						'files' => Array(
 							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
-							'etc_postfix_master.cf' => '/etc/postfix/master.cf',
 							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
 							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
 							'etc_postfix_sasl_smtpd.conf' => '/etc/postfix/sasl/smtpd.conf'
+						),
+						'restart' => Array(
+							'/etc/init.d/postfix restart',
+							'newaliases'
+						)
+					),
+					'postfix_dovecot' => Array(
+						'label' => 'Postfix/Dovecot',
+						'commands' => Array(
+							'apt-get install postfix postfix-mysql',
+							'mkdir -p /var/spool/postfix/etc/pam.d',
+							'mkdir -p /var/spool/postfix/var/run/mysqld',
+							'groupadd -g ' . $settings['system']['vmail_gid'] . ' vmail',
+							'useradd -u ' . $settings['system']['vmail_uid'] . ' -g vmail vmail',
+							'mkdir -p ' . $settings['system']['vmail_homedir'],
+							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
+							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
+							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
+							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'chown root:root /etc/postfix/main.cf',
+							'chown root:root /etc/postfix/master.cf',
+							'chown root:postfix /etc/postfix/mysql-virtual_alias_maps.cf',
+							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_domains.cf',
+							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'chmod 0644 /etc/postfix/main.cf',
+							'chmod 0644 /etc/postfix/master.cf',
+							'chmod 0640 /etc/postfix/mysql-virtual_alias_maps.cf',
+							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_domains.cf',
+							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_maps.cf',
+						),
+						'files' => Array(
+							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
+							'etc_postfix_master.cf' => '/etc/postfix/master.cf',
+							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
+							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
+							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf'
 						),
 						'restart' => Array(
 							'/etc/init.d/postfix restart',

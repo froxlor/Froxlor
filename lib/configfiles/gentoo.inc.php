@@ -89,9 +89,48 @@ return Array(
 			'smtp' => Array(
 				'label' => $lng['admin']['configfiles']['smtp'],
 				'daemons' => Array(
-					'postfix' => Array(
-						'label' => 'Postfix',
+					'postfix_courier' => Array(
+						'label' => 'Postfix/Courier',
 						'commands_1' => Array(
+							'echo "mail-mta/postfix -dovecot-sasl sasl" >> /etc/portage/package.use',
+							'emerge -av postfix',            
+							'mkdir -p ' . $settings['system']['vmail_homedir'],
+							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
+							'chmod 0750 ' . $settings['system']['vmail_homedir'],
+							'mv /etc/postfix/main.cf /etc/postfix/main.cf.gentoo',
+							'touch /etc/postfix/main.cf',
+							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
+							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
+							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'touch /etc/sasl2/smtpd.conf',
+							'chown root:root /etc/postfix/main.cf',
+							'chown root:postfix /etc/postfix/mysql-virtual_alias_maps.cf',
+							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_domains.cf',
+							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'chown root:root /etc/sasl2/smtpd.conf',
+							'chmod 0644 /etc/postfix/main.cf',
+							'chmod 0640 /etc/postfix/mysql-virtual_alias_maps.cf',
+							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_domains.cf',
+							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'chmod 0600 /etc/sasl2/smtpd.conf',
+						),
+						'files' => Array(
+							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
+							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
+							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
+							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'etc_sasl2_smtpd.conf' => '/etc/sasl2/smtpd.conf'
+						),
+						'restart' => Array(
+							'rc-update add postfix default',
+							'/etc/init.d/postfix restart'
+						)
+					),
+					'postfix_dovecot' => Array(
+						'label' => 'Postfix/Dovecot',
+						'commands_1' => Array(
+							'echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use',
+              'emerge -av postfix',
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
 							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir'],
@@ -101,27 +140,23 @@ return Array(
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'touch /etc/sasl2/smtpd.conf',
 							'chown root:root /etc/postfix/main.cf',
 							'chown root:root /etc/postfix/master.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_alias_maps.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'chown root:root /etc/sasl2/smtpd.conf',
 							'chmod 0644 /etc/postfix/main.cf',
 							'chmod 0644 /etc/postfix/master.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_alias_maps.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'chmod 0600 /etc/sasl2/smtpd.conf',
 						),
 						'files' => Array(
 							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
 							'etc_postfix_master.cf' => '/etc/postfix/master.cf',
 							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
 							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
-							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'etc_sasl2_smtpd.conf' => '/etc/sasl2/smtpd.conf'
+							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf'
 						),
 						'restart' => Array(
 							'rc-update add postfix default',

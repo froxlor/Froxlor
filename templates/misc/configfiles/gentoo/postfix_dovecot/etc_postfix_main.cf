@@ -50,12 +50,10 @@ smtpd_sasl_local_domain = $myhostname
 smtpd_sasl_security_options = noanonymous
 broken_sasl_auth_clients = yes
 ## Dovecot Settings for deliver, SASL Auth and virtual transport
-## uncomment those line to use Dovecot
-#mailbox_command = /usr/libexec/dovecot/deliver
-#smtpd_sasl_type = dovecot
-#smtpd_sasl_path = private/auth
-#virtual_transport = dovecot
-#dovecot_destination_recipient_limit = 1
+mailbox_command = /usr/libexec/dovecot/deliver
+smtpd_sasl_path = private/auth
+virtual_transport = dovecot
+dovecot_destination_recipient_limit = 1
 
 # Virtual delivery settings
 virtual_mailbox_base = <VIRTUAL_MAILBOX_BASE>
@@ -90,14 +88,14 @@ virtual_mailbox_limit = 0
 #tls_random_source = dev:/dev/urandom
 
 ### Quota Settings with vda useflag
-## I use only virtual as localdelivery... This permit me to have full
-## virtual domain hosting without using a lots of maps
+## I use only virtual as localdelivery... This permits me to have full
+## virtual domain hosting without using a lot of maps
 #virtual_transport = virtual
 ## Generate maildirsize files or not
 #virtual_create_maildirsize = yes
 ## I use Courier IMAP compatibles files.
 #virtual_mailbox_extended = yes
-## Limits only INBOX part (usefull when
+## Limits only INBOX part (useful when
 ## using when you have IMAP users)
 #virtual_mailbox_limit_inbox = yes
 ## maps of soft disk quotas
