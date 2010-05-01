@@ -106,7 +106,8 @@ if($page == 'tickets'
                                      WHERE `customerid` = "' . (int)$cid . '"');
 						
 						if(isset($usr['loginname'])) {
-							$customer = $usr['firstname'] . " " . $usr['name'] . " (" . $usr['loginname'] . ")";
+							$customer = getCorrectFullUserDetails($usr);
+							//$customer = $usr['firstname'] . " " . $usr['name'] . " (" . $usr['loginname'] . ")";
 						} else {
 							$customer = $lng['ticket']['nonexistingcustomer'];
 						}
@@ -219,22 +220,8 @@ if($page == 'tickets'
 
 				while($row_customer = $db->fetch_array($result_customers))
 				{
-					if($row_customer['company'] == '')
-					{
-						$customers.= makeoption($row_customer['name'] . ', ' . $row_customer['firstname'] . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
-					}
-					else
-					{
-						if($row_customer['name'] != ''
-						   && $row_customer['firstname'] != '')
-						{
-							$customers.= makeoption($row_customer['name'] . ', ' . $row_customer['firstname'] . ' | ' . $row_customer['company'] . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
-						}
-						else
-						{
-							$customers.= makeoption($row_customer['company'] . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
-						}
-					}
+					$customer = getCorrectFullUserDetails($row_customer);
+					$customers.= makeoption($customer, $row_customer['customerid']);
 				}
 
 				$priorities = makeoption($lng['ticket']['unf_high'], '1', $settings['ticket']['default_priority']);
@@ -651,7 +638,7 @@ elseif($page == 'archive'
                                        WHERE `customerid` = "' . (int)$cid . '"');
 							
 							if(isset($usr['loginname'])) {
-								$customer = $usr['firstname'] . " " . $usr['name'] . " (" . $usr['loginname'] . ")";
+								$customer = getCorrectFullUserDetails($usr);
 							} else {
 								$customer = $lng['ticket']['nonexistingcustomer'];
 							}
@@ -741,7 +728,8 @@ elseif($page == 'archive'
 
 				while($row = $db->fetch_array($result2))
 				{
-					$customers.= makeoption($row['name'] . ', ' . $row['firstname'] . ' (' . $row['loginname'] . ')', $row['customerid']);
+					$customer = getCorrectFullUserDetails($row);
+					$customers.= makeoption($customer, $row['customerid']);
 				}
 			}
 
