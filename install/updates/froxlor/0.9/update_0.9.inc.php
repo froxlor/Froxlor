@@ -619,8 +619,10 @@ if(isFroxlorVersion('0.9.6-svn5'))
 
 	showUpdateStep("Adding new FTP-quota settings");
 
+	$update_defsys_ftpserver = isset($_POST['update_defsys_ftpserver']) ? intval($_POST['update_defsys_ftpserver']) : 'proftpd';
+
 	// add ftp server setting
-	$db->query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ftpserver', `value` = 'proftpd';");
+	$db->query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ftpserver', `value` = '".$db->escape($update_defsys_ftpserver)."';");
 
 	// add proftpd quota
 	$db->query("CREATE TABLE`ftp_quotalimits` (`name` varchar(30) default NULL, `quota_type` enum('user','group','class','all') NOT NULL default 'user', `per_session` enum('false','true') NOT NULL default 'false', `limit_type` enum('soft','hard') NOT NULL default 'hard', `bytes_in_avail` float NOT NULL, `bytes_out_avail` float NOT NULL, `bytes_xfer_avail` float NOT NULL, `files_in_avail` int(10) unsigned NOT NULL, `files_out_avail` int(10) unsigned NOT NULL, `files_xfer_avail` int(10) unsigned NOT NULL) ENGINE=MyISAM;");
@@ -634,9 +636,9 @@ if(isFroxlorVersion('0.9.6-svn5'))
 
 	while($row_ftp_users = $db->fetch_array($result_ftp_users))
 	{
-		$result_ftp_quota = $db->query("SELECT diskspace_used FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE loginname = SUBSTRING_INDEX('" . $row_ftp_users[username] . "', '" . $settings['customer']['ftpprefix'] . "', 1);");
+		$result_ftp_quota = $db->query("SELECT diskspace_used FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE loginname = SUBSTRING_INDEX('" . $row_ftp_users['username'] . "', '" . $settings['customer']['ftpprefix'] . "', 1);");
 		$row_ftp_quota = mysql_fetch_row($result_ftp_quota);
-		$db->query("INSERT INTO `ftp_quotatallies` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $row_ftp_users[username] . "', 'user', '" . $row_ftp_quota[0] . "'*1024, '0', '0', '0', '0', '0');");
+		$db->query("INSERT INTO `ftp_quotatallies` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $row_ftp_users['username'] . "', 'user', '" . $row_ftp_quota[0] . "'*1024, '0', '0', '0', '0', '0');");
 	}
 
 	lastStepStatus(0);
