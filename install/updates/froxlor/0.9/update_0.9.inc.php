@@ -615,7 +615,7 @@ if(isFroxlorVersion('0.9.6-svn4'))
 
 if(isFroxlorVersion('0.9.6-svn5'))
 {
-	showUpdateStep("Updating from 0.9.6-svn5 to 0.9.6-svn6");
+	showUpdateStep("Updating from 0.9.6-svn5 to 0.9.6-svn6", false);
 
 	showUpdateStep("Adding new FTP-quota settings");
 
@@ -640,6 +640,7 @@ if(isFroxlorVersion('0.9.6-svn5'))
 	}
 
 	lastStepStatus(0);
+
 	updateToVersion('0.9.6-svn6');
 }
 
