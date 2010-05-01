@@ -613,4 +613,34 @@ if(isFroxlorVersion('0.9.6-svn4'))
 	updateToVersion('0.9.6-svn5');
 }
 
+if(isFroxlorVersion('0.9.6-svn5'))
+{
+	showUpdateStep("Updating from 0.9.6-svn5 to 0.9.6-svn6");
+
+	showUpdateStep("Adding new FTP-quota settings");
+
+	// add ftp server setting
+	$db->query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ftpserver', `value` = 'proftpd';");
+
+	// add proftpd quota
+	$db->query("CREATE TABLE`ftp_quotalimits` (`name` varchar(30) default NULL, `quota_type` enum('user','group','class','all') NOT NULL default 'user', `per_session` enum('false','true') NOT NULL default 'false', `limit_type` enum('soft','hard') NOT NULL default 'hard', `bytes_in_avail` float NOT NULL, `bytes_out_avail` float NOT NULL, `bytes_xfer_avail` float NOT NULL, `files_in_avail` int(10) unsigned NOT NULL, `files_out_avail` int(10) unsigned NOT NULL, `files_xfer_avail` int(10) unsigned NOT NULL) ENGINE=MyISAM;");
+
+	$db->query("INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES ('froxlor', 'user', 'false', 'hard', 0, 0, 0, 0, 0, 0);");
+
+	$db->query("CREATE TABLE `ftp_quotatallies` (`name` varchar(30) NOT NULL, `quota_type` enum('user','group','class','all') NOT NULL, `bytes_in_used` float NOT NULL, `bytes_out_used` float NOT NULL, `bytes_xfer_used` float NOT NULL, `files_in_used` int(10) unsigned NOT NULL, `files_out_used` int(10) unsigned NOT NULL, `files_xfer_used` int(10) unsigned NOT NULL ) ENGINE=MyISAM;");
+
+	// fill quota tallies
+	$result_ftp_users = $db->query("SELECT username FROM `" . TABLE_FTP_USERS . "` WHERE 1;");
+
+	while($row_ftp_users = $db->fetch_array($result_ftp_users))
+	{
+		$result_ftp_quota = $db->query("SELECT diskspace_used FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE loginname = SUBSTRING_INDEX('" . $row_ftp_users[username] . "', '" . $settings['customer']['ftpprefix'] . "', 1);");
+		$row_ftp_quota = mysql_fetch_row($result_ftp_quota);
+		$db->query("INSERT INTO `ftp_quotatallies` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $row_ftp_users[username] . "', 'user', '" . $row_ftp_quota[0] . "'*1024, '0', '0', '0', '0', '0');");
+	}
+
+	lastStepStatus(0);
+	updateToVersion('0.9.6-svn6');
+}
+
 ?>

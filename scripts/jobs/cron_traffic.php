@@ -365,6 +365,31 @@ while($row = $db->fetch_array($result))
 
 	$diskusage = floatval($webspaceusage + $emailusage + $mysqlusage);
 	$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `diskspace_used`='" . (float)$current_diskspace['all'] . "', `traffic_used`='" . (float)$sum_month_traffic['all'] . "' WHERE `customerid`='" . (int)$row['customerid'] . "'");
+
+	/**
+	 * Proftpd Quota
+	 */
+
+	$db->query("UPDATE `" . TABLE_FTP_QUOTATALLIES . "` SET `bytes_in_used`='" . (float)$current_diskspace['all'] . "'*1024 WHERE `name` = '" . $row['loginname'] . "' OR `name` LIKE '" . $row['loginname'] . $settings['customer']['ftpprefix'] . "%'");
+	
+	/**
+	 * Pureftpd Quota
+	 */
+	
+	if($settings['system']['ftpserver'] == "pureftpd")
+	{
+		$result_quota = $db->query("SELECT homedir FROM `" . TABLE_FTP_USERS . "` WHERE customerid = '" . $row['customerid'] . "'");
+		
+		while($row_quota = $db->fetch_array($result_quota))
+		{
+			$quotafile = "" . $row_quota['homedir'] . ".ftpquota";
+			$fh = fopen($quotafile, 'w');
+			$stringdata = "0 " . $current_diskspace['all']*1024 . "";
+			fwrite($fh, $stringdata);
+			fclose($fh);
+			safe_exec('chown ' . $row['loginname'] . ':' . $row['loginname'] . ' ' . escapeshellarg($quotafile) . '');
+		}
+	}
 }
 
 /**

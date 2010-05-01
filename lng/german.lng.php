@@ -1379,4 +1379,12 @@ $lng['serversettings']['ticket']['default_priority'] = 'Voreingestellte Support-
 // ADDED IN FROXLOR 0.9.6-svn5
 $lng['serversettings']['mod_fcgid']['defaultini'] = 'Voreingestellte PHP Konfiguration f&uuml;r neue Domains';
 
+// ADDED IN FROXLOR 0.9.6-svn5
+$lng['admin']['ftpserver'] = 'FTP Server';
+$lng['admin']['ftpserversettings'] = 'FTP Server Einstellungen';
+$lng['serversettings']['ftpserver']['desc'] = 'Wenn pureftpd ausgew&auml;hlt ist, werden die .ftpquota Dateien f&uuml;r das Quota erstellt und t&auml;glich aktualisiert.';
+
+// CHANGED IN FROXLOR 0.9.6-svn5
+$lng['serversettings']['ftpprefix']['description'] = 'Welchen Prefix sollen die FTP-Benutzerkonten haben?<br/><b>Wenn du das &auml;nderst, musst du auch das Quota SQL Query in der FTP Server Config &auml;ndern, solltest du FTP-Quotas benutzen!</b>';
+
 ?>

@@ -97,6 +97,11 @@ elseif($page == 'accounts')
 			   && $_POST['send'] == 'send')
 			{
 				$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `up_count`=`up_count`+'" . (int)$result['up_count'] . "', `up_bytes`=`up_bytes`+'" . (int)$result['up_bytes'] . "', `down_count`=`down_count`+'" . (int)$result['down_count'] . "', `down_bytes`=`down_bytes`+'" . (int)$result['down_bytes'] . "' WHERE `username`='" . $db->escape($userinfo['loginname']) . "'");
+				$result = $db->query("SELECT `username` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+				while($row = $db->fetch_array($result))
+				{
+					$db->query("DELETE FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = '" . $db->escape($row['username']) . "'");
+				}
 				$db->query("DELETE FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted ftp-account '" . $result['username'] . "'");
 				$db->query("UPDATE `" . TABLE_FTP_GROUPS . "` SET `members`=REPLACE(`members`,'," . $db->escape($result['username']) . "','') WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
@@ -176,6 +181,11 @@ elseif($page == 'accounts')
 					$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 					
 					$db->query("INSERT INTO `" . TABLE_FTP_USERS . "` (`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) VALUES ('" . (int)$userinfo['customerid'] . "', '" . $db->escape($username) . "', ENCRYPT('" . $db->escape($password) . "'), '" . $db->escape($path) . "', 'y', '" . (int)$userinfo['guid'] . "', '" . (int)$userinfo['guid'] . "')");
+					$result = $db->query("SELECT `bytes_in_used` FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = '" . $userinfo['loginname'] . "'");
+					while($row = $db->fetch_array($result))
+					{
+						$db->query("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $db->escape($username) . "', 'user', '" . $db->escape($row[bytes_in_used]) . "', '0', '0', '0', '0', '0')");
+					}
 					$db->query("UPDATE `" . TABLE_FTP_GROUPS . "` SET `members`=CONCAT_WS(',',`members`,'" . $db->escape($username) . "') WHERE `customerid`='" . $userinfo['customerid'] . "' AND `gid`='" . (int)$userinfo['guid'] . "'");
 					$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `ftps_used`=`ftps_used`+1, `ftp_lastaccountnumber`=`ftp_lastaccountnumber`+1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 

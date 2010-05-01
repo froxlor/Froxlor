@@ -451,7 +451,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (18, 'system', 'vmail_homedir', '/var/customers/mail/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (19, 'system', 'bindconf_directory', '/etc/bind/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (20, 'system', 'bindreload_command', '/etc/init.d/bind9 reload');
-INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (22, 'panel', 'version', '0.9.6-svn5');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (22, 'panel', 'version', '0.9.6-svn6');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (23, 'system', 'hostname', 'SERVERNAME');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (24, 'login', 'maxloginattempts', '3');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (25, 'login', 'deactivatetime', '900');
@@ -567,6 +567,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (136, 'defaultwebsrverrhandler', 'err500', '');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (137, 'ticket', 'default_priority', '2');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (138, 'system', 'mod_fcgid_defaultini', '1');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (139, 'system', 'ftpserver', 'proftpd');
 
 
 # --------------------------------------------------------
@@ -969,3 +970,45 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, 
 INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (6, 'froxlor/core', 'cron_traffic.php', '1 DAY', '1', 'cron_traffic');
 INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (7, 'froxlor/ticket', 'cron_used_tickets_reset.php', '1 MONTH', '1', 'cron_ticketsreset');
 INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (8, 'froxlor/ticket', 'cron_ticketarchive.php', '1 MONTH', '1', 'cron_ticketarchive');
+
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur fuer Tabelle `ftp_quotalimits`
+#
+
+CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
+  `name` varchar(30) default NULL,
+  `quota_type` enum('user','group','class','all') NOT NULL default 'user',
+  `per_session` enum('false','true') NOT NULL default 'false',
+  `limit_type` enum('soft','hard') NOT NULL default 'hard',
+  `bytes_in_avail` float NOT NULL,
+  `bytes_out_avail` float NOT NULL,
+  `bytes_xfer_avail` float NOT NULL,
+  `files_in_avail` int(10) unsigned NOT NULL,
+  `files_out_avail` int(10) unsigned NOT NULL,
+  `files_xfer_avail` int(10) unsigned NOT NULL
+) ENGINE=MyISAM;
+
+#
+# Dumping data for table `ftp_quotalimits`
+#
+
+INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES ('froxlor', 'user', 'false', 'hard', 0, 0, 0, 0, 0, 0);
+
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur fuer Tabelle `ftp_quotatallies`
+#
+			        
+CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
+  `name` varchar(30) NOT NULL,
+  `quota_type` enum('user','group','class','all') NOT NULL,
+  `bytes_in_used` float NOT NULL,
+  `bytes_out_used` float NOT NULL,
+  `bytes_xfer_used` float NOT NULL,
+  `files_in_used` int(10) unsigned NOT NULL,
+  `files_out_used` int(10) unsigned NOT NULL,
+  `files_xfer_used` int(10) unsigned NOT NULL
+) ENGINE=MyISAM;

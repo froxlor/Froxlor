@@ -19,6 +19,8 @@
 
 define('TABLE_FTP_GROUPS', 'ftp_groups');
 define('TABLE_FTP_USERS', 'ftp_users');
+define('TABLE_FTP_QUOTALIMITS', 'ftp_quotalimits');
+define('TABLE_FTP_QUOTATALLIES', 'ftp_quotatallies');
 define('TABLE_MAIL_USERS', 'mail_users');
 define('TABLE_MAIL_VIRTUAL', 'mail_virtual');
 define('TABLE_PANEL_ADMINS', 'panel_admins');
@@ -68,7 +70,7 @@ define('PACKAGE_ENABLED', 2);
 
 // VERSION INFO
 
-$version = '0.9.6-svn5';
+$version = '0.9.6-svn6';
 $dbversion = '2';
 $branding = '';
 

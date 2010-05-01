@@ -184,6 +184,11 @@ if($page == 'customers'
 				$db->query("DELETE FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`='" . (int)$id . "'");
+				$result = $db->query("SELECT `username` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$id . "'");
+				while($row = $db->fetch_array($result))
+				{
+					$db->query("DELETE FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name`='" . $row['username'] . "'");
+				}
 				$db->query("DELETE FROM `" . TABLE_FTP_GROUPS . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid`='" . (int)$id . "'");
@@ -592,6 +597,7 @@ if($page == 'customers'
 					inserttask('1');
 					$result = $db->query("INSERT INTO `" . TABLE_FTP_USERS . "` " . "(`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) " . "VALUES ('" . (int)$customerid . "', '" . $db->escape($loginname) . "', ENCRYPT('" . $db->escape($password) . "'), '" . $db->escape($documentroot) . "', 'y', '" . (int)$guid . "', '" . (int)$guid . "')");
 					$result = $db->query("INSERT INTO `" . TABLE_FTP_GROUPS . "` " . "(`customerid`, `groupname`, `gid`, `members`) " . "VALUES ('" . (int)$customerid . "', '" . $db->escape($loginname) . "', '" . $db->escape($guid) . "', '" . $db->escape($loginname) . "')");
+					$result = $db->query("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $db->escape($loginname) . "', 'user', '0', '0', '0', '0', '0', '0')");
 					$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added ftp-account for user '" . $loginname . "'");
 
 					if($createstdsubdomain == '1')
