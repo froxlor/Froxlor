@@ -414,9 +414,9 @@ if($page == '')
 /**
  * Initialize the mailingsystem
  */
+$mail = new PHPMailer();
 if(PHPMailer::ValidateAddress($settings['panel']['adminmail']) !== false)
-{
-	$mail = new PHPMailer();
+{	
 	// set return-to address and custom sender-name, see #76
 	$mail->SetFrom($settings['panel']['adminmail'], $settings['panel']['adminmail_defname']);
 	if ($settings['panel']['adminmail_return'] != '') {

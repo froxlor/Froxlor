@@ -102,11 +102,11 @@ if($page == 'tickets'
 					if($_cid != $row['customerid'])
 					{
 						$cid = $row['customerid'];
-						$usr = $db->query_first('SELECT `firstname`, `name`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
+						$usr = $db->query_first('SELECT `firstname`, `name`, `company`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
                                      WHERE `customerid` = "' . (int)$cid . '"');
 						
 						if(isset($usr['loginname'])) {
-							$customer = getCorrectFullUserDetails($usr);
+							$customer = getCorrectFullUserDetails($usr) . ' (' . $usr['loginname'] . ')';
 							//$customer = $usr['firstname'] . " " . $usr['name'] . " (" . $usr['loginname'] . ")";
 						} else {
 							$customer = $lng['ticket']['nonexistingcustomer'];
@@ -220,8 +220,7 @@ if($page == 'tickets'
 
 				while($row_customer = $db->fetch_array($result_customers))
 				{
-					$customer = getCorrectFullUserDetails($row_customer);
-					$customers.= makeoption($customer, $row_customer['customerid']);
+					$customers.= makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
 				}
 
 				$priorities = makeoption($lng['ticket']['unf_high'], '1', $settings['ticket']['default_priority']);
@@ -634,14 +633,15 @@ elseif($page == 'archive'
 						if($_cid != $ticket['customerid'])
 						{
 							$cid = $ticket['customerid'];
-							$usr = $db->query_first('SELECT `firstname`, `name`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
+							$usr = $db->query_first('SELECT `firstname`, `name`, `company`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
                                        WHERE `customerid` = "' . (int)$cid . '"');
 							
 							if(isset($usr['loginname'])) {
-								$customer = getCorrectFullUserDetails($usr);
+								$customer = getCorrectFullUserDetails($usr) . ' (' . $usr['loginname'] . ')';
 							} else {
 								$customer = $lng['ticket']['nonexistingcustomer'];
 							}
+							
 							eval("\$tickets.=\"" . getTemplate("ticket/tickets_customer") . "\";");
 						}
 
@@ -718,19 +718,11 @@ elseif($page == 'archive'
 			}
 
 			$customers = makeoption($lng['ticket']['nocustomer'], '-1', '-1');
-			$result = $db->query_first('SELECT `customerid` FROM `' . TABLE_PANEL_CUSTOMERS . '` ' . ($userinfo['customers_see_all'] ? '' : ' WHERE `adminid` = "' . (int)$userinfo['adminid'] . '" ') . 'ORDER BY `name` ASC');
+			$result_customers = $db->query("SELECT `customerid`, `loginname`, `name`, `firstname`, `company` FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int)$userinfo['adminid'] . "' ") . " ORDER BY `name` ASC");
 
-			if(isset($result['customerid'])
-			   && $result['customerid'] != '')
+			while($row_customer = $db->fetch_array($result_customers))
 			{
-				$result2 = $db->query('SELECT `customerid`, `loginname`, `firstname`, `name`
-  									          FROM `' . TABLE_PANEL_CUSTOMERS . '` ' . ($userinfo['customers_see_all'] ? '' : ' WHERE `adminid` = "' . (int)$userinfo['adminid'] . '" ') . ' ORDER BY `name` ASC');
-
-				while($row = $db->fetch_array($result2))
-				{
-					$customer = getCorrectFullUserDetails($row);
-					$customers.= makeoption($customer, $row['customerid']);
-				}
+				$customers.= makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
 			}
 
 			eval("echo \"" . getTemplate("ticket/archive") . "\";");
