@@ -254,6 +254,7 @@ $lng['question']['extras_reallydelete_pathoptions'] = 'Do you really want to del
 $lng['question']['ftp_reallydelete'] = 'Czy na pewno chcesz skasowa&#263 konto FTP %s?';
 $lng['question']['mysql_reallydelete'] = 'Czy na pewno chcesz skasowa&#263 baz&#281 danych %s? Ta czynno&#347&#263 jest niedwracalna!';
 $lng['question']['admin_configs_reallyrebuild'] = 'Czy napewno chcesz przebudowa&#263 pliki konfiguracyjne Apacha i Binda?';
+$lng['question']['admin_customer_alsoremovefiles'] = 'Remove user files too?';
 
 /**
  * Mails
@@ -824,8 +825,6 @@ $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'You cannot enable Weba
 $lng['serversettings']['webalizer_enabled'] = 'Enable webalizer statistics';
 $lng['serversettings']['awstats_enabled'] = 'Enable awstats statistics';
 $lng['admin']['awstatssettings'] = 'Ustawienia Awstats';
-$lng['serversettings']['awstats_domain_file']['title'] = 'Awstats domainfiles directory';
-$lng['serversettings']['awstats_model_file']['title'] = 'Awstats model file';
 
 // ADDED IN 1.2.19-svn16
 
@@ -1261,22 +1260,6 @@ $lng['update']['proceed'] = 'Proceed';
 $lng['update']['update_information']['part_a'] = 'The Froxlor files have been updated to version <strong>%newversion</strong>. The installed version is <strong>%curversion</strong>.';
 $lng['update']['update_information']['part_b'] = '<br /><br />Customers will not be able to log in until the update has been finished.<br /><strong>Proceed?</strong>';
 $lng['update']['noupdatesavail'] = '<strong>You already have the latest Froxlor version.</strong>';
-$lng['admin']['cron']['cronsettings'] = 'ustawienia Cronjob';
-$lng['cron']['cronname'] = 'cronjob-name';
-$lng['cron']['lastrun'] = 'last run';
-$lng['cron']['interval'] = 'interval';
-$lng['cron']['isactive'] = 'enabled';
-$lng['admin']['cron']['add'] = 'Add a new cronjob';
-$lng['cron']['description'] = 'description';
-$lng['crondesc']['cron_unknown_desc'] = 'no description given';
-$lng['crondesc']['cron_tasks'] = 'przebudowanie plików konfiguracyjnych';
-$lng['crondesc']['cron_legacy'] = 'legacy (old) cronjob';
-$lng['crondesc']['cron_apsinstaller'] = 'Instalator aplikacji';
-$lng['crondesc']['cron_autoresponder'] = 'e-mail autoresponder';
-$lng['crondesc']['cron_apsupdater'] = 'Aktualizacja pakietów instalatora aplikacji';
-$lng['crondesc']['cron_traffic'] = 'obliczanie ruchu';
-$lng['crondesc']['cron_ticketsreset'] = 'resetowanie licznika zg&#322osze&#324';
-$lng['crondesc']['cron_ticketarchive'] = 'archiwizowanie starych zg&#322osze&#324';
 $lng['admin']['specialsettingsforsubdomains'] = 'Apply specialsettings to all subdomains (*.example.com)';
 $lng['serversettings']['specialsettingsforsubdomains']['description'] = 'If yes these custom vhost-settings will be added to all subdomains; if no subdomain-specialsettings are being removed.';
 $lng['tasks']['outstanding_tasks'] = 'Outstanding cron-tasks';
@@ -1291,13 +1274,13 @@ $lng['admin']['ticket_nocustomeraddingavailable'] = 'It\'s not possible to open 
 
 // ADDED IN FROXLOR 0.9.1
 
-$lng['admin']['accountdata'] = 'Account Data';
-$lng['admin']['contactdata'] = 'Contact Data';
-$lng['admin']['servicedata'] = 'Service Data';
+$lng['admin']['accountdata'] = 'Dane konta';
+$lng['admin']['contactdata'] = 'Dane kontaktowe';
+$lng['admin']['servicedata'] = 'Dane us&#322ugi';
 
 // ADDED IN FROXLOR 0.9.2
 
-$lng['admin']['newerversionavailable'] = 'Jest dostêpna nowa wersja Froxlora';
+$lng['admin']['newerversionavailable'] = 'Jest dost&#281pna nowa wersja Froxlora';
 
 // ADDED IN FROXLOR 0.9.3
 
@@ -1306,7 +1289,7 @@ $lng['error']['hiddenfieldvaluechanged'] = 'The value for the hidden field &quot
 
 // ADDED IN FROXLOR 0.9.3-svn1
 
-$lng['serversettings']['panel_password_min_length']['title'] = 'Minimalna d³ugoœæ has³a';
+$lng['serversettings']['panel_password_min_length']['title'] = 'Minimalna d&#322ugo&#347&#263 has&#322a';
 $lng['serversettings']['panel_password_min_length']['description'] = 'Here you can set a minimum length for passwords. \'0\' means: no minimum length required.';
 $lng['error']['notrequiredpasswordlength'] = 'The given password is too short. Please enter at least %s characters.';
 $lng['serversettings']['system_store_index_file_subs']['title'] = 'Store default index file also to new subfolders';
@@ -1331,12 +1314,12 @@ $lng['dkim']['dkim_add_adsp']['description'] = 'If you don\'t know what this is,
 $lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP policy';
 $lng['dkim']['dkim_add_adsppolicy']['description'] = 'For more information about this setting see <a href="http://wiki.froxlor.org/contrib/dkim-adsp-policies">http://wiki.froxlor.org/contrib/dkim-adsp-policies</a>';
 
-$lng['admin']['cron']['cronsettings'] = 'ustawienia zadañ cyklicznych';
+$lng['admin']['cron']['cronsettings'] = 'ustawienia zada&#324 cyklicznych';
 $lng['cron']['cronname'] = 'cronjob-name';
-$lng['cron']['lastrun'] = 'last run';
-$lng['cron']['interval'] = 'interval';
-$lng['cron']['isactive'] = 'enabled';
-$lng['cron']['description'] = 'description';
+$lng['cron']['lastrun'] = 'ostatnio uruchomiony';
+$lng['cron']['interval'] = 'interwa&#322';
+$lng['cron']['isactive'] = 'w&#322&#261czony';
+$lng['cron']['description'] = 'opis';
 $lng['crondesc']['cron_unknown_desc'] = 'no description given';
 $lng['admin']['cron']['add'] = 'Add cronjob';
 $lng['crondesc']['cron_tasks'] = 'przebudowanie plików konfiguracyjnych';
@@ -1347,33 +1330,50 @@ $lng['crondesc']['cron_apsupdater'] = 'Aktualizacja pakietów instalatora aplikac
 $lng['crondesc']['cron_traffic'] = 'obliczanie ruchu';
 $lng['crondesc']['cron_ticketsreset'] = 'resetowanie liczników zg&#322osze&#324';
 $lng['crondesc']['cron_ticketarchive'] = 'archiwizowanie starych zg&#322osze&#324';
-$lng['cronmgmt']['seconds'] = 'seconds';
-$lng['cronmgmt']['minutes'] = 'minutes';
-$lng['cronmgmt']['hours'] = 'hours';
-$lng['cronmgmt']['days'] = 'days';
-$lng['cronmgmt']['weeks'] = 'weeks';
-$lng['cronmgmt']['months'] = 'months';
+$lng['cronmgmt']['seconds'] = 'sekund';
+$lng['cronmgmt']['minutes'] = 'minut';
+$lng['cronmgmt']['hours'] = 'godzin';
+$lng['cronmgmt']['days'] = 'dni';
+$lng['cronmgmt']['weeks'] = 'tygodni';
+$lng['cronmgmt']['months'] = 'miesi&#281cy';
 $lng['admin']['cronjob_edit'] = 'Edytuj zadania cykliczne';
-$lng['cronjob']['cronjobsettings'] = 'Cronjob settings';
-$lng['cronjob']['cronjobinterval'] = 'Runtime interval';
-$lng['panel']['options'] = 'options';
-$lng['admin']['warning'] = 'WARNING - Please note!';
+$lng['cronjob']['cronjobsettings'] = 'Ustawienia zadania cykliczne';
+$lng['cronjob']['cronjobinterval'] = 'Interwa&#322 uruchomienia';
+$lng['panel']['options'] = 'opcje';
+$lng['admin']['warning'] = 'WA&#379NE - Przeczytaj to!';
 $lng['cron']['changewarning'] = 'Changing these values can have a negative cause to the behavior of Froxlor and its automated tasks.<br /><br />Please, only change values here if you are *damn sure* you know what you are doing.';
 
 $lng['serversettings']['stdsubdomainhost']['title'] = 'Customer standard subdomain';
 $lng['serversettings']['stdsubdomainhost']['description'] = 'What hostname should be used to create standard subdomains for customer. If empty, the system-hostname is used.';
 
 // ADDED IN FROXLOR 0.9.4-svn1
-$lng['ftp']['account_edit'] = 'Edit ftp account';
-$lng['ftp']['editpassdescription'] = 'Set new password or leave blank for no change.';
+$lng['ftp']['account_edit'] = 'Edytuj konto ftp';
+$lng['ftp']['editpassdescription'] = 'Ustal nowe has&#322o lub zostaw puste by nie zmienia&#263.';
 $lng['mysql']['sendinfomail'] = 'Send data via email to me';
-$lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] New database created';
-$lng['customer']['mysql_add']['infomail_body']['pma'] = "\nYou can access your databases using phpMyAdmin via {URI}\n";
-$lng['customer']['mysql_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nyou have just added a new database. Here is the entered information:\n\nDatabasename: {DB_NAME}\nPassword: {DB_PASS}\nDescription: {DB_DESC}\nDB-Hostname: {DB_SRV}\n{PMA_URI}\nYours sincerely, the Froxlor-Team";
-$lng['error']['domains_cantdeletedomainwithapsinstances'] = 'You cannot delete a domain which is used by an installed APS package. You have to uninstall it first.';
-$lng['serversettings']['awstats_path'] = 'Œcie¿ka do AWStats \'awstats_buildstaticpages.pl\'';
+$lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Nowa baza danych utworzona';
+$lng['customer']['mysql_add']['infomail_body']['pma'] = "\nMasz dost&#281p do Twojej bazy danych uzywaj&#261c phpMyAdmina pod adresem {URI}\n";
+$lng['customer']['mysql_add']['infomail_body']['main'] = "Witaj {CUST_NAME},\n\nw&#322a&#347nie doda&#322e&#347 now&#261 baz&#281 danych. Przesy&#322amy dane uruchomieniowe:\n\nBaza danych: {DB_NAME}\nHas&#322o: {DB_PASS}\nOpis: {DB_DESC}\n{PMA_URI}\nZ powa&#380aniem, Froxlor";
+$lng['error']['domains_cantdeletedomainwithapsinstances'] = 'Nie mo&#380esz usun&#261&#263 domeny, poniewa&#380 jest na niej zainstalowana aplikacja z instalatora aplikacji. W pierwszej kolejno&#347ci odinstaluj t&#261 aplikacj&#281.';
+$lng['serversettings']['awstats_path'] = 'Œcie&#380ka do AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'AWStats configuration path';
 $lng['error']['overviewsettingoptionisnotavalidfield'] = 'Woops, a field that should be displayed as an option in the settings-overview is not an excepted type. You can blame the developers for this. This should not happen!';
 $lng['admin']['configfiles']['compactoverview'] = 'Compact-overview';
+$lng['admin']['lastlogin_succ'] = 'Ostatnie logowanie';
+$lng['panel']['neverloggedin'] = 'Brak logowania do tej pory';
+
+// ADDED IN FROXLOR 0.9.6-svn1
+$lng['serversettings']['defaultttl'] = 'TTL domeny dla binda w sekundach (domy&#347lnie \'604800\' = 1 tydzie&#324)';
+$lng['ticket']['logicalorder'] = 'Logical order';
+$lng['ticket']['orderdesc'] = 'Here you can define your own logical order for the ticket-category. Use 1 - 999, lower numbers are displayed first.';
+
+// ADDED IN FROXLOR 0.9.6-svn3
+$lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'W&#322&#261czone standardowe strony b&#322&#281dów dla wszystkich klientów';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'Plik/URL dla b&#322&#281du 401';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'Plik/URL dla b&#322&#281du 403';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Plik/URL dla b&#322&#281du 404';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Plik/URL dla b&#322&#281du 500';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
 
 ?>
