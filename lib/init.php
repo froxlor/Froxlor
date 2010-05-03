@@ -158,7 +158,15 @@ $settings = loadSettings($settings_data, $db);
 if(!isset($settings['admin']['froxlor_graphic'])
 	|| $settings['admin']['froxlor_graphic'] == ''
 ) {
-	$settings['admin']['froxlor_graphic'] = ($settings['admin']['syscp_graphic'] != '') ? $settings['admin']['syscp_graphic'] : 'images/header.gif';
+	if(isset($settings['admin']['syscp_graphic']) 
+		&& $settings['admin']['syscp_graphic'] != ''
+	){
+		$settings['admin']['froxlor_graphic'] = $settings['admin']['syscp_graphic'];
+	}
+	else
+	{
+		$settings['admin']['froxlor_graphic'] = 'images/header.gif';
+	}
 }
 
 /**
