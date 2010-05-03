@@ -100,7 +100,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	{
 		$has_preconfig = true;
 		$description = 'For the new FTP-quota feature, you can now chose the currently used ftpd-software.';
-		$question = '<strong>Chose ftpd-software:</strong>&nbsp;';
+		$question = '<strong>Used FTPd-software:</strong>&nbsp;';
 		$question .= '<select name="update_defsys_ftpserver">';
 		$question .= makeoption('ProFTPd', 'proftpd', 'proftpd');
 		$question .= makeoption('PureFTPd', 'pureftpd', 'proftpd');
