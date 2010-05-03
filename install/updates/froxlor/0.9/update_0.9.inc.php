@@ -654,4 +654,11 @@ if(isFroxlorVersion('0.9.6-svn5'))
 	updateToVersion('0.9.6-svn6');
 }
 
+if(isFroxlorVersion('0.9.6-svn6'))
+{
+	showUpdateStep("Updating from 0.9.6-svn6 to 0.9.6 final");
+	lastStepStatus(0);
+	updateToVersion('0.9.6');
+}
+
 ?>
