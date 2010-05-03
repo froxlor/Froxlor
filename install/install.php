@@ -503,7 +503,7 @@ if(isset($_POST['installstep'])
 
 	if($result)
 	{
-		$filename = "/tmp/froxlor_backup_" . date(YmdHi) . ".sql";
+		$filename = "/tmp/froxlor_backup_" . date('YmdHi') . ".sql";
 
 		if(is_file("/usr/bin/mysqldump"))
 		{
