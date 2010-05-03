@@ -46,6 +46,9 @@ function getPreConfig($current_version)
 
 function versionInUpdate($current_version, $version_to_check)
 {
+	if (!isFroxlor()) {
+		return true;
+	}
 	$pos_a = strpos($current_version, '-svn');
 	$pos_b = strpos($version_to_check, '-svn');
 	// if we compare svn-versions, we have to add -svn0 to the version
