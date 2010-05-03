@@ -20,7 +20,7 @@ echo -- cding to dir --
 cd $WORKDIR/$1
 
 echo -- exporting svn --
-svn export https://svn.froxlor.org/tags/$1 froxlor
+svn export http://svn.froxlor.org/tags/$1 froxlor
 
 echo -- cding to checkout --
 cd froxlor
