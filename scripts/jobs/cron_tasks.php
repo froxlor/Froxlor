@@ -235,6 +235,37 @@ $awstatsclean['headerold']) {
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
 					safe_exec('rm -rf '.escapeshellarg($maildir));
 				}
+				
+				/*
+				 * see if we have some php-fcgid leftovers if used
+				 * and remove them, #200
+				 */
+				if($settings['system']['mod_fcgid'] == 1)
+				{
+					// e.g. /var/www/php-fcgi-starter/web1/
+					$configdir = makeCorrectDir($settings['system']['mod_fcgid_configdir'] . '/' . $row['data']['loginname'] . '/');
+					
+					if (is_dir($configdir)) 
+					{
+						$its = new RecursiveIteratorIterator(
+							new RecursiveDirectoryIterator($configdir)
+						);
+
+						// iterate through all subdirs,
+						// look for php-fcgi-starter files
+						// and take chattr +i away from them
+						// so we can delete them :)
+						foreach ($its as $fullFileName => $it ) 
+						{
+							if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter') 
+							{
+								safe_exec('chattr -i ' . escapeshellarg($its->getPathname()));
+							}
+						}
+						// now get rid of old stuff
+						safe_exec('rm -rf '. escapeshellarg($configdir));
+					}				
+				}
 			}
 		}
 	}
