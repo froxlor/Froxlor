@@ -130,6 +130,8 @@ if($page == 'domains'
 			$i++;
 		}
 
+		$domainscount = $db->num_rows($result);
+
 		// Display the list
 
 		eval("echo \"" . getTemplate("domains/domains") . "\";");

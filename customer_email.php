@@ -139,8 +139,10 @@ elseif($page == 'emails')
 			}
 		}
 
-		$emaildomains_count = $db->query_first("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . $userinfo['customerid'] . "' AND `isemaildomain`='1' ORDER BY `domain` ASC");
+		$emaildomains_count = $db->query_first("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `isemaildomain`='1' ORDER BY `domain` ASC");
 		$emaildomains_count = $emaildomains_count['count'];
+
+		$emailscount = $db->num_rows($result);
 		eval("echo \"" . getTemplate("email/emails") . "\";");
 	}
 	elseif($action == 'delete'

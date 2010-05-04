@@ -93,6 +93,7 @@ if($page == 'admins'
 			$i++;
 		}
 
+		$admincount = $db->num_rows($result);
 		eval("echo \"" . getTemplate("admins/admins") . "\";");
 	}
 	elseif($action == 'su')

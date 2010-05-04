@@ -115,6 +115,7 @@ if($page == 'customers'
 			$i++;
 		}
 
+		$customercount = $db->num_rows($result);
 		eval("echo \"" . getTemplate("customers/customers") . "\";");
 	}
 	elseif($action == 'su'

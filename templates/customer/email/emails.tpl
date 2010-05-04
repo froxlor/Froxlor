@@ -4,7 +4,7 @@ $header
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td  class="maintitle_search_left"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['menue']['email']['emails']}</b></td>
+				<td  class="maintitle_search_left"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['menue']['email']['emails']}</b>&nbsp;({$emailscount})</td>
 				<td class="maintitle_search_right" colspan="6">{$searchcode}</td>
 			</tr>
 			<if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && 15 < $emails_count && $emaildomains_count !=0 >
