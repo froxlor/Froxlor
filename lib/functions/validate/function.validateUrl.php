@@ -34,21 +34,15 @@ function validateUrl($url)
 		$url = 'http://' . $url;
 	}
 
-	if(version_compare("5.2.13", PHP_VERSION, "=")
-		|| version_compare("5.3.2", PHP_VERSION, "="))
+	// there is a bug in php 5.2.13 - 5.3.2 which
+	// lets filter_var fail if the domain has
+	// a dash (-) in it. As the PHP_VERSION constant
+	// gives also patch-brandings, e.g. '5.3.2-pl0-gentoo'
+	// we just always use our regex
+	$pattern = '/^https?:\/\/([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,6}$/i';
+	if(preg_match($pattern, $url))
 	{
-		$pattern = '/^https?:\/\/([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,6}$/i';
-		if(preg_match($pattern, $url))
-		{
-			return true;
-		}
-	}
-	else
-	{
-		if(filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED) !== false)
-		{
-			return true;
-		}
+		return true;
 	}
 
 	// not an fqdn
