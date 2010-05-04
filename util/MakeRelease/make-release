@@ -35,7 +35,7 @@ echo -- setting general file permissions --
 find -type f -exec chmod ugo-x {} \;
 
 echo -- setting general directory permissions --
-find -type d  -exec chmod ugo+x {} \;
+find -type d -exec chmod ugo+x {} \;
 
 echo -- setting +w on special directories --
 chmod ug+w ./temp ./packages
