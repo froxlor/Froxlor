@@ -659,7 +659,8 @@ if(isset($_POST['installstep'])
 			 `port` = '80',
 			 `namevirtualhost_statement` = '1',
 			 `vhostcontainer` = '1', 
-			 `vhostcontainer_servername_statement` = '1'";
+			 `vhostcontainer_servername_statement` = '1',
+			 `specialsettings` = 'DocumentRoot \"".$db->escape(dirname(dirname(__FILE__))) . "\"'";
 	$db->query($query);
 	$defaultip = $db->insert_id();
 
