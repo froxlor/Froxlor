@@ -26,6 +26,10 @@ $header
 				<td class="main_field_display" nowrap="nowrap"><input type="password" name="ftp_password" size="30" /></td>
 			</tr>
 			<tr>
+				<td class="main_field_name">{$lng['customer']['sendinfomail']}:</td>
+				<td class="main_field_display" nowrap="nowrap">{$sendinfomail}</td>
+			</tr>
+			<tr>
 				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['ftp']['account_add']}" /></td>
 			</tr>
 		</table>

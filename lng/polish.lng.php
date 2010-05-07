@@ -1349,7 +1349,7 @@ $lng['serversettings']['stdsubdomainhost']['description'] = 'What hostname shoul
 // ADDED IN FROXLOR 0.9.4-svn1
 $lng['ftp']['account_edit'] = 'Edytuj konto ftp';
 $lng['ftp']['editpassdescription'] = 'Ustal nowe has&#322o lub zostaw puste by nie zmienia&#263.';
-$lng['mysql']['sendinfomail'] = 'Send data via email to me';
+$lng['customer']['sendinfomail'] = 'Send data via email to me';
 $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Nowa baza danych utworzona';
 $lng['customer']['mysql_add']['infomail_body']['pma'] = "\nMasz dost&#281p do Twojej bazy danych uzywaj&#261c phpMyAdmina pod adresem {URI}\n";
 $lng['customer']['mysql_add']['infomail_body']['main'] = "Witaj {CUST_NAME},\n\nw&#322a&#347nie doda&#322e&#347 now&#261 baz&#281 danych. Przesy&#322amy dane uruchomieniowe:\n\nBaza danych: {DB_NAME}\nHas&#322o: {DB_PASS}\nOpis: {DB_DESC}\n{PMA_URI}\nZ powa&#380aniem, Froxlor";

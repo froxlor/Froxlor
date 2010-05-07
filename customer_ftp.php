@@ -142,6 +142,12 @@ elseif($page == 'accounts')
 				$password = validate($_POST['ftp_password'], 'password');
 				$password = validatePassword($password);
 
+				$sendinfomail = intval($_POST['sendinfomail']);
+				if($sendinfomail != 1)
+				{
+					$sendinfomail = 0;
+				}
+
 				if($settings['customer']['ftpatdomain'] == '1')
 				{
 					$ftpusername = validate($_POST['ftp_username'], 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/');
@@ -191,6 +197,41 @@ elseif($page == 'accounts')
 
 					$log->logAction(USR_ACTION, LOG_INFO, "added ftp-account '" . $username . " (" . $path . ")'");
 					inserttask(5);
+
+					if($sendinfomail == 1)
+					{
+						$replace_arr = array(
+							'CUST_NAME' => getCorrectUserSalutation($userinfo),
+							'USR_NAME' => $username,
+							'USR_PASS' => $password,
+							'USR_PATH' => makeCorrectDir(substr($path, strlen($userinfo['documentroot'])))
+						);
+						
+						$mail_body = replace_variables($lng['customer']['ftp_add']['infomail_body']['main'], $replace_arr);
+						
+						$_mailerror = false;
+						try {
+							$mail->Subject = $lng['customer']['ftp_add']['infomail_subject'];
+							$mail->AltBody = $mail_body;
+							$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
+							$mail->AddAddress($userinfo['email'], getCorrectUserSalutation($userinfo));
+							$mail->Send();
+						} catch(phpmailerException $e) {
+							$mailerr_msg = $e->errorMessage();
+							$_mailerror = true;
+						} catch (Exception $e) {
+							$mailerr_msg = $e->getMessage();
+							$_mailerror = true;
+						}
+
+						if ($_mailerror) {
+							$log->logAction(USR_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+							standard_error('errorsendingmail', $userinfo['email']);
+						}
+
+						$mail->ClearAddresses();
+					}
+
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
 			}
@@ -209,6 +250,8 @@ elseif($page == 'accounts')
 						$domains.= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['domain']);
 					}
 				}
+
+				$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
 
 				eval("echo \"" . getTemplate("ftp/accounts_add") . "\";");
 			}

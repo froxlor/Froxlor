@@ -1330,7 +1330,7 @@ $lng['serversettings']['stdsubdomainhost']['description'] = 'Welcher Hostname so
 // ADDED IN FROXLOR 0.9.4-svn1
 $lng['ftp']['account_edit'] = 'FTP Konto bearbeiten';
 $lng['ftp']['editpassdescription'] = 'Neues Passwort setzen oder leer f&uuml;r keine &Auml;nderung.';
-$lng['mysql']['sendinfomail'] = 'Daten per E-Mail an mich senden';
+$lng['customer']['sendinfomail'] = 'Daten per E-Mail an mich senden';
 $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Neue Datenbank erstellt';
 $lng['customer']['mysql_add']['infomail_body']['pma'] = "\nDie Datenbank kann mit phpMyAdmin via {URI} verwaltet werden.\n";
 $lng['customer']['mysql_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade eine neue Datenbank angelegt. Hier die angegebenen Informationen:\n\nDatenbankname: {DB_NAME}\nPasswort: {DB_PASS}\nBeschreibung: {DB_DESC}\nDatenbank-Server: {DB_SRV}\n{PMA_URI}\nVielen Dank, das Froxlor-Team";
@@ -1386,5 +1386,9 @@ $lng['serversettings']['ftpserver']['desc'] = 'Wenn pureftpd ausgew&auml;hlt ist
 
 // CHANGED IN FROXLOR 0.9.6-svn5
 $lng['serversettings']['ftpprefix']['description'] = 'Welchen Prefix sollen die FTP-Benutzerkonten haben?<br/><b>Wenn du das &auml;nderst, musst du auch das Quota SQL Query in der FTP Server Config &auml;ndern, solltest du FTP-Quotas benutzen!</b>';
+
+// ADDED IN FROXLOR 0.9.7-svn1
+$lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] Neuer FTP-Benutzer erstellt';
+$lng['customer']['ftp_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade einen neuen FTP-Benutzer angelegt. Hier die angegebenen Informationen:\n\nBenutzername: {USR_NAME}\nPasswort: {USR_PASS}\nPfad: {USR_PATH}\n\nVielen Dank, das Froxlor-Team";
 
 ?>

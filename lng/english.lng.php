@@ -1350,7 +1350,7 @@ $lng['serversettings']['stdsubdomainhost']['description'] = 'What hostname shoul
 // ADDED IN FROXLOR 0.9.4-svn1
 $lng['ftp']['account_edit'] = 'Edit ftp account';
 $lng['ftp']['editpassdescription'] = 'Set new password or leave blank for no change.';
-$lng['mysql']['sendinfomail'] = 'Send data via email to me';
+$lng['customer']['sendinfomail'] = 'Send data via email to me';
 $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] New database created';
 $lng['customer']['mysql_add']['infomail_body']['pma'] = "\nYou can access your databases using phpMyAdmin via {URI}\n";
 $lng['customer']['mysql_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nyou have just added a new database. Here is the entered information:\n\nDatabasename: {DB_NAME}\nPassword: {DB_PASS}\nDescription: {DB_DESC}\nDB-Hostname: {DB_SRV}\n{PMA_URI}\nYours sincerely, the Froxlor-Team";
@@ -1390,5 +1390,9 @@ $lng['serversettings']['ftpserver']['desc'] = 'If pureftpd is selected the .ftpq
 
 // CHANGED IN FROXLOR 0.9.6-svn6
 $lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?<br/><b>If you change this you also have to change the Quota SQL Query in your FTP Server config file in case you use it!</b> ';
+
+// ADDED IN FROXLOR 0.9.7-svn1
+$lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] New ftp-user created';
+$lng['customer']['ftp_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nyou have just added a new ftp-user. Here is the entered information:\n\nUsername: {USR_NAME}\nPassword: {USR_PASS}\nPath: {USR_PATH}\n\nYours sincerely, the Froxlor-Team";
 
 ?>
