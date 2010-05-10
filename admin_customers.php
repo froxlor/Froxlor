@@ -193,6 +193,22 @@ if($page == 'customers'
 				$db->query("DELETE FROM `" . TABLE_FTP_GROUPS . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid`='" . (int)$id . "'");
+
+				// remove everything APS-related, #216
+				$apsresult = $db->query("SELECT `ID` FROM `".TABLE_APS_INSTANCES."` WHERE `CustomerID`='".(int)$id."'");
+				while($apsrow = $db->fetch_array($apsresult))
+				{
+					// remove all package related settings
+					$db->query("DELETE FROM `".TABLE_APS_SETTINGS."` WHERE `InstanceID` = '".(int)$apsrow['ID']."'");
+					// maybe some leftovers in the tasks
+					$db->query("DELETE FROM `".TABLE_APS_TASKS."` WHERE `InstanceID` = '".(int)$apsrow['ID']."'"); 
+				}
+				// now remove all user instances
+				$db->query("DELETE FROM `".TABLE_APS_INSTANCES."` WHERE `CustomerID`='".(int)$id."'");
+				// eventually some temp-setting-leftovers
+				$db->query("DELETE FROM `".TABLE_APS_TEMP_SETTINGS."` WHERE `CustomerID`='".(int)$id."'");
+				// eof APS-related removings, #216
+
 				$admin_update_query = "UPDATE `" . TABLE_PANEL_ADMINS . "` SET `customers_used` = `customers_used` - 1 ";
 				$admin_update_query.= ", `domains_used` = `domains_used` - 0" . (int)($domains_deleted - $result['subdomains_used']);
 
@@ -234,6 +250,11 @@ if($page == 'customers'
 				if($result['tickets'] != '-1')
 				{
 					$admin_update_query.= ", `tickets_used` = `tickets_used` - 0" . (int)$result['tickets'];
+				}
+
+				if($result['aps_packages'] != '-1')
+				{
+					$admin_update_query.= ", `aps_packages` = `aps_packages` - 0" . (int)$result['aps_packages'];
 				}
 
 				if(($result['diskspace'] / 1024) != '-1')
