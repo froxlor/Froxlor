@@ -185,8 +185,8 @@ if($page == 'customers'
 				$db->query("DELETE FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`='" . (int)$id . "'");
-				$result = $db->query("SELECT `username` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$id . "'");
-				while($row = $db->fetch_array($result))
+				$result2 = $db->query("SELECT `username` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$id . "'");
+				while($row = $db->fetch_array($result2))
 				{
 					$db->query("DELETE FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name`='" . $row['username'] . "'");
 				}
