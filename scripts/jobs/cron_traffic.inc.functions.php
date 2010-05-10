@@ -36,6 +36,7 @@ function awstatsDoSingleDomain($domain, $outputdir)
 		 * check for correct path of awstats_buildstaticpages.pl
 		 */
 		$awbsp = makeCorrectFile($settings['system']['awstats_path'].'/awstats_buildstaticpages.pl');
+		$awprog = makeCorrectFile($settings['system']['awstats_path'].'/awstats.pl');
 		
 		if (!file_exists($awbsp)) {
 			echo "WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting";
@@ -44,7 +45,7 @@ function awstatsDoSingleDomain($domain, $outputdir)
 		}
 
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '".$domain."' (Output: '".$outputdir."')");
-		safe_exec($awbsp.' -update -config=' . $domain . ' -dir='.escapeshellarg($outputdir));
+		safe_exec($awbsp.' -awstatsprog='.escapeshellarg($awprog).' -update -config=' . $domain . ' -dir='.escapeshellarg($outputdir));
 		
 		/**
 		 * index file is saved like 'awstats.[domain].html',
