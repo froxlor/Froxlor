@@ -73,6 +73,7 @@ virtual_transport = virtual
 #virtual_transport = dovecot
 #dovecot_destination_recipient_limit = 1
 #alias_maps = $alias_database
+#smtpd_sasl_path = private/auth
 
 queue_directory = /var/spool/postfix
 command_directory = /usr/local/sbin

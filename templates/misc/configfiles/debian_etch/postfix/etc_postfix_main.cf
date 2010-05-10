@@ -54,6 +54,7 @@ broken_sasl_auth_clients = yes
 #mailbox_command = /usr/lib/dovecot/deliver
 #virtual_transport = dovecot
 #dovecot_destination_recipient_limit = 1
+#smtpd_sasl_path = private/auth
 
 # Virtual delivery settings
 virtual_mailbox_base = <VIRTUAL_MAILBOX_BASE>
