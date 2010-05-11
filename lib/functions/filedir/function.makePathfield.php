@@ -20,10 +20,12 @@
 /**
  * Returns a valid html tag for the choosen $fieldType for pathes
  *
- * @param  string   path       The path to start searching in
- * @param  integer  uid        The uid which must match the found directories
- * @param  integer  gid        The gid which must match the found direcotries
- * @param  string   fieldType  Either "Manual" or "Dropdown"
+ * @param string  path      The path to start searching in
+ * @param integer uid       The uid which must match the found directories
+ * @param integer gid       The gid which must match the found direcotries
+ * @param string  fieldType Either "Manual" or "Dropdown"
+ * @param string  value     the value for the input-field
+ * 
  * @return string   The html tag for the choosen $fieldType
  *
  * @author Martin Burchert  <martin.burchert@syscp.de>
@@ -42,6 +44,12 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 	}
 	elseif($fieldType == 'Dropdown')
 	{
+		// path is given without starting slash
+		// but dirList holds the paths with starting slash
+		// so we just add one here to get the correct
+		// default path selected, #225
+		$value = '/'.$value;
+
 		$dirList = findDirs($path, $uid, $gid);
 		
 		natcasesort($dirList);
@@ -64,6 +72,9 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 			}
 			else
 			{
+				// remove starting slash we added
+				// for the Dropdown, #225
+				$value = substr($value, 1);
 				$field = $lng['panel']['toomanydirs'];
 				$field.= '<input type="text" name="path" value="' . htmlspecialchars($value) . '" />';
 			}
