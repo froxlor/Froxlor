@@ -415,7 +415,7 @@ if($page == 'customers'
 				}
 
 				$createstdsubdomain = intval($_POST['createstdsubdomain']);
-				$password = validate($_POST['customer_password'], 'password');
+				$password = validate($_POST['new_customer_password'], 'password');
 				$password = validatePassword($password);
 				$sendpassword = intval($_POST['sendpassword']);
 				$phpenabled = intval($_POST['phpenabled']);
@@ -469,11 +469,11 @@ if($page == 'customers'
 				}
 				else
 				{
-					if(isset($_POST['loginname'])
-					   && $_POST['loginname'] != '')
+					if(isset($_POST['new_loginname'])
+					   && $_POST['new_loginname'] != '')
 					{
 						$accountnumber = intval($settings['system']['lastaccountnumber']);
-						$loginname = validate($_POST['loginname'], 'loginname', '/^[a-z0-9\-_]+$/i');
+						$loginname = validate($_POST['new_loginname'], 'loginname', '/^[a-z0-9\-_]+$/i');
 
 						// Accounts which match systemaccounts are not allowed, filtering them
 
@@ -750,7 +750,7 @@ if($page == 'customers'
 				$email = $idna_convert->encode(validate($_POST['email'], 'email'));
 				$customernumber = validate($_POST['customernumber'], 'customer number', '/^[A-Za-z0-9 \-]*$/Di');
 				$def_language = validate($_POST['def_language'], 'default language');
-				$password = validate($_POST['customer_password'], 'new password');
+				$password = validate($_POST['new_customer_password'], 'new password');
 				$diskspace = intval_ressource($_POST['diskspace']);
 
 				if(isset($_POST['diskspace_ul']))

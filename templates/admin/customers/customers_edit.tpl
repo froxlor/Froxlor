@@ -35,7 +35,7 @@ $header
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['login']['password']} ({$lng['panel']['emptyfornochanges']}):</td>
-				<td class="main_field_display" nowrap="nowrap"><input type="password" name="customer_password" value="" /></td>
+				<td class="main_field_display" nowrap="nowrap"><input type="password" name="new_customer_password" value="" /></td>
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['login']['language']}:</td>
