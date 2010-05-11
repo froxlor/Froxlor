@@ -451,7 +451,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (18, 'system', 'vmail_homedir', '/var/customers/mail/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (19, 'system', 'bindconf_directory', '/etc/bind/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (20, 'system', 'bindreload_command', '/etc/init.d/bind9 reload');
-INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (22, 'panel', 'version', '0.9.6');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (22, 'panel', 'version', '0.9.7-svn1');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (23, 'system', 'hostname', 'SERVERNAME');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (24, 'login', 'maxloginattempts', '3');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (25, 'login', 'deactivatetime', '900');
@@ -568,6 +568,8 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (137, 'ticket', 'default_priority', '2');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (138, 'system', 'mod_fcgid_defaultini', '1');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (139, 'system', 'ftpserver', 'proftpd');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (140, 'customredirect', 'enabled', '1');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (141, 'customredirect', 'default', '1');
 
 
 # --------------------------------------------------------
@@ -828,6 +830,7 @@ CREATE TABLE IF NOT EXISTS `panel_syslog` (
 # Table structure for table `mail_autoresponder`
 #
 
+DROP TABLE IF EXISTS `mail_autoresponder`;
 CREATE TABLE `mail_autoresponder` (
   `email` varchar(255) NOT NULL default '',
   `message` text NOT NULL,
@@ -852,6 +855,7 @@ CREATE TABLE `mail_autoresponder` (
 # Table structure for table `panel_phpconfigs`
 #
 
+DROP TABLE IF EXISTS `panel_phpconfigs`;
 CREATE TABLE `panel_phpconfigs` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `description` varchar(50) NOT NULL,
@@ -875,6 +879,7 @@ INSERT INTO `panel_phpconfigs` (`id`, `description`, `binary`, `file_extensions`
 # Tabellenstruktur fuer Tabelle `aps_instances`
 #
 
+DROP TABLE IF EXISTS `aps_instances`;
 CREATE TABLE IF NOT EXISTS `aps_instances` (
   `ID` int(4) NOT NULL auto_increment,
   `CustomerID` int(4) NOT NULL,
@@ -889,6 +894,7 @@ CREATE TABLE IF NOT EXISTS `aps_instances` (
 # Tabellenstruktur fuer Tabelle `aps_packages`
 #
 
+DROP TABLE IF EXISTS `aps_packages`;
 CREATE TABLE IF NOT EXISTS `aps_packages` (
   `ID` int(4) NOT NULL auto_increment,
   `Path` varchar(500) NOT NULL,
@@ -905,6 +911,7 @@ CREATE TABLE IF NOT EXISTS `aps_packages` (
 # Tabellenstruktur fuer Tabelle `aps_settings`
 #
 
+DROP TABLE IF EXISTS `aps_settings`;
 CREATE TABLE IF NOT EXISTS `aps_settings` (
   `ID` int(4) NOT NULL auto_increment,
   `InstanceID` int(4) NOT NULL,
@@ -919,6 +926,7 @@ CREATE TABLE IF NOT EXISTS `aps_settings` (
 # Tabellenstruktur fuer Tabelle `aps_tasks`
 #
 
+DROP TABLE IF EXISTS `aps_tasks`;
 CREATE TABLE IF NOT EXISTS `aps_tasks` (
   `ID` int(4) NOT NULL auto_increment,
   `InstanceID` int(4) NOT NULL,
@@ -932,6 +940,7 @@ CREATE TABLE IF NOT EXISTS `aps_tasks` (
 # Tabellenstruktur fuer Tabelle `aps_temp_settings`
 #
 
+DROP TABLE IF EXISTS `aps_temp_settings`;
 CREATE TABLE IF NOT EXISTS `aps_temp_settings` (
   `ID` int(4) NOT NULL auto_increment,
   `PackageID` int(4) NOT NULL,
@@ -947,6 +956,7 @@ CREATE TABLE IF NOT EXISTS `aps_temp_settings` (
 # Tabellenstruktur fuer Tabelle `cronjobs_run`
 #
 
+DROP TABLE IF EXISTS `cronjobs_run`;
 CREATE TABLE IF NOT EXISTS `cronjobs_run` (
   `id` bigint(20) NOT NULL auto_increment,
   `module` varchar(250) NOT NULL,  
@@ -977,6 +987,7 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, 
 # Tabellenstruktur fuer Tabelle `ftp_quotalimits`
 #
 
+DROP TABLE IF EXISTS `ftp_quotalimits`;
 CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
   `name` varchar(30) default NULL,
   `quota_type` enum('user','group','class','all') NOT NULL default 'user',
@@ -1001,7 +1012,8 @@ INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`
 #
 # Tabellenstruktur fuer Tabelle `ftp_quotatallies`
 #
-			        
+
+DROP TABLE IF EXISTS `ftp_quotatallies`;
 CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
   `name` varchar(30) NOT NULL,
   `quota_type` enum('user','group','class','all') NOT NULL,
@@ -1011,4 +1023,41 @@ CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
   `files_in_used` int(10) unsigned NOT NULL,
   `files_out_used` int(10) unsigned NOT NULL,
   `files_xfer_used` int(10) unsigned NOT NULL
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur fuer Tabelle `redirect_codes`
+#
+
+DROP TABLE IF EXISTS `redirect_codes`;
+CREATE TABLE IF NOT EXISTS `redirect_codes` (
+  `id` int(5) NOT NULL auto_increment,
+  `code` varchar(3) NOT NULL,  
+  `enabled` tinyint(1) DEFAULT '1',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM;
+
+#
+# Dumping data for table `redirect_codes`
+#
+
+INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (1, '---', 1);
+INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (2, '301', 1);
+INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (3, '302', 1);
+INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (4, '303', 1);
+INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (5, '307', 1);
+
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur fuer Tabelle `domain_redirect_codes`
+#
+
+DROP TABLE IF EXISTS `domain_redirect_codes`;
+CREATE TABLE IF NOT EXISTS `domain_redirect_codes` (
+  `rid` int(5) NOT NULL,
+  `did` int(11) unsigned NOT NULL,
+  UNIQUE KEY `rc` (`rid`, `did`)
 ) ENGINE=MyISAM;

@@ -622,7 +622,8 @@ class apache
 
 		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
 		{
-			$vhost_content.= '  Redirect 301 / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
+			$code = getDomainRedirectCode($domain['id']);
+			$vhost_content.= '  Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
 		}
 		else
 		{

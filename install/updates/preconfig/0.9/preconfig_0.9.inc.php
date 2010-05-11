@@ -107,4 +107,21 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question .= '</select>';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+	
+	if(versionInUpdate($current_version, '0.9.7-svn1'))
+	{
+		$has_preconfig = true;
+		$description = 'You can now choose whether customers can select the http-redirect code and which of them acts as default.';
+		$question = '<strong>Allow customer chosen redirects?:</strong>&nbsp;';
+		$question.= makeyesno('update_customredirect_enable', '1', '0', '1').'<br /><br />';
+		$question.= '<strong>Select default redirect code (default: empty):</strong>&nbsp;';
+		$question.= '<select name="update_customredirect_default">';
+		$redirects = makeoption('---', 1, '1');
+		$redirects.= makeoption('301', 2, '1');
+		$redirects.= makeoption('302', 3, '1');
+		$redirects.= makeoption('303', 4, '1');
+		$redirects.= makeoption('307', 5, '1');		
+		$question .= $redirects.'</select>';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

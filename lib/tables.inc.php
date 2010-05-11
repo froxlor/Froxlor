@@ -51,6 +51,8 @@ define('TABLE_APS_SETTINGS', 'aps_settings');
 define('TABLE_APS_TASKS', 'aps_tasks');
 define('TABLE_APS_TEMP_SETTINGS', 'aps_temp_settings');
 define('TABLE_PANEL_CRONRUNS', 'cronjobs_run');
+define('TABLE_PANEL_REDIRECTCODES', 'redirect_codes');
+define('TABLE_PANEL_DOMAINREDIRECTS', 'domain_redirect_codes');
 
 // APS constants
 
@@ -70,7 +72,7 @@ define('PACKAGE_ENABLED', 2);
 
 // VERSION INFO
 
-$version = '0.9.6';
+$version = '0.9.7-svn1';
 $dbversion = '2';
 $branding = '';
 

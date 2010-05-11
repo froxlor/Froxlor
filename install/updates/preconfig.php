@@ -55,7 +55,7 @@ function versionInUpdate($current_version, $version_to_check)
 	// to compare it correctly	
 	if($pos_a === false && $pos_b !== false)
 	{
-		$current_version.= '-svn0';
+		$current_version.= '-svn9999';
 	}
 	
 	return version_compare($current_version, $version_to_check, '<');

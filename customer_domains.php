@@ -226,6 +226,7 @@ elseif($page == 'domains')
 				$aliasdomain_check = array(
 					'id' => 0
 				);
+				$_doredirect = false;
 
 				if($aliasdomain != 0)
 				{
@@ -238,6 +239,7 @@ elseif($page == 'domains')
 				   && validateUrl($idna_convert->encode($_POST['url'])))
 				{
 					$path = $_POST['url'];
+					$_doredirect = true;
 				}
 				else
 				{
@@ -249,6 +251,10 @@ elseif($page == 'domains')
 				{
 					$path = $userinfo['documentroot'] . '/' . $path;
 					$path = makeCorrectDir($path);
+				}
+				else
+				{
+					$_doredirect = true;
 				}
 
 				if(isset($_POST['openbasedir_path'])
@@ -326,6 +332,13 @@ elseif($page == 'domains')
 								`ssl_redirect` = '" . $ssl_redirect . "', 
 								`phpsettingid` = '" . $phpsid_result['phpsettingid'] . "'");
 
+					if($_doredirect)
+					{
+						$did = $db->insert_id();
+						$redirect = isset($_POST['redirectcode']) ? (int)$_POST['redirectcode'] : $settings['customredirect']['default'];
+						addRedirectToDomain($did, $redirect);
+					}
+
 					$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used`=`subdomains_used`+1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 					$log->logAction(USR_ACTION, LOG_INFO, "added subdomain '" . $completedomain . "'");
 					inserttask('1');
@@ -351,6 +364,16 @@ elseif($page == 'domains')
 					$aliasdomains.= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id']);
 				}
 
+				if($settings['customredirect']['enabled'] == '1')
+				{
+					$redirectcode = '';
+					$codes = getRedirectCodesArray();
+					foreach($codes as $rc)
+					{
+						$redirectcode .= makeoption($rc['code'], $rc['id'], $settings['customredirect']['default']);
+					}
+				}
+
 				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
@@ -364,6 +387,7 @@ elseif($page == 'domains')
 		$result = $db->query_first("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir_path`, `d`.`ipandport`, `pd`.`subcanemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd` WHERE `d`.`customerid`='" . (int)$userinfo['customerid'] . "' AND `d`.`id`='" . (int)$id . "' AND ((`d`.`parentdomainid`!='0' AND `pd`.`id`=`d`.`parentdomainid`) OR (`d`.`parentdomainid`='0' AND `pd`.`id`=`d`.`id`)) AND `d`.`caneditdomain`='1'");
 		$alias_check = $db->query_first('SELECT COUNT(`id`) AS count FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . (int)$result['id'] . '\'');
 		$alias_check = $alias_check['count'];
+		$_doredirect = false;
 
 		if(isset($result['customerid'])
 		   && $result['customerid'] == $userinfo['customerid'])
@@ -376,6 +400,7 @@ elseif($page == 'domains')
 				   && validateUrl($idna_convert->encode($_POST['url'])))
 				{
 					$path = $_POST['url'];
+					$_doredirect = true;
 				}
 				else
 				{
@@ -387,6 +412,10 @@ elseif($page == 'domains')
 				{
 					$path = $userinfo['documentroot'] . '/' . $path;
 					$path = makeCorrectDir($path);
+				}
+				else
+				{
+					$_doredirect = true;
 				}
 
 				$aliasdomain = intval($_POST['alias']);
@@ -461,6 +490,12 @@ elseif($page == 'domains')
 						$log->logAction(USR_ACTION, LOG_NOTICE, "automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
 					}
 
+					if($_doredirect)
+					{
+						$redirect = isset($_POST['redirectcode']) ? (int)$_POST['redirectcode'] : false;
+						updateRedirectOfDomain($id, $redirect);
+					}
+
 					if($path != $result['documentroot']
 					   || $isemaildomain != $result['isemaildomain']
 					   || $iswildcarddomain != $result['iswildcarddomain']
@@ -500,6 +535,17 @@ elseif($page == 'domains')
 				{
 					$urlvalue = '';
 					$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $result['documentroot']);
+				}
+
+				if($settings['customredirect']['enabled'] == '1')
+				{
+					$def_code = getDomainRedirectId($id);
+					$redirectcode = '';
+					$codes = getRedirectCodesArray();
+					foreach($codes as $rc)
+					{
+						$redirectcode .= makeoption($rc['code'], $rc['id'], $def_code);
+					}
 				}
 
 				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);

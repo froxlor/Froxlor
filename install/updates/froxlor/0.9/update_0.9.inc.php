@@ -550,21 +550,21 @@ if(isFroxlorVersion('0.9.6-svn2'))
 		if(isset($_POST['update_deferr_401'])
 			&& trim($_POST['update_deferr_401']) != ''
 		) {
-			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '".$db->escape($_POST['update_deferr_401'])."');");
+			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err401', '".$db->escape($_POST['update_deferr_401'])."');");
 			$err401 = true;
 		}
 		
 		if(isset($_POST['update_deferr_403'])
 			&& trim($_POST['update_deferr_403']) != ''
 		) {
-			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '".$db->escape($_POST['update_deferr_403'])."');");
+			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err403', '".$db->escape($_POST['update_deferr_403'])."');");
 			$err403 = true;
 		}
-		
+
 		if(isset($_POST['update_deferr_404'])
 			&& trim($_POST['update_deferr_404']) != ''
 		) {
-			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '".$db->escape($_POST['update_deferr_404'])."');");
+			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err404', '".$db->escape($_POST['update_deferr_404'])."');");
 			$err404 = true;
 		}
 	} 
@@ -633,7 +633,7 @@ if(isFroxlorVersion('0.9.6-svn5'))
 	$db->query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ftpserver', `value` = '".$db->escape($update_defsys_ftpserver)."';");
 
 	// add proftpd quota
-	$db->query("CREATE TABLE`ftp_quotalimits` (`name` varchar(30) default NULL, `quota_type` enum('user','group','class','all') NOT NULL default 'user', `per_session` enum('false','true') NOT NULL default 'false', `limit_type` enum('soft','hard') NOT NULL default 'hard', `bytes_in_avail` float NOT NULL, `bytes_out_avail` float NOT NULL, `bytes_xfer_avail` float NOT NULL, `files_in_avail` int(10) unsigned NOT NULL, `files_out_avail` int(10) unsigned NOT NULL, `files_xfer_avail` int(10) unsigned NOT NULL) ENGINE=MyISAM;");
+	$db->query("CREATE TABLE `ftp_quotalimits` (`name` varchar(30) default NULL, `quota_type` enum('user','group','class','all') NOT NULL default 'user', `per_session` enum('false','true') NOT NULL default 'false', `limit_type` enum('soft','hard') NOT NULL default 'hard', `bytes_in_avail` float NOT NULL, `bytes_out_avail` float NOT NULL, `bytes_xfer_avail` float NOT NULL, `files_in_avail` int(10) unsigned NOT NULL, `files_out_avail` int(10) unsigned NOT NULL, `files_xfer_avail` int(10) unsigned NOT NULL) ENGINE=MyISAM;");
 
 	$db->query("INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES ('froxlor', 'user', 'false', 'hard', 0, 0, 0, 0, 0, 0);");
 
@@ -659,6 +659,70 @@ if(isFroxlorVersion('0.9.6-svn6'))
 	showUpdateStep("Updating from 0.9.6-svn6 to 0.9.6 final");
 	lastStepStatus(0);
 	updateToVersion('0.9.6');
+}
+
+if(isFroxlorVersion('0.9.6'))
+{
+	showUpdateStep("Updating from 0.9.6 to 0.9.7-svn1", false);
+	
+	$update_customredirect_enable = isset($_POST['update_customredirect_enable']) ? 1 : 0;
+	$update_customredirect_default = isset($_POST['update_customredirect_default']) ? (int)$_POST['update_customredirect_default'] : 1;
+
+	showUpdateStep("Adding new tables to database");
+	$db->query("CREATE TABLE IF NOT EXISTS `redirect_codes` (
+  `id` int(5) NOT NULL auto_increment,
+  `code` varchar(3) NOT NULL,  
+  `enabled` tinyint(1) DEFAULT '1',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM;");	
+
+	$db->query("CREATE TABLE IF NOT EXISTS `domain_redirect_codes` (
+  `rid` int(5) NOT NULL,
+  `did` int(11) unsigned NOT NULL,
+  UNIQUE KEY `rc` (`rid`, `did`)
+) ENGINE=MyISAM;");
+	lastStepStatus(0);
+	
+	showUpdateStep("Filling new tables with default data");
+	$db->query("INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (1, '---', 1);");
+	$db->query("INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (2, '301', 1);");
+	$db->query("INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (3, '302', 1);");
+	$db->query("INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (4, '303', 1);");
+	$db->query("INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (5, '307', 1);");
+	lastStepStatus(0);
+	
+	showUpdateStep("Updating domains");
+	$res = $db->query("SELECT `id` FROM `".TABLE_PANEL_DOMAINS."` ORDER BY `id` ASC");
+	$updated_domains = 0;
+	while($d = $db->fetch_array($res))
+	{
+		$db->query("INSERT INTO `domain_redirect_codes` (`rid`, `did`) VALUES ('".(int)$update_customredirect_default."', '".(int)$d['id']."');");
+		$updated_domains++;
+	}
+	lastStepStatus(0, 'Updated '.$updated_domains.' domain(s)');
+
+	showUpdateStep("Adding new settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('customredirect', 'enabled', '".(int)$update_customredirect_enable."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('customredirect', 'default', '".(int)$update_customredirect_default."');");
+	lastStepStatus(0);
+	
+	// need to fix default-error-copy-and-paste-shizzle
+	showUpdateStep("Checking if anything is ok with the default-error-handler");
+	if(!isset($settings['defaultwebsrverrhandler']['err404']))
+	{
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err404', '');");
+	}
+	if(!isset($settings['defaultwebsrverrhandler']['err403']))
+	{
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err403', '');");
+	}
+	if(!isset($settings['defaultwebsrverrhandler']['err401']))
+	{
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err401', '');");
+	}
+	lastStepStatus(0);
+
+	updateToVersion('0.9.7-svn1');
 }
 
 ?>

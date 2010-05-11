@@ -1390,5 +1390,11 @@ $lng['serversettings']['ftpprefix']['description'] = 'Welchen Prefix sollen die 
 // ADDED IN FROXLOR 0.9.7-svn1
 $lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] Neuer FTP-Benutzer erstellt';
 $lng['customer']['ftp_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade einen neuen FTP-Benutzer angelegt. Hier die angegebenen Informationen:\n\nBenutzername: {USR_NAME}\nPasswort: {USR_PASS}\nPfad: {USR_PATH}\n\nVielen Dank, das Froxlor-Team";
+$lng['domains']['redirectifpathisurl'] = 'Redirect code (Standard: leer)';
+$lng['domains']['redirectifpathisurlinfo'] = 'Der Redirect code kann gew&auml;hlt werden, wenn der eingegebene Pfad eine URL ist';
+$lng['serversettings']['customredirect_enabled']['title'] = 'Erlaube Kunden-Redirect';
+$lng['serversettings']['customredirect_enabled']['description'] = 'Erlaubt es Kunden den HTTP-Status Code f&uuml;r einen Redirect zu w&auml;hlen';
+$lng['serversettings']['customredirect_default']['title'] = 'Standard Redirect';
+$lng['serversettings']['customredirect_default']['description'] = 'Dieser Redirect wird immer genutzt, sofern der Kunde keinen anderen ausw&auml;hlt.';
 
 ?>

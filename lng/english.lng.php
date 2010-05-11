@@ -1394,5 +1394,11 @@ $lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp ac
 // ADDED IN FROXLOR 0.9.7-svn1
 $lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] New ftp-user created';
 $lng['customer']['ftp_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nyou have just added a new ftp-user. Here is the entered information:\n\nUsername: {USR_NAME}\nPassword: {USR_PASS}\nPath: {USR_PATH}\n\nYours sincerely, the Froxlor-Team";
+$lng['domains']['redirectifpathisurl'] = 'Redirect code (default: empty)';
+$lng['domains']['redirectifpathisurlinfo'] = 'You only need to select one of these if you entered an URL as path';
+$lng['serversettings']['customredirect_enabled']['title'] = 'Allow customer redirects';
+$lng['serversettings']['customredirect_enabled']['description'] = 'Allow customers to choose the http-status code for redirects which will be used';
+$lng['serversettings']['customredirect_default']['title'] = 'Default redirect';
+$lng['serversettings']['customredirect_default']['description'] = 'Set the default redirect-code which should be used if the customer does not set it himself';
 
 ?>
