@@ -141,9 +141,10 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			$description = 'Resetting the open_basedir to customer - root';
 			$question = '<strong>Due to a security - issue regarding open_basedir, Froxlor will set the open_basedir for the following domains to the customers root instead of the chosen documentroot:</strong><br />&nbsp;';
 			$question.= '<ul>';
+			$idna_convert = new idna_convert_wrapper();
 			foreach($wrongOpenBasedirDomain as $domain)
 			{
-				$question.= '<li>' . $domain . '</li>';
+				$question.= '<li>' . $idna_convert->decode($domain) . '</li>';
 			}
 			$question.= '</ul>';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
