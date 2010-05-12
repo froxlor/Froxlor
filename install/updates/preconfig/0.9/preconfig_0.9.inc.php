@@ -17,16 +17,16 @@
 
 /**
  * checks if the new-version has some updating to do
- * 
+ *
  * @param boolean $has_preconfig   pointer to check if any preconfig has to be output
  * @param string  $return          pointer to output string
  * @param string  $current_version current froxlor version
- * 
+ *
  * @return null
  */
 function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 {
-	global $settings, $lng;
+	global $settings, $lng, $db;
 
 	if(versionInUpdate($current_version, '0.9.4-svn2'))
 	{
@@ -54,7 +54,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	if(versionInUpdate($current_version, '0.9.6-svn3'))
 	{
 		$has_preconfig = true;
-		$description = 'You now have the possibility to define default error-documents for your webserver which replace the default webserver error-messages.';  
+		$description = 'You now have the possibility to define default error-documents for your webserver which replace the default webserver error-messages.';
 		$question = '<strong>Do you want to enable default error-documents?:</strong>&nbsp;';
 		$question .= makeyesno('update_deferr_enable', '1', '0', '0').'<br /><br />';
 		if($settings['system']['webserver'] == 'apache2')
@@ -79,7 +79,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question .= $priorities.'</select>';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
-	
+
 	if(versionInUpdate($current_version, '0.9.6-svn5'))
 	{
 		$has_preconfig = true;
@@ -95,7 +95,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question .= $configs.'</select>';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
-	
+
 	if(versionInUpdate($current_version, '0.9.6-svn6'))
 	{
 		$has_preconfig = true;
@@ -107,7 +107,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question .= '</select>';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
-	
+
 	if(versionInUpdate($current_version, '0.9.7-svn1'))
 	{
 		$has_preconfig = true;
@@ -120,8 +120,33 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$redirects.= makeoption('301', 2, '1');
 		$redirects.= makeoption('302', 3, '1');
 		$redirects.= makeoption('303', 4, '1');
-		$redirects.= makeoption('307', 5, '1');		
+		$redirects.= makeoption('307', 5, '1');
 		$question .= $redirects.'</select>';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if(versionInUpdate($current_version, '0.9.7-svn2'))
+	{
+		$has_preconfig = false;
+		$result = $db->query("SELECT `domain` FROM " . TABLE_PANEL_DOMAINS . " WHERE `documentroot` LIKE '%:%' AND `openbasedir_path` = '0' AND `openbasedir` = '1'");
+		$wrongOpenBasedirDomain = array();
+		while($row = $db->fetch_array($result))
+		{
+			$wrongOpenBasedirDomain[] = $row['domain'];
+		}
+
+		if(count($wrongOpenBasedirDomain) > 0)
+		{
+			$has_preconfig = true;
+			$description = 'Resetting the open_basedir to customer - root';
+			$question = '<strong>Due to a security - issue regarding open_basedir, Froxlor will set the open_basedir for the following domains to the customers root instead of the chosen documentroot:</strong><br />&nbsp;';
+			$question.= '<ul>';
+			foreach($wrongOpenBasedirDomain as $domain)
+			{
+				$question.= '<li>' . $domain . '</li>';
+			}
+			$question.= '</ul>';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
 	}
 }
