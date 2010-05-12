@@ -190,22 +190,31 @@ class lighttpd_fcgid extends lighttpd
 			if($domain['openbasedir'] == '1')
 			{
 				$openbasedirc = '';
-				if($domain['openbasedir_path'] == '0')
+				$_phpappendopenbasedir = appendOpenBasedirPath($this->settings['system']['mod_fcgid_peardir']);
+				$_phpappendopenbasedir .= appendOpenBasedirPath($this->settings['system']['phpappendopenbasedir']);
+
+				if($domain['openbasedir_path'] == '0' && strstr($domain['documentroot'], ":") === false)
 				{
-					$openbasedir = $domain['documentroot'] . ':' . $tmpdir . ':' . $this->settings['system']['mod_fcgid_peardir'] . ':' . $this->settings['system']['phpappendopenbasedir'];
+					$openbasedir = appendOpenBasedirPath($domain['documentroot'], true);
 				}
 				else
 				{
-					$openbasedir = $domain['customerroot'] . ':' . $tmpdir . ':' . $this->settings['system']['mod_fcgid_peardir'] . ':' . $this->settings['system']['phpappendopenbasedir'];
+					$openbasedir = appendOpenBasedirPath($domain['customerroot'], true);
 				}
+
+				$openbasedir .= appendOpenBasedirPath($tmpdir);
+				$openbasedir .= $_phpappendopenbasedir;
 
 				$openbasedir = explode(':', $openbasedir);
+				$clean_openbasedir = array();
 				foreach($openbasedir as $number => $path)
 				{
-					$openbasedir[$number] = makeCorrectDir($path);
+					if(trim($path) != '/')
+					{
+						$clean_openbasedir[] = makeCorrectDir($path);
+					}
 				}
-
-				$openbasedir = implode(':', $openbasedir);
+				$openbasedir = implode(':', $clean_openbasedir);
 			}
 			else
 			{

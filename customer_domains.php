@@ -251,6 +251,10 @@ elseif($page == 'domains')
 				{
 					$path = $userinfo['documentroot'] . '/' . $path;
 					$path = makeCorrectDir($path);
+					if (strstr($path, ":") !== FALSE)
+					{
+						standard_error('pathmaynotcontaincolon');
+					}
 				}
 				else
 				{
@@ -412,6 +416,10 @@ elseif($page == 'domains')
 				{
 					$path = $userinfo['documentroot'] . '/' . $path;
 					$path = makeCorrectDir($path);
+					if (strstr($path, ":") !== FALSE)
+					{
+						standard_error('pathmaynotcontaincolon');
+					}
 				}
 				else
 				{

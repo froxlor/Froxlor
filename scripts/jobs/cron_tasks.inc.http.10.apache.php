@@ -270,23 +270,17 @@ class apache
 
 			if($domain['openbasedir'] == '1')
 			{
-				if($this->settings['system']['phpappendopenbasedir'] != '')
+				if($domain['openbasedir_path'] == '1' || strstr($domain['documentroot'], ":") !== false)
 				{
-					$_phpappendopenbasedir = ':' . $this->settings['system']['phpappendopenbasedir'];
+					$_phpappendopenbasedir = appendOpenBasedirPath($domain['customerroot'], true);
 				}
 				else
 				{
-					$_phpappendopenbasedir = '';
+					$_phpappendopenbasedir = appendOpenBasedirPath($domain['documentroot'], true);
 				}
-
-				if($domain['openbasedir_path'] == '1')
-				{
-					$php_options_text.= '  php_admin_value open_basedir "' . $domain['customerroot'] . $_phpappendopenbasedir . "\"\n";
-				}
-				else
-				{
-					$php_options_text.= '  php_admin_value open_basedir "' . $domain['documentroot'] . $_phpappendopenbasedir . "\"\n";
-				}
+				$_phpappendopenbasedir .= appendOpenBasedirPath($this->settings['system']['phpappendopenbasedir']);
+				
+				$php_options_text.= '  php_admin_value open_basedir "' . $_phpappendopenbasedir . '"'."\n";
 			}
 
 			if($domain['safemode'] == '0')

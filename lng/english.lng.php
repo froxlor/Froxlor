@@ -1401,4 +1401,7 @@ $lng['serversettings']['customredirect_enabled']['description'] = 'Allow custome
 $lng['serversettings']['customredirect_default']['title'] = 'Default redirect';
 $lng['serversettings']['customredirect_default']['description'] = 'Set the default redirect-code which should be used if the customer does not set it himself';
 
+// ADDED IN FROXLOR 0.9.7-svn2
+$lng['error']['pathmaynotcontaincolon'] = 'The path you have entered should not contain a colon (":"). Please enter a correct path value.';
+
 ?>

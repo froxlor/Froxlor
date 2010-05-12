@@ -1397,4 +1397,7 @@ $lng['serversettings']['customredirect_enabled']['description'] = 'Erlaubt es Ku
 $lng['serversettings']['customredirect_default']['title'] = 'Standard Redirect';
 $lng['serversettings']['customredirect_default']['description'] = 'Dieser Redirect wird immer genutzt, sofern der Kunde keinen anderen ausw&auml;hlt.';
 
+// ADDED IN FROXLOR 0.9.7-svn2
+$lng['error']['pathmaynotcontaincolon'] = 'Der eingegebene Pfad sollte keinen Doppelpunkt (":") enthalten. Bitte geben Sie einen korrekten Wert f&uuml;r den Pfad ein.';
+
 ?>

@@ -451,6 +451,10 @@ if($page == 'domains'
 				{
 					standard_error(array('stringisempty', 'mydocumentroot'));
 				}
+				elseif(strstr($documentroot, ":") !== FALSE)
+				{
+					standard_error('pathmaynotcontaincolon');
+				}
 				elseif($customerid == 0)
 				{
 					standard_error('adduserfirst');
@@ -743,6 +747,11 @@ if($page == 'domains'
 					if($documentroot == '')
 					{
 						$documentroot = $customer['documentroot'];
+					}
+
+					if(strstr($documentroot, ":") !== FALSE)
+					{
+						standard_error('pathmaynotcontaincolon');
 					}
 				}
 				else
