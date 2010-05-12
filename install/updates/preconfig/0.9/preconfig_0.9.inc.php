@@ -128,7 +128,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	if(versionInUpdate($current_version, '0.9.7-svn2'))
 	{
 		$has_preconfig = false;
-		$result = $db->query("SELECT `domain` FROM " . TABLE_PANEL_DOMAINS . " WHERE `documentroot` LIKE '%:%' AND `openbasedir_path` = '0' AND `openbasedir` = '1'");
+		$result = $db->query("SELECT `domain` FROM " . TABLE_PANEL_DOMAINS . " WHERE `documentroot` LIKE '%:%' AND `documentroot` NOT LIKE 'http://%' AND `openbasedir_path` = '0' AND `openbasedir` = '1'");
 		$wrongOpenBasedirDomain = array();
 		while($row = $db->fetch_array($result))
 		{

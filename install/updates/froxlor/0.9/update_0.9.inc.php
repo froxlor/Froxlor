@@ -730,7 +730,7 @@ if(isFroxlorVersion('0.9.7-svn1'))
 	showUpdateStep("Updating from 0.9.7-svn1 to 0.9.7-svn2", false);
 
 	showUpdateStep("Updating open_basedir due to security - issue");
-	$result = $db->query("SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `documentroot` LIKE '%:%' AND `openbasedir_path` = '0' AND `openbasedir` = '1'");
+	$result = $db->query("SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `documentroot` LIKE '%:%' AND `documentroot` NOT LIKE 'http://%' AND `openbasedir_path` = '0' AND `openbasedir` = '1'");
 	while($row = $db->fetch_array($result))
 	{
 		$db->query("UPDATE `".TABLE_PANEL_DOMAINS."` SET `openbasedir_path` = '1' WHERE `id` = " . $row['id']);
