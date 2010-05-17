@@ -1403,5 +1403,11 @@ $lng['serversettings']['customredirect_default']['description'] = 'Set the defau
 
 // ADDED IN FROXLOR 0.9.7-svn2
 $lng['error']['pathmaynotcontaincolon'] = 'The path you have entered should not contain a colon (":"). Please enter a correct path value.';
+$lng['tasks']['aps_task_install'] = 'Installing one or more APS packages';
+$lng['tasks']['aps_task_remove'] = 'Removing one or more APS packages';
+$lng['tasks']['aps_task_reconfigure'] = 'Reconfigurating one or more APS packages';
+$lng['tasks']['aps_task_upgrade'] = 'Upgrading one or more APS packages';
+$lng['tasks']['aps_task_sysupdate'] = 'Updating all APS packages';
+$lng['tasks']['aps_task_sysdownload'] = 'Downloading new APS packages';
 
 ?>

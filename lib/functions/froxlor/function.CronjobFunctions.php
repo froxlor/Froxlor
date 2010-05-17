@@ -229,6 +229,59 @@ function getOutstandingTasks()
 		}
 	}
 	
+	$query2 = "SELECT DISTINCT `Task` FROM `".TABLE_APS_TASKS."` ORDER BY `Task` ASC";
+	$result2 = $db->query($query2);
+	
+	while($row2 = $db->fetch_array($result2))
+	{
+		/*
+		 * install
+		 */
+		if($row2['Task'] == '1')
+		{
+			$task_desc = $lng['tasks']['aps_task_install'];
+		}
+		/*
+		 * remove
+		 */
+		elseif($row2['Task'] == '2')
+		{
+			$task_desc = $lng['tasks']['aps_task_remove'];
+		}
+		/*
+		 * reconfigure
+		 */
+		elseif($row2['Task'] == '3')
+		{
+			$task_desc = $lng['tasks']['aps_task_reconfigure'];
+		}
+		/*
+		 * upgrade
+		 */
+		elseif($row2['Task'] == '4')
+		{
+			$task_desc = $lng['tasks']['aps_task_upgrade'];
+		}
+		/*
+		 * system update
+		 */
+		elseif($row2['Task'] == '5')
+		{
+			$task_desc = $lng['tasks']['aps_task_sysupdate'];
+		}
+		/*
+		 * system download
+		 */
+		elseif($row2['Task'] == '6')
+		{
+			$task_desc = $lng['tasks']['aps_task_sysdownload'];
+		}
+		
+		if($task_desc != '') {
+			$tasks .= '<li>'.$task_desc.'</li>';
+		}
+	}
+
 	if(trim($tasks) == '') {
 		$outstanding_tasks .= '<li>'.$lng['tasks']['noneoutstanding'].'</li>';
 	} else {

@@ -1399,5 +1399,11 @@ $lng['serversettings']['customredirect_default']['description'] = 'Dieser Redire
 
 // ADDED IN FROXLOR 0.9.7-svn2
 $lng['error']['pathmaynotcontaincolon'] = 'Der eingegebene Pfad sollte keinen Doppelpunkt (":") enthalten. Bitte geben Sie einen korrekten Wert f&uuml;r den Pfad ein.';
+$lng['tasks']['aps_task_install'] = 'Installation eines oder mehrerer APS Pakete';
+$lng['tasks']['aps_task_remove'] = 'Deinstallation eines oder mehrerer APS Pakete';
+$lng['tasks']['aps_task_reconfigure'] = 'Rekonfiguration eines oder mehrerer APS Pakete';
+$lng['tasks']['aps_task_upgrade'] = 'Upgrade eines oder mehrerer APS Pakete';
+$lng['tasks']['aps_task_sysupdate'] = 'Aktualisiere alle APS Pakete';
+$lng['tasks']['aps_task_sysdownload'] = 'Herunterladen neuer APS Pakete';
 
 ?>

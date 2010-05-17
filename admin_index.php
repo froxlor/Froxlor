@@ -100,7 +100,7 @@ if($page == 'overview')
 				&& count($latestversion) >= 1)
 				{
 					$_version = $latestversion[0];
-					$_message = $latestversion[1];
+					$_message = isset($latestversion[1]) ? $latestversion[1] : '';
 					$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
 
 					$lookfornewversion_lable = $_version;
