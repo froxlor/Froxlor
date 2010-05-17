@@ -47,7 +47,7 @@ smtpd_sasl_type = dovecot
 mailbox_command = /usr/lib/dovecot/deliver
 virtual_transport = dovecot
 dovecot_destination_recipient_limit = 1
-smtpd_sasl_path = private/auth
+smtpd_sasl_path = private/dovecot-auth
 
 # Virtual delivery settings
 virtual_mailbox_base = <VIRTUAL_MAILBOX_BASE>
