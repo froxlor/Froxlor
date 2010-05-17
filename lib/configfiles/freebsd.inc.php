@@ -58,7 +58,7 @@ return Array(
 							'cd /usr/ports/dns/powerdns',
 							'make config',
 							'make install',
-							'echo "add pdns_enable=\"YES\"" >> /etc/rc.conf',
+							'echo "pdns_enable=\"YES\"" >> /etc/rc.conf',
 						),
 						'files' => Array(
 							'usr_local_etc_pdns_pdns.conf' => '/usr/local/etc/pdns/pdns.conf'
@@ -155,7 +155,7 @@ return Array(
 							'set ManageSieve support (optional)',
 							'set MySQL support ',
 							'make install',
-							'echo "add dovecot_enable=\"YES\"" >> /etc/rc.conf'
+							'echo "dovecot_enable=\"YES\"" >> /etc/rc.conf'
 						),
 						'files' => Array(
 							'usr_local_etc_dovecot.conf' => '/usr/local/etc/dovecot.conf',
@@ -202,6 +202,25 @@ return Array(
 						),
 						'files' => Array(
 							'etc_awstats.model.conf' => makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
+						)
+					),
+					'libnss' => Array(
+						'label' => 'libnss (system login with mysql)',
+						'commands_1' => Array(
+							'cd /usr/ports/net/libnss-mysql',
+							'make install clean',
+							'echo "nscd_enable=\"YES\"" >> /etc/rc.conf'
+						),
+						'files' => Array(
+							'usr_local_etc_libnss-mysql.cfg' => '/usr/local/etc/libnss-mysql.cfg',
+							'usr_local_etc_libnss-mysql-root.cfg' => '/usr/local/etc/libnss-mysql-root.cfg',
+							'etc_nsswitch.conf' => '/etc/nsswitch.conf'
+						),
+						'commands_2' => Array(
+							'chmod 600 /usr/local/etc/libnss-mysql.cfg /usr/local/etc/libnss-mysql-root.cfg'
+						),
+						'restart' => Array(
+							'sh /etc/rc.d/nscd restart'
 						)
 					)
 				)
