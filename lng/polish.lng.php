@@ -344,12 +344,12 @@ $lng['serversettings']['ipaddress']['title'] = 'Adres IP';
 $lng['serversettings']['ipaddress']['description'] = 'Jaki jest adres IP tego serwera?';
 $lng['serversettings']['hostname']['title'] = 'Hostname';
 $lng['serversettings']['hostname']['description'] = 'Jaki jest Hostname serwera?';
-$lng['serversettings']['apachereload_command']['title'] = 'Apache reload command';
-$lng['serversettings']['apachereload_command']['description'] = 'What\'s the apache command to reload apache configfiles?';
-$lng['serversettings']['bindconf_directory']['title'] = 'Bind config directory';
-$lng['serversettings']['bindconf_directory']['description'] = 'Where should bind configfiles be saved?';
-$lng['serversettings']['bindreload_command']['title'] = 'Bind reload command';
-$lng['serversettings']['bindreload_command']['description'] = 'What\'s the bind command to reload bind configfiles?';
+$lng['serversettings']['apachereload_command']['title'] = 'Komenda prze³adowania Apache';
+$lng['serversettings']['apachereload_command']['description'] = 'Jaka jest komenda, do prze³adowania plików konfiguracyjnych Apacha?';
+$lng['serversettings']['bindconf_directory']['title'] = 'Katalog z konfiguracj¹ Bunda';
+$lng['serversettings']['bindconf_directory']['description'] = 'Gdzie maja byæ zapisywane pliki konfiguracyjne dla Binda?';
+$lng['serversettings']['bindreload_command']['title'] = 'Komenda prze³adowania Binda';
+$lng['serversettings']['bindreload_command']['description'] = 'Jaka jest komenda, do prze³adowania plików konfiguracyjnych Binda?';
 $lng['serversettings']['binddefaultzone']['title'] = 'Bind default zone';
 $lng['serversettings']['binddefaultzone']['description'] = 'What\'s the name of the default zone?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mails-UID';
@@ -367,7 +367,7 @@ $lng['serversettings']['webmail_url']['description'] = 'Jaki jest adres URL do W
 $lng['serversettings']['webftp_url']['title'] = 'URL do WebFTPa';
 $lng['serversettings']['webftp_url']['description'] = 'Jaki jest adres URL do WebFTPa? (Musi si&#281 rozpoczyna&#263 do http(s)://)';
 $lng['serversettings']['language']['description'] = 'Jaki jest standardowy j&#281zyk serwera?';
-$lng['serversettings']['maxloginattempts']['title'] = 'Max Login Attempts';
+$lng['serversettings']['maxloginattempts']['title'] = 'Maksymalna iloœæ prób logowania';
 $lng['serversettings']['maxloginattempts']['description'] = 'Maximum login attempts after which the account gets deactivated.';
 $lng['serversettings']['deactivatetime']['title'] = 'Czas zablokowania';
 $lng['serversettings']['deactivatetime']['description'] = 'Czas (sek.) zablokowania dost&#281pu do konta po nieudanym logowaniu.';
@@ -710,7 +710,7 @@ $lng['serversettings']['mod_fcgid']['tmpdir'] = 'Katalog plików tymczasowych';
 $lng['serversettings']['ticket']['reset_cycle'] = 'Okresowe reset licznika u&#380ycia zg&#322osze&#324 pomocy technicznej';
 $lng['serversettings']['ticket']['reset_cycle_desc'] = 'Resetowanie zg&#322osze&#324 pomocy technicznej powoduje ustawienie licznika na warto&#347&#263 0 przy ka&#380dym cyklu';
 $lng['admin']['tickets']['daily'] = 'Dziennie';
-$lng['admin']['tickets']['weekly'] = 'Wygodniowo';
+$lng['admin']['tickets']['weekly'] = 'Tygodniowo';
 $lng['admin']['tickets']['monthly'] = 'Miesi&#281cznie';
 $lng['admin']['tickets']['yearly'] = 'Rocznie';
 $lng['error']['ticketresetcycleiswrong'] = 'The cycle for ticket-resets has to be "daily", "weekly", "monthly" or "yearly".';
@@ -1375,5 +1375,19 @@ $lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div 
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Plik/URL dla b&#322&#281du 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Plik/URL dla b&#322&#281du 500';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+
+// ADDED IN FROXLOR 0.9.6-svn4
+$lng['serversettings']['ticket']['default_priority'] = 'Standardowy priorytet dla zg³oszeñ pomocy technicznej';
+
+// ADDED IN FROXLOR 0.9.6-svn5
+$lng['serversettings']['mod_fcgid']['defaultini'] = 'Default PHP configuration for new domains';
+
+// ADDED IN FROXLOR 0.9.6-svn6
+$lng['admin']['ftpserver'] = 'Serwer FTP';
+$lng['admin']['ftpserversettings'] = 'Ustawienia Serwera FTP';
+$lng['serversettings']['ftpserver']['desc'] = 'Jeœli pureftpd jest zaznaczone, plik .ftpquota z quotami u¿ytkownika bêdzie tworzony i aktualizowany codziennie';
+
+// CHANGED IN FROXLOR 0.9.6-svn6
+$lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?<br/><b>If you change this you also have to change the Quota SQL Query in your FTP Server config file in case you use it!</b> ';
 
 ?>
