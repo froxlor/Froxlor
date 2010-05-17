@@ -280,7 +280,8 @@ if(isFroxlorVersion('0.9-r3'))
 
 if(isFroxlorVersion('0.9-r4'))
 {
-	showUpdateStep("Updating from 0.9-r4 to 0.9 final", false);
+	showUpdateStep("Updating from 0.9-r4 to 0.9 final");
+	lastStepStatus(0);
 	updateToVersion('0.9');
 }
 
