@@ -19,6 +19,9 @@
 
 $updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'), $db, $settings);
 
+$filelog = FileLogger::getInstanceOf(array('loginname' => 'updater'), $settings);
+$filelog->setLogFile(makeCorrectFile(dirname(__FILE__).'/update.log'));
+
 /*
  * since froxlor, we have to check if there's still someone
  * out there using syscp and needs to upgrade
@@ -89,8 +92,6 @@ if(!isFroxlor())
 
 if(isFroxlor())
 {
-	$filelog = FileLogger::getInstanceOf(array('loginname' => 'updater'), $settings);
-	$filelog->setLogFile(makeCorrectFile(dirname(__FILE__).'/update.log'));
 	$filelog->logAction(ADM_ACTION, LOG_NOTICE, '-------------- START LOG --------------');
 	include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/0.9/update_0.9.inc.php'));
 	$filelog->logAction(ADM_ACTION, LOG_NOTICE, '--------------- END LOG ---------------');

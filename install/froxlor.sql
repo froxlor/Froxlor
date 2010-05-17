@@ -451,7 +451,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (18, 'system', 'vmail_homedir', '/var/customers/mail/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (19, 'system', 'bindconf_directory', '/etc/bind/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (20, 'system', 'bindreload_command', '/etc/init.d/bind9 reload');
-INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (22, 'panel', 'version', '0.9.7-svn1');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (22, 'panel', 'version', '0.9.7-svn3');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (23, 'system', 'hostname', 'SERVERNAME');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (24, 'login', 'maxloginattempts', '3');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (25, 'login', 'deactivatetime', '900');
@@ -1034,7 +1034,8 @@ CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
 DROP TABLE IF EXISTS `redirect_codes`;
 CREATE TABLE IF NOT EXISTS `redirect_codes` (
   `id` int(5) NOT NULL auto_increment,
-  `code` varchar(3) NOT NULL,  
+  `code` varchar(3) NOT NULL,
+  `desc` varchar(200) NOT NULL,
   `enabled` tinyint(1) DEFAULT '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM;
@@ -1043,11 +1044,11 @@ CREATE TABLE IF NOT EXISTS `redirect_codes` (
 # Dumping data for table `redirect_codes`
 #
 
-INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (1, '---', 1);
-INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (2, '301', 1);
-INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (3, '302', 1);
-INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (4, '303', 1);
-INSERT INTO `redirect_codes` (`id`, `code`, `enabled`) VALUES (5, '307', 1);
+INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES (1, '---', 'rc_default', 1);
+INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES (2, '301', 'rc_movedperm', 1);
+INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES (3, '302', 'rc_found', 1);
+INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES (4, '303', 'rc_seeother', 1);
+INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES (5, '307', 'rc_tempred', 1);
 
 # --------------------------------------------------------
 

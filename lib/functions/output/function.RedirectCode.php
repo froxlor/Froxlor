@@ -52,7 +52,7 @@ function getRedirectCodes()
 	$codes = array();
 	while($rc = $db->fetch_array($result))
 	{
-		$codes[$rc['id']] = $rc['code'];
+		$codes[$rc['id']] = $rc['code']. ' ('.$lng['redirect_desc'][$rc['desc']].')';
 	}
 	
 	return $codes;

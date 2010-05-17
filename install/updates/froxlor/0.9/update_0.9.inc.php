@@ -741,4 +741,23 @@ if(isFroxlorVersion('0.9.7-svn1'))
 	updateToVersion('0.9.7-svn2');
 }
 
+if(isFroxlorVersion('0.9.7-svn2'))
+{
+	showUpdateStep("Updating from 0.9.7-svn2 to 0.9.7-svn3", false);
+
+	showUpdateStep("Updating database tables");
+	$db->query("ALTER TABLE `redirect_codes` ADD `desc` varchar(200) NOT NULL AFTER `code`;");
+	lastStepStatus(0);
+	
+	showUpdateStep("Updating field-values");
+	$db->query("UPDATE TABLE `redirect_codes` SET `desc` = 'rc_default' WHERE `code` = '---';");
+	$db->query("UPDATE TABLE `redirect_codes` SET `desc` = 'rc_movedperm' WHERE `code` = '301';");
+	$db->query("UPDATE TABLE `redirect_codes` SET `desc` = 'rc_found' WHERE `code` = '302';");
+	$db->query("UPDATE TABLE `redirect_codes` SET `desc` = 'rc_seeother' WHERE `code` = '303';");
+	$db->query("UPDATE TABLE `redirect_codes` SET `desc` = 'rc_tempred' WHERE `code` = '307';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.7-svn3');
+}
+
 ?>

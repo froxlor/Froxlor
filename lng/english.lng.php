@@ -1410,4 +1410,14 @@ $lng['tasks']['aps_task_upgrade'] = 'Upgrading one or more APS packages';
 $lng['tasks']['aps_task_sysupdate'] = 'Updating all APS packages';
 $lng['tasks']['aps_task_sysdownload'] = 'Downloading new APS packages';
 
+// ADDED IN FROXLOR 0.9.7-svn3
+
+// these stay only in english.lng.php - they are the same
+// for all other languages and are used if not found there
+$lng['redirect_desc']['rc_default'] = 'default';
+$lng['redirect_desc']['rc_movedperm'] = 'moved permanently';
+$lng['redirect_desc']['rc_found'] = 'found';
+$lng['redirect_desc']['rc_seeother'] = 'see other';
+$lng['redirect_desc']['rc_tempred'] = 'temporary redirect';
+
 ?>

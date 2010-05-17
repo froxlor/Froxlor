@@ -116,11 +116,11 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= makeyesno('update_customredirect_enable', '1', '0', '1').'<br /><br />';
 		$question.= '<strong>Select default redirect code (default: empty):</strong>&nbsp;';
 		$question.= '<select name="update_customredirect_default">';
-		$redirects = makeoption('---', 1, '1');
-		$redirects.= makeoption('301', 2, '1');
-		$redirects.= makeoption('302', 3, '1');
-		$redirects.= makeoption('303', 4, '1');
-		$redirects.= makeoption('307', 5, '1');
+		$redirects = makeoption('--- ('.$lng['redirect_desc']['rc_default'].')', 1, '1');
+		$redirects.= makeoption('301 ('.$lng['redirect_desc']['rc_movedperm'].')', 2, '1');
+		$redirects.= makeoption('302 ('.$lng['redirect_desc']['rc_found'].')', 3, '1');
+		$redirects.= makeoption('303 ('.$lng['redirect_desc']['rc_seeother'].')', 4, '1');
+		$redirects.= makeoption('307 ('.$lng['redirect_desc']['rc_tempred'].')', 5, '1');
 		$question .= $redirects.'</select>';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
