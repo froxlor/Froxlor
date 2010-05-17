@@ -175,3 +175,25 @@ function lastStepStatus($status = -1, $message = '')
 		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Success');
 	}
 }
+
+/**
+ * validate if full path to update.log is sane
+ * if not, the update.log is created in /tmp/
+ *  
+ * @param string $filename the file name to validate
+ * 
+ * @return string the full path with filename (can differ if not writeable => /tmp)
+ */
+function validateUpdateLogFile($filename)
+{
+	if(!is_dir($filename))
+	{
+		$fh = @fopen($filename, 'a');
+		if($fh)
+		{
+			fclose($fh);
+			return $filename;
+		}
+	}
+	return '/tmp/froxlor_update.log';
+}
