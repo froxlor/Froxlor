@@ -172,6 +172,6 @@ function lastStepStatus($status = -1, $message = '')
 	}
 	elseif($status == 0 || $status == 1)
 	{
-		$filelog->logAction(ADM_ACTION, LOG_NOTICE, 'Success');
+		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Success');
 	}
 }
