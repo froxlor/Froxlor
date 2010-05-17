@@ -115,7 +115,7 @@ function hasUpdates($to_check = null)
  */
 function showUpdateStep($task = null, $needs_status = true)
 {
-	global $updatelog;
+	global $updatelog, $filelog;
 	
 	// output
 	echo $task;
@@ -126,6 +126,7 @@ function showUpdateStep($task = null, $needs_status = true)
 	}
 	
 	$updatelog->logAction(ADM_ACTION, LOG_WARNING, $task);
+	$filelog->logAction(ADM_ACTION, LOG_WARNING, $task);
 }
 
 /*
@@ -140,7 +141,7 @@ function showUpdateStep($task = null, $needs_status = true)
  */
 function lastStepStatus($status = -1, $message = '')
 {
-	global $updatelog;
+	global $updatelog, $filelog;
 	
 	switch($status)
 	{
@@ -164,8 +165,13 @@ function lastStepStatus($status = -1, $message = '')
 	// output
 	echo "<span style=\"margin-left: 5em; font-weight: bold; color: #".$status_color."\">".$status_sign."</span><br />";
 	
-	if($status == -1)
+	if($status == -1 || $status == 2)
 	{
 		$updatelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
+		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
+	}
+	elseif($status == 0 || $status == 1)
+	{
+		$filelog->logAction(ADM_ACTION, LOG_NOTICE, 'Success');
 	}
 }

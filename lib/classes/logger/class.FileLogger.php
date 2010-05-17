@@ -169,7 +169,7 @@ class FileLogger extends AbstractLogger
 		}
 	}
 
-	private function setLogFile($filename = null)
+	public function setLogFile($filename = null)
 	{
 		if($filename != null
 		   && $filename != ''
