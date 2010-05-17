@@ -750,11 +750,11 @@ if(isFroxlorVersion('0.9.7-svn2'))
 	lastStepStatus(0);
 	
 	showUpdateStep("Updating field-values");
-	$db->query("UPDATE TABLE `redirect_codes` SET `desc` = 'rc_default' WHERE `code` = '---';");
-	$db->query("UPDATE TABLE `redirect_codes` SET `desc` = 'rc_movedperm' WHERE `code` = '301';");
-	$db->query("UPDATE TABLE `redirect_codes` SET `desc` = 'rc_found' WHERE `code` = '302';");
-	$db->query("UPDATE TABLE `redirect_codes` SET `desc` = 'rc_seeother' WHERE `code` = '303';");
-	$db->query("UPDATE TABLE `redirect_codes` SET `desc` = 'rc_tempred' WHERE `code` = '307';");
+	$db->query("UPDATE `redirect_codes` SET `desc` = 'rc_default' WHERE `code` = '---';");
+	$db->query("UPDATE `redirect_codes` SET `desc` = 'rc_movedperm' WHERE `code` = '301';");
+	$db->query("UPDATE `redirect_codes` SET `desc` = 'rc_found' WHERE `code` = '302';");
+	$db->query("UPDATE `redirect_codes` SET `desc` = 'rc_seeother' WHERE `code` = '303';");
+	$db->query("UPDATE `redirect_codes` SET `desc` = 'rc_tempred' WHERE `code` = '307';");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.7-svn3');
