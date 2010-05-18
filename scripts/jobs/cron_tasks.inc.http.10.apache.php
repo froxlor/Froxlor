@@ -278,8 +278,13 @@ class apache
 				{
 					$_phpappendopenbasedir = appendOpenBasedirPath($domain['documentroot'], true);
 				}
-				$_phpappendopenbasedir .= appendOpenBasedirPath($this->settings['system']['phpappendopenbasedir']);
 				
+				$_custom_openbasedir = explode(':', $this->settings['system']['phpappendopenbasedir']);
+				foreach($_custom_openbasedir as $cobd)
+				{
+					$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
+				}
+
 				$php_options_text.= '  php_admin_value open_basedir "' . $_phpappendopenbasedir . '"'."\n";
 			}
 

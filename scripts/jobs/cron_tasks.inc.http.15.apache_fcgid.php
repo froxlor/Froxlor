@@ -166,9 +166,20 @@ class apache_fcgid extends apache
 			if($domain['openbasedir'] == '1')
 			{
 				$openbasedirc = '';
-				$_phpappendopenbasedir = appendOpenBasedirPath($this->settings['system']['mod_fcgid_peardir']);
-				$_phpappendopenbasedir .= appendOpenBasedirPath($this->settings['system']['phpappendopenbasedir']);
+				$_phpappendopenbasedir = '';
+
+				$_custom_openbasedir = explode(':', $this->settings['system']['mod_fcgid_peardir']);
+				foreach($_custom_openbasedir as $cobd)
+				{
+					$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
+				}
 				
+				$_custom_openbasedir = explode(':', $this->settings['system']['phpappendopenbasedir']);
+				foreach($_custom_openbasedir as $cobd)
+				{
+					$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
+				}
+
 				if($domain['openbasedir_path'] == '0' && strstr($domain['documentroot'], ":") === false)
 				{
 					$openbasedir = appendOpenBasedirPath($domain['documentroot'], true);
