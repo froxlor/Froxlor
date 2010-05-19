@@ -320,10 +320,8 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 						'label' => 'Awstats',
 						'commands' => Array(
 							'emerge awstats',
-							'awstats_configure.pl'
-						),
-						'files' => Array(
-							'etc_awstats.model.conf' => makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
+							'awstats_configure.pl',
+							'sed -i.bak \'s/^DirData/# DirData/\''.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
 						),
 					),
 					'libnss' => Array(
