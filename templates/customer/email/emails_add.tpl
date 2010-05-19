@@ -19,7 +19,7 @@ $header
 				<tr>
 					<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['emails']['emails_add']}" /></td>
 				</tr>
-			<else
+			<else>
 				<tr>
 					<td class="main_field_name" colspan="2">{$lng['emails']['noemaildomainaddedyet']}</td>
 				</tr>
