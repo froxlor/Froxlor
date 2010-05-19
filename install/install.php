@@ -629,7 +629,6 @@ if(isset($_POST['installstep'])
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/apache2/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_diroptions'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/apache2/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/apache2 reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
-		$ssettings = 'DocumentRoot \"".$db->escape(dirname(dirname(__FILE__))) . "\"';
 	}
 	elseif($webserver == "lighttpd")
 	{
@@ -661,8 +660,7 @@ if(isset($_POST['installstep'])
 			 `port` = '80',
 			 `namevirtualhost_statement` = '1',
 			 `vhostcontainer` = '1', 
-			 `vhostcontainer_servername_statement` = '1',
-			 `specialsettings` = '".$ssettings."'";
+			 `vhostcontainer_servername_statement` = '1'";
 	$db->query($query);
 	$defaultip = $db->insert_id();
 

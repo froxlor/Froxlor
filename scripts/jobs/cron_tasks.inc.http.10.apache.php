@@ -177,7 +177,7 @@ class apache
 				/**
 				 * add 'real'-vhost content here, like doc-root :)
 				 */
-				$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+				$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
 				$this->virtualhosts_data[$vhosts_filename].= 'DocumentRoot "'.$mypath.'"'."\n";
 				
 				if($row_ipsandports['vhostcontainer_servername_statement'] == '1')
