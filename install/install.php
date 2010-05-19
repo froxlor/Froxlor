@@ -629,6 +629,7 @@ if(isset($_POST['installstep'])
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/apache2/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_diroptions'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/apache2/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/apache2 reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
+		$ssettings = 'DocumentRoot \"".$db->escape(dirname(dirname(__FILE__))) . "\"';
 	}
 	elseif($webserver == "lighttpd")
 	{
@@ -637,6 +638,7 @@ if(isset($_POST['installstep'])
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/lighttpd reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/lighttpd.pem' WHERE `settinggroup` = 'system' AND `varname` = 'ssl_cert_file'");
+		$ssettings = '';
 	}
 
 	// insert the lastcronrun to be the installation date
@@ -660,7 +662,7 @@ if(isset($_POST['installstep'])
 			 `namevirtualhost_statement` = '1',
 			 `vhostcontainer` = '1', 
 			 `vhostcontainer_servername_statement` = '1',
-			 `specialsettings` = 'DocumentRoot \"".$db->escape(dirname(dirname(__FILE__))) . "\"'";
+			 `specialsettings` = '".$ssettings."'";
 	$db->query($query);
 	$defaultip = $db->insert_id();
 
