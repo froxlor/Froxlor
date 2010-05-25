@@ -230,7 +230,7 @@ return Array(
 						'files' => Array(
 							'etc_dovecot_auth.d_01-dovecot-postfix.auth' => '/etc/dovecot/auth.d/01-dovecot-postfix.auth',
 							'etc_dovecot_conf.d_01-dovecot-postfix.conf' => '/etc/dovecot/conf.d/01-dovecot-postfix.conf',
-							'etc_dovecot_conf.d_02-dovecot-sql.conf' => '/etc/dovecot/conf.d/02-dovecot-sql.conf'
+							'etc_dovecot_dovecot-sql.conf' => '/etc/dovecot/dovecot-sql.conf'
 						),
 						'restart' => Array(
 							'/etc/init.d/dovecot restart'
