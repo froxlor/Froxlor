@@ -67,7 +67,14 @@ class apache
 	 */
 	private function _createStandardDirectoryEntry()
 	{
-		$vhosts_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/05_froxlor_dirfix_nofcgid.conf');
+		$vhosts_folder = '';
+		if(is_dir($this->settings['system']['apacheconf_vhost']))
+		{
+			$vhosts_folder = makeCorrectPath($this->settings['system']['apacheconf_vhost']);
+		} else {
+			$vhosts_folder = makeCorrectPath(dirname($this->settings['system']['apacheconf_vhost']));
+		}
+		$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_dirfix_nofcgid.conf');
 
 		if($this->settings['system']['mod_fcgid'] == '1')
 		{
