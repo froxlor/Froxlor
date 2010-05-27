@@ -65,7 +65,7 @@ return array(
 					'varname' => 'defaultttl',
 					'type' => 'int',
 					'default' => 604800, /* 1 week */
-					'int_min' => 86400, /* 1 day */
+					'int_min' => 3600, /* 1 hour */
 					'int_max' => 2147483647, /* integer max */
 					'save_method' => 'storeSettingField',
 					),
