@@ -111,7 +111,15 @@ class apache
 			|| $this->settings['defaultwebsrverrhandler']['err404'] != ''
 			|| $this->settings['defaultwebsrverrhandler']['err500'] != '')
 		) {
-			$vhosts_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/05_froxlor_default_errorhandler.conf');
+			$vhosts_folder = '';
+			if(is_dir($this->settings['system']['apacheconf_vhost']))
+			{
+				$vhosts_folder = makeCorrectPath($this->settings['system']['apacheconf_vhost']);
+			} else {
+				$vhosts_folder = makeCorrectPath(dirname($this->settings['system']['apacheconf_vhost']));
+			}
+			
+			$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
 
 			if(!isset($this->virtualhosts_data[$vhosts_filename]))
 			{
