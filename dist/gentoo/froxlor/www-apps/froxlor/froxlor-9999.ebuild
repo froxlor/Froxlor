@@ -24,11 +24,12 @@ SLOT="0"
 IUSE="aps autoresponder awstats bind domainkey dovecot fcgid lighttpd +log mailquota realtime ssl +tickets"
 
 DEPEND="
+	!www-apps/syscp
 	>=mail-mta/postfix-2.4[mysql,ssl=]
 	sys-process/vixie-cron
-	dev-db/mysql
-	|| ( <dev-lang/php-5.2.99[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,pcre,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
-	>=dev-lang/php-5.3.2[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib] )
+	virtual/mysql
+	>=dev-lang/php-5.2[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
+	|| ( <dev-lang/php-5.3[pcre] >=dev-lang/php-5.3 )
 	net-ftp/proftpd[mysql,ssl=]
 	awstats? (
 		www-misc/awstats
@@ -48,8 +49,8 @@ DEPEND="
 	!lighttpd? ( www-servers/apache[ssl=]
 		     dev-lang/php[apache2]
 	)
-	fcgid? ( || ( <dev-lang/php-5.2.99[cgi,force-cgi-redirect]
-		 >=dev-lang/php-5.3.2[cgi] )
+	fcgid? ( >=dev-lang/php-5.2[cgi]
+		|| ( <dev-lang/php-5.3[force-cgi-redirect] >=dev-lang/php-5.3 )
 		 sys-auth/libnss-mysql
 			( !lighttpd? (
 				www-servers/apache[suexec]
@@ -67,8 +68,7 @@ DEPEND="
 	)
 	aps? ( dev-lang/php[zip] )
 	mailquota? ( >=mail-mta/postfix-2.4[vda] )
-	realtime?  ( dev-lang/php[sockets] )
-	!www-apps/syscp"
+	realtime?  ( dev-lang/php[sockets] )"
 
 RDEPEND="${DEPEND}"
 
