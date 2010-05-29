@@ -33,7 +33,7 @@ function getPreConfig($current_version)
 	include_once makeCorrectFile(dirname(__FILE__).'/preconfig/0.9/preconfig_0.9.inc.php');
 	parseAndOutputPreconfig($has_preconfig, $return, $current_version);
 
-	$return .= '<br /><br />'.makecheckbox('update_changesagreed', '<strong>I have read the update notifications and I am aware of the changes made to my system.</strong>', '1', true, '0', true);
+	$return .= '<br /><br />'.makecheckbox('update_changesagreed', '<strong>I have read the above update notifications and I am aware of the changes made to my system.</strong>', '1', true, '0', true);
 	$return .= '</div>';
 	$return .= '<input type="hidden" name="update_preconfig" value="1" />';
 

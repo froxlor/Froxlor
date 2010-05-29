@@ -83,8 +83,8 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	if(versionInUpdate($current_version, '0.9.6-svn5'))
 	{
 		$has_preconfig = true;
-		$description = 'If you have more than one PHP-configurations defined in Froxlor you can know set a default one which will be used for every domain.';
-		$question = '<strong>Select default PHP-configuration:</strong>&nbsp;';
+		$description = 'If you have more than one PHP configurations defined in Froxlor you can now set a default one which will be used for every domain.';
+		$question = '<strong>Select default PHP configuration:</strong>&nbsp;';
 		$question .= '<select name="update_defsys_phpconfig">';
 		$configs_array = getPhpConfigs();
 		$configs = '';
