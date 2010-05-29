@@ -70,9 +70,9 @@ class apache
 		$vhosts_folder = '';
 		if(is_dir($this->settings['system']['apacheconf_vhost']))
 		{
-			$vhosts_folder = makeCorrectPath($this->settings['system']['apacheconf_vhost']);
+			$vhosts_folder = makeCorrectDir($this->settings['system']['apacheconf_vhost']);
 		} else {
-			$vhosts_folder = makeCorrectPath(dirname($this->settings['system']['apacheconf_vhost']));
+			$vhosts_folder = makeCorrectDir(dirname($this->settings['system']['apacheconf_vhost']));
 		}
 		$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_dirfix_nofcgid.conf');
 
@@ -114,9 +114,9 @@ class apache
 			$vhosts_folder = '';
 			if(is_dir($this->settings['system']['apacheconf_vhost']))
 			{
-				$vhosts_folder = makeCorrectPath($this->settings['system']['apacheconf_vhost']);
+				$vhosts_folder = makeCorrectDir($this->settings['system']['apacheconf_vhost']);
 			} else {
-				$vhosts_folder = makeCorrectPath(dirname($this->settings['system']['apacheconf_vhost']));
+				$vhosts_folder = makeCorrectDir(dirname($this->settings['system']['apacheconf_vhost']));
 			}
 			
 			$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
