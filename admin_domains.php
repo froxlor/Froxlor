@@ -369,7 +369,14 @@ if($page == 'domains'
 
 				if(!preg_match('/^https?\:\/\//', $documentroot))
 				{
-					$documentroot = makeCorrectDir($documentroot);
+					if(strstr($documentroot, ":") !== FALSE)
+					{
+						standard_error('pathmaynotcontaincolon');
+					}
+					else
+					{
+						$documentroot = makeCorrectDir($documentroot);
+					}
 				}
 
 				$domain_check = $db->query_first("SELECT `id`, `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `domain` = '" . $db->escape(strtolower($domain)) . "'");
@@ -450,10 +457,6 @@ if($page == 'domains'
 				elseif($documentroot == '')
 				{
 					standard_error(array('stringisempty', 'mydocumentroot'));
-				}
-				elseif(strstr($documentroot, ":") !== FALSE)
-				{
-					standard_error('pathmaynotcontaincolon');
 				}
 				elseif($customerid == 0)
 				{
@@ -749,8 +752,9 @@ if($page == 'domains'
 						$documentroot = $customer['documentroot'];
 					}
 
-					if(strstr($documentroot, ":") !== FALSE)
-					{
+					if(!preg_match('/^https?\:\/\//', $documentroot)
+						&& strstr($documentroot, ":") !== FALSE
+					) {
 						standard_error('pathmaynotcontaincolon');
 					}
 				}
