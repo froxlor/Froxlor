@@ -768,4 +768,11 @@ if(isFroxlorVersion('0.9.7-svn3'))
 	updateToVersion('0.9.7');
 }
 
+if(isFroxlorVersion('0.9.7'))
+{
+	showUpdateStep("Updating from 0.9.7 to 0.9.8 final");
+	lastStepStatus(0);
+	updateToVersion('0.9.8');
+}
+
 ?>
