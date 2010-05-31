@@ -1,3 +1,17 @@
+froxlor (0.9.8-1+squeeze1) testing; urgency=low
+
+  * new upstream release
+  * depend on wwwconfig-common to provide apache restart on first
+    installation
+
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 31 May 2010 16:19:10 +0200
+
+froxlor (0.9.7-1+squeeze1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 17 May 2010 15:02:49 +0200
+
 froxlor (0.9.6-1+squeeze1) testing; urgency=low
 
   * new upstream release
