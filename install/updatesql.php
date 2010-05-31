@@ -22,7 +22,14 @@ $updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'), $db, 
 $updatelogfile = validateUpdateLogFile(makeCorrectFile(dirname(__FILE__).'/update.log'));
 $filelog = FileLogger::getInstanceOf(array('loginname' => 'updater'), $settings);
 $filelog->setLogFile($updatelogfile);
-$filelog->logAction(ADM_ACTION, LOG_WARNING, '-------------- START LOG --------------');
+
+// if first writing does not work we'll stop, tell the user to fix it
+// and then let him try again.
+try {
+	$filelog->logAction(ADM_ACTION, LOG_WARNING, '-------------- START LOG --------------');
+} catch(Exception $e) {
+	standard_error('exception', $e->getMessage());
+}
 
 /*
  * since froxlor, we have to check if there's still someone

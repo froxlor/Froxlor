@@ -1420,4 +1420,7 @@ $lng['redirect_desc']['rc_found'] = 'found';
 $lng['redirect_desc']['rc_seeother'] = 'see other';
 $lng['redirect_desc']['rc_tempred'] = 'temporary redirect';
 
+// ADDED UN FROXLOR 0.9.8
+$lng['error']['exception'] = '%s';
+
 ?>
