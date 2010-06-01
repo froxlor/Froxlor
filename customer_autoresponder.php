@@ -107,7 +107,7 @@ if($action == "add")
 	}
 	
 	$date_from_off = makecheckbox('date_from_off', $lng['panel']['not_activated'], '-1', false, '-1', true, true);
-	$date_until_off = makecheckbox('date_from_off', $lng['panel']['not_activated'], '-1', false, '-1', true, true);
+	$date_until_off = makecheckbox('date_until_off', $lng['panel']['not_activated'], '-1', false, '-1', true, true);
 
 	eval("echo \"" . getTemplate("email/autoresponder_add") . "\";");
 }
@@ -229,7 +229,7 @@ if($action == "edit")
 		$deactivated = '0';
 		$date_until = date('d-m-Y', $date_until);
 	}
-	$date_from_off = makecheckbox('date_until_off', $lng['panel']['not_activated'], '-1', false, $deactivated, true, true);
+	$date_until_off = makecheckbox('date_until_off', $lng['panel']['not_activated'], '-1', false, $deactivated, true, true);
 
 	$checked = '';
 
