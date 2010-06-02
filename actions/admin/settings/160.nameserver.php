@@ -59,6 +59,14 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					),
+				'system_dns_createmailentry' => array(
+					'label' => $lng['serversettings']['mail_also_with_mxservers'],
+					'settinggroup' => 'system',
+					'varname' => 'dns_createmailentry',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+					),
 				'system_defaultttl' => array(
 					'label' => $lng['serversettings']['defaultttl'],
 					'settinggroup' => 'system',

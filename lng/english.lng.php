@@ -1421,7 +1421,10 @@ $lng['redirect_desc']['rc_found'] = 'found';
 $lng['redirect_desc']['rc_seeother'] = 'see other';
 $lng['redirect_desc']['rc_tempred'] = 'temporary redirect';
 
-// ADDED UN FROXLOR 0.9.8
+// ADDED IN FROXLOR 0.9.8
 $lng['error']['exception'] = '%s';
 
+// ADDED IN FROXLOR 0.9.9-svn1
+$lng['serversettings']['mail_also_with_mxservers'] = 'Create mail-, imap-, pop3- and smtp-"A record" also with MX-Servers set';
+ 
 ?>

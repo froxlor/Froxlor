@@ -225,6 +225,17 @@ class bind
 			{
 				$zonefile.= '@	IN	MX	' . trim($mxserver) . "\n";
 			}
+			
+			if($this->settings['system']['dns_createmailentry'] == '1')
+			{
+				$zonefile.= 'mail	IN	' . $ip_a_record . "\n";
+				if($domain['iswildcarddomain'] != '1')
+				{
+					$zonefile.= 'imap	IN	' . $ip_a_record . "\n";
+					$zonefile.= 'smtp	IN	' . $ip_a_record . "\n";
+					$zonefile.= 'pop3	IN	' . $ip_a_record . "\n";
+				}
+			}
 		}
 
 		/*

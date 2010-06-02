@@ -149,4 +149,13 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if(versionInUpdate($current_version, '0.9.9-svn1'))
+	{
+		$has_preconfig = true;
+		$description = 'When entering MX servers to Froxlor there was no mail-, imap-, pop3- and smtp-"A record" created. You can now chose whether this should be done or not.';
+		$question = '<strong>Do you want these A-records to be created even with MX servers given?:</strong>&nbsp;';
+		$question.= makeyesno('update_defdns_mailentry', '1', '0', '0');
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

@@ -775,4 +775,17 @@ if(isFroxlorVersion('0.9.7'))
 	updateToVersion('0.9.8');
 }
 
+if(isFroxlorVersion('0.9.8'))
+{
+	showUpdateStep("Updating from 0.9.8 to 0.9.9-svn1", false);
+
+	$update_defdns_mailentry = isset($_POST['update_defdns_mailentry']) ? '1' : '0';
+
+	showUpdateStep("Adding new settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'dns_createmailentry', '".(int)$update_defdns_mailentry."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.9-svn1');
+}
+
 ?>
