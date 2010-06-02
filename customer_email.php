@@ -184,6 +184,12 @@ elseif($page == 'emails')
 					$number_forwarders = 0;
 				}
 
+				if(isset($_POST['delete_userfiles'])
+				  && (int)$_POST['delete_userfiles'] == 1)
+				{
+					inserttask('7', $result['loginname'], $result['email']);
+				}
+
 				$db->query("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 				$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `emails_used`=`emails_used` - 1 , `email_forwarders_used` = `email_forwarders_used` - " . (int)$number_forwarders . " $update_users_query_addon WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted email address '" . $result['email'] . "'");
@@ -191,7 +197,7 @@ elseif($page == 'emails')
 			}
 			else
 			{
-				ask_yesno('email_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']));
+				ask_yesno_withcheckbox('email_reallydelete', 'admin_customer_alsoremovemail', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']));
 			}
 		}
 	}

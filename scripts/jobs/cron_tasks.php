@@ -213,7 +213,7 @@ $awstatsclean['headerold']) {
 				/*
 				 * remove homedir
 				 */
-				$homedir = makeCorrectDir($settings['system']['documentroot_prefix'] . $row['data']['loginname']);
+				$homedir = makeCorrectDir($settings['system']['documentroot_prefix'] . '/' . $row['data']['loginname']);
 
 				if($homedir != '/'
 				&& $homedir != $settings['system']['documentroot_prefix']
@@ -226,7 +226,7 @@ $awstatsclean['headerold']) {
 				/*
 				 * remove maildir
 				 */
-				$maildir = makeCorrectDir($settings['system']['vmail_homedir'] . $row['data']['loginname']);
+				$maildir = makeCorrectDir($settings['system']['vmail_homedir'] . '/' . $row['data']['loginname']);
 
 				if($maildir != '/'
 				&& $maildir != $settings['system']['vmail_homedir']
@@ -265,6 +265,35 @@ $awstatsclean['headerold']) {
 						// now get rid of old stuff
 						safe_exec('rm -rf '. escapeshellarg($configdir));
 					}				
+				}
+			}
+		}
+	}
+
+	/**
+	 * TYPE=7 Customer deleted an email account and wants the data to be deleted on the filesystem
+	 */
+	elseif ($row['type'] == '7')
+	{
+		fwrite($debugHandler, '  cron_tasks: Task7 started - deleting customer e-mail data' . "\n");
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task7 started - deleting customer e-mail data');
+
+		if(is_array($row['data']))
+		{
+			if(isset($row['data']['loginname'])
+				&& isset($row['data']['email'])
+			) {
+				/*
+				 * remove specific maildir
+				 */
+				$maildir = makeCorrectDir($settings['system']['vmail_homedir'] .'/'. $row['data']['loginname'] .'/'. $row['data']['email']);
+
+				if($maildir != '/'
+				&& $maildir != $settings['system']['vmail_homedir']
+				&& substr($maildir, 0, strlen($settings['system']['vmail_homedir'])) == $settings['system']['vmail_homedir'])
+				{
+					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
+					safe_exec('rm -rf '.escapeshellarg($maildir));
 				}
 			}
 		}
