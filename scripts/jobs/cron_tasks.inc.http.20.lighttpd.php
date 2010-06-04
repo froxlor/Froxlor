@@ -368,7 +368,7 @@ class lighttpd
 		}
 		else
 		{
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
+			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 
 			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
 			$vhost_content.= $this->create_htaccess($domain);

@@ -27,6 +27,7 @@
  * @param  int    The uid of the user
  * @param  int    The gid of the user
  * @param  bool   Place standard-index.html into the new folder
+ * @param  bool   Allow creating a directory out of the customers docroot
  * 
  * @return bool   true if everything went okay, false if something went wrong
  *
@@ -34,7 +35,7 @@
  * @author Martin Burchert <martin.burchert@syscp.org>
  */
 
-function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeindex = false)
+function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeindex = false, $allow_notwithinhomedir = false)
 {
 	$returncode = true;
 
@@ -47,24 +48,33 @@ function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeind
 		if(substr($dirToCreate, 0, strlen($homeDir)) == $homeDir)
 		{
 			$subdir = substr($dirToCreate, strlen($homeDir));
+			$within_homedir = true;
 		}
 		else
 		{
 			$subdir = $dirToCreate;
+			$within_homedir = false;
 		}
 
 		$subdir = makeCorrectDir($subdir);
-		$subdirlen = strlen($subdir);
-		$subdirs = array();
-		array_push($subdirs, $dirToCreate);
-		$offset = 0;
+		$subdirs = array();		
 
-		while($offset < $subdirlen)
+		if($within_homedir || !$allow_notwithinhomedir)
 		{
-			$offset = strpos($subdir, '/', $offset);
-			$subdirelem = substr($subdir, 0, $offset);
-			$offset++;
-			array_push($subdirs, makeCorrectDir($homeDir . $subdirelem));
+			$subdirlen = strlen($subdir);
+			$offset = 0;
+	
+			while($offset < $subdirlen)
+			{
+				$offset = strpos($subdir, '/', $offset);
+				$subdirelem = substr($subdir, 0, $offset);
+				$offset++;
+				array_push($subdirs, makeCorrectDir($homeDir . $subdirelem));
+			}
+		}
+		else
+		{
+			array_push($subdirs, $dirToCreate);
 		}
 
 		$subdirs = array_unique($subdirs);

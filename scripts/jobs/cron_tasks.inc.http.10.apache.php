@@ -677,7 +677,7 @@ class apache
 				}
 			}
 
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
+			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 			$vhost_content.= $this->getWebroot($domain);
 			$vhost_content.= $this->composePhpOptions($domain);
 			$vhost_content.= $this->getStats($domain);
