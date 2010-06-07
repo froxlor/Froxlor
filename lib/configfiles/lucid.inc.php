@@ -308,7 +308,7 @@ return Array(
 							'apt-get install awstats',
 							'cp /usr/share/doc/awstats/examples/awstats_buildstaticpages.pl /usr/lib/cgi-bin/',
 							'mv '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf').' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^DirData/# DirData/\''.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
+							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
 						),
 					),
 					'libnss' => Array(

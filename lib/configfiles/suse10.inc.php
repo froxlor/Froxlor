@@ -155,7 +155,7 @@ return Array(
 						'commands' => Array(
 							'awstats_configure.pl',
 							makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf').' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^DirData/# DirData/\''.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
+							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
 						)
 					)
 				)

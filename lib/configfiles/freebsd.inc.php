@@ -199,12 +199,12 @@ return Array(
 							'cd /usr/ports/www/awstats/',
 							'make install clean',
 							'cp /usr/local/www/awstats/cgi-bin/awstats.model.conf '.makeCorrectDir($settings['system']['awstats_conf']),
-							'sed -i.bak \'s/^LogFile/# LogFile/\''.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
-							'sed -i.bak \'s/^LogType/# LogType/\''.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
-							'sed -i.bak \'s/^LogFormat/# LogFormat/\''.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
-							'sed -i.bak \'s/^LogSeparator/# LogSeparator/\''.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
-							'sed -i.bak \'s/^SiteDomain/# SiteDomain/\''.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
-							'sed -i.bak \'s/^DirData/# DirData/\''.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf')
+							'sed -i.bak \'s/^LogFile/# LogFile/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
+							'sed -i.bak \'s/^LogType/# LogType/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
+							'sed -i.bak \'s/^LogFormat/# LogFormat/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
+							'sed -i.bak \'s/^LogSeparator/# LogSeparator/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
+							'sed -i.bak \'s/^SiteDomain/# SiteDomain/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
+							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf')
 						)
 					),
 					'libnss' => Array(
