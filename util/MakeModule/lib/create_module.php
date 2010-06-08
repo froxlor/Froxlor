@@ -150,11 +150,15 @@ if($proceed == I_YES)
 		<longdescription>'.$data['shortdesc'].'</longdescription>
 		<website>'.$data['website'].'</website>
 		<authorgroup>
-			<name>'.$data['author']['name'].'</name>
-			<email>'.$data['author']['mail'].'</email>
+			<author>
+				<name>'.$data['author']['name'].'</name>
+				<email>'.$data['author']['mail'].'</email>
+			</author>
 		</authorgroup>
 		<copyright>'.date('Y', time()).'</copyright>
 	</information>
+	<dependencies>
+	</dependencies>
 </froxlormodule>
 ';
 		fwrite($xml, $raw_xml);
