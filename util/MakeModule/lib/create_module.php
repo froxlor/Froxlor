@@ -1,5 +1,11 @@
 <?php
 
+if (function_exists("date_default_timezone_set") 
+	&& function_exists("date_default_timezone_get")
+) {
+	@date_default_timezone_set(@date_default_timezone_get());
+}
+
 define('I_YES', 1);
 define('I_NO', 0);
 
