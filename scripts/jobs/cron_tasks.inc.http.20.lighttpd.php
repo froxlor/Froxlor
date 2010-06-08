@@ -283,10 +283,18 @@ class lighttpd
 				if((int)$domain['parentdomainid'] == 0)
 				{
 					$vhost_no = '51';
+					if($ssl == '1')
+					{
+						$vhost_no = '61';
+					}
 				}
 				else
 				{
 					$vhost_no = '50';
+					if($ssl == '1')
+					{
+						$vhost_no = '60';
+					}
 				}
 
 				$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'].'/vhosts/'.$vhost_no.'_'.$domain['domain'].'.conf');
