@@ -173,9 +173,7 @@ while($row = $db->fetch_array($result))
 				{
 					$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
 				}
-			}
-			// make the stuff readable for the customer, #258
-			makeChownWithNewStats($row);			
+			}			
 		}
 
 		reset($domainlist[$row['customerid']]);
@@ -193,6 +191,9 @@ while($row = $db->fetch_array($result))
 		{
 			$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
 		}
+		
+		// make the stuff readable for the customer, #258
+		makeChownWithNewStats($row);
 	}
 
 	/**
