@@ -1,7 +1,7 @@
 <?php
 
-define(I_YES, 1);
-define(I_NO, 0);
+define('I_YES', 1);
+define('I_NO', 0);
 
 $system = new MakeModule();
 $data = array();
