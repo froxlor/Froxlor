@@ -370,12 +370,20 @@ class lighttpd
 		{
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 
+			$only_webroot = false;
+			if($ssl_vhost === false && $domain['ssl_redirect'] == '1')
+			{
+				$only_webroot = true;
+			}
 			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
-			$vhost_content.= $this->create_htaccess($domain);
-			$vhost_content.= $this->create_pathOptions($domain);
-			$vhost_content.= $this->composePhpOptions($domain);
-			$vhost_content.= $this->getStats($domain);
-			$vhost_content.= $this->getLogFiles($domain);
+			if(!$only_webroot)
+			{
+				$vhost_content.= $this->create_htaccess($domain);
+				$vhost_content.= $this->create_pathOptions($domain);
+				$vhost_content.= $this->composePhpOptions($domain);
+				$vhost_content.= $this->getStats($domain);
+				$vhost_content.= $this->getLogFiles($domain);
+			}
 		}
 
 		if ($domain['specialsettings'] != "") {
