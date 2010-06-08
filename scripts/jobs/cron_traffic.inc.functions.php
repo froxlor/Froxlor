@@ -31,8 +31,16 @@ function makeChownWithNewStats($row)
 	global $settings;
 
 	// get correct user
-	$user = $row['loginname'];
-	$group = $row['guid'];
+	if($settings['system']['mod_fcgid'] == 1)
+	{
+		$user = $row['loginname'];
+		$group = $row['loginname'];
+	}
+	else
+	{
+		$user = $row['guid'];
+		$group = $row['guid'];
+	}
 
 	// get correct directory
 	$dir = $row['documentroot'];
