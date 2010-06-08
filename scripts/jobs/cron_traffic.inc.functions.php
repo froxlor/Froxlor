@@ -17,6 +17,40 @@
  * @version    $Id$
  */
 
+/**
+ * chowns either awstats or webalizer folder,
+ * either with webserver-user or - if fcgid
+ * is used - the customers name, #258
+ * 
+ * @param array $row array if panel_customers
+ * 
+ * @return void
+ */
+function makeChownWithNewStats($row)
+{
+	global $settings;
+
+	// get correct user
+	$user = $row['loginname'];
+	$group = $row['guid'];
+
+	// get correct directory
+	$dir = $row['documentroot'];
+	if($settings['system']['awstats_enabled'] == '1')
+	{
+		$dir .= '/awstats/';
+	} else {
+		$dir .= '/webalizer/';
+	}
+
+	// only run chown if directory exists
+	if (file_exists($dir))
+	{
+		// run chown
+		safe_exec('chown -R '.escapeshellarg($user).':'.escapeshellarg($group).' '.escapeshellarg(makeCorrectDir($dir)));
+	}
+}
+
 function awstatsDoSingleDomain($domain, $outputdir)
 {
 	global $cronlog, $settings;
