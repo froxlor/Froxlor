@@ -89,7 +89,7 @@ if($proceed == I_YES)
 	$module_skeleton = str_replace('{$MODULE_WEBSITE}', $data['website'], $module_skeleton);
 	echo "[OK]\n";
 	
-	echo "Saving bew module to '".$module_path."'\t\t";
+	echo "Saving new module to '".$module_path."'\t\t";
 	$mod_file = $module_path.'/module.'.$data['vendor'].$data['module'].'.php';
 	
 	if (file_exists($mod_file)) {
