@@ -21,7 +21,7 @@ DESCRIPTION="A PHP-based webhosting-oriented control panel for servers."
 HOMEPAGE="http://www.froxlor.org/"
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="aps autoresponder awstats bind domainkey dovecot fcgid lighttpd +log mailquota realtime ssl +tickets"
+IUSE="aps autoresponder awstats bind domainkey dovecot fcgid lighttpd +log mailquota perl realtime ssl +tickets"
 
 DEPEND="
 	!www-apps/syscp
@@ -912,7 +912,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 
 	einfo "Configuring Gentoo-Froxlor cronjob ..."
 	exeinto "${ROOT}/etc/cron.d"
-	newexe "${ROOT}/usr/share/{PN}/froxlor.cron" froxlor
+	newexe "${ROOT}/usr/share/${PN}/froxlor.cron" froxlor
 
 	if ! useq dovecot ; then
 		einfo "Configuring Courier-IMAP ..."
