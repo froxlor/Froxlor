@@ -992,8 +992,15 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	fi
 
 	einfo "Configuring Postfix ..."
+	local POSTFIX_PATH=""
+	if useq dovecot ; then
+		POSTFIX_PATH="postfix_dovecot"
+	else
+		POSTFIX_PATH="postfix_courier"
+	fi
+	
 	rm -f "${ROOT}/etc/postfix/main.cf"
-	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_main.cf" "${ROOT}/etc/postfix/main.cf"
+	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_postfix_main.cf" "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<VIRTUAL_MAILBOX_BASE>|/var/customers/mail|g" -i "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<VIRTUAL_UID_MAPS>|9997|g" -i "${ROOT}/etc/postfix/main.cf"
@@ -1007,11 +1014,11 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 
 		# add line to master.cf
 		local MASTER_DOVECOT=""
-		MASTER_DOVECOT=`cat ${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_master.cf`
+		MASTER_DOVECOT=`cat ${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_postfix_master.cf`
 		echo -e "\n${MASTER_DOVECOT}" >> "${ROOT}/etc/postfix/master.cf"
 	fi
 	if useq mailquota ; then
-		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/mysql-virtual_mailbox_limit_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/mysql-virtual_mailbox_limit_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
@@ -1038,9 +1045,9 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		sed -e "s|#tls_random_source|tls_random_source|g" -i "${ROOT}/etc/postfix/main.cf"
 	fi
 
-	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_mysql-virtual_alias_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_alias_maps.cf"
-	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_mysql-virtual_mailbox_domains.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_domains.cf"
-	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_postfix_mysql-virtual_mailbox_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
+	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_postfix_mysql-virtual_alias_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_alias_maps.cf"
+	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_postfix_mysql-virtual_mailbox_domains.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_domains.cf"
+	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_postfix_mysql-virtual_mailbox_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
 
 	sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/postfix/mysql-virtual_alias_maps.cf"
 	sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/postfix/mysql-virtual_alias_maps.cf"
@@ -1062,9 +1069,9 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	chmod 0640 "${ROOT}/etc/postfix/mysql-virtual_mailbox_domains.cf"
 	chmod 0640 "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
 
-	if useq ! dovecot ; then
+	if ! useq dovecot ; then
 		rm -f "${ROOT}/etc/sasl2/smtpd.conf"
-		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/postfix/etc_sasl2_smtpd.conf" "${ROOT}/etc/sasl2/smtpd.conf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_sasl2_smtpd.conf" "${ROOT}/etc/sasl2/smtpd.conf"
 		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
