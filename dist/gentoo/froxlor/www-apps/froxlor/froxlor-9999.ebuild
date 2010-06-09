@@ -21,7 +21,7 @@ DESCRIPTION="A PHP-based webhosting-oriented control panel for servers."
 HOMEPAGE="http://www.froxlor.org/"
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="aps autoresponder awstats bind domainkey dovecot fcgid lighttpd +log mailquota perl realtime ssl +tickets"
+IUSE="aps autoresponder awstats bind domainkey dovecot fcgid lighttpd +log mailquota realtime ssl +tickets"
 
 DEPEND="
 	!www-apps/syscp
@@ -747,11 +747,6 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 }" >> "${ROOT}/etc/lighttpd/lighttpd.conf"
 
 		fi
-
-		if useq perl ; then
-		    echo -e "\nserver.modules += ("mod_cgi")" >> "${ROOT}/etc/lighttpd/lighttpd.conf"
-		fi
-
 	else
 		einfo "Configuring apache2"
 		if useq fcgid ; then
@@ -998,7 +993,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	else
 		POSTFIX_PATH="postfix_courier"
 	fi
-	
+
 	rm -f "${ROOT}/etc/postfix/main.cf"
 	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_postfix_main.cf" "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/postfix/main.cf"
