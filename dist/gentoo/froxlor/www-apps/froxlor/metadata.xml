@@ -15,6 +15,7 @@
   <flag name='domainkey'>Adds support for writing DKIM DNS-Records and
 	  Filters for them</flag>
   <flag name='dovecot'>use Dovecot instead of Courier</flag>
+  <flag name='ftpquota'>Adds support for FTP Quotas for use with ProFTPd</flag>
   <flag name='fcgid'>Adds support for FCGId</flag>
   <flag name='lighttpd'>use ligHTTPd instead of Apache</flag>
   <flag name='log'>Adds support for logging actions in the Panel</flag>

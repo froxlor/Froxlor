@@ -13,6 +13,7 @@ www-apps/froxlor:bind - Adds support for writing BIND configuration files
 www-apps/froxlor:domainkey - Adds support for writing DKIM DNS-Records and Filters for them
 www-apps/froxlor:dovecot - use Dovecot instead of Courier
 www-apps/froxlor:fcgid - Adds support for FCGId
+www-apps/froxlor:ftpquota - Adds support for FTP Quotas for use with ProFTPd
 www-apps/froxlor:lighttpd - use ligHTTPd instead of Apache
 www-apps/froxlor:log - Adds support for logging actions in the Panel
 www-apps/froxlor:mailquota - Adds support for Quotas for the maildirs of Customers

@@ -21,7 +21,7 @@ DESCRIPTION="A PHP-based webhosting-oriented control panel for servers."
 HOMEPAGE="http://www.froxlor.org/"
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="aps autoresponder awstats bind domainkey dovecot fcgid lighttpd +log mailquota realtime ssl +tickets"
+IUSE="aps autoresponder awstats bind domainkey dovecot fcgid ftpquota lighttpd +log mailquota realtime ssl +tickets"
 
 DEPEND="
 	!www-apps/syscp
@@ -31,6 +31,7 @@ DEPEND="
 	>=dev-lang/php-5.2[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
 	|| ( <dev-lang/php-5.3[pcre] >=dev-lang/php-5.3 )
 	net-ftp/proftpd[mysql,ssl=]
+	ftpquota? ( net-ftp/proftpd[softquota] )
 	awstats? (
 		www-misc/awstats
 		( !lighttpd? (
@@ -901,6 +902,15 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		sed -e "s|#TLSVerifyClient|TLSVerifyClient|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 		sed -e "s|#TLSRequired|TLSRequired|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 		sed -e "s|#</IfModule>|</IfModule>|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+	fi
+	if ! useq ftpquota ; then
+		sed -e "s|QuotaEngine|#QuotaEngine|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|QuotaShowQuotas|#QuotaShowQuotas|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|QuotaDisplayUnits|#QuotaDisplayUnits|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|QuotaLock|#QuotaLock|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|QuotaLimitTable|#QuotaLimitTable|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|QuotaTallyTable|#QuotaTallyTable|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|SQLNamedQuery|#SQLNamedQuery|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 	fi
 	chown root:0 "${ROOT}/etc/proftpd/proftpd.conf"
 	chmod 0600 "${ROOT}/etc/proftpd/proftpd.conf"
