@@ -788,4 +788,11 @@ if(isFroxlorVersion('0.9.8'))
 	updateToVersion('0.9.9-svn1');
 }
 
+if(isFroxlorVersion('0.9.9-svn1'))
+{
+	showUpdateStep("Updating from 0.9.9-svn1 to 0.9.9 final");
+	lastStepStatus(0);
+	updateToVersion('0.9.9');
+}
+
 ?>
