@@ -38,6 +38,7 @@ class ApsParser
 	private $settings = array();
 	private $db = false;
 	private $RootDir = '';
+	private $aps_version = '1.0';
 
 	/**
 	 * Constructor of class, setup basic variables needed by the class
@@ -988,14 +989,26 @@ class ApsParser
 			if($Xml == false)continue;
 			$Icon = './images/default.png';
 
+			$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';
+
 			//show data and status of package
 
-			if($Xml->icon['path'])
+			if($this->aps_version != '1.0')
 			{
-				$Icon = './packages/' . $Row2['Path'] . '/' . basename($Xml->icon['path']);
+				$iconpath = $Xml->presentation->icon['path'];
+				$Summary = htmlspecialchars($Xml->presentation->summary);
+			} 
+			else
+			{
+				$iconpath = $Xml->icon['path'];
+				$Summary = htmlspecialchars($Xml->summary);
 			}
 
-			$Summary = $Xml->summary;
+			if($iconpath)
+			{
+				$Icon = './packages/' . $Row2['Path'] . '/' . basename($iconpath);
+			}
+
 			$Fieldname = $lng['aps']['version'];
 			$Fieldvalue = $Xml->version . ' (Release ' . $Xml->release . ')';
 			eval("\$Data.=\"" . getTemplate("aps/data") . "\";");
@@ -1345,16 +1358,36 @@ class ApsParser
 		{
 			$Error = array();
 
+			$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';
+
 			//check alot of stuff if package is supported
 			//php modules
 
-			$XmlPhp = $Xml->requirements->children('http://apstandard.com/ns/1/php');
+			if ($this->aps_version == '1.0')
+			{
+				// the good ole way
+				$XmlPhp = $Xml->requirements->children('http://apstandard.com/ns/1/php');
+			} 
+			else 
+			{
+				// since 1.1
+				$Xml->registerXPathNamespace('php', 'http://apstandard.com/ns/1/php');
+
+				$XmlPhp = new DynamicProperties;
+				$XmlPhp->extension = getXPathValue($Xml, '//php:extension', false);
+				$XmlPhp->function = getXPathValue($Xml, '//php:function', false);
+			}
 
 			if($XmlPhp->extension)
 			{
 				$ExtensionsLoaded = get_loaded_extensions();
 				foreach($XmlPhp->extension as $Extension)
 				{
+					if(strtolower($Extension) == 'php')
+					{
+						continue;
+					}
+
 					if(!in_array($Extension, $ExtensionsLoaded)
 					   && !self::CheckException('php', 'extension', $Extension))
 					{
@@ -1389,6 +1422,11 @@ class ApsParser
 			);
 			foreach($PhpValues as $Value)
 			{
+				if ($this->aps_version != '1.0')
+				{
+					$XmlPhp->{$Value} = getXPathValue($Xml, '//php:'.$Value);
+				}
+
 				if($XmlPhp->{$Value})
 				{
 					if(self::TrueFalseIniGet($Value) != $XmlPhp->{$Value}
@@ -1397,6 +1435,11 @@ class ApsParser
 						$Error[] = sprintf($lng['aps']['php_configuration'], str_replace(array('-'), array('_'), $Value));
 					}
 				}
+			}
+
+			if ($this->aps_version != '1.0')
+			{
+				$XmlPhp->{'post-max-size'} = getXPathValue($Xml, '//php:post-max-size');
 			}
 
 			if($XmlPhp->{'post-max-size'})
@@ -1408,6 +1451,11 @@ class ApsParser
 				}
 			}
 
+			if ($this->aps_version != '1.0')
+			{
+				$XmlPhp->{'memory-limit'} = getXPathValue($Xml, '//php:memory-limit');
+			}
+
 			if($XmlPhp->{'memory-limit'})
 			{
 				if(self::PhpMemorySizeToBytes(ini_get('memory_limit')) < intval($XmlPhp->{'memory-limit'})
@@ -1415,6 +1463,11 @@ class ApsParser
 				{
 					$Error[] = $lng['aps']['php_configuration_memory_limit'];
 				}
+			}
+
+			if ($this->aps_version != '1.0')
+			{
+				$XmlPhp->{'max-execution-time'} = getXPathValue($Xml, '//php:max-execution-time');
 			}
 
 			if($XmlPhp->{'max-execution-time'})
@@ -1450,7 +1503,21 @@ class ApsParser
 
 			//database
 
-			$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+			if ($this->aps_version == '1.0')
+			{
+				// the good ole way
+				$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+			} 
+			else 
+			{
+				// since 1.1
+				$Xml->registerXPathNamespace('db', 'http://apstandard.com/ns/1/db');
+
+				$XmlDb = new DynamicProperties;
+				$XmlDb->db->id = getXPathValue($Xml, '//db:id');
+				$XmlDb->db->{'server-type'} = getXPathValue($Xml, '//db:server-type');
+				$XmlDb->db->{'server-min-version'} = getXPathValue($Xml, '//db:server-min-version');
+			}
 
 			if($XmlDb->db->id)
 			{
@@ -1467,7 +1534,21 @@ class ApsParser
 
 			//ASP.NET
 
-			$XmlAsp = $Xml->requirements->children('http://apstandard.com/ns/1/aspnet');
+			if ($this->aps_version == '1.0')
+			{
+				// the good ole way
+				$XmlAsp = $Xml->requirements->children('http://apstandard.com/ns/1/aspnet');
+			} 
+			else 
+			{
+				// since 1.1
+				$Xml->registerXPathNamespace('aspnet', 'http://apstandard.com/ns/1/aspnet');
+
+				$XmlAsp = new DynamicProperties;
+				$XmlAsp->handler = getXPathValue($Xml, '//aspnet:handler');
+				$XmlAsp->permissions = getXPathValue($Xml, '//aspnet:permissions');
+				$XmlAsp->version = getXPathValue($Xml, '//aspnet:version');
+			}
 
 			if($XmlAsp->handler
 			   || $XmlAsp->permissions
@@ -1478,7 +1559,19 @@ class ApsParser
 
 			//CGI
 
-			$XmlCgi = $Xml->requirements->children('http://apstandard.com/ns/1/cgi');
+			if ($this->aps_version == '1.0')
+			{
+				// the good ole way
+				$XmlCgi = $Xml->requirements->children('http://apstandard.com/ns/1/cgi');
+			} 
+			else 
+			{
+				// since 1.1
+				$Xml->registerXPathNamespace('cgi', 'http://apstandard.com/ns/1/cgi');
+
+				$XmlCgi = new DynamicProperties;
+				$XmlCgi->handler = getXPathValue($Xml, '//cgi:handler');
+			}
 
 			if($XmlCgi->handler)
 			{
@@ -1487,7 +1580,20 @@ class ApsParser
 
 			//webserver modules
 
-			$XmlWebserver = $Xml->requirements->children('http://apstandard.com/ns/1/apache');
+			if ($this->aps_version == '1.0')
+			{
+				// the good ole way
+				$XmlWebserver = $Xml->requirements->children('http://apstandard.com/ns/1/apache');
+			} 
+			else
+			{
+				// since 1.1
+				$Xml->registerXPathNamespace('apache', 'http://apstandard.com/ns/1/apache');
+
+				$XmlWebserver = new DynamicProperties;
+				$XmlWebserver->{'required-module'} = getXPathValue($Xml, '//apache:required-module');
+				$XmlWebserver->htaccess = getXPathValue($Xml, '//apache:htaccess');
+			}
 
 			if($XmlWebserver->{'required-module'})
 			{
@@ -1527,7 +1633,21 @@ class ApsParser
 
 			//validation against a charset not possible in current version
 
-			foreach($Xml->settings->group as $Group)
+			if ($this->aps_version == '1.0')
+			{
+				// the good ole way
+				$aps_settings_array = $Xml->settings->group;
+			} 
+			else
+			{
+				// since 1.1
+				$aps_settings_array = $Xml->{'global-settings'}->setting;
+				if(!is_array($aps_settings_array)) {
+					$aps_settings_array = $Xml->service->settings->group;
+				}
+			}
+			
+			foreach($aps_settings_array as $Group)
 			{
 				foreach($Group->setting as $Setting)
 				{
@@ -1544,13 +1664,16 @@ class ApsParser
 
 			//check different errors/features in submappings
 
-			$Return = self::CheckSubmappings($Xml->mapping, $Xml->mapping['url']);
+			if ($this->aps_version == '1.0')
+			{			
+				$Return = self::CheckSubmappings($Xml->mapping, $Xml->mapping['url']);
 
-			if(count($Return) != 0)
-			{
-				foreach($Return as $Value)
+				if(count($Return) != 0)
 				{
-					if(!in_array($Value, $Error))$Error[] = $Value;
+					foreach($Return as $Value)
+					{
+						if(!in_array($Value, $Error))$Error[] = $Value;
+					}
 				}
 			}
 
@@ -1616,28 +1739,57 @@ class ApsParser
 				self::GetContentFromZip($Filename, 'APP-META.xml', $Destination . 'APP-META.xml');
 
 				//copy screenshots
-
-				if($Xml->screenshot)
+				
+				if ($this->aps_version != '1.0')
 				{
-					foreach($Xml->screenshot as $Screenshot)
+					$xml_screenshots = $Xml->presentation->screenshot;;
+				}
+				else
+				{
+					$xml_screenshots = $Xml->screenshot;
+				}
+				
+
+				if($xml_screenshots)
+				{
+					foreach($xml_screenshots as $Screenshot)
 					{
 						self::GetContentFromZip($Filename, $Screenshot['path'], $Destination . basename($Screenshot['path']));
 					}
 				}
 
 				//copy icon
-
-				if($Xml->icon['path'])
+				
+				if ($this->aps_version != '1.0')
 				{
-					self::GetContentFromZip($Filename, $Xml->icon['path'], $Destination . basename($Xml->icon['path']));
+					$xml_iconpath = $Xml->presentation->icon['path'];
+				}
+				else
+				{
+					$xml_iconpath = $Xml->icon['path'];
+				}
+
+				if($xml_iconpath)
+				{
+					self::GetContentFromZip($Filename, $xml_iconpath, $Destination . basename($xml_iconpath));
 				}
 
 				//copy license
-
-				if($Xml->license
-				   && $Xml->license->text->file)
+				
+				if ($this->aps_version != '1.0')
 				{
-					self::GetContentFromZip($Filename, $Xml->license->text->file, $Destination . 'license.txt');
+					$xml_license = $Xml->service->license;
+				}
+				else
+				{
+					$xml_license = $Xml->license;
+				}				
+				
+
+				if($xml_license
+				   && $xml_license->text->file)
+				{
+					self::GetContentFromZip($Filename, $xml_license->text->file, $Destination . 'license.txt');
 				}
 
 				//insert package to database
@@ -2363,10 +2515,26 @@ class ApsParser
 
 		if($Xml == false)return false;
 
+		$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';		
+
 		//check all data fields of xml file against inut of customer
 
+		if ($this->aps_version == '1.0')
+		{
+			// the good ole way
+			$aps_settings_array = $Xml->settings->group;
+		} 
+		else
+		{
+			// since 1.1
+			$aps_settings_array = $Xml->{'global-settings'}->setting;
+			if(!is_array($aps_settings_array)) {
+				$aps_settings_array = $Xml->service->settings->group;
+			}			
+		}
+		
 		$Error = array();
-		foreach($Xml->settings->group as $Group)
+		foreach($aps_settings_array as $Group)
 		{
 			foreach($Group->setting as $Setting)
 			{
@@ -2542,7 +2710,19 @@ class ApsParser
 
 		//database required?
 
-		$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+		if ($this->aps_version == '1.0')
+		{
+			// the good ole way
+			$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+		} 
+		else 
+		{
+			// since 1.1
+			$Xml->registerXPathNamespace('db', 'http://apstandard.com/ns/1/db');
+
+			$XmlDb = new DynamicProperties;
+			$XmlDb->db->id = getXPathValue($Xml, '//db:id');
+		}
 
 		if($XmlDb->db->id)
 		{
@@ -2664,10 +2844,19 @@ class ApsParser
 			self::SetInstallationValue($PackageId, $CustomerId, 'main_location', '');
 		}
 
-		if($Xml->license)
+		if ($this->aps_version != '1.0')
 		{
-			if($Xml->license['must-accept']
-			   && $Xml->license['must-accept'] == 'true')
+			$xml_license = $Xml->service->license;
+		}
+		else
+		{
+			$xml_license = $Xml->license;
+		}
+		
+		if($xml_license)
+		{
+			if($xml_license['must-accept']
+			   && $xml_license['must-accept'] == 'true')
 			{
 				if(isset($_POST['license'])
 				   && $_POST['license'] == 'true')
@@ -2712,6 +2901,8 @@ class ApsParser
 
 		if($Xml == false)return false;
 
+		$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';
+		
 		//show notifcation if customer has reached his installation limit
 
 		if($this->userinfo['aps_packages'] != '-1'
@@ -2724,10 +2915,19 @@ class ApsParser
 		//icon for package
 
 		$Icon = './images/default.png';
-
-		if($Xml->icon['path'])
+		
+		if($this->aps_version != '1.0')
 		{
-			$Icon = './packages/' . $Row['Path'] . '/' . basename($Xml->icon['path']);
+			$iconpath = $Xml->presentation->icon['path'];		
+		} 
+		else
+		{
+			$iconpath = $Xml->icon['path'];
+		}
+
+		if($iconpath)
+		{
+			$Icon = './packages/' . $Row['Path'] . '/' . basename($iconpath);
 		}
 
 		//show error message if some input was wrong
@@ -2761,7 +2961,7 @@ class ApsParser
 			{
 				if($Value)
 				{
-					if($Row3['ID'] == $Value)
+					if($Row3['id'] == $Value)
 					{
 						$Temp.= '<option selected="selected" value="' . $Row3['id'] . '">' . $Row3['domain'] . '</option>';
 					}
@@ -2813,7 +3013,19 @@ class ApsParser
 
 		//database required?
 
-		$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+		if ($this->aps_version == '1.0')
+		{
+			// the good ole way
+			$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+		} 
+		else 
+		{
+			// since 1.1
+			$Xml->registerXPathNamespace('db', 'http://apstandard.com/ns/1/db');
+
+			$XmlDb = new DynamicProperties;
+			$XmlDb->db->id = getXPathValue($Xml, '//db:id');
+		}
 
 		if($XmlDb->db->id)
 		{
@@ -2831,8 +3043,22 @@ class ApsParser
 			$Fieldvalue = $Temp;
 			eval("\$Data.=\"" . getTemplate("aps/data") . "\";");
 		}
+		
+		if ($this->aps_version == '1.0')
+		{
+			// the good ole way
+			$aps_settings_array = $Xml->settings->group;
+		} 
+		else
+		{
+			// since 1.1
+			$aps_settings_array = $Xml->{'global-settings'}->setting;
+			if(!is_array($aps_settings_array)) {
+				$aps_settings_array = $Xml->service->settings->group;
+			}
+		}		
 
-		foreach($Xml->settings->group as $Group)
+		foreach($aps_settings_array as $Group)
 		{
 			$GroupPrinted = false;
 			foreach($Group->setting as $Setting)
@@ -3015,16 +3241,25 @@ class ApsParser
 			}
 		}
 
-		if($Xml->license)
+		if ($this->aps_version != '1.0')
+		{
+			$xml_license = $Xml->service->license;
+		}
+		else
+		{
+			$xml_license = $Xml->license;
+		}
+		
+		if($xml_license)
 		{
 			$Temp = '';
 
-			if($Xml->license['must-accept']
-			   && $Xml->license['must-accept'] == 'true')
+			if($xml_license['must-accept']
+			   && $xml_license['must-accept'] == 'true')
 			{
-				if($Xml->license->text->name)$Temp.= $Xml->license->text->name . '<br/>';
+				if($xml_license->text->name)$Temp.= $xml_license->text->name . '<br/>';
 
-				if($Xml->license->text->file)
+				if($xml_license->text->file)
 				{
 					$Temp.= '<textarea name="text" rows="10" cols="55">';
 					$FileContent = file_get_contents('./packages/' . $Row['Path'] . '/license.txt');
@@ -3037,7 +3272,7 @@ class ApsParser
 				}
 				else
 				{
-					$Temp.= '<a target="_blank" href="' . htmlspecialchars($Xml->license->text->url) . '">' . $lng['aps']['error_license'] . '</a>';
+					$Temp.= '<a target="_blank" href="' . htmlspecialchars($xml_license->text->url) . '">' . $lng['aps']['error_license'] . '</a>';
 					$Groupname = $lng['aps']['license'];
 					$Fieldname = $lng['aps']['license'];
 					$Fieldvalue = $Temp;
@@ -3088,14 +3323,37 @@ class ApsParser
 		if($Xml == false)return false;
 		$Icon = './images/default.png';
 
-		//show icon and basic data
+		$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';
 
-		if($Xml->icon['path'])
+		//show icon and basic data
+		if($this->aps_version != '1.0')
 		{
-			$Icon = './packages/' . $Row['Path'] . '/' . basename($Xml->icon['path']);
+			$iconpath = $Xml->presentation->icon['path'];
+			$Summary = htmlspecialchars($Xml->presentation->summary);
+			$categories = $Xml->presentation->categories;
+			$languages =  $Xml->presentation->languages;
+			$description = $Xml->presentation->description;
+			$changelogs = $Xml->presentation->changelog;
+			$license = $Xml->service->license;
+			$screenshots = $Xml->presentation->screenshot;			
+		} 
+		else
+		{
+			$iconpath = $Xml->icon['path'];
+			$Summary = htmlspecialchars($Xml->summary);
+			$categories = $Xml->categories;
+			$languages =  $Xml->languages;
+			$description = $Xml->description;
+			$changelogs = $Xml->changelog;
+			$license = $Xml->license;
+			$screenshots = $Xml->screenshot;
 		}
 
-		$Summary = htmlspecialchars($Xml->summary);
+		if($iconpath)
+		{
+			$Icon = './packages/' . $Row['Path'] . '/' . basename($iconpath);
+		}
+
 		$Fieldname = $lng['aps']['version'];
 		$Fieldvalue = $Xml->version . ' (Release ' . $Xml->release . ')';
 		eval("\$Data.=\"" . getTemplate("aps/data") . "\";");
@@ -3120,12 +3378,12 @@ class ApsParser
 
 		//show categories
 
-		if($Xml->categories)
+		if($categories)
 		{
 			$Temp = '';
-			foreach($Xml->categories->category as $Categories)
+			foreach($categories->category as $_categories)
 			{
-				$Temp.= htmlspecialchars($Categories[0]) . '<br/>';
+				$Temp.= htmlspecialchars($_categories[0]) . '<br/>';
 			}
 
 			$Fieldname = $lng['aps']['categories'];
@@ -3135,12 +3393,12 @@ class ApsParser
 
 		//show available languages
 
-		if($Xml->languages)
+		if($languages)
 		{
 			$Temp = '';
-			foreach($Xml->languages->language as $Languages)
+			foreach($languages->language as $_languages)
 			{
-				$Temp.= $Languages[0] . ' ';
+				$Temp.= $_languages[0] . ' ';
 			}
 
 			$Fieldname = $lng['aps']['languages'];
@@ -3153,7 +3411,7 @@ class ApsParser
 		if($All == true)
 		{
 			$Fieldname = $lng['aps']['long_description'];
-			$Fieldvalue = htmlspecialchars($Xml->description);
+			$Fieldvalue = htmlspecialchars($description);
 			eval("\$Data.=\"" . getTemplate("aps/data") . "\";");
 
 			//show config script language
@@ -3168,7 +3426,7 @@ class ApsParser
 			//show changelog
 
 			$Temp = '<ul>';
-			foreach($Xml->changelog->version as $Versions)
+			foreach($changelogs->version as $Versions)
 			{
 				$Temp.= '<li><strong>' . $Versions['version'] . ' (Release ' . $Versions['release'] . ')</strong>';
 				$Temp.= '<ul>';
@@ -3187,13 +3445,13 @@ class ApsParser
 
 			//show license
 
-			if($Xml->license)
+			if($license)
 			{
-				if($Xml->license->text->file)
+				if($license->text->file)
 				{
 					$Temp = '';
 
-					if($Xml->license->text->name)$Temp = $Xml->license->text->name . '<br/>';
+					if($license->text->name)$Temp = $license->text->name . '<br/>';
 					$Temp.= '<form name="license" action="#"><textarea name="text" rows="10" cols="70">';
 					$FileContent = file_get_contents('./packages/' . $Row['Path'] . '/license.txt');
 					$Temp.= htmlentities($FileContent, ENT_QUOTES, 'ISO-8859-1');
@@ -3205,23 +3463,23 @@ class ApsParser
 				else
 				{
 					$Fieldname = $lng['aps']['license'];
-					$Fieldvalue = '<a target="_blank" href="' . htmlspecialchars($Xml->license->text->url) . '">' . $lng['aps']['linktolicense'] . '</a>';
+					$Fieldvalue = '<a target="_blank" href="' . htmlspecialchars($license->text->url) . '">' . $lng['aps']['linktolicense'] . '</a>';
 					eval("\$Data.=\"" . getTemplate("aps/data") . "\";");
 				}
 			}
 
 			//show screenshots
 
-			if($Xml->screenshot)
+			if($screenshots)
 			{
 				$Count = 0;
 				$Temp = '';
-				foreach($Xml->screenshot as $Screenshot)
+				foreach($screenshots as $Screenshot)
 				{
 					$Count+= 1;
 					$Temp.= '<img src="./packages/' . $Row['Path'] . '/' . basename($Screenshot['path']) . '" alt="' . $Screenshot->description . '"/><br/><em>' . $Screenshot->description . '</em><br/>';
 
-					if(count($Xml->screenshot) != $Count)$Temp.= '<br/>';
+					if(count($screenshots) != $Count)$Temp.= '<br/>';
 				}
 
 				$Fieldname = $lng['aps']['screenshots'];

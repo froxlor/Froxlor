@@ -32,6 +32,7 @@ class ApsInstaller extends ApsParser
 	private $RealPath = '';
 	private $RootDir = '';
 	private $Hosts = '';
+	private $aps_version = '1.0';
 
 	/**
 	 * constructor of class. setup some basic variables
@@ -72,6 +73,8 @@ class ApsInstaller extends ApsParser
 
 			$XmlContent = file_get_contents($this->RootDir . 'packages/' . $Row['Path'] . '/APP-META.xml');
 			$Xml = new SimpleXMLElement($XmlContent);
+			
+			$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';
 
 			//check for unparseable xml data
 
@@ -146,9 +149,16 @@ class ApsInstaller extends ApsParser
 			$ReturnStatus = 0;
 
 			// make configure-script executable
-			chmod($this->RealPath . $this->DomainPath . '/install_scripts/configure', 0755);
+			if($this->aps_version != '1.0')
+			{
+				$scriptname = (string)$Xml->service->provision->{'configuration-script'}['name'];
+			} else {
+				$scriptname = 'configure';
+			}
 
-			$Return = safe_exec('php ' . escapeshellarg($this->RealPath . $this->DomainPath . '/install_scripts/configure') . ' install', $ReturnStatus);
+			chmod($this->RealPath . $this->DomainPath . '/install_scripts/'.$scriptname, 0755);
+
+			$Return = safe_exec('php ' . escapeshellarg($this->RealPath . $this->DomainPath . '/install_scripts/'.$scriptname) . ' install', $ReturnStatus);
 
 			if($ReturnStatus != 0)
 			{
@@ -214,7 +224,19 @@ class ApsInstaller extends ApsParser
 			//remove permissions
 			//drop database
 
-			$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+			if ($this->aps_version == '1.0')
+			{
+				// the good ole way
+				$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+			} 
+			else 
+			{
+				// since 1.1
+				$Xml->registerXPathNamespace('db', 'http://apstandard.com/ns/1/db');
+	
+				$XmlDb = new DynamicProperties;
+				$XmlDb->db->id = getXPathValue($Xml, '//db:id');
+			}
 
 			if($XmlDb->db->id)
 			{
@@ -278,6 +300,19 @@ class ApsInstaller extends ApsParser
 
 	private function PrepareFiles($Xml, $Row, $Task)
 	{
+		if($this->aps_version != '1.0')
+		{
+			$mapping = $Xml->service->provision->{'url-mapping'}->mapping;
+			$mapping_path = $Xml->service->provision->{'url-mapping'}->mapping['path'];
+			$mapping_url = $Xml->service->provision->{'url-mapping'}->mapping['url'];
+		}
+		else 
+		{
+			$mapping = $Xml->mapping;
+			$mapping_path = $Xml->mapping['path'];
+			$mapping_url = $Xml->mapping['url'];
+		}
+		
 		if($Task == TASK_INSTALL)
 		{
 			//FIXME truncate customer directory
@@ -287,7 +322,7 @@ class ApsInstaller extends ApsParser
 
 			//extract all files and chown them to the customer guid
 
-			if(self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], $Xml->mapping['path'], $this->RealPath . $this->DomainPath . '/') == false
+			if(self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], $mapping_path, $this->RealPath . $this->DomainPath . '/') == false
 			|| self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], 'scripts', $this->RealPath . $this->DomainPath . '/install_scripts/') == false)
 			{
 				$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
@@ -319,7 +354,7 @@ class ApsInstaller extends ApsParser
 
 		//recursive mappings
 
-		self::PrepareMappings($Xml->mapping, $Xml->mapping['url'], $this->RealPath . $this->DomainPath . '/');
+		self::PrepareMappings($mapping, $mapping_url, $this->RealPath . $this->DomainPath . '/');
 		return true;
 	}
 
@@ -336,34 +371,37 @@ class ApsInstaller extends ApsParser
 		//check for special PHP permissions
 		//must be done with xpath otherwise check not possible (XML parser problem with attributes)
 
-		$ParentMapping->registerXPathNamespace('p', 'http://apstandard.com/ns/1/php');
-		$Result = $ParentMapping->xpath('p:permissions');
-
-		if($Result[0]['writable'] == 'true')
+		if($ParentMapping && $ParentMapping !== null)
 		{
-			//fixing file permissions to writeable
-
-			if(is_dir($Path))
+			$ParentMapping->registerXPathNamespace('p', 'http://apstandard.com/ns/1/php');
+			$Result = $ParentMapping->xpath('p:permissions');
+	
+			if($Result[0]['writable'] == 'true')
 			{
-				chmod($Path, 0775);
+				//fixing file permissions to writeable
+	
+				if(is_dir($Path))
+				{
+					chmod($Path, 0775);
+				}
+				else
+				{
+					chmod($Path, 0664);
+				}
 			}
-			else
+	
+			if($Result[0]['readable'] == 'false')
 			{
-				chmod($Path, 0664);
-			}
-		}
-
-		if($Result[0]['readable'] == 'false')
-		{
-			//fixing file permissions to non readable
-
-			if(is_dir($Path))
-			{
-				chmod($Path, 0333);
-			}
-			else
-			{
-				chmod($Path, 0222);
+				//fixing file permissions to non readable
+	
+				if(is_dir($Path))
+				{
+					chmod($Path, 0333);
+				}
+				else
+				{
+					chmod($Path, 0222);
+				}
 			}
 		}
 
@@ -373,18 +411,20 @@ class ApsInstaller extends ApsParser
 		putenv('WEB_' . $EnvVariable . '_DIR=' . $Path);
 
 		//resolve deeper mappings
-
-		foreach($ParentMapping->mapping as $Mapping)
+		if($ParentMapping && $ParentMapping !== null)
 		{
-			//recursive check of other mappings
-
-			if($Url == '/')
+			foreach($ParentMapping->mapping as $Mapping)
 			{
-				self::PrepareMappings($Mapping, $Url . $Mapping['url'], $Path . $Mapping['url']);
-			}
-			else
-			{
-				self::PrepareMappings($Mapping, $Url . '/' . $Mapping['url'], $Path . '/' . $Mapping['url']);
+				//recursive check of other mappings
+	
+				if($Url == '/')
+				{
+					self::PrepareMappings($Mapping, $Url . $Mapping['url'], $Path . $Mapping['url']);
+				}
+				else
+				{
+					self::PrepareMappings($Mapping, $Url . '/' . $Mapping['url'], $Path . '/' . $Mapping['url']);
+				}
 			}
 		}
 	}
@@ -434,7 +474,22 @@ class ApsInstaller extends ApsParser
 	private function PrepareDatabase($Xml, $Row, $Task)
 	{
 		global $db_root;
+
 		$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+
+		if ($this->aps_version == '1.0')
+		{
+			// the good ole way
+			$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+		} 
+		else
+		{
+			// since 1.1
+			$Xml->registerXPathNamespace('db', 'http://apstandard.com/ns/1/db');
+
+			$XmlDb = new DynamicProperties;
+			$XmlDb->db->id = getXPathValue($Xml, '//db:id');
+		}
 
 		if($XmlDb->db->id)
 		{

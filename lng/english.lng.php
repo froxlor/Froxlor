@@ -1065,7 +1065,7 @@ $lng['aps']['nospecialchars'] = 'Special characters are not allowed in the searc
 $lng['aps']['noitemsfound'] = 'No Packages were found!';
 $lng['aps']['nopackagesinstalled'] = 'You haven\'t installed any package yet which could be shown.';
 $lng['aps']['instance_install'] = 'Package Installation pending';
-$lng['aps']['instance_task_active'] = 'Installation running at this moment';
+$lng['aps']['instance_task_active'] = 'Package is currently being processed';
 $lng['aps']['instance_success'] = 'Package is installed/was installed successfully';
 $lng['aps']['instance_error'] = 'Package isn\'t installed - there occured some errors on the Installation';
 $lng['aps']['instance_uninstall'] = 'Package Uninstallation pending';
@@ -1426,5 +1426,5 @@ $lng['error']['exception'] = '%s';
 
 // ADDED IN FROXLOR 0.9.9-svn1
 $lng['serversettings']['mail_also_with_mxservers'] = 'Create mail-, imap-, pop3- and smtp-"A record" also with MX-Servers set';
- 
+
 ?>

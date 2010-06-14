@@ -59,7 +59,7 @@ return array(
 					'type' => 'option',
 					'default' => '',
 					'option_mode' => 'multiple',
-					'option_options' => array('gd' => 'GD Library', 'pcre' => 'PCRE', 'ioncube' => 'ionCube', 'ioncube loader' => 'ionCube Loader', 'curl' => 'curl', 'mcrypt' => 'mcrypt', 'imap' => 'imap'),
+					'option_options' => array('gd' => 'GD Library', 'pcre' => 'PCRE', 'ioncube' => 'ionCube', 'ioncube loader' => 'ionCube Loader', 'curl' => 'curl', 'mcrypt' => 'mcrypt', 'imap' => 'imap', 'json' => 'json', 'ldap' => 'LDAP', 'hash' => 'hash', 'mbstring' => 'mbstring'),
 					'save_method' => 'storeSettingApsPhpExtensions',
 					),
 				'aps_php-function' => array(
