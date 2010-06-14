@@ -1070,7 +1070,7 @@ $lng['aps']['nospecialchars'] = 'Sonderzeichen sind im Suchausdruck nicht erlaub
 $lng['aps']['noitemsfound'] = 'Es wurden keine Pakete gefunden!';
 $lng['aps']['nopackagesinstalled'] = 'Sie haben noch kein Paket installiert welches angezeigt werden k&ouml;nnte.';
 $lng['aps']['instance_install'] = 'Paket wurde zur Installation vorgemerkt';
-$lng['aps']['instance_task_active'] = 'Paket wird gerade installiert';
+$lng['aps']['instance_task_active'] = 'Paket wird gerade bearbeitet';
 $lng['aps']['instance_success'] = 'Paket ist installiert bzw. wurde erfolgreich installiert';
 $lng['aps']['instance_error'] = 'Paket ist nicht installiert - bei der Installation traten Fehler auf';
 $lng['aps']['instance_uninstall'] = 'Paket wurde zur Deinstallation vorgemerkt';
@@ -1410,4 +1410,5 @@ $lng['tasks']['aps_task_sysdownload'] = 'Herunterladen neuer APS Pakete';
 
 // ADDED IN FROXLOR 0.9.9-svn1
 $lng['serversettings']['mail_also_with_mxservers'] = 'Erstelle mail-, imap-, pop3- and smtp-"A Record" auch wenn MX-Server angegeben sind';
+
 ?>
