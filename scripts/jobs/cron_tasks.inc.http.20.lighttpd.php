@@ -107,7 +107,7 @@ class lighttpd
 				$this->lighttpd_data[$vhost_filename].= '# Froxlor default vhost' . "\n";
 				$this->lighttpd_data[$vhost_filename].= '$HTTP["host"] =~ "^(?:www\.|)' . $myhost . '$" {' . "\n";
 
-				$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
+				$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
 				$this->lighttpd_data[$vhost_filename].= '  server.document-root = "'.$mypath.'"'."\n";
 
 				/**
