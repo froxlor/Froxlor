@@ -265,7 +265,7 @@ foreach($langs as $key => $value)
 	$languages[$key] = $key;
 }
 
-if (isset($userinfo['language']))
+if (isset($userinfo['language']) && isset($languages[$userinfo['language']]))
 {
 	// default: use language from session, #277
 	$language = $userinfo['language'];
