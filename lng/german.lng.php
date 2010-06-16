@@ -933,7 +933,7 @@ $lng['customer']['email_pop3'] = 'E-Mail POP3';
 $lng['customer']['mail_quota'] = 'E-Mail Kontingent';
 $lng['panel']['megabyte'] = 'MegaByte';
 $lng['emails']['quota_edit'] = 'E-Mail Kontingent &auml;ndern';
-$lng['panel']['not_supported'] = 'Nicht &uuml;nterst&uuml;zt in: ';
+$lng['panel']['not_supported'] = 'Nicht unterst&uuml;zt in: ';
 $lng['error']['allocatetoomuchquota'] = 'Sie versuchen %s MB ' . $lng['emails']['quota'] . ' zu zuweisen, haben aber nicht genug &uuml;brig.';
 
 // Autoresponder module
