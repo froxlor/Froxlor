@@ -801,21 +801,25 @@ if(isFroxlorVersion('0.9.9'))
 	
 	showUpdateStep("Checking whether you are missing any settings", false);
 	$nonefound = true;
-	if(!isset($settings['system']['httpuser']))
+	
+	$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
+	if(!isset($result) || !isset($result['value']))
 	{
 		$nonefound = false;
 		showUpdateStep("Adding missing setting 'httpuser'");
 		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpuser', 'www-data');");
 		lastStepStatus(0);
 	}
-	if(!isset($settings['system']['httpgroup']))
+	$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
+	if(!isset($result) || !isset($result['value']))
 	{
 		$nonefound = false;
 		showUpdateStep("Adding missing setting 'httpgroup'");
 		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpgroup', 'www-data');");
 		lastStepStatus(0);
 	}
-	if(!isset($settings['system']['debug_cron']))
+	$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'debug_cron'");
+	if(!isset($result) || !isset($result['value']))
 	{
 		$nonefound = false;
 		showUpdateStep("Adding missing setting 'debug_cron'");
