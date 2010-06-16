@@ -795,4 +795,39 @@ if(isFroxlorVersion('0.9.9-svn1'))
 	updateToVersion('0.9.9');
 }
 
+if(isFroxlorVersion('0.9.9'))
+{
+	showUpdateStep("Updating from 0.9.9 to 0.9.10-svn1", false);
+	
+	showUpdateStep("Checking whether you are missing any settings", false);
+	$nonefound = true;
+	if(!isset($settings['system']['httpuser']))
+	{
+		$nonefound = false;
+		showUpdateStep("Adding missing setting 'httpuser'");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpuser', 'www-data');");
+		lastStepStatus(0);
+	}
+	if(!isset($settings['system']['httpgroup']))
+	{
+		$nonefound = false;
+		showUpdateStep("Adding missing setting 'httpgroup'");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpgroup', 'www-data');");
+		lastStepStatus(0);
+	}
+	if(!isset($settings['system']['debug_cron']))
+	{
+		$nonefound = false;
+		showUpdateStep("Adding missing setting 'debug_cron'");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'debug_cron', '0');");
+		lastStepStatus(0);
+	}
+	
+	if($nonefound) {
+		showUpdateStep("No missing settings found");
+		lastStepStatus(0);
+	}
+
+	updateToVersion('0.9.10-svn1');
+}
 ?>
