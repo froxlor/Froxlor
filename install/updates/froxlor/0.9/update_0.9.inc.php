@@ -834,4 +834,27 @@ if(isFroxlorVersion('0.9.9'))
 
 	updateToVersion('0.9.10-svn1');
 }
-?>
+
+if(isFroxlorVersion('0.9.10-svn1'))
+{
+	showUpdateStep("Updating from 0.9.10-svn1 to 0.9.10-svn2", false);
+
+	$update_httpuser = isset($_POST['update_httpuser']) ? $_POST['update_httpuser'] : false;
+	$update_httpgroup = isset($_POST['update_httpgroup']) ? $_POST['update_httpgroup'] : false;
+
+	if($update_httpuser !== false)
+	{
+		showUpdateStep("Setting httpuser to '".$update_httpuser."'");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value`='".$update_httpuser."' WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
+		lastStepStatus(0);
+	}
+	
+	if($update_httpgroup !== false)
+	{
+		showUpdateStep("Setting httpgroup to '".$update_httpgroup."'");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value`='".$update_httpgroup."' WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
+		lastStepStatus(0);
+	}
+
+	updateToVersion('0.9.10-svn2');
+}

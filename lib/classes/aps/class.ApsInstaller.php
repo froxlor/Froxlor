@@ -259,6 +259,20 @@ class ApsInstaller extends ApsParser
 			$this->db->query('DELETE FROM `' . TABLE_APS_TASKS . '` WHERE `Task` = ' . TASK_REMOVE . ' AND `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
 			$this->db->query('DELETE FROM `' . TABLE_APS_INSTANCES . '` WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
 			$this->db->query('DELETE FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
+
+
+			// decrease customer-counter
+			/*
+			 * @TODO this is for 0.9.11 or so
+			 *
+			$aps_userinfo = $db->query_first("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = '" . (int)$Row['CustomerID'] . "'");
+			if($aps_userinfo['mysqls_used'] == '1')
+			{
+				$resetaccnumber = " , `mysql_lastaccountnumber`='0' ";
+			}
+
+			$result = $db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`-1 ' . $resetaccnumber . 'WHERE `customerid`="' . (int)$Row['CustomerID'] . '"');
+			*/
 		}
 	}
 

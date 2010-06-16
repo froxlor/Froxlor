@@ -33,6 +33,20 @@ return array(
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
 					),
+				'system_httpuser' => array(
+					'settinggroup' => 'system',
+					'varname' => 'httpuser',
+					'type' => 'string',
+					'default' => 'www-data',
+					'save_method' => 'storeSettingField',
+					),
+				'system_httpgroup' => array(
+					'settinggroup' => 'system',
+					'varname' => 'httpgroup',
+					'type' => 'string',
+					'default' => 'www-data',
+					'save_method' => 'storeSettingField',
+					),
 				'system_apacheconf_vhost' => array(
 					'label' => $lng['serversettings']['apacheconf_vhost'],
 					'settinggroup' => 'system',

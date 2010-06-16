@@ -158,4 +158,31 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= makeyesno('update_defdns_mailentry', '1', '0', '0');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+	
+	if(versionInUpdate($current_version, '0.9.10-svn2'))
+	{
+		$has_preconfig = true;
+		
+		$guessed_user = 'www-data';
+		$guessed_group = 'www-data';
+
+		if(function_exists('posix_getuid')
+			&& function_exists('posix_getpwuid')
+		) {
+			$_httpuser = posix_getpwuid(posix_getuid());
+			$guessed_user = $_httpuser['name'];
+		}
+		
+		if(function_exists('posix_getgid')
+			&& function_exists('posix_getgrgid')
+		) {
+			$_httpgroup = posix_getgrgid(posix_getgid());
+			$guessed_group = $_httpgroup['name'];
+		}
+
+		$description = 'Please enter the correct username/groupname of the webserver on your system We\'re guessing the user but it might not be correct, so please check.';
+		$question = '<strong>Please enter the webservers username:</strong>&nbsp;<input type="text" class="text" name="update_httpuser" value="'.$guessed_user.'" /><br /><br />';
+		$question = '<strong>Please enter the webservers groupname:</strong>&nbsp;<input type="text" class="text" name="update_httpgroup" value="'.$guessed_group.'" />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

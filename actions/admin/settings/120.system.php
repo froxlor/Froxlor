@@ -101,18 +101,6 @@ return array(
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					),
-				'system_httpuser' => array(
-					'settinggroup' => 'system',
-					'varname' => 'httpuser',
-					'type' => 'hidden',
-					'default' => 'www-data',
-					),
-				'system_httpgroup' => array(
-					'settinggroup' => 'system',
-					'varname' => 'httpgroup',
-					'type' => 'hidden',
-					'default' => 'www-data',
-					),
 				'system_debug_cron' => array(
 					'label' => $lng['serversettings']['cron']['debug'],
 					'settinggroup' => 'system',
