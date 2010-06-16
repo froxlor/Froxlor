@@ -265,22 +265,30 @@ foreach($langs as $key => $value)
 	$languages[$key] = $key;
 }
 
-if(!isset($userinfo['def_language'])
-   || !isset($languages[$userinfo['def_language']]))
+if (isset($userinfo['language']))
 {
-	if(isset($_GET['language'])
-	   && isset($languages[$_GET['language']]))
-	{
-		$language = $_GET['language'];
-	}
-	else
-	{
-		$language = $settings['panel']['standardlanguage'];
-	}
+	// default: use language from session, #277
+	$language = $userinfo['language'];
 }
 else
 {
-	$language = $userinfo['def_language'];
+	if(!isset($userinfo['def_language'])
+	   || !isset($languages[$userinfo['def_language']]))
+	{
+		if(isset($_GET['language'])
+		   && isset($languages[$_GET['language']]))
+		{
+			$language = $_GET['language'];
+		}
+		else
+		{
+			$language = $settings['panel']['standardlanguage'];
+		}
+	}
+	else
+	{
+		$language = $userinfo['def_language'];
+	}
 }
 
 // include every english language file we can get
