@@ -159,30 +159,53 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 	
-	if(versionInUpdate($current_version, '0.9.10-svn2'))
+	if(versionInUpdate($current_version, '0.9.10-svn1'))
 	{
-		$has_preconfig = true;
-		
-		$guessed_user = 'www-data';
-		$guessed_group = 'www-data';
+		$has_nouser = false;
+		$has_nogroup = false;
 
-		if(function_exists('posix_getuid')
-			&& function_exists('posix_getpwuid')
-		) {
-			$_httpuser = posix_getpwuid(posix_getuid());
-			$guessed_user = $_httpuser['name'];
+		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
+		if(!isset($result) || !isset($result['value']))
+		{
+			$has_preconfig = true;
+			$has_nouser = true;
+			$guessed_user = 'www-data';
+			if(function_exists('posix_getuid')
+				&& function_exists('posix_getpwuid')
+			) {
+				$_httpuser = posix_getpwuid(posix_getuid());
+				$guessed_user = $_httpuser['name'];
+			}
 		}
 		
-		if(function_exists('posix_getgid')
-			&& function_exists('posix_getgrgid')
-		) {
-			$_httpgroup = posix_getgrgid(posix_getgid());
-			$guessed_group = $_httpgroup['name'];
+		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
+		if(!isset($result) || !isset($result['value']))
+		{
+			$has_preconfig = true;
+			$has_nogroup = true;
+			$guessed_group = 'www-data';
+			if(function_exists('posix_getgid')
+				&& function_exists('posix_getgrgid')
+			) {
+				$_httpgroup = posix_getgrgid(posix_getgid());
+				$guessed_group = $_httpgroup['name'];
+			}
 		}
 
 		$description = 'Please enter the correct username/groupname of the webserver on your system We\'re guessing the user but it might not be correct, so please check.';
-		$question = '<strong>Please enter the webservers username:</strong>&nbsp;<input type="text" class="text" name="update_httpuser" value="'.$guessed_user.'" /><br /><br />';
-		$question .= '<strong>Please enter the webservers groupname:</strong>&nbsp;<input type="text" class="text" name="update_httpgroup" value="'.$guessed_group.'" />';
+		if($has_nouser)
+		{
+			$question = '<strong>Please enter the webservers username:</strong>&nbsp;<input type="text" class="text" name="update_httpuser" value="'.$guessed_user.'" />';
+		} 
+		elseif($has_nogroup) 
+		{
+			$question2 = '<strong>Please enter the webservers groupname:</strong>&nbsp;<input type="text" class="text" name="update_httpgroup" value="'.$guessed_group.'" />';
+			if($has_nouser) {
+				$question .= '<br /><br />'.$question2;
+			} else {
+				$question = $question2;
+			}
+		}
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 }

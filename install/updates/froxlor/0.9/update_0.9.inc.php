@@ -802,22 +802,25 @@ if(isFroxlorVersion('0.9.9'))
 	showUpdateStep("Checking whether you are missing any settings", false);
 	$nonefound = true;
 	
-	$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
-	if(!isset($result) || !isset($result['value']))
+	$update_httpuser = isset($_POST['update_httpuser']) ? $_POST['update_httpuser'] : false;
+	$update_httpgroup = isset($_POST['update_httpgroup']) ? $_POST['update_httpgroup'] : false;
+
+	if($update_httpuser !== false)
 	{
 		$nonefound = false;
 		showUpdateStep("Adding missing setting 'httpuser'");
-		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpuser', 'www-data');");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpuser', '".$update_httpuser."');");
 		lastStepStatus(0);
 	}
-	$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
-	if(!isset($result) || !isset($result['value']))
+
+	if($update_httpgroup !== false)
 	{
 		$nonefound = false;
 		showUpdateStep("Adding missing setting 'httpgroup'");
-		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpgroup', 'www-data');");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpgroup', '".$update_httpgroup."');");
 		lastStepStatus(0);
 	}
+
 	$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'debug_cron'");
 	if(!isset($result) || !isset($result['value']))
 	{
@@ -833,28 +836,4 @@ if(isFroxlorVersion('0.9.9'))
 	}
 
 	updateToVersion('0.9.10-svn1');
-}
-
-if(isFroxlorVersion('0.9.10-svn1'))
-{
-	showUpdateStep("Updating from 0.9.10-svn1 to 0.9.10-svn2", false);
-
-	$update_httpuser = isset($_POST['update_httpuser']) ? $_POST['update_httpuser'] : false;
-	$update_httpgroup = isset($_POST['update_httpgroup']) ? $_POST['update_httpgroup'] : false;
-
-	if($update_httpuser !== false)
-	{
-		showUpdateStep("Setting httpuser to '".$update_httpuser."'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value`='".$update_httpuser."' WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
-		lastStepStatus(0);
-	}
-	
-	if($update_httpgroup !== false)
-	{
-		showUpdateStep("Setting httpgroup to '".$update_httpgroup."'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value`='".$update_httpgroup."' WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
-		lastStepStatus(0);
-	}
-
-	updateToVersion('0.9.10-svn2');
 }
