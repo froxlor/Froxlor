@@ -194,6 +194,10 @@ if($page == 'customers'
 				$db->query("DELETE FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid`='" . (int)$id . "'");
 
+				// Delete all waiting "create user" -tasks for this user, #276
+				// Note: the WHERE selects part of a serialized array, but it should be safe this way
+				$db->query("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '2' AND `data` LIKE = '%;\"" . $db->escape($result['loginname']) . "\"%;';");
+
 				// remove everything APS-related, #216
 				$apsresult = $db->query("SELECT `ID` FROM `".TABLE_APS_INSTANCES."` WHERE `CustomerID`='".(int)$id."'");
 				while($apsrow = $db->fetch_array($apsresult))
