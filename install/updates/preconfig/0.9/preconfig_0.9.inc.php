@@ -182,7 +182,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 		$description = 'Please enter the correct username/groupname of the webserver on your system We\'re guessing the user but it might not be correct, so please check.';
 		$question = '<strong>Please enter the webservers username:</strong>&nbsp;<input type="text" class="text" name="update_httpuser" value="'.$guessed_user.'" /><br /><br />';
-		$question = '<strong>Please enter the webservers groupname:</strong>&nbsp;<input type="text" class="text" name="update_httpgroup" value="'.$guessed_group.'" />';
+		$question .= '<strong>Please enter the webservers groupname:</strong>&nbsp;<input type="text" class="text" name="update_httpgroup" value="'.$guessed_group.'" />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 }
