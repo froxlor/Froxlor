@@ -193,23 +193,6 @@ class lighttpd
 
 			if(!in_array($row_htpasswds['path'], $needed_htpasswds))
 			{
-				if(empty($needed_htpasswds))
-				{
-					$auth_backend_loaded[$domain['ipandport']] = 'yes';
-
-					if(!$this->auth_backend_loaded)
-					{
-						$htaccess_text.= '  auth.backend = "htpasswd"' . "\n";
-					}
-
-					$htaccess_text.= '  auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
-					$htaccess_text.= '  auth.require = ( ' . "\n";
-				}
-				else
-				{
-					$htaccess_text.= '  ,' . "\n";
-				}
-
 				if(!isset($this->needed_htpasswds[$filename])) {
 					$this->needed_htpasswds[$filename] = '';
 				}
@@ -219,20 +202,24 @@ class lighttpd
 					$this->needed_htpasswds[$filename].= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 				}
 
-				$needed_htpasswds[] = $row_htpasswds['path'];
 				$htaccess_path = substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1);
-				$htaccess_text.= '    "' . makeCorrectDir($htaccess_path) . '" =>' . "\n";
-				$htaccess_text.= '    (' . "\n";
-				$htaccess_text.= '       "method"  => "basic",' . "\n";
-				$htaccess_text.= '       "realm"   => "Restricted Area",' . "\n";
-				$htaccess_text.= '       "require" => "user=' . $row_htpasswds['username'] . '"' . "\n";
-				$htaccess_text.= '    )' . "\n";
-			}
-		}
+				$htaccess_path = makeCorrectDir($htaccess_path);
 
-		if(strlen(trim($htaccess_text)) > 0)
-		{
-			$htaccess_text.= '  )' . "\n";
+				$htaccess_text.= '  $HTTP["url"] =~ "^'.$htaccess_path.'" {' . "\n";
+				$htaccess_text.= '    auth.backend = "htpasswd"' . "\n";
+				$htaccess_text.= '    auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
+				$htaccess_text.= '    auth.require = ( ' . "\n";
+				$htaccess_text.= '      "' . $htaccess_path . '" =>' . "\n";
+				$htaccess_text.= '      (' . "\n";
+				$htaccess_text.= '         "method"  => "basic",' . "\n";
+				$htaccess_text.= '         "realm"   => "Restricted Area",' . "\n";
+				$htaccess_text.= '         "require" => "valid-user"' . "\n";
+				$htaccess_text.= '      )' . "\n";
+				$htaccess_text.= '    )' . "\n";
+				$htaccess_text.= '  }' . "\n";
+
+				$needed_htpasswds[] = $row_htpasswds['path'];
+			}
 		}
 
 		return $htaccess_text;
@@ -578,7 +565,7 @@ class lighttpd
 			$diroption_text.= '(' . "\n";
 			$diroption_text.= '   "method"  => "basic",' . "\n";
 			$diroption_text.= '   "realm"   => "Restricted Area",' . "\n";
-			$diroption_text.= '   "require" => "user=' . $row_htpasswds['username'] . '"' . "\n";
+			$diroption_text.= '   "require" => "valid-user"' . "\n";
 			$diroption_text.= ')' . "\n";
 
 			if($this->auth_backend_loaded[$domain['ssl_ipandport']] == 'yes')
