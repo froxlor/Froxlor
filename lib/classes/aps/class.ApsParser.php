@@ -2182,6 +2182,12 @@ class ApsParser
 					return;
 				}
 
+				// no more contingent, #278
+				if($userinfo['aps_packages'] == $userinfo['aps_packages_used'])
+				{
+					self::InfoBox($lng['aps']['nocontingent']);
+				}
+
 				//show packages
 
 				while($Row3 = $this->db->fetch_array($result2))

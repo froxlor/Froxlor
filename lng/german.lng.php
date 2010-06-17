@@ -1407,8 +1407,10 @@ $lng['tasks']['aps_task_upgrade'] = 'Upgrade eines oder mehrerer APS Pakete';
 $lng['tasks']['aps_task_sysupdate'] = 'Aktualisiere alle APS Pakete';
 $lng['tasks']['aps_task_sysdownload'] = 'Herunterladen neuer APS Pakete';
 
-
 // ADDED IN FROXLOR 0.9.9-svn1
 $lng['serversettings']['mail_also_with_mxservers'] = 'Erstelle mail-, imap-, pop3- and smtp-"A Record" auch wenn MX-Server angegeben sind';
+
+// ADDED IN FROXLOR 0.9.10-svn1
+$lng['aps']['nocontingent'] = 'Sie haben kein ausreichendes APS-Kontingent und k&ouml;nnen daher keine Pakete installieren.';
 
 ?>
