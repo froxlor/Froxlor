@@ -1351,7 +1351,7 @@ class ApsParser
 
 	private function InstallNewPackage($Filename)
 	{
-		global $lng;
+		global $lng, $userinfo;
 
 		if(file_exists($Filename)
 		   && $Xml = self::GetXmlFromZip($Filename))
@@ -1831,7 +1831,7 @@ class ApsParser
 
 	public function MainHandler($Action)
 	{
-		global $lng, $filename, $s, $page, $action, $Id;
+		global $lng, $filename, $s, $page, $action, $Id, $userinfo;
 
 		//check for basic functions, classes and permissions
 
@@ -2183,8 +2183,9 @@ class ApsParser
 				}
 
 				// no more contingent, #278
-				if($userinfo['aps_packages'] == $userinfo['aps_packages_used'])
-				{
+				if($userinfo['aps_packages'] == $userinfo['aps_packages_used'] 
+					&& $userinfo['aps_packages'] != '-1'
+				){
 					self::InfoBox($lng['aps']['nocontingent']);
 				}
 
@@ -3492,6 +3493,41 @@ class ApsParser
 				$Fieldvalue = $Temp;
 				eval("\$Data.=\"" . getTemplate("aps/data") . "\";");
 			}
+		}
+
+		/*
+		 * check if packages needs a database
+		 * and if the customer has contingent for that, #272
+		 */
+		if ($this->aps_version == '1.0')
+		{
+			// the good ole way
+			$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
+		}
+		else 
+		{
+			// since 1.1
+			$Xml->registerXPathNamespace('db', 'http://apstandard.com/ns/1/db');
+
+			$XmlDb = new DynamicProperties;
+			$XmlDb->db->id = getXPathValue($Xml, '//db:id');
+		}
+
+		if($XmlDb->db->id)
+		{
+			if($userinfo['mysqls_used'] < $userinfo['mysqls']
+				|| $userinfo['mysqls'] == '-1'
+			){
+				$can_use_db = true;
+			} else {
+				$can_use_db = false;
+			}
+		} else { $can_use_db = true; }
+
+		$db_info = '';
+		if(!$can_use_db)
+		{
+			$db_info = $lng['aps']['packageneedsdb'];
 		}
 
 		eval("echo \"" . getTemplate("aps/package") . "\";");

@@ -29,7 +29,7 @@
 				<input class="bottom" type="submit" value="{$lng['aps']['back']}" />
 			</form>
 		</if>
-		<if $action != 'customerstatus' && ( $userinfo['aps_packages'] != $userinfo['aps_packages_used'] )>
+		<if $action != 'customerstatus' && ( $userinfo['aps_packages'] != $userinfo['aps_packages_used'] ) && $db_info == ''>
 			<form method="get" action="$filename" style="float:left; padding-left: 5px;">
 				<input type="hidden" name="s" value="$s" />
 				<input type="hidden" name="page" value="$page" />
@@ -37,6 +37,9 @@
 				<input type="hidden" name="id" value="{$Row['ID']}" />
 				<input class="bottom" type="submit" value="{$lng['aps']['install']}" />
 			</form>
+		</if>
+		<if $db_info != ''>
+			<span style="padding-left: 5px;">{$db_info}</span>
 		</if>
 		<if ($action == 'customerstatus') && ($Row['Status'] == 2 || $Row['Status'] == 3)>
 			<form method="get" action="$filename" style="float:left;">

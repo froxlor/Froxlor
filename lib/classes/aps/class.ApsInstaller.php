@@ -252,6 +252,12 @@ class ApsInstaller extends ApsParser
 
 				$this->db_root->query('DROP DATABASE IF EXISTS `' . $this->db->escape($Database) . '`');
 				$this->db_root->query('FLUSH PRIVILEGES');
+
+				/*
+				 * remove database from customer-mysql overview, #272
+				 */
+				$this->db->query('DELETE FROM `' . TABLE_PANEL_DATABASES . '` WHERE `customerid`="' . (int)$Row['CustomerID'] . '" AND `databasename`="' . $this->db->escape($Database) . '" AND `apsdb`="1"');
+				$result = $this->db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`-1 WHERE `customerid`="' . (int)$Row['CustomerID'] . '"');
 			}
 
 			//remove task & delete package instance + settings
@@ -259,20 +265,6 @@ class ApsInstaller extends ApsParser
 			$this->db->query('DELETE FROM `' . TABLE_APS_TASKS . '` WHERE `Task` = ' . TASK_REMOVE . ' AND `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
 			$this->db->query('DELETE FROM `' . TABLE_APS_INSTANCES . '` WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
 			$this->db->query('DELETE FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
-
-
-			// decrease customer-counter
-			/*
-			 * @TODO this is for 0.9.11 or so
-			 *
-			$aps_userinfo = $db->query_first("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = '" . (int)$Row['CustomerID'] . "'");
-			if($aps_userinfo['mysqls_used'] == '1')
-			{
-				$resetaccnumber = " , `mysql_lastaccountnumber`='0' ";
-			}
-
-			$result = $db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`-1 ' . $resetaccnumber . 'WHERE `customerid`="' . (int)$Row['CustomerID'] . '"');
-			*/
 		}
 	}
 
@@ -487,8 +479,6 @@ class ApsInstaller extends ApsParser
 
 	private function PrepareDatabase($Xml, $Row, $Task)
 	{
-		global $db_root;
-
 		$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
 
 		if ($this->aps_version == '1.0')
@@ -525,6 +515,13 @@ class ApsInstaller extends ApsParser
 				}
 
 				$this->db_root->query('FLUSH PRIVILEGES');
+
+				/*
+				 * add database to customers databases, #272
+				 */
+				$databasedescription = $Xml->name.' '.$Xml->version.' (Release ' . $Xml->release . ')'; 
+				$result = $this->db->query('INSERT INTO `' . TABLE_PANEL_DATABASES . '` (`customerid`, `databasename`, `description`, `dbserver`, `apsdb`) VALUES ("' . (int)$Row['CustomerID'] . '", "' . $this->db->escape($NewDatabase) . '", "' . $this->db->escape($databasedescription) . '", "0", "1")');
+				$result = $this->db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`+1 WHERE `customerid`="' . (int)$Row['CustomerID'] . '"');	
 			}
 
 			//get first mysql access host

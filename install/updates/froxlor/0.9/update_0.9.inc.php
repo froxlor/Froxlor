@@ -837,3 +837,37 @@ if(isFroxlorVersion('0.9.9'))
 
 	updateToVersion('0.9.10-svn1');
 }
+
+if(isFroxlorVersion('0.9.10-svn1'))
+{
+	showUpdateStep("Updating from 0.9.10-svn1 to 0.9.10-svn2", false);
+	
+	showUpdateStep("Updating database table definition for panel_databases");
+	$db->query("ALTER TABLE `" . TABLE_PANEL_DATABASES . "` ADD `apsdb` tinyint(1) NOT NULL default '0' AFTER `dbserver`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding APS databases to customers overview");
+	$count_dbupdates = 0;
+	$db_root = null;
+	openRootDB();
+	$result = $db_root->query("SHOW DATABASES;");
+	while($row = $db_root->fetch_array($result))
+	{	
+		if(preg_match('/^web([0-9]+)aps([0-9]+)$/', $row['Database']))
+		{
+			$cid = substr($row['Database'], 3, strpos($row['Database'], 'aps')- 3);
+			$databasedescription = 'APS DB';
+			$result = $db->query('INSERT INTO `' . TABLE_PANEL_DATABASES . '` (`customerid`, `databasename`, `description`, `dbserver`, `apsdb`) VALUES ("' . (int)$cid . '", "' . $db->escape($row['Database']) . '", "' . $db->escape($databasedescription) . '", "0", "1")');
+			$result = $db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`+1 WHERE `customerid`="' . (int)$cid . '"');
+			$count_dbupdates++;
+		}
+	}
+	closeRootDB();
+	if($count_dbupdates > 0) {
+		lastStepStatus(0, "Found ".$count_dbupdates." customer APS databases");
+	} else {
+		lastStepStatus(0, "None found");
+	}
+
+	updateToVersion('0.9.10-svn2');
+}

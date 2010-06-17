@@ -26,7 +26,7 @@
  *
  * @return	null
  */
-function openRootDB($debugHandler, $lockfile)
+function openRootDB($debugHandler = false, $lockfile = false)
 {
 	global $db_root;
 
@@ -47,14 +47,22 @@ function openRootDB($debugHandler, $lockfile)
 		/**
 		 * Do not proceed further if no database connection could be established
 		 */
-
-		fclose($debugHandler);
-		unlink($lockfile);
+		if(isset($debugHandler) && $debugHandler !== false)
+		{
+			fclose($debugHandler);
+		}
+		if(isset($lockfile) && $lockfile !== false) 
+		{
+			unlink($lockfile);	
+		}
 		die('root can\'t connect to mysqlserver. Please check userdata.inc.php! Exiting...');
 	}
 
 	unset($db_root->password);
-	fwrite($debugHandler, 'Database-rootconnection established' . "\n");
+	if(isset($debugHandler) && $debugHandler !== false)
+	{
+		fwrite($debugHandler, 'Database-rootconnection established' . "\n");
+	}
 	
 	unset($sql);
 }

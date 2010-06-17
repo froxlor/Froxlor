@@ -1412,5 +1412,7 @@ $lng['serversettings']['mail_also_with_mxservers'] = 'Erstelle mail-, imap-, pop
 
 // ADDED IN FROXLOR 0.9.10-svn1
 $lng['aps']['nocontingent'] = 'Sie haben kein ausreichendes APS-Kontingent und k&ouml;nnen daher keine Pakete installieren.';
+$lng['aps']['packageneedsdb'] = 'Dieses Paket ben&ouml;tigt eine Datenbank, Sie haben allerdings keine mehr frei';
+$lng['aps']['cannoteditordeleteapsdb'] = 'APS-Datenbanken k&ouml;nnen hier nicht bearbeitet oder gel&ouml;scht werden';
 
 ?>

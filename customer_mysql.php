@@ -52,7 +52,7 @@ elseif($page == 'mysqls')
 			'description' => $lng['mysql']['databasedescription']
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_DATABASES, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$result = $db->query("SELECT `id`, `databasename`, `description`, `dbserver` FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+		$result = $db->query("SELECT * FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		$paging->setEntries($db->num_rows($result));
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
