@@ -34,6 +34,7 @@ return array(
 					'overview_option' => true
 					),
 				'system_httpuser' => array(
+					'label' => $lng['admin']['webserver_user'],
 					'settinggroup' => 'system',
 					'varname' => 'httpuser',
 					'type' => 'string',
@@ -41,6 +42,7 @@ return array(
 					'save_method' => 'storeSettingField',
 					),
 				'system_httpgroup' => array(
+					'label' => $lng['admin']['webserver_group'],
 					'settinggroup' => 'system',
 					'varname' => 'httpgroup',
 					'type' => 'string',
