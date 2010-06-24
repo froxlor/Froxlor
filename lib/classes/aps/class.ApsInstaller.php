@@ -264,7 +264,18 @@ class ApsInstaller extends ApsParser
 			$this->db->query('DELETE FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
 
 			//remove data,  #273
-			self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/');
+			if($this->DomainPath != '' && $this->DomainPath != '/') {
+				self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/');
+			} else {
+				// save awstats/webalizer folder if it's the docroot
+				self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/', true);
+				// place standard-index file
+				$loginname = getLoginNameByUid($Row['CustomerID']);
+				if($loginname !== false)
+				{
+					storeDefaultIndex($loginname, $this->RealPath . $this->DomainPath . '/');
+				}
+			}
 		}
 	}
 

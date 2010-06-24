@@ -342,7 +342,7 @@ elseif($page == 'htaccess')
 		else
 		{
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
-			$options_indexes = makeyesno('options_indexes', '1', '0', '1');
+			$options_indexes = makeyesno('options_indexes', '1', '0', '0');
 			eval("echo \"" . getTemplate("extras/htaccess_add") . "\";");
 		}
 	}

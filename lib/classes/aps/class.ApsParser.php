@@ -400,9 +400,9 @@ class ApsParser
 	 * unlink files recursively
 	 *
 	 * @param	dir			directory to delete recursive
+	 * @param   boolean     whether the base-directory should be kept or not
 	 */
-
-	protected function UnlinkRecursive($Dir)
+	protected function UnlinkRecursive($Dir, $save_base = false)
 	{
 		if(!$DirHandle = @opendir($Dir))return;
 
@@ -411,6 +411,12 @@ class ApsParser
 			if($Object == '.'
 			   || $Object == '..')continue;
 
+			if($save_base  
+				&& (strtoupper($Object) == 'AWSTATS' || strtoupper($Object) == 'WEBALIZER')
+			) {
+				continue;
+			}
+
 			if(!@unlink($Dir . '/' . $Object))
 			{
 				self::UnlinkRecursive($Dir . '/' . $Object);
@@ -418,7 +424,10 @@ class ApsParser
 		}
 
 		closedir($DirHandle);
-		@rmdir($Dir);
+		if(!$save_base)
+		{
+			@rmdir($Dir);
+		}
 	}
 
 	/**
