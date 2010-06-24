@@ -80,7 +80,7 @@ if($db->num_rows($result) > 0)
 		
 		$path = $row['homedir'] . $row['maildir'] . "new/";
 		
-		if(!is_dir($path) || !is_readable($path))
+		if(!is_dir($path))
 		{
 			$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Error accessing maildir: " . $path);
 			continue;
