@@ -219,11 +219,7 @@ class ApsInstaller extends ApsParser
 		}
 		elseif($Task == TASK_REMOVE)
 		{
-			//FIXME cleanup installation
-			//remove files from: $this->RealPath . $this->DomainPath . '/'
-			//remove permissions
-			//drop database
-
+			// check for database
 			if ($this->aps_version == '1.0')
 			{
 				// the good ole way
@@ -240,7 +236,7 @@ class ApsInstaller extends ApsParser
 
 			if($XmlDb->db->id)
 			{
-				//database management
+				//drop database permissions
 
 				$Database = 'web' . $Row['CustomerID'] . 'aps' . $Row['InstanceID'];
 				foreach(array_map('trim', explode(',', $this->Hosts)) as $DatabaseHost)
@@ -250,6 +246,7 @@ class ApsInstaller extends ApsParser
 					$this->db_root->query('DELETE FROM `mysql`.`user` WHERE `User` = "' . $this->db->escape($Database) . '" AND `Host` = "' . $this->db->escape($DatabaseHost) . '"');
 				}
 
+				//drop database
 				$this->db_root->query('DROP DATABASE IF EXISTS `' . $this->db->escape($Database) . '`');
 				$this->db_root->query('FLUSH PRIVILEGES');
 
@@ -265,6 +262,9 @@ class ApsInstaller extends ApsParser
 			$this->db->query('DELETE FROM `' . TABLE_APS_TASKS . '` WHERE `Task` = ' . TASK_REMOVE . ' AND `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
 			$this->db->query('DELETE FROM `' . TABLE_APS_INSTANCES . '` WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
 			$this->db->query('DELETE FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
+
+			//remove data,  #273
+			self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/');
 		}
 	}
 
@@ -642,5 +642,3 @@ class ApsInstaller extends ApsParser
 		return false;
 	}
 }
-
-?>
