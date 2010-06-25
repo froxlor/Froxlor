@@ -35,7 +35,7 @@ while($row_ticket = $db->fetch_array($result_tickets))
 	if($days >= $settings['ticket']['archiving_days'])
 	{
 		fwrite($debugHandler, 'archiving ticket "' . $row_ticket['subject'] . '" (ID #' . $row_ticket['id'] . ')' . "\n");
-		$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$row_ticket['id']);
+		$mainticket = ticket::getInstanceOf(null, $db, $settings, (int)$row_ticket['id']);
 		$mainticket->Set('lastchange', $now, true, true);
 		$mainticket->Set('lastreplier', '1', true, true);
 		$mainticket->Set('status', '3', true, true);
