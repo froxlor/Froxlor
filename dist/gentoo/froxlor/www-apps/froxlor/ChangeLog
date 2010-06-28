@@ -2,6 +2,12 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+*froxlor-0.9.10 (28 Jun 2010)
+
+  28 Jun 2010; Froxlor Release Team <release@froxlor.org>
+  -froxlor-0.9.9.ebuild, +froxlor-0.9.10.ebuild:
+  version bump
+
 *froxlor-0.9.9 (14 Jun 2010)
 
   14 Jun 2010; Froxlor Release Team <release@froxlor.org>
