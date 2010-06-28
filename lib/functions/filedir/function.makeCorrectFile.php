@@ -29,6 +29,15 @@
 
 function makeCorrectFile($filename)
 {
+	if (!isset($filename)
+		|| trim($filename) == ''
+	) {
+		$error = 'Given filename for function '.__FUNCTION__.' is empty.'."\n";
+		$error.= 'This is very dangerous and should not happen.'."\n";
+		$error.= 'Please inform the Froxlor team about this issue so they can fix it.';
+		die($error);
+	}
+
 	if(substr($filename, 0, 1) != '/')
 	{
 		$filename = '/' . $filename;
