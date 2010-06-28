@@ -1417,4 +1417,7 @@ $lng['aps']['cannoteditordeleteapsdb'] = 'APS-Datenbanken k&ouml;nnen hier nicht
 $lng['admin']['webserver_user'] = 'Benutzername Webserver';
 $lng['admin']['webserver_group'] = 'Gruppenname Webserver';
 
+// ADDED IN FROXLOR 0.9.10
+$lng['serversettings']['froxlordirectlyviahostname'] = 'Froxlor direkt &uuml;ber den Hostnamen erreichbar machen';
+
 ?>

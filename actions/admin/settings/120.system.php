@@ -58,6 +58,14 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingHostname',
 					),
+				'system_froxlordirectlyviahostname' => array(
+					'label' => $lng['serversettings']['froxlordirectlyviahostname'],
+					'settinggroup' => 'system',
+					'varname' => 'froxlordirectlyviahostname',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
 				'system_stdsubdomain' => array(
 					'label' => $lng['serversettings']['stdsubdomainhost'],
 					'settinggroup' => 'system',

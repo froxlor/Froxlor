@@ -871,3 +871,16 @@ if(isFroxlorVersion('0.9.10-svn1'))
 
 	updateToVersion('0.9.10-svn2');
 }
+
+if(isFroxlorVersion('0.9.10-svn2'))
+{
+	showUpdateStep("Updating from 0.9.10-svn2 to 0.9.10", false);
+
+	$update_directlyviahostname = isset($_POST['update_directlyviahostname']) ? '1' : '0';
+
+	showUpdateStep("Adding new settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'froxlordirectlyviahostname', '".(int)$update_directlyviahostname."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.10');
+}

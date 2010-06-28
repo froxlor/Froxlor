@@ -211,4 +211,13 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if(versionInUpdate($current_version, '0.9.10'))
+	{
+		$has_preconfig = true;
+		$description = 'you can now decide whether Froxlor should be reached via hostname/froxlor or directly via the hostname.';
+		$question = '<strong>Do you want Froxlor to be reached directly via the hostname?:</strong>&nbsp;';
+		$question.= makeyesno('update_directlyviahostname', '1', '0', '0');
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }
