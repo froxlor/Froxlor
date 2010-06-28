@@ -2,6 +2,10 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  29 Jun 2010; Froxlor Release Team <release@froxlor.org>
+  froxlor-0.9.10.ebuild, froxlor-9999.ebuild:
+  depend on virtual/cron instead of vixie-cron, thanks to marienz
+
 *froxlor-0.9.10 (28 Jun 2010)
 
   28 Jun 2010; Froxlor Release Team <release@froxlor.org>

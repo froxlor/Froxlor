@@ -26,7 +26,7 @@ IUSE="aps autoresponder awstats bind domainkey dovecot fcgid ftpquota lighttpd +
 DEPEND="
 	!www-apps/syscp
 	>=mail-mta/postfix-2.4[mysql,ssl=]
-	sys-process/vixie-cron
+	virtual/cron
 	virtual/mysql
 	>=dev-lang/php-5.2[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
 	|| ( <dev-lang/php-5.3[pcre] >=dev-lang/php-5.3 )
@@ -1118,6 +1118,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	else
 		srv_add_restart apache2
 	fi
+	# NB: this may fail if the user does not have vixie-cron installed
 	srv_add_restart vixie-cron
 	if useq bind ; then
 		srv_add_restart named
