@@ -17,16 +17,19 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-. /usr/share/debconf/confmodule
-db_version 2.0
+# TODO: use it correctly for next version!!!
+#. /usr/share/debconf/confmodule
+#db_version 2.0
 
 		# Get the web server type. both is for backward compatibity
-		db_get "froxlor/webserver"
-		if [ "$( echo -n $RET | tr '[A-Z]' '[a-z]' )" = "both" ] ; then
-		    webservers="apache apache2 apache-ssl"
-		else
-		    webservers=$(echo -n "$RET" | tr '[A-Z,]' '[a-z ]' )
-		fi
+#		db_get "froxlor/webserver"
+#		if [ "$( echo -n $RET | tr '[A-Z]' '[a-z]' )" = "both" ] ; then
+		# force people to apache2 restart, need it simple right now
+#		    webservers="apache apache2 apache-ssl"
+		    webservers="apache2"
+#		else
+#		    webservers=$(echo -n "$RET" | tr '[A-Z,]' '[a-z ]' )
+#		fi
 
 case "$1" in
     configure)
@@ -75,7 +78,6 @@ case "$1" in
 	echo "http://<YOURIP>/froxlor/"
 	fi
     ;;
-
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;
 

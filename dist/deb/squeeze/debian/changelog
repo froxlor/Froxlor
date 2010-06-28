@@ -1,3 +1,15 @@
+froxlor (0.9.10-1+squeeze1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 28 Jun 2010 11:16:11 +0200
+
+froxlor (0.9.9-1+squeeze1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 14 Jun 2010 10:24:24 +0200
+
 froxlor (0.9.8-1+squeeze1) testing; urgency=low
 
   * new upstream release
