@@ -81,9 +81,9 @@ class apache
 			// if we use fcgid we don't need this file
 			if(file_exists($vhosts_filename))
 			{
-				fwrite($this->debugHandler, '  apache::_createStandardDirectoryEntry: unlinking ' . basename($vhost_filename) . "\n");
-				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . basename($vhost_filename));
-				unlink(makeCorrectFile($vhost_filename));
+				fwrite($this->debugHandler, '  apache::_createStandardDirectoryEntry: unlinking ' . basename($vhosts_filename) . "\n");
+				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . basename($vhosts_filename));
+				unlink(makeCorrectFile($vhosts_filename));
 			}			
 		}
 		else
