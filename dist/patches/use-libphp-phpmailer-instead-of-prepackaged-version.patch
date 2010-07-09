@@ -1,13 +1,21 @@
 --- a/lib/functions.php
 +++ b/lib/functions.php
-@@ -61,6 +61,13 @@
+@@ -46,6 +46,7 @@
+ {
+ 	global $libdirname;
+ 	findIncludeClass($libdirname . '/classes/', $classname);
++	findIncludeClass('/usr/share/php/libphp-phpmailer/', $classname);
+ }
+ 
+ function findIncludeClass($dirname, $classname)
+@@ -61,6 +62,13 @@
  				return;
  			}
  
 +			// added for using the system copy of PHPMailer
 +			if ($classname == 'PHPMailer' || $classname == 'SMTP')
 +			{
-+				include '/usr/share/php/libphp-phpmailer/' . strtolower($filename);
++				findIncludeClass($dirname .  '/', strtolower($classname));
 +				return;
 +			}
 +
