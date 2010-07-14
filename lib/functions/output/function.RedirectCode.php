@@ -156,8 +156,9 @@ function updateRedirectOfDomain($domainid = 0, $redirect = false)
 	
 	if($domainid > 0)
 	{
-		$db->query("UPDATE `".TABLE_PANEL_DOMAINREDIRECTS."` 
-					SET `rid` = '".(int)$redirect."' 
+		$db->query("DELETE FROM `".TABLE_PANEL_DOMAINREDIRECTS."` 
 					WHERE `did` = '".(int)$domainid."'");
+		$db->query("INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."` 
+					SET `rid` = '".(int)$redirect."', `did` = '".(int)$domainid."'");
 	}
 }

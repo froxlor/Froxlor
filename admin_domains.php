@@ -182,6 +182,7 @@ if($page == 'domains'
 				$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used` = `subdomains_used` - " . (int)($deleted_domains - 1) . " WHERE `customerid` = '" . (int)$result['customerid'] . "'");
 				$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` - 1 WHERE `adminid` = '" . (int)$userinfo['adminid'] . "'");
 				$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `standardsubdomain`=\'0\' WHERE `standardsubdomain`=\'' . (int)$result['id'] . '\' AND `customerid`=\'' . (int)$result['customerid'] . '\'');
+				$db->query("DELETE FROM `" . TABLE_PANEL_DOMAINREDIRECTS . "` WHERE `did` = '".(int)$id."'");
 				$log->logAction(ADM_ACTION, LOG_INFO, "deleted domain/subdomains (#" . $result['id'] . ")");
 				updateCounters();
 				inserttask('1');
