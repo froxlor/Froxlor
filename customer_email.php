@@ -608,13 +608,19 @@ elseif($page == 'accounts')
 					$quota = 0;
 				}
 
+				if(isset($_POST['delete_userfiles'])
+				  && (int)$_POST['delete_userfiles'] == 1)
+				{
+					inserttask('7', $userinfo['loginname'], $result['email']);
+				}
+
 				$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_accounts_used` = `email_accounts_used` - 1, `email_quota_used` = `email_quota_used` - " . (int)$quota . " WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted email account for '" . $result['email_full'] . "'");
 				redirectTo($filename, Array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 			}
 			else
 			{
-				ask_yesno('email_reallydelete_account', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']));
+				ask_yesno_withcheckbox('email_reallydelete_account', 'admin_customer_alsoremovemail', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']));
 			}
 		}
 	}

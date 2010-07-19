@@ -257,6 +257,7 @@ $lng['question']['mysql_reallydelete'] = 'Do you really want to delete the datab
 $lng['question']['admin_configs_reallyrebuild'] = 'Do you really want to rebuild all config files?';
 $lng['question']['admin_customer_alsoremovefiles'] = 'Remove user files too?';
 $lng['question']['admin_customer_alsoremovemail'] = 'Completely remove email data from filesystem?';
+$lng['question']['admin_customer_alsoremoveftphomedir'] = 'Also remove FTP-user homedir?';
 
 /**
  * Mails

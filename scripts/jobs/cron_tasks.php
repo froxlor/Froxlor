@@ -298,6 +298,37 @@ $awstatsclean['headerold']) {
 			}
 		}
 	}
+
+	/**
+	 * TYPE=8 Customer deleted a ftp account and wants the homedir to be deleted on the filesystem
+	 * refs #293
+	 */
+	elseif ($row['type'] == '8')
+	{
+		fwrite($debugHandler, '  cron_tasks: Task8 started - deleting customer ftp homedir' . "\n");
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task8 started - deleting customer ftp homedir');
+
+		if(is_array($row['data']))
+		{
+			if(isset($row['data']['loginname'])
+				&& isset($row['data']['homedir'])
+			) {
+				/*
+				 * remove specific homedir
+				 */
+				$ftphomedir = makeCorrectDir($row['data']['homedir']);
+				$customerdocroot = makeCorrectDir($settings['system']['documentroot_prefix'].'/'.$row['data']['loginname'].'/');
+
+				if($ftphomedir != '/'
+				&& $ftphomedir != $settings['system']['documentroot_prefix']
+				&& $ftphomedir != $customerdocroot
+				) {
+					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($ftphomedir));
+					safe_exec('rm -rf '.escapeshellarg($ftphomedir));
+				}
+			}
+		}
+	}
 }
 
 if($db->num_rows($result_tasks) != 0)

@@ -106,8 +106,6 @@ elseif($page == 'accounts')
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted ftp-account '" . $result['username'] . "'");
 				$db->query("UPDATE `" . TABLE_FTP_GROUPS . "` SET `members`=REPLACE(`members`,'," . $db->escape($result['username']) . "','') WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 
-				//					$db->query("DELETE FROM `".TABLE_FTP_GROUPS."` WHERE `customerid`='".$userinfo['customerid']."' AND `id`='$id'");
-
 				if($userinfo['ftps_used'] == '1')
 				{
 					$resetaccnumber = " , `ftp_lastaccountnumber`='0'";
@@ -117,12 +115,19 @@ elseif($page == 'accounts')
 					$resetaccnumber = '';
 				}
 
+				// refs #293
+				if(isset($_POST['delete_userfiles'])
+				  && (int)$_POST['delete_userfiles'] == 1)
+				{
+					inserttask('8', $userinfo['loginname'], $result['homedir']);
+				}
+
 				$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `ftps_used`=`ftps_used`-1 $resetaccnumber WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 			else
 			{
-				ask_yesno('ftp_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['username']);
+				ask_yesno_withcheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['username']);
 			}
 		}
 		else

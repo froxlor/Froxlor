@@ -257,6 +257,7 @@ $lng['question']['mysql_reallydelete'] = 'Wollen Sie die Datenbank %s wirklich l
 $lng['question']['admin_configs_reallyrebuild'] = 'Wollen Sie wirklich alle Konfigurationsdateien neu erstellen lassen?';
 $lng['question']['admin_customer_alsoremovefiles'] = 'Auch Kunden-Daten l&ouml;schen?';
 $lng['question']['admin_customer_alsoremovemail'] = 'E-Mail Daten auf dem Dateisystem l&ouml;schen?';
+$lng['question']['admin_customer_alsoremoveftphomedir'] = 'Heimatverzeichnis des FTP-Benutzers l&ouml;schen?';
 
 /**
  * Mails
