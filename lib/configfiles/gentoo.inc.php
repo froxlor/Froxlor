@@ -310,7 +310,7 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 							'emerge -av xinetd'
 						),
 						'files' => Array(
-							'etc_xinet.d_froxlor' => '/etc/xinetd.d/froxlor'
+							'etc_xinetd.d_froxlor' => '/etc/xinetd.d/froxlor'
 						),
 						'restart' => Array(
 							'/etc/init.d/xinetd restart'
