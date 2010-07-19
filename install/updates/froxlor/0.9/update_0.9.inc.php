@@ -884,3 +884,16 @@ if(isFroxlorVersion('0.9.10-svn2'))
 
 	updateToVersion('0.9.10');
 }
+
+if(isFroxlorVersion('0.9.10'))
+{
+	showUpdateStep("Updating from 0.9.10 to 0.9.11-svn1", false);
+
+	$update_pwdregex = isset($_POST['update_pwdregex']) ? $_POST['update_pwdregex'] : '';
+
+	showUpdateStep("Adding new settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'password_regex', '".$db->escape($update_pwdregex)."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.11-svn1');
+}

@@ -62,6 +62,15 @@ return array(
 					'default' => 0,
 					'save_method' => 'storeSettingField',
 					),
+				'panel_password_regex' => array(
+					'label' => $lng['serversettings']['panel_password_regex'],
+					'settinggroup' => 'panel',
+					'varname' => 'password_regex',
+					'type' => 'string',
+					'default' => '',
+					/* 'plausibility_check_method' => 'checkValidRegEx', */
+					'save_method' => 'storeSettingField',
+					),
 				'customer_accountprefix' => array(
 					'label' => $lng['serversettings']['accountprefix'],
 					'settinggroup' => 'customer',

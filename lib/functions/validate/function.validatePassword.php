@@ -39,5 +39,14 @@ function validatePassword($password = null)
 		);
 	}
 	
+	if ($settings['panel']['password_regex'] != '') {
+		$password = validate(
+			$password, 
+			$settings['panel']['password_regex'],
+			$settings['panel']['password_regex'], 
+			'notrequiredpasswordcomplexity'
+		);
+	}
+	
 	return $password;
 }

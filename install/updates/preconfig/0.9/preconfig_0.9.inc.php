@@ -220,4 +220,13 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= makeyesno('update_directlyviahostname', '1', '0', '0');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if(versionInUpdate($current_version, '0.9.11-svn1'))
+	{
+		$has_preconfig = true;
+		$description = 'It is possible to enhance security with setting a regular expression to force your customers to enter more complex passwords.';
+		$question = '<strong>Enter a regular expression to force a higher password complexity (leave empty for none):</strong>&nbsp;';
+		$question.= '<input type="text" class="text" name="update_pwdregex" value="" />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }
