@@ -121,6 +121,7 @@ class lighttpd_fcgid extends lighttpd
 			$starter_file.= "# starter created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $domain['domain'] . "' with id #" . $domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
 			$starter_file.= "# Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
 			$starter_file.= "#\n\n";
+			$starter_file.= "umask 022\n";
 			$starter_file.= "PHPRC=" . escapeshellarg($configdir) . "\n";
 			$starter_file.= "export PHPRC\n";
 
