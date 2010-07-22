@@ -44,7 +44,7 @@ function getRedirectCodesArray()
  */
 function getRedirectCodes()
 {
-	global $db;
+	global $db, $lng;
 	
 	$sql = "SELECT * FROM `".TABLE_PANEL_REDIRECTCODES."` WHERE `enabled` = '1' ORDER BY `id` ASC";
 	$result = $db->query($sql);
