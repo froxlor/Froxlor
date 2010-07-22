@@ -546,8 +546,8 @@ class lighttpd
 				}
 				$path_options.= '  $HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
 				$path_options.= "\t" . 'cgi.assign = (' . "\n";
-				$path_options.= "\t\t" . '".pl" => "/usr/bin/perl",' . "\n";
-				$path_options.= "\t\t" . '".cgi" => "/usr/bin/perl"' . "\n";
+				$path_options.= "\t\t" . '".pl" => "'.makeCorrectFile($this->settings['system']['perl_path']).'",' . "\n";
+				$path_options.= "\t\t" . '".cgi" => "'.makeCorrectFile($this->settings['system']['perl_path']).'"' . "\n";
 				$path_options.= "\t" . ')' . "\n";
 				$path_options.= '  }' . "\n\n";
 			}

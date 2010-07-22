@@ -909,3 +909,17 @@ if(isFroxlorVersion('0.9.11-svn1'))
 
 	updateToVersion('0.9.11-svn2');
 }
+
+if(isFroxlorVersion('0.9.11-svn2'))
+{
+	showUpdateStep("Updating from 0.9.11-svn2 to 0.9.11-svn3", false);
+
+	$update_perlpath = isset($_POST['update_perlpath']) ? $_POST['update_perlpath'] : '/usr/bin/perl';
+
+	showUpdateStep("Adding new settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'perl_path', '".$db->escape($update_perlpath)."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.11-svn3');
+}
+

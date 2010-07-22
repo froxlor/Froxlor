@@ -1447,4 +1447,8 @@ $lng['error']['notrequiredpasswordcomplexity'] = 'The specified password-complex
 $lng['extras']['execute_perl'] = 'Execute perl/CGI';
 $lng['admin']['perlenabled'] = 'Perl enabled';
 
+// ADDED IN FROXLOR 0.9.11-svn3
+$lng['serversettings']['perl_path']['title'] = 'Path zu perl';
+$lng['serversettings']['perl_path']['description'] = 'Only relevant if you use lighttpd. Default is /usr/bin/perl';
+
 ?>

@@ -229,4 +229,13 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= '<input type="text" class="text" name="update_pwdregex" value="" />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if(versionInUpdate($current_version, '0.9.11-svn3'))
+	{
+		$has_preconfig = true;
+		$description = 'As Froxlor can now handle perl, you have to specify where the perl executable is (only if you\'re running lighttpd, else just leave empty).';
+		$question = '<strong>Path to perl (default \'/usr/bin/perl\'):</strong>&nbsp;';
+		$question.= '<input type="text" class="text" name="update_perlpath" value="/usr/bin/perl" />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }
