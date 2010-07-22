@@ -522,7 +522,9 @@ class lighttpd
 				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
-				$path = substr($path, 0, -1);
+				if($row['path'] != $domain['documentroot']) {
+					$path = substr($path, 0, -1);
+				}
 				$path_options.= '  $HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
 				$path_options.= "\t" . 'dir-listing.activate = "enable"' . "\n";
 				$path_options.= '  }' . "\n\n";
@@ -539,7 +541,9 @@ class lighttpd
 				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
-				$path = substr($path, 0, -1);
+				if($row['path'] != $domain['documentroot']) {
+					$path = substr($path, 0, -1);
+				}
 				$path_options.= '  $HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
 				$path_options.= "\t" . 'cgi.assign = (' . "\n";
 				$path_options.= "\t\t" . '".pl" => "/usr/bin/perl",' . "\n";
