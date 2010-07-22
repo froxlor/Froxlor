@@ -531,6 +531,22 @@ class lighttpd
 			{
 				$path_options = $error_string;
 			}
+
+			if(customerHasPerlEnabled($domain['customerid'])
+				&& $row['options_cgi'] != '0')
+			{
+				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
+				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
+
+				// We need to remove the last slash, otherwise the regex wouldn't work
+				$path = substr($path, 0, -1);
+				$path_options.= '  $HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
+				$path_options.= "\t" . 'cgi.assign = (' . "\n";
+				$path_options.= "\t\t" . '".pl" => "/usr/bin/perl",' . "\n";
+				$path_options.= "\t\t" . '".cgi" => "/usr/bin/perl"' . "\n";
+				$path_options.= "\t" . ')' . "\n";
+				$path_options.= '  }' . "\n\n";
+			}
 		}
 
 		return $path_options;

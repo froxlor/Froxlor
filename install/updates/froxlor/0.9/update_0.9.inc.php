@@ -897,3 +897,15 @@ if(isFroxlorVersion('0.9.10'))
 
 	updateToVersion('0.9.11-svn1');
 }
+
+if(isFroxlorVersion('0.9.11-svn1'))
+{
+	showUpdateStep("Updating from 0.9.11-svn1 to 0.9.11-svn2", false);
+
+	showUpdateStep("Adding perl/CGI directory fields");
+	$db->query("ALTER TABLE `".TABLE_PANEL_HTACCESS."` ADD `options_cgi` tinyint(1) NOT NULL default '0' AFTER `error401path`;");
+	$db->query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `perlenabled` tinyint(1) NOT NULL default '0' AFTER `aps_packages_used`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.11-svn2');
+}

@@ -803,19 +803,41 @@ class apache
 
 			if(is_dir($row_diroptions['path']))
 			{
+				$cperlenabled = customerHasPerlEnabled($row_diroptions['customerid']);
+
 				$this->diroptions_data[$diroptions_filename].= '<Directory "' . $row_diroptions['path'] . '">' . "\n";
 
 				if(isset($row_diroptions['options_indexes'])
 				   && $row_diroptions['options_indexes'] == '1')
 				{
-					$this->diroptions_data[$diroptions_filename].= '  Options +Indexes' . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  Options +Indexes';
+
+					// add perl options if enabled
+					if($cperlenabled
+						&& isset($row_diroptions['options_cgi'])
+						&& $row_diroptions['options_cgi'] == '1')
+					{
+						$this->diroptions_data[$diroptions_filename].= ' ExecCGI -MultiViews +SymLinksIfOwnerMatch'."\n";
+					} else {
+						$this->diroptions_data[$diroptions_filename].= "\n";
+					}
 					fwrite($this->debugHandler, '  cron_tasks: Task3 - Setting Options +Indexes' . "\n");
 				}
 
 				if(isset($row_diroptions['options_indexes'])
 				   && $row_diroptions['options_indexes'] == '0')
 				{
-					$this->diroptions_data[$diroptions_filename].= '  Options -Indexes' . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  Options -Indexes';
+
+					// add perl options if enabled
+					if($cperlenabled
+						&& isset($row_diroptions['options_cgi'])
+						&& $row_diroptions['options_cgi'] == '1')
+					{
+						$this->diroptions_data[$diroptions_filename].= ' ExecCGI -MultiViews +SymLinksIfOwnerMatch'."\n";
+					} else {
+						$this->diroptions_data[$diroptions_filename].= "\n";
+					}
 					fwrite($this->debugHandler, '  cron_tasks: Task3 - Setting Options -Indexes' . "\n");
 				}
 
@@ -835,6 +857,17 @@ class apache
 				   && $row_diroptions['error500path'] != '')
 				{
 					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 500 ' . $row_diroptions['error500path'] . "\n";
+				}
+
+				if($cperlenabled
+					&& isset($row_diroptions['options_cgi'])
+					&& $row_diroptions['options_cgi'] == '1')
+				{
+					$this->diroptions_data[$diroptions_filename].= '  AllowOverride None' . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  AddHandler cgi-script .cgi .pl' . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  Order allow,deny' . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  Allow from all' . "\n";
+					fwrite($this->debugHandler, '  cron_tasks: Task3 - Enabling perl execution' . "\n");
 				}
 
 				if(count($row_diroptions['htpasswds']) > 0)

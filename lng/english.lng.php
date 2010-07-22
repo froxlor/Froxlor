@@ -1443,4 +1443,8 @@ $lng['serversettings']['panel_password_regex']['title'] = 'Regular expression fo
 $lng['serversettings']['panel_password_regex']['description'] = 'Here you can set a regular expression for passwords-complexity.<br />Empty = no specific requirement<br />(<a href="http://wiki.froxlor.org/doc/password-regex-examples">regex help/examples</a>)';
 $lng['error']['notrequiredpasswordcomplexity'] = 'The specified password-complexity was not satisfied (regex: %s)';
 
+// ADDED IN FROXLOR 0.9.11-svn2
+$lng['extras']['execute_perl'] = 'Execute perl/CGI';
+$lng['admin']['perlenabled'] = 'Perl enabled';
+
 ?>

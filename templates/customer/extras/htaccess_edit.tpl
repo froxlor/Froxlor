@@ -32,6 +32,12 @@ $header
 				</td>
 				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="error500path" value="{$result['error500path']}" size="30" maxlength="255" /></td>
 			</tr>
+			<if $cperlenabled == 1 >
+				<tr>
+					<td class="main_field_name"><b>{$lng['extras']['execute_perl']}:</b></td>
+					<td class="main_field_display" nowrap="nowrap">$options_cgi</td>
+				</tr>
+			</if>
 			<tr>
 				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['extras']['pathoptions_edit']}" /></td>
 			</tr>

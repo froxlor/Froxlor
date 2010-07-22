@@ -148,6 +148,10 @@ $header
 				<td class="main_field_name">{$lng['admin']['phpenabled']}?</td>
 				<td class="main_field_display" nowrap="nowrap">$phpenabled</td>
 			</tr>
+			<tr>
+				<td class="main_field_name">{$lng['admin']['perlenabled']}?</td>
+				<td class="main_field_display" nowrap="nowrap">$perlenabled</td>
+			</tr>
 			<if $settings['aps']['aps_active'] == '1'>
 			<tr>
 				<td class="main_field_name">{$lng['aps']['numberofapspackages']}:</td>

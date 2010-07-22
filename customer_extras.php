@@ -221,10 +221,11 @@ elseif($page == 'htaccess')
 			'options_indexes' => $lng['extras']['view_directory'],
 			'error404path' => $lng['extras']['error404path'],
 			'error403path' => $lng['extras']['error403path'],
-			'error500path' => $lng['extras']['error500path']
+			'error500path' => $lng['extras']['error500path'],
+			'options_cgi' => $lng['extras']['execute_perl']
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_HTACCESS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$result = $db->query("SELECT `id`, `path`, `options_indexes`, `error404path`, `error403path`, `error500path` FROM `" . TABLE_PANEL_HTACCESS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+		$result = $db->query("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		$paging->setEntries($db->num_rows($result));
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
@@ -234,6 +235,8 @@ elseif($page == 'htaccess')
 		$count = 0;
 		$htaccess = '';
 
+		$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
+
 		while($row = $db->fetch_array($result))
 		{
 			if($paging->checkDisplay($i))
@@ -241,10 +244,14 @@ elseif($page == 'htaccess')
 				if(strpos($row['path'], $userinfo['documentroot']) === 0)
 				{
 					$row['path'] = substr($row['path'], strlen($userinfo['documentroot']));
+					// don't show nothing wehn it's the docroot, show slash
+					if ($row['path'] == '') { $row['path'] = '/'; }
 				}
 
 				$row['options_indexes'] = str_replace('1', $lng['panel']['yes'], $row['options_indexes']);
 				$row['options_indexes'] = str_replace('0', $lng['panel']['no'], $row['options_indexes']);
+				$row['options_cgi'] = str_replace('1', $lng['panel']['yes'], $row['options_cgi']);
+				$row['options_cgi'] = str_replace('0', $lng['panel']['no'], $row['options_cgi']);
 				$row = htmlentities_array($row);
 				eval("\$htaccess.=\"" . getTemplate("extras/htaccess_htaccess") . "\";");
 				$count++;
@@ -293,6 +300,15 @@ elseif($page == 'htaccess')
 				standard_error('invalidpath');
 			}
 
+			if(isset($_POST['options_cgi']))
+			{
+				$options_cgi = intval($_POST['options_cgi']);
+			}
+			else
+			{
+				$options_cgi = '0';
+			} 
+
 			if(($_POST['error404path'] === '')
 			   || (validateUrl($idna_convert->encode($_POST['error404path']))))
 			{
@@ -333,7 +349,15 @@ elseif($page == 'htaccess')
 			}
 			else
 			{
-				$db->query('INSERT INTO `' . TABLE_PANEL_HTACCESS . '`  (`customerid`,  `path`,  `options_indexes`,  `error404path`,  `error403path`,  `error500path`  ) VALUES ("' . (int)$userinfo['customerid'] . '",  "' . $db->escape($path) . '",  "' . $db->escape($_POST['options_indexes'] == '1' ? '1' : '0') . '",  "' . $db->escape($error404path) . '",  "' . $db->escape($error403path) . '",  "' . $db->escape($error500path) . '"  )');
+				$db->query('INSERT INTO `' . TABLE_PANEL_HTACCESS . '` SET
+							`customerid` = "'.(int)$userinfo['customerid'].'",
+							`path` = "'.$db->escape($path).'",
+							`options_indexes` = "'.$db->escape($_POST['options_indexes'] == '1' ? '1' : '0').'",
+							`error404path` = "'.$db->escape($error404path).'",
+							`error403path` = "'.$db->escape($error403path).'",
+							`error500path` = "'.$db->escape($error500path).'",
+							`options_cgi` = "'.$db->escape($options_cgi).'"');
+
 				$log->logAction(USR_ACTION, LOG_INFO, "added htaccess for '" . $path . "'");
 				inserttask('1');
 				redirectTo($filename, Array('page' => $page, 's' => $s));
@@ -343,6 +367,8 @@ elseif($page == 'htaccess')
 		{
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
 			$options_indexes = makeyesno('options_indexes', '1', '0', '0');
+			$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
+			$options_cgi = makeyesno('options_cgi', '1', '0', '0');
 			eval("echo \"" . getTemplate("extras/htaccess_add") . "\";");
 		}
 	}
@@ -359,10 +385,16 @@ elseif($page == 'htaccess')
 			   && $_POST['send'] == 'send')
 			{
 				$option_indexes = intval($_POST['options_indexes']);
+				$options_cgi = isset($_POST['options_cgi']) ? intval($_POST['options_cgi']) : 0;
 
 				if($option_indexes != '1')
 				{
 					$option_indexes = '0';
+				}
+
+				if($options_cgi != '1')
+				{
+					$options_cgi = '0';
 				}
 
 				if(($_POST['error404path'] === '')
@@ -398,10 +430,11 @@ elseif($page == 'htaccess')
 				if(($option_indexes != $result['options_indexes'])
 				   || ($error404path != $result['error404path'])
 				   || ($error403path != $result['error403path'])
-				   || ($error500path != $result['error500path']))
+				   || ($error500path != $result['error500path'])
+				   || ($options_cgi != $result['options_cgi']))
 				{
 					inserttask('1');
-					$db->query('UPDATE `' . TABLE_PANEL_HTACCESS . '` SET `options_indexes` = "' . $db->escape($option_indexes) . '", `error404path`    = "' . $db->escape($error404path) . '",  `error403path`    = "' . $db->escape($error403path) . '",  `error500path`    = "' . $db->escape($error500path) . '" WHERE `customerid` = "' . (int)$userinfo['customerid'] . '"  AND `id` = "' . (int)$id . '"');
+					$db->query('UPDATE `' . TABLE_PANEL_HTACCESS . '` SET `options_indexes` = "' . $db->escape($option_indexes) . '", `error404path`    = "' . $db->escape($error404path) . '",  `error403path`    = "' . $db->escape($error403path) . '",  `error500path`    = "' . $db->escape($error500path) . '", `options_cgi` = "' . $db->escape($options_cgi) . '" WHERE `customerid` = "' . (int)$userinfo['customerid'] . '"  AND `id` = "' . (int)$id . '"');
 					$log->logAction(USR_ACTION, LOG_INFO, "edited htaccess for '" . str_replace($userinfo['documentroot'], '', $result['path']) . "'");
 				}
 
@@ -412,12 +445,16 @@ elseif($page == 'htaccess')
 				if(strpos($result['path'], $userinfo['documentroot']) === 0)
 				{
 					$result['path'] = substr($result['path'], strlen($userinfo['documentroot']));
+					// don't show nothing wehn it's the docroot, show slash
+					if ($result['path'] == '') { $result['path'] = '/'; }
 				}
 
 				$result['error404path'] = $result['error404path'];
 				$result['error403path'] = $result['error403path'];
 				$result['error500path'] = $result['error500path'];
 				$options_indexes = makeyesno('options_indexes', '1', '0', $result['options_indexes']);
+				$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
+				$options_cgi = makeyesno('options_cgi', '1', '0', $result['options_cgi']);
 				$result = htmlentities_array($result);
 				eval("echo \"" . getTemplate("extras/htaccess_edit") . "\";");
 			}
