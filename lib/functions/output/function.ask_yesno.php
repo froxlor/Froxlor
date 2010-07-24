@@ -66,7 +66,7 @@ function ask_yesno($text, $yesfile, $params = array(), $targetname = '')
 	exit;
 }
 
-function ask_yesno_withcheckbox($text, $chk_text, $yesfile, $params = array(), $targetname = '')
+function ask_yesno_withcheckbox($text, $chk_text, $yesfile, $params = array(), $targetname = '', $show_checkbox = true)
 {
 	global $userinfo, $db, $s, $header, $footer, $lng;
 
@@ -89,8 +89,12 @@ function ask_yesno_withcheckbox($text, $chk_text, $yesfile, $params = array(), $
 	{
 		$chk_text = $lng['question'][$chk_text];
 	}
-	
-	$checkbox = makecheckbox('delete_userfiles', $chk_text, '1', false, '0', true, true);
+
+	if ($show_checkbox) {
+		$checkbox = makecheckbox('delete_userfiles', $chk_text, '1', false, '0', true, true);
+	} else {
+		$checkbox = '<input type="hidden" name="delete_userfiles" value="0" />' . "\n";;
+	}
 
 	$text = strtr($text, array('%s' => $targetname));
 	eval("echo \"" . getTemplate('misc/question_yesno_checkbox', '1') . "\";");

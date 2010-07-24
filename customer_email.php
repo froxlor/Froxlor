@@ -197,7 +197,12 @@ elseif($page == 'emails')
 			}
 			else
 			{
-				ask_yesno_withcheckbox('email_reallydelete', 'admin_customer_alsoremovemail', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']));
+				if(maildirExists($result))  {
+					$show_checkbox = true;
+				} else {
+					$show_checkbox = false;
+				}
+				ask_yesno_withcheckbox('email_reallydelete', 'admin_customer_alsoremovemail', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']), $show_checkbox);
 			}
 		}
 	}
