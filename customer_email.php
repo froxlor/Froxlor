@@ -187,7 +187,7 @@ elseif($page == 'emails')
 				if(isset($_POST['delete_userfiles'])
 				  && (int)$_POST['delete_userfiles'] == 1)
 				{
-					inserttask('7', $result['loginname'], $result['email']);
+					inserttask('7', $userinfo['loginname'], $result['email']);
 				}
 
 				$db->query("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
