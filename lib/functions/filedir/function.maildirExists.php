@@ -30,7 +30,7 @@ function maildirExists($result = null)
 	{
 		$loginname = getCustomerDetail($result['customerid'], 'loginname');
 		if($loginname !== false) {
-			$maildir = makeCorrectDir($settings['system']['vmail_homedir'] .'/'. $loginname .'/'. $result['email']);
+			$maildir = makeCorrectDir($settings['system']['vmail_homedir'] .'/'. $loginname .'/'. $result['email_full']);
 			if(@file_exists($maildir)) {
 				return true;
 			}
