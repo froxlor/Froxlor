@@ -73,6 +73,17 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '')
 		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("7", "' . $db->escape($data) . '")');
 		$doupdate = true;
 	}
+	elseif($type == '8'
+			&& $param1 != ''
+			&& $param2 != '')
+	{
+		$data = Array();
+		$data['loginname'] = $param1;
+		$data['homedir'] = $param2;
+		$data = serialize($data);
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("8", "' . $db->escape($data) . '")');
+		$doupdate = true;
+	}
 
 	if($doupdate === true
 	   && (int)$settings['system']['realtime_port'] !== 0
