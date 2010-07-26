@@ -923,3 +923,10 @@ if(isFroxlorVersion('0.9.11-svn2'))
 	updateToVersion('0.9.11-svn3');
 }
 
+if(isFroxlorVersion('0.9.11-svn3'))
+{
+	showUpdateStep("Updating from 0.9.11-svn3 to 0.9.11 final", false);
+	lastStepStatus(0);
+
+	updateToVersion('0.9.11');
+}
