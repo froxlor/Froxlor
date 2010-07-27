@@ -25,7 +25,7 @@ $yesterday = time() - (60 * 60 * 24);
  */
 
 require (dirname(__FILE__) . '/../lib/class.phpmailer.php');
-$mail = new PHPMailer();
+$mail = new PHPMailer(true);
 $mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
 
 // Warn the customers at 90% traffic-usage

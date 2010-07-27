@@ -21,45 +21,33 @@
  * @todo	   skip mail parsing after x bytes for large mails
  */
 
-$mail = new PHPMailer();
+$mail = new PHPMailer(true);
 
 //dont do anything when module is disabled
-
 if((int)$settings['autoresponder']['autoresponder_active'] == 0)
 {
 	return;
 }
 
 //only send autoresponder to mails which were delivered since last run
-
 if((int)$settings['autoresponder']['last_autoresponder_run'] == 0)
 {
 	//mails from last 5 minutes, otherwise all mails will be parsed -> mailbomb prevention
-
 	$cycle = 300;
 }
 else
 {
+	// calculate seconds since last check
 	$cycle = time() - (int)$settings['autoresponder']['last_autoresponder_run'];
 
 	//prevent mailbombs when cycle is bigger than two days
-
 	if($cycle > (2 * 60 * 60 * 24))$cycle = (60 * 60 * 24);
 }
 
+// set last_autoresponder_run
 $db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . (int)time() . "' WHERE `settinggroup` = 'autoresponder' AND `varname` = 'last_autoresponder_run'");
 
-/*
-//can be used for later usage if autoresponders should be only active in a defined period
-
-//This query has to disable every autoresponder entry which ended in the past
-$db->query("UPDATE `autoresponder` SET `enabled` = 0 WHERE `to` < CURDATE()");
-
-//This query has to activate every autoresponder entry which starts today
-$db->query("UPDATE `autoresponder` SET `enabled` = 1 WHERE `from` = CURDATE()");
-*/
-//getting all mailboxes where autoresponders are active and configured
-
+// get all customer set ip autoresponders
 $result = $db->query("SELECT * FROM `" . TABLE_MAIL_AUTORESPONDER . "` INNER JOIN `" . TABLE_MAIL_USERS . "` ON `" . TABLE_MAIL_AUTORESPONDER . "`.`email` = `" . TABLE_MAIL_USERS . "`.`email` WHERE `enabled` = 1");
 
 if($db->num_rows($result) > 0)
@@ -77,32 +65,41 @@ if($db->num_rows($result) > 0)
 		if($ts_start != -1 && $ts_start > $ts_now) continue;
 		// already ended
 		if($ts_end != -1 && $ts_end < $ts_now) continue;
-		
+
+		// setup mail-path (e.g. /var/customers/mail/[loginname]/[user@domain.tld]/new
 		$path = $row['homedir'] . $row['maildir'] . "new/";
-		
+
+		// if the directory does not exist, inform syslog
 		if(!is_dir($path))
 		{
 			$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Error accessing maildir: " . $path);
 			continue;
 		}
-		
-		$files = scandir($path);
-		foreach($files as $entry)
+
+		// get all files 
+		$its = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($path)
+		);
+
+		$responded_counter = 0;
+		foreach ($its as $fullFilename => $it ) 
 		{
-			if($entry == '.'
-			   || $entry == '..')continue;
+			if($it->getFilename() == '.' || $it->getFilename() == '..')
+			{
+				continue;
+			}
 
 			/*
 			 * is the time passed between now and
 			 * the time we received the mail lower/equal
 			 * than our cycle-seconds?
 			 */
-			if(time() - filemtime($path . $entry) <= $cycle)
+			$filemtime = $it->getMTime(); 
+			if(time() - $filemtime <= $cycle)
 			{
-				$content = file($path . $entry);
+				$content = file($fullFilename);
 
-				//error reading mail contents
-
+				// error reading mail contents or just empty
 				if(count($content) == 0)
 				{
 					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Unable to read mail from maildir: " . $entry);
@@ -117,53 +114,48 @@ if($db->num_rows($result) > 0)
 				foreach($content as $line)
 				{
 					// header ends on first empty line, skip rest of mail
-
 					if(strlen(rtrim($line)) == 0)
 					{
 						break;
 					}
 
 					//fetching from field
-
 					if(!strlen($from)
-					   && preg_match("/^From:(.+)<(.*)>$/", $line, $match))
-					{
+					   && preg_match("/^From:(.+)<(.*)>$/", $line, $match)
+					) {
 						$from = $match[2];
 					}
 					elseif(!strlen($from)
-					       && preg_match("/^From:\s+(.*@.*)$/", $line, $match))
-					{
+					       && preg_match("/^From:\s+(.*@.*)$/", $line, $match)
+					) {
 						$from = $match[1];
 					}
 
 					//fetching to field
-
 					if(!strlen($to)
-					   && preg_match("/^To:(.+)<(.*)>$/", $line, $match))
-					{
+					   && preg_match("/^To:(.+)<(.*)>$/", $line, $match)
+					) {
 						$to = $match[2];
 					}
 					elseif(!strlen($to)
-					       && preg_match("/To:\s+(.*@.*)$/", $line, $match))
-					{
+					       && preg_match("/To:\s+(.*@.*)$/", $line, $match)
+					) {
 						$to = $match[1];
 					}
 
 					//fetching sender field
-
 					if(!strlen($to)
-					   && preg_match("/^Sender:(.+)<(.*)>$/", $line, $match))
-					{
+					   && preg_match("/^Sender:(.+)<(.*)>$/", $line, $match)
+					) {
 						$sender = $match[2];
 					}
 					elseif(!strlen($to)
-					       && preg_match("/Sender:\s+(.*@.*)$/", $line, $match))
-					{
+					       && preg_match("/Sender:\s+(.*@.*)$/", $line, $match)
+					) {
 						$sender = $match[1];
 					}
 
 					//check for amavis/spamassassin spam headers
-
 					if(preg_match("/^X-Spam-Status: (Yes|No)(.*)$/", $line, $match))
 					{
 						if($match[1] == 'Yes')$spam = true;
@@ -178,13 +170,13 @@ if($db->num_rows($result) > 0)
 				}
 
 				//skip mail when marked as spam
-
-				if($spam == true)continue;
+				if($spam == true)
+				{
+					continue;
+				}
 
 				//error while parsing mail
-
-				if($to == ''
-				   || $from == '')
+				if($to == '' || $from == '')
 				{
 					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "No valid headers found in mail to parse: " . $entry);
 					continue;
@@ -193,15 +185,15 @@ if($db->num_rows($result) > 0)
 				//important! prevent mailbombs when mail comes from a maildaemon/mailrobot
 				//robot/daemon mails must go to Sender: field in envelope header
 				//refers to "Das Postfix-Buch" / RFC 2822
-
-				if($sender != '')$from = $sender;
+				if($sender != '')
+				{
+					$from = $sender;
+				}
 
 				//make message valid to email format
-
 				$message = str_replace("\r\n", "\n", $row['message']);
 
 				//check if mail is already an answer
-
 				$fullcontent = implode("", $content);
 
 				if(strstr($fullcontent, $message))
@@ -232,9 +224,9 @@ if($db->num_rows($result) > 0)
 				}
 
 				$mail->ClearAddresses();
+				$responded_counter++;
 			}
 		}
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Responded to '" . $responded_counter . "' mails from '".$path."'");
 	}
 }
-
-?>
