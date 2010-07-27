@@ -207,6 +207,30 @@ class apache
 					$this->virtualhosts_data[$vhosts_filename].= ' ServerName ' . $this->settings['system']['hostname'] . "\n";
 				}
 
+				// create fcgid <Directory>-Part (starter is created in apache_fcgid)
+				if($this->settings['system']['mod_fcgid_ownvhost'] == '1')
+				{
+					
+					$configdir = makeCorrectDir($this->settings['system']['mod_fcgid_configdir'] . '/froxlor.panel/');
+					if((int)$this->settings['system']['mod_fcgid_wrapper'] == 0)
+					{
+						$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '  ScriptAlias /php/ ' . $configdir . "\n";
+					}
+					else
+					{
+						$starter_filename = makeCorrectFile($configdir . '/php-fcgi-starter');
+						$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '    AddHandler fcgid-script .php' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '    FCGIWrapper ' . $starter_filename . ' .php' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '    Options +ExecCGI' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
+					}
+				}
+
 				/**
 				 * dirprotection, see #72
 				 * @TODO deferred until 0.9.5, needs more testing
@@ -326,6 +350,10 @@ class apache
 		}
 
 		return $php_options_text;
+	}
+	
+	public function createOwnVhostStarter()
+	{
 	}
 
 	/*

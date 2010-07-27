@@ -123,6 +123,7 @@ $awstatsclean['headerold']) {
 			$webserver->createVirtualHosts();
 			$webserver->createFileDirOptions();
 			$webserver->writeConfigs();
+			$webserver->createOwnVhostStarter();
 			$webserver->reload();
 		}
 		else

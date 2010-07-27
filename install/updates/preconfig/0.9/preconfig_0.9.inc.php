@@ -238,4 +238,21 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= '<input type="text" class="text" name="update_perlpath" value="/usr/bin/perl" />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+	
+	if(versionInUpdate($current_version, '0.9.12-svn1'))
+	{
+		if($settings['system']['mod_fcgid'] == 1)
+		{
+			$has_preconfig = true;
+			$description = 'You can chose whether you want Froxlor to use FCGID itself too now.';
+			$question = '<strong>Use FCGID for the Froxlor Panel?:</strong>&nbsp;';
+			$question.= makeyesno('update_fcgid_ownvhost', '1', '0', '0').'<br /><br />';
+			$question.= '<strong>If \'yes\', please specify local user/group (have to exist, Froxlor does not add them automatically):</strong><br /><br />';
+			$question.= 'Local user:&nbsp;';
+			$question.= '<input type="text" class="text" name="update_fcgid_httpuser" value="froxlorlocal" /><br /><br />';
+			$question.= 'Local group:&nbsp;';
+			$question.= '<input type="text" class="text" name="update_fcgid_ownvhost" value="froxlorlocal" /><br />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
 }

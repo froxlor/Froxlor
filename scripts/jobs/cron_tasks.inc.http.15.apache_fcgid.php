@@ -278,6 +278,89 @@ class apache_fcgid extends apache
 
 		return $this->admin_cache[$adminid];
 	}
+	
+	public function createOwnVhostStarter()
+	{
+		if ($this->settings['system']['mod_fcgid_ownvhost'] == '1')
+		{
+			$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
+			$configdir = makeCorrectDir($this->settings['system']['mod_fcgid_configdir'] . '/froxlor.panel/');
+			$starter_filename = makeCorrectFile($configdir . '/php-fcgi-starter');
+			$tmpdir = makeCorrectDir($this->settings['system']['mod_fcgid_tmpdir'] . '/froxlor.panel/');
+			
+			$user = $this->settings['system']['mod_fcgid_httpuser'];
+			$group = $this->settings['system']['mod_fcgid_httpgroup'];
+
+			// all the files and folders have to belong to the local user
+			// now because we also use fcgid for our own vhost
+			safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
+			
+			// create config dir if necessary
+			if(!is_dir($configdir))
+			{
+				safe_exec('mkdir -p ' . escapeshellarg($configdir));
+				safe_exec('chown ' . $user . ':' . $group . ' ' . escapeshellarg($configdir));
+			}
+
+			// create tmp dir if necessary
+			if(!is_dir($tmpdir))
+			{
+				safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
+				safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($tmpdir));
+				safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
+			}
+			
+			// we only need this for some basic, no special parameters that
+			// would require to maybe allow selecting a specific php.ini
+			// because we only need the binary and spawning parameters
+			$phpconfig = $this->getPhpConfig(0); 
+
+			// create starter
+			$starter_file = "#!/bin/sh\n\n";
+			$starter_file.= "#\n";
+			$starter_file.= "# starter created/changed on " . date("Y.m.d H:i:s") . " for the Froxlor vhost\n";
+			$starter_file.= "# Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
+			$starter_file.= "#\n\n";
+			$starter_file.= "umask 022\n";
+			$starter_file.= "PHPRC=" . escapeshellarg($configdir) . "\n";
+			$starter_file.= "export PHPRC\n";
+			if((int)$phpconfig['mod_fcgid_starter'] != - 1)
+			{
+				$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$phpconfig['mod_fcgid_starter'] . "\n";
+			}
+			else
+			{
+				$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$this->settings['system']['mod_fcgid_starter'] . "\n";
+			}
+			$starter_file.= "export PHP_FCGI_CHILDREN\n";
+			if((int)$phpconfig['mod_fcgid_maxrequests'] != - 1)
+			{
+				$starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$phpconfig['mod_fcgid_maxrequests'] . "\n";
+			}
+			else
+			{
+				$starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$this->settings['system']['mod_fcgid_maxrequests'] . "\n";
+			}
+			$starter_file.= "export PHP_FCGI_MAX_REQUESTS\n";
+
+			// Set Binary
+			$starter_file.= "exec " . $phpconfig['binary'] . " -c " . escapeshellarg($configdir) . "\n";
+
+			//remove +i attibute, so starter can be overwritten
+			if(file_exists($starter_filename))
+			{
+				safe_exec('chattr -i ' . escapeshellarg($starter_filename));
+			}
+
+			$starter_file_handler = fopen($starter_filename, 'w');
+			fwrite($starter_file_handler, $starter_file);
+			fclose($starter_file_handler);
+			safe_exec('chmod 750 ' . escapeshellarg($starter_filename));
+			safe_exec('chown ' . $user . ':' . $group . ' ' . escapeshellarg($starter_filename));
+			safe_exec('chattr +i ' . escapeshellarg($starter_filename));
+		}
+	}
+
 }
 
 ?>

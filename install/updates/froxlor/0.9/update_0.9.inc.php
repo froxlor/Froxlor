@@ -925,8 +925,32 @@ if(isFroxlorVersion('0.9.11-svn2'))
 
 if(isFroxlorVersion('0.9.11-svn3'))
 {
-	showUpdateStep("Updating from 0.9.11-svn3 to 0.9.11 final", false);
+	showUpdateStep("Updating from 0.9.11-svn3 to 0.9.11 final");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.11');
+}
+
+if(isFroxlorVersion('0.9.11'))
+{
+	showUpdateStep("Updating from 0.9.11 to 0.9.12-svn1", false);
+
+	$update_fcgid_ownvhost = isset($_POST['update_fcgid_ownvhost']) ? '1' : '0';
+	$update_fcgid_httpuser = isset($_POST['update_fcgid_httpuser']) ? $_POST['update_fcgid_httpuser'] : 'froxlorlocal';
+	$update_fcgid_httpgroup = isset($_POST['update_fcgid_ownvhost']) ? $_POST['update_fcgid_ownvhost'] : 'froxlorlocal';
+
+	if($update_fcgid_httpuser == '') {
+		$update_fcgid_httpuser = 'froxlorlocal';
+	}
+	if($update_fcgid_httpgroup == '') {
+		$update_fcgid_httpgroup = 'froxlorlocal';
+	}
+	
+	showUpdateStep("Adding new settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_ownvhost', '".$db->escape($update_fcgid_ownvhost)."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_httpuser', '".$db->escape($update_fcgid_httpuser)."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_httpgroup', '".$db->escape($update_fcgid_httpgroup)."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.12-svn1');
 }

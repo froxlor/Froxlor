@@ -1448,7 +1448,14 @@ $lng['extras']['execute_perl'] = 'Execute perl/CGI';
 $lng['admin']['perlenabled'] = 'Perl enabled';
 
 // ADDED IN FROXLOR 0.9.11-svn3
-$lng['serversettings']['perl_path']['title'] = 'Path zu perl';
+$lng['serversettings']['perl_path']['title'] = 'Path to perl';
 $lng['serversettings']['perl_path']['description'] = 'Only relevant if you use lighttpd. Default is /usr/bin/perl';
+
+// ADDED IN FROXLOR 0.9.12-svn1
+$lng['admin']['fcgid_settings'] = 'FCGID';
+$lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Enable FCGID for the Froxlor vhost';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'If enabled, Froxlor will also be running under a local user<br /><strong>ATTENTION:</strong>This needs manual configuration, see <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a>';
+$lng['admin']['mod_fcgid_user'] = 'Local user to use for FCGID (Froxlor vhost)';
+$lng['admin']['mod_fcgid_group'] = 'Local group to use for FCGID (Froxlor vhost)';
 
 ?>
