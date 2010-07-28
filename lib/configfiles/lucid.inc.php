@@ -224,13 +224,16 @@ return Array(
 					),
 					'dovecot' => Array(
 						'label' => 'Dovecot',
-						'commands' => Array(
+						'commands_1' => Array(
 							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix'
 						),
 						'files' => Array(
 							'etc_dovecot_auth.d_01-dovecot-postfix.auth' => '/etc/dovecot/auth.d/01-dovecot-postfix.auth',
 							'etc_dovecot_conf.d_01-dovecot-postfix.conf' => '/etc/dovecot/conf.d/01-dovecot-postfix.conf',
 							'etc_dovecot_dovecot-sql.conf' => '/etc/dovecot/dovecot-sql.conf'
+						),
+						'commands_2' => Array(
+							'chmod 0640 /etc/dovecot/dovecot-sql.conf'
 						),
 						'restart' => Array(
 							'/etc/init.d/dovecot restart'
@@ -257,7 +260,7 @@ return Array(
 					),
 					'pure-ftpd' => Array(
 						'label' => 'Pure FTPd',
-						'commands' => Array(
+						'commands_1' => Array(
 							'apt-get install pure-ftpd-common pure-ftpd-mysql'
 						),
 						'files' => Array(
@@ -271,6 +274,9 @@ return Array(
 							'etc_pure-ftpd_conf_CustomerProof' => '/etc/pure-ftpd/conf/CustomerProof',
 							'etc_pure-ftpd_conf_Bind' => '/etc/pure-ftpd/conf/Bind',
 							'etc_default_pure-ftpd-common' => '/etc/default/pure-ftpd-common'
+						),
+						'commands_2' => Array(
+							'chmod 0640 /etc/pure-ftpd/db/mysql.conf'
 						),
 						'restart' => Array(
 							'/etc/init.d/pure-ftpd-mysql restart'

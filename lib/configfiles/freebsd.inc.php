@@ -163,7 +163,8 @@ return Array(
 						),
 						'commands_2' => Array(
 							'echo "dovecot unix - n n - - pipe
-    flags=DRhu user=vmail:vmail argv=/usr/local/libexec/dovecot/deliver -f ${sender} -d ${recipient}" >> /usr/local/etc/postfix/master.cf'
+    flags=DRhu user=vmail:vmail argv=/usr/local/libexec/dovecot/deliver -f ${sender} -d ${recipient}" >> /usr/local/etc/postfix/master.cf',
+							'chmod 0640 /usr/local/etc/dovecot-sql.conf'
 						),
 						'restart' => Array(
 							'sh /usr/local/etc/rc.d/dovecot restart'
