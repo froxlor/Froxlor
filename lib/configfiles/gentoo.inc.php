@@ -330,13 +330,15 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 					),
 					'libnss' => Array(
 						'label' => 'libnss (system login with mysql)',
+						'commands_1' => Array(
+							'emerge -av libnss-mysql'
+						),
 						'files' => Array(
 							'etc_libnss-mysql.cfg' => '/etc/libnss-mysql.cfg',
 							'etc_libnss-mysql-root.cfg' => '/etc/libnss-mysql-root.cfg',
 							'etc_nsswitch.conf' => '/etc/nsswitch.conf',
 						),
-						'commands' => Array(
-							'emerge -av libnss-mysql',
+						'commands_2' => Array(
 							'chmod 600 /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg'
 						),
 						'restart' => Array(
