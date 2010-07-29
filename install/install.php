@@ -499,9 +499,19 @@ if(isset($_POST['installstep'])
 	//first we make a backup of the old DB if it exists
 
 	status_message('begin', $lng['install']['backup_old_db']);
-	$result = mysql_list_tables($mysql_database);
 
-	if($result)
+	$sql = "SHOW TABLES FROM $mysql_database";
+	$result = mysql_query($sql);
+	// check the first row
+	$row = mysql_fetch_row($result);
+	
+	$tables_exist = false;
+	if(isset($row[0]) && $row[0] != '')
+	{
+		$tables_exist = true;
+	}
+
+	if($tables_exist)
 	{
 		$filename = "/tmp/froxlor_backup_" . date('YmdHi') . ".sql";
 
