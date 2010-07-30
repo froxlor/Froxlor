@@ -876,7 +876,7 @@ if(isFroxlorVersion('0.9.10-svn2'))
 {
 	showUpdateStep("Updating from 0.9.10-svn2 to 0.9.10", false);
 
-	$update_directlyviahostname = isset($_POST['update_directlyviahostname']) ? '1' : '0';
+	$update_directlyviahostname = isset($_POST['update_directlyviahostname']) ? (int)$_POST['update_directlyviahostname'] : '0';
 
 	showUpdateStep("Adding new settings");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'froxlordirectlyviahostname', '".(int)$update_directlyviahostname."');");
@@ -935,7 +935,7 @@ if(isFroxlorVersion('0.9.11'))
 {
 	showUpdateStep("Updating from 0.9.11 to 0.9.12-svn1", false);
 
-	$update_fcgid_ownvhost = isset($_POST['update_fcgid_ownvhost']) ? '1' : '0';
+	$update_fcgid_ownvhost = isset($_POST['update_fcgid_ownvhost']) ? (int)$_POST['update_fcgid_ownvhost'] : '0';
 	$update_fcgid_httpuser = isset($_POST['update_fcgid_httpuser']) ? $_POST['update_fcgid_httpuser'] : 'froxlorlocal';
 	$update_fcgid_httpgroup = isset($_POST['update_fcgid_ownvhost']) ? $_POST['update_fcgid_ownvhost'] : 'froxlorlocal';
 
