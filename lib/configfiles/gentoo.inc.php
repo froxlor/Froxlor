@@ -288,6 +288,26 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 							'/etc/init.d/proftpd restart'
 						)
 					),
+					'pureftpd' => Array(
+						'label' => 'PureFTPD',
+						'commands_1' => Array(
+							'emerge pure-ftpd'
+						),
+						'files' => Array(
+							'etc_conf.d_pure-ftpd' => '/etc/conf.d/pure-ftpd',
+							'etc_pureftpd-mysql.conf' => '/etc/pureftpd-mysql.conf'
+						),
+						'commands_2' => Array(
+							'chown root:0 /etc/conf.d/pure-ftpd',
+							'chmod 0644 /etc/conf.d/pure-ftpd',
+							'chown root:0 /etc/pureftpd-mysql.conf',
+							'chmod 0600 /etc/pureftpd-mysql.conf'
+						),
+						'restart' => Array(
+							'rc-update add pure-ftpd default',
+							'/etc/init.d/pure-ftpd restart'
+						)
+					)
 				)
 			),
 			'etc' => Array(

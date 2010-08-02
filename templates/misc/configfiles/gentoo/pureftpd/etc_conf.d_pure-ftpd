@@ -1,0 +1,23 @@
+# Config file for /etc/init.d/pure-ftpd
+# Configuration-template by Froxlor
+
+IS_CONFIGURED="yes"
+
+# Server/Port
+SERVER="-S 21"
+
+## Number of simultaneous connections in total, and per IP ##
+MAX_CONN="-c 30"
+MAX_CONN_IP="-C 10"
+
+## Start daemonized in background ##
+DAEMON="-B"
+
+## Don't allow uploads if the partition is more full then this var ##
+DISK_FULL="-k 90%"
+
+## Authentication mechanism
+AUTH="-l mysql:/etc/pureftpd-mysql.conf"
+
+## Misc. Others ##
+MISC_OTHER="-A -x -j -Z"
