@@ -270,14 +270,14 @@ elseif($page == 'mysqls')
 			   && $_POST['send'] == 'send')
 			{
 				// Only change Password if it is set, do nothing if it is empty! -- PH 2004-11-29
-
 				$password = validate($_POST['mysql_password'], 'password');
-				$password = validatePassword($password);
 
 				if($password != '')
 				{
-					// Begin root-session
+					// validate password
+					$password = validatePassword($password);
 
+					// Begin root-session
 					$db_root = new db($sql_root[$result['dbserver']]['host'], $sql_root[$result['dbserver']]['user'], $sql_root[$result['dbserver']]['password'], '');
 					unset($db_root->password);
 					foreach(array_map('trim', explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host)
