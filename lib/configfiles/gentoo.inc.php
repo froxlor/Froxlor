@@ -27,10 +27,10 @@ return Array(
 					'apache2' => Array(
 						'label' => 'Apache2 Webserver',
 						'commands' => Array(
-							'touch ' . $settings['system']['apacheconf_vhost'],
+							$configcommand['vhost'],
 							'chown root:0 ' . $settings['system']['apacheconf_vhost'],
 							'chmod 0600 ' . $settings['system']['apacheconf_vhost'],
-							'touch ' . $settings['system']['apacheconf_diroptions'],
+							$configcommand['diroptions'],
 							'chown root:0 ' . $settings['system']['apacheconf_diroptions'],
 							'chmod 0600 ' . $settings['system']['apacheconf_diroptions'],
 							'mkdir -p ' . $settings['system']['documentroot_prefix'],
