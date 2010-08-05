@@ -26,12 +26,14 @@
  */
  function correctErrorDocument($errdoc = null)
  {
- 	global $idna_convert;
+ 	global $settings, $idna_convert;
 
  	if($errdoc !== null && $errdoc != '')
  	{
  		// not a URL
- 		if(!validateUrl($idna_convert->encode($errdoc)))
+ 		if((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:' 
+ 			&& strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:')
+ 			|| !validateUrl($idna_convert->encode($errdoc)))
  		{
  			// a file
  			if(substr($errdoc, 0, 1) != '"')
