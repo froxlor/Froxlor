@@ -172,9 +172,14 @@ elseif($page == 'change_language')
 	{
 		$language_options = '';
 
+		$default_lang = $settings['panel']['standardlanguage'];
+		if($userinfo['def_language'] != '') { 
+			$default_lang = $userinfo['def_language'];
+		}
+
 		while(list($language_file, $language_name) = each($languages))
 		{
-			$language_options.= makeoption($language_name, $language_file, $userinfo['def_language'], true);
+			$language_options.= makeoption($language_name, $language_file, $default_lang, true);
 		}
 
 		eval("echo \"" . getTemplate("index/change_language") . "\";");
