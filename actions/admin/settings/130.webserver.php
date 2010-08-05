@@ -186,14 +186,6 @@ return array(
 					'option_options_method' => 'getRedirectCodes',
 					'save_method' => 'storeSettingField',
 					),
-				'perl_path' => array(
-					'label' => $lng['serversettings']['perl_path'],
-					'settinggroup' => 'system',
-					'varname' => 'perl_path',
-					'type' => 'string',
-					'default' => '/usr/bin/perl',
-					'save_method' => 'storeSettingField',
-					),
 				),
 			),
 		'ssl' => array(

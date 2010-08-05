@@ -954,3 +954,22 @@ if(isFroxlorVersion('0.9.11'))
 
 	updateToVersion('0.9.12-svn1');
 }
+
+if(isFroxlorVersion('0.9.12-svn1'))
+{
+	showUpdateStep("Updating from 0.9.12-svn1 to 0.9.12-svn2", false);
+
+	$update_perl_suexecworkaround = isset($_POST['update_perl_suexecworkaround']) ? (int)$_POST['update_perl_suexecworkaround'] : '0';
+	$update_perl_suexecpath = isset($_POST['update_perl_suexecpath']) ? $_POST['update_perl_suexecpath'] : '/var/www/cgi-bin/';
+
+	if($update_perl_suexecpath == '') {
+		$update_perl_suexecpath = '/var/www/cgi-bin/';
+	}
+	
+	showUpdateStep("Adding new settings for perl/CGI");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('perl', 'suexecworkaround', '".$db->escape($update_perl_suexecworkaround)."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('perl', 'suexecpath', '".$db->escape($update_perl_suexecpath)."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.12-svn2');
+}

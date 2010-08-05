@@ -1458,4 +1458,11 @@ $lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'If enabled, Froxl
 $lng['admin']['mod_fcgid_user'] = 'Local user to use for FCGID (Froxlor vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Local group to use for FCGID (Froxlor vhost)';
 
+// ADDED IN FROXLOR 0.9.12-svn2
+$lng['admin']['perl_settings'] = 'Perl/CGI';
+$lng['serversettings']['perl']['suexecworkaround']['title'] = 'Enable SuExec workaround (Apache only)';
+$lng['serversettings']['perl']['suexecworkaround']['description'] = 'Enable only if customer docroots are not within the apache suexec path.<br />If enabled, Froxlor will generate a symlink from the customers perl-enabled directory + /cgi-bin/ to the given path.<br />Note that perl will then only work in the folders subdirectory /cgi-bin/ and not in the folder itself (as it does without this fix!)';
+$lng['serversettings']['perl']['suexeccgipath']['title'] = 'Path for customer perl-enabled directory symlinks';
+$lng['serversettings']['perl']['suexeccgipath']['description'] = 'You only need to set this if the SuExec-workaround is enabled.<br />ATTENTION: Be sure this path is within the suexec path or else this workaround is uselsess';
+
 ?>

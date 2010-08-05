@@ -255,4 +255,16 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if(versionInUpdate($current_version, '0.9.12-svn2'))
+	{
+		$has_preconfig = true;
+		$description = 'Many apache user will have problems using perl/CGI as the customer docroots are not within the suexec path. Froxlor provides a simple workaround for that.';
+		$question = '<strong>Enable Apache/SuExec/Perl workaround?:</strong>&nbsp;';
+		$question.= makeyesno('update_perl_suexecworkaround', '1', '0', '0').'<br /><br />';
+		$question.= '<strong>If \'yes\', please specify a path within the suexec path where Froxlor will create symlinks to customer perl-enabled paths:</strong><br /><br />';
+		$question.= 'Path for symlinks (must be within suexec path):&nbsp;';
+		$question.= '<input type="text" class="text" name="update_perl_suexecpath" value="/var/www/cgi-bin/" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

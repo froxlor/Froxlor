@@ -896,6 +896,51 @@ class apache
 					$this->diroptions_data[$diroptions_filename].= '  Order allow,deny' . "\n";
 					$this->diroptions_data[$diroptions_filename].= '  Allow from all' . "\n";
 					fwrite($this->debugHandler, '  cron_tasks: Task3 - Enabling perl execution' . "\n");
+
+					// check for suexec-workaround, #319
+					if((int)$this->settings['perl']['suexecworkaround'] == 1)
+					{
+						// symlink this directory to suexec-safe-path
+						$loginname = getCustomerDetail($row_diroptions['customerid'], 'loginname');
+						$suexecpath = makeCorrectDir($this->settings['perl']['suexecpath'].'/'.$loginname.'/'.md5($row_diroptions['path']).'/');
+
+						if(!file_exists($suexecpath))
+						{
+							safe_exec('mkdir -p '.escapeshellarg($suexecpath));
+							safe_exec('chown -R '.escapeshellarg($row_diroptions['guid']).':'.escapeshellarg($row_diroptions['guid']).' '.escapeshellarg($suexecpath));
+						}
+
+						// symlink to {$givenpath}/cgi-bin
+						// NOTE: symlinks are FILES, so do not append a / here
+						$perlsymlink = makeCorrectFile($row_diroptions['path'].'/cgi-bin');
+						if(!file_exists($perlsymlink))
+						{
+							safe_exec('ln -s '.escapeshellarg($suexecpath).' '.escapeshellarg($perlsymlink));
+						}
+						safe_exec('chown '.escapeshellarg($row_diroptions['guid']).':'.escapeshellarg($row_diroptions['guid']).' '.escapeshellarg($perlsymlink));
+					}
+				}
+				else
+				{
+					// if no perl-execution is enabled but the workaround is,
+					// we have to remove the symlink and folder in suexecpath
+					if((int)$this->settings['perl']['suexecworkaround'] == 1)
+					{
+						$loginname = getCustomerDetail($row_diroptions['customerid'], 'loginname');
+						$suexecpath = makeCorrectDir($this->settings['perl']['suexecpath'].'/'.$loginname.'/'.md5($row_diroptions['path']).'/');
+						$perlsymlink = makeCorrectFile($row_diroptions['path'].'/cgi-bin');
+
+						// remove symlink
+						if(file_exists($perlsymlink))
+						{
+							safe_exec('rm -f '.escapeshellarg($perlsymlink));
+						}
+						// remove folder in suexec-path
+						if(file_exists($suexecpath))
+						{
+							safe_exec('rm -rf '.escapeshellarg($suexecpath));
+						}
+					}
 				}
 
 				if(count($row_diroptions['htpasswds']) > 0)

@@ -215,5 +215,3 @@ elseif($page == 'enforcequotas'
 		ask_yesno('admin_quotas_reallyenforce', $filename, array('page' => $page));
 	}
 }
-
-?>

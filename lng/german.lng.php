@@ -1441,4 +1441,11 @@ $lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Wenn verwendet, w
 $lng['admin']['mod_fcgid_user'] = 'Lokaler Benutzer f&uuml;r FCGID (Froxlor Vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Lokale Gruppe f&uuml;r FCGID (Froxlor Vhost)';
 
+// ADDED IN FROXLOR 0.9.12-svn2
+$lng['admin']['perl_settings'] = 'Perl/CGI';
+$lng['serversettings']['perl']['suexecworkaround']['title'] = 'Aktiviere SuExec Workaround (nur f&uumL,r Apache)';
+$lng['serversettings']['perl']['suexecworkaround']['description'] = 'Aktivieren Sie den Workaround nur, wenn die Kunden-Heimatverzeichnise sich nicht unterhalb des suexec-Pfades liegen.<br />Wenn aktiviert erstellt Froxlor eine Verkn&uuml;pfung des vom Kunden f&uuml;r Perl aktiviertem Pfad + /cgi-bin/ im angegebenen suexec-Pfad.<br />Bitte beachten Sie, dass Perl dann nur im Unterordner /cgi-bin/ des Kunden-Ordners funktioniert und nicht direkt in diesem Ordner (wie es ohne den Workaround w&auml;re!)';
+$lng['serversettings']['perl']['suexeccgipath']['title'] = 'Pfad f&uuml;r Verkn&uuml;pfungen zu Kunden-Perl-Verzeichnis';
+$lng['serversettings']['perl']['suexeccgipath']['description'] = 'Diese Einstellung wird nur ben&ouml;tigt, wenn der SuExec-Workaround aktiviert ist.<br />ACHTUNG: Stellen Sie sicher, dass sich der angegebene Pfad innerhalb des Suexec-Pfades befindet ansonsten ist der Workaround nutzlos';
+
 ?>
