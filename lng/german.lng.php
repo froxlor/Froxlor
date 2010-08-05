@@ -171,10 +171,10 @@ $lng['extras']['error404path'] = '404';
 $lng['extras']['error403path'] = '403';
 $lng['extras']['error500path'] = '500';
 $lng['extras']['error401path'] = '401';
-$lng['extras']['errordocument404path'] = 'URL zum Fehlerdokument 404';
-$lng['extras']['errordocument403path'] = 'URL zum Fehlerdokument 403';
-$lng['extras']['errordocument500path'] = 'URL zum Fehlerdokument 500';
-$lng['extras']['errordocument401path'] = 'URL zum Fehlerdokument 401';
+$lng['extras']['errordocument404path'] = 'Fehlerdokument 404';
+$lng['extras']['errordocument403path'] = 'Fehlerdokument 403';
+$lng['extras']['errordocument500path'] = 'Fehlerdokument 500';
+$lng['extras']['errordocument401path'] = 'Fehlerdokument 401';
 
 /**
  * Errors
@@ -1447,5 +1447,8 @@ $lng['serversettings']['perl']['suexecworkaround']['title'] = 'Aktiviere SuExec 
 $lng['serversettings']['perl']['suexecworkaround']['description'] = 'Aktivieren Sie den Workaround nur, wenn die Kunden-Heimatverzeichnise sich nicht unterhalb des suexec-Pfades liegen.<br />Wenn aktiviert erstellt Froxlor eine Verkn&uuml;pfung des vom Kunden f&uuml;r Perl aktiviertem Pfad + /cgi-bin/ im angegebenen suexec-Pfad.<br />Bitte beachten Sie, dass Perl dann nur im Unterordner /cgi-bin/ des Kunden-Ordners funktioniert und nicht direkt in diesem Ordner (wie es ohne den Workaround w&auml;re!)';
 $lng['serversettings']['perl']['suexeccgipath']['title'] = 'Pfad f&uuml;r Verkn&uuml;pfungen zu Kunden-Perl-Verzeichnis';
 $lng['serversettings']['perl']['suexeccgipath']['description'] = 'Diese Einstellung wird nur ben&ouml;tigt, wenn der SuExec-Workaround aktiviert ist.<br />ACHTUNG: Stellen Sie sicher, dass sich der angegebene Pfad innerhalb des Suexec-Pfades befindet ansonsten ist der Workaround nutzlos';
+$lng['panel']['descriptionerrordocument'] = 'M&ouml;gliche Werte sind: URL, Pfad zu einer Datei oder ein Text umgeben von Anf&uuml;hrungszeichen (" ")<br />Leer f&uuml;r Server-Standardwerd.';
+$lng['error']['stringerrordocumentnotvalidforlighty'] = 'Ein Text als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an';
+$lng['error']['urlerrordocumentnotvalidforlighty'] = 'Eine URL als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an';
 
 ?>

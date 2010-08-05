@@ -309,35 +309,9 @@ elseif($page == 'htaccess')
 				$options_cgi = '0';
 			} 
 
-			if(($_POST['error404path'] === '')
-			   || (validateUrl($idna_convert->encode($_POST['error404path']))))
-			{
-				$error404path = $_POST['error404path'];
-			}
-			else
-			{
-				standard_error('mustbeurl');
-			}
-
-			if(($_POST['error403path'] === '')
-			   || (validateUrl($idna_convert->encode($_POST['error403path']))))
-			{
-				$error403path = $_POST['error403path'];
-			}
-			else
-			{
-				standard_error('mustbeurl');
-			}
-
-			if(($_POST['error500path'] === '')
-			   || (validateUrl($idna_convert->encode($_POST['error500path']))))
-			{
-				$error500path = $_POST['error500path'];
-			}
-			else
-			{
-				standard_error('mustbeurl');
-			}
+			$error404path = correctErrorDocument($_POST['error404path']);
+			$error403path = correctErrorDocument($_POST['error403path']);
+			$error500path = correctErrorDocument($_POST['error500path']);
 
 			if($path_dupe_check['path'] == $path)
 			{
@@ -397,35 +371,9 @@ elseif($page == 'htaccess')
 					$options_cgi = '0';
 				}
 
-				if(($_POST['error404path'] === '')
-				   || (validateUrl($idna_convert->encode($_POST['error404path']))))
-				{
-					$error404path = $_POST['error404path'];
-				}
-				else
-				{
-					standard_error('mustbeurl');
-				}
-
-				if(($_POST['error403path'] === '')
-				   || (validateUrl($idna_convert->encode($_POST['error403path']))))
-				{
-					$error403path = $_POST['error403path'];
-				}
-				else
-				{
-					standard_error('mustbeurl');
-				}
-
-				if(($_POST['error500path'] === '')
-				   || (validateUrl($idna_convert->encode($_POST['error500path']))))
-				{
-					$error500path = $_POST['error500path'];
-				}
-				else
-				{
-					standard_error('mustbeurl');
-				}
+				$error404path = correctErrorDocument($_POST['error404path']);
+				$error403path = correctErrorDocument($_POST['error403path']);
+				$error500path = correctErrorDocument($_POST['error500path']);
 
 				if(($option_indexes != $result['options_indexes'])
 				   || ($error404path != $result['error404path'])

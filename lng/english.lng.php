@@ -171,10 +171,10 @@ $lng['extras']['error404path'] = '404';
 $lng['extras']['error403path'] = '403';
 $lng['extras']['error500path'] = '500';
 $lng['extras']['error401path'] = '401';
-$lng['extras']['errordocument404path'] = 'URL to ErrorDocument 404';
-$lng['extras']['errordocument403path'] = 'URL to ErrorDocument 403';
-$lng['extras']['errordocument500path'] = 'URL to ErrorDocument 500';
-$lng['extras']['errordocument401path'] = 'URL to ErrorDocument 401';
+$lng['extras']['errordocument404path'] = 'ErrorDocument 404';
+$lng['extras']['errordocument403path'] = 'ErrorDocument 403';
+$lng['extras']['errordocument500path'] = 'ErrorDocument 500';
+$lng['extras']['errordocument401path'] = 'ErrorDocument 401';
 
 /**
  * Errors
@@ -1464,5 +1464,8 @@ $lng['serversettings']['perl']['suexecworkaround']['title'] = 'Enable SuExec wor
 $lng['serversettings']['perl']['suexecworkaround']['description'] = 'Enable only if customer docroots are not within the apache suexec path.<br />If enabled, Froxlor will generate a symlink from the customers perl-enabled directory + /cgi-bin/ to the given path.<br />Note that perl will then only work in the folders subdirectory /cgi-bin/ and not in the folder itself (as it does without this fix!)';
 $lng['serversettings']['perl']['suexeccgipath']['title'] = 'Path for customer perl-enabled directory symlinks';
 $lng['serversettings']['perl']['suexeccgipath']['description'] = 'You only need to set this if the SuExec-workaround is enabled.<br />ATTENTION: Be sure this path is within the suexec path or else this workaround is uselsess';
+$lng['panel']['descriptionerrordocument'] = 'Can be an URL, path to a file or just a string wrapped around " "<br />Leave empty to use server default value.';
+$lng['error']['stringerrordocumentnotvalidforlighty'] = 'A string as ErrorDocument does not work in lighttpd, please specify a path to a file';
+$lng['error']['urlerrordocumentnotvalidforlighty'] = 'An URL as ErrorDocument does not work in lighttpd, please specify a path to a file';
 
 ?>
