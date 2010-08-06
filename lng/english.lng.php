@@ -1468,4 +1468,10 @@ $lng['panel']['descriptionerrordocument'] = 'Can be an URL, path to a file or ju
 $lng['error']['stringerrordocumentnotvalidforlighty'] = 'A string as ErrorDocument does not work in lighttpd, please specify a path to a file';
 $lng['error']['urlerrordocumentnotvalidforlighty'] = 'An URL as ErrorDocument does not work in lighttpd, please specify a path to a file';
 
+// ADDED IN FROXLOR 0.9.12-svn3
+$lng['question']['remove_subbutmain_domains'] = 'Also remove domains which are added as full domains but which are subdomains of this domain?';
+$lng['domains']['issubof'] = 'This domain is a subdomain of another domain';
+$lng['domains']['issubofinfo'] = 'You have to set this to the correct domain if you want to add a subdomain as full-domain (e.g. you want to add "www.domain.tld", you have to select "domain.tld" here)';
+$lng['domains']['nosubtomaindomain'] = 'No subdomain of a full domain';
+
 ?>

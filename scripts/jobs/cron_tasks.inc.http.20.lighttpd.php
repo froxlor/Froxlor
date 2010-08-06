@@ -278,8 +278,19 @@ class lighttpd
 				$_pos = strrpos($_tmp_path, '/');
 				$_inc_path = substr($_tmp_path, $_pos+1);
 
-				if((int)$domain['parentdomainid'] == 0)
-				{
+				if((int)$domain['parentdomainid'] == 0 
+					&& ((int)$domain['ismainbutsubto'] == 0
+					|| domainMainToSubExists($domain['ismainbutsubto']) == false) 
+				) {
+					$vhost_no = '52';
+					if($ssl == '1')
+					{
+						$vhost_no = '62';
+					}
+				}
+				elseif((int)$domain['parentdomainid'] == 0 
+					&& (int)$domain['ismainbutsubto'] > 0
+				) {
 					$vhost_no = '51';
 					if($ssl == '1')
 					{

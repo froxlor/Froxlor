@@ -38,6 +38,10 @@ $header
 			</tr>
 			</if>
 			<tr>
+				<td class="main_field_name">{$lng['domains']['issubof']}:<br /><small>{$lng['domains']['issubofinfo']}</small></td>
+				<td class="main_field_display" nowrap="nowrap"><select class="dropdown_noborder" name="issubof">$subtodomains</select></td>
+			</tr>
+			<tr>
 				<td class="main_field_name">{$lng['domains']['associated_with_domain']}:</td>
 				<td class="main_field_display" nowrap="nowrap">{$subdomains} {$lng['customer']['subdomains']}, {$alias_check} {$lng['domains']['aliasdomains']}, {$emails} {$lng['customer']['emails']}, {$email_accounts} {$lng['customer']['accounts']}, {$email_forwarders} {$lng['customer']['forwarders']}</td>
 			</tr>

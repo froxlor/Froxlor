@@ -600,8 +600,15 @@ class apache
 
 	protected function getVhostFilename($domain, $ssl_vhost = false)
 	{
-		if((int)$domain['parentdomainid'] == 0)
-		{
+		if((int)$domain['parentdomainid'] == 0 
+			&& ((int)$domain['ismainbutsubto'] == 0
+			|| domainMainToSubExists($domain['ismainbutsubto']) == false)
+		) {
+			$vhost_no = '22';
+		}
+		elseif((int)$domain['parentdomainid'] == 0 
+			&& (int)$domain['ismainbutsubto'] > 0
+		) {
 			$vhost_no = '21';
 		}
 		else

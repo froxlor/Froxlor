@@ -1451,4 +1451,10 @@ $lng['panel']['descriptionerrordocument'] = 'M&ouml;gliche Werte sind: URL, Pfad
 $lng['error']['stringerrordocumentnotvalidforlighty'] = 'Ein Text als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an';
 $lng['error']['urlerrordocumentnotvalidforlighty'] = 'Eine URL als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an';
 
+// ADDED IN FROXLOR 0.9.12-svn3
+$lng['question']['remove_subbutmain_domains'] = 'Auch Domains entfernen, welche als volle Domains hinzugef&uuml;gt wurden, aber Subdomains von dieser Domain sind?';
+$lng['domains']['issubof'] = 'Diese Domain ist eine Subdomain von der Domain';
+$lng['domains']['issubofinfo'] = 'Diese Einstellung muss gesetzt werden, wenn Sie eine Subdomain einer Hauptdomain als Hauptdomain anlegen (z.B. soll "www.domain.tld" hinzugef&uuml;gt werden, somit muss hier "domain.tld" ausgew&auml;hlt werden)';
+$lng['domains']['nosubtomaindomain'] = 'Keine Subdomain einer Hauptdomain';
+
 ?>

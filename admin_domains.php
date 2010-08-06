@@ -157,7 +157,15 @@ if($page == 'domains'
 					standard_error('domains_cantdeletedomainwithapsinstances');
 				}
 
-				$query = 'SELECT `id` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE (`id`="' . (int)$id . '" OR `parentdomainid`="' . (int)$id . '")  AND  `isemaildomain`="1"';
+				// check for deletion of main-domains which are logically subdomains, #329
+				$rsd_sql = '';
+				$remove_subbutmain_domains = isset($_POST['delete_userfiles']) ? 1 : 0;
+				if($remove_subbutmain_domains == 1)
+				{
+					$rsd_sql .= ' OR `ismainbutsubto` = "'.(int)$id.'"';
+				}
+
+				$query = 'SELECT `id` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE (`id`="' . (int)$id . '" OR `parentdomainid`="' . (int)$id . '"'.$rsd_sql.')  AND  `isemaildomain`="1"';
 				$subResult = $db->query($query);
 				$idString = array();
 
@@ -177,7 +185,7 @@ if($page == 'domains'
 					$log->logAction(ADM_ACTION, LOG_NOTICE, "deleted domain/s from mail-tables");
 				}
 
-				$db->query("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `id`='" . (int)$id . "' OR `parentdomainid`='" . (int)$result['id'] . "'");
+				$db->query("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `id`='" . (int)$id . "' OR `parentdomainid`='" . (int)$result['id'] . "'".$rsd_sql);
 				$deleted_domains = (int)$db->affected_rows();
 				$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used` = `subdomains_used` - " . (int)($deleted_domains - 1) . " WHERE `customerid` = '" . (int)$result['customerid'] . "'");
 				$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` - 1 WHERE `adminid` = '" . (int)$userinfo['adminid'] . "'");
@@ -191,7 +199,12 @@ if($page == 'domains'
 			}
 			else
 			{
-				ask_yesno('admin_domain_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['domain']));
+				$showcheck = false;
+				if(domainHasMainSubDomains($id))
+				{
+					$showcheck = true;
+				}
+				ask_yesno_withcheckbox('admin_domain_reallydelete', 'remove_subbutmain_domains', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['domain']), $showcheck);
 			}
 		}
 	}
@@ -216,6 +229,7 @@ if($page == 'domains'
 				$wwwserveralias = intval($_POST['wwwserveralias']);
 				$speciallogfile = intval($_POST['speciallogfile']);
 				$aliasdomain = intval($_POST['alias']);
+				$issubof = intval($_POST['issubof']);
 				$customerid = intval($_POST['customerid']);
 				$customer = $db->query_first("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid`='" . (int)$customerid . "' " . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = '" . (int)$userinfo['adminid'] . "' ") . " ");
 
@@ -446,6 +460,11 @@ if($page == 'domains'
 				{
 					$caneditdomain = '0';
 				}
+				
+				if($issubof <= '0')
+				{
+					$issubof = '0';
+				}
 
 				if($domain == '')
 				{
@@ -500,7 +519,8 @@ if($page == 'domains'
 						'mod_fcgid_starter' => $mod_fcgid_starter,
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 						'specialsettings' => $specialsettings,
-						'registration_date' => $registration_date
+						'registration_date' => $registration_date,
+						'issubof' => $issubof
 					);
 
 					$security_questions = array(
@@ -522,7 +542,7 @@ if($page == 'domains'
 						}
 					}
 
-					$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` (`domain`, `customerid`, `adminid`, `documentroot`, `ipandport`,`aliasdomain`, `zonefile`, `dkim`, `wwwserveralias`, `isbinddomain`, `isemaildomain`, `email_only`, `subcanemaildomain`, `caneditdomain`, `openbasedir`, `safemode`,`speciallogfile`, `specialsettings`, `ssl`, `ssl_redirect`, `ssl_ipandport`, `add_date`, `registration_date`, `phpsettingid`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`) VALUES ('" . $db->escape($domain) . "', '" . (int)$customerid . "', '" . (int)$adminid . "', '" . $db->escape($documentroot) . "', '" . $db->escape($ipandport) . "', " . (($aliasdomain != 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", '" . $db->escape($zonefile) . "', '" . $db->escape($dkim) . "', '" . $db->escape($wwwserveralias) . "', '" . $db->escape($isbinddomain) . "', '" . $db->escape($isemaildomain) . "', '" . $db->escape($email_only) . "', '" . $db->escape($subcanemaildomain) . "', '" . $db->escape($caneditdomain) . "', '" . $db->escape($openbasedir) . "', '" . $db->escape($safemode) . "', '" . $db->escape($speciallogfile) . "', '" . $db->escape($specialsettings) . "', '" . $ssl . "', '" . $ssl_redirect . "' , '" . $ssl_ipandport . "', '" . $db->escape(time()) . "', '" . $db->escape($registration_date) . "', '" . (int)$phpsettingid . "', '" . (int)$mod_fcgid_starter . "', '" . (int)$mod_fcgid_maxrequests . "')");
+					$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` (`domain`, `customerid`, `adminid`, `documentroot`, `ipandport`,`aliasdomain`, `zonefile`, `dkim`, `wwwserveralias`, `isbinddomain`, `isemaildomain`, `email_only`, `subcanemaildomain`, `caneditdomain`, `openbasedir`, `safemode`,`speciallogfile`, `specialsettings`, `ssl`, `ssl_redirect`, `ssl_ipandport`, `add_date`, `registration_date`, `phpsettingid`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `ismainbutsubto`) VALUES ('" . $db->escape($domain) . "', '" . (int)$customerid . "', '" . (int)$adminid . "', '" . $db->escape($documentroot) . "', '" . $db->escape($ipandport) . "', " . (($aliasdomain != 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", '" . $db->escape($zonefile) . "', '" . $db->escape($dkim) . "', '" . $db->escape($wwwserveralias) . "', '" . $db->escape($isbinddomain) . "', '" . $db->escape($isemaildomain) . "', '" . $db->escape($email_only) . "', '" . $db->escape($subcanemaildomain) . "', '" . $db->escape($caneditdomain) . "', '" . $db->escape($openbasedir) . "', '" . $db->escape($safemode) . "', '" . $db->escape($speciallogfile) . "', '" . $db->escape($specialsettings) . "', '" . $ssl . "', '" . $ssl_redirect . "' , '" . $ssl_ipandport . "', '" . $db->escape(time()) . "', '" . $db->escape($registration_date) . "', '" . (int)$phpsettingid . "', '" . (int)$mod_fcgid_starter . "', '" . (int)$mod_fcgid_maxrequests . "', '".(int)$issubof."')");
 					$domainid = $db->insert_id();
 					$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` + 1 WHERE `adminid` = '" . (int)$adminid . "'");
 					$log->logAction(ADM_ACTION, LOG_INFO, "added domain '" . $domain . "'");
@@ -607,12 +627,16 @@ if($page == 'domains'
 				}
 
 				$domains = makeoption($lng['domains']['noaliasdomain'], 0, NULL, true);
+				$subtodomains = makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
 				$result_domains = $db->query("SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid`=0 " . $standardsubdomains . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = '" . (int)$userinfo['adminid'] . "'") . " AND `d`.`customerid`=`c`.`customerid` ORDER BY `loginname`, `domain` ASC");
 
+				$all_domains = '';
 				while($row_domain = $db->fetch_array($result_domains))
 				{
-					$domains.= makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
+					$all_domains.= makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
 				}
+				$domains .= $all_domains;
+				$subtodomains .= $all_domains;
 
 				$phpconfigs = '';
 				$configs = $db->query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
@@ -724,6 +748,7 @@ if($page == 'domains'
 				}
 
 				$aliasdomain = intval($_POST['alias']);
+				$issubof = intval($_POST['issubof']);
 				$isemaildomain = intval($_POST['isemaildomain']);
 				$email_only = intval($_POST['email_only']);
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
@@ -915,6 +940,11 @@ if($page == 'domains'
 				{
 					standard_error('domainisaliasorothercustomer');
 				}
+				
+				if($issubof <= '0')
+				{
+					$issubof = '0';
+				}
 
 				$params = array(
 					'id' => $id,
@@ -942,7 +972,8 @@ if($page == 'domains'
 					'mod_fcgid_starter' => $mod_fcgid_starter,
 					'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 					'specialsettings' => $specialsettings,
-					'registration_date' => $registration_date
+					'registration_date' => $registration_date,
+					'issubof' => $issubof
 				);
 
 				$security_questions = array(
@@ -976,7 +1007,8 @@ if($page == 'domains'
 				   || $mod_fcgid_starter != $result['mod_fcgid_starter']
 				   || $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests']
 				   || $specialsettings != $result['specialsettings']
-				   || $aliasdomain != $result['aliasdomain'])
+				   || $aliasdomain != $result['aliasdomain']
+				   || $issubof != $result['ismainbutsubto'])
 				{
 					inserttask('1');
 				}
@@ -1038,7 +1070,7 @@ if($page == 'domains'
 					$log->logAction(ADM_ACTION, LOG_INFO, "removed specialsettings on all subdomains of domain #" . $id);
 				}
 				
-				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `documentroot`='" . $db->escape($documentroot) . "', `ipandport`='" . $db->escape($ipandport) . "', `ssl`='" . (int)$ssl . "', `ssl_redirect`='" . (int)$ssl_redirect . "', `ssl_ipandport`='" . (int)$ssl_ipandport . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", `isbinddomain`='" . $db->escape($isbinddomain) . "', `isemaildomain`='" . $db->escape($isemaildomain) . "', `email_only`='" . $db->escape($email_only) . "', `subcanemaildomain`='" . $db->escape($subcanemaildomain) . "', `dkim`='" . $db->escape($dkim) . "', `caneditdomain`='" . $db->escape($caneditdomain) . "', `zonefile`='" . $db->escape($zonefile) . "', `wwwserveralias`='" . $db->escape($wwwserveralias) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "', `specialsettings`='" . $db->escape($specialsettings) . "', `registration_date`='" . $db->escape($registration_date) . "' WHERE `id`='" . (int)$id . "'");
+				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `documentroot`='" . $db->escape($documentroot) . "', `ipandport`='" . $db->escape($ipandport) . "', `ssl`='" . (int)$ssl . "', `ssl_redirect`='" . (int)$ssl_redirect . "', `ssl_ipandport`='" . (int)$ssl_ipandport . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", `isbinddomain`='" . $db->escape($isbinddomain) . "', `isemaildomain`='" . $db->escape($isemaildomain) . "', `email_only`='" . $db->escape($email_only) . "', `subcanemaildomain`='" . $db->escape($subcanemaildomain) . "', `dkim`='" . $db->escape($dkim) . "', `caneditdomain`='" . $db->escape($caneditdomain) . "', `zonefile`='" . $db->escape($zonefile) . "', `wwwserveralias`='" . $db->escape($wwwserveralias) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "', `specialsettings`='" . $db->escape($specialsettings) . "', `registration_date`='" . $db->escape($registration_date) . "', `ismainbutsubto`='" . (int)$issubof . "' WHERE `id`='" . (int)$id . "'");
 				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `ipandport`='" . $db->escape($ipandport) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "'" . $upd_specialsettings . $updatechildren . " WHERE `parentdomainid`='" . (int)$id . "'");
 				$log->logAction(ADM_ACTION, LOG_INFO, "edited domain #" . $id);
 				$redirect_props = Array(
@@ -1092,6 +1124,14 @@ if($page == 'domains'
 				while($row_domain = $db->fetch_array($result_domains))
 				{
 					$domains.= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
+				}
+				
+				$subtodomains = makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
+				$result_domains = $db->query("SELECT `d`.`id`, `d`.`domain`  FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid`=0 AND `d`.`id`<>'" . (int)$result['id'] . "' AND `c`.`standardsubdomain`<>`d`.`id` AND `d`.`customerid`='" . (int)$result['customerid'] . "' AND `c`.`customerid`=`d`.`customerid` ORDER BY `d`.`domain` ASC");
+
+				while($row_domain = $db->fetch_array($result_domains))
+				{
+					$subtodomains.= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['ismainbutsubto']);
 				}
 
 				if($userinfo['ip'] == "-1")

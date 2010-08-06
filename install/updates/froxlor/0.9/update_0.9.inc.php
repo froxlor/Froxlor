@@ -973,3 +973,14 @@ if(isFroxlorVersion('0.9.12-svn1'))
 
 	updateToVersion('0.9.12-svn2');
 }
+
+if(isFroxlorVersion('0.9.12-svn2'))
+{
+	showUpdateStep("Updating from 0.9.12-svn2 to 0.9.12-svn3", false);
+
+	showUpdateStep("Adding new field to domain table");
+	$db->query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `ismainbutsubto` int(11) unsigned NOT NULL default '0' AFTER `mod_fcgid_maxrequests`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.12-svn3');
+}

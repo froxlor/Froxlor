@@ -35,6 +35,10 @@ $header
 				<td class="main_field_display" nowrap="nowrap"><select class="dropdown_noborder" name="alias">$domains</select></td>
 			</tr>
 			<tr>
+				<td class="main_field_name">{$lng['domains']['issubof']}:<br /><small>{$lng['domains']['issubofinfo']}</small></td>
+				<td class="main_field_display" nowrap="nowrap"><select class="dropdown_noborder" name="issubof">$subtodomains</select></td>
+			</tr>
+			<tr>
 				<td class="main_field_name">{$lng['admin']['domain_edit']}:</td>
 				<td class="main_field_display" nowrap="nowrap">$caneditdomain</td>
 			</tr>
