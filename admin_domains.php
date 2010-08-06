@@ -627,16 +627,20 @@ if($page == 'domains'
 				}
 
 				$domains = makeoption($lng['domains']['noaliasdomain'], 0, NULL, true);
-				$subtodomains = makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
 				$result_domains = $db->query("SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid`=0 " . $standardsubdomains . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = '" . (int)$userinfo['adminid'] . "'") . " AND `d`.`customerid`=`c`.`customerid` ORDER BY `loginname`, `domain` ASC");
 
-				$all_domains = '';
 				while($row_domain = $db->fetch_array($result_domains))
 				{
-					$all_domains.= makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
+					$domains.= makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
 				}
-				$domains .= $all_domains;
-				$subtodomains .= $all_domains;
+				
+				$subtodomains = makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
+				$result_domains = $db->query("SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid`=0 AND `d`.`ismainbutsubto`=0 " . $standardsubdomains . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = '" . (int)$userinfo['adminid'] . "'") . " AND `d`.`customerid`=`c`.`customerid` ORDER BY `loginname`, `domain` ASC");
+
+				while($row_domain = $db->fetch_array($result_domains))
+				{
+					$subtodomains.= makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
+				}
 
 				$phpconfigs = '';
 				$configs = $db->query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
