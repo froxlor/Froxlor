@@ -130,7 +130,7 @@ return Array(
 						'label' => 'Postfix/Dovecot',
 						'commands_1' => Array(
 							'echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use',
-              'emerge -av postfix',
+              				'emerge -av postfix',
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
 							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir'],
