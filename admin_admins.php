@@ -220,12 +220,19 @@ if($page == 'admins'
 				$ftps = - 1;
 			}
 
-			$tickets = intval_ressource($_POST['tickets']);
-
-			if(isset($_POST['tickets_ul'])
-			   && $settings['ticket']['enabled'] == '1')
+			if($settings['ticket']['enabled'] == 1)
 			{
-				$tickets = - 1;
+				$tickets = intval_ressource($_POST['tickets']);
+
+				if(isset($_POST['tickets_ul'])
+			   		&& $settings['ticket']['enabled'] == '1')
+				{
+					$tickets = - 1;
+				}
+			}
+			else
+			{
+				$tickets = 0;
 			}
 
 			$mysqls = intval_ressource($_POST['mysqls']);
@@ -499,12 +506,19 @@ if($page == 'admins'
 					{
 						$ftps = - 1;
 					}
-
-					$tickets = intval_ressource($_POST['tickets']);
-
-					if(isset($_POST['tickets_ul']))
+					
+					if($settings['ticket']['enabled'] == 1)
 					{
-						$tickets = - 1;
+						$tickets = intval_ressource($_POST['tickets']);
+
+						if(isset($_POST['tickets_ul']))
+						{
+							$tickets = - 1;
+						}
+					}
+					else
+					{
+						$tickets = 0;
 					}
 
 					$mysqls = intval_ressource($_POST['mysqls']);
