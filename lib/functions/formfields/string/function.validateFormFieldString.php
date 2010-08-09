@@ -58,6 +58,11 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 		}
 		elseif(isset($fielddata['string_type']) && $fielddata['string_type'] == 'dir')
 		{
+			// add trailing slash to validate path if needed
+			// refs #331
+			if(substr($newfieldvalue, -1) != '/') {
+				$newfieldvalue.= '/';
+			}
 			$returnvalue = ($newfieldvalue == makeCorrectDir($newfieldvalue));
 		}
 		elseif(isset($fielddata['string_type']) && $fielddata['string_type'] == 'file')
