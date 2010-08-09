@@ -242,7 +242,7 @@ elseif($page == 'accounts')
 			}
 			else
 			{
-				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
+				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], '/');
 
 				if($settings['customer']['ftpatdomain'] == '1')
 				{
