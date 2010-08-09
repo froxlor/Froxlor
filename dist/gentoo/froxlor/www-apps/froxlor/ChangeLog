@@ -2,6 +2,11 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  09 Aug 2010; Froxlor Release Team <release@froxlor.org>
+  froxlor-9999.ebuild, metadata.xml:
+  add pureftpd support, fix disabling inserttask statement when bind useflag
+  is not set
+
 *froxlor-0.9.11 (26 Jul 2010)
 
   26 Jul 2010; Froxlor Release Team <release@froxlor.org>

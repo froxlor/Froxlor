@@ -17,5 +17,6 @@ www-apps/froxlor:ftpquota - Adds support for FTP Quotas for use with ProFTPd
 www-apps/froxlor:lighttpd - use ligHTTPd instead of Apache
 www-apps/froxlor:log - Adds support for logging actions in the Panel
 www-apps/froxlor:mailquota - Adds support for Quotas for the maildirs of Customers
+www-apps/froxlor:pureftpd - use pure-FTPd instead of ProFTPd
 www-apps/froxlor:realtime - Executes Cron Tasks in Realtime
 www-apps/froxlor:tickets - Adds support for the Ticket System

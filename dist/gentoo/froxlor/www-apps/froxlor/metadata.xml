@@ -21,6 +21,7 @@
   <flag name='log'>Adds support for logging actions in the Panel</flag>
   <flag name='mailquota'>Adds support for Quotas for the maildirs of
 	  Customers</flag>
+  <flag name='pureftpd'>use pure-FTPd instead of ProFTPd</flag>
   <flag name='realtime'>Executes Cron Tasks in Realtime</flag>
   <flag name='tickets'>Adds support for the Ticket System</flag>
 </use>
