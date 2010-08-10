@@ -62,18 +62,18 @@ $header
 				<td class="field_name">{$lng['admin']['templates']['EMAIL']}</td>
 			</tr>
 			<if $settings['panel']['sendalternativemail'] == 1>
-            <tr>
-                <td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['pop_success_alternative']}</b></td>
-            </tr>
-            <tr>
-                <td class="field_name_border_left"><i>{EMAIL}</i>:</td>
-                <td class="field_name">{$lng['admin']['templates']['EMAIL']}</td>
-            </tr>
-            <tr>
-                <td class="field_name_border_left"><i>{PASSWORD}</i>:</td>
-                <td class="field_name">{$lng['admin']['templates']['EMAIL_PASSWORD']}</td>
-            </tr>
-            </if>
+				<tr>
+					<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['pop_success_alternative']}</b></td>
+				</tr>
+				<tr>
+					<td class="field_name_border_left"><i>{EMAIL}</i>:</td>
+					<td class="field_name">{$lng['admin']['templates']['EMAIL']}</td>
+				</tr>
+				<tr>
+					<td class="field_name_border_left"><i>{PASSWORD}</i>:</td>
+					<td class="field_name">{$lng['admin']['templates']['EMAIL_PASSWORD']}</td>
+				</tr>
+			</if>
 			<tr>
 				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['trafficninetypercent']}</b></td>
 			</tr>
@@ -99,6 +99,52 @@ $header
 			<tr>
 				<td class="field_name_border_left"><i>{NAME}</i>:</td>
 				<td class="field_name">{$lng['admin']['templates']['NAME']}</td>
+			</tr>
+			<tr>
+				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['newdatabase']}</b></td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{CUST_NAME}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['CUST_NAME']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{DB_NAME}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['DB_NAME']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{DB_PASS}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['DB_PASS']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{DB_DESC}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['DB_DESC']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{DB_SRV}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['DB_SRV']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{PMA_URI}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['PMA_URI']}</td>
+			</tr>
+			<tr>
+				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['newftpuser']}</b></td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{CUST_NAME}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['CUST_NAME']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{USR_NAME}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['USR_NAME']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{USR_PASS}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['USR_PASS']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{USR_PATH}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['USR_PATH']}</td>
 			</tr>
 		</table>
 	</form>

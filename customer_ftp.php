@@ -212,11 +212,15 @@ elseif($page == 'accounts')
 							'USR_PATH' => makeCorrectDir(substr($path, strlen($userinfo['documentroot'])))
 						);
 						
-						$mail_body = replace_variables($lng['customer']['ftp_add']['infomail_body']['main'], $replace_arr);
+						$def_language = $userinfo['def_language'];
+						$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$userinfo['adminid'] . '\' AND `language`=\'' . $db->escape($def_language) . '\' AND `templategroup`=\'mails\' AND `varname`=\'new_ftpaccount_by_customer_subject\'');
+						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['customer']['ftp_add']['infomail_subject']), $replace_arr));
+						$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$userinfo['adminid'] . '\' AND `language`=\'' . $db->escape($def_language) . '\' AND `templategroup`=\'mails\' AND `varname`=\'new_ftpaccount_by_customer_mailbody\'');
+						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['customer']['ftp_add']['infomail_body']['main']), $replace_arr));
 						
 						$_mailerror = false;
 						try {
-							$mail->Subject = $lng['customer']['ftp_add']['infomail_subject'];
+							$mail->Subject = $mail_subject;
 							$mail->AltBody = $mail_body;
 							$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 							$mail->AddAddress($userinfo['email'], getCorrectUserSalutation($userinfo));

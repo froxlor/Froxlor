@@ -53,7 +53,9 @@ $available_templates = array(
 	'new_ticket_for_customer',
 	'new_ticket_by_staff',
 	'new_reply_ticket_by_customer',
-	'new_reply_ticket_by_staff'
+	'new_reply_ticket_by_staff',
+	'new_database_by_customer',
+	'new_ftpaccount_by_customer'
 );
 $file_templates = array(
 	'index_html'
