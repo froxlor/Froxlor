@@ -49,6 +49,15 @@ return array(
 					'default' => '/usr/bin/',
 					'save_method' => 'storeSettingField',
 					),
+				'system_awstats_awstatspath' => array(
+					'label' => $lng['serversettings']['awstats_awstatspath'],
+					'settinggroup' => 'system',
+					'varname' => 'awstats_awstatspath',
+					'type' => 'string',
+					'string_type' => 'dir',
+					'default' => '/usr/bin/',
+					'save_method' => 'storeSettingField',
+					),
 				'system_awstats_conf' => array(
 					'label' => $lng['serversettings']['awstats_conf'],
 					'settinggroup' => 'system',

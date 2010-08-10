@@ -267,4 +267,16 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= '<input type="text" class="text" name="update_perl_suexecpath" value="/var/www/cgi-bin/" /><br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if(versionInUpdate($current_version, '0.9.12-svn4'))
+	{
+		if((int)$settings['system']['awstats_enabled'] == 1)
+		{
+			$has_preconfig = true;
+			$description = 'Due to different paths of awstats_buildstaticpages.pl and awstats.pl you can set a different path for awstats.pl now.';
+			$question = '<strong>Path to \'awstats.pl\'?:</strong>&nbsp;';
+			$question.= '<input type="text" class="text" name="update_awstats_awstatspath" value="'.$settings['system']['awstats_path'].'" /><br />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
 }

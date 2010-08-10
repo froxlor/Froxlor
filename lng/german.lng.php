@@ -1470,4 +1470,7 @@ $lng['admin']['templates']['USR_NAME'] = 'FTP Benutzername';
 $lng['admin']['templates']['USR_PASS'] = 'FTP Passwort';
 $lng['admin']['templates']['USR_PATH'] = 'FTP Heimatverzeichnis (relativ zum Kunden-Heimatverzeichnis)';
 
+// ADDED IN FROXLOR 0.9.12-svn4
+$lng['serversettings']['awstats_awstatspath'] = 'Pfad zu AWStats \'awstats.pl\'';
+
 ?>

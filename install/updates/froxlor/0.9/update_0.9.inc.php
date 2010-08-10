@@ -960,7 +960,7 @@ if(isFroxlorVersion('0.9.12-svn1'))
 	showUpdateStep("Updating from 0.9.12-svn1 to 0.9.12-svn2", false);
 
 	$update_perl_suexecworkaround = isset($_POST['update_perl_suexecworkaround']) ? (int)$_POST['update_perl_suexecworkaround'] : '0';
-	$update_perl_suexecpath = isset($_POST['update_perl_suexecpath']) ? $_POST['update_perl_suexecpath'] : '/var/www/cgi-bin/';
+	$update_perl_suexecpath = isset($_POST['update_perl_suexecpath']) ? makeCorrectPath($_POST['update_perl_suexecpath']) : '/var/www/cgi-bin/';
 
 	if($update_perl_suexecpath == '') {
 		$update_perl_suexecpath = '/var/www/cgi-bin/';
@@ -983,4 +983,17 @@ if(isFroxlorVersion('0.9.12-svn2'))
 	lastStepStatus(0);
 
 	updateToVersion('0.9.12-svn3');
+}
+
+if(isFroxlorVersion('0.9.12-svn3'))
+{
+	showUpdateStep("Updating from 0.9.12-svn3 to 0.9.12-svn4", false);
+	
+	$update_awstats_awstatspath = isset($_POST['update_awstats_awstatspath']) ? makeCorrectPath($_POST['update_awstats_awstatspath']) : $settings['system']['awstats_path'];	
+
+	showUpdateStep("Adding new settings for awstats");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_awstatspath', '".$db->escape($update_awstats_awstatspath)."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.12-svn4');
 }

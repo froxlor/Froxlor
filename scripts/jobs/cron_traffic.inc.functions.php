@@ -78,7 +78,7 @@ function awstatsDoSingleDomain($domain, $outputdir)
 		 * check for correct path of awstats_buildstaticpages.pl
 		 */
 		$awbsp = makeCorrectFile($settings['system']['awstats_path'].'/awstats_buildstaticpages.pl');
-		$awprog = makeCorrectFile($settings['system']['awstats_path'].'/awstats.pl');
+		$awprog = makeCorrectFile($settings['system']['awstats_awstatspath'].'/awstats.pl');
 		
 		if (!file_exists($awbsp)) {
 			echo "WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting";
