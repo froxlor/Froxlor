@@ -56,11 +56,11 @@ function _getImmutableFunction($remove = false)
 	if((int)$return_var != 0)
 	{
 		// FreeBSD style
-		return 'chflags '.($remove === true) ? 'noschg ' : 'schg ';  
+		return 'chflags '.(($remove === true) ? 'noschg ' : 'schg ');  
 	}
 	else
 	{
 		// Linux style
-		return 'chattr '.($remove === true) ? '-i ' : '+i ';
+		return 'chattr '.(($remove === true) ? '-i ' : '+i ');
 	}
 }
