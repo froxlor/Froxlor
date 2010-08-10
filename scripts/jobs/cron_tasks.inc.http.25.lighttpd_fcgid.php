@@ -173,7 +173,7 @@ class lighttpd_fcgid extends lighttpd
 
 			if(file_exists($starter_filename))
 			{
-				safe_exec('chattr -i ' . escapeshellarg($starter_filename));
+				removeImmutable($starter_filename);
 			}
 
 			$starter_file_handler = fopen($starter_filename, 'w');
@@ -181,7 +181,7 @@ class lighttpd_fcgid extends lighttpd
 			fclose($starter_file_handler);
 			safe_exec('chmod 750 ' . escapeshellarg($starter_filename));
 			safe_exec('chown ' . $domain['guid'] . ':' . $domain['guid'] . ' ' . escapeshellarg($starter_filename));
-			safe_exec('chattr +i ' . escapeshellarg($starter_filename));
+			setImmutable($starter_filename);
 
 			// define the php.ini
 

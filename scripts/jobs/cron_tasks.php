@@ -254,13 +254,13 @@ $awstatsclean['headerold']) {
 
 						// iterate through all subdirs,
 						// look for php-fcgi-starter files
-						// and take chattr +i away from them
+						// and take immutable-flag away from them
 						// so we can delete them :)
 						foreach ($its as $fullFileName => $it ) 
 						{
 							if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter') 
 							{
-								safe_exec('chattr -i ' . escapeshellarg($its->getPathname()));
+								removeImmutable($its->getPathname());
 							}
 						}
 						// now get rid of old stuff

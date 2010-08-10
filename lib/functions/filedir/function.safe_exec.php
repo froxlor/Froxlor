@@ -48,6 +48,7 @@ function safe_exec($exec_string, &$return_value = false)
 		'du',
 		'chmod',
 		'chattr',
+		'chflags', /* freebsd equivalent to linux' chattr */
 		$settings['system']['apachereload_command'],
 		$settings['system']['bindreload_command'],
 		$settings['dkim']['dkimrestart_command'],
