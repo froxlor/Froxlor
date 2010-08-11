@@ -1008,3 +1008,14 @@ if(isFroxlorVersion('0.9.12-svn4'))
 
 	updateToVersion('0.9.12-svn5');
 }
+
+if(isFroxlorVersion('0.9.12-svn5'))
+{
+	showUpdateStep("Updating from 0.9.12-svn5 to 0.9.12-svn6", false);	
+
+	showUpdateStep("Adding new field to table 'panel_htpasswds'");
+	$db->query("ALTER TABLE `".TABLE_PANEL_HTPASSWDS."` ADD `authname` varchar(255) NOT NULL default 'Restricted Area' AFTER `password`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.12-svn6');
+}

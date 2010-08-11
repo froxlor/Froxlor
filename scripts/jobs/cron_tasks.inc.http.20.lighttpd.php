@@ -219,7 +219,7 @@ class lighttpd
 				$htaccess_text.= '      "' . $htaccess_path . '" =>' . "\n";
 				$htaccess_text.= '      (' . "\n";
 				$htaccess_text.= '         "method"  => "basic",' . "\n";
-				$htaccess_text.= '         "realm"   => "Restricted Area",' . "\n";
+				$htaccess_text.= '         "realm"   => "'.$row_htpasswds['authname'].'",' . "\n";
 				$htaccess_text.= '         "require" => "valid-user"' . "\n";
 				$htaccess_text.= '      )' . "\n";
 				$htaccess_text.= '    )' . "\n";
@@ -606,7 +606,7 @@ class lighttpd
 			$diroption_text.= '"' . $row_htpasswds['path'] . '" =>' . "\n";
 			$diroption_text.= '(' . "\n";
 			$diroption_text.= '   "method"  => "basic",' . "\n";
-			$diroption_text.= '   "realm"   => "Restricted Area",' . "\n";
+			$diroption_text.= '   "realm"   => "'.$row_htpasswds['authname'].'",' . "\n";
 			$diroption_text.= '   "require" => "valid-user"' . "\n";
 			$diroption_text.= ')' . "\n";
 

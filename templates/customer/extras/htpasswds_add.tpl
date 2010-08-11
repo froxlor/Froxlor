@@ -23,6 +23,10 @@ $header
 				<td class="main_field_display" nowrap="nowrap"><input type="password" name="directory_password" size="30" /></td>
 			</tr>
 			<tr>
+				<td class="main_field_name">{$lng['extras']['htpasswdauthname']}:</td>
+				<td class="main_field_display" nowrap="nowrap"><input type="text" name="directory_authname" size="30" /></td>
+			</tr>
+			<tr>
 				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['extras']['directoryprotection_add']}" /></td>
 			</tr>
 		</table>

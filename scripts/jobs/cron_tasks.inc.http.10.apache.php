@@ -965,7 +965,7 @@ class apache
 					}
 
 					$this->diroptions_data[$diroptions_filename].= '  AuthType Basic' . "\n";
-					$this->diroptions_data[$diroptions_filename].= '  AuthName "Restricted Area"' . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  AuthName "'.$row_htpasswd['authname'].'"' . "\n";
 					$this->diroptions_data[$diroptions_filename].= '  AuthUserFile ' . $htpasswd_filename . "\n";
 					$this->diroptions_data[$diroptions_filename].= '  require valid-user' . "\n";
 				}

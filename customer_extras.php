@@ -49,7 +49,7 @@ elseif($page == 'htpasswds')
 			'path' => $lng['panel']['path']
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_HTPASSWDS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$result = $db->query("SELECT `id`, `username`, `path` FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+		$result = $db->query("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		$paging->setEntries($db->num_rows($result));
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
@@ -81,7 +81,7 @@ elseif($page == 'htpasswds')
 	elseif($action == 'delete'
 	       && $id != 0)
 	{
-		$result = $db->query_first("SELECT `id`, `customerid`, `username`, `path` FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 
 		if(isset($result['username'])
 		   && $result['username'] != '')
@@ -114,6 +114,7 @@ elseif($page == 'htpasswds')
 			$userpath = $path;
 			$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 			$username = validate($_POST['username'], 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/');
+			$authname = validate($_POST['directory_authname'], 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/');
 			validate($_POST['directory_password'], 'password');
 			$username_path_check = $db->query_first("SELECT `id`, `username`, `path` FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `username`='" . $db->escape($username) . "' AND `path`='" . $db->escape($path) . "' AND `customerid`='" . (int)$userinfo['customerid'] . "'");
 
@@ -151,7 +152,7 @@ elseif($page == 'htpasswds')
 			}
 			else
 			{
-				$db->query("INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "` (`customerid`, `username`, `password`, `path`) VALUES ('" . (int)$userinfo['customerid'] . "', '" . $db->escape($username) . "', '" . $db->escape($password) . "', '" . $db->escape($path) . "')");
+				$db->query("INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "` (`customerid`, `username`, `password`, `path`, `authname`) VALUES ('" . (int)$userinfo['customerid'] . "', '" . $db->escape($username) . "', '" . $db->escape($password) . "', '" . $db->escape($path) . "', '" . $db->escape($authname) . "')");
 				$log->logAction(USR_ACTION, LOG_INFO, "added htpasswd for '" . $username . " (" . $path . ")'");
 				inserttask('1');
 				redirectTo($filename, Array('page' => $page, 's' => $s));
@@ -166,7 +167,7 @@ elseif($page == 'htpasswds')
 	elseif($action == 'edit'
 	       && $id != 0)
 	{
-		$result = $db->query_first("SELECT `id`, `username`, `path` FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 
 		if(isset($result['username'])
 		   && $result['username'] != '')
@@ -175,6 +176,7 @@ elseif($page == 'htpasswds')
 			   && $_POST['send'] == 'send')
 			{
 				validate($_POST['directory_password'], 'password');
+				$authname = validate($_POST['directory_authname'], 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/');
 
 				if(CRYPT_STD_DES == 1)
 				{
@@ -186,13 +188,25 @@ elseif($page == 'htpasswds')
 					$password = crypt($_POST['directory_password']);
 				}
 
-				if($_POST['directory_password'] == '')
+				$pwd_sql = '';
+				if($_POST['directory_password'] != '')
 				{
-					standard_error(array('stringisempty', 'mypassword'));
+					$pwd_sql = "`password`='" . $db->escape($password) . "' ";
 				}
-				else
+				
+				$auth_sql = '';
+				if($authname != $result['authname'])
 				{
-					$db->query("UPDATE `" . TABLE_PANEL_HTPASSWDS . "` SET `password`='" . $db->escape($password) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+					$auth_sql = "`authname`='" . $db->escape($authname) . "' ";
+				}
+
+				if($pwd_sql != '' || $auth_sql != '')
+				{
+					if($pwd_sql !='' && $auth_sql != '') {
+						$pwd_sql.= ', ';
+					}
+
+					$db->query("UPDATE `" . TABLE_PANEL_HTPASSWDS . "` SET ".$pwd_sql.$auth_sql." WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 					$log->logAction(USR_ACTION, LOG_INFO, "edited htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
 					inserttask('1');
 					redirectTo($filename, Array('page' => $page, 's' => $s));

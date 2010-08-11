@@ -1490,4 +1490,8 @@ $lng['admin']['templates']['USR_PATH'] = 'FTP homedir (relative to customer-docr
 // ADDED IN FROXLOR 0.9.12-svn4
 $lng['serversettings']['awstats_awstatspath'] = 'Path to AWStats \'awstats.pl\'';
 
+// ADDED IN FROXLOR 0.9.12-svn6
+$lng['extras']['htpasswdauthname'] = 'Authentication reason (AuthName)';
+$lng['extras']['directoryprotection_edit'] = 'edit directory protection';
+
 ?>
