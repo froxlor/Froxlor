@@ -997,3 +997,14 @@ if(isFroxlorVersion('0.9.12-svn3'))
 
 	updateToVersion('0.9.12-svn4');
 }
+
+if(isFroxlorVersion('0.9.12-svn4'))
+{
+	showUpdateStep("Updating from 0.9.12-svn4 to 0.9.12-svn5", false);	
+
+	showUpdateStep("Setting ticket-usage-reset cronjob interval to 1 day");
+	$db->query("UPDATE `cronjobs_run` SET `interval`='1 DAY' WHERE `cronfile`='cron_used_tickets_reset.php';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.12-svn5');
+}
