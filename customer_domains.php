@@ -374,7 +374,7 @@ elseif($page == 'domains')
 					$codes = getRedirectCodesArray();
 					foreach($codes as $rc)
 					{
-						$redirectcode .= makeoption($rc['code'], $rc['id'], $settings['customredirect']['default']);
+						$redirectcode .= makeoption($rc['code']. ' ('.$lng['redirect_desc'][$rc['desc']].')', $rc['id'], $settings['customredirect']['default']);
 					}
 				}
 
@@ -552,7 +552,7 @@ elseif($page == 'domains')
 					$codes = getRedirectCodesArray();
 					foreach($codes as $rc)
 					{
-						$redirectcode .= makeoption($rc['code'], $rc['id'], $def_code);
+						$redirectcode .= makeoption($rc['code']. ' ('.$lng['redirect_desc'][$rc['desc']].')', $rc['id'], $def_code);
 					}
 				}
 
