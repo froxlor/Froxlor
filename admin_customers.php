@@ -671,7 +671,6 @@ if($page == 'customers'
 						$replace_arr = array(
 							'FIRSTNAME' => $firstname,
 							'NAME' => $name,
-							'TITLE' => $title,
 							'COMPANY' => $company,
 							'SALUTATION' => getCorrectUserSalutation(array('firstname' => $firstname, 'name' => $name, 'company' => $company)),
 							'USERNAME' => $loginname,
