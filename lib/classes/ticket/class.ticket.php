@@ -255,12 +255,14 @@ class ticket
 		{
 			// Get e-mail message for customer
 
-			$usr = $this->db->query_first('SELECT `name`, `firstname`, `email`
+			$usr = $this->db->query_first('SELECT `name`, `firstname`, `company`, `email`
                                FROM `' . TABLE_PANEL_CUSTOMERS . '` 
                                WHERE `customerid` = "' . (int)$customerid . '"');
 			$replace_arr = array(
 				'FIRSTNAME' => $usr['firstname'],
 				'NAME' => $usr['name'],
+				'COMPANY' => $usr['company'],
+				'SALUTATION' => getCorrectUserSalutation($usr),
 				'SUBJECT' => $this->Get('subject', true)
 			);
 		}

@@ -101,12 +101,20 @@ $header
 				<td class="field_name">{$lng['admin']['templates']['SUBJECT']}</td>
 			</tr>
 			<tr>
+				<td class="field_name_border_left"><i>{SALUTATION}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['SALUTATION']}</td>
+			</tr>
+			<tr>
 				<td class="field_name_border_left"><i>{FIRSTNAME}</i>:</td>
 				<td class="field_name">{$lng['admin']['templates']['FIRSTNAME']}</td>
 			</tr>
 			<tr>
 				<td class="field_name_border_left"><i>{NAME}</i>:</td>
 				<td class="field_name">{$lng['admin']['templates']['NAME']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{COMPANY}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['COMPANY']}</td>
 			</tr>
 			<tr>
 				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['newdatabase']}</b></td>
