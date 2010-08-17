@@ -75,8 +75,7 @@ while($row = $db->fetch_array($result_tasks))
 						$awstatsclean['fh'] = fopen($awstatsclean['fullentry'], 'r');
 						$awstatsclean['headerRead'] = fgets($awstatsclean['fh'], strlen($awstatsclean['header'])+1);
 						fclose($awstatsclean['fh']);
-						if($awstatsclean['headerRead'] == $awstatsclean['header'] || $awstatsclean['headerRead'] == 
-$awstatsclean['headerold']) {
+						if($awstatsclean['headerRead'] == $awstatsclean['header'] || $awstatsclean['headerRead'] == $awstatsclean['headerold']) {
 							$cronlog->logAction(CRON_ACTION, LOG_INFO, "Removing awstats configuration ".$awstatsclean['fullentry']." for re-creation");
 							@unlink($awstatsclean['fullentry']);
 						}
@@ -90,6 +89,34 @@ $awstatsclean['headerold']) {
 			unset($awstatsclean);
 		}
 		//end dhr
+
+		// clear fcgid - starter files prior to re-creation to keep it clean, #367
+		if ($settings['system']['mod_fcgid'] == '1')
+		{
+			$configdir = makeCorrectDir($settings['system']['mod_fcgid_configdir']);
+
+			if (is_dir($configdir)) 
+			{
+				$its = new RecursiveIteratorIterator(
+					new RecursiveDirectoryIterator($configdir)
+				);
+
+				// iterate through all subdirs,
+				// look for php-fcgi-starter files
+				// and take immutable-flag away from them
+				// so we can delete them :)
+				foreach ($its as $fullFileName => $it ) 
+				{
+					if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter') 
+					{
+						removeImmutable($its->getPathname());
+					}
+				}
+				// now get rid of old stuff 
+				//(but append /* so we don't delete the directory)
+				safe_exec('rm -rf '. escapeshellarg(makeCorrectFile($configdir.'/*')));
+			}
+		}
 
 		if(!isset($webserver))
 		{
@@ -236,7 +263,7 @@ $awstatsclean['headerold']) {
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
 					safe_exec('rm -rf '.escapeshellarg($maildir));
 				}
-				
+
 				/*
 				 * see if we have some php-fcgid leftovers if used
 				 * and remove them, #200
