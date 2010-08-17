@@ -1496,5 +1496,6 @@ $lng['serversettings']['awstats_awstatspath'] = 'Path to AWStats \'awstats.pl\''
 $lng['extras']['htpasswdauthname'] = 'Authentication reason (AuthName)';
 $lng['extras']['directoryprotection_edit'] = 'edit directory protection';
 $lng['admin']['templates']['forgotpwd'] = 'Notification-mails for password-reset';
+$lng['admin']['templates']['password_reset'] = 'Customer-notification for passwort-reset';
 
 ?>
