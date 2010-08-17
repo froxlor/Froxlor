@@ -221,14 +221,14 @@ if($action == 'forgotpwd')
 	{
 		$loginname = validate($_POST['loginname'], 'loginname');
 		$email = validateEmail($_POST['loginemail'], 'email');
-		$sql = "SELECT `customerid`, `firstname`, `name`, `email`, `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "`
+		$sql = "SELECT `adminid`, `customerid`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 				WHERE `loginname`='" . $db->escape($loginname) . "'
 				AND `email`='" . $db->escape($email) . "'";
 		$result = $db->query($sql);
 
 		if($db->num_rows() == 0)
 		{
-			$sql = "SELECT `adminid`, `name`, `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "`
+			$sql = "SELECT `adminid`, `name`, `email`, `loginname`, `def_language` FROM `" . TABLE_PANEL_ADMINS . "`
 				WHERE `loginname`='" . $db->escape($loginname) . "'
 				AND `email`='" . $db->escape($email) . "'";
 			$result = $db->query($sql);
@@ -280,13 +280,26 @@ if($action == 'forgotpwd')
 
 					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
 					$rstlog->logAction(USR_ACTION, LOG_WARNING, "Password for user '" . $user['loginname'] . "' has been reset!");
+
+					$replace_arr = array(
+						'SALUTATION' => getCorrectUserSalutation($user),
+						'USERNAME' => $user['loginname'],
+						'PASSWORD' => $password
+					);
+
 					$body = strtr($lng['pwdreminder']['body'], array('%s' => $user['firstname'] . ' ' . $user['name'], '%p' => $password));
+
+					$def_language = ($user['def_language'] != '') ? $user['def_language'] : $settings['panel']['standardlanguage'];
+					$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$user['adminid'] . '\' AND `language`=\'' . $db->escape($def_language) . '\' AND `templategroup`=\'mails\' AND `varname`=\'password_reset_subject\'');
+					$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['pwdreminder']['subject']), $replace_arr));
+					$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$user['adminid'] . '\' AND `language`=\'' . $db->escape($def_language) . '\' AND `templategroup`=\'mails\' AND `varname`=\'password_reset_mailbody\'');
+					$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $body), $replace_arr));
 						
 					$_mailerror = false;
 					try {
-						$mail->Subject = $lng['pwdreminder']['subject'];
-						$mail->AltBody = $body;
-						$mail->MsgHTML(str_replace("\\n", "<br />", $body));
+						$mail->Subject = $mail_subject;
+						$mail->AltBody = $mail_body;
+						$mail->MsgHTML(str_replace("\\n", "<br />", $mail_body));
 						$mail->AddAddress($user['email'], $user['firstname'] . ' ' . $user['name']);
 						$mail->Send();
 					} catch(phpmailerException $e) {

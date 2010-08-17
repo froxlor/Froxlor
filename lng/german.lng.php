@@ -1478,5 +1478,6 @@ $lng['serversettings']['awstats_awstatspath'] = 'Pfad zu AWStats \'awstats.pl\''
 // ADDED IN FROXLOR 0.9.12-svn6
 $lng['extras']['htpasswdauthname'] = 'Authentifizierungs-Grund (AuthName)';
 $lng['extras']['directoryprotection_edit'] = 'Verzeichnisschutz bearbeiten';
+$lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zur&uuml;cksetzen des Passworts';
 
 ?>

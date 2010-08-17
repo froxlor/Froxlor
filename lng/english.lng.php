@@ -320,7 +320,7 @@ $lng['admin']['templates']['mailbody'] = 'Mail body';
 $lng['admin']['templates']['createcustomer'] = 'Welcome mail for new customers';
 $lng['admin']['templates']['pop_success'] = 'Welcome mail for new email accounts';
 $lng['admin']['templates']['template_replace_vars'] = 'Variables to be replaced in the template:';
-$lng['admin']['templates']['SALUTATION'] = 'Replaced with a correct salutation';
+$lng['admin']['templates']['SALUTATION'] = 'Replaced with a correct salutation (name or company)';
 $lng['admin']['templates']['FIRSTNAME'] = 'Replaced with the customers firstname.';
 $lng['admin']['templates']['NAME'] = 'Replaced with the customers name.';
 $lng['admin']['templates']['COMPANY'] = 'Replaces with the customers company name';
@@ -1495,5 +1495,6 @@ $lng['serversettings']['awstats_awstatspath'] = 'Path to AWStats \'awstats.pl\''
 // ADDED IN FROXLOR 0.9.12-svn6
 $lng['extras']['htpasswdauthname'] = 'Authentication reason (AuthName)';
 $lng['extras']['directoryprotection_edit'] = 'edit directory protection';
+$lng['admin']['templates']['forgotpwd'] = 'Notification-mails for password-reset';
 
 ?>

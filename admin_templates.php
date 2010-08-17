@@ -55,7 +55,8 @@ $available_templates = array(
 	'new_reply_ticket_by_customer',
 	'new_reply_ticket_by_staff',
 	'new_database_by_customer',
-	'new_ftpaccount_by_customer'
+	'new_ftpaccount_by_customer',
+	'password_reset'
 );
 $file_templates = array(
 	'index_html'

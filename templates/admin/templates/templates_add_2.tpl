@@ -81,6 +81,21 @@ $header
 				</tr>
 			</if>
 			<tr>
+				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['forgotpwd']}</b></td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{SALUTATION}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['SALUTATION']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{USERNAME}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['USERNAME']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{PASSWORD}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['PASSWORD']}</td>
+			</tr>
+			<tr>
 				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['trafficninetypercent']}</b></td>
 			</tr>
 			<tr>
