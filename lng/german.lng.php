@@ -223,7 +223,7 @@ $lng['error']['nosubjectcreate'] = 'Sie m&uuml;ssen einen Betreff angeben.';
 $lng['error']['nomailbodycreate'] = 'Sie m&uuml;ssen einen E-Mail-Text eingeben.';
 $lng['error']['templatenotfound'] = 'Vorlage wurde nicht gefunden.';
 $lng['error']['alltemplatesdefined'] = 'Sie k&ouml;nnen keine weiteren Vorlagen anlegen, da bereits alle Sprachen mit Vorlagen versorgt sind.';
-$lng['error']['wwwnotallowed'] = 'Ihre Subdomain darf nicht www heissen.';
+$lng['error']['wwwnotallowed'] = 'Ihre Subdomain darf nicht www hei&szlig;en.';
 $lng['error']['subdomainiswrong'] = 'Die Subdomain %s enth&auml;lt ung&uuml;ltige Zeichen.';
 $lng['error']['domaincantbeempty'] = 'Der Domain-Name darf nicht leer sein.';
 $lng['error']['domainexistalready'] = 'Die Domain %s existiert bereits.';
@@ -350,11 +350,11 @@ $lng['serversettings']['ipaddress']['description'] = 'Welche IP-Adresse hat der 
 $lng['serversettings']['hostname']['title'] = 'Hostname';
 $lng['serversettings']['hostname']['description'] = 'Welchen Hostnamen hat der Server?';
 $lng['serversettings']['apachereload_command']['title'] = 'Webserver-Reload-Command';
-$lng['serversettings']['apachereload_command']['description'] = 'Wie heisst das Skript zum Neuladen der Webserver-Konfigurationsdateien?';
+$lng['serversettings']['apachereload_command']['description'] = 'Wie hei&szlig;t das Skript zum Neuladen der Webserver-Konfigurationsdateien?';
 $lng['serversettings']['bindconf_directory']['title'] = 'Bind-Config-Directory';
 $lng['serversettings']['bindconf_directory']['description'] = 'Wo liegen die Bind-Konfigurationsdateien?';
 $lng['serversettings']['bindreload_command']['title'] = 'Bind-Reload-Command';
-$lng['serversettings']['bindreload_command']['description'] = 'Wie heisst das Skript zum Neuladen der Bind-Konfigurationsdateien?';
+$lng['serversettings']['bindreload_command']['description'] = 'Wie hei&szlig;t das Skript zum Neuladen der Bind-Konfigurationsdateien?';
 $lng['serversettings']['binddefaultzone']['title'] = 'Bind-Default-Zone';
 $lng['serversettings']['binddefaultzone']['description'] = 'Wie hei&szlig;t die Default-Zone f&uuml;r alle Domains?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mails-Uid';
@@ -496,7 +496,7 @@ $lng['admin']['mailserversettings'] = 'Mailservereinstellungen';
 $lng['admin']['nameserversettings'] = 'Nameservereinstellungen';
 $lng['admin']['updatecounters'] = 'Ressourcenverbrauch';
 $lng['question']['admin_counters_reallyupdate'] = 'Wollen Sie den Ressourcenverbrauch neu berechnen?';
-$lng['panel']['pathDescription'] = 'Wenn das Verzeichnis nicht existiert, wird es automatisch erstellt.';
+$lng['panel']['pathDescription'] = 'Wenn das Verzeichnis nicht existiert, wird es automatisch erstellt.<br /><br />Sollte eine Weiterleitung auf eine andere Domain gew&uuml;nscht sein, muss der Eintrag mit http:// oder https:// beginnen';
 
 // ADDED IN 1.2.16-svn6
 
