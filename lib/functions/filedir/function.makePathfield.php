@@ -76,7 +76,7 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 				// for the Dropdown, #225
 				$value = substr($value, 1);
 				$field = $lng['panel']['toomanydirs'];
-				$field.= '<input type="text" name="path" value="' . htmlspecialchars($value) . '" />';
+				$field.= '<br /><input type="text" name="path" value="' . htmlspecialchars($value) . '" />';
 			}
 		}
 		else
