@@ -21,7 +21,7 @@ DESCRIPTION="A PHP-based webhosting-oriented control panel for servers."
 HOMEPAGE="http://www.froxlor.org/"
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="aps autoresponder awstats bind domainkey dovecot fcgid ftpquota lighttpd +log mailquota realtime ssl +tickets"
+IUSE="aps autoresponder awstats bind domainkey dovecot fcgid ftpquota lighttpd +log mailquota pureftpd realtime ssl +tickets"
 
 DEPEND="
 	!www-apps/syscp
@@ -30,8 +30,13 @@ DEPEND="
 	virtual/mysql
 	>=dev-lang/php-5.2[bcmath,cli,ctype,filter,ftp,gd,mysql,nls,posix,session,simplexml,ssl=,tokenizer,xml,xsl,zlib]
 	|| ( <dev-lang/php-5.3[pcre] >=dev-lang/php-5.3 )
-	net-ftp/proftpd[mysql,ssl=]
-	ftpquota? ( net-ftp/proftpd[softquota] )
+	pureftpd? (
+		net-ftp/pure-ftpd[mysql,ssl=]
+	)
+	!pureftpd? (
+		net-ftp/proftpd[mysql,ssl=]
+		ftpquota? ( net-ftp/proftpd[softquota] )
+	)
 	awstats? (
 		www-misc/awstats
 		( !lighttpd? (
@@ -114,7 +119,7 @@ pkg_setup() {
 src_prepare() {
 	epatch_user
 	# Delete any mention of inserttask('4') if no Bind is used
-	if ! use bind ; then
+	if ! useq bind ; then
 		find "${S}/" -type f -exec sed -e "s|inserttask('4');||g" -i {} \;
 	fi
 }
@@ -270,6 +275,11 @@ src_install() {
 		einfo "Switching from 'Webalizer' to 'AWStats'"
 		sed -e "s|'webalizer_quiet', '2'|'webalizer_quiet', '0'|g" -i "${S}/install/froxlor.sql"
 		sed -e "s|'awstats_enabled', '0'|'awstats_enabled', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to enable AWStats"
+	fi
+
+	if useq pureftpd ; then
+		einfo "Switching from 'ProFTPd' to 'Pure-FTPd'"
+		sed -e "s|'ftpserver', 'proftpd'|'ftpserver', 'pureftpd'|g" -i "${S}/install/froxlor.sql"
 	fi
 
 	# Install the Froxlor files
@@ -864,7 +874,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	fi
 
 	# NSS-MySQL preparations
-	if use fcgid ; then
+	if useq fcgid ; then
 		einfo "Modifying nsswitch.conf to use MySQL ..."
 		sed -e "s|compat|compat mysql|g" -i "${ROOT}/etc/nsswitch.conf"
 		rm -f "${ROOT}/etc/libnss-mysql.cfg"
@@ -881,38 +891,53 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/libnss-mysql-root.cfg"
 	fi
 
-	einfo "Configuring ProFTPd ..."
-	rm -f "${ROOT}/etc/proftpd/proftpd.conf"
-	cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/proftpd/etc_proftpd_proftpd.conf" "${ROOT}/etc/proftpd/proftpd.conf"
-	sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-	sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-	sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-	sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-	sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-	if useq ssl ; then
-		sed -e "s|#<IfModule mod_tls.c>|<IfModule mod_tls.c>|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|#TLSEngine|TLSEngine|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|#TLSLog|TLSLog|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|#TLSProtocol|TLSProtocol|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|#TLSTimeoutHandshake|TLSTimeoutHandshake|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|#TLSOptions|TLSOptions|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|#TLSRSACertificateFile|TLSRSACertificateFile|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|#TLSRSACertificateKeyFile|TLSRSACertificateKeyFile|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|#TLSVerifyClient|TLSVerifyClient|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|#TLSRequired|TLSRequired|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|#</IfModule>|</IfModule>|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+	if ! useq pureftpd ; then
+		einfo "Configuring ProFTPd ..."
+		rm -f "${ROOT}/etc/proftpd/proftpd.conf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/proftpd/etc_proftpd_proftpd.conf" "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		if useq ssl ; then
+			sed -e "s|#<IfModule mod_tls.c>|<IfModule mod_tls.c>|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|#TLSEngine|TLSEngine|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|#TLSLog|TLSLog|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|#TLSProtocol|TLSProtocol|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|#TLSTimeoutHandshake|TLSTimeoutHandshake|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|#TLSOptions|TLSOptions|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|#TLSRSACertificateFile|TLSRSACertificateFile|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|#TLSRSACertificateKeyFile|TLSRSACertificateKeyFile|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|#TLSVerifyClient|TLSVerifyClient|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|#TLSRequired|TLSRequired|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|#</IfModule>|</IfModule>|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		fi
+		if ! useq ftpquota ; then
+			sed -e "s|QuotaEngine|#QuotaEngine|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|QuotaShowQuotas|#QuotaShowQuotas|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|QuotaDisplayUnits|#QuotaDisplayUnits|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|QuotaLock|#QuotaLock|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|QuotaLimitTable|#QuotaLimitTable|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|QuotaTallyTable|#QuotaTallyTable|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+			sed -e "s|SQLNamedQuery|#SQLNamedQuery|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		fi
+		chown root:0 "${ROOT}/etc/proftpd/proftpd.conf"
+		chmod 0600 "${ROOT}/etc/proftpd/proftpd.conf"
+	else
+		einfo "Configuring Pure-FTPd ..."
+		rm -f "${ROOT}/etc/conf.d/pure-ftpd"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/pureftpd/etc_conf.d_pure-ftpd" "${ROOT}/etc/conf.d/pure-ftpd"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/pureftpd/etc_pureftpd-mysql.conf" "${ROOT}/etc/pureftpd-mysql.conf"
+		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/pureftpd-mysql.conf"
+		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/pureftpd-mysql.conf"
+		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/pureftpd-mysql.conf"
+		sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/pureftpd-mysql.conf"
+		chown root:0 "${ROOT}/etc/conf.d/pure-ftpd"
+		chmod 0644 "${ROOT}/etc/conf.d/pure-ftpd"
+		chown root:0 "${ROOT}/etc/pureftpd-mysql.conf"
+		chmod 0600 "${ROOT}/etc/pureftpd-mysql.conf"
 	fi
-	if ! useq ftpquota ; then
-		sed -e "s|QuotaEngine|#QuotaEngine|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|QuotaShowQuotas|#QuotaShowQuotas|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|QuotaDisplayUnits|#QuotaDisplayUnits|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|QuotaLock|#QuotaLock|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|QuotaLimitTable|#QuotaLimitTable|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|QuotaTallyTable|#QuotaTallyTable|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		sed -e "s|SQLNamedQuery|#SQLNamedQuery|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-	fi
-	chown root:0 "${ROOT}/etc/proftpd/proftpd.conf"
-	chmod 0600 "${ROOT}/etc/proftpd/proftpd.conf"
 
 	einfo "Configuring Gentoo-Froxlor cronjob ..."
 	exeinto "${ROOT}/etc/cron.d"
