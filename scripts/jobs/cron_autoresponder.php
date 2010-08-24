@@ -207,7 +207,8 @@ if($db->num_rows($result) > 0)
 					$mail->AddReplyTo($to, $to);
 					$mail->Subject = $row['subject'];
 					$mail->AltBody = $message;
-					$mail->MsgHTML(html_entity_decode($message));
+					$html_message = str_replace("\n", "<br />", $message);
+					$mail->MsgHTML(html_entity_decode($html_message));
 					$mail->AddAddress($from, $from);
 					$mail->AddCustomHeader('Precedence: bulk');
 					$mail->Send();
