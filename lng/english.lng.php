@@ -1442,7 +1442,7 @@ $lng['serversettings']['froxlordirectlyviahostname'] = 'Access Froxlor directly 
 // ADDED IN FROXLOR 0.9.11-svn1
 $lng['serversettings']['panel_password_regex']['title'] = 'Regular expression for passwords';
 $lng['serversettings']['panel_password_regex']['description'] = 'Here you can set a regular expression for passwords-complexity.<br />Empty = no specific requirement<br />(<a href="http://wiki.froxlor.org/doc/password-regex-examples">regex help/examples</a>)';
-$lng['error']['notrequiredpasswordcomplexity'] = 'The specified password-complexity was not satisfied (regex: %s)';
+$lng['error']['notrequiredpasswordcomplexity'] = 'The specified password-complexity was not satisfied.<br />Please contact your administrator if you have any questions about the complexity-specification';
 
 // ADDED IN FROXLOR 0.9.11-svn2
 $lng['extras']['execute_perl'] = 'Execute perl/CGI';
