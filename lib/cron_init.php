@@ -167,6 +167,21 @@ unset($row);
 unset($result);
 fwrite($debugHandler, 'Froxlor settings have been loaded from the database' . "\n");
 
+/**
+ * if settings['system']['mod_fcgid_ownvhost'] is set, we have to check
+ * whether the permission of the files are still correct
+ */
+if((int)$settings['system']['mod_fcgid_ownvhost'] == 1)
+{
+	fwrite($debugHandler, 'Checking froxlor file permissions');
+	$mypath = makeCorrectDir(dirname(dirname(__FILE__))); // /var/www/froxlor, needed for chown
+	$user = $settings['system']['mod_fcgid_httpuser'];
+	$group = $settings['system']['mod_fcgid_httpgroup'];
+	// all the files and folders have to belong to the local user
+	// now because we also use fcgid for our own vhost
+	safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
+}
+
 if(!isset($settings['panel']['version'])
    || $settings['panel']['version'] != $version)
 {
