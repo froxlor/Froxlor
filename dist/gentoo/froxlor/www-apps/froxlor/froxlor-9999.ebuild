@@ -1047,7 +1047,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		echo -e "\n${MASTER_DOVECOT}" >> "${ROOT}/etc/postfix/master.cf"
 	fi
 	if useq mailquota ; then
-		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/mysql-virtual_mailbox_limit_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_mysql-virtual_mailbox_limit_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
