@@ -12,6 +12,7 @@
  * @copyright  (c) the authors
  * @author     Luca Piona <info@havanastudio.ch>
  * @author     Luca Longinotti <chtekk@gentoo.org>
+ * @author     Emilien 
  * @author     Froxlor Team <team@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
@@ -22,7 +23,7 @@
  * Global
  */
 
-$lng['translator'] = 'Luca Longinotti & Luca Piona';
+$lng['translator'] = 'Luca Longinotti & Luca Piona & Emilien';
 $lng['panel']['edit'] = 'Modifica';
 $lng['panel']['delete'] = 'Cancella';
 $lng['panel']['create'] = 'Crea';
@@ -272,7 +273,7 @@ $lng['mails']['createcustomer']['subject'] = 'Informazioni account';
  * Admin
  */
 
-$lng['admin']['overview'] = 'Visione d\'insieme';
+$lng['admin']['overview'] = 'Generale';
 $lng['admin']['ressourcedetails'] = 'Risorse utilizzate';
 $lng['admin']['systemdetails'] = 'Dettagli sistema';
 $lng['admin']['froxlordetails'] = 'Dettagli Froxlor';
@@ -298,7 +299,7 @@ $lng['admin']['domains_see_all'] = 'Può vedere tutti i domini?';
 $lng['admin']['change_serversettings'] = 'Può cambiare le impostazioni del server?';
 $lng['admin']['server'] = 'Server';
 $lng['admin']['serversettings'] = 'Opzioni';
-$lng['admin']['rebuildconf'] = 'Rigenera file di configurazione';
+$lng['admin']['rebuildconf'] = 'Rigenera configurazione';
 $lng['admin']['stdsubdomain'] = 'Sottodominio standard';
 $lng['admin']['stdsubdomain_add'] = 'Crea sottodominio standard';
 $lng['admin']['phpenabled'] = 'PHP abilitato';
@@ -318,7 +319,7 @@ $lng['admin']['templates']['email'] = 'Email';
 $lng['admin']['templates']['subject'] = 'Soggetto:';
 $lng['admin']['templates']['mailbody'] = 'Testo dell\'Email';
 $lng['admin']['templates']['createcustomer'] = 'Email di benvenuto per i nuovi clienti';
-$lng['admin']['templates']['pop_success'] = 'Benevenuto per ogni nuovo account Email';
+$lng['admin']['templates']['pop_success'] = 'Benvenuto per ogni nuovo account Email';
 $lng['admin']['templates']['template_replace_vars'] = 'Variabili da cambiare nel template:';
 $lng['admin']['templates']['FIRSTNAME'] = 'Rimpiazzato con il nome del cliente.';
 $lng['admin']['templates']['NAME'] = 'Rimpiazzato con il cognome del cliente.';
@@ -423,7 +424,7 @@ $lng['domain']['docroot'] = 'Percorso del campo sopra';
 $lng['domain']['homedir'] = 'Cartella Home';
 $lng['admin']['valuemandatory'] = 'Questo valore è obbligatorio';
 $lng['admin']['valuemandatorycompany'] = 'O i campi "nome" e "cognome" O il capo "compagnia" devono essere riempiti';
-$lng['menue']['main']['username'] = 'Connesso come utente: ';
+$lng['menue']['main']['username'] = 'Utente: ';
 $lng['panel']['urloverridespath'] = 'URL (sovrascrive il percorso)';
 $lng['panel']['pathorurl'] = 'Percorso o URL';
 $lng['error']['sessiontimeoutiswrong'] = '&quot;Timeout Sessione&quot; deve essere un numero.';
@@ -495,7 +496,7 @@ $lng['admin']['systemsettings'] = 'Impostazioni di Sistema';
 $lng['admin']['webserversettings'] = 'Impostazioni Server Web';
 $lng['admin']['mailserversettings'] = 'Impostazioni Server di Posta';
 $lng['admin']['nameserversettings'] = 'Impostazioni Nameserver';
-$lng['admin']['updatecounters'] = 'Ricalcola il consumo delle risorse';
+$lng['admin']['updatecounters'] = 'Ricalcolo risorse';
 $lng['question']['admin_counters_reallyupdate'] = 'Sei sicuro di voler ricacolare il consumo delle risorse?';
 $lng['panel']['pathDescription'] = 'Se la cartella non esiste, viene creata automaticamente.';
 
@@ -533,7 +534,7 @@ $lng['admin']['configfiles']['smtp'] = 'Mailserver (SMTP)';
 $lng['admin']['configfiles']['ftp'] = 'FTP-Server';
 $lng['admin']['configfiles']['etc'] = 'Altro (Sistema)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Scegli una distribuzione --';
-$lng['admin']['configfiles']['chooseservice'] = '-- Secgli un servizio --';
+$lng['admin']['configfiles']['chooseservice'] = '-- Scegli un servizio --';
 $lng['admin']['configfiles']['choosedaemon'] = '-- Scegli un demone --';
 
 // ADDED IN 1.2.16-svn10
@@ -761,8 +762,8 @@ $lng['serversettings']['logger']['logfile'] = 'Percorso completo e nome del file
 $lng['error']['logerror'] = 'Errore Log: %s';
 $lng['serversettings']['logger']['logcron'] = 'Log cronjobs (one run)';
 $lng['question']['logger_reallytruncate'] = 'Sei sicuro di voler troncare la tabella &quot;%s&quot;?';
-$lng['admin']['loggersystem'] = 'log di Sistema';
-$lng['menue']['logger']['logger'] = 'log di Sistema';
+$lng['admin']['loggersystem'] = 'Log di Sistema';
+$lng['menue']['logger']['logger'] = 'Log di Sistema';
 $lng['logger']['date'] = 'Data';
 $lng['logger']['type'] = 'Tipo';
 $lng['logger']['action'] = 'Azione';
@@ -1423,5 +1424,80 @@ $lng['redirect_desc']['rc_movedperm'] = 'spostato in modo permanente';
 $lng['redirect_desc']['rc_found'] = 'trovato';
 $lng['redirect_desc']['rc_seeother'] = 'vedi gli altri';
 $lng['redirect_desc']['rc_tempred'] = 'reindirizzamento temporaneo';
+          
+// ADDED IN FROXLOR 0.9.8
+$lng['error']['exception'] = '%s';
+
+// ADDED IN FROXLOR 0.9.9-svn1
+$lng['serversettings']['mail_also_with_mxservers'] = 'Crea mail-, imap-, pop3- and smtp-"A record" anche con MX-Servers impostato';
+
+// ADDED IN FROXLOR 0.9.10-svn1
+$lng['aps']['nocontingent'] = 'Il tuo APS contingente è insufficiente. Non è possibile installare qualsiasi pacchetto.';
+$lng['aps']['packageneedsdb'] = 'Questo pacchetto ha bisogno di un database, ma il tuo potenziale è esaurito';
+$lng['aps']['cannoteditordeleteapsdb'] = 'I database APS qui non possono essere modificati o rimossi';
+$lng['admin']['webserver_user'] = 'Utente Webserver';
+$lng['admin']['webserver_group'] = 'Gruppo Webserver';
+
+// ADDED IN FROXLOR 0.9.10
+$lng['serversettings']['froxlordirectlyviahostname'] = 'Accedi direttamente a Froxlor via hostname';
+
+// ADDED IN FROXLOR 0.9.11-svn1
+$lng['serversettings']['panel_password_regex']['title'] = 'Espressione per le password';
+$lng['serversettings']['panel_password_regex']['description'] = 'Qui è possibile impostare una espressione regolare per la complessità delle password.<br />Vuoto = nessun requisito specificato<br />(<a href="http://wiki.froxlor.org/doc/password-regex-examples">aiuto/esempi regex</a>)';
+$lng['error']['notrequiredpasswordcomplexity'] = 'La complessita della password specificata non è soddisfacente.<br />Si prega di contattare l\'amministratore se avete domande sulla complessità della password';
+
+// ADDED IN FROXLOR 0.9.11-svn2
+$lng['extras']['execute_perl'] = 'Esegui perl/CGI';
+$lng['admin']['perlenabled'] = 'Perl abilitato';
+
+// ADDED IN FROXLOR 0.9.11-svn3
+$lng['serversettings']['perl_path']['title'] = 'Percorso perl';
+$lng['serversettings']['perl_path']['description'] = 'Rilevante solo se si utilizza lighttpd. Predefinito /usr/bin/perl';
+
+// ADDED IN FROXLOR 0.9.12-svn1
+$lng['admin']['fcgid_settings'] = 'FCGID';
+$lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Abilita FCGID per i vhost Froxlor';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Se attivato, Froxlor verrà eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a>';
+$lng['admin']['mod_fcgid_user'] = 'Utente locale per FCGID (Froxlor vhost)';
+$lng['admin']['mod_fcgid_group'] = 'Gruppo locale per FCGID (Froxlor vhost)';
+
+// ADDED IN FROXLOR 0.9.12-svn2
+$lng['admin']['perl_settings'] = 'Perl/CGI';
+$lng['serversettings']['perl']['suexecworkaround']['title'] = 'Abilita SuExec workaround (solo con Apache)';
+$lng['serversettings']['perl']['suexecworkaround']['description'] = 'Abilita solo se la docroots del cliente non sono all\'interno del percorso suexec di Apache<br />Se attivato, Froxlor genererà un link simbolico dalla cartella perl abilitata dei clienti + /cgi-bin/ al percorso specificato.<br />Nota: Perl funziona solo nelle sottocartelle /cgi-bin/ e non nella cartella stessa (come farebbe normalmente senza questa correzione!)';
+$lng['serversettings']['perl']['suexeccgipath']['title'] = 'Percorso dei link simbolici della cartella abilitata perl del cliente';
+$lng['serversettings']['perl']['suexeccgipath']['description'] = 'Imposta questo solo se la soluzione SuExec è abilitata.<br />ATTENZIONE: Assicurati che questo percorso sia all\'interno del percorso suexec oppure questa soluzione è inutile';
+$lng['panel']['descriptionerrordocument'] = 'Può essere un URL, un percorso ad un file o solo una stringa con un " "<br />Lasciare vuoto per usare il valore di default del server.';
+$lng['error']['stringerrordocumentnotvalidforlighty'] = 'Una stringa come ErrorDocument non funziona in lighttpd, si prega di specificare un percorso di un file';
+$lng['error']['urlerrordocumentnotvalidforlighty'] = 'Un URL come ErrorDocument non funziona in lighttpd, si prega di specificare un percorso di un file';
+
+// ADDED IN FROXLOR 0.9.12-svn3
+$lng['question']['remove_subbutmain_domains'] = 'Rimuover anche i domini che sono stati aggiunti come domini completi, ma quali sono i sottodomini di questo dominio?';
+$lng['domains']['issubof'] = 'Questo dominio è un sottodominio di un altro dominio';
+$lng['domains']['issubofinfo'] = 'Devi impostare correttamente questo dominio se si desidera aggiungere un sottodominio come dominio completo (es. si vuole aggiungere "www.domain.tld", devi selezionare qui "domain.tld")';
+$lng['domains']['nosubtomaindomain'] = 'No sottodominio di un dominio completo';
+$lng['admin']['templates']['new_database_by_customer'] = 'Notifica al cliente quando un database è stato creato';
+$lng['admin']['templates']['new_ftpaccount_by_customer'] = 'Notifica al cliente quando un utente FTP è stato creato';
+$lng['admin']['templates']['newdatabase'] = 'Mail di notifica per i nuovi database';
+$lng['admin']['templates']['newftpuser'] = 'Mail di notifica per i nuovi utenti ftp';
+$lng['admin']['templates']['CUST_NAME'] = 'Nome del Cliente';
+$lng['admin']['templates']['DB_NAME'] = 'Nome del Database';
+$lng['admin']['templates']['DB_PASS'] = 'Password del Database';
+$lng['admin']['templates']['DB_DESC'] = 'Descrizione del Database';
+$lng['admin']['templates']['DB_SRV'] = 'Server del Database';
+$lng['admin']['templates']['PMA_URI'] = 'URL a phpMyAdmin (se presente)';
+$lng['admin']['notgiven'] = '[se presente]';
+$lng['admin']['templates']['USR_NAME'] = 'Nome utente FTP';
+$lng['admin']['templates']['USR_PASS'] = 'Password FTP';
+$lng['admin']['templates']['USR_PATH'] = 'Cartella utente FTP (rispetto alla cartella docroot del cliente)';
+
+// ADDED IN FROXLOR 0.9.12-svn4
+$lng['serversettings']['awstats_awstatspath'] = 'Percorso AWStats \'awstats.pl\'';
+
+// ADDED IN FROXLOR 0.9.12-svn6
+$lng['extras']['htpasswdauthname'] = 'Argomento di Autenticazione (AuthName)';
+$lng['extras']['directoryprotection_edit'] = 'modifica la protezione della directory';
+$lng['admin']['templates']['forgotpwd'] = 'Mail di notifica per il reset della password';
+$lng['admin']['templates']['password_reset'] = 'Notifica al cliente per il reset della password';
 
 ?>
