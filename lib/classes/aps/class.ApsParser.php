@@ -1314,12 +1314,14 @@ class ApsParser
 
 		//check for special CGI url handlers within mappings
 
+		/**
+		 * as of 0.9.13 we can handle CGI ;-), #404
+		 *
 		$XmlCgiMapping = $ParentMapping->children('http://apstandard.com/ns/1/cgi');
-
-		if($XmlCgiMapping->handler)
-		{
+		if($XmlCgiMapping->handler) {
 			$Error[] = $lng['aps']['cgi'];
 		}
+		*/
 
 		//resolve deeper mappings
 
@@ -1567,7 +1569,9 @@ class ApsParser
 			}
 
 			//CGI
-
+			/**
+			 * as of 0.9.13 we can handle CGI ;-), #404
+			 *
 			if ($this->aps_version == '1.0')
 			{
 				// the good ole way
@@ -1586,6 +1590,7 @@ class ApsParser
 			{
 				$Error[] = $lng['aps']['cgi'];
 			}
+			*/
 
 			//webserver modules
 
