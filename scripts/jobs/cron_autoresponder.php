@@ -196,7 +196,7 @@ if($db->num_rows($result) > 0)
 				//check if mail is already an answer
 				$fullcontent = implode("", $content);
 
-				if(strstr($fullcontent, $message))
+				if(strstr($fullcontent, $message) || $from == $to)
 				{
 					continue;
 				}
