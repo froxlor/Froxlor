@@ -25,6 +25,10 @@ $header
 				<td class="main_field_display" nowrap="nowrap">$createstdsubdomain</td>
 			</tr>
 			<tr>
+				<td class="main_field_name">{$lng['admin']['store_defaultindex']}?</td>
+				<td class="main_field_display" nowrap="nowrap">$store_defaultindex</td>
+			</tr>
+			<tr>
 				<td class="main_field_name">{$lng['login']['password']}:</td>
 				<td class="main_field_display" nowrap="nowrap"><input type="password" name="new_customer_password" value="" /></td>
 			</tr>

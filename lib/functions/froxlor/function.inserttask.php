@@ -27,7 +27,7 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function inserttask($type, $param1 = '', $param2 = '', $param3 = '')
+function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '')
 {
 	global $db, $settings;
 
@@ -43,12 +43,14 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '')
 	elseif($type == '2'
 	       && $param1 != ''
 	       && $param2 != ''
-	       && $param3 != '')
+	       && $param3 != ''
+	       && $param4 != '')
 	{
 		$data = Array();
 		$data['loginname'] = $param1;
 		$data['uid'] = $param2;
 		$data['gid'] = $param3;
+		$data['store_defaultindex'] = $param4;
 		$data = serialize($data);
 		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("2", "' . $db->escape($data) . '")');
 		$doupdate = true;

@@ -1480,5 +1480,6 @@ $lng['extras']['htpasswdauthname'] = 'Authentifizierungs-Grund (AuthName)';
 $lng['extras']['directoryprotection_edit'] = 'Verzeichnisschutz bearbeiten';
 $lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zur&uuml;cksetzen des Passworts';
 $lng['admin']['templates']['password_reset'] = 'Kunden-Benachrichtigung nach Zur&uuml;cksetzen des Passworts';
+$lng['admin']['store_defaultindex'] = 'Erstelle standard Index-Datei in Kunden-Ordner';
 
 ?>

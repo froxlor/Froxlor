@@ -425,6 +425,7 @@ if($page == 'customers'
 				$sendpassword = intval($_POST['sendpassword']);
 				$phpenabled = intval($_POST['phpenabled']);
 				$perlenabled = intval($_POST['perlenabled']);
+				$store_defaultindex = intval($_POST['store_defaultindex']);
 				$diskspace = $diskspace * 1024;
 				$traffic = $traffic * 1024 * 1024;
 
@@ -602,7 +603,7 @@ if($page == 'customers'
 					}
 
 					$log->logAction(ADM_ACTION, LOG_INFO, "added user '" . $loginname . "'");
-					inserttask('2', $loginname, $guid, $guid);
+					inserttask('2', $loginname, $guid, $guid, $store_defaultindex);
 
 					// Add htpasswd for the webalizer stats
 
@@ -737,6 +738,7 @@ if($page == 'customers'
 				$sendpassword = makeyesno('sendpassword', '1', '0', '1');
 				$phpenabled = makeyesno('phpenabled', '1', '0', '1');
 				$perlenabled = makeyesno('perlenabled', '1', '0', '0');
+				$store_defaultindex = makeyesno('store_defaultindex', '1', '0', '1');
 				eval("echo \"" . getTemplate("customers/customers_add") . "\";");
 			}
 		}

@@ -178,7 +178,10 @@ while($row = $db->fetch_array($result_tasks))
 
 			//check if admin of customer has added template for new customer directories
 			$destdir = makeCorrectDir($settings['system']['documentroot_prefix'] . '/' . $row['data']['loginname']);
-			storeDefaultIndex($row['data']['loginname'], $destdir, $cronlog, true);
+			if((int)$row['data']['store_defaultindex'] == 1)
+			{
+				storeDefaultIndex($row['data']['loginname'], $destdir, $cronlog, true);
+			}
 
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname']));
 			safe_exec('chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($settings['system']['documentroot_prefix'] . $row['data']['loginname']));
