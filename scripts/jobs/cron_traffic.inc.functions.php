@@ -87,7 +87,7 @@ function awstatsDoSingleDomain($domain, $outputdir)
 		}
 
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '".$domain."' (Output: '".$outputdir."')");
-		safe_exec($awbsp.' -awstatsprog='.escapeshellarg($awprog).' -update -config=' . $domain . ' -dir='.escapeshellarg($outputdir));
+		safe_exec($awbsp.' -awstatsprog='.escapeshellarg($awprog).' -update -month=' . date('n') . ' -year=' . date('Y') . ' -config=' . $domain . ' -dir='.escapeshellarg($outputdir));
 		
 		/**
 		 * index file is saved like 'awstats.[domain].html',
