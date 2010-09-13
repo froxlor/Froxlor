@@ -102,16 +102,19 @@ return Array(
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'touch /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'touch /etc/sasl2/smtpd.conf',
 							'chown root:root /etc/postfix/main.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_alias_maps.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'chown root:postfix /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chown root:root /etc/sasl2/smtpd.conf',
 							'chmod 0644 /etc/postfix/main.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_alias_maps.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'chmod 0640 /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chmod 0600 /etc/sasl2/smtpd.conf',
 						),
 						'files' => Array(
@@ -119,6 +122,7 @@ return Array(
 							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
 							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf',
 							'etc_sasl2_smtpd.conf' => '/etc/sasl2/smtpd.conf'
 						),
 						'restart' => Array(
@@ -140,23 +144,27 @@ return Array(
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'touch /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chown root:root /etc/postfix/main.cf',
 							'chown root:root /etc/postfix/master.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_alias_maps.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'chown root:postfix /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chmod 0644 /etc/postfix/main.cf',
 							'chmod 0644 /etc/postfix/master.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_alias_maps.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'chmod 0640 /etc/postfix/mysql-virtual_sender_permissions.cf'
 						),
 						'files' => Array(
 							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
 							'etc_postfix_master.cf' => '/etc/postfix/master.cf',
 							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
 							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
-							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf'
+							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf'
 						),
 						'restart' => Array(
 							'rc-update add postfix default',

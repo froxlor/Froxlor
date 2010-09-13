@@ -67,6 +67,7 @@ return Array(
 							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
 							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf',
 							'usr_lib_sasl2_smtpd.conf' => '/usr/lib/sasl2/smtpd.conf'
 						),
 						'commands' => Array(
@@ -78,14 +79,17 @@ return Array(
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'touch /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'touch /usr/lib/sasl2/smtpd.conf',
 							'chmod 660 /etc/postfix/mysql-virtual_alias_maps.cf',
 							'chmod 660 /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'chmod 660 /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'chmod 660 /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chmod 660 /usr/lib/sasl2/smtpd.conf',
 							'chgrp postfix /etc/postfix/mysql-virtual_alias_maps.cf',
 							'chgrp postfix /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'chgrp postfix /etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'chgrp postfix /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chgrp postfix /usr/lib/sasl2/smtpd.conf'
 						),
 						'restart' => Array(

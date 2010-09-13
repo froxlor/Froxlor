@@ -106,7 +106,8 @@ return Array(
 							'usr_local_etc_postfix_main.cf' => '/usr/local/etc/postfix/main.cf',
 							'usr_local_etc_postfix_mysql-virtual_alias_maps.cf' => '/usr/local/etc/postfix/mysql-virtual_alias_maps.cf',
 							'usr_local_etc_postfix_mysql-virtual_mailbox_domains.cf' => '/usr/local/etc/postfix/mysql-virtual_mailbox_domains.cf',
-							'usr_local_etc_postfix_mysql-virtual_mailbox_maps.cf' => '/usr/local/etc/postfix/mysql-virtual_mailbox_maps.cf'
+							'usr_local_etc_postfix_mysql-virtual_mailbox_maps.cf' => '/usr/local/etc/postfix/mysql-virtual_mailbox_maps.cf',
+							'usr_local_etc_postfix_mysql-virtual_sender_permissions.cf' => '/usr/local/etc/postfix/mysql-virtual_sender_permissions.cf'
 						),
 						'restart' => Array(
 							'sh /usr/local/etc/rc.d/postfix restart'

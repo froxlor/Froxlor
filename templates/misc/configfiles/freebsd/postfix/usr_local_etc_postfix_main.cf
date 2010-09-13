@@ -1,5 +1,6 @@
 smtpd_sender_restrictions = 
-     permit_sasl_authenticated, 
+     permit_sasl_authenticated,
+     reject_sender_login_mismatch,
      permit_mynetworks,
      reject_unknown_hostname, 
      reject_unknown_recipient_domain, 
@@ -51,6 +52,7 @@ smtpd_tls_session_cache_timeout = 3600s
 tls_random_source = dev:/dev/urandom
 
 virtual_alias_maps = proxy:mysql:/usr/local/etc/postfix/mysql-virtual_alias_maps.cf
+smtpd_sender_login_maps = proxy:mysql:/usr/local/etc/postfix/mysql-virtual_sender_permissions.cf
 virtual_mailbox_base = <VIRTUAL_MAILBOX_BASE>
 virtual_mailbox_domains = proxy:mysql:/usr/local/etc/postfix/mysql-virtual_mailbox_domains.cf
 virtual_mailbox_limit = 0

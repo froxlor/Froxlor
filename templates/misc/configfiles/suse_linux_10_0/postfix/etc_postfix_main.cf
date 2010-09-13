@@ -26,6 +26,7 @@ virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
 virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
 virtual_alias_domains =
 virtual_alias_maps = mysql:/etc/postfix/mysql-virtual_alias_maps.cf
+smtpd_sender_login_maps = mysql:/etc/postfix/mysql-virtual_sender_permissions.cf
 virtual_uid_maps = static:<VIRTUAL_UID_MAPS>
 virtual_gid_maps = static:<VIRTUAL_GID_MAPS>
 virtual_maps = hash:/etc/postfix/virtual

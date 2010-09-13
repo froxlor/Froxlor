@@ -28,6 +28,7 @@ smtpd_recipient_restrictions = permit_mynetworks,
 	reject_unauth_pipelining,
 	reject_non_fqdn_recipient
 smtpd_sender_restrictions = permit_mynetworks,
+	reject_sender_login_mismatch,
 	permit_sasl_authenticated, 
 	reject_unknown_helo_hostname, 
 	reject_unknown_recipient_domain, 
@@ -48,6 +49,7 @@ virtual_mailbox_base = <VIRTUAL_MAILBOX_BASE>
 virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
 virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
 virtual_alias_maps = mysql:/etc/postfix/mysql-virtual_alias_maps.cf
+smtpd_sender_login_maps = mysql:/etc/postfix/mysql-virtual_sender_permissions.cf
 virtual_uid_maps = static:<VIRTUAL_UID_MAPS>
 virtual_gid_maps = static:<VIRTUAL_GID_MAPS>
 
