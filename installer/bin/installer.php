@@ -122,7 +122,7 @@ if($os == OS_OTHER) {
 	if($os == OS_GENTOO)
 	{
 		$system->ewarn(array(
-				"In case you've installed syscp via the ebuild",
+				"In case you've installed froxlor via the ebuild",
 				"I'd suggest you run emerge --config froxlor",
 				"instead of using the shell installer.")
 				);
@@ -477,7 +477,7 @@ if($proceed == I_YES)
 			"Default is 'admin'.")
 		);
 
-		echo "SysCP admin user [admin]: ";
+		echo "Froxlor admin user [admin]: ";
 		$sys['admin'] = $system->getString('admin');
 
 		while(true)
@@ -729,16 +729,16 @@ FLUSH PRIVILEGES;\" > " . $sqltmpdb);
 	if($system->getUseflag('fcgid'))
 	{
 		echo "Configuring NSS-MySQL ...\n";
-		$system->doconf($syscpdir, $os, 'libnss', '/etc/nss-mysql.conf', 'etc_nss-mysql.conf', $replace_arr);
-		$system->doconf($syscpdir, $os, 'libnss', '/etc/nss-mysql-root.conf', 'etc_nss-mysql-root.conf', $replace_arr);
-		$system->doconf($syscpdir, $os, 'libnss', '/etc/nsswitch.conf', 'etc_nsswitch.conf', $replace_arr);
+		$system->doconf($froxlordir, $os, 'libnss', '/etc/nss-mysql.conf', 'etc_nss-mysql.conf', $replace_arr);
+		$system->doconf($froxlordir, $os, 'libnss', '/etc/nss-mysql-root.conf', 'etc_nss-mysql-root.conf', $replace_arr);
+		$system->doconf($froxlordir, $os, 'libnss', '/etc/nsswitch.conf', 'etc_nsswitch.conf', $replace_arr);
 	}
 
 	/* configure ProFTPd */
 	echo "Configuring ProFTPd ...\n";
-	$system->doconf($syscpdir, $os, 'proftpd', '/etc/proftpd/proftpd.conf', 'etc_proftpd_proftpd.conf', $replace_arr);
+	$system->doconf($froxlordir, $os, 'proftpd', '/etc/proftpd/proftpd.conf', 'etc_proftpd_proftpd.conf', $replace_arr);
 	if($os != OS_GENTOO)
-		$system->doconf($syscpdir, $os, 'proftpd', '/etc/proftdp/modules.conf', 'etc_proftpd_modules.conf', $replace_arr);
+		$system->doconf($froxlordir, $os, 'proftpd', '/etc/proftdp/modules.conf', 'etc_proftpd_modules.conf', $replace_arr);
 
 	if($system->getUseflag('ssl'))
 	{
@@ -755,7 +755,7 @@ FLUSH PRIVILEGES;\" > " . $sqltmpdb);
 		$system->confReplace("</IfModule>", "#</IfModule>", "/etc/proftpd/proftpd.conf");
 	}
 
-	/* configure syscp-cronjob */
+	/* configure froxlor-cronjob */
 	echo "Configuring Froxlor-cronjob ...\n";
 	$system->doconf($basedir, $os, 'cron', '/etc/cron.d/froxlor', 'etc_cron.d_froxlor', $replace_arr);
 

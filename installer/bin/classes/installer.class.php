@@ -343,11 +343,11 @@ class System
 		return $template;
 	}
 
-	public function doconf($syscpdir = null, $os = OS_OTHER, $service = null, $origin = null, $tpl = null, $replacers = null)
+	public function doconf($froxlordir = null, $os = OS_OTHER, $service = null, $origin = null, $tpl = null, $replacers = null)
 	{
-		if($syscpdir == null || $syscpdir == '')
+		if($froxlordir == null || $froxlordir == '')
 		{
-			$this->ewarn("Ups, where's the syscpdir gone?!");
+			$this->ewarn("Ups, where's the froxlordir gone?!");
 			return;
 		}
 
@@ -357,13 +357,13 @@ class System
 			return;
 		}
 
-		if($service == null || $service == '' || $this->serviceExists($syscpdir, $os, $service) == FALSE)
+		if($service == null || $service == '' || $this->serviceExists($froxlordir, $os, $service) == FALSE)
 		{
 			$this->ewarn("We don't have ".$service."-configurations for your system!");
 			return;
 		}
 
-		if($tpl == null || $tpl == '' || $this->templateExists($syscpdir, $os, $service, $tpl) == FALSE)
+		if($tpl == null || $tpl == '' || $this->templateExists($froxlordir, $os, $service, $tpl) == FALSE)
 		{
 			$this->ewarn("Can't find ".$service."-configuration template '".$tpl."'");
 			return;
@@ -381,7 +381,7 @@ class System
 			exec("mv " . $origin . " " . $origin . ".bak");
 		}
 
-		$newconf = $this->getConfPath($syscpdir, $os, $service, $tpl);
+		$newconf = $this->getConfPath($froxlordir, $os, $service, $tpl);
 
 		echo "Copying new configuration file for '".$service."'\t\t";
 		exec("cp " . $newconf . " " . $origin);
@@ -445,10 +445,10 @@ class System
 			"dovecot\t\tUse dovecot e-mailserver instead of courier [default: Off]",
 			"fcgid\t\t\tRun PHP as FCGID (apache only) [default: Off]",
 			"lighttpd\t\tUse lighttpd instead of apache2 [default: Off]",
-			"log\t\t\tEnables the syscp logging system [default: On]",
+			"log\t\t\tEnables the froxlor logging system [default: On]",
 			"mailquota\t\tEnables mailquota for the mailserver [default: Off]",
 			"ssl\t\t\tEnable ssl for web-, mail- and ftpserver [default: Off]",
-			"tickets\t\tSysCP ticket system [default: On]",
+			"tickets\t\tFroxlor ticket system [default: On]",
 			"",
 			"Notice: You can also disable features by putting a '-' before the name:",
 			"for example: ./install -log -tickets")
