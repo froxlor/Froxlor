@@ -91,4 +91,11 @@ $lng['install']['click_here_to_refresh'] = 'Erneut pr&uuml;fen';
 $lng['install']['click_here_to_continue'] = 'Installation fortf&uuml;hren';
 $lng['install']['froxlor_succ_checks'] = 'Alle Vorraussetzungen sind erf&uuml;llt';
 
+/*
+ * Added in Froxlor 0.9.13
+ */
+$lng['install']['phpmagic_quotes_runtime'] = 'Pr&uuml;fe ob magic_quotes_runtime ausgeschalten ist';
+$lng['install']['active'] = 'nein';
+$lng['install']['phpmagic_quotes_runtime_description'] = 'Die PHP Einstellung "magic_quotes_runtime" muss deaktiviert sein ("Off"), um merkw&uuml;rdige Verhalten von Froxlor zu umgehen. Sie wurde deaktiviert (nur tempor&auml;r, bitte php.ini anpassen).';
+
 ?>

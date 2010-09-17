@@ -121,6 +121,15 @@ if(!isset($need_root_db_sql_data) || $need_root_db_sql_data !== true)
 $idna_convert = new idna_convert_wrapper();
 
 /**
+ * disable magic_quotes_runtime if enabled
+ */
+if(get_magic_quotes_runtime())
+{
+	//Deactivate
+	set_magic_quotes_runtime(false);
+}
+
+/**
  * Reverse magic_quotes_gpc=on to have clean GPC data again
  */
 

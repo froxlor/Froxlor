@@ -182,6 +182,18 @@ function requirement_checks()
 		status_message('green', 'OK');
 	}
 
+	// Check if magic_quotes_runtime is active
+	status_message('begin', $lng['install']['phpmagic_quotes_runtime']);	 
+	if(get_magic_quotes_runtime())
+	{
+	    // Deactivate
+	    set_magic_quotes_runtime(false);
+	    status_message('orange', $lng['install']['active'] . '<br />' . $lng['install']['phpmagic_quotes_runtime_description']);
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
 
 	status_message('begin', $lng['install']['phpmysql']);
 
