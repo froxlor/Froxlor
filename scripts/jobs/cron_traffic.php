@@ -382,6 +382,18 @@ while($row = $db->fetch_array($result))
 	if($settings['system']['ftpserver'] == "pureftpd")
 	{
 		$result_quota = $db->query("SELECT homedir FROM `" . TABLE_FTP_USERS . "` WHERE customerid = '" . $row['customerid'] . "'");
+
+	        // get correct user
+	        if($settings['system']['mod_fcgid'] == 1)
+	        {
+        	        $user = $row['loginname'];
+	                $group = $row['loginname'];
+	        }
+	        else
+	        {
+	                $user = $row['guid'];
+	                $group = $row['guid'];
+	        }
 		
 		while($row_quota = $db->fetch_array($result_quota))
 		{
@@ -390,7 +402,7 @@ while($row = $db->fetch_array($result))
 			$stringdata = "0 " . $current_diskspace['all']*1024 . "";
 			fwrite($fh, $stringdata);
 			fclose($fh);
-			safe_exec('chown ' . $row['loginname'] . ':' . $row['loginname'] . ' ' . escapeshellarg($quotafile) . '');
+			safe_exec('chown ' . $user . ':' . $group . ' ' . escapeshellarg($quotafile) . '');
 		}
 	}
 }
