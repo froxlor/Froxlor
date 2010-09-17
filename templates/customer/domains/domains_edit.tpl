@@ -24,7 +24,7 @@ $header
 			</if>
 			<if $settings['panel']['pathedit'] != 'Dropdown'>
 				<tr>
-					<td class="main_field_name">{$lng['panel']['pathorurl']}:<br /><font size="1">{$lng['panel']['pathDescription']}</font></td>
+					<td class="main_field_name">{$lng['panel']['pathorurl']}:<br /><font size="1">{$lng['panel']['pathDescription']}{$lng['panel']['pathDescriptionEx']}</font></td>
 					<td class="main_field_display" nowrap="nowrap">{$pathSelect}</td>
 				</tr>
 			</if>
