@@ -9,7 +9,7 @@ $header
 			</tr>
 			<tr>
 				<td class="field_name_border_left">$text</td>
-				<td class="field_name" nowrap="nowrap"><input type="submit" class="bottom" name="submitbutton" value="{$lng['panel']['yes']}" />&nbsp;<input type="button" class="bottom" value="{$lng['panel']['no']}" onclick="history.back();" /></td>
+				<td class="field_name" nowrap="nowrap"><input type="submit" class="bottom" name="submitbutton" value="{$lng['panel']['yes']}" />&nbsp;<input type="button" class="bottom" value="{$lng['panel']['no']}" onclick="history.go(-{$back_nr});" /></td>
 			</tr>
 		</table>
 	</form>
