@@ -126,6 +126,12 @@ $header
 				<td class="main_field_display" nowrap="nowrap"><input type="text" class="textul" name="email_quota" value="0" maxlength="9" />&nbsp;{$email_quota_ul}</td>
 			</tr>
 			</if>
+			<if $settings['autoresponder']['autoresponder_active'] == 1>
+			<tr>
+				<td class="main_field_name">{$lng['customer']['autoresponder']}:</td>
+				<td class="main_field_display" nowrap="nowrap"><input type="text" class="textul" name="email_autoresponder" value="0" maxlength="9" />&nbsp;{$email_autoresponder_ul}</td>
+			</tr>
+			</if>
 			<tr>
 				<td class="main_field_name">{$lng['customer']['email_imap']}: *</td>
 				<td class="main_field_display" nowrap="nowrap">$email_imap</td>

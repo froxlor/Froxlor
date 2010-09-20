@@ -279,4 +279,16 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if(versionInUpdate($current_version, '0.9.13-svn1'))
+	{
+		if((int)$settings['autoresponder']['autoresponder_active'] == 1)
+		{
+			$has_preconfig = true;
+			$description = 'Froxlor can now limit the number of autoresponder-entries for each user. Here you can set the value which will be available for each customer (Of course you can change the value for each customer separately after the update).';
+			$question = '<strong>How many autoresponders should your customers be able to add?:</strong>&nbsp;';
+			$question.= '<input type="text" class="text" name="update_autoresponder_default" value="0" />&nbsp;'.makecheckbox('update_autoresponder_default', $lng['customer']['unlimited'], '-1', false, 0, true, true).'<br />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
 }

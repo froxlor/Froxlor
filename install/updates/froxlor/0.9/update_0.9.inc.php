@@ -1027,3 +1027,40 @@ if(isFroxlorVersion('0.9.12-svn6'))
 
 	updateToVersion('0.9.12');
 }
+
+if(isFroxlorVersion('0.9.12'))
+{
+	showUpdateStep("Updating from 0.9.12 to 0.9.13-svn1", false);
+
+	showUpdateStep("Adding new fields to admin-table");
+	$db->query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `email_autoresponder` int(5) NOT NULL default '0' AFTER `aps_packages_used`;");
+	$db->query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `email_autoresponder_used` int(5) NOT NULL default '0' AFTER `email_autoresponder`;");
+	lastStepStatus(0);
+	
+	showUpdateStep("Adding new fields to customer-table");
+	$db->query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `email_autoresponder` int(5) NOT NULL default '0' AFTER `perlenabled`;");
+	$db->query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `email_autoresponder_used` int(5) NOT NULL default '0' AFTER `email_autoresponder`;");
+	lastStepStatus(0);
+	
+	if((int)$settings['autoresponder']['autoresponder_active'] == 1)
+	{
+		$update_autoresponder_default = isset($_POST['update_autoresponder_default']) ? intval_ressource($_POST['update_autoresponder_default']) : 0;
+
+		if(isset($_POST['update_autoresponder_default_ul'])) {
+			$update_autoresponder_default = -1;
+		}
+	}
+	else
+	{
+		$update_autoresponder_default = 0;
+	}
+
+	showUpdateStep("Setting default amount of autoresponders");
+	// admin gets unlimited
+	$db->query("UPDATE `".TABLE_PANEL_ADMINS."` SET `email_autoresponder`='-1' WHERE `adminid` = '".(int)$userinfo['adminid']."'");
+	// customers
+	$db->query("UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `email_autoresponder`='".(int)$update_autoresponder_default."' WHERE `deactivated` = '0'");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.13-svn1');
+}

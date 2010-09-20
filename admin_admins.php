@@ -63,6 +63,8 @@ if($page == 'admins'
 			'email_forwarders_used' => $lng['customer']['forwarders'] . ' (' . $lng['panel']['used'] . ')',
 			'email_quota' => $lng['customer']['email_quota'],
 			'email_quota_used' => $lng['customer']['email_quota'] . ' (' . $lng['panel']['used'] . ')',
+			'email_autoresponder' => $lng['customer']['autoresponder'],
+			'email_autoresponder_used' => $lng['customer']['autoresponder'] . ' (' . $lng['panel']['used'] . ')',
 			'deactivated' => $lng['admin']['deactivated']
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_ADMINS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
@@ -84,7 +86,7 @@ if($page == 'admins'
 				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
 				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
 				$row['diskspace'] = round($row['diskspace'] / 1024, $settings['panel']['decimal_places']);
-				$row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains tickets');
+				$row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota email_autoresponder ftps subdomains tickets');
 				$row = htmlentities_array($row);
 				eval("\$admins.=\"" . getTemplate("admins/admins_admin") . "\";");
 				$count++;
@@ -213,6 +215,20 @@ if($page == 'admins'
 				$email_quota = - 1;
 			}
 
+			if($settings['autoresponder']['autoresponder_active'] == '1')
+			{
+				$email_autoresponder = intval_ressource($_POST['email_autoresponder']);
+
+				if(isset($_POST['email_autoresponder_ul']))
+				{
+					$email_autoresponder = - 1;
+				}
+			}
+			else
+			{
+				$email_autoresponder = 0;
+			}
+
 			$ftps = intval_ressource($_POST['ftps']);
 
 			if(isset($_POST['ftps_ul']))
@@ -224,8 +240,7 @@ if($page == 'admins'
 			{
 				$tickets = intval_ressource($_POST['tickets']);
 
-				if(isset($_POST['tickets_ul'])
-			   		&& $settings['ticket']['enabled'] == '1')
+				if(isset($_POST['tickets_ul']))
 				{
 					$tickets = - 1;
 				}
@@ -345,8 +360,8 @@ if($page == 'admins'
 					$change_serversettings = '0';
 				}
 
-				$result = $db->query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` (`loginname`, `password`, `name`, `email`, `def_language`, `change_serversettings`, `customers`, `customers_see_all`, `domains`, `domains_see_all`, `caneditphpsettings`, `diskspace`, `traffic`, `subdomains`, `emails`, `email_accounts`, `email_forwarders`, `email_quota`, `ftps`, `tickets`, `mysqls`, `ip`, `can_manage_aps_packages`, `aps_packages`)
-					                   VALUES ('" . $db->escape($loginname) . "', '" . md5($password) . "', '" . $db->escape($name) . "', '" . $db->escape($email) . "','" . $db->escape($def_language) . "', '" . $db->escape($change_serversettings) . "', '" . $db->escape($customers) . "', '" . $db->escape($customers_see_all) . "', '" . $db->escape($domains) . "', '" . $db->escape($domains_see_all) . "', '" . (int)$caneditphpsettings . "', '" . $db->escape($diskspace) . "', '" . $db->escape($traffic) . "', '" . $db->escape($subdomains) . "', '" . $db->escape($emails) . "', '" . $db->escape($email_accounts) . "', '" . $db->escape($email_forwarders) . "', '" . $db->escape($email_quota) . "', '" . $db->escape($ftps) . "', '" . $db->escape($tickets) . "', '" . $db->escape($mysqls) . "', '" . (int)$ipaddress . "', " . (int)$can_manage_aps_packages . ", " . (int)$number_of_aps_packages . ")");
+				$result = $db->query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` (`loginname`, `password`, `name`, `email`, `def_language`, `change_serversettings`, `customers`, `customers_see_all`, `domains`, `domains_see_all`, `caneditphpsettings`, `diskspace`, `traffic`, `subdomains`, `emails`, `email_accounts`, `email_forwarders`, `email_quota`, `ftps`, `tickets`, `mysqls`, `ip`, `can_manage_aps_packages`, `aps_packages`, `email_autoresponder`)
+					                   VALUES ('" . $db->escape($loginname) . "', '" . md5($password) . "', '" . $db->escape($name) . "', '" . $db->escape($email) . "','" . $db->escape($def_language) . "', '" . $db->escape($change_serversettings) . "', '" . $db->escape($customers) . "', '" . $db->escape($customers_see_all) . "', '" . $db->escape($domains) . "', '" . $db->escape($domains_see_all) . "', '" . (int)$caneditphpsettings . "', '" . $db->escape($diskspace) . "', '" . $db->escape($traffic) . "', '" . $db->escape($subdomains) . "', '" . $db->escape($emails) . "', '" . $db->escape($email_accounts) . "', '" . $db->escape($email_forwarders) . "', '" . $db->escape($email_quota) . "', '" . $db->escape($ftps) . "', '" . $db->escape($tickets) . "', '" . $db->escape($mysqls) . "', '" . (int)$ipaddress . "', " . (int)$can_manage_aps_packages . ", " . (int)$number_of_aps_packages . ", " . $db->escape($email_autoresponder) . ")");
 				$adminid = $db->insert_id();
 				$log->logAction(ADM_ACTION, LOG_INFO, "added admin '" . $loginname . "'");
 				redirectTo($filename, Array('page' => $page, 's' => $s));
@@ -388,6 +403,7 @@ if($page == 'admins'
 			$email_accounts_ul = makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_forwarders_ul = makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_quota_ul = makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$email_autoresponder_ul = makecheckbox('email_autoresponder_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
@@ -426,6 +442,7 @@ if($page == 'admins'
 					$email_accounts = $result['email_accounts'];
 					$email_forwarders = $result['email_forwarders'];
 					$email_quota = $result['email_quota'];
+					$email_autoresponder = $result['email_autoresponder'];
 					$ftps = $result['ftps'];
 					$tickets = $result['tickets'];
 					$mysqls = $result['mysqls'];
@@ -498,6 +515,20 @@ if($page == 'admins'
 					else
 					{
 						$email_quota = - 1;
+					}
+
+					if($settings['autoresponder']['autoresponder_active'] == '1')
+					{
+						$email_autoresponder = intval_ressource($_POST['email_autoresponder']);
+
+						if(isset($_POST['email_autoresponder_ul']))
+						{
+							$email_autoresponder = - 1;
+						}
+					}
+					else
+					{
+						$email_autoresponder = 0;
 					}
 
 					$ftps = intval_ressource($_POST['ftps']);
@@ -609,7 +640,7 @@ if($page == 'admins'
 						$change_serversettings = '0';
 					}
 
-					$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `name`='" . $db->escape($name) . "', `email`='" . $db->escape($email) . "', `def_language`='" . $db->escape($def_language) . "', `change_serversettings` = '" . $db->escape($change_serversettings) . "', `customers` = '" . $db->escape($customers) . "', `customers_see_all` = '" . $db->escape($customers_see_all) . "', `domains` = '" . $db->escape($domains) . "', `domains_see_all` = '" . $db->escape($domains_see_all) . "', `caneditphpsettings` = '" . (int)$caneditphpsettings . "', `password` = '" . $password . "', `diskspace`='" . $db->escape($diskspace) . "', `traffic`='" . $db->escape($traffic) . "', `subdomains`='" . $db->escape($subdomains) . "', `emails`='" . $db->escape($emails) . "', `email_accounts` = '" . $db->escape($email_accounts) . "', `email_forwarders`='" . $db->escape($email_forwarders) . "', `email_quota`='" . $db->escape($email_quota) . "', `ftps`='" . $db->escape($ftps) . "', `tickets`='" . $db->escape($tickets) . "', `mysqls`='" . $db->escape($mysqls) . "', `ip`='" . (int)$ipaddress . "', `deactivated`='" . $db->escape($deactivated) . "', `can_manage_aps_packages`=" . (int)$can_manage_aps_packages . ", `aps_packages`=" . (int)$number_of_aps_packages . " WHERE `adminid`='" . $db->escape($id) . "'");
+					$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `name`='" . $db->escape($name) . "', `email`='" . $db->escape($email) . "', `def_language`='" . $db->escape($def_language) . "', `change_serversettings` = '" . $db->escape($change_serversettings) . "', `customers` = '" . $db->escape($customers) . "', `customers_see_all` = '" . $db->escape($customers_see_all) . "', `domains` = '" . $db->escape($domains) . "', `domains_see_all` = '" . $db->escape($domains_see_all) . "', `caneditphpsettings` = '" . (int)$caneditphpsettings . "', `password` = '" . $password . "', `diskspace`='" . $db->escape($diskspace) . "', `traffic`='" . $db->escape($traffic) . "', `subdomains`='" . $db->escape($subdomains) . "', `emails`='" . $db->escape($emails) . "', `email_accounts` = '" . $db->escape($email_accounts) . "', `email_forwarders`='" . $db->escape($email_forwarders) . "', `email_quota`='" . $db->escape($email_quota) . "', `email_autoresponder`='" . $db->escape($email_autoresponder) . "', `ftps`='" . $db->escape($ftps) . "', `tickets`='" . $db->escape($tickets) . "', `mysqls`='" . $db->escape($mysqls) . "', `ip`='" . (int)$ipaddress . "', `deactivated`='" . $db->escape($deactivated) . "', `can_manage_aps_packages`=" . (int)$can_manage_aps_packages . ", `aps_packages`=" . (int)$number_of_aps_packages . " WHERE `adminid`='" . $db->escape($id) . "'");
 					$log->logAction(ADM_ACTION, LOG_INFO, "edited admin '#" . $id . "'");
 					$redirect_props = Array(
 						'page' => $page,
@@ -685,6 +716,13 @@ if($page == 'admins'
 				if($result['email_quota'] == '-1')
 				{
 					$result['email_quota'] = '';
+				}
+
+				$email_autoresponder_ul = makecheckbox('email_autoresponder_ul', $lng['customer']['unlimited'], '-1', false, $result['email_autoresponder'], true, true);
+
+				if($result['email_autoresponder'] == '-1')
+				{
+					$result['email_autoresponder'] = '';
 				}
 
 				$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, $result['ftps'], true, true);

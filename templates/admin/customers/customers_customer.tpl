@@ -3,7 +3,21 @@
 	<td class="field_name">{$row['adminname']}</td>
 	<td class="field_name"><if $row['name'] != '' && $row['firstname'] != ''>{$row['name']}<br />{$row['firstname']}</if><if ($row['name'] == '' || $row['firstname'] == '') && $row['company'] != ''>{$row['company']}</if></td>
 	<td class="field_name"><if $row['domains'] != 0><a href="admin_domains.php?s=$s&amp;page=domains&amp;searchfield=c.loginname&amp;searchtext={$row['loginname']}">{$row['domains']}</a><else>{$row['domains']}</if></td>
-	<if $settings['ticket']['enabled'] == 1 ><td class="field_name"><span<if $row['tickets'] < $row['tickets_used'] && $row['tickets'] != 'UL'> style="color:red"</if><if $row['tickets_used'] < $row['tickets'] || $row['tickets'] == 'UL'> style="color:green"</if>><b>{$row['tickets_used']}</b>/<b><font color="#FD6204">{$row['tickets']}</font></b></span></td></if>
+	<if ($settings['ticket']['enabled'] == 1 || $settings['autoresponder']['autoresponder_active'] == 1) >
+		<if ($settings['ticket']['enabled'] == 1 && $settings['autoresponder']['autoresponder_active'] == 0) >
+			<td class="field_name"><span<if $row['tickets'] < $row['tickets_used'] && $row['tickets'] != 'UL'> style="color:red"</if><if $row['tickets_used'] < $row['tickets'] || $row['tickets'] == 'UL'> style="color:green"</if>><b>{$row['tickets_used']}</b>/<b><font color="#FD6204">{$row['tickets']}</font></b></span></td>
+		</if>
+		<if ($settings['ticket']['enabled'] == 0 && $settings['autoresponder']['autoresponder_active'] == 1) >
+			<td class="field_name"><span<if $row['email_autoresponder'] < $row['email_autoresponder_used'] && $row['email_autoresponder'] != 'UL'> style="color:red"</if><if $row['email_autoresponder_used'] < $row['email_autoresponder'] || $row['email_autoresponder'] == 'UL'> style="color:green"</if>><b>{$row['email_autoresponder_used']}</b>/<b><font color="#FD6204">{$row['email_autoresponder']}</font></b></span></td>
+		</if>
+		<if ($settings['ticket']['enabled'] == 1 && $settings['autoresponder']['autoresponder_active'] == 1) >
+			<td class="field_name">
+				<span<if $row['tickets'] < $row['tickets_used'] && $row['tickets'] != 'UL'> style="color:red"</if><if $row['tickets_used'] < $row['tickets'] || $row['tickets'] == 'UL'> style="color:green"</if>><b>{$row['tickets_used']}</b>/<b><font color="#FD6204">{$row['tickets']}</font></b></span>
+				<br />
+				<span<if $row['email_autoresponder'] < $row['email_autoresponder_used'] && $row['email_autoresponder'] != 'UL'> style="color:red"</if><if $row['email_autoresponder_used'] < $row['email_autoresponder'] || $row['email_autoresponder'] == 'UL'> style="color:green"</if>><b>{$row['email_autoresponder_used']}</b>/<b><font color="#FD6204">{$row['email_autoresponder']}</font></b></span>
+			</td>
+		</if>
+	</if>
 	<td class="field_name">
 	<span<if $row['diskspace'] < $row['diskspace_used'] && $row['diskspace'] != 'UL'> style="color:red"</if><if $row['diskspace_used'] < $row['diskspace'] || $row['diskspace'] == 'UL'> style="color:green"</if>><b>{$row['diskspace_used']}</b>/<b><font color="#FD6204">{$row['diskspace']}</font></b></span> (MB)
 	<br />

@@ -1483,4 +1483,7 @@ $lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zur&uuml;
 $lng['admin']['templates']['password_reset'] = 'Kunden-Benachrichtigung nach Zur&uuml;cksetzen des Passworts';
 $lng['admin']['store_defaultindex'] = 'Erstelle standard Index-Datei in Kunden-Ordner';
 
+// ADDED IN FROXLOR 0.9.13-svn1
+$lng['customer']['autoresponder'] = 'Abwesenheitsnachrichten';
+
 ?>

@@ -87,6 +87,7 @@ if($action == "add")
 			`subject` = '" . $db->escape($subject) . "',
 			`customerid` = '" . $db->escape((int)$userinfo['customerid']) . "'
 			");
+		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_autoresponder_used` = `email_autoresponder_used` + 1 WHERE `customerid` = '" . $db->escape((int)$userinfo['customerid']). "'");
 		redirectTo($filename, Array('s' => $s));
 	}
 
@@ -265,6 +266,7 @@ if($action == "delete")
 			WHERE `email` = '" . $db->escape($account) . "'
 			AND `customerid` = '" . $db->escape((int)$userinfo['customerid']) . "'
 			");
+		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_autoresponder_used` = `email_autoresponder_used` - 1 WHERE `customerid` = '" . $db->escape((int)$userinfo['customerid']). "'");
 		redirectTo($filename, Array('s' => $s));
 	}
 

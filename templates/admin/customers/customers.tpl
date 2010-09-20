@@ -5,7 +5,7 @@ $header
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
 				<td class="maintitle_search_left" colspan="3" ><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['customers']}</b>&nbsp;({$customercount})</td>
-				<td class="maintitle_search_right" colspan="<if $settings['ticket']['enabled'] == 1 >8<else>7</if>">{$searchcode}</td>
+				<td class="maintitle_search_right" colspan="<if ($settings['ticket']['enabled'] == 1 || $settings['autoresponder']['autoresponder_active'] == 1) >8<else>7</if>">{$searchcode}</td>
 			</tr>
 			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $userinfo['customers_used']>
 			<tr>
@@ -17,7 +17,17 @@ $header
 				<td class="field_display">{$lng['admin']['admin']}<br />{$arrowcode['a.loginname']}</td>
 				<td class="field_display">{$lng['customer']['name']}&nbsp;&nbsp;{$arrowcode['c.name']}<br />{$lng['customer']['firstname']}&nbsp;&nbsp;{$arrowcode['c.firstname']}</td>
 				<td class="field_display">{$lng['customer']['domains']}</td>
-				<if $settings['ticket']['enabled'] == 1 ><td class="field_display">{$lng['customer']['tickets']}</td></if>
+				<if ($settings['ticket']['enabled'] == 1 || $settings['autoresponder']['autoresponder_active'] == 1) >
+					<if ($settings['ticket']['enabled'] == 1 && $settings['autoresponder']['autoresponder_active'] == 0) >
+						<td class="field_display">{$lng['customer']['tickets']}</td>
+					</if>
+					<if ($settings['ticket']['enabled'] == 0 && $settings['autoresponder']['autoresponder_active'] == 1) >
+						<td class="field_display">{$lng['customer']['autoresponder']}</td>
+					</if>
+					<if ($settings['ticket']['enabled'] == 1 && $settings['autoresponder']['autoresponder_active'] == 1) >
+						<td class="field_display">{$lng['customer']['tickets']}<br />{$lng['customer']['autoresponder']}</td>
+					</if>
+				</if>
 				<td class="field_display">{$lng['customer']['diskspace']}<br />{$lng['customer']['traffic']}</td>
 				<td class="field_display">{$lng['customer']['mysqls']}<br />{$lng['customer']['ftps']}</td>
 				<td class="field_display">{$lng['customer']['emails']}<br />{$lng['customer']['subdomains']}</td>
@@ -33,7 +43,7 @@ $header
 			</if>
 			<if $userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1'>
 			<tr>
-				<td colspan="<if $settings['ticket']['enabled'] == 1 >11<else>10</if>" class="field_display_border_left"><a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['customer_add']}</a></td>
+				<td colspan="<if ($settings['ticket']['enabled'] == 1 || $settings['autoresponder']['autoresponder_active'] == 1) >11<else>10</if>" class="field_display_border_left"><a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['customer_add']}</a></td>
 			</tr>
 			</if>
 		</table>

@@ -39,10 +39,18 @@ $header
 			<td class="field_name_border_left">{$lng['customer']['forwarders']}:</td>
 			<td class="field_display">{$overview['email_forwarders_used']} ({$userinfo['email_forwarders_used']}/{$userinfo['email_forwarders']})</td>
 		</tr>
+		<if $settings['system']['mail_quota_enabled'] == 1>
 		<tr>
 			<td class="field_name_border_left">{$lng['customer']['email_quota']}:</td>
 			<td class="field_display">{$overview['email_quota_used']} ({$userinfo['email_quota_used']}/{$userinfo['email_quota']})</td>
 		</tr>
+		</if>
+		<if $settings['autoresponder']['autoresponder_active'] == 1>
+		<tr>
+			<td class="field_name_border_left">{$lng['customer']['autoresponder']}:</td>
+			<td class="field_display">{$userinfo['email_autoresponder_used']} ({$userinfo['email_autoresponder']})</td>
+		</tr>
+		</if>
 		<if (int)$settings['aps']['aps_active'] == 1>
 		<tr>
 			<td class="field_name_border_left">{$lng['aps']['numberofapspackages']}:</td>

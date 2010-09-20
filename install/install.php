@@ -730,7 +730,10 @@ if(isset($_POST['installstep'])
 		`traffic` = -1048576,
 		`traffic_used` = 0,
 		`deactivated` = 0,
-		`aps_packages` = -1");
+		`aps_packages` = -1,
+		`aps_packages_used` = 0,
+		`email_autoresponder` = -1,
+		`email_autoresponder_used` = 0");
 	status_message('green', 'OK');
 
 	//now we create the userdata.inc.php with the mysql-accounts

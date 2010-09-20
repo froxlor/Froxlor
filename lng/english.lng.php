@@ -1500,4 +1500,7 @@ $lng['admin']['templates']['forgotpwd'] = 'Notification-mails for password-reset
 $lng['admin']['templates']['password_reset'] = 'Customer-notification for passwort-reset';
 $lng['admin']['store_defaultindex'] = 'Store default index-file to customers docroot';
 
+// ADDED IN FROXLOR 0.9.13-svn1
+$lng['customer']['autoresponder'] = 'Autoresponder';
+
 ?>

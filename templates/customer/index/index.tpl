@@ -68,6 +68,13 @@ $header
 			<td class="field_display">{$userinfo['email_quota_used']} ({$userinfo['email_quota']})</td>
 		</tr>
 		</if>
+		</tr>
+		<if $settings['autoresponder']['autoresponder_active'] == 1>
+		<tr>
+			<td class="field_name_border_left">{$lng['customer']['autoresponder']}:</td>
+			<td class="field_display">{$userinfo['email_autoresponder_used']} ({$userinfo['email_autoresponder']})</td>
+		</tr>
+		</if>
 		<tr>
 			<td class="field_name_border_left">{$lng['customer']['mysqls']}:</td>
 			<td class="field_display">{$userinfo['mysqls_used']} ({$userinfo['mysqls']})</td>
