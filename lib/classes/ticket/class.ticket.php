@@ -65,6 +65,12 @@ class ticket
 	static private $tickets = array();
 
 	/**
+	 * HTML purifier
+	 * @var purifier
+	 */
+	private $purifier = null;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array userinfo
@@ -79,6 +85,10 @@ class ticket
 		$this->db = $db;
 		$this->settings = $settings;
 		$this->tid = $tid;
+
+		// initialize purifier
+		require_once '../htmlpurifier/library/HTMLPurifier.auto.php';
+		$this->_purifier = new HTMLPurifier();
 
 		// initialize data array
 
@@ -706,11 +716,11 @@ class ticket
 			{
 				if(strtolower($_var) == 'message')
 				{
-					return $this->_removeBadTags(htmlspecialchars_decode(nl2br($this->t_data[$_var])));
+					return nl2br($this->t_data[$_var]);
 				}
 				elseif(strtolower($_var) == 'subject')
 				{
-					return $this->_removeBadTags(htmlspecialchars_decode(nl2br($this->t_data[$_var])));
+					return nl2br($this->t_data[$_var]);
 				}
 				else
 				{
@@ -735,12 +745,12 @@ class ticket
 		{
 			if(!$_vartrusted)
 			{
-				$_var = htmlspecialchars($_var);
+				$_var = $this->_purifier->purify($_var);
 			}
 
 			if(!$_valuetrusted)
 			{
-				$_value = htmlspecialchars($_value);
+				$_value = $this->_purifier->purify($_value);
 			}
 
 			if(strtolower($_var) == 'message' || strtolower($_var) == 'subject')
@@ -750,30 +760,6 @@ class ticket
 
 			$this->t_data[$_var] = $_value;
 		}
-	}
-	
-	/**
-	 * removes unwanted HTML-tags from a string
-	 * 
-	 * @param string $s string to be cleaned
-	 * 
-	 * @return string cleaned string
-	 */
-	function _removeBadTags($str = null)
-	{
-		$tags = array('script', 'noframes', 'iframe');
-    		$content = '';
-		$stripContent = false;
-    		if(!is_array($tags)) {
-        		$tags = (strpos($str, '>') !== false ? explode('>', str_replace('<', '', $tags)) : array($tags));
-        		if(end($tags) == '') array_pop($tags);
-   		}
-    		foreach($tags as $tag) {
-        		if ($stripContent)
-            			 $content = '(.+</'.$tag.'[^>]*>|)';
-        		 $str = preg_replace('#</?'.$tag.'[^>]*>'.$content.'#is', '', $str);
-    		}
-    		return $str; 
 	}
 }
 
