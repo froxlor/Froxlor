@@ -16,7 +16,7 @@
  * @package    Logger
  * @version    $Id$
  * @link       http://www.nutime.de/
- * 
+ *
  * Support Tickets - Tickets-Class
  */
 
@@ -303,7 +303,7 @@ class ticket
 				$mailerr_msg = $e->getMessage();
 				$_mailerror = true;
 			}
-	
+
 			if ($_mailerror) {
 				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->db, $this->settings);
 				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
@@ -315,9 +315,9 @@ class ticket
 		else
 		{
 			$admin = $this->db->query_first("SELECT `name`, `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`='" . (int)$this->userinfo['adminid'] . "'");
-			
+
 			$_mailerror = false;
-			try {		
+			try {
 				$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
 				$mail->Subject = $mail_subject;
 				$mail->AltBody = $mail_body;
@@ -331,7 +331,7 @@ class ticket
 				$mailerr_msg = $e->getMessage();
 				$_mailerror = true;
 			}
-	
+
 			if ($_mailerror) {
 				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->db, $this->settings);
 				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
@@ -355,7 +355,7 @@ class ticket
 				$_order = 1;
 			}
 
-			$_db->query('INSERT INTO `' . TABLE_PANEL_TICKET_CATS . '` SET 
+			$_db->query('INSERT INTO `' . TABLE_PANEL_TICKET_CATS . '` SET
 						`name` = "' . $_db->escape($_category) . '", 
 						`adminid` = "' . (int)$_admin . '", 
 						`logicalorder` = "' . (int)$_order . '"');
@@ -378,8 +378,8 @@ class ticket
 			if($_order < 1) {
 				$_order = 1;
 			}
-			
-			$_db->query('UPDATE `' . TABLE_PANEL_TICKET_CATS . '` SET 
+
+			$_db->query('UPDATE `' . TABLE_PANEL_TICKET_CATS . '` SET
 					`name` = "' . $_db->escape($_category) . '",
 					`logicalorder` = "' . (int)$_order . '"
                    WHERE `id` = "' . (int)$_id . '"');
@@ -665,16 +665,16 @@ class ticket
 
 	/*
 	 * function customerHasTickets
-	 * 
+	 *
 	 * @param	object	mysql-db-object
 	 * @param	int		customer-id
-	 * 
+	 *
 	 * @return	array/bool	array of ticket-ids if customer has any, else false
 	 */
 	static public function customerHasTickets($_db = null, $_cid = 0)
 	{
 		if($_cid != 0)
-		{	
+		{
 			$result = $_db->query('SELECT `id` FROM `' . TABLE_PANEL_TICKETS . '` WHERE `customerid` ="'.(int)$_cid.'"');
 
 			$tickets = array();
@@ -682,7 +682,7 @@ class ticket
 			{
 				$tickets[] = $row['id'];
 			}
-			
+
 			return $tickets;
 		}
 
@@ -706,11 +706,11 @@ class ticket
 			{
 				if(strtolower($_var) == 'message')
 				{
-					return str_replace('script>', 'pre>', htmlspecialchars_decode(nl2br($this->t_data[$_var])));
+					return $this->_removeBadTags(htmlspecialchars_decode(nl2br($this->t_data[$_var])));
 				}
 				elseif(strtolower($_var) == 'subject')
 				{
-					return str_replace('script>', 'pre>', htmlspecialchars_decode(nl2br($this->t_data[$_var])));
+					return $this->_removeBadTags(htmlspecialchars_decode(nl2br($this->t_data[$_var])));
 				}
 				else
 				{
@@ -750,6 +750,30 @@ class ticket
 
 			$this->t_data[$_var] = $_value;
 		}
+	}
+	
+	/**
+	 * removes unwanted HTML-tags from a string
+	 * 
+	 * @param string $s string to be cleaned
+	 * 
+	 * @return string cleaned string
+	 */
+	function _removeBadTags($str = null)
+	{
+		$tags = array('script', 'noframes', 'iframe');
+    		$content = '';
+		$stripContent = false;
+    		if(!is_array($tags)) {
+        		$tags = (strpos($str, '>') !== false ? explode('>', str_replace('<', '', $tags)) : array($tags));
+        		if(end($tags) == '') array_pop($tags);
+   		}
+    		foreach($tags as $tag) {
+        		if ($stripContent)
+            			 $content = '(.+</'.$tag.'[^>]*>|)';
+        		 $str = preg_replace('#</?'.$tag.'[^>]*>'.$content.'#is', '', $str);
+    		}
+    		return $str; 
 	}
 }
 
