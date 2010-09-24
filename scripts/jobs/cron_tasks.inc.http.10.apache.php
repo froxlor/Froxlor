@@ -1150,7 +1150,7 @@ class apache
 				if($vhost_filename != '.'
 				   && $vhost_filename != '..'
 				   && !in_array($vhost_filename, $this->known_vhostfilenames)
-				   && preg_match('/^(05|10|20|21|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
+				   && preg_match('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
 				{
 					fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking ' . $vhost_filename . "\n");
