@@ -943,8 +943,8 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	fi
 
 	einfo "Configuring Gentoo-Froxlor cronjob ..."
-	exeinto "${ROOT}/etc/cron.d"
-	newexe "${ROOT}/usr/share/${PN}/froxlor.cron" froxlor
+	insinto "${ROOT}/etc/cron.d"
+	newins "${ROOT}/usr/share/${PN}/froxlor.cron" froxlor
 
 	if ! useq dovecot ; then
 		einfo "Configuring Courier-IMAP ..."
@@ -1113,7 +1113,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	fi
 
 	if useq domainkey && useq bind ; then
-		echo "${ROOT}/usr/share/${PN}/domainkey.conf" >> "${ROOT}/etc/postfix/main.cf"
+		cat "${ROOT}/usr/share/${PN}/domainkey.conf" >> "${ROOT}/etc/postfix/main.cf"
 	fi
 
 	# Automatical Bind configuration, if Bind is installed

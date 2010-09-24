@@ -2,6 +2,10 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  24 Sep 2010; Froxlor Release Team <release@froxlor.org>
+  froxlor-9999.ebuild:
+  added php.ini for Froxlors own vhost
+
   03 Sep 2010; Froxlor Release Team <release@froxlor.org>
   froxlor-0.9.12.ebuild, froxlor-9999.ebuild:
   fix typo, thanks to Emilien
