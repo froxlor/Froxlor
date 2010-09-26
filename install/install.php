@@ -511,16 +511,20 @@ if(isset($_POST['installstep'])
 	//first we make a backup of the old DB if it exists
 
 	status_message('begin', $lng['install']['backup_old_db']);
+	$tables_exist = false;
 
 	$sql = "SHOW TABLES FROM $mysql_database";
 	$result = mysql_query($sql);
+
 	// check the first row
-	$row = mysql_fetch_row($result);
-	
-	$tables_exist = false;
-	if(isset($row[0]) && $row[0] != '')
+	if($result !== false)
 	{
-		$tables_exist = true;
+		$row = mysql_num_rows($result);
+	
+		if($row > 0)
+		{
+			$tables_exist = true;
+		}
 	}
 
 	if($tables_exist)
