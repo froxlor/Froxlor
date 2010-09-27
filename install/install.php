@@ -705,6 +705,7 @@ if(isset($_POST['installstep'])
 		`password` = '" . md5($admin_pass1) . "',
 		`name` = 'Siteadmin',
 		`email` = 'admin@" . $db->escape($servername) . "',
+		`def_language` = '". $db->escape($languages[$language]) . "',
 		`customers` = -1,
 		`customers_used` = 0,
 		`customers_see_all` = 1,
