@@ -751,7 +751,7 @@ if($page == 'customers'
 
 				while(list($language_file, $language_name) = each($languages))
 				{
-					$language_options.= makeoption($language_name, $language_file, $userinfo['def_language'], true);
+					$language_options.= makeoption($language_name, $language_file, $settings['panel']['standardlanguage'], true);
 				}
 
 				$diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
