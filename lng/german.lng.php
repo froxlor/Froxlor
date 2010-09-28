@@ -578,7 +578,7 @@ $lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma g
 // CHANGED IN 1.2.18
 
 $lng['serversettings']['mod_log_sql']['description'] = '<a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
-$lng['serversettings']['mod_fcgid']['description'] = 'mod_fcgid/suexec/libnss_mysql benutzen um PHP unter dem jeweiligen Useraccount laufen zu lassen<br /><b>Dies ben&ouml;tigt eine spezielle Webserver-Konfiguration. Alle nachfolgenden Optionen sind nur g&uuml;ltig wenn das Modul aktiviert wird.</b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'mod_fcgid/suexec/libnss_mysql benutzen um PHP unter dem jeweiligen Useraccount laufen zu lassen<br /><b>Dies ben&ouml;tigt eine spezielle Webserver-Konfiguration, siehe <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a>.</b>';
 
 // ADDED IN 1.2.18-svn1
 
@@ -1439,7 +1439,7 @@ $lng['serversettings']['perl_path']['description'] = 'Nur n&ouml;tig f&uuml;r li
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
 $lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Verwende FCGID im Froxlor Vhost';
-$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Wenn verwendet, wird Froxlor selbst unter einem lokalem Benutzer ausgef&uuml;hrt<br /><strong>ACHTUNG:</strong>Hierzu m&uuml;ssen noch zus&auml;tzliche Konfigurationen vorgenommen werden, siehe <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a>';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Wenn verwendet, wird Froxlor selbst unter einem lokalem Benutzer ausgef&uuml;hrt';
 $lng['admin']['mod_fcgid_user'] = 'Lokaler Benutzer f&uuml;r FCGID (Froxlor Vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Lokale Gruppe f&uuml;r FCGID (Froxlor Vhost)';
 
@@ -1485,5 +1485,8 @@ $lng['admin']['store_defaultindex'] = 'Erstelle standard Index-Datei in Kunden-O
 
 // ADDED IN FROXLOR 0.9.13-svn1
 $lng['customer']['autoresponder'] = 'Abwesenheitsnachrichten';
+
+// ADDED IN FROXLOR 0.9.14-svn1
+$lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PHP Konfiguration f&uuml;r den Froxlor-Vhost';
 
 ?>

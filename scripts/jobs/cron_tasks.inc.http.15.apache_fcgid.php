@@ -286,6 +286,7 @@ class apache_fcgid extends apache
 			$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
 			$configdir = makeCorrectDir($this->settings['system']['mod_fcgid_configdir'] . '/froxlor.panel/');
 			$starter_filename = makeCorrectFile($configdir . '/php-fcgi-starter');
+			$phpini_filename = makeCorrectFile($configdir . '/php.ini');
 			$tmpdir = makeCorrectDir($this->settings['system']['mod_fcgid_tmpdir'] . '/froxlor.panel/');
 			
 			$user = $this->settings['system']['mod_fcgid_httpuser'];
@@ -310,10 +311,8 @@ class apache_fcgid extends apache
 				safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
 			}
 			
-			// we only need this for some basic, no special parameters that
-			// would require to maybe allow selecting a specific php.ini
-			// because we only need the binary and spawning parameters
-			$phpconfig = $this->getPhpConfig(0); 
+			// get php.ini for our own vhost
+			$phpconfig = $this->getPhpConfig((int)$this->settings['system']['mod_fcgid_defaultini_ownvhost']); 
 
 			// create starter
 			$starter_file = "#!/bin/sh\n\n";
@@ -358,6 +357,37 @@ class apache_fcgid extends apache
 			safe_exec('chmod 750 ' . escapeshellarg($starter_filename));
 			safe_exec('chown ' . $user . ':' . $group . ' ' . escapeshellarg($starter_filename));
 			setImmutable($starter_filename);
+
+			// define the php.ini
+
+			$php_ini_variables = array(
+				'SAFE_MODE' => 'Off',
+				'PEAR_DIR' => $this->settings['system']['mod_fcgid_peardir'],
+				'OPEN_BASEDIR' => 'none',
+				'OPEN_BASEDIR_C' => ';',
+				'OPEN_BASEDIR_GLOBAL' => '',
+				'TMP_DIR' => $tmpdir,
+				'CUSTOMER_EMAIL' => $this->settings['panel']['adminmail'],
+				'ADMIN_EMAIL' => $this->settings['panel']['adminmail'],
+				'DOMAIN' => $this->settings['system']['hostname'],
+				'CUSTOMER' => $user,
+				'ADMIN' => $user
+			);
+
+			//insert a small header for the file
+
+			$phpini_file = ";\n";
+			$phpini_file.= "; php.ini created/changed on " . date("Y.m.d H:i:s") . " for Froxlor-vhost from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
+			$phpini_file.= "; Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
+			$phpini_file.= ";\n\n";
+			$phpini_file.= replace_variables($phpconfig['phpsettings'], $php_ini_variables);
+			$phpini_file = str_replace('"none"', 'none', $phpini_file);
+			$phpini_file = preg_replace('/\"+/', '"', $phpini_file);
+			$phpini_file_handler = fopen($phpini_filename, 'w');
+			fwrite($phpini_file_handler, $phpini_file);
+			fclose($phpini_file_handler);
+			safe_exec('chown root:0 ' . escapeshellarg($phpini_filename));
+			safe_exec('chmod 0644 ' . escapeshellarg($phpini_filename));
 		}
 	}
 

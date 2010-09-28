@@ -291,4 +291,23 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if(versionInUpdate($current_version, '0.9.14-svn1'))
+	{
+		if((int)$settings['system']['mod_fcgid_ownvhost'] == 1)
+		{
+			$has_preconfig = true;
+			$description = 'You have FCGID for Froxlor itself activated. You can now specify a PHP-configuration for this.';
+			$question = '<strong>Select Froxlor-vhost PHP configuration:</strong>&nbsp;';
+			$question .= '<select name="update_defaultini_ownvhost">';
+			$configs_array = getPhpConfigs();
+			$configs = '';
+			foreach($configs_array as $idx => $desc)
+			{
+				$configs .= makeoption($desc, $idx, '1');
+			}
+			$question .= $configs.'</select>';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
 }

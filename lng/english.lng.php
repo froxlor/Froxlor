@@ -548,7 +548,7 @@ $lng['panel']['back'] = 'Back';
 $lng['serversettings']['mod_log_sql']['title'] = 'Temporary save logs in the database';
 $lng['serversettings']['mod_log_sql']['description'] = 'Use <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Include PHP via mod_fcgid/suexec';
-$lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libnss_mysql to run PHP with the corresponding useraccount.<br/><b>This needs a special Webserver configuration. All following options are only valid if the module is enabled.</b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libnss_mysql to run PHP with the corresponding useraccount.<br/><b>This needs a special Webserver configuration, see <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a></b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
@@ -1456,7 +1456,7 @@ $lng['serversettings']['perl_path']['description'] = 'Only relevant if you use l
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
 $lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Enable FCGID for the Froxlor vhost';
-$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'If enabled, Froxlor will also be running under a local user<br /><strong>ATTENTION:</strong>This needs manual configuration, see <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a>';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'If enabled, Froxlor will also be running under a local user';
 $lng['admin']['mod_fcgid_user'] = 'Local user to use for FCGID (Froxlor vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Local group to use for FCGID (Froxlor vhost)';
 
@@ -1502,5 +1502,8 @@ $lng['admin']['store_defaultindex'] = 'Store default index-file to customers doc
 
 // ADDED IN FROXLOR 0.9.13-svn1
 $lng['customer']['autoresponder'] = 'Autoresponder';
+
+// ADDED IN FROXLOR 0.9.14-svn1
+$lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Default PHP configuration for Froxlor-vhost';
 
 ?>
