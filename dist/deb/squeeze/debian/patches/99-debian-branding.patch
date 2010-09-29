@@ -2,9 +2,9 @@
 +++ b/lib/tables.inc.php
 @@ -70,6 +70,6 @@
  
- $version = '0.9.10';
+ $version = '0.9.13';
  $dbversion = '2';
 -$branding = '';
-+$branding = '-1+squeeze2';
++$branding = '-1+squeeze1';
  
  ?>

@@ -30,6 +30,6 @@
  
 -require (dirname(__FILE__) . '/../lib/class.phpmailer.php');
 +require '/usr/share/php/libphp-phpmailer/class.phpmailer.php';
- $mail = new PHPMailer();
+ $mail = new PHPMailer(true);
  $mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
  

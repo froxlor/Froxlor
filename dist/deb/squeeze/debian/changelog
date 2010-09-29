@@ -1,3 +1,27 @@
+froxlor (0.9.13-1+squeeze1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 28 Sep 2010 08:19:31 +0200
+
+froxlor (0.9.12-1+squeeze1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 23 Aug 2010 11:36:36 +0200
+
+froxlor (0.9.11-1+squeeze1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 27 Jul 2010 09:31:01 +0200
+
+froxlor (0.9.10-1+squeeze3) testing; urgency=low
+
+  * fix the fix
+
+ -- Froxlor Release Team <release@froxlor.org>  Fri, 09 Jul 2010 22:16:38 +0200
+
 froxlor (0.9.10-1+squeeze2) testing; urgency=low
 
   * fix phpmailer patch, thanks to thekillah
