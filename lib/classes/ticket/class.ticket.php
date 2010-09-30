@@ -87,7 +87,7 @@ class ticket
 		$this->tid = $tid;
 
 		// initialize purifier
-		require_once '../htmlpurifier/library/HTMLPurifier.auto.php';
+		require_once dirname(dirname(__FILE__)).'/htmlpurifier/library/HTMLPurifier.auto.php';
 		$this->_purifier = new HTMLPurifier();
 
 		// initialize data array
