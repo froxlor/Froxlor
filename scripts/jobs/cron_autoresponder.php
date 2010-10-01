@@ -138,7 +138,7 @@ if($db->num_rows($result) > 0)
 						$to = $match[2];
 					}
 					elseif(!strlen($to)
-					       && preg_match("/To:\s+(.*@.*)$/", $line, $match)
+					       && preg_match("/^To:\s+(.*@.*)$/", $line, $match) 
 					) {
 						$to = $match[1];
 					}
