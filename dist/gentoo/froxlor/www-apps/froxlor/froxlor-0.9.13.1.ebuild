@@ -766,11 +766,11 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 			mkdir -p "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/tmp"
 			chmod 0750 "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/tmp"
 			touch "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
-			echo "${ROOT}/usr/share/${PN}/php-fcgi-starter" >> "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
+			cp "${ROOT}/usr/share/${PN}/php-fcgi-starter" "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
 			chmod 0750 "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
 			chattr +i "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
 			touch "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php.ini"
-			echo "${ROOT}/usr/share/${PN}/php.ini" >> "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php.ini"
+			cp "${ROOT}/usr/share/${PN}/php.ini" "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php.ini"
 			chown froxlor:froxlor -R "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script" || die "Unable to fix owner for php-fcgi-script folder"
 		fi
 
