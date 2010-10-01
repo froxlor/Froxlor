@@ -292,7 +292,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		}
 	}
 
-	if(versionInUpdate($current_version, '0.9.14-svn1'))
+	if(versionInUpdate($current_version, '0.9.13.1'))
 	{
 		if((int)$settings['system']['mod_fcgid_ownvhost'] == 1)
 		{

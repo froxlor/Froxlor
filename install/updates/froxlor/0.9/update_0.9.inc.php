@@ -1075,13 +1075,24 @@ if(isFroxlorVersion('0.9.13-svn1'))
 
 if(isFroxlorVersion('0.9.13'))
 {
-	showUpdateStep("Updating from 0.9.13 to 0.9.14-svn1", false);
-	
+	showUpdateStep("Updating from 0.9.13 to 0.9.13.1 final", false);
+
 	$update_defaultini_ownvhost = isset($_POST['update_defaultini_ownvhost']) ? (int)$_POST['update_defaultini_ownvhost'] : 1;	
 
 	showUpdateStep("Adding settings for Froxlor-vhost's PHP-configuration");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_defaultini_ownvhost', '".(int)$update_defaultini_ownvhost."');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.14-svn1');
+	updateToVersion('0.9.13.1');
+}
+
+/**
+ * be compatible with the few who already use 0.9.14-svn1
+ */
+if(isFroxlorVersion('0.9.14-svn1'))
+{
+	showUpdateStep("Resetting version 0.9.14-svn1 to 0.9.13.1");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.13.1');
 }
