@@ -182,6 +182,14 @@ if((int)$settings['system']['mod_fcgid_ownvhost'] == 1)
 	safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
 }
 
+/**
+ * be sure HTMLPurifier's cache folder is writable
+ */
+safe_exec('chmod -R 0755 '.escapeshellarg(dirname(__FILE__).'/classes/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer'));
+/**
+ * end of HTMLPurifier check
+ */
+
 if(!isset($settings['panel']['version'])
    || $settings['panel']['version'] != $version)
 {
