@@ -36,6 +36,7 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/var/www/php-fcgi-scripts/',
+					'plausibility_check_method' => 'checkPathConflicts',
 					'save_method' => 'storeSettingField',
 					),
 				'system_mod_fcgid_tmpdir' => array(

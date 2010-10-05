@@ -28,6 +28,7 @@ return array(
 					'varname' => 'documentroot_prefix',
 					'type' => 'string',
 					'default' => '/var/customers/webs/',
+					'plausibility_check_method' => 'checkPathConflicts',
 					'save_method' => 'storeSettingField',
 					),
 				'system_ipaddress' => array(
