@@ -12,7 +12,7 @@
  * @copyright  (c) the authors
  * @author     Luca Piona <info@havanastudio.ch>
  * @author     Luca Longinotti <chtekk@gentoo.org>
- * @author     Emilien 
+ * @author     Emilien
  * @author     Froxlor Team <team@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
@@ -1264,7 +1264,7 @@ $lng['update']['updateinprogress_onlyadmincanlogin'] = 'Una nuova versione di Fr
 $lng['update']['update'] = 'Aggiorna Froxlor';
 $lng['update']['proceed'] = 'Procedi';
 $lng['update']['update_information']['part_a'] = 'I file di Froxlor sono stati aggiornati alla versione <strong>%newversion</strong>. La versione installata è <strong>%curversion</strong>.';
-$lng['update']['update_information']['part_b'] = '<br /><br />I clienti non potranno accedere fino a quando l\'aggiornamento non sarà completato.<br /><strong>Proceed?</strong>';
+$lng['update']['update_information']['part_b'] = '<br /><br />I clienti non potranno accedere fino a quando l\'aggiornamento non sarà completato.<br /><strong>Procedere?</strong>';
 $lng['update']['noupdatesavail'] = '<strong>È già presente l\'ultima versione di Froxlor.</strong>';
 $lng['admin']['specialsettingsforsubdomains'] = 'Applica le impostazioni speciali a tutti i sottodomini (*.esempio.com)';
 $lng['serversettings']['specialsettingsforsubdomains']['description'] = 'Se si queste impostazioni personalizzate dei vhost saranno aggiunte a tutti sottodomini; se no le impostazioni speciali dei sottodomini verranno rimosse.';
@@ -1299,7 +1299,7 @@ $lng['serversettings']['panel_password_min_length']['title'] = 'Lunghezza minima
 $lng['serversettings']['panel_password_min_length']['description'] = 'Qui è possibile impostare una lunghezza minima per le password.\'0\' significa: nessuna lunghezza minima richiesta.';
 $lng['error']['notrequiredpasswordlength'] = 'La password scritta è troppo corta. Si prega di scrivere una password lunga almeno %s caratteri.';
 $lng['serversettings']['system_store_index_file_subs']['title'] = 'Salva il file index predefinito anche nelle nuove sottocartelle';
-$lng['serversettings']['system_store_index_file_subs']['description'] = 'Se abilitato, il file index predefinito viene memorizzato per ogni cartella sottodominio appena creata (non se la cartella esiste già!)'; 
+$lng['serversettings']['system_store_index_file_subs']['description'] = 'Se abilitato, il file index predefinito viene memorizzato per ogni cartella sottodominio appena creata (non se la cartella esiste già!)';
 
 // ADDED IN FROXLOR 0.9.3-svn2
 
@@ -1424,7 +1424,7 @@ $lng['redirect_desc']['rc_movedperm'] = 'spostato in modo permanente';
 $lng['redirect_desc']['rc_found'] = 'trovato';
 $lng['redirect_desc']['rc_seeother'] = 'vedi gli altri';
 $lng['redirect_desc']['rc_tempred'] = 'reindirizzamento temporaneo';
-          
+
 // ADDED IN FROXLOR 0.9.8
 $lng['error']['exception'] = '%s';
 
@@ -1499,5 +1499,11 @@ $lng['extras']['htpasswdauthname'] = 'Argomento di Autenticazione (AuthName)';
 $lng['extras']['directoryprotection_edit'] = 'modifica la protezione della directory';
 $lng['admin']['templates']['forgotpwd'] = 'Mail di notifica per il reset della password';
 $lng['admin']['templates']['password_reset'] = 'Notifica al cliente per il reset della password';
+
+// ADDED IN FROXLOR 0.9.13-svn1
+$lng['customer']['autoresponder'] = 'Risponditore Automatico';
+
+// ADDED IN FROXLOR 0.9.14-svn1
+$lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Configurazione di Default di PHP per Froxlor-vhost';
 
 ?>
