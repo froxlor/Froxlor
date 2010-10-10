@@ -98,6 +98,7 @@ elseif($page == 'tickets')
 					$cananswer = 0;
 				}
 
+				$row['subject'] = html_entity_decode($row['subject']);
 				if(strlen($row['subject']) > 20)
 				{
 					$row['subject'] = substr($row['subject'], 0, 17) . '...';
