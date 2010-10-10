@@ -46,6 +46,12 @@
 						<td><span <if $customer['tickets_used'] == $customer['tickets_used_new']>style="color:green"<else>style="color:red"</if>><b>{$customer['tickets_used']} -&gt; {$customer['tickets_used_new']}</b></span></td>
 					</tr>
 					</if>
+					<if $settings['aps']['aps_active'] == '1'>
+					<tr>
+						<td>{$lng['customer']['aps']}:</td>
+						<td><span <if $customer['aps_packages_used'] == $customer['aps_packages_used_new']>style="color:green"<else>style="color:red"</if>><b>{$customer['aps_packages_used']} -&gt; {$customer['aps_packages_used_new']}</b></span></td>
+					</tr>
+					</if>
 				</table>
 			</td>
 		</tr>

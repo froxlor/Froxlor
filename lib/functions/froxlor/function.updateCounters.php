@@ -22,7 +22,8 @@
  * @param bool Set to true to get an array with debug information
  * @return array Contains debug information if parameter 'returndebuginfo' is set to true
  *
- * @author Florian Lippert <flo@syscp.org>
+ * @author Florian Lippert <flo@syscp.org> (2003-2009)
+ * @author Froxlor team <team@froxlor.org> (2010-)
  */
 
 function updateCounters($returndebuginfo = false)
@@ -158,6 +159,16 @@ function updateCounters($returndebuginfo = false)
 			$admin_resources[$customer['adminid']]['subdomains_used']+= intval_ressource($customer['subdomains']);
 		}
 
+		if(!isset($admin_resources[$customer['adminid']]['aps_packages_used']))
+		{
+			$admin_resources[$customer['adminid']]['aps_packages_used'] = 0;
+		}
+
+		if($customer['aps_packages'] != '-1')
+		{
+			$admin_resources[$customer['adminid']]['aps_packages_used']+= intval_ressource($customer['aps_packages']);
+		}
+
 		$customer_mysqls = $db->query_first('SELECT COUNT(*) AS `number_mysqls` FROM `' . TABLE_PANEL_DATABASES . '` WHERE `customerid` = "' . (int)$customer['customerid'] . '"');
 		$customer['mysqls_used_new'] = (int)$customer_mysqls['number_mysqls'];
 		$customer_emails = $db->query_first('SELECT COUNT(*) AS `number_emails` FROM `' . TABLE_MAIL_VIRTUAL . '` WHERE `customerid` = "' . (int)$customer['customerid'] . '"');
@@ -194,8 +205,25 @@ function updateCounters($returndebuginfo = false)
 		
 		$customer_email_autoresponder = $db->query_first('SELECT COUNT(*) AS `number_autoresponder` FROM `' . TABLE_MAIL_AUTORESPONDER . '` WHERE `customerid` = "' . (int)$customer['customerid'] . '"');
 		$customer['email_autoresponder_used_new'] = (int)$customer_email_autoresponder['number_autoresponder'];
+		$customer_aps_packages = $db->query_first('SELECT COUNT(*) AS `number_apspackages` FROM `' . TABLE_APS_INSTANCES . '` WHERE `CustomerID` = "' . (int)$customer['customerid'] . '"');
+		$customer['aps_packages_used_new'] = (int)$customer_aps_packages['number_apspackages'];
 
-		$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used` = "' . (int)$customer['mysqls_used_new'] . '",  `emails_used` = "' . (int)$customer['emails_used_new'] . '",  `email_accounts_used` = "' . (int)$customer['email_accounts_used_new'] . '",  `email_forwarders_used` = "' . (int)$customer['email_forwarders_used_new'] . '",  `email_quota_used` = "' . (int)$customer['email_quota_used_new'] . '",  `email_autoresponder_used` = "' . (int)$customer['email_autoresponder_used_new'] . '",  `ftps_used` = "' . (int)$customer['ftps_used_new'] . '",   `tickets_used` = "' . (int)$customer['tickets_used_new'] . '",  `subdomains_used` = "' . (int)$customer['subdomains_used_new'] . '" WHERE `customerid` = "' . (int)$customer['customerid'] . '"');
+		$db->query('UPDATE 
+		`' . TABLE_PANEL_CUSTOMERS . '` 
+		SET 
+			`mysqls_used` = "' . (int)$customer['mysqls_used_new'] . '",
+			`emails_used` = "' . (int)$customer['emails_used_new'] . '",
+			`email_accounts_used` = "' . (int)$customer['email_accounts_used_new'] . '",
+			`email_forwarders_used` = "' . (int)$customer['email_forwarders_used_new'] . '",
+			`email_quota_used` = "' . (int)$customer['email_quota_used_new'] . '",
+			`email_autoresponder_used` = "' . (int)$customer['email_autoresponder_used_new'] . '",
+			`ftps_used` = "' . (int)$customer['ftps_used_new'] . '", 
+			`tickets_used` = "' . (int)$customer['tickets_used_new'] . '",
+			`subdomains_used` = "' . (int)$customer['subdomains_used_new'] . '",
+			`aps_packages_used` = "' . (int)$customer['aps_packages_used_new'] . '"
+		WHERE 
+			`customerid` = "' . (int)$customer['customerid'] . '"
+		');
 
 		if($returndebuginfo === true)
 		{
@@ -294,9 +322,34 @@ function updateCounters($returndebuginfo = false)
 			$admin_resources[$admin['adminid']]['subdomains_used'] = 0;
 		}
 
+		$admin['aps_packages_used_new'] = $admin_resources[$admin['adminid']]['aps_packages_used'];
+
+		if(!isset($admin_resources[$admin['adminid']]['aps_packages_used']))
+		{
+			$admin_resources[$admin['adminid']]['aps_packages_used'] = 0;
+		}
 
 		$admin['subdomains_used_new'] = $admin_resources[$admin['adminid']]['subdomains_used'];
-		$db->query('UPDATE `' . TABLE_PANEL_ADMINS . '` SET `customers_used` = "' . (int)$admin['customers_used_new'] . '",  `domains_used` = "' . (int)$admin['domains_used_new'] . '",  `diskspace_used` = "' . (int)$admin['diskspace_used_new'] . '",  `mysqls_used` = "' . (int)$admin['mysqls_used_new'] . '",  `emails_used` = "' . (int)$admin['emails_used_new'] . '",  `email_accounts_used` = "' . (int)$admin['email_accounts_used_new'] . '",  `email_forwarders_used` = "' . (int)$admin['email_forwarders_used_new'] . '",  `email_quota_used` = "' . (int)$admin['email_quota_used_new'] . '",  `email_autoresponder_used` = "' . (int)$admin['email_autoresponder_used_new'] . '",  `ftps_used` = "' . (int)$admin['ftps_used_new'] . '",  `tickets_used` = "' . (int)$admin['tickets_used_new'] . '",  `subdomains_used` = "' . (int)$admin['subdomains_used_new'] . '",  `traffic_used` = "' . (int)$admin['traffic_used_new'] . '" WHERE `adminid` = "' . (int)$admin['adminid'] . '"');
+		$db->query('UPDATE 
+			`' . TABLE_PANEL_ADMINS . '` 
+			SET 
+				`customers_used` = "' . (int)$admin['customers_used_new'] . '",
+				`domains_used` = "' . (int)$admin['domains_used_new'] . '",
+				`diskspace_used` = "' . (int)$admin['diskspace_used_new'] . '",
+				`mysqls_used` = "' . (int)$admin['mysqls_used_new'] . '",
+				`emails_used` = "' . (int)$admin['emails_used_new'] . '",
+				`email_accounts_used` = "' . (int)$admin['email_accounts_used_new'] . '",
+				`email_forwarders_used` = "' . (int)$admin['email_forwarders_used_new'] . '",
+				`email_quota_used` = "' . (int)$admin['email_quota_used_new'] . '",
+				`email_autoresponder_used` = "' . (int)$admin['email_autoresponder_used_new'] . '",
+				`ftps_used` = "' . (int)$admin['ftps_used_new'] . '", 
+				`tickets_used` = "' . (int)$admin['tickets_used_new'] . '",
+				`subdomains_used` = "' . (int)$admin['subdomains_used_new'] . '",
+				`traffic_used` = "' . (int)$admin['traffic_used_new'] . '",
+				`aps_packages_used` = "' . (int)$admin['aps_packages_used_new'] . '"
+			WHERE 
+				`adminid` = "' . (int)$admin['adminid'] . '"
+			');
 
 		if($returndebuginfo === true)
 		{
