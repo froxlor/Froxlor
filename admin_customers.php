@@ -188,6 +188,7 @@ if($page == 'customers'
 				$db->query("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$id . "'");
 				$domains_deleted = $db->affected_rows();
 				$db->query("DELETE FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `customerid`='" . (int)$id . "'");
+				$db->query("DELETE FROM `" . TABLE_PANEL_HTACCESS . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid`='" . (int)$id . "' AND `adminsession` = '0'");
 				$db->query("DELETE FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid`='" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`='" . (int)$id . "'");

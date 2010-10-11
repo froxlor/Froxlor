@@ -339,7 +339,7 @@ while($row = $db->fetch_array($result))
 	{
 		$mysqlusage = floatval($mysqlusage_all[$row['customerid']] / 1024);
 	}
-	
+
 	$current_diskspace = array();
 	$current_diskspace['webspace'] = floatval($webspaceusage);
 	$current_diskspace['mail'] = floatval($emailusage);
