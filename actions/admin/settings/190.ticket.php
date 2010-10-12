@@ -58,6 +58,7 @@ return array(
 					'option_mode' => 'one',
 					'option_options' => array(0 => html_entity_decode($lng['admin']['tickets']['daily']), 1 => html_entity_decode($lng['admin']['tickets']['weekly']), 2 => html_entity_decode($lng['admin']['tickets']['monthly']), 3 => html_entity_decode($lng['admin']['tickets']['yearly'])),
 					'save_method' => 'storeSettingField',
+					'plausibility_check_method' => 'setCycleOfCronjob',
 					),
 				'ticket_concurrently_open' => array(
 					'label' => $lng['serversettings']['ticket']['concurrentlyopen'],
