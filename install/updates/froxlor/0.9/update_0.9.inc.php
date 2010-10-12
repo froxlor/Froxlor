@@ -1096,3 +1096,16 @@ if(isFroxlorVersion('0.9.14-svn1'))
 
 	updateToVersion('0.9.13.1');
 }
+
+if(isFroxlorVersion('0.9.13.1'))
+{
+	showUpdateStep("Updating from 0.9.13.1 to 0.9.14-svn2", false);
+	
+	if($settings['ticket']['enabled'] == '1')
+	{
+		showUpdateStep("Setting INTERVAL for used-tickets cronjob");
+		setCycleOfCronjob(null, null, $settings['ticket']['reset_cycle'], null);
+		lastStepStatus(0);
+	}
+	updateToVersion('0.9.14-svn2');
+}
