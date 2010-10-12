@@ -6,7 +6,7 @@
 				<table border="0" style="text-align: left;">
 					<tr>
 						<td>{$lng['customer']['subdomains']}:</td>
-						<td><span <if $customer['tickets_used'] == $customer['tickets_used_new']>style="color:green"<else>style="color:red"</if>><b>{$customer['tickets_used']} -&gt; {$customer['tickets_used_new']}</b></span></td>
+						<td><span <if $customer['subdomains_used'] == $customer['subdomains_used_new']>style="color:green"<else>style="color:red"</if>><b>{$customer['subdomains_used']} -&gt; {$customer['subdomains_used_new']}</b></span></td>
 					</tr>
 					<tr>
 						<td>{$lng['customer']['mysqls']}:</td>
