@@ -93,6 +93,7 @@ return Array(
 							'chgrp postfix /usr/lib/sasl2/smtpd.conf'
 						),
 						'restart' => Array(
+							'newaliases',
 							'/etc/init.d/postfix restart'
 						)
 					),

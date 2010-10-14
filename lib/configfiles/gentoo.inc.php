@@ -181,6 +181,7 @@ return Array(
 							'postmap /etc/postfix/mx_access'
 						),
 						'restart' => Array(
+							'newaliases',
 							'/etc/init.d/postfix restart'
 						)
 					),

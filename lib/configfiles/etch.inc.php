@@ -137,8 +137,28 @@ return Array(
 							'etc_postfix_sasl_smtpd.conf' => '/etc/postfix/sasl/smtpd.conf'
 						),
 						'restart' => Array(
-							'/etc/init.d/postfix restart',
-							'newaliases'
+							'newaliases',
+							'/etc/init.d/postfix restart'
+						)
+					),
+					'dkim' => Array(
+						'label' => 'DomainKey filter',
+						'commands_1' => Array(
+							'apt-get install dkim-filter',
+							'mkdir -p /etc/postfix/dkim'
+						),
+						'files' => Array(
+							'dkim-filter.conf' => '/etc/dkim-filter.conf'
+						),
+						'commands_2' => Array(
+							'echo "milter_default_action = accept" >> /etc/postfix/main.cf',
+							'echo "milter_protocol = 2" >> /etc/postfix/main.cf',
+							'echo "smtpd_milters = inet:localhost:8891" >> /etc/postfix/main.cf',
+							'echo "non_smtpd_milters = inet:localhost:8891" >> /etc/postfix/main.cf'
+						),
+						'restart' => Array(
+							'/etc/init.d/dkim-filter restart',
+							'/etc/init.d/postfix restart'
 						)
 					),
 					'postfix_mxaccess' => Array(
