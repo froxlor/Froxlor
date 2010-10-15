@@ -144,7 +144,7 @@ function awstatsDoSingleDomain($domain, $outputdir)
 	return $returnval;
 }
 
-function callAwstatsGetTraffic($domain, $outputdir, $caption, $usersdomainlist)
+function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist)
 {
 	global $settings, $db, $cronlog;
 	$returnval = 0;
@@ -169,7 +169,6 @@ function callAwstatsGetTraffic($domain, $outputdir, $caption, $usersdomainlist)
 	 * a sane value for our panel_traffic and to remain the whole stats
 	 * (awstats overwrites the customers .html stats-files)
 	 */
-	$customerid = getCustomerIdByDomain($domain);
 	
 	if($customerid !== false)
 	{

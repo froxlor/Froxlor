@@ -165,15 +165,11 @@ while($row = $db->fetch_array($result))
 					unset($domainlist[$row['customerid']][$domainid]);
 				}
 
-				if($settings['system']['awstats_enabled'] == '1')
-				{
-					$httptraffic+= floatval(callAwstatsGetTraffic($domain, $row['documentroot'] . '/awstats/', $domain, $domainlist[$row['customerid']]));
-				} 
-				else
+				if($settings['system']['awstats_enabled'] == '0')
 				{
 					$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
 				}
-			}			
+			}
 		}
 
 		reset($domainlist[$row['customerid']]);
@@ -183,9 +179,13 @@ while($row = $db->fetch_array($result))
 			safeSQLLogfile($domainlist[$row['customerid']], $row['loginname']);
 		}
 
+		// callAwstatsGetTraffic is called ONLY HERE and 
+		// *not* also in the special-logfiles-loop, because the function
+		// will iterate through all customer-domains and the awstats-configs
+		// know the logfile-name, #246
 		if($settings['system']['awstats_enabled'] == '1')
 		{
-			$httptraffic+= floatval(callAwstatsGetTraffic($caption, $row['documentroot'] . '/awstats/', $caption, $domainlist[$row['customerid']]));
+			$httptraffic+= floatval(callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']]));
 		}
 		else
 		{
