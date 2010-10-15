@@ -894,13 +894,6 @@ $lng['pwdreminder']['success'] = 'Mot de passe correctement réinitialiser.<br />
 $lng['serversettings']['allow_password_reset']['title'] = 'Permettre aux clients de réinitialiser leurs mots de passe';
 $lng['pwdreminder']['notallowed'] = 'La réinitialisation des mots de passe est désactivée.';
 
-// ADDED IN 1.2.19-svn20
-
-$lng['serversettings']['awstats_path']['title'] = 'Dossier CGI-BIN de AWStats';
-$lng['serversettings']['awstats_path']['description'] = 'exemple : /var/www/cgi-bin/';
-$lng['serversettings']['awstats_updateall_command']['title'] = 'Emplacement de "awstats_updateall.pl"';
-$lng['serversettings']['awstats_updateall_command']['description'] = 'exemple : /usr/share/awstats/tools/awstats_updateall.pl';
-
 // ADDED IN 1.2.19-svn21
 
 $lng['customer']['title'] = 'Titre';

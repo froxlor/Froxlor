@@ -877,13 +877,6 @@ $lng['pwdreminder']['success'] = 'Password reset successfully.<br />You now shou
 $lng['serversettings']['allow_password_reset']['title'] = 'Allow password reset by customers';
 $lng['pwdreminder']['notallowed'] = 'Password reset is disabled';
 
-// ADDED IN 1.2.19-svn20
-
-$lng['serversettings']['awstats_path']['title'] = 'Path to awstats cgi-bin folder';
-$lng['serversettings']['awstats_path']['description'] = 'e.g. /usr/share/webapps/awstats/6.1/webroot/cgi-bin/';
-$lng['serversettings']['awstats_updateall_command']['title'] = 'Path to &quot;awstats_updateall.pl&quot;';
-$lng['serversettings']['awstats_updateall_command']['description'] = 'e.g. /usr/bin/awstats_updateall.pl';
-
 // ADDED IN 1.2.19-svn21
 
 $lng['customer']['title'] = 'Title';
@@ -1505,5 +1498,9 @@ $lng['customer']['autoresponder'] = 'Autoresponder';
 
 // ADDED IN FROXLOR 0.9.14-svn1
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Default PHP configuration for Froxlor-vhost';
+
+// ADDED IN FROXLOR 0.9.14-svn3
+$lng['serversettings']['awstats_icons']['title'] = 'Path to awstats icons folder';
+$lng['serversettings']['awstats_icons']['description'] = 'e.g. /usr/share/awstats/htdocs/icon/';
 
 ?>

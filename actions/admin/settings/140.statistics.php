@@ -66,6 +66,15 @@ return array(
 					'string_type' => 'dir',
 					'default' => '/etc/awstats/',
 					'save_method' => 'storeSettingField',
+					),
+				'system_awstats_icons' => array(
+					'label' => $lng['serversettings']['awstats_icons'],
+					'settinggroup' => 'system',
+					'varname' => 'awstats_icons',
+					'type' => 'string',
+					'string_type' => 'dir',
+					'default' => '/usr/share/awstats/icon/',
+					'save_method' => 'storeSettingField',
 					)
 				)
 			)

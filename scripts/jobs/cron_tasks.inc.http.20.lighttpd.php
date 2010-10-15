@@ -759,8 +759,8 @@ class lighttpd
 			{
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					// @TODO see if this is correct for awstats
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
+					$stats_text.= '  alias.url = ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
 				}
 				else
 				{
@@ -771,8 +771,8 @@ class lighttpd
 			{
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					// @TODO see if this is correct for awstats
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']).'" )' . "\n";
+					$stats_text.= '  alias.url = ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
 				}
 				else
 				{
@@ -787,6 +787,7 @@ class lighttpd
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
+					$stats_text.= '  alias.url = ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
 				} 
 				else
 				{

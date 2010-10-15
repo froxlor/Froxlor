@@ -877,13 +877,6 @@ $lng['pwdreminder']['success'] = 'La password è stata reimpostata con successo.<
 $lng['serversettings']['allow_password_reset']['title'] = 'Consenti ai clienti di reimpostare la password';
 $lng['pwdreminder']['notallowed'] = 'Il reimposta password è disabilitato';
 
-// ADDED IN 1.2.19-svn20
-
-$lng['serversettings']['awstats_path']['title'] = 'Percorso della cartella cgi-bin di awstats';
-$lng['serversettings']['awstats_path']['description'] = 'es. /usr/share/webapps/awstats/6.1/webroot/cgi-bin/';
-$lng['serversettings']['awstats_updateall_command']['title'] = 'Percorso di &quot;awstats_updateall.pl&quot;';
-$lng['serversettings']['awstats_updateall_command']['description'] = 'es. /usr/bin/awstats_updateall.pl';
-
 // ADDED IN 1.2.19-svn21
 
 $lng['customer']['title'] = 'Titolo';

@@ -871,13 +871,6 @@ $lng['pwdreminder']['success'] = 'Password reset successfully.<br />You now shou
 $lng['serversettings']['allow_preset'] = 'Zezwalaj na resetowanie has&#322a przez klientów';
 $lng['pwdreminder']['notallowed'] = 'Resetowanie has&#322a jest nieaktywne';
 
-// ADDED IN 1.2.19-svn20
-
-$lng['serversettings']['awstats_path']['title'] = 'Path to awstats cgi-bin folder';
-$lng['serversettings']['awstats_path']['description'] = 'e.g. /usr/share/webapps/awstats/6.1/webroot/cgi-bin/';
-$lng['serversettings']['awstats_updateall_command']['title'] = 'Path to &quot;awstats_updateall.pl&quot;';
-$lng['serversettings']['awstats_updateall_command']['description'] = 'e.g. /usr/bin/awstats_updateall.pl';
-
 // ADDED IN 1.2.19-svn21
 
 $lng['customer']['title'] = 'Tytu&#322';

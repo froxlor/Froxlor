@@ -881,13 +881,6 @@ $lng['pwdreminder']['success'] = 'Passwort erfolgreich zur&uuml;ckgesetzt.<br />
 $lng['serversettings']['allow_password_reset']['title'] = 'Erlaube das Zur&uuml;cksetzen des Kundenpassworts';
 $lng['pwdreminder']['notallowed'] = 'Das Zur&uuml;cksetzen des Passworts ist deaktiviert';
 
-// ADDED IN 1.2.19-svn20
-
-$lng['serversettings']['awstats_path']['title'] = 'Pfad zum awstats cgi-bin Ordner';
-$lng['serversettings']['awstats_path']['description'] = 'z.B. /usr/share/webapps/awstats/6.1/webroot/cgi-bin/';
-$lng['serversettings']['awstats_updateall_command']['title'] = 'Pfad zu &quot;awstats_updateall.pl&quot;';
-$lng['serversettings']['awstats_updateall_command']['description'] = 'z.B. /usr/bin/awstats_updateall.pl';
-
 // ADDED IN 1.2.19-svn21
 
 $lng['customer']['title'] = 'Titel';
@@ -1488,5 +1481,9 @@ $lng['customer']['autoresponder'] = 'Abwesenheitsnachrichten';
 
 // ADDED IN FROXLOR 0.9.14-svn1
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PHP Konfiguration f&uuml;r den Froxlor-Vhost';
+
+// ADDED IN FROXLOR 0.9.14-svn3
+$lng['serversettings']['awstats_icons']['title'] = 'Pfad zum Awstats icons Ordner';
+$lng['serversettings']['awstats_icons']['description'] = 'z.B. /usr/share/awstats/htdocs/icon/';
 
 ?>

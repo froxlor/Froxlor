@@ -1109,3 +1109,16 @@ if(isFroxlorVersion('0.9.13.1'))
 	}
 	updateToVersion('0.9.14-svn2');
 }
+
+if(isFroxlorVersion('0.9.14-svn2'))
+{
+	showUpdateStep("Updating from 0.9.14-svn2 to 0.9.14-svn3", false);
+
+	$update_awstats_icons = isset($_POST['update_awstats_icons']) ? makeCorrectDir($_POST['update_awstats_icons']) : $settings['system']['awstats_icons'];	
+
+	showUpdateStep("Adding AWStats icons path to the settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_icons', '".$db->escape($update_awstats_icons)."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.14-svn3');
+}

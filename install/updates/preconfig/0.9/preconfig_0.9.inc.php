@@ -310,4 +310,16 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if(versionInUpdate($current_version, '0.9.14-svn3'))
+	{
+		if((int)$settings['system']['awstats_enabled'] == 1)
+		{
+			$has_preconfig = true;
+			$description = 'To have icons in AWStats statistic-pages please enter the path to AWStats icons folder.';
+			$question = '<strong>Path to AWSTats icons folder:</strong>&nbsp;';
+			$question.= '<input type="text" class="text" name="update_awstats_icons" value="'.$settings['system']['awstats_icons'].'" />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
 }

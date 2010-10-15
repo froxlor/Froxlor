@@ -449,6 +449,7 @@ class apache
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
+					$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '"' . "\n";
 				}
 				else
 				{
@@ -460,6 +461,7 @@ class apache
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . '"' . "\n";
+					$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '"' . "\n";
 				}
 				else
 				{
@@ -474,6 +476,7 @@ class apache
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
+					$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '"' . "\n";
 				} 
 				else
 				{
@@ -1080,7 +1083,6 @@ class apache
 			if(!isConfigDir($this->settings['system']['apacheconf_vhost']))
 			{
 				// Save one big file
-
 				$vhosts_file = '';
 
 				foreach($this->virtualhosts_data as $vhosts_filename => $vhost_content)
