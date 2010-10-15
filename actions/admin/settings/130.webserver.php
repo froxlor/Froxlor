@@ -230,6 +230,16 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					),
+				'system_ssl_cert_chainfile' => array(
+					'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
+					'settinggroup' => 'system',
+					'varname' => 'ssl_cert_chainfile',
+					'type' => 'string',
+					'string_type' => 'file',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					),
 				'system_ssl_openssl_cnf' => array(
 					'label' => $lng['serversettings']['ssl']['openssl_cnf'],
 					'settinggroup' => 'system',
