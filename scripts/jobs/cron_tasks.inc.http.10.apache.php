@@ -268,6 +268,12 @@ class apache
 						$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
 					}
 
+					// #418
+					if($row_ipsandports['ssl_cert_chainfile'] == '')
+					{
+						$row_ipsandports['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
+					}
+
 					if($row_ipsandports['ssl_cert_file'] != '')
 					{
 						$this->virtualhosts_data[$vhosts_filename].= ' SSLEngine On' . "\n";
@@ -281,6 +287,12 @@ class apache
 						if($row_ipsandports['ssl_ca_file'] != '')
 						{
 							$this->virtualhosts_data[$vhosts_filename].= ' SSLCACertificateFile ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . "\n";
+						}
+
+						// #418
+						if($row_ipsandports['ssl_cert_chainfile'] != '')
+						{
+							$this->virtualhosts_data[$vhosts_filename].= '  SSLCertificateChainFile ' . makeCorrectFile($row_ipsandports['ssl_cert_chainfile']) . "\n";
 						}
 					}
 				}
@@ -659,6 +671,8 @@ class apache
 		$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
 		$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
 		$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
+		// #418
+		$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
 
 		if(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
 		{
@@ -705,6 +719,12 @@ class apache
 					$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
 				}
 
+				// #418
+				if($domain['ssl_cert_chainfile'] == '')
+				{
+					$domain['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
+				}
+
 				if($domain['ssl_cert_file'] != '')
 				{
 					$vhost_content.= '  SSLEngine On' . "\n";
@@ -718,6 +738,12 @@ class apache
 					if($domain['ssl_ca_file'] != '')
 					{
 						$vhost_content.= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
+					}
+
+					// #418
+					if($domain['ssl_cert_chainfile'] != '')
+					{
+						$vhost_content.= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
 					}
 				}
 			}

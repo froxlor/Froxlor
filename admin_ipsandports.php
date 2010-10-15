@@ -145,6 +145,7 @@ if($page == 'ipsandports'
 			$ssl_cert_file = validate($_POST['ssl_cert_file'], 'ssl_cert_file');
 			$ssl_key_file = validate($_POST['ssl_key_file'], 'ssl_key_file');
 			$ssl_ca_file = validate($_POST['ssl_ca_file'], 'ssl_ca_file');
+			$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
 			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 			
 			if($listen_statement != '1')
@@ -187,6 +188,11 @@ if($page == 'ipsandports'
 				$ssl_ca_file = makeCorrectFile($ssl_ca_file);
 			}
 
+			if($ssl_cert_chainfile != '')
+			{
+				$ssl_cert_chainfile = makeCorrectFile($ssl_cert_chainfile);
+			}
+
 			$result_checkfordouble = $db->query_first("SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ip`='" . $db->escape($ip) . "' AND `port`='" . (int)$port . "'");
 
 			if($result_checkfordouble['id'] != '')
@@ -195,7 +201,22 @@ if($page == 'ipsandports'
 			}
 			else
 			{
-				$db->query("INSERT INTO `" . TABLE_PANEL_IPSANDPORTS . "` (`ip`, `port`, `listen_statement`, `namevirtualhost_statement`, `vhostcontainer`, `vhostcontainer_servername_statement`, `specialsettings`, `ssl`, `ssl_cert_file`, `ssl_key_file`, `ssl_ca_file`, `default_vhostconf_domain`) VALUES ('" . $db->escape($ip) . "', '" . (int)$port . "', '" . (int)$listen_statement . "', '" . (int)$namevirtualhost_statement . "', '" . (int)$vhostcontainer . "', '" . (int)$vhostcontainer_servername_statement . "', '" . $db->escape($specialsettings) . "', '" . (int)$ssl . "', '" . $db->escape($ssl_cert_file) . "', '" . $db->escape($ssl_key_file) . "', '" . $db->escape($ssl_ca_file) . "', '" . $db->escape($default_vhostconf_domain) . "')");
+				$db->query("INSERT INTO `" . TABLE_PANEL_IPSANDPORTS . "`
+					SET 
+						`ip` = '" . $db->escape($ip) . "', 
+						`port` = '" . (int)$port . "', 
+						`listen_statement` = '" . (int)$listen_statement . "', 
+						`namevirtualhost_statement` = '" . (int)$namevirtualhost_statement . "', 
+						`vhostcontainer` = '" . (int)$vhostcontainer . "', 
+						`vhostcontainer_servername_statement` = '" . (int)$vhostcontainer_servername_statement . "', 
+						`specialsettings` = '" . $db->escape($specialsettings) . "', 
+						`ssl` = '" . (int)$ssl . "', 
+						`ssl_cert_file` = '" . $db->escape($ssl_cert_file) . "', 
+						`ssl_key_file` = '" . $db->escape($ssl_key_file) . "', 
+						`ssl_ca_file` = '" . $db->escape($ssl_ca_file) . "',
+						`ssl_cert_chainfile` = '" . $db->escape($ssl_cert_chainfile) . "', 
+						`default_vhostconf_domain` = '" . $db->escape($default_vhostconf_domain) . "';
+					");
 
 				if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
 				{
@@ -241,6 +262,7 @@ if($page == 'ipsandports'
 				$ssl_cert_file = validate($_POST['ssl_cert_file'], 'ssl_cert_file');
 				$ssl_key_file = validate($_POST['ssl_key_file'], 'ssl_key_file');
 				$ssl_ca_file = validate($_POST['ssl_ca_file'], 'ssl_ca_file');
+				$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
 				$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 				
 				if($listen_statement != '1')
@@ -283,6 +305,11 @@ if($page == 'ipsandports'
 					$ssl_ca_file = makeCorrectFile($ssl_ca_file);
 				}
 
+				if($ssl_cert_chainfile != '')
+				{
+					$ssl_cert_chainfile = makeCorrectFile($ssl_cert_chainfile);
+				}
+
 				if($result['ip'] != $ip
 				   && $result['ip'] == $settings['system']['ipaddress']
 				   && $result_sameipotherport['id'] == '')
@@ -296,7 +323,25 @@ if($page == 'ipsandports'
 				}
 				else
 				{
-					$db->query("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "` SET `ip`='" . $db->escape($ip) . "', `port`='" . (int)$port . "', `listen_statement`='" . (int)$listen_statement . "', `namevirtualhost_statement`='" . (int)$namevirtualhost_statement . "', `vhostcontainer`='" . (int)$vhostcontainer . "', `vhostcontainer_servername_statement`='" . (int)$vhostcontainer_servername_statement . "', `specialsettings`='" . $db->escape($specialsettings) . "', `ssl`='" . (int)$ssl . "', `ssl_cert_file`='" . $db->escape($ssl_cert_file) . "', `ssl_key_file`='" . $db->escape($ssl_key_file) . "', `ssl_ca_file`='" . $db->escape($ssl_ca_file) . "', `default_vhostconf_domain`='" . $db->escape($default_vhostconf_domain) . "' WHERE `id`='" . (int)$id . "'");
+
+					$db->query("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "`
+					SET 
+						`ip` = '" . $db->escape($ip) . "', 
+						`port` = '" . (int)$port . "', 
+						`listen_statement` = '" . (int)$listen_statement . "', 
+						`namevirtualhost_statement` = '" . (int)$namevirtualhost_statement . "', 
+						`vhostcontainer` = '" . (int)$vhostcontainer . "', 
+						`vhostcontainer_servername_statement` = '" . (int)$vhostcontainer_servername_statement . "', 
+						`specialsettings` = '" . $db->escape($specialsettings) . "', 
+						`ssl` = '" . (int)$ssl . "', 
+						`ssl_cert_file` = '" . $db->escape($ssl_cert_file) . "', 
+						`ssl_key_file` = '" . $db->escape($ssl_key_file) . "', 
+						`ssl_ca_file` = '" . $db->escape($ssl_ca_file) . "',
+						`ssl_cert_chainfile` = '" . $db->escape($ssl_cert_chainfile) . "', 
+						`default_vhostconf_domain` = '" . $db->escape($default_vhostconf_domain) . "'
+					WHERE `id`='" . (int)$id . "'
+					");
+
 					$log->logAction(ADM_ACTION, LOG_WARNING, "changed IP/port from '" . $result['ip'] . ":" . $result['port'] . "' to '" . $ip . ":" . $port . "'");
 					inserttask('1');
 					inserttask('4');

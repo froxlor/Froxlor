@@ -98,6 +98,10 @@ $header
 				<td class="main_field_name">{$lng['admin']['ipsandports']['ssl_ca_file']}:</td>
 				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="ssl_ca_file" value="" size="32" /></td>
 			</tr>
+			<tr>
+				<td class="main_field_name">{$lng['admin']['ipsandports']['ssl_cert_chainfile']}:</td>
+				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="ssl_cert_chainfile" value="" size="32" /></td>
+			</tr>
 			</if>
 			<tr>
 				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input class="bottom" type="submit" value="{$lng['panel']['save']}" /></td>

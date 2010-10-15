@@ -198,6 +198,7 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
+					'overview_option' => true
 					),
 				'system_ssl_cert_file' => array(
 					'label' => $lng['serversettings']['ssl']['ssl_cert_file'],

@@ -322,4 +322,16 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if(versionInUpdate($current_version, '0.9.14-svn4'))
+	{
+		if((int)$settings['system']['use_ssl'] == 1)
+		{
+			$has_preconfig = true;
+			$description = 'Froxlor now has the possibility to set \'SSLCertificateChainFile\' for the apache webserver.';
+			$question = '<strong>Enter filename (leave empty for none):</strong>&nbsp;';
+			$question.= '<input type="text" class="text" name="update_ssl_cert_chainfile" value="'.$settings['system']['ssl_cert_chainfile'].'" />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
 }

@@ -1486,4 +1486,7 @@ $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PH
 $lng['serversettings']['awstats_icons']['title'] = 'Pfad zum Awstats icons Ordner';
 $lng['serversettings']['awstats_icons']['description'] = 'z.B. /usr/share/awstats/htdocs/icon/';
 
+// ADDED IN FROXLOR 0.9.14-svn4
+$lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Pfad zu dem SSL CertificateChainFile';
+
 ?>

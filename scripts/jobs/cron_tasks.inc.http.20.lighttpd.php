@@ -136,8 +136,26 @@ class lighttpd
 	
 			if($row_ipsandports['ssl'] == '1')
 			{
-				$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
-				$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . $row_ipsandports['ssl_cert_file'] . '"' . "\n";
+				if($row_ipsandports['ssl_cert_file'] == '')
+				{
+					$row_ipsandports['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+				}
+
+				if($row_ipsandports['ssl_ca_file'] == '')
+				{
+					$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
+				}
+				
+				if($row_ipsandports['ssl_cert_file'] != '')
+				{
+					$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
+					$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . '"' . "\n";
+					
+					if($row_ipsandports['ssl_ca_file'] != '')
+					{
+						$this->lighttpd_data[$vhost_filename].= 'ssl.ca-file = "' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . '"' . "\n";
+					}
+				}
 			}
 
 			/**
@@ -313,12 +331,6 @@ class lighttpd
 			{
 				$this->lighttpd_data[$vhost_filename] = '';
 			}
-					
-			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ipandport'] . "'";
-			$ipandport = $this->db->query_first($query);
-			$domain['ip'] = $ipandport['ip'];
-			$domain['port'] = $ipandport['port'];
-			$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
 
 			if((!empty($this->lighttpd_data[$vhost_filename])
 				&& !is_dir($this->settings['system']['apacheconf_vhost']))
@@ -364,6 +376,7 @@ class lighttpd
 		$domain['ip'] = $ipandport['ip'];
 		$domain['port'] = $ipandport['port'];
 		$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
+		$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
 
 		if(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
 		{
@@ -400,6 +413,7 @@ class lighttpd
 				$vhost_content.= $this->composePhpOptions($domain);
 				$vhost_content.= $this->getStats($domain);
 				$vhost_content.= $this->getLogFiles($domain);
+				$vhost_content.= $this->getSslSettings($domain, $ssl_vhost);
 			}
 		}
 
@@ -409,6 +423,38 @@ class lighttpd
 		$vhost_content.= '}' . "\n";
 
 		return $vhost_content;
+	}
+
+	protected function getSslSettings($domain, $ssl_vhost)
+	{
+		$ssl_settings = '';
+		
+		if($ssl_vhost === true
+			&& $domain['ssl'] == '1'
+			&& (int)$this->settings['system']['use_ssl'] == 1
+		) {
+			if($domain['ssl_cert_file'] == '')
+			{
+				$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+			}
+
+			if($domain['ssl_ca_file'] == '')
+			{
+				$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
+			}
+			
+			if($domain['ssl_cert_file'] != '')
+			{
+				$ssl_settings.= 'ssl.engine = "enable"' . "\n";
+				$ssl_settings.= 'ssl.pemfile = "' . makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
+				
+				if($domain['ssl_ca_file'] != '')
+				{
+					$ssl_settings.= 'ssl.ca-file = "' . makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
+				}
+			}
+		}
+		return $ssl_settings;
 	}
 
 	protected function getLogFiles($domain)

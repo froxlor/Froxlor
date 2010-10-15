@@ -1122,3 +1122,20 @@ if(isFroxlorVersion('0.9.14-svn2'))
 
 	updateToVersion('0.9.14-svn3');
 }
+
+if(isFroxlorVersion('0.9.14-svn3'))
+{
+	showUpdateStep("Updating from 0.9.14-svn3 to 0.9.14-svn4", false);
+
+	$update_ssl_cert_chainfile = isset($_POST['update_ssl_cert_chainfile']) ? makeCorrectFile($_POST['update_ssl_cert_chainfile']) : '';	
+
+	showUpdateStep("Adding SSLCertificateChainFile to the settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'ssl_cert_chainfile', '".$db->escape($update_ssl_cert_chainfile)."');");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new field to IPs and ports for SSLCertificateChainFile");
+	$db->query("ALTER TABLE `".TABLE_PANEL_IPSANDPORTS."` ADD `ssl_cert_chainfile` varchar(255) NOT NULL AFTER `default_vhostconf_domain`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.14-svn4');
+}
