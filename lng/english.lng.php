@@ -1510,4 +1510,7 @@ $lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Path to the SSL Certificat
 $lng['admin']['ipsandports']['docroot']['title'] = 'Custom docroot (empty = point to Froxlor)';
 $lng['admin']['ipsandports']['docroot']['description'] = 'You can define a custom document-root (the destination for a request) for this ip/port combination here.<br /><strong>ATTENTION:</strong> Please be careful with what you enter here!';
 
+// ADDED IN FROXLOR 0.9.14-svn6
+$lng['serversettings']['login_domain_login'] = 'Allow login with domains';
+
 ?>

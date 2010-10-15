@@ -1493,4 +1493,7 @@ $lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Pfad zu dem SSL Certificat
 $lng['admin']['ipsandports']['docroot']['title'] = 'Benutzerdefinierter Docroot (leer = zeige auf Froxlor)';
 $lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzerdefinierter Document-Root (der Zeilordner f&uuml;r einen Zugriff) f&uuml;r diese IP/Port Kombination gesetzt werden.<br /><strong>ACHTUNG:</strong> Bitte &uuml;berlege vorher, welchen Pfad du hier angibst!';
 
+// ADDED IN FROXLOR 0.9.14-svn6
+$lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
+
 ?>

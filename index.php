@@ -49,7 +49,44 @@ if($action == 'login')
 		}
 		else
 		{
-			$is_admin = true;
+			if((int)$settings['login']['domain_login'] == 1)
+			{
+				/**
+				 * check if the customer tries to login with a domain, #374
+				 */
+				$domainname = $idna_convert->encode(preg_replace(Array('/\:(\d)+$/', '/^https?\:\/\//'), '', $loginname));
+				$row2 = $db->query_first("SELECT `customerid` FROM `".TABLE_PANEL_DOMAINS."` WHERE `domain` = '".$db->escape($domainname)."'");
+	
+				if(isset($row2['customerid']) && $row2['customerid'] > 0)
+				{
+					$loginname = getCustomerDetail($row2['customerid'], 'loginname');
+					
+					if($loginname !== false)
+					{
+						$row3 = $db->query_first("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
+		
+						if($row3['customer'] == $loginname)
+						{
+							$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
+							$uid = 'customerid';
+							$adminsession = '0';
+							$is_admin = false;
+						}
+					}
+					else
+					{
+						$is_admin = true;
+					}
+				}
+				else
+				{
+					$is_admin = true;
+				}
+			}
+			else
+			{
+				$is_admin = true;
+			}
 		}
 
 		if(hasUpdates($version) && $is_admin == false)

@@ -1150,3 +1150,16 @@ if(isFroxlorVersion('0.9.14-svn4'))
 
 	updateToVersion('0.9.14-svn5');
 }
+
+if(isFroxlorVersion('0.9.14-svn5'))
+{
+	showUpdateStep("Updating from 0.9.14-svn5 to 0.9.14-svn6", false);
+
+	$update_allow_domain_login = isset($_POST['update_allow_domain_login']) ? (int)$_POST['update_allow_domain_login'] : '0';
+
+	showUpdateStep("Adding domain-login switch to the settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('login', 'domain_login', '".(int)$update_allow_domain_login."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.14-svn6');
+}

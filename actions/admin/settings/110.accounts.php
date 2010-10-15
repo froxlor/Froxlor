@@ -38,6 +38,14 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					),
+				'login_domain_login' => array(
+					'label' => $lng['serversettings']['login_domain_login'],
+					'settinggroup' => 'login',
+					'varname' => 'domain_login',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
 				'login_maxloginattempts' => array(
 					'label' => $lng['serversettings']['maxloginattempts'],
 					'settinggroup' => 'login',

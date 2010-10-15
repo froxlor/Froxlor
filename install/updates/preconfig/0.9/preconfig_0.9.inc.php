@@ -334,4 +334,13 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if(versionInUpdate($current_version, '0.9.14-svn6'))
+	{
+		$has_preconfig = true;
+		$description = 'You can now allow customers to use any of their domains as username for the login.';
+		$question = '<strong>Do you want to enable domain-login for all customers?:</strong>&nbsp;';
+		$question.= makeyesno('update_allow_domain_login', '1', '0', '0');
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }
