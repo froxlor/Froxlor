@@ -1127,7 +1127,12 @@ if(isFroxlorVersion('0.9.14-svn3'))
 {
 	showUpdateStep("Updating from 0.9.14-svn3 to 0.9.14-svn4", false);
 
-	$update_ssl_cert_chainfile = isset($_POST['update_ssl_cert_chainfile']) ? makeCorrectFile($_POST['update_ssl_cert_chainfile']) : '';	
+	$update_ssl_cert_chainfile = isset($_POST['update_ssl_cert_chainfile']) ? $_POST['update_ssl_cert_chainfile'] : '';	
+
+	if($update_ssl_cert_chainfile != '')
+	{
+		$update_ssl_cert_chainfile = makeCorrectFile($update_ssl_cert_chainfile);
+	}
 
 	showUpdateStep("Adding SSLCertificateChainFile to the settings");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'ssl_cert_chainfile', '".$db->escape($update_ssl_cert_chainfile)."');");
