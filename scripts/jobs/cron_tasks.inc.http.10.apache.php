@@ -189,17 +189,26 @@ class apache
 			{
 				$this->virtualhosts_data[$vhosts_filename].= '<VirtualHost ' . $ipport . '>' . "\n";
 
-				/**
-				 * add 'real'-vhost content here, like doc-root :)
-				 */
-				if($this->settings['system']['froxlordirectlyviahostname'])
+				if($row_ipsandports['docroot'] == '')
 				{
-					$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+					/**
+					 * add 'real'-vhost content here, like doc-root :)
+					 */
+					if($this->settings['system']['froxlordirectlyviahostname'])
+					{
+						$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+					}
+					else 
+					{
+						$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
+					}
 				}
-				else 
+				else
 				{
-					$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
+					// user-defined docroot, #417
+					$mypath = makeCorrectDir($row_ipsandports['docroot']);
 				}
+
 				$this->virtualhosts_data[$vhosts_filename].= 'DocumentRoot "'.$mypath.'"'."\n";
 				
 				if($row_ipsandports['vhostcontainer_servername_statement'] == '1')
@@ -1110,6 +1119,13 @@ class apache
 			{
 				// Save one big file
 				$vhosts_file = '';
+
+				// sort by filename so the order is:
+				// 1. subdomains                  20
+				// 2. subdomains as main-domains  21
+				// 3. main-domains                22
+				// #437
+				ksort($this->virtualhosts_data);
 
 				foreach($this->virtualhosts_data as $vhosts_filename => $vhost_content)
 				{

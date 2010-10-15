@@ -1139,3 +1139,14 @@ if(isFroxlorVersion('0.9.14-svn3'))
 
 	updateToVersion('0.9.14-svn4');
 }
+
+if(isFroxlorVersion('0.9.14-svn4'))
+{
+	showUpdateStep("Updating from 0.9.14-svn4 to 0.9.14-svn5", false);
+
+	showUpdateStep("Adding docroot-field to IPs and ports for custom-docroot settings");
+	$db->query("ALTER TABLE `".TABLE_PANEL_IPSANDPORTS."` ADD `docroot` varchar(255) NOT NULL default '' AFTER `ssl_cert_chainfile`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.14-svn5');
+}

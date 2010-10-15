@@ -48,6 +48,10 @@ $header
 				<td class="main_field_display" nowrap="nowrap">$vhostcontainer</td>
 			</tr>
 			<tr>
+				<td class="main_field_name">{$lng['admin']['ipsandports']['docroot']}:</td>
+				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="docroot" value="" /></td>
+			</tr>
+			<tr>
 				<td class="main_field_name" valign="top">{$lng['admin']['ownvhostsettings']}:<br /><font size="1">{$lng['serversettings']['default_vhostconf']['description']}</font>
 				<if $settings['system']['webserver'] == 'lighttpd'><div style="color:red">{$lng['panel']['not_supported']}lighttpd</div></if>
 				</td>

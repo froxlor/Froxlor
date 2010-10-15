@@ -107,14 +107,23 @@ class lighttpd
 				$this->lighttpd_data[$vhost_filename].= '# Froxlor default vhost' . "\n";
 				$this->lighttpd_data[$vhost_filename].= '$HTTP["host"] =~ "^(?:www\.|)' . $myhost . '$" {' . "\n";
 
-				if($this->settings['system']['froxlordirectlyviahostname'])
+				if($row_ipsandports['docroot'] == '')
 				{
-					$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+					if($this->settings['system']['froxlordirectlyviahostname'])
+					{
+						$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+					}
+					else 
+					{
+						$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
+					}
 				}
-				else 
+				else
 				{
-					$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
+					// user-defined docroot, #417
+					$mypath = makeCorrectDir($row_ipsandports['docroot']);
 				}
+
 				$this->lighttpd_data[$vhost_filename].= '  server.document-root = "'.$mypath.'"'."\n";
 
 				/**
@@ -854,6 +863,13 @@ class lighttpd
 		{
 			// Save one big file
 			$vhosts_file = '';
+
+			// sort by filename so the order is:
+			// 1. subdomains
+			// 2. subdomains as main-domains
+			// 3. main-domains
+			// #437
+			ksort($this->lighttpd_data);
 
 			foreach($this->lighttpd_data as $vhosts_filename => $vhost_content)
 			{

@@ -1489,4 +1489,8 @@ $lng['serversettings']['awstats_icons']['description'] = 'z.B. /usr/share/awstat
 // ADDED IN FROXLOR 0.9.14-svn4
 $lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Pfad zu dem SSL CertificateChainFile';
 
+// ADDED IN FROXLOR 0.9.14-svn5
+$lng['admin']['ipsandports']['docroot']['title'] = 'Benutzerdefinierter Docroot (leer = zeige auf Froxlor)';
+$lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzerdefinierter Document-Root (der Zeilordner f&uuml;r einen Zugriff) f&uuml;r diese IP/Port Kombination gesetzt werden.<br /><strong>ACHTUNG:</strong> Bitte &uuml;berlege vorher, welchen Pfad du hier angibst!';
+
 ?>

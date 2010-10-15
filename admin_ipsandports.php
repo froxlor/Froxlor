@@ -147,6 +147,7 @@ if($page == 'ipsandports'
 			$ssl_ca_file = validate($_POST['ssl_ca_file'], 'ssl_ca_file');
 			$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
 			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
+			$docroot = validate($_POST['docroot'], 'docroot');
 			
 			if($listen_statement != '1')
 			{
@@ -193,6 +194,15 @@ if($page == 'ipsandports'
 				$ssl_cert_chainfile = makeCorrectFile($ssl_cert_chainfile);
 			}
 
+			if(strlen(trim($docroot)) > 0)
+			{
+				$docroot = makeCorrectDir($docroot);
+			}
+			else
+			{
+				$docroot = '';
+			}
+
 			$result_checkfordouble = $db->query_first("SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ip`='" . $db->escape($ip) . "' AND `port`='" . (int)$port . "'");
 
 			if($result_checkfordouble['id'] != '')
@@ -215,7 +225,8 @@ if($page == 'ipsandports'
 						`ssl_key_file` = '" . $db->escape($ssl_key_file) . "', 
 						`ssl_ca_file` = '" . $db->escape($ssl_ca_file) . "',
 						`ssl_cert_chainfile` = '" . $db->escape($ssl_cert_chainfile) . "', 
-						`default_vhostconf_domain` = '" . $db->escape($default_vhostconf_domain) . "';
+						`default_vhostconf_domain` = '" . $db->escape($default_vhostconf_domain) . "',
+						`docroot` = '" . $db->escape($docroot) . "';
 					");
 
 				if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
@@ -264,6 +275,7 @@ if($page == 'ipsandports'
 				$ssl_ca_file = validate($_POST['ssl_ca_file'], 'ssl_ca_file');
 				$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
 				$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
+				$docroot =  validate($_POST['docroot'], 'docroot');
 				
 				if($listen_statement != '1')
 				{
@@ -310,6 +322,15 @@ if($page == 'ipsandports'
 					$ssl_cert_chainfile = makeCorrectFile($ssl_cert_chainfile);
 				}
 
+				if(strlen(trim($docroot)) > 0)
+				{
+					$docroot = makeCorrectDir($docroot);
+				}
+				else
+				{
+					$docroot = '';
+				}
+
 				if($result['ip'] != $ip
 				   && $result['ip'] == $settings['system']['ipaddress']
 				   && $result_sameipotherport['id'] == '')
@@ -338,7 +359,8 @@ if($page == 'ipsandports'
 						`ssl_key_file` = '" . $db->escape($ssl_key_file) . "', 
 						`ssl_ca_file` = '" . $db->escape($ssl_ca_file) . "',
 						`ssl_cert_chainfile` = '" . $db->escape($ssl_cert_chainfile) . "', 
-						`default_vhostconf_domain` = '" . $db->escape($default_vhostconf_domain) . "'
+						`default_vhostconf_domain` = '" . $db->escape($default_vhostconf_domain) . "',
+						`docroot` = '" . $db->escape($docroot) . "' 
 					WHERE `id`='" . (int)$id . "'
 					");
 
