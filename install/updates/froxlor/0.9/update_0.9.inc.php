@@ -1168,3 +1168,109 @@ if(isFroxlorVersion('0.9.14-svn5'))
 
 	updateToVersion('0.9.14-svn6');
 }
+
+if(isFroxlorVersion('0.9.14-svn6'))
+{
+	showUpdateStep("Updating from 0.9.14-svn6 to 0.9.14-svn7", false);
+
+	// remove deprecated realtime-feature
+	showUpdateStep("Removing realtime-feature (deprecated)");
+	$db->query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'realtime_port';");
+	lastStepStatus(0);
+
+	// remove deprecated panel_navigation
+	showUpdateStep("Removing table `panel_navigation` (deprecated)");
+	$db->query("DROP TABLE IF EXISTS `panel_navigation`;");
+	lastStepStatus(0);
+
+	// remove deprecated panel_cronscript
+	showUpdateStep("Removing table `panel_cronscript` (deprecated)");
+	$db->query("DROP TABLE IF EXISTS `panel_cronscript`;");
+	lastStepStatus(0);
+
+	// make ticket-system ipv6 compatible
+	showUpdateStep("Altering IP field in panel_tickets (IPv6 compatibility)");
+	$db->query("ALTER TABLE `" . TABLE_PANEL_TICKETS . "` MODIFY `ip` varchar(39) NOT NULL default '';");
+	lastStepStatus(0);
+
+	showUpdateStep("Preparing database tables for upcoming multi-server support");
+	$db->query("ALTER TABLE `".TABLE_PANEL_SETTINGS."` ADD `sid` int(11) NOT NULL default '0' AFTER `value`;");
+
+	showUpdateStep(".");
+	$db->query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `sid` int(11) NOT NULL default '0' AFTER `email_autoresponder_used`;");
+
+	showUpdateStep(".");
+	$db->query("ALTER TABLE `".TABLE_MAIL_VIRTUAL."` ADD `sid` int(11) NOT NULL default '0' AFTER `iscatchall`;");
+
+	showUpdateStep(".");
+	$db->query("ALTER TABLE `".TABLE_FTP_USERS."` ADD `sid` int(11) NOT NULL default '0' AFTER `customerid`;");
+
+	showUpdateStep(".");
+	$db->query("ALTER TABLE `".TABLE_PANEL_TASKS."` ADD `sid` int(11) NOT NULL default '0' AFTER `data`;");
+
+	showUpdateStep(".");
+	$db->query("ALTER TABLE `".TABLE_APS_TASKS."` ADD `sid` int(11) NOT NULL default '0' AFTER `Task`;");
+
+	showUpdateStep(".");
+	$db->query("ALTER TABLE `".TABLE_PANEL_LOG."` ADD `sid` int(11) NOT NULL default '0' AFTER `text`;");
+
+	showUpdateStep(".");
+	$db->query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `sid` int(11) NOT NULL default '0' AFTER `phpsettings`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new table `".TABLE_FROXLOR_CLIENTS."`");
+	$db->query("DROP TABLE IF EXISTS `".TABLE_FROXLOR_CLIENTS."`;)");
+	$db->query("CREATE TABLE IF NOT EXISTS `".TABLE_FROXLOR_CLIENTS."` (
+				  `id` int(11) NOT NULL auto_increment,
+				  `name` varchar(255) NOT NULL,
+				  `ip` varchar(39) NOT NULL default '',
+				  `enabled` tinyint(1) DEFAULT '1',
+				  PRIMARY KEY  (`id`)
+				) ENGINE=MyISAM;");
+	lastStepStatus(0);
+
+	// add $server_id to userdata.inc.php for upcoming multi-server-support
+	showUpdateStep("Adding server-id setting for upcoming multi-server support to userdata.inc.php");
+	$mypath = dirname(dirname(dirname(dirname(dirname(__FILE__))))); // froxlor-rootdir
+	$userdatafile = makeCorrectFile($mypath.'/lib/userdata.inc.php');
+	$userdata = @file_get_contents($userdatafile);
+	$newcontent = '';
+	if($userdata !== false)
+	{
+		$ud = explode("\n", $userdata);
+		// add server_id lines at the end
+		$lastidx = count($ud) -1;
+		while($ud[$lastidx] != "?>")
+		{
+			$lastidx--;
+		}
+		$ud[$lastidx] = "\n";
+		$ud[$lastidx++] = "// Define our system id (multiserver support, default is '0')\n";
+		$ud[$lastidx++] = "\$server_id = 0;\n";
+		$ud[$lastidx++] = "?>\n";
+
+		@copy($userdatafile, $userdatafile.'.bak');
+		@unlink($userdatafile);
+		$writesuccess = @fopen($userdatafile, 'w');
+
+		if($writesuccess !== false)
+		{
+			@fwrite($writesuccess, implode("\n", $ud));
+			@fclose($writesucsess);
+			@unlink($userdatafile.'.bak');
+			lastStepStatus(0);
+		}
+		else
+		{
+			@copy($userdatafile.'.bak', $userdatafile);
+			@unlink($userdatafile.'.bak');
+			lastStepStatus(2, 'Failed to append server-id to userdata.inc.php file. Please put <strong>\$server_id = 0;</strong> to your userdata.inc.php file manually.');
+		}
+	}
+	else
+	{
+		lastStepStatus(2, 'Failed to read userdata.inc.php file. Please put <strong>\$server_id = 0;</strong> to your userdata.inc.php file manually.');
+	}
+
+	updateToVersion('0.9.14-svn7');
+}

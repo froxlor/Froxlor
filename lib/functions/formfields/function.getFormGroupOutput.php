@@ -63,8 +63,18 @@ function getFormOverviewGroupOutput($groupname, $groupdetails)
 				}
 				else
 				{
+					if(isset($fielddetails['disabled']) && $fielddetails['disabled'] == true)
+					{
+						$d = true;
+						$option.='<span class="strikethrough">';
+					} else {
+						$d = false;
+					}
 					$option.= $lng['admin']['activated'].':&nbsp;';
-					$option.= makeyesno($fieldname, '1', '0', $settings[$fielddetails['settinggroup']][$fielddetails['varname']]);
+					$option.= makeyesno($fieldname, '1', '0', $settings[$fielddetails['settinggroup']][$fielddetails['varname']], $d);
+					if($d) {
+						$option.='</span>';
+					}
 					$activated = (int)$settings[$fielddetails['settinggroup']][$fielddetails['varname']];
 				}
 			}

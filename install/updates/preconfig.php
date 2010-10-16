@@ -43,20 +43,3 @@ function getPreConfig($current_version)
 		return '';
 	}
 }
-
-function versionInUpdate($current_version, $version_to_check)
-{
-	if (!isFroxlor()) {
-		return true;
-	}
-	$pos_a = strpos($current_version, '-svn');
-	$pos_b = strpos($version_to_check, '-svn');
-	// if we compare svn-versions, we have to add -svn0 to the version
-	// to compare it correctly	
-	if($pos_a === false && $pos_b !== false)
-	{
-		$current_version.= '-svn9999';
-	}
-	
-	return version_compare($current_version, $version_to_check, '<');
-}

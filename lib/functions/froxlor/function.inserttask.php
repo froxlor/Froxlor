@@ -24,12 +24,18 @@
  * @param string Parameter 1
  * @param string Parameter 2
  * @param string Parameter 3
- * @author Florian Lippert <flo@syscp.org>
+ * @param string Parameter 4
+ * 
+ * @author Florian Lippert <flo@syscp.org> (2003-2009)
+ * @author Froxlor team <team@froxlor.org> (2010-)
  */
 
 function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '')
 {
 	global $db, $settings;
+	
+	// check for $server_id, if it's not set default to "master"
+	$server_id = getServerId();
 
 	if($type == '1'
 	   || $type == '3'
@@ -37,8 +43,7 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 	   || $type == '5')
 	{
 		$db->query('DELETE FROM `' . TABLE_PANEL_TASKS . '` WHERE `type`="' . $type . '"');
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`) VALUES ("' . $type . '")');
-		$doupdate = true;
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `sid`) VALUES ("' . $type . '", "'.$server_id.'")');
 	}
 	elseif($type == '2'
 	       && $param1 != ''
@@ -52,8 +57,7 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data['gid'] = $param3;
 		$data['store_defaultindex'] = $param4;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("2", "' . $db->escape($data) . '")');
-		$doupdate = true;
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`, `sid`) VALUES ("2", "' . $db->escape($data) . '", "'.$server_id.'")');
 	}
 	elseif($type == '6'
 			&& $param1 != '')
@@ -61,8 +65,7 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data = Array();
 		$data['loginname'] = $param1;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("6", "' . $db->escape($data) . '")');
-		$doupdate = true;
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`, `sid`) VALUES ("6", "' . $db->escape($data) . '", "'.$server_id.'")');
 	}
 	elseif($type == '7'
 			&& $param1 != ''
@@ -72,8 +75,7 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data['loginname'] = $param1;
 		$data['email'] = $param2;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("7", "' . $db->escape($data) . '")');
-		$doupdate = true;
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`, `sid`) VALUES ("7", "' . $db->escape($data) . '", "'.$server_id.'")');
 	}
 	elseif($type == '8'
 			&& $param1 != ''
@@ -83,50 +85,6 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data['loginname'] = $param1;
 		$data['homedir'] = $param2;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("8", "' . $db->escape($data) . '")');
-		$doupdate = true;
-	}
-
-	if($doupdate === true
-	   && (int)$settings['system']['realtime_port'] !== 0
-	   && function_exists('socket_create'))
-	{
-		$timeout = 15;
-		//$socket = @socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-		$socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-
-		if($socket !== false)
-		{
-			// create the request packet
-			$packet = chr(0) . chr(1) . 'RUN' . chr(0);
-			// UDP is connectionless, so we just send on it.
-			//@socket_sendto($socket, $packet, strlen($packet), 0x100, '127.0.0.1', (int)$settings['system']['realtime_port']);			
-
-			/*
-			 * this is for TCP-Connections
-			 */
-			$time = time();
-
-			while(!@socket_connect($socket, '127.0.0.1', (int)$settings['system']['realtime_port']))
-			{
-				$err = socket_last_error($socket);
-
-				if($err == 115
-				   || $err == 114)
-				{
-					if((time() - $time) >= $timeout)
-					{
-						break;
-					}
-
-					sleep(1);
-					continue;
-				}
-			}
-			/**
-			 * close socket
-			 */
-			@socket_close($socket);
-		}
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`, `sid`) VALUES ("8", "' . $db->escape($data) . '", "'.$server_id.'")');
 	}
 }

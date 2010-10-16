@@ -255,6 +255,17 @@ function requirement_checks()
 		status_message('green', 'OK');
 	}
 
+	// check for ssh2 (multiserver-mode)
+	status_message('begin', $lng['install']['phpssh2']);
+	if(!extension_loaded('ssh2'))
+	{
+		status_message('orange', $lng['install']['ssh2neededformultiserver']);
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
+
 	if($_die)
 	{
 ?>
@@ -753,8 +764,10 @@ if(isset($_POST['installstep'])
 	$userdata.= "\$sql_root[0]['caption']='Default';\n";
 	$userdata.= "\$sql_root[0]['host']='" . addcslashes($mysql_host, "'\\") . "';\n";
 	$userdata.= "\$sql_root[0]['user']='" . addcslashes($mysql_root_user, "'\\") . "';\n";
-	$userdata.= "\$sql_root[0]['password']='" . addcslashes($mysql_root_pass, "'\\") . "';\n";
-	$userdata.= "?>";
+	$userdata.= "\$sql_root[0]['password']='" . addcslashes($mysql_root_pass, "'\\") . "';\n\n";
+	$userdata.= "// Define our system id (multiserver support, default is '0')\n";
+	$userdata.= "\$server_id = 0;\n";
+	$userdata.= "?>\n";
 
 	//we test now if we can store the userdata.inc.php in ../lib
 

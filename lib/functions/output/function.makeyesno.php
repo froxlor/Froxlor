@@ -24,12 +24,18 @@
  * @param string Value which will be returned if user chooses yes
  * @param string Value which will be returned if user chooses no
  * @param string Value which is chosen by default
+ * @param bool   Whether this element is disabled or not (default: false)
  * @return string HTML Code
- * @author Florian Lippert <flo@syscp.org>
+ * @author Florian Lippert <flo@syscp.org> (2003-2009)
+ * @author     Froxlor team <team@froxlor.org> (2010-)
  */
 
-function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '')
+function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled = false)
 {
 	global $lng;
-	return '<select class="dropdown_noborder" name="' . $name . '"><option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' . $lng['panel']['yes'] . '</option><option value="' . $novalue . '"' . ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
+	
+	if($disabled) {
+		$d = ' disabled="disabled"';
+	}
+	return '<select class="dropdown_noborder" name="' . $name . '"'.$d.'><option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' . $lng['panel']['yes'] . '</option><option value="' . $novalue . '"' . ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
 }

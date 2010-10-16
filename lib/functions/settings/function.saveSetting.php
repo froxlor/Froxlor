@@ -20,8 +20,19 @@
 function saveSetting($settinggroup, $varname, $newvalue)
 {
 	global $db;
-	$query = 'UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = \'' . $db->escape($newvalue) . '\' WHERE `settinggroup` = \'' . $db->escape($settinggroup) . '\' AND `varname`=\'' . $db->escape($varname) . '\'';
+	
+	// multi-server-support, get the destination server id (master = 0)
+	$server_id = getServerId();
+
+	$query = 'UPDATE 
+			`' . TABLE_PANEL_SETTINGS . '` 
+		SET 
+			`value` = \'' . $db->escape($newvalue) . '\' 
+		WHERE 
+			`settinggroup` = \'' . $db->escape($settinggroup) . '\' 
+		AND 
+			`varname`=\'' . $db->escape($varname) . '\'
+		AND 
+			`sid`=\''. (int)$server_id . '\' ';
 	return $db->query($query);
 }
-
-?>

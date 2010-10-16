@@ -84,15 +84,6 @@ return array(
 					'plausibility_check_method' => 'checkMysqlAccessHost',
 					'save_method' => 'storeSettingMysqlAccessHost',
 					),
-				'system_realtime_port' => array(
-					'label' => $lng['serversettings']['system_realtime_port'],
-					'settinggroup' => 'system',
-					'varname' => 'realtime_port',
-					'type' => (function_exists('socket_create') ? 'int' : 'hidden'),
-					'int_max' => 65535,
-					'default' => 0,
-					'save_method' => 'storeSettingField',
-					),
 				'system_index_file_extension' => array(
 					'label' => $lng['serversettings']['index_file_extension'],
 					'settinggroup' => 'system',

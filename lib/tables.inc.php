@@ -38,7 +38,6 @@ define('TABLE_PANEL_TRAFFIC_ADMINS', 'panel_traffic_admins');
 define('TABLE_PANEL_DISKSPACE', 'panel_diskspace');
 define('TABLE_PANEL_DISKSPACE_ADMINS', 'panel_diskspace_admins');
 define('TABLE_PANEL_LANGUAGE', 'panel_languages');
-define('TABLE_PANEL_CRONSCRIPT', 'panel_cronscript');
 define('TABLE_PANEL_IPSANDPORTS', 'panel_ipsandports');
 define('TABLE_PANEL_TICKETS', 'panel_tickets');
 define('TABLE_PANEL_TICKET_CATS', 'panel_ticket_categories');
@@ -53,6 +52,7 @@ define('TABLE_APS_TEMP_SETTINGS', 'aps_temp_settings');
 define('TABLE_PANEL_CRONRUNS', 'cronjobs_run');
 define('TABLE_PANEL_REDIRECTCODES', 'redirect_codes');
 define('TABLE_PANEL_DOMAINREDIRECTS', 'domain_redirect_codes');
+define('TABLE_FROXLOR_CLIENTS', 'froxlor_clients');
 
 // APS constants
 
@@ -72,7 +72,7 @@ define('PACKAGE_ENABLED', 2);
 
 // VERSION INFO
 
-$version = '0.9.14-svn6';
+$version = '0.9.14-svn7';
 $dbversion = '2';
 $branding = '';
 

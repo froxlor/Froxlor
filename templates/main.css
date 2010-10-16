@@ -470,3 +470,8 @@ TR.RowOverSelected {
         margin-bottom: 0.5em;
 		font-size: 120%;
 }
+
+.strikethrough {
+	text-decoration: line-through;
+}
+

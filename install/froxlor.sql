@@ -45,6 +45,7 @@ CREATE TABLE `ftp_users` (
   `down_count` int(15) NOT NULL default '0',
   `down_bytes` bigint(30) NOT NULL default '0',
   `customerid` int(11) NOT NULL default '0',
+  `sid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `customerid` (`customerid`)
@@ -103,6 +104,7 @@ CREATE TABLE `mail_virtual` (
   `customerid` int(11) NOT NULL default '0',
   `popaccountid` int(11) NOT NULL default '0',
   `iscatchall` tinyint(1) unsigned NOT NULL default '0',
+  `sid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `email` (`email`)
 ) TYPE=MyISAM ;
@@ -232,6 +234,7 @@ CREATE TABLE `panel_customers` (
   `perlenabled` tinyint(1) NOT NULL default '0',
   `email_autoresponder` int(5) NOT NULL default '0',
   `email_autoresponder_used` int(5) NOT NULL default '0',
+  `sid` int(11) NOT NULL default '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) TYPE=MyISAM ;
@@ -434,6 +437,7 @@ CREATE TABLE `panel_settings` (
   `settinggroup` varchar(255) NOT NULL default '',
   `varname` varchar(255) NOT NULL default '',
   `value` text NOT NULL,
+  `sid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`settingid`)
 ) TYPE=MyISAM ;
 
@@ -462,7 +466,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (18, 'system', 'vmail_homedir', '/var/customers/mail/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (19, 'system', 'bindconf_directory', '/etc/bind/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (20, 'system', 'bindreload_command', '/etc/init.d/bind9 reload');
-INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (22, 'panel', 'version', '0.9.14-svn6');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (22, 'panel', 'version', '0.9.14-svn7');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (23, 'system', 'hostname', 'SERVERNAME');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (24, 'login', 'maxloginattempts', '3');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (25, 'login', 'deactivatetime', '900');
@@ -546,7 +550,6 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (104, 'aps', 'webserver-htaccess', '');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (105, 'aps', 'php-function', '');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (106, 'aps', 'webserver-module', '');
-INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (107, 'system', 'realtime_port', '0');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (108, 'session', 'allow_multiple_login', '0');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (109, 'panel', 'allow_domain_change_admin', '0');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (110, 'panel', 'allow_domain_change_customer', '0');
@@ -607,6 +610,7 @@ CREATE TABLE `panel_tasks` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `type` int(11) NOT NULL default '0',
   `data` text NOT NULL,
+  `sid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM ;
 
@@ -795,7 +799,7 @@ CREATE TABLE `panel_tickets` (
   `message` text NOT NULL,
   `dt` int(15) NOT NULL,
   `lastchange` int(15) NOT NULL,
-  `ip` varchar(20) NOT NULL,
+  `ip` varchar(39) NOT NULL default '',
   `status` enum('0','1','2','3') NOT NULL default '1',
   `lastreplier` enum('0','1') NOT NULL default '0',
   `answerto` int(11) unsigned NOT NULL,
@@ -840,6 +844,7 @@ CREATE TABLE IF NOT EXISTS `panel_syslog` (
   `date` int(15) NOT NULL,
   `user` varchar(50) NOT NULL,
   `text` text NOT NULL,
+  `sid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`logid`)
 ) ENGINE=MyISAM;
 
@@ -888,6 +893,7 @@ CREATE TABLE `panel_phpconfigs` (
   `mod_fcgid_starter` int(4) NOT NULL DEFAULT '-1',
   `mod_fcgid_maxrequests` int(4) NOT NULL DEFAULT '-1',
   `phpsettings` text NOT NULL,
+  `sid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM;
 
@@ -955,6 +961,7 @@ CREATE TABLE IF NOT EXISTS `aps_tasks` (
   `ID` int(4) NOT NULL auto_increment,
   `InstanceID` int(4) NOT NULL,
   `Task` int(4) NOT NULL,
+  `sid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`ID`)
 ) ENGINE=MyISAM;
 
@@ -1085,4 +1092,18 @@ CREATE TABLE IF NOT EXISTS `domain_redirect_codes` (
   `rid` int(5) NOT NULL,
   `did` int(11) unsigned NOT NULL,
   UNIQUE KEY `rc` (`rid`, `did`)
+) ENGINE=MyISAM;
+
+
+#
+# Tabellenstruktur fuer Tabelle `froxlor_clients`
+#
+
+DROP TABLE IF EXISTS `froxlor_clients`;
+CREATE TABLE IF NOT EXISTS `froxlor_clients` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  `ip` varchar(39) NOT NULL default '',
+  `enabled` tinyint(1) DEFAULT '1',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM;
