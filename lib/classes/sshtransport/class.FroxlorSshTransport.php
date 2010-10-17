@@ -20,7 +20,7 @@
  * @author     Froxlor Team <team@froxlor.org>
  * @copyright  2010 the authors
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @version    SVN: $Id: class.FroxlorModule.php 1167 2010-06-22 11:46:34Z d00p $
+ * @version    SVN: $Id$
  * @link       http://www.froxlor.org/
  */
 
@@ -85,6 +85,15 @@ class FroxlorSshTransport
 		
 		// get a shell stream
 		$this->_shell = $this->_getShell();
+	}
+	
+	/**
+	 * Destructor.
+	 *
+	 */
+	public function __destruct()
+	{
+		$this->close();
 	}
 
 	/**
@@ -156,6 +165,8 @@ class FroxlorSshTransport
 	
 	/**
 	 * Sends a file to the remote server.
+	 * The function checks if fopen() is enabled to use a faster way
+	 * to send the file. Otherwise ssh2_scp_send() is used.
 	 * 
 	 * @param string $localFile  path to the local file
 	 * @param string $remoteFile remote file path
@@ -170,11 +181,41 @@ class FroxlorSshTransport
 			return false;
 		}
 		
-		// send file
-		if (ssh2_scp_send($this->_connection, $localFile, $remoteFile, $chmod)) {
+		// send file with scp if fopen() is disabled
+		if (ssh2_scp_send($this->_connection, $localFile, $remoteFile, $chmod) && !function_exists("fopen")) {
 			return true;
 		} else {
 			return false;
+		}
+		
+		// open a sftp cnnection
+		$sftp = ssh2_sftp($this->_connection);
+		
+		// connect to it
+		$sftpStream = @fopen('ssh2.sftp://'.$sftp.$remoteFile, 'w');
+	
+		try {
+			if (!$sftpStream) {
+				throw new Exception("Could not open remote file: $remoteFile");
+		    }
+		   
+		    $data_to_send = @file_get_contents($localFile);
+		   
+		    if ($data_to_send === false) {
+				throw new Exception("Could not open local file: $localFile.");
+		    }
+		   
+		    if (@fwrite($sftpStream, $data_to_send) === false) {
+				throw new Exception("Could not send data from file: $localFile.");
+		    }
+		    
+		    fclose($sftpStream);
+		    return true;
+				   
+		} catch (Exception $e) {
+			// TODO log to error log?
+		    fclose($sftpStream);
+		    return false;
 		}
 	}
 	
@@ -192,7 +233,7 @@ class FroxlorSshTransport
 		$output = array();
 		
 		while($line = fgets($this->_shell)) {
-	        $output[] = $line;
+		$output[] = $line;
 		}
 		
 		return $output;
@@ -203,6 +244,10 @@ class FroxlorSshTransport
 	 */
 	public function close()
 	{
+		// close the session and force flushing file content to disk
+		ssh2_exec($this->_connection, 'exit'); 
+		
+		// set null values
 		$this->_shell = null;
 		$this->_settings = null;
 		$this->_connection = null;
@@ -221,7 +266,7 @@ class FroxlorSshTransport
 		if ($this->_settings['pubkeyfile']) {
 			// pubkey authentication
 			$this->_connection = ssh2_connect($this->_settings['ip'], $this->_settings['port'], array('hostkey'=>'ssh-rsa'), $callbacks);
-            $success = ssh2_auth_pubkey_file($this->_connection, $this->_settings['username'], $pubkeyfile, $privkeyfile, $passphrase);
+			$success = ssh2_auth_pubkey_file($this->_connection, $this->_settings['username'], $pubkeyfile, $privkeyfile, $passphrase);
 		} else {
 			// plain password authentication
 			$this->_connection = ssh2_connect($this->_settings['ip'], $this->_settings['port'], array(), $callbacks);
