@@ -201,7 +201,7 @@ elseif($page == 'accounts')
 					$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `ftps_used`=`ftps_used`+1, `ftp_lastaccountnumber`=`ftp_lastaccountnumber`+1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 
 					$log->logAction(USR_ACTION, LOG_INFO, "added ftp-account '" . $username . " (" . $path . ")'");
-					inserttask(5);
+					inserttask(5, (int)$userinfo['sid']);
 
 					if($sendinfomail == 1)
 					{

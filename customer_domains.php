@@ -195,8 +195,8 @@ elseif($page == 'domains')
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted subdomain '" . $idna_convert->decode($result['domain']) . "'");
 				$result = $db->query("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 				$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used`=`subdomains_used`-1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
-				inserttask('1');
-				inserttask('4');
+				inserttask('1', (int)$userinfo['sid']);
+				inserttask('4', (int)$userinfo['sid']);
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 			else
@@ -345,8 +345,8 @@ elseif($page == 'domains')
 
 					$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used`=`subdomains_used`+1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 					$log->logAction(USR_ACTION, LOG_INFO, "added subdomain '" . $completedomain . "'");
-					inserttask('1');
-					inserttask('4');
+					inserttask('1', (int)$userinfo['sid']);
+					inserttask('4', (int)$userinfo['sid']);
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
 			}
@@ -513,8 +513,8 @@ elseif($page == 'domains')
 					{
 						$log->logAction(USR_ACTION, LOG_INFO, "edited domain '" . $idna_convert->decode($result['domain']) . "'");
 						$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `documentroot`='" . $db->escape($path) . "', `isemaildomain`='" . (int)$isemaildomain . "', `iswildcarddomain`='" . (int)$iswildcarddomain . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ",`openbasedir_path`='" . $db->escape($openbasedir_path) . "', `ssl_redirect`='" . $ssl_redirect . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
-						inserttask('1');
-						inserttask('4');
+						inserttask('1', (int)$userinfo['sid']);
+						inserttask('4', (int)$userinfo['sid']);
 					}
 
 					redirectTo($filename, Array('page' => $page, 's' => $s));

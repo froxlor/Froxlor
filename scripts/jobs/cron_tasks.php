@@ -32,7 +32,14 @@ require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.25.lightt
 
 fwrite($debugHandler, '  cron_tasks: Searching for tasks to do' . "\n");
 $cronlog->logAction(CRON_ACTION, LOG_INFO, "Searching for tasks to do");
-$result_tasks = $db->query("SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` ORDER BY `id` ASC");
+$server_id = getServerId();
+$result_tasks = $db->query("SELECT 
+	`id`, `type`, `data` 
+FROM 
+	`" . TABLE_PANEL_TASKS . "` 
+WHERE
+	`sid` = '".$server_id."' 
+ORDER BY `id` ASC");
 $resultIDs = array();
 
 while($row = $db->fetch_array($result_tasks))
