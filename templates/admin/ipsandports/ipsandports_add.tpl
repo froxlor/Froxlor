@@ -48,7 +48,7 @@ $header
 				<td class="main_field_display" nowrap="nowrap">$vhostcontainer</td>
 			</tr>
 			<tr>
-				<td class="main_field_name">{$lng['admin']['ipsandports']['docroot']}:</td>
+				<td class="main_field_name">{$lng['admin']['ipsandports']['docroot']['title']}:<br /><font size="1">{$lng['admin']['ipsandports']['docroot']['description']}</font></td>
 				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="docroot" value="" /></td>
 			</tr>
 			<tr>

@@ -1219,7 +1219,7 @@ if(isFroxlorVersion('0.9.14-svn6'))
 	lastStepStatus(0);
 
 	showUpdateStep("Adding new table `".TABLE_FROXLOR_CLIENTS."`");
-	$db->query("DROP TABLE IF EXISTS `".TABLE_FROXLOR_CLIENTS."`;)");
+	$db->query("DROP TABLE IF EXISTS `".TABLE_FROXLOR_CLIENTS."`");
 	$db->query("CREATE TABLE IF NOT EXISTS `".TABLE_FROXLOR_CLIENTS."` (
 				  `id` int(11) NOT NULL auto_increment,
 				  `name` varchar(255) NOT NULL,
