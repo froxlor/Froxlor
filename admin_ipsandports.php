@@ -148,13 +148,6 @@ if($page == 'ipsandports'
 			$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
 			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 			$docroot = validate($_POST['docroot'], 'docroot');
-			/*
-			 * get server-id for ip/port combo (multiserver-support, default = 0)
-			 * @TODO needs to be implemented in the interface, using 0 for now
-			 * 16.10.2010 d00p
-			 */
-			//$server_id = intval_ressource($_POST['serverid']);
-			$server_id = 0;
 			
 			if($listen_statement != '1')
 			{
@@ -233,8 +226,7 @@ if($page == 'ipsandports'
 						`ssl_ca_file` = '" . $db->escape($ssl_ca_file) . "',
 						`ssl_cert_chainfile` = '" . $db->escape($ssl_cert_chainfile) . "', 
 						`default_vhostconf_domain` = '" . $db->escape($default_vhostconf_domain) . "',
-						`docroot` = '" . $db->escape($docroot) . "',
-						`sid` = '" . (int)$server_id ."';
+						`docroot` = '" . $db->escape($docroot) . "';
 					");
 
 				if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
@@ -243,8 +235,8 @@ if($page == 'ipsandports'
 				}
 
 				$log->logAction(ADM_ACTION, LOG_WARNING, "added IP/port '" . $ip . ":" . $port . "'");
-				inserttask('1', $server_id);
-				inserttask('4', $server_id);
+				inserttask('1');
+				inserttask('4');
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 		}
@@ -265,16 +257,6 @@ if($page == 'ipsandports'
 
 		if($result['ip'] != '')
 		{
-			/*
-			 * get server-id from ip/port combo (multiserver-support)
-			 */
-			$server_id = $result['sid'];
-			
-			/*
-			 * @TODO enter server-id as select-condition where necessary
-			 * 16.10.2010 d00p
-			 */
-
 			if(isset($_POST['send'])
 			   && $_POST['send'] == 'send')
 			{
@@ -294,12 +276,6 @@ if($page == 'ipsandports'
 				$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
 				$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 				$docroot =  validate($_POST['docroot'], 'docroot');
-				/*
-				 * get server-id for customer (multiserver-support, default = 0)
-				 * @TODO needs to be implemented in the interface, using 0 for now
-				 * 16.10.2010 d00p
-				 */
-				//$server_id = intval_ressource($_POST['serverid']);
 
 				if($listen_statement != '1')
 				{
