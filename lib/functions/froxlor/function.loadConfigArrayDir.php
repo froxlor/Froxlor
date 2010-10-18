@@ -17,25 +17,44 @@
  * @version    $Id$
  */
 
-function loadConfigArrayDir($data_dirname)
+function loadConfigArrayDir()
 {
 	// Workaround until we use gettext
 	global $lng;
-	
+
+	// we now use dynamic function parameters
+	// so we can read from more than one directory
+	// and still be valid for old calls
+	$numargs = func_num_args();
+	if($numargs <= 0) { return null; }
+
+	$configdirs = array();
+	for($x=0;$x<$numargs;$x++) {
+		$configdirs[] = func_get_arg($x);
+	}
+
 	$data = array();
+	$data_files = array();
+	$has_data = false;
 
-	if(is_dir($data_dirname))
+	foreach($configdirs as $data_dirname)
 	{
-		$data_files = array();
-		$data_dirhandle = opendir($data_dirname);
-		while(false !== ($data_filename = readdir($data_dirhandle)))
+		if(is_dir($data_dirname))
 		{
-			if($data_filename != '.' && $data_filename != '..' && $data_filename != '' && substr($data_filename, -4 ) == '.php')
+			$data_dirhandle = opendir($data_dirname);
+			while(false !== ($data_filename = readdir($data_dirhandle)))
 			{
-				$data_files[] = $data_dirname . $data_filename;
+				if($data_filename != '.' && $data_filename != '..' && $data_filename != '' && substr($data_filename, -4 ) == '.php')
+				{
+					$data_files[] = $data_dirname . $data_filename;
+				}
 			}
+			$has_data = true;
 		}
-
+	}
+	
+	if($has_data)
+	{
 		sort($data_files);
 
 		foreach($data_files as $data_filename)

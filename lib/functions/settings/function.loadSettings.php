@@ -17,12 +17,9 @@
  * @version    $Id$
  */
 
-function loadSettings(&$settings_data, $db)
+function loadSettings(&$settings_data, $db, $server_id = 0)
 {
 	global $version;
-
-	// multi-server-support, get the destination server id (master = 0)
-	$server_id = getServerId();
 
 	$settings = array();
 

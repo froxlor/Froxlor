@@ -2,7 +2,6 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
@@ -323,11 +322,19 @@ class froxlorclient
 		if(isset($this->cid)
 			&& $this->cid != - 1
 		) {
-			$_settings = $this->db->query("SELECT * FROM `".TABLE_PANEL_SETTINGS."` WHERE `sid` = '".(int)$this->cid."'");
+			$spath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
+			$settings_data = loadConfigArrayDir(
+								makeCorrectDir($spath.'/actions/admin/settings/'),
+								makeCorrectDir($spath.'/actions/multiserver/clientsettings/')
+							);
+			$settings = loadSettings($settings_data, $db, $this->cid);
 
-			while($_s = mysql_fetch_array($_settings))
+			foreach($settings as $group => $fv)
 			{
-				$this->_setSetting($_s['settinggroup'], $_s['varname'], $_s['value'], true, true, true);
+				foreach($fv as $field => $value)
+				{
+					$this->_setSetting($group, $field, $value, true, true, true);					
+				}
 			}
 		}
 	}
