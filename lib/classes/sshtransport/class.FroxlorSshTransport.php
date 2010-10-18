@@ -309,4 +309,4 @@ class FroxlorSshTransport
 		}
 	}
 }
-?>
+

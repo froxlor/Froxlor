@@ -1274,3 +1274,14 @@ if(isFroxlorVersion('0.9.14-svn6'))
 
 	updateToVersion('0.9.14-svn7');
 }
+
+if(isFroxlorVersion('0.9.14-svn7'))
+{
+	showUpdateStep("Updating from 0.9.14-svn7 to 0.9.14-svn8", false);
+
+	showUpdateStep("Removing deprecated legacy-cronjob from database");
+	$db->query("DELETE FROM `".TABLE_PANEL_CRONRUNS."` WHERE `cronfile` ='cron_legacy.php';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.14-svn8');
+}

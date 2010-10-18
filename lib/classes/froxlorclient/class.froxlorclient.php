@@ -107,26 +107,41 @@ class froxlorclient
 	public function Deploy()
 	{
 		// get FroxlorSshTransport-object
-		if($this->_getSetting('client', 'deploy_mode') !== null
-			&& $this->_getSetting('client', 'deploy_mode') == 'pubkey'
-		) {
-			$ssh = FroxlorSshTransport::usePublicKey(
-				$this->_getSetting('client', 'hostname'), 
-				$this->_getSetting('client', 'ssh_port'), 
-				$this->_getSetting('client', 'ssh_user'), 
-				$this->_getSetting('client', 'ssh_pubkey'), 
-				$this->_getSetting('client', 'ssh_privkey'), 
-				$this->_getSetting('client', 'ssh_passphrase')
-			);
-		} else if($this->_getSetting('client', 'deploy_mode') !== null) {
-			$ssh = FroxlorSshTransport::usePlainPassword(
-				$this->_getSetting('client', 'hostname'), 
-				$this->_getSetting('client', 'ssh_port'), 
-				$this->_getSetting('client', 'ssh_user'), 
-				$this->_getSetting('client', 'ssh_passphrase')
-			);
-		} else {
-			throw new Exception('NO_DEPLOY_METHOD_GIVEN');
+		$ssh = null;
+		try {
+			if($this->_getSetting('client', 'deploy_mode') !== null
+				&& $this->_getSetting('client', 'deploy_mode') == 'pubkey'
+			) {
+				$ssh = FroxlorSshTransport::usePublicKey(
+					$this->_getSetting('client', 'hostname'), 
+					$this->_getSetting('client', 'ssh_port'), 
+					$this->_getSetting('client', 'ssh_user'), 
+					$this->_getSetting('client', 'ssh_pubkey'), 
+					$this->_getSetting('client', 'ssh_privkey'), 
+					$this->_getSetting('client', 'ssh_passphrase')
+				);
+			} else if($this->_getSetting('client', 'deploy_mode') !== null) {
+				$ssh = FroxlorSshTransport::usePlainPassword(
+					$this->_getSetting('client', 'hostname'), 
+					$this->_getSetting('client', 'ssh_port'), 
+					$this->_getSetting('client', 'ssh_user'), 
+					$this->_getSetting('client', 'ssh_passphrase')
+				);
+			} else {
+				throw new Exception('NO_DEPLOY_METHOD_GIVEN');
+			}
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}		
+		
+		if($ssh instanceof FroxlorSshTransport)
+		{
+			/**
+			 * @TODO implement me
+			 */
+				
+			// close the session 
+			$ssh->close();
 		}
 	}
 
@@ -353,6 +368,10 @@ class froxlorclient
 			{
 				$this->Set($field, $value, true, true);
 			}
+
+			// after we have details about the client, 
+			// we need its settings too
+			$this->_readSettings();
 		}
 	}
 }
