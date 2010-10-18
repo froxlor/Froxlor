@@ -1,9 +1,22 @@
 <?php
+
 /**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    Panel
+ * @version    $Id$
+ *
  * This file is for demonstration purpose and should NEVER be enabled
  * in a live enviroment.
  * 
- * @version SVN: $Id: class.FroxlorModule.php 1167 2010-06-22 11:46:34Z d00p $
  */
 exit();
 
@@ -43,4 +56,3 @@ $transport = FroxlorSshTransport::usePublicKey("test.froxlor.org", 22, "testUser
  * Clean up and finish.
  */
 $transport->close();
-?>

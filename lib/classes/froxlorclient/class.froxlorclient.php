@@ -74,9 +74,6 @@ class froxlorclient
 		$this->settings = $settings;
 		$this->cid = $cid;
 
-		// initialize data array
-		$this->_initData();
-
 		// read data from database
 		$this->_readData();
 	}
@@ -98,6 +95,40 @@ class froxlorclient
 		}
 
 		return self::$clients[$_cid];
+	}
+
+	/**
+	 * This functions deploys the needed files
+	 * to the client destination server
+	 * 
+	 * @TODO
+	 * - get information about what files need to be transfered
+	 * - generate userdata.inc.php for client (db = master db)
+	 */
+	public function Deploy()
+	{
+		// get FroxlorSshTransport-object
+		if($this->_getSetting('client', 'deploy_mode') !== null
+			&& $this->_getSetting('client', 'deploy_mode') == 'pubkey'
+		) {
+			$ssh = FroxlorSshTransport::usePublicKey(
+				$this->_getSetting('client', 'hostname'), 
+				$this->_getSetting('client', 'ssh_port'), 
+				$this->_getSetting('client', 'ssh_user'), 
+				$this->_getSetting('client', 'ssh_pubkey'), 
+				$this->_getSetting('client', 'ssh_privkey'), 
+				$this->_getSetting('client', 'ssh_passphrase')
+			);
+		} else if($this->_getSetting('client', 'deploy_mode') !== null) {
+			$ssh = FroxlorSshTransport::usePlainPassword(
+				$this->_getSetting('client', 'hostname'), 
+				$this->_getSetting('client', 'ssh_port'), 
+				$this->_getSetting('client', 'ssh_user'), 
+				$this->_getSetting('client', 'ssh_passphrase')
+			);
+		} else {
+			throw new Exception('NO_DEPLOY_METHOD_GIVEN');
+		}
 	}
 
 	/**
@@ -188,8 +219,8 @@ class froxlorclient
 	public function Set($_var = '', $_value = '', $_vartrusted = false, $_valuetrusted = false)
 	{
 		if($_var != ''
-		&& $_value != '')
-		{
+			&& $_value != ''
+		) {
 			if(!$_vartrusted)
 			{
 				$_var = htmlspecialchars($_var);
@@ -205,13 +236,79 @@ class froxlorclient
 	}
 
 	/**
-	 * Initialize data-array
+	 * set a value in the internal settings array
+	 * 
+	 * @param string $_var
+	 * @param string $_value
+	 * @param bool   $_vartrusted
+	 * @param bool   $_valuetrusted
 	 */
-	private function _initData()
+	private function _getSetting($_var = '', $_vartrusted = false)
 	{
-		$this->Set('name', '', true, true);
-		$this->Set('ip', '', true, true);
-		$this->Set('enabled', '0', true, true);
+		if($_var != '')
+		{
+			if(!$_vartrusted)
+			{
+				$_var = htmlspecialchars($_var);
+			}
+
+			if(isset($this->c_data['settings'][$_var]))
+			{
+				return $this->c_data['settings'][$_var];
+			}
+			else
+			{
+				return null;
+			}
+		}
+	}
+
+	/**
+	 * set a value in the internal settings array
+	 * 
+	 * @param string $_var
+	 * @param string $_value
+	 * @param bool   $_vartrusted
+	 * @param bool   $_valuetrusted
+	 */
+	private function _setSetting($_var = '', $_value = '', $_vartrusted = false, $_valuetrusted = false)
+	{
+		if($_var != ''
+			&& $_value != ''
+		) {
+			if(!$_vartrusted)
+			{
+				$_var = htmlspecialchars($_var);
+			}
+
+			if(!$_valuetrusted)
+			{
+				$_value = htmlspecialchars($_value);
+			}
+
+			if(!is_array($this->c_data['settings'])) {
+				$this->c_data['settings'] = array();
+			}
+
+			$this->c_data['settings'][$_var] = $_value;
+		}
+	}
+
+	/**
+	 * read client settings from database
+	 */
+	private function _readSettings()
+	{
+		if(isset($this->cid)
+			&& $this->cid != - 1
+		) {
+			$_settings = $this->db->query_first("SELECT * FROM `".TABLE_PANEL_SETTINGS."` WHERE `sid` = '".(int)$this->cid."'");
+
+			foreach($_settings as $field => $value)
+			{
+				$this->_setSetting($field, $value, true, true);
+			}
+		}
 	}
 
 	/**
@@ -220,12 +317,14 @@ class froxlorclient
 	private function _readData()
 	{
 		if(isset($this->cid)
-		&& $this->cid != - 1)
-		{
+			&& $this->cid != - 1
+		) {
 			$_client = $this->db->query_first('SELECT * FROM `' . TABLE_FROXLOR_CLIENTS . '` WHERE `id` = "' . $this->cid . '"');
-			$this->Set('name', $_client['name'], true, true);
-			$this->Set('ip', $_client['ip'], true, true);
-			$this->Set('enabled', $_client['enabled'], true, true);
+
+			foreach($_client as $field => $value)
+			{
+				$this->Set($field, $value, true, true);
+			}
 		}
 	}
 }

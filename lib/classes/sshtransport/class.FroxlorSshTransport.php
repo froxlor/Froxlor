@@ -127,9 +127,9 @@ class FroxlorSshTransport
 	}
 	
 	/**
+	 * Constructor for plain password auth
 	 * 
-	 * 
-	 * @param string $ip       ip toremote server
+	 * @param string $ip       ip to remote server
      * @param string $port     remote port
      * @param string $username ssh username
 	 * @param string $password ssh password
