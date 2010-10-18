@@ -236,25 +236,34 @@ class froxlorclient
 	}
 
 	/**
-	 * set a value in the internal settings array
-	 * 
+	 * get a value from the internal settings array
+	 *
+	 * @param string $_grp
 	 * @param string $_var
-	 * @param string $_value
+	 * @param bool   $_grptrusted
 	 * @param bool   $_vartrusted
-	 * @param bool   $_valuetrusted
+	 * 
+	 * @return mixed or null if not found
 	 */
-	private function _getSetting($_var = '', $_vartrusted = false)
+	private function _getSetting($_grp = '', $_var = '', $_grptrusted = false, $_vartrusted = false)
 	{
-		if($_var != '')
-		{
+		if($_grp != ''
+			&& $_var != ''
+		) {
+
+			if(!$_grptrusted)
+			{
+				$_grp = htmlspecialchars($_grp);
+			}
+
 			if(!$_vartrusted)
 			{
 				$_var = htmlspecialchars($_var);
 			}
 
-			if(isset($this->c_data['settings'][$_var]))
+			if(isset($this->c_data['settings'][$_grp][$_var]))
 			{
-				return $this->c_data['settings'][$_var];
+				return $this->c_data['settings'][$_grp][$_var];
 			}
 			else
 			{
@@ -265,17 +274,25 @@ class froxlorclient
 
 	/**
 	 * set a value in the internal settings array
-	 * 
+	 *
+	 * @param string $_grp
 	 * @param string $_var
 	 * @param string $_value
+	 * @param bool   $_grptrusted
 	 * @param bool   $_vartrusted
 	 * @param bool   $_valuetrusted
 	 */
-	private function _setSetting($_var = '', $_value = '', $_vartrusted = false, $_valuetrusted = false)
+	private function _setSetting($_grp = '', $_var = '', $_value = '', $_grptrusted = false, $_vartrusted = false, $_valuetrusted = false)
 	{
-		if($_var != ''
+		if($_grp != ''
+			&& $_var != ''
 			&& $_value != ''
 		) {
+			if(!$_grptrusted)
+			{
+				$_grp = htmlspecialchars($_grp);
+			}
+
 			if(!$_vartrusted)
 			{
 				$_var = htmlspecialchars($_var);
@@ -290,7 +307,11 @@ class froxlorclient
 				$this->c_data['settings'] = array();
 			}
 
-			$this->c_data['settings'][$_var] = $_value;
+			if(!is_array($this->c_data['settings'][$_grp])) {
+				$this->c_data['settings'][$_grp] = array();
+			}
+
+			$this->c_data['settings'][$_grp][$_var] = $_value;
 		}
 	}
 
@@ -302,11 +323,11 @@ class froxlorclient
 		if(isset($this->cid)
 			&& $this->cid != - 1
 		) {
-			$_settings = $this->db->query_first("SELECT * FROM `".TABLE_PANEL_SETTINGS."` WHERE `sid` = '".(int)$this->cid."'");
+			$_settings = $this->db->query("SELECT * FROM `".TABLE_PANEL_SETTINGS."` WHERE `sid` = '".(int)$this->cid."'");
 
-			foreach($_settings as $field => $value)
+			while($_s = mysql_fetch_array($_settings))
 			{
-				$this->_setSetting($field, $value, true, true);
+				$this->_setSetting($_s['settinggroup'], $_s['varname'], $_s['value'], true, true, true);
 			}
 		}
 	}
