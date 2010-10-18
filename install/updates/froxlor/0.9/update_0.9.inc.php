@@ -1285,3 +1285,15 @@ if(isFroxlorVersion('0.9.14-svn7'))
 
 	updateToVersion('0.9.14-svn8');
 }
+
+if(isFroxlorVersion('0.9.14-svn8'))
+{
+	showUpdateStep("Updating from 0.9.14-svn8 to 0.9.14-svn9", false);
+
+	showUpdateStep("Updating table 'froxlor_clients'");
+	$db->query("ALTER TABLE `".TABLE_FROXLOR_CLIENTS."` DROP `ip`;");
+	$db->query("ALTER TABLE `".TABLE_FROXLOR_CLIENTS."` ADD `desc` text NOT NULL default '' AFTER `id`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.14-svn9');
+}

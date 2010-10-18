@@ -53,6 +53,12 @@ class froxlorclient
 	private $c_data = array();
 
 	/**
+	 * Client Settings_Data Array
+	 * @var s_data
+	 */
+	private $s_data = array();
+
+	/**
 	 * Client-Object-Array
 	 * @var clients
 	 */
@@ -154,7 +160,7 @@ class froxlorclient
 			`" . TABLE_FROXLOR_CLIENTS . "` 
 		SET
 			`name` = '" . $this->db->escape($this->Get('name')) . "',  
-			`ip` = '" . $this->db->escape($this->Get('ip')) . "', 
+			`desc` = '" . $this->db->escape($this->Get('desc')) . "', 
 			`enabled` = '" . (int)$this->Get('enabled') . "'
 		WHERE 
 			`id` = '" . (int)$this->cid . "';
@@ -192,6 +198,24 @@ class froxlorclient
 		');
 
 		return true;
+	}
+
+	/**
+	 * return the complete client-settings array
+	 * for the settings page
+	 */
+	public function getSettingsArray()
+	{
+		return $this->Get('settings');
+	}
+
+	/**
+	 * return the complete client-settings-data array
+	 * for the settings page
+	 */
+	public function getSettingsData()
+	{
+		return $this->s_data;
 	}
 
 	/**
@@ -338,11 +362,11 @@ class froxlorclient
 			&& $this->cid != - 1
 		) {
 			$spath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
-			$settings_data = loadConfigArrayDir(
+			$this->s_data = loadConfigArrayDir(
 								makeCorrectDir($spath.'/actions/admin/settings/'),
 								makeCorrectDir($spath.'/actions/multiserver/clientsettings/')
 							);
-			$settings = loadSettings($settings_data, $db, $this->cid);
+			$settings = loadSettings($this->s_data, $db, $this->cid);
 
 			foreach($settings as $group => $fv)
 			{

@@ -20,9 +20,6 @@
 function saveSetting($settinggroup, $varname, $newvalue)
 {
 	global $db;
-	
-	// multi-server-support, get the destination server id (master = 0)
-	$server_id = getServerId();
 
 	$query = 'UPDATE 
 			`' . TABLE_PANEL_SETTINGS . '` 
@@ -31,8 +28,13 @@ function saveSetting($settinggroup, $varname, $newvalue)
 		WHERE 
 			`settinggroup` = \'' . $db->escape($settinggroup) . '\' 
 		AND 
-			`varname`=\'' . $db->escape($varname) . '\'
+			`varname`=\'' . $db->escape($varname) . '\' ';
+	/*
+	 * 
+	 * @TODO for multiserver
+	 * 
 		AND 
 			`sid`=\''. (int)$server_id . '\' ';
+	*/
 	return $db->query($query);
 }

@@ -97,9 +97,12 @@ if((int)$settings['multiserver']['enabled'] == 1)
 
 			}
 		}
+		/**
+		 * edit client-base data like name and description
+		 */
 		elseif($action == 'edit'
-		       && $id != 0)
-		{
+			&& $id != 0
+		) {
 			$client = froxlorclient::getInstance($userinfo, $db, $settings, $id);
 
 			if(isset($_POST['send'])
@@ -110,6 +113,25 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			else
 			{
 
+			}
+		}
+		/**
+		 * edit client settings 
+		 */
+		elseif($action == 'settings'
+			&& $id != 0
+		) {
+			$client = froxlorclient::getInstance($userinfo, $db, $settings, $id);
+
+			$settings_data = $client->getSettingsData();
+			$settings = $client->getSettingsArray();
+
+			if(isset($_POST['send'])
+				&& $_POST['send'] == 'send')
+			{
+			}
+			else
+			{
 			}
 		}
 	}
