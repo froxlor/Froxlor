@@ -1526,6 +1526,7 @@ $lng['admin']['froxlorclients']['name'] = 'Client name';
 $lng['admin']['froxlorclients']['desc'] = 'Client description';
 $lng['admin']['froxlorclients']['enabled'] = 'Client enabled?';
 $lng['admin']['froxlorclients']['settings'] = 'settings';
+$lng['admin']['froxlorclients']['deploy'] = 'deploy';
 $lng['menue']['multiserver']['clients'] = 'Multiserver clients';
 $lng['admin']['froxlorclient'] = 'Multiserver client settings';
 $lng['froxlorclient']['ipaddress'] = 'Client IP';

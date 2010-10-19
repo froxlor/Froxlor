@@ -190,6 +190,36 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			}
 			else
 			{
+				/**
+				 * @TODO
+				 * - show all client settings
+				 * - validate settings
+				 */ 
+				echo $header;
+				echo "Here you will see the clients configuration, you will know most of the settings from the 'master'-panel already";
+				echo $footer;
+			}
+		}
+		/**
+		 * deploy client to the destination server 
+		 */
+		elseif($action == 'deploy'
+			&& $id != 0
+		) {
+			$client = froxlorclient::getInstance($userinfo, $db, $id);
+
+			if(isset($_POST['send'])
+				&& $_POST['send'] == 'send')
+			{
+			}
+			else
+			{
+				/**
+				 * @TODO 
+				 * - validate client-settings
+				 * - validate client ssh connection (test?)
+				 */
+				echo "Here the client's settings and ssh-connection will be validated";
 			}
 		}
 	}
