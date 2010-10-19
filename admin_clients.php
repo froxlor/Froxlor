@@ -90,11 +90,37 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			if(isset($_POST['send'])
 			   && $_POST['send'] == 'send')
 			{
+				$name = validate($_POST['name'], 'name');
+				$desc = validate($_POST['desc'], 'desc');
+				$client_enabled = intval($_POST['vhostcontainer']);
+
+				if($name == '')
+				{
+					standard_error(array('stringisempty', 'name'));
+				}
+
+				if($desc == '')
+				{
+					standard_error(array('stringisempty', 'desc'));
+				}
+				
+				if($client_enabled != 1) {
+					$client_enabled = 0;
+				}
+
 				$new_client = froxlorclient::getInstance($userinfo, $db, $settings, -1);
+				$new_client->Set('name', $name, true, false);
+				$new_client->Set('desc', $desc, true, false);
+				$new_client->Set('enabled', $client_enabled, true, true);
+				$cid = $new_client->Insert();
+
+				$log->logAction(ADM_ACTION, LOG_WARNING, "added froxlor-client '" . $name . "' (#" . $cid . ")");
+				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 			else
 			{
-
+				$client_enabled = makeyesno('enabled', '1', '0', '0');
+				eval("echo \"" . getTemplate("froxlorclients/froxlorclients_add") . "\";");
 			}
 		}
 		/**

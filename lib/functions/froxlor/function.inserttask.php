@@ -52,14 +52,16 @@ function inserttask()
 	// if server_id = -1 then add this task for EVERY froxlor-client
 	if($server_id == -1)
 	{
-		// @TODO implement function to get number of froxlor-clients
-		/*
-		$numclients = getNumberOfFroxlorClients();
-		foreach($numclients as $froxclient_id)
-		{
-			inserttask($type, implode(', ', $taskparams), $froxclient_id);
+		$numclients = froxlorclient::getFroxlorClients($db);
+		if(is_array($numclients)
+			&& count($numclients) > 0
+		) {
+			foreach($numclients as $froxclient_id)
+			{
+				inserttask($type, implode(', ', $taskparams), $froxclient_id);
+			}
 		}
-		*/
+
 		// also for the master
 		inserttask($type, implode(', ', $taskparams), 0);
 		return;

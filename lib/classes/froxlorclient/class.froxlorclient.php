@@ -103,6 +103,25 @@ class froxlorclient
 	}
 
 	/**
+	 * return an array of enabled froxlor-client ids
+	 * 
+	 * @param resource mysql-object
+	 * 
+	 * @return array
+	 */
+	static public function getFroxlorClients($_db = null)
+	{
+		$sql = "SELECT `id` FROM `".TABLE_FROXLOR_CLIENTS."` WHERE `enabled` = '1';";
+		$res = $_db->query($sql);
+		$result = array();
+		while($_r = mysql_fetch_array($res))
+		{
+			$result[] = $_r['id'];
+		}
+		return $result;
+	}
+
+	/**
 	 * This functions deploys the needed files
 	 * to the client destination server
 	 * 
@@ -149,6 +168,22 @@ class froxlorclient
 			// close the session 
 			$ssh->close();
 		}
+	}
+
+	/**
+	 * Insert new client to database
+	 */
+	public function Insert()
+	{
+		$this->db->query("INSERT INTO  
+			`" . TABLE_FROXLOR_CLIENTS . "` 
+		SET
+			`name` = '" . $this->db->escape($this->Get('name')) . "',  
+			`desc` = '" . $this->db->escape($this->Get('desc')) . "', 
+			`enabled` = '" . (int)$this->Get('enabled') . "';
+		");
+		$this->cid = $this->db->insert_id();
+		return $this->cid;
 	}
 
 	/**

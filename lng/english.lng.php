@@ -1514,8 +1514,14 @@ $lng['serversettings']['login_domain_login'] = 'Allow login with domains';
 // ADDED IN FROXLOR 0.9.14-svn7
 $lng['admin']['multiserver'] = 'Multiserver settings';
 $lng['multiserver']['enabled']['title'] = 'Enable multiserver mode';
+$lng['multiserver']['enabled']['description'] = '@TODO';
 
 // ADDED IN FROXLOR 0.9.14-svn9
 $lng['mysql']['database_edit'] = 'Edit database';
+$lng['admin']['froxlorclients']['add'] = 'Create new Froxlor-client';
+$lng['admin']['froxlorclients']['longdesc_add'] = '@TODO a long description on how the multiserver-client thing works';
+$lng['admin']['froxlorclients']['client'] = 'Froxlor client';
+$lng['admin']['froxlorclients']['name'] = 'Client name';
+$lng['admin']['froxlorclients']['desc'] = 'Client description';
 
 ?>
