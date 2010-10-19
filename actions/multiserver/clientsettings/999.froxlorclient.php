@@ -20,15 +20,6 @@ return array(
 		'froxlorclient' => array(
 			'title' => $lng['admin']['froxlorclient'],
 			'fields' => array(
-				'froxlorclient_enabled' => array(
-					'label' => $lng['froxlorclient']['enabled'],
-					'settinggroup' => 'client',
-					'varname' => 'enabled',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					'overview_option' => true
-				),
 				'froxlorclient_ipaddress' => array(
 					'label' => $lng['froxlorclient']['ipaddress'],
 					'settinggroup' => 'client',

@@ -36,6 +36,8 @@ function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled
 	
 	if($disabled) {
 		$d = ' disabled="disabled"';
+	} else {
+		$d = '';
 	}
 	return '<select class="dropdown_noborder" name="' . $name . '"'.$d.'><option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' . $lng['panel']['yes'] . '</option><option value="' . $novalue . '"' . ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
 }

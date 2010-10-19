@@ -35,12 +35,6 @@ class froxlorclient
 	private $db = false;
 
 	/**
-	 * Settings array
-	 * @var settings
-	 */
-	private $settings = array();
-
-	/**
 	 * Client ID
 	 * @var cid
 	 */
@@ -69,14 +63,12 @@ class froxlorclient
 	 *
 	 * @param array    $userinfo userdetails array of logged in user
 	 * @param resource $db       database-object
-	 * @param array    $settings settings-array
 	 * @param int      $cid      client-id
 	 */
-	private function __construct($userinfo, $db, $settings, $cid = -1)
+	private function __construct($userinfo, $db, $cid = -1)
 	{
 		$this->userinfo = $userinfo;
 		$this->db = $db;
-		$this->settings = $settings;
 		$this->cid = $cid;
 
 		// read data from database
@@ -89,14 +81,13 @@ class froxlorclient
 	 * 
 	 * @param array    $_usernfo  userdetails array of logged in user
 	 * @param resource $_db       database-object
-	 * @param array    $_settings settings-array
 	 * @param int      $_cid      client-id
 	 */
-	static public function getInstance($_usernfo, $_db, $_settings, $_cid)
+	static public function getInstance($_usernfo, $_db, $_cid)
 	{
 		if(!isset(self::$clients[$_cid]))
 		{
-			self::$clients[$_cid] = new froxlorclient($_usernfo, $_db, $_settings, $_cid);
+			self::$clients[$_cid] = new froxlorclient($_usernfo, $_db, $_cid);
 		}
 
 		return self::$clients[$_cid];
@@ -376,11 +367,11 @@ class froxlorclient
 				$_value = htmlspecialchars($_value);
 			}
 
-			if(!is_array($this->c_data['settings'])) {
+			if(!isset($this->c_data['settings']) || !is_array($this->c_data['settings'])) {
 				$this->c_data['settings'] = array();
 			}
 
-			if(!is_array($this->c_data['settings'][$_grp])) {
+			if(!isset($this->c_data['settings'][$_grp]) || !is_array($this->c_data['settings'][$_grp])) {
 				$this->c_data['settings'][$_grp] = array();
 			}
 
@@ -401,7 +392,7 @@ class froxlorclient
 								makeCorrectDir($spath.'/actions/admin/settings/'),
 								makeCorrectDir($spath.'/actions/multiserver/clientsettings/')
 							);
-			$settings = loadSettings($this->s_data, $db, $this->cid);
+			$settings = loadSettings($this->s_data, $this->db, $this->cid);
 
 			foreach($settings as $group => $fv)
 			{

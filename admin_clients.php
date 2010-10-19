@@ -48,7 +48,7 @@ if((int)$settings['multiserver']['enabled'] == 1)
 				'enabled' => $lng['admin']['froxlorclients']['enabled']
 			);
 			$paging = new paging($userinfo, $db, TABLE_FROXLOR_CLIENTS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-			$ipsandports = '';
+			$froxlorclients = '';
 			$result = $db->query("SELECT * FROM `" . TABLE_FROXLOR_CLIENTS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 			$paging->setEntries($db->num_rows($result));
 			$sortcode = $paging->getHtmlSortCode($lng);
@@ -57,7 +57,7 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 			$i = 0;
 			$count = 0;
-
+			
 			while($row = $db->fetch_array($result))
 			{
 				if($paging->checkDisplay($i))
@@ -78,7 +78,7 @@ if((int)$settings['multiserver']['enabled'] == 1)
 		elseif($action == 'delete'
 		       && $id != 0)
 		{
-			$client = froxlorclient::getInstance($userinfo, $db, $settings, $id);
+			$client = froxlorclient::getInstance($userinfo, $db, $id);
 	
 			if(isset($_POST['send'])
 				&& $_POST['send'] == 'send')
@@ -99,7 +99,7 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			{
 				$name = validate($_POST['name'], 'name');
 				$desc = validate($_POST['desc'], 'desc');
-				$client_enabled = intval($_POST['vhostcontainer']);
+				$client_enabled = intval($_POST['enabled']);
 
 				if($name == '')
 				{
@@ -115,7 +115,7 @@ if((int)$settings['multiserver']['enabled'] == 1)
 					$client_enabled = 0;
 				}
 
-				$new_client = froxlorclient::getInstance($userinfo, $db, $settings, -1);
+				$new_client = froxlorclient::getInstance($userinfo, $db, -1);
 				$new_client->Set('name', $name, true, false);
 				$new_client->Set('desc', $desc, true, false);
 				$new_client->Set('enabled', $client_enabled, true, true);
@@ -136,16 +136,41 @@ if((int)$settings['multiserver']['enabled'] == 1)
 		elseif($action == 'edit'
 			&& $id != 0
 		) {
-			$client = froxlorclient::getInstance($userinfo, $db, $settings, $id);
+			$client = froxlorclient::getInstance($userinfo, $db, $id);
 
 			if(isset($_POST['send'])
 				&& $_POST['send'] == 'send')
 			{
+				$name = validate($_POST['name'], 'name');
+				$desc = validate($_POST['desc'], 'desc');
+				$client_enabled = intval($_POST['enabled']);
 
+				if($name == '')
+				{
+					standard_error(array('stringisempty', 'name'));
+				}
+
+				if($desc == '')
+				{
+					standard_error(array('stringisempty', 'desc'));
+				}
+				
+				if($client_enabled != 1) {
+					$client_enabled = 0;
+				}
+
+				$client->Set('name', $name, true, false);
+				$client->Set('desc', $desc, true, false);
+				$client->Set('enabled', $client_enabled, true, true);
+				$client->Update();
+
+				$log->logAction(ADM_ACTION, LOG_WARNING, "updated froxlor-client '" . $name . "' (#" . $id . ")");
+				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 			else
 			{
-
+				$client_enabled = makeyesno('enabled', '1', '0', $client->Get('enabled'));
+				eval("echo \"" . getTemplate("froxlorclients/froxlorclients_edit") . "\";");
 			}
 		}
 		/**
@@ -154,7 +179,7 @@ if((int)$settings['multiserver']['enabled'] == 1)
 		elseif($action == 'settings'
 			&& $id != 0
 		) {
-			$client = froxlorclient::getInstance($userinfo, $db, $settings, $id);
+			$client = froxlorclient::getInstance($userinfo, $db, $id);
 
 			$settings_data = $client->getSettingsData();
 			$settings = $client->getSettingsArray();
