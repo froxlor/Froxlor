@@ -182,7 +182,7 @@ class FroxlorSshTransport
 		}
 		
 		// send file with scp if fopen() is disabled
-		if (ssh2_scp_send($this->_connection, $localFile, $remoteFile, $chmod) && !function_exists("fopen")) {
+		if (!function_exists("fopen") && ssh2_scp_send($this->_connection, $localFile, $remoteFile, $chmod)) {
 			return true;
 		} else {
 			return false;
