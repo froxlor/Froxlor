@@ -43,7 +43,9 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_clients");
 
 			$fields = array(
-				'none' => $lng['none']['yet']
+				'id' => 'ID#',
+				'name' => $lng['admin']['froxlorclients']['name'],
+				'enabled' => $lng['admin']['froxlorclients']['enabled']
 			);
 			$paging = new paging($userinfo, $db, TABLE_FROXLOR_CLIENTS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 			$ipsandports = '';
@@ -61,7 +63,12 @@ if((int)$settings['multiserver']['enabled'] == 1)
 				if($paging->checkDisplay($i))
 				{
 					$row = htmlentities_array($row);
-					eval("\$froxclients.=\"" . getTemplate("froxlorclients/froxlorclients_client") . "\";");
+					if((int)$row['enabled'] == 1) {
+						$row['enabled'] = $lng['panel']['yes'];
+					} else {
+						$row['enabled'] = $lng['panel']['no'];
+					}
+					eval("\$froxlorclients.=\"" . getTemplate("froxlorclients/froxlorclients_client") . "\";");
 					$count++;
 				}
 				$i++;

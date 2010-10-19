@@ -1523,5 +1523,8 @@ $lng['admin']['froxlorclients']['longdesc_add'] = '@TODO a long description on h
 $lng['admin']['froxlorclients']['client'] = 'Froxlor client';
 $lng['admin']['froxlorclients']['name'] = 'Client name';
 $lng['admin']['froxlorclients']['desc'] = 'Client description';
+$lng['admin']['froxlorclients']['enabled'] = 'Client enabled?';
+$lng['admin']['froxlorclients']['settings'] = 'settings';
+$lng['menue']['multiserver']['clients'] = 'Multiserver clients';
 
 ?>
