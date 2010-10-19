@@ -19,8 +19,14 @@
 
 function loadSettings(&$settings_data, $db, $server_id = 0)
 {
-	global $version;
-
+	// to check whether we're on a recent
+	// Froxlor installation which supports
+	// multiserver-settings, we have to read
+	// the version from the database
+	$_dbversion = '';
+	$_dv = $db->query_first("SELECT `value` FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'version';");
+	$_dbversion = $_dv['value'];
+	
 	$settings = array();
 
 	if(is_array($settings_data) && isset($settings_data['groups']) && is_array($settings_data['groups']))
@@ -46,7 +52,7 @@ function loadSettings(&$settings_data, $db, $server_id = 0)
 						// but versions before 0.9.14-svn7 don't have the `sid` field
 						// in panel_settings, so only append the condition if we're on
 						// 0.9.14-svn7 or higher
-						if(compareFroxlorVersion('0.9.14-svn7', $version))
+						if(compareFroxlorVersion('0.9.14-svn7', $_dbversion))
 						{
 							$sql_query_sid = 'AND `sid` = \''. (int)$server_id . '\' ';
 						} else {
