@@ -27,7 +27,7 @@
  * @return null
  */
 
-function createAWStatsConf($logFile, $siteDomain, $hostAliases, $customerDocroot)
+function createAWStatsConf($logFile, $siteDomain, $hostAliases, $customerDocroot, $awstats_params = array())
 {
 	global $pathtophpfiles, $settings;
 
@@ -41,6 +41,8 @@ function createAWStatsConf($logFile, $siteDomain, $hostAliases, $customerDocroot
 	{
 		safe_exec('mkdir -p '.escapeshellarg($awstats_dir));
 	}
+	// chown created folder, #258
+	makeChownWithNewStats($awstats_params);
 	
 	// weird but could happen...
 	if(!is_dir($settings['system']['awstats_conf']))
