@@ -6,7 +6,7 @@ $header
 		<input type="hidden" name="id" value="$id" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['menue']['main']['changepassword']}</b></td>
+				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['mysql']['database_edit']}</b></td>
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['mysql']['databasename']}:</td>

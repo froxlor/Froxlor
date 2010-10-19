@@ -1515,4 +1515,7 @@ $lng['serversettings']['login_domain_login'] = 'Allow login with domains';
 $lng['admin']['multiserver'] = 'Multiserver settings';
 $lng['multiserver']['enabled']['title'] = 'Enable multiserver mode';
 
+// ADDED IN FROXLOR 0.9.14-svn9
+$lng['mysql']['database_edit'] = 'Edit database';
+
 ?>

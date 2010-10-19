@@ -1498,4 +1498,7 @@ $lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
 $lng['admin']['multiserver'] = 'Multiserver Einstellungen';
 $lng['multiserver']['enabled']['title'] = 'Aktiviere den Multiserver Modus';
 
+// ADDED IN FROXLOR 0.9.14-svn9
+$lng['mysql']['database_edit'] = 'Datenbank bearbeiten';
+
 ?>
