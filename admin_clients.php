@@ -181,7 +181,20 @@ if((int)$settings['multiserver']['enabled'] == 1)
 		) {
 			$client = froxlorclient::getInstance($userinfo, $db, $id);
 
-			$settings_data = $client->getSettingsData();
+			/**
+			 * @TODO
+			 * - decide by client type (implementation will follow)
+			 *   what settings are going to be shown here 
+			 *   (parameter $client_settings, has to be an array,
+			 *   see loadConfigArrayDir-function)
+			 */
+			$client_settings = array('froxlorclient');
+
+			$settings_data = loadConfigArrayDir(
+				'./actions/admin/settings/',
+				'./actions/multiserver/clientsettings/',
+				$client_settings
+			);
 			$settings = $client->getSettingsArray();
 
 			if(isset($_POST['send'])
@@ -190,14 +203,32 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			}
 			else
 			{
+				$_part = isset($_GET['part']) ? $_GET['part'] : '';
+				
+				if($_part == '')
+				{
+					$_part = isset($_POST['part']) ? $_POST['part'] : '';
+				}
+
 				/**
-				 * @TODO
-				 * - show all client settings
-				 * - validate settings
-				 */ 
-				echo $header;
-				echo "Here you will see the clients configuration, you will know most of the settings from the 'master'-panel already";
-				echo $footer;
+				 * @TODO this has to get the client-id so the 
+				 * 		 links "configuration" have the ID 
+				 */
+				$fields = buildFormEx($settings_data, $_part);
+				
+				$settings_page = '';
+				if($_part == '')
+				{
+					eval("\$settings_page .= \"" . getTemplate("froxlorclients/froxlorclient_settingsoverview") . "\";");
+				} 
+				else
+				{
+					eval("\$settings_page .= \"" . getTemplate("froxlorclients/froxlorclient_settings") . "\";");
+				}
+				
+				eval("echo \"" . getTemplate("settings/settings_form_begin") . "\";");
+				eval("echo \$settings_page;");
+				eval("echo \"" . getTemplate("froxlorclients/froxlorclient_settingsend") . "\";");
 			}
 		}
 		/**

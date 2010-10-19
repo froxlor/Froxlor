@@ -28,9 +28,20 @@ function loadConfigArrayDir()
 	$numargs = func_num_args();
 	if($numargs <= 0) { return null; }
 
+	// variable that holds all dirs that will
+	// be parsed for inclusion
 	$configdirs = array();
+	// if one of the parameters is an array
+	// we assume that this is a list of
+	// setting-groups to be selected
+	$selection = null;
 	for($x=0;$x<$numargs;$x++) {
-		$configdirs[] = func_get_arg($x);
+		$arg = func_get_arg($x);
+		if(is_array($arg) && isset($arg[0])) {
+			$selection = $arg;
+		} else {
+			$configdirs[] = $arg;
+		}
 	}
 
 	$data = array();
@@ -62,6 +73,23 @@ function loadConfigArrayDir()
 			$data = array_merge_recursive($data, include($data_filename));
 		}
 	}
-	
+
+	// if we have specific setting-groups
+	// to select, we'll handle this here
+	// (this is for multiserver-client settings)
+	$_data = array();
+	if($selection != null
+		&& is_array($selection)
+		&& isset($selection[0])
+	) {
+		foreach($data['groups'] as $group => $data)
+		{
+			if(in_array($group, $selection)) {
+				$_data[$group] = $data;  
+			}
+		}
+		$data = $_data;
+	}
+
 	return $data;
 }

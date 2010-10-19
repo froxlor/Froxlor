@@ -1537,5 +1537,6 @@ $lng['froxlorclient']['ssh_user'] = 'SSH user';
 $lng['froxlorclient']['ssh_passphrase'] = 'SSH passphrase';
 $lng['froxlorclient']['ssh_pubkey'] = 'SSH public key';
 $lng['froxlorclient']['ssh_privkey'] = 'SSH private key';
+$lng['admin']['froxlorclient_settings'] = 'Froxlor client settings:';
 
 ?>

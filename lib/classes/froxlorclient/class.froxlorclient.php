@@ -236,15 +236,6 @@ class froxlorclient
 	}
 
 	/**
-	 * return the complete client-settings-data array
-	 * for the settings page
-	 */
-	public function getSettingsData()
-	{
-		return $this->s_data;
-	}
-
-	/**
 	 * get a value from the internal data array
 	 * 
 	 * @param string $_var
