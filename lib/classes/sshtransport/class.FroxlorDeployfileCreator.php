@@ -47,6 +47,13 @@ class FroxlorDeployfileCreator
 	public static $_list = null;
 	
 	/**
+	 * Excluded dirs, seperated with | (for RegEx)
+	 * 
+	 * @var string
+	 */
+	public static $_exclude = "userdata.inc.php|navigation|configfiles";
+	
+	/**
 	 * This function iterates through the $dir and generates the deploy list.
 	 * 
 	 * @param array $dir dir to deploy
@@ -64,7 +71,7 @@ class FroxlorDeployfileCreator
 				);
 	
 				foreach ($its as $fullFileName => $it ) {
-					if (!preg_match("/(userdata.inc.php|navigation|configfiles)/i", $it->getFilename())) {
+					if (!preg_match("/(".self::$_exclude.")/i", $fullFileName)) {
 						$list[] = $fullFileName;
 					}
 				}

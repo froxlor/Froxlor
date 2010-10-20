@@ -56,3 +56,33 @@ $transport = FroxlorSshTransport::usePublicKey("test.froxlor.org", 22, "testUser
  * Clean up and finish.
  */
 $transport->close();
+
+
+/*
+ * *********************************************************************************************************************
+ * 
+ * Demousage about deploying
+ */
+
+/*
+ * create a file list and save it internaly
+ */
+FroxlorDeployfileCreator::createList(
+	array(
+		"/var/www/froxlor/lib/",
+		"/var/www/froxlor/lng/",
+		"/var/www/froxlor/scripts/",
+		"/var/www/froxlor/actions/",
+		"/var/www/froxlor/templates/"
+	)
+);
+
+/*
+ * save it to disk file
+ */
+FroxlorDeployfileCreator::saveListTo("deploy.txt");
+
+/*
+ * and create a zip archive
+ */
+new FroxlorPkgCreator("deploy.txt", "deploy.zip");
