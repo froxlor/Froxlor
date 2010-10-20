@@ -39,9 +39,8 @@
  */
 class FroxlorPkgCreator
 {
-	
 	/**
-	 * Path to file-include list.
+	 * Path to save file.
 	 * 
 	 * @var string
 	 */
@@ -55,6 +54,14 @@ class FroxlorPkgCreator
 	private $_config = array();
 	
 	/**
+	 * Manual added files. 
+	 * Uses key as filename!
+	 * 
+	 * @var array
+	 */
+	private $_manualFiles = array();
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @param string $incListPath contains the path to include-configuration
@@ -62,30 +69,30 @@ class FroxlorPkgCreator
 	 */
 	public function __construct($incListPath, $toPath)
 	{
-		$this->_path = $incListPath;
+		$this->_path = $toPath;
 		
 		// load the config
-		$this->_config = $this->_readConfig();
+		$this->_config = $this->_readConfig($incListPath);
 		
 		// parse the config
 		if (!$this->_checkConfig()) {
 			throw new Exception("Error in FroxlorPkgCreator::_checkConfig()");
 		}
-		
-		$this->pack($toPath);
 	}
 	
 	/**
 	 * Loads the config to an array.
 	 * 
+	 * @param string $path path to inc-list
+	 * 
 	 * @return array pathes to files
 	 */
-	private function _readConfig()
+	private function _readConfig($path)
 	{
 		$arr = array();
 		
-		if (is_readable($this->_path)) {
-			$arr = file($this->_path);
+		if (is_readable($path)) {
+			$arr = file($path);
 		}
 		
 		return $arr;
@@ -117,14 +124,27 @@ class FroxlorPkgCreator
 	}
 	
 	/**
+	 * Adds a "file".
+	 * 
+	 * @param string $name filename (containg path like lib/userdata.inc.php)
+	 * @param string $data data to write
+	 */
+	public function addFile($name, $data)
+	{
+		$this->_manualFiles[$name] = $data;
+	}
+	
+	/**
 	 * This functions creates the package.
 	 * 
 	 * @param string $toPath the path where this file should be saved
 	 * 
 	 * @return string path
 	 */
-	public function pack($toPath)
+	public function pack()
 	{
+		$toPath = $this->_path;
+		
 		$zip = new ZipArchive;
 		
 		// create archive
@@ -133,6 +153,11 @@ class FroxlorPkgCreator
 			foreach ($this->_config as $var) {
 				$name = str_replace("froxlor/", "", strstr($var, "froxlor/"));
 				$zip->addFile($var, $name);
+			}
+			
+			// add manual files
+			foreach ($this->_manualFiles as $key=>$var) {
+				$zip->addFromString($key, $var);
 			}
 			
 			// close it
