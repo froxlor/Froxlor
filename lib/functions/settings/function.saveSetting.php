@@ -17,7 +17,7 @@
  * @version    $Id$
  */
 
-function saveSetting($settinggroup, $varname, $newvalue)
+function saveSetting($settinggroup, $varname, $newvalue, $server_id = 0)
 {
 	global $db;
 
@@ -28,13 +28,9 @@ function saveSetting($settinggroup, $varname, $newvalue)
 		WHERE 
 			`settinggroup` = \'' . $db->escape($settinggroup) . '\' 
 		AND 
-			`varname`=\'' . $db->escape($varname) . '\' ';
-	/*
-	 * 
-	 * @TODO for multiserver
-	 * 
+			`varname`=\'' . $db->escape($varname) . '\' 
 		AND 
 			`sid`=\''. (int)$server_id . '\' ';
-	*/
+
 	return $db->query($query);
 }

@@ -144,7 +144,7 @@ function processForm(&$form, &$input, $url_params = array())
 	}
 }
 
-function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_all, $settings_part, $only_enabledisable)
+function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_all, $settings_part, $only_enabledisable, $server_id = 0)
 {
 	if(validateFormDefinition($form))
 	{
@@ -287,7 +287,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
 						) {
 							if(isset($changed_fields[$fieldname]))
 							{
-								if(($saved_field = saveFormField($fieldname, $fielddetails, manipulateFormFieldData($fieldname, $fielddetails, $changed_fields[$fieldname]))) !== false)
+								if(($saved_field = saveFormField($fieldname, $fielddetails, manipulateFormFieldData($fieldname, $fielddetails, $changed_fields[$fieldname]), $server_id)) !== false)
 								{
 									$saved_fields = array_merge($saved_fields, $saved_field);
 								}

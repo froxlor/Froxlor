@@ -17,13 +17,20 @@
  * @version    $Id$
  */
 
-function storeSettingIpAddress($fieldname, $fielddata, $newfieldvalue)
+function storeSettingIpAddress($fieldname, $fielddata, $newfieldvalue, $server_id = 0)
 {
-	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
+	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue, $server_id);
 
 	if($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'ipaddress')
 	{
-		$mysql_access_host_array = array_map('trim', explode(',', getSetting('system', 'mysql_access_host')));
+		if($server_id > 0)
+		{
+			$client = froxlorclient::getInstance(null, $db, $server_id);
+			$mysqlhosts = $client->getSetting('system', 'mysql_access_host');
+		} else {
+			$mysqlhosts = getSetting('system', 'mysql_access_host');
+		}
+		$mysql_access_host_array = array_map('trim', explode(',', $mysqlhosts));
 		$mysql_access_host_array[] = $newfieldvalue;
 		$mysql_access_host_array = array_unique(array_trim($mysql_access_host_array));
 		$mysql_access_host = implode(',', $mysql_access_host_array);

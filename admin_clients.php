@@ -120,6 +120,12 @@ if((int)$settings['multiserver']['enabled'] == 1)
 				$new_client->Set('desc', $desc, true, false);
 				$new_client->Set('enabled', $client_enabled, true, true);
 				$cid = $new_client->Insert();
+				
+				/**
+				 * @TODO create a set of default settings,
+				 *       which depends on the client-type
+				 *       (implementation will follow)
+				 */
 
 				$log->logAction(ADM_ACTION, LOG_WARNING, "added froxlor-client '" . $name . "' (#" . $cid . ")");
 				redirectTo($filename, Array('page' => $page, 's' => $s));
@@ -200,6 +206,48 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			if(isset($_POST['send'])
 				&& $_POST['send'] == 'send')
 			{
+				$_part = isset($_GET['part']) ? $_GET['part'] : '';
+
+				if($_part == '')
+				{
+					$_part = isset($_POST['part']) ? $_POST['part'] : '';
+				}
+		
+				if($_part != '')
+				{
+					if($_part == 'all')
+					{
+						$settings_all = true;
+						$settings_part = false;
+					}
+					else
+					{
+						$settings_all = false;
+						$settings_part = true;
+					}
+		
+					$only_enabledisable = false;
+				}
+				else
+				{
+					$settings_all = false;
+					$settings_part = false;
+					$only_enabledisable = true;
+				}
+				
+				if(processFormEx(
+					$settings_data, 
+					$_POST, 
+					array('filename' => $filename, 'action' => $action, 'page' => $page),
+					$_part,
+					$settings_all,
+					$settings_part,
+					$only_enabledisable,
+					$id
+					)
+				) {
+					standard_success('settingssaved', '', array('filename' => $filename, 'action' => $action, 'page' => $page));
+				}
 			}
 			else
 			{
@@ -211,8 +259,8 @@ if((int)$settings['multiserver']['enabled'] == 1)
 				}
 
 				/**
-				 * @TODO this has to get the client-id so the 
-				 * 		 links "configuration" have the ID 
+				 * pass the client-id so the links "configuration" 
+				 * gets page=clients, action=settings and id={$id}  
 				 */
 				$fields = buildFormEx($settings_data, $_part, $id);
 				

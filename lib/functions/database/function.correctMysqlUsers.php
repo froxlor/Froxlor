@@ -17,8 +17,18 @@
  * @version    $Id$
  */
 
-function correctMysqlUsers($mysql_access_host_array)
+function correctMysqlUsers($mysql_access_host_array, $server_id = 0)
 {
+	/**
+	 * for multiserver-clients
+	 * this has to be done in
+	 * a different way
+	 */
+	if($server_id > 0) {
+		correctMysqlUsersRemote($mysql_access_host_array, $server_id);
+		return; 
+	}
+
 	global $db, $settings, $sql, $sql_root;
 	
 	foreach($sql_root as $mysql_server => $mysql_server_details)
@@ -88,4 +98,18 @@ function correctMysqlUsers($mysql_access_host_array)
 		$db_root->close();
 		unset($db_root);
 	}
+}
+
+/**
+ * @TODO finish me
+ * @param array $mysql_access_host_array list of ips/hostnames of the mysql-server
+ * @param int   $server_id               id of the multiserver-client
+ * 
+ * @return null
+ */
+function correctMysqlUsersRemote($mysql_access_host_array, $server_id = 0)
+{
+	/* if($server_id == 0) */ 
+		return;
+	
 }

@@ -17,11 +17,11 @@
  * @version    $Id$
  */
 
-function storeSettingField($fieldname, $fielddata, $newfieldvalue)
+function storeSettingField($fieldname, $fielddata, $newfieldvalue, $server_id = 0)
 {
 	if(is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] != '' && isset($fielddata['varname']) && $fielddata['varname'] != '')
 	{
-		if(saveSetting($fielddata['settinggroup'], $fielddata['varname'], $newfieldvalue) != false)
+		if(saveSetting($fielddata['settinggroup'], $fielddata['varname'], $newfieldvalue, $server_id) != false)
 		{
 			/*
 			 * when fielddata[cronmodule] is set, this means enable/disable a cronjob
@@ -38,7 +38,7 @@ function storeSettingField($fieldname, $fielddata, $newfieldvalue)
 			{
 				if((int)$fielddata['dependency']['onlyif'] == (int)$newfieldvalue)
 				{
-					storeSettingField($fielddata['dependency']['fieldname'], $fielddata['dependency']['fielddata'], $newfieldvalue);
+					storeSettingField($fielddata['dependency']['fieldname'], $fielddata['dependency']['fielddata'], $newfieldvalue, $server_id);
 				}
 			}
 

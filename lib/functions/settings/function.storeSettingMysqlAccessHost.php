@@ -17,9 +17,9 @@
  * @version    $Id$
  */
 
-function storeSettingMysqlAccessHost($fieldname, $fielddata, $newfieldvalue)
+function storeSettingMysqlAccessHost($fieldname, $fielddata, $newfieldvalue, $server_id = 0)
 {
-	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
+	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue, $server_id);
 
 	if($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'mysql_access_host')
 	{
@@ -39,7 +39,7 @@ function storeSettingMysqlAccessHost($fieldname, $fielddata, $newfieldvalue)
 
 		$mysql_access_host_array = array_unique(array_trim($mysql_access_host_array));
 		$newfieldvalue = implode(',', $mysql_access_host_array);
-		correctMysqlUsers($mysql_access_host_array);
+		correctMysqlUsers($mysql_access_host_array, $server_id);
 	}
 	
 	return $returnvalue;
