@@ -132,7 +132,7 @@ class FroxlorPkgCreator
 		if ($zip->open($toPath, ZIPARCHIVE::OVERWRITE)) {
 			// write data
 			foreach ($this->_config as $var) {
-				$zip->addFile($var);
+				$zip->addFile($var, strstr($var, "lib/"));
 			}
 			
 			// close it
