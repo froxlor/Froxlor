@@ -242,6 +242,13 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			if(isset($_POST['send'])
 				&& $_POST['send'] == 'send')
 			{
+				// ...
+				
+				/**
+				 * create task to deploy client,
+				 * always use id of master-server
+				 */ 
+				inserttask('9', $id, 0);
 			}
 			else
 			{

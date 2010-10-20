@@ -119,7 +119,7 @@ elseif($page == 'accounts')
 				if(isset($_POST['delete_userfiles'])
 				  && (int)$_POST['delete_userfiles'] == 1)
 				{
-					inserttask('8', $userinfo['loginname'], $result['homedir']);
+					inserttask('8', $userinfo['loginname'], $result['homedir'], $userinfo['sid']);
 				}
 
 				$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `ftps_used`=`ftps_used`-1 $resetaccnumber WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
