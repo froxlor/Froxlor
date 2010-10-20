@@ -1,12 +1,17 @@
 <tr class="" onmouseover="this.className='RowOverSelected';" onmouseout="this.className='';">
-	<td class="field_name_border_left"><font size="-1">{$row['id']}</font></td>
-	<td class="field_name">{$row['name']}</td>
-	<td class="field_name">{$row['desc']}</td>
-	<td class="field_name">{$row['enabled']}</td>
+	<td class="field_name_border_left">
+		<img src="./images/multiserver/server.png" alt="Client #{$row['id']}" /></td>
+	<td class="field_name">{$row['name']}<br /><span style="font-size:80%">{$row['desc']}</span></td>
 	<td class="field_name">
-		<a href="$filename?s=$s&amp;page=$page&amp;action=settings&amp;id={$row['id']}">{$lng['admin']['froxlorclients']['settings']}</a>&nbsp;
-		<a href="$filename?s=$s&amp;page=$page&amp;action=deploy&amp;id={$row['id']}">{$lng['admin']['froxlorclients']['deploy']}</a>&nbsp;
-		<a href="$filename?s=$s&amp;page=$page&amp;action=edit&amp;id={$row['id']}">{$lng['panel']['edit']}</a>&nbsp;
-		<a href="$filename?s=$s&amp;page=$page&amp;action=delete&amp;id={$row['id']}">{$lng['panel']['delete']}</a>
+		<if $row['enabled'] == 1 >
+			<img src="./images/multiserver/tick.png" alt="{$lng['panel']['yes']}" />
+		<else>
+			<img src="./images/multiserver/no.png" alt="{$lng['panel']['no']}" />
+		</if>
+	</td>
+	<td class="field_name">
+		<a href="$filename?s=$s&amp;page=$page&amp;action=view&amp;id={$row['id']}">
+			<img src="./images/multiserver/view.png" alt="{$lng['admin']['froxlorclients']['view']}" style="border:0;" />
+		</a>
 	</td>
 </tr>

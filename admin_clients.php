@@ -43,7 +43,6 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_clients");
 
 			$fields = array(
-				'id' => 'ID#',
 				'name' => $lng['admin']['froxlorclients']['name'],
 				'enabled' => $lng['admin']['froxlorclients']['enabled']
 			);
@@ -63,11 +62,6 @@ if((int)$settings['multiserver']['enabled'] == 1)
 				if($paging->checkDisplay($i))
 				{
 					$row = htmlentities_array($row);
-					if((int)$row['enabled'] == 1) {
-						$row['enabled'] = $lng['panel']['yes'];
-					} else {
-						$row['enabled'] = $lng['panel']['no'];
-					}
 					eval("\$froxlorclients.=\"" . getTemplate("froxlorclients/froxlorclients_client") . "\";");
 					$count++;
 				}
@@ -178,6 +172,19 @@ if((int)$settings['multiserver']['enabled'] == 1)
 				$client_enabled = makeyesno('enabled', '1', '0', $client->Get('enabled'));
 				eval("echo \"" . getTemplate("froxlorclients/froxlorclients_edit") . "\";");
 			}
+		}
+		/**
+		 * view client details
+		 */
+		elseif($action == 'view'
+			&& $id != 0
+		) {
+			$client = froxlorclient::getInstance($userinfo, $db, $id);
+			
+			/**
+			 * for now, we'll only show a few links
+			 */
+			eval("echo \"" . getTemplate("froxlorclients/froxlorclients_view") . "\";");
 		}
 		/**
 		 * edit client settings 
