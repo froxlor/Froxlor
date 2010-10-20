@@ -3,7 +3,7 @@
 /**
  * ssh Transport class
  *
- * This class provides interaction with modules
+ * This class handles remote server related stuff.
  *
  * PHP version 5
  *
