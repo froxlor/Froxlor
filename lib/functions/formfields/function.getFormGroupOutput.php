@@ -24,7 +24,7 @@ function getFormGroupOutput($groupname, $groupdetails)
 	return $group;
 }
 
-function getFormOverviewGroupOutput($groupname, $groupdetails)
+function getFormOverviewGroupOutput($groupname, $groupdetails, $server_id = 0)
 {
 	global $lng, $settings, $filename, $s;
 	
@@ -81,6 +81,16 @@ function getFormOverviewGroupOutput($groupname, $groupdetails)
 		}
 	}
 
-	eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
+	// if the server_id is > 0 then
+	// this is a client-settings page
+	// and we need another template
+	if($server_id > 0)
+	{
+		eval("\$group = \"" . getTemplate("froxlorclients/froxlorclient_settingsoverviewgroup") . "\";");
+	}
+	else
+	{
+		eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
+	}
 	return $group;
 }

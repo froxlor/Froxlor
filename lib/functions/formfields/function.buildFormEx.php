@@ -15,7 +15,7 @@
  * @version    $Id $
  */
 
-function buildFormEx($form, $part = '')
+function buildFormEx($form, $part = '', $server_id = 0)
 {
 	$fields = '';
 
@@ -28,7 +28,7 @@ function buildFormEx($form, $part = '')
 			{
 				if(isset($groupdetails['title']) && $groupdetails['title'] != '')
 				{
-					$fields .= getFormOverviewGroupOutput($groupname, $groupdetails);
+					$fields .= getFormOverviewGroupOutput($groupname, $groupdetails, $server_id);
 				}
 			}
 			// only show one section

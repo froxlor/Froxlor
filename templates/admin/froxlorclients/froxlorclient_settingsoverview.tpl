@@ -2,7 +2,7 @@
 			<tr>
 				<td class="maintitle" align="center" colspan="3">
 					<b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['configfiles']['serverconfiguration']}</b>
-					[<a href="$filename?page=settings&amp;part=all&amp;s=$s&amp;id={$id}">{$lng['admin']['configfiles']['overview']}</a>]
+					[<a href="$filename?page=clients&amp;action=settings&amp;part=all&amp;s=$s&amp;id={$id}">{$lng['admin']['configfiles']['overview']}</a>]
 				</td>
 			</tr>
 			$fields

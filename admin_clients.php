@@ -214,7 +214,7 @@ if((int)$settings['multiserver']['enabled'] == 1)
 				 * @TODO this has to get the client-id so the 
 				 * 		 links "configuration" have the ID 
 				 */
-				$fields = buildFormEx($settings_data, $_part);
+				$fields = buildFormEx($settings_data, $_part, $id);
 				
 				$settings_page = '';
 				if($_part == '')

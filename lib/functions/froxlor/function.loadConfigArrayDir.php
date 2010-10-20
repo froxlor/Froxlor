@@ -82,10 +82,11 @@ function loadConfigArrayDir()
 		&& is_array($selection)
 		&& isset($selection[0])
 	) {
+		$_data['groups'] = array();
 		foreach($data['groups'] as $group => $data)
 		{
 			if(in_array($group, $selection)) {
-				$_data[$group] = $data;  
+				$_data['groups'][$group] = $data;  
 			}
 		}
 		$data = $_data;
