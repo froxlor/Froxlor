@@ -38,7 +38,7 @@ function buildFormEx($form, $part = '', $server_id = 0)
 				{
 					$fields .= getFormGroupOutput($groupname, $groupdetails);
 				}
-				
+
 				if(validateFieldDefinition($groupdetails))
 				{
 					// Prefetch form fields
@@ -47,7 +47,7 @@ function buildFormEx($form, $part = '', $server_id = 0)
 						$groupdetails['fields'][$fieldname] = array_merge_prefix($fielddetails, $fielddetails['type'], prefetchFormFieldData($fieldname, $fielddetails));
 						$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 					}
-	
+
 					// Collect form field output
 					foreach($groupdetails['fields'] as $fieldname => $fielddetails)
 					{

@@ -113,55 +113,6 @@ class froxlorclient
 	}
 
 	/**
-	 * This functions deploys the needed files
-	 * to the client destination server
-	 * 
-	 * @TODO
-	 * - get information about what files need to be transfered
-	 * - generate userdata.inc.php for client (db = master db)
-	 */
-	public function Deploy()
-	{
-		// get FroxlorSshTransport-object
-		$ssh = null;
-		try {
-			if($this->_getSetting('client', 'deploy_mode') !== null
-				&& $this->_getSetting('client', 'deploy_mode') == 'pubkey'
-			) {
-				$ssh = FroxlorSshTransport::usePublicKey(
-					$this->_getSetting('client', 'hostname'), 
-					$this->_getSetting('client', 'ssh_port'), 
-					$this->_getSetting('client', 'ssh_user'), 
-					$this->_getSetting('client', 'ssh_pubkey'), 
-					$this->_getSetting('client', 'ssh_privkey'), 
-					$this->_getSetting('client', 'ssh_passphrase')
-				);
-			} else if($this->_getSetting('client', 'deploy_mode') !== null) {
-				$ssh = FroxlorSshTransport::usePlainPassword(
-					$this->_getSetting('client', 'hostname'), 
-					$this->_getSetting('client', 'ssh_port'), 
-					$this->_getSetting('client', 'ssh_user'), 
-					$this->_getSetting('client', 'ssh_passphrase')
-				);
-			} else {
-				throw new Exception('NO_DEPLOY_METHOD_GIVEN');
-			}
-		} catch (Exception $e) {
-			return $e->getMessage();
-		}		
-		
-		if($ssh instanceof FroxlorSshTransport)
-		{
-			/**
-			 * @TODO implement me
-			 */
-				
-			// close the session 
-			$ssh->close();
-		}
-	}
-
-	/**
 	 * Insert new client to database
 	 */
 	public function Insert()
@@ -300,7 +251,7 @@ class froxlorclient
 	 * 
 	 * @return mixed or null if not found
 	 */
-	private function _getSetting($_grp = '', $_var = '', $_grptrusted = false, $_vartrusted = false)
+	public function getSetting($_grp = '', $_var = '', $_grptrusted = false, $_vartrusted = false)
 	{
 		if($_grp != ''
 			&& $_var != ''
@@ -337,7 +288,7 @@ class froxlorclient
 	 * @param bool   $_vartrusted
 	 * @param bool   $_valuetrusted
 	 */
-	private function _setSetting($_grp = '', $_var = '', $_value = '', $_grptrusted = false, $_vartrusted = false, $_valuetrusted = false)
+	public function setSetting($_grp = '', $_var = '', $_value = '', $_grptrusted = false, $_vartrusted = false, $_valuetrusted = false)
 	{
 		if($_grp != ''
 			&& $_var != ''
@@ -389,7 +340,7 @@ class froxlorclient
 			{
 				foreach($fv as $field => $value)
 				{
-					$this->_setSetting($group, $field, $value, true, true, true);					
+					$this->setSetting($group, $field, $value, true, true, true);					
 				}
 			}
 		}
