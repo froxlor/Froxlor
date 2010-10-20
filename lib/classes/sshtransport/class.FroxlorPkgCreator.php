@@ -55,7 +55,7 @@ class FroxlorPkgCreator
 	
 	/**
 	 * Manual added files. 
-	 * Uses key as filename!
+	 * Contains an array with an array (name, data);
 	 * 
 	 * @var array
 	 */
@@ -131,7 +131,7 @@ class FroxlorPkgCreator
 	 */
 	public function addFile($name, $data)
 	{
-		$this->_manualFiles[$name] = $data;
+		$this->_manualFiles[] = array("name" => $name, "data" => $data;
 	}
 	
 	/**
@@ -156,8 +156,8 @@ class FroxlorPkgCreator
 			}
 			
 			// add manual files
-			foreach ($this->_manualFiles as $key=>$var) {
-				$zip->addFromString($key, $var);
+			foreach ($this->_manualFiles as $var) {
+				$zip->addFromString($var['name'], $var['data']);
 			}
 			
 			// close it

@@ -79,6 +79,31 @@ class client_deployer
 			/**
 			 * @TODO implement me
 			 */
+			
+			$deployList = "/tmp/froxlor_deploy_".time().".txt";
+			$zipPath = "/tmp/froxlor_deploy_".time().".zip";
+			
+			$remoteTo = "/var/ww/froxlor/"; // TODO setting variable?!
+			
+			// TODO get a deploy configuration from database/panel?
+			// create the deploy list
+			FroxlorDeployfileCreator::createList(
+				array(
+					"/var/www/froxlor/lib/",
+					"/var/www/froxlor/lng/",
+					"/var/www/froxlor/scripts/",
+					"/var/www/froxlor/actions/",
+					"/var/www/froxlor/templates/"
+				)
+			);
+			
+			FroxlorDeployfileCreator::saveListTo($deployList);
+			
+			// prepare and pack files
+			$this->_prepareFiles($deployList, $zipPath);
+			
+			// transfer the data
+			$bytes = $this->_transferArchive($ssh, $zipPath, $remoteTo);
 				
 			// close the session 
 			$ssh->close();
@@ -91,9 +116,13 @@ class client_deployer
 	 * 
 	 * @return double amount of bytes transferd 
 	 */
-	private function _transferArchive()
+	private function _transferArchive($ssh, $from, $to)
 	{
-		$archive = $this->_prepareFiles();
+		if ($ssh->sendFile($from, $to)) {
+			return stat($from)['7'];
+		} else {
+			return 0.0;
+		}
 	}
 
 	/**
@@ -102,14 +131,21 @@ class client_deployer
 	 * 
 	 * @return string path to the created archive
 	 */
-	private function _prepareFiles()
+	private function _prepareFiles($deployList, $toPath)
 	{
-
+		$pkg = FroxlorPkgCreator($deployList, $toPath);
+		
 		/** 
 		 * create userdata file which
 		 * has to be included to the archive
 		 */
 		$userdatafile = $this->_createUserdataFile();
+		
+		// add userdata.inc.php
+		$pkg->addFile("lib/userdata.inc.php", $userdatafile);
+		
+		// pack it
+		$pkg->pack();
 	}
 
 	/**
@@ -122,6 +158,6 @@ class client_deployer
 	 */
 	private function _createUserdataFile()
 	{
-		
+		return "Chuck Norris doesn't need a userdata.inc.php to run Froxlor!";
 	}
 }

@@ -85,4 +85,5 @@ FroxlorDeployfileCreator::saveListTo("deploy.txt");
 /*
  * and create a zip archive
  */
-new FroxlorPkgCreator("deploy.txt", "deploy.zip");
+$pkg = new FroxlorPkgCreator("deploy.txt", "deploy.zip");
+$pkg->pack();
