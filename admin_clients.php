@@ -193,8 +193,23 @@ if((int)$settings['multiserver']['enabled'] == 1)
 			 *   what settings are going to be shown here 
 			 *   (parameter $client_settings, has to be an array,
 			 *   see loadConfigArrayDir-function)
+			 * 
+			 *   now set are all possible client settings
 			 */
-			$client_settings = array('froxlorclient');
+			$client_settings = array(
+				'froxlorclient',
+				'webserver',
+				'ssl',
+				'fcgid',
+				'perl',
+				'statistics',
+				'mail',
+				'ftpserver',
+				'nameserver',
+				'logging',
+				'dkim',
+				'spf'
+			);
 
 			$settings_data = loadConfigArrayDir(
 				'./actions/admin/settings/',
