@@ -69,7 +69,7 @@ class FroxlorPkgCreator
 		
 		// parse the config
 		if (!$this->_checkConfig()) {
-			die("Error in FroxlorPkgCreator::_checkConfig()");
+			throw new Exception("Error in FroxlorPkgCreator::_checkConfig()");
 		}
 		
 		$this->pack($toPath);
@@ -99,7 +99,6 @@ class FroxlorPkgCreator
 	private function _checkConfig()
 	{
 		foreach ($this->_config as $key => $var) {
-			// TODO maybe more excluded files?
 			if (strstr($var, "userdata.inc")) {
 				// delete this entry
 				unset($this->_config[$key]);
@@ -132,7 +131,8 @@ class FroxlorPkgCreator
 		if ($zip->open($toPath, ZIPARCHIVE::OVERWRITE)) {
 			// write data
 			foreach ($this->_config as $var) {
-				$zip->addFile($var, strstr($var, "lib/"));
+				$name = str_replace("froxlor/", "", strstr($var, "froxlor/"));
+				$zip->addFile($var, $name);
 			}
 			
 			// close it

@@ -20,7 +20,7 @@
  * @author     Froxlor Team <team@froxlor.org>
  * @copyright  2010 the authors
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @version    SVN: $Id: class.FroxlorPkgCreator.php 1376 2010-10-20 19:07:51Z scarya $
+ * @version    SVN: $Id$
  * @link       http://www.froxlor.org/
  */
 
@@ -39,30 +39,39 @@
  */
 class FroxlorDeployfileCreator
 {
+	/**
+	 * Contains the file listing.
+	 * 
+	 * @var array
+	 */
 	public static $_list = null;
 	
 	/**
 	 * This function iterates through the $dir and generates the deploy list.
 	 * 
-	 * @param string $dir dir to deploy
+	 * @param array $dir dir to deploy
 	 * 
 	 * @return array file listing
 	 */
-	public static function createList($dir)
+	public static function createList($dirList)
 	{
 		$list = array();
 		
-		if (is_dir($dir)) {
-			$its = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator($dir)
-			);
-
-			foreach ($its as $fullFileName => $it ) {
-				if (!preg_match("/userdata.inc.php$/i", $it->getFilename())) {
-					$list[] = strstr($fullFileName, "lib/");
+		foreach ($dirList as $dir) {
+			if (is_dir($dir)) {
+				$its = new RecursiveIteratorIterator(
+					new RecursiveDirectoryIterator($dir)
+				);
+	
+				foreach ($its as $fullFileName => $it ) {
+					if (!preg_match("/(userdata.inc.php|navigation|configfiles)/i", $it->getFilename())) {
+						$list[] = $fullFileName;
+					}
 				}
+				
+			} else {
+				throw new Exception($dir." is not a directory!");
 			}
-			
 		}
 		
 		self::$_list = $list;
