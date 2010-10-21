@@ -305,7 +305,7 @@ class FroxlorSshTransport
 		try{
 			self::$_instance->_connect();
 		} catch (Exception $e) {
-			die("Connection lost and could not re-established! \n".$reason."\n".$message."\n".$language."\n".$e->getMessage());
+			throw new Exception("Connection lost and could not re-established! \n".$reason."\n".$message."\n".$language."\n".$e->getMessage());
 		}
 	}
 }
