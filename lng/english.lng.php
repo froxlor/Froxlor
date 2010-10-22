@@ -1529,6 +1529,7 @@ $lng['admin']['froxlorclients']['settings'] = 'settings';
 $lng['admin']['froxlorclients']['deploy'] = 'deploy';
 $lng['menue']['multiserver']['clients'] = 'Multiserver clients';
 $lng['admin']['froxlorclient'] = 'Multiserver client settings';
+$lng['admin']['froxlorclient_settings'] = 'Froxlor client settings:';
 $lng['froxlorclient']['ipaddress'] = 'Client IP';
 $lng['froxlorclient']['hostname'] = 'Client hostname';
 $lng['froxlorclient']['deploy_mode'] = 'Deploy mode';
@@ -1537,6 +1538,6 @@ $lng['froxlorclient']['ssh_user'] = 'SSH user';
 $lng['froxlorclient']['ssh_passphrase'] = 'SSH passphrase';
 $lng['froxlorclient']['ssh_pubkey'] = 'SSH public key';
 $lng['froxlorclient']['ssh_privkey'] = 'SSH private key';
-$lng['admin']['froxlorclient_settings'] = 'Froxlor client settings:';
+$lng['froxlorclient']['install_destination'] = 'Froxlor client data destination';
 
 ?>

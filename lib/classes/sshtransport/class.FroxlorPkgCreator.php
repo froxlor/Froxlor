@@ -131,7 +131,10 @@ class FroxlorPkgCreator
 	 */
 	public function addFile($name, $data)
 	{
-		$this->_manualFiles[] = array("name" => $name, "data" => $data;
+		$this->_manualFiles[] = array(
+			'name' => $name, 
+			'data' => $data
+		);
 	}
 	
 	/**

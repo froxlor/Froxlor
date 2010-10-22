@@ -76,24 +76,22 @@ class client_deployer
 		
 		if($ssh instanceof FroxlorSshTransport)
 		{
-			/**
-			 * @TODO implement me
-			 */
-			
-			$deployList = "/tmp/froxlor_deploy_".time().".txt";
-			$zipPath = "/tmp/froxlor_deploy_".time().".zip";
-			
-			$remoteTo = "/var/ww/froxlor/"; // TODO setting variable?!
-			
+			$time = time();
+			$deployList = "/tmp/froxlor_deploy_".$time.".txt";
+			$zipPath = "/tmp/froxlor_deploy_".$time.".zip";
+
+			$remoteTo = $this->_client->getSetting('client', 'install_destination');
+
 			// TODO get a deploy configuration from database/panel?
 			// create the deploy list
+			$mypath = dirname(dirname((dirname(dirname(__FILE)))));
 			FroxlorDeployfileCreator::createList(
 				array(
-					"/var/www/froxlor/lib/",
-					"/var/www/froxlor/lng/",
-					"/var/www/froxlor/scripts/",
-					"/var/www/froxlor/actions/",
-					"/var/www/froxlor/templates/"
+					makeCorrectDir($mypath."/lib/"),
+					makeCorrectDir($mypath."/lng/"),
+					makeCorrectDir($mypath."/scripts/"),
+					makeCorrectDir($mypath."/actions/"),
+					makeCorrectDir($mypath."/templates/")
 				)
 			);
 			
@@ -119,7 +117,8 @@ class client_deployer
 	private function _transferArchive($ssh, $from, $to)
 	{
 		if ($ssh->sendFile($from, $to)) {
-			return stat($from)['7'];
+			$filenfo = stat($from);
+			return $filenfo['7'];
 		} else {
 			return 0.0;
 		}
@@ -133,7 +132,7 @@ class client_deployer
 	 */
 	private function _prepareFiles($deployList, $toPath)
 	{
-		$pkg = FroxlorPkgCreator($deployList, $toPath);
+		$pkg = new FroxlorPkgCreator($deployList, $toPath);
 		
 		/** 
 		 * create userdata file which
@@ -155,9 +154,24 @@ class client_deployer
 	 * !!! don't forget to set $server_id to the correct value !!!
 	 * 
 	 * @return string full path to the created file
+	 * 
+	 * @TODO master-db settings
 	 */
 	private function _createUserdataFile()
 	{
-		return "Chuck Norris doesn't need a userdata.inc.php to run Froxlor!";
+		$userdata = '';
+		$userdata .= "<?php\n";
+		$userdata .= "// automatically generated userdata.inc.php for Froxlor-Client '".$this->_client->Get('name')."'\n";
+		$userdata .= "\$sql['host']='".$this->_client->getSetting('client', 'masterdb_host')."';\n";
+		$userdata .= "\$sql['user']='".$this->_client->getSetting('client', 'masterdb_usr')."';\n";
+		$userdata .= "\$sql['password']='".$this->_client->getSetting('client', 'masterdb_pwd')."';\n";
+		$userdata .= "\$sql['db']='".$this->_client->getSetting('client', 'masterdb_db')."';\n";
+		$userdata .= "\$sql_root[0]['caption']='Master database';\n";
+		$userdata .= "\$sql_root[0]['host']='".$this->_client->getSetting('client', 'masterdb_host')."';\n";
+		$userdata .= "\$sql_root[0]['user']='".$this->_client->getSetting('client', 'masterdb_rootusr')."';\n";
+		$userdata .= "\$sql_root[0]['password']='".$this->_client->getSetting('client', 'masterdb_rootpwd')."';\n";
+		$userdata .= "// Define our system id\n";
+		$userdata .= "\$server_id = ".(int)$this->_client->Get('id').";\n";
+		return $userdata;
 	}
 }

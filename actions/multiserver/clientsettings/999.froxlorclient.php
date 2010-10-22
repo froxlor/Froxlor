@@ -92,7 +92,15 @@ return array(
 					'default' => '',
 					'string_emptyallowed' => true,
 					'save_method' => 'storeSettingField'
-				)
+				),
+				'froxlorclient_install_destination' => array(
+					'label' => $lng['froxlorclient']['install_destination'],
+					'settinggroup' => 'client',
+					'varname' => 'install_destination',
+					'type' => 'string',
+					'default' => '/usr/share/froxlor/',
+					'save_method' => 'storeSettingField'
+				),
 			)
 		)
 	)
