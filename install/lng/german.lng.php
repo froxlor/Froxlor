@@ -98,8 +98,4 @@ $lng['install']['phpmagic_quotes_runtime'] = 'Pr&uuml;fe ob magic_quotes_runtime
 $lng['install']['active'] = 'nein';
 $lng['install']['phpmagic_quotes_runtime_description'] = 'Die PHP Einstellung "magic_quotes_runtime" muss deaktiviert sein ("Off"), um merkw&uuml;rdige Verhalten von Froxlor zu umgehen. Sie wurde deaktiviert (nur tempor&auml;r, bitte php.ini anpassen).';
 
-// ADDED IN FROXLOR 0.9.14-svn7
-$lng['install']['phpssh2'] = 'Teste, ob die PHP ssh2-Erweiterung installiert ist...';
-$lng['install']['ssh2neededformultiserver'] = 'nicht gefunden. Falls Multiserver Modus genutzt werden soll, muss PHP mit der ssh2-Extenstion neu kompiliert werden.'
-
 ?>

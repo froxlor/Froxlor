@@ -76,7 +76,7 @@ if($page == 'overview')
 				eval("echo \"" . getTemplate("update/update_end") . "\";");
 	
 				updateCounters();
-				inserttask('1', -1); // -1 = all frox-clients + master (multiserver-mode)
+				inserttask('1');
 				@chmod('./lib/userdata.inc.php', 0440);
 				
 				$successful_update = true;

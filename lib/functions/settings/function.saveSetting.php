@@ -17,20 +17,11 @@
  * @version    $Id$
  */
 
-function saveSetting($settinggroup, $varname, $newvalue, $server_id = 0)
+function saveSetting($settinggroup, $varname, $newvalue)
 {
 	global $db;
-
-	$query = 'UPDATE 
-			`' . TABLE_PANEL_SETTINGS . '` 
-		SET 
-			`value` = \'' . $db->escape($newvalue) . '\' 
-		WHERE 
-			`settinggroup` = \'' . $db->escape($settinggroup) . '\' 
-		AND 
-			`varname`=\'' . $db->escape($varname) . '\' 
-		AND 
-			`sid`=\''. (int)$server_id . '\' ';
-
+	$query = 'UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = \'' . $db->escape($newvalue) . '\' WHERE `settinggroup` = \'' . $db->escape($settinggroup) . '\' AND `varname`=\'' . $db->escape($varname) . '\'';
 	return $db->query($query);
 }
+
+?>

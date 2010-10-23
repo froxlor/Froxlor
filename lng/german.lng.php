@@ -1494,11 +1494,4 @@ $lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzer
 // ADDED IN FROXLOR 0.9.14-svn6
 $lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
 
-// ADDED IN FROXLOR 0.9.14-svn7
-$lng['admin']['multiserver'] = 'Multiserver Einstellungen';
-$lng['multiserver']['enabled']['title'] = 'Aktiviere den Multiserver Modus';
-
-// ADDED IN FROXLOR 0.9.14-svn9
-$lng['mysql']['database_edit'] = 'Datenbank bearbeiten';
-
 ?>

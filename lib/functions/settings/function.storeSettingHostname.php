@@ -17,16 +17,16 @@
  * @version    $Id$
  */
 
-function storeSettingHostname($fieldname, $fielddata, $newfieldvalue, $server_id = 0)
+function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)
 {
-	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue, $server_id );
+	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 	if($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'hostname')
 	{
 		global $db, $idna_convert;
 		$newfieldvalue = $idna_convert->encode($newfieldvalue);
 		
-		$customerstddomains_result = $db->query('SELECT `standardsubdomain` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `standardsubdomain` <> \'0\' and `sid` = "'.$server_id.'"');
+		$customerstddomains_result = $db->query('SELECT `standardsubdomain` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `standardsubdomain` <> \'0\'');
 		$ids = array();
 
 		while($customerstddomains_row = $db->fetch_array($customerstddomains_result))
@@ -36,15 +36,8 @@ function storeSettingHostname($fieldname, $fielddata, $newfieldvalue, $server_id
 
 		if(count($ids) > 0)
 		{
-			if($server_id > 0)
-			{
-				$client = froxlorclient::getInstance(null, $db, $server_id);
-				$syshostname = $client->getSetting('system', 'hostname');
-			} else {
-				$syshostname = getSetting('system', 'hostname');
-			}
-			$db->query('UPDATE `' . TABLE_PANEL_DOMAINS . '` SET `domain` = REPLACE(`domain`, \'' . $db->escape($syshostname) . '\', \'' . $db->escape($newfieldvalue) . '\') WHERE `id` IN (\'' . implode('\',\'', $ids) . '\') AND `sid` = "'.$server_id.'"');
-			inserttask('1', $server_id);
+			$db->query('UPDATE `' . TABLE_PANEL_DOMAINS . '` SET `domain` = REPLACE(`domain`, \'' . $db->escape(getSetting('system', 'hostname')) . '\', \'' . $db->escape($newfieldvalue) . '\') WHERE `id` IN (\'' . implode('\',\'', $ids) . '\')');
+			inserttask('1');
 		}
 	}
 	

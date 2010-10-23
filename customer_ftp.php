@@ -119,7 +119,7 @@ elseif($page == 'accounts')
 				if(isset($_POST['delete_userfiles'])
 				  && (int)$_POST['delete_userfiles'] == 1)
 				{
-					inserttask('8', $userinfo['loginname'], $result['homedir'], $userinfo['sid']);
+					inserttask('8', $userinfo['loginname'], $result['homedir']);
 				}
 
 				$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `ftps_used`=`ftps_used`-1 $resetaccnumber WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
@@ -201,7 +201,7 @@ elseif($page == 'accounts')
 					$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `ftps_used`=`ftps_used`+1, `ftp_lastaccountnumber`=`ftp_lastaccountnumber`+1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 
 					$log->logAction(USR_ACTION, LOG_INFO, "added ftp-account '" . $username . " (" . $path . ")'");
-					inserttask(5, (int)$userinfo['sid']);
+					inserttask(5);
 
 					if($sendinfomail == 1)
 					{

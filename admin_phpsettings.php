@@ -88,13 +88,6 @@ if($page == 'overview')
 				$phpsettings = validate(str_replace("\r\n", "\n", $_POST['phpsettings']), 'phpsettings', '/^[^\0]*$/');
 				$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
 				$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
-				/*
-				 * get server-id for php-config (multiserver-support, default = 0)
-				 * @TODO needs to be implemented in the interface, using 0 for now
-				 * 16.10.2010 d00p
-				 */
-				//$server_id = intval_ressource($_POST['serverid']);
-				$server_id = 0;
 
 				if(strlen($description) == 0
 				   || strlen($description) > 50)
@@ -102,17 +95,8 @@ if($page == 'overview')
 					standard_error('descriptioninvalid');
 				}
 
-				$db->query("INSERT INTO 
-					`" . TABLE_PANEL_PHPCONFIGS . "` 
-				SET 
-					`description` = '" . $db->escape($description) . "', 
-					`binary` = '" . $db->escape($binary) . "', 
-					`file_extensions` = '" . $db->escape($file_extensions) . "', 
-					`mod_fcgid_starter` = '" . $db->escape($mod_fcgid_starter) . "', 
-					`mod_fcgid_maxrequests` = '" . $db->escape($mod_fcgid_maxrequests) . "', 
-					`phpsettings` = '" . $db->escape($phpsettings) . "',
-					`sid` = '" . (int)$server_id . "'");
-				inserttask('1', $server_id);
+				$db->query("INSERT INTO `" . TABLE_PANEL_PHPCONFIGS . "` SET `description` = '" . $db->escape($description) . "', `binary` = '" . $db->escape($binary) . "', `file_extensions` = '" . $db->escape($file_extensions) . "', `mod_fcgid_starter` = '" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests` = '" . $db->escape($mod_fcgid_maxrequests) . "', `phpsettings` = '" . $db->escape($phpsettings) . "'");
+				inserttask('1');
 				$log->logAction(ADM_ACTION, LOG_INFO, "php.ini setting with description '" . $description . "' has been created by '" . $userinfo['loginname'] . "'");
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
@@ -142,7 +126,7 @@ if($page == 'overview')
 			{
 				$db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `phpsettingid` = 1 WHERE `phpsettingid` = " . (int)$id);
 				$db->query("DELETE FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = " . (int)$id);
-				inserttask('1', $result['sid']);
+				inserttask('1');
 				$log->logAction(ADM_ACTION, LOG_INFO, "php.ini setting with id #" . (int)$id . " has been deleted by '" . $userinfo['loginname'] . "'");
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
@@ -165,16 +149,6 @@ if($page == 'overview')
 		   && $result['id'] == $id
 		   && (int)$userinfo['change_serversettings'] == 1)
 		{
-			/*
-			 * get server-id from php-config (multiserver-support)
-			 */
-			$server_id = $result['sid'];
-			
-			/*
-			 * @TODO enter server-id as select-condition where necessary
-			 * 16.10.2010 d00p
-			 */
-
 			if(isset($_POST['send'])
 			   && $_POST['send'] == 'send')
 			{
@@ -184,31 +158,15 @@ if($page == 'overview')
 				$phpsettings = validate(str_replace("\r\n", "\n", $_POST['phpsettings']), 'phpsettings', '/^[^\0]*$/');
 				$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
 				$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
-				/*
-				 * get server-id for php-config (multiserver-support, default = 0)
-				 * @TODO needs to be implemented in the interface, using 0 for now
-				 * 16.10.2010 d00p
-				 */
-				//$server_id = intval_ressource($_POST['serverid']);
-	
+
 				if(strlen($description) == 0
 				   || strlen($description) > 50)
 				{
 					standard_error('descriptioninvalid');
 				}
 
-				$db->query("UPDATE 
-					`" . TABLE_PANEL_PHPCONFIGS . "` 
-				SET 
-					`description` = '" . $db->escape($description) . "', 
-					`binary` = '" . $db->escape($binary) . "', 
-					`file_extensions` = '" . $db->escape($file_extensions) . "', 
-					`mod_fcgid_starter` = '" . $db->escape($mod_fcgid_starter) . "', 
-					`mod_fcgid_maxrequests` = '" . $db->escape($mod_fcgid_maxrequests) . "', 
-					`phpsettings` = '" . $db->escape($phpsettings) . "',
-					`sid` = '" . (int)$server_id . "'  
-				WHERE `id` = " . (int)$id);
-				inserttask('1', $server_id);
+				$db->query("UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET `description` = '" . $db->escape($description) . "', `binary` = '" . $db->escape($binary) . "', `file_extensions` = '" . $db->escape($file_extensions) . "', `mod_fcgid_starter` = '" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests` = '" . $db->escape($mod_fcgid_maxrequests) . "', `phpsettings` = '" . $db->escape($phpsettings) . "' WHERE `id` = " . (int)$id);
+				inserttask('1');
 				$log->logAction(ADM_ACTION, LOG_INFO, "php.ini setting with description '" . $description . "' has been changed by '" . $userinfo['loginname'] . "'");
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}

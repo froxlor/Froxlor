@@ -154,16 +154,6 @@ if($page == 'customers'
 			if(isset($_POST['send'])
 			   && $_POST['send'] == 'send')
 			{
-				/*
-				 * get server-id from customer (multiserver-support)
-				 */
-				$server_id = $result['sid'];
-				
-				/*
-				 * @TODO enter server-id as select-condition where necessary
-				 * 16.10.2010 d00p
-				 */
-
 				$databases = $db->query("SELECT * FROM " . TABLE_PANEL_DATABASES . " WHERE customerid='" . (int)$id . "' ORDER BY `dbserver`");
 				$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
 				unset($db_root->password);
@@ -292,13 +282,13 @@ if($page == 'customers'
 				$admin_update_query.= " WHERE `adminid` = '" . (int)$result['adminid'] . "'";
 				$db->query($admin_update_query);
 				$log->logAction(ADM_ACTION, LOG_INFO, "deleted user '" . $result['loginname'] . "'");
-				inserttask('1', $server_id);
-				inserttask('4', $server_id);
+				inserttask('1');
+				inserttask('4');
 				
 				if(isset($_POST['delete_userfiles'])
 				  && (int)$_POST['delete_userfiles'] == 1)
 				{
-					inserttask('6', $result['loginname'], $server_id);
+					inserttask('6', $result['loginname']);
 				}
 				
 				/*
@@ -348,18 +338,6 @@ if($page == 'customers'
 				$customernumber = validate($_POST['customernumber'], 'customer number', '/^[A-Za-z0-9 \-]*$/Di');
 				$def_language = validate($_POST['def_language'], 'default language');
 				$diskspace = intval_ressource($_POST['diskspace']);
-				/*
-				 * get server-id for customer (multiserver-support, default = 0)
-				 * @TODO needs to be implemented in the interface, using 0 for now
-				 * 16.10.2010 d00p
-				 */
-				//$server_id = intval_ressource($_POST['serverid']);
-				$server_id = 0;
-
-				/*
-				 * @TODO enter server-id as select-condition where necessary
-				 * 16.10.2010 d00p
-				 */
 
 				if(isset($_POST['diskspace_ul']))
 				{
@@ -588,44 +566,7 @@ if($page == 'customers'
 						$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
 					}
 
-					$result = $db->query("INSERT INTO 
-						`" . TABLE_PANEL_CUSTOMERS . "` 
-					SET
-						`adminid` = '" . (int)$userinfo['adminid'] . "', 
-						`loginname` = '" . $db->escape($loginname) . "', 
-						`password` = '" . md5($password) . "', 
-						`name` = '" . $db->escape($name) . "', 
-						`firstname` = '" . $db->escape($firstname) . "', 
-						`company` = '" . $db->escape($company) . "', 
-						`street` = '" . $db->escape($street) . "', 
-						`zipcode` = '" . $db->escape($zipcode) . "', 
-						`city` = '" . $db->escape($city) . "', 
-						`phone` = '" . $db->escape($phone) . "', 
-						`fax` = '" . $db->escape($fax) . "', 
-						`email` = '" . $db->escape($email) . "', 
-						`customernumber` = '" . $db->escape($customernumber) . "', 
-						`def_language` = '" . $db->escape($def_language) . "', 
-						`documentroot` = '" . $db->escape($documentroot) . "', 
-						`guid` = '" . $db->escape($guid) . "', 
-						`diskspace` = '" . $db->escape($diskspace) . "', 
-						`traffic` = '" . $db->escape($traffic) . "', 
-						`subdomains` = '" . $db->escape($subdomains) . "', 
-						`emails` = '" . $db->escape($emails) . "', 
-						`email_accounts` = '" . $db->escape($email_accounts) . "', 
-						`email_forwarders` = '" . $db->escape($email_forwarders) . "', 
-						`email_quota` = '" . $db->escape($email_quota) . "', 
-						`ftps` = '" . $db->escape($ftps) . "', 
-						`tickets` = '" . $db->escape($tickets) . "', 
-						`mysqls` = '" . $db->escape($mysqls) . "', 
-						`standardsubdomain` = '0', 
-						`phpenabled` = '" . $db->escape($phpenabled) . "', 
-						`imap` = '" . $db->escape($email_imap) . "', 
-						`pop3` = '" . $db->escape($email_pop3) . "', 
-						`aps_packages` = '" . (int)$number_of_aps_packages . "',
-						`perlenabled` = '" . $db->escape($perlenabled) . "', 
-						`email_autoresponder` = '" . $db->escape($email_autoresponder) . "',
-						`sid` =  '" . (int)$server_id . "'");
-
+					$result = $db->query("INSERT INTO `" . TABLE_PANEL_CUSTOMERS . "` (`adminid`, `loginname`, `password`, `name`, `firstname`, `company`, `street`, `zipcode`, `city`, `phone`, `fax`, `email`, `customernumber`, `def_language`, `documentroot`, `guid`, `diskspace`, `traffic`, `subdomains`, `emails`, `email_accounts`, `email_forwarders`, `email_quota`, `ftps`, `tickets`, `mysqls`, `standardsubdomain`, `phpenabled`, `imap`, `pop3`, `aps_packages`, `perlenabled`, `email_autoresponder`)  VALUES ('" . (int)$userinfo['adminid'] . "', '" . $db->escape($loginname) . "', '" . md5($password) . "', '" . $db->escape($name) . "', '" . $db->escape($firstname) . "', '" . $db->escape($company) . "', '" . $db->escape($street) . "', '" . $db->escape($zipcode) . "', '" . $db->escape($city) . "', '" . $db->escape($phone) . "', '" . $db->escape($fax) . "', '" . $db->escape($email) . "', '" . $db->escape($customernumber) . "','" . $db->escape($def_language) . "', '" . $db->escape($documentroot) . "', '" . $db->escape($guid) . "', '" . $db->escape($diskspace) . "', '" . $db->escape($traffic) . "', '" . $db->escape($subdomains) . "', '" . $db->escape($emails) . "', '" . $db->escape($email_accounts) . "', '" . $db->escape($email_forwarders) . "', '" . $db->escape($email_quota) . "', '" . $db->escape($ftps) . "', '" . $db->escape($tickets) . "', '" . $db->escape($mysqls) . "', '0', '" . $db->escape($phpenabled) . "', '" . $db->escape($email_imap) . "', '" . $db->escape($email_pop3) . "', '" . (int)$number_of_aps_packages . "', '" . $db->escape($perlenabled) . "', '" . $db->escape($email_autoresponder) . "')");
 					$customerid = $db->insert_id();
 					$admin_update_query = "UPDATE `" . TABLE_PANEL_ADMINS . "` SET `customers_used` = `customers_used` + 1";
 
@@ -696,7 +637,7 @@ if($page == 'customers'
 					}
 
 					$log->logAction(ADM_ACTION, LOG_INFO, "added user '" . $loginname . "'");
-					inserttask('2', $loginname, $guid, $guid, $store_defaultindex, $server_id);
+					inserttask('2', $loginname, $guid, $guid, $store_defaultindex);
 
 					// Add htpasswd for the webalizer stats
 
@@ -721,7 +662,7 @@ if($page == 'customers'
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added webalizer htpasswd for user '" . $loginname . "'");
 					}
 
-					inserttask('1', $server_id);
+					inserttask('1');
 					$result = $db->query("INSERT INTO `" . TABLE_FTP_USERS . "` " . "(`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) " . "VALUES ('" . (int)$customerid . "', '" . $db->escape($loginname) . "', ENCRYPT('" . $db->escape($password) . "'), '" . $db->escape($documentroot) . "', 'y', '" . (int)$guid . "', '" . (int)$guid . "')");
 					$result = $db->query("INSERT INTO `" . TABLE_FTP_GROUPS . "` " . "(`customerid`, `groupname`, `gid`, `members`) " . "VALUES ('" . (int)$customerid . "', '" . $db->escape($loginname) . "', '" . $db->escape($guid) . "', '" . $db->escape($loginname) . "')");
 					$result = $db->query("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $db->escape($loginname) . "', 'user', '0', '0', '0', '0', '0', '0')");
@@ -757,7 +698,7 @@ if($page == 'customers'
 						$domainid = $db->insert_id();
 						$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `standardsubdomain`=\'' . (int)$domainid . '\' WHERE `customerid`=\'' . (int)$customerid . '\'');
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added standardsubdomain for user '" . $loginname . "'");
-						inserttask('1', $server_id);
+						inserttask('1');
 					}
 
 					if($sendpassword == '1')
@@ -844,16 +785,6 @@ if($page == 'customers'
 
 		if($result['loginname'] != '')
 		{
-			/*
-			 * get server-id from customer (multiserver-support)
-			 */
-			$server_id = $result['sid'];
-			
-			/*
-			 * @TODO enter server-id as select-condition where necessary
-			 * 16.10.2010 d00p
-			 */
-
 			if(isset($_POST['send'])
 			   && $_POST['send'] == 'send')
 			{
@@ -870,12 +801,6 @@ if($page == 'customers'
 				$def_language = validate($_POST['def_language'], 'default language');
 				$password = validate($_POST['new_customer_password'], 'new password');
 				$diskspace = intval_ressource($_POST['diskspace']);
-				/*
-				 * get server-id fir customer (multiserver-support, default = 0)
-				 * @TODO needs to be implemented in the interface, using 0 for now
-				 * 16.10.2010 d00p
-				 */
-				//$server_id = intval_ressource($_POST['serverid']);
 
 				if(isset($_POST['diskspace_ul']))
 				{
@@ -1071,7 +996,7 @@ if($page == 'customers'
 						$domainid = $db->insert_id();
 						$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `standardsubdomain`=\'' . (int)$domainid . '\' WHERE `customerid`=\'' . (int)$result['customerid'] . '\'');
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added standardsubdomain for user '" . $result['loginname'] . "'");
-						inserttask('1', $server_id);
+						inserttask('1');
 					}
 
 					if($createstdsubdomain == '0'
@@ -1080,7 +1005,7 @@ if($page == 'customers'
 						$db->query('DELETE FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `id`=\'' . (int)$result['standardsubdomain'] . '\'');
 						$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `standardsubdomain`=\'0\' WHERE `customerid`=\'' . (int)$result['customerid'] . '\'');
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
-						inserttask('1', $server_id);
+						inserttask('1');
 					}
 
 					if($deactivated != '1')
@@ -1101,7 +1026,7 @@ if($page == 'customers'
 					if($phpenabled != $result['phpenabled']
 						|| $perlenabled != $result['perlenabled'])
 					{
-						inserttask('1', $server_id);
+						inserttask('1');
 					}
 
 					if($deactivated != $result['deactivated'])
@@ -1110,7 +1035,7 @@ if($page == 'customers'
 						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `login_enabled`='" . (($deactivated) ? 'N' : 'Y') . "' WHERE `customerid`='" . (int)$id . "'");
 						$db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `deactivated`='" . (int)$deactivated . "' WHERE `customerid`='" . (int)$id . "'");
 						$log->logAction(ADM_ACTION, LOG_INFO, "deactivated user '" . $result['loginname'] . "'");
-						inserttask('1', $server_id);
+						inserttask('1');
 					}
 
 					// Disable or enable POP3 Login for customers Mail Accounts

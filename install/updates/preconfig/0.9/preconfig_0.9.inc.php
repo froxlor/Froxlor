@@ -343,12 +343,4 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= makeyesno('update_allow_domain_login', '1', '0', '0');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
-
-	if(versionInUpdate($current_version, '0.9.14-svn7'))
-	{
-		$has_preconfig = true;
-		$description = 'This update removes the unsupported real-time option. Additionally the deprecated tables for navigation and cronscripts are removed, any modules using these tables need to be updated to the new structure!';
-		$question = '';
-		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
-	}
 }

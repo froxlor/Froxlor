@@ -276,7 +276,7 @@ if($page == 'ipsandports'
 				$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
 				$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 				$docroot =  validate($_POST['docroot'], 'docroot');
-
+				
 				if($listen_statement != '1')
 				{
 					$listen_statement = '0';
@@ -365,8 +365,8 @@ if($page == 'ipsandports'
 					");
 
 					$log->logAction(ADM_ACTION, LOG_WARNING, "changed IP/port from '" . $result['ip'] . ":" . $result['port'] . "' to '" . $ip . ":" . $port . "'");
-					inserttask('1', $server_id);
-					inserttask('4', $server_id);
+					inserttask('1');
+					inserttask('4');
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
 			}

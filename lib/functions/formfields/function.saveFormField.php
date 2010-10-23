@@ -17,12 +17,12 @@
  * @version    $Id$
  */
 
-function saveFormField($fieldname, $fielddata, $newfieldvalue, $server_id = 0)
+function saveFormField($fieldname, $fielddata, $newfieldvalue)
 {
 	$returnvalue = '';
 	if(is_array($fielddata) && isset($fielddata['save_method']) && $fielddata['save_method'] != '' && function_exists($fielddata['save_method']))
 	{
-		$returnvalue = call_user_func($fielddata['save_method'], $fieldname, $fielddata, $newfieldvalue, $server_id);
+		$returnvalue = call_user_func($fielddata['save_method'], $fieldname, $fielddata, $newfieldvalue);
 	}
 	elseif(is_array($fielddata) && !isset($fielddata['save_method']))
 	{

@@ -17,16 +17,8 @@
  * @version    $Id$
  */
 
-function loadSettings(&$settings_data, $db, $server_id = 0)
+function loadSettings(&$settings_data, $db)
 {
-	// to check whether we're on a recent
-	// Froxlor installation which supports
-	// multiserver-settings, we have to read
-	// the version from the database
-	$_dbversion = '';
-	$_dv = $db->query_first("SELECT `value` FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'version';");
-	$_dbversion = $_dv['value'];
-	
 	$settings = array();
 
 	if(is_array($settings_data) && isset($settings_data['groups']) && is_array($settings_data['groups']))
@@ -39,48 +31,10 @@ function loadSettings(&$settings_data, $db, $server_id = 0)
 				{
 					if(isset($field_details['settinggroup']) && isset($field_details['varname']) && isset($field_details['default']))
 					{
-						$sql_query = 'SELECT 
-							`settinggroup`, `varname`, `value` 
-						FROM 
-							`' . TABLE_PANEL_SETTINGS . '` 
-						WHERE 
-							`settinggroup` = \'' . $db->escape($field_details['settinggroup']) . '\' 
-						AND 
-							`varname` = \'' . $db->escape($field_details['varname']) . '\' ';
-						
-						// since 0.9.14-svn7 we have $server_id for multi-server-support
-						// but versions before 0.9.14-svn7 don't have the `sid` field
-						// in panel_settings, so only append the condition if we're on
-						// 0.9.14-svn7 or higher
-						if(compareFroxlorVersion('0.9.14-svn7', $_dbversion))
-						{
-							$sql_query_sid = 'AND `sid` = \''. (int)$server_id . '\' ';
-						} else {
-							$sql_query_sid = '';
-						}
-
-						$row = $db->query_first($sql_query.$sql_query_sid);
+						$row = $db->query_first('SELECT `settinggroup`, `varname`, `value` FROM `' . TABLE_PANEL_SETTINGS . '` WHERE `settinggroup` = \'' . $db->escape($field_details['settinggroup']) . '\' AND `varname` = \'' . $db->escape($field_details['varname']) . '\' ');
 						if(!empty($row))
 						{
 							$varvalue = $row['value'];
-						}
-						elseif($server_id > 0)
-						{
-							// if we're a client (server_id > 0)
-							// and a setting is not found or not
-							// needed for clients, we get it from 
-							// the master (server_id = 0)
-							$sql_query_sid = 'AND `sid` = \'0\' ';
-							$row = $db->query_first($sql_query.$sql_query_sid);
-							if(!empty($row))
-							{
-								$varvalue = $row['value'];
-							}
-							else
-							{
-								// default to array-default-value
-								$varvalue = $field_details['default'];
-							}
 						}
 						else
 						{

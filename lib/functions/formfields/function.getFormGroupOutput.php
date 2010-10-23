@@ -24,7 +24,7 @@ function getFormGroupOutput($groupname, $groupdetails)
 	return $group;
 }
 
-function getFormOverviewGroupOutput($groupname, $groupdetails, $server_id = 0)
+function getFormOverviewGroupOutput($groupname, $groupdetails)
 {
 	global $lng, $settings, $filename, $s;
 	
@@ -63,34 +63,14 @@ function getFormOverviewGroupOutput($groupname, $groupdetails, $server_id = 0)
 				}
 				else
 				{
-					if(isset($fielddetails['disabled']) && $fielddetails['disabled'] == true)
-					{
-						$d = true;
-						$option.='<span class="strikethrough">';
-					} else {
-						$d = false;
-					}
 					$option.= $lng['admin']['activated'].':&nbsp;';
-					$option.= makeyesno($fieldname, '1', '0', $settings[$fielddetails['settinggroup']][$fielddetails['varname']], $d);
-					if($d) {
-						$option.='</span>';
-					}
+					$option.= makeyesno($fieldname, '1', '0', $settings[$fielddetails['settinggroup']][$fielddetails['varname']]);
 					$activated = (int)$settings[$fielddetails['settinggroup']][$fielddetails['varname']];
 				}
 			}
 		}
 	}
 
-	// if the server_id is > 0 then
-	// this is a client-settings page
-	// and we need another template
-	if($server_id > 0)
-	{
-		eval("\$group = \"" . getTemplate("froxlorclients/froxlorclient_settingsoverviewgroup") . "\";");
-	}
-	else
-	{
-		eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
-	}
+	eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
 	return $group;
 }

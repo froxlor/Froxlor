@@ -1511,33 +1511,4 @@ $lng['admin']['ipsandports']['docroot']['description'] = 'You can define a custo
 // ADDED IN FROXLOR 0.9.14-svn6
 $lng['serversettings']['login_domain_login'] = 'Allow login with domains';
 
-// ADDED IN FROXLOR 0.9.14-svn7
-$lng['admin']['multiserver'] = 'Multiserver settings';
-$lng['multiserver']['enabled']['title'] = 'Enable multiserver mode';
-$lng['multiserver']['enabled']['description'] = '@TODO';
-
-// ADDED IN FROXLOR 0.9.14-svn9
-$lng['mysql']['database_edit'] = 'Edit database';
-$lng['admin']['froxlorclients']['add'] = 'Create new Froxlor-client';
-$lng['admin']['froxlorclients']['edit'] = 'Edit Froxlor-client';
-$lng['admin']['froxlorclients']['longdesc_add'] = '@TODO a long description on how the multiserver-client thing works';
-$lng['admin']['froxlorclients']['client'] = 'Froxlor client';
-$lng['admin']['froxlorclients']['name'] = 'Client name';
-$lng['admin']['froxlorclients']['desc'] = 'Client description';
-$lng['admin']['froxlorclients']['enabled'] = 'Client enabled?';
-$lng['admin']['froxlorclients']['settings'] = 'settings';
-$lng['admin']['froxlorclients']['deploy'] = 'deploy';
-$lng['menue']['multiserver']['clients'] = 'Multiserver clients';
-$lng['admin']['froxlorclient'] = 'Multiserver client settings';
-$lng['admin']['froxlorclient_settings'] = 'Froxlor client settings:';
-$lng['froxlorclient']['ipaddress'] = 'Client IP';
-$lng['froxlorclient']['hostname'] = 'Client hostname';
-$lng['froxlorclient']['deploy_mode'] = 'Deploy mode';
-$lng['froxlorclient']['ssh_port'] = 'SSH port';
-$lng['froxlorclient']['ssh_user'] = 'SSH user';
-$lng['froxlorclient']['ssh_passphrase'] = 'SSH passphrase';
-$lng['froxlorclient']['ssh_pubkey'] = 'SSH public key';
-$lng['froxlorclient']['ssh_privkey'] = 'SSH private key';
-$lng['froxlorclient']['install_destination'] = 'Froxlor client data destination';
-
 ?>

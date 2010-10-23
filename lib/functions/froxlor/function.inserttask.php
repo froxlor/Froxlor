@@ -19,53 +19,17 @@
 
 /**
  * Inserts a task into the PANEL_TASKS-Table
- * 
- * @author Florian Lippert <flo@syscp.org> (2003-2009)
- * @author Froxlor team <team@froxlor.org> (2010-)
+ *
+ * @param int Type of task
+ * @param string Parameter 1
+ * @param string Parameter 2
+ * @param string Parameter 3
+ * @author Florian Lippert <flo@syscp.org>
  */
 
-function inserttask()
+function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '')
 {
 	global $db, $settings;
-	
-	$numargs = func_num_args();
-	
-	if($numargs <= 0) {
-		// no arguments given, exiting
-		return;
-	}
-
-	// type will always be the first argument
-	$type = func_get_arg(0);
-
-	// server-id will always be the last argument
-	// (if not set, use id of master (0)
-	$server_id = ($numargs-1 <= 0) ? 0 : func_get_arg($numargs-1);
-
-	// get the rest of the params
-	$taskparams = array();
-	for($x=1;$x<$numargs-1;$x++)
-	{
-		$taskparams[] = func_get_arg($x);		
-	}
-
-	// if server_id = -1 then add this task for EVERY froxlor-client
-	if($server_id == -1)
-	{
-		$numclients = froxlorclient::getFroxlorClients($db);
-		if(is_array($numclients)
-			&& count($numclients) > 0
-		) {
-			foreach($numclients as $froxclient_id)
-			{
-				inserttask($type, implode(', ', $taskparams), $froxclient_id);
-			}
-		}
-
-		// also for the master
-		inserttask($type, implode(', ', $taskparams), 0);
-		return;
-	}
 
 	if($type == '1'
 	   || $type == '3'
@@ -73,48 +37,96 @@ function inserttask()
 	   || $type == '5')
 	{
 		$db->query('DELETE FROM `' . TABLE_PANEL_TASKS . '` WHERE `type`="' . $type . '"');
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `sid`) VALUES ("' . $type . '", "'.$server_id.'")');
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`) VALUES ("' . $type . '")');
+		$doupdate = true;
 	}
 	elseif($type == '2'
-	       && $taskparams[0] != ''
-	       && $taskparams[1] != ''
-	       && $taskparams[2] != ''
-	       && $taskparams[3] != '')
+	       && $param1 != ''
+	       && $param2 != ''
+	       && $param3 != ''
+	       && $param4 != '')
 	{
 		$data = Array();
-		$data['loginname'] = $taskparams[0];
-		$data['uid'] = $taskparams[1];
-		$data['gid'] = $taskparams[2];
-		$data['store_defaultindex'] = $taskparams[3];
+		$data['loginname'] = $param1;
+		$data['uid'] = $param2;
+		$data['gid'] = $param3;
+		$data['store_defaultindex'] = $param4;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`, `sid`) VALUES ("2", "' . $db->escape($data) . '", "'.$server_id.'")');
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("2", "' . $db->escape($data) . '")');
+		$doupdate = true;
 	}
 	elseif($type == '6'
-			&& $taskparams[0] != '')
+			&& $param1 != '')
 	{
 		$data = Array();
-		$data['loginname'] = $taskparams[0];
+		$data['loginname'] = $param1;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`, `sid`) VALUES ("6", "' . $db->escape($data) . '", "'.$server_id.'")');
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("6", "' . $db->escape($data) . '")');
+		$doupdate = true;
 	}
 	elseif($type == '7'
-			&& $taskparams[0] != ''
-			&& $taskparams[1] != '')
+			&& $param1 != ''
+			&& $param2 != '')
 	{
 		$data = Array();
-		$data['loginname'] = $taskparams[0];
-		$data['email'] = $taskparams[1];
+		$data['loginname'] = $param1;
+		$data['email'] = $param2;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`, `sid`) VALUES ("7", "' . $db->escape($data) . '", "'.$server_id.'")');
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("7", "' . $db->escape($data) . '")');
+		$doupdate = true;
 	}
 	elseif($type == '8'
-			&& $taskparams[0] != ''
-			&& $taskparams[1] != '')
+			&& $param1 != ''
+			&& $param2 != '')
 	{
 		$data = Array();
-		$data['loginname'] = $taskparams[0];
-		$data['homedir'] = $taskparams[1];
+		$data['loginname'] = $param1;
+		$data['homedir'] = $param2;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`, `sid`) VALUES ("8", "' . $db->escape($data) . '", "'.$server_id.'")');
+		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("8", "' . $db->escape($data) . '")');
+		$doupdate = true;
+	}
+
+	if($doupdate === true
+	   && (int)$settings['system']['realtime_port'] !== 0
+	   && function_exists('socket_create'))
+	{
+		$timeout = 15;
+		//$socket = @socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+		$socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+
+		if($socket !== false)
+		{
+			// create the request packet
+			$packet = chr(0) . chr(1) . 'RUN' . chr(0);
+			// UDP is connectionless, so we just send on it.
+			//@socket_sendto($socket, $packet, strlen($packet), 0x100, '127.0.0.1', (int)$settings['system']['realtime_port']);			
+
+			/*
+			 * this is for TCP-Connections
+			 */
+			$time = time();
+
+			while(!@socket_connect($socket, '127.0.0.1', (int)$settings['system']['realtime_port']))
+			{
+				$err = socket_last_error($socket);
+
+				if($err == 115
+				   || $err == 114)
+				{
+					if((time() - $time) >= $timeout)
+					{
+						break;
+					}
+
+					sleep(1);
+					continue;
+				}
+			}
+			/**
+			 * close socket
+			 */
+			@socket_close($socket);
+		}
 	}
 }

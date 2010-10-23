@@ -25,10 +25,6 @@ require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.10.apache
 require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.15.apache_fcgid.php'));
 require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.20.lighttpd.php'));
 require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.25.lighttpd_fcgid.php'));
-// only include if multiserver is enabled
-if($settings['multiserver']['enabled']) {
-	require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.multiserver.client_deploy.php'));
-}
 
 /**
  * LOOK INTO TASKS TABLE TO SEE IF THERE ARE ANY UNDONE JOBS
@@ -36,14 +32,7 @@ if($settings['multiserver']['enabled']) {
 
 fwrite($debugHandler, '  cron_tasks: Searching for tasks to do' . "\n");
 $cronlog->logAction(CRON_ACTION, LOG_INFO, "Searching for tasks to do");
-$server_id = getServerId();
-$result_tasks = $db->query("SELECT 
-	`id`, `type`, `data` 
-FROM 
-	`" . TABLE_PANEL_TASKS . "` 
-WHERE
-	`sid` = '".$server_id."' 
-ORDER BY `id` ASC");
+$result_tasks = $db->query("SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` ORDER BY `id` ASC");
 $resultIDs = array();
 
 while($row = $db->fetch_array($result_tasks))
@@ -376,36 +365,6 @@ while($row = $db->fetch_array($result_tasks))
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($ftphomedir));
 					safe_exec('rm -rf '.escapeshellarg($ftphomedir));
 				}
-			}
-		}
-	}
-
-	/**
-	 * TYPE=9 -> deploy a Froxlor multiserver client to its destination
-	 */
-	elseif ($row['type'] == '9')
-	{
-		fwrite($debugHandler, '  cron_tasks: Task9 started - deploy a Froxlor multiserver client' . "\n");
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task9 started - deploy a Froxlor multiserver client');
-
-		if(is_array($row['data']))
-		{
-			if(isset($row['data']['serverid'])) 
-			{
-				/*
-				 * get froxlor-client-object
-				 */
-				$client = froxlorclient::getInstance(null, $db, (int)$row['data']['serverid']);
-				/*
-				 * create new deployer-object
-				 */
-				$deployer = new client_deployer($client);
-				/*
-				 * deploy
-				 * 
-				 * @TODO handle Exceptions
-				 */
-				$deployer->Deploy();
 			}
 		}
 	}
