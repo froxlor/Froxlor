@@ -2,6 +2,10 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  23 Oct 2010; Froxlor Release Team <release@froxlor.org>
+  froxlor-9999.ebuild, metadata.xml:
+  remove realtime useflag
+
 *froxlor-0.9.13.1 (01 Oct 2010)
 
   01 Oct 2010; Froxlor Release Team <release@froxlor.org>
