@@ -1238,5 +1238,5 @@ if(isFroxlorVersion('0.9.14-svn6'))
 	$db->query("DELETE FROM `".TABLE_PANEL_CRONRUNS."` WHERE `cronfile` ='cron_legacy.php';");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.14-svn6');
+	updateToVersion('0.9.14-svn10');
 }
