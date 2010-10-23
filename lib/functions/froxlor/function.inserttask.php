@@ -38,7 +38,6 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 	{
 		$db->query('DELETE FROM `' . TABLE_PANEL_TASKS . '` WHERE `type`="' . $type . '"');
 		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`) VALUES ("' . $type . '")');
-		$doupdate = true;
 	}
 	elseif($type == '2'
 	       && $param1 != ''
@@ -53,7 +52,6 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data['store_defaultindex'] = $param4;
 		$data = serialize($data);
 		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("2", "' . $db->escape($data) . '")');
-		$doupdate = true;
 	}
 	elseif($type == '6'
 			&& $param1 != '')
@@ -62,7 +60,6 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data['loginname'] = $param1;
 		$data = serialize($data);
 		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("6", "' . $db->escape($data) . '")');
-		$doupdate = true;
 	}
 	elseif($type == '7'
 			&& $param1 != ''
@@ -73,7 +70,6 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data['email'] = $param2;
 		$data = serialize($data);
 		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("7", "' . $db->escape($data) . '")');
-		$doupdate = true;
 	}
 	elseif($type == '8'
 			&& $param1 != ''
@@ -84,49 +80,5 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data['homedir'] = $param2;
 		$data = serialize($data);
 		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("8", "' . $db->escape($data) . '")');
-		$doupdate = true;
-	}
-
-	if($doupdate === true
-	   && (int)$settings['system']['realtime_port'] !== 0
-	   && function_exists('socket_create'))
-	{
-		$timeout = 15;
-		//$socket = @socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-		$socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-
-		if($socket !== false)
-		{
-			// create the request packet
-			$packet = chr(0) . chr(1) . 'RUN' . chr(0);
-			// UDP is connectionless, so we just send on it.
-			//@socket_sendto($socket, $packet, strlen($packet), 0x100, '127.0.0.1', (int)$settings['system']['realtime_port']);			
-
-			/*
-			 * this is for TCP-Connections
-			 */
-			$time = time();
-
-			while(!@socket_connect($socket, '127.0.0.1', (int)$settings['system']['realtime_port']))
-			{
-				$err = socket_last_error($socket);
-
-				if($err == 115
-				   || $err == 114)
-				{
-					if((time() - $time) >= $timeout)
-					{
-						break;
-					}
-
-					sleep(1);
-					continue;
-				}
-			}
-			/**
-			 * close socket
-			 */
-			@socket_close($socket);
-		}
 	}
 }
