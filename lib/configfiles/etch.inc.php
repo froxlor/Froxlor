@@ -19,7 +19,7 @@
 
 return Array(
 	'debian_etch' => Array(
-		'label' => 'Debian 4.0 (Etch)',
+		'label' => 'Debian 4.0 (Etch) [deprecated]',
 		'services' => Array(
 			'http' => Array(
 				'label' => $lng['admin']['configfiles']['http'],
