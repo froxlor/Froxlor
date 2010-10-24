@@ -337,18 +337,6 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 							'/etc/init.d/vixie-cron restart'
 						)
 					),
-					'xinetd' => Array(
-						'label' => 'xinet.d (froxlor updates in realtime)',
-						'commands' => Array(
-							'emerge -av xinetd'
-						),
-						'files' => Array(
-							'etc_xinetd.d_froxlor' => '/etc/xinetd.d/froxlor'
-						),
-						'restart' => Array(
-							'/etc/init.d/xinetd restart'
-						)
-					),
 					'awstats' => Array(
 						'label' => 'Awstats',
 						'commands' => Array(

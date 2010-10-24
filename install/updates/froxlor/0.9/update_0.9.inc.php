@@ -1206,6 +1206,7 @@ if(isFroxlorVersion('0.9.14-svn9'))
 
 	showUpdateStep("Removing froxlor-clients table");
 	$db->query("DROP TABLE IF EXISTS `froxlor_clients`");
+	lastStepStatus(0);
 
 	updateToVersion('0.9.14-svn10');
 }
