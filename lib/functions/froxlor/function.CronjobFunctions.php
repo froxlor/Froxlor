@@ -78,17 +78,6 @@ function includeCronjobs($debugHandler, $pathtophpfiles)
 		}
 	}
 	
-	/**
-	 * if we're on realtime and cron_tasks is not one
-	 * of the jobs to run, we add it so the changes are being applied
-	 */
-	if ($settings['system']['realtime_port'] !== 0) {
-		$cron_file = makeCorrectFile($cron_path.'/cron_tasks.php');
-		if (!in_array($cron_file, $jobs_to_run)) {
-			$jobs_to_run[] = $cron_file;
-		}
-	}
-	
 	return $jobs_to_run;
 }
 
