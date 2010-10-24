@@ -245,7 +245,10 @@ class FroxlorSshTransport
 	public function close()
 	{
 		// close the session and force flushing file content to disk
-		ssh2_exec($this->_connection, 'exit'); 
+		if (!is_null($this->_connection)) {
+			ssh2_exec($this->_connection, 'exit');
+		}
+		
 		
 		// set null values
 		$this->_shell = null;
