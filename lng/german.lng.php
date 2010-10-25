@@ -128,7 +128,7 @@ $lng['domains']['noaliasdomain'] = 'Keine Aliasdomain';
  * eMails
  */
 
-$lng['emails']['description'] = 'Hier k&ouml;nnen Sie Ihre E-Mail Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haust&uuml;re. Wenn jemand eine E-Mail an Sie schreibt, dann wird diese in dieses Konto gelegt.<br><br>Die Zugangsdaten von Ihrem Mailprogramm sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Eintr&auml;ge zu ersetzen!)<br>Hostname: <b><i>Domainname</i></b><br>Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br>Passwort: <b><i>das gew&auml;hlte Passwort</i></b>';
+$lng['emails']['description'] = 'Hier k&ouml;nnen Sie Ihre E-Mail Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haust&uuml;re. Wenn jemand eine E-Mail an Sie schreibt, dann wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten von Ihrem Mailprogramm sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Eintr&auml;ge zu ersetzen!)<br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gew&auml;hlte Passwort</i></b>';
 $lng['emails']['emailaddress'] = 'E-Mail-Adresse';
 $lng['emails']['emails_add'] = 'E-Mail-Adresse anlegen';
 $lng['emails']['emails_edit'] = 'E-Mail-Adresse &auml;ndern';
@@ -387,7 +387,7 @@ $lng['serversettings']['mxservers']['description'] = 'Eine durch Komma getrenne 
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['mysql']['description'] = 'Hier k&ouml;nnen Sie MySQL-Datenbanken anlegen und l&ouml;schen.<br>Die &Auml;nderungen werden sofort wirksam und die Datenbanken sofort benutzbar.<br>Im Men&uuml; finden Sie einen Link zum phpMyAdmin, mit dem Sie Ihre Datenbankeninhalte einfach bearbeiten k&ouml;nnen.<br><br>Die Zugangsdaten von php-Skripten sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Eintr&auml;ge zu ersetzen!)<br>Hostname: <b><SQL_HOST></b><br>Benutzername: <b><i>Datenbankname</i></b><br>Passwort: <b><i>das gew&auml;hlte Passwort</i></b><br>Datenbank: <b><i>Datenbankname</i></b>';
+$lng['mysql']['description'] = 'Hier k&ouml;nnen Sie MySQL-Datenbanken anlegen und l&ouml;schen.<br />Die &Auml;nderungen werden sofort wirksam und die Datenbanken sofort benutzbar.<br />Im Men&uuml; finden Sie einen Link zum phpMyAdmin, mit dem Sie Ihre Datenbankeninhalte einfach bearbeiten k&ouml;nnen.<br /><br />Die Zugangsdaten von php-Skripten sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Eintr&auml;ge zu ersetzen!)<br />Hostname: <b><SQL_HOST></b><br />Benutzername: <b><i>Datenbankname</i></b><br />Passwort: <b><i>das gew&auml;hlte Passwort</i></b><br />Datenbank: <b><i>Datenbankname</i></b>';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
@@ -467,7 +467,7 @@ $lng['admin']['mysqlclientversion'] = 'MySQL Client Version';
 $lng['admin']['webserverinterface'] = 'Webserver Interface';
 $lng['domains']['isassigneddomain'] = 'Ist zugewiesene Domain';
 $lng['serversettings']['phpappendopenbasedir']['title'] = 'An OpenBasedir anzuh&auml;ngende Pfade';
-$lng['serversettings']['phpappendopenbasedir']['description'] = 'Diese (durch Doppelpunkte getrennten) Pfade werden dem OpenBasedir-Statement in jedem vhost-Container angeh&auml;ngt.';
+$lng['serversettings']['phpappendopenbasedir']['description'] = 'Diese (durch Doppelpunkte getrennten) Pfade werden dem OpenBasedir-Statement in jedem vHost-Container angeh&auml;ngt.';
 
 // CHANGED IN 1.2.15-rc1
 
@@ -558,14 +558,14 @@ $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Wird mit dem Passwort des neuen 
 
 // ADDED IN 1.2.16-svn13
 
-$lng['error']['documentrootexists'] = 'Es existiert noch ein Verzeichnis &quot;%s&quot; f&uuml;r diesen Kunden. Bitte dieses vorher l&ouml;schen.';
+$lng['error']['documentrootexists'] = 'Es existiert noch ein Verzeichnis &quot;%s&quot; f&uuml;r diesen Kunden. Bitte l&ouml;schen Sie dieses vorher.';
 
 // ADDED IN 1.2.16-svn14
 
 $lng['serversettings']['apacheconf_vhost']['title'] = 'Webserver vHost-Konfigurations-Datei/Verzeichnis-Name';
-$lng['serversettings']['apacheconf_vhost']['description'] = 'Wo soll die vHost-Konfigurationen abgelegt werden? Sie k&ouml;nnen entweder eine Datei (also mit allen vhosts) oder einen Ordner (mit einer Datei pro vhost) angeben.';
+$lng['serversettings']['apacheconf_vhost']['description'] = 'Wo soll die vHost-Konfigurationen abgelegt werden? Sie k&ouml;nnen entweder eine Datei (also mit allen vHosts) oder einen Ordner (mit einer Datei pro vHost) angeben.';
 $lng['serversettings']['apacheconf_diroptions']['title'] = 'Webserver Verzeichnisoption-Konfigurations-Datei/Verzeichnis-Name';
-$lng['serversettings']['apacheconf_diroptions']['description'] = 'Wo soll die Verzeichnisoption-Konfigurationen abgelegt werden? Sie k&ouml;nnen entweder eine Datei (also mit allen vhosts) oder einen Ordner (mit einer Datei pro vhost) angeben.';
+$lng['serversettings']['apacheconf_diroptions']['description'] = 'Wo soll die Verzeichnisoption-Konfigurationen abgelegt werden? Sie k&ouml;nnen entweder eine Datei (also mit allen vHosts) oder einen Ordner (mit einer Datei pro vHost) angeben.';
 $lng['serversettings']['apacheconf_htpasswddir']['title'] = 'Webserver htpasswd Verzeichnisname';
 $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Wo sollen die htpasswd-Dateien f&uuml; den Verzeichnisschutz abgelegt werden?';
 
@@ -594,7 +594,7 @@ $lng['admin']['webalizer']['normal'] = 'Normal';
 $lng['admin']['webalizer']['quiet'] = 'Leise';
 $lng['admin']['webalizer']['veryquiet'] = 'Keine Ausgaben';
 $lng['serversettings']['webalizer_quiet']['title'] = 'Webalizerausgabe';
-$lng['serversettings']['webalizer_quiet']['description'] = 'Ausgabefreudigkeit des webalizer-Programms';
+$lng['serversettings']['webalizer_quiet']['description'] = 'Ausgabefreudigkeit des Webalizer-Programms';
 
 // ADDED IN 1.2.18-svn3
 
@@ -831,10 +831,10 @@ $lng['ticket']['by'] = 'von';
 $lng['dkim']['use_dkim']['title'] = 'DKIM Support aktivieren?';
 $lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain Keys (DKIM) System benutzen?';
 $lng['error']['invalidmysqlhost'] = 'Ung&uuml;ltige MySQL Host Adresse: %s';
-$lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'Webalizer und Awstats k&ouml;nnen nicht zur gleichen Zeit aktiviert werden, bitte w&auml;hlen Sie eines aus';
+$lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'Webalizer und AWstats k&ouml;nnen nicht zur gleichen Zeit aktiviert werden, bitte w&auml;hlen Sie eines aus';
 $lng['serversettings']['webalizer_enabled'] = 'Nutze Webalizer Statistiken';
 $lng['serversettings']['awstats_enabled'] = 'Nutze AWStats Statistiken';
-$lng['admin']['awstatssettings'] = 'Awstats Einstellungen';
+$lng['admin']['awstatssettings'] = 'AWstats Einstellungen';
 
 // ADDED IN 1.2.19-svn16
 
@@ -1481,7 +1481,7 @@ $lng['customer']['autoresponder'] = 'Abwesenheitsnachrichten';
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PHP Konfiguration f&uuml;r den Froxlor-Vhost';
 
 // ADDED IN FROXLOR 0.9.14-svn3
-$lng['serversettings']['awstats_icons']['title'] = 'Pfad zum Awstats icons Ordner';
+$lng['serversettings']['awstats_icons']['title'] = 'Pfad zum AWstats icons Ordner';
 $lng['serversettings']['awstats_icons']['description'] = 'z.B. /usr/share/awstats/htdocs/icon/';
 
 // ADDED IN FROXLOR 0.9.14-svn4

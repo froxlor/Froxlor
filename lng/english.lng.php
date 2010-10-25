@@ -63,7 +63,7 @@ $lng['customer']['email'] = 'Email';
 $lng['customer']['customernumber'] = 'Customer ID';
 $lng['customer']['diskspace'] = 'Webspace (MB)';
 $lng['customer']['traffic'] = 'Traffic (GB)';
-$lng['customer']['mysqls'] = 'MySQL-Databases';
+$lng['customer']['mysqls'] = 'MySQL-databases';
 $lng['customer']['emails'] = 'E-mail-Addresses';
 $lng['customer']['accounts'] = 'E-mail-Accounts';
 $lng['customer']['forwarders'] = 'E-mail-Forwarders';
@@ -81,7 +81,7 @@ $lng['menue']['main']['changepassword'] = 'Change password';
 $lng['menue']['main']['changelanguage'] = 'Change language';
 $lng['menue']['email']['email'] = 'E-mail';
 $lng['menue']['email']['emails'] = 'Addresses';
-$lng['menue']['email']['webmail'] = 'WebMail';
+$lng['menue']['email']['webmail'] = 'webmail';
 $lng['menue']['mysql']['mysql'] = 'MySQL';
 $lng['menue']['mysql']['databases'] = 'Databases';
 $lng['menue']['mysql']['phpmyadmin'] = 'phpMyAdmin';
@@ -92,14 +92,14 @@ $lng['menue']['ftp']['accounts'] = 'Accounts';
 $lng['menue']['ftp']['webftp'] = 'WebFTP';
 $lng['menue']['extras']['extras'] = 'Extras';
 $lng['menue']['extras']['directoryprotection'] = 'Directory protection';
-$lng['menue']['extras']['pathoptions'] = 'path options';
+$lng['menue']['extras']['pathoptions'] = 'Path options';
 
 /**
  * Index
  */
 
-$lng['index']['customerdetails'] = 'Customer Details';
-$lng['index']['accountdetails'] = 'Account Details';
+$lng['index']['customerdetails'] = 'Customer details';
+$lng['index']['accountdetails'] = 'Account details';
 
 /**
  * Change Password
@@ -128,7 +128,7 @@ $lng['domains']['noaliasdomain'] = 'No alias domain';
  * E-mails
  */
 
-$lng['emails']['description'] = 'Here you can create and change your e-mail addresses.<br />An account is like your letterbox in front of your house. If someone sends you an email, it will be dropped into the account.<br /><br />To download your emails use the following settings in your mailprogram: (The data in <i>italics</i> has to be changed to the equivalents you typed in!)<br />Hostname: <b><i>Domainname</i></b><br />Username: <b><i>Account name / e-mail address</i></b><br />Password: <b><i>the password you\'ve chosen</i></b>';
+$lng['emails']['description'] = 'Here you can create and change your e-mail addresses.<br />An account is like your letterbox in front of your house. If someone sends you an email, it will be dropped into the account.<br /><br />To download your emails use the following settings in your mailprogram: (The data in <i>italics</i> has to be changed to the equivalents you typed in!)<br />Hostname: <b><i>domainname</i></b><br />Username: <b><i>account name / e-mail address</i></b><br />password: <b><i>the password you\'ve chosen</i></b>';
 $lng['emails']['emailaddress'] = 'E-mail-address';
 $lng['emails']['emails_add'] = 'Create e-mail-address';
 $lng['emails']['emails_edit'] = 'Edit e-mail-address';
@@ -187,7 +187,7 @@ $lng['error']['allresourcesused'] = 'You have already used all of your resources
 $lng['error']['domains_cantdeletemaindomain'] = 'You cannot delete a domain which is used as an email-domain.';
 $lng['error']['domains_canteditdomain'] = 'You cannot edit this domain. It has been disabled by the admin.';
 $lng['error']['domains_cantdeletedomainwithemail'] = 'You cannot delete a domain which is used as an email-domain. Delete all email addresses first.';
-$lng['error']['firstdeleteallsubdomains'] = 'You have to delete all Subdomains first before you can create a wildcard domain.';
+$lng['error']['firstdeleteallsubdomains'] = 'You have to delete all subdomains first before you can create a wildcard domain.';
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'You have already defined a catchall for this domain.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'You cannot delete your main FTP account';
 $lng['error']['login'] = 'The username or password you typed in is wrong. Please try it again!';
@@ -196,7 +196,7 @@ $lng['error']['notallreqfieldsorerrors'] = 'You have not filled in all or filled
 $lng['error']['oldpasswordnotcorrect'] = 'The old password is not correct.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'You cannot allocate more resources than you own for yourself.';
 $lng['error']['mustbeurl'] = 'You have not typed a valid or complete url (e.g. http://somedomain.com/error404.htm)';
-$lng['error']['invalidpath'] = 'You have not chosen a valid url (maybe problems with the dirlisting?)';
+$lng['error']['invalidpath'] = 'You have not chosen a valid URL (maybe problems with the dirlisting?)';
 $lng['error']['stringisempty'] = 'Missing Input in Field';
 $lng['error']['stringiswrong'] = 'Wrong Input in Field';
 $lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
@@ -213,14 +213,14 @@ $lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Login-Name %s already exists';
 $lng['error']['emailiswrong'] = 'E-mail-Address %s contains invalid characters or is incomplete';
 $lng['error']['loginnameiswrong'] = 'Login-Name %s contains invalid characters';
-$lng['error']['userpathcombinationdupe'] = 'Combination of Username and Path already exists';
-$lng['error']['patherror'] = 'General Error! path cannot be empty';
+$lng['error']['userpathcombinationdupe'] = 'Combination of username and path already exists';
+$lng['error']['patherror'] = 'General Error! Path cannot be empty';
 $lng['error']['errordocpathdupe'] = 'Option for path %s already exists';
 $lng['error']['adduserfirst'] = 'Please create a customer first';
 $lng['error']['domainalreadyexists'] = 'The domain %s is already assigned to a customer';
 $lng['error']['nolanguageselect'] = 'No language selected.';
 $lng['error']['nosubjectcreate'] = 'You must define a topic for this mail template.';
-$lng['error']['nomailbodycreate'] = 'You must define a Mail-Text for this mail template.';
+$lng['error']['nomailbodycreate'] = 'You must define a mail-text for this mail template.';
 $lng['error']['templatenotfound'] = 'Template was not found.';
 $lng['error']['alltemplatesdefined'] = 'You cant define more templates, all languages are supported already.';
 $lng['error']['wwwnotallowed'] = 'www is not allowed for subdomains.';
@@ -231,7 +231,7 @@ $lng['error']['domainisaliasorothercustomer'] = 'The selected alias domain is ei
 $lng['error']['emailexistalready'] = 'The e-mail-Address %s already exists.';
 $lng['error']['maindomainnonexist'] = 'The main-domain %s does not exist.';
 $lng['error']['destinationnonexist'] = 'Please create your forwarder in the field \'Destination\'.';
-$lng['error']['destinationalreadyexistasmail'] = 'The forwarder to %s already exists as active EMail-Address.';
+$lng['error']['destinationalreadyexistasmail'] = 'The forwarder to %s already exists as active e-mail-address.';
 $lng['error']['destinationalreadyexist'] = 'You have already defined a forwarder to %s .';
 $lng['error']['destinationiswrong'] = 'The forwarder %s contains invalid character(s) or is incomplete.';
 $lng['error']['domainname'] = $lng['domains']['domainname'];
@@ -243,7 +243,7 @@ $lng['error']['domainname'] = $lng['domains']['domainname'];
 $lng['question']['question'] = 'Security question';
 $lng['question']['admin_customer_reallydelete'] = 'Do you really want to delete the customer %s? This cannot be undone!';
 $lng['question']['admin_domain_reallydelete'] = 'Do you really want to delete the domain %s?';
-$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Do you really want to disable these Security settings (OpenBasedir and/or SafeMode)?';
+$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Do you really want to disable these security settings (OpenBasedir and/or SafeMode)?';
 $lng['question']['admin_admin_reallydelete'] = 'Do you really want to delete the admin %s? Every customer and domain will be reassigned to your account.';
 $lng['question']['admin_template_reallydelete'] = 'Do you really want to delete the template \'%s\'?';
 $lng['question']['domains_reallydelete'] = 'Do you really want to delete the domain %s?';
@@ -263,7 +263,7 @@ $lng['question']['admin_customer_alsoremoveftphomedir'] = 'Also remove FTP-user 
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Hello,\n\nyour Mail account {EMAIL}\nwas set up successfully.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, the Froxlor-Team';
+$lng['mails']['pop_success']['mailbody'] = 'Hello,\n\nyour mail account {EMAIL}\nwas set up successfully.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, the Froxlor-Team';
 $lng['mails']['pop_success']['subject'] = 'Mail account set up successfully';
 $lng['mails']['createcustomer']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nhere is your account information:\n\nUsername: {USERNAME}\nPassword: {PASSWORD}\n\nThank you,\nthe Froxlor-Team';
 $lng['mails']['createcustomer']['subject'] = 'Account information';
@@ -274,8 +274,8 @@ $lng['mails']['createcustomer']['subject'] = 'Account information';
 
 $lng['admin']['overview'] = 'Overview';
 $lng['admin']['ressourcedetails'] = 'Used resources';
-$lng['admin']['systemdetails'] = 'System Details';
-$lng['admin']['froxlordetails'] = 'Froxlor Details';
+$lng['admin']['systemdetails'] = 'System details';
+$lng['admin']['froxlordetails'] = 'Froxlor details';
 $lng['admin']['installedversion'] = 'Installed version';
 $lng['admin']['latestversion'] = 'Latest version';
 $lng['admin']['lookfornewversion']['clickhere'] = 'search via webservice';
@@ -298,16 +298,16 @@ $lng['admin']['domains_see_all'] = 'Can see all domains?';
 $lng['admin']['change_serversettings'] = 'Can change server settings?';
 $lng['admin']['server'] = 'Server';
 $lng['admin']['serversettings'] = 'Settings';
-$lng['admin']['rebuildconf'] = 'Rebuild Config Files';
+$lng['admin']['rebuildconf'] = 'Rebuild config files';
 $lng['admin']['stdsubdomain'] = 'Standard subdomain';
 $lng['admin']['stdsubdomain_add'] = 'Create standard subdomain';
 $lng['admin']['phpenabled'] = 'PHP enabled';
 $lng['admin']['deactivated'] = 'Deactivated';
-$lng['admin']['deactivated_user'] = 'Deactivate User';
+$lng['admin']['deactivated_user'] = 'Deactivate user';
 $lng['admin']['sendpassword'] = 'Send password';
-$lng['admin']['ownvhostsettings'] = 'Own vHost-Settings';
+$lng['admin']['ownvhostsettings'] = 'Own vHost-settings';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configuration';
-$lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Please change the following files or create them with<br />the following content if they do not exist.<br /><b>Please Note:</b> The MySQL-password has not been replaced for security reasons.<br />Please replace &quot;MYSQL_PASSWORD&quot; on your own. If you forgot your MySQL-password<br />you\'ll find it in &quot;lib/userdata.inc.php&quot;.';
+$lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Please change the following files or create them with<br />the following content if they do not exist.<br /><b>Please note:</b> The MySQL-password has not been replaced for security reasons.<br />Please replace &quot;MYSQL_PASSWORD&quot; on your own. If you forgot your MySQL-password<br />you\'ll find it in &quot;lib/userdata.inc.php&quot;.';
 $lng['admin']['configfiles']['commands'] = '<b>Commands:</b> Please execute the following commands in a shell.';
 $lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Please execute the following commands in a shell in order to reload the new configuration.';
 $lng['admin']['templates']['templates'] = 'E-Mail-templates';
@@ -338,7 +338,7 @@ $lng['serversettings']['session_timeout']['description'] = 'How long does a user
 $lng['serversettings']['accountprefix']['title'] = 'Customer prefix';
 $lng['serversettings']['accountprefix']['description'] = 'Which prefix should customer accounts have?';
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL Prefix';
-$lng['serversettings']['mysqlprefix']['description'] = 'Which prefix should mysql accounts have?';
+$lng['serversettings']['mysqlprefix']['description'] = 'Which prefix should MySQL accounts have?';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP Prefix';
 $lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Home directory';
@@ -367,8 +367,8 @@ $lng['serversettings']['adminmail']['title'] = 'Sender';
 $lng['serversettings']['adminmail']['description'] = 'What\'s the sender address for emails sent from the Panel?';
 $lng['serversettings']['phpmyadmin_url']['title'] = 'phpMyAdmin URL';
 $lng['serversettings']['phpmyadmin_url']['description'] = 'What\'s the URL to phpMyAdmin? (has to start with http(s)://)';
-$lng['serversettings']['webmail_url']['title'] = 'WebMail URL';
-$lng['serversettings']['webmail_url']['description'] = 'What\'s the URL to WebMail? (has to start with http(s)://)';
+$lng['serversettings']['webmail_url']['title'] = 'Webmail URL';
+$lng['serversettings']['webmail_url']['description'] = 'What\'s the URL to webmail? (has to start with http(s)://)';
 $lng['serversettings']['webftp_url']['title'] = 'WebFTP URL';
 $lng['serversettings']['webftp_url']['description'] = 'What\'s the URL to  WebFTP? (has to start with http(s)://)';
 $lng['serversettings']['language']['description'] = 'What\'s your standard server language?';
@@ -387,7 +387,7 @@ $lng['serversettings']['mxservers']['description'] = 'A comma seperated list con
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['mysql']['description'] = 'Here you can create and change your MySQL-Databases.<br />The changes are made instantly and the database can be used immediately.<br />At the menu on the left side you find the tool phpMyAdmin with which you can easily administer your database.<br /><br />To use your databases in your own php-scripts use the following settings: (The data in <i>italics</i> have to be changed into the equivalents you typed in!)<br />Hostname: <b><SQL_HOST></b><br />Username: <b><i>Databasename</i></b><br />Password: <b><i>the password you\'ve chosen</i></b><br />Database: <b><i>Databasename</i></b>';
+$lng['mysql']['description'] = 'Here you can create and change your MySQL-databases.<br />The changes are made instantly and the database can be used immediately.<br />At the menu on the left side you find the tool phpMyAdmin with which you can easily administer your database.<br /><br />To use your databases in your own php-scripts use the following settings: (The data in <i>italics</i> have to be changed into the equivalents you typed in!)<br />Hostname: <b><SQL_HOST></b><br />Username: <b><i>databasename</i></b><br />Password: <b><i>the password you\'ve chosen</i></b><br />Database: <b><i>databasename</i></b>';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
@@ -427,19 +427,19 @@ $lng['admin']['valuemandatorycompany'] = 'Either &quot;name&quot; and &quot;firs
 $lng['menue']['main']['username'] = 'Logged in as: ';
 $lng['panel']['urloverridespath'] = 'URL (overrides path)';
 $lng['panel']['pathorurl'] = 'Path or URL';
-$lng['error']['sessiontimeoutiswrong'] = 'Only numerical &quot;Session Timeout&quot; is allowed.';
-$lng['error']['maxloginattemptsiswrong'] = 'Only numerical &quot;Max Login Attempts&quot; are allowed.';
-$lng['error']['deactivatetimiswrong'] = 'Only numerical &quot;Deactivation Time&quot; is allowed.';
-$lng['error']['accountprefixiswrong'] = 'The &quot;Customerprefix&quot; is wrong.';
-$lng['error']['mysqlprefixiswrong'] = 'The &quot;SQL Prefix&quot; is wrong.';
-$lng['error']['ftpprefixiswrong'] = 'The &quot;FTP Prefix&quot; is wrong.';
-$lng['error']['ipiswrong'] = 'The &quot;IP-Address&quot; is wrong. Only a valid IP-address is allowed.';
-$lng['error']['vmailuidiswrong'] = 'The &quot;Mails-uid&quot; is wrong. Only a numerical UID is allowed.';
-$lng['error']['vmailgidiswrong'] = 'The &quot;Mails-gid&quot; is wrong. Only a numerical GID is allowed.';
-$lng['error']['adminmailiswrong'] = 'The &quot;Sender-address&quot; is wrong. Only a valid email-address is allowed.';
-$lng['error']['pagingiswrong'] = 'The &quot;Entries per Page&quot;-value is wrong. Only numerical characters are allowed.';
+$lng['error']['sessiontimeoutiswrong'] = 'Only numerical &quot;session timeout&quot; is allowed.';
+$lng['error']['maxloginattemptsiswrong'] = 'Only numerical &quot;max login attempts&quot; are allowed.';
+$lng['error']['deactivatetimiswrong'] = 'Only numerical &quot;deactivation time&quot; is allowed.';
+$lng['error']['accountprefixiswrong'] = 'The &quot;customerprefix&quot; is wrong.';
+$lng['error']['mysqlprefixiswrong'] = 'The &quot;SQL prefix&quot; is wrong.';
+$lng['error']['ftpprefixiswrong'] = 'The &quot;FTP prefix&quot; is wrong.';
+$lng['error']['ipiswrong'] = 'The &quot;IP-address&quot; is wrong. Only a valid IP-address is allowed.';
+$lng['error']['vmailuidiswrong'] = 'The &quot;mails-uid&quot; is wrong. Only a numerical UID is allowed.';
+$lng['error']['vmailgidiswrong'] = 'The &quot;mails-gid&quot; is wrong. Only a numerical GID is allowed.';
+$lng['error']['adminmailiswrong'] = 'The &quot;sender-address&quot; is wrong. Only a valid email-address is allowed.';
+$lng['error']['pagingiswrong'] = 'The &quot;entries per page&quot;-value is wrong. Only numerical characters are allowed.';
 $lng['error']['phpmyadminiswrong'] = 'The phpMyAdmin-link is not a valid link.';
-$lng['error']['webmailiswrong'] = 'The WebMail-link is not a valid link.';
+$lng['error']['webmailiswrong'] = 'The webmail-link is not a valid link.';
 $lng['error']['webftpiswrong'] = 'The WebFTP-link is not a valid link.';
 $lng['domains']['hasaliasdomains'] = 'Has alias domain(s)';
 $lng['serversettings']['defaultip']['title'] = 'Default IP/Port';
@@ -468,7 +468,7 @@ $lng['admin']['mysqlclientversion'] = 'MySQL Client Version';
 $lng['admin']['webserverinterface'] = 'Webserver Interface';
 $lng['domains']['isassigneddomain'] = 'Is assigned domain';
 $lng['serversettings']['phpappendopenbasedir']['title'] = 'Paths to append to OpenBasedir';
-$lng['serversettings']['phpappendopenbasedir']['description'] = 'These paths (separated by colons) will be added to the OpenBasedir-statement in every vhost-container.';
+$lng['serversettings']['phpappendopenbasedir']['description'] = 'These paths (separated by colons) will be added to the OpenBasedir-statement in every vHost-container.';
 
 // CHANGED IN 1.2.15-rc1
 
@@ -484,7 +484,7 @@ $lng['serversettings']['natsorting']['description'] = 'Sorts lists as web1 -> we
 // ADDED IN 1.2.16-svn2
 
 $lng['serversettings']['deactivateddocroot']['title'] = 'Docroot for deactivated users';
-$lng['serversettings']['deactivateddocroot']['description'] = 'When a user is deactivated this path is used as his docroot. Leave empty for not creating a vhost at all.';
+$lng['serversettings']['deactivateddocroot']['description'] = 'When a user is deactivated this path is used as his docroot. Leave empty for not creating a vHost at all.';
 
 // ADDED IN 1.2.16-svn4
 
@@ -502,7 +502,7 @@ $lng['panel']['pathDescriptionEx'] = '<br /><br />If you want a redirect to anot
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Dear {NAME},\n\nYou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\nThis is more than 90%.\n\nYours sincerely, the Froxlor-Team';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'Dear {NAME},\n\nyou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\nThis is more than 90%.\n\nYours sincerely, the Froxlor-Team';
 $lng['mails']['trafficninetypercent']['subject'] = 'Reaching your traffic limit';
 $lng['admin']['templates']['trafficninetypercent'] = 'Notification mail for customers when ninety percent of traffic is exhausted';
 $lng['admin']['templates']['TRAFFIC'] = 'Replaced with the traffic, which was assigned to the customer.';
@@ -540,7 +540,7 @@ $lng['admin']['configfiles']['choosedaemon'] = '-- Choose a daemon --';
 // ADDED IN 1.2.16-svn10
 
 $lng['serversettings']['ftpdomain']['title'] = 'FTP accounts @domain';
-$lng['serversettings']['ftpdomain']['description'] = 'Customers can create Ftp accounts user@customerdomain?';
+$lng['serversettings']['ftpdomain']['description'] = 'Customers can create FTP accounts user@customerdomain?';
 $lng['panel']['back'] = 'Back';
 
 // ADDED IN 1.2.16-svn12
@@ -548,7 +548,7 @@ $lng['panel']['back'] = 'Back';
 $lng['serversettings']['mod_log_sql']['title'] = 'Temporary save logs in the database';
 $lng['serversettings']['mod_log_sql']['description'] = 'Use <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Include PHP via mod_fcgid/suexec';
-$lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libnss_mysql to run PHP with the corresponding useraccount.<br/><b>This needs a special Webserver configuration, see <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a></b><br /><br /><div style="color:red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
+$lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libnss_mysql to run PHP with the corresponding useraccount.<br/><b>This needs a special webserver configuration, see <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a></b><br /><br /><div style="color:red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
@@ -563,8 +563,8 @@ $lng['error']['documentrootexists'] = 'The directory &quot;%s&quot; already exis
 
 // ADDED IN 1.2.16-svn14
 
-$lng['serversettings']['apacheconf_vhost']['title'] = 'Webserver vhost configuration file/dirname';
-$lng['serversettings']['apacheconf_vhost']['description'] = 'Where should the vhost configuration be stored? You could either specify a file (all vhosts in one file) or directory (each vhost in his own file) here.';
+$lng['serversettings']['apacheconf_vhost']['title'] = 'Webserver vHost configuration file/dirname';
+$lng['serversettings']['apacheconf_vhost']['description'] = 'Where should the vHost configuration be stored? You could either specify a file (all vHosts in one file) or directory (each vHost in his own file) here.';
 $lng['serversettings']['apacheconf_diroptions']['title'] = 'Webserver diroptions configuration file/dirname';
 $lng['serversettings']['apacheconf_diroptions']['description'] = 'Where should the diroptions configuration be stored? You could either specify a file (all diroptions in one file) or directory (each diroption in his own file) here.';
 $lng['serversettings']['apacheconf_htpasswddir']['title'] = 'Webserver htpasswd dirname';
@@ -798,8 +798,8 @@ $lng['message']['noreceipients'] = 'No e-mail has been sent because there are no
 $lng['admin']['sslsettings'] = 'SSL settings';
 $lng['cronjobs']['notyetrun'] = 'Not yet run';
 $lng['install']['servername_should_be_fqdn'] = 'The servername should be a FQDN and not an IP address';
-$lng['serversettings']['default_vhostconf']['title'] = 'Default vhost-settings';
-$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into the domain vhost container directly. Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
+$lng['serversettings']['default_vhostconf']['title'] = 'Default vHost-settings';
+$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into the domain vHost container directly. Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['error']['invalidip'] = 'Invalid IP address: %s';
 $lng['serversettings']['decimal_places'] = 'Number of decimal places in traffic/webspace output';
 
@@ -827,10 +827,10 @@ $lng['ticket']['by'] = 'by';
 $lng['dkim']['use_dkim']['title'] = 'Activate DKIM support?';
 $lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?';
 $lng['error']['invalidmysqlhost'] = 'Invalid MySQL host address: %s';
-$lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'You cannot enable Webalizer and Awstats at the same time, please chose one of them';
+$lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'You cannot enable Webalizer and AWstats at the same time, please chose one of them';
 $lng['serversettings']['webalizer_enabled'] = 'Enable webalizer statistics';
-$lng['serversettings']['awstats_enabled'] = 'Enable awstats statistics';
-$lng['admin']['awstatssettings'] = 'Awstats settings';
+$lng['serversettings']['awstats_enabled'] = 'Enable AWstats statistics';
+$lng['admin']['awstatssettings'] = 'AWstats settings';
 
 // ADDED IN 1.2.19-svn16
 
@@ -1020,11 +1020,11 @@ $lng['admin']['aps'] = 'APS Installer';
 $lng['customer']['aps'] = 'APS Installer';
 $lng['aps']['scan'] = 'Scan for new packages';
 $lng['aps']['upload'] = 'Upload new packages';
-$lng['aps']['managepackages'] = 'Manage Packages';
-$lng['aps']['manageinstances'] = 'Manage Instances';
+$lng['aps']['managepackages'] = 'Manage packages';
+$lng['aps']['manageinstances'] = 'Manage instances';
 $lng['aps']['overview'] = 'Package overview';
-$lng['aps']['status'] = 'My Packages';
-$lng['aps']['search'] = 'Search for Packages';
+$lng['aps']['status'] = 'My packages';
+$lng['aps']['search'] = 'Search for packages';
 $lng['aps']['upload_description'] = 'Please select the APS Installer zipfiles to install them in the system.';
 $lng['aps']['search_description'] = 'Name, Description, Keyword, Version';
 $lng['aps']['detail'] = 'More information';
@@ -1059,13 +1059,13 @@ $lng['aps']['phperror'] = 'There occured a PHP internal error. The PHP upload er
 $lng['aps']['moveproblem'] = 'The script failed to move the uploaded file into the destination directory. Please ensure that all permissions are set correctly.';
 $lng['aps']['uploaderrors'] = '<strong>Errors for the file <em>%s</em></strong><br/><ul>%s</ul>';
 $lng['aps']['nospecialchars'] = 'Special characters are not allowed in the search term!';
-$lng['aps']['noitemsfound'] = 'No Packages were found!';
+$lng['aps']['noitemsfound'] = 'No packages were found!';
 $lng['aps']['nopackagesinstalled'] = 'You haven\'t installed any package yet which could be shown.';
 $lng['aps']['instance_install'] = 'Package Installation pending';
 $lng['aps']['instance_task_active'] = 'Package is currently being processed';
 $lng['aps']['instance_success'] = 'Package is installed/was installed successfully';
-$lng['aps']['instance_error'] = 'Package isn\'t installed - there occured some errors on the Installation';
-$lng['aps']['instance_uninstall'] = 'Package Uninstallation pending';
+$lng['aps']['instance_error'] = 'Package isn\'t installed - there occured some errors on the installation';
+$lng['aps']['instance_uninstall'] = 'Package uninstall pending';
 $lng['aps']['unknown_status'] = 'Error - Unknown value';
 $lng['aps']['currentstatus'] = 'Current status';
 $lng['aps']['activetasks'] = 'Current tasks';
@@ -1076,42 +1076,42 @@ $lng['aps']['task_upgrade'] = 'Update/Upgrade pending';
 $lng['aps']['no_task'] = 'No tasks pending';
 $lng['aps']['applicationlinks'] = 'Application links';
 $lng['aps']['mainsite'] = 'Main site';
-$lng['aps']['uninstall'] = 'Uninstall Package';
+$lng['aps']['uninstall'] = 'Uninstall package';
 $lng['aps']['reconfigure'] = 'Change settings';
-$lng['aps']['erroronnewinstance'] = '<strong>This Package cannot be installed.</strong><br/><br/>Please go back to the Package overview and start a new Installation.';
-$lng['aps']['successonnewinstance'] = '<strong><em>%s</em> will be installed now.</strong><br/><br/>Go back to "My Packages" and wait until the Installation has finished. This can take some time.';
+$lng['aps']['erroronnewinstance'] = '<strong>This package cannot be installed.</strong><br/><br/>Please go back to the package overview and start a new Installation.';
+$lng['aps']['successonnewinstance'] = '<strong><em>%s</em> will be installed now.</strong><br/><br/>Go back to "My packages" and wait until the Installation has finished. This can take some time.';
 $lng['aps']['php_misc_handler'] = 'PHP - Misc - There is no support for other file extensions than .php for the PHP Parser.';
 $lng['aps']['php_misc_directoryhandler'] = 'PHP - Misc - There is no support for per directory disabled PHP Handlers.';
 $lng['aps']['asp_net'] = 'ASP.NET - Package not supported.';
 $lng['aps']['cgi'] = 'CGI - Package not supported.';
 $lng['aps']['php_extension'] = 'PHP - Extension "%s" missing.';
 $lng['aps']['php_function'] = 'PHP - Function "%s" missing.';
-$lng['aps']['php_configuration'] = 'PHP - Configuration - Current "%s" setting not supported by Package.';
+$lng['aps']['php_configuration'] = 'PHP - Configuration - Current "%s" setting not supported by package.';
 $lng['aps']['php_configuration_post_max_size'] = 'PHP - Configuration - "post_max_size" value too low.';
 $lng['aps']['php_configuration_memory_limit'] = 'PHP - Configuration - "memory_limit" value too low.';
 $lng['aps']['php_configuration_max_execution_time'] = 'PHP - Configuration - "max_execution_time" value too low.';
 $lng['aps']['php_general_old'] = 'PHP - General - PHP Version too old.';
 $lng['aps']['php_general_new'] = 'PHP - General - PHP Version too new.';
-$lng['aps']['db_mysql_support'] = 'Database - The Package needs another database engine than MySQL.';
-$lng['aps']['db_mysql_version'] = 'Database - MySQL Server too old.';
+$lng['aps']['db_mysql_support'] = 'Database - The package needs another database engine than MySQL.';
+$lng['aps']['db_mysql_version'] = 'Database - MySQL server too old.';
 $lng['aps']['webserver_module'] = 'Webserver - Module "%s" missing.';
-$lng['aps']['webserver_fcgid'] = 'Webserver - This Package requires additional modules from the Webserver. In your FastCGI/mod_fcgid environment the function "apache_get_modules" doesn\'t exist. The Package cannot be installed because the APS Installer is unable to verify if this modules are installed.';
-$lng['aps']['webserver_htaccess'] = 'Webserver - This Package requires that .htaccess files are parsed by the Webserver. The Package cannot be installed because the APS Installer is unable to determine if this is enabled.';
+$lng['aps']['webserver_fcgid'] = 'Webserver - This package requires additional modules from the webserver. In your FastCGI/mod_fcgid environment the function "apache_get_modules" doesn\'t exist. The package cannot be installed because the APS Installer is unable to verify if this modules are installed.';
+$lng['aps']['webserver_htaccess'] = 'Webserver - This package requires that .htaccess files are parsed by the webserver. The package cannot be installed because the APS Installer is unable to determine if this is enabled.';
 $lng['aps']['misc_configscript'] = 'Misc - The language of the configuration script is not supported.';
-$lng['aps']['misc_charset'] = 'Misc - In the current Installer version its not possibel to validate formfields from the wizard against a specific charset. The Package cannot be installed.';
-$lng['aps']['misc_version_already_installed'] = 'Same version of Package already installed.';
-$lng['aps']['misc_only_newer_versions'] = 'For security reasons only newer Package versions can be installed on the system than them which are already installed.';
+$lng['aps']['misc_charset'] = 'Misc - In the current Installer version its not possibel to validate formfields from the wizard against a specific charset. The package cannot be installed.';
+$lng['aps']['misc_version_already_installed'] = 'Same version of package already installed.';
+$lng['aps']['misc_only_newer_versions'] = 'For security reasons only newer package versions can be installed on the system than them which are already installed.';
 $lng['aps']['erroronscan'] = '<strong>Errors for <em>%s</em></strong><ul>%s</ul>';
 $lng['aps']['invalidzipfile'] = '<strong>Errors for <em>%s</em></strong><br/><ul><li>This is not a valid APS zipfile!</li></ul>';
-$lng['aps']['successpackageupdate'] = '<strong><em>%s</em> successfully installed as a Package update</strong>';
-$lng['aps']['successpackageinstall'] = '<strong><em>%s</em> successfully installed as a new Package</strong>';
+$lng['aps']['successpackageupdate'] = '<strong><em>%s</em> successfully installed as a package update</strong>';
+$lng['aps']['successpackageinstall'] = '<strong><em>%s</em> successfully installed as a new package</strong>';
 $lng['aps']['class_zip_missing'] = 'SimpleXML Class, exec function or ZIP Functions missing or not enabled! For further information about this problem look into the handbook for this module.';
-$lng['aps']['dir_permissions'] = 'The PHP/Webserver process must be able to write in the directory {$path}temp/ and {$path}packages/';
+$lng['aps']['dir_permissions'] = 'The PHP/webserver process must be able to write in the directory {$path}temp/ and {$path}packages/';
 $lng['aps']['initerror'] = '<strong>There are some problems with this module:</strong><ul>%s</ul>Fix these problems, otherwise the module cannot be used!';
 $lng['aps']['iderror'] = 'Wrong id specified!';
 $lng['aps']['nopacketsforinstallation'] = 'There are no packages to install.';
 $lng['aps']['nopackagestoinstall'] = 'There are no packages to view or install.';
-$lng['aps']['nodomains'] = 'Select a domain from the list. If there is none, the Package cannot be installed!';
+$lng['aps']['nodomains'] = 'Select a domain from the list. If there is none, the package cannot be installed!';
 $lng['aps']['wrongpath'] = 'Either this path contains invalid characters or there is another application installed already.';
 $lng['aps']['dbpassword'] = 'Specify a password with a minimum length of 8 characters.';
 $lng['aps']['error_text'] = 'Specify a text without special characters.';
@@ -1123,33 +1123,33 @@ $lng['aps']['error_password'] = 'Specify a password.';
 $lng['aps']['error_license'] = 'Yes, I have read the license and will abide by its terms.';
 $lng['aps']['error_licensenoaccept'] = 'You must accept the license to install this application.';
 $lng['aps']['stopinstall'] = 'Abort Installation';
-$lng['aps']['installstopped'] = 'The Installation of this Package was aborted successfully.';
-$lng['aps']['installstoperror'] = 'The Installation cannot be aborted anymore because installation has started already. If you\'d like to uninstall the Package, wait until the Installation has finished and then go to "My Packages" to trigger an Uninstallation.';
+$lng['aps']['installstopped'] = 'The Installation of this package was aborted successfully.';
+$lng['aps']['installstoperror'] = 'The Installation cannot be aborted anymore because installation has started already. If you\'d like to uninstall the package, wait until the Installation has finished and then go to "My packages" to trigger an Uninstall.';
 $lng['aps']['waitfortask'] = 'There are no actions to select. Wait until all tasks have finished.';
-$lng['aps']['removetaskexisting'] = '<strong>There is already a task for Uninstallation.</strong><br/><br/>Please go back to "My Packages" and wait until the Uninstallation has finished.';
-$lng['aps']['packagewillberemoved'] = '<strong>The Package will be uninstalled now.</strong><br/><br/>Please go back to "My Packages" and wait until the Uninstallation has finished.';
-$lng['question']['reallywanttoremove'] = '<strong>Do you really want to uninstall this Package?</strong><br/><br/>All database contents and files will be erased. Be sure to make a manual backup of a files you need for any further usage!<br/><br/>';
-$lng['aps']['searchoneresult'] = '%s Package found';
-$lng['aps']['searchmultiresult'] = '%s Packages found';
-$lng['question']['reallywanttostop'] = 'Do you really want to abort the Installation of this Package?<br/><br/>';
-$lng['aps']['packagenameandversion'] = 'Packagename &amp; Version';
+$lng['aps']['removetaskexisting'] = '<strong>There is already a task for uninstallation.</strong><br/><br/>Please go back to "My packages" and wait until the uninstall has finished.';
+$lng['aps']['packagewillberemoved'] = '<strong>The package will be uninstalled now.</strong><br/><br/>Please go back to "My packages" and wait until the uninstall has finished.';
+$lng['question']['reallywanttoremove'] = '<strong>Do you really want to uninstall this package?</strong><br/><br/>All database contents and files will be erased. Be sure to make a manual backup of a files you need for any further usage!<br/><br/>';
+$lng['aps']['searchoneresult'] = '%s package found';
+$lng['aps']['searchmultiresult'] = '%s packages found';
+$lng['question']['reallywanttostop'] = 'Do you really want to abort the installation of this package?<br/><br/>';
+$lng['aps']['packagenameandversion'] = 'Packagename &amp; version';
 $lng['aps']['package_locked'] = 'Locked';
 $lng['aps']['package_enabled'] = 'Enabled';
 $lng['aps']['lock'] = 'Lock';
 $lng['aps']['unlock'] = 'Enable';
 $lng['aps']['remove'] = 'Remove';
-$lng['aps']['allpackages'] = 'All Packages';
+$lng['aps']['allpackages'] = 'All packages';
 $lng['question']['reallyremovepackages'] = '<strong>Do you really want to delete these packages?</strong><br/><br/>Packages with dependencies can only be remove if the corresponding Instances have been removed!<br/><br/>';
 $lng['aps']['nopackagesinsystem'] = 'There were no packages installed in the system which could be managed.';
-$lng['aps']['packagenameandstatus'] = 'Packagename &amp; Status';
-$lng['aps']['activate_aps']['title'] = 'Enable APS Installer';
-$lng['aps']['activate_aps']['description'] = 'Here the APS Installer can be enabled and disabled globaly.';
+$lng['aps']['packagenameandstatus'] = 'Packagename &amp; status';
+$lng['aps']['activate_aps']['title'] = 'Enable APS installer';
+$lng['aps']['activate_aps']['description'] = 'Here the APS installer can be enabled and disabled globaly.';
 $lng['aps']['packages_per_page']['title'] = 'Packages per page';
 $lng['aps']['packages_per_page']['description'] = 'How many packages should be displayed per page for customers?';
 $lng['aps']['upload_fields']['title'] = 'Upload fields per page';
 $lng['aps']['upload_fields']['description'] = 'How many upload fields should be displayed on the page to install new packages in the system?';
-$lng['aps']['exceptions']['title'] = 'Exceptions for Package validation';
-$lng['aps']['exceptions']['description'] = 'Some packages need special configuration parameters or modules. The Installer cannot always determine if this options/extensions are available. For this reason you can now define exceptions that packages can be installed in the system. Do only select options which match your real configuration setup. For further information about this problem look into the handbook for this module.';
+$lng['aps']['exceptions']['title'] = 'Exceptions for package validation';
+$lng['aps']['exceptions']['description'] = 'Some packages need special configuration parameters or modules. The installer cannot always determine if this options/extensions are available. For this reason you can now define exceptions that packages can be installed in the system. Do only select options which match your real configuration setup. For further information about this problem look into the handbook for this module.';
 $lng['aps']['settings_php_extensions'] = 'PHP-Extensions';
 $lng['aps']['settings_php_configuration'] = 'PHP-Configuration';
 $lng['aps']['settings_webserver_modules'] = 'Webserver modules';
@@ -1159,9 +1159,9 @@ $lng['aps']['removeunused'] = 'Remove unused packages';
 $lng['aps']['enablenewest'] = 'Enabled newest version of package, lock others';
 $lng['aps']['installations'] = 'Installations';
 $lng['aps']['statistics'] = 'Statistics';
-$lng['aps']['numerofpackagesinstalled'] = '%s Packages installed<br/>';
-$lng['aps']['numerofpackagesenabled'] = '%s Packages enabled<br/>';
-$lng['aps']['numerofpackageslocked'] = '%s Packages locked<br/>';
+$lng['aps']['numerofpackagesinstalled'] = '%s packages installed<br/>';
+$lng['aps']['numerofpackagesenabled'] = '%s packages enabled<br/>';
+$lng['aps']['numerofpackageslocked'] = '%s packages locked<br/>';
 $lng['aps']['numerofinstances'] = '%s Instances installed<br/>';
 $lng['question']['reallydoaction'] = '<strong>Do you really want to execute the selected actions?</strong><br/><br/>Data which can be lost by continuing, cannot be restored later.<br/><br/>';
 $lng['aps']['linktolicense'] = 'Link to license';
@@ -1204,7 +1204,7 @@ $lng['admin']['phpsettings']['binary'] = 'PHP Binary';
 $lng['admin']['phpsettings']['file_extensions'] = 'File extensions';
 $lng['admin']['phpsettings']['file_extensions_note'] = '(without dot, separated by spaces)';
 $lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maximum php requests for this domain (empty for default value)';
-$lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximum Requests per Domain';
+$lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximum Requests per domain';
 $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'How many requests should be allowed per domain?';
 
 // fix bug #1124
@@ -1218,12 +1218,12 @@ $lng['mysql']['mysql_server'] = 'MySQL-Server';
 
 // ADDED IN 1.4.2.1-2
 
-$lng['admin']['ipsandports']['webserverdefaultconfig'] = 'Webserver Default Config';
-$lng['admin']['ipsandports']['webserverdomainconfig'] = 'Webserver Domain Config';
-$lng['admin']['ipsandports']['webserverssldomainconfig'] = 'Webserver SSL Config';
+$lng['admin']['ipsandports']['webserverdefaultconfig'] = 'Webserver default config';
+$lng['admin']['ipsandports']['webserverdomainconfig'] = 'Webserver domain config';
+$lng['admin']['ipsandports']['webserverssldomainconfig'] = 'Webserver SSL config';
 $lng['admin']['ipsandports']['ssl_key_file'] = 'Path to the SSL Keyfile';
 $lng['admin']['ipsandports']['ssl_ca_file'] = 'Path to the SSL CA certificate';
-$lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Default vhost-settings for every domain container';
+$lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Default vHost-settings for every domain container';
 $lng['serversettings']['ssl']['ssl_key_file'] = 'Path to the SSL Keyfile';
 $lng['serversettings']['ssl']['ssl_ca_file'] = 'Path to the SSL CA certificate';
 
@@ -1252,13 +1252,13 @@ $lng['autoresponder']['startenddate'] = 'Start/end date';
 $lng['panel']['not_activated'] = 'not activated';
 $lng['panel']['off'] = 'off';
 $lng['update']['updateinprogress_onlyadmincanlogin'] = 'A newer version of Froxlor has been installed but not yet set up.<br />Only the administrator can log in and finish the update.';
-$lng['update']['update'] = 'Froxlor Update';
+$lng['update']['update'] = 'Froxlor update';
 $lng['update']['proceed'] = 'Proceed';
 $lng['update']['update_information']['part_a'] = 'The Froxlor files have been updated to version <strong>%newversion</strong>. The installed version is <strong>%curversion</strong>.';
 $lng['update']['update_information']['part_b'] = '<br /><br />Customers will not be able to log in until the update has been finished.<br /><strong>Proceed?</strong>';
 $lng['update']['noupdatesavail'] = '<strong>You already have the latest Froxlor version.</strong>';
 $lng['admin']['specialsettingsforsubdomains'] = 'Apply specialsettings to all subdomains (*.example.com)';
-$lng['serversettings']['specialsettingsforsubdomains']['description'] = 'If yes these custom vhost-settings will be added to all subdomains; if no subdomain-specialsettings are being removed.';
+$lng['serversettings']['specialsettingsforsubdomains']['description'] = 'If yes these custom vHost-settings will be added to all subdomains; if no subdomain-specialsettings are being removed.';
 $lng['tasks']['outstanding_tasks'] = 'Outstanding cron-tasks';
 $lng['tasks']['rebuild_webserverconfig'] = 'Rebuilding webserver-configuration';
 $lng['tasks']['adding_customer'] = 'Adding new customer %loginname%';
@@ -1446,10 +1446,10 @@ $lng['serversettings']['perl_path']['description'] = 'Only relevant if you use l
 
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
-$lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Enable FCGID for the Froxlor vhost';
+$lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Enable FCGID for the Froxlor vHost';
 $lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'If enabled, Froxlor will also be running under a local user';
-$lng['admin']['mod_fcgid_user'] = 'Local user to use for FCGID (Froxlor vhost)';
-$lng['admin']['mod_fcgid_group'] = 'Local group to use for FCGID (Froxlor vhost)';
+$lng['admin']['mod_fcgid_user'] = 'Local user to use for FCGID (Froxlor vHost)';
+$lng['admin']['mod_fcgid_group'] = 'Local group to use for FCGID (Froxlor vHost)';
 
 // ADDED IN FROXLOR 0.9.12-svn2
 $lng['admin']['perl_settings'] = 'Perl/CGI';
@@ -1495,10 +1495,10 @@ $lng['admin']['store_defaultindex'] = 'Store default index-file to customers doc
 $lng['customer']['autoresponder'] = 'Autoresponder';
 
 // ADDED IN FROXLOR 0.9.14-svn1
-$lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Default PHP configuration for Froxlor-vhost';
+$lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Default PHP configuration for Froxlor-vHost';
 
 // ADDED IN FROXLOR 0.9.14-svn3
-$lng['serversettings']['awstats_icons']['title'] = 'Path to awstats icons folder';
+$lng['serversettings']['awstats_icons']['title'] = 'Path to AWstats icons folder';
 $lng['serversettings']['awstats_icons']['description'] = 'e.g. /usr/share/awstats/htdocs/icon/';
 
 // ADDED IN FROXLOR 0.9.14-svn4
