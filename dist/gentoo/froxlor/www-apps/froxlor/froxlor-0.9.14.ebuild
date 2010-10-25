@@ -72,7 +72,8 @@ DEPEND="
 		    >=mail-mta/postfix-2.4[sasl]
 	)
 	aps? ( dev-lang/php[zip] )
-	mailquota? ( >=mail-mta/postfix-2.4[vda] )"
+	mailquota? ( >=mail-mta/postfix-2.4[vda] )
+	"
 
 RDEPEND="${DEPEND}"
 
