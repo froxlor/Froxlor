@@ -1241,3 +1241,11 @@ if(isFroxlorVersion('0.9.14-svn6'))
 
 	updateToVersion('0.9.14-svn10');
 }
+
+if(isFroxlorVersion('0.9.14-svn10'))
+{
+	showUpdateStep("Updating from 0.9.14-svn10 to 0.9.14 final");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.14');
+}
