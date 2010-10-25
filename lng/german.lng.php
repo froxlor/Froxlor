@@ -563,9 +563,9 @@ $lng['error']['documentrootexists'] = 'Es existiert noch ein Verzeichnis &quot;%
 // ADDED IN 1.2.16-svn14
 
 $lng['serversettings']['apacheconf_vhost']['title'] = 'Webserver vHost-Konfigurations-Datei/Verzeichnis-Name';
-$lng['serversettings']['apacheconf_vhost']['description'] = 'Wo soll die vHost-Konfigurationen abgelegt werden? Sie k&ouml;nnen entweder eine Datei (also mit allen vHosts) oder einen Ordner (mit einer Datei pro vHost) angeben.';
+$lng['serversettings']['apacheconf_vhost']['description'] = 'Wo sollen die vHost-Konfigurationen abgelegt werden? Sie k&ouml;nnen entweder eine Datei (also mit allen vHosts) oder einen Ordner (mit einer Datei pro vHost) angeben.';
 $lng['serversettings']['apacheconf_diroptions']['title'] = 'Webserver Verzeichnisoption-Konfigurations-Datei/Verzeichnis-Name';
-$lng['serversettings']['apacheconf_diroptions']['description'] = 'Wo soll die Verzeichnisoption-Konfigurationen abgelegt werden? Sie k&ouml;nnen entweder eine Datei (also mit allen vHosts) oder einen Ordner (mit einer Datei pro vHost) angeben.';
+$lng['serversettings']['apacheconf_diroptions']['description'] = 'Wo sollen die Verzeichnisoption-Konfigurationen abgelegt werden? Sie k&ouml;nnen entweder eine Datei (also mit allen vHosts) oder einen Ordner (mit einer Datei pro vHost) angeben.';
 $lng['serversettings']['apacheconf_htpasswddir']['title'] = 'Webserver htpasswd Verzeichnisname';
 $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Wo sollen die htpasswd-Dateien f&uuml; den Verzeichnisschutz abgelegt werden?';
 
@@ -1437,7 +1437,7 @@ $lng['admin']['mod_fcgid_group'] = 'Lokale Gruppe f&uuml;r FCGID (Froxlor Vhost)
 // ADDED IN FROXLOR 0.9.12-svn2
 $lng['admin']['perl_settings'] = 'Perl/CGI';
 $lng['serversettings']['perl']['suexecworkaround']['title'] = 'Aktiviere SuExec Workaround (nur f&uuml;r Apache)';
-$lng['serversettings']['perl']['suexecworkaround']['description'] = 'Aktivieren Sie den Workaround nur, wenn die Kunden-Heimatverzeichnise sich nicht unterhalb des suexec-Pfades liegen.<br />Wenn aktiviert erstellt Froxlor eine Verkn&uuml;pfung des vom Kunden f&uuml;r Perl aktiviertem Pfad + /cgi-bin/ im angegebenen suexec-Pfad.<br />Bitte beachten Sie, dass Perl dann nur im Unterordner /cgi-bin/ des Kunden-Ordners funktioniert und nicht direkt in diesem Ordner (wie es ohne den Workaround w&auml;re!)';
+$lng['serversettings']['perl']['suexecworkaround']['description'] = 'Aktivieren Sie den Workaround nur, wenn die Kunden-Heimatverzeichnisse sich nicht unterhalb des suexec-Pfades liegen.<br />Wenn aktiviert erstellt Froxlor eine Verkn&uuml;pfung des vom Kunden f&uuml;r Perl aktiviertem Pfad + /cgi-bin/ im angegebenen suexec-Pfad.<br />Bitte beachten Sie, dass Perl dann nur im Unterordner /cgi-bin/ des Kunden-Ordners funktioniert und nicht direkt in diesem Ordner (wie es ohne den Workaround w&auml;re!)';
 $lng['serversettings']['perl']['suexeccgipath']['title'] = 'Pfad f&uuml;r Verkn&uuml;pfungen zu Kunden-Perl-Verzeichnis';
 $lng['serversettings']['perl']['suexeccgipath']['description'] = 'Diese Einstellung wird nur ben&ouml;tigt, wenn der SuExec-Workaround aktiviert ist.<br />ACHTUNG: Stellen Sie sicher, dass sich der angegebene Pfad innerhalb des Suexec-Pfades befindet ansonsten ist der Workaround nutzlos';
 $lng['panel']['descriptionerrordocument'] = 'M&ouml;gliche Werte sind: URL, Pfad zu einer Datei oder ein Text umgeben von Anf&uuml;hrungszeichen (" ")<br />Leer f&uuml;r Server-Standardwert.';
