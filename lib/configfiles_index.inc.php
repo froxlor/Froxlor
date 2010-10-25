@@ -45,6 +45,6 @@ else
 
 $cfgPath = 'lib/configfiles/';
 $configfiles = Array();
-$configfiles = array_merge(include $cfgPath . 'lenny.inc.php', include $cfgPath . 'etch.inc.php', include $cfgPath . 'hardy.inc.php', include $cfgPath . 'lucid.inc.php', include $cfgPath . 'gentoo.inc.php', include $cfgPath . 'suse10.inc.php', include $cfgPath . 'freebsd.inc.php');
+$configfiles = array_merge(include $cfgPath . 'lenny.inc.php', include $cfgPath . 'hardy.inc.php', include $cfgPath . 'lucid.inc.php', include $cfgPath . 'gentoo.inc.php', include $cfgPath . 'suse10.inc.php', include $cfgPath . 'freebsd.inc.php');
 
 ?>
