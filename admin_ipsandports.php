@@ -141,13 +141,22 @@ if($page == 'ipsandports'
 			$vhostcontainer = intval($_POST['vhostcontainer']);
 			$specialsettings = validate(str_replace("\r\n", "\n", $_POST['specialsettings']), 'specialsettings', '/^[^\0]*$/');
 			$vhostcontainer_servername_statement = intval($_POST['vhostcontainer_servername_statement']);
-			$ssl = intval($_POST['ssl']);
-			$ssl_cert_file = validate($_POST['ssl_cert_file'], 'ssl_cert_file');
-			$ssl_key_file = validate($_POST['ssl_key_file'], 'ssl_key_file');
-			$ssl_ca_file = validate($_POST['ssl_ca_file'], 'ssl_ca_file');
-			$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
 			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 			$docroot = validate($_POST['docroot'], 'docroot');
+			if((int)$settings['system']['use_ssl'] == 1)
+			{
+				$ssl = intval($_POST['ssl']);
+				$ssl_cert_file = validate($_POST['ssl_cert_file'], 'ssl_cert_file');
+				$ssl_key_file = validate($_POST['ssl_key_file'], 'ssl_key_file');
+				$ssl_ca_file = validate($_POST['ssl_ca_file'], 'ssl_ca_file');
+				$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
+			} else {
+				$ssl = 0;
+				$ssl_cert_file = '';
+				$ssl_key_file = '';
+				$ssl_ca_file = '';
+				$ssl_cert_chainfile = '';
+			}
 			
 			if($listen_statement != '1')
 			{
@@ -269,13 +278,22 @@ if($page == 'ipsandports'
 				$vhostcontainer = intval($_POST['vhostcontainer']);
 				$specialsettings = validate(str_replace("\r\n", "\n", $_POST['specialsettings']), 'specialsettings', '/^[^\0]*$/');
 				$vhostcontainer_servername_statement = intval($_POST['vhostcontainer_servername_statement']);
-				$ssl = intval($_POST['ssl']);
-				$ssl_cert_file = validate($_POST['ssl_cert_file'], 'ssl_cert_file');
-				$ssl_key_file = validate($_POST['ssl_key_file'], 'ssl_key_file');
-				$ssl_ca_file = validate($_POST['ssl_ca_file'], 'ssl_ca_file');
-				$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
 				$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 				$docroot =  validate($_POST['docroot'], 'docroot');
+				if((int)$settings['system']['use_ssl'] == 1)
+				{
+					$ssl = intval($_POST['ssl']);
+					$ssl_cert_file = validate($_POST['ssl_cert_file'], 'ssl_cert_file');
+					$ssl_key_file = validate($_POST['ssl_key_file'], 'ssl_key_file');
+					$ssl_ca_file = validate($_POST['ssl_ca_file'], 'ssl_ca_file');
+					$ssl_cert_chainfile = validate($_POST['ssl_cert_chainfile'], 'ssl_cert_chainfile');
+				} else {
+					$ssl = 0;
+					$ssl_cert_file = '';
+					$ssl_key_file = '';
+					$ssl_ca_file = '';
+					$ssl_cert_chainfile = '';
+				}
 				
 				if($listen_statement != '1')
 				{
