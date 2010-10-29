@@ -315,11 +315,21 @@ function updateCounters($returndebuginfo = false)
 			$admin_resources[$admin['adminid']]['email_autoresponder_used'] = 0;
 		}
 
+                if(!isset($admin_resources[$admin['adminid']]['email_autoresponder_used']))
+                {
+                        $admin_resources[$admin['adminid']]['email_autoresponder_used'] = 0;
+                }
+
 		$admin['email_autoresponder_used_new'] = $admin_resources[$admin['adminid']]['email_autoresponder_used'];
 
 		if(!isset($admin_resources[$admin['adminid']]['subdomains_used']))
 		{
 			$admin_resources[$admin['adminid']]['subdomains_used'] = 0;
+		}
+
+		if(!isset($admin_resources[$admin['adminid']]['aps_packages_used']))
+		{
+			$admin_resources[$admin['adminid']]['aps_packages_used'] = 0;
 		}
 
 		$admin['aps_packages_used_new'] = $admin_resources[$admin['adminid']]['aps_packages_used'];
