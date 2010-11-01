@@ -612,7 +612,7 @@ class apache
 				// After inserting the AWStats information, 
 				// be sure to build the awstats conf file as well
 				// and chown it using $awstats_params, #258
-				$awstats_param = array(
+				$awstats_params = array(
 					'loginname' => $domain['loginname'],
 					'guid' => $domain['guid'],
 					'documentroot' => $domain['documentroot']
