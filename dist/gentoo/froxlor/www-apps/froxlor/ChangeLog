@@ -2,6 +2,10 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  02 Nov 2010; Froxlor Release Team <release@froxlor.org>
+  froxlor-0.9.14.ebuild, froxlor-9999.ebuild:
+  depend on correct SAPI for lighttpd
+
 *froxlor-0.9.14 (25 Oct 2010)
 
   25 Oct 2010; Froxlor Release Team <release@froxlor.org>
