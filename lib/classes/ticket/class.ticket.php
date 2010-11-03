@@ -320,7 +320,7 @@ class ticket
 			if ($_mailerror) {
 				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->db, $this->settings);
 				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-				standard_error(array('errorsendingmail', $usr['email']));
+				standard_error('errorsendingmail', $usr['email']);
 			}
 
 			$mail->ClearAddresses();
@@ -348,7 +348,7 @@ class ticket
 			if ($_mailerror) {
 				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->db, $this->settings);
 				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-				standard_error(array('errorsendingmail', $admin['email']));
+				standard_error('errorsendingmail', $admin['email']);
 			}
 
 			$mail->ClearAddresses();

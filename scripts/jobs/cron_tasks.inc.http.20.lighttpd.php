@@ -77,11 +77,13 @@ class lighttpd
 			{
 				$ip = '[' . $row_ipsandports['ip'] . ']';
 				$port = $row_ipsandports['port'];
+				$ipv6 = 'server.use-ipv6 = "enable"'."\n";
 			}
 			else
 			{
 				$ip = $row_ipsandports['ip'];
 				$port = $row_ipsandports['port'];
+				$ipv6 = '';
 			}
 
 			fwrite($this->debugHandler, '  lighttpd::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port . "\n");
@@ -99,6 +101,7 @@ class lighttpd
 			{
 				$this->lighttpd_data[$vhost_filename].= 'server.port = ' . $port . "\n";
 				$this->lighttpd_data[$vhost_filename].= 'server.bind = "' . $ip . '"' . "\n";
+				$this->lighttpd_data[$vhost_filename].= $ipv6;
 			}
 			
 			if($row_ipsandports['vhostcontainer'] == '1')
