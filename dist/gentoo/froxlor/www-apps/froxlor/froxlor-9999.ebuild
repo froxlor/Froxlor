@@ -297,7 +297,7 @@ src_install() {
 	fi
 	if useq fcgid ; then
 		if ! useq lighttpd ; then
-			fownwers -R froxlor:froxlor ${FROXLOR_DOCROOT}/froxlor
+			fowners -R froxlor:froxlor ${FROXLOR_DOCROOT}/froxlor
 		else
 			einfo "lighttpd overwrites fcgid USE-flag!"
 			#fowners froxlor:lighttpd ${FROXLOR_DOCROOT}/froxlor
