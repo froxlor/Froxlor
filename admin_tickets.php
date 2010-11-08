@@ -473,7 +473,8 @@ elseif($page == 'categories'
 			
 			if($order < 1 || $order >= 1000)
 			{
-				$order = 1;
+				// use the latest available
+				$order = ticket::getHighestOrderNumber($db) + 1;
 			}
 
 			if($category == '')
@@ -489,6 +490,7 @@ elseif($page == 'categories'
 		}
 		else
 		{
+			$order = ticket::getHighestOrderNumber($db) + 1;
 			eval("echo \"" . getTemplate("ticket/tickets_newcategory") . "\";");
 		}
 	}

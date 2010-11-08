@@ -443,6 +443,20 @@ class ticket
 	}
 
 	/**
+	 * get the highest order number
+	 * 
+	 * @param object $_db database-object
+	 * 
+	 * @return int highest order number
+	 */
+	static public function getHighestOrderNumber($_db = null)
+	{
+		$sql = "SELECT MAX(`logicalorder`) as `highestorder` FROM `" . TABLE_PANEL_TICKET_CATS . "`;";
+		$result = $_db->query_first($sql);
+		return (isset($result['highestorder']) ? (int)$result['highestorder'] : 1);
+	}
+
+	/**
 	 * returns the last x archived tickets
 	 */
 
