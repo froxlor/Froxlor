@@ -13,7 +13,7 @@ $header
 			</tr>
 			<tr>
 				<td class="main_field_name"><b>{$lng['ticket']['logicalorder']}:</b><br />{$lng['ticket']['orderdesc']}</td>
-				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="logicalorder" maxlength="3" value="1" /></td>
+				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="logicalorder" maxlength="3" value="{$order}" /></td>
 			</tr>
 			<tr>
 				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['ticket']['ticket_newcateory']}" /></td>
