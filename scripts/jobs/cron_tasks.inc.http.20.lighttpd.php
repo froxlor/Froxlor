@@ -309,6 +309,7 @@ class lighttpd
 				$_inc_path = substr($_tmp_path, $_pos+1);
 
 				if((int)$domain['parentdomainid'] == 0 
+					&& isCustomerStdSubdomain((int)$domain['id']) == false
 					&& ((int)$domain['ismainbutsubto'] == 0
 					|| domainMainToSubExists($domain['ismainbutsubto']) == false) 
 				) {
@@ -319,6 +320,7 @@ class lighttpd
 					}
 				}
 				elseif((int)$domain['parentdomainid'] == 0 
+					&& isCustomerStdSubdomain((int)$domain['id']) == false
 					&& (int)$domain['ismainbutsubto'] > 0
 				) {
 					$vhost_no = '51';
