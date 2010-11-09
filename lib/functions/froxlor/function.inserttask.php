@@ -43,8 +43,8 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 	       && $param1 != ''
 	       && $param2 != ''
 	       && $param3 != ''
-	       && $param4 != '')
-	{
+	       && ($param4 == 0 || $param4 == 1)
+	) {
 		$data = Array();
 		$data['loginname'] = $param1;
 		$data['uid'] = $param2;

@@ -183,7 +183,12 @@ if(!isset($settings['admin']['froxlor_graphic'])
  */
 
 $remote_addr = $_SERVER['REMOTE_ADDR'];
-$http_user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+if (empty($_SERVER['HTTP_USER_AGENT'])) {
+	$http_user_agent = 'unknown';
+} else {
+	$http_user_agent = $_SERVER['HTTP_USER_AGENT'];
+}
 unset($userinfo);
 unset($userid);
 unset($customerid);
