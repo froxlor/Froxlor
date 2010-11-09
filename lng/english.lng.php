@@ -1511,4 +1511,8 @@ $lng['admin']['ipsandports']['docroot']['description'] = 'You can define a custo
 // ADDED IN FROXLOR 0.9.14-svn6
 $lng['serversettings']['login_domain_login'] = 'Allow login with domains';
 
+// ADDED IN FROXLOR 0.9.14
+$lng['panel']['unlock'] = 'unlock';
+$lng['question']['customer_reallyunlock'] = 'Do you really want to unlock customer %s?'; 
+
 ?>

@@ -107,10 +107,12 @@ if($page == 'customers'
 				$last_login = ((int)$row['lastlogin_succ'] == 0) ? $lng['panel']['neverloggedin'] : date('d.m.Y', $row['lastlogin_succ']);
 
 				$column_style = '';
+				$unlock_link = '';
 				if($row['loginfail_count'] >= $settings['login']['maxloginattempts']
 					&& $row['lastlogin_fail'] > (time() - $settings['login']['deactivatetime'])
 				) {
 					$column_style = ' style="background-color: #f99122;"';
+					$unlock_link = '<a href="'.$filename.'?s='.$s.'&amp;page='.$page.'&amp;action=unlock&amp;id='.$row['customerid'].'">'.$lng['panel']['unlock'].'</a><br />';
 				}
 
 				$row = str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps tickets subdomains email_autoresponder');
@@ -142,6 +144,31 @@ if($page == 'customers'
 		else
 		{
 			redirectTo('index.php', Array('action' => 'login'));
+		}
+	}
+	elseif($action == 'unlock'
+	       && $id != 0)
+	{
+		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid`='" . (int)$id . "' " . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = '" . $db->escape($userinfo['adminid']) . "' "));
+
+		if($result['loginname'] != '')
+		{
+			if(isset($_POST['send'])
+			   && $_POST['send'] == 'send')
+			{
+				$result = $db->query("UPDATE 
+					`" . TABLE_PANEL_CUSTOMERS . "` 
+				SET 
+					`loginfail_count` = '0' 
+				WHERE 
+					`customerid`= '" . (int)$id . "'"
+				);
+				redirectTo($filename, Array('page' => $page, 's' => $s));
+			}
+			else
+			{
+				ask_yesno('customer_reallyunlock', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['loginname']);
+			}
 		}
 	}
 	elseif($action == 'delete'

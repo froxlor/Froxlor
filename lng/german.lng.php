@@ -1494,4 +1494,8 @@ $lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzer
 // ADDED IN FROXLOR 0.9.14-svn6
 $lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
 
+// ADDED IN FROXLOR 0.9.14
+$lng['panel']['unlock'] = 'entsperren';
+$lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden %s wirklich entsperren?';
+
 ?>
