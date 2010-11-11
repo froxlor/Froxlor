@@ -132,24 +132,40 @@ if($db->num_rows($result) > 0)
 					}
 
 					//fetching to field
-					if(!strlen($to)
-					   && preg_match("/^To:(.+)<(.*)>$/", $line, $match)
+					if((!strlen($to) || $to != $row['email'])
+						&& preg_match("/^To:(.+)<(.*)>$/", $line, $match)
 					) {
 						$to = $match[2];
 					}
-					elseif(!strlen($to)
-					       && preg_match("/^To:\s+(.*@.*)$/", $line, $match) 
+					elseif((!strlen($to) || $to != $row['email'])
+						&& preg_match("/^To:\s+(.*@.*)$/", $line, $match)
+					) {
+						$to = $match[1];
+					}
+					/*
+					 * if we still don't have a To:-address
+					 * OR even worse, the $to is NOT the mail-address
+					 * of the customer which autoresponder this is
+					 * we have to check for CC too, #476
+					 */
+					elseif((!strlen($to) || $to != $row['email'])
+						&& preg_match("/^Cc:(.+)<(.*)>$/", $line, $match)
+					) {
+						$to = $match[2];
+					}
+					elseif((!strlen($to) || $to != $row['email'])
+						&& preg_match("/^Cc:\s+(.*@.*)$/", $line, $match)
 					) {
 						$to = $match[1];
 					}
 
 					//fetching sender field
-					if(!strlen($to)
+					if(!strlen($sender)
 					   && preg_match("/^Sender:(.+)<(.*)>$/", $line, $match)
 					) {
 						$sender = $match[2];
 					}
-					elseif(!strlen($to)
+					elseif(!strlen($sender)
 					       && preg_match("/Sender:\s+(.*@.*)$/", $line, $match)
 					) {
 						$sender = $match[1];
@@ -167,6 +183,13 @@ if($db->num_rows($result) > 0)
 						// use the spam flag to skip reply
 						$spam = true;
 					}
+				}
+
+				// check if the receiver is really the one 
+				// with the autoresponder
+				if(!strlen($to) || $to != $row['email'])
+				{
+					$to = '';
 				}
 
 				//skip mail when marked as spam
