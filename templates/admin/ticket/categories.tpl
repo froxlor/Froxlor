@@ -10,7 +10,7 @@ $header
 			</tr>
 			<if 15 < $categories_count >
 			<tr>
-				<td class="field_display_border_left" colspan="4"><a href="$filename?page=categories&amp;action=new&amp;s=$s">{$lng['ticket']['ticket_newcateory']}</a></td>
+				<td class="field_display_border_left" colspan="4"><a href="$filename?page=categories&amp;action=addcategory&amp;s=$s">{$lng['ticket']['ticket_newcateory']}</a></td>
 			</tr>
 			</if>
 			<tr>
