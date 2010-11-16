@@ -88,8 +88,8 @@ return Array(
 							'make install'
 						),
 						'commands_2' => Array(
-							'pw groupadd vmail -g 5001 ',
-							'pw useradd vmail -u 5001 -g 5001 -s/sbin/nologin -d/dev/null',			
+							'pw groupadd vmail -g '.$settings['system']['vmail_gid'],
+							'pw useradd vmail -u '.$settings['system']['vmail_uid'].' -g '.$settings['system']['vmail_gid'].' -s/sbin/nologin -d/dev/null',			
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
 							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir']
