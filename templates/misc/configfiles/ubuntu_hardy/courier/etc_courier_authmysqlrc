@@ -11,3 +11,4 @@ MYSQL_LOGIN_FIELD username
 MYSQL_HOME_FIELD homedir
 MYSQL_MAILDIR_FIELD maildir
 MYSQL_QUOTA_FIELD (quota*1024*1024)
+MYSQL_AUXOPTIONS_FIELD CONCAT("allowimap=",imap,",allowpop3=",pop3)
