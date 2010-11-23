@@ -19,6 +19,19 @@ include_once(dirname(__FILE__) . '/../lib/cron_init.php');
 
 $jobs_to_run = includeCronjobs($debugHandler, $pathtophpfiles);
 
+/**
+ * check for --force to include cron_tasks 
+ * even if it's not its turn
+ */
+if(isset($argv[1]) && strtolower($argv[1]) == '--force')
+{
+	$crontasks = makeCorrectFile($pathtophpfiles.'/scripts/jobs/cron_tasks.php');
+	if(!in_array($crontasks, $jobs_to_run))
+	{
+		array_unshift($jobs_to_run, $crontasks);
+	}
+}
+
 foreach($jobs_to_run as $cron)
 {
 	require_once($cron);
