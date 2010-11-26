@@ -87,7 +87,7 @@ return Array(
                                         'nginx' => Array(
                                                 'label' => 'Nginx Webserver',
                                                 'commands_1' => Array(
-                                                        'apt-get install nginx',
+                                                        'emerge nginx',
                                                 ),
                                                 'files' => Array(
                                                         'etc_nginx_nginx.conf' => '/etc/nginx/nginx.conf',
