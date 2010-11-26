@@ -62,7 +62,49 @@ return Array(
 							'rc-update add lighttpd default',
 							'/etc/init.d/lighttpd restart'
 						)
-					)
+					),
+					'nginx' => Array(
+						'label' => 'Nginx Webserver',
+						'commands_1' => Array(
+							'emerge nginx',
+						),
+						'files' => Array(
+							'etc_nginx_nginx.conf' => '/etc/nginx/nginx.conf',
+							'etc_init.d_php-fcgi' => '/etc/init.d/php-fcgi'
+						),
+						'commands_2' => Array(
+							'mkdir -p ' . $settings['system']['documentroot_prefix'],
+							'mkdir -p ' . $settings['system']['logfiles_directory'],
+							'mkdir -p ' . $settings['system']['deactivateddocroot'],
+							'mkdir -p ' . $settings['system']['mod_fcgid_tmpdir'],
+							'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir'],
+							'chmod u+x /etc/init.d/php-fcgi'
+						),
+						'restart' => Array(
+							'/etc/init.d/nginx restart'
+						)
+					),
+                                        'nginx' => Array(
+                                                'label' => 'Nginx Webserver',
+                                                'commands_1' => Array(
+                                                        'apt-get install nginx',
+                                                ),
+                                                'files' => Array(
+                                                        'etc_nginx_nginx.conf' => '/etc/nginx/nginx.conf',
+                                                        'etc_init.d_php-fcgi' => '/etc/init.d/php-fcgi'
+                                                ),
+                                                'commands_2' => Array(
+                                                        'mkdir -p ' . $settings['system']['documentroot_prefix'],
+                                                        'mkdir -p ' . $settings['system']['logfiles_directory'],
+                                                        'mkdir -p ' . $settings['system']['deactivateddocroot'],
+                                                        'mkdir -p ' . $settings['system']['mod_fcgid_tmpdir'],
+                                                        'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir'],
+                                                        'chmod u+x /etc/init.d/php-fcgi'
+                                                ),
+                                                'restart' => Array(
+                                                        '/etc/init.d/nginx restart'
+                                                )
+                                        )
 				)
 			),
 			'dns' => Array(

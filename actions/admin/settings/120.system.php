@@ -28,7 +28,6 @@ return array(
 					'varname' => 'documentroot_prefix',
 					'type' => 'string',
 					'default' => '/var/customers/webs/',
-					'plausibility_check_method' => 'checkPathConflicts',
 					'save_method' => 'storeSettingField',
 					),
 				'system_ipaddress' => array(
@@ -59,22 +58,6 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingHostname',
 					),
-				'system_froxlordirectlyviahostname' => array(
-					'label' => $lng['serversettings']['froxlordirectlyviahostname'],
-					'settinggroup' => 'system',
-					'varname' => 'froxlordirectlyviahostname',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					),
-				'system_stdsubdomain' => array(
-					'label' => $lng['serversettings']['stdsubdomainhost'],
-					'settinggroup' => 'system',
-					'varname' => 'stdsubdomain',
-					'type' => 'string',
-					'default' => '',
-					'save_method' => 'storeSettingHostname',
-					),
 				'system_mysql_access_host' => array(
 					'label' => $lng['serversettings']['mysql_access_host'],
 					'settinggroup' => 'system',
@@ -83,6 +66,15 @@ return array(
 					'default' => '127.0.0.1,localhost',
 					'plausibility_check_method' => 'checkMysqlAccessHost',
 					'save_method' => 'storeSettingMysqlAccessHost',
+					),
+				'system_realtime_port' => array(
+					'label' => $lng['serversettings']['system_realtime_port'],
+					'settinggroup' => 'system',
+					'varname' => 'realtime_port',
+					'type' => (function_exists('socket_create') ? 'int' : 'hidden'),
+					'int_max' => 65535,
+					'default' => 0,
+					'save_method' => 'storeSettingField',
 					),
 				'system_index_file_extension' => array(
 					'label' => $lng['serversettings']['index_file_extension'],
@@ -100,6 +92,18 @@ return array(
 					'type' => 'bool',
 					'default' => true,
 					'save_method' => 'storeSettingField',
+					),
+				'system_httpuser' => array(
+					'settinggroup' => 'system',
+					'varname' => 'httpuser',
+					'type' => 'hidden',
+					'default' => 'www-data',
+					),
+				'system_httpgroup' => array(
+					'settinggroup' => 'system',
+					'varname' => 'httpgroup',
+					'type' => 'hidden',
+					'default' => 'www-data',
 					),
 				'system_debug_cron' => array(
 					'label' => $lng['serversettings']['cron']['debug'],

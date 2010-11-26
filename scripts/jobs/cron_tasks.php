@@ -25,6 +25,7 @@ require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.10.apache
 require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.15.apache_fcgid.php'));
 require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.20.lighttpd.php'));
 require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.25.lighttpd_fcgid.php'));
+require_once(makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.30.nginx.php'));
 
 /**
  * LOOK INTO TASKS TABLE TO SEE IF THERE ARE ANY UNDONE JOBS
@@ -117,6 +118,17 @@ while($row = $db->fetch_array($result_tasks))
 				$configdir.='/*';
 				safe_exec('rm -rf '. makeCorrectFile($configdir));
 			}
+			elseif($settings['system']['webserver'] == "nginx")
+			{
+				if($settings['system']['mod_fcgid'] == 1)
+				{
+					$webserver = new nginx_fcgid($db, $cronlog, $debugHandler, $idna_convert, $settings);
+				}
+				else
+				{
+					$webserver = new nginx($db, $cronlog, $debugHandler, $idna_convert, $settings);
+				}
+			}
 		}
 
 		if(!isset($webserver))
@@ -142,6 +154,10 @@ while($row = $db->fetch_array($result_tasks))
 				{
 					$webserver = new lighttpd($db, $cronlog, $debugHandler, $idna_convert, $settings);
 				}
+			}
+			elseif($settings['system']['webserver'] == "nginx")
+			{
+				$webserver = new nginx($db, $cronlog, $debugHandler, $idna_convert, $settings);
 			}
 		}
 

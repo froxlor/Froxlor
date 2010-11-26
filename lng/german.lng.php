@@ -1474,6 +1474,9 @@ $lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zur&uuml;
 $lng['admin']['templates']['password_reset'] = 'Kunden-Benachrichtigung nach Zur&uuml;cksetzen des Passworts';
 $lng['admin']['store_defaultindex'] = 'Erstelle standard Index-Datei in Kunden-Ordner';
 
+// ADDED FOR NGINX
+$lng['serversettings']['mod_fcgid_startport']['title'] = '<b>Nur f&uuml;r Nginx:</b> Port f&uuml;r FastCGI';
+$lng['serversettings']['mod_fcgid_startport']['description'] = 'Erster Port der Portrange.';
 // ADDED IN FROXLOR 0.9.13-svn1
 $lng['customer']['autoresponder'] = 'Abwesenheitsnachrichten';
 

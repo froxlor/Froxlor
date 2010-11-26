@@ -449,6 +449,11 @@ else
 	{
 		$webserver = 'lighttpd';
 	}
+    elseif(substr(strtoupper(@php_sapi_name()), 0, 8) == "NGINX"
+	       || stristr($_SERVER['SERVER_SOFTWARE'], "nginx"))
+	{
+		$webserver = 'nginx';
+	}
 	else
 	{
 		// we don't need to bail out, since unknown does not affect any critical installation routines
@@ -669,6 +674,14 @@ if(isset($_POST['installstep'])
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/lighttpd reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/lighttpd.pem' WHERE `settinggroup` = 'system' AND `varname` = 'ssl_cert_file'");
+		$ssettings = '';
+	}
+        elseif($webserver == "nginx")
+	{
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_vhost'");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_diroptions'");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/nginx reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
 		$ssettings = '';
 	}
 
@@ -901,7 +914,7 @@ else
 			</tr>
 			<tr>
 				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && $webserver == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['webserver']; ?>:</td>
-				<td class="main_field_display"><input type="radio" name="webserver" value="apache2" <?php echo $webserver == "apache2" ? 'checked="checked"' : "" ?>/>Apache2&nbsp;<br /><input type="radio" name="webserver" value="lighttpd" <?php echo $webserver == "lighttpd" ? 'checked="checked"' : "" ?>/>Lighttpd</td>
+				<td class="main_field_display"><input type="radio" name="webserver" value="apache2" <?php echo $webserver == "apache2" ? 'checked="checked"' : "" ?>/>Apache2&nbsp;<br /><input type="radio" name="webserver" value="lighttpd" <?php echo $webserver == "lighttpd" ? 'checked="checked"' : "" ?>/>Lighttpd2&nbsp;<br /><input type="radio" name="webserver" value="nginx" <?php echo $webserver == "nginx" ? 'checked="checked"' : "" ?>/>Nginx</td>
 			</tr>
 			<tr>
 				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && $serverip == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['httpuser']; ?>:</td>

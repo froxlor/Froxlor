@@ -29,7 +29,7 @@ return array(
 					'type' => 'option',
 					'default' => 'Apache2',
 					'option_mode' => 'one',
-					'option_options' => array('apache2' => 'Apache 2', 'lighttpd' => 'ligHTTPd'),
+					'option_options' => array('apache2' => 'Apache 2', 'lighttpd' => 'ligHTTPd', 'nginx' => 'Nginx'),
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
 					),

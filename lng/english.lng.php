@@ -1515,4 +1515,8 @@ $lng['serversettings']['login_domain_login'] = 'Allow login with domains';
 $lng['panel']['unlock'] = 'unlock';
 $lng['question']['customer_reallyunlock'] = 'Do you really want to unlock customer %s?'; 
 
+//ADDED IN FROXLOR NGINX BRANCH
+$lng['serversettings']['perl_server']['title'] = 'Perl server location';
+$lng['serversettings']['perl_server']['description'] = 'This is only used for Nginx<br />defaultis set for using the guide found at: http://wiki.nginx.org/SimpleCGI';
+
 ?>
