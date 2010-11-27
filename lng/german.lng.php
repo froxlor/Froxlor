@@ -1474,9 +1474,6 @@ $lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zur&uuml;
 $lng['admin']['templates']['password_reset'] = 'Kunden-Benachrichtigung nach Zur&uuml;cksetzen des Passworts';
 $lng['admin']['store_defaultindex'] = 'Erstelle standard Index-Datei in Kunden-Ordner';
 
-// ADDED FOR NGINX
-$lng['serversettings']['mod_fcgid_startport']['title'] = '<b>Nur f&uuml;r Nginx:</b> Port f&uuml;r FastCGI';
-$lng['serversettings']['mod_fcgid_startport']['description'] = 'Erster Port der Portrange.';
 // ADDED IN FROXLOR 0.9.13-svn1
 $lng['customer']['autoresponder'] = 'Abwesenheitsnachrichten';
 
@@ -1492,7 +1489,7 @@ $lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Pfad zu dem SSL Certificat
 
 // ADDED IN FROXLOR 0.9.14-svn5
 $lng['admin']['ipsandports']['docroot']['title'] = 'Benutzerdefinierter Docroot (leer = zeige auf Froxlor)';
-$lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzerdefinierter Document-Root (der Zeilordner f&uuml;r einen Zugriff) f&uuml;r diese IP/Port Kombination gesetzt werden.<br /><strong>ACHTUNG:</strong> Bitte &uuml;berlege vorher, welchen Pfad du hier angibst!';
+$lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzerdefinierter Document-Root (der Zielordner f&uuml;r einen Zugriff) f&uuml;r diese IP/Port Kombination gesetzt werden.<br /><strong>ACHTUNG:</strong> Bitte &uuml;berlege vorher, welchen Pfad du hier angibst!';
 
 // ADDED IN FROXLOR 0.9.14-svn6
 $lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
@@ -1501,4 +1498,9 @@ $lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
 $lng['panel']['unlock'] = 'entsperren';
 $lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden %s wirklich entsperren?';
 
+// ADDED IN FROXLOR 0.9.15-svn1
+$lng['serversettings']['perl_server']['title'] = 'Perl Server Ort';
+$lng['serversettings']['perl_server']['description'] = 'Nur f&uuml;r nginx<br />Der Standardwert ist diesem Guide entnommen: http://wiki.nginx.org/SimpleCGI';
+$lng['serversettings']['mod_fcgid_startport']['title'] = 'PHP FCGId start Port';
+$lng['serversettings']['mod_fcgid_startport']['description'] = 'Dies ist der Port den FCGI nutzen wird, um auf PHP Anfragen zu warten';
 ?>

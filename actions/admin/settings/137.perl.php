@@ -46,7 +46,7 @@ return array(
 					),
 				'perl_server' => array(
 					'label' => $lng['serversettings']['perl_server'],
-					'settinggroup' => 'system',
+					'settinggroup' => 'serversettings',
 					'varname' => 'perl_server',
 					'type' => 'string',
 					'default' => 'unix:/var/run/nginx/cgiwrap-dispatch.sock',

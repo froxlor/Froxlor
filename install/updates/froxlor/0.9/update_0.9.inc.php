@@ -1169,6 +1169,37 @@ if(isFroxlorVersion('0.9.14-svn5'))
 	updateToVersion('0.9.14-svn6');
 }
 
+if(isFroxlorVersion('0.9.14-svn6'))
+{
+	showUpdateStep("Updating from 0.9.14-svn6 to 0.9.14-svn10", false);
+
+	// remove deprecated realtime-feature
+	showUpdateStep("Removing realtime-feature (deprecated)");
+	$db->query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'realtime_port';");
+	lastStepStatus(0);
+
+	// remove deprecated panel_navigation
+	showUpdateStep("Removing table `panel_navigation` (deprecated)");
+	$db->query("DROP TABLE IF EXISTS `panel_navigation`;");
+	lastStepStatus(0);
+
+	// remove deprecated panel_cronscript
+	showUpdateStep("Removing table `panel_cronscript` (deprecated)");
+	$db->query("DROP TABLE IF EXISTS `panel_cronscript`;");
+	lastStepStatus(0);
+
+	// make ticket-system ipv6 compatible
+	showUpdateStep("Altering IP field in panel_tickets (IPv6 compatibility)");
+	$db->query("ALTER TABLE `" . TABLE_PANEL_TICKETS . "` MODIFY `ip` varchar(39) NOT NULL default '';");
+	lastStepStatus(0);
+
+	showUpdateStep("Removing deprecated legacy-cronjob from database");
+	$db->query("DELETE FROM `".TABLE_PANEL_CRONRUNS."` WHERE `cronfile` ='cron_legacy.php';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.14-svn10');
+}
+
 /*
  * revert database changes we did for multiserver-support
  * before branching - sorry guys :/
@@ -1211,37 +1242,6 @@ if(isFroxlorVersion('0.9.14-svn9'))
 	updateToVersion('0.9.14-svn10');
 }
 
-if(isFroxlorVersion('0.9.14-svn6'))
-{
-	showUpdateStep("Updating from 0.9.14-svn6 to 0.9.14-svn10", false);
-
-	// remove deprecated realtime-feature
-	showUpdateStep("Removing realtime-feature (deprecated)");
-	$db->query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'realtime_port';");
-	lastStepStatus(0);
-
-	// remove deprecated panel_navigation
-	showUpdateStep("Removing table `panel_navigation` (deprecated)");
-	$db->query("DROP TABLE IF EXISTS `panel_navigation`;");
-	lastStepStatus(0);
-
-	// remove deprecated panel_cronscript
-	showUpdateStep("Removing table `panel_cronscript` (deprecated)");
-	$db->query("DROP TABLE IF EXISTS `panel_cronscript`;");
-	lastStepStatus(0);
-
-	// make ticket-system ipv6 compatible
-	showUpdateStep("Altering IP field in panel_tickets (IPv6 compatibility)");
-	$db->query("ALTER TABLE `" . TABLE_PANEL_TICKETS . "` MODIFY `ip` varchar(39) NOT NULL default '';");
-	lastStepStatus(0);
-
-	showUpdateStep("Removing deprecated legacy-cronjob from database");
-	$db->query("DELETE FROM `".TABLE_PANEL_CRONRUNS."` WHERE `cronfile` ='cron_legacy.php';");
-	lastStepStatus(0);
-
-	updateToVersion('0.9.14-svn10');
-}
-
 if(isFroxlorVersion('0.9.14-svn10'))
 {
 	showUpdateStep("Updating from 0.9.14-svn10 to 0.9.14 final");
@@ -1249,3 +1249,19 @@ if(isFroxlorVersion('0.9.14-svn10'))
 
 	updateToVersion('0.9.14');
 }
+
+if(isFroxlorVersion('0.9.14'))
+{
+	showUpdateStep("Updating from 0.9.14 to 0.9.15-svn1");
+	lastStepStatus(0);
+	
+	showUpdateStep(".");
+	$db->query("INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (156, 'system', 'mod_fcgid_startport', '8888')");
+
+	showUpdateStep(".");
+	$db->query("INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (157, 'system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock')");
+	
+	updateToVersion('0.9.15-svn1');
+}
+
+
