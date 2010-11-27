@@ -1256,10 +1256,10 @@ if(isFroxlorVersion('0.9.14'))
 	lastStepStatus(0);
 	
 	showUpdateStep(".");
-	$db->query("INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (156, 'system', 'mod_fcgid_startport', '8888')");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_startport', '8888')");
 
 	showUpdateStep(".");
-	$db->query("INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (157, 'system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock')");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock')");
 	
 	updateToVersion('0.9.15-svn1');
 }
