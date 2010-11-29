@@ -2,6 +2,10 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  29 Nov 2010; Froxlor Release Team <release@froxlor.org> froxlor-9999.ebuild,
+  +files/aliases:
+  fix #412
+
   07 Nov 2010; Froxlor Release Team <release@froxlor.org>
   froxlor-0.9.14.ebuild, froxlor-9999.ebuild:
   fix typo for #463
