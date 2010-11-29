@@ -860,6 +860,15 @@ class lighttpd
 					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer').'" )' . "\n";
 				}
 			}
+			// if the docroots are equal, we still have to set an alias for awstats
+			// because the stats are in /awstats/[domain], not just /awstats/
+			// also, the awstats-icons are someplace else too!
+			// -> webalizer does not need this!
+			elseif($this->settings['system']['awstats_enabled'] == '1')
+			{
+				$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
+				$stats_text.= '  alias.url = ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+			}
 		}
 
 		return $stats_text;
