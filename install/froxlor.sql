@@ -594,8 +594,9 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (153, 'system', 'awstats_icons', '/usr/share/awstats/icon/');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (154, 'system', 'ssl_cert_chainfile', '');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (155, 'login', 'domain_login', '0');
-INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (156, 'system', 'mod_fcgid_startport', '8888');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (156, 'system', 'nginx_php_backend', '127.0.0.1:8888');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (157, 'system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (158, 'system', 'phpreload_command', '');
 
 # --------------------------------------------------------
 

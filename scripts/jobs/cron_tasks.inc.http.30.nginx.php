@@ -15,10 +15,6 @@
  * @version    $Id$
  */
 
-/*
- * This script creates the php.ini's used by mod_suPHP+php-cgi
- */
-
 if(@php_sapi_name() != 'cli'
 && @php_sapi_name() != 'cgi'
 && @php_sapi_name() != 'cgi-fcgi')
@@ -68,9 +64,12 @@ class nginx
 		/**
 		 * nginx does not auto-spawn fcgi-processes
 		 */
-		fwrite($this->debugHandler, '   nginx::reload: spwaning fcgi processes' . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'spwaning fcgi processes for nginx');
-		safe_exec('/etc/init.d/php-fcgi restart');
+		if  ($this->settings['system']['phpreload_command'] != '')
+		{
+			fwrite($this->debugHandler, '   nginx::reload: restarting php processes' . "\n");
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'restarting php processes');
+			safe_exec($this->settings['system']['phpreload_command']);
+		}
 	}
 
 	public function createVirtualHosts()
@@ -223,7 +222,7 @@ class nginx
 			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_index index.php;'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root' . '$fastcgi_script_name;'."\n";
-			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass 127.0.0.1:8888;'."\n";
+			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
 			$this->nginx_data[$vhost_filename].= "\t".'}'."\n";
 
 			$this->nginx_data[$vhost_filename].= '}' . "\n\n";
@@ -534,7 +533,7 @@ class nginx
 			$phpopts.= "\t\t".'fastcgi_index index.php;'."\n";
 			$phpopts.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
 			$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root' . '$fastcgi_script_name;'."\n";
-			$phpopts.= "\t\t".'fastcgi_pass 127.0.0.1:8888;'."\n";
+			$phpopts.= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
 			$phpopts.= "\t".'}'."\n";
 		}
 		return $phpopts;
@@ -580,16 +579,16 @@ class nginx
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'root ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
 					$stats_text.= "\t" . '}' . "\n";
 					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'root ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\tt" . '}' . "\n";
+					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
+					$stats_text.= "\t\t" . '}' . "\n";
 				}
 				else
 				{
 					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'root ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
 					$stats_text.= "\t" . '}' . "\n";
 
 				}
@@ -599,16 +598,16 @@ class nginx
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'root ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . ';' . "\n";
 					$stats_text.= "\t" . '}' . "\n";
 					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'root ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\tt" . '}' . "\n";
+					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
+					$stats_text.= "\t\t" . '}' . "\n";
 				}
 				else
 				{
 					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'root ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . ';' . "\n";
 					$stats_text.= "\t" . '}' . "\n";
 
 				}
@@ -621,11 +620,11 @@ class nginx
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'root ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
 					$stats_text.= "\t" . '}' . "\n";
 					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'root ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\tt" . '}' . "\n";
+					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
+					$stats_text.= "\t\t" . '}' . "\n";
 				}
 				else
 				{
@@ -640,8 +639,8 @@ class nginx
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'root ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\tt" . '}' . "\n";
+					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
+					$stats_text.= "\t\t" . '}' . "\n";
 				}
 			}
 		}

@@ -84,6 +84,22 @@ return array(
 					'default' => '/etc/init.d/apache2 reload',
 					'save_method' => 'storeSettingField',
 					),
+				'system_phpreload_command' => array(
+					'label' => $lng['serversettings']['phpreload_command'],
+					'settinggroup' => 'system',
+					'varname' => 'phpreload_command',
+					'type' => 'string',
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					),
+				'system_nginx_php_backend' => array(
+					'label' => $lng['serversettings']['nginx_php_backend'],
+					'settinggroup' => 'system',
+					'varname' => 'nginx_php_backend',
+					'type' => 'string',
+					'default' => '127.0.0.1:8888',
+					'save_method' => 'storeSettingField',
+					),
 				'system_mod_log_sql' => array(
 					'label' => $lng['serversettings']['mod_log_sql'],
 					'settinggroup' => 'system',

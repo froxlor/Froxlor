@@ -1518,7 +1518,7 @@ $lng['question']['customer_reallyunlock'] = 'Do you really want to unlock custom
 // ADDED IN FROXLOR 0.9.15-svn1
 $lng['serversettings']['perl_server']['title'] = 'Perl server location';
 $lng['serversettings']['perl_server']['description'] = 'This is only used for Nginx<br />default is set for using the guide found at: http://wiki.nginx.org/SimpleCGI';
-$lng['serversettings']['mod_fcgid_startport']['title'] = 'PHP FCGId start port';
-$lng['serversettings']['mod_fcgid_startport']['description'] = 'this is the port that FCGI will listen on for requests for php scripts';
-
-?>
+$lng['serversettings']['nginx_php_backend']['title'] = 'Nginx php backend';
+$lng['serversettings']['nginx_php_backend']['description'] = 'this is where the PHP process is listening for requests from nginx, can be a unix socket of ip:port combination';
+$lng['serversettings']['phpreload_command']['title'] = 'PHP reload command';
+$lng['serversettings']['phpreload_command']['description'] = 'this is used to reload the Php backend if any is used (this is required to be set for Nginx) Default: Blank';

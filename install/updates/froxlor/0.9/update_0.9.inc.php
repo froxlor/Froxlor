@@ -1252,16 +1252,12 @@ if(isFroxlorVersion('0.9.14-svn10'))
 
 if(isFroxlorVersion('0.9.14'))
 {
-	showUpdateStep("Updating from 0.9.14 to 0.9.15-svn1");
-	lastStepStatus(0);
+	showUpdateStep("Updating from 0.9.14 to 0.9.15-svn1", false);
 	
-	showUpdateStep(".");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_startport', '8888')");
+	showUpdateStep("Adding new settings for Nginx support");
+	$db->query("INSERT INTO `".TABLE_PANEL_SETTINGS."` (`settinggroup`, `varname`, `value`) VALUES ('system', 'nginx_php_backend', '127.0.0.1:8888')");
+	$db->query("INSERT INTO `".TABLE_PANEL_SETTINGS."` (`settinggroup`, `varname`, `value`) VALUES ('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock')");
+	$db->query("INSERT INTO `".TABLE_PANEL_SETTINGS."` (`settinggroup`, `varname`, `value`) VALUES ('system', 'phpreload_command', '')");
 
-	showUpdateStep(".");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock')");
-	
 	updateToVersion('0.9.15-svn1');
 }
-
-

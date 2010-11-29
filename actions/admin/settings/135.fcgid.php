@@ -84,14 +84,6 @@ return array(
 					'default' => 250,
 					'save_method' => 'storeSettingField',
 					),
-                'system_mod_fcgid_startport' => array(
-					'label' => $lng['serversettings']['mod_fcgid_startport'],
-					'settinggroup' => 'system',
-					'varname' => 'mod_fcgid_startport',
-					'type' => 'int',
-					'default' => 8888,
-					'save_method' => 'storeSettingField',
-					),
 				'system_mod_fcgid_defaultini' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
 					'settinggroup' => 'system',
