@@ -52,7 +52,7 @@ DEPEND="
 	)
 	ssl? ( dev-libs/openssl )
 	lighttpd? ( www-servers/lighttpd[fastcgi,ssl=]
-		    >=dev-lang/php-5.2[cgi]
+		   >=dev-lang/php-5.2[cgi]
 	)
 	!lighttpd? ( www-servers/apache[ssl=]
 		     dev-lang/php[apache2]
@@ -74,8 +74,7 @@ DEPEND="
 		    >=mail-mta/postfix-2.4[sasl]
 	)
 	aps? ( dev-lang/php[zip] )
-	mailquota? ( >=mail-mta/postfix-2.4[vda] )
-	"
+	mailquota? ( >=mail-mta/postfix-2.4[vda] )"
 
 RDEPEND="${DEPEND}"
 
@@ -325,6 +324,7 @@ src_install() {
 	cp "${FILESDIR}/froxlor.cron" "${D}/usr/share/${PN}"
 	cp "${FILESDIR}/php-fcgi-starter" "${D}/usr/share/${PN}"
 	cp "${FILESDIR}/php.ini" "${D}/usr/share/${PN}"
+	cp "${FILESDIR}/aliases" "${D}/usr/share/${PN}"
 }
 
 pkg_postinst() {
@@ -1117,6 +1117,14 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	if useq domainkey && useq bind ; then
 		cat "${ROOT}/usr/share/${PN}/domainkey.conf" >> "${ROOT}/etc/postfix/main.cf"
 	fi
+
+	# create postfix aliases.db, #412
+	einfo "Creating aliases.db for postfix ..."
+	rm -f "${ROOT}/etc/mail/aliases"
+	insinto "${ROOT}/etc/mail"
+	newins "${ROOT}/usr/share/${PN}/aliases" aliases
+	sed -e "s|<ADMIN_MAIL>|root@${servername}|g" -i "${ROOT}/etc/mail/aliases"
+	/usr/bin/newaliases
 
 	# Automatical Bind configuration, if Bind is installed
 	if useq bind ; then
