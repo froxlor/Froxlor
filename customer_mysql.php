@@ -126,7 +126,11 @@ elseif($page == 'mysqls')
 			}
 			else
 			{
-				ask_yesno('mysql_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['databasename']);
+				$dbnamedesc = $result['databasename'];
+				if($result['description'] != '') {
+					$dbnamedesc.= ' ('.$result['description'].')';
+				}
+				ask_yesno('mysql_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $dbnamedesc);
 			}
 		}
 	}
