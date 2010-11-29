@@ -118,17 +118,6 @@ while($row = $db->fetch_array($result_tasks))
 				$configdir.='/*';
 				safe_exec('rm -rf '. makeCorrectFile($configdir));
 			}
-			elseif($settings['system']['webserver'] == "nginx")
-			{
-				if($settings['system']['mod_fcgid'] == 1)
-				{
-					$webserver = new nginx_fcgid($db, $cronlog, $debugHandler, $idna_convert, $settings);
-				}
-				else
-				{
-					$webserver = new nginx($db, $cronlog, $debugHandler, $idna_convert, $settings);
-				}
-			}
 		}
 
 		if(!isset($webserver))

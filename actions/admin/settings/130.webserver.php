@@ -27,7 +27,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'webserver',
 					'type' => 'option',
-					'default' => 'Apache2',
+					'default' => 'apache2',
 					'option_mode' => 'one',
 					'option_options' => array('apache2' => 'Apache 2', 'lighttpd' => 'ligHTTPd', 'nginx' => 'Nginx'),
 					'save_method' => 'storeSettingField',
