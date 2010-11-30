@@ -103,7 +103,7 @@ class nginx
 
 			if(!isset($this->nginx_data[$vhosts_filename]))
 			{
-				$this->vnginx_data[$vhosts_filename] = '';
+				$this->nginx_data[$vhosts_filename] = '';
 			}
 	
 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
