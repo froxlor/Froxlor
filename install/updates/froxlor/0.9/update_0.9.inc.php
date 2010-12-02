@@ -1269,3 +1269,54 @@ if(isFroxlorVersion('0.9.15-svn1'))
 
 	updateToVersion('0.9.15');
 }
+
+if(isFroxlorVersion('0.9.15'))
+{
+	showUpdateStep("Updating from 0.9.15 to 0.9.16-svn1", false);
+
+	$update_phpfpm_enabled = isset($_POST['update_phpfpm_enabled']) ? (int)$_POST['update_phpfpm_enabled'] : '0';
+	$update_phpfpm_configdir = isset($_POST['update_phpfpm_configdir']) ? makeCorrectDir($_POST['update_phpfpm_configdir']) : '/etc/php-fpm.d/';
+	$update_phpfpm_tmpdir = isset($_POST['update_phpfpm_tmpdir']) ? makeCorrectDir($_POST['update_phpfpm_tmpdir']) : '/var/customers/tmp';
+	$update_phpfpm_peardir = isset($_POST['update_phpfpm_peardir']) ? makeCorrectDir($_POST['update_phpfpm_peardir']) : '/usr/share/php/:/usr/share/php5/';
+	$update_phpfpm_reload = isset($_POST['update_phpfpm_reload']) ? $_POST['update_phpfpm_reload'] : '/etc/init.d/php-fpm restart';
+
+	$update_phpfpm_pm = isset($_POST['update_phpfpm_pm']) ? $_POST['update_phpfpm_pm'] : 'static';
+	$update_phpfpm_max_children = isset($_POST['update_phpfpm_max_children']) ? (int)$_POST['update_phpfpm_max_children'] : '1';
+	$update_phpfpm_max_requests = isset($_POST['update_phpfpm_max_requests']) ? (int)$_POST['update_phpfpm_max_requests'] : '0';
+	
+	if($update_phpfpm_pm == 'dynamic')
+	{
+		$update_phpfpm_start_servers = isset($_POST['update_phpfpm_start_servers']) ? (int)$_POST['update_phpfpm_start_servers'] : '20';
+		$update_phpfpm_min_spare_servers = isset($_POST['update_phpfpm_min_spare_servers']) ? (int)$_POST['update_phpfpm_min_spare_servers'] : '5';
+		$update_phpfpm_max_spare_servers = isset($_POST['update_phpfpm_max_spare_servers']) ? (int)$_POST['update_phpfpm_max_spare_servers'] : '35';
+	}
+	else
+	{
+		$update_phpfpm_start_servers = 20;
+		$update_phpfpm_min_spare_servers = 5;
+		$update_phpfpm_max_spare_servers = 35;
+	}
+
+	if($update_phpfpm_configdir == '') {
+		$update_phpfpm_configdir = '/etc/php-fpm.d/';
+	}
+	if($update_phpfpm_reload == '') {
+		$update_phpfpm_reload = '/etc/init.d/php-fpm restart';
+	}
+	
+	showUpdateStep("Adding new settings");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'enabled', '".(int)$update_phpfpm_enabled."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'configdir', '".$db->escape($update_phpfpm_configdir)."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'reload', '".$db->escape($update_phpfpm_reload)."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'pm', '".$db->escape($update_phpfpm_pm)."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'max_children', '".(int)$update_phpfpm_max_children."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'max_requests', '".(int)$update_phpfpm_max_requests."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'start_servers', '".(int)$update_phpfpm_start_servers."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'min_spare_servers', '".(int)$update_phpfpm_min_spare_servers."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'max_spare_servers', '".(int)$update_phpfpm_max_spare_servers."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'tmpdir', '".$db->escape($update_phpfpm_tmpdir)."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'peardir', '".$db->escape($update_phpfpm_peardir)."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.16-svn1');
+}

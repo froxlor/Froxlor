@@ -57,6 +57,12 @@ class apache
 
 	public function reload()
 	{
+		if((int)$this->settings['phpfpm']['enabled'] == 1)
+		{
+			fwrite($this->debugHandler, '   apache::reload: reloading php-fpm' . "\n");
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
+			safe_exec(escapeshellcmd($this->settings['phpfpm']['reload']));
+		}
 		fwrite($this->debugHandler, '   apache::reload: reloading apache' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading apache');
 		safe_exec(escapeshellcmd($this->settings['system']['apachereload_command']));
@@ -76,9 +82,10 @@ class apache
 		}
 		$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_dirfix_nofcgid.conf');
 
-		if($this->settings['system']['mod_fcgid'] == '1')
-		{
-			// if we use fcgid we don't need this file
+		if($this->settings['system']['mod_fcgid'] == '1'
+			|| $this->settings['phpfpm']['enabled'] == '1'
+		) {
+			// if we use fcgid or php-fpm we don't need this file
 			if(file_exists($vhosts_filename))
 			{
 				fwrite($this->debugHandler, '  apache::_createStandardDirectoryEntry: unlinking ' . basename($vhosts_filename) . "\n");

@@ -120,11 +120,25 @@ while($row = $db->fetch_array($result_tasks))
 			}
 		}
 
+		// clear php-fpm-configurations prior to re-creation to keep it clean
+		if ($settings['phpfpm']['enabled'] == '1')
+		{
+			$configdir = makeCorrectDir($settings['phpfpm']['configdir']);
+
+			if (is_dir($configdir)) 
+			{
+				// now get rid of old stuff 
+				//(but append /* so we don't delete the directory)
+				$configdir.='/*';
+				safe_exec('rm -rf '. makeCorrectFile($configdir));
+			}
+		}
+
 		if(!isset($webserver))
 		{
 			if($settings['system']['webserver'] == "apache2")
 			{
-				if($settings['system']['mod_fcgid'] == 1)
+				if($settings['system']['mod_fcgid'] == 1 || $settings['phpfpm']['enabled'] == 1)
 				{
 					$webserver = new apache_fcgid($db, $cronlog, $debugHandler, $idna_convert, $settings);
 				}
@@ -135,7 +149,7 @@ while($row = $db->fetch_array($result_tasks))
 			}
 			elseif($settings['system']['webserver'] == "lighttpd")
 			{
-				if($settings['system']['mod_fcgid'] == 1)
+				if($settings['system']['mod_fcgid'] == 1 || $settings['phpfpm']['enabled'] == 1)
 				{
 					$webserver = new lighttpd_fcgid($db, $cronlog, $debugHandler, $idna_convert, $settings);
 				}
@@ -146,7 +160,14 @@ while($row = $db->fetch_array($result_tasks))
 			}
 			elseif($settings['system']['webserver'] == "nginx")
 			{
-				$webserver = new nginx($db, $cronlog, $debugHandler, $idna_convert, $settings);
+				if($settings['phpfpm']['enabled'] == 1)
+				{
+					$webserver = new nginx_phpfpm($db, $cronlog, $debugHandler, $idna_convert, $settings);
+				}
+				else
+				{
+					$webserver = new nginx($db, $cronlog, $debugHandler, $idna_convert, $settings);
+				}
 			}
 		}
 

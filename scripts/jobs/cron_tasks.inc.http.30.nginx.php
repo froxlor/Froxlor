@@ -64,11 +64,18 @@ class nginx
 		/**
 		 * nginx does not auto-spawn fcgi-processes
 		 */
-		if  ($this->settings['system']['phpreload_command'] != '')
-		{
-			fwrite($this->debugHandler, '   nginx::reload: restarting php processes' . "\n");
+		if ($this->settings['system']['phpreload_command'] != ''
+			&& (int)$this->settings['phpfpm']['enabled'] == 0
+		) {
+		 	fwrite($this->debugHandler, '   nginx::reload: restarting php processes' . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'restarting php processes');
 			safe_exec($this->settings['system']['phpreload_command']);
+		}
+		elseif((int)$this->settings['phpfpm']['enabled'] == 1)
+		{
+			fwrite($this->debugHandler, '   nginx::reload: reloading php-fpm' . "\n");
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
+			safe_exec(escapeshellcmd($this->settings['phpfpm']['reload']));
 		}
 	}
 
@@ -532,7 +539,7 @@ class nginx
 			$phpopts = "\t".'location ~ \.php$ {'."\n";
 			$phpopts.= "\t\t".'fastcgi_index index.php;'."\n";
 			$phpopts.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
-			$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root' . '$fastcgi_script_name;'."\n";
+			$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME '.makeCorrectDir($domain['documentroot']).'$fastcgi_script_name;'."\n";
 			$phpopts.= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
 			$phpopts.= "\t".'}'."\n";
 		}

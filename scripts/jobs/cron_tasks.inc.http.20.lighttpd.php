@@ -61,6 +61,12 @@ class lighttpd
 
 	public function reload()
 	{
+		if((int)$this->settings['phpfpm']['enabled'] == 1)
+		{
+			fwrite($this->debugHandler, '   lighttpd::reload: reloading php-fpm' . "\n");
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
+			safe_exec(escapeshellcmd($this->settings['phpfpm']['reload']));
+		}
 		fwrite($this->debugHandler, '   lighttpd::reload: reloading lighttpd' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading lighttpd');
 		safe_exec(escapeshellcmd($this->settings['system']['apachereload_command']));

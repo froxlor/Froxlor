@@ -351,4 +351,37 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question = '';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+	
+	if(versionInUpdate($current_version, '0.9.16-svn1'))
+	{
+		$has_preconfig = true;
+		$description = 'Froxlor now features support for php-fpm.';
+		$question = '<strong>Do you want to enable php-fpm?:</strong>&nbsp;';
+		$question.= makeyesno('update_phpfpm_enabled', '1', '0', '0').'<br /><br />';
+		$question.= 'If \'yes\', please specify the configuration directory:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_phpfpm_configdir" value="/etc/php-fpm.d/" /><br /><br />';
+		$question.= 'Please specify the temporary files directory:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_phpfpm_tmpdir" value="/var/customers/tmp/" /><br /><br />';
+		$question.= 'Please specify the PEAR directory:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_phpfpm_peardir" value="/usr/share/php/:/usr/share/php5/" /><br /><br />';
+		$question.= 'Please specify the php-fpm restart-command:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_phpfpm_reload" value="/etc/init.d/php-fpm restart" /><br /><br />';
+		$question.= 'Please specify the php-fpm rocess manager control:&nbsp;';
+		$question.= '<select name="update_phpfpm_pm">';
+		$redirects = makeoption('static', 'static', 'static');
+		$redirects.= makeoption('dynamic', 'dynamic', 'static');
+		$question .= $redirects.'</select><br /><br />';
+		$question.= 'Please specify the number of child processes:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_phpfpm_max_children" value="1" /><br /><br />';
+		$question.= 'Please specify the number of requests per child before respawning:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_phpfpm_max_requests" value="0" /><br /><br />';
+		$question.= '<em>The following settings are only required if you chose process manager = dynamic</em><br /><br />';
+		$question.= 'Please specify the number of child processes created on startup:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_phpfpm_start_servers" value="20" /><br /><br />';
+		$question.= 'Please specify the desired minimum number of idle server processes:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_phpfpm_min_spare_servers" value="5" /><br /><br />';
+		$question.= 'Please specify the desired maximum number of idle server processes:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_phpfpm_max_spare_servers" value="35" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }
