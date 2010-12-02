@@ -1504,3 +1504,7 @@ $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP Backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'Dies ist das Backend, auf dem PHP auf Anfragen von Nginx h&ouml;rt. Kann ein UNIX Socket oder eine IP:Port Kombination sein';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP Reload Befehl';
 $lng['serversettings']['phpreload_command']['description'] = 'Dieser wird ben&ouml;tigt, um das PHP Backend (z.B. PHP-Fpm oder f&uuml;r Nginx) bei Bedarf durch den Cronjob neu zu laden. (Standard: leer)';
+
+// ADDED IN FROXLOR 0.9.16
+$lng['error']['intvaluetoolow'] = 'Die angegebene Zahl ist zu klein (Feld %s)';
+$lng['error']['intvaluetoohigh'] = 'Die angegebene Zahl ist zu gro&szlig; (Feld %s)';
