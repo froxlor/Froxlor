@@ -71,6 +71,24 @@ function getFormOverviewGroupOutput($groupname, $groupdetails)
 		}
 	}
 
-	eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
+	/**
+	 * this part checks for the 'websrv_avail' entry in the settings-array
+	 * if found, we check if the current webserver is in the array. If this
+	 * is not the case, we change the setting type to "hidden", #502
+	 */
+	$do_show = true;
+	if(isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail']))
+	{
+		$websrv = $settings['system']['webserver'];
+		if(!in_array($websrv, $groupdetails['websrv_avail']))
+		{
+			$do_show = false;
+		}
+	}	
+
+	if($do_show)
+	{
+		eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
+	}
 	return $group;
 }

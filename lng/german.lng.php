@@ -547,7 +547,7 @@ $lng['panel']['back'] = 'Zur&uuml;ck';
 $lng['serversettings']['mod_log_sql']['title'] = 'Logs in Datenbank zwischenspeichern';
 $lng['serversettings']['mod_log_sql']['description'] = '<a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle Apache-Konfiguration</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP &uuml;ber mod_fcgid/suexec einbinden';
-$lng['serversettings']['mod_fcgid']['description'] = 'mod_fcgid/suexec/libnss_mysql benutzen um PHP unter dem jeweiligen Useraccount laufen zu lassen<br /><b>Dies ben&ouml;tigt eine spezielle <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b><br /><br /><div style="color:red">ACHTUNG: Der Inhalt dieses Ordners wird regelm&auml;&szlig;ig geleert, daher sollten keinerlei Daten dort manuell abgelegt werden.</div>';
+$lng['serversettings']['mod_fcgid']['description'] = 'PHP unter dem jeweiligen Useraccount laufen lassen.<br /><br /><b>Dies ben&ouml;tigt eine spezielle Webserver-Konfiguration f&uuml;r Apache, siehe <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a>.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Alternative E-Mail-Adresse benutzen';
 $lng['serversettings']['sendalternativemail']['description'] = 'W&auml;hrend des Erstellens eines Accounts das Passwort an eine andere E-Mail-Adresse senden';
 $lng['emails']['alternative_emailaddress'] = 'Alternative E-Mail-Adresse';
@@ -578,7 +578,6 @@ $lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma g
 // CHANGED IN 1.2.18
 
 $lng['serversettings']['mod_log_sql']['description'] = '<a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
-$lng['serversettings']['mod_fcgid']['description'] = 'mod_fcgid/suexec/libnss_mysql benutzen um PHP unter dem jeweiligen Useraccount laufen zu lassen<br /><b>Dies ben&ouml;tigt eine spezielle Webserver-Konfiguration, siehe <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a>.</b>';
 
 // ADDED IN 1.2.18-svn1
 
@@ -712,7 +711,7 @@ $lng['serversettings']['ticket']['noreply_name'] = 'Ticket E-Mail Absendername';
 // ADDED IN 1.2.19-svn
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'Konfigurations-Verzeichnis';
-$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Wo sollen alle Konfigurationsdateien von fcgid liegen? Wenn Sie keine selbst kompilierte suexec Binary benutzen, was in der Regel der Fall ist, muss dieser Pfad unter /var/www/ liegen.';
+$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Wo sollen alle Konfigurationsdateien von fcgid liegen? Wenn Sie keine selbst kompilierte suexec Binary benutzen, was in der Regel der Fall ist, muss dieser Pfad unter /var/www/ liegen.<br /><br /><div style="color:red">ACHTUNG: Der Inhalt dieses Ordners wird regelm&auml;&szlig;ig geleert, daher sollten keinerlei Daten dort manuell abgelegt werden.</div>';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Tempor&auml;res Verzeichnis';
 
 // ADDED IN 1.2.19-svn3
@@ -1425,7 +1424,7 @@ $lng['admin']['perlenabled'] = 'Perl verf&uuml;gbar';
 
 // ADDED IN FROXLOR 0.9.11-svn3
 $lng['serversettings']['perl_path']['title'] = 'Pfad zu Perl';
-$lng['serversettings']['perl_path']['description'] = 'Nur n&ouml;tig f&uuml;r lighttpd-Nutzer. Standard ist /usr/bin/perl';
+$lng['serversettings']['perl_path']['description'] = 'Standard ist /usr/bin/perl';
 
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
@@ -1436,7 +1435,7 @@ $lng['admin']['mod_fcgid_group'] = 'Lokale Gruppe f&uuml;r FCGID (Froxlor Vhost)
 
 // ADDED IN FROXLOR 0.9.12-svn2
 $lng['admin']['perl_settings'] = 'Perl/CGI';
-$lng['serversettings']['perl']['suexecworkaround']['title'] = 'Aktiviere SuExec Workaround (nur f&uuml;r Apache)';
+$lng['serversettings']['perl']['suexecworkaround']['title'] = 'Aktiviere SuExec Workaround';
 $lng['serversettings']['perl']['suexecworkaround']['description'] = 'Aktivieren Sie den Workaround nur, wenn die Kunden-Heimatverzeichnisse sich nicht unterhalb des suexec-Pfades liegen.<br />Wenn aktiviert erstellt Froxlor eine Verkn&uuml;pfung des vom Kunden f&uuml;r Perl aktiviertem Pfad + /cgi-bin/ im angegebenen suexec-Pfad.<br />Bitte beachten Sie, dass Perl dann nur im Unterordner /cgi-bin/ des Kunden-Ordners funktioniert und nicht direkt in diesem Ordner (wie es ohne den Workaround w&auml;re!)';
 $lng['serversettings']['perl']['suexeccgipath']['title'] = 'Pfad f&uuml;r Verkn&uuml;pfungen zu Kunden-Perl-Verzeichnis';
 $lng['serversettings']['perl']['suexeccgipath']['description'] = 'Diese Einstellung wird nur ben&ouml;tigt, wenn der SuExec-Workaround aktiviert ist.<br />ACHTUNG: Stellen Sie sicher, dass sich der angegebene Pfad innerhalb des Suexec-Pfades befindet ansonsten ist der Workaround nutzlos';
@@ -1500,8 +1499,8 @@ $lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden %s wirklich e
 
 // ADDED IN FROXLOR 0.9.15-svn1
 $lng['serversettings']['perl_server']['title'] = 'Perl Server Ort';
-$lng['serversettings']['perl_server']['description'] = 'Nur f&uuml;r nginx<br />Der Standardwert ist diesem Guide entnommen: http://wiki.nginx.org/SimpleCGI';
+$lng['serversettings']['perl_server']['description'] = 'Der Standardwert ist diesem Guide entnommen: http://wiki.nginx.org/SimpleCGI';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP Backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'Dies ist das Backend, auf dem PHP auf Anfragen von Nginx h&ouml;rt. Kann ein UNIX Socket oder eine IP:Port Kombination sein';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP Reload Befehl';
-$lng['serversettings']['phpreload_command']['description'] = 'Dieser wird ben&ouml;tigt, um das PHP Backend f&uuml;r Nginx bei Bedarf durch den Cronjob neu zu laden. (Nur f&uuml;r Nginx, Standard: leer)';
+$lng['serversettings']['phpreload_command']['description'] = 'Dieser wird ben&ouml;tigt, um das PHP Backend (z.B. PHP-Fpm oder f&uuml;r Nginx) bei Bedarf durch den Cronjob neu zu laden. (Standard: leer)';

@@ -19,6 +19,7 @@ return array(
 	'groups' => array(
 		'fcgid' => array(
 			'title' => $lng['admin']['fcgid_settings'],
+			'websrv_avail' => array('apache2'),
 			'fields' => array(
 				'system_mod_fcgid_enabled' => array(
 					'label' => $lng['serversettings']['mod_fcgid'],

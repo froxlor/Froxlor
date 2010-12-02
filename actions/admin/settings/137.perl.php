@@ -27,6 +27,7 @@ return array(
 					'type' => 'string',
 					'default' => '/usr/bin/perl',
 					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('lighttpd')
 					),	
 				'system_perl_suexecworkaround' => array(
 					'label' => $lng['serversettings']['perl']['suexecworkaround'],
@@ -35,6 +36,7 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2')
 					),
 				'system_perl_suexeccgipath' => array(
 					'label' => $lng['serversettings']['perl']['suexeccgipath'],
@@ -43,6 +45,7 @@ return array(
 					'type' => 'string',
 					'default' => '/var/www/cgi-bin/',
 					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2')
 					),
 				'perl_server' => array(
 					'label' => $lng['serversettings']['perl_server'],
@@ -51,6 +54,7 @@ return array(
 					'type' => 'string',
 					'default' => 'unix:/var/run/nginx/cgiwrap-dispatch.sock',
 					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('nginx')
 					),
 				),
 			),

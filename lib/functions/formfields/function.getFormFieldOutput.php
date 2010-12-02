@@ -19,6 +19,8 @@
 
 function getFormFieldOutput($fieldname, $fielddata)
 {
+	global $settings;
+
 	$returnvalue = '';
 	if(is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('getFormFieldOutput' . ucfirst($fielddata['type'])))
 	{
@@ -44,7 +46,26 @@ function getFormFieldOutput($fieldname, $fielddata)
 				$fielddata['value'] = null;
 			}
 		}
-		$returnvalue = call_user_func('getFormFieldOutput' . ucfirst($fielddata['type']), $fieldname, $fielddata);
+		
+		/**
+		 * this part checks for the 'websrv_avail' entry in the settings-array
+		 * if found, we check if the current webserver is in the array. If this
+		 * is not the case, we change the setting type to "hidden", #502
+		 */
+		$do_show = true;
+		if(isset($fielddata['websrv_avail']) && is_array($fielddata['websrv_avail']))
+		{
+			$websrv = $settings['system']['webserver'];
+			if(!in_array($websrv, $fielddata['websrv_avail']))
+			{
+				$do_show = false;
+			}
+		}
+
+		if($do_show)
+		{
+			$returnvalue = call_user_func('getFormFieldOutput' . ucfirst($fielddata['type']), $fieldname, $fielddata);
+		}
 	}
 	return $returnvalue;
 }

@@ -76,38 +76,6 @@ return array(
 					'default' => '/etc/apache2/htpasswd/',
 					'save_method' => 'storeSettingField',
 					),
-				'system_apachereload_command' => array(
-					'label' => $lng['serversettings']['apachereload_command'],
-					'settinggroup' => 'system',
-					'varname' => 'apachereload_command',
-					'type' => 'string',
-					'default' => '/etc/init.d/apache2 reload',
-					'save_method' => 'storeSettingField',
-					),
-				'system_phpreload_command' => array(
-					'label' => $lng['serversettings']['phpreload_command'],
-					'settinggroup' => 'system',
-					'varname' => 'phpreload_command',
-					'type' => 'string',
-					'default' => '',
-					'save_method' => 'storeSettingField',
-					),
-				'system_nginx_php_backend' => array(
-					'label' => $lng['serversettings']['nginx_php_backend'],
-					'settinggroup' => 'system',
-					'varname' => 'nginx_php_backend',
-					'type' => 'string',
-					'default' => '127.0.0.1:8888',
-					'save_method' => 'storeSettingField',
-					),
-				'system_mod_log_sql' => array(
-					'label' => $lng['serversettings']['mod_log_sql'],
-					'settinggroup' => 'system',
-					'varname' => 'mod_log_sql',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					),
 				'system_logfiles_directory' => array(
 					'label' => $lng['serversettings']['logfiles_directory'],
 					'settinggroup' => 'system',
@@ -144,6 +112,40 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					),
+				'system_apachereload_command' => array(
+					'label' => $lng['serversettings']['apachereload_command'],
+					'settinggroup' => 'system',
+					'varname' => 'apachereload_command',
+					'type' => 'string',
+					'default' => '/etc/init.d/apache2 reload',
+					'save_method' => 'storeSettingField',
+					),
+				'system_phpreload_command' => array(
+					'label' => $lng['serversettings']['phpreload_command'],
+					'settinggroup' => 'system',
+					'varname' => 'phpreload_command',
+					'type' => 'string',
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					),
+				'system_nginx_php_backend' => array(
+					'label' => $lng['serversettings']['nginx_php_backend'],
+					'settinggroup' => 'system',
+					'varname' => 'nginx_php_backend',
+					'type' => 'string',
+					'default' => '127.0.0.1:8888',
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('nginx')
+					),
+				'system_mod_log_sql' => array(
+					'label' => $lng['serversettings']['mod_log_sql'],
+					'settinggroup' => 'system',
+					'varname' => 'mod_log_sql',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2')
+					),
 				'defaultwebsrverrhandler_enabled' => array(
 					'label' => $lng['serversettings']['defaultwebsrverrhandler_enabled'],
 					'settinggroup' => 'defaultwebsrverrhandler',
@@ -159,6 +161,7 @@ return array(
 					'type' => 'string',
 					'default' => '',
 					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2', 'nginx')
 					),
 				'defaultwebsrverrhandler_err403' => array(
 					'label' => $lng['serversettings']['defaultwebsrverrhandler_err403'],
@@ -167,6 +170,7 @@ return array(
 					'type' => 'string',
 					'default' => '',
 					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2', 'nginx')
 					),
 				'defaultwebsrverrhandler_err404' => array(
 					'label' => $lng['serversettings']['defaultwebsrverrhandler_err404'],
@@ -183,6 +187,7 @@ return array(
 					'type' => 'string',
 					'default' => '',
 					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2', 'nginx')
 					),
 				'customredirect_enabled' => array(
 					'label' => $lng['serversettings']['customredirect_enabled'],
@@ -191,6 +196,7 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2', 'lighttpd')
 					),
 				'customredirect_default' => array(
 					'label' => $lng['serversettings']['customredirect_default'],
@@ -201,6 +207,7 @@ return array(
 					'option_mode' => 'one',
 					'option_options_method' => 'getRedirectCodes',
 					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2', 'lighttpd')
 					),
 				),
 			),

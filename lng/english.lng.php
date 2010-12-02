@@ -547,8 +547,8 @@ $lng['panel']['back'] = 'Back';
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Temporary save logs in the database';
 $lng['serversettings']['mod_log_sql']['description'] = 'Use <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
-$lng['serversettings']['mod_fcgid']['title'] = 'Include PHP via mod_fcgid/suexec';
-$lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libnss_mysql to run PHP with the corresponding useraccount.<br/><b>This needs a special webserver configuration, see <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a></b><br /><br /><div style="color:red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
+$lng['serversettings']['mod_fcgid']['title'] = 'Enable FCGID';
+$lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with the corresponding useraccount.<br /><br /><b>This needs a special webserver configuration for Apache, see <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a></b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
@@ -708,7 +708,7 @@ $lng['serversettings']['ticket']['noreply_name'] = 'Ticket e-mail sendername';
 // ADDED IN 1.2.19-svn1
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'Configuration directory';
-$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/';
+$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/<br /><br /><div style="color:red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Temp directory';
 
 // ADDED IN 1.2.19-svn3
@@ -1442,7 +1442,7 @@ $lng['admin']['perlenabled'] = 'Perl enabled';
 
 // ADDED IN FROXLOR 0.9.11-svn3
 $lng['serversettings']['perl_path']['title'] = 'Path to perl';
-$lng['serversettings']['perl_path']['description'] = 'Only relevant if you use lighttpd. Default is /usr/bin/perl';
+$lng['serversettings']['perl_path']['description'] = 'Default is /usr/bin/perl';
 
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
@@ -1453,7 +1453,7 @@ $lng['admin']['mod_fcgid_group'] = 'Local group to use for FCGID (Froxlor vHost)
 
 // ADDED IN FROXLOR 0.9.12-svn2
 $lng['admin']['perl_settings'] = 'Perl/CGI';
-$lng['serversettings']['perl']['suexecworkaround']['title'] = 'Enable SuExec workaround (Apache only)';
+$lng['serversettings']['perl']['suexecworkaround']['title'] = 'Enable SuExec workaround';
 $lng['serversettings']['perl']['suexecworkaround']['description'] = 'Enable only if customer docroots are not within the apache suexec path.<br />If enabled, Froxlor will generate a symlink from the customers perl-enabled directory + /cgi-bin/ to the given path.<br />Note that perl will then only work in the folders subdirectory /cgi-bin/ and not in the folder itself (as it does without this fix!)';
 $lng['serversettings']['perl']['suexeccgipath']['title'] = 'Path for customer perl-enabled directory symlinks';
 $lng['serversettings']['perl']['suexeccgipath']['description'] = 'You only need to set this if the SuExec-workaround is enabled.<br />ATTENTION: Be sure this path is within the suexec path or else this workaround is uselsess';
@@ -1517,8 +1517,8 @@ $lng['question']['customer_reallyunlock'] = 'Do you really want to unlock custom
 
 // ADDED IN FROXLOR 0.9.15-svn1
 $lng['serversettings']['perl_server']['title'] = 'Perl server location';
-$lng['serversettings']['perl_server']['description'] = 'This is only used for Nginx<br />default is set for using the guide found at: http://wiki.nginx.org/SimpleCGI';
-$lng['serversettings']['nginx_php_backend']['title'] = 'Nginx php backend';
+$lng['serversettings']['perl_server']['description'] = 'Default is set for using the guide found at: http://wiki.nginx.org/SimpleCGI';
+$lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'this is where the PHP process is listening for requests from nginx, can be a unix socket of ip:port combination';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP reload command';
-$lng['serversettings']['phpreload_command']['description'] = 'this is used to reload the Php backend if any is used (this is required to be set for Nginx) Default: Blank';
+$lng['serversettings']['phpreload_command']['description'] = 'this is used to reload the PHP backend if any is used (e.g. php-fpm or nginx)<br />Default: blank';
