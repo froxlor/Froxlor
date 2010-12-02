@@ -34,6 +34,12 @@ return Array(
 							'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir'],
 							'a2dismod userdir'
 						),
+						'files' => ((int)$settings['phpfpm']['enabled'] == 1) ?
+							Array(
+								'etc_apache2_mods-enabled_fastcgi.conf' => '/etc/apache2/mods-enabled/fastcgi.conf'
+							)
+							:
+							null,
 						'restart' => Array(
 							'/etc/init.d/apache2 restart'
 						),

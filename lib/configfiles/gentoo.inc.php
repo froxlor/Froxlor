@@ -39,6 +39,12 @@ return Array(
 							'mkdir -p ' . $settings['system']['mod_fcgid_tmpdir'],
 							'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir']
 						),
+						'files' => ((int)$settings['phpfpm']['enabled'] == 1) ?
+							Array(
+								'etc_apache2_modules.d_70_fastcgi.conf' => '/etc/apache2/modules.d/70_fastcgi.conf'
+							)
+							:
+							null,
 						'restart' => Array(
 							'rc-update add apache2 default',
 							'/etc/init.d/apache2 restart'
