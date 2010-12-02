@@ -474,7 +474,12 @@ if($page == 'customers'
 
 				$createstdsubdomain = intval($_POST['createstdsubdomain']);
 				$password = validate($_POST['new_customer_password'], 'password');
-				$password = validatePassword($password);
+				// only check if not empty,
+				// cause empty == generate password automatically
+				if($password != '')
+				{
+					$password = validatePassword($password);
+				}
 				$sendpassword = intval($_POST['sendpassword']);
 				$phpenabled = intval($_POST['phpenabled']);
 				$perlenabled = intval($_POST['perlenabled']);
