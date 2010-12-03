@@ -124,15 +124,16 @@ return array(
 					'label' => $lng['serversettings']['phpreload_command'],
 					'settinggroup' => 'system',
 					'varname' => 'phpreload_command',
-					'type' => 'string',
+					'type' => (getSetting('phpfpm', 'enabled') == '1') ? 'hidden' : 'string',
 					'default' => '',
 					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('nginx')
 					),
 				'system_nginx_php_backend' => array(
 					'label' => $lng['serversettings']['nginx_php_backend'],
 					'settinggroup' => 'system',
 					'varname' => 'nginx_php_backend',
-					'type' => 'string',
+					'type' => (getSetting('phpfpm', 'enabled') == '1') ? 'hidden' : 'string',
 					'default' => '127.0.0.1:8888',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('nginx')

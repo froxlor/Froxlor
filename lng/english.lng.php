@@ -1521,7 +1521,7 @@ $lng['serversettings']['perl_server']['description'] = 'Default is set for using
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'this is where the PHP process is listening for requests from nginx, can be a unix socket of ip:port combination';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP reload command';
-$lng['serversettings']['phpreload_command']['description'] = 'this is used to reload the PHP backend if any is used (e.g. php-fpm or nginx)<br />Default: blank';
+$lng['serversettings']['phpreload_command']['description'] = 'this is used to reload the PHP backend if any is used<br />Default: blank';
 
 // ADDED IN FROXLOR 0.9.16
 $lng['error']['intvaluetoolow'] = 'The given number is too low (field %s)';
