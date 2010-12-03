@@ -1258,6 +1258,7 @@ if(isFroxlorVersion('0.9.14'))
 	$db->query("INSERT INTO `".TABLE_PANEL_SETTINGS."` (`settinggroup`, `varname`, `value`) VALUES ('system', 'nginx_php_backend', '127.0.0.1:8888')");
 	$db->query("INSERT INTO `".TABLE_PANEL_SETTINGS."` (`settinggroup`, `varname`, `value`) VALUES ('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock')");
 	$db->query("INSERT INTO `".TABLE_PANEL_SETTINGS."` (`settinggroup`, `varname`, `value`) VALUES ('system', 'phpreload_command', '')");
+	lastStepStatus(0);
 
 	updateToVersion('0.9.15-svn1');
 }
