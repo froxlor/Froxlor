@@ -110,7 +110,10 @@ class phpinterface_fpm
 			$fpm_config.= 'env[TEMP] = '.$tmpdir."\n\n";
 
 			$fpm_config.= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f '.$this->_domain['email']."\n\n";
-			$fpm_config.= 'php_admin_value[open_basedir] = ' . $this->_settings['system']['documentroot_prefix'] . $this->_domain['loginname'] . '/:' . $this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/:' . $this->_settings['phpfpm']['peardir'] . "\n";
+			if($this->_domain['loginname'] != 'froxlor.panel')
+			{
+				$fpm_config.= 'php_admin_value[open_basedir] = ' . $this->_settings['system']['documentroot_prefix'] . $this->_domain['loginname'] . '/:' . $this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/:' . $this->_settings['phpfpm']['peardir'] . "\n";
+			}
 			$fpm_config.= 'php_admin_value[session.save_path] = ' . $this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/' . "\n";
 			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . $this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/' . "\n\n";
 
