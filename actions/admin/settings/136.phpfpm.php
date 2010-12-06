@@ -29,7 +29,45 @@ return array(
 					'save_method' => 'storeSettingField',
 					'plausibility_check_method' => 'checkFcgidPhpFpm',
 					'overview_option' => true
-					),		
+					),
+				'system_phpfpm_enabled_ownvhost' => array(
+					'label' => $lng['serversettings']['phpfpm'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'enabled_ownvhost',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+					),
+				'system_phpfpm_httpuser' => array(
+					'label' => $lng['admin']['mod_fcgid_user'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'vhost_httpuser',
+					'type' => 'string',
+					'default' => 'froxlorlocal',
+					'save_method' => 'storeSettingField'
+					),
+				'system_phpfpm_httpgroup' => array(
+					'label' => $lng['admin']['mod_fcgid_group'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'vhost_httpgroup',
+					'type' => 'string',
+					'default' => 'froxlorlocal',
+					'save_method' => 'storeSettingField'
+					),
+				/*
+				 * @TODO implement if phpfpm knows custom php.ini files
+				 * 
+				'system_phpfpm_defaultini_ownvhost' => array(
+					'label' => $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'vhost_defaultini',
+					'type' => 'option',
+					'default' => '1',
+					'option_mode' => 'one',
+					'option_options_method' => 'getPhpConfigs',
+					'save_method' => 'storeSettingField',
+					),
+				*/
 				'system_phpfpm_configdir' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['configdir'],
 					'settinggroup' => 'phpfpm',

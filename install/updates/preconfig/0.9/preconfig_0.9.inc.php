@@ -251,7 +251,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			$question.= 'Local user:&nbsp;';
 			$question.= '<input type="text" class="text" name="update_fcgid_httpuser" value="froxlorlocal" /><br /><br />';
 			$question.= 'Local group:&nbsp;';
-			$question.= '<input type="text" class="text" name="update_fcgid_ownvhost" value="froxlorlocal" /><br />';
+			$question.= '<input type="text" class="text" name="update_fcgid_httpgroup" value="froxlorlocal" /><br />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
@@ -383,5 +383,22 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= 'Please specify the desired maximum number of idle server processes:&nbsp;';
 		$question.= '<input type="text" class="text" name="update_phpfpm_max_spare_servers" value="35" /><br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if(versionInUpdate($current_version, '0.9.16-svn2'))
+	{
+		if((int)$settings['phpfpm']['enabled'] == 1)
+		{
+			$has_preconfig = true;
+			$description = 'You can chose whether you want Froxlor to use PHP-FPM itself too now.';
+			$question = '<strong>Use PHP-FPM for the Froxlor Panel?:</strong>&nbsp;';
+			$question.= makeyesno('update_phpfpm_enabled_ownvhost', '1', '0', '0').'<br /><br />';
+			$question.= '<strong>If \'yes\', please specify local user/group (have to exist, Froxlor does not add them automatically):</strong><br /><br />';
+			$question.= 'Local user:&nbsp;';
+			$question.= '<input type="text" class="text" name="update_phpfpm_httpuser" value="'.$settings['system']['mod_fcgid_httpuser'].'" /><br /><br />';
+			$question.= 'Local group:&nbsp;';
+			$question.= '<input type="text" class="text" name="update_phpfpm_httpgroup" value="'.$settings['system']['mod_fcgid_httpgroup'].'" /><br />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
 	}
 }

@@ -246,6 +246,35 @@ class apache
 						$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
 					}
 				}
+				// create php-fpm <Directory>-Part (config is created in apache_fcgid)
+				elseif($this->settings['phpfpm']['enabled'] == '1')
+				{
+					$domain = array(
+						'id' => 'none',
+						'domain' => $this->settings['system']['hostname'],
+						'adminid' => 1, /* first admin-user (superadmin) */
+						'mod_fcgid_starter' => -1,
+						'mod_fcgid_maxrequests' => -1,
+						'guid' => $this->settings['phpfpm']['vhost_httpuser'],
+						'openbasedir' => 0,
+						'safemode' => '0',
+						'email' => $this->settings['panel']['adminmail'],
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath
+					);
+
+					$php = new phpinterface($this->getDB(), $this->settings, $domain);
+					$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  FastCgiExternalServer ' . $mypath . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['system']['mod_fcgid_httpuser'] . ' -group ' . $this->settings['system']['mod_fcgid_httpuser'] . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '    AddHandler php5-fastcgi .php'. "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '    Action php5-fastcgi /fastcgiphp' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '    Options +ExecCGI' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  Alias /fastcgiphp ' . $mypath . 'fpm.external' . "\n";
+				}
 
 				/**
 				 * dirprotection, see #72

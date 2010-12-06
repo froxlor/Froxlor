@@ -228,8 +228,30 @@ class nginx
 			$this->nginx_data[$vhost_filename].= "\t".'location ~ \.php$ {'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_index index.php;'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
-			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root' . '$fastcgi_script_name;'."\n";
-			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
+			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
+			if((int)$this->settings['phpfpm']['enabled'] == 1)
+			{
+				$domain = array(
+					'id' => 'none',
+					'domain' => $this->settings['system']['hostname'],
+					'adminid' => 1, /* first admin-user (superadmin) */
+					'mod_fcgid_starter' => -1,
+					'mod_fcgid_maxrequests' => -1,
+					'guid' => $this->settings['phpfpm']['vhost_httpuser'],
+					'openbasedir' => 0,
+					'safemode' => '0',
+					'email' => $this->settings['panel']['adminmail'],
+					'loginname' => 'froxlor.panel',
+					'documentroot' => $mypath
+				);
+
+				$php = new phpinterface($this->getDB(), $this->settings, $domain);
+				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
+			}
+			else
+			{
+				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
+			}
 			$this->nginx_data[$vhost_filename].= "\t".'}'."\n";
 
 			$this->nginx_data[$vhost_filename].= '}' . "\n\n";
@@ -539,7 +561,7 @@ class nginx
 			$phpopts = "\t".'location ~ \.php$ {'."\n";
 			$phpopts.= "\t\t".'fastcgi_index index.php;'."\n";
 			$phpopts.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
-			$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME '.makeCorrectDir($domain['documentroot']).'$fastcgi_script_name;'."\n";
+			$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
 			$phpopts.= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
 			$phpopts.= "\t".'}'."\n";
 		}

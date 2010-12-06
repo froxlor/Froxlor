@@ -144,6 +144,38 @@ class lighttpd
 				$this->lighttpd_data[$vhost_filename].= '  }' . "\n";
 				*/
 
+				/**
+				 * own php-fpm vhost
+				 */
+				if((int)$this->settings['phpfpm']['enabled'] == 1)
+				{
+					$domain = array(
+						'id' => 'none',
+						'domain' => $this->settings['system']['hostname'],
+						'adminid' => 1, /* first admin-user (superadmin) */
+						'mod_fcgid_starter' => -1,
+						'mod_fcgid_maxrequests' => -1,
+						'guid' => $this->settings['phpfpm']['vhost_httpuser'],
+						'openbasedir' => 0,
+						'safemode' => '0',
+						'email' => $this->settings['panel']['adminmail'],
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath
+					);
+	
+					$php = new phpinterface($this->getDB(), $this->settings, $domain);
+
+					$this->lighttpd_data[$vhost_filename].= '  fastcgi.server = ( '."\n";
+					$this->lighttpd_data[$vhost_filename].=	"\t".'".php" => ('."\n";
+					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"localhost" => ('."\n";
+					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"socket" => "'.$php->getInterface()->getSocketFile().'",'."\n";
+					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"check-local" => "enable",'."\n";
+					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"disable-time" => 1'."\n";
+					$this->lighttpd_data[$vhost_filename].=	"\t".')'."\n";
+					$this->lighttpd_data[$vhost_filename].=	"\t".')'."\n";
+					$this->lighttpd_data[$vhost_filename].=	'  )'."\n";
+				}
+
 				if($row_ipsandports['specialsettings'] != '')
 				{
 					$this->lighttpd_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";

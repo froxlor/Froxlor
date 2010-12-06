@@ -89,114 +89,54 @@ class apache_fcgid extends apache
 
 	public function createOwnVhostStarter()
 	{
-		if ($this->settings['system']['mod_fcgid_ownvhost'] == '1')
-		{
+		if ($this->settings['system']['mod_fcgid_ownvhost'] == '1'
+			|| ($this->settings['phpfpm']['enabled'] == '1'
+				&& $this->settings['phpfpm']['enabled_ownvhost'] == '1')
+		) {
 			$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
-			$configdir = makeCorrectDir($this->settings['system']['mod_fcgid_configdir'] . '/froxlor.panel/');
-			$starter_filename = makeCorrectFile($configdir . '/php-fcgi-starter');
-			$phpini_filename = makeCorrectFile($configdir . '/php.ini');
-			$tmpdir = makeCorrectDir($this->settings['system']['mod_fcgid_tmpdir'] . '/froxlor.panel/');
-			
-			$user = $this->settings['system']['mod_fcgid_httpuser'];
-			$group = $this->settings['system']['mod_fcgid_httpgroup'];
+
+			if ($this->settings['system']['mod_fcgid_ownvhost'] == '1')
+			{
+				$user = $this->settings['system']['mod_fcgid_httpuser'];
+				$group = $this->settings['system']['mod_fcgid_httpgroup'];
+			}
+			elseif($this->settings['phpfpm']['enabled'] == '1'
+				&& $this->settings['phpfpm']['enabled_ownvhost'] == '1'
+			) {
+				$user = $this->settings['phpfpm']['vhost_httpuser'];
+				$group = $this->settings['phpfpm']['vhost_httpgroup'];	
+			}
+
+			$domain = array(
+				'id' => 'none',
+				'domain' => $this->settings['system']['hostname'],
+				'adminid' => 1, /* first admin-user (superadmin) */
+				'mod_fcgid_starter' => -1,
+				'mod_fcgid_maxrequests' => -1,
+				'guid' => $user,
+				'openbasedir' => 0,
+				'safemode' => '0',
+				'email' => $this->settings['panel']['adminmail'],
+				'loginname' => 'froxlor.panel',
+				'documentroot' => $mypath
+			);
 
 			// all the files and folders have to belong to the local user
 			// now because we also use fcgid for our own vhost
 			safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
-			
-			// create config dir if necessary
-			if(!is_dir($configdir))
-			{
-				safe_exec('mkdir -p ' . escapeshellarg($configdir));
-				safe_exec('chown ' . $user . ':' . $group . ' ' . escapeshellarg($configdir));
-			}
-
-			// create tmp dir if necessary
-			if(!is_dir($tmpdir))
-			{
-				safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
-				safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($tmpdir));
-				safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
-			}
-			
+						
 			// get php.ini for our own vhost
-			$php = new phpinterface($this->getDB(), $this->settings, null);
+			$php = new phpinterface($this->getDB(), $this->settings, $domain);
+
+			// @FIXME don't use fcgid settings if not fcgid in use, but we don't have anything else atm
 			$phpconfig = $php->getPhpConfig($this->settings['system']['mod_fcgid_defaultini_ownvhost']);
 
-			// create starter
-			$starter_file = "#!/bin/sh\n\n";
-			$starter_file.= "#\n";
-			$starter_file.= "# starter created/changed on " . date("Y.m.d H:i:s") . " for the Froxlor vhost\n";
-			$starter_file.= "# Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
-			$starter_file.= "#\n\n";
-			$starter_file.= "umask 022\n";
-			$starter_file.= "PHPRC=" . escapeshellarg($configdir) . "\n";
-			$starter_file.= "export PHPRC\n";
-			if((int)$phpconfig['mod_fcgid_starter'] != - 1)
-			{
-				$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$phpconfig['mod_fcgid_starter'] . "\n";
-			}
-			else
-			{
-				$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$this->settings['system']['mod_fcgid_starter'] . "\n";
-			}
-			$starter_file.= "export PHP_FCGI_CHILDREN\n";
-			if((int)$phpconfig['mod_fcgid_maxrequests'] != - 1)
-			{
-				$starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$phpconfig['mod_fcgid_maxrequests'] . "\n";
-			}
-			else
-			{
-				$starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$this->settings['system']['mod_fcgid_maxrequests'] . "\n";
-			}
-			$starter_file.= "export PHP_FCGI_MAX_REQUESTS\n";
-
-			// Set Binary
-			$starter_file.= "exec " . $phpconfig['binary'] . " -c " . escapeshellarg($configdir) . "\n";
-
-			//remove +i attibute, so starter can be overwritten
-			if(file_exists($starter_filename))
-			{
-				removeImmutable($starter_filename);
-			}
-
-			$starter_file_handler = fopen($starter_filename, 'w');
-			fwrite($starter_file_handler, $starter_file);
-			fclose($starter_file_handler);
-			safe_exec('chmod 750 ' . escapeshellarg($starter_filename));
-			safe_exec('chown ' . $user . ':' . $group . ' ' . escapeshellarg($starter_filename));
-			setImmutable($starter_filename);
-
-			// define the php.ini
-
-			$php_ini_variables = array(
-				'SAFE_MODE' => 'Off',
-				'PEAR_DIR' => $this->settings['system']['mod_fcgid_peardir'],
-				'OPEN_BASEDIR' => 'none',
-				'OPEN_BASEDIR_C' => ';',
-				'OPEN_BASEDIR_GLOBAL' => '',
-				'TMP_DIR' => $tmpdir,
-				'CUSTOMER_EMAIL' => $this->settings['panel']['adminmail'],
-				'ADMIN_EMAIL' => $this->settings['panel']['adminmail'],
-				'DOMAIN' => $this->settings['system']['hostname'],
-				'CUSTOMER' => $user,
-				'ADMIN' => $user
-			);
-
-			//insert a small header for the file
-
-			$phpini_file = ";\n";
-			$phpini_file.= "; php.ini created/changed on " . date("Y.m.d H:i:s") . " for Froxlor-vhost from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
-			$phpini_file.= "; Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
-			$phpini_file.= ";\n\n";
-			$phpini_file.= replace_variables($phpconfig['phpsettings'], $php_ini_variables);
-			$phpini_file = str_replace('"none"', 'none', $phpini_file);
-			$phpini_file = preg_replace('/\"+/', '"', $phpini_file);
-			$phpini_file_handler = fopen($phpini_filename, 'w');
-			fwrite($phpini_file_handler, $phpini_file);
-			fclose($phpini_file_handler);
-			safe_exec('chown root:0 ' . escapeshellarg($phpini_filename));
-			safe_exec('chmod 0644 ' . escapeshellarg($phpini_filename));
+			// create starter-file | config-file
+			$php->getInterface()->createConfig($phpconfig);
+			
+			// create php.ini 
+			// @TODO make php-fpm support this
+			$php->getInterface()->createIniFile($phpconfig);
 		}
 	}
 }

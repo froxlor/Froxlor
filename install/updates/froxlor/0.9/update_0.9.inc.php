@@ -937,7 +937,7 @@ if(isFroxlorVersion('0.9.11'))
 
 	$update_fcgid_ownvhost = isset($_POST['update_fcgid_ownvhost']) ? (int)$_POST['update_fcgid_ownvhost'] : '0';
 	$update_fcgid_httpuser = isset($_POST['update_fcgid_httpuser']) ? $_POST['update_fcgid_httpuser'] : 'froxlorlocal';
-	$update_fcgid_httpgroup = isset($_POST['update_fcgid_ownvhost']) ? $_POST['update_fcgid_ownvhost'] : 'froxlorlocal';
+	$update_fcgid_httpgroup = isset($_POST['update_fcgid_httpgroup']) ? $_POST['update_fcgid_httpgroup'] : 'froxlorlocal';
 
 	if($update_fcgid_httpuser == '') {
 		$update_fcgid_httpuser = 'froxlorlocal';
@@ -1305,7 +1305,7 @@ if(isFroxlorVersion('0.9.15'))
 		$update_phpfpm_reload = '/etc/init.d/php-fpm restart';
 	}
 	
-	showUpdateStep("Adding new settings");
+	showUpdateStep("Adding new settings for PHP-FPM #1");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'enabled', '".(int)$update_phpfpm_enabled."');");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'configdir', '".$db->escape($update_phpfpm_configdir)."');");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'reload', '".$db->escape($update_phpfpm_reload)."');");
@@ -1320,4 +1320,28 @@ if(isFroxlorVersion('0.9.15'))
 	lastStepStatus(0);
 
 	updateToVersion('0.9.16-svn1');
+}
+
+if(isFroxlorVersion('0.9.16-svn1'))
+{
+	showUpdateStep("Updating from 0.9.16-svn1 to 0.9.16-svn2", false);
+
+	$update_phpfpm_enabled_ownvhost = isset($_POST['update_phpfpm_enabled_ownvhost']) ? (int)$_POST['update_phpfpm_enabled_ownvhost'] : '0';
+	$update_phpfpm_httpuser = isset($_POST['update_phpfpm_httpuser']) ? $_POST['update_phpfpm_httpuser'] : 'froxlorlocal';
+	$update_phpfpm_httpgroup = isset($_POST['update_phpfpm_httpgroup']) ? $_POST['update_phpfpm_httpgroup'] : 'froxlorlocal';
+
+	if($update_phpfpm_httpuser == '') {
+		$update_phpfpm_httpuser = 'froxlorlocal';
+	}
+	if($update_phpfpm_httpgroup == '') {
+		$update_phpfpm_httpgroup = 'froxlorlocal';
+	}
+
+	showUpdateStep("Adding new settings for PHP-FPM #2");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'enabled_ownvhost', '".(int)$update_phpfpm_enabled_ownvhost."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'vhost_httpuser', '".$db->escape($update_phpfpm_httpuser)."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'vhost_httpgroup', '".$db->escape($update_phpfpm_httpgroup)."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.16-svn2');
 }
