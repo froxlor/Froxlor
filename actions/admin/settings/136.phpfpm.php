@@ -31,7 +31,7 @@ return array(
 					'overview_option' => true
 					),
 				'system_phpfpm_enabled_ownvhost' => array(
-					'label' => $lng['serversettings']['phpfpm'],
+					'label' => $lng['phpfpm']['ownvhost'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'enabled_ownvhost',
 					'type' => 'bool',
@@ -39,7 +39,7 @@ return array(
 					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_httpuser' => array(
-					'label' => $lng['admin']['mod_fcgid_user'],
+					'label' => $lng['phpfpm']['vhost_httpuser'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_httpuser',
 					'type' => 'string',
@@ -47,7 +47,7 @@ return array(
 					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_httpgroup' => array(
-					'label' => $lng['admin']['mod_fcgid_group'],
+					'label' => $lng['phpfpm']['vhost_httpgroup'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_httpgroup',
 					'type' => 'string',
