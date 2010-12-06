@@ -68,12 +68,28 @@ class phpinterface_fpm
 			$fpm_config = ';PHP-FPM configuration for "'.$this->_domain['domain'].'" created on ' . date("Y.m.d H:i:s") . "\n\n";
 			$fpm_config.= '['.$this->_domain['domain'].']'."\n";
 			$fpm_config.= 'listen = '.$this->getSocketFile()."\n";
-			$fpm_config.= 'listen.owner = '.$this->_domain['loginname']."\n";
-			$fpm_config.= 'listen.group = '.$this->_domain['loginname']."\n";
+			if($this->_domain['loginname'] == 'froxlor.panel')
+			{
+				$fpm_config.= 'listen.owner = '.$this->_domain['guid']."\n";
+				$fpm_config.= 'listen.group = '.$this->_domain['guid']."\n";
+			}
+			else
+			{
+				$fpm_config.= 'listen.owner = '.$this->_domain['loginname']."\n";
+				$fpm_config.= 'listen.group = '.$this->_domain['loginname']."\n";
+			}
 			$fpm_config.= 'listen.mode = 0666'."\n\n";
 
-			$fpm_config.= 'user = '.$this->_domain['loginname']."\n";
-			$fpm_config.= 'group = '.$this->_domain['loginname']."\n\n";
+			if($this->_domain['loginname'] == 'froxlor.panel')
+			{
+				$fpm_config.= 'user = '.$this->_domain['guid']."\n";
+				$fpm_config.= 'group = '.$this->_domain['guid']."\n\n";
+			}
+			else
+			{
+				$fpm_config.= 'user = '.$this->_domain['loginname']."\n";
+				$fpm_config.= 'group = '.$this->_domain['loginname']."\n\n";
+			}
 
 			$fpm_config.= 'pm = '.$fpm_pm."\n";
 			$fpm_config.= 'pm.max_children = '.$fpm_children."\n";
