@@ -770,10 +770,10 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 			touch "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
 			cp "${ROOT}/usr/share/${PN}/php-fcgi-starter" "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
 			chmod 0750 "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
-			chattr +i "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
 			touch "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php.ini"
 			cp "${ROOT}/usr/share/${PN}/php.ini" "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php.ini"
 			chown froxlor:froxlor -R "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script" || die "Unable to fix owner for php-fcgi-script folder"
+			chattr +i "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
 		fi
 
 		if useq ssl ; then
@@ -1052,7 +1052,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		echo -e "\n${MASTER_DOVECOT}" >> "${ROOT}/etc/postfix/master.cf"
 	fi
 	if useq mailquota ; then
-		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_mysql-virtual_mailbox_limit_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_postfix_mysql-virtual_mailbox_limit_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
@@ -1121,8 +1121,8 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	# create postfix aliases.db, #412
 	einfo "Creating aliases.db for postfix ..."
 	rm -f "${ROOT}/etc/mail/aliases"
-	insinto "${ROOT}/etc/mail"
-	newins "${ROOT}/usr/share/${PN}/aliases" aliases
+	# do not use insinto/newins. mailbase does contain that file so it will nether work nor fail in pkg_config :( #512
+	cp "${ROOT}/usr/share/${PN}/aliases" "${ROOT}/etc/mail"
 	sed -e "s|<ADMIN_MAIL>|root@${servername}|g" -i "${ROOT}/etc/mail/aliases"
 	/usr/bin/newaliases
 
