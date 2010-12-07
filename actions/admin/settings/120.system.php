@@ -29,6 +29,7 @@ return array(
 					'type' => 'string',
 					'default' => '/var/customers/webs/',
 					'save_method' => 'storeSettingField',
+					'plausibility_check_method' => 'checkPathConflicts'
 					),
 				'system_ipaddress' => array(
 					'label' => $lng['serversettings']['ipaddress'],
@@ -54,6 +55,22 @@ return array(
 					'label' => $lng['serversettings']['hostname'],
 					'settinggroup' => 'system',
 					'varname' => 'hostname',
+					'type' => 'string',
+					'default' => '',
+					'save_method' => 'storeSettingHostname',
+					),
+				'system_froxlordirectlyviahostname' => array(
+					'label' => $lng['serversettings']['froxlordirectlyviahostname'],
+					'settinggroup' => 'system',
+					'varname' => 'froxlordirectlyviahostname',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
+				'system_stdsubdomain' => array(
+					'label' => $lng['serversettings']['stdsubdomainhost'],
+					'settinggroup' => 'system',
+					'varname' => 'stdsubdomain',
 					'type' => 'string',
 					'default' => '',
 					'save_method' => 'storeSettingHostname',

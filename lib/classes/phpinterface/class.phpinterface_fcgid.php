@@ -215,7 +215,7 @@ class phpinterface_fcgid
 	{
 		$configdir = makeCorrectDir($this->_settings['system']['mod_fcgid_configdir'] . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
 
-		if(!is_dir($configdir))
+		if(!is_dir($configdir) && $createifnotexists)
 		{
 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
 			safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($configdir));
@@ -235,7 +235,7 @@ class phpinterface_fcgid
 	{
 		$tmpdir = makeCorrectDir($this->_settings['system']['mod_fcgid_tmpdir'] . '/' . $this->_domain['loginname'] . '/');
 
-		if(!is_dir($tmpdir))
+		if(!is_dir($tmpdir) && $createifnotexists)
 		{
 			safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
 			safe_exec('chown -R ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($tmpdir));

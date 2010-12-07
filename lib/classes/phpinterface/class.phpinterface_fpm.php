@@ -139,7 +139,7 @@ class phpinterface_fpm
 		$configdir = makeCorrectDir($this->_settings['phpfpm']['configdir']);
 		$config = makeCorrectFile($configdir.'/'.$this->_domain['domain'].'.conf');
 
-		if(!is_dir($configdir))
+		if(!is_dir($configdir) && $createifnotexists)
 		{
 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
 		}
@@ -150,14 +150,16 @@ class phpinterface_fpm
 	/**
 	 * return path of fpm-socket file
 	 * 
+	 * @param boolean $createifnotexists create the directory if it does not exist
+	 * 
 	 * @return string the full path to the socket
 	 */
-	public function getSocketFile()
+	public function getSocketFile($createifnotexists = true)
 	{
 		$socketdir = makeCorrectDir('/var/run/'.$this->_settings['system']['webserver'].'/');
 		$socket = makeCorrectFile($socketdir.'/'.$this->_domain['loginname'].'-'.$this->_domain['domain'].'-php-fpm.socket');
 
-		if(!is_dir($socketdir))
+		if(!is_dir($socketdir) && $createifnotexists)
 		{
 			safe_exec('mkdir -p '.$socketdir);
 			safe_exec('chown -R '.$this->_settings['system']['httpuser'].':'.$this->_settings['system']['httpgroup'].' '.$socketdir);
