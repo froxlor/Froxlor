@@ -524,7 +524,7 @@ class nginx
 		$query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `customerid`='" . $domain['customerid'] . "'";
 		$result = $this->db->query($query);
 
-		$result = array();
+		$returnval = array();
 		$x = 0;
 		while($row_htpasswds = $this->db->fetch_array($result))
 		{
@@ -544,13 +544,13 @@ class nginx
 
 				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
 
-				$result[$x]['path'] = $path;
-				$result[$x]['root'] = makeCorrectDir($domain['documentroot']);
-				$result[$x]['usrf'] = $htpasswd_filename;
+				$returnval[$x]['path'] = $path;
+				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
+				$returnval[$x]['usrf'] = $htpasswd_filename;
 				$x++;
 			}
 		}
-		return $result;
+		return $returnval;
 	}
 
 	protected function composePhpOptions($domain)
