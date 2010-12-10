@@ -114,8 +114,8 @@ class phpinterface_fpm
 			{
 				$fpm_config.= 'php_admin_value[open_basedir] = ' . $this->_settings['system']['documentroot_prefix'] . $this->_domain['loginname'] . '/:' . $this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/:' . $this->_settings['phpfpm']['peardir'] . "\n";
 			}
-			$fpm_config.= 'php_admin_value[session.save_path] = ' . $this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/' . "\n";
-			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . $this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/' . "\n\n";
+			$fpm_config.= 'php_admin_value[session.save_path] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
+			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n\n";
 
 			fwrite($fh, $fpm_config, strlen($fpm_config));
 			fclose($fh);
