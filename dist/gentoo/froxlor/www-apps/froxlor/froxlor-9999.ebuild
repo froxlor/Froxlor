@@ -120,7 +120,7 @@ pkg_setup() {
 src_prepare() {
 	epatch_user
 	# Delete any mention of inserttask('4') if no Bind is used
-	if ! useq bind ; then
+	if ! use bind ; then
 		find "${S}/" -type f -exec sed -e "s|inserttask('4');||g" -i {} \;
 	fi
 }
@@ -128,37 +128,37 @@ src_prepare() {
 src_install() {
 	# set default language
 	local MYLANG=""
-	if useq linguas_bg ; then
+	if use linguas_bg ; then
 		MYLANG="Bulgarian"
-	elif useq linguas_ca ; then
+	elif use linguas_ca ; then
 		MYLANG="Catalan"
-	elif useq linguas_cs ; then
+	elif use linguas_cs ; then
 		MYLANG="Czech"
-	elif useq linguas_de ; then
+	elif use linguas_de ; then
 		MYLANG="Deutsch"
-	elif useq linguas_da ; then
+	elif use linguas_da ; then
 		MYLANG="Danish"
-	elif useq linguas_es ; then
+	elif use linguas_es ; then
 		MYLANG="Espa&ntilde;ol"
-	elif useq linguas_fr ; then
+	elif use linguas_fr ; then
 		MYLANG="Fran&ccedil;ais"
-	elif useq linguas_hu ; then
+	elif use linguas_hu ; then
 		MYLANG="Hungarian"
-	elif useq linguas_it ; then
+	elif use linguas_it ; then
 		MYLANG="Italian"
-	elif useq linguas_nl ; then
+	elif use linguas_nl ; then
 		MYLANG="Dutch"
-	elif useq linguas_pl ; then
+	elif use linguas_pl ; then
 		MYLANG="Polski"
-	elif useq linguas_pt ; then
+	elif use linguas_pt ; then
 		MYLANG="Portugu&ecirc;s"
-	elif useq linguas_ru ; then
+	elif use linguas_ru ; then
 		MYLANG="Russian"
-	elif useq linguas_se ; then
+	elif use linguas_se ; then
 		MYLANG="Swedish"
-	elif useq linguas_sl ; then
+	elif use linguas_sl ; then
 		MYLANG="Slovak"
-	elif useq linguas_zh_CN ; then
+	elif use linguas_zh_CN ; then
 		MYLANG="Chinese"
 	fi
 
@@ -175,7 +175,7 @@ src_install() {
 	sed -e "s|'vmail_gid', '2000'|'vmail_gid', '9997'|g" -i "${S}/install/froxlor.sql" || die "Unable to change gid for user vmail"
 
 	# set correct webserver reload
-	if useq lighttpd; then
+	if use lighttpd; then
 		einfo "Switching settings to fit 'lighttpd'"
 		sed -e "s|/etc/init.d/apache reload|/etc/init.d/lighttpd restart|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver restart-command"
 		sed -e "s|'webserver', 'apache2'|'webserver', 'lighttpd'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver version"
@@ -194,7 +194,7 @@ src_install() {
 		sed -e "s|'httpgroup', 'www-data'|'httpgroup', 'apache'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver group"
 	fi
 
-	if useq fcgid && ! useq lighttpd ; then
+	if use fcgid && ! use lighttpd ; then
 		einfo "Switching 'fcgid' to 'On'"
 		sed -e "s|'mod_fcgid', '0'|'mod_fcgid', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set fcgid to 'On'"
 
@@ -208,13 +208,13 @@ src_install() {
 	fi
 
 	# If Bind will not used, change the reload path for it
-	if ! useq bind ; then
+	if ! use bind ; then
 		einfo "Switching 'bind' to 'Off'"
 		sed -e 's|/etc/init.d/named reload|/bin/true|g' -i "${S}/install/froxlor.sql" || die "Unable to change reload path for Bind"
 	fi
 
 	# default value is logging_enabled='1'
-	if ! useq log ; then
+	if ! use log ; then
 		einfo "Switching 'log' to 'Off'"
 		sed -e "s|'logger', 'enabled', '1'|'logger', 'enabled', '0'|g" -i "${S}/install/froxlor.sql" || die "Unable to set logging to 'Off'"
 		# fix menu
@@ -222,19 +222,19 @@ src_install() {
 	fi
 
 	# default value is tickets_enabled='1'
-	if ! useq tickets ; then
+	if ! use tickets ; then
 		einfo "Switching 'tickets' to 'Off'"
 		sed -e "s|'ticket', 'enabled', '1'|'ticket', 'enabled', '0'|g" -i "${S}/install/froxlor.sql" || die "Unable to set ticketsystem to 'Off'"
 	fi
 
 	# default value is mailquota='0'
-	if useq mailquota ; then
+	if use mailquota ; then
 		einfo "Switching 'mailquota' to 'On'"
 		sed -e "s|'mail_quota_enabled', '0'|'mail_quota_enabled', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set mailquota to 'On'"
 	fi
 
 	# default value is autoresponder='0'
-	if useq autoresponder ; then
+	if use autoresponder ; then
 		einfo "Switching 'autoresponder' to 'On'"
 		sed -e "s|'autoresponder_active', '0'|'autoresponder_active', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set autoresponder to 'On'"
 		# fix menu
@@ -242,7 +242,7 @@ src_install() {
 	fi
 
 	# default value is dkim_enabled='0'
-	if useq domainkey && useq bind ; then
+	if use domainkey && use bind ; then
 		einfo "Switching 'domainkey' to 'On'"
 		sed -e "s|'use_dkim', '0'|'use_dkim', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set domainkey to 'On'"
 
@@ -251,7 +251,7 @@ src_install() {
 	fi
 
 	# default value is aps_enabled='0'
-	if useq aps ; then
+	if use aps ; then
 		einfo "Switching 'APS' to 'On'"
 		sed -e "s|'aps_active', '0'|'aps_active', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set aps to 'On'"
 		# fix menu
@@ -267,18 +267,18 @@ src_install() {
 	fi
 
 	# default value is ssl_enabled='1'
-	if ! useq ssl ; then
+	if ! use ssl ; then
 		einfo "Switching 'SSL' to 'Off'"
 		sed -e "s|'use_ssl','1'|'use_ssl','0'|g" -i "${S}/install/froxlor.sql" || die "Unable to set ssl to 'Off'"
 	fi
 
-	if useq awstats ; then
+	if use awstats ; then
 		einfo "Switching from 'Webalizer' to 'AWStats'"
 		sed -e "s|'webalizer_quiet', '2'|'webalizer_quiet', '0'|g" -i "${S}/install/froxlor.sql"
 		sed -e "s|'awstats_enabled', '0'|'awstats_enabled', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to enable AWStats"
 	fi
 
-	if useq pureftpd ; then
+	if use pureftpd ; then
 		einfo "Switching from 'ProFTPd' to 'Pure-FTPd'"
 		sed -e "s|'ftpserver', 'proftpd'|'ftpserver', 'pureftpd'|g" -i "${S}/install/froxlor.sql"
 	fi
@@ -290,13 +290,13 @@ src_install() {
 
 	# Fix the permissions for the Froxlor files
 	einfo "Fixing permission of Froxlor files"
-	if useq lighttpd ; then
+	if use lighttpd ; then
 		fowners -R froxlor:lighttpd ${FROXLOR_DOCROOT}/froxlor
 	else
 		fowners -R froxlor:apache ${FROXLOR_DOCROOT}/froxlor
 	fi
-	if useq fcgid ; then
-		if ! useq lighttpd ; then
+	if use fcgid ; then
+		if ! use lighttpd ; then
 			fowners -R froxlor:froxlor ${FROXLOR_DOCROOT}/froxlor
 		else
 			einfo "lighttpd overwrites fcgid USE-flag!"
@@ -304,7 +304,7 @@ src_install() {
 		fi
 		fperms 0750 ${FROXLOR_DOCROOT}/froxlor
 	else
-		if useq lighttpd ; then
+		if use lighttpd ; then
 			fowners -R froxlor:lighttpd ${FROXLOR_DOCROOT}/froxlor/{temp,packages}
 		else
 			fowners -R froxlor:apache ${FROXLOR_DOCROOT}/froxlor/{temp,packages}
@@ -631,14 +631,14 @@ EOF
 \$sql['root_password']='${mysqlrootpw}';
 ?>" > "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
 
-	if ! useq fcgid ; then
-		if ! useq lighttpd ; then
+	if ! use fcgid ; then
+		if ! use lighttpd ; then
 			chown froxlor:apache "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
 		else
 			chown froxlor:lighttpd "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
 		fi
 	else
-		if ! useq lighttpd ; then
+		if ! use lighttpd ; then
 			chown froxlor:froxlor "${ROOT}${FROXLOR_DOCROOT}/froxlor/lib/userdata.inc.php"
 		else
 			# this stays as lighty doesn't use fcgid
@@ -646,7 +646,7 @@ EOF
 		fi
 	fi
 
-	if useq ssl ; then
+	if use ssl ; then
 		einfo "Creating needed SSL certificates ..."
 		einfo "Please enter the correct input when it's requested."
 		ewarn
@@ -714,7 +714,7 @@ EOF
 	fi
 
 	einfo "Writing Gentoo-Froxlor vhost configuration ..."
-	if useq lighttpd ; then
+	if use lighttpd ; then
 		rm -f "${ROOT}/etc/lighttpd/95_${servername}.conf"
 		touch "${ROOT}/etc/lighttpd/95_${servername}.conf"
 		chown root:0 "${ROOT}/etc/lighttpd/95_${servername}.conf"
@@ -726,7 +726,7 @@ EOF
 		chmod 0600 "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
 	fi
 
-	if useq lighttpd ; then
+	if use lighttpd ; then
 		einfo "Configuring lighttpd"
 		rm -f "${ROOT}/etc/lighttpd/lighttpd.conf"
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/lighttpd/etc_lighttpd.conf" "${ROOT}/etc/lighttpd/lighttpd.conf"
@@ -742,7 +742,7 @@ EOF
 	server.document-root = var.basedir + \"/froxlor\"
 	server.name = \"${servername}\"" > "${ROOT}/etc/lighttpd/95_${servername}.conf"
 
-		if useq ssl ; then
+		if use ssl ; then
 			echo -e "
 	\$HTTP[\"scheme\"] == \"http\" {
 		url.redirect = ( \"^/(.*)\" => \"https://${servername}/$1\" )
@@ -752,7 +752,7 @@ EOF
 		echo -e "
 }" >> "${ROOT}/etc/lighttpd/95_${servername}.conf"
 
-		if useq ssl ; then
+		if use ssl ; then
 		    echo -e "\n\$SERVER[\"socket\"] == \"${serverip}:443\" {
 ssl.engine = \"enable\"
 ssl.pemfile = \"${ROOT}etc/ssl/server/${servername}.pem\"
@@ -762,7 +762,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		fi
 	else
 		einfo "Configuring apache2"
-		if useq fcgid ; then
+		if use fcgid ; then
 			# create php-starter file
 			mkdir -p "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script"
 			mkdir -p "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/tmp"
@@ -776,7 +776,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 			chattr +i "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
 		fi
 
-		if useq ssl ; then
+		if use ssl ; then
 			echo "# Gentoo-Froxlor SSL-enabled VirtualHost
 <IfDefine SSL>
 		<IfModule mod_ssl.c>
@@ -804,7 +804,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 					\"%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\\"%r\\\" %b\"
 				</IfModule>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
 
-			if useq fcgid ; then
+			if use fcgid ; then
 				echo "SuexecUserGroup \"froxlor\" \"froxlor\"
 	<Directory \"${FROXLOR_DOCROOT}/froxlor\">
 		AddHandler fcgid-script .php
@@ -836,7 +836,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		DocumentRoot \"${FROXLOR_DOCROOT}/froxlor\"
 		ServerName ${servername}" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
 
-			if useq fcgid ; then
+			if use fcgid ; then
 				echo "SuexecUserGroup \"froxlor\" \"froxlor\"
 	<Directory \"${FROXLOR_DOCROOT}/froxlor\">
 		AddHandler fcgid-script .php
@@ -855,17 +855,17 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		fi
 	fi
 
-	if ! useq lighttpd ; then
+	if ! use lighttpd ; then
 		einfo "Fix general Apache configuration to work with Gentoo-Froxlor ..."
 		sed -e "s|^\#ServerName localhost.*|ServerName ${servername}|g" -i "${ROOT}/etc/apache2/httpd.conf" || ewarn "Please make sure that the ServerName directive in ${ROOT}/etc/apache${USE_APACHE2}/httpd.conf is set to a valid value!"
 		sed -e "s|^ServerAdmin root\@localhost.*|ServerAdmin root\@${servername}|g" -i "${ROOT}/etc/apache2/httpd.conf" || ewarn "Please make sure that the ServerAdmin directive in ${ROOT}/etc/apache${USE_APACHE2}/httpd.conf is set to a valid value!"
 		sed -e "s|\*:80|${serverip}:80|g" -i "${ROOT}/etc/apache2/vhosts.d/00_default_vhost.conf" || ewarn "Please make sure the NameVirtualHost and VirtualHost directives in ${ROOT}/etc/apache${USE_APACHE2}/vhosts.d/00_default_vhost.conf are set to the Gentoo-Froxlor IP and Port 80!"
 	fi
 
-	if ! useq lighttpd ; then
+	if ! use lighttpd ; then
 		local DFCGID=""
 
-		if useq fcgid ; then
+		if use fcgid ; then
 			DFCGID="-D FCGID "
 		else
 			DFCGID=""
@@ -879,7 +879,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	fi
 
 	# NSS-MySQL preparations
-	if useq fcgid ; then
+	if use fcgid ; then
 		einfo "Modifying nsswitch.conf to use MySQL ..."
 		sed -e "s|compat|compat mysql|g" -i "${ROOT}/etc/nsswitch.conf"
 		rm -f "${ROOT}/etc/libnss-mysql.cfg"
@@ -896,7 +896,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/libnss-mysql-root.cfg"
 	fi
 
-	if ! useq pureftpd ; then
+	if ! use pureftpd ; then
 		einfo "Configuring ProFTPd ..."
 		rm -f "${ROOT}/etc/proftpd/proftpd.conf"
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/proftpd/etc_proftpd_proftpd.conf" "${ROOT}/etc/proftpd/proftpd.conf"
@@ -905,7 +905,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 		sed -e "s|<SQL_UNPRIVILEGED_USER>|${mysqlunprivuser}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 		sed -e "s|<SQL_UNPRIVILEGED_PASSWORD>|${mysqlunprivpw}|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
-		if useq ssl ; then
+		if use ssl ; then
 			sed -e "s|#<IfModule mod_tls.c>|<IfModule mod_tls.c>|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 			sed -e "s|#TLSEngine|TLSEngine|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 			sed -e "s|#TLSLog|TLSLog|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
@@ -918,7 +918,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 			sed -e "s|#TLSRequired|TLSRequired|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 			sed -e "s|#</IfModule>|</IfModule>|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 		fi
-		if ! useq ftpquota ; then
+		if ! use ftpquota ; then
 			sed -e "s|QuotaEngine|#QuotaEngine|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 			sed -e "s|QuotaShowQuotas|#QuotaShowQuotas|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 			sed -e "s|QuotaDisplayUnits|#QuotaDisplayUnits|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
@@ -926,6 +926,9 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 			sed -e "s|QuotaLimitTable|#QuotaLimitTable|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 			sed -e "s|QuotaTallyTable|#QuotaTallyTable|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 			sed -e "s|SQLNamedQuery|#SQLNamedQuery|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
+		fi
+		if ! has_version "net-ftp/proftpd[ipv6]"; then
+			sed -e "s|UseIPv6|#UseIPv6|g" -i "${ROOT}/etc/proftpd/proftpd.conf"
 		fi
 		chown root:0 "${ROOT}/etc/proftpd/proftpd.conf"
 		chmod 0600 "${ROOT}/etc/proftpd/proftpd.conf"
@@ -948,7 +951,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	insinto "${ROOT}/etc/cron.d"
 	newins "${ROOT}/usr/share/${PN}/froxlor.cron" froxlor
 
-	if ! useq dovecot ; then
+	if ! use dovecot ; then
 		einfo "Configuring Courier-IMAP ..."
 		rm -f "${ROOT}/etc/courier/authlib/authdaemonrc"
 		rm -f "${ROOT}/etc/courier/authlib/authmysqlrc"
@@ -971,7 +974,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_pop3d" "${ROOT}/etc/courier-imap/pop3d"
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_imapd" "${ROOT}/etc/courier-imap/imapd"
 
-		if useq ssl ; then
+		if use ssl ; then
 			cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_pop3d-ssl" "${ROOT}/etc/courier-imap/pop3d-ssl"
 			cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/courier/etc_courier-imap_imapd-ssl" "${ROOT}/etc/courier-imap/imapd-ssl"
 
@@ -983,7 +986,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		chown root:0 "${ROOT}/etc/courier/authlib/authmysqlrc"
 		chown root:0 "${ROOT}/etc/courier-imap/pop3d"
 		chown root:0 "${ROOT}/etc/courier-imap/imapd"
-		if useq ssl ; then
+		if use ssl ; then
 			chown root:0 "${ROOT}/etc/courier-imap/pop3d-ssl"
 			chown root:0 "${ROOT}/etc/courier-imap/imapd-ssl"
 		fi
@@ -991,7 +994,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		chmod 0600 "${ROOT}/etc/courier/authlib/authmysqlrc"
 		chmod 0600 "${ROOT}/etc/courier-imap/pop3d"
 		chmod 0600 "${ROOT}/etc/courier-imap/imapd"
-		if useq ssl ; then
+		if use ssl ; then
 			chmod 0600 "${ROOT}/etc/courier-imap/pop3d-ssl"
 			chmod 0600 "${ROOT}/etc/courier-imap/imapd-ssl"
 		fi
@@ -1003,7 +1006,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/dovecot/etc_dovecot_dovecot.conf" "${ROOT}/etc/dovecot/dovecot.conf"
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/dovecot/etc_dovecot_dovecot-sql.conf" "${ROOT}/etc/dovecot/dovecot-sql.conf"
 
-		if useq ssl ; then
+		if use ssl ; then
 			sed -e "s|<SSLPROTOCOLS>|imaps pop3s|g" -i "${ROOT}/etc/dovecot/dovecot.conf"
 			sed -e "s|#ssl_cert_file|ssl_cert_file|g" -i "${ROOT}/etc/dovecot/dovecot.conf"
 			sed -e "s|#ssl_key_file|ssl_key_file|g" -i "${ROOT}/etc/dovecot/dovecot.conf"
@@ -1027,7 +1030,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 
 	einfo "Configuring Postfix ..."
 	local POSTFIX_PATH=""
-	if useq dovecot ; then
+	if use dovecot ; then
 		POSTFIX_PATH="postfix_dovecot"
 	else
 		POSTFIX_PATH="postfix_courier"
@@ -1039,7 +1042,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	sed -e "s|<VIRTUAL_MAILBOX_BASE>|/var/customers/mail|g" -i "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<VIRTUAL_UID_MAPS>|9997|g" -i "${ROOT}/etc/postfix/main.cf"
 	sed -e "s|<VIRTUAL_GID_MAPS>|9997|g" -i "${ROOT}/etc/postfix/main.cf"
-	if useq dovecot ; then
+	if use dovecot ; then
 		sed -e "s|#mailbox_command = /usr/libexec/dovecot/deliver|mailbox_command = /usr/libexec/dovecot/deliver|g" -i "${ROOT}/etc/postfix/main.cf"
 		sed -e "s|#smtpd_sasl_type = dovecot|smtpd_sasl_type = dovecot|g" -i "${ROOT}/etc/postfix/main.cf"
 		sed -e "s|#smtpd_sasl_path = private/auth|smtpd_sasl_path = private/auth|g" -i "${ROOT}/etc/postfix/main.cf"
@@ -1051,7 +1054,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		MASTER_DOVECOT=`cat ${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_postfix_master.cf`
 		echo -e "\n${MASTER_DOVECOT}" >> "${ROOT}/etc/postfix/master.cf"
 	fi
-	if useq mailquota ; then
+	if use mailquota ; then
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_postfix_mysql-virtual_mailbox_limit_maps.cf" "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		sed -e "s|<SQL_HOST>|${mysqlaccesshost}|g" -i "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
@@ -1069,7 +1072,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		chown root:postfix "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 		chmod 0640 "${ROOT}/etc/postfix/mysql-virtual_mailbox_limit_maps.cf"
 	fi
-	if useq ssl ; then
+	if use ssl ; then
 		sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/postfix/main.cf"
 		sed -e "s|#smtp_use_tls|smtp_use_tls|g" -i "${ROOT}/etc/postfix/main.cf"
 		sed -e "s|#smtpd_tls_cert_file|smtpd_tls_cert_file|g" -i "${ROOT}/etc/postfix/main.cf"
@@ -1103,7 +1106,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	chmod 0640 "${ROOT}/etc/postfix/mysql-virtual_mailbox_domains.cf"
 	chmod 0640 "${ROOT}/etc/postfix/mysql-virtual_mailbox_maps.cf"
 
-	if ! useq dovecot ; then
+	if ! use dovecot ; then
 		rm -f "${ROOT}/etc/sasl2/smtpd.conf"
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/${POSTFIX_PATH}/etc_sasl2_smtpd.conf" "${ROOT}/etc/sasl2/smtpd.conf"
 		sed -e "s|<SQL_DB>|${mysqldbname}|g" -i "${ROOT}/etc/sasl2/smtpd.conf"
@@ -1114,7 +1117,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		chmod 0600 "${ROOT}/etc/sasl2/smtpd.conf"
 	fi
 
-	if useq domainkey && useq bind ; then
+	if use domainkey && use bind ; then
 		cat "${ROOT}/usr/share/${PN}/domainkey.conf" >> "${ROOT}/etc/postfix/main.cf"
 	fi
 
@@ -1127,7 +1130,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	/usr/bin/newaliases
 
 	# Automatical Bind configuration, if Bind is installed
-	if useq bind ; then
+	if use bind ; then
 		einfo "Configuring Bind .."
 		rm -f "${ROOT}/etc/bind/default.zone"
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/bind/etc_bind_default.zone" "${ROOT}/etc/bind/default.zone"
@@ -1150,32 +1153,32 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	# Automatical service starting
 
 	sleep 2
-	if useq lighttpd ; then
+	if use lighttpd ; then
 		srv_add_restart lighttpd
 	else
 		srv_add_restart apache2
 	fi
 	# NB: this may fail if the user does not have vixie-cron installed
 	srv_add_restart vixie-cron
-	if useq bind ; then
+	if use bind ; then
 		srv_add_restart named
 	fi
 	srv_add_restart proftpd
-	if ! useq dovecot ; then
+	if ! use dovecot ; then
 		srv_add_restart courier-authlib
 		srv_add_restart courier-pop3d
 		srv_add_restart courier-imapd
-		if useq ssl ; then
+		if use ssl ; then
 			srv_add_restart courier-pop3d-ssl
 			srv_add_restart courier-imapd-ssl
 		fi
 	else
 		srv_add_restart dovecot
 	fi
-	if useq domainkey && useq bind ; then
+	if use domainkey && use bind ; then
 		srv_add_restart dkim-filter
 	fi
-	if useq fcgid ; then
+	if use fcgid ; then
 		srv_add_restart nscd
 	fi
 	srv_add_restart postfix
@@ -1183,7 +1186,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 	einfo "Configuration completed successfully!"
 	einfo
 	local URL=""
-	if useq ssl ; then
+	if use ssl ; then
 		URL="https://${servername}/index.php"
 	else
 		URL="http://${servername}/index.php"
