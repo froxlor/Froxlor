@@ -227,7 +227,7 @@ class apache
 				if($this->settings['system']['mod_fcgid_ownvhost'] == '1')
 				{
 					
-					$configdir = makeCorrectDir($this->settings['system']['mod_fcgid_configdir'] . '/'. $this->settings['system']['hostname'] . '/froxlor.panel/');
+					$configdir = makeCorrectDir($this->settings['system']['mod_fcgid_configdir'] . '/froxlor.panel/' . $this->settings['system']['hostname']);
 					if((int)$this->settings['system']['mod_fcgid_wrapper'] == 0)
 					{
 						$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
