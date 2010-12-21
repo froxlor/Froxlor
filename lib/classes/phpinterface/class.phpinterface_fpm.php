@@ -65,7 +65,7 @@ class phpinterface_fpm
 				$fpm_children = 1;
 			}
 
-			$fpm_config = ';PHP-FPM configuration for "'.$this->_domain['domain'].'" created on ' . date("Y.m.d H:i:s") . "\n\n";
+			$fpm_config = ';PHP-FPM configuration for "'.$this->_domain['domain'].'" created on ' . date("Y.m.d H:i:s") . "\n";
 			$fpm_config.= '['.$this->_domain['domain'].']'."\n";
 			$fpm_config.= 'listen = '.$this->getSocketFile()."\n";
 			if($this->_domain['loginname'] == 'froxlor.panel')
@@ -78,17 +78,17 @@ class phpinterface_fpm
 				$fpm_config.= 'listen.owner = '.$this->_domain['loginname']."\n";
 				$fpm_config.= 'listen.group = '.$this->_domain['loginname']."\n";
 			}
-			$fpm_config.= 'listen.mode = 0666'."\n\n";
+			$fpm_config.= 'listen.mode = 0666'."\n";
 
 			if($this->_domain['loginname'] == 'froxlor.panel')
 			{
 				$fpm_config.= 'user = '.$this->_domain['guid']."\n";
-				$fpm_config.= 'group = '.$this->_domain['guid']."\n\n";
+				$fpm_config.= 'group = '.$this->_domain['guid']."\n";
 			}
 			else
 			{
 				$fpm_config.= 'user = '.$this->_domain['loginname']."\n";
-				$fpm_config.= 'group = '.$this->_domain['loginname']."\n\n";
+				$fpm_config.= 'group = '.$this->_domain['loginname']."\n";
 			}
 
 			$fpm_config.= 'pm = '.$fpm_pm."\n";
@@ -98,24 +98,28 @@ class phpinterface_fpm
 				$fpm_config.= 'pm.min_spare_servers = '.$fpm_min_spare_servers."\n";
 				$fpm_config.= 'pm.max_spare_servers = '.$fpm_max_spare_servers."\n";
 			}
-			$fpm_config.= 'pm.max_requests = '.$fpm_requests."\n\n";
+			$fpm_config.= 'pm.max_requests = '.$fpm_requests."\n";
 
-			$fpm_config.= ';chroot = '.makeCorrectDir($this->_domain['documentroot'])."\n\n";
+			$fpm_config.= ';chroot = '.makeCorrectDir($this->_domain['documentroot'])."\n";
 
 			$tmpdir = makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/');
+			if(!is_dir($tmpdir))
+			{
+				safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
+			}
 			//$slowlog = makeCorrectFile($this->_settings['system']['logfiles_directory'] . $this->_domain['loginname'] . '/php-fpm_slow.log');
 
 			$fpm_config.= 'env[TMP] = '.$tmpdir."\n";
 			$fpm_config.= 'env[TMPDIR] = '.$tmpdir."\n";
-			$fpm_config.= 'env[TEMP] = '.$tmpdir."\n\n";
+			$fpm_config.= 'env[TEMP] = '.$tmpdir."\n";
 
-			$fpm_config.= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f '.$this->_domain['email']."\n\n";
+			$fpm_config.= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f '.$this->_domain['email']."\n";
 			if($this->_domain['loginname'] != 'froxlor.panel')
 			{
-				$fpm_config.= 'php_admin_value[open_basedir] = ' . $this->_settings['system']['documentroot_prefix'] . $this->_domain['loginname'] . '/:' . $this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/:' . $this->_settings['phpfpm']['peardir'] . "\n";
+				$fpm_config.= 'php_admin_value[open_basedir] = ' . makeCorrectDir($this->_settings['system']['documentroot_prefix'] . '/' . $this->_domain['loginname'] . '/') .':' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . ':' . $this->_settings['phpfpm']['peardir'] . "\n";
 			}
 			$fpm_config.= 'php_admin_value[session.save_path] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
-			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n\n";
+			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
 
 			fwrite($fh, $fpm_config, strlen($fpm_config));
 			fclose($fh);
