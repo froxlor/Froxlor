@@ -68,7 +68,7 @@ while($row = $db->fetch_array($result_tasks))
 			{
 				$awstatsclean['dir'] = dir($awstatsclean['path']);
 				while($awstatsclean['entry'] = $awstatsclean['dir']->read()) {
-					$awstatsclean['fullentry'] = $awstatsclean['path'].'/'.$awstatsclean['entry'];
+					$awstatsclean['fullentry'] = makeCorrectFile($awstatsclean['path'].'/'.$awstatsclean['entry']);
 					/**
 					 * dont do anything if the file does not exist
 					 */

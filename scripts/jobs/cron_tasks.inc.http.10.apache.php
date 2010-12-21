@@ -1125,6 +1125,11 @@ class apache
 				$this->wipeOutOldDiroptionConfigs();
 			}
 		}
+		else
+		{
+			// no more diroptions, but there might be some file-corpses which have to be removed
+			$this->wipeOutOldDiroptionConfigs();
+		}
 
 		// Write htpasswds
 
@@ -1159,6 +1164,11 @@ class apache
 				echo 'WARNING!!! ' . $this->settings['system']['apacheconf_htpasswddir'] . ' is not a directory. htpasswd directory protection is disabled!!!';
 				$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . $this->settings['system']['apacheconf_htpasswddir'] . ' is not a directory. htpasswd directory protection is disabled!!!');
 			}
+		}
+		else
+		{
+			// no more htpasswds, but there might be some file-corpses which have to be removed
+			$this->wipeOutOldHtpasswdConfigs();
 		}
 
 		// Write virtualhosts
