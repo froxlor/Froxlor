@@ -195,7 +195,7 @@ elseif($page == 'accounts')
 					$result = $db->query("SELECT `bytes_in_used` FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = '" . $userinfo['loginname'] . "'");
 					while($row = $db->fetch_array($result))
 					{
-						$db->query("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $db->escape($username) . "', 'user', '" . $db->escape($row[bytes_in_used]) . "', '0', '0', '0', '0', '0')");
+						$db->query("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $db->escape($username) . "', 'user', '" . $db->escape($row['bytes_in_used']) . "', '0', '0', '0', '0', '0')");
 					}
 					$db->query("UPDATE `" . TABLE_FTP_GROUPS . "` SET `members`=CONCAT_WS(',',`members`,'" . $db->escape($username) . "') WHERE `customerid`='" . $userinfo['customerid'] . "' AND `gid`='" . (int)$userinfo['guid'] . "'");
 					$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `ftps_used`=`ftps_used`+1, `ftp_lastaccountnumber`=`ftp_lastaccountnumber`+1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
