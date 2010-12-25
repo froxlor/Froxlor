@@ -212,6 +212,20 @@ function requirement_checks()
 	{
 		status_message('green', 'OK');
 	}
+	
+	status_message('begin', $lng['install']['phpxml']);
+	
+	if(!extension_loaded('xml'))
+	{
+		status_message('red', $lng['install']['notinstalled']);
+		$_die = true;
+	}
+	else
+	{
+		status_message('green', 'OK');
+	}
+
+
 
 	status_message('begin', $lng['install']['phpfilter']);
 

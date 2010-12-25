@@ -15,7 +15,7 @@ CREATE TABLE `ftp_groups` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `groupname` (`groupname`),
   KEY `customerid` (`customerid`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `ftp_groups`
@@ -48,7 +48,7 @@ CREATE TABLE `ftp_users` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `customerid` (`customerid`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `ftp_users`
@@ -80,7 +80,7 @@ CREATE TABLE `mail_users` (
   `imap` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `email` (`email`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `mail_users`
@@ -105,7 +105,7 @@ CREATE TABLE `mail_virtual` (
   `iscatchall` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `email` (`email`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `mail_virtual`
@@ -168,7 +168,7 @@ CREATE TABLE `panel_admins` (
   `email_autoresponder_used` int(5) NOT NULL default '0',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 
 # --------------------------------------------------------
@@ -234,7 +234,7 @@ CREATE TABLE `panel_customers` (
   `email_autoresponder_used` int(5) NOT NULL default '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 #
 # Dumping data for table `panel_customers`
 #
@@ -256,7 +256,7 @@ CREATE TABLE `panel_databases` (
   `apsdb` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_databases`
@@ -310,7 +310,7 @@ CREATE TABLE `panel_domains` (
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
   KEY `domain` (`domain`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_domains`
@@ -340,7 +340,7 @@ CREATE TABLE `panel_ipsandports` (
   `ssl_cert_chainfile` varchar(255) NOT NULL,
   `docroot` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_ipsandports`
@@ -366,7 +366,7 @@ CREATE TABLE `panel_htaccess` (
   `error401path` varchar(255) NOT NULL default '',
   `options_cgi` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_htaccess`
@@ -389,7 +389,7 @@ CREATE TABLE `panel_htpasswds` (
   `authname` varchar(255) NOT NULL default 'Restricted Area',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_htpasswds`
@@ -435,7 +435,7 @@ CREATE TABLE `panel_settings` (
   `varname` varchar(255) NOT NULL default '',
   `value` text NOT NULL,
   PRIMARY KEY  (`settingid`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 
 # --------------------------------------------------------
@@ -624,7 +624,7 @@ CREATE TABLE `panel_tasks` (
   `type` int(11) NOT NULL default '0',
   `data` text NOT NULL,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_tasks`
@@ -647,7 +647,7 @@ CREATE TABLE `panel_templates` (
   `value` longtext NOT NULL,
   PRIMARY KEY  (id),
   KEY adminid (adminid)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 #
 # Dumping data for table `panel_templates`
@@ -674,7 +674,7 @@ CREATE TABLE `panel_traffic` (
   `mail` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_traffic`
@@ -701,7 +701,7 @@ CREATE TABLE `panel_traffic_admins` (
   `mail` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `adminid` (`adminid`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_traffic_admins`
@@ -727,7 +727,7 @@ CREATE TABLE `panel_diskspace` (
   `mysql` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_diskspace`
@@ -752,7 +752,7 @@ CREATE TABLE `panel_diskspace_admins` (
   `mysql` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `adminid` (`adminid`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_diskspace_admins`
@@ -770,7 +770,7 @@ CREATE TABLE `panel_languages` (
   `language` varchar(30) NOT NULL default '',
   `file` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
 #
 # Dumping data for table `panel_languages`

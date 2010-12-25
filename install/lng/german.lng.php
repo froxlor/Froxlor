@@ -97,5 +97,5 @@ $lng['install']['froxlor_succ_checks'] = 'Alle Vorraussetzungen sind erf&uuml;ll
 $lng['install']['phpmagic_quotes_runtime'] = 'Pr&uuml;fe ob magic_quotes_runtime ausgeschalten ist';
 $lng['install']['active'] = 'nein';
 $lng['install']['phpmagic_quotes_runtime_description'] = 'Die PHP Einstellung "magic_quotes_runtime" muss deaktiviert sein ("Off"), um merkw&uuml;rdige Verhalten von Froxlor zu umgehen. Sie wurde deaktiviert (nur tempor&auml;r, bitte php.ini anpassen).';
-
+$lng['install']['phpxml'] = 'Teste, ob die PHP XML-Erweiterung installiert ist...';
 ?>

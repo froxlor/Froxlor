@@ -68,4 +68,5 @@ $lng['install']['httpgroup'] = 'Nom du la group du HTTP';
 
 $lng['install']['webserver'] = 'Version du serveur';
 
+$lng['install']['phpxml'] = 'Tester si PHP XML-extension est installée...';
 ?>
