@@ -51,7 +51,7 @@ if($settings['panel']['version'] == '1.2.2-cvs1')
   				`language` varchar(30)           NOT NULL default '',
   				`file`     varchar(255)          NOT NULL default '',
   			PRIMARY KEY  (`id`)
-			) TYPE=MyISAM
+			) ENGINE=MyISAM
 		");
 	$db->query("INSERT INTO `" . TABLE_PANEL_LANGUAGE . "` (`id`, `language`, `file`) VALUES (1, 'Deutsch', 'lng/german.lng.php');");
 	$db->query("INSERT INTO `" . TABLE_PANEL_LANGUAGE . "` (`id`, `language`, `file`) VALUES (2, 'English', 'lng/english.lng.php');");
@@ -88,7 +88,7 @@ if($settings['panel']['version'] == '1.2.2-cvs3')
 			  `id` int(11) unsigned NOT NULL auto_increment,
 			  `file` varchar(255) NOT NULL default '',
 			  PRIMARY KEY  (`id`)
-			) TYPE=MyISAM
+			) ENGINE=MyISAM
 		");
 	$db->query("INSERT INTO `" . TABLE_PANEL_CRONSCRIPT . "` (`id`, `file`) VALUES (1, 'cron_traffic.php');");
 	$db->query("INSERT INTO `" . TABLE_PANEL_CRONSCRIPT . "` (`id`, `file`) VALUES (2, 'cron_tasks.php');");
@@ -146,7 +146,7 @@ if($settings['panel']['version'] == '1.2.3-cvs4')
 			  PRIMARY KEY  (`id`),
 			  KEY `adminid` (`adminid`),
 			  UNIQUE `date` (`adminid` , `year` , `month` , `day`)
-			) TYPE=MyISAM
+			) ENGINE=MyISAM
 		");
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value`='1.2.3-cvs5' WHERE `settinggroup`='panel' AND `varname`='version'");
 	$settings['panel']['version'] = '1.2.3-cvs5';
@@ -267,7 +267,7 @@ if($settings['panel']['version'] == '1.2.6')
   			`value` longtext NOT NULL,
   			PRIMARY KEY  (`id`),
   			KEY `adminid` (`adminid`)
-			) TYPE=MyISAM
+			) ENGINE=MyISAM
 		');
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value`='1.2.6-cvs1' WHERE `settinggroup`='panel' AND `varname`='version'");
 	$settings['panel']['version'] = '1.2.6-cvs1';
@@ -458,7 +458,7 @@ if($settings['panel']['version'] == '1.2.12-svn1')
 			`port` int(5) NOT NULL default \'80\',
 			`default` int(1) NOT NULL default \'0\',
 			PRIMARY KEY  (`id`)
-			) TYPE=MyISAM');
+			) ENGINE=MyISAM');
 	$db->query('INSERT INTO `' . TABLE_PANEL_IPSANDPORTS . '` (`ip`, `port`, `default`) VALUES (\'' . $settings['system']['ipaddress'] . '\', \'80\', \'1\')');
 	$db->query('UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = \'1.2.12-svn2\' WHERE `settinggroup` = \'panel\' AND `varname` = \'version\'');
 	$settings['panel']['version'] = '1.2.12-svn2';

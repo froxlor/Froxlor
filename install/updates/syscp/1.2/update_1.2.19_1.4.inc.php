@@ -620,7 +620,7 @@ else
 		  `mysql` bigint(30) unsigned NOT NULL default '0',
 		  PRIMARY KEY  (`id`),
 		  KEY `customerid` (`customerid`)
-		) TYPE=MyISAM ;");
+		) ENGINE=MyISAM ;");
 		$db->query("CREATE TABLE `" . TABLE_PANEL_DISKSPACE_ADMINS . "` (
 		  `id` int(11) unsigned NOT NULL auto_increment,
 		  `adminid` int(11) unsigned NOT NULL default '0',
@@ -633,7 +633,7 @@ else
 		  `mysql` bigint(30) unsigned NOT NULL default '0',
 		  PRIMARY KEY  (`id`),
 		  KEY `adminid` (`adminid`)
-		) TYPE=MyISAM ;");
+		) ENGINE=MyISAM ;");
 		$db->query("INSERT INTO `" . TABLE_BILLING_SERVICE_CATEGORIES . "` (`id`, `category_name`, `category_order`, `category_classname`, `category_classfile`, `category_cachefield`, `category_caption`, `category_rowcaption_setup`, `category_rowcaption_interval`) VALUES (1, 'hosting', 10, 'hosting', 'lib/billing_class_hosting.php', 'invoice_fee_hosting', 'hosting_caption', 'hosting_rowcaption_setup', 'hosting_rowcaption_interval');");
 		$db->query("INSERT INTO `" . TABLE_BILLING_SERVICE_CATEGORIES . "` (`id`, `category_name`, `category_order`, `category_classname`, `category_classfile`, `category_cachefield`, `category_caption`, `category_rowcaption_setup`, `category_rowcaption_interval`) VALUES (2, 'domains', 20, 'domains', 'lib/billing_class_domains.php', 'invoice_fee_domains', 'domains_caption', 'domains_rowcaption_setup', 'domains_rowcaption_interval');");
 		$db->query("INSERT INTO `" . TABLE_BILLING_SERVICE_CATEGORIES . "` (`id`, `category_name`, `category_order`, `category_classname`, `category_classfile`, `category_cachefield`, `category_caption`, `category_rowcaption_setup`, `category_rowcaption_interval`) VALUES (3, 'traffic', 30, 'traffic', 'lib/billing_class_traffic.php', 'invoice_fee_traffic', 'traffic_caption', 'traffic_rowcaption_setup', 'traffic_rowcaption_interval');");
