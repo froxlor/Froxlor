@@ -71,7 +71,7 @@ define('PACKAGE_ENABLED', 2);
 
 // VERSION INFO
 
-$version = '0.9.16-svn2';
+$version = '0.9.16';
 $dbversion = '2';
 $branding = '';
 

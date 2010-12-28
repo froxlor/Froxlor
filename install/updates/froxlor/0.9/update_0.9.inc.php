@@ -1345,3 +1345,11 @@ if(isFroxlorVersion('0.9.16-svn1'))
 
 	updateToVersion('0.9.16-svn2');
 }
+
+if(isFroxlorVersion('0.9.16-svn2'))
+{
+        showUpdateStep("Updating from 0.9.16-svn2 to 0.9.16 final");
+        lastStepStatus(0);
+
+        updateToVersion('0.9.16');
+}
