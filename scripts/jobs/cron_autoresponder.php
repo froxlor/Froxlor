@@ -201,7 +201,7 @@ if($db->num_rows($result) > 0)
 				//error while parsing mail
 				if($to == '' || $from == '')
 				{
-					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "No valid headers found in mail to parse: " . $entry);
+					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "No valid headers found in mail to parse");
 					continue;
 				}
 

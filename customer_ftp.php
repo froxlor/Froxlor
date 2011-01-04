@@ -250,13 +250,24 @@ elseif($page == 'accounts')
 
 				if($settings['customer']['ftpatdomain'] == '1')
 				{
+					$domainlist = array();
 					$domains = '';
 
 					$result_domains = $db->query("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 
 					while($row_domain = $db->fetch_array($result_domains))
 					{
-						$domains.= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['domain']);
+						$domainlist[] =  $row_domain['domain'];
+					}
+
+					sort($domainlist);
+
+					if(isset($domainlist[0]) && $domainlist[0] != '')
+					{
+						foreach($domainlist as $dom)
+						{
+							$domains .= makeoption($idna_convert->decode($dom), $dom);
+						}
 					}
 				}
 
