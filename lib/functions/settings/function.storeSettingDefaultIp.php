@@ -37,8 +37,6 @@ function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue)
 		{
 			$db->query('UPDATE `' . TABLE_PANEL_DOMAINS . '` SET `ipandport`=\'' . (int)$newfieldvalue . '\' WHERE `id` IN (\'' . implode('\',\'', $ids) . '\') AND `ipandport` = \'' . $db->escape(getSetting('system', 'defaultip')) . '\'');
 		}
-
-		inserttask('1');
 	}
 	
 	return $returnvalue;

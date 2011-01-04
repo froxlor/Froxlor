@@ -61,7 +61,6 @@ function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue)
 	{
 		if(saveSetting($fielddata['settinggroup'], $fielddata['varname'], $newfieldvalue) != false)
 		{
-			inserttask('4');
 			return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
 		}
 		else

@@ -37,7 +37,6 @@ function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)
 		if(count($ids) > 0)
 		{
 			$db->query('UPDATE `' . TABLE_PANEL_DOMAINS . '` SET `domain` = REPLACE(`domain`, \'' . $db->escape(getSetting('system', 'hostname')) . '\', \'' . $db->escape($newfieldvalue) . '\') WHERE `id` IN (\'' . implode('\',\'', $ids) . '\')');
-			inserttask('1');
 		}
 	}
 	
