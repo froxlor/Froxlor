@@ -75,6 +75,10 @@ if(($page == 'settings' || $page == 'overview')
 			$only_enabledisable
 			)
 		) {
+			$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles due to changed setting");
+			inserttask('1');
+			inserttask('4');
+			inserttask('5');
 			standard_success('settingssaved', '', array('filename' => $filename, 'action' => $action, 'page' => $page));
 		}
 	}
