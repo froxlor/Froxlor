@@ -80,7 +80,7 @@ elseif($page == 'mysqls')
 	elseif($action == 'delete'
 	       && $id != 0)
 	{
-		$result = $db->query_first('SELECT `id`, `databasename`, `dbserver` FROM `' . TABLE_PANEL_DATABASES . '` WHERE `customerid`="' . (int)$userinfo['customerid'] . '" AND `id`="' . (int)$id . '"');
+		$result = $db->query_first('SELECT `id`, `databasename`, `description`, `dbserver` FROM `' . TABLE_PANEL_DATABASES . '` WHERE `customerid`="' . (int)$userinfo['customerid'] . '" AND `id`="' . (int)$id . '"');
 
 		if(isset($result['databasename'])
 		   && $result['databasename'] != '')
@@ -127,7 +127,7 @@ elseif($page == 'mysqls')
 			else
 			{
 				$dbnamedesc = $result['databasename'];
-				if($result['description'] != '') {
+				if(isset($result['description']) && $result['description'] != '') {
 					$dbnamedesc.= ' ('.$result['description'].')';
 				}
 				ask_yesno('mysql_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $dbnamedesc);
