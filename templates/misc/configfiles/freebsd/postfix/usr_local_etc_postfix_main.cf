@@ -17,8 +17,11 @@ smtpd_recipient_restrictions =
     reject_unauth_pipelining,
     reject_invalid_hostname,
     reject_rbl_client sbl-xbl.spamhaus.org,
+    reject_rbl_client ix.dnsbl.manitu.net,
 #   sqlgrey enable
 #   check_policy_service inet:127.0.0.1:2501,
+#   postgrey enable
+#   check_policy_service inet:127.0.0.1:10023,
 
 smtpd_client_restrictions = 
     permit_mynetworks,
@@ -35,8 +38,8 @@ smtpd_sasl_path = private/auth
 
 soft_bounce = yes
 
-# Maximum size of Message in bytes (50MB)
-message_size_limit = 52428800
+# Maximum size of Message in bytes (0 = unlimited)
+message_size_limit = 0
 
 smtp_use_tls = yes
 smtpd_use_tls = yes
@@ -45,7 +48,8 @@ smtpd_tls_auth_only = no
 smtp_tls_note_starttls_offer = yes
 smtpd_tls_key_file = /etc/ssl/<SERVERNAME>.key.unencrypted
 smtpd_tls_cert_file = /etc/ssl/<SERVERNAME>.crt
-smtpd_tls_CAfile = /etc/ssl/cacert.class3.crt  # Just an example for CACert.org
+# Just an example for CACert.org
+smtpd_tls_CAfile = /etc/ssl/cacert.class3.crt
 smtpd_tls_loglevel = 0
 smtpd_tls_received_header = yes
 smtpd_tls_session_cache_timeout = 3600s

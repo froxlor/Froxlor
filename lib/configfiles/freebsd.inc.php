@@ -28,10 +28,10 @@ return Array(
 							'cd /usr/ports/www/apache22',
 							'make config',
 							'make install',
-							'touch ' . $settings['system']['apacheconf_vhost'],
+							$configcommand['vhost'],
 							'chown root:0 ' . $settings['system']['apacheconf_vhost'],
 							'chmod 0600 ' . $settings['system']['apacheconf_vhost'],
-							'touch ' . $settings['system']['apacheconf_diroptions'],
+							$configcommand['diroptions'],
 							'chown root:0 ' . $settings['system']['apacheconf_diroptions'],
 							'chmod 0600 ' . $settings['system']['apacheconf_diroptions'],
 							'mkdir -p ' . $settings['system']['documentroot_prefix'],
@@ -57,6 +57,7 @@ return Array(
 						'commands_1' => Array(
 							'cd /usr/ports/dns/powerdns',
 							'make config',
+							'set MySQL backend',
 							'make install',
 							'echo "pdns_enable=\"YES\"" >> /etc/rc.conf',
 						),
@@ -111,6 +112,21 @@ return Array(
 						),
 						'restart' => Array(
 							'sh /usr/local/etc/rc.d/postfix restart'
+						)
+					),
+					'postgrey' => Array(
+						'label' => 'Postgrey',
+						'commands_1' => Array(
+							'cd /usr/ports/mail/postgrey',
+							'make install clean'
+						),
+						'commands_2' => Array(
+							'sed -i.bak \'s/# *check_policy_service  *inet:127\.0\.0\.1:10023/    check_policy_service inet:127\.0\.0\.1:10023/\' /usr/local/etc/postfix/main.cf',
+							'echo "postgrey_enable=\"YES\"" >> /etc/rc.conf'
+						),
+						'restart' => Array(
+							'/usr/local/etc/rc.d/postgrey restart',
+							'/usr/local/etc/rc.d/postfix restart'
 						)
 					),
 					'postfix_mxaccess' => Array(
@@ -178,13 +194,21 @@ return Array(
 				'daemons' => Array(
 					'proftpd' => Array(
 						'label' => 'ProFTPd',
+                                                'commands_1' => Array(
+							'cd /usr/ports/ftp/proftpd',
+							'make config',
+							'set MySQL auth',
+							'set Include mod_quota',
+							'make install clean'
+                                                ),
+						'commands_2' => Array(
+                                                        'touch /usr/local/etc/proftpd.conf',
+                                                        'chown root:0 /usr/local/etc/proftpd.conf',
+                                                        'chmod 0600 /usr/local/etc/proftpd.conf',
+							'echo "proftpd_enable=\"YES\"" >> /etc/rc.conf'
+						),
 						'files' => Array(
 							'etc_proftpd_proftpd.conf' => '/usr/local/etc/proftpd.conf'
-						),
-						'commands' => Array(
-							'touch /usr/local/etc/proftpd.conf',
-							'chown root:0 /usr/local/etc/proftpd.conf',
-							'chmod 0600 /usr/local/etc/proftpd.conf'
 						),
 						'restart' => Array(
 							'/usr/local/etc/rc.d/proftpd restart'
@@ -195,18 +219,28 @@ return Array(
 			'etc' => Array(
 				'label' => $lng['admin']['configfiles']['etc'],
 				'daemons' => Array(
+					'cron' => Array(
+                                                'label' => 'Crond (cronscript)',
+						'commands' => Array(
+							'echo "*/1 * * * *     root     /usr/local/bin/php -q /var/customers/froxlor/scripts/froxlor_master_cronjob.php" >> /etc/crontab'
+							),
+                                                'restart' => Array(
+                                                        '/etc/rc.d/cron restart'
+                                                )
+                                        ),
 					'awstats' => Array(
 						'label' => 'Awstats',
 						'commands' => Array(
 							'cd /usr/ports/www/awstats/',
 							'make install clean',
 							'cp /usr/local/www/awstats/cgi-bin/awstats.model.conf '.makeCorrectDir($settings['system']['awstats_conf']),
-							'sed -i.bak \'s/^LogFile/# LogFile/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
-							'sed -i.bak \'s/^LogType/# LogType/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
-							'sed -i.bak \'s/^LogFormat/# LogFormat/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
-							'sed -i.bak \'s/^LogSeparator/# LogSeparator/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
-							'sed -i.bak \'s/^SiteDomain/# SiteDomain/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf'),
-							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf')
+							'sed -i.bak \'s/^LogFile/# LogFile/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
+							'sed -i.bak \'s/^LogType/# LogType/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
+							'sed -i.bak \'s/^LogFormat/# LogFormat/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
+							'sed -i.bak \'s/^LogSeparator/# LogSeparator/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
+							'sed -i.bak \'s/^SiteDomain/# SiteDomain/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
+							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
+							'sed -i.bak \'s/^DirIcons=\"\/awstatsicons\"/DirIcons=\"\/awstats-icon\"/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
 						)
 					),
 					'libnss' => Array(
