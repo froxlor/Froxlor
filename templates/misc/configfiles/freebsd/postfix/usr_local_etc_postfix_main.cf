@@ -40,6 +40,7 @@ soft_bounce = yes
 
 # Maximum size of Message in bytes (0 = unlimited)
 message_size_limit = 0
+mailbox_size_limit = 0
 
 smtp_use_tls = yes
 smtpd_use_tls = yes
