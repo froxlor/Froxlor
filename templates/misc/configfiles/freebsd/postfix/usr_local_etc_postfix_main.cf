@@ -42,8 +42,7 @@ soft_bounce = yes
 message_size_limit = 0
 mailbox_size_limit = 0
 
-smtp_use_tls = yes
-smtpd_use_tls = yes
+smtp_tls_security_level = may
 smtpd_tls_security_level = may
 smtpd_tls_auth_only = no
 smtp_tls_note_starttls_offer = yes
