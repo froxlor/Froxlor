@@ -757,6 +757,14 @@ class apache
 
 		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
 		{
+			// redirect everything, not only root-directory, #541
+
+			$vhost_content.= '  <IfModule mod_rewrite.c>'."\n";
+			$vhost_content.= '    RewriteEngine On' . "\n";
+			$vhost_content.= '    RewriteCond %{HTTPS} off' . "\n";
+			$vhost_content.= '    RewriteRule (.*) '. $this->idnaConvert->encode($domain['documentroot']).'%{REQUEST_URI}'. "\n";
+			$vhost_content.= '  </IfModule>' . "\n";
+
 			$code = getDomainRedirectCode($domain['id']);
 			$vhost_content.= '  Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
 		}
