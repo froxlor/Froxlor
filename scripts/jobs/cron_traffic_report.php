@@ -23,8 +23,6 @@ $yesterday = time() - (60 * 60 * 24);
 /**
  * Initialize the mailingsystem
  */
-
-require (dirname(__FILE__) . '/../lib/class.phpmailer.php');
 $mail = new PHPMailer(true);
 $mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
 
@@ -49,7 +47,7 @@ while($row = $db->fetch_array($result))
 	{
 		$replace_arr = array(
 			'NAME' => $row['name'],
-			'TRAFFIC' => $row['traffic'],
+			'TRAFFIC' => ($row['traffic'] / 1024), /* traffic is stored in KB, template uses MB */
 			'TRAFFICUSED' => $row['traffic_used']
 		);
 		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
@@ -128,7 +126,7 @@ while($row = $db->fetch_array($result))
 	{
 		$replace_arr = array(
 			'NAME' => $row['name'],
-			'TRAFFIC' => $row['traffic'],
+			'TRAFFIC' => ($row['traffic'] / 1024), /* traffic is stored in KB, template uses MB */
 			'TRAFFICUSED' => $row['traffic_used_total']
 		);
 		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`

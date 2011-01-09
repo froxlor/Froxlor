@@ -441,7 +441,15 @@ class lighttpd
 
 		$vhost_content = '';
 		$vhost_content.= $this->getServerNames($domain) . " {\n";
-		
+
+		// respect ssl_redirect settings, #542
+		if($ssl_vhost == false
+			&& $domain['ssl'] == '1'
+			&& $domain['ssl_redirect'] == '1'
+		) {
+			$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
+		}
+
 		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
 		{
 			$vhost_content.= '  url.redirect = (' . "\n";
