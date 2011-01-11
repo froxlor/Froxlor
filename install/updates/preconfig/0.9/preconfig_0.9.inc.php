@@ -401,4 +401,18 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if(versionInUpdate($current_version, '0.9.17-svn1'))
+	{
+		$has_preconfig = true;
+		$description = 'Select if you want to enable the web- and traffic-reports';
+		$question = '<strong>Enable?:</strong>&nbsp;';
+		$question.= makeyesno('update_system_report_enable', '1', '0', '1').'<br /><br />';
+		$question.= '<strong>If \'yes\', please specify a percentage value for web- and traffic when reports are to be sent:</strong><br /><br />';
+		$question.= 'Webusage warning level:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_system_report_webmax" value="90" /><br /><br />';
+		$question.= 'Traffic warning level:&nbsp;';
+		$question.= '<input type="text" class="text" name="update_system_report_trafficmax" value="90" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

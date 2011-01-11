@@ -96,7 +96,7 @@ $header
 				<td class="field_name">{$lng['admin']['templates']['PASSWORD']}</td>
 			</tr>
 			<tr>
-				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['trafficninetypercent']}</b></td>
+				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['trafficmaxpercent']}</b></td>
 			</tr>
 			<tr>
 				<td class="field_name_border_left"><i>{TRAFFIC}</i>:</td>
@@ -105,6 +105,33 @@ $header
 			<tr>
 				<td class="field_name_border_left"><i>{TRAFFICUSED}</i>:</td>
 				<td class="field_name">{$lng['admin']['templates']['TRAFFICUSED']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{MAX_PERCENT}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['MAX_PERCENT']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{USAGE_PERCENT}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['USAGE_PERCENT']}</td>
+			</tr>
+			<tr>
+				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['diskmaxpercent']}</b></td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{DISKAVAILABLE}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['DISKAVAILABLE']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{DISKUSED}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['DISKUSED']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{MAX_PERCENT}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['MAX_PERCENT']}</td>
+			</tr>
+			<tr>
+				<td class="field_name_border_left"><i>{USAGE_PERCENT}</i>:</td>
+				<td class="field_name">{$lng['admin']['templates']['USAGE_PERCENT']}</td>
 			</tr>
 			<tr>
 				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['ticket']}</b></td>

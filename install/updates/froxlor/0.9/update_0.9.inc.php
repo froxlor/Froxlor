@@ -192,7 +192,7 @@ if(isFroxlorVersion('0.9-r1'))
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'spf_entry', '@	IN	TXT	\"v=spf1 a mx -all\"');");
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `varname` = 'froxlor_graphic' WHERE `varname` = 'syscp_graphic'");
 	if(isset($settings['admin']['syscp_graphic'])
-		&& $settings['admin']['syscp_graphic'] != ''
+	&& $settings['admin']['syscp_graphic'] != ''
 	){
 		$settings['admin']['froxlor_graphic'] = $settings['admin']['syscp_graphic'];
 	}
@@ -305,8 +305,8 @@ if(isFroxlorVersion('0.9.1'))
 	$result = $db->query_first("SELECT MAX(`guid`) as `latestguid` FROM `".TABLE_PANEL_CUSTOMERS."`");
 
 	if (isset($result['latestguid'])
-		&& (int)$result['latestguid'] > 0
-		&& $result['latestguid'] != $settings['system']['lastguid']
+	&& (int)$result['latestguid'] > 0
+	&& $result['latestguid'] != $settings['system']['lastguid']
 	) {
 		checkLastGuid();
 		lastStepStatus(1, 'fixed');
@@ -411,7 +411,7 @@ if(isFroxlorVersion('0.9.4'))
 	 * To not confuse Froxlor, we just update old settings.
 	 */
 	if(isset($settings['system']['awstats_path'])
-		&& $settings['system']['awstats_path'] != ''
+	&& $settings['system']['awstats_path'] != ''
 	) {
 		showUpdateStep("Updating awstats path setting");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/usr/bin/' WHERE `settinggroup` = 'system' AND `varname` = 'awstats_path';");
@@ -425,7 +425,7 @@ if(isFroxlorVersion('0.9.4'))
 	}
 
 	if(isset($settings['system']['awstats_domain_file'])
-		&& $settings['system']['awstats_domain_file'] != ''
+	&& $settings['system']['awstats_domain_file'] != ''
 	) {
 		showUpdateStep("Updating awstats configuration path setting");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `varname` = 'awstats_conf' WHERE `varname` = 'awstats_domain_file';");
@@ -543,28 +543,28 @@ if(isFroxlorVersion('0.9.6-svn2'))
 		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'enabled', '1');");
 
 		if(isset($_POST['update_deferr_500'])
-			&& trim($_POST['update_deferr_500']) != ''
+		&& trim($_POST['update_deferr_500']) != ''
 		) {
 			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '".$db->escape($_POST['update_deferr_500'])."');");
 			$err500 = true;
 		}
 
 		if(isset($_POST['update_deferr_401'])
-			&& trim($_POST['update_deferr_401']) != ''
+		&& trim($_POST['update_deferr_401']) != ''
 		) {
 			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err401', '".$db->escape($_POST['update_deferr_401'])."');");
 			$err401 = true;
 		}
 
 		if(isset($_POST['update_deferr_403'])
-			&& trim($_POST['update_deferr_403']) != ''
+		&& trim($_POST['update_deferr_403']) != ''
 		) {
 			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err403', '".$db->escape($_POST['update_deferr_403'])."');");
 			$err403 = true;
 		}
 
 		if(isset($_POST['update_deferr_404'])
-			&& trim($_POST['update_deferr_404']) != ''
+		&& trim($_POST['update_deferr_404']) != ''
 		) {
 			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err404', '".$db->escape($_POST['update_deferr_404'])."');");
 			$err404 = true;
@@ -749,7 +749,7 @@ if(isFroxlorVersion('0.9.7-svn2'))
 	showUpdateStep("Updating database tables");
 	$db->query("ALTER TABLE `redirect_codes` ADD `desc` varchar(200) NOT NULL AFTER `code`;");
 	lastStepStatus(0);
-	
+
 	showUpdateStep("Updating field-values");
 	$db->query("UPDATE `redirect_codes` SET `desc` = 'rc_default' WHERE `code` = '---';");
 	$db->query("UPDATE `redirect_codes` SET `desc` = 'rc_movedperm' WHERE `code` = '301';");
@@ -798,10 +798,10 @@ if(isFroxlorVersion('0.9.9-svn1'))
 if(isFroxlorVersion('0.9.9'))
 {
 	showUpdateStep("Updating from 0.9.9 to 0.9.10-svn1", false);
-	
+
 	showUpdateStep("Checking whether you are missing any settings", false);
 	$nonefound = true;
-	
+
 	$update_httpuser = isset($_POST['update_httpuser']) ? $_POST['update_httpuser'] : false;
 	$update_httpgroup = isset($_POST['update_httpgroup']) ? $_POST['update_httpgroup'] : false;
 
@@ -829,7 +829,7 @@ if(isFroxlorVersion('0.9.9'))
 		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'debug_cron', '0');");
 		lastStepStatus(0);
 	}
-	
+
 	if($nonefound) {
 		showUpdateStep("No missing settings found");
 		lastStepStatus(0);
@@ -841,7 +841,7 @@ if(isFroxlorVersion('0.9.9'))
 if(isFroxlorVersion('0.9.10-svn1'))
 {
 	showUpdateStep("Updating from 0.9.10-svn1 to 0.9.10-svn2", false);
-	
+
 	showUpdateStep("Updating database table definition for panel_databases");
 	$db->query("ALTER TABLE `" . TABLE_PANEL_DATABASES . "` ADD `apsdb` tinyint(1) NOT NULL default '0' AFTER `dbserver`;");
 	lastStepStatus(0);
@@ -852,7 +852,7 @@ if(isFroxlorVersion('0.9.10-svn1'))
 	openRootDB();
 	$result = $db_root->query("SHOW DATABASES;");
 	while($row = $db_root->fetch_array($result))
-	{	
+	{
 		if(preg_match('/^web([0-9]+)aps([0-9]+)$/', $row['Database'], $matches))
 		{
 			$cid = $matches[1];
@@ -945,7 +945,7 @@ if(isFroxlorVersion('0.9.11'))
 	if($update_fcgid_httpgroup == '') {
 		$update_fcgid_httpgroup = 'froxlorlocal';
 	}
-	
+
 	showUpdateStep("Adding new settings");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_ownvhost', '".$db->escape($update_fcgid_ownvhost)."');");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_httpuser', '".$db->escape($update_fcgid_httpuser)."');");
@@ -965,7 +965,7 @@ if(isFroxlorVersion('0.9.12-svn1'))
 	if($update_perl_suexecpath == '') {
 		$update_perl_suexecpath = '/var/www/cgi-bin/';
 	}
-	
+
 	showUpdateStep("Adding new settings for perl/CGI");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('perl', 'suexecworkaround', '".$db->escape($update_perl_suexecworkaround)."');");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('perl', 'suexecpath', '".$db->escape($update_perl_suexecpath)."');");
@@ -988,8 +988,8 @@ if(isFroxlorVersion('0.9.12-svn2'))
 if(isFroxlorVersion('0.9.12-svn3'))
 {
 	showUpdateStep("Updating from 0.9.12-svn3 to 0.9.12-svn4", false);
-	
-	$update_awstats_awstatspath = isset($_POST['update_awstats_awstatspath']) ? makeCorrectDir($_POST['update_awstats_awstatspath']) : $settings['system']['awstats_path'];	
+
+	$update_awstats_awstatspath = isset($_POST['update_awstats_awstatspath']) ? makeCorrectDir($_POST['update_awstats_awstatspath']) : $settings['system']['awstats_path'];
 
 	showUpdateStep("Adding new settings for awstats");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_awstatspath', '".$db->escape($update_awstats_awstatspath)."');");
@@ -1000,7 +1000,7 @@ if(isFroxlorVersion('0.9.12-svn3'))
 
 if(isFroxlorVersion('0.9.12-svn4'))
 {
-	showUpdateStep("Updating from 0.9.12-svn4 to 0.9.12-svn5", false);	
+	showUpdateStep("Updating from 0.9.12-svn4 to 0.9.12-svn5", false);
 
 	showUpdateStep("Setting ticket-usage-reset cronjob interval to 1 day");
 	$db->query("UPDATE `cronjobs_run` SET `interval`='1 DAY' WHERE `cronfile`='cron_used_tickets_reset.php';");
@@ -1011,7 +1011,7 @@ if(isFroxlorVersion('0.9.12-svn4'))
 
 if(isFroxlorVersion('0.9.12-svn5'))
 {
-	showUpdateStep("Updating from 0.9.12-svn5 to 0.9.12-svn6", false);	
+	showUpdateStep("Updating from 0.9.12-svn5 to 0.9.12-svn6", false);
 
 	showUpdateStep("Adding new field to table 'panel_htpasswds'");
 	$db->query("ALTER TABLE `".TABLE_PANEL_HTPASSWDS."` ADD `authname` varchar(255) NOT NULL default 'Restricted Area' AFTER `password`;");
@@ -1036,12 +1036,12 @@ if(isFroxlorVersion('0.9.12'))
 	$db->query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `email_autoresponder` int(5) NOT NULL default '0' AFTER `aps_packages_used`;");
 	$db->query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `email_autoresponder_used` int(5) NOT NULL default '0' AFTER `email_autoresponder`;");
 	lastStepStatus(0);
-	
+
 	showUpdateStep("Adding new fields to customer-table");
 	$db->query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `email_autoresponder` int(5) NOT NULL default '0' AFTER `perlenabled`;");
 	$db->query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `email_autoresponder_used` int(5) NOT NULL default '0' AFTER `email_autoresponder`;");
 	lastStepStatus(0);
-	
+
 	if((int)$settings['autoresponder']['autoresponder_active'] == 1)
 	{
 		$update_autoresponder_default = isset($_POST['update_autoresponder_default']) ? intval_ressource($_POST['update_autoresponder_default']) : 0;
@@ -1077,7 +1077,7 @@ if(isFroxlorVersion('0.9.13'))
 {
 	showUpdateStep("Updating from 0.9.13 to 0.9.13.1 final", false);
 
-	$update_defaultini_ownvhost = isset($_POST['update_defaultini_ownvhost']) ? (int)$_POST['update_defaultini_ownvhost'] : 1;	
+	$update_defaultini_ownvhost = isset($_POST['update_defaultini_ownvhost']) ? (int)$_POST['update_defaultini_ownvhost'] : 1;
 
 	showUpdateStep("Adding settings for Froxlor-vhost's PHP-configuration");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_defaultini_ownvhost', '".(int)$update_defaultini_ownvhost."');");
@@ -1100,7 +1100,7 @@ if(isFroxlorVersion('0.9.14-svn1'))
 if(isFroxlorVersion('0.9.13.1'))
 {
 	showUpdateStep("Updating from 0.9.13.1 to 0.9.14-svn2", false);
-	
+
 	if($settings['ticket']['enabled'] == '1')
 	{
 		showUpdateStep("Setting INTERVAL for used-tickets cronjob");
@@ -1114,7 +1114,7 @@ if(isFroxlorVersion('0.9.14-svn2'))
 {
 	showUpdateStep("Updating from 0.9.14-svn2 to 0.9.14-svn3", false);
 
-	$update_awstats_icons = isset($_POST['update_awstats_icons']) ? makeCorrectDir($_POST['update_awstats_icons']) : $settings['system']['awstats_icons'];	
+	$update_awstats_icons = isset($_POST['update_awstats_icons']) ? makeCorrectDir($_POST['update_awstats_icons']) : $settings['system']['awstats_icons'];
 
 	showUpdateStep("Adding AWStats icons path to the settings");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_icons', '".$db->escape($update_awstats_icons)."');");
@@ -1127,7 +1127,7 @@ if(isFroxlorVersion('0.9.14-svn3'))
 {
 	showUpdateStep("Updating from 0.9.14-svn3 to 0.9.14-svn4", false);
 
-	$update_ssl_cert_chainfile = isset($_POST['update_ssl_cert_chainfile']) ? $_POST['update_ssl_cert_chainfile'] : '';	
+	$update_ssl_cert_chainfile = isset($_POST['update_ssl_cert_chainfile']) ? $_POST['update_ssl_cert_chainfile'] : '';
 
 	if($update_ssl_cert_chainfile != '')
 	{
@@ -1253,7 +1253,7 @@ if(isFroxlorVersion('0.9.14-svn10'))
 if(isFroxlorVersion('0.9.14'))
 {
 	showUpdateStep("Updating from 0.9.14 to 0.9.15-svn1", false);
-	
+
 	showUpdateStep("Adding new settings for Nginx support");
 	$db->query("INSERT INTO `".TABLE_PANEL_SETTINGS."` (`settinggroup`, `varname`, `value`) VALUES ('system', 'nginx_php_backend', '127.0.0.1:8888')");
 	$db->query("INSERT INTO `".TABLE_PANEL_SETTINGS."` (`settinggroup`, `varname`, `value`) VALUES ('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock')");
@@ -1284,7 +1284,7 @@ if(isFroxlorVersion('0.9.15'))
 	$update_phpfpm_pm = isset($_POST['update_phpfpm_pm']) ? $_POST['update_phpfpm_pm'] : 'static';
 	$update_phpfpm_max_children = isset($_POST['update_phpfpm_max_children']) ? (int)$_POST['update_phpfpm_max_children'] : '1';
 	$update_phpfpm_max_requests = isset($_POST['update_phpfpm_max_requests']) ? (int)$_POST['update_phpfpm_max_requests'] : '0';
-	
+
 	if($update_phpfpm_pm == 'dynamic')
 	{
 		$update_phpfpm_start_servers = isset($_POST['update_phpfpm_start_servers']) ? (int)$_POST['update_phpfpm_start_servers'] : '20';
@@ -1304,7 +1304,7 @@ if(isFroxlorVersion('0.9.15'))
 	if($update_phpfpm_reload == '') {
 		$update_phpfpm_reload = '/etc/init.d/php-fpm restart';
 	}
-	
+
 	showUpdateStep("Adding new settings for PHP-FPM #1");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'enabled', '".(int)$update_phpfpm_enabled."');");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'configdir', '".$db->escape($update_phpfpm_configdir)."');");
@@ -1348,8 +1348,44 @@ if(isFroxlorVersion('0.9.16-svn1'))
 
 if(isFroxlorVersion('0.9.16-svn2'))
 {
-        showUpdateStep("Updating from 0.9.16-svn2 to 0.9.16 final");
-        lastStepStatus(0);
+	showUpdateStep("Updating from 0.9.16-svn2 to 0.9.16 final");
+	lastStepStatus(0);
 
-        updateToVersion('0.9.16');
+	updateToVersion('0.9.16');
+}
+
+if(isFroxlorVersion('0.9.16'))
+{
+	showUpdateStep("Updating from 0.9.16 to 0.9.17-svn1", false);
+
+	$update_system_report_enable = isset($_POST['update_system_report_enable']) ? (int)$_POST['update_system_report_enable'] : '1';
+	$update_system_report_webmax = isset($_POST['update_system_report_webmax']) ? (int)$_POST['update_system_report_webmax'] : '90';
+	$update_system_report_trafficmax = isset($_POST['update_system_report_trafficmax']) ? (int)$_POST['update_system_report_trafficmax'] : '90';
+
+	showUpdateStep("Adding new settings for web- and traffic-reporting");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_enable', '".(int)$update_system_report_enable."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_webmax', '".(int)$update_system_report_webmax."');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_trafficmax', '".(int)$update_system_report_trafficmax."');");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new cron-module for web- and traffic-reporting");
+	$clastrun = mktime(6, 0, 0, date('m'), date('d') - 1, date('Y'));
+	$db->query("INSERT INTO `" . TABLE_PANEL_CRONRUNS . "` SET `module`='froxlor/reports', `cronfile`='cron_usage_report.php', `lastrun`='".(int)$clastrun."', `interval`='1 DAY', `isactive`='".(int)$update_system_report_enable."', `desc_lng_key`='cron_usage_report';");
+	lastStepStatus(0);
+
+	showUpdateStep("Updating various database-fields");
+	$db->query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup`='system' AND `varname`='last_traffic_report_run';");
+	$check = $db->query_first("SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "` WHERE `varname`='trafficninetypercent_subject';");
+	if(isset($check['varname']) && $check['varname'] == 'trafficninetypercent_subject')
+	{
+		$db->query("UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET `varname` = 'trafficmaxpercent_subject' WHERE `varname`='trafficninetypercent_subject';");
+	}
+	$check = $db->query_first("SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "` WHERE `varname`='trafficninetypercent_mailbody';");
+	if(isset($check['varname']) && $check['varname'] == 'trafficninetypercent_mailbody')
+	{	
+		$db->query("UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET `varname` = 'trafficmaxpercent_mailbody' WHERE `varname`='trafficninetypercent_mailbody';");
+	}
+	lastStepStatus(0);
+
+	updateToVersion('0.9.17-svn1');
 }

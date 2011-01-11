@@ -502,11 +502,8 @@ $lng['panel']['pathDescriptionEx'] = '<br /><br />If you want a redirect to anot
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Dear {NAME},\n\nyou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\nThis is more than 90%.\n\nYours sincerely, the Froxlor-Team';
-$lng['mails']['trafficninetypercent']['subject'] = 'Reaching your traffic limit';
-$lng['admin']['templates']['trafficninetypercent'] = 'Notification mail for customers when ninety percent of traffic is exhausted';
-$lng['admin']['templates']['TRAFFIC'] = 'Replaced with the traffic, which was assigned to the customer.';
-$lng['admin']['templates']['TRAFFICUSED'] = 'Replaced with the traffic, which was exhausted by the customer.';
+$lng['admin']['templates']['TRAFFIC'] = 'Replaced with the traffic in mB, which was assigned to the customer.';
+$lng['admin']['templates']['TRAFFICUSED'] = 'Replaced with the traffic in MB, which was exhausted by the customer.';
 
 // ADDED IN 1.2.16-svn7
 
@@ -1547,3 +1544,20 @@ $lng['phpfpm']['vhost_httpuser'] = 'Local user to use for PHP-FPM (Froxlor vHost
 $lng['phpfpm']['vhost_httpgroup'] = 'Local group to use for PHP-FPM (Froxlor vHost)';
 $lng['phpfpm']['ownvhost']['title'] = 'Enable PHP-FPM for the Froxlor vHost';
 $lng['phpfpm']['ownvhost']['description'] = 'If enabled, Froxlor will also be running under a local user';
+
+// ADDED IN FROXLOR 0.9.17
+$lng['crondesc']['cron_usage_report'] = 'sends reports about web- and traffic-usage';
+$lng['serversettings']['report']['report'] = 'Enable sending of reports about web- and traffic-usage';
+$lng['serversettings']['report']['webmax'] = 'Warning-level in percent for webspace';
+$lng['serversettings']['report']['trafficmax'] = 'Warning-level in percent for traffic';
+$lng['mails']['trafficmaxpercent']['mailbody'] = 'Dear {NAME},\n\nyou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\nThis is more than {MAX_PERCENT}%.\n\nYours sincerely, the Froxlor-Team';
+$lng['mails']['trafficmaxpercent']['subject'] = 'Reaching your traffic limit';
+$lng['admin']['templates']['trafficmaxpercent'] = 'Notification mail for customers when given maximum of percent of traffic is exhausted';
+$lng['admin']['templates']['MAX_PERCENT'] = 'Replaced with the diskusage/traffic limit for sending reports in percent.';
+$lng['admin']['templates']['USAGE_PERCENT'] = 'Replaced with the diskusage/traffic, which was exhausted by the customer in percent.';
+$lng['admin']['templates']['diskmaxpercent'] = 'Notification mail for customers when given maximum of percent of diskspace is exhausted';
+$lng['admin']['templates']['DISKAVAILABLE'] = 'Replaced with the diskusage in MB, which was assigned to the customer.';
+$lng['admin']['templates']['DISKUSED'] = 'Replaced with the diskusage in MB, which was exhausted by the customer.';
+$lng['serversettings']['dropdown'] = 'Dropdown';
+$lng['serversettings']['manual'] = 'Manual';
+

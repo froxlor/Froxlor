@@ -64,7 +64,7 @@ return array(
 					'type' => 'option',
 					'default' => 'Manual',
 					'option_mode' => 'one',
-					'option_options' => array('Manual' => 'Manual', 'Dropdown' => 'Dropdown'),
+					'option_options' => array('Manual' => $lng['serversettings']['manual'], 'Dropdown' => $lng['serversettings']['dropdown']),
 					'save_method' => 'storeSettingField',
 					),
 				'panel_adminmail' => array(

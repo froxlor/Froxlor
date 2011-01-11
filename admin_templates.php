@@ -48,7 +48,8 @@ elseif(isset($_GET['id']))
 $available_templates = array(
 	'createcustomer',
 	'pop_success',
-	'trafficninetypercent',
+	'trafficmaxpercent',
+	'diskmaxpercent',
 	'new_ticket_by_customer',
 	'new_ticket_for_customer',
 	'new_ticket_by_staff',

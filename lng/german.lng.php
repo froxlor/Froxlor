@@ -377,7 +377,7 @@ $lng['serversettings']['maxloginattempts']['description'] = 'Maximale Anzahl an 
 $lng['serversettings']['deactivatetime']['title'] = 'L&auml;nge der Deaktivierung';
 $lng['serversettings']['deactivatetime']['description'] = 'Zeitraum (in sek.) f&uuml;r den der Account deaktiviert ist.';
 $lng['serversettings']['pathedit']['title'] = 'Pfad-Eingabemethode';
-$lng['serversettings']['pathedit']['description'] = 'Soll ein Pfad via Dropdown-Men&uuml; ausgew&auml;hlt oder manuell eingegeben werden k&ouml;nnen.';
+$lng['serversettings']['pathedit']['description'] = 'Soll ein Pfad via Auswahlliste ausgew&auml;hlt oder manuell eingegeben werden k&ouml;nnen.';
 $lng['serversettings']['nameservers']['title'] = 'Nameserver';
 $lng['serversettings']['nameservers']['description'] = 'Eine durch Komma getrennte Liste mit den Hostnamen aller Nameserver. Der erste ist der prim&auml;re.';
 $lng['serversettings']['mxservers']['title'] = 'MX Server';
@@ -501,11 +501,8 @@ $lng['panel']['pathDescriptionEx'] = '<br /><br />Sollte eine Weiterleitung auf 
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Sehr geehrte(r) {NAME},\n\nSie haben bereits {TRAFFICUSED} MB von Ihren insgesamt {TRAFFIC} MB Traffic verbraucht.\nDies sind mehr als 90%.\n\nVielen Dank,\ndas Froxlor-Team';
-$lng['mails']['trafficninetypercent']['subject'] = 'Sie erreichen bald Ihr Traffic-Limit';
-$lng['admin']['templates']['trafficninetypercent'] = 'Hinweismail f&uuml;r Kunden, wenn sie 90% des Traffics verbraucht haben';
-$lng['admin']['templates']['TRAFFIC'] = 'Wird mit Traffic, der dem Kunden zugewiesen wurde, ersetzt.';
-$lng['admin']['templates']['TRAFFICUSED'] = 'Wird mit Traffic, der vom Kunden bereits verbraucht wurde, ersetzt.';
+$lng['admin']['templates']['TRAFFIC'] = 'Wird mit Traffic, der dem Kunden zugewiesen wurde, ersetzt (in MB).';
+$lng['admin']['templates']['TRAFFICUSED'] = 'Wird mit Traffic, der vom Kunden bereits verbraucht wurde, ersetzt (in MB).';
 
 // ADDED IN 1.2.16-svn7
 
@@ -1529,3 +1526,19 @@ $lng['phpfpm']['vhost_httpuser'] = 'Lokaler Benutzer f&uuml;r PHP-FPM (Froxlor V
 $lng['phpfpm']['vhost_httpgroup'] = 'Lokale Gruppe f&uuml;r PHP-FPM (Froxlor Vhost)';
 $lng['phpfpm']['ownvhost']['title'] = 'Verwende PHP-FPM im Froxlor Vhost';
 $lng['phpfpm']['ownvhost']['description'] = 'Wenn verwendet, wird Froxlor selbst unter einem lokalem Benutzer ausgef&uuml;hrt';
+
+// ADDED IN FROXLOR 0.9.17
+$lng['crondesc']['cron_usage_report'] = 'Sende Reports &uuml;ber Webspace- und Trafficverbrauch';
+$lng['serversettings']['report']['report'] = 'Aktiviere das Senden von Reports &uuml;ber Webspace- und Trafficverbrauch';
+$lng['serversettings']['report']['webmax'] = 'Warn-Level in Prozent f&uuml;r Webspace';
+$lng['serversettings']['report']['trafficmax'] = 'Warn-Level in Prozent f&uuml;r Traffic';
+$lng['mails']['trafficmaxpercent']['mailbody'] = 'Sehr geehrte(r) {NAME},\n\nSie haben bereits {TRAFFICUSED} MB von Ihren insgesamt {TRAFFIC} MB Traffic verbraucht.\nDies sind mehr als {MAX_PERCENT}%.\n\nVielen Dank,\ndas Froxlor-Team';
+$lng['mails']['trafficmaxpercent']['subject'] = 'Sie erreichen bald Ihr Traffic-Limit';
+$lng['admin']['templates']['trafficmaxpercent'] = 'Hinweismail f&uuml;r Kunden, wenn sie die angegebenen Prozent des Traffics verbraucht haben';
+$lng['admin']['templates']['MAX_PERCENT'] = 'Wird mit dem Webspace/Traffic-Limit, welches dem Kunden zugewiesen wurde, ersetzt.';
+$lng['admin']['templates']['USAGE_PERCENT'] = 'Wird mit dem Webspace/Traffic, welcher vom Kunden bereits verbraucht wurde, ersetzt.';
+$lng['admin']['templates']['diskmaxpercent'] = 'Hinweismail f&uuml;r Kunden, wenn sie die angegebenen Prozent des Webspaces verbraucht haben';
+$lng['admin']['templates']['DISKAVAILABLE'] = 'Wird mit dem Webspace, der dem Kunden zugewiesen wurde, ersetzt (in MB).';
+$lng['admin']['templates']['DISKUSED'] = 'Wird mit dem Webspace, welcher vom Kunden bereits verbraucht wurde, ersetzt (in MB).';
+$lng['serversettings']['dropdown'] = 'Auswahlliste';
+$lng['serversettings']['manual'] = 'Manuelle Eingabe';

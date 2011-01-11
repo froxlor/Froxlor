@@ -17,7 +17,7 @@
  * @version    $Id$
  */
 
-fwrite($debugHandler, 'Trafficreport run started...' . "\n");
+fwrite($debugHandler, 'Web- and Traffic-usage reporting started...' . "\n");
 $yesterday = time() - (60 * 60 * 24);
 
 /**
@@ -26,7 +26,7 @@ $yesterday = time() - (60 * 60 * 24);
 $mail = new PHPMailer(true);
 $mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
 
-// Warn the customers at 90% traffic-usage
+// Warn the customers at xx% traffic-usage
 
 $result = $db->query("SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`, `c`.`traffic`,
                              `c`.`email`, `c`.`def_language`, `a`.`name` AS `adminname`, `a`.`email` AS `adminmail`,
@@ -43,12 +43,14 @@ while($row = $db->fetch_array($result))
 	if(isset($row['traffic'])
 	   && $row['traffic'] > 0
 	   && $row['traffic_used'] != NULL
-	   && (($row['traffic_used'] * 100) / $row['traffic']) >= 90)
+	   && (($row['traffic_used'] * 100) / $row['traffic']) >= (int)$settings['system']['report_trafficmax'])
 	{
 		$replace_arr = array(
 			'NAME' => $row['name'],
 			'TRAFFIC' => ($row['traffic'] / 1024), /* traffic is stored in KB, template uses MB */
-			'TRAFFICUSED' => $row['traffic_used']
+			'TRAFFICUSED' => ($row['traffic_used'] / 1024), /* traffic is stored in KB, template uses MB */
+			'USAGE_PERCENT' => ($row['traffic_used'] * 100) / $row['traffic'],
+			'MAX_PERCENT' => $settings['system']['report_trafficmax']
 		);
 		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
                                  WHERE `language` ='" . $row['def_language'] . "'");
@@ -72,14 +74,14 @@ while($row = $db->fetch_array($result))
                                 WHERE `adminid`='" . (int)$row['adminid'] . "'
                                 AND `language`='" . $db->escape($row['def_language']) . "'
                                 AND `templategroup`='mails'
-                                AND `varname`='trafficninetypercent_subject'");
-		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficninetypercent']['subject']), $replace_arr));
+                                AND `varname`='trafficmaxpercent_subject'");
+		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
 		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
                                 WHERE `adminid`='" . (int)$row['adminid'] . "'
                                 AND `language`='" . $db->escape($row['def_language']) . "'
                                 AND `templategroup`='mails'
-                                AND `varname`='trafficninetypercent_mailbody'");
-		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficninetypercent']['mailbody']), $replace_arr));
+                                AND `varname`='trafficmaxpercent_mailbody'");
+		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
 		
 		$_mailerror = false;
 		try {
@@ -99,8 +101,8 @@ while($row = $db->fetch_array($result))
 
 		if($_mailerror)
 		{
-			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $_mailerror);
-			standard_error('errorsendingmail', $row["email"]);
+			$cronlog->logAction(CRON_ACTION, LOG_ERR, 'Error sending mail: ' . $_mailerror);
+			standard_error('errorsendingmail', $row['email']);
 		}
 
 		$mail->ClearAddresses();
@@ -109,7 +111,7 @@ while($row = $db->fetch_array($result))
 	}
 }
 
-// Warn the admins at 90% traffic-usage
+// Warn the admins at xx% traffic-usage
 
 $result = $db->query("SELECT `a`.*,
                        (SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
@@ -122,12 +124,14 @@ while($row = $db->fetch_array($result))
 {
 	if(isset($row['traffic'])
 	   && $row['traffic'] > 0
-	   && (($row['traffic_used_total'] * 100) / $row['traffic']) >= 90)
+	   && (($row['traffic_used_total'] * 100) / $row['traffic']) >= (int)$settings['system']['report_trafficmax'])
 	{
 		$replace_arr = array(
 			'NAME' => $row['name'],
 			'TRAFFIC' => ($row['traffic'] / 1024), /* traffic is stored in KB, template uses MB */
-			'TRAFFICUSED' => $row['traffic_used_total']
+			'TRAFFICUSED' => ($row['traffic_used_total'] / 1024), /* traffic is stored in KB, template uses MB */
+			'USAGE_PERCENT' => ($row['traffic_used_total'] * 100) / $row['traffic'],
+			'MAX_PERCENT' => $settings['system']['report_trafficmax']
 		);
 		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
                                  WHERE `language` ='" . $row['def_language'] . "'");
@@ -151,14 +155,14 @@ while($row = $db->fetch_array($result))
                                 WHERE `adminid`='" . (int)$row['adminid'] . "'
                                 AND `language`='" . $db->escape($row['def_language']) . "'
                                 AND `templategroup`='mails'
-                                AND `varname`='trafficninetypercent_subject'");
-		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficninetypercent']['subject']), $replace_arr));
+                                AND `varname`='trafficmaxpercent_subject'");
+		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
 		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
                                 WHERE `adminid`='" . (int)$row['adminid'] . "'
                                 AND `language`='" . $db->escape($row['def_language']) . "'
                                 AND `templategroup`='mails'
-                                AND `varname`='trafficninetypercent_mailbody'");
-		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficninetypercent']['mailbody']), $replace_arr));
+                                AND `varname`='trafficmaxpercent_mailbody'");
+		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
 		
 		$_mailerror = false;
 		try {
@@ -226,8 +230,8 @@ while($row = $db->fetch_array($result))
 		}
 
 		if ($_mailerror) {
-			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-			standard_error('errorsendingmail', $row["email"]);
+			$cronlog->logAction(CRON_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
+			standard_error('errorsendingmail', $row['email']);
 		}
 
 		$mail->ClearAddresses();
@@ -241,9 +245,3 @@ if(date('d') == '01')
 	$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `reportsent` = \'0\';');
 	$db->query('UPDATE `' . TABLE_PANEL_ADMINS . '` SET `reportsent` = \'0\';');
 }
-
-$db->query('UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = UNIX_TIMESTAMP()
-            WHERE `settinggroup` = \'system\' AND `varname` = \'last_traffic_report_run\' ');
-
-
-?>
