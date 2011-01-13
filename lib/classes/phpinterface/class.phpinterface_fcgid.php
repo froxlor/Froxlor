@@ -70,7 +70,7 @@ class phpinterface_fcgid
 		// set number of processes for one domain
 		if((int)$this->_domain['mod_fcgid_starter'] != - 1)
 		{
-			$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$$this->_domain['mod_fcgid_starter'] . "\n";
+			$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$this->_domain['mod_fcgid_starter'] . "\n";
 		}
 		else
 		{
