@@ -21,7 +21,7 @@
 $result = $db->query("SELECT 
 	`c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`, `c`.`diskspace`, 
 	`c`.`diskspace_used`, `c`.`email`, `c`.`def_language`, 
-	`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`,
+	`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`
 	FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
     LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a` 
     ON `a`.`adminid` = `c`.`adminid`
@@ -38,74 +38,73 @@ while($row = $db->fetch_array($result))
 		$replace_arr = array(
 			'NAME' => $row['name'],
 			'DISKAVAILABLE' => ($row['diskspace'] / 1024), /* traffic is stored in KB, template uses MB */
-			'DISKUSED' => ($row['diskspace_used'] / 1024), /* traffic is stored in KB, template uses MB */
+			'DISKUSED' => round($row['diskspace_used'] / 1024, 2), /* traffic is stored in KB, template uses MB */
 			'USAGE_PERCENT' => ($row['diskspace_used'] * 100) / $row['diskspace'],
 			'MAX_PERCENT' => $settings['system']['report_webmax']
 		);
-	}
 
-	$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-								WHERE `language` ='" . $row['def_language'] . "'");
-
-	if($lngfile !== NULL)
-	{
-		$langfile = $lngfile['file'];
-	}
-	else
-	{
 		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-									WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'");
-		$langfile = $lngfile['file'];
+									WHERE `language` ='" . $row['def_language'] . "'");
+	
+		if($lngfile !== NULL)
+		{
+			$langfile = $lngfile['file'];
+		}
+		else
+		{
+			$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
+										WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'");
+			$langfile = $lngfile['file'];
+		}
+	
+		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
+	
+		// Get mail templates from database; the ones from 'admin' are fetched for fallback
+		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
+	                                AND `language`='" . $db->escape($row['def_language']) . "'
+	                                AND `templategroup`='mails'
+	                                AND `varname`='webmaxpercent_subject'");
+		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
+	
+		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
+	                                AND `language`='" . $db->escape($row['def_language']) . "'
+	                                AND `templategroup`='mails'
+	                                AND `varname`='webmaxpercent_mailbody'");
+		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
+	
+		$_mailerror = false;
+		try {
+			$mail->SetFrom($row['email'], $row['firstname'] . " " . $row['name']);
+			$mail->Subject = $mail_subject;
+			$mail->AltBody = $mail_body;
+			$mail->MsgHTML(nl2br($mail_body));
+			$mail->AddAddress($row['email'], $row['name']);
+			$mail->Send();
+		} catch(phpmailerException $e) {
+			$mailerr_msg = $e->errorMessage();
+			$_mailerror = true;
+		} catch (Exception $e) {
+			$mailerr_msg = $e->getMessage();
+			$_mailerror = true;
+		}
+	
+		if ($_mailerror) {
+			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+			standard_error('errorsendingmail', $row["email"]);
+		}
+	
+		$mail->ClearAddresses();
+		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent`='2'
+	                WHERE `customerid`='" . (int)$row['customerid'] . "'");
 	}
-
-	include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
-
-	// Get mail templates from database; the ones from 'admin' are fetched for fallback
-	$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-                                AND `language`='" . $db->escape($row['def_language']) . "'
-                                AND `templategroup`='mails'
-                                AND `varname`='webmaxpercent_subject'");
-	$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
-
-	$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-                                AND `language`='" . $db->escape($row['def_language']) . "'
-                                AND `templategroup`='mails'
-                                AND `varname`='webmaxpercent_mailbody'");
-	$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
-
-	$_mailerror = false;
-	try {
-		$mail->SetFrom($row['email'], $row['firstname'] . " " . $row['name']);
-		$mail->Subject = $mail_subject;
-		$mail->AltBody = $mail_body;
-		$mail->MsgHTML($mail_body);
-		$mail->AddAddress($row['email'], $row['name']);
-		$mail->Send();
-	} catch(phpmailerException $e) {
-		$mailerr_msg = $e->errorMessage();
-		$_mailerror = true;
-	} catch (Exception $e) {
-		$mailerr_msg = $e->getMessage();
-		$_mailerror = true;
-	}
-
-	if ($_mailerror) {
-		$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-		standard_error('errorsendingmail', $row["email"]);
-	}
-
-	$mail->ClearAddresses();
-	$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent`='2'
-                WHERE `customerid`='" . (int)$row['customerid'] . "'");
 }
 
 /**
  * report about diskusage for admins/reseller
  */
-$result = $db->query("SELECT `a`.* FROM `" . TABLE_PANEL_ADMINS . "` `a` 
-	WHERE `a`.`reportsent` <> '2'");
+$result = $db->query("SELECT `a`.* FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` <> '2'");
 
 while($row = $db->fetch_array($result))
 {
@@ -118,65 +117,65 @@ while($row = $db->fetch_array($result))
 		$replace_arr = array(
 			'NAME' => $row['name'],
 			'DISKAVAILABLE' => ($row['diskspace'] / 1024), /* traffic is stored in KB, template uses MB */
-			'DISKUSED' => ($row['diskspace_used'] / 1024), /* traffic is stored in KB, template uses MB */
+			'DISKUSED' => round($row['diskspace_used'] / 1024, 2), /* traffic is stored in KB, template uses MB */
 			'USAGE_PERCENT' => ($row['diskspace_used'] * 100) / $row['diskspace'],
 			'MAX_PERCENT' => $settings['system']['report_webmax']
 		);
-	}
 
-	$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-								WHERE `language` ='" . $row['def_language'] . "'");
-
-	if($lngfile !== NULL)
-	{
-		$langfile = $lngfile['file'];
-	}
-	else
-	{
 		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-									WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'");
-		$langfile = $lngfile['file'];
+									WHERE `language` ='" . $row['def_language'] . "'");
+	
+		if($lngfile !== NULL)
+		{
+			$langfile = $lngfile['file'];
+		}
+		else
+		{
+			$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
+										WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'");
+			$langfile = $lngfile['file'];
+		}
+	
+		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
+	
+		// Get mail templates from database; the ones from 'admin' are fetched for fallback
+		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
+	                                AND `language`='" . $db->escape($row['def_language']) . "'
+	                                AND `templategroup`='mails'
+	                                AND `varname`='webmaxpercent_subject'");
+		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
+	
+		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
+	                                AND `language`='" . $db->escape($row['def_language']) . "'
+	                                AND `templategroup`='mails'
+	                                AND `varname`='webmaxpercent_mailbody'");
+		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
+	
+		$_mailerror = false;
+		try {
+			$mail->SetFrom($row['email'], $row['name']);
+			$mail->Subject = $mail_subject;
+			$mail->AltBody = $mail_body;
+			$mail->MsgHTML(nl2br($mail_body));
+			$mail->AddAddress($row['email'], $row['name']);
+			$mail->Send();
+		} catch(phpmailerException $e) {
+			$mailerr_msg = $e->errorMessage();
+			$_mailerror = true;
+		} catch (Exception $e) {
+			$mailerr_msg = $e->getMessage();
+			$_mailerror = true;
+		}
+	
+		if ($_mailerror) {
+			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+			standard_error('errorsendingmail', $row["email"]);
+		}
+	
+		$mail->ClearAddresses();
+		$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent`='2'
+	                WHERE `adminid`='" . (int)$row['adminid'] . "'");
 	}
-
-	include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
-
-	// Get mail templates from database; the ones from 'admin' are fetched for fallback
-	$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-                                AND `language`='" . $db->escape($row['def_language']) . "'
-                                AND `templategroup`='mails'
-                                AND `varname`='webmaxpercent_subject'");
-	$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
-
-	$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-                                AND `language`='" . $db->escape($row['def_language']) . "'
-                                AND `templategroup`='mails'
-                                AND `varname`='webmaxpercent_mailbody'");
-	$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
-
-	$_mailerror = false;
-	try {
-		$mail->SetFrom($row['email'], $row['name']);
-		$mail->Subject = $mail_subject;
-		$mail->AltBody = $mail_body;
-		$mail->MsgHTML($mail_body);
-		$mail->AddAddress($row['email'], $row['name']);
-		$mail->Send();
-	} catch(phpmailerException $e) {
-		$mailerr_msg = $e->errorMessage();
-		$_mailerror = true;
-	} catch (Exception $e) {
-		$mailerr_msg = $e->getMessage();
-		$_mailerror = true;
-	}
-
-	if ($_mailerror) {
-		$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-		standard_error('errorsendingmail', $row["email"]);
-	}
-
-	$mail->ClearAddresses();
-	$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent`='2'
-                WHERE `adminid`='" . (int)$row['adminid'] . "'");
 }

@@ -88,7 +88,7 @@ while($row = $db->fetch_array($result))
 			$mail->SetFrom($row['adminmail'], $row['adminname']);
 			$mail->Subject = $mail_subject;
 			$mail->AltBody = $mail_body;
-			$mail->MsgHTML($mail_body);
+			$mail->MsgHTML(nl2br($mail_body));
 			$mail->AddAddress($row['email'], $row['firstname'] . ' ' . $row['name']);
 			$mail->Send();
 		} catch(phpmailerException $e) {
@@ -169,7 +169,7 @@ while($row = $db->fetch_array($result))
 			$mail->SetFrom($row['email'], $row['name']);
 			$mail->Subject = $mail_subject;
 			$mail->AltBody = $mail_body;
-			$mail->MsgHTML($mail_body);
+			$mail->MsgHTML(nl2br($mail_body));
 			$mail->AddAddress($row['email'], $row['name']);
 			$mail->Send();
 		} catch(phpmailerException $e) {

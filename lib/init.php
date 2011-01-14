@@ -408,6 +408,8 @@ if(AREA == 'admin' || AREA == 'customer')
 }
 
 eval("\$header = \"" . getTemplate('header', '1') . "\";");
+
+$current_year = date('Y', time());
 eval("\$footer = \"" . getTemplate('footer', '1') . "\";");
 
 if(isset($_POST['action']))
