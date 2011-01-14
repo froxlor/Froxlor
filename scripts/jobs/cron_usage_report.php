@@ -36,7 +36,7 @@ $result = $db->query("SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`f
                             AND `t`.`month` = '" . date("m", $yesterday) . "') as `traffic_used`
                       FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
                       LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a` ON `a`.`adminid` = `c`.`adminid`
-                      WHERE `c`.`reportsent` = '0'");
+                      WHERE `c`.`reportsent` <> '1'");
 
 while($row = $db->fetch_array($result))
 {
@@ -166,7 +166,7 @@ while($row = $db->fetch_array($result))
 		
 		$_mailerror = false;
 		try {
-			$mail->SetFrom($row['email'], $row['firstname'] . " " . $row['name']);
+			$mail->SetFrom($row['email'], $row['name']);
 			$mail->Subject = $mail_subject;
 			$mail->AltBody = $mail_body;
 			$mail->MsgHTML($mail_body);
@@ -187,7 +187,7 @@ while($row = $db->fetch_array($result))
 
 		$mail->ClearAddresses();
 		$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent`='1'
-                WHERE `customerid`='" . (int)$row['adminid'] . "'");
+                WHERE `adminid`='" . (int)$row['adminid'] . "'");
 	}
 
 	// Another month, let's build our report
@@ -237,6 +237,9 @@ while($row = $db->fetch_array($result))
 		$mail->ClearAddresses();
 	}
 }
+
+// include diskspace-usage report, #466
+include dirname(__FILE__).'/cron_usage.inc.diskspace.php';
 
 // Another month, reset the reportstatus
 

@@ -1560,4 +1560,5 @@ $lng['admin']['templates']['DISKAVAILABLE'] = 'Replaced with the diskusage in MB
 $lng['admin']['templates']['DISKUSED'] = 'Replaced with the diskusage in MB, which was exhausted by the customer.';
 $lng['serversettings']['dropdown'] = 'Dropdown';
 $lng['serversettings']['manual'] = 'Manual';
-
+$lng['mails']['webmaxpercent']['mailbody'] = 'Dear {NAME},\n\nyou used {DISKUSED} MB of your available {DISKAVAILABLE} MB of diskspace.\nThis is more than {MAX_PERCENT}%.\n\nYours sincerely, the Froxlor-Team';
+$lng['mails']['webmaxpercent']['subject'] = 'Reaching your diskspace limit';
