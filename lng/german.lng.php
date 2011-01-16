@@ -1542,3 +1542,4 @@ $lng['admin']['templates']['DISKAVAILABLE'] = 'Wird mit dem Webspace, der dem Ku
 $lng['admin']['templates']['DISKUSED'] = 'Wird mit dem Webspace, welcher vom Kunden bereits verbraucht wurde, ersetzt (in MB).';
 $lng['serversettings']['dropdown'] = 'Auswahlliste';
 $lng['serversettings']['manual'] = 'Manuelle Eingabe';
+$lng['mysql']['database_edit'] = 'Datenbank bearbeiten';
