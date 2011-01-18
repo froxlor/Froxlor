@@ -18,7 +18,7 @@
 /**
  * report about diskusage for customers
  */
-$result = $db->query("SELECT 
+$result = $db->query("SELECT
 	`c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`, `c`.`diskspace`, 
 	`c`.`diskspace_used`, `c`.`email`, `c`.`def_language`, 
 	`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`
@@ -30,11 +30,11 @@ $result = $db->query("SELECT
 while($row = $db->fetch_array($result))
 {
 	if(isset($row['diskspace'])
-	   && $row['diskspace_used'] != NULL
-	   && $row['diskspace_used'] > 0
-	   && (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)$settings['system']['report_webmax']
+		&& $row['diskspace_used'] != NULL
+		&& $row['diskspace_used'] > 0
+		&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)$settings['system']['report_webmax']
 	) {
-		
+
 		$replace_arr = array(
 			'NAME' => $row['name'],
 			'DISKAVAILABLE' => ($row['diskspace'] / 1024), /* traffic is stored in KB, template uses MB */
@@ -45,7 +45,7 @@ while($row = $db->fetch_array($result))
 
 		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
 									WHERE `language` ='" . $row['def_language'] . "'");
-	
+
 		if($lngfile !== NULL)
 		{
 			$langfile = $lngfile['file'];
@@ -56,9 +56,9 @@ while($row = $db->fetch_array($result))
 										WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'");
 			$langfile = $lngfile['file'];
 		}
-	
+
 		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
-	
+
 		// Get mail templates from database; the ones from 'admin' are fetched for fallback
 		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
@@ -66,14 +66,14 @@ while($row = $db->fetch_array($result))
 	                                AND `templategroup`='mails'
 	                                AND `varname`='webmaxpercent_subject'");
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
-	
+
 		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
 	                                AND `language`='" . $db->escape($row['def_language']) . "'
 	                                AND `templategroup`='mails'
 	                                AND `varname`='webmaxpercent_mailbody'");
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
-	
+
 		$_mailerror = false;
 		try {
 			$mail->SetFrom($row['email'], $row['firstname'] . " " . $row['name']);
@@ -89,12 +89,12 @@ while($row = $db->fetch_array($result))
 			$mailerr_msg = $e->getMessage();
 			$_mailerror = true;
 		}
-	
+
 		if ($_mailerror) {
 			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 			standard_error('errorsendingmail', $row["email"]);
 		}
-	
+
 		$mail->ClearAddresses();
 		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent`='2'
 	                WHERE `customerid`='" . (int)$row['customerid'] . "'");
@@ -109,11 +109,11 @@ $result = $db->query("SELECT `a`.* FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `
 while($row = $db->fetch_array($result))
 {
 	if(isset($row['diskspace'])
-	   && $row['diskspace_used'] != NULL
-	   && $row['diskspace_used'] > 0
-	   && (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)$settings['system']['report_webmax']
+		&& $row['diskspace_used'] != NULL
+		&& $row['diskspace_used'] > 0
+		&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)$settings['system']['report_webmax']
 	) {
-		
+
 		$replace_arr = array(
 			'NAME' => $row['name'],
 			'DISKAVAILABLE' => ($row['diskspace'] / 1024), /* traffic is stored in KB, template uses MB */
@@ -124,7 +124,7 @@ while($row = $db->fetch_array($result))
 
 		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
 									WHERE `language` ='" . $row['def_language'] . "'");
-	
+
 		if($lngfile !== NULL)
 		{
 			$langfile = $lngfile['file'];
@@ -135,9 +135,9 @@ while($row = $db->fetch_array($result))
 										WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'");
 			$langfile = $lngfile['file'];
 		}
-	
+
 		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
-	
+
 		// Get mail templates from database; the ones from 'admin' are fetched for fallback
 		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
@@ -145,14 +145,14 @@ while($row = $db->fetch_array($result))
 	                                AND `templategroup`='mails'
 	                                AND `varname`='webmaxpercent_subject'");
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
-	
+
 		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
 	                                AND `language`='" . $db->escape($row['def_language']) . "'
 	                                AND `templategroup`='mails'
 	                                AND `varname`='webmaxpercent_mailbody'");
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
-	
+
 		$_mailerror = false;
 		try {
 			$mail->SetFrom($row['email'], $row['name']);
@@ -168,12 +168,12 @@ while($row = $db->fetch_array($result))
 			$mailerr_msg = $e->getMessage();
 			$_mailerror = true;
 		}
-	
+
 		if ($_mailerror) {
 			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 			standard_error('errorsendingmail', $row["email"]);
 		}
-	
+
 		$mail->ClearAddresses();
 		$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent`='2'
 	                WHERE `adminid`='" . (int)$row['adminid'] . "'");

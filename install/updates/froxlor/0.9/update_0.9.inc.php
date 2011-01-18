@@ -1389,3 +1389,25 @@ if(isFroxlorVersion('0.9.16'))
 
 	updateToVersion('0.9.17-svn1');
 }
+
+if(isFroxlorVersion('0.9.17-svn1'))
+{
+	showUpdateStep("Updating from 0.9.17-svn1 to 0.9.17-svn2", false);
+
+	showUpdateStep("Adding new tables to database");
+	$db->query("CREATE TABLE IF NOT EXISTS `ipsandports_docrootsettings` (
+  `id` int(5) NOT NULL auto_increment,
+  `fid` int(11) NOT NULL,
+  `docrootsettings` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM;");	
+	$db->query("CREATE TABLE IF NOT EXISTS `domain_docrootsettings` (
+  `id` int(5) NOT NULL auto_increment,
+  `fid` int(11) NOT NULL,
+  `docrootsettings` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.17-svn2');
+}
