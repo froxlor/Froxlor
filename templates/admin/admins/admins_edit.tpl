@@ -124,7 +124,7 @@ $header
 			<if $settings['system']['mail_quota_enabled'] == 1>
 			<tr>
 				<td class="main_field_name">{$lng['customer']['email_quota']}: *</td>
-				<td class="main_field_display" nowrap="nowrap"><input type="text" class="textul" name="email_quota" value="{$result['email_quota']}" maxlength="3" />&nbsp;{$email_quota_ul}</td>
+				<td class="main_field_display" nowrap="nowrap"><input type="text" class="textul" name="email_quota" value="{$result['email_quota']}" maxlength="9" />&nbsp;{$email_quota_ul}</td>
 			</tr>
 			</if>
 			<if $settings['autoresponder']['autoresponder_active'] == 1>
