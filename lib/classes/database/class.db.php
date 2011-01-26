@@ -181,22 +181,36 @@ class db
 	 * @return string RessourceId
 	 */
 
-	function query($query_str, $unbuffered = false)
+	function query($query_str, $unbuffered = false, $suppress_error = false)
 	{
 		global $numbqueries;
 
 		if(!$unbuffered)
 		{
-			$this->query_id = mysql_query($query_str, $this->link_id);
+			if($suppress_error)
+			{
+				$this->query_id = @mysql_query($query_str, $this->link_id);
+			} else {
+				$this->query_id = mysql_query($query_str, $this->link_id);
+			}
 		}
 		else
 		{
-			$this->query_id = mysql_unbuffered_query($query_str, $this->link_id);
+			if($suppress_error)
+			{
+				$this->query_id = @mysql_unbuffered_query($query_str, $this->link_id);
+			} else {
+				$this->query_id = mysql_unbuffered_query($query_str, $this->link_id);
+			}
 		}
 
-		if(!$this->query_id)
+		if(!$this->query_id && !$suppress_error)
 		{
 			$this->showerror('Invalid SQL: ' . $query_str);
+		}
+		elseif(!$this->query_id && $suppress_error)
+		{
+			return false;
 		}
 
 		$numbqueries++;

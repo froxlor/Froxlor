@@ -25,17 +25,24 @@ function getPhpConfigs()
 	global $db;
 	
 	$query = 'SELECT * FROM `' . TABLE_PANEL_PHPCONFIGS . '` ';
-	$result = $db->query($query);
+	$result = $db->query($query, false, true);
 	$configs_array = array();
 
-	while($row = $db->fetch_array($result))
+	// if the table does not yet exist, we just use the default php.ini
+	if(!$result)
 	{
-		if(!isset($configs_array[$row['id']])
-		   && !in_array($row['id'], $configs_array))
+		$configs_array[1] = 'Default php.ini';
+	}
+	else
+	{
+		while($row = $db->fetch_array($result))
 		{
-			$configs_array[$row['id']] = html_entity_decode($row['description']);
+			if(!isset($configs_array[$row['id']])
+			   && !in_array($row['id'], $configs_array))
+			{
+				$configs_array[$row['id']] = html_entity_decode($row['description']);
+			}
 		}
 	}
-
 	return $configs_array;
 }

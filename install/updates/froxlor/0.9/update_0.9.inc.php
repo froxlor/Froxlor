@@ -1422,7 +1422,7 @@ if(isFroxlorVersion('0.9.17-svn2'))
 
 if(isFroxlorVersion('0.9.17'))
 {
-	showUpdateStep("Updating from 0.9.17 to 0.9.18-svn1");
+	showUpdateStep("Updating from 0.9.17 to 0.9.18-svn1", false);
 
 	showUpdateStep("Checking whether you are missing any settings", false);
 	$nonefound = true;
