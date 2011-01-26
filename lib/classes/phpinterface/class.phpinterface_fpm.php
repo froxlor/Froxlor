@@ -116,7 +116,47 @@ class phpinterface_fpm
 			$fpm_config.= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f '.$this->_domain['email']."\n";
 			if($this->_domain['loginname'] != 'froxlor.panel')
 			{
-				$fpm_config.= 'php_admin_value[open_basedir] = ' . makeCorrectDir($this->_settings['system']['documentroot_prefix'] . '/' . $this->_domain['loginname'] . '/') .':' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . ':' . $this->_settings['phpfpm']['peardir'] . "\n";
+				if($this->_domain['openbasedir'] == '1')
+				{
+					$openbasedir = '';
+					$_phpappendopenbasedir = '';
+					$_custom_openbasedir = explode(':', $this->_settings['phpfpm']['peardir']);
+					foreach($_custom_openbasedir as $cobd)
+					{
+						$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
+					}
+		
+					$_custom_openbasedir = explode(':', $this->_settings['system']['phpappendopenbasedir']);
+					foreach($_custom_openbasedir as $cobd)
+					{
+						$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
+					}
+		
+					if($this->_domain['openbasedir_path'] == '0' && strstr($this->_domain['documentroot'], ":") === false)
+					{
+						$openbasedir = appendOpenBasedirPath($this->_domain['documentroot'], true);
+					}
+					else
+					{
+						$openbasedir = appendOpenBasedirPath($this->_domain['customerroot'], true);
+					}
+		
+					$openbasedir .= appendOpenBasedirPath($this->getTempDir());
+					$openbasedir .= $_phpappendopenbasedir;
+		
+					$openbasedir = explode(':', $openbasedir);
+					$clean_openbasedir = array();
+					foreach($openbasedir as $number => $path)
+					{
+						if(trim($path) != '/')
+						{
+							$clean_openbasedir[] = makeCorrectDir($path);
+						}
+					}
+					$openbasedir = implode(':', $clean_openbasedir);
+
+					$fpm_config.= 'php_admin_value[open_basedir] = ' . $openbasedir . "\n";
+				}
 			}
 			$fpm_config.= 'php_admin_value[session.save_path] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
 			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
@@ -170,5 +210,26 @@ class phpinterface_fpm
 		}
 
 		return $socket;
+	}
+
+	/**
+	 * fpm-temp directory
+	 * 
+	 * @param boolean $createifnotexists create the directory if it does not exist
+	 * 
+	 * @return string the directory
+	 */
+	public function getTempDir($createifnotexists = true)
+	{
+		$tmpdir = makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/');
+
+		if(!is_dir($tmpdir) && $createifnotexists)
+		{
+			safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
+			safe_exec('chown -R ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($tmpdir));
+			safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
+		}
+		
+		return $tmpdir;
 	}
 }

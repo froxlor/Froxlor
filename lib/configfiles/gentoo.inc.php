@@ -52,20 +52,23 @@ return Array(
 					),
 					'lighttpd' => Array(
 						'label' => 'Lighttpd Webserver',
+						'commands_1' => Array(
+							'emerge -av lighttpd'
+						),
 						'files' => Array(
 							'etc_lighttpd.conf' => '/etc/lighttpd/lighttpd.conf'
 						),
-						'commands' => Array(
+						'commands_2' => Array(
 							$configcommand['vhost'],
 							$configcommand['diroptions'],
 							$configcommand['v_inclighty'],
 							$configcommand['d_inclighty'],
 							'mkdir -p ' . $settings['system']['documentroot_prefix'],
 							'mkdir -p ' . $settings['system']['logfiles_directory'],
-							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p ' . $settings['system']['deactivateddocroot'] : ''
+							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p ' . $settings['system']['deactivateddocroot'] : '',
+							'rc-update add lighttpd default'
 						),
 						'restart' => Array(
-							'rc-update add lighttpd default',
 							'/etc/init.d/lighttpd restart'
 						)
 					),
@@ -84,33 +87,13 @@ return Array(
 							'mkdir -p ' . $settings['system']['deactivateddocroot'],
 							'mkdir -p ' . $settings['system']['mod_fcgid_tmpdir'],
 							'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir'],
-							'chmod u+x /etc/init.d/php-fcgi'
+							'chmod u+x /etc/init.d/php-fcgi',
+							'rc-update add nginx default'
 						),
 						'restart' => Array(
 							'/etc/init.d/nginx restart'
 						)
 					),
-                                        'nginx' => Array(
-                                                'label' => 'Nginx Webserver',
-                                                'commands_1' => Array(
-                                                        'emerge nginx',
-                                                ),
-                                                'files' => Array(
-                                                        'etc_nginx_nginx.conf' => '/etc/nginx/nginx.conf',
-                                                        'etc_init.d_php-fcgi' => '/etc/init.d/php-fcgi'
-                                                ),
-                                                'commands_2' => Array(
-                                                        'mkdir -p ' . $settings['system']['documentroot_prefix'],
-                                                        'mkdir -p ' . $settings['system']['logfiles_directory'],
-                                                        'mkdir -p ' . $settings['system']['deactivateddocroot'],
-                                                        'mkdir -p ' . $settings['system']['mod_fcgid_tmpdir'],
-                                                        'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir'],
-                                                        'chmod u+x /etc/init.d/php-fcgi'
-                                                ),
-                                                'restart' => Array(
-                                                        '/etc/init.d/nginx restart'
-                                                )
-                                        )
 				)
 			),
 			'dns' => Array(
@@ -125,10 +108,10 @@ return Array(
 							'echo "include \"' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf\";" >> /etc/bind/named.conf',
 							'touch ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
 							'chown named:0 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
-							'chmod 0600 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf'
+							'chmod 0600 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
+							'rc-update add named default'
 						),
 						'restart' => Array(
-							'rc-update add named default',
 							'/etc/init.d/named restart'
 						)
 					),
@@ -173,8 +156,10 @@ return Array(
 							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf',
 							'etc_sasl2_smtpd.conf' => '/etc/sasl2/smtpd.conf'
 						),
+						'commands_2' => Array(
+							'rc-update add postfix default'
+						),
 						'restart' => Array(
-							'rc-update add postfix default',
 							'/etc/init.d/postfix restart'
 						)
 					),
@@ -214,8 +199,10 @@ return Array(
 							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
 							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf'
 						),
+						'commands_2'  => Array(
+							'rc-update add postfix default'
+						),
 						'restart' => Array(
-							'rc-update add postfix default',
 							'/etc/init.d/postfix restart'
 						)
 					),
@@ -246,10 +233,10 @@ return Array(
 						'commands_2' => Array(
 							'echo "smtpd_milters = inet:localhost:8891
 milter_macro_daemon_name = SIGNING
-milter_default_action = accept" >> /etc/postfix/main.cf'
+milter_default_action = accept" >> /etc/postfix/main.cf',
+							'rc-update add dovecot default'
 						),
 						'restart' => Array(
-							'rc-update add dkim-filter default',
 							'/etc/init.d/postfix restart'
 						)
 					)
@@ -294,12 +281,12 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 							'chmod 0600 /etc/courier-imap/pop3d',
 							'chmod 0600 /etc/courier-imap/imapd',
 							'chmod 0600 /etc/courier-imap/pop3d-ssl',
-							'chmod 0600 /etc/courier-imap/imapd-ssl'
-						),
-						'restart' => Array(
+							'chmod 0600 /etc/courier-imap/imapd-ssl',
 							'rc-update add courier-authlib default',
 							'rc-update add courier-pop3d default',
-							'rc-update add courier-imapd default',
+							'rc-update add courier-imapd default'
+						),
+						'restart' => Array(
 							'/etc/init.d/courier-authlib restart',
 							'/etc/init.d/courier-pop3d restart',
 							'/etc/init.d/courier-imapd restart'
@@ -319,7 +306,8 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 							'etc_dovecot_dovecot-sql.conf' => '/etc/dovecot/dovecot-sql.conf'
 						),
 						'commands_2' => Array(
-							'chmod 0640 /etc/dovecot/dovecot-sql.conf'
+							'chmod 0640 /etc/dovecot/dovecot-sql.conf',
+							'rc-update add dovecot default'
 						),
 						'restart' => Array(
 							'/etc/init.d/dovecot restart'
@@ -332,16 +320,19 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 				'daemons' => Array(
 					'proftpd' => Array(
 						'label' => 'ProFTPd',
+						'commands_1' => Array(
+							'emerge -av proftpd'
+						),
 						'files' => Array(
 							'etc_proftpd_proftpd.conf' => '/etc/proftpd/proftpd.conf'
 						),
-						'commands' => Array(
+						'commands_2' => Array(
 							'touch /etc/proftpd/proftpd.conf',
 							'chown root:0 /etc/proftpd/proftpd.conf',
-							'chmod 0600 /etc/proftpd/proftpd.conf'
+							'chmod 0600 /etc/proftpd/proftpd.conf',
+							'rc-update add proftpd default'
 						),
 						'restart' => Array(
-							'rc-update add proftpd default',
 							'/etc/init.d/proftpd restart'
 						)
 					),
@@ -358,10 +349,10 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 							'chown root:0 /etc/conf.d/pure-ftpd',
 							'chmod 0644 /etc/conf.d/pure-ftpd',
 							'chown root:0 /etc/pureftpd-mysql.conf',
-							'chmod 0600 /etc/pureftpd-mysql.conf'
+							'chmod 0600 /etc/pureftpd-mysql.conf',
+							'rc-update add pure-ftpd default'
 						),
 						'restart' => Array(
-							'rc-update add pure-ftpd default',
 							'/etc/init.d/pure-ftpd restart'
 						)
 					)
@@ -372,16 +363,19 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 				'daemons' => Array(
 					'cron' => Array(
 						'label' => 'Crond (cronscript)',
+						'commands_1' => Array(
+							'emerge -av vixie-cron',
+							'touch /etc/cron.d/froxlor',
+							'chown root:0 /etc/cron.d/froxlor',
+							'chmod 0640 /etc/cron.d/froxlor'
+						),
 						'files' => Array(
 							'etc_cron.d_froxlor' => '/etc/cron.d/froxlor'
 						),
-						'commands' => Array(
-							'touch /etc/cron.d/froxlor',
-							'chown root:0 /etc/cron.d/froxlor',
-							'chmod 0640 /etc/cron.d/froxlor',
+						'commands_2' => Array(
+							'rc-update add vixie-cron default'
 						),
 						'restart' => Array(
-							'rc-update add vixie-cron default',
 							'/etc/init.d/vixie-cron restart'
 						)
 					),
@@ -404,10 +398,10 @@ milter_default_action = accept" >> /etc/postfix/main.cf'
 							'etc_nsswitch.conf' => '/etc/nsswitch.conf',
 						),
 						'commands_2' => Array(
-							'chmod 600 /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg'
+							'chmod 600 /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg',
+							'rc-update add nscd default'
 						),
 						'restart' => Array(
-							'rc-update add nscd default',
 							'/etc/init.d/nscd restart'
 						)
 					)
