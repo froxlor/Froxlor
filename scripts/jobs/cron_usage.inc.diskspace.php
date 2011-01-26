@@ -37,9 +37,9 @@ while($row = $db->fetch_array($result))
 
 		$replace_arr = array(
 			'NAME' => $row['name'],
-			'DISKAVAILABLE' => ($row['diskspace'] / 1024), /* traffic is stored in KB, template uses MB */
+			'DISKAVAILABLE' => round(($row['diskspace'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 			'DISKUSED' => round($row['diskspace_used'] / 1024, 2), /* traffic is stored in KB, template uses MB */
-			'USAGE_PERCENT' => ($row['diskspace_used'] * 100) / $row['diskspace'],
+			'USAGE_PERCENT' => round(($row['diskspace_used'] * 100) / $row['diskspace'], 2),
 			'MAX_PERCENT' => $settings['system']['report_webmax']
 		);
 

@@ -47,9 +47,9 @@ while($row = $db->fetch_array($result))
 	{
 		$replace_arr = array(
 			'NAME' => $row['name'],
-			'TRAFFIC' => ($row['traffic'] / 1024), /* traffic is stored in KB, template uses MB */
-			'TRAFFICUSED' => ($row['traffic_used'] / 1024), /* traffic is stored in KB, template uses MB */
-			'USAGE_PERCENT' => ($row['traffic_used'] * 100) / $row['traffic'],
+			'TRAFFIC' => round(($row['traffic'] / 1024), 2), /* traffic is stored in KB, template uses MB */
+			'TRAFFICUSED' => round(($row['traffic_used'] / 1024), 2), /* traffic is stored in KB, template uses MB */
+			'USAGE_PERCENT' => round(($row['traffic_used'] * 100) / $row['traffic'], 2),
 			'MAX_PERCENT' => $settings['system']['report_trafficmax']
 		);
 		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
@@ -128,9 +128,9 @@ while($row = $db->fetch_array($result))
 	{
 		$replace_arr = array(
 			'NAME' => $row['name'],
-			'TRAFFIC' => ($row['traffic'] / 1024), /* traffic is stored in KB, template uses MB */
-			'TRAFFICUSED' => ($row['traffic_used_total'] / 1024), /* traffic is stored in KB, template uses MB */
-			'USAGE_PERCENT' => ($row['traffic_used_total'] * 100) / $row['traffic'],
+			'TRAFFIC' => round(($row['traffic'] / 1024), 2), /* traffic is stored in KB, template uses MB */
+			'TRAFFICUSED' => round(($row['traffic_used_total'] / 1024), 2), /* traffic is stored in KB, template uses MB */
+			'USAGE_PERCENT' => round(($row['traffic_used_total'] * 100) / $row['traffic'], 2),
 			'MAX_PERCENT' => $settings['system']['report_trafficmax']
 		);
 		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
