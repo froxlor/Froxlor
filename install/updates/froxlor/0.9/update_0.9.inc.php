@@ -1419,3 +1419,27 @@ if(isFroxlorVersion('0.9.17-svn2'))
 
 	updateToVersion('0.9.17');
 }
+
+if(isFroxlorVersion('0.9.17'))
+{
+	showUpdateStep("Updating from 0.9.17 to 0.9.18-svn1");
+
+	showUpdateStep("Checking whether you are missing any settings", false);
+	$nonefound = true;
+
+	$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
+	if(!isset($result) || !isset($result['value']))
+	{
+		$nonefound = false;
+		showUpdateStep("Adding missing setting 'httpgroup'");
+		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpgroup', '".$settings['system']['httpuser']."');");
+		lastStepStatus(0);
+	}
+
+	if($nonefound) {
+		showUpdateStep("No missing settings found ;-)");
+		lastStepStatus(0);
+	}
+
+	updateToVersion('0.9.18-svn1');
+}
