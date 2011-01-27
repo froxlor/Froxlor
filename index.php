@@ -234,7 +234,8 @@ if($action == 'login')
 				$message = $lng['error']['login_blocked'];
 				break;
 			case 4:
-				$message = $lng['error']['errorsendingmail'];
+				$cmail = isset($_GET['customermail']) ? $_GET['customermail'] : 'unknown';
+				$message = str_replace('%s', $cmail, $lng['error']['errorsendingmail']);
 				break;
 		}
 
@@ -350,7 +351,7 @@ if($action == 'forgotpwd')
 					if ($_mailerror) {
 						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
 						$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-						redirectTo('index.php', Array('showmessage' => '4'), true);
+						redirectTo('index.php', Array('showmessage' => '4', 'customermail' => $user['email']), true);
 						exit;
 					}
 
