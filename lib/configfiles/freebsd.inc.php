@@ -90,7 +90,7 @@ return Array(
 						),
 						'commands_2' => Array(
 							'pw groupadd vmail -g '.$settings['system']['vmail_gid'],
-							'pw useradd vmail -u '.$settings['system']['vmail_uid'].' -g '.$settings['system']['vmail_gid'].' -s/sbin/nologin -d/dev/null',			
+							'pw useradd vmail -u '.$settings['system']['vmail_uid'].' -g '.$settings['system']['vmail_gid'].' -s/sbin/nologin -d/dev/null',
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
 							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir']
@@ -136,10 +136,10 @@ return Array(
 							'etc_postfix_main.cf' => '/usr/local/etc/postfix/main.cf'
 						),
 						'commands_1' => Array(
-							'postmap /etc/postfix/mx_access'
+							'postmap /usr/local/etc/postfix/mx_access'
 						),
 						'restart' => Array(
-							'/etc/init.d/postfix restart'
+							'/usr/local/etc/rc.d/postfix restart'
 						)
 					),
 					'dkim' => Array(
