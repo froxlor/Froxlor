@@ -97,7 +97,8 @@ if($userinfo['change_serversettings'] == '1')
 			'<VIRTUAL_GID_MAPS>' => $settings['system']['vmail_gid'],
 			'<SSLPROTOCOLS>' => ($settings['system']['use_ssl'] == '1') ? 'imaps pop3s' : '',
 			'<CUSTOMER_TMP>' => ($settings['system']['mod_fcgid_tmpdir'] != '') ? makeCorrectDir($settings['system']['mod_fcgid_tmpdir']) : '/tmp/',
-			'<BASE_PATH>' => makeCorrectDir(dirname(__FILE__))
+			'<BASE_PATH>' => makeCorrectDir(dirname(__FILE__)),
+			'<BIND_CONFIG_PATH>' => makeCorrectDir($settings['system']['bindconf_directory'])
 		);
 		$files = '';
 		$configpage = '';
