@@ -220,14 +220,14 @@ return Array(
 				'label' => $lng['admin']['configfiles']['etc'],
 				'daemons' => Array(
 					'cron' => Array(
-                                                'label' => 'Crond (cronscript)',
+						'label' => 'Crond (cronscript)',
 						'commands' => Array(
-							'echo "*/1 * * * *     root     /usr/local/bin/php -q /var/customers/froxlor/scripts/froxlor_master_cronjob.php" >> /etc/crontab'
-							),
-                                                'restart' => Array(
-                                                        '/etc/rc.d/cron restart'
-                                                )
-                                        ),
+							'echo "*/5 * * * *     root     /usr/local/bin/php -q '.makeCorrectDir(dirname(dirname(dirname(__FILE__)))).'scripts/froxlor_master_cronjob.php" >> /etc/crontab'
+						),
+						'restart' => Array(
+							'/etc/rc.d/cron restart'
+						)
+					),
 					'awstats' => Array(
 						'label' => 'Awstats',
 						'commands' => Array(
@@ -267,5 +267,3 @@ return Array(
 		)
 	)
 );
-
-?>
