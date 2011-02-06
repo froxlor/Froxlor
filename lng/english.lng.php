@@ -1564,3 +1564,5 @@ $lng['mails']['webmaxpercent']['mailbody'] = 'Dear {NAME},\n\nyou used {DISKUSED
 $lng['mails']['webmaxpercent']['subject'] = 'Reaching your diskspace limit';
 $lng['mysql']['database_edit'] = 'Edit database';
 
+// ADDED IN FROXLOR 0.9.18
+$lng['error']['domains_cantdeletedomainwithaliases'] = 'You cannot delete a domain which is used for alias-domains. You have to delete the aliases first.';

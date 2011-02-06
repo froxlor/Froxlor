@@ -1545,3 +1545,6 @@ $lng['serversettings']['manual'] = 'Manuelle Eingabe';
 $lng['mails']['webmaxpercent']['mailbody'] = 'Sehr geehrte(r) {NAME},\n\nSie haben bereits {DISKUSED} MB von Ihren insgesamt {DISKAVAILABLE} MB Speicherplatz verbraucht.\nDies sind mehr als {MAX_PERCENT}%.\n\nVielen Dank,\ndas Froxlor-Team';
 $lng['mails']['webmaxpercent']['subject'] = 'Sie erreichen bald Ihr Speicherplatz-Limit';
 $lng['mysql']['database_edit'] = 'Datenbank bearbeiten';
+
+// ADDED IN FROXLOR 0.9.18
+$lng['error']['domains_cantdeletedomainwithaliases'] = 'Sie k&ouml;nnen keine Domain l&ouml;schen, die noch von Alias-Domains verwendet wird. L&ouml;schen Sie zuerst alle Alias-Domains dieser Domain.';

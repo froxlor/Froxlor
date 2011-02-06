@@ -144,8 +144,8 @@ if($page == 'domains'
 		$alias_check = $db->query_first('SELECT COUNT(`id`) AS `count` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . (int)$id . '\'');
 
 		if($result['domain'] != ''
-		   && $alias_check['count'] == 0)
-		{
+			&& $alias_check['count'] == 0
+		) {
 			if(isset($_POST['send'])
 			   && $_POST['send'] == 'send')
 			{
@@ -196,6 +196,9 @@ if($page == 'domains'
 				inserttask('1');
 				inserttask('4');
 				redirectTo($filename, Array('page' => $page, 's' => $s));
+			}
+			elseif ($alias_check['count'] > 0) {
+				standard_error('domains_cantdeletedomainwithaliases');
 			}
 			else
 			{
