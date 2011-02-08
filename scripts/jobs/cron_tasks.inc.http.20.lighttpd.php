@@ -876,7 +876,7 @@ class lighttpd
 				}
 				else
 				{
-					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']).'" )' . "\n";					
+					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']).'/" )' . "\n";					
 				}
 			}
 			else
@@ -888,7 +888,7 @@ class lighttpd
 				}
 				else
 				{
-					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']).'" )' . "\n";
+					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']).'/" )' . "\n";
 				}
 			}
 		}
@@ -903,7 +903,7 @@ class lighttpd
 				} 
 				else
 				{
-					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer').'" )' . "\n";
+					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/').'" )' . "\n";
 				}
 			}
 			// if the docroots are equal, we still have to set an alias for awstats
