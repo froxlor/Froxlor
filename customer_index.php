@@ -185,5 +185,33 @@ elseif($page == 'change_language')
 		eval("echo \"" . getTemplate("index/change_language") . "\";");
 	}
 }
+elseif($page == 'change_theme')
+{
+	if(isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
+		$theme = validate($_POST['theme'], 'theme');
+ 
+		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `theme`='" . $db->escape($theme) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
+		$db->query("UPDATE `" . TABLE_PANEL_SESSIONS . "` SET `theme`='" . $db->escape($theme) . "' WHERE `hash`='" . $db->escape($s) . "'");
+		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
+		redirectTo($filename, Array('s' => $s));
+	}
+	else
+	{
+		$theme_options = '';
 
-?>
+		$default_theme = $settings['panel']['default_theme'];
+		if($userinfo['theme'] != '') {
+			$default_theme = $userinfo['theme'];
+		}
+
+		$themes_avail = getThemes();
+		foreach($themes_avail as $t)
+		{
+			$theme_options.= makeoption($t, $t, $default_theme, true);
+		}
+
+		eval("echo \"" . getTemplate("index/change_theme") . "\";");
+	}
+}

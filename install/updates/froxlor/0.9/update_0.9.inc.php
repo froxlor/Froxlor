@@ -1443,3 +1443,26 @@ if(isFroxlorVersion('0.9.17'))
 
 	updateToVersion('0.9.18-svn1');
 }
+
+if(isFroxlorVersion('0.9.18-svn1'))
+{
+	showUpdateStep("Updating from 0.9.18-svn1 to 0.9.18-svn2", false);
+
+	$update_default_theme = isset($_POST['update_default_theme']) ? $_POST['update_default_theme'] : 'Froxlor';
+
+	showUpdateStep("Adding new settings for themes");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'default_theme', '".$db->escape($update_default_theme)."');");
+	lastStepStatus(0);
+
+	showUpdateStep("Delete old setting for header-graphic");
+	$db->query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup`='admin' AND `varname` = 'froxlor_graphic';");
+	lastStepStatus(0);
+
+	showUpdateStep("Updating table layouts");
+	$db->query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `theme` varchar(255) NOT NULL default 'Froxlor' AFTER `email_autoresponder_used`;");
+	$db->query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `theme` varchar(255) NOT NULL default 'Froxlor' AFTER `email_autoresponder_used`;");
+	$db->query("ALTER TABLE `".TABLE_PANEL_SESSIONS."` ADD `theme` varchar(255) NOT NULL default '' AFTER `adminsession`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.18-svn2');
+}

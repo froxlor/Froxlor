@@ -42,6 +42,7 @@ $lng['install']['httpuser'] = 'HTTP username';
 $lng['install']['httpgroup'] = 'HTTP groupname';
 $lng['install']['apacheversion'] = 'Apacheversion';
 $lng['install']['next'] = 'Next';
+$lng['install']['installdata'] = 'Installation - Data';
 
 /**
  * Progress

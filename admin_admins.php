@@ -14,7 +14,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id$
+ * @version    $Id: admin_admins.php 101 2010-12-08 07:03:42Z d00p $
  */
 
 define('AREA', 'admin');
@@ -47,6 +47,7 @@ if($page == 'admins'
 			'diskspace_used' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
 			'traffic' => $lng['customer']['traffic'],
 			'traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
+/*
 			'mysqls' => $lng['customer']['mysqls'],
 			'mysqls_used' => $lng['customer']['mysqls'] . ' (' . $lng['panel']['used'] . ')',
 			'ftps' => $lng['customer']['ftps'],
@@ -66,6 +67,7 @@ if($page == 'admins'
 			'email_autoresponder' => $lng['customer']['autoresponder'],
 			'email_autoresponder_used' => $lng['customer']['autoresponder'] . ' (' . $lng['panel']['used'] . ')',
 			'deactivated' => $lng['admin']['deactivated']
+*/
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_ADMINS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$admins = '';
@@ -86,6 +88,19 @@ if($page == 'admins'
 				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
 				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
 				$row['diskspace'] = round($row['diskspace'] / 1024, $settings['panel']['decimal_places']);
+
+				/**
+				 * percent-values for progressbar
+				 */
+				if($row['diskspace'] > 0) {
+					$percent = round(($row['diskspace_used']*100)/$row['diskspace'], 2);
+					$doublepercent = round($percent*2, 2);
+				} else {
+					$percent = 0;
+					$doublepercent = 0;
+				}
+				/* */
+
 				$row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota email_autoresponder ftps subdomains tickets');
 				$row = htmlentities_array($row);
 				eval("\$admins.=\"" . getTemplate("admins/admins_admin") . "\";");
@@ -360,8 +375,38 @@ if($page == 'admins'
 					$change_serversettings = '0';
 				}
 
-				$result = $db->query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` (`loginname`, `password`, `name`, `email`, `def_language`, `change_serversettings`, `customers`, `customers_see_all`, `domains`, `domains_see_all`, `caneditphpsettings`, `diskspace`, `traffic`, `subdomains`, `emails`, `email_accounts`, `email_forwarders`, `email_quota`, `ftps`, `tickets`, `mysqls`, `ip`, `can_manage_aps_packages`, `aps_packages`, `email_autoresponder`)
-					                   VALUES ('" . $db->escape($loginname) . "', '" . md5($password) . "', '" . $db->escape($name) . "', '" . $db->escape($email) . "','" . $db->escape($def_language) . "', '" . $db->escape($change_serversettings) . "', '" . $db->escape($customers) . "', '" . $db->escape($customers_see_all) . "', '" . $db->escape($domains) . "', '" . $db->escape($domains_see_all) . "', '" . (int)$caneditphpsettings . "', '" . $db->escape($diskspace) . "', '" . $db->escape($traffic) . "', '" . $db->escape($subdomains) . "', '" . $db->escape($emails) . "', '" . $db->escape($email_accounts) . "', '" . $db->escape($email_forwarders) . "', '" . $db->escape($email_quota) . "', '" . $db->escape($ftps) . "', '" . $db->escape($tickets) . "', '" . $db->escape($mysqls) . "', '" . (int)$ipaddress . "', " . (int)$can_manage_aps_packages . ", " . (int)$number_of_aps_packages . ", " . $db->escape($email_autoresponder) . ")");
+				$_theme = $settings['panel']['default_theme'];
+
+				$result = $db->query("INSERT INTO 
+					`" . TABLE_PANEL_ADMINS . "`
+				SET 
+					`loginname` = '" . $db->escape($loginname) . "', 
+					`password` = '" . md5($password) . "', 
+					`name` = '" . $db->escape($name) . "', 
+					`email` = '" . $db->escape($email) . "', 
+					`def_language` = '" . $db->escape($def_language) . "', 
+					`change_serversettings` = '" . $db->escape($change_serversettings) . "', 
+					`customers` = '" . $db->escape($customers) . "', 
+					`customers_see_all` = '" . $db->escape($customers_see_all) . "', 
+					`domains` = '" . $db->escape($domains) . "', 
+					`domains_see_all` = '" . $db->escape($domains_see_all) . "', 
+					`caneditphpsettings` = '" . (int)$caneditphpsettings . "', 
+					`diskspace` = '" . $db->escape($diskspace) . "', 
+					`traffic` = '" . $db->escape($traffic) . "', 
+					`subdomains` = '" . $db->escape($subdomains) . "', 
+					`emails` = '" . $db->escape($emails) . "', 
+					`email_accounts` = '" . $db->escape($email_accounts) . "', 
+					`email_forwarders` = '" . $db->escape($email_forwarders) . "', 
+					`email_quota` = '" . $db->escape($email_quota) . "', 
+					`ftps` = '" . $db->escape($ftps) . "', 
+					`tickets` = '" . $db->escape($tickets) . "', 
+					`mysqls` = '" . $db->escape($mysqls) . "', 
+					`ip` = '" . (int)$ipaddress . "', 
+					`can_manage_aps_packages` = '" . (int)$can_manage_aps_packages . "', 
+					`aps_packages` = '" . (int)$number_of_aps_packages . "', 
+					`email_autoresponder` = '" . $db->escape($email_autoresponder) . "',
+					`theme` = '".$db->escape($_theme)."';
+				");
 				$adminid = $db->insert_id();
 				$log->logAction(ADM_ACTION, LOG_INFO, "added admin '" . $loginname . "'");
 				redirectTo($filename, Array('page' => $page, 's' => $s));
@@ -413,6 +458,12 @@ if($page == 'admins'
 			$caneditphpsettings = makeyesno('caneditphpsettings', '1', '0', '0');
 			$can_manage_aps_packages = makeyesno('can_manage_aps_packages', '1', '0', '0');
 			$number_of_aps_packages_ul = makecheckbox('number_of_aps_packages_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+
+			$admin_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/admin/formfield.admin_add.php';
+			$admin_add_form = htmlform::genHTMLForm($admin_add_data);
+
+			$title = $admin_add_data['admin_add']['title'];
+			$image = $admin_add_data['admin_add']['image'];
 
 			eval("echo \"" . getTemplate("admins/admins_add") . "\";");
 		}
@@ -786,6 +837,13 @@ if($page == 'admins'
 				$can_manage_aps_packages = makeyesno('can_manage_aps_packages', '1', '0', $result['can_manage_aps_packages']);
 
 				$result = htmlentities_array($result);
+
+				$admin_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/admin/formfield.admin_edit.php';
+				$admin_edit_form = htmlform::genHTMLForm($admin_edit_data);
+
+				$title = $admin_edit_data['admin_edit']['title'];
+				$image = $admin_edit_data['admin_edit']['image'];
+
 				eval("echo \"" . getTemplate("admins/admins_edit") . "\";");
 			}
 		}

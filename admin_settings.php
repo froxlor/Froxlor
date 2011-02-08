@@ -119,7 +119,7 @@ elseif($page == 'rebuildconfigs'
 		inserttask('1');
 		inserttask('4');
 		inserttask('5');
-		redirectTo('admin_index.php', array('s' => $s));
+		standard_success('rebuildingconfigs', '', array('filename' => 'admin_index.php'));
 	}
 	else
 	{

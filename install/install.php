@@ -37,9 +37,10 @@ if(file_exists('../lib/userdata.inc.php'))
 	require ('../lib/userdata.inc.php');
 
 	if(isset($sql)
-	   && is_array($sql))
-	{
-		die('Sorry, Froxlor is already configured...');
+	   && is_array($sql)
+	) {
+		$installed_hint = file_get_contents('../templates/Froxlor/misc/alreadyinstalledhint.tpl');
+		die($installed_hint);
 	}
 }
 
@@ -94,58 +95,45 @@ if(file_exists('./lng/' . $language . '.lng.php'))
  * BEGIN FUNCTIONS -----------------------------------------------
  */
 
-function page_header()
-{
-
+function page_header() {
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
-	<link rel="stylesheet" href="../templates/main.css" type="text/css" />
-	<title>Froxlor</title>
+	<meta charset="iso-8859-1" />
+	<meta http-equiv="Default-Style" content="text/css" />
+	<link rel="stylesheet" href="../templates/Froxlor/froxlor.css"  />
+	<!--[if IE]><link rel="stylesheet" href="../templates/Froxlor/froxlor_ie.css"  /><![endif]-->
+	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script type="text/javascript" src="../templates/Froxlor/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../templates/Froxlor/js/froxlor.js"></script>
+	<title>Froxlor Server Management Panel - Installation</title>
+	<style>
+	input {
+		background: #dae7ee url('../images/Froxlor/icons/text_align_left.png') no-repeat 5px 4px;
+	}
+	input[type="password"] {
+		background: #dae7ee url('../images/Froxlor/icons/password.png') no-repeat 4px 4px;
+	}
+	input[type="submit"] {
+		background: #ccc url('../images/Froxlor/icons/button_ok.png') no-repeat 4px 8px;
+	}
+	</style>
 </head>
-	<body style="margin: 0; padding: 0;" onload="document.loginform.loginname.focus()">
-		<!--
-			We request you retain the full copyright notice below including the link to www.froxlor.org.
-			This not only gives respect to the large amount of time given freely by the developers
-			but also helps build interest, traffic and use of Froxlor. If you refuse
-			to include even this then support on our forums may be affected.
-			The Froxlor Team : 2009-2010
-		// -->
-		<!--
-			Templates based on work by Luca Piona (info@havanastudio.ch) and Luca Longinotti (chtekk@gentoo.org)
-		// -->
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">
-			<tr>
-				<td width="800"><img src="../images/header.gif" width="800" height="90" alt="" /></td>
-				<td class="header">&nbsp;</td>
-			</tr>
-		</table>
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">
-			<tr>
-				<td valign="top" bgcolor="#FFFFFF">
-				<br />
-				<br />
+<body>
+<div class="loginpage">
 <?php
 }
 
-function page_footer()
-{
-
+function page_footer() {
 ?>
-				</td>
-			</tr>
-		</table>
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">
-			<tr>
-				<td width="100%" class="footer">
-					<br />Froxlor &copy; 2009-2010 by <a href="http://www.froxlor.org/" target="_blank">the Froxlor Team</a>
-					<br /><br/>
-				</td>
-			</tr>
-		</table>
-	</body>
+</div>
+<footer>
+	<span>
+		Froxlor &copy; 2009-<?php echo date('Y', time()); ?> by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a>
+	</span>
+</footer>
+</body>
 </html>
 <?php
 }
@@ -154,24 +142,30 @@ function status_message($case, $text)
 {
 	if($case == 'begin')
 	{
-		echo "\t\t<tr>\n\t\t\t<td class=\"main_field_name\">$text";
+		echo '<tr><td>'.$text;
 	}
 	else
 	{
-		echo " <span style=\"color:$case;\">$text</span></td>\n\t\t</tr>\n";
+		echo '</td><td class="installstatus">
+			<span style="color:'.$case.';">'.$text.'</span>
+		</td></tr>';
 	}
 }
 
-function requirement_checks()
-{
+function requirement_checks() {
+
 	global $lng;
 	page_header();
 
 ?>
-	<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable">
-		<tr>
-			<td class="maintitle"><b><img src="../images/title.gif" alt="" />&nbsp;Froxlor Installation</b></td>
-		</tr>
+	<article class="install bradius">
+		<header class="dark">
+			<img src="../images/Froxlor/logo.png" alt="Froxlor Server Management Panel" />
+		</header>
+
+		<section class="installsec">
+			<h2>Requirements</h2>
+			<table class="noborder">
 <?php
 	$_die = false;
 	
@@ -201,6 +195,7 @@ function requirement_checks()
 		status_message('green', 'OK');
 	}
 
+	// check for mysql-extension
 	status_message('begin', $lng['install']['phpmysql']);
 
 	if(!extension_loaded('mysql'))
@@ -212,7 +207,8 @@ function requirement_checks()
 	{
 		status_message('green', 'OK');
 	}
-	
+
+	// check for xml-extension
 	status_message('begin', $lng['install']['phpxml']);
 	
 	if(!extension_loaded('xml'))
@@ -225,8 +221,7 @@ function requirement_checks()
 		status_message('green', 'OK');
 	}
 
-
-
+	// check for filter-extension
 	status_message('begin', $lng['install']['phpfilter']);
 
 	if(!extension_loaded('filter'))
@@ -239,6 +234,7 @@ function requirement_checks()
 		status_message('green', 'OK');
 	}
 
+	// check for posix-extension
 	status_message('begin', $lng['install']['phpposix']);	
 
 	if(!extension_loaded('posix'))
@@ -250,7 +246,8 @@ function requirement_checks()
 	{
 		status_message('green', 'OK');
 	}
-	
+
+	// check for bcmath extension
 	status_message('begin', $lng['install']['phpbcmath']);
 
 	if(!extension_loaded('bcmath'))
@@ -262,6 +259,7 @@ function requirement_checks()
 		status_message('green', 'OK');
 	}
 
+	// check for open_basedir
 	status_message('begin', $lng['install']['openbasedir']);
 	$php_ob = @ini_get("open_basedir");
 
@@ -275,30 +273,32 @@ function requirement_checks()
 		status_message('green', 'OK');
 	}
 
+?>
+		</table>
+<?php
 	if($_die)
 	{
 ?>
-		<tr>
-			<td class="main_field_display" align="center">
-				<?php echo $lng['install']['diedbecauseofrequirements']; ?><br />
-				<a href="install.php"><?php echo $lng['install']['click_here_to_refresh']; ?></a>
-			</td>
-		</tr>
+		<p style="padding-left:15px;">
+			<strong><?php echo $lng['install']['diedbecauseofrequirements']; ?></strong>
+		</p>
+		<p class="submit">
+			<a href="install.php"><?php echo $lng['install']['click_here_to_refresh']; ?></a>
+		</p>
 <?php 
 	} else {
 ?>
-		<tr>
-			<td class="main_field_display" align="center">
-				<?php echo $lng['install']['froxlor_succ_checks']; ?><br />
-				<a href="install.php?check=1"><?php echo $lng['install']['click_here_to_continue']; ?></a>
-			</td>
-		</tr>
+		<p style="padding-left:15px;">
+			<strong><?php echo $lng['install']['froxlor_succ_checks']; ?></strong>
+		</p>
+		<p class="submit">
+			<a href="install.php?check=1"><?php echo $lng['install']['click_here_to_continue']; ?></a>
+		</p>
 <?php
 	}
 ?>
-	</table>
-	<br />
-	<br />
+		</section>
+	</article>
 <?php 
 	page_footer();
 }
@@ -518,10 +518,14 @@ if(isset($_POST['installstep'])
 	page_header();
 
 ?>
-	<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable">
-		<tr>
-			<td class="maintitle"><b><img src="../images/title.gif" alt="" />&nbsp;Froxlor Installation</b></td>
-		</tr>
+	<article class="install bradius">
+		<header class="dark">
+			<img src="../images/Froxlor/logo.png" alt="Froxlor Server Management Panel" />
+		</header>
+
+		<section class="installsec">
+			<h2>Installation</h2>
+			<table class="noborder">
 <?php
 
 	//first test if we can access the database server with the given root user and password
@@ -812,15 +816,15 @@ if(isset($_POST['installstep'])
 	}
 
 ?>
-		<tr>
-			<td class="main_field_display" align="center">
-				<?php echo $lng['install']['froxlor_succ_installed']; ?><br />
-				<a href="../index.php"><?php echo $lng['install']['click_here_to_login']; ?></a>
-			</td>
-		</tr>
-	</table>
-	<br />
-	<br />
+		</table>
+		<p style="padding-left: 15px;">
+			<strong><?php echo $lng['install']['froxlor_succ_installed']; ?></strong>
+		</p>
+		<p class="submit">
+			<a href="../index.php"><?php echo $lng['install']['click_here_to_login']; ?></a>
+		</p>
+	</section>
+</article>
 <?php
 	page_footer();
 }
@@ -835,116 +839,120 @@ else
 	page_header();
 
 ?>
-	<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get">
-		<input type="hidden" name="check" value="1" />
-		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_40">
-			<tr>
-				<td class="maintitle" colspan="2"><b><img src="../images/title.gif" alt="" />&nbsp;<?php echo $lng['install']['welcome']; ?></b></td>
-			</tr>
-			<tr>
-				<td class="main_field_name" colspan="2"><?php echo $lng['install']['welcometext']; ?></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"><?php echo $lng['install']['language']; ?>: </td>
-				<td class="main_field_display" nowrap="nowrap">
-					<select name="language" class="dropdown_noborder"><?php
-	$language_options = '';
-
-	while(list($language_file, $language_name) = each($languages))
-	{
-		$language_options.= "\n\t\t\t\t\t\t" . makeoption($language_name, $language_file, $language, true, true);
-	}
-
-	echo $language_options;
-
-?>
-
+	<article class="install bradius">
+		<header class="dark">
+			<img src="../images/Froxlor/logo.png" alt="Froxlor Server Management Panel" />
+		</header>
+		<section class="installsec">
+			<h2><?php echo $lng['install']['language']; ?></h2>
+			<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get">
+				<fieldset>
+				<legend>Froxlor&nbsp;-&nbsp;Install</legend>
+				<p>
+					<label for="language"><?php echo $lng['install']['language']; ?>:</label>&nbsp;
+					<select name="language" id="language">
+					<?php
+						$language_options = '';
+						while(list($language_file, $language_name) = each($languages)) {
+							$language_options.= makeoption($language_name, $language_file, $language, true, true);
+						}
+						echo $language_options;
+					?>
 					</select>
-				</td>
-			</tr>
-			<tr>
-				<td class="main_field_confirm" colspan="2">
-					<input class="bottom" type="submit" name="chooselang" value="Go" />
-				</td>
-			</tr>
-		</table>
-	</form>
-	<br />
-	<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
-		<input type="hidden" name="check" value="1" />
-		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_40">
-			<tr>
-				<td class="maintitle" colspan="2"><b><img src="../images/title.gif" alt="" />&nbsp;<?php echo $lng['install']['database']; ?></b></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"><?php echo $lng['install']['mysql_hostname']; ?>:</td>
-				<td class="main_field_display"><input type="text" name="mysql_host" value="<?php echo htmlspecialchars($mysql_host); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"><?php echo $lng['install']['mysql_database']; ?>:</td>
-				<td class="main_field_display"><input type="text" name="mysql_database" value="<?php echo htmlspecialchars($mysql_database); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo (($mysql_unpriv_user == $mysql_root_user) ? ' style="color:blue;"' : ''); ?>><?php echo $lng['install']['mysql_unpriv_user']; ?>:</td>
-				<td class="main_field_display"><input type="text" name="mysql_unpriv_user" value="<?php echo htmlspecialchars($mysql_unpriv_user); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && $mysql_unpriv_pass == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['mysql_unpriv_pass']; ?>:</td>
-				<td class="main_field_display"><input type="password" name="mysql_unpriv_pass" value="<?php echo htmlspecialchars($mysql_unpriv_pass); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo (($mysql_unpriv_user == $mysql_root_user) ? ' style="color:blue;"' : ''); ?>><?php echo $lng['install']['mysql_root_user']; ?>:</td>
-				<td class="main_field_display"><input type="text" name="mysql_root_user" value="<?php echo htmlspecialchars($mysql_root_user); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && $mysql_root_pass == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['mysql_root_pass']; ?>:</td>
-				<td class="main_field_display"><input type="password" name="mysql_root_pass" value="<?php echo htmlspecialchars($mysql_root_pass); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="maintitle" colspan="2"><b><img src="../images/title.gif" alt="" />&nbsp;<?php echo $lng['install']['admin_account']; ?></b></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"><?php echo $lng['install']['admin_user']; ?>:</td>
-				<td class="main_field_display"><input type="text" name="admin_user" value="<?php echo htmlspecialchars($admin_user); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && ($admin_pass1 == '' || $admin_pass1 != $admin_pass2)) ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['admin_pass']; ?>:</td>
-				<td class="main_field_display"><input type="password" name="admin_pass1" value="<?php echo htmlspecialchars($admin_pass1); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && ($admin_pass2 == '' || $admin_pass1 != $admin_pass2)) ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['admin_pass_confirm']; ?>:</td>
-				<td class="main_field_display"><input type="password" name="admin_pass2" value="<?php echo htmlspecialchars($admin_pass2); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="maintitle" colspan="2"><b><img src="../images/title.gif" alt="" />&nbsp;<?php echo $lng['install']['serversettings']; ?></b></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && $servername == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['servername']; ?>:</td>
-				<td class="main_field_display"><input type="text" name="servername" value="<?php echo htmlspecialchars($servername); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && $serverip == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['serverip']; ?>:</td>
-				<td class="main_field_display"><input type="text" name="serverip" value="<?php echo htmlspecialchars($serverip); ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && $webserver == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['webserver']; ?>:</td>
-				<td class="main_field_display"><input type="radio" name="webserver" value="apache2" <?php echo $webserver == "apache2" ? 'checked="checked"' : "" ?>/>Apache2&nbsp;<br /><input type="radio" name="webserver" value="lighttpd" <?php echo $webserver == "lighttpd" ? 'checked="checked"' : "" ?>/>Lighttpd2&nbsp;<br /><input type="radio" name="webserver" value="nginx" <?php echo $webserver == "nginx" ? 'checked="checked"' : "" ?>/>Nginx</td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && $serverip == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['httpuser']; ?>:</td>
-				<td class="main_field_display"><input type="text" name="httpuser" value="<?php $posixusername = posix_getpwuid(posix_getuid()); echo $posixusername['name']; ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_name"<?php echo ((!empty($_POST['installstep']) && $serverip == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['httpgroup']; ?>:</td>
-				<td class="main_field_display"><input type="text" name="httpgroup" value="<?php $posixgroup = posix_getgrgid(posix_getgid()); echo $posixgroup['name']; ?>"/></td>
-			</tr>
-			<tr>
-				<td class="main_field_confirm" colspan="2"><input type="hidden" name="language" value="<?php echo htmlspecialchars($language); ?>"/><input type="hidden" name="installstep" value="1"/><input class="bottom" type="submit" name="submitbutton" value="<?php echo $lng['install']['next']; ?>"/></td>
-			</tr>
-		</table>
-	</form>
-	<br />
-	<br />
+				</p>
+				<p class="submit">
+					<input type="hidden" name="check" value="1" />
+					<input type="submit" name="chooselang" value="Go" />
+				</p>
+				</fieldset>
+			</form>
+			<aside>&nbsp;</aside>
+		</section>
+		<section class="installsec">
+			<h2><?php echo $lng['install']['installdata']; ?></h2>
+			<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
+				<fieldset>
+				<legend>Froxlor&nbsp;-&nbsp;Install</legend>
+				<p>
+					<strong><?php echo $lng['install']['database']; ?></strong>
+				</p>
+				<p>
+					<label for="mysql_host"><?php echo $lng['install']['mysql_hostname']; ?>:</label>&nbsp;
+					<input type="text" name="mysql_host" id="mysql_host" value="<?php echo htmlspecialchars($mysql_host); ?>" required/>
+				</p>
+				<p>
+					<label for="mysql_database"><?php echo $lng['install']['mysql_database']; ?>:</label>&nbsp;
+					<input type="text" name="mysql_database" id="mysql_database" value="<?php echo htmlspecialchars($mysql_database); ?>" required/>
+				</p>
+				<p>
+					<label for="mysql_unpriv_user"<?php echo (($mysql_unpriv_user == $mysql_root_user) ? ' style="color:blue;"' : ''); ?>><?php echo $lng['install']['mysql_unpriv_user']; ?>:</label>&nbsp;
+					<input type="text" name="mysql_unpriv_user" id="mysql_unpriv_user" value="<?php echo htmlspecialchars($mysql_unpriv_user); ?>" required/>
+				</p>
+				<p>
+					<label for="mysql_unpriv_pass"<?php echo ((!empty($_POST['installstep']) && $mysql_unpriv_pass == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['mysql_unpriv_pass']; ?>:</label>&nbsp;
+					<input type="password" name="mysql_unpriv_pass" id="mysql_unpriv_pass" value="<?php echo htmlspecialchars($mysql_unpriv_pass); ?>" required/>
+				</p>
+				<p>
+					<label for="mysql_root_user"<?php echo (($mysql_unpriv_user == $mysql_root_user) ? ' style="color:blue;"' : ''); ?>><?php echo $lng['install']['mysql_root_user']; ?>:</label>&nbsp;
+					<input type="text" name="mysql_root_user" id="mysql_root_user" value="<?php echo htmlspecialchars($mysql_root_user); ?>" required/>
+				</p>
+				<p>
+					<label for="mysql_root_pass"<?php echo ((!empty($_POST['installstep']) && $mysql_root_pass == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['mysql_root_pass']; ?>:</label>&nbsp;
+					<input type="password" name="mysql_root_pass" id="mysql_root_pass" value="<?php echo htmlspecialchars($mysql_root_pass); ?>" required/>
+				</p>
+				<p>
+					<strong><?php echo $lng['install']['admin_account']; ?></strong>
+				</p>
+				<p>
+					<label for="admin_user"><?php echo $lng['install']['admin_user']; ?>:</label>&nbsp;
+					<input type="text" name="admin_user" id="admin_user" value="<?php echo htmlspecialchars($admin_user); ?>" required/>
+				</p>
+				<p>
+					<label for="admin_pass1"<?php echo ((!empty($_POST['installstep']) && ($admin_pass1 == '' || $admin_pass1 != $admin_pass2)) ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['admin_pass']; ?>:</label>&nbsp;
+					<input type="password" name="admin_pass1" id="admin_pass1" value="<?php echo htmlspecialchars($admin_pass1); ?>" required/>
+				</p>
+				<p>
+					<label for="admin_pass2"<?php echo ((!empty($_POST['installstep']) && ($admin_pass2 == '' || $admin_pass1 != $admin_pass2)) ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['admin_pass_confirm']; ?>:</label>&nbsp;
+					<input type="password" name="admin_pass2" id="admin_pass2" value="<?php echo htmlspecialchars($admin_pass2); ?>" required/>
+				</p>
+				<p>
+					<strong><?php echo $lng['install']['serversettings']; ?></strong>
+				</p>
+				<p>
+					<label for="servername"<?php echo ((!empty($_POST['installstep']) && $servername == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['servername']; ?>:</label>&nbsp;
+					<input type="text" name="servername" id="servername" value="<?php echo htmlspecialchars($servername); ?>" required/>
+				</p>
+				<p>
+					<label for="serverip"<?php echo ((!empty($_POST['installstep']) && $serverip == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['serverip']; ?>:</label>&nbsp;
+					<input type="text" name="serverip" id="serverip" value="<?php echo htmlspecialchars($serverip); ?>" required/>
+				</p>
+				<p>
+					<label for="apache"<?php echo ((!empty($_POST['installstep']) && $webserver == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['webserver']; ?> Apache:</label>&nbsp;
+					<input type="radio" name="webserver" id="apache" value="apache2" <?php echo $webserver == "apache2" ? 'checked="checked"' : "" ?>/>Apache2
+				</p>
+				<p>
+					<label for="lighty"<?php echo ((!empty($_POST['installstep']) && $webserver == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['webserver']; ?> ligHTTPd:</label>&nbsp;
+					<input type="radio" name="webserver" id="lighty" value="lighttpd" <?php echo $webserver == "lighttpd" ? 'checked="checked"' : "" ?>/>ligHTTPd
+				</p>
+				<p>
+					<label for="httpuser"<?php echo ((!empty($_POST['installstep']) && $httpuser == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['httpuser']; ?>:</label>&nbsp;
+					<input type="text" name="httpuser" id="httpuser" value="<?php $posixusername = posix_getpwuid(posix_getuid()); echo $posixusername['name']; ?>" required/>
+				</p>
+				<p>
+					<label for="httpgroup"<?php echo ((!empty($_POST['installstep']) && $httpgroup == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['httpgroup']; ?>:</label>&nbsp;
+					<input type="text" name="httpgroup" id="httpgroup" value="<?php $posixgroup = posix_getgrgid(posix_getgid()); echo $posixgroup['name']; ?>" required/>
+				</p>
+				<p class="submit">
+					<input type="hidden" name="check" value="1" />
+					<input type="hidden" name="language" value="<?php echo htmlspecialchars($language); ?>"/>
+					<input type="hidden" name="installstep" value="1"/>
+					<input class="bottom" type="submit" name="submitbutton" value="<?php echo $lng['install']['next']; ?>"/>
+				</p>
+			</fieldset>
+		</form>
+		<aside>&nbsp;</aside>
+	</section>
+</article>
 <?php
 	page_footer();
 	}
@@ -957,5 +965,3 @@ else
 /**
  * END INSTALL ---------------------------------------------------
  */
-
-?>

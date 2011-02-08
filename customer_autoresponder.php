@@ -279,6 +279,7 @@ if($action == "delete")
 else 
 {
 	$autoresponder = '';
+	$count = 0;
 	$result = $db->query("SELECT * FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' ORDER BY email ASC");
 
 	while($row = $db->fetch_array($result))
@@ -300,9 +301,8 @@ else
 			$activated_date = date('d-m-Y', $row['date_from']) . ' - ' . date('d-m-Y', $row['date_until']);
 		}
 		eval("\$autoresponder.=\"" . getTemplate("email/autoresponder_autoresponder") . "\";");
+		$count++;
 	}	
 
 	eval("echo \"" . getTemplate("email/autoresponder") . "\";");
 }
-
-?>

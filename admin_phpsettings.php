@@ -39,6 +39,7 @@ if($page == 'overview')
 	if($action == '')
 	{
 		$tablecontent = '';
+		$count = 0;
 		$result = $db->query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
 
 		while($row = $db->fetch_array($result))
@@ -68,6 +69,7 @@ if($page == 'overview')
 				$domains = $lng['admin']['phpsettings']['notused'];
 			}
 
+			$count ++;
 			eval("\$tablecontent.=\"" . getTemplate("phpconfig/overview_overview") . "\";");
 		}
 
@@ -103,6 +105,13 @@ if($page == 'overview')
 			else
 			{
 				$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = 1");
+
+				$phpconfig_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/phpconfig/formfield.phpconfig_add.php';
+				$phpconfig_add_form = htmlform::genHTMLForm($phpconfig_add_data);
+
+				$title = $phpconfig_add_data['phpconfig_add']['title'];
+				$image = $phpconfig_add_data['phpconfig_add']['image'];
+
 				eval("echo \"" . getTemplate("phpconfig/overview_add") . "\";");
 			}
 		}
@@ -172,6 +181,12 @@ if($page == 'overview')
 			}
 			else
 			{
+				$phpconfig_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/phpconfig/formfield.phpconfig_edit.php';
+				$phpconfig_edit_form = htmlform::genHTMLForm($phpconfig_edit_data);
+
+				$title = $phpconfig_edit_data['phpconfig_edit']['title'];
+				$image = $phpconfig_edit_data['phpconfig_edit']['image'];
+
 				eval("echo \"" . getTemplate("phpconfig/overview_edit") . "\";");
 			}
 		}

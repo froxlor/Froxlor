@@ -669,6 +669,12 @@ if($page == 'domains'
 				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', '0');				
 				$add_date = date('Y-m-d');
 
+				$domain_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/domains/formfield.domains_add.php';
+				$domain_add_form = htmlform::genHTMLForm($domain_add_data);
+
+				$title = $domain_add_data['domain_add']['title'];
+				$image = $domain_add_data['domain_add']['image'];
+
 				eval("echo \"" . getTemplate("domains/domains_add") . "\";");
 			}
 		}
@@ -1208,6 +1214,13 @@ if($page == 'domains'
 				$specialsettingsforsubdomains = makeyesno('specialsettingsforsubdomains', '1', '0', '1');
 				
 				$result = htmlentities_array($result);
+
+				$domain_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/domains/formfield.domains_edit.php';
+				$domain_edit_form = htmlform::genHTMLForm($domain_edit_data);
+
+				$title = $domain_edit_data['domain_edit']['title'];
+				$image = $domain_edit_data['domain_edit']['image'];
+
 				eval("echo \"" . getTemplate("domains/domains_edit") . "\";");
 			}
 		}

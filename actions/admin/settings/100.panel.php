@@ -32,6 +32,17 @@ return array(
 					'option_options_method' => 'getLanguages',
 					'save_method' => 'storeSettingField',
 					),
+				'panel_default_theme' => array(
+					'label' => $lng['serversettings']['default_theme'],
+					'settinggroup' => 'panel',
+					'varname' => 'default_theme',
+					'type' => 'option',
+					'default' => 'Froxlor',
+					'option_mode' => 'one',
+					'option_options' => array('Classic' => 'Classic', 'Froxlor' => 'Froxlor'),
+					/* 'option_options_method' => 'getThemes', // iterate through templates/ and dynamically display all folders found */
+					'save_method' => 'storeSettingField',
+					),
 				'panel_natsorting' => array(
 					'label' => $lng['serversettings']['natsorting'],
 					'settinggroup' => 'panel',
@@ -149,14 +160,6 @@ return array(
 					'varname' => 'show_version_footer',
 					'type' => 'bool',
 					'default' => false,
-					'save_method' => 'storeSettingField',
-					),
-				'admin_froxlor_graphic' => array(
-					'label' => $lng['admin']['froxlor_graphic'],
-					'settinggroup' => 'admin',
-					'varname' => 'froxlor_graphic',
-					'type' => 'string',
-					'default' => '',
 					'save_method' => 'storeSettingField',
 					),
 				'panel_allow_domain_change_admin' => array(

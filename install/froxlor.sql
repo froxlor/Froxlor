@@ -166,6 +166,7 @@ CREATE TABLE `panel_admins` (
   `aps_packages_used` int(5) NOT NULL default '0',
   `email_autoresponder` int(5) NOT NULL default '0',
   `email_autoresponder_used` int(5) NOT NULL default '0',
+  `theme` varchar(255) NOT NULL default 'Froxlor',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM ;
@@ -232,6 +233,7 @@ CREATE TABLE `panel_customers` (
   `perlenabled` tinyint(1) NOT NULL default '0',
   `email_autoresponder` int(5) NOT NULL default '0',
   `email_autoresponder_used` int(5) NOT NULL default '0',
+  `theme` varchar(255) NOT NULL default 'Froxlor',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM ;
@@ -413,6 +415,7 @@ CREATE TABLE `panel_sessions` (
   `formtoken` char(32) NOT NULL default '',
   `language` varchar(64) NOT NULL default '',
   `adminsession` tinyint(1) unsigned NOT NULL default '0',
+  `theme` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`hash`),
   KEY `userid` (`userid`)
 ) TYPE=HEAP;
@@ -614,6 +617,7 @@ INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) V
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (173, 'system', 'report_enable', '1');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (174, 'system', 'report_webmax', '90');
 INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (175, 'system', 'report_trafficmax', '90');
+INSERT INTO `panel_settings` (`settingid`, `settinggroup`, `varname`, `value`) VALUES (176, 'panel', 'default_theme', 'Froxlor');
 
 # --------------------------------------------------------
 
