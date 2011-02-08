@@ -66,8 +66,8 @@ if($page == 'admins'
 			'email_quota_used' => $lng['customer']['email_quota'] . ' (' . $lng['panel']['used'] . ')',
 			'email_autoresponder' => $lng['customer']['autoresponder'],
 			'email_autoresponder_used' => $lng['customer']['autoresponder'] . ' (' . $lng['panel']['used'] . ')',
-			'deactivated' => $lng['admin']['deactivated']
 */
+			'deactivated' => $lng['admin']['deactivated']
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_ADMINS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$admins = '';
