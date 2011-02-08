@@ -49,7 +49,7 @@ $filename = basename($_SERVER['PHP_SELF']);
 
 if(!file_exists('./lib/userdata.inc.php'))
 {
-	$config_hint = file_get_contents('./templates/misc/configurehint.tpl');
+	$config_hint = file_get_contents('./templates/Froxlor/misc/configurehint.tpl');
 	die($config_hint);
 }
 
@@ -67,7 +67,7 @@ require ('./lib/userdata.inc.php');
 if(!isset($sql)
    || !is_array($sql))
 {
-	$config_hint = file_get_contents('./templates/misc/configurehint.tpl');
+	$config_hint = file_get_contents('./templates/Froxlor/misc/configurehint.tpl');
 	die($config_hint);
 }
 
@@ -161,23 +161,6 @@ if(get_magic_quotes_gpc())
 $settings_data = loadConfigArrayDir('./actions/admin/settings/');
 $settings = loadSettings($settings_data, $db);
 
-/*
- * when upgrading from syscp, the header-graphic gets lost
- */
-if(!isset($settings['admin']['froxlor_graphic'])
-	|| $settings['admin']['froxlor_graphic'] == ''
-) {
-	if(isset($settings['admin']['syscp_graphic']) 
-		&& $settings['admin']['syscp_graphic'] != ''
-	){
-		$settings['admin']['froxlor_graphic'] = $settings['admin']['syscp_graphic'];
-	}
-	else
-	{
-		$settings['admin']['froxlor_graphic'] = 'images/header.gif';
-	}
-}
-
 /**
  * SESSION MANAGEMENT
  */
@@ -261,19 +244,16 @@ $langs = array();
 $languages = array();
 
 // query the whole table
-
 $query = 'SELECT * FROM `' . TABLE_PANEL_LANGUAGE . '` ';
 $result = $db->query($query);
 
 // presort languages
-
 while($row = $db->fetch_array($result))
 {
 	$langs[$row['language']][] = $row;
 }
 
 // buildup $languages for the login screen
-
 foreach($langs as $key => $value)
 {
 	$languages[$key] = $key;
@@ -306,7 +286,6 @@ else
 }
 
 // include every english language file we can get
-
 foreach($langs['English'] as $key => $value)
 {
 	include_once makeSecurePath($value['file']);
@@ -320,6 +299,28 @@ if($language != 'English')
 	{
 		include_once makeSecurePath($value['file']);
 	}
+}
+
+/**
+ * global Theme-variable
+ */
+$theme = isset($settings['panel']['default_theme']) ? $settings['panel']['default_theme'] : 'Froxlor';
+
+/**
+ * overwrite with customer/admin theme if defined
+ */
+if(isset($userinfo['theme']) && $userinfo['theme'] != $theme)
+{
+	$theme = $userinfo['theme'];
+}
+
+/*
+ * check for custom header-graphic 
+ */
+$hl_path = 'images/'.$theme;
+$header_logo = $hl_path.'/logo.png';
+if(file_exists($hl_path.'/logo_custom.png')) {
+	$header_logo = $hl_path.'/logo_custom.png';
 }
 
 /**
@@ -455,5 +456,3 @@ if(PHPMailer::ValidateAddress($settings['panel']['adminmail']) !== false)
 		$mail->AddReplyTo($settings['panel']['adminmail_return'], $settings['panel']['adminmail_defname']);
 	}
 }
- 
-?>

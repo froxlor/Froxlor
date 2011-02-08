@@ -392,19 +392,22 @@ class paging
 
 	function getHtmlSortCode($lng, $break = false)
 	{
-		$sortcode = '<select class="dropdown_noborder" name="sortfield">';
+		$sortcode = '';
+		$fieldoptions = '';
+		$orderoptions = '';
+
 		foreach($this->fields as $fieldname => $fieldcaption)
 		{
-			$sortcode.= makeoption($fieldcaption, $fieldname, $this->sortfield, true, true);
+			$fieldoptions.= makeoption($fieldcaption, $fieldname, $this->sortfield, true, true);
 		}
 
-		$sortcode.= '</select>' . ($break ? '<br />' : '&nbsp;') . '<select class="dropdown_noborder" name="sortorder">';
+		$breakorws = ($break ? '<br />' : '&nbsp;');
 		foreach(array('asc' => $lng['panel']['ascending'], 'desc' => $lng['panel']['decending']) as $sortordertype => $sortorderdescription)
 		{
-			$sortcode.= makeoption($sortorderdescription, $sortordertype, $this->sortorder, true, true);
+			$orderoptions.= makeoption($sortorderdescription, $sortordertype, $this->sortorder, true, true);
 		}
 
-		$sortcode.= '</select>&nbsp;<input type="submit" name="Go" value="Go" />';
+		eval("\$sortcode =\"" . getTemplate("misc/htmlsortcode", '1') . "\";");
 		return $sortcode;
 	}
 
@@ -421,14 +424,18 @@ class paging
 		if($field != ''
 		   && isset($this->fields[$field]))
 		{
-			$arrowcode = '<a href="' . htmlspecialchars($baseurl) . '&amp;sortfield=' . htmlspecialchars($field) . '&amp;sortorder=desc"><img src="images/order_desc.gif" border="0" alt="" /></a><a href="' . htmlspecialchars($baseurl) . '&amp;sortfield=' . htmlspecialchars($field) . '&amp;sortorder=asc"><img src="images/order_asc.gif" border="0" alt="" /></a>';
+			$baseurl = htmlspecialchars($baseurl);
+			$fieldname = htmlspecialchars($field);
+			eval("\$arrowcode =\"" . getTemplate("misc/htmlarrowcode", '1') . "\";");
 		}
 		else
 		{
+			$baseurl = htmlspecialchars($baseurl);
 			$arrowcode = array();
 			foreach($this->fields as $fieldname => $fieldcaption)
 			{
-				$arrowcode[$fieldname] = '<a href="' . htmlspecialchars($baseurl) . '&amp;sortfield=' . htmlspecialchars($fieldname) . '&amp;sortorder=desc"><img src="images/order_desc.gif" border="0" alt="" /></a><a href="' . htmlspecialchars($baseurl) . '&amp;sortfield=' . htmlspecialchars($fieldname) . '&amp;sortorder=asc"><img src="images/order_asc.gif" border="0" alt="" /></a>';
+				$fieldname = htmlspecialchars($fieldname);
+				eval("\$arrowcode[\$fieldname] =\"" . getTemplate("misc/htmlarrowcode", '1') . "\";");
 			}
 		}
 
@@ -444,14 +451,15 @@ class paging
 
 	function getHtmlSearchCode($lng)
 	{
-		$sortcode = $lng['panel']['search'] . ': <select class="dropdown_noborder" name="searchfield">';
+		$searchcode = '';
+		$fieldoptions = '';
+		$searchtext = htmlspecialchars($this->searchtext);
 		foreach($this->fields as $fieldname => $fieldcaption)
 		{
-			$sortcode.= makeoption($fieldcaption, $fieldname, $this->searchfield, true, true);
+			$fieldoptions.= makeoption($fieldcaption, $fieldname, $this->searchfield, true, true);
 		}
-
-		$sortcode.= '</select>&nbsp;<input type="text" name="searchtext" value="' . htmlspecialchars($this->searchtext) . '" />&nbsp;<input type="submit" name="Go" value="Go" />';
-		return $sortcode;
+		eval("\$searchcode =\"" . getTemplate("misc/htmlsearchcode", '1') . "\";");
+		return $searchcode;
 	}
 
 	/**
@@ -493,16 +501,16 @@ class paging
 				$stop = $pages;
 			}
 
-			$pagingcode = '<a href="' . htmlspecialchars($baseurl) . '&amp;pageno=1">&laquo;</a> <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) - 1) == 0 ? '1' : intval($this->pageno) - 1) . '">&lt;</a> ';
+			$pagingcode = '<a href="' . htmlspecialchars($baseurl) . '&amp;pageno=1">&laquo;</a> <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) - 1) == 0 ? '1' : intval($this->pageno) - 1) . '">&lt;</a>&nbsp;';
 			for ($i = $start;$i <= $stop;$i++)
 			{
 				if($i != $this->pageno)
 				{
-					$pagingcode.= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . $i . '">' . $i . '</a> ';
+					$pagingcode.= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . $i . '">' . $i . '</a>&nbsp;';
 				}
 				else
 				{
-					$pagingcode.= ' <b>' . $i . '</b> ';
+					$pagingcode.= ' <strong>' . $i . '</strong>/nbsp;';
 				}
 			}
 

@@ -21,7 +21,7 @@ return array (
 	'customer' => array (
 		'index' => array (
 			'url' => 'customer_index.php',
-			'label' => $lng['menue']['main']['main'],
+			'label' => $lng['admin']['overview'],
 			'elements' => array (
 				array (
 					'label' => $lng['menue']['main']['username'],
@@ -33,6 +33,10 @@ return array (
 				array (
 					'url' => 'customer_index.php?page=change_language',
 					'label' => $lng['menue']['main']['changelanguage'],
+				),
+				array (
+					'url' => 'customer_index.php?page=change_theme',
+					'label' => $lng['menue']['main']['changetheme'],
 				),
 				array (
 					'url' => 'customer_index.php?action=logout',
@@ -155,6 +159,10 @@ return array (
 					'label' => $lng['menue']['main']['changelanguage'],
 				),
 				array (
+					'url' => 'admin_index.php?page=change_theme',
+					'label' => $lng['menue']['main']['changetheme'],
+				),
+				array (
 					'url' => 'admin_index.php?action=logout',
 					'label' => $lng['login']['logout'],
 				),
@@ -250,4 +258,3 @@ return array (
 		),
 	),
 );
-?>

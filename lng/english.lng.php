@@ -70,7 +70,7 @@ $lng['customer']['forwarders'] = 'E-mail-Forwarders';
 $lng['customer']['ftps'] = 'FTP-Accounts';
 $lng['customer']['subdomains'] = 'Sub-Domain';
 $lng['customer']['domains'] = 'Domain';
-$lng['customer']['unlimited'] = 'unlimited';
+$lng['customer']['unlimited'] = '&infin;';
 
 /**
  * Customermenue
@@ -1332,6 +1332,7 @@ $lng['cronmgmt']['weeks'] = 'weeks';
 $lng['cronmgmt']['months'] = 'months';
 $lng['admin']['cronjob_edit'] = 'Edit cronjob';
 $lng['cronjob']['cronjobsettings'] = 'Cronjob settings';
+$lng['cronjob']['cronjobintervalv'] = 'Runtime interval value';
 $lng['cronjob']['cronjobinterval'] = 'Runtime interval';
 $lng['panel']['options'] = 'options';
 $lng['admin']['warning'] = 'WARNING - Please note!';
@@ -1566,3 +1567,9 @@ $lng['mysql']['database_edit'] = 'Edit database';
 
 // ADDED IN FROXLOR 0.9.18
 $lng['error']['domains_cantdeletedomainwithaliases'] = 'You cannot delete a domain which is used for alias-domains. You have to delete the aliases first.';
+$lng['serversettings']['default_theme'] = 'Default theme';
+$lng['menue']['main']['changetheme'] = 'Change theme';
+$lng['panel']['theme'] = 'Theme';
+$lng['success']['rebuildingconfigs'] = 'Successfully inserted tasks for rebuild configfiles';
+$lng['panel']['variable'] = 'Variable';
+$lng['panel']['description'] = 'Description';

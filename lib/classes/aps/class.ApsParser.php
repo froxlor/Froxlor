@@ -911,7 +911,7 @@ class ApsParser
 
 		if($Error == 1)
 		{
-			self::InfoBox($lng['aps']['nospecialchars']);
+			self::InfoBox($lng['aps']['nospecialchars'], 1);
 		}
 		elseif($Error == 2)
 		{
@@ -948,11 +948,11 @@ class ApsParser
 			{
 				if($this->db->num_rows($result) == 1)
 				{
-					self::InfoBox(sprintf($lng['aps']['searchoneresult'], $this->db->num_rows($result)));
+					self::InfoBox(sprintf($lng['aps']['searchoneresult'], $this->db->num_rows($result)), 2);
 				}
 				else
 				{
-					self::InfoBox(sprintf($lng['aps']['searchmultiresult'], $this->db->num_rows($result)));
+					self::InfoBox(sprintf($lng['aps']['searchmultiresult'], $this->db->num_rows($result)), 2);
 				}
 
 				while($Row = $this->db->fetch_array($result))
@@ -996,7 +996,7 @@ class ApsParser
 			//skip if parse of xml has failed
 
 			if($Xml == false)continue;
-			$Icon = './images/default.png';
+			$Icon = './images/Classic/default.png';
 
 			$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';
 
@@ -1162,7 +1162,7 @@ class ApsParser
 
 		if($this->db->num_rows($result) == 0)
 		{
-			self::InfoBox($lng['aps']['erroronnewinstance']);
+			self::InfoBox($lng['aps']['erroronnewinstance'], 1);
 			return false;
 		}
 
@@ -1194,7 +1194,7 @@ class ApsParser
 		//update used counter for packages
 
 		$this->db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `aps_packages_used` = `aps_packages_used` + 1 WHERE `customerid` = ' . (int)$CustomerId);
-		self::InfoBox(sprintf($lng['aps']['successonnewinstance'], $Xml->name));
+		self::InfoBox(sprintf($lng['aps']['successonnewinstance'], $Xml->name), 2);
 		unset($Xml);
 	}
 
@@ -1735,7 +1735,7 @@ class ApsParser
 					$Output.= '<li>' . $Entry . '</li>';
 				}
 
-				self::InfoBox(sprintf($lng['aps']['erroronscan'], $Xml->name, $Output));
+				self::InfoBox(sprintf($lng['aps']['erroronscan'], $Xml->name, $Output), 1);
 				return false;
 			}
 			else
@@ -1819,11 +1819,11 @@ class ApsParser
 
 				if($Newer == 1)
 				{
-					self::InfoBox(sprintf($lng['aps']['successpackageupdate'], $Xml->name));
+					self::InfoBox(sprintf($lng['aps']['successpackageupdate'], $Xml->name), 2);
 				}
 				else
 				{
-					self::InfoBox(sprintf($lng['aps']['successpackageinstall'], $Xml->name));
+					self::InfoBox(sprintf($lng['aps']['successpackageinstall'], $Xml->name), 2);
 				}
 
 				unset($Xml);
@@ -1870,11 +1870,11 @@ class ApsParser
 
 			if(!isset($this->userinfo['customerid']))
 			{
-				self::InfoBox(sprintf($lng['aps']['initerror'], $Error));
+				self::InfoBox(sprintf($lng['aps']['initerror'], $Error), 1);
 			}
 			else
 			{
-				self::InfoBox($lng['aps']['initerror_customer']);
+				self::InfoBox($lng['aps']['initerror_customer'], 1);
 			}
 
 			return;
@@ -2139,11 +2139,11 @@ class ApsParser
 						{
 							if($i == $_GET['page'])
 							{
-								echo ('<span class="pageitem">' . $i . '</span>');
+								echo ('<span class="pageitem">' . $i . '</span>&nbsp;');
 							}
 							else
 							{
-								echo ('<span class="pageitem"><a href="' . $filename . '?s=' . $s . '&amp;action=overview&amp;page=' . $i . '">' . $i . '</a></span>');
+								echo ('<span class="pageitem"><a href="' . $filename . '?s=' . $s . '&amp;action=overview&amp;page=' . $i . '">' . $i . '</a></span>&nbsp;');
 							}
 						}
 
@@ -2177,7 +2177,7 @@ class ApsParser
 						echo ('<div style="width: 90%; text-align: center;"><br/>');
 						for ($i = 1;$i < $Pages + 1;$i++)
 						{
-							echo ('<span class="pageitem"><a href="' . $filename . '?s=' . $s . '&amp;action=overview&amp;page=' . $i . '">' . $i . '</a></span>');
+							echo ('<span class="pageitem"><a href="' . $filename . '?s=' . $s . '&amp;action=overview&amp;page=' . $i . '">' . $i . '</a></span>&nbsp;');
 						}
 
 						echo ('</div>');
@@ -2935,7 +2935,7 @@ class ApsParser
 
 		//icon for package
 
-		$Icon = './images/default.png';
+		$Icon = './images/Classic/default.png';
 		
 		if($this->aps_version != '1.0')
 		{
@@ -3342,7 +3342,7 @@ class ApsParser
 		//return if parse of xml file has failed
 
 		if($Xml == false)return false;
-		$Icon = './images/default.png';
+		$Icon = './images/Classic/default.png';
 
 		$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';
 
@@ -3551,15 +3551,14 @@ class ApsParser
 	/**
 	 * show a nice looking infobox
 	 *
-	 * @param	message		message to display in beautifull layout
+	 * @param string $Message message to display in beautifull layout
+	 * @param int    $Type    0 = warning, 1 = errror, 2 = success
+	 *
 	 */
-
-	private function InfoBox($Message)
+	private function InfoBox($Message, $Type = 0)
 	{
 		global $lng, $filename, $s, $page, $action;
-
 		//shows a box with informations
-
 		eval("echo \"" . getTemplate("aps/infobox") . "\";");
 	}
 
@@ -3574,5 +3573,3 @@ class ApsParser
 		return '<div class="fielderror">' . $Error . '</div>';
 	}
 }
-
-?>
