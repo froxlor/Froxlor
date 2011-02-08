@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+/* input elements */
+input {
+	padding: 4px 4px 0px 24px;
+}
+
+input[type="submit"],input[class="nobutton"],input[type="reset"] {
+	padding-left: 24px;
+}
+
+.midform input[type="file"] {
+	width: 90%;
+}
+
+table thead th {
+	border-right: 1px solid #333;
+}
