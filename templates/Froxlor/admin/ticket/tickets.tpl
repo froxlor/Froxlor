@@ -62,10 +62,12 @@ $header
 			</if>
 
 			<if $countcustomers == 0 >
-			<div class="overviewadd">
-				<img src="images/Froxlor/icons/add_user.png" alt="" />&nbsp;
-				<a href="admin_customers.php?s=$s&amp;page=customers&amp;action=add">{$lng['admin']['ticket_nocustomeraddingavailable']}</a></td>
-			</div>
+				<div class="warningcontainer bradius">
+					<div class="warningtitle">{$lng['admin']['warning']}</div>
+					<div class="warning">
+						<a href="admin_customers.php?s=$s&amp;page=customers&amp;action=add">{$lng['admin']['ticket_nocustomeraddingavailable']}</a>
+					</div>
+				</div>
 			</if>
 
 		</section>
