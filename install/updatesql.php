@@ -105,5 +105,3 @@ if(isFroxlor())
 	$filelog->logAction(ADM_ACTION, LOG_WARNING, '--------------- END LOG ---------------');
 	unset($filelog);
 }
-
-?>
