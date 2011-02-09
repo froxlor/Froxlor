@@ -194,35 +194,33 @@ while($row = $db->fetch_array($result))
 		
 		// make the stuff readable for the customer, #258
 		makeChownWithNewStats($row);
-	}
 
-	/**
-	 * Webalizer might run for some time, so we'd better check if our database is still present
-	 */
-
-	if(empty($db->link_id)
-	   || $db->link_id === false)
-	{
-		fwrite($debugHandler, 'Database-connection seems to be down, trying to reconnect' . "\n");
-
-		// just in case
-
-		$db->close();
-		require_once ($pathtophpfiles . '/lib/userdata.inc.php');
-		$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
-
-		if($db->link_id == 0)
+		/**
+		 * Webalizer/AWStats might run for some time, so we'd better check if our database is still present
+		 */
+		if (empty($db->link_id)
+		   || $db->link_id === false)
 		{
-			fclose($debugHandler);
-			unlink($lockfile);
-			$cronlog->logAction(CRON_ACTION, LOG_ERR, 'Database-connection crashed during traffic-cronjob, could not reconnect!');
-			die('Froxlor can\'t connect to mysqlserver. Exiting...');
+			fwrite($debugHandler, 'Database-connection seems to be down, trying to reconnect' . "\n");
+
+			// just in case
+			$db->close();
+			require_once ($pathtophpfiles . '/lib/userdata.inc.php');
+			$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
+	
+			if ($db->link_id == 0) {
+				fclose($debugHandler);
+				unlink($lockfile);
+				$cronlog->logAction(CRON_ACTION, LOG_ERR, 'Database-connection crashed during traffic-cronjob, could not reconnect!');
+				die('Froxlor can\'t connect to mysqlserver. Exiting...');
+			}
+
+			fwrite($debugHandler, 'Database-connection re-established' . "\n");
+			unset($sql);
+			unset($db->password);
+			$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Database-connection crashed during traffic-cronjob, reconnected!');
 		}
 
-		fwrite($debugHandler, 'Database-connection re-established' . "\n");
-		unset($sql);
-		unset($db->password);
-		$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Database-connection crashed during traffic-cronjob, reconnected!');
 	}
 
 	/**
@@ -290,7 +288,7 @@ while($row = $db->fetch_array($result))
 	
 	if(file_exists($row['documentroot']) && is_dir($row['documentroot']))
 	{
-		$back = safe_exec('du -s ' . escapeshellarg($row['documentroot']) . '');
+		$back = safe_exec('du -sk ' . escapeshellarg($row['documentroot']) . '');
 		foreach($back as $backrow)
 		{
 			$webspaceusage = explode(' ', $backrow);
@@ -314,7 +312,7 @@ while($row = $db->fetch_array($result))
 	$maildir = makeCorrectDir($settings['system']['vmail_homedir'] . $row['loginname']);
 	if(file_exists($maildir) && is_dir($maildir))
 	{
-		$back = safe_exec('du -s ' . escapeshellarg($maildir) . '');
+		$back = safe_exec('du -sk ' . escapeshellarg($maildir) . '');
 		foreach($back as $backrow)
 		{
 			$emailusage = explode(' ', $backrow);
