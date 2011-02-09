@@ -290,7 +290,7 @@ while($row = $db->fetch_array($result))
 	
 	if(file_exists($row['documentroot']) && is_dir($row['documentroot']))
 	{
-		$back = safe_exec('du -s ' . escapeshellarg($row['documentroot']) . '');
+		$back = safe_exec('du -sk ' . escapeshellarg($row['documentroot']) . '');
 		foreach($back as $backrow)
 		{
 			$webspaceusage = explode(' ', $backrow);
@@ -314,7 +314,7 @@ while($row = $db->fetch_array($result))
 	$maildir = makeCorrectDir($settings['system']['vmail_homedir'] . $row['loginname']);
 	if(file_exists($maildir) && is_dir($maildir))
 	{
-		$back = safe_exec('du -s ' . escapeshellarg($maildir) . '');
+		$back = safe_exec('du -sk ' . escapeshellarg($maildir) . '');
 		foreach($back as $backrow)
 		{
 			$emailusage = explode(' ', $backrow);
