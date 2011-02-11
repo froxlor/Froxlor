@@ -7,9 +7,9 @@ EAPI="2"
 inherit eutils depend.php
 
 if [[ ${PV} == "9999" ]] ; then
-	ESVN_REPO_URI="http://svn.froxlor.org/trunk"
-	ESVN_PROJECT="froxlor"
-	inherit subversion
+	EGIT_REPO_URI="git://git.froxlor.org/froxlor.git"
+	EGIT_PROJECT="froxlor"
+	inherit git
 	#KEYWORDS=""
 else
 	RESTRICT="mirror"
@@ -21,7 +21,7 @@ DESCRIPTION="A PHP-based webhosting-oriented control panel for servers."
 HOMEPAGE="http://www.froxlor.org/"
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="aps autoresponder awstats bind domainkey dovecot fcgid ftpquota lighttpd +log mailquota pureftpd ssl +tickets"
+IUSE="aps autoresponder awstats bind domainkey dovecot fcgid ftpquota fpm lighttpd +log mailquota nginx pureftpd ssl +tickets"
 
 DEPEND="
 	!www-apps/syscp
@@ -40,7 +40,9 @@ DEPEND="
 	awstats? (
 		www-misc/awstats
 		( !lighttpd? (
-			www-misc/awstats[apache2]
+			!nginx? (
+				www-misc/awstats[apache2]
+				)
 			)
 		)
 	)
@@ -54,15 +56,24 @@ DEPEND="
 	lighttpd? ( www-servers/lighttpd[fastcgi,ssl=]
 		   >=dev-lang/php-5.2[cgi]
 	)
-	!lighttpd? ( www-servers/apache[ssl=]
+	nginx? ( 
+		www-servers/nginx[ssl=]
+	)
+	!lighttpd? ( 
+		( !nginx? (
+			www-servers/apache[ssl=]
 		     dev-lang/php[apache2]
+		)
 	)
 	fcgid? ( >=dev-lang/php-5.2[cgi]
 		|| ( <dev-lang/php-5.3[force-cgi-redirect] >=dev-lang/php-5.3 )
 		 sys-auth/libnss-mysql
 			( !lighttpd? (
-				www-servers/apache[suexec]
-				www-apache/mod_fcgid )
+				!nginx? (
+					www-servers/apache[suexec]
+					www-apache/mod_fcgid 
+					)
+				)	
 			)
 	)
 	dovecot? ( >=net-mail/dovecot-1.2.0[mysql,ssl=]
@@ -94,7 +105,7 @@ S="${WORKDIR}/${PN}"
 
 src_unpack() {
 	if [[ ${PV} == "9999" ]] ; then
-		subversion_src_unpack
+		git_src_unpack
 	else
 		unpack ${A}
 	fi
@@ -184,6 +195,15 @@ src_install() {
 		sed -e "s|'apacheconf_htpasswddir', '/etc/apache/htpasswd/'|'apacheconf_htpasswddir', '/etc/lighttpd/htpasswd/'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver htpasswd directory"
 		sed -e "s|'httpuser', 'www-data'|'httpuser', 'lighttpd'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver user"
 		sed -e "s|'httpgroup', 'www-data'|'httpgroup', 'lighttpd'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver group"
+	elif use nginx; then
+		einfo "Switching settings to fit 'nginx'"
+		sed -e "s|/etc/init.d/apache reload|/etc/init.d/nginx restart|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver restart-command"
+		sed -e "s|'webserver', 'apache2'|'webserver', 'nginx'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver version"
+		sed -e "s|'apacheconf_vhost', '/etc/apache/vhosts.conf'|'apacheconf_vhost', '/etc/nginx/froxlor-vhosts.conf'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver vhost directory"
+		sed -e "s|'apacheconf_diroptions', '/etc/apache/diroptions.conf'|'apacheconf_diroptions', '/etc/nginx/diroptions.conf'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver diroptions file"
+		sed -e "s|'apacheconf_htpasswddir', '/etc/apache/htpasswd/'|'apacheconf_htpasswddir', '/etc/nginx/htpasswd/'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver htpasswd directory"
+		sed -e "s|'httpuser', 'www-data'|'httpuser', 'nginx'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver user"
+		sed -e "s|'httpgroup', 'www-data'|'httpgroup', 'nginx'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver group"
 	else
 		einfo "Switching settings to fit 'apache2'"
 		sed -e "s|/etc/init.d/apache reload|/etc/init.d/apache2 reload|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver restart-command"
@@ -194,7 +214,7 @@ src_install() {
 		sed -e "s|'httpgroup', 'www-data'|'httpgroup', 'apache'|g" -i "${S}/install/froxlor.sql" || die "Unable to change webserver group"
 	fi
 
-	if use fcgid && ! use lighttpd ; then
+	if use fcgid && ! use lighttpd && ! use nginx ; then
 		einfo "Switching 'fcgid' to 'On'"
 		sed -e "s|'mod_fcgid', '0'|'mod_fcgid', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set fcgid to 'On'"
 
@@ -205,6 +225,20 @@ src_install() {
 		dodir "/var/customers/tmp"
 
 		ewarn "You have to remove the '-D PHP5' entry from /etc/conf.d/apache2 if it exists!"
+	fi
+
+	if use fpm ; then
+		einfo "Switching 'fpm' to 'On'"
+		sed -e "s|'phpfpm', 'enabled', '0'|'phpfpm', 'enabled', '1'|g" -i "${S}/install/froxlor.sql" || die "Unable to set fpm to 'On'"
+
+		einfo "Setting configdir for fpm"
+		sed -e "s|'phpfpm', 'configdir', '/etc/php-fpm.d/'|'phpfpm', 'configdir', '/etc/php/fpm-php5.3/fpm.d/'|g" -i "${S}/install/froxlor.sql" || die "Unable to set configdir for 'fpm'"
+
+		einfo "Enable custom configdir for fpm"
+		sed -e "s|;include=/etc/php/fpm-php5.3/fpm.d/*.conf|include=/etc/php/fpm-php5.3/fpm.d/*.conf|g" -i "/etc/php/fpm-php5.3/php-fpm.conf" || die "Unable to set custom configdir for 'fpm'"
+
+		einfo "Creating tmp-directory"
+		dodir "/var/customers/tmp"	
 	fi
 
 	# If Bind will not used, change the reload path for it
@@ -292,6 +326,8 @@ src_install() {
 	einfo "Fixing permission of Froxlor files"
 	if use lighttpd ; then
 		fowners -R froxlor:lighttpd ${FROXLOR_DOCROOT}/froxlor
+	elif use nginx ; then
+		fowners -R froxlor:nginx ${FROXLOR_DOCROOT}/froxlor
 	else
 		fowners -R froxlor:apache ${FROXLOR_DOCROOT}/froxlor
 	fi
@@ -303,9 +339,14 @@ src_install() {
 			#fowners froxlor:lighttpd ${FROXLOR_DOCROOT}/froxlor
 		fi
 		fperms 0750 ${FROXLOR_DOCROOT}/froxlor
+	elif use fpm ; then
+		fowners -R froxlor:froxlor ${FROXLOR_DOCROOT}/froxlor
+		fperms 0750 ${FROXLOR_DOCROOT}/froxlor
 	else
 		if use lighttpd ; then
 			fowners -R froxlor:lighttpd ${FROXLOR_DOCROOT}/froxlor/{temp,packages}
+		elif use nginx ; then
+			fowners -R froxlor:nginx ${FROXLOR_DOCROOT}/froxlor/{temp,packages}
 		else
 			fowners -R froxlor:apache ${FROXLOR_DOCROOT}/froxlor/{temp,packages}
 		fi
