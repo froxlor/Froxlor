@@ -357,6 +357,13 @@ elseif($page == 'htaccess')
 			$options_indexes = makeyesno('options_indexes', '1', '0', '0');
 			$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
 			$options_cgi = makeyesno('options_cgi', '1', '0', '0');
+
+			$htaccess_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htaccess_add.php';
+			$htaccess_add_form = htmlform::genHTMLForm($htaccess_add_data);
+
+			$title = $htaccess_add_data['htaccess_add']['title'];
+			$image = $htaccess_add_data['htaccess_add']['image'];
+
 			eval("echo \"" . getTemplate("extras/htaccess_add") . "\";");
 		}
 	}
@@ -418,6 +425,13 @@ elseif($page == 'htaccess')
 				$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
 				$options_cgi = makeyesno('options_cgi', '1', '0', $result['options_cgi']);
 				$result = htmlentities_array($result);
+
+				$htaccess_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htaccess_edit.php';
+				$htaccess_edit_form = htmlform::genHTMLForm($htaccess_edit_data);
+	
+				$title = $htaccess_edit_data['htaccess_edit']['title'];
+				$image = $htaccess_edit_data['htaccess_edit']['image'];
+
 				eval("echo \"" . getTemplate("extras/htaccess_edit") . "\";");
 			}
 		}
