@@ -256,6 +256,12 @@ elseif($page == 'mysqls')
 
 				$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
 
+				$mysql_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/mysql/formfield.mysql_add.php';
+				$mysql_add_form = htmlform::genHTMLForm($mysql_add_data);
+
+				$title = $mysql_add_data['mysql_add']['title'];
+				$image = $mysql_add_data['mysql_add']['image'];
+
 				eval("echo \"" . getTemplate("mysql/mysqls_add") . "\";");
 			}
 		}
@@ -307,6 +313,12 @@ elseif($page == 'mysqls')
 			}
 			else
 			{
+				$mysql_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/mysql/formfield.mysql_edit.php';
+				$mysql_edit_form = htmlform::genHTMLForm($mysql_edit_data);
+
+				$title = $mysql_edit_data['mysql_edit']['title'];
+				$image = $mysql_edit_data['mysql_edit']['image'];
+
 				eval("echo \"" . getTemplate("mysql/mysqls_edit") . "\";");
 			}
 		}
