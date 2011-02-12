@@ -2,8 +2,8 @@ $header
 <article>
 	<header>
 		<h2>
-			<img src="images/Froxlor/icons/email_edit.png" alt="{$lng['emails']['emails_edit']}" />&nbsp;
-			{$lng['emails']['emails_edit']}
+			<img src="images/Froxlor/icons/{$title}" alt="{$title}" />&nbsp;
+			{$title}
 		</h2>
 	</header>
 	
@@ -11,7 +11,7 @@ $header
 
 			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
-					<legend>Froxlor&nbsp;-&nbsp;{$lng['emails']['emails_edit']}</legend>
+					<legend>Froxlor&nbsp;-&nbsp;{$title}</legend>
 
 					<table class="formtable">
             {$email_edit_form}

@@ -11,8 +11,8 @@ $header
 	<else>
 	<header>
 		<h2>
-			<img src="images/Froxlor/icons/email_add.png" alt="{$lng['emails']['emails_add']}" />&nbsp;
-			{$lng['emails']['emails_add']}
+			<img src="images/Froxlor/icons/{}$image alt="{$title}" />&nbsp;
+			{$title}
 		</h2>
 	</header>
 	
@@ -20,7 +20,7 @@ $header
 
 			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
-					<legend>Froxlor&nbsp;-&nbsp;{$lng['emails']['emails_add']}</legend>
+					<legend>Froxlor&nbsp;-&nbsp;{$title}</legend>
 
 					<table class="formtable">
 						  {$email_add_form}
