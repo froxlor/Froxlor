@@ -2,16 +2,16 @@ $header
 <article>
 	<header>
 		<h2>
-			<img src="images/Froxlor/icons/add_autoresponder.png" alt="{$lng['emails']['forwarder_add']}" />&nbsp;
-			{$lng['emails']['forwarder_add']}
+			<img src="images/Froxlor/{$image}" alt="{$title}" />&nbsp;
+			{$title}
 		</h2>
 	</header>
-	
+
 	<section class="fullform bradiusodd">
 
 			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
-					<legend>Froxlor&nbsp;-&nbsp;{$lng['emails']['forwarder_add']}</legend>
+					<legend>Froxlor&nbsp;-&nbsp;{$lng['emails']['emails_add']}</legend>
 
 					<table class="formtable">
 						  {$forwarder_add_form}
