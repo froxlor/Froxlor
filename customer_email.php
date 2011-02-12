@@ -714,7 +714,7 @@ elseif($page == 'forwarders')
 					$result['email_full'] = $idna_convert->decode($result['email_full']);
 					$result = htmlentities_array($result);
 
-					$forwarder_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/emails/formfield.emails_addforwarder.php';
+					$forwarder_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_addforwarder.php';
 					$forwarder_add_form = htmlform::genHTMLForm($forwarder_add_data);
 
 					$title = $forwarder_add_data['emails_addforwarder']['title'];
