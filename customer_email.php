@@ -282,13 +282,13 @@ elseif($page == 'emails')
 				}
 
 				$iscatchall = makeyesno('iscatchall', '1', '0', '0');
-				
-        $email_add_form = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_edit.php';
-        $email_add_form = htmlform::genHTMLForm($email_add_form);
 
-        $title = $email_add_form['emails_edit']['title'];
-        $image = $email_add_form['emails_edit']['image'];
-        
+				$email_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_add.php';
+				$email_add_form = htmlform::genHTMLForm($email_add_data);
+
+				$title = $email_add_data['emails_add']['title'];
+				$image = $email_add_data['emails_add']['image'];
+
 				eval("echo \"" . getTemplate("email/emails_add") . "\";");
 			}
 		}
@@ -328,12 +328,12 @@ elseif($page == 'emails')
 
 			$destinations_count = count($result['destination']);
 			$result = htmlentities_array($result);
-			
-			  $email_edit_form = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_edit.php';
-        $email_edit_form = htmlform::genHTMLForm($email_edit_form);
 
-        $title = $email_edit_form['emails_edit']['title'];
-        $image = $email_edit_form['emails_edit']['image'];
+			$email_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_edit.php';
+			$email_edit_form = htmlform::genHTMLForm($email_edit_data);
+
+			$title = $email_edit_data['emails_edit']['title'];
+			$image = $email_edit_data['emails_edit']['image'];
 			
 			eval("echo \"" . getTemplate("email/emails_edit") . "\";");
 		}
