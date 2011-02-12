@@ -1,26 +1,30 @@
 $header
-	<form method="post" action="$filename">
-		<input type="hidden" name="s" value="$s" />
-		<input type="hidden" name="page" value="$page" />
-		<input type="hidden" name="action" value="$action" />
-		<input type="hidden" name="id" value="$id" />
-		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
-			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['menue']['main']['changepassword']}</b></td>
-			</tr>
-			<tr>
-				<td class="main_field_name">{$lng['emails']['emailaddress']}:</td>
-				<td class="main_field_display" nowrap="nowrap">{$result['email_full']}</td>
-			</tr>
-			<tr>
-				<td class="main_field_name">{$lng['login']['password']}:</td>
-				<td class="main_field_display" nowrap="nowrap"><input type="password" name="email_password" maxlength="50" /></td>
-			</tr>
-			<tr>
-				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['menue']['main']['changepassword']}" /></td>
-			</tr>
-		</table>
-	</form>
-	<br />
-	<br />
+<article>
+  <header>
+    <h2>
+      <img src="images/Froxlor/icons/email_add.png" alt="{$lng['menue']['main']['changepassword']}" />&nbsp;
+      {$lng['menue']['main']['changepassword']}
+    </h2>
+  </header>
+  
+  <section class="fullform bradiusodd">
+
+      <form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+        <fieldset>
+          <legend>Froxlor&nbsp;-&nbsp;{$lng['menue']['main']['changepassword']}</legend>
+
+          <table class="formtable">
+            {$account_changepw}
+          </table>
+
+          <p style="display: none;">
+            <input type="hidden" name="s" value="$s" />
+            <input type="hidden" name="page" value="$page" />
+            <input type="hidden" name="action" value="$action" />
+            <input type="hidden" name="send" value="send" />
+          </p>
+        </fieldset>
+      </form>
+  </section>
+</article>
 $footer

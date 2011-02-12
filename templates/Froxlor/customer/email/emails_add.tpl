@@ -23,17 +23,7 @@ $header
 					<legend>Froxlor&nbsp;-&nbsp;{$lng['emails']['emails_add']}</legend>
 
 					<table class="formtable">
-						<tr>
-							<td>{$lng['emails']['emailaddress']}:</td>
-							<td><input type="text" name="email_part" value="" size="15" /> @ <select name="domain">$domains</select></td>
-						</tr>
-						<tr>
-							<td>{$lng['emails']['iscatchall']}</td>
-							<td>$iscatchall</td>
-						</tr>
-						<tr>
-							<td colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['emails']['emails_add']}" /></td>
-						</tr>
+						  {$email_add_form}
 					</table>
 
 					<p style="display: none;">
