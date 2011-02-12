@@ -22,6 +22,7 @@ $header
 						<input type="hidden" name="page" value="$page" />
 						<input type="hidden" name="action" value="$action" />
 						<input type="hidden" name="send" value="send" />
+						<input type="hidden" name="id" value="$id" />
 					</p>
 				</fieldset>
 			</form>
