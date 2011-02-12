@@ -34,58 +34,50 @@ return array(
 						'type' => 'label',
 						'value' => $domainip
 					),
-					'alias_check' => array(
+					'alias' => array(
 						'visible' => ($alias_check == '0' ? true : false),
 						'label' => $lng['domains']['aliasdomain'],
 						'type' => 'select',
 						'select_var' => $domains
 					),
-					'pathedit' => array(
-						'visible' => ($settings['panel']['pathedit'] != 'Dropdown' ? true : false),
-						'label' => $lng['panel']['pathorurl'],
-						'desc' => $lng['panel']['pathDescription'], // TODO was ist mit: $lng['panel']['pathDescriptionEx'] ?
-						'type' => 'text',
-						'value' => $pathSelect
-					),
-					'pathedit_dropdown' => array(
-						'visible' => ($settings['panel']['pathedit'] == 'Dropdown' ? true : false),
+					'path' => array(
 						'label' => $lng['panel']['path'],
-						'type' => 'text',
-						'value' => $pathSelect
+						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescription'] : null),
+						'type' => ($settings['panel']['pathedit'] != 'Dropdown' ? 'text' : 'select'),
+						'select_var' => $pathSelect
 					),
-					'pathedit_dropdown2' => array(
+					'url' => array(
 						'visible' => ($settings['panel']['pathedit'] == 'Dropdown' ? true : false),
 						'label' => $lng['panel']['urloverridespath'],
 						'type' => 'text',
-						'value' => $urlvalue,
-						'size' => 30
+						'value' => $urlvalue
 					),
-					'apache2_customerRedirect' => array(
+					'redirectcode' => array(
 						'visible' => (($settings['system']['webserver'] == 'apache2' && $settings['customredirect']['enabled'] == '1') ? true : false),
 						'label' => $lng['domains']['redirectifpathisurl'],
 						'desc' => $lng['domains']['redirectifpathisurlinfo'],
 						'type' => 'select',
 						'select_var' => $redirectcode
 					),
-					'parentdomain' => array(
+					'iswildcarddomain' => array(
 						'visible' => (($result['parentdomainid'] == '0' && $userinfo['subdomains'] != '0') ? true : false),
 						'label' => $lng['domains']['wildcarddomain'],
-						'type' => 'label',
-						'value' => $iswildcarddomain
+						'type' => 'yesno',
+						'yesno_var' => $iswildcarddomain
 					),
-					'emaildomain' => array(
+					'isemaildomain' => array(
 						'visible' => ((( $result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2' ) && $result['parentdomainid'] != '0') ? true : false),
 						'label' => 'Emaildomain',
-						'type' => 'label',
-						'value' => $isemaildomain
+						'type' => 'yesno',
+						'yesno_var' => $isemaildomain
 					),
-					'ssl' => array(
+					'ssl_redirect' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? true : false),
 						'label' => 'SSL Redirect',
-						'type' => 'label',
-						'value' => $ssl_redirect
+						'type' => 'yesno',
+						'yesno_var' => $ssl_redirect
 					),
-					'openbasedir' => array(
+					'openbasedir_path' => array(
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
 						'select_var' => $openbasedir
