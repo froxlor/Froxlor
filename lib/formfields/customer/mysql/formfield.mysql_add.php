@@ -17,11 +17,11 @@
 return array(
         'mysql_add' => array(
                 'title' => $lng['mysql']['database_create'],
-                'image' => 'icons/mysql_add.png',
+                'image' => 'icons/add_mysql.png',
                 'sections' => array(
                         'section_a' => array(
                                 'title' => $lng['mysql']['database_create'],
-                                'image' => 'icons/mysql_add.png',
+                                'image' => 'icons/add_mysql.png',
                                 'fields' => array(
 					'description' => array(
 						'label' => $lng['mysql']['databasedescription'],

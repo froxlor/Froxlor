@@ -17,11 +17,11 @@
 return array(
         'mysql_edit' => array(
                 'title' => $lng['mysql']['database_edit'],
-                'image' => 'icons/mysql_edit.png',
+                'image' => 'icons/edit_mysql.png',
                 'sections' => array(
                         'section_a' => array(
                                 'title' => $lng['mysql']['database_edit'],
-                                'image' => 'icons/mysql_edit.png',
+                                'image' => 'icons/edit_mysql.png',
                                 'fields' => array(
 					'databasename' => array(
 						'label' => $lng['mysql']['databasename'],
