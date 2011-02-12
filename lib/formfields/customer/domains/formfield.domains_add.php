@@ -12,61 +12,53 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Formfields
- * @version    $Id: formfield.domains_add.php 112 2010-12-14 12:11:20Z d00p $
+ * @version    $Id: formfield.domains_edit.php 130 2010-12-22 00:54:11Z d00p $
  */
 
 return array(
 	'domain_add' => array(
 		'title' => $lng['domains']['subdomain_add'],
-		'image' => 'icons/add_domain.png',
+		'image' => 'icons/domain_add.png',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['domains']['subdomain_add'],
-				'image' => 'icons/add_domain.png',
+				'image' => 'icons/domain_add.png',
 				'fields' => array(
 					'domain' => array(
 						'label' => $lng['domains']['domainname'],
 						'type' => 'text'
 					),
-					'aliasdomain' => array(
+					'alias' => array(
 						'label' => $lng['domains']['aliasdomain'],
 						'type' => 'select',
 						'select_var' => $aliasdomains
 					),
-					'pathedit' => array(
-						'visible' => ($settings['panel']['pathedit'] != 'Dropdown' ? true : false),
-						'label' => $lng['panel']['pathorurl'],
-						'desc' => $lng['panel']['pathDescription'], // TODO was ist mit: $lng['panel']['pathDescriptionEx'] ?
-						'type' => 'text',
-						'value' => $pathSelect
-					),
-					'pathedit_dropdown' => array(
-						'visible' => ($settings['panel']['pathedit'] == 'Dropdown' ? true : false),
+					'path' => array(
 						'label' => $lng['panel']['path'],
-						'type' => 'text',
-						'value' => $pathSelect
+						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescription'] : null),
+						'type' => ($settings['panel']['pathedit'] != 'Dropdown' ? 'text' : 'select'),
+						'select_var' => $pathSelect
 					),
-					'pathedit_dropdown2' => array(
+					'url' => array(
 						'visible' => ($settings['panel']['pathedit'] == 'Dropdown' ? true : false),
 						'label' => $lng['panel']['urloverridespath'],
 						'type' => 'text',
-						'value' => $urlvalue,
-						'size' => 30
+						'value' => $urlvalue
 					),
-					'apache2_customerRedirect' => array(
+					'redirectcode' => array(
 						'visible' => (($settings['system']['webserver'] == 'apache2' && $settings['customredirect']['enabled'] == '1') ? true : false),
 						'label' => $lng['domains']['redirectifpathisurl'],
 						'desc' => $lng['domains']['redirectifpathisurlinfo'],
 						'type' => 'select',
 						'select_var' => $redirectcode
 					),
-					'ssl' => array(
+					'ssl_redirect' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? true : false),
 						'label' => 'SSL Redirect',
 						'type' => 'yesno',
 						'yesno_var' => $ssl_redirect
 					),
-					'openbasedir' => array(
+					'openbasedir_path' => array(
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
 						'select_var' => $openbasedir
