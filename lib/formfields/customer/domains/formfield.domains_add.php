@@ -24,9 +24,14 @@ return array(
 				'title' => $lng['domains']['subdomain_add'],
 				'image' => 'icons/domain_add.png',
 				'fields' => array(
-					'domain' => array(
+					'subdomain' => array(
 						'label' => $lng['domains']['domainname'],
 						'type' => 'text'
+					),
+					'domain' => array(
+						'label' => '@TODO up to subdomain-part',
+						'type' => 'select',
+						'select_var' => $domains
 					),
 					'alias' => array(
 						'label' => $lng['domains']['aliasdomain'],
@@ -42,8 +47,7 @@ return array(
 					'url' => array(
 						'visible' => ($settings['panel']['pathedit'] == 'Dropdown' ? true : false),
 						'label' => $lng['panel']['urloverridespath'],
-						'type' => 'text',
-						'value' => $urlvalue
+						'type' => 'text'
 					),
 					'redirectcode' => array(
 						'visible' => (($settings['system']['webserver'] == 'apache2' && $settings['customredirect']['enabled'] == '1') ? true : false),
