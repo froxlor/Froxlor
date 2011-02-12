@@ -161,6 +161,13 @@ elseif($page == 'htpasswds')
 		else
 		{
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
+
+			$htpasswd_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htpasswd_add.php';
+			$htpasswd_add_form = htmlform::genHTMLForm($htpasswd_add_data);
+
+			$title = $htpasswd_add_data['htpasswd_add']['title'];
+			$image = $htpasswd_add_data['htpasswd_add']['image'];
+
 			eval("echo \"" . getTemplate("extras/htpasswds_add") . "\";");
 		}
 	}
@@ -220,6 +227,13 @@ elseif($page == 'htpasswds')
 				}
 
 				$result = htmlentities_array($result);
+
+				$htpasswd_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htpasswd_edit.php';
+				$htpasswd_edit_form = htmlform::genHTMLForm($htpasswd_edit_data);
+
+				$title = $htpasswd_edit_data['htpasswd_edit']['title'];
+				$image = $htpasswd_edit_data['htpasswd_edit']['image'];
+
 				eval("echo \"" . getTemplate("extras/htpasswds_edit") . "\";");
 			}
 		}
