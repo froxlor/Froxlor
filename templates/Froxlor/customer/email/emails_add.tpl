@@ -19,8 +19,8 @@ $header
 	
 				<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
 					<fieldset>
-						<legend>Froxlor&nbsp;-&nbsp;{$lng['emails']['emails_add']}</legend>
-	
+						<legend>Froxlor&nbsp;-&nbsp;{$title}</legend>
+
 						<table class="formtable">
 							  {$email_add_form}
 						</table>
