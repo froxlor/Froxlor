@@ -63,7 +63,7 @@ return array(
 					'ssl' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? true : false),
 						'label' => 'SSL Redirect',
-						'type' => 'text',
+						'type' => 'yesno',
 						'yesno_var' => $ssl_redirect
 					),
 					'openbasedir' => array(
