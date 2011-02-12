@@ -14,17 +14,7 @@ $header
 					<legend>Froxlor&nbsp;-&nbsp;{$lng['emails']['forwarder_add']}</legend>
 
 					<table class="formtable">
-						<tr>
-							<td>{$lng['emails']['from']}:</td>
-							<td>{$result['email_full']}</td>
-						</tr>
-						<tr>
-							<td>{$lng['emails']['to']}:</td>
-							<td><input type="text" class="text" id="destination" name="destination" size="30" /></td>
-						</tr>
-						<tr>
-							<td colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['emails']['forwarder_add']}" />&nbsp;<input type="button" class="bottom" value="{$lng['panel']['abort']}" onclick="history.back();" /></td>
-						</tr>
+						  {$forwarder_add_form}
 					</table>
 
 					<p style="display: none;">
