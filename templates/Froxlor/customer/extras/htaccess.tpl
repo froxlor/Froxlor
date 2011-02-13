@@ -17,7 +17,7 @@
 
 			<if 15 < $count >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/add_htaccess.png" alt="" />&nbsp;
+					<img src="images/Froxlor/icons/htaccess_add.png" alt="" />&nbsp;
 					<a href="$filename?page=htaccess&amp;action=add&amp;s=$s">{$lng['extras']['pathoptions_add']}</a>
 				</div>
 			</if>
@@ -54,7 +54,7 @@
 			</p>
 
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/add_htaccess.png" alt="" />&nbsp;
+				<img src="images/Froxlor/icons/htaccess_add.png" alt="" />&nbsp;
 				<a href="$filename?page=htaccess&amp;action=add&amp;s=$s">{$lng['extras']['pathoptions_add']}</a>
 			</div>
 

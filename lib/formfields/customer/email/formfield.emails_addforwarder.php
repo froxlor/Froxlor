@@ -18,11 +18,11 @@
 return array(
 	'emails_addforwarder' => array(
 		'title' => $lng['emails']['forwarder_add'],
-		'image' => 'icons/add_autoresponder.png',
+		'image' => 'icons/autoresponder_add.png',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['emails']['forwarder_add'],
-				'image' => 'icons/add_autoresponder.png',
+				'image' => 'icons/autoresponder_add.png',
 				'fields' => array(
 					'email_full' => array(
 						'label' => $lng['emails']['from'],

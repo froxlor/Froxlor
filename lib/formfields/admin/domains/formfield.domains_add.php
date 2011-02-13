@@ -18,11 +18,11 @@
 return array(
 	'domain_add' => array(
 		'title' => $lng['admin']['domain_add'],
-		'image' => 'icons/add_domain.png',
+		'image' => 'icons/domain_add.png',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['domains']['domainsettings'],
-				'image' => 'icons/add_domain.png',
+				'image' => 'icons/domain_add.png',
 				'fields' => array(
 					'domain' => array(
 						'label' => 'Domain',
@@ -71,7 +71,7 @@ return array(
 			),
 			'section_b' => array(
 				'title' => $lng['admin']['webserversettings'],
-				'image' => 'icons/add_domain.png',
+				'image' => 'icons/domain_add.png',
 				'fields' => array(
 					'documentroot' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
@@ -131,7 +131,7 @@ return array(
 			),
 			'section_c' => array(
 				'title' => $lng['admin']['phpserversettings'],
-				'image' => 'icons/add_domain.png',
+				'image' => 'icons/domain_add.png',
 				'visible' => (($userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1') ? true : false),
 				'fields' => array(
 					'openbasedir' => array(
@@ -164,7 +164,7 @@ return array(
 			),
 			'section_d' => array(
 				'title' => $lng['admin']['nameserversettings'],
-				'image' => 'icons/add_domain.png',
+				'image' => 'icons/domain_add.png',
 				'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
 				'fields' => array(
 					'isbinddomain' => array(
@@ -181,7 +181,7 @@ return array(
 			),
 			'section_e' => array(
 				'title' => $lng['admin']['mailserversettings'],
-				'image' => 'icons/add_domain.png',
+				'image' => 'icons/domain_add.png',
 				'fields' => array(
 					'isemaildomain' => array(
 						'label' => $lng['admin']['emaildomain'],

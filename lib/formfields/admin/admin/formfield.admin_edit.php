@@ -68,7 +68,7 @@ return array(
 			),
 			'section_c' => array(
 				'title' => $lng['admin']['servicedata'],
-				'image' => 'icons/add_user.png',
+				'image' => 'icons/user_add.png',
 				'visible' => ($result['adminid'] != $userinfo['userid'] ? true : false),
 				'fields' => array(
 					'ipaddress' => array(

@@ -18,11 +18,11 @@
 return array(
 	'htaccess_add' => array(
 		'title' => $lng['extras']['pathoptions_add'],
-		'image' => 'icons/add_htpasswd.png',
+		'image' => 'icons/htpasswd_add.png',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['extras']['pathoptions_add'],
-				'image' => 'icons/add_htpasswd.png',
+				'image' => 'icons/htpasswd_add.png',
 				'fields' => array(
 					'path' => array(
 						'label' => $lng['panel']['path'],

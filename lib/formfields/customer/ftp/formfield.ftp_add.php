@@ -17,11 +17,11 @@
 return array(
 	'ftp_add' => array(
 		'title' => $lng['ftp']['account_add'],
-		'image' => 'icons/add_user.png',
+		'image' => 'icons/user_add.png',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['ftp']['account_add'],
-                                'image' => 'icons/add_user.png',
+                                'image' => 'icons/user_add.png',
 				'fields' => array(
 					'ftp_username' => array(
 						'visible' => ($settings['customer']['ftpatdomain'] == '1' ? true : false),

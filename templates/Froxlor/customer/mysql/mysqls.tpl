@@ -17,7 +17,7 @@
 
 			<if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') && 15 < $mysqls_count >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/add_mysql.png" alt="" />&nbsp;
+					<img src="images/Froxlor/icons/mysql_add.png" alt="" />&nbsp;
 					<a href="$filename?page=mysqls&amp;action=add&amp;s=$s">{$lng['mysql']['database_create']}</a>
 				</div>
 			</if>
@@ -52,7 +52,7 @@
 
 			<if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/add_mysql.png" alt="" />&nbsp;
+					<img src="images/Froxlor/icons/mysql_add.png" alt="" />&nbsp;
 					<a href="$filename?page=mysqls&amp;action=add&amp;s=$s">{$lng['mysql']['database_create']}</a>
 				</div>
 			</if>
