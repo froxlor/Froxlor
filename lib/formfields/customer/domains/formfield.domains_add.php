@@ -18,11 +18,11 @@
 return array(
 	'domain_add' => array(
 		'title' => $lng['domains']['subdomain_add'],
-		'image' => 'icons/domain_add.png',
+		'image' => 'icons/add_domain.png',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['domains']['subdomain_add'],
-				'image' => 'icons/domain_add.png',
+				'image' => 'icons/add_domain.png',
 				'fields' => array(
 					'subdomain' => array(
 						'label' => $lng['domains']['domainname'],
