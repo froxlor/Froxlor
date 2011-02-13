@@ -8,9 +8,7 @@ $header
 		</header>
 
 		<if 0 < $ticket_replies_count >
-		<section class="fullform bradiusodd">
-			$ticket_replies
-		</section>
+		$ticket_replies
 		</if>
 
 		<section class="fullform bradiusodd">
