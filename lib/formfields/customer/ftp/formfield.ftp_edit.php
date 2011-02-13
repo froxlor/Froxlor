@@ -17,11 +17,11 @@
 return array(
 	'ftp_edit' => array(
 		'title' => $lng['ftp']['account_edit'],
-		'image' => 'icons/edit_user.png',
+		'image' => 'icons/user_edit.png',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['ftp']['account_edit'],
-                                'image' => 'icons/edit_user.png',
+                                'image' => 'icons/user_edit.png',
 				'fields' => array(
 					'username' => array(
 						'label' => $lng['login']['username'],
