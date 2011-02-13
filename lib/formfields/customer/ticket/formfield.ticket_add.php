@@ -32,7 +32,7 @@ return array(
 						'type' => 'select',
 						'select_var' => $priorities,
 					),
-					'categories' => array(
+					'category' => array(
 						'label' => $lng['ticket']['category'],
 						'type' => 'select',
 						'select_var' => $categories,
