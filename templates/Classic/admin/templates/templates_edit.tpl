@@ -98,7 +98,7 @@ $header
 				<td class="field_name">{$lng['admin']['templates']['PASSWORD']}</td>
 			</tr>
 			<tr>
-				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['trafficninetypercent']}</b></td>
+				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['trafficmaxpercent']}</b></td>
 			</tr>
 			<tr>
 				<td class="field_name_border_left"><i>{TRAFFIC}</i>:</td>
