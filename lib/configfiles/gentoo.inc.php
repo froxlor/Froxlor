@@ -293,7 +293,28 @@ milter_default_action = accept" >> /etc/postfix/main.cf',
 						)
 					),
 					'dovecot' => Array(
-						'label' => 'Dovecot',
+						'label' => 'Dovecot 1',
+						'commands_1' => Array(
+							'emerge -av dovecot',
+							'mv dovecot.conf dovecot.conf.gentoo',
+							'mv dovecot-sql.conf dovecot-sql.conf.gentoo',
+							'touch dovecot.conf',
+							'touch dovecot-sql.conf',
+						),
+						'files' => Array(
+							'etc_dovecot_dovecot.conf' => '/etc/dovecot/dovecot.conf',
+							'etc_dovecot_dovecot-sql.conf' => '/etc/dovecot/dovecot-sql.conf'
+						),
+						'commands_2' => Array(
+							'chmod 0640 /etc/dovecot/dovecot-sql.conf',
+							'rc-update add dovecot default'
+						),
+						'restart' => Array(
+							'/etc/init.d/dovecot restart'
+						)
+					),
+					'dovecot2' => Array(
+						'label' => 'Dovecot 2',
 						'commands_1' => Array(
 							'emerge -av dovecot',
 							'mv dovecot.conf dovecot.conf.gentoo',
