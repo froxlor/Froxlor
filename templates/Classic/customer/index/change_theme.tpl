@@ -4,7 +4,7 @@ $header
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
 			<tr>
-				<td class="none" rowspan="4"><img src="images/Classic/changetheme.gif" alt="" /></td>
+				<td class="none" rowspan="4"><img src="images/Classic/changetheme.png" alt="" /></td>
 			</tr>
 			<tr>
 				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['menue']['main']['changetheme']}</b></td>
