@@ -40,6 +40,14 @@ class apache
 	protected $virtualhosts_data = array();
 	protected $diroptions_data = array();
 	protected $htpasswds_data = array();
+	
+	/**
+	 * indicator whether a customer is deactivated or not
+	 * if yes, only the webroot will be generated
+	 * 
+	 * @var bool
+	 */
+	private $_deactivated = false;
 
 	public function __construct($db, $logger, $debugHandler, $idnaConvert, $settings)
 	{
@@ -481,10 +489,12 @@ class apache
 		{
 			$webroot_text.= '  # Using docroot for deactivated users...' . "\n";
 			$webroot_text.= '  DocumentRoot "' . $this->settings['system']['deactivateddocroot'] . "\"\n";
+			$this->_deactivated = true;
 		}
 		else
 		{
 			$webroot_text.= '  DocumentRoot "' . $domain['documentroot'] . "\"\n";
+			$this->_deactivated = false;
 		}
 
 		return $webroot_text;
@@ -820,8 +830,10 @@ class apache
 
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 			$vhost_content.= $this->getWebroot($domain);
-			$vhost_content.= $this->composePhpOptions($domain);
-			$vhost_content.= $this->getStats($domain);
+			if ($this->_deactivated == false) {
+				$vhost_content.= $this->composePhpOptions($domain);
+				$vhost_content.= $this->getStats($domain);
+			}
 			$vhost_content.= $this->getLogfiles($domain);
 		}
 

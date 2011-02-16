@@ -44,6 +44,13 @@ class lighttpd
 	protected $htpasswd_files = array();
 	protected $mod_accesslog_loaded = "0";
 
+	/**
+	 * indicator whether a customer is deactivated or not
+	 * if yes, only the webroot will be generated
+	 * 
+	 * @var bool
+	 */
+	private $_deactivated = false;
 
 	public function __construct($db, $logger, $debugHandler, $idnaConvert, $settings)
 	{
@@ -468,12 +475,14 @@ class lighttpd
 			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
 			if(!$only_webroot)
 			{
-				$vhost_content.= $this->create_htaccess($domain);
-				$vhost_content.= $this->create_pathOptions($domain);
-				$vhost_content.= $this->composePhpOptions($domain);
-				$vhost_content.= $this->getStats($domain);
+				if ($this->_deactivated == false) {
+					$vhost_content.= $this->create_htaccess($domain);
+					$vhost_content.= $this->create_pathOptions($domain);
+					$vhost_content.= $this->composePhpOptions($domain);
+					$vhost_content.= $this->getStats($domain);
+					$vhost_content.= $this->getSslSettings($domain, $ssl_vhost);
+				}
 				$vhost_content.= $this->getLogFiles($domain);
-				$vhost_content.= $this->getSslSettings($domain, $ssl_vhost);
 			}
 		}
 
@@ -825,6 +834,7 @@ class lighttpd
 		{
 			$webroot_text.= '  # Using docroot for deactivated users...' . "\n";
 			$webroot_text.= '  server.document-root = "' . $this->settings['system']['deactivateddocroot'] . "\"\n";
+			$this->_deactivated = true;
 		}
 		else
 		{
@@ -851,6 +861,7 @@ class lighttpd
 			{
 				$webroot_text.= '  server.document-root = "' . makeCorrectDir($domain['documentroot']) . "\"\n";
 			}
+			$this->_deactivated = false;
 		}
 
 		return $webroot_text;
