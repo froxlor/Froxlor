@@ -101,8 +101,8 @@ while($row = $db->fetch_array($result))
 
 		if($_mailerror)
 		{
-			$cronlog->logAction(CRON_ACTION, LOG_ERR, 'Error sending mail: ' . $_mailerror);
-			standard_error('errorsendingmail', $row['email']);
+			$cronlog->logAction(CRON_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
+			echo 'Error sending mail: ' . $mailerr_msg . "\n";
 		}
 
 		$mail->ClearAddresses();
@@ -182,7 +182,7 @@ while($row = $db->fetch_array($result))
 
 		if ($_mailerror) {
 			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-			standard_error('errorsendingmail', $row["email"]);
+			echo "Error sending mail: " . $mailerr_msg . "\n";
 		}
 
 		$mail->ClearAddresses();
@@ -231,7 +231,7 @@ while($row = $db->fetch_array($result))
 
 		if ($_mailerror) {
 			$cronlog->logAction(CRON_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
-			standard_error('errorsendingmail', $row['email']);
+			echo 'Error sending mail: ' . $mailerr_msg . "\n";
 		}
 
 		$mail->ClearAddresses();
