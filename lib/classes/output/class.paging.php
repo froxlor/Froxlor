@@ -510,7 +510,7 @@ class paging
 				}
 				else
 				{
-					$pagingcode.= ' <strong>' . $i . '</strong>/nbsp;';
+					$pagingcode.= ' <strong>' . $i . '</strong>&nbsp;';
 				}
 			}
 
