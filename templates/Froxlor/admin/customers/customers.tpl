@@ -29,6 +29,7 @@ $header
 						{$lng['customer']['name']}&nbsp;&nbsp;{$arrowcode['c.name']}&nbsp;
 						{$lng['customer']['firstname']}&nbsp;&nbsp;{$arrowcode['c.firstname']}&nbsp;
 						{$lng['login']['username']}&nbsp;{$arrowcode['c.loginname']}
+						{$lng['admin']['admin']}&nbsp;{$arrowcode['a.loginname']}
 					</th>
 					<th>{$lng['panel']['options']}</th>
 				</tr>

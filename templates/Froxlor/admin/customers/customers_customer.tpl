@@ -7,7 +7,7 @@
 		<if ($row['name'] == '' || $row['firstname'] == '') && $row['company'] != ''>
 			{$row['company']}
 		</if>
-		&nbsp;(<a href="$filename?s=$s&amp;page=$page&amp;action=su&amp;id={$row['customerid']}" rel="external">{$row['loginname']}</a>)
+		&nbsp;(<a href="$filename?s=$s&amp;page=$page&amp;action=su&amp;id={$row['customerid']}" rel="external">{$row['loginname']}</a> | {$row['adminname']})
 		</strong>
 	</td>
 	<td rowspan="2">
