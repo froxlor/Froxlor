@@ -190,7 +190,19 @@ if($action == 'login')
 				$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['userid'] . "' AND `adminsession` = '" . $db->escape($userinfo['adminsession']) . "'");
 			}
 
-			$db->query("INSERT INTO `" . TABLE_PANEL_SESSIONS . "` (`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`, `theme`) VALUES ('" . $db->escape($s) . "', '" . (int)$userinfo['userid'] . "', '" . $db->escape($remote_addr) . "', '" . $db->escape($http_user_agent) . "', '" . time() . "', '" . $db->escape($language) . "', '" . $db->escape($userinfo['adminsession']) . "', '" . $db->escape($theme) . "')");
+			// check for field 'theme' in session-table, refs #607
+			$fields = mysql_list_fields($db->getDbName(), TABLE_PANEL_SESSIONS);
+			$columns = mysql_num_fields($fields);
+			$field_array = array();
+			for ($i = 0; $i < $columns; $i++) {
+    			$field_array[] = mysql_field_name($fields, $i);
+			}
+
+    		if (!in_array('theme', $field_array)) {
+				$db->query("INSERT INTO `" . TABLE_PANEL_SESSIONS . "` (`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`) VALUES ('" . $db->escape($s) . "', '" . (int)$userinfo['userid'] . "', '" . $db->escape($remote_addr) . "', '" . $db->escape($http_user_agent) . "', '" . time() . "', '" . $db->escape($language) . "', '" . $db->escape($userinfo['adminsession']) . "')");
+    		} else {
+    			$db->query("INSERT INTO `" . TABLE_PANEL_SESSIONS . "` (`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`, `theme`) VALUES ('" . $db->escape($s) . "', '" . (int)$userinfo['userid'] . "', '" . $db->escape($remote_addr) . "', '" . $db->escape($http_user_agent) . "', '" . time() . "', '" . $db->escape($language) . "', '" . $db->escape($userinfo['adminsession']) . "', '" . $db->escape($theme) . "')");
+    		}
 
 			if($userinfo['adminsession'] == '1')
 			{

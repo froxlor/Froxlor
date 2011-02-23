@@ -685,3 +685,35 @@ select {
 .maintable {
 	width: 90%;	
 }
+
+.update_progess
+{
+        padding: 2em;
+        text-align: left;
+}
+
+.preconfig
+{
+        text-align: left;
+        margin-top: 20px;
+        margin-bottom: 5px;
+        margin-right: 15px;
+        margin-left: 15px;
+}
+
+.preconfigitem 
+{
+        padding: 0.15em;
+        border-bottom: 1px solid #cccccc;
+}
+
+.preconfdesc 
+{
+        display: block;
+        margin-bottom: 0.5em;
+		font-size: 120%;
+}
+
+.strikethrough {
+	text-decoration: line-through;
+}
