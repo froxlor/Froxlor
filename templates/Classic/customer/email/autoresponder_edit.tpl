@@ -5,7 +5,7 @@ $header
 		<input type="hidden" name="account" value="$email" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['autoresponder']['autoresponder_edit']}</b></td>
+				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="{$title}" />&nbsp;{$title}</b></td>
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['autoresponder']['account']}:</td>

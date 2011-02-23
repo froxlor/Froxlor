@@ -52,6 +52,7 @@ smtpd_sasl_security_options = noanonymous
 broken_sasl_auth_clients = yes
 ## Dovecot Settings for deliver, SASL Auth and virtual transport
 mailbox_command = /usr/libexec/dovecot/deliver
+smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
 virtual_transport = dovecot
 dovecot_destination_recipient_limit = 1

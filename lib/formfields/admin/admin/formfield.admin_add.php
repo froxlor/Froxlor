@@ -18,11 +18,11 @@
 return array(
 	'admin_add' => array(
 		'title' => $lng['admin']['admin_add'],
-		'image' => 'icons/add_user.png',
+		'image' => 'icons/user_add.png',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['accountdata'],
-				'image' => 'icons/add_user.png',
+				'image' => 'icons/user_add.png',
 				'fields' => array(
 					'loginname' => array(
 						'label' => $lng['login']['username'],
@@ -43,7 +43,7 @@ return array(
 			),
 			'section_b' => array(
 				'title' => $lng['admin']['contactdata'],
-				'image' => 'icons/add_user.png',
+				'image' => 'icons/user_add.png',
 				'fields' => array(
 					'name' => array(
 						'label' => $lng['customer']['name'],
@@ -59,7 +59,7 @@ return array(
 			),
 			'section_c' => array(
 				'title' => $lng['admin']['servicedata'],
-				'image' => 'icons/add_user.png',
+				'image' => 'icons/user_add.png',
 				'fields' => array(
 					'ipaddress' => array(
 						'label' => $lng['serversettings']['ipaddress']['title'],

@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/edit_group.png" alt="" />&nbsp;
+				<img src="images/Froxlor/icons/group_edit.png" alt="" />&nbsp;
 				{$lng['admin']['customers']}&nbsp;({$customercount})
 			</h2>
 		</header>
@@ -17,7 +17,7 @@ $header
 
 			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $count && 0 < $countcustomers >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/add_user.png" alt="" />&nbsp;
+					<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
 					<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['customer_add']}</a>
 				</div>
 			</if>
@@ -29,6 +29,7 @@ $header
 						{$lng['customer']['name']}&nbsp;&nbsp;{$arrowcode['c.name']}&nbsp;
 						{$lng['customer']['firstname']}&nbsp;&nbsp;{$arrowcode['c.firstname']}&nbsp;
 						{$lng['login']['username']}&nbsp;{$arrowcode['c.loginname']}
+						{$lng['admin']['admin']}&nbsp;{$arrowcode['a.loginname']}
 					</th>
 					<th>{$lng['panel']['options']}</th>
 				</tr>
@@ -54,7 +55,7 @@ $header
 
 			<if $userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1'>
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/add_user.png" alt="" />&nbsp;
+				<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
 				<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['customer_add']}</a>
 			</div>
 			</if>

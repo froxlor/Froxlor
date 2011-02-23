@@ -28,7 +28,7 @@ $header
 				</tr>
 				<tr>
 					<td class="main_field_name">{$lng['panel']['urloverridespath']}:</td>
-					<td class="main_field_display"><input type="text" class="text" name="url" value="{$urlvalue}" size="30" /></td>
+					<td class="main_field_display"><input type="text" class="text" name="url" value="" size="30" /></td>
 				</tr>
 			</if>
 			<if $settings['system']['webserver'] == 'apache2' && $settings['customredirect']['enabled'] == '1'>

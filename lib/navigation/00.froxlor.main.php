@@ -56,7 +56,7 @@ return array (
 				array (
 					'url' => 'customer_email.php?page=emails&action=add',
 					'label' => $lng['emails']['emails_add'],
-					'required_resources' => 'emails',
+					'required_resources' => 'emails'
 				),
 				array (
 					'url' => 'customer_autoresponder.php',

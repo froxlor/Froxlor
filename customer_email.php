@@ -282,6 +282,13 @@ elseif($page == 'emails')
 				}
 
 				$iscatchall = makeyesno('iscatchall', '1', '0', '0');
+
+				$email_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_add.php';
+				$email_add_form = htmlform::genHTMLForm($email_add_data);
+
+				$title = $email_add_data['emails_add']['title'];
+				$image = $email_add_data['emails_add']['image'];
+
 				eval("echo \"" . getTemplate("email/emails_add") . "\";");
 			}
 		}
@@ -321,6 +328,13 @@ elseif($page == 'emails')
 
 			$destinations_count = count($result['destination']);
 			$result = htmlentities_array($result);
+
+			$email_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_edit.php';
+			$email_edit_form = htmlform::genHTMLForm($email_edit_data);
+
+			$title = $email_edit_data['emails_edit']['title'];
+			$image = $email_edit_data['emails_edit']['image'];
+			
 			eval("echo \"" . getTemplate("email/emails_edit") . "\";");
 		}
 	}
@@ -505,6 +519,13 @@ elseif($page == 'accounts')
 					$result['email_full'] = $idna_convert->decode($result['email_full']);
 					$result = htmlentities_array($result);
 					$quota = $settings['system']['mail_quota'];
+
+					$account_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_addaccount.php';
+					$account_add_form = htmlform::genHTMLForm($account_add_data);
+
+					$title = $account_add_data['emails_addaccount']['title'];
+					$image = $account_add_data['emails_addaccount']['image'];
+
 					eval("echo \"" . getTemplate("email/account_add") . "\";");
 				}
 			}
@@ -543,6 +564,13 @@ elseif($page == 'accounts')
 			{
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
 				$result = htmlentities_array($result);
+
+				$account_changepw_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_accountchangepasswd.php';
+				$account_changepw_form = htmlform::genHTMLForm($account_changepw_data);
+
+				$title = $account_changepw_data['emails_accountchangepasswd']['title'];
+				$image = $account_changepw_data['emails_accountchangepasswd']['image'];
+
 				eval("echo \"" . getTemplate("email/account_changepw") . "\";");
 			}
 		}
@@ -584,6 +612,13 @@ elseif($page == 'accounts')
 			{
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
 				$result = htmlentities_array($result);
+
+				$quota_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_accountchangequota.php';
+				$quota_edit_form = htmlform::genHTMLForm($quota_edit_data);
+
+				$title = $quota_edit_data['emails_accountchangequota']['title'];
+				$image = $quota_edit_data['emails_accountchangequota']['image'];
+        
 				eval("echo \"" . getTemplate("email/account_changequota") . "\";");
 			}
 		}
@@ -678,6 +713,13 @@ elseif($page == 'forwarders')
 				{
 					$result['email_full'] = $idna_convert->decode($result['email_full']);
 					$result = htmlentities_array($result);
+
+					$forwarder_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_addforwarder.php';
+					$forwarder_add_form = htmlform::genHTMLForm($forwarder_add_data);
+
+					$title = $forwarder_add_data['emails_addforwarder']['title'];
+					$image = $forwarder_add_data['emails_addforwarder']['image'];
+
 					eval("echo \"" . getTemplate("email/forwarder_add") . "\";");
 				}
 			}

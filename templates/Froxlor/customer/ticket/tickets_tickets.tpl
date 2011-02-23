@@ -8,20 +8,20 @@
 	<td>
 		<a href="$filename?page=tickets&amp;action=answer&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
 			<if $cananswer < 1 >
-				<img src="images/Froxlor/icons/show_ticket.png" alt="{$lng['ticket']['show']}"/>
+				<img src="images/Froxlor/icons/ticket_show.png" alt="{$lng['ticket']['show']}"/>
 			</if>
 			<if 0 < $cananswer >
-				<img src="images/Froxlor/icons/answer_ticket.png" alt="{$lng['ticket']['answer']}"/>
+				<img src="images/Froxlor/icons/ticket_answer.png" alt="{$lng['ticket']['answer']}"/>
 			</if>
 		</a>
 		<if $reopen < 1 >
 			&nbsp;<a href="$filename?page=tickets&amp;action=close&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
-				<img src="images/Froxlor/icons/close_ticket.png" alt="{$lng['ticket']['close']}"/>
+				<img src="images/Froxlor/icons/ticket_close.png" alt="{$lng['ticket']['close']}"/>
 			</a>
 		</if>
 		<if 0 < $reopen >
 			&nbsp;<a href="$filename?page=tickets&amp;action=reopen&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
-				<img src="images/Froxlor/icons/reopen_ticket.png" alt="{$lng['ticket']['reopen']}"/>
+				<img src="images/Froxlor/icons/ticket_reopen.png" alt="{$lng['ticket']['reopen']}"/>
 			</a>
 		</if>
 	</td>

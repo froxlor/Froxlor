@@ -17,7 +17,7 @@
 
 			<if 15 < $count >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/add_htpasswd.png" alt="" />&nbsp;
+					<img src="images/Froxlor/icons/htpasswd_add.png" alt="" />&nbsp;
 					<a href="$filename?page=htpasswds&amp;action=add&amp;s=$s">{$lng['extras']['directoryprotection_add']}</a>
 				</div>
 			</if>
@@ -50,7 +50,7 @@
 			</form>
 
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/add_htpasswd.png" alt="" />&nbsp;
+				<img src="images/Froxlor/icons/htpasswd_add.png" alt="" />&nbsp;
 				<a href="$filename?page=htpasswds&amp;action=add&amp;s=$s">{$lng['extras']['directoryprotection_add']}</a>
 			</div>
 

@@ -247,6 +247,13 @@ elseif($page == 'tickets')
 				}
 
 				$ticketsopen = (int)$opentickets['count'];
+
+				$ticket_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/ticket/formfield.ticket_add.php';
+				$ticket_add_form = htmlform::genHTMLForm($ticket_add_data);
+
+				$title = $ticket_add_data['ticket_add']['title'];
+				$image = $ticket_add_data['ticket_add']['image'];
+
 				eval("echo \"" . getTemplate("ticket/tickets_new") . "\";");
 			}
 		}
@@ -359,6 +366,12 @@ elseif($page == 'tickets')
 			$ticket_replies_count = $db->num_rows($andere) + 1;
 
 			// don't forget the main-ticket!
+
+			$ticket_reply_data = include_once dirname(__FILE__).'/lib/formfields/customer/ticket/formfield.ticket_reply.php';
+			$ticket_reply_form = htmlform::genHTMLForm($ticket_reply_data);
+
+			$title = $ticket_reply_data['ticket_reply']['title'];
+			$image = $ticket_reply_data['ticket_reply']['image'];
 
 			eval("echo \"" . getTemplate("ticket/tickets_reply") . "\";");
 		}

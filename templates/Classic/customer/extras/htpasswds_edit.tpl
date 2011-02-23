@@ -6,27 +6,9 @@ $header
 		<input type="hidden" name="id" value="$id" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['extras']['directoryprotection_edit']}</b></td>
+				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="{$title}" />&nbsp;{$title}</b></td>
 			</tr>
-			<tr>
-				<td class="main_field_name">{$lng['panel']['path']}:</td>
-				<td class="main_field_display" nowrap="nowrap">{$result['path']}</td>
-			</tr>
-			<tr>
-				<td class="main_field_name">{$lng['login']['username']}:</td>
-				<td class="main_field_display" nowrap="nowrap">{$result['username']}</td>
-			</tr>
-			<tr>
-				<td class="main_field_name">{$lng['login']['password']}:</td>
-				<td class="main_field_display" nowrap="nowrap"><input type="password" name="directory_password" maxlength="50" /></td>
-			</tr>
-			<tr>
-				<td class="main_field_name">{$lng['extras']['htpasswdauthname']}:</td>
-				<td class="main_field_display" nowrap="nowrap"><input type="text" name="directory_authname" value="{$result['authname']}" /></td>
-			</tr>
-			<tr>
-				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['extras']['directoryprotection_edit']}" /></td>
-			</tr>
+			{$htpasswd_edit_form}
 		</table>
 	</form>
 	<br />

@@ -2,7 +2,7 @@
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/edit_group.png" alt="" />&nbsp;
+				<img src="images/Froxlor/icons/group_edit.png" alt="" />&nbsp;
 				{$lng['menue']['ftp']['accounts']}&nbsp;({$ftps_count})
 			</h2>
 		</header>
@@ -17,7 +17,7 @@
 
 			<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') && 15 < $ftps_count >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/add_user.png" alt="" />&nbsp;
+					<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
 					<a href="$filename?page=accounts&amp;action=add&amp;s=$s">{$lng['ftp']['account_add']}</a>
 				</div>
 			</if>
@@ -51,7 +51,7 @@
 
 			<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/add_user.png" alt="" />&nbsp;
+					<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
 					<a href="$filename?page=accounts&amp;action=add&amp;s=$s">{$lng['ftp']['account_add']}</a>
 				</div>
 			</if>

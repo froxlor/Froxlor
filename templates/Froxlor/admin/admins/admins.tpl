@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/edit_group.png" alt="" />&nbsp;
+				<img src="images/Froxlor/icons/group_edit.png" alt="" />&nbsp;
 				{$lng['admin']['admins']}&nbsp;({$admincount})
 			</h2>
 		</header>
@@ -17,7 +17,7 @@ $header
 
 			<if 15 < $count >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/add_user.png" alt="" />&nbsp;
+					<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
 					<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['admin_add']}</a>
 				</div>
 			</if>
@@ -52,7 +52,7 @@ $header
 			</form>
 
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/add_user.png" alt="" />&nbsp;
+				<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
 				<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['admin_add']}</a>
 			</div>
 

@@ -120,7 +120,7 @@ $header
 				</tr>
 				<tr>
 					<td colspan="2">
-						<strong>{$lng['admin']['templates']['trafficninetypercent']}</strong>
+						<strong>{$lng['admin']['templates']['trafficmaxpercent']}</strong>
 					</td>
 				</tr>
 				<tr>

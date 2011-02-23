@@ -10,29 +10,9 @@ $header
 	<if $isclosed < 1 >
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['ticket']['ticket_reply']}</b></td>
+				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$title}</b></td>
 			</tr>
-			<tr>
-				<td class="main_field_name">{$lng['ticket']['subject']}:</td>
-				<td class="main_field_display" nowrap="nowrap"><input type="text" class="text" name="subject" value="Re: {$subject}" /></td>
-			</tr>
- 			<tr>
-				<td class="main_field_name">{$lng['ticket']['priority']}:</td>
-				<td class="main_field_display" nowrap="nowrap"><select name="priority">$priorities</select></td>
- 			</tr>
- 			<tr>
-				<td class="main_field_name">{$lng['ticket']['category']}:</td>
-				<td class="main_field_display" nowrap="nowrap">{$row['name']}</td>
- 			</tr>
-			<tr>
-				<td class="main_field_name" colspan="2">{$lng['ticket']['message']}:</td>
- 			</tr>
-			<tr>
-				<td class="main_field_display" colspan="2"><textarea class="textarea_border" rows="12" cols="60" name="message"></textarea></td>
- 			</tr>
-			<tr>
-				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['ticket']['ticket_reply']}" /></td>
-			</tr>
+			{$ticket_reply_form}
 		</table>
 	</if>
 	<if 0 < $isclosed >

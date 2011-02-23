@@ -270,6 +270,12 @@ elseif($page == 'accounts')
 
 				$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
 
+				$ftp_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/ftp/formfield.ftp_add.php';
+				$ftp_add_form = htmlform::genHTMLForm($ftp_add_data);
+
+				$title = $ftp_add_data['ftp_add']['title'];
+				$image = $ftp_add_data['ftp_add']['image'];
+
 				eval("echo \"" . getTemplate("ftp/accounts_add") . "\";");
 			}
 		}
@@ -352,7 +358,13 @@ elseif($page == 'accounts')
 						$domains.= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['domain']);
 					}
 				}
-				
+
+				$ftp_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/ftp/formfield.ftp_edit.php';
+				$ftp_edit_form = htmlform::genHTMLForm($ftp_edit_data);
+
+				$title = $ftp_edit_data['ftp_edit']['title'];
+				$image = $ftp_edit_data['ftp_edit']['image'];
+
 				eval("echo \"" . getTemplate("ftp/accounts_edit") . "\";");
 			}
 		}

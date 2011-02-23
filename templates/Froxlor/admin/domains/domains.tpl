@@ -17,7 +17,7 @@
 
 			<if ($userinfo['domains_used'] < $userinfo['domains'] || $userinfo['domains'] == '-1') && 15 < $count && 0 < $countcustomers >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/add_domain.png" alt="" />&nbsp;
+					<img src="images/Froxlor/icons/domain_add.png" alt="" />&nbsp;
 					<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['domain_add']}</a>
 				</div>
 			</if>
@@ -61,7 +61,7 @@
 
 			<if ($userinfo['domains_used'] < $userinfo['domains'] || $userinfo['domains'] == '-1') && $countcustomers !=0 >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/add_domain.png" alt="" />&nbsp;
+					<img src="images/Froxlor/icons/domain_add.png" alt="" />&nbsp;
 					<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['domain_add']}</a>
 				</div>
 			</if>
