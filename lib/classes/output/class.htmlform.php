@@ -48,22 +48,42 @@ class htmlform
 				}
 	
 				eval("self::\$_form .= \"" . getTemplate("misc/form/table_section", "1") . "\";");
-	
+
+				$nexto = false;
 				foreach($section['fields'] as $fieldname => $fielddata)
 				{
 					if(isset($fielddata['visible']) && $fielddata['visible'] === false)
 					{
 						continue;
 					}
-	
-					$label = $fielddata['label'];
-					$desc = (isset($fielddata['desc']) ? $fielddata['desc'] : '');
-					$style = (isset($fielddata['style']) ? ' style="'.$fielddata['style'].'"' : '');
-					$mandatory = self::_getMandatoryFlag($fielddata);
-					$data_field = self::_parseDataField($fieldname, $fielddata);
-					$data_field = str_replace("\n", "", $data_field);
-					$data_field = str_replace("\t", "", $data_field);
-					eval("self::\$_form .= \"" . getTemplate("misc/form/table_row", "1") . "\";");
+
+					if ($nexto === false || (isset($fielddata['next_to']) && $nexto['field'] != $fielddata['next_to'])) {
+						$label = $fielddata['label'];
+						$desc = (isset($fielddata['desc']) ? $fielddata['desc'] : '');
+						$style = (isset($fielddata['style']) ? ' style="'.$fielddata['style'].'"' : '');
+						$mandatory = self::_getMandatoryFlag($fielddata);
+						$data_field = self::_parseDataField($fieldname, $fielddata);
+						$data_field = str_replace("\n", "", $data_field);
+						$data_field = str_replace("\t", "", $data_field);
+						if (isset($fielddata['has_nextto'])) {
+							$nexto = array('field' => $fieldname);
+							$data_field.='{NEXTTOFIELD_'.$fieldname.'}';
+						} else {
+							$nexto = false;
+						}
+						eval("self::\$_form .= \"" . getTemplate("misc/form/table_row", "1") . "\";");
+					} else {
+						$data_field = self::_parseDataField($fieldname, $fielddata);
+						$data_field = str_replace("\n", "", $data_field);
+						$data_field = str_replace("\t", "", $data_field);
+						$data_field = $fielddata['next_to_prefix'].$data_field;
+						self::$_form = str_replace(
+							'{NEXTTOFIELD_'.$fielddata['next_to'].'}',
+							$data_field,
+							self::$_form
+						);
+						$nexto = false;
+					}
 				}
 			}
 		}

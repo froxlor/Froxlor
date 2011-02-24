@@ -26,10 +26,12 @@ return array(
 				'fields' => array(
 					'subdomain' => array(
 						'label' => $lng['domains']['domainname'],
-						'type' => 'text'
+						'type' => 'text',
+						'has_nextto' => true
 					),
 					'domain' => array(
-						'label' => '@TODO up to subdomain-part',
+						'next_to' => 'subdomain',
+						'next_to_prefix' => '&nbsp;.&nbsp;',
 						'type' => 'select',
 						'select_var' => $domains
 					),
@@ -54,7 +56,7 @@ return array(
 						'label' => $lng['domains']['redirectifpathisurl'],
 						'desc' => $lng['domains']['redirectifpathisurlinfo'],
 						'type' => 'select',
-						'select_var' => $redirectcode
+						'select_var' => isset($redirectcode) ? $redirectcode : null
 					),
 					'ssl_redirect' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? true : false),

@@ -26,10 +26,12 @@ return array(
 				'fields' => array(
 					'email_part' => array(
 						'label' => $lng['emails']['emailaddress'],
-						'type' => 'text'
+						'type' => 'text',
+						'has_nextto' => true
 					),
 					'domain' => array(
-						'label' => '@TODO up to email-part',
+						'next_to' => 'email_part',
+						'next_to_prefix' => '&nbsp;@&nbsp;',
 						'type' => 'select',
 						'select_var' => $domains
 					),
