@@ -36,9 +36,9 @@ return array(
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescription'] : null),
-						'type' => ($settings['panel']['pathedit'] != 'Dropdown' ? 'text' : 'select'),
-						'select_var' => $pathSelect,
+						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'type' => $pathSelect['type'],
+						'select_var' => $pathSelect['value']
 					),
 					'ftp_password' => array(
 						'label' => $lng['login']['password'],

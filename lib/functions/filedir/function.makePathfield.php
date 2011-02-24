@@ -36,11 +36,15 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 {
 	global $lng;
 	$value = str_replace($path, '', $value);
-	$field = '';
+	$field = array();
 
 	if($fieldType == 'Manual')
 	{
-		$field = '<input type="text" name="path" value="' . htmlspecialchars($value) . '" />';
+		$field = array(
+			'type' => 'text',
+			'value' => htmlspecialchars($value)
+		);
+		
 	}
 	elseif($fieldType == 'Dropdown')
 	{
@@ -58,7 +62,7 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 		{
 			if(sizeof($dirList) <= 100)
 			{
-				$field = '<select name="path">';
+				$_field = '';
 				foreach($dirList as $key => $dir)
 				{
 					if(strpos($dir, $path) === 0)
@@ -66,23 +70,35 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 						$dir = makeCorrectDir(substr($dir, strlen($path)));
 					}
 	
-					$field.= makeoption($dir, $dir, $value);
+					$_field.= makeoption($dir, $dir, $value);
 				}
-				$field.= '</select>';
+				$field = array(
+					'type' => 'select',
+					'value' => $_field
+				);
 			}
 			else
 			{
 				// remove starting slash we added
 				// for the Dropdown, #225
 				$value = substr($value, 1);
-				$field = $lng['panel']['toomanydirs'];
-				$field.= '<br /><input type="text" name="path" value="' . htmlspecialchars($value) . '" />';
+				//$field = $lng['panel']['toomanydirs'];
+				$field = array(
+					'type' => 'text',
+					'value' => htmlspecialchars($value),
+					'note' => $lng['panel']['toomanydirs']
+				);
 			}
 		}
 		else
 		{
-			$field = $lng['panel']['dirsmissing'];
-			$field.= '<input type="hidden" name="path" value="/" />';
+			//$field = $lng['panel']['dirsmissing'];
+			$field = '<input type="hidden" name="path" value="/" />';
+			$field = array(
+				'type' => 'hidden',
+				'value' => '/',
+				'note' => $lng['panel']['dirsmissing']
+			);
 		}
 	}
 
