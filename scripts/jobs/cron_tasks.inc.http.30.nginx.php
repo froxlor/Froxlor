@@ -236,6 +236,9 @@ class nginx
 			$this->nginx_data[$vhost_filename].= "\t".'location ~ \.php$ {'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_index index.php;'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
+			if ($row_ipsandports['ssl'] == '1') {
+				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param HTTPS on;'."\n";
+			}
 			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
 			if((int)$this->settings['phpfpm']['enabled'] == 1)
 			{
@@ -420,7 +423,7 @@ class nginx
 			if ($this->_deactivated == false) {
 				$vhost_content.= $this->create_pathOptions($domain);
 			//	$vhost_content.= $this->create_htaccess($domain);
-				$vhost_content.= $this->composePhpOptions($domain);
+				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
 				$vhost_content.= $this->getStats($domain);
 
 				if ($domain['specialsettings'] != "") {
@@ -571,7 +574,7 @@ class nginx
 		return $returnval;
 	}
 
-	protected function composePhpOptions($domain)
+	protected function composePhpOptions($domain, $ssl_vhost = false)
 	{
 		$phpopts = '';
 		if($domain['phpenabled'] == '1')
@@ -579,6 +582,9 @@ class nginx
 			$phpopts = "\t".'location ~ \.php$ {'."\n";
 			$phpopts.= "\t\t".'fastcgi_index index.php;'."\n";
 			$phpopts.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
+			if ($domain['ssl'] == '1' && $ssl_vhost) {
+				$phpopts.= "\t\t".'fastcgi_param HTTPS on;'."\n";
+			}
 			$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
 			$phpopts.= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
 			$phpopts.= "\t".'}'."\n";

@@ -28,7 +28,7 @@ if(@php_sapi_name() != 'cli'
 
 class nginx_phpfpm extends nginx
 {
-	protected function composePhpOptions($domain)
+	protected function composePhpOptions($domain, $ssl_vhost = false)
 	{
 		$php_options_text = '';
 
@@ -40,7 +40,7 @@ class nginx_phpfpm extends nginx
 			$php_options_text = "\t".'location ~ \.php$ {'."\n";
 			$php_options_text.= "\t\t".'fastcgi_index index.php;'."\n";
 			$php_options_text.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
-			if ($domain['ssl'] == '1') {
+			if ($domain['ssl'] == '1' && $ssl_vhost) {
 				$php_options_text.= "\t\t".'fastcgi_param HTTPS on;'."\n";
 			}
 			$php_options_text.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
