@@ -46,7 +46,7 @@ function findDirs($path, $uid, $gid)
 		$path = array_pop($list);
 		$path = makeCorrectDir($path);
 		
-		if(!is_readable($path))
+		if(!is_readable($path) || !is_executable($path))
 		{
 			//return $_fileList;
 			// only 'skip' this directory, #611
