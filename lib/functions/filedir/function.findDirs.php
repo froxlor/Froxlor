@@ -48,7 +48,9 @@ function findDirs($path, $uid, $gid)
 		
 		if(!is_readable($path))
 		{
-			return $_fileList;
+			//return $_fileList;
+			// only 'skip' this directory, #611
+			continue;
 		}
 
 		$dh = opendir($path);
