@@ -332,14 +332,15 @@ function updateCounters($returndebuginfo = false)
 			$admin_resources[$admin['adminid']]['aps_packages_used'] = 0;
 		}
 
-		$admin['aps_packages_used_new'] = $admin_resources[$admin['adminid']]['aps_packages_used'];
+		$admin['subdomains_used_new'] = $admin_resources[$admin['adminid']]['subdomains_used'];
 
 		if(!isset($admin_resources[$admin['adminid']]['aps_packages_used']))
 		{
 			$admin_resources[$admin['adminid']]['aps_packages_used'] = 0;
 		}
 
-		$admin['subdomains_used_new'] = $admin_resources[$admin['adminid']]['subdomains_used'];
+		$admin['aps_packages_used_new'] = $admin_resources[$admin['adminid']]['aps_packages_used'];
+
 		$db->query('UPDATE 
 			`' . TABLE_PANEL_ADMINS . '` 
 			SET 

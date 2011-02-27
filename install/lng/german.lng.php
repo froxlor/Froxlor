@@ -40,6 +40,7 @@ $lng['install']['servername'] = 'Servername (FQDN)';
 $lng['install']['serverip'] = 'Server-IP';
 $lng['install']['apacheversion'] = 'Apacheversion';
 $lng['install']['next'] = 'Fortfahren';
+$lng['install']['installdata'] = 'Installation - Daten';
 
 /**
  * Progress

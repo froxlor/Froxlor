@@ -152,7 +152,7 @@ elseif($action == 'delete'
 		}
 	}
 }
-elseif($action == 'delete'
+elseif($action == 'deletef'
        && $id != 0)
 {
 	//file templates
@@ -208,6 +208,12 @@ elseif($action == 'add')
 		{
 			$template_options.= makeoption($lng['admin']['templates'][$template], $template, NULL, true);
 		}
+
+		$template_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/templates/formfield.template_add.php';
+		$template_add_form = htmlform::genHTMLForm($template_add_data);
+
+		$title = $template_add_data['template_add']['title'];
+		$image = $template_add_data['template_add']['image'];
 
 		eval("echo \"" . getTemplate("templates/templates_add_2") . "\";");
 	}
@@ -312,6 +318,12 @@ elseif($action == 'add')
 				$free_templates.= makeoption($lng['admin']['templates'][$template], $template, '', true);
 			}
 
+			$filetemplate_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/templates/formfield.filetemplate_add.php';
+			$filetemplate_add_form = htmlform::genHTMLForm($filetemplate_add_data);
+
+			$title = $filetemplate_add_data['filetemplate_add']['title'];
+			$image = $filetemplate_add_data['filetemplate_add']['image'];
+
 			eval("echo \"" . getTemplate("templates/filetemplates_add") . "\";");
 		}
 	}
@@ -344,11 +356,18 @@ elseif($action == 'edit'
 			$result = $db->query_first("SELECT `language`, `varname`, `value` FROM `" . TABLE_PANEL_TEMPLATES . "` WHERE `id`='$mailbodyid'");
 			$result = htmlentities_array($result);
 			$mailbody = $result['value'];
+
+			$template_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/templates/formfield.template_edit.php';
+			$template_edit_form = htmlform::genHTMLForm($template_edit_data);
+
+			$title = $template_edit_data['template_edit']['title'];
+			$image = $template_edit_data['template_edit']['image'];
+
 			eval("echo \"" . getTemplate("templates/templates_edit") . "\";");
 		}
 	}
 }
-elseif($action == 'edit'
+elseif($action == 'editf'
        && $id != 0)
 {
 	//file templates
@@ -372,6 +391,13 @@ elseif($action == 'edit'
 		else
 		{
 			$row = htmlentities_array($row);
+
+			$filetemplate_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/templates/formfield.filetemplate_edit.php';
+			$filetemplate_edit_form = htmlform::genHTMLForm($filetemplate_edit_data);
+
+			$title = $filetemplate_edit_data['filetemplate_edit']['title'];
+			$image = $filetemplate_edit_data['filetemplate_edit']['image'];
+
 			eval("echo \"" . getTemplate("templates/filetemplates_edit") . "\";");
 		}
 	}
@@ -381,5 +407,3 @@ elseif($action == 'edit'
 		exit;
 	}
 }
-
-?>

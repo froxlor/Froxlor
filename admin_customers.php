@@ -50,7 +50,8 @@ if($page == 'customers'
 			'c.diskspace' => $lng['customer']['diskspace'],
 			'c.diskspace_used' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
 			'c.traffic' => $lng['customer']['traffic'],
-			'c.traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
+			'c.traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')'
+/*
 			'c.mysqls' => $lng['customer']['mysqls'],
 			'c.mysqls_used' => $lng['customer']['mysqls'] . ' (' . $lng['panel']['used'] . ')',
 			'c.ftps' => $lng['customer']['ftps'],
@@ -69,8 +70,10 @@ if($page == 'customers'
 			'c.lastlogin_succ' => $lng['admin']['lastlogin_succ'],
 			'c.phpenabled' => $lng['admin']['phpenabled'],
 			'c.perlenabled' => $lng['admin']['perlenabled']
+*/
 		);
 
+/*
 		if($settings['ticket']['enabled'] == 1)
 		{
 			$fields['c.tickets'] = $lng['customer']['tickets'];
@@ -82,6 +85,7 @@ if($page == 'customers'
 			$fields['c.email_autoresponder'] = $lng['customer']['autoresponder'];
 			$fields['c.email_autoresponder_used'] = $lng['customer']['autoresponder'] . ' (' . $lng['panel']['used'] . ')';			
 		}
+*/
 
 		$paging = new paging($userinfo, $db, TABLE_PANEL_CUSTOMERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$customers = '';
@@ -105,6 +109,17 @@ if($page == 'customers'
 				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
 				$row['diskspace'] = round($row['diskspace'] / 1024, $settings['panel']['decimal_places']);
 				$last_login = ((int)$row['lastlogin_succ'] == 0) ? $lng['panel']['neverloggedin'] : date('d.m.Y', $row['lastlogin_succ']);
+
+				/**
+				 * percent-values for progressbar
+				 */
+				if ($row['diskspace'] > 0) {
+					$percent = round(($row['diskspace_used']*100)/$row['diskspace'], 2);
+					$doublepercent = round($percent*2, 2);
+				} else {
+					$percent = 0;
+					$doublepercent = 0;
+				}
 
 				$column_style = '';
 				$unlock_link = '';
@@ -598,7 +613,45 @@ if($page == 'customers'
 						$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
 					}
 
-					$result = $db->query("INSERT INTO `" . TABLE_PANEL_CUSTOMERS . "` (`adminid`, `loginname`, `password`, `name`, `firstname`, `company`, `street`, `zipcode`, `city`, `phone`, `fax`, `email`, `customernumber`, `def_language`, `documentroot`, `guid`, `diskspace`, `traffic`, `subdomains`, `emails`, `email_accounts`, `email_forwarders`, `email_quota`, `ftps`, `tickets`, `mysqls`, `standardsubdomain`, `phpenabled`, `imap`, `pop3`, `aps_packages`, `perlenabled`, `email_autoresponder`)  VALUES ('" . (int)$userinfo['adminid'] . "', '" . $db->escape($loginname) . "', '" . md5($password) . "', '" . $db->escape($name) . "', '" . $db->escape($firstname) . "', '" . $db->escape($company) . "', '" . $db->escape($street) . "', '" . $db->escape($zipcode) . "', '" . $db->escape($city) . "', '" . $db->escape($phone) . "', '" . $db->escape($fax) . "', '" . $db->escape($email) . "', '" . $db->escape($customernumber) . "','" . $db->escape($def_language) . "', '" . $db->escape($documentroot) . "', '" . $db->escape($guid) . "', '" . $db->escape($diskspace) . "', '" . $db->escape($traffic) . "', '" . $db->escape($subdomains) . "', '" . $db->escape($emails) . "', '" . $db->escape($email_accounts) . "', '" . $db->escape($email_forwarders) . "', '" . $db->escape($email_quota) . "', '" . $db->escape($ftps) . "', '" . $db->escape($tickets) . "', '" . $db->escape($mysqls) . "', '0', '" . $db->escape($phpenabled) . "', '" . $db->escape($email_imap) . "', '" . $db->escape($email_pop3) . "', '" . (int)$number_of_aps_packages . "', '" . $db->escape($perlenabled) . "', '" . $db->escape($email_autoresponder) . "')");
+					$_theme = $settings['panel']['default_theme'];
+
+					$result = $db->query(
+						"INSERT INTO `" . TABLE_PANEL_CUSTOMERS . "` SET 
+						`adminid` = '" . (int)$userinfo['adminid'] . "', 
+						`loginname` = '" . $db->escape($loginname) . "', 
+						`password` = '" . md5($password) . "', 
+						`name` = '" . $db->escape($name) . "', 
+						`firstname` = '" . $db->escape($firstname) . "', 
+						`company` = '" . $db->escape($company) . "', 
+						`street` = '" . $db->escape($street) . "', 
+						`zipcode` = '" . $db->escape($zipcode) . "', 
+						`city` = '" . $db->escape($city) . "', 
+						`phone` = '" . $db->escape($phone) . "', 
+						`fax` = '" . $db->escape($fax) . "', 
+						`email` = '" . $db->escape($email) . "', 
+						`customernumber` = '" . $db->escape($customernumber) . "', 
+						`def_language` = '" . $db->escape($def_language) . "', 
+						`documentroot` = '" . $db->escape($documentroot) . "', 
+						`guid` = '" . $db->escape($guid) . "', 
+						`diskspace` = '" . $db->escape($diskspace) . "', 
+						`traffic` = '" . $db->escape($traffic) . "', 
+						`subdomains` = '" . $db->escape($subdomains) . "', 
+						`emails` = '" . $db->escape($emails) . "', 
+						`email_accounts` = '" . $db->escape($email_accounts) . "', 
+						`email_forwarders` = '" . $db->escape($email_forwarders) . "', 
+						`email_quota` = '" . $db->escape($email_quota) . "', 
+						`ftps` = '" . $db->escape($ftps) . "', 
+						`tickets` = '" . $db->escape($tickets) . "', 
+						`mysqls` = '" . $db->escape($mysqls) . "', 
+						`standardsubdomain` = '0', 
+						`phpenabled` = '" . $db->escape($phpenabled) . "', 
+						`imap` = '" . $db->escape($email_imap) . "', 
+						`pop3` = '" . $db->escape($email_pop3) . "', 
+						`aps_packages` = '" . (int)$number_of_aps_packages . "', 
+						`perlenabled` = '" . $db->escape($perlenabled) . "', 
+						`email_autoresponder` = '" . $db->escape($email_autoresponder) . "',
+						`theme` = '" . $db->escape($_theme) . "'"
+					);
 					$customerid = $db->insert_id();
 					$admin_update_query = "UPDATE `" . TABLE_PANEL_ADMINS . "` SET `customers_used` = `customers_used` + 1";
 
@@ -806,6 +859,13 @@ if($page == 'customers'
 				$phpenabled = makeyesno('phpenabled', '1', '0', '1');
 				$perlenabled = makeyesno('perlenabled', '1', '0', '0');
 				$store_defaultindex = makeyesno('store_defaultindex', '1', '0', '1');
+
+				$customer_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/customer/formfield.customer_add.php';
+				$customer_add_form = htmlform::genHTMLForm($customer_add_data);
+
+				$title = $customer_add_data['customer_add']['title'];
+				$image = $customer_add_data['customer_add']['image'];
+
 				eval("echo \"" . getTemplate("customers/customers_add") . "\";");
 			}
 		}
@@ -1378,6 +1438,13 @@ if($page == 'customers'
 				$email_pop3 = makeyesno('email_pop3', '1', '0', $result['pop3']);
 
 				$result = htmlentities_array($result);
+
+				$customer_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/customer/formfield.customer_edit.php';
+				$customer_edit_form = htmlform::genHTMLForm($customer_edit_data);
+
+				$title = $customer_edit_data['customer_edit']['title'];
+				$image = $customer_edit_data['customer_edit']['image'];
+
 				eval("echo \"" . getTemplate("customers/customers_edit") . "\";");
 			}
 		}

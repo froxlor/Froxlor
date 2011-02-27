@@ -31,10 +31,10 @@ if($page == 'log'
 	if($action == '')
 	{
 		$fields = array(
-			'action' => $lng['logger']['action'],
 			'date' => $lng['logger']['date'],
 			'type' => $lng['logger']['type'],
-			'user' => $lng['logger']['user']
+			'user' => $lng['logger']['user'],
+			'text' => $lng['logger']['action']
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_LOG, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$paging->sortfield = 'date';
@@ -167,5 +167,3 @@ if($page == 'log'
 		}
 	}
 }
-
-?>

@@ -177,12 +177,32 @@ if($action == 'login')
 				$language = $settings['panel']['standardlanguage'];
 			}
 
+			if(isset($userinfo['theme']) && $userinfo['theme'] != '') {
+				$theme = $userinfo['theme'];
+			}
+			else
+			{
+				$theme = $settings['panel']['default_theme'];
+			}
+
 			if($settings['session']['allow_multiple_login'] != '1')
 			{
 				$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['userid'] . "' AND `adminsession` = '" . $db->escape($userinfo['adminsession']) . "'");
 			}
 
-			$db->query("INSERT INTO `" . TABLE_PANEL_SESSIONS . "` (`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`) VALUES ('" . $db->escape($s) . "', '" . (int)$userinfo['userid'] . "', '" . $db->escape($remote_addr) . "', '" . $db->escape($http_user_agent) . "', '" . time() . "', '" . $db->escape($language) . "', '" . $db->escape($userinfo['adminsession']) . "')");
+			// check for field 'theme' in session-table, refs #607
+			$fields = mysql_list_fields($db->getDbName(), TABLE_PANEL_SESSIONS);
+			$columns = mysql_num_fields($fields);
+			$field_array = array();
+			for ($i = 0; $i < $columns; $i++) {
+    			$field_array[] = mysql_field_name($fields, $i);
+			}
+
+    		if (!in_array('theme', $field_array)) {
+				$db->query("INSERT INTO `" . TABLE_PANEL_SESSIONS . "` (`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`) VALUES ('" . $db->escape($s) . "', '" . (int)$userinfo['userid'] . "', '" . $db->escape($remote_addr) . "', '" . $db->escape($http_user_agent) . "', '" . time() . "', '" . $db->escape($language) . "', '" . $db->escape($userinfo['adminsession']) . "')");
+    		} else {
+    			$db->query("INSERT INTO `" . TABLE_PANEL_SESSIONS . "` (`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`, `theme`) VALUES ('" . $db->escape($s) . "', '" . (int)$userinfo['userid'] . "', '" . $db->escape($remote_addr) . "', '" . $db->escape($http_user_agent) . "', '" . time() . "', '" . $db->escape($language) . "', '" . $db->escape($userinfo['adminsession']) . "', '" . $db->escape($theme) . "')");
+    		}
 
 			if($userinfo['adminsession'] == '1')
 			{
@@ -221,6 +241,7 @@ if($action == 'login')
 
 		$smessage = isset($_GET['showmessage']) ? (int)$_GET['showmessage'] : 0;
 		$message = '';
+		$successmessage = '';
 
 		switch($smessage)
 		{
@@ -369,8 +390,11 @@ if($action == 'forgotpwd')
 				unset($user);
 			}
 		}
+		else
+		{
+			$message = $lng['login']['usernotfound'];
+		}
 	}
-
 
 	if($adminchecked)
 	{
@@ -390,5 +414,3 @@ if($action == 'forgotpwd')
 
 	eval("echo \"" . getTemplate("fpwd") . "\";");
 }
-
-?>

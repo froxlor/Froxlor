@@ -381,6 +381,13 @@ elseif($page == 'domains')
 				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
+
+				$subdomain_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domains_add.php';
+				$subdomain_add_form = htmlform::genHTMLForm($subdomain_add_data);
+
+				$title = $subdomain_add_data['domain_add']['title'];
+				$image = $subdomain_add_data['domain_add']['image'];
+
 				eval("echo \"" . getTemplate("domains/domains_add") . "\";");
 			}
 		}
@@ -568,6 +575,12 @@ elseif($page == 'domains')
 				}
 				$domainip = $result_ipandport['ip'];
 				$result = htmlentities_array($result);
+
+				$subdomain_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domains_edit.php';
+				$subdomain_edit_form = htmlform::genHTMLForm($subdomain_edit_data);
+
+				$title = $subdomain_edit_data['domain_edit']['title'];
+				$image = $subdomain_edit_data['domain_edit']['image'];
 
 				eval("echo \"" . getTemplate("domains/domains_edit") . "\";");
 			}

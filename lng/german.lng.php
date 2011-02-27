@@ -1311,6 +1311,7 @@ $lng['cronmgmt']['weeks'] = 'Wochen';
 $lng['cronmgmt']['months'] = 'Monate';
 $lng['admin']['cronjob_edit'] = 'Cronjob bearbeiten';
 $lng['cronjob']['cronjobsettings'] = 'Cronjob Einstellungen';
+$lng['cronjob']['cronjobintervalv'] = 'Laufzeit-Intervall Wert';
 $lng['cronjob']['cronjobinterval'] = 'Laufzeit-Intervall';
 $lng['panel']['options'] = 'Optionen';
 $lng['admin']['warning'] = 'ACHTUNG - Wichtiger Hinweis!';
@@ -1548,3 +1549,9 @@ $lng['mysql']['database_edit'] = 'Datenbank bearbeiten';
 
 // ADDED IN FROXLOR 0.9.18
 $lng['error']['domains_cantdeletedomainwithaliases'] = 'Sie k&ouml;nnen keine Domain l&ouml;schen, die noch von Alias-Domains verwendet wird. L&ouml;schen Sie zuerst alle Alias-Domains dieser Domain.';
+$lng['serversettings']['default_theme'] = 'Standard Theme';
+$lng['menue']['main']['changetheme'] = 'Theme wechseln';
+$lng['panel']['theme'] = 'Theme';
+$lng['success']['rebuildingconfigs'] = 'Task f&uuml;r das Neuerstellen der Konfigurationen wurde erfolgreich eingetragen';
+$lng['panel']['variable'] = 'Variable';
+$lng['panel']['description'] = 'Beschreibung';

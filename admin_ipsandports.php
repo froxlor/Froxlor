@@ -256,6 +256,13 @@ if($page == 'ipsandports'
 			$namevirtualhost_statement = makeyesno('namevirtualhost_statement', '1', '0', '1');
 			$vhostcontainer = makeyesno('vhostcontainer', '1', '0', '1');
 			$vhostcontainer_servername_statement = makeyesno('vhostcontainer_servername_statement', '1', '0', '1');
+
+			$ipsandports_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_add.php';
+			$ipsandports_add_form = htmlform::genHTMLForm($ipsandports_add_data);
+
+			$title = $ipsandports_add_data['ipsandports_add']['title'];
+			$image = $ipsandports_add_data['ipsandports_add']['image'];
+
 			eval("echo \"" . getTemplate("ipsandports/ipsandports_add") . "\";");
 		}
 	}
@@ -396,6 +403,13 @@ if($page == 'ipsandports'
 				$namevirtualhost_statement = makeyesno('namevirtualhost_statement', '1', '0', $result['namevirtualhost_statement']);
 				$vhostcontainer = makeyesno('vhostcontainer', '1', '0', $result['vhostcontainer']);
 				$vhostcontainer_servername_statement = makeyesno('vhostcontainer_servername_statement', '1', '0', $result['vhostcontainer_servername_statement']);
+
+				$ipsandports_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
+				$ipsandports_edit_form = htmlform::genHTMLForm($ipsandports_edit_data);
+	
+				$title = $ipsandports_edit_data['ipsandports_edit']['title'];
+				$image = $ipsandports_edit_data['ipsandports_edit']['image'];
+
 				eval("echo \"" . getTemplate("ipsandports/ipsandports_edit") . "\";");
 			}
 		}

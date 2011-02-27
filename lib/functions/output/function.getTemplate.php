@@ -28,16 +28,21 @@
 
 function getTemplate($template, $noarea = 0)
 {
-	global $templatecache;
+	global $templatecache, $theme;
+
+	if(!isset($theme) || $theme == '')
+	{
+		$theme = 'Froxlor';
+	}
 
 	if($noarea != 1)
 	{
 		$template = AREA . '/' . $template;
 	}
 
-	if(!isset($templatecache[$template]))
+	if(!isset($templatecache[$theme][$template]))
 	{
-		$filename = './templates/' . $template . '.tpl';
+		$filename = './templates/' . $theme . '/' . $template . '.tpl';
 
 		if(file_exists($filename)
 		   && is_readable($filename))
@@ -56,8 +61,9 @@ function getTemplate($template, $noarea = 0)
 			$templatefile = 'TEMPLATE NOT FOUND: ' . $filename;
 		}
 
-		$templatecache[$template] = $templatefile;
+		$output = $templatefile; // Minify_HTML::minify($templatefile, array('cssMinifier', 'jsMinifier'));
+		$templatecache[$theme][$template] = $output;
 	}
 
-	return $templatecache[$template];
+	return $templatecache[$theme][$template];
 }

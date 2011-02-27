@@ -150,6 +150,11 @@ class db
 		return @mysql_close($this->link_id);
 	}
 
+	function getDbName()
+	{
+		return $this->database;
+	}
+
 	/**
 	 * Escapes user input to be used in mysql queries
 	 *

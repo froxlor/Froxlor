@@ -12,7 +12,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id$
+ * @version    $Id: admin_cronjobs.php 105 2010-12-09 08:02:33Z d00p $
  */
 
 define('AREA', 'admin');
@@ -140,7 +140,13 @@ if($page == 'cronjobs'
 				{
 					$change_cronfile = true;
 				}
-				
+
+				$cronjobs_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/cronjobs/formfield.cronjobs_edit.php';
+				$cronjobs_edit_form = htmlform::genHTMLForm($cronjobs_edit_data);
+
+				$title = $cronjobs_edit_data['cronjobs_edit']['title'];
+				$image = $cronjobs_edit_data['cronjobs_edit']['image'];
+
 				eval("echo \"" . getTemplate("cronjobs/cronjob_edit") . "\";");
 			}
 		}

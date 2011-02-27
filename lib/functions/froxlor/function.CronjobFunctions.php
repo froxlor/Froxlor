@@ -123,11 +123,11 @@ function getCronjobsLastRun()
 		if($row['lastrun'] > 0) {
 			$lastrun = date('d.m.Y H:i:s', $row['lastrun']);
 		}
-		
-		$cronjobs_last_run .= '<tr>
-			<td class="field_name_border_left">'.$lng['crondesc'][$row['desc_lng_key']].':</td>
-			<td class="field_display">'.$lastrun.'</td>
-		</tr>';
+
+		$text = $lng['crondesc'][$row['desc_lng_key']];
+		$value = $lastrun;
+
+		eval("\$cronjobs_last_run .= \"" . getTemplate("index/overview_item") . "\";");
 	}
 	
 	return $cronjobs_last_run;
@@ -153,10 +153,7 @@ function getOutstandingTasks()
 	$query = "SELECT * FROM `".TABLE_PANEL_TASKS."` ORDER BY `type` ASC";
 	$result = $db->query($query);
 	
-	$outstanding_tasks = '<tr>
-			<td class="field_name_border_left">'.$lng['tasks']['outstanding_tasks'].':</td>
-			<td class="field_display" colspan="2"><ul>';
-
+	$value = '<ul class="cronjobtask">';
 	$tasks = '';
 	while($row = $db->fetch_array($result))
 	{
@@ -272,12 +269,14 @@ function getOutstandingTasks()
 	}
 
 	if(trim($tasks) == '') {
-		$outstanding_tasks .= '<li>'.$lng['tasks']['noneoutstanding'].'</li>';
+		$value .= '<li>'.$lng['tasks']['noneoutstanding'].'</li>';
 	} else {
-		$outstanding_tasks .= $tasks;
+		$value .= $tasks;
 	}
-	
-	$outstanding_tasks .= '</ul></td></tr>';
-		
+
+	$value .= '</ul>';
+	$text = $lng['tasks']['outstanding_tasks'];
+	eval("\$outstanding_tasks = \"" . getTemplate("index/overview_item") . "\";");
+
 	return $outstanding_tasks;
 }

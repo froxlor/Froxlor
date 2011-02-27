@@ -415,4 +415,18 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= '<input type="text" class="text" name="update_system_report_trafficmax" value="90" /><br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if(versionInUpdate($current_version, '0.9.18-svn2'))
+	{       
+		$has_preconfig = true;
+		$description = 'As you can (obviously) see, Froxlor now comes with a new theme. You also have the possibility to switch back to "Classic" if you want to.'; 
+		$question = '<strong>Select default panel theme:</strong>&nbsp;';
+		$question.= '<select name="update_default_theme">';
+		$themes = getThemes();
+		foreach($themes as $theme) {
+			$question.= makeoption($theme, $theme, 'Froxlor');
+		}
+		$question.= '</select>';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }
