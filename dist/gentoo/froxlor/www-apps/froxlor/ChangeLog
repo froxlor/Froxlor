@@ -2,6 +2,13 @@
 # Copyright 1999-2011 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+*froxlor-0.9.18 (28 Feb 2011)
+
+  28 Feb 2011; Froxlor Release Team <release@froxlor.org>
+  -froxlor-0.9.17.ebuild, +froxlor-0.9.18.ebuild, froxlor-9999.ebuild,
+  metadata.xml:
+  version bump, switch to git and add nginx and FPM support
+
 *froxlor-0.9.17 (27 Jan 2011)
 
   27 Jan 2011; Froxlor Release Team <release@froxlor.org>

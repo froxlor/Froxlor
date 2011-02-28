@@ -15,12 +15,14 @@
   <flag name='domainkey'>Adds support for writing DKIM DNS-Records and
 	  Filters for them</flag>
   <flag name='dovecot'>use Dovecot instead of Courier</flag>
-  <flag name='ftpquota'>Adds support for FTP Quotas for use with ProFTPd</flag>
   <flag name='fcgid'>Adds support for FCGId</flag>
+  <flag name='ftpquota'>Adds support for FTP Quotas for use with ProFTPd</flag>
+  <flag name='fpm'>Adds support for PHP-FPM</flag>
   <flag name='lighttpd'>use ligHTTPd instead of Apache</flag>
   <flag name='log'>Adds support for logging actions in the Panel</flag>
   <flag name='mailquota'>Adds support for Quotas for the maildirs of
 	  Customers</flag>
+  <flag name='nginx'>use nginx instead of Apache</flag>
   <flag name='pureftpd'>use pure-FTPd instead of ProFTPd</flag>
   <flag name='tickets'>Adds support for the Ticket System</flag>
 </use>

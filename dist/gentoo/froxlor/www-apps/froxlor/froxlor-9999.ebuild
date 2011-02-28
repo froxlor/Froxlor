@@ -56,13 +56,14 @@ DEPEND="
 	lighttpd? ( www-servers/lighttpd[fastcgi,ssl=]
 		   >=dev-lang/php-5.2[cgi]
 	)
-	nginx? ( 
+	nginx? (
 		www-servers/nginx[ssl=]
 	)
-	!lighttpd? ( 
+	!lighttpd? (
 		( !nginx? (
 			www-servers/apache[ssl=]
-		     dev-lang/php[apache2]
+			dev-lang/php[apache2]
+			)
 		)
 	)
 	fcgid? ( >=dev-lang/php-5.2[cgi]
@@ -71,9 +72,9 @@ DEPEND="
 			( !lighttpd? (
 				!nginx? (
 					www-servers/apache[suexec]
-					www-apache/mod_fcgid 
+					www-apache/mod_fcgid
 					)
-				)	
+				)
 			)
 	)
 	dovecot? ( >=net-mail/dovecot-1.2.0[mysql,ssl=]
@@ -243,7 +244,7 @@ src_install() {
 		fi
 
 		einfo "Creating tmp-directory"
-		dodir "/var/customers/tmp"	
+		dodir "/var/customers/tmp"
 	fi
 
 	# If Bind will not used, change the reload path for it
@@ -818,7 +819,7 @@ env[TEMP] = /tmp/
 
 php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f admin@${servername}" > "${ROOT}/etc/php/fpm-php5.3/fpm.d/${servername}.conf"
 
-			echo -e "\n  fastcgi.server = ( 
+			echo -e "\n  fastcgi.server = (
 \".php\" => (
 	\"localhost\" => (
 		\"socket\" => \"/var/run/lighttpd/${servername}-php-fpm.socket\",
@@ -828,7 +829,7 @@ php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f admin@${servername}
 )
 )" >> "${VHOST_CONFIG}"
 
-			dodir "${ROOT}/var/run/lighttpd"
+			dodir "/var/run/lighttpd"
 		fi
 
 		echo -e "
@@ -849,21 +850,21 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/nginx/etc_nginx_nginx.conf" "${ROOT}/etc/nginx/nginx.conf"
 		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/nginx/etc_init.d_php-fcgi" "${ROOT}/etc/init.d/php-fcgi"
 		chmod u+x "${ROOT}/etc/init.d/php-fcgi"
-		
+
 		touch "${VHOST_CONFIG}"
 
 		echo -e "# Froxlor default vhost
 server_name     ${servername};
 access_log      /var/log/nginx/access.log;
-root            ${ROOT}${FROXLOR_DOCROOT};
+root            "${ROOT}${FROXLOR_DOCROOT}";
 location / {
-    index    index.php index.html index.htm;
+	index    index.php index.html index.htm;
 }" > "${VHOST_CONFIG}"
 
 		if use ssl ; then
 			echo -e "\n    ssl on;
-ssl_certificate ${ROOT}etc/ssl/server/${servername}.pem;
-ssl_certificate_key ${ROOT}etc/ssl/server/${servername}.pem;" >> "${VHOST_CONFIG}"
+ssl_certificate "${ROOT}etc/ssl/server/${servername}.pem;"
+ssl_certificate_key "${ROOT}etc/ssl/server/${servername}.pem;"" >> "${VHOST_CONFIG}"
 		fi
 
 		echo -e "\nlocation ~ \.php$ {
@@ -900,7 +901,7 @@ php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f admin@${servername}
 
 			echo -e "\n    fastcgi_pass unix: /var/run/nginx/${servername}-php-fpm.socket;" >> "${VHOST_CONFIG}"
 
-			dodir "${ROOT}/var/run/nginx"
+			dodir "/var/run/nginx"
 		fi
 
 		echo -e "\n}
@@ -1095,7 +1096,7 @@ php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f admin@${servername}
 	fi
 
 	einfo "Configuring Gentoo-Froxlor cronjob ..."
-	insinto "${ROOT}/etc/cron.d"
+	insinto "/etc/cron.d"
 	newins "${ROOT}/usr/share/${PN}/froxlor.cron" froxlor
 
 	if ! use dovecot ; then
