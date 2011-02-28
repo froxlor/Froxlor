@@ -22,13 +22,13 @@ $configcommand = array();
 if(isConfigDir($settings['system']['apacheconf_vhost']))
 {
 	$configcommand['vhost'] = 'mkdir -p ' . $settings['system']['apacheconf_vhost'];
-	$configcommand['include'] = 'echo -e "\\nInclude ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . '*.conf" >> ' . makeCorrectFile(makeCorrectDir($settings['system']['apacheconf_vhost']) . '/httpd.conf');
+	$configcommand['include'] = 'echo -e "\\nInclude ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . '*.conf" >> ' . makeCorrectFile(makeCorrectDir('/etc/apache2/httpd.conf');
 	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude_shell "cat ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . '*.conf"\' >> /etc/lighttpd/lighttpd.conf';
 }
 else
 {
 	$configcommand['vhost'] = 'touch ' . $settings['system']['apacheconf_vhost'];
-	$configcommand['include'] = 'echo -e "\\nInclude ' . $settings['system']['apacheconf_vhost'] . '" >> ' . makeCorrectFile(dirname($settings['system']['apacheconf_vhost']) . '/httpd.conf');
+	$configcommand['include'] = 'echo -e "\\nInclude ' . $settings['system']['apacheconf_vhost'] . '" >> ' . makeCorrectFile('/etc/apache2/httpd.conf');
 	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude "' . $settings['system']['apacheconf_vhost'] . '"\' >> /etc/lighttpd/lighttpd.conf';
 }
 
@@ -47,4 +47,3 @@ $cfgPath = 'lib/configfiles/';
 $configfiles = Array();
 $configfiles = array_merge(include $cfgPath . 'lenny.inc.php', include $cfgPath . 'hardy.inc.php', include $cfgPath . 'lucid.inc.php', include $cfgPath . 'gentoo.inc.php', include $cfgPath . 'suse10.inc.php', include $cfgPath . 'freebsd.inc.php');
 
-?>
