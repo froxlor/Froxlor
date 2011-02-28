@@ -237,6 +237,11 @@ src_install() {
 		einfo "Enable custom configdir for fpm"
 		sed -e "s|;include=/etc/php/fpm-php5.3/fpm.d/*.conf|include=/etc/php/fpm-php5.3/fpm.d/*.conf|g" -i "/etc/php/fpm-php5.3/php-fpm.conf" || die "Unable to set custom configdir for 'fpm'"
 
+		einfo "Checking for directory /etc/php/fpm-php5.3/fpm.d/"
+		if [ ! -d /etc/php/fpm-php5.3/fpm.d/ ]; then
+			didir "/etc/php/fpm-php5.3/fpm.d/"
+		fi
+
 		einfo "Creating tmp-directory"
 		dodir "/var/customers/tmp"	
 	fi
@@ -608,7 +613,7 @@ FLUSH PRIVILEGES;" > "${ROOT}/tmp/froxlor-install-by-emerge/createdb.sql"
 	einfo "Adding system ip/port to database"
 	touch "${ROOT}/tmp/froxlor-install-by-emerge/ipandport.sql"
 	cat > "${ROOT}/tmp/froxlor-install-by-emerge/ipandport.sql" <<EOF
-INSERT INTO \`panel_ipsandports\` (\`ip\`, \`port\`, \`namevirtualhost_statement\`) VALUES ('${serverip}', '80', '1');
+INSERT INTO \`panel_ipsandports\` (\`ip\`, \`port\`, \`namevirtualhost_statement\`, `vhostcontainer`, `vhostcontainer_servername_statement`) VALUES ('${serverip}', '80', '1', '1', '1');
 EOF
 
 	mysql -u ${mysqlrootuser} -p${mysqlrootpw} ${mysqldbname} < "${ROOT}/tmp/froxlor-install-by-emerge/ipandport.sql"
@@ -756,16 +761,18 @@ EOF
 
 	einfo "Writing Gentoo-Froxlor vhost configuration ..."
 	if use lighttpd ; then
-		rm -f "${ROOT}/etc/lighttpd/95_${servername}.conf"
-		touch "${ROOT}/etc/lighttpd/95_${servername}.conf"
-		chown root:0 "${ROOT}/etc/lighttpd/95_${servername}.conf"
-		chmod 0600 "${ROOT}/etc/lighttpd/95_${servername}.conf"
+		VHOST_CONFIG="${ROOT}/etc/lighttpd/froxlor-vhosts.conf"
+	elif use nginx ; then
+		VHOST_CONFIG="${ROOT}/etc/nginx/froxlor-vhosts.conf"
 	else
-		rm -f "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
-		touch "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
-		chown root:0 "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
-		chmod 0600 "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
+		VHOST_CONFIG="${ROOT}/etc/apache2/vhosts.d/99_froxlor-vhosts.conf"
 	fi
+
+	# do stuff with the config file
+	rm -f "${VHOST_CONFIG}"
+	touch "${VHOST_CONFIG}"
+	chown root:0 "${VHOST_CONFIG}"
+	chmod 0600 "${VHOST_CONFIG}"
 
 	if use lighttpd ; then
 		einfo "Configuring lighttpd"
@@ -774,24 +781,58 @@ EOF
 		sed -e "s|<SERVERNAME>|${servername}|g" -i "${ROOT}/etc/lighttpd/lighttpd.conf"
 		sed -e "s|<SERVERIP>|${serverip}|g" -i "${ROOT}/etc/lighttpd/lighttpd.conf"
 
-		touch "${ROOT}/etc/lighttpd/froxlor-vhosts.conf"
-		echo -e "\ninclude \"95_${servername}.conf\"" >> "${ROOT}/etc/lighttpd/lighttpd.conf"
+		touch "${VHOST_CONFIG}"
 		echo -e "\ninclude \"froxlor-vhosts.conf\"" >> "${ROOT}/etc/lighttpd/lighttpd.conf"
 
 		echo -e "# Froxlor default vhost
 \$HTTP[\"host\"] == \"${servername}\" {
 	server.document-root = var.basedir + \"/froxlor\"
-	server.name = \"${servername}\"" > "${ROOT}/etc/lighttpd/95_${servername}.conf"
+	server.name = \"${servername}\"" > "${VHOST_CONFIG}"
 
 		if use ssl ; then
 			echo -e "
 	\$HTTP[\"scheme\"] == \"http\" {
 		url.redirect = ( \"^/(.*)\" => \"https://${servername}/$1\" )
-	}" >> "${ROOT}/etc/lighttpd/95_${servername}.conf"
+	}" >> "${VHOST_CONFIG}"
+		fi
+
+		if use fpm ; then
+
+			echo -e ";PHP-FPM configuration for \"${servername}\"
+[${servername}]
+listen = /var/run/lighttpd/${servername}-php-fpm.socket
+listen.owner = froxlor
+listen.group = froxlor
+listen.mode = 0666
+
+user = froxlor
+group = froxlor
+
+pm = static
+pm.max_children = 1
+pm.max_requests = 0
+
+env[TMP] = /tmp/
+env[TMPDIR] = /tmp/
+env[TEMP] = /tmp/
+
+php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f admin@${servername}" > "${ROOT}/etc/php/fpm-php5.3/fpm.d/${servername}.conf"
+
+			echo -e "\n  fastcgi.server = ( 
+\".php\" => (
+	\"localhost\" => (
+		\"socket\" => \"/var/run/lighttpd/${servername}-php-fpm.socket\",
+		\"check-local\" => \"enable\",
+		\"disable-time\" => 1
+	)
+)
+)" >> "${VHOST_CONFIG}"
+
+			dodir "${ROOT}/var/run/lighttpd"
 		fi
 
 		echo -e "
-}" >> "${ROOT}/etc/lighttpd/95_${servername}.conf"
+}" >> "${VHOST_CONFIG}"
 
 		if use ssl ; then
 		    echo -e "\n\$SERVER[\"socket\"] == \"${serverip}:443\" {
@@ -801,20 +842,85 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 }" >> "${ROOT}/etc/lighttpd/lighttpd.conf"
 
 		fi
+
+	elif use nginx ; then
+		einfo "Configuring nginx"
+		rm -f "${ROOT}/etc/nginx/nginx.conf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/nginx/etc_nginx_nginx.conf" "${ROOT}/etc/nginx/nginx.conf"
+		cp -L "${ROOT}${FROXLOR_DOCROOT}/froxlor/templates/misc/configfiles/gentoo/nginx/etc_init.d_php-fcgi" "${ROOT}/etc/init.d/php-fcgi"
+		chmod u+x "${ROOT}/etc/init.d/php-fcgi"
+		
+		touch "${VHOST_CONFIG}"
+
+		echo -e "# Froxlor default vhost
+server_name     ${servername};
+access_log      /var/log/nginx/access.log;
+root            ${ROOT}${FROXLOR_DOCROOT};
+location / {
+    index    index.php index.html index.htm;
+}" > "${VHOST_CONFIG}"
+
+		if use ssl ; then
+			echo -e "\n    ssl on;
+ssl_certificate ${ROOT}etc/ssl/server/${servername}.pem;
+ssl_certificate_key ${ROOT}etc/ssl/server/${servername}.pem;" >> "${VHOST_CONFIG}"
+		fi
+
+		echo -e "\nlocation ~ \.php$ {
+fastcgi_index index.php;
+include /etc/nginx/fastcgi_params;" >> "${VHOST_CONFIG}"
+
+		if use ssl ; then
+			echo -e "fastcgi_param HTTPS on;" >> "${VHOST_CONFIG}"
+		fi
+
+		echo -e "fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;" >> "${VHOST_CONFIG}"
+
+		if use fpm ; then
+
+			echo -e ";PHP-FPM configuration for \"${servername}\"
+[${servername}]
+listen = /var/run/nginx/${servername}-php-fpm.socket
+listen.owner = froxlor
+listen.group = froxlor
+listen.mode = 0666
+
+user = froxlor
+group = froxlor
+
+pm = static
+pm.max_children = 1
+pm.max_requests = 0
+
+env[TMP] = /tmp/
+env[TMPDIR] = /tmp/
+env[TEMP] = /tmp/
+
+php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f admin@${servername}" > "${ROOT}/etc/php/fpm-php5.3/fpm.d/${servername}.conf"
+
+			echo -e "\n    fastcgi_pass unix: /var/run/nginx/${servername}-php-fpm.socket;" >> "${VHOST_CONFIG}"
+
+			dodir "${ROOT}/var/run/nginx"
+		fi
+
+		echo -e "\n}
+}" >> "${VHOST_CONFIG}"
+
 	else
 		einfo "Configuring apache2"
 		if use fcgid ; then
 			# create php-starter file
-			mkdir -p "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script"
-			mkdir -p "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/tmp"
-			chmod 0750 "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/tmp"
-			touch "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
-			cp "${ROOT}/usr/share/${PN}/php-fcgi-starter" "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
-			chmod 0750 "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
-			touch "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php.ini"
-			cp "${ROOT}/usr/share/${PN}/php.ini" "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php.ini"
-			chown froxlor:froxlor -R "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script" || die "Unable to fix owner for php-fcgi-script folder"
-			chattr +i "${ROOT}${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter"
+			FCGIDPATH="${ROOT}${FROXLOR_DOCROOT}/php-fcgi-scripts/froxlor.panel/${servername}"
+			mkdir -p "${FCGIDPATH}/php-fcgi-script"
+			mkdir -p "${FCGIDPATH}/tmp"
+			chmod 0750 "${FCGIDPATH}/tmp"
+			touch "${FCGIDPATH}/php-fcgi-starter"
+			cp "${ROOT}/usr/share/${PN}/php-fcgi-starter" "${FCGIDPATH}/php-fcgi-starter"
+			chmod 0750 "${FCGIDPATH}/php-fcgi-starter"
+			touch "${FCGIDPATH}/php.ini"
+			cp "${ROOT}/usr/share/${PN}/php.ini" "${FCGIDPATH}/php.ini"
+			chown froxlor:froxlor -R "${FCGIDPATH}/php-fcgi-script" || die "Unable to fix owner for php-fcgi-script folder"
+			chattr +i "${FCGIDPATH}/php-fcgi-starter"
 		fi
 
 		if use ssl ; then
@@ -823,7 +929,7 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 		<IfModule mod_ssl.c>
 			<VirtualHost ${serverip}:443>
 				DocumentRoot \"${FROXLOR_DOCROOT}/froxlor\"
-				ServerName ${servername}" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
+				ServerName ${servername}" >> "${VHOST_CONFIG}"
 
 			echo "				ErrorLog /var/log/apache2/froxlor_ssl_error_log
 				<IfModule mod_log_config.c>
@@ -843,21 +949,21 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 				<IfModule mod_log_config.c>
 					CustomLog /var/log/apache2/froxlor_ssl_request_log \\
 					\"%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\\"%r\\\" %b\"
-				</IfModule>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
+				</IfModule>" >> "${VHOST_CONFIG}"
 
 			if use fcgid ; then
 				echo "SuexecUserGroup \"froxlor\" \"froxlor\"
 	<Directory \"${FROXLOR_DOCROOT}/froxlor\">
 		AddHandler fcgid-script .php
-		FCGIWrapper ${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter .php
+		FCGIWrapper ${FROXLOR_DOCROOT}/php-fcgi-scripts/froxlor.panel/${servername}/php-fcgi-starter .php
 		Options +ExecCGI
-</Directory>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
+</Directory>" >> "${VHOST_CONFIG}"
 
 			else
 				echo "	<Directory \"${FROXLOR_DOCROOT}/froxlor\">
 						Order allow,deny
 						allow from all
-					</Directory>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
+					</Directory>" >> "${VHOST_CONFIG}"
 			fi
 
 			echo "
@@ -868,42 +974,42 @@ ssl.ca-file = \"${ROOT}etc/ssl/server/${servername}.pem\"
 # Redirect to the SSL-enabled Gentoo-Froxlor vhost
 <VirtualHost ${serverip}:80>
 	RedirectPermanent / https://${servername}/index.php
-</VirtualHost>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
+</VirtualHost>" >> "${VHOST_CONFIG}"
 
 		else
 
 			echo "# Gentoo-Froxlor VirtualHost
 	<VirtualHost ${serverip}:80>
 		DocumentRoot \"${FROXLOR_DOCROOT}/froxlor\"
-		ServerName ${servername}" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
+		ServerName ${servername}" >> "${VHOST_CONFIG}"
 
 			if use fcgid ; then
 				echo "SuexecUserGroup \"froxlor\" \"froxlor\"
 	<Directory \"${FROXLOR_DOCROOT}/froxlor\">
 		AddHandler fcgid-script .php
-		FCGIWrapper ${FROXLOR_DOCROOT}/froxlor/php-fcgi-script/php-fcgi-starter .php
+		FCGIWrapper ${FROXLOR_DOCROOT}/php-fcgi-scripts/froxlor.panel/${servername}/php-fcgi-starter .php
 		Options +ExecCGI
-</Directory>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
+</Directory>" >> "${VHOST_CONFIG}"
 
 			else
 				echo "	<Directory \"${FROXLOR_DOCROOT}/froxlor\">
 						Order allow,deny
 						allow from all
-					</Directory>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
+					</Directory>" >> "${VHOST_CONFIG}"
 			fi
 
-			echo "</VirtualHost>" >> "${ROOT}/etc/apache2/vhosts.d/95_${servername}.conf"
+			echo "</VirtualHost>" >> "${VHOST_CONFIG}"
 		fi
 	fi
 
-	if ! use lighttpd ; then
+	if ! use lighttpd && ! use nginx ; then
 		einfo "Fix general Apache configuration to work with Gentoo-Froxlor ..."
 		sed -e "s|^\#ServerName localhost.*|ServerName ${servername}|g" -i "${ROOT}/etc/apache2/httpd.conf" || ewarn "Please make sure that the ServerName directive in ${ROOT}/etc/apache${USE_APACHE2}/httpd.conf is set to a valid value!"
 		sed -e "s|^ServerAdmin root\@localhost.*|ServerAdmin root\@${servername}|g" -i "${ROOT}/etc/apache2/httpd.conf" || ewarn "Please make sure that the ServerAdmin directive in ${ROOT}/etc/apache${USE_APACHE2}/httpd.conf is set to a valid value!"
 		sed -e "s|\*:80|${serverip}:80|g" -i "${ROOT}/etc/apache2/vhosts.d/00_default_vhost.conf" || ewarn "Please make sure the NameVirtualHost and VirtualHost directives in ${ROOT}/etc/apache${USE_APACHE2}/vhosts.d/00_default_vhost.conf are set to the Gentoo-Froxlor IP and Port 80!"
 	fi
 
-	if ! use lighttpd ; then
+	if ! use lighttpd && ! use nginx ; then
 		local DFCGID=""
 
 		if use fcgid ; then
