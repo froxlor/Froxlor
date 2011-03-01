@@ -240,8 +240,9 @@ class nginx
 				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param HTTPS on;'."\n";
 			}
 			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
-			if((int)$this->settings['phpfpm']['enabled'] == 1)
-			{
+			if((int)$this->settings['phpfpm']['enabled'] == 1
+				&& (int)$this->settings['phpfpm']['enabled_ownvhost'] == 1
+			) {
 				$domain = array(
 					'id' => 'none',
 					'domain' => $this->settings['system']['hostname'],
