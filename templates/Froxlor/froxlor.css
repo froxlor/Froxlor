@@ -78,7 +78,7 @@ td a {
 }
 
 .topheader {
-	background: #cccccc url('/images/Froxlor/header_g.png') 0 bottom repeat-x;
+	background: #cccccc url('../../images/Froxlor/header_g.png') 0 bottom repeat-x;
 	padding-left: 5px;
 	padding-top: 2px;
 	margin-bottom: 12px;
@@ -290,7 +290,7 @@ p.submit {
  * error message display
  */
 .errorcontainer {
-	background: url('/images/Froxlor/icons/bad.png') 10px center no-repeat #ffedef;
+	background: url('../../images/Froxlor/icons/bad.png') 10px center no-repeat #ffedef;
 	border: 1px solid #ffc2ca;
 	padding: 10px 10px 10px 68px !important;
 	margin: .75em !important;
@@ -312,7 +312,7 @@ p.submit {
  * warning message display 
  */
 .warningcontainer {
-	background: url('/images/Froxlor/icons/warning.png') 10px center no-repeat #fffecc;
+	background: url('../../images/Froxlor/icons/warning.png') 10px center no-repeat #fffecc;
 	border: 1px solid #f3c37e;
 	padding: 10px 10px 10px 68px !important;
 	margin: .75em !important;
@@ -333,7 +333,7 @@ p.submit {
  * success message display 
  */
 .successcontainer {
-	background: url('/images/Froxlor/icons/ok.png') 10px center no-repeat #E2F9E3;
+	background: url('../../images/Froxlor/icons/ok.png') 10px center no-repeat #E2F9E3;
 	border: 1px solid #9C9;
 	padding: 10px 10px 10px 68px !important;
 	margin: .75em !important;
@@ -354,7 +354,7 @@ p.submit {
  * neutral/info message display 
  */
 .neutralcontainer {
-	background: url('/images/Froxlor/icons/info.png') 10px center no-repeat #d2eaf6;
+	background: url('../../images/Froxlor/icons/info.png') 10px center no-repeat #d2eaf6;
 	border: 1px solid #b7d8ed;
 	padding: 10px 10px 10px 68px !important;
 	margin: .75em !important;
@@ -398,7 +398,7 @@ a:hover {
 }
 
 .menuelement h4 {
-	background: transparent url('/images/Froxlor/icons/tag_blue.png') no-repeat center left;
+	background: transparent url('../../images/Froxlor/icons/tag_blue.png') no-repeat center left;
 	margin: 0;
 	padding: 0 0 0 20px;
 }
@@ -528,7 +528,7 @@ table tfoot td {
 
 /* input elements */
 input {
-	background: #dae7ee url('/images/Froxlor/icons/text_align_left.png') no-repeat 5px 4px;
+	background: #dae7ee url('../../images/Froxlor/icons/text_align_left.png') no-repeat 5px 4px;
 	padding: 2px 4px 2px 22px;
 	border: 1px solid #666666;
 	height: 22px;
@@ -539,7 +539,7 @@ input {
 }
 
 textarea {
-	background: #dae7ee url('/images/Froxlor/icons/text_align_left.png') no-repeat 5px 4px;
+	background: #dae7ee url('../../images/Froxlor/icons/text_align_left.png') no-repeat 5px 4px;
 	padding: 4px 4px 2px 22px;
 	border: 1px solid #666666;
 	-moz-border-radius: 5px;
@@ -549,7 +549,7 @@ textarea {
 }
 
 input[type="password"] {
-	background: #dae7ee url('/images/Froxlor/icons/password.png') no-repeat 4px 4px;
+	background: #dae7ee url('../../images/Froxlor/icons/password.png') no-repeat 4px 4px;
 }
 
 input[type="button"],input[type="submit"],input[type="reset"] {
@@ -566,14 +566,14 @@ input[type="button"],input[type="submit"],input[type="reset"] {
 
 input[type="submit"] {
 	color: green;
-	background: #ccc url('/images/Froxlor/icons/button_ok.png') no-repeat 4px 8px;
+	background: #ccc url('../../images/Froxlor/icons/button_ok.png') no-repeat 4px 8px;
 	padding-left: 20px;
 }
 
 input[class="nobutton"],
 input[type="reset"] {
 	color: red;
-	background: #ccc url('/images/Froxlor/icons/cancel.png') no-repeat 4px 8px;
+	background: #ccc url('../../images/Froxlor/icons/cancel.png') no-repeat 4px 8px;
 	padding-left: 20px;
 }
 
@@ -630,7 +630,7 @@ select {
 }
 
 .cronjobtask {
-	list-style: url('/images/Froxlor/icons/clock.png') inside;
+	list-style: url('../../images/Froxlor/icons/clock.png') inside;
 	margin: 0;
 	padding: 0;
 }
@@ -658,7 +658,7 @@ select {
 	display:block;
 	width:200px;
 	height:15px;
-	background:url('/images/Froxlor/bar.gif') no-repeat 0 0;
+	background:url('../../images/Froxlor/bar.gif') no-repeat 0 0;
 	top:8px; 
 	left:8px;
 	overflow:hidden;
@@ -666,11 +666,11 @@ select {
 }
 
 .progressBar span.redbar {
-	background:url('/images/Froxlor/barred.gif') no-repeat 0 0;
+	background:url('../../images/Froxlor/barred.gif') no-repeat 0 0;
 }
 
 .progressBar span.greybar {
-	background:url('/images/Froxlor/bargrey.gif') no-repeat 0 0;
+	background:url('../../images/Froxlor/bargrey.gif') no-repeat 0 0;
 }
 
 .progressBar em {
@@ -678,7 +678,7 @@ select {
 	display:block;
 	width:200px;
 	height:15px;
-	background:url('/images/Froxlor/bg_cover.gif') repeat-x 0 0;
+	background:url('../../images/Froxlor/bg_cover.gif') repeat-x 0 0;
 	top:0;
 }
 
