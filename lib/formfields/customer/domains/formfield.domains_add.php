@@ -44,7 +44,8 @@ return array(
 						'label' => $lng['panel']['path'],
 						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
-						'select_var' => $pathSelect['value']
+						'select_var' => $pathSelect['value'],
+						'value' => $pathSelect['value']
 					),
 					'url' => array(
 						'visible' => ($settings['panel']['pathedit'] == 'Dropdown' ? true : false),

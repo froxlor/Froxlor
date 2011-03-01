@@ -38,6 +38,12 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 	$value = str_replace($path, '', $value);
 	$field = array();
 
+	// path is given without starting slash
+	// but dirList holds the paths with starting slash
+	// so we just add one here to get the correct
+	// default path selected, #225
+	$value = '/'.$value;
+
 	if($fieldType == 'Manual')
 	{
 		$field = array(
@@ -48,12 +54,6 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 	}
 	elseif($fieldType == 'Dropdown')
 	{
-		// path is given without starting slash
-		// but dirList holds the paths with starting slash
-		// so we just add one here to get the correct
-		// default path selected, #225
-		$value = '/'.$value;
-
 		$dirList = findDirs($path, $uid, $gid);
 		
 		natcasesort($dirList);
@@ -93,7 +93,7 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 		else
 		{
 			//$field = $lng['panel']['dirsmissing'];
-			$field = '<input type="hidden" name="path" value="/" />';
+			//$field = '<input type="hidden" name="path" value="/" />';
 			$field = array(
 				'type' => 'hidden',
 				'value' => '/',
