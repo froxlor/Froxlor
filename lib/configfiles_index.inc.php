@@ -22,7 +22,7 @@ $configcommand = array();
 if(isConfigDir($settings['system']['apacheconf_vhost']))
 {
 	$configcommand['vhost'] = 'mkdir -p ' . $settings['system']['apacheconf_vhost'];
-	$configcommand['include'] = 'echo -e "\\nInclude ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . '*.conf" >> ' . makeCorrectFile(makeCorrectDir('/etc/apache2/httpd.conf');
+	$configcommand['include'] = 'echo -e "\\nInclude ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . '*.conf" >> ' . makeCorrectFile(makeCorrectDir('/etc/apache2/httpd.conf'));
 	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude_shell "cat ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . '*.conf"\' >> /etc/lighttpd/lighttpd.conf';
 }
 else
