@@ -37,7 +37,7 @@ function getThemes()
 				&& $it->getFilename() != '.svn'
 				&& $it->getFilename() != 'misc'
 			) {
-				$themes_available[] = $it->getFilename();
+				$themes_available[$it->getFilename()] = $it->getFilename();
 			}
 		}
 	}

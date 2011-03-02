@@ -5,7 +5,7 @@ body {
 }
 
 .header {
-	background-image	: url( '/images/Classic/header_r.gif' );
+	background-image	: url( '../../images/Classic/header_r.gif' );
 	background-repeat	: repeat-x;
 }
 
@@ -16,7 +16,7 @@ body {
 	border-width		: 1px;
 	border-right		: none;
 	border-left			: none;
-	background			: url('/images/Classic/footer.gif') repeat-y #FFFFFF;
+	background			: url('../../images/Classic/footer.gif') repeat-y #FFFFFF;
 }
 
 a,a:visited,a:active {
@@ -97,24 +97,24 @@ ul {
 }
 
 .line_shadow {
-	background-image	: url( '/images/Classic/shadow.gif' );
+	background-image	: url( '../../images/Classic/shadow.gif' );
 	background-repeat	: repeat-y;
 	background-position	: top left;
 }
 
 .section {
 	height				: 25px;
-	background-image	: url( '/images/Classic/section.gif' );
+	background-image	: url( '../../images/Classic/section.gif' );
 }
 
 .subsection {
 	padding-top			: 8px;
-	background-image	: url( '/images/Classic/subsection.gif' );
+	background-image	: url( '../../images/Classic/subsection.gif' );
 }
 
 .endsection {
 	height				: 10px;
-	background-image	: url( '/images/Classic/endsection.gif' );
+	background-image	: url( '../../images/Classic/endsection.gif' );
 	background-position : bottom;
 }
 
@@ -420,7 +420,7 @@ TR.RowOverSelected {
 	padding: 20px 20px 20px 60px;
 	background-color: #f1baba;
 	border: 1px solid #ce1d1d;
-	background-image: url('/images/Classic/error.png');
+	background-image: url('../../images/Classic/error.png');
 	background-repeat: no-repeat;
 	background-position: 15px 50%;
 }

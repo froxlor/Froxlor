@@ -14,7 +14,16 @@ $(document).ready(function(){
 			$(this).css("background-color", "#fff");
 		},
 		function() {
-			$(this).css("background-color", "#f8f8f8");
+			$(this).css("background-color", "#f5f5f5");
+		}
+		);
+	}
+	if($("table.bradiusodd").length != 0) {
+		$("table.bradiusodd tr").hover(function() {
+			$(this).css("background-color", "#fff");
+		},
+		function() {
+			$(this).css("background-color", "#f5f5f5");
 		}
 		);
 	}
@@ -24,7 +33,7 @@ $(document).ready(function(){
                         $(this).css("background-color", "#fff");
                 },
                 function() {
-                        $(this).css("background-color", "#f8f8f8");
+                        $(this).css("background-color", "#f5f5f5");
                 }
                 );
         }

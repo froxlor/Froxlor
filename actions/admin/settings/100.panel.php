@@ -39,8 +39,7 @@ return array(
 					'type' => 'option',
 					'default' => 'Froxlor',
 					'option_mode' => 'one',
-					'option_options' => array('Classic' => 'Classic', 'Froxlor' => 'Froxlor'),
-					/* 'option_options_method' => 'getThemes', // iterate through templates/ and dynamically display all folders found */
+					'option_options_method' => 'getThemes',
 					'save_method' => 'storeSettingField',
 					),
 				'panel_natsorting' => array(

@@ -931,8 +931,12 @@ else
 					<input type="radio" name="webserver" id="apache" value="apache2" <?php echo $webserver == "apache2" ? 'checked="checked"' : "" ?>/>Apache2
 				</p>
 				<p>
-					<label for="lighty"<?php echo ((!empty($_POST['installstep']) && $webserver == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['webserver']; ?> ligHTTPd:</label>&nbsp;
-					<input type="radio" name="webserver" id="lighty" value="lighttpd" <?php echo $webserver == "lighttpd" ? 'checked="checked"' : "" ?>/>ligHTTPd
+					<label for="lighty"<?php echo ((!empty($_POST['installstep']) && $webserver == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['webserver']; ?> LigHTTPd:</label>&nbsp;
+					<input type="radio" name="webserver" id="lighty" value="lighttpd" <?php echo $webserver == "lighttpd" ? 'checked="checked"' : "" ?>/>LigHTTPd
+				</p>
+				<p>
+					<label for="nginx"<?php echo ((!empty($_POST['installstep']) && $webserver == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['webserver']; ?> Nginx:</label>&nbsp;
+					<input type="radio" name="webserver" id="nginx" value="nginx" <?php echo $webserver == "nginx" ? 'checked="checked"' : "" ?>/>Nginx
 				</p>
 				<p>
 					<label for="httpuser"<?php echo ((!empty($_POST['installstep']) && $httpuser == '') ? ' style="color:red;"' : ''); ?>><?php echo $lng['install']['httpuser']; ?>:</label>&nbsp;
