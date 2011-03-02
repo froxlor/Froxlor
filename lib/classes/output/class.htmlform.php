@@ -87,7 +87,10 @@ class htmlform
 				}
 			}
 		}
-		
+
+		// add save/reset buttons at the end of the form
+		eval("self::\$_form .= \"" . getTemplate("misc/form/table_end", "1") . "\";");
+
 		return self::$_form;
 	}
 
