@@ -13,11 +13,11 @@ $header
 				<fieldset>
 					<legend>Froxlor&nbsp;-&nbsp;{$title}</legend>
 
-                                        <table class="formtable">
-                                                {$filetemplate_edit_form}
-                                        </table>
+					<table class="formtable">
+						{$filetemplate_edit_form}
+					</table>
 
-                                        <p style="display: none;">
+					<p style="display: none;">
 						<input type="hidden" name="s" value="$s" />
 						<input type="hidden" name="page" value="$page" />
 						<input type="hidden" name="action" value="$action" />
