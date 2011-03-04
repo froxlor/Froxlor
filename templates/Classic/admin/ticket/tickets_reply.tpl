@@ -3,6 +3,7 @@ $header
 		<input type="hidden" name="s" value="$s" />
 		<input type="hidden" name="page" value="$page" />
 		<input type="hidden" name="action" value="$action" />
+		<input type="hidden" name="send" value="send" />
  		<input type="hidden" name="id" value="$id" />
 		<if 0 < $ticket_replies_count >
 		$ticket_replies

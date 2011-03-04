@@ -453,7 +453,7 @@ class ticket
 	{
 		$sql = "SELECT MAX(`logicalorder`) as `highestorder` FROM `" . TABLE_PANEL_TICKET_CATS . "`;";
 		$result = $_db->query_first($sql);
-		return (isset($result['highestorder']) ? (int)$result['highestorder'] : 1);
+		return (isset($result['highestorder']) ? (int)$result['highestorder'] : 0);
 	}
 
 	/**

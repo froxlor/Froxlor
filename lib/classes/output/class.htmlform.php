@@ -27,6 +27,7 @@ class htmlform
 	public static function genHTMLForm($data = array())
 	{
 		global $lng;
+		$nob = false;
 
 		self::$_form = '';
 
@@ -47,7 +48,11 @@ class htmlform
 					continue;
 				}
 	
-				eval("self::\$_form .= \"" . getTemplate("misc/form/table_section", "1") . "\";");
+				if (!isset($section['nobuttons']) || $section['nobuttons'] == false) {
+					eval("self::\$_form .= \"" . getTemplate("misc/form/table_section", "1") . "\";");
+				} else {
+					$nob = true;
+				}
 
 				$nexto = false;
 				foreach($section['fields'] as $fieldname => $fielddata)
@@ -89,7 +94,9 @@ class htmlform
 		}
 
 		// add save/reset buttons at the end of the form
-		eval("self::\$_form .= \"" . getTemplate("misc/form/table_end", "1") . "\";");
+		if (!$nob) {
+			eval("self::\$_form .= \"" . getTemplate("misc/form/table_end", "1") . "\";");
+		}
 
 		return self::$_form;
 	}

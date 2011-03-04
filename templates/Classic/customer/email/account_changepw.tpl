@@ -9,7 +9,7 @@ $header
 			<tr>
 				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="{$title}" />&nbsp;{$title}</b></td>
 			</tr>
-			{$account_changepw}
+			{$account_changepw_form}
 		</table>
 	</form>
 	<br />

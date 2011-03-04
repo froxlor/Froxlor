@@ -26,7 +26,8 @@ return array(
 				'fields' => array(
 					'subdomain' => array(
 						'label' => $lng['domains']['domainname'],
-						'type' => 'text',
+						'type' => 'textul',
+						'ul_field' => '',
 						'has_nextto' => true
 					),
 					'domain' => array(

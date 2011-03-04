@@ -23,6 +23,7 @@ return array(
 			'section_a' => array(
 				'title' => $lng['emails']['emails_edit'],
 				'image' => 'icons/email_edit.png',
+				'nobuttons' => true,
 				'fields' => array(
 					'email_full' => array(
 						'label' => $lng['emails']['emailaddress'],

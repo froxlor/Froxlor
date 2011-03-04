@@ -26,7 +26,8 @@ return array(
 				'fields' => array(
 					'email_part' => array(
 						'label' => $lng['emails']['emailaddress'],
-						'type' => 'text',
+						'type' => 'textul',
+						'ul_field' => '',
 						'has_nextto' => true
 					),
 					'domain' => array(

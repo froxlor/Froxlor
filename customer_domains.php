@@ -368,9 +368,9 @@ elseif($page == 'domains')
 					$aliasdomains.= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id']);
 				}
 
+				$redirectcode = '';
 				if($settings['customredirect']['enabled'] == '1')
 				{
-					$redirectcode = '';
 					$codes = getRedirectCodesArray();
 					foreach($codes as $rc)
 					{
@@ -552,10 +552,10 @@ elseif($page == 'domains')
 					$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $result['documentroot']);
 				}
 
+				$redirectcode = '';
 				if($settings['customredirect']['enabled'] == '1')
 				{
 					$def_code = getDomainRedirectId($id);
-					$redirectcode = '';
 					$codes = getRedirectCodesArray();
 					foreach($codes as $rc)
 					{
