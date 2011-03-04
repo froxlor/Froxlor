@@ -207,7 +207,11 @@ while($row = $db->fetch_array($result))
 
 		while($customer = $db->fetch_array($customers))
 		{
-			$mail_body.= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-12d', $customer['traffic_used_total']) . ' (' . sprintf('%00.3f%%', (($customer['traffic_used_total'] * 100) / $customer['traffic'])) . ')   ' . $customer['traffic'] . "\n";
+			if ($customer['traffic'] >= 0) {
+				$mail_body.= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-12d', $customer['traffic_used_total']) . ' (' . sprintf('%00.3f%%', (($customer['traffic_used_total'] * 100) / $customer['traffic'])) . ')   ' . $customer['traffic'] . "\n";
+			} else {
+				$mail_body.= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-12d', $customer['traffic_used_total']) . ' (' . sprintf('%00.3f%%', $customer['traffic_used_total']) . ')   ' . $customer['traffic'] . "\n";
+			}
 		}
 
 		$mail_body.= '---------------------------------------------' . "\n";
