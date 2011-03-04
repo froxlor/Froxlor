@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/{$image}" alt="{$title}" />&nbsp;
+				<img src="images/Froxlor/{$image}" alt="{$title}" />&nbsp;
 				{$title}
 			</h2>
 		</header>

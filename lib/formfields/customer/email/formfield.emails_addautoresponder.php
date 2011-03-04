@@ -46,6 +46,10 @@ return array(
 						'maxlength' => 10,
 						'ul_field' => $date_until_off,
 					),
+					'subject' => array(
+						'label' => $lng['autoresponder']['subject'],
+						'type' => 'text',
+					),
 					'message' => array(
 						'style' => 'vertical-align:top;',
 						'label' => $lng['autoresponder']['message'],
