@@ -25,7 +25,7 @@ $header
 							<td><div style="color:#800000;text-align:center">{$traffic_complete['mail']}</div></td>
 						</tr>
 					</table>
-<br /><br />					
+					<br /><br />
 					<table class="formtable">
 						<tr>
 							<td>{$lng['traffic']['day']}</td>
@@ -34,7 +34,6 @@ $header
 						</tr>
 						$traffic
 					</table>
-
 
 					<p style="display: none;">
 						<input type="hidden" name="s" value="$s" />
