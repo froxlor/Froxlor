@@ -47,11 +47,13 @@ $header
 				</fieldset>
 			</form>
 
-			<if $settings['panel']['allow_preset'] == '1'>
-				<aside>
+			<aside>
+				<if $settings['panel']['allow_preset'] == '1'>
 					<a href="$filename?action=forgotpwd">{$lng['login']['forgotpwd']}</a>
-				</aside>
-			</if>
+				<else>
+					&nbsp;
+				</if>
+			</aside>
 
 		</section>
 
