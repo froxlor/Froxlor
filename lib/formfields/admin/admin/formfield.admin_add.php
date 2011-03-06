@@ -155,7 +155,7 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => $settings['system']['mail_quota_enabled'],
+						'visible' => ($settings['system']['mail_quota_enabled'] == '1' ? true : false),
 						'mandatory' => true,
 						'ul_field' => $email_quota_ul
 					),
@@ -164,7 +164,7 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => $settings['autoresponder']['autoresponder_active'],
+						'visible' => ($settings['autoresponder']['autoresponder_active'] == '1' ? true : false),
 						'ul_field' => $email_autoresponder_ul
 					),
 					'ftps' => array(
@@ -179,7 +179,7 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => $settings['ticket']['enabled'],
+						'visible' => ($settings['ticket']['enabled'] == '1' ? true : false),
 						'ul_field' => $tickets_ul
 					),
 					'mysqls' => array(
@@ -194,14 +194,14 @@ return array(
 						'label' => $lng['aps']['canmanagepackages'],
 						'type' => 'yesno',
 						'yesno_var' => $can_manage_aps_packages,
-						'visible' => $settings['aps']['aps_active']
+						'visible' => ($settings['aps']['aps_active'] == '1' ? true : false)
 					),
 					'number_of_aps_packages' => array(
 						'label' => $lng['aps']['numberofapspackages'],
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => $settings['aps']['aps_active'],
+						'visible' => ($settings['aps']['aps_active'] == '1' ? true : false),
 						'ul_field' => $number_of_aps_packages_ul
 					)
 				)

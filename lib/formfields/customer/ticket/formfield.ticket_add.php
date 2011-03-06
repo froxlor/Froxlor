@@ -17,12 +17,12 @@
 return array(
 	'ticket_add' => array(
 		'title' => $lng['ticket']['ticket_new'],
-                'image' => 'icons/ticket_add.png',
-                'sections' => array(
-                        'section_a' => array(
-                                'title' => $lng['ticket']['ticket_new'],
-                                'image' => 'icons/ticket_add.png',
-                                'fields' => array(
+		'image' => 'icons/ticket_add.png',
+		'sections' => array(
+			'section_a' => array(
+				'title' => $lng['ticket']['ticket_new'],
+				'image' => 'icons/ticket_add.png',
+				'fields' => array(
 					'subject' => array(
 						'label' => $lng['ticket']['subject'],
 						'type' => 'text',

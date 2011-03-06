@@ -34,14 +34,14 @@ return array(
 						'type' => 'password'
 					),
 					'email_quota' => array(
-						'visible' => $settings['system']['mail_quota_enabled'],
+						'visible' => ($settings['system']['mail_quota_enabled'] == '1' ? true : false),
 						'label' => $lng['emails']['quota'],
 						'desc' => $lng['panel']['megabyte'],
 						'type' => 'text',
 						'value' => $quota
 					),
 					'alternative_email' => array(
-						'visible' => $settings['panel']['sendalternativemail'],
+						'visible' => ($settings['panel']['sendalternativemail'] == '1' ? true : false),
 						'label' => $lng['emails']['alternative_emailaddress'],
 						'type' => 'text'
 					)
