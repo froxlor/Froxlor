@@ -68,7 +68,7 @@ class htmlform
 						$style = (isset($fielddata['style']) ? ' style="'.$fielddata['style'].'"' : '');
 						$mandatory = self::_getMandatoryFlag($fielddata);
 						$data_field = self::_parseDataField($fieldname, $fielddata);
-						$data_field = str_replace("\n", "", $data_field);
+						//$data_field = str_replace("\n", "", $data_field);
 						$data_field = str_replace("\t", "", $data_field);
 						if (isset($fielddata['has_nextto'])) {
 							$nexto = array('field' => $fieldname);
@@ -79,7 +79,7 @@ class htmlform
 						eval("self::\$_form .= \"" . getTemplate("misc/form/table_row", "1") . "\";");
 					} else {
 						$data_field = self::_parseDataField($fieldname, $fielddata);
-						$data_field = str_replace("\n", "", $data_field);
+						//$data_field = str_replace("\n", "", $data_field);
 						$data_field = str_replace("\t", "", $data_field);
 						$data_field = $fielddata['next_to_prefix'].$data_field;
 						self::$_form = str_replace(
