@@ -1474,3 +1474,11 @@ if(isFroxlorVersion('0.9.18-svn2'))
 
 	updateToVersion('0.9.18');
 }
+
+if(isFroxlorVersion('0.9.18'))
+{
+	showUpdateStep("Updating from 0.9.18 to 0.9.18.1");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.18.1');
+}
