@@ -68,13 +68,13 @@ return array(
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
 						'type' => 'textarea',
 						'cols' => 60,
-						'rows' => 12
+						'rows' => 12,
+						'value' => $result['specialsettings']
 					),
 					'vhostcontainer_servername_statement' => array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
 						'type' => 'yesno',
-						'yesno_var' => $vhostcontainer_servername_statement,
-						'value' => $result['specialsettings']
+						'yesno_var' => $vhostcontainer_servername_statement
 					)
 				)
 			),
