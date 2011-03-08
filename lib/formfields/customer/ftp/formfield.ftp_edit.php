@@ -21,7 +21,7 @@ return array(
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['ftp']['account_edit'],
-                                'image' => 'icons/user_edit.png',
+				'image' => 'icons/user_edit.png',
 				'fields' => array(
 					'username' => array(
 						'label' => $lng['login']['username'],
@@ -32,13 +32,14 @@ return array(
 						'label' => $lng['panel']['path'],
 						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
-						'select_var' => $pathSelect['value']
+						'select_var' => $pathSelect['value'],
+						'value' => $pathSelect['value']
 					),
 					'ftp_password' => array(
 						'label' => $lng['login']['password'],
 						'desc' => $lng['ftp']['editpassdescription'],
 						'type' => 'password',
-					),
+					)
 				)
 			)
 		)

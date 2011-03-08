@@ -21,13 +21,13 @@ return array(
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['ftp']['account_add'],
-                                'image' => 'icons/user_add.png',
+				'image' => 'icons/user_add.png',
 				'fields' => array(
 					'ftp_username' => array(
 						'visible' => ($settings['customer']['ftpatdomain'] == '1' ? true : false),
-                                                'label' => $lng['login']['username'],
-                                                'type' => 'text'
-                                        ),
+						'label' => $lng['login']['username'],
+						'type' => 'text'
+					),
 					'ftp_domain' => array(
 						'visible' => ($settings['customer']['ftpatdomain'] == '1' ? true : false),
 						'label' => $lng['domains']['domainname'],
@@ -38,7 +38,8 @@ return array(
 						'label' => $lng['panel']['path'],
 						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
-						'select_var' => $pathSelect['value']
+						'select_var' => $pathSelect['value'],
+						'value' => $pathSelect['value']
 					),
 					'ftp_password' => array(
 						'label' => $lng['login']['password'],
