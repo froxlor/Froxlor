@@ -169,7 +169,7 @@ class htmlform
 		if(isset($data['rows'])) {
 			$extras .= ' rows="'.$data['rows'].'"';
 		}
-		$value = isset($data['value']) ? $data['value'] : '';
+		$value = isset($data['value']) ? trim($data['value']) : '';
 
 		eval("\$return = \"" . getTemplate("misc/form/input_textarea", "1") . "\";");
 		return $return;
