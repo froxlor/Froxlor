@@ -1499,4 +1499,81 @@ $lng['customer']['autoresponder'] = 'Risponditore Automatico';
 // ADDED IN FROXLOR 0.9.14-svn1
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Configurazione di Default di PHP per Froxlor-vhost';
 
-?>
+// ADDED IN FROXLOR 0.9.14-svn3
+$lng['serversettings']['awstats_icons']['title'] = 'Percorso della cartella delle icone di AWstats';
+$lng['serversettings']['awstats_icons']['description'] = 'es. /usr/share/awstats/htdocs/icon/';
+
+// ADDED IN FROXLOR 0.9.14-svn4
+$lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Percorso SSL CertificateChainFile';
+
+// ADDED IN FROXLOR 0.9.14-svn5
+$lng['admin']['ipsandports']['docroot']['title'] = 'Imposta Cartella principale (vuoto = va in Froxlor)';
+$lng['admin']['ipsandports']['docroot']['description'] = 'Qui puoi definire una tua cartella principale (la destinazione di una richiesta) per questa combinazione IP/Porta.<br /><strong>ATTENZIONE:</strong> Fai molta attenzione a quello che scrivi qui!';
+
+// ADDED IN FROXLOR 0.9.14-svn6
+$lng['serversettings']['login_domain_login'] = 'Permetti il login con i domini';
+
+// ADDED IN FROXLOR 0.9.14
+$lng['panel']['unlock'] = 'unlock';
+$lng['question']['customer_reallyunlock'] = 'Sei sicuro di voler sbloccare il cliente %s?'; 
+
+// ADDED IN FROXLOR 0.9.15-svn1
+$lng['serversettings']['perl_server']['title'] = 'Localizzazione del server Perl';
+$lng['serversettings']['perl_server']['description'] = 'Di default è impostato per utilizzare la guida disponibile sul sito: http://wiki.nginx.org/SimpleCGI';
+$lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
+$lng['serversettings']['nginx_php_backend']['description'] = 'questo è dove in ascolto il processo PHP per le richieste da nginx, può essere un socket unix combinazione IP:Porta';
+$lng['serversettings']['phpreload_command']['title'] = 'Comando riavvio PHP';
+$lng['serversettings']['phpreload_command']['description'] = 'questo viene utilizzato per ricaricare il backend PHP se è in uso<br />Predefinito: vuoto';
+
+// ADDED IN FROXLOR 0.9.16
+$lng['error']['intvaluetoolow'] = 'Il numero dato è troppo basso (campo %s)';
+$lng['error']['intvaluetoohigh'] = 'Il numero dato è troppo alto (campo %s)';
+$lng['admin']['phpfpm_settings'] = 'PHP-FPM';
+$lng['serversettings']['phpfpm'] = 'Abilita php-fpm';
+$lng['serversettings']['phpfpm_settings']['configdir'] = 'Cartella di configurazione php-fpm';
+$lng['serversettings']['phpfpm_settings']['reload'] = 'comando di riavvio php-fpm';
+$lng['serversettings']['phpfpm_settings']['pm'] = 'Gestore processi (pm)';
+$lng['serversettings']['phpfpm_settings']['max_children']['title'] = 'Il numero di processi figli';
+$lng['serversettings']['phpfpm_settings']['max_children']['description'] = 'Il numero di processi figli che vengono creati quando il pm è impostato a  \'static\' e il numero massimo di processi figli che vengono creati quando il pm è impostato a \'dynamic\'<br />Equivalente a PHP_FCGI_CHILDREN';
+$lng['serversettings']['phpfpm_settings']['start_servers']['title'] = 'Il numero di processi figli creati all\'avvio';
+$lng['serversettings']['phpfpm_settings']['start_servers']['description'] = 'Nota: Usato solo quando il pm è impostato a \'dynamic\'';
+$lng['serversettings']['phpfpm_settings']['min_spare_servers']['title'] = 'Il numero minimo di processi inattivi nel server';
+$lng['serversettings']['phpfpm_settings']['min_spare_servers']['description'] = 'Nota: Usato solo quando il pm è impostato a \'dynamic\'<br />Nota: Obbligatorio quando il pm è impostato a \'dynamic\'';
+$lng['serversettings']['phpfpm_settings']['max_spare_servers']['title'] = 'Il numero massimo di processi inattivi nel server';
+$lng['serversettings']['phpfpm_settings']['max_spare_servers']['description'] = 'Nota: Usato solo quando il pm è impostato a \'dynamic\'<br />Nota: Obbligatorio quando il pm è impostato a \'dynamic\'';
+$lng['serversettings']['phpfpm_settings']['max_requests']['title'] = 'Richieste per figli prima di rigenerare';
+$lng['serversettings']['phpfpm_settings']['max_requests']['description'] = 'Per le richieste senza fine specificare \'0\'. Equivalente a PHP_FCGI_MAX_REQUESTS.';
+$lng['error']['phpfpmstillenabled'] = 'PHP-FPM è attivo. Si prega di disattivarlo prima di attivare FCGID';
+$lng['error']['fcgidstillenabled'] = 'FCGID è attivo. Si prega di disattivarlo prima di attivare PHP-FPM';
+$lng['phpfpm']['vhost_httpuser'] = 'Utente locale per PHP-FPM (Froxlor vHost)';
+$lng['phpfpm']['vhost_httpgroup'] = 'Gruppo locale per PHP-FPM (Froxlor vHost)';
+$lng['phpfpm']['ownvhost']['title'] = 'Abilita PHP-FPM per i vHost Froxlor';
+$lng['phpfpm']['ownvhost']['description'] = 'Se abilitato, Froxlor potrà essere avviato attraverso un utente locale';
+
+// ADDED IN FROXLOR 0.9.17
+$lng['crondesc']['cron_usage_report'] = 'Invia i report di utilizzo web e del traffico';
+$lng['serversettings']['report']['report'] = 'Abilita l\'invio dei report di utilizzo web e del traffico';
+$lng['serversettings']['report']['webmax'] = 'Percentuale di avviso per lo spazio web';
+$lng['serversettings']['report']['trafficmax'] = 'Percentuale di avviso per il traffico';
+$lng['mails']['trafficmaxpercent']['mailbody'] = 'Salve {NAME},\n\nhai utilizzato {TRAFFICUSED} MB di {TRAFFIC} MB traffico disponibile.\nQuesto è più del {MAX_PERCENT}%.\n\nCordiali Saluti, il Team Froxlor';
+$lng['mails']['trafficmaxpercent']['subject'] = 'Raggiunto il limite di traffico';
+$lng['admin']['templates']['trafficmaxpercent'] = 'Mail di notifica per i clienti che hanno raggiunto il limite di traffico';
+$lng['admin']['templates']['MAX_PERCENT'] = 'Sostituito con spazio/limite di traffico per l\'invio dei report in precentuale.';
+$lng['admin']['templates']['USAGE_PERCENT'] = 'Sostituito con l\'utilizzo del disco/limite di traffico, che è stato esaurito da parte del cliente in percentuale.';
+$lng['admin']['templates']['diskmaxpercent'] = 'Mail di notifica per i clienti che hanno raggiunto il limite di spazio su disco';
+$lng['admin']['templates']['DISKAVAILABLE'] = 'Sostituito con il spazio utilizzato in MB, che è stato assegnato al cliente.';
+$lng['admin']['templates']['DISKUSED'] = 'Sostituito con il spazio utilizzato in MB, che è stato esaurito da parte del cliente.';
+$lng['serversettings']['dropdown'] = 'Dropdown';
+$lng['serversettings']['manual'] = 'Manuale';
+$lng['mails']['webmaxpercent']['mailbody'] = 'Salve {NAME},\n\nhai utilizzato {DISKUSED} MB di {DISKAVAILABLE} MB di spazio disponibile.\nQuesto è più del {MAX_PERCENT}%.\n\nCordiali Saluti, il Team Froxlor';
+$lng['mails']['webmaxpercent']['subject'] = 'Raggiungere il limite di spazio su disco';
+$lng['mysql']['database_edit'] = 'Modifica database';
+
+// ADDED IN FROXLOR 0.9.18
+$lng['error']['domains_cantdeletedomainwithaliases'] = 'Non è possibile cancellare un dominio che viene utilizzato per alias-domains. È necessario eliminare prima gli alias.';
+$lng['serversettings']['default_theme'] = 'Tema predefinito';
+$lng['menue']['main']['changetheme'] = 'Cambia tema';
+$lng['panel']['theme'] = 'Tema';
+$lng['success']['rebuildingconfigs'] = 'Inseriti con successo i lavori per la ricostruzione del file di configurazione';
+$lng['panel']['variable'] = 'Variabile';
+$lng['panel']['description'] = 'Descrizione';
