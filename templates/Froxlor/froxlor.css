@@ -74,7 +74,7 @@ td a {
 	-moz-border-radius-topright: 20px;
 	-moz-border-radius-bottomleft: 20px;
 	border-top-right-radius: 20px;
-	border-bottom-left-radius: 20px
+	border-bottom-left-radius: 20px;
 }
 
 .topheader {
@@ -578,6 +578,17 @@ input[type="reset"] {
 	color: red;
 	background: #ccc url('../../images/Froxlor/icons/cancel.png') no-repeat 4px 8px;
 	padding-left: 20px;
+}
+
+input[type="checkbox"] {
+	background: #dae7ee;
+	padding: 0;
+	width: 25px;
+	border: 1px solid #666666;
+	-moz-border-radius: 2px;
+	-khtml-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
 }
 
 select {
