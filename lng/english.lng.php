@@ -1573,3 +1573,4 @@ $lng['panel']['theme'] = 'Theme';
 $lng['success']['rebuildingconfigs'] = 'Successfully inserted tasks for rebuild configfiles';
 $lng['panel']['variable'] = 'Variable';
 $lng['panel']['description'] = 'Description';
+$lng['emails']['back_to_overview'] = 'Back to overview';

@@ -1555,3 +1555,4 @@ $lng['panel']['theme'] = 'Theme';
 $lng['success']['rebuildingconfigs'] = 'Task f&uuml;r das Neuerstellen der Konfigurationen wurde erfolgreich eingetragen';
 $lng['panel']['variable'] = 'Variable';
 $lng['panel']['description'] = 'Beschreibung';
+$lng['emails']['back_to_overview'] = 'Zur&uuml;ck zur &Uuml;bersicht';
