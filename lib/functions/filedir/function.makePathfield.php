@@ -42,7 +42,7 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 	// but dirList holds the paths with starting slash
 	// so we just add one here to get the correct
 	// default path selected, #225
-	if ($value != '/') {
+	if (substr($value, 0, 1) != '/') {
 		$value = '/'.$value;
 	}
 
