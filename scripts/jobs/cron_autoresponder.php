@@ -102,7 +102,7 @@ if($db->num_rows($result) > 0)
 				// error reading mail contents or just empty
 				if(count($content) == 0)
 				{
-					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Unable to read mail from maildir: " . $entry);
+					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Unable to read mail from maildir: " . dirname($fullFilename));
 					continue;
 				}
 
