@@ -2,8 +2,7 @@ $(document).ready(function() {
 	// make rel="external" links open in a new window
 		$("a[rel='external']").attr('target', '_blank');
 		$(".main").css('min-height', $("nav").height() - 34);
-		$(".dboarditem:last")
-				.css('min-height', $(".dboarditem:first").height());
+		$(".dboarditem:last").css('min-height', $(".dboarditem:first").height());
 
 		// set focus on username-field if on loginpage
 		if ($(".loginpage").length != 0) {
