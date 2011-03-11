@@ -27,6 +27,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'documentroot_prefix',
 					'type' => 'string',
+					'string_type' => 'dir',
 					'default' => '/var/customers/webs/',
 					'save_method' => 'storeSettingField',
 					'plausibility_check_method' => 'checkPathConflicts'

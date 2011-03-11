@@ -38,5 +38,6 @@ function makeSecurePath($path)
 		''
 	);
 	$path = preg_replace($search, $replace, $path);
+	$path = str_replace(" ", "\ ", $path);
 	return $path;
 }

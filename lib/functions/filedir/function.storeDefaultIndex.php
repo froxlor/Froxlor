@@ -55,6 +55,7 @@ function storeDefaultIndex($loginname = null, $destination = null, $logger = nul
 		}
 		else
 		{
+			$destination = makeCorrectDir($destination);
 			if ($logger !== null) {
 				$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Running: cp -a ' . $pathtophpfiles . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 			}

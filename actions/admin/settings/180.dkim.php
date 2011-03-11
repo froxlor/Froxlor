@@ -36,6 +36,7 @@ return array(
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_prefix',
 					'type' => 'string',
+					'string_type' => 'dir',
 					'default' => '/etc/postfix/dkim/',
 					'save_method' => 'storeSettingField',
 					),

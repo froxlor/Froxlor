@@ -43,6 +43,7 @@ return array(
 					'settinggroup' => 'perl',
 					'varname' => 'suexecpath',
 					'type' => 'string',
+					'string_type' => 'dir',
 					'default' => '/var/www/cgi-bin/',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('apache2')
