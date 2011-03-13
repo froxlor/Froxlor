@@ -246,7 +246,7 @@ if($action == 'login')
 		switch($smessage)
 		{
 			case 1:
-				$message = $lng['pwdreminder']['success'];
+				$successmessage = $lng['pwdreminder']['success'];
 				break;
 			case 2:
 				$message = $lng['error']['login'];
