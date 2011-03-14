@@ -966,7 +966,7 @@ class apache
 						&& isset($row_diroptions['options_cgi'])
 						&& $row_diroptions['options_cgi'] == '1')
 					{
-						$this->diroptions_data[$diroptions_filename].= ' ExecCGI -MultiViews +SymLinksIfOwnerMatch'."\n";
+						$this->diroptions_data[$diroptions_filename].= ' ExecCGI -MultiViews +SymLinksIfOwnerMatch +FollowSysLinks'."\n";
 					} else {
 						$this->diroptions_data[$diroptions_filename].= "\n";
 					}
@@ -983,7 +983,7 @@ class apache
 						&& isset($row_diroptions['options_cgi'])
 						&& $row_diroptions['options_cgi'] == '1')
 					{
-						$this->diroptions_data[$diroptions_filename].= ' ExecCGI -MultiViews +SymLinksIfOwnerMatch'."\n";
+						$this->diroptions_data[$diroptions_filename].= ' ExecCGI -MultiViews +SymLinksIfOwnerMatch +FollowSysLinks'."\n";
 					} else {
 						$this->diroptions_data[$diroptions_filename].= "\n";
 					}
