@@ -14,7 +14,7 @@
 				Webspace:&nbsp;
 				<if $row['diskspace'] != 'UL'>
 					<span class="progressBar" title="{$row['diskspace_used']} / {$row['diskspace']} MB">
-						<if (($row['diskspace']/100)*90) < $row['diskspace_used']>
+						<if (($row['diskspace']/100)*(int)$settings['system']['report_webmax']) < $row['diskspace_used']>
 							<span class="redbar">
 						<else>
 							<span>
@@ -31,7 +31,7 @@
 				Traffic:&nbsp;
 				<if $row['traffic'] != 'UL'>
 					<span class="progressBar" title="{$row['traffic_used']} / {$row['traffic']} GB">
-						<if (($row['traffic']/100)*90) < $row['traffic_used']>
+						<if (($row['traffic']/100)*(int)$settings['system']['report_trafficmax']) < $row['traffic_used']>
 							<span class="redbar">
 						<else>
 							<span>

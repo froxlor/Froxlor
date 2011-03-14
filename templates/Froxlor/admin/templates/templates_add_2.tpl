@@ -132,6 +132,35 @@ $header
 					<td>{$lng['admin']['templates']['TRAFFICUSED']}</td>
 				</tr>
 				<tr>
+					<td><em>{MAX_PERCENT}</em>:</td>
+					<td>{$lng['admin']['templates']['MAX_PERCENT']}</td>
+				</tr>
+				<tr>
+					<td><em>{USAGE_PERCENT}</em>:</td>
+					<td>{$lng['admin']['templates']['USAGE_PERCENT']}</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<strong>{$lng['admin']['templates']['diskmaxpercent']}</strong>
+					</td>
+				</tr>
+				<tr>
+					<td><em>{DISKAVAILABLE}</em>:</td>
+					<td>{$lng['admin']['templates']['DISKAVAILABLE']}</td>
+				</tr>
+				<tr>
+					<td><em>{DISKUSED}</em>:</td>
+					<td>{$lng['admin']['templates']['DISKUSED']}</td>
+				</tr>
+				<tr>
+					<td><em>{MAX_PERCENT}</em>:</td>
+					<td>{$lng['admin']['templates']['MAX_PERCENT']}</td>
+				</tr>
+				<tr>
+					<td><em>{USAGE_PERCENT}</em>:</td>
+					<td>{$lng['admin']['templates']['USAGE_PERCENT']}</td>
+				</tr>
+				<tr>
 					<td colspan="2">
 						<strong>{$lng['admin']['templates']['ticket']}</strong>
 					</td>

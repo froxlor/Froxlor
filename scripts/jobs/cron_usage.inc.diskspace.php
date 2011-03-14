@@ -64,14 +64,14 @@ while($row = $db->fetch_array($result))
 	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
 	                                AND `language`='" . $db->escape($row['def_language']) . "'
 	                                AND `templategroup`='mails'
-	                                AND `varname`='webmaxpercent_subject'");
+	                                AND `varname`='diskmaxpercent_subject'");
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
 
 		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
 	                                AND `language`='" . $db->escape($row['def_language']) . "'
 	                                AND `templategroup`='mails'
-	                                AND `varname`='webmaxpercent_mailbody'");
+	                                AND `varname`='diskmaxpercent_mailbody'");
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
 
 		$_mailerror = false;
@@ -143,14 +143,14 @@ while($row = $db->fetch_array($result))
 	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
 	                                AND `language`='" . $db->escape($row['def_language']) . "'
 	                                AND `templategroup`='mails'
-	                                AND `varname`='webmaxpercent_subject'");
+	                                AND `varname`='diskmaxpercent_subject'");
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
 
 		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
 	                                AND `language`='" . $db->escape($row['def_language']) . "'
 	                                AND `templategroup`='mails'
-	                                AND `varname`='webmaxpercent_mailbody'");
+	                                AND `varname`='diskmaxpercent_mailbody'");
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
 
 		$_mailerror = false;
