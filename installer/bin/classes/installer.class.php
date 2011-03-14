@@ -19,24 +19,40 @@ define(TPL_PATH, '/templates/misc/configfiles/');
 
 class System
 {
+	/**
+	 * internal array of options
+	 * @var array
+	 */
 	private static $useflags = array();
 
+	/**
+	 * default constructor, sets initial
+	 * option values
+	 */
 	public function __construct() 
 	{ 
 		self::$useflags['aps'] = false;
 		self::$useflags['autoresponder'] = false;
-		self::$useflags['billing'] = false;
+		self::$useflags['awstats'] = false;
 		self::$useflags['bind'] = false;
 		self::$useflags['domainkey'] = false;
 		self::$useflags['dovecot'] = false;
 		self::$useflags['fcgid'] = false;
+		self::$useflags['ftpquota'] = false;
+		self::$useflags['fpm'] = false;
 		self::$useflags['lighttpd'] = false;
 		self::$useflags['log'] = true;
 		self::$useflags['mailquota'] = false;
+		self::$useflags['nginx'] = false;
+		self::$useflags['pureftpd'] = false;
 		self::$useflags['ssl'] = false;
 		self::$useflags['tickets'] = true;
 	}
 
+	/**
+	 * function to try to determine
+	 * the users operating system
+	 */
 	public function getOS()
 	{
 		if ( file_exists ( OS_CHK_DEBIAN ) ) 
@@ -85,6 +101,14 @@ class System
 		}
 	}
 
+	/**
+	 * returns the operating system name 
+	 * by the internal constant-value
+	 * 
+	 * @param int $os operating system indicator
+	 * 
+	 * @return string operating system name
+	 */
 	public function getOSName($os = OS_OTHER)
 	{
 		switch($os)
@@ -115,6 +139,14 @@ class System
 		return $ret;
 	}
 
+	/**
+	 * sets an internal use-flag for congfiguration
+	 * 
+	 * @param string $flag  name of the uselfag
+	 * @param mixed  $value value
+	 * 
+	 * @return boolean false if useflag unknown
+	 */
 	public function setUseflag($flag = null, $value = '')
 	{
 		$flag = strtolower($flag);
@@ -126,6 +158,13 @@ class System
 		}
 	}
 
+	/**
+	 * getter function for internal useflags
+	 * 
+	 * @param string $flag name of the useflag
+	 * 
+	 * @return boolean false if useflag unknown
+	 */
 	public function getUseflag($flag = null)
 	{
 		$flag = strtolower($flag);
@@ -137,6 +176,15 @@ class System
 		}
 	}
 
+	/**
+	 * sed-wrapper for config-replacings
+	 * 
+	 * @param string $haystack what to replace
+	 * @param string $needle   value for replacing
+	 * @param string $file     file in which to replace
+	 * 
+	 * @return null
+	 */
 	public function confReplace($haystack = null, $needle = null, $file = null)
 	{
 		if (file_exists($file))
@@ -148,6 +196,13 @@ class System
 			}
 	}
 
+	/**
+	 * read input-string from STDIN
+	 * 
+	 * @param string $default optional default value
+	 * 
+	 * @return string value which was entered
+	 */
 	public function getString($default = null)
 	{
 		$value = null;
@@ -172,6 +227,48 @@ class System
 		return $value;
 	}
 
+	/**
+	 * read input-interger from STDIN
+	 * 
+	 * @param int $default optional default value
+	 * 
+	 * @return int value which was entered
+	 */
+	public function getInt($default = null)
+	{
+		$value = null;
+
+		while(true)
+		{
+			$this->getInput($_v);
+
+			if ($_v == '' && $default != null) {
+				$value = $default;
+				break;
+			} elseif($_v == '' && $default == null) {
+				echo "Please enter a value: ";
+				$value = null;
+				continue;
+			} elseif(!is_numeric($_v)) {
+				echo "Only numeric values are allowed";
+				$value = null;
+				continue;
+			} else {
+				$value = $_v;
+				break;
+			}
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Yes-No-Wrapper for STDIN input
+	 * 
+	 * @param string $default optional default value
+	 * 
+	 * @return string yes|no
+	 */
 	public function getYesNo($default = null)
 	{
 		$value = null;
@@ -204,6 +301,12 @@ class System
 		return $value;
 	}
 
+	/**
+	 * input-wrapper for directories got from STDIN.
+	 * Optionally create directory if not exists
+	 * 
+	 * @param string $default optional default value
+	 */
 	public function getDirectory($default = null)
 	{
 		$value = null;
@@ -251,11 +354,24 @@ class System
 		return $value;
 	}
 
+	/**
+	 * get input from STDIN
+	 * 
+	 * @param mixed $inputvar reference for input value
+	 */
 	public function getInput(&$inputvar)
 	{
 		$inputvar = trim(fgets(STDIN));
 	}
 
+	/**
+	 * wrapper for mkdir to create directories with correct
+	 * permissions and ownership
+	 * 
+	 * @param string $directory dir to create
+	 * @param string $chmod     chmod value for the new dir
+	 * @param string $chown     chown-parameter for ownership
+	 */
 	public function makedir($directory = null, $chmod = "0755", $chown = "root:root")
 	{
 		if($directory != null)
@@ -270,6 +386,11 @@ class System
 		}
 	}
 
+	/**
+	 * std. error output wrapper
+	 * 
+	 * @param string|array $msg use array for multiline messages
+	 */
 	public function ewarn($msg = null)
 	{
 		echo "\n*";
@@ -285,6 +406,12 @@ class System
 		echo "\n*\n\n";
 	}
 
+	/**
+	 * returns the froxlor-config-template path part for the
+	 * used operating system
+	 * 
+	 * @param int $os os-indicator number|constant
+	 */
 	private function getOSPathName($os = OS_OTHER)
 	{
 		switch($os)
@@ -315,6 +442,16 @@ class System
 		return $ret;
 	}
 
+	/**
+	 * wrapper function to check whether configfiles for
+	 * a specific service for a specific OS exists
+	 * 
+	 * @param string $sdir    path to froxlor
+	 * @param int    $os      os-indicator constant
+	 * @param string $service service-name
+	 * 
+	 * @return boolean
+	 */
 	private function serviceExists($sdir, $os, $service)
 	{
 		$service_dir = $this->makeCorrectDir($sdir.TPL_PATH.$this->getOSPathName($os).'/'.$service);
@@ -325,6 +462,16 @@ class System
 		}
 	}
 
+	/**
+	 * check for existance of a specific template
+	 * 
+	 * @param string $sdir    path to froxlor
+	 * @param int    $os      os-indicator constant
+	 * @param string $service service-name
+	 * @param string $tpl     template-name
+	 * 
+	 * @return boolean
+	 */
 	private function templateExists($sdir, $os, $service, $tpl)
 	{
 		$service_dir = $this->makeCorrectDir($sdir.TPL_PATH.$this->getOSPathName($os).'/'.$service);
@@ -336,6 +483,16 @@ class System
 		}
 	}
 
+	/**
+	 * returns the path incl. filename for a specific template
+	 * 
+	 * @param string $sdir    path to froxlor
+	 * @param int    $os      os-indicator constant
+	 * @param string $service service-name
+	 * @param string $tpl     template-name
+	 * 
+	 * @return string path + filename
+	 */
 	public function getConfPath($sdir, $os, $service, $tpl)
 	{
 		$service_dir = $this->makeCorrectDir($sdir.TPL_PATH.$this->getOSPathName($os).'/'.$service);
@@ -343,6 +500,17 @@ class System
 		return $template;
 	}
 
+	/**
+	 * main function to copy config-templates to the destination
+	 * and replace template-variables with actual values
+	 * 
+	 * @param string $froxlordir directory pointing to froxlor install
+	 * @param int    $os         os-indicator constant
+	 * @param string $service    service-name
+	 * @param string $origin     source path
+	 * @param string $tpl        template-name
+	 * @param array  $replacers  replace-array
+	 */
 	public function doconf($froxlordir = null, $os = OS_OTHER, $service = null, $origin = null, $tpl = null, $replacers = null)
 	{
 		if($froxlordir == null || $froxlordir == '')
@@ -398,6 +566,13 @@ class System
 		echo "[OK]\n";
 	}
 
+	/**
+	 * well-known function to clean a path value
+	 * 
+	 * @param string $path path to secure
+	 * 
+	 * @return string path
+	 */
 	private function makeSecurePath($path)
 	{
 		$search = Array(
@@ -411,9 +586,17 @@ class System
 			''
 		);
 		$path = preg_replace($search, $replace, $path);
+		$path = str_replace(" ", "\ ", $path);
 		return $path;
 	}
 
+	/**
+	 * well-known function to correct a path value
+	 * 
+	 * @param string $dir path to clean
+	 * 
+	 * @return string path
+	 */
 	private function makeCorrectDir($dir)
 	{
 		if(substr($dir, -1, 1) != '/')
@@ -430,6 +613,9 @@ class System
 		return $dir;
 	}
 
+	/**
+	 * show cli-help
+	 */
 	public function showHelp()
 	{
 		$this->ewarn(array(
@@ -439,14 +625,18 @@ class System
 			"",
 			"aps\t\t\tApplication Packaging Standard [default: Off]",
 			"autoresponder\t\tE-Mail autoresponder [default: Off]",
-			"billing\t\tComplete billing system [default: Off]",
+			"awstats\t\tAlternative traffic-script (instead of webalizer) [default: Off]",
 			"bind\t\t\tBind nameserver [default: Off]",
 			"domainkey\t\tDomainkey service, needs 'bind' [default: Off]",
 			"dovecot\t\tUse dovecot e-mailserver instead of courier [default: Off]",
 			"fcgid\t\t\tRun PHP as FCGID (apache only) [default: Off]",
+			"ftpquota\t\t\tUse quota rules for FTP usage [default: Off]",
+			"fpm\t\t\tRun PHP using PHP-FPM interface [default: Off]",
 			"lighttpd\t\tUse lighttpd instead of apache2 [default: Off]",
 			"log\t\t\tEnables the froxlor logging system [default: On]",
 			"mailquota\t\tEnables mailquota for the mailserver [default: Off]",
+			"nginx\t\tUse nginx instead of apache2 [default: Off]",
+			"pureftpd\t\tUse PureFTPd instead of ProFTPd [default: Off]",
 			"ssl\t\t\tEnable ssl for web-, mail- and ftpserver [default: Off]",
 			"tickets\t\tFroxlor ticket system [default: On]",
 			"",
@@ -456,5 +646,3 @@ class System
 		die;
 	}
 }
-
-?>

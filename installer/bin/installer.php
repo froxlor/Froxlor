@@ -23,6 +23,12 @@ if(isset($argv[1]))
 			case '-autoresponder':
 				$system->setUseflag('autoresponder', false);
 				break;
+			case 'awstats':
+				$system->setUseflag('awstats', true);
+				break;
+			case '-awstats':
+				$system->setUseflag('awstats', false);
+				break;
 			case 'bind':
 				$system->setUseflag('bind', true);
 				break;
@@ -47,6 +53,18 @@ if(isset($argv[1]))
 			case '-fcgid':
 				$system->setUseflag('fcgid', false);
 				break;
+			case 'ftpquota':
+				$system->setUseflag('ftpquota', true);
+				break;
+			case '-ftpquota':
+				$system->setUseflag('ftpquota', false);
+				break;
+			case 'fpm':
+				$system->setUseflag('fpm', true);
+				break;
+			case '-fpm':
+				$system->setUseflag('fpm', false);
+				break;
 			case 'lighttpd':
 				$system->setUseflag('lighttpd', true);
 				break;
@@ -64,6 +82,18 @@ if(isset($argv[1]))
 				break;
 			case '-mailquota':
 				$system->setUseflag('mailquota', false);
+				break;
+			case 'nginx':
+				$system->setUseflag('nginx', true);
+				break;
+			case '-nginx':
+				$system->setUseflag('nginx', false);
+				break;
+			case 'pureftpd':
+				$system->setUseflag('pureftpd', true);
+				break;
+			case '-pureftpd':
+				$system->setUseflag('pureftpd', false);
 				break;
 			case 'ssl':
 				$system->setUseflag('ssl', true);
@@ -97,13 +127,18 @@ echo "Intalling Froxlor with the following options:\n\n";
 
 echo "- APS \t\t[" . (($system->getUseflag('aps') == true) ? 'On' : 'Off') . "]\n";
 echo "- Autoresponder [" . (($system->getUseflag('autoresponder') == true) ? 'On' : 'Off') . "]\n";
+echo "- Awstats [" . (($system->getUseflag('awstats') == true) ? 'On' : 'Off') . "]\n";
 echo "- Bind \t\t[" . (($system->getUseflag('bind') == true) ? 'On' : 'Off') . "]\n";
 echo "- Domainkey \t[" . (($system->getUseflag('domainkey') == true) ? 'On' : 'Off') . "]\n";
 echo "- Dovecot \t[" . (($system->getUseflag('dovecot') == true) ? 'On' : 'Off') . "]\n";
 echo "- Fcgid \t[" . (($system->getUseflag('fcgid') == true) ? 'On' : 'Off') . "]\n";
+echo "- FTP-quota \t[" . (($system->getUseflag('ftpquota') == true) ? 'On' : 'Off') . "]\n";
+echo "- PHP-FPM \t[" . (($system->getUseflag('fpm') == true) ? 'On' : 'Off') . "]\n";
 echo "- Lighttpd \t[" . (($system->getUseflag('lighttpd') == true) ? 'On' : 'Off') . "]\n";
 echo "- Log \t\t[" . (($system->getUseflag('log') == true) ? 'On' : 'Off') . "]\n";
 echo "- Mailquota \t[" . (($system->getUseflag('mailquota') == true) ? 'On' : 'Off') . "]\n";
+echo "- nginx \t[" . (($system->getUseflag('nginx') == true) ? 'On' : 'Off') . "]\n";
+echo "- PureFTPd \t[" . (($system->getUseflag('pureftpd') == true) ? 'On' : 'Off') . "]\n";
 echo "- SSL \t\t[" . (($system->getUseflag('ssl') == true) ? 'On' : 'Off') . "]\n";
 echo "- Tickets \t[" . (($system->getUseflag('tickets') == true) ? 'On' : 'Off') . "]\n";
 echo "\n";
@@ -118,14 +153,16 @@ if($os == OS_OTHER) {
 			"but the installer won't configure the services")
 		);
 } else {
-	echo "OK, looks like you are running " . $system->getOSName($os) . ".\n";
-	if($os == OS_GENTOO)
-	{
+	if($os < OS_DEBIANLENNY) {
 		$system->ewarn(array(
-				"In case you've installed froxlor via the ebuild",
-				"I'd suggest you run emerge --config froxlor",
-				"instead of using the shell installer.")
-				);
+			"The system you are using (".$system->getOSName($os).") is pretty old.",
+			"Froxlor does not provide configuration templates for your OS anymore.",
+			"",
+			"If you know what you are doing proceed",
+			"but the installer won't configure the services"
+		));
+	} else {
+		echo "OK, looks like you are running " . $system->getOSName($os) . ".\n";
 	}
 }
 
@@ -135,9 +172,22 @@ $proceed = $system->getYesNo(I_YES);
 if($proceed == I_YES) 
 {
 	/* hit the shit */
-	if ($system->getUseflag('lighttpd') && $system->getUseflag('fcgid'))
-		$system->ewarn("PLEASE NOTE: The lighttpd flag overwrites fcgid!");
 	
+	/* check for sane use-flags */
+	if ($system->getUseflag('lighttpd') && $system->getUseflag('fcgid')) {
+		$system->ewarn("PLEASE NOTE: The lighttpd flag overwrites fcgid!");
+	}
+
+	if ($system->getUseflag('lighttpd') && $system->getUseflag('nginx')) {
+		$system->ewarn("You cannot use two webservers at once. Please unset either lighttpd or nginx (or both for apache)");
+		die();
+	}
+
+	if ($system->getUseflag('fcgid') && $system->getUseflag('fpm')) {
+		$system->ewarn("You cannot use two php-interfaces at once. Please unset either fcgid or fpm (or both for mod_php)");
+		die();
+	}
+
 	echo "Please enter the directory where Froxlor has been extracted to [/var/www/froxlor/]: ";
 	$basedir = $system->getDirectory('/var/www/froxlor/');
 
@@ -150,7 +200,8 @@ if($proceed == I_YES)
 		die();
 	}
 
-	$docroot = array('web' => null, 'mail' => null, 'logs' => null, 'tmp' => null, 'fcgid' => null);
+	// get all the directories we need
+	$docroot = array('web' => null, 'mail' => null, 'logs' => null, 'tmp' => null, 'fcgid' => null, 'fpm' => null);
 
 	echo "Please enter the customer docroot directory [/var/customers/web/]: ";
 	$docroot['web'] = $system->getDirectory('/var/customers/web/');
@@ -167,7 +218,16 @@ if($proceed == I_YES)
 		$docroot['tmp'] = $system->getDirectory('/var/customers/tmp/');
 
 		echo "Please enter the fcgid starter files directory [/var/www/php-fcgi-scripts/]: ";
-		$docroot['fcgid'] = $system->getDirectory('/var/www/php-fcgi-scripts');
+		$docroot['fcgid'] = $system->getDirectory('/var/www/php-fcgi-scripts/');
+	}
+
+	if($system->getUseflag('fpm'))
+	{
+		echo "Please enter the customer tmp directory [/var/customers/tmp/]: ";
+		$docroot['tmp'] = $system->getDirectory('/var/customers/tmp/');
+
+		echo "Please enter the fpm configuration directory [/etc/php-fpm.d/]: ";
+		$docroot['fpm'] = $system->getDirectory('/etc/php-fpm.d/');
 	}
 
 	echo "Setting paths";
@@ -184,10 +244,49 @@ if($proceed == I_YES)
 		$system->confReplace("'system', 'mod_fcgid_configdir', '".$docroot['fcgid']."'", "'system', 'mod_fcgid_configdir', '/var/www/php-fcgi-scripts'", $sqltmp);
 		echo "...";
 	}
+	if($system->getUseflag('fpm'))
+	{
+		$system->confReplace("'phpfpm', 'tmpdir', '".$docroot['tmp']."'", "'phpfpm', 'tmpdir', '/var/customers/tmp'", $sqltmp);
+		echo "...";	
+		$system->confReplace("'phpfpm', 'configdir', '".$docroot['fcgid']."'", "'phpfpm', 'configdir', '/etc/php-fpm.d/'", $sqltmp);
+		echo "...";
+	}
 	echo "[OK]\n";
 
-	// TODO: create local users here!
+	// create local users 
+	echo "Creating users...\n";
+	$users = array('froxlor' => 9995, 'froxlorftpd' => 9996, 'vmail' => 9997);
 
+	// main user
+	echo "Please enter the uid for the froxlor user [9995]: ";
+	$users['froxlor'] = $system->getInt(9995);
+
+	@exec("groupadd -g ".$users['froxlor']." froxlor");
+	echo "...";
+	@exec("useradd -u ".$users['froxlor']." -s /bin/false -d ".$basedir." -g froxlor froxlor");
+	echo "...";
+
+	// ftp user
+	echo "Please enter the uid for the froxlor-ftpd user [9996]: ";
+	$users['froxlorftpd'] = $system->getInt(9996);
+
+	@exec("groupadd -g ".$users['froxlorftpd']." froxlorftpd");
+	echo "...";
+	@exec("useradd -u ".$users['froxlorftpd']." -s /bin/false -d ".$docroot['web']." -g froxlorftpd froxlorftpd");
+	echo "...";
+
+	// vmail user
+	echo "Please enter the uid for the vmail user [9997]: ";
+	$users['vmail'] = $system->getInt(9997);
+
+	@exec("groupadd -g ".$users['vmail']." vmail");
+	echo "...";
+	@exec("useradd -u ".$users['vmail']." -s /bin/false -d ".$docroot['mail']." -g vmail vmail");
+	echo "...";
+	echo "[OK]\n";
+
+	// create directories
+	echo "Creating Froxlor directories...";
 	$system->makedir($docroot['web']);
 	$system->makedir($docroot['mail'], "0755", "vmail:vmail");
 	$system->makedir($docroot['logs']);
@@ -196,6 +295,12 @@ if($proceed == I_YES)
 		$system->makedir($docroot['tmp']);
 		$system->makedir($docroot['fcgid']);
 	}
+	if($system->getUseflag('fpm'))
+	{
+		$system->makedir($docroot['tmp']);
+		$system->makedir($docroot['fpm']);
+	}
+	echo "[OK]\n";
 
 	/* sed the froxlor.sql file (and maybe others) */
 	if($os == OS_GENTOO) {
@@ -203,9 +308,9 @@ if($proceed == I_YES)
 		$system->confReplace("'lastguid', '10000'", "'lastguid', '9999'", $sqltmp);
 		echo "[OK]\n";
 
-		echo "Setting 'vmail_uid' and 'vmail_gid' to '9997'\t\t";
-		$system->confReplace("'vmail_uid', '9997'", "'vmail_uid', '2000'", $sqltmp);
-		$system->confReplace("'vmail_gid', '9997'", "'vmail_gid', '2000'", $sqltmp);
+		echo "Setting 'vmail_uid' and 'vmail_gid' to '".$users['vmail']."'\t\t";
+		$system->confReplace("'vmail_uid', '".$users['vmail']."'", "'vmail_uid', '2000'", $sqltmp);
+		$system->confReplace("'vmail_gid', '".$users['vmail']."'", "'vmail_gid', '2000'", $sqltmp);
 		echo "[OK]\n";
 	}
 
@@ -217,43 +322,86 @@ if($proceed == I_YES)
 		$system->confReplace("'apacheconf_vhost', '/etc/lighttpd/froxlor-vhosts.conf'", "'apacheconf_vhost', '/etc/apache/vhosts.conf'", $sqltmp);
 		$system->confReplace("'apacheconf_diroptions', '/etc/lighttpd/diroptions.conf'", "'apacheconf_diroptions', '/etc/apache/diroptions.conf'", $sqltmp);
 		$system->confReplace("'apacheconf_htpasswddir', '/etc/lighttpd/htpasswd/'", "'apacheconf_htpasswddir', '/etc/apache/htpasswd/'", $sqltmp);
+		echo "[OK]\n";
 		if($os == OS_GENTOO) {
 			$httpd = 'lighttpd';
 		}
 		else {
 			$httpd = 'www-data';
 		}
-		$system->confReplace("'httpuser', '".$httpd."'", "'httpuser', 'www-data'", $sqltmp);
-		$system->confReplace("'httpgroup', '".$httpd."'", "'httpgroup', 'www-data'", $sqltmp);
+		echo "Please enter the webserver system user [".$httpd."]: ";
+		$httpd = $system->getString($httpd);
+		if ($httpd != 'www-data') {
+			$system->confReplace("'httpuser', '".$httpd."'", "'httpuser', 'www-data'", $sqltmp);
+			$system->confReplace("'httpgroup', '".$httpd."'", "'httpgroup', 'www-data'", $sqltmp);
+		}
+	} 
+	elseif ($system->getUseflag('nginx')) 
+	{
+		echo "Switching settings to fit 'nginx'\t\t";
+		$system->confReplace("/etc/init.d/nginx restart", "/etc/init.d/apache reload", $sqltmp);
+		$system->confReplace("'webserver', 'nginx'", "'webserver', 'apache2'", $sqltmp);
+		$system->confReplace("'apacheconf_vhost', '/etc/nginx/froxlor-vhosts.conf'", "'apacheconf_vhost', '/etc/apache/vhosts.conf'", $sqltmp);
+		$system->confReplace("'apacheconf_diroptions', '/etc/nginx/diroptions.conf'", "'apacheconf_diroptions', '/etc/apache/diroptions.conf'", $sqltmp);
+		$system->confReplace("'apacheconf_htpasswddir', '/etc/nginx/htpasswd/'", "'apacheconf_htpasswddir', '/etc/apache/htpasswd/'", $sqltmp);
 		echo "[OK]\n";
-	} else {
+		if($os == OS_GENTOO) {
+			$httpd = 'nginx';
+		}
+		else {
+			$httpd = 'www-data';
+		}
+		echo "Please enter the webserver system user [".$httpd."]: ";
+		$httpd = $system->getString($httpd);
+		if ($httpd != 'www-data') {
+			$system->confReplace("'httpuser', '".$httpd."'", "'httpuser', 'www-data'", $sqltmp);
+			$system->confReplace("'httpgroup', '".$httpd."'", "'httpgroup', 'www-data'", $sqltmp);
+		}
+	}
+	else 
+	{
 		echo "Switching settings to fit 'apache2'\t\t";
 		$system->confReplace("/etc/init.d/apache2 reload", "/etc/init.d/apache reload", $sqltmp);
 		$system->confReplace("'apacheconf_vhost', '/etc/apache2/vhosts.d/99_froxlor-vhosts.conf'", "'apacheconf_vhost', '/etc/apache/vhosts.conf'", $sqltmp);
 		$system->confReplace("'apacheconf_diroptions', '/etc/apache2/diroptions.conf'", "'apacheconf_diroptions', '/etc/apache/diroptions.conf'", $sqltmp);
 		$system->confReplace("'apacheconf_htpasswddir', '/etc/apache2/htpasswd/'", "'apacheconf_htpasswddir', '/etc/apache/htpasswd/'", $sqltmp);
+		echo "[OK]\n";
 		if($os == OS_GENTOO) {
 			$httpd = 'apache';
 		}
 		else {
 			$httpd = 'www-data';
 		}
-		$system->confReplace("'httpuser', '".$httpd."'", "'httpuser', 'www-data'", $sqltmp);
-		$system->confReplace("'httpgroup', '".$httpd."'", "'httpgroup', 'www-data'", $sqltmp);
-		echo "[OK]\n";
+		echo "Please enter the webserver system user [".$httpd."]: ";
+		$httpd = $system->getString($httpd);
+		if ($httpd != 'www-data') {
+			$system->confReplace("'httpuser', '".$httpd."'", "'httpuser', 'www-data'", $sqltmp);
+			$system->confReplace("'httpgroup', '".$httpd."'", "'httpgroup', 'www-data'", $sqltmp);
+		}
 	}
 
 	// set mod_fcgid to "1" if it's wanted
-	if ($system->getUseflag('fcgid') && $system->getUseflag('fcgid') == false)
+	if ($system->getUseflag('fcgid') == true)
 	{
 		echo "Switching 'fcgid' to 'On'\t\t";
 		$system->confReplace("'mod_fcgid', '1'", "'mod_fcgid', '0'", $sqltmp);
 		echo "[OK]\n";
-		echo "Setting wrapper to 'FCGIWrapper'\t\t";
-		$system->confReplace("'mod_fcgid_wrapper', '1'", "'mod_fcgid_wrapper', '0'", $sqltmp);
+		$system->makedir($docroot['tmp']);
+		if($os == OS_GENTOO) {
+			$system->ewarn("You have to remove the '-D PHP5' entry from /etc/conf.d/apache2 if it exists!");
+		}
+	}
+
+	// set php-fpm to "1" if it's wanted
+	if ($system->getUseflag('fpm') == true)
+	{
+		echo "Switching 'fpm' to 'On'\t\t";
+		$system->confReplace("'phpfpm', 'enabled', '1'", "'phpfpm', 'enabled', '0'", $sqltmp);
+		$system->confReplace("'phpfpm', 'enabled_ownvhost', '1'", "'phpfpm', 'enabled_ownvhost', '0'", $sqltmp);
+		$system->confReplace("'phpfpm', 'vhost_httpuser', 'froxlor'", "'phpfpm', 'vhost_httpuser', 'froxlorlocal'", $sqltmp);
+		$system->confReplace("'phpfpm', 'vhost_httpgroup', 'froxlor'", "'phpfpm', 'vhost_httpgroup', 'froxlorlocal'", $sqltmp);
 		echo "[OK]\n";
 		$system->makedir($docroot['tmp']);
-		$system->ewarn("You have to remove the '-D PHP5' entry from /etc/conf.d/apache2 if it exists!");
 	}
 
 	// If Bind is not to be used, change the reload path for it
@@ -272,8 +420,6 @@ if($proceed == I_YES)
 	{
 		echo "Switching 'log' to 'Off'\t\t";
 		$system->confReplace("'logger', 'enabled', '0'", "'logger', 'enabled', '1'", $sqltmp);
-		// fix menu
-		$system->confReplace("'10', 'logger.enabled'", "'10', 'change_serversettings'", $sqltmp);
 		echo "[OK]\n";
 	}
 
@@ -298,8 +444,6 @@ if($proceed == I_YES)
 	{
 		echo "Switching 'autoresponder' to 'On'\t\t";
 		$system->confReplace("'autoresponder_active', '1'", "'autoresponder_active', '0'", $sqltmp);
-		// fix menu
-		$system->confReplace("40, 'mails'", "40, 'autoresponder.autoresponder_active'", $sqltmp);
 		echo "[OK]\n";
 	}
 
@@ -323,9 +467,6 @@ if($proceed == I_YES)
 	{
 		echo "Switching 'APS' to 'On'\t\t";
 		$system->confReplace("'aps_active', '1'", "'aps_active', '0'", $sqltmp);
-		// fix menu
-		$system->confReplace("'admin_aps.nourl', 45, 'can_manage_aps_packages'", "'admin_aps.nourl', 45, 'aps.aps_active'", $sqltmp);
-		$system->confReplace("'customer_aps.nourl', 50, 'phpenabled'", "'customer_aps.nourl', 50, 'aps.aps_active'", $sqltmp);
 		echo "[OK]\n";
 		// if aps is used we enable required features in the php-cli php.ini
 		$system->ewarn(array(
@@ -334,11 +475,11 @@ if($proceed == I_YES)
 				);
 	}
 
-	// default value is ssl_enabled='1'
-	if (!$system->getUseflag('ssl'))
+	// default value is ssl_enabled='0'
+	if ($system->getUseflag('ssl'))
 	{
-		echo "Switching 'SSL' to 'Off'\t\t";
-		$system->confReplace("'use_ssl','0'", "'use_ssl','1'", $sqltmp);
+		echo "Switching 'SSL' to 'On'\t\t";
+		$system->confReplace("'use_ssl', '1'", "'use_ssl', '0'", $sqltmp);
 		echo "[OK]\n";
 	}
 
@@ -373,8 +514,6 @@ if($proceed == I_YES)
 			'ipaddress' => null,
 			'mysqlaccess_hosts' => 'localhost',
 			'nameservers' => '',
-			'vmail_uid' => ($os == OS_GENTOO) ? '9997' : '2000',
-			'vmail_gid' => ($os == OS_GENTOO) ? '9997' : '2000',
 			'admin' => 'admin',
 			'admin_password' => null
 		);
@@ -542,6 +681,7 @@ FLUSH PRIVILEGES;\" > " . $sqltmpdb);
 		echo "[OK]\n";
 
 		echo "Adding Froxlor admin-user...\t\t";
+		// @TODO check if everything is present
 		$sqltmpadm = "/tmp/admin.sql";
 		exec("touch " . $sqltmpadm);
 		exec("echo \"INSERT INTO \`panel_admins\` SET
@@ -620,69 +760,47 @@ FLUSH PRIVILEGES;\" > " . $sqltmpdb);
 			echo "...we'll do that later...promise!\n";
 		}
 
-		/* create local users */
-		/*
-		 * @FIXME don't use fix guid/uid
-		 */
-		echo "Creating froxlor user ...\t\t";
-		exec("groupadd -g 9995 froxlor");
-		exec("useradd -u 9995 -g froxlor -d " . $basedir . " -s /bin/false -c Froxlor-user froxlor");
-		echo "[OK]\n";
-	
-		/* Create the user and group that will run the FTPd */
-		echo "Creating froxlorftpd user ...\t\t";
-		exec("groupadd -g 9996 froxlorftpd");
-		exec("useradd -u 9996 -g froxlorftpd -d " . $docroot['web'] . " -s /bin/false -c Froxlor-FTP-user froxlorftpd");
-		echo "[OK]\n";
-	
-		/* Create the user and group that will run the virtual MTA */
-		$system->ewarn(array("Please enter the uid and gid of the vmail user",
-				"",
-				"If you're unsure what to say here, just press enter")
-			);
-		echo "vmail uid [".$sys['vmail_uid']."]: ";
-		$sys['vmail_uid'] = $system->getString($sys['vmail_uid']);
-		echo "vmail gid [".$sys['vmail_gid']."]: ";
-		$sys['vmail_gid'] = $system->getString($sys['vmail_gid']);
-
-		echo "Creating vmail user ...\t\t";
-		exec("groupadd -g ".$sys['vmail_gid']." vmail");
-		exec("useradd -u ".$sys['vmail_uid']." -g vmail -d " . $docroot['mail'] . " -s /bin/false -c Froxlor-Mail-user vmail");
-		echo "[OK]\n";
-
 		/* Fix the permissions for the Froxlor files */
 		echo "Fixing permission of Froxlor files\t\t";
-		if($system->getUseflag('lighttpd')) {
-			exec("chown -R froxlor:lighttpd " . $basedir);
-		} else {
-			exec("chown -R froxlor:apache " . $basedir);
-		}
+		exec("chown -R froxlor:".$httpd." " . $basedir);
 		exec("find " . $basedir . " -type d -exec chmod 0755 {} \;");
 		exec("find " . $basedir . " -type f -exec chmod 0444 {} \;");
-		if($system->getUseflag('fcgid')) 
-		{
-			if(!$system->getUseflag('lighttpd')) {
-				exec("chown -R froxlor:froxlor " . $basedir);
-			}
+		if($system->getUseflag('fcgid')
+			|| $system->getUseflag('fpm')
+		) {
+			exec("chown -R froxlor:froxlor " . $basedir);
 			exec("chmod 0750 " . $basedir);
 		}
 		else
 		{
-			if($system->getUseflag('lighttpd')) {
-				exec("chown -R froxlor:lighttpd " . $basedir . "{temp,packages}");
-			} else {
-				exec("chown -R froxlor:apache " . $basedir . "{temp,packages}");
-			}
+			exec("chown -R froxlor:".$httpd." " . $basedir . "{temp,packages}");
 		}
 		exec("chmod 0775 " . $basedir . "{temp,packages}");
 		echo "[OK]\n";
 
+		$bind_config = '/etc/bind/';
+
 	} else {
+		/**
+		 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+		 *  +++++++               UPDATE                +++++++
+		 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+		 */
+
 		/* let's get our data somewhere else :P */
 		include_once($basedir.'/lib/userdata.inc.php');
 
-		/* read some settings from database */
-
+		/* @TODO read some settings from database */
+		/*
+		$sys['hostname']
+		$sys['ipaddress']
+		$sys['nameservers']
+		$docroot['mail']
+		$users['vmail']
+		$system->setUseflag('ssl', false)
+		$docroot['tmp']
+		$bind_config
+		*/
 	}
 
 	$replace_arr = Array(
@@ -694,9 +812,12 @@ FLUSH PRIVILEGES;\" > " . $sqltmpdb);
 		'<SERVERIP>' => $sys['ipaddress'],
 		'<NAMESERVERS>' => $sys['nameservers'],
 		'<VIRTUAL_MAILBOX_BASE>' => $docroot['mail'],
-		'<VIRTUAL_UID_MAPS>' => $sys['vmail_uid'],
-		'<VIRTUAL_GID_MAPS>' => $sys['vmail_gid'],
-		'<SSLPROTOCOLS>' => ($system->getUseflag('ssl')) ? 'imaps pop3s' : ''
+		'<VIRTUAL_UID_MAPS>' => $users['vmail'],
+		'<VIRTUAL_GID_MAPS>' => $users['vmail'],
+		'<SSLPROTOCOLS>' => ($system->getUseflag('ssl')) ? 'imaps pop3s' : '',
+		'<CUSTOMER_TMP>' => ($docroot['tmp'] != '') ? $docroot['tmp'] : '/tmp/',
+		'<BASE_PATH>' => $basedir,
+		'<BIND_CONFIG_PATH>' => $bind_config
 	);
 
 	/* Services: configure */
@@ -719,40 +840,50 @@ FLUSH PRIVILEGES;\" > " . $sqltmpdb);
 	{
 		echo "Configuring Lighttpd ...\n";
 		$system->doconf($basedir, $os, 'lighttpd', '/etc/lighttpd/lighttpd.conf', 'etc_lighttpd.conf', $replace_arr);
-		if($os == OS_GENTOO)
+		if($os == OS_GENTOO) {
 			exec("touch /etc/lighttpd/froxlor-vhosts.conf");
+		}
+	elseif($system->getUseflag('nginx')) 
+	{
+		echo "Configuring Nginx ...\n";
+		$system->doconf($basedir, $os, 'nginx', '/etc/nginx/nginx.conf', 'etc_nginx_nginx.conf', $replace_arr);
+		$system->doconf($basedir, $os, 'nginx', '/etc/nginx/fastcgi.conf', 'etc_nginx_fastcgi.conf', $replace_arr);
+		$system->doconf($basedir, $os, 'nginx', '/etc/init.d/php-fcgi', 'etc_init.d_php-fcgi', $replace_arr);
+	}
 	} else {
 		/* apache doesn't have any...cronjob does the job for us */
 	}
 
 	/* configure NSS-MySQL */
-	if($system->getUseflag('fcgid'))
-	{
-		echo "Configuring NSS-MySQL ...\n";
-		$system->doconf($froxlordir, $os, 'libnss', '/etc/nss-mysql.conf', 'etc_nss-mysql.conf', $replace_arr);
-		$system->doconf($froxlordir, $os, 'libnss', '/etc/nss-mysql-root.conf', 'etc_nss-mysql-root.conf', $replace_arr);
-		$system->doconf($froxlordir, $os, 'libnss', '/etc/nsswitch.conf', 'etc_nsswitch.conf', $replace_arr);
-	}
+	echo "Configuring NSS-MySQL ...\n";
+	$system->doconf($froxlordir, $os, 'libnss', '/etc/nss-mysql.conf', 'etc_nss-mysql.conf', $replace_arr);
+	$system->doconf($froxlordir, $os, 'libnss', '/etc/nss-mysql-root.conf', 'etc_nss-mysql-root.conf', $replace_arr);
+	$system->doconf($froxlordir, $os, 'libnss', '/etc/nsswitch.conf', 'etc_nsswitch.conf', $replace_arr);
 
-	/* configure ProFTPd */
-	echo "Configuring ProFTPd ...\n";
-	$system->doconf($froxlordir, $os, 'proftpd', '/etc/proftpd/proftpd.conf', 'etc_proftpd_proftpd.conf', $replace_arr);
-	if($os != OS_GENTOO)
-		$system->doconf($froxlordir, $os, 'proftpd', '/etc/proftdp/modules.conf', 'etc_proftpd_modules.conf', $replace_arr);
-
-	if($system->getUseflag('ssl'))
+	if($system->getUseflag('pureftpd'))
 	{
-		$system->confReplace("<IfModule mod_tls.c>", "#<IfModule mod_tls.c>", "/etc/proftpd/proftpd.conf");
-		$system->confReplace("TLSEngine", "#TLSEngine", "/etc/proftpd/proftpd.conf");
-		$system->confReplace("TLSLog", "#TLSLog", "/etc/proftpd/proftpd.conf");
-		$system->confReplace("TLSProtocol", "#TLSProtocol", "/etc/proftpd/proftpd.conf");
-		$system->confReplace("TLSTimeoutHandshake", "#TLSTimeoutHandshake", "/etc/proftpd/proftpd.conf");
-		$system->confReplace("TLSOptions", "#TLSOptions", "/etc/proftpd/proftpd.conf");
-		$system->confReplace("TLSRSACertificateFile", "#TLSRSACertificateFile", "/etc/proftpd/proftpd.conf");
-		$system->confReplace("TLSRSACertificateKeyFile", "#TLSRSACertificateKeyFile", "/etc/proftpd/proftpd.conf");
-		$system->confReplace("TLSVerifyClient", "#TLSVerifyClient", "/etc/proftpd/proftpd.conf");
-		$system->confReplace("TLSRequired", "#TLSRequired", "/etc/proftpd/proftpd.conf");
-		$system->confReplace("</IfModule>", "#</IfModule>", "/etc/proftpd/proftpd.conf");
+		
+	} else {
+		/* configure ProFTPd */
+		echo "Configuring ProFTPd ...\n";
+		$system->doconf($froxlordir, $os, 'proftpd', '/etc/proftpd/proftpd.conf', 'etc_proftpd_proftpd.conf', $replace_arr);
+		if($os != OS_GENTOO)
+			$system->doconf($froxlordir, $os, 'proftpd', '/etc/proftdp/modules.conf', 'etc_proftpd_modules.conf', $replace_arr);
+	
+		if($system->getUseflag('ssl'))
+		{
+			$system->confReplace("<IfModule mod_tls.c>", "#<IfModule mod_tls.c>", "/etc/proftpd/proftpd.conf");
+			$system->confReplace("TLSEngine", "#TLSEngine", "/etc/proftpd/proftpd.conf");
+			$system->confReplace("TLSLog", "#TLSLog", "/etc/proftpd/proftpd.conf");
+			$system->confReplace("TLSProtocol", "#TLSProtocol", "/etc/proftpd/proftpd.conf");
+			$system->confReplace("TLSTimeoutHandshake", "#TLSTimeoutHandshake", "/etc/proftpd/proftpd.conf");
+			$system->confReplace("TLSOptions", "#TLSOptions", "/etc/proftpd/proftpd.conf");
+			$system->confReplace("TLSRSACertificateFile", "#TLSRSACertificateFile", "/etc/proftpd/proftpd.conf");
+			$system->confReplace("TLSRSACertificateKeyFile", "#TLSRSACertificateKeyFile", "/etc/proftpd/proftpd.conf");
+			$system->confReplace("TLSVerifyClient", "#TLSVerifyClient", "/etc/proftpd/proftpd.conf");
+			$system->confReplace("TLSRequired", "#TLSRequired", "/etc/proftpd/proftpd.conf");
+			$system->confReplace("</IfModule>", "#</IfModule>", "/etc/proftpd/proftpd.conf");
+		}
 	}
 
 	/* configure froxlor-cronjob */
@@ -862,5 +993,3 @@ else
 {
 	echo "kthxbye!\n\n";
 }
-
-?>
