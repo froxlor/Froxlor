@@ -418,7 +418,7 @@ CREATE TABLE `panel_sessions` (
   `theme` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`hash`),
   KEY `userid` (`userid`)
-) TYPE=HEAP;
+) ENGINE=HEAP;
 
 #
 # Dumping data for table `panel_sessions`
