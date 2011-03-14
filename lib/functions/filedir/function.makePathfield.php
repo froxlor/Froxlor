@@ -32,9 +32,10 @@
  * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
  */
 
-function makePathfield($path, $uid, $gid, $fieldType, $value = '')
+function makePathfield($path, $uid, $gid, $fieldType, $value = '', $dom = false)
 {
 	global $lng;
+
 	$value = str_replace($path, '', $value);
 	$field = array();
 
@@ -42,7 +43,7 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '')
 	// but dirList holds the paths with starting slash
 	// so we just add one here to get the correct
 	// default path selected, #225
-	if (substr($value, 0, 1) != '/') {
+	if (substr($value, 0, 1) != '/' && !$dom) {
 		$value = '/'.$value;
 	}
 

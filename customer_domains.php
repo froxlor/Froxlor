@@ -541,10 +541,17 @@ elseif($page == 'domains')
 
 				if(preg_match('/^https?\:\/\//', $result['documentroot'])
 				   && validateUrl($idna_convert->encode($result['documentroot']))
-				   && $settings['panel']['pathedit'] == 'Dropdown')
-				{
-					$urlvalue = $result['documentroot'];
-					$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
+				) {
+					if($settings['panel']['pathedit'] == 'Dropdown')
+					{
+						$urlvalue = $result['documentroot'];
+						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
+					}
+					else
+					{
+						$urlvalue = '';
+						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $result['documentroot'], true);						
+					}
 				}
 				else
 				{
