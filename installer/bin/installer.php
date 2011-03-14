@@ -9,108 +9,13 @@ if(isset($argv[1]))
 	foreach($argv as $parm)
 	{
 		$parm = strtolower($parm);
-		switch($parm)
-		{
-			case 'aps':
-				$system->setUseflag('aps', true);
-				break;
-			case '-aps':
-				$system->setUseflag('aps', false);
-				break;
-			case 'autoresponder':
-				$system->setUseflag('autoresponder', true);
-				break;
-			case '-autoresponder':
-				$system->setUseflag('autoresponder', false);
-				break;
-			case 'awstats':
-				$system->setUseflag('awstats', true);
-				break;
-			case '-awstats':
-				$system->setUseflag('awstats', false);
-				break;
-			case 'bind':
-				$system->setUseflag('bind', true);
-				break;
-			case '-bind':
-				$system->setUseflag('bind', false);
-				break;
-			case 'domainkey':
-				$system->setUseflag('domainkey', true);
-				break;
-			case '-domainkey':
-				$system->setUseflag('domainkey', false);
-				break;
-			case 'dovecot':
-				$system->setUseflag('dovecot', true);
-				break;
-			case '-dovecot':
-				$system->setUseflag('dovecot', false);
-				break;
-			case 'fcgid':
-				$system->setUseflag('fcgid', true);
-				break;
-			case '-fcgid':
-				$system->setUseflag('fcgid', false);
-				break;
-			case 'ftpquota':
-				$system->setUseflag('ftpquota', true);
-				break;
-			case '-ftpquota':
-				$system->setUseflag('ftpquota', false);
-				break;
-			case 'fpm':
-				$system->setUseflag('fpm', true);
-				break;
-			case '-fpm':
-				$system->setUseflag('fpm', false);
-				break;
-			case 'lighttpd':
-				$system->setUseflag('lighttpd', true);
-				break;
-			case '-lighttpd':
-				$system->setUseflag('lighttpd', false);
-				break;
-			case 'log':
-				$system->setUseflag('log', true);
-				break;
-			case '-log':
-				$system->setUseflag('log', false);
-				break;
-			case 'mailquota':
-				$system->setUseflag('mailquota', true);
-				break;
-			case '-mailquota':
-				$system->setUseflag('mailquota', false);
-				break;
-			case 'nginx':
-				$system->setUseflag('nginx', true);
-				break;
-			case '-nginx':
-				$system->setUseflag('nginx', false);
-				break;
-			case 'pureftpd':
-				$system->setUseflag('pureftpd', true);
-				break;
-			case '-pureftpd':
-				$system->setUseflag('pureftpd', false);
-				break;
-			case 'ssl':
-				$system->setUseflag('ssl', true);
-				break;
-			case '-ssl':
-				$system->setUseflag('ssl', false);
-				break;
-			case 'tickets':
-				$system->setUseflag('tickets', true);
-				break;
-			case '-tickets':
-				$system->setUseflag('tickets', false);
-				break;
-			case '--help':
-				$system->showHelp();
-				break;
+
+		$value = true;
+		if (substr($parm, 0, 1) == '-') {
+			$value = false;
+			$parm = substr($parm, 1);
 		}
+		$system->setUseflag($parm, $value);
 	}
 }
 
@@ -127,7 +32,7 @@ echo "Intalling Froxlor with the following options:\n\n";
 
 echo "- APS \t\t[" . (($system->getUseflag('aps') == true) ? 'On' : 'Off') . "]\n";
 echo "- Autoresponder [" . (($system->getUseflag('autoresponder') == true) ? 'On' : 'Off') . "]\n";
-echo "- Awstats [" . (($system->getUseflag('awstats') == true) ? 'On' : 'Off') . "]\n";
+echo "- Awstats \t[" . (($system->getUseflag('awstats') == true) ? 'On' : 'Off') . "]\n";
 echo "- Bind \t\t[" . (($system->getUseflag('bind') == true) ? 'On' : 'Off') . "]\n";
 echo "- Domainkey \t[" . (($system->getUseflag('domainkey') == true) ? 'On' : 'Off') . "]\n";
 echo "- Dovecot \t[" . (($system->getUseflag('dovecot') == true) ? 'On' : 'Off') . "]\n";
@@ -143,6 +48,11 @@ echo "- SSL \t\t[" . (($system->getUseflag('ssl') == true) ? 'On' : 'Off') . "]\
 echo "- Tickets \t[" . (($system->getUseflag('tickets') == true) ? 'On' : 'Off') . "]\n";
 echo "\n";
 
+/**
+ *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+ *  +++++++              OS-CHECK               +++++++
+ *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+ */
 $os = $system->getOS();
 
 if($os == OS_OTHER) {
@@ -166,14 +76,21 @@ if($os == OS_OTHER) {
 	}
 }
 
+/**
+ *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+ *  +++++++         Start configuration         +++++++
+ *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+ */
 echo "Would you like to configure Froxlor now? [Y/n]: ";
 $proceed = $system->getYesNo(I_YES);
 
 if($proceed == I_YES) 
 {
-	/* hit the shit */
-	
-	/* check for sane use-flags */
+	/**
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 *  +++++++      Check for sane use-flags       +++++++
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 */
 	if ($system->getUseflag('lighttpd') && $system->getUseflag('fcgid')) {
 		$system->ewarn("PLEASE NOTE: The lighttpd flag overwrites fcgid!");
 	}
@@ -188,6 +105,11 @@ if($proceed == I_YES)
 		die();
 	}
 
+	/**
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 *  +++++++ Get basic information (paths, etc.) +++++++
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 */
 	echo "Please enter the directory where Froxlor has been extracted to [/var/www/froxlor/]: ";
 	$basedir = $system->getDirectory('/var/www/froxlor/');
 
@@ -203,8 +125,8 @@ if($proceed == I_YES)
 	// get all the directories we need
 	$docroot = array('web' => null, 'mail' => null, 'logs' => null, 'tmp' => null, 'fcgid' => null, 'fpm' => null);
 
-	echo "Please enter the customer docroot directory [/var/customers/web/]: ";
-	$docroot['web'] = $system->getDirectory('/var/customers/web/');
+	echo "Please enter the customer docroot directory [/var/customers/webs/]: ";
+	$docroot['web'] = $system->getDirectory('/var/customers/webs/');
 
 	echo "Please enter the customer mail directory [/var/customers/mail/]: ";
 	$docroot['mail'] = $system->getDirectory('/var/customers/mail/');
@@ -253,7 +175,11 @@ if($proceed == I_YES)
 	}
 	echo "[OK]\n";
 
-	// create local users 
+	/**
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 *  +++++++         Create local users          +++++++
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 */
 	echo "Creating users...\n";
 	$users = array('froxlor' => 9995, 'froxlorftpd' => 9996, 'vmail' => 9997);
 
@@ -302,6 +228,11 @@ if($proceed == I_YES)
 	}
 	echo "[OK]\n";
 
+	/**
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 *  +++++++         Prepare SQL-files           +++++++
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 */
 	/* sed the froxlor.sql file (and maybe others) */
 	if($os == OS_GENTOO) {
 		echo "Setting 'lastguid' to '10000'\t\t";
@@ -314,6 +245,11 @@ if($proceed == I_YES)
 		echo "[OK]\n";
 	}
 
+	/**
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 *  +++++++           Webserver stuff           +++++++
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 */
 	if ($system->getUseflag('lighttpd'))
 	{
 		echo "Switching settings to fit 'lighttpd'\t\t";
@@ -380,6 +316,11 @@ if($proceed == I_YES)
 		}
 	}
 
+	/**
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 *  +++++++         PHP interface stuff         +++++++
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 */
 	// set mod_fcgid to "1" if it's wanted
 	if ($system->getUseflag('fcgid') == true)
 	{
@@ -404,6 +345,11 @@ if($proceed == I_YES)
 		$system->makedir($docroot['tmp']);
 	}
 
+	/**
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 *  +++++++      Enable/Disbale features        +++++++
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 */
 	// If Bind is not to be used, change the reload path for it
 	if (!$system->getUseflag('bind'))
 	{
@@ -499,6 +445,11 @@ if($proceed == I_YES)
 			die("\nUser abort...\n");
 	}
 
+	/**
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 *  +++++++Basic panel access info (new install)+++++++
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 */
 	if(!isset($doupdate))
 	{
 		/* ask for general information like the ebuild does */
@@ -642,6 +593,11 @@ if($proceed == I_YES)
 		echo "(Re)Starting MySQL server ...\n";
 		exec("/etc/init.d/mysql restart");
 
+		/**
+		 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+		 *  +++++++    Basic SQL updates for install    +++++++
+		 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+		 */
 		echo "\nPreparing SQL database files ...\t\t";
 		$system->confReplace($sys['hostname'], "SERVERNAME", $sqltmp);
 		$system->confReplace($sys['ipaddress'], "SERVERIP", $sqltmp);
@@ -803,6 +759,11 @@ FLUSH PRIVILEGES;\" > " . $sqltmpdb);
 		*/
 	}
 
+	/**
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 *  +++++++       Services configuration        +++++++
+	 *  +++++++++++++++++++++++++++++++++++++++++++++++++++
+	 */
 	$replace_arr = Array(
 		'<SQL_UNPRIVILEGED_USER>' => $sql['user'],
 		'<SQL_UNPRIVILEGED_PASSWORD>' => $sql['password'],

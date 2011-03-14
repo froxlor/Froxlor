@@ -1,21 +1,21 @@
 <?php
 
-define(I_YES, 1);
-define(I_NO, 0);
+define('I_YES', 1);
+define('I_NO', 0);
 
 /* OS dependend files */
-define(OS_CHK_DEBIAN, "/etc/debian_version");
-define(OS_CHK_OTHER, "/etc/*-release");
+define('OS_CHK_DEBIAN', "/etc/debian_version");
+define('OS_CHK_OTHER', "/etc/*-release");
 
-define(OS_DEBIANSARGE, '1');
-define(OS_DEBIANETCH, '2');
-define(OS_DEBIANLENNY, '3');
-define(OS_GENTOO, '4');
-define(OS_SUSE, '5');
-define(OS_UBUNTU, '6');
-define(OS_OTHER, '99');
+define('OS_DEBIANSARGE', '1');
+define('OS_DEBIANETCH', '2');
+define('OS_DEBIANLENNY', '3');
+define('OS_GENTOO', '4');
+define('OS_SUSE', '5');
+define('OS_UBUNTU', '6');
+define('OS_OTHER', '99');
 
-define(TPL_PATH, '/templates/misc/configfiles/');
+define('TPL_PATH', '/templates/misc/configfiles/');
 
 class System
 {
