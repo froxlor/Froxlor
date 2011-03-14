@@ -15,7 +15,7 @@ $header
 				{$searchcode}
 			</div>
 
-			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $count && 0 < $countcustomers >
+			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $userinfo['customers_used'] >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
 					<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['customer_add']}</a>
