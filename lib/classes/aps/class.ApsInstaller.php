@@ -185,7 +185,7 @@ class ApsInstaller extends ApsParser
 				//installation succeeded
 				//chown all files if installtion script has created some new files. otherwise customers cannot edit the files via ftp
 
-				safe_exec('chown ' . (int)$Row['guid'] . ':' . (int)$Row['guid'] . ' -R ' . escapeshellarg($this->RealPath . $this->DomainPath . '/'));
+				safe_exec('chown -R ' . (int)$Row['guid'] . ':' . (int)$Row['guid'] . ' ' . escapeshellarg($this->RealPath . $this->DomainPath . '/'));
 
 				//update database
 
@@ -350,7 +350,7 @@ class ApsInstaller extends ApsParser
 				return false;
 			}
 
-			safe_exec('chown ' . (int)$Row['guid'] . ':' . (int)$Row['guid'] . ' -R ' . escapeshellarg($this->RealPath . $this->DomainPath . '/'));
+			safe_exec('chown -R ' . (int)$Row['guid'] . ':' . (int)$Row['guid'] . ' ' . escapeshellarg($this->RealPath . $this->DomainPath . '/'));
 		}
 		else
 		{
@@ -366,7 +366,7 @@ class ApsInstaller extends ApsParser
 
 			//set right file owner
 
-			safe_exec('chown ' . (int)$Row['guid'] . ':' . (int)$Row['guid'] . ' -R ' . escapeshellarg($this->RealPath . $this->DomainPath . '/'));
+			safe_exec('chown -R ' . (int)$Row['guid'] . ':' . (int)$Row['guid'] . ' ' . escapeshellarg($this->RealPath . $this->DomainPath . '/'));
 		}
 
 		//recursive mappings
