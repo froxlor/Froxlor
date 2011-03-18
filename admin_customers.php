@@ -1126,6 +1126,47 @@ if($page == 'customers'
 						$db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET `postfix`='" . (($deactivated) ? 'N' : 'Y') . "', `pop3`='" . (($deactivated) ? '0' : '1') . "', `imap`='" . (($deactivated) ? '0' : '1') . "' WHERE `customerid`='" . (int)$id . "'");
 						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `login_enabled`='" . (($deactivated) ? 'N' : 'Y') . "' WHERE `customerid`='" . (int)$id . "'");
 						$db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `deactivated`='" . (int)$deactivated . "' WHERE `customerid`='" . (int)$id . "'");
+						
+						/* Retrieve customer's databases */
+						$databases = $db->query("SELECT * FROM " . TABLE_PANEL_DATABASES . " WHERE customerid='" . (int)$id . "' ORDER BY `dbserver`");
+						$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
+						unset($db_root->password);
+						$last_dbserver = 0;
+
+						/* For each of them */
+						while($row_database = $db->fetch_array($databases))
+						{
+							if($last_dbserver != $row_database['dbserver'])
+							{
+								$db_root->query('FLUSH PRIVILEGES;');
+								$db_root->close();
+								$db_root = new db($sql_root[$row_database['dbserver']]['host'], $sql_root[$row_database['dbserver']]['user'], $sql_root[$row_database['dbserver']]['password'], '');
+								unset($db_root->password);
+								$last_dbserver = $row_database['dbserver'];
+							}
+
+							foreach(array_unique(explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host)
+							{
+								$mysql_access_host = trim($mysql_access_host);
+								
+								/* Prevent access, if deactivated */
+								if($deactivated)
+								{
+									$db_root->query('REVOKE ALL PRIVILEGES ON * . * FROM `' . $db_root->escape($row_database['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`');
+									$db_root->query('REVOKE ALL PRIVILEGES ON `' . str_replace('_', '\_', $db_root->escape($row_database['databasename'])) . '` . * FROM `' . $db_root->escape($row_database['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`');
+								}
+								else /* Otherwise grant access */
+								{					
+									$db_root->query('GRANT ALL PRIVILEGES ON `' . $db_root->escape($row_database['databasename']) .'`.* TO `' . $db_root->escape($row_database['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`');
+									$db_root->query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $db_root->escape($row_database['databasename'])) . '` . * TO `' . $db_root->escape($row_database['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`');
+								}
+							}
+						}
+
+						/* At last flush the new privileges */
+						$db_root->query('FLUSH PRIVILEGES;');
+						$db_root->close();
+						
 						$log->logAction(ADM_ACTION, LOG_INFO, "deactivated user '" . $result['loginname'] . "'");
 						inserttask('1');
 					}
