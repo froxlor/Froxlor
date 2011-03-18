@@ -145,8 +145,6 @@ class ApsInstaller extends ApsParser
 			}
 
 			chdir($this->RealPath . $this->DomainPath . '/install_scripts/');
-			$Return = array();
-			$ReturnStatus = 0;
 
 			// make configure-script executable
 			if($this->aps_version != '1.0')
@@ -157,6 +155,11 @@ class ApsInstaller extends ApsParser
 			}
 
 			chmod($this->RealPath . $this->DomainPath . '/install_scripts/'.$scriptname, 0755);
+			
+			$Return = array();
+			
+			/* is true by default; later it will contain the return status of the executed program */
+			$ReturnStatus = true;
 
 			$Return = safe_exec('php ' . escapeshellarg($this->RealPath . $this->DomainPath . '/install_scripts/'.$scriptname) . ' install', $ReturnStatus);
 
@@ -629,7 +632,10 @@ class ApsInstaller extends ApsParser
 		else
 		{
 			$ReturnLines = array();
-			$ReturnVal = - 1;
+			
+			/* true by default; later it will contain the return status of the executed program */
+			$ReturnVal = true;
+
 
 			//on 64 bit systems the zip functions can fail -> use exec to extract the files
 
