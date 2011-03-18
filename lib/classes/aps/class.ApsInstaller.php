@@ -158,7 +158,9 @@ class ApsInstaller extends ApsParser
 			
 			$Return = array();
 			
-			/* is true by default; later it will contain the return status of the executed program */
+			// first 'true' to indicate that we want the return-status from exec.
+			// after exec() is called, the value will be the return-status of the
+			// program executed
 			$ReturnStatus = true;
 
 			$Return = safe_exec('php ' . escapeshellarg($this->RealPath . $this->DomainPath . '/install_scripts/'.$scriptname) . ' install', $ReturnStatus);
@@ -633,7 +635,9 @@ class ApsInstaller extends ApsParser
 		{
 			$ReturnLines = array();
 			
-			/* true by default; later it will contain the return status of the executed program */
+			// first 'true' to indicate that we want the return-status from exec.
+			// after exec() is called, the value will be the return-status of the
+			// program executed
 			$ReturnVal = true;
 
 
