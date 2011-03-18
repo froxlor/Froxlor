@@ -771,11 +771,19 @@ class apache
 			if(substr($corrected_docroot, -1) == '/') {
 				$corrected_docroot = substr($corrected_docroot, 0, -1);
 			}
+			
+			/* Get domain's redirect code */
+			$code = getDomainRedirectCode($domain['id']);
+			$modrew_red = '';
+			if ($code != '') {
+				$modrew_red = '[R='. $code . ';L]';
+			} 
+			
 			// redirect everything, not only root-directory, #541
 			$vhost_content.= '  <IfModule mod_rewrite.c>'."\n";
 			$vhost_content.= '    RewriteEngine On' . "\n";
 			$vhost_content.= '    RewriteCond %{HTTPS} off' . "\n";
-			$vhost_content.= '    RewriteRule (.*) '. $corrected_docroot.'%{REQUEST_URI}'. "\n";
+			$vhost_content.= '    RewriteRule (.*) '. $corrected_docroot.'%{REQUEST_URI} ' . $modrew_red . "\n";
 			$vhost_content.= '  </IfModule>' . "\n";
 
 			$code = getDomainRedirectCode($domain['id']);
