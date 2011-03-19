@@ -508,18 +508,18 @@ class ticket
 	 * Returns a sql-statement to search the archive
 	 */
 
-	static public function getArchiveSearchStatement($subject = NULL, $priority = NULL, $fromdate = NULL, $todate = NULL, $message = NULL, $customer = - 1, $admin = 1, $categories = NULL)
+	static public function getArchiveSearchStatement($db, $subject = NULL, $priority = NULL, $fromdate = NULL, $todate = NULL, $message = NULL, $customer = - 1, $admin = 1, $categories = NULL)
 	{
 		$query = 'SELECT `main`.*,
                 (SELECT COUNT(`sub`.`id`) FROM `' . TABLE_PANEL_TICKETS . '` `sub` 
                  WHERE `sub`.`answerto` = `main`.`id`) as `ticket_answers` 
               FROM `' . TABLE_PANEL_TICKETS . '` `main` 
-              WHERE `main`.`archived` = "1" AND `main`.`answerto` = "0" AND `main`.`adminid` = "' . (int)$admin . '"';
+              WHERE `main`.`archived` = "1" AND `main`.`adminid` = "' . (int)$admin . '" ';
 
 		if($subject != NULL
 		&& $subject != '')
 		{
-			$query.= 'AND `main`.`subject` LIKE "%' . $subject . '%" ';
+			$query.= 'AND `main`.`subject` LIKE "' . $db->escape("%$subject%") . '" ';
 		}
 
 		if($priority != NULL
@@ -560,8 +560,7 @@ class ticket
 			if(isset($priority[2])
 			&& $priority[2] != '')
 			{
-				$query.= 'AND (`main`.`priority` = "2"
-                     OR `main`.`priority` = "3") ';
+				$query.= 'AND (`main`.`priority` = "2" OR `main`.`priority` = "3") ';
 			}
 			else
 			{
@@ -580,43 +579,52 @@ class ticket
 		if($fromdate != NULL
 		&& $fromdate > 0)
 		{
-			$query.= 'AND `main`.`lastchange` > "' . $fromdate . '" ';
+			$query.= 'AND `main`.`lastchange` > "' . $db->escape(strtotime($fromdate)) . '" ';
 		}
 
 		if($todate != NULL
 		&& $todate > 0)
 		{
-			$query.= 'AND `main`.`lastchange` < "' . $todate . '" ';
+			$query.= 'AND `main`.`lastchange` < "' . $db->escape(strtotime($todate)) . '" ';
 		}
 
 		if($message != NULL
 		&& $message != '')
 		{
-			$query.= 'AND `main`.`message` LIKE "%' . $message . '%" ';
+			$query.= 'AND `main`.`message` LIKE "' . $db->escape("%$message%") . '" ';
 		}
 
 		if($customer != - 1)
 		{
-			$query.= 'AND `main`.`customerid` = "' . $customer . '" ';
+			$query.= 'AND `main`.`customerid` = "' . (int)$customer . '" ';
 		}
 
 		if($categories != NULL)
 		{
-			if($categories[0] != '')
+			$cats = array();
+			foreach($categories as $index => $catid)
+			{
+				if ($catid != "")
+				{
+					$cats[] = $catid;
+				}
+			}
+
+			if (count($cats) > 0)
 			{
 				$query.= 'AND (';
 			}
 
-			foreach($categories as $catid)
+			foreach($cats as $catid)
 			{
 				if(isset($catid)
 				&& $catid > 0)
 				{
-					$query.= '`main`.`category` = "' . $catid . '" OR ';
+					$query.= '`main`.`category` = "' . (int)$catid . '" OR ';
 				}
 			}
 
-			if($categories[0] != '')
+			if (count($cats) > 0)
 			{
 				$query = substr($query, 0, strlen($query) - 3);
 				$query.= ') ';

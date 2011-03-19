@@ -597,8 +597,7 @@ elseif($page == 'archive'
 			{
 				$categories[$x] = isset($_POST['category' . $x]) ? $_POST['category' . $x] : '';
 			}
-
-			$query = ticket::getArchiveSearchStatement($subject, $priority, $fromdate, $todate, $message, $customer, $userinfo['adminid'], $categories);
+			$query = ticket::getArchiveSearchStatement($db, $subject, $priority, $fromdate, $todate, $message, $customer, $userinfo['adminid'], $categories);
 			$fields = array(
 				'lastchange' => $lng['ticket']['lastchange'],
 				'ticket_answers' => $lng['ticket']['ticket_answers'],
