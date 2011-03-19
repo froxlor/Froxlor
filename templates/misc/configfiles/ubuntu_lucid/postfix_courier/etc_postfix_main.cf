@@ -69,6 +69,7 @@ virtual_mailbox_limit = 0
 ## TLS for email client
 #smtpd_tls_security_level = may
 #smtpd_tls_cert_file = /etc/ssl/server/<SERVERNAME>.pem
+#smtpd_tls_key_file = $smtpd_tls_cert_file
 #smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 #smtpd_tls_loglevel = 1
 #smtpd_tls_received_header = yes
