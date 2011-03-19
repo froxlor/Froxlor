@@ -733,16 +733,16 @@ elseif($page == 'archive'
 				}
 			}
 
-			$priorities_options = makecheckbox('priority1', htmlentities($lng['ticket']['unf_high']), '1');
-			$priorities_options.= makecheckbox('priority2', htmlentities($lng['ticket']['unf_normal']), '2');
-			$priorities_options.= makecheckbox('priority3', htmlentities($lng['ticket']['unf_low']), '3');
+			$priorities_options = makecheckbox('priority1', $lng['ticket']['unf_high'], '1');
+			$priorities_options.= makecheckbox('priority2', $lng['ticket']['unf_normal'], '2');
+			$priorities_options.= makecheckbox('priority3', $lng['ticket']['unf_low'], '3');
 			$category_options = '';
 			$ccount = 0;
 			$result = $db->query('SELECT * FROM `' . TABLE_PANEL_TICKET_CATS . '` ORDER BY `name` ASC');
 
 			while($row = $db->fetch_array($result))
 			{
-				$category_options.= makecheckbox('category' . $ccount, htmlentities($row['name']), $row['id'], true);
+				$category_options.= makecheckbox('category' . $ccount, $row['name'], $row['id'], true);
 				$ccount++;
 			}
 
