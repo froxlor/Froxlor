@@ -202,6 +202,11 @@ if(isset($s)
    && $s != ""
    && $nosession != 1)
 {
+	ini_set("session.name", "s");
+	ini_set("url_rewriter.tags", "");
+	ini_set("session.use_cookies", false);
+	session_id($s);
+	session_start();
 	$query = 'SELECT `s`.*, `u`.* FROM `' . TABLE_PANEL_SESSIONS . '` `s` LEFT JOIN `';
 
 	if(AREA == 'admin')
