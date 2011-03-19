@@ -40,6 +40,9 @@ if($page == 'customers'
 {
 	if($action == '')
 	{
+		// clear request data
+		unset($_SESSION['requestData']);
+		
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
 		$fields = array(
 			'c.loginname' => $lng['login']['username'],

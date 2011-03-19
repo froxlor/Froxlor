@@ -148,7 +148,15 @@ class htmlform
 			$extras .= ' size="'.$data['size'].'"';
 		}
 
-		$value = isset($data['value']) ? $data['value'] : '';
+		// add support to save reloaded forms
+		if (isset($data['value'])) {
+			$value = $data['value'];
+		} elseif (isset($_SESSION['requestData'][$fieldname])) {
+			$value = $_SESSION['requestData'][$fieldname];
+		} else {
+			$value = '';
+		}
+		
 		$ulfield = ($unlimited == true ? '&nbsp;'.$data['ul_field'] : '');
 		if(isset($data['display']) && $data['display'] != '')
 		{
@@ -169,7 +177,16 @@ class htmlform
 		if(isset($data['rows'])) {
 			$extras .= ' rows="'.$data['rows'].'"';
 		}
-		$value = isset($data['value']) ? trim($data['value']) : '';
+		
+		// add support to save reloaded forms
+		if (isset($data['value'])) {
+			$value = $data['value'];
+		} elseif (isset($_SESSION['requestData'][$fieldname])) {
+			$value = $_SESSION['requestData'][$fieldname];
+		} else {
+			$value = '';
+		}
+		trim($value);
 
 		eval("\$return = \"" . getTemplate("misc/form/input_textarea", "1") . "\";");
 		return $return;
@@ -187,12 +204,21 @@ class htmlform
 
 	private static function _selectBox($fieldname = '', $data = array())
 	{
+		// add support to save reloaded forms
+		if (isset($data['select_var'])) {
+			$select_var = $data['select_var'];
+		} elseif (isset($_SESSION['requestData'][$fieldname])) {
+			$select_var = $_SESSION['requestData'][$fieldname];
+		} else {
+			$select_var = '';
+		}
+		
 		return '<select 
 			id="'.$fieldname.'" 
 			name="'.$fieldname.'" 
 			'.(isset($data['class']) ? ' class="'.$data['class'] .'" ' : '').'
 			>'
-			.$data['select_var'].
+			.$select_var.
 			'</select>';
 	}
 }

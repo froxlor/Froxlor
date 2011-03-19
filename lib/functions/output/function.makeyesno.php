@@ -39,5 +39,14 @@ function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled
 	} else {
 		$d = '';
 	}
-	return '<select class="dropdown_noborder" id="' . $name . '" name="' . $name . '"'.$d.'><option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' . $lng['panel']['yes'] . '</option><option value="' . $novalue . '"' . ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
+	
+	if (isset($_SESSION['requestData'])) {
+		$yesselected = $yesselected & $_SESSION['requestData'][$name];
+	}
+	
+	return '<select class="dropdown_noborder" id="' . $name . '" name="' . $name . '"'
+	.$d.'>
+	<option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' 
+	. $lng['panel']['yes'] . '</option><option value="' . $novalue . '"' 
+	. ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
 }

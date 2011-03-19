@@ -29,6 +29,7 @@
 function standard_error($errors = '', $replacer = '')
 {
 	global $db, $userinfo, $s, $header, $footer, $lng;
+	$_SESSION['requestData'] = $_POST;
 	$replacer = htmlentities($replacer);
 
 	if(!is_array($errors))
