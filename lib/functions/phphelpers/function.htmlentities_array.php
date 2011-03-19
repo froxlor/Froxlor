@@ -29,7 +29,7 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function htmlentities_array($subject, $fields = '', $quote_style = ENT_COMPAT, $charset = 'ISO-8859-1')
+function htmlentities_array($subject, $fields = '', $quote_style = ENT_QUOTES, $charset = 'ISO-8859-1')
 {
 	if(is_array($subject))
 	{

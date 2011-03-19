@@ -655,7 +655,6 @@ elseif($page == 'archive'
 				{
 					if($paging->checkDisplay($i))
 					{
-						$ticket = htmlentities_array($ticket);
 						$ticket['lastchange'] = date("d.m.y H:i", $ticket['lastchange']);
 
 						if($_cid != $ticket['customerid'])
@@ -689,6 +688,8 @@ elseif($page == 'archive'
 						{
 							$ticket['subject'] = substr($ticket['subject'], 0, 17) . '...';
 						}
+
+						$ticket = htmlentities_array($ticket);
 
 						eval("\$tickets.=\"" . getTemplate("ticket/archived_tickets") . "\";");
 						$count++;
@@ -732,16 +733,16 @@ elseif($page == 'archive'
 				}
 			}
 
-			$priorities_options = makecheckbox('priority1', $lng['ticket']['unf_high'], '1');
-			$priorities_options.= makecheckbox('priority2', $lng['ticket']['unf_normal'], '2');
-			$priorities_options.= makecheckbox('priority3', $lng['ticket']['unf_low'], '3');
+			$priorities_options = makecheckbox('priority1', htmlentities($lng['ticket']['unf_high']), '1');
+			$priorities_options.= makecheckbox('priority2', htmlentities($lng['ticket']['unf_normal']), '2');
+			$priorities_options.= makecheckbox('priority3', htmlentities($lng['ticket']['unf_low']), '3');
 			$category_options = '';
 			$ccount = 0;
 			$result = $db->query('SELECT * FROM `' . TABLE_PANEL_TICKET_CATS . '` ORDER BY `name` ASC');
 
 			while($row = $db->fetch_array($result))
 			{
-				$category_options.= makecheckbox('category' . $ccount, $row['name'], $row['id'], true);
+				$category_options.= makecheckbox('category' . $ccount, htmlentities($row['name']), $row['id'], true);
 				$ccount++;
 			}
 
@@ -776,8 +777,8 @@ elseif($page == 'archive'
 			$by = $lng['ticket']['customer'];
 		}
 
-		$subject = $mainticket->Get('subject');
-		$message = $mainticket->Get('message');
+		$subject = htmlentities($mainticket->Get('subject'));
+		$message = htmlentities($mainticket->Get('message'));
 		eval("\$ticket_replies.=\"" . getTemplate("ticket/tickets_tickets_main") . "\";");
 		$result = $db->query('SELECT `name` FROM `' . TABLE_PANEL_TICKET_CATS . '`
                               WHERE `id`="' . (int)$mainticket->Get('category') . '"');
@@ -798,15 +799,15 @@ elseif($page == 'archive'
 				$by = $lng['ticket']['customer'];
 			}
 
-			$subject = $subticket->Get('subject');
-			$message = $subticket->Get('message');
+			$subject = htmlentities($subticket->Get('subject'));
+			$message = htmlentities($subticket->Get('message'));
 			eval("\$ticket_replies.=\"" . getTemplate("ticket/tickets_tickets_list") . "\";");
 		}
 
-		$priorities = makeoption($lng['ticket']['high'], '1', $mainticket->Get('priority'), true, true);
-		$priorities.= makeoption($lng['ticket']['normal'], '2', $mainticket->Get('priority'), true, true);
-		$priorities.= makeoption($lng['ticket']['low'], '3', $mainticket->Get('priority'), true, true);
-		$subject = $mainticket->Get('subject');
+		$priorities = makeoption($lng['ticket']['high'], '1', htmlentities($mainticket->Get('priority')), true, true);
+		$priorities.= makeoption($lng['ticket']['normal'], '2', htmlentities($mainticket->Get('priority')), true, true);
+		$priorities.= makeoption($lng['ticket']['low'], '3', htmlentities($mainticket->Get('priority')), true, true);
+		$subject = htmlentities($mainticket->Get('subject'));
 		$ticket_replies_count = $db->num_rows($andere) + 1;
 
 		// don't forget the main-ticket!

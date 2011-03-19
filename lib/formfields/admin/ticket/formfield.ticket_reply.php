@@ -38,7 +38,7 @@ return array(
 					'category' => array(
 						'label' => $lng['ticket']['category'],
 						'type' => 'label',
-						'value' => $row['name']
+						'value' => htmlentities($row['name']),
 					),
 					'message' => array(
 						'style' => 'vertical-align:top;',
