@@ -429,6 +429,9 @@ elseif(isset($_GET['action']))
 else
 {
 	$action = '';
+	
+	// clear request data
+	unset($_SESSION['requestData']);
 }
 
 if(isset($_POST['page']))
