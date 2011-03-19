@@ -38,6 +38,10 @@ function standard_error($errors = '', $replacer = '')
 			$errors
 		);
 	}
+	
+	if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
+		$link = '<a href="'.$_SERVER['HTTP_REFERER'].'">'.$lng['panel']['back'].'</a>';
+	}
 
 	$error = '';
 	foreach($errors as $single_error)

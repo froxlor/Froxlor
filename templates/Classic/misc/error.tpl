@@ -7,6 +7,10 @@ $header
 			<td class="field_name_center_noborder"><img src="images/Classic/error.gif" alt="" /></td>
 			<td class="field_name">$error</td>
 		</tr>
+		<tr>
+			<td></td>
+			<td>$link</td>
+		</tr>
 	</table>
 	<br />
 	<br />
