@@ -121,6 +121,8 @@ class htmlform
 				return self::_labelField($data); break;
 			case 'textarea':
 				return self::_textArea($fieldname, $data); break;
+			case 'checkbox':
+				return self::_checkbox($fieldname, $data); break;
 		}
 	}
 
@@ -221,4 +223,55 @@ class htmlform
 			.$select_var.
 			'</select>';
 	}
+	
+	/**
+	 * Function to generate checkboxes.
+	 * 
+	 * <code>
+	 * $data = array(
+     *                       'label' => $lng['customer']['email_imap'],
+     *                       'type' => 'checkbox',
+     *                       'values' => array(
+     *                                         array(  'label' => 'active',
+     *                                                 'value' => '1'
+     *                                               )
+     *                                           ),
+     *                       'value' => array('1'),
+     *                       'mandatory' => true
+     *          )
+	 * </code>
+	 * 
+	 * @param string $fieldname contains the fieldname
+	 * @param array $data contains the data array
+	 */
+	public static function _checkbox($fieldname = '', $data = array()) {
+		// $data['value'] contains checked items
+		$checked = $data['value'];
+		
+		// default value is none, so the checkbox isn't an array
+		$isArray = '';
+		
+		if (count($data['values']) > 1) {
+			$isArray = '[]';
+		}
+		
+		// will contain the output
+		$output = "";
+		foreach($data['values'] as $val) {
+			$key = $val['label'];
+			// is this box checked?
+			$isChecked = '';
+			foreach($checked as $tmp) {
+				if ($tmp == $val['value']) {
+					$isChecked = ' checked="checked" ';
+					break;
+				}
+			}
+			
+			$output .= '<label><input type="checkbox" name="'.$fieldname.$isArray.'" value="'.$val['value'].'" '.$isChecked.'/>'.$key.'</label>';
+		}
+		
+		return $output;
+	}
+	
 }
