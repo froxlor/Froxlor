@@ -431,7 +431,9 @@ else
 	$action = '';
 	
 	// clear request data
-	unset($_SESSION['requestData']);
+	if (isset($_SESSION)) {
+		unset($_SESSION['requestData']);
+	}
 }
 
 if(isset($_POST['page']))
