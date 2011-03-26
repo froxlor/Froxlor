@@ -64,8 +64,11 @@ return array(
 					),
 					'caneditdomain' => array(
 						'label' => $lng['admin']['domain_edit'],
-						'type' => 'yesno',
-						'yesno_var' => $caneditdomain
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['caneditdomain'])
 					),
 					'add_date' => array(
 						'label' => $lng['domains']['add_date'],
@@ -102,14 +105,20 @@ return array(
 					'ssl' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
 						'label' => 'SSL',
-						'type' => 'yesno',
-						'yesno_var' => $ssl
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['ssl'])
 					),
 					'ssl_redirect' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
 						'label' => 'SSL Redirect',
-						'type' => 'yesno',
-						'yesno_var' => $ssl_redirect
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['ssl_redirect'])
 					),
 					'ssl_ipandport' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
@@ -125,8 +134,11 @@ return array(
 					),
 					'wwwserveralias' => array(
 						'label' => $lng['admin']['wwwserveralias'],
-						'type' => 'yesno',
-						'yesno_var' => $wwwserveralias
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['wwwserveralias'])
 					),
 					'speciallogfile' => array(
 						'label' => 'Speciallogfile',
@@ -147,8 +159,11 @@ return array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
 						'label' => $lng['admin']['specialsettingsforsubdomains'],
 						'desc' => $lng['serversettings']['specialsettingsforsubdomains']['description'],
-						'type' => 'yesno',
-						'yesno_var' => $specialsettingsforsubdomains
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1')
 					)
 				)
 			),
@@ -159,13 +174,19 @@ return array(
 				'fields' => array(
 					'openbasedir' => array(
 						'label' => 'OpenBasedir',
-						'type' => 'yesno',
-						'yesno_var' => $openbasedir
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['openbasedir'])
 					),
 					'safemode' => array(
 						'label' => 'Safemode',
-						'type' => 'yesno',
-						'yesno_var' => $safemode
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['safemode'])
 					),
 					'phpsettingid' => array(
 						'visible' => ((int)$settings['system']['mod_fcgid'] == 1 ? true : false),
@@ -194,8 +215,11 @@ return array(
 				'fields' => array(
 					'isbinddomain' => array(
 						'label' => 'Nameserver',
-						'type' => 'yesno',
-						'yesno_var' => $isbinddomain
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['isbinddomain'])
 					),
 					'zonefile' => array(
 						'label' => 'Zonefile',
@@ -211,13 +235,19 @@ return array(
 				'fields' => array(
 					'isemaildomain' => array(
 						'label' => $lng['admin']['emaildomain'],
-						'type' => 'yesno',
-						'yesno_var' => $isemaildomain
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['isemaildomain'])
 					),
 					'email_only' => array(
 						'label' => $lng['admin']['email_only'],
-						'type' => 'yesno',
-						'yesno_var' => $email_only
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['email_only'])
 					),
 					'subcanemaildomain' => array(
 						'label' => $lng['admin']['subdomainforemail'],
@@ -227,8 +257,11 @@ return array(
 					'dkim' => array(
 						'visible' => ($settings['dkim']['use_dkim'] == '1' ? true : false),
 						'label' => 'DomainKeys',
-						'type' => 'yesno',
-						'yesno_var' => $dkim
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['dkim'])
 					)
 				)
 			)

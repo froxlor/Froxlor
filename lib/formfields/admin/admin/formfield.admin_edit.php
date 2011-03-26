@@ -31,8 +31,11 @@ return array(
 					),
 					'deactivated' => array(
 						'label' => $lng['admin']['deactivated_user'],
-						'type' => 'yesno',
-						'yesno_var' => $deactivated,
+						'type' => 'checkbox',
+                        'values' => array(
+                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
+                                    ),
+                        'value' => array($result['deactivated']),
 						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
 					),
 					'admin_password' => array(
@@ -78,8 +81,11 @@ return array(
 					),
 					'change_serversettings' => array(
 						'label' => $lng['admin']['change_serversettings'],
-						'type' => 'yesno',
-						'yesno_var' => $change_serversettings,
+						'type' => 'checkbox',
+                        'values' => array(
+                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
+                                    ),
+                        'value' => array($result['change_serversettings'])
 					),
 					'customers' => array(
 						'label' => $lng['admin']['customers'],
@@ -91,8 +97,11 @@ return array(
 					),
 					'customers_see_all' => array(
 						'label' => $lng['admin']['customers_see_all'],
-						'type' => 'yesno',
-						'yesno_var' => $customers_see_all,
+						'type' => 'checkbox',
+                        'values' => array(
+                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
+                                    ),
+                        'value' => array($result['customers_see_all'])
 					),
 					'domains' => array(
 						'label' => $lng['admin']['domains'],
@@ -104,13 +113,19 @@ return array(
 					),
 					'domains_see_all' => array(
 						'label' => $lng['admin']['domains_see_all'],
-						'type' => 'yesno',
-						'yesno_var' => $domains_see_all,
+						'type' => 'checkbox',
+                        'values' => array(
+                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
+                                    ),
+                        'value' => array($result['domains_see_all'])
 					),
 					'caneditphpsettings' => array(
 						'label' => $lng['admin']['caneditphpsettings'],
-						'type' => 'yesno',
-						'yesno_var' => $caneditphpsettings,
+						'type' => 'checkbox',
+                        'values' => array(
+                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
+                                    ),
+                        'value' => array($result['caneditphpsettings'])
 					),
 					'diskspace' => array(
 						'label' => $lng['customer']['diskspace'],
@@ -202,8 +217,11 @@ return array(
 					),
 					'can_manage_aps_packages' => array(
 						'label' => $lng['aps']['canmanagepackages'],
-						'type' => 'yesno',
-						'yesno_var' => $can_manage_aps_packages,
+						'type' => 'checkbox',
+                        'values' => array(
+                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
+                                    ),
+                        'value' => array($result['can_manage_aps_packages']),
 						'visible' => ($settings['aps']['aps_active'] == '1' ? true : false)
 					),
 					'number_of_aps_packages' => array(

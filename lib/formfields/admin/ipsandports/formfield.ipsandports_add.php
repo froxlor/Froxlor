@@ -41,18 +41,27 @@ return array(
 				'fields' => array(
 					'listen_statement' => array(
 						'label' => $lng['admin']['ipsandports']['create_listen_statement'],
-						'type' => 'yesno',
-						'yesno_var' => $listen_statement
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1')
 					),
 					'namevirtualhost_statement' => array(
 						'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
-						'type' => 'yesno',
-						'yesno_var' => $namevirtualhost_statement,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1')
 					),
 					'vhostcontainer' => array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer'],
-						'type' => 'yesno',
-						'yesno_var' => $vhostcontainer
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1')
 					),
 					'docroot' => array(
 						'label' => $lng['admin']['ipsandports']['docroot']['title'],
@@ -69,8 +78,11 @@ return array(
 					),
 					'vhostcontainer_servername_statement' => array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
-						'type' => 'yesno',
-						'yesno_var' => $vhostcontainer_servername_statement
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1')
 					)
 				)
 			),
@@ -95,8 +107,11 @@ return array(
 				'fields' => array(
 					'ssl' => array(
 						'label' => $lng['admin']['ipsandports']['enable_ssl'],
-						'type' => 'yesno',
-						'yesno_var' => $enable_ssl
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
 					),
 					'ssl_cert_file' => array(
 						'label' => $lng['admin']['ipsandports']['ssl_cert_file'],

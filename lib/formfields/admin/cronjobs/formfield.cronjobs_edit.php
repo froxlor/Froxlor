@@ -31,8 +31,11 @@ return array(
 					),
 					'isactive' => array(
 						'label' => $lng['admin']['activated'],
-						'type' => 'yesno',
-						'yesno_var' => $isactive
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['isactive'])
 					),
 					'interval_value' => array(
 						'label' => $lng['cronjob']['cronjobintervalv'],

@@ -68,8 +68,11 @@ return array(
 					),
 					'change_serversettings' => array(
 						'label' => $lng['admin']['change_serversettings'],
-						'type' => 'yesno',
-						'yesno_var' => $change_serversettings,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
 					),
 					'customers' => array(
 						'label' => $lng['admin']['customers'],
@@ -81,8 +84,11 @@ return array(
 					),
 					'customers_see_all' => array(
 						'label' => $lng['admin']['customers_see_all'],
-						'type' => 'yesno',
-						'yesno_var' => $customers_see_all,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
 					),
 					'domains' => array(
 						'label' => $lng['admin']['domains'],
@@ -94,13 +100,19 @@ return array(
 					),
 					'domains_see_all' => array(
 						'label' => $lng['admin']['domains_see_all'],
-						'type' => 'yesno',
-						'yesno_var' => $domains_see_all,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
 					),
 					'caneditphpsettings' => array(
 						'label' => $lng['admin']['caneditphpsettings'],
-						'type' => 'yesno',
-						'yesno_var' => $caneditphpsettings,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
 					),
 					'diskspace' => array(
 						'label' => $lng['customer']['diskspace'],
@@ -192,8 +204,11 @@ return array(
 					),
 					'can_manage_aps_packages' => array(
 						'label' => $lng['aps']['canmanagepackages'],
-						'type' => 'yesno',
-						'yesno_var' => $can_manage_aps_packages,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array(),
 						'visible' => ($settings['aps']['aps_active'] == '1' ? true : false)
 					),
 					'number_of_aps_packages' => array(

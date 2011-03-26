@@ -30,13 +30,19 @@ return array(
 					),
 					'createstdsubdomain' => array(
 						'label' => $lng['admin']['stdsubdomain_add'].'?',
-						'type' => 'yesno',
-						'yesno_var' => $createstdsubdomain
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1')
 					),
 					'store_defaultindex' => array(
 						'label' => $lng['admin']['store_defaultindex'].'?',
-						'type' => 'yesno',
-						'yesno_var' => $store_defaultindex
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1')
 					),
 					'new_customer_password' => array(
 						'label' => $lng['login']['password'],
@@ -44,8 +50,11 @@ return array(
 					),
 					'sendpassword' => array(
 						'label' => $lng['admin']['sendpassword'],
-						'type' => 'yesno',
-						'yesno_var' => $sendpassword
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1')
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
@@ -175,14 +184,20 @@ return array(
 					),
 					'email_imap' => array(
 						'label' => $lng['customer']['email_imap'],
-						'type' => 'yesno',
-						'yesno_var' => $email_imap,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1'),
 						'mandatory' => true
 					),
 					'email_pop3' => array(
 						'label' => $lng['customer']['email_pop3'],
-						'type' => 'yesno',
-						'yesno_var' => $email_pop3,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1'),
 						'mandatory' => true
 					),
 					'ftps' => array(
@@ -210,13 +225,18 @@ return array(
 					),
 					'phpenabled' => array(
 						'label' => $lng['admin']['phpenabled'].'?',
-						'type' => 'yesno',
-						'yesno_var' => $phpenabled
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array('1')
 					),
 					'perlenabled' => array(
 						'label' => $lng['admin']['perlenabled'].'?',
-						'type' => 'yesno',
-						'yesno_var' => $perlenabled
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									)
 					),
 					'number_of_aps_packages' => array(
 						'label' => $lng['aps']['numberofapspackages'],

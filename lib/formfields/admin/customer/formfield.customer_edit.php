@@ -36,13 +36,19 @@ return array(
 					),
 					'createstdsubdomain' => array(
 						'label' => $lng['admin']['stdsubdomain_add'].'?',
-						'type' => 'yesno',
-						'yesno_var' => $createstdsubdomain
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array(($result['standardsubdomain'] != '0') ? '1' : '0')
 					),
 					'deactivated' => array(
 						'label' => $lng['admin']['deactivated_user'],
-						'type' => 'yesno',
-						'yesno_var' => $deactivated
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['deactivated'])
 					),
 					'new_customer_password' => array(
 						'label' => $lng['login']['password'].'&nbsp;('.$lng['panel']['emptyfornochanges'].')',
@@ -186,14 +192,20 @@ return array(
 					),
 					'email_imap' => array(
 						'label' => $lng['customer']['email_imap'],
-						'type' => 'yesno',
-						'yesno_var' => $email_imap,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['imap']),
 						'mandatory' => true
 					),
 					'email_pop3' => array(
 						'label' => $lng['customer']['email_pop3'],
-						'type' => 'yesno',
-						'yesno_var' => $email_pop3,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['pop3']),
 						'mandatory' => true
 					),
 					'ftps' => array(
@@ -221,13 +233,19 @@ return array(
 					),
 					'phpenabled' => array(
 						'label' => $lng['admin']['phpenabled'].'?',
-						'type' => 'yesno',
-						'yesno_var' => $phpenabled
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['phpenabled'])
 					),
 					'perlenabled' => array(
 						'label' => $lng['admin']['perlenabled'].'?',
-						'type' => 'yesno',
-						'yesno_var' => $perlenabled
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['perlenabled'])
 					),
 					'number_of_aps_packages' => array(
 						'label' => $lng['aps']['numberofapspackages'],
