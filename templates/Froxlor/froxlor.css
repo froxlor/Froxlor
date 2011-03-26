@@ -731,3 +731,7 @@ select {
 .strikethrough {
 	text-decoration: line-through;
 }
+
+label.nobr {
+        display: inline;
+}

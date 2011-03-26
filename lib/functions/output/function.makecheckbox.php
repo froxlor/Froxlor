@@ -57,7 +57,7 @@ function makecheckbox($name, $title, $value, $break = false, $selvalue = NULL, $
 		$value = htmlspecialchars($value);
 	}
 
-	$checkbox = '<input type="checkbox" name="' . $name . '" value="' . $value . '" ' . $checked . ' />&nbsp;' . $title;
+	$checkbox = '<label class="nobr"><input type="checkbox" name="' . $name . '" value="' . $value . '" ' . $checked . ' />&nbsp;' . $title . '</label>';
 
 	if($break)
 	{
