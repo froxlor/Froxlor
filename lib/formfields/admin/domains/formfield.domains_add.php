@@ -26,18 +26,21 @@ return array(
 				'fields' => array(
 					'domain' => array(
 						'label' => 'Domain',
-						'type' => 'text'
+						'type' => 'text',
+						'mandatory' => true,
 					),
 					'customerid' => array(
 						'label' => $lng['admin']['customer'],
 						'type' => 'select',
-						'select_var' => $customers
+						'select_var' => $customers,
+						'mandatory' => true,
 					),
 					'adminid' => array(
 						'visible' => ($userinfo['customers_see_all'] == '1' ? true : false),
 						'label' => $lng['admin']['admin'],
 						'type' => 'select',
-						'select_var' => $admins
+						'select_var' => $admins,
+						'mandatory' => true,
 					),
 					'alias' => array(
 						'label' => $lng['domains']['aliasdomain'],
@@ -83,6 +86,7 @@ return array(
 						'label' => 'IP/Port',
 						'type' => 'select',
 						'select_var' => $ipsandports,
+						'mandatory' => true,
 					),
 					'ssl' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),

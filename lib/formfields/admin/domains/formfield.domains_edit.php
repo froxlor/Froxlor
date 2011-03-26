@@ -27,20 +27,23 @@ return array(
 					'domain' => array(
 						'label' => 'Domain',
 						'type' => 'label',
-						'value' => $result['domain']
+						'value' => $result['domain'],
+						'mandatory' => true,
 					),
 					'customerid' => array(
 						'label' => $lng['admin']['customer'],
 						'type' => ($settings['panel']['allow_domain_change_customer'] == '1' ? 'select' : 'label'),
 						'select_var' => (isset($customers) ? $customers : null),
-						'value' => (isset($result['customername']) ? $result['customername'] : null)
+						'value' => (isset($result['customername']) ? $result['customername'] : null),
+						'mandatory' => true,
 					),
 					'adminid' => array(
 						'visible' => ($userinfo['customers_see_all'] == '1' ? true : false),
 						'label' => $lng['admin']['admin'],
 						'type' => ($settings['panel']['allow_domain_change_admin'] == '1' ? 'select' : 'label'),
 						'select_var' => (isset($admins) ? $admins : null),
-						'value' => (isset($result['adminname']) ? $result['adminname'] : null)
+						'value' => (isset($result['adminname']) ? $result['adminname'] : null),
+						'mandatory' => true,
 					),
 					'alias' => array(
 						'visible' => ($alias_check == '0' ? true : false),
@@ -94,6 +97,7 @@ return array(
 						'label' => 'IP/Port',
 						'type' => 'select',
 						'select_var' => $ipsandports,
+						'mandatory' => true,
 					),
 					'ssl' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
