@@ -246,7 +246,17 @@ class htmlform
 	 */
 	public static function _checkbox($fieldname = '', $data = array()) {
 		// $data['value'] contains checked items
-		$checked = $data['value'];
+		if (isset($data['value'])) {
+			$checked = $data['value'];
+		} else {
+			$checked = array();
+		}
+		
+		if (isset($_SESSION['requestData'])) {
+			if (isset($_SESSION['requestData'][$fieldname])) {
+				$checked[] = $_SESSION['requestData'][$fieldname];
+			}
+		}
 		
 		// default value is none, so the checkbox isn't an array
 		$isArray = '';
