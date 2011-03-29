@@ -63,20 +63,29 @@ return array(
 					'iswildcarddomain' => array(
 						'visible' => (($result['parentdomainid'] == '0' && $userinfo['subdomains'] != '0') ? true : false),
 						'label' => $lng['domains']['wildcarddomain'],
-						'type' => 'yesno',
-						'yesno_var' => $iswildcarddomain
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
 					),
 					'isemaildomain' => array(
 						'visible' => ((( $result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2' ) && $result['parentdomainid'] != '0') ? true : false),
 						'label' => 'Emaildomain',
-						'type' => 'yesno',
-						'yesno_var' => $isemaildomain
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['isemaildomain'])
 					),
 					'ssl_redirect' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? true : false),
 						'label' => 'SSL Redirect',
-						'type' => 'yesno',
-						'yesno_var' => $ssl_redirect
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['ssl_redirect'])
 					),
 					'openbasedir_path' => array(
 						'label' => $lng['domain']['openbasedirpath'],

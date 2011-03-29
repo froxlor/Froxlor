@@ -38,8 +38,11 @@ return array(
 					),
 					'pathedit' => array(
 						'label' => $lng['emails']['iscatchall'],
-						'type' => 'yesno',
-						'yesno_var' => $iscatchall
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
 					)
 				)
 			)

@@ -31,8 +31,11 @@ return array(
 					),
 					'active' => array(
 						'label' => $lng['autoresponder']['active'],
-						'type' => 'yesno',
-						'yesno_var' => $isactive,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($row['enabled'])
 					),
 					'date_from' => array(
 						'label' => $lng['autoresponder']['date_from'] . " (dd-mm-yyyy)",

@@ -47,8 +47,11 @@ return array(
 					),
 					'sendinfomail' => array(
 						'label' => $lng['customer']['sendinfomail'],
-						'type' => 'yesno',
-						'yesno_var' => $sendinfomail,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
 					),
 				)
 			)

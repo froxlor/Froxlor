@@ -63,8 +63,11 @@ return array(
 					'ssl_redirect' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? true : false),
 						'label' => 'SSL Redirect',
-						'type' => 'yesno',
-						'yesno_var' => $ssl_redirect
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['ssl_redirect'])
 					),
 					'openbasedir_path' => array(
 						'label' => $lng['domain']['openbasedirpath'],
