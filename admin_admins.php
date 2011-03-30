@@ -289,10 +289,21 @@ if($page == 'admins'
 				$can_manage_aps_packages = 0;
 			}
 
-			$customers_see_all = intval($_POST['customers_see_all']);
-			$domains_see_all = intval($_POST['domains_see_all']);
-			$caneditphpsettings = intval($_POST['caneditphpsettings']);
-			$change_serversettings = intval($_POST['change_serversettings']);
+			$customers_see_all = 0;
+			if(isset($_POST['customers_see_all']))
+				$customers_see_all = intval($_POST['customers_see_all']);
+			
+			$domains_see_all = 0;
+			if(isset($_POST['domains_see_all']))
+				$domains_see_all = intval($_POST['domains_see_all']);
+			
+			$caneditphpsettings = 0;
+			if(isset($_POST['caneditphpsettings']))
+				$caneditphpsettings = intval($_POST['caneditphpsettings']);
+			
+			$change_serversettings = 0;
+			if(isset($_POST['change_serversettings']))
+				$change_serversettings = intval($_POST['change_serversettings']);
 
 			$diskspace = intval_ressource($_POST['diskspace']);
 
@@ -617,12 +628,24 @@ if($page == 'admins'
 						$number_of_aps_packages = - 1;
 					}
 
-					$customers_see_all = intval($_POST['customers_see_all']);
-					$domains_see_all = intval($_POST['domains_see_all']);
-					$caneditphpsettings = intval($_POST['caneditphpsettings']);
-					$change_serversettings = intval($_POST['change_serversettings']);
 					$can_manage_aps_packages = intval($_POST['can_manage_aps_packages']);
 
+					$customers_see_all = 0;
+					if(isset($_POST['customers_see_all']))
+						$customers_see_all = intval($_POST['customers_see_all']);
+					
+					$domains_see_all = 0;
+					if(isset($_POST['domains_see_all']))
+						$domains_see_all = intval($_POST['domains_see_all']);
+					
+					$caneditphpsettings = 0;
+					if(isset($_POST['caneditphpsettings']))
+						$caneditphpsettings = intval($_POST['caneditphpsettings']);
+					
+					$change_serversettings = 0;
+					if(isset($_POST['change_serversettings']))
+						$change_serversettings = intval($_POST['change_serversettings']);
+					
 					$diskspace = intval($_POST['diskspace']);
 
 					if(isset($_POST['diskspace_ul']))

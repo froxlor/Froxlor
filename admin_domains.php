@@ -227,10 +227,23 @@ if($page == 'domains'
 
 				$domain = $idna_convert->encode(preg_replace(Array('/\:(\d)+$/', '/^https?\:\/\//'), '', validate($_POST['domain'], 'domain')));
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
+				
+				$isemaildomain = 0;
+				if(isset($_POST['isemaildomain']))
 				$isemaildomain = intval($_POST['isemaildomain']);
-				$email_only = intval($_POST['email_only']);
-				$wwwserveralias = intval($_POST['wwwserveralias']);
-				$speciallogfile = intval($_POST['speciallogfile']);
+				
+				$email_only = 0;
+				if(isset($_POST['email_only']))
+					$email_only = intval($_POST['email_only']);
+					
+				$wwwserveralias = 0;
+				if(isset($_POST['wwwserveralias']))
+					$wwwserveralias = intval($_POST['wwwserveralias']);
+				
+				$speciallogfile = 0;
+				if(isset($_POST['speciallogfile']))
+					$speciallogfile = intval($_POST['speciallogfile']);
+					
 				$aliasdomain = intval($_POST['alias']);
 				$issubof = intval($_POST['issubof']);
 				$customerid = intval($_POST['customerid']);
@@ -764,13 +777,22 @@ if($page == 'domains'
 
 				$aliasdomain = intval($_POST['alias']);
 				$issubof = intval($_POST['issubof']);
-				$isemaildomain = intval($_POST['isemaildomain']);
-				$email_only = intval($_POST['email_only']);
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
 				$caneditdomain = intval($_POST['caneditdomain']);
-				$wwwserveralias = intval($_POST['wwwserveralias']);
 				$registration_date = validate($_POST['registration_date'], 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
+				$isemaildomain = 0;
+				if(isset($_POST['isemaildomain']))
+				$isemaildomain = intval($_POST['isemaildomain']);
+				
+				$email_only = 0;
+				if(isset($_POST['email_only']))
+					$email_only = intval($_POST['email_only']);
+					
+				$wwwserveralias = 0;
+				if(isset($_POST['wwwserveralias']))
+					$wwwserveralias = intval($_POST['wwwserveralias']);
+				
 				if($userinfo['change_serversettings'] == '1')
 				{
 					$isbinddomain = intval($_POST['isbinddomain']);

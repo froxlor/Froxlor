@@ -452,9 +452,17 @@ if($page == 'customers'
 					$email_autoresponder = 0;
 				}
 
-				$email_imap = intval_ressource($_POST['email_imap']);
-				$email_pop3 = intval_ressource($_POST['email_pop3']);
-				$ftps = intval_ressource($_POST['ftps']);
+				$email_imap = 0;
+				if(isset($_POST['email_imap'])) 
+					$email_imap = intval_ressource($_POST['email_imap']);
+				
+				$email_pop3 = 0;
+				if(isset($_POST['email_pop3'])) 
+					$email_pop3 = intval_ressource($_POST['email_pop3']);
+				
+				$ftps = 0;
+				if(isset($_POST['ftps']))
+					$ftps = intval_ressource($_POST['ftps']);
 
 				if(isset($_POST['ftps_ul']))
 				{
@@ -489,8 +497,10 @@ if($page == 'customers'
 				{
 					$number_of_aps_packages = 0;
 				}
-
-				$createstdsubdomain = intval($_POST['createstdsubdomain']);
+			
+				$createstdsubdomain = 0;
+				if(isset($_POST['createstdsubdomain']))
+					$createstdsubdomain = intval($_POST['createstdsubdomain']);
 				$password = validate($_POST['new_customer_password'], 'password');
 				// only check if not empty,
 				// cause empty == generate password automatically
@@ -498,10 +508,23 @@ if($page == 'customers'
 				{
 					$password = validatePassword($password);
 				}
-				$sendpassword = intval($_POST['sendpassword']);
-				$phpenabled = intval($_POST['phpenabled']);
-				$perlenabled = intval($_POST['perlenabled']);
-				$store_defaultindex = intval($_POST['store_defaultindex']);
+				
+				$sendpassword = 0;
+				if(isset($_POST['sendpassword']))
+					$sendpassword = intval($_POST['sendpassword']);
+				
+				$phpenabled = 0;
+				if(isset($_POST['phpenabled']))
+					$phpenabled = intval($_POST['phpenabled']);
+				
+				$perlenabled = 0;
+				if(isset($_POST['perlenabled']))
+					$perlenabled = intval($_POST['perlenabled']);
+					
+				$store_defaultindex = 0;
+				if(isset($_POST['store_defaultindex']))
+					$store_defaultindex = intval($_POST['store_defaultindex']);
+					
 				$diskspace = $diskspace * 1024;
 				$traffic = $traffic * 1024 * 1024;
 
@@ -965,9 +988,17 @@ if($page == 'customers'
 					$email_autoresponder = 0;
 				}				
 
-				$email_imap = intval_ressource($_POST['email_imap']);
-				$email_pop3 = intval_ressource($_POST['email_pop3']);
-				$ftps = intval_ressource($_POST['ftps']);
+				$email_imap = 0;
+				if(isset($_POST['email_imap'])) 
+					$email_imap = intval_ressource($_POST['email_imap']);
+				
+				$email_pop3 = 0;
+				if(isset($_POST['email_pop3'])) 
+					$email_pop3 = intval_ressource($_POST['email_pop3']);
+				
+				$ftps = 0;
+				if(isset($_POST['ftps']))
+					$ftps = intval_ressource($_POST['ftps']);
 
 				if(isset($_POST['ftps_ul']))
 				{
@@ -982,7 +1013,9 @@ if($page == 'customers'
 					$tickets = - 1;
 				}
 
-				$mysqls = intval_ressource($_POST['mysqls']);
+				$mysqls = 0;
+				if(isset($_POST['mysqls']))
+					$mysqls = intval_ressource($_POST['mysqls']);
 
 				if(isset($_POST['mysqls_ul']))
 				{
@@ -1003,10 +1036,21 @@ if($page == 'customers'
 					$number_of_aps_packages = 0;
 				}
 
-				$createstdsubdomain = intval($_POST['createstdsubdomain']);
-				$deactivated = intval($_POST['deactivated']);
-				$phpenabled = intval($_POST['phpenabled']);
-				$perlenabled = intval($_POST['perlenabled']);
+				$createstdsubdomain = 0;
+				if(isset($_POST['createstdsubdomain']))
+					$createstdsubdomain = intval($_POST['createstdsubdomain']);
+					
+				$deactivated = 0;
+				if(isset($_POST['deactivated']))
+					$deactivated = intval($_POST['deactivated']);
+				
+				$phpenabled = 0;
+				if(isset($_POST['phpenabled']))
+					$phpenabled = intval($_POST['phpenabled']);
+				
+				$perlenabled = 0;
+				if(isset($_POST['perlenabled']))
+					$perlenabled = intval($_POST['perlenabled']);
 				$diskspace = $diskspace * 1024;
 				$traffic = $traffic * 1024 * 1024;
 
