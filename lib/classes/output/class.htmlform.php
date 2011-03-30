@@ -253,8 +253,10 @@ class htmlform
 		}
 		
 		if (isset($_SESSION['requestData'])) {
-			if (isset($_SESSION['requestData'][$fieldname])) {
-				$checked[] = $_SESSION['requestData'][$fieldname];
+			if(isset($_SESSION['requestData'][$fieldname])) {
+				$checked = array($_SESSION['requestData'][$fieldname]);
+			} else {
+				$checked = array();
 			}
 		}
 		
