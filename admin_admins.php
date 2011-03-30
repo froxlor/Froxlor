@@ -452,11 +452,11 @@ if($page == 'admins'
 			$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$change_serversettings = makeyesno('change_serversettings', '1', '0', '0');
-			$customers_see_all = makeyesno('customers_see_all', '1', '0', '0');
-			$domains_see_all = makeyesno('domains_see_all', '1', '0', '0');
-			$caneditphpsettings = makeyesno('caneditphpsettings', '1', '0', '0');
-			$can_manage_aps_packages = makeyesno('can_manage_aps_packages', '1', '0', '0');
+			#$change_serversettings = makeyesno('change_serversettings', '1', '0', '0');
+			#$customers_see_all = makeyesno('customers_see_all', '1', '0', '0');
+			#$domains_see_all = makeyesno('domains_see_all', '1', '0', '0');
+			#$caneditphpsettings = makeyesno('caneditphpsettings', '1', '0', '0');
+			#$can_manage_aps_packages = makeyesno('can_manage_aps_packages', '1', '0', '0');
 			$number_of_aps_packages_ul = makecheckbox('number_of_aps_packages_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 
 			$admin_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/admin/formfield.admin_add.php';
@@ -829,12 +829,12 @@ if($page == 'admins'
 					}
 				}
 
-				$change_serversettings = makeyesno('change_serversettings', '1', '0', $result['change_serversettings']);
-				$customers_see_all = makeyesno('customers_see_all', '1', '0', $result['customers_see_all']);
-				$domains_see_all = makeyesno('domains_see_all', '1', '0', $result['domains_see_all']);
-				$caneditphpsettings = makeyesno('caneditphpsettings', '1', '0', $result['caneditphpsettings']);
-				$deactivated = makeyesno('deactivated', '1', '0', $result['deactivated']);
-				$can_manage_aps_packages = makeyesno('can_manage_aps_packages', '1', '0', $result['can_manage_aps_packages']);
+				#$change_serversettings = makeyesno('change_serversettings', '1', '0', $result['change_serversettings']);
+				#$customers_see_all = makeyesno('customers_see_all', '1', '0', $result['customers_see_all']);
+				#$domains_see_all = makeyesno('domains_see_all', '1', '0', $result['domains_see_all']);
+				#$caneditphpsettings = makeyesno('caneditphpsettings', '1', '0', $result['caneditphpsettings']);
+				#$deactivated = makeyesno('deactivated', '1', '0', $result['deactivated']);
+				#$can_manage_aps_packages = makeyesno('can_manage_aps_packages', '1', '0', $result['can_manage_aps_packages']);
 
 				$result = htmlentities_array($result);
 

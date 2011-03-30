@@ -110,7 +110,7 @@ if($action == "add")
 	$date_from_off = makecheckbox('date_from_off', $lng['panel']['not_activated'], '-1', false, '-1', true, true);
 	$date_until_off = makecheckbox('date_until_off', $lng['panel']['not_activated'], '-1', false, '-1', true, true);
 	
-	$isactive = makeyesno('active', '1', '0', '1');
+	#$isactive = makeyesno('active', '1', '0', '1');
 
 	$autoresponder_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_addautoresponder.php';
 	$autoresponder_add_form = htmlform::genHTMLForm($autoresponder_add_data);
@@ -241,7 +241,7 @@ if($action == "edit")
 	}
 	$date_until_off = makecheckbox('date_until_off', $lng['panel']['not_activated'], '-1', false, $deactivated, true, true);
 	
-	$isactive = makeyesno('active', '1', '0', $row['enabled']);
+	#$isactive = makeyesno('active', '1', '0', $row['enabled']);
 
 	$autoresponder_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_editautoresponder.php';
 	$autoresponder_edit_form = htmlform::genHTMLForm($autoresponder_edit_data);

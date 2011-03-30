@@ -368,9 +368,9 @@ elseif($page == 'htaccess')
 		else
 		{
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
-			$options_indexes = makeyesno('options_indexes', '1', '0', '0');
+			#$options_indexes = makeyesno('options_indexes', '1', '0', '0');
 			$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
-			$options_cgi = makeyesno('options_cgi', '1', '0', '0');
+			#$options_cgi = makeyesno('options_cgi', '1', '0', '0');
 
 			$htaccess_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htaccess_add.php';
 			$htaccess_add_form = htmlform::genHTMLForm($htaccess_add_data);
@@ -435,9 +435,9 @@ elseif($page == 'htaccess')
 				$result['error404path'] = $result['error404path'];
 				$result['error403path'] = $result['error403path'];
 				$result['error500path'] = $result['error500path'];
-				$options_indexes = makeyesno('options_indexes', '1', '0', $result['options_indexes']);
+				#$options_indexes = makeyesno('options_indexes', '1', '0', $result['options_indexes']);
 				$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
-				$options_cgi = makeyesno('options_cgi', '1', '0', $result['options_cgi']);
+				#$options_cgi = makeyesno('options_cgi', '1', '0', $result['options_cgi']);
 				$result = htmlentities_array($result);
 
 				$htaccess_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htaccess_edit.php';

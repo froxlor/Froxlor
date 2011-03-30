@@ -121,7 +121,7 @@ if($page == 'cronjobs'
 			}
 			else
 			{
-				$isactive = makeyesno('isactive', '1', '0', $result['isactive']);
+				#$isactive = makeyesno('isactive', '1', '0', $result['isactive']);
 				// interval
 				$interval_nfo = explode(' ', $result['interval']);
 				$interval_value = $interval_nfo[0];

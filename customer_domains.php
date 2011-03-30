@@ -378,7 +378,7 @@ elseif($page == 'domains')
 					}
 				}
 
-				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
+				#$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
 
@@ -570,9 +570,9 @@ elseif($page == 'domains')
 					}
 				}
 
-				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
-				$iswildcarddomain = makeyesno('iswildcarddomain', '1', '0', $result['iswildcarddomain']);
-				$isemaildomain = makeyesno('isemaildomain', '1', '0', $result['isemaildomain']);
+				#$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
+				#$iswildcarddomain = makeyesno('iswildcarddomain', '1', '0', $result['iswildcarddomain']);
+				#$isemaildomain = makeyesno('isemaildomain', '1', '0', $result['isemaildomain']);
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true);
 
 				$result_ipandport = $db->query_first("SELECT `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id`='".(int)$result['ipandport']."'");

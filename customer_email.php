@@ -281,7 +281,7 @@ elseif($page == 'emails')
 					$domains.= makeoption($idna_convert->decode($row['domain']), $row['domain']);
 				}
 
-				$iscatchall = makeyesno('iscatchall', '1', '0', '0');
+				#$iscatchall = makeyesno('iscatchall', '1', '0', '0');
 
 				$email_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_add.php';
 				$email_add_form = htmlform::genHTMLForm($email_add_data);

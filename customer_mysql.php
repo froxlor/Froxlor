@@ -254,7 +254,7 @@ elseif($page == 'mysqls')
 					$mysql_servers .= makeoption($mysql_server_details['caption'], $mysql_server);
 				}
 
-				$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
+				#$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
 
 				$mysql_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/mysql/formfield.mysql_add.php';
 				$mysql_add_form = htmlform::genHTMLForm($mysql_add_data);

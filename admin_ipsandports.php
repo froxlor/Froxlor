@@ -251,11 +251,11 @@ if($page == 'ipsandports'
 		}
 		else
 		{
-			$enable_ssl = makeyesno('ssl', '1', '0', '0');
-			$listen_statement = makeyesno('listen_statement', '1', '0', '1');
-			$namevirtualhost_statement = makeyesno('namevirtualhost_statement', '1', '0', '1');
-			$vhostcontainer = makeyesno('vhostcontainer', '1', '0', '1');
-			$vhostcontainer_servername_statement = makeyesno('vhostcontainer_servername_statement', '1', '0', '1');
+			#$enable_ssl = makeyesno('ssl', '1', '0', '0');
+			#$listen_statement = makeyesno('listen_statement', '1', '0', '1');
+			#$namevirtualhost_statement = makeyesno('namevirtualhost_statement', '1', '0', '1');
+			#$vhostcontainer = makeyesno('vhostcontainer', '1', '0', '1');
+			#$vhostcontainer_servername_statement = makeyesno('vhostcontainer_servername_statement', '1', '0', '1');
 
 			$ipsandports_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_add.php';
 			$ipsandports_add_form = htmlform::genHTMLForm($ipsandports_add_data);
@@ -397,12 +397,12 @@ if($page == 'ipsandports'
 			}
 			else
 			{
-				$enable_ssl = makeyesno('ssl', '1', '0', $result['ssl']);
+				#$enable_ssl = makeyesno('ssl', '1', '0', $result['ssl']);
 				$result = htmlentities_array($result);
-				$listen_statement = makeyesno('listen_statement', '1', '0', $result['listen_statement']);
-				$namevirtualhost_statement = makeyesno('namevirtualhost_statement', '1', '0', $result['namevirtualhost_statement']);
-				$vhostcontainer = makeyesno('vhostcontainer', '1', '0', $result['vhostcontainer']);
-				$vhostcontainer_servername_statement = makeyesno('vhostcontainer_servername_statement', '1', '0', $result['vhostcontainer_servername_statement']);
+				#$listen_statement = makeyesno('listen_statement', '1', '0', $result['listen_statement']);
+				#$namevirtualhost_statement = makeyesno('namevirtualhost_statement', '1', '0', $result['namevirtualhost_statement']);
+				#$vhostcontainer = makeyesno('vhostcontainer', '1', '0', $result['vhostcontainer']);
+				#$vhostcontainer_servername_statement = makeyesno('vhostcontainer_servername_statement', '1', '0', $result['vhostcontainer_servername_statement']);
 
 				$ipsandports_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
 				$ipsandports_edit_form = htmlform::genHTMLForm($ipsandports_edit_data);
