@@ -1,18 +1,30 @@
 $header
-	<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable">
-		<tr>
-			<td class="maintitle" colspan="2">
-				<b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['updatecounters']}: {$lng['admin']['customers']}</b>
-			</td>
-		</tr>
+<article>
+		<header>
+			<h2>
+				<img src="images/Froxlor/icons/res_recalculate_big.png" alt="" />&nbsp;
+				{$lng['admin']['updatecounters']}
+			</h2>
+		</header>
+
+		<section class="fullform bradiusodd">
+        	<table class="formtable">
+				<tr>
+					<td colspan="2" style="font-weight: bold;"><img src="images/Froxlor/icons/res_recalculate.png" alt="" />&nbsp;{$lng['admin']['customers']}</td>
+				</tr>
 {$customers}
-		<tr>
-			<td class="maintitle" colspan="2">
-				<b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['updatecounters']}: {$lng['admin']['admins']}</b>
-			</td>
-		</tr>
+			</table>
+			<br /><br />
+		</section>
+		<br /><br />
+		<section class="fullform bradiusodd">
+        	<table class="formtable">
+				<tr>
+					<td colspan="2" style="font-weight: bold;"><img src="images/Froxlor/icons/res_recalculate.png" alt="" />&nbsp;{$lng['admin']['admins']}</td>
+				</tr>
 {$admins}
-	</table>
-	<br />
-	<br />
+			</table>
+			<br /><br />
+		</section>
+</article>
 $footer
