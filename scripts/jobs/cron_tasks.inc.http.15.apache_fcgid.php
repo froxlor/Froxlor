@@ -40,11 +40,13 @@ class apache_fcgid extends apache
 				$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
 				$php_options_text.= '  FastCgiExternalServer ' . makeCorrectDir($domain['documentroot']) . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $domain['loginname'] . ' -group ' . $domain['loginname'] . "\n";
 				$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
-				$php_options_text.= '    AddHandler php5-fastcgi .php'. "\n";
-				$php_options_text.= '    Action php5-fastcgi /fastcgiphp' . "\n";
-				$php_options_text.= '    Options +ExecCGI' . "\n";
-				$php_options_text.= '    Order allow,deny' . "\n";
-				$php_options_text.= '    allow from all' . "\n";
+				$php_options_text.= '    <FilesMatch "\.php$">' . "\n";
+				$php_options_text.= '      SetHandler php5-fastcgi'. "\n";
+				$php_options_text.= '      Action php5-fastcgi /fastcgiphp' . "\n";
+				$php_options_text.= '      Options +ExecCGI' . "\n";
+				$php_options_text.= '      Order allow,deny' . "\n";
+				$php_options_text.= '      allow from all' . "\n";
+				$php_options_text.= '    </FilesMatch>' . "\n";
 				$php_options_text.= '  </Directory>' . "\n";
 				$php_options_text.= '  Alias /fastcgiphp ' . makeCorrectDir($domain['documentroot']) . 'fpm.external' . "\n";
 			}
@@ -60,14 +62,16 @@ class apache_fcgid extends apache
 					$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
 					$php_options_text.= '  <Directory "' . $domain['documentroot'] . '">' . "\n";
 					$file_extensions = explode(' ', $phpconfig['file_extensions']);
-					$php_options_text.= '    AddHandler fcgid-script .' . implode(' .', $file_extensions) . "\n";
+					$php_options_text.= '    <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
+					$php_options_text.= '      SetHandler fcgid-script' . "\n";
 					foreach($file_extensions as $file_extension)
 					{
-						$php_options_text.= '    FCGIWrapper ' . $php->getInterface()->getStarterFile() . ' .' . $file_extension . "\n";
+						$php_options_text.= '      FCGIWrapper ' . $php->getInterface()->getStarterFile() . ' .' . $file_extension . "\n";
 					}
-					$php_options_text.= '    Options +ExecCGI' . "\n";
-					$php_options_text.= '    Order allow,deny' . "\n";
-					$php_options_text.= '    allow from all' . "\n";
+					$php_options_text.= '      Options +ExecCGI' . "\n";
+					$php_options_text.= '      Order allow,deny' . "\n";
+					$php_options_text.= '      allow from all' . "\n";
+				        $php_options_text.= '    </FilesMatch>' . "\n";
 					$php_options_text.= '  </Directory>' . "\n";
 				}
 			}
