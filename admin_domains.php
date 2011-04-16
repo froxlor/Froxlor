@@ -486,7 +486,8 @@ if($page == 'domains'
 				{
 					standard_error(array('stringisempty', 'mydomain'));
 				}
-				elseif(!validateDomain($domain))
+				/* Check whether domain validation is enabled and if, validate the domain */
+				elseif($settings['system']['validate_domain'] && !validateDomain($domain))
 				{
 					standard_error(array('stringiswrong', 'mydomain'));
 				}

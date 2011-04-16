@@ -68,6 +68,14 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					),
+				'system_validatedomain' => array(
+					'label' => $lng['serversettings']['validate_domain'],
+					'settinggroup' => 'system',
+					'varname' => 'validate_domain',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					),
 				'system_stdsubdomain' => array(
 					'label' => $lng['serversettings']['stdsubdomainhost'],
 					'settinggroup' => 'system',

@@ -1490,3 +1490,14 @@ if(isFroxlorVersion('0.9.18.1'))
 
 	updateToVersion('0.9.19');
 }
+
+if(isFroxlorVersion('0.9.19'))
+{
+	showUpdateStep("Updating from 0.9.19 to 0.9.20");
+	lastStepStatus(0);
+	
+	showUpdateStep("Adding new setting for domain validation");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'validate_domain', '1')");
+	
+	updateToVersion('0.9.20');
+}

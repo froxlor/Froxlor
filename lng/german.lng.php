@@ -1559,3 +1559,4 @@ $lng['emails']['back_to_overview'] = 'Zur&uuml;ck zur &Uuml;bersicht';
 
 // ADDED IN FROXLOR 0.9.20
 $lng['error']['user_banned'] = 'Ihr Benutzerkonto wurde gesperrt. Bitte kontaktieren Sie Ihren Administrator f&uuml;r weitere Informationen.';
+$lng['serversettings']['validate_domain'] = 'Validiere Domainnamen';

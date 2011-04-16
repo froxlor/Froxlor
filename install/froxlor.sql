@@ -617,6 +617,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('syste
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_webmax', '90');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_trafficmax', '90');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'default_theme', 'Froxlor');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'validate_domain', '1');
 
 # --------------------------------------------------------
 
