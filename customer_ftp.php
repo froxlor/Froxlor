@@ -324,6 +324,7 @@ elseif($page == 'accounts')
 						if(!file_exists($path))
 						{
 							mkDirWithCorrectOwnership($userinfo['documentroot'], $path, $result['uid'], $result['gid']);
+							inserttask(5); /* Let the cronjob do the rest */
 						}
 
 						$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account homdir for '" . $result['username'] . "'");
