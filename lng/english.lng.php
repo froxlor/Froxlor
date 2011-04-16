@@ -1574,3 +1574,6 @@ $lng['success']['rebuildingconfigs'] = 'Successfully inserted tasks for rebuild 
 $lng['panel']['variable'] = 'Variable';
 $lng['panel']['description'] = 'Description';
 $lng['emails']['back_to_overview'] = 'Back to overview';
+
+// ADDED IN FROXLOR 0.9.20
+$lng['error']['user_banned'] = 'Your account has been banned. Please contact your administrator for further information.';

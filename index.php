@@ -258,6 +258,9 @@ if($action == 'login')
 				$cmail = isset($_GET['customermail']) ? $_GET['customermail'] : 'unknown';
 				$message = str_replace('%s', $cmail, $lng['error']['errorsendingmail']);
 				break;
+			case 5:
+				$message = $lng['error']['user_banned'];
+				break;
 		}
 
 		$update_in_progress = '';
@@ -280,7 +283,7 @@ if($action == 'forgotpwd')
 	{
 		$loginname = validate($_POST['loginname'], 'loginname');
 		$email = validateEmail($_POST['loginemail'], 'email');
-		$sql = "SELECT `adminid`, `customerid`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language` FROM `" . TABLE_PANEL_CUSTOMERS . "`
+		$sql = "SELECT `adminid`, `customerid`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 				WHERE `loginname`='" . $db->escape($loginname) . "'
 				AND `email`='" . $db->escape($email) . "'";
 		$result = $db->query($sql);
@@ -305,6 +308,13 @@ if($action == 'forgotpwd')
 		if($result !== null)
 		{
 			$user = $db->fetch_array($result);
+			
+			/* Check whether user is banned */
+			if($user['deactivated'])
+			{
+				$message = $lng['pwdreminder']['notallowed'];
+				redirectTo('index.php', Array('showmessage' => '5'), true);
+			}
 
 			if(($adminchecked && $settings['panel']['allow_preset_admin'] == '1')
 			|| $adminchecked == false)

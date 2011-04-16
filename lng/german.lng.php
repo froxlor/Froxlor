@@ -1556,3 +1556,6 @@ $lng['success']['rebuildingconfigs'] = 'Task f&uuml;r das Neuerstellen der Konfi
 $lng['panel']['variable'] = 'Variable';
 $lng['panel']['description'] = 'Beschreibung';
 $lng['emails']['back_to_overview'] = 'Zur&uuml;ck zur &Uuml;bersicht';
+
+// ADDED IN FROXLOR 0.9.20
+$lng['error']['user_banned'] = 'Ihr Benutzerkonto wurde gesperrt. Bitte kontaktieren Sie Ihren Administrator f&uuml;r weitere Informationen.';
