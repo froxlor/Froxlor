@@ -1578,3 +1578,4 @@ $lng['emails']['back_to_overview'] = 'Back to overview';
 // ADDED IN FROXLOR 0.9.20
 $lng['error']['user_banned'] = 'Your account has been banned. Please contact your administrator for further information.';
 $lng['serversettings']['validate_domain'] = 'Validate domain names';
+$lng['login']['combination_not_found'] = 'Combination of user and email adress not found.';
