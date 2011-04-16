@@ -32,6 +32,11 @@ return array(
 					'email_password' => array(
 						'label' => $lng['login']['password'],
 						'type' => 'password'
+					),
+					'email_password_suggestion' => array(
+						'label' => $lng['customer']['generated_pwd'],
+						'type' => 'text',
+						'value' => generatePassword(),
 					)
 				)
 			)

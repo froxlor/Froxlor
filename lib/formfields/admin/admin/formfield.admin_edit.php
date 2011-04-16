@@ -43,6 +43,12 @@ return array(
 						'type' => 'password',
 						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
 					),
+					'admin_password_suggestion' => array(
+						'label' => $lng['customer']['generated_pwd'],
+						'type' => 'text',
+						'value' => generatePassword(),
+						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
+					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
 						'type' => 'select',

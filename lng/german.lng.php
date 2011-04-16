@@ -1561,3 +1561,4 @@ $lng['emails']['back_to_overview'] = 'Zur&uuml;ck zur &Uuml;bersicht';
 $lng['error']['user_banned'] = 'Ihr Benutzerkonto wurde gesperrt. Bitte kontaktieren Sie Ihren Administrator f&uuml;r weitere Informationen.';
 $lng['serversettings']['validate_domain'] = 'Validiere Domainnamen';
 $lng['login']['combination_not_found'] = 'Kombination von Benutzer und E-Mail Adresse nicht gefunden.';
+$lng['customer']['generated_pwd'] = 'Passwortvorschlag';

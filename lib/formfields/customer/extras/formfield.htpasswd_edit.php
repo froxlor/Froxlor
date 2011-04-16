@@ -38,6 +38,11 @@ return array(
 						'label' => $lng['login']['password'],
 						'type' => 'password'
 					),
+					'directory_password_suggestion' => array(
+						'label' => $lng['customer']['generated_pwd'],
+						'type' => 'text',
+						'value' => generatePassword(),
+					),
 					'directory_authname' => array(
 						'label' => $lng['extras']['htpasswdauthname'],
 						'type' => 'text',

@@ -54,6 +54,11 @@ return array(
 						'label' => $lng['login']['password'].'&nbsp;('.$lng['panel']['emptyfornochanges'].')',
 						'type' => 'password'
 					),
+					'new_customer_password_suggestion' => array(
+						'label' => $lng['customer']['generated_pwd'],
+						'type' => 'text',
+						'value' => generatePassword(),
+					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
 						'type' => 'select',

@@ -33,6 +33,11 @@ return array(
 						'label' => $lng['login']['password'],
 						'type' => 'password'
 					),
+					'email_password_suggestion' => array(
+						'label' => $lng['customer']['generated_pwd'],
+						'type' => 'text',
+						'value' => generatePassword(),
+					),
 					'email_quota' => array(
 						'visible' => ($settings['system']['mail_quota_enabled'] == '1' ? true : false),
 						'label' => $lng['emails']['quota'],

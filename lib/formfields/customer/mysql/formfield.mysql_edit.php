@@ -43,6 +43,11 @@ return array(
 						'label' => $lng['changepassword']['new_password_ifnotempty'],
 						'type' => 'password',
 					),
+					'mysql_password_suggestion' => array(
+						'label' => $lng['customer']['generated_pwd'],
+						'type' => 'text',
+						'value' => generatePassword(),
+					)
 				)
 			)
 		)

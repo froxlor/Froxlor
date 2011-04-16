@@ -34,6 +34,11 @@ return array(
 						'type' => 'password',
 						'mandatory' => true
 					),
+					'admin_password_suggestion' => array(
+						'label' => $lng['customer']['generated_pwd'],
+						'type' => 'text',
+						'value' => generatePassword(),
+					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
 						'type' => 'select',

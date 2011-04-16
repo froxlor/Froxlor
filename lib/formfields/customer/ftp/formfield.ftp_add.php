@@ -45,6 +45,11 @@ return array(
 						'label' => $lng['login']['password'],
 						'type' => 'password',
 					),
+					'ftp_password_suggestion' => array(
+						'label' => $lng['customer']['generated_pwd'],
+						'type' => 'text',
+						'value' => generatePassword(),
+					),
 					'sendinfomail' => array(
 						'label' => $lng['customer']['sendinfomail'],
 						'type' => 'checkbox',
