@@ -394,7 +394,7 @@ if($action == 'forgotpwd')
 				{
 					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
 					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to reset pwd but wasn't found in database!");
-					$message = $lng['login']['usernotfound'];
+					$message = $lng['login']['combination_not_found'];
 				}
 
 				unset($user);
