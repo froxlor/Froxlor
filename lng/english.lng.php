@@ -1602,4 +1602,4 @@ $lng['traffic']['months']['dec'] = 'Dec';
 $lng['traffic']['months']['total'] = 'Total';
 $lng['traffic']['details'] = 'Details';
 $lng['menue']['traffic']['table'] = 'Traffic';
-
+$lng['error']['admin_domain_emailsystemhostname'] = 'Sorry, the system - hostname may not be used as a customer domain';

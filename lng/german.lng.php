@@ -1563,3 +1563,4 @@ $lng['serversettings']['validate_domain'] = 'Validiere Domainnamen';
 $lng['login']['combination_not_found'] = 'Kombination von Benutzer und E-Mail Adresse nicht gefunden.';
 $lng['customer']['generated_pwd'] = 'Passwortvorschlag';
 $lng['customer']['usedmax'] = 'Benutzt / Max.';
+$lng['error']['admin_domain_emailsystemhostname'] = 'Der System - Hostname kann leider nicht als Kundendomain verwendet werden.';
