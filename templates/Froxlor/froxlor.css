@@ -735,3 +735,8 @@ select {
 label.nobr {
         display: inline;
 }
+
+caption {
+	font-weight: bold;
+	margin-bottom: 0.2em;
+}
