@@ -39,60 +39,60 @@ $header
 			<td class="field_display">$domains</td>
 		</tr>
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['subdomains']}:</td>
-			<td class="field_display">{$userinfo['subdomains_used']} ({$userinfo['subdomains']})</td>
+			<td class="field_name_border_left">{$lng['customer']['subdomains']} ({$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['subdomains_used']}/{$userinfo['subdomains']}</td>
 		</tr>
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['diskspace']}:</td>
-			<td class="field_display">{$userinfo['diskspace_used']} ({$userinfo['diskspace']})</td>
+			<td class="field_name_border_left">{$lng['customer']['diskspace']} ({$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['diskspace_used']}/{$userinfo['diskspace']}</td>
 		</tr>
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['traffic']} ($month):</td>
-			<td class="field_display">{$userinfo['traffic_used']} ({$userinfo['traffic']})</td>
+			<td class="field_name_border_left">{$lng['customer']['traffic']} ($month, {$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['traffic_used']}/{$userinfo['traffic']}</td>
 		</tr>
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['emails']}:</td>
-			<td class="field_display">{$userinfo['emails_used']} ({$userinfo['emails']})</td>
+			<td class="field_name_border_left">{$lng['customer']['emails']} ({$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['emails_used']}/{$userinfo['emails']}</td>
 		</tr>
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['accounts']}:</td>
-			<td class="field_display">{$userinfo['email_accounts_used']} ({$userinfo['email_accounts']})</td>
+			<td class="field_name_border_left">{$lng['customer']['accounts']} ({$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['email_accounts_used']}/{$userinfo['email_accounts']}</td>
 		</tr>
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['forwarders']}:</td>
-			<td class="field_display">{$userinfo['email_forwarders_used']} ({$userinfo['email_forwarders']})</td>
+			<td class="field_name_border_left">{$lng['customer']['forwarders']} ({$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['email_forwarders_used']}/{$userinfo['email_forwarders']}</td>
 		</tr>
 		<if $settings['system']['mail_quota_enabled'] == 1>
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['email_quota']} ({$lng['panel']['megabyte']}):</td>
-			<td class="field_display">{$userinfo['email_quota_used']} ({$userinfo['email_quota']})</td>
+			<td class="field_name_border_left">{$lng['customer']['email_quota']} ({$lng['panel']['megabyte']}, {$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['email_quota_used']}/{$userinfo['email_quota']}</td>
 		</tr>
 		</if>
 		</tr>
 		<if $settings['autoresponder']['autoresponder_active'] == 1>
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['autoresponder']}:</td>
-			<td class="field_display">{$userinfo['email_autoresponder_used']} ({$userinfo['email_autoresponder']})</td>
+			<td class="field_name_border_left">{$lng['customer']['autoresponder']} ({$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['email_autoresponder_used']}/{$userinfo['email_autoresponder']}</td>
 		</tr>
 		</if>
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['mysqls']}:</td>
-			<td class="field_display">{$userinfo['mysqls_used']} ({$userinfo['mysqls']})</td>
+			<td class="field_name_border_left">{$lng['customer']['mysqls']} ({$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['mysqls_used']}/{$userinfo['mysqls']}</td>
 		</tr>
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['ftps']}:</td>
-			<td class="field_display">{$userinfo['ftps_used']} ({$userinfo['ftps']})</td>
+			<td class="field_name_border_left">{$lng['customer']['ftps']} ({$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['ftps_used']}/{$userinfo['ftps']}</td>
 		</tr>
 		<if (int)$settings['aps']['aps_active'] == 1>
 		<tr>
-			<td class="field_name_border_left">{$lng['aps']['numberofapspackages']}:</td>
-			<td class="field_display">{$userinfo['aps_packages_used']} ({$userinfo['aps_packages']})</td>
+			<td class="field_name_border_left">{$lng['aps']['numberofapspackages']} ({$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['aps_packages_used']}/{$userinfo['aps_packages']}</td>
 		</tr>
 		</if>
 		<if $settings['ticket']['enabled'] == 1 >
 		<tr>
-			<td class="field_name_border_left">{$lng['customer']['tickets']}:</td>
-			<td class="field_display">{$userinfo['tickets_used']} ({$userinfo['tickets']})</td>
+			<td class="field_name_border_left">{$lng['customer']['tickets']} ({$lng['customer']['usedmax']}):</td>
+			<td class="field_display">{$userinfo['tickets_used']}/{$userinfo['tickets']}</td>
 		</tr>
 		</if>
 		<if 0 < $awaitingtickets && $settings['ticket']['enabled'] == 1 >

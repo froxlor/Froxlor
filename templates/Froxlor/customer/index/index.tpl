@@ -22,60 +22,60 @@ $header
 			<td>$domains</td>
 		</tr>
 		<tr>
-			<td>{$lng['customer']['subdomains']}:</td>
-			<td>{$userinfo['subdomains_used']} ({$userinfo['subdomains']})</td>
+			<td>{$lng['customer']['subdomains']} ({$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['subdomains_used']}/{$userinfo['subdomains']}</td>
 		</tr>
 		<tr>
-			<td>{$lng['customer']['diskspace']}:</td>
-			<td>{$userinfo['diskspace_used']} ({$userinfo['diskspace']})</td>
+			<td>{$lng['customer']['diskspace']} ({$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['diskspace_used']}/{$userinfo['diskspace']}</td>
 		</tr>
 		<tr>
-			<td>{$lng['customer']['traffic']} ($month):</td>
-			<td>{$userinfo['traffic_used']} ({$userinfo['traffic']})</td>
+			<td>{$lng['customer']['traffic']} ($month, {$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['traffic_used']}/{$userinfo['traffic']}</td>
 		</tr>
 		<tr>
-			<td>{$lng['customer']['emails']}:</td>
-			<td>{$userinfo['emails_used']} ({$userinfo['emails']})</td>
+			<td>{$lng['customer']['emails']} ({$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['emails_used']}/{$userinfo['emails']}</td>
 		</tr>
 		<tr>
-			<td>{$lng['customer']['accounts']}:</td>
-			<td>{$userinfo['email_accounts_used']} ({$userinfo['email_accounts']})</td>
+			<td>{$lng['customer']['accounts']} ({$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['email_accounts_used']}/{$userinfo['email_accounts']}</td>
 		</tr>
 		<tr>
-			<td>{$lng['customer']['forwarders']}:</td>
-			<td>{$userinfo['email_forwarders_used']} ({$userinfo['email_forwarders']})</td>
+			<td>{$lng['customer']['forwarders']} ({$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['email_forwarders_used']}/{$userinfo['email_forwarders']}</td>
 		</tr>
 		<if $settings['system']['mail_quota_enabled'] == 1>
 		<tr>
-			<td>{$lng['customer']['email_quota']} ({$lng['panel']['megabyte']}):</td>
-			<td>{$userinfo['email_quota_used']} ({$userinfo['email_quota']})</td>
+			<td>{$lng['customer']['email_quota']} ({$lng['panel']['megabyte']}, {$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['email_quota_used']}/{$userinfo['email_quota']}</td>
 		</tr>
 		</if>
 		</tr>
 		<if $settings['autoresponder']['autoresponder_active'] == 1>
 		<tr>
-			<td>{$lng['customer']['autoresponder']}:</td>
-			<td>{$userinfo['email_autoresponder_used']} ({$userinfo['email_autoresponder']})</td>
+			<td>{$lng['customer']['autoresponder']} ({$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['email_autoresponder_used']}/{$userinfo['email_autoresponder']}</td>
 		</tr>
 		</if>
 		<tr>
-			<td>{$lng['customer']['mysqls']}:</td>
-			<td>{$userinfo['mysqls_used']} ({$userinfo['mysqls']})</td>
+			<td>{$lng['customer']['mysqls']} ({$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['mysqls_used']}/{$userinfo['mysqls']}</td>
 		</tr>
 		<tr>
-			<td>{$lng['customer']['ftps']}:</td>
-			<td>{$userinfo['ftps_used']} ({$userinfo['ftps']})</td>
+			<td>{$lng['customer']['ftps']} ({$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['ftps_used']}/{$userinfo['ftps']}</td>
 		</tr>
 		<if (int)$settings['aps']['aps_active'] == 1>
 		<tr>
-			<td>{$lng['aps']['numberofapspackages']}:</td>
-			<td>{$userinfo['aps_packages_used']} ({$userinfo['aps_packages']})</td>
+			<td>{$lng['aps']['numberofapspackages']} ({$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['aps_packages_used']}/{$userinfo['aps_packages']}</td>
 		</tr>
 		</if>
 		<if $settings['ticket']['enabled'] == 1 >
 		<tr>
-			<td>{$lng['customer']['tickets']}:</td>
-			<td>{$userinfo['tickets_used']} ({$userinfo['tickets']})</td>
+			<td>{$lng['customer']['tickets']} ({$lng['customer']['usedmax']}):</td>
+			<td>{$userinfo['tickets_used']}/{$userinfo['tickets']}</td>
 		</tr>
 		</if>
 		<tr>

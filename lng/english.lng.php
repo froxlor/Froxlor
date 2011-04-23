@@ -1580,3 +1580,4 @@ $lng['error']['user_banned'] = 'Your account has been banned. Please contact you
 $lng['serversettings']['validate_domain'] = 'Validate domain names';
 $lng['login']['combination_not_found'] = 'Combination of user and email adress not found.';
 $lng['customer']['generated_pwd'] = 'Password suggestion';
+$lng['customer']['usedmax'] = 'Used / Max';
