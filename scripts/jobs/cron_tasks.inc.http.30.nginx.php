@@ -186,6 +186,7 @@ class nginx
 
 			$this->nginx_data[$vhost_filename].= "\t".'access_log      /var/log/nginx/access.log;' . "\n";
 
+			$mypath = '';
 			if($row_ipsandports['vhostcontainer'] == '1')
 			{
 				$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
@@ -550,7 +551,7 @@ class nginx
 		$x = 0;
 		while($row_htpasswds = $this->db->fetch_array($result))
 		{
-			if(count($row_htpasswds['htpasswds']) > 0)
+			if(count($row_htpasswds) > 0)
 			{
 				$htpasswd_filename = makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd');
 
@@ -559,12 +560,9 @@ class nginx
 					$this->htpasswds_data[$htpasswd_filename] = '';
 				}
 
-				foreach($row['htpasswds'] as $row_htpasswd)
-				{
-					$this->htpasswds_data[$htpasswd_filename].= $row_htpasswd['username'] . ':' . $row_htpasswd['password'] . "\n";
-				}
+				$this->htpasswds_data[$htpasswd_filename].= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 
-				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
+				$path = makeCorrectDir(substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1));
 
 				$returnval[$x]['path'] = $path;
 				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
