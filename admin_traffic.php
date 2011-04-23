@@ -81,7 +81,14 @@ if($page == 'overview' || $page == 'customers')
 	$customerview = 1;
 	$stats_tables = '';
 	$minyear = $db->query_first("SELECT `year` FROM `". TABLE_PANEL_TRAFFIC . "` ORDER BY `year` ASC LIMIT 1");
-	$maxyears = date("Y") - $minyear['year'];
+	if (!isset($minyear['year']) || $minyear['year'] == 0)
+	{
+		$maxyears = 0;
+	}
+	else
+	{
+		$maxyears = date("Y") - $minyear['year'];
+	}
 	for($years = 0; $years<=$maxyears; $years++) {
 		$overview['year'] = date("Y")-$years;
 		$overview['type'] = $lng['traffic']['customer'];
