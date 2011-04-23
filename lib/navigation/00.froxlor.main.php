@@ -189,6 +189,17 @@ return array (
 				),
 			),
 		),
+		'traffic' => array (
+			'label' => $lng['admin']['traffic'],
+			'required_resources' => 'customers',
+			'elements' => array (
+				array (
+					'url' => 'admin_traffic.php?page=customers',
+					'label' => $lng['admin']['customertraffic'],
+					'required_resources' => 'customers',
+				),
+			),
+		),
 		'server' => array (
 			'label' => $lng['admin']['server'],
 			'required_resources' => 'change_serversettings',

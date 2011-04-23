@@ -476,3 +476,17 @@ TR.RowOverSelected {
 }
 
 
+table.maintable th.field_display .header {
+	background-color: #000000;
+}
+
+.headerSortUp {
+	background-image: url(../images/asc.gif);
+	background-position: right bottom;
+	background-repeat: no-repeat;
+}
+.headerSortDown {
+	background-image: url(../images/desc.gif);
+	background-position: right top;
+	background-repeat: no-repeat;
+}
