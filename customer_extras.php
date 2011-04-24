@@ -56,6 +56,12 @@ elseif($page == 'backup')
 	redirectTo($filename, Array('page' => $page, 's' => $s));
     }
 
+    $backup_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.backup.php';
+	$backup_form = htmlform::genHTMLForm($backup_data);
+
+	$title = $backup_data['backup']['title'];
+	$image = $backup_data['backup']['image'];
+    
     eval("echo \"" . getTemplate("extras/backup") . "\";");
 }
 elseif($page == 'htpasswds')
