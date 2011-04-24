@@ -365,6 +365,14 @@ while($row = $db->fetch_array($result))
 	 */
 
 	$diskusage = floatval($webspaceusage + $emailusage + $mysqlusage);
+	if($settings['system']['backup_count'] == 0 && file_exists($row['documentroot'] . $settings['system']['backup_dir'])){
+		$backupsize = exec('du -s ' . escapeshellarg($row['documentroot'] . $settings['system']['backup_dir']) . '');
+                $diskusage = floatval($webspaceusage + $emailusage + $mysqlusage - $backupsize);
+        }
+        else{
+		$diskusage = floatval($webspaceusage + $emailusage + $mysqlusage);
+        }
+
 	$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `diskspace_used`='" . (float)$current_diskspace['all'] . "', `traffic_used`='" . (float)$sum_month_traffic['all'] . "' WHERE `customerid`='" . (int)$row['customerid'] . "'");
 
 	/**

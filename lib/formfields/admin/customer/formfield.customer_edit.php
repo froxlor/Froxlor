@@ -252,6 +252,11 @@ return array(
 									),
 						'value' => array($result['perlenabled'])
 					),
+					'backup_allowed' => array(
+						'label' => $lng['backup_allowed'].'?',
+						'type' => 'yesno',
+						'yesno_var' => $backup_allowed
+					),
 					'number_of_aps_packages' => array(
 						'label' => $lng['aps']['numberofapspackages'],
 						'type' => 'textul',

@@ -129,6 +129,11 @@ return array (
 					'url' => 'customer_extras.php?page=htaccess',
 					'label' => $lng['menue']['extras']['pathoptions'],
 				),
+				array (
+					'url' => 'customer_extras.php?page=backup',
+					'label' => $lng['backup'],
+					'required_resources' => 'backup_allowed',
+				),
 			),
 		),
 		'traffic' => array (

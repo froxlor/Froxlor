@@ -79,6 +79,7 @@ if(($page == 'settings' || $page == 'overview')
 			inserttask('1');
 			inserttask('4');
 			inserttask('5');
+			inserttask('9');
 			standard_success('settingssaved', '', array('filename' => $filename, 'action' => $action, 'page' => $page));
 		}
 	}
@@ -119,6 +120,7 @@ elseif($page == 'rebuildconfigs'
 		inserttask('1');
 		inserttask('4');
 		inserttask('5');
+		inserttask('9');
 		standard_success('rebuildingconfigs', '', array('filename' => 'admin_index.php'));
 	}
 	else

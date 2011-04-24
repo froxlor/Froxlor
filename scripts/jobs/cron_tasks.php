@@ -403,6 +403,63 @@ while($row = $db->fetch_array($result_tasks))
 			}
 		}
 	}
+
+	/**
+	 * TYPE=9 Create backup dir protection (no download of backups via webserver)
+	 */
+	elseif ($row['type'] == '9')
+	{
+		
+		fwrite($debugHandler, '  cron_tasks: Task9 started - creating backup dir protection' . "\n");
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task9 started - creating backup dir protection');
+
+		$result = $db->query("SELECT documentroot, backup_allowed, backup_enabled FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE 1");
+		while($row = $db->fetch_array($result)){
+
+			if ($row['backup_allowed'] == '1' && $row['backup_enabled'] == '1'){
+
+				$backupprotectfile = $settings['system']['apacheconf_diroptions'] . '50_froxlor_diroption_' . md5($row['documentroot'] . $settings['system']['backup_dir']) . '.conf';
+				$fh = fopen($backupprotectfile, 'w');
+
+				if($settings['system']['webserver'] == 'apache2'){
+					$filedata = '# ' . basename($backupprotectfile) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" .
+					    '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n\n" .
+	        			    '<Directory "' . $row['documentroot'] . $settings['system']['backup_dir'] . '/">' . "\n" .
+	        			    '       deny from all' . "\n" .
+	        			    '</Directory>' . "\n";
+				}
+				elseif($settings['system']['webserver'] == 'lighttpd'){
+					$filedata = '# ' . basename($backupprotectfile) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" .
+					    '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n\n" .
+	        			    '$PHYSICAL["path"] !~ "^' . $row['documentroot'] . $settings['system']['backup_dir'] . '/$" {' . "\n" .
+	        			    '       access.deny-all = "enable"' . "\n" .
+	        			    '}' . "\n";
+				}
+				elseif($settings['system']['webserver'] == 'nginx'){
+					$filedata = '# ' . basename($backupprotectfile) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" .
+					    '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n\n" .
+	        			    'location ' . $row['documentroot'] . $settings['system']['backup_dir'] . ' {' . "\n" .
+	        			    '       deny all;' . "\n" .
+	        			    '       return 403;' . "\n" .
+	        			    '}' . "\n";
+				}
+				fwrite($fh, $filedata);
+				fclose($fh);
+			}
+			else{
+				// deletes backup if customer or admin disables backup because backup protection is not set
+				if (file_exists($row['documentroot'] . $settings['system']['backup_dir'] . '/')){
+					$files = scandir($row['documentroot'] . $settings['system']['backup_dir']);
+					foreach ($files as $file){
+						if(preg_match('/.*\.tar\.gz$/', $file)){
+							safe_exec('rm ' . escapeshellarg($row['documentroot']) . escapeshellarg($settings['system']['backup_dir']) . '/' . $file . '');
+						}
+					}
+				}
+			}
+			
+		}
+	}
 }
 
 if($db->num_rows($result_tasks) != 0)
