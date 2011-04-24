@@ -7,6 +7,7 @@
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	</if>
 	<link rel="stylesheet" href="templates/Classic/main.css" type="text/css" />
+	<script type="text/javascript" src="templates/Classic/js/froxlor.js"></script>
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor</title>
 </head>
 <body style="margin: 0; padding: 0;"<if !isset($userinfo['loginname']) && !(isset($userinfo['loginname']) && $userinfo['loginname'] == '')> onload="document.loginform.loginname.focus()"</if>>
