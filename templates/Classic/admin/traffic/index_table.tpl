@@ -34,18 +34,31 @@
 		{  
 		    // extract data from markup and return it  
 		    if(node.innerHTML != '-') {
-			return 1 + node.innerHTML.substr(0,node.innerHTML.length-3); 
+			return 1 + node.innerHTML.substr(0,node.innerHTML.length); 
 		    } else {
 			return '1';
 		    }
 		} 
 		$(document).ready(function() 
 		{ 
-			$("#stats{$overview['year']}").tablesorter( {
-				textExtraction: myTextExtraction
-			} ); 
-		} 
-		); 
+                        $("#stats{$overview['year']}").tablesorter( {
+                                textExtraction: myTextExtraction,
+                                headers: {
+                                        1: {sorter: 'filesize'},
+                                        2: {sorter: 'filesize'},
+                                        3: {sorter: 'filesize'},
+                                        4: {sorter: 'filesize'},
+                                        5: {sorter: 'filesize'},
+                                        6: {sorter: 'filesize'},
+                                        7: {sorter: 'filesize'},
+                                        8: {sorter: 'filesize'},
+                                        9: {sorter: 'filesize'},
+                                        10: {sorter: 'filesize'},
+                                        11: {sorter: 'filesize'},
+                                        12: {sorter: 'filesize'}
+                                },
+                        });
+		}); 
 	</script>
 	<br />
 	<br />
