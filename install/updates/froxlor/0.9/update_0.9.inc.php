@@ -1485,29 +1485,6 @@ if(isFroxlorVersion('0.9.18'))
 
 if(isFroxlorVersion('0.9.18.1'))
 {
-	showUpdateStep("Updating from 0.9.18.1 to 0.9.18.2");
-
-	// adding backup stuff
-	$db->query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `backup_allowed` TINYINT( 1 ) NOT NULL DEFAULT '1'");
-	$db->query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `backup_enabled` TINYINT( 1 ) NOT NULL DEFAULT '0'");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_enabled', '1')");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_dir', '#froxlor_backup')");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_mysqldump_path', '/usr/bin/mysqldump')");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_count', '1')");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_bigfile', '1')");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_enabled', '0')");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_server', '')");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_user', '')");
-	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_pass', '')");
-	$db->query("INSERT INTO `" . TABLE_PANEL_CRONRUNS . "` (`module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES ('froxlor/backup', 'cron_backup.php', '1 Day', '1', 'cron_backup');");
-
-	lastStepStatus(0);
-
-	updateToVersion('0.9.18.2');
-}
-
-if(isFroxlorVersion('0.9.18.1'))
-{
 	showUpdateStep("Updating from 0.9.18.1 to 0.9.19");
 	lastStepStatus(0);
 
