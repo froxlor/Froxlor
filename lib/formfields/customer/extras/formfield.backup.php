@@ -23,22 +23,12 @@ return array(
 				'title' => $lng['backup'],
 				'image' => 'icons/backup.png',
 				'fields' => array(
-					'info' => array(
-						'label' => $lng['extras']['backup_info'],
-						'type' => 'label',
-						'value' => ''
-					),
 					'path' => array(
 						'label' => $lng['extras']['backup_create'],
-						'desc' => ($settings['system']['backup_bigfile'] == 1 ? $lng['extras']['backup_info_big'] : $lng['extras']['backup_info_sep']),
+						'desc' => $lng['extras']['backup_info'].'<br />'.($settings['system']['backup_bigfile'] == 1 ? $lng['extras']['backup_info_big'] : $lng['extras']['backup_info_sep']).'<br />'.$lng['extras']['backup_count_info'],
 						'type' => 'yesno',
 						'yesno_var' => $backup_enabled
-					),
-					'count' => array(
-						'label' => $lng['extras']['backup_count_info'],
-						'type' => 'label',
-						'value' => ''
-					),
+					)
 				)
 			)
 		)
