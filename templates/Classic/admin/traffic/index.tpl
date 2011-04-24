@@ -4,13 +4,13 @@ $header
                 $.tablesorter.addParser( {
                         id: 'filesize',
                         is: function(s) {
-                                return s.match( new RegExp( /[0-9]+(\.[0-9]+)?\ (KiB|Bi|GiB|MiB|TiB)/ ) );
+                                return s.match( new RegExp( /[0-9]+(\.[0-9]+)?\ (KiB|B|GiB|MiB|TiB)/ ) );
                         },
                         format: function(s) {
-                                var suf = s.match( new RegExp( /(KiB|Bi|GiB|MiB|TiB)/) )[1];
+                                var suf = s.match( new RegExp( /(KiB|B|GiB|MiB|TiB)/) )[1];
                                 var num = parseFloat( s.match( new RegExp( /^[0-9]+(\.[0-9]+)?/ ) )[0] );
                                 switch( suf ) {
-                                        case 'Bi':
+                                        case 'B':
                                                 return num;
                                         case 'KiB':
                                                 return num * 1024;
