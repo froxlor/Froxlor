@@ -36,7 +36,7 @@
 		    if(node.innerHTML != '-') {
 			return 1 + node.innerHTML.substr(0,node.innerHTML.length); 
 		    } else {
-			return '1';
+			return '0 B';
 		    }
 		} 
 		$(document).ready(function() 
