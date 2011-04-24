@@ -1498,6 +1498,7 @@ if(isFroxlorVersion('0.9.19'))
 	
 	showUpdateStep("Adding new setting for domain validation");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'validate_domain', '1')");
+	lastStepStatus(0);
 	
 	updateToVersion('0.9.20-svn1');
 }
