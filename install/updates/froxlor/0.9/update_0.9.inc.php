@@ -1526,9 +1526,9 @@ if(isFroxlorVersion('0.9.19'))
 }
 
 
-if(isFroxlorVersion('0.9.19'))
+if(isFroxlorVersion('0.9.20-svn1'))
 {
-	showUpdateStep("Updating from 0.9.19 to 0.9.20");
+	showUpdateStep("Updating from 0.9.20-svn1 to 0.9.20-svn2");
 
 	// adding backup stuff
 
@@ -1546,5 +1546,5 @@ if(isFroxlorVersion('0.9.19'))
 	$db->query("INSERT INTO `" . TABLE_PANEL_CRONRUNS . "` (`module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES ('froxlor/backup', 'cron_backup.php', '1 Day', '1', 'cron_backup');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.20');
+	updateToVersion('0.9.20-svn2');
 }
