@@ -1,0 +1,125 @@
+### acl/30_exim4-config_check_rcpt
+#################################
+
+acl_check_rcpt:
+  accept
+    hosts = :
+
+  warn
+    hosts = +relay_from_hosts
+    control = submission/sender_retain
+
+  .ifdef CHECK_RCPT_LOCAL_LOCALPARTS
+  deny
+    domains = +local_domains:+froxlor_domain
+    local_parts = CHECK_RCPT_LOCAL_LOCALPARTS
+    message = restricted characters in address
+  .endif
+
+  .ifdef CHECK_RCPT_REMOTE_LOCALPARTS
+  deny
+    domains = !+local_domains
+    local_parts = CHECK_RCPT_REMOTE_LOCALPARTS
+    message = restricted characters in address
+  .endif
+
+  accept
+    .ifndef CHECK_RCPT_POSTMASTER
+    local_parts = postmaster
+    .else
+    local_parts = CHECK_RCPT_POSTMASTER
+    .endif
+    domains = +local_domains:+froxlor_domain
+
+  deny
+    message = sender envelope address $sender_address is locally blacklisted here. If you think this is wrong, get in touch with postmaster
+    !acl = acl_local_deny_exceptions
+    senders = ${if exists{CONFDIR/local_sender_blacklist}\
+                   {CONFDIR/local_sender_blacklist}\
+                   {}}
+
+  deny
+    message = sender IP address $sender_host_address is locally blacklisted here. If you think this is wrong, get in touch with postmaster
+    !acl = acl_local_deny_exceptions
+    hosts = ${if exists{CONFDIR/local_host_blacklist}\
+                 {CONFDIR/local_host_blacklist}\
+                 {}}
+
+  .ifdef CHECK_RCPT_VERIFY_SENDER
+  deny
+    message = Sender verification failed
+    !acl = acl_local_deny_exceptions
+    !verify = sender
+  .endif
+
+  deny
+    !acl = acl_local_deny_exceptions
+    senders = ${if exists{CONFDIR/local_sender_callout}\
+                         {CONFDIR/local_sender_callout}\
+                   {}}
+    !verify = sender/callout
+
+  deny
+    !acl = acl_local_deny_exceptions
+    recipients = ${if exists{CONFDIR/local_rcpt_callout}\
+                            {CONFDIR/local_rcpt_callout}\
+                      {}}
+    !verify = recipient/callout
+
+  .ifdef CHECK_RCPT_REVERSE_DNS
+  warn
+    message = X-Host-Lookup-Failed: Reverse DNS lookup failed for $sender_host_address (${if eq{$host_lookup_failed}{1}{failed}{deferred}})
+     condition = ${if and{{def:sender_host_address}{!def:sender_host_name}}\
+                      {yes}{no}}
+  .endif
+
+  .ifdef CHECK_RCPT_IP_DNSBLS
+  warn
+    message = X-Warning: $sender_host_address is listed at $dnslist_domain ($dnslist_value: $dnslist_text)
+    log_message = $sender_host_address is listed at $dnslist_domain ($dnslist_value: $dnslist_text)
+    dnslists = CHECK_RCPT_IP_DNSBLS
+  .endif
+
+  .ifdef CHECK_RCPT_DOMAIN_DNSBLS
+  warn
+    message = X-Warning: $sender_address_domain is listed at $dnslist_domain ($dnslist_value: $dnslist_text)
+    log_message = $sender_address_domain is listed at $dnslist_domain ($dnslist_value: $dnslist_text)
+    !senders = ${if exists{CONFDIR/local_domain_dnsbl_whitelist}\
+                    {CONFDIR/local_domain_dnsbl_whitelist}\
+                    {}}
+    dnslists = CHECK_RCPT_DOMAIN_DNSBLS/$sender_address_domain
+  .endif
+
+  .ifdef CHECK_RCPT_LOCAL_ACL_FILE
+  .include CHECK_RCPT_LOCAL_ACL_FILE
+  .endif
+
+  accept
+    domains = +local_domains:+froxlor_domain
+    endpass
+    message = unknown user
+    verify = recipient
+
+  accept
+    domains = +relay_to_domains
+    endpass
+    .ifdef CHECK_RCPT_GIVE_UNKNOWN_USER
+    message = ${if eq{$acl_verify_message}{Unrouteable address}{unknown user}{$acl_verify_message}}
+    .else
+    message = unrouteable address
+    .endif
+    verify = recipient
+
+  ############
+  # If control reaches this point, the domain is neither in +local_domains
+  # nor in +relay_to_domains.
+  ############
+
+  accept
+    hosts = +relay_from_hosts
+
+  accept
+    authenticated = *
+
+  deny
+    message = relay not permitted

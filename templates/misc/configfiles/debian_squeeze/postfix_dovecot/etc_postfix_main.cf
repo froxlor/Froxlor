@@ -1,0 +1,86 @@
+## General Postfix configuration
+# should be the default domain from your provider eg. "server100.provider.tld"
+mydomain = <SERVERNAME>
+
+# should be different from $mydomain eg. "mail.$mydomain"
+myhostname = <SERVERNAME>
+
+mydestination = $myhostname,
+	$mydomain,
+	localhost.$myhostname,
+	localhost.$mydomain,
+	localhost
+mynetworks = 127.0.0.0/8
+inet_interfaces = all
+append_dot_mydomain = no
+biff = no
+
+# Postfix performance settings
+default_destination_concurrency_limit = 20
+local_destination_concurrency_limit = 2
+
+# SMTPD Settings
+smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+smtpd_helo_required = yes
+smtpd_recipient_restrictions = permit_mynetworks,
+	permit_sasl_authenticated,
+	reject_unauth_destination,
+	reject_unauth_pipelining,
+	reject_non_fqdn_recipient
+smtpd_sender_restrictions = permit_mynetworks,
+	reject_sender_login_mismatch,
+	permit_sasl_authenticated, 
+	reject_unknown_helo_hostname, 
+	reject_unknown_recipient_domain, 
+	reject_unknown_sender_domain
+smtpd_client_restrictions = permit_mynetworks,
+	permit_sasl_authenticated,
+	reject_unknown_client_hostname
+# Maximum size of Message in bytes (50MB)
+message_size_limit = 52428800
+
+## SASL Auth Settings
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_local_domain = $myhostname
+broken_sasl_auth_clients = yes
+## Dovecot Settings for deliver, SASL Auth and virtual transport
+smtpd_sasl_type = dovecot
+mailbox_command = /usr/lib/dovecot/deliver
+virtual_transport = dovecot
+dovecot_destination_recipient_limit = 1
+smtpd_sasl_path = private/auth
+
+# Virtual delivery settings
+virtual_mailbox_base = <VIRTUAL_MAILBOX_BASE>
+virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
+virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
+virtual_alias_maps = mysql:/etc/postfix/mysql-virtual_alias_maps.cf
+smtpd_sender_login_maps = mysql:/etc/postfix/mysql-virtual_sender_permissions.cf
+virtual_uid_maps = static:<VIRTUAL_UID_MAPS>
+virtual_gid_maps = static:<VIRTUAL_GID_MAPS>
+
+# Local delivery settings
+local_transport = local
+alias_maps = $alias_database
+
+# Default Mailbox size, is set to 0 which means unlimited!
+mailbox_size_limit = 0
+virtual_mailbox_limit = 0
+
+### TLS settings
+###
+## TLS for outgoing mails from the server to another server
+#smtp_tls_security_level = may
+#smtp_tls_note_starttls_offer = yes
+## TLS for email client
+#smtpd_tls_security_level = may
+#smtpd_tls_cert_file = /etc/ssl/server/<SERVERNAME>.pem
+#smtpd_tls_key_file = $smtpd_tls_cert_file
+#smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+#smtpd_tls_loglevel = 1
+#smtpd_tls_received_header = yes
+
+debugger_command =
+         PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
+         ddd $daemon_directory/$process_name $process_id & sleep 5
+
