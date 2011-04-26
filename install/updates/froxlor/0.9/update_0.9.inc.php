@@ -1526,3 +1526,11 @@ if(isFroxlorVersion('0.9.20-svn1'))
 
 	updateToVersion('0.9.20-svn2');
 }
+
+if(isFroxlorVersion('0.9.20'))
+{
+	showUpdateStep("Updating from 0.9.20-svn2 to 0.9.20");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.20');
+}
