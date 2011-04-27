@@ -686,7 +686,7 @@ if($page == 'customers'
 						`aps_packages` = '" . (int)$number_of_aps_packages . "', 
 						`perlenabled` = '" . $db->escape($perlenabled) . "', 
 						`email_autoresponder` = '" . $db->escape($email_autoresponder) . "',
-						`backup_allowed' = '" . $db->escape($backup_allowed) . "',
+						`backup_allowed` = '" . $db->escape($backup_allowed) . "',
 						`theme` = '" . $db->escape($_theme) . "'"
 					);
 					$customerid = $db->insert_id();
