@@ -18,8 +18,8 @@
  */
 
 return Array(
-	'debian_lenny' => Array(
-		'label' => 'Debian 5.0 (Lenny)',
+	'debian_squeeze' => Array(
+		'label' => 'Debian 6.0 (Squeeze)',
 		'services' => Array(
 			'http' => Array(
 				'label' => $lng['admin']['configfiles']['http'],
