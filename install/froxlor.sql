@@ -167,8 +167,6 @@ CREATE TABLE `panel_admins` (
   `email_autoresponder` int(5) NOT NULL default '0',
   `email_autoresponder_used` int(5) NOT NULL default '0',
   `theme` varchar(255) NOT NULL default 'Froxlor',
-  `backup_allowed` TINYINT( 1 ) NOT NULL DEFAULT '1',
-  `backup_enabled` TINYINT( 1 ) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM ;
@@ -236,6 +234,8 @@ CREATE TABLE `panel_customers` (
   `email_autoresponder` int(5) NOT NULL default '0',
   `email_autoresponder_used` int(5) NOT NULL default '0',
   `theme` varchar(255) NOT NULL default 'Froxlor',
+  `backup_allowed` TINYINT( 1 ) NOT NULL DEFAULT '1',
+  `backup_enabled` TINYINT( 1 ) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM ;
