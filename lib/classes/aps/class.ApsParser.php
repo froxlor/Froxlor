@@ -3300,7 +3300,7 @@ class ApsParser
 					eval("\$Data.=\"" . getTemplate("aps/data") . "\";");
 				}
 
-				$Temp = '<input name="license" type="checkbox" value="true" /> ' . $lng['aps']['error_license'];
+				$Temp = '<label><input name="license" type="checkbox" value="true" /> ' . $lng['aps']['error_license'] . '</label>';
 
 				if(in_array('license', $WrongData))
 				{
