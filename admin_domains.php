@@ -273,7 +273,8 @@ if($page == 'domains'
 				}
 
 				$documentroot = $customer['documentroot'];
-				$registration_date = validate($_POST['registration_date'], 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
+				$registration_date = trim($_POST['registration_date']);
+				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
 				if($userinfo['change_serversettings'] == '1')
 				{
@@ -780,7 +781,8 @@ if($page == 'domains'
 				$issubof = intval($_POST['issubof']);
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
 				$caneditdomain = intval($_POST['caneditdomain']);
-				$registration_date = validate($_POST['registration_date'], 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
+				$registration_date = trim($_POST['registration_date']);
+				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
 				$isemaildomain = 0;
 				if(isset($_POST['isemaildomain']))
