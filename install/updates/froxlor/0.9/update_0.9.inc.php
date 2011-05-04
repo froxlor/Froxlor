@@ -1583,5 +1583,5 @@ if(isFroxlorVersion('0.9.20.1'))
 	}
 	lastStepStatus(0);
 
-	updateToVersion('0.9.20.1-svn1');
+	updateToVersion('0.9.20.2-svn1');
 }
