@@ -12,7 +12,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Cron
- * @version    $Id: cron_backup.php 1 2010-09-15 13:19:45Z monotek $
+ *
 */
 
 if(@php_sapi_name() != 'cli'){

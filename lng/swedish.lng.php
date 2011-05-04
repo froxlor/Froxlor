@@ -14,7 +14,7 @@
  * @author     Froxlor Team <team@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id$
+ *
  */
 
 /**
@@ -22,29 +22,29 @@
  */
 
 $lng['translator'] = 'Staffan Starberg';
-$lng['panel']['edit'] = 'Ändra';
+$lng['panel']['edit'] = 'ï¿½ndra';
 $lng['panel']['delete'] = 'Radera';
 $lng['panel']['create'] = 'Skapa';
 $lng['panel']['save'] = 'Spara';
 $lng['panel']['yes'] = 'Ja';
 $lng['panel']['no'] = 'Nej';
-$lng['panel']['emptyfornochanges'] = 'Tomt fält = ingen ändring';
-$lng['panel']['emptyfordefault'] = 'Förvalt värde används om fältet lämnas tommt';
-$lng['panel']['path'] = 'Sökväg (Path)';
-$lng['panel']['toggle'] = 'Växla (Toggle)';
-$lng['panel']['next'] = 'nästa';
-$lng['panel']['dirsmissing'] = 'Kan inte hitta eller läsa katalogen!';
+$lng['panel']['emptyfornochanges'] = 'Tomt fï¿½lt = ingen ï¿½ndring';
+$lng['panel']['emptyfordefault'] = 'Fï¿½rvalt vï¿½rde anvï¿½nds om fï¿½ltet lï¿½mnas tommt';
+$lng['panel']['path'] = 'Sï¿½kvï¿½g (Path)';
+$lng['panel']['toggle'] = 'Vï¿½xla (Toggle)';
+$lng['panel']['next'] = 'nï¿½sta';
+$lng['panel']['dirsmissing'] = 'Kan inte hitta eller lï¿½sa katalogen!';
 
 /**
  * Login
  */
 
-$lng['login']['username'] = 'Användarnamn';
-$lng['login']['password'] = 'Lösenord';
-$lng['login']['language'] = 'Språk';
+$lng['login']['username'] = 'Anvï¿½ndarnamn';
+$lng['login']['password'] = 'Lï¿½senord';
+$lng['login']['language'] = 'Sprï¿½k';
 $lng['login']['login'] = 'Logga in';
 $lng['login']['logout'] = 'Logga ut';
-$lng['login']['profile_lng'] = 'Profilspråk';
+$lng['login']['profile_lng'] = 'Profilsprï¿½k';
 
 /**
  * Customer
@@ -52,8 +52,8 @@ $lng['login']['profile_lng'] = 'Profilspråk';
 
 $lng['customer']['documentroot'] = 'Hemkatalog';
 $lng['customer']['name'] = 'Efternamn';
-$lng['customer']['firstname'] = 'Förnamn';
-$lng['customer']['company'] = 'Företag';
+$lng['customer']['firstname'] = 'Fï¿½rnamn';
+$lng['customer']['company'] = 'Fï¿½retag';
 $lng['customer']['street'] = 'Postadress';
 $lng['customer']['zipcode'] = 'Postnummer';
 $lng['customer']['city'] = 'Postort';
@@ -68,31 +68,31 @@ $lng['customer']['emails'] = 'E-post_adresser';
 $lng['customer']['accounts'] = 'E-post_konton';
 $lng['customer']['forwarders'] = 'E-post_skicka_vidare';
 $lng['customer']['ftps'] = 'FTP_Kto';
-$lng['customer']['subdomains'] = 'Sub-Domäner';
-$lng['customer']['domains'] = 'Domäner';
-$lng['customer']['unlimited'] = 'Obegränsad';
+$lng['customer']['subdomains'] = 'Sub-Domï¿½ner';
+$lng['customer']['domains'] = 'Domï¿½ner';
+$lng['customer']['unlimited'] = 'Obegrï¿½nsad';
 
 /**
  * Customermenue
  */
 
 $lng['menue']['main']['main'] = 'Huvudsidan';
-$lng['menue']['main']['changepassword'] = 'Ändra lösenord';
-$lng['menue']['main']['changelanguage'] = 'Ändra språk';
+$lng['menue']['main']['changepassword'] = 'ï¿½ndra lï¿½senord';
+$lng['menue']['main']['changelanguage'] = 'ï¿½ndra sprï¿½k';
 $lng['menue']['email']['email'] = 'E-post';
 $lng['menue']['email']['emails'] = 'E-post';
 $lng['menue']['email']['webmail'] = 'WebMail';
 $lng['menue']['mysql']['mysql'] = 'MySQL';
 $lng['menue']['mysql']['databases'] = 'Databaser';
 $lng['menue']['mysql']['phpmyadmin'] = 'phpMyAdmin';
-$lng['menue']['domains']['domains'] = 'Domäner';
-$lng['menue']['domains']['settings'] = 'Inställningar';
+$lng['menue']['domains']['domains'] = 'Domï¿½ner';
+$lng['menue']['domains']['settings'] = 'Instï¿½llningar';
 $lng['menue']['ftp']['ftp'] = 'FTP';
 $lng['menue']['ftp']['accounts'] = 'Konton';
 $lng['menue']['ftp']['webftp'] = 'WebFTP';
 $lng['menue']['extras']['extras'] = 'Extras';
-$lng['menue']['extras']['directoryprotection'] = 'Katalog säkerhet';
-$lng['menue']['extras']['pathoptions'] = 'Inställningar sökväg';
+$lng['menue']['extras']['directoryprotection'] = 'Katalog sï¿½kerhet';
+$lng['menue']['extras']['pathoptions'] = 'Instï¿½llningar sï¿½kvï¿½g';
 
 /**
  * Index
@@ -105,39 +105,39 @@ $lng['index']['accountdetails'] = 'Kontodetaljer';
  * Change Password
  */
 
-$lng['changepassword']['old_password'] = 'Gammalt lösenord';
-$lng['changepassword']['new_password'] = 'Nytt lösenord';
-$lng['changepassword']['new_password_confirm'] = 'Nytt lösenord (verifiera)';
-$lng['changepassword']['new_password_ifnotempty'] = 'Nytt lösenord (Tomt fältet = inga ändringar)';
-$lng['changepassword']['also_change_ftp'] = ' Ändra även lösenord för huvud FTP kontot';
+$lng['changepassword']['old_password'] = 'Gammalt lï¿½senord';
+$lng['changepassword']['new_password'] = 'Nytt lï¿½senord';
+$lng['changepassword']['new_password_confirm'] = 'Nytt lï¿½senord (verifiera)';
+$lng['changepassword']['new_password_ifnotempty'] = 'Nytt lï¿½senord (Tomt fï¿½ltet = inga ï¿½ndringar)';
+$lng['changepassword']['also_change_ftp'] = ' ï¿½ndra ï¿½ven lï¿½senord fï¿½r huvud FTP kontot';
 
 /**
  * Domains
  */
 
-$lng['domains']['description'] = 'Här kan du skapa (sub-)domäner och ändra i dem.<br />Systemet behöver dock lite tid på sig att genomföra ändringarna.';
-$lng['domains']['domainsettings'] = 'Domäninställningar';
-$lng['domains']['domainname'] = 'Domännamn';
-$lng['domains']['subdomain_add'] = '[Skapa en ny subdomän]';
-$lng['domains']['subdomain_edit'] = 'Ändra (sub)domän';
-$lng['domains']['wildcarddomain'] = 'Skapa som ospecificerad domän (Create as wildcarddomain?)';
-$lng['domains']['aliasdomain'] = 'Alias for domän';
+$lng['domains']['description'] = 'Hï¿½r kan du skapa (sub-)domï¿½ner och ï¿½ndra i dem.<br />Systemet behï¿½ver dock lite tid pï¿½ sig att genomfï¿½ra ï¿½ndringarna.';
+$lng['domains']['domainsettings'] = 'Domï¿½ninstï¿½llningar';
+$lng['domains']['domainname'] = 'Domï¿½nnamn';
+$lng['domains']['subdomain_add'] = '[Skapa en ny subdomï¿½n]';
+$lng['domains']['subdomain_edit'] = 'ï¿½ndra (sub)domï¿½n';
+$lng['domains']['wildcarddomain'] = 'Skapa som ospecificerad domï¿½n (Create as wildcarddomain?)';
+$lng['domains']['aliasdomain'] = 'Alias for domï¿½n';
 $lng['domains']['noaliasdomain'] = '(inget alias)';
 
 /**
  * E-mails
  */
 
-$lng['emails']['description'] = 'Här kan du skapa eller ändra dina E-postadresser.<br />Ett konto är som en brevlåda utanför huset. Om någon skickar dig E-post kommer det att hamna i din brevlåda (ditt konto).<br /><br />För att hämta din E-post så skall du använda följande inställningar i ditt E-postprogram: (Text i kursiv stil <i>italics</i> måste ändras till det som motsvaras av det du knappade in tidigare!)<br />Servernamn (Hostname): <b><i>Domännamn (Domainname)</i></b><br />Användarnamn (Username): <b><i>Konto namn (Account name) / E-postadress</i></b><br />Lösenord (Password): <b><i>lösenordet som du valde</i></b>';
+$lng['emails']['description'] = 'Hï¿½r kan du skapa eller ï¿½ndra dina E-postadresser.<br />Ett konto ï¿½r som en brevlï¿½da utanfï¿½r huset. Om nï¿½gon skickar dig E-post kommer det att hamna i din brevlï¿½da (ditt konto).<br /><br />Fï¿½r att hï¿½mta din E-post sï¿½ skall du anvï¿½nda fï¿½ljande instï¿½llningar i ditt E-postprogram: (Text i kursiv stil <i>italics</i> mï¿½ste ï¿½ndras till det som motsvaras av det du knappade in tidigare!)<br />Servernamn (Hostname): <b><i>Domï¿½nnamn (Domainname)</i></b><br />Anvï¿½ndarnamn (Username): <b><i>Konto namn (Account name) / E-postadress</i></b><br />Lï¿½senord (Password): <b><i>lï¿½senordet som du valde</i></b>';
 $lng['emails']['emailaddress'] = 'E-postadress';
 $lng['emails']['emails_add'] = '[Skapa en E-postadress]';
-$lng['emails']['emails_edit'] = 'Ändra E-postadressen';
+$lng['emails']['emails_edit'] = 'ï¿½ndra E-postadressen';
 $lng['emails']['catchall'] = 'Maildump';
 $lng['emails']['iscatchall'] = 'Skapa en maildump?';
 $lng['emails']['account'] = 'Konto';
 $lng['emails']['account_add'] = 'Skapa konto';
 $lng['emails']['account_delete'] = 'Radera konto';
-$lng['emails']['from'] = 'Från';
+$lng['emails']['from'] = 'Frï¿½n';
 $lng['emails']['to'] = 'Till';
 $lng['emails']['forwarders'] = 'Skicka vidare:';
 $lng['emails']['forwarder_add'] = '[Skapa ny "skicka vidare"]';
@@ -146,14 +146,14 @@ $lng['emails']['forwarder_add'] = '[Skapa ny "skicka vidare"]';
  * FTP
  */
 
-$lng['ftp']['description'] = 'Här kan du skapa eller änra i dina FTP konton.<br />Ändringen genomförs omedelbart så man kan använda det nya/ändrade kontot direkt.';
+$lng['ftp']['description'] = 'Hï¿½r kan du skapa eller ï¿½nra i dina FTP konton.<br />ï¿½ndringen genomfï¿½rs omedelbart sï¿½ man kan anvï¿½nda det nya/ï¿½ndrade kontot direkt.';
 $lng['ftp']['account_add'] = '[Skapa ett nytt FTP konto]';
 
 /**
  * MySQL
  */
 
-$lng['mysql']['databasename'] = 'Användare/databasnamn';
+$lng['mysql']['databasename'] = 'Anvï¿½ndare/databasnamn';
 $lng['mysql']['databasedescription'] = 'Beskrivning av databasen';
 $lng['mysql']['database_create'] = '[Skapa en ny databas]';
 
@@ -161,12 +161,12 @@ $lng['mysql']['database_create'] = '[Skapa en ny databas]';
  * Extras
  */
 
-$lng['extras']['description'] = 'Här kan du ändra övriga saker såsom katalogskydd mm.<br />Systemet behöver dock lite tid på sig att genomföra ändringarna.';
+$lng['extras']['description'] = 'Hï¿½r kan du ï¿½ndra ï¿½vriga saker sï¿½som katalogskydd mm.<br />Systemet behï¿½ver dock lite tid pï¿½ sig att genomfï¿½ra ï¿½ndringarna.';
 $lng['extras']['directoryprotection_add'] = '[Skapa ett nytt katalogskydd]';
-$lng['extras']['view_directory'] = 'Visa kataloginnehåll';
-$lng['extras']['pathoptions_add'] = '[Skapa ny regel för sökvägar]';
+$lng['extras']['view_directory'] = 'Visa kataloginnehï¿½ll';
+$lng['extras']['pathoptions_add'] = '[Skapa ny regel fï¿½r sï¿½kvï¿½gar]';
 $lng['extras']['directory_browsing'] = 'Visning av katalogstruktur';
-$lng['extras']['pathoptions_edit'] = 'Ändra sökvägsinställningar';
+$lng['extras']['pathoptions_edit'] = 'ï¿½ndra sï¿½kvï¿½gsinstï¿½llningar';
 $lng['extras']['error404path'] = '404';
 $lng['extras']['error403path'] = '403';
 $lng['extras']['error500path'] = '500';
@@ -180,25 +180,25 @@ $lng['extras']['errordocument401path'] = 'URL to ErrorDocument 401';
  * Errors
  */
 
-$lng['error']['error'] = 'Följande fel har uppstått';
-$lng['error']['directorymustexist'] = 'Katalogen %s måste finnas. Skapa den med ditt FTP program.';
-$lng['error']['filemustexist'] = 'Filen %s måste existera.';
-$lng['error']['allresourcesused'] = 'Du har redan skapt så många konton som du har tillstånd till.';
-$lng['error']['domains_cantdeletemaindomain'] = 'Du kan inte radera en domän som användes för E-post.';
-$lng['error']['domains_canteditdomain'] = 'Endast administratörer kan ändra denna domän.';
-$lng['error']['domains_cantdeletedomainwithemail'] = 'Du kan inte radera en domän som användes för E-post. Radera alla E-postadresser först';
-$lng['error']['firstdeleteallsubdomains'] = 'Du måste radera alla sub-domäner innan du kan skapa en maildump (wildcard domain).';
-$lng['error']['youhavealreadyacatchallforthisdomain'] = 'Du har redan skapat en maildump för denna domän.';
-$lng['error']['ftp_cantdeletemainaccount'] = 'Det går inte att radera huvud FTP kontot för domänen';
-$lng['error']['login'] = 'Användarnamnet eller lösenordet var felaktigt, försök igen!';
-$lng['error']['login_blocked'] = 'Kontot har blivit avstängt på grund av för många felaktiga inloggningsförsök. <br />Försök igen om ' . $settings['login']['deactivatetime'] . ' sekunder.';
-$lng['error']['notallreqfieldsorerrors'] = 'Du har inte fyllt i alla fält eller så har du skrivit in något som inte accepteras.';
-$lng['error']['oldpasswordnotcorrect'] = 'Det gamla lösenordet är fel.';
-$lng['error']['youcantallocatemorethanyouhave'] = 'Du kan inte skapa fler resurser än du äger själv (You cannot allocate more resources than you own for yourself).';
+$lng['error']['error'] = 'Fï¿½ljande fel har uppstï¿½tt';
+$lng['error']['directorymustexist'] = 'Katalogen %s mï¿½ste finnas. Skapa den med ditt FTP program.';
+$lng['error']['filemustexist'] = 'Filen %s mï¿½ste existera.';
+$lng['error']['allresourcesused'] = 'Du har redan skapt sï¿½ mï¿½nga konton som du har tillstï¿½nd till.';
+$lng['error']['domains_cantdeletemaindomain'] = 'Du kan inte radera en domï¿½n som anvï¿½ndes fï¿½r E-post.';
+$lng['error']['domains_canteditdomain'] = 'Endast administratï¿½rer kan ï¿½ndra denna domï¿½n.';
+$lng['error']['domains_cantdeletedomainwithemail'] = 'Du kan inte radera en domï¿½n som anvï¿½ndes fï¿½r E-post. Radera alla E-postadresser fï¿½rst';
+$lng['error']['firstdeleteallsubdomains'] = 'Du mï¿½ste radera alla sub-domï¿½ner innan du kan skapa en maildump (wildcard domain).';
+$lng['error']['youhavealreadyacatchallforthisdomain'] = 'Du har redan skapat en maildump fï¿½r denna domï¿½n.';
+$lng['error']['ftp_cantdeletemainaccount'] = 'Det gï¿½r inte att radera huvud FTP kontot fï¿½r domï¿½nen';
+$lng['error']['login'] = 'Anvï¿½ndarnamnet eller lï¿½senordet var felaktigt, fï¿½rsï¿½k igen!';
+$lng['error']['login_blocked'] = 'Kontot har blivit avstï¿½ngt pï¿½ grund av fï¿½r mï¿½nga felaktiga inloggningsfï¿½rsï¿½k. <br />Fï¿½rsï¿½k igen om ' . $settings['login']['deactivatetime'] . ' sekunder.';
+$lng['error']['notallreqfieldsorerrors'] = 'Du har inte fyllt i alla fï¿½lt eller sï¿½ har du skrivit in nï¿½got som inte accepteras.';
+$lng['error']['oldpasswordnotcorrect'] = 'Det gamla lï¿½senordet ï¿½r fel.';
+$lng['error']['youcantallocatemorethanyouhave'] = 'Du kan inte skapa fler resurser ï¿½n du ï¿½ger sjï¿½lv (You cannot allocate more resources than you own for yourself).';
 $lng['error']['mustbeurl'] = 'Du har inte skrivit in en korrekt url (e.g. http://somedomain.com/error404.htm)';
-$lng['error']['invalidpath'] = 'Du har inte valt en korrekt url (Kanske har du lagt till en katalogsäkerhet så att katalogerna inte kan visas?)';
-$lng['error']['stringisempty'] = 'Du måste skriva in något i fältet';
-$lng['error']['stringiswrong'] = 'Fel inatningsfält';
+$lng['error']['invalidpath'] = 'Du har inte valt en korrekt url (Kanske har du lagt till en katalogsï¿½kerhet sï¿½ att katalogerna inte kan visas?)';
+$lng['error']['stringisempty'] = 'Du mï¿½ste skriva in nï¿½got i fï¿½ltet';
+$lng['error']['stringiswrong'] = 'Fel inatningsfï¿½lt';
 $lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
 $lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
 $lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
@@ -210,311 +210,311 @@ $lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
 $lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
-$lng['error']['loginnameexists'] = 'Login-Name %s är upptaget';
-$lng['error']['emailiswrong'] = 'E-post-Adressen "%s" innehåller ogiltiga tecken eller så är den inte komplett';
-$lng['error']['loginnameiswrong'] = 'Login-Namnet %s innehåller ogiltiga tecken';
-$lng['error']['userpathcombinationdupe'] = 'Användarnamnet och sökvägen tillsammans finns redan';
-$lng['error']['patherror'] = 'Generellt Fel! sökvägen till katalogen kan inte vara tom';
-$lng['error']['errordocpathdupe'] = 'Option för sökvägen %s finns redan';
-$lng['error']['adduserfirst'] = 'Skapa användaren först';
-$lng['error']['domainalreadyexists'] = 'Domänen %s ägs redan av en kund';
-$lng['error']['nolanguageselect'] = 'Inget språk är valt.';
-$lng['error']['nosubjectcreate'] = 'Du måste ha ett rubrik för denna E-postmall.';
-$lng['error']['nomailbodycreate'] = 'Du måste ha skrivit in en E-post text för denna mall.';
+$lng['error']['loginnameexists'] = 'Login-Name %s ï¿½r upptaget';
+$lng['error']['emailiswrong'] = 'E-post-Adressen "%s" innehï¿½ller ogiltiga tecken eller sï¿½ ï¿½r den inte komplett';
+$lng['error']['loginnameiswrong'] = 'Login-Namnet %s innehï¿½ller ogiltiga tecken';
+$lng['error']['userpathcombinationdupe'] = 'Anvï¿½ndarnamnet och sï¿½kvï¿½gen tillsammans finns redan';
+$lng['error']['patherror'] = 'Generellt Fel! sï¿½kvï¿½gen till katalogen kan inte vara tom';
+$lng['error']['errordocpathdupe'] = 'Option fï¿½r sï¿½kvï¿½gen %s finns redan';
+$lng['error']['adduserfirst'] = 'Skapa anvï¿½ndaren fï¿½rst';
+$lng['error']['domainalreadyexists'] = 'Domï¿½nen %s ï¿½gs redan av en kund';
+$lng['error']['nolanguageselect'] = 'Inget sprï¿½k ï¿½r valt.';
+$lng['error']['nosubjectcreate'] = 'Du mï¿½ste ha ett rubrik fï¿½r denna E-postmall.';
+$lng['error']['nomailbodycreate'] = 'Du mï¿½ste ha skrivit in en E-post text fï¿½r denna mall.';
 $lng['error']['templatenotfound'] = 'E-postmallen hittades inte.';
-$lng['error']['alltemplatesdefined'] = 'Du kan inte skapa flera mallar, alla språk finns redan.';
-$lng['error']['wwwnotallowed'] = 'www är inte tillåtet att använda för subdomäner.';
-$lng['error']['subdomainiswrong'] = 'Subdomänen %s innehåller ogiltiga tecken.';
-$lng['error']['domaincantbeempty'] = 'Fältet för domännamn får inte vara tommt.';
-$lng['error']['domainexistalready'] = 'Domänen %s finns redan.';
-$lng['error']['domainisaliasorothercustomer'] = 'Den valda domänen är antingen en aliasdomän eller så ägs den redan av en annan kund.';
+$lng['error']['alltemplatesdefined'] = 'Du kan inte skapa flera mallar, alla sprï¿½k finns redan.';
+$lng['error']['wwwnotallowed'] = 'www ï¿½r inte tillï¿½tet att anvï¿½nda fï¿½r subdomï¿½ner.';
+$lng['error']['subdomainiswrong'] = 'Subdomï¿½nen %s innehï¿½ller ogiltiga tecken.';
+$lng['error']['domaincantbeempty'] = 'Fï¿½ltet fï¿½r domï¿½nnamn fï¿½r inte vara tommt.';
+$lng['error']['domainexistalready'] = 'Domï¿½nen %s finns redan.';
+$lng['error']['domainisaliasorothercustomer'] = 'Den valda domï¿½nen ï¿½r antingen en aliasdomï¿½n eller sï¿½ ï¿½gs den redan av en annan kund.';
 $lng['error']['emailexistalready'] = 'E-postadressen %s finns redan.';
-$lng['error']['maindomainnonexist'] = 'Huvuddomänen %s finns inte.';
-$lng['error']['destinationnonexist'] = 'Skapa en forwarder i fältet \'Destination\'.';
+$lng['error']['maindomainnonexist'] = 'Huvuddomï¿½nen %s finns inte.';
+$lng['error']['destinationnonexist'] = 'Skapa en forwarder i fï¿½ltet \'Destination\'.';
 $lng['error']['destinationalreadyexistasmail'] = 'Denna forwarder %s, finns redan som aktiv E-postadress.';
 $lng['error']['destinationalreadyexist'] = 'Du har redan skapat en forwarder till %s .';
-$lng['error']['destinationiswrong'] = 'Denna forwarder: %s innehåller ogiltiga tecken eller så är den inte komplett adress.';
+$lng['error']['destinationiswrong'] = 'Denna forwarder: %s innehï¿½ller ogiltiga tecken eller sï¿½ ï¿½r den inte komplett adress.';
 $lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
  */
 
-$lng['question']['question'] = 'Säkerhetsfråga';
-$lng['question']['admin_customer_reallydelete'] = 'Är du säker på att du vill radera kunden %s? Om du väljer att radera går det inte att ångra sig efteråt!';
-$lng['question']['admin_domain_reallydelete'] = 'Är du riktigt säker på att du vill radera domänen %s?';
-$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Är du riktigt säker på att du vill avaktivera säkerhetsinställningarna (OpenBasedir and/or SafeMode)?';
-$lng['question']['admin_admin_reallydelete'] = 'Är du riktigt säker på att du vill radera adminkontot %s? Alla kunder och domäner kommer att flyttas till ditt konto istället.';
-$lng['question']['admin_template_reallydelete'] = 'Är du riktigt säker på att du vill radera mallen \'%s\'?';
-$lng['question']['domains_reallydelete'] = 'Är du riktigt säker på att du vill radera domänen %s?';
-$lng['question']['email_reallydelete'] = 'Är du riktigt säker på att du vill radera E-postadressen %s?';
-$lng['question']['email_reallydelete_account'] = 'Är du riktigt säker på att du vill radera E-postkontot %s?';
-$lng['question']['email_reallydelete_forwarder'] = 'Är du riktigt säker på att du vill radera forwardern till %s?';
-$lng['question']['extras_reallydelete'] = 'Är du riktigt säker på att du vill radera katalogsäkerheten (directory protection) för %s?';
-$lng['question']['extras_reallydelete_pathoptions'] = 'Är du riktigt säker på att du vill radera katalogalternativen (path options) för %s?';
-$lng['question']['ftp_reallydelete'] = 'Är du riktigt säker på att du vill radera FTP kontot %s?';
-$lng['question']['mysql_reallydelete'] = 'Är du riktigt säker på att du vill radera databasen %s? Om du väljer att radera går det inte att ångra sig efteråt!';
-$lng['question']['admin_configs_reallyrebuild'] = 'Är du riktigt säker på att du vill skapa nya konfigurationsfiler för apache och bind?';
+$lng['question']['question'] = 'Sï¿½kerhetsfrï¿½ga';
+$lng['question']['admin_customer_reallydelete'] = 'ï¿½r du sï¿½ker pï¿½ att du vill radera kunden %s? Om du vï¿½ljer att radera gï¿½r det inte att ï¿½ngra sig efterï¿½t!';
+$lng['question']['admin_domain_reallydelete'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera domï¿½nen %s?';
+$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill avaktivera sï¿½kerhetsinstï¿½llningarna (OpenBasedir and/or SafeMode)?';
+$lng['question']['admin_admin_reallydelete'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera adminkontot %s? Alla kunder och domï¿½ner kommer att flyttas till ditt konto istï¿½llet.';
+$lng['question']['admin_template_reallydelete'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera mallen \'%s\'?';
+$lng['question']['domains_reallydelete'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera domï¿½nen %s?';
+$lng['question']['email_reallydelete'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera E-postadressen %s?';
+$lng['question']['email_reallydelete_account'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera E-postkontot %s?';
+$lng['question']['email_reallydelete_forwarder'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera forwardern till %s?';
+$lng['question']['extras_reallydelete'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera katalogsï¿½kerheten (directory protection) fï¿½r %s?';
+$lng['question']['extras_reallydelete_pathoptions'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera katalogalternativen (path options) fï¿½r %s?';
+$lng['question']['ftp_reallydelete'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera FTP kontot %s?';
+$lng['question']['mysql_reallydelete'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill radera databasen %s? Om du vï¿½ljer att radera gï¿½r det inte att ï¿½ngra sig efterï¿½t!';
+$lng['question']['admin_configs_reallyrebuild'] = 'ï¿½r du riktigt sï¿½ker pï¿½ att du vill skapa nya konfigurationsfiler fï¿½r apache och bind?';
 
 /**
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Hej,\n\nDitt E-postkonto {EMAIL}\nhar nu skapats.\n\nDetta är ett automatgenererat E-post meddelande\n, Det går därför inte att svara på detta meddelande!\n';
-$lng['mails']['pop_success']['subject'] = 'E-postkontot är nu skapat';
-$lng['mails']['createcustomer']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nHär kommer kontoinformationen för ditt konto:\n\nAnvändarnamn (Username): {USERNAME}\nLösenord (Password): {PASSWORD}\n\n';
+$lng['mails']['pop_success']['mailbody'] = 'Hej,\n\nDitt E-postkonto {EMAIL}\nhar nu skapats.\n\nDetta ï¿½r ett automatgenererat E-post meddelande\n, Det gï¿½r dï¿½rfï¿½r inte att svara pï¿½ detta meddelande!\n';
+$lng['mails']['pop_success']['subject'] = 'E-postkontot ï¿½r nu skapat';
+$lng['mails']['createcustomer']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nHï¿½r kommer kontoinformationen fï¿½r ditt konto:\n\nAnvï¿½ndarnamn (Username): {USERNAME}\nLï¿½senord (Password): {PASSWORD}\n\n';
 $lng['mails']['createcustomer']['subject'] = 'Kontoinformation';
 
 /**
  * Admin
  */
 
-$lng['admin']['overview'] = 'Översikt';
-$lng['admin']['ressourcedetails'] = 'Använda resurser';
+$lng['admin']['overview'] = 'ï¿½versikt';
+$lng['admin']['ressourcedetails'] = 'Anvï¿½nda resurser';
 $lng['admin']['systemdetails'] = 'System Detaljer';
 $lng['admin']['froxlordetails'] = 'Froxlor Detaljer';
 $lng['admin']['installedversion'] = 'Installerad version av Froxlor';
 $lng['admin']['latestversion'] = 'Senaste version av Froxlor';
-$lng['admin']['lookfornewversion']['clickhere'] = '[Sök senaste verison av Froxlor via Internet]';
-$lng['admin']['lookfornewversion']['error'] = 'Fel vid läsning, kontrollera uppkopplingen mot Froxlor';
+$lng['admin']['lookfornewversion']['clickhere'] = '[Sï¿½k senaste verison av Froxlor via Internet]';
+$lng['admin']['lookfornewversion']['error'] = 'Fel vid lï¿½sning, kontrollera uppkopplingen mot Froxlor';
 $lng['admin']['resources'] = 'Resurser';
 $lng['admin']['customer'] = 'Kunder';
 $lng['admin']['customers'] = 'Kunder';
 $lng['admin']['customer_add'] = '[Skapa en ny kund]';
-$lng['admin']['customer_edit'] = 'Ändra ny kund';
-$lng['admin']['domains'] = 'Domäner';
-$lng['admin']['domain_add'] = '[Skapa en ny domän]';
-$lng['admin']['domain_edit'] = 'Tillåt ändring av domänen';
-$lng['admin']['subdomainforemail'] = 'Sub-domän som E-postdomän (Subdomains as emaildomains)';
+$lng['admin']['customer_edit'] = 'ï¿½ndra ny kund';
+$lng['admin']['domains'] = 'Domï¿½ner';
+$lng['admin']['domain_add'] = '[Skapa en ny domï¿½n]';
+$lng['admin']['domain_edit'] = 'Tillï¿½t ï¿½ndring av domï¿½nen';
+$lng['admin']['subdomainforemail'] = 'Sub-domï¿½n som E-postdomï¿½n (Subdomains as emaildomains)';
 $lng['admin']['admin'] = 'Admin';
 $lng['admin']['admins'] = 'Admins';
 $lng['admin']['admin_add'] = '[Skapa en ny admin]';
-$lng['admin']['admin_edit'] = 'Ändra admin';
+$lng['admin']['admin_edit'] = 'ï¿½ndra admin';
 $lng['admin']['customers_see_all'] = 'Kan se alla kunder?';
-$lng['admin']['domains_see_all'] = 'Kan se alla domäner?';
-$lng['admin']['change_serversettings'] = 'Kan ändra serverinställningar?';
+$lng['admin']['domains_see_all'] = 'Kan se alla domï¿½ner?';
+$lng['admin']['change_serversettings'] = 'Kan ï¿½ndra serverinstï¿½llningar?';
 $lng['admin']['server'] = 'Server';
-$lng['admin']['serversettings'] = 'Inställningar';
+$lng['admin']['serversettings'] = 'Instï¿½llningar';
 $lng['admin']['rebuildconf'] = 'Uppdatera konfig filer';
-$lng['admin']['stdsubdomain'] = 'Standard subdomän';
-$lng['admin']['stdsubdomain_add'] = '[Skapa en ny standard subdomän]';
-$lng['admin']['phpenabled'] = 'PHP påslagen';
+$lng['admin']['stdsubdomain'] = 'Standard subdomï¿½n';
+$lng['admin']['stdsubdomain_add'] = '[Skapa en ny standard subdomï¿½n]';
+$lng['admin']['phpenabled'] = 'PHP pï¿½slagen';
 $lng['admin']['deactivated'] = 'Inaktiv';
-$lng['admin']['deactivated_user'] = 'Avaktivera användare';
-$lng['admin']['sendpassword'] = 'Skicka lösenord';
-$lng['admin']['ownvhostsettings'] = 'Egna vHost-Inställningar';
+$lng['admin']['deactivated_user'] = 'Avaktivera anvï¿½ndare';
+$lng['admin']['sendpassword'] = 'Skicka lï¿½senord';
+$lng['admin']['ownvhostsettings'] = 'Egna vHost-Instï¿½llningar';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Konfiguration';
-$lng['admin']['configfiles']['files'] = '<b>Konfigurationsfiler:</b> Ändra eller skapa följande filer med<br />följande innehåll om de inte finns redan.<br /><b>Notera:</b> MySQL-lösenordet har inte ändrats på grund av säkerhetsskäl.<br />Du måste själv ändra lösenordet &quot;MYSQL_PASSWORD&quot; på egen hand. Om du glömt bort ditt MySQL-password<br />så kan du hitta det här &quot;lib/userdata.inc.php&quot;.';
-$lng['admin']['configfiles']['commands'] = '<b>Kommandon:</b> Kör följande kommandon i ett terminalfönster.';
-$lng['admin']['configfiles']['restart'] = '<b>Omstart:</b> Kör följande kommandon i ett terminalfönster för att ladda in den nya konfigurationen.';
+$lng['admin']['configfiles']['files'] = '<b>Konfigurationsfiler:</b> ï¿½ndra eller skapa fï¿½ljande filer med<br />fï¿½ljande innehï¿½ll om de inte finns redan.<br /><b>Notera:</b> MySQL-lï¿½senordet har inte ï¿½ndrats pï¿½ grund av sï¿½kerhetsskï¿½l.<br />Du mï¿½ste sjï¿½lv ï¿½ndra lï¿½senordet &quot;MYSQL_PASSWORD&quot; pï¿½ egen hand. Om du glï¿½mt bort ditt MySQL-password<br />sï¿½ kan du hitta det hï¿½r &quot;lib/userdata.inc.php&quot;.';
+$lng['admin']['configfiles']['commands'] = '<b>Kommandon:</b> Kï¿½r fï¿½ljande kommandon i ett terminalfï¿½nster.';
+$lng['admin']['configfiles']['restart'] = '<b>Omstart:</b> Kï¿½r fï¿½ljande kommandon i ett terminalfï¿½nster fï¿½r att ladda in den nya konfigurationen.';
 $lng['admin']['templates']['templates'] = 'Mallar';
-$lng['admin']['templates']['template_add'] = '[Lägg till en ny mall]';
-$lng['admin']['templates']['template_edit'] = 'Ändra en befintlig mall';
+$lng['admin']['templates']['template_add'] = '[Lï¿½gg till en ny mall]';
+$lng['admin']['templates']['template_edit'] = 'ï¿½ndra en befintlig mall';
 $lng['admin']['templates']['action'] = 'Action';
 $lng['admin']['templates']['email'] = 'E-Post';
 $lng['admin']['templates']['subject'] = 'Rubrik (subjekt)';
-$lng['admin']['templates']['mailbody'] = 'E-Postinnehåll (Mail body)';
-$lng['admin']['templates']['createcustomer'] = 'E-Post till nya kunder (Välkommen)';
-$lng['admin']['templates']['pop_success'] = 'E-Post för nya konton (Välkommen)';
-$lng['admin']['templates']['template_replace_vars'] = 'Variabler som kan ändras i mallen:';
-$lng['admin']['templates']['FIRSTNAME'] = 'Ändra till kundens förnamn.';
-$lng['admin']['templates']['NAME'] = 'Ändra till kundens efternamn.';
-$lng['admin']['templates']['USERNAME'] = 'Ändra till kundens kontonamns användarnamn.';
-$lng['admin']['templates']['PASSWORD'] = 'Ändra till kundens kontonamns lösenord.';
-$lng['admin']['templates']['EMAIL'] = 'Ändra till adressen för POP3/IMAP kontot.';
+$lng['admin']['templates']['mailbody'] = 'E-Postinnehï¿½ll (Mail body)';
+$lng['admin']['templates']['createcustomer'] = 'E-Post till nya kunder (Vï¿½lkommen)';
+$lng['admin']['templates']['pop_success'] = 'E-Post fï¿½r nya konton (Vï¿½lkommen)';
+$lng['admin']['templates']['template_replace_vars'] = 'Variabler som kan ï¿½ndras i mallen:';
+$lng['admin']['templates']['FIRSTNAME'] = 'ï¿½ndra till kundens fï¿½rnamn.';
+$lng['admin']['templates']['NAME'] = 'ï¿½ndra till kundens efternamn.';
+$lng['admin']['templates']['USERNAME'] = 'ï¿½ndra till kundens kontonamns anvï¿½ndarnamn.';
+$lng['admin']['templates']['PASSWORD'] = 'ï¿½ndra till kundens kontonamns lï¿½senord.';
+$lng['admin']['templates']['EMAIL'] = 'ï¿½ndra till adressen fï¿½r POP3/IMAP kontot.';
 
 /**
  * Serversettings
  */
 
-$lng['serversettings']['session_timeout']['title'] = 'Sessionen har avslutats för att den tog för lång tid att utföra (session Timeout)';
-$lng['serversettings']['session_timeout']['description'] = 'Tiden (i sekunder) som användaren får vara inaktiv innan han måste logga in igen är (seconds)?';
+$lng['serversettings']['session_timeout']['title'] = 'Sessionen har avslutats fï¿½r att den tog fï¿½r lï¿½ng tid att utfï¿½ra (session Timeout)';
+$lng['serversettings']['session_timeout']['description'] = 'Tiden (i sekunder) som anvï¿½ndaren fï¿½r vara inaktiv innan han mï¿½ste logga in igen ï¿½r (seconds)?';
 $lng['serversettings']['accountprefix']['title'] = 'Kund ID (Customer prefix)';
-$lng['serversettings']['accountprefix']['description'] = 'Vilket prefix skall användas till ett kundkonto?';
+$lng['serversettings']['accountprefix']['description'] = 'Vilket prefix skall anvï¿½ndas till ett kundkonto?';
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL ID (SQL Prefix)';
-$lng['serversettings']['mysqlprefix']['description'] = 'Vilket prefix skall användas till mysql?';
+$lng['serversettings']['mysqlprefix']['description'] = 'Vilket prefix skall anvï¿½ndas till mysql?';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP ID (FTP Prefix)';
-$lng['serversettings']['ftpprefix']['description'] = 'Vilket prefix skall användas till ftp?';
+$lng['serversettings']['ftpprefix']['description'] = 'Vilket prefix skall anvï¿½ndas till ftp?';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Hemkatalog';
-$lng['serversettings']['documentroot_prefix']['description'] = 'Vilken sökväg skall det vara till hemkatalogen?';
+$lng['serversettings']['documentroot_prefix']['description'] = 'Vilken sï¿½kvï¿½g skall det vara till hemkatalogen?';
 $lng['serversettings']['logfiles_directory']['title'] = 'Loggfilernas hemkatalog (Logfiles directory)';
-$lng['serversettings']['logfiles_directory']['description'] = 'Vilken sökväg skall det vara till loggfilernas hemkatalog?';
+$lng['serversettings']['logfiles_directory']['description'] = 'Vilken sï¿½kvï¿½g skall det vara till loggfilernas hemkatalog?';
 $lng['serversettings']['ipaddress']['title'] = 'IP-Adress';
 $lng['serversettings']['ipaddress']['description'] = 'Vilken IP-adress har denna server?';
 $lng['serversettings']['hostname']['title'] = 'Datornamn (Hostname)';
 $lng['serversettings']['hostname']['description'] = 'Villket Datornamn (Hostname) har denna server?';
 $lng['serversettings']['apachereload_command']['title'] = 'Ladda om Apache kommandot (Apache reload)';
-$lng['serversettings']['apachereload_command']['description'] = 'Ange sökvägen till programmet som laddar om Apache (reload apache) konfigurationsfiler?';
+$lng['serversettings']['apachereload_command']['description'] = 'Ange sï¿½kvï¿½gen till programmet som laddar om Apache (reload apache) konfigurationsfiler?';
 $lng['serversettings']['bindconf_directory']['title'] = 'Bind konfigurationskatalog (Bind config directory)';
-$lng['serversettings']['bindconf_directory']['description'] = 'Vilken sökväg skall det vara till bind:s konfigurationsfiler?';
-$lng['serversettings']['bindreload_command']['title'] = 'Ange sökvägen till programmet som laddar om Bind (reload bind) konfigurationsfiler?';
-$lng['serversettings']['bindreload_command']['description'] = 'Ange sökvägen till programmet som laddar om Bind (reload bind) konfigurationsfiler?';
+$lng['serversettings']['bindconf_directory']['description'] = 'Vilken sï¿½kvï¿½g skall det vara till bind:s konfigurationsfiler?';
+$lng['serversettings']['bindreload_command']['title'] = 'Ange sï¿½kvï¿½gen till programmet som laddar om Bind (reload bind) konfigurationsfiler?';
+$lng['serversettings']['bindreload_command']['description'] = 'Ange sï¿½kvï¿½gen till programmet som laddar om Bind (reload bind) konfigurationsfiler?';
 $lng['serversettings']['binddefaultzone']['title'] = 'Bind standard zone';
-$lng['serversettings']['binddefaultzone']['description'] = 'Vad är namnet på standard zonen?';
+$lng['serversettings']['binddefaultzone']['description'] = 'Vad ï¿½r namnet pï¿½ standard zonen?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mails-UID';
-$lng['serversettings']['vmail_uid']['description'] = 'Vilket användarID (UserID) ska E-posten ha?';
+$lng['serversettings']['vmail_uid']['description'] = 'Vilket anvï¿½ndarID (UserID) ska E-posten ha?';
 $lng['serversettings']['vmail_gid']['title'] = 'Mails-GID';
 $lng['serversettings']['vmail_gid']['description'] = 'Vilket gruppID (GroupID) ska E-posten ha?';
 $lng['serversettings']['vmail_homedir']['title'] = 'E-post hemkatalog';
 $lng['serversettings']['vmail_homedir']['description'] = 'I vilken katalog skall E-posten sparas?';
-$lng['serversettings']['adminmail']['title'] = 'Avsändare';
-$lng['serversettings']['adminmail']['description'] = 'Vilken avsändaradress skall E-post från admin panelen ha?';
+$lng['serversettings']['adminmail']['title'] = 'Avsï¿½ndare';
+$lng['serversettings']['adminmail']['description'] = 'Vilken avsï¿½ndaradress skall E-post frï¿½n admin panelen ha?';
 $lng['serversettings']['phpmyadmin_url']['title'] = 'phpMyAdmin URL';
-$lng['serversettings']['phpmyadmin_url']['description'] = 'Vilken URL är det till phpMyAdmin? (Måste börja med http(s)://)';
+$lng['serversettings']['phpmyadmin_url']['description'] = 'Vilken URL ï¿½r det till phpMyAdmin? (Mï¿½ste bï¿½rja med http(s)://)';
 $lng['serversettings']['webmail_url']['title'] = 'WebMail URL';
-$lng['serversettings']['webmail_url']['description'] = 'Vilken URL är det till WebMail? (Måste börja med http(s)://)';
+$lng['serversettings']['webmail_url']['description'] = 'Vilken URL ï¿½r det till WebMail? (Mï¿½ste bï¿½rja med http(s)://)';
 $lng['serversettings']['webftp_url']['title'] = 'WebFTP URL';
-$lng['serversettings']['webftp_url']['description'] = 'Vilken URL är det till  WebFTP? (Måste börja med http(s)://)';
-$lng['serversettings']['language']['description'] = 'Vilket språk skall användas som standardspråk?';
-$lng['serversettings']['maxloginattempts']['title'] = 'Max antal Login försök';
-$lng['serversettings']['maxloginattempts']['description'] = 'Maximalt antal inloggningsförsök innan kontot stängs av.';
-$lng['serversettings']['deactivatetime']['title'] = 'Avstängningstid';
-$lng['serversettings']['deactivatetime']['description'] = 'Tid (sec.) som kontot stängs av efter för många felaktiga försök.';
+$lng['serversettings']['webftp_url']['description'] = 'Vilken URL ï¿½r det till  WebFTP? (Mï¿½ste bï¿½rja med http(s)://)';
+$lng['serversettings']['language']['description'] = 'Vilket sprï¿½k skall anvï¿½ndas som standardsprï¿½k?';
+$lng['serversettings']['maxloginattempts']['title'] = 'Max antal Login fï¿½rsï¿½k';
+$lng['serversettings']['maxloginattempts']['description'] = 'Maximalt antal inloggningsfï¿½rsï¿½k innan kontot stï¿½ngs av.';
+$lng['serversettings']['deactivatetime']['title'] = 'Avstï¿½ngningstid';
+$lng['serversettings']['deactivatetime']['description'] = 'Tid (sec.) som kontot stï¿½ngs av efter fï¿½r mï¿½nga felaktiga fï¿½rsï¿½k.';
 $lng['serversettings']['pathedit']['title'] = 'Typ av (path input)';
-$lng['serversettings']['pathedit']['description'] = 'Skall en sökväg väljas i en rullist eller matas in för hand?';
+$lng['serversettings']['pathedit']['description'] = 'Skall en sï¿½kvï¿½g vï¿½ljas i en rullist eller matas in fï¿½r hand?';
 $lng['serversettings']['nameservers']['title'] = 'Nameservers';
-$lng['serversettings']['nameservers']['description'] = 'En kommaseparerad lista med namnet (hostname) på alla DNS:er. Den första blir den första som söks (primary).';
+$lng['serversettings']['nameservers']['description'] = 'En kommaseparerad lista med namnet (hostname) pï¿½ alla DNS:er. Den fï¿½rsta blir den fï¿½rsta som sï¿½ks (primary).';
 $lng['serversettings']['mxservers']['title'] = 'MX servers';
-$lng['serversettings']['mxservers']['description'] = 'En kommaseparerad lista med nummer och namn separerade men mellanslag (ex. \'10 mx.example.com\') innehåller mx servrarna.';
+$lng['serversettings']['mxservers']['description'] = 'En kommaseparerad lista med nummer och namn separerade men mellanslag (ex. \'10 mx.example.com\') innehï¿½ller mx servrarna.';
 
 /**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['mysql']['description'] = 'Här ändras eller skapas MySQL-Databaser.<br />Ändringen sker omedelbart och databasen kan användas direkt.<br />I menyn på vänster sida finns verktyget phpMyAdmin med vilket man enkelt kan ändra i sin databas.<br /><br />För att använda databasen i dina egna php-scripts använd följande inställningar: (Data med kursiv stil <i>italics</i> måste ändras till det du matat in!)<br />Servernamn (Hostname): <b><SQL_HOST></b><br />Användarnamn (Username): <b><i>Databsnamn (Databasename)</i></b><br />Lösenord (Password): <b><i>Lösenordet som du har valt</i></b><br />Databas (Database): <b><i>Databasnamn (Databasename)</i></b>';
+$lng['mysql']['description'] = 'Hï¿½r ï¿½ndras eller skapas MySQL-Databaser.<br />ï¿½ndringen sker omedelbart och databasen kan anvï¿½ndas direkt.<br />I menyn pï¿½ vï¿½nster sida finns verktyget phpMyAdmin med vilket man enkelt kan ï¿½ndra i sin databas.<br /><br />Fï¿½r att anvï¿½nda databasen i dina egna php-scripts anvï¿½nd fï¿½ljande instï¿½llningar: (Data med kursiv stil <i>italics</i> mï¿½ste ï¿½ndras till det du matat in!)<br />Servernamn (Hostname): <b><SQL_HOST></b><br />Anvï¿½ndarnamn (Username): <b><i>Databsnamn (Databasename)</i></b><br />Lï¿½senord (Password): <b><i>Lï¿½senordet som du har valt</i></b><br />Databas (Database): <b><i>Databasnamn (Databasename)</i></b>';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
 $lng['serversettings']['paging']['title'] = 'Antal rader per sida';
-$lng['serversettings']['paging']['description'] = 'Hur många rader skall det vara på en sida? (0 = Stäng av sidbrytning)';
-$lng['error']['ipstillhasdomains'] = 'IP/Port kombinationen som du vill radera har fortfarande domäner anslutna till sig, Flytta dessa till någon annan IP/Port kombination innan du raderar denna IP/Port kombination.';
-$lng['error']['cantdeletedefaultip'] = 'Det går inte att ta bort den förvalda återförsäljarens IP/Port kombination, Välj en annan IP/Port kombination som förval för återförsäljare innan du raderar denna IP/Port kombination.';
-$lng['error']['cantdeletesystemip'] = 'Det går inte att radera den sista system IP:n, Antingen skapar man en ny IP/Port kombination för system IP eller så ändrar man system IP:n.';
+$lng['serversettings']['paging']['description'] = 'Hur mï¿½nga rader skall det vara pï¿½ en sida? (0 = Stï¿½ng av sidbrytning)';
+$lng['error']['ipstillhasdomains'] = 'IP/Port kombinationen som du vill radera har fortfarande domï¿½ner anslutna till sig, Flytta dessa till nï¿½gon annan IP/Port kombination innan du raderar denna IP/Port kombination.';
+$lng['error']['cantdeletedefaultip'] = 'Det gï¿½r inte att ta bort den fï¿½rvalda ï¿½terfï¿½rsï¿½ljarens IP/Port kombination, Vï¿½lj en annan IP/Port kombination som fï¿½rval fï¿½r ï¿½terfï¿½rsï¿½ljare innan du raderar denna IP/Port kombination.';
+$lng['error']['cantdeletesystemip'] = 'Det gï¿½r inte att radera den sista system IP:n, Antingen skapar man en ny IP/Port kombination fï¿½r system IP eller sï¿½ ï¿½ndrar man system IP:n.';
 $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Port\'';
-$lng['error']['myipdefault'] = 'Man måste välja en IP/Port kombination som skall bli standardvärdet.';
+$lng['error']['myipdefault'] = 'Man mï¿½ste vï¿½lja en IP/Port kombination som skall bli standardvï¿½rdet.';
 $lng['error']['myipnotdouble'] = 'Denna IP/Port kombination finns redan.';
-$lng['question']['admin_ip_reallydelete'] = 'Är du säker på att du vill radera IP addressen %s?';
+$lng['question']['admin_ip_reallydelete'] = 'ï¿½r du sï¿½ker pï¿½ att du vill radera IP addressen %s?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs and Ports';
-$lng['admin']['ipsandports']['add'] = '[Lägg till IP/Port]';
-$lng['admin']['ipsandports']['edit'] = 'Ändra IP/Port';
+$lng['admin']['ipsandports']['add'] = '[Lï¿½gg till IP/Port]';
+$lng['admin']['ipsandports']['edit'] = 'ï¿½ndra IP/Port';
 $lng['admin']['ipsandports']['ipandport'] = 'IP/Port';
 $lng['admin']['ipsandports']['ip'] = 'IP';
 $lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
 
-$lng['error']['cantchangesystemip'] = 'Man kan inte ändra den senaste system IP-adressen. Skapa en helt ny IP/Port kombination för system IP:n eller ändra system IP-adressen.';
-$lng['question']['admin_domain_reallydocrootoutofcustomerroot'] = 'Dokumentkatalogen för denna domän inte kommer att ligga under kundkatalogen, är du säker på att du vill ändra detta?';
+$lng['error']['cantchangesystemip'] = 'Man kan inte ï¿½ndra den senaste system IP-adressen. Skapa en helt ny IP/Port kombination fï¿½r system IP:n eller ï¿½ndra system IP-adressen.';
+$lng['question']['admin_domain_reallydocrootoutofcustomerroot'] = 'Dokumentkatalogen fï¿½r denna domï¿½n inte kommer att ligga under kundkatalogen, ï¿½r du sï¿½ker pï¿½ att du vill ï¿½ndra detta?';
 
 // ADDED IN 1.2.14-rc1
 
-$lng['admin']['memorylimitdisabled'] = 'Avstängd';
+$lng['admin']['memorylimitdisabled'] = 'Avstï¿½ngd';
 $lng['domain']['openbasedirpath'] = 'OpenBasedir-path';
-$lng['domain']['docroot'] = 'Sökvägen från ovanstående fält';
+$lng['domain']['docroot'] = 'Sï¿½kvï¿½gen frï¿½n ovanstï¿½ende fï¿½lt';
 $lng['domain']['homedir'] = 'Hemkatalog';
-$lng['admin']['valuemandatory'] = 'Denna ruta måste fyllas i';
-$lng['admin']['valuemandatorycompany'] = 'Fyll i &quot;förnamn&quot; och &quot;efternamn&quot; eller &quot;företagsnamn&quot;';
+$lng['admin']['valuemandatory'] = 'Denna ruta mï¿½ste fyllas i';
+$lng['admin']['valuemandatorycompany'] = 'Fyll i &quot;fï¿½rnamn&quot; och &quot;efternamn&quot; eller &quot;fï¿½retagsnamn&quot;';
 $lng['menue']['main']['username'] = 'Inloggad som: ';
-$lng['panel']['urloverridespath'] = 'URL (skriver över sökvägen)';
-$lng['panel']['pathorurl'] = 'Sökväg eller URL';
-$lng['error']['sessiontimeoutiswrong'] = 'Bara siffror &quot;Session Timeout&quot; är tillåtna.';
-$lng['error']['maxloginattemptsiswrong'] = 'Bara siffror &quot;Max Login Attempts&quot; är tillåtna.';
-$lng['error']['deactivatetimiswrong'] = 'Bara siffror &quot;Deactivate Time&quot; är tillåtna.';
-$lng['error']['accountprefixiswrong'] = 'Det här &quot;Customerprefix&quot; är fel.';
-$lng['error']['mysqlprefixiswrong'] = 'Det här &quot;SQL Prefix&quot; är fel.';
-$lng['error']['ftpprefixiswrong'] = 'Det här &quot;FTP Prefix&quot; är fel.';
-$lng['error']['ipiswrong'] = 'Den här &quot;IP-Address&quot; är fel. Endast en giltig IP-adress är tillåten.';
-$lng['error']['vmailuidiswrong'] = 'Den här &quot;Mails-uid&quot; är fel. Endast numerisk UID är tillåtenis allowed.';
-$lng['error']['vmailgidiswrong'] = 'Den här &quot;Mails-gid&quot; är fel. Endast numerisk GID är tillåtenis allowed.';
-$lng['error']['adminmailiswrong'] = 'Den här &quot;Sender-address&quot; är fel. Endast en giltig E-postadress är tillåten.';
-$lng['error']['pagingiswrong'] = 'Den här &quot;Entries per Page&quot;-värdet är fel. Endast siffror är tillåtna.';
-$lng['error']['phpmyadminiswrong'] = 'Den här phpMyAdmin-link är inte en giltig länk.';
-$lng['error']['webmailiswrong'] = 'Den här WebMail-link är inte en giltig länk.';
-$lng['error']['webftpiswrong'] = 'Den här WebFTP-link är inte en giltig länk.';
-$lng['domains']['hasaliasdomains'] = 'Domänen har redan alias';
-$lng['serversettings']['defaultip']['title'] = 'Förvald IP/Port';
-$lng['serversettings']['defaultip']['description'] = 'Vilken är den förvalda IP/Port kombinationen?';
-$lng['domains']['statstics'] = 'Användarstatistik';
+$lng['panel']['urloverridespath'] = 'URL (skriver ï¿½ver sï¿½kvï¿½gen)';
+$lng['panel']['pathorurl'] = 'Sï¿½kvï¿½g eller URL';
+$lng['error']['sessiontimeoutiswrong'] = 'Bara siffror &quot;Session Timeout&quot; ï¿½r tillï¿½tna.';
+$lng['error']['maxloginattemptsiswrong'] = 'Bara siffror &quot;Max Login Attempts&quot; ï¿½r tillï¿½tna.';
+$lng['error']['deactivatetimiswrong'] = 'Bara siffror &quot;Deactivate Time&quot; ï¿½r tillï¿½tna.';
+$lng['error']['accountprefixiswrong'] = 'Det hï¿½r &quot;Customerprefix&quot; ï¿½r fel.';
+$lng['error']['mysqlprefixiswrong'] = 'Det hï¿½r &quot;SQL Prefix&quot; ï¿½r fel.';
+$lng['error']['ftpprefixiswrong'] = 'Det hï¿½r &quot;FTP Prefix&quot; ï¿½r fel.';
+$lng['error']['ipiswrong'] = 'Den hï¿½r &quot;IP-Address&quot; ï¿½r fel. Endast en giltig IP-adress ï¿½r tillï¿½ten.';
+$lng['error']['vmailuidiswrong'] = 'Den hï¿½r &quot;Mails-uid&quot; ï¿½r fel. Endast numerisk UID ï¿½r tillï¿½tenis allowed.';
+$lng['error']['vmailgidiswrong'] = 'Den hï¿½r &quot;Mails-gid&quot; ï¿½r fel. Endast numerisk GID ï¿½r tillï¿½tenis allowed.';
+$lng['error']['adminmailiswrong'] = 'Den hï¿½r &quot;Sender-address&quot; ï¿½r fel. Endast en giltig E-postadress ï¿½r tillï¿½ten.';
+$lng['error']['pagingiswrong'] = 'Den hï¿½r &quot;Entries per Page&quot;-vï¿½rdet ï¿½r fel. Endast siffror ï¿½r tillï¿½tna.';
+$lng['error']['phpmyadminiswrong'] = 'Den hï¿½r phpMyAdmin-link ï¿½r inte en giltig lï¿½nk.';
+$lng['error']['webmailiswrong'] = 'Den hï¿½r WebMail-link ï¿½r inte en giltig lï¿½nk.';
+$lng['error']['webftpiswrong'] = 'Den hï¿½r WebFTP-link ï¿½r inte en giltig lï¿½nk.';
+$lng['domains']['hasaliasdomains'] = 'Domï¿½nen har redan alias';
+$lng['serversettings']['defaultip']['title'] = 'Fï¿½rvald IP/Port';
+$lng['serversettings']['defaultip']['description'] = 'Vilken ï¿½r den fï¿½rvalda IP/Port kombinationen?';
+$lng['domains']['statstics'] = 'Anvï¿½ndarstatistik';
 $lng['panel']['ascending'] = 'Stigande';
 $lng['panel']['decending'] = 'Fallande';
-$lng['panel']['search'] = 'Sök';
-$lng['panel']['used'] = 'använd';
+$lng['panel']['search'] = 'Sï¿½k';
+$lng['panel']['used'] = 'anvï¿½nd';
 
 // ADDED IN 1.2.14-rc3
 
-$lng['panel']['translator'] = 'Översättare';
+$lng['panel']['translator'] = 'ï¿½versï¿½ttare';
 
 // ADDED IN 1.2.14-rc4
 
-$lng['error']['stringformaterror'] = 'Värdet för fältet &quot;%s&quot; har inte rätt format.';
+$lng['error']['stringformaterror'] = 'Vï¿½rdet fï¿½r fï¿½ltet &quot;%s&quot; har inte rï¿½tt format.';
 
 // ADDED IN 1.2.15-rc1
 
 $lng['admin']['serversoftware'] = 'Webserver version';
 $lng['admin']['phpversion'] = 'PHP-Version';
-$lng['admin']['phpmemorylimit'] = 'PHP-Minnesgräns';
+$lng['admin']['phpmemorylimit'] = 'PHP-Minnesgrï¿½ns';
 $lng['admin']['mysqlserverversion'] = 'MySQL Server Version';
 $lng['admin']['mysqlclientversion'] = 'MySQL Klient Version';
 $lng['admin']['webserverinterface'] = 'Webserver Interface';
-$lng['domains']['isassigneddomain'] = 'Tilldelad domän ';
-$lng['serversettings']['phpappendopenbasedir']['title'] = 'Sökväg att lägga till OpenBasedir';
-$lng['serversettings']['phpappendopenbasedir']['description'] = 'Dessa sökvägar (separerade med kolon) kommer att läggas till OpenBasedir-statement i alla  vhost-container.';
+$lng['domains']['isassigneddomain'] = 'Tilldelad domï¿½n ';
+$lng['serversettings']['phpappendopenbasedir']['title'] = 'Sï¿½kvï¿½g att lï¿½gga till OpenBasedir';
+$lng['serversettings']['phpappendopenbasedir']['description'] = 'Dessa sï¿½kvï¿½gar (separerade med kolon) kommer att lï¿½ggas till OpenBasedir-statement i alla  vhost-container.';
 
 // CHANGED IN 1.2.15-rc1
 
-$lng['error']['loginnameissystemaccount'] = 'Det går inte att skapa ett konto som liknar ett systemkonto (Om det till exempel börjar med &quot;%s&quot;). Vlj ett annat kontonamn.';
-$lng['error']['youcantdeleteyourself'] = 'Av säkerhetsskäl går inte att redera ditt eget konto.';
-$lng['error']['youcanteditallfieldsofyourself'] = 'Notera: Av säkerhetsskäl går det inte att ändra ditt eget konto.';
+$lng['error']['loginnameissystemaccount'] = 'Det gï¿½r inte att skapa ett konto som liknar ett systemkonto (Om det till exempel bï¿½rjar med &quot;%s&quot;). Vlj ett annat kontonamn.';
+$lng['error']['youcantdeleteyourself'] = 'Av sï¿½kerhetsskï¿½l gï¿½r inte att redera ditt eget konto.';
+$lng['error']['youcanteditallfieldsofyourself'] = 'Notera: Av sï¿½kerhetsskï¿½l gï¿½r det inte att ï¿½ndra ditt eget konto.';
 
 // ADDED IN 1.2.16-svn1
 
-$lng['serversettings']['natsorting']['title'] = 'Använd mänsklig sortertering i listvisning';
-$lng['serversettings']['natsorting']['description'] = 'Sorterar listan så här web1 -> web2 -> web11 istället för web1 -> web11 -> web2.';
+$lng['serversettings']['natsorting']['title'] = 'Anvï¿½nd mï¿½nsklig sortertering i listvisning';
+$lng['serversettings']['natsorting']['description'] = 'Sorterar listan sï¿½ hï¿½r web1 -> web2 -> web11 istï¿½llet fï¿½r web1 -> web11 -> web2.';
 
 // ADDED IN 1.2.16-svn2
 
-$lng['serversettings']['deactivateddocroot']['title'] = 'Dokumentroot för avstängda användare';
-$lng['serversettings']['deactivateddocroot']['description'] = 'När en användare är avstängd kommer denna sökväg att användas som dokumentroot. Lämna fältet tommt om du inte vill skapa någon vhost.';
+$lng['serversettings']['deactivateddocroot']['title'] = 'Dokumentroot fï¿½r avstï¿½ngda anvï¿½ndare';
+$lng['serversettings']['deactivateddocroot']['description'] = 'Nï¿½r en anvï¿½ndare ï¿½r avstï¿½ngd kommer denna sï¿½kvï¿½g att anvï¿½ndas som dokumentroot. Lï¿½mna fï¿½ltet tommt om du inte vill skapa nï¿½gon vhost.';
 
 // ADDED IN 1.2.16-svn4
 
-$lng['panel']['reset'] = 'Avbryt ändringarna';
-$lng['admin']['accountsettings'] = 'Kontoinställningar';
-$lng['admin']['panelsettings'] = 'Panelinställningar';
-$lng['admin']['systemsettings'] = 'Systeminställningar';
-$lng['admin']['webserversettings'] = 'Webserverinställningar';
-$lng['admin']['mailserversettings'] = 'E-postserverinställningar';
-$lng['admin']['nameserversettings'] = 'Namnserverinställningar';
+$lng['panel']['reset'] = 'Avbryt ï¿½ndringarna';
+$lng['admin']['accountsettings'] = 'Kontoinstï¿½llningar';
+$lng['admin']['panelsettings'] = 'Panelinstï¿½llningar';
+$lng['admin']['systemsettings'] = 'Systeminstï¿½llningar';
+$lng['admin']['webserversettings'] = 'Webserverinstï¿½llningar';
+$lng['admin']['mailserversettings'] = 'E-postserverinstï¿½llningar';
+$lng['admin']['nameserversettings'] = 'Namnserverinstï¿½llningar';
 $lng['admin']['updatecounters'] = 'Uppdatera status';
-$lng['question']['admin_counters_reallyupdate'] = 'Vill du uppdatera alla statusberäkningar för kunder och admins?';
+$lng['question']['admin_counters_reallyupdate'] = 'Vill du uppdatera alla statusberï¿½kningar fï¿½r kunder och admins?';
 $lng['panel']['pathDescription'] = 'Katalogen kommer att skapas om den inte redan finns.';
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Varning {NAME},\n\nDu har nu använt {TRAFFICUSED} MB av ditt tillgängliga {TRAFFIC} MB för trafik.\nDetta är mer än 90%.\n\nHälsningar, Froxlor team';
-$lng['mails']['trafficninetypercent']['subject'] = 'Du är på väg att nå din tillåtna trafikgräns';
-$lng['admin']['templates']['trafficninetypercent'] = 'Meddelande till kund när mer än nittio procent av trafiken utnyttjas';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'Varning {NAME},\n\nDu har nu anvï¿½nt {TRAFFICUSED} MB av ditt tillgï¿½ngliga {TRAFFIC} MB fï¿½r trafik.\nDetta ï¿½r mer ï¿½n 90%.\n\nHï¿½lsningar, Froxlor team';
+$lng['mails']['trafficninetypercent']['subject'] = 'Du ï¿½r pï¿½ vï¿½g att nï¿½ din tillï¿½tna trafikgrï¿½ns';
+$lng['admin']['templates']['trafficninetypercent'] = 'Meddelande till kund nï¿½r mer ï¿½n nittio procent av trafiken utnyttjas';
 $lng['admin']['templates']['TRAFFIC'] = 'Ersatt med trafikbegrnsningen som var tilldelad till kunden.';
-$lng['admin']['templates']['TRAFFICUSED'] = 'Ersatt med trafikbegrnsningen som var överskriden av kunden.';
+$lng['admin']['templates']['TRAFFICUSED'] = 'Ersatt med trafikbegrnsningen som var ï¿½verskriden av kunden.';
 
 // ADDED IN 1.2.16-svn7
 
 $lng['admin']['subcanemaildomain']['never'] = 'Aldrig';
-$lng['admin']['subcanemaildomain']['choosableno'] = 'Valbar, standardvärdet är Nej';
-$lng['admin']['subcanemaildomain']['choosableyes'] = 'Valbar, standardvärdet är Ja';
+$lng['admin']['subcanemaildomain']['choosableno'] = 'Valbar, standardvï¿½rdet ï¿½r Nej';
+$lng['admin']['subcanemaildomain']['choosableyes'] = 'Valbar, standardvï¿½rdet ï¿½r Ja';
 $lng['admin']['subcanemaildomain']['always'] = 'Alltid';
-$lng['changepassword']['also_change_webalizer'] = ' Ändra även lösenord för webalizer statistik';
+$lng['changepassword']['also_change_webalizer'] = ' ï¿½ndra ï¿½ven lï¿½senord fï¿½r webalizer statistik';
 
 // ADDED IN 1.2.16-svn8
 
-$lng['serversettings']['mailpwcleartext']['title'] = 'Spara även lösenord till E-postkonton okrypterade i databassen';
-$lng['serversettings']['mailpwcleartext']['description'] = 'Om du valt Ja så kommer alla lösenord att sparas okrypterade (klartext, fullt läsbara för alla som har rättigheter till databasen) i tabellen mail_users-table. Aktivera detta endast om du är säker på vad du gör!';
-$lng['serversettings']['mailpwcleartext']['removelink'] = 'Klicka här för att radera alla okrypterade lösenord från tabellen.';
-$lng['question']['admin_cleartextmailpws_reallywipe'] = 'Är du säker på att du vill radera alla okrupterade lösenord från tabellen mail_users? Du kan INTE ändra dig efteråt!';
-$lng['admin']['configfiles']['overview'] = 'Översikt';
+$lng['serversettings']['mailpwcleartext']['title'] = 'Spara ï¿½ven lï¿½senord till E-postkonton okrypterade i databassen';
+$lng['serversettings']['mailpwcleartext']['description'] = 'Om du valt Ja sï¿½ kommer alla lï¿½senord att sparas okrypterade (klartext, fullt lï¿½sbara fï¿½r alla som har rï¿½ttigheter till databasen) i tabellen mail_users-table. Aktivera detta endast om du ï¿½r sï¿½ker pï¿½ vad du gï¿½r!';
+$lng['serversettings']['mailpwcleartext']['removelink'] = 'Klicka hï¿½r fï¿½r att radera alla okrypterade lï¿½senord frï¿½n tabellen.';
+$lng['question']['admin_cleartextmailpws_reallywipe'] = 'ï¿½r du sï¿½ker pï¿½ att du vill radera alla okrupterade lï¿½senord frï¿½n tabellen mail_users? Du kan INTE ï¿½ndra dig efterï¿½t!';
+$lng['admin']['configfiles']['overview'] = 'ï¿½versikt';
 $lng['admin']['configfiles']['wizard'] = 'Guide';
 $lng['admin']['configfiles']['distribution'] = 'Distribution';
 $lng['admin']['configfiles']['service'] = 'Service';
@@ -537,36 +537,36 @@ $lng['panel']['back'] = 'Tillbaka';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_log_sql']['title'] = 'Tillfälligt spara loggfiler i databasen';
-$lng['serversettings']['mod_log_sql']['description'] = 'Använd <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> för att spara webfrågor tillfälligt<br /><b>Detta behöver en special <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
+$lng['serversettings']['mod_log_sql']['title'] = 'Tillfï¿½lligt spara loggfiler i databasen';
+$lng['serversettings']['mod_log_sql']['description'] = 'Anvï¿½nd <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> fï¿½r att spara webfrï¿½gor tillfï¿½lligt<br /><b>Detta behï¿½ver en special <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Inkludera PHP via mod_fcgid/suexec';
-$lng['serversettings']['mod_fcgid']['description'] = 'Använd mod_fcgid/suexec/libnss_mysql för att köra PHP med tillhörande användarkonto.<br/><b>Denna inställning behöver en speciell apache-konfiguration!</b>';
-$lng['serversettings']['sendalternativemail']['title'] = 'Använd en alternativ E-postadress';
-$lng['serversettings']['sendalternativemail']['description'] = 'Skicka lösenord med E-post till adressen under email-account-creation';
+$lng['serversettings']['mod_fcgid']['description'] = 'Anvï¿½nd mod_fcgid/suexec/libnss_mysql fï¿½r att kï¿½ra PHP med tillhï¿½rande anvï¿½ndarkonto.<br/><b>Denna instï¿½llning behï¿½ver en speciell apache-konfiguration!</b>';
+$lng['serversettings']['sendalternativemail']['title'] = 'Anvï¿½nd en alternativ E-postadress';
+$lng['serversettings']['sendalternativemail']['description'] = 'Skicka lï¿½senord med E-post till adressen under email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Hej,\n\nditt E-postkonto {EMAIL}\nhar ny skapats.\nDitt lösenord är {PASSWORD}.\n\nDetta är ett automatgenererat E-postmeddelande som det INTE går att svara på!\n\nLycka till önskar, Froxlor';
-$lng['mails']['pop_success_alternative']['subject'] = 'E-postkontot är nu skapat';
-$lng['admin']['templates']['pop_success_alternative'] = 'Välkommstmeddelande för nya E-post konton som skickas till den alternativa adressen';
-$lng['admin']['templates']['EMAIL_PASSWORD'] = 'Ersatt med POP3/IMAP kontots lösenord.';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Hej,\n\nditt E-postkonto {EMAIL}\nhar ny skapats.\nDitt lï¿½senord ï¿½r {PASSWORD}.\n\nDetta ï¿½r ett automatgenererat E-postmeddelande som det INTE gï¿½r att svara pï¿½!\n\nLycka till ï¿½nskar, Froxlor';
+$lng['mails']['pop_success_alternative']['subject'] = 'E-postkontot ï¿½r nu skapat';
+$lng['admin']['templates']['pop_success_alternative'] = 'Vï¿½lkommstmeddelande fï¿½r nya E-post konton som skickas till den alternativa adressen';
+$lng['admin']['templates']['EMAIL_PASSWORD'] = 'Ersatt med POP3/IMAP kontots lï¿½senord.';
 
 // ADDED IN 1.2.16-svn13
 
-$lng['error']['documentrootexists'] = 'Katalogen &quot;%s&quot; finns redan hos den här kunden. Radera detta först innan kunden skapas igen.';
+$lng['error']['documentrootexists'] = 'Katalogen &quot;%s&quot; finns redan hos den hï¿½r kunden. Radera detta fï¿½rst innan kunden skapas igen.';
 
 // ADDED IN 1.2.16-svn14
 
 $lng['serversettings']['apacheconf_vhost']['title'] = 'Apache vhost konfiguration fil/katalognamn';
-$lng['serversettings']['apacheconf_vhost']['description'] = 'Var skall vhost konfigurationen sparas? Det går att specificera alla vhost i en fil eller en katalog där alla filerna ligger (varje vhost i sin egen fil).';
+$lng['serversettings']['apacheconf_vhost']['description'] = 'Var skall vhost konfigurationen sparas? Det gï¿½r att specificera alla vhost i en fil eller en katalog dï¿½r alla filerna ligger (varje vhost i sin egen fil).';
 $lng['serversettings']['apacheconf_diroptions']['title'] = 'Apache diroptions konfiguration fil/katalognamn';
-$lng['serversettings']['apacheconf_diroptions']['description'] = 'Var skall diroptions konfigurationen sparas? Det går att specificera alla diroptions i en fil eller en katalog där alla filerna ligger (varje diroptions i sin egen fil).';
+$lng['serversettings']['apacheconf_diroptions']['description'] = 'Var skall diroptions konfigurationen sparas? Det gï¿½r att specificera alla diroptions i en fil eller en katalog dï¿½r alla filerna ligger (varje diroptions i sin egen fil).';
 $lng['serversettings']['apacheconf_htpasswddir']['title'] = 'Apache htpasswd katalognamn';
-$lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Var skall htpasswd konfigurationen för katalogsäkerheten?';
+$lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Var skall htpasswd konfigurationen fï¿½r katalogsï¿½kerheten?';
 
 // ADDED IN 1.2.16-svn15
 
-$lng['error']['formtokencompromised'] = 'Den säkra anslutningen till Froxlor har avslutats och du har av säkerhetsskäl automatiskt loggats ur.';
+$lng['error']['formtokencompromised'] = 'Den sï¿½kra anslutningen till Froxlor har avslutats och du har av sï¿½kerhetsskï¿½l automatiskt loggats ur.';
 $lng['serversettings']['mysql_access_host']['title'] = 'MySQL-Access-Hosts';
-$lng['serversettings']['mysql_access_host']['description'] = 'En kommaseparerad lista med datornamn som tillåts att kontakta MySQL servern.';
+$lng['serversettings']['mysql_access_host']['description'] = 'En kommaseparerad lista med datornamn som tillï¿½ts att kontakta MySQL servern.';
 
 // ADDED IN 1.2.18-svn1
 
@@ -577,10 +577,10 @@ $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'] = 'Sk
 
 // ADDED IN 1.2.18-svn2
 
-$lng['admin']['webalizersettings'] = 'Webalizer inställningar';
+$lng['admin']['webalizersettings'] = 'Webalizer instï¿½llningar';
 $lng['admin']['webalizer']['normal'] = 'Normal';
 $lng['admin']['webalizer']['quiet'] = 'Tyst';
-$lng['admin']['webalizer']['veryquiet'] = 'Väldigt tyst';
+$lng['admin']['webalizer']['veryquiet'] = 'Vï¿½ldigt tyst';
 $lng['serversettings']['webalizer_quiet']['title'] = 'Webalizer output';
 $lng['serversettings']['webalizer_quiet']['description'] = 'Verbosity of the webalizer-program';
 
@@ -589,135 +589,135 @@ $lng['serversettings']['webalizer_quiet']['description'] = 'Verbosity of the web
 $lng['ticket']['admin_email'] = 'root@localhost';
 $lng['ticket']['noreply_email'] = 'tickets@froxlor';
 $lng['admin']['ticketsystem'] = 'Support';
-$lng['menue']['ticket']['ticket'] = 'Supportärenden';
+$lng['menue']['ticket']['ticket'] = 'Supportï¿½renden';
 $lng['menue']['ticket']['categories'] = 'Kategorier';
 $lng['menue']['ticket']['archive'] = 'Arkivet';
-$lng['ticket']['description'] = 'Skriv en beskrivning av ärendet här!';
-$lng['ticket']['ticket_new'] = '[Skapa ett nytt ärende]';
-$lng['ticket']['ticket_reply'] = 'Svara ärende';
-$lng['ticket']['ticket_reopen'] = 'Återöppna ärende';
+$lng['ticket']['description'] = 'Skriv en beskrivning av ï¿½rendet hï¿½r!';
+$lng['ticket']['ticket_new'] = '[Skapa ett nytt ï¿½rende]';
+$lng['ticket']['ticket_reply'] = 'Svara ï¿½rende';
+$lng['ticket']['ticket_reopen'] = 'ï¿½terï¿½ppna ï¿½rende';
 $lng['ticket']['ticket_newcateory'] = '[Skapa ny kategori]';
-$lng['ticket']['ticket_editcateory'] = 'Ändra kategori';
+$lng['ticket']['ticket_editcateory'] = 'ï¿½ndra kategori';
 $lng['ticket']['ticket_view'] = 'View ticketcourse';
-$lng['ticket']['ticketcount'] = 'Ärendenummer';
+$lng['ticket']['ticketcount'] = 'ï¿½rendenummer';
 $lng['ticket']['ticket_answers'] = 'Svar';
-$lng['ticket']['lastchange'] = 'Senaste ändring';
+$lng['ticket']['lastchange'] = 'Senaste ï¿½ndring';
 $lng['ticket']['subject'] = 'Rubrik';
 $lng['ticket']['status'] = 'Status';
-$lng['ticket']['lastreplier'] = 'Ägare';
+$lng['ticket']['lastreplier'] = 'ï¿½gare';
 $lng['ticket']['priority'] = 'Prioritet';
-$lng['ticket']['low'] = '<span class="Ärende_låg">Låg</span>';
-$lng['ticket']['normal'] = '<span class="Ärende_norm">Normal</span>';
-$lng['ticket']['high'] = '<span class="Ärende_hög">Hög</span>';
-$lng['ticket']['unf_low'] = 'Låg';
+$lng['ticket']['low'] = '<span class="ï¿½rende_lï¿½g">Lï¿½g</span>';
+$lng['ticket']['normal'] = '<span class="ï¿½rende_norm">Normal</span>';
+$lng['ticket']['high'] = '<span class="ï¿½rende_hï¿½g">Hï¿½g</span>';
+$lng['ticket']['unf_low'] = 'Lï¿½g';
 $lng['ticket']['unf_normal'] = 'Normal';
-$lng['ticket']['unf_high'] = 'Hög';
-$lng['ticket']['lastchange'] = 'Ändrad';
-$lng['ticket']['lastchange_from'] = 'Från datum (dd.mm.yyyy)';
+$lng['ticket']['unf_high'] = 'Hï¿½g';
+$lng['ticket']['lastchange'] = 'ï¿½ndrad';
+$lng['ticket']['lastchange_from'] = 'Frï¿½n datum (dd.mm.yyyy)';
 $lng['ticket']['lastchange_to'] = 'Till datum (dd.mm.yyyy)';
 $lng['ticket']['category'] = 'Kategori';
 $lng['ticket']['no_cat'] = 'None';
 $lng['ticket']['message'] = 'Meddeland';
 $lng['ticket']['show'] = 'Visa';
 $lng['ticket']['answer'] = 'Svara';
-$lng['ticket']['close'] = 'Stäng';
-$lng['ticket']['reopen'] = 'Öppna igen';
+$lng['ticket']['close'] = 'Stï¿½ng';
+$lng['ticket']['reopen'] = 'ï¿½ppna igen';
 $lng['ticket']['archive'] = 'Arkivera';
-$lng['ticket']['ticket_delete'] = 'Radera ett ärende';
+$lng['ticket']['ticket_delete'] = 'Radera ett ï¿½rende';
 $lng['ticket']['lastarchived'] = 'Recently archived tickets';
 $lng['ticket']['archivedtime'] = 'Arkiverad';
-$lng['ticket']['open'] = 'Öppnad';
-$lng['ticket']['wait_reply'] = 'Väntar på svar';
+$lng['ticket']['open'] = 'ï¿½ppnad';
+$lng['ticket']['wait_reply'] = 'Vï¿½ntar pï¿½ svar';
 $lng['ticket']['replied'] = 'Besvarad';
-$lng['ticket']['closed'] = 'Stängd';
+$lng['ticket']['closed'] = 'Stï¿½ngd';
 $lng['ticket']['staff'] = 'Staff';
 $lng['ticket']['customer'] = 'Kund';
-$lng['ticket']['old_tickets'] = 'Ärende meddelanden';
-$lng['ticket']['search'] = 'Sök i arkivet';
+$lng['ticket']['old_tickets'] = 'ï¿½rende meddelanden';
+$lng['ticket']['search'] = 'Sï¿½k i arkivet';
 $lng['ticket']['nocustomer'] = 'Inget val';
-$lng['ticket']['archivesearch'] = 'Arkiv sökresultat';
-$lng['ticket']['noresults'] = 'Inget ärende funnet';
-$lng['ticket']['notmorethanxopentickets'] = 'På grund av spamhanteringen kan du inte ha mer än %s öppna ärenden';
+$lng['ticket']['archivesearch'] = 'Arkiv sï¿½kresultat';
+$lng['ticket']['noresults'] = 'Inget ï¿½rende funnet';
+$lng['ticket']['notmorethanxopentickets'] = 'Pï¿½ grund av spamhanteringen kan du inte ha mer ï¿½n %s ï¿½ppna ï¿½renden';
 $lng['ticket']['supportstatus'] = 'Support-Status';
-$lng['ticket']['supportavailable'] = '<span class="ticket_low">Våra supporttekniker tar nu gärna emot era supportärenden.</span>';
-$lng['ticket']['supportnotavailable'] = '<span class="ticket_high">Våra supporttekniker är inte tillgängliga just nu.</span>';
-$lng['admin']['templates']['ticket'] = 'Informations E-post för supportärenden';
-$lng['admin']['templates']['SUBJECT'] = 'Ersatt med supportärendet rubrik';
-$lng['admin']['templates']['new_ticket_for_customer'] = 'Kundinformation som ärendet har skickat';
-$lng['admin']['templates']['new_ticket_by_customer'] = 'Admininformation för ett ärende öppnat av kund';
-$lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Admininformation för ett svar från kund';
-$lng['admin']['templates']['new_ticket_by_staff'] = 'Kundinformation för ett ärende öppnat av ledningen';
-$lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Kundinformation för ett ärende besvarat av ledningen';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nDitt supportärende med rubriken "{SUBJECT}" har skickats till supporten.\n\nVi meddelar dig när ditt ärende har blivit besvarat.\n\nMed vänliga hälsningar,\n Froxlor';
-$lng['mails']['new_ticket_for_customer']['subject'] = 'Ditt supportärende har nu skickats';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hej admin,\n\nEtt nytt supportärende med rubriken "{SUBJECT}" har nu skapats.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
-$lng['mails']['new_ticket_by_customer']['subject'] = 'Nytt supportärende skapat';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hej admin,\n\nDitt supportärende "{SUBJECT}" har blivit besvarat an en kund.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
-$lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nytt svar för supportärendet';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nEtt nytt supportärende har öppnats med rubriken "{SUBJECT}".\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
-$lng['mails']['new_ticket_by_staff']['subject'] = 'Nytt supportärede behandlat';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nSupportärendet med rubriken "{SUBJECT}" har besvarats av vår personal.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
-$lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Svar på ert supportärende';
-$lng['question']['ticket_reallyclose'] = 'Är du säker på att du vill stänga supportärendet "%s"?';
-$lng['question']['ticket_reallydelete'] = 'Är du säker på att du vill radera supportärendet "%s"?';
-$lng['question']['ticket_reallydeletecat'] = 'Är du säker på att du vill radera kategorin "%s"?';
-$lng['question']['ticket_reallyarchive'] = 'Är du säker på att du vill flytta supportärendet "%s" till arkivet?';
+$lng['ticket']['supportavailable'] = '<span class="ticket_low">Vï¿½ra supporttekniker tar nu gï¿½rna emot era supportï¿½renden.</span>';
+$lng['ticket']['supportnotavailable'] = '<span class="ticket_high">Vï¿½ra supporttekniker ï¿½r inte tillgï¿½ngliga just nu.</span>';
+$lng['admin']['templates']['ticket'] = 'Informations E-post fï¿½r supportï¿½renden';
+$lng['admin']['templates']['SUBJECT'] = 'Ersatt med supportï¿½rendet rubrik';
+$lng['admin']['templates']['new_ticket_for_customer'] = 'Kundinformation som ï¿½rendet har skickat';
+$lng['admin']['templates']['new_ticket_by_customer'] = 'Admininformation fï¿½r ett ï¿½rende ï¿½ppnat av kund';
+$lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Admininformation fï¿½r ett svar frï¿½n kund';
+$lng['admin']['templates']['new_ticket_by_staff'] = 'Kundinformation fï¿½r ett ï¿½rende ï¿½ppnat av ledningen';
+$lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Kundinformation fï¿½r ett ï¿½rende besvarat av ledningen';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nDitt supportï¿½rende med rubriken "{SUBJECT}" har skickats till supporten.\n\nVi meddelar dig nï¿½r ditt ï¿½rende har blivit besvarat.\n\nMed vï¿½nliga hï¿½lsningar,\n Froxlor';
+$lng['mails']['new_ticket_for_customer']['subject'] = 'Ditt supportï¿½rende har nu skickats';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hej admin,\n\nEtt nytt supportï¿½rende med rubriken "{SUBJECT}" har nu skapats.\n\nVï¿½nligen logga in fï¿½r att ï¿½ppna ï¿½rendet.\n\nMed vï¿½nliga hï¿½lsningar,\n Froxlor';
+$lng['mails']['new_ticket_by_customer']['subject'] = 'Nytt supportï¿½rende skapat';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hej admin,\n\nDitt supportï¿½rende "{SUBJECT}" har blivit besvarat an en kund.\n\nVï¿½nligen logga in fï¿½r att ï¿½ppna ï¿½rendet.\n\nMed vï¿½nliga hï¿½lsningar,\n Froxlor';
+$lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nytt svar fï¿½r supportï¿½rendet';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nEtt nytt supportï¿½rende har ï¿½ppnats med rubriken "{SUBJECT}".\n\nVï¿½nligen logga in fï¿½r att ï¿½ppna ï¿½rendet.\n\nMed vï¿½nliga hï¿½lsningar,\n Froxlor';
+$lng['mails']['new_ticket_by_staff']['subject'] = 'Nytt supportï¿½rede behandlat';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nSupportï¿½rendet med rubriken "{SUBJECT}" har besvarats av vï¿½r personal.\n\nVï¿½nligen logga in fï¿½r att ï¿½ppna ï¿½rendet.\n\nMed vï¿½nliga hï¿½lsningar,\n Froxlor';
+$lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Svar pï¿½ ert supportï¿½rende';
+$lng['question']['ticket_reallyclose'] = 'ï¿½r du sï¿½ker pï¿½ att du vill stï¿½nga supportï¿½rendet "%s"?';
+$lng['question']['ticket_reallydelete'] = 'ï¿½r du sï¿½ker pï¿½ att du vill radera supportï¿½rendet "%s"?';
+$lng['question']['ticket_reallydeletecat'] = 'ï¿½r du sï¿½ker pï¿½ att du vill radera kategorin "%s"?';
+$lng['question']['ticket_reallyarchive'] = 'ï¿½r du sï¿½ker pï¿½ att du vill flytta supportï¿½rendet "%s" till arkivet?';
 $lng['error']['mysubject'] = '\'' . $lng['ticket']['subject'] . '\'';
 $lng['error']['mymessage'] = '\'' . $lng['ticket']['message'] . '\'';
 $lng['error']['mycategory'] = '\'' . $lng['ticket']['category'] . '\'';
-$lng['error']['nomoreticketsavailable'] = 'Du har redan använt alla supportärenden som du fått tilldelade. Kontakta administratören om du behöver fler.';
-$lng['error']['nocustomerforticket'] = 'Det går inte att skapa ett supportärende utan kunder';
-$lng['error']['categoryhastickets'] = 'Denna kategori har fortfarande supportärenden.<br />Du måste radera dessa ärenden innan du kan radera denna kategori';
+$lng['error']['nomoreticketsavailable'] = 'Du har redan anvï¿½nt alla supportï¿½renden som du fï¿½tt tilldelade. Kontakta administratï¿½ren om du behï¿½ver fler.';
+$lng['error']['nocustomerforticket'] = 'Det gï¿½r inte att skapa ett supportï¿½rende utan kunder';
+$lng['error']['categoryhastickets'] = 'Denna kategori har fortfarande supportï¿½renden.<br />Du mï¿½ste radera dessa ï¿½renden innan du kan radera denna kategori';
 $lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
-$lng['admin']['ticketsettings'] = 'Supportärende inställningar';
-$lng['admin']['archivelastrun'] = 'Sista supportärende som arkiverats';
+$lng['admin']['ticketsettings'] = 'Supportï¿½rende instï¿½llningar';
+$lng['admin']['archivelastrun'] = 'Sista supportï¿½rende som arkiverats';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Svara-Inte E-post adress';
-$lng['serversettings']['ticket']['noreply_email']['description'] = 'Avsändaradressen för support-ticket, exempel: inget-svar@example.org';
+$lng['serversettings']['ticket']['noreply_email']['description'] = 'Avsï¿½ndaradressen fï¿½r support-ticket, exempel: inget-svar@example.org';
 $lng['serversettings']['ticket']['worktime_begin']['title'] = 'Start av support-tid (hh:mm)';
-$lng['serversettings']['ticket']['worktime_begin']['description'] = 'Start-tid, när supporten är tillgänglig';
-$lng['serversettings']['ticket']['worktime_end']['title'] = 'Slut på support-tid (hh:mm)';
-$lng['serversettings']['ticket']['worktime_end']['description'] = 'Slut-tid, när supporten inte längre är tillgänglig';
-$lng['serversettings']['ticket']['worktime_sat'] = 'Supporten har öppet på lördagar?';
-$lng['serversettings']['ticket']['worktime_sun'] = 'Supporten har öppet på söndagar?';
-$lng['serversettings']['ticket']['worktime_all']['title'] = 'Supporten är tillgänglig dygnet runt';
-$lng['serversettings']['ticket']['worktime_all']['description'] = 'Om du väljer "Ja" så kommer start och stopp tiderna att skrivas över';
-$lng['serversettings']['ticket']['archiving_days'] = 'Efter hur många dagar skall stängda tickets arkiveras?';
-$lng['customer']['tickets'] = 'Support ärenden';
+$lng['serversettings']['ticket']['worktime_begin']['description'] = 'Start-tid, nï¿½r supporten ï¿½r tillgï¿½nglig';
+$lng['serversettings']['ticket']['worktime_end']['title'] = 'Slut pï¿½ support-tid (hh:mm)';
+$lng['serversettings']['ticket']['worktime_end']['description'] = 'Slut-tid, nï¿½r supporten inte lï¿½ngre ï¿½r tillgï¿½nglig';
+$lng['serversettings']['ticket']['worktime_sat'] = 'Supporten har ï¿½ppet pï¿½ lï¿½rdagar?';
+$lng['serversettings']['ticket']['worktime_sun'] = 'Supporten har ï¿½ppet pï¿½ sï¿½ndagar?';
+$lng['serversettings']['ticket']['worktime_all']['title'] = 'Supporten ï¿½r tillgï¿½nglig dygnet runt';
+$lng['serversettings']['ticket']['worktime_all']['description'] = 'Om du vï¿½ljer "Ja" sï¿½ kommer start och stopp tiderna att skrivas ï¿½ver';
+$lng['serversettings']['ticket']['archiving_days'] = 'Efter hur mï¿½nga dagar skall stï¿½ngda tickets arkiveras?';
+$lng['customer']['tickets'] = 'Support ï¿½renden';
 
 // ADDED IN 1.2.18-svn4
 
-$lng['admin']['domain_nocustomeraddingavailable'] = 'Det går inte att skapa en ny domän innan det finns mins en upplagd kund.';
-$lng['serversettings']['ticket']['enable'] = 'Tillåt användninga av ticketsystemet';
-$lng['serversettings']['ticket']['concurrentlyopen'] = 'Maximalt antal tickets som kan öppnas samtidigt?';
-$lng['error']['norepymailiswrong'] = 'Den här adressen  &quot;Noreply-address&quot; är felaktig. Bara giltiga E-post adresser är tillåtna.';
-$lng['error']['tadminmailiswrong'] = 'Den här adressen &quot;Ticketadmin-address&quot; är felaktig. Bara giltiga E-post adresser är tillåtna.';
+$lng['admin']['domain_nocustomeraddingavailable'] = 'Det gï¿½r inte att skapa en ny domï¿½n innan det finns mins en upplagd kund.';
+$lng['serversettings']['ticket']['enable'] = 'Tillï¿½t anvï¿½ndninga av ticketsystemet';
+$lng['serversettings']['ticket']['concurrentlyopen'] = 'Maximalt antal tickets som kan ï¿½ppnas samtidigt?';
+$lng['error']['norepymailiswrong'] = 'Den hï¿½r adressen  &quot;Noreply-address&quot; ï¿½r felaktig. Bara giltiga E-post adresser ï¿½r tillï¿½tna.';
+$lng['error']['tadminmailiswrong'] = 'Den hï¿½r adressen &quot;Ticketadmin-address&quot; ï¿½r felaktig. Bara giltiga E-post adresser ï¿½r tillï¿½tna.';
 $lng['ticket']['awaitingticketreply'] = 'Du har %s obesvarade support-ticket(s)';
 
 // ADDED IN 1.2.18-svn5
 
-$lng['serversettings']['ticket']['noreply_name'] = 'Supportärendes namn på E-postadressen';
+$lng['serversettings']['ticket']['noreply_name'] = 'Supportï¿½rendes namn pï¿½ E-postadressen';
 
 // ADDED IN 1.2.19-svn1
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'FCGI konfigurationskatalog';
 $lng['serversettings']['mod_fcgid']['configdir']['description'] = 'I vilken katalog skall alla fcgi-konfigurationfiler lagras?';
-$lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'FCGI temporärkatalog';
+$lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'FCGI temporï¿½rkatalog';
 
 // ADDED IN 1.2.19-svn3
 
-$lng['serversettings']['ticket']['reset_cycle']['title'] = 'Återställ cykeln för använda supportärenden';
-$lng['serversettings']['ticket']['reset_cycle']['description'] = 'Återställ kundens räknare för använda supportärenden. Vald cykel = 0';
+$lng['serversettings']['ticket']['reset_cycle']['title'] = 'ï¿½terstï¿½ll cykeln fï¿½r anvï¿½nda supportï¿½renden';
+$lng['serversettings']['ticket']['reset_cycle']['description'] = 'ï¿½terstï¿½ll kundens rï¿½knare fï¿½r anvï¿½nda supportï¿½renden. Vald cykel = 0';
 $lng['admin']['tickets']['daily'] = 'Dagligen';
 $lng['admin']['tickets']['weekly'] = 'Varje vecka';
-$lng['admin']['tickets']['monthly'] = 'Varje månad';
-$lng['admin']['tickets']['yearly'] = 'Varje år';
-$lng['error']['ticketresetcycleiswrong'] = 'Cykeln för återställning av supportärenden måste vara "Dagligen", "Varje vecka", "varje månad" or "varje år".';
+$lng['admin']['tickets']['monthly'] = 'Varje mï¿½nad';
+$lng['admin']['tickets']['yearly'] = 'Varje ï¿½r';
+$lng['error']['ticketresetcycleiswrong'] = 'Cykeln fï¿½r ï¿½terstï¿½llning av supportï¿½renden mï¿½ste vara "Dagligen", "Varje vecka", "varje mï¿½nad" or "varje ï¿½r".';
 
 // ADDED IN 1.2.19-svn4
 
 $lng['menue']['traffic']['traffic'] = 'Trafik';
-$lng['menue']['traffic']['current'] = 'Nuvarande månad';
-$lng['traffic']['month'] = "Månad";
+$lng['menue']['traffic']['current'] = 'Nuvarande mï¿½nad';
+$lng['traffic']['month'] = "Mï¿½nad";
 $lng['traffic']['day'] = "Dag";
 $lng['traffic']['months'][1] = "Januari";
 $lng['traffic']['months'][2] = "Februari";

@@ -13,7 +13,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Classes
- * @version    $Id$
+ *
  * @link       http://www.nutime.de/
  * @since      0.9.17-svn2
  *

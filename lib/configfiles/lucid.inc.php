@@ -14,7 +14,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Configfiles
- * @version    $Id: lenny.inc.php 860 2010-04-30 16:38:02Z Dessa $
+ * 
  */
 
 return Array(

@@ -12,7 +12,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Formfields
- * @version    $Id: formfield.ipsandports_edit.php 111 2010-12-14 07:48:33Z d00p $
+ *
  */
 
 return array(

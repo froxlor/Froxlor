@@ -16,7 +16,7 @@
  * @author     Froxlor Team <team@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id$
+ *
  */
 
 /**
@@ -217,8 +217,8 @@ $lng['error']['loginnameexists'] = 'Login %s j&aacute; existe';
 $lng['error']['emailiswrong'] = 'E-mail %s contem caracteres inv&aacute;lidos ou est&aacute; incompleto';
 $lng['error']['loginnameiswrong'] = 'Login %s contem caracteres inv&aacute;lidos';
 $lng['error']['userpathcombinationdupe'] = 'Usuario e caminho j&aacute; existem';
-$lng['error']['patherror'] = 'Erro geral! o caminho não pode ficar em branco';
-$lng['error']['errordocpathdupe'] = 'Opção de caminho %s j&aacute; existe';
+$lng['error']['patherror'] = 'Erro geral! o caminho nï¿½o pode ficar em branco';
+$lng['error']['errordocpathdupe'] = 'Opï¿½ï¿½o de caminho %s j&aacute; existe';
 $lng['error']['adduserfirst'] = 'Por favor crie um cliente primeiro';
 $lng['error']['domainalreadyexists'] = 'O dominio %s j&aacute; est&aacute; apontado para outro cliente';
 $lng['error']['nolanguageselect'] = 'Nenhum idioma selecionado.';
@@ -306,7 +306,7 @@ $lng['admin']['deactivated_user'] = 'Desativar usu&aacute;rio';
 $lng['admin']['sendpassword'] = 'Enviar senha';
 $lng['admin']['ownvhostsettings'] = 'Own vHost-Settings';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configura&ccedil;&otilde;es';
-$lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Por favor altere os seguintes arquivos ou crie eles com<br />o seguinte conte&uacute;do se ele n&atilde;o existir.<br /><b>Por favor observe:</b> A senha do MySQL não foi alterada por raz&otilde;es de seguran&ccedil;a.<br />Por favor substitua &quot;MYSQL_PASSWORD&quot; por uma sua. Se voce esqueceu a senha do MySQL<br />voce pode verificar em &quot;lib/userdata.inc.php&quot;.';
+$lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Por favor altere os seguintes arquivos ou crie eles com<br />o seguinte conte&uacute;do se ele n&atilde;o existir.<br /><b>Por favor observe:</b> A senha do MySQL nï¿½o foi alterada por raz&otilde;es de seguran&ccedil;a.<br />Por favor substitua &quot;MYSQL_PASSWORD&quot; por uma sua. Se voce esqueceu a senha do MySQL<br />voce pode verificar em &quot;lib/userdata.inc.php&quot;.';
 $lng['admin']['configfiles']['commands'] = '<b>Commands:</b> Por favor execute as seguintes comandos no shell.';
 $lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Por favor execute as seguintes comandos no shell para carregar aas novas configura&ccedil;&otilde;es.';
 $lng['admin']['templates']['templates'] = 'Templates';

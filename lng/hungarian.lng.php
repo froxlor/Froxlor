@@ -13,7 +13,7 @@
  * @author     Laszlo (Laci) Puchner <puchnerl@konyvbroker.hu>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id$
+ *
  */
 
 /**
@@ -116,7 +116,7 @@ $lng['changepassword']['also_change_ftp'] = ' a f&#337; FTP fi&oacute;k jelszav&
 
 $lng['domains']['description'] = 'Itt hozhat l&eacute;tre (al-)domaineket &eacute;s megv&aacute;ltoztathatja azok &uacute;tvonalait.<br />A rendszernek minden v&aacute;ltoztat&aacute;s ut&aacute;n sz&uuml;ks&eacute;ge van n&eacute;mi id&#337;re, m&iacute;g az &uacute;j be&aacute;ll&iacute;t&aacute;sokat &eacute;rv&eacute;nyes&iacute;ti.';
 $lng['domains']['domainsettings'] = 'Domain be&aacute;ll&iacute;t&aacute;sok';
-$lng['domains']['domainname'] = 'Domain név';
+$lng['domains']['domainname'] = 'Domain nï¿½v';
 $lng['domains']['subdomain_add'] = '(Al-)domain l&eacute;trehoz&aacute;sa';
 $lng['domains']['subdomain_edit'] = '(Al-)domain szerkeszt&eacute;se';
 $lng['domains']['wildcarddomain'] = 'Helyettes&iacute;t&#337;k&eacute;nt hozza l&eacute;tre?';
@@ -274,13 +274,13 @@ $lng['admin']['systemdetails'] = 'Rendszeradatok';
 $lng['admin']['froxlordetails'] = 'Froxlor adatok';
 $lng['admin']['installedversion'] = 'Install&aacute;lt Verzi&oacute;';
 $lng['admin']['latestversion'] = 'Legutols&oacute; verzi&oacute;';
-$lng['admin']['lookfornewversion']['clickhere'] = 'keresés a webszervizen kereszt&uuml;l';
+$lng['admin']['lookfornewversion']['clickhere'] = 'keresï¿½s a webszervizen kereszt&uuml;l';
 $lng['admin']['lookfornewversion']['error'] = 'Olvas&aacute;si hiba';
 $lng['admin']['resources'] = 'Er&#337;forr&aacute;sok';
-$lng['admin']['customer'] = 'Felhaszn&aacute;ló';
-$lng['admin']['customers'] = 'Felhaszn&aacute;lók';
-$lng['admin']['customer_add'] = 'Felhaszn&aacute;ló hozz&aacute;ad&aacute;sa';
-$lng['admin']['customer_edit'] = 'Felhaszn&aacute;ló szerkeszt&eacute;se';
+$lng['admin']['customer'] = 'Felhaszn&aacute;lï¿½';
+$lng['admin']['customers'] = 'Felhaszn&aacute;lï¿½k';
+$lng['admin']['customer_add'] = 'Felhaszn&aacute;lï¿½ hozz&aacute;ad&aacute;sa';
+$lng['admin']['customer_edit'] = 'Felhaszn&aacute;lï¿½ szerkeszt&eacute;se';
 $lng['admin']['domains'] = 'Domainek';
 $lng['admin']['domain_add'] = 'Domain hozz&aacute;ad&aacute;sa';
 $lng['admin']['domain_edit'] = 'Domain szerkeszt&eacute;se';
@@ -298,11 +298,11 @@ $lng['admin']['rebuildconf'] = 'A konfig. f&aacute;jlok &uacute;jra&iacute;r&aac
 $lng['admin']['stdsubdomain'] = 'Egyszer&#369; aldomain';
 $lng['admin']['stdsubdomain_add'] = 'Egyszer&#369; aldomain hozz&aacute;ad&aacute;sa';
 $lng['admin']['deactivated'] = 'Kikapcsolva';
-$lng['admin']['deactivated_user'] = 'Felhaszn&aacute;ló kikapcsol&aacute;sa';
-$lng['admin']['sendpassword'] = 'Jelsz&oacute; küld&eacute;se';
+$lng['admin']['deactivated_user'] = 'Felhaszn&aacute;lï¿½ kikapcsol&aacute;sa';
+$lng['admin']['sendpassword'] = 'Jelsz&oacute; kï¿½ld&eacute;se';
 $lng['admin']['ownvhostsettings'] = 'Saj&aacute;t vHost be&aacute;ll&iacute;t&aacute;sok';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Konfigur&aacute;ci&oacute;';
-$lng['admin']['configfiles']['files'] = '<b>Konfig. f&aacute;jlok:</b> K&eacute;rem, v&aacute;ltoztassa meg a k&ouml;vetkez&#337; fájlokat, vagy - ha még nem léteznek - hozza létre &#337;ket a következ&#337; tartalommal.<br /><b>Fontos:</b> A MySQL jelsz&oacute; biztons&aacute;gi okokb&oacute;l nem lesz kicser&eacute;lve. K&eacute;rem, cser&eacute;lje ki a &quot;MYSQL_PASSWORD&quot;-&ouml;t! Ha elfelejtette a NySQL jelsz&oacute;t, megtal&aacute;lja a &quot;lib/userdata.inc.php&quot; f&aacute;jlban.';
+$lng['admin']['configfiles']['files'] = '<b>Konfig. f&aacute;jlok:</b> K&eacute;rem, v&aacute;ltoztassa meg a k&ouml;vetkez&#337; fï¿½jlokat, vagy - ha mï¿½g nem lï¿½teznek - hozza lï¿½tre &#337;ket a kï¿½vetkez&#337; tartalommal.<br /><b>Fontos:</b> A MySQL jelsz&oacute; biztons&aacute;gi okokb&oacute;l nem lesz kicser&eacute;lve. K&eacute;rem, cser&eacute;lje ki a &quot;MYSQL_PASSWORD&quot;-&ouml;t! Ha elfelejtette a NySQL jelsz&oacute;t, megtal&aacute;lja a &quot;lib/userdata.inc.php&quot; f&aacute;jlban.';
 $lng['admin']['configfiles']['commands'] = '<b>Parancsok:</b> K&eacute;rem, hajtsa v&eacute;gre a k&ouml;vetkez&#337; parancsokat egy h&eacute;jprogramban (shell)!';
 $lng['admin']['configfiles']['restart'] = '<b>&Uacute;jraind&iacute;t&aacute;s:</b> K&eacute;rem, hajtsa v&eacute;gre a k&ouml;vetkez&#337; parancsokat egy h&eacute;jprogramban (shell), hogy az &uacute;j konfigur&aacute;ci&oacute; bet&ouml;lt&#337;dj&ouml;n.';
 $lng['admin']['templates']['templates'] = 'Sablonok';
@@ -437,7 +437,7 @@ $lng['serversettings']['defaultip']['title'] = 'Alap&eacute;rtelmezett IP/Port';
 $lng['serversettings']['defaultip']['description'] = 'Mi az alap&eacute;rtelmezett IP/Port kombin&aacute;ci&oacute;?';
 $lng['domains']['statstics'] = 'Haszn&aacute;lati statisztika';
 $lng['panel']['ascending'] = 'n&ouml;vekv&#337;';
-$lng['panel']['decending'] = 'csökken&#337;';
+$lng['panel']['decending'] = 'csï¿½kken&#337;';
 $lng['panel']['search'] = 'Keres&eacute;s';
 $lng['panel']['used'] = 'felhaszn&aacute;lt';
 

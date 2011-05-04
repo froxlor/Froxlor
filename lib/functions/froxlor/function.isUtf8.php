@@ -12,7 +12,7 @@
  * @author     Florian Aders <eleras@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Functions
- * @version    $Id$
+ *
  */
 
 /**

@@ -14,7 +14,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Cron
- * @version    $Id$
+ *
  */
 
 if(@php_sapi_name() != 'cli'

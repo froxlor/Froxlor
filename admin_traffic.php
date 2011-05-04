@@ -13,7 +13,7 @@
  * @author     Morton Jonuschat <m.jonuschat@chrome-it.de>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id: $
+ *
  */
 
 define('AREA', 'admin');

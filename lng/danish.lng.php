@@ -13,7 +13,7 @@
  * @author     Simon Clausen
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id$
+ *
  */
 
 /**

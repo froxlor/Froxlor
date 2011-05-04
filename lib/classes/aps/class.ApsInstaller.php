@@ -17,7 +17,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    APS
- * @version    $Id$
+ *
  * @todo		logging
  *				run with user uid/gid
  *				folder truncation/tar all files

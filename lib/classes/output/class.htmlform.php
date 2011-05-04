@@ -12,7 +12,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Classes
- * @version    $Id: class.htmlform.php 130 2010-12-22 00:54:11Z d00p $
+ *
  */
 
 class htmlform 

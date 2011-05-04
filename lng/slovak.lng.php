@@ -13,7 +13,7 @@
  * @author     Bystrik Kacer <drakeman@phpnuke.sk>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id$
+ *
  */
 
 /**
@@ -21,429 +21,429 @@
  */
 
 $lng['translator'] = 'Drakeman';
-$lng['panel']['edit'] = 'Upravi»';
-$lng['panel']['delete'] = 'Zmaza»';
-$lng['panel']['create'] = 'Vytvori»';
-$lng['panel']['save'] = 'Ulo¾i»';
-$lng['panel']['yes'] = 'Áno';
+$lng['panel']['edit'] = 'Upraviï¿½';
+$lng['panel']['delete'] = 'Zmazaï¿½';
+$lng['panel']['create'] = 'Vytvoriï¿½';
+$lng['panel']['save'] = 'Uloï¿½iï¿½';
+$lng['panel']['yes'] = 'ï¿½no';
 $lng['panel']['no'] = 'Nie';
-$lng['panel']['emptyfornochanges'] = 'Ak políèko nevyplníte, ostane bez zmien';
-$lng['panel']['emptyfordefault'] = 'Ak políèko nevyplníte, ostane nastavené ako predvolené';
+$lng['panel']['emptyfornochanges'] = 'Ak polï¿½ï¿½ko nevyplnï¿½te, ostane bez zmien';
+$lng['panel']['emptyfordefault'] = 'Ak polï¿½ï¿½ko nevyplnï¿½te, ostane nastavenï¿½ ako predvolenï¿½';
 $lng['panel']['path'] = 'Cesta';
-$lng['panel']['toggle'] = 'Prepnú»';
-$lng['panel']['next'] = 'Ïal¹ie';
-$lng['panel']['dirsmissing'] = 'Nepodarilo sa nájs» uvedený adresár!';
+$lng['panel']['toggle'] = 'Prepnï¿½';
+$lng['panel']['next'] = 'ï¿½alï¿½ie';
+$lng['panel']['dirsmissing'] = 'Nepodarilo sa nï¿½jsï¿½ uvedenï¿½ adresï¿½r!';
 
 /**
  * Login
  */
 
-$lng['login']['username'] = 'U¾ívateµské meno';
+$lng['login']['username'] = 'Uï¿½ï¿½vateï¿½skï¿½ meno';
 $lng['login']['password'] = 'Heslo';
 $lng['login']['language'] = 'Jazyk';
-$lng['login']['login'] = 'Prihlási»';
-$lng['login']['logout'] = 'Odlási»';
+$lng['login']['login'] = 'Prihlï¿½siï¿½';
+$lng['login']['logout'] = 'Odlï¿½siï¿½';
 $lng['login']['profile_lng'] = 'Jazyk profilu';
 
 /**
  * Customer
  */
 
-$lng['customer']['documentroot'] = 'Domovský adresár (root)';
+$lng['customer']['documentroot'] = 'Domovskï¿½ adresï¿½r (root)';
 $lng['customer']['name'] = 'Priezvisko';
 $lng['customer']['firstname'] = 'Meno';
-$lng['customer']['company'] = 'Spoloènos»';
+$lng['customer']['company'] = 'Spoloï¿½nosï¿½';
 $lng['customer']['street'] = 'Ulica';
-$lng['customer']['zipcode'] = 'PSÈ';
+$lng['customer']['zipcode'] = 'PSï¿½';
 $lng['customer']['city'] = 'Mesto';
 $lng['customer']['phone'] = 'Tel.';
 $lng['customer']['fax'] = 'Fax';
 $lng['customer']['email'] = 'E-mail';
 $lng['customer']['customernumber'] = 'ID klienta';
-$lng['customer']['diskspace'] = 'Diskový priestor (MB)';
+$lng['customer']['diskspace'] = 'Diskovï¿½ priestor (MB)';
 $lng['customer']['traffic'] = 'Traffic/prenos (GB)';
-$lng['customer']['mysqls'] = 'MySQL-Databázy';
-$lng['customer']['emails'] = 'E-mailové adresy';
-$lng['customer']['accounts'] = 'E-mailové úèty';
-$lng['customer']['forwarders'] = 'E-mailové presmerovania';
-$lng['customer']['ftps'] = 'FTP-úèty';
-$lng['customer']['subdomains'] = 'SubDoména(y)';
-$lng['customer']['domains'] = 'Doména(y)';
-$lng['customer']['unlimited'] = 'Neobmedzené';
+$lng['customer']['mysqls'] = 'MySQL-Databï¿½zy';
+$lng['customer']['emails'] = 'E-mailovï¿½ adresy';
+$lng['customer']['accounts'] = 'E-mailovï¿½ ï¿½ï¿½ty';
+$lng['customer']['forwarders'] = 'E-mailovï¿½ presmerovania';
+$lng['customer']['ftps'] = 'FTP-ï¿½ï¿½ty';
+$lng['customer']['subdomains'] = 'SubDomï¿½na(y)';
+$lng['customer']['domains'] = 'Domï¿½na(y)';
+$lng['customer']['unlimited'] = 'Neobmedzenï¿½';
 
 /**
  * Customermenue
  */
 
-$lng['menue']['main']['main'] = 'Hlavné menu';
-$lng['menue']['main']['changepassword'] = 'Zmeni» heslo';
-$lng['menue']['main']['changelanguage'] = 'Zmeni» jazyk';
+$lng['menue']['main']['main'] = 'Hlavnï¿½ menu';
+$lng['menue']['main']['changepassword'] = 'Zmeniï¿½ heslo';
+$lng['menue']['main']['changelanguage'] = 'Zmeniï¿½ jazyk';
 $lng['menue']['email']['email'] = 'E-mail';
 $lng['menue']['email']['emails'] = 'Adresy';
 $lng['menue']['email']['webmail'] = 'WebMail';
 $lng['menue']['mysql']['mysql'] = 'MySQL';
-$lng['menue']['mysql']['databases'] = 'Databázy';
+$lng['menue']['mysql']['databases'] = 'Databï¿½zy';
 $lng['menue']['mysql']['phpmyadmin'] = 'phpMyAdmin';
-$lng['menue']['domains']['domains'] = 'Domény';
+$lng['menue']['domains']['domains'] = 'Domï¿½ny';
 $lng['menue']['domains']['settings'] = 'Nastavenia';
 $lng['menue']['ftp']['ftp'] = 'FTP';
-$lng['menue']['ftp']['accounts'] = 'Úèty';
+$lng['menue']['ftp']['accounts'] = 'ï¿½ï¿½ty';
 $lng['menue']['ftp']['webftp'] = 'WebFTP';
-$lng['menue']['extras']['extras'] = '©peciálne';
-$lng['menue']['extras']['directoryprotection'] = 'Ochrana adresárov';
-$lng['menue']['extras']['pathoptions'] = 'Mo¾nosti cesty';
+$lng['menue']['extras']['extras'] = 'ï¿½peciï¿½lne';
+$lng['menue']['extras']['directoryprotection'] = 'Ochrana adresï¿½rov';
+$lng['menue']['extras']['pathoptions'] = 'Moï¿½nosti cesty';
 
 /**
  * Index
  */
 
 $lng['index']['customerdetails'] = 'Detaily klienta';
-$lng['index']['accountdetails'] = 'Detaily úètu';
+$lng['index']['accountdetails'] = 'Detaily ï¿½ï¿½tu';
 
 /**
  * Change Password
  */
 
-$lng['changepassword']['old_password'] = 'Staré heslo';
-$lng['changepassword']['new_password'] = 'Nové heslo';
-$lng['changepassword']['new_password_confirm'] = 'Potvrïte nové heslo';
-$lng['changepassword']['new_password_ifnotempty'] = 'Nové heslo (prázdne = bez zmeny)';
-$lng['changepassword']['also_change_ftp'] = ' Tie¾ zmeni» heslo FTP úètu';
+$lng['changepassword']['old_password'] = 'Starï¿½ heslo';
+$lng['changepassword']['new_password'] = 'Novï¿½ heslo';
+$lng['changepassword']['new_password_confirm'] = 'Potvrï¿½te novï¿½ heslo';
+$lng['changepassword']['new_password_ifnotempty'] = 'Novï¿½ heslo (prï¿½zdne = bez zmeny)';
+$lng['changepassword']['also_change_ftp'] = ' Tieï¿½ zmeniï¿½ heslo FTP ï¿½ï¿½tu';
 
 /**
  * Domains
  */
 
-$lng['domains']['description'] = 'Tu mô¾ete nastavi» a vytvori» subdomény a zmeni» ich cestu k adresáru, kde majú smerova».<br />Systém bude potrebova» niekoµko málo minút na uskutoènenie zmien (pribli¾ne 5 min).';
-$lng['domains']['domainsettings'] = 'Nastavenia domény';
-$lng['domains']['domainname'] = 'Názov domény';
-$lng['domains']['subdomain_add'] = 'Vytvori» subdoménu';
-$lng['domains']['subdomain_edit'] = 'Upravi» subdoménu';
-$lng['domains']['wildcarddomain'] = 'Vytvori» doménu ako wildcarddomain <br />(v¹etky subdomény smerujú do root adresára hlavnej domény)?';
-$lng['domains']['aliasdomain'] = 'Alias pre doménu';
-$lng['domains']['noaliasdomain'] = '®iaden alias pre doménu';
+$lng['domains']['description'] = 'Tu mï¿½ï¿½ete nastaviï¿½ a vytvoriï¿½ subdomï¿½ny a zmeniï¿½ ich cestu k adresï¿½ru, kde majï¿½ smerovaï¿½.<br />Systï¿½m bude potrebovaï¿½ niekoï¿½ko mï¿½lo minï¿½t na uskutoï¿½nenie zmien (pribliï¿½ne 5 min).';
+$lng['domains']['domainsettings'] = 'Nastavenia domï¿½ny';
+$lng['domains']['domainname'] = 'Nï¿½zov domï¿½ny';
+$lng['domains']['subdomain_add'] = 'Vytvoriï¿½ subdomï¿½nu';
+$lng['domains']['subdomain_edit'] = 'Upraviï¿½ subdomï¿½nu';
+$lng['domains']['wildcarddomain'] = 'Vytvoriï¿½ domï¿½nu ako wildcarddomain <br />(vï¿½etky subdomï¿½ny smerujï¿½ do root adresï¿½ra hlavnej domï¿½ny)?';
+$lng['domains']['aliasdomain'] = 'Alias pre domï¿½nu';
+$lng['domains']['noaliasdomain'] = 'ï¿½iaden alias pre domï¿½nu';
 
 /**
  * E-mails
  */
 
-$lng['emails']['description'] = 'Tu mô¾ete vytvori» a zmeni» Va¹e E-mailové adresy.<br />E-mail úèet je ako Va¹a po¹tová schránka v dome. Ak Vám niekto po¹le E-mail, bude vlo¾ený do Vá¹ho úètu.<br /><br />Pre stiahnutie Va¹ích E-mailov pou¾ite do Vá¹ho mailového programu nasledujúce nastavenia: (Informácie oznaèené <i>lomeným písmom</i>, musia by» zmenené na Va¹e prístupové údaje!)<br />Názov hosta: <b><i>Názov domény</i></b><br />U¾ívateµské meno: <b><i>Názov úètu / E-mailová adresa</i></b><br />Heslo: <b><i>heslo, ktoré ste si zvolili</i></b>';
-$lng['emails']['emailaddress'] = 'E-mailová adresa';
-$lng['emails']['emails_add'] = 'Vytvori» E-mailovú adresu';
-$lng['emails']['emails_edit'] = 'Upravi» E-mailovú adresu';
-$lng['emails']['catchall'] = 'Doménový kô¹';
-$lng['emails']['iscatchall'] = 'Definova» ako doménový kô¹?';
-$lng['emails']['account'] = 'Úèet';
-$lng['emails']['account_add'] = 'Vytvori» úèet';
-$lng['emails']['account_delete'] = 'Vymaza» úèet';
+$lng['emails']['description'] = 'Tu mï¿½ï¿½ete vytvoriï¿½ a zmeniï¿½ Vaï¿½e E-mailovï¿½ adresy.<br />E-mail ï¿½ï¿½et je ako Vaï¿½a poï¿½tovï¿½ schrï¿½nka v dome. Ak Vï¿½m niekto poï¿½le E-mail, bude vloï¿½enï¿½ do Vï¿½ho ï¿½ï¿½tu.<br /><br />Pre stiahnutie Vaï¿½ï¿½ch E-mailov pouï¿½ite do Vï¿½ho mailovï¿½ho programu nasledujï¿½ce nastavenia: (Informï¿½cie oznaï¿½enï¿½ <i>lomenï¿½m pï¿½smom</i>, musia byï¿½ zmenenï¿½ na Vaï¿½e prï¿½stupovï¿½ ï¿½daje!)<br />Nï¿½zov hosta: <b><i>Nï¿½zov domï¿½ny</i></b><br />Uï¿½ï¿½vateï¿½skï¿½ meno: <b><i>Nï¿½zov ï¿½ï¿½tu / E-mailovï¿½ adresa</i></b><br />Heslo: <b><i>heslo, ktorï¿½ ste si zvolili</i></b>';
+$lng['emails']['emailaddress'] = 'E-mailovï¿½ adresa';
+$lng['emails']['emails_add'] = 'Vytvoriï¿½ E-mailovï¿½ adresu';
+$lng['emails']['emails_edit'] = 'Upraviï¿½ E-mailovï¿½ adresu';
+$lng['emails']['catchall'] = 'Domï¿½novï¿½ kï¿½ï¿½';
+$lng['emails']['iscatchall'] = 'Definovaï¿½ ako domï¿½novï¿½ kï¿½ï¿½?';
+$lng['emails']['account'] = 'ï¿½ï¿½et';
+$lng['emails']['account_add'] = 'Vytvoriï¿½ ï¿½ï¿½et';
+$lng['emails']['account_delete'] = 'Vymazaï¿½ ï¿½ï¿½et';
 $lng['emails']['from'] = 'Zdroj';
-$lng['emails']['to'] = 'Cieµ';
+$lng['emails']['to'] = 'Cieï¿½';
 $lng['emails']['forwarders'] = 'Presmerovania';
-$lng['emails']['forwarder_add'] = 'Vytvori» presmerovanie';
+$lng['emails']['forwarder_add'] = 'Vytvoriï¿½ presmerovanie';
 
 /**
  * FTP
  */
 
-$lng['ftp']['description'] = 'Tu mô¾ete vytvori» a zmeni» Va¹e FTP úèty.<br />Zmeny sú okam¾ité a úèty mô¾ete pou¾íva» ihneï.';
-$lng['ftp']['account_add'] = 'Vytvori» FTP úèet';
+$lng['ftp']['description'] = 'Tu mï¿½ï¿½ete vytvoriï¿½ a zmeniï¿½ Vaï¿½e FTP ï¿½ï¿½ty.<br />Zmeny sï¿½ okamï¿½itï¿½ a ï¿½ï¿½ty mï¿½ï¿½ete pouï¿½ï¿½vaï¿½ ihneï¿½.';
+$lng['ftp']['account_add'] = 'Vytvoriï¿½ FTP ï¿½ï¿½et';
 
 /**
  * MySQL
  */
 
-$lng['mysql']['databasename'] = 'U¾ívateµ/Názov databázy';
-$lng['mysql']['databasedescription'] = 'Popis databázy';
-$lng['mysql']['database_create'] = 'Vytvori» databázu';
+$lng['mysql']['databasename'] = 'Uï¿½ï¿½vateï¿½/Nï¿½zov databï¿½zy';
+$lng['mysql']['databasedescription'] = 'Popis databï¿½zy';
+$lng['mysql']['database_create'] = 'Vytvoriï¿½ databï¿½zu';
 
 /**
  * Extras
  */
 
-$lng['extras']['description'] = 'Tu mô¾ete pridáva» ïaµ¹ie doplnky, napríklad ochranu súborov.<br />Systém bude potrebova» niekoµko málo minút na uskutoènenie zmien (pribli¾ne 5 min).';
-$lng['extras']['directoryprotection_add'] = 'Prida» ochranu adresára';
-$lng['extras']['view_directory'] = 'Zobrazi» obsah adresára';
-$lng['extras']['pathoptions_add'] = 'Prida» mo¾nosti cesty';
-$lng['extras']['directory_browsing'] = 'Prezeranie obsahu adresáru';
-$lng['extras']['pathoptions_edit'] = 'Upravi» mo¾nosti cesty';
+$lng['extras']['description'] = 'Tu mï¿½ï¿½ete pridï¿½vaï¿½ ï¿½aï¿½ï¿½ie doplnky, naprï¿½klad ochranu sï¿½borov.<br />Systï¿½m bude potrebovaï¿½ niekoï¿½ko mï¿½lo minï¿½t na uskutoï¿½nenie zmien (pribliï¿½ne 5 min).';
+$lng['extras']['directoryprotection_add'] = 'Pridaï¿½ ochranu adresï¿½ra';
+$lng['extras']['view_directory'] = 'Zobraziï¿½ obsah adresï¿½ra';
+$lng['extras']['pathoptions_add'] = 'Pridaï¿½ moï¿½nosti cesty';
+$lng['extras']['directory_browsing'] = 'Prezeranie obsahu adresï¿½ru';
+$lng['extras']['pathoptions_edit'] = 'Upraviï¿½ moï¿½nosti cesty';
 $lng['extras']['error404path'] = '404';
 $lng['extras']['error403path'] = '403';
 $lng['extras']['error500path'] = '500';
 $lng['extras']['error401path'] = '401';
-$lng['extras']['errordocument404path'] = 'URL pre Chybový Dokument 404';
-$lng['extras']['errordocument403path'] = 'URL pre Chybový Dokument 403';
-$lng['extras']['errordocument500path'] = 'URL pre Chybový Dokument 500';
-$lng['extras']['errordocument401path'] = 'URL pre Chybový Dokument 401';
+$lng['extras']['errordocument404path'] = 'URL pre Chybovï¿½ Dokument 404';
+$lng['extras']['errordocument403path'] = 'URL pre Chybovï¿½ Dokument 403';
+$lng['extras']['errordocument500path'] = 'URL pre Chybovï¿½ Dokument 500';
+$lng['extras']['errordocument401path'] = 'URL pre Chybovï¿½ Dokument 401';
 
 /**
  * Errors
  */
 
 $lng['error']['error'] = 'Chyba';
-$lng['error']['directorymustexist'] = 'Adresár %s musí existova». Prosím, vytvorte ho pou¾itím FTP klienta.';
-$lng['error']['filemustexist'] = 'Súbor %s musí existova».';
-$lng['error']['allresourcesused'] = 'U¾ ste pou¾ili v¹etky Va¹e zdroje (mo¾nosti).';
-$lng['error']['domains_cantdeletemaindomain'] = 'Nemô¾ete vymaza» doménu, ktorá sa pou¾íva ako E-mailová doména.';
-$lng['error']['domains_canteditdomain'] = 'Nemô¾ete upravi» túto doménu. Bola zablokovaná admininistrátorom.';
-$lng['error']['domains_cantdeletedomainwithemail'] = 'Nemô¾ete vymaza» doménu, ktorá sa pou¾íva ako E-mailová doména. Najskôr zma¾te v¹etky E-mailové adresy.';
-$lng['error']['firstdeleteallsubdomains'] = 'Pred vytvorením wildcard domény najskôr musíte vymaza» v¹etky subdomény.';
-$lng['error']['youhavealreadyacatchallforthisdomain'] = 'Pre túto doménu ste u¾ doménový kô¹ nadefinovali.';
-$lng['error']['ftp_cantdeletemainaccount'] = 'Nemô¾ete vymaza» Vá¹ hlavný FTP úèet';
-$lng['error']['login'] = 'U¾ívateµské meno alebo heslo, ktoré ste zadali je nesprávne. Prosím, skúste znovu!';
-$lng['error']['login_blocked'] = 'Tento úèet bol suspendovaný z dôvodu veµkého mno¾sta chybových prihlasení. <br />Prosím, skúste znovu za ' . $settings['login']['deactivatetime'] . ' sekúnd.';
-$lng['error']['notallreqfieldsorerrors'] = 'Nevyplnili ste v¹etky polia, alebo sú niektoré nesprávne.';
-$lng['error']['oldpasswordnotcorrect'] = 'Stará heslo nie je správne.';
-$lng['error']['youcantallocatemorethanyouhave'] = 'Nemô¾ete vymedzi» viac prostiedkov ako sú povolené pre Vás.';
-$lng['error']['mustbeurl'] = 'Nezadali ste správu alebo kompletnú URL (napr. http://vasa_domena.tlk/error404.htm)';
-$lng['error']['invalidpath'] = 'Nevybrali ste správu URL (mo¾no je problém so zoznamom adresárov)';
-$lng['error']['stringisempty'] = 'Chýbajúce vstupné pole';
-$lng['error']['stringiswrong'] = 'Nesprávne vstupné pole';
+$lng['error']['directorymustexist'] = 'Adresï¿½r %s musï¿½ existovaï¿½. Prosï¿½m, vytvorte ho pouï¿½itï¿½m FTP klienta.';
+$lng['error']['filemustexist'] = 'Sï¿½bor %s musï¿½ existovaï¿½.';
+$lng['error']['allresourcesused'] = 'Uï¿½ ste pouï¿½ili vï¿½etky Vaï¿½e zdroje (moï¿½nosti).';
+$lng['error']['domains_cantdeletemaindomain'] = 'Nemï¿½ï¿½ete vymazaï¿½ domï¿½nu, ktorï¿½ sa pouï¿½ï¿½va ako E-mailovï¿½ domï¿½na.';
+$lng['error']['domains_canteditdomain'] = 'Nemï¿½ï¿½ete upraviï¿½ tï¿½to domï¿½nu. Bola zablokovanï¿½ admininistrï¿½torom.';
+$lng['error']['domains_cantdeletedomainwithemail'] = 'Nemï¿½ï¿½ete vymazaï¿½ domï¿½nu, ktorï¿½ sa pouï¿½ï¿½va ako E-mailovï¿½ domï¿½na. Najskï¿½r zmaï¿½te vï¿½etky E-mailovï¿½ adresy.';
+$lng['error']['firstdeleteallsubdomains'] = 'Pred vytvorenï¿½m wildcard domï¿½ny najskï¿½r musï¿½te vymazaï¿½ vï¿½etky subdomï¿½ny.';
+$lng['error']['youhavealreadyacatchallforthisdomain'] = 'Pre tï¿½to domï¿½nu ste uï¿½ domï¿½novï¿½ kï¿½ï¿½ nadefinovali.';
+$lng['error']['ftp_cantdeletemainaccount'] = 'Nemï¿½ï¿½ete vymazaï¿½ Vï¿½ hlavnï¿½ FTP ï¿½ï¿½et';
+$lng['error']['login'] = 'Uï¿½ï¿½vateï¿½skï¿½ meno alebo heslo, ktorï¿½ ste zadali je nesprï¿½vne. Prosï¿½m, skï¿½ste znovu!';
+$lng['error']['login_blocked'] = 'Tento ï¿½ï¿½et bol suspendovanï¿½ z dï¿½vodu veï¿½kï¿½ho mnoï¿½sta chybovï¿½ch prihlasenï¿½. <br />Prosï¿½m, skï¿½ste znovu za ' . $settings['login']['deactivatetime'] . ' sekï¿½nd.';
+$lng['error']['notallreqfieldsorerrors'] = 'Nevyplnili ste vï¿½etky polia, alebo sï¿½ niektorï¿½ nesprï¿½vne.';
+$lng['error']['oldpasswordnotcorrect'] = 'Starï¿½ heslo nie je sprï¿½vne.';
+$lng['error']['youcantallocatemorethanyouhave'] = 'Nemï¿½ï¿½ete vymedziï¿½ viac prostiedkov ako sï¿½ povolenï¿½ pre Vï¿½s.';
+$lng['error']['mustbeurl'] = 'Nezadali ste sprï¿½vu alebo kompletnï¿½ URL (napr. http://vasa_domena.tlk/error404.htm)';
+$lng['error']['invalidpath'] = 'Nevybrali ste sprï¿½vu URL (moï¿½no je problï¿½m so zoznamom adresï¿½rov)';
+$lng['error']['stringisempty'] = 'Chï¿½bajï¿½ce vstupnï¿½ pole';
+$lng['error']['stringiswrong'] = 'Nesprï¿½vne vstupnï¿½ pole';
 $lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
 $lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
 $lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
 $lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
 $lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
-$lng['error']['newpasswordconfirmerror'] = 'Nové a potvrdzujúce heslo sa nezhodujú';
+$lng['error']['newpasswordconfirmerror'] = 'Novï¿½ a potvrdzujï¿½ce heslo sa nezhodujï¿½';
 $lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
 $lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
 $lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
-$lng['error']['loginnameexists'] = 'Prihlasovacie meno %s u¾ existuje';
-$lng['error']['emailiswrong'] = 'E-mailová adresa obsahuje %s obsahuje neplatné znaky, alebo je nekompletná';
-$lng['error']['loginnameiswrong'] = 'Prihlasovacie meno %s obsahuje neplatné znaky';
-$lng['error']['userpathcombinationdupe'] = 'Kombinácia u¾ívateµského mena a cesty u¾ existuje';
-$lng['error']['patherror'] = 'V¹eobecná chyba! Cesta nemô¾e by» prázdna';
-$lng['error']['errordocpathdupe'] = 'Mo¾nos» pre cestu %s u¾ existuje';
-$lng['error']['adduserfirst'] = 'Prosím, najskor vytvorte u¾ívateµa';
-$lng['error']['domainalreadyexists'] = 'Doména %s je u¾ priradená u¾ívateµovi';
-$lng['error']['nolanguageselect'] = 'Nebol vybraný jazyk.';
-$lng['error']['nosubjectcreate'] = 'Pre túto E-mailovú ¹ablónu musíte zadefinova» tému.';
-$lng['error']['nomailbodycreate'] = 'Pre túto E-mailovú ¹ablónu musíte zadefinova» text E-mailu.';
-$lng['error']['templatenotfound'] = '©ablóna nebola nájdená.';
-$lng['error']['alltemplatesdefined'] = 'Nemô¾ete definova» viac ¹ablón. V¹etky jazyky sú u¾ podporované.';
-$lng['error']['wwwnotallowed'] = 'www nie je povolené pre subdomény.';
-$lng['error']['subdomainiswrong'] = 'Subdoména obsahuje %s neplatné znaky.';
-$lng['error']['domaincantbeempty'] = 'Názov domény nemô¾e by» prázdny.';
-$lng['error']['domainexistalready'] = 'Doména %s u¾ existuje.';
-$lng['error']['domainisaliasorothercustomer'] = 'Zvolený alias domény je buï sám doménový alias alebo patrí inému klientovi.';
-$lng['error']['emailexistalready'] = 'E-maolová adresa %s u¾ existuje.';
-$lng['error']['maindomainnonexist'] = 'Hlavná doména %s neexistuje.';
-$lng['error']['destinationnonexist'] = 'Prosím, vytvorte Va¹e presmerovanie v polièku \'Cieµ\'.';
-$lng['error']['destinationalreadyexistasmail'] = 'Presmerovanie na %s u¾ existuje s aktívnou E-mail adresou.';
-$lng['error']['destinationalreadyexist'] = 'U¾ ste definovali presmerovanie na %s .';
-$lng['error']['destinationiswrong'] = 'Presmerovanie %s obsahuje neplatný(é) znak(y) alebo je nekompletné.';
+$lng['error']['loginnameexists'] = 'Prihlasovacie meno %s uï¿½ existuje';
+$lng['error']['emailiswrong'] = 'E-mailovï¿½ adresa obsahuje %s obsahuje neplatnï¿½ znaky, alebo je nekompletnï¿½';
+$lng['error']['loginnameiswrong'] = 'Prihlasovacie meno %s obsahuje neplatnï¿½ znaky';
+$lng['error']['userpathcombinationdupe'] = 'Kombinï¿½cia uï¿½ï¿½vateï¿½skï¿½ho mena a cesty uï¿½ existuje';
+$lng['error']['patherror'] = 'Vï¿½eobecnï¿½ chyba! Cesta nemï¿½ï¿½e byï¿½ prï¿½zdna';
+$lng['error']['errordocpathdupe'] = 'Moï¿½nosï¿½ pre cestu %s uï¿½ existuje';
+$lng['error']['adduserfirst'] = 'Prosï¿½m, najskor vytvorte uï¿½ï¿½vateï¿½a';
+$lng['error']['domainalreadyexists'] = 'Domï¿½na %s je uï¿½ priradenï¿½ uï¿½ï¿½vateï¿½ovi';
+$lng['error']['nolanguageselect'] = 'Nebol vybranï¿½ jazyk.';
+$lng['error']['nosubjectcreate'] = 'Pre tï¿½to E-mailovï¿½ ï¿½ablï¿½nu musï¿½te zadefinovaï¿½ tï¿½mu.';
+$lng['error']['nomailbodycreate'] = 'Pre tï¿½to E-mailovï¿½ ï¿½ablï¿½nu musï¿½te zadefinovaï¿½ text E-mailu.';
+$lng['error']['templatenotfound'] = 'ï¿½ablï¿½na nebola nï¿½jdenï¿½.';
+$lng['error']['alltemplatesdefined'] = 'Nemï¿½ï¿½ete definovaï¿½ viac ï¿½ablï¿½n. Vï¿½etky jazyky sï¿½ uï¿½ podporovanï¿½.';
+$lng['error']['wwwnotallowed'] = 'www nie je povolenï¿½ pre subdomï¿½ny.';
+$lng['error']['subdomainiswrong'] = 'Subdomï¿½na obsahuje %s neplatnï¿½ znaky.';
+$lng['error']['domaincantbeempty'] = 'Nï¿½zov domï¿½ny nemï¿½ï¿½e byï¿½ prï¿½zdny.';
+$lng['error']['domainexistalready'] = 'Domï¿½na %s uï¿½ existuje.';
+$lng['error']['domainisaliasorothercustomer'] = 'Zvolenï¿½ alias domï¿½ny je buï¿½ sï¿½m domï¿½novï¿½ alias alebo patrï¿½ inï¿½mu klientovi.';
+$lng['error']['emailexistalready'] = 'E-maolovï¿½ adresa %s uï¿½ existuje.';
+$lng['error']['maindomainnonexist'] = 'Hlavnï¿½ domï¿½na %s neexistuje.';
+$lng['error']['destinationnonexist'] = 'Prosï¿½m, vytvorte Vaï¿½e presmerovanie v poliï¿½ku \'Cieï¿½\'.';
+$lng['error']['destinationalreadyexistasmail'] = 'Presmerovanie na %s uï¿½ existuje s aktï¿½vnou E-mail adresou.';
+$lng['error']['destinationalreadyexist'] = 'Uï¿½ ste definovali presmerovanie na %s .';
+$lng['error']['destinationiswrong'] = 'Presmerovanie %s obsahuje neplatnï¿½(ï¿½) znak(y) alebo je nekompletnï¿½.';
 $lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
  */
 
-$lng['question']['question'] = 'Otázky bezpeènosti';
-$lng['question']['admin_customer_reallydelete'] = 'Naozaj chcete zmaza» klienta %s? Nemo¾no vráti» spä»!';
-$lng['question']['admin_domain_reallydelete'] = 'Naozaj chcete zmaza» doménu %s?';
-$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Naozaj chcete deaktivova» tieto bezbeènostné nastavenias (OpenBasedir a/alebo SafeMode)?';
-$lng['question']['admin_admin_reallydelete'] = 'Naozaj chcete zmaza» admina %s? Ka¾dý klient a doména bude preradená hlavnému administrátorovi.';
-$lng['question']['admin_template_reallydelete'] = 'Naozaj chcete zmaza» ¹ablónu \'%s\'?';
-$lng['question']['domains_reallydelete'] = 'Naozaj chcete zmaza» doménu %s?';
-$lng['question']['email_reallydelete'] = 'Naozaj chcete zmaza» E-mailovú adresu %s?';
-$lng['question']['email_reallydelete_account'] = 'Naozaj chcete zmaza» E-mailový úèet %s?';
-$lng['question']['email_reallydelete_forwarder'] = 'Naozaj chcete zmaza» presmerovanie %s?';
-$lng['question']['extras_reallydelete'] = 'Naozaj chcete zmaza» ochranu adresára pre %s?';
-$lng['question']['extras_reallydelete_pathoptions'] = 'Naozaj chcete zmaza» cestu mo¾ností pre %s?';
-$lng['question']['ftp_reallydelete'] = 'Naozaj chcete zmaza» FTP úèet %s?';
-$lng['question']['mysql_reallydelete'] = 'Naozaj chcete zmaza» databázu %s? Nemo¾no vráti» spä»!';
-$lng['question']['admin_configs_reallyrebuild'] = 'Naozaj chcete pretvori» Va¹e apache a bind (DNS) konfikuraèné súbory?';
+$lng['question']['question'] = 'Otï¿½zky bezpeï¿½nosti';
+$lng['question']['admin_customer_reallydelete'] = 'Naozaj chcete zmazaï¿½ klienta %s? Nemoï¿½no vrï¿½tiï¿½ spï¿½!';
+$lng['question']['admin_domain_reallydelete'] = 'Naozaj chcete zmazaï¿½ domï¿½nu %s?';
+$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Naozaj chcete deaktivovaï¿½ tieto bezbeï¿½nostnï¿½ nastavenias (OpenBasedir a/alebo SafeMode)?';
+$lng['question']['admin_admin_reallydelete'] = 'Naozaj chcete zmazaï¿½ admina %s? Kaï¿½dï¿½ klient a domï¿½na bude preradenï¿½ hlavnï¿½mu administrï¿½torovi.';
+$lng['question']['admin_template_reallydelete'] = 'Naozaj chcete zmazaï¿½ ï¿½ablï¿½nu \'%s\'?';
+$lng['question']['domains_reallydelete'] = 'Naozaj chcete zmazaï¿½ domï¿½nu %s?';
+$lng['question']['email_reallydelete'] = 'Naozaj chcete zmazaï¿½ E-mailovï¿½ adresu %s?';
+$lng['question']['email_reallydelete_account'] = 'Naozaj chcete zmazaï¿½ E-mailovï¿½ ï¿½ï¿½et %s?';
+$lng['question']['email_reallydelete_forwarder'] = 'Naozaj chcete zmazaï¿½ presmerovanie %s?';
+$lng['question']['extras_reallydelete'] = 'Naozaj chcete zmazaï¿½ ochranu adresï¿½ra pre %s?';
+$lng['question']['extras_reallydelete_pathoptions'] = 'Naozaj chcete zmazaï¿½ cestu moï¿½nostï¿½ pre %s?';
+$lng['question']['ftp_reallydelete'] = 'Naozaj chcete zmazaï¿½ FTP ï¿½ï¿½et %s?';
+$lng['question']['mysql_reallydelete'] = 'Naozaj chcete zmazaï¿½ databï¿½zu %s? Nemoï¿½no vrï¿½tiï¿½ spï¿½!';
+$lng['question']['admin_configs_reallyrebuild'] = 'Naozaj chcete pretvoriï¿½ Vaï¿½e apache a bind (DNS) konfikuraï¿½nï¿½ sï¿½bory?';
 
 /**
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Dobrý deò,\n\nVá¹ E-mail úèet {EMAIL}\nbol úspe¹ne zalo¾ený.\n\nToto je automaticky generovaný E-mail.\n Prosím, neodpovedajte naò!\n\nS pozdravom, Va¹ webhostingový partner Iga s.r.o.';
-$lng['mails']['pop_success']['subject'] = 'E-mailový úèet bol úspe¹ne zalo¾ený';
-$lng['mails']['createcustomer']['mailbody'] = 'Dobrý deò {FIRSTNAME} {NAME},\n\ntu sú Va¹e informácie o úète:\n\nPrihlasovacie meno: {USERNAME}\nHeslo: {PASSWORD}\n\nÏakujeme,\n Iga s.r.o';
-$lng['mails']['createcustomer']['subject'] = 'Informácie o úète';
+$lng['mails']['pop_success']['mailbody'] = 'Dobrï¿½ deï¿½,\n\nVï¿½ E-mail ï¿½ï¿½et {EMAIL}\nbol ï¿½speï¿½ne zaloï¿½enï¿½.\n\nToto je automaticky generovanï¿½ E-mail.\n Prosï¿½m, neodpovedajte naï¿½!\n\nS pozdravom, Vaï¿½ webhostingovï¿½ partner Iga s.r.o.';
+$lng['mails']['pop_success']['subject'] = 'E-mailovï¿½ ï¿½ï¿½et bol ï¿½speï¿½ne zaloï¿½enï¿½';
+$lng['mails']['createcustomer']['mailbody'] = 'Dobrï¿½ deï¿½ {FIRSTNAME} {NAME},\n\ntu sï¿½ Vaï¿½e informï¿½cie o ï¿½ï¿½te:\n\nPrihlasovacie meno: {USERNAME}\nHeslo: {PASSWORD}\n\nï¿½akujeme,\n Iga s.r.o';
+$lng['mails']['createcustomer']['subject'] = 'Informï¿½cie o ï¿½ï¿½te';
 
 /**
  * Admin
  */
 
-$lng['admin']['overview'] = 'Prehµad';
-$lng['admin']['ressourcedetails'] = 'Pou¾ité prostriedky';
-$lng['admin']['systemdetails'] = 'Systémové údaje';
-$lng['admin']['froxlordetails'] = 'Froxlor údaje';
-$lng['admin']['installedversion'] = 'In¹talovaná verzia';
-$lng['admin']['latestversion'] = 'Najnov¹ia verzia';
-$lng['admin']['lookfornewversion']['clickhere'] = 'Vyhµadáva» pomocou webovej slo¾by';
-$lng['admin']['lookfornewversion']['error'] = 'Chyba poèas èítania';
+$lng['admin']['overview'] = 'Prehï¿½ad';
+$lng['admin']['ressourcedetails'] = 'Pouï¿½itï¿½ prostriedky';
+$lng['admin']['systemdetails'] = 'Systï¿½movï¿½ ï¿½daje';
+$lng['admin']['froxlordetails'] = 'Froxlor ï¿½daje';
+$lng['admin']['installedversion'] = 'Inï¿½talovanï¿½ verzia';
+$lng['admin']['latestversion'] = 'Najnovï¿½ia verzia';
+$lng['admin']['lookfornewversion']['clickhere'] = 'Vyhï¿½adï¿½vaï¿½ pomocou webovej sloï¿½by';
+$lng['admin']['lookfornewversion']['error'] = 'Chyba poï¿½as ï¿½ï¿½tania';
 $lng['admin']['resources'] = 'Prostriedky';
 $lng['admin']['customer'] = 'Klient';
 $lng['admin']['customers'] = 'Klienti';
-$lng['admin']['customer_add'] = 'Vytvori» klienta';
-$lng['admin']['customer_edit'] = 'Upravi» klienta';
-$lng['admin']['domains'] = 'Domény';
-$lng['admin']['domain_add'] = 'Vytvori» doménu';
-$lng['admin']['domain_edit'] = 'Upravi» doménu';
-$lng['admin']['subdomainforemail'] = 'Subdomény ako E-mailové domény';
-$lng['admin']['admin'] = 'Administrátor';
-$lng['admin']['admins'] = 'Administrátori';
-$lng['admin']['admin_add'] = 'Vytvori» administrátora';
-$lng['admin']['admin_edit'] = 'Upravi» administrátora';
-$lng['admin']['customers_see_all'] = 'Mô¾e vidie» v¹etkých klientov?';
-$lng['admin']['domains_see_all'] = 'Mô¾e vidie» v¹etky domény?';
-$lng['admin']['change_serversettings'] = 'Mô¾e meni» nastavenia servra?';
+$lng['admin']['customer_add'] = 'Vytvoriï¿½ klienta';
+$lng['admin']['customer_edit'] = 'Upraviï¿½ klienta';
+$lng['admin']['domains'] = 'Domï¿½ny';
+$lng['admin']['domain_add'] = 'Vytvoriï¿½ domï¿½nu';
+$lng['admin']['domain_edit'] = 'Upraviï¿½ domï¿½nu';
+$lng['admin']['subdomainforemail'] = 'Subdomï¿½ny ako E-mailovï¿½ domï¿½ny';
+$lng['admin']['admin'] = 'Administrï¿½tor';
+$lng['admin']['admins'] = 'Administrï¿½tori';
+$lng['admin']['admin_add'] = 'Vytvoriï¿½ administrï¿½tora';
+$lng['admin']['admin_edit'] = 'Upraviï¿½ administrï¿½tora';
+$lng['admin']['customers_see_all'] = 'Mï¿½ï¿½e vidieï¿½ vï¿½etkï¿½ch klientov?';
+$lng['admin']['domains_see_all'] = 'Mï¿½ï¿½e vidieï¿½ vï¿½etky domï¿½ny?';
+$lng['admin']['change_serversettings'] = 'Mï¿½ï¿½e meniï¿½ nastavenia servra?';
 $lng['admin']['server'] = 'Server';
 $lng['admin']['serversettings'] = 'Nastavenia';
-$lng['admin']['rebuildconf'] = 'Pretvori» konfikuraèné súbory';
-$lng['admin']['stdsubdomain'] = '©tandardné subdomény';
-$lng['admin']['stdsubdomain_add'] = 'Vytvori» ¹tandardnú subdoménu';
-$lng['admin']['deactivated'] = 'Deaktivové';
-$lng['admin']['deactivated_user'] = 'Dektivova» u¾ívateµa';
-$lng['admin']['sendpassword'] = 'Zasla» heslo';
-$lng['admin']['ownvhostsettings'] = 'Vlastné vHost-Nastavenia';
+$lng['admin']['rebuildconf'] = 'Pretvoriï¿½ konfikuraï¿½nï¿½ sï¿½bory';
+$lng['admin']['stdsubdomain'] = 'ï¿½tandardnï¿½ subdomï¿½ny';
+$lng['admin']['stdsubdomain_add'] = 'Vytvoriï¿½ ï¿½tandardnï¿½ subdomï¿½nu';
+$lng['admin']['deactivated'] = 'Deaktivovï¿½';
+$lng['admin']['deactivated_user'] = 'Dektivovaï¿½ uï¿½ï¿½vateï¿½a';
+$lng['admin']['sendpassword'] = 'Zaslaï¿½ heslo';
+$lng['admin']['ownvhostsettings'] = 'Vlastnï¿½ vHost-Nastavenia';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Nastavenia';
-$lng['admin']['configfiles']['files'] = '<b>Konfiguraèné súbory:</b> Prosím, zmeòte nasledovné súbory alebo ak neexistujú,<br />vytvorte v nich nasledujúci obsah.<br /><b>V¹imnite si:</b> MySQL heslo nemô¾e by» z bezpeènostných dôvodov zmenené.<br />Prosím nahraïte &quot;MYSQL_PASSWORD&quot; Va¹ím vlastným. Ak ste zabudli Va¹e MySQL heslo,<br />nájdete ho v &quot;lib/userdata.inc.php&quot;.';
-$lng['admin']['configfiles']['commands'] = '<b>Príkazy:</b> Prosím vykonajte nasledovné príkazy v príkazovom riadku.';
-$lng['admin']['configfiles']['restart'] = '<b>Re¹tart:</b> Prosím vykonajte následovné príkazy v príkazovom riadku v presnom poradí, aby sa naèítali nové nastavenia.';
-$lng['admin']['templates']['templates'] = '©ablóny';
-$lng['admin']['templates']['template_add'] = 'Prida» ¹ablónu';
-$lng['admin']['templates']['template_edit'] = 'Upravi» ¹ablónu';
+$lng['admin']['configfiles']['files'] = '<b>Konfiguraï¿½nï¿½ sï¿½bory:</b> Prosï¿½m, zmeï¿½te nasledovnï¿½ sï¿½bory alebo ak neexistujï¿½,<br />vytvorte v nich nasledujï¿½ci obsah.<br /><b>Vï¿½imnite si:</b> MySQL heslo nemï¿½ï¿½e byï¿½ z bezpeï¿½nostnï¿½ch dï¿½vodov zmenenï¿½.<br />Prosï¿½m nahraï¿½te &quot;MYSQL_PASSWORD&quot; Vaï¿½ï¿½m vlastnï¿½m. Ak ste zabudli Vaï¿½e MySQL heslo,<br />nï¿½jdete ho v &quot;lib/userdata.inc.php&quot;.';
+$lng['admin']['configfiles']['commands'] = '<b>Prï¿½kazy:</b> Prosï¿½m vykonajte nasledovnï¿½ prï¿½kazy v prï¿½kazovom riadku.';
+$lng['admin']['configfiles']['restart'] = '<b>Reï¿½tart:</b> Prosï¿½m vykonajte nï¿½sledovnï¿½ prï¿½kazy v prï¿½kazovom riadku v presnom poradï¿½, aby sa naï¿½ï¿½tali novï¿½ nastavenia.';
+$lng['admin']['templates']['templates'] = 'ï¿½ablï¿½ny';
+$lng['admin']['templates']['template_add'] = 'Pridaï¿½ ï¿½ablï¿½nu';
+$lng['admin']['templates']['template_edit'] = 'Upraviï¿½ ï¿½ablï¿½nu';
 $lng['admin']['templates']['action'] = 'Akcia';
 $lng['admin']['templates']['email'] = 'E-Mail';
 $lng['admin']['templates']['subject'] = 'Predmet';
-$lng['admin']['templates']['mailbody'] = 'Telo správy';
-$lng['admin']['templates']['createcustomer'] = 'Uvítací E-mail pre nového klienta';
-$lng['admin']['templates']['pop_success'] = 'Uvítací E-mail pre nov» E-mailový úèet';
-$lng['admin']['templates']['template_replace_vars'] = 'Premenné nahradzované v ¹ablónach:';
-$lng['admin']['templates']['FIRSTNAME'] = 'Nahradi» krstným menom klienta.';
-$lng['admin']['templates']['NAME'] = 'Nahradi» menom klienta.';
-$lng['admin']['templates']['USERNAME'] = 'Nahradi» menom úètu klienta.';
-$lng['admin']['templates']['PASSWORD'] = 'Nahradi» heslom úètu klienta.';
-$lng['admin']['templates']['EMAIL'] = 'Nahradi» adresou POP3/IMAP úètu.';
+$lng['admin']['templates']['mailbody'] = 'Telo sprï¿½vy';
+$lng['admin']['templates']['createcustomer'] = 'Uvï¿½tacï¿½ E-mail pre novï¿½ho klienta';
+$lng['admin']['templates']['pop_success'] = 'Uvï¿½tacï¿½ E-mail pre novï¿½ E-mailovï¿½ ï¿½ï¿½et';
+$lng['admin']['templates']['template_replace_vars'] = 'Premennï¿½ nahradzovanï¿½ v ï¿½ablï¿½nach:';
+$lng['admin']['templates']['FIRSTNAME'] = 'Nahradiï¿½ krstnï¿½m menom klienta.';
+$lng['admin']['templates']['NAME'] = 'Nahradiï¿½ menom klienta.';
+$lng['admin']['templates']['USERNAME'] = 'Nahradiï¿½ menom ï¿½ï¿½tu klienta.';
+$lng['admin']['templates']['PASSWORD'] = 'Nahradiï¿½ heslom ï¿½ï¿½tu klienta.';
+$lng['admin']['templates']['EMAIL'] = 'Nahradiï¿½ adresou POP3/IMAP ï¿½ï¿½tu.';
 
 /**
  * Serversettings
  */
 
-$lng['serversettings']['session_timeout']['title'] = 'Èasový limit sedenia';
-$lng['serversettings']['session_timeout']['description'] = 'Ako dlho má by» u¾ívateµ neaktívny predtým, ako sa pripojenie stane neplatným (v sekundách)?';
+$lng['serversettings']['session_timeout']['title'] = 'ï¿½asovï¿½ limit sedenia';
+$lng['serversettings']['session_timeout']['description'] = 'Ako dlho mï¿½ byï¿½ uï¿½ï¿½vateï¿½ neaktï¿½vny predtï¿½m, ako sa pripojenie stane neplatnï¿½m (v sekundï¿½ch)?';
 $lng['serversettings']['accountprefix']['title'] = 'Prefix klienta';
-$lng['serversettings']['accountprefix']['description'] = 'Aký prefix mô¾u ma» klientské úèty?';
+$lng['serversettings']['accountprefix']['description'] = 'Akï¿½ prefix mï¿½ï¿½u maï¿½ klientskï¿½ ï¿½ï¿½ty?';
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL Prefix';
-$lng['serversettings']['mysqlprefix']['description'] = 'Aký prefix majú ma» mySQL úèty?';
+$lng['serversettings']['mysqlprefix']['description'] = 'Akï¿½ prefix majï¿½ maï¿½ mySQL ï¿½ï¿½ty?';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP Prefix';
-$lng['serversettings']['ftpprefix']['description'] = 'Aký prefix majú ma»  FTP úèty?';
-$lng['serversettings']['documentroot_prefix']['title'] = 'Adresár dokumentov';
-$lng['serversettings']['documentroot_prefix']['description'] = 'Kde majú by» ukladané v¹etky dáta?';
-$lng['serversettings']['logfiles_directory']['title'] = 'Adresár súborov s logmi';
-$lng['serversettings']['logfiles_directory']['description'] = 'Kde majú by» ukladané v¹etky log súbory?';
+$lng['serversettings']['ftpprefix']['description'] = 'Akï¿½ prefix majï¿½ maï¿½  FTP ï¿½ï¿½ty?';
+$lng['serversettings']['documentroot_prefix']['title'] = 'Adresï¿½r dokumentov';
+$lng['serversettings']['documentroot_prefix']['description'] = 'Kde majï¿½ byï¿½ ukladanï¿½ vï¿½etky dï¿½ta?';
+$lng['serversettings']['logfiles_directory']['title'] = 'Adresï¿½r sï¿½borov s logmi';
+$lng['serversettings']['logfiles_directory']['description'] = 'Kde majï¿½ byï¿½ ukladanï¿½ vï¿½etky log sï¿½bory?';
 $lng['serversettings']['ipaddress']['title'] = 'IP-Addresy';
-$lng['serversettings']['ipaddress']['description'] = 'Aká je IP adresa tohto servera?';
-$lng['serversettings']['hostname']['title'] = 'Názov hosta';
-$lng['serversettings']['hostname']['description'] = 'Aký je názov hosta tohto servera?';
-$lng['serversettings']['apachereload_command']['title'] = 'Príkaz na pretvorenie (reload) Apache';
-$lng['serversettings']['apachereload_command']['description'] = 'Aký je príkaz na pretvorenie (reload) Apache?';
-$lng['serversettings']['bindconf_directory']['title'] = 'Adresár konfigurácie bind (DNS)';
-$lng['serversettings']['bindconf_directory']['description'] = 'Kde sa nachádzajú konfiguraèné súbory pre bind (DNS)?';
-$lng['serversettings']['bindreload_command']['title'] = 'Príkaz na pretvorenie (reload) bind';
-$lng['serversettings']['bindreload_command']['description'] = 'Aký je príkaz na pretvorenie (reload) bind (DNS)?';
-$lng['serversettings']['binddefaultzone']['title'] = 'Predvolená zóna bind (DNS)';
-$lng['serversettings']['binddefaultzone']['description'] = 'Aký je názov predvolenej zóny?';
+$lng['serversettings']['ipaddress']['description'] = 'Akï¿½ je IP adresa tohto servera?';
+$lng['serversettings']['hostname']['title'] = 'Nï¿½zov hosta';
+$lng['serversettings']['hostname']['description'] = 'Akï¿½ je nï¿½zov hosta tohto servera?';
+$lng['serversettings']['apachereload_command']['title'] = 'Prï¿½kaz na pretvorenie (reload) Apache';
+$lng['serversettings']['apachereload_command']['description'] = 'Akï¿½ je prï¿½kaz na pretvorenie (reload) Apache?';
+$lng['serversettings']['bindconf_directory']['title'] = 'Adresï¿½r konfigurï¿½cie bind (DNS)';
+$lng['serversettings']['bindconf_directory']['description'] = 'Kde sa nachï¿½dzajï¿½ konfiguraï¿½nï¿½ sï¿½bory pre bind (DNS)?';
+$lng['serversettings']['bindreload_command']['title'] = 'Prï¿½kaz na pretvorenie (reload) bind';
+$lng['serversettings']['bindreload_command']['description'] = 'Akï¿½ je prï¿½kaz na pretvorenie (reload) bind (DNS)?';
+$lng['serversettings']['binddefaultzone']['title'] = 'Predvolenï¿½ zï¿½na bind (DNS)';
+$lng['serversettings']['binddefaultzone']['description'] = 'Akï¿½ je nï¿½zov predvolenej zï¿½ny?';
 $lng['serversettings']['vmail_uid']['title'] = 'Uid E-mailov (Mails-Uid)';
-$lng['serversettings']['vmail_uid']['description'] = 'Ktoré ID u¾ívateµa mô¾u ma» E-mail?';
+$lng['serversettings']['vmail_uid']['description'] = 'Ktorï¿½ ID uï¿½ï¿½vateï¿½a mï¿½ï¿½u maï¿½ E-mail?';
 $lng['serversettings']['vmail_gid']['title'] = 'Mails-Gid';
-$lng['serversettings']['vmail_gid']['description'] = 'Ktoré ID skupiny mô¾u ma» E-mail?';
-$lng['serversettings']['vmail_homedir']['title'] = 'Domovský adresár pre E-maily';
-$lng['serversettings']['vmail_homedir']['description'] = 'Kde majú by» ukladané v¹etky E-maily?';
-$lng['serversettings']['adminmail']['title'] = 'Odosielateµ';
-$lng['serversettings']['adminmail']['description'] = 'Aká je adresa odosielateµa pre E-maily odoslané z panela?';
+$lng['serversettings']['vmail_gid']['description'] = 'Ktorï¿½ ID skupiny mï¿½ï¿½u maï¿½ E-mail?';
+$lng['serversettings']['vmail_homedir']['title'] = 'Domovskï¿½ adresï¿½r pre E-maily';
+$lng['serversettings']['vmail_homedir']['description'] = 'Kde majï¿½ byï¿½ ukladanï¿½ vï¿½etky E-maily?';
+$lng['serversettings']['adminmail']['title'] = 'Odosielateï¿½';
+$lng['serversettings']['adminmail']['description'] = 'Akï¿½ je adresa odosielateï¿½a pre E-maily odoslanï¿½ z panela?';
 $lng['serversettings']['phpmyadmin_url']['title'] = 'URL pre phpMyAdmin';
-$lng['serversettings']['phpmyadmin_url']['description'] = 'Aká je URL pre phpMyAdmin? (musí zaèína» s http://)';
+$lng['serversettings']['phpmyadmin_url']['description'] = 'Akï¿½ je URL pre phpMyAdmin? (musï¿½ zaï¿½ï¿½naï¿½ s http://)';
 $lng['serversettings']['webmail_url']['title'] = 'URL pre WebMail';
-$lng['serversettings']['webmail_url']['description'] = 'Aká je URL pre WebMail? (musí zaèína» s http://)';
+$lng['serversettings']['webmail_url']['description'] = 'Akï¿½ je URL pre WebMail? (musï¿½ zaï¿½ï¿½naï¿½ s http://)';
 $lng['serversettings']['webftp_url']['title'] = 'URL pre WebFTP';
-$lng['serversettings']['webftp_url']['description'] = 'Aká je URL WebFTP? (musí zaèína» s http://)';
-$lng['serversettings']['language']['description'] = 'Aký je ¹tandardný jazyk servera?';
-$lng['serversettings']['maxloginattempts']['title'] = 'Maximálny poèet pokusov o prihlásenia';
-$lng['serversettings']['maxloginattempts']['description'] = 'Maximálny poèet pokusov o prihlásenia po ktorých bude úèet deaktivovaný.';
-$lng['serversettings']['deactivatetime']['title'] = 'Dátum/èas deaktivácie';
-$lng['serversettings']['deactivatetime']['description'] = 'Èas v sekundách, za ktorý sa úèet deaktivuje po mno¾stve pokusov o prihlásenie.';
-$lng['serversettings']['pathedit']['title'] = 'Zadajte názov vstupu';
-$lng['serversettings']['pathedit']['description'] = 'Mô¾e by» cest zvolená z vyskakovacieho menu alebo zadaná do pola?';
+$lng['serversettings']['webftp_url']['description'] = 'Akï¿½ je URL WebFTP? (musï¿½ zaï¿½ï¿½naï¿½ s http://)';
+$lng['serversettings']['language']['description'] = 'Akï¿½ je ï¿½tandardnï¿½ jazyk servera?';
+$lng['serversettings']['maxloginattempts']['title'] = 'Maximï¿½lny poï¿½et pokusov o prihlï¿½senia';
+$lng['serversettings']['maxloginattempts']['description'] = 'Maximï¿½lny poï¿½et pokusov o prihlï¿½senia po ktorï¿½ch bude ï¿½ï¿½et deaktivovanï¿½.';
+$lng['serversettings']['deactivatetime']['title'] = 'Dï¿½tum/ï¿½as deaktivï¿½cie';
+$lng['serversettings']['deactivatetime']['description'] = 'ï¿½as v sekundï¿½ch, za ktorï¿½ sa ï¿½ï¿½et deaktivuje po mnoï¿½stve pokusov o prihlï¿½senie.';
+$lng['serversettings']['pathedit']['title'] = 'Zadajte nï¿½zov vstupu';
+$lng['serversettings']['pathedit']['description'] = 'Mï¿½ï¿½e byï¿½ cest zvolenï¿½ z vyskakovacieho menu alebo zadanï¿½ do pola?';
 
 /**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['mysql']['description'] = 'Tu mô¾ete vytvára» a meni» Va¹e MySQL databázy.<br />Zmeny sú okam¾ité a úèty mô¾ete pou¾íva» ihneï.<br />Na µavej strane sa nachádza menu, v ktorom je nástroj phpMyAdmin, cez ktorý mô¾ete rýchlo a jednoducho spravova» Va¹e databázy.<br /><br />Pre pou¾itie Va¹ích databáz vo Va¹ích PHP skriptoch pou¾ite nasledujúce nastavenia: (Informácie oznaèené <i>lomeným písmom</i>, musia by» zmenené na Va¹e prístupové údaje!)<br />Názov hosta: <b>localhost</b><br />U¾ívateµské meno: <b><i>Názov_databázy</i></b><br />Heslo: <b><i>heslo, ktoré ste si zvolili</i></b><br />Databáza: <b><i>Názov_databázy';
+$lng['mysql']['description'] = 'Tu mï¿½ï¿½ete vytvï¿½raï¿½ a meniï¿½ Vaï¿½e MySQL databï¿½zy.<br />Zmeny sï¿½ okamï¿½itï¿½ a ï¿½ï¿½ty mï¿½ï¿½ete pouï¿½ï¿½vaï¿½ ihneï¿½.<br />Na ï¿½avej strane sa nachï¿½dza menu, v ktorom je nï¿½stroj phpMyAdmin, cez ktorï¿½ mï¿½ï¿½ete rï¿½chlo a jednoducho spravovaï¿½ Vaï¿½e databï¿½zy.<br /><br />Pre pouï¿½itie Vaï¿½ï¿½ch databï¿½z vo Vaï¿½ï¿½ch PHP skriptoch pouï¿½ite nasledujï¿½ce nastavenia: (Informï¿½cie oznaï¿½enï¿½ <i>lomenï¿½m pï¿½smom</i>, musia byï¿½ zmenenï¿½ na Vaï¿½e prï¿½stupovï¿½ ï¿½daje!)<br />Nï¿½zov hosta: <b>localhost</b><br />Uï¿½ï¿½vateï¿½skï¿½ meno: <b><i>Nï¿½zov_databï¿½zy</i></b><br />Heslo: <b><i>heslo, ktorï¿½ ste si zvolili</i></b><br />Databï¿½za: <b><i>Nï¿½zov_databï¿½zy';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['serversettings']['paging']['title'] = 'Záznamov na stránku';
-$lng['serversettings']['paging']['description'] = 'Koµko záznamov bude zobrazených na jednej stránke? (0 = zakázané stránkovanie)';
-$lng['error']['ipstillhasdomains'] = 'IP/Port kombinácia ktorú chcete zmaza» má stále priradené domenény. Pred zmazaním tejto IP/Port kombinácie prosím znovu priraïte tieto k ostatným IP/Port kombináciam.';
-$lng['error']['cantdeletedefaultip'] = 'Nemô¾ete zmaza» predvolenú reseller IP/Port kombináciu. Pred zmazaním tejto IP/Port kombinácie prosím vytvorte inú predvolenú IP/Port kombináciu pre resellerov.';
-$lng['error']['cantdeletesystemip'] = 'Nemô¾ete zmaza» poslednú IP systému, ani vytvori» ïaµ¹iu novú IP/Port kombináciu pre IP systém alebo zmeni» systémovú IP.';
+$lng['serversettings']['paging']['title'] = 'Zï¿½znamov na strï¿½nku';
+$lng['serversettings']['paging']['description'] = 'Koï¿½ko zï¿½znamov bude zobrazenï¿½ch na jednej strï¿½nke? (0 = zakï¿½zanï¿½ strï¿½nkovanie)';
+$lng['error']['ipstillhasdomains'] = 'IP/Port kombinï¿½cia ktorï¿½ chcete zmazaï¿½ mï¿½ stï¿½le priradenï¿½ domenï¿½ny. Pred zmazanï¿½m tejto IP/Port kombinï¿½cie prosï¿½m znovu priraï¿½te tieto k ostatnï¿½m IP/Port kombinï¿½ciam.';
+$lng['error']['cantdeletedefaultip'] = 'Nemï¿½ï¿½ete zmazaï¿½ predvolenï¿½ reseller IP/Port kombinï¿½ciu. Pred zmazanï¿½m tejto IP/Port kombinï¿½cie prosï¿½m vytvorte inï¿½ predvolenï¿½ IP/Port kombinï¿½ciu pre resellerov.';
+$lng['error']['cantdeletesystemip'] = 'Nemï¿½ï¿½ete zmazaï¿½ poslednï¿½ IP systï¿½mu, ani vytvoriï¿½ ï¿½aï¿½ï¿½iu novï¿½ IP/Port kombinï¿½ciu pre IP systï¿½m alebo zmeniï¿½ systï¿½movï¿½ IP.';
 $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Port\'';
-$lng['error']['myipdefault'] = 'Musíte vybra» kombináciu IP/Port ktorá sa stane predvolenou.';
-$lng['error']['myipnotdouble'] = 'Táto kombinácia IP/Port u¾ existuje.';
-$lng['question']['admin_ip_reallydelete'] = 'Naozaj chcete zmaza» IP adresu %s?';
+$lng['error']['myipdefault'] = 'Musï¿½te vybraï¿½ kombinï¿½ciu IP/Port ktorï¿½ sa stane predvolenou.';
+$lng['error']['myipnotdouble'] = 'Tï¿½to kombinï¿½cia IP/Port uï¿½ existuje.';
+$lng['question']['admin_ip_reallydelete'] = 'Naozaj chcete zmazaï¿½ IP adresu %s?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IP a Port(y)';
-$lng['admin']['ipsandports']['add'] = 'Prida» IP/Port';
-$lng['admin']['ipsandports']['edit'] = 'Upravi»t IP/Port';
+$lng['admin']['ipsandports']['add'] = 'Pridaï¿½ IP/Port';
+$lng['admin']['ipsandports']['edit'] = 'Upraviï¿½t IP/Port';
 $lng['admin']['ipsandports']['ipandport'] = 'IP/Port';
 $lng['admin']['ipsandports']['ip'] = 'IP';
 $lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
 
-$lng['error']['cantchangesystemip'] = 'Nemô¾ete zmeni» poslednú IP systému, ani vytvori» ïaµ¹iu novú IP/Port kombináciu pre IP systém alebo zmeni» systémovú IP.';
+$lng['error']['cantchangesystemip'] = 'Nemï¿½ï¿½ete zmeniï¿½ poslednï¿½ IP systï¿½mu, ani vytvoriï¿½ ï¿½aï¿½ï¿½iu novï¿½ IP/Port kombinï¿½ciu pre IP systï¿½m alebo zmeniï¿½ systï¿½movï¿½ IP.';
 $lng['question']['admin_domain_reallydocrootoutofcustomerroot'] = 'Are you sure, you want the document root for this domain, not being within the customerroot of the customer?';
 
 // ADDED IN 1.2.14-rc1
 
-$lng['admin']['memorylimitdisabled'] = 'Zakázaný';
+$lng['admin']['memorylimitdisabled'] = 'Zakï¿½zanï¿½';
 $lng['domain']['openbasedirpath'] = 'OpenBasedir cesta';
-$lng['domain']['docroot'] = 'Cesta z pola vy¹¹ie';
-$lng['domain']['homedir'] = 'Domovský adresár';
-$lng['admin']['valuemandatory'] = 'Táto hodnota je povinná';
-$lng['admin']['valuemandatorycompany'] = 'Oboje &quot;meno&quot; a &quot;priezvisko&quot; alebo &quot;spoloènos»&quot; musia by» vyplnené';
-$lng['menue']['main']['username'] = 'Prihlásený ako: ';
-$lng['panel']['urloverridespath'] = 'URL (nadradená cesta)';
+$lng['domain']['docroot'] = 'Cesta z pola vyï¿½ï¿½ie';
+$lng['domain']['homedir'] = 'Domovskï¿½ adresï¿½r';
+$lng['admin']['valuemandatory'] = 'Tï¿½to hodnota je povinnï¿½';
+$lng['admin']['valuemandatorycompany'] = 'Oboje &quot;meno&quot; a &quot;priezvisko&quot; alebo &quot;spoloï¿½nosï¿½&quot; musia byï¿½ vyplnenï¿½';
+$lng['menue']['main']['username'] = 'Prihlï¿½senï¿½ ako: ';
+$lng['panel']['urloverridespath'] = 'URL (nadradenï¿½ cesta)';
 $lng['panel']['pathorurl'] = 'Cesta alebo URL';
-$lng['error']['sessiontimeoutiswrong'] = 'Je povolený len èíselný &quot;èasový limit sedenia&quot;.';
-$lng['error']['maxloginattemptsiswrong'] = 'Je povolený len èíselný &quot;maximálny poèet prihlásení&quot;.';
-$lng['error']['deactivatetimiswrong'] = 'Je povolený len èíselný &quot;èas deaktivácie&quot;.';
-$lng['error']['accountprefixiswrong'] = '&quot;Prefix klienta&quot; je nesprávny.';
-$lng['error']['mysqlprefixiswrong'] = '&quot;SQL prefix&quot; je nesprávny.';
-$lng['error']['ftpprefixiswrong'] = '&quot;FTP prefix&quot; je nesprávny.';
-$lng['error']['ipiswrong'] = '&quot;IP-Adresa&quot; je nesprávna. Je povolená len platná IP-adresa.';
-$lng['error']['vmailuidiswrong'] = '&quot;Mails-uid&quot; je nesprávne. Je povolené len èíselné UID.';
-$lng['error']['vmailgidiswrong'] = '&quot;Mails-gid&quot; je nesprávne. Je povolené len èíselné GID.';
-$lng['error']['adminmailiswrong'] = '&quot;Adresa odosielateµa&quot; je nesprávna. Je povolená len platná E-mail-adresa.';
-$lng['error']['pagingiswrong'] = 'Hodnota &quot;záznamov na stránku&quot je neplatná. Sú povolené len èíselné znaky.';
-$lng['error']['phpmyadminiswrong'] = 'phpMyAdmin odkaz nie je platným odkazov.';
-$lng['error']['webmailiswrong'] = 'WebMail odkaz nie je platým odkazom.';
-$lng['error']['webftpiswrong'] = 'WebFTP odkaz nie je platým odkazom.';
-$lng['domains']['hasaliasdomains'] = 'Má alias domény(én)';
-$lng['serversettings']['defaultip']['title'] = 'Predvolený IP/Port';
-$lng['serversettings']['defaultip']['description'] = 'Èo je predvolená IP/Port kombinácia?';
-$lng['domains']['statstics'] = 'Pou¾i» ¹tatistiky';
+$lng['error']['sessiontimeoutiswrong'] = 'Je povolenï¿½ len ï¿½ï¿½selnï¿½ &quot;ï¿½asovï¿½ limit sedenia&quot;.';
+$lng['error']['maxloginattemptsiswrong'] = 'Je povolenï¿½ len ï¿½ï¿½selnï¿½ &quot;maximï¿½lny poï¿½et prihlï¿½senï¿½&quot;.';
+$lng['error']['deactivatetimiswrong'] = 'Je povolenï¿½ len ï¿½ï¿½selnï¿½ &quot;ï¿½as deaktivï¿½cie&quot;.';
+$lng['error']['accountprefixiswrong'] = '&quot;Prefix klienta&quot; je nesprï¿½vny.';
+$lng['error']['mysqlprefixiswrong'] = '&quot;SQL prefix&quot; je nesprï¿½vny.';
+$lng['error']['ftpprefixiswrong'] = '&quot;FTP prefix&quot; je nesprï¿½vny.';
+$lng['error']['ipiswrong'] = '&quot;IP-Adresa&quot; je nesprï¿½vna. Je povolenï¿½ len platnï¿½ IP-adresa.';
+$lng['error']['vmailuidiswrong'] = '&quot;Mails-uid&quot; je nesprï¿½vne. Je povolenï¿½ len ï¿½ï¿½selnï¿½ UID.';
+$lng['error']['vmailgidiswrong'] = '&quot;Mails-gid&quot; je nesprï¿½vne. Je povolenï¿½ len ï¿½ï¿½selnï¿½ GID.';
+$lng['error']['adminmailiswrong'] = '&quot;Adresa odosielateï¿½a&quot; je nesprï¿½vna. Je povolenï¿½ len platnï¿½ E-mail-adresa.';
+$lng['error']['pagingiswrong'] = 'Hodnota &quot;zï¿½znamov na strï¿½nku&quot je neplatnï¿½. Sï¿½ povolenï¿½ len ï¿½ï¿½selnï¿½ znaky.';
+$lng['error']['phpmyadminiswrong'] = 'phpMyAdmin odkaz nie je platnï¿½m odkazov.';
+$lng['error']['webmailiswrong'] = 'WebMail odkaz nie je platï¿½m odkazom.';
+$lng['error']['webftpiswrong'] = 'WebFTP odkaz nie je platï¿½m odkazom.';
+$lng['domains']['hasaliasdomains'] = 'Mï¿½ alias domï¿½ny(ï¿½n)';
+$lng['serversettings']['defaultip']['title'] = 'Predvolenï¿½ IP/Port';
+$lng['serversettings']['defaultip']['description'] = 'ï¿½o je predvolenï¿½ IP/Port kombinï¿½cia?';
+$lng['domains']['statstics'] = 'Pouï¿½iï¿½ ï¿½tatistiky';
 $lng['panel']['ascending'] = 'Vzostupne';
 $lng['panel']['decending'] = 'Zostupne';
-$lng['panel']['search'] = 'Vyhµada»';
-$lng['panel']['used'] = 'pou¾ité';
+$lng['panel']['search'] = 'Vyhï¿½adaï¿½';
+$lng['panel']['used'] = 'pouï¿½itï¿½';
 
 // ADDED IN 1.2.14-rc3
 
-$lng['panel']['translator'] = 'Prekladaè';
+$lng['panel']['translator'] = 'Prekladaï¿½';
 
 // ADDED IN 1.2.14-rc4
 
-$lng['error']['stringformaterror'] = 'Hodnota pre pole &quot;%s&quot; nie je v oèakávanom formáte.';
+$lng['error']['stringformaterror'] = 'Hodnota pre pole &quot;%s&quot; nie je v oï¿½akï¿½vanom formï¿½te.';
 
 // ADDED IN 1.2.15-rc1
 
@@ -453,12 +453,12 @@ $lng['admin']['phpmemorylimit'] = 'PHP Memory Limit';
 $lng['admin']['mysqlserverversion'] = 'MySQL Server verzia';
 $lng['admin']['mysqlclientversion'] = 'MySQL Client verzia';
 $lng['admin']['webserverinterface'] = 'Webserver rozhranie';
-$lng['domains']['isassigneddomain'] = 'Je priradenou doménou';
+$lng['domains']['isassigneddomain'] = 'Je priradenou domï¿½nou';
 $lng['serversettings']['phpappendopenbasedir']['title'] = 'Cesty na pripojenie k OpenBasedir';
-$lng['serversettings']['phpappendopenbasedir']['description'] = 'Tieto cesty (oddelené dvojbodkou) budú pridané do OpenBasedir príkazu (statement) v ka¾dom vhost-zázobníku (container).';
+$lng['serversettings']['phpappendopenbasedir']['description'] = 'Tieto cesty (oddelenï¿½ dvojbodkou) budï¿½ pridanï¿½ do OpenBasedir prï¿½kazu (statement) v kaï¿½dom vhost-zï¿½zobnï¿½ku (container).';
 
 // CHANGED IN 1.2.15-rc1
 
-$lng['error']['loginnameissystemaccount'] = 'Nemô¾ete vytvori» úèet, ktorý je podobný systémovému úètu (napríklad zaènite s &quot;%s&quot;). Prosím, zadajte iný názov úètu.';
+$lng['error']['loginnameissystemaccount'] = 'Nemï¿½ï¿½ete vytvoriï¿½ ï¿½ï¿½et, ktorï¿½ je podobnï¿½ systï¿½movï¿½mu ï¿½ï¿½tu (naprï¿½klad zaï¿½nite s &quot;%s&quot;). Prosï¿½m, zadajte inï¿½ nï¿½zov ï¿½ï¿½tu.';
 
 ?>

@@ -13,7 +13,7 @@
  * @author     Michal Gozdzik <michal@gozdzik.com> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id$
+ *
  */
 
 /**
@@ -23,7 +23,7 @@
 $lng['translator'] = 'Michal Gozdzik';
 $lng['panel']['edit'] = 'edytuj';
 $lng['panel']['delete'] = 'kasuj';
-$lng['panel']['create'] = 'utwórz';
+$lng['panel']['create'] = 'utwï¿½rz';
 $lng['panel']['save'] = 'zapisz';
 $lng['panel']['yes'] = 'tak';
 $lng['panel']['no'] = 'nie';
@@ -75,7 +75,7 @@ $lng['customer']['unlimited'] = 'bez limitu';
  * Customermenue
  */
 
-$lng['menue']['main']['main'] = 'Panel g³ówny';
+$lng['menue']['main']['main'] = 'Panel gï¿½ï¿½wny';
 $lng['menue']['main']['changepassword'] = 'Zmie&#324 has&#322o';
 $lng['menue']['main']['changelanguage'] = 'Zmie&#324 j&#281zyk';
 $lng['menue']['email']['email'] = 'E-mail';
@@ -97,8 +97,8 @@ $lng['menue']['extras']['pathoptions'] = 'Opcje &#347cie&#380ki';
  * Index
  */
 
-$lng['index']['customerdetails'] = 'Szczegó&#322y klienta';
-$lng['index']['accountdetails'] = 'Szczegó&#322y konta';
+$lng['index']['customerdetails'] = 'Szczegï¿½&#322y klienta';
+$lng['index']['accountdetails'] = 'Szczegï¿½&#322y konta';
 
 /**
  * Change Password
@@ -106,9 +106,9 @@ $lng['index']['accountdetails'] = 'Szczegó&#322y konta';
 
 $lng['changepassword']['old_password'] = 'Stare has&#322o';
 $lng['changepassword']['new_password'] = 'Nowe has&#322o';
-$lng['changepassword']['new_password_confirm'] = 'Nowe has&#322o (powtórz)';
+$lng['changepassword']['new_password_confirm'] = 'Nowe has&#322o (powtï¿½rz)';
 $lng['changepassword']['new_password_ifnotempty'] = 'Nowe has&#322o (puste = bez zmien)';
-$lng['changepassword']['also_change_ftp'] = ' oraz zmie&#324 has&#322o do g&#322ównego konta FTP';
+$lng['changepassword']['also_change_ftp'] = ' oraz zmie&#324 has&#322o do g&#322ï¿½wnego konta FTP';
 
 /**
  * Domains
@@ -117,9 +117,9 @@ $lng['changepassword']['also_change_ftp'] = ' oraz zmie&#324 has&#322o do g&#322
 $lng['domains']['description'] = 'Here you can create (sub-)domains and change their paths.<br />The system will need some time to apply the new settings after every change.';
 $lng['domains']['domainsettings'] = 'Ustawienia domeny';
 $lng['domains']['domainname'] = 'Nazwa domeny';
-$lng['domains']['subdomain_add'] = 'Utwórz (pod)domen&#281';
+$lng['domains']['subdomain_add'] = 'Utwï¿½rz (pod)domen&#281';
 $lng['domains']['subdomain_edit'] = 'Edytuj (pod)domen&#281';
-$lng['domains']['wildcarddomain'] = 'Utwórz jako wildcarddomain?';
+$lng['domains']['wildcarddomain'] = 'Utwï¿½rz jako wildcarddomain?';
 $lng['domains']['aliasdomain'] = 'Alias dla domeny';
 $lng['domains']['noaliasdomain'] = 'Bez aliasu dla domeny';
 
@@ -129,24 +129,24 @@ $lng['domains']['noaliasdomain'] = 'Bez aliasu dla domeny';
 
 $lng['emails']['description'] = 'W tym miejscu mo&#380esz utworzy&#263 lub zmieni&#263 Twoje adresy e-mail.<br />An account is like your letterbox in front of your house. If someone sends you an email, it will be dropped into the account.<br /><br />To download your emails use the following settings in your mailprogram: (The data in <i>italics</i> has to be changed to the equivalents you typed in!)<br />Hostname: <b><i>Domainname</i></b><br />Username: <b><i>Account name / e-mail address</i></b><br />Password: <b><i>the password you\'ve chosen</i></b>';
 $lng['emails']['emailaddress'] = 'Adresy E-mail';
-$lng['emails']['emails_add'] = 'Utwórz adresy e-mail';
+$lng['emails']['emails_add'] = 'Utwï¿½rz adresy e-mail';
 $lng['emails']['emails_edit'] = 'Edytuj adresy e-mail';
 $lng['emails']['catchall'] = 'Catchall';
 $lng['emails']['iscatchall'] = 'Zdefiniuj jako adres catchall?';
 $lng['emails']['account'] = 'Konto';
-$lng['emails']['account_add'] = 'Utwórz konto';
+$lng['emails']['account_add'] = 'Utwï¿½rz konto';
 $lng['emails']['account_delete'] = 'Kasuj konto';
 $lng['emails']['from'] = 'Source';
 $lng['emails']['to'] = 'Destination';
 $lng['emails']['forwarders'] = 'Przekierowania';
-$lng['emails']['forwarder_add'] = 'Utwórz przekierowanie';
+$lng['emails']['forwarder_add'] = 'Utwï¿½rz przekierowanie';
 
 /**
  * FTP
  */
 
 $lng['ftp']['description'] = 'W tym miejscu mo&#380esz utworzy&#263 lub zmieni&#263 Twoje konta FTP.<br />Dokonane zmiany s&#261 wprowadzane natychmiastowo.';
-$lng['ftp']['account_add'] = 'Utwórz konto';
+$lng['ftp']['account_add'] = 'Utwï¿½rz konto';
 
 /**
  * MySQL
@@ -154,7 +154,7 @@ $lng['ftp']['account_add'] = 'Utwórz konto';
 
 $lng['mysql']['databasename'] = 'u&#380ytkownik/nazwa bazy danych';
 $lng['mysql']['databasedescription'] = 'Opis bazy danych';
-$lng['mysql']['database_create'] = 'Utwórz baz&#281 danych';
+$lng['mysql']['database_create'] = 'Utwï¿½rz baz&#281 danych';
 
 /**
  * Extras
@@ -183,13 +183,13 @@ $lng['error']['error'] = 'B&#322&#261d';
 $lng['error']['directorymustexist'] = 'Folder %s musi istnie&#263. Prosz&#281 go utworzy&#263 przez klienta FTP.';
 $lng['error']['filemustexist'] = 'Plik %s musi istnie&#263.';
 $lng['error']['allresourcesused'] = 'You have already used all of your resources.';
-$lng['error']['domains_cantdeletemaindomain'] = 'Nie mo&#380esz usun&#261&#263 domeny, która jest u&#380ywana jako domena e-mailowa.';
+$lng['error']['domains_cantdeletemaindomain'] = 'Nie mo&#380esz usun&#261&#263 domeny, ktï¿½ra jest u&#380ywana jako domena e-mailowa.';
 $lng['error']['domains_canteditdomain'] = 'Nie mo&#380esz edytowa&#263 tej domeny. Ta opcja zosta&#322a wy&#322&#261czona przez administratora.';
-$lng['error']['domains_cantdeletedomainwithemail'] = 'Nie mo&#380esz usun&#261&#263 domeny, która jest u&#380ywana jako domena e-mailowa. Usu&#324 w pierwszej kolejno&#347ci wszystkie konta e-mail dla tej domeny.';
+$lng['error']['domains_cantdeletedomainwithemail'] = 'Nie mo&#380esz usun&#261&#263 domeny, ktï¿½ra jest u&#380ywana jako domena e-mailowa. Usu&#324 w pierwszej kolejno&#347ci wszystkie konta e-mail dla tej domeny.';
 $lng['error']['firstdeleteallsubdomains'] = 'You have to delete all Subdomains first before you can create a wildcard domain.';
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Masz juz zdefiniowany catchall dla tej domeny.';
-$lng['error']['ftp_cantdeletemainaccount'] = 'Nie mo&#380esz skasowa&#263 swojego g&#322ównego konat FTP';
-$lng['error']['login'] = 'Login i has&#322o wpisane jest &#378le. Prosz&#281 spróbowa&#263 ponownie!';
+$lng['error']['ftp_cantdeletemainaccount'] = 'Nie mo&#380esz skasowa&#263 swojego g&#322ï¿½wnego konat FTP';
+$lng['error']['login'] = 'Login i has&#322o wpisane jest &#378le. Prosz&#281 sprï¿½bowa&#263 ponownie!';
 $lng['error']['login_blocked'] = 'This account has been suspended because of too many login errors. <br />Please try again in ' . $settings['login']['deactivatetime'] . ' seconds.';
 $lng['error']['notallreqfieldsorerrors'] = 'You have not filled in all or filled in some fields incorrectly.';
 $lng['error']['oldpasswordnotcorrect'] = 'Stare has&#322o jest nieprawid&#322owe.';
@@ -203,7 +203,7 @@ $lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
 $lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
 $lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
 $lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
-$lng['error']['newpasswordconfirmerror'] = 'Nowe hhas&#322o i jego powtórzenie nie s&#261 takie same';
+$lng['error']['newpasswordconfirmerror'] = 'Nowe hhas&#322o i jego powtï¿½rzenie nie s&#261 takie same';
 $lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
 $lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
 $lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
@@ -218,16 +218,16 @@ $lng['error']['errordocpathdupe'] = 'Option for path %s already exists';
 $lng['error']['adduserfirst'] = 'Prosz&#281 w pierwszej kolejno&#347ci utworzy&#263 klienta';
 $lng['error']['domainalreadyexists'] = 'The domain %s is already assigned to a customer';
 $lng['error']['nolanguageselect'] = 'Nie wybrano j&#281zyka.';
-$lng['error']['nosubjectcreate'] = 'Musisz zdefiniowaæ temat dla szablonu e-maila.';
-$lng['error']['nomailbodycreate'] = 'Musisz zdefiniowaæ treœæ dla szablonu e-maila.';
-$lng['error']['templatenotfound'] = 'Szablon nie zosta³ znaleziony.';
+$lng['error']['nosubjectcreate'] = 'Musisz zdefiniowaï¿½ temat dla szablonu e-maila.';
+$lng['error']['nomailbodycreate'] = 'Musisz zdefiniowaï¿½ treï¿½ï¿½ dla szablonu e-maila.';
+$lng['error']['templatenotfound'] = 'Szablon nie zostaï¿½ znaleziony.';
 $lng['error']['alltemplatesdefined'] = 'You cant define more templates, all languages are supported already.';
 $lng['error']['wwwnotallowed'] = 'www is not allowed for subdomains.';
 $lng['error']['subdomainiswrong'] = 'The subdomain %s contains invalid characters.';
-$lng['error']['domaincantbeempty'] = 'Nazwa domeny nie mo¿e byæ pusta.';
-$lng['error']['domainexistalready'] = 'Domena %s ju¿ istnieje.';
+$lng['error']['domaincantbeempty'] = 'Nazwa domeny nie moï¿½e byï¿½ pusta.';
+$lng['error']['domainexistalready'] = 'Domena %s juï¿½ istnieje.';
 $lng['error']['domainisaliasorothercustomer'] = 'The selected alias domain is either itself an alias domain or belongs to another customer.';
-$lng['error']['emailexistalready'] = 'Adres e-mail %s ju¿ istnieje.';
+$lng['error']['emailexistalready'] = 'Adres e-mail %s juï¿½ istnieje.';
 $lng['error']['maindomainnonexist'] = 'The main-domain %s does not exist.';
 $lng['error']['destinationnonexist'] = 'Please create your forwarder in the field \'Destination\'.';
 $lng['error']['destinationalreadyexistasmail'] = 'The forwarder to %s already exists as active EMail-Address.';
@@ -242,7 +242,7 @@ $lng['error']['domainname'] = $lng['domains']['domainname'];
 $lng['question']['question'] = 'Pytanie bezpiecze&#324stwa';
 $lng['question']['admin_customer_reallydelete'] = 'Czy na pewno chcesz skasowa&#263 klienta %s? Ta czynno&#347&#263 jest niedwracalna!';
 $lng['question']['admin_domain_reallydelete'] = 'Czy na pewno chcesz skasowa&#263 domen&#281 %s?';
-$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Czy na pewno chcesz deaktywowaæ ustawienia bezpieczeñstwa (OpenBasedir i/lub SafeMode)?';
+$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Czy na pewno chcesz deaktywowaï¿½ ustawienia bezpieczeï¿½stwa (OpenBasedir i/lub SafeMode)?';
 $lng['question']['admin_admin_reallydelete'] = 'Czy na pewno chcesz skasowa&#263 administratora %s? Wszystcy klienci i domeny zostan&#261 przypisani do Twojego konta.';
 $lng['question']['admin_template_reallydelete'] = 'Czy na pewno chcesz skasowa&#263 szablon \'%s\'?';
 $lng['question']['domains_reallydelete'] = 'Czy na pewno chcesz skasowa&#263 domen&#281 %s?';
@@ -270,8 +270,8 @@ $lng['mails']['createcustomer']['subject'] = 'Informacje dotycz&#261ce konta';
 
 $lng['admin']['overview'] = 'Przegl&#261d';
 $lng['admin']['ressourcedetails'] = 'U&#380ywane zasoby';
-$lng['admin']['systemdetails'] = 'Szczegó&#322y systemu';
-$lng['admin']['froxlordetails'] = 'Szczegó&#322y Froxlora';
+$lng['admin']['systemdetails'] = 'Szczegï¿½&#322y systemu';
+$lng['admin']['froxlordetails'] = 'Szczegï¿½&#322y Froxlora';
 $lng['admin']['installedversion'] = 'Zainstalowana wersja';
 $lng['admin']['latestversion'] = 'Ostatnia wersja';
 $lng['admin']['lookfornewversion']['clickhere'] = 'Wyszukaj przez webserwis';
@@ -279,17 +279,17 @@ $lng['admin']['lookfornewversion']['error'] = 'B&#322&#261d podszas czytania';
 $lng['admin']['resources'] = 'Zasoby';
 $lng['admin']['customer'] = 'Klient';
 $lng['admin']['customers'] = 'Klienci';
-$lng['admin']['customer_add'] = 'Utwórz klienta';
+$lng['admin']['customer_add'] = 'Utwï¿½rz klienta';
 $lng['admin']['customer_edit'] = 'Edytuj klienta';
 $lng['admin']['domains'] = 'Domeny';
-$lng['admin']['domain_add'] = 'Utwórz domen&#281';
+$lng['admin']['domain_add'] = 'Utwï¿½rz domen&#281';
 $lng['admin']['domain_edit'] = 'Edytuj domen&#281';
 $lng['admin']['subdomainforemail'] = 'Subdomains as emaildomains';
 $lng['admin']['admin'] = 'Administrator';
 $lng['admin']['admins'] = 'Administratorzy';
-$lng['admin']['admin_add'] = 'Utwórz administratora';
+$lng['admin']['admin_add'] = 'Utwï¿½rz administratora';
 $lng['admin']['admin_edit'] = 'Edytuj administratora';
-$lng['admin']['customers_see_all'] = 'Widzi wszystkich klientów?';
+$lng['admin']['customers_see_all'] = 'Widzi wszystkich klientï¿½w?';
 $lng['admin']['domains_see_all'] = 'Widzi wszystkie domeny?';
 $lng['admin']['change_serversettings'] = 'Can change server settings?';
 $lng['admin']['server'] = 'Serwer';
@@ -310,10 +310,10 @@ $lng['admin']['templates']['templates'] = 'Szablony e-maili';
 $lng['admin']['templates']['template_add'] = 'Dodaj szablon';
 $lng['admin']['templates']['template_edit'] = 'Edytuj szablon';
 $lng['admin']['templates']['action'] = 'Action';
-$lng['admin']['templates']['email'] = 'E-Maile i pliki szablonów';
+$lng['admin']['templates']['email'] = 'E-Maile i pliki szablonï¿½w';
 $lng['admin']['templates']['subject'] = 'Temat';
 $lng['admin']['templates']['mailbody'] = 'Tre&#347&#263 wiadomo&#347ci';
-$lng['admin']['templates']['createcustomer'] = 'Wiadomo&#347&#263 powitalna dla nowych klientów';
+$lng['admin']['templates']['createcustomer'] = 'Wiadomo&#347&#263 powitalna dla nowych klientï¿½w';
 $lng['admin']['templates']['pop_success'] = 'Wiadomo&#347&#263 powitalna dla nowych kont e-mail';
 $lng['admin']['templates']['template_replace_vars'] = 'Variables to be replaced in the template:';
 $lng['admin']['templates']['FIRSTNAME'] = 'Replaced with the customers firstname.';
@@ -328,7 +328,7 @@ $lng['admin']['webserver'] = 'Webserwer';
  */
 
 $lng['serversettings']['session_timeout']['title'] = 'Timeout Sesji';
-$lng['serversettings']['session_timeout']['description'] = 'jak d³ugo u¿ytkownik mo¿e byæ nieaktywny przed automatycznym wylogowaniem (sekund)?';
+$lng['serversettings']['session_timeout']['description'] = 'jak dï¿½ugo uï¿½ytkownik moï¿½e byï¿½ nieaktywny przed automatycznym wylogowaniem (sekund)?';
 $lng['serversettings']['accountprefix']['title'] = 'Customer prefix';
 $lng['serversettings']['accountprefix']['description'] = 'Which prefix should customer accounts have?';
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL Prefix';
@@ -356,9 +356,9 @@ $lng['serversettings']['vmail_uid']['description'] = 'Which UserID should mails 
 $lng['serversettings']['vmail_gid']['title'] = 'Mails-GID';
 $lng['serversettings']['vmail_gid']['description'] = 'Which GroupID should mails have?';
 $lng['serversettings']['vmail_homedir']['title'] = 'Katalog domowy e-maili';
-$lng['serversettings']['vmail_homedir']['description'] = 'Gdzie maj¹ byæ sk³adowane wiadomoœci e-mail?';
+$lng['serversettings']['vmail_homedir']['description'] = 'Gdzie majï¿½ byï¿½ skï¿½adowane wiadomoï¿½ci e-mail?';
 $lng['serversettings']['adminmail']['title'] = 'Nadawca';
-$lng['serversettings']['adminmail']['description'] = 'Jaki jest adres nadawcy dla wiadomoœci wysy³anych z panelu?';
+$lng['serversettings']['adminmail']['description'] = 'Jaki jest adres nadawcy dla wiadomoï¿½ci wysyï¿½anych z panelu?';
 $lng['serversettings']['phpmyadmin_url']['title'] = 'URL do phpMyAdmina';
 $lng['serversettings']['phpmyadmin_url']['description'] = 'What\'s the URL to phpMyAdmin? (has to start with http(s)://)';
 $lng['serversettings']['webmail_url']['title'] = 'WebMail URL';
@@ -369,7 +369,7 @@ $lng['serversettings']['language']['description'] = 'What\'s your standard serve
 $lng['serversettings']['maxloginattempts']['title'] = 'Max Login Attempts';
 $lng['serversettings']['maxloginattempts']['description'] = 'Maximum login attempts after which the account gets deactivated.';
 $lng['serversettings']['deactivatetime']['title'] = 'Czas zablokowania';
-$lng['serversettings']['deactivatetime']['description'] = 'Czas (sek.) zablokowania dostêpu do konta po nieudanym logowaniu.';
+$lng['serversettings']['deactivatetime']['description'] = 'Czas (sek.) zablokowania dostï¿½pu do konta po nieudanym logowaniu.';
 $lng['serversettings']['pathedit']['title'] = 'Type of path input';
 $lng['serversettings']['pathedit']['description'] = 'Should a path be selected by a dropdown menu or by an input field?';
 $lng['serversettings']['nameservers']['title'] = 'Serwery Nazw (Nameserwery)';
@@ -381,23 +381,23 @@ $lng['serversettings']['mxservers']['description'] = 'A comma seperated list con
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['mysql']['description'] = 'W tym miejscu mo¿esz tworzyæ i zmieniaæ Twoje bazy MySQL.<br />The changes are made instantly and the database can be used immediately.<br />At the menu on the left side you find the tool phpMyAdmin with which you can easily administer your database.<br /><br />To use your databases in your own php-scripts use the following settings: (The data in <i>italics</i> have to be changed into the equivalents you typed in!)<br />Hostname: <b><SQL_HOST></b><br />Username: <b><i>Databasename</i></b><br />Password: <b><i>the password you\'ve chosen</i></b><br />Database: <b><i>Databasename</i></b>';
+$lng['mysql']['description'] = 'W tym miejscu moï¿½esz tworzyï¿½ i zmieniaï¿½ Twoje bazy MySQL.<br />The changes are made instantly and the database can be used immediately.<br />At the menu on the left side you find the tool phpMyAdmin with which you can easily administer your database.<br /><br />To use your databases in your own php-scripts use the following settings: (The data in <i>italics</i> have to be changed into the equivalents you typed in!)<br />Hostname: <b><SQL_HOST></b><br />Username: <b><i>Databasename</i></b><br />Password: <b><i>the password you\'ve chosen</i></b><br />Database: <b><i>Databasename</i></b>';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['serversettings']['paging']['title'] = 'Wpisów na stronie';
-$lng['serversettings']['paging']['description'] = 'Ilo&#347&#263 wpisów jakie maj&#261 si&#281 pojaiwa&#263 na jednej wy&#347wietlanej stronie? (0 = wy&#322&#261czone stronnicowanie)';
+$lng['serversettings']['paging']['title'] = 'Wpisï¿½w na stronie';
+$lng['serversettings']['paging']['description'] = 'Ilo&#347&#263 wpisï¿½w jakie maj&#261 si&#281 pojaiwa&#263 na jednej wy&#347wietlanej stronie? (0 = wy&#322&#261czone stronnicowanie)';
 $lng['error']['ipstillhasdomains'] = 'The IP/Port combination you want to delete still has domains assigned to it, please reassign those to other IP/Port combinations before deleting this IP/Port combination.';
 $lng['error']['cantdeletedefaultip'] = 'You cannot delete the default reseller IP/Port combination, please make another IP/Port combination default for resellers before deleting this IP/Port combination.';
 $lng['error']['cantdeletesystemip'] = 'You cannot delete the last system IP, either create a new IP/Port combination for the system IP or change the system IP.';
 $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Port\'';
 $lng['error']['myipdefault'] = 'You need to select an IP/Port combination that should become default.';
-$lng['error']['myipnotdouble'] = 'Kombinacja IP/Port ju¿ istnieje.';
+$lng['error']['myipnotdouble'] = 'Kombinacja IP/Port juï¿½ istnieje.';
 $lng['error']['admin_domain_emailsystemhostname'] = 'Sorry. You can not use the Server Hostname as email domain';
-$lng['question']['admin_ip_reallydelete'] = 'Czy na pewno chcesz skasowaæ adres IP %s?';
+$lng['question']['admin_ip_reallydelete'] = 'Czy na pewno chcesz skasowaï¿½ adres IP %s?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IP i Porty';
 $lng['admin']['ipsandports']['add'] = 'Dodaj IP/Port';
 $lng['admin']['ipsandports']['edit'] = 'Edytuj IP/Port';
@@ -489,8 +489,8 @@ $lng['admin']['systemsettings'] = 'Ustawienia Systemu';
 $lng['admin']['webserversettings'] = 'Ustawienia Webserwera';
 $lng['admin']['mailserversettings'] = 'Ustawienia Serwera Pocztowego';
 $lng['admin']['nameserversettings'] = 'Ustawienia Serwera Nazw';
-$lng['admin']['updatecounters'] = 'Przelicz u&#380ycie zasobów';
-$lng['question']['admin_counters_reallyupdate'] = 'Czy na pewno chcesz przeliczy&#263 u&#380ycie zasobów?';
+$lng['admin']['updatecounters'] = 'Przelicz u&#380ycie zasobï¿½w';
+$lng['question']['admin_counters_reallyupdate'] = 'Czy na pewno chcesz przeliczy&#263 u&#380ycie zasobï¿½w?';
 $lng['panel']['pathDescription'] = 'Je&#347li folder nie istnieje, zostanie stworzony automatycznie.';
 
 // ADDED IN 1.2.16-svn6
@@ -504,8 +504,8 @@ $lng['admin']['templates']['TRAFFICUSED'] = 'Replaced with the traffic, which wa
 // ADDED IN 1.2.16-svn7
 
 $lng['admin']['subcanemaildomain']['never'] = 'Nigdy';
-$lng['admin']['subcanemaildomain']['choosableno'] = 'Wybór, domy&#347lnie nie';
-$lng['admin']['subcanemaildomain']['choosableyes'] = 'Wybór, domy&#347lnie tak';
+$lng['admin']['subcanemaildomain']['choosableno'] = 'Wybï¿½r, domy&#347lnie nie';
+$lng['admin']['subcanemaildomain']['choosableyes'] = 'Wybï¿½r, domy&#347lnie tak';
 $lng['admin']['subcanemaildomain']['always'] = 'Zawsze';
 $lng['changepassword']['also_change_webalizer'] = ' oraz zmie&#324 has&#322o do webalizera';
 
@@ -533,7 +533,7 @@ $lng['admin']['configfiles']['choosedaemon'] = '-- Wybierz daemona --';
 // ADDED IN 1.2.16-svn10
 
 $lng['serversettings']['ftpdomain']['title'] = 'konta FTP @domena';
-$lng['serversettings']['ftpdomain']['description'] = 'Klienci mog¹ tworzyæ konta FTP uzytkownik@domenaklienta?';
+$lng['serversettings']['ftpdomain']['description'] = 'Klienci mogï¿½ tworzyï¿½ konta FTP uzytkownik@domenaklienta?';
 $lng['panel']['back'] = 'Back';
 
 // ADDED IN 1.2.16-svn12
@@ -581,9 +581,9 @@ $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'] = 'Cr
 $lng['admin']['webalizersettings'] = 'Usttawienia Webalizera';
 $lng['admin']['webalizer']['normal'] = 'Normalny';
 $lng['admin']['webalizer']['quiet'] = 'Cichy';
-$lng['admin']['webalizer']['veryquiet'] = 'Bez danych wyjœcia';
-$lng['serversettings']['webalizer_quiet']['title'] = 'Dane wyjœcia Webalizera';
-$lng['serversettings']['webalizer_quiet']['description'] = 'Gadatliwoœæ programu Webalizer';
+$lng['admin']['webalizer']['veryquiet'] = 'Bez danych wyjï¿½cia';
+$lng['serversettings']['webalizer_quiet']['title'] = 'Dane wyjï¿½cia Webalizera';
+$lng['serversettings']['webalizer_quiet']['description'] = 'Gadatliwoï¿½ï¿½ programu Webalizer';
 
 // ADDED IN 1.2.18-svn3
 
@@ -594,10 +594,10 @@ $lng['menue']['ticket']['ticket'] = 'Zg&#322oszenia wsparcia tech.';
 $lng['menue']['ticket']['categories'] = 'Kategorie wsparcia';
 $lng['menue']['ticket']['archive'] = 'Archiwum zg&#322osze&#324';
 $lng['ticket']['description'] = 'Here you can send help-requests to your responsible administrator.<br />Notifications will be sent via e-mail.';
-$lng['ticket']['ticket_new'] = 'Utwórz nowe zg&#322oszenie';
+$lng['ticket']['ticket_new'] = 'Utwï¿½rz nowe zg&#322oszenie';
 $lng['ticket']['ticket_reply'] = 'Odpowied&#378 na zg&#322oszenie';
-$lng['ticket']['ticket_reopen'] = 'Ponownie otwórz zg³oszenie';
-$lng['ticket']['ticket_newcateory'] = 'Utwórz now&#261 kategori&#281';
+$lng['ticket']['ticket_reopen'] = 'Ponownie otwï¿½rz zgï¿½oszenie';
+$lng['ticket']['ticket_newcateory'] = 'Utwï¿½rz now&#261 kategori&#281';
 $lng['ticket']['ticket_editcateory'] = 'Edytuj kategori&#281';
 $lng['ticket']['ticket_view'] = 'View ticketcourse';
 $lng['ticket']['ticketcount'] = 'Zg&#322oszenia';
@@ -622,7 +622,7 @@ $lng['ticket']['message'] = 'Wiadomo&#347&#263';
 $lng['ticket']['show'] = 'Zobacz';
 $lng['ticket']['answer'] = 'Odpowied&#378';
 $lng['ticket']['close'] = 'Zamknij';
-$lng['ticket']['reopen'] = 'Ponownie otwórz';
+$lng['ticket']['reopen'] = 'Ponownie otwï¿½rz';
 $lng['ticket']['archive'] = 'Zarchiwizuj';
 $lng['ticket']['ticket_delete'] = 'Kasuj zg&#322oszenie';
 $lng['ticket']['lastarchived'] = 'Recently archived tickets';
@@ -689,7 +689,7 @@ $lng['customer']['tickets'] = 'Zg&#322oszenia wsparcia technicznego';
 
 $lng['admin']['domain_nocustomeraddingavailable'] = 'Nie jest mo&#380liwe, by doda&#263 teraz domen&#281. W pierwszej kolejno&#347ci trzeba doda&#263 klienta.';
 $lng['serversettings']['ticket']['enable'] = 'Wspracie techniczne w&#322&#261czone';
-$lng['serversettings']['ticket']['concurrentlyopen'] = 'Ile zg³oszeñ mo¿e byæ otwartych w jednym czasie?';
+$lng['serversettings']['ticket']['concurrentlyopen'] = 'Ile zgï¿½oszeï¿½ moï¿½e byï¿½ otwartych w jednym czasie?';
 $lng['error']['norepymailiswrong'] = 'The &quot;Noreply-address&quot; is wrong. Only a valid email-address is allowed.';
 $lng['error']['tadminmailiswrong'] = 'The &quot;Ticketadmin-address&quot; is wrong. Only a valid email-address is allowed.';
 $lng['ticket']['awaitingticketreply'] = 'Masz %s zg&#322osze&#324 do pomocy technicznej';
@@ -702,7 +702,7 @@ $lng['serversettings']['ticket']['noreply_name'] = 'Ticket e-mail sendername';
 
 $lng['serversettings']['mod_fcgid']['configdir'] = 'Configuration directory';
 $lng['serversettings']['mod_fcgid']['configdir_desc'] = 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/';
-$lng['serversettings']['mod_fcgid']['tmpdir'] = 'Katalog plików tymczasowych';
+$lng['serversettings']['mod_fcgid']['tmpdir'] = 'Katalog plikï¿½w tymczasowych';
 
 // ADDED IN 1.2.19-svn3
 
@@ -744,15 +744,15 @@ $lng['serversettings']['no_robots']['title'] = 'Zezwalaj na indeksowanie panelu 
 
 // ADDED IN 1.2.19-svn6
 
-$lng['admin']['loggersettings'] = 'Ustawienia Logów';
+$lng['admin']['loggersettings'] = 'Ustawienia Logï¿½w';
 $lng['serversettings']['logger']['enable'] = 'Logowanie w&#322&#261czone/wy&#322&#261czone';
 $lng['serversettings']['logger']['severity'] = 'Poziom logowania';
 $lng['admin']['logger']['normal'] = 'normalny';
 $lng['admin']['logger']['paranoid'] = 'paranoidalny';
-$lng['serversettings']['logger']['types'] = 'Rodzaj(e) logów';
+$lng['serversettings']['logger']['types'] = 'Rodzaj(e) logï¿½w';
 $lng['serversettings']['logger']['types_desc'] = 'Specify logtypes seperated by comma.<br />Available logtypes are: syslog, file, mysql';
 $lng['serversettings']['logger']['logfile'] = 'Logfile path including filename';
-$lng['error']['logerror'] = 'System logowania b&#322&#281dów: %s';
+$lng['error']['logerror'] = 'System logowania b&#322&#281dï¿½w: %s';
 $lng['serversettings']['logger']['logcron'] = 'Log cronjobs (one run)';
 $lng['question']['logger_reallytruncate'] = 'Czy na pewno chcesz wyszy&#347ci&#263 tabel&#281 &quot;%s&quot;?';
 $lng['admin']['loggersystem'] = 'System logowania';
@@ -765,7 +765,7 @@ $lng['logger']['truncate'] = 'Wyszy&#347&#263 logi';
 
 // ADDED IN 1.2.19-svn7
 
-$lng['serversettings']['ssl']['use_ssl'] = 'U¿yj SSL';
+$lng['serversettings']['ssl']['use_ssl'] = 'Uï¿½yj SSL';
 $lng['serversettings']['ssl']['ssl_cert_file'] = 'Gdzie jest zlokalizowany Certyfikat';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Standardowe dane do tworzenia pliku certyfikatu';
 $lng['panel']['reseller'] = 'reseller';
@@ -775,7 +775,7 @@ $lng['error']['nomessagetosend'] = 'Nie wprowadzono wiadomo&#347ci.';
 $lng['error']['noreceipientsgiven'] = 'Nie wprowadzono &#380adnego odbiorcy';
 $lng['admin']['emaildomain'] = 'Emaildomain';
 $lng['admin']['email_only'] = 'Only email?';
-$lng['admin']['wwwserveralias'] = 'Dodaæ &quot;www.&quot; ServerAlias';
+$lng['admin']['wwwserveralias'] = 'Dodaï¿½ &quot;www.&quot; ServerAlias';
 $lng['admin']['ipsandports']['enable_ssl'] = 'Is this an SSL Port?';
 $lng['admin']['ipsandports']['ssl_cert_file'] = 'Path to the SSL Certificate';
 $lng['panel']['send'] = 'send';
@@ -936,7 +936,7 @@ $lng['menue']['email']['autoresponder'] = 'Autoresponder';
 $lng['autoresponder']['active'] = 'Aktywny';
 $lng['autoresponder']['autoresponder_add'] = 'Dodaj autoresponder';
 $lng['autoresponder']['autoresponder_edit'] = 'Edytuj autoresponder';
-$lng['autoresponder']['autoresponder_new'] = 'Utwórz nowy autoresponder';
+$lng['autoresponder']['autoresponder_new'] = 'Utwï¿½rz nowy autoresponder';
 $lng['autoresponder']['subject'] = 'Temat';
 $lng['autoresponder']['message'] = 'Wiadomo&#347&#263';
 $lng['autoresponder']['account'] = 'Konto';
@@ -955,26 +955,26 @@ $lng['admin']['show_version_login']['title'] = 'Pokazuj wersj&#281 Froxlora przy
 $lng['admin']['show_version_login']['description'] = 'Pokazuj wersj&#281 Froxlora w stopce struno logowania';
 $lng['admin']['show_version_footer']['title'] = 'Pokazuj wersj&#281 Froxlora w stopce';
 $lng['admin']['show_version_footer']['description'] = 'Pokazuj wersj&#281 Froxlora w stopce na pozosta&#322ych stronach';
-$lng['admin']['froxlor_graphic']['title'] = 'Nag&#322ówek graficzny dla Froxlora';
-$lng['admin']['froxlor_graphic']['description'] = 'jaka grafika powinna by&#263 pokazywana w nag&#322ówku';
+$lng['admin']['froxlor_graphic']['title'] = 'Nag&#322ï¿½wek graficzny dla Froxlora';
+$lng['admin']['froxlor_graphic']['description'] = 'jaka grafika powinna by&#263 pokazywana w nag&#322ï¿½wku';
 
 //improved froxlor
 
 $lng['menue']['phpsettings']['maintitle'] = 'Konfiguracje PHP';
 $lng['admin']['phpsettings']['title'] = 'Konfiguracja PHP';
-$lng['admin']['phpsettings']['description'] = 'krótki opis';
+$lng['admin']['phpsettings']['description'] = 'krï¿½tki opis';
 $lng['admin']['phpsettings']['actions'] = 'Actions';
 $lng['admin']['phpsettings']['activedomains'] = 'In use for domain(s)';
 $lng['admin']['phpsettings']['notused'] = 'Configuration not in use';
-$lng['admin']['misc'] = 'Ró&#380ne';
+$lng['admin']['misc'] = 'Rï¿½&#380ne';
 $lng['admin']['phpsettings']['editsettings'] = 'Zmie&#324 ustawienia PHP';
-$lng['admin']['phpsettings']['addsettings'] = 'Utwórz nowe ustawienia PHP';
+$lng['admin']['phpsettings']['addsettings'] = 'Utwï¿½rz nowe ustawienia PHP';
 $lng['admin']['phpsettings']['viewsettings'] = 'Zobacz ustawienia PHP';
 $lng['admin']['phpsettings']['phpinisettings'] = 'ustawienia php.ini';
 $lng['error']['nopermissionsorinvalidid'] = 'You don\'t have enough permissions to change these settings or an invalid id was given.';
 $lng['panel']['view'] = 'view';
 $lng['question']['phpsetting_reallydelete'] = 'Do you really want to delete these settings? All domains which use these settings currently will be changed to the default config.';
-$lng['admin']['phpsettings']['addnew'] = 'Utwórz nowe ustawienia';
+$lng['admin']['phpsettings']['addnew'] = 'Utwï¿½rz nowe ustawienia';
 $lng['error']['phpsettingidwrong'] = 'A PHP Configuration with this id doesn\'t exist';
 $lng['error']['descriptioninvalid'] = 'The description is too short, too long or contains illegal characters.';
 $lng['error']['info'] = 'Info';
@@ -990,8 +990,8 @@ $lng['admin']['phpconfig']['admin_email'] = 'Will be replaced with e-mail addres
 $lng['admin']['phpconfig']['domain'] = 'Will be replaced with the domain.';
 $lng['admin']['phpconfig']['customer'] = 'Will be replaced with the loginname of the customer who owns this domain.';
 $lng['admin']['phpconfig']['admin'] = 'Will be replaced with the loginname of the admin who owns this domain.';
-$lng['login']['backtologin'] = 'Powrót do logowania';
-$lng['serversettings']['mod_fcgid']['starter']['title'] = 'Procesów na Domen&#281';
+$lng['login']['backtologin'] = 'Powrï¿½t do logowania';
+$lng['serversettings']['mod_fcgid']['starter']['title'] = 'Procesï¿½w na Domen&#281';
 $lng['serversettings']['mod_fcgid']['starter']['description'] = 'How many processes should be started/allowed per domain? The value 0 is recommended cause PHP will then manage the amount of processes itself very efficiently.';
 $lng['serversettings']['mod_fcgid']['wrapper']['title'] = 'Wrapper in Vhosts';
 $lng['serversettings']['mod_fcgid']['wrapper']['description'] = 'How should the wrapper be included in the Vhosts';
@@ -1007,14 +1007,14 @@ $lng['admin']['templates']['CUSTOMER'] = 'Zamieniane na login klienta.';
 $lng['admin']['templates']['ADMIN'] = 'Zamieniane na nazw&#281 administratora.';
 $lng['admin']['templates']['CUSTOMER_EMAIL'] = 'Zamieniane na konto e-mail klienta.';
 $lng['admin']['templates']['ADMIN_EMAIL'] = 'Zamieniane na konto e-mail administratora.';
-$lng['admin']['templates']['filetemplates'] = 'Pliki szablonów';
+$lng['admin']['templates']['filetemplates'] = 'Pliki szablonï¿½w';
 $lng['admin']['templates']['filecontent'] = 'File content';
 $lng['error']['filecontentnotset'] = 'Plik nie mo&#380e by&#263 pusty!';
 $lng['serversettings']['index_file_extension']['description'] = 'Which file extension should be used for the index file in newly created customer directories? This file extension will be used, if you or one of your admins has created its own index file template.';
 $lng['serversettings']['index_file_extension']['title'] = 'File extension for index file in newly created customer directories';
 $lng['error']['index_file_extension'] = 'The file extension for the index file must be between 1 and 6 characters long. The extension can only contain characters like a-z, A-Z and 0-9';
 $lng['admin']['expert_settings'] = 'Ustawienia Experta!';
-$lng['admin']['mod_fcgid_starter']['title'] = 'Procesów PHO na t&#261 Domen&#281 (pozostaw puste dla warto&#347ci domy&#347lej)';
+$lng['admin']['mod_fcgid_starter']['title'] = 'Procesï¿½w PHO na t&#261 Domen&#281 (pozostaw puste dla warto&#347ci domy&#347lej)';
 
 //added with aps installer
 
@@ -1043,7 +1043,7 @@ $lng['aps']['changelog'] = 'Hostoria zmian';
 $lng['aps']['license'] = 'Licencja';
 $lng['aps']['license_link'] = 'Link do licencji';
 $lng['aps']['screenshots'] = 'Zrzuty ekranowe';
-$lng['aps']['back'] = 'Powrót do listy';
+$lng['aps']['back'] = 'Powrï¿½t do listy';
 $lng['aps']['install_wizard'] = 'Installation wizard...';
 $lng['aps']['wizard_error'] = 'Your input contains invalid data. Please correct yourself to continue the installation.';
 $lng['aps']['basic_settings'] = 'Proste ustawienia';
@@ -1077,11 +1077,11 @@ $lng['aps']['task_reconfigure'] = 'Rekonfiguracja w toku';
 $lng['aps']['task_upgrade'] = 'Aktualizacja w toku';
 $lng['aps']['no_task'] = 'Brak zaplanowanych zada&#324';
 $lng['aps']['applicationlinks'] = 'Linki aplikacji';
-$lng['aps']['mainsite'] = 'Strona g&#322ówna aplikacji';
+$lng['aps']['mainsite'] = 'Strona g&#322ï¿½wna aplikacji';
 $lng['aps']['uninstall'] = 'Odinstaluj paczk&#281';
 $lng['aps']['reconfigure'] = 'Zmiana ustawie&#324';
 $lng['aps']['erroronnewinstance'] = '<strong>This Package cannot be installed.</strong><br/><br/>Please go back to the Package overview and start a new Installation.';
-$lng['aps']['successonnewinstance'] = '<strong><em>%s</em> zostanie zainstalowany.</strong><br/><br/>Wró&#263 do zak&#322adki "Moje paczki" i poczekaj a&#380 instalator oprogramowania sko&#324czy instalacj&#281. Mo&#380e to chwil&#281 zaj&#261&#263.';
+$lng['aps']['successonnewinstance'] = '<strong><em>%s</em> zostanie zainstalowany.</strong><br/><br/>Wrï¿½&#263 do zak&#322adki "Moje paczki" i poczekaj a&#380 instalator oprogramowania sko&#324czy instalacj&#281. Mo&#380e to chwil&#281 zaj&#261&#263.';
 $lng['aps']['php_misc_handler'] = 'PHP - Misc - There is no support for other file extensions than .php for the PHP Parser.';
 $lng['aps']['php_misc_directoryhandler'] = 'PHP - Misc - There is no support for per directory disabled PHP Handlers.';
 $lng['aps']['asp_net'] = 'ASP.NET - Paczka nie jest wspierana.';
@@ -1092,8 +1092,8 @@ $lng['aps']['php_configuration'] = 'PHP - Configuracja - Current "%s" setting no
 $lng['aps']['php_configuration_post_max_size'] = 'PHP - Configuracja - "post_max_size" ma za ma&#322&#261 warto&#347&#263.';
 $lng['aps']['php_configuration_memory_limit'] = 'PHP - Configuracja - "memory_limit" ma za ma&#322&#261 warto&#347&#263.';
 $lng['aps']['php_configuration_max_execution_time'] = 'PHP - Configuracja - "max_execution_time" ma za ma&#322&#261 warto&#347&#263.';
-$lng['aps']['php_general_old'] = 'PHP - Ogólne - Wersja PHP jest za stara.';
-$lng['aps']['php_general_new'] = 'PHP - Ogólne - Wersja PHP jest za nowa.';
+$lng['aps']['php_general_old'] = 'PHP - Ogï¿½lne - Wersja PHP jest za stara.';
+$lng['aps']['php_general_new'] = 'PHP - Ogï¿½lne - Wersja PHP jest za nowa.';
 $lng['aps']['db_mysql_support'] = 'Database - The Package needs another database engine than MySQL.';
 $lng['aps']['db_mysql_version'] = 'Baza danych - Serwer MySQL jest za stary.';
 $lng['aps']['webserver_module'] = 'Webserwer - Brakuj&#261cy modu&#322 "%s".';
@@ -1128,8 +1128,8 @@ $lng['aps']['stopinstall'] = 'Anuluj instalacj&#281';
 $lng['aps']['installstopped'] = 'The Installation of this Package was aborted successfully.';
 $lng['aps']['installstoperror'] = 'The Installation cannot be aborted anymore because installation has started already. If you\'d like to uninstall the Package, wait until the Installation has finished and then go to "My Packages" to trigger an Uninstallation.';
 $lng['aps']['waitfortask'] = 'Brak akcji do wybrania. Oczykiwanie na zako&#324czenie wszystkich zada&#324.';
-$lng['aps']['removetaskexisting'] = '<strong>There is already a task for Uninstallation.</strong><br/><br/>Prosz&#263 wró&#263 do zak&#322adki "Moje Paczki" i poczekaj, a&#380 deinstalacja zostanie zako&#324czona.';
-$lng['aps']['packagewillberemoved'] = '<strong>Paczka zostanie odinstalowana.</strong><br/><br/>Prosz&#263 wró&#263 do zak&#322adki "Moje Paczki" i poczekaj, a&#380 deinstalacja zostanie zako&#324czona.';
+$lng['aps']['removetaskexisting'] = '<strong>There is already a task for Uninstallation.</strong><br/><br/>Prosz&#263 wrï¿½&#263 do zak&#322adki "Moje Paczki" i poczekaj, a&#380 deinstalacja zostanie zako&#324czona.';
+$lng['aps']['packagewillberemoved'] = '<strong>Paczka zostanie odinstalowana.</strong><br/><br/>Prosz&#263 wrï¿½&#263 do zak&#322adki "Moje Paczki" i poczekaj, a&#380 deinstalacja zostanie zako&#324czona.';
 $lng['question']['reallywanttoremove'] = '<strong>Czy na pewno chcesz odinstalowa&#263 t&#261 paczk&#281?</strong><br/><br/>Wszystkie bazy danych i pliki zostan&#261 usuni&#281te. Be sure to make a manual backup of a files you need for any further usage!<br/><br/>';
 $lng['aps']['searchoneresult'] = '%s Package found';
 $lng['aps']['searchmultiresult'] = '%s Packages found';
@@ -1268,11 +1268,11 @@ $lng['cron']['isactive'] = 'enabled';
 $lng['admin']['cron']['add'] = 'Add a new cronjob';
 $lng['cron']['description'] = 'description';
 $lng['crondesc']['cron_unknown_desc'] = 'no description given';
-$lng['crondesc']['cron_tasks'] = 'przebudowanie plików konfiguracyjnych';
+$lng['crondesc']['cron_tasks'] = 'przebudowanie plikï¿½w konfiguracyjnych';
 $lng['crondesc']['cron_legacy'] = 'legacy (old) cronjob';
 $lng['crondesc']['cron_apsinstaller'] = 'Instalator aplikacji';
 $lng['crondesc']['cron_autoresponder'] = 'e-mail autoresponder';
-$lng['crondesc']['cron_apsupdater'] = 'Aktualizacja pakietów instalatora aplikacji';
+$lng['crondesc']['cron_apsupdater'] = 'Aktualizacja pakietï¿½w instalatora aplikacji';
 $lng['crondesc']['cron_traffic'] = 'obliczanie ruchu';
 $lng['crondesc']['cron_ticketsreset'] = 'resetowanie licznika zg&#322osze&#324';
 $lng['crondesc']['cron_ticketarchive'] = 'archiwizowanie starych zg&#322osze&#324';

@@ -12,7 +12,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Formfields
- * @version    $Id: formfield.admin_add.php 104 2010-12-08 07:23:22Z d00p $
+ *
  */
 
 return array(

@@ -14,7 +14,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Settings
- * @version    $Id: 215.backup.php 1 2010-09-14 08:09:17Z monotek $
+ *
  */
 
 return array(

@@ -12,7 +12,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Formfields
- * @version    $Id: formfield.cronjobs_edit.php 105 2010-12-09 08:02:33Z d00p $
+ *
  */
 
 return array(

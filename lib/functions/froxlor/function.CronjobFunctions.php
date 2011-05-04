@@ -12,7 +12,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Functions
- * @version    $Id: function.includeCronjobs.php 138 2010-01-27 08:54:31Z Dessa $
+ *
  */
 
 /*

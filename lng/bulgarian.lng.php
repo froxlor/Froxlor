@@ -13,7 +13,7 @@
  * @author     Nickola Kolev <nikky@minus273.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id$
+ *
  */
 
 /**

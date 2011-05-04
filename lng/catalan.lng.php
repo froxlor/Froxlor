@@ -13,7 +13,7 @@
  * @author     Jordi Romero (jordi@jrom.net)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id$
+ *
  */
 
 /**
@@ -31,7 +31,7 @@ $lng['panel']['emptyfornochanges'] = 'deixeu-ho buit per no canviar-ne el valor'
 $lng['panel']['emptyfordefault'] = 'deixeu-ho buit per usar el valor predeterminat';
 $lng['panel']['path'] = 'Ruta';
 $lng['panel']['toggle'] = 'Marcar/Desmarcar';
-$lng['panel']['next'] = 'següent';
+$lng['panel']['next'] = 'segï¿½ent';
 $lng['panel']['dirsmissing'] = 'No puc trobar o escriure en aquest directori!';
 
 /**
@@ -126,7 +126,7 @@ $lng['domains']['noaliasdomain'] = 'No hi ha sobrenom del domini';
  * eMails
  */
 
-$lng['emails']['description'] = 'Des d\'aqu&iacute; pots modificar les adreces de correu, crear-ne de noves o esborrar les que hi ha.<br />Pensa que despr&eacute;s de crear la adre&ccedil;a de correu, has de crear o b&eacute; un COMPTE o b&eacute; un REDIRECCIONADOR, sense una de les dues coses la adre&ccedil;a &eacute;s inútil.<br /><br />Per baixar-te el correu en el teu client de correu (Outlook, Thunderbird, ...) utilitza la següent informaci&oacute;: (La informaci&oacute; en <i>cursiva</i> ha de ser substituida per la que correspongui al compte de correu en questi&oacute;!)<br />Servidor de correu entrant o sortint: <b><i>el teu domini</i></b><br />Nom dusuari: <b><i>(usuari@exemple.com)</i></b> (ATENCIÓ: És imprescindible posar la adre&ccedil;a sencera en el camp de l\'usuari, en cas contrari no funcionaria)<br />Clau: <b><i>la clau del compte de correu</i></b>';
+$lng['emails']['description'] = 'Des d\'aqu&iacute; pots modificar les adreces de correu, crear-ne de noves o esborrar les que hi ha.<br />Pensa que despr&eacute;s de crear la adre&ccedil;a de correu, has de crear o b&eacute; un COMPTE o b&eacute; un REDIRECCIONADOR, sense una de les dues coses la adre&ccedil;a &eacute;s inï¿½til.<br /><br />Per baixar-te el correu en el teu client de correu (Outlook, Thunderbird, ...) utilitza la segï¿½ent informaci&oacute;: (La informaci&oacute; en <i>cursiva</i> ha de ser substituida per la que correspongui al compte de correu en questi&oacute;!)<br />Servidor de correu entrant o sortint: <b><i>el teu domini</i></b><br />Nom dusuari: <b><i>(usuari@exemple.com)</i></b> (ATENCIï¿½: ï¿½s imprescindible posar la adre&ccedil;a sencera en el camp de l\'usuari, en cas contrari no funcionaria)<br />Clau: <b><i>la clau del compte de correu</i></b>';
 $lng['emails']['emailaddress'] = 'adreces d\'email';
 $lng['emails']['emails_add'] = 'Crear adre&ccedil;a d\'email';
 $lng['emails']['emails_edit'] = 'Editar adreces d\'email';
@@ -259,7 +259,7 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Segur que vols regenerar les 
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Hola,\n\nel teu compte d\'email $destination\ns\'ha creat satisfactoriament.\n\nAixò &eacute;s un missatge creat autom&agrave;ticament, si us plau uno responguis. Gr&agrave;cies.';
+$lng['mails']['pop_success']['mailbody'] = 'Hola,\n\nel teu compte d\'email $destination\ns\'ha creat satisfactoriament.\n\nAixï¿½ &eacute;s un missatge creat autom&agrave;ticament, si us plau uno responguis. Gr&agrave;cies.';
 $lng['mails']['pop_success']['subject'] = 'Compte de correu creat satisfactoriament';
 $lng['mails']['createcustomer']['mailbody'] = 'Hola {FIRSTNAME} {NAME},\n\n aqu&iacute; te la seva informaci&oacute;:\n\nNom d\'usuari: $loginname\nClau: $password\n\n Gr&agrave;cies per tot, disfruta del teu compte';
 $lng['mails']['createcustomer']['subject'] = 'Informaci&oacute; del compte';
@@ -273,7 +273,7 @@ $lng['admin']['ressourcedetails'] = 'Recursos utilitzats';
 $lng['admin']['systemdetails'] = 'Detalls del sistema';
 $lng['admin']['froxlordetails'] = 'Detalls de Froxlor';
 $lng['admin']['installedversion'] = 'Versi&oacute;';
-$lng['admin']['latestversion'] = 'Última versi&oacute;';
+$lng['admin']['latestversion'] = 'ï¿½ltima versi&oacute;';
 $lng['admin']['lookfornewversion']['clickhere'] = 'cerca a internet';
 $lng['admin']['lookfornewversion']['error'] = 'Error carregant';
 $lng['admin']['resources'] = 'Personal';
@@ -304,7 +304,7 @@ $lng['admin']['ownvhostsettings'] = 'Opcions dels vhost propis';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configuracions del servidor';
 $lng['admin']['configfiles']['files'] = '<b>Fitxers de configuraci&oacute;:</b> Si us plau, canvia els continguts fitxers o crea\'ls<br />amb el cotingut que surt a continuaci&oacute; si no existeixen.<br /><b>Nota:</b> El Mysql-password no ha estat modificat per questions de seguretat.<br />Canvia &quot;MYSQL_PASSWORD&quot; per la clau que desitgi';
 $lng['admin']['configfiles']['commands'] = '<b>Comandaments:</b> Executa\'ls en una consola.';
-$lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Executa els següents comandaments en la consola per carregar la nova configuraci&oacute;.';
+$lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Executa els segï¿½ents comandaments en la consola per carregar la nova configuraci&oacute;.';
 $lng['admin']['templates']['templates'] = 'Plantilles';
 $lng['admin']['templates']['template_add'] = 'Afegir plantilla';
 $lng['admin']['templates']['template_edit'] = 'Editar plantilla';
@@ -365,7 +365,7 @@ $lng['serversettings']['webftp_url']['title'] = 'Adre&ccedil;a de WebFTP';
 $lng['serversettings']['webftp_url']['description'] = 'Quina &eacute;s la URL del WebFTP? (ha de comen&ccedil;ar amb http://)';
 $lng['serversettings']['language']['description'] = 'Quin &eacute;s l\'idioma per defecte?';
 $lng['serversettings']['maxloginattempts']['title'] = 'Intents de logueix m&agrave;xims';
-$lng['serversettings']['maxloginattempts']['description'] = 'Número de vegades que pots intentar identificar-te abans de que la compta es desactivi.';
+$lng['serversettings']['maxloginattempts']['description'] = 'Nï¿½mero de vegades que pots intentar identificar-te abans de que la compta es desactivi.';
 $lng['serversettings']['deactivatetime']['title'] = 'Temps de desactivacio';
 $lng['serversettings']['deactivatetime']['description'] = 'Segons que la compta estar&agrave; inactiva quan s\'ha produit un seguit d\'intents frustrats d\'identificaci&oacute;.';
 $lng['serversettings']['pathedit']['title'] = 'Tipus d\'entrada de ruta';

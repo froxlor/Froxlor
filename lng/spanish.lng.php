@@ -15,7 +15,7 @@
  * @author     Sandra Aders
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id$
+ *
  */
 
 /**
@@ -407,17 +407,17 @@ $lng['domain']['homedir'] = 'Hogar-directorio';
 $lng['admin']['valuemandatory'] = 'Este valor es obligatorio';
 $lng['admin']['valuemandatorycompany'] = 'Hay que rellenar &oacute; &quot;apellido&quot; y &quot;nombre&quot; &oacute; &quot;empresa&quot;';
 $lng['panel']['pathorurl'] = 'Path &oacute; URL';
-$lng['error']['sessiontimeoutiswrong'] = 'S&oacute;lo est&aacute;n permitidos &quot;descansos de la sesi&oacute;n&quot; numéricos';
-$lng['error']['maxloginattemptsiswrong'] = 'S&oacute;lo est&aacute;n permitidos &quot;intentos m&aacute;ximas de registro&quot; numéricos';
-$lng['error']['deactivatetimiswrong'] = 'S&oacute;lo est&aacute; permitido un &quot;tiempo de desactivaci&oacute;n&quot; numérico';
+$lng['error']['sessiontimeoutiswrong'] = 'S&oacute;lo est&aacute;n permitidos &quot;descansos de la sesi&oacute;n&quot; numï¿½ricos';
+$lng['error']['maxloginattemptsiswrong'] = 'S&oacute;lo est&aacute;n permitidos &quot;intentos m&aacute;ximas de registro&quot; numï¿½ricos';
+$lng['error']['deactivatetimiswrong'] = 'S&oacute;lo est&aacute; permitido un &quot;tiempo de desactivaci&oacute;n&quot; numï¿½rico';
 $lng['error']['accountprefixiswrong'] = 'El prefijo de cliente est&aacute; mal.';
 $lng['error']['mysqlprefixiswrong'] = 'El prefijo del SQL est&aacute; mal.';
 $lng['error']['ftpprefixiswrong'] = 'El prefijo del FTP est&aacute; mal.';
 $lng['error']['ipiswrong'] = 'La direcci&oacute;n IP est&aacute; mal. S&oacute;lo se permiten direcciones IP v&aacute;lidas.';
-$lng['error']['vmailuidiswrong'] = 'El eMail-Uid est&aacute; mal. S&oacute;lo se permiten UIDs numéricos.';
-$lng['error']['vmailgidiswrong'] = 'El eMail-Gid est&aacute; mal. S&oacute;lo se permiten GIDs numéricos.';
+$lng['error']['vmailuidiswrong'] = 'El eMail-Uid est&aacute; mal. S&oacute;lo se permiten UIDs numï¿½ricos.';
+$lng['error']['vmailgidiswrong'] = 'El eMail-Gid est&aacute; mal. S&oacute;lo se permiten GIDs numï¿½ricos.';
 $lng['error']['adminmailiswrong'] = 'La direcci&oacute;n del remitente est&aacute; mal. S&oacute;lo se permiten direcciones de correo electr&oacute;nico v&aacute;lidas.';
-$lng['error']['pagingiswrong'] = 'Las entradas por p&aacute;gina est&aacute;n mal. S&oacute;lo se permiten caracteres numéricos.';
+$lng['error']['pagingiswrong'] = 'Las entradas por p&aacute;gina est&aacute;n mal. S&oacute;lo se permiten caracteres numï¿½ricos.';
 $lng['error']['phpmyadminiswrong'] = 'La URL de phpMyAdmin no es una URL v&aacute;lida.';
 $lng['error']['webmailiswrong'] = 'La URL de WebMail no es una URL v&aacute;lida.';
 $lng['error']['webftpiswrong'] = 'La URL de WebFTP no es una URL v&aacute;lida.';

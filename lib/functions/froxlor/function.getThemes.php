@@ -12,7 +12,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Functions
- * @version    $Id: function.getThemes.php 5 2010-11-08 09:35:26Z d00p $
+ *
  */
 
 /**

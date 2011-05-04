@@ -17,7 +17,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    APS
- * @version    $Id$
+ *
  * @todo		logging
  *				install specific packages by name
  *				other solution than using url_fopen

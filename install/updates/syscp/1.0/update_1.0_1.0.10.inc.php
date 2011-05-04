@@ -14,7 +14,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Install
- * @version    $Id$
+ *
  */
 
 define('TABLE_POSTFIX_TRANSPORT', 'postfix_transport');

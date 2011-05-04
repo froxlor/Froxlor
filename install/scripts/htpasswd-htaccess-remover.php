@@ -12,7 +12,7 @@
  * @author     Michael Duergner <michael@duergner.com>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id$
+ *
  */
 
 if(@php_sapi_name() != 'cli'

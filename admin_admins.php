@@ -14,7 +14,7 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Panel
- * @version    $Id: admin_admins.php 101 2010-12-08 07:03:42Z d00p $
+ *
  */
 
 define('AREA', 'admin');

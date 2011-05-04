@@ -12,7 +12,7 @@
  * @author     Martin Burchert <eremit@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
  * @package    System
- * @version    $Id$
+ *
  */
 
 // some configs

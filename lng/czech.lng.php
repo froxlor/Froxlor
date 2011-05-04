@@ -14,7 +14,7 @@
  * @author     Froxlor Team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
- * @version    $Id$
+ *
  */
 
 /**
@@ -304,7 +304,7 @@ $lng['admin']['deactivated_user'] = 'Deaktivovat u&#382;ivatele';
 $lng['admin']['sendpassword'] = 'Zaslat heslo';
 $lng['admin']['ownvhostsettings'] = 'Vlastn&iacute; vHost-nastaven&iacute;';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Konfigurace';
-$lng['admin']['configfiles']['files'] = '<b>Konfigura&egrave;n&iacute; soubory:</b> Pros&iacute;m zm&igrave; òte n&aacute;sleduj&iacute;c&iacute; soubory nabo je vytvo&oslash;te s<br /> n&aacute;sleduj&iacute;c&iacute;m obsahem, pokud neexistuj&iacute;.<br /><b>Pozn&aacute;mka:</b> MySQL heslo nebylo nahrazeno z bezpe&egrave;nostn&iacute;ch d&ugrave;vod&ugrave;.<br />Pros&iacute;m nahra&iuml;te &quot;MYSQL_PASSWORD&quot; sv&yacute;m vlastn&iacute;m. Pokud jste zapomn&igrave; li sv&eacute; mysql heslo<br />najdete jej v &quot;lib/userdata.inc.php&quot;.';
+$lng['admin']['configfiles']['files'] = '<b>Konfigura&egrave;n&iacute; soubory:</b> Pros&iacute;m zm&igrave; ï¿½te n&aacute;sleduj&iacute;c&iacute; soubory nabo je vytvo&oslash;te s<br /> n&aacute;sleduj&iacute;c&iacute;m obsahem, pokud neexistuj&iacute;.<br /><b>Pozn&aacute;mka:</b> MySQL heslo nebylo nahrazeno z bezpe&egrave;nostn&iacute;ch d&ugrave;vod&ugrave;.<br />Pros&iacute;m nahra&iuml;te &quot;MYSQL_PASSWORD&quot; sv&yacute;m vlastn&iacute;m. Pokud jste zapomn&igrave; li sv&eacute; mysql heslo<br />najdete jej v &quot;lib/userdata.inc.php&quot;.';
 $lng['admin']['configfiles']['commands'] = '<b>P&oslash;&iacute;kazy:</b> Pros&iacute;m spus?te n&aacute;sleduj&iacute;c&iacute; p&oslash;&iacute;kazy v p&oslash;&iacute;kazov&eacute;m &oslash;&aacute;dku.';
 $lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Pros&iacute;m spus?te n&iacute;sleduj&iacute;c&iacute; p&oslash;&iacute;kazy v p&oslash;&iacute;kazov&eacute;m &oslash;&aacute;dku, aby jste nahr&aacute;li novou konfiguraci.';
 $lng['admin']['templates']['templates'] = '&#353;ablony';
@@ -349,8 +349,8 @@ $lng['serversettings']['bindconf_directory']['title'] = 'Bindujte konfigura&egra
 $lng['serversettings']['bindconf_directory']['description'] = 'Kde by m&igrave; ly b&yacute;t ulo&#382;eny "bind configfiles"?';
 $lng['serversettings']['bindreload_command']['title'] = 'Bind reload p&oslash;&iacute;kaz';
 $lng['serversettings']['bindreload_command']['description'] = 'Jak&yacute; je p&oslash;&iacute;kaz pro znovunahr&aacute;n&iacute; "bind configfiles"?';
-$lng['serversettings']['binddefaultzone']['title'] = 'Bind v&yacute;choz&iacute; zóna';
-$lng['serversettings']['binddefaultzone']['description'] = 'Jak&yacute; je n&aacute;zev v&yacute;choz&iacute; zóny?';
+$lng['serversettings']['binddefaultzone']['title'] = 'Bind v&yacute;choz&iacute; zï¿½na';
+$lng['serversettings']['binddefaultzone']['description'] = 'Jak&yacute; je n&aacute;zev v&yacute;choz&iacute; zï¿½ny?';
 $lng['serversettings']['vmail_uid']['title'] = 'UID-mail&ugrave;';
 $lng['serversettings']['vmail_uid']['description'] = 'Jak&eacute; UserID by m&igrave; ly e-maily m&iacute;t?';
 $lng['serversettings']['vmail_gid']['title'] = 'GID-mail&ugrave;';
@@ -391,7 +391,7 @@ $lng['serversettings']['paging']['title'] = 'Z&aacute;znam&ugrave; na str&aacute
 $lng['serversettings']['paging']['description'] = 'Kolik z&aacute;znam&ugrave; by m&igrave; lo b&yacute;t zobrazeno na str&aacute;nce? (0 = zru&#353;it str&aacute;nkov&aacute;n&iacute;)';
 $lng['error']['ipstillhasdomains'] = 'IP/Port kombinace, kterou chcete smazat m&aacute; st&aacute;le p&oslash;i&oslash;azen&eacute; dom&eacute;ny, pros&iacute;m p&oslash;e&oslash;a&iuml;te je k jin&eacute; IP/Port kombinaci ne&#382; sma&#382;ete tuto IP/Port kombinaci.';
 $lng['error']['cantdeletedefaultip'] = 'Nem&ugrave;&#382;ete smazat IP/Port kombinaci v&yacute;choz&iacute;ho p&oslash;eprodejce, pros&iacute;m vytvo&oslash;te jinou IP/Port kombinaci v&yacute;choz&iacute; pro p&oslash;eprodejce ne&#382; sma&#382;ete tuto IP/Port kombinaci.';
-$lng['error']['cantdeletesystemip'] = 'Nem&ugrave;&#382;ete smazat posledn&iacute; syst&eacute;movou IP, bu&iuml; vytvo&oslash;te novou IP/Port kombinaci pro syst&eacute;movou IP nebo zm&igrave; òte IP syst&eacute;mu.';
+$lng['error']['cantdeletesystemip'] = 'Nem&ugrave;&#382;ete smazat posledn&iacute; syst&eacute;movou IP, bu&iuml; vytvo&oslash;te novou IP/Port kombinaci pro syst&eacute;movou IP nebo zm&igrave; ï¿½te IP syst&eacute;mu.';
 $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Port\'';
 $lng['error']['myipdefault'] = 'Mus&iacute;te vybrat IP/Port kombinaci kter&aacute; by se m&igrave; la st&aacute;t v&yacute;choz&iacute;.';
@@ -406,7 +406,7 @@ $lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
 
-$lng['error']['cantchangesystemip'] = 'Nem&ugrave;&#382;ete zm&igrave; nit posledn&iacute; syst&eacute;movou IP, bu&iuml; vytvo&oslash;te novou IP/Port kombinaci pro syst&eacute;movou IP nebo zm&igrave; òte IP syst&eacute;mu.';
+$lng['error']['cantchangesystemip'] = 'Nem&ugrave;&#382;ete zm&igrave; nit posledn&iacute; syst&eacute;movou IP, bu&iuml; vytvo&oslash;te novou IP/Port kombinaci pro syst&eacute;movou IP nebo zm&igrave; ï¿½te IP syst&eacute;mu.';
 $lng['question']['admin_domain_reallydocrootoutofcustomerroot'] = 'Jste si jisti, &#382;e chcete aby root dokument&ugrave; pro tuto dom&eacute;nu nebyl v "customerroot" z&aacute;kazn&iacute;ka?';
 
 // ADDED IN 1.2.14-rc1
@@ -496,7 +496,7 @@ $lng['panel']['pathDescription'] = 'Pokud adres&aacute;&oslash; neexistuje, bude
 
 $lng['mails']['trafficninetypercent']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli {NAME},\n\nPou&#382;il jste {TRAFFICUSED} MB z V&aacute;mi dostupn&yacute;ch {TRAFFIC} MB p&oslash;enos&ugrave;.\nTo je v&iacute;ce jak 90%.\n\nP&oslash;ejeme hezk&yacute; den, Froxlor-Team';
 $lng['mails']['trafficninetypercent']['subject'] = 'Dosahuj&iacute;c va&#353;eho limitu p&oslash;enos&ugrave;';
-$lng['admin']['templates']['trafficninetypercent'] = 'Upozoròovac&iacute; mail pro z&aacute;kazn&iacute;ky, pokud vy&egrave;erpaj&iacute; 90% z p&oslash;enos&ugrave;';
+$lng['admin']['templates']['trafficninetypercent'] = 'Upozorï¿½ovac&iacute; mail pro z&aacute;kazn&iacute;ky, pokud vy&egrave;erpaj&iacute; 90% z p&oslash;enos&ugrave;';
 $lng['admin']['templates']['TRAFFIC'] = 'Nahrazeno p&oslash;enosy, kter&eacute; byly p&oslash;id&igrave; leny u&#382;ivateli.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Nahrazeno p&oslash;enosy, kter&eacute; byly vy&egrave;erp&aacute;ny z&aacute;kazn&iacute;kem.';
 
@@ -506,7 +506,7 @@ $lng['admin']['subcanemaildomain']['never'] = 'Nikdy';
 $lng['admin']['subcanemaildomain']['choosableno'] = 'V&yacute;b&igrave; r, v&yacute;choz&iacute; ne';
 $lng['admin']['subcanemaildomain']['choosableyes'] = 'V&yacute;b&igrave; r, v&yacute;choz&iacute; ano';
 $lng['admin']['subcanemaildomain']['always'] = 'V&#382;dy';
-$lng['changepassword']['also_change_webalizer'] = ' tak&eacute; zm&igrave; òte heslo pro webalizer statistics';
+$lng['changepassword']['also_change_webalizer'] = ' tak&eacute; zm&igrave; ï¿½te heslo pro webalizer statistics';
 
 // ADDED IN 1.2.16-svn8
 
@@ -551,7 +551,7 @@ $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Nahrazeno heslem &Uacute;&egrave
 
 // ADDED IN 1.2.16-svn13
 
-$lng['error']['documentrootexists'] = 'Adres&aacute;&oslash; &quot;%s&quot; ji&#382; existuje pro tohoto z&aacute;kazn&iacute;ka. Pros&iacute;m odstraòte jej, ne&#382; budete znovu z&aacute;kazn&iacute;ka vkl&aacute;dat.';
+$lng['error']['documentrootexists'] = 'Adres&aacute;&oslash; &quot;%s&quot; ji&#382; existuje pro tohoto z&aacute;kazn&iacute;ka. Pros&iacute;m odstraï¿½te jej, ne&#382; budete znovu z&aacute;kazn&iacute;ka vkl&aacute;dat.';
 
 // ADDED IN 1.2.16-svn14
 
@@ -641,7 +641,7 @@ $lng['ticket']['notmorethanxopentickets'] = 'Kv&ugrave;li ochran&igrave;  proti 
 $lng['ticket']['supportstatus'] = 'Status-podpory';
 $lng['ticket']['supportavailable'] = '<span class="ticket_low">Na&#353;e podpora jsou k dispozici a p&oslash;ipraveni pomoci.</span>';
 $lng['ticket']['supportnotavailable'] = '<span class="ticket_high">Na&#353;e podpora nen&iacute; moment&aacute;ln&igrave;  dostupn&aacute;</span>';
-$lng['admin']['templates']['ticket'] = 'Upozoròovac&iacute; e-maily pro tikety podpory';
+$lng['admin']['templates']['ticket'] = 'Upozorï¿½ovac&iacute; e-maily pro tikety podpory';
 $lng['admin']['templates']['SUBJECT'] = 'Nahrazeno p&oslash;edm&igrave; tem tiketu podpory';
 $lng['admin']['templates']['new_ticket_for_customer'] = 'Z&aacute;kaznick&eacute; upozorn&igrave; n&iacute;, &#382;e byl tiket odesl&aacute;n';
 $lng['admin']['templates']['new_ticket_by_customer'] = 'Administr&aacute;torsk&eacute; upozorn&igrave; n&iacute;, &#382;e byl tiket otev&oslash;en z&aacute;kazn&iacute;kem';
@@ -686,7 +686,7 @@ $lng['customer']['tickets'] = 'Tikety podpory';
 
 // ADDED IN 1.2.18-svn4
 
-$lng['admin']['domain_nocustomeraddingavailable'] = 'Moment&aacute;ln&igrave;  nen&iacute; mo&#382;n&eacute; p&oslash;idat dom&eacute;nu. Nejd&oslash;&iacute;ve mus&iacute;te p&oslash;idat aspoò jednoho z&aacute;kazn&iacute;ka.';
+$lng['admin']['domain_nocustomeraddingavailable'] = 'Moment&aacute;ln&igrave;  nen&iacute; mo&#382;n&eacute; p&oslash;idat dom&eacute;nu. Nejd&oslash;&iacute;ve mus&iacute;te p&oslash;idat aspoï¿½ jednoho z&aacute;kazn&iacute;ka.';
 $lng['serversettings']['ticket']['enable'] = 'Zapnout syst&eacute;m tiket&ugrave;';
 $lng['serversettings']['ticket']['concurrentlyopen'] = 'Kolik tiket&ugrave; by m&igrave; lo b&yacute;t k dispozici najednou?';
 $lng['error']['norepymailiswrong'] = '&quot;Bezodpov&igrave; dn&iacute; adresa&quot; je &#353;patn&igrave; . Je povolena pouze validn&iacute; e-mailov&aacute; adresa.';
