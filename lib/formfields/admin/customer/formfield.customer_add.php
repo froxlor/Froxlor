@@ -82,6 +82,11 @@ return array(
 						'type' => 'text',
 						'mandatory_ex' => true
 					),
+					'gender' => array(
+						'label' => $lng['gender']['title'],
+						'type' => 'select',
+						'select_var' => $gender_options
+					),
 					'company' => array(
 						'label' => $lng['customer']['company'],
 						'type' => 'text',
