@@ -1600,3 +1600,9 @@ $lng['serversettings']['backupdir']['description'] = 'Welchen Namen soll das Bac
 $lng['serversettings']['mysqldump_path']['description'] = 'Pfad zum mysqldump kommando?';
 $lng['serversettings']['backup_count'] = 'Soll die Gr&ouml;&amp;e des Backups vom verf&uuml;gbaren Webspace abgezogen werden?';
 $lng['crondesc']['cron_backup'] = 'Backup cronjob';
+
+// ADDED IN FROXLOR 0.9.21
+$lng['gender']['title'] = 'Geschlecht';
+$lng['gender']['male'] = 'm&auml;nnlich';
+$lng['gender']['female'] = 'weiblich';
+$lng['gender']['undef'] = 'keine Angabe';
