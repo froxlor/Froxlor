@@ -186,6 +186,7 @@ CREATE TABLE `panel_customers` (
   `adminid` int(11) unsigned NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
   `firstname` varchar(255) NOT NULL default '',
+  `gender` int(1) NOT NULL DEFAULT '0',
   `company` varchar(255) NOT NULL default '',
   `street` varchar(255) NOT NULL default '',
   `zipcode` varchar(255) NOT NULL default '',
