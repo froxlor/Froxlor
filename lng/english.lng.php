@@ -1622,7 +1622,7 @@ $lng['serversettings']['backup_ftp_pass'] = 'FTP Password:';
 $lng['crondesc']['cron_backup'] = 'Backup cronjob';
 
 // ADDED IN FROXLOR 0.9.21
-$lng['gender']['title'] = 'gender';
+$lng['gender']['title'] = 'Gender';
 $lng['gender']['male'] = 'male';
 $lng['gender']['female'] = 'female';
 $lng['gender']['undef'] = 'not specified';
