@@ -99,7 +99,7 @@ return array(
 					'save_method' => 'storeSettingField',
 				),
 				'backup_passive_mode' => array(
-					'label' => $lng{'serversettings']['backup_ftp_passive_mode'],
+					'label' => $lng['serversettings']['backup_ftp_passive_mode'],
 					'settinggroup' => 'system',
 					'varname' => 'backup_ftp_passive',
 					'type' => 'bool',
