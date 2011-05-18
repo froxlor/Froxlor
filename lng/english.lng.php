@@ -1336,7 +1336,7 @@ $lng['cronjob']['cronjobintervalv'] = 'Runtime interval value';
 $lng['cronjob']['cronjobinterval'] = 'Runtime interval';
 $lng['panel']['options'] = 'options';
 $lng['admin']['warning'] = 'WARNING - Please note!';
-$lng['cron']['changewarning'] = 'Changing these values can have a negative cause to the behavior of Froxlor and its automated tasks.<br /><br />Please, only change values here if you are *damn sure* you know what you are doing.';
+$lng['cron']['changewarning'] = 'Changing these values can have a negative cause to the behavior of Froxlor and its automated tasks.<br /><br />Please only change values here, if you are sure you know what you are doing.';
 
 $lng['serversettings']['stdsubdomainhost']['title'] = 'Customer standard subdomain';
 $lng['serversettings']['stdsubdomainhost']['description'] = 'What hostname should be used to create standard subdomains for customer. If empty, the system-hostname is used.';
@@ -1576,7 +1576,7 @@ $lng['panel']['description'] = 'Description';
 $lng['emails']['back_to_overview'] = 'Back to overview';
 
 // ADDED IN FROXLOR 0.9.20
-$lng['error']['user_banned'] = 'Your account has been banned. Please contact your administrator for further information.';
+$lng['error']['user_banned'] = 'Your account has been locked. Please contact your administrator for further information.';
 $lng['serversettings']['validate_domain'] = 'Validate domain names';
 $lng['login']['combination_not_found'] = 'Combination of user and email adress not found.';
 $lng['customer']['generated_pwd'] = 'Password suggestion';
@@ -1607,13 +1607,13 @@ $lng['backup'] = 'Backup';
 $lng['backup_allowed'] = 'Backup allowed';
 $lng['extras']['backup_create'] = 'Create Backup?';
 $lng['extras']['backup_info'] = 'Backup will be saved once daily in directory "' . $settings['system']['backup_dir'] . '".';
-$lng['extras']['backup_info_sep'] = 'It contains compressed archives of HTML Files and Databases.';
-$lng['extras']['backup_info_big'] = 'It contains a compressed archive of HTML Files and Databases.';
+$lng['extras']['backup_info_sep'] = 'It contains compressed archives of your web-directory and databases.';
+$lng['extras']['backup_info_big'] = 'It contains a compressed archive of your web-directory and databases.';
 $lng['extras']['backup_count_info'] = '<br /><br />Please note that the backup will charge your webspace!';
 $lng['serversettings']['backup_count'] = 'Should backup size be subtracted from webspace size?';
 $lng['serversettings']['backup_enabled'] = 'Backup activated?';
-$lng['serversettings']['backupdir']['description'] = 'Which name should customers backup directory have?';
-$lng['serversettings']['mysqldump_path']['description'] = 'Path to mysqldump command?';
+$lng['serversettings']['backupdir']['description'] = 'Which name should the customer\'s backup directory have?';
+$lng['serversettings']['mysqldump_path']['description'] = 'Path to mysqldump binary?';
 $lng['serversettings']['backup_bigfile'] = 'Save backup in 1 big file instead in separeted files for html and databases?';
 $lng['serversettings']['backup_ftp_enabled'] = 'FTP Upload activated?';
 $lng['serversettings']['backup_ftp_server'] = 'FTP Server:';
