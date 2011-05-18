@@ -942,7 +942,7 @@ if($page == 'customers'
 				$def_language = validate($_POST['def_language'], 'default language');
 				$password = validate($_POST['new_customer_password'], 'new password');
 				$diskspace = intval_ressource($_POST['diskspace']);
-				$gender = intval_resource($_POST['gender']);
+				$gender = intval_ressource($_POST['gender']);
 
 				if(isset($_POST['diskspace_ul']))
 				{
