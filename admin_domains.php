@@ -376,12 +376,15 @@ if($page == 'domains'
 
 				if($settings['system']['use_ssl'] == "1"
 				   && isset($_POST['ssl'])
-				   && isset($_POST['ssl_redirect'])
+				   /*&& isset($_POST['ssl_redirect'])*/
 				   && isset($_POST['ssl_ipandport'])
 				   && $_POST['ssl'] != '0')
 				{
 					$ssl = (int)$_POST['ssl'];
-					$ssl_redirect = (int)$_POST['ssl_redirect'];
+					$ssl_redirect = 0;
+					if (isset($_POST['ssl_redirect'])) {
+						$ssl_redirect = (int)$_POST['ssl_redirect'];
+					}
 					$ssl_ipandport = (int)$_POST['ssl_ipandport'];
 					$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' AND `ssl` = '1'" . $additional_ip_condition);
 
@@ -892,12 +895,15 @@ if($page == 'domains'
 
 				if($settings['system']['use_ssl'] == "1"
 				   && isset($_POST['ssl'])
-				   && isset($_POST['ssl_redirect'])
+				   /*&& isset($_POST['ssl_redirect'])*/
 				   && isset($_POST['ssl_ipandport'])
 				   && $_POST['ssl'] != '0')
 				{
 					$ssl = (int)$_POST['ssl'];
-					$ssl_redirect = (int)$_POST['ssl_redirect'];
+					$ssl_redirect = 0;
+					if (isset($_POST['ssl_redirect'])) {
+						$ssl_redirect = (int)$_POST['ssl_redirect'];
+					}
 					$ssl_ipandport = (int)$_POST['ssl_ipandport'];
 					$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' AND `ssl` = '1'" . $additional_ip_condition);
 
