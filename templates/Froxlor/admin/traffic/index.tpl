@@ -28,7 +28,7 @@ $header
 		<article>
 			<header>
 				<h2>
-					<img src="images/Froxlor/icons/traffic_big.png" alt="$lng['admin']['traffic']" />&nbsp;$lng['admin']['traffic'] &nbsp;
+					<img src="images/Froxlor/icons/traffic_big.png" alt="{$lng['admin']['traffic']}" />&nbsp;{$lng['admin']['traffic']} &nbsp;
 				</h2>
 			</header>
 			{$stats_tables}
