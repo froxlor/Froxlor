@@ -1594,10 +1594,21 @@ if(isFroxlorVersion('0.9.20.1-svn1') || isFroxlorVersion('0.9.20.2-svn1'))
 	// add table column for gender
 	$db->query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `gender` INT( 1 ) NOT NULL DEFAULT '0' AFTER `firstname`");
 	
+
+	lastStepStatus(0);
+
+	updateToVersion('0.9.21-svn1');
+}
+
+if(isFroxlorVersion('0.9.21-svn1'))
+{
+	showUpdateStep("Updating from 0.9.21-svn1 to 0.9.21-svn2");
+	lastStepStatus(0);
+	
 	/* add new setting: backup FTP mode */
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_passive', '1')");
 	
 	lastStepStatus(0);
 
-	updateToVersion('0.9.21-svn1');
+	updateToVersion('0.9.21-svn2');
 }
