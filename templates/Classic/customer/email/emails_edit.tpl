@@ -6,7 +6,7 @@ $header
 			</tr>
 			{$email_edit_form}
 			<tr>
-				<td class="maintitle" colspan="2"><a href="$filename?page=email&amp;s=$s">{$lng['emails']['back_to_overview']}</a></td>
+				<td class="maintitle" colspan="2"><a href="$filename?page=emails&amp;s=$s">{$lng['emails']['back_to_overview']}</a></td>
 			</tr>
 		</table>
 	</form>
