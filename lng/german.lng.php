@@ -1606,3 +1606,4 @@ $lng['gender']['title'] = 'Geschlecht';
 $lng['gender']['male'] = 'm&auml;nnlich';
 $lng['gender']['female'] = 'weiblich';
 $lng['gender']['undef'] = 'keine Angabe';
+$lng['serversettings']['backup_ftp_passive_mode'] = 'Passiven Modus verwenden';

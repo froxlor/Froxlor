@@ -122,7 +122,17 @@ if($settings['system']['backup_enabled'] == '1'){
 		    if(preg_match('/.*\.tar\.gz$/', $ftp_file)){
 			$ftp_con = ftp_connect($settings['system']['backup_ftp_server']);
 			$ftp_login = ftp_login($ftp_con, $settings['system']['backup_ftp_user'], $settings['system']['backup_ftp_pass']);
-			ftp_pasv($ftp_con, true);
+			
+			/* Check whether to use passive mode or not */
+			if($settings['system']['backup_ftp_passive'] == 1)
+			{
+				ftp_pasv($ftp_con, true);
+			}
+			else
+			{
+				ftp_pasv($ftp_con, false);
+			}
+			
 			$ftp_upload = ftp_put($ftp_con, $ftp_file, $row['documentroot'] . $settings['system']['backup_dir'] . "/" . $ftp_file, FTP_BINARY);
 		    }
 		}
