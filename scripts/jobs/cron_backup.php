@@ -61,9 +61,6 @@ if($settings['system']['backup_enabled'] == '1'){
 	fwrite($fh, $filedata);
 	fclose($fh);
 
-	//reload webserver to enable directory protection
-	safe_exec(escapeshellcmd($settings['system']['apachereload_command']));
-
 	// backup
 	if($row['backup_allowed'] == '1' && $row['backup_enabled'] == '1'){
 	    // get uid & gid from ftp table
@@ -151,7 +148,10 @@ if($settings['system']['backup_enabled'] == '1'){
 	    }
 	}
     }
-    fwrite($debugHandler, 'backup customers finished...' . "\n");    
+    fwrite($debugHandler, 'backup customers finished...' . "\n");
+    
+    //reload webserver to enable directory protection
+	safe_exec(escapeshellcmd($settings['system']['apachereload_command']));
 }
 
 ?>
