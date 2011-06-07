@@ -44,9 +44,9 @@ class apache_fcgid extends apache
 				$php_options_text.= '      SetHandler php5-fastcgi'. "\n";
 				$php_options_text.= '      Action php5-fastcgi /fastcgiphp' . "\n";
 				$php_options_text.= '      Options +ExecCGI' . "\n";
-				$php_options_text.= '      Order allow,deny' . "\n";
-				$php_options_text.= '      allow from all' . "\n";
 				$php_options_text.= '    </FilesMatch>' . "\n";
+				$php_options_text.= '    Order allow,deny' . "\n";
+				$php_options_text.= '    allow from all' . "\n";
 				$php_options_text.= '  </Directory>' . "\n";
 				$php_options_text.= '  Alias /fastcgiphp ' . makeCorrectDir($domain['documentroot']) . 'fpm.external' . "\n";
 			}
@@ -69,9 +69,9 @@ class apache_fcgid extends apache
 						$php_options_text.= '      FCGIWrapper ' . $php->getInterface()->getStarterFile() . ' .' . $file_extension . "\n";
 					}
 					$php_options_text.= '      Options +ExecCGI' . "\n";
-					$php_options_text.= '      Order allow,deny' . "\n";
-					$php_options_text.= '      allow from all' . "\n";
 				        $php_options_text.= '    </FilesMatch>' . "\n";
+					$php_options_text.= '    Order allow,deny' . "\n";
+					$php_options_text.= '    allow from all' . "\n";
 					$php_options_text.= '  </Directory>' . "\n";
 				}
 			}
