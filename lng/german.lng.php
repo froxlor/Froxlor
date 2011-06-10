@@ -1603,8 +1603,8 @@ $lng['crondesc']['cron_backup'] = 'Backup Cronjob';
 
 // ADDED IN FROXLOR 0.9.21
 $lng['gender']['title'] = 'Geschlecht';
-$lng['gender']['male'] = 'm&auml;nnlich';
-$lng['gender']['female'] = 'weiblich';
-$lng['gender']['undef'] = 'keine Angabe';
+$lng['gender']['male'] = 'Herr';
+$lng['gender']['female'] = 'Frau';
+$lng['gender']['undef'] = '';
 $lng['serversettings']['backup_ftp_passive_mode'] = 'Passiven &Uuml;bertragungsmodus verwenden';
 $lng['serversettings']['backup_bigfile'] = 'Backup von Kundenverzeichnissen und Datenbanken in eine Datei speichern, statt zu splitten?';

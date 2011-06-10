@@ -1287,7 +1287,7 @@ $lng['serversettings']['panel_password_min_length']['title'] = 'Minimum password
 $lng['serversettings']['panel_password_min_length']['description'] = 'Here you can set a minimum length for passwords. \'0\' means: no minimum length required.';
 $lng['error']['notrequiredpasswordlength'] = 'The given password is too short. Please enter at least %s characters.';
 $lng['serversettings']['system_store_index_file_subs']['title'] = 'Store default index file also to new subfolders';
-$lng['serversettings']['system_store_index_file_subs']['description'] = 'If enabled, the default index-file is being stored to every subdomain-path newly created (not if the folder already exists!)'; 
+$lng['serversettings']['system_store_index_file_subs']['description'] = 'If enabled, the default index-file is being stored to every subdomain-path newly created (not if the folder already exists!)';
 
 // ADDED IN FROXLOR 0.9.3-svn2
 
@@ -1511,7 +1511,7 @@ $lng['serversettings']['login_domain_login'] = 'Allow login with domains';
 
 // ADDED IN FROXLOR 0.9.14
 $lng['panel']['unlock'] = 'unlock';
-$lng['question']['customer_reallyunlock'] = 'Do you really want to unlock customer %s?'; 
+$lng['question']['customer_reallyunlock'] = 'Do you really want to unlock customer %s?';
 
 // ADDED IN FROXLOR 0.9.15-svn1
 $lng['serversettings']['perl_server']['title'] = 'Perl server location';
@@ -1622,10 +1622,10 @@ $lng['serversettings']['backup_ftp_pass'] = 'FTP Password:';
 $lng['crondesc']['cron_backup'] = 'Backup cronjob';
 
 // ADDED IN FROXLOR 0.9.21
-$lng['gender']['title'] = 'Gender';
-$lng['gender']['male'] = 'male';
-$lng['gender']['female'] = 'female';
-$lng['gender']['undef'] = 'not specified';
+$lng['gender']['title'] = 'Title';
+$lng['gender']['male'] = 'Mr.';
+$lng['gender']['female'] = 'Mrs.';
+$lng['gender']['undef'] = '';
 $lng['serversettings']['backup_ftp_passive_mode'] = 'Use passive mode';
 
 // Country code (ISO-3166-2)
