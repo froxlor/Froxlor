@@ -6,10 +6,10 @@ $header
 				{$configfiles[$distribution]['label']}&nbsp;&raquo;&nbsp;
 				{$configfiles[$distribution]['services'][$service]['label']}&nbsp;&raquo;&nbsp;
 				{$configfiles[$distribution]['services'][$service]['daemons'][$daemon]['label']}&nbsp;
-[<a href="$filename?s=$s&amp;page=$page&amp;distribution=$distribution&amp;service=$service">{$lng['panel']['back']}</a>]
+[<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => $page, 'distribution' => $distribution, 'service' => $service))}">{$lng['panel']['back']}</a>]
 			</h2>
 		</header>
-		
+
 		<section class="fullform bradiusodd">
         	<table class="formtable">
 				{$configpage}

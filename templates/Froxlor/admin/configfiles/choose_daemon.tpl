@@ -1,1 +1,1 @@
-<li><a href="$filename?page=$page&amp;distribution=$distribution_name&amp;service=$service_name&amp;daemon=$daemon_name&amp;s=$s">{$daemon_details['label']}</a></li>
+<li><a href="{$linker->getLink(array('section' => 'configfiles', 'page' => $page, 'distribution' => $distribution_name, 'service' => $service_name, 'daemon' => $daemon_name))}">{$daemon_details['label']}</a></li>
