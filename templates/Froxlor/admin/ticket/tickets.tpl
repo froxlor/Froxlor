@@ -65,7 +65,7 @@ $header
 				<div class="warningcontainer bradius">
 					<div class="warningtitle">{$lng['admin']['warning']}</div>
 					<div class="warning">
-						<a href="admin_customers.php?s=$s&amp;page=customers&amp;action=add">{$lng['admin']['ticket_nocustomeraddingavailable']}</a>
+						<a href="{$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'add'))}">{$lng['admin']['ticket_nocustomeraddingavailable']}</a>
 					</div>
 				</div>
 			</if>

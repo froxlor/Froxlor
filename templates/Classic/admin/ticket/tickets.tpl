@@ -35,7 +35,7 @@ $header
 			</if>
 			<if $countcustomers == 0 >
 			<tr>
-				<td class="field_display_border_left" colspan="10"><a href="admin_customers.php?s=$s&amp;page=customers&amp;action=add">{$lng['admin']['ticket_nocustomeraddingavailable']}</a></td>
+				<td class="field_display_border_left" colspan="10"><a href="{$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'add'))}">{$lng['admin']['ticket_nocustomeraddingavailable']}</a></td>
 			</tr>
 			</if>			
 		</table>
