@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'mysql'))}" method="post">
 		<input type="hidden" name="s" value="$s" />
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
@@ -9,7 +9,7 @@ $header
 			</tr>
 			<if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') && 15 < $mysqls_count >
 			<tr>
-				<td class="field_display_border_left" colspan="5"><a href="$filename?page=mysqls&amp;action=add&amp;s=$s">{$lng['mysql']['database_create']}</a></td>
+				<td class="field_display_border_left" colspan="5"><a href="{$linker->getLink(array('section' => 'mysql', 'page' => 'mysqls', 'action' => 'add'))}">{$lng['mysql']['database_create']}</a></td>
 			</tr>
 			</if>
 			<tr>
@@ -26,7 +26,7 @@ $header
 			</if>
 			<if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') >
 			<tr>
-				<td class="field_display_border_left" colspan="5"><a href="$filename?page=mysqls&amp;action=add&amp;s=$s">{$lng['mysql']['database_create']}</a></td>
+				<td class="field_display_border_left" colspan="5"><a href="{$linker->getLink(array('section' => 'mysql', 'page' => 'mysqls', 'action' => 'add'))}">{$lng['mysql']['database_create']}</a></td>
 			</tr>
 			</if>
 		</table>
