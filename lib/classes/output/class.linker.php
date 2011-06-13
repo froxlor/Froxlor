@@ -17,7 +17,7 @@
 
 class linker
 {
-	private $protocol = 'http';
+	private $protocol = '';
 	private $username = '';
 	private $password = '';
 	private $hostname = '';
@@ -26,15 +26,29 @@ class linker
 
 	private $args = array();
 
-	public function __construct($hostname, $protocol = 'http', $port = 80, $file = 'index.php', $username = '', $password = '')
+	public function __construct($file = 'index.php', $sessionid = '', $hostname = '', $protocol = '', $port = '', $username = '', $password = '')
 	{
 		# Set the basic parts of our URL
 		$this->protocol = $protocol;
+		$this->username = $username;
+		$this->password = $password;
 		$this->hostname = $hostname;
 		$this->port = $port;
 		$this->filename = $file;
-		$this->username = $username;
-		$this->password = $password;
+		$this->args['s'] = $sessionid;
+	}
+
+	public function __set($key, $value)
+	{
+		switch($key)
+		{
+			case 'protocol': $this->protocol = $value; break;
+			case 'username': $this->username = $value; break;
+			case 'password': $this->password = $value; break;
+			case 'hostname': $this->hostname = $value; break;
+			case 'port': $this->port = $value; break;
+			case 'filename': $this->filename = $value; break;
+		}
 	}
 
 	public function add($key, $value)
@@ -55,7 +69,8 @@ class linker
 	public function delAll()
 	{
 		# Just resetting the array
-		$this->args = array();
+		# Until the sessionid can be removed: save it
+		$this->args = array('s' => $this->args['s']);
 	}
 
 	public function getLink()
@@ -63,10 +78,14 @@ class linker
 		$link = '';
 
 		# Build the basic URL
-		$link = $this->protocol . '://';
+		if (strlen($this->protocol) > 0)
+		{
+			$link = $this->protocol . '://';
+		}
 
 		# Let's see if we shall use a username in the URL
-		if ($this->username != '')
+		# This is only available if a hostname is used as well
+		if (strlen($this->username) > 0 && strlen($this->hostname) > 0)
 		{
 			$link .= urlencode($this->username);
 
@@ -81,7 +100,19 @@ class linker
 		}
 
 		# Add hostname, port and filename to the URL
-		$link .= $this->hostname . ':' . $this->port . '/' . $this->filename;
+		if (strlen($this->hostname) > 0)
+		{
+			$link .= $this->hostname;
+
+			# A port may only be used if hostname is used as well
+			if (strlen($this->port) > 0)
+			{
+				$link .= ':' . $this->port;
+			}
+			$link .= '/';
+		}
+
+		$link .= $this->filename;
 
 		# Overwrite $this->args with parameters of this function (if necessary)
 		if(func_num_args() == 1 && is_arrray(func_get_arg(0)))
