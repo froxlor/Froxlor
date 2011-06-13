@@ -1,5 +1,5 @@
 		<tr>
-			<th class="field_name_border_left">{$virtual_host['name']}<if $customerview == 1>&nbsp;<a href="$filename?s=$s&amp;page=$page&amp;action=su&amp;id={$virtual_host['customerid']}">[{$lng['traffic']['details']}]</a></if></th>
+			<th class="field_name_border_left">{$virtual_host['name']}<if $customerview == 1>&nbsp;<a href="{$linker->getLink(array('section' => 'traffic', 'page' => $page, 'action' => 'su', 'id' => $virtual_host['customerid']))}">[{$lng['traffic']['details']}]</a></if></th>
 			<td class="field_name" style="text-align:right;background-color:white;">{$virtual_host['jan']}</td>
 			<td class="field_name" style="text-align:right;">{$virtual_host['feb']}</td>
 			<td class="field_name" style="text-align:right;background-color:white;">{$virtual_host['mar']}</td>
