@@ -4,7 +4,7 @@ $header
   			<td class="maintitle"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['ticket']['ticket_delete']}</b></td>
 		</tr>
 		<tr>
-  			<td class="main_field_confirm"><a href="$filename?page=archive&amp;action=delete&amp;id={$id}&amp;s=$s">{$lng['panel']['delete']}</a></td>      
+  			<td class="main_field_confirm"><a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'archive', 'action' => 'delete', 'id' => $id))}">{$lng['panel']['delete']}</a></td>      
 		</tr>
 	</table>
 	<br />

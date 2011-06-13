@@ -3,9 +3,9 @@
 	<td class="field_name">{$row['logicalorder']}</td>
 	<td class="field_name">{$row['ticketcount']}&nbsp;({$row['ticketcountnotclosed']}&nbsp;{$lng['ticket']['open']}&nbsp;|&nbsp;{$closedtickets_count}&nbsp;{$lng['ticket']['closed']})</td>
 	<td class="field_name">
-		<a href="$filename?page=categories&amp;action=editcategory&amp;id={$row['id']}&amp;s=$s">{$lng['panel']['edit']}</a>
+		<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'editcategory', 'id' => $row['id']))}">{$lng['panel']['edit']}</a>
 	</td>
 	<td class="field_name">
-		<a href="$filename?page=categories&amp;action=deletecategory&amp;id={$row['id']}&amp;s=$s">{$lng['panel']['delete']}</a>
+		<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'deletecategory', 'id' => $row['id']))}">{$lng['panel']['delete']}</a>
 	</td>
 </tr>

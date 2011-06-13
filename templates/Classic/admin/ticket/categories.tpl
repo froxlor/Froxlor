@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post">
 		<input type="hidden" name="s" value="$s"/>
 		<input type="hidden" name="page" value="$page"/>
 		<input type="hidden" name="send" value="send" />
@@ -10,7 +10,7 @@ $header
 			</tr>
 			<if 15 < $categories_count >
 			<tr>
-				<td class="field_display_border_left" colspan="4"><a href="$filename?page=categories&amp;action=addcategory&amp;s=$s">{$lng['ticket']['ticket_newcateory']}</a></td>
+				<td class="field_display_border_left" colspan="4"><a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'addcategory'))}">{$lng['ticket']['ticket_newcateory']}</a></td>
 			</tr>
 			</if>
 			<tr>
@@ -26,7 +26,7 @@ $header
 			</tr>
 			</if>
 			<tr>
-				<td class="field_display_border_left" colspan="5"><a href="$filename?page=categories&amp;action=addcategory&amp;s=$s">{$lng['ticket']['ticket_newcateory']}</a></td>
+				<td class="field_display_border_left" colspan="5"><a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'addcategory'))}">{$lng['ticket']['ticket_newcateory']}</a></td>
 			</tr>
 		</table>
 	</form>

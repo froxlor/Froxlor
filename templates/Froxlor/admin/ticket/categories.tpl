@@ -9,7 +9,7 @@ $header
 
 		<section>
 			
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post" enctype="application/x-www-form-urlencoded">
 
 			<div class="overviewsearch">
 				{$searchcode}
@@ -18,7 +18,7 @@ $header
 			<if 15 < $categories_count >
 			<div class="overviewadd">
 				<img src="images/Froxlor/icons/category_add.png" alt="" />&nbsp;
-				<a href="$filename?page=categories&amp;action=addcategory&amp;s=$s">{$lng['ticket']['ticket_newcateory']}</a>
+				<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'addcategory'))}">{$lng['ticket']['ticket_newcateory']}</a>
 			</div>
 			</if>
 
@@ -53,7 +53,7 @@ $header
 
 			<div class="overviewadd">
 				<img src="images/Froxlor/icons/category_add.png" alt="" />&nbsp;
-				<a href="$filename?page=categories&amp;action=addcategory&amp;s=$s">{$lng['ticket']['ticket_newcateory']}</a>
+				<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'addcategory'))}">{$lng['ticket']['ticket_newcateory']}</a>
 			</div>
 
 		</section>

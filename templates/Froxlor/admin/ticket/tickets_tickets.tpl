@@ -6,7 +6,7 @@
 	<td>{$row['lastreplier']}</td>
 	<td>{$row['priority']}</td>
 	<td>
-		<a href="$filename?page=tickets&amp;action=answer&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
+		<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'answer', 'id' => $row['id']))}" style="text-decoration:none;">
 			<if $cananswer < 1 >
 				<img src="images/Froxlor/icons/ticket_show.png" alt="{$lng['ticket']['show']}"/>
 			</if>
@@ -15,19 +15,19 @@
 			</if>
 		</a>
 		<if $reopen < 1 >
-			&nbsp;<a href="$filename?page=tickets&amp;action=close&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
+			&nbsp;<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'close', 'id' => $row['id']))}" style="text-decoration:none;">
 				<img src="images/Froxlor/icons/ticket_close.png" alt="{$lng['ticket']['close']}"/>
 			</a>
 		</if>
 		<if 0 < $reopen >
-			&nbsp;<a href="$filename?page=tickets&amp;action=reopen&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
+			&nbsp;<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'reopen', 'id' => $row['id']))}" style="text-decoration:none;">
 				<img src="images/Froxlor/icons/ticket_reopen.png" alt="{$lng['ticket']['reopen']}"/>
 			</a>
 		</if>
-		&nbsp;<a href="$filename?page=tickets&amp;action=archive&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
+		&nbsp;<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'archive', 'id' => $row['id']))}" style="text-decoration:none;">
 			<img src="images/Froxlor/icons/archive_ticket.png" alt="{$lng['ticket']['archive']}"/>
 		</a>
-		&nbsp;<a href="$filename?page=tickets&amp;action=delete&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
+		&nbsp;<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'delete', 'id' => $row['id']))}" style="text-decoration:none;">
 			<img src="images/Froxlor/icons/delete.png" alt="{$lng['panel']['delete']}"/>
 		</a>
 	</td>

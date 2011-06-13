@@ -39,7 +39,7 @@ $header
 
 		<section class="fullform bradiusodd">
 
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post" enctype="application/x-www-form-urlencoded">
 
 			<input type="hidden" name="s" value="$s"/>
 			<input type="hidden" name="page" value="$page"/>

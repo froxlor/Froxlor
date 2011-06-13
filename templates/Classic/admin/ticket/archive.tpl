@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post">
 		<input type="hidden" name="s" value="$s"/>
 		<input type="hidden" name="page" value="$page"/>
 		<input type="hidden" name="send" value="send" />
@@ -21,7 +21,7 @@ $header
 	</form>
 	<br />
 	<br />
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post">
 		<input type="hidden" name="s" value="$s"/>
 		<input type="hidden" name="page" value="$page"/>
 		<input type="hidden" name="send" value="send" />

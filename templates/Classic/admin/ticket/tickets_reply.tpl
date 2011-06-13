@@ -1,5 +1,5 @@
 $header
-	<form method="post" action="$filename">
+	<form method="post" action="{$linker->getLink(array('section' => 'tickets'))}">
 		<input type="hidden" name="s" value="$s" />
 		<input type="hidden" name="page" value="$page" />
 		<input type="hidden" name="action" value="$action" />
@@ -22,7 +22,7 @@ $header
 				<td class="maintitle"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['ticket']['ticket_reopen']}</b></td>
 			</tr>
 			<tr>
-				<td class="main_field_confirm"><a href="$filename?page=tickets&amp;action=reopen&amp;id={$id}&amp;s=$s">{$lng['ticket']['ticket_reopen']}</a></td>
+				<td class="main_field_confirm"><a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'reopen', 'id' => $id))}">{$lng['ticket']['ticket_reopen']}</a></td>
 			</tr>
 		</table>
 		</if>

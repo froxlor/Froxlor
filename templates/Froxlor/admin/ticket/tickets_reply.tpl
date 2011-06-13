@@ -11,7 +11,7 @@ $header
 			<div class="messagewrapperfull">
 				<div class="warningcontainer bradius">
 					<div class="warningtitle">{$lng['ticket']['ticket_reopen']}</div>
-					<div class="warning"><br /><strong><a href="$filename?page=tickets&amp;action=reopen&amp;id={$id}&amp;s=$s">{$lng['ticket']['ticket_reopen']}</a></strong></div>
+					<div class="warning"><br /><strong><a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'reopen', 'id' => $id))}">{$lng['ticket']['ticket_reopen']}</a></strong></div>
 				</div>
 			</div>
 		</if>
@@ -22,7 +22,7 @@ $header
 
 		<section class="fullform bradiusodd">
 
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 					<legend>Froxlor&nbsp;-&nbsp;{$title}</legend>
 
