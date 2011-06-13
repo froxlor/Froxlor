@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'extras'))}" method="post">
 		<input type="hidden" name="s" value="$s" />
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
@@ -23,7 +23,7 @@ $header
 			</tr>
 			</if>
 			<tr>
-				<td class="field_display_border_left" colspan="<if $cperlenabled == 1 >8<else>7</if>"><a href="$filename?page=htaccess&amp;action=add&amp;s=$s">{$lng['extras']['pathoptions_add']}</a></td>
+				<td class="field_display_border_left" colspan="<if $cperlenabled == 1 >8<else>7</if>"><a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a></td>
 			</tr>
 		</table>
 	</form>

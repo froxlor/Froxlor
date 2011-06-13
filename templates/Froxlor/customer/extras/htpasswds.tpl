@@ -9,7 +9,7 @@
 
 		<section>
 
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'extras'))}" method="post" enctype="application/x-www-form-urlencoded">
 
 			<div class="overviewsearch">
 				{$searchcode}
@@ -18,7 +18,7 @@
 			<if 15 < $count >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/htpasswd_add.png" alt="" />&nbsp;
-					<a href="$filename?page=htpasswds&amp;action=add&amp;s=$s">{$lng['extras']['directoryprotection_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
 				</div>
 			</if>
 
@@ -51,7 +51,7 @@
 
 			<div class="overviewadd">
 				<img src="images/Froxlor/icons/htpasswd_add.png" alt="" />&nbsp;
-				<a href="$filename?page=htpasswds&amp;action=add&amp;s=$s">{$lng['extras']['directoryprotection_add']}</a>
+				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
 			</div>
 
 		</section>

@@ -9,7 +9,7 @@
 
 		<section>
 
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'extras'))}" method="post" enctype="application/x-www-form-urlencoded">
 
 			<div class="overviewsearch">
 				{$searchcode}
@@ -18,7 +18,7 @@
 			<if 15 < $count >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/htaccess_add.png" alt="" />&nbsp;
-					<a href="$filename?page=htaccess&amp;action=add&amp;s=$s">{$lng['extras']['pathoptions_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
 				</div>
 			</if>
 
@@ -55,7 +55,7 @@
 
 			<div class="overviewadd">
 				<img src="images/Froxlor/icons/htaccess_add.png" alt="" />&nbsp;
-				<a href="$filename?page=htaccess&amp;action=add&amp;s=$s">{$lng['extras']['pathoptions_add']}</a>
+				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
 			</div>
 
 		</section>

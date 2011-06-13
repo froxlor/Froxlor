@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'extras'))}" method="post">
 		<input type="hidden" name="s" value="$s" />
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
@@ -19,7 +19,7 @@ $header
 			</tr>
 			</if>
 			<tr>
-				<td class="field_display_border_left" colspan="4"><a href="$filename?page=htpasswds&amp;action=add&amp;s=$s">{$lng['extras']['directoryprotection_add']}</a></td>
+				<td class="field_display_border_left" colspan="4"><a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a></td>
 			</tr>
 		</table>
 	</form>

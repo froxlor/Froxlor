@@ -8,10 +8,10 @@
 	<td>{$row['options_cgi']}</td>
 	</if>
 	<td>
-		<a href="$filename?page=htaccess&amp;action=edit&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
+		<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'edit', 'id' => $row['id']))}" style="text-decoration:none;">
 			<img src="images/Froxlor/icons/edit.png" alt="{$lng['panel']['edit']}" />
 		</a>&nbsp;
-		<a href="$filename?page=htaccess&amp;action=delete&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
+		<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'delete', 'id' => $row['id']))}" style="text-decoration:none;">
 			<img src="images/Froxlor/icons/delete.png" alt="{$lng['panel']['delete']}" />
 		</a>
 	</td>
