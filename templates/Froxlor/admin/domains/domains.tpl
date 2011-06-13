@@ -9,7 +9,7 @@
 
 		<section>
 
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'domains'))}" method="post" enctype="application/x-www-form-urlencoded">
 
 			<div class="overviewsearch">
 				{$searchcode}
@@ -18,7 +18,7 @@
 			<if ($userinfo['domains_used'] < $userinfo['domains'] || $userinfo['domains'] == '-1') && 15 < $count && 0 < $countcustomers >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/domain_add.png" alt="" />&nbsp;
-					<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['domain_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['domain_add']}</a>
 				</div>
 			</if>
 
@@ -54,7 +54,7 @@
 				<div class="warningcontainer bradius">
 					<div class="warningtitle">{$lng['admin']['warning']}</div>
 					<div class="warning">
-						<a href="admin_customers.php?s=$s&amp;page=customers&amp;action=add">{$lng['admin']['domain_nocustomeraddingavailable']}</a>
+						<a href="{$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'add'))}">{$lng['admin']['domain_nocustomeraddingavailable']}</a>
 					</div>
 				</div>
 			</if>
@@ -62,7 +62,7 @@
 			<if ($userinfo['domains_used'] < $userinfo['domains'] || $userinfo['domains'] == '-1') && $countcustomers !=0 >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/domain_add.png" alt="" />&nbsp;
-					<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['domain_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['domain_add']}</a>
 				</div>
 			</if>
 
