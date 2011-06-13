@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'logger'))}" method="post">
 		<input type="hidden" name="s" value="$s"/>
 		<input type="hidden" name="page" value="$page"/>
 		<input type="hidden" name="send" value="send" />
@@ -10,7 +10,7 @@ $header
 			</tr>
 			<if 15 < $log_count >
 			<tr>
-				<td class="field_display_border_left" colspan="4"><a href="$filename?page=log&amp;action=truncate&amp;s=$s">{$lng['logger']['truncate']}</a></td>
+				<td class="field_display_border_left" colspan="4"><a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a></td>
 			</tr>
 			</if>
 			<tr>
@@ -21,7 +21,7 @@ $header
 			</tr>
 			$log
 			<tr>
-				<td class="field_display_border_left" colspan="4"><a href="$filename?page=log&amp;action=truncate&amp;s=$s">{$lng['logger']['truncate']}</a></td>
+				<td class="field_display_border_left" colspan="4"><a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a></td>
 			</tr>
 		</table>
 	</form>

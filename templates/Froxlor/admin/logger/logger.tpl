@@ -9,7 +9,7 @@ $header
 
 		<section>
 			
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'logger'))}" method="post" enctype="application/x-www-form-urlencoded">
 
 			<div class="overviewsearch">
 				{$searchcode}
@@ -18,7 +18,7 @@ $header
 			<if 15 < $log_count >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/syslog_truncate.png" alt="" />&nbsp;
-					<a href="$filename?page=log&amp;action=truncate&amp;s=$s">{$lng['logger']['truncate']}</a>
+					<a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a>
 				</div>
 			</if>
 
@@ -46,7 +46,7 @@ $header
 
 			<div class="overviewadd">
 				<img src="images/Froxlor/icons/syslog_truncate.png" alt="" />&nbsp;
-				<a href="$filename?page=log&amp;action=truncate&amp;s=$s">{$lng['logger']['truncate']}</a>
+				<a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a>
 			</div>
 
 		</section>
