@@ -9,7 +9,7 @@
 
 		<section>
 
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'ftp'))}" method="post" enctype="application/x-www-form-urlencoded">
 
 			<div class="overviewsearch">
 				{$searchcode}
@@ -18,7 +18,7 @@
 			<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') && 15 < $ftps_count >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
-					<a href="$filename?page=accounts&amp;action=add&amp;s=$s">{$lng['ftp']['account_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{$lng['ftp']['account_add']}</a>
 				</div>
 			</if>
 
@@ -52,7 +52,7 @@
 			<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
-					<a href="$filename?page=accounts&amp;action=add&amp;s=$s">{$lng['ftp']['account_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{$lng['ftp']['account_add']}</a>
 				</div>
 			</if>
 

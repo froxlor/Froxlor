@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'ftp'))}" method="post">
 		<input type="hidden" name="s" value="$s" />
 		<input type="hidden" name="page" value="$page" />
 		<input type="hidden" name="send" value="send" />
@@ -10,7 +10,7 @@ $header
 			</tr>
 			<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') && 15 < $ftps_count >
 			<tr>
-				<td class="field_display_border_left" colspan="4"><a href="$filename?page=accounts&amp;action=add&amp;s=$s">{$lng['ftp']['account_add']}</a></td>
+				<td class="field_display_border_left" colspan="4"><a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{$lng['ftp']['account_add']}</a></td>
 			</tr>
 			</if>
 			<tr>
@@ -26,7 +26,7 @@ $header
 			</if>
 			<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') >
 			<tr>
-				<td class="field_display_border_left" colspan="4"><a href="$filename?page=accounts&amp;action=add&amp;s=$s">{$lng['ftp']['account_add']}</a></td>
+				<td class="field_display_border_left" colspan="4"><a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{$lng['ftp']['account_add']}</a></td>
 			</tr>
 			</if>
 		</table>
