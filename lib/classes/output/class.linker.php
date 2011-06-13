@@ -48,7 +48,9 @@ class linker
 			case 'hostname': $this->hostname = $value; break;
 			case 'port': $this->port = $value; break;
 			case 'filename': $this->filename = $value; break;
+			default: return false;
 		}
+		return true;
 	}
 
 	public function add($key, $value)
@@ -115,7 +117,7 @@ class linker
 		$link .= $this->filename;
 
 		# Overwrite $this->args with parameters of this function (if necessary)
-		if(func_num_args() == 1 && is_arrray(func_get_arg(0)))
+		if(func_num_args() == 1 && is_array(func_get_arg(0)))
 		{
 			$this->args = array_merge($this->args, func_get_arg(0));
 		}
