@@ -9,7 +9,7 @@ $header
 
 		<section>
 
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'admins'))}" method="post" enctype="application/x-www-form-urlencoded">
 
 			<div class="overviewsearch">
 				{$searchcode}
@@ -18,7 +18,7 @@ $header
 			<if 15 < $count >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
-					<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['admin_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a>
 				</div>
 			</if>
 
@@ -32,7 +32,7 @@ $header
 					<th>{$lng['panel']['options']}</th>
 				</tr>
 			</thead>
-			<if $pagingcode != ''>			
+			<if $pagingcode != ''>
 				<tfoot>
 					<tr>
 						<td>{$pagingcode}</td>
@@ -53,7 +53,7 @@ $header
 
 			<div class="overviewadd">
 				<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
-				<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['admin_add']}</a>
+				<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a>
 			</div>
 
 		</section>

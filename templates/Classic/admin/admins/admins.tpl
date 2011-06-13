@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'admins'))}" method="post">
                 <input type="hidden" name="s" value="$s"/>
                 <input type="hidden" name="page" value="$page"/>
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
@@ -36,7 +36,7 @@ $header
 			</tr>
 			</if>
 			<tr>
-				<td class="field_display_border_left" colspan="<if ($settings['ticket']['enabled'] == 1 || $settings['autoresponder']['autoresponder_active'] == 1) >10<else>9</if>"><a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['admin_add']}</a></td>
+				<td class="field_display_border_left" colspan="<if ($settings['ticket']['enabled'] == 1 || $settings['autoresponder']['autoresponder_active'] == 1) >10<else>9</if>"><a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a></td>
 			</tr>
 		</table>
 	</form>

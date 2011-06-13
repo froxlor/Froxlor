@@ -35,6 +35,7 @@ class linker
 		$this->hostname = $hostname;
 		$this->port = $port;
 		$this->filename = $file;
+		# @TODO: Remove this
 		$this->args['s'] = $sessionid;
 	}
 
@@ -72,6 +73,7 @@ class linker
 	{
 		# Just resetting the array
 		# Until the sessionid can be removed: save it
+		# @TODO: Remove this
 		$this->args = array('s' => $this->args['s']);
 	}
 
@@ -122,10 +124,12 @@ class linker
 		}
 
 		# temporary until frontcontroller exists
-		# We got a section in the URL -> add area and section as filename
+		# We got a section in the URL -> morph AREA and section into filename
+		# @TODO: Remove this
 		if (isset($this->args['section']))
 		{
 			$link .= AREA . '_' . $this->args['section'] . '.php';
+			unset($this->args['section']);
 		}
 		else
 		{
@@ -144,10 +148,10 @@ class linker
 		# Loop through arguments and add them to the link
 		foreach ($this->args as $key => $value)
 		{
-			# For all but the first argument, prepend "&"
+			# For all but the first argument, prepend "&amp;"
 			if (substr($link, -1) != "?")
 			{
-				$link .= "&";
+				$link .= "&amp;";
 			}
 
 			# Encode parameters and add them to the link

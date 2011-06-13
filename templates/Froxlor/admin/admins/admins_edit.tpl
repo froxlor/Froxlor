@@ -15,7 +15,7 @@ $header
 
 		<section class="fullform bradiusodd">
 
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'admins'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 					<legend>Froxlor&nbsp;-&nbsp;{$title}</legend>
 
