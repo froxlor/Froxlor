@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'ipsandports'))}" method="post">
                 <input type="hidden" name="s" value="$s"/>
                 <input type="hidden" name="page" value="$page"/>
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
@@ -24,7 +24,7 @@ $header
 			</tr>
 			</if>
 			<tr>
-				<td class="field_display_border_left" colspan="9"><a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['ipsandports']['add']}</a></td>
+				<td class="field_display_border_left" colspan="9"><a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['ipsandports']['add']}</a></td>
 			</tr>
 		</table>
 	</form>
