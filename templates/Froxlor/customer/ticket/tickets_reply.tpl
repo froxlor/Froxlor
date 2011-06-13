@@ -13,7 +13,7 @@ $header
 
 		<section class="fullform bradiusodd">
 			
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 					<legend>Froxlor&nbsp;-&nbsp;{$title}</legend>
 
@@ -23,7 +23,7 @@ $header
 					</table>
 					</if>
 					<if 0 < $isclosed >
-						<a href="$filename?page=tickets&amp;action=reopen&amp;id={$id}&amp;s=$s">{$lng['ticket']['ticket_reopen']}</a>
+						<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'reopen', 'id' => $id))}">{$lng['ticket']['ticket_reopen']}</a>
 					</if>
 
 					<p style="display: none;">
