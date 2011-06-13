@@ -26,7 +26,7 @@ class linker
 
 	private $args = array();
 
-	public function __construct($hostname, $protocol = 'http', $port = 80, $file = 'index.php', $username = '', $password = '';)
+	public function __construct($hostname, $protocol = 'http', $port = 80, $file = 'index.php', $username = '', $password = '')
 	{
 		# Set the basic parts of our URL
 		$this->protocol = $protocol;
