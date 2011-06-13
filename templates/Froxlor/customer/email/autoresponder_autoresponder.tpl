@@ -6,10 +6,10 @@
 	</td>
 	<td>$activated_date</td>
 	<td>
-		<a href="$filename?&amp;action=edit&amp;email={$row['email']}&amp;s=$s" style="text-decoration:none;">
+		<a href="{$linker->getLink(array('section' => 'autoresponder', 'action' => 'edit', 'email' => $row['email']))}" style="text-decoration:none;">
 			<img src="images/Froxlor/icons/edit.png" alt="{$lng['panel']['edit']}" />
 		</a>&nbsp;
-		<a href="$filename?&amp;action=delete&amp;email={$row['email']}&amp;s=$s" style="text-decoration:none;">
+		<a href="{$linker->getLink(array('section' => 'autoresponder', 'action' => 'delete', 'email' => $row['email']))}" style="text-decoration:none;">
 			<img src="images/Froxlor/icons/delete.png" alt="{$lng['panel']['delete']}" />
 		</a>
 	</td>

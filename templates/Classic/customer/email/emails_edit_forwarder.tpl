@@ -1,2 +1,2 @@
-$destination [<a href="$filename?page=forwarders&amp;action=delete&amp;id={$id}&amp;forwarderid={$dest_id}&amp;s=$s">{$lng['panel']['delete']}</a>]
+$destination [<a href="{$linker->getLink(array('section' => 'email', 'page' => 'forwarders', 'action' => 'delete', 'id' => $id, 'forwarderid' => $dest_id))}">{$lng['panel']['delete']}</a>]
 <br />

@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'email'))}" method="post">
 		<input type="hidden" name="s" value="$s" />
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
@@ -9,7 +9,7 @@ $header
 			</tr>
 			<if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && 15 < $emails_count && $emaildomains_count !=0 >
 			<tr>
-				<td class="field_display_border_left" colspan="7"><a href="$filename?page={$page}&amp;action=add&amp;s=$s">{$lng['emails']['emails_add']}</a></td>
+				<td class="field_display_border_left" colspan="7"><a href="{$linker->getLink(array('section' => 'email', 'page' => $page, 'action' => 'add'))}">{$lng['emails']['emails_add']}</a></td>
 			</tr>
 			</if>
 			<tr>
@@ -28,7 +28,7 @@ $header
 			</if>
 			<if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && $emaildomains_count !=0 >
 			<tr>
-				<td class="field_display_border_left" colspan="7"><a href="$filename?page={$page}&amp;action=add&amp;s=$s">{$lng['emails']['emails_add']}</a></td>
+				<td class="field_display_border_left" colspan="7"><a href="{$linker->getLink(array('section' => 'email', 'page' => $page, 'action' => 'add'))}">{$lng['emails']['emails_add']}</a></td>
 			</tr>
 			</if>
 		</table>

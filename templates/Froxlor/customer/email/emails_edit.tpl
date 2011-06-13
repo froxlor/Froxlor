@@ -9,14 +9,14 @@ $header
 
 	<section class="fullform bradiusodd">
 
-		<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+		<form action="{$linker->getLink(array('section' => 'email'))}" method="post" enctype="application/x-www-form-urlencoded">
 			<fieldset>
 				<legend>Froxlor&nbsp;-&nbsp;{$title}</legend>
 
 				<table class="formtable">
 					{$email_edit_form}
 					<tr>
-						<td class="maintitle" colspan="2"><a href="$filename?page=emails&amp;s=$s">{$lng['emails']['back_to_overview']}</a></td>
+						<td class="maintitle" colspan="2"><a href="{$linker->getLink(array('section' => 'email', 'page' => 'emails'))}">{$lng['emails']['back_to_overview']}</a></td>
 					</tr>
 				</table>
 			</fieldset>

@@ -9,7 +9,7 @@
 
 		<section>
 
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'email'))}" method="post" enctype="application/x-www-form-urlencoded">
 
 			<div class="overviewsearch">
 				{$searchcode}
@@ -18,7 +18,7 @@
 			<if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && 15 < $emails_count && $emaildomains_count !=0 >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/email_add.png" alt="" />&nbsp;
-					<a href="$filename?page={$page}&amp;action=add&amp;s=$s">{$lng['emails']['emails_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'email', 'page' => $page, 'action' => 'add'))}">{$lng['emails']['emails_add']}</a>
 				</div>
 			</if>
 
@@ -57,7 +57,7 @@
 			<if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && $emaildomains_count !=0 >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/email_add.png" alt="" />&nbsp;
-					<a href="$filename?page={$page}&amp;action=add&amp;s=$s">{$lng['emails']['emails_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'email', 'page' => $page, 'action' => 'add'))}">{$lng['emails']['emails_add']}</a>
 				</div>
 			</if>
 

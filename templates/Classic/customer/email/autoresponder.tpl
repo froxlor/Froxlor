@@ -13,7 +13,7 @@ $header
 		$autoresponder
 		<if ($userinfo['email_autoresponder_used'] < $userinfo['email_autoresponder'] || $userinfo['email_autoresponder'] == '-1') >
 		<tr>
-			<td class="field_display_border_left" colspan="5"><a href="$filename?&amp;action=add&amp;s=$s">{$lng['autoresponder']['autoresponder_add']}</a></td>
+			<td class="field_display_border_left" colspan="5"><a href="{$linker->getLink(array('section' => 'autoresponder', 'action' => 'add'))}">{$lng['autoresponder']['autoresponder_add']}</a></td>
 		</tr>
 		</if>
 	</table>
