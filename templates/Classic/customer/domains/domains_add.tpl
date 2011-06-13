@@ -1,5 +1,5 @@
 $header
-	<form method="post" action="$filename">
+	<form method="post" action="{$linker->getLink(array('section' => 'domains'))}">
 		<input type="hidden" name="s" value="$s" />
 		<input type="hidden" name="page" value="$page" />
 		<input type="hidden" name="action" value="$action" />

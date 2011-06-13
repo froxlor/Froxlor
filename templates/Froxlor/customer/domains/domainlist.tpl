@@ -9,7 +9,7 @@
 
 		<section>
 
-			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{$linker->getLink(array('section' => 'domains'))}" method="post" enctype="application/x-www-form-urlencoded">
 
 			<div class="overviewsearch">
 				{$searchcode}
@@ -18,7 +18,7 @@
 			<if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && 15 < $domains_count && $parentdomains_count != 0 >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/domain_add.png" alt="" />&nbsp;
-					<a href="$filename?page=domains&amp;action=add&amp;s=$s">{$lng['domains']['subdomain_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'add'))}">{$lng['domains']['subdomain_add']}</a>
 				</div>
 			</if>
 
@@ -52,7 +52,7 @@
 			<if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && $parentdomains_count != 0 >
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/domain_add.png" alt="" />&nbsp;
-					<a href="$filename?page=domains&amp;action=add&amp;s=$s">{$lng['domains']['subdomain_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'add'))}">{$lng['domains']['subdomain_add']}</a>
 				</div>
 			</if>
 

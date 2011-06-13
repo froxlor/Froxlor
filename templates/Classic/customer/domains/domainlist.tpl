@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'domains'))}" method="post">
 		<input type="hidden" name="s" value="$s" />
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
@@ -9,7 +9,7 @@ $header
 			</tr>
 			<if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && 15 < $domains_count && $parentdomains_count != 0 >
 			<tr>
-				<td class="field_display_border_left" colspan="4"><a href="$filename?page=domains&amp;action=add&amp;s=$s">{$lng['domains']['subdomain_add']}</a></td>
+				<td class="field_display_border_left" colspan="4"><a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'add'))}">{$lng['domains']['subdomain_add']}</a></td>
 			</tr>
 			</if>
 			<tr>
@@ -25,7 +25,7 @@ $header
 			</if>
 			<if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && $parentdomains_count != 0 >
 			<tr>
-				<td class="field_display_border_left" colspan="4"><a href="$filename?page=domains&amp;action=add&amp;s=$s">{$lng['domains']['subdomain_add']}</a></td>
+				<td class="field_display_border_left" colspan="4"><a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'add'))}">{$lng['domains']['subdomain_add']}</a></td>
 			</tr>
 			</if>
 		</table>

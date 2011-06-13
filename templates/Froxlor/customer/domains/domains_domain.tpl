@@ -6,12 +6,12 @@
 	</td>
 	<td>
 		<if $row['caneditdomain'] == '1'>
-			<a href="$filename?page=domains&amp;action=edit&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
+			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $row['id']))}" style="text-decoration:none;">
 				<img src="images/Froxlor/icons/edit.png" alt="{$lng['panel']['edit']}" />
 			</a>&nbsp;
 		</if>
 		<if $row['parentdomainid'] != '0' && !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
-			<a href="$filename?page=domains&amp;action=delete&amp;id={$row['id']}&amp;s=$s" style="text-decoration:none;">
+			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'delete', 'id' => $row['id']))}" style="text-decoration:none;">
 				<img src="images/Froxlor/icons/delete.png" alt="{$lng['panel']['delete']}" />
 			</a>&nbsp;
 		</if>
@@ -19,7 +19,7 @@
 			({$lng['domains']['isassigneddomain']})&nbsp;
 		</if>
 		<if isset($row['domainaliasid']) && $row['domainaliasid'] != 0>
-			<a href="$filename?page=domains&amp;searchfield=d.aliasdomain&amp;searchtext={$row['id']}&amp;s=$s">{$lng['domains']['hasaliasdomains']}</a>
+			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'searchfield' => 'd.aliasdomain', 'searchtext' => $row['id']))}">{$lng['domains']['hasaliasdomains']}</a>
 		</if>
 	</td>
 </tr>
