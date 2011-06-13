@@ -3,7 +3,7 @@ $header
 		<h2>{$lng['update']['update']}</h2>
 	</header>
 	<article>
-		<form action="$filename" method="post">
+		<form action="{$linker->getLink(array('section' => 'updates'))}" method="post">
 			{$update_information}
 			<p class="submit">
 				<input type="hidden" name="s" value="$s"/>
