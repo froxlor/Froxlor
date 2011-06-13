@@ -29,7 +29,6 @@
  *
  * @author  Florian Lippert <flo@syscp.org>
  * @author  Martin Burchert <eremit@syscp.org>
- *
  * @changes martin@2005-01-29
  *          - added isRelative parameter
  *          - speed up the url generation
@@ -40,19 +39,20 @@ function redirectTo($destination, $get_variables = array(), $isRelative = false)
 {
 	$params = array();
 
+	$linker = new linker();
+	$linker->filename = $destination;
+
 	if(is_array($get_variables))
 	{
 		foreach($get_variables as $key => $value)
 		{
-			$params[] = urlencode($key) . '=' . urlencode($value);
+			$linker->add($key, $value);
 		}
-
-		$params = '?' . implode($params, '&');
 
 		if($isRelative)
 		{
-			$protocol = '';
-			$host = '';
+			$linker->protocol = '';
+			$linker->host = '';
 			$path = './';
 		}
 		else
@@ -60,15 +60,12 @@ function redirectTo($destination, $get_variables = array(), $isRelative = false)
 			if(isset($_SERVER['HTTPS'])
 			   && strtolower($_SERVER['HTTPS']) == 'on')
 			{
-				$protocol = 'https://';
+				$linker->protocol = 'https';
 			}
 			else
 			{
-				$protocol = 'http://';
+				$linker->protocol = 'http';
 			}
-
-			$host = $_SERVER['HTTP_HOST'];
-
 			if(dirname($_SERVER['PHP_SELF']) == '/')
 			{
 				$path = '/';
@@ -77,14 +74,15 @@ function redirectTo($destination, $get_variables = array(), $isRelative = false)
 			{
 				$path = dirname($_SERVER['PHP_SELF']) . '/';
 			}
+			$linker->host = $_SERVER['HTTP_HOST'];
 		}
-
-		header('Location: ' . $protocol . $host . $path . $destination . $params);
+		$linker->filename = $path . $destination;
+		header('Location: ' . $linker->getLink());
 		exit;
 	}
 	elseif($get_variables == null)
 	{
-		header('Location: ' . $destination);
+		header('Location: ' . $linker->getLink());
 		exit;
 	}
 
