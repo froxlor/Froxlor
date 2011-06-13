@@ -26,7 +26,7 @@ $header
 							</tr>
 							<tr>
 								<td><b>{$lng['admin']['configfiles']['daemon']}:</b></td>
-								<td><select name="daemon" onchange="javascript: window.location.href='{$linker->getLink(array('section' => 'configfiles', 'page' => $page, 'distribution' => $distribution, 'service' => $service))}&amp;service=$service&amp;daemon=' + this.options[ this.selectedIndex ].value;"><option value="choose">{$lng['admin']['configfiles']['choosedaemon']}</option>{$daemons_select}</select></td>
+								<td><select name="daemon" onchange="javascript: window.location.href='{$linker->getLink(array('section' => 'configfiles', 'page' => $page, 'distribution' => $distribution, 'service' => $service))}&amp;daemon=' + this.options[ this.selectedIndex ].value;"><option value="choose">{$lng['admin']['configfiles']['choosedaemon']}</option>{$daemons_select}</select></td>
 							</tr>
 							<tr>
 								<td><input class="bottom" type="submit" value="{$lng['panel']['next']}" /></td>
