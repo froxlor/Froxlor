@@ -306,6 +306,10 @@ if($language != 'English')
 	}
 }
 
+// Initialize our new link - class
+
+$linker = new linker('index.php', $s);
+
 /**
  * global Theme-variable
  */
@@ -320,7 +324,7 @@ if(isset($userinfo['theme']) && $userinfo['theme'] != $theme)
 }
 
 /*
- * check for custom header-graphic 
+ * check for custom header-graphic
  */
 $hl_path = 'images/'.$theme;
 $header_logo = $hl_path.'/logo.png';
@@ -371,7 +375,7 @@ if(AREA == 'admin' || AREA == 'customer')
 	if(hasUpdates($version))
 	{
 		/*
-		 * if froxlor-files have been updated 
+		 * if froxlor-files have been updated
 		 * but not yet configured by the admin
 		 * we only show logout and the update-page
 		 */
@@ -389,7 +393,7 @@ if(AREA == 'admin' || AREA == 'customer')
 							'label' => $lng['login']['logout'],
 						),
 					),
-				),		
+				),
 				'server' => array (
 					'label' => $lng['admin']['server'],
 					'required_resources' => 'change_serversettings',
@@ -429,7 +433,7 @@ elseif(isset($_GET['action']))
 else
 {
 	$action = '';
-	
+
 	// clear request data
 	if (isset($_SESSION)) {
 		unset($_SESSION['requestData']);
@@ -459,7 +463,7 @@ if($page == '')
  */
 $mail = new PHPMailer(true);
 if(PHPMailer::ValidateAddress($settings['panel']['adminmail']) !== false)
-{	
+{
 	// set return-to address and custom sender-name, see #76
 	$mail->SetFrom($settings['panel']['adminmail'], $settings['panel']['adminmail_defname']);
 	if ($settings['panel']['adminmail_return'] != '') {

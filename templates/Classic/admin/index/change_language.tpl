@@ -1,5 +1,5 @@
 $header
-	<form method="post" action="$filename">
+	<form method="post" action="{$linker->getLink(array('section' => 'index'))}">
 		<input type="hidden" name="s" value="$s" />
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">

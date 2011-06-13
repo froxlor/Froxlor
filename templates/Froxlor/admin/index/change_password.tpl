@@ -8,9 +8,9 @@ $header
 		</header>
 
 		<section class="tinyform bradiusodd">
-			<form method="post" action="$filename" enctype="application/x-www-form-urlencoded">
+			<form method="post" action="{$linker->getLink(array('section' => 'index'))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
-				<legend>Froxlor&nbsp;-&nbsp{$lng['menue']['main']['changepassword']}</legend>
+				<legend>Froxlor&nbsp;-&nbsp;{$lng['menue']['main']['changepassword']}</legend>
 				<p>
 					<label for="old_password">{$lng['changepassword']['old_password']}:</label>&nbsp;
 					<input type="password" id="old_password" name="old_password" />

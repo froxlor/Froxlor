@@ -107,7 +107,7 @@ if($page == 'overview')
 					$lookfornewversion_lable = $_version;
 					$lookfornewversion_link = $_link;
 					$lookfornewversion_addinfo = $_message;
-					
+
 					if (version_compare($version, $_version) == -1) {
 						$isnewerversion = 1;
 					} else {
@@ -283,7 +283,7 @@ elseif($page == 'change_language')
 		$language_options = '';
 
 		$default_lang = $settings['panel']['standardlanguage'];
-		if($userinfo['def_language'] != '') { 
+		if($userinfo['def_language'] != '') {
 			$default_lang = $userinfo['def_language'];
 		}
 

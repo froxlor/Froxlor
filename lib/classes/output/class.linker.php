@@ -114,12 +114,22 @@ class linker
 			$link .= '/';
 		}
 
-		$link .= $this->filename;
 
 		# Overwrite $this->args with parameters of this function (if necessary)
 		if(func_num_args() == 1 && is_array(func_get_arg(0)))
 		{
 			$this->args = array_merge($this->args, func_get_arg(0));
+		}
+
+		# temporary until frontcontroller exists
+		# We got a section in the URL -> add area and section as filename
+		if (isset($this->args['section']))
+		{
+			$link .= AREA . '_' . $this->args['section'] . '.php';
+		}
+		else
+		{
+			$link .= $this->filename;
 		}
 
 		# Let's see if we are done (no arguments in query)
