@@ -1,6 +1,6 @@
 		<tr>
 			<td class="main_field_name" style="width: 40%;">
-				<b><if $admin['adminid'] != $userinfo['userid']><a href="admin_admins.php?s=$s&amp;page=admins&amp;action=su&amp;id={$admin['adminid']}" target="_blank">{$admin['loginname']}</a></if><if $admin['adminid'] == $userinfo['userid']>{$admin['loginname']}</if>:</b>
+				<b><if $admin['adminid'] != $userinfo['userid']><a href="{$linker->getLink(array('section' => 'admins', 'page' => 'admins', 'action' => 'su', 'id' => $admin['adminid']))}" target="_blank">{$admin['loginname']}</a></if><if $admin['adminid'] == $userinfo['userid']>{$admin['loginname']}</if>:</b>
 			</td>
 			<td class="main_field_name">
 				<table border="0" style="text-align: left;">

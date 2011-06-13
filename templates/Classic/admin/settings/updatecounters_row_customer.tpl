@@ -1,6 +1,6 @@
 		<tr>
 			<td class="main_field_name" style="width: 40%;">
-				<b><if $customer['name'] != '' && $customer['firstname'] != ''>{$customer['name']}, {$customer['firstname']}</if><if $customer['name'] != '' && $customer['firstname'] != '' && $customer['company'] != ''> | </if><if $customer['company'] != ''>{$customer['company']}</if> (<a href="admin_customers.php?s=$s&amp;page=customers&amp;action=su&amp;id={$customer['customerid']}" target="_blank">{$customer['loginname']}</a>):</b>
+				<b><if $customer['name'] != '' && $customer['firstname'] != ''>{$customer['name']}, {$customer['firstname']}</if><if $customer['name'] != '' && $customer['firstname'] != '' && $customer['company'] != ''> | </if><if $customer['company'] != ''>{$customer['company']}</if> (<a href="{$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $customer['customerid']))}" target="_blank">{$customer['loginname']}</a>):</b>
 			</td>
 			<td class="main_field_name">
 				<table border="0" style="text-align: left;">
