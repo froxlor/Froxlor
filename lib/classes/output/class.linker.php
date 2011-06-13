@@ -41,7 +41,7 @@ class linker
 
 	public function __set($key, $value)
 	{
-		switch($key)
+		switch(strtolower($key))
 		{
 			case 'protocol': $this->protocol = $value; break;
 			case 'username': $this->username = $value; break;
@@ -82,7 +82,7 @@ class linker
 		$link = '';
 
 		# Build the basic URL
-		if (strlen($this->protocol) > 0)
+		if (strlen($this->protocol) > 0 && strlen($this->hostname) > 0)
 		{
 			$link = $this->protocol . '://';
 		}
@@ -116,7 +116,6 @@ class linker
 			$link .= '/';
 		}
 
-
 		# Overwrite $this->args with parameters of this function (if necessary)
 		if(func_num_args() == 1 && is_array(func_get_arg(0)))
 		{
@@ -126,7 +125,7 @@ class linker
 		# temporary until frontcontroller exists
 		# We got a section in the URL -> morph AREA and section into filename
 		# @TODO: Remove this
-		if (isset($this->args['section']))
+		if (isset($this->args['section']) && strlen($this->args['section']) > 0)
 		{
 			$link .= AREA . '_' . $this->args['section'] . '.php';
 			unset($this->args['section']);
