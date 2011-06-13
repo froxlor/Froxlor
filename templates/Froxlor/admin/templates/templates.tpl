@@ -24,7 +24,7 @@ $header
 			<if $add>
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/templates_add.png" alt="" />&nbsp;
-					<a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['templates']['template_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['templates']['template_add']}</a>
 				</div>
 			</if>
 
@@ -56,7 +56,7 @@ $header
 			<if $filetemplateadd>
 				<div class="overviewadd">
 					<img src="images/Froxlor/icons/templates_add.png" alt="" />&nbsp;
-					<a href="$filename?page=$page&amp;action=add&amp;s=$s&amp;files=files">{$lng['admin']['templates']['template_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add', 'files' => 'files'))}">{$lng['admin']['templates']['template_add']}</a>
 				</div>
 			</if>
 		</section>

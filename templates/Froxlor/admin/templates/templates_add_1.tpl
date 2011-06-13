@@ -8,7 +8,7 @@ $header
 		</header>
 
 		<section class="tinyform bradiusodd">
-			<form method="post" action="$filename" enctype="application/x-www-form-urlencoded">
+			<form method="post" action="{$linker->getLink(array('section' => 'templates'))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 				<legend>Froxlor&nbsp;-&nbsp;{$lng['menue']['main']['changelanguage']}</legend>
 				<p>

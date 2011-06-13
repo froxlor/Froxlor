@@ -11,7 +11,7 @@ $header
 		$templates
 		<if $add>
 		<tr>
-			<td colspan="4" class="field_display_border_left"><a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['templates']['template_add']}</a></td>
+			<td colspan="4" class="field_display_border_left"><a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['templates']['template_add']}</a></td>
 		</tr>
 		</if>
 	</table>
@@ -28,7 +28,7 @@ $header
 		$filetemplates
 		<if $filetemplateadd>
 		<tr>
-			<td colspan="4" class="field_display_border_left"><a href="$filename?page=$page&amp;action=add&amp;s=$s&amp;files=files">{$lng['admin']['templates']['template_add']}</a></td>
+			<td colspan="4" class="field_display_border_left"><a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add', 'files' => 'files'))}">{$lng['admin']['templates']['template_add']}</a></td>
 		</tr>
 		</if>
 	</table>
