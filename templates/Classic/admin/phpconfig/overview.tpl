@@ -13,7 +13,7 @@ $header
 		</tr>
 		$tablecontent
 		<tr>
-			<td class="field_display_border_left" colspan="5"><a href="$filename?s=$s&amp;page=$page&amp;action=add">{$lng['admin']['phpsettings']['addnew']}</a></td>
+			<td class="field_display_border_left" colspan="5"><a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a></td>
 		</tr>
 	</table>
 	<br />

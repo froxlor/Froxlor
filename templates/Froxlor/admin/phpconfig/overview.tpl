@@ -12,7 +12,7 @@ $header
 			<if 15 < $count>
 			<div class="overviewadd">
 				<img src="images/Froxlor/icons/phpsettings_add.png" alt="" />&nbsp;
-				<a href="$filename?s=$s&amp;page=$page&amp;action=add">{$lng['admin']['phpsettings']['addnew']}</a>
+				<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>
 			</div>
 			</if>
 
@@ -32,7 +32,7 @@ $header
 
 			<div class="overviewadd">
 				<img src="images/Froxlor/icons/phpsettings_add.png" alt="" />&nbsp;
-				<a href="$filename?s=$s&amp;page=$page&amp;action=add">{$lng['admin']['phpsettings']['addnew']}</a>
+				<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>
 			</div>
 
 		</section>

@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'phpsettings'))}" method="post">
 		<input type="hidden" name="s" value="$s"/>
 		<input type="hidden" name="page" value="$page"/>
 		<input type="hidden" name="action" value="edit"/>
