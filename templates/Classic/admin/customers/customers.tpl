@@ -1,5 +1,5 @@
 $header
-	<form action="$filename" method="post">
+	<form action="{$linker->getLink(array('section' => 'customers'))}" method="post">
                 <input type="hidden" name="s" value="$s"/>
                 <input type="hidden" name="page" value="$page"/>
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
@@ -9,7 +9,7 @@ $header
 			</tr>
 			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $userinfo['customers_used']>
 			<tr>
-				<td colspan="11" class="field_display_border_left"><a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['customer_add']}</a></td>
+				<td colspan="11" class="field_display_border_left"><a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a></td>
 			</tr>
 			</if>
 			<tr>
@@ -43,7 +43,7 @@ $header
 			</if>
 			<if $userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1'>
 			<tr>
-				<td colspan="<if ($settings['ticket']['enabled'] == 1 || $settings['autoresponder']['autoresponder_active'] == 1) >11<else>10</if>" class="field_display_border_left"><a href="$filename?page=$page&amp;action=add&amp;s=$s">{$lng['admin']['customer_add']}</a></td>
+				<td colspan="<if ($settings['ticket']['enabled'] == 1 || $settings['autoresponder']['autoresponder_active'] == 1) >11<else>10</if>" class="field_display_border_left"><a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a></td>
 			</tr>
 			</if>
 		</table>

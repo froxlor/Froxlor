@@ -1,5 +1,5 @@
 <tr>
-	<td class="field_name_border_left"{$column_style}><a href="$filename?s=$s&amp;page=$page&amp;action=su&amp;id={$row['customerid']}" target="_blank">{$row['loginname']}</a></td>
+	<td class="field_name_border_left"{$column_style}><a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'su', 'id' => $row['customerid']))}" target="_blank">{$row['loginname']}</a></td>
 	<td class="field_name">{$row['adminname']}</td>
 	<td class="field_name"><if $row['name'] != '' && $row['firstname'] != ''>{$row['name']}<br />{$row['firstname']}</if><if ($row['name'] == '' || $row['firstname'] == '') && $row['company'] != ''>{$row['company']}</if></td>
 	<td class="field_name"><if $row['domains'] != 0><a href="admin_domains.php?s=$s&amp;page=domains&amp;searchfield=c.loginname&amp;searchtext={$row['loginname']}">{$row['domains']}</a><else>{$row['domains']}</if></td>
@@ -27,5 +27,5 @@
 	<td class="field_name"><b><font color="green">{$row['emails_used']}</font></b>/<b><font color="#FD6204">{$row['emails']}</font></b><br /><b><font color="green">{$row['subdomains_used']}</font></b>/<b><font color="#FD6204">{$row['subdomains']}</font></b></td>
 	<td class="field_name"><b><font color="green">{$row['email_accounts_used']}</font></b>/<b><font color="#FD6204">{$row['email_accounts']}</font></b><br /><b><font color="green">{$row['email_forwarders_used']}</font></b>/<b><font color="#FD6204">{$row['email_forwarders']}</font></b></td>
 	<td class="field_name" style=" text-align: center; "><if $row['deactivated'] == '1'>{$lng['panel']['yes']}<else>{$lng['panel']['no']}</if><br />{$last_login}</td>
-	<td class="field_name"><a href="$filename?s=$s&amp;page=$page&amp;action=edit&amp;id={$row['customerid']}">{$lng['panel']['edit']}</a><br /><a href="$filename?s=$s&amp;page=$page&amp;action=delete&amp;id={$row['customerid']}">{$lng['panel']['delete']}</a></td>
+	<td class="field_name"><a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'edit', 'id' => $row['customerid']))}">{$lng['panel']['edit']}</a><br /><a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'delete', 'id' => $row['customerid']))}">{$lng['panel']['delete']}</a></td>
 </tr>

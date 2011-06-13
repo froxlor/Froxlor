@@ -7,7 +7,7 @@
 		<if ($row['name'] == '' || $row['firstname'] == '') && $row['company'] != ''>
 			{$row['company']}
 		</if>
-		&nbsp;(<a href="$filename?s=$s&amp;page=$page&amp;action=su&amp;id={$row['customerid']}" rel="external">{$row['loginname']}</a> | {$row['adminname']})
+		&nbsp;(<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'su', 'id' => $row['customerid']))}" rel="external">{$row['loginname']}</a> | {$row['adminname']})
 		</strong>
 		<div>
 			<span class="overviewcustomerextras">
@@ -50,10 +50,10 @@
 		</div>
 	</td>
 	<td>
-		<a href="$filename?s=$s&amp;page=$page&amp;action=edit&amp;id={$row['customerid']}" style="text-decoration:none;">
+		<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'edit', 'id' => $row['customerid']))}" style="text-decoration:none;">
 			<img src="images/Froxlor/icons/edit.png" alt="{$lng['panel']['edit']}" />
 		</a>&nbsp;
-		<a href="$filename?s=$s&amp;page=$page&amp;action=delete&amp;id={$row['customerid']}" style="text-decoration:none;">
+		<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'delete', 'id' => $row['customerid']))}" style="text-decoration:none;">
 			<img src="images/Froxlor/icons/delete.png" alt="{$lng['panel']['delete']}" />
 		</a>
 	</td>
