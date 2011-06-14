@@ -41,7 +41,7 @@ if($page == 'tickets'
 
 	$countcustomers = $db->query_first("SELECT COUNT(`customerid`) as `countcustomers` FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int)$userinfo['adminid'] . "' ") . "");
 	$countcustomers = (int)$countcustomers['countcustomers'];
-	
+
 	if($action == '')
 	{
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_tickets");
@@ -104,14 +104,14 @@ if($page == 'tickets'
 						$cid = $row['customerid'];
 						$usr = $db->query_first('SELECT `firstname`, `name`, `company`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
                                      WHERE `customerid` = "' . (int)$cid . '"');
-						
+
 						if(isset($usr['loginname'])) {
 							$customer = getCorrectFullUserDetails($usr) . ' (' . $usr['loginname'] . ')';
 							//$customer = $usr['firstname'] . " " . $usr['name'] . " (" . $usr['loginname'] . ")";
 						} else {
 							$customer = $lng['ticket']['nonexistingcustomer'];
 						}
-						eval("\$tickets.=\"" . getTemplate("ticket/tickets_customer") . "\";");
+						eval("\$tickets.=\"" . getTemplate("tickets/tickets_customer") . "\";");
 					}
 
 					$tickets_count++;
@@ -146,7 +146,7 @@ if($page == 'tickets'
 						$row['subject'] = substr($row['subject'], 0, 17) . '...';
 					}
 
-					eval("\$tickets.=\"" . getTemplate("ticket/tickets_tickets") . "\";");
+					eval("\$tickets.=\"" . getTemplate("tickets/tickets_tickets") . "\";");
 					$count++;
 					$_cid = $row['customerid'];
 				}
@@ -155,7 +155,7 @@ if($page == 'tickets'
 			$i++;
 		}
 
-		eval("echo \"" . getTemplate("ticket/tickets") . "\";");
+		eval("echo \"" . getTemplate("tickets/tickets") . "\";");
 	}
 	elseif($action == 'new')
 	{
@@ -234,7 +234,7 @@ if($page == 'tickets'
 				$title = $ticket_new_data['ticket_new']['title'];
 				$image = $ticket_new_data['ticket_new']['image'];
 
-				eval("echo \"" . getTemplate("ticket/tickets_new") . "\";");
+				eval("echo \"" . getTemplate("tickets/tickets_new") . "\";");
 			}
 		}
 		else
@@ -313,7 +313,7 @@ if($page == 'tickets'
 
 			$subject = $mainticket->Get('subject');
 			$message = $mainticket->Get('message');
-			eval("\$ticket_replies.=\"" . getTemplate("ticket/tickets_tickets_main") . "\";");
+			eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_main") . "\";");
 			$result = $db->query('SELECT `name` FROM `' . TABLE_PANEL_TICKET_CATS . '`
                                 WHERE `id`="' . (int)$mainticket->Get('category') . '"');
 			$row = $db->fetch_array($result);
@@ -335,7 +335,7 @@ if($page == 'tickets'
 
 				$subject = $subticket->Get('subject');
 				$message = $subticket->Get('message');
-				eval("\$ticket_replies.=\"" . getTemplate("ticket/tickets_tickets_list") . "\";");
+				eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_list") . "\";");
 			}
 
 			$priorities = makeoption($lng['ticket']['high'], '1', $mainticket->Get('priority'), true, true);
@@ -347,11 +347,11 @@ if($page == 'tickets'
 			// don't forget the main-ticket!
 			$ticket_reply_data = include_once dirname(__FILE__).'/lib/formfields/admin/ticket/formfield.ticket_reply.php';
 			$ticket_reply_form = htmlform::genHTMLForm($ticket_reply_data);
- 
+
 			$title = $ticket_reply_data['ticket_reply']['title'];
 			$image = $ticket_reply_data['ticket_reply']['image'];
 
-			eval("echo \"" . getTemplate("ticket/tickets_reply") . "\";");
+			eval("echo \"" . getTemplate("tickets/tickets_reply") . "\";");
 		}
 	}
 	elseif($action == 'close'
@@ -466,14 +466,14 @@ elseif($page == 'categories'
 			{
 				$row = htmlentities_array($row);
 				$closedtickets_count = ($row['ticketcount'] - $row['ticketcountnotclosed']);
-				eval("\$ticketcategories.=\"" . getTemplate("ticket/tickets_categories") . "\";");
+				eval("\$ticketcategories.=\"" . getTemplate("tickets/tickets_categories") . "\";");
 				$count++;
 			}
 
 			$i++;
 		}
 
-		eval("echo \"" . getTemplate("ticket/categories") . "\";");
+		eval("echo \"" . getTemplate("tickets/categories") . "\";");
 	}
 	elseif($action == 'addcategory')
 	{
@@ -482,7 +482,7 @@ elseif($page == 'categories'
 		{
 			$category = validate($_POST['category'], 'category');
 			$order = validate($_POST['logicalorder'], 'logicalorder');
-			
+
 			if($order < 1 || $order >= 1000)
 			{
 				// use the latest available
@@ -510,7 +510,7 @@ elseif($page == 'categories'
 			$title = $category_new_data['category_new']['title'];
 			$image = $category_new_data['category_new']['image'];
 
-			eval("echo \"" . getTemplate("ticket/tickets_newcategory") . "\";");
+			eval("echo \"" . getTemplate("tickets/tickets_newcategory") . "\";");
 		}
 	}
 	elseif($action == 'editcategory'
@@ -548,7 +548,7 @@ elseif($page == 'categories'
 			$title = $category_edit_data['category_edit']['title'];
 			$image = $category_edit_data['category_edit']['image'];
 
-			eval("echo \"" . getTemplate("ticket/tickets_editcategory") . "\";");
+			eval("echo \"" . getTemplate("tickets/tickets_editcategory") . "\";");
 		}
 	}
 	elseif($action == 'deletecategory'
@@ -662,14 +662,14 @@ elseif($page == 'archive'
 							$cid = $ticket['customerid'];
 							$usr = $db->query_first('SELECT `firstname`, `name`, `company`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
                                        WHERE `customerid` = "' . (int)$cid . '"');
-							
+
 							if(isset($usr['loginname'])) {
 								$customer = getCorrectFullUserDetails($usr) . ' (' . $usr['loginname'] . ')';
 							} else {
 								$customer = $lng['ticket']['nonexistingcustomer'];
 							}
-							
-							eval("\$tickets.=\"" . getTemplate("ticket/tickets_customer") . "\";");
+
+							eval("\$tickets.=\"" . getTemplate("tickets/tickets_customer") . "\";");
 						}
 
 						$tickets_count++;
@@ -691,7 +691,7 @@ elseif($page == 'archive'
 
 						$ticket = htmlentities_array($ticket);
 
-						eval("\$tickets.=\"" . getTemplate("ticket/archived_tickets") . "\";");
+						eval("\$tickets.=\"" . getTemplate("tickets/archived_tickets") . "\";");
 						$count++;
 						$_cid = $ticket['customerid'];
 					}
@@ -700,7 +700,7 @@ elseif($page == 'archive'
 				$i++;
 			}
 
-			eval("echo \"" . getTemplate("ticket/archivesearch") . "\";");
+			eval("echo \"" . getTemplate("tickets/archivesearch") . "\";");
 		}
 		else
 		{
@@ -729,7 +729,7 @@ elseif($page == 'archive'
 						$ticket['subject'] = substr($ticket['subject'], 0, 17) . '...';
 					}
 
-					eval("\$tickets.=\"" . getTemplate("ticket/archived_tickets") . "\";");
+					eval("\$tickets.=\"" . getTemplate("tickets/archived_tickets") . "\";");
 				}
 			}
 
@@ -754,7 +754,7 @@ elseif($page == 'archive'
 				$customers.= makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
 			}
 
-			eval("echo \"" . getTemplate("ticket/archive") . "\";");
+			eval("echo \"" . getTemplate("tickets/archive") . "\";");
 		}
 	}
 	elseif($action == 'view'
@@ -779,7 +779,7 @@ elseif($page == 'archive'
 
 		$subject = htmlentities($mainticket->Get('subject'));
 		$message = htmlentities($mainticket->Get('message'));
-		eval("\$ticket_replies.=\"" . getTemplate("ticket/tickets_tickets_main") . "\";");
+		eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_main") . "\";");
 		$result = $db->query('SELECT `name` FROM `' . TABLE_PANEL_TICKET_CATS . '`
                               WHERE `id`="' . (int)$mainticket->Get('category') . '"');
 		$row = $db->fetch_array($result);
@@ -801,7 +801,7 @@ elseif($page == 'archive'
 
 			$subject = htmlentities($subticket->Get('subject'));
 			$message = htmlentities($subticket->Get('message'));
-			eval("\$ticket_replies.=\"" . getTemplate("ticket/tickets_tickets_list") . "\";");
+			eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_list") . "\";");
 		}
 
 		$priorities = makeoption($lng['ticket']['high'], '1', htmlentities($mainticket->Get('priority')), true, true);
@@ -812,7 +812,7 @@ elseif($page == 'archive'
 
 		// don't forget the main-ticket!
 
-		eval("echo \"" . getTemplate("ticket/tickets_view") . "\";");
+		eval("echo \"" . getTemplate("tickets/tickets_view") . "\";");
 	}
 	elseif($action == 'delete'
 	       && $id != 0)

@@ -37,7 +37,7 @@ elseif(isset($_GET['id']))
 if($page == 'overview')
 {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_tickets");
-	eval("echo \"" . getTemplate("ticket/ticket") . "\";");
+	eval("echo \"" . getTemplate("tickets/ticket") . "\";");
 }
 elseif($page == 'tickets')
 {
@@ -104,7 +104,7 @@ elseif($page == 'tickets')
 					$row['subject'] = substr($row['subject'], 0, 17) . '...';
 				}
 
-				eval("\$tickets.=\"" . getTemplate("ticket/tickets_tickets") . "\";");
+				eval("\$tickets.=\"" . getTemplate("tickets/tickets_tickets") . "\";");
 				$count++;
 			}
 
@@ -157,7 +157,7 @@ elseif($page == 'tickets')
 		}
 
 		$ticketsopen = (int)$opentickets['count'];
-		eval("echo \"" . getTemplate("ticket/tickets") . "\";");
+		eval("echo \"" . getTemplate("tickets/tickets") . "\";");
 	}
 	elseif($action == 'new')
 	{
@@ -254,7 +254,7 @@ elseif($page == 'tickets')
 				$title = $ticket_add_data['ticket_add']['title'];
 				$image = $ticket_add_data['ticket_add']['image'];
 
-				eval("echo \"" . getTemplate("ticket/tickets_new") . "\";");
+				eval("echo \"" . getTemplate("tickets/tickets_new") . "\";");
 			}
 		}
 		else
@@ -334,7 +334,7 @@ elseif($page == 'tickets')
 
 			$subject = $mainticket->Get('subject');
 			$message = $mainticket->Get('message');
-			eval("\$ticket_replies.=\"" . getTemplate("ticket/tickets_tickets_main") . "\";");
+			eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_main") . "\";");
 			$result = $db->query('SELECT `name` FROM `' . TABLE_PANEL_TICKET_CATS . '`
                                 WHERE `id`="' . (int)$mainticket->Get('category') . '"');
 			$row = $db->fetch_array($result);
@@ -356,7 +356,7 @@ elseif($page == 'tickets')
 
 				$subject = $subticket->Get('subject');
 				$message = $subticket->Get('message');
-				eval("\$ticket_replies.=\"" . getTemplate("ticket/tickets_tickets_list") . "\";");
+				eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_list") . "\";");
 			}
 
 			$priorities = makeoption($lng['ticket']['high'], '1', $mainticket->Get('priority'), true, true);
@@ -373,7 +373,7 @@ elseif($page == 'tickets')
 			$title = $ticket_reply_data['ticket_reply']['title'];
 			$image = $ticket_reply_data['ticket_reply']['image'];
 
-			eval("echo \"" . getTemplate("ticket/tickets_reply") . "\";");
+			eval("echo \"" . getTemplate("tickets/tickets_reply") . "\";");
 		}
 	}
 	elseif($action == 'close'
