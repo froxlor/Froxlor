@@ -32,13 +32,13 @@ if($action == "add")
 		$account = trim($_POST['account']);
 		$subject = trim($_POST['subject']);
 		$message = trim($_POST['message']);
-		
+
 		$date_from_off = isset($_POST['date_from_off']) ? -1 : 0;
 		$date_until_off = isset($_POST['date_until_off']) ? -1 : 0;
-		
+
 		/*
-		 * @TODO validate date (DD-MM-YYYY) 
-		 */	
+		 * @TODO validate date (DD-MM-YYYY)
+		 */
 		$ts_from = -1;
 		$ts_until = -1;
 
@@ -106,10 +106,10 @@ if($action == "add")
 	{
 		$accounts.= "<option value=\"" . $row['email'] . "\">" . $row['email'] . "</option>";
 	}
-	
+
 	$date_from_off = makecheckbox('date_from_off', $lng['panel']['not_activated'], '-1', false, '-1', true, true);
 	$date_until_off = makecheckbox('date_until_off', $lng['panel']['not_activated'], '-1', false, '-1', true, true);
-	
+
 	#$isactive = makeyesno('active', '1', '0', '1');
 
 	$autoresponder_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_addautoresponder.php';
@@ -117,8 +117,8 @@ if($action == "add")
 
 	$title = $autoresponder_add_data['autoresponder_add']['title'];
 	$image = $autoresponder_add_data['autoresponder_add']['image'];
-	
-	eval("echo \"" . getTemplate("email/autoresponder_add") . "\";");
+
+	eval("echo \"" . getTemplate("autoresponder/autoresponder_add") . "\";");
 }
 
 // Edit autoresponder
@@ -136,10 +136,10 @@ if($action == "edit")
 
 		$date_from_off = isset($_POST['date_from_off']) ? -1 : 0;
 		$date_until_off = isset($_POST['date_until_off']) ? -1 : 0;
-				
+
 		/*
-		 * @TODO validate date (DD-MM-YYYY) 
-		 */	
+		 * @TODO validate date (DD-MM-YYYY)
+		 */
 		$ts_from = -1;
 		$ts_until = -1;
 
@@ -152,7 +152,7 @@ if($action == "edit")
 		{
 			$date_until = $_POST['date_until'];
 			$ts_until = mktime(0, 0, 0, substr($date_until, 3, 2), substr($date_until, 0, 2), substr($date_until, 6, 4));
-		}	
+		}
 
 		if(empty($account)
 		   || empty($subject)
@@ -191,7 +191,7 @@ if($action == "edit")
 			SET `message` = '" . $db->escape($message) . "',
 			`enabled` = '" . (int)$ResponderActive . "',
 			`date_from` = '" . (int)$ts_from . "',
-			`date_until` = '" . (int)$ts_until . "',			
+			`date_until` = '" . (int)$ts_until . "',
 			`subject` = '" . $db->escape($subject) . "'
 			WHERE `email` = '" . $db->escape($account) . "'
 			AND `customerid` = '" . $db->escape((int)$userinfo['customerid']) . "'
@@ -213,10 +213,10 @@ if($action == "edit")
 	$row = $db->fetch_array($result);
 	$subject = htmlspecialchars($row['subject']);
 	$message = htmlspecialchars($row['message']);
-	
+
 	$date_from = (int)$row['date_from'];
 	$date_until = (int)$row['date_until'];
-	
+
 	if($date_from == -1)
 	{
 		$deactivated = '-1';
@@ -228,7 +228,7 @@ if($action == "edit")
 		$date_from = date('d-m-Y', $date_from);
 	}
 	$date_from_off = makecheckbox('date_from_off', $lng['panel']['not_activated'], '-1', false, $deactivated, true, true);
-	
+
 	if($date_until == -1)
 	{
 		$deactivated = '-1';
@@ -240,7 +240,7 @@ if($action == "edit")
 		$date_until = date('d-m-Y', $date_until);
 	}
 	$date_until_off = makecheckbox('date_until_off', $lng['panel']['not_activated'], '-1', false, $deactivated, true, true);
-	
+
 	#$isactive = makeyesno('active', '1', '0', $row['enabled']);
 
 	$autoresponder_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_editautoresponder.php';
@@ -249,7 +249,7 @@ if($action == "edit")
 	$title = $autoresponder_edit_data['autoresponder_edit']['title'];
 	$image = $autoresponder_edit_data['autoresponder_edit']['image'];
 
-	eval("echo \"" . getTemplate("email/autoresponder_edit") . "\";");
+	eval("echo \"" . getTemplate("autoresponder/autoresponder_edit") . "\";");
 }
 
 // Delete autoresponder
@@ -286,7 +286,7 @@ if($action == "delete")
 
 // List existing autoresponders
 
-else 
+else
 {
 	$autoresponder = '';
 	$count = 0;
@@ -305,14 +305,14 @@ else
 		elseif($row['date_from'] != -1 && $row['date_until'] == -1)
 		{
 			$activated_date = $lng['autoresponder']['date_from'].': '.date('d-m-Y', $row['date_from']);
-		}	
+		}
 		else
 		{
 			$activated_date = date('d-m-Y', $row['date_from']) . ' - ' . date('d-m-Y', $row['date_until']);
 		}
-		eval("\$autoresponder.=\"" . getTemplate("email/autoresponder_autoresponder") . "\";");
+		eval("\$autoresponder.=\"" . getTemplate("autoresponder/autoresponder_autoresponder") . "\";");
 		$count++;
-	}	
+	}
 
-	eval("echo \"" . getTemplate("email/autoresponder") . "\";");
+	eval("echo \"" . getTemplate("autoresponder/autoresponder") . "\";");
 }
