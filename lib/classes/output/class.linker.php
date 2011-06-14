@@ -150,7 +150,7 @@ class linker
 			# For all but the first argument, prepend "&amp;"
 			if (substr($link, -1) != "?")
 			{
-				$link .= "&amp;";
+				$link .= "&";
 			}
 
 			# Encode parameters and add them to the link

@@ -38,21 +38,28 @@
 
 function redirectTo($destination, $get_variables = array(), $isRelative = false)
 {
-	$params = array();
+	global $s;
 
 	if(is_array($get_variables))
 	{
-		foreach($get_variables as $key => $value)
+		if (isset($get_variables['s']))
 		{
-			$params[] = urlencode($key) . '=' . urlencode($value);
+			$linker = new linker($destination, $get_variables['s']);
+		}
+		else
+		{
+			$linker = new linker($destination, $s);
 		}
 
-		$params = '?' . implode($params, '&');
+		foreach($get_variables as $key => $value)
+		{
+			$linker->add($key, $value);
+		}
 
 		if($isRelative)
 		{
-			$protocol = '';
-			$host = '';
+			$linker->protocol = '';
+			$linker->host = '';
 			$path = './';
 		}
 		else
@@ -60,14 +67,14 @@ function redirectTo($destination, $get_variables = array(), $isRelative = false)
 			if(isset($_SERVER['HTTPS'])
 			   && strtolower($_SERVER['HTTPS']) == 'on')
 			{
-				$protocol = 'https://';
+				$linker->protocol = 'https';
 			}
 			else
 			{
-				$protocol = 'http://';
+				$linker->protocol = 'http';
 			}
 
-			$host = $_SERVER['HTTP_HOST'];
+			$linker->host = $_SERVER['HTTP_HOST'];
 
 			if(dirname($_SERVER['PHP_SELF']) == '/')
 			{
@@ -77,14 +84,15 @@ function redirectTo($destination, $get_variables = array(), $isRelative = false)
 			{
 				$path = dirname($_SERVER['PHP_SELF']) . '/';
 			}
+			$linker->filename = $path . $destination;
 		}
-
-		header('Location: ' . $protocol . $host . $path . $destination . $params);
+		header('Location: ' . $linker->getLink());
 		exit;
 	}
 	elseif($get_variables == null)
 	{
-		header('Location: ' . $destination);
+		$linker = new linker($destination, $s);
+		header('Location: ' . $linker->getLink());
 		exit;
 	}
 
