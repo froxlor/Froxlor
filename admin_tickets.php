@@ -228,7 +228,7 @@ if($page == 'tickets'
 				$priorities.= makeoption($lng['ticket']['unf_normal'], '2', $settings['ticket']['default_priority']);
 				$priorities.= makeoption($lng['ticket']['unf_low'], '3', $settings['ticket']['default_priority']);
 
-				$ticket_new_data = include_once dirname(__FILE__).'/lib/formfields/admin/ticket/formfield.ticket_new.php';
+				$ticket_new_data = include_once dirname(__FILE__).'/lib/formfields/admin/tickets/formfield.ticket_new.php';
 				$ticket_new_form = htmlform::genHTMLForm($ticket_new_data);
 
 				$title = $ticket_new_data['ticket_new']['title'];
@@ -345,7 +345,7 @@ if($page == 'tickets'
 			$ticket_replies_count = $db->num_rows($andere) + 1;
 
 			// don't forget the main-ticket!
-			$ticket_reply_data = include_once dirname(__FILE__).'/lib/formfields/admin/ticket/formfield.ticket_reply.php';
+			$ticket_reply_data = include_once dirname(__FILE__).'/lib/formfields/admin/tickets/formfield.ticket_reply.php';
 			$ticket_reply_form = htmlform::genHTMLForm($ticket_reply_data);
 
 			$title = $ticket_reply_data['ticket_reply']['title'];
@@ -504,7 +504,7 @@ elseif($page == 'categories'
 		{
 			$order = ticket::getHighestOrderNumber($db) + 1;
 
-			$category_new_data = include_once dirname(__FILE__).'/lib/formfields/admin/ticket/formfield.category_new.php';
+			$category_new_data = include_once dirname(__FILE__).'/lib/formfields/admin/tickets/formfield.category_new.php';
 			$category_new_form = htmlform::genHTMLForm($category_new_data);
 
 			$title = $category_new_data['category_new']['title'];
@@ -542,7 +542,7 @@ elseif($page == 'categories'
 		{
 			$row = $db->query_first('SELECT * FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `id` = "' . (int)$id . '"');
 
-			$category_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/ticket/formfield.category_edit.php';
+			$category_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/tickets/formfield.category_edit.php';
 			$category_edit_form = htmlform::genHTMLForm($category_edit_data);
 
 			$title = $category_edit_data['category_edit']['title'];
