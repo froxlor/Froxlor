@@ -112,7 +112,7 @@ if($action == "add")
 
 	#$isactive = makeyesno('active', '1', '0', '1');
 
-	$autoresponder_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_addautoresponder.php';
+	$autoresponder_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/autoresponder/formfield.autoresponder_add.php';
 	$autoresponder_add_form = htmlform::genHTMLForm($autoresponder_add_data);
 
 	$title = $autoresponder_add_data['autoresponder_add']['title'];
@@ -243,7 +243,7 @@ if($action == "edit")
 
 	#$isactive = makeyesno('active', '1', '0', $row['enabled']);
 
-	$autoresponder_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_editautoresponder.php';
+	$autoresponder_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/autoresponder/formfield.autoresponder_edit.php';
 	$autoresponder_edit_form = htmlform::genHTMLForm($autoresponder_edit_data);
 
 	$title = $autoresponder_edit_data['autoresponder_edit']['title'];
