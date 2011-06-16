@@ -227,23 +227,23 @@ if($page == 'domains'
 
 				$domain = $idna_convert->encode(preg_replace(Array('/\:(\d)+$/', '/^https?\:\/\//'), '', validate($_POST['domain'], 'domain')));
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
-				
+
 				$isemaildomain = 0;
 				if(isset($_POST['isemaildomain']))
 				$isemaildomain = intval($_POST['isemaildomain']);
-				
+
 				$email_only = 0;
 				if(isset($_POST['email_only']))
 					$email_only = intval($_POST['email_only']);
-					
+
 				$wwwserveralias = 0;
 				if(isset($_POST['wwwserveralias']))
 					$wwwserveralias = intval($_POST['wwwserveralias']);
-				
+
 				$speciallogfile = 0;
 				if(isset($_POST['speciallogfile']))
 					$speciallogfile = intval($_POST['speciallogfile']);
-					
+
 				$aliasdomain = intval($_POST['alias']);
 				$issubof = intval($_POST['issubof']);
 				$customerid = intval($_POST['customerid']);
@@ -480,7 +480,7 @@ if($page == 'domains'
 				{
 					$caneditdomain = '0';
 				}
-				
+
 				if($issubof <= '0')
 				{
 					$issubof = '0';
@@ -545,7 +545,7 @@ if($page == 'domains'
 					);
 
 					$security_questions = array(
-						'reallydisablesecuritysetting' => (($openbasedir == '0' || $safemode == '0') && $userinfo['change_serversettings'] == '1'),
+						'reallydisablesecuritysetting' => ($openbasedir == '0' && $userinfo['change_serversettings'] == '1'),
 						'reallydocrootoutofcustomerroot' => (substr($documentroot, 0, strlen($customer['documentroot'])) != $customer['documentroot'] && !preg_match('/^https?\:\/\//', $documentroot))
 					);
 					$question_nr = 1;
@@ -656,7 +656,7 @@ if($page == 'domains'
 				{
 					$domains.= makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
 				}
-				
+
 				$subtodomains = makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
 				$result_domains = $db->query("SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid`=0 AND `d`.`ismainbutsubto`=0 " . $standardsubdomains . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = '" . (int)$userinfo['adminid'] . "'") . " AND `d`.`customerid`=`c`.`customerid` ORDER BY `loginname`, `domain` ASC");
 
@@ -684,7 +684,7 @@ if($page == 'domains'
 				#$safemode = makeyesno('safemode', '1', '0', '1');
 				#$speciallogfile = makeyesno('speciallogfile', '1', '0', '0');
 				#$ssl = makeyesno('ssl', '1', '0', '0');
-				#$ssl_redirect = makeyesno('ssl_redirect', '1', '0', '0');				
+				#$ssl_redirect = makeyesno('ssl_redirect', '1', '0', '0');
 				$add_date = date('Y-m-d');
 
 				$domain_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/domains/formfield.domains_add.php';
@@ -700,10 +700,10 @@ if($page == 'domains'
 	elseif($action == 'edit'
 	       && $id != 0)
 	{
-		$result = $db->query_first("SELECT `d`.*, `c`.`customerid` FROM `" . TABLE_PANEL_DOMAINS . "` `d` 
-									LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) 
-									WHERE `d`.`parentdomainid`='0' 
-									AND `d`.`id`='" . (int)$id . "'" 
+		$result = $db->query_first("SELECT `d`.*, `c`.`customerid` FROM `" . TABLE_PANEL_DOMAINS . "` `d`
+									LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
+									WHERE `d`.`parentdomainid`='0'
+									AND `d`.`id`='" . (int)$id . "'"
 									. ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = '" . (int)$userinfo['adminid'] . "' "));
 
 		if($result['domain'] != '')
@@ -790,15 +790,15 @@ if($page == 'domains'
 				$isemaildomain = 0;
 				if(isset($_POST['isemaildomain']))
 				$isemaildomain = intval($_POST['isemaildomain']);
-				
+
 				$email_only = 0;
 				if(isset($_POST['email_only']))
 					$email_only = intval($_POST['email_only']);
-					
+
 				$wwwserveralias = 0;
 				if(isset($_POST['wwwserveralias']))
 					$wwwserveralias = intval($_POST['wwwserveralias']);
-				
+
 				if($userinfo['change_serversettings'] == '1')
 				{
 					$isbinddomain = intval($_POST['isbinddomain']);
@@ -986,7 +986,7 @@ if($page == 'domains'
 				{
 					standard_error('domainisaliasorothercustomer');
 				}
-				
+
 				if($issubof <= '0')
 				{
 					$issubof = '0';
@@ -1023,7 +1023,7 @@ if($page == 'domains'
 				);
 
 				$security_questions = array(
-					'reallydisablesecuritysetting' => (($openbasedir == '0' || $safemode == '0') && $userinfo['change_serversettings'] == '1'),
+					'reallydisablesecuritysetting' => ($openbasedir == '0' && $userinfo['change_serversettings'] == '1'),
 					'reallydocrootoutofcustomerroot' => (substr($documentroot, 0, strlen($customer['documentroot'])) != $customer['documentroot'] && !preg_match('/^https?\:\/\//', $documentroot))
 				);
 				foreach($security_questions as $question_name => $question_launch)
@@ -1108,14 +1108,14 @@ if($page == 'domains'
 				if($ssfs == 1)
 				{
 					$upd_specialsettings = ", `specialsettings`='" . $db->escape($specialsettings) . "' ";
-				} 
-				else 
+				}
+				else
 				{
 					$upd_specialsettings = '';
 					$db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `specialsettings`='' WHERE `parentdomainid`='" . (int)$id . "'");
 					$log->logAction(ADM_ACTION, LOG_INFO, "removed specialsettings on all subdomains of domain #" . $id);
 				}
-				
+
 				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `documentroot`='" . $db->escape($documentroot) . "', `ipandport`='" . $db->escape($ipandport) . "', `ssl`='" . (int)$ssl . "', `ssl_redirect`='" . (int)$ssl_redirect . "', `ssl_ipandport`='" . (int)$ssl_ipandport . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", `isbinddomain`='" . $db->escape($isbinddomain) . "', `isemaildomain`='" . $db->escape($isemaildomain) . "', `email_only`='" . $db->escape($email_only) . "', `subcanemaildomain`='" . $db->escape($subcanemaildomain) . "', `dkim`='" . $db->escape($dkim) . "', `caneditdomain`='" . $db->escape($caneditdomain) . "', `zonefile`='" . $db->escape($zonefile) . "', `wwwserveralias`='" . $db->escape($wwwserveralias) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "', `specialsettings`='" . $db->escape($specialsettings) . "', `registration_date`='" . $db->escape($registration_date) . "', `ismainbutsubto`='" . (int)$issubof . "' WHERE `id`='" . (int)$id . "'");
 				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `ipandport`='" . $db->escape($ipandport) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "'" . $upd_specialsettings . $updatechildren . " WHERE `parentdomainid`='" . (int)$id . "'");
 				$log->logAction(ADM_ACTION, LOG_INFO, "edited domain #" . $id);
@@ -1243,7 +1243,7 @@ if($page == 'domains'
 				}
 
 				#$specialsettingsforsubdomains = makeyesno('specialsettingsforsubdomains', '1', '0', '1');
-				
+
 				$result = htmlentities_array($result);
 
 				$domain_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/domains/formfield.domains_edit.php';

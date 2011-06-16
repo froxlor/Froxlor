@@ -1,6 +1,6 @@
 <?php
 
-/** 
+/**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -243,7 +243,7 @@ $lng['error']['domainname'] = $lng['domains']['domainname'];
 $lng['question']['question'] = 'S�kerhetsfr�ga';
 $lng['question']['admin_customer_reallydelete'] = '�r du s�ker p� att du vill radera kunden %s? Om du v�ljer att radera g�r det inte att �ngra sig efter�t!';
 $lng['question']['admin_domain_reallydelete'] = '�r du riktigt s�ker p� att du vill radera dom�nen %s?';
-$lng['question']['admin_domain_reallydisablesecuritysetting'] = '�r du riktigt s�ker p� att du vill avaktivera s�kerhetsinst�llningarna (OpenBasedir and/or SafeMode)?';
+$lng['question']['admin_domain_reallydisablesecuritysetting'] = '�r du riktigt s�ker p� att du vill avaktivera s�kerhetsinst�llningarna (OpenBasedir)?';
 $lng['question']['admin_admin_reallydelete'] = '�r du riktigt s�ker p� att du vill radera adminkontot %s? Alla kunder och dom�ner kommer att flyttas till ditt konto ist�llet.';
 $lng['question']['admin_template_reallydelete'] = '�r du riktigt s�ker p� att du vill radera mallen \'%s\'?';
 $lng['question']['domains_reallydelete'] = '�r du riktigt s�ker p� att du vill radera dom�nen %s?';

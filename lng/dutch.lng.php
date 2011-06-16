@@ -243,7 +243,7 @@ $lng['error']['domainname'] = $lng['domains']['domainname'];
 $lng['question']['question'] = 'Beveiligings vraag';
 $lng['question']['admin_customer_reallydelete'] = 'Weet u zeker dat u de klant %s wilt verwijderen? Dit kan niet ongedaan worden gemaakt!';
 $lng['question']['admin_domain_reallydelete'] = 'Weet u zeker dat u het domein %s wilt verwijderen?';
-$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Weet u echt heel zeker dat deze beveiligings instellingen wilt deactiveren (OpenBasedir en/of SafeMode)?';
+$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Weet u echt heel zeker dat deze beveiligings instellingen wilt deactiveren (OpenBasedir)?';
 $lng['question']['admin_admin_reallydelete'] = 'Weet u zeker dat u de admin %s verwijderen wilt? Iedere klant en domein zal worden toegewezen aan de hoofd administrator.';
 $lng['question']['admin_template_reallydelete'] = 'Weet u zeker dat u het sjabloon \'%s\' verwijderen wilt?';
 $lng['question']['domains_reallydelete'] = 'Weet u zeker dat u het domein %s verwijderen wilt?';
@@ -1286,7 +1286,7 @@ $lng['serversettings']['panel_password_min_length']['title'] = 'Minimumlengte wa
 $lng['serversettings']['panel_password_min_length']['description'] = 'Hier kunt u een minimumlengte voor wachtwoorden opgeven. \'0\' betekent geen minimumlengte.';
 $lng['error']['notrequiredpasswordlength'] = 'Het opgegeven wachtwoord is te kort. Geef tenminste %s tekens op.';
 $lng['serversettings']['system_store_index_file_subs']['title'] = 'Standaard indexbestand ook plaatsen in nieuwe submappen';
-$lng['serversettings']['system_store_index_file_subs']['description'] = 'Indiend actief wordt dit bestand automatisch geplaatst in nieuw aangemaakte submappen (indien deze nog niet bestaat).'; 
+$lng['serversettings']['system_store_index_file_subs']['description'] = 'Indiend actief wordt dit bestand automatisch geplaatst in nieuw aangemaakte submappen (indien deze nog niet bestaat).';
 
 // ADDED IN FROXLOR 0.9.3-svn2
 
@@ -1498,7 +1498,7 @@ $lng['serversettings']['login_domain_login'] = 'Login met domeinen toestaan';
 
 // ADDED IN FROXLOR 0.9.14
 $lng['panel']['unlock'] = 'ontgrendelen';
-$lng['question']['customer_reallyunlock'] = 'Weet u zeker dat u klant %s? wilt ontgrendelen'; 
+$lng['question']['customer_reallyunlock'] = 'Weet u zeker dat u klant %s? wilt ontgrendelen';
 
 // ADDED IN FROXLOR 0.9.15-svn1
 $lng['serversettings']['perl_server']['title'] = 'Server locatie Perl';
