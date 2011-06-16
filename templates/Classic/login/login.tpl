@@ -21,7 +21,7 @@ $header
 			<tr>
 				<td rowspan="3" class="field_name_center"><img src="images/Classic/login.gif" alt="" /></td>
 				<td class="field_name"><font size="-1">{$lng['login']['username']}:</font></td>
-				<td class="field_display"><input type="text" class="text" name="loginname" value="" maxlength="50" /></td>
+				<td class="field_display"><input type="text" class="text" name="loginname" id="loginname" value="" maxlength="50" /></td>
 			</tr>
 			<tr>
 				<td class="field_name"><font size="-1">{$lng['login']['password']}:</font></td>
@@ -43,7 +43,7 @@ $header
 			<tr>
 				<td class="field_name_center" colspan="3">{$update_in_progress}</td>
 			</tr>
-			</if>			
+			</if>
 		</table>
 	</form>
 	<br />

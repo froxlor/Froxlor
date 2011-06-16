@@ -8,9 +8,10 @@
 	</if>
 	<link rel="stylesheet" href="templates/Classic/main.css" type="text/css" />
 	<script type="text/javascript" src="templates/Classic/js/jquery.min.js"></script>
+	<script type="text/javascript" src="templates/Froxlor/js/froxlor.js"></script>
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor</title>
 </head>
-<body style="margin: 0; padding: 0;"<if !isset($userinfo['loginname']) && !(isset($userinfo['loginname']) && $userinfo['loginname'] == '')> onload="document.loginform.loginname.focus()"</if>>
+<body style="margin: 0; padding: 0;">
 <!--
     We request you retain the full copyright notice below including the link to www.froxlor.org.
     This not only gives respect to the large amount of time given freely by the developers

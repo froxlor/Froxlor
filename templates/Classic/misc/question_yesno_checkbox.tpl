@@ -12,7 +12,7 @@ $header
 				<td class="field_name">$checkbox</td>
 			</tr>
 			<tr>
-				<td class="field_name_border_left" nowrap="nowrap" style="text-align: center;" colspan="2"><input type="submit" class="bottom" name="submitbutton" value="{$lng['panel']['yes']}" />&nbsp;<input type="button" class="bottom" value="{$lng['panel']['no']}" onclick="history.back();" /></td>
+				<td class="field_name_border_left" nowrap="nowrap" style="text-align: center;" colspan="2"><input type="submit" class="bottom" name="submitbutton" value="{$lng['panel']['yes']}" />&nbsp;<input type="button" class="bottom" value="{$lng['panel']['no']}" id="yesnobutton" /></td>
 			</tr>
 		</table>
 	</form>
