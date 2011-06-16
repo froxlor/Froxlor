@@ -119,7 +119,8 @@ class linker
 		# Overwrite $this->args with parameters of this function (if necessary)
 		if(func_num_args() == 1 && is_array(func_get_arg(0)))
 		{
-			$this->args = array_merge($this->args, func_get_arg(0));
+			$arguments = func_get_arg(0);
+			$this->args = array_merge($this->args, $arguments);
 		}
 
 		# temporary until frontcontroller exists
