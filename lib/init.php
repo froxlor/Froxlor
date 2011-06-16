@@ -17,11 +17,31 @@
  *
  */
 
-// prevent Froxlor pages from being cached
+header("Content-Type: text/html; charset=iso-8859-1");
 
-header("Cache-Control: no-cache, must-revalidate");
+// prevent Froxlor pages from being cached
+header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
-header("Content-type: text/html; charset=iso-8859-1");
+header('Last-Modified: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
+header('Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
+
+// Prevent inline - JS to be executed (i.e. XSS) in browsers which support this,
+// Inline-JS is no longer allowed and used
+// See: http://people.mozilla.org/~bsterne/content-security-policy/index.html
+header("X-Content-Security-Policy: allow 'self'; frame-ancestors 'none'");
+
+// Don't allow to load Froxlor in an iframe to prevent i.e. clickjacking
+header('X-Frame-Options: DENY');
+
+// If Froxlor was called via HTTPS -> enforce it for the next time
+if(isset( $_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off' ))
+{
+	header('Strict-Transport-Security: max-age=500');
+}
+
+// Internet Explorer shall not guess the Content-Type, see:
+// http://blogs.msdn.com/ie/archive/2008/07/02/ie8-security-part-v-comprehensive-protection.aspx
+header('X-Content-Type-Options: nosniff' );
 
 // ensure that default timezone is set
 if(function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get"))
