@@ -8,7 +8,7 @@
 	</if>
 	<link rel="stylesheet" href="templates/Classic/main.css" type="text/css" />
 	<script type="text/javascript" src="templates/Classic/js/jquery.min.js"></script>
-	<script type="text/javascript" src="templates/Froxlor/js/froxlor.js"></script>
+	<script type="text/javascript" src="templates/Classic/js/froxlor.js"></script>
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor</title>
 </head>
 <body style="margin: 0; padding: 0;">
