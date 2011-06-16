@@ -29,11 +29,9 @@ $(document).ready(function() {
 			 $(this).children(':first-child').css("-webkit-border-bottom-left-radius", "20px");
 			 $(this).children(':first-child').css("-moz-border-radius-bottomleft", "20px");
 			 $(this).children(':first-child').css("border-bottom-left-radius", "20px");
-		},
-		function() {
+		}, function() {
 			$(this).children().css("background-color", "#f5f5f5");
-		}
-		);
+		});
 	}
 
 	// Auto-select next field in configfile - wizard
