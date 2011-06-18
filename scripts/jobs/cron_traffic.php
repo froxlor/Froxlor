@@ -80,7 +80,7 @@ while($row_database = $db->fetch_array($databases))
 			$databases_list[] = strtolower($databases_list_row['Database']);
 		}
 	}
-	
+
 	if(in_array(strtolower($row_database['databasename']), $databases_list))
 	{
 		$mysql_usage_result = $db_root->query("SHOW TABLE STATUS FROM `" . $db_root->escape($row_database['databasename']) . "`");
@@ -102,7 +102,36 @@ while($row_database = $db->fetch_array($databases))
 
 $db_root->close();
 
+# We are using the file-system quota, this will speed up the diskusage - collection
+if ($settings['system']['diskquota_enabled'])
+{
+	# Fetch all quota in the desired partition
+	exec("repquota -n " . $settings['system']['diskquota_customer_partition'], $repquota);
 
+	$usedquota = array();
+	foreach ($repquota as $tmpquota)
+	{
+		# Let's see if the line matches a quota - line
+		if (preg_match('/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\ddays)?\s*(\d+)\s*(\d+)\s*(\d+)/i', $tmpquota, $matches))
+		{
+			# It matches - put it into an array with userid as key (for easy lookup later)
+			$usedquota[$matches[1]] = array(
+					'block' => array(
+					'used' => $matches[2],
+					'soft' => $matches[3],
+					'hard' => $matches[4],
+					'grace' => $matches[5]
+				),
+					'file' => array(
+					'used' => $matches[6],
+					'soft' => $matches[7],
+					'hard' => $matches[8],
+					'grace' => $matches[9]
+				),
+			);
+		}
+	}
+}
 $result = $db->query("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` ORDER BY `customerid` ASC");
 
 while($row = $db->fetch_array($result))
@@ -179,7 +208,7 @@ while($row = $db->fetch_array($result))
 			safeSQLLogfile($domainlist[$row['customerid']], $row['loginname']);
 		}
 
-		// callAwstatsGetTraffic is called ONLY HERE and 
+		// callAwstatsGetTraffic is called ONLY HERE and
 		// *not* also in the special-logfiles-loop, because the function
 		// will iterate through all customer-domains and the awstats-configs
 		// know the logfile-name, #246
@@ -191,7 +220,7 @@ while($row = $db->fetch_array($result))
 		{
 			$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
 		}
-		
+
 		// make the stuff readable for the customer, #258
 		makeChownWithNewStats($row);
 
@@ -207,7 +236,7 @@ while($row = $db->fetch_array($result))
 			$db->close();
 			require_once ($pathtophpfiles . '/lib/userdata.inc.php');
 			$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
-	
+
 			if ($db->link_id == 0) {
 				fclose($debugHandler);
 				unlink($lockfile);
@@ -285,23 +314,33 @@ while($row = $db->fetch_array($result))
 
 	fwrite($debugHandler, 'calculating webspace usage for ' . $row['loginname'] . "\n");
 	$webspaceusage = 0;
-	
-	if(file_exists($row['documentroot']) && is_dir($row['documentroot']))
+
+	# Using repquota, it's faster using this tool than using du traversing the complete directory
+	if ($settings['system']['diskquota_enabled'])
 	{
-		$back = safe_exec('du -sk ' . escapeshellarg($row['documentroot']) . '');
-		foreach($back as $backrow)
-		{
-			$webspaceusage = explode(' ', $backrow);
-		}
-	
-		$webspaceusage = floatval($webspaceusage['0']);
-		unset($back);
+		# We may use the array we created earlier, the used diskspace is stored in [<guid>][block][used]
+		$webspaceusage = floatval($usedquota[$row['guid']]['block']['used']);
 	}
 	else
 	{
-		fwrite($debugHandler, 'documentroot ' . $row['documentroot'] . ' does not exist' . "\n");
+		# Use the old fashioned way with "du"
+		if(file_exists($row['documentroot']) && is_dir($row['documentroot']))
+		{
+			$back = safe_exec('du -sk ' . escapeshellarg($row['documentroot']) . '');
+			foreach($back as $backrow)
+			{
+				$webspaceusage = explode(' ', $backrow);
+			}
+
+			$webspaceusage = floatval($webspaceusage['0']);
+			unset($back);
+		}
+		else
+		{
+			fwrite($debugHandler, 'documentroot ' . $row['documentroot'] . ' does not exist' . "\n");
+		}
 	}
-	
+
 	/**
 	 * MailSpace-Usage
 	 */
@@ -317,7 +356,7 @@ while($row = $db->fetch_array($result))
 		{
 			$emailusage = explode(' ', $backrow);
 		}
-	
+
 		$emailusage = floatval($emailusage['0']);
 		unset($back);
 	}
@@ -380,11 +419,11 @@ while($row = $db->fetch_array($result))
 	 */
 
 	$db->query("UPDATE `" . TABLE_FTP_QUOTATALLIES . "` SET `bytes_in_used`='" . (float)$current_diskspace['all'] . "'*1024 WHERE `name` = '" . $row['loginname'] . "' OR `name` LIKE '" . $row['loginname'] . $settings['customer']['ftpprefix'] . "%'");
-	
+
 	/**
 	 * Pureftpd Quota
 	 */
-	
+
 	if($settings['system']['ftpserver'] == "pureftpd")
 	{
 		$result_quota = $db->query("SELECT homedir FROM `" . TABLE_FTP_USERS . "` WHERE customerid = '" . $row['customerid'] . "'");
@@ -400,7 +439,7 @@ while($row = $db->fetch_array($result))
 	                $user = $row['guid'];
 	                $group = $row['guid'];
 	        }
-		
+
 		while($row_quota = $db->fetch_array($result_quota))
 		{
 			$quotafile = "" . $row_quota['homedir'] . ".ftpquota";

@@ -1877,3 +1877,10 @@ $lng['country']['EH'] = "Western Sahara";
 $lng['country']['YE'] = "Yemen";
 $lng['country']['ZM'] = "Zambia";
 $lng['country']['ZW'] = "Zimbabwe";
+
+// ADDED IN FROXLOR 0.9.22-svn1
+$lng['diskquota'] = 'Quota';
+$lng['serversettings']['diskquota_enabled'] = 'Quota activated?';
+$lng['serversettings']['diskquota_repquota_path']['description'] = 'Path to the repquota - tool';
+$lng['serversettings']['diskquota_quotatool_path']['description'] = 'Path to quotatool';
+$lng['serversettings']['diskquota_customer_partition']['description'] = 'Partition, on which the customer files are stored';
