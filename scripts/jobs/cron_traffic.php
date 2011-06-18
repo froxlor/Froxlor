@@ -106,7 +106,7 @@ $db_root->close();
 if ($settings['system']['diskquota_enabled'])
 {
 	# Fetch all quota in the desired partition
-	exec("repquota -np " . $settings['system']['diskquota_customer_partition'], $repquota);
+	exec($settings['system']['diskquota_repquota_path'] . " -np " . $settings['system']['diskquota_customer_partition'], $repquota);
 
 	$usedquota = array();
 	foreach ($repquota as $tmpquota)
