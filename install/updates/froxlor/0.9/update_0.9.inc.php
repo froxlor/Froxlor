@@ -1382,7 +1382,7 @@ if(isFroxlorVersion('0.9.16'))
 	}
 	$check = $db->query_first("SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "` WHERE `varname`='trafficninetypercent_mailbody';");
 	if(isset($check['varname']) && $check['varname'] == 'trafficninetypercent_mailbody')
-	{	
+	{
 		$db->query("UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET `varname` = 'trafficmaxpercent_mailbody' WHERE `varname`='trafficninetypercent_mailbody';");
 	}
 	lastStepStatus(0);
@@ -1400,7 +1400,7 @@ if(isFroxlorVersion('0.9.17-svn1'))
   `fid` int(11) NOT NULL,
   `docrootsettings` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;");	
+) ENGINE=MyISAM;");
 	$db->query("CREATE TABLE IF NOT EXISTS `domain_docrootsettings` (
   `id` int(5) NOT NULL auto_increment,
   `fid` int(11) NOT NULL,
@@ -1495,11 +1495,11 @@ if(isFroxlorVersion('0.9.19'))
 {
 	showUpdateStep("Updating from 0.9.19 to 0.9.20-svn1");
 	lastStepStatus(0);
-	
+
 	showUpdateStep("Adding new setting for domain validation");
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'validate_domain', '1')");
 	lastStepStatus(0);
-	
+
 	updateToVersion('0.9.20-svn1');
 }
 
@@ -1549,7 +1549,7 @@ if(isFroxlorVersion('0.9.20.1'))
 	lastStepStatus(0);
 
 	showUpdateStep("Fixing possible broken tables");
-	
+
 	// The customer-table may miss the columns, if installed a fresh 0.9.20 or 0.9.20.1 - add them
 	$result = $db->query("DESCRIBE `" . TABLE_PANEL_CUSTOMERS . "`");
 	$columnfound = 0;
@@ -1593,7 +1593,7 @@ if(isFroxlorVersion('0.9.20.1-svn1') || isFroxlorVersion('0.9.20.2-svn1'))
 
 	// add table column for gender
 	$db->query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `gender` INT( 1 ) NOT NULL DEFAULT '0' AFTER `firstname`");
-	
+
 
 	lastStepStatus(0);
 
@@ -1604,10 +1604,10 @@ if(isFroxlorVersion('0.9.21-svn1'))
 {
 	showUpdateStep("Updating from 0.9.21-svn1 to 0.9.21-svn2");
 	lastStepStatus(0);
-	
+
 	/* add new setting: backup FTP mode */
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_passive', '1')");
-	
+
 	lastStepStatus(0);
 
 	updateToVersion('0.9.21-svn2');
@@ -1617,6 +1617,20 @@ if(isFroxlorVersion('0.9.21-svn2'))
 {
 	showUpdateStep("Updating from 0.9.21-svn2 to 0.9.21");
 	lastStepStatus(0);
-	
+
 	updateToVersion('0.9.21');
+}
+
+if(isFroxlorVersion('0.9.21'))
+{
+	showUpdateStep("Updating from 0.9.21 to 0.9.22-svn1");
+	lastStepStatus(0);
+
+	/* add new settings for diskspacequota - support */
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_enabled', '0');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_repquota_path', '/usr/sbin/repquota');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_quotatool_path', '/usr/bin/quotatool');");
+	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_customer_partition', '/dev/root');");
+
+	updateToVersion('0.9.22-svn1');
 }
