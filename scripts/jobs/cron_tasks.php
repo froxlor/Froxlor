@@ -472,13 +472,13 @@ while($row = $db->fetch_array($result_tasks))
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task10 started - setting filesystem quota');
 
 			# Fetch all quota in the desired partition
-			exec($settings['system']['diskquota_repquota_path'] . " -n " . escapeshellarg($settings['system']['diskquota_customer_partition']), $repquota);
+			exec($settings['system']['diskquota_repquota_path'] . " -np " . escapeshellarg($settings['system']['diskquota_customer_partition']), $repquota);
 
 			$usedquota = array();
 			foreach ($repquota as $tmpquota)
 			{
 				# Let's see if the line matches a quota - line
-				if (preg_match('/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\ddays)?\s*(\d+)\s*(\d+)\s*(\d+)/i', $tmpquota, $matches))
+				if (preg_match('/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/i', $tmpquota, $matches))
 				{
 					# It matches - put it into an array with userid as key (for easy lookup later)
 					$usedquota[$matches[1]] = array(

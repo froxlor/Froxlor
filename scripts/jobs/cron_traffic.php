@@ -106,13 +106,13 @@ $db_root->close();
 if ($settings['system']['diskquota_enabled'])
 {
 	# Fetch all quota in the desired partition
-	exec("repquota -n " . $settings['system']['diskquota_customer_partition'], $repquota);
+	exec("repquota -np " . $settings['system']['diskquota_customer_partition'], $repquota);
 
 	$usedquota = array();
 	foreach ($repquota as $tmpquota)
 	{
 		# Let's see if the line matches a quota - line
-		if (preg_match('/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\ddays)?\s*(\d+)\s*(\d+)\s*(\d+)/i', $tmpquota, $matches))
+		if (preg_match('/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/i', $tmpquota, $matches))
 		{
 			# It matches - put it into an array with userid as key (for easy lookup later)
 			$usedquota[$matches[1]] = array(
