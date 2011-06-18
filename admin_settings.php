@@ -32,7 +32,7 @@ if(($page == 'settings' || $page == 'overview')
 {
 	$settings_data = loadConfigArrayDir('./actions/admin/settings/');
 	$settings = loadSettings($settings_data, $db);
-	
+
 	if(isset($_POST['send'])
 	   && $_POST['send'] == 'send')
 	{
@@ -64,10 +64,10 @@ if(($page == 'settings' || $page == 'overview')
 			$settings_part = false;
 			$only_enabledisable = true;
 		}
-		
+
 		if(processFormEx(
-			$settings_data, 
-			$_POST, 
+			$settings_data,
+			$_POST,
 			array('filename' => $filename, 'action' => $action, 'page' => $page),
 			$_part,
 			$settings_all,
@@ -86,24 +86,24 @@ if(($page == 'settings' || $page == 'overview')
 	else
 	{
 		$_part = isset($_GET['part']) ? $_GET['part'] : '';
-		
+
 		if($_part == '')
 		{
 			$_part = isset($_POST['part']) ? $_POST['part'] : '';
 		}
 
 		$fields = buildFormEx($settings_data, $_part);
-		
+
 		$settings_page = '';
 		if($_part == '')
 		{
 			eval("\$settings_page .= \"" . getTemplate("settings/settings_overview") . "\";");
-		} 
+		}
 		else
 		{
 			eval("\$settings_page .= \"" . getTemplate("settings/settings") . "\";");
 		}
-		
+
 		eval("echo \"" . getTemplate("settings/settings_form_begin") . "\";");
 		eval("echo \$settings_page;");
 		eval("echo \"" . getTemplate("settings/settings_form_end") . "\";");
@@ -121,6 +121,7 @@ elseif($page == 'rebuildconfigs'
 		inserttask('4');
 		inserttask('5');
 		inserttask('9');
+		inserttask('10');
 		standard_success('rebuildingconfigs', '', array('filename' => 'admin_index.php'));
 	}
 	else
