@@ -471,32 +471,7 @@ while($row = $db->fetch_array($result_tasks))
 			fwrite($debugHandler, '  cron_tasks: Task10 started - setting filesystem quota' . "\n");
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task10 started - setting filesystem quota');
 
-			# Fetch all quota in the desired partition
-			exec($settings['system']['diskquota_repquota_path'] . " -np " . escapeshellarg($settings['system']['diskquota_customer_partition']), $repquota);
-
-			$usedquota = array();
-			foreach ($repquota as $tmpquota)
-			{
-				# Let's see if the line matches a quota - line
-				if (preg_match('/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/i', $tmpquota, $matches))
-				{
-					# It matches - put it into an array with userid as key (for easy lookup later)
-					$usedquota[$matches[1]] = array(
-							'block' => array(
-							'used' => $matches[2],
-							'soft' => $matches[3],
-							'hard' => $matches[4],
-							'grace' => $matches[5]
-						),
-							'file' => array(
-							'used' => $matches[6],
-							'soft' => $matches[7],
-							'hard' => $matches[8],
-							'grace' => $matches[9]
-						),
-					);
-				}
-			}
+			$usedquota = getFilesystemQuota();
 
 			# Select all customers Froxlor knows about
 			$result = $db->query("SELECT `guid`, `loginname`, `diskspace` FROM `" . TABLE_PANEL_CUSTOMERS . "`;");

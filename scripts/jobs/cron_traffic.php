@@ -105,33 +105,9 @@ $db_root->close();
 # We are using the file-system quota, this will speed up the diskusage - collection
 if ($settings['system']['diskquota_enabled'])
 {
-	# Fetch all quota in the desired partition
-	exec($settings['system']['diskquota_repquota_path'] . " -np " . $settings['system']['diskquota_customer_partition'], $repquota);
-
-	$usedquota = array();
-	foreach ($repquota as $tmpquota)
-	{
-		# Let's see if the line matches a quota - line
-		if (preg_match('/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/i', $tmpquota, $matches))
-		{
-			# It matches - put it into an array with userid as key (for easy lookup later)
-			$usedquota[$matches[1]] = array(
-					'block' => array(
-					'used' => $matches[2],
-					'soft' => $matches[3],
-					'hard' => $matches[4],
-					'grace' => $matches[5]
-				),
-					'file' => array(
-					'used' => $matches[6],
-					'soft' => $matches[7],
-					'hard' => $matches[8],
-					'grace' => $matches[9]
-				),
-			);
-		}
-	}
+	$usedquota = getFilesystemQuota();
 }
+
 $result = $db->query("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` ORDER BY `customerid` ASC");
 
 while($row = $db->fetch_array($result))
