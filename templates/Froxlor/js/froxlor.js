@@ -3,6 +3,7 @@ $(document).ready(function() {
 	$("a[rel='external']").attr('target', '_blank');
 	$(".main").css('min-height', $("nav").height() - 34);
 	$(".dboarditem:last").css('min-height', $(".dboarditem:first").height());
+	$(".dboarditem:first").css('min-height', $(".dboarditem:last").height());
 
 	// set focus on username-field if on loginpage
 	if ($(".loginpage").length != 0) {

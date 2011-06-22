@@ -1,6 +1,6 @@
 <div class="menuelement bradiusodd">
-	<h4>$completeLink</h4>
+	<h4>{$completeLink}</h4>
 	<ul>
-		$navigation_links
+		{$navigation_links}
 	</ul>
 </div>
