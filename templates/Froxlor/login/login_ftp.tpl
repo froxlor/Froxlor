@@ -10,10 +10,10 @@
 			</div>
 		{/if}
 
-		{if isset($message)}
+		{if isset($errormessage)}
 			<div class="errorcontainer bradius">
 				<div class="errortitle">{t}Error{/t}</div>
-				<div class="error">{$message}</div>
+				<div class="error">{$errormessage}</div>
 			</div>
 		{/if}
 

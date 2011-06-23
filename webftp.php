@@ -13,7 +13,8 @@
  * @package    WebFTP
  *
  */
-// Konfiguration
+
+// Configuration
 // Server to connect to:
 $server = 'localhost';
 
@@ -227,27 +228,29 @@ if (isset($_GET['logoff']) || isset($_POST['logoff']))
 {
 	unset($_SESSION['server'],$_SESSION['user'],$_SESSION['password']);
 	session_destroy();
+	$smarty->assign('successmessage', _('Successfully logged out'));
 	$body = $smarty->fetch('login/login_ftp.tpl');
 }
+
 elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($_SESSION['user']) && !empty($_SESSION['password']) && !empty($_SESSION['server'])))
 {
 	if(empty($_SESSION['server']))
 	{
 		$_SESSION['server'] = $server;
 	}
-	if(empty($_SESSION['user']))
+	if(isset($_POST['loginname']))
 	{
 		$_SESSION['user'] = $_POST['loginname'];
 	}
-	if(empty($_SESSION['password']))
+	if(isset($_POST['password']))
 	{
 		 $_SESSION['password'] = $_POST['password'];
 	}
 
-	$connection = ftp_connect($_SESSION['server']);
-	$loggedOn = ftp_login($connection, $_SESSION['user'], $_SESSION['password']);
-	$systype = ftp_systype($connection);
-	$pasv = ftp_pasv($connection, false);
+	$connection = @ftp_connect($_SESSION['server']);
+	$loggedOn = @ftp_login($connection, $_SESSION['user'], $_SESSION['password']);
+	$systype = @ftp_systype($connection);
+	$pasv = @ftp_pasv($connection, false);
 
 	// Mode setzen
 	if(isset($_POST['mode']))
@@ -957,6 +960,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 	}
 	else
 	{
+		$smarty->assign('errormessage', _('Login failed, please try again'));
 		$body = $smarty->fetch('login/login_ftp.tpl');
 	}
 }

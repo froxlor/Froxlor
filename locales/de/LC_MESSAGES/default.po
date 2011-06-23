@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Froxlor\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-23 10:05+0100\n"
-"PO-Revision-Date: 2011-06-23 10:11+0100\n"
+"POT-Creation-Date: 2011-06-23 10:46+0100\n"
+"PO-Revision-Date: 2011-06-23 10:46+0100\n"
 "Last-Translator: Florian Aders <eleras@froxlor.org>\n"
 "Language-Team: The Froxlor team <team@froxlor.org>\n"
 "Language: \n"
@@ -186,172 +186,180 @@ msgstr "Tu es"
 msgid "the Froxlor Team"
 msgstr "das Froxlor Team"
 
-#: webftp.php:333
-#: webftp.php:340
-#: webftp.php:420
+#: webftp.php:231
+msgid "Successfully logged out"
+msgstr "Erfolgreich ausgeloggt"
+
+#: webftp.php:343
+#: webftp.php:350
+#: webftp.php:430
 #, php-format
 msgid "Directory change to '%1$s' failed!"
 msgstr "Verzeichniswechsel nach '%1$s' fehlgeschlagen!"
 
-#: webftp.php:347
-#: webftp.php:359
-#: webftp.php:365
-#: webftp.php:416
+#: webftp.php:357
+#: webftp.php:369
+#: webftp.php:375
+#: webftp.php:426
 #, php-format
 msgid "current folder = [%1$s]"
 msgstr "aktuelles Verzeichnis = [%1$s]"
 
-#: webftp.php:461
+#: webftp.php:471
 #, php-format
 msgid "<strong>File '%1$s' is to big!</strong> (max. %2$u bytes)<br />"
 msgstr "<strong>Datei '%1$s' ist zu groß!</strong> (max. %2$u Bytes)<br />"
 
-#: webftp.php:476
+#: webftp.php:486
 #, php-format
 msgid "<br />File '%1$s' couldn't be uploaded!"
 msgstr "<br />Datei '%1$s' konnte nicht hochgeladen werden!"
 
-#: webftp.php:480
+#: webftp.php:490
 #, php-format
 msgid "<br />File '%1$s' was successfully uploaded!"
 msgstr "<br />Datei '%1$s' wurde erfolgreich hochgeladen!"
 
-#: webftp.php:490
+#: webftp.php:500
 #, php-format
 msgid "<br />Directory '%1$s' deleted!"
 msgstr "<br />Verzeichnis '%1$s' gelöscht!"
 
-#: webftp.php:494
+#: webftp.php:504
 #, php-format
 msgid "<br />Directory '%1$s' couldn't be deleted!"
 msgstr "<br />Verzeichnis '%1$s' konnt nicht gelöscht werden!"
 
-#: webftp.php:500
-#: webftp.php:617
+#: webftp.php:510
+#: webftp.php:627
 #, php-format
 msgid "<br />'%1$s' deleted!"
 msgstr "<br />'%1$s' gelöscht!"
 
-#: webftp.php:504
-#: webftp.php:621
+#: webftp.php:514
+#: webftp.php:631
 #, php-format
 msgid "<br />'%1$s' couldn't be deleted!"
 msgstr "<br />'%1$s' konnt nicht gelöscht werden!"
 
-#: webftp.php:512
+#: webftp.php:522
 #, php-format
 msgid "'%1$s' renamed to '%2$s'"
 msgstr "'%1$s' wurde umbenannt noch '%2$s'"
 
-#: webftp.php:516
+#: webftp.php:526
 #, php-format
 msgid "'%1$s' couldn't be renamed to '%2$s'!"
 msgstr "'%1$s' konnt nicht nach '%2$s' umbenannt werden"
 
-#: webftp.php:521
+#: webftp.php:531
 #, php-format
 msgid "File '%1$s' rename/move to"
 msgstr "Datei '%1$s' verschoben nach"
 
-#: webftp.php:527
+#: webftp.php:537
 #, php-format
 msgid "Directory '%1$s' created"
 msgstr "Verzeichnis '%1$s' erstellt"
 
-#: webftp.php:531
+#: webftp.php:541
 #, php-format
 msgid "Directory '%1$s' couldn't be created!"
 msgstr "Verzeichnis '%1$s' konnte nicht erstellt werden!"
 
-#: webftp.php:546
-#: webftp.php:577
+#: webftp.php:556
+#: webftp.php:587
 #, php-format
 msgid "<br />The permission '%1$s' you entered is not valid!"
 msgstr "<br />Die eingegebenen Berechtigungen '%1$s' sind nicht valide!"
 
-#: webftp.php:553
-#: webftp.php:588
+#: webftp.php:563
+#: webftp.php:598
 #, php-format
 msgid "<br />The permission of '%1$s' is set to '%2$s'!"
 msgstr "<br />Die Berechtigungen von '%1$s' wurden auf '%2$s' gesetzt!"
 
-#: webftp.php:557
-#: webftp.php:592
+#: webftp.php:567
+#: webftp.php:602
 #, php-format
 msgid "<br />The permission of '%1$s' couldn't be set to '%2$s'!"
 msgstr "<br />Die Berechtigungen für '%1$s' konnten nicht auf '%2$s' gesetzt werden "
 
-#: webftp.php:641
+#: webftp.php:651
 #, php-format
 msgid "<br />File '%1$s' moved"
 msgstr "<br />Datei '%1$s' verschoben"
 
-#: webftp.php:645
+#: webftp.php:655
 #, php-format
 msgid "<br />File '%1$s' couldn't be moved"
 msgstr "<br />Die Datei '%1$s' konnte nicht verschoben werden"
 
-#: webftp.php:652
+#: webftp.php:662
 #, php-format
 msgid "The directory '%1$s' doesn't exist"
 msgstr "Das Verzeichnis '%1$s' existiert nicht"
 
-#: webftp.php:696
+#: webftp.php:706
 #, php-format
 msgid "File '%1$s' couldn't be downloaded!"
 msgstr "Die Datei '%1$s' konnte nicht heruntergeladen werden!"
 
-#: webftp.php:733
+#: webftp.php:743
 #, php-format
 msgid "File '%1$s' couldn't be saved!"
 msgstr "Die Datei '%1$s' konnte nicht gespeichert werden!"
 
-#: webftp.php:737
+#: webftp.php:747
 #, php-format
 msgid "File '%1$s' was saved succesfully!"
 msgstr "Die Datei '%1$s' wurde erfolgreich gespeichert!"
 
-#: webftp.php:744
+#: webftp.php:754
 #, php-format
 msgid "Files with these extension can't be created/edited!"
 msgstr "Dateien mit dieser Endung können nicht erstellt / bearbeitet werden!"
 
-#: webftp.php:752
+#: webftp.php:762
 msgid "Please enter a filename!"
 msgstr "Bitte einen Dateinamen eingeben!"
 
-#: webftp.php:902
+#: webftp.php:912
 #, php-format
 msgid "Connected to %1$s"
 msgstr "Verbunden mit %1$s"
 
-#: webftp.php:921
+#: webftp.php:931
 msgid "Do you really want to delete the selected files?"
 msgstr "Sollen die markierten Dateien wirklich gelöscht werden?"
 
-#: webftp.php:925
+#: webftp.php:935
 #, php-format
 msgid "Do you really want to move the selected files to '%1$s'?"
 msgstr "Sollen die markierten Dateien wirklich nach '%1$s' verschoben werden?"
 
-#: webftp.php:930
+#: webftp.php:940
 #, php-format
 msgid "Do you really want to set the permission of the selected files to '%1$s'?"
 msgstr "Sollen die Berechtigungen der markierten Dateien wirklich auf '%1$s' geändert werden?"
 
-#: webftp.php:941
+#: webftp.php:951
 msgid "Logout"
 msgstr "Logout"
 
-#: webftp.php:943
+#: webftp.php:953
 msgid "Switch to BINARY mode"
 msgstr "Auf BINARY - Modus wechseln"
 
-#: webftp.php:945
+#: webftp.php:955
 msgid "Switch to ASCII mode"
 msgstr "Auf ASCII - Modus wechseln"
 
-#: webftp.php:947
+#: webftp.php:957
 msgid "Main"
 msgstr "Hauptmenü"
+
+#: webftp.php:963
+msgid "Login failed, please try again"
+msgstr "Login fehlgeschlagen, bitte erneut versuchen"
 
