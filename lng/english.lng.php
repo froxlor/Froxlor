@@ -543,9 +543,9 @@ $lng['panel']['back'] = 'Back';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Temporary save logs in the database';
-$lng['serversettings']['mod_log_sql']['description'] = 'Use <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
+$lng['serversettings']['mod_log_sql']['description'] = 'Use <a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Enable FCGID';
-$lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with the corresponding useraccount.<br /><br /><b>This needs a special webserver configuration for Apache, see <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a></b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with the corresponding useraccount.<br /><br /><b>This needs a special webserver configuration for Apache, see <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_handbook">FCGI - handbook</a></b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
@@ -1306,7 +1306,7 @@ $lng['dkim']['dkim_notes']['description'] = 'Notes that might be of interest to 
 $lng['dkim']['dkim_add_adsp']['title'] = 'Add DKIM ADSP entry';
 $lng['dkim']['dkim_add_adsp']['description'] = 'If you don\'t know what this is, leave it "enabled"';
 $lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP policy';
-$lng['dkim']['dkim_add_adsppolicy']['description'] = 'For more information about this setting see <a href="http://wiki.froxlor.org/contrib/dkim-adsp-policies">http://wiki.froxlor.org/contrib/dkim-adsp-policies</a>';
+$lng['dkim']['dkim_add_adsppolicy']['description'] = 'For more information about this setting see <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-dkim-adsp-policies">DKIM ADSP policies</a>';
 
 $lng['admin']['cron']['cronsettings'] = 'Cronjob settings';
 $lng['cron']['cronname'] = 'cronjob-name';
@@ -1431,7 +1431,7 @@ $lng['serversettings']['froxlordirectlyviahostname'] = 'Access Froxlor directly 
 
 // ADDED IN FROXLOR 0.9.11-svn1
 $lng['serversettings']['panel_password_regex']['title'] = 'Regular expression for passwords';
-$lng['serversettings']['panel_password_regex']['description'] = 'Here you can set a regular expression for passwords-complexity.<br />Empty = no specific requirement<br />(<a href="http://wiki.froxlor.org/doc/password-regex-examples">regex help/examples</a>)';
+$lng['serversettings']['panel_password_regex']['description'] = 'Here you can set a regular expression for passwords-complexity.<br />Empty = no specific requirement<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">regex help/examples</a>)';
 $lng['error']['notrequiredpasswordcomplexity'] = 'The specified password-complexity was not satisfied.<br />Please contact your administrator if you have any questions about the complexity-specification';
 
 // ADDED IN FROXLOR 0.9.11-svn2
@@ -1515,7 +1515,7 @@ $lng['question']['customer_reallyunlock'] = 'Do you really want to unlock custom
 
 // ADDED IN FROXLOR 0.9.15-svn1
 $lng['serversettings']['perl_server']['title'] = 'Perl server location';
-$lng['serversettings']['perl_server']['description'] = 'Default is set for using the guide found at: http://wiki.nginx.org/SimpleCGI';
+$lng['serversettings']['perl_server']['description'] = 'Default is set for using the guide found at: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'this is where the PHP process is listening for requests from nginx, can be a unix socket of ip:port combination';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP reload command';

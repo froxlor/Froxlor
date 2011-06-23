@@ -538,7 +538,7 @@ $lng['panel']['back'] = 'Back';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Do&egrave;asn&igrave;  ukl&aacute;dat logy do datab&aacute;ze';
-$lng['serversettings']['mod_log_sql']['description'] = 'Pou&#382;&iacute;t <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> pro do&egrave;asn&eacute; ulo&#382;en&iacute; webrequest&ugrave;<br /><b>Toto vy&#382;aduje speci&aacute;ln&iacute; <a href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - documentation">konfiguraci apache</a>!</b>';
+$lng['serversettings']['mod_log_sql']['description'] = 'Pou&#382;&iacute;t <a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> pro do&egrave;asn&eacute; ulo&#382;en&iacute; webrequest&ugrave;<br /><b>Toto vy&#382;aduje speci&aacute;ln&iacute; <a target="blank" href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - documentation">konfiguraci apache</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Includuj PHP p&oslash;es mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Pou&#382;ij mod_fcgid/suexec/libnss_mysql pro b&igrave; h PHP s odpov&iacute;daj&iacute;c&iacute;m &Uacute;&oslash;ivatelsk&yacute;m &Uacute;&egrave;tem.<br/><b>toto vy&#382;aduje speci&aacute;ln&iacute; konfiguraci apache!</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Pou&#382;ij alternativn&iacute; e-mailovou adresu';

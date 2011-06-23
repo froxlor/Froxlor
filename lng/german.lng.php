@@ -375,7 +375,7 @@ $lng['serversettings']['language']['description'] = 'Welche Sprache ist Ihre Sta
 $lng['serversettings']['maxloginattempts']['title'] = 'Maximale Loginversuche';
 $lng['serversettings']['maxloginattempts']['description'] = 'Maximale Anzahl an Loginversuchen bis der Account deaktiviert wird.';
 $lng['serversettings']['deactivatetime']['title'] = 'L&auml;nge der Deaktivierung';
-$lng['serversettings']['deactivatetime']['description'] = 'Zeitraum (in sek.) f&uuml;r den der Account deaktiviert ist.';
+$lng['serversettings']['deactivatetime']['description'] = 'Zeitraum (in Sek.) f&uuml;r den der Account deaktiviert ist.';
 $lng['serversettings']['pathedit']['title'] = 'Pfad-Eingabemethode';
 $lng['serversettings']['pathedit']['description'] = 'Soll ein Pfad via Auswahlliste ausgew&auml;hlt oder manuell eingegeben werden k&ouml;nnen.';
 $lng['serversettings']['nameservers']['title'] = 'Nameserver';
@@ -542,9 +542,9 @@ $lng['panel']['back'] = 'Zur&uuml;ck';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Logs in Datenbank zwischenspeichern';
-$lng['serversettings']['mod_log_sql']['description'] = '<a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle Apache-Konfiguration</b>';
+$lng['serversettings']['mod_log_sql']['description'] = '<a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle Apache-Konfiguration</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP &uuml;ber mod_fcgid/suexec einbinden';
-$lng['serversettings']['mod_fcgid']['description'] = 'PHP unter dem jeweiligen Useraccount laufen lassen.<br /><br /><b>Dies ben&ouml;tigt eine spezielle Webserver-Konfiguration f&uuml;r Apache, siehe <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a>.</b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'PHP unter dem jeweiligen Useraccount laufen lassen.<br /><br /><b>Dies ben&ouml;tigt eine spezielle Webserver-Konfiguration f&uuml;r Apache, siehe <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_Handbuch">FCGID-Handbuch</a>.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Alternative E-Mail-Adresse benutzen';
 $lng['serversettings']['sendalternativemail']['description'] = 'W&auml;hrend des Erstellens eines Accounts das Passwort an eine andere E-Mail-Adresse senden';
 $lng['emails']['alternative_emailaddress'] = 'Alternative E-Mail-Adresse';
@@ -574,7 +574,7 @@ $lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma g
 
 // CHANGED IN 1.2.18
 
-$lng['serversettings']['mod_log_sql']['description'] = '<a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
+$lng['serversettings']['mod_log_sql']['description'] = '<a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe tempor&auml;r zu speichern<br /><b>Dies ben&ouml;tigt eine spezielle <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
 
 // ADDED IN 1.2.18-svn1
 
@@ -708,7 +708,7 @@ $lng['serversettings']['ticket']['noreply_name'] = 'Ticket E-Mail Absendername';
 // ADDED IN 1.2.19-svn
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'Konfigurations-Verzeichnis';
-$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Wo sollen alle Konfigurationsdateien von fcgid liegen? Wenn Sie keine selbst kompilierte suexec Binary benutzen, was in der Regel der Fall ist, muss dieser Pfad unter /var/www/ liegen.<br /><br /><div style="color:red">ACHTUNG: Der Inhalt dieses Ordners wird regelm&auml;&szlig;ig geleert, daher sollten keinerlei Daten dort manuell abgelegt werden.</div>';
+$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Wo sollen alle Konfigurationsdateien von fcgid liegen? Wenn Sie keine selbst kompilierte suexec Binary benutzen, was in der Regel der Fall ist, muss dieser Pfad unter /var/www/ liegen.<br /><br /><div style="color:red">ACHTUNG: Der Inhalt dieses Ordners wird regelm&auml;&szlig;ig geleert, daher sollten dort keinerlei Daten manuell abgelegt werden.</div>';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Tempor&auml;res Verzeichnis';
 
 // ADDED IN 1.2.19-svn3
@@ -1221,7 +1221,7 @@ $lng['panel']['dirsmissing'] = 'Das angegebene Verzeichnis konnte nicht gefunden
 $lng['panel']['toomanydirs'] = 'Zu viele Unterverzeichnisse. Weiche auf manuelle Verzeichniseingabe aus.';
 $lng['panel']['abort'] = 'Abbrechen';
 $lng['serversettings']['cron']['debug']['title'] = 'Debuggen des Cronscripts';
-$lng['serversettings']['cron']['debug']['description'] = 'Wenn aktiviert, wird die Lockdatei nach dem Cronlauf zum Debuggen nicht gel&ouml;scht<br /><b>Achtung:</b>Eine alte Lockdatei kann weitere Cronjobs behindern und daf&uuml;r sorgen, dass diese nicht vollst&auml;ndig ausgef&uuml;hrt werden.';
+$lng['serversettings']['cron']['debug']['description'] = 'Wenn aktiviert, wird die Lockdatei nach dem Cronlauf zum Debuggen nicht gel&ouml;scht<br /><b>Achtung:</b> Eine alte Lockdatei kann weitere Cronjobs behindern und daf&uuml;r sorgen, dass diese nicht vollst&auml;ndig ausgef&uuml;hrt werden.';
 $lng['autoresponder']['date_from'] = 'Start-Datum';
 $lng['autoresponder']['date_until'] = 'End-Datum';
 $lng['autoresponder']['startenddate'] = 'Start/End-Datum';
@@ -1285,7 +1285,7 @@ $lng['dkim']['dkim_notes']['description'] = 'Eine Notiz, welche f&uuml;r Mensche
 $lng['dkim']['dkim_add_adsp']['title'] = 'DKIM ADSP Eintrag hinzuf&uuml;gen';
 $lng['dkim']['dkim_add_adsp']['description'] = 'Wenn unsicher oder unbekannt, belassen sie es auf "aktiviert"';
 $lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP Richtlinie';
-$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Mehr Informationen zu dieser Einstellung (englisch) <a href="http://wiki.froxlor.org/contrib/dkim-adsp-policies">http://wiki.froxlor.org/contrib/dkim-adsp-policies</a>';
+$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Mehr Informationen zu dieser Einstellung (englisch) <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-dkim-adsp-policies">DKIM ADSP Policies</a>';
 
 $lng['admin']['cron']['cronsettings'] = 'Cronjob Einstellungen';
 $lng['cron']['cronname'] = 'Cronjob-Name';
@@ -1413,7 +1413,7 @@ $lng['serversettings']['froxlordirectlyviahostname'] = 'Froxlor direkt &uuml;ber
 
 // ADDED IN FROXLOR 0.9.11-svn1
 $lng['serversettings']['panel_password_regex']['title'] = 'Regul&auml;rer Ausdruck f&uuml;r Passw&ouml;rter';
-$lng['serversettings']['panel_password_regex']['description'] = 'Hier k&ouml;nnen Sie einen regul&auml;ren Ausdruck f&uuml;r Passwort-Komplexit&auml;t festlegen.<br />Leer = keine bestimmten Anforderungen<br />(<a href="http://wiki.froxlor.org/doc/password-regex-examples">RegEx Hilfe/Beispiele</a>)';
+$lng['serversettings']['panel_password_regex']['description'] = 'Hier k&ouml;nnen Sie einen regul&auml;ren Ausdruck f&uuml;r Passwort-Komplexit&auml;t festlegen.<br />Leer = keine bestimmten Anforderungen<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">RegEx Hilfe/Beispiele</a>)';
 $lng['error']['notrequiredpasswordcomplexity'] = 'Die vorgegebene Passwort-Komplexit&auml;t wurde nicht erf&uuml;llt.<br />Bitte kontaktieren Sie Ihren Administrator, wenn Sie Fragen zur Komplexit&auml;ts-Vorgabe haben.';
 
 // ADDED IN FROXLOR 0.9.11-svn2
@@ -1497,7 +1497,7 @@ $lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden %s wirklich e
 
 // ADDED IN FROXLOR 0.9.15-svn1
 $lng['serversettings']['perl_server']['title'] = 'Perl Server Ort';
-$lng['serversettings']['perl_server']['description'] = 'Der Standardwert ist diesem Guide entnommen: http://wiki.nginx.org/SimpleCGI';
+$lng['serversettings']['perl_server']['description'] = 'Der Standardwert ist diesem Guide entnommen: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP Backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'Dies ist das Backend, auf dem PHP auf Anfragen von Nginx h&ouml;rt. Kann ein UNIX Socket oder eine IP:Port Kombination sein';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP Reload Befehl';

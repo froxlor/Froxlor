@@ -539,7 +539,7 @@ $lng['panel']['back'] = 'Back';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Temporary save logs in the database';
-$lng['serversettings']['mod_log_sql']['description'] = 'Use <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
+$lng['serversettings']['mod_log_sql']['description'] = 'Use <a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Include PHP via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libnss_mysql to run PHP with the corresponding useraccount.<br/><b>This needs a special Webserver configuration. All following options are only valid if the module is enabled.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
@@ -1190,7 +1190,7 @@ $lng['error']['admindoesntexist'] = 'The admin you have chosen doesn\'t exist.';
 // ADDED IN 1.2.19-svn37
 
 $lng['serversettings']['system_realtime_port']['title'] = 'Port for realtime Froxlor';
-$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature is disabled.<br />See also: <a href="https://wiki.froxlor.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
+$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor connects to this port at localhost everytime a new cron task is scheduled. If value is 0 (zero), this feature is disabled.<br />See also: <a target="blank" href="https://wiki.froxlor.org/contrib/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Allow multiple login';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'If activated a user could login multiple times.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Allow moving domains between admins';

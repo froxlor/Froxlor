@@ -546,7 +546,7 @@ $lng['panel']['back'] = 'Indietro';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Salva i log temporaneamente nel database';
-$lng['serversettings']['mod_log_sql']['description'] = 'Usa <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> per salvare temporaneamente le richieste web<br /><b>Questo richiede una <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">configurazione di apache</a> particolare!</b>';
+$lng['serversettings']['mod_log_sql']['description'] = 'Usa <a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> per salvare temporaneamente le richieste web<br /><b>Questo richiede una <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">configurazione di apache</a> particolare!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Includi PHP via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Usa mod_fcgid/suexec/libnss_mysql per avviare PHP con il corrispondente account-utente.<br/><b>Questo richiede una speciale configurazione del Webserver. Tutte le opzioni seguenti sono validi solo se il modulo &egrave; abilitato.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Usa un\'indirizzo email alternativo';
@@ -1188,7 +1188,7 @@ $lng['error']['admindoesntexist'] = 'L\'amministratore che si &egrave; seleziona
 // ADDED IN 1.2.19-svn37
 
 $lng['serversettings']['system_realtime_port']['title'] = 'Porta per il realtime di Froxlor';
-$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor si connette a questa porta in localhost ogni volta che un nuovo task cron viene programmato. Se il valore &egrave; 0 (zero), questa funzionalit&agrave; &egrave; disabilitata.<br />Vedi anche: <a href="http://wiki.froxlor.org/doc/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
+$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor si connette a questa porta in localhost ogni volta che un nuovo task cron viene programmato. Se il valore &egrave; 0 (zero), questa funzionalit&agrave; &egrave; disabilitata.<br />Vedi anche: <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Permettere login multipli';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Se attivato un utente pu&ograve; accedere pi&ugrave; volte.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Permettere di spostare domini tra gli amministratori';
@@ -1311,7 +1311,7 @@ $lng['dkim']['dkim_notes']['description'] = 'Nota potrebbe essere di interesse, 
 $lng['dkim']['dkim_add_adsp']['title'] = 'Aggiungi un valore DKIM ADSP';
 $lng['dkim']['dkim_add_adsp']['description'] = 'Se non si sa di cosa si tratta, lasciare "enabled"';
 $lng['dkim']['dkim_add_adsppolicy']['title'] = 'Regola ADSP';
-$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Per ulteriori informazioni su questa impostazione leggere <a href="http://wiki.froxlor.org/contrib/dkim-adsp-policies">http://wiki.froxlor.org/contrib/dkim-adsp-policies</a>';
+$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Per ulteriori informazioni su questa impostazione leggere <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-dkim-adsp-policies">DKIM ADSP policies</a>';
 
 $lng['admin']['cron']['cronsettings'] = 'Impostazioni Cronjob';
 $lng['cron']['cronname'] = 'Nome cronjob';
@@ -1436,7 +1436,7 @@ $lng['serversettings']['froxlordirectlyviahostname'] = 'Accedi direttamente a Fr
 
 // ADDED IN FROXLOR 0.9.11-svn1
 $lng['serversettings']['panel_password_regex']['title'] = 'Espressione per le password';
-$lng['serversettings']['panel_password_regex']['description'] = 'Qui &egrave; possibile impostare una espressione regolare per la complessit&agrave; delle password.<br />Vuoto = nessun requisito specificato<br />(<a href="http://wiki.froxlor.org/doc/password-regex-examples">aiuto/esempi regex</a>)';
+$lng['serversettings']['panel_password_regex']['description'] = 'Qui &egrave; possibile impostare una espressione regolare per la complessit&agrave; delle password.<br />Vuoto = nessun requisito specificato<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">aiuto/esempi regex</a>)';
 $lng['error']['notrequiredpasswordcomplexity'] = 'La complessita della password specificata non &egrave; soddisfacente.<br />Si prega di contattare l\'amministratore se avete domande sulla complessit&agrave; della password';
 
 // ADDED IN FROXLOR 0.9.11-svn2
@@ -1450,7 +1450,7 @@ $lng['serversettings']['perl_path']['description'] = 'Rilevante solo se si utili
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
 $lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Abilita FCGID per i vhost Froxlor';
-$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Se attivato, Froxlor verr&agrave; eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a>';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Se attivato, Froxlor verr&agrave; eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_handbook">FCGID - handbook</a>';
 $lng['admin']['mod_fcgid_user'] = 'Utente locale per FCGID (Froxlor vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Gruppo locale per FCGID (Froxlor vhost)';
 
@@ -1519,7 +1519,7 @@ $lng['question']['customer_reallyunlock'] = 'Sei sicuro di voler sbloccare il cl
 
 // ADDED IN FROXLOR 0.9.15-svn1
 $lng['serversettings']['perl_server']['title'] = 'Localizzazione del server Perl';
-$lng['serversettings']['perl_server']['description'] = 'Di default &egrave; impostato per utilizzare la guida disponibile sul sito: http://wiki.nginx.org/SimpleCGI';
+$lng['serversettings']['perl_server']['description'] = 'Di default &egrave; impostato per utilizzare la guida disponibile sul sito: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'questo &egrave; dove in ascolto il processo PHP per le richieste da nginx, pu&ograve; essere un socket unix combinazione IP:Porta';
 $lng['serversettings']['phpreload_command']['title'] = 'Comando riavvio PHP';

@@ -533,7 +533,7 @@ $lng['panel']['back'] = 'Back';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Logs tijdelijk opslaan in de database';
-$lng['serversettings']['mod_log_sql']['description'] = 'Gebruike <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> om toegangslogs tijdelijk in de database op te slaan<br /><b>Dit vereist een speciale <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">configuratie van Apache</a>!</b>';
+$lng['serversettings']['mod_log_sql']['description'] = 'Gebruike <a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> om toegangslogs tijdelijk in de database op te slaan<br /><b>Dit vereist een speciale <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">configuratie van Apache</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP insluiten via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Gebruik mod_fcgid/suexec/libnss_mysql om PHP uit te voeren onder het gebruikersaccount.<br/><b>Dit vereist een aangepaste configuratie van de webserver. Alle volgende optie\'s zijn alleen geldig wanneer deze module actief is.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Gebruik alternatief emailadres';
@@ -1182,7 +1182,7 @@ $lng['error']['admindoesntexist'] = 'De gekozen beheerder bestaat niet.';
 // ADDED IN 1.2.19-svn37
 
 $lng['serversettings']['system_realtime_port']['title'] = 'Poort voor realtime Froxlor';
-$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor maakt verbinding met deze poort wanneer een nieuwe taak gepland wordt. Indien deze waarde 0 (nul) is, is deze uitgeschakeld.<br />Zie ook: <a href="http://wiki.froxlor.org/doc/realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
+$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor maakt verbinding met deze poort wanneer een nieuwe taak gepland wordt. Indien deze waarde 0 (nul) is, is deze uitgeschakeld.<br />Zie ook: <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Meerdere logins toestaan';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Indien dit is ingeschakeld kan een klant meerdere malen tegelijkertijd inloggen.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Het verplaatsen van domeinen tussen beheerders toestaan';
@@ -1305,7 +1305,7 @@ $lng['dkim']['dkim_notes']['description'] = 'Notities die van belang kunnen zijn
 $lng['dkim']['dkim_add_adsp']['title'] = 'DKIM ADSP toevoegen';
 $lng['dkim']['dkim_add_adsp']['description'] = 'Indien u niet weet wat dit is, laat het op "actief" staan.';
 $lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP beleid';
-$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Voor meer informatie inzake deze instelling zie <a href="http://wiki.froxlor.org/contrib/dkim-adsp-policies">http://wiki.froxlor.org/contrib/dkim-adsp-policies</a>';
+$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Voor meer informatie inzake deze instelling zie <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-dkim-adsp-policies">DKIM ADSP policies</a>';
 
 $lng['admin']['cron']['cronsettings'] = 'Instellingen cron-taken';
 $lng['cron']['cronname'] = 'naam cron-taak';
@@ -1419,7 +1419,7 @@ $lng['serversettings']['froxlordirectlyviahostname'] = 'Froxlor is direct toegan
 
 // ADDED IN FROXLOR 0.9.11-svn1
 $lng['serversettings']['panel_password_regex']['title'] = 'Reguliere expressie voor wachtwoorden';
-$lng['serversettings']['panel_password_regex']['description'] = 'Hier kunt u een reguliere expressie opgeven voor de complexiteit van wachtwoorden.<br />Leeg betekent geen speciale complexiteit<br />(<a href="http://wiki.froxlor.org/doc/password-regex-examples">regex hulp/voorbeelden</a>)';
+$lng['serversettings']['panel_password_regex']['description'] = 'Hier kunt u een reguliere expressie opgeven voor de complexiteit van wachtwoorden.<br />Leeg betekent geen speciale complexiteit<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">regex hulp/voorbeelden</a>)';
 $lng['error']['notrequiredpasswordcomplexity'] = 'Er is niet voldaan aan de complexiteit voor het wachtwoord (regex: %s)';
 
 // ADDED IN FROXLOR 0.9.11-svn2
@@ -1433,7 +1433,7 @@ $lng['serversettings']['perl_path']['description'] = 'Alleen relevant voor light
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
 $lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'FCGID inschakelen voor de VHost voor Froxlor';
-$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Indien ingeschakeld wordt Froxlor ook uitgevoerd onder een lokale gebruiker<br /><strong>Let op:</strong>Dit vereist handmatige configuratie, zie <a href="http://wiki.froxlor.org/contrib/fcgid-handbook">http://wiki.froxlor.org/contrib/fcgid-handbook</a>';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Indien ingeschakeld wordt Froxlor ook uitgevoerd onder een lokale gebruiker<br /><strong>Let op:</strong>Dit vereist handmatige configuratie, zie <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_handbook">FCGID - handbook</a>';
 $lng['admin']['mod_fcgid_user'] = 'Lokale gebruiker voor FCGID (Froxlor vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Lokale groep voor FCGID (Froxlor vhost)';
 
@@ -1502,7 +1502,7 @@ $lng['question']['customer_reallyunlock'] = 'Weet u zeker dat u klant %s? wilt o
 
 // ADDED IN FROXLOR 0.9.15-svn1
 $lng['serversettings']['perl_server']['title'] = 'Server locatie Perl';
-$lng['serversettings']['perl_server']['description'] = 'Standaard is ingesteld op de gids: http://wiki.nginx.org/SimpleCGI';
+$lng['serversettings']['perl_server']['description'] = 'Standaard is ingesteld op de gids: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'dit is waar het PHP-proces luistert naar verzoeken van nginx, kan een unix socket van ip:poort combinatie zijn';
 $lng['serversettings']['phpreload_command']['title'] = 'Commando voor het herladen van PHP';
