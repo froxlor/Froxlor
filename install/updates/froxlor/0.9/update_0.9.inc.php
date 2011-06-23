@@ -1634,3 +1634,14 @@ if(isFroxlorVersion('0.9.21'))
 
 	updateToVersion('0.9.22-svn1');
 }
+
+if(isFroxlorVersion('0.9.21-svn1'))
+{
+	showUpdateStep("Updating from 0.9.22-svn1 to 0.9.22-svn2");
+	lastStepStatus(0);
+
+	/* add new settings for diskspacequota - support */
+	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/var/customers/backups/' WHERE `varname` = 'backup_dir';");
+	
+	updateToVersion('0.9.22-svn2');
+}

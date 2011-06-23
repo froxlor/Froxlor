@@ -622,7 +622,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('syste
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'default_theme', 'Froxlor');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'validate_domain', '1');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_enabled', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_dir', '#froxlor_backup');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_dir', '/var/customers/backups/');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_mysqldump_path', '/usr/bin/mysqldump');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_count', '1');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_bigfile', '1');

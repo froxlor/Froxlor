@@ -1423,7 +1423,7 @@ $lng['serversettings']['mail_also_with_mxservers'] = 'Create mail-, imap-, pop3-
 $lng['aps']['nocontingent'] = 'Your APS contingent is insufficient. You cannot install any package.';
 $lng['aps']['packageneedsdb'] = 'This package needs a database but your contingent is used up';
 $lng['aps']['cannoteditordeleteapsdb'] = 'APS databases cannot be edited or removed here';
-$lng['admin']['webserver_user'] = 'Webserver user-name';
+$lng['admin']['webserver_Puser'] = 'Webserver user-name';
 $lng['admin']['webserver_group'] = 'Webserver group-name';
 
 // ADDED IN FROXLOR 0.9.10
@@ -1606,13 +1606,13 @@ $lng['error']['admin_domain_emailsystemhostname'] = 'Sorry, the system - hostnam
 $lng['backup'] = 'Backup';
 $lng['backup_allowed'] = 'Backup allowed';
 $lng['extras']['backup_create'] = 'Create Backup?';
-$lng['extras']['backup_info'] = 'Backup will be saved once daily in directory "' . $settings['system']['backup_dir'] . '".';
+$lng['extras']['backup_info'] = 'Backup will be saved once daily to a FTP directory. The FTP username is "'. $userinfo['loginname'] .'_backup". The FTP password is the same as for your main FTP account.';
 $lng['extras']['backup_info_sep'] = 'It contains compressed archives of your web-directory and databases.';
 $lng['extras']['backup_info_big'] = 'It contains a compressed archive of your web-directory and databases.';
 $lng['extras']['backup_count_info'] = '<br /><br />Please note that the backup will charge your webspace!';
 $lng['serversettings']['backup_count'] = 'Should backup size be subtracted from webspace size?';
 $lng['serversettings']['backup_enabled'] = 'Backup activated?';
-$lng['serversettings']['backupdir']['description'] = 'Which name should the customer\'s backup directory have?';
+$lng['serversettings']['backupdir']['description'] = 'Backup dir path?';
 $lng['serversettings']['mysqldump_path']['description'] = 'Path to mysqldump binary?';
 $lng['serversettings']['backup_bigfile'] = 'Save backup in 1 big file instead in separeted files for html and databases?';
 $lng['serversettings']['backup_ftp_enabled'] = 'FTP Upload activated?';

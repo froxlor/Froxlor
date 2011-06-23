@@ -36,7 +36,9 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'backup_dir',
 					'type' => 'string',
-					'default' => '#froxlor_backup',
+					'string_type' => 'dir',
+					'default' => '/var/customers/backups/',
+					'string_regexp' => '/^/.*/$/',
 					'save_method' => 'storeSettingField',
 				),
 				'backup_mysqldump_path' => array(
