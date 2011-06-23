@@ -28,6 +28,8 @@
 */
 
 	$smarty->registerFilter('pre', 'smarty_prefilter_t');
+	$smarty->registerFilter('post', 'smarty_postfilter_t');
+
 	function smarty_prefilter_t($tpl_source, &$smarty) {
 		/* find all {t} ... {/t} uses regex */
 		$tpl_source = preg_replace_callback(
@@ -39,6 +41,10 @@
 		/* return our new tpl_source */
 		return $tpl_source;
 	}
+	function smarty_postfilter_t($tpl_source, &$smarty) {
+		return preg_replace('/<!--GETTEXT (.*?) \/GETTEXT-->/',	'<?'.'php echo $1 ?'.'>', $tpl_source);
+	}
+
 	function smarty_helper_gettext_block($matches)
 	{
 		/* the actual text is the 2nd submatch */
@@ -85,14 +91,15 @@
 			}
 		}
 
+		$text = str_replace("'", "\'", $text);
 		// use plural if required parameters are set
 		if (isset($count) && isset($plural))
 		{
-			$text = isset($domain) ? dngettext($domain, $text, $plural, $count) : ngettext($text, $plural, $count);
+			$text = isset($domain) ? "_dngettext('$domain', '$text', '$plural', '$count')" : "ngettext('$text', '$plural', '$count')";
 		}
 		else
 		{ // use normal
-			$text = isset($domain) ? dgettext($domain, $text) : gettext($text);
+			$text = isset($domain) ? "dgettext('$domain', '$text')" : "gettext('$text')";
 		}
 
 		// default to noescaping at all
@@ -112,6 +119,6 @@
 			}
 		}
 
-		return $text;
+		return '<!--GETTEXT ' . $text . '; /GETTEXT-->';
 	}
 ?>
