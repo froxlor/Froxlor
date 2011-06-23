@@ -108,73 +108,6 @@ else
 	$settings['panel']['default_theme'] = 'Froxlor';
 }
 
-# Set the language
-setLocale(LC_ALL,'en_US.utf8');
-bindtextdomain('default','./locales/');
-textdomain('default');
-if ($handle = opendir('./locales/'))
-{
-	$files = array();
-	while(false!==($file = readdir($handle)))
-	{
-		if (is_dir('./locales/' . $file) && !preg_match('/^\.\.?$/', $file))
-		{
-			$files[] = $file;
-		}
-	}
-	closedir($handle);
-	sort($files);
-	$available_languages = array();
-	foreach($files as $f)
-	{
-		$available_languages[] = $f;
-	}
-}
-else
-{
-	echo 'error: missing language files';
-	exit;
-}
-
-$ls = array();
-if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
-{
-	$_SERVER['HTTP_ACCEPT_LANGUAGE'] = '';
-}
-
-$langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-foreach($langs as $lang)
-{
-	if (in_array(preg_replace('/;.*/','',trim($lang)), $available_languages))
-	{
-		$selected_language = preg_replace('/;.*/','',trim($lang));
-		break;
-	}
-}
-if(!isset($selected_language))
-{
-	$selected_language = 'en';
-}
-
-if(!setLocale(LC_ALL, $selected_language))
-{
-	preg_match_all("/[^|\w]".$selected_language.'.*/',`locale -a`,$matches);
-	if(!count($matches[0]))
-	{
-		die('no locale info for "'.$selected_language.'"');
-	}
-	$selected_language = trim($matches[0][0]);
-	foreach($matches[0] as $m)
-	{
-		if(preg_match('/utf8/', $m))
-		{
-			$selected_language = trim($m);
-			break;
-		}
-	}
-	setLocale(LC_ALL, $selected_language);
-}
-
 # Initialize Smarty
 include('./lib/classes/Smarty/Smarty.class.php');
 $smarty = new Smarty;
@@ -182,6 +115,16 @@ $smarty = new Smarty;
 $smarty->template_dir = './templates/' . $settings['panel']['default_theme'] . '/';
 $smarty->compile_dir  = './templates_c/';
 $smarty->cache_dir    = './cache/';
+
+# Set the language
+require('./lib/classes/output/class.languageSelect.php');
+$language = new languageSelect();
+$language->useBrowser = true;
+$language->setLanguage();
+
+# Activate gettext for smarty;
+define('HAVE_GETTEXT', true);
+require ('./lib/functions/smarty_plugins/gettext-prefilter.php');
 
 $settings['admin']['show_version_login'] = 0;
 if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'admin' AND `varname` = 'show_version_login'"))
@@ -203,9 +146,6 @@ if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggro
 $db->close();
 unset($db);
 
-# Activate gettext for smarty;
-define('HAVE_GETTEXT', true);
-require ('./lib/functions/smarty_plugins/gettext-prefilter.php');
 # Set default options for template
 $image_path = 'images/'.$settings['panel']['default_theme'];
 $header_logo = $image_path.'/logo.png';
