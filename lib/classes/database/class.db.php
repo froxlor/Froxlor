@@ -358,7 +358,7 @@ class db
 		openlog("Froxlor", LOG_NDELAY, LOG_USER);
 		syslog(LOG_ERR, $text);
 		closelog();
-		die("A MySQL error occured, This should not happen, a detailed description may be found in Syslog");
+		die("A MySQL error occured, this should not happen, a detailled description may be found in syslog");
 	}
 }
 
