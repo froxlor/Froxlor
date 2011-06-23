@@ -201,7 +201,7 @@ class paging
 		$this->userinfo['lastpaging']['searchfield'] = $this->searchfield;
 
 		if(isset($_REQUEST['searchtext'])
-		   && (preg_match("/^[@0-9a-zA-ZöüäÖÜÄß\-\*\.]+$/", $_REQUEST['searchtext']) || $_REQUEST['searchtext'] === ''))
+		   && (preg_match("/^[@0-9a-zA-Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\-\*\.]+$/", $_REQUEST['searchtext']) || $_REQUEST['searchtext'] === ''))
 		{
 			$this->searchtext = $_REQUEST['searchtext'];
 		}
@@ -209,7 +209,7 @@ class paging
 		{
 			if($checklastpaging
 			   && isset($this->userinfo['lastpaging']['searchtext'])
-			   && preg_match("/^[@0-9a-zA-ZöüäÖÜÄß\-\*\.]+$/", $this->userinfo['lastpaging']['searchtext']))
+			   && preg_match("/^[@0-9a-zA-Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\-\*\.]+$/", $this->userinfo['lastpaging']['searchtext']))
 			{
 				$this->searchtext = $this->userinfo['lastpaging']['searchtext'];
 			}
@@ -358,7 +358,7 @@ class paging
 		{
 			// Acts similar to php's natsort(), found in one comment at http://my.opera.com/cpr/blog/show.dml/160556
 
-			$sortcode = 'ORDER BY CONCAT( IF( ASCII( LEFT( ' . $sortfield . ', 1 ) ) > 57, LEFT( ' . $sortfield . ', 1 ), \'0\' ), IF( ASCII( RIGHT( ' . $sortfield . ', 1 ) ) > 57, LPAD( ' . $sortfield . ', 255, \'0\' ), LPAD( CONCAT( ' . $sortfield . ', \'-\' ), 255, \'0\' ) ) ) ' . $sortorder;
+			$sortcode = 'ORDER BY CONCAT( IF( ASCII( LEFT( ' . $sortfield . ', 5 ) ) > 57, LEFT( ' . $sortfield . ', 1 ), \'0\' ), IF( ASCII( RIGHT( ' . $sortfield . ', 1 ) ) > 57, LPAD( ' . $sortfield . ', 255, \'0\' ), LPAD( CONCAT( ' . $sortfield . ', \'-\' ), 255, \'0\' ) ) ) ' . $sortorder;
 		}
 		else
 		{
