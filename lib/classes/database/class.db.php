@@ -355,10 +355,11 @@ class db
 		{
 			$text .= "; Script: cronscript";
 		}
+		$md5 = md5($text . time());
 		openlog("Froxlor", LOG_NDELAY, LOG_USER);
-		syslog(LOG_ERR, $text);
+		syslog(LOG_ERR, $text . "; $md5");
 		closelog();
-		die("A MySQL error occured, this should not happen, a detailled description may be found in syslog");
+		die("We are sorry, but a MySQL - error occurred. The administrator may find more information in syslog with the ID $md5");
 	}
 }
 
