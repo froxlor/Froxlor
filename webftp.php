@@ -23,7 +23,7 @@ $downloadDir = "/tmp/";
 
 // Which file extensions indicate files allowed to be edited
 // Either simple extension or regex
-$editFileExtensions = array("php[34]?$","sh$","txt$","[ps]?htm[l]?$","tpl$","pl","cgi","^ht[acespwd]+$");
+$editFileExtensions = array("php[345]?$","sh$","txt$","[ps]?htm[l]?$","tpl$","pl","cgi","^ht[acespwd]+$");
 // Are files without extension allowed to be edited?
 $editFileNoExtension = true;
 // Which FTP - mode should be used by default?
