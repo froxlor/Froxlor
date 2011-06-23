@@ -135,7 +135,7 @@ class db
 			}
 		}
 		/*
-		 * this is not for 0.9.x 
+		 * this is not for 0.9.x
 		 */
 		//mysql_query("SET NAMES utf8", $this->link_id);
 		//mysql_query("SET CHARACTER SET utf8", $this->link_id);
@@ -340,27 +340,25 @@ class db
 	{
 		global $filename;
 
+		$text = 'MySQL - Error: ' . str_replace("\n", "\t", $errormsg);
 		if($mysqlActive)
 		{
 			$this->geterrdescno();
-			$errormsg.= "\n";
-			$errormsg.= 'mysql error number: ' . $this->errno . "\n";
-			$errormsg.= 'mysql error desc: ' . $this->errdesc . "\n";
+			$text .= "; ErrNo: " . $this->errno . "; Desc: " . $this->errdesc;
 		}
-
-		$errormsg.= 'Time/date: ' . date('d/m/Y h:i A') . "\n";
 
 		if($filename != 'cronscript.php')
 		{
-			$errormsg.= 'Script: ' . htmlspecialchars(getenv('REQUEST_URI')) . "\n";
-			$errormsg.= 'Referer: ' . htmlspecialchars(getenv('HTTP_REFERER')) . "\n";
-			die(nl2br($errormsg));
+			$text .= "; Script: " . getenv('REQUEST_URI') . "; Ref: " . getenv('HTTP_REFERER');
 		}
 		else
 		{
-			$errormsg.= 'Script: -- Cronscript --' . "\n";
-			die($errormsg);
+			$text .= "; Script: cronscript";
 		}
+		openlog("Froxlor", LOG_NDELAY, LOG_USER);
+		syslog(LOG_ERR, $text);
+		closelog();
+		die("A MySQL error occured, This should not happen, a detailed description may be found in Syslog");
 	}
 }
 
