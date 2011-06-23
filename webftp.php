@@ -710,7 +710,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 						{
 							fclose($fp);
 							// temporäre Datei lesen und ausgeben
-							$myFileContent = htmlentities(implode("",file($downloadDir .  killslashes(html_entity_decode($file))."_".$s)));
+							$myFileContent = implode("",file($downloadDir .  killslashes(html_entity_decode($file))."_".$s));
 						}
 						$smarty->assign('myFileContent', $myFileContent);
 						unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
