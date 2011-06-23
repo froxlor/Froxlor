@@ -1885,3 +1885,5 @@ $lng['serversettings']['diskquota_repquota_path']['description'] = 'Path to repq
 $lng['serversettings']['diskquota_quotatool_path']['description'] = 'Path to quotatool';
 $lng['serversettings']['diskquota_customer_partition']['description'] = 'Partition, on which the customer files are stored';
 $lng['tasks']['diskspace_set_quota'] = 'Set quota on filesystem';
+$lng['error']['session_timeout'] = 'Value too low';
+$lng['error']['session_timeout_desc'] = 'You should not set the session timeout lower than 1 minute.';

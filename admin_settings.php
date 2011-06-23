@@ -64,6 +64,11 @@ if(($page == 'settings' || $page == 'overview')
 			$settings_part = false;
 			$only_enabledisable = true;
 		}
+		
+		// check if the session timeout is too low #815
+		if (isset($_POST['session_sessiontimeout']) && $_POST['session_sessiontimeout'] <= 60) {
+			standard_error($lng['error']['session_timeout'], $lng['error']['session_timeout_desc']);
+		}
 
 		if(processFormEx(
 			$settings_data,
