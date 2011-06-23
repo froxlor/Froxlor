@@ -961,6 +961,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 	else
 	{
 		$smarty->assign('errormessage', _('Login failed, please try again'));
+		session_destroy();
 		$body = $smarty->fetch('login/login_ftp.tpl');
 	}
 }
