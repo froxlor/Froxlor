@@ -64,7 +64,7 @@ while($row = $db->fetch_array($result_tasks))
 			 * (e.g. awstats not installed yet or whatever)
 			 * fixes #45
 			 */
-			if (is_dir($awstatsclean['path'])) 
+			if (is_dir($awstatsclean['path']))
 			{
 				$awstatsclean['dir'] = dir($awstatsclean['path']);
 				while($awstatsclean['entry'] = $awstatsclean['dir']->read()) {
@@ -98,7 +98,7 @@ while($row = $db->fetch_array($result_tasks))
 		{
 			$configdir = makeCorrectDir($settings['system']['mod_fcgid_configdir']);
 
-			if (is_dir($configdir)) 
+			if (is_dir($configdir))
 			{
 				$its = new RecursiveIteratorIterator(
 					new RecursiveDirectoryIterator($configdir)
@@ -108,14 +108,14 @@ while($row = $db->fetch_array($result_tasks))
 				// look for php-fcgi-starter files
 				// and take immutable-flag away from them
 				// so we can delete them :)
-				foreach ($its as $fullFileName => $it ) 
+				foreach ($its as $fullFileName => $it )
 				{
-					if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter') 
+					if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter')
 					{
 						removeImmutable($its->getPathname());
 					}
 				}
-				// now get rid of old stuff 
+				// now get rid of old stuff
 				//(but append /* so we don't delete the directory)
 				$configdir.='/*';
 				safe_exec('rm -rf '. makeCorrectFile($configdir));
@@ -127,9 +127,9 @@ while($row = $db->fetch_array($result_tasks))
 		{
 			$configdir = makeCorrectDir($settings['phpfpm']['configdir']);
 
-			if (is_dir($configdir)) 
+			if (is_dir($configdir))
 			{
-				// now get rid of old stuff 
+				// now get rid of old stuff
 				//(but append /* so we don't delete the directory)
 				$configdir.='/*';
 				safe_exec('rm -rf '. makeCorrectFile($configdir));
@@ -211,7 +211,7 @@ while($row = $db->fetch_array($result_tasks))
 				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
 				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
 			}
-			
+
 			// maildir
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($usermaildir));
 			safe_exec('mkdir -p ' . escapeshellarg($usermaildir));
@@ -318,8 +318,8 @@ while($row = $db->fetch_array($result_tasks))
 				{
 					// e.g. /var/www/php-fcgi-starter/web1/
 					$configdir = makeCorrectDir($settings['system']['mod_fcgid_configdir'] . '/' . $row['data']['loginname'] . '/');
-					
-					if (is_dir($configdir)) 
+
+					if (is_dir($configdir))
 					{
 						$its = new RecursiveIteratorIterator(
 							new RecursiveDirectoryIterator($configdir)
@@ -329,16 +329,16 @@ while($row = $db->fetch_array($result_tasks))
 						// look for php-fcgi-starter files
 						// and take immutable-flag away from them
 						// so we can delete them :)
-						foreach ($its as $fullFileName => $it ) 
+						foreach ($its as $fullFileName => $it )
 						{
-							if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter') 
+							if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter')
 							{
 								removeImmutable($its->getPathname());
 							}
 						}
 						// now get rid of old stuff
 						safe_exec('rm -rf '. escapeshellarg($configdir));
-					}				
+					}
 				}
 			}
 		}
@@ -409,7 +409,7 @@ while($row = $db->fetch_array($result_tasks))
 	 */
 	elseif ($row['type'] == '9')
 	{
-		
+
 		fwrite($debugHandler, '  cron_tasks: Task9 started - creating backup dir protection' . "\n");
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task9 started - creating backup dir protection');
 
@@ -457,7 +457,49 @@ while($row = $db->fetch_array($result_tasks))
 					}
 				}
 			}
-			
+
+		}
+	}
+
+	/**
+	 * TYPE=10 Set the filesystem - quota
+	 */
+	elseif ($row['type'] == '10')
+	{
+		if ($settings['system']['diskquota_enabled'])
+		{
+			fwrite($debugHandler, '  cron_tasks: Task10 started - setting filesystem quota' . "\n");
+			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task10 started - setting filesystem quota');
+
+			$usedquota = getFilesystemQuota();
+
+			# Select all customers Froxlor knows about
+			$result = $db->query("SELECT `guid`, `loginname`, `diskspace` FROM `" . TABLE_PANEL_CUSTOMERS . "`;");
+			while($row = $db->fetch_array($result))
+			{
+				# We do not want to set a quota for root by accident
+				if ($row['guid'] != 0)
+				{
+					# The user has no quota in Froxlor, but on the filesystem
+					if (($row['diskspace'] == 0 || $row['diskspace'] == -1024) && $usedquota[$row['guid']]['block']['hard'] != 0)
+					{
+						$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Disabling quota for " . $row['loginname']);
+						safe_exec($settings['system']['diskquota_quotatool_path'] . " -u " . $row['guid'] . " -bl 0 -q 0 " . escapeshellarg($settings['system']['diskquota_customer_partition']));
+					}
+
+					# The user quota in Froxlor is different than on the filesystem
+					elseif($row['diskspace'] != $usedquota[$row['guid']]['block']['hard'] && $row['diskspace'] != -1024)
+					{
+						$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Setting quota for " . $row['loginname'] . " from " . $usedquota[$row['guid']]['block']['hard'] . " to " . $row['diskspace']);
+						safe_exec($settings['system']['diskquota_quotatool_path'] . " -u " . $row['guid'] . " -bl " . $row['diskspace'] . " -q " . $row['diskspace'] . " " . escapeshellarg($settings['system']['diskquota_customer_partition']));
+					}
+				}
+			}
+		}
+		else
+		{
+			fwrite($debugHandler, '  cron_tasks: Task10 skipped - filesystem quota not enabled' . "\n");
+			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task10 skipped - filesystem quota not enabled');
 		}
 	}
 }

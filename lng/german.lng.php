@@ -1608,3 +1608,11 @@ $lng['gender']['female'] = 'Frau';
 $lng['gender']['undef'] = '';
 $lng['serversettings']['backup_ftp_passive_mode'] = 'Passiven &Uuml;bertragungsmodus verwenden';
 $lng['serversettings']['backup_bigfile'] = 'Backup von Kundenverzeichnissen und Datenbanken in eine Datei speichern, statt zu splitten?';
+
+// ADDED IN FROXLOR 0.9.22-svn1
+$lng['diskquota'] = 'Quota';
+$lng['serversettings']['diskquota_enabled'] = 'Quota aktiviert?';
+$lng['serversettings']['diskquota_repquota_path']['description'] = 'Pfad zu repquota';
+$lng['serversettings']['diskquota_quotatool_path']['description'] = 'Pfad zu quotatool';
+$lng['serversettings']['diskquota_customer_partition']['description'] = 'Partition, auf welcher die Kundendaten liegen';
+$lng['tasks']['diskspace_set_quota'] = 'Quota auf dem Dateisystem setzen';

@@ -18,18 +18,18 @@
 /*
  * Function getNextCronjobs
  *
- * checks which cronjobs have to be executed 
+ * checks which cronjobs have to be executed
  *
  * @return	array	array of cron-files which are to be executed
  */
 function getNextCronjobs()
 {
 	global $db;
-	
+
 	$query = "SELECT `id`, `cronfile` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `interval` <> '0' AND `isactive` = '1' AND (";
 
 	$intervals = getIntervalOptions();
-	
+
 	$x = 0;
 	foreach($intervals as $name => $ival)
 	{
@@ -37,23 +37,23 @@ function getNextCronjobs()
 
 		if($x == 0) {
 			$query.= '(UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(`lastrun`), INTERVAL '.$ival.')) <= UNIX_TIMESTAMP() AND `interval`=\''.$ival.'\')';
-		} else {	
+		} else {
 			$query.= ' OR (UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(`lastrun`), INTERVAL '.$ival.')) <= UNIX_TIMESTAMP() AND `interval`=\''.$ival.'\')';
 		}
 		$x++;
 	}
-	
+
 	$query.= ');';
-	
+
 	$result = $db->query($query);
-	
+
 	$cron_files = array();
 	while($row = $db->fetch_array($result))
 	{
 		$cron_files[] = $row['cronfile'];
 		$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = UNIX_TIMESTAMP() WHERE `id` ='".(int)$row['id']."';");
 	}
-	
+
 	return $cron_files;
 }
 
@@ -63,10 +63,10 @@ function includeCronjobs($debugHandler, $pathtophpfiles)
 	global $settings;
 
 	$cronjobs = getNextCronjobs();
-	
+
 	$jobs_to_run = array();
 	$cron_path = makeCorrectDir($pathtophpfiles.'/scripts/jobs/');
-	
+
 	if($cronjobs !== false
 	&& is_array($cronjobs)
 	&& isset($cronjobs[0]))
@@ -77,7 +77,7 @@ function includeCronjobs($debugHandler, $pathtophpfiles)
 			$jobs_to_run[] = $cron_file;
 		}
 	}
-	
+
 	return $jobs_to_run;
 }
 
@@ -103,7 +103,7 @@ function getIntervalOptions()
 			$cronlog->logAction(CRON_ACTION, LOG_ERROR, "Invalid SQL-Interval ".$row['interval']." detected. Please fix this in the database.");
 		}
 	}
-	
+
 	return $cron_intervals;
 }
 
@@ -111,14 +111,14 @@ function getIntervalOptions()
 function getCronjobsLastRun()
 {
 	global $db, $lng;
-	
+
 	$query = "SELECT `lastrun`, `desc_lng_key` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `isactive` = '1' ORDER BY `cronfile` ASC";
 	$result = $db->query($query);
-	
+
 	$cronjobs_last_run = '';
 
 	while($row = $db->fetch_array($result))
-	{	
+	{
 		$lastrun = $lng['cronjobs']['notyetrun'];
 		if($row['lastrun'] > 0) {
 			$lastrun = date('d.m.Y H:i:s', $row['lastrun']);
@@ -129,18 +129,18 @@ function getCronjobsLastRun()
 
 		eval("\$cronjobs_last_run .= \"" . getTemplate("index/overview_item") . "\";");
 	}
-	
+
 	return $cronjobs_last_run;
 }
 
 function toggleCronStatus($module = null, $isactive = 0)
 {
 	global $db;
-	
+
 	if($isactive != 1) {
 		$isactive = 0;
 	}
-	
+
 	$query = "UPDATE `".TABLE_PANEL_CRONRUNS."` SET `isactive` = '".(int)$isactive."' WHERE `module` = '".$module."'";
 	$db->query($query);
 
@@ -149,10 +149,10 @@ function toggleCronStatus($module = null, $isactive = 0)
 function getOutstandingTasks()
 {
 	global $db, $lng;
-	
+
 	$query = "SELECT * FROM `".TABLE_PANEL_TASKS."` ORDER BY `type` ASC";
 	$result = $db->query($query);
-	
+
 	$value = '<ul class="cronjobtask">';
 	$tasks = '';
 	while($row = $db->fetch_array($result))
@@ -161,7 +161,7 @@ function getOutstandingTasks()
 		{
 			$row['data'] = unserialize($row['data']);
 		}
-		
+
 		/*
 		 * rebuilding webserver-configuration
 		 */
@@ -208,16 +208,23 @@ function getOutstandingTasks()
 			}
 			$task_desc = $lng['tasks']['deleting_customerfiles'];
 			$task_desc = str_replace('%loginname%', $loginname, $task_desc);
-		}		
+		}
+		/*
+		 * Set FS - quota
+		 */
+		elseif($row['type'] == '10')
+		{
+			$task_desc = $lng['tasks']['diskspace_set_quota'];
+		}
 
 		if($task_desc != '') {
 			$tasks .= '<li>'.$task_desc.'</li>';
 		}
 	}
-	
+
 	$query2 = "SELECT DISTINCT `Task` FROM `".TABLE_APS_TASKS."` ORDER BY `Task` ASC";
 	$result2 = $db->query($query2);
-	
+
 	while($row2 = $db->fetch_array($result2))
 	{
 		/*
@@ -262,7 +269,7 @@ function getOutstandingTasks()
 		{
 			$task_desc = $lng['tasks']['aps_task_sysdownload'];
 		}
-		
+
 		if($task_desc != '') {
 			$tasks .= '<li>'.$task_desc.'</li>';
 		}

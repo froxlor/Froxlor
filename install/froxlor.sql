@@ -468,7 +468,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('syste
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_homedir', '/var/customers/mail/');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindconf_directory', '/etc/bind/');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindreload_command', '/etc/init.d/bind9 reload');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'version', '0.9.21');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'version', '0.9.22-svn1');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'hostname', 'SERVERNAME');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'maxloginattempts', '3');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'deactivatetime', '900');
@@ -632,6 +632,11 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('syste
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_user', '');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_pass', '');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_passive', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_enabled', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_repquota_path', '/usr/sbin/repquota');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_quotatool_path', '/usr/bin/quotatool');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_customer_partition', '/dev/root');
+
 # --------------------------------------------------------
 
 #
@@ -1019,7 +1024,7 @@ CREATE TABLE IF NOT EXISTS `aps_temp_settings` (
 DROP TABLE IF EXISTS `cronjobs_run`;
 CREATE TABLE IF NOT EXISTS `cronjobs_run` (
   `id` bigint(20) NOT NULL auto_increment,
-  `module` varchar(250) NOT NULL,  
+  `module` varchar(250) NOT NULL,
   `cronfile` varchar(250) NOT NULL,
   `lastrun` int(15) NOT NULL DEFAULT '0',
   `interval` varchar(100) NOT NULL DEFAULT '5 MINUTE',
