@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Froxlor\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-06-23 10:46+0100\n"
-"PO-Revision-Date: 2011-06-23 10:46+0100\n"
+"PO-Revision-Date: 2011-06-23 13:30+0100\n"
 "Last-Translator: Florian Aders <eleras@froxlor.org>\n"
 "Language-Team: The Froxlor team <team@froxlor.org>\n"
 "Language: \n"
@@ -345,7 +345,7 @@ msgstr "Sollen die Berechtigungen der markierten Dateien wirklich auf '%1$s' ge√
 
 #: webftp.php:951
 msgid "Logout"
-msgstr "Logout"
+msgstr "Abmelden"
 
 #: webftp.php:953
 msgid "Switch to BINARY mode"
