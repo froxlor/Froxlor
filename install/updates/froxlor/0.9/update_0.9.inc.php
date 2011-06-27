@@ -1635,7 +1635,7 @@ if(isFroxlorVersion('0.9.21'))
 	updateToVersion('0.9.22-svn1');
 }
 
-if(isFroxlorVersion('0.9.21-svn1'))
+if(isFroxlorVersion('0.9.22-svn1'))
 {
 	showUpdateStep("Updating from 0.9.22-svn1 to 0.9.22-svn2");
 	lastStepStatus(0);
