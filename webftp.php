@@ -856,7 +856,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 
 			if($action == "rename" && $_GET['op']=="show")
 			{
-				$body .= $smarty->fetch('webftp/webftp_main_rename');
+				$body .= $smarty->fetch('webftp/webftp_main_rename.tpl');
 			}
 			$smarty->assign('output_dir', $output_dir);
 			$smarty->assign('output_link', $output_link);
@@ -881,7 +881,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 					$smarty->assign('chmod', $_POST['chmod']);
 				}
 				$smarty->assign('op', $_POST['op']);
-				$body .= $smarty->fetch('webftp/webftp_main_prompt');
+				$body .= $smarty->fetch('webftp/webftp_main_prompt.tpl');
 			}
 			else
 			{
