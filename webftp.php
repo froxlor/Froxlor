@@ -97,6 +97,7 @@ if ($db->connect_error)
 }
 
 $settings = array();
+/*
 // Let's get the theme we need
 if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `varname` = 'default_theme'"))
 {
@@ -107,6 +108,9 @@ else
 	// Default will be Froxlor ;)
 	$settings['panel']['default_theme'] = 'Froxlor';
 }
+*/
+# Until we have other themes: enforce the Froxlor - layout
+$settings['panel']['default_theme'] = 'Froxlor';
 
 # Initialize Smarty
 include('./lib/classes/Smarty/Smarty.class.php');
