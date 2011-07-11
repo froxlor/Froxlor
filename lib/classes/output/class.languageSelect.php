@@ -78,7 +78,10 @@ class languageSelect
 		# See for which language the codepages are compiled
 		foreach ($this->availableLanguages as $lang)
 		{
-			preg_match_all("/[^|\w]".$lang.'.*/', `locale -a`, $matches);
+			$tmplng = array();
+			@exec("locale -a", $tmplng);
+			$tmplng = join("\n", $tmplng);
+			preg_match_all("/[^|\w]".$lang.'.*/', $tmplng, $matches);
 			foreach($matches[0] as $m)
 			{
 				if(preg_match('/utf8/', $m))
