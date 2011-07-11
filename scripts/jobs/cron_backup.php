@@ -70,18 +70,8 @@ if($settings['system']['backup_enabled'] == '1'){
 		}
 	    }
 
-	    // set correct user
-	    if($settings['system']['mod_fcgid'] == 1){
-		$user = $row['loginname'];
-		$group = $row['loginname'];
-	    }
-	    else {
-		$user = $row['guid'];
-		$group = $row['guid'];
-	    }
-
 	    // chown & chmod files to prevent manipulation
-	    safe_exec('chown ' . escapeshellarg($user) . ':' . escapeshellarg($group) . ' ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/*');
+	    safe_exec('chown ' . escapeshellarg($row['guid']) . ':' . escapeshellarg($row['guid']) . ' ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/*');
 	    safe_exec('chmod 0400 ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/*');
 
 	    // create ftp backup user
