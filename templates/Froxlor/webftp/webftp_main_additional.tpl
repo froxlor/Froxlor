@@ -38,7 +38,7 @@
 		</section>
 		<section class="dboarditem bradiusodd">
 			<h2>{t}Upload files{/t}</h2>
-			<form name="putForm" envtype="multipart/form-data" method="POST" action="webftp.php">
+			<form name="putForm" enctype="multipart/form-data" method="POST" action="webftp.php">
 				<input type="hidden" name="action" value="put" />
 				<input type="hidden" name="currentDir" value="{$currentDir}" />
 				<input type="hidden" name="mode" value="{$mode}" />
