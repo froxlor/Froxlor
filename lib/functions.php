@@ -55,7 +55,7 @@ function findIncludeClass($dirname, $classname)
 	{
 		if($filename != '.' && $filename != '..' && $filename != '')
 		{
-			if($filename == 'class.' . $classname . '.php' || $filename == 'abstract.' . $classname . '.php')
+			if($filename == 'class.' . $classname . '.php' || $filename == 'abstract.' . $classname . '.php' || $filename == 'interface.' . $classname . '.php')
 			{
 				include($dirname . $filename);
 				return;
