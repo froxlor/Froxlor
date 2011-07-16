@@ -8,7 +8,7 @@ font-weight: bold;
 </style>
 <table cellpadding="0" cellspacing="0">
 	<tr>
-		<td colspan="10" align="left"><span class="Stil1">{$action_text}</span></td>
+		<td colspan="10" align="left"><span class="Stil1">{$action_text|escape:'htmlall'|nl2br}</span></td>
 	</tr>
 	<tr>
 		<td colspan="10" align="left">
@@ -19,7 +19,7 @@ font-weight: bold;
 		</td>
 	</tr>
 	<tr>
-	<td colspan="10" align="left"><input type="submit" NAME="yes" VALUE="$language[temp_prompt_yes]"><input type="submit" NAME="no" VALUE="$language[temp_prompt_no]">
+	<td colspan="10" align="left"><input type="submit" name="yes" value="{t}Yes{/t}"><input type="submit" name="no" value="{t}No{/t}">
 	</td>
 	</tr>
 	</tr>

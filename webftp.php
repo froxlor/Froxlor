@@ -30,6 +30,8 @@ $editFileNoExtension = true;
 $default_mode = "FTP_BINARY";
 // Max. uploadsize (0 = unlimited)
 $MAX_FILE_SIZE = 1907300;
+// The color of a marked row
+$marked_color = '#FFC2CA';
 
 header("Content-Type: text/html; charset=utf-8");
 
@@ -371,7 +373,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 				}
 				else
 				{
-					$errormessage = sprintf(_('Directory change to \'%1$s\' failed!'), $file);
+					$errormessage = sprintf(_('Directory change to \'%1$s\' failed!') . "\n", $file);
 				}
 				break;
 			case "get":			// Datei dwonload
@@ -412,7 +414,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 				{
 					if(file_exists($_FILES[$myFile]['tmp_name']) && ($_FILES[$myFile]['size'] > $MAX_FILE_SIZE && $MAX_FILE_SIZE!=0))
 					{
-						$errormessage .= sprintf(_('<strong>File \'%1$s\' is to big!</strong> (max. %2$u bytes)<br />'), $_FILES[$myFile]['name'], $MAX_FILE_SIZE);
+						$errormessage .= sprintf(_('File \'%1$s\' is to big! (max. %2$u bytes)') . "\n", $_FILES[$myFile]['name'], $MAX_FILE_SIZE);
 					}
 					elseif(file_exists($_FILES[$myFile]['tmp_name']))
 					{
@@ -427,11 +429,11 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 
 						if(!$uploadStatus)
 						{
-							$errormessage .= sprintf(_('<br />File \'%1$s\' couldn\'t be uploaded!'), $_FILES[$myFile]['name']);
+							$errormessage .= sprintf(_('File \'%1$s\' couldn\'t be uploaded!') . "\n", $_FILES[$myFile]['name']);
 						}
 						else
 						{
-							$successmessage .= sprintf(_('<br />File \'%1$s\' was successfully uploaded!'), $_FILES[$myFile]['name']);
+							$successmessage .= sprintf(_('File \'%1$s\' was successfully uploaded!') . "\n", $_FILES[$myFile]['name']);
 						}
 
 						unlink($_FILES[$myFile]['tmp_name']);
@@ -441,21 +443,21 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 			case "deldir":		// Ordner löschen
 				if(ftp_rmdir($connection,  html_entity_decode($file)))
 				{
-					$successmessage = sprintf(_('<br />Directory \'%1$s\' deleted!'), $file);
+					$successmessage = sprintf(_('Directory \'%1$s\' deleted!') . "\n", $file);
 				}
 				else
 				{
-					$errormessage = sprintf(_('<br />Directory \'%1$s\' couldn\'t be deleted!'), $file);
+					$errormessage = sprintf(_('Directory \'%1$s\' couldn\'t be deleted!') . "\n", $file);
 				}
 				break;
 			case "delfile":		// Datei löschen
 				if (@ftp_delete($connection,  $file))
 				{
-					$successmessage = sprintf(_('<br />\'%1$s\' deleted!'), $file);
+					$successmessage = sprintf(_('\'%1$s\' deleted!') . "\n", $file);
 				}
 				else
 				{
-					$errormessage = sprintf(_('<br />\'%1$s\' couldn\'t be deleted!'), $file);
+					$errormessage = sprintf(_('\'%1$s\' couldn\'t be deleted!') . "\n", $file);
 				}
 				break;
 			case "rename":		// Datei umbennenen
@@ -463,26 +465,26 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 				{
 					if (@ftp_rename($connection, $file, $_POST['file2']))
 					{
-						$successmessage = sprintf(_('\'%1$s\' renamed to \'%2$s\''), $file, $_POST['file2']);
+						$successmessage = sprintf(_('\'%1$s\' renamed to \'%2$s\'') . "\n", $file, $_POST['file2']);
 					}
 					else
 					{
-						$errormessage = sprintf(_('\'%1$s\' couldn\'t be renamed to \'%2$s\'!'), $file, $_POST['file2']);
+						$errormessage = sprintf(_('\'%1$s\' couldn\'t be renamed to \'%2$s\'!') . "\n", $file, $_POST['file2']);
 					}
 				}
 				elseif($_GET['op']=="show")
 				{
-					$smarty->assign('rename_text', sprintf(_('File \'%1$s\' rename/move to'), $file));
+					$smarty->assign('rename_text', sprintf(_('File \'%1$s\' rename/move to') . "\n", $file));
 				}
 				break;
 			case "createdir":  // neuen Ordner erstellen
 				if(@ftp_mkdir($connection,  $file))
 				{
-					$successmessage = sprintf(_('Directory \'%1$s\' created'), $file);
+					$successmessage = sprintf(_('Directory \'%1$s\' created') . "\n", $file);
 				}
 				else
 				{
-					$errormessage = sprintf(_('Directory \'%1$s\' couldn\'t be created!'), $file);
+					$errormessage = sprintf(_('Directory \'%1$s\' couldn\'t be created!') . "\n", $file);
 				}
 				break;
 			case "chmod":  // Berechtigungen setzen
@@ -497,18 +499,18 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 				}
 				if ($wrongchmod || strlen($_POST['chmod']) > 3)
 				{
-					$errormessage = sprintf(_('<br />The permission \'%1$s\' you entered is not valid!'), $_POST['file2']);
+					$errormessage = sprintf(_('The permission \'%1$s\' you entered is not valid!') . "\n", $_POST['file2']);
 				}
 				else
 				{
 					$command = "chmod {$_POST['file2']} {$_POST['file']}";
 					if(!$wrongchmod && ftp_site($connection,$command))
 					{
-						$successmessage = sprintf(_('<br />The permission of \'%1$s\' is set to \'%2$s\'!'), $file, $_POST['file2']);
+						$successmessage = sprintf(_('The permission of \'%1$s\' is set to \'%2$s\'!') . "\n", $file, $_POST['file2']);
 					}
 					else
 					{
-						$errormessage = sprintf(_('<br />The permission of \'%1$s\' couldn\'t be set to \'%2$s\'!'), $file, $_POST['file2']);
+						$errormessage = sprintf(_('The permission of \'%1$s\' couldn\'t be set to \'%2$s\'!') . "\n", $file, $_POST['file2']);
 					}
 				}
 				break;
@@ -528,7 +530,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 						}
 						if($wrongchmod || strlen($_POST['chmod'])>3)
 						{
-							$errormessage .= sprintf(_('<br />The permission \'%1$s\' you entered is not valid!'), $_POST['file2']);
+							$errormessage .= sprintf(_('The permission \'%1$s\' you entered is not valid!') . "\n", $_POST['file2']);
 						}
 						else
 						{
@@ -539,11 +541,11 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 									$command = "chmod $_POST[chmod] ".$myName;
 									if (ftp_site($connection,$command))
 									{
-										$successmessage .= sprintf(_('<br />The permission of \'%1$s\' is set to \'%2$s\'!'), $myName, $_POST['chmod']);
+										$successmessage .= sprintf(_('The permission of \'%1$s\' is set to \'%2$s\'!') . "\n", $myName, $_POST['chmod']);
 									}
 									else
 									{
-										$errormessage .= sprintf(_('<br />The permission of \'%1$s\' couldn\'t be set to \'%2$s\'!'), $myName, $_POST['chmod']);
+										$errormessage .= sprintf(_('The permission of \'%1$s\' couldn\'t be set to \'%2$s\'!') . "\n", $myName, $_POST['chmod']);
 									}
 								}
 							}
@@ -568,11 +570,11 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 
 								if($del_status)
 								{
-									$successmessage .= sprintf(_('<br />\'%1$s\' deleted!'), $myName);
+									$successmessage .= sprintf(_('\'%1$s\' deleted!') . "\n", $myName);
 								}
 								else
 								{
-									$errormessage .= sprintf(_('<br />\'%1$s\' couldn\'t be deleted!'), $myName);
+									$errormessage .= sprintf(_('\'%1$s\' couldn\'t be deleted!') . "\n", $myName);
 								}
 							}
 						}
@@ -592,18 +594,18 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 								{
 									if(ftp_rename($connection, $myName,$_POST['move_to'].$myName))
 									{
-										$successmessage .= sprintf(_('<br />File \'%1$s\' moved'), $myName);
+										$successmessage .= sprintf(_('File \'%1$s\' moved') . "\n", $myName);
 									}
 									else
 									{
-										$errormessage .= sprintf(_('<br />File \'%1$s\' couldn\'t be moved'), $myName);
+										$errormessage .= sprintf(_('File \'%1$s\' couldn\'t be moved') . "\n", $myName);
 									}
 								}
 							}
 						}
 						else
 						{
-							$errormessage = sprintf(_('The directory \'%1$s\' doesn\'t exist'), $_POST['move_to']);
+							$errormessage = sprintf(_('The directory \'%1$s\' doesn\'t exist') . "\n", $_POST['move_to']);
 						}
 					}
 				}
@@ -647,7 +649,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 						if(!$downloadStatus)
 						{
 							fclose($fp);
-							$errormessage = sprintf(_('File \'%1$s\' couldn\'t be downloaded!'), $file);
+							$errormessage = sprintf(_('File \'%1$s\' couldn\'t be downloaded!') . "\n", $file);
 							$myFileContent = '';
 						}
 						else
@@ -684,18 +686,18 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 
 						if(!$uploadStatus)
 						{
-							$errormessage = sprintf(_('File \'%1$s\' couldn\'t be saved!'), $file);
+							$errormessage = sprintf(_('File \'%1$s\' couldn\'t be saved!') . "\n", $file);
 						}
 						else
 						{
-							$successmessage = sprintf(_('File \'%1$s\' was saved succesfully!'), $file);
+							$successmessage = sprintf(_('File \'%1$s\' was saved succesfully!') . "\n", $file);
 						}
 						unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
 					}
 				}
 				else
 				{
-					$errormessage = sprintf(_('Files with these extension can\'t be created/edited!'), $file);
+					$errormessage = sprintf(_('Files with this extension can\'t be created/edited!') . "\n", $file);
 				}
 
 				if((isset($_GET['op']) && $_GET['op'] != "new") && (isset($_POST['op']) && $_POST['op'] != "new"))
@@ -703,7 +705,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 					if($file == "")
 					{
 						$editAble = false;
-						$errormessage = _('Please enter a filename!');
+						$errormessage = _('Please enter a filename!') . "\n";
 					}
 				}
 				break;
@@ -766,7 +768,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 						$countArray['dirsize'] += $myDir['size'];
 						$fileAction = "cd";
 						$fileName = $myDir["name"];
-						if(is_array($file) && val_in_array($fileName, $file))
+						if(is_array($file) && in_array($fileName, $file))
 						{
 							$smarty->assign('checked', 'checked');
 							$smarty->assign('checked_color', "bgcolor=\"".$marked_color."\"");
@@ -790,7 +792,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 						$countArray['link']++;
 						$fileAction = "cd";
 						$fileName = $myDir["target"];
-						if (is_array($file) && val_in_array($fileName, $file))
+						if (is_array($file) && in_array($fileName, $file))
 						{
 							$smarty->assign('checked', 'checked');
 							$smarty->assign('checked_color', "bgcolor=\"".$marked_color."\"");
@@ -815,7 +817,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 						$countArray['filesize'] += $myDir['size'];
 						$fileAction = "get";
 						$fileName = $myDir["name"];
-						if (is_array($file) && val_in_array($fileName, $file))
+						if (is_array($file) && in_array($fileName, $file))
 						{
 							$smarty->assign('checked', 'checked');
 							$smarty->assign('checked_color', "bgcolor=\"".$marked_color."\"");
@@ -872,16 +874,16 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 			{
 				if($_POST['op']=="delete")
 				{
-					$smarty->assign('action_text', _('Do you really want to delete the selected files?'));
+					$smarty->assign('action_text', _('Do you really want to delete the selected files?') . "\n");
 				}
 				elseif($_POST['op']=="move")
 				{
-					$smarty->assign('action_text', sprintf(_('Do you really want to move the selected files to \'%1$s\'?'), $_POST['move_to']));
+					$smarty->assign('action_text', sprintf(_('Do you really want to move the selected files to \'%1$s\'?') . "\n", $_POST['move_to']));
 					$smarty->assign('move_to', $_POST['move_to']);
 				}
 				elseif($_POST['op']=="chmod")
 				{
-					$smarty->assign('action_text', sprintf(_('Do you really want to set the permission of the selected files to \'%1$s\'?'), $_POST['chmod']));
+					$smarty->assign('action_text', sprintf(_('Do you really want to set the permission of the selected files to \'%1$s\'?') . "\n", $_POST['chmod']));
 					$smarty->assign('chmod', $_POST['chmod']);
 				}
 				$smarty->assign('op', $_POST['op']);
@@ -904,7 +906,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 	}
 	else
 	{
-		$smarty->assign('errormessage', _('Login failed, please try again'));
+		$smarty->assign('errormessage', _('Login failed, please try again') . "\n");
 		session_destroy();
 		$body = $smarty->fetch('login/login_ftp.tpl');
 	}
