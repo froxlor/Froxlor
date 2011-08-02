@@ -41,7 +41,7 @@ if($settings['system']['backup_enabled'] == '1'){
 
 	    // create backup dir an set rights
 	    if(!file_exists($row['documentroot'] . $settings['system']['backup_dir'])){
-		safe_exec('install -d ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . ' -o ' . escapeshellarg($ftp_row['uid']) . ' -g ' . escapeshellarg($ftp_row['gid']) . ' -m ' . '0500'); 
+		safe_exec('install -d ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . ' -o ' . escapeshellarg($ftp_row['uid']) . ' -g ' . escapeshellarg($ftp_row['gid']) . ' -m ' . '0500');
 	    }
 
 	    // create customers html backup
@@ -51,7 +51,7 @@ if($settings['system']['backup_enabled'] == '1'){
 	    $dbs_result = $db->query("SELECT databasename FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = '" . $db->escape($row['customerid']) . "';");
 	    while($dbs_row = $db->fetch_array($dbs_result)){
 		// create customers sql backup
-		safe_exec(escapeshellarg($settings['system']['backup_mysqldump_path']) . ' --opt --allow-keywords -u ' . $sql_root[0]['user'] . ' -p' . $sql_root[0]['password'] . ' -h ' . $sql_root[0]['host'] . ' ' . escapeshellarg($dbs_row['databasename']) . ' -r ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/' . escapeshellarg($dbs_row['databasename']) . '.sql'  );
+		safe_exec(escapeshellarg($settings['system']['backup_mysqldump_path']) . ' --opt  --force --allow-keywords -u ' . $sql_root[0]['user'] . ' -p' . $sql_root[0]['password'] . ' -h ' . $sql_root[0]['host'] . ' ' . escapeshellarg($dbs_row['databasename']) . ' -r ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/' . escapeshellarg($dbs_row['databasename']) . '.sql'  );
 		// compress sql backup
 		safe_exec('tar -C ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . ' -c -z -f ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/' . escapeshellarg($dbs_row['databasename']) . '.tar.gz ' . escapeshellarg($dbs_row['databasename']) . '.sql');
 		// remove uncompresed sql files
