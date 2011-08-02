@@ -67,7 +67,7 @@ return array(
 						'values' => array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')
 									),
-						'value' => array()
+						'value' => array($result['iswildcarddomain'])
 					),
 					'isemaildomain' => array(
 						'visible' => ((( $result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2' ) && $result['parentdomainid'] != '0') ? true : false),
