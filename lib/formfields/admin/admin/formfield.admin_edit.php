@@ -41,6 +41,7 @@ return array(
 					'admin_password' => array(
 						'label' => $lng['login']['password'].'&nbsp;('.$lng['panel']['emptyfornochanges'].')',
 						'type' => 'password',
+						'autocomplete' => 'off',
 						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
 					),
 					'admin_password_suggestion' => array(

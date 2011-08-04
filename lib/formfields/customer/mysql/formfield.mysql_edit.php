@@ -42,6 +42,7 @@ return array(
 					'mysql_password' => array(
 						'label' => $lng['changepassword']['new_password_ifnotempty'],
 						'type' => 'password',
+						'autocomplete' => 'off'
 					),
 					'mysql_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],

@@ -32,7 +32,8 @@ return array(
 					'admin_password' => array(
 						'label' => $lng['login']['password'],
 						'type' => 'password',
-						'mandatory' => true
+						'mandatory' => true,
+						'autocomplete' => 'off'
 					),
 					'admin_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],

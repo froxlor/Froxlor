@@ -47,6 +47,7 @@ return array(
 					'new_customer_password' => array(
 						'label' => $lng['login']['password'],
 						'type' => 'password',
+						'autocomplete' => 'off'
 					),
 					'new_customer_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],

@@ -36,6 +36,7 @@ return array(
 					'mysql_password' => array(
 						'label' => $lng['login']['password'],
 						'type' => 'password',
+						'autocomplete' => 'off'
 					),
 					'mysql_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],

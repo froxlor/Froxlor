@@ -44,6 +44,7 @@ return array(
 					'ftp_password' => array(
 						'label' => $lng['login']['password'],
 						'type' => 'password',
+						'autocomplete' => 'off'
 					),
 					'ftp_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
