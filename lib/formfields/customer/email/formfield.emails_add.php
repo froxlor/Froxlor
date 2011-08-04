@@ -36,7 +36,7 @@ return array(
 						'type' => 'select',
 						'select_var' => $domains
 					),
-					'pathedit' => array(
+					'iscatchall' => array(
 						'label' => $lng['emails']['iscatchall'],
 						'type' => 'checkbox',
 						'values' => array(
