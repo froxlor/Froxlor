@@ -325,6 +325,20 @@ while($row = $db->fetch_array($result_tasks))
 				}
 
 				/*
+				 * remove tmpdir if it exists
+				 */
+				$tmpdir = makeCorrectDir($settings['system']['mod_fcgid_tmpdir'] . '/' . $row['data']['loginname'] . '/');
+
+				if (is_dir($tmpdir)
+				&& $tmpdir != "/"
+				&& $tmpdir != $settings['system']['mod_fcgid_tmpdir']
+				&& substr($tmpdir, 0, strlen($settings['system']['mod_fcgid_tmpdir'])) == $settings['system']['mod_fcgid_tmpdir'])
+				{
+					 $cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($tmpdir));
+					 safe_exec('rm -rf '.escapeshellarg($tmpdir));
+				}
+
+				/*
 				 * see if we have some php-fcgid leftovers if used
 				 * and remove them, #200
 				 */
