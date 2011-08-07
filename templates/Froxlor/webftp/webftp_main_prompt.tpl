@@ -19,8 +19,7 @@ font-weight: bold;
 		</td>
 	</tr>
 	<tr>
-	<td colspan="10" align="left"><input type="submit" name="yes" value="{t}Yes{/t}"><input type="submit" name="no" value="{t}No{/t}">
-	</td>
+	<td colspan="10" align="left"><input type="submit" name="yes" value="{t}Yes{/t}"><input type="submit" name="no" value="{t}No{/t}"></td>
 	</tr>
 	</tr>
 </table>

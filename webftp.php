@@ -17,6 +17,8 @@
 // Configuration
 // Server to connect to:
 $server = 'localhost';
+// Connect to the FTP - server via SSL or not
+$useSsl = false;
 
 // Temporary directory on the server (need write permissions)
 $downloadDir = "/tmp/";
@@ -193,7 +195,14 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 		 $_SESSION['password'] = $_POST['password'];
 	}
 
-	$connection = @ftp_connect($_SESSION['server']);
+	if ($useSsl)
+	{
+		$connection = @ftp_ssl_connect($_SESSION['server']);
+	}
+	else
+	{
+		$connection = @ftp_connect($_SESSION['server']);
+	}
 	$loggedOn = @ftp_login($connection, $_SESSION['user'], $_SESSION['password']);
 	$systype = @ftp_systype($connection);
 	$pasv = @ftp_pasv($connection, false);
