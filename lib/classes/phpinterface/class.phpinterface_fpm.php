@@ -105,7 +105,7 @@ class phpinterface_fpm
 			$tmpdir = makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/');
 			if(!is_dir($tmpdir))
 			{
-				safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
+				$this->getTempDir();
 			}
 			//$slowlog = makeCorrectFile($this->_settings['system']['logfiles_directory'] . $this->_domain['loginname'] . '/php-fpm_slow.log');
 
@@ -173,9 +173,9 @@ class phpinterface_fpm
 
 	/**
 	 * fpm-config file
-	 * 
+	 *
 	 * @param boolean $createifnotexists create the directory if it does not exist
-	 * 
+	 *
 	 * @return string the full path to the file
 	 */
 	public function getConfigFile($createifnotexists = true)
@@ -193,9 +193,9 @@ class phpinterface_fpm
 
 	/**
 	 * return path of fpm-socket file
-	 * 
+	 *
 	 * @param boolean $createifnotexists create the directory if it does not exist
-	 * 
+	 *
 	 * @return string the full path to the socket
 	 */
 	public function getSocketFile($createifnotexists = true)
@@ -214,9 +214,9 @@ class phpinterface_fpm
 
 	/**
 	 * fpm-temp directory
-	 * 
+	 *
 	 * @param boolean $createifnotexists create the directory if it does not exist
-	 * 
+	 *
 	 * @return string the directory
 	 */
 	public function getTempDir($createifnotexists = true)
