@@ -1662,3 +1662,11 @@ if(isFroxlorVersion('0.9.22-rc1'))
 	updateToVersion('0.9.22');
 }
 
+if(isFroxlorVersion('0.9.22'))
+{
+	showUpdateStep("Updating from 0.9.22 to 0.9.23-rc1");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.23-rc1');
+}
+
