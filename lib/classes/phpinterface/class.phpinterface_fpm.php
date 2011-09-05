@@ -205,8 +205,8 @@ class phpinterface_fpm
 
 		if(!is_dir($socketdir) && $createifnotexists)
 		{
-			safe_exec('mkdir -p '.$socketdir);
-			safe_exec('chown -R '.$this->_settings['system']['httpuser'].':'.$this->_settings['system']['httpgroup'].' '.$socketdir);
+			safe_exec('mkdir -p '.escapeshellarg($socketdir));
+			safe_exec('chown -R '.$this->_settings['system']['httpuser'].':'.$this->_settings['system']['httpgroup'].' '.escapeshellarg($socketdir));
 		}
 
 		return $socket;
