@@ -199,6 +199,35 @@ while($row = $db->fetch_array($result))
 
 		// make the stuff readable for the customer, #258
 		makeChownWithNewStats($row);
+		
+		// logrotate
+		if($settings['system']['logrotate_enabled'] == '1')
+		{
+			fwrite($debugHandler, '   logrotate customers logs' . "\n");
+
+			$logrotatefile = '/tmp/froxlor_logrotate_tmpfile.conf';
+			$fh = fopen($logrotatefile, 'w');
+
+			$logconf = '# ' . basename($logrotatefile) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" .
+				$settings['system']['logfiles_directory'] . $row['loginname'] . '-access.log ' .
+				$settings['system']['logfiles_directory'] . $row['loginname'] . '-error.log {' . "\n" .
+				$settings['system']['logrotate_interval'] . "\n" .
+				'missingok' . "\n" .
+				'rotate ' . $settings['system']['logrotate_keep'] . "\n" .
+				'compress' . "\n" .
+				'delaycompress' . "\n" .
+				'notifempty' . "\n" .
+				'create' . "\n" .
+				'}' . "\n";
+
+			fwrite($fh, $logconf);
+			fclose($fh);
+
+			safe_exec(escapeshellcmd($settings['system']['logrotate_binary']) . ' ' . $logrotatefile);
+
+			fwrite($debugHandler, '   apache::reload: reloading apache' . "\n");
+			safe_exec(escapeshellcmd($settings['system']['apachereload_command']));
+		}
 
 		/**
 		 * Webalizer/AWStats might run for some time, so we'd better check if our database is still present
