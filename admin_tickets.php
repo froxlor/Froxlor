@@ -170,7 +170,7 @@ if($page == 'tickets'
 				$newticket->Set('priority', validate($_POST['priority'], 'priority'), true, false);
 				$newticket->Set('category', validate($_POST['category'], 'category'), true, false);
 				$newticket->Set('customer', (int)$_POST['customer'], true, false);
-				$newticket->Set('message', validate(str_replace("\r\n", "\n", $_POST['message']), 'message', '/^[^\0]*$/'), true, false);
+				$newticket->Set('message', validate(htmlentities(str_replace("\r\n", "\n", $_POST['message'])), 'message', '/^[^\0]*$/'), true, false);
 
 				if($newticket->Get('subject') == null)
 				{
@@ -251,7 +251,7 @@ if($page == 'tickets'
 			$replyticket = ticket::getInstanceOf($userinfo, $db, $settings, -1);
 			$replyticket->Set('subject', validate($_POST['subject'], 'subject'), true, false);
 			$replyticket->Set('priority', validate($_POST['priority'], 'priority'), true, false);
-			$replyticket->Set('message', validate(str_replace("\r\n", "\n", $_POST['message']), 'message', '/^[^\0]*$/'), true, false);
+			$replyticket->Set('message', validate(htmlentities(str_replace("\r\n", "\n", $_POST['message'])), 'message', '/^[^\0]*$/'), true, false);
 
 			if($replyticket->Get('message') == null)
 			{
