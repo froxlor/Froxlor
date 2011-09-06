@@ -1619,9 +1619,12 @@ $lng['tasks']['diskspace_set_quota'] = 'Quota auf dem Dateisystem setzen';
 $lng['error']['session_timeout'] = 'Wert zu niedrig';
 $lng['error']['session_timeout_desc'] = 'Der Wert der Session Timeout sollte nicht unter einer Minute liegen.';
 
-// ADDED IN FROXLOR 0.9.23
+// ADDED IN FROXLOR 0.9.24-svn1
 $lng['logrotate'] = 'Logrotate';
 $lng['logrotate_enabled'] = 'Logrotate aktivieren?';
 $lng['logrotate_binary'] = 'Pfad zum logrotate binary?';
 $lng['logrotate_interval'] = 'Intervall?';
 $lng['logrotate_keep'] = 'Wie viele Logdateien sollen aufbewahrt werden?';
+$lng['admin']['assignedmax'] = 'Zugewiesen / Max.';
+$lng['admin']['usedmax'] = 'Benutzt / Max.';	
+$lng['admin']['used'] = 'Benutzt';
