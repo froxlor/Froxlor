@@ -1423,7 +1423,7 @@ $lng['serversettings']['mail_also_with_mxservers'] = 'Create mail-, imap-, pop3-
 $lng['aps']['nocontingent'] = 'Your APS contingent is insufficient. You cannot install any package.';
 $lng['aps']['packageneedsdb'] = 'This package needs a database but your contingent is used up';
 $lng['aps']['cannoteditordeleteapsdb'] = 'APS databases cannot be edited or removed here';
-$lng['admin']['webserver_Puser'] = 'Webserver user-name';
+$lng['admin']['webserver_user'] = 'Webserver user-name';
 $lng['admin']['webserver_group'] = 'Webserver group-name';
 
 // ADDED IN FROXLOR 0.9.10
