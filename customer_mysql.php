@@ -71,7 +71,7 @@ elseif($page == 'mysqls')
 			{
 				$row = htmlentities_array($row);
 				$mbdata = $db_root->query_first("SELECT SUM( data_length + index_length) / 1024 / 1024 'MB' FROM information_schema.TABLES WHERE table_schema = '" . $db_root->escape($row['databasename']) . "' GROUP BY table_schema ;");
-				$row['size'] = $mbdata['MB'];
+				$row['size'] = number_format($mbdata['MB'], 3, '.', '');
 				eval("\$mysqls.=\"" . getTemplate("mysql/mysqls_database") . "\";");
 				$count++;
 			}
