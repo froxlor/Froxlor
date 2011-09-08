@@ -12,6 +12,7 @@
 	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 	<script type="text/javascript" src="templates/Froxlor/js/jquery.min.js"></script>
 	<script type="text/javascript" src="templates/Froxlor/js/froxlor.js"></script>
+	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
 </head>
 <body>
