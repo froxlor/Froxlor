@@ -4,4 +4,5 @@ dbname = <SQL_DB>
 table = mail_users
 select_field = maildir
 where_field = email
+additional_conditions = and postfix = 'Y'
 hosts = <SQL_HOST> 
