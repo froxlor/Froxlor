@@ -1,6 +1,7 @@
 <tr>
 	<td>{$row['databasename']}</td>
 	<td>{$row['description']}</td>
+	<td>{$row['size']}</td>
 	<if 1 < count($sql_root)><td>{$sql_root[$row['dbserver']]['caption']}</td></if>
 	<if $row['apsdb'] != '1'>
 		<td>

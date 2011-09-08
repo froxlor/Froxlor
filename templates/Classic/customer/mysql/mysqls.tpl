@@ -15,6 +15,7 @@ $header
 			<tr>
 				<td class="field_display_border_left">{$lng['mysql']['databasename']}&nbsp;&nbsp;{$arrowcode['databasename']}</td>
 				<td class="field_display">{$lng['mysql']['databasedescription']}&nbsp;&nbsp;{$arrowcode['description']}</td>
+				<td class="field_display">{$lng['panel']['megabyte']}</td>
 				<if 1 < count($sql_root)><td class="field_display">{$lng['mysql']['mysql_server']}</td></if>
 				<td class="field_display_search" colspan="2">{$sortcode}</td>
 			</tr>

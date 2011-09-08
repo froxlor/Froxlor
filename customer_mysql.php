@@ -62,17 +62,24 @@ elseif($page == 'mysqls')
 		$count = 0;
 		$mysqls = '';
 
+		// Begin root-session
+		$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
+		unset($db_root->password);
 		while($row = $db->fetch_array($result))
 		{
 			if($paging->checkDisplay($i))
 			{
 				$row = htmlentities_array($row);
+				$mbdata = $db_root->query_first("SELECT SUM( data_length + index_length) / 1024 / 1024 'MB' FROM information_schema.TABLES WHERE table_schema = '" . $db_root->escape($row['databasename']) . "' GROUP BY table_schema ;");
+				$row['size'] = $mbdata['MB'];
 				eval("\$mysqls.=\"" . getTemplate("mysql/mysqls_database") . "\";");
 				$count++;
 			}
 
 			$i++;
 		}
+		$db_root->close();
+		// End root-session
 
 		$mysqls_count = $db->num_rows($result);
 		eval("echo \"" . getTemplate("mysql/mysqls") . "\";");
