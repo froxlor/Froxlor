@@ -153,8 +153,8 @@ $lng['ftp']['account_add'] = 'Create Account';
  * MySQL
  */
 
-$lng['mysql']['databasename'] = 'user/database name';
-$lng['mysql']['databasedescription'] = 'database description';
+$lng['mysql']['databasename'] = 'User/Database name';
+$lng['mysql']['databasedescription'] = 'Database description';
 $lng['mysql']['database_create'] = 'Create database';
 
 /**
@@ -1897,3 +1897,4 @@ $lng['logrotate_keep'] = 'How many logfiles should be kept?';
 $lng['admin']['assignedmax'] = 'Assigned / Max';
 $lng['admin']['usedmax'] = 'Used / Max';
 $lng['admin']['used'] = 'Used';
+$lng['mysql']['size'] = 'Database size (MB)';

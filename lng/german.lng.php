@@ -1628,3 +1628,4 @@ $lng['logrotate_keep'] = 'Wie viele Logdateien sollen aufbewahrt werden?';
 $lng['admin']['assignedmax'] = 'Zugewiesen / Max.';
 $lng['admin']['usedmax'] = 'Benutzt / Max.';	
 $lng['admin']['used'] = 'Benutzt';
+$lng['mysql']['size'] = 'Datenbankgr&ouml;&szlig;e (MB)';
