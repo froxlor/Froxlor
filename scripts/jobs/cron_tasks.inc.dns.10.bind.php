@@ -279,14 +279,21 @@ class bind
 
 		if($domain['iswildcarddomain'] == '1')
 		{
-			$zonefile.= '*	IN  ' . $ip_a_record . "\n";
+			$zonefile.= '*	IN      ' . $ip_a_record . "\n";
 		}
 
 		$subdomains = $this->db->query('SELECT `d`.`domain`, `ip`.`ip` AS `ip` FROM `' . TABLE_PANEL_DOMAINS . '` `d`, `' . TABLE_PANEL_IPSANDPORTS . '` `ip` WHERE `parentdomainid`=\'' . $domain['id'] . '\' AND `d`.`ipandport`=`ip`.`id`');
 
 		while($subdomain = $this->db->fetch_array($subdomains))
 		{
-			$zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '	IN	A	' . $subdomain['ip'] . "\n";
+                        if(filter_var($subdomain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+                        {
+                                $zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      A       ' . $subdomain['ip'] . "\n";
+                        }
+                        else
+                        {
+                                $zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      AAAA    ' . $subdomain['ip'] . "\n";
+                        }
 		}
 
 		return $zonefile;
