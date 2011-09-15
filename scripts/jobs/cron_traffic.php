@@ -408,7 +408,6 @@ while($row = $db->fetch_array($result))
 	 * Total Usage
 	 */
 
-	$diskusage = floatval($webspaceusage + $emailusage + $mysqlusage);
 	if($settings['system']['backup_count'] == 0 && file_exists($settings['system']['backup_dir'] . $row['loginname'])){
 		$backupsize = exec('du -s ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '');
                 $diskusage = floatval($webspaceusage + $emailusage + $mysqlusage - $backupsize);

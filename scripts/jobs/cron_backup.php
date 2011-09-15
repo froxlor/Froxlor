@@ -40,39 +40,45 @@ if($settings['system']['backup_enabled'] == '1'){
 	    $ftp_row = mysql_fetch_array($ftp_result);
 
 	    // create backup dir an set rights
-	    if(!file_exists($row['documentroot'] . $settings['system']['backup_dir'])){
-		safe_exec('install -d ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . ' -o ' . escapeshellarg($ftp_row['uid']) . ' -g ' . escapeshellarg($ftp_row['gid']) . ' -m ' . '0500');
+       if(!file_exists($settings['system']['backup_dir'] . $row['loginname']) {
+		safe_exec('install -d ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . ' -o ' . escapeshellarg($ftp_row['uid']) . ' -g ' . escapeshellarg($ftp_row['gid']) . ' -m ' . '0500');
 	    }
 
 	    // create customers html backup
-	    safe_exec('tar -C ' . escapeshellarg($row['documentroot']) . ' -c -z -f ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname']  . '/' . escapeshellarg($row['loginname']) . 'html.tar.gz .');
+	    safe_exec('tar -C ' . escapeshellarg($row['documentroot']) . ' -c -z -f ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname'])  . '/' . escapeshellarg($row['loginname']) . 'html.tar.gz .');
 
 	    // get customer dbs
 	    $dbs_result = $db->query("SELECT databasename FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = '" . $db->escape($row['customerid']) . "';");
 	    while($dbs_row = $db->fetch_array($dbs_result)){
 		// create customers sql backup
-		safe_exec(escapeshellarg($settings['system']['backup_mysqldump_path']) . ' --opt  --force --allow-keywords -u ' . $sql_root[0]['user'] . ' -p' . $sql_root[0]['password'] . ' -h ' . $sql_root[0]['host'] . ' ' . escapeshellarg($dbs_row['databasename']) . ' -r ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/' . escapeshellarg($dbs_row['databasename']) . '.sql'  );
+		safe_exec(escapeshellarg($settings['system']['backup_mysqldump_path']) . ' --opt --force --allow-keywords -u ' . escapeshellarg($sql_root[0]['user']) . ' -p' . escapeshellarg($sql_root[0]['password']) . ' -h ' . $sql_root[0]['host'] . ' ' . escapeshellarg($dbs_row['databasename']) . ' -r ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/' . escapeshellarg($dbs_row['databasename']) . '.sql'  );
 		// compress sql backup
-		safe_exec('tar -C ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . ' -c -z -f ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/' . escapeshellarg($dbs_row['databasename']) . '.tar.gz ' . escapeshellarg($dbs_row['databasename']) . '.sql');
+		safe_exec('tar -C ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . ' -c -z -f ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/' . escapeshellarg($dbs_row['databasename']) . '.tar.gz ' . escapeshellarg($dbs_row['databasename']) . '.sql');
 		// remove uncompresed sql files
-		safe_exec('rm ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/' . escapeshellarg($dbs_row['databasename']) . '.sql');
+		safe_exec('rm ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/' . escapeshellarg($dbs_row['databasename']) . '.sql');
 	    }
 
 	    // create 1 big file with html & db
 	    if($settings['system']['backup_bigfile'] == 1){
-		safe_exec('tar -C ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/'  . ' --exclude=' . escapeshellarg($row['loginname']) . '.tar.gz -c -z -f ' . $settings['system']['backup_dir'] . $row['loginname'] . '/' . escapeshellarg($row['loginname']) . '.tar.gz .');
+		safe_exec('tar -C ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/'  . ' --exclude=' . escapeshellarg($row['loginname']) . '.tar.gz -c -z -f ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/' . escapeshellarg($row['loginname']) . '.tar.gz .');
 		// remove separated files
 		$tmp_files = scandir($settings['system']['backup_dir'] . $row['loginname']);
 		foreach ($tmp_files as $tmp_file){
 		    if(preg_match('/.*(html|sql|aps).*\.tar\.gz$/', $tmp_file) && !preg_match('/^' . $row['loginname'] . '\.tar\.gz$/', $tmp_file)){
-			safe_exec('rm ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/' . $tmp_file . '');
+			safe_exec('rm ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/' . escapeshellarg($tmp_file) . '');
 		    }
+		}
+	    }
+	    else {
+		//remove big file if separated backups are used
+		if (file_exists($settings['system']['backup_dir'] . $row['loginname'] . '/' . $row['loginname'] . '.tar.gz')) {
+		    safe_exec('rm ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/' . escapeshellarg($row['loginname']) . '.tar.gz');
 		}
 	    }
 
 	    // chown & chmod files to prevent manipulation
-	    safe_exec('chown ' . escapeshellarg($row['guid']) . ':' . escapeshellarg($row['guid']) . ' ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/*');
-	    safe_exec('chmod 0400 ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/*');
+	    safe_exec('chown ' . escapeshellarg($row['guid']) . ':' . escapeshellarg($row['guid']) . ' ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/*');
+	    safe_exec('chmod 0400 ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/*');
 
 	    // create ftp backup user
 	    $user_result = $db->query("SELECT username, password FROM `" . TABLE_FTP_USERS . "` WHERE `customerid` = '" . $db->escape($row['customerid']) . "' AND `username` = '" . $db->escape($row['loginname']) . "';");
@@ -111,7 +117,7 @@ if($settings['system']['backup_enabled'] == '1'){
 		$files = scandir($settings['system']['backup_dir'] . $row['loginname'] . '/');
 		foreach ($files as $file){
 	    	    if(preg_match('/.*\.tar\.gz$/', $file)){
-			safe_exec('rm ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/' . $file . '');
+			safe_exec('rm ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/' . escapeshellarg($file) . '');
 		    }
 		}
 	    }

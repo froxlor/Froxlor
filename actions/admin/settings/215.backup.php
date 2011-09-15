@@ -38,7 +38,7 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/var/customers/backups/',
-					'string_regexp' => '/^/.*/$/',
+					'string_regexp' => '^/.*/$',
 					'save_method' => 'storeSettingField',
 				),
 				'backup_mysqldump_path' => array(
