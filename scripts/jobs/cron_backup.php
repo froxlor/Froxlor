@@ -40,7 +40,7 @@ if($settings['system']['backup_enabled'] == '1'){
 	    $ftp_row = mysql_fetch_array($ftp_result);
 
 	    // create backup dir an set rights
-       if(!file_exists($settings['system']['backup_dir'] . $row['loginname']) {
+       if(!file_exists($settings['system']['backup_dir'] . $row['loginname'])) {
 		safe_exec('install -d ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . ' -o ' . escapeshellarg($ftp_row['uid']) . ' -g ' . escapeshellarg($ftp_row['gid']) . ' -m ' . '0500');
 	    }
 
