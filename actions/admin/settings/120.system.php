@@ -59,6 +59,7 @@ return array(
 					'type' => 'string',
 					'default' => '',
 					'save_method' => 'storeSettingHostname',
+					'plausibility_check_method' => 'checkHostname',
 					),
 				'system_froxlordirectlyviahostname' => array(
 					'label' => $lng['serversettings']['froxlordirectlyviahostname'],

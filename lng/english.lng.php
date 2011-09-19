@@ -1898,3 +1898,5 @@ $lng['admin']['assignedmax'] = 'Assigned / Max';
 $lng['admin']['usedmax'] = 'Used / Max';
 $lng['admin']['used'] = 'Used';
 $lng['mysql']['size'] = 'Database size (MB)';
+
+$lng['error']['invalidhostname'] = 'Hostname can\'t be empty nor can it consist only of whitespaces';

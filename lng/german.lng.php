@@ -1626,6 +1626,8 @@ $lng['logrotate_binary'] = 'Pfad zum logrotate binary?';
 $lng['logrotate_interval'] = 'Intervall?';
 $lng['logrotate_keep'] = 'Wie viele Logdateien sollen aufbewahrt werden?';
 $lng['admin']['assignedmax'] = 'Zugewiesen / Max.';
-$lng['admin']['usedmax'] = 'Benutzt / Max.';	
+$lng['admin']['usedmax'] = 'Benutzt / Max.';
 $lng['admin']['used'] = 'Benutzt';
 $lng['mysql']['size'] = 'Datenbankgr&ouml;&szlig;e (MB)';
+
+$lng['error']['invalidhostname'] = 'Hostname darf nicht leer sein oder nur aus Leerzeichen bestehen';
