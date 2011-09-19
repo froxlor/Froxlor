@@ -44,7 +44,7 @@ class nginx
 	/**
 	 * indicator whether a customer is deactivated or not
 	 * if yes, only the webroot will be generated
-	 * 
+	 *
 	 * @var bool
 	 */
 	private $_deactivated = false;
@@ -422,6 +422,7 @@ class nginx
 
 			$vhost_content.= $this->getLogFiles($domain);
 			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
+			
 			if ($this->_deactivated == false) {
 				$vhost_content.= $this->create_pathOptions($domain);
 			//	$vhost_content.= $this->create_htaccess($domain);

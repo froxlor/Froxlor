@@ -38,8 +38,8 @@ class nginx_phpfpm extends nginx
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
 			
 			$php_options_text = "\t".'location ~ \.php$ {'."\n";
-			$php_options_text.= "\t\t".'fastcgi_index index.php;'."\n";
-			$php_options_text.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
+//			$php_options_text.= "\t\t".'fastcgi_index index.php;'."\n";
+//			$php_options_text.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
 				$php_options_text.= "\t\t".'fastcgi_param HTTPS on;'."\n";
 			}
@@ -50,7 +50,7 @@ class nginx_phpfpm extends nginx
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
 			
-			// create php.ini 
+			// create php.ini
 			// @TODO make php-fpm support this
 			$php->getInterface()->createIniFile($phpconfig);
 		}
@@ -70,7 +70,7 @@ class nginx_phpfpm extends nginx
 			$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
 
 			$user = $this->settings['phpfpm']['vhost_httpuser'];
-			$group = $this->settings['phpfpm']['vhost_httpgroup'];	
+			$group = $this->settings['phpfpm']['vhost_httpgroup'];
 
 			$domain = array(
 				'id' => 'none',
@@ -99,7 +99,7 @@ class nginx_phpfpm extends nginx
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
 			
-			// create php.ini 
+			// create php.ini
 			// @TODO make php-fpm support this
 			$php->getInterface()->createIniFile($phpconfig);
 		}
