@@ -73,9 +73,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$description = 'You can define a default support-ticket priority level which is pre-selected for new support-tickets.';
 		$question = '<strong>Which should be the default ticket-priority?:</strong>&nbsp;';
 		$question .= '<select name="update_deftic_priority">';
-		$priorities = makeoption($lng['ticket']['unf_high'], '1', '2');
-		$priorities.= makeoption($lng['ticket']['unf_normal'], '2', '2');
-		$priorities.= makeoption($lng['ticket']['unf_low'], '3', '2');
+		$priorities = makeoption($lng['ticket']['high'], '1', '2');
+		$priorities.= makeoption($lng['ticket']['normal'], '2', '2');
+		$priorities.= makeoption($lng['ticket']['low'], '3', '2');
 		$question .= $priorities.'</select>';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}

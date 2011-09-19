@@ -227,9 +227,9 @@ elseif($page == 'tickets')
 					$categories = makeoption($lng['ticket']['no_cat'], '0');
 				}
 
-				$priorities = makeoption($lng['ticket']['unf_high'], '1', $settings['ticket']['default_priority']);
-				$priorities.= makeoption($lng['ticket']['unf_normal'], '2', $settings['ticket']['default_priority']);
-				$priorities.= makeoption($lng['ticket']['unf_low'], '3', $settings['ticket']['default_priority']);
+				$priorities = makeoption($lng['ticket']['high'], '1', $settings['ticket']['default_priority']);
+				$priorities.= makeoption($lng['ticket']['normal'], '2', $settings['ticket']['default_priority']);
+				$priorities.= makeoption($lng['ticket']['low'], '3', $settings['ticket']['default_priority']);
 				$ticketsopen = 0;
 				$opentickets = $db->query_first('SELECT COUNT(`id`) as `count` FROM `' . TABLE_PANEL_TICKETS . '`
                                            WHERE `customerid` = "' . $userinfo['customerid'] . '"

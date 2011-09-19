@@ -224,9 +224,9 @@ if($page == 'tickets'
 					$customers.= makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
 				}
 
-				$priorities = makeoption($lng['ticket']['unf_high'], '1', $settings['ticket']['default_priority']);
-				$priorities.= makeoption($lng['ticket']['unf_normal'], '2', $settings['ticket']['default_priority']);
-				$priorities.= makeoption($lng['ticket']['unf_low'], '3', $settings['ticket']['default_priority']);
+				$priorities = makeoption($lng['ticket']['high'], '1', $settings['ticket']['default_priority']);
+				$priorities.= makeoption($lng['ticket']['normal'], '2', $settings['ticket']['default_priority']);
+				$priorities.= makeoption($lng['ticket']['low'], '3', $settings['ticket']['default_priority']);
 
 				$ticket_new_data = include_once dirname(__FILE__).'/lib/formfields/admin/tickets/formfield.ticket_new.php';
 				$ticket_new_form = htmlform::genHTMLForm($ticket_new_data);
@@ -673,6 +673,16 @@ elseif($page == 'archive'
 						}
 
 						$tickets_count++;
+						switch ($ticket['priority'])
+						{
+							case 1: $ticket['display'] = 'high';
+							break;
+							case 2: $ticket['display'] = 'normal';
+							break;
+							case 3: $ticket['display'] = 'low';
+							break;
+							default: $ticket['display'] = 'unknown'; 
+						}
 						$ticket['priority'] = ticket::getPriorityText($lng, $ticket['priority']);
 
 						if($ticket['lastreplier'] == '1')
@@ -688,9 +698,7 @@ elseif($page == 'archive'
 						{
 							$ticket['subject'] = substr($ticket['subject'], 0, 17) . '...';
 						}
-
 						$ticket = htmlentities_array($ticket);
-
 						eval("\$tickets.=\"" . getTemplate("tickets/archived_tickets") . "\";");
 						$count++;
 						$_cid = $ticket['customerid'];
@@ -733,9 +741,9 @@ elseif($page == 'archive'
 				}
 			}
 
-			$priorities_options = makecheckbox('priority1', $lng['ticket']['unf_high'], '1');
-			$priorities_options.= makecheckbox('priority2', $lng['ticket']['unf_normal'], '2');
-			$priorities_options.= makecheckbox('priority3', $lng['ticket']['unf_low'], '3');
+			$priorities_options = makecheckbox('priority1', $lng['ticket']['high'], '1');
+			$priorities_options.= makecheckbox('priority2', $lng['ticket']['normal'], '2');
+			$priorities_options.= makecheckbox('priority3', $lng['ticket']['low'], '3');
 			$category_options = '';
 			$ccount = 0;
 			$result = $db->query('SELECT * FROM `' . TABLE_PANEL_TICKET_CATS . '` ORDER BY `name` ASC');

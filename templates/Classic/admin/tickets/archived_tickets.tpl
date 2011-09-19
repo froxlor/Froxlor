@@ -3,7 +3,7 @@
 	<td class="field_name">{$ticket['ticket_answers']}</td>
 	<td class="field_name">{$ticket['subject']}</td>
 	<td class="field_name">{$ticket['lastreplier']}</td>
-	<td class="field_name">{$ticket['priority']}</td>
+	<td class="field_name"><span class="ticket_{$ticket['display']}">{$ticket['priority']}</span></td>
 	<td class="field_name">
     <a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'archive', 'action' => 'view', 'id' => $ticket['id']))}">{$lng['ticket']['show']}</a>
   </td>  

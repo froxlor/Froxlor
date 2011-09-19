@@ -133,7 +133,7 @@ return array(
 					'type' => 'option',
 					'default' => 2,
 					'option_mode' => 'one',
-					'option_options' => array(1 => $lng['ticket']['unf_high'], 2 => $lng['ticket']['unf_normal'], 3 => $lng['ticket']['unf_low']),
+					'option_options' => array(1 => $lng['ticket']['high'], 2 => $lng['ticket']['normal'], 3 => $lng['ticket']['low']),
 					'save_method' => 'storeSettingField', 
 					),
 				),
