@@ -19,9 +19,9 @@
  * chowns either awstats or webalizer folder,
  * either with webserver-user or - if fcgid
  * is used - the customers name, #258
- * 
+ *
  * @param array $row array if panel_customers
- * 
+ *
  * @return void
  */
 function makeChownWithNewStats($row)
@@ -29,7 +29,7 @@ function makeChownWithNewStats($row)
 	global $settings;
 
 	// get correct user
-	if($settings['system']['mod_fcgid'] == 1)
+	if($settings['system']['mod_fcgid'] == '1' && $row['deactivated'] == '0')
 	{
 		$user = $row['loginname'];
 		$group = $row['loginname'];
