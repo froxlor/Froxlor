@@ -1054,7 +1054,8 @@ if($page == 'domains'
 				   || $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests']
 				   || $specialsettings != $result['specialsettings']
 				   || $aliasdomain != $result['aliasdomain']
-				   || $issubof != $result['ismainbutsubto'])
+				   || $issubof != $result['ismainbutsubto']
+				   || $email_only != $result['email_only'])
 				{
 					inserttask('1');
 				}

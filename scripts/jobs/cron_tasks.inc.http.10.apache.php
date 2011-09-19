@@ -873,7 +873,7 @@ class apache
 
 	public function createVirtualHosts()
 	{
-		$result_domains = $this->db->query("SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, `d`.`mod_fcgid_maxrequests` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) " . "LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) " . "WHERE `d`.`aliasdomain` IS NULL ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC");
+		$result_domains = $this->db->query("SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, `d`.`mod_fcgid_maxrequests` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) " . "LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) " . "WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC");
 
 		while($domain = $this->db->fetch_array($result_domains))
 		{
