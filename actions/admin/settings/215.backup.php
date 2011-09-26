@@ -96,7 +96,7 @@ return array(
 					'label' => $lng['serversettings']['backup_ftp_pass'],
 					'settinggroup' => 'system',
 					'varname' => 'backup_ftp_pass',
-					'type' => 'string',
+					'type' => 'hiddenstring',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 				),
