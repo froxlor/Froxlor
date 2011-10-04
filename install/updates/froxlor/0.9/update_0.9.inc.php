@@ -1693,12 +1693,19 @@ if(isFroxlorVersion('0.9.23'))
 	updateToVersion('0.9.24-svn1');
 }
 
-
 if(isFroxlorVersion('0.9.24-svn1'))
 {
 	showUpdateStep("Updating from 0.9.24-svn1 to 0.9.24-rc1");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.24-rc1');
+}
+
+if(isFroxlorVersion('0.9.24-rc1'))
+{
+	showUpdateStep("Updating from 0.9.24-rc1 to 0.9.24");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.24');
 }
 
