@@ -19,7 +19,7 @@
 						<else>
 							<span>
 						</if>
-						<em style="left: {$doublepercent}px;">{$percent}%</em></span>
+						<em style="left: {$disk_doublepercent}px;">{$disk_percent}%</em></span>
 					</span>
 				<else>
 					<span class="progressBar" title="{$lng['customer']['unlimited']}">
@@ -36,7 +36,7 @@
 						<else>
 							<span>
 						</if>
-						<em style="left: {$doublepercent}px;">{$percent}%</em></span>
+						<em style="left: {$traffic_doublepercent}px;">{$traffic_percent}%</em></span>
 					</span>
 				<else>
 					<span class="progressBar" title="{$lng['customer']['unlimited']}">
