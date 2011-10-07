@@ -7,10 +7,19 @@
 	<meta name="robots" content="noindex, nofollow, noarchive" />
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	</if>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<if isset($intrafficpage)>
+        <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/excanvas.js"></script><![endif]-->
+        <script language="javascript" type="text/javascript" src="js/jquery.jqplot.min.js"></script>
+        <script language="javascript" type="text/javascript" src="js/plugins/jqplot.barRenderer.min.js"></script>
+        <script language="javascript" type="text/javascript" src="js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+        <script language="javascript" type="text/javascript" src="js/plugins/jqplot.pointLabels.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/jquery.jqplot.css" />
+	<script language="javascript" type="text/javascript" src="js/traffic.js"></script>
+	</if>
 	<link rel="stylesheet" href="templates/Froxlor/froxlor.css"  />
 	<!--[if IE]><link rel="stylesheet" href="templates/Froxlor/froxlor_ie.css"  /><![endif]-->
-	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<script type="text/javascript" src="templates/Froxlor/js/jquery.min.js"></script>
 	<script type="text/javascript" src="templates/Froxlor/js/froxlor.js"></script>
 	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>

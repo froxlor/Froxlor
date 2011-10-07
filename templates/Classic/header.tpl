@@ -7,7 +7,7 @@
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	</if>
 	<link rel="stylesheet" href="templates/Classic/main.css" type="text/css" />
-	<script type="text/javascript" src="templates/Classic/js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="templates/Classic/js/froxlor.js"></script>
 	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor</title>

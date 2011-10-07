@@ -22,7 +22,7 @@ define('AREA', 'customer');
 /**
  * Include our init.php, which manages Sessions, Language etc.
  */
-
+$intrafficpage = 1;
 require ("./lib/init.php");
 $traffic = '';
 $month = null;
@@ -99,7 +99,7 @@ if(!is_null($month)
 		$traffic_complete['http']+= $http;
 		$traffic_complete['ftp']+= $ftp;
 		$traffic_complete['mail']+= $mail;
-		$traf['day'] = $row['day'];
+		$traf['day'] = $row['day'] . ".";
 
 		if(extension_loaded('bcmath'))
 		{
@@ -118,9 +118,9 @@ if(!is_null($month)
 		   && $traf['max'] != 0)
 		{
 			$proz = $traf['max'] / 100;
-			$traf['http'] = round($http / $proz, 0);
-			$traf['ftp'] = round($ftp / $proz, 0);
-			$traf['mail'] = round($mail / $proz, 0);
+			$traf['http'] = round($http / $proz, $settings['panel']['decimal_places']);
+			$traf['ftp'] = round($ftp / $proz, $settings['panel']['decimal_places']);
+			$traf['mail'] = round($mail / $proz, $settings['panel']['decimal_places']);
 
 			if($traf['http'] == 0)
 			{
@@ -227,9 +227,9 @@ else
 		if($traf['max'] != 0)
 		{
 			$proz = $traf['max'] / 100;
-			$traf['ftp'] = round(($ftp_up + $ftp_down) / $proz, 0);
-			$traf['http'] = round($http / $proz, 0);
-			$traf['mail'] = round($mail / $proz, 0);
+			$traf['ftp'] = round(($ftp_up + $ftp_down) / $proz, $settings['panel']['decimal_places']);
+			$traf['http'] = round($http / $proz, $settings['panel']['decimal_places']);
+			$traf['mail'] = round($mail / $proz, $settings['panel']['decimal_places']);
 
 			if($traf['http'] == 0)
 			{
@@ -255,11 +255,11 @@ else
 
 		if(extension_loaded('bcmath'))
 		{
-			$traf['byte'] = bcadd($traf['byte'] / (1024 * 1024), 0.0000, 4);
+			$traf['byte'] = bcadd($traf['byte'] / (1024 * 1024), 0.0000, $settings['panel']['decimal_places']);
 		}
 		else
 		{
-			$traf['byte'] = round($traf['byte'] + (1024 * 1024), 4);
+			$traf['byte'] = round($traf['byte'] + (1024 * 1024), $settings['panel']['decimal_places']);
 		}
 
 		eval("\$traffic.=\"" . getTemplate("traffic/traffic_traffic") . "\";");

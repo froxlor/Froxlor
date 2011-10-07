@@ -25,24 +25,21 @@ $header
 							<td><div style="color:#800000;text-align:center">{$traffic_complete['mail']}</div></td>
 						</tr>
 					</table>
-<br /><br />					
-					<table class="formtable">
-						<tr>
+					<table class="formtable" id="datatable">
+						<tr id="datalegend">
 							<td>{$lng['traffic']['month']}</td>
-							<td>{$lng['traffic']['distribution']}</td>
+							<td>{$lng['traffic']['ftp']}</td>
+							<td>{$lng['traffic']['http']}</td>
+							<td>{$lng['traffic']['mail']}</td>
 							<td class="text-align:right;">{$lng['customer']['traffic']}</td>
+							<td></td>
 						</tr>
 						$traffic
 					</table>
 
-					<p style="display: none;">
-						<input type="hidden" name="s" value="$s" />
-						<input type="hidden" name="page" value="$page" />
-						<input type="hidden" name="action" value="$action" />
-						<input type="hidden" name="send" value="send" />
-					</p>
 				</fieldset>
 			</form>
 	</section>
+	<div id="chartdiv"></div>
 </article>
 $footer
