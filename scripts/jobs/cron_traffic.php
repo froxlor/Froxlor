@@ -321,7 +321,7 @@ while($row = $db->fetch_array($result))
 	$webspaceusage = 0;
 
 	# Using repquota, it's faster using this tool than using du traversing the complete directory
-	if ($settings['system']['diskquota_enabled'])
+	if ($settings['system']['diskquota_enabled'] && isset($usedquota[$row['guid']]['block']['used']) && $usedquota[$row['guid']]['block']['used'] >= 1)
 	{
 		# We may use the array we created earlier, the used diskspace is stored in [<guid>][block][used]
 		$webspaceusage = floatval($usedquota[$row['guid']]['block']['used']);
