@@ -38,13 +38,13 @@ class nginx_phpfpm extends nginx
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
 			
 			$php_options_text = "\t".'location ~ \.php$ {'."\n";
-//			$php_options_text.= "\t\t".'fastcgi_index index.php;'."\n";
-//			$php_options_text.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
+			$php_options_text.= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
+			$php_options_text.= "\t\t".'fastcgi_index index.php;'."\n";
+			$php_options_text.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
+			$php_options_text.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
 				$php_options_text.= "\t\t".'fastcgi_param HTTPS on;'."\n";
 			}
-			$php_options_text.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
-			$php_options_text.= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
 			$php_options_text.= "\t".'}'."\n";
 
 			// create starter-file | config-file
