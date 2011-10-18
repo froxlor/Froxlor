@@ -167,202 +167,83 @@ class ApsParser
 				$Question = true;
 			}
 		}
-
 		//create table with contents based on instance status
-
 		if($Question != true)
 		{
-			//INSTALL
-
-			$InstancesInstall = '';
-
-			if((int)$this->userinfo['customers_see_all'] == 1)
-			{
-				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`PackageID` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` WHERE `i`.`Status` = ' . INSTANCE_INSTALL . ' GROUP BY `Version`, `Release`');
-			}
-			else
-			{
-				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`PackageID` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `i`.`Status` = ' . INSTANCE_INSTALL . ' AND `c`.`adminid` = ' . (int)$this->userinfo['adminid'] . ' GROUP BY `Version`, `Release`');
-			}
-
-			while($Row = $this->db->fetch_array($Result))
-			{
-				eval("\$InstancesInstall.=\"" . getTemplate("aps/manage_instances_package") . "\";");
-
-				//get instances
-
-				if((int)$this->userinfo['customers_see_all'] == 1)
-				{
-					$Result2 = $this->db->query('SELECT * FROM `' . TABLE_APS_INSTANCES . '` WHERE `Status` = ' . INSTANCE_INSTALL . ' AND `PackageID` = ' . $Row['PackageID']);
-				}
-				else
-				{
-					$Result2 = $this->db->query('SELECT * FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `i`.`Status` = ' . INSTANCE_INSTALL . ' AND `i`.`PackageID` = ' . $Row['PackageID'] . ' AND `c`.`adminid` = ' . (int)$this->userinfo['adminid']);
-				}
-
-				while($Row2 = $this->db->fetch_array($Result2))
-				{
-					//get customer name
-
-					$Result3 = $this->db->query('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = ' . $Row2['CustomerID']);
-					$Row3 = $this->db->fetch_array($Result3);
-					$Stop = makecheckbox('stop' . $Row2['ID'], '', '1');
-					eval("\$InstancesInstall.=\"" . getTemplate("aps/manage_instances_install") . "\";");
-				}
-			}
-
-			//TASK ACTIVE
-
-			$InstancesTaskActive = '';
+			global $settings;
+			$Instances = '';
 
 			if((int)$this->userinfo['customers_see_all'] == 1)
 			{
-				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`PackageID` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` WHERE `i`.`Status` = ' . INSTANCE_TASK_ACTIVE . ' GROUP BY `Version`, `Release`');
+				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`Status`, `i`.`PackageID`, `i`.`ID`, `i`.`CustomerID`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`loginname` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` ORDER BY i.`Status`, p.`Version`, p.`Release`, i.`CustomerID`');
 			}
 			else
 			{
-				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`PackageID` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `i`.`Status` = ' . INSTANCE_TASK_ACTIVE . ' AND `c`.`adminid` = ' . (int)$this->userinfo['adminid'] . ' GROUP BY `Version`, `Release`');
+				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`Status`, `i`.`PackageID`, `i`.`ID`, `i`.`CustomerID`  FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `c`.`adminid` = ' . (int)$this->userinfo['adminid'] . ' ORDER BY i.`Status`, p.`Version`, p.`Release`, i.`CustomerID`');
 			}
-
+			$lastState = 0;
+			$lastPackage = 0;
+			
 			while($Row = $this->db->fetch_array($Result))
 			{
-				eval("\$InstancesTaskActive.=\"" . getTemplate("aps/manage_instances_package") . "\";");
-
-				//get instances
-
-				if((int)$this->userinfo['customers_see_all'] == 1)
+				if ($lastState != $Row['Status'])
 				{
-					$Result2 = $this->db->query('SELECT * FROM `' . TABLE_APS_INSTANCES . '` WHERE `Status` = ' . INSTANCE_TASK_ACTIVE . ' AND `PackageID` = ' . $Row['PackageID']);
-				}
-				else
-				{
-					$Result2 = $this->db->query('SELECT * FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `i`.`Status` = ' . INSTANCE_TASK_ACTIVE . ' AND `i`.`PackageID` = ' . $Row['PackageID'] . ' AND `c`.`adminid` = ' . (int)$this->userinfo['adminid']);
-				}
-
-				while($Row2 = $this->db->fetch_array($Result2))
-				{
-					//get customer name
-
-					$Result3 = $this->db->query('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = ' . $Row2['CustomerID']);
-					$Row3 = $this->db->fetch_array($Result3);
-					eval("\$InstancesTaskActive.=\"" . getTemplate("aps/manage_instances_taskactive") . "\";");
-				}
-			}
-
-			//SUCCESS
-
-			$InstancesSuccess = '';
-
-			if((int)$this->userinfo['customers_see_all'] == 1)
-			{
-				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`PackageID` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` WHERE `i`.`Status` = ' . INSTANCE_SUCCESS . ' GROUP BY `Version`, `Release`');
-			}
-			else
-			{
-				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`PackageID` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `i`.`Status` = ' . INSTANCE_SUCCESS . ' AND `c`.`adminid` = ' . (int)$this->userinfo['adminid'] . ' GROUP BY `Version`, `Release`');
-			}
-
-			while($Row = $this->db->fetch_array($Result))
-			{
-				eval("\$InstancesSuccess.=\"" . getTemplate("aps/manage_instances_package") . "\";");
-
-				//get instances
-
-				if((int)$this->userinfo['customers_see_all'] == 1)
-				{
-					$Result2 = $this->db->query('SELECT * FROM `' . TABLE_APS_INSTANCES . '` WHERE `Status` = ' . INSTANCE_SUCCESS . ' AND `PackageID` = ' . $Row['PackageID']);
-				}
-				else
-				{
-					$Result2 = $this->db->query('SELECT * FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `i`.`Status` = ' . INSTANCE_SUCCESS . ' AND `i`.`PackageID` = ' . $Row['PackageID'] . ' AND `c`.`adminid` = ' . (int)$this->userinfo['adminid']);
+					switch ($Row['Status'])
+					{
+						case INSTANCE_INSTALL:
+							$Caption = $lng['aps']['instance_install'];
+							break;
+						case INSTANCE_TASK_ACTIVE:
+							$Caption = $lng['aps']['instance_task_active'];
+							break;
+						case INSTANCE_SUCCESS:
+							$Caption = $lng['aps']['instance_success'];
+							break;
+						case INSTANCE_ERROR:
+							$Caption = $lng['aps']['instance_error'];
+							break;
+						case INSTANCE_UNINSTALL:
+							$Caption = $lng['aps']['instance_uninstall'];
+							break;
+					}
+					eval("\$Instances.=\"" . getTemplate("aps/manage_instances_status") . "\";");
+					$lastState = $Row['Status'];
+					//we need to print the package header for the new State as well it can be that the last Package is the first in this section, so we would it ignore it otherwise
+					$lastPackage = 0;
 				}
 
-				while($Row2 = $this->db->fetch_array($Result2))
+				if (strcmp($lastPackage, $Row['Name'].$Row['Version']. '(Release ' . $Row['Release'] . ')'))
 				{
-					//get customer name
-
-					$Result3 = $this->db->query('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = ' . $Row2['CustomerID']);
-					$Row3 = $this->db->fetch_array($Result3);
-					$Remove = makecheckbox('remove' . $Row2['ID'], '', '1');
-					eval("\$InstancesSuccess.=\"" . getTemplate("aps/manage_instances_success") . "\";");
-				}
-			}
-
-			//ERROR
-
-			$InstancesError = '';
-
-			if((int)$this->userinfo['customers_see_all'] == 1)
-			{
-				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`PackageID` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` WHERE `i`.`Status` = ' . INSTANCE_ERROR . ' GROUP BY `Version`, `Release`');
-			}
-			else
-			{
-				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`PackageID` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `i`.`Status` = ' . INSTANCE_ERROR . ' AND `c`.`adminid` = ' . (int)$this->userinfo['adminid'] . ' GROUP BY `Version`, `Release`');
-			}
-
-			while($Row = $this->db->fetch_array($Result))
-			{
-				eval("\$InstancesError.=\"" . getTemplate("aps/manage_instances_package") . "\";");
-
-				//get instances
-
-				if((int)$this->userinfo['customers_see_all'] == 1)
-				{
-					$Result2 = $this->db->query('SELECT * FROM `' . TABLE_APS_INSTANCES . '` WHERE `Status` = ' . INSTANCE_ERROR . ' AND `PackageID` = ' . $Row['PackageID']);
-				}
-				else
-				{
-					$Result2 = $this->db->query('SELECT * FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `i`.`Status` = ' . INSTANCE_ERROR . ' AND `i`.`PackageID` = ' . $Row['PackageID'] . ' AND `c`.`adminid` = ' . (int)$this->userinfo['adminid']);
+					$lastPackage = $Row['Name'].$Row['Version']. '(Release ' . $Row['Release'] . ')';
+					eval("\$Instances.=\"" . getTemplate("aps/manage_instances_package") . "\";");
 				}
 
-				while($Row2 = $this->db->fetch_array($Result2))
+				$main_domain = $this->GetSettingValue($Row['ID'], 'main_domain');
+				$main_location = $this->GetSettingValue($Row['ID'],  'main_location');
+				$Result2 = $this->db->query('SELECT `domain` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `id` = ' . $this->db->escape($main_domain));
+				$Row2 = $this->db->fetch_array($Result2);
+				
+				$main_domain = $Row2['domain'] . '/' . $main_location;
+				
+				$database = $settings['customer']['accountprefix'] . $Row['CustomerID'] . 'aps' . $Row['ID'];
+
+				switch ($Row['Status'])
 				{
-					//get customer name
-
-					$Result3 = $this->db->query('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = ' . $Row2['CustomerID']);
-					$Row3 = $this->db->fetch_array($Result3);
-					$Remove = makecheckbox('remove' . $Row2['ID'], '', '1');
-					eval("\$InstancesError.=\"" . getTemplate("aps/manage_instances_error") . "\";");
+					case INSTANCE_INSTALL:
+						$Stop = makecheckbox('stop' . $Row['ID'], '', '1');
+						break;
+					case INSTANCE_TASK_ACTIVE:
+						break;
+					case INSTANCE_SUCCESS:
+						$Remove = makecheckbox('remove' . $Row['ID'], '', '1');
+						break;
+					case INSTANCE_ERROR:
+						$Remove = makecheckbox('remove' . $Row['ID'], '', '1');
+						break;
+					case INSTANCE_UNINSTALL:
+						break;
 				}
-			}
-
-			//UNINSTALL
-
-			$InstancesUninstall = '';
-
-			if((int)$this->userinfo['customers_see_all'] == 1)
-			{
-				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`PackageID` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` WHERE `i`.`Status` = ' . INSTANCE_UNINSTALL . ' GROUP BY `Version`, `Release`');
-			}
-			else
-			{
-				$Result = $this->db->query('SELECT `p`.`Name`, `p`.`Version`, `p`.`Release`, `i`.`PackageID` FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `i`.`Status` = ' . INSTANCE_UNINSTALL . ' AND `c`.`adminid` = ' . (int)$this->userinfo['adminid'] . ' GROUP BY `Version`, `Release`');
-			}
-
-			while($Row = $this->db->fetch_array($Result))
-			{
-				eval("\$InstancesUninstall.=\"" . getTemplate("aps/manage_instances_package") . "\";");
-
-				//get instances
-
-				if((int)$this->userinfo['customers_see_all'] == 1)
-				{
-					$Result2 = $this->db->query('SELECT * FROM `' . TABLE_APS_INSTANCES . '` WHERE `Status` = ' . INSTANCE_UNINSTALL . ' AND `PackageID` = ' . $Row['PackageID']);
-				}
-				else
-				{
-					$Result2 = $this->db->query('SELECT * FROM `' . TABLE_APS_INSTANCES . '` AS `i` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `i`.`Status` = ' . INSTANCE_UNINSTALL . ' AND `i`.`PackageID` = ' . $Row['PackageID'] . ' AND `c`.`adminid` = ' . (int)$this->userinfo['adminid']);
-				}
-
-				while($Row2 = $this->db->fetch_array($Result2))
-				{
-					//get customer name
-
-					$Result3 = $this->db->query('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = ' . $Row2['CustomerID']);
-					$Row3 = $this->db->fetch_array($Result3);
-					eval("\$InstancesUninstall.=\"" . getTemplate("aps/manage_instances_uninstall") . "\";");
-				}
+				eval("\$Instances.=\"" . getTemplate("aps/manage_instances_detail") . "\";");
 			}
 
 			//create some statistics
@@ -2481,7 +2362,29 @@ class ApsParser
 			return $Row['Value'];
 		}
 	}
+	
+	/**
+	 * return setting value for a given Instance
+	 *
+	 * @param	instanceid		id of APS Instance from database
+	 * @param	name			name of field to read
+	 * @return	success value of field from database / error false
+	 */
 
+	private function GetSettingValue($InstanceId, $Name)
+	{
+		$result = $this->db->query('SELECT * FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($InstanceId) . ' AND `Name` = "' . $this->db->escape($Name) . '"');
+
+		if($this->db->num_rows($result) == 0)
+		{
+			return false;
+		}
+		else
+		{
+			$Row = $this->db->fetch_array($result);
+			return $Row['Value'];
+		}
+	}
 	/**
 	 * fix a path given by the customer
 	 *
