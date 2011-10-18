@@ -201,7 +201,7 @@ class paging
 		$this->userinfo['lastpaging']['searchfield'] = $this->searchfield;
 
 		if(isset($_REQUEST['searchtext'])
-		   && (preg_match("/^[@0-9a-zA-Z�������\-\*\.]+$/", $_REQUEST['searchtext']) || $_REQUEST['searchtext'] === ''))
+		   && (preg_match('/[-_@\p{L}\p{N}*.]+$/u', $_REQUEST['searchtext']) || $_REQUEST['searchtext'] === ''))
 		{
 			$this->searchtext = $_REQUEST['searchtext'];
 		}
@@ -209,7 +209,7 @@ class paging
 		{
 			if($checklastpaging
 			   && isset($this->userinfo['lastpaging']['searchtext'])
-			   && preg_match("/^[@0-9a-zA-Z�������\-\*\.]+$/", $this->userinfo['lastpaging']['searchtext']))
+			   && preg_match('/[-_@\p{L}\p{N}*.]+$/u', $this->userinfo['lastpaging']['searchtext']))
 			{
 				$this->searchtext = $this->userinfo['lastpaging']['searchtext'];
 			}
