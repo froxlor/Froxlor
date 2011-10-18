@@ -289,10 +289,22 @@ class bind
                         if(filter_var($subdomain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
                         {
                                 $zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      A       ' . $subdomain['ip'] . "\n";
+                                
+                                /* Check whether to add a www.-prefix */
+                                if($domain['wwwserveralias'] == '1')
+								{
+									$zonefile.= str_replace('www.' . $domain['domain'], '', $subdomain['domain']) . '  IN      A       ' . $subdomain['ip'] . "\n";
+								}
                         }
                         else
                         {
                                 $zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      AAAA    ' . $subdomain['ip'] . "\n";
+                                
+								/* Check whether to add a www.-prefix */
+                                if($domain['wwwserveralias'] == '1')
+								{
+									$zonefile.= str_replace('www.' . $domain['domain'], '', $subdomain['domain']) . '  IN      AAAA       ' . $subdomain['ip'] . "\n";
+								}
                         }
 		}
 
