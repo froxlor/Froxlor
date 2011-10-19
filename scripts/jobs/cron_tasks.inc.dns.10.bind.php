@@ -296,7 +296,7 @@ class bind
 									$zonefile.= str_replace('www.' . $domain['domain'], '', $subdomain['domain']) . '  IN      A       ' . $subdomain['ip'] . "\n";
 								}
                         }
-                        else
+                        elseif(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
                         {
                                 $zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      AAAA    ' . $subdomain['ip'] . "\n";
                                 
