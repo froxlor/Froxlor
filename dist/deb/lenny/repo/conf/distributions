@@ -1,17 +1,26 @@
 Origin: froxlor.org
 Label: Froxlor
-Suite: stable
+Suite: oldstable
 Codename: lenny
-Architectures: all
+Architectures: amd64 arm i386
 Components: main
 Description: Froxlor repository
 SignWith: release@froxlor.org
 
 Origin: froxlor.org
 Label: Froxlor
-Suite: testing
+Suite: stable
 Codename: squeeze
-Architectures: all
+Architectures: amd64 arm i386
+Components: main
+Description: Froxlor repository
+SignWith: release@froxlor.org
+
+Origin: froxlor.org
+Label: Froxlor
+Suite: unstable
+Codename: sid
+Architectures: amd64 arm i386
 Components: main
 Description: Froxlor repository
 SignWith: release@froxlor.org

@@ -1,11 +1,14 @@
 *.php		var/www/froxlor
 
-actions		var/www/froxlor
+actions	var/www/froxlor
+cache		var/www/froxlor
 images		var/www/froxlor
-install		var/www/froxlor
+install	var/www/froxlor
 lib		var/www/froxlor
+locales	var/www/froxlor
 lng		var/www/froxlor
 packages	var/www/froxlor
-scripts		var/www/froxlor
+scripts	var/www/froxlor
 temp		var/www/froxlor
 templates	var/www/froxlor
+templates_c	var/www/froxlor

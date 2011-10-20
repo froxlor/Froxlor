@@ -1,6 +1,6 @@
 Origin: froxlor.org
 Label: Froxlor
-Suite: stable
+Suite: oldstable
 Codename: lenny
 Architectures: all
 Components: main
@@ -9,7 +9,7 @@ SignWith: release@froxlor.org
 
 Origin: froxlor.org
 Label: Froxlor
-Suite: testing
+Suite: stable
 Codename: squeeze
 Architectures: all
 Components: main

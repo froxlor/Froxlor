@@ -22,14 +22,3 @@
  			if(is_dir($dirname . $filename))
  			{
  				findIncludeClass($dirname . $filename . '/', $classname);
---- a/scripts/jobs/cron_traffic_report.php
-+++ b/scripts/jobs/cron_traffic_report.php
-@@ -24,7 +24,7 @@
-  * Initialize the mailingsystem
-  */
- 
--require (dirname(__FILE__) . '/../lib/class.phpmailer.php');
-+require '/usr/share/php/libphp-phpmailer/class.phpmailer.php';
- $mail = new PHPMailer(true);
- $mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
- 

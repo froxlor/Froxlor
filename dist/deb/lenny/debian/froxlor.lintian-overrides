@@ -1,8 +1,14 @@
 # ITP would be bug 581792, since we are not upstream, kill the warning instead
 froxlor: new-package-should-close-itp-bug
 
-# can't use the debian package for it, its too old
+# can't use the debian package for them, too old
 froxlor: embedded-php-library var/www/froxlor/lib/classes/phpmailer/class.PHPMailer.php
+froxlor: extra-license-file var/www/froxlor/lib/classes/Smarty-3.0.8/COPYING.lib
+froxlor: embedded-php-library var/www/froxlor/lib/classes/Smarty-3.0.8/libs/Smarty.class.php
+froxlor: extra-license-file var/www/froxlor/lib/classes/htmlpurifier/LICENSE
+froxlor: embedded-php-library var/www/froxlor/lib/classes/htmlpurifier/library/HTMLPurifier.php
+froxlor: embedded-javascript-library var/www/froxlor/templates/Classic/js/jquery.min.js
+froxlor: embedded-javascript-library var/www/froxlor/templates/Froxlor/js/jquery.min.js
 
 # TODO: fix probably, i. e. try to install it to /usr/share/froxlor like phpmyadmin for example
 # NB: not before squeeze

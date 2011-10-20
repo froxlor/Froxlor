@@ -1,10 +1,8 @@
 --- a/lib/tables.inc.php
 +++ b/lib/tables.inc.php
-@@ -70,6 +70,6 @@
- 
- $version = '0.9.16';
+@@ -75,4 +75,4 @@ define('PACKAGE_ENABLED', 2);
+
+ $version = '0.9.24';
  $dbversion = '2';
 -$branding = '';
-+$branding = '-1+squeeze1';
- 
- ?>
++$branding = '-1';

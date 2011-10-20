@@ -1,3 +1,63 @@
+froxlor (0.9.24-1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Thu, 06 Oct 2011 09:12:59 +0200
+
+froxlor (0.9.23-1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Thu, 25 Aug 2011 10:29:51 +0200
+
+froxlor (0.9.22-2) testing; urgency=low
+
+  * add some missing directories
+
+ -- Froxlor Release Team <release@froxlor.org>  Fri, 15 Jul 2011 16:04:43 +0200
+
+froxlor (0.9.22-1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 12 Jul 2011 10:39:53 +0200
+
+froxlor (0.9.21-1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 31 May 2011 14:06:33 +0200
+
+froxlor (0.9.20.1-1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Thu, 28 Apr 2011 06:21:07 +0200
+
+froxlor (0.9.19-1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Wed, 30 Mar 2011 10:04:51 +0200
+
+froxlor (0.9.18.1-1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 08 Mar 2011 08:27:46 +0100
+
+froxlor (0.9.18-1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 28 Feb 2011 16:14:52 +0100
+
+froxlor (0.9.17-1+squeeze1) testing; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 08 Feb 2011 09:45:36 +0100
+
 froxlor (0.9.16-1+squeeze1) testing; urgency=low
 
   * new upstream release
