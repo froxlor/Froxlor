@@ -1,8 +1,0 @@
-#
-# Set PATH, otherwise restart-scripts won't find start-stop-daemon
-#
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
-#
-# Regular cron jobs for the froxlor package
-#
-*/5 * * * *     root    /usr/lib/php5/bin/php -q /var/www/froxlor/scripts/froxlor_master_cronjob.php

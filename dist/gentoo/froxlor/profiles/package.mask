@@ -1,4 +1,0 @@
-# Froxlor Release Team <release@froxlor.org> (30 Jan 2010)
-# Live version, only use that when you know what you are doing.
-=www-apps/froxlor-9999
-
