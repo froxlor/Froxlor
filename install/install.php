@@ -198,7 +198,7 @@ function requirement_checks() {
 	// check for mysql-extension
 	status_message('begin', $lng['install']['phpmysql']);
 
-	if(!extension_loaded('mysql'))
+	if(!extension_loaded('mysql') && !extension_loaded('mysqlnd'))
 	{
 		status_message('red', $lng['install']['notinstalled']);
 		$_die = true;
