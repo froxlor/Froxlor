@@ -90,6 +90,13 @@ mail_owner = postfix
 myhostname = <SERVERNAME>
 mydomain = <SERVERNAME>
 myorigin = $mydomain
+
+mydestination = $myhostname,
+$mydomain,
+localhost.$myhostname,
+localhost.$mydomain,
+localhost
+
 inet_interfaces = all
 unknown_local_recipient_reject_code = 550
 mynetworks_style = host
