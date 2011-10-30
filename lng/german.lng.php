@@ -1628,3 +1628,7 @@ $lng['admin']['used'] = 'Benutzt';
 $lng['mysql']['size'] = 'Datenbankgr&ouml;&szlig;e (MB)';
 
 $lng['error']['invalidhostname'] = 'Hostname darf nicht leer sein oder nur aus Leerzeichen bestehen';
+
+$lng['traffic']['http'] = 'HTTP';
+$lng['traffic']['ftp'] = 'FTP';
+$lng['traffic']['mail'] = 'Mail';
