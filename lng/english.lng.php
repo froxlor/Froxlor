@@ -1898,6 +1898,6 @@ $lng['mysql']['size'] = 'Database size (MB)';
 
 $lng['error']['invalidhostname'] = 'Hostname can\'t be empty nor can it consist only of whitespaces';
 
-$lng['traffic']['http'] = 'HTTP';
-$lng['traffic']['ftp'] = 'FTP';
-$lng['traffic']['mail'] = 'Mail';
+$lng['traffic']['http'] = 'HTTP (MB)';
+$lng['traffic']['ftp'] = 'FTP (MB)';
+$lng['traffic']['mail'] = 'Mail (MB)';

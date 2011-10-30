@@ -80,7 +80,6 @@ $(document).ready(function(){
 			},
 			xaxis: {
 				min: 0,
-				max: parseFloat(max) + 10,
 			},
 		},
 	})

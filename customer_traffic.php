@@ -70,14 +70,6 @@ if(!is_null($month)
    && !is_null($year))
 {
 	$traf['byte'] = 0;
-	$result = $db->query("SELECT MAX(`http`), MAX(`ftp_up`+`ftp_down`), MAX(`mail`)
-	                     FROM `" . TABLE_PANEL_TRAFFIC . "`
-	                     WHERE `customerid`='" . $userinfo['customerid'] . "'
-	                     AND `month` = '" . $month . "'
-	                     AND `year` = '" . $year . "'");
-	$row = mysql_fetch_row($result);
-	rsort($row);
-	$traf['max'] = ($row[0] > $row[1] ? ($row[0] > $row[2] ? $row[0] : $row[2]) : ($row[1] > $row[2] ? $row[1] : $row[2]));;
 	$result = $db->query("SELECT
                                 SUM(`http`) as 'http', SUM(`ftp_up`) AS 'ftp_up', SUM(`ftp_down`) as 'ftp_down', SUM(`mail`) as 'mail',
                                 `day`, `month`, `year`
@@ -106,50 +98,19 @@ if(!is_null($month)
 			$traf['ftptext'] = bcdiv($row['ftp_up'], 1024, $settings['panel']['decimal_places']) . " MB up/ " . bcdiv($row['ftp_down'], 1024, $settings['panel']['decimal_places']) . " MB down (FTP)";
 			$traf['httptext'] = bcdiv($http, 1024, $settings['panel']['decimal_places']) . " MB (HTTP)";
 			$traf['mailtext'] = bcdiv($mail, 1024, $settings['panel']['decimal_places']) . " MB (Mail)";
+			$traf['ftp'] = bcdiv($ftp, 1024, $settings['panel']['decimal_places']);
+			$traf['http'] = bcdiv($http, 1024, $settings['panel']['decimal_places']);
+			$traf['mail'] = bcdiv($mail, 1024, $settings['panel']['decimal_places']);
+			$traf['byte'] = bcdiv($traf['byte'], 1024, $settings['panel']['decimal_places']);
 		}
 		else
 		{
 			$traf['ftptext'] = round($row['ftp_up'] / 1024, $settings['panel']['decimal_places']) . " MB up/ " . round($row['ftp_down'] / 1024, $settings['panel']['decimal_places']) . " MB down (FTP)";
 			$traf['httptext'] = round($http / 1024, $settings['panel']['decimal_places']) . " MB (HTTP)";
 			$traf['mailtext'] = round($mail / 1024, $settings['panel']['decimal_places']) . " MB (Mail)";
-		}
-
-		if($traf['byte'] != 0
-		   && $traf['max'] != 0)
-		{
-			$proz = $traf['max'] / 100;
-			$traf['http'] = round($http / $proz, $settings['panel']['decimal_places']);
-			$traf['ftp'] = round($ftp / $proz, $settings['panel']['decimal_places']);
-			$traf['mail'] = round($mail / $proz, $settings['panel']['decimal_places']);
-
-			if($traf['http'] == 0)
-			{
-				$traf['http'] = 1;
-			}
-
-			if($traf['ftp'] == 0)
-			{
-				$traf['ftp'] = 1;
-			}
-
-			if($traf['mail'] == 0)
-			{
-				$traf['mail'] = 1;
-			}
-		}
-		else
-		{
-			$traf['http'] = 0;
-			$traf['ftp'] = 0;
-			$traf['mail'] = 0;
-		}
-
-		if(extension_loaded('bcmath'))
-		{
-			$traf['byte'] = bcdiv($traf['byte'], 1024, $settings['panel']['decimal_places']);
-		}
-		else
-		{
+			$traf['http'] = round($http, $settings['panel']['decimal_places']);
+			$traf['ftp'] = round($ftp, $settings['panel']['decimal_places']);
+			$traf['mail'] = round($mail, $settings['panel']['decimal_places']);
 			$traf['byte'] = round($traf['byte'] / 1024, $settings['panel']['decimal_places']);
 		}
 
@@ -174,21 +135,6 @@ if(!is_null($month)
 }
 else
 {
-	$result = $db->query("SELECT MAX(`http`), MAX(`ftp_up`+`ftp_down`), MAX(`mail`)
-	                     FROM `" . TABLE_PANEL_TRAFFIC . "`
-	                     WHERE `customerid`='" . $userinfo['customerid'] . "'
-	                     GROUP BY CONCAT(`year`,`month`) ORDER BY CONCAT(`year`,`month`) DESC LIMIT 12");
-	
-	$nums = mysql_num_rows($result);
-	if($nums > 0)
-	{
-		$row = mysql_fetch_row($result);
-		rsort($row);
-		$traf['max'] = ($row[0] > $row[1] ? ($row[0] > $row[2] ? $row[0] : $row[2]) : ($row[1] > $row[2] ? $row[1] : $row[2]));
-	} else {
-		// no records yet
-		$traf['max'] = 0;
-	}
 	
 	$result = $db->query("SELECT `month`, `year`, SUM(`http`) AS http, SUM(`ftp_up`) AS ftp_up, SUM(`ftp_down`) AS ftp_down, SUM(`mail`) AS mail
 	                     FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid` = '" . $userinfo['customerid'] . "'
@@ -213,53 +159,23 @@ else
 
 		if(extension_loaded('bcmath'))
 		{
-			$traf['ftptext'] = bcdiv($ftp_up, 1024 * 1024, $settings['panel']['decimal_places']) . " GB up/ " . bcdiv($ftp_down, 1024 * 1024, $settings['panel']['decimal_places']) . " GB down (FTP)";
-			$traf['httptext'] = bcdiv($http, 1024 * 1024, $settings['panel']['decimal_places']) . " GB (HTTP)";
-			$traf['mailtext'] = bcdiv($mail, 1024 * 1024, $settings['panel']['decimal_places']) . " GB (Mail)";
+			$traf['ftptext'] = bcdiv($ftp_up, 1024, $settings['panel']['decimal_places']) . " MB up/ " . bcdiv($ftp_down, 1024, $settings['panel']['decimal_places']) . " MB down (FTP)";
+			$traf['httptext'] = bcdiv($http, 1024, $settings['panel']['decimal_places']) . " MB (HTTP)";
+			$traf['mailtext'] = bcdiv($mail, 1024, $settings['panel']['decimal_places']) . " MB (Mail)";
+			$traf['ftp'] = bcdiv(($ftp_up + $ftp_down), 1024, $settings['panel']['decimal_places']);
+			$traf['http'] = bcdiv($http, 1024, $settings['panel']['decimal_places']);
+			$traf['mail'] = bcdiv($mail, 1024, $settings['panel']['decimal_places']);
+			$traf['byte'] = bcdiv($traf['byte'], 1024 * 1024, $settings['panel']['decimal_places']);
 		}
 		else
 		{
-			$traf['ftptext'] = round($ftp_up / 1024 * 1024, $settings['panel']['decimal_places']) . " GB up/ " . round($ftp_down / 1024 * 1024, $settings['panel']['decimal_places']) . " GB down (FTP)";
-			$traf['httptext'] = round($http / 1024 * 1024, $settings['panel']['decimal_places']) . " GB (HTTP)";
-			$traf['mailtext'] = round($mail / 1024 * 1024, $settings['panel']['decimal_places']) . " GB (Mail)";
-		}
-
-		if($traf['max'] != 0)
-		{
-			$proz = $traf['max'] / 100;
-			$traf['ftp'] = round(($ftp_up + $ftp_down) / $proz, $settings['panel']['decimal_places']);
-			$traf['http'] = round($http / $proz, $settings['panel']['decimal_places']);
-			$traf['mail'] = round($mail / $proz, $settings['panel']['decimal_places']);
-
-			if($traf['http'] == 0)
-			{
-				$traf['http'] = 1;
-			}
-
-			if($traf['ftp'] == 0)
-			{
-				$traf['ftp'] = 1;
-			}
-
-			if($traf['mail'] == 0)
-			{
-				$traf['mail'] = 1;
-			}
-		}
-		else
-		{
-			$traf['ftp'] = 0;
-			$traf['http'] = 0;
-			$traf['mail'] = 0;
-		}
-
-		if(extension_loaded('bcmath'))
-		{
-			$traf['byte'] = bcadd($traf['byte'] / (1024 * 1024), 0.0000, $settings['panel']['decimal_places']);
-		}
-		else
-		{
-			$traf['byte'] = round($traf['byte'] + (1024 * 1024), $settings['panel']['decimal_places']);
+			$traf['ftptext'] = round($ftp_up / 1024, $settings['panel']['decimal_places']) . " MB up/ " . round($ftp_down / 1024, $settings['panel']['decimal_places']) . " MB down (FTP)";
+			$traf['httptext'] = round($http / 1024, $settings['panel']['decimal_places']) . " MB (HTTP)";
+			$traf['mailtext'] = round($mail / 1024, $settings['panel']['decimal_places']) . " MB (Mail)";
+			$traf['ftp'] = round(($ftp_up + $ftp_down) / 1024, $settings['panel']['decimal_places']);
+			$traf['http'] = round($http / 1024, $settings['panel']['decimal_places']);
+			$traf['mail'] = round($mail / 1024, $settings['panel']['decimal_places']);
+			$traf['byte'] = round($traf['byte'] / (1024 * 1024), $settings['panel']['decimal_places']);
 		}
 
 		eval("\$traffic.=\"" . getTemplate("traffic/traffic_traffic") . "\";");
@@ -273,9 +189,9 @@ else
 	}
 	else
 	{
-		$traffic_complete['http'] = round($traffic_complete['http'] / 1024 * 1024, $settings['panel']['decimal_places']);
-		$traffic_complete['ftp'] = round($traffic_complete['ftp'] / 1024 * 1024, $settings['panel']['decimal_places']);
-		$traffic_complete['mail'] = round($traffic_complete['mail'] / 1024 * 1024, $settings['panel']['decimal_places']);
+		$traffic_complete['http'] = round($traffic_complete['http'] / (1024 * 1024), $settings['panel']['decimal_places']);
+		$traffic_complete['ftp'] = round($traffic_complete['ftp'] / (1024 * 1024), $settings['panel']['decimal_places']);
+		$traffic_complete['mail'] = round($traffic_complete['mail'] / (1024 * 1024), $settings['panel']['decimal_places']);
 	}
 
 	eval("echo \"" . getTemplate("traffic/traffic") . "\";");
