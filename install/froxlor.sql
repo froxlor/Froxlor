@@ -621,7 +621,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('syste
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_trafficmax', '90');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'default_theme', 'Froxlor');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'validate_domain', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_enabled', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_enabled', '0');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_dir', '/var/customers/backups/');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_mysqldump_path', '/usr/bin/mysqldump');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_count', '1');
