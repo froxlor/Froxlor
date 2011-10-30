@@ -17,8 +17,7 @@
 
 function checkHostname($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 {
-	echo $fieldname . "--" . $fielddata . "--" . $newfieldvalue . "--". $allnewfieldvalues;
-	if (0 == strlen(trim($fielddata)))
+	if (0 == strlen(trim($newfieldvalue)))
 	{
 		return array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'invalidhostname');
 	} else {
