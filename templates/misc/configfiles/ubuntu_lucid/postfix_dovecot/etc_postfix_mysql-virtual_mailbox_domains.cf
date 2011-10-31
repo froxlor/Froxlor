@@ -4,5 +4,5 @@ dbname = <SQL_DB>
 table = panel_domains
 select_field = domain
 where_field = domain
-additional_conditions = and isemaildomain = '1' and deactivated = '0'
+additional_conditions = and isemaildomain = '1'
 hosts = <SQL_HOST> 
