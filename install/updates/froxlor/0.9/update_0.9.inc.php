@@ -1709,3 +1709,12 @@ if(isFroxlorVersion('0.9.24-rc1'))
 	updateToVersion('0.9.24');
 }
 
+if(isFroxlorVersion('0.9.24'))
+{
+	showUpdateStep("Updating from 0.9.24 to 0.9.25-rc1");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.25-rc1');
+}
+
+
