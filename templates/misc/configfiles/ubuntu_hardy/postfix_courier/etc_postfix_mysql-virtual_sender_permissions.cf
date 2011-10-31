@@ -1,5 +1,5 @@
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
-query = select distinct username from mail_users where postfix = 'Y' and email in ((select mail_virtual.email_full from mail_virtual where mail_virtual.email = '%s' union select mail_virtual.destination from mail_virtual where mail_virtual.email = '%s'));
+query = select distinct username from mail_users where email in ((select mail_virtual.email_full from mail_virtual where mail_virtual.email = '%s' union select mail_virtual.destination from mail_virtual where mail_virtual.email = '%s'));
 hosts = <SQL_HOST>
