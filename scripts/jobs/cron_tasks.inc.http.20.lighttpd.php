@@ -618,12 +618,8 @@ class lighttpd
 				// After inserting the AWStats information, 
 				// be sure to build the awstats conf file as well
 				// and chown it using $awstats_params, #258
-				$awstats_params = array(
-					'loginname' => $domain['loginname'],
-					'guid' => $domain['guid'],
-					'documentroot' => $domain['documentroot']
-				);
-				createAWStatsConf($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $awstats_params);
+				// Bug 960 + Bug 970 : Use full $domain instead of custom $awstats_params as following classes depend on the informations
+				createAWStatsConf($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
 			}
 		}
 
