@@ -97,8 +97,8 @@ elseif($page == 'change_password')
 			exit;
 		}
 
-		$new_password = validate($_POST['new_password'], 'new password');
-		$new_password_confirm = validate($_POST['new_password_confirm'], 'new password confirm');
+		$new_password = validatePassword($_POST['new_password'], 'new password');
+		$new_password_confirm = validatePassword($_POST['new_password_confirm'], 'new password confirm');
 
 		if($old_password == '')
 		{
