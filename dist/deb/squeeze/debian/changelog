@@ -1,3 +1,12 @@
+froxlor (0.9.25-1) testing; urgency=low
+
+  * new upstream release
+  * add armel
+  * change VCS-Git to something more resonable, even though its not
+    entirely correct due to limitations
+
+ -- Froxlor Release Team <release@froxlor.org>  Wed, 16 Nov 2011 13:19:51 +0100
+
 froxlor (0.9.24-1) testing; urgency=low
 
   * new upstream release
