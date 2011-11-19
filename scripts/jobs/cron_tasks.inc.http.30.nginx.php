@@ -619,6 +619,8 @@ class nginx
 		if($domain['phpenabled'] == '1')
 		{
 			$phpopts = "\t".'location ~ \.php$ {'."\n";
+			$phpopts.= "\t\t".'try_files $uri =404;'."\n";
+			$phpopts.= "\t\t".'fastcgi_split_path_info ^(.+\.php)(/.+)$;'."\n";
 			$phpopts.= "\t\t".'fastcgi_index index.php;'."\n";
 			//$phpopts.= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
 			//$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
