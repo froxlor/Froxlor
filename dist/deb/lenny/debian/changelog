@@ -1,3 +1,9 @@
+froxlor (0.9.25-2+lenny1) stable; urgency=low
+
+  * add missing js dir (bug #983)
+
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 22 Nov 2011 17:21:23 +0100
+
 froxlor (0.9.25-1+lenny1) stable; urgency=low
 
   * new upstream release

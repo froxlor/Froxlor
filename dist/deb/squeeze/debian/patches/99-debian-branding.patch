@@ -5,4 +5,4 @@
  $version = '0.9.25';
  $dbversion = '2';
 -$branding = '';
-+$branding = '-1';
++$branding = '-2';

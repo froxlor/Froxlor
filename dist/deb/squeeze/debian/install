@@ -4,6 +4,7 @@ actions	var/www/froxlor
 cache		var/www/froxlor
 images		var/www/froxlor
 install	var/www/froxlor
+js		var/www/froxlor
 lib		var/www/froxlor
 locales	var/www/froxlor
 lng		var/www/froxlor
