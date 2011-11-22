@@ -1,10 +1,10 @@
-froxlor (0.9.25-2+lenny1) stable; urgency=low
+froxlor (0.9.25-2+lenny1) oldstable; urgency=low
 
   * add missing js dir (bug #983)
 
  -- Froxlor Release Team <release@froxlor.org>  Tue, 22 Nov 2011 17:21:23 +0100
 
-froxlor (0.9.25-1+lenny1) stable; urgency=low
+froxlor (0.9.25-1+lenny1) oldstable; urgency=low
 
   * new upstream release
   * add armel
@@ -13,61 +13,61 @@ froxlor (0.9.25-1+lenny1) stable; urgency=low
 
  -- Froxlor Release Team <release@froxlor.org>  Wed, 16 Nov 2011 13:18:52 +0100
 
-froxlor (0.9.24-1+lenny1) stable; urgency=low
+froxlor (0.9.24-1+lenny1) oldstable; urgency=low
 
   * new upstream release
 
  -- Froxlor Release Team <release@froxlor.org>  Thu, 06 Oct 2011 09:11:10 +0200
 
-froxlor (0.9.23-1+lenny1) stable; urgency=low
+froxlor (0.9.23-1+lenny1) oldstable; urgency=low
 
   * new upstream release
 
  -- Froxlor Release Team <release@froxlor.org>  Thu, 25 Aug 2011 10:29:32 +0200
 
-froxlor (0.9.22-2+lenny1) stable; urgency=low
+froxlor (0.9.22-2+lenny1) oldstable; urgency=low
 
   * add some missing directories
 
  -- Froxlor Release Team <release@froxlor.org>  Fri, 15 Jul 2011 16:04:10 +0200
 
-froxlor (0.9.22-1+lenny1) stable; urgency=low
+froxlor (0.9.22-1+lenny1) oldstable; urgency=low
 
   * new upstream release
 
  -- Froxlor Release Team <release@froxlor.org>  Tue, 12 Jul 2011 10:39:32 +0200
 
-froxlor (0.9.21-1+lenny1) stable; urgency=low
+froxlor (0.9.21-1+lenny1) oldstable; urgency=low
 
   * new upstream release
 
  -- Froxlor Release Team <release@froxlor.org>  Tue, 31 May 2011 14:06:15 +0200
 
-froxlor (0.9.20.1-1+lenny1) stable; urgency=low
+froxlor (0.9.20.1-1+lenny1) oldstable; urgency=low
 
   * new upstream release
 
  -- Froxlor Release Team <release@froxlor.org>  Thu, 28 Apr 2011 06:20:54 +0200
 
-froxlor (0.9.19-1+lenny1) stable; urgency=low
+froxlor (0.9.19-1+lenny1) oldstable; urgency=low
 
   * new upstream release
 
  -- Froxlor Release Team <release@froxlor.org>  Wed, 30 Mar 2011 10:04:25 +0200
 
-froxlor (0.9.18.1-1+lenny1) stable; urgency=low
+froxlor (0.9.18.1-1+lenny1) oldstable; urgency=low
 
   * new upstream release
 
  -- Froxlor Release Team <release@froxlor.org>  Tue, 08 Mar 2011 08:27:18 +0100
 
-froxlor (0.9.18-1+lenny1) stable; urgency=low
+froxlor (0.9.18-1+lenny1) oldstable; urgency=low
 
   * new upstream release
 
  -- Froxlor Release Team <release@froxlor.org>  Mon, 28 Feb 2011 16:14:26 +0100
 
-froxlor (0.9.17-1) stable; urgency=low
+froxlor (0.9.17-1) oldstable; urgency=low
 
   * new upstream release
 
