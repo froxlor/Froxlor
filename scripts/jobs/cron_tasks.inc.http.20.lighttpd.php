@@ -37,7 +37,7 @@ class lighttpd
 
 	//	protected
 
-	protected $settings = array();
+	protected $settings = array(); 
 	protected $lighttpd_data = array();
 	protected $needed_htpasswds = array();
 	protected $auth_backend_loaded = false;
@@ -47,7 +47,7 @@ class lighttpd
 	/**
 	 * indicator whether a customer is deactivated or not
 	 * if yes, only the webroot will be generated
-	 *
+	 * 
 	 * @var bool
 	 */
 	private $_deactivated = false;
@@ -129,7 +129,7 @@ class lighttpd
 					{
 						$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
 					}
-					else
+					else 
 					{
 						$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
 					}
@@ -330,11 +330,11 @@ class lighttpd
 
 		if($ssl == '0')
 		{
-			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC";
+			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC";
 		}
 		else
 		{
-			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ssl_ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC";
+			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ssl_ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC";
 		}
 
 		$included_vhosts = array();
@@ -353,10 +353,10 @@ class lighttpd
 				$_pos = strrpos($_tmp_path, '/');
 				$_inc_path = substr($_tmp_path, $_pos+1);
 
-				if((int)$domain['parentdomainid'] == 0
+				if((int)$domain['parentdomainid'] == 0 
 					&& isCustomerStdSubdomain((int)$domain['id']) == false
 					&& ((int)$domain['ismainbutsubto'] == 0
-					|| domainMainToSubExists($domain['ismainbutsubto']) == false)
+					|| domainMainToSubExists($domain['ismainbutsubto']) == false) 
 				) {
 					$vhost_no = '52';
 					if($ssl == '1')
@@ -364,7 +364,7 @@ class lighttpd
 						$vhost_no = '62';
 					}
 				}
-				elseif((int)$domain['parentdomainid'] == 0
+				elseif((int)$domain['parentdomainid'] == 0 
 					&& isCustomerStdSubdomain((int)$domain['id']) == false
 					&& (int)$domain['ismainbutsubto'] > 0
 				) {
@@ -569,12 +569,12 @@ class lighttpd
 		
 		if($this->settings['system']['awstats_enabled'] == '1')
 		{
-			if((int)$domain['parentdomainid'] == 0)
+			if((int)$domain['parentdomainid'] == 0) 
 			{
 				// prepare the aliases and subdomains for stats config files
 	
 				$server_alias = '';
-				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '`
+				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` 
 												WHERE `aliasdomain`=\'' . $domain['id'] . '\'
 												OR `parentdomainid` =\''. $domain['id']. '\'');
 	
@@ -615,15 +615,11 @@ class lighttpd
 					}
 				}
 	
-				// After inserting the AWStats information,
+				// After inserting the AWStats information, 
 				// be sure to build the awstats conf file as well
 				// and chown it using $awstats_params, #258
-				$awstats_params = array(
-					'loginname' => $domain['loginname'],
-					'guid' => $domain['guid'],
-					'documentroot' => $domain['documentroot']
-				);
-				createAWStatsConf($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $awstats_params);
+				// Bug 960 + Bug 970 : Use full $domain instead of custom $awstats_params as following classes depend on the informations
+				createAWStatsConf($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
 			}
 		}
 
@@ -655,7 +651,7 @@ class lighttpd
 				}
 
 				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
-				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
+				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
 				if($row['path'] != $domain['documentroot']) {
@@ -674,7 +670,7 @@ class lighttpd
 				&& $row['options_cgi'] != '0')
 			{
 				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
-				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
+				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
 				if($row['path'] != $domain['documentroot']) {
@@ -883,11 +879,11 @@ class lighttpd
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
-					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+					$stats_text.= '  alias.url = ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
 				}
 				else
 				{
-					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']).'/" )' . "\n";
+					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']).'/" )' . "\n";					
 				}
 			}
 			else
@@ -895,7 +891,7 @@ class lighttpd
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']).'" )' . "\n";
-					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+					$stats_text.= '  alias.url = ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
 				}
 				else
 				{
@@ -910,8 +906,8 @@ class lighttpd
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
-					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
-				}
+					$stats_text.= '  alias.url = ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+				} 
 				else
 				{
 					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/').'" )' . "\n";
@@ -924,7 +920,7 @@ class lighttpd
 			elseif($this->settings['system']['awstats_enabled'] == '1')
 			{
 				$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
-				$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+				$stats_text.= '  alias.url = ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
 			}
 		}
 
