@@ -245,6 +245,12 @@ while($row = $db->fetch_array($result_tasks))
 	 */
 	elseif ($row['type'] == '4')
 	{
+		//dont do anything when module is disabled
+		if((int)$settings['system']['bind_enable'] == 0)
+		{
+			return;
+		}
+		
 		if(!isset($nameserver))
 		{
 			$nameserver = new bind($db, $cronlog, $debugHandler, $settings);

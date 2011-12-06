@@ -104,7 +104,12 @@ if($page == 'ipsandports'
 								$db->query("DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id`='" . (int)$id . "'");
 								$log->logAction(ADM_ACTION, LOG_WARNING, "deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
 								inserttask('1');
-								inserttask('4');
+
+								# Using nameserver, insert a task which rebuilds the server config
+								if ($settings['system']['bind_enable'])
+								{
+									inserttask('4');
+								}
 								redirectTo($filename, Array('page' => $page, 's' => $s));
 							}
 							else
@@ -245,7 +250,12 @@ if($page == 'ipsandports'
 
 				$log->logAction(ADM_ACTION, LOG_WARNING, "added IP/port '" . $ip . ":" . $port . "'");
 				inserttask('1');
-				inserttask('4');
+
+				# Using nameserver, insert a task which rebuilds the server config
+				if ($settings['system']['bind_enable'])
+				{
+					inserttask('4');
+				}
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 		}
@@ -391,7 +401,12 @@ if($page == 'ipsandports'
 
 					$log->logAction(ADM_ACTION, LOG_WARNING, "changed IP/port from '" . $result['ip'] . ":" . $result['port'] . "' to '" . $ip . ":" . $port . "'");
 					inserttask('1');
-					inserttask('4');
+
+					# Using nameserver, insert a task which rebuilds the server config
+					if ($settings['system']['bind_enable'])
+					{
+						inserttask('4');
+					}
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
 			}

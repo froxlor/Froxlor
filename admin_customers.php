@@ -338,7 +338,12 @@ if($page == 'customers'
 				$db->query($admin_update_query);
 				$log->logAction(ADM_ACTION, LOG_INFO, "deleted user '" . $result['loginname'] . "'");
 				inserttask('1');
-				inserttask('4');
+
+				# Using nameserver, insert a task which rebuilds the server config
+				if ($settings['system']['bind_enable'])
+				{
+					inserttask('4');
+				}
 
 				if(isset($_POST['delete_userfiles'])
 				  && (int)$_POST['delete_userfiles'] == 1)

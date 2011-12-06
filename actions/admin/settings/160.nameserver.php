@@ -22,6 +22,15 @@ return array(
 		'nameserver' => array(
 			'title' => $lng['admin']['nameserversettings'],
 			'fields' => array(
+				'nameserver_enable' => array(
+					'label' => $lng['serversettings']['bindenable'],
+					'settinggroup' => 'system',
+					'varname' => 'bind_enable',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					'overview_option' => true
+					),
 				'system_bindconf_directory' => array(
 					'label' => $lng['serversettings']['bindconf_directory'],
 					'settinggroup' => 'system',
