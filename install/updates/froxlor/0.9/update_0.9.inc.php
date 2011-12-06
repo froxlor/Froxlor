@@ -1725,3 +1725,14 @@ if(isFroxlorVersion('0.9.25-rc1'))
 	updateToVersion('0.9.25');
 }
 
+if(isFroxlorVersion('0.9.25'))
+{
+	showUpdateStep("Updating from 0.9.25 to 0.9.26-rc1");
+	lastStepStatus(0);
+	
+	// enable bind by default
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bind_enable', '1')");
+	
+	updateToVersion('0.9.26-rc1');
+}
+
