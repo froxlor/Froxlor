@@ -1,2 +1,6 @@
 packages/*
 temp/*
+.buildpath
+.project
+.settings/
+*.diff
