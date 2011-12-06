@@ -17,6 +17,45 @@
  *
  */
 
+//Check Traffic-Lock
+$TrafficLock = dirname($lockfile)."/froxlor_cron_traffic.lock";
+if(file_exists($TrafficLock) &&  is_numeric($TrafficPid=file_get_contents($TrafficLock))) {
+        if(function_exists('posix_kill')) {
+                $TrafficPidStatus = @posix_kill($TrafficPid,0);
+        }
+        else {
+                system("kill -CHLD " . $TrafficPid . " 1> /dev/null 2> /dev/null", $TrafficPidStatus);
+                $TrafficPidStatus = $TrafficPidStatus ? false : true;
+        }
+        if($TrafficPidStatus) {
+                fwrite($debugHandler,"Traffic Run already in progress\n");
+                return 1;
+        }
+}
+ //Create Traffic Log and Fork
+$TrafficPid = pcntl_fork();
+if($TrafficPid) { //Parent
+        file_put_contents($TrafficLock,$TrafficPid);
+        return 0;
+}
+elseif($TrafficPid == 0) { //Child
+        posix_setsid();
+        fclose($debugHandler);
+        $debugHandler = fopen("/tmp/froxlor_traffic.log","w");
+        require ($pathtophpfiles . '/lib/userdata.inc.php'); //There is no bloody reason not to have sql values in the backend ready!
+        if(isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
+                $sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+                unset($sql['root_user']);
+                unset($sql['root_password']);
+        }
+        $db->close();
+        unset($db);
+        $db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']); //detabase handler renewal after fork()
+}
+else { //Fork failed
+        return 1;
+}
+ 
 openRootDB($debugHandler, $lockfile);
 require_once(makeCorrectFile(dirname(__FILE__) . '/cron_traffic.inc.functions.php'));
 
@@ -480,5 +519,7 @@ while($row = $db->fetch_array($result))
 $db->query('UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = \'system\'   AND `varname`      = \'last_traffic_run\' ');
 
 closeRootDB();
+
+die();
 
 ?>
