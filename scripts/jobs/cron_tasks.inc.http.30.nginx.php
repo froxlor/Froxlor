@@ -226,7 +226,7 @@ class nginx
 						
 					if($row_ipsandports['ssl_ca_file'] != '')
 					{
-						$this->lighttpd_data[$vhost_filename].= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
+						$this->nginx_data[$vhost_filename].= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
 					}
 				}
 			}
