@@ -487,9 +487,9 @@ class nginx
 					if($this->vhost_root_autoindex) {
 						$path_options.= "\t\t" . 'autoindex  on;' . "\n";
 						$this->vhost_root_autoindex = false;
-					}		
+					}
 					$path_options.= "\t\t" . 'index    index.php index.html index.htm;'."\n";
-//					$path_options.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";		
+//					$path_options.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 					// check if we have a htpasswd for this path
 					// (damn nginx does not like more than one
 					// 'location'-part with the same path)
@@ -521,7 +521,7 @@ class nginx
 					if($this->vhost_root_autoindex) {
 						$path_options.= "\t\t" . 'autoindex  on;' . "\n";
 						$this->vhost_root_autoindex = false;
-					}		
+					}
 					$path_options.= "\t\t" . 'index    index.php index.html index.htm;'."\n";
 				}
 //			}
@@ -557,7 +557,7 @@ class nginx
 		{
 			foreach($htpasswds as $idx => $single)
 			{
-				//if($single['path'] != "/") 
+				//if($single['path'] != "/")
 				//{
 					switch($single['path'])
 					{
@@ -622,9 +622,9 @@ class nginx
 			$phpopts.= "\t\t".'try_files $uri =404;'."\n";
 			$phpopts.= "\t\t".'fastcgi_split_path_info ^(.+\.php)(/.+)$;'."\n";
 			$phpopts.= "\t\t".'fastcgi_index index.php;'."\n";
-			//$phpopts.= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
-			//$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
-			//$phpopts.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
+			$phpopts.= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
+			$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
+			$phpopts.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
 				$phpopts.= "\t\t".'fastcgi_param HTTPS on;'."\n";
 			}
@@ -652,7 +652,7 @@ class nginx
 
 		$webroot_text.= "\t".'location / {'."\n";
 		$webroot_text.= "\t\t".'index    index.php index.html index.htm;'."\n";
-		$webroot_text.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";		
+		$webroot_text.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 
 		if($this->vhost_root_autoindex) {
 			$webroot_text.= "\t\t".'autoindex on;'."\n";
