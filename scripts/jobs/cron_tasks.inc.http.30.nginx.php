@@ -523,6 +523,7 @@ class nginx
 						$this->vhost_root_autoindex = false;
 					}
 					$path_options.= "\t\t" . 'index    index.php index.html index.htm;'."\n";
+					$path_options.= "\t".'} ' . "\n";
 				}
 //			}
 			
