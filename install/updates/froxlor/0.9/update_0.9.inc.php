@@ -1727,7 +1727,7 @@ if(isFroxlorVersion('0.9.25-rc1'))
 
 if(isFroxlorVersion('0.9.25'))
 {
-	showUpdateStep("Updating from 0.9.25 to 0.9.26-rc1");
+	showUpdateStep("Updating from 0.9.25 to 0.9.26-svn1");
 	lastStepStatus(0);
 	
 	// enable bind by default
@@ -1754,6 +1754,6 @@ if(isFroxlorVersion('0.9.25'))
 		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_enabled', '". $state ."');");
 	}
 	
-	updateToVersion('0.9.26-rc1');
+	updateToVersion('0.9.26-svn1');
 }
 
