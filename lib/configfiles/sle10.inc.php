@@ -18,8 +18,8 @@
  */
 
 return Array(
-	'suse_linux_10_0' => Array(
-		'label' => 'SUSE Linux 10.0',
+	'sle_10' => Array(
+		'label' => 'SUSE Linux Enterprise 10',
 		'services' => Array(
 			'http' => Array(
 				'label' => $lng['admin']['configfiles']['http'],
