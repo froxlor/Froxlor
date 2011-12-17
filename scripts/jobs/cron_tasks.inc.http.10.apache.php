@@ -633,7 +633,7 @@ class apache
 	
 					if($alias_domain['iswildcarddomain'] == '1')
 					{
-						$server_alias.= '*.' . $domain['domain'];
+						$server_alias.= '*.' . $alias_domain['domain'];
 					}
 					else
 					{
