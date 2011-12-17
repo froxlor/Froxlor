@@ -221,8 +221,7 @@ while($row = $db->fetch_array($result))
 		try {
 			$mail->SetFrom($row['email'], $row['name']);
 			$mail->Subject = $mail_subject;
-			$mail->AltBody = $mail_body;
-			$mail->MsgHTML($mail_body);
+			$mail->Body = $mail_body;
 			$mail->AddAddress($row['email'], $row['name']);
 			$mail->Send();
 		} catch(phpmailerException $e) {
