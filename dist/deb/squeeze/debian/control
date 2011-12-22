@@ -2,7 +2,7 @@ Source: froxlor
 Section: admin
 Priority: extra
 Maintainer: Froxlor Release Team <release@froxlor.org>
-Build-Depends: cdbs, debhelper (>= 7.0.50~)
+Build-Depends: cdbs, debhelper (>= 8)
 Standards-Version: 3.9.1
 Homepage: http://www.froxlor.org
 Vcs-Git: git://git.froxlor.org
@@ -11,7 +11,7 @@ Vcs-Browser: http://git.froxlor.org/?p=froxlor.git;a=tree;f=dist/deb;hb=refs/hea
 Package: froxlor
 Architecture: all
 Depends: apache2 | lighttpd | nginx, php5 | php5-cgi, php5-cli, php5-mysql, mysql-server, mysql-client, mysql-common, webalizer | awstats, libphp-phpmailer (>= 5.1)
-Recommends: postfix-mysql | exim4-daemon-heavy, libsasl2-modules-sql, maildrop, courier-authlib-mysql | dovecot-common, courier-imap | dovecot-imapd, courier-pop | dovecot-pop3d, php5-gd, php5-suhosin, php5-imap, proftpd-mod-mysql | pure-ftpd-mysql, bind9
+Recommends: postfix-mysql | exim4-daemon-heavy, libsasl2-modules-sql, maildrop, courier-authlib-mysql | dovecot-common, courier-imap | dovecot-imapd, courier-pop | dovecot-pop3d, php5-gd, php5-suhosin, php5-imap, proftpd-mod-mysql | pure-ftpd-mysql, bind9 | pdns-server
 Conflicts: syscp
 Replaces: syscp
 Description: Server Management Panel
