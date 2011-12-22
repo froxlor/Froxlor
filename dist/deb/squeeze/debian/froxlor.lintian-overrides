@@ -14,11 +14,11 @@ froxlor: embedded-php-library var/www/froxlor/lib/classes/Smarty-3.0.8/libs/Smar
 froxlor: dir-or-file-in-var-www
 
 # not needed on runtime (locale files already should be generated)
-W: froxlor: script-not-executable ./var/www/froxlor/install/tsmarty2c.php
+froxlor: script-not-executable ./var/www/froxlor/install/tsmarty2c.php
 
 # part of the config templates
-W: froxlor: script-not-executable ./var/www/froxlor/templates/misc/configfiles/debian_lenny/nginx/etc_init.d_php-fcgi
-W: froxlor: script-not-executable ./var/www/froxlor/templates/misc/configfiles/debian_squeeze/nginx/etc_init.d_php-fcgi
-W: froxlor: script-not-executable ./var/www/froxlor/templates/misc/configfiles/gentoo/nginx/etc_init.d_php-fcgi
-W: froxlor: script-not-executable ./var/www/froxlor/templates/misc/configfiles/ubuntu_hardy/nginx/etc_init.d_php-fcgi
-W: froxlor: script-not-executable ./var/www/froxlor/templates/misc/configfiles/ubuntu_lucid/nginx/etc_init.d_php-fcgi
+froxlor: script-not-executable ./var/www/froxlor/templates/misc/configfiles/debian_lenny/nginx/etc_init.d_php-fcgi
+froxlor: script-not-executable ./var/www/froxlor/templates/misc/configfiles/debian_squeeze/nginx/etc_init.d_php-fcgi
+froxlor: script-not-executable ./var/www/froxlor/templates/misc/configfiles/gentoo/nginx/etc_init.d_php-fcgi
+froxlor: script-not-executable ./var/www/froxlor/templates/misc/configfiles/ubuntu_hardy/nginx/etc_init.d_php-fcgi
+froxlor: script-not-executable ./var/www/froxlor/templates/misc/configfiles/ubuntu_lucid/nginx/etc_init.d_php-fcgi
