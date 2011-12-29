@@ -6,7 +6,7 @@ $header
 		
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['backup']}</b></td>
+				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['backup']}</b></td>
 			</tr>
 			{$backup_form}
 		</table>
