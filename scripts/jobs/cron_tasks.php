@@ -241,16 +241,10 @@ while($row = $db->fetch_array($result_tasks))
 	}
 
 	/**
-	 * TYPE=4 MEANS THAT SOMETHING IN THE BIND CONFIG HAS CHANGED. REBUILD froxlor_bind.conf
+	 * TYPE=4 MEANS THAT SOMETHING IN THE BIND CONFIG HAS CHANGED. REBUILD froxlor_bind.conf IF BIND IS ENABLED
 	 */
-	elseif ($row['type'] == '4')
+	elseif ($row['type'] == '4' && (int)$settings['system']['bind_enable'] != 0)
 	{
-		//dont do anything when module is disabled
-		if((int)$settings['system']['bind_enable'] == 0)
-		{
-			return;
-		}
-		
 		if(!isset($nameserver))
 		{
 			$nameserver = new bind($db, $cronlog, $debugHandler, $settings);
