@@ -117,22 +117,22 @@ class nginx
 	
 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
 			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 401 ' . $this->settings['defaultwebsrverrhandler']['err401'] . ';' . "\n";
+				$this->nginx_data[$vhosts_filename].= 'error_page 401 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err401']) . '";' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err403'] != '')
 			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 403 ' . $this->settings['defaultwebsrverrhandler']['err403'] . ';' . "\n";
+				$this->nginx_data[$vhosts_filename].= 'error_page 403 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err403']) . '";' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err404'] != '')
 			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 404 ' . $this->settings['defaultwebsrverrhandler']['err404'] . ';' . "\n";
+				$this->nginx_data[$vhosts_filename].= 'error_page 404 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err404']) . '";' . "\n";
 			}
 			
 			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
 			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 500 ' . $this->settings['defaultwebsrverrhandler']['err500'] . ';' . "\n";
+				$this->nginx_data[$vhosts_filename].= 'error_page 500 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err500']) . '";' . "\n";
 			}
 
 		}
@@ -221,12 +221,12 @@ class nginx
 				if($row_ipsandports['ssl_cert_file'] != '')
 				{
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl on;' . "\n";
-					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . ';' . "\n";
-					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate_key ' .makeCorrectFile($row_ipsandports['ssl_key_file']) . ';' .  "\n";
+					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate "' . $this->escapeConfigParamter(makeCorrectFile($row_ipsandports['ssl_cert_file'])) . '";' . "\n";
+					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate_key "' . $this->escapeConfigParamter(makeCorrectFile($row_ipsandports['ssl_key_file'])). '";' .  "\n";
 						
 					if($row_ipsandports['ssl_ca_file'] != '')
 					{
-						$this->nginx_data[$vhost_filename].= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
+						$this->nginx_data[$vhost_filename].= 'ssl_client_certificate "' . $this->escapeConfigParamter(makeCorrectFile($row_ipsandports['ssl_ca_file'])) . '";' . "\n";
 					}
 				}
 			}
@@ -256,11 +256,11 @@ class nginx
 				);
 
 				$php = new phpinterface($this->getDB(), $this->settings, $domain);
-				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
+				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass "unix:' . $this->escapeConfigParamter($php->getInterface()->getSocketFile()) . '";' . "\n";
 			}
 			else
 			{
-				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
+				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass "' . $this->settings['system']['nginx_php_backend'] . '";' . "\n";
 			}
 			$this->nginx_data[$vhost_filename].= "\t".'}'."\n";
 
@@ -461,17 +461,17 @@ class nginx
 		{
 			if(!empty($row['error404path']))
 			{
-				$path_options.= "\t".'error_page   404    ' . $row['error404path'] . ';' . "\n";
+				$path_options.= "\t".'error_page   404    "' . $this->escapeConfigParamter($row['error404path']) . '";' . "\n";
 			}
 
 			if(!empty($row['error403path']))
 			{
-				$path_options.= "\t".'error_page   403    ' . $row['error403path'] . ';' . "\n";
+				$path_options.= "\t".'error_page   403    "' . $this->escapeConfigParamter($row['error403path']) . '";' . "\n";
 			}
 
 			if(!empty($row['error500path']))
 			{
-				$path_options.= "\t".'error_page   502 503 504    ' . $row['error500path'] . ';' . "\n";
+				$path_options.= "\t".'error_page   502 503 504    "' . $this->escapeConfigParamter($row['error500path']) . '";' . "\n";
 			}
 
 //			if($row['options_indexes'] != '0')
@@ -483,7 +483,7 @@ class nginx
 				$path_options.= "\t".'# '.$path."\n";
 				if ($path == '/') {
 					$this->vhost_root_autoindex = true;
-					$path_options.= "\t".'location ' . $path . ' {' . "\n";
+					$path_options.= "\t".'location "' . $this->escapeConfigParamter($path) . '" {' . "\n";
 					if($this->vhost_root_autoindex) {
 						$path_options.= "\t\t" . 'autoindex  on;' . "\n";
 						$this->vhost_root_autoindex = false;
@@ -504,7 +504,7 @@ class nginx
 								default:
 									if ($single['path']=='/'){
 										$path_options.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-										$path_options.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+										$path_options.= "\t\t" . 'auth_basic_user_file  "' . $this->escapeConfigParamter($single['usrf']) . '";'."\n";
 										// remove already used entries so we do not have doubles
 										unset($htpasswds[$idx]);
 									}
@@ -517,7 +517,7 @@ class nginx
 				}
 				 else
 				{
-					$path_options.= "\t".'location ' . $path . ' {' . "\n";
+					$path_options.= "\t".'location "' . $this->escapeConfigParamter($path) . '" {' . "\n";
 					if($this->vhost_root_autoindex) {
 						$path_options.= "\t\t" . 'autoindex  on;' . "\n";
 						$this->vhost_root_autoindex = false;
@@ -543,7 +543,7 @@ class nginx
 				}
 				$path_options.= "\t" . 'location ~ \(.pl|.cgi)$ {' . "\n";
 				$path_options.= "\t\t" . 'gzip off; #gzip makes scripts feel slower since they have to complete before getting gzipped' . "\n";
-	    			$path_options.= "\t\t" . 'fastcgi_pass  '. $this->settings['system']['perl_server'] . ';' . "\n";
+				$path_options.= "\t\t" . 'fastcgi_pass  "' . $this->escapeConfigParamter($this->settings['system']['perl_server']) . '";' . "\n";
    				$path_options.= "\t\t" . 'fastcgi_index index.cgi;' . "\n";
 				$path_options.= "\t\t" . 'include /etc/nginx/fastcgi_params;'."\n";
 				$path_options.= "\t" . '}' . "\n";
@@ -568,9 +568,9 @@ class nginx
 							unset($htpasswds[$idx]);
 						break;
 						default:
-							$path_options.= "\t" . 'location ' . $single['path'] . ' {' . "\n";
+							$path_options.= "\t" . 'location "' . $this->escapeConfigParamter($single['path']) . '" {' . "\n";
 							$path_options.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-							$path_options.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+							$path_options.= "\t\t" . 'auth_basic_user_file  "' . $this->escapeConfigParamter($single['usrf']) . '";'."\n";
 							$path_options.= "\t".'}' . "\n";
 					}
 				//}
@@ -623,7 +623,7 @@ class nginx
 			$phpopts.= "\t\t".'try_files $uri =404;'."\n";
 			$phpopts.= "\t\t".'fastcgi_split_path_info ^(.+\.php)(/.+)$;'."\n";
 			$phpopts.= "\t\t".'fastcgi_index index.php;'."\n";
-			$phpopts.= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
+			$phpopts.= "\t\t".'fastcgi_pass "' . $this->escapeConfigParamter($this->settings['system']['nginx_php_backend']) . '";' . "\n";
 			$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
 			$phpopts.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
@@ -642,12 +642,12 @@ class nginx
 		&& $this->settings['system']['deactivateddocroot'] != '')
 		{
 			$webroot_text.= "\t".'# Using docroot for deactivated users...' . "\n";
-			$webroot_text.= "\t".'root     '.$this->settings['system']['deactivateddocroot'].';'."\n";
+			$webroot_text.= "\t".'root     "' . $this->escapeConfigParamter($this->settings['system']['deactivateddocroot']) . '";' . "\n";
 			$this->_deactivated = true;
 		}
 		else
 		{
-			$webroot_text.= "\t".'root     '.makeCorrectDir($domain['documentroot']).';'."\n";
+			$webroot_text.= "\t".'root     "' . $this->escapeConfigParamter(makeCorrectDir($domain['documentroot'])) . '";' . "\n";
 			$this->_deactivated = false;
 		}
 
@@ -680,20 +680,20 @@ class nginx
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain'])) . '";' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  "' . $this->escapeConfigParamter($single['usrf']) . '";'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '";' . "\n";
 					$stats_text.= "\t" . '}' . "\n";
 				}
 				else
 				{
 					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias "' .  $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain'])) . '";' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  "' . $this->escapeConfigParamter($single['usrf']) . '";'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 				}
 			}
@@ -702,20 +702,20 @@ class nginx
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain'])) . '";' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  "' . $this->escapeConfigParamter($single['usrf']) . '";'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '";' . "\n";
 					$stats_text.= "\t" . '}' . "\n";
 				}
 				else
 				{
 					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias "' .  $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain'])) . '";' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  "' . $this->escapeConfigParamter($single['usrf']) . '";'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 
 				}
@@ -728,20 +728,20 @@ class nginx
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
 					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain'])) . '";' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  "' . $this->escapeConfigParamter($single['usrf']) . '";'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'alias "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '";' . "\n";
 					$stats_text.= "\t\t" . '}' . "\n";
 				}
 				else
 				{
 					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'root ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
+					$stats_text.= "\t\t" . 'root "' .  $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain'])) . '";' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  "' . $this->escapeConfigParamter($single['usrf']) . '";'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 
 				}
@@ -753,12 +753,12 @@ class nginx
 			elseif($this->settings['system']['awstats_enabled'] == '1')
 			{
 				$stats_text.= "\t" . 'location /awstats {' . "\n";
-				$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
+				$stats_text.= "\t\t" . 'alias "' . $this->escapeConfigParamter(makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain'])) . '";' . "\n";
 				$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-				$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+				$stats_text.= "\t\t" . 'auth_basic_user_file  "' . $this->escapeConfigParamter($single['usrf']) . '";'."\n";
 				$stats_text.= "\t" . '}' . "\n";
 				$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-				$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
+				$stats_text.= "\t\t" . 'alias "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '";' . "\n";
 				$stats_text.= "\t" . '}' . "\n";
 			}
 		}
@@ -804,8 +804,8 @@ class nginx
 		chown($access_log, $this->settings['system']['httpuser']);
 		chgrp($access_log, $this->settings['system']['httpgroup']);
 
-		$logfiles_text.= "\t".'access_log    ' . $access_log . ' combined;' . "\n";
-		$logfiles_text.= "\t".'error_log    ' . $error_log . ' error;' . "\n";
+		$logfiles_text.= "\t".'access_log    "' . $this->escapeConfigParamter($access_log) . '" combined;' . "\n";
+		$logfiles_text.= "\t".'error_log    "' . $this->escapeConfigParamter($error_log) . '" error;' . "\n";
 
 		if($this->settings['system']['awstats_enabled'] == '1')
 		{
@@ -1098,5 +1098,22 @@ class nginx
 				}
 			}
 		}
+	}
+
+	/*
+	*       Escape paramters
+	*/
+	protected function escapeConfigParamter($parameter,$escapeds = true)
+	{
+		$out = str_replace('\\', '\\\\', $parameter);
+		$out = str_replace('"', '\"', $out);
+
+		// escape dollar sign
+		if($escapeds)
+		{
+			$out = str_replace('$', '\$"', $out);
+		}
+
+		return $out;
 	}
 }
