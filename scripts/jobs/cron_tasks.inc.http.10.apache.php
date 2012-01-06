@@ -446,11 +446,16 @@ class apache
 			}
 		}
 
+		if(trim($server_alias) != '')
+		{
+			$servernames_text.= '  ServerAlias ' . $server_alias . "\n";
+		}
+
 		$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . $domain['id'] . '\'');
 
 		while(($alias_domain = $this->db->fetch_array($alias_domains)) !== false)
 		{
-			$server_alias.= ' ' . $alias_domain['domain'];
+			$server_alias = '  ServerAlias ' . $alias_domain['domain'];
 
 			if($alias_domain['iswildcarddomain'] == '1')
 			{
@@ -463,11 +468,8 @@ class apache
 					$server_alias.= ' www.' . $alias_domain['domain'];
 				}
 			}
-		}
 
-		if(trim($server_alias) != '')
-		{
-			$servernames_text.= '  ServerAlias ' . $server_alias . "\n";
+			$servernames_text.= $server_alias . "\n";
 		}
 
 		$servernames_text.= '  ServerAdmin ' . $domain['email'] . "\n";
