@@ -234,7 +234,7 @@ return Array(
 							'echo "smtpd_milters = inet:localhost:8891
 milter_macro_daemon_name = SIGNING
 milter_default_action = accept" >> /etc/postfix/main.cf',
-							'rc-update add dovecot default'
+							'rc-update add dkim-filter default'
 						),
 						'restart' => Array(
 							'/etc/init.d/postfix restart'
