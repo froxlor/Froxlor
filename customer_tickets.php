@@ -28,6 +28,17 @@ require ("./lib/init.php");
 if(isset($_POST['id']))
 {
 	$id = intval($_POST['id']);
+	
+	/*
+	 * Check if the current user is allowed to see the current ticket.
+	 */
+	$sql = "SELECT `id` FROM `panel_tickets` WHERE `id` = '".$id."' AND `customerid` = '".$userinfo['customerid']."'";
+	
+	$result = $db->query_first($sql);
+	if ($result == null) {
+		// no rights to see the requested ticket
+		standard_error(array('ticketnotaccessible'));
+	}
 }
 elseif(isset($_GET['id']))
 {

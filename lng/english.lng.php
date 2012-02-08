@@ -235,6 +235,7 @@ $lng['error']['destinationalreadyexistasmail'] = 'The forwarder to %s already ex
 $lng['error']['destinationalreadyexist'] = 'You have already defined a forwarder to %s .';
 $lng['error']['destinationiswrong'] = 'The forwarder %s contains invalid character(s) or is incomplete.';
 $lng['error']['domainname'] = $lng['domains']['domainname'];
+$lng['error']['ticketnotaccessible'] = 'You cannot access this ticket.';
 
 /**
  * Questions

@@ -32,6 +32,19 @@ if(isset($_POST['id']))
 elseif(isset($_GET['id']))
 {
 	$id = intval($_GET['id']);
+	
+	if (!$userinfo['customers_see_all']) {
+		/*
+		 * Check if the current user is allowed to see the current ticket.
+		 */
+		$sql = "SELECT `id` FROM `panel_tickets` WHERE `id` = '".$id."' AND `adminid` = '".$userinfo['admindid']."'";
+		
+		$result = $db->query_first($sql);
+		if ($result == null) {
+			// no rights to see the requested ticket
+			standard_error(array('ticketnotaccessible'));
+		}
+	}
 }
 
 if($page == 'tickets'
@@ -681,7 +694,7 @@ elseif($page == 'archive'
 							break;
 							case 3: $ticket['display'] = 'low';
 							break;
-							default: $ticket['display'] = 'unknown'; 
+							default: $ticket['display'] = 'unknown';
 						}
 						$ticket['priority'] = ticket::getPriorityText($lng, $ticket['priority']);
 

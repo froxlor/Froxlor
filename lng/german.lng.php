@@ -235,6 +235,7 @@ $lng['error']['destinationalreadyexistasmail'] = 'Die Weiterleitung zu %s exisit
 $lng['error']['destinationalreadyexist'] = 'Es gibt bereits eine Weiterleitung nach %s .';
 $lng['error']['destinationiswrong'] = 'Die Weiterleitungsadresse-Adresse %s enth&auml;lt ung&uuml;ltige Zeichen oder ist nicht vollst&auml;ndig.';
 $lng['error']['domainname'] = $lng['domains']['domainname'];
+$lng['error']['ticketnotaccessible'] = 'Sie k&ouml;nnen sich das Ticket nicht ansehen.';
 
 /**
  * Questions
