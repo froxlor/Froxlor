@@ -5,8 +5,7 @@ froxlor: new-package-should-close-itp-bug
 froxlor: extra-license-file var/www/froxlor/lib/classes/htmlpurifier/LICENSE
 froxlor: embedded-php-library var/www/froxlor/lib/classes/htmlpurifier/library/HTMLPurifier.php
 froxlor: embedded-javascript-library var/www/froxlor/js/jquery.min.js
-
-# package is orphaned, bah.
+froxlor: embedded-javascript-library var/www/froxlor/js/jquery.tablesorter.min.js
 froxlor: extra-license-file var/www/froxlor/lib/classes/Smarty-3.0.8/COPYING.lib
 froxlor: embedded-php-library var/www/froxlor/lib/classes/Smarty-3.0.8/libs/Smarty.class.php
 

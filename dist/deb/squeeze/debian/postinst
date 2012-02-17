@@ -72,7 +72,6 @@ echo "To proceed with the Froxlor upgrade move your configuration file (lib/user
 	find /tmp/ -type f -name "froxlordir"* -delete;
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
-	/bin/true
     ;;
 
     *)
