@@ -627,7 +627,7 @@ if($page == 'customers'
 						}
 						
 						//Additional filtering for Bug #962
-						if(function_exists('posix_getpwuid') && !in_array("posix_getpwuid",explode(",",ini_get('disable_functions'))) && posix_getpwuid($loginname)) {
+						if(function_exists('posix_getpwnam') && !in_array("posix_getpwnam",explode(",",ini_get('disable_functions'))) && posix_getpwnam($loginname)) {
 							standard_error('loginnameissystemaccount', $settings['customer']['accountprefix']);
 						}
 					}
