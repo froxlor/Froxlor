@@ -52,7 +52,7 @@ class apache_fcgid extends apache
 			}
 			else
 			{
-				$php_options_text.= '  FastCgiConfig -idle-timeout ' . $this->settings['system']['mod_fcgid_idle_timeout'] . "\n";
+				$php_options_text.= '  FcgidIdleTimeout ' . $this->settings['system']['mod_fcgid_idle_timeout'] . "\n";
 				if((int)$this->settings['system']['mod_fcgid_wrapper'] == 0)
 				{
 					$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";

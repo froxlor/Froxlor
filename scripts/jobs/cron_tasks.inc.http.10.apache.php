@@ -236,7 +236,7 @@ class apache
 				{
 					
 					$configdir = makeCorrectDir($this->settings['system']['mod_fcgid_configdir'] . '/froxlor.panel/' . $this->settings['system']['hostname']);
-					$this->virtualhosts_data[$vhosts_filename].= '  FastCgiConfig -idle-timeout ' . $this->settings['system']['mod_fcgid_idle_timeout'] . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  FcgidIdleTimeout ' . $this->settings['system']['mod_fcgid_idle_timeout'] . "\n";
 					if((int)$this->settings['system']['mod_fcgid_wrapper'] == 0)
 					{
 						$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
