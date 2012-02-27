@@ -712,7 +712,7 @@ class ApsParser
 		$Output = '';
 		foreach($Files as $File)
 		{
-			$Output.= '<input size="60" name="' . $File . '" type="file" /><br/><br/>';
+			$Output.= '<input size="45" name="' . $File . '" type="file" /><br /><br />';
 		}
 
 		eval("echo \"" . getTemplate("aps/upload") . "\";");

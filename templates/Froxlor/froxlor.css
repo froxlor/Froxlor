@@ -229,6 +229,18 @@ footer a:hover {
 	text-align: right;
 }
 
+.midformaps_1 {
+	padding:10px;
+}
+
+.midformaps_2 {
+	padding:5px;
+}
+
+.midformaps form input {
+	text-align: center;
+}
+
 .fullform textarea,.midform textarea {
 	width: 60%;
 }
