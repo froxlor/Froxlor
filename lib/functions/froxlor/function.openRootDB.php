@@ -58,7 +58,6 @@ function openRootDB($debugHandler = false, $lockfile = false)
 		die('root can\'t connect to mysqlserver. Please check userdata.inc.php! Exiting...');
 	}
 
-	unset($db_root->password);
 	if(isset($debugHandler) && $debugHandler !== false)
 	{
 		fwrite($debugHandler, 'Database-rootconnection established' . "\n");

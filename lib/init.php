@@ -117,7 +117,6 @@ require ('./lib/tables.inc.php');
 
 $db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
 unset($sql['password']);
-unset($db->password);
 
 // we will try to unset most of the $sql information if they are not needed
 // by the calling script.

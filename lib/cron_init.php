@@ -155,7 +155,6 @@ if($db->link_id == 0)
 
 fwrite($debugHandler, 'Database-connection established' . "\n");
 unset($sql);
-unset($db->password);
 $result = $db->query("SELECT `settingid`, `settinggroup`, `varname`, `value` FROM `" . TABLE_PANEL_SETTINGS . "`");
 
 while($row = $db->fetch_array($result))

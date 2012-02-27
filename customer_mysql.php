@@ -64,7 +64,6 @@ elseif($page == 'mysqls')
 
 		// Begin root-session
 		$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
-		unset($db_root->password);
 		while($row = $db->fetch_array($result))
 		{
 			if($paging->checkDisplay($i))
@@ -103,7 +102,6 @@ elseif($page == 'mysqls')
 				// Begin root-session
 
 				$db_root = new db($sql_root[$result['dbserver']]['host'], $sql_root[$result['dbserver']]['user'], $sql_root[$result['dbserver']]['password'], '');
-				unset($db_root->password);
 				foreach(array_map('trim', array_unique(explode(',', $settings['system']['mysql_access_host']))) as $mysql_access_host)
 				{
 					$db_root->query('REVOKE ALL PRIVILEGES ON * . * FROM `' . $db_root->escape($result['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`');
@@ -183,7 +181,6 @@ elseif($page == 'mysqls')
 					// Begin root-session
 
 					$db_root = new db($sql_root[$dbserver]['host'], $sql_root[$dbserver]['user'], $sql_root[$dbserver]['password'], '');
-					unset($db_root->password);
 					$db_root->query('CREATE DATABASE `' . $db_root->escape($username) . '`');
 					$log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
 					foreach(array_map('trim', explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host)
@@ -299,7 +296,6 @@ elseif($page == 'mysqls')
 
 					// Begin root-session
 					$db_root = new db($sql_root[$result['dbserver']]['host'], $sql_root[$result['dbserver']]['user'], $sql_root[$result['dbserver']]['password'], '');
-					unset($db_root->password);
 					foreach(array_map('trim', explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host)
 					{
 						$db_root->query('SET PASSWORD FOR `' . $db_root->escape($result['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '` = PASSWORD(\'' . $db_root->escape($password) . '\')');

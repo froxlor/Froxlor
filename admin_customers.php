@@ -211,7 +211,6 @@ if($page == 'customers'
 			{
 				$databases = $db->query("SELECT * FROM " . TABLE_PANEL_DATABASES . " WHERE customerid='" . (int)$id . "' ORDER BY `dbserver`");
 				$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
-				unset($db_root->password);
 				$last_dbserver = 0;
 
 				while($row_database = $db->fetch_array($databases))
@@ -221,7 +220,6 @@ if($page == 'customers'
 						$db_root->query('FLUSH PRIVILEGES;');
 						$db_root->close();
 						$db_root = new db($sql_root[$row_database['dbserver']]['host'], $sql_root[$row_database['dbserver']]['user'], $sql_root[$row_database['dbserver']]['password'], '');
-						unset($db_root->password);
 						$last_dbserver = $row_database['dbserver'];
 					}
 
@@ -1244,7 +1242,6 @@ if($page == 'customers'
 						/* Retrieve customer's databases */
 						$databases = $db->query("SELECT * FROM " . TABLE_PANEL_DATABASES . " WHERE customerid='" . (int)$id . "' ORDER BY `dbserver`");
 						$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
-						unset($db_root->password);
 						$last_dbserver = 0;
 
 						/* For each of them */
@@ -1255,7 +1252,6 @@ if($page == 'customers'
 								$db_root->query('FLUSH PRIVILEGES;');
 								$db_root->close();
 								$db_root = new db($sql_root[$row_database['dbserver']]['host'], $sql_root[$row_database['dbserver']]['user'], $sql_root[$row_database['dbserver']]['password'], '');
-								unset($db_root->password);
 								$last_dbserver = $row_database['dbserver'];
 							}
 

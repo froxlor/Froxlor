@@ -29,56 +29,56 @@ class db
 	 * @var int
 	 */
 
-	var $link_id = 0;
+	public $link_id = 0;
 
 	/**
 	 * Query ID for every query
 	 * @var int
 	 */
 
-	var $query_id = 0;
+	private $query_id = 0;
 
 	/**
 	 * Errordescription, if an error occures
 	 * @var string
 	 */
 
-	var $errdesc = '';
+	public $errdesc = '';
 
 	/**
 	 * Errornumber, if an error occures
 	 * @var int
 	 */
 
-	var $errno = 0;
+	public $errno = 0;
 
 	/**
 	 * Servername
 	 * @var string
 	 */
 
-	var $server = '';
+	private $server = '';
 
 	/**
 	 * Username
 	 * @var string
 	 */
 
-	var $user = '';
+	private $user = '';
 
 	/**
 	 * Password
 	 * @var string
 	 */
 
-	var $password = '';
+	private $password = '';
 
 	/**
 	 * Database
 	 * @var string
 	 */
 
-	var $database = '';
+	private $database = '';
 
 	/**
 	 * Class constructor. Connects to Databaseserver and selects Database
@@ -188,7 +188,18 @@ class db
 
 	function query($query_str, $unbuffered = false, $suppress_error = false)
 	{
+
 		global $numbqueries;
+
+		if (!mysql_ping($this->link_id))
+		{
+			$this->link_id = mysql_connect($this->server,$this->user,$this->password);
+			if(!$this->database)
+			{
+				return false;
+			}
+			mysql_select_db($this->database);
+		}
 
 		if(!$unbuffered)
 		{
