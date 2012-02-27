@@ -135,6 +135,14 @@ return array(
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('apache2')
 					),
+				'system_mod_fcgid_idle_timeout' => array(
+					'label' => $lng['serversettings']['mod_fcgid']['idle_timeout'],
+					'settinggroup' => 'system',
+					'varname' => 'mod_fcgid_idle_timeout',
+					'type' => 'int',
+					'default' => 30,
+					'save_method' => 'storeSettingField'
+					),
 				)
 			)
 		)

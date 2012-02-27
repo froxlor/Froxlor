@@ -1904,3 +1904,7 @@ $lng['error']['invalidhostname'] = 'Hostname can\'t be empty nor can it consist 
 $lng['traffic']['http'] = 'HTTP (MB)';
 $lng['traffic']['ftp'] = 'FTP (MB)';
 $lng['traffic']['mail'] = 'Mail (MB)';
+$lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle Timeout';
+$lng['serversettings']['mod_fcgid']['idle_timeout']['description'] = 'Timeout setting for Mod FastCGI.';
+$lng['serversettings']['phpfpm_settings']['idle_timeout']['title'] = 'Idle Timeout';
+$lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Timeout setting for PHP5 FPM FastCGI.';

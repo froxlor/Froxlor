@@ -153,6 +153,14 @@ return array(
 					'default' => 0,
 					'save_method' => 'storeSettingField',
 					),
+				'system_phpfpm_idle_timeout' => array(
+					'label' => $lng['serversettings']['phpfpm_settings']['idle_timeout'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'idle_timeout',
+					'type' => 'int',
+					'default' => 30,
+					'save_method' => 'storeSettingField'
+					),
 				),
 			),
 		),

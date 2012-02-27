@@ -236,6 +236,7 @@ class apache
 				{
 					
 					$configdir = makeCorrectDir($this->settings['system']['mod_fcgid_configdir'] . '/froxlor.panel/' . $this->settings['system']['hostname']);
+					$this->virtualhosts_data[$vhosts_filename].= '  FastCgiConfig -idle-timeout ' . $this->settings['system']['mod_fcgid_idle_timeout'] . "\n";
 					if((int)$this->settings['system']['mod_fcgid_wrapper'] == 0)
 					{
 						$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
@@ -273,7 +274,7 @@ class apache
 
 					$php = new phpinterface($this->getDB(), $this->settings, $domain);
 					$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '  FastCgiExternalServer ' . $mypath . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['system']['mod_fcgid_httpuser'] . ' -group ' . $this->settings['system']['mod_fcgid_httpuser'] . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  FastCgiExternalServer ' . $mypath . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['system']['mod_fcgid_httpuser'] . ' -group ' . $this->settings['system']['mod_fcgid_httpuser'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    AddHandler php5-fastcgi .php'. "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    Action php5-fastcgi /fastcgiphp' . "\n";
@@ -1293,6 +1294,28 @@ class apache
 					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $vhost_filename);
 					unlink(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename));
 				}
+			}
+		}
+		if($this->settings['phpfpm']['enabled'] == '1')
+		{
+			foreach($this->known_vhostfilenames as $vhostfilename){
+				$known_phpfpm_files[]=preg_replace('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_/', '', $vhostfilename);
+			}
+		
+			$configdir = $this->settings['phpfpm']['configdir'];
+			$phpfpm_file_dirhandle = opendir($this->settings['phpfpm']['configdir']);
+		
+			while(false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle)))
+			{
+				if($phpfpm_filename != '.'
+					&& $phpfpm_filename != '..'
+					&& !in_array($phpfpm_filename, $known_phpfpm_files)
+					&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename)))
+					{
+						fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking PHP5-FPM ' . $phpfpm_filename . "\n");
+						$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $phpfpm_filename);
+						unlink(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename));
+					}
 			}
 		}
 	}

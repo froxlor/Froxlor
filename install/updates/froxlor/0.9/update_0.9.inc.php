@@ -1780,3 +1780,27 @@ if(isFroxlorVersion('0.9.26'))
 
 	updateToVersion('0.9.27-svn1');
 }
+
+if(isFroxlorVersion('0.9.27-svn1'))
+{
+	showUpdateStep("Updating from 0.9.27-svn1 to 0.9.27-svn2");
+	lastStepStatus(0);
+	
+	// Get FastCGI timeout setting if available
+	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'system' AND `varname` = 'mod_fcgid_idle_timeout';");
+	
+	// If timeout is set then skip
+	if ($db->num_rows($handle) < 1) {
+		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_idle_timeout', '30');");
+	}
+		
+	// Get FastCGI timeout setting if available
+	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'idle_timeout';");
+	
+	// If timeout is set then skip
+	if ($db->num_rows($handle) < 1) {
+		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'idle_timeout', '30');");
+	}
+
+	updateToVersion('0.9.27-svn2');
+}
