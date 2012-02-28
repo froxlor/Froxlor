@@ -98,7 +98,6 @@ while($row_domainlist = $db->fetch_array($result_domainlist))
 $mysqlusage_all = array();
 $databases = $db->query("SELECT * FROM " . TABLE_PANEL_DATABASES . " ORDER BY `dbserver`");
 $db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
-unset($db_root->password);
 $last_dbserver = 0;
 
 $databases_list = array();
@@ -114,7 +113,6 @@ while($row_database = $db->fetch_array($databases))
 	{
 		$db_root->close();
 		$db_root = new db($sql_root[$row_database['dbserver']]['host'], $sql_root[$row_database['dbserver']]['user'], $sql_root[$row_database['dbserver']]['password'], '');
-		unset($db_root->password);
 		$last_dbserver = $row_database['dbserver'];
 
 		$database_list = array();
@@ -295,7 +293,6 @@ while($row = $db->fetch_array($result))
 
 			fwrite($debugHandler, 'Database-connection re-established' . "\n");
 			unset($sql);
-			unset($db->password);
 			$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Database-connection crashed during traffic-cronjob, reconnected!');
 		}
 
