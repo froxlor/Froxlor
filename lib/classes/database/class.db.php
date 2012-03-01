@@ -102,7 +102,7 @@ class db
 		$this->user = $user;
 		$this->password = $password;
 		$this->database = $database;
-		$this->link_id = @mysql_connect($this->server, $this->user, $this->password);
+		$this->link_id = @mysql_connect($this->server, $this->user, $this->password, 1);
 
 		if(!$this->link_id)
 		{
@@ -110,7 +110,7 @@ class db
 
 			if($this->user == 'root')
 			{
-				$this->link_id = @mysql_connect($this->server, $this->user, '');
+				$this->link_id = @mysql_connect($this->server, $this->user, '', 1);
 
 				if($this->link_id)
 				{
