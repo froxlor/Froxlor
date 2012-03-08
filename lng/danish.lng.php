@@ -260,9 +260,9 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Er du sikker p&aring; du vil 
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Hej,\n\ndin eMail konto {EMAIL}\ner blevet oprettet.\n\nDette er en automatisk genereret\neMail, svar er ikke n&oslash;dvendig!\n\nHilsen, Froxlor-Teamet';
+$lng['mails']['pop_success']['mailbody'] = 'Hej,\n\ndin eMail konto {EMAIL}\ner blevet oprettet.\n\nDette er en automatisk genereret\neMail, svar er ikke n&oslash;dvendig!\n\nHilsen, din administrator';
 $lng['mails']['pop_success']['subject'] = 'eMail konto er blevet oprettet';
-$lng['mails']['createcustomer']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\ndette er information til din konto:\n\nBruger: {USERNAME}\nKodeord: {PASSWORD}\n\nHilsen, Froxlor-Teamet';
+$lng['mails']['createcustomer']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\ndette er information til din konto:\n\nBruger: {USERNAME}\nKodeord: {PASSWORD}\n\nHilsen, din administrator';
 $lng['mails']['createcustomer']['subject'] = 'Konto information';
 
 /**
