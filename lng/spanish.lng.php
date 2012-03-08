@@ -153,7 +153,7 @@ $lng['ftp']['account_add'] = 'Crear Cuenta';
  * MySQL
  */
 
-$lng['mysql']['description'] = 'Aqui se puede crear/cancelar la MySQL Base de Datos.<br>Los Cambios se actualizan de inmediato y la Base de Datos se puede usar enseguida.<br />En el men&uacute; usted encuentra el phpMyAdmin de la herramienta con el cual usted puede administrar f&aacute;cilmente su base de datos.<br /><br />Para utilizar sus bases de datos en sus propias php-escrituras utilice las configuraciones siguientes: (Los datos en letra <i>cursiva</i> seran sustituidas por las asignadas!)<br />Nombre del Host:<b><SQL_HOST></b><br />Nombre del Usuario: <b><i>nombre de la base de datos</i></b><br />Clave: <b><i>contrase&ntilde;a elegida</i></b><br />Base de datos: <b><i>Nombre de la base de datos';
+$lng['mysql']['description'] = 'Aqui se puede crear/cancelar la MySQL Base de Datos.<br />Los Cambios se actualizan de inmediato y la Base de Datos se puede usar enseguida.<br />En el men&uacute; usted encuentra el phpMyAdmin de la herramienta con el cual usted puede administrar f&aacute;cilmente su base de datos.<br /><br />Para utilizar sus bases de datos en sus propias php-escrituras utilice las configuraciones siguientes: (Los datos en letra <i>cursiva</i> seran sustituidas por las asignadas!)<br />Nombre del Host:<b><SQL_HOST></b><br />Nombre del Usuario: <b><i>nombre de la base de datos</i></b><br />Clave: <b><i>contrase&ntilde;a elegida</i></b><br />Base de datos: <b><i>Nombre de la base de datos';
 $lng['mysql']['databasename'] = 'Nombre -/Base de Datos';
 $lng['mysql']['databasedescription'] = 'Indentificador de la Base de Datos';
 $lng['mysql']['database_create'] = 'Abrir base de Datos';
