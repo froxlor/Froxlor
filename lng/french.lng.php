@@ -139,7 +139,7 @@ $lng['domains']['noaliasdomain'] = 'Domaine sans alias';
  * E-mails
  */
 
-$lng['emails']['description'] = 'Ici, vous pouvez ajouter vos bo&icirc;tes e-mails.<br><br>Les informations pour configurer votre logiciel e-mail sont les suivantes : <br><br>Nom du serveur : <b><i>votre-domaine.com</i></b><br>Identifiant : <b><i>l\'adresse e-mail</i></b><br>Mot de passe : <b><i>le mot de passe que vous avez choisi</i></b>';
+$lng['emails']['description'] = 'Ici, vous pouvez ajouter vos bo&icirc;tes e-mails.<br /><br />Les informations pour configurer votre logiciel e-mail sont les suivantes : <br /><br />Nom du serveur : <b><i>votre-domaine.com</i></b><br />Identifiant : <b><i>l\'adresse e-mail</i></b><br />Mot de passe : <b><i>le mot de passe que vous avez choisi</i></b>';
 $lng['emails']['emailaddress'] = 'Adresse';
 $lng['emails']['emails_add'] = 'Ajouter une adresse e-mail';
 $lng['emails']['emails_edit'] = 'Changer une adresse e-mail';
@@ -393,7 +393,7 @@ $lng['serversettings']['mxservers']['description'] = 'Une liste s&eacute;par&eac
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['mysql']['description'] = 'Ici, vous pouvez ajouter et effacer des bases de donn&eacute;es MySQL.<br>Les changements, ainsi que les bases de donn&eacute;es, sont imm&eacute;diatement op&eacute;rationnels.<br>Dans le menu, vous trouverez un lien vers phpMyAdmin, avec lequel vous pouvez g&eacute;rer vos bases de donn&eacute;es.<br><br>L\'acc&egrave;s aux bases de donn&eacute;es depuis les scripts PHP fonctionne comme suit : (Il faut remplacer les valeurs en <i><b>italique</b></i> par vos informations !)<br><br>$connexion = mysql_connect(\'localhost\', \'<i><b>Votre identifiant</b></i>\', \'<i><b>Votre mot de passe</b></i>\');<br>mysql_select_db(\'<i><b>Le nom de la base de donn&eacute;es</b></i>\', $connexion);';
+$lng['mysql']['description'] = 'Ici, vous pouvez ajouter et effacer des bases de donn&eacute;es MySQL.<br />Les changements, ainsi que les bases de donn&eacute;es, sont imm&eacute;diatement op&eacute;rationnels.<br />Dans le menu, vous trouverez un lien vers phpMyAdmin, avec lequel vous pouvez g&eacute;rer vos bases de donn&eacute;es.<br /><br />L\'acc&egrave;s aux bases de donn&eacute;es depuis les scripts PHP fonctionne comme suit : (Il faut remplacer les valeurs en <i><b>italique</b></i> par vos informations !)<br /><br />$connexion = mysql_connect(\'localhost\', \'<i><b>Votre identifiant</b></i>\', \'<i><b>Votre mot de passe</b></i>\');<br />mysql_select_db(\'<i><b>Le nom de la base de donn&eacute;es</b></i>\', $connexion);';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
