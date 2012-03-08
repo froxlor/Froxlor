@@ -332,7 +332,7 @@ p.submit {
 	overflow: hidden;
 }
 
-+.warningtitle,.ui-dialog-titlebar {
+.warningtitle,.ui-dialog-titlebar {
 	font-weight: bold;
 	color: #D57D00;
 }
