@@ -264,9 +264,9 @@ $lng['question']['admin_customer_alsoremovefiles'] = 'Cancellare anche i file de
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Salve,\n\nil tuo indirizzo Email {EMAIL}\n&egrave; stato configurato con successo.\n\nQuesta &egrave; un\'Email creata automaticamente,\n per favore non rispondere!\n\nCordiali saluti, Froxlor-Team.';
+$lng['mails']['pop_success']['mailbody'] = 'Salve,\n\nil tuo indirizzo Email {EMAIL}\n&egrave; stato configurato con successo.\n\nQuesta &egrave; un\'Email creata automaticamente,\n per favore non rispondere!\n\nCordiali saluti, Amministratore.';
 $lng['mails']['pop_success']['subject'] = 'Indirizzo Email configurato con successo';
-$lng['mails']['createcustomer']['mailbody'] = 'Salve {FIRSTNAME} {NAME},\n\nqueste sono le informazioni per il tuo account:\n\nNome Utente: {USERNAME}\nPassword: {PASSWORD}\n\nGrazie,\nFroxlor-Team.';
+$lng['mails']['createcustomer']['mailbody'] = 'Salve {FIRSTNAME} {NAME},\n\nqueste sono le informazioni per il tuo account:\n\nNome Utente: {USERNAME}\nPassword: {PASSWORD}\n\nGrazie,\nAmministratore.';
 $lng['mails']['createcustomer']['subject'] = 'Informazioni account';
 
 /**
@@ -502,7 +502,7 @@ $lng['panel']['pathDescription'] = 'Se la cartella non esiste, viene creata auto
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Salve {NAME},\n\nHai usato {TRAFFICUSED} MB su {TRAFFIC} MB di traffico disponibile.\nPi&ugrave; del 90%.\n\nCordiali Saluti, Froxlor-Team';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'Salve {NAME},\n\nHai usato {TRAFFICUSED} MB su {TRAFFIC} MB di traffico disponibile.\nPi&ugrave; del 90%.\n\nCordiali Saluti, Amministratore.';
 $lng['mails']['trafficninetypercent']['subject'] = 'Hai raggiunto il limite di Traffico';
 $lng['admin']['templates']['trafficninetypercent'] = 'Notifica email per i clienti che hanno superato il 90% del traffico';
 $lng['admin']['templates']['TRAFFIC'] = 'Sostituito con il traffico che &egrave; stato assegnato al cliente.';
@@ -552,7 +552,7 @@ $lng['serversettings']['mod_fcgid']['description'] = 'Usa mod_fcgid/suexec/libns
 $lng['serversettings']['sendalternativemail']['title'] = 'Usa un\'indirizzo email alternativo';
 $lng['serversettings']['sendalternativemail']['description'] = 'Invia la password dell\'email a un\'indirizzo diverso da quello creato';
 $lng['emails']['alternative_emailaddress'] = 'Indirizzo email alternativo';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Salve,\n\nil tuo account email {EMAIL}\n&egrave; stato creato correttamente.\nLa tua password &egrave; {PASSWORD}.\n\nQuesta &egrave; un\'email creata automaticamente,\n si prega di non rispondere a questa email!\n\nCordiali Saluti, Froxlor-Team';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Salve,\n\nil tuo account email {EMAIL}\n&egrave; stato creato correttamente.\nLa tua password &egrave; {PASSWORD}.\n\nQuesta &egrave; un\'email creata automaticamente,\n si prega di non rispondere a questa email!\n\nCordiali Saluti, Amministratore.';
 $lng['mails']['pop_success_alternative']['subject'] = 'Account email creato correttamente';
 $lng['admin']['templates']['pop_success_alternative'] = 'Email di Benvenuto spedita all\'indirizzo alternativo per i nuovi account email';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Sostituito con la password dell\'account POP3/IMAP.';
