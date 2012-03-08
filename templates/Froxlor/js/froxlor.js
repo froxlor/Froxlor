@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	//TODO COMMENT!
+	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
 		var urlParams = decodeURI( window.location.search.substring(1) );
 		if(urlParams == false | urlParams == '') return null;
