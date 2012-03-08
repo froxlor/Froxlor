@@ -33,10 +33,21 @@ if(function_exists('pcntl_fork')) {
 			return 1;
 		}
 	}
-	 //Create Traffic Log and Fork
+	//Create Traffic Log and Fork
+	// We close the database - connection before we fork, so we don't share resources with the child
+	$db->close();
+	unset($db);
 	$TrafficPid = pcntl_fork();
 	if($TrafficPid) { //Parent
 		file_put_contents($TrafficLock,$TrafficPid);
+		// Recreate the database - connection
+		require ($pathtophpfiles . '/lib/userdata.inc.php');
+		if(isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
+			$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+			unset($sql['root_user']);
+			unset($sql['root_password']);
+		}
+		$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
 		return 0;
 	}
 	elseif($TrafficPid == 0) { //Child
@@ -49,16 +60,14 @@ if(function_exists('pcntl_fork')) {
 			unset($sql['root_user']);
 			unset($sql['root_password']);
 		}
-		$db->close();
-		unset($db);
-		$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']); //detabase handler renewal after fork()
+		$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']); //database handler renewal after fork()
 	}
 	else { //Fork failed
 		return 1;
 	}
 }
 else {
-		fwrite($debugHandler,"PHP compiled without pcntl. Not forking traffic-cron, this may take a long time!");
+	fwrite($debugHandler,"PHP compiled without pcntl. Not forking traffic-cron, this may take a long time!");
 }
 
 openRootDB($debugHandler, $lockfile);
