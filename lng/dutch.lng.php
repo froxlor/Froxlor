@@ -260,9 +260,9 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Weet u zeker dat u de configu
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Hallo,\n\nUw mail account {EMAIL}\nis succesvol aangemaakt.\n\nDit is een automatisch verstuurde\ne-mail, beantwoord deze niet AUB!\n\nMet vriendelijke groet, het Froxlor-Team';
+$lng['mails']['pop_success']['mailbody'] = 'Hallo,\n\nUw mail account {EMAIL}\nis succesvol aangemaakt.\n\nDit is een automatisch verstuurde\ne-mail, beantwoord deze niet AUB!\n\nMet vriendelijke groet, uw beheerder';
 $lng['mails']['pop_success']['subject'] = 'Mail account succesvol aangemaakt';
-$lng['mails']['createcustomer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhierbij uw account informatie:\n\nGebruikersnaam: {USERNAME}\nWachtwoord: {PASSWORD}\n\nMet vriendelijke groet,\nhet Froxlor-Team';
+$lng['mails']['createcustomer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhierbij uw account informatie:\n\nGebruikersnaam: {USERNAME}\nWachtwoord: {PASSWORD}\n\nMet vriendelijke groet,\nuw beheerder';
 $lng['mails']['createcustomer']['subject'] = 'Account informatie';
 
 /**
@@ -489,7 +489,7 @@ $lng['panel']['pathDescription'] = 'Indien de map niet bestaat wordt deze automa
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Beste {NAME},\n\nU hebt {TRAFFICUSED} MB van de beschikbare {TRAFFIC} MB verbruikt.\nDit is meer dan 90%.\n\nMet vriendelijke groet, the Froxlor-Team';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'Beste {NAME},\n\nU hebt {TRAFFICUSED} MB van de beschikbare {TRAFFIC} MB verbruikt.\nDit is meer dan 90%.\n\nMet vriendelijke groet, uw beheerder';
 $lng['mails']['trafficninetypercent']['subject'] = 'Limiet dataverkeer bereikt';
 $lng['admin']['templates']['trafficninetypercent'] = 'E-mail ter notificatie aan klanten indien zij 90 procent van het dataverkeer is verbruikt';
 $lng['admin']['templates']['TRAFFIC'] = 'Wordt vervangen door aan klant toegewezen dataverkeer.';
@@ -539,7 +539,7 @@ $lng['serversettings']['mod_fcgid']['description'] = 'Gebruik mod_fcgid/suexec/l
 $lng['serversettings']['sendalternativemail']['title'] = 'Gebruik alternatief emailadres';
 $lng['serversettings']['sendalternativemail']['description'] = 'Stuur het wachtwoord naar een ander adres dan het adres dat opgegeven werd tijdens het aanmaken van het emailadres.';
 $lng['emails']['alternative_emailaddress'] = 'Alternatief emailadres';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Hallo,\n\nuw mailaccount {EMAIL}\nis met succes opgezet.\nUw wachtwoord is {PASSWORD}.\n\nDit is een automatisch gegenereerde\ne-mail, u kunt hierop niet antwoorden!\n\nMet vriendelijk groet, het Froxlor-Team';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Hallo,\n\nuw mailaccount {EMAIL}\nis met succes opgezet.\nUw wachtwoord is {PASSWORD}.\n\nDit is een automatisch gegenereerde\ne-mail, u kunt hierop niet antwoorden!\n\nMet vriendelijk groet, uw beheerder';
 $lng['mails']['pop_success_alternative']['subject'] = 'Mailaccount actief gemaakt';
 $lng['admin']['templates']['pop_success_alternative'] = 'Welkomstmail voor nieuwe emailaccounts, gestuurd naar een alternatief emailadres';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Vervangen door het POP3/IMAP-wachtwoord.';
@@ -640,15 +640,15 @@ $lng['admin']['templates']['new_ticket_by_customer'] = 'Notificatie voor beheerd
 $lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Notificatie voor beheerder voor antwoord van klant';
 $lng['admin']['templates']['new_ticket_by_staff'] = 'Notificatie voor klant van ticket geopend door stafleden';
 $lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Notificatie voor klant van antwoorden door stafleden';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nuw ondersteuningsticket met het onderwerp "{SUBJECT}" is verstuurd.\n\nU krijgt bericht wanneer uw ticket beantwoord is.\n\nMet vriendelijke groet,\nhet Froxlor-Team';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nuw ondersteuningsticket met het onderwerp "{SUBJECT}" is verstuurd.\n\nU krijgt bericht wanneer uw ticket beantwoord is.\n\nMet vriendelijke groet,\nuw beheerder';
 $lng['mails']['new_ticket_for_customer']['subject'] = 'Uw ondersteuningsticket is verzonden';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hallo beheerder,\n\neen nieuw ondersteuningsticket met onderwerp "{SUBJECT}" is verstuurd.\n\nU dient in te loggen om het ticket te behandelen.\n\nMet vriendelijke groet,\nhet Froxlor-Team';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hallo beheerder,\n\neen nieuw ondersteuningsticket met onderwerp "{SUBJECT}" is verstuurd.\n\nU dient in te loggen om het ticket te behandelen.\n\nMet vriendelijke groet,\nuw beheerder';
 $lng['mails']['new_ticket_by_customer']['subject'] = 'Nieuw ondersteuningsticket verzonden';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hallo beheerder,\n\nhet ondersteuningsticket "{SUBJECT}" is beantwoord door een klant.\n\nU dient in te loggen om het ticket te behandelen.\n\nMet vriendelijk groet,\nhet Froxlor-Team';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hallo beheerder,\n\nhet ondersteuningsticket "{SUBJECT}" is beantwoord door een klant.\n\nU dient in te loggen om het ticket te behandelen.\n\nMet vriendelijk groet,\nuw beheerder';
 $lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nieuw antwoord op ondersteuningsticket';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\neen ondersteuningsticket met onderwerp "{SUBJECT}" is voor u geopend.\n\nU dient in te loggen om het ticket te bekijken.\n\nMet vriendelijk groet,\nhet Froxlor-Team';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\neen ondersteuningsticket met onderwerp "{SUBJECT}" is voor u geopend.\n\nU dient in te loggen om het ticket te bekijken.\n\nMet vriendelijk groet,\nuw beheerder';
 $lng['mails']['new_ticket_by_staff']['subject'] = 'Nieuw ondersteuningsticket verzonden';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhet ondersteuningsticket met onderwerp "{SUBJECT}" is door onze staf beantwoord.\n\nU dient in te loggen om het ticket te bekijken.\n\nMet vriendelijk groet,\nhet Froxlor-Team';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhet ondersteuningsticket met onderwerp "{SUBJECT}" is door onze staf beantwoord.\n\nU dient in te loggen om het ticket te bekijken.\n\nMet vriendelijk groet,\nuw beheerder';
 $lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Nieuw antwoord op ondersteuningsticket';
 $lng['question']['ticket_reallyclose'] = 'Weet u zeker dat u ticket "%s" wilt sluiten?';
 $lng['question']['ticket_reallydelete'] = 'Weet u zeker dat u ticket "%s" wilt verwijderen?';
@@ -853,7 +853,7 @@ $lng['login']['email'] = 'E-mailadres';
 $lng['login']['remind'] = 'Mijn wachtwoord opnieuw instellen';
 $lng['login']['usernotfound'] = 'Gebruiker niet gevonden!';
 $lng['pwdreminder']['subject'] = 'Froxlor - Wachtwoord opnieuw instellen';
-$lng['pwdreminder']['body'] = 'Hallo %s,\n\nuw wachtwoord voor Froxlor is opnieuw ingesteld!\nHet nieuwe wachtwoord is: %p\n\nMet vriendelijke groet,\nhet Froxlor-Team';
+$lng['pwdreminder']['body'] = 'Hallo %s,\n\nuw wachtwoord voor Froxlor is opnieuw ingesteld!\nHet nieuwe wachtwoord is: %p\n\nMet vriendelijke groet,\nuw beheerder';
 $lng['pwdreminder']['success'] = 'Wachtwoord opnieuw ingesteld.<br />U ontvangt spoedig een e-mail met uw nieuwe wachtwoord.';
 
 // ADDED IN 1.2.19-svn18
@@ -1341,7 +1341,7 @@ $lng['ftp']['account_edit'] = 'FTP account aanpassen';
 $lng['ftp']['editpassdescription'] = 'Nieuw wachtwoord of leeg voor het oude wachtwoord.';
 $lng['customer']['sendinfomail'] = 'Stuur gegevens naar mij via e-mail';
 $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Nieuwe database aangemaakt';
-$lng['customer']['mysql_add']['infomail_body']['main'] = "Geachte {CUST_NAME},\n\nu hebt zojuist een nieuwe database aangemaakt. Hier zijn nogmaals de ingevoerde gegevens:\n\nNaam database: {DB_NAME}\nWachtwoord: {DB_PASS}\nBeschrijving: {DB_DESC}\nHostnaam database: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nMet vriendelijke groet, Het Froxlor-team";
+$lng['customer']['mysql_add']['infomail_body']['main'] = "Geachte {CUST_NAME},\n\nu hebt zojuist een nieuwe database aangemaakt. Hier zijn nogmaals de ingevoerde gegevens:\n\nNaam database: {DB_NAME}\nWachtwoord: {DB_PASS}\nBeschrijving: {DB_DESC}\nHostnaam database: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nMet vriendelijke groet, uw beheerder";
 $lng['error']['domains_cantdeletedomainwithapsinstances'] = 'U kunt geen domeinen verwijderen die in gebruik zijn door APS-pakketten. U dient deze eerst te verwijderen.';
 $lng['serversettings']['awstats_path'] = 'Pad naar \'awstats_buildstaticpages.pl\' van AWStats';
 $lng['serversettings']['awstats_conf'] = 'AWStats configuratiepad';
@@ -1381,7 +1381,7 @@ $lng['serversettings']['ftpprefix']['description'] = 'Welk voorvoegsel dienen ni
 
 // ADDED IN FROXLOR 0.9.7-svn1
 $lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] Nieuwe FTP-gebruiker aangemaakt';
-$lng['customer']['ftp_add']['infomail_body']['main'] = "Geachte {CUST_NAME},\n\nu hebt zojuist een nieuwe FTP-gebruiker aangemaakt. Hier is de opgegeven informatie:\n\nGebruikersnaam: {USR_NAME}\nWachtwoord: {USR_PASS}\nPad: {USR_PATH}\n\nMet vriendelijke groet, Het Froxlor-team";
+$lng['customer']['ftp_add']['infomail_body']['main'] = "Geachte {CUST_NAME},\n\nu hebt zojuist een nieuwe FTP-gebruiker aangemaakt. Hier is de opgegeven informatie:\n\nGebruikersnaam: {USR_NAME}\nWachtwoord: {USR_PASS}\nPad: {USR_PATH}\n\nMet vriendelijke groet, uw beheerder";
 $lng['domains']['redirectifpathisurl'] = 'Doorverwijzingscode (standaard: leegt)';
 $lng['domains']['redirectifpathisurlinfo'] = 'U dient deze alleen op te geven indien u een URL als pad hebt opgegeven';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Klanten toestaan doorverwijzingen te maken';

@@ -545,7 +545,7 @@ $lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libns
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Hello,\n\nyour Mail account {EMAIL}\nwas set up successfully.\nYour password is {PASSWORD}.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, the Froxlor-Team';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Hello,\n\nyour Mail account {EMAIL}\nwas set up successfully.\nYour password is {PASSWORD}.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, Administrator';
 $lng['mails']['pop_success_alternative']['subject'] = 'Mail account set up successfully';
 $lng['admin']['templates']['pop_success_alternative'] = 'Welcome mail for new email accounts sent to alternative address';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Replaced with the POP3/IMAP account password.';
@@ -861,7 +861,7 @@ $lng['login']['email'] = 'Adres e-mail';
 $lng['login']['remind'] = 'Zresetuj moje has&#322o';
 $lng['login']['usernotfound'] = 'U&#380ytkownik nie znaleziony!';
 $lng['pwdreminder']['subject'] = 'Froxlor - Password reset';
-$lng['pwdreminder']['body'] = 'Hello %s,\n\nyour froxlor password has been reset!\nThe new password is: %p\n\nThank you,\nthe Froxlor-Team';
+$lng['pwdreminder']['body'] = 'Hello %s,\n\nyour froxlor password has been reset!\nThe new password is: %p\n\nThank you,\nAdministrator';
 $lng['pwdreminder']['success'] = 'Password reset successfully.<br />You now should receive an email with your new password.';
 
 // ADDED IN 1.2.19-svn18

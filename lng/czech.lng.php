@@ -260,9 +260,9 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Opravdu chcete rebuildovat ap
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Dobr&yacute; den,\n\nV&aacute;&#353; e-mailov&yacute; &Uacute;&egrave;et {EMAIL}\nbyl v po&oslash;&aacute;dku nastaven.\n\nToto je automaticky vytvo&oslash;en&yacute;\ne-mail, pros&iacute;m neodpov&iacute;dejte na n&igrave; j!\n\nP&oslash;ejeme hezk&yacute; den, Froxlor-Team';
+$lng['mails']['pop_success']['mailbody'] = 'Dobr&yacute; den,\n\nV&aacute;&#353; e-mailov&yacute; &Uacute;&egrave;et {EMAIL}\nbyl v po&oslash;&aacute;dku nastaven.\n\nToto je automaticky vytvo&oslash;en&yacute;\ne-mail, pros&iacute;m neodpov&iacute;dejte na n&igrave; j!\n\nP&oslash;ejeme hezk&yacute; den, Administrator';
 $lng['mails']['pop_success']['subject'] = 'Po&#353;tovn&iacute; &Uacute;&egrave;et byl &Uacute;sp&igrave; &#353;n&igrave;  nastaven';
-$lng['mails']['createcustomer']['mailbody'] = 'Dobr&yacute; den, {FIRSTNAME} {NAME},\n\nzde jsou informace o Va&#353;em &Uacute;&egrave;tu:\n\nU&#382;ivatel: {USERNAME}\nHeslo: {PASSWORD}\n\nD&igrave; kujeme,\nFroxlor-Team';
+$lng['mails']['createcustomer']['mailbody'] = 'Dobr&yacute; den, {FIRSTNAME} {NAME},\n\nzde jsou informace o Va&#353;em &Uacute;&egrave;tu:\n\nU&#382;ivatel: {USERNAME}\nHeslo: {PASSWORD}\n\nD&igrave; kujeme,\nv&aacute;&scaron; spr&aacute;vce';
 $lng['mails']['createcustomer']['subject'] = 'Informace o &Uacute;&egrave;tu';
 
 /**
@@ -494,7 +494,7 @@ $lng['panel']['pathDescription'] = 'Pokud adres&aacute;&oslash; neexistuje, bude
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli {NAME},\n\nPou&#382;il jste {TRAFFICUSED} MB z V&aacute;mi dostupn&yacute;ch {TRAFFIC} MB p&oslash;enos&ugrave;.\nTo je v&iacute;ce jak 90%.\n\nP&oslash;ejeme hezk&yacute; den, Froxlor-Team';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli {NAME},\n\nPou&#382;il jste {TRAFFICUSED} MB z V&aacute;mi dostupn&yacute;ch {TRAFFIC} MB p&oslash;enos&ugrave;.\nTo je v&iacute;ce jak 90%.\n\nP&oslash;ejeme hezk&yacute; den, v&aacute;&scaron; spr&aacute;vce';
 $lng['mails']['trafficninetypercent']['subject'] = 'Dosahuj&iacute;c va&#353;eho limitu p&oslash;enos&ugrave;';
 $lng['admin']['templates']['trafficninetypercent'] = 'Upozor�ovac&iacute; mail pro z&aacute;kazn&iacute;ky, pokud vy&egrave;erpaj&iacute; 90% z p&oslash;enos&ugrave;';
 $lng['admin']['templates']['TRAFFIC'] = 'Nahrazeno p&oslash;enosy, kter&eacute; byly p&oslash;id&igrave; leny u&#382;ivateli.';
@@ -544,7 +544,7 @@ $lng['serversettings']['mod_fcgid']['description'] = 'Pou&#382;ij mod_fcgid/suex
 $lng['serversettings']['sendalternativemail']['title'] = 'Pou&#382;ij alternativn&iacute; e-mailovou adresu';
 $lng['serversettings']['sendalternativemail']['description'] = 'Po&#353;li email s heslem na jinou adresu p&oslash;i vytv&aacute;&oslash;en&iacute; emailov&eacute;ho &Uacute;&egrave;tu';
 $lng['emails']['alternative_emailaddress'] = 'Alternativn&iacute; e-mailov&aacute; adresa';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli,\n\nV&aacute;&#353; emailov&yacute; &Uacute;&egrave;et {EMAIL}\nbyl &Uacute;sp&igrave; &#353;n&igrave;  nastaven.\nVa&#353;e heslo je {PASSWORD}.\n\nTento e-mail byl automaticky vygenerov&aacute;n,\npros&iacute;m neodpov&iacute;dejte na n&igrave; j!\n\nP&oslash;ejeme V&aacute;m hezk&yacute; den, Froxlor-Team';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli,\n\nV&aacute;&#353; emailov&yacute; &Uacute;&egrave;et {EMAIL}\nbyl &Uacute;sp&igrave; &#353;n&igrave;  nastaven.\nVa&#353;e heslo je {PASSWORD}.\n\nTento e-mail byl automaticky vygenerov&aacute;n,\npros&iacute;m neodpov&iacute;dejte na n&igrave; j!\n\nP&oslash;ejeme V&aacute;m hezk&yacute; den, v&aacute;&scaron; spr&aacute;vce';
 $lng['mails']['pop_success_alternative']['subject'] = 'E-mailov&yacute; &Uacute;&egrave;et byl &Uacute;sp&igrave; &#353;n&igrave;  vytvo&oslash;en';
 $lng['admin']['templates']['pop_success_alternative'] = 'Uv&iacute;tac&iacute; e-mail pro nov&eacute; &Uacute;&egrave;ty byl odesl&aacute;n na alternativn&iacute; adresu';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Nahrazeno heslem &Uacute;&egrave;tu POP3/IMAP.';
@@ -645,15 +645,15 @@ $lng['admin']['templates']['new_ticket_by_customer'] = 'Administr&aacute;torsk&e
 $lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Administr&aacute;torsk&eacute; upozorn&igrave; n&iacute;, &#382;e p&oslash;i&#353;la odpov&igrave; &iuml; na tiket od z&aacute;kazn&iacute;ka';
 $lng['admin']['templates']['new_ticket_by_staff'] = 'Z&aacute;kaznick&eacute; upozorn&igrave; n&iacute;, &#382;e byl tiket otev&oslash;en person&aacute;lem';
 $lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Z&aacute;kaznick&eacute; upozorn&igrave; n&iacute; na odpov&igrave; &iuml; na tiket od person&aacute;lu';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli {FIRSTNAME} {NAME},\n\nV&aacute;&#353; tiket podpory s p&oslash;edm&igrave; tem "{SUBJECT}" byl odesl&aacute;n.\n\nA&#382; p&oslash;ijde odpov&igrave; &iuml; na V&aacute;&#353; tiket, budete upozorn&igrave; ni.\n\nD&igrave; kujeme,\n Froxlor-Team';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli {FIRSTNAME} {NAME},\n\nV&aacute;&#353; tiket podpory s p&oslash;edm&igrave; tem "{SUBJECT}" byl odesl&aacute;n.\n\nA&#382; p&oslash;ijde odpov&igrave; &iuml; na V&aacute;&#353; tiket, budete upozorn&igrave; ni.\n\nD&igrave; kujeme,\n v&aacute;&scaron; spr&aacute;vce';
 $lng['mails']['new_ticket_for_customer']['subject'] = 'V&aacute;&#353; tiket na podporu byl odesl&aacute;n';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Mil&yacute; administr&aacute;tore,\n\nbyl odesl&aacute;n nov&yacute; tiket s p&oslash;edm&igrave; tem "{SUBJECT}".\n\nPros&iacute;m p&oslash;ihla&#353;te se pro otev&oslash;en&iacute; tiketu.\n\nD&igrave; kujeme,\n Froxlor-Team';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Mil&yacute; administr&aacute;tore,\n\nbyl odesl&aacute;n nov&yacute; tiket s p&oslash;edm&igrave; tem "{SUBJECT}".\n\nPros&iacute;m p&oslash;ihla&#353;te se pro otev&oslash;en&iacute; tiketu.\n\nD&igrave; kujeme,\n v&aacute;&scaron; spr&aacute;vce';
 $lng['mails']['new_ticket_by_customer']['subject'] = 'Nov&yacute; tiket podpory byl odesl&aacute;n';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Mil&yacute; administr&aacute;tore,\n\ntiket podpory "{SUBJECT}" byl zodpov&igrave; zen z&aacute;kazn&iacute;kem.\n\nPros&iacute;m p&oslash;ihla&#353;te se pro otev&oslash;en&iacute; tiketu.\n\nD&igrave; kujeme,\n Froxlor-Team';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Mil&yacute; administr&aacute;tore,\n\ntiket podpory "{SUBJECT}" byl zodpov&igrave; zen z&aacute;kazn&iacute;kem.\n\nPros&iacute;m p&oslash;ihla&#353;te se pro otev&oslash;en&iacute; tiketu.\n\nD&igrave; kujeme,\n v&aacute;&scaron; spr&aacute;vce';
 $lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nov&aacute; odpov&igrave; &iuml; na tiket podpory';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli {FIRSTNAME} {NAME},\n\nbyl pro V&aacute;s otev&oslash;en tiket podpory s p&oslash;edm&igrave; tem "{SUBJECT}".\n\nPros&iacute;m p&oslash;ihla&#353;te se pro otev&oslash;en&iacute; tiketu.\n\nD&igrave; kujeme,\n Froxlor-Team';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli {FIRSTNAME} {NAME},\n\nbyl pro V&aacute;s otev&oslash;en tiket podpory s p&oslash;edm&igrave; tem "{SUBJECT}".\n\nPros&iacute;m p&oslash;ihla&#353;te se pro otev&oslash;en&iacute; tiketu.\n\nD&igrave; kujeme,\n v&aacute;&scaron; spr&aacute;vce';
 $lng['mails']['new_ticket_by_staff']['subject'] = 'Nov&yacute; tiket podpory byl odesl&aacute;n';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli {FIRSTNAME} {NAME},\n\ntiket podpory s p&oslash;edm&igrave; tem "{SUBJECT}" byl zodpov&igrave; zen na&#353;&iacute;m person&aacute;lem.\n\nPro p&oslash;e&egrave;ten&iacute; tiketu se pros&iacute;m p&oslash;ihla&#353;te.\n\nD&igrave; kujem,\n Froxlor-Team';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'V&aacute;&#382;en&yacute; u&#382;ivateli {FIRSTNAME} {NAME},\n\ntiket podpory s p&oslash;edm&igrave; tem "{SUBJECT}" byl zodpov&igrave; zen na&#353;&iacute;m person&aacute;lem.\n\nPro p&oslash;e&egrave;ten&iacute; tiketu se pros&iacute;m p&oslash;ihla&#353;te.\n\nD&igrave; kujem,\n v&aacute;&scaron; spr&aacute;vce';
 $lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Nov&aacute; odpov&igrave; &iuml; na tiket podpory';
 $lng['question']['ticket_reallyclose'] = 'Opravdu chcete zav&oslash;&iacute;t tiket "%s"?';
 $lng['question']['ticket_reallydelete'] = 'Opravdu chcete smazat tiket "%s"?';
