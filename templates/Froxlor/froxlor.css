@@ -59,7 +59,7 @@ td a {
 	text-decoration: none;
 }
 
-.bradius {
+.bradius,.ui-corner-all {
 	-webkit-border-top-left-radius: 20px;
 	-webkit-border-bottom-right-radius: 20px;
 	-moz-border-radius-topleft: 20px;
@@ -323,7 +323,7 @@ p.submit {
 /* 
  * warning message display 
  */
-.warningcontainer {
+.warningcontainer,.ui-dialog {
 	background: url('../../images/Froxlor/icons/warning.png') 10px center no-repeat #fffecc;
 	border: 1px solid #f3c37e;
 	padding: 10px 10px 10px 68px !important;
@@ -332,12 +332,12 @@ p.submit {
 	overflow: hidden;
 }
 
-.warningtitle {
++.warningtitle,.ui-dialog-titlebar {
 	font-weight: bold;
 	color: #D57D00;
 }
 
-.warning {
+.warning,.ui-dialog-content {
 	color: #D57D00 !important;
 }
 
@@ -579,7 +579,7 @@ input[type="button"],input[type="submit"],input[type="reset"] {
 	border-radius: 5px;
 }
 
-input[type="submit"] {
+input[type="submit"],input[class="yesbutton"] {
 	color: green;
 	background: #ccc url('../../images/Froxlor/icons/button_ok.png') no-repeat 4px 8px;
 	padding-left: 20px;

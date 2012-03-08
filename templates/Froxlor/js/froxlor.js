@@ -1,4 +1,27 @@
 $(document).ready(function() {
+	//TODO COMMENT!
+	$.getQueryVariable = function(key) {
+		var urlParams = decodeURI( window.location.search.substring(1) );
+		if(urlParams == false | urlParams == '') return null;
+		var vars = urlParams.split("&");
+		for (var i=0;i<vars.length;i++) {
+			var pair = vars[i].split("=");
+			if (pair[0] == key) {
+				return pair[1];
+			}
+		}
+		return null;
+	}
+
+	var $speciallogdialog = $('#speciallogwarningpopup')
+		.dialog({
+			autoOpen: false,
+			closeOnEscape: false,
+			draggable: false,
+			modal: true,
+			resizable: false,
+		});
+
 	// make rel="external" links open in a new window
 	$("a[rel='external']").attr('target', '_blank');
 	$(".main").css('min-height', $("nav").height() - 34);
@@ -50,4 +73,35 @@ $(document).ready(function() {
 	$('#yesnobutton').click(function() {
 		history.back();
 	});
+
+    $('input[name=speciallogfile]').click(function () {
+            if($.getQueryVariable("page") == "domains" && $.getQueryVariable("action") == "edit") {
+                    $speciallogdialog.dialog("open");
+                    $(".ui-dialog-titlebar").hide();
+            }
+    });
+
+    $('#speciallogyesbutton').click(function () {
+            $speciallogdialog.dialog("close");
+            if($('#delete_stats').val().toLowerCase() != $('#delete_statistics_str').val().toLowerCase()) {
+                    $("#speciallogverified").val("0");
+                    if($('input[name=speciallogfile]').prop("checked") != false) {
+                            $('input[name=speciallogfile]').attr("checked", false);
+                    } else {
+                            $('input[name=speciallogfile]').attr("checked", true);
+                    }
+            } else {
+                    $("#speciallogverified").val("1");
+            }
+    });
+
+    $('input[id=speciallognobutton]').click(function () {
+            $speciallogdialog.dialog("close");
+            $("#speciallogverified").val("0");
+            if($('input[name=speciallogfile]').prop("checked") != false) {
+                    $('input[name=speciallogfile]').attr("checked", false);
+            } else {
+                    $('input[name=speciallogfile]').attr("checked", true);
+            }
+    });
 });
