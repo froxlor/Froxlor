@@ -9,7 +9,7 @@
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	</if>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="js/jquery-ui-1.8.13.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 	<if isset($intrafficpage)>
         <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/excanvas.js"></script><![endif]-->
