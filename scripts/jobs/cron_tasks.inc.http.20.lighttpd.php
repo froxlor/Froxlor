@@ -140,7 +140,7 @@ class lighttpd
 					$mypath = makeCorrectDir($row_ipsandports['docroot']);
 				}
 
-				$this->lighttpd_data[$vhost_filename].= '  server.document-root = "'.$mypath.'"'."\n";
+				$this->lighttpd_data[$vhost_filename].= '  server.document-root = "' . $this->escapeConfigParamter($mypath) . '"' . "\n";
 
 				/**
 				 * dirprotection, see #72
@@ -175,7 +175,7 @@ class lighttpd
 					$this->lighttpd_data[$vhost_filename].= '  fastcgi.server = ( '."\n";
 					$this->lighttpd_data[$vhost_filename].=	"\t".'".php" => ('."\n";
 					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"localhost" => ('."\n";
-					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"socket" => "'.$php->getInterface()->getSocketFile().'",'."\n";
+					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"socket" => "'.$this->escapeConfigParamter($php->getInterface()->getSocketFile()).'",'."\n";
 					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"check-local" => "enable",'."\n";
 					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"disable-time" => 1'."\n";
 					$this->lighttpd_data[$vhost_filename].=	"\t".')'."\n";
@@ -203,16 +203,15 @@ class lighttpd
 					$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
 				}
 				
-				if($row_ipsandports['ssl_cert_file'] != '')
-				{
-					$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
-					$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . '"' . "\n";
-					
-					if($row_ipsandports['ssl_ca_file'] != '')
-					{
-						$this->lighttpd_data[$vhost_filename].= 'ssl.ca-file = "' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . '"' . "\n";
-					}
-				}
+ 				if($row_ipsandports['ssl_cert_file'] != '')
+ 				{
+ 					$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
+					$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . $this->escapeConfigParamter(makeCorrectFile($row_ipsandports['ssl_cert_file'])) . '"' . "\n";
+ 					
+ 					if($row_ipsandports['ssl_ca_file'] != '')
+ 					{
+						$this->lighttpd_data[$vhost_filename].= 'ssl.ca-file = "' . $this->escapeConfigParamter(makeCorrectFile($row_ipsandports['ssl_ca_file'])) . '"' . "\n";
+ 					}
 			}
 
 			/**
@@ -255,7 +254,7 @@ class lighttpd
 				$this->lighttpd_data[$vhost_filename] = '';
 			}
 
-			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "'.$this->settings['defaultwebsrverrhandler']['err404'].'"';
+			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err404']) . '"';
 		}
 	}
 
@@ -287,14 +286,14 @@ class lighttpd
 				$htaccess_path = substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1);
 				$htaccess_path = makeCorrectDir($htaccess_path);
 
-				$htaccess_text.= '  $HTTP["url"] =~ "^'.$htaccess_path.'" {' . "\n";
+				$htaccess_text.= '  $HTTP["url"] =~ "^' . $this->escapeConfigParamter($htaccess_path) . '" {' . "\n";
 				$htaccess_text.= '    auth.backend = "htpasswd"' . "\n";
-				$htaccess_text.= '    auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
-				$htaccess_text.= '    auth.require = ( ' . "\n";
-				$htaccess_text.= '      "' . $htaccess_path . '" =>' . "\n";
-				$htaccess_text.= '      (' . "\n";
-				$htaccess_text.= '         "method"  => "basic",' . "\n";
-				$htaccess_text.= '         "realm"   => "'.$row_htpasswds['authname'].'",' . "\n";
+				$htaccess_text.= '    auth.backend.htpasswd.userfile = "' . $this->escapeConfigParamter(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename)) . '"' . "\n";
+ 				$htaccess_text.= '    auth.require = ( ' . "\n";
+ 				$htaccess_text.= '      "' . $htaccess_path . '" =>' . "\n";
+ 				$htaccess_text.= '      (' . "\n";
+ 				$htaccess_text.= '         "method"  => "basic",' . "\n";
+				$htaccess_text.= '         "realm"   => "' . $this->escapeConfigParamter($row_htpasswds['authname']) . '",' . "\n";
 				$htaccess_text.= '         "require" => "valid-user"' . "\n";
 				$htaccess_text.= '      )' . "\n";
 				$htaccess_text.= '    )' . "\n";
@@ -512,16 +511,15 @@ class lighttpd
 				$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
 			}
 			
-			if($domain['ssl_cert_file'] != '')
-			{
-				$ssl_settings.= 'ssl.engine = "enable"' . "\n";
-				$ssl_settings.= 'ssl.pemfile = "' . makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
-				
-				if($domain['ssl_ca_file'] != '')
-				{
-					$ssl_settings.= 'ssl.ca-file = "' . makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
-				}
-			}
+ 			if($domain['ssl_cert_file'] != '')
+ 			{
+ 				$ssl_settings.= 'ssl.engine = "enable"' . "\n";
+				$ssl_settings.= 'ssl.pemfile = "' . $this->escapeConfigParamter(makeCorrectFile($domain['ssl_cert_file'])) . '"' . "\n";
+ 				
+ 				if($domain['ssl_ca_file'] != '')
+ 				{
+					$ssl_settings.= 'ssl.ca-file = "' . $this->escapeConfigParamter(makeCorrectFile($domain['ssl_ca_file'])) . '"' . "\n";
+ 				}
 		}
 		return $ssl_settings;
 	}
@@ -564,7 +562,7 @@ class lighttpd
 			chown($access_log, $this->settings['system']['httpuser']);
 			chgrp($access_log, $this->settings['system']['httpgroup']);
 
-			$logfiles_text.= '  accesslog.filename	= "' . $access_log . '"' . "\n";
+			$logfiles_text.= '  accesslog.filename	= "' . $this->escapeConfigParamter($access_log) . '"' . "\n";
 		}
 		
 		if($this->settings['system']['awstats_enabled'] == '1')
@@ -638,7 +636,7 @@ class lighttpd
 		{
 			if(!empty($row['error404path']))
 			{
-				$error_string.= '  server.error-handler-404 = "' . makeCorrectFile($domain['documentroot'] . '/' . $row['error404path']) . '"' . "\n\n";
+				$error_string.= '  server.error-handler-404 = "' . $this->escapeConfigParamter(makeCorrectFile($domain['documentroot'] . '/' . $row['error404path'])) . '"' . "\n\n";
 			}
 
 			if($row['options_indexes'] != '0')
@@ -657,6 +655,8 @@ class lighttpd
 				if($row['path'] != $domain['documentroot']) {
 					$path = substr($path, 0, -1);
 				}
+
+				//TODO: will this work with special chars in $path?
 				$path_options.= '  $HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
 				$path_options.= "\t" . 'dir-listing.activate = "enable"' . "\n";
 				$path_options.= '  }' . "\n\n";
@@ -676,10 +676,12 @@ class lighttpd
 				if($row['path'] != $domain['documentroot']) {
 					$path = substr($path, 0, -1);
 				}
+
+				//TODO: will this work with special chars in $path?
 				$path_options.= '  $HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
 				$path_options.= "\t" . 'cgi.assign = (' . "\n";
-				$path_options.= "\t\t" . '".pl" => "'.makeCorrectFile($this->settings['system']['perl_path']).'",' . "\n";
-				$path_options.= "\t\t" . '".cgi" => "'.makeCorrectFile($this->settings['system']['perl_path']).'"' . "\n";
+				$path_options.= "\t\t" . '".pl" => "'.$this->escapeConfigParamter(makeCorrectFile($this->settings['system']['perl_path'])).'",' . "\n";
+				$path_options.= "\t\t" . '".cgi" => "'.$this->escapeConfigParamter(makeCorrectFile($this->settings['system']['perl_path'])).'"' . "\n";
 				$path_options.= "\t" . ')' . "\n";
 				$path_options.= '  }' . "\n\n";
 			}
@@ -704,7 +706,7 @@ class lighttpd
 				{
 					$auth_backend_loaded[$domain['ipandport']] = 'yes';
 					$diroption_text.= 'auth.backend = "htpasswd"' . "\n";
-					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
+					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . $this->escapeConfigParamter(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename)) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text.= 'auth.require = ( ' . "\n";
 					$previous_domain_id = '1';
@@ -713,7 +715,7 @@ class lighttpd
 				{
 					$auth_backend_loaded[$domain['ssl_ipandport']] = 'yes';
 					$diroption_text.= 'auth.backend= "htpasswd"' . "\n";
-					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
+					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . $this->escapeConfigParamter(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename)) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text.= 'auth.require = ( ' . "\n";
 					$previous_domain_id = '1';
@@ -723,7 +725,7 @@ class lighttpd
 			$diroption_text.= '"' . $row_htpasswds['path'] . '" =>' . "\n";
 			$diroption_text.= '(' . "\n";
 			$diroption_text.= '   "method"  => "basic",' . "\n";
-			$diroption_text.= '   "realm"   => "'.$row_htpasswds['authname'].'",' . "\n";
+			$diroption_text.= '   "realm"   => "' . $this->escapeConfigParamter($row_htpasswds['authname']) . '",' . "\n";
 			$diroption_text.= '   "require" => "valid-user"' . "\n";
 			$diroption_text.= ')' . "\n";
 
@@ -738,7 +740,7 @@ class lighttpd
 			}
 		}
 
-		return '  auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
+		return '  auth.backend.htpasswd.userfile = "' . $this->escapeConfigParamter(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename)) . '"' . "\n";
 	}
 
 	protected function getServerNames($domain)
@@ -829,7 +831,7 @@ class lighttpd
 		&& $this->settings['system']['deactivateddocroot'] != '')
 		{
 			$webroot_text.= '  # Using docroot for deactivated users...' . "\n";
-			$webroot_text.= '  server.document-root = "' . $this->settings['system']['deactivateddocroot'] . "\"\n";
+			$webroot_text.= '  server.document-root = "' . $this->escapeConfigParamter($this->settings['system']['deactivateddocroot']) . "\"\n";
 			$this->_deactivated = true;
 		}
 		else
@@ -855,7 +857,7 @@ class lighttpd
 			}
 			else
 			{
-				$webroot_text.= '  server.document-root = "' . makeCorrectDir($domain['documentroot']) . "\"\n";
+				$webroot_text.= '  server.document-root = "' . $this->escapeConfigParamter(makeCorrectDir($domain['documentroot'])) . "\"\n";
 			}
 			$this->_deactivated = false;
 		}
@@ -878,24 +880,24 @@ class lighttpd
 			{
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
-					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+					$stats_text.= '  alias.url = ( "/awstats/" => "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain'])) . '" )' . "\n";
+					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '" )' . "\n";
 				}
 				else
 				{
-					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']).'/" )' . "\n";					
+					$stats_text.= '  alias.url = ( "/webalizer/" => "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain'])) . '/" )' . "\n";					
 				}
 			}
 			else
 			{
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']).'" )' . "\n";
-					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+					$stats_text.= '  alias.url = ( "/awstats/" => "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain'])) . '" )' . "\n";
+					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '" )' . "\n";
 				}
 				else
 				{
-					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']).'/" )' . "\n";
+					$stats_text.= '  alias.url = ( "/webalizer/" => "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . '/') . '" )' . "\n";
 				}
 			}
 		}
@@ -905,12 +907,12 @@ class lighttpd
 			{
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
-					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+					$stats_text.= '  alias.url = ( "/awstats/" => "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain'])) . '" )' . "\n";
+					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '" )' . "\n";
 				} 
 				else
 				{
-					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/').'" )' . "\n";
+					$stats_text.= '  alias.url = ( "/webalizer/" => "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/webalizer/')) . '" )' . "\n";
 				}
 			}
 			// if the docroots are equal, we still have to set an alias for awstats
@@ -919,8 +921,8 @@ class lighttpd
 			// -> webalizer does not need this!
 			elseif($this->settings['system']['awstats_enabled'] == '1')
 			{
-				$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
-				$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+				$stats_text.= '  alias.url = ( "/awstats/" => "' . $this->escapeConfigParamter(makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain'])) . '" )' . "\n";
+				$stats_text.= '  alias.url += ( "/awstats-icon" => "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '" )' . "\n";
 			}
 		}
 
@@ -1052,6 +1054,16 @@ class lighttpd
 					}
 			}
 		}
+	}
+
+	/*
+	*       Escape paramters
+	*/
+	protected function escapeConfigParamter($parameter)
+	{
+		$out = str_replace('\\', '\\\\', $parameter);
+		$out = str_replace('"', '\"', $out);
+		return $out;
 	}
 }
 

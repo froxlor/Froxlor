@@ -1804,3 +1804,76 @@ if(isFroxlorVersion('0.9.27-svn1'))
 
 	updateToVersion('0.9.27-svn2');
 }
+
+# Introduced with #717
+if(isFroxlorVersion('0.9.27-svn2'))
+{
+	function postkey_filter($pattern)
+	{
+		$out = array();
+		$in = array_keys($_POST);
+		foreach($in as $key)
+		{
+			if(strpos($key,$pattern) !== false)
+			{
+				$out[] = $key;
+			}
+		}
+		return $out;
+	}
+
+	if(count(postkey_filter('preconfig_')) == 0)
+	{
+		showUpdateStep("Updating from 0.9.27-svn2 to 0.9.27-svn3");
+		lastStepStatus(0);
+	}
+	else
+	{
+		showUpdateStep("Updating from 0.9.27-svn2 to 0.9.27-svn3",false);
+
+		$req_keys = postkey_filter('preconfig_set_');
+		if(count($req_keys) > 0)
+		{
+			showUpdateStep("Applying settings");
+			foreach($req_keys as $req_key)
+			{
+				$mysetting = explode('/',substr($req_key,14));
+				$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET value='".$db->escape(htmlspecialchars_decode($_POST[$req_key]))."' WHERE settinggroup='".$mysetting[0]."' AND varname='".$mysetting[1]."'");
+			}
+			lastStepStatus(0);
+		}
+
+		$table_list = array(
+			'd' => TABLE_PANEL_DOMAINS,
+			'ip' => TABLE_PANEL_IPSANDPORTS,
+			'hta' => TABLE_PANEL_HTACCESS,
+			'htp' => TABLE_PANEL_HTPASSWDS,
+			'c' => TABLE_PANEL_CUSTOMERS
+		);
+		$idcols = array(
+                        'd' => 'id',
+                        'ip' => 'id',
+                        'hta' => 'id',
+                        'htp' => 'id',
+                        'c' => 'customerid'
+                );
+		foreach($table_list as $area => $table)
+		{
+			$post_area = 'preconfig_' . $area . '_';
+			$req_keys = postkey_filter($post_area);
+			if(count($req_keys) > 0)
+			{
+				showUpdateStep("Applying to table ".$table);
+				foreach($req_keys as $req_key)
+				{
+					preg_match('/' . $post_area . '(?P<col>.*)_(?P<id>.*)/', $req_key, $matches);
+					$db->query("UPDATE `" . $table . "` SET " . $matches['col'] . "='" . $db->escape(htmlspecialchars_decode($_POST[$req_key])) . "' WHERE " . $idcols[$area] . "='" . $matches['id'] ."'");
+				}
+				lastStepStatus(0);
+			}
+		}
+	}
+
+	updateToVersion('0.9.26-svn3');
+}
+

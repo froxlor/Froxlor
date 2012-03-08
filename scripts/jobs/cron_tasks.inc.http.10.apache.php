@@ -105,7 +105,7 @@ class apache
 		{
 			if(!isset($this->virtualhosts_data[$vhosts_filename]))
 			{
-				$this->virtualhosts_data[$vhosts_filename] = '';
+				$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->escapeConfigParamter($this->settings['system']['documentroot_prefix']) . '">' . "\n";
 			}
 
 			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->settings['system']['documentroot_prefix'] . '">' . "\n";
@@ -136,30 +136,25 @@ class apache
 			
 			$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
 
-			if(!isset($this->virtualhosts_data[$vhosts_filename]))
-			{
-				$this->virtualhosts_data[$vhosts_filename] = '';
-			}
-	
-			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
-			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 ' . $this->settings['defaultwebsrverrhandler']['err401'] . "\n";
-			}
-
-			if($this->settings['defaultwebsrverrhandler']['err403'] != '')
-			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 ' . $this->settings['defaultwebsrverrhandler']['err403'] . "\n";
-			}
-
-			if($this->settings['defaultwebsrverrhandler']['err404'] != '')
-			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 ' . $this->settings['defaultwebsrverrhandler']['err404'] . "\n";
-			}
-			
-			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
-			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 ' . $this->settings['defaultwebsrverrhandler']['err500'] . "\n";
-			}
+ 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
+ 			{
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err401']) . '"' . "\n";
+ 			}
+ 
+ 			if($this->settings['defaultwebsrverrhandler']['err403'] != '')
+ 			{
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err403']) . '"' . "\n";
+ 			}
+ 
+ 			if($this->settings['defaultwebsrverrhandler']['err404'] != '')
+ 			{
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err404']) . '"' . "\n";
+ 			}
+ 			
+ 			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
+ 			{
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err500']) . '"' . "\n";
+ 			}
 
 		}
 	}
@@ -224,7 +219,7 @@ class apache
 					$mypath = makeCorrectDir($row_ipsandports['docroot']);
 				}
 
-				$this->virtualhosts_data[$vhosts_filename].= 'DocumentRoot "'.$mypath.'"'."\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'DocumentRoot "' . $this->escapeConfigParamter($mypath) . '"' . "\n";
 				
 				if($row_ipsandports['vhostcontainer_servername_statement'] == '1')
 				{
@@ -246,9 +241,9 @@ class apache
 					{
 						$starter_filename = makeCorrectFile($configdir . '/php-fcgi-starter');
 						$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->escapeConfigParamter($mypath) . '">' . "\n";
 						$this->virtualhosts_data[$vhosts_filename].= '    AddHandler fcgid-script .php' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '    FCGIWrapper ' . $starter_filename . ' .php' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '    FCGIWrapper "' . $this->escapeConfigParamter($starter_filename) . '" .php' . "\n";
 						$this->virtualhosts_data[$vhosts_filename].= '    Options +ExecCGI' . "\n";
 						$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
 						$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
@@ -275,7 +270,7 @@ class apache
 					$php = new phpinterface($this->getDB(), $this->settings, $domain);
 					$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '  FastCgiExternalServer ' . $mypath . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['system']['mod_fcgid_httpuser'] . ' -group ' . $this->settings['system']['mod_fcgid_httpuser'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->escapeConfigParamter($mypath) . '">' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    AddHandler php5-fastcgi .php'. "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    Action php5-fastcgi /fastcgiphp' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    Options +ExecCGI' . "\n";
@@ -331,22 +326,22 @@ class apache
 					if($row_ipsandports['ssl_cert_file'] != '')
 					{
 						$this->virtualhosts_data[$vhosts_filename].= ' SSLEngine On' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= ' SSLCertificateFile ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . "\n";
-	
-						if($row_ipsandports['ssl_key_file'] != '')
-						{
-							$this->virtualhosts_data[$vhosts_filename].= ' SSLCertificateKeyFile ' . makeCorrectFile($row_ipsandports['ssl_key_file']) . "\n";
-						}
-	
-						if($row_ipsandports['ssl_ca_file'] != '')
-						{
-							$this->virtualhosts_data[$vhosts_filename].= ' SSLCACertificateFile ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . "\n";
-						}
+						$this->virtualhosts_data[$vhosts_filename].= ' SSLCertificateFile "' . $this->escapeConfigParamter(makeCorrectFile($row_ipsandports['ssl_cert_file'])) . '"' . "\n";
+ 	
+ 						if($row_ipsandports['ssl_key_file'] != '')
+ 						{
+							$this->virtualhosts_data[$vhosts_filename].= ' SSLCertificateKeyFile "' . $this->escapeConfigParamter(makeCorrectFile($row_ipsandports['ssl_key_file'])) . '"' . "\n";
+ 						}
+ 	
+ 						if($row_ipsandports['ssl_ca_file'] != '')
+ 						{
+							$this->virtualhosts_data[$vhosts_filename].= ' SSLCACertificateFile "' . $this->escapeConfigParamter(makeCorrectFile($row_ipsandports['ssl_ca_file'])) . '"' . "\n";
+ 						}
 
 						// #418
 						if($row_ipsandports['ssl_cert_chainfile'] != '')
 						{
-							$this->virtualhosts_data[$vhosts_filename].= '  SSLCertificateChainFile ' . makeCorrectFile($row_ipsandports['ssl_cert_chainfile']) . "\n";
+							$this->virtualhosts_data[$vhosts_filename].= '  SSLCertificateChainFile ' . $this->escapeConfigParamter(makeCorrectFile($row_ipsandports['ssl_cert_chainfile'])) . "\n";
 						}
 					}
 				}
@@ -397,7 +392,7 @@ class apache
 					$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 				}
 
-				$php_options_text.= '  php_admin_value open_basedir "' . $_phpappendopenbasedir . '"'."\n";
+				$php_options_text.= '  php_admin_value open_basedir "' . $this->escapeConfigParamter($_phpappendopenbasedir) . '"'."\n";
 			}
 
 			if($domain['safemode'] == '0')
@@ -491,12 +486,12 @@ class apache
 		   && $this->settings['system']['deactivateddocroot'] != '')
 		{
 			$webroot_text.= '  # Using docroot for deactivated users...' . "\n";
-			$webroot_text.= '  DocumentRoot "' . $this->settings['system']['deactivateddocroot'] . "\"\n";
+			$webroot_text.= '  DocumentRoot "' . $this->escapeConfigParamter($this->settings['system']['deactivateddocroot']) . "\"\n";
 			$this->_deactivated = true;
 		}
 		else
 		{
-			$webroot_text.= '  DocumentRoot "' . $domain['documentroot'] . "\"\n";
+			$webroot_text.= '  DocumentRoot "' . $this->escapeConfigParamter($domain['documentroot']) . "\"\n";
 			$this->_deactivated = false;
 		}
 
@@ -518,24 +513,25 @@ class apache
 			{
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
-					$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '"' . "\n";
+					$stats_text.= '  Alias /awstats "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain'])) . '"' . "\n";
+					$stats_text.= '  Alias /awstats-icon "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '"' . "\n";
+
 				}
 				else
 				{
-					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . '"' . "\n";					
+					$stats_text.= '  Alias /webalizer "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain'])) . '"' . "\n";				
 				}
 			}
 			else
 			{
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . '"' . "\n";
+					$stats_text.= '  Alias /awstats "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain'])) . '"' . "\n";
 					$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '"' . "\n";
 				}
 				else
 				{
-					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . '"' . "\n";
+					$stats_text.= '  Alias /webalizer "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain'])) . '"' . "\n";
 				}
 			}
 		}
@@ -545,12 +541,12 @@ class apache
 			{
 				if($this->settings['system']['awstats_enabled'] == '1')
 				{
-					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
-					$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '"' . "\n";
+					$stats_text.= '  Alias /awstats "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain'])) . '"' . "\n";
+					$stats_text.= '  Alias /awstats-icon "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '"' . "\n";
 				} 
 				else
 				{
-					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer') . '"' . "\n";
+					$stats_text.= '  Alias /webalizer "' . $this->escapeConfigParamter(makeCorrectFile($domain['customerroot'] . '/webalizer')) . '"' . "\n";
 				}
 			}
 			// if the docroots are equal, we still have to set an alias for awstats
@@ -559,8 +555,8 @@ class apache
 			// -> webalizer does not need this!
 			elseif($this->settings['system']['awstats_enabled'] == '1')
 			{
-				$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
-				$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '"' . "\n";
+				$stats_text.= '  Alias /awstats "' . $this->escapeConfigParamter(makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain'])) . '"' . "\n";
+				$stats_text.= '  Alias /awstats-icon "' . $this->escapeConfigParamter(makeCorrectDir($this->settings['system']['awstats_icons'])) . '"' . "\n";
 			}
 		}
 
@@ -614,8 +610,8 @@ class apache
 			chown($access_log, $this->settings['system']['httpuser']);
 			chgrp($access_log, $this->settings['system']['httpgroup']);
 					
-			$logfiles_text.= '  ErrorLog "' . $error_log . "\"\n";
-			$logfiles_text.= '  CustomLog "' . $access_log .'" combined' . "\n";
+			$logfiles_text.= '  ErrorLog "' . $this->escapeConfigParamter($error_log) . "\"\n";
+			$logfiles_text.= '  CustomLog "' . $this->escapeConfigParamter($access_log) .'" combined' . "\n";
 
 		}
 
@@ -818,23 +814,23 @@ class apache
 				if($domain['ssl_cert_file'] != '')
 				{
 					$vhost_content.= '  SSLEngine On' . "\n";
-					$vhost_content.= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
-
-					if($domain['ssl_key_file'] != '')
-					{
-						$vhost_content.= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
-					}
-
-					if($domain['ssl_ca_file'] != '')
-					{
-						$vhost_content.= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
-					}
-
-					// #418
-					if($domain['ssl_cert_chainfile'] != '')
-					{
-						$vhost_content.= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
-					}
+					$vhost_content.= '  SSLCertificateFile "' . $this->escapeConfigParamter(makeCorrectFile($domain['ssl_cert_file'])) . '"' ."\n";
+ 
+ 					if($domain['ssl_key_file'] != '')
+ 					{
+						$vhost_content.= '  SSLCertificateKeyFile "' . $this->escapeConfigParamter(makeCorrectFile($domain['ssl_key_file'])) . '"' . "\n";
+ 					}
+ 
+ 					if($domain['ssl_ca_file'] != '')
+ 					{
+						$vhost_content.= '  SSLCACertificateFile "' . $this->escapeConfigParamter(makeCorrectFile($domain['ssl_ca_file'])) . '"' . "\n";
+ 					}
+ 
+ 					// #418
+ 					if($domain['ssl_cert_chainfile'] != '')
+ 					{
+						$vhost_content.= '  SSLCertificateChainFile "' . $this->escapeConfigParamter(makeCorrectFile($domain['ssl_cert_chainfile'])) . '"' . "\n";
+ 					}
 				}
 			}
 
@@ -961,7 +957,7 @@ class apache
 			{
 				$cperlenabled = customerHasPerlEnabled($row_diroptions['customerid']);
 
-				$this->diroptions_data[$diroptions_filename].= '<Directory "' . $row_diroptions['path'] . '">' . "\n";
+				$this->diroptions_data[$diroptions_filename].= '<Directory "' . $this->escapeConfigParamter($row_diroptions['path']) . '">' . "\n";
 
 				if(isset($row_diroptions['options_indexes'])
 				   && $row_diroptions['options_indexes'] == '1')
@@ -997,23 +993,23 @@ class apache
 					fwrite($this->debugHandler, '  cron_tasks: Task3 - Setting Options -Indexes' . "\n");
 				}
 
-				if(isset($row_diroptions['error404path'])
-				   && $row_diroptions['error404path'] != '')
-				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 404 ' . $row_diroptions['error404path'] . "\n";
-				}
-
-				if(isset($row_diroptions['error403path'])
-				   && $row_diroptions['error403path'] != '')
-				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 403 ' . $row_diroptions['error403path'] . "\n";
-				}
-
-				if(isset($row_diroptions['error500path'])
-				   && $row_diroptions['error500path'] != '')
-				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 500 ' . $row_diroptions['error500path'] . "\n";
-				}
+ 				if(isset($row_diroptions['error404path'])
+ 				   && $row_diroptions['error404path'] != '')
+ 				{
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 404 "' . $this->escapeConfigParamter($row_diroptions['error404path']) . '"' . "\n";
+ 				}
+ 
+ 				if(isset($row_diroptions['error403path'])
+ 				   && $row_diroptions['error403path'] != '')
+ 				{
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 403 "' . $this->escapeConfigParamter($row_diroptions['error403path']) . '"' . "\n";
+ 				}
+ 
+ 				if(isset($row_diroptions['error500path'])
+ 				   && $row_diroptions['error500path'] != '')
+ 				{
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 500 "' . $this->escapeConfigParamter($row_diroptions['error500path']) . '"' . "\n";
+ 				}
 
 				if($cperlenabled
 					&& isset($row_diroptions['options_cgi'])
@@ -1086,8 +1082,8 @@ class apache
 					}
 
 					$this->diroptions_data[$diroptions_filename].= '  AuthType Basic' . "\n";
-					$this->diroptions_data[$diroptions_filename].= '  AuthName "'.$row_htpasswd['authname'].'"' . "\n";
-					$this->diroptions_data[$diroptions_filename].= '  AuthUserFile ' . $htpasswd_filename . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  AuthName "' . $this->escapeConfigParamter($row_htpasswd['authname']) . '"' . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  AuthUserFile "' . $this->escapeConfigParamter($htpasswd_filename) . '"' . "\n";
 					$this->diroptions_data[$diroptions_filename].= '  require valid-user' . "\n";
 				}
 
@@ -1397,6 +1393,17 @@ class apache
 				}
 			}
 		}
+	}
+
+	/*
+	*       Escape paramters
+	*/
+
+	protected function escapeConfigParamter($parameter)
+	{
+		$out = str_replace('\\', '\\\\', $parameter);
+		$out = str_replace('"', '\"', $out);
+		return $out;
 	}
 }
 
