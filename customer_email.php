@@ -237,7 +237,7 @@ elseif($page == 'emails')
 					standard_error('emailiswrong', $email_full);
 				}
 
-				$email_check = $db->query_first("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE ( `email`='" . $db->escape($email) . "' OR `email_full` = '" . $db->escape($email_full) . "' ) AND `customerid`='" . (int)$userinfo['customerid'] . "'");
+				$email_check = $db->query_first("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE (`email` LIKE '" . $db->escape($email) . "' OR `email_full` LIKE '" . $db->escape($email_full) . "') AND `customerid`='" . (int)$userinfo['customerid'] . "'");
 
 				if($email == ''
 				   || $email_full == ''
