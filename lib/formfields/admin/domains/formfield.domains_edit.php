@@ -142,8 +142,11 @@ return array(
 					),
 					'speciallogfile' => array(
 						'label' => 'Speciallogfile',
-						'type' => 'label',
-						'value' => $speciallogfile
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['speciallogfile'])
 					),
 					'specialsettings' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),

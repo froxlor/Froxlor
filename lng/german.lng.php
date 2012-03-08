@@ -1635,7 +1635,14 @@ $lng['error']['invalidhostname'] = 'Hostname darf nicht leer sein oder nur aus L
 $lng['traffic']['http'] = 'HTTP (MB)';
 $lng['traffic']['ftp'] = 'FTP (MB)';
 $lng['traffic']['mail'] = 'Mail (MB)';
+
+// ADDED IN 0.9.27-svn1
 $lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle Timeout';
 $lng['serversettings']['mod_fcgid']['idle_timeout']['description'] = 'Timeout einstellung f&uuml;r Mod FastCGI.';
 $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'] = 'Idle Timeout';
 $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Timeout einstellung f&uuml;r PHP5 FPM FastCGI.';
+
+// ADDED IN 0.9.27-svn2
+$lng['panel']['cancel'] = 'abbrechen';
+$lng['admin']['delete_statistics'] = 'Statistiken L&ouml;schen';
+$lng['admin']['speciallogwarning'] = 'ACHTUNG: Durch diese Einstellungen werden Sie alle bisherige Statistiken dieser Domain verlieren. Wenn Sie dabei wirklich sicher sind, geben Sie bitte folgenden Text in das nachfolgende Textfeld ein: "'.$lng['admin']['delete_statistics'].'" und best&auml;tigen Sie mit "'.$lng['panel']['delete'].'".<br /><br />';
