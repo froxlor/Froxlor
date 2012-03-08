@@ -53,17 +53,17 @@ if(isFroxlorVersion('0.9-r0'))
 	define('TABLE_BILLING_TAXCLASSES', 'billing_taxclasses');
 	define('TABLE_BILLING_TAXRATES', 'billing_taxrates');
 
-	$db->query("DROP TABLE  `" . TABLE_BILLING_SERVICE_CATEGORIES . "`;");
-	$db->query("DROP TABLE  `" . TABLE_BILLING_SERVICE_CATEGORIES_ADMINS . "`;");
-	$db->query("DROP TABLE  `" . TABLE_BILLING_SERVICE_DOMAINS_TEMPLATES . "`;");
-	$db->query("DROP TABLE  `" . TABLE_BILLING_SERVICE_OTHER . "`;");
-	$db->query("DROP TABLE  `" . TABLE_BILLING_SERVICE_OTHER_TEMPLATES . "`;");
-	$db->query("DROP TABLE  `" . TABLE_BILLING_TAXCLASSES . "`;");
-	$db->query("DROP TABLE  `" . TABLE_BILLING_TAXRATES . "`;");
-	$db->query("DROP TABLE  `" . TABLE_BILLING_INVOICES . "`;");
-	$db->query("DROP TABLE  `" . TABLE_BILLING_INVOICES_ADMINS . "`;");
-	$db->query("DROP TABLE  `" . TABLE_BILLING_INVOICE_CHANGES . "`;");
-	$db->query("DROP TABLE  `" . TABLE_BILLING_INVOICE_CHANGES_ADMINS . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_SERVICE_CATEGORIES . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_SERVICE_CATEGORIES_ADMINS . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_SERVICE_DOMAINS_TEMPLATES . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_SERVICE_OTHER . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_SERVICE_OTHER_TEMPLATES . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_TAXCLASSES . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_TAXRATES . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_INVOICES . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_INVOICES_ADMINS . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_INVOICE_CHANGES . "`;");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_BILLING_INVOICE_CHANGES_ADMINS . "`;");
 
 	/*
 	 * update panel_domains, panel_customers, panel_admins

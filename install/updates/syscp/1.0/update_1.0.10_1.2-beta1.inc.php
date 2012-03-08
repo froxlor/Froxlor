@@ -31,7 +31,7 @@ if($settings['panel']['version'] == '1.0.10')
 {
 	// Drop/Rename postfix_ tables
 
-	$db->query("DROP TABLE `" . TABLE_POSTFIX_TRANSPORT . "`");
+	$db->query("DROP TABLE IF EXISTS `" . TABLE_POSTFIX_TRANSPORT . "`");
 	$db->query("ALTER TABLE `" . TABLE_POSTFIX_USERS . "` RENAME `" . TABLE_MAIL_USERS . "` ");
 	$db->query("ALTER TABLE `" . TABLE_POSTFIX_VIRTUAL . "` RENAME `" . TABLE_MAIL_VIRTUAL . "` ");
 
