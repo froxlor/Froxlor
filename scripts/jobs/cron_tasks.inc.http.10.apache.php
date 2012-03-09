@@ -105,10 +105,10 @@ class apache
 		{
 			if(!isset($this->virtualhosts_data[$vhosts_filename]))
 			{
-				$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->escapeConfigParamter($this->settings['system']['documentroot_prefix']) . '">' . "\n";
+				$this->virtualhosts_data[$vhosts_filename] = '';
 			}
 
-			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->settings['system']['documentroot_prefix'] . '">' . "\n";
+			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->escapeConfigParamter($this->settings['system']['documentroot_prefix']) . '">' . "\n";
 			$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
 			$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
 			$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
