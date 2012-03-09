@@ -77,6 +77,23 @@ return array(
 					'option_options' => array('Manual' => $lng['serversettings']['manual'], 'Dropdown' => $lng['serversettings']['dropdown']),
 					'save_method' => 'storeSettingField',
 					),
+				'panel_pathedit_limit' => array(
+					'label' => $lng['serversettings']['patheditlimit'],
+					'settinggroup' => 'panel',
+					'varname' => 'patheditlimit',
+					'type' => 'int',
+					'int_min' => 1,
+					'default' => 2,
+					'save_method' => 'storeSettingField',
+					),
+				'panel_pathedit_filter' => array(
+					'label' => $lng['serversettings']['patheditfilter'],
+					'settinggroup' => 'panel',
+					'varname' => 'patheditfilter',
+					'type' => 'string',
+					'default' => 'log|tmp',
+					'save_method' => 'storeSettingField',
+					),
 				'panel_adminmail' => array(
 					'label' => $lng['serversettings']['adminmail'],
 					'settinggroup' => 'panel',

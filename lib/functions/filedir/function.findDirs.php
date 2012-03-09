@@ -32,7 +32,8 @@
  *
  * @author Martin Burchert  <martin.burchert@syscp.de>
  * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
- * @author Fabian Petzold <mail@fpcom.de>
+ * @author Fabian Petzold   <mail@fpcom.de>
+ * @author Arnold Bechtoldt <arnoldB@froxlor.org>
  */
 
 function _findDirs($list, &$_fileList, $counter, $limit, $filter)
@@ -45,7 +46,11 @@ function _findDirs($list, &$_fileList, $counter, $limit, $filter)
 		$list2 = array();
 		foreach($tmp AS $fo)
 		{
-			if(is_dir($path.$fo) && $fo != "." && $fo != ".." && !preg_match("/".$filter."/i", $fo))
+			if(is_dir($path.$fo)
+				&& $fo != "."
+				&& $fo != ".."
+				&& !preg_match("/".$filter."/i", $fo)
+			)
 			{
 				array_push($list2, $path.$fo."/");
 			}
@@ -64,8 +69,8 @@ function findDirs($path, $uid, $gid)
 		$path
 	);
 	$_fileList = array();
-	$filter    = "log|tmp";
-	$limit     = 2;
+	$filter    = $settings['panel']['patheditfilter'];
+	$limit     = $settings['panel']['patheditlimit'];
 	_findDirs($list, &$_fileList, 0, $limit, $filter);
 
 	return $_fileList;

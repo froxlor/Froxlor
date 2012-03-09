@@ -1804,3 +1804,15 @@ if(isFroxlorVersion('0.9.27-svn1'))
 
 	updateToVersion('0.9.27-svn2');
 }
+
+if(isFroxlorVersion('0.9.27-svn2'))
+{
+	showUpdateStep("Updating from 0.9.27-svn2 to 0.9.27-svn3");
+	lastStepStatus(0);
+	
+	// Set new settings, refs #1020
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'patheditlimit', '2');");
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'patheditfilter', 'log|tmp');");
+	
+	updateToVersion('0.9.27-svn3');
+}
