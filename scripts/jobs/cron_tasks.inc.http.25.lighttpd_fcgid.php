@@ -43,7 +43,7 @@ class lighttpd_fcgid extends lighttpd
 				$php_options_text = '  fastcgi.server = ( '."\n";
 				$php_options_text.=	"\t".'".php" => ('."\n";
 				$php_options_text.=	"\t\t".'"localhost" => ('."\n";
-				$php_options_text.=	"\t\t".'"socket" => "'.$php->getInterface()->getSocketFile().'",'."\n";
+				$php_options_text.=	"\t\t".'"socket" => "'.$this->escapeConfigParamter($php->getInterface()->getSocketFile()).'",'."\n";
 				$php_options_text.=	"\t\t".'"check-local" => "enable",'."\n";
 				$php_options_text.=	"\t\t".'"disable-time" => 1'."\n";
 				$php_options_text.=	"\t".')'."\n";
@@ -59,8 +59,8 @@ class lighttpd_fcgid extends lighttpd
 				{
 					$php_options_text.=	"\t".'".'.$f_extension.'" => ('."\n";
 					$php_options_text.=	"\t\t".'"localhost" => ('."\n";
-					$php_options_text.=	"\t\t".'"socket" => "/var/run/lighttpd/'.$domain['loginname'].'-'.$domain['domain'].'-php.socket",'."\n";
-					$php_options_text.=	"\t\t".'"bin-path" => "'.$phpconfig['binary'].' -c '.$php->getInterface()->getIniFile().'",'."\n";
+					$php_options_text.=	"\t\t".'"socket" => "'.$this->escapeConfigParamter('/var/run/lighttpd/'.$domain['loginname'].'-'.$domain['domain'].'-php.socket').'",'."\n";
+					$php_options_text.=	"\t\t".'"bin-path" => "'.$this->escapeConfigParamter($phpconfig['binary'].' -c '.$php->getInterface()->getIniFile()).'",'."\n";
 					$php_options_text.=	"\t\t".'"bin-environment" => ('."\n";
 					if((int)$domain['mod_fcgid_starter'] != - 1)
 					{

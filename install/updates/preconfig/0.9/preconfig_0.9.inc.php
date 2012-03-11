@@ -423,10 +423,202 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question = '<strong>Select default panel theme:</strong>&nbsp;';
 		$question.= '<select name="update_default_theme">';
 		$themes = getThemes();
-		foreach($themes as $theme) {
+		foreach($themes as $theme)
+		{
 			$question.= makeoption($theme, $theme, 'Froxlor');
 		}
 		$question.= '</select>';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if(versionInUpdate($current_version, '0.9.27-svn3'))
+	{
+		# check if there are any whitespaces or backslashes in paths
+		$settings_slist = array();
+		$settings_slist[] = array('area' => 'system', 'name' => 'documentroot_prefix');
+		$settings_slist[] = array('area' => 'system', 'name' => 'logfiles_directory');
+		$settings_slist[] = array('area' => 'system', 'name' => 'vmail_homedir');
+		$settings_slist[] = array('area' => 'system', 'name' => 'bindconf_directory');
+		$settings_slist[] = array('area' => 'system', 'name' => 'apacheconf_vhost');
+		$settings_slist[] = array('area' => 'system', 'name' => 'apacheconf_diroptions');
+		$settings_slist[] = array('area' => 'system', 'name' => 'apacheconf_htpasswddir');
+		$settings_slist[] = array('area' => 'system', 'name' => 'mod_fcgid_configdir');
+		$settings_slist[] = array('area' => 'system', 'name' => 'mod_fcgid_tmpdir');
+		$settings_slist[] = array('area' => 'system', 'name' => 'ssl_cert_file');
+		$settings_slist[] = array('area' => 'system', 'name' => 'ssl_key_file');
+		$settings_slist[] = array('area' => 'system', 'name' => 'ssl_ca_file');
+		$settings_slist[] = array('area' => 'system', 'name' => 'awstats_path');
+		$settings_slist[] = array('area' => 'system', 'name' => 'awstats_conf');
+		$settings_slist[] = array('area' => 'system', 'name' => 'perl_path');
+		$settings_slist[] = array('area' => 'system', 'name' => 'configdir');
+		$settings_slist[] = array('area' => 'system', 'name' => 'awstats_awstatspath');
+		$settings_slist[] = array('area' => 'system', 'name' => 'awstats_icons');
+		$settings_slist[] = array('area' => 'system', 'name' => 'backup_dir');
+		$settings_slist[] = array('area' => 'system', 'name' => 'backup_mysqldump_path');
+		$settings_slist[] = array('area' => 'system', 'name' => 'diskquota_repquota_path');
+		$settings_slist[] = array('area' => 'system', 'name' => 'diskquota_quotatool_path');
+		$settings_slist[] = array('area' => 'system', 'name' => 'diskquota_customer_partition');
+		$settings_slist[] = array('area' => 'dkim', 'name' => 'dkim_prefix');
+		$settings_slist[] = array('area' => 'defaultwebsrverrhandler', 'name' => 'err401');
+		$settings_slist[] = array('area' => 'defaultwebsrverrhandler', 'name' => 'err403');
+		$settings_slist[] = array('area' => 'defaultwebsrverrhandler', 'name' => 'err404');
+		$settings_slist[] = array('area' => 'defaultwebsrverrhandler', 'name' => 'err500');
+		$settings_slist[] = array('area' => 'phpfpm', 'name' => 'configdir');
+		$settings_slist[] = array('area' => 'phpfpm', 'name' => 'tmpdir');
+		$settings_slist[] = array('area' => 'system', 'name' => 'apachereload_command');
+		$settings_slist[] = array('area' => 'system', 'name' => 'bindreload_command');
+		$settings_slist[] = array('area' => 'dkim', 'name' => 'dkimrestart_command');
+		$settings_slist[] = array('area' => 'system', 'name' => 'phpappendopenbasedir');
+		$settings_slist[] = array('area' => 'system', 'name' => 'mod_fcgid_peardir');
+		$settings_slist[] = array('area' => 'system', 'name' => 'perl_server');
+		$settings_slist[] = array('area' => 'perl', 'name' => 'suexecpath');
+		$settings_slist[] = array('area' => 'phpfpm', 'name' => 'reload');
+		$settings_slist[] = array('area' => 'phpfpm', 'name' => 'peardir');
+
+		# test
+		$settings_slist_mod = array();
+		foreach($settings_slist as $settings_entry)
+		{
+			$current_path = $settings[$settings_entry['area']][$settings_entry['name']];
+			if(strpos($current_path,'\ ') !== false && empty($current_path) == false)
+			{
+				# this setting is a candiadate
+				$settings_slist_mod[] = $settings_entry;
+			}
+		}
+
+		if(count($settings_slist_mod) > 0)
+		{
+			$has_preconfig = true;
+			$description = '<strong>Settings</strong><br/>Due to an earlier bug reported in bug report #717 paths of some settings containing whitespaces in their paths got stored in the database the wrong way. The current settings have been analyzed and suspicious settings identified. Please check the following identified settings.';
+
+			$question = '';
+			foreach($settings_slist_mod as $entry)
+			{
+				$question .= 'Setting \''.$entry['name'].'\' in \''.$entry['area'].'\': ';
+				$question .= '<input type="text" name="preconfig_set_'.$entry['area'].'/'.$entry['name'].'" value="'.htmlspecialchars($settings[$entry['area']][$entry['name']]).'"/><br/>';
+			}
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+
+		# document root (domain)
+		$result = $db->query("SELECT id,domain,documentroot,zonefile FROM `" . TABLE_PANEL_DOMAINS . "` WHERE documentroot LIKE '%\\\\\\\\ %' OR zonefile LIKE '%\\\\\\\\ %'");
+		if($db->num_rows() > 0)
+		{
+			$question = '';
+			while($row = $db->fetch_array($result))
+			{
+				$question .= '<strong>'.$row['domain'].'</strong><br/>';
+				if(strpos($row['documentroot'],'\ ') !== false)
+				{
+					$question .= 'Document Root: <input type="text" name="preconfig_d_documentroot_'.$row['id'].'" value="'.htmlspecialchars($row['documentroot']).'"/><br/>';
+				}
+
+				if(strpos($row['zonefile'],'\ ') !== false)
+				{
+					$question .= 'Zonefile: <input type="text" name="preconfig_d_zonefile_'.$row['id'].'" value="'.htmlspecialchars($row['zonefile']).'"/><br/>';
+				}
+				$question .= '<br/>';
+			}
+
+			$has_preconfig = true;
+			$description = '<strong>Domain</strong><br/>Due to an earlier bug reported in bug report #717 paths of some document roots and zonefiles containing whitespaces in their paths got stored in the database the wrong way. The current document roots and zonefiles have been analyzed and suspicious ones identified. Please check the following identified document roots and zonefiles.';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+
+		# document root (ip and port)
+		$columns = array(
+			'docroot' => 'Document Root',
+			'ssl_cert_file' => 'SSL Certificate File',
+			'ssl_key_file' => 'SSL Key File',
+			'ssl_ca_file' => 'SSL CA File',
+			'ssl_cert_chainfile' => 'SSL Certificate Chain File'
+			);
+
+		$result = $db->query("SELECT id,ip,".implode(',',array_keys($columns))." FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE ".implode(' LIKE \'%\\\\ %\' OR ',array_keys($columns))." LIKE '%\\\\\\\\ %'");
+		if($db->num_rows() > 0)
+		{
+			$question = '';
+			while($row = $db->fetch_array($result))
+			{
+				$question .= '<strong>IP '.$row['ip'].'</strong><br/>';
+				foreach(array_keys($columns) as $col)
+				{
+					if(strpos($row[$col],'\ ') !== false)
+					{
+						$question .= $columns[$col].': <input type="text" name="preconfig_ip_'.$col.'_'.$row['id'].'" value="'.htmlspecialchars($row[$col]).'"/><br/>';
+					}
+					$question .= '<br/>';
+				}
+			}
+
+			$has_preconfig = true;
+			$description = '<strong>IP and Port</strong><br/>Due to an earlier bug reported in bug report #717 paths of some document roots and ssl paths containing whitespaces in their paths got stored in the database the wrong way. The current document roots and ssl file paths have been analyzed and suspicious ones identified. Please check the following identified document roots and ssl paths.';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+
+		# htaccess
+		$columns = array(
+			'path' => 'Pfad',
+			'error404path' => 'Error 404 Pfad',
+			'error403path' => 'Error 403 Pfad',
+			'error500path' => 'Error 500 Pfad',
+			'error401path' => 'Error 401 Pfad'
+			);
+		$result = $db->query("SELECT a.id,a.customerid,b.loginname,".implode(',a.',array_keys($columns))." FROM `" . TABLE_PANEL_HTACCESS . "` a JOIN `" . TABLE_PANEL_CUSTOMERS . "` b ON a.customerid = b.customerid WHERE a.".implode(" REGEXP '\\\\\\\\ ' OR a.",array_keys($columns))." REGEXP '\\\\\\\\ '");
+		if($db->num_rows() > 0)
+		{
+			$question = '';
+			while($row = $db->fetch_array($result))
+			{
+				$question .= '<strong>Customer '.$row['loginname'].', '.htmlspecialchars($row['path']).'</strong><br/>';
+				foreach($columns as $col => $colname)
+				{
+					if(strpos($row[$col],'\ ') !== false)
+					{
+						$question .= $colname.': <input type="text" name="preconfig_hta_'.$col.'_'.$row['id'].'" value="'.htmlspecialchars($row[$col]).'"/><br/>';
+					}
+					$question .= '<br/>';
+				}
+			}
+
+			$has_preconfig = true;
+			$description = '<strong>HTACCESS</strong><br/>Due to an earlier bug reported in bug report #717 paths of some paths and error document paths containing whitespaces in their paths got stored in the database the wrong way. The current paths have been analyzed and suspicious ones identified. Please check the following identified paths.';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+
+		# htpasswd
+		$result = $db->query("SELECT id,a.customerid,path,loginname FROM `" . TABLE_PANEL_HTPASSWDS . "` a JOIN `" . TABLE_PANEL_CUSTOMERS . "` b ON a.customerid = b.customerid WHERE path LIKE '%\\\\\\\\ %'");
+		if($db->num_rows() > 0)
+		{
+			$question = '';
+			while($row = $db->fetch_array($result))
+			{
+				$question .= '<strong>Customer '.$row['loginname'].'</strong><br/>';
+				$question .= 'Path: <input type="text" name="preconfig_htp_path_'.$row['id'].'" value="'.htmlspecialchars($row['path']).'"/><br/>';
+				$question .= '<br/>';
+			}
+
+			$has_preconfig = true;
+			$description = '<strong>HTPASSWD</strong><br/>Due to an earlier bug reported in bug report #717 paths containing whitespaces got stored in the database the wrong way. The current paths have been analyzed and suspicious ones identified. Please check the following paths.';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+
+		# customer
+		$result = $db->query("SELECT customerid,documentroot,loginname FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE documentroot LIKE '%\\\\\\\\ %'");
+		if($db->num_rows() > 0)
+		{
+			$question = '';
+			while($row = $db->fetch_array($result))
+			{
+				$question .= '<strong>Customer '.$row['loginname'].'</strong><br/>';
+				$question .= 'Documentroot: <input type="text" name="preconfig_c_documentroot_'.$row['customerid'].'" value="'.htmlspecialchars($row['documentroot']).'"/><br/>';
+				$question .= '<br/>';
+			}
+
+			$has_preconfig = true;
+			$description = '<strong>CUSTOMERS</strong><br/>Due to an earlier bug reported in bug report #717 paths of some document roots containing whitespaces in their paths got stored in the database the wrong way. The current document roots have been analyzed and suspicious ones identified. Please check the following identified document roots.';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
 	}
 }
