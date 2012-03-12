@@ -1651,5 +1651,5 @@ $lng['admin']['speciallogwarning'] = 'ACHTUNG: Durch diese Einstellungen werden 
 $lng['serversettings']['patheditlimit']['title'] = 'Pfad-Eingabe (Maximale Anzahl der Ebenen)';
 $lng['serversettings']['patheditlimit']['discription'] = 'Ab welcher Anzahl an Ebenen soll eine manuelle Eingabe erzwungen werden?';
 $lng['serversettings']['patheditfilter']['title'] = 'Pfad-Eingabe (Dateierweiterungen)';
-$lng['serversettings']['patheditfilter']['discription'] = 'Wa&auml;hlen Sie die Dateierweiterungen, welche in der Auswahlliste ausgefiltert werden sollen (RegEx).';
+$lng['serversettings']['patheditfilter']['discription'] = 'W&auml;hlen Sie die Dateierweiterungen, welche in der Auswahlliste ausgefiltert werden sollen (RegEx).';
 
