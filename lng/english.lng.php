@@ -1918,7 +1918,7 @@ $lng['admin']['speciallogwarning'] = 'WARNING: By changing this setting you will
 
 // ADDED in 0.9.27-svn3
 $lng['serversettings']['patheditlimit']['title'] = 'Type of path input (maximum amount of levels)';
-$lng['serversettings']['patheditlimit']['discription'] = 'What should be the maximum amount of levels where manual input should be enforced?'
+$lng['serversettings']['patheditlimit']['discription'] = 'What should be the maximum amount of levels where manual input should be enforced?';
 $lng['serversettings']['patheditfilter']['title'] = 'Type of path input (file extensions)';
 $lng['serversettings']['patheditfilter']['discription'] = 'Choose the file extensions which should be filtered out in the dropdown (RegEx).';
 
