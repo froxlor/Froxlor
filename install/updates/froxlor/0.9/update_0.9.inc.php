@@ -1804,3 +1804,11 @@ if(isFroxlorVersion('0.9.27-svn1'))
 
 	updateToVersion('0.9.27-svn2');
 }
+
+if(isFroxlorVersion('0.9.27-svn2'))
+{
+	showUpdateStep("Updating from 0.9.27-svn2 to 0.9.27-rc1");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.27-rc1');
+}
