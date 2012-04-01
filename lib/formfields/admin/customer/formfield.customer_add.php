@@ -252,7 +252,9 @@ return array(
 					'backup_allowed' => array(
 						'label' => $lng['backup_allowed'].'?',
 						'type' => 'yesno',
-						'yesno_var' => $backup_allowed
+						'value' => 0,
+						'yesno_var' => $backup_allowed,
+						'visible' => ($settings['system']['backup_enabled'] == '1' ? true : false)
 					),
 					'number_of_aps_packages' => array(
 						'label' => $lng['aps']['numberofapspackages'],
