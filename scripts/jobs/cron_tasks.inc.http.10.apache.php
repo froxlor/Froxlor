@@ -232,7 +232,9 @@ class apache
 				}
 
 				// create fcgid <Directory>-Part (starter is created in apache_fcgid)
-				if($this->settings['system']['mod_fcgid_ownvhost'] == '1')
+				if($this->settings['system']['mod_fcgid_ownvhost'] == '1'
+					&& $this->settings['system']['mod_fcgid'] == '1'
+				)
 				{
 					
 					$configdir = makeCorrectDir($this->settings['system']['mod_fcgid_configdir'] . '/froxlor.panel/' . $this->settings['system']['hostname']);
