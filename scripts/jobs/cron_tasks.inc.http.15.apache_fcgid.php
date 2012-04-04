@@ -38,7 +38,7 @@ class apache_fcgid extends apache
 			if((int)$this->settings['phpfpm']['enabled'] == 1)
 			{
 				$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
-				$php_options_text.= '  FastCgiExternalServer ' . makeCorrectDir($domain['documentroot']) . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $domain['loginname'] . ' -group ' . $domain['loginname'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
+				$php_options_text.= '  FastCgiExternalServer ' . makeCorrectDir($domain['documentroot']) . $domain['domain'] . "." . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $domain['loginname'] . ' -group ' . $domain['loginname'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
 				$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
 				$php_options_text.= '    <FilesMatch "\.php$">' . "\n";
 				$php_options_text.= '      SetHandler php5-fastcgi'. "\n";
@@ -48,7 +48,7 @@ class apache_fcgid extends apache
 				$php_options_text.= '    Order allow,deny' . "\n";
 				$php_options_text.= '    allow from all' . "\n";
 				$php_options_text.= '  </Directory>' . "\n";
-				$php_options_text.= '  Alias /fastcgiphp ' . makeCorrectDir($domain['documentroot']) . 'fpm.external' . "\n";
+				$php_options_text.= '  Alias /fastcgiphp ' . makeCorrectDir($domain['documentroot']) . $domain['domain'] . "." . 'fpm.external' . "\n";
 			}
 			else
 			{

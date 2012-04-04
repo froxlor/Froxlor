@@ -276,7 +276,7 @@ class apache
 
 					$php = new phpinterface($this->getDB(), $this->settings, $domain);
 					$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '  FastCgiExternalServer ' . $mypath . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['system']['mod_fcgid_httpuser'] . ' -group ' . $this->settings['system']['mod_fcgid_httpuser'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  FastCgiExternalServer ' . $mypath . $domain['domain'] . "." . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['system']['mod_fcgid_httpuser'] . ' -group ' . $this->settings['system']['mod_fcgid_httpuser'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    AddHandler php5-fastcgi .php'. "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    Action php5-fastcgi /fastcgiphp' . "\n";
@@ -284,7 +284,7 @@ class apache
 					$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '  Alias /fastcgiphp ' . $mypath . 'fpm.external' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  Alias /fastcgiphp ' . $mypath . $domain['domain'] . "." . 'fpm.external' . "\n";
 				}
 
 				/**
