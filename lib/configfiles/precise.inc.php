@@ -18,7 +18,7 @@
  */
 
 return Array(
-	'ubuntu_lucid' => Array(
+	'ubuntu_precise' => Array(
 		'label' => 'Ubuntu 12.04 (Precise)',
 		'services' => Array(
 			'http' => Array(
