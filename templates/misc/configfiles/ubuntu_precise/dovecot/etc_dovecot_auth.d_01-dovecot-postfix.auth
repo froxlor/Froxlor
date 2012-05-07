@@ -1,0 +1,28 @@
+mechanisms = plain login
+socket listen {
+        client {
+                path = /var/spool/postfix/private/dovecot-auth
+                mode = 0660
+                user = postfix
+                group = postfix
+        }
+        master {
+			          path = /var/run/dovecot/auth-master
+			          mode = 0660
+			          user = vmail
+			          group = vmail
+        }
+}
+
+passdb sql {
+	args = /etc/dovecot/dovecot-sql.conf
+}
+
+userdb prefetch {
+}
+
+userdb sql {
+	args = /etc/dovecot/dovecot-sql.conf
+}
+
+user = vmail
