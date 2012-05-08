@@ -243,12 +243,11 @@ class phpinterface_fpm
  	public function getAliasConfigDir($createifnotexists = true)
  	{
     // ensure default...
-    if (!isset($this->_settings['system']['phpfpm_aliasconfigdir'])) {
-      $this->_settings['system']['phpfpm_aliasconfigdir'] = '/var/www/php-fpm';
+    if (!isset($this->_settings['phpfpm']['aliasconfigdir'])) {
+      $this->_settings['phpfpm']['aliasconfigdir'] = '/var/www/php-fpm';
     }
 
- 		$configdir = makeCorrectDir($this->_settings['system']['phpfpm_aliasconfigdir'] . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
-
+ 		$configdir = makeCorrectDir($this->_settings['phpfpm']['aliasconfigdir'] . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
  		if(!is_dir($configdir) && $createifnotexists)
  		{
  			safe_exec('mkdir -p ' . escapeshellarg($configdir));
