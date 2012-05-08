@@ -125,13 +125,13 @@ class phpinterface_fpm
 					{
 						$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 					}
-		
+
 					$_custom_openbasedir = explode(':', $this->_settings['system']['phpappendopenbasedir']);
 					foreach($_custom_openbasedir as $cobd)
 					{
 						$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 					}
-		
+
 					if($this->_domain['openbasedir_path'] == '0' && strstr($this->_domain['documentroot'], ":") === false)
 					{
 						$openbasedir = appendOpenBasedirPath($this->_domain['documentroot'], true);
@@ -140,10 +140,10 @@ class phpinterface_fpm
 					{
 						$openbasedir = appendOpenBasedirPath($this->_domain['customerroot'], true);
 					}
-		
+
 					$openbasedir .= appendOpenBasedirPath($this->getTempDir());
 					$openbasedir .= $_phpappendopenbasedir;
-		
+
 					$openbasedir = explode(':', $openbasedir);
 					$clean_openbasedir = array();
 					foreach($openbasedir as $number => $path)
@@ -229,7 +229,32 @@ class phpinterface_fpm
 			safe_exec('chown -R ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($tmpdir));
 			safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
 		}
-		
+
 		return $tmpdir;
 	}
+
+  /**
+ 	 * fastcgi-fakedirectory directory
+ 	 *
+ 	 * @param boolean $createifnotexists create the directory if it does not exist
+ 	 *
+ 	 * @return string the directory
+ 	 */
+ 	public function getAliasConfigDir($createifnotexists = true)
+ 	{
+    // ensure default...
+    if (!isset($this->_settings['system']['phpfpm_aliasconfigdir'])) {
+      $this->_settings['system']['phpfpm_aliasconfigdir'] = '/var/www/php-fpm';
+    }
+
+ 		$configdir = makeCorrectDir($this->_settings['system']['phpfpm_aliasconfigdir'] . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
+
+ 		if(!is_dir($configdir) && $createifnotexists)
+ 		{
+ 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
+ 			safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($configdir));
+ 		}
+
+ 		return $configdir;
+ 	}
 }
