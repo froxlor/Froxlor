@@ -38,7 +38,7 @@ class apache_fcgid extends apache
 			if((int)$this->settings['phpfpm']['enabled'] == 1)
 			{
 				$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
-				$php_options_text.= '  FastCgiExternalServer ' . makeCorrectDir($domain['documentroot']) . $domain['domain'] . "." . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $domain['loginname'] . ' -group ' . $domain['loginname'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
+				$php_options_text.= '  FastCgiExternalServer ' . makeCorrectDir($php->getInterface()->getTempDir()) . $domain['domain'] . "." . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $domain['loginname'] . ' -group ' . $domain['loginname'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
 				$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
 				$php_options_text.= '    <FilesMatch "\.php$">' . "\n";
 				$php_options_text.= '      SetHandler php5-fastcgi'. "\n";
@@ -48,7 +48,7 @@ class apache_fcgid extends apache
 				$php_options_text.= '    Order allow,deny' . "\n";
 				$php_options_text.= '    allow from all' . "\n";
 				$php_options_text.= '  </Directory>' . "\n";
-				$php_options_text.= '  Alias /fastcgiphp ' . makeCorrectDir($domain['documentroot']) . $domain['domain'] . "." . 'fpm.external' . "\n";
+				$php_options_text.= '  Alias /fastcgiphp ' . makeCorrectDir($php->getInterface()->getTempDir()) . $domain['domain'] . "." . 'fpm.external' . "\n";
 			}
 			else
 			{
@@ -79,8 +79,8 @@ class apache_fcgid extends apache
 
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
-			
-			// create php.ini 
+
+			// create php.ini
 			// @TODO make php-fpm support this
 			$php->getInterface()->createIniFile($phpconfig);
 		}
@@ -109,7 +109,7 @@ class apache_fcgid extends apache
 				&& $this->settings['phpfpm']['enabled_ownvhost'] == '1'
 			) {
 				$user = $this->settings['phpfpm']['vhost_httpuser'];
-				$group = $this->settings['phpfpm']['vhost_httpgroup'];	
+				$group = $this->settings['phpfpm']['vhost_httpgroup'];
 			}
 
 			$domain = array(
@@ -129,7 +129,7 @@ class apache_fcgid extends apache
 			// all the files and folders have to belong to the local user
 			// now because we also use fcgid for our own vhost
 			safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
-						
+
 			// get php.ini for our own vhost
 			$php = new phpinterface($this->getDB(), $this->settings, $domain);
 
@@ -138,8 +138,8 @@ class apache_fcgid extends apache
 
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
-			
-			// create php.ini 
+
+			// create php.ini
 			// @TODO make php-fpm support this
 			$php->getInterface()->createIniFile($phpconfig);
 		}
