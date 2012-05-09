@@ -5,8 +5,8 @@ Maintainer: Froxlor Release Team <release@froxlor.org>
 Build-Depends: debhelper (>= 7)
 Standards-Version: 3.8.4
 Homepage: http://www.froxlor.org
-Vcs-Git: git://git.froxlor.org
-Vcs-Browser: http://git.froxlor.org/?p=froxlor.git;a=tree;f=dist/deb;hb=refs/heads/extras
+Vcs-Git: git://github.com/Froxlor/Froxlor.git
+Vcs-Browser: https://github.com/Froxlor/Froxlor/tree/extras/dist/deb
 
 Package: froxlor
 Architecture: all

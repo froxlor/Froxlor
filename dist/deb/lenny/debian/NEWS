@@ -1,0 +1,8 @@
+froxlor (0.9.27-1+lenny1) oldstable; urgency=low
+
+  this will be the last release in the oldstable suite
+  lenny support will be terminated after 0.9.27
+  users are advised to upgrade to squeeze if they
+  wish to receive support and package updates beyond 0.9.27
+
+ -- Froxlor Release Team <release@froxlor.org>  Wed, 09 May 2012 10:42:56 +0200

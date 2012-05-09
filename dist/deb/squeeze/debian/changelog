@@ -1,7 +1,15 @@
+froxlor (0.9.27-1) stable; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Wed, 09 May 2012 10:52:41 +0200
+
 froxlor (0.9.26-1) stable; urgency=low
 
   * new upstream release
-  * fix bugs #430 and #723
+  * don't unconditionally reset owner to www-data on
+    upgrades, closes: #430
+  * change php5 dependency to allow other apache mpms, closes: #723
   * resync with dh-make 0.55, update copyright and lintian-overrides
     file
   * Build-Depend on DH 8
@@ -10,7 +18,7 @@ froxlor (0.9.26-1) stable; urgency=low
 
 froxlor (0.9.25-2) stable; urgency=low
 
-  * add missing js dir (bug #983)
+  * add missing js dir, closes: #983
 
  -- Froxlor Release Team <release@froxlor.org>  Tue, 22 Nov 2011 17:22:10 +0100
 
@@ -18,7 +26,7 @@ froxlor (0.9.25-1) stable; urgency=low
 
   * new upstream release
   * add armel
-  * change VCS-Git to something more resonable, even though its not
+  * change VCS-Git to something more reasonable, even though its not
     entirely correct due to limitations
 
  -- Froxlor Release Team <release@froxlor.org>  Wed, 16 Nov 2011 13:19:51 +0100
