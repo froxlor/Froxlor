@@ -1822,8 +1822,8 @@ if(isFroxlorVersion('0.9.27-rc1'))
 }
 
 if(isFroxlorVersion('0.9.27')) {
-  showUpdateStep("Updating from 0.9.27 to 0.9.28-fpmfix");
-  lastStepStatus(0);
+	showUpdateStep("Updating from 0.9.27 to 0.9.28-svn1");
+	lastStepStatus(0);
 
 	// Get AliasconfigDir setting if available
 	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'aliasconfigdir';");
@@ -1833,5 +1833,5 @@ if(isFroxlorVersion('0.9.27')) {
 		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/');");
 	}
 
- 	updateToVersion('0.9.28-fpmfix');
+ 	updateToVersion('0.9.28-svn1');
 }
