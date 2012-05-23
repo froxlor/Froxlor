@@ -1527,6 +1527,7 @@ $lng['error']['intvaluetoohigh'] = 'The given number is too high (field %s)';
 $lng['admin']['phpfpm_settings'] = 'PHP-FPM';
 $lng['serversettings']['phpfpm'] = 'Enable php-fpm';
 $lng['serversettings']['phpfpm_settings']['configdir'] = 'Configuration directory of php-fpm';
+$lng['serversettings']['phpfpm_settings']['aliasconfigdir'] = 'Configuration Alias-directory of php-fpm';
 $lng['serversettings']['phpfpm_settings']['reload'] = 'php-fpm restart command';
 $lng['serversettings']['phpfpm_settings']['pm'] = 'Process manager control (pm)';
 $lng['serversettings']['phpfpm_settings']['max_children']['title'] = 'The number of child processes';
