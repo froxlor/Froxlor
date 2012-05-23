@@ -37,7 +37,7 @@ function processForm(&$form, &$input, $url_params = array())
 				}
 			}
 		}
-		
+
 		foreach($form['groups'] as $groupname => $groupdetails)
 		{
 			if(validateFieldDefinition($groupdetails))
@@ -46,7 +46,7 @@ function processForm(&$form, &$input, $url_params = array())
 				foreach($groupdetails['fields'] as $fieldname => $fielddetails)
 				{
 					$newfieldvalue = getFormFieldData($fieldname, $fielddetails, $input);
-			
+
 					if($newfieldvalue != $fielddetails['value'])
 					{
 						if(($error = validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true)
@@ -173,13 +173,13 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
 				}
 			}
 		}
-		
+
 		foreach($form['groups'] as $groupname => $groupdetails)
 		{
 			if(($settings_part && $part == $groupname)
 				|| $settings_all
 				|| $only_enabledisable
-			){			
+			){
 				if(validateFieldDefinition($groupdetails))
 				{
 					// Validate fields
@@ -189,7 +189,6 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
 							|| ($only_enabledisable && isset($fielddetails['overview_option']))
 						) {
 							$newfieldvalue = getFormFieldData($fieldname, $fielddetails, $input);
-					
 							if($newfieldvalue != $fielddetails['value'])
 							{
 								if(($error = validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true)
@@ -201,7 +200,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
 									$changed_fields[$fieldname] = $newfieldvalue;
 								}
 							}
-		
+
 							$submitted_fields[$fieldname] = $newfieldvalue;
 						}
 					}

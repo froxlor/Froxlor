@@ -56,7 +56,7 @@ return array(
 					),
 				/*
 				 * @TODO implement if phpfpm knows custom php.ini files
-				 * 
+				 *
 				'system_phpfpm_defaultini_ownvhost' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'],
 					'settinggroup' => 'phpfpm',
@@ -77,6 +77,15 @@ return array(
 					'default' => '/etc/php-fpm.d/',
 					'save_method' => 'storeSettingField',
 					),
+        'system_phpfpm_aliasconfigdir' => array(
+          'label' => $lng['serversettings']['phpfpm_settings']['aliasconfigdir'],
+          'settinggroup' => 'phpfpm',
+          'varname' => 'aliasconfigdir',
+          'type' => 'string',
+          'string_type' => 'dir',
+          'default' => '/var/www/php-fpm/',
+          'save_method' => 'storeSettingField',
+        ),
 				'system_phpfpm_tmpdir' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['tmpdir'],
 					'settinggroup' => 'phpfpm',

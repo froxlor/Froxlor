@@ -21,6 +21,7 @@ function storeSettingField($fieldname, $fielddata, $newfieldvalue)
 {
 	if(is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] != '' && isset($fielddata['varname']) && $fielddata['varname'] != '')
 	{
+
 		if(saveSetting($fielddata['settinggroup'], $fielddata['varname'], $newfieldvalue) != false)
 		{
 			/*
@@ -30,7 +31,7 @@ function storeSettingField($fieldname, $fielddata, $newfieldvalue)
 			{
 				toggleCronStatus($fielddata['cronmodule'], $newfieldvalue);
 			}
-			
+
 			/*
 			 * satisfy dependencies
 			 */
@@ -47,7 +48,7 @@ function storeSettingField($fieldname, $fielddata, $newfieldvalue)
 		else
 		{
 			return false;
-		}	
+		}
 	}
 	else
 	{
@@ -66,7 +67,7 @@ function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue)
 		else
 		{
 			return false;
-		}	
+		}
 	}
 	else
 	{
