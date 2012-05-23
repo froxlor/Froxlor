@@ -92,13 +92,23 @@ if($page == 'admins'
 				/**
 				 * percent-values for progressbar
 				 */
-				if($row['diskspace'] > 0) {
-					$percent = round(($row['diskspace_used']*100)/$row['diskspace'], 2);
-					$doublepercent = round($percent*2, 2);
-				} else {
-					$percent = 0;
-					$doublepercent = 0;
-				}
+                                //For Disk usage
+                                if ($row['diskspace'] > 0) {
+                                        $disk_percent = round(($row['diskspace_used']*100)/$row['diskspace'], 2);
+                                        $disk_doublepercent = round($disk_percent*2, 2);
+                                } else {
+                                        $disk_percent = 0;
+                                        $disk_doublepercent = 0;
+                                }
+
+				//For Traffic usage
+                                if ($row['traffic'] > 0) {
+                                        $traffic_percent = round(($row['traffic_used']*100)/$row['traffic'], 2);
+                                        $traffic_doublepercent = round($traffic_percent*2, 2);
+                                } else {
+                                        $traffic_percent = 0;
+                                        $traffic_doublepercent = 0;
+                                }
 				/* */
 
 				$row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota email_autoresponder ftps subdomains tickets');
