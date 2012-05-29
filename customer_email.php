@@ -237,7 +237,7 @@ elseif($page == 'emails')
 					standard_error('emailiswrong', $email_full);
 				}
 
-				$email_check = $db->query_first("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE (`email` LIKE '" . $db->escape($email) . "' OR `email_full` LIKE '" . $db->escape($email_full) . "') AND `customerid`='" . (int)$userinfo['customerid'] . "'");
+				$email_check = $db->query_first("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE (`email` = '" . strtolower($db->escape($email)) . "' OR `email_full` = '" . strtolower($db->escape($email_full)) . "') AND `customerid`='" . (int)$userinfo['customerid'] . "'");
 
 				if($email == ''
 				   || $email_full == ''
@@ -253,7 +253,7 @@ elseif($page == 'emails')
 				{
 					standard_error('maindomainnonexist', $domain);
 				}
-				elseif($email_check['email_full'] == $email_full)
+				elseif(strtolower($email_check['email_full']) == strtolower($email_full))
 				{
 					standard_error('emailexistalready', $email_full);
 				}
