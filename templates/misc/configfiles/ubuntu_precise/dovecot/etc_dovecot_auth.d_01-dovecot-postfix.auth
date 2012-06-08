@@ -1,4 +1,4 @@
-mechanisms = plain login
+#mechanisms = plain login
 socket listen {
         client {
                 path = /var/spool/postfix/private/dovecot-auth
