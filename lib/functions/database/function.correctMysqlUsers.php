@@ -24,7 +24,7 @@ function correctMysqlUsers($mysql_access_host_array)
 	foreach($sql_root as $mysql_server => $mysql_server_details)
 	{
 		$db_root = new db($mysql_server_details['host'], $mysql_server_details['user'], $mysql_server_details['password'], '');
-		unset($db_root->password);
+		unset($mysql_server_details['password']);
 
 		$users = array();
 		$users_result = $db_root->query('SELECT * FROM `mysql`.`user`');
