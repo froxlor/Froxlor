@@ -216,6 +216,11 @@ function getOutstandingTasks()
 		{
 			$task_desc = $lng['tasks']['diskspace_set_quota'];
 		}
+		else
+		{
+			$task_desc = "ERROR: Unknown task type '".$row['type'].
+			             "'";
+		}
 
 		if($task_desc != '') {
 			$tasks .= '<li>'.$task_desc.'</li>';
