@@ -284,7 +284,7 @@ if($page == 'domains'
 				if($userinfo['change_serversettings'] == '1')
 				{
 					$isbinddomain = intval($_POST['isbinddomain']);
-					$caneditdomain = intval($_POST['caneditdomain']);
+					$caneditdomain = isset($_POST['caneditdomain']) ? 1 : 0;
 					$zonefile = validate($_POST['zonefile'], 'zonefile');
 
 					if(isset($_POST['dkim']))
@@ -325,8 +325,8 @@ if($page == 'domains'
 				if($userinfo['caneditphpsettings'] == '1'
 				   || $userinfo['change_serversettings'] == '1')
 				{
-					$openbasedir = intval($_POST['openbasedir']);
-					$safemode = intval($_POST['safemode']);
+					$openbasedir = isset($_POST['openbasedir']) ? 1 : 0;
+					$safemode = isset($_POST['safemode']) ? 1 : 0;
 
 					if((int)$settings['system']['mod_fcgid'] == 1)
 					{
@@ -385,7 +385,7 @@ if($page == 'domains'
 				   && isset($_POST['ssl_ipandport'])
 				   && $_POST['ssl'] != '0')
 				{
-					$ssl = (int)$_POST['ssl'];
+					$ssl = 1; // if ssl is set and != 0 it can only be 1
 					$ssl_redirect = 0;
 					if (isset($_POST['ssl_redirect'])) {
 						$ssl_redirect = (int)$_POST['ssl_redirect'];
@@ -683,18 +683,20 @@ if($page == 'domains'
 					$phpconfigs.= makeoption($row['description'], $row['id'], $settings['system']['mod_fcgid_defaultini'], true, true);
 				}
 
-				#$isbinddomain = makeyesno('isbinddomain', '1', '0', '1');
-				#$isemaildomain = makeyesno('isemaildomain', '1', '0', '1');
-				#$email_only = makeyesno('email_only', '1', '0', '0');
+				/*
+				$isbinddomain = makeyesno('isbinddomain', '1', '0', '1');
+				$isemaildomain = makeyesno('isemaildomain', '1', '0', '1');
+				$email_only = makeyesno('email_only', '1', '0', '0');
+				$dkim = makeyesno('dkim', '1', '0', '1');
+				$wwwserveralias = makeyesno('wwwserveralias', '1', '0', '1');
+				$caneditdomain = makeyesno('caneditdomain', '1', '0', '1');
+				$openbasedir = makeyesno('openbasedir', '1', '0', '1');
+				$safemode = makeyesno('safemode', '1', '0', '1');
+				$speciallogfile = makeyesno('speciallogfile', '1', '0', '0');
+				$ssl = makeyesno('ssl', '1', '0', '0');
+				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', '0');
+				*/
 				$subcanemaildomain = makeoption($lng['admin']['subcanemaildomain']['never'], '0', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['always'], '3', '0', true, true);
-				#$dkim = makeyesno('dkim', '1', '0', '1');
-				#$wwwserveralias = makeyesno('wwwserveralias', '1', '0', '1');
-				#$caneditdomain = makeyesno('caneditdomain', '1', '0', '1');
-				#$openbasedir = makeyesno('openbasedir', '1', '0', '1');
-				#$safemode = makeyesno('safemode', '1', '0', '1');
-				#$speciallogfile = makeyesno('speciallogfile', '1', '0', '0');
-				#$ssl = makeyesno('ssl', '1', '0', '0');
-				#$ssl_redirect = makeyesno('ssl_redirect', '1', '0', '0');
 				$add_date = date('Y-m-d');
 
 				$domain_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/domains/formfield.domains_add.php';
@@ -793,7 +795,7 @@ if($page == 'domains'
 				$aliasdomain = intval($_POST['alias']);
 				$issubof = intval($_POST['issubof']);
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
-				$caneditdomain = intval($_POST['caneditdomain']);
+				$caneditdomain = isset($_POST['caneditdomain']) ? 1 : 0;
 				$registration_date = trim($_POST['registration_date']);
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
@@ -821,7 +823,7 @@ if($page == 'domains'
 
 					if($settings['dkim']['use_dkim'] == '1')
 					{
-						$dkim = intval($_POST['dkim']);
+						$dkim = isset($_POST['dkim']) ? 1 : 0;
 					}
 					else
 					{
@@ -854,8 +856,8 @@ if($page == 'domains'
 				if($userinfo['caneditphpsettings'] == '1'
 				   || $userinfo['change_serversettings'] == '1')
 				{
-					$openbasedir = intval($_POST['openbasedir']);
-					$safemode = intval($_POST['safemode']);
+					$openbasedir = isset($_POST['openbasedir']) ? 1 : 0;
+					$safemode = isset($_POST['safemode']) ? 1 : 0;
 
 					if((int)$settings['system']['mod_fcgid'] == 1)
 					{
@@ -914,7 +916,7 @@ if($page == 'domains'
 				   && isset($_POST['ssl_ipandport'])
 				   && $_POST['ssl'] != '0')
 				{
-					$ssl = (int)$_POST['ssl'];
+					$ssl = 1; // if ssl is set and != 0, it can only be 1
 					$ssl_redirect = 0;
 					if (isset($_POST['ssl_redirect'])) {
 						$ssl_redirect = (int)$_POST['ssl_redirect'];
@@ -1237,20 +1239,22 @@ if($page == 'domains'
 				}
 
 				$result['specialsettings'] = $result['specialsettings'];
-				#$isbinddomain = makeyesno('isbinddomain', '1', '0', $result['isbinddomain']);
-				#$wwwserveralias = makeyesno('wwwserveralias', '1', '0', $result['wwwserveralias']);
-				#$isemaildomain = makeyesno('isemaildomain', '1', '0', $result['isemaildomain']);
-				#$email_only = makeyesno('email_only', '1', '0', $result['email_only']);
-				#$ssl = makeyesno('ssl', '1', '0', $result['ssl']);
-				#$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
+				/*
+				$isbinddomain = makeyesno('isbinddomain', '1', '0', $result['isbinddomain']);
+				$wwwserveralias = makeyesno('wwwserveralias', '1', '0', $result['wwwserveralias']);
+				$isemaildomain = makeyesno('isemaildomain', '1', '0', $result['isemaildomain']);
+				$email_only = makeyesno('email_only', '1', '0', $result['email_only']);
+				$ssl = makeyesno('ssl', '1', '0', $result['ssl']);
+				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
+				$dkim = makeyesno('dkim', '1', '0', $result['dkim']);
+				$caneditdomain = makeyesno('caneditdomain', '1', '0', $result['caneditdomain']);
+				$openbasedir = makeyesno('openbasedir', '1', '0', $result['openbasedir']);
+				$safemode = makeyesno('safemode', '1', '0', $result['safemode']);
+				*/
 				$subcanemaildomain = makeoption($lng['admin']['subcanemaildomain']['never'], '0', $result['subcanemaildomain'], true, true);
 				$subcanemaildomain.= makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', $result['subcanemaildomain'], true, true);
 				$subcanemaildomain.= makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', $result['subcanemaildomain'], true, true);
 				$subcanemaildomain.= makeoption($lng['admin']['subcanemaildomain']['always'], '3', $result['subcanemaildomain'], true, true);
-				#$dkim = makeyesno('dkim', '1', '0', $result['dkim']);
-				#$caneditdomain = makeyesno('caneditdomain', '1', '0', $result['caneditdomain']);
-				#$openbasedir = makeyesno('openbasedir', '1', '0', $result['openbasedir']);
-				#$safemode = makeyesno('safemode', '1', '0', $result['safemode']);
 				$speciallogfile = ($result['speciallogfile'] == 1 ? $lng['panel']['yes'] : $lng['panel']['no']);
 				$result['add_date'] = date('Y-m-d', $result['add_date']);
 
@@ -1262,7 +1266,9 @@ if($page == 'domains'
 					$phpconfigs.= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true);
 				}
 
-				#$specialsettingsforsubdomains = makeyesno('specialsettingsforsubdomains', '1', '0', '1');
+				/*
+				$specialsettingsforsubdomains = makeyesno('specialsettingsforsubdomains', '1', '0', '1');
+				*/
 
 				$result = htmlentities_array($result);
 
