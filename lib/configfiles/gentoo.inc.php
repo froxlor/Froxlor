@@ -17,6 +17,23 @@
  *
  */
 
+// Try to guess user/group from settings' email UID/GID
+$vmail_user=posix_getpwuid($settings['system']['vmail_uid']);
+$vmail_group=posix_getgrgid($settings['system']['vmail_gid']);
+
+/* If one of them are not set, call it 'vmail' and suggest creating user/group
+ * in scripts. */
+if ($vmail_user === false) {
+	$vmail_username="mail"; // Gentoo uses 'mail' user/group
+} else {
+	$vmail_username=$vmail_user['name'];
+}
+if ($vmail_group === false) {
+	$vmail_groupname="mail"; // Gentoo uses 'mail' user/group
+} else {
+	$vmail_groupname=$vmail_group['name'];
+}
+
 return Array(
 	'gentoo' => Array(
 		'label' => 'Gentoo',
@@ -126,7 +143,7 @@ return Array(
 							'echo "mail-mta/postfix -dovecot-sasl sasl" >> /etc/portage/package.use',
 							'emerge -av postfix',            
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_user['name'].':'.$vmail_group['name'].' ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir'],
 							'mv /etc/postfix/main.cf /etc/postfix/main.cf.gentoo',
 							'touch /etc/postfix/main.cf',
@@ -169,7 +186,7 @@ return Array(
 							'echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use',
               				'emerge -av postfix',
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_user['name'].':'.$vmail_group['name'].' ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir'],
 							'mv /etc/postfix/main.cf /etc/postfix/main.cf.gentoo',
 							'touch /etc/postfix/main.cf',

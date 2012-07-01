@@ -15,6 +15,23 @@
  *
  */
 
+// Try to guess user/group from settings' email UID/GID
+$vmail_user=posix_getpwuid($settings['system']['vmail_uid']);
+$vmail_group=posix_getgrgid($settings['system']['vmail_gid']);
+
+/* If one of them are not set, call it 'vmail' and suggest creating user/group
+ * in scripts. */
+if ($vmail_user === false) {
+	$vmail_username="vmail";
+} else {
+	$vmail_username=$vmail_user['name'];
+}
+if ($vmail_group === false) {
+	$vmail_groupname="vmail";
+} else {
+	$vmail_groupname=$vmail_group['name'];
+}
+
 return Array(
 	'freebsd' => Array(
 		'label' => 'FreeBSD',
@@ -89,10 +106,10 @@ return Array(
 							'make install'
 						),
 						'commands_2' => Array(
-							'pw groupadd vmail -g '.$settings['system']['vmail_gid'],
-							'pw useradd vmail -u '.$settings['system']['vmail_uid'].' -g '.$settings['system']['vmail_gid'].' -s/sbin/nologin -d/dev/null',
+							($vmail_group === false) ? 'pw groupadd ' . $vmail_groupname . ' -g '.$settings['system']['vmail_gid'] : '',
+							($vmail_user === false) ? 'pw useradd ' . $vmail_username . ' -u '.$settings['system']['vmail_uid'].' -g '.$settings['system']['vmail_gid'].' -s/sbin/nologin -d/dev/null' : '',
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir']
 						),
 						'commands_3' => Array(
@@ -180,7 +197,7 @@ return Array(
 						),
 						'commands_2' => Array(
 							'echo "dovecot unix - n n - - pipe
-    flags=DRhu user=vmail:vmail argv=/usr/local/libexec/dovecot/deliver -f ${sender} -d ${recipient}" >> /usr/local/etc/postfix/master.cf',
+    flags=DRhu user='.$vmail_username.':'.$vmail_groupname.' argv=/usr/local/libexec/dovecot/deliver -f ${sender} -d ${recipient}" >> /usr/local/etc/postfix/master.cf',
 							'chmod 0640 /usr/local/etc/dovecot-sql.conf'
 						),
 						'restart' => Array(
