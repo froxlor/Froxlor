@@ -9,7 +9,7 @@ sendmail_path = /usr/sbin/sendmail
 mydomain = <SERVERNAME>
 
 # should be different from $mydomain eg. "mail.$mydomain"
-myhostname = <SERVERNAME>
+myhostname = mail.$mydomain
 
 mydestination = $myhostname,
 	$mydomain,
@@ -26,7 +26,7 @@ default_destination_concurrency_limit = 20
 local_destination_concurrency_limit = 2
 
 # SMTPD Settings
-smtpd_banner = $myhostname ESMTP $mail_name (Gentoo/GNU)
+smtpd_banner = $myhostname ESMTP $mail_name ($mail_version)
 smtpd_helo_required = yes
 smtpd_recipient_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
@@ -42,8 +42,8 @@ smtpd_sender_restrictions = permit_mynetworks,
 smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
 	reject_unknown_client
-# Maximum size of Message in bytes (50MB)
-message_size_limit = 52428800
+# Maximum size of Message in bytes (512MB)
+message_size_limit = 536870912
 
 ## SASL Auth Settings
 smtpd_sasl_auth_enable = yes
@@ -81,8 +81,9 @@ virtual_mailbox_limit = 0
 #smtp_use_tls = yes
 #smtp_tls_note_starttls_offer = yes
 ## TLS for email client
-#smtpd_tls_cert_file = /etc/ssl/server/<SERVERNAME>.pem
-#smtpd_tls_key_file = /etc/ssl/server/<SERVERNAME>.pem
+#smtpd_tls_cert_file = /etc/ssl/server/server.pem
+#smtpd_tls_key_file = /etc/ssl/server/server.key
+#smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 #smtpd_tls_CAfile = /etc/ssl/cacert.class3.crt  # Just an example for CACert.org
 #smtpd_tls_auth_only = no
 #smtpd_tls_loglevel = 1

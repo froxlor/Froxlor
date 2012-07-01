@@ -3,7 +3,7 @@
 mydomain = <SERVERNAME>
 
 # should be different from $mydomain eg. "mail.$mydomain"
-myhostname = <SERVERNAME>
+myhostname = mail.$mydomain
 
 mydestination = $myhostname,
 	$mydomain,
@@ -36,8 +36,8 @@ smtpd_sender_restrictions = permit_mynetworks,
 smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
 	reject_unknown_client_hostname
-# Maximum size of Message in bytes (50MB)
-message_size_limit = 52428800
+# Maximum size of Message in bytes (512MB)
+message_size_limit = 536870912
 
 ## SASL Auth Settings
 smtpd_sasl_auth_enable = yes
@@ -68,8 +68,8 @@ virtual_mailbox_limit = 0
 #smtp_tls_note_starttls_offer = yes
 ## TLS for email client
 #smtpd_tls_security_level = may
-#smtpd_tls_cert_file = /etc/ssl/server/<SERVERNAME>.pem
-#smtpd_tls_key_file = $smtpd_tls_cert_file
+#smtpd_tls_cert_file = /etc/ssl/postfix/server.pem
+#smtpd_tls_key_file = /etc/ssl/postfix/server.key
 #smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 #smtpd_tls_loglevel = 1
 #smtpd_tls_received_header = yes
