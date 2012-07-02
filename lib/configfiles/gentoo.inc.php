@@ -24,12 +24,12 @@ $vmail_group=posix_getgrgid($settings['system']['vmail_gid']);
 /* If one of them are not set, call it 'vmail' and suggest creating user/group
  * in scripts. */
 if ($vmail_user === false) {
-	$vmail_username="mail"; // Gentoo uses 'mail' user/group
+	$vmail_username="vmail";
 } else {
 	$vmail_username=$vmail_user['name'];
 }
 if ($vmail_group === false) {
-	$vmail_groupname="mail"; // Gentoo uses 'mail' user/group
+	$vmail_groupname="vmail";
 } else {
 	$vmail_groupname=$vmail_group['name'];
 }
@@ -140,10 +140,12 @@ return Array(
 					'postfix_courier' => Array(
 						'label' => 'Postfix/Courier',
 						'commands_1' => Array(
+							($vmail_group === false) ? 'groupadd -g ' . $settings['system']['vmail_gid'] . ' ' . $vmail_groupname : '',
+							($vmail_user === false) ? 'useradd -u ' . $settings['system']['vmail_uid'] . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
 							'echo "mail-mta/postfix -dovecot-sasl sasl" >> /etc/portage/package.use',
 							'emerge -av postfix',            
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R '.$vmail_user['name'].':'.$vmail_group['name'].' ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir'],
 							'mv /etc/postfix/main.cf /etc/postfix/main.cf.gentoo',
 							'touch /etc/postfix/main.cf',
@@ -178,6 +180,8 @@ return Array(
 					'postfix_dovecot' => Array(
 						'label' => 'Postfix/Dovecot',
 						'commands_1' => Array(
+							($vmail_group === false) ? 'groupadd -g ' . $settings['system']['vmail_gid'] . ' ' . $vmail_groupname : '',
+							($vmail_user === false) ? 'useradd -u ' . $settings['system']['vmail_uid'] . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
 							'echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use',
               				'emerge -av postfix',
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
