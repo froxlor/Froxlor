@@ -1832,70 +1832,79 @@ if(isFroxlorVersion('0.9.27')) {
 	if ($db->num_rows($handle) < 1) {
 		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/');");
 	}
-	
-	// Insert ISO-Codes into database. Default value is foo, which is not a valid language code.
-	$db->query("ALTER TABLE  `panel_languages` ADD  `iso` CHAR( 3 ) NOT NULL DEFAULT  'foo' AFTER  `language`");
-
-    $handle = $db->query("SELECT `language` FROM `panel_languages` WHERE `iso`='foo'");
-    
-    $langauges = $db->fetch_array($handle);
-    foreach($languages as $language){    
-        switch ($language) {
-            case "Deutsch":
-                $db->query("UPDATE `panel_languages` SET `iso`='de' WHERE `language` = 'Deutsch'");
-                break;
-            case "English":
-                $db->query("UPDATE `panel_languages` SET `iso`='en' WHERE `language` = 'English'");
-                break;
-            case "Fran&ccedil;ais":
-                $db->query("UPDATE `panel_languages` SET `iso`='fr' WHERE `language` = 'Fran&ccedil;ais'");
-                break;
-            case "Chinese":
-                $db->query("UPDATE `panel_languages` SET `iso`='zh' WHERE `language` = 'Chinese'");
-                break;
-            case "Catalan":
-                $db->query("UPDATE `panel_languages` SET `iso`='ca' WHERE `language` = 'Catalan'");
-                break;
-            case "Espa&ntilde;ol":
-                $db->query("UPDATE `panel_languages` SET `iso`='es' WHERE `language` = 'Espa&ntilde;ol'");
-                break;
-            case "Portugu&ecirc;s":
-                $db->query("UPDATE `panel_languages` SET `iso`='pt' WHERE `language` = 'Portugu&ecirc;s'");
-                break;
-            case "Danish":
-                $db->query("UPDATE `panel_languages` SET `iso`='da' WHERE `language` = 'Danish'");
-                break;
-            case "Italian":
-                $db->query("UPDATE `panel_languages` SET `iso`='it' WHERE `language` = 'Italian'");
-                break;
-            case "Bulgarian":
-                $db->query("UPDATE `panel_languages` SET `iso`='bg' WHERE `language` = 'Bulgarian'");
-                break;
-            case "Slovak":
-                $db->query("UPDATE `panel_languages` SET `iso`='sk' WHERE `language` = 'Slovak'");
-                break;
-            case "Dutch":
-                $db->query("UPDATE `panel_languages` SET `iso`='nl' WHERE `language` = 'Dutch'");
-                break;
-            case "Russian":
-                $db->query("UPDATE `panel_languages` SET `iso`='ru' WHERE `language` = 'Russian'");
-                break;
-            case "Hungarian":
-                $db->query("UPDATE `panel_languages` SET `iso`='hu' WHERE `language` = 'Hungarian'");
-                break;
-            case "Swedish":
-                $db->query("UPDATE `panel_languages` SET `iso`='sv' WHERE `language` = 'Swedish'");
-                break;
-            case "Czech":
-                $db->query("UPDATE `panel_languages` SET `iso`='cz' WHERE `language` = 'Czech'");
-                break;
-            case "Polski":
-                $db->query("UPDATE `panel_languages` SET `iso`='pl' WHERE `language` = 'Polski'");
-                break;
-            default:
-                showUpdateStep("Sorry, but I don't know the ISO-639 language code for ".$language.". Please update the entry in `panel_languages` manually.\n");
-        }
-    }
     
  	updateToVersion('0.9.28-svn1');
 }
+
+if(isFroxlorVersion('0.9.28-svn1')) {
+	showUpdateStep("Updating from 0.9.28-svn1 to 0.9.28-svn2");
+	lastStepStatus(0);
+
+	// Insert ISO-Codes into database. Default value is foo, which is not a valid language code.
+	$db->query("ALTER TABLE  `panel_languages` ADD  `iso` CHAR( 3 ) NOT NULL DEFAULT  'foo' AFTER  `language`");
+
+	$handle = $db->query("SELECT `language` FROM `panel_languages` WHERE `iso`='foo'");
+    
+	$langauges = $db->fetch_array($handle);
+	foreach($languages as $language){    
+		switch ($language) {
+			case "Deutsch":
+				$db->query("UPDATE `panel_languages` SET `iso`='de' WHERE `language` = 'Deutsch'");
+				break;
+			case "English":
+				$db->query("UPDATE `panel_languages` SET `iso`='en' WHERE `language` = 'English'");
+				break;
+			case "Fran&ccedil;ais":
+				$db->query("UPDATE `panel_languages` SET `iso`='fr' WHERE `language` = 'Fran&ccedil;ais'");
+				break;
+			case "Chinese":
+				$db->query("UPDATE `panel_languages` SET `iso`='zh' WHERE `language` = 'Chinese'");
+				break;
+			case "Catalan":
+				$db->query("UPDATE `panel_languages` SET `iso`='ca' WHERE `language` = 'Catalan'");
+				break;
+			case "Espa&ntilde;ol":
+				$db->query("UPDATE `panel_languages` SET `iso`='es' WHERE `language` = 'Espa&ntilde;ol'");
+				break;
+			case "Portugu&ecirc;s":
+				$db->query("UPDATE `panel_languages` SET `iso`='pt' WHERE `language` = 'Portugu&ecirc;s'");
+				break;
+			case "Danish":
+				$db->query("UPDATE `panel_languages` SET `iso`='da' WHERE `language` = 'Danish'");
+				break;
+			case "Italian":
+				$db->query("UPDATE `panel_languages` SET `iso`='it' WHERE `language` = 'Italian'");
+				break;
+			case "Bulgarian":
+				$db->query("UPDATE `panel_languages` SET `iso`='bg' WHERE `language` = 'Bulgarian'");
+				break;
+			case "Slovak":
+				$db->query("UPDATE `panel_languages` SET `iso`='sk' WHERE `language` = 'Slovak'");
+				break;
+			case "Dutch":
+				$db->query("UPDATE `panel_languages` SET `iso`='nl' WHERE `language` = 'Dutch'");
+				break;
+			case "Russian":
+				$db->query("UPDATE `panel_languages` SET `iso`='ru' WHERE `language` = 'Russian'");
+				break;
+			case "Hungarian":
+				$db->query("UPDATE `panel_languages` SET `iso`='hu' WHERE `language` = 'Hungarian'");
+				break;
+			case "Swedish":
+				$db->query("UPDATE `panel_languages` SET `iso`='sv' WHERE `language` = 'Swedish'");
+				break;
+			case "Czech":
+				$db->query("UPDATE `panel_languages` SET `iso`='cz' WHERE `language` = 'Czech'");
+				break;
+			case "Polski":
+				$db->query("UPDATE `panel_languages` SET `iso`='pl' WHERE `language` = 'Polski'");
+				break;
+			default:
+				showUpdateStep("Sorry, but I don't know the ISO-639 language code for ".$language.". Please update the entry in `panel_languages` manually.\n");
+		}
+	}
+
+	updateToVersion('0.9.28-svn2');
+}
+
+
