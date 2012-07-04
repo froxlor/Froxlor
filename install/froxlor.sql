@@ -797,9 +797,10 @@ CREATE TABLE `panel_diskspace_admins` (
 
 DROP TABLE IF EXISTS `panel_languages`;
 CREATE TABLE `panel_languages` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `language` varchar(30) NOT NULL default '',
-  `file` varchar(255) NOT NULL default '',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `language` varchar(30) NOT NULL DEFAULT '',
+  `iso` char(3) NOT NULL DEFAULT 'foo',
+  `file` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM ;
 
@@ -807,23 +808,24 @@ CREATE TABLE `panel_languages` (
 # Dumping data for table `panel_languages`
 #
 
-INSERT INTO `panel_languages` VALUES (1, 'Deutsch', 'lng/german.lng.php');
-INSERT INTO `panel_languages` VALUES (2, 'English', 'lng/english.lng.php');
-INSERT INTO `panel_languages` VALUES (3, 'Fran&ccedil;ais', 'lng/french.lng.php');
-INSERT INTO `panel_languages` VALUES (4, 'Chinese', 'lng/zh-cn.lng.php');
-INSERT INTO `panel_languages` VALUES (5, 'Catalan', 'lng/catalan.lng.php');
-INSERT INTO `panel_languages` VALUES (6, 'Espa&ntilde;ol', 'lng/spanish.lng.php');
-INSERT INTO `panel_languages` VALUES (7, 'Portugu&ecirc;s', 'lng/portugues.lng.php');
-INSERT INTO `panel_languages` VALUES (8, 'Russian', 'lng/russian.lng.php');
-INSERT INTO `panel_languages` VALUES (9, 'Danish', 'lng/danish.lng.php');
-INSERT INTO `panel_languages` VALUES (10, 'Italian', 'lng/italian.lng.php');
-INSERT INTO `panel_languages` VALUES (11, 'Bulgarian', 'lng/bulgarian.lng.php');
-INSERT INTO `panel_languages` VALUES (12, 'Slovak', 'lng/slovak.lng.php');
-INSERT INTO `panel_languages` VALUES (13, 'Dutch', 'lng/dutch.lng.php');
-INSERT INTO `panel_languages` VALUES (14, 'Hungarian', 'lng/hungarian.lng.php');
-INSERT INTO `panel_languages` VALUES (15, 'Swedish', 'lng/swedish.lng.php');
-INSERT INTO `panel_languages` VALUES (16, 'Czech', 'lng/czech.lng.php');
-INSERT INTO `panel_languages` VALUES (17, 'Polski', 'lng/polish.lng.php');
+INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
+    (1, 'Deutsch', 'de', 'lng/german.lng.php'),
+    (2, 'English', 'en', 'lng/english.lng.php'),
+    (3, 'Fran&ccedil;ais', 'fr', 'lng/french.lng.php'),
+    (4, 'Chinese', 'zh', 'lng/zh-cn.lng.php'),
+    (5, 'Catalan', 'ca', 'lng/catalan.lng.php'),
+    (6, 'Espa&ntilde;ol', 'es', 'lng/spanish.lng.php'),
+    (7, 'Portugu&ecirc;s', 'pt', 'lng/portugues.lng.php'),
+    (8, 'Russian', 'ru', 'lng/russian.lng.php'),
+    (9, 'Danish', 'da', 'lng/danish.lng.php'),
+    (10, 'Italian', 'it', 'lng/italian.lng.php'),
+    (11, 'Bulgarian', 'bg', 'lng/bulgarian.lng.php'),
+    (12, 'Slovak', 'sk', 'lng/slovak.lng.php'),
+    (13, 'Dutch', 'nl', 'lng/dutch.lng.php'),
+    (14, 'Hungarian', 'hu', 'lng/hungarian.lng.php'),
+    (15, 'Swedish', 'sv', 'lng/swedish.lng.php'),
+    (16, 'Czech', 'cz', 'lng/czech.lng.php'),
+    (17, 'Polski', 'pl', 'lng/polish.lng.php');
 
 # --------------------------------------------------------
 
