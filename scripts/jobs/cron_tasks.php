@@ -400,12 +400,13 @@ while($row = $db->fetch_array($result_tasks))
 				// Add trailing slash to Maildir if needed
 				$maildirpath=$maildirname;
 				if (!empty($maildirname) and substr($maildirname,-1) != "/") $maildirpath.="/";
-				$maildir = makeCorrectDir($settings['system']['vmail_homedir'] .'/'. $row['data']['loginname'] .'/'. $email_domain .'/'. $email_user .'/'. $maildirpath);
+				$maildir = makeCorrectDir($settings['system']['vmail_homedir'] .'/'. $row['data']['loginname'] .'/'. $email_domain .'/'. $email_user);
 
 				if($maildir != '/' && !empty($maildir) && !empty($email_full)
 				&& $maildir != $settings['system']['vmail_homedir']
 				&& substr($maildir, 0, strlen($settings['system']['vmail_homedir'])) == $settings['system']['vmail_homedir']
-				&& is_dir($maildir)
+				&& is_dir($maildir) 
+				&& is_dir(makeCorrectDir($maildir.'/'.$maildirpath))
 				&& fileowner($maildir) == $settings['system']['vmail_uid']
 				&& filegroup($maildir) == $settings['system']['vmail_gid'])
 				{
