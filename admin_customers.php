@@ -924,13 +924,16 @@ if($page == 'customers'
 				$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 				$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 				$number_of_aps_packages_ul = makecheckbox('number_of_aps_packages_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				#$createstdsubdomain = makeyesno('createstdsubdomain', '1', '0', '1');
-				#$email_imap = makeyesno('email_imap', '1', '0', '1');
-				#$email_pop3 = makeyesno('email_pop3', '1', '0', '1');
-				#$sendpassword = makeyesno('sendpassword', '1', '0', '1');
-				#$phpenabled = makeyesno('phpenabled', '1', '0', '1');
-				#$perlenabled = makeyesno('perlenabled', '1', '0', '0');
-				#$store_defaultindex = makeyesno('store_defaultindex', '1', '0', '1');
+				/*
+				$createstdsubdomain = makeyesno('createstdsubdomain', '1', '0', '1');
+				$email_imap = makeyesno('email_imap', '1', '0', '1');
+				$email_pop3 = makeyesno('email_pop3', '1', '0', '1');
+				$sendpassword = makeyesno('sendpassword', '1', '0', '1');
+				$phpenabled = makeyesno('phpenabled', '1', '0', '1');
+				$perlenabled = makeyesno('perlenabled', '1', '0', '0');
+				$store_defaultindex = makeyesno('store_defaultindex', '1', '0', '1');
+				*/
+				// why still makeyesno for this one?
 				$backup_allowed = makeyesno('backup_allowed', '1', '0', '0');
 
 				$gender_options = makeoption($lng['gender']['undef'], 0, true, true, true);
@@ -1588,12 +1591,14 @@ if($page == 'customers'
 					$result['aps_packages'] = '';
 				}
 
-				#$createstdsubdomain = makeyesno('createstdsubdomain', '1', '0', (($result['standardsubdomain'] != '0') ? '1' : '0'));
-				#$phpenabled = makeyesno('phpenabled', '1', '0', $result['phpenabled']);
-				#$perlenabled = makeyesno('perlenabled', '1', '0', $result['perlenabled']);
-				#$deactivated = makeyesno('deactivated', '1', '0', $result['deactivated']);
-				#$email_imap = makeyesno('email_imap', '1', '0', $result['imap']);
-				#$email_pop3 = makeyesno('email_pop3', '1', '0', $result['pop3']);
+				/*
+				$createstdsubdomain = makeyesno('createstdsubdomain', '1', '0', (($result['standardsubdomain'] != '0') ? '1' : '0'));
+				$phpenabled = makeyesno('phpenabled', '1', '0', $result['phpenabled']);
+				$perlenabled = makeyesno('perlenabled', '1', '0', $result['perlenabled']);
+				$deactivated = makeyesno('deactivated', '1', '0', $result['deactivated']);
+				$email_imap = makeyesno('email_imap', '1', '0', $result['imap']);
+				$email_pop3 = makeyesno('email_pop3', '1', '0', $result['pop3']);
+				*/
 				$backup_allowed = makeyesno('backup_allowed', '1', '0', $result['backup_allowed']);
 				$result = htmlentities_array($result);
 

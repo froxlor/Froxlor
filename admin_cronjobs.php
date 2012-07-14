@@ -101,7 +101,7 @@ if($page == 'cronjobs'
 			if(isset($_POST['send'])
 			   && $_POST['send'] == 'send')
 			{
-				$isactive = intval($_POST['isactive']);
+				$isactive = isset($_POST['isactive']) ? 1 : 0;
 				$interval_value = validate($_POST['interval_value'], 'interval_value', '/^([0-9]+)$/Di', 'stringisempty');
 				$interval_interval = validate($_POST['interval_interval'], 'interval_interval');
 				
@@ -121,7 +121,7 @@ if($page == 'cronjobs'
 			}
 			else
 			{
-				#$isactive = makeyesno('isactive', '1', '0', $result['isactive']);
+				//$isactive = makeyesno('isactive', '1', '0', $result['isactive']);
 				// interval
 				$interval_nfo = explode(' ', $result['interval']);
 				$interval_value = $interval_nfo[0];
@@ -159,5 +159,3 @@ if($page == 'cronjobs'
 		 */
 	}
 }
-
-?>

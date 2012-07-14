@@ -352,7 +352,7 @@ elseif($page == 'domains')
 					$log->logAction(USR_ACTION, LOG_INFO, "added subdomain '" . $completedomain . "'");
 					inserttask('1');
 
-					# Using nameserver, insert a task which rebuilds the server config
+					// Using nameserver, insert a task which rebuilds the server config
 					if ($settings['system']['bind_enable'])
 					{
 						inserttask('4');
@@ -388,7 +388,7 @@ elseif($page == 'domains')
 					}
 				}
 
-				#$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
+				//$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
 
@@ -532,7 +532,7 @@ elseif($page == 'domains')
 						$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `documentroot`='" . $db->escape($path) . "', `isemaildomain`='" . (int)$isemaildomain . "', `iswildcarddomain`='" . (int)$iswildcarddomain . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ",`openbasedir_path`='" . $db->escape($openbasedir_path) . "', `ssl_redirect`='" . $ssl_redirect . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 						inserttask('1');
 
-						# Using nameserver, insert a task which rebuilds the server config
+						// Using nameserver, insert a task which rebuilds the server config
 						if ($settings['system']['bind_enable'])
 						{
 							inserttask('4');
@@ -585,9 +585,11 @@ elseif($page == 'domains')
 					}
 				}
 
-				#$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
-				#$iswildcarddomain = makeyesno('iswildcarddomain', '1', '0', $result['iswildcarddomain']);
-				#$isemaildomain = makeyesno('isemaildomain', '1', '0', $result['isemaildomain']);
+				/*
+				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
+				$iswildcarddomain = makeyesno('iswildcarddomain', '1', '0', $result['iswildcarddomain']);
+				$isemaildomain = makeyesno('isemaildomain', '1', '0', $result['isemaildomain']);
+				*/
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true);
 
 				$result_ipandport = $db->query_first("SELECT `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id`='".(int)$result['ipandport']."'");
