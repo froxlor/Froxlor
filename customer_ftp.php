@@ -144,7 +144,7 @@ elseif($page == 'accounts')
 				$password = validate($_POST['ftp_password'], 'password');
 				$password = validatePassword($password);
 
-				$sendinfomail = intval($_POST['sendinfomail']);
+				$sendinfomail = isset($_POST['sendinfomail']) ? 1 : 0;
 				if($sendinfomail != 1)
 				{
 					$sendinfomail = 0;
@@ -268,7 +268,7 @@ elseif($page == 'accounts')
 					}
 				}
 
-				#$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
+				//$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
 
 				$ftp_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/ftp/formfield.ftp_add.php';
 				$ftp_add_form = htmlform::genHTMLForm($ftp_add_data);

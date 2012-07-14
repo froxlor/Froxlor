@@ -141,11 +141,11 @@ if($page == 'ipsandports'
 		{
 			$ip = validate_ip($_POST['ip']);
 			$port = validate($_POST['port'], 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array('stringisempty', 'myport'));
-			$listen_statement = intval($_POST['listen_statement']);
-			$namevirtualhost_statement = intval($_POST['namevirtualhost_statement']);
-			$vhostcontainer = intval($_POST['vhostcontainer']);
+			$listen_statement = isset($_POST['listen_statement']) ? 1 : 0;
+			$namevirtualhost_statement = isset($_POST['namevirtualhost_statement']) ? 1 : 0;
+			$vhostcontainer = isset($_POST['vhostcontainer']) ? 1 : 0;
 			$specialsettings = validate(str_replace("\r\n", "\n", $_POST['specialsettings']), 'specialsettings', '/^[^\0]*$/');
-			$vhostcontainer_servername_statement = intval($_POST['vhostcontainer_servername_statement']);
+			$vhostcontainer_servername_statement = isset($_POST['vhostcontainer_servername_statement']) ? 1 : 0;
 			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 			$docroot = validate($_POST['docroot'], 'docroot');
 			if((int)$settings['system']['use_ssl'] == 1)
@@ -261,11 +261,13 @@ if($page == 'ipsandports'
 		}
 		else
 		{
-			#$enable_ssl = makeyesno('ssl', '1', '0', '0');
-			#$listen_statement = makeyesno('listen_statement', '1', '0', '1');
-			#$namevirtualhost_statement = makeyesno('namevirtualhost_statement', '1', '0', '1');
-			#$vhostcontainer = makeyesno('vhostcontainer', '1', '0', '1');
-			#$vhostcontainer_servername_statement = makeyesno('vhostcontainer_servername_statement', '1', '0', '1');
+			/*
+			$enable_ssl = makeyesno('ssl', '1', '0', '0');
+			$listen_statement = makeyesno('listen_statement', '1', '0', '1');
+			$namevirtualhost_statement = makeyesno('namevirtualhost_statement', '1', '0', '1');
+			$vhostcontainer = makeyesno('vhostcontainer', '1', '0', '1');
+			$vhostcontainer_servername_statement = makeyesno('vhostcontainer_servername_statement', '1', '0', '1');
+			*/
 
 			$ipsandports_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_add.php';
 			$ipsandports_add_form = htmlform::genHTMLForm($ipsandports_add_data);
@@ -290,16 +292,23 @@ if($page == 'ipsandports'
 				$port = validate($_POST['port'], 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array('stringisempty', 'myport'));
 				$result_checkfordouble = $db->query_first("SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ip`='" . $db->escape($ip) . "' AND `port`='" . (int)$port . "'");
 				$result_sameipotherport = $db->query_first("SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ip`='" . $db->escape($result['ip']) . "' AND `id`!='" . (int)$id . "'");
-				$listen_statement = intval($_POST['listen_statement']);
-				$namevirtualhost_statement = intval($_POST['namevirtualhost_statement']);
-				$vhostcontainer = intval($_POST['vhostcontainer']);
+				$listen_statement = isset($_POST['listen_statement']) ? 1 : 0;
+				$namevirtualhost_statement = isset($_POST['namevirtualhost_statement']) ? 1 : 0;
+				$vhostcontainer = isset($_POST['vhostcontainer']) ? 1 : 0;
 				$specialsettings = validate(str_replace("\r\n", "\n", $_POST['specialsettings']), 'specialsettings', '/^[^\0]*$/');
-				$vhostcontainer_servername_statement = intval($_POST['vhostcontainer_servername_statement']);
+				$vhostcontainer_servername_statement = isset($_POST['vhostcontainer_servername_statement']) ? 1 : 0;
 				$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 				$docroot =  validate($_POST['docroot'], 'docroot');
-				if((int)$settings['system']['use_ssl'] == 1)
-				{
-					$ssl = intval($_POST['ssl']);
+
+				if((int)$settings['system']['use_ssl'] == 1
+					/* 
+					 * check here if ssl is even checked, cause if not, we don't need
+					 * to validate and set all the $ssl_*_file vars
+					 */
+					&& isset($_POST['ssl'])
+					&& $_POST['ssl'] != 0
+				) {
+					$ssl = 1;
 					$ssl_cert_file = validate($_POST['ssl_cert_file'], 'ssl_cert_file');
 					$ssl_key_file = validate($_POST['ssl_key_file'], 'ssl_key_file');
 					$ssl_ca_file = validate($_POST['ssl_ca_file'], 'ssl_ca_file');
@@ -402,7 +411,7 @@ if($page == 'ipsandports'
 					$log->logAction(ADM_ACTION, LOG_WARNING, "changed IP/port from '" . $result['ip'] . ":" . $result['port'] . "' to '" . $ip . ":" . $port . "'");
 					inserttask('1');
 
-					# Using nameserver, insert a task which rebuilds the server config
+					// Using nameserver, insert a task which rebuilds the server config
 					if ($settings['system']['bind_enable'])
 					{
 						inserttask('4');
@@ -412,12 +421,14 @@ if($page == 'ipsandports'
 			}
 			else
 			{
-				#$enable_ssl = makeyesno('ssl', '1', '0', $result['ssl']);
 				$result = htmlentities_array($result);
-				#$listen_statement = makeyesno('listen_statement', '1', '0', $result['listen_statement']);
-				#$namevirtualhost_statement = makeyesno('namevirtualhost_statement', '1', '0', $result['namevirtualhost_statement']);
-				#$vhostcontainer = makeyesno('vhostcontainer', '1', '0', $result['vhostcontainer']);
-				#$vhostcontainer_servername_statement = makeyesno('vhostcontainer_servername_statement', '1', '0', $result['vhostcontainer_servername_statement']);
+				/*
+				$enable_ssl = makeyesno('ssl', '1', '0', $result['ssl']);
+				$listen_statement = makeyesno('listen_statement', '1', '0', $result['listen_statement']);
+				$namevirtualhost_statement = makeyesno('namevirtualhost_statement', '1', '0', $result['namevirtualhost_statement']);
+				$vhostcontainer = makeyesno('vhostcontainer', '1', '0', $result['vhostcontainer']);
+				$vhostcontainer_servername_statement = makeyesno('vhostcontainer_servername_statement', '1', '0', $result['vhostcontainer_servername_statement']);
+				*/
 
 				$ipsandports_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
 				$ipsandports_edit_form = htmlform::genHTMLForm($ipsandports_edit_data);
