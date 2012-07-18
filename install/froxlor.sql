@@ -466,10 +466,11 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('syste
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_uid', '2000');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_gid', '2000');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_homedir', '/var/customers/mail/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_maildir', 'Maildir');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bind_enable', '1');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindconf_directory', '/etc/bind/');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindreload_command', '/etc/init.d/bind9 reload');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'version', '0.9.28-svn2');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'version', '0.9.28-svn3');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'hostname', 'SERVERNAME');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'maxloginattempts', '3');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'deactivatetime', '900');

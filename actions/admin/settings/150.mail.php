@@ -51,6 +51,15 @@ return array(
 					'default' => '/var/customers/mail/',
 					'save_method' => 'storeSettingField',
 					),
+				'system_vmail_maildirname' => array(
+					'label' => $lng['serversettings']['vmail_maildirname'],
+					'settinggroup' => 'system',
+					'varname' => 'vmail_maildirname',
+					'type' => 'string',
+					'string_type' => 'dir',
+					'default' => 'Maildir',
+					'save_method' => 'storeSettingField',
+					),
 				'panel_sendalternativemail' => array(
 					'label' => $lng['serversettings']['sendalternativemail'],
 					'settinggroup' => 'panel',
