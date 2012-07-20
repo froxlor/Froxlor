@@ -228,6 +228,38 @@ while($row = $db->fetch_array($result))
 			}
 		}
 
+		// logrotate speciallogfiles
+		if(isset($speciallogfile_domainlist[$row['customerid']])
+				&& is_array($speciallogfile_domainlist[$row['customerid']])
+				&& count($speciallogfile_domainlist[$row['customerid']]) != 0)
+		{
+			reset($speciallogfile_domainlist[$row['customerid']]);
+			foreach($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain)
+			{
+				$fh = fopen($logrotatefile, 'w');
+
+				$logconf = '# ' . basename($logrotatefile) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" .
+						$settings['system']['logfiles_directory'] . $row['loginname'] .'-' . $domain . '-access.log ' .
+						$settings['system']['logfiles_directory'] . $row['loginname'] .'-' . $domain . '-error.log {' . "\n" .
+						$settings['system']['logrotate_interval'] . "\n" .
+						'missingok' . "\n" .
+						'rotate ' . $settings['system']['logrotate_keep'] . "\n" .
+						'compress' . "\n" .
+						'delaycompress' . "\n" .
+						'notifempty' . "\n" .
+						'create' . "\n" .
+						'}' . "\n";
+
+				fwrite($fh, $logconf);
+				fclose($fh);
+
+				safe_exec(escapeshellcmd($settings['system']['logrotate_binary']) . ' ' . $logrotatefile);
+
+				fwrite($debugHandler, '   apache::reload: reloading apache' . "\n");
+				safe_exec(escapeshellcmd($settings['system']['apachereload_command']));
+			}
+		}
+
 		reset($domainlist[$row['customerid']]);
 
 		if($settings['system']['mod_log_sql'] == 1)
