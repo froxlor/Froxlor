@@ -222,7 +222,7 @@ return Array(
 					'cron' => Array(
 						'label' => 'Crond (cronscript)',
 						'commands' => Array(
-							'echo "*/5 * * * *     root     /usr/local/bin/php -q '.makeCorrectDir(dirname(dirname(dirname(__FILE__)))).'scripts/froxlor_master_cronjob.php" >> /etc/crontab'
+							'echo "*/5 * * * *     root     nice -n 5	/usr/local/bin/php -q '.makeCorrectDir(dirname(dirname(dirname(__FILE__)))).'scripts/froxlor_master_cronjob.php" >> /etc/crontab'
 						),
 						'restart' => Array(
 							'/etc/rc.d/cron restart'
