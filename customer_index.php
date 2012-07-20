@@ -124,7 +124,8 @@ elseif($page == 'change_password')
 			if(isset($_POST['change_main_ftp'])
 			   && $_POST['change_main_ftp'] == 'true')
 			{
-				$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`=ENCRYPT('" . $db->escape($new_password) . "') WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $db->escape($userinfo['loginname']) . "'");
+				$cryptPassword = makeCryptPassword($db->escape($new_password),1);
+				$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $db->escape($userinfo['loginname']) . "'");
 				$log->logAction(USR_ACTION, LOG_NOTICE, 'changed main ftp password');
 			}
 

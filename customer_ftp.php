@@ -187,8 +187,9 @@ elseif($page == 'accounts')
 				else
 				{
 					$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-					
-					$db->query("INSERT INTO `" . TABLE_FTP_USERS . "` (`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) VALUES ('" . (int)$userinfo['customerid'] . "', '" . $db->escape($username) . "', ENCRYPT('" . $db->escape($password) . "'), '" . $db->escape($path) . "', 'y', '" . (int)$userinfo['guid'] . "', '" . (int)$userinfo['guid'] . "')");
+
+					$cryptPassword = makeCryptPassword($db->escape($password),1);					
+					$db->query("INSERT INTO `" . TABLE_FTP_USERS . "` (`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) VALUES ('" . (int)$userinfo['customerid'] . "', '" . $db->escape($username) . "', '" . $db->escape($cryptPassword) . "', '" . $db->escape($path) . "', 'y', '" . (int)$userinfo['guid'] . "', '" . (int)$userinfo['guid'] . "')");
 					$result = $db->query("SELECT `bytes_in_used` FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = '" . $userinfo['loginname'] . "'");
 					while($row = $db->fetch_array($result))
 					{
@@ -311,11 +312,12 @@ elseif($page == 'accounts')
 					else
 					{
 						$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account password for '" . $result['username'] . "'");
-						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`=ENCRYPT('" . $db->escape($password) . "') WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+						$cryptPassword = makeCryptPassword($db->escape($password),1);
+						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 						
 						// also update customers backup user password if password of main ftp user is changed
 						if(!preg_match('/' . $settings['customer']['ftpprefix'] . '/', $result['username'])){
-						    $db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`=ENCRYPT('" . $db->escape($password) . "') WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $result['username'] . "_backup'");
+						    $db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $result['username'] . "_backup'");
 						}
 					}
 				}

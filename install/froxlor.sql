@@ -34,7 +34,7 @@ CREATE TABLE `ftp_users` (
   `username` varchar(255) NOT NULL default '',
   `uid` int(5) NOT NULL default '0',
   `gid` int(5) NOT NULL default '0',
-  `password` varchar(20) NOT NULL default '',
+  `password` varchar(128) NOT NULL default '',
   `homedir` varchar(255) NOT NULL default '',
   `shell` varchar(255) NOT NULL default '/bin/false',
   `login_enabled` enum('N','Y') NOT NULL default 'N',
@@ -469,7 +469,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('syste
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bind_enable', '1');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindconf_directory', '/etc/bind/');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindreload_command', '/etc/init.d/bind9 reload');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'version', '0.9.28-svn2');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'version', '0.9.28-svn3');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'hostname', 'SERVERNAME');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'maxloginattempts', '3');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'deactivatetime', '900');
