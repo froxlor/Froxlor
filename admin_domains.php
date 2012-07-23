@@ -1126,7 +1126,7 @@ if($page == 'domains'
 					$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` - 1 WHERE `adminid` = '" . (int)$result['adminid'] . "' ");
 				}
 
-				$ssfs = isset($_POST['specialsettingsforsubdomains']) ? intval($_POST['specialsettingsforsubdomains']) : 1;
+				$ssfs = isset($_POST['specialsettingsforsubdomains']) ? 1 : 0;
 				if($ssfs == 1)
 				{
 					$upd_specialsettings = ", `specialsettings`='" . $db->escape($specialsettings) . "' ";
