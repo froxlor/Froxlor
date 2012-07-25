@@ -17,6 +17,23 @@
  *
  */
 
+// Try to guess user/group from settings' email UID/GID
+$vmail_user=posix_getpwuid($settings['system']['vmail_uid']);
+$vmail_group=posix_getgrgid($settings['system']['vmail_gid']);
+
+/* If one of them are not set, call it 'vmail' and suggest creating user/group
+ * in scripts. */
+if ($vmail_user === false) {
+	$vmail_username="vmail";
+} else {
+	$vmail_username=$vmail_user['name'];
+}
+if ($vmail_group === false) {
+	$vmail_groupname="vmail";
+} else {
+	$vmail_groupname=$vmail_group['name'];
+}
+
 return Array(
 	'debian_squeeze' => Array(
 		'label' => 'Debian 6.0 (Squeeze)',
@@ -128,13 +145,13 @@ return Array(
 					'postfix_courier' => Array(
 						'label' => 'Postfix/Courier',
 						'commands' => Array(
+							($vmail_group === false) ? 'groupadd -g ' . $settings['system']['vmail_gid'] . ' '.$vmail_groupname : '',
+							($vmail_user === false) ? 'useradd -u ' . $settings['system']['vmail_uid'] . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
+							'mkdir -p ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . $settings['system']['vmail_homedir'],
 							'apt-get install postfix postfix-mysql libsasl2-2 libsasl2-modules libsasl2-modules-sql',
 							'mkdir -p /var/spool/postfix/etc/pam.d',
 							'mkdir -p /var/spool/postfix/var/run/mysqld',
-							'groupadd -g ' . $settings['system']['vmail_gid'] . ' vmail',
-							'useradd -u ' . $settings['system']['vmail_uid'] . ' -g vmail vmail',
-							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
@@ -189,13 +206,13 @@ return Array(
 					'postfix_dovecot' => Array(
 						'label' => 'Postfix/Dovecot',
 						'commands' => Array(
+							($vmail_group === false) ? 'groupadd -g ' . $settings['system']['vmail_gid'] . ' ' . $vmail_groupname : '',
+							($vmail_user === false) ? 'useradd -u ' . $settings['system']['vmail_uid'] . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
+							'mkdir -p ' . $settings['system']['vmail_homedir'],
+							'chown -R ' . $vmail_username . ':' . $vmail_groupname . ' ' . $settings['system']['vmail_homedir'],
 							'apt-get install postfix postfix-mysql',
 							'mkdir -p /var/spool/postfix/etc/pam.d',
 							'mkdir -p /var/spool/postfix/var/run/mysqld',
-							'groupadd -g ' . $settings['system']['vmail_gid'] . ' vmail',
-							'useradd -u ' . $settings['system']['vmail_uid'] . ' -g vmail vmail',
-							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
