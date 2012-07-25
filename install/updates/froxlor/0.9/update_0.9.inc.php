@@ -1914,5 +1914,12 @@ if(isFroxlorVersion('0.9.28-svn2')) {
 	// change lenght of passwd column
 	$db->query("ALTER TABLE `" . TABLE_FTP_USERS . "` MODIFY `password` varchar(128) NOT NULL default ''");
 	
+	// Add default setting for vmail_maildirname if not already in place
+	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'system' AND `varname` = 'vmail_maildirname';");
+	if ($db->num_rows($handle) < 1) {
+		showUpdateStep("Adding default Maildir value into Mailserver settings.");
+		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_maildirname', 'Maildir');");
+	}
+
 	updateToVersion('0.9.28-svn3');
 }
