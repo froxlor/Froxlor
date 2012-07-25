@@ -17,6 +17,23 @@
  *
  */
 
+// Try to guess user/group from settings' email UID/GID
+$vmail_user=posix_getpwuid($settings['system']['vmail_uid']);
+$vmail_group=posix_getgrgid($settings['system']['vmail_gid']);
+
+/* If one of them are not set, call it 'vmail' and suggest creating user/group
+ * in scripts. */
+if ($vmail_user === false) {
+	$vmail_username="vmail";
+} else {
+	$vmail_username=$vmail_user['name'];
+}
+if ($vmail_group === false) {
+	$vmail_groupname="vmail";
+} else {
+	$vmail_groupname=$vmail_group['name'];
+}
+
 return Array(
 	'sle_10' => Array(
 		'label' => 'SUSE Linux Enterprise 10',
@@ -71,11 +88,11 @@ return Array(
 							'usr_lib_sasl2_smtpd.conf' => '/usr/lib/sasl2/smtpd.conf'
 						),
 						'commands' => Array(
-							'mkdir -p /var/spool/postfix/etc/pam.d',
-							'groupadd -g ' . $settings['system']['vmail_gid'] . ' vmail',
-							'useradd -u ' . $settings['system']['vmail_uid'] . ' -g vmail vmail',
+							($vmail_group === false) ? 'groupadd -g ' . $settings['system']['vmail_gid'] . ' ' . $vmail_groupname : '',
+							($vmail_user === false) ? 'useradd -u ' . $settings['system']['vmail_uid'] . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . $settings['system']['vmail_homedir'],
+							'mkdir -p /var/spool/postfix/etc/pam.d',
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
