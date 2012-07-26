@@ -201,6 +201,7 @@ while($row = $db->fetch_array($result_tasks))
 			// define paths
 			$userhomedir = makeCorrectDir($settings['system']['documentroot_prefix'] . '/' . $row['data']['loginname'] . '/');
 			$usermaildir = makeCorrectDir($settings['system']['vmail_homedir'] . '/' . $row['data']['loginname'] . '/');
+			$userlogdir = makeCorrectDir($settings['system']['logfiles_directory'] . '/' . $row['data']['loginname'] . '/');
 
 			// stats directory
 			if($settings['system']['awstats_enabled'] == '1')
@@ -216,6 +217,10 @@ while($row = $db->fetch_array($result_tasks))
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($usermaildir));
 			safe_exec('mkdir -p ' . escapeshellarg($usermaildir));
 
+			// logdir
+			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userlogdir));
+			safe_exec('mkdir -p ' . escapeshellarg($userlogdir));
+
 			//check if admin of customer has added template for new customer directories
 			if((int)$row['data']['store_defaultindex'] == 1)
 			{
@@ -225,11 +230,14 @@ while($row = $db->fetch_array($result_tasks))
 			// strip of last slash of paths to have correct chown results
 			$userhomedir = (substr($userhomedir, 0, -1) == '/') ? substr($userhomedir, 0, -1) : $userhomedir;
 			$usermaildir = (substr($usermaildir, 0, -1) == '/') ? substr($usermaildir, 0, -1) : $usermaildir;
+			$userlogdir = (substr($userlogdir, 0, -1) == '/') ? substr($userlogdir, 0, -1) : $userlogdir;
 
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($userhomedir));
 			safe_exec('chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($userhomedir));
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)$settings['system']['vmail_uid'] . ':' . (int)$settings['system']['vmail_gid'] . ' ' . escapeshellarg($usermaildir));
 			safe_exec('chown -R ' . (int)$settings['system']['vmail_uid'] . ':' . (int)$settings['system']['vmail_gid'] . ' ' . escapeshellarg($usermaildir));
+			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)$settings['system']['httpuser'] . ':' . (int)$settings['system']['httpgroup'] . ' ' . escapeshellarg($userlogdir));
+			safe_exec('chown -R ' . (int)$settings['system']['httpuser'] . ':' . (int)$settings['system']['httpgroup'] . ' ' . escapeshellarg($userlogdir));
 		}
 	}
 
@@ -264,7 +272,7 @@ while($row = $db->fetch_array($result_tasks))
 	elseif ($row['type'] == '5')
 	{
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Creating new FTP-home');
-		$result_directories = $db->query('SELECT `f`.`homedir`, `f`.`uid`, `f`.`gid`, `c`.`documentroot` AS `customerroot` FROM `' . TABLE_FTP_USERS . '` `f` LEFT JOIN `' . TABLE_PANEL_CUSTOMERS . '` `c` USING (`customerid`) WHERE `f`.`username` NOT LIKE \'%_backup\'');
+		$result_directories = $db->query('SELECT `f`.`homedir`, `f`.`uid`, `f`.`gid`, `c`.`documentroot` AS `customerroot` FROM `' . TABLE_FTP_USERS . '` `f` LEFT JOIN `' . TABLE_PANEL_CUSTOMERS . '` `c` USING (`customerid`) WHERE `f`.`username` NOT LIKE \'%_backup\ OR `f`.`username` NOT LIKE \'%_logs\'');
 
 		while($directory = $db->fetch_array($result_directories))
 		{
@@ -308,6 +316,20 @@ while($row = $db->fetch_array($result_tasks))
 				{
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($backupdir));
 					safe_exec('rm -rf '.escapeshellarg($backupdir));
+				}
+
+				/*
+				 * remove log dir
+				 */
+				
+				$logdir = makeCorrectDir($settings['system']['logfiles_directory'] . $row['data']['loginname']);
+				
+				if($logdir != '/'
+				&& $logdir != $settings['system']['logfiles_directory']
+				&& substr($logdir, 0, strlen($settings['system']['logfiles_directory'])) == $settings['system']['logfiles_directory'])
+				{
+					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($logdir));
+					safe_exec('rm -rf '.escapeshellarg($logdir));
 				}
 				
 				/*
@@ -489,6 +511,25 @@ while($row = $db->fetch_array($result_tasks))
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task10 skipped - filesystem quota not enabled');
 		}
 	}
+	
+	
+	/**
+	 * TYPE=11 MEANS TO CREATE LOG DIRS FOR EXISTING USERS NEEDED BY UPDATE TO 0.9.28-svn4
+	 */
+	elseif ($row['type'] == '11')
+	{
+	$result_customers = $db->query("SELECT loginname FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE 1;");
+	
+		while($row_customers = $db->fetch_array($result_customers))
+		{
+			$userlogdir = makeCorrectDir($settings['system']['logfiles_directory'] . '/' . $row_customers['loginname'] . '/');
+			safe_exec('mkdir -p ' . escapeshellarg($userlogdir));
+
+			$userlogdir = (substr($userlogdir, 0, -1) == '/') ? substr($userlogdir, 0, -1) : $userlogdir;
+			safe_exec('chown -R ' . (int)$settings['system']['httpuser'] . ':' . (int)$settings['system']['httpgroup'] . ' ' . escapeshellarg($userlogdir));
+		}
+	}
+
 }
 
 if($db->num_rows($result_tasks) != 0)

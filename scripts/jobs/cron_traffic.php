@@ -239,8 +239,8 @@ while($row = $db->fetch_array($result))
 				$fh = fopen($logrotatefile, 'w');
 
 				$logconf = '# ' . basename($logrotatefile) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" .
-						$settings['system']['logfiles_directory'] . $row['loginname'] .'-' . $domain . '-access.log ' .
-						$settings['system']['logfiles_directory'] . $row['loginname'] .'-' . $domain . '-error.log {' . "\n" .
+						$settings['system']['logfiles_directory'] . '/' . $row['loginname'] . '/' . $row['loginname'] .'-' . $domain . '-access.log ' .
+						$settings['system']['logfiles_directory'] . '/' . $row['loginname'] . '/' . $row['loginname'] .'-' . $domain . '-error.log {' . "\n" .
 						$settings['system']['logrotate_interval'] . "\n" .
 						'missingok' . "\n" .
 						'rotate ' . $settings['system']['logrotate_keep'] . "\n" .
@@ -292,8 +292,8 @@ while($row = $db->fetch_array($result))
 			$fh = fopen($logrotatefile, 'w');
 
 			$logconf = '# ' . basename($logrotatefile) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" .
-				$settings['system']['logfiles_directory'] . $row['loginname'] . '-access.log ' .
-				$settings['system']['logfiles_directory'] . $row['loginname'] . '-error.log {' . "\n" .
+				$settings['system']['logfiles_directory'] . '/' . $row['loginname'] . '/' . $row['loginname'] . '-access.log ' .
+				$settings['system']['logfiles_directory'] . '/' . $row['loginname'] . '/' . $row['loginname'] . '-error.log {' . "\n" .
 				$settings['system']['logrotate_interval'] . "\n" .
 				'missingok' . "\n" .
 				'rotate ' . $settings['system']['logrotate_keep'] . "\n" .

@@ -1923,3 +1923,22 @@ if(isFroxlorVersion('0.9.28-svn2')) {
 
 	updateToVersion('0.9.28-svn3');
 }
+	
+if(isFroxlorVersion('0.9.28-svn3')) {
+	showUpdateStep("Updating from 0.9.28-svn3 to 0.9.28-svn4");
+	lastStepStatus(0);
+
+        $result_customers = $db->query("SELECT `customerid`, `loginname`, `guid` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE 1;");
+
+        while($row_customers = $db->fetch_array($result_customers))
+        {
+		$result_password = $db->query("SELECT `password` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid` = '" . $row_customers['customerid'] . "';");
+		$row_password = $db->fetch_array($result_password);
+		$db->query("INSERT INTO `" . TABLE_FTP_USERS . "` " . "(`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) " . "VALUES ('" . $db->escape($row_customers['customerid']) . "', '" . $db->escape($row_customers['loginname']) . "_logs', '" . $db->escape($row_password['password']) . "', '" . $settings['system']['logfiles_directory'] . $db->escape($row_customers['loginname']) . "', 'y', '" . $db->escape($row_customers['guid']) . "', '" . $db->escape($row_customers['guid']) . "')");
+	}
+
+	inserttask('11');
+	inserttask('1');
+	
+	updateToVersion('0.9.28-svn4');
+}
