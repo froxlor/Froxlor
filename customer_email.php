@@ -237,7 +237,7 @@ elseif($page == 'emails')
 					standard_error('emailiswrong', $email_full);
 				}
 
-				$email_check = $db->query_first("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE ( `email`='" . $db->escape($email) . "' OR `email_full` = '" . $db->escape($email_full) . "' ) AND `customerid`='" . (int)$userinfo['customerid'] . "'");
+				$email_check = $db->query_first("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE (`email` = '" . strtolower($db->escape($email)) . "' OR `email_full` = '" . strtolower($db->escape($email_full)) . "') AND `customerid`='" . (int)$userinfo['customerid'] . "'");
 
 				if($email == ''
 				   || $email_full == ''
@@ -253,7 +253,7 @@ elseif($page == 'emails')
 				{
 					standard_error('maindomainnonexist', $domain);
 				}
-				elseif($email_check['email_full'] == $email_full)
+				elseif(strtolower($email_check['email_full']) == strtolower($email_full))
 				{
 					standard_error('emailexistalready', $email_full);
 				}
@@ -281,7 +281,7 @@ elseif($page == 'emails')
 					$domains.= makeoption($idna_convert->decode($row['domain']), $row['domain']);
 				}
 
-				#$iscatchall = makeyesno('iscatchall', '1', '0', '0');
+				//$iscatchall = makeyesno('iscatchall', '1', '0', '0');
 
 				$email_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_add.php';
 				$email_add_form = htmlform::genHTMLForm($email_add_data);
@@ -439,11 +439,42 @@ elseif($page == 'accounts')
 							$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
 						}
 
-						$db->query("INSERT INTO `" . TABLE_MAIL_USERS . "` (`customerid`, `email`, `username`, " . ($settings['system']['mailpwcleartext'] == '1' ? '`password`, ' : '') . " `password_enc`, `homedir`, `maildir`, `uid`, `gid`, `domainid`, `postfix`, `quota`, `imap`, `pop3`) VALUES ('" . (int)$userinfo['customerid'] . "', '" . $db->escape($email_full) . "', '" . $db->escape($username) . "', " . ($settings['system']['mailpwcleartext'] == '1' ? "'" . $db->escape($password) . "'," : '') . " ENCRYPT('" . $db->escape($password) . "'), '" . $db->escape($settings['system']['vmail_homedir']) . "', '" . $db->escape($userinfo['loginname'] . '/' . $email_full . '/') . "', '" . (int)$settings['system']['vmail_uid'] . "', '" . (int)$settings['system']['vmail_gid'] . "', '" . (int)$result['domainid'] . "', 'y', '" . (int)$quota . "', '" . (int)$userinfo['imap'] . "', '" . (int)$userinfo['pop3'] . "')");
+						$cryptPassword = makeCryptPassword($db->escape($password),1);
+
+						$email_user=substr($email_full,0,strrpos($email_full,"@"));
+						$email_domain=substr($email_full,strrpos($email_full,"@")+1);
+						$maildirname=trim($settings['system']['vmail_maildirname']);
+						// Add trailing slash to Maildir if needed
+						$maildirpath=$maildirname;
+						if (!empty($maildirname) and substr($maildirname,-1) != "/") $maildirpath.="/";
+
+						$db->query("INSERT INTO `" . TABLE_MAIL_USERS . 
+							"` (`customerid`, `email`, `username`, " . ($settings['system']['mailpwcleartext'] == '1' ? '`password`, ' : '') . " `password_enc`, `homedir`, `maildir`, `uid`, `gid`, `domainid`, `postfix`, `quota`, `imap`, `pop3`) ".
+							"VALUES (".
+							"'" . (int)$userinfo['customerid'] . "', ".
+							"'" . $db->escape($email_full) . "', ".
+							"'" . $db->escape($username) . "', " .
+							($settings['system']['mailpwcleartext'] == '1' ? "'" . $db->escape($password) . "', " : '') .
+							"'" . $db->escape($cryptPassword) . "', ".
+							"'" . $db->escape($settings['system']['vmail_homedir']) . "', '" . $db->escape($userinfo['loginname'] . '/' . $email_domain . "/" . $email_user . "/" . $maildirpath) . "', ".
+							"'" . (int)$settings['system']['vmail_uid'] . "', ".
+							"'" . (int)$settings['system']['vmail_gid'] . "', ".
+							"'" . (int)$result['domainid'] . "', ".
+							"'y', ".
+							"'" . (int)$quota . "', ".
+							"'" . (int)$userinfo['imap'] . "', ".
+							"'" . (int)$userinfo['pop3'] . "')");
+
 						$popaccountid = $db->insert_id();
 						$result['destination'].= ' ' . $email_full;
-						$db->query("UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `destination` = '" . $db->escape(makeCorrectDestination($result['destination'])) . "', `popaccountid` = '" . (int)$popaccountid . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
-						$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_accounts_used`=`email_accounts_used`+1, `email_quota_used`=`email_quota_used`+" . (int)$quota . " WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
+						$db->query("UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET ".
+							"`destination` = '" . $db->escape(makeCorrectDestination($result['destination'])) . "', ".
+							"`popaccountid` = '" . (int)$popaccountid . "' ".
+							"WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+						$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET ".
+							"`email_accounts_used`=`email_accounts_used`+1, ".
+							"`email_quota_used`=`email_quota_used`+" . (int)$quota . " ".
+							"WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 						$log->logAction(USR_ACTION, LOG_INFO, "added email account for '" . $email_full . "'");
 						$replace_arr = array(
 							'EMAIL' => $email_full,
@@ -557,7 +588,8 @@ elseif($page == 'accounts')
 				$password = validatePassword($password);
 				
 				$log->logAction(USR_ACTION, LOG_NOTICE, "changed email password for '" . $result['email_full'] . "'");
-				$result = $db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET " . ($settings['system']['mailpwcleartext'] == '1' ? "`password` = '" . $db->escape($password) . "', " : '') . " `password_enc`=ENCRYPT('" . $db->escape($password) . "') WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$result['popaccountid'] . "'");
+				$cryptPassword = makeCryptPassword($db->escape($password),1);
+				$result = $db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET " . ($settings['system']['mailpwcleartext'] == '1' ? "`password` = '" . $db->escape($password) . "', " : '') . " `password_enc`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$result['popaccountid'] . "'");
 				redirectTo($filename, Array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 			}
 			else

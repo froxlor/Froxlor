@@ -22,7 +22,7 @@
 	</if>
 	<link href="templates/Froxlor/froxlor.css" rel="stylesheet" type="text/css" />
 	<!--[if IE]><link rel="stylesheet" href="templates/Froxlor/froxlor_ie.css" type="text/css" /><![endif]-->
-	<link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+	<link href="css/jquery.jquery-ui.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="templates/Froxlor/js/froxlor.js"></script>
 	<link href="images/favicon.ico" rel="icon" type="image/x-icon" />
 </head>

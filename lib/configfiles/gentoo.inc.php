@@ -17,6 +17,23 @@
  *
  */
 
+// Try to guess user/group from settings' email UID/GID
+$vmail_user=posix_getpwuid($settings['system']['vmail_uid']);
+$vmail_group=posix_getgrgid($settings['system']['vmail_gid']);
+
+/* If one of them are not set, call it 'vmail' and suggest creating user/group
+ * in scripts. */
+if ($vmail_user === false) {
+	$vmail_username="vmail";
+} else {
+	$vmail_username=$vmail_user['name'];
+}
+if ($vmail_group === false) {
+	$vmail_groupname="vmail";
+} else {
+	$vmail_groupname=$vmail_group['name'];
+}
+
 return Array(
 	'gentoo' => Array(
 		'label' => 'Gentoo',
@@ -123,30 +140,25 @@ return Array(
 					'postfix_courier' => Array(
 						'label' => 'Postfix/Courier',
 						'commands_1' => Array(
+							($vmail_group === false) ? 'groupadd -g ' . $settings['system']['vmail_gid'] . ' ' . $vmail_groupname : '',
+							($vmail_user === false) ? 'useradd -u ' . $settings['system']['vmail_uid'] . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
 							'echo "mail-mta/postfix -dovecot-sasl sasl" >> /etc/portage/package.use',
 							'emerge -av postfix',            
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir'],
 							'mv /etc/postfix/main.cf /etc/postfix/main.cf.gentoo',
 							'touch /etc/postfix/main.cf',
-							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
-							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
-							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'touch /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'touch /etc/sasl2/smtpd.conf',
 							'chown root:root /etc/postfix/main.cf',
-							'chown root:postfix /etc/postfix/mysql-virtual_alias_maps.cf',
-							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_domains.cf',
-							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'chown root:postfix /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chown root:root /etc/sasl2/smtpd.conf',
 							'chmod 0644 /etc/postfix/main.cf',
-							'chmod 0640 /etc/postfix/mysql-virtual_alias_maps.cf',
-							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_domains.cf',
-							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'chmod 0640 /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chmod 0600 /etc/sasl2/smtpd.conf',
+							'for suffix in {alias,mailbox,uid,gid}_maps mailbox_domains sender_permissions; do',
+							' touch /etc/postfix/mysql-virtual_${suffix}.cf',
+							' chown root:postfix /etc/postfix/mysql-virtual_${suffix}.cf',
+							' chmod 0640 /etc/postfix/mysql-virtual_${suffix}.cf',
+							'done'
 						),
 						'files' => Array(
 							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
@@ -154,6 +166,8 @@ return Array(
 							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
 							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf',
+							'etc_postfix_mysql-virtual_uid_maps.cf' => '/etc/postfix/mysql-virtual_uid_maps.cf',
+							'etc_postfix_mysql-virtual_gid_maps.cf' => '/etc/postfix/mysql-virtual_gid_maps.cf',
 							'etc_sasl2_smtpd.conf' => '/etc/sasl2/smtpd.conf'
 						),
 						'commands_2' => Array(
@@ -166,30 +180,22 @@ return Array(
 					'postfix_dovecot' => Array(
 						'label' => 'Postfix/Dovecot',
 						'commands_1' => Array(
+							($vmail_group === false) ? 'groupadd -g ' . $settings['system']['vmail_gid'] . ' ' . $vmail_groupname : '',
+							($vmail_user === false) ? 'useradd -u ' . $settings['system']['vmail_uid'] . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
 							'echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use',
               				'emerge -av postfix',
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_user['name'].':'.$vmail_group['name'].' ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir'],
 							'mv /etc/postfix/main.cf /etc/postfix/main.cf.gentoo',
-							'touch /etc/postfix/main.cf',
-							'touch /etc/postfix/master.cf',
-							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
-							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
-							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'touch /etc/postfix/mysql-virtual_sender_permissions.cf',
-							'chown root:root /etc/postfix/main.cf',
-							'chown root:root /etc/postfix/master.cf',
-							'chown root:postfix /etc/postfix/mysql-virtual_alias_maps.cf',
-							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_domains.cf',
-							'chown root:postfix /etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'chown root:postfix /etc/postfix/mysql-virtual_sender_permissions.cf',
-							'chmod 0644 /etc/postfix/main.cf',
-							'chmod 0644 /etc/postfix/master.cf',
-							'chmod 0640 /etc/postfix/mysql-virtual_alias_maps.cf',
-							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_domains.cf',
-							'chmod 0640 /etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'chmod 0640 /etc/postfix/mysql-virtual_sender_permissions.cf'
+							'touch /etc/postfix/{main,master}.cf',
+							'chown root:root /etc/postfix/{main,master}.cf',
+							'chmod 0644 /etc/postfix/{main,master}.cf',
+							'for suffix in {alias,mailbox,uid,gid}_maps mailbox_domains sender_permissions; do',
+							' touch /etc/postfix/mysql-virtual_${suffix}.cf',
+							' chown root:postfix /etc/postfix/mysql-virtual_${suffix}.cf',
+							' chmod 0640 /etc/postfix/mysql-virtual_${suffix}.cf',
+							'done'
 						),
 						'files' => Array(
 							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
@@ -197,7 +203,9 @@ return Array(
 							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
 							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf'
+							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf',
+							'etc_postfix_mysql-virtual_uid_maps.cf' => '/etc/postfix/mysql-virtual_uid_maps.cf',
+							'etc_postfix_mysql-virtual_gid_maps.cf' => '/etc/postfix/mysql-virtual_gid_maps.cf'
 						),
 						'commands_2'  => Array(
 							'rc-update add postfix default'

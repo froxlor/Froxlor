@@ -209,6 +209,10 @@ function getOutstandingTasks()
 			$task_desc = $lng['tasks']['deleting_customerfiles'];
 			$task_desc = str_replace('%loginname%', $loginname, $task_desc);
 		}
+		elseif($row['type'] == '7')
+		{
+			$task_desc = $lng['tasks']['remove_emailacc_files'];
+		}
 		/*
 		 * Set FS - quota
 		 */

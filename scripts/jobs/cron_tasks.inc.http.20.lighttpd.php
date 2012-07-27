@@ -1038,21 +1038,28 @@ class lighttpd
 		
 			$configdir = $this->settings['phpfpm']['configdir'];
 			$phpfpm_file_dirhandle = opendir($this->settings['phpfpm']['configdir']);
-		
-			while(false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle)))
-			{
-				if($phpfpm_filename != '.'
-					&& $phpfpm_filename != '..'
-					&& !in_array($phpfpm_filename, $known_phpfpm_files)
-					&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename)))
-					{
+
+			if ($phpfpm_file_dirhandle !== false) {
+
+				while (false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle))) {
+
+					if (is_array($known_phpfpm_files)
+						&& $phpfpm_filename != '.'
+						&& $phpfpm_filename != '..'
+						&& !in_array($phpfpm_filename, $known_phpfpm_files)
+						&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename))
+					) {
 						fwrite($this->debugHandler, '  lighttpd::wipeOutOldConfigs: unlinking PHP5-FPM ' . $phpfpm_filename . "\n");
 						$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $phpfpm_filename);
 						unlink(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename));
 					}
+					if (!is_array($known_phpfpm_files)) {
+						$this->logger->logAction(CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM Configs Not written!!");
+					}
+				}
+			} else {
+				$this->logger->logAction(CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM configuration path could not be read (".$this->settings['phpfpm']['configdir'].")");
 			}
 		}
 	}
 }
-
-?>
