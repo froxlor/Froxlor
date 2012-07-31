@@ -223,7 +223,7 @@ while($row = $db->fetch_array($result))
 
 				if($settings['system']['awstats_enabled'] == '0')
 				{
-					$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
+					$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'] . '/' . $row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
 				}
 			}
 		}
@@ -277,7 +277,7 @@ while($row = $db->fetch_array($result))
 		}
 		else
 		{
-			$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
+			$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'] . '/' . $row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
 		}
 
 		// make the stuff readable for the customer, #258

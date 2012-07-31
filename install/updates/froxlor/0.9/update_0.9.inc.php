@@ -1929,7 +1929,9 @@ if(isFroxlorVersion('0.9.28-svn3')) {
 	lastStepStatus(0);
 
         $result_customers = $db->query("SELECT `customerid`, `loginname`, `guid` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE 1;");
-
+	
+	showUpdateStep("Adding log users to ftp table.");
+	
         while($row_customers = $db->fetch_array($result_customers))
         {
 		$result_password = $db->query("SELECT `password` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid` = '" . $row_customers['customerid'] . "';");
