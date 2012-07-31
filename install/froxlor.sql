@@ -644,6 +644,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('syste
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_interval', 'weekly');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_keep', '4');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_idle_timeout', '30');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'patheditlimit', '2');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'patheditfilter', 'log|tmp');
 # --------------------------------------------------------
 
 #

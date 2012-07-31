@@ -1921,5 +1921,9 @@ if(isFroxlorVersion('0.9.28-svn2')) {
 		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_maildirname', 'Maildir');");
 	}
 
+	// Adding new panel settings, see #1020
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'patheditlimit', '2');");
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'patheditfilter', 'log|tmp');");
+
 	updateToVersion('0.9.28-svn3');
 }

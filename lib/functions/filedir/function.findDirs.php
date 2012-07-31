@@ -32,7 +32,36 @@
  *
  * @author Martin Burchert  <martin.burchert@syscp.de>
  * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
+ * @author Fabian Petzold   <mail@fpcom.de>
+ * @author Arnold Bechtoldt <arnoldB@froxlor.org>
  */
+
+function _findDirs($list, &$_fileList, $counter, $limit, $filter)
+{
+	foreach($list AS $path) 
+	{
+		$_fileList[] = $path;
+
+		$tmp = scandir($path);
+		$list2 = array();
+		foreach($tmp AS $fo)
+		{
+			if(is_dir($path.$fo)
+				&& $fo != "."
+				&& $fo != ".."
+				&& !preg_match("/".$filter."/i", $fo)
+			)
+			{
+				array_push($list2, $path.$fo."/");
+			}
+		}
+
+		if( $counter < $limit)
+		{
+			_findDirs($list2, &$_fileList, $counter+1, $limit, $filter);
+		}
+	}
+}
 
 function findDirs($path, $uid, $gid)
 {
@@ -40,51 +69,10 @@ function findDirs($path, $uid, $gid)
 		$path
 	);
 	$_fileList = array();
-
-	while(sizeof($list) > 0)
-	{
-		$path = array_pop($list);
-		$path = makeCorrectDir($path);
-		
-		if(!is_readable($path) || !is_executable($path))
-		{
-			//return $_fileList;
-			// only 'skip' this directory, #611
-			continue;
-		}
-
-		$dh = opendir($path);
-
-		if($dh === false)
-		{
-			/*
-			 * this should never be called because we checked
-			 * 'is_readable' before...but we never know what might happen
-			 */
-			standard_error('cannotreaddir', $path);
-			return null;
-		}
-		else
-		{
-			while(false !== ($file = @readdir($dh)))
-			{
-				if($file == '.'
-				   && (fileowner($path . '/' . $file) == $uid || filegroup($path . '/' . $file) == $gid))
-				{
-					$_fileList[] = makeCorrectDir($path);
-				}
-
-				if(is_dir($path . '/' . $file)
-				   && $file != '..'
-				   && $file != '.')
-				{
-					array_push($list, $path . '/' . $file);
-				}
-			}
-
-			@closedir($dh);
-		}
-	}
+	$filter    = $settings['panel']['patheditfilter'];
+	$limit     = $settings['panel']['patheditlimit'];
+	_findDirs($list, &$_fileList, 0, $limit, $filter);
 
 	return $_fileList;
 }
+
