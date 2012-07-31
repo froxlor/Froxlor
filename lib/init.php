@@ -266,6 +266,7 @@ else
 
 $langs = array();
 $languages = array();
+$iso = array();
 
 // query the whole table
 $query = 'SELECT * FROM `' . TABLE_PANEL_LANGUAGE . '` ';
@@ -275,6 +276,7 @@ $result = $db->query($query);
 while($row = $db->fetch_array($result))
 {
 	$langs[$row['language']][] = $row;
+	$iso[$row['iso']] = $row['language'];
 }
 
 // buildup $languages for the login screen
@@ -291,7 +293,7 @@ if (isset($userinfo['language']) && isset($languages[$userinfo['language']]))
 else
 {
 	if(!isset($userinfo['def_language'])
-	   || !isset($languages[$userinfo['def_language']]))
+	   || !isset($languages[$userinfo['def_language']]))// this will always evaluat  true, since it is the above statement inverted. @todo remove
 	{
 		if(isset($_GET['language'])
 		   && isset($languages[$_GET['language']]))
@@ -300,7 +302,22 @@ else
 		}
 		else
 		{
-			$language = $settings['panel']['standardlanguage'];
+			$accept_langs = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			for($i = 0; $i<count($accept_langs); $i++) {
+			    # this only works for most common languages. some (uncommon) languages have a 3 letter iso-code.
+			    # to be able to use these also, we would have to depend on the intl extension for php (using Locale::lookup or similar)
+			    # as long as froxlor does not support any of these languages, we can leave it like that.
+				if(isset($iso[substr($accept_langs[$i],0,2)])) {
+					$language=$iso[substr($accept_langs[$i],0,2)];
+					break;
+				}
+			}
+			unset($iso);
+			
+			// if HTTP_ACCEPT_LANGUAGES has no valid langs, use default (very unlikely)
+			if(!strlen($language)>0) {
+				$language = $settings['panel']['standardlanguage'];
+			}
 		}
 	}
 	else
@@ -308,6 +325,7 @@ else
 		$language = $userinfo['def_language'];
 	}
 }
+
 
 // include every english language file we can get
 foreach($langs['English'] as $key => $value)

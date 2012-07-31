@@ -92,13 +92,23 @@ if($page == 'admins'
 				/**
 				 * percent-values for progressbar
 				 */
-				if($row['diskspace'] > 0) {
-					$percent = round(($row['diskspace_used']*100)/$row['diskspace'], 2);
-					$doublepercent = round($percent*2, 2);
-				} else {
-					$percent = 0;
-					$doublepercent = 0;
-				}
+                                //For Disk usage
+                                if ($row['diskspace'] > 0) {
+                                        $disk_percent = round(($row['diskspace_used']*100)/$row['diskspace'], 2);
+                                        $disk_doublepercent = round($disk_percent*2, 2);
+                                } else {
+                                        $disk_percent = 0;
+                                        $disk_doublepercent = 0;
+                                }
+
+				//For Traffic usage
+                                if ($row['traffic'] > 0) {
+                                        $traffic_percent = round(($row['traffic_used']*100)/$row['traffic'], 2);
+                                        $traffic_doublepercent = round($traffic_percent*2, 2);
+                                } else {
+                                        $traffic_percent = 0;
+                                        $traffic_doublepercent = 0;
+                                }
 				/* */
 
 				$row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota email_autoresponder ftps subdomains tickets');
@@ -281,7 +291,7 @@ if($page == 'admins'
 					$number_of_aps_packages = - 1;
 				}
 
-				$can_manage_aps_packages = intval($_POST['can_manage_aps_packages']);
+				$can_manage_aps_packages = isset($_POST['can_manage_aps_packages']) ? 1 : 0;
 			}
 			else
 			{
@@ -463,11 +473,13 @@ if($page == 'admins'
 			$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			#$change_serversettings = makeyesno('change_serversettings', '1', '0', '0');
-			#$customers_see_all = makeyesno('customers_see_all', '1', '0', '0');
-			#$domains_see_all = makeyesno('domains_see_all', '1', '0', '0');
-			#$caneditphpsettings = makeyesno('caneditphpsettings', '1', '0', '0');
-			#$can_manage_aps_packages = makeyesno('can_manage_aps_packages', '1', '0', '0');
+			/*
+			$change_serversettings = makeyesno('change_serversettings', '1', '0', '0');
+			$customers_see_all = makeyesno('customers_see_all', '1', '0', '0');
+			$domains_see_all = makeyesno('domains_see_all', '1', '0', '0');
+			$caneditphpsettings = makeyesno('caneditphpsettings', '1', '0', '0');
+			$can_manage_aps_packages = makeyesno('can_manage_aps_packages', '1', '0', '0');
+			*/
 			$number_of_aps_packages_ul = makecheckbox('number_of_aps_packages_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 
 			$admin_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/admin/formfield.admin_add.php';
@@ -522,7 +534,7 @@ if($page == 'admins'
 				{
 					$password = validate($_POST['admin_password'], 'new password');
 					$def_language = validate($_POST['def_language'], 'default language');
-					$deactivated = intval($_POST['deactivated']);
+					$deactivated = isset($_POST['deactivated']) ? 1 : 0;
 					$customers = intval_ressource($_POST['customers']);
 
 					if(isset($_POST['customers_ul']))
@@ -628,7 +640,7 @@ if($page == 'admins'
 						$number_of_aps_packages = - 1;
 					}
 
-					$can_manage_aps_packages = intval($_POST['can_manage_aps_packages']);
+					$can_manage_aps_packages = isset($_POST['can_manage_aps_packages']) ? 1 : 0;
 
 					$customers_see_all = 0;
 					if(isset($_POST['customers_see_all']))
@@ -644,7 +656,7 @@ if($page == 'admins'
 					
 					$change_serversettings = 0;
 					if(isset($_POST['change_serversettings']))
-						$change_serversettings = intval($_POST['change_serversettings']);
+						$change_serversettings = isset($_POST['change_serversettings']) ? 1 : 0;
 					
 					$diskspace = intval($_POST['diskspace']);
 
@@ -852,13 +864,14 @@ if($page == 'admins'
 					}
 				}
 
-				#$change_serversettings = makeyesno('change_serversettings', '1', '0', $result['change_serversettings']);
-				#$customers_see_all = makeyesno('customers_see_all', '1', '0', $result['customers_see_all']);
-				#$domains_see_all = makeyesno('domains_see_all', '1', '0', $result['domains_see_all']);
-				#$caneditphpsettings = makeyesno('caneditphpsettings', '1', '0', $result['caneditphpsettings']);
-				#$deactivated = makeyesno('deactivated', '1', '0', $result['deactivated']);
-				#$can_manage_aps_packages = makeyesno('can_manage_aps_packages', '1', '0', $result['can_manage_aps_packages']);
-
+				/*
+				$change_serversettings = makeyesno('change_serversettings', '1', '0', $result['change_serversettings']);
+				$customers_see_all = makeyesno('customers_see_all', '1', '0', $result['customers_see_all']);
+				$domains_see_all = makeyesno('domains_see_all', '1', '0', $result['domains_see_all']);
+				$caneditphpsettings = makeyesno('caneditphpsettings', '1', '0', $result['caneditphpsettings']);
+				$deactivated = makeyesno('deactivated', '1', '0', $result['deactivated']);
+				$can_manage_aps_packages = makeyesno('can_manage_aps_packages', '1', '0', $result['can_manage_aps_packages']);
+				*/
 				$result = htmlentities_array($result);
 
 				$admin_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/admin/formfield.admin_edit.php';

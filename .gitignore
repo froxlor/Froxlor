@@ -4,3 +4,4 @@ temp/*
 .project
 .settings/
 *.diff
+*~

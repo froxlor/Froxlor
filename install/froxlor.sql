@@ -34,7 +34,7 @@ CREATE TABLE `ftp_users` (
   `username` varchar(255) NOT NULL default '',
   `uid` int(5) NOT NULL default '0',
   `gid` int(5) NOT NULL default '0',
-  `password` varchar(20) NOT NULL default '',
+  `password` varchar(128) NOT NULL default '',
   `homedir` varchar(255) NOT NULL default '',
   `shell` varchar(255) NOT NULL default '/bin/false',
   `login_enabled` enum('N','Y') NOT NULL default 'N',
@@ -466,10 +466,11 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('syste
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_uid', '2000');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_gid', '2000');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_homedir', '/var/customers/mail/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_maildir', 'Maildir');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bind_enable', '1');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindconf_directory', '/etc/bind/');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindreload_command', '/etc/init.d/bind9 reload');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'version', '0.9.27-svn3');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'version', '0.9.28-svn3');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'hostname', 'SERVERNAME');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'maxloginattempts', '3');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'deactivatetime', '900');
@@ -618,6 +619,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfp
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'vhost_httpuser', 'froxlorlocal');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'vhost_httpgroup', 'froxlorlocal');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'idle_timeout', '30');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_enable', '1');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_webmax', '90');
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_trafficmax', '90');
@@ -798,9 +800,10 @@ CREATE TABLE `panel_diskspace_admins` (
 
 DROP TABLE IF EXISTS `panel_languages`;
 CREATE TABLE `panel_languages` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `language` varchar(30) NOT NULL default '',
-  `file` varchar(255) NOT NULL default '',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `language` varchar(30) NOT NULL DEFAULT '',
+  `iso` char(3) NOT NULL DEFAULT 'foo',
+  `file` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM ;
 
@@ -808,23 +811,24 @@ CREATE TABLE `panel_languages` (
 # Dumping data for table `panel_languages`
 #
 
-INSERT INTO `panel_languages` VALUES (1, 'Deutsch', 'lng/german.lng.php');
-INSERT INTO `panel_languages` VALUES (2, 'English', 'lng/english.lng.php');
-INSERT INTO `panel_languages` VALUES (3, 'Fran&ccedil;ais', 'lng/french.lng.php');
-INSERT INTO `panel_languages` VALUES (4, 'Chinese', 'lng/zh-cn.lng.php');
-INSERT INTO `panel_languages` VALUES (5, 'Catalan', 'lng/catalan.lng.php');
-INSERT INTO `panel_languages` VALUES (6, 'Espa&ntilde;ol', 'lng/spanish.lng.php');
-INSERT INTO `panel_languages` VALUES (7, 'Portugu&ecirc;s', 'lng/portugues.lng.php');
-INSERT INTO `panel_languages` VALUES (8, 'Russian', 'lng/russian.lng.php');
-INSERT INTO `panel_languages` VALUES (9, 'Danish', 'lng/danish.lng.php');
-INSERT INTO `panel_languages` VALUES (10, 'Italian', 'lng/italian.lng.php');
-INSERT INTO `panel_languages` VALUES (11, 'Bulgarian', 'lng/bulgarian.lng.php');
-INSERT INTO `panel_languages` VALUES (12, 'Slovak', 'lng/slovak.lng.php');
-INSERT INTO `panel_languages` VALUES (13, 'Dutch', 'lng/dutch.lng.php');
-INSERT INTO `panel_languages` VALUES (14, 'Hungarian', 'lng/hungarian.lng.php');
-INSERT INTO `panel_languages` VALUES (15, 'Swedish', 'lng/swedish.lng.php');
-INSERT INTO `panel_languages` VALUES (16, 'Czech', 'lng/czech.lng.php');
-INSERT INTO `panel_languages` VALUES (17, 'Polski', 'lng/polish.lng.php');
+INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
+    (1, 'Deutsch', 'de', 'lng/german.lng.php'),
+    (2, 'English', 'en', 'lng/english.lng.php'),
+    (3, 'Fran&ccedil;ais', 'fr', 'lng/french.lng.php'),
+    (4, 'Chinese', 'zh', 'lng/zh-cn.lng.php'),
+    (5, 'Catalan', 'ca', 'lng/catalan.lng.php'),
+    (6, 'Espa&ntilde;ol', 'es', 'lng/spanish.lng.php'),
+    (7, 'Portugu&ecirc;s', 'pt', 'lng/portugues.lng.php'),
+    (8, 'Russian', 'ru', 'lng/russian.lng.php'),
+    (9, 'Danish', 'da', 'lng/danish.lng.php'),
+    (10, 'Italian', 'it', 'lng/italian.lng.php'),
+    (11, 'Bulgarian', 'bg', 'lng/bulgarian.lng.php'),
+    (12, 'Slovak', 'sk', 'lng/slovak.lng.php'),
+    (13, 'Dutch', 'nl', 'lng/dutch.lng.php'),
+    (14, 'Hungarian', 'hu', 'lng/hungarian.lng.php'),
+    (15, 'Swedish', 'sv', 'lng/swedish.lng.php'),
+    (16, 'Czech', 'cz', 'lng/czech.lng.php'),
+    (17, 'Polski', 'pl', 'lng/polish.lng.php');
 
 # --------------------------------------------------------
 

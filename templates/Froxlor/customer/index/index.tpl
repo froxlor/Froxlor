@@ -84,38 +84,50 @@ $header
 		</table>
 	</section>
 
-	<section class="dboarditem bradiusodd">
-		<h2>{$lng['index']['customerdetails']}</h2>
-		<table>
-		<tr>
-			<td>{$lng['customer']['name']}:</td>
-			<td>{$userinfo['firstname']} {$userinfo['name']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['company']}:</td>
-			<td>{$userinfo['company']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['street']}:</td>
-			<td>{$userinfo['street']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['zipcode']}/{$lng['customer']['city']}:</td>
-			<td>{$userinfo['zipcode']} {$userinfo['city']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['email']}:</td>
-			<td>{$userinfo['email']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['customernumber']}:</td>
-			<td>{$userinfo['customernumber']}</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="border:0;height:5px;"></td>
-		</tr>
-		</table>
-	</section>
+    <section class="dboarditem bradiusodd">
+            <h2>{$lng['index']['customerdetails']}</h2>
+        <table>
+        <if $userinfo['customernumber'] >
+        <tr>
+            <td>{$lng['customer']['customernumber']}:</td>
+            <td>{$userinfo['customernumber']}</td>
+        </tr>
+        </if>
+        <if $userinfo['company'] >
+        <tr>
+            <td>{$lng['customer']['company']}:</td>
+            <td>{$userinfo['company']}</td>
+        </tr>
+        </if>
+        <if $userinfo['name'] >
+        <tr>
+            <td>{$lng['customer']['name']}:</td>
+            <td>{$userinfo['firstname']} {$userinfo['name']}</td>
+        </tr>
+        </if>
+        <if $userinfo['street'] >
+        <tr>
+            <td>{$lng['customer']['street']}:</td>
+            <td>{$userinfo['street']}</td>
+        </tr>
+        </if>
+        <if $userinfo['city'] >
+        <tr>
+            <td>{$lng['customer']['zipcode']}/{$lng['customer']['city']}:</td>
+            <td>{$userinfo['zipcode']} {$userinfo['city']}</td>
+        </tr>
+        </if>
+        <if $userinfo['email'] >
+        <tr>
+            <td>{$lng['customer']['email']}:</td>
+            <td>{$userinfo['email']}</td>
+        </tr>
+        </if>
+        <tr>
+            <td colspan="2" style="border:0;height:20px;"></td>
+        </tr>
+        </table>
+    </section>
 
 	</article>
 $footer

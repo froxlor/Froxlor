@@ -820,7 +820,8 @@ if($page == 'customers'
 					}
 
 					inserttask('1');
-					$result = $db->query("INSERT INTO `" . TABLE_FTP_USERS . "` " . "(`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) " . "VALUES ('" . (int)$customerid . "', '" . $db->escape($loginname) . "', ENCRYPT('" . $db->escape($password) . "'), '" . $db->escape($documentroot) . "', 'y', '" . (int)$guid . "', '" . (int)$guid . "')");
+					$cryptPassword = makeCryptPassword($db->escape($password),1);
+					$result = $db->query("INSERT INTO `" . TABLE_FTP_USERS . "` " . "(`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) " . "VALUES ('" . (int)$customerid . "', '" . $db->escape($loginname) . "', '" . $db->escape($cryptPassword) . "', '" . $db->escape($documentroot) . "', 'y', '" . (int)$guid . "', '" . (int)$guid . "')");
 					$result = $db->query("INSERT INTO `" . TABLE_FTP_GROUPS . "` " . "(`customerid`, `groupname`, `gid`, `members`) " . "VALUES ('" . (int)$customerid . "', '" . $db->escape($loginname) . "', '" . $db->escape($guid) . "', '" . $db->escape($loginname) . "')");
 					$result = $db->query("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $db->escape($loginname) . "', 'user', '0', '0', '0', '0', '0', '0')");
 					$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added ftp-account for user '" . $loginname . "'");
@@ -924,13 +925,16 @@ if($page == 'customers'
 				$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 				$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 				$number_of_aps_packages_ul = makecheckbox('number_of_aps_packages_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				#$createstdsubdomain = makeyesno('createstdsubdomain', '1', '0', '1');
-				#$email_imap = makeyesno('email_imap', '1', '0', '1');
-				#$email_pop3 = makeyesno('email_pop3', '1', '0', '1');
-				#$sendpassword = makeyesno('sendpassword', '1', '0', '1');
-				#$phpenabled = makeyesno('phpenabled', '1', '0', '1');
-				#$perlenabled = makeyesno('perlenabled', '1', '0', '0');
-				#$store_defaultindex = makeyesno('store_defaultindex', '1', '0', '1');
+				/*
+				$createstdsubdomain = makeyesno('createstdsubdomain', '1', '0', '1');
+				$email_imap = makeyesno('email_imap', '1', '0', '1');
+				$email_pop3 = makeyesno('email_pop3', '1', '0', '1');
+				$sendpassword = makeyesno('sendpassword', '1', '0', '1');
+				$phpenabled = makeyesno('phpenabled', '1', '0', '1');
+				$perlenabled = makeyesno('perlenabled', '1', '0', '0');
+				$store_defaultindex = makeyesno('store_defaultindex', '1', '0', '1');
+				*/
+				// why still makeyesno for this one?
 				$backup_allowed = makeyesno('backup_allowed', '1', '0', '0');
 
 				$gender_options = makeoption($lng['gender']['undef'], 0, true, true, true);
@@ -1235,7 +1239,7 @@ if($page == 'customers'
 
 					if($deactivated != $result['deactivated'])
 					{
-						$db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET `postfix`='" . (($deactivated) ? 'N' : 'Y') . "', `pop3`='" . (($deactivated) ? '0' : '1') . "', `imap`='" . (($deactivated) ? '0' : '1') . "' WHERE `customerid`='" . (int)$id . "'");
+						$db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET `postfix`='" . (($deactivated) ? 'N' : 'Y') . "', `pop3`='" . (($deactivated) ? '0' : (int)$result['pop3']) . "', `imap`='" . (($deactivated) ? '0' : (int)$result['imap']) . "' WHERE `customerid`='" . (int)$id . "'");
 						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `login_enabled`='" . (($deactivated) ? 'N' : 'Y') . "' WHERE `customerid`='" . (int)$id . "'");
 						$db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `deactivated`='" . (int)$deactivated . "' WHERE `customerid`='" . (int)$id . "'");
 
@@ -1588,12 +1592,14 @@ if($page == 'customers'
 					$result['aps_packages'] = '';
 				}
 
-				#$createstdsubdomain = makeyesno('createstdsubdomain', '1', '0', (($result['standardsubdomain'] != '0') ? '1' : '0'));
-				#$phpenabled = makeyesno('phpenabled', '1', '0', $result['phpenabled']);
-				#$perlenabled = makeyesno('perlenabled', '1', '0', $result['perlenabled']);
-				#$deactivated = makeyesno('deactivated', '1', '0', $result['deactivated']);
-				#$email_imap = makeyesno('email_imap', '1', '0', $result['imap']);
-				#$email_pop3 = makeyesno('email_pop3', '1', '0', $result['pop3']);
+				/*
+				$createstdsubdomain = makeyesno('createstdsubdomain', '1', '0', (($result['standardsubdomain'] != '0') ? '1' : '0'));
+				$phpenabled = makeyesno('phpenabled', '1', '0', $result['phpenabled']);
+				$perlenabled = makeyesno('perlenabled', '1', '0', $result['perlenabled']);
+				$deactivated = makeyesno('deactivated', '1', '0', $result['deactivated']);
+				$email_imap = makeyesno('email_imap', '1', '0', $result['imap']);
+				$email_pop3 = makeyesno('email_pop3', '1', '0', $result['pop3']);
+				*/
 				$backup_allowed = makeyesno('backup_allowed', '1', '0', $result['backup_allowed']);
 				$result = htmlentities_array($result);
 

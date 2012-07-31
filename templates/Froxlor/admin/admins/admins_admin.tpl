@@ -13,36 +13,36 @@
 			<span class="overviewcustomerextras">
 				Webspace:&nbsp;
 				<if $row['diskspace'] != 'UL'>
-					<span class="progressBar" title="{$row['diskspace_used']} / {$row['diskspace']} MB">
-						<if (($row['diskspace']/100)*(int)$settings['system']['report_webmax']) < $row['diskspace_used']>
-							<span class="redbar">
-						<else>
-							<span>
-						</if>
-						<em style="left: {$doublepercent}px;">{$percent}%</em></span>
-					</span>
-				<else>
-					<span class="progressBar" title="{$lng['customer']['unlimited']}">
-						<span class="greybar"><em style="left: 200px;">100%</em></span>
-					</span>
-				</if>
-			</span>
-			<span class="overviewcustomerextras">
-				Traffic:&nbsp;
-				<if $row['traffic'] != 'UL'>
-					<span class="progressBar" title="{$row['traffic_used']} / {$row['traffic']} GB">
-						<if (($row['traffic']/100)*(int)$settings['system']['report_trafficmax']) < $row['traffic_used']>
-							<span class="redbar">
-						<else>
-							<span>
-						</if>
-						<em style="left: {$doublepercent}px;">{$percent}%</em></span>
-					</span>
-				<else>
-					<span class="progressBar" title="{$lng['customer']['unlimited']}">
-						<span class="greybar"><em style="left: 200px;">100%</em></span>
-					</span>
-				</if>
+                                        <span class="progressBar" title="{$row['diskspace_used']} / {$row['diskspace']} MB">
+                                                <if (($row['diskspace']/100)*(int)$settings['system']['report_webmax']) < $row['diskspace_used']>
+                                                        <span class="redbar">
+                                                <else>
+                                                        <span>
+                                                </if>
+                                                <em style="left: {$disk_doublepercent}px;">{$disk_percent}%</em></span>
+                                        </span>
+                                <else>
+                                        <span class="progressBar" title="{$lng['customer']['unlimited']}">
+                                                <span class="greybar"><em style="left: 200px;">100%</em></span>
+                                        </span>
+                                </if>
+                        </span>
+                        <span class="overviewcustomerextras">
+                                Traffic:&nbsp;
+                                <if $row['traffic'] != 'UL'>
+                                        <span class="progressBar" title="{$row['traffic_used']} / {$row['traffic']} GB">
+                                                <if (($row['traffic']/100)*(int)$settings['system']['report_trafficmax']) < $row['traffic_used']>
+                                                        <span class="redbar">
+                                                <else>
+                                                        <span>
+                                                </if>
+                                                <em style="left: {$traffic_doublepercent}px;">{$traffic_percent}%</em></span>
+                                        </span>
+                                <else>
+                                        <span class="progressBar" title="{$lng['customer']['unlimited']}">
+                                                <span class="greybar"><em style="left: 200px;">100%</em></span>
+                                        </span>
+                                </if>
 			</span>
 			<span style="clear: both !important;">
 				{$lng['admin']['customers']}: {$row['customers_used']}

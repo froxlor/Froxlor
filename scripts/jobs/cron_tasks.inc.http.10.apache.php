@@ -30,21 +30,21 @@ class apache
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
-	
+
 	//	protected
-		
-	protected $settings = array();	
+
+	protected $settings = array();
 	protected $known_vhostfilenames = array();
 	protected $known_diroptionsfilenames = array();
 	protected $known_htpasswdsfilenames = array();
 	protected $virtualhosts_data = array();
 	protected $diroptions_data = array();
 	protected $htpasswds_data = array();
-	
+
 	/**
 	 * indicator whether a customer is deactivated or not
 	 * if yes, only the webroot will be generated
-	 * 
+	 *
 	 * @var bool
 	 */
 	private $_deactivated = false;
@@ -57,7 +57,7 @@ class apache
 		$this->idnaConvert = $idnaConvert;
 		$this->settings = $settings;
 	}
-	
+
 	protected function getDB()
 	{
 		return $this->db;
@@ -75,7 +75,7 @@ class apache
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading apache');
 		safe_exec(escapeshellcmd($this->settings['system']['apachereload_command']));
 	}
-	
+
 	/**
 	 * define a standard <Directory>-statement, bug #32
 	 */
@@ -99,7 +99,7 @@ class apache
 				fwrite($this->debugHandler, '  apache::_createStandardDirectoryEntry: unlinking ' . basename($vhosts_filename) . "\n");
 				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . basename($vhosts_filename));
 				unlink(makeCorrectFile($vhosts_filename));
-			}			
+			}
 		}
 		else
 		{
@@ -133,14 +133,14 @@ class apache
 			} else {
 				$vhosts_folder = makeCorrectDir(dirname($this->settings['system']['apacheconf_vhost']));
 			}
-			
+
 			$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
 
 			if(!isset($this->virtualhosts_data[$vhosts_filename]))
 			{
 				$this->virtualhosts_data[$vhosts_filename] = '';
 			}
-	
+
 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
 			{
 				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 ' . $this->settings['defaultwebsrverrhandler']['err401'] . "\n";
@@ -155,7 +155,7 @@ class apache
 			{
 				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 ' . $this->settings['defaultwebsrverrhandler']['err404'] . "\n";
 			}
-			
+
 			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
 			{
 				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 ' . $this->settings['defaultwebsrverrhandler']['err500'] . "\n";
@@ -213,7 +213,7 @@ class apache
 					{
 						$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
 					}
-					else 
+					else
 					{
 						$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
 					}
@@ -225,16 +225,18 @@ class apache
 				}
 
 				$this->virtualhosts_data[$vhosts_filename].= 'DocumentRoot "'.$mypath.'"'."\n";
-				
+
 				if($row_ipsandports['vhostcontainer_servername_statement'] == '1')
 				{
 					$this->virtualhosts_data[$vhosts_filename].= ' ServerName ' . $this->settings['system']['hostname'] . "\n";
 				}
 
 				// create fcgid <Directory>-Part (starter is created in apache_fcgid)
-				if($this->settings['system']['mod_fcgid_ownvhost'] == '1')
+				if($this->settings['system']['mod_fcgid_ownvhost'] == '1'
+					&& $this->settings['system']['mod_fcgid'] == '1'
+				)
 				{
-					
+
 					$configdir = makeCorrectDir($this->settings['system']['mod_fcgid_configdir'] . '/froxlor.panel/' . $this->settings['system']['hostname']);
 					$this->virtualhosts_data[$vhosts_filename].= '  FcgidIdleTimeout ' . $this->settings['system']['mod_fcgid_idle_timeout'] . "\n";
 					if((int)$this->settings['system']['mod_fcgid_wrapper'] == 0)
@@ -269,12 +271,12 @@ class apache
 						'safemode' => '0',
 						'email' => $this->settings['panel']['adminmail'],
 						'loginname' => 'froxlor.panel',
-						'documentroot' => $mypath
+						'documentroot' => $mypath,
 					);
 
 					$php = new phpinterface($this->getDB(), $this->settings, $domain);
 					$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '  FastCgiExternalServer ' . $mypath . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['system']['mod_fcgid_httpuser'] . ' -group ' . $this->settings['system']['mod_fcgid_httpuser'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['system']['mod_fcgid_httpuser'] . ' -group ' . $this->settings['system']['mod_fcgid_httpuser'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    AddHandler php5-fastcgi .php'. "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    Action php5-fastcgi /fastcgiphp' . "\n";
@@ -282,7 +284,7 @@ class apache
 					$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '  Alias /fastcgiphp ' . $mypath . 'fpm.external' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . 'fpm.external' . "\n";
 				}
 
 				/**
@@ -292,7 +294,7 @@ class apache
 				$this->virtualhosts_data[$vhosts_filename].= "\t\tAllow from all\n";
 				$this->virtualhosts_data[$vhosts_filename].= "\t\tOptions -Indexes\n";
 				$this->virtualhosts_data[$vhosts_filename].= "\t</Directory>\n";
-				
+
 				$this->virtualhosts_data[$vhosts_filename].= "\t<Directory \"'.$mypath.'*\">\n";
 				$this->virtualhosts_data[$vhosts_filename].= "\t\tOrder Deny,Allow\n";
 				$this->virtualhosts_data[$vhosts_filename].= "\t\tDeny from All\n";
@@ -332,12 +334,12 @@ class apache
 					{
 						$this->virtualhosts_data[$vhosts_filename].= ' SSLEngine On' . "\n";
 						$this->virtualhosts_data[$vhosts_filename].= ' SSLCertificateFile ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . "\n";
-	
+
 						if($row_ipsandports['ssl_key_file'] != '')
 						{
 							$this->virtualhosts_data[$vhosts_filename].= ' SSLCertificateKeyFile ' . makeCorrectFile($row_ipsandports['ssl_key_file']) . "\n";
 						}
-	
+
 						if($row_ipsandports['ssl_ca_file'] != '')
 						{
 							$this->virtualhosts_data[$vhosts_filename].= ' SSLCACertificateFile ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . "\n";
@@ -356,7 +358,7 @@ class apache
 			}
 			unset($vhosts_filename);
 		}
-		
+
 		/**
 		 * bug #32
 		 */
@@ -390,7 +392,7 @@ class apache
 				{
 					$_phpappendopenbasedir = appendOpenBasedirPath($domain['documentroot'], true);
 				}
-				
+
 				$_custom_openbasedir = explode(':', $this->settings['system']['phpappendopenbasedir']);
 				foreach($_custom_openbasedir as $cobd)
 				{
@@ -417,7 +419,7 @@ class apache
 
 		return $php_options_text;
 	}
-	
+
 	public function createOwnVhostStarter()
 	{
 	}
@@ -523,7 +525,7 @@ class apache
 				}
 				else
 				{
-					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . '"' . "\n";					
+					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . '"' . "\n";
 				}
 			}
 			else
@@ -547,7 +549,7 @@ class apache
 				{
 					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
 					$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '"' . "\n";
-				} 
+				}
 				else
 				{
 					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer') . '"' . "\n";
@@ -607,13 +609,13 @@ class apache
 			touch($error_log);
 			chown($error_log, $this->settings['system']['httpuser']);
 			chgrp($error_log, $this->settings['system']['httpgroup']);
-			
+
 			$access_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
 			// Create the logfile if it does not exist (fixes #46)
 			touch($access_log);
 			chown($access_log, $this->settings['system']['httpuser']);
 			chgrp($access_log, $this->settings['system']['httpgroup']);
-					
+
 			$logfiles_text.= '  ErrorLog "' . $error_log . "\"\n";
 			$logfiles_text.= '  CustomLog "' . $access_log .'" combined' . "\n";
 
@@ -621,19 +623,19 @@ class apache
 
 		if($this->settings['system']['awstats_enabled'] == '1')
 		{
-			if((int)$domain['parentdomainid'] == 0) 
+			if((int)$domain['parentdomainid'] == 0)
 			{
 				// prepare the aliases and subdomains for stats config files
 
 				$server_alias = '';
-				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` 
+				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '`
 												WHERE `aliasdomain`=\'' . $domain['id'] . '\'
 												OR `parentdomainid` =\''. $domain['id']. '\'');
-	
+
 				while(($alias_domain = $this->db->fetch_array($alias_domains)) !== false)
 				{
 					$server_alias.= ' ' . $alias_domain['domain'] . ' ';
-	
+
 					if($alias_domain['iswildcarddomain'] == '1')
 					{
 						$server_alias.= '*.' . $alias_domain['domain'];
@@ -650,7 +652,7 @@ class apache
 						}
 					}
 				}
-	
+
 				if($domain['iswildcarddomain'] == '1')
 				{
 					$alias = '*.' . $domain['domain'];
@@ -666,8 +668,8 @@ class apache
 						$alias = '';
 					}
 				}
-	
-				// After inserting the AWStats information, 
+
+				// After inserting the AWStats information,
 				// be sure to build the awstats conf file as well
 				// and chown it using $awstats_params, #258
 				// Bug 960 + Bug 970 : Use full $domain instead of custom $awstats_params as following classes depend on the informations
@@ -684,14 +686,14 @@ class apache
 
 	protected function getVhostFilename($domain, $ssl_vhost = false)
 	{
-		if((int)$domain['parentdomainid'] == 0 
+		if((int)$domain['parentdomainid'] == 0
 			&& isCustomerStdSubdomain((int)$domain['id']) == false
 			&& ((int)$domain['ismainbutsubto'] == 0
 			|| domainMainToSubExists($domain['ismainbutsubto']) == false)
 		) {
 			$vhost_no = '22';
 		}
-		elseif((int)$domain['parentdomainid'] == 0 
+		elseif((int)$domain['parentdomainid'] == 0
 			&& isCustomerStdSubdomain((int)$domain['id']) == false
 			&& (int)$domain['ismainbutsubto'] > 0
 		) {
@@ -770,14 +772,14 @@ class apache
 			if(substr($corrected_docroot, -1) == '/') {
 				$corrected_docroot = substr($corrected_docroot, 0, -1);
 			}
-			
+
 			/* Get domain's redirect code */
 			$code = getDomainRedirectCode($domain['id']);
 			$modrew_red = '';
 			if ($code != '') {
 				$modrew_red = '[R='. $code . ';L]';
-			} 
-			
+			}
+
 			// redirect everything, not only root-directory, #541
 			$vhost_content.= '  <IfModule mod_rewrite.c>'."\n";
 			$vhost_content.= '    RewriteEngine On' . "\n";
@@ -1298,13 +1300,18 @@ class apache
 		}
 		if($this->settings['phpfpm']['enabled'] == '1')
 		{
+			foreach($this->virtualhosts_data as $vhosts_filename => $vhosts_file)
+			{
+				$this->known_vhostfilenames[] = basename($vhosts_filename);
+			}
+
 			foreach($this->known_vhostfilenames as $vhostfilename){
 				$known_phpfpm_files[]=preg_replace('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_/', '', $vhostfilename);
 			}
-		
+
 			$configdir = $this->settings['phpfpm']['configdir'];
 			$phpfpm_file_dirhandle = opendir($this->settings['phpfpm']['configdir']);
-		
+
 			while(false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle)))
 			{
 				if($phpfpm_filename != '.'
@@ -1349,24 +1356,38 @@ class apache
 		}
 		if($this->settings['phpfpm']['enabled'] == '1')
 		{
+			foreach($this->virtualhosts_data as $vhosts_filename => $vhosts_file)
+			{
+				$this->known_vhostfilenames[] = basename($vhosts_filename);
+			}
+
 			foreach($this->known_vhostfilenames as $vhostfilename){
 				$known_phpfpm_files[]=preg_replace('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_/', '', $vhostfilename);
 			}
-		
+
 			$configdir = $this->settings['phpfpm']['configdir'];
 			$phpfpm_file_dirhandle = opendir($this->settings['phpfpm']['configdir']);
-		
-			while(false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle)))
-			{
-				if($phpfpm_filename != '.'
-					&& $phpfpm_filename != '..'
-					&& !in_array($phpfpm_filename, $known_phpfpm_files)
-					&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename)))
-					{
-						fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking PHP5-FPM ' . $phpfpm_filename . "\n");
-						$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $phpfpm_filename);
-						unlink(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename));
+
+			if ($phpfpm_file_dirhandle !== false) {
+				
+				while (false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle))) {
+	
+					if (is_array($known_phpfpm_files)
+						&& $phpfpm_filename != '.'
+						&& $phpfpm_filename != '..'
+						&& !in_array($phpfpm_filename, $known_phpfpm_files)
+						&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename))
+					) {
+							fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking PHP5-FPM ' . $phpfpm_filename . "\n");
+							$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $phpfpm_filename);
+							unlink(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename));
 					}
+					if (!is_array($known_phpfpm_files)) {
+						$this->logger->logAction(CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM Configs Not written!!");
+					}
+				}
+			} else {
+				$this->logger->logAction(CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM configuration path could not be read (".$this->settings['phpfpm']['configdir'].")");
 			}
 		}
 	}
@@ -1387,7 +1408,7 @@ class apache
 			while(false !== ($htpasswd_filename = readdir($htpasswds_file_dirhandle)))
 			{
 				if($htpasswd_filename != '.'
-				   && $htpasswd_filename != '..'		   
+				   && $htpasswd_filename != '..'
 				   && !in_array($htpasswd_filename, $this->known_htpasswdsfilenames)
 				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $htpasswd_filename)))
 				{

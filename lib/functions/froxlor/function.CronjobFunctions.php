@@ -209,12 +209,21 @@ function getOutstandingTasks()
 			$task_desc = $lng['tasks']['deleting_customerfiles'];
 			$task_desc = str_replace('%loginname%', $loginname, $task_desc);
 		}
+		elseif($row['type'] == '7')
+		{
+			$task_desc = $lng['tasks']['remove_emailacc_files'];
+		}
 		/*
 		 * Set FS - quota
 		 */
 		elseif($row['type'] == '10')
 		{
 			$task_desc = $lng['tasks']['diskspace_set_quota'];
+		}
+		else
+		{
+			$task_desc = "ERROR: Unknown task type '".$row['type'].
+			             "'";
 		}
 
 		if($task_desc != '') {

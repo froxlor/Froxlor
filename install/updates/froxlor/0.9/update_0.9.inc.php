@@ -1642,7 +1642,7 @@ if(isFroxlorVersion('0.9.22-svn1'))
 
 	/* fix backup_dir for #186 */
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/var/customers/backups/' WHERE `varname` = 'backup_dir';");
-	
+
 	updateToVersion('0.9.22-svn2');
 }
 
@@ -1650,7 +1650,7 @@ if(isFroxlorVersion('0.9.22-svn2'))
 {
 	showUpdateStep("Updating from 0.9.22-svn2 to 0.9.22-rc1");
 	lastStepStatus(0);
-	
+
 	updateToVersion('0.9.22-rc1');
 }
 
@@ -1658,7 +1658,7 @@ if(isFroxlorVersion('0.9.22-rc1'))
 {
 	showUpdateStep("Updating from 0.9.22-rc1 to 0.9.22");
 	lastStepStatus(0);
-	
+
 	updateToVersion('0.9.22');
 }
 
@@ -1729,10 +1729,10 @@ if(isFroxlorVersion('0.9.25'))
 {
 	showUpdateStep("Updating from 0.9.25 to 0.9.26-svn1");
 	lastStepStatus(0);
-	
+
 	// enable bind by default
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bind_enable', '1')");
-	
+
 	updateToVersion('0.9.26-svn1');
 }
 
@@ -1756,24 +1756,24 @@ if(isFroxlorVersion('0.9.26'))
 {
 	showUpdateStep("Updating from 0.9.26 to 0.9.27-svn1");
 	lastStepStatus(0);
-  
+
 	// check for multiple backup_ftp_enabled entries
 	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `varname` = 'backup_ftp_enabled';");
-	
+
 	// if there are more than one entry try to fix it
 	if ($db->num_rows($handle) > 1) {
 		$rows = $db->fetch_array($handle);
 		$state = false;
-		
+
 		// iterate through all found entries
 		// and try to guess what value it should be
 		foreach ($rows as $row) {
 			$state = $state | $row['value'];
 		}
-		
+
 		// now delete all entries
 		$db->query("DELETE FROM `panel_settings` WHERE `varname` = 'backup_ftp_enabled';");
-		
+
 		// and re-add it
 		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_enabled', '". $state ."');");
 	}
@@ -1785,18 +1785,18 @@ if(isFroxlorVersion('0.9.27-svn1'))
 {
 	showUpdateStep("Updating from 0.9.27-svn1 to 0.9.27-svn2");
 	lastStepStatus(0);
-	
+
 	// Get FastCGI timeout setting if available
 	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'system' AND `varname` = 'mod_fcgid_idle_timeout';");
-	
+
 	// If timeout is set then skip
 	if ($db->num_rows($handle) < 1) {
 		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_idle_timeout', '30');");
 	}
-		
+
 	// Get FastCGI timeout setting if available
 	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'idle_timeout';");
-	
+
 	// If timeout is set then skip
 	if ($db->num_rows($handle) < 1) {
 		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'idle_timeout', '30');");
@@ -1807,12 +1807,123 @@ if(isFroxlorVersion('0.9.27-svn1'))
 
 if(isFroxlorVersion('0.9.27-svn2'))
 {
-	showUpdateStep("Updating from 0.9.27-svn2 to 0.9.27-svn3");
+	showUpdateStep("Updating from 0.9.27-svn2 to 0.9.27-rc1");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.27-rc1');
+}
+
+if(isFroxlorVersion('0.9.27-rc1'))
+{
+	showUpdateStep("Updating from 0.9.27-rc1 to 0.9.27");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.27');
+}
+
+if(isFroxlorVersion('0.9.27')) {
+	showUpdateStep("Updating from 0.9.27 to 0.9.28-svn1");
+	lastStepStatus(0);
+
+	// Get AliasconfigDir setting if available
+	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'aliasconfigdir';");
+
+	// If AliasconfigDir is set then skip
+	if ($db->num_rows($handle) < 1) {
+		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/');");
+	}
+    
+ 	updateToVersion('0.9.28-svn1');
+}
+
+if(isFroxlorVersion('0.9.28-svn1')) {
+	showUpdateStep("Updating from 0.9.28-svn1 to 0.9.28-svn2");
+	lastStepStatus(0);
+
+	// Insert ISO-Codes into database. Default value is foo, which is not a valid language code.
+	$db->query("ALTER TABLE  `panel_languages` ADD  `iso` CHAR( 3 ) NOT NULL DEFAULT  'foo' AFTER  `language`");
+
+	$handle = $db->query("SELECT `language` FROM `panel_languages` WHERE `iso`='foo'");
+    
+	$langauges = $db->fetch_array($handle);
+	foreach($languages as $language){    
+		switch ($language) {
+			case "Deutsch":
+				$db->query("UPDATE `panel_languages` SET `iso`='de' WHERE `language` = 'Deutsch'");
+				break;
+			case "English":
+				$db->query("UPDATE `panel_languages` SET `iso`='en' WHERE `language` = 'English'");
+				break;
+			case "Fran&ccedil;ais":
+				$db->query("UPDATE `panel_languages` SET `iso`='fr' WHERE `language` = 'Fran&ccedil;ais'");
+				break;
+			case "Chinese":
+				$db->query("UPDATE `panel_languages` SET `iso`='zh' WHERE `language` = 'Chinese'");
+				break;
+			case "Catalan":
+				$db->query("UPDATE `panel_languages` SET `iso`='ca' WHERE `language` = 'Catalan'");
+				break;
+			case "Espa&ntilde;ol":
+				$db->query("UPDATE `panel_languages` SET `iso`='es' WHERE `language` = 'Espa&ntilde;ol'");
+				break;
+			case "Portugu&ecirc;s":
+				$db->query("UPDATE `panel_languages` SET `iso`='pt' WHERE `language` = 'Portugu&ecirc;s'");
+				break;
+			case "Danish":
+				$db->query("UPDATE `panel_languages` SET `iso`='da' WHERE `language` = 'Danish'");
+				break;
+			case "Italian":
+				$db->query("UPDATE `panel_languages` SET `iso`='it' WHERE `language` = 'Italian'");
+				break;
+			case "Bulgarian":
+				$db->query("UPDATE `panel_languages` SET `iso`='bg' WHERE `language` = 'Bulgarian'");
+				break;
+			case "Slovak":
+				$db->query("UPDATE `panel_languages` SET `iso`='sk' WHERE `language` = 'Slovak'");
+				break;
+			case "Dutch":
+				$db->query("UPDATE `panel_languages` SET `iso`='nl' WHERE `language` = 'Dutch'");
+				break;
+			case "Russian":
+				$db->query("UPDATE `panel_languages` SET `iso`='ru' WHERE `language` = 'Russian'");
+				break;
+			case "Hungarian":
+				$db->query("UPDATE `panel_languages` SET `iso`='hu' WHERE `language` = 'Hungarian'");
+				break;
+			case "Swedish":
+				$db->query("UPDATE `panel_languages` SET `iso`='sv' WHERE `language` = 'Swedish'");
+				break;
+			case "Czech":
+				$db->query("UPDATE `panel_languages` SET `iso`='cz' WHERE `language` = 'Czech'");
+				break;
+			case "Polski":
+				$db->query("UPDATE `panel_languages` SET `iso`='pl' WHERE `language` = 'Polski'");
+				break;
+			default:
+				showUpdateStep("Sorry, but I don't know the ISO-639 language code for ".$language.". Please update the entry in `panel_languages` manually.\n");
+		}
+	}
+
+	updateToVersion('0.9.28-svn2');
+}
+
+if(isFroxlorVersion('0.9.28-svn2')) {
+	showUpdateStep("Updating from 0.9.28-svn2 to 0.9.28-svn3");
 	lastStepStatus(0);
 	
-	// Set new settings, refs #1020
+	// change lenght of passwd column
+	$db->query("ALTER TABLE `" . TABLE_FTP_USERS . "` MODIFY `password` varchar(128) NOT NULL default ''");
+	
+	// Add default setting for vmail_maildirname if not already in place
+	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'system' AND `varname` = 'vmail_maildirname';");
+	if ($db->num_rows($handle) < 1) {
+		showUpdateStep("Adding default Maildir value into Mailserver settings.");
+		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_maildirname', 'Maildir');");
+	}
+
+	// Adding new panel settings, see #1020
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'patheditlimit', '2');");
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'patheditfilter', 'log|tmp');");
-	
-	updateToVersion('0.9.27-svn3');
+
+	updateToVersion('0.9.28-svn3');
 }
