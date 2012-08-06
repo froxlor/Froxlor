@@ -284,6 +284,12 @@ elseif($page == 'emails')
 				//$iscatchall = makeyesno('iscatchall', '1', '0', '0');
 
 				$email_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_add.php';
+
+				if ( $settings['catchall']['catchall_enabled'] != '1' )
+				{
+					unset($email_add_data['emails_add']['sections']['section_a']['fields']['iscatchall']);
+				}
+
 				$email_add_form = htmlform::genHTMLForm($email_add_data);
 
 				$title = $email_add_data['emails_add']['title'];
@@ -330,6 +336,12 @@ elseif($page == 'emails')
 			$result = htmlentities_array($result);
 
 			$email_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_edit.php';
+
+			if ( $settings['catchall']['catchall_enabled'] != '1' )
+			{
+				unset($email_edit_data['emails_edit']['sections']['section_a']['fields']['mail_catchall']);
+			}
+
 			$email_edit_form = htmlform::genHTMLForm($email_edit_data);
 
 			$title = $email_edit_data['emails_edit']['title'];
@@ -341,34 +353,41 @@ elseif($page == 'emails')
 	elseif($action == 'togglecatchall'
 	       && $id != 0)
 	{
-		$result = $db->query_first("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid` FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
-
-		if(isset($result['email'])
-		   && $result['email'] != '')
+		if ( $settings['catchall']['catchall_enabled'] == '1' )
 		{
-			if($result['iscatchall'] == '1')
-			{
-				$db->query("UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `email` = '" . $db->escape($result['email_full']) . "', `iscatchall` = '0' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$result['id'] . "'");
-			}
-			else
-			{
-				$email_parts = explode('@', $result['email_full']);
-				$email = '@' . $email_parts[1];
-				$email_check = $db->query_first("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `email`='" . $db->escape($email) . "' AND `customerid`='" . (int)$userinfo['customerid'] . "'");
+			$result = $db->query_first("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid` FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 
-				if($email_check['email'] == $email)
+			if(isset($result['email'])
+			   && $result['email'] != '')
+			{
+				if($result['iscatchall'] == '1')
 				{
-					standard_error('youhavealreadyacatchallforthisdomain');
-					exit;
+					$db->query("UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `email` = '" . $db->escape($result['email_full']) . "', `iscatchall` = '0' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$result['id'] . "'");
 				}
 				else
 				{
-					$db->query("UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `email` = '$email' , `iscatchall` = '1' WHERE `customerid`='" . $userinfo['customerid'] . "' AND `id`='" . $result['id'] . "'");
-					$log->logAction(USR_ACTION, LOG_INFO, "edited email address '" . $email . "'");
-				}
-			}
+					$email_parts = explode('@', $result['email_full']);
+					$email = '@' . $email_parts[1];
+					$email_check = $db->query_first("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `email`='" . $db->escape($email) . "' AND `customerid`='" . (int)$userinfo['customerid'] . "'");
 
-			redirectTo($filename, Array('page' => $page, 'action' => 'edit', 'id' => $id, 's' => $s));
+					if($email_check['email'] == $email)
+					{
+						standard_error('youhavealreadyacatchallforthisdomain');
+						exit;
+					}
+					else
+					{
+						$db->query("UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `email` = '$email' , `iscatchall` = '1' WHERE `customerid`='" . $userinfo['customerid'] . "' AND `id`='" . $result['id'] . "'");
+						$log->logAction(USR_ACTION, LOG_INFO, "edited email address '" . $email . "'");
+					}
+				}
+
+				redirectTo($filename, Array('page' => $page, 'action' => 'edit', 'id' => $id, 's' => $s));
+			}
+		}
+		else
+		{
+			standard_error(array('operationnotpermitted', 'featureisdisabled'), 'Catchall');
 		}
 	}
 }
