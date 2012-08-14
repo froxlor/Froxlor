@@ -62,7 +62,7 @@ class ApsParser
 
 	private function ManageInstances()
 	{
-		global $lng, $filename, $s, $page, $action;
+		global $lng, $filename, $s, $page, $action, $theme;
 		$Question = false;
 
 		//dont do anything if there is no instance
@@ -170,7 +170,7 @@ class ApsParser
 		//create table with contents based on instance status
 		if($Question != true)
 		{
-			global $settings;
+			global $settings, $theme;
 			$Instances = '';
 
 			if((int)$this->userinfo['customers_see_all'] == 1)
@@ -317,7 +317,7 @@ class ApsParser
 
 	private function ManagePackages()
 	{
-		global $lng, $filename, $s, $page, $action;
+		global $lng, $filename, $s, $page, $action, $theme;
 		$Question = false;
 
 		if(isset($_POST['save']))
@@ -611,7 +611,7 @@ class ApsParser
 
 	private function UploadNewPackages()
 	{
-		global $lng, $filename, $s, $page, $action;
+		global $lng, $filename, $s, $page, $action, $theme;
 
 		//define how many files can be uploaded at once
 
@@ -724,7 +724,7 @@ class ApsParser
 
 	private function SearchPackages()
 	{
-		global $lng, $filename, $s, $page, $action;
+		global $lng, $filename, $s, $page, $action, $theme;
 		$Error = 0;
 		$Ids = array();
 		$ShowAll = 0;
@@ -852,7 +852,7 @@ class ApsParser
 
 	private function CustomerStatus($CustomerId)
 	{
-		global $lng, $filename, $s, $page, $action;
+		global $lng, $filename, $s, $page, $action, $theme;
 		$Data = '';
 		$Fieldname = '';
 		$Fieldvalue = '';
@@ -877,7 +877,7 @@ class ApsParser
 			//skip if parse of xml has failed
 
 			if($Xml == false)continue;
-			$Icon = './images/Classic/default.png';
+			$Icon = 'templates/'.$theme.'/assets/img/default.png';
 
 			$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';
 
@@ -1033,7 +1033,7 @@ class ApsParser
 
 	private function CreatePackageInstance($PackageId, $CustomerId)
 	{
-		global $lng;
+		global $lng, $theme;
 
 		if(!self::IsValidPackageId($PackageId, true))return false;
 
@@ -1141,7 +1141,7 @@ class ApsParser
 
 	private function CheckException($Category, $Item, $Value)
 	{
-		global $settings;
+		global $settings, $theme;
 
 		//search for element within system settings
 
@@ -1164,7 +1164,7 @@ class ApsParser
 
 	private function CheckSubmappings($ParentMapping, $Url)
 	{
-		global $lng;
+		global $lng, $theme;
 		$Error = array();
 
 		//check for special PHP handler extensions
@@ -1243,7 +1243,7 @@ class ApsParser
 
 	private function InstallNewPackage($Filename)
 	{
-		global $lng, $userinfo;
+		global $lng, $userinfo, $theme;
 
 		if(file_exists($Filename)
 		   && $Xml = self::GetXmlFromZip($Filename))
@@ -1726,7 +1726,7 @@ class ApsParser
 
 	public function MainHandler($Action)
 	{
-		global $lng, $filename, $s, $page, $action, $Id, $userinfo;
+		global $lng, $filename, $s, $page, $action, $Id, $userinfo, $theme;
 
 		//check for basic functions, classes and permissions
 
@@ -2810,7 +2810,7 @@ class ApsParser
 
 	private function ShowPackageInstaller($PackageId, $WrongData, $CustomerId)
 	{
-		global $lng, $filename, $s, $page, $action;
+		global $lng, $filename, $s, $page, $action, $theme;
 		$Data = '';
 		$Fieldname = '';
 		$Fieldvalue = '';
@@ -2838,7 +2838,7 @@ class ApsParser
 
 		//icon for package
 
-		$Icon = './images/Classic/default.png';
+		$Icon = 'templates/'.$theme.'/img/default.png';
 		
 		if($this->aps_version != '1.0')
 		{
@@ -3231,7 +3231,7 @@ class ApsParser
 
 	private function ShowPackageInfo($PackageId, $All = false)
 	{
-		global $lng, $filename, $s, $page, $action, $userinfo;
+		global $lng, $filename, $s, $page, $action, $userinfo, $theme;
 		$Data = '';
 		$Fieldname = '';
 		$Fieldvalue = '';
@@ -3245,7 +3245,7 @@ class ApsParser
 		//return if parse of xml file has failed
 
 		if($Xml == false)return false;
-		$Icon = './images/Classic/default.png';
+		$Icon = 'templates/'.$theme.'/img/default.png';
 
 		$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';
 
@@ -3460,7 +3460,7 @@ class ApsParser
 	 */
 	private function InfoBox($Message, $Type = 0)
 	{
-		global $lng, $filename, $s, $page, $action;
+		global $lng, $filename, $s, $page, $action, $theme;
 		//shows a box with informations
 		eval("echo \"" . getTemplate("aps/infobox") . "\";");
 	}

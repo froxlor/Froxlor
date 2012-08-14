@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/templates_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/templates_add.png" alt="" />&nbsp;
 				{$lng['admin']['templates']['template_add']}
 			</h2>
 		</header>

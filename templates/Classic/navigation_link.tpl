@@ -1,2 +1,2 @@
-&nbsp;&nbsp;<img src="images/Classic/ball.gif" alt="" />&nbsp;{$completeLink}
+&nbsp;&nbsp;<img src="templates/{$theme}/assets/img/ball.gif" alt="" />&nbsp;{$completeLink}
 <br />

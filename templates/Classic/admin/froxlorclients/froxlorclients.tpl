@@ -4,7 +4,7 @@ $header
                 <input type="hidden" name="page" value="$page"/>
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle_search_left" colspan="3"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['menue']['multiserver']['clients']}</b></td>
+				<td class="maintitle_search_left" colspan="3"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['menue']['multiserver']['clients']}</b></td>
 				<td class="maintitle_search_right" colspan="1">{$searchcode}</td>
 			</tr>
 			<tr>

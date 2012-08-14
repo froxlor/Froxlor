@@ -34,7 +34,7 @@
 
 function ask_yesno($text, $yesfile, $params = array(), $targetname = '', $back_nr = 1)
 {
-	global $userinfo, $db, $s, $header, $footer, $lng;
+	global $userinfo, $db, $s, $header, $footer, $lng, $theme;
 
 	$hiddenparams = '';
 
@@ -58,7 +58,7 @@ function ask_yesno($text, $yesfile, $params = array(), $targetname = '', $back_n
 
 function ask_yesno_withcheckbox($text, $chk_text, $yesfile, $params = array(), $targetname = '', $show_checkbox = true)
 {
-	global $userinfo, $db, $s, $header, $footer, $lng;
+	global $userinfo, $db, $s, $header, $footer, $lng, $theme;
 
 	$hiddenparams = '';
 

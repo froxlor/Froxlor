@@ -1,7 +1,7 @@
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/group_edit.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/group_edit.png" alt="" />&nbsp;
 				{$connected_to} ({$mode})
 			</h2>
 		</header>

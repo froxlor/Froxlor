@@ -19,7 +19,7 @@
 
 function getFormFieldOutput($fieldname, $fielddata)
 {
-	global $settings;
+	global $settings, $theme;
 
 	$returnvalue = '';
 	if(is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('getFormFieldOutput' . ucfirst($fielddata['type'])))

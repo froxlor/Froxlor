@@ -1,5 +1,5 @@
 $header
-	<script type="text/javascript" src="js/jquery.tablesorter.min.js"></script> 
+	<script type="text/javascript" src="templates/{$theme}/assets/js/jquery.tablesorter.min.js"></script>
         <script type="text/javascript">
                 $.tablesorter.addParser( {
                         id: 'filesize',

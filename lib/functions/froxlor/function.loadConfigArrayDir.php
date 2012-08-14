@@ -20,7 +20,7 @@
 function loadConfigArrayDir()
 {
 	// Workaround until we use gettext
-	global $lng;
+	global $lng, $theme;
 
 	// we now use dynamic function parameters
 	// so we can read from more than one directory

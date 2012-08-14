@@ -2,7 +2,7 @@
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/autoresponder.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/autoresponder.png" alt="" />&nbsp;
 				{$lng['menue']['email']['autoresponder']}
 			</h2>
 		</header>
@@ -11,7 +11,7 @@
 
 			<if ($userinfo['email_autoresponder_used'] < $userinfo['email_autoresponder'] || $userinfo['email_autoresponder'] == '-1') && 15 < $count >
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/autoresponder_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/autoresponder_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'autoresponder', 'action' => 'add'))}">{$lng['autoresponder']['autoresponder_add']}</a>
 			</div>
 			</if>
@@ -33,7 +33,7 @@
 
 			<if ($userinfo['email_autoresponder_used'] < $userinfo['email_autoresponder'] || $userinfo['email_autoresponder'] == '-1') >
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/autoresponder_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/autoresponder_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'autoresponder', 'action' => 'add'))}">{$lng['autoresponder']['autoresponder_add']}</a>
 			</div>
 			</if>

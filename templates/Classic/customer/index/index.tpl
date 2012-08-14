@@ -2,7 +2,7 @@ $header
 <table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable" xmlns="http://www.w3.org/1999/html"
        xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 		<tr>
-			<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['index']['customerdetails']}</b></td>
+			<td class="maintitle" colspan="2"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['index']['customerdetails']}</b></td>
 		</tr>
         <if $userinfo['customernumber'] >
         <tr>
@@ -41,7 +41,7 @@ $header
 		</tr>
         </if>
         <tr>
-			<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['index']['accountdetails']}</b></td>
+			<td class="maintitle" colspan="2"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['index']['accountdetails']}</b></td>
 		</tr>
 		<tr>
 			<td class="field_name_border_left">{$lng['login']['username']}:</td>

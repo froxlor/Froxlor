@@ -1,7 +1,7 @@
 <article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/settings.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/settings.png" alt="" />&nbsp;
 				{$lng['admin']['configfiles']['serverconfiguration']} &nbsp;
 				[<a href="$filename?page=overview&amp;part=all&amp;s=$s">{$lng['admin']['configfiles']['overview']}</a>]
 			</h2>

@@ -25,7 +25,7 @@
  */
 function domainHasMainSubDomains($id = 0)
 {
-	global $db;
+	global $db, $theme;
 	
 	$sql = "SELECT COUNT(`id`) as `mainsubs` FROM `".TABLE_PANEL_DOMAINS."` WHERE `ismainbutsubto` = '".(int)$id."'";
 	$result = $db->query_first($sql);
@@ -47,7 +47,7 @@ function domainHasMainSubDomains($id = 0)
  */
 function domainMainToSubExists($id = 0)
 {
-	global $db;
+	global $db, $theme;
 	
 	$sql = "SELECT `id` FROM `".TABLE_PANEL_DOMAINS."` WHERE `id` = '".(int)$id."'";
 	$result = $db->query_first($sql);

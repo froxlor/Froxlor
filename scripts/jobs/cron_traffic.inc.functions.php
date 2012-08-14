@@ -19,7 +19,7 @@
 
 function awstatsDoSingleDomain($domain, $outputdir)
 {
-	global $cronlog, $settings;
+	global $cronlog, $settings, $theme;
 	$returnval = 0;
 
 	$domainconfig = makeCorrectFile($settings['system']['awstats_conf'].'/awstats.' . $domain . '.conf');
@@ -104,7 +104,7 @@ function awstatsDoSingleDomain($domain, $outputdir)
 
 function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist)
 {
-	global $settings, $db, $cronlog;
+	global $settings, $db, $cronlog, $theme;
 	$returnval = 0;
 
 	foreach($usersdomainlist as $domainid => $singledomain)
@@ -156,7 +156,7 @@ function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist)
 
 function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlist)
 {
-	global $settings, $cronlog;
+	global $settings, $cronlog, $theme;
 	$returnval = 0;
 
 	if(file_exists($settings['system']['logfiles_directory'] . $logfile . '-access.log'))
@@ -305,7 +305,7 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 
 function safeSQLLogfile($domains, $loginname)
 {
-	global $db, $settings;
+	global $db, $settings, $theme;
 	$sql = "SELECT * FROM access_log ";
 	$where = "WHERE virtual_host = ";
 

@@ -5,11 +5,11 @@ $header
 		<input type="hidden" name="action" value="$action" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['froxlorclients']['add']}</b></td>
+				<td class="maintitle" colspan="2"><b><img src="templates/${theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['froxlorclients']['add']}</b></td>
 			</tr>
 			<tr>
 				<td class="maintitle_apply_left">
-					<b><img src="images/title.gif" alt="" />&nbsp;{$lng['admin']['froxlorclients']['client']}</b>
+					<b><img src="templates/${theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['froxlorclients']['client']}</b>
 				</td>
 				<td class="maintitle_apply_right" nowrap="nowrap">
 					<input class="bottom" type="reset" value="{$lng['panel']['reset']}" /><input class="bottom" type="submit" value="{$lng['panel']['save']}" />

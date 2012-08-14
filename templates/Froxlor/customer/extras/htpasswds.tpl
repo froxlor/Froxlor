@@ -2,7 +2,7 @@
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/htpasswd.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/htpasswd.png" alt="" />&nbsp;
 				{$lng['menue']['extras']['directoryprotection']}
 			</h2>
 		</header>
@@ -17,7 +17,7 @@
 
 			<if 15 < $count >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/htpasswd_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/htpasswd_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
 				</div>
 			</if>
@@ -50,7 +50,7 @@
 			</form>
 
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/htpasswd_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/htpasswd_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
 			</div>
 

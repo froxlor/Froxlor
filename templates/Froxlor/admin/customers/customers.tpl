@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/group_edit.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/group_edit.png" alt="" />&nbsp;
 				{$lng['admin']['customers']}&nbsp;({$customercount})
 			</h2>
 		</header>
@@ -17,7 +17,7 @@ $header
 
 			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $userinfo['customers_used'] >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>
 				</div>
 			</if>
@@ -55,7 +55,7 @@ $header
 
 			<if $userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1'>
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/user_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>
 			</div>
 			</if>

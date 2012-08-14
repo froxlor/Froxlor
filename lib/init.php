@@ -363,8 +363,9 @@ if(isset($userinfo['theme']) && $userinfo['theme'] != $theme)
 /*
  * check for custom header-graphic
  */
-$hl_path = 'images/'.$theme;
+$hl_path = 'templates/'.$theme.'/assets/img';
 $header_logo = $hl_path.'/logo.png';
+
 if(file_exists($hl_path.'/logo_custom.png')) {
 	$header_logo = $hl_path.'/logo_custom.png';
 }

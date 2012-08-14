@@ -5,7 +5,7 @@ $header
 		<input type="hidden" name="send" value="send" />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 		<tr>
-			<td class="maintitle_search_left"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['ticket']['lastarchived']}</b></td>
+			<td class="maintitle_search_left"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['ticket']['lastarchived']}</b></td>
         		<td class="maintitle_search_right" colspan="5">&nbsp;</td>
 		</tr>
 		<tr>
@@ -27,7 +27,7 @@ $header
 		<input type="hidden" name="send" value="send" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['ticket']['search']}</b></td>
+				<td class="maintitle" colspan="2"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['ticket']['search']}</b></td>
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['ticket']['subject']}:</td>

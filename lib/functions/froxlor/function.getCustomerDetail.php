@@ -19,7 +19,7 @@
 
 function getCustomerDetail($customerid, $varname)
 {
-	global $db;
+	global $db, $theme;
 
 	$query = 'SELECT `' . $db->escape($varname) . '` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = \'' . (int)$customerid . '\'';
 	$customer = $db->query_first($query);

@@ -32,7 +32,7 @@
 
 function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled = false)
 {
-	global $lng;
+	global $lng, $theme;
 	
 	if($disabled) {
 		$d = ' disabled="disabled"';

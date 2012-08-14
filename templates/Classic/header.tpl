@@ -6,10 +6,10 @@
 	<meta name="robots" content="noindex, nofollow, noarchive" />
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	</if>
-	<link rel="stylesheet" href="templates/Classic/main.css" type="text/css" />
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="templates/Classic/js/froxlor.js"></script>
-	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="templates/{$theme}/assets/css/main.css" type="text/css" />
+	<script type="text/javascript" src="templates/{$theme}/assets/js/jquery.min.js"></script>
+	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
+	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor</title>
 </head>
 <body style="margin: 0; padding: 0;">

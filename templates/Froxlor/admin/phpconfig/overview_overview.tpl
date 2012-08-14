@@ -5,11 +5,11 @@
 	<td style="vertical-align:top;">{$row['file_extensions']}</td>
 	<td style="vertical-align:top;">
 		<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'edit', 'id' => $row['id']))}" style="text-decoration:none;">
-			<img src="images/Froxlor/icons/edit.png" alt="{$lng['panel']['edit']}" />
+			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" />
 		</a>
 		<if $row['id'] != 1>
 			&nbsp;<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'delete', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="images/Froxlor/icons/delete.png" alt="{$lng['panel']['delete']}" />
+				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" />
 			</a>
 		</if>
 	</td>

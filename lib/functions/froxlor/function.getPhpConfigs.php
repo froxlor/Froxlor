@@ -22,7 +22,7 @@
  */
 function getPhpConfigs()
 {
-	global $db;
+	global $db, $theme;
 	
 	$query = 'SELECT * FROM `' . TABLE_PANEL_PHPCONFIGS . '` ';
 	$result = $db->query($query, false, true);

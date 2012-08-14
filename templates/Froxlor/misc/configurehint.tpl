@@ -3,18 +3,18 @@
 <head>
 	<meta charset="iso-8859-1" />
 	<meta http-equiv="Default-Style" content="text/css" />
-	<link rel="stylesheet" href="./templates/Froxlor/froxlor.css"  />
-	<!--[if IE]><link rel="stylesheet" href="./templates/Froxlor/froxlor_ie.css"  /><![endif]-->
+	<link rel="stylesheet" href="templates/Froxlor/assets/css/main.css" />
+	<!--[if IE]><link rel="stylesheet" href="templates/Froxlor/assets/css/main_ie.css" /><![endif]-->
 	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="./templates/Froxlor/js/froxlor.js"></script>
+	<script type="text/javascript" src="templates/Froxlor/assets/js/jquery.min.js"></script>
+	<script type="text/javascript" src="templates/Froxlor/assets/js/main.js"></script>
 	<title>Froxlor Server Management Panel - Installation</title>
 </head>
 <body>
 <div class="loginpage">
 	<article class="login bradius">
 		<header class="dark">
-			<img src="./images/Froxlor/logo.png" alt="Froxlor Server Management Panel" />
+			<img src="templates/Froxlor/assets/img/logo.png" alt="Froxlor Server Management Panel" />
 		</header>
 
 		<section class="loginsec">

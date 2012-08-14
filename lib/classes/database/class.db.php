@@ -189,7 +189,7 @@ class db
 	function query($query_str, $unbuffered = false, $suppress_error = false)
 	{
 
-		global $numbqueries;
+		global $numbqueries, $theme;
 
 		if (!mysql_ping($this->link_id))
 		{
@@ -349,7 +349,7 @@ class db
 
 	function showerror($errormsg, $mysqlActive = true)
 	{
-		global $filename;
+		global $filename, $theme;
 
 		$text = 'MySQL - Error: ' . str_replace("\n", "\t", $errormsg);
 		if($mysqlActive)

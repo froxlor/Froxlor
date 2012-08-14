@@ -29,7 +29,7 @@
 
 function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '')
 {
-	global $db, $settings;
+	global $db, $settings, $theme;
 
 	if($type == '1'
 	   || $type == '3'

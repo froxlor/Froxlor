@@ -1,7 +1,7 @@
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
 			<tr>
 				<td class="maintitle" align="center" colspan="3">
-					<b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['admin']['configfiles']['serverconfiguration']}</b>
+					<b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['configfiles']['serverconfiguration']}</b>
 					[<a href="$filename?page=overview&amp;part=all&amp;s=$s">{$lng['admin']['configfiles']['overview']}</a>]
 				</td>
 			</tr>

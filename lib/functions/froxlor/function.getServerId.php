@@ -25,10 +25,10 @@
  */
 function getServerId() {
 
-	global $server_id;
+	global $server_id, $theme;
 
-	if(isset($server_id) 
-		&& is_numeric($server_id) 
+	if(isset($server_id)
+		&& is_numeric($server_id)
 		&& $server_id > 0
 	) {
 		return $server_id;

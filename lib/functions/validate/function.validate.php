@@ -33,7 +33,7 @@
 
 function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array())
 {
-	global $log;
+	global $log, $theme;
 
 	if(!is_array($emptydefault))
 	{

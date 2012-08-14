@@ -1,7 +1,7 @@
 $header
 	<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 		<tr>
-			<td colspan="2" class="maintitle"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['admin']['ressourcedetails']}</b></td>
+			<td colspan="2" class="maintitle"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['ressourcedetails']}</b></td>
 		</tr>
 		<tr>
 			<td class="field_name_border_left">{$lng['admin']['customers']}:</td>
@@ -78,7 +78,7 @@ $header
 		</tr>
 		</if>
 		<tr>
-			<td colspan="2" class="maintitle"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['admin']['systemdetails']}</b></td>
+			<td colspan="2" class="maintitle"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['systemdetails']}</b></td>
 		</tr>
 		<tr>
 			<td class="field_name_border_left">{$lng['admin']['serversoftware']}:</td>
@@ -121,9 +121,9 @@ $header
 		</tr>
 		</if>
 		<tr>
-			<td colspan="2" class="maintitle"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['admin']['froxlordetails']}</b></td>
+			<td colspan="2" class="maintitle"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['froxlordetails']}</b></td>
 		</tr>
-		{$outstanding_tasks}		
+		{$outstanding_tasks}
 		{$cron_last_runs}
 		<tr>
 			<td class="field_name_border_left">{$lng['admin']['installedversion']}:</td>

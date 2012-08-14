@@ -27,7 +27,7 @@
 
 function standard_success($success_message = '', $replacer = '', $params = array())
 {
-	global $s, $header, $footer, $lng;
+	global $s, $header, $footer, $lng, $theme;
 
 	if(isset($lng['success'][$success_message]))
 	{

@@ -4,7 +4,7 @@ $header
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle_search_left" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['menue']['mysql']['databases']}</b>&nbsp;({$mysqls_count})</td>
+				<td class="maintitle_search_left" colspan="2"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['menue']['mysql']['databases']}</b>&nbsp;({$mysqls_count})</td>
 				<td class="maintitle_search_right" colspan="3">{$searchcode}</td>
 			</tr>
 			<if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') && 15 < $mysqls_count >
