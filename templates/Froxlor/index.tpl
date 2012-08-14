@@ -12,6 +12,7 @@
 	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 	<script type="text/javascript" src="templates/{$theme}/assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
+	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title>{$title}Froxlor Server Management Panel</title>
 </head>
 <body>

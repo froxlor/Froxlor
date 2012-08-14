@@ -179,7 +179,6 @@ $smarty->assign('theme', $theme);
 $smarty->assign('settings', $settings);
 $smarty->assign('loggedin', 0);
 $smarty->assign('current_year', date('Y'));
-$smarty->assign('image_folder', $image_path);
 $smarty->assign('title', 'WebFTP - ');
 
 // Let's start the program
