@@ -1,5 +1,6 @@
 packages/*
 temp/*
+templates/*
 .buildpath
 .project
 .settings/
