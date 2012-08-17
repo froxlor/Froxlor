@@ -17,7 +17,7 @@
  *
  */
 
-header("Content-Type: text/html; charset=iso-8859-1");
+header("Content-Type: text/html; charset=UTF-8");
 
 // prevent Froxlor pages from being cached
 header("Cache-Control: no-store, no-cache, must-revalidate");
@@ -67,27 +67,27 @@ unset($value);
 unset($key);
 $filename = basename($_SERVER['PHP_SELF']);
 
-if(!file_exists('./lib/userdata.inc.php'))
+if(!file_exists('lib/userdata.inc.php'))
 {
-	$config_hint = file_get_contents('./templates/Froxlor/misc/configurehint.tpl');
+	$config_hint = file_get_contents('templates/Froxlor/misc/configurehint.tpl');
 	die($config_hint);
 }
 
-if(!is_readable('./lib/userdata.inc.php'))
+if(!is_readable('lib/userdata.inc.php'))
 {
-	die('You have to make the file "./lib/userdata.inc.php" readable for the http-process!');
+	die('You have to make the file "lib/userdata.inc.php" readable for the http-process!');
 }
 
 /**
  * Includes the Usersettings eg. MySQL-Username/Passwort etc.
  */
 
-require ('./lib/userdata.inc.php');
+require ('lib/userdata.inc.php');
 
 if(!isset($sql)
    || !is_array($sql))
 {
-	$config_hint = file_get_contents('./templates/Froxlor/misc/configurehint.tpl');
+	$config_hint = file_get_contents('templates/Froxlor/misc/configurehint.tpl');
 	die($config_hint);
 }
 
@@ -103,13 +103,13 @@ if(isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root
  * Includes the Functions
  */
 
-require ('./lib/functions.php');
+require ('lib/functions.php');
 
 /**
  * Includes the MySQL-Tabledefinitions etc.
  */
 
-require ('./lib/tables.inc.php');
+require ('lib/tables.inc.php');
 
 /**
  * Includes the MySQL-Connection-Class
@@ -177,7 +177,7 @@ if(get_magic_quotes_gpc())
  * Selects settings from MySQL-Table
  */
 
-$settings_data = loadConfigArrayDir('./actions/admin/settings/');
+$settings_data = loadConfigArrayDir('actions/admin/settings/');
 $settings = loadSettings($settings_data, $db);
 
 /**
@@ -449,7 +449,7 @@ if(AREA == 'admin' || AREA == 'customer')
 	}
 	else
 	{
-		$navigation_data = loadConfigArrayDir('./lib/navigation/');
+		$navigation_data = loadConfigArrayDir('lib/navigation/');
 		$navigation = buildNavigation($navigation_data[AREA], $userinfo);
 	}
 	unset($navigation_data);

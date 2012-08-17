@@ -31,7 +31,7 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function html_entity_decode_array($subject, $fields = '', $complete = false, $quote_style = ENT_COMPAT, $charset = 'ISO-8859-1')
+function html_entity_decode_array($subject, $fields = '', $complete = false, $quote_style = ENT_COMPAT, $charset = 'UTF-8')
 {
 	if(is_array($subject))
 	{

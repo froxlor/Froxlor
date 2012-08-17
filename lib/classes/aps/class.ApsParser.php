@@ -3187,7 +3187,7 @@ class ApsParser
 				{
 					$Temp.= '<textarea name="text" rows="10" cols="55">';
 					$FileContent = file_get_contents('./packages/' . $Row['Path'] . '/license.txt');
-					$Temp.= htmlentities($FileContent, ENT_QUOTES, 'ISO-8859-1');
+					$Temp.= htmlentities($FileContent, ENT_QUOTES, 'UTF-8');
 					$Temp.= '</textarea>';
 					$Groupname = $lng['aps']['license'];
 					$Fieldname = $lng['aps']['license'];
@@ -3378,7 +3378,7 @@ class ApsParser
 					if($license->text->name)$Temp = $license->text->name . '<br/>';
 					$Temp.= '<form name="license" action="#"><textarea name="text" rows="10" cols="70">';
 					$FileContent = file_get_contents('./packages/' . $Row['Path'] . '/license.txt');
-					$Temp.= htmlentities($FileContent, ENT_QUOTES, 'ISO-8859-1');
+					$Temp.= htmlentities($FileContent, ENT_QUOTES, 'UTF-8');
 					$Temp.= '</textarea></form>';
 					$Fieldname = $lng['aps']['license'];
 					$Fieldvalue = $Temp;

@@ -89,7 +89,7 @@ class ticket
 		// initialize purifier
 		require_once dirname(dirname(__FILE__)).'/htmlpurifier/library/HTMLPurifier.auto.php';
 		$config = HTMLPurifier_Config::createDefault();
-		$config->set('Core.Encoding', 'ISO-8859-1'); // for now
+		$config->set('Core.Encoding', 'UTF-8'); //htmlpurifier uses utf-8 anyway as default
 		$config->set('HTML.Doctype', 'XHTML 1.0 Transitional');
 		$this->_purifier = new HTMLPurifier($config);
 

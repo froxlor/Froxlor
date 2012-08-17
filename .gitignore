@@ -1,6 +1,7 @@
 packages/*
 temp/*
 templates/*
+install/update.log
 .buildpath
 .project
 .settings/
