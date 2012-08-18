@@ -1943,7 +1943,7 @@ if(isFroxlorVersion('0.9.28-svn3'))
 	{
 		foreach ($row as $table)
 		{
-			$db->query('ALTER TABLE ' . $table . ' CHARACTER SET utf8 COLLATE utf8_general_ci;');
+			$db->query('ALTER TABLE ' . $table . ' CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
 		}
 	}
 
