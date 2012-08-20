@@ -272,7 +272,7 @@ while($row = $db->fetch_array($result_tasks))
 	elseif ($row['type'] == '5')
 	{
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Creating new FTP-home');
-		$result_directories = $db->query('SELECT `f`.`homedir`, `f`.`uid`, `f`.`gid`, `c`.`documentroot` AS `customerroot` FROM `' . TABLE_FTP_USERS . '` `f` LEFT JOIN `' . TABLE_PANEL_CUSTOMERS . '` `c` USING (`customerid`) WHERE `f`.`username` NOT LIKE \'%_backup\ OR `f`.`username` NOT LIKE \'%_logs\'');
+		$result_directories = $db->query('SELECT `f`.`homedir`, `f`.`uid`, `f`.`gid`, `c`.`documentroot` AS `customerroot` FROM `' . TABLE_FTP_USERS . '` `f` LEFT JOIN `' . TABLE_PANEL_CUSTOMERS . '` `c` USING (`customerid`) WHERE `f`.`username` NOT LIKE \'%_backup'\ OR `f`.`username` NOT LIKE \'%_logs\'');
 
 		while($directory = $db->fetch_array($result_directories))
 		{
