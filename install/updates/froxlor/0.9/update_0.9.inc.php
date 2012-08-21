@@ -1951,3 +1951,14 @@ if(isFroxlorVersion('0.9.28-svn3'))
 
 	updateToVersion('0.9.28-svn4');
 }
+
+if(isFroxlorVersion('0.9.28-svn4')) {
+	showUpdateStep("Updating from 0.9.28-svn4 to 0.9.28-svn5");
+
+	// Catchall functionality (enabled by default) see #1114
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('catchall', 'catchall_enabled', '1');");
+
+	lastStepStatus(0);
+
+	updateToVersion('0.9.28-svn5');
+}
