@@ -495,7 +495,7 @@ $lng['panel']['pathDescription'] = 'Katalogen kommer att skapas om den inte reda
 
 // ADDED IN 1.2.16-svn6
 
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Varning {NAME},\n\nDu har nu använt {TRAFFICUSED} MB av ditt tillgängliga {TRAFFIC} MB för trafik.\nDetta är mer än 90%.\n\nHälsningar, SysCP team';
+$lng['mails']['trafficninetypercent']['mailbody'] = 'Varning {NAME},\n\nDu har nu använt {TRAFFICUSED} MB av ditt tillgängliga {TRAFFIC} MB för trafik.\nDetta är mer än 90%.\n\nHälsningar, Froxlor team';
 $lng['mails']['trafficninetypercent']['subject'] = 'Du är på väg att nå din tillåtna trafikgräns';
 $lng['admin']['templates']['trafficninetypercent'] = 'Meddelande till kund när mer än nittio procent av trafiken utnyttjas';
 $lng['admin']['templates']['TRAFFIC'] = 'Ersatt med trafikbegrnsningen som var tilldelad till kunden.';
