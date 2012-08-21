@@ -1929,9 +1929,28 @@ if(isFroxlorVersion('0.9.28-svn3'))
 	showUpdateStep("Updating from 0.9.28-svn3 to 0.9.28-svn4", true);
 	lastStepStatus(0);
 
-	$update_default_theme = isset($_POST['update_default_theme']) ? $_POST['update_default_theme'] : 'Froxlor';
-	showUpdateStep('Setting default panel theme \'' . $update_default_theme . '\'', true);
-	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '".$db->escape($update_default_theme)."' WHERE varname = 'default_theme';");
+	if (isset($_POST['classic_theme_replacement']) && $_POST['classic_theme_replacement'] != '')
+	{
+		$classic_theme_replacement = $_POST['classic_theme_replacement'];
+	}
+	else
+	{
+		$classic_theme_replacement = 'Froxlor';
+	}
+	showUpdateStep('Setting replacement for the discontinued and removed Classic theme (if active)', true);
+
+	// Updating default theme setting
+	if ($settings['panel']['default_theme'] == 'Classic')
+	{
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '".$db->escape($classic_theme_replacement)."' WHERE varname = 'default_theme';");
+	}
+
+	// Updating admin's theme setting
+	$db->query('UPDATE `' . TABLE_PANEL_ADMINS . '` SET `theme` = \'' . $db->escape($classic_theme_replacement) . '\' WHERE `theme` = \'Classic\'');
+
+	// Updating customer's theme setting
+	$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `theme` = \'' . $db->escape($classic_theme_replacement) . '\' WHERE `theme` = \'Classic\'');
+
 	lastStepStatus(0);
 
 	showUpdateStep('Altering Froxlor database and tables to use UTF-8. This may take a while..', true);
