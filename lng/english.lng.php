@@ -1921,3 +1921,10 @@ $lng['admin']['speciallogwarning'] = 'WARNING: By changing this setting you will
 $lng['serversettings']['vmail_maildirname']['title'] = 'Maildir name';
 $lng['serversettings']['vmail_maildirname']['description'] = 'Maildir directory into user\'s account. Normally \'Maildir\', in some implementations \'.maildir\', and directly into user\'s directory if left blank.';
 $lng['tasks']['remove_emailacc_files'] = 'Delete customer e-mail data.';
+
+// ADDED IN 0.9.28-svn5
+$lng['error']['operationnotpermitted'] = 'Operation not permitted!';
+$lng['error']['featureisdisabled'] = 'Feature %s is disabled. Please contact your service provider.';
+$lng['serversettings']['catchall_enabled']['title']  = 'Use Catchall';
+$lng['serversettings']['catchall_enabled']['description']  = 'Do you want to provide your customers the catchall-feature?';
+

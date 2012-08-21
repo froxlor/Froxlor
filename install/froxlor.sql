@@ -337,6 +337,7 @@ CREATE TABLE `panel_settings` (
 
 
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
+	('catchall', 'catchall_enabled', '1'),
 	('session', 'allow_multiple_login', '0'),
 	('session', 'sessiontimeout', '600'),
 	('customer', 'accountprefix', 'web'),
@@ -530,7 +531,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'allow_preset', '1'),
 	('panel', 'allow_preset_admin', '0'),
 	('panel', 'password_regex', ''),
-	('panel', 'version', '0.9.28-svn4');
+	('panel', 'version', '0.9.28-svn5');
 
 
 
