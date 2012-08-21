@@ -302,7 +302,7 @@ $lng['admin']['deactivated_user'] = 'Felhasználï¿½ kikapcsolása';
 $lng['admin']['sendpassword'] = 'Jelszó kï¿½ldése';
 $lng['admin']['ownvhostsettings'] = 'Saját vHost beállítások';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Konfiguráció';
-$lng['admin']['configfiles']['files'] = '<b>Konfig. fájlok:</b> Kérem, változtassa meg a következő fï¿½jlokat, vagy - ha mï¿½g nem lï¿½teznek - hozza lï¿½tre őket a kï¿½vetkező tartalommal.<br /><b>Fontos:</b> A MySQL jelszó biztonsági okokból nem lesz kicserélve. Kérem, cserélje ki a "MYSQL_PASSWORD"-öt! Ha elfelejtette a NySQL jelszót, megtalálja a "lib/userdata.inc.php" fájlban.';
+$lng['admin']['configfiles']['files'] = '<b>Konfig. fájlok:</b> Kérem, változtassa meg a következő fájlokat, vagy - ha még nem léteznek - hozza létre őket a következő tartalommal.<br /><b>Fontos:</b> A MySQL jelszó biztonsági okokból nem lesz kicserélve. Kérem, cserélje ki a "MYSQL_PASSWORD"-öt! Ha elfelejtette a NySQL jelszót, megtalálja a "lib/userdata.inc.php" fájlban.';
 $lng['admin']['configfiles']['commands'] = '<b>Parancsok:</b> Kérem, hajtsa végre a következő parancsokat egy héjprogramban (shell)!';
 $lng['admin']['configfiles']['restart'] = '<b>Újraindítás:</b> Kérem, hajtsa végre a következő parancsokat egy héjprogramban (shell), hogy az új konfiguráció betöltődjön.';
 $lng['admin']['templates']['templates'] = 'Sablonok';
@@ -437,7 +437,7 @@ $lng['serversettings']['defaultip']['title'] = 'Alapértelmezett IP/Port';
 $lng['serversettings']['defaultip']['description'] = 'Mi az alapértelmezett IP/Port kombináció?';
 $lng['domains']['statstics'] = 'Használati statisztika';
 $lng['panel']['ascending'] = 'növekvő';
-$lng['panel']['decending'] = 'csï¿½kkenő';
+$lng['panel']['decending'] = 'csökkenő';
 $lng['panel']['search'] = 'Keresés';
 $lng['panel']['used'] = 'felhasznált';
 
