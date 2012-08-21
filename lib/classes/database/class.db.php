@@ -106,7 +106,7 @@ class db
 
 		if(!$this->link_id)
 		{
-			//try to connect with no password an change it afterwards. only for root user
+			//try to connect with no password and change it afterwards. only for root user
 
 			if($this->user == 'root')
 			{
@@ -134,11 +134,8 @@ class db
 				$this->showerror('Trying to use database ' . $this->database . ' failed, exiting');
 			}
 		}
-		/*
-		 * this is not for 0.9.x
-		 */
-		//mysql_query("SET NAMES utf8", $this->link_id);
-		//mysql_query("SET CHARACTER SET utf8", $this->link_id);
+
+		mysql_set_charset('utf8', $this->link_id);
 	}
 
 	/**
