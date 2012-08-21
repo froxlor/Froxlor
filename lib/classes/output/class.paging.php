@@ -421,6 +421,8 @@ class paging
 
 	function getHtmlArrowCode($baseurl, $field = '')
 	{
+		global $theme;
+
 		if($field != ''
 		   && isset($this->fields[$field]))
 		{

@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/flag.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/flag.png" alt="" />&nbsp;
 				{$lng['menue']['main']['changelanguage']}
 			</h2>
 		</header>

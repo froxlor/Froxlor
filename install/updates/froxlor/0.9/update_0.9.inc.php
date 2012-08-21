@@ -1923,3 +1923,31 @@ if(isFroxlorVersion('0.9.28-svn2')) {
 
 	updateToVersion('0.9.28-svn3');
 }
+
+if(isFroxlorVersion('0.9.28-svn3'))
+{
+	showUpdateStep("Updating from 0.9.28-svn3 to 0.9.28-svn4", true);
+	lastStepStatus(0);
+
+	$update_default_theme = isset($_POST['update_default_theme']) ? $_POST['update_default_theme'] : 'Froxlor';
+	showUpdateStep('Setting default panel theme \'' . $update_default_theme . '\'', true);
+	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '".$db->escape($update_default_theme)."' WHERE varname = 'default_theme';");
+	lastStepStatus(0);
+
+	showUpdateStep('Altering Froxlor database and tables to use UTF-8. This may take a while..', true);
+
+	$db->query('ALTER DATABASE ' . $db->getDbName() . ' CHARACTER SET utf8 COLLATE utf8_general_ci');
+
+	$handle = $db->query('SHOW TABLES');
+	while ($row = $db->fetch_array($handle))
+	{
+		foreach ($row as $table)
+		{
+			$db->query('ALTER TABLE ' . $table . ' CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
+		}
+	}
+
+	lastStepStatus(0);
+
+	updateToVersion('0.9.28-svn4');
+}

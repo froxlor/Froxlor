@@ -8,10 +8,10 @@
 	<td><if $row['ssl']=='1'>{$lng['panel']['yes']}<else>{$lng['panel']['no']}</if></td>
 	<td>
 		<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'edit', 'id' => $row['id']))}" style="text-decoration:none;">
-			<img src="images/Froxlor/icons/edit.png" alt="{$lng['panel']['edit']}" />
+			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" />
 		</a>&nbsp;
 		<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'delete', 'id' => $row['id']))}" style="text-decoration:none;">
-			<img src="images/Froxlor/icons/delete.png" alt="{$lng['panel']['delete']}" />
+			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" />
 		</a>
 	</td>
 </tr>

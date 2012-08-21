@@ -19,7 +19,7 @@
 
 function getAdmins($limit_resource = '')
 {
-	global $db;
+	global $db, $theme;
 
 	$additional_conditions = '';
 	$additional_conditions_array = array();

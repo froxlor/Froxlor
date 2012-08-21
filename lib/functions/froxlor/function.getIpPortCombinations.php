@@ -19,7 +19,7 @@
 
 function getIpPortCombinations($ssl = null)
 {
-	global $db;
+	global $db, $theme;
 	
 	$additional_conditions = '';
 	$additional_conditions_array = array();

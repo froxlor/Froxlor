@@ -17,7 +17,7 @@
 
 function checkPathConflicts($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 {
-	global $settings;
+	global $settings, $theme;
 	if((int)$settings['system']['mod_fcgid'] == 1)
 	{
 		/**

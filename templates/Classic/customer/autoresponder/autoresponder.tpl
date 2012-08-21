@@ -1,7 +1,7 @@
 $header
 	<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 		<tr>
-			<td  class="maintitle" colspan="5"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['menue']['email']['autoresponder']}</b></td>
+			<td  class="maintitle" colspan="5"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['menue']['email']['autoresponder']}</b></td>
 		</tr>
 		<tr>
 			<td class="field_display_border_left">{$lng['emails']['emailaddress']}</td>

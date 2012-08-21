@@ -1,7 +1,7 @@
 $header
 	<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable_60">
 		<tr>
-			<td class="maintitle"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$configfiles[$distribution]['label']}&nbsp;&raquo;&nbsp;{$configfiles[$distribution]['services'][$service]['label']}&nbsp;&raquo;&nbsp;{$configfiles[$distribution]['services'][$service]['daemons'][$daemon]['label']}</b> [<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => $page, 'distribution' => $distribution, 'service' => $service))}">{$lng['panel']['back']}</a>]</td>
+			<td class="maintitle"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$configfiles[$distribution]['label']}&nbsp;&raquo;&nbsp;{$configfiles[$distribution]['services'][$service]['label']}&nbsp;&raquo;&nbsp;{$configfiles[$distribution]['services'][$service]['daemons'][$daemon]['label']}</b> [<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => $page, 'distribution' => $distribution, 'service' => $service))}">{$lng['panel']['back']}</a>]</td>
 		</tr>
 		{$configpage}
 		<if $restart != ''>

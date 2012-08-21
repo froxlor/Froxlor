@@ -1,7 +1,7 @@
 <article>
 	<header>
 		<h2>
-			<img src="images/Froxlor/icons/aps_upload.png" alt="" />&nbsp;
+			<img src="templates/{$theme}/assets/img/icons/aps_upload.png" alt="" />&nbsp;
 			{$lng['aps']['upload']}
 		</h2>
 	</header>

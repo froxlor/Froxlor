@@ -2,7 +2,7 @@
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/htaccess.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/htaccess.png" alt="" />&nbsp;
 				{$lng['menue']['extras']['pathoptions']}
 			</h2>
 		</header>
@@ -17,7 +17,7 @@
 
 			<if 15 < $count >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/htaccess_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/htaccess_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
 				</div>
 			</if>
@@ -54,7 +54,7 @@
 			</p>
 
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/htaccess_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/htaccess_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
 			</div>
 

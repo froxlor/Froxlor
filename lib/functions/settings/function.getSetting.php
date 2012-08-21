@@ -19,7 +19,7 @@
 
 function getSetting($settinggroup, $varname)
 {
-	global $settings;
+	global $settings, $theme;
 	if(isset($settings[$settinggroup]) && is_array($settings[$settinggroup]) && isset($settings[$settinggroup][$varname]))
 	{
 		return $settings[$settinggroup][$varname];

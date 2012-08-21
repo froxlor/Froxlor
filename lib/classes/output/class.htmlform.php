@@ -26,7 +26,7 @@ class htmlform
 
 	public static function genHTMLForm($data = array())
 	{
-		global $lng;
+		global $lng, $theme;
 		$nob = false;
 
 		self::$_form = '';

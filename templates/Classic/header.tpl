@@ -1,15 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
 <head>
-	<meta http-equiv="content-type" content="application/xhtml+xml; charset=iso-8859-1" />
+	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
 	<if $settings['panel']['no_robots'] == '0'>
 	<meta name="robots" content="noindex, nofollow, noarchive" />
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	</if>
-	<link rel="stylesheet" href="templates/Classic/main.css" type="text/css" />
+	<link rel="stylesheet" href="templates/{$theme}/assets/css/main.css" type="text/css" />
 	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="templates/Classic/js/froxlor.js"></script>
-	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
+	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor</title>
 </head>
 <body style="margin: 0; padding: 0;">

@@ -27,9 +27,21 @@
 
 function html_entity_decode_complete($string)
 {
-	while($string != html_entity_decode($string))
+	global $theme;
+
+	if($theme == 'Classic')
 	{
-		$string = html_entity_decode($string);
+		while($string != html_entity_decode($string))
+		{
+			$string = html_entity_decode($string);
+		}
+	}
+	else
+	{
+		while($string != html_entity_decode($string, ENT_COMPAT | ENT_HTML5, 'UTF-8'))
+		{
+			$string = html_entity_decode($string, ENT_COMPAT | ENT_HTML5, 'UTF-8');
+		}
 	}
 
 	return $string;

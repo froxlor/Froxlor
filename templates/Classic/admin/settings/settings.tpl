@@ -1,6 +1,6 @@
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['admin']['serversettings']}</b>
+				<td class="maintitle" colspan="2"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['serversettings']}</b>
 				[<a href="$filename?page=overview&amp;part=&amp;s=$s">{$lng['admin']['configfiles']['compactoverview']}</a>]</td>
 			</tr>
 			$fields

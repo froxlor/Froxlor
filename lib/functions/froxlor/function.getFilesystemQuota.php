@@ -17,7 +17,7 @@
 
 function getFilesystemQuota()
 {
-	global $settings;
+	global $settings, $theme;
 	if ($settings['system']['diskquota_enabled'])
 	{
 		# Fetch all quota in the desired partition

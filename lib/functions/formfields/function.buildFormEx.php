@@ -17,7 +17,7 @@
 
 function buildFormEx($form, $part = '')
 {
-	global $settings;
+	global $settings, $theme;
 	$fields = '';
 
 	if(validateFormDefinition($form))

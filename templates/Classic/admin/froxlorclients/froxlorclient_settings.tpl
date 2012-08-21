@@ -1,6 +1,6 @@
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['admin']['froxlorclient_settings']}&nbsp;"{$client->Get('name')}"</b>
+				<td class="maintitle" colspan="2"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['froxlorclient_settings']}&nbsp;"{$client->Get('name')}"</b>
 				[<a href="$filename?page=clients&amp;action=settings&amp;part=&amp;s=$s&amp;id={$id}">{$lng['admin']['configfiles']['compactoverview']}</a>]</td>
 			</tr>
 			$fields

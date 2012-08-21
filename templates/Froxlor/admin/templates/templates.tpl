@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/templates.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/templates.png" alt="" />&nbsp;
 				{$lng['admin']['templates']['templates']}
 			</h2>
 		</header>
@@ -23,7 +23,7 @@ $header
 
 			<if $add>
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/templates_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/templates_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['templates']['template_add']}</a>
 				</div>
 			</if>
@@ -35,7 +35,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/templates.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/templates.png" alt="" />&nbsp;
 				{$lng['admin']['templates']['filetemplates']}
 			</h2>
 		</header>
@@ -55,7 +55,7 @@ $header
 
 			<if $filetemplateadd>
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/templates_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/templates_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add', 'files' => 'files'))}">{$lng['admin']['templates']['template_add']}</a>
 				</div>
 			</if>

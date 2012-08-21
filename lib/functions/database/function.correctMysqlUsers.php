@@ -19,7 +19,7 @@
 
 function correctMysqlUsers($mysql_access_host_array)
 {
-	global $db, $settings, $sql, $sql_root;
+	global $db, $settings, $sql, $sql_root, $theme;
 	
 	foreach($sql_root as $mysql_server => $mysql_server_details)
 	{

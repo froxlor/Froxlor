@@ -31,7 +31,7 @@
  */
 function checkLastGuid()
 {
-	global $log, $cronlog, $db, $settings;
+	global $log, $cronlog, $db, $settings, $theme;
 	
 	$mylog = null;
 	if (isset($cronlog) && $cronlog instanceof FroxlorLogger) {

@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/{$image}" alt="{$title}" />&nbsp;
+				<img src="templates/{$theme}/assets/img/{$image}" alt="{$title}" />&nbsp;
 				{$title}
 			</h2>
 		</header>
@@ -34,7 +34,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/replace_vars.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/replace_vars.png" alt="" />&nbsp;
 				{$lng['admin']['templates']['template_replace_vars']}
 			</h2>
 		</header>

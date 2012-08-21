@@ -47,7 +47,7 @@ else
 
 function read_directory($dir1 = null, $min_depth = 25, $htaccessfh = null)
 {
-	global $htaccessfh;
+	global $htaccessfh, $theme;
 
 	if(!is_string($dir1))
 	{
@@ -95,7 +95,7 @@ function read_directory($dir1 = null, $min_depth = 25, $htaccessfh = null)
 
 function parseHtaccess($file = null)
 {
-	global $debugHandler, $htaccessfh;
+	global $debugHandler, $htaccessfh, $theme;
 	$htacc = @file_get_contents($file);
 
 	if($htacc != "")

@@ -19,14 +19,14 @@
 
 function getFormGroupOutput($groupname, $groupdetails)
 {
-	global $lng;
+	global $lng, $theme;
 	eval("\$group = \"" . getTemplate("settings/settings_group") . "\";");
 	return $group;
 }
 
 function getFormOverviewGroupOutput($groupname, $groupdetails)
 {
-	global $lng, $settings, $filename, $s;
+	global $lng, $settings, $filename, $s, $theme;
 	
 	$group = '';
 	$title = $groupdetails['title'];

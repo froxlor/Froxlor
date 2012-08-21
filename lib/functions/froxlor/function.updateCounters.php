@@ -28,7 +28,7 @@
 
 function updateCounters($returndebuginfo = false)
 {
-	global $db;
+	global $db, $theme;
 	$returnval = array();
 
 	if($returndebuginfo === true)

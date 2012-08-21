@@ -4,7 +4,7 @@ $header
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_40">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['admin']['configfiles']['serverconfiguration']}</b> [<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'overview'))}">{$lng['admin']['configfiles']['overview']}</a>]</td>
+				<td class="maintitle" colspan="2"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['configfiles']['serverconfiguration']}</b> [<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'overview'))}">{$lng['admin']['configfiles']['overview']}</a>]</td>
 			</tr>
 			<tr>
 				<td class="main_field_name"><b>{$lng['admin']['configfiles']['distribution']}:</b></td>

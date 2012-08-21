@@ -22,7 +22,7 @@
  */
 function getRedirectCodesArray()
 {
-	global $db;
+	global $db, $theme;
 	
 	$sql = "SELECT * FROM `".TABLE_PANEL_REDIRECTCODES."` WHERE `enabled` = '1' ORDER BY `id` ASC";
 	$result = $db->query($sql);
@@ -44,7 +44,7 @@ function getRedirectCodesArray()
  */
 function getRedirectCodes()
 {
-	global $db, $lng;
+	global $db, $lng, $theme;
 	
 	$sql = "SELECT * FROM `".TABLE_PANEL_REDIRECTCODES."` WHERE `enabled` = '1' ORDER BY `id` ASC";
 	$result = $db->query($sql);
@@ -68,7 +68,7 @@ function getRedirectCodes()
  */
 function getDomainRedirectCode($domainid = 0)
 {
-	global $db;
+	global $db, $theme;
 
 	$code = '';
 	if($domainid > 0)
@@ -98,7 +98,7 @@ function getDomainRedirectCode($domainid = 0)
  */
 function getDomainRedirectId($domainid = 0)
 {
-	global $db;
+	global $db, $theme;
 
 	$code = 1;
 	if($domainid > 0)
@@ -128,10 +128,10 @@ function getDomainRedirectId($domainid = 0)
  */
 function addRedirectToDomain($domainid = 0, $redirect = 1)
 {
-	global $db;
+	global $db, $theme;
 	if($domainid > 0)
 	{
-		$db->query("INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."` 
+		$db->query("INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."`
 					SET `rid` = '".(int)$redirect."', `did` = '".(int)$domainid."'");
 	}
 }
@@ -147,7 +147,7 @@ function addRedirectToDomain($domainid = 0, $redirect = 1)
  */
 function updateRedirectOfDomain($domainid = 0, $redirect = false)
 {
-	global $db;
+	global $db, $theme;
 
 	if($redirect == false)
 	{
@@ -158,7 +158,7 @@ function updateRedirectOfDomain($domainid = 0, $redirect = false)
 	{
 		$db->query("DELETE FROM `".TABLE_PANEL_DOMAINREDIRECTS."` 
 					WHERE `did` = '".(int)$domainid."'");
-		$db->query("INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."` 
+		$db->query("INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."`
 					SET `rid` = '".(int)$redirect."', `did` = '".(int)$domainid."'");
 	}
 }

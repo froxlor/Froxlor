@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/ticket_archive.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/ticket_archive.png" alt="" />&nbsp;
 				{$lng['ticket']['lastarchived']}
 			</h2>
 		</header>
@@ -32,7 +32,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/ticket_archive_search.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/ticket_archive_search.png" alt="" />&nbsp;
 				{$lng['ticket']['search']}
 			</h2>
 		</header>

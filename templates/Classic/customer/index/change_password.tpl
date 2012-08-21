@@ -4,10 +4,10 @@ $header
 		<input type="hidden" name="page" value="$page" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
 			<tr>
-				<td class="none" rowspan="8"><img src="images/Classic/logininternal.gif" alt="" /></td>
+				<td class="none" rowspan="8"><img src="templates/{$theme}/assets/img/logininternal.gif" alt="" /></td>
 			</tr>
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['menue']['main']['changepassword']}</b></td>
+				<td class="maintitle" colspan="2"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['menue']['main']['changepassword']}</b></td>
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['changepassword']['old_password']}:</td>
