@@ -1646,3 +1646,10 @@ $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Time
 $lng['panel']['cancel'] = 'abbrechen';
 $lng['admin']['delete_statistics'] = 'Statistiken Löschen';
 $lng['admin']['speciallogwarning'] = 'ACHTUNG: Durch diese Einstellungen werden Sie alle bisherige Statistiken dieser Domain verlieren. Wenn Sie dabei wirklich sicher sind, geben Sie bitte folgenden Text in das nachfolgende Textfeld ein: "'.$lng['admin']['delete_statistics'].'" und bestätigen Sie mit "'.$lng['panel']['delete'].'".<br /><br />';
+
+// ADDED IN 0.9.28-svn5
+$lng['error']['operationnotpermitted'] = 'Diese Aktion ist nicht erlaubt!';
+$lng['error']['featureisdisabled'] = 'Die Funktion %s wurde deaktiviert. Kontaktieren Sie bitte Ihren Dienstleister.';
+$lng['serversettings']['catchall_enabled']['title']  = 'Catchall verwenden';
+$lng['serversettings']['catchall_enabled']['description']  = 'Möchten Sie Ihren Kunden die Funktion Catchall zur Verfügung stellen?';
+
