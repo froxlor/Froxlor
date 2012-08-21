@@ -11,7 +11,7 @@
  *
  * @copyright  (c) the authors
  * @author     Nickola Kolev <nikky@minus273.org>
- * @author     Ivaylo Bachvarov
+ * @author     Ivaylo Bachvarov <bachvarof@gmail.com>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  *
@@ -495,50 +495,50 @@ $lng['error']['youcanteditallfieldsofyourself'] = 'Бележка: Не може
 
 // ADDED IN 1.2.16-svn1
 
-$lng['serversettings']['natsorting']['title'] = 'Use natural human sorting in list view';
-$lng['serversettings']['natsorting']['description'] = 'Sorts lists as web1 -> web2 -> web11 instead of web1 -> web11 -> web2.';
+$lng['serversettings']['natsorting']['title'] = 'Използване на нормално сортиране в формата на лист';
+$lng['serversettings']['natsorting']['description'] = 'Сортирай така: web1 -> web2 -> web11 вместо така: web1 -> web11 -> web2.';
 
 // ADDED IN 1.2.16-svn2
 
-$lng['serversettings']['deactivateddocroot']['title'] = 'Docroot for deactivated users';
-$lng['serversettings']['deactivateddocroot']['description'] = 'When a user is deactivated this path is used as his docroot. Leave empty for not creating a vHost at all.';
+$lng['serversettings']['deactivateddocroot']['title'] = 'Docroot за деактивирани потребители';
+$lng['serversettings']['deactivateddocroot']['description'] = 'Когато потребител е деактивиран този път се използва за неговият docroot. Оставете празно ако не искате да създадете vHost.';
 
 // ADDED IN 1.2.16-svn4
 
 $lng['panel']['reset'] = 'Отхвърляне на промените';
-$lng['admin']['accountsettings'] = 'Account settings';
-$lng['admin']['panelsettings'] = 'Panel settings';
-$lng['admin']['systemsettings'] = 'System settings';
-$lng['admin']['webserversettings'] = 'Webserver settings';
-$lng['admin']['mailserversettings'] = 'Mailserver settings';
-$lng['admin']['nameserversettings'] = 'Nameserver settings';
-$lng['admin']['updatecounters'] = 'Recalculate resource usage';
-$lng['question']['admin_counters_reallyupdate'] = 'Do you really want to recalculate resource usage?';
-$lng['panel']['pathDescription'] = 'If the directory doesn\'t exist, it will be created automatically.';
-$lng['panel']['pathDescriptionEx'] = '<br /><br />If you want a redirect to another domain than this entry has to start with http:// or https://';
+$lng['admin']['accountsettings'] = 'Настройки на акаунта';
+$lng['admin']['panelsettings'] = 'Настройки на панела';
+$lng['admin']['systemsettings'] = 'Настройки на системата';
+$lng['admin']['webserversettings'] = 'Настройки на Webserver';
+$lng['admin']['mailserversettings'] = 'Настройки на Mailserver';
+$lng['admin']['nameserversettings'] = 'Настройки на Nameserver';
+$lng['admin']['updatecounters'] = 'Пресметни използвания ресурс';
+$lng['question']['admin_counters_reallyupdate'] = 'Сигурни ли сте, че искате да пресметнете използвания ресурс?';
+$lng['panel']['pathDescription'] = 'Ако директорията не съществува ще бъде създадена автоматично.';
+$lng['panel']['pathDescriptionEx'] = '<br /><br />Ако искате да пренасочите друг домейн той трябва да започва с http:// или https://';
 
 // ADDED IN 1.2.16-svn6
 
-$lng['admin']['templates']['TRAFFIC'] = 'Replaced with the traffic in mB, which was assigned to the customer.';
-$lng['admin']['templates']['TRAFFICUSED'] = 'Replaced with the traffic in MB, which was exhausted by the customer.';
+$lng['admin']['templates']['TRAFFIC'] = 'Заменен с трафика в МБ, който е назначен на клиента.';
+$lng['admin']['templates']['TRAFFICUSED'] = 'Заменен с трафика в MB, която е изчерпана от клиента.';
 
 // ADDED IN 1.2.16-svn7
 
-$lng['admin']['subcanemaildomain']['never'] = 'Never';
-$lng['admin']['subcanemaildomain']['choosableno'] = 'Choosable, default no';
-$lng['admin']['subcanemaildomain']['choosableyes'] = 'Choosable, default yes';
-$lng['admin']['subcanemaildomain']['always'] = 'Always';
+$lng['admin']['subcanemaildomain']['never'] = 'Никога';
+$lng['admin']['subcanemaildomain']['choosableno'] = 'Избираемо, по подразбиране не';
+$lng['admin']['subcanemaildomain']['choosableyes'] = 'Избираемо, по подразбиране да';
+$lng['admin']['subcanemaildomain']['always'] = 'Винаги';
 $lng['changepassword']['also_change_webalizer'] = ' промени също паролата за Webalizer статистиката';
 
 // ADDED IN 1.2.16-svn8
 
-$lng['serversettings']['mailpwcleartext']['title'] = 'Also save passwords of mail accounts unencrypted in database';
-$lng['serversettings']['mailpwcleartext']['description'] = 'If this is set to yes, all passwords will also be saved unencrypted (clear text, plain readable for everyone with database access) in the mail_users-table. Only activate this if you intend to use SASL!';
-$lng['serversettings']['mailpwcleartext']['removelink'] = 'Click here to wipe all unencrypted passwords from the table.';
-$lng['question']['admin_cleartextmailpws_reallywipe'] = 'Do you really want to wipe all unencrypted mail account passwords from the table mail_users? This cannot be reverted!';
-$lng['admin']['configfiles']['overview'] = 'Overview';
+$lng['serversettings']['mailpwcleartext']['title'] = 'Запазване на паролите на имейл акаунти, некриптиран в базата данни';
+$lng['serversettings']['mailpwcleartext']['description'] = 'Ако това е настроено на Да, всички пароли ще бъдат zapomneni некриптиран (w the mail_users-table. активира това само ако възнамерявате да използвате SASL!';
+$lng['serversettings']['mailpwcleartext']['removelink'] = 'Щракнете тук, за да изтрие всички некриптиран пароли от базата..';
+$lng['question']['admin_cleartextmailpws_reallywipe'] = 'Наистина ли искате да изтрие всички некриптирани пароли за имейл акаунт от базата mail_users? Това е необратимо!';
+$lng['admin']['configfiles']['overview'] = 'Преглед';
 $lng['admin']['configfiles']['wizard'] = 'Wizard';
-$lng['admin']['configfiles']['distribution'] = 'Distribution';
+$lng['admin']['configfiles']['distribution'] = 'Дистрибуция';
 $lng['admin']['configfiles']['service'] = 'Service';
 $lng['admin']['configfiles']['daemon'] = 'Daemon';
 $lng['admin']['configfiles']['http'] = 'Webserver (HTTP)';
@@ -546,20 +546,20 @@ $lng['admin']['configfiles']['dns'] = 'Nameserver (DNS)';
 $lng['admin']['configfiles']['mail'] = 'Mailserver (IMAP/POP3)';
 $lng['admin']['configfiles']['smtp'] = 'Mailserver (SMTP)';
 $lng['admin']['configfiles']['ftp'] = 'FTP-Server';
-$lng['admin']['configfiles']['etc'] = 'Others (System)';
-$lng['admin']['configfiles']['choosedistribution'] = '-- Choose a distribution --';
-$lng['admin']['configfiles']['chooseservice'] = '-- Choose a service --';
-$lng['admin']['configfiles']['choosedaemon'] = '-- Choose a daemon --';
+$lng['admin']['configfiles']['etc'] = 'Други (System)';
+$lng['admin']['configfiles']['choosedistribution'] = '-- Избери дистрибуция --';
+$lng['admin']['configfiles']['chooseservice'] = '-- Избери услуга --';
+$lng['admin']['configfiles']['choosedaemon'] = '-- Избери daemon --';
 
 // ADDED IN 1.2.16-svn10
 
-$lng['serversettings']['ftpdomain']['title'] = 'FTP accounts @domain';
-$lng['serversettings']['ftpdomain']['description'] = 'Customers can create FTP accounts user@customerdomain?';
+$lng['serversettings']['ftpdomain']['title'] = 'FTP акаунти @домейн';
+$lng['serversettings']['ftpdomain']['description'] = 'Клиентите могат да създават FTP акаунти: потребител@домейн?';
 $lng['panel']['back'] = 'Назад';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_log_sql']['title'] = 'Temporary save logs in the database';
+$lng['serversettings']['mod_log_sql']['title'] = 'Временно запиши логовете в базата данни';
 $lng['serversettings']['mod_log_sql']['description'] = 'Use <a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> to save webrequests temporarily<br /><b>This needs a special <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Enable FCGID';
 $lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with the corresponding useraccount.<br /><br /><b>This needs a special webserver configuration for Apache, see <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_handbook">FCGI - handbook</a></b>';
