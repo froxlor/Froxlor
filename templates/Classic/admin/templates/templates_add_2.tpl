@@ -5,7 +5,7 @@ $header
 		<input type="hidden" name="action" value="$action" />
 		<table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle" colspan="2"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['admin']['templates']['template_add']}</b></td>
+				<td class="maintitle" colspan="2"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['templates']['template_add']}</b></td>
 			</tr>
 			<tr>
 				<td class="main_field_name">{$lng['login']['language']}</td>
@@ -31,7 +31,7 @@ $header
 	<br />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle" colspan="2"><b>&nbsp;<img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['admin']['templates']['template_replace_vars']}</b></td>
+				<td class="maintitle" colspan="2"><b>&nbsp;<img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['templates']['template_replace_vars']}</b></td>
 			</tr>
 			<tr>
 				<td class="field_display_border_left" colspan="2"><b>{$lng['admin']['templates']['createcustomer']}</b></td>

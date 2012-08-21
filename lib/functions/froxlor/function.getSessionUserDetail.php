@@ -19,7 +19,7 @@
 
 function getSessionUserDetail($varname)
 {
-	global $userinfo;
+	global $userinfo, $theme;
 
 	if(isset($userinfo[$varname]))
 	{

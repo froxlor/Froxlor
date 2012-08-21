@@ -27,7 +27,7 @@
  */
 function customerHasPerlEnabled($cid = 0)
 {
-	global $db;
+	global $db, $theme;
 
 	if($cid > 0)
 	{

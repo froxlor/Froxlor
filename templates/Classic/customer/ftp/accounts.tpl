@@ -5,7 +5,7 @@ $header
 		<input type="hidden" name="send" value="send" />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle_search_left"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['menue']['ftp']['accounts']}</b>&nbsp;({$ftps_count})</td>
+				<td class="maintitle_search_left"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['menue']['ftp']['accounts']}</b>&nbsp;({$ftps_count})</td>
 				<td class="maintitle_search_right" colspan="3">{$searchcode}</td>
 			</tr>
 			<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') && 15 < $ftps_count >

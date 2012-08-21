@@ -19,7 +19,7 @@
 
 function getIpAddresses()
 {
-	global $db;
+	global $db, $theme;
 	
 	$query = 'SELECT `id`, `ip`, `port` FROM `' . TABLE_PANEL_IPSANDPORTS . '` ORDER BY `ip` ASC, `port` ASC';
 	$result = $db->query($query);

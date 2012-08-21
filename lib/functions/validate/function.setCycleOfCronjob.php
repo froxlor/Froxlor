@@ -17,7 +17,7 @@
 
 function setCycleOfCronjob($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 {
-	global $settings, $db;
+	global $settings, $db, $theme;
 
 	switch($newfieldvalue)
 	{

@@ -6,10 +6,10 @@
 	<if $row['apsdb'] != '1'>
 		<td>
 			<a href="{$linker->getLink(array('section' => 'mysql', 'page' => 'mysqls', 'action' => 'edit', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="images/Froxlor/icons/edit.png" alt="{$lng['panel']['edit']}" />
+				<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" />
 			</a>&nbsp;
 			<a href="{$linker->getLink(array('section' => 'mysql', 'page' => 'mysqls', 'action' => 'delete', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="images/Froxlor/icons/delete.png" alt="{$lng['panel']['delete']}" />
+				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" />
 			</a>
 		</td>
 	<else>

@@ -1,6 +1,6 @@
 <table cellpadding="5" cellspacing="4" border="0" align="center" class="maintable_60">
   <tr>
-    <td class="maintitle"><b><img src="images/Classic/title.gif" alt="" />&nbsp;&nbsp;{$dt}&nbsp;{$lng['ticket']['by']}&nbsp;{$by}&nbsp;({$status})</b></td>
+    <td class="maintitle"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;&nbsp;{$dt}&nbsp;{$lng['ticket']['by']}&nbsp;{$by}&nbsp;({$status})</b></td>
 	</tr>
   <tr>
     <td class="main_field_display">{$subject}</td>

@@ -33,7 +33,7 @@
 
 function safe_exec($exec_string, &$return_value = false)
 {
-	global $settings;
+	global $settings, $theme;
 
 	//
 	// define allowed system commands

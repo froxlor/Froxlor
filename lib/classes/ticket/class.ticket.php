@@ -89,7 +89,7 @@ class ticket
 		// initialize purifier
 		require_once dirname(dirname(__FILE__)).'/htmlpurifier/library/HTMLPurifier.auto.php';
 		$config = HTMLPurifier_Config::createDefault();
-		$config->set('Core.Encoding', 'ISO-8859-1'); // for now
+		$config->set('Core.Encoding', 'UTF-8'); //htmlpurifier uses utf-8 anyway as default
 		$config->set('HTML.Doctype', 'XHTML 1.0 Transitional');
 		$this->_purifier = new HTMLPurifier($config);
 
@@ -260,7 +260,7 @@ class ticket
 
 	public function sendMail($customerid = - 1, $template_subject = null, $default_subject = null, $template_body = null, $default_body = null)
 	{
-		global $mail;
+		global $mail, $theme;
 
 		// Some checks are to be made here in the future
 
@@ -680,13 +680,13 @@ class ticket
 	private function convertLatin1ToHtml($str)
 	{
 		$html_entities = array (
-					"Ä" =>  "&Auml;",
-					"ä" =>  "&auml;",
-					"Ö" =>  "&Ouml;",
-					"ö" =>  "&ouml;",
-					"Ü" =>  "&Uuml;",
-					"ü" =>  "&uuml;",
-					"ß" =>  "&szlig;"
+					"Ã„" =>  "&Auml;",
+					"Ã¤" =>  "&auml;",
+					"Ã–" =>  "&Ouml;",
+					"Ã¶" =>  "&ouml;",
+					"Ãœ" =>  "&Uuml;",
+					"Ã¼" =>  "&uuml;",
+					"ÃŸ" =>  "&szlig;"
 					/*
 					 * @TODO continue this table for all the special-characters
 					 */

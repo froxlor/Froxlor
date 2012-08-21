@@ -1,7 +1,7 @@
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/group_edit.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/group_edit.png" alt="" />&nbsp;
 				{t}Editing{/t}: <a href="webftp.php?action=cd&amp;file={$currentDir}">{$currentDir}</a>/{$file} ({$mode})
 			</h2>
 		</header>

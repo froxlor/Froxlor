@@ -4,7 +4,7 @@ $header
                 <input type="hidden" name="page" value="$page"/>
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle_search_left" colspan="4"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['menue']['multiserver']['clients']}&nbsp;"{$client->Get('name')}"</b></td>
+				<td class="maintitle_search_left" colspan="4"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['menue']['multiserver']['clients']}&nbsp;"{$client->Get('name')}"</b></td>
 			</tr>
 			<tr>
 				<td colspan="4">@TODO infos about client "{$client->Get('name')}"</td>

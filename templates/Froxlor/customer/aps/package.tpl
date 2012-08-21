@@ -1,7 +1,7 @@
 <article>
 	<header>
 		<h2>
-			<img src="images/Froxlor/icons/aps.png" alt="{$Xml->name}" />&nbsp;
+			<img src="templates/{$theme}/assets/img/icons/aps.png" alt="{$Xml->name}" />&nbsp;
 			{$Xml->name}
 		</h2>
 	</header>

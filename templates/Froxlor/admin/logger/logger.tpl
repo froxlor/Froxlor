@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/syslog.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/syslog.png" alt="" />&nbsp;
 				{$lng['menue']['logger']['logger']}
 			</h2>
 		</header>
@@ -17,7 +17,7 @@ $header
 
 			<if 15 < $log_count >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/syslog_truncate.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/syslog_truncate.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a>
 				</div>
 			</if>
@@ -45,7 +45,7 @@ $header
 			</form>
 
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/syslog_truncate.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/syslog_truncate.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a>
 			</div>
 

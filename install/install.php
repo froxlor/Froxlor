@@ -100,23 +100,24 @@ function page_header() {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="iso-8859-1" />
+	<meta charset="utf-8" />
 	<meta http-equiv="Default-Style" content="text/css" />
-	<link rel="stylesheet" href="../templates/Froxlor/froxlor.css"  />
-	<!--[if IE]><link rel="stylesheet" href="../templates/Froxlor/froxlor_ie.css"  /><![endif]-->
+	<link rel="stylesheet" href="../templates/Froxlor/assets/css/main.css"  />
+	<!--[if IE]><link rel="stylesheet" href="../templates/Froxlor/assets/css/main_ie.css"  /><![endif]-->
 	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
-	<script type="text/javascript" src="../templates/Froxlor/js/froxlor.js"></script>
+	<script type="text/javascript" src="../templates/Froxlor/assets/js/main.js"></script>
+	<link href="../templates/Froxlor/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title>Froxlor Server Management Panel - Installation</title>
 	<style>
 	input {
-		background: #dae7ee url('../images/Froxlor/icons/text_align_left.png') no-repeat 5px 4px;
+		background: #dae7ee url('../templates/Froxlor/assets/img/icons/text_align_left.png') no-repeat 5px 4px;
 	}
 	input[type="password"] {
-		background: #dae7ee url('../images/Froxlor/icons/password.png') no-repeat 4px 4px;
+		background: #dae7ee url('../templates/Froxlor/assets/img/icons/password.png') no-repeat 4px 4px;
 	}
 	input[type="submit"] {
-		background: #ccc url('../images/Froxlor/icons/button_ok.png') no-repeat 4px 8px;
+		background: #ccc url('../templates/Froxlor/assets/img/icons/button_ok.png') no-repeat 4px 8px;
 	}
 	</style>
 </head>
@@ -154,13 +155,13 @@ function status_message($case, $text)
 
 function requirement_checks() {
 
-	global $lng;
+	global $lng, $theme;
 	page_header();
 
 ?>
 	<article class="install bradius">
 		<header class="dark">
-			<img src="../images/Froxlor/logo.png" alt="Froxlor Server Management Panel" />
+			<img src="../templates/Froxlor/assets/img/logo.png" alt="Froxlor Server Management Panel" />
 		</header>
 
 		<section class="installsec">
@@ -520,7 +521,7 @@ if(isset($_POST['installstep'])
 ?>
 	<article class="install bradius">
 		<header class="dark">
-			<img src="../images/Froxlor/logo.png" alt="Froxlor Server Management Panel" />
+			<img src="../templates/Froxlor/assets/img/logo.png" alt="Froxlor Server Management Panel" />
 		</header>
 
 		<section class="installsec">
@@ -841,7 +842,7 @@ else
 ?>
 	<article class="install bradius">
 		<header class="dark">
-			<img src="../images/Froxlor/logo.png" alt="Froxlor Server Management Panel" />
+			<img src="../templates/Froxlor/assets/img/logo.png" alt="Froxlor Server Management Panel" />
 		</header>
 		<section class="installsec">
 			<h2><?php echo $lng['install']['language']; ?></h2>

@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/tickets.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/tickets.png" alt="" />&nbsp;
 				{$lng['menue']['ticket']['ticket']}
 			</h2>
 		</header>
@@ -17,7 +17,7 @@ $header
 
 			<if ($userinfo['tickets_used'] < $userinfo['tickets'] || $userinfo['tickets'] == '-1') && 15 < $tickets_count >
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/ticket_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/ticket_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'new'))}">{$lng['ticket']['ticket_new']}</a>
 			</div>
 			</if>
@@ -56,7 +56,7 @@ $header
 
 			<if ($userinfo['tickets_used'] < $userinfo['tickets'] || $userinfo['tickets'] == '-1') && $countcustomers !=0 >
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/ticket_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/ticket_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'new'))}">{$lng['ticket']['ticket_new']}</a>
 			</div>
 			</if>

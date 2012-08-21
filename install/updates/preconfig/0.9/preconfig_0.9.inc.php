@@ -26,7 +26,7 @@
  */
 function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 {
-	global $settings, $lng, $db;
+	global $settings, $lng, $db, $theme;
 
 	if(versionInUpdate($current_version, '0.9.4-svn2'))
 	{
@@ -417,16 +417,38 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	}
 
 	if(versionInUpdate($current_version, '0.9.18-svn2'))
-	{       
+	{
 		$has_preconfig = true;
 		$description = 'As you can (obviously) see, Froxlor now comes with a new theme. You also have the possibility to switch back to "Classic" if you want to.'; 
 		$question = '<strong>Select default panel theme:</strong>&nbsp;';
 		$question.= '<select name="update_default_theme">';
 		$themes = getThemes();
-		foreach($themes as $theme) {
-			$question.= makeoption($theme, $theme, 'Froxlor');
+		foreach($themes as $cur_theme) // $theme is already in use
+		{
+			$question.= makeoption($cur_theme, $cur_theme, 'Froxlor');
 		}
 		$question.= '</select>';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if(versionInUpdate($current_version, '0.9.28-svn4'))
+	{
+		$has_preconfig = true;
+		$description = 'This version introduces a lot of profound changes:';
+		$description .= '<br /><ul><li>Improving the whole template system</li><li>Full UTF-8 support</li><li><strong>Removing support for the former default theme \'Classic\'</strong></li></ul>';
+		$description .= '<br /><br />Notice: This update will <strong>alter your Froxlor database to use UTF-8</strong> as default charset. ';
+		$description .= 'Even though this is already tested, we <span style="color:#ff0000;font-weight:bold;">strongly recommend</span> to ';
+		$description .= 'test this update in a testing environment using your existing data.<br /><br />';
+
+		$question = '<strong>Select your default panel theme:</strong>&nbsp;';
+		$question.= '<select name="update_default_theme">';
+		$themes = getThemes();
+		foreach($themes as $cur_theme)
+		{
+			$question.= makeoption($cur_theme, $cur_theme, 'Froxlor');
+		}
+		$question.= '</select>';
+
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 }

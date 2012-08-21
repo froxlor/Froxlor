@@ -9,10 +9,10 @@
  */
 function getCustomerIdByDomain($domain = null)
 {
-	global $db;
+	global $db, $theme;
 	
 	$result = $db->query_first("SELECT `customerid` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `domain` = '".$domain."'");
-	if(is_array($result) 
+	if(is_array($result)
 		&& isset($result['customerid'])
 	) {
 		return $result['customerid'];

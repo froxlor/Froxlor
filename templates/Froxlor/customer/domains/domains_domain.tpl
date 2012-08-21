@@ -7,12 +7,12 @@
 	<td>
 		<if $row['caneditdomain'] == '1'>
 			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="images/Froxlor/icons/edit.png" alt="{$lng['panel']['edit']}" />
+				<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" />
 			</a>&nbsp;
 		</if>
 		<if $row['parentdomainid'] != '0' && !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
 			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'delete', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="images/Froxlor/icons/delete.png" alt="{$lng['panel']['delete']}" />
+				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" />
 			</a>&nbsp;
 		</if>
 		<if $row['parentdomainid'] == '0' && !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>

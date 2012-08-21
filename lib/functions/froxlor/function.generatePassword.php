@@ -21,7 +21,7 @@
 
 function generatePassword()
 {
-	global $db, $settings;
+	global $db, $settings, $theme;
 
 	return substr(md5(uniqid(microtime(), 1)), 24, 10);
 }

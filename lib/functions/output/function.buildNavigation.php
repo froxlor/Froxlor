@@ -28,6 +28,8 @@
 
 function buildNavigation($navigation, $userinfo)
 {
+	global $theme;
+
 	$returnvalue = '';
 	
 	foreach($navigation as $box)

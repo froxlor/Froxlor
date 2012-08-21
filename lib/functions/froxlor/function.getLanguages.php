@@ -19,7 +19,7 @@
 
 function getLanguages()
 {
-	global $db;
+	global $db, $theme;
 	
 	$query = 'SELECT * FROM `' . TABLE_PANEL_LANGUAGE . '` ';
 	$result = $db->query($query);

@@ -1,6 +1,6 @@
 	<article class="login bradius">
 		<header class="dark">
-			<img src="{$header_logo}" alt="{t}Froxlor Server Management Panel{/t}" />
+			<img src="templates/{$theme}/assets/img/logo.png" alt="{t}Froxlor Server Management Panel{/t}" />
 		</header>
 
 		{if isset($successmessage)}

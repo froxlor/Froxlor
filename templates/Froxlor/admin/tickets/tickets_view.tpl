@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/delete.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="" />&nbsp;
 				{$lng['ticket']['ticket_delete']}
 			</h2>
 		</header>

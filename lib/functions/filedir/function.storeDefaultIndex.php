@@ -27,7 +27,7 @@
  */
 function storeDefaultIndex($loginname = null, $destination = null, $logger = null, $force = false)
 {
-	global $db, $settings, $pathtophpfiles;
+	global $db, $settings, $pathtophpfiles, $theme;
 
 	if ($force
 		|| (int)$settings['system']['store_index_file_subs'] == 1

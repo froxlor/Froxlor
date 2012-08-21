@@ -2,7 +2,7 @@ $header
 <article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/res_recalculate_big.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/res_recalculate_big.png" alt="" />&nbsp;
 				{$lng['admin']['updatecounters']}
 			</h2>
 		</header>
@@ -10,7 +10,7 @@ $header
 		<section class="fullform bradiusodd">
         	<table class="formtable">
 				<tr>
-					<td colspan="2" style="font-weight: bold;"><img src="images/Froxlor/icons/res_recalculate.png" alt="" />&nbsp;{$lng['admin']['customers']}</td>
+					<td colspan="2" style="font-weight: bold;"><img src="templates/{$theme}/assets/img/icons/res_recalculate.png" alt="" />&nbsp;{$lng['admin']['customers']}</td>
 				</tr>
 {$customers}
 			</table>
@@ -20,7 +20,7 @@ $header
 		<section class="fullform bradiusodd">
         	<table class="formtable">
 				<tr>
-					<td colspan="2" style="font-weight: bold;"><img src="images/Froxlor/icons/res_recalculate.png" alt="" />&nbsp;{$lng['admin']['admins']}</td>
+					<td colspan="2" style="font-weight: bold;"><img src="templates/{$theme}/assets/img/icons/res_recalculate.png" alt="" />&nbsp;{$lng['admin']['admins']}</td>
 				</tr>
 {$admins}
 			</table>

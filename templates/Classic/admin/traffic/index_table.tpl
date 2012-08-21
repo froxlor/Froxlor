@@ -1,7 +1,7 @@
 	<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable" id="stats{$overview['year']}">
 		<thead>
 			<tr>
-				<td colspan="13" class="maintitle"><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['traffic']['trafficoverview']}&nbsp;{$overview['type']}&nbsp;{$overview['year']}</b></td>
+				<td colspan="13" class="maintitle"><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['traffic']['trafficoverview']}&nbsp;{$overview['type']}&nbsp;{$overview['year']}</b></td>
 			</tr>
 			<tr>
 				<th class="field_display_border_left" style="text-align:left;">{$overview['type']}</th>

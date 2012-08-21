@@ -4,7 +4,7 @@ $header
                 <input type="hidden" name="page" value="$page"/>
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle_search_left" colspan="3" ><b><img src="images/Classic/title.gif" alt="" />&nbsp;{$lng['admin']['customers']}</b>&nbsp;({$customercount})</td>
+				<td class="maintitle_search_left" colspan="3" ><b><img src="templates/{$theme}/assets/img/title.gif" alt="" />&nbsp;{$lng['admin']['customers']}</b>&nbsp;({$customercount})</td>
 				<td class="maintitle_search_right" colspan="<if ($settings['ticket']['enabled'] == 1 || $settings['autoresponder']['autoresponder_active'] == 1) >8<else>7</if>">{$searchcode}</td>
 			</tr>
 			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $userinfo['customers_used']>
