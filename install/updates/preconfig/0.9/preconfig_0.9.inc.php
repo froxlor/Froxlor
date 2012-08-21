@@ -440,8 +440,8 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$description .= 'Even though this is already tested, we <span style="color:#ff0000;font-weight:bold;">strongly recommend</span> to ';
 		$description .= 'test this update in a testing environment using your existing data.<br /><br />';
 
-		$question = '<strong>Select your default panel theme:</strong>&nbsp;';
-		$question.= '<select name="update_default_theme">';
+		$question = '<strong>Select your preferred Classic Theme replacement:</strong>&nbsp;';
+		$question.= '<select name="classic_theme_replacement">';
 		$themes = getThemes();
 		foreach($themes as $cur_theme)
 		{

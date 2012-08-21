@@ -8,7 +8,7 @@ CREATE TABLE `ftp_groups` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `groupname` (`groupname`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -32,7 +32,7 @@ CREATE TABLE `ftp_users` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -55,7 +55,7 @@ CREATE TABLE `mail_users` (
   `imap` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -71,7 +71,7 @@ CREATE TABLE `mail_virtual` (
   `iscatchall` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `email` (`email`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -126,7 +126,7 @@ CREATE TABLE `panel_admins` (
   `theme` varchar(255) NOT NULL default 'Froxlor',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -191,7 +191,7 @@ CREATE TABLE `panel_customers` (
   `backup_enabled` TINYINT( 1 ) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -205,7 +205,7 @@ CREATE TABLE `panel_databases` (
   `apsdb` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -251,7 +251,7 @@ CREATE TABLE `panel_domains` (
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
   KEY `domain` (`domain`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -273,7 +273,7 @@ CREATE TABLE `panel_ipsandports` (
   `ssl_cert_chainfile` varchar(255) NOT NULL,
   `docroot` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -289,7 +289,7 @@ CREATE TABLE `panel_htaccess` (
   `error401path` varchar(255) NOT NULL default '',
   `options_cgi` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -303,7 +303,7 @@ CREATE TABLE `panel_htpasswds` (
   `authname` varchar(255) NOT NULL default 'Restricted Area',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -332,7 +332,7 @@ CREATE TABLE `panel_settings` (
   `varname` varchar(255) NOT NULL default '',
   `value` text NOT NULL,
   PRIMARY KEY  (`settingid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -541,7 +541,7 @@ CREATE TABLE `panel_tasks` (
   `type` int(11) NOT NULL default '0',
   `data` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -555,7 +555,7 @@ CREATE TABLE `panel_templates` (
   `value` longtext NOT NULL,
   PRIMARY KEY  (id),
   KEY adminid (adminid)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -573,7 +573,7 @@ CREATE TABLE `panel_traffic` (
   `mail` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -591,7 +591,7 @@ CREATE TABLE `panel_traffic_admins` (
   `mail` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `adminid` (`adminid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -608,7 +608,7 @@ CREATE TABLE `panel_diskspace` (
   `mysql` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -625,7 +625,7 @@ CREATE TABLE `panel_diskspace_admins` (
   `mysql` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `adminid` (`adminid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -636,7 +636,7 @@ CREATE TABLE `panel_languages` (
   `iso` char(3) NOT NULL DEFAULT 'foo',
   `file` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -680,7 +680,7 @@ CREATE TABLE `panel_tickets` (
   `archived` enum('0','1') NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -691,7 +691,7 @@ CREATE TABLE `panel_ticket_categories` (
   `adminid` int(11) NOT NULL,
   `logicalorder` int(3) NOT NULL default '1',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -704,7 +704,7 @@ CREATE TABLE IF NOT EXISTS `panel_syslog` (
   `user` varchar(50) NOT NULL,
   `text` text NOT NULL,
   PRIMARY KEY  (`logid`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -720,7 +720,7 @@ CREATE TABLE `mail_autoresponder` (
   PRIMARY KEY  (`email`),
   KEY `customerid` (`customerid`),
   FULLTEXT KEY `message` (`message`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -734,7 +734,7 @@ CREATE TABLE `panel_phpconfigs` (
   `mod_fcgid_maxrequests` int(4) NOT NULL DEFAULT '-1',
   `phpsettings` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -750,7 +750,7 @@ CREATE TABLE IF NOT EXISTS `aps_instances` (
   `PackageID` int(4) NOT NULL,
   `Status` int(4) NOT NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -763,7 +763,7 @@ CREATE TABLE IF NOT EXISTS `aps_packages` (
   `Release` int(4) NOT NULL,
   `Status` int(1) NOT NULL default '1',
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -774,7 +774,7 @@ CREATE TABLE IF NOT EXISTS `aps_settings` (
   `Name` varchar(250) NOT NULL,
   `Value` varchar(250) NOT NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -784,7 +784,7 @@ CREATE TABLE IF NOT EXISTS `aps_tasks` (
   `InstanceID` int(4) NOT NULL,
   `Task` int(4) NOT NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -796,7 +796,7 @@ CREATE TABLE IF NOT EXISTS `aps_temp_settings` (
   `Name` varchar(250) NOT NULL,
   `Value` varchar(250) NOT NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -810,7 +810,7 @@ CREATE TABLE IF NOT EXISTS `cronjobs_run` (
   `isactive` tinyint(1) DEFAULT '1',
   `desc_lng_key` varchar(100) NOT NULL DEFAULT 'cron_unknown_desc',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -839,7 +839,7 @@ CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
   `files_in_avail` int(10) unsigned NOT NULL,
   `files_out_avail` int(10) unsigned NOT NULL,
   `files_xfer_avail` int(10) unsigned NOT NULL
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -858,7 +858,7 @@ CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
   `files_in_used` int(10) unsigned NOT NULL,
   `files_out_used` int(10) unsigned NOT NULL,
   `files_xfer_used` int(10) unsigned NOT NULL
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -869,7 +869,7 @@ CREATE TABLE IF NOT EXISTS `redirect_codes` (
   `desc` varchar(200) NOT NULL,
   `enabled` tinyint(1) DEFAULT '1',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -887,7 +887,7 @@ CREATE TABLE IF NOT EXISTS `domain_redirect_codes` (
   `rid` int(5) NOT NULL,
   `did` int(11) unsigned NOT NULL,
   UNIQUE KEY `rc` (`rid`, `did`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -897,7 +897,7 @@ CREATE TABLE IF NOT EXISTS `ipsandports_docrootsettings` (
   `fid` int(11) NOT NULL,
   `docrootsettings` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -907,5 +907,5 @@ CREATE TABLE IF NOT EXISTS `domain_docrootsettings` (
   `fid` int(11) NOT NULL,
   `docrootsettings` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM SET utf8 COLLATE utf8_general_ci;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
