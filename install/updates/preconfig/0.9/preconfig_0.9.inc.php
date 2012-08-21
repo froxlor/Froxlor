@@ -438,7 +438,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$description .= '<br /><ul><li>Improving the whole template system</li><li>Full UTF-8 support</li><li><strong>Removing support for the former default theme \'Classic\'</strong></li></ul>';
 		$description .= '<br /><br />Notice: This update will <strong>alter your Froxlor database to use UTF-8</strong> as default charset. ';
 		$description .= 'Even though this is already tested, we <span style="color:#ff0000;font-weight:bold;">strongly recommend</span> to ';
-		$description .= 'test this update in a testing environment using your existing database.<br /><br />';
+		$description .= 'test this update in a testing environment using your existing data.<br /><br />';
 
 		$question = '<strong>Select your default panel theme:</strong>&nbsp;';
 		$question.= '<select name="update_default_theme">';
