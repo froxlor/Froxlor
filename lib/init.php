@@ -500,6 +500,8 @@ if($page == '')
  * Initialize the mailingsystem
  */
 $mail = new PHPMailer(true);
+$mail->CharSet = "UTF-8";
+
 if(PHPMailer::ValidateAddress($settings['panel']['adminmail']) !== false)
 {
 	// set return-to address and custom sender-name, see #76
