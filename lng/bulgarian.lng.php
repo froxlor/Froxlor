@@ -11,7 +11,7 @@
  *
  * @copyright  (c) the authors
  * @author     Nickola Kolev <nikky@minus273.org>
- * @author     Ivaylo Bachvarov <nikky@minus273.org>
+ * @author     Ivaylo Bachvarov
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  *
@@ -191,61 +191,65 @@ $lng['extras']['errordocument401path'] = 'URL към ErrorDocument 401';
  */
 
 $lng['error']['error'] = 'Грешка';
-$lng['error']['directorymustexist'] = 'The directory %s must exist. Please create it with your FTP client.';
-$lng['error']['filemustexist'] = 'The file %s must exist.';
-$lng['error']['allresourcesused'] = 'You have already used all of your resources.';
-$lng['error']['domains_cantdeletemaindomain'] = 'You cannot delete a domain which is used as an email-domain.';
-$lng['error']['domains_canteditdomain'] = 'You cannot edit this domain. It has been disabled by the admin.';
-$lng['error']['domains_cantdeletedomainwithemail'] = 'You cannot delete a domain which is used as an email-domain. Delete all email addresses first.';
-$lng['error']['firstdeleteallsubdomains'] = 'You have to delete all subdomains first before you can create a wildcard domain.';
+$lng['error']['directorymustexist'] = 'Доректорията %s трябва да съществува. Моля създайте я с FTP клиента.';
+$lng['error']['filemustexist'] = 'Файлът %s трябва да съществува.';
+$lng['error']['allresourcesused'] = 'Вие вече сте използвали всичките си ресурси.';
+$lng['error']['domains_cantdeletemaindomain'] = 'Вие не можете да изтриете домейн, който се използва като имейл домейн.';
+$lng['error']['domains_canteditdomain'] = 'Вие не можете да редактирате този домейн. Тои е забранено от админа.';
+$lng['error']['domains_cantdeletedomainwithemail'] = 'Вие не можете да изтриете домейн, който се използва като имейл домейн. Изтрийте всички емейл адреси първо.';
+$lng['error']['firstdeleteallsubdomains'] = 'Трябва да изтриете всички суб-домейни преди да създадете wildcard домейн.';
+/// can't translate that
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'You have already defined a catchall for this domain.';
+
 $lng['error']['ftp_cantdeletemainaccount'] = 'Не можете да изтриете главния си FTP акаунт';
-$lng['error']['login'] = 'The username or password you typed in is wrong. Please try it again!';
-$lng['error']['login_blocked'] = 'This account has been suspended because of too many login errors. <br />Please try again in ' . $settings['login']['deactivatetime'] . ' seconds.';
-$lng['error']['notallreqfieldsorerrors'] = 'You have not filled in all or filled in some fields incorrectly.';
-$lng['error']['oldpasswordnotcorrect'] = 'The old password is not correct.';
-$lng['error']['youcantallocatemorethanyouhave'] = 'You cannot allocate more resources than you own for yourself.';
-$lng['error']['mustbeurl'] = 'You have not typed a valid or complete url (e.g. http://somedomain.com/error404.htm)';
-$lng['error']['invalidpath'] = 'You have not chosen a valid URL (maybe problems with the dirlisting?)';
-$lng['error']['stringisempty'] = 'Missing Input in Field';
-$lng['error']['stringiswrong'] = 'Wrong Input in Field';
+$lng['error']['login'] = 'Грешно име или парола. Моля опитайте отново!';
+$lng['error']['login_blocked'] = 'Този акаунт е бил блокиран заради прекалено много грешки. <br />Моля опитайте отново след: ' . $settings['login']['deactivatetime'] . ' секунди.';
+$lng['error']['notallreqfieldsorerrors'] = 'Не сте попълнили всички полета, или сте попълнили някое грешно.';
+$lng['error']['oldpasswordnotcorrect'] = 'Старата парола не съответства.';
+$lng['error']['youcantallocatemorethanyouhave'] = 'Вие не можете да заделят повече ресурси, отколкото притежаватe.';
+$lng['error']['mustbeurl'] = 'Вие не сте въвели валиден или пълeн URL адрес (e.g. http://somedomain.com/error404.htm)';
+$lng['error']['invalidpath'] = 'Не сте избрали валиден URL (може би проблеми с "dirlisting?")';
+$lng['error']['stringisempty'] = 'Липства стойност в полето';
+$lng['error']['stringiswrong'] = 'Грешна стойност в полето';
 $lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
 $lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
 $lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
 $lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
 $lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
-$lng['error']['newpasswordconfirmerror'] = 'New password and confirmation does not match';
+$lng['error']['newpasswordconfirmerror'] = 'Нова парола и потвърждение не съвпадат';
 $lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
 $lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
 $lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
-$lng['error']['mydomain'] = '\'Domain\'';
-$lng['error']['mydocumentroot'] = '\'Documentroot\'';
-$lng['error']['loginnameexists'] = 'Login-Name %s already exists';
-$lng['error']['emailiswrong'] = 'E-mail-Address %s contains invalid characters or is incomplete';
-$lng['error']['loginnameiswrong'] = 'Login-Name %s contains invalid characters';
-$lng['error']['userpathcombinationdupe'] = 'Combination of username and path already exists';
-$lng['error']['patherror'] = 'General Error! Path cannot be empty';
-$lng['error']['errordocpathdupe'] = 'Option for path %s already exists';
-$lng['error']['adduserfirst'] = 'Please create a customer first';
-$lng['error']['domainalreadyexists'] = 'The domain %s is already assigned to a customer';
-$lng['error']['nolanguageselect'] = 'No language selected.';
-$lng['error']['nosubjectcreate'] = 'You must define a topic for this mail template.';
-$lng['error']['nomailbodycreate'] = 'You must define a mail-text for this mail template.';
+$lng['error']['mydomain'] = '\'Домейн\'';
+$lng['error']['mydocumentroot'] = '\'Главна директория\'';
+$lng['error']['loginnameexists'] = 'Потребителското име %s  е заето';
+$lng['error']['emailiswrong'] = 'E-mail адресът %s съдържа невалидни знаци или е непълна';
+$lng['error']['loginnameiswrong'] = 'Потребителскоро име %s съдържа забранени символи';
+$lng['error']['userpathcombinationdupe'] = 'Комбинация от потребителско име и път вече съществува';
+$lng['error']['patherror'] = 'Обща грешка! Пътят не мое да е празен';
+$lng['error']['errordocpathdupe'] = 'Възможност за пътя вече съществува';
+$lng['error']['adduserfirst'] = 'Моля, първо създайте клиент';
+$lng['error']['domainalreadyexists'] = 'Домейнът %s вече е зададен на клиента';
+$lng['error']['nolanguageselect'] = 'Не е избран език';
+$lng['error']['nosubjectcreate'] = 'Трябва да се определи тема за тoзи шаблон.';
+$lng['error']['nomailbodycreate'] = 'Трябва да определите текст за този шаблон.';
 $lng['error']['templatenotfound'] = 'Template was not found.';
-$lng['error']['alltemplatesdefined'] = 'You cant define more templates, all languages are supported already.';
-$lng['error']['wwwnotallowed'] = 'www is not allowed for subdomains.';
-$lng['error']['subdomainiswrong'] = 'The subdomain %s contains invalid characters.';
-$lng['error']['domaincantbeempty'] = 'The domain-name can not be empty.';
-$lng['error']['domainexistalready'] = 'The domain %s already exists.';
+$lng['error']['alltemplatesdefined'] = 'Не можеш да определят повече шаблони, всички езици се поддържат вече.';
+$lng['error']['wwwnotallowed'] = 'www не е разрешено за поддомейни.';
+$lng['error']['subdomainiswrong'] = 'Поддомейнър %s съдържа невалидни знаци.';
+$lng['error']['domaincantbeempty'] = 'Домейн името не може да бъде празено.';
+$lng['error']['domainexistalready'] = 'Домейнът %s вече съществува.';
+/// can't translate that
 $lng['error']['domainisaliasorothercustomer'] = 'The selected alias domain is either itself an alias domain, has a different ip/port combination or belongs to another customer.';
-$lng['error']['emailexistalready'] = 'The e-mail-Address %s already exists.';
-$lng['error']['maindomainnonexist'] = 'The main-domain %s does not exist.';
-$lng['error']['destinationnonexist'] = 'Please create your forwarder in the field \'Destination\'.';
-$lng['error']['destinationalreadyexistasmail'] = 'The forwarder to %s already exists as active e-mail-address.';
-$lng['error']['destinationalreadyexist'] = 'You have already defined a forwarder to %s .';
-$lng['error']['destinationiswrong'] = 'The forwarder %s contains invalid character(s) or is incomplete.';
+
+$lng['error']['emailexistalready'] = 'E-mail адресът %s вече съществува.';
+$lng['error']['maindomainnonexist'] = 'Главният домейн %s не съществува.';
+$lng['error']['destinationnonexist'] = 'Моля коригирайте полето \'Дестинация\'.';
+$lng['error']['destinationalreadyexistasmail'] = 'Препрадката към %s вече съществува като активен E-mail адрес.';
+$lng['error']['destinationalreadyexist'] = 'Вече има препрадка към %s .';
+$lng['error']['destinationiswrong'] = 'Пренасочването %s съдържа невалиден символ (и), или е непълна.';
 $lng['error']['domainname'] = $lng['domains']['domainname'];
-$lng['error']['ticketnotaccessible'] = 'You cannot access this ticket.';
+$lng['error']['ticketnotaccessible'] = 'Нямате достъп до този билет.';
 
 /**
  * Questions
@@ -476,8 +480,8 @@ $lng['error']['stringformaterror'] = 'Стойността в полето &quot
 $lng['admin']['serversoftware'] = 'Serversoftware';
 $lng['admin']['phpversion'] = 'PHP-Version';
 $lng['admin']['phpmemorylimit'] = 'PHP-Memory-Limit';
-$lng['admin']['mysqlserverversion'] = 'MySQL Server Version';
-$lng['admin']['mysqlclientversion'] = 'MySQL Client Version';
+$lng['admin']['mysqlserverversion'] = 'MySQL Server версия';
+$lng['admin']['mysqlclientversion'] = 'MySQL Client версия';
 $lng['admin']['webserverinterface'] = 'Webserver Interface';
 $lng['domains']['isassigneddomain'] = 'Is assigned domain';
 $lng['serversettings']['phpappendopenbasedir']['title'] = 'Paths to append to OpenBasedir';
@@ -722,10 +726,10 @@ $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Temp directory';
 
 $lng['serversettings']['ticket']['reset_cycle']['title'] = 'Reset used tickets cycle';
 $lng['serversettings']['ticket']['reset_cycle']['description'] = 'Reset the customers used ticket counter to 0 in the chosen cycle';
-$lng['admin']['tickets']['daily'] = 'Daily';
-$lng['admin']['tickets']['weekly'] = 'Weekly';
-$lng['admin']['tickets']['monthly'] = 'Monthly';
-$lng['admin']['tickets']['yearly'] = 'Yearly';
+$lng['admin']['tickets']['daily'] = 'Дневно';
+$lng['admin']['tickets']['weekly'] = 'Седмично';
+$lng['admin']['tickets']['monthly'] = 'Месечно';
+$lng['admin']['tickets']['yearly'] = 'Годишно';
 $lng['error']['ticketresetcycleiswrong'] = 'The cycle for ticket-resets has to be "daily", "weekly", "monthly" or "yearly".';
 
 // ADDED IN 1.2.19-svn4
@@ -1909,9 +1913,7 @@ $lng['admin']['assignedmax'] = 'Assigned / Max';
 $lng['admin']['usedmax'] = 'Used / Max';
 $lng['admin']['used'] = 'Used';
 $lng['mysql']['size'] = 'Размер на базата (MB)';
-
 $lng['error']['invalidhostname'] = 'Hostname can\'t be empty nor can it consist only of whitespaces';
-
 $lng['traffic']['http'] = 'HTTP (MB)';
 $lng['traffic']['ftp'] = 'FTP (MB)';
 $lng['traffic']['mail'] = 'Mail (MB)';
@@ -1924,6 +1926,6 @@ $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Time
 
 // ADDED IN 0.9.27-svn2
 $lng['panel']['cancel'] = 'Отказ';
-$lng['admin']['delete_statistics'] = 'Delete Statistics';
+$lng['admin']['delete_statistics'] = 'Изтрий статистиките';
 $lng['admin']['speciallogwarning'] = 'WARNING: By changing this setting you will lose all your old statistics for this domain. If you are 100% sure you wish to change this type "'.$lng['admin']['delete_statistics'].'" in the field below and click the "'.$lng['panel']['delete'].'" button.<br /><br />';
 
