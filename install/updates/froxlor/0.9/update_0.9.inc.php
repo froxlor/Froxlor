@@ -1951,6 +1951,9 @@ if(isFroxlorVersion('0.9.28-svn3'))
 	// Updating customer's theme setting
 	$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `theme` = \'' . $db->escape($classic_theme_replacement) . '\' WHERE `theme` = \'Classic\'');
 
+	// Updating theme setting of active sessions
+	$db->query('UPDATE `' . TABLE_PANEL_SESSIONS . '` SET `theme` = \'' . $db->escape($classic_theme_replacement) . '\' WHERE `theme` = \'Classic\'');
+
 	lastStepStatus(0);
 
 	showUpdateStep('Altering Froxlor database and tables to use UTF-8. This may take a while..', true);
