@@ -47,8 +47,8 @@
  * ACE input and output is always expected to be ASCII.
  *
  * @author  Matthias Sommerfeld <mso@phlylabs.de>
- * @copyright 2004-2010 phlyLabs Berlin, http://phlylabs.de
- * @version 0.7.0 2010-11-20
+ * @copyright 2004-2011 phlyLabs Berlin, http://phlylabs.de
+ * @version 0.8.0 2011-03-11
  */
 class idna_convert
 {
@@ -76,11 +76,14 @@ class idna_convert
     protected $_scount = 11172; // _lcount * _tcount * _vcount
     protected $_error = false;
 
+    protected static $_mb_string_overload = null;
+
     // See {@link set_paramter()} for details of how to change the following
     // settings from within your script / application
     protected $_api_encoding = 'utf8';   // Default input charset is UTF-8
     protected $_allow_overlong = false;  // Overlong UTF-8 encodings are forbidden
     protected $_strict_mode = false;     // Behave strict or not
+    protected $_idn_version = 2003;      // Can be either 2003 (old, default) or 2008
 
     /**
      * the constructor
@@ -93,7 +96,15 @@ class idna_convert
     {
         $this->slast = $this->_sbase + $this->_lcount * $this->_vcount * $this->_tcount;
         // If parameters are given, pass these to the respective method
-        if (is_array($options)) return $this->set_parameter($options);
+        if (is_array($options)) {
+            $this->set_parameter($options);
+        }
+
+        // populate mbstring overloading cache if not set
+        if (self::$_mb_string_overload === null) {
+            self::$_mb_string_overload = (extension_loaded('mbstring')
+                && (ini_get('mbstring.func_overload') & 0x02) === 0x02);
+        }
     }
 
     /**
@@ -136,11 +147,18 @@ class idna_convert
             case 'strict':
                 $this->_strict_mode = ($v) ? true : false;
                 break;
-            case 'encode_german_sz':
-                if (!$v) {
-                    $this->NP['replacemaps'][0xDF] = array(0x73, 0x73);
+            case 'idn_version':
+                if (in_array($v, array('2003', '2008'))) {
+                    $this->_idn_version = $v;
                 } else {
-                    unset($this->NP['replacemaps'][0xDF]);
+                    $this->_error('Set Parameter: Unknown parameter '.$v.' for option '.$k);
+                }
+                break;
+            case 'encode_german_sz': // Deprecated
+                if (!$v) {
+                    self::$NP['replacemaps'][0xDF] = array(0x73, 0x73);
+                } else {
+                    unset(self::$NP['replacemaps'][0xDF]);
                 }
                 break;
             default:
@@ -398,13 +416,13 @@ class idna_convert
         }
         // Find last occurence of the delimiter
         $delim_pos = strrpos($encoded, '-');
-        if ($delim_pos > strlen($this->_punycode_prefix)) {
-            for ($k = strlen($this->_punycode_prefix); $k < $delim_pos; ++$k) {
+        if ($delim_pos > self::byteLength($this->_punycode_prefix)) {
+            for ($k = self::byteLength($this->_punycode_prefix); $k < $delim_pos; ++$k) {
                 $decoded[] = ord($encoded{$k});
             }
         }
         $deco_len = count($decoded);
-        $enco_len = strlen($encoded);
+        $enco_len = self::byteLength($encoded);
 
         // Wandering through the strings; init
         $is_first = true;
@@ -442,7 +460,7 @@ class idna_convert
     protected function _encode($decoded)
     {
         // We cannot encode a domain name containing the Punycode prefix
-        $extract = strlen($this->_punycode_prefix);
+        $extract = self::byteLength($this->_punycode_prefix);
         $check_pref = $this->_utf8_to_ucs4($this->_punycode_prefix);
         $check_deco = array_slice($decoded, 0, $extract);
 
@@ -589,24 +607,28 @@ class idna_convert
         // While mapping required chars we apply the cannonical ordering
         foreach ($input as $v) {
             // Map to nothing == skip that code point
-            if (in_array($v, $this->NP['map_nothing'])) continue;
+            if (in_array($v, self::$NP['map_nothing'])) continue;
             // Try to find prohibited input
-            if (in_array($v, $this->NP['prohibit']) || in_array($v, $this->NP['general_prohibited'])) {
+            if (in_array($v, self::$NP['prohibit']) || in_array($v, self::$NP['general_prohibited'])) {
                 $this->_error('NAMEPREP: Prohibited input U+'.sprintf('%08X', $v));
                 return false;
             }
-            foreach ($this->NP['prohibit_ranges'] as $range) {
+            foreach (self::$NP['prohibit_ranges'] as $range) {
                 if ($range[0] <= $v && $v <= $range[1]) {
                     $this->_error('NAMEPREP: Prohibited input U+'.sprintf('%08X', $v));
                     return false;
                 }
             }
-            // Hangul syllable decomposition
+
             if (0xAC00 <= $v && $v <= 0xD7AF) {
-                foreach ($this->_hangul_decompose($v) as $out) $output[] = (int) $out;
-            // There's a decomposition mapping for that code point
-            } elseif (isset($this->NP['replacemaps'][$v])) {
-                foreach ($this->_apply_cannonical_ordering($this->NP['replacemaps'][$v]) as $out) {
+                // Hangul syllable decomposition
+                foreach ($this->_hangul_decompose($v) as $out) {
+                    $output[] = (int) $out;
+                }
+            } elseif (($this->_idn_version == '2003') && isset(self::$NP['replacemaps'][$v])) {
+                // There's a decomposition mapping for that code point
+                // Decompositions only in version 2003 (original) of IDNA
+                foreach ($this->_apply_cannonical_ordering(self::$NP['replacemaps'][$v]) as $out) {
                     $output[] = (int) $out;
                 }
             } else {
@@ -715,11 +737,11 @@ class idna_convert
      */
     protected function _get_combining_class($char)
     {
-        return isset($this->NP['norm_combcls'][$char]) ? $this->NP['norm_combcls'][$char] : 0;
+        return isset(self::$NP['norm_combcls'][$char]) ? self::$NP['norm_combcls'][$char] : 0;
     }
 
     /**
-     * Apllies the cannonical ordering of a decomposed UCS4 sequence
+     * Applies the cannonical ordering of a decomposed UCS4 sequence
      * @param    array      Decomposed UCS4 sequence
      * @return   array      Ordered USC4 sequence
      */
@@ -758,7 +780,7 @@ class idna_convert
     protected function _combine($input)
     {
         $inp_len = count($input);
-        foreach ($this->NP['replacemaps'] as $np_src => $np_target) {
+        foreach (self::$NP['replacemaps'] as $np_src => $np_target) {
             if ($np_target[0] != $input[0]) continue;
             if (count($np_target) != $inp_len) continue;
             $hit = false;
@@ -797,12 +819,7 @@ class idna_convert
     {
         $output = array();
         $out_len = 0;
-        // Patch by Daniel Hahler; work around prolbem with mbstring.func_overload
-        if (function_exists('mb_strlen')) {
-            $inp_len = mb_strlen($input, '8bit');
-        } else {
-            $inp_len = strlen($input);
-        }
+        $inp_len = self::byteLength($input);
         $mode = 'next';
         $test = 'none';
         for ($k = 0; $k < $inp_len; ++$k) {
@@ -923,7 +940,7 @@ class idna_convert
     protected function _ucs4_string_to_ucs4($input)
     {
         $output = array();
-        $inp_len = strlen($input);
+        $inp_len = self::byteLength($input);
         // Input length must be dividable by 4
         if ($inp_len % 4) {
             $this->_error('Input UCS4 string is broken');
@@ -943,13 +960,63 @@ class idna_convert
     }
 
     /**
+     * Gets the length of a string in bytes even if mbstring function
+     * overloading is turned on
+     *
+     * @param string $string the string for which to get the length.
+     * @return integer the length of the string in bytes.
+     */
+    protected static function byteLength($string)
+    {
+        if (self::$_mb_string_overload) {
+            return mb_strlen($string, '8bit');
+        }
+        return strlen((binary) $string);
+    }
+
+    /**
+     * Attempts to return a concrete IDNA instance.
+     *
+     * @param array $params Set of paramaters
+     * @return idna_convert
+     * @access public
+     */
+    public function getInstance($params = array())
+    {
+        return new idna_convert($params);
+    }
+
+    /**
+     * Attempts to return a concrete IDNA instance for either php4 or php5,
+     * only creating a new instance if no IDNA instance with the same
+     * parameters currently exists.
+     *
+     * @param array $params Set of paramaters
+     *
+     * @return object idna_convert
+     * @access public
+     */
+    public function singleton($params = array())
+    {
+        static $instances;
+        if (!isset($instances)) {
+            $instances = array();
+        }
+        $signature = serialize($params);
+        if (!isset($instances[$signature])) {
+            $instances[$signature] = idna_convert::getInstance($params);
+        }
+        return $instances[$signature];
+    }
+
+    /**
      * Holds all relevant mapping tables
      * See RFC3454 for details
      *
      * @private array
      * @since 0.5.2
      */
-    protected $NP = array
+    protected static $NP = array
             ('map_nothing' => array(0xAD, 0x34F, 0x1806, 0x180B, 0x180C, 0x180D, 0x200B, 0x200C
                     ,0x200D, 0x2060, 0xFE00, 0xFE01, 0xFE02, 0xFE03, 0xFE04, 0xFE05, 0xFE06, 0xFE07
                     ,0xFE08, 0xFE09, 0xFE0A, 0xFE0B, 0xFE0C, 0xFE0D, 0xFE0E, 0xFE0F, 0xFEFF
@@ -984,7 +1051,7 @@ class idna_convert
                     ,0xD0 => array(0xF0), 0xD1 => array(0xF1), 0xD2 => array(0xF2), 0xD3 => array(0xF3)
                     ,0xD4 => array(0xF4), 0xD5 => array(0xF5), 0xD6 => array(0xF6), 0xD8 => array(0xF8)
                     ,0xD9 => array(0xF9), 0xDA => array(0xFA), 0xDB => array(0xFB), 0xDC => array(0xFC)
-                    ,0xDD => array(0xFD), 0xDE => array(0xFE) /* Here was German "ß" -> "ss", is now configurable */
+                    ,0xDD => array(0xFD), 0xDE => array(0xFE), 0xDF => array(0x73, 0x73)
                     ,0x100 => array(0x101), 0x102 => array(0x103), 0x104 => array(0x105)
                     ,0x106 => array(0x107), 0x108 => array(0x109), 0x10A => array(0x10B)
                     ,0x10C => array(0x10D), 0x10E => array(0x10F), 0x110 => array(0x111)
