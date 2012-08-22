@@ -40,7 +40,7 @@ $lng['panel']['dirsmissing'] = 'Verzeichnisse nicht verfügbar oder lesbar';
  */
 
 $lng['login']['username'] = 'Benutzername';
-$lng['login']['password'] = 'Passwort';
+$lng['login']['password'] = 'Kennwort';
 $lng['login']['language'] = 'Sprache';
 $lng['login']['login'] = 'Anmelden';
 $lng['login']['logout'] = 'Abmelden';
@@ -77,7 +77,7 @@ $lng['customer']['unlimited'] = 'unbegrenzt';
  */
 
 $lng['menue']['main']['main'] = 'Allgemein';
-$lng['menue']['main']['changepassword'] = 'Passwort ändern';
+$lng['menue']['main']['changepassword'] = 'Kennwort ändern';
 $lng['menue']['main']['changelanguage'] = 'Sprache ändern';
 $lng['menue']['email']['email'] = 'E-Mail';
 $lng['menue']['email']['emails'] = 'Adressen';
@@ -105,11 +105,11 @@ $lng['index']['accountdetails'] = 'Kontodaten';
  * Change Password
  */
 
-$lng['changepassword']['old_password'] = 'Altes Passwort';
-$lng['changepassword']['new_password'] = 'Neues Passwort';
-$lng['changepassword']['new_password_confirm'] = 'Neues Passwort (bestätigen)';
-$lng['changepassword']['new_password_ifnotempty'] = 'Neues Passwort (leer = nicht ändern)';
-$lng['changepassword']['also_change_ftp'] = 'Auch Passwort vom Haupt-FTP-Zugang ändern';
+$lng['changepassword']['old_password'] = 'Altes Kennwort';
+$lng['changepassword']['new_password'] = 'Neues Kennwort';
+$lng['changepassword']['new_password_confirm'] = 'Neues Kennwort (bestätigen)';
+$lng['changepassword']['new_password_ifnotempty'] = 'Neues Kennwort (leer = nicht ändern)';
+$lng['changepassword']['also_change_ftp'] = 'Auch Kennwort vom Haupt-FTP-Zugang ändern';
 
 /**
  * Domains
@@ -128,7 +128,7 @@ $lng['domains']['noaliasdomain'] = 'Keine Aliasdomain';
  * eMails
  */
 
-$lng['emails']['description'] = 'Hier können Sie Ihre E-Mail Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustüre. Wenn jemand eine E-Mail an Sie schreibt, dann wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten von Ihrem Mailprogramm sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen!)<br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>';
+$lng['emails']['description'] = 'Hier können Sie Ihre E-Mail Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustüre. Wenn jemand eine E-Mail an Sie schreibt, dann wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten von Ihrem Mailprogramm sind wie folgt: (Die Angaben in <em>kursiver</em> Schrift sind durch die jeweiligen Einträge zu ersetzen!)<br />Hostname: <strong><em>Domainname</em></strong><br />Benutzername: <strong><em>Kontoname / E-Mail-Adresse</em></strong><br />Kennwort: <strong><em>das gewählte Kennwort</em></strong>';
 $lng['emails']['emailaddress'] = 'E-Mail-Adresse';
 $lng['emails']['emails_add'] = 'E-Mail-Adresse anlegen';
 $lng['emails']['emails_edit'] = 'E-Mail-Adresse ändern';
@@ -190,10 +190,10 @@ $lng['error']['domains_cantdeletedomainwithemail'] = 'Sie können keine Domain l
 $lng['error']['firstdeleteallsubdomains'] = 'Sie müssen erst alle Subdomains löschen, bevor Sie eine Wildcarddomain anlegen können.';
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Sie haben bereits eine Adresse als Catchall für diese Domain definiert.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'Sie können Ihren Hauptaccount nicht löschen.';
-$lng['error']['login'] = 'Der angegebene Benutzername/Passwort ist falsch.';
+$lng['error']['login'] = 'Der angegebene Benutzername/Kennwort ist falsch.';
 $lng['error']['login_blocked'] = 'Dieser Account wurde aufgrund zu vieler Fehlversuche vorrübergehend geschlossen. <br />Bitte versuchen Sie es in ' . $settings['login']['deactivatetime'] . ' Sekunden erneut.';
 $lng['error']['notallreqfieldsorerrors'] = 'Sie haben nicht alle Felder oder ein Feld mit fehlerhaften Angaben ausgefüllt.';
-$lng['error']['oldpasswordnotcorrect'] = 'Das alte Passwort ist nicht korrekt.';
+$lng['error']['oldpasswordnotcorrect'] = 'Das alte Kennwort ist nicht korrekt.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Sie können nicht mehr Ressourcen verteilen als Sie noch frei haben.';
 $lng['error']['mustbeurl'] = 'Sie müssen eine vollständige URL angeben (z.B. http://irgendwas.de/error404.htm)';
 $lng['error']['invalidpath'] = 'Sie haben keine gültige URL ausgewählt (Evtl. Probleme beim Verzeichnislisting?)';
@@ -204,7 +204,7 @@ $lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
 $lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
 $lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
 $lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
-$lng['error']['newpasswordconfirmerror'] = 'Das neue Passwort und die Bestätigung sind nicht identisch.';
+$lng['error']['newpasswordconfirmerror'] = 'Das neue Kennwort und die Bestätigung sind nicht identisch.';
 $lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
 $lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
 $lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
@@ -266,7 +266,7 @@ $lng['question']['admin_customer_alsoremoveftphomedir'] = 'Heimatverzeichnis des
 
 $lng['mails']['pop_success']['mailbody'] = 'Hallo,\n\nIhr E-Mail-Konto {USERNAME}\nwurde erfolgreich eingerichtet.\n\nDies ist eine automatisch generierte\nE-Mail, bitte antworten Sie nicht auf\ndiese Mitteilung.\n\nIhr Administrator';
 $lng['mails']['pop_success']['subject'] = 'E-Mail-Konto erfolgreich eingerichtet';
-$lng['mails']['createcustomer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhier ihre Accountinformationen:\n\nBenutzername: {USERNAME}\nPasswort: {PASSWORD}\n\nVielen Dank,\nIhr Administrator';
+$lng['mails']['createcustomer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhier ihre Accountinformationen:\n\nBenutzername: {USERNAME}\nKennwort: {PASSWORD}\n\nVielen Dank,\nIhr Administrator';
 $lng['mails']['createcustomer']['subject'] = 'Kontoinformationen';
 
 /**
@@ -305,12 +305,12 @@ $lng['admin']['stdsubdomain_add'] = 'Standardsubdomain anlegen';
 $lng['admin']['phpenabled'] = 'PHP verfügbar';
 $lng['admin']['deactivated'] = 'Gesperrt';
 $lng['admin']['deactivated_user'] = 'Benutzer sperren';
-$lng['admin']['sendpassword'] = 'Passwort zusenden';
+$lng['admin']['sendpassword'] = 'Kennwort zusenden';
 $lng['admin']['ownvhostsettings'] = 'Eigene vHost-Einstellungen';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Konfiguration';
-$lng['admin']['configfiles']['files'] = '<b>Konfigurationsdateien:</b> Bitte ändern Sie die entsprechenden Konfigurationsdateien<br />oder legen sie mit dem folgenden Inhalt neu an, falls sie nicht existieren.<br /><b>Bitte beachten Sie:</b> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt.<br />Bitte ersetzen Sie "MYSQL_PASSWORD" manuell durch das entsprechende Passwort.<br />Falls Sie es vergessen haben sollten, finden Sie es in der Datei "lib/userdata.inc.php".';
-$lng['admin']['configfiles']['commands'] = '<b>Kommandos:</b> Bitte führen Sie die folgenden Kommandos in einer Shell aus.';
-$lng['admin']['configfiles']['restart'] = '<b>Neustart:</b> Bitte führen Sie die folgenden Kommandos zum Neuladen<br />der Konfigurationsdateien in einer Shell aus.';
+$lng['admin']['configfiles']['files'] = '<strong>Konfigurationsdateien:</strong> Bitte ändern Sie die entsprechenden Konfigurationsdateien<br />oder legen sie mit dem folgenden Inhalt neu an, falls sie nicht existieren.<br /><strong>Bitte beachten Sie:</strong> Das MySQL-Kennwort wurde aus Sicherheitsgründen nicht ersetzt.<br />Bitte ersetzen Sie "MYSQL_PASSWORD" manuell durch das entsprechende Kennwort.<br />Falls Sie es vergessen haben sollten, finden Sie es in der Datei "lib/userdata.inc.php".';
+$lng['admin']['configfiles']['commands'] = '<strong>Kommandos:</strong> Bitte führen Sie die folgenden Kommandos in einer Shell aus.';
+$lng['admin']['configfiles']['restart'] = '<strong>Neustart:</strong> Bitte führen Sie die folgenden Kommandos zum Neuladen<br />der Konfigurationsdateien in einer Shell aus.';
 $lng['admin']['templates']['templates'] = 'E-Mail-Vorlagen';
 $lng['admin']['templates']['template_add'] = 'Vorlage hinzufügen';
 $lng['admin']['templates']['template_edit'] = 'Vorlage bearbeiten';
@@ -327,7 +327,7 @@ $lng['admin']['templates']['FIRSTNAME'] = 'Wird mit dem Vornamen des Kunden erse
 $lng['admin']['templates']['NAME'] = 'Wird mit dem Namen des Kunden ersetzt.';
 $lng['admin']['templates']['COMPANY'] = 'Wird mit dem Firmennamen des Kunden ersetzt.';
 $lng['admin']['templates']['USERNAME'] = 'Wird mit dem Benutzernamen des neuen Kundenkontos ersetzt.';
-$lng['admin']['templates']['PASSWORD'] = 'Wird mit dem Passwort des neuen Kundenkontos ersetzt.';
+$lng['admin']['templates']['PASSWORD'] = 'Wird mit dem Kennwort des neuen Kundenkontos ersetzt.';
 $lng['admin']['templates']['EMAIL'] = 'Wird mit der Adresse des neuen POP3/IMAP Kontos ersetzt.';
 
 /**
@@ -390,7 +390,7 @@ $lng['serversettings']['mxservers']['description'] = 'Eine durch Komma getrenne 
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['mysql']['description'] = 'Hier können Sie MySQL-Datenbanken anlegen und löschen.<br />Die Änderungen werden sofort wirksam und die Datenbanken sofort benutzbar.<br />Im Menü finden Sie einen Link zum phpMyAdmin, mit dem Sie Ihre Datenbankeninhalte einfach bearbeiten können.<br /><br />Die Zugangsdaten von php-Skripten sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen!)<br />Hostname: <b><SQL_HOST></b><br />Benutzername: <b><i>Datenbankname</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b><br />Datenbank: <b><i>Datenbankname</i></b>';
+$lng['mysql']['description'] = 'Hier können Sie MySQL-Datenbanken anlegen und löschen.<br />Die Änderungen werden sofort wirksam und die Datenbanken sofort benutzbar.<br />Im Menü finden Sie einen Link zum phpMyAdmin, mit dem Sie Ihre Datenbankeninhalte einfach bearbeiten können.<br /><br />Die Zugangsdaten von php-Skripten sind wie folgt: (Die Angaben in <em>kursiver</em> Schrift sind durch die jeweiligen Einträge zu ersetzen!)<br />Hostname: <strong><SQL_HOST></strong><br />Benutzername: <strong><em>Datenbankname</em></strong><br />Kennwort: <strong><em>das gewählte Kennwort</em></strong><br />Datenbank: <strong><em>Datenbankname</em></strong>';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
@@ -513,14 +513,14 @@ $lng['admin']['subcanemaildomain']['never'] = 'Nie';
 $lng['admin']['subcanemaildomain']['choosableno'] = 'Wählbar, Standardwert: Nein';
 $lng['admin']['subcanemaildomain']['choosableyes'] = 'Wählbar, Standardwert: Ja';
 $lng['admin']['subcanemaildomain']['always'] = 'Immer';
-$lng['changepassword']['also_change_webalizer'] = ' Auch Passwort vom Webalizer ändern';
+$lng['changepassword']['also_change_webalizer'] = ' Auch Kennwort vom Webalizer ändern';
 
 // ADDED IN 1.2.16-svn8
 
-$lng['serversettings']['mailpwcleartext']['title'] = 'Passwörter der Mail-Konten auch im Klartext in der Datenbank speichern';
-$lng['serversettings']['mailpwcleartext']['description'] = 'Wenn diese Einstellung auf Ja gesetzt wird, werden alle Passwörter auch unverschlüsselt (also im Klartext, für jeden mit Zugriff auf die Froxlor-Datenbank sofort lesbar) in der mail_users-Tabelle gespeichert. Aktivieren Sie diese Option nur dann, wenn Sie SASL nutzen!';
-$lng['serversettings']['mailpwcleartext']['removelink'] = 'Klicken Sie hier, um alle unverschlüsselten Passwörter aus der Tabelle zu entfernen.';
-$lng['question']['admin_cleartextmailpws_reallywipe'] = 'Wollen Sie wirklich alle unverschlüsselten Passwörter aus der Tabelle mail_users entfernen? Dieser Schritt kann nicht rückgängig gemacht werden!';
+$lng['serversettings']['mailpwcleartext']['title'] = 'Kennwörter der Mail-Konten auch im Klartext in der Datenbank speichern';
+$lng['serversettings']['mailpwcleartext']['description'] = 'Wenn diese Einstellung auf Ja gesetzt wird, werden alle Kennwörter auch unverschlüsselt (also im Klartext, für jeden mit Zugriff auf die Froxlor-Datenbank sofort lesbar) in der mail_users-Tabelle gespeichert. Aktivieren Sie diese Option nur dann, wenn Sie SASL nutzen!';
+$lng['serversettings']['mailpwcleartext']['removelink'] = 'Klicken Sie hier, um alle unverschlüsselten Kennwörter aus der Tabelle zu entfernen.';
+$lng['question']['admin_cleartextmailpws_reallywipe'] = 'Wollen Sie wirklich alle unverschlüsselten Kennwörter aus der Tabelle mail_users entfernen? Dieser Schritt kann nicht rückgängig gemacht werden!';
 $lng['admin']['configfiles']['overview'] = 'Übersicht';
 $lng['admin']['configfiles']['wizard'] = 'Assistent';
 $lng['admin']['configfiles']['distribution'] = 'Distribution';
@@ -545,16 +545,16 @@ $lng['panel']['back'] = 'Zurück';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_log_sql']['title'] = 'Logs in Datenbank zwischenspeichern';
-$lng['serversettings']['mod_log_sql']['description'] = '<a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe temporär zu speichern<br /><b>Dies benötigt eine spezielle Apache-Konfiguration</b>';
+$lng['serversettings']['mod_log_sql']['description'] = '<a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe temporär zu speichern<br /><strong>Dies benötigt eine spezielle Apache-Konfiguration</strong>';
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP über mod_fcgid/suexec einbinden';
-$lng['serversettings']['mod_fcgid']['description'] = 'PHP unter dem jeweiligen Useraccount laufen lassen.<br /><br /><b>Dies benötigt eine spezielle Webserver-Konfiguration für Apache, siehe <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_Handbuch">FCGID-Handbuch</a>.</b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'PHP unter dem jeweiligen Useraccount laufen lassen.<br /><br /><strong>Dies benötigt eine spezielle Webserver-Konfiguration für Apache, siehe <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_Handbuch">FCGID-Handbuch</a>.</strong>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Alternative E-Mail-Adresse benutzen';
-$lng['serversettings']['sendalternativemail']['description'] = 'Während des Erstellens eines Accounts das Passwort an eine andere E-Mail-Adresse senden';
+$lng['serversettings']['sendalternativemail']['description'] = 'Während des Erstellens eines Accounts das Kennwort an eine andere E-Mail-Adresse senden';
 $lng['emails']['alternative_emailaddress'] = 'Alternative E-Mail-Adresse';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Hallo,\n\nihr E-Mail-Konto {USERNAME}\nwurde erfolgreich eingerichtet.\nIhr Passwort lautet {PASSWORD}.\n\nDies ist eine automatisch generierte\neMail, bitte antworten Sie nicht auf\ndiese Mitteilung.\n\nIhr Administrator';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Hallo,\n\nihr E-Mail-Konto {USERNAME}\nwurde erfolgreich eingerichtet.\nIhr Kennwort lautet {PASSWORD}.\n\nDies ist eine automatisch generierte\nE-Mail, bitte antworten Sie nicht auf\ndiese Mitteilung.\n\nIhr Administrator';
 $lng['mails']['pop_success_alternative']['subject'] = 'E-Mail-Konto erfolgreich eingerichtet';
 $lng['admin']['templates']['pop_success_alternative'] = 'Willkommensmail für neue E-Mail Konten für die alternative Email Addresse';
-$lng['admin']['templates']['EMAIL_PASSWORD'] = 'Wird mit dem Passwort des neuen POP3/IMAP Kontos ersetzt.';
+$lng['admin']['templates']['EMAIL_PASSWORD'] = 'Wird mit dem Kennwort des neuen POP3/IMAP Kontos ersetzt.';
 
 // ADDED IN 1.2.16-svn13
 
@@ -577,7 +577,7 @@ $lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma g
 
 // CHANGED IN 1.2.18
 
-$lng['serversettings']['mod_log_sql']['description'] = '<a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe temporär zu speichern<br /><b>Dies benötigt eine spezielle <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
+$lng['serversettings']['mod_log_sql']['description'] = '<a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe temporär zu speichern<br /><strong>Dies benötigt eine spezielle <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></strong>';
 
 // ADDED IN 1.2.18-svn1
 
@@ -863,19 +863,19 @@ $lng['admin']['nouptimeavailable'] = 'nicht verfügbar';
 $lng['panel']['backtooverview'] = 'Zurück zur Übersicht';
 $lng['admin']['nosubject'] = '(Kein Betreff)';
 $lng['admin']['configfiles']['statistics'] = 'Statistik';
-$lng['login']['forgotpwd'] = 'Passwort vergessen?';
-$lng['login']['presend'] = 'Passwort zurücksetzen';
+$lng['login']['forgotpwd'] = 'Kennwort vergessen?';
+$lng['login']['presend'] = 'Kennwort zurücksetzen';
 $lng['login']['email'] = 'E-Mail Adresse';
-$lng['login']['remind'] = 'Passwort zurücksetzen';
+$lng['login']['remind'] = 'Kennwort zurücksetzen';
 $lng['login']['usernotfound'] = 'Fehler: Unbekannter Benutzer!';
-$lng['pwdreminder']['subject'] = 'Froxlor - Passwort zurückgesetzt';
-$lng['pwdreminder']['body'] = 'Hallo %s,\n\nIhr Froxlor Passwort wurde zurückgesetzt!\nDas neue Passwort lautet: %p\n\nVielen Dank,\nIhr Administrator';
-$lng['pwdreminder']['success'] = 'Passwort erfolgreich zurückgesetzt.<br />Sie sollten nun eine E-Mail mit dem neuen Passwort erhalten.';
+$lng['pwdreminder']['subject'] = 'Froxlor - Kennwort zurückgesetzt';
+$lng['pwdreminder']['body'] = 'Hallo %s,\n\nIhr Froxlor Kennwort wurde zurückgesetzt!\nDas neue Kennwort lautet: %p\n\nVielen Dank,\nIhr Administrator';
+$lng['pwdreminder']['success'] = 'Kennwort erfolgreich zurückgesetzt.<br />Sie sollten nun eine E-Mail mit dem neuen Kennwort erhalten.';
 
 // ADDED IN 1.2.19-svn18
 
-$lng['serversettings']['allow_password_reset']['title'] = 'Erlaube das Zurücksetzen des Kundenpassworts';
-$lng['pwdreminder']['notallowed'] = 'Das Zurücksetzen des Passworts ist deaktiviert';
+$lng['serversettings']['allow_password_reset']['title'] = 'Erlaube das Zurücksetzen des Kundenkennworts';
+$lng['pwdreminder']['notallowed'] = 'Das Zurücksetzen des Kennworts ist deaktiviert';
 
 // ADDED IN 1.2.19-svn21
 
@@ -901,9 +901,9 @@ $lng['domains']['topleveldomain'] = 'Top-Level-Domain';
 
 // ADDED IN 1.2.19-svn22
 
-$lng['serversettings']['allow_password_reset']['description'] = 'Kunden können ihr Passwort zurücksetzen und bekommen ein Neues per E-Mail zugesandt';
-$lng['serversettings']['allow_password_reset_admin']['title'] = 'Erlaube das Zurücksetzen von Admin-/Reseller-Passwörtern.';
-$lng['serversettings']['allow_password_reset_admin']['description'] = 'Admins/Reseller können ihr Passwort zurücksetzen und bekommen ein Neues per E-Mail zugesandt';
+$lng['serversettings']['allow_password_reset']['description'] = 'Kunden können ihr Kennwort zurücksetzen und bekommen ein neues per E-Mail zugesandt';
+$lng['serversettings']['allow_password_reset_admin']['title'] = 'Erlaube das Zurücksetzen von Admin-/Reseller-Kennwörtern.';
+$lng['serversettings']['allow_password_reset_admin']['description'] = 'Admins/Reseller können ihr Kennwort zurücksetzen und bekommen ein neues per E-Mail zugesandt';
 
 // ADDED IN 1.2.19-svn25
 // Mailquota
@@ -914,7 +914,7 @@ $lng['emails']['updatequota'] = 'Update Kontingent';
 $lng['serversettings']['mail_quota']['title'] = 'Mailbox-Kontingent';
 $lng['serversettings']['mail_quota']['description'] = 'Standard-Kontingent für neuerstellte E-Mail Benutzerkonten (MegaByte)';
 $lng['serversettings']['mail_quota_enabled']['title'] = 'Nutze E-Mail Kontingent für Kunden';
-$lng['serversettings']['mail_quota_enabled']['description'] = 'Aktiviere Kontingent für E-Mailkonten. Standard ist <b>Nein</b> da dies eine spezielle Konfiguration voraussetzt.';
+$lng['serversettings']['mail_quota_enabled']['description'] = 'Aktiviere Kontingent für E-Mailkonten. Standard ist <strong>Nein</strong> da dies eine spezielle Konfiguration voraussetzt.';
 $lng['serversettings']['mail_quota_enabled']['removelink'] = 'Hier klicken, um alle E-Mail Kontingente zu entfernen';
 $lng['serversettings']['mail_quota_enabled']['enforcelink'] = 'Hier klicken, um allen Benutzern das Standard Kontingent zu zuweisen';
 $lng['question']['admin_quotas_reallywipe'] = 'Sind Sie sicher, dass alle E-Mail Kontingente aus der Tabelle mail_users entfernt werden sollen? Dieser Schritt kann nicht rückgängig gemacht werden!';
@@ -1049,8 +1049,8 @@ $lng['aps']['basic_settings'] = 'Grundlegende Einstellungen';
 $lng['aps']['application_location'] = 'Installationsort';
 $lng['aps']['application_location_description'] = 'Ort an dem die Anwendung installiert werden soll.';
 $lng['aps']['no_domains'] = 'Keine Domains gefunden';
-$lng['aps']['database_password'] = 'Datenbankpasswort';
-$lng['aps']['database_password_description'] = 'Passwort welches für die neu zu erstellende Datenbank verwendet werden soll.';
+$lng['aps']['database_password'] = 'Datenbankkennwort';
+$lng['aps']['database_password_description'] = 'Kennwort welches für die neu zu erstellende Datenbank verwendet werden soll.';
 $lng['aps']['license_agreement'] = 'Zustimmung';
 $lng['aps']['cancel_install'] = 'Installation abbrechen';
 $lng['aps']['notazipfile'] = 'Die hochgeladene Datei ist keine gültige ZIP-Datei.';
@@ -1114,13 +1114,13 @@ $lng['aps']['nopacketsforinstallation'] = 'Es wurden keine Pakete zur Installati
 $lng['aps']['nopackagestoinstall'] = 'Es existieren keine Pakete die angezeigt oder installiert werden könnten.';
 $lng['aps']['nodomains'] = 'Wählen Sie eine Domain aus der Liste. Sollte keine Domain vorhanden sein können Sie keine Pakete installieren!';
 $lng['aps']['wrongpath'] = 'Entweder enthält dieser Pfad ungültige Zeichen oder es ist bereits eine Anwendung am gegebenen Ort installiert.';
-$lng['aps']['dbpassword'] = 'Geben Sie ein Passwort mit einer minimalen Länge von 8 Zeichen ein.';
+$lng['aps']['dbpassword'] = 'Geben Sie ein Kennwort mit einer minimalen Länge von 8 Zeichen ein.';
 $lng['aps']['error_text'] = 'Geben Sie einen Text ohne Sonderzeichen ein.';
 $lng['aps']['error_email'] = 'Geben Sie eine gültige E-Mail Adresse ein.';
 $lng['aps']['error_domain'] = 'Geben Sie eine gültige URL wie http://www.example.com/ ein.';
 $lng['aps']['error_integer'] = 'Geben Sie eine Zahl (Integer-Format) ein. Beispiel: <em>5</em> oder <em>7</em>.';
 $lng['aps']['error_float'] = 'Geben Sie eine Zahl (Float-Format) ein. Beispiel: <em>5,2432</em> oder <em>7,5346</em>.';
-$lng['aps']['error_password'] = 'Geben Sie ein Passwort ein.';
+$lng['aps']['error_password'] = 'Geben Sie ein Kennwort ein.';
 $lng['aps']['error_license'] = 'Ja, ich habe die Lizenz gelesen und willige ein diese zu befolgen.';
 $lng['aps']['error_licensenoaccept'] = 'Sie müssen die Lizenz annehmen um die Anwendung installieren zu können.';
 $lng['aps']['stopinstall'] = 'Installation abbrechen';
@@ -1190,9 +1190,9 @@ $lng['error']['admindoesntexist'] = 'Der ausgewählte Admin existiert nicht.';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Erlaube gleichzeitigen Login';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Wenn diese Option aktiviert ist, können sich Nutzer mehrmals gleichzeitig anmelden.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Erlaube Verschieben von Domains unter Admins';
-$lng['serversettings']['panel_allow_domain_change_admin']['description'] = 'Wenn diese Option aktiviert ist, kann unter Domaineinstellungen die Domain einem anderen Admin zugewiesen werden.<br /><b>Achtung:</b> Wenn der Kunde einer Domain nicht dem gleichen Admin zugeordnet ist wie die Domain selbst, kann dieser Admin alle anderen Domains des Kunden sehen!';
+$lng['serversettings']['panel_allow_domain_change_admin']['description'] = 'Wenn diese Option aktiviert ist, kann unter Domaineinstellungen die Domain einem anderen Admin zugewiesen werden.<br /><strong>Achtung:</strong> Wenn der Kunde einer Domain nicht dem gleichen Admin zugeordnet ist wie die Domain selbst, kann dieser Admin alle anderen Domains des Kunden sehen!';
 $lng['serversettings']['panel_allow_domain_change_customer']['title'] = 'Erlaube Verschieben von Domains unter Kunden';
-$lng['serversettings']['panel_allow_domain_change_customer']['description'] = 'Wenn diese Option aktiviert ist, kann unter Domaineinstellungen die Domain einem anderen Kunden zugewiesen werden.<br /><b>Achtung:</b> Es werden keine Pfade bei dieser Aktion angepasst. Das kann dazu führen, dass die Domain nach dem Verschieben nicht mehr richtig funktioniert!';
+$lng['serversettings']['panel_allow_domain_change_customer']['description'] = 'Wenn diese Option aktiviert ist, kann unter Domaineinstellungen die Domain einem anderen Kunden zugewiesen werden.<br /><strong>Achtung:</strong> Es werden keine Pfade bei dieser Aktion angepasst. Das kann dazu führen, dass die Domain nach dem Verschieben nicht mehr richtig funktioniert!';
 $lng['domains']['associated_with_domain'] = 'Verbunden mit';
 $lng['domains']['aliasdomains'] = 'Aliasdomains';
 $lng['error']['ipportdoesntexist'] = 'Die gewählte IP/Port-Kombination existiert nicht.';
@@ -1221,7 +1221,7 @@ $lng['panel']['dirsmissing'] = 'Das angegebene Verzeichnis konnte nicht gefunden
 $lng['panel']['toomanydirs'] = 'Zu viele Unterverzeichnisse. Weiche auf manuelle Verzeichniseingabe aus.';
 $lng['panel']['abort'] = 'Abbrechen';
 $lng['serversettings']['cron']['debug']['title'] = 'Debuggen des Cronscripts';
-$lng['serversettings']['cron']['debug']['description'] = 'Wenn aktiviert, wird die Lockdatei nach dem Cronlauf zum Debuggen nicht gelöscht<br /><b>Achtung:</b> Eine alte Lockdatei kann weitere Cronjobs behindern und dafür sorgen, dass diese nicht vollständig ausgeführt werden.';
+$lng['serversettings']['cron']['debug']['description'] = 'Wenn aktiviert, wird die Lockdatei nach dem Cronlauf zum Debuggen nicht gelöscht<br /><strong>Achtung:</strong> Eine alte Lockdatei kann weitere Cronjobs behindern und dafür sorgen, dass diese nicht vollständig ausgeführt werden.';
 $lng['autoresponder']['date_from'] = 'Start-Datum';
 $lng['autoresponder']['date_until'] = 'End-Datum';
 $lng['autoresponder']['startenddate'] = 'Start/End-Datum';
@@ -1262,9 +1262,9 @@ $lng['error']['hiddenfieldvaluechanged'] = 'Der Wert des verborgenen Feldes "%s"
 
 // ADDED IN FROXLOR 0.9.3-svn1
 
-$lng['serversettings']['panel_password_min_length']['title'] = 'Mindestlänge von Passwörtern';
-$lng['serversettings']['panel_password_min_length']['description'] = 'Hier können Sie die Mindestlänge für Passwörter festlegen. \'0\' bedeutet: Keine Mindestlänge';
-$lng['error']['notrequiredpasswordlength'] = 'Das Passwort ist zu kurz. Bitte geben Sie mindestens %s Zeichen an.';
+$lng['serversettings']['panel_password_min_length']['title'] = 'Mindestlänge von Kennwörtern';
+$lng['serversettings']['panel_password_min_length']['description'] = 'Hier können Sie die Mindestlänge für Kennwörter festlegen. \'0\' bedeutet: Keine Mindestlänge';
+$lng['error']['notrequiredpasswordlength'] = 'Das Kennwort ist zu kurz. Bitte geben Sie mindestens %s Zeichen an.';
 $lng['serversettings']['system_store_index_file_subs']['title'] = 'Erstelle Index-Datei auch in neuen Unterordnern';
 $lng['serversettings']['system_store_index_file_subs']['description'] = 'Wenn aktiviert, wird für jede Subdomain mit neuem Unterordner die Standard-Index Datei angelegt.';
 
@@ -1318,14 +1318,14 @@ $lng['admin']['warning'] = 'ACHTUNG - Wichtiger Hinweis!';
 $lng['cron']['changewarning'] = 'Änderungen an diesen Werten können einen negativen Effekt auf das Verhalten von Froxlor und seinen automatisierten Aufgaben haben.<br /><br />Ändern Sie hier etwas bitte nur, wenn Sie sich dessen Folgen im Klaren sind.';
 
 $lng['serversettings']['stdsubdomainhost']['title'] = 'Kunden Standard-Subdomain';
-$lng['serversettings']['stdsubdomainhost']['description'] = 'Welcher Hostname soll für das Erstellen der Kunden-Standard-Subdomain verwendet werden? Falls leer wird der System-Hostname verwendet.';
+$lng['serversettings']['stdsubdomainhost']['description'] = 'Welcher Hostname soll für das Erstellen der Kunden-Standard-Subdomain verwendet werden? Falls leer, wird der System-Hostname verwendet.';
 
 // ADDED IN FROXLOR 0.9.4-svn1
 $lng['ftp']['account_edit'] = 'FTP Konto bearbeiten';
-$lng['ftp']['editpassdescription'] = 'Neues Passwort setzen oder leer für keine Änderung.';
+$lng['ftp']['editpassdescription'] = 'Neues Kennwort setzen oder leer für keine Änderung.';
 $lng['customer']['sendinfomail'] = 'Daten per E-Mail an mich senden';
 $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Neue Datenbank erstellt';
-$lng['customer']['mysql_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade eine neue Datenbank angelegt. Hier die angegebenen Informationen:\n\nDatenbankname: {DB_NAME}\nPasswort: {DB_PASS}\nBeschreibung: {DB_DESC}\nDatenbank-Server: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nVielen Dank, Ihr Administrator";
+$lng['customer']['mysql_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\nSie haben gerade eine neue Datenbank angelegt. Hier die angegebenen Informationen:\n\nDatenbankname: {DB_NAME}\nKennwort: {DB_PASS}\nBeschreibung: {DB_DESC}\nDatenbank-Server: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nVielen Dank, Ihr Administrator";
 $lng['error']['domains_cantdeletedomainwithapsinstances'] = 'Sie können keine Domain löschen, die noch von APS Paketen verwendet wird. Löschen Sie zuerst alle installierten APS Pakete dieser Domain.';
 $lng['serversettings']['awstats_path'] = 'Pfad zu AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'AWStats Konfigurations-Pfad';
@@ -1377,11 +1377,11 @@ $lng['admin']['ftpserversettings'] = 'FTP Server Einstellungen';
 $lng['serversettings']['ftpserver']['desc'] = 'Wenn pureftpd ausgewählt ist, werden die .ftpquota Dateien für das Quota erstellt und täglich aktualisiert.';
 
 // CHANGED IN FROXLOR 0.9.6-svn5
-$lng['serversettings']['ftpprefix']['description'] = 'Welchen Prefix sollen die FTP-Benutzerkonten haben?<br/><b>Wenn du das änderst, musst du auch das Quota SQL Query in der FTP Server Config ändern, solltest du FTP-Quotas benutzen!</b>';
+$lng['serversettings']['ftpprefix']['description'] = 'Welchen Prefix sollen die FTP-Benutzerkonten haben?<br/><strong>Wenn du das änderst, musst du auch das Quota SQL Query in der FTP Server Config ändern, solltest du FTP-Quotas benutzen!</strong>';
 
 // ADDED IN FROXLOR 0.9.7-svn1
 $lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] Neuer FTP-Benutzer erstellt';
-$lng['customer']['ftp_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade einen neuen FTP-Benutzer angelegt. Hier die angegebenen Informationen:\n\nBenutzername: {USR_NAME}\nPasswort: {USR_PASS}\nPfad: {USR_PATH}\n\nVielen Dank, Ihr Administrator";
+$lng['customer']['ftp_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\nSie haben gerade einen neuen FTP-Benutzer angelegt. Hier die angegebenen Informationen:\n\nBenutzername: {USR_NAME}\nKennwort: {USR_PASS}\nPfad: {USR_PATH}\n\nVielen Dank, Ihr Administrator";
 $lng['domains']['redirectifpathisurl'] = 'Redirect code (Standard: leer)';
 $lng['domains']['redirectifpathisurlinfo'] = 'Der Redirect code kann gewählt werden, wenn der eingegebene Pfad eine URL ist';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Erlaube Kunden-Redirect';
@@ -1412,9 +1412,9 @@ $lng['admin']['webserver_group'] = 'Gruppenname Webserver';
 $lng['serversettings']['froxlordirectlyviahostname'] = 'Froxlor direkt über den Hostnamen erreichbar machen';
 
 // ADDED IN FROXLOR 0.9.11-svn1
-$lng['serversettings']['panel_password_regex']['title'] = 'Regulärer Ausdruck für Passwörter';
-$lng['serversettings']['panel_password_regex']['description'] = 'Hier können Sie einen regulären Ausdruck für Passwort-Komplexität festlegen.<br />Leer = keine bestimmten Anforderungen<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">RegEx Hilfe/Beispiele</a>)';
-$lng['error']['notrequiredpasswordcomplexity'] = 'Die vorgegebene Passwort-Komplexität wurde nicht erfüllt.<br />Bitte kontaktieren Sie Ihren Administrator, wenn Sie Fragen zur Komplexitäts-Vorgabe haben.';
+$lng['serversettings']['panel_password_regex']['title'] = 'Regulärer Ausdruck für Kennwörter';
+$lng['serversettings']['panel_password_regex']['description'] = 'Hier können Sie einen regulären Ausdruck für Kennwort-Komplexität festlegen.<br />Leer = keine bestimmten Anforderungen<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">RegEx Hilfe/Beispiele</a>)';
+$lng['error']['notrequiredpasswordcomplexity'] = 'Die vorgegebene Kennwort-Komplexität wurde nicht erfüllt.<br />Bitte kontaktieren Sie Ihren Administrator, wenn Sie Fragen zur Komplexitäts-Vorgabe haben.';
 
 // ADDED IN FROXLOR 0.9.11-svn2
 $lng['extras']['execute_perl'] = 'Perl/CGI ausführen';
@@ -1452,13 +1452,13 @@ $lng['admin']['templates']['newdatabase'] = 'Benachrichtigungs-Mails für neue D
 $lng['admin']['templates']['newftpuser'] = 'Benachrichtigungs-Mails für neuen FTP-Benutzer';
 $lng['admin']['templates']['CUST_NAME'] = 'Kundenname';
 $lng['admin']['templates']['DB_NAME'] = 'Datenbankname';
-$lng['admin']['templates']['DB_PASS'] = 'Datenbankpasswort';
+$lng['admin']['templates']['DB_PASS'] = 'Datenbankkennwort';
 $lng['admin']['templates']['DB_DESC'] = 'Datenbankbeschreibung';
 $lng['admin']['templates']['DB_SRV'] = 'Datenbankserver';
 $lng['admin']['templates']['PMA_URI'] = 'URL zu phpMyAdmin (wenn angegeben)';
 $lng['admin']['notgiven'] = '[nicht angegeben]';
 $lng['admin']['templates']['USR_NAME'] = 'FTP Benutzername';
-$lng['admin']['templates']['USR_PASS'] = 'FTP Passwort';
+$lng['admin']['templates']['USR_PASS'] = 'FTP Kennwort';
 $lng['admin']['templates']['USR_PATH'] = 'FTP Heimatverzeichnis (relativ zum Kunden-Heimatverzeichnis)';
 
 // ADDED IN FROXLOR 0.9.12-svn4
@@ -1467,8 +1467,8 @@ $lng['serversettings']['awstats_awstatspath'] = 'Pfad zu AWStats \'awstats.pl\''
 // ADDED IN FROXLOR 0.9.12-svn6
 $lng['extras']['htpasswdauthname'] = 'Authentifizierungs-Grund (AuthName)';
 $lng['extras']['directoryprotection_edit'] = 'Verzeichnisschutz bearbeiten';
-$lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zurücksetzen des Passworts';
-$lng['admin']['templates']['password_reset'] = 'Kunden-Benachrichtigung nach Zurücksetzen des Passworts';
+$lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zurücksetzen des Kennworts';
+$lng['admin']['templates']['password_reset'] = 'Kunden-Benachrichtigung nach Zurücksetzen des Kennworts';
 $lng['admin']['store_defaultindex'] = 'Erstelle standard Index-Datei in Kunden-Ordner';
 
 // ADDED IN FROXLOR 0.9.13-svn1
@@ -1486,7 +1486,7 @@ $lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Pfad zu dem SSL Certificat
 
 // ADDED IN FROXLOR 0.9.14-svn5
 $lng['admin']['ipsandports']['docroot']['title'] = 'Benutzerdefinierter Docroot (leer = zeige auf Froxlor)';
-$lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzerdefinierter Document-Root (der Zielordner für einen Zugriff) für diese IP/Port Kombination gesetzt werden.<br /><strong>ACHTUNG:</strong> Bitte überlege vorher, welchen Pfad du hier angibst!';
+$lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzerdefinierter Document-Root (der Zielordner für einen Zugriff) für diese IP/Port Kombination gesetzt werden.<br /><strong>ACHTUNG:</strong> Bitte überlege vorher, welchen Pfad Sie hier angeben!';
 
 // ADDED IN FROXLOR 0.9.14-svn6
 $lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
@@ -1561,7 +1561,7 @@ $lng['emails']['back_to_overview'] = 'Zurück zur Übersicht';
 $lng['error']['user_banned'] = 'Ihr Benutzerkonto wurde gesperrt. Bitte kontaktieren Sie Ihren Administrator für weitere Informationen.';
 $lng['serversettings']['validate_domain'] = 'Validiere Domainnamen';
 $lng['login']['combination_not_found'] = 'Kombination aus Benutzername und E-Mail Adresse stimmen nicht überein.';
-$lng['customer']['generated_pwd'] = 'Passwortvorschlag';
+$lng['customer']['generated_pwd'] = 'Kennwortvorschlag';
 $lng['customer']['usedmax'] = 'Benutzt / Max.';
 $lng['admin']['traffic'] = 'Datentransfer';
 $lng['admin']['customertraffic'] = 'Kunden';
@@ -1586,7 +1586,7 @@ $lng['error']['admin_domain_emailsystemhostname'] = 'Der System - Hostname kann 
 $lng['backup'] = 'Backup';
 $lng['backup_allowed'] = 'Backup erlaubt';
 $lng['extras']['backup_create'] = 'Backup erstellen?';
-$lng['extras']['backup_info'] = 'Das Backup wird täglich in einem FTP Verzeichnis abgelegt. Der FTP Username ist "<Froxloruser>_backup". Das FTP Passwort ist das gleiche wie bei ihrem Haupt FTP Account.';
+$lng['extras']['backup_info'] = 'Das Backup wird täglich in einem FTP Verzeichnis abgelegt. Der FTP Username ist "<Froxloruser>_backup". Das FTP Kennwort ist das gleiche wie bei ihrem Haupt FTP Account.';
 $lng['extras']['backup_info_sep'] = 'Es sind komprimierte Archive von Ihrem Webverzeichnis und Ihren Datenbanken enthalten.';
 $lng['extras']['backup_info_big'] = 'Es ist ein komprimiertes Archiv von Ihrem Webverzeichnis und Ihren Datenbanken enthalten.';
 $lng['extras']['backup_count_info'] = '<br /><br />Beachten Sie bitte, dass das Backup den verfügbaren Speicherplatz belastet!';
@@ -1595,7 +1595,7 @@ $lng['serversettings']['backup_enabled'] = 'Backup aktivieren?';
 $lng['serversettings']['backup_ftp_enabled'] = 'FTP Upload aktivieren?';
 $lng['serversettings']['backup_ftp_server'] = 'FTP Server:';
 $lng['serversettings']['backup_ftp_user'] = 'FTP Benutzer:';
-$lng['serversettings']['backup_ftp_pass'] = 'FTP Passwort:';
+$lng['serversettings']['backup_ftp_pass'] = 'FTP Kennwort:';
 $lng['serversettings']['backupdir']['description'] = 'Pfad des Backup-Verzeichnisses?';
 $lng['serversettings']['mysqldump_path']['description'] = 'Pfad zum mysqldump Programm:';
 $lng['serversettings']['backup_count'] = 'Soll die Größe des Backups vom verfügbaren Webspace abgezogen werden?';
