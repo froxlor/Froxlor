@@ -1,7 +1,7 @@
 $header
 	<article class="login bradius">
 		<header class="dark">
-			<img src="templates/{$theme}/assets/img/logo.png" alt="Froxlor Server Management Panel" />
+			<img src="{$header_logo}" alt="Froxlor Server Management Panel" />
 		</header>
 			<if $message != ''>
 				<div class="errorcontainer bradius">
