@@ -332,6 +332,215 @@ CREATE TABLE `panel_settings` (
   `varname` varchar(255) NOT NULL default '',
   `value` text NOT NULL,
   PRIMARY KEY  (`settingid`)
+) ENGINE=MyISAM ;
+
+
+# --------------------------------------------------------
+
+#
+# Dumping data for table `panel_settings`
+#
+
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('session', 'sessiontimeout', '600');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'adminmail', 'admin@SERVERNAME');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'phpmyadmin_url', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customer', 'accountprefix', 'web');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customer', 'ftpprefix', 'ftp');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customer', 'mysqlprefix', 'sql');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'lastaccountnumber', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'lastguid', '9999');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'documentroot_prefix', '/var/customers/webs/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logfiles_directory', '/var/customers/logs/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'ipaddress', 'SERVERIP');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apachereload_command', '/etc/init.d/apache reload');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'last_traffic_run', '000000');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_uid', '2000');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_gid', '2000');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_homedir', '/var/customers/mail/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_maildir', 'Maildir');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bind_enable', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindconf_directory', '/etc/bind/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindreload_command', '/etc/init.d/bind9 reload');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'version', '0.9.28-svn4');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'hostname', 'SERVERNAME');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'maxloginattempts', '3');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'deactivatetime', '900');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'webmail_url', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'webftp_url', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'standardlanguage', 'English');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mysql_access_host', 'localhost');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'pathedit', 'Manual');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'lastcronrun', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'paging', '20');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'defaultip', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'phpappendopenbasedir', '/tmp/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'natsorting', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'deactivateddocroot', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mailpwcleartext', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'last_tasks_run', '000000');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customer', 'ftpatdomain', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'nameservers', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mxservers', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_log_sql', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'sendalternativemail', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apacheconf_vhost', '/etc/apache/vhosts.conf');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apacheconf_diroptions', '/etc/apache/diroptions.conf');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apacheconf_htpasswddir', '/etc/apache/htpasswd/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'webalizer_quiet', '2');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'noreply_email', 'NO-REPLY@SERVERNAME');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'worktime_all', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'worktime_begin', '00:00');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'worktime_end', '23:59');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'worktime_sat', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'worktime_sun', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'archiving_days', '5');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'last_archive_run', '000000');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'enabled', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'concurrently_open', '5');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'noreply_name', 'Froxlor Support');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_configdir', '/var/www/php-fcgi-scripts');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_tmpdir', '/var/customers/tmp');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'reset_cycle', '2');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'no_robots', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('logger', 'enabled', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('logger', 'log_cron', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('logger', 'logfile', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('logger', 'logtypes', 'syslog,mysql');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('logger', 'severity', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'ssl_cert_file', '/etc/apache2/apache2.pem');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'use_ssl', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'openssl_cnf', '[ req ]\r\ndefault_bits = 1024\r\ndistinguished_name = req_distinguished_name\r\nattributes = req_attributes\r\nprompt = no\r\noutput_password =\r\ninput_password =\r\n[ req_distinguished_name ]\r\nC = DE\r\nST = froxlor\r\nL = froxlor    \r\nO = Testcertificate\r\nOU = froxlor        \r\nCN = @@domain_name@@\r\nemailAddress = @@email@@    \r\n[ req_attributes ]\r\nchallengePassword =\r\n');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'default_vhostconf', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mail_quota_enabled', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mail_quota', '100');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'decimal_places', '4');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'use_dkim', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'webalizer_enabled', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_enabled', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_prefix', '/etc/postfix/dkim/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_domains', 'domains');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_dkimkeys', 'dkim-keys.conf');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkimrestart_command', '/etc/init.d/dkim-filter restart');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'unix_names', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'allow_preset', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'allow_preset_admin', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpuser', 'www-data');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpgroup', 'www-data');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'webserver', 'apache2');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('autoresponder', 'autoresponder_active', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('autoresponder', 'last_autoresponder_run', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('admin', 'show_version_login', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('admin', 'show_version_footer', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_wrapper', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_starter', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_peardir', '/usr/share/php/:/usr/share/php5/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'index_file_extension', 'html');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'items_per_page', '20');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'upload_fields', '5');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'aps_active', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'php-extension', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'php-configuration', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'webserver-htaccess', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'php-function', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'webserver-module', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('session', 'allow_multiple_login', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'allow_domain_change_admin', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'allow_domain_change_customer', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_maxrequests', '250');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system','ssl_key_file','/etc/apache2/apache2.key');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system','ssl_ca_file', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'frontend', 'froxlor');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'use_spf', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'spf_entry', '@	IN	TXT	"v=spf1 a mx -all"');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'debug_cron', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'password_min_length', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'store_index_file_subs', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'adminmail_defname', 'Froxlor Administrator');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'adminmail_return', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_algorithm', 'all');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_add_adsp', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_keylength', '1024');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_servicetype', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_add_adsppolicy', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_notes', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'stdsubdomain', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_path', '/usr/bin/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_conf', '/etc/awstats/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'defaultttl', '604800');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'enabled', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err401', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err403', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err404', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'default_priority', '2');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_defaultini', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'ftpserver', 'proftpd');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customredirect', 'enabled', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customredirect', 'default', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'dns_createmailentry', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'froxlordirectlyviahostname', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'password_regex', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'perl_path', '/usr/bin/perl');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_ownvhost', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_httpuser', 'froxlorlocal');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_httpgroup', 'froxlorlocal');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('perl', 'suexecworkaround', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('perl', 'suexecpath', '/var/www/cgi-bin/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_awstatspath', '/usr/bin/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_defaultini_ownvhost', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_icons', '/usr/share/awstats/icon/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'ssl_cert_chainfile', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'domain_login', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'nginx_php_backend', '127.0.0.1:8888');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'phpreload_command', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'enabled', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'configdir', '/etc/php-fpm.d/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'reload', '/etc/init.d/php-fpm restart');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'pm', 'static');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'max_children', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'start_servers', '20');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'min_spare_servers', '5');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'max_spare_servers', '35');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'max_requests', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'tmpdir', '/var/customers/tmp/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'peardir', '/usr/share/php/:/usr/share/php5/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'enabled_ownvhost', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'vhost_httpuser', 'froxlorlocal');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'vhost_httpgroup', 'froxlorlocal');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'idle_timeout', '30');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_enable', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_webmax', '90');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_trafficmax', '90');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'default_theme', 'Froxlor');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'validate_domain', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_enabled', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_dir', '/var/customers/backups/');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_mysqldump_path', '/usr/bin/mysqldump');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_count', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_bigfile', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_enabled', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_server', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_user', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_pass', '');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_passive', '1');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_enabled', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_repquota_path', '/usr/sbin/repquota');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_quotatool_path', '/usr/bin/quotatool');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_customer_partition', '/dev/root');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_enabled', '0');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_binary', '/usr/sbin/logrotate');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_interval', 'weekly');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_keep', '4');
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_idle_timeout', '30');
+# --------------------------------------------------------
+
+#
+# Table structure for table `panel_tasks`
+#
+
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
@@ -531,7 +740,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'allow_preset', '1'),
 	('panel', 'allow_preset_admin', '0'),
 	('panel', 'password_regex', ''),
-	('panel', 'version', '0.9.28-svn5');
+	('panel', 'version', '0.9.28-svn6');
 
 
 
