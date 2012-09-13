@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/settings.png" alt="{$lng['admin']['configfiles']['serverconfiguration']}" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/settings.png" alt="{$lng['admin']['configfiles']['serverconfiguration']}" />&nbsp;
 				{$lng['admin']['configfiles']['serverconfiguration']} &nbsp;
 				[<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'configfiles'))}">{$lng['admin']['configfiles']['wizard']}</a>]
 			</h2>

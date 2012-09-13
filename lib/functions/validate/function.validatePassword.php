@@ -28,7 +28,7 @@
  */
 function validatePassword($password = null)
 {
-	global $settings;
+	global $settings, $theme;
 	
 	if ($settings['panel']['password_min_length'] > 0) {
 		$password = validate(

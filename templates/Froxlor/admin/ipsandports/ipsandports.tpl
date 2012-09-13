@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/ipsports.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/ipsports.png" alt="" />&nbsp;
 				{$lng['admin']['ipsandports']['ipsandports']}
 			</h2>
 		</header>
@@ -17,7 +17,7 @@ $header
 
 			<if 15 < $count>
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/ipsports_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/ipsports_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['ipsandports']['add']}</a>
 			</div>
 			</if>
@@ -55,7 +55,7 @@ $header
 			</form>
 
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/ipsports_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/ipsports_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['ipsandports']['add']}</a>
 			</div>
 

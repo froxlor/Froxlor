@@ -115,13 +115,17 @@ if($page == 'tickets'
 					if($_cid != $row['customerid'])
 					{
 						$cid = $row['customerid'];
-						$usr = $db->query_first('SELECT `firstname`, `name`, `company`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
+						$usr = $db->query_first('SELECT `customerid`, `firstname`, `name`, `company`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
                                      WHERE `customerid` = "' . (int)$cid . '"');
 
-						if(isset($usr['loginname'])) {
-							$customer = getCorrectFullUserDetails($usr) . ' (' . $usr['loginname'] . ')';
-							//$customer = $usr['firstname'] . " " . $usr['name'] . " (" . $usr['loginname'] . ")";
-						} else {
+						if(isset($usr['loginname']))
+						{
+							$customer = getCorrectFullUserDetails($usr);
+							$customerloginname =  $usr['loginname'];
+							$customerid = $usr['customerid'];
+						}
+						else
+						{
 							$customer = $lng['ticket']['nonexistingcustomer'];
 						}
 						eval("\$tickets.=\"" . getTemplate("tickets/tickets_customer") . "\";");
@@ -673,12 +677,17 @@ elseif($page == 'archive'
 						if($_cid != $ticket['customerid'])
 						{
 							$cid = $ticket['customerid'];
-							$usr = $db->query_first('SELECT `firstname`, `name`, `company`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
+							$usr = $db->query_first('SELECT `customerid`, `firstname`, `name`, `company`, `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '`
                                        WHERE `customerid` = "' . (int)$cid . '"');
 
-							if(isset($usr['loginname'])) {
-								$customer = getCorrectFullUserDetails($usr) . ' (' . $usr['loginname'] . ')';
-							} else {
+							if(isset($usr['loginname']))
+							{
+								$customer = getCorrectFullUserDetails($usr);
+								$customerloginname =  $usr['loginname'];
+								$customerid = $usr['customerid'];
+							}
+							else
+							{
 								$customer = $lng['ticket']['nonexistingcustomer'];
 							}
 

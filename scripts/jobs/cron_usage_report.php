@@ -24,6 +24,8 @@ $yesterday = time() - (60 * 60 * 24);
  * Initialize the mailingsystem
  */
 $mail = new PHPMailer(true);
+
+$mail->CharSet = "UTF-8";
 $mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
 
 // Warn the customers at xx% traffic-usage

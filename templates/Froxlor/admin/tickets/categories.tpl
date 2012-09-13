@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/categories.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/categories.png" alt="" />&nbsp;
 				{$lng['menue']['ticket']['categories']}
 			</h2>
 		</header>
@@ -17,7 +17,7 @@ $header
 
 			<if 15 < $categories_count >
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/category_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/category_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'addcategory'))}">{$lng['ticket']['ticket_newcateory']}</a>
 			</div>
 			</if>
@@ -52,7 +52,7 @@ $header
 			</form>
 
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/category_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/category_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'addcategory'))}">{$lng['ticket']['ticket_newcateory']}</a>
 			</div>
 

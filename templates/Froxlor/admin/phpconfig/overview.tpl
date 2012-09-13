@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/phpsettings.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/phpsettings.png" alt="" />&nbsp;
 				{$lng['menue']['phpsettings']['maintitle']}
 			</h2>
 		</header>
@@ -11,7 +11,7 @@ $header
 
 			<if 15 < $count>
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/phpsettings_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/phpsettings_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>
 			</div>
 			</if>
@@ -31,7 +31,7 @@ $header
 			</table>
 
 			<div class="overviewadd">
-				<img src="images/Froxlor/icons/phpsettings_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/phpsettings_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>
 			</div>
 

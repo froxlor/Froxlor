@@ -1,10 +1,3 @@
-# $Id$
-# --------------------------------------------------------
-
-#
-# Table structure for table `ftp_groups`
-#
-
 DROP TABLE IF EXISTS `ftp_groups`;
 CREATE TABLE `ftp_groups` (
   `id` int(20) NOT NULL auto_increment,
@@ -15,18 +8,9 @@ CREATE TABLE `ftp_groups` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `groupname` (`groupname`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `ftp_groups`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `ftp_users`
-#
 
 DROP TABLE IF EXISTS `ftp_users`;
 CREATE TABLE `ftp_users` (
@@ -48,18 +32,9 @@ CREATE TABLE `ftp_users` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `ftp_users`
-#
-
-# --------------------------------------------------------
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-#
-# Table structure for table `mail_users`
-#
 
 DROP TABLE IF EXISTS `mail_users`;
 CREATE TABLE `mail_users` (
@@ -80,18 +55,9 @@ CREATE TABLE `mail_users` (
   `imap` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `mail_users`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `mail_virtual`
-#
 
 DROP TABLE IF EXISTS `mail_virtual`;
 CREATE TABLE `mail_virtual` (
@@ -105,18 +71,9 @@ CREATE TABLE `mail_virtual` (
   `iscatchall` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `email` (`email`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `mail_virtual`
-#
-
-# --------------------------------------------------------
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-#
-# Table structure for table `panel_admins`
-#
 
 DROP TABLE IF EXISTS `panel_admins`;
 CREATE TABLE `panel_admins` (
@@ -169,14 +126,9 @@ CREATE TABLE `panel_admins` (
   `theme` varchar(255) NOT NULL default 'Froxlor',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
-) ENGINE=MyISAM ;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_customers`
-#
 
 DROP TABLE IF EXISTS `panel_customers`;
 CREATE TABLE `panel_customers` (
@@ -239,17 +191,9 @@ CREATE TABLE `panel_customers` (
   `backup_enabled` TINYINT( 1 ) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
-) ENGINE=MyISAM ;
-#
-# Dumping data for table `panel_customers`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_databases`
-#
 
 DROP TABLE IF EXISTS `panel_databases`;
 CREATE TABLE `panel_databases` (
@@ -261,18 +205,10 @@ CREATE TABLE `panel_databases` (
   `apsdb` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `panel_databases`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
 
-#
-# Table structure for table `panel_domains`
-#
 DROP TABLE IF EXISTS `panel_domains`;
 CREATE TABLE `panel_domains` (
   `id` int(11) unsigned NOT NULL auto_increment,
@@ -315,18 +251,10 @@ CREATE TABLE `panel_domains` (
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
   KEY `domain` (`domain`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `panel_domains`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
 
-#
-# Table structure for table `panel_ipsandports`
-#
 DROP TABLE IF EXISTS `panel_ipsandports`;
 CREATE TABLE `panel_ipsandports` (
   `id` int(11) unsigned NOT NULL auto_increment,
@@ -345,19 +273,9 @@ CREATE TABLE `panel_ipsandports` (
   `ssl_cert_chainfile` varchar(255) NOT NULL,
   `docroot` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `panel_ipsandports`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_htaccess`
-#
 
 DROP TABLE IF EXISTS `panel_htaccess`;
 CREATE TABLE `panel_htaccess` (
@@ -371,18 +289,9 @@ CREATE TABLE `panel_htaccess` (
   `error401path` varchar(255) NOT NULL default '',
   `options_cgi` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `panel_htaccess`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_htpasswds`
-#
 
 DROP TABLE IF EXISTS `panel_htpasswds`;
 CREATE TABLE `panel_htpasswds` (
@@ -394,18 +303,9 @@ CREATE TABLE `panel_htpasswds` (
   `authname` varchar(255) NOT NULL default 'Restricted Area',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `panel_htpasswds`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_sessions`
-#
 
 DROP TABLE IF EXISTS `panel_sessions`;
 CREATE TABLE `panel_sessions` (
@@ -423,16 +323,7 @@ CREATE TABLE `panel_sessions` (
   KEY `userid` (`userid`)
 ) ENGINE=HEAP;
 
-#
-# Dumping data for table `panel_sessions`
-#
 
-
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_settings`
-#
 
 DROP TABLE IF EXISTS `panel_settings`;
 CREATE TABLE `panel_settings` (
@@ -441,214 +332,208 @@ CREATE TABLE `panel_settings` (
   `varname` varchar(255) NOT NULL default '',
   `value` text NOT NULL,
   PRIMARY KEY  (`settingid`)
-) ENGINE=MyISAM ;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
 
-#
-# Dumping data for table `panel_settings`
-#
+INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
+	('catchall', 'catchall_enabled', '1'),
+	('session', 'allow_multiple_login', '0'),
+	('session', 'sessiontimeout', '600'),
+	('customer', 'accountprefix', 'web'),
+	('customer', 'ftpprefix', 'ftp'),
+	('customer', 'mysqlprefix', 'sql'),
+	('customer', 'ftpatdomain', '0'),
+	('ticket', 'noreply_email', 'NO-REPLY@SERVERNAME'),
+	('ticket', 'worktime_all', '1'),
+	('ticket', 'worktime_begin', '00:00'),
+	('ticket', 'worktime_end', '23:59'),
+	('ticket', 'worktime_sat', '0'),
+	('ticket', 'worktime_sun', '0'),
+	('ticket', 'archiving_days', '5'),
+	('ticket', 'enabled', '1'),
+	('ticket', 'concurrently_open', '5'),
+	('ticket', 'noreply_name', 'Hosting Support'),
+	('ticket', 'reset_cycle', '2'),
+	('logger', 'enabled', '1'),
+	('logger', 'log_cron', '0'),
+	('logger', 'logfile', ''),
+	('logger', 'logtypes', 'syslog,mysql'),
+	('logger', 'severity', '1'),
+	('dkim', 'use_dkim', '0'),
+	('dkim', 'dkim_prefix', '/etc/postfix/dkim/'),
+	('dkim', 'dkim_domains', 'domains'),
+	('dkim', 'dkim_dkimkeys', 'dkim-keys.conf'),
+	('dkim', 'dkimrestart_command', '/etc/init.d/dkim-filter restart'),
+	('autoresponder', 'autoresponder_active', '0'),
+	('autoresponder', 'last_autoresponder_run', '0'),
+	('admin', 'show_version_login', '0'),
+	('admin', 'show_version_footer', '0'),
+	('aps', 'items_per_page', '20'),
+	('aps', 'upload_fields', '5'),
+	('aps', 'aps_active', '0'),
+	('aps', 'php-extension', ''),
+	('aps', 'php-configuration', ''),
+	('aps', 'webserver-htaccess', ''),
+	('aps', 'php-function', ''),
+	('aps', 'webserver-module', ''),
+	('spf', 'use_spf', '0'),
+	('spf', 'spf_entry', '@	IN	TXT	"v=spf1 a mx -all"'),
+	('dkim', 'dkim_algorithm', 'all'),
+	('dkim', 'dkim_add_adsp', '1'),
+	('dkim', 'dkim_keylength', '1024'),
+	('dkim', 'dkim_servicetype', '0'),
+	('dkim', 'dkim_add_adsppolicy', '1'),
+	('dkim', 'dkim_notes', ''),
+	('defaultwebsrverrhandler', 'enabled', '0'),
+	('defaultwebsrverrhandler', 'err401', ''),
+	('defaultwebsrverrhandler', 'err403', ''),
+	('defaultwebsrverrhandler', 'err404', ''),
+	('defaultwebsrverrhandler', 'err500', ''),
+	('ticket', 'default_priority', '2'),
+	('customredirect', 'enabled', '1'),
+	('customredirect', 'default', '1'),
+	('perl', 'suexecworkaround', '0'),
+	('perl', 'suexecpath', '/var/www/cgi-bin/'),
+	('login', 'domain_login', '0'),
+	('login', 'maxloginattempts', '3'),
+	('login', 'deactivatetime', '900'),
+	('phpfpm', 'enabled', '0'),
+	('phpfpm', 'configdir', '/etc/php-fpm.d/'),
+	('phpfpm', 'reload', '/etc/init.d/php-fpm restart'),
+	('phpfpm', 'pm', 'static'),
+	('phpfpm', 'max_children', '1'),
+	('phpfpm', 'start_servers', '20'),
+	('phpfpm', 'min_spare_servers', '5'),
+	('phpfpm', 'max_spare_servers', '35'),
+	('phpfpm', 'max_requests', '0'),
+	('phpfpm', 'tmpdir', '/var/customers/tmp/'),
+	('phpfpm', 'peardir', '/usr/share/php/:/usr/share/php5/'),
+	('phpfpm', 'enabled_ownvhost', '0'),
+	('phpfpm', 'vhost_httpuser', 'froxlorlocal'),
+	('phpfpm', 'vhost_httpgroup', 'froxlorlocal'),
+	('phpfpm', 'idle_timeout', '30'),
+	('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/'),
+	('system', 'lastaccountnumber', '0'),
+	('system', 'lastguid', '9999'),
+	('system', 'documentroot_prefix', '/var/customers/webs/'),
+	('system', 'logfiles_directory', '/var/customers/logs/'),
+	('system', 'ipaddress', 'SERVERIP'),
+	('system', 'apachereload_command', '/etc/init.d/apache reload'),
+	('system', 'last_traffic_run', '000000'),
+	('system', 'vmail_uid', '2000'),
+	('system', 'vmail_gid', '2000'),
+	('system', 'vmail_homedir', '/var/customers/mail/'),
+	('system', 'vmail_maildir', 'Maildir'),
+	('system', 'bind_enable', '1'),
+	('system', 'bindconf_directory', '/etc/bind/'),
+	('system', 'bindreload_command', '/etc/init.d/bind9 reload'),
+	('system', 'hostname', 'SERVERNAME'),
+	('system', 'mysql_access_host', 'localhost'),
+	('system', 'lastcronrun', ''),
+	('system', 'defaultip', '1'),
+	('system', 'phpappendopenbasedir', '/tmp/'),
+	('system', 'deactivateddocroot', ''),
+	('system', 'mailpwcleartext', '1'),
+	('system', 'last_tasks_run', '000000'),
+	('system', 'nameservers', ''),
+	('system', 'mxservers', ''),
+	('system', 'mod_log_sql', '0'),
+	('system', 'mod_fcgid', '0'),
+	('system', 'apacheconf_vhost', '/etc/apache/vhosts.conf'),
+	('system', 'apacheconf_diroptions', '/etc/apache/diroptions.conf'),
+	('system', 'apacheconf_htpasswddir', '/etc/apache/htpasswd/'),
+	('system', 'webalizer_quiet', '2'),
+	('system', 'last_archive_run', '000000'),
+	('system', 'mod_fcgid_configdir', '/var/www/php-fcgi-scripts'),
+	('system', 'mod_fcgid_tmpdir', '/var/customers/tmp'),
+	('system', 'ssl_cert_file', '/etc/apache2/apache2.pem'),
+	('system', 'use_ssl', '0'),
+	('system', 'openssl_cnf', '[ req ]\r\ndefault_bits = 1024\r\ndistinguished_name = req_distinguished_name\r\nattributes = req_attributes\r\nprompt = no\r\noutput_password =\r\ninput_password =\r\n[ req_distinguished_name ]\r\nC = DE\r\nST = froxlor\r\nL = froxlor    \r\nO = Testcertificate\r\nOU = froxlor        \r\nCN = @@domain_name@@\r\nemailAddress = @@email@@    \r\n[ req_attributes ]\r\nchallengePassword =\r\n'),
+	('system', 'default_vhostconf', ''),
+	('system', 'mail_quota_enabled', '0'),
+	('system', 'mail_quota', '100'),
+	('system', 'webalizer_enabled', '1'),
+	('system', 'awstats_enabled', '0'),
+	('system', 'httpuser', 'www-data'),
+	('system', 'httpgroup', 'www-data'),
+	('system', 'webserver', 'apache2'),
+	('system', 'mod_fcgid_wrapper', '1'),
+	('system', 'mod_fcgid_starter', '0'),
+	('system', 'mod_fcgid_peardir', '/usr/share/php/:/usr/share/php5/'),
+	('system', 'index_file_extension', 'html'),
+	('system', 'mod_fcgid_maxrequests', '250'),
+	('system','ssl_key_file','/etc/apache2/apache2.key'),
+	('system','ssl_ca_file', ''),
+	('system', 'debug_cron', '0'),
+	('system', 'store_index_file_subs', '1'),
+	('system', 'stdsubdomain', ''),
+	('system', 'awstats_path', '/usr/bin/'),
+	('system', 'awstats_conf', '/etc/awstats/'),
+	('system', 'defaultttl', '604800'),
+	('system', 'mod_fcgid_defaultini', '1'),
+	('system', 'ftpserver', 'proftpd'),
+	('system', 'dns_createmailentry', '0'),
+	('system', 'froxlordirectlyviahostname', '0'),
+	('system', 'report_enable', '1'),
+	('system', 'report_webmax', '90'),
+	('system', 'report_trafficmax', '90'),
+	('system', 'validate_domain', '1'),
+	('system', 'backup_enabled', '0'),
+	('system', 'backup_dir', '/var/customers/backups/'),
+	('system', 'backup_mysqldump_path', '/usr/bin/mysqldump'),
+	('system', 'backup_count', '1'),
+	('system', 'backup_bigfile', '1'),
+	('system', 'backup_ftp_enabled', '0'),
+	('system', 'backup_ftp_server', ''),
+	('system', 'backup_ftp_user', ''),
+	('system', 'backup_ftp_pass', ''),
+	('system', 'backup_ftp_passive', '1'),
+	('system', 'diskquota_enabled', '0'),
+	('system', 'diskquota_repquota_path', '/usr/sbin/repquota'),
+	('system', 'diskquota_quotatool_path', '/usr/bin/quotatool'),
+	('system', 'diskquota_customer_partition', '/dev/root'),
+	('system', 'logrotate_enabled', '0'),
+	('system', 'logrotate_binary', '/usr/sbin/logrotate'),
+	('system', 'logrotate_interval', 'weekly'),
+	('system', 'logrotate_keep', '4'),
+	('system', 'mod_fcgid_idle_timeout', '30'),
+	('system', 'perl_path', '/usr/bin/perl'),
+	('system', 'mod_fcgid_ownvhost', '0'),
+	('system', 'mod_fcgid_httpuser', 'froxlorlocal'),
+	('system', 'mod_fcgid_httpgroup', 'froxlorlocal'),
+	('system', 'awstats_awstatspath', '/usr/bin/'),
+	('system', 'mod_fcgid_defaultini_ownvhost', '1'),
+	('system', 'awstats_icons', '/usr/share/awstats/icon/'),
+	('system', 'ssl_cert_chainfile', ''),
+	('system', 'nginx_php_backend', '127.0.0.1:8888'),
+	('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock'),
+	('system', 'phpreload_command', ''),
+	('panel', 'decimal_places', '4'),
+	('panel', 'adminmail', 'admin@SERVERNAME'),
+	('panel', 'phpmyadmin_url', ''),
+	('panel', 'webmail_url', ''),
+	('panel', 'webftp_url', ''),
+	('panel', 'standardlanguage', 'English'),
+	('panel', 'pathedit', 'Manual'),
+	('panel', 'paging', '20'),
+	('panel', 'natsorting', '1'),
+	('panel', 'sendalternativemail', '0'),
+	('panel', 'no_robots', '1'),
+	('panel', 'allow_domain_change_admin', '0'),
+	('panel', 'allow_domain_change_customer', '0'),
+	('panel', 'frontend', 'froxlor'),
+	('panel', 'default_theme', 'Froxlor'),
+	('panel', 'password_min_length', '0'),
+	('panel', 'adminmail_defname', 'Froxlor Administrator'),
+	('panel', 'adminmail_return', ''),
+	('panel', 'unix_names', '1'),
+	('panel', 'allow_preset', '1'),
+	('panel', 'allow_preset_admin', '0'),
+	('panel', 'password_regex', ''),
+	('panel', 'version', '0.9.28-svn5');
 
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('session', 'sessiontimeout', '600');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'adminmail', 'admin@SERVERNAME');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'phpmyadmin_url', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customer', 'accountprefix', 'web');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customer', 'ftpprefix', 'ftp');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customer', 'mysqlprefix', 'sql');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'lastaccountnumber', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'lastguid', '9999');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'documentroot_prefix', '/var/customers/webs/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logfiles_directory', '/var/customers/logs/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'ipaddress', 'SERVERIP');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apachereload_command', '/etc/init.d/apache reload');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'last_traffic_run', '000000');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_uid', '2000');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_gid', '2000');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_homedir', '/var/customers/mail/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_maildir', 'Maildir');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bind_enable', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindconf_directory', '/etc/bind/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bindreload_command', '/etc/init.d/bind9 reload');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'version', '0.9.28-svn3');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'hostname', 'SERVERNAME');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'maxloginattempts', '3');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'deactivatetime', '900');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'webmail_url', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'webftp_url', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'standardlanguage', 'English');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mysql_access_host', 'localhost');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'pathedit', 'Manual');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'lastcronrun', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'paging', '20');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'defaultip', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'phpappendopenbasedir', '/tmp/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'natsorting', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'deactivateddocroot', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mailpwcleartext', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'last_tasks_run', '000000');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customer', 'ftpatdomain', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'nameservers', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mxservers', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_log_sql', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'sendalternativemail', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apacheconf_vhost', '/etc/apache/vhosts.conf');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apacheconf_diroptions', '/etc/apache/diroptions.conf');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apacheconf_htpasswddir', '/etc/apache/htpasswd/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'webalizer_quiet', '2');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'noreply_email', 'NO-REPLY@SERVERNAME');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'worktime_all', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'worktime_begin', '00:00');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'worktime_end', '23:59');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'worktime_sat', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'worktime_sun', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'archiving_days', '5');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'last_archive_run', '000000');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'enabled', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'concurrently_open', '5');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'noreply_name', 'Froxlor Support');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_configdir', '/var/www/php-fcgi-scripts');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_tmpdir', '/var/customers/tmp');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'reset_cycle', '2');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'no_robots', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('logger', 'enabled', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('logger', 'log_cron', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('logger', 'logfile', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('logger', 'logtypes', 'syslog,mysql');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('logger', 'severity', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'ssl_cert_file', '/etc/apache2/apache2.pem');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'use_ssl', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'openssl_cnf', '[ req ]\r\ndefault_bits = 1024\r\ndistinguished_name = req_distinguished_name\r\nattributes = req_attributes\r\nprompt = no\r\noutput_password =\r\ninput_password =\r\n[ req_distinguished_name ]\r\nC = DE\r\nST = froxlor\r\nL = froxlor    \r\nO = Testcertificate\r\nOU = froxlor        \r\nCN = @@domain_name@@\r\nemailAddress = @@email@@    \r\n[ req_attributes ]\r\nchallengePassword =\r\n');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'default_vhostconf', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mail_quota_enabled', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mail_quota', '100');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'decimal_places', '4');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'use_dkim', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'webalizer_enabled', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_enabled', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_prefix', '/etc/postfix/dkim/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_domains', 'domains');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_dkimkeys', 'dkim-keys.conf');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkimrestart_command', '/etc/init.d/dkim-filter restart');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'unix_names', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'allow_preset', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'allow_preset_admin', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpuser', 'www-data');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'httpgroup', 'www-data');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'webserver', 'apache2');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('autoresponder', 'autoresponder_active', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('autoresponder', 'last_autoresponder_run', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('admin', 'show_version_login', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('admin', 'show_version_footer', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_wrapper', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_starter', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_peardir', '/usr/share/php/:/usr/share/php5/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'index_file_extension', 'html');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'items_per_page', '20');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'upload_fields', '5');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'aps_active', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'php-extension', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'php-configuration', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'webserver-htaccess', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'php-function', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('aps', 'webserver-module', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('session', 'allow_multiple_login', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'allow_domain_change_admin', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'allow_domain_change_customer', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_maxrequests', '250');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system','ssl_key_file','/etc/apache2/apache2.key');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system','ssl_ca_file', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'frontend', 'froxlor');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'use_spf', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'spf_entry', '@	IN	TXT	"v=spf1 a mx -all"');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'debug_cron', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'password_min_length', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'store_index_file_subs', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'adminmail_defname', 'Froxlor Administrator');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'adminmail_return', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_algorithm', 'all');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_add_adsp', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_keylength', '1024');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_servicetype', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_add_adsppolicy', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_notes', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'stdsubdomain', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_path', '/usr/bin/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_conf', '/etc/awstats/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'defaultttl', '604800');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'enabled', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err401', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err403', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err404', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'default_priority', '2');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_defaultini', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'ftpserver', 'proftpd');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customredirect', 'enabled', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('customredirect', 'default', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'dns_createmailentry', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'froxlordirectlyviahostname', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'password_regex', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'perl_path', '/usr/bin/perl');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_ownvhost', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_httpuser', 'froxlorlocal');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_httpgroup', 'froxlorlocal');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('perl', 'suexecworkaround', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('perl', 'suexecpath', '/var/www/cgi-bin/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_awstatspath', '/usr/bin/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_defaultini_ownvhost', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_icons', '/usr/share/awstats/icon/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'ssl_cert_chainfile', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('login', 'domain_login', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'nginx_php_backend', '127.0.0.1:8888');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'phpreload_command', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'enabled', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'configdir', '/etc/php-fpm.d/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'reload', '/etc/init.d/php-fpm restart');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'pm', 'static');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'max_children', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'start_servers', '20');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'min_spare_servers', '5');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'max_spare_servers', '35');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'max_requests', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'tmpdir', '/var/customers/tmp/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'peardir', '/usr/share/php/:/usr/share/php5/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'enabled_ownvhost', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'vhost_httpuser', 'froxlorlocal');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'vhost_httpgroup', 'froxlorlocal');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'idle_timeout', '30');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_enable', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_webmax', '90');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'report_trafficmax', '90');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'default_theme', 'Froxlor');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'validate_domain', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_enabled', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_dir', '/var/customers/backups/');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_mysqldump_path', '/usr/bin/mysqldump');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_count', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_bigfile', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_enabled', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_server', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_user', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_pass', '');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_passive', '1');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_enabled', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_repquota_path', '/usr/sbin/repquota');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_quotatool_path', '/usr/bin/quotatool');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_customer_partition', '/dev/root');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_enabled', '0');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_binary', '/usr/sbin/logrotate');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_interval', 'weekly');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_keep', '4');
-INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_idle_timeout', '30');
-# --------------------------------------------------------
 
-#
-# Table structure for table `panel_tasks`
-#
 
 DROP TABLE IF EXISTS `panel_tasks`;
 CREATE TABLE `panel_tasks` (
@@ -656,18 +541,9 @@ CREATE TABLE `panel_tasks` (
   `type` int(11) NOT NULL default '0',
   `data` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `panel_tasks`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_templates`
-#
 
 DROP TABLE IF EXISTS `panel_templates`;
 CREATE TABLE `panel_templates` (
@@ -679,18 +555,9 @@ CREATE TABLE `panel_templates` (
   `value` longtext NOT NULL,
   PRIMARY KEY  (id),
   KEY adminid (adminid)
-) ENGINE=MyISAM;
-
-#
-# Dumping data for table `panel_templates`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_traffic`
-#
 
 DROP TABLE IF EXISTS `panel_traffic`;
 CREATE TABLE `panel_traffic` (
@@ -706,18 +573,9 @@ CREATE TABLE `panel_traffic` (
   `mail` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `panel_traffic`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_traffic_admins`
-#
 
 DROP TABLE IF EXISTS `panel_traffic_admins`;
 CREATE TABLE `panel_traffic_admins` (
@@ -733,20 +591,11 @@ CREATE TABLE `panel_traffic_admins` (
   `mail` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `adminid` (`adminid`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `panel_traffic_admins`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_diskspace`
-#
-
+DROP TABLE IF EXISTS `panel_diskspace`;
 CREATE TABLE `panel_diskspace` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `customerid` int(11) unsigned NOT NULL default '0',
@@ -759,19 +608,11 @@ CREATE TABLE `panel_diskspace` (
   `mysql` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM ;
-
-#
-# Dumping data for table `panel_diskspace`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
 
-#
-# Table structure for table `panel_diskspace_admins`
-#
-
+DROP TABLE IF EXISTS `panel_diskspace_admins`;
 CREATE TABLE `panel_diskspace_admins` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `adminid` int(11) unsigned NOT NULL default '0',
@@ -784,17 +625,9 @@ CREATE TABLE `panel_diskspace_admins` (
   `mysql` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `adminid` (`adminid`)
-) ENGINE=MyISAM ;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-#
-# Dumping data for table `panel_diskspace_admins`
-#
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_languages`
-#
 
 DROP TABLE IF EXISTS `panel_languages`;
 CREATE TABLE `panel_languages` (
@@ -803,16 +636,14 @@ CREATE TABLE `panel_languages` (
   `iso` char(3) NOT NULL DEFAULT 'foo',
   `file` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM ;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-#
-# Dumping data for table `panel_languages`
-#
+
 
 INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
     (1, 'Deutsch', 'de', 'lng/german.lng.php'),
     (2, 'English', 'en', 'lng/english.lng.php'),
-    (3, 'Fran&ccedil;ais', 'fr', 'lng/french.lng.php'),
+    (3, 'Français', 'fr', 'lng/french.lng.php'),
     (4, 'Chinese', 'zh', 'lng/zh-cn.lng.php'),
     (5, 'Catalan', 'ca', 'lng/catalan.lng.php'),
     (6, 'Espa&ntilde;ol', 'es', 'lng/spanish.lng.php'),
@@ -828,11 +659,7 @@ INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
     (16, 'Czech', 'cz', 'lng/czech.lng.php'),
     (17, 'Polski', 'pl', 'lng/polish.lng.php');
 
-# --------------------------------------------------------
 
-#
-# Table structure for table `panel_tickets`
-#
 
 DROP TABLE IF EXISTS `panel_tickets`;
 CREATE TABLE `panel_tickets` (
@@ -853,14 +680,9 @@ CREATE TABLE `panel_tickets` (
   `archived` enum('0','1') NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_ticket_categories`
-#
 
 DROP TABLE IF EXISTS `panel_ticket_categories`;
 CREATE TABLE `panel_ticket_categories` (
@@ -869,18 +691,9 @@ CREATE TABLE `panel_ticket_categories` (
   `adminid` int(11) NOT NULL,
   `logicalorder` int(3) NOT NULL default '1',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
-
-#
-# Dumping data for table `panel_ticket_categories`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_syslog`
-#
 
 DROP TABLE IF EXISTS `panel_syslog`;
 CREATE TABLE IF NOT EXISTS `panel_syslog` (
@@ -891,18 +704,9 @@ CREATE TABLE IF NOT EXISTS `panel_syslog` (
   `user` varchar(50) NOT NULL,
   `text` text NOT NULL,
   PRIMARY KEY  (`logid`)
-) ENGINE=MyISAM;
-
-#
-# Dumping data for table `panel_syslog`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `mail_autoresponder`
-#
 
 DROP TABLE IF EXISTS `mail_autoresponder`;
 CREATE TABLE `mail_autoresponder` (
@@ -916,18 +720,9 @@ CREATE TABLE `mail_autoresponder` (
   PRIMARY KEY  (`email`),
   KEY `customerid` (`customerid`),
   FULLTEXT KEY `message` (`message`)
-) ENGINE=MyISAM;
-
-#
-# Dumping data for table `mail_autoresponder`
-#
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-# --------------------------------------------------------
-
-#
-# Table structure for table `panel_phpconfigs`
-#
 
 DROP TABLE IF EXISTS `panel_phpconfigs`;
 CREATE TABLE `panel_phpconfigs` (
@@ -939,18 +734,14 @@ CREATE TABLE `panel_phpconfigs` (
   `mod_fcgid_maxrequests` int(4) NOT NULL DEFAULT '-1',
   `phpsettings` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-#
-# Dumping data for table `panel_phpconfigs`
-#
 
-INSERT INTO `panel_phpconfigs` (`id`, `description`, `binary`, `file_extensions`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `phpsettings`) VALUES(1, 'Default Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_call_time_pass_reference = Off\r\nallow_url_fopen = Off\r\nasp_tags = Off\r\ndisable_classes =\r\ndisable_functions = curl_exec,curl_multi_exec,exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\ncgi.force_redirect = 1\r\ngpc_order = "GPC"\r\nhtml_errors = Off\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmagic_quotes_gpc = Off\r\nmagic_quotes_runtime = Off\r\nmagic_quotes_sybase = Off\r\nmax_execution_time = 30\r\nmax_input_time = 60\r\nmemory_limit = 16M\r\n{OPEN_BASEDIR_C}open_basedir = "{OPEN_BASEDIR}"\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nregister_globals = Off\r\nreport_memleaks = On\r\nsafe_mode = {SAFE_MODE}\r\nsafe_mode_allowed_env_vars = PHP_\r\nsafe_mode_gid = Off\r\nsafe_mode_include_dir = "{PEAR_DIR}"\r\nsafe_mode_protected_env_vars = LD_LIBRARY_PATH\r\nsendmail_path = "/usr/sbin/sendmail -t -f {CUSTOMER_EMAIL}"\r\nsession.auto_start = 0\r\nsession.bug_compat_42 = 0\r\nsession.bug_compat_warn = 1\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.entropy_file = /dev/urandom\r\nsession.entropy_length = 16\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 1\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.use_cookies = 1\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nsuhosin.mail.protect = 1\r\nsuhosin.simulation = Off\r\ntrack_errors = Off\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\n');
-# --------------------------------------------------------
 
-#
-# Tabellenstruktur fuer Tabelle `aps_instances`
-#
+INSERT INTO `panel_phpconfigs` (`id`, `description`, `binary`, `file_extensions`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `phpsettings`) VALUES
+	(1, 'Default Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_call_time_pass_reference = Off\r\nallow_url_fopen = Off\r\nasp_tags = Off\r\ndisable_classes =\r\ndisable_functions = curl_exec,curl_multi_exec,exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\ncgi.force_redirect = 1\r\ngpc_order = "GPC"\r\nhtml_errors = Off\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmagic_quotes_gpc = Off\r\nmagic_quotes_runtime = Off\r\nmagic_quotes_sybase = Off\r\nmax_execution_time = 30\r\nmax_input_time = 60\r\nmemory_limit = 16M\r\n{OPEN_BASEDIR_C}open_basedir = "{OPEN_BASEDIR}"\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nregister_globals = Off\r\nreport_memleaks = On\r\nsafe_mode = {SAFE_MODE}\r\nsafe_mode_allowed_env_vars = PHP_\r\nsafe_mode_gid = Off\r\nsafe_mode_include_dir = "{PEAR_DIR}"\r\nsafe_mode_protected_env_vars = LD_LIBRARY_PATH\r\nsendmail_path = "/usr/sbin/sendmail -t -f {CUSTOMER_EMAIL}"\r\nsession.auto_start = 0\r\nsession.bug_compat_42 = 0\r\nsession.bug_compat_warn = 1\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.entropy_file = /dev/urandom\r\nsession.entropy_length = 16\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 1\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.use_cookies = 1\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nsuhosin.mail.protect = 1\r\nsuhosin.simulation = Off\r\ntrack_errors = Off\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\n');
+
+
 
 DROP TABLE IF EXISTS `aps_instances`;
 CREATE TABLE IF NOT EXISTS `aps_instances` (
@@ -959,13 +750,9 @@ CREATE TABLE IF NOT EXISTS `aps_instances` (
   `PackageID` int(4) NOT NULL,
   `Status` int(4) NOT NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-# --------------------------------------------------------
 
-#
-# Tabellenstruktur fuer Tabelle `aps_packages`
-#
 
 DROP TABLE IF EXISTS `aps_packages`;
 CREATE TABLE IF NOT EXISTS `aps_packages` (
@@ -976,13 +763,9 @@ CREATE TABLE IF NOT EXISTS `aps_packages` (
   `Release` int(4) NOT NULL,
   `Status` int(1) NOT NULL default '1',
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-# --------------------------------------------------------
 
-#
-# Tabellenstruktur fuer Tabelle `aps_settings`
-#
 
 DROP TABLE IF EXISTS `aps_settings`;
 CREATE TABLE IF NOT EXISTS `aps_settings` (
@@ -991,13 +774,9 @@ CREATE TABLE IF NOT EXISTS `aps_settings` (
   `Name` varchar(250) NOT NULL,
   `Value` varchar(250) NOT NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-# --------------------------------------------------------
 
-#
-# Tabellenstruktur fuer Tabelle `aps_tasks`
-#
 
 DROP TABLE IF EXISTS `aps_tasks`;
 CREATE TABLE IF NOT EXISTS `aps_tasks` (
@@ -1005,13 +784,9 @@ CREATE TABLE IF NOT EXISTS `aps_tasks` (
   `InstanceID` int(4) NOT NULL,
   `Task` int(4) NOT NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-# --------------------------------------------------------
 
-#
-# Tabellenstruktur fuer Tabelle `aps_temp_settings`
-#
 
 DROP TABLE IF EXISTS `aps_temp_settings`;
 CREATE TABLE IF NOT EXISTS `aps_temp_settings` (
@@ -1021,13 +796,9 @@ CREATE TABLE IF NOT EXISTS `aps_temp_settings` (
   `Name` varchar(250) NOT NULL,
   `Value` varchar(250) NOT NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-# --------------------------------------------------------
 
-#
-# Tabellenstruktur fuer Tabelle `cronjobs_run`
-#
 
 DROP TABLE IF EXISTS `cronjobs_run`;
 CREATE TABLE IF NOT EXISTS `cronjobs_run` (
@@ -1039,26 +810,22 @@ CREATE TABLE IF NOT EXISTS `cronjobs_run` (
   `isactive` tinyint(1) DEFAULT '1',
   `desc_lng_key` varchar(100) NOT NULL DEFAULT 'cron_unknown_desc',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-#
-# Dumping data for table `panel_phpconfigs`
-#
 
-INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (1, 'froxlor/core', 'cron_tasks.php', '5 MINUTE', '1', 'cron_tasks');
-INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (2, 'froxlor/aps', 'cron_apsinstaller.php', '5 MINUTE', '0', 'cron_apsinstaller');
-INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (3, 'froxlor/autoresponder', 'cron_autoresponder.php', '5 MINUTE', '0', 'cron_autoresponder');
-INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (4, 'froxlor/aps', 'cron_apsupdater.php', '1 HOUR', '0', 'cron_apsupdater');
-INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (5, 'froxlor/core', 'cron_traffic.php', '1 DAY', '1', 'cron_traffic');
-INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (6, 'froxlor/ticket', 'cron_used_tickets_reset.php', '1 DAY', '1', 'cron_ticketsreset');
-INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (7, 'froxlor/ticket', 'cron_ticketarchive.php', '1 MONTH', '1', 'cron_ticketarchive');
-INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (8, 'froxlor/reports', 'cron_usage_report.php', '1 DAY', '1', 'cron_usage_report');
-INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES (9, 'froxlor/backup', 'cron_backup.php', '1 Day', '1', 'cron_backup');
-# --------------------------------------------------------
 
-#
-# Tabellenstruktur fuer Tabelle `ftp_quotalimits`
-#
+INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES
+	(1, 'froxlor/core', 'cron_tasks.php', '5 MINUTE', '1', 'cron_tasks'),
+	(2, 'froxlor/aps', 'cron_apsinstaller.php', '5 MINUTE', '0', 'cron_apsinstaller'),
+	(3, 'froxlor/autoresponder', 'cron_autoresponder.php', '5 MINUTE', '0', 'cron_autoresponder'),
+	(4, 'froxlor/aps', 'cron_apsupdater.php', '1 HOUR', '0', 'cron_apsupdater'),
+	(5, 'froxlor/core', 'cron_traffic.php', '1 DAY', '1', 'cron_traffic'),
+	(6, 'froxlor/ticket', 'cron_used_tickets_reset.php', '1 DAY', '1', 'cron_ticketsreset'),
+	(7, 'froxlor/ticket', 'cron_ticketarchive.php', '1 MONTH', '1', 'cron_ticketarchive'),
+	(8, 'froxlor/reports', 'cron_usage_report.php', '1 DAY', '1', 'cron_usage_report'),
+	(9, 'froxlor/backup', 'cron_backup.php', '1 Day', '1', 'cron_backup');
+
+
 
 DROP TABLE IF EXISTS `ftp_quotalimits`;
 CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
@@ -1072,19 +839,14 @@ CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
   `files_in_avail` int(10) unsigned NOT NULL,
   `files_out_avail` int(10) unsigned NOT NULL,
   `files_xfer_avail` int(10) unsigned NOT NULL
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-#
-# Dumping data for table `ftp_quotalimits`
-#
 
-INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES ('froxlor', 'user', 'false', 'hard', 0, 0, 0, 0, 0, 0);
 
-# --------------------------------------------------------
+INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES 
+	('froxlor', 'user', 'false', 'hard', 0, 0, 0, 0, 0, 0);
 
-#
-# Tabellenstruktur fuer Tabelle `ftp_quotatallies`
-#
+
 
 DROP TABLE IF EXISTS `ftp_quotatallies`;
 CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
@@ -1096,13 +858,9 @@ CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
   `files_in_used` int(10) unsigned NOT NULL,
   `files_out_used` int(10) unsigned NOT NULL,
   `files_xfer_used` int(10) unsigned NOT NULL
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-# --------------------------------------------------------
 
-#
-# Tabellenstruktur fuer Tabelle `redirect_codes`
-#
 
 DROP TABLE IF EXISTS `redirect_codes`;
 CREATE TABLE IF NOT EXISTS `redirect_codes` (
@@ -1111,35 +869,27 @@ CREATE TABLE IF NOT EXISTS `redirect_codes` (
   `desc` varchar(200) NOT NULL,
   `enabled` tinyint(1) DEFAULT '1',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-#
-# Dumping data for table `redirect_codes`
-#
 
-INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES (1, '---', 'rc_default', 1);
-INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES (2, '301', 'rc_movedperm', 1);
-INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES (3, '302', 'rc_found', 1);
-INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES (4, '303', 'rc_seeother', 1);
-INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES (5, '307', 'rc_tempred', 1);
 
-# --------------------------------------------------------
+INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES
+	(1, '---', 'rc_default', 1),
+	(2, '301', 'rc_movedperm', 1),
+	(3, '302', 'rc_found', 1),
+	(4, '303', 'rc_seeother', 1),
+	(5, '307', 'rc_tempred', 1);
 
-#
-# Tabellenstruktur fuer Tabelle `domain_redirect_codes`
-#
+
 
 DROP TABLE IF EXISTS `domain_redirect_codes`;
 CREATE TABLE IF NOT EXISTS `domain_redirect_codes` (
   `rid` int(5) NOT NULL,
   `did` int(11) unsigned NOT NULL,
   UNIQUE KEY `rc` (`rid`, `did`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-#
-# Tabellenstruktur fuer Tabelle `ipsandports_docrootsettings`
-#
 
 DROP TABLE IF EXISTS `ipsandports_docrootsettings`;
 CREATE TABLE IF NOT EXISTS `ipsandports_docrootsettings` (
@@ -1147,12 +897,9 @@ CREATE TABLE IF NOT EXISTS `ipsandports_docrootsettings` (
   `fid` int(11) NOT NULL,
   `docrootsettings` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-#
-# Tabellenstruktur fuer Tabelle `domain_docrootsettings`
-#
 
 DROP TABLE IF EXISTS `domain_docrootsettings`;
 CREATE TABLE IF NOT EXISTS `domain_docrootsettings` (
@@ -1160,5 +907,5 @@ CREATE TABLE IF NOT EXISTS `domain_docrootsettings` (
   `fid` int(11) NOT NULL,
   `docrootsettings` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 

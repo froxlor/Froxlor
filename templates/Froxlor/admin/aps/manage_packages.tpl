@@ -1,7 +1,7 @@
 <article>
 	<header>
 		<h2>
-			<img src="images/Froxlor/icons/aps.png" alt="" />&nbsp;
+			<img src="templates/{$theme}/assets/img/icons/aps.png" alt="" />&nbsp;
 			{$lng['aps']['specialoptions']}
 		</h2>
 	</header>
@@ -62,7 +62,7 @@
 <article>
 	<header>
 		<h2>
-			<img src="images/Froxlor/icons/aps.png" alt="" />&nbsp;
+			<img src="templates/{$theme}/assets/img/icons/aps.png" alt="" />&nbsp;
 			{$lng['aps']['managepackages']}
 		</h2>
 	</header>

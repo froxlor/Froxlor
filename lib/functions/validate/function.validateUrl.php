@@ -28,7 +28,7 @@
 
 function validateUrl($url)
 {
-	global $idna_convert;
+	global $idna_convert, $theme;
 
 	if(strtolower(substr($url, 0, 7)) != "http://"
 	&& strtolower(substr($url, 0, 8)) != "https://")

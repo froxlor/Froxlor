@@ -5,7 +5,7 @@ $header
 		<input type="hidden" name="send" value="send" />
 		<table cellpadding="5" cellspacing="0" border="0" align="center" class="maintable">
 			<tr>
-				<td class="maintitle_search_left" colspan="5"><b><img src="images/Froxlor/icons/ticket_archive.png" alt="" />&nbsp;{$lng['ticket']['archivesearch']}</b></td>
+				<td class="maintitle_search_left" colspan="5"><b><img src="templates/{$theme}/assets/img/icons/ticket_archive.png" alt="" />&nbsp;{$lng['ticket']['archivesearch']}</b></td>
 				<td class="maintitle_search_right">&nbsp;</td>
 			</tr>
       		<if 0 < $tickets_count >

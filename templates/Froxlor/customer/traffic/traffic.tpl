@@ -2,7 +2,7 @@ $header
 <article>
 	<header>
 		<h2>
-			<img src="images/Froxlor/icons/traffic.png" alt="{$lng['menue']['traffic']['traffic']}" />&nbsp;
+			<img src="templates/{$theme}/assets/img/icons/traffic.png" alt="{$lng['menue']['traffic']['traffic']}" />&nbsp;
 			{$lng['menue']['traffic']['traffic']}
 		</h2>
 	</header>

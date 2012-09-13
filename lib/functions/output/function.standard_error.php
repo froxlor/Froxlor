@@ -28,7 +28,7 @@
 
 function standard_error($errors = '', $replacer = '')
 {
-	global $db, $userinfo, $s, $header, $footer, $lng;
+	global $db, $userinfo, $s, $header, $footer, $lng, $theme;
 	$_SESSION['requestData'] = $_POST;
 	$replacer = htmlentities($replacer);
 
