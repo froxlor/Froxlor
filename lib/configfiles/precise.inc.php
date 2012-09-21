@@ -299,15 +299,17 @@ return Array(
 					'dovecot' => Array(
 						'label' => 'Dovecot',
 						'commands_1' => Array(
-							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix'
+							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix dovecot-mysql mail-stack-delivery'
 						),
 						'files' => Array(
-							'etc_dovecot_auth.d_01-dovecot-postfix.auth' => '/etc/dovecot/auth.d/01-dovecot-postfix.auth',
-							'etc_dovecot_conf.d_01-dovecot-postfix.conf' => '/etc/dovecot/conf.d/01-dovecot-postfix.conf',
-							'etc_dovecot_dovecot-sql.conf' => '/etc/dovecot/dovecot-sql.conf'
+							
+							'etc_dovecot_conf.d_01_mail_stack_delivery.conf' => '/etc/dovecot/conf.d/01-mail-stack-delivery.conf',
+							'etc_dovecot_conf.d_10_auth.conf' => '/etc/dovecot/conf.d/10-auth.conf',
+							'etc_dovecot_conf.d_auth-sql.conf.ext' => '/etc/dovecot/conf.d/auth-sql.conf.ext',
+							'etc_dovecot_dovecot-sql.conf.ext' => '/etc/dovecot/dovecot-sql.conf.ext'
 						),
 						'commands_2' => Array(
-							'chmod 0640 /etc/dovecot/dovecot-sql.conf'
+							'chmod 0640 /etc/dovecot/dovecot-sql.conf.ext'
 						),
 						'restart' => Array(
 							'/etc/init.d/dovecot restart'
@@ -386,8 +388,8 @@ return Array(
 							'chmod 600 /etc/nss-mysql.conf /etc/nss-mysql-root.conf'
 						),
 						'files' => Array(
-							'etc_libnss-mysql.conf' => '/etc/libnss-mysql.conf',
-							'etc_libnss-mysql-root.conf' => '/etc/libnss-mysql-root.conf',
+							'etc_libnss-mysql.cfg' => '/etc/libnss-mysql.cfg',
+							'etc_libnss-mysql-root.cfg' => '/etc/libnss-mysql-root.cfg',
 							'etc_nsswitch.conf' => '/etc/nsswitch.conf',
 						),
 						'restart' => Array(
