@@ -385,7 +385,7 @@ return Array(
 						'label' => 'libnss-bg (system login with mysql)',
 						'commands' => Array(
 							'apt-get install libnss-mysql-bg nscd',
-							'chmod 600 /etc/nss-mysql.conf /etc/nss-mysql-root.conf'
+							'chmod 600 /etc/libnss-mysql.conf /etc/libnss-mysql-root.conf'
 						),
 						'files' => Array(
 							'etc_libnss-mysql.cfg' => '/etc/libnss-mysql.cfg',
