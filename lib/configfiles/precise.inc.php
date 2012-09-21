@@ -386,8 +386,8 @@ return Array(
 							'chmod 600 /etc/nss-mysql.conf /etc/nss-mysql-root.conf'
 						),
 						'files' => Array(
-							'etc_libnss-mysql.conf' => '/etc/libnss-mysql.conf',
-							'etc_libnss-mysql-root.conf' => '/etc/libnss-mysql-root.conf',
+							'etc_libnss-mysql.cfg' => '/etc/libnss-mysql.cfg',
+							'etc_libnss-mysql-root.cfg' => '/etc/libnss-mysql-root.cfg',
 							'etc_nsswitch.conf' => '/etc/nsswitch.conf',
 						),
 						'restart' => Array(
