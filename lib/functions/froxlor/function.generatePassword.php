@@ -19,10 +19,34 @@
  * Generates a random password
  */
 
+function createPassword($length, $chars, $verifyRegEx)
+{
+        $password = "";
+        while (strlen($password) < $length)
+        {
+                $char = $chars{mt_rand(0,strlen($chars))};
+
+                if (ord($char) > 0)
+                {
+                        $password .= $char;
+                }
+        }
+        
+        if (preg_match($verifyRegEx, $password) == TRUE)
+        {
+                return $password;
+        }
+        else
+        {
+                return createPassword($length, $chars, $verifyRegEx);
+        }
+}
+
 function generatePassword()
 {
-	global $db, $settings;
-
-	return substr(md5(uniqid(microtime(), 1)), 24, 10);
+        $chars = "23456789abcdefghjkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
+        $verifyRegEx = "/(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).*$/";
+        return createPassword(15, $chars, $verifyRegEx);
 }
+
 ?>
