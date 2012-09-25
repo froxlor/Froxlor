@@ -26,7 +26,7 @@ if(@php_sapi_name() != 'cli'
 
 class apache_fcgid extends apache
 {
-	protected function composePhpOptions($domain)
+	protected function composePhpOptions($domain, $ssl_vhost = false)
 	{
 		$php_options_text = '';
 
@@ -38,7 +38,11 @@ class apache_fcgid extends apache
 			if((int)$this->settings['phpfpm']['enabled'] == 1)
 			{
 				$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
-				$php_options_text.= '  FastCgiExternalServer ' . makeCorrectDir($php->getInterface()->getAliasConfigDir()) . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $domain['loginname'] . ' -group ' . $domain['loginname'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
+				if ($domain['ssl'] == 1 && $ssl_vhost) {
+					$php_options_text.= '  FastCgiExternalServer ' . makeCorrectDir($php->getInterface()->getAliasConfigDir()) . 'ssl-fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $domain['loginname'] . ' -group ' . $domain['loginname'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
+				} else {
+					$php_options_text.= '  FastCgiExternalServer ' . makeCorrectDir($php->getInterface()->getAliasConfigDir()) . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $domain['loginname'] . ' -group ' . $domain['loginname'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
+				}
 				$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
 				$php_options_text.= '    <FilesMatch "\.php$">' . "\n";
 				$php_options_text.= '      SetHandler php5-fastcgi'. "\n";
@@ -48,7 +52,11 @@ class apache_fcgid extends apache
 				$php_options_text.= '    Order allow,deny' . "\n";
 				$php_options_text.= '    allow from all' . "\n";
 				$php_options_text.= '  </Directory>' . "\n";
-				$php_options_text.= '  Alias /fastcgiphp ' . makeCorrectDir($php->getInterface()->getAliasConfigDir()) . 'fpm.external' . "\n";
+				if ($domain['ssl'] == 1 && $ssl_vhost) {
+					$php_options_text.= '  Alias /fastcgiphp ' . makeCorrectDir($php->getInterface()->getAliasConfigDir()) . 'ssl-fpm.external' . "\n";
+				} else {
+					$php_options_text.= '  Alias /fastcgiphp ' . makeCorrectDir($php->getInterface()->getAliasConfigDir()) . 'fpm.external' . "\n";
+				}
 			}
 			else
 			{

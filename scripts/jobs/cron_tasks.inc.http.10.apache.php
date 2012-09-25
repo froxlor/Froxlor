@@ -374,7 +374,7 @@ class apache
 	*	We put together the needed php options in the virtualhost entries
 	*/
 
-	protected function composePhpOptions($domain)
+	protected function composePhpOptions($domain, $ssl_vhost = false)
 	{
 		$php_options_text = '';
 
@@ -843,7 +843,7 @@ class apache
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 			$vhost_content.= $this->getWebroot($domain);
 			if ($this->_deactivated == false) {
-				$vhost_content.= $this->composePhpOptions($domain);
+				$vhost_content.= $this->composePhpOptions($domain,$ssl_vhost);
 				$vhost_content.= $this->getStats($domain);
 			}
 			$vhost_content.= $this->getLogfiles($domain);
