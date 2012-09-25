@@ -765,6 +765,54 @@ class apache
 		{
 			$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
 		}
+		
+		if($ssl_vhost === true
+		   && $domain['ssl'] == '1'
+		   && $this->settings['system']['use_ssl'] == '1')
+		{
+			if($domain['ssl_cert_file'] == '')
+			{
+				$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+			}
+
+			if($domain['ssl_key_file'] == '')
+			{
+				$domain['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
+			}
+
+			if($domain['ssl_ca_file'] == '')
+			{
+				$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
+			}
+
+			// #418
+			if($domain['ssl_cert_chainfile'] == '')
+			{
+				$domain['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
+			}
+
+			if($domain['ssl_cert_file'] != '')
+			{
+				$vhost_content.= '  SSLEngine On' . "\n";
+				$vhost_content.= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
+
+				if($domain['ssl_key_file'] != '')
+				{
+					$vhost_content.= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
+				}
+
+				if($domain['ssl_ca_file'] != '')
+				{
+					$vhost_content.= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
+				}
+
+				// #418
+				if($domain['ssl_cert_chainfile'] != '')
+				{
+					$vhost_content.= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
+				}
+			}
+		}
 
 		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
 		{
@@ -792,54 +840,6 @@ class apache
 		}
 		else
 		{
-			if($ssl_vhost === true
-			   && $domain['ssl'] == '1'
-			   && $this->settings['system']['use_ssl'] == '1')
-			{
-				if($domain['ssl_cert_file'] == '')
-				{
-					$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
-				}
-
-				if($domain['ssl_key_file'] == '')
-				{
-					$domain['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
-				}
-
-				if($domain['ssl_ca_file'] == '')
-				{
-					$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
-				}
-
-				// #418
-				if($domain['ssl_cert_chainfile'] == '')
-				{
-					$domain['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
-				}
-
-				if($domain['ssl_cert_file'] != '')
-				{
-					$vhost_content.= '  SSLEngine On' . "\n";
-					$vhost_content.= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
-
-					if($domain['ssl_key_file'] != '')
-					{
-						$vhost_content.= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
-					}
-
-					if($domain['ssl_ca_file'] != '')
-					{
-						$vhost_content.= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
-					}
-
-					// #418
-					if($domain['ssl_cert_chainfile'] != '')
-					{
-						$vhost_content.= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
-					}
-				}
-			}
-
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 			$vhost_content.= $this->getWebroot($domain);
 			if ($this->_deactivated == false) {
