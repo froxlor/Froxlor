@@ -236,6 +236,8 @@ while($row = $db->fetch_array($result))
 			reset($speciallogfile_domainlist[$row['customerid']]);
 			foreach($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain)
 			{
+				
+				$logrotatefile = '/tmp/froxlor_logrotate_tmpfile.conf';
 				$fh = fopen($logrotatefile, 'w');
 
 				$logconf = '# ' . basename($logrotatefile) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" .
