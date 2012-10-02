@@ -49,7 +49,7 @@ elseif($page == 'accounts')
 			'homedir' => $lng['panel']['path']
 		);
 		$paging = new paging($userinfo, $db, TABLE_FTP_USERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$result = $db->query("SELECT `id`, `username`, `homedir` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . $userinfo['customerid'] . "'  AND `username` NOT LIKE '%_backup'" . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+		$result = $db->query("SELECT `id`, `username`, `homedir` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . $userinfo['customerid'] . "'  AND `username` NOT LIKE '%_backup' AND `username` NOT LIKE '%_logs'" . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		$paging->setEntries($db->num_rows($result));
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
@@ -315,9 +315,9 @@ elseif($page == 'accounts')
 						$cryptPassword = makeCryptPassword($db->escape($password),1);
 						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 						
-						// also update customers backup user password if password of main ftp user is changed
+						// also update customers backup and logs user password if password of main ftp user is changed
 						if(!preg_match('/' . $settings['customer']['ftpprefix'] . '/', $result['username'])){
-						    $db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $result['username'] . "_backup'");
+						    $db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND (`username`='" . $result['username'] . "_backup OR `username`='" . $result['username'] . "_logs'");
 						}
 					}
 				}
@@ -335,7 +335,7 @@ elseif($page == 'accounts')
 						}
 
 						$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account homdir for '" . $result['username'] . "'");
-						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `homedir`= '" . $db->escape($path) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");						
+						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `homedir`= '" . $db->escape($path) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 					}
 				}
 

@@ -558,7 +558,7 @@ class lighttpd
 			// error log cannot be set conditionally see
 			// https://redmine.lighttpd.net/issues/665
 
-			$access_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
+			$access_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . '/' . $domain['loginname'] . '/' . $domain['loginname'] . $speciallogfile . '-access.log');
 			// Create the logfile if it does not exist (fixes #46)
 			touch($access_log);
 			chown($access_log, $this->settings['system']['httpuser']);
@@ -619,7 +619,7 @@ class lighttpd
 				// be sure to build the awstats conf file as well
 				// and chown it using $awstats_params, #258
 				// Bug 960 + Bug 970 : Use full $domain instead of custom $awstats_params as following classes depend on the informations
-				createAWStatsConf($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
+				createAWStatsConf($this->settings['system']['logfiles_directory'] . '/' . $domain['loginname'] . '/' . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
 			}
 		}
 
