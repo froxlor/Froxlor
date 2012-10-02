@@ -214,7 +214,7 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['nameserversettings'],
 				'image' => 'icons/domain_edit.png',
-				'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
+				'visible' => ($system['system']['bind_enable'] == '1' && $userinfo['change_serversettings'] == '1' ? true : false),
 				'fields' => array(
 					'isbinddomain' => array(
 						'label' => 'Nameserver',
