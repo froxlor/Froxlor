@@ -48,6 +48,7 @@ if($page == 'customers'
 			'c.loginname' => $lng['login']['username'],
 			'a.loginname' => $lng['admin']['admin'],
 			'c.name' => $lng['customer']['name'],
+			'c.email' => $lng['customer']['email'],
 			'c.firstname' => $lng['customer']['firstname'],
 			'c.company' => $lng['customer']['company'],
 			'c.diskspace' => $lng['customer']['diskspace'],
