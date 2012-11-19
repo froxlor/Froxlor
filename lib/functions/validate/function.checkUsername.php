@@ -19,7 +19,7 @@
 
 function checkUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 {
-	global $settings;
+	global $settings, $theme;
 	if(!isset($allnewfieldvalues['customer_mysqlprefix']))
 	{
 		$allnewfieldvalues['customer_mysqlprefix'] = $settings['customer']['mysqlprefix'];

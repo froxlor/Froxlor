@@ -1832,70 +1832,155 @@ if(isFroxlorVersion('0.9.27')) {
 	if ($db->num_rows($handle) < 1) {
 		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/');");
 	}
-	
+    
+ 	updateToVersion('0.9.28-svn1');
+}
+
+if(isFroxlorVersion('0.9.28-svn1')) {
+	showUpdateStep("Updating from 0.9.28-svn1 to 0.9.28-svn2");
+	lastStepStatus(0);
+
 	// Insert ISO-Codes into database. Default value is foo, which is not a valid language code.
 	$db->query("ALTER TABLE  `panel_languages` ADD  `iso` CHAR( 3 ) NOT NULL DEFAULT  'foo' AFTER  `language`");
 
-    $handle = $db->query("SELECT `language` FROM `panel_languages` WHERE `iso`='foo'");
+	$handle = $db->query("SELECT `language` FROM `panel_languages` WHERE `iso`='foo'");
     
-    $langauges = $db->fetch_array($handle);
-    foreach($languages as $language){    
-        switch ($language) {
-            case "Deutsch":
-                $db->query("UPDATE `panel_languages` SET `iso`='de' WHERE `language` = 'Deutsch'");
-                break;
-            case "English":
-                $db->query("UPDATE `panel_languages` SET `iso`='en' WHERE `language` = 'English'");
-                break;
-            case "Fran&ccedil;ais":
-                $db->query("UPDATE `panel_languages` SET `iso`='fr' WHERE `language` = 'Fran&ccedil;ais'");
-                break;
-            case "Chinese":
-                $db->query("UPDATE `panel_languages` SET `iso`='zh' WHERE `language` = 'Chinese'");
-                break;
-            case "Catalan":
-                $db->query("UPDATE `panel_languages` SET `iso`='ca' WHERE `language` = 'Catalan'");
-                break;
-            case "Espa&ntilde;ol":
-                $db->query("UPDATE `panel_languages` SET `iso`='es' WHERE `language` = 'Espa&ntilde;ol'");
-                break;
-            case "Portugu&ecirc;s":
-                $db->query("UPDATE `panel_languages` SET `iso`='pt' WHERE `language` = 'Portugu&ecirc;s'");
-                break;
-            case "Danish":
-                $db->query("UPDATE `panel_languages` SET `iso`='da' WHERE `language` = 'Danish'");
-                break;
-            case "Italian":
-                $db->query("UPDATE `panel_languages` SET `iso`='it' WHERE `language` = 'Italian'");
-                break;
-            case "Bulgarian":
-                $db->query("UPDATE `panel_languages` SET `iso`='bg' WHERE `language` = 'Bulgarian'");
-                break;
-            case "Slovak":
-                $db->query("UPDATE `panel_languages` SET `iso`='sk' WHERE `language` = 'Slovak'");
-                break;
-            case "Dutch":
-                $db->query("UPDATE `panel_languages` SET `iso`='nl' WHERE `language` = 'Dutch'");
-                break;
-            case "Russian":
-                $db->query("UPDATE `panel_languages` SET `iso`='ru' WHERE `language` = 'Russian'");
-                break;
-            case "Hungarian":
-                $db->query("UPDATE `panel_languages` SET `iso`='hu' WHERE `language` = 'Hungarian'");
-                break;
-            case "Swedish":
-                $db->query("UPDATE `panel_languages` SET `iso`='sv' WHERE `language` = 'Swedish'");
-                break;
-            case "Czech":
-                $db->query("UPDATE `panel_languages` SET `iso`='cz' WHERE `language` = 'Czech'");
-                break;
-            case "Polski":
-                $db->query("UPDATE `panel_languages` SET `iso`='pl' WHERE `language` = 'Polski'");
-                break;
-            default:
-                showUpdateStep("Sorry, but I don't know the ISO-639 language code for ".$language.". Please update the entry in `panel_languages` manually.\n");
-        }
-    }
-    
- 	updateToVersion('0.9.28-svn1');
+	$langauges = $db->fetch_array($handle);
+	foreach($languages as $language){    
+		switch ($language) {
+			case "Deutsch":
+				$db->query("UPDATE `panel_languages` SET `iso`='de' WHERE `language` = 'Deutsch'");
+				break;
+			case "English":
+				$db->query("UPDATE `panel_languages` SET `iso`='en' WHERE `language` = 'English'");
+				break;
+			case "Fran&ccedil;ais":
+				$db->query("UPDATE `panel_languages` SET `iso`='fr' WHERE `language` = 'Fran&ccedil;ais'");
+				break;
+			case "Chinese":
+				$db->query("UPDATE `panel_languages` SET `iso`='zh' WHERE `language` = 'Chinese'");
+				break;
+			case "Catalan":
+				$db->query("UPDATE `panel_languages` SET `iso`='ca' WHERE `language` = 'Catalan'");
+				break;
+			case "Espa&ntilde;ol":
+				$db->query("UPDATE `panel_languages` SET `iso`='es' WHERE `language` = 'Espa&ntilde;ol'");
+				break;
+			case "Portugu&ecirc;s":
+				$db->query("UPDATE `panel_languages` SET `iso`='pt' WHERE `language` = 'Portugu&ecirc;s'");
+				break;
+			case "Danish":
+				$db->query("UPDATE `panel_languages` SET `iso`='da' WHERE `language` = 'Danish'");
+				break;
+			case "Italian":
+				$db->query("UPDATE `panel_languages` SET `iso`='it' WHERE `language` = 'Italian'");
+				break;
+			case "Bulgarian":
+				$db->query("UPDATE `panel_languages` SET `iso`='bg' WHERE `language` = 'Bulgarian'");
+				break;
+			case "Slovak":
+				$db->query("UPDATE `panel_languages` SET `iso`='sk' WHERE `language` = 'Slovak'");
+				break;
+			case "Dutch":
+				$db->query("UPDATE `panel_languages` SET `iso`='nl' WHERE `language` = 'Dutch'");
+				break;
+			case "Russian":
+				$db->query("UPDATE `panel_languages` SET `iso`='ru' WHERE `language` = 'Russian'");
+				break;
+			case "Hungarian":
+				$db->query("UPDATE `panel_languages` SET `iso`='hu' WHERE `language` = 'Hungarian'");
+				break;
+			case "Swedish":
+				$db->query("UPDATE `panel_languages` SET `iso`='sv' WHERE `language` = 'Swedish'");
+				break;
+			case "Czech":
+				$db->query("UPDATE `panel_languages` SET `iso`='cz' WHERE `language` = 'Czech'");
+				break;
+			case "Polski":
+				$db->query("UPDATE `panel_languages` SET `iso`='pl' WHERE `language` = 'Polski'");
+				break;
+			default:
+				showUpdateStep("Sorry, but I don't know the ISO-639 language code for ".$language.". Please update the entry in `panel_languages` manually.\n");
+		}
+	}
+
+	updateToVersion('0.9.28-svn2');
+}
+
+if(isFroxlorVersion('0.9.28-svn2')) {
+	showUpdateStep("Updating from 0.9.28-svn2 to 0.9.28-svn3");
+	lastStepStatus(0);
+	
+	// change lenght of passwd column
+	$db->query("ALTER TABLE `" . TABLE_FTP_USERS . "` MODIFY `password` varchar(128) NOT NULL default ''");
+	
+	// Add default setting for vmail_maildirname if not already in place
+	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'system' AND `varname` = 'vmail_maildirname';");
+	if ($db->num_rows($handle) < 1) {
+		showUpdateStep("Adding default Maildir value into Mailserver settings.");
+		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_maildirname', 'Maildir');");
+	}
+
+	updateToVersion('0.9.28-svn3');
+}
+
+if(isFroxlorVersion('0.9.28-svn3'))
+{
+	showUpdateStep("Updating from 0.9.28-svn3 to 0.9.28-svn4", true);
+	lastStepStatus(0);
+
+	if (isset($_POST['classic_theme_replacement']) && $_POST['classic_theme_replacement'] != '')
+	{
+		$classic_theme_replacement = $_POST['classic_theme_replacement'];
+	}
+	else
+	{
+		$classic_theme_replacement = 'Froxlor';
+	}
+	showUpdateStep('Setting replacement for the discontinued and removed Classic theme (if active)', true);
+
+	// Updating default theme setting
+	if ($settings['panel']['default_theme'] == 'Classic')
+	{
+		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '".$db->escape($classic_theme_replacement)."' WHERE varname = 'default_theme';");
+	}
+
+	// Updating admin's theme setting
+	$db->query('UPDATE `' . TABLE_PANEL_ADMINS . '` SET `theme` = \'' . $db->escape($classic_theme_replacement) . '\' WHERE `theme` = \'Classic\'');
+
+	// Updating customer's theme setting
+	$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `theme` = \'' . $db->escape($classic_theme_replacement) . '\' WHERE `theme` = \'Classic\'');
+
+	// Updating theme setting of active sessions
+	$db->query('UPDATE `' . TABLE_PANEL_SESSIONS . '` SET `theme` = \'' . $db->escape($classic_theme_replacement) . '\' WHERE `theme` = \'Classic\'');
+
+	lastStepStatus(0);
+
+	showUpdateStep('Altering Froxlor database and tables to use UTF-8. This may take a while..', true);
+
+	$db->query('ALTER DATABASE ' . $db->getDbName() . ' CHARACTER SET utf8 COLLATE utf8_general_ci');
+
+	$handle = $db->query('SHOW TABLES');
+	while ($row = $db->fetch_array($handle))
+	{
+		foreach ($row as $table)
+		{
+			$db->query('ALTER TABLE ' . $table . ' CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
+		}
+	}
+
+	lastStepStatus(0);
+
+	updateToVersion('0.9.28-svn4');
+}
+
+if(isFroxlorVersion('0.9.28-svn4')) {
+	showUpdateStep("Updating from 0.9.28-svn4 to 0.9.28-svn5");
+
+	// Catchall functionality (enabled by default) see #1114
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('catchall', 'catchall_enabled', '1');");
+
+	lastStepStatus(0);
+
+	updateToVersion('0.9.28-svn5');
 }

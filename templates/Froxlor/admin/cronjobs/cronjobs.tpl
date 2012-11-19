@@ -1,7 +1,7 @@
 $header
         <article>
                 <header>
-			<h2><img src="images/Froxlor/icons/clock.png" alt="" />
+			<h2><img src="templates/{$theme}/assets/img/icons/clock.png" alt="" />
                         {$lng['admin']['cron']['cronsettings']}</h2>
                 </header>
 

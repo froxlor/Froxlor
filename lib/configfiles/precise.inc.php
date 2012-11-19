@@ -17,6 +17,23 @@
  * 
  */
 
+// Try to guess user/group from settings' email UID/GID
+$vmail_user=posix_getpwuid($settings['system']['vmail_uid']);
+$vmail_group=posix_getgrgid($settings['system']['vmail_gid']);
+
+/* If one of them are not set, call it 'vmail' and suggest creating user/group
+ * in scripts. */
+if ($vmail_user === false) {
+	$vmail_username="vmail";
+} else {
+	$vmail_username=$vmail_user['name'];
+}
+if ($vmail_group === false) {
+	$vmail_groupname="vmail";
+} else {
+	$vmail_groupname=$vmail_group['name'];
+}
+
 return Array(
 	'ubuntu_precise' => Array(
 		'label' => 'Ubuntu 12.04 (Precise)',
@@ -128,13 +145,13 @@ return Array(
 					'postfix_courier' => Array(
 						'label' => 'Postfix/Courier',
 						'commands' => Array(
+							($vmail_group === false) ? 'groupadd -g ' . $settings['system']['vmail_gid'] . ' ' . $vmail_groupname : '',
+							($vmail_user === false) ? 'useradd -u ' . $settings['system']['vmail_uid'] . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
+							'mkdir -p ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . $settings['system']['vmail_homedir'],
 							'apt-get install postfix postfix-mysql libsasl2-2 libsasl2-modules libsasl2-modules-sql',
 							'mkdir -p /var/spool/postfix/etc/pam.d',
 							'mkdir -p /var/spool/postfix/var/run/mysqld',
-							'groupadd -g ' . $settings['system']['vmail_gid'] . ' vmail',
-							'useradd -u ' . $settings['system']['vmail_uid'] . ' -g vmail vmail',
-							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
@@ -189,13 +206,13 @@ return Array(
 					'postfix_dovecot' => Array(
 						'label' => 'Postfix/Dovecot',
 						'commands' => Array(
+							($vmail_group === false) ? 'groupadd -g ' . $settings['system']['vmail_gid'] . ' ' . $vmail_groupname : '',
+							($vmail_user === false) ? 'useradd -u ' . $settings['system']['vmail_uid'] . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
+							'mkdir -p ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . $settings['system']['vmail_homedir'],
 							'apt-get install postfix postfix-mysql',
 							'mkdir -p /var/spool/postfix/etc/pam.d',
 							'mkdir -p /var/spool/postfix/var/run/mysqld',
-							'groupadd -g ' . $settings['system']['vmail_gid'] . ' vmail',
-							'useradd -u ' . $settings['system']['vmail_uid'] . ' -g vmail vmail',
-							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R vmail:vmail ' . $settings['system']['vmail_homedir'],
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
@@ -282,15 +299,17 @@ return Array(
 					'dovecot' => Array(
 						'label' => 'Dovecot',
 						'commands_1' => Array(
-							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix'
+							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix dovecot-mysql mail-stack-delivery'
 						),
 						'files' => Array(
-							'etc_dovecot_auth.d_01-dovecot-postfix.auth' => '/etc/dovecot/auth.d/01-dovecot-postfix.auth',
-							'etc_dovecot_conf.d_01-dovecot-postfix.conf' => '/etc/dovecot/conf.d/01-dovecot-postfix.conf',
-							'etc_dovecot_dovecot-sql.conf' => '/etc/dovecot/dovecot-sql.conf'
+							
+							'etc_dovecot_conf.d_01_mail_stack_delivery.conf' => '/etc/dovecot/conf.d/01-mail-stack-delivery.conf',
+							'etc_dovecot_conf.d_10_auth.conf' => '/etc/dovecot/conf.d/10-auth.conf',
+							'etc_dovecot_conf.d_auth-sql.conf.ext' => '/etc/dovecot/conf.d/auth-sql.conf.ext',
+							'etc_dovecot_dovecot-sql.conf.ext' => '/etc/dovecot/dovecot-sql.conf.ext'
 						),
 						'commands_2' => Array(
-							'chmod 0640 /etc/dovecot/dovecot-sql.conf'
+							'chmod 0640 /etc/dovecot/dovecot-sql.conf.ext'
 						),
 						'restart' => Array(
 							'/etc/init.d/dovecot restart'
@@ -366,11 +385,11 @@ return Array(
 						'label' => 'libnss-bg (system login with mysql)',
 						'commands' => Array(
 							'apt-get install libnss-mysql-bg nscd',
-							'chmod 600 /etc/nss-mysql.conf /etc/nss-mysql-root.conf'
+							'chmod 600 /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg'
 						),
 						'files' => Array(
-							'etc_libnss-mysql.conf' => '/etc/libnss-mysql.conf',
-							'etc_libnss-mysql-root.conf' => '/etc/libnss-mysql-root.conf',
+							'etc_libnss-mysql.cfg' => '/etc/libnss-mysql.cfg',
+							'etc_libnss-mysql-root.cfg' => '/etc/libnss-mysql-root.cfg',
 							'etc_nsswitch.conf' => '/etc/nsswitch.conf',
 						),
 						'restart' => Array(

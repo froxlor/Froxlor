@@ -28,7 +28,7 @@
  */
 function openRootDB($debugHandler = false, $lockfile = false)
 {
-	global $db_root;
+	global $db_root, $theme;
 
 	require dirname(dirname(dirname(__FILE__))).'/userdata.inc.php';
 	
@@ -68,6 +68,6 @@ function openRootDB($debugHandler = false, $lockfile = false)
 
 function closeRootDB()
 {
-	global $db_root;
+	global $db_root, $theme;
 	if(isset($db_root)) unset($db_root);
 }

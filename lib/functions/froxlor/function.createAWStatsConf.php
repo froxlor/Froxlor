@@ -29,7 +29,7 @@
 
 function createAWStatsConf($logFile, $siteDomain, $hostAliases, $customerDocroot, $awstats_params = array())
 {
-	global $pathtophpfiles, $settings;
+	global $pathtophpfiles, $settings, $theme;
 
 	// Generation header
 

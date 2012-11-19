@@ -34,7 +34,7 @@
 
 function makePathfield($path, $uid, $gid, $fieldType, $value = '', $dom = false)
 {
-	global $lng;
+	global $lng, $theme;
 
 	$value = str_replace($path, '', $value);
 	$field = array();

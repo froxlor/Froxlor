@@ -28,7 +28,7 @@
  */
 function domainHasApsInstances($domainid = 0)
 {
-	global $db, $settings;
+	global $db, $settings, $theme;
 	
 	if($settings['aps']['aps_active'] == '1')
 	{

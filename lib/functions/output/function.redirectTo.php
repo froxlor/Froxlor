@@ -38,7 +38,7 @@
 
 function redirectTo($destination, $get_variables = array(), $isRelative = false)
 {
-	global $s;
+	global $s, $theme;
 
 	if(is_array($get_variables))
 	{

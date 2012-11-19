@@ -27,7 +27,7 @@
  */
 function updateToVersion($new_version = null)
 {
-	global $db, $settings;
+	global $db, $settings, $theme;
 
 	if($new_version !== null && $new_version != '')
 	{
@@ -48,7 +48,7 @@ function updateToVersion($new_version = null)
  */
 function isFroxlor()
 {
-	global $settings;
+	global $settings, $theme;
 
 	if(isset($settings['panel']['frontend'])
 	&& $settings['panel']['frontend'] == 'froxlor')
@@ -70,7 +70,7 @@ function isFroxlor()
  */
 function isFroxlorVersion($to_check = null)
 {
-	global $settings;
+	global $settings, $theme;
 
 	if($settings['panel']['frontend'] == 'froxlor'
 	&& $settings['panel']['version'] == $to_check)
@@ -92,7 +92,7 @@ function isFroxlorVersion($to_check = null)
  */
 function hasUpdates($to_check = null)
 {
-	global $settings;
+	global $settings, $theme;
 
 	if(!isset($settings['panel']['version'])
 	|| $settings['panel']['version'] != $to_check)
@@ -115,7 +115,7 @@ function hasUpdates($to_check = null)
  */
 function showUpdateStep($task = null, $needs_status = true)
 {
-	global $updatelog, $filelog;
+	global $updatelog, $filelog, $theme;
 	
 	// output
 	echo $task;
@@ -141,7 +141,7 @@ function showUpdateStep($task = null, $needs_status = true)
  */
 function lastStepStatus($status = -1, $message = '')
 {
-	global $updatelog, $filelog;
+	global $updatelog, $filelog, $theme;
 	
 	switch($status)
 	{

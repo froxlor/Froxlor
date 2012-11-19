@@ -113,10 +113,10 @@ else
 	$settings['panel']['default_theme'] = 'Froxlor';
 }
 */
-# Until we have other themes: enforce the Froxlor - layout
+// Until we have other themes: enforce the Froxlor - layout
 $settings['panel']['default_theme'] = 'Froxlor';
 
-# Initialize Smarty
+// Initialize Smarty
 include('./lib/classes/Smarty/Smarty.class.php');
 $smarty = new Smarty;
 
@@ -124,13 +124,13 @@ $smarty->template_dir = './templates/' . $settings['panel']['default_theme'] . '
 $smarty->compile_dir  = './templates_c/';
 $smarty->cache_dir    = './cache/';
 
-# Set the language
+// Set the language
 require('./lib/classes/output/class.languageSelect.php');
 $language = new languageSelect();
 $language->useBrowser = true;
 $language->setLanguage();
 
-# Activate gettext for smarty;
+// Activate gettext for smarty;
 define('HAVE_GETTEXT', true);
 require ('./lib/functions/smarty_plugins/gettext-prefilter.php');
 
@@ -154,21 +154,34 @@ if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggro
 $db->close();
 unset($db);
 
-# Set default options for template
-$image_path = 'images/'.$settings['panel']['default_theme'];
-$header_logo = $image_path.'/logo.png';
-if(file_exists($image_path.'/logo_custom.png'))
+
+// global Theme-variable
+
+$theme = isset($settings['panel']['default_theme']) ? $settings['panel']['default_theme'] : 'Froxlor';
+
+// overwrite with customer/admin theme if defined
+
+if(isset($userinfo['theme']) && $userinfo['theme'] != $theme)
 {
-	$header_logo = $image_path.'/logo_custom.png';
+	$theme = $userinfo['theme'];
 }
+
+// Set default options for template
+$hl_path = 'templates/'.$theme.'/assets/img';
+$header_logo = $hl_path.'/logo.png';
+
+if(file_exists($hl_path.'/logo_custom.png')) {
+	$header_logo = $hl_path.'/logo_custom.png';
+}
+
 $smarty->assign('header_logo', $header_logo);
+$smarty->assign('theme', $theme);
 $smarty->assign('settings', $settings);
 $smarty->assign('loggedin', 0);
 $smarty->assign('current_year', date('Y'));
-$smarty->assign('image_folder', $image_path);
 $smarty->assign('title', 'WebFTP - ');
 
-# Let's start the program
+// Let's start the program
 session_start();
 $s = session_id();
 

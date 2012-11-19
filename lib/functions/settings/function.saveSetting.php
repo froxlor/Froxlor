@@ -19,7 +19,7 @@
 
 function saveSetting($settinggroup, $varname, $newvalue)
 {
-	global $db;
+	global $db, $theme;
 	$query = 'UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = \'' . $db->escape($newvalue) . '\' WHERE `settinggroup` = \'' . $db->escape($settinggroup) . '\' AND `varname`=\'' . $db->escape($varname) . '\'';
 	return $db->query($query);
 }

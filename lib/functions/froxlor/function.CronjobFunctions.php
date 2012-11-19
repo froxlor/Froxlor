@@ -24,7 +24,7 @@
  */
 function getNextCronjobs()
 {
-	global $db;
+	global $db, $theme;
 
 	$query = "SELECT `id`, `cronfile` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `interval` <> '0' AND `isactive` = '1' AND (";
 
@@ -60,7 +60,7 @@ function getNextCronjobs()
 
 function includeCronjobs($debugHandler, $pathtophpfiles)
 {
-	global $settings;
+	global $settings, $theme;
 
 	$cronjobs = getNextCronjobs();
 
@@ -84,7 +84,7 @@ function includeCronjobs($debugHandler, $pathtophpfiles)
 
 function getIntervalOptions()
 {
-	global $db, $lng, $cronlog;
+	global $db, $lng, $cronlog, $theme;
 
 	$query = "SELECT DISTINCT `interval` FROM `" . TABLE_PANEL_CRONRUNS . "` ORDER BY `interval` ASC;";
 	$result = $db->query($query);
@@ -110,7 +110,7 @@ function getIntervalOptions()
 
 function getCronjobsLastRun()
 {
-	global $db, $lng;
+	global $db, $lng, $theme;
 
 	$query = "SELECT `lastrun`, `desc_lng_key` FROM `".TABLE_PANEL_CRONRUNS."` WHERE `isactive` = '1' ORDER BY `cronfile` ASC";
 	$result = $db->query($query);
@@ -135,7 +135,7 @@ function getCronjobsLastRun()
 
 function toggleCronStatus($module = null, $isactive = 0)
 {
-	global $db;
+	global $db, $theme;
 
 	if($isactive != 1) {
 		$isactive = 0;
@@ -148,7 +148,7 @@ function toggleCronStatus($module = null, $isactive = 0)
 
 function getOutstandingTasks()
 {
-	global $db, $lng;
+	global $db, $lng, $theme;
 
 	$query = "SELECT * FROM `".TABLE_PANEL_TASKS."` ORDER BY `type` ASC";
 	$result = $db->query($query);
@@ -208,6 +208,10 @@ function getOutstandingTasks()
 			}
 			$task_desc = $lng['tasks']['deleting_customerfiles'];
 			$task_desc = str_replace('%loginname%', $loginname, $task_desc);
+		}
+		elseif($row['type'] == '7')
+		{
+			$task_desc = $lng['tasks']['remove_emailacc_files'];
 		}
 		/*
 		 * Set FS - quota

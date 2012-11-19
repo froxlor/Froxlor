@@ -26,7 +26,7 @@
  */
  function correctErrorDocument($errdoc = null)
  {
- 	global $settings, $idna_convert;
+ 	global $settings, $idna_convert, $theme;
 
  	if($errdoc !== null && $errdoc != '')
  	{

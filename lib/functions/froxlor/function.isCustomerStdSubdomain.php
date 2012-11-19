@@ -26,7 +26,7 @@
  */
 function isCustomerStdSubdomain($did = 0)
 {
-	global $db;
+	global $db, $theme;
 
 	if($did > 0)
 	{

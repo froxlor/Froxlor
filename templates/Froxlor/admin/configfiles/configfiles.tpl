@@ -2,7 +2,7 @@ $header
 <article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/settings.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/settings.png" alt="" />&nbsp;
 				{$configfiles[$distribution]['label']}&nbsp;&raquo;&nbsp;
 				{$configfiles[$distribution]['services'][$service]['label']}&nbsp;&raquo;&nbsp;
 				{$configfiles[$distribution]['services'][$service]['daemons'][$daemon]['label']}&nbsp;

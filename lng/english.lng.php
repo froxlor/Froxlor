@@ -70,7 +70,7 @@ $lng['customer']['forwarders'] = 'E-mail-Forwarders';
 $lng['customer']['ftps'] = 'FTP-Accounts';
 $lng['customer']['subdomains'] = 'Sub-Domain';
 $lng['customer']['domains'] = 'Domain';
-$lng['customer']['unlimited'] = '&infin;';
+$lng['customer']['unlimited'] = '∞';
 
 /**
  * Customermenue
@@ -308,14 +308,14 @@ $lng['admin']['deactivated_user'] = 'Deactivate user';
 $lng['admin']['sendpassword'] = 'Send password';
 $lng['admin']['ownvhostsettings'] = 'Own vHost-settings';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configuration';
-$lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Please change the following files or create them with<br />the following content if they do not exist.<br /><b>Please note:</b> The MySQL-password has not been replaced for security reasons.<br />Please replace &quot;MYSQL_PASSWORD&quot; on your own. If you forgot your MySQL-password<br />you\'ll find it in &quot;lib/userdata.inc.php&quot;.';
+$lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Please change the following files or create them with<br />the following content if they do not exist.<br /><b>Please note:</b> The MySQL-password has not been replaced for security reasons.<br />Please replace "MYSQL_PASSWORD" on your own. If you forgot your MySQL-password<br />you\'ll find it in "lib/userdata.inc.php".';
 $lng['admin']['configfiles']['commands'] = '<b>Commands:</b> Please execute the following commands in a shell.';
 $lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Please execute the following commands in a shell in order to reload the new configuration.';
 $lng['admin']['templates']['templates'] = 'E-Mail-templates';
 $lng['admin']['templates']['template_add'] = 'Add template';
 $lng['admin']['templates']['template_edit'] = 'Edit template';
 $lng['admin']['templates']['action'] = 'Action';
-$lng['admin']['templates']['email'] = 'E-mail &amp; file templates';
+$lng['admin']['templates']['email'] = 'E-mail & file templates';
 $lng['admin']['templates']['subject'] = 'Subject';
 $lng['admin']['templates']['mailbody'] = 'Mail body';
 $lng['admin']['templates']['createcustomer'] = 'Welcome mail for new customers';
@@ -426,21 +426,21 @@ $lng['domain']['openbasedirpath'] = 'OpenBasedir-path';
 $lng['domain']['docroot'] = 'Path from field above';
 $lng['domain']['homedir'] = 'Home directory';
 $lng['admin']['valuemandatory'] = 'This value is mandatory';
-$lng['admin']['valuemandatorycompany'] = 'Either &quot;name&quot; and &quot;firstname&quot; or &quot;company&quot; must be filled';
+$lng['admin']['valuemandatorycompany'] = 'Either "name" and "firstname" or "company" must be filled';
 $lng['menue']['main']['username'] = 'Logged in as: ';
 $lng['panel']['urloverridespath'] = 'URL (overrides path)';
 $lng['panel']['pathorurl'] = 'Path or URL';
-$lng['error']['sessiontimeoutiswrong'] = 'Only numerical &quot;session timeout&quot; is allowed.';
-$lng['error']['maxloginattemptsiswrong'] = 'Only numerical &quot;max login attempts&quot; are allowed.';
-$lng['error']['deactivatetimiswrong'] = 'Only numerical &quot;deactivation time&quot; is allowed.';
-$lng['error']['accountprefixiswrong'] = 'The &quot;customerprefix&quot; is wrong.';
-$lng['error']['mysqlprefixiswrong'] = 'The &quot;SQL prefix&quot; is wrong.';
-$lng['error']['ftpprefixiswrong'] = 'The &quot;FTP prefix&quot; is wrong.';
-$lng['error']['ipiswrong'] = 'The &quot;IP-address&quot; is wrong. Only a valid IP-address is allowed.';
-$lng['error']['vmailuidiswrong'] = 'The &quot;mails-uid&quot; is wrong. Only a numerical UID is allowed.';
-$lng['error']['vmailgidiswrong'] = 'The &quot;mails-gid&quot; is wrong. Only a numerical GID is allowed.';
-$lng['error']['adminmailiswrong'] = 'The &quot;sender-address&quot; is wrong. Only a valid email-address is allowed.';
-$lng['error']['pagingiswrong'] = 'The &quot;entries per page&quot;-value is wrong. Only numerical characters are allowed.';
+$lng['error']['sessiontimeoutiswrong'] = 'Only numerical "session timeout" is allowed.';
+$lng['error']['maxloginattemptsiswrong'] = 'Only numerical "max login attempts" are allowed.';
+$lng['error']['deactivatetimiswrong'] = 'Only numerical "deactivation time" is allowed.';
+$lng['error']['accountprefixiswrong'] = 'The "customerprefix" is wrong.';
+$lng['error']['mysqlprefixiswrong'] = 'The "SQL prefix" is wrong.';
+$lng['error']['ftpprefixiswrong'] = 'The "FTP prefix" is wrong.';
+$lng['error']['ipiswrong'] = 'The "IP-address" is wrong. Only a valid IP-address is allowed.';
+$lng['error']['vmailuidiswrong'] = 'The "mails-uid" is wrong. Only a numerical UID is allowed.';
+$lng['error']['vmailgidiswrong'] = 'The "mails-gid" is wrong. Only a numerical GID is allowed.';
+$lng['error']['adminmailiswrong'] = 'The "sender-address" is wrong. Only a valid email-address is allowed.';
+$lng['error']['pagingiswrong'] = 'The "entries per page"-value is wrong. Only numerical characters are allowed.';
 $lng['error']['phpmyadminiswrong'] = 'The phpMyAdmin-link is not a valid link.';
 $lng['error']['webmailiswrong'] = 'The webmail-link is not a valid link.';
 $lng['error']['webftpiswrong'] = 'The WebFTP-link is not a valid link.';
@@ -459,7 +459,7 @@ $lng['panel']['translator'] = 'Translator';
 
 // ADDED IN 1.2.14-rc4
 
-$lng['error']['stringformaterror'] = 'The value for the field &quot;%s&quot; is not in the expected format.';
+$lng['error']['stringformaterror'] = 'The value for the field "%s" is not in the expected format.';
 
 // ADDED IN 1.2.15-rc1
 
@@ -475,7 +475,7 @@ $lng['serversettings']['phpappendopenbasedir']['description'] = 'These paths (se
 
 // CHANGED IN 1.2.15-rc1
 
-$lng['error']['loginnameissystemaccount'] = 'You cannot create accounts which are similar to system accounts (as for example begin with &quot;%s&quot;). Please enter another account name.';
+$lng['error']['loginnameissystemaccount'] = 'You cannot create accounts which are similar to system accounts (as for example begin with "%s"). Please enter another account name.';
 $lng['error']['youcantdeleteyourself'] = 'You cannot delete yourself for security reasons.';
 $lng['error']['youcanteditallfieldsofyourself'] = 'Note: You cannot edit all fields of your own account for security reasons.';
 
@@ -559,7 +559,7 @@ $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Replaced with the POP3/IMAP acco
 
 // ADDED IN 1.2.16-svn13
 
-$lng['error']['documentrootexists'] = 'The directory &quot;%s&quot; already exists for this customer. Please remove this before adding the customer again.';
+$lng['error']['documentrootexists'] = 'The directory "%s" already exists for this customer. Please remove this before adding the customer again.';
 
 // ADDED IN 1.2.16-svn14
 
@@ -694,8 +694,8 @@ $lng['customer']['tickets'] = 'Support-tickets';
 $lng['admin']['domain_nocustomeraddingavailable'] = 'It\'s not possible to add a domain currently. You first need to add at least one customer.';
 $lng['serversettings']['ticket']['enable'] = 'Enable ticketsystem';
 $lng['serversettings']['ticket']['concurrentlyopen'] = 'How many tickets shall be able to be opened at one time?';
-$lng['error']['norepymailiswrong'] = 'The &quot;Noreply-address&quot; is wrong. Only a valid email-address is allowed.';
-$lng['error']['tadminmailiswrong'] = 'The &quot;Ticketadmin-address&quot; is wrong. Only a valid email-address is allowed.';
+$lng['error']['norepymailiswrong'] = 'The "Noreply-address" is wrong. Only a valid email-address is allowed.';
+$lng['error']['tadminmailiswrong'] = 'The "Ticketadmin-address" is wrong. Only a valid email-address is allowed.';
 $lng['ticket']['awaitingticketreply'] = 'You have %s unanswered support-ticket(s)';
 
 // ADDED IN 1.2.18-svn5
@@ -758,7 +758,7 @@ $lng['serversettings']['logger']['types']['description'] = 'Specify logtypes. To
 $lng['serversettings']['logger']['logfile'] = 'Logfile path including filename';
 $lng['error']['logerror'] = 'Log-Error: %s';
 $lng['serversettings']['logger']['logcron'] = 'Log cronjobs (one run)';
-$lng['question']['logger_reallytruncate'] = 'Do you really want to truncate the table &quot;%s&quot;?';
+$lng['question']['logger_reallytruncate'] = 'Do you really want to truncate the table "%s"?';
 $lng['admin']['loggersystem'] = 'System-logging';
 $lng['menue']['logger']['logger'] = 'System-logging';
 $lng['logger']['date'] = 'Date';
@@ -779,7 +779,7 @@ $lng['error']['nomessagetosend'] = 'You did not enter a message.';
 $lng['error']['noreceipientsgiven'] = 'You did not specify any receipient';
 $lng['admin']['emaildomain'] = 'Emaildomain';
 $lng['admin']['email_only'] = 'Only email?';
-$lng['admin']['wwwserveralias'] = 'Add a &quot;www.&quot; ServerAlias';
+$lng['admin']['wwwserveralias'] = 'Add a "www." ServerAlias';
 $lng['admin']['ipsandports']['enable_ssl'] = 'Is this an SSL Port?';
 $lng['admin']['ipsandports']['ssl_cert_file'] = 'Path to the SSL Certificate';
 $lng['panel']['send'] = 'send';
@@ -788,8 +788,8 @@ $lng['admin']['receipient'] = 'Recipient';
 $lng['admin']['message'] = 'Write a Message';
 $lng['admin']['text'] = 'Message';
 $lng['menu']['message'] = 'Messages';
-$lng['error']['errorsendingmail'] = 'The message to &quot;%s&quot; failed';
-$lng['error']['cannotreaddir'] = 'Unable to read directory &quot;%s&quot;';
+$lng['error']['errorsendingmail'] = 'The message to "%s" failed';
+$lng['error']['cannotreaddir'] = 'Unable to read directory "%s"';
 $lng['message']['success'] = 'Successfully sent message to %s recipients';
 $lng['message']['noreceipients'] = 'No e-mail has been sent because there are no recipients in the database';
 $lng['admin']['sslsettings'] = 'SSL settings';
@@ -1129,7 +1129,7 @@ $lng['question']['reallywanttoremove'] = '<strong>Do you really want to uninstal
 $lng['aps']['searchoneresult'] = '%s package found';
 $lng['aps']['searchmultiresult'] = '%s packages found';
 $lng['question']['reallywanttostop'] = 'Do you really want to abort the installation of this package?<br/><br/>';
-$lng['aps']['packagenameandversion'] = 'Packagename &amp; version';
+$lng['aps']['packagenameandversion'] = 'Packagename & version';
 $lng['aps']['package_locked'] = 'Locked';
 $lng['aps']['package_enabled'] = 'Enabled';
 $lng['aps']['lock'] = 'Lock';
@@ -1138,7 +1138,7 @@ $lng['aps']['remove'] = 'Remove';
 $lng['aps']['allpackages'] = 'All packages';
 $lng['question']['reallyremovepackages'] = '<strong>Do you really want to delete these packages?</strong><br/><br/>Packages with dependencies can only be remove if the corresponding Instances have been removed!<br/><br/>';
 $lng['aps']['nopackagesinsystem'] = 'There were no packages installed in the system which could be managed.';
-$lng['aps']['packagenameandstatus'] = 'Packagename &amp; status';
+$lng['aps']['packagenameandstatus'] = 'Packagename & status';
 $lng['aps']['activate_aps']['title'] = 'Enable APS installer';
 $lng['aps']['activate_aps']['description'] = 'Here the APS installer can be enabled and disabled globaly.';
 $lng['aps']['packages_per_page']['title'] = 'Packages per page';
@@ -1279,7 +1279,7 @@ $lng['admin']['newerversionavailable'] = 'There is a newer version of Froxlor av
 // ADDED IN FROXLOR 0.9.3
 
 $lng['emails']['noemaildomainaddedyet'] = 'You do not have a (email-)domain in your account yet.';
-$lng['error']['hiddenfieldvaluechanged'] = 'The value for the hidden field &quot;%s&quot; changed while editing the settings.<br /><br />This is usually not a big problem but the settings could not be saved because of this.';
+$lng['error']['hiddenfieldvaluechanged'] = 'The value for the hidden field "%s" changed while editing the settings.<br /><br />This is usually not a big problem but the settings could not be saved because of this.';
 
 // ADDED IN FROXLOR 0.9.3-svn1
 
@@ -1607,7 +1607,7 @@ $lng['error']['admin_domain_emailsystemhostname'] = 'Sorry, the system - hostnam
 $lng['backup'] = 'Backup';
 $lng['backup_allowed'] = 'Backup allowed';
 $lng['extras']['backup_create'] = 'Create Backup?';
-$lng['extras']['backup_info'] = 'Backup will be saved once daily to a FTP directory. The FTP username is "&lt;Froxloruser&gt;_backup". The FTP password is the same as for your main FTP account.';
+$lng['extras']['backup_info'] = 'Backup will be saved once daily to a FTP directory. The FTP username is "<Froxloruser>_backup". The FTP password is the same as for your main FTP account.';
 $lng['extras']['backup_info_sep'] = 'It contains compressed archives of your web-directory and databases.';
 $lng['extras']['backup_info_big'] = 'It contains a compressed archive of your web-directory and databases.';
 $lng['extras']['backup_count_info'] = '<br /><br />Please note that the backup will charge your webspace!';
@@ -1916,4 +1916,15 @@ $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Time
 $lng['panel']['cancel'] = 'Cancel';
 $lng['admin']['delete_statistics'] = 'Delete Statistics';
 $lng['admin']['speciallogwarning'] = 'WARNING: By changing this setting you will lose all your old statistics for this domain. If you are 100% sure you wish to change this type "'.$lng['admin']['delete_statistics'].'" in the field below and click the "'.$lng['panel']['delete'].'" button.<br /><br />';
+
+// ADDED IN 0.9.28-svn2
+$lng['serversettings']['vmail_maildirname']['title'] = 'Maildir name';
+$lng['serversettings']['vmail_maildirname']['description'] = 'Maildir directory into user\'s account. Normally \'Maildir\', in some implementations \'.maildir\', and directly into user\'s directory if left blank.';
+$lng['tasks']['remove_emailacc_files'] = 'Delete customer e-mail data.';
+
+// ADDED IN 0.9.28-svn5
+$lng['error']['operationnotpermitted'] = 'Operation not permitted!';
+$lng['error']['featureisdisabled'] = 'Feature %s is disabled. Please contact your service provider.';
+$lng['serversettings']['catchall_enabled']['title']  = 'Use Catchall';
+$lng['serversettings']['catchall_enabled']['description']  = 'Do you want to provide your customers the catchall-feature?';
 

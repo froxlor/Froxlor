@@ -23,7 +23,7 @@ function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)
 
 	if($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'hostname')
 	{
-		global $db, $idna_convert;
+		global $db, $idna_convert, $theme;
 		$newfieldvalue = $idna_convert->encode($newfieldvalue);
 		
 		$customerstddomains_result = $db->query('SELECT `standardsubdomain` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `standardsubdomain` <> \'0\'');

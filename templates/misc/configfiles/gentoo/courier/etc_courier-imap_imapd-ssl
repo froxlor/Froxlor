@@ -145,7 +145,7 @@ TLS_STARTTLS_PROTOCOL=TLS1
 # servers, and is optional for SSL/TLS clients.  TLS_CERTFILE is usually
 # treated as confidential, and must not be world-readable.
 #
-TLS_CERTFILE=/etc/ssl/server/<SERVERNAME>.pem
+TLS_CERTFILE=/etc/ssl/postfix/server.pem
 
 ##NAME: TLS_TRUSTCERTS:0
 #
@@ -159,7 +159,7 @@ TLS_CERTFILE=/etc/ssl/server/<SERVERNAME>.pem
 # to PEER or REQUIREPEER).
 #
 #
-# TLS_TRUSTCERTS=
+TLS_TRUSTCERTS=/etc/ssl/certs
 
 ##NAME: TLS_VERIFYPEER:0
 #

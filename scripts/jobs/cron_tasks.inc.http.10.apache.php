@@ -374,7 +374,7 @@ class apache
 	*	We put together the needed php options in the virtualhost entries
 	*/
 
-	protected function composePhpOptions($domain)
+	protected function composePhpOptions($domain, $ssl_vhost = false)
 	{
 		$php_options_text = '';
 
@@ -765,6 +765,54 @@ class apache
 		{
 			$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
 		}
+		
+		if($ssl_vhost === true
+		   && $domain['ssl'] == '1'
+		   && $this->settings['system']['use_ssl'] == '1')
+		{
+			if($domain['ssl_cert_file'] == '')
+			{
+				$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+			}
+
+			if($domain['ssl_key_file'] == '')
+			{
+				$domain['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
+			}
+
+			if($domain['ssl_ca_file'] == '')
+			{
+				$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
+			}
+
+			// #418
+			if($domain['ssl_cert_chainfile'] == '')
+			{
+				$domain['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
+			}
+
+			if($domain['ssl_cert_file'] != '')
+			{
+				$vhost_content.= '  SSLEngine On' . "\n";
+				$vhost_content.= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
+
+				if($domain['ssl_key_file'] != '')
+				{
+					$vhost_content.= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
+				}
+
+				if($domain['ssl_ca_file'] != '')
+				{
+					$vhost_content.= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
+				}
+
+				// #418
+				if($domain['ssl_cert_chainfile'] != '')
+				{
+					$vhost_content.= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
+				}
+			}
+		}
 
 		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
 		{
@@ -792,58 +840,10 @@ class apache
 		}
 		else
 		{
-			if($ssl_vhost === true
-			   && $domain['ssl'] == '1'
-			   && $this->settings['system']['use_ssl'] == '1')
-			{
-				if($domain['ssl_cert_file'] == '')
-				{
-					$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
-				}
-
-				if($domain['ssl_key_file'] == '')
-				{
-					$domain['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
-				}
-
-				if($domain['ssl_ca_file'] == '')
-				{
-					$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
-				}
-
-				// #418
-				if($domain['ssl_cert_chainfile'] == '')
-				{
-					$domain['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
-				}
-
-				if($domain['ssl_cert_file'] != '')
-				{
-					$vhost_content.= '  SSLEngine On' . "\n";
-					$vhost_content.= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
-
-					if($domain['ssl_key_file'] != '')
-					{
-						$vhost_content.= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
-					}
-
-					if($domain['ssl_ca_file'] != '')
-					{
-						$vhost_content.= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
-					}
-
-					// #418
-					if($domain['ssl_cert_chainfile'] != '')
-					{
-						$vhost_content.= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
-					}
-				}
-			}
-
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 			$vhost_content.= $this->getWebroot($domain);
 			if ($this->_deactivated == false) {
-				$vhost_content.= $this->composePhpOptions($domain);
+				$vhost_content.= $this->composePhpOptions($domain,$ssl_vhost);
 				$vhost_content.= $this->getStats($domain);
 			}
 			$vhost_content.= $this->getLogfiles($domain);
@@ -1312,17 +1312,21 @@ class apache
 			$configdir = $this->settings['phpfpm']['configdir'];
 			$phpfpm_file_dirhandle = opendir($this->settings['phpfpm']['configdir']);
 
-			while(false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle)))
-			{
-				if($phpfpm_filename != '.'
-					&& $phpfpm_filename != '..'
-					&& !in_array($phpfpm_filename, $known_phpfpm_files)
-					&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename)))
-					{
-						fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking PHP5-FPM ' . $phpfpm_filename . "\n");
-						$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $phpfpm_filename);
-						unlink(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename));
-					}
+			if ($phpfpm_file_dirhandle !== false) {
+				while(false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle)))
+				{
+					if($phpfpm_filename != '.'
+						&& $phpfpm_filename != '..'
+						&& !in_array($phpfpm_filename, $known_phpfpm_files)
+						&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename)))
+						{
+							fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking PHP5-FPM ' . $phpfpm_filename . "\n");
+							$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $phpfpm_filename);
+							unlink(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename));
+						}
+				}
+			} else {
+				$this->logger->logAction(CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM configuration path could not be read (".$this->settings['phpfpm']['configdir'].")");
 			}
 		}
 	}
@@ -1368,22 +1372,26 @@ class apache
 			$configdir = $this->settings['phpfpm']['configdir'];
 			$phpfpm_file_dirhandle = opendir($this->settings['phpfpm']['configdir']);
 
-			while(false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle)))
-			{
-				if(is_array($known_phpfpm_files)
-					&& $phpfpm_filename != '.'
-					&& $phpfpm_filename != '..'
-					&& !in_array($phpfpm_filename, $known_phpfpm_files)
-					&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename)))
-					{
-						fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking PHP5-FPM ' . $phpfpm_filename . "\n");
-						$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $phpfpm_filename);
-						unlink(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename));
+			if ($phpfpm_file_dirhandle !== false) {
+				
+				while (false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle))) {
+	
+					if (is_array($known_phpfpm_files)
+						&& $phpfpm_filename != '.'
+						&& $phpfpm_filename != '..'
+						&& !in_array($phpfpm_filename, $known_phpfpm_files)
+						&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename))
+					) {
+							fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking PHP5-FPM ' . $phpfpm_filename . "\n");
+							$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $phpfpm_filename);
+							unlink(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename));
 					}
-				if(!is_array($known_phpfpm_files))
-					{
+					if (!is_array($known_phpfpm_files)) {
 						$this->logger->logAction(CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM Configs Not written!!");
 					}
+				}
+			} else {
+				$this->logger->logAction(CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM configuration path could not be read (".$this->settings['phpfpm']['configdir'].")");
 			}
 		}
 	}

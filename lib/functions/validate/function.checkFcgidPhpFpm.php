@@ -17,7 +17,7 @@
 
 function checkFcgidPhpFpm($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 {
-	global $settings;
+	global $settings, $theme;
 
 	$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 

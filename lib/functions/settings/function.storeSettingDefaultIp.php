@@ -23,7 +23,7 @@ function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue)
 
 	if($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'defaultip')
 	{
-		global $db;
+		global $db, $theme;
 		
 		$customerstddomains_result = $db->query('SELECT `standardsubdomain` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `standardsubdomain` <> \'0\'');
 		$ids = array();

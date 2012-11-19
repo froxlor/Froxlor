@@ -45,7 +45,6 @@ smtpd_sasl_local_domain = $myhostname
 broken_sasl_auth_clients = yes
 ## Dovecot Settings for deliver, SASL Auth and virtual transport
 smtpd_sasl_type = dovecot
-virtual_transport = lmtp:unix:private/dovecot-lmtp
 dovecot_destination_recipient_limit = 1
 smtpd_sasl_path = private/dovecot-auth
 

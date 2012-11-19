@@ -226,6 +226,7 @@ if($db->num_rows($result) > 0)
 
 				$_mailerror = false;
 				try {
+					$mail->CharSet = "UTF-8";
 					$mail->SetFrom($to, $to);
 					$mail->AddReplyTo($to, $to);
 					$mail->Subject = $row['subject'];

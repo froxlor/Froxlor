@@ -24,13 +24,16 @@
  */
 function maildirExists($result = null)
 {
-	global $settings;
+	global $settings, $theme;
 
 	if(is_array($result))
 	{
 		$loginname = getCustomerDetail($result['customerid'], 'loginname');
 		if($loginname !== false) {
-			$maildir = makeCorrectDir($settings['system']['vmail_homedir'] .'/'. $loginname .'/'. $result['email_full']);
+			$email_user=substr($result['email_full'],0,strrpos($result['email_full'],"@"));
+			$email_domain=substr($result['email_full'],strrpos($result['email_full'],"@")+1);
+			$maildirname=trim($settings['system']['vmail_maildirname']);
+			$maildir = makeCorrectDir($settings['system']['vmail_homedir'] .'/'. $loginname .'/'. $email_domain .'/'. $email_user . (!empty($maildirname)?'/'.$maildirname:''));
 			if(@file_exists($maildir)) {
 				return true;
 			}

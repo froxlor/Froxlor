@@ -10,12 +10,12 @@
 	</td>
 	<td>
 		<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'edit', 'id' => $row['id']))}" style="text-decoration:none;">
-			<img src="images/Froxlor/icons/edit.png" alt="{$lng['panel']['edit']}" />
+			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" />
 		</a>
 		<if !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
 			<if !(isset($row['standardsubdomain']) && $row['standardsubdomain'] == $row['id'])>
 				&nbsp;<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'delete', 'id' => $row['id']))}" style="text-decoration:none;">
-					<img src="images/Froxlor/icons/delete.png" alt="{$lng['panel']['delete']}" />
+					<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" />
 				</a>
 			</if>
 		</if>

@@ -2,7 +2,7 @@
 	<article>
 		<header>
 			<h2>
-				<img src="images/Froxlor/icons/domains.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/domains.png" alt="" />&nbsp;
 				{$lng['domains']['domainsettings']}&nbsp;({$domains_count})
 			</h2>
 		</header>
@@ -17,7 +17,7 @@
 
 			<if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && 15 < $domains_count && $parentdomains_count != 0 >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/domain_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/domain_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'add'))}">{$lng['domains']['subdomain_add']}</a>
 				</div>
 			</if>
@@ -51,7 +51,7 @@
 
 			<if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && $parentdomains_count != 0 >
 				<div class="overviewadd">
-					<img src="images/Froxlor/icons/domain_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/domain_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'add'))}">{$lng['domains']['subdomain_add']}</a>
 				</div>
 			</if>
