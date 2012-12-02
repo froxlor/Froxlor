@@ -47,8 +47,6 @@ if($page == 'domains'
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
 		$fields = array(
 			'd.domain' => $lng['domains']['domainname'],
-			'ip.ip' => $lng['admin']['ipsandports']['ip'],
-			'ip.port' => $lng['admin']['ipsandports']['port'],
 			'c.name' => $lng['customer']['name'],
 			'c.firstname' => $lng['customer']['firstname'],
 			'c.company' => $lng['customer']['company'],
@@ -57,7 +55,7 @@ if($page == 'domains'
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_DOMAINS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$domains = '';
-		$result = $db->query("SELECT `d`.*, `c`.`loginname`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `ip`.`id` AS `ipid`, `ip`.`ip`, `ip`.`port` " . "FROM `" . TABLE_PANEL_DOMAINS . "` `d` " . "LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) " . "LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id` " . "LEFT JOIN `" . TABLE_PANEL_IPSANDPORTS . "` `ip` ON (`d`.`ipandport` = `ip`.`id`) " . "WHERE `d`.`parentdomainid`='0' " . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = '" . (int)$userinfo['adminid'] . "' ") . " " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+		$result = $db->query("SELECT `d`.*, `c`.`loginname`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain` " . "FROM `" . TABLE_PANEL_DOMAINS . "` `d` " . "LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) " . "LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id` WHERE `d`.`parentdomainid`='0' " . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = '" . (int)$userinfo['adminid'] . "' ") . " " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		$paging->setEntries($db->num_rows($result));
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
@@ -70,14 +68,21 @@ if($page == 'domains'
 			$row['domain'] = $idna_convert->decode($row['domain']);
 			$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
 
-			if(filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+			$resultips = $db->query("SELECT `ips`.* FROM `".TABLE_DOMAINTOIP . "` AS `dti`, `".TABLE_PANEL_IPSANDPORTS."` AS `ips` WHERE `dti`.`id_ipandports` = `ips`.`id` AND `dti`.`id_domain` = " . (int)$row['id']);
+
+			$row['ipandport'] = '';
+			while ($rowip = $db->fetch_array($resultips))
 			{
-				$row['ipandport'] = '[' . $row['ip'] . ']:' . $row['port'];
+				if(filter_var($rowip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+				{
+					$row['ipandport'] .= '[' . $rowip['ip'] . ']:' . $rowip['port'] . "\n";
+				}
+				else
+				{
+					$row['ipandport'] .= $rowip['ip'] . ':' . $rowip['port'] . "\n";
+				}
 			}
-			else
-			{
-				$row['ipandport'] = $row['ip'] . ':' . $row['port'];
-			}
+			$row['ipandport'] = substr($row['ipandport'], 0, -1);
 
 			if(!isset($domain_array[$row['domain']]))
 			{
@@ -190,6 +195,7 @@ if($page == 'domains'
 				$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used` = `subdomains_used` - " . (int)($deleted_domains - 1) . " WHERE `customerid` = '" . (int)$result['customerid'] . "'");
 				$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` - 1 WHERE `adminid` = '" . (int)$userinfo['adminid'] . "'");
 				$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `standardsubdomain`=\'0\' WHERE `standardsubdomain`=\'' . (int)$result['id'] . '\' AND `customerid`=\'' . (int)$result['customerid'] . '\'');
+				$db->query("DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = '" . (int)$id . "'");
 				$db->query("DELETE FROM `" . TABLE_PANEL_DOMAINREDIRECTS . "` WHERE `did` = '".(int)$id."'");
 				$log->logAction(ADM_ACTION, LOG_INFO, "deleted domain/subdomains (#" . $result['id'] . ")");
 				updateCounters();
@@ -383,42 +389,69 @@ if($page == 'domains'
 					$additional_ip_condition = '';
 				}
 
-				$ipandport = intval($_POST['ipandport']);
-				$ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' AND `ssl` = '0'" . $additional_ip_condition);
-
-				if(!isset($ipandport_check['id'])
-				   || $ipandport_check['id'] == '0'
-				   || $ipandport_check['id'] != $ipandport)
+				$ipandports = array();
+				if (isset($_POST['ipandport']) && !is_array($_POST['ipandport']))
 				{
-					standard_error('ipportdoesntexist');
+					$_POST['ipandport'] = unserialize($_POST['ipandport']);
+				}
+
+				if (isset($_POST['ipandport']) && is_array($_POST['ipandport']))
+				{
+					foreach($_POST['ipandport'] as $ipandport)
+					{
+						 $ipandport = intval($ipandport);
+						 $ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' " . $additional_ip_condition);
+						 if(!isset($ipandport_check['id'])
+						 	|| $ipandport_check['id'] == '0'
+							|| $ipandport_check['id'] != $ipandport)
+						{
+							standard_error('ipportdoesntexist');
+						}
+						else
+						{
+							$ipandports[] = $ipandport;
+						}
+					}
 				}
 
 				if($settings['system']['use_ssl'] == "1"
-				   && isset($_POST['ssl'])
-				   /*&& isset($_POST['ssl_redirect'])*/
-				   && isset($_POST['ssl_ipandport'])
-				   && $_POST['ssl'] != '0')
+				   && isset($_POST['ssl_ipandport']))
 				{
-					$ssl = 1; // if ssl is set and != 0 it can only be 1
 					$ssl_redirect = 0;
 					if (isset($_POST['ssl_redirect'])) {
 						$ssl_redirect = (int)$_POST['ssl_redirect'];
 					}
-					$ssl_ipandport = (int)$_POST['ssl_ipandport'];
-					$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' AND `ssl` = '1'" . $additional_ip_condition);
 
-					if(!isset($ssl_ipandport_check['id'])
-					   || $ssl_ipandport_check['id'] == '0'
-					   || $ssl_ipandport_check['id'] != $ssl_ipandport)
+					$ssl_ipandports = array();
+					if (isset($_POST['ssl_ipandport']) && !is_array($_POST['ssl_ipandport']))
 					{
-						standard_error('ipportdoesntexist');
+						$_POST['ssl_ipandport'] = unserialize($_POST['ssl_ipandport']);
 					}
+
+					// Verify SSL-Ports
+					if (isset($_POST['ssl_ipandport']) && is_array($_POST['ssl_ipandport']))
+					{
+						foreach($_POST['ssl_ipandport'] as $ssl_ipandport)
+						{
+							$ssl_ipandport = intval($ssl_ipandport);
+							$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' " . $additional_ip_condition);
+							if(!isset($ssl_ipandport_check['id'])
+								|| $ssl_ipandport_check['id'] == '0'
+								|| $ssl_ipandport_check['id'] != $ssl_ipandport)
+							{
+								standard_error('ipportdoesntexist');
+							}
+							else
+							{
+								$ssl_ipandports[] = $ssl_ipandport;
+							}
+						}
+					}
+		
 				}
 				else
 				{
-					$ssl = 0;
 					$ssl_redirect = 0;
-					$ssl_ipandport = 0;
 				}
 
 				if(!preg_match('/^https?\:\/\//', $documentroot))
@@ -440,8 +473,21 @@ if($page == 'domains'
 
 				if($aliasdomain != 0)
 				{
+					// Overwrite given ipandports with these of the "main" domain
+					$ipandports = array();
+					$origipresult = $db->query("SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP ."` WHERE `id_domain` = '" . (int)$aliasdomain . "'");
+					while($origip = $db->fetch_array($origipresult))
+					{
+						$ipandports[] = $origip['id_ipandports'];
+					}
+
 					// also check ip/port combination to be the same, #176
 					$aliasdomain_check = $db->query_first('SELECT `d`.`id` FROM `' . TABLE_PANEL_DOMAINS . '` `d`,`' . TABLE_PANEL_CUSTOMERS . '` `c` WHERE `d`.`customerid`=\'' . (int)$customerid . '\' AND `d`.`aliasdomain` IS NULL AND `d`.`id`<>`c`.`standardsubdomain` AND `c`.`customerid`=\'' . (int)$customerid . '\' AND `d`.`id`=\'' . (int)$aliasdomain . '\' AND `d`.`ipandport` = \''.(int)$ipandport.'\'');
+				}
+
+				if(count($ipandports) == 0)
+				{
+					standard_error('noipportgiven');
 				}
 
 				if($openbasedir != '1')
@@ -545,7 +591,6 @@ if($page == 'domains'
 						'speciallogfile' => $speciallogfile,
 						'wwwserveralias' => $wwwserveralias,
 						'ipandport' => $ipandport,
-						'ssl' => $ssl,
 						'ssl_redirect' => $ssl_redirect,
 						'ssl_ipandport' => $ssl_ipandport,
 						'openbasedir' => $openbasedir,
@@ -578,9 +623,45 @@ if($page == 'domains'
 						$question_nr++;
 					}
 
-					$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` (`domain`, `customerid`, `adminid`, `documentroot`, `ipandport`,`aliasdomain`, `zonefile`, `dkim`, `wwwserveralias`, `isbinddomain`, `isemaildomain`, `email_only`, `subcanemaildomain`, `caneditdomain`, `openbasedir`, `speciallogfile`, `specialsettings`, `ssl`, `ssl_redirect`, `ssl_ipandport`, `add_date`, `registration_date`, `phpsettingid`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `ismainbutsubto`) VALUES ('" . $db->escape($domain) . "', '" . (int)$customerid . "', '" . (int)$adminid . "', '" . $db->escape($documentroot) . "', '" . $db->escape($ipandport) . "', " . (($aliasdomain != 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", '" . $db->escape($zonefile) . "', '" . $db->escape($dkim) . "', '" . $db->escape($wwwserveralias) . "', '" . $db->escape($isbinddomain) . "', '" . $db->escape($isemaildomain) . "', '" . $db->escape($email_only) . "', '" . $db->escape($subcanemaildomain) . "', '" . $db->escape($caneditdomain) . "', '" . $db->escape($openbasedir) . "', '" . $db->escape($speciallogfile) . "', '" . $db->escape($specialsettings) . "', '" . $ssl . "', '" . $ssl_redirect . "' , '" . $ssl_ipandport . "', '" . $db->escape(time()) . "', '" . $db->escape($registration_date) . "', '" . (int)$phpsettingid . "', '" . (int)$mod_fcgid_starter . "', '" . (int)$mod_fcgid_maxrequests . "', '".(int)$issubof."')");
+					$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
+						`domain` = '" . $db->escape($domain) . "',
+						`customerid` = '" . (int)$customerid . "',
+						`adminid` = '" . (int)$adminid . "',
+						`documentroot` = '" . $db->escape($documentroot) . "',
+						`aliasdomain` = " . (($aliasdomain != 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ",
+						`zonefile` = '" . $db->escape($zonefile) . "',
+						`dkim` = '" . $db->escape($dkim) . "',
+						`wwwserveralias` = '" . $db->escape($wwwserveralias) . "',
+						`isbinddomain` = '" . $db->escape($isbinddomain) . "',
+						`isemaildomain` = '" . $db->escape($isemaildomain) . "',
+						`email_only` = '" . $db->escape($email_only) . "',
+						`subcanemaildomain` = '" . $db->escape($subcanemaildomain) . "',
+						`caneditdomain` = '" . $db->escape($caneditdomain) . "',
+						`openbasedir` = '" . $db->escape($openbasedir) . "',
+						`speciallogfile` = '" . $db->escape($speciallogfile) . "',
+						`specialsettings` = '" . $db->escape($specialsettings) . "',
+						`ssl_redirect` = '" . $ssl_redirect . "',
+						`add_date` = '" . $db->escape(time()) . "',
+						`registration_date` = '" . $db->escape($registration_date) . "',
+						`phpsettingid` = '" . (int)$phpsettingid . "',
+						`mod_fcgid_starter` = '" . (int)$mod_fcgid_starter . "',
+						`mod_fcgid_maxrequests` = '" . (int)$mod_fcgid_maxrequests . "',
+						`ismainbutsubto` = '".(int)$issubof."'
+					");
 					$domainid = $db->insert_id();
 					$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` + 1 WHERE `adminid` = '" . (int)$adminid . "'");
+					foreach ($ipandports as $ipportid) {
+						$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+								`id_domain` = '" . $domainid . "',
+								`id_ipandports` = '" . (int)$ipportid . "';
+						");
+					}
+					foreach ($ssl_ipandports as $ssl_ipportid) {
+						$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+								`id_domain` = '" . $domainid . "',
+								`id_ipandports` = '" . (int)$ssl_ipportid . "';
+						");
+					}
 					$log->logAction(ADM_ACTION, LOG_INFO, "added domain '" . $domain . "'");
 					inserttask('1');
 
@@ -624,8 +705,8 @@ if($page == 'domains'
 					$result_ssl_ipsandports = $db->query("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ssl`='1' AND `ip`='" . $admin_ip['ip'] . "' ORDER BY `ip`, `port` ASC");
 				}
 
-				$ipsandports = '';
-
+				// Build array holding all IPs and Ports available to this admin
+				$ipsandports = array();
 				while($row_ipandport = $db->fetch_array($result_ipsandports))
 				{
 					if(filter_var($row_ipandport['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
@@ -633,11 +714,10 @@ if($page == 'domains'
 						$row_ipandport['ip'] = '[' . $row_ipandport['ip'] . ']';
 					}
 
-					$ipsandports.= makeoption($row_ipandport['ip'] . ':' . $row_ipandport['port'], $row_ipandport['id'], $settings['system']['defaultip']);
+					$ipsandports[] = array('label' => $row_ipandport['ip'] . ':' . $row_ipandport['port'], 'value' => $row_ipandport['id']);
 				}
 
-				$ssl_ipsandports = '';
-
+				$ssl_ipsandports = array();
 				while($row_ssl_ipandport = $db->fetch_array($result_ssl_ipsandports))
 				{
 					if(filter_var($row_ssl_ipandport['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
@@ -645,7 +725,7 @@ if($page == 'domains'
 						$row_ssl_ipandport['ip'] = '[' . $row_ssl_ipandport['ip'] . ']';
 					}
 
-					$ssl_ipsandports.= makeoption($row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'], $row_ssl_ipandport['id'], $settings['system']['defaultip']);
+					$ssl_ipsandports[] = array('label' => $row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'], 'value' => $row_ssl_ipandport['id']);
 				}
 
 				$standardsubdomains = array();
@@ -735,6 +815,13 @@ if($page == 'domains'
 						$email_accounts++;
 					}
 				}
+			}
+
+			$ipsresult = $db->query("SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = '" . (int)$result['id'] . "'");
+			$usedips = array();
+			while ($ipsresultrow = $db->fetch_array($ipsresult))
+			{
+				$usedips[] = $ipsresultrow['id_ipandports'];
 			}
 
 			if(isset($_POST['send'])
@@ -909,39 +996,70 @@ if($page == 'domains'
 				$ipandport = intval($_POST['ipandport']);
 				$ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' AND `ssl` = '0'" . $additional_ip_condition);
 
-				if(!isset($ipandport_check['id'])
-				   || $ipandport_check['id'] == '0'
-				   || $ipandport_check['id'] != $ipandport)
+                                $ipandports = array();
+				if (isset($_POST['ipandport']) && !is_array($_POST['ipandport']))
 				{
-					standard_error('ipportdoesntexist');
+					$_POST['ipandport'] = unserialize($_POST['ipandport']);
 				}
+                                if (isset($_POST['ipandport']) && is_array($_POST['ipandport']))
+                                {
+                                        foreach($_POST['ipandport'] as $ipandport)
+                                        {
+                                                 $ipandport = intval($ipandport);
+                                                 $ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' " . $additional_ip_condition);
+                                                 if(!isset($ipandport_check['id'])
+                                                        || $ipandport_check['id'] == '0'
+                                                        || $ipandport_check['id'] != $ipandport)
+                                                {
+                                                        standard_error('ipportdoesntexist');
+                                                }
+                                                else
+                                                {
+                                                        $ipandports[] = $ipandport;
+                                                }
+                                        }
+                                }
 
 				if($settings['system']['use_ssl'] == "1"
-				   && isset($_POST['ssl'])
-				   /*&& isset($_POST['ssl_redirect'])*/
-				   && isset($_POST['ssl_ipandport'])
-				   && $_POST['ssl'] != '0')
+				   && isset($_POST['ssl_ipandport']))
 				{
 					$ssl = 1; // if ssl is set and != 0, it can only be 1
 					$ssl_redirect = 0;
 					if (isset($_POST['ssl_redirect'])) {
 						$ssl_redirect = (int)$_POST['ssl_redirect'];
 					}
-					$ssl_ipandport = (int)$_POST['ssl_ipandport'];
+
+					$ssl_ipandport = intval($_POST['ssl_ipandport']);
 					$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' AND `ssl` = '1'" . $additional_ip_condition);
 
-					if(!isset($ssl_ipandport_check['id'])
-					   || $ssl_ipandport_check['id'] == '0'
-					   || $ssl_ipandport_check['id'] != $ssl_ipandport)
+					$ssl_ipandports = array();
+					if (isset($_POST['ssl_ipandport']) && !is_array($_POST['ssl_ipandport']))
 					{
-						standard_error('ipportdoesntexist');
+						$_POST['ssl_ipandport'] = unserialize($_POST['ssl_ipandport']);
+					}
+					if (isset($_POST['ssl_ipandport']) && is_array($_POST['ssl_ipandport']))
+					{
+						foreach($_POST['ssl_ipandport'] as $ssl_ipandport)
+						{
+							$ssl_ipandport = intval($ssl_ipandport);
+							$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' " . $additional_ip_condition);
+							if(!isset($ssl_ipandport_check['id'])
+								|| $ssl_ipandport_check['id'] == '0'
+								|| $ssl_ipandport_check['id'] != $ssl_ipandport)
+							{
+								standard_error('ipportdoesntexist');
+							}
+							else
+							{
+								$ssl_ipandports[] = $ssl_ipandport;
+							}
+						}
 					}
 				}
 				else
 				{
-					$ssl = 0;
 					$ssl_redirect = 0;
-					$ssl_ipandport = 0;
+					//$ssl_ipandports[] = '';
 				}
 
 				if(!preg_match('/^https?\:\/\//', $documentroot))
@@ -994,11 +1112,23 @@ if($page == 'domains'
 					'id' => 0
 				);
 
-				if($aliasdomain != 0)
-				{
-					// also check ip/port combination to be the same, #176
-					$aliasdomain_check = $db->query_first('SELECT `d`.`id` FROM `' . TABLE_PANEL_DOMAINS . '` `d`,`' . TABLE_PANEL_CUSTOMERS . '` `c` WHERE `d`.`customerid`=\'' . (int)$result['customerid'] . '\' AND `d`.`aliasdomain` IS NULL AND `d`.`id`<>`c`.`standardsubdomain` AND `c`.`customerid`=\'' . (int)$result['customerid'] . '\' AND `d`.`id`=\'' . (int)$aliasdomain . '\' AND `d`.`ipandport` = \''.(int)$ipandport.'\'');
-				}
+                                if($aliasdomain != 0)
+                                {
+                                        // Overwrite given ipandports with these of the "main" domain
+                                        $ipandports = array();
+                                        $origipresult = $db->query("SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP ."` WHERE `id_domain` = '" . (int)$aliasdomain . "'");
+                                        while($origip = $db->fetch_array($origipresult))
+                                        {
+                                                $ipandports[] = $origip['id_ipandports'];
+                                        }
+
+                                        $aliasdomain_check = $db->query_first('SELECT `d`.`id` FROM `' . TABLE_PANEL_DOMAINS . '` `d`,`' . TABLE_PANEL_CUSTOMERS . '` `c` WHERE `d`.`customerid`=\'' . (int)$customerid . '\' AND `d`.`aliasdomain` IS NULL AND `d`.`id`<>`c`.`standardsubdomain` AND `c`.`customerid`=\'' . (int)$customerid . '\' AND `d`.`id`=\'' . (int)$aliasdomain . '\'');
+                                }
+
+                                if(count($ipandports) == 0)
+                                {
+                                        standard_error('noipportgiven');
+                                }
 
 				if($aliasdomain_check['id'] != $aliasdomain)
 				{
@@ -1026,10 +1156,7 @@ if($page == 'domains'
 					'zonefile' => $zonefile,
 					'dkim' => $dkim,
 					'wwwserveralias' => $wwwserveralias,
-					'ipandport' => $ipandport,
-					'ssl' => $ssl,
 					'ssl_redirect' => $ssl_redirect,
-					'ssl_ipandport' => $ssl_ipandport,
 					'openbasedir' => $openbasedir,
 					'phpsettingid' => $phpsettingid,
 					'mod_fcgid_starter' => $mod_fcgid_starter,
@@ -1037,7 +1164,9 @@ if($page == 'domains'
 					'specialsettings' => $specialsettings,
 					'registration_date' => $registration_date,
 					'issubof' => $issubof,
-					'speciallogfile' => $speciallogfile
+					'speciallogfile' => $speciallogfile,
+					'ipandport' => serialize($ipandports),
+					'ssl_ipandport' => serialize($ssl_ipandports)
 				);
 
 				$security_questions = array(
@@ -1060,10 +1189,7 @@ if($page == 'domains'
 				}
 
 				if($documentroot != $result['documentroot']
-				   || $ipandport != $result['ipandport']
-				   || $ssl != $result['ssl']
 				   || $ssl_redirect != $result['ssl_redirect']
-				   || $ssl_ipandport != $result['ssl_ipandport']
 				   || $wwwserveralias != $result['wwwserveralias']
 				   || $openbasedir != $result['openbasedir']
 				   || $phpsettingid != $result['phpsettingid']
@@ -1082,8 +1208,7 @@ if($page == 'domains'
 
 				if($isbinddomain != $result['isbinddomain']
 				   || $zonefile != $result['zonefile']
-				   || $dkim != $result['dkim']
-				   || $ipandport != $result['ipandport'])
+				   || $dkim != $result['dkim'])
 				{
 					inserttask('4');
 				}
@@ -1137,8 +1262,74 @@ if($page == 'domains'
 					$log->logAction(ADM_ACTION, LOG_INFO, "removed specialsettings on all subdomains of domain #" . $id);
 				}
 
-				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `documentroot`='" . $db->escape($documentroot) . "', `ipandport`='" . $db->escape($ipandport) . "', `ssl`='" . (int)$ssl . "', `ssl_redirect`='" . (int)$ssl_redirect . "', `ssl_ipandport`='" . (int)$ssl_ipandport . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", `isbinddomain`='" . $db->escape($isbinddomain) . "', `isemaildomain`='" . $db->escape($isemaildomain) . "', `email_only`='" . $db->escape($email_only) . "', `subcanemaildomain`='" . $db->escape($subcanemaildomain) . "', `dkim`='" . $db->escape($dkim) . "', `caneditdomain`='" . $db->escape($caneditdomain) . "', `zonefile`='" . $db->escape($zonefile) . "', `wwwserveralias`='" . $db->escape($wwwserveralias) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `speciallogfile`='" . $db->escape($speciallogfile) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "', `specialsettings`='" . $db->escape($specialsettings) . "', `registration_date`='" . $db->escape($registration_date) . "', `ismainbutsubto`='" . (int)$issubof . "' WHERE `id`='" . (int)$id . "'");
-				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `ipandport`='" . $db->escape($ipandport) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "'" . $upd_specialsettings . $updatechildren . " WHERE `parentdomainid`='" . (int)$id . "'");
+				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET 
+					`customerid` = '" . (int)$customerid . "',
+					`adminid` = '" . (int)$adminid . "',
+					`documentroot`='" . $db->escape($documentroot) . "',
+					`ssl_redirect`='" . (int)$ssl_redirect . "',
+					`aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ",
+					`isbinddomain`='" . $db->escape($isbinddomain) . "',
+					`isemaildomain`='" . $db->escape($isemaildomain) . "',
+					`email_only`='" . $db->escape($email_only) . "',
+					`subcanemaildomain`='" . $db->escape($subcanemaildomain) . "',
+					`dkim`='" . $db->escape($dkim) . "', 
+					`caneditdomain`='" . $db->escape($caneditdomain) . "',
+					`zonefile`='" . $db->escape($zonefile) . "',
+					`wwwserveralias`='" . $db->escape($wwwserveralias) . "',
+					`openbasedir`='" . $db->escape($openbasedir) . "',
+					`speciallogfile`='" . $db->escape($speciallogfile) . "',
+					`phpsettingid`='" . $db->escape($phpsettingid) . "',
+					`mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "',
+					`mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "',
+					`specialsettings`='" . $db->escape($specialsettings) . "',
+					`registration_date`='" . $db->escape($registration_date) . "',
+					`ismainbutsubto`='" . (int)$issubof . "' WHERE `id`='" . (int)$id . "'
+				");
+				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET 
+					`customerid` = '" . (int)$customerid . "',
+					`adminid` = '" . (int)$adminid . "',
+					`openbasedir`='" . $db->escape($openbasedir) . "',
+					`phpsettingid`='" . $db->escape($phpsettingid) . "',
+					`mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "',
+					`mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "'
+					" . $upd_specialsettings . $updatechildren . " 
+					WHERE `parentdomainid`='" . (int)$id . "'
+				");
+
+				// Cleanup domain <-> ip mapping
+				$db->query("DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = '" . (int)$id . "'");
+
+				foreach ($ipandports as $ipportid) {
+					$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+							`id_domain` = '" . (int)$id . "',
+							`id_ipandports` = '" . (int)$ipportid . "';
+					");
+				}
+				foreach ($ssl_ipandports as $ssl_ipportid) {
+					$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+							`id_domain` = '" . (int)$id . "',
+							`id_ipandports` = '" . (int)$ssl_ipportid . "';
+					");
+				}
+
+				// Cleanup domain <-> ip mapping for subdomains
+				$domainidsresult = $db->query("SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `parentdomainid`='" . (int)$id . "'");
+				while ($row = $db->fetch_array($domainidsresult)) {
+					$db->query("DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = '" . (int)$row['id'] . "'");
+					foreach ($ipandports as $ipportid) {
+						$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+								`id_domain` = '" . (int)$row['id'] . "',
+								`id_ipandports` = '" . (int)$ipportid . "';
+						");
+					}
+					foreach ($ssl_ipandports as $ssl_ipportid) {
+						$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+								`id_domain` = '" . (int)$row['id'] . "',
+								`id_ipandports` = '" . (int)$ssl_ipportid . "';
+						");
+					}
+				}
+
 				$log->logAction(ADM_ACTION, LOG_INFO, "edited domain #" . $id);
 				$redirect_props = Array(
 					'page' => $page,
@@ -1213,8 +1404,7 @@ if($page == 'domains'
 					$result_ssl_ipsandports = $db->query("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ssl`='1' AND `ip`='" . $admin_ip['ip'] . "' ORDER BY `ip`, `port` ASC");
 				}
 
-				$ipsandports = '';
-
+				$ipsandports = array();
 				while($row_ipandport = $db->fetch_array($result_ipsandports))
 				{
 					if(filter_var($row_ipandport['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
@@ -1222,11 +1412,10 @@ if($page == 'domains'
 						$row_ipandport['ip'] = '[' . $row_ipandport['ip'] . ']';
 					}
 
-					$ipsandports.= makeoption($row_ipandport['ip'] . ':' . $row_ipandport['port'], $row_ipandport['id'], $result['ipandport']);
+					$ipsandports[] = array('label' => $row_ipandport['ip'] . ':' . $row_ipandport['port'], 'value' => $row_ipandport['id']);
 				}
 
-				$ssl_ipsandports = '';
-
+				$ssl_ipsandports = array();
 				while($row_ssl_ipandport = $db->fetch_array($result_ssl_ipsandports))
 				{
 					if(filter_var($row_ssl_ipandport['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
@@ -1234,7 +1423,7 @@ if($page == 'domains'
 						$row_ssl_ipandport['ip'] = '[' . $row_ssl_ipandport['ip'] . ']';
 					}
 
-					$ssl_ipsandports.= makeoption($row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'], $row_ssl_ipandport['id'], $result['ssl_ipandport']);
+					$ssl_ipsandports[] = array('label' => $row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'], 'value' => $row_ssl_ipandport['id']);
 				}
 
 				$result['specialsettings'] = $result['specialsettings'];
@@ -1249,8 +1438,7 @@ if($page == 'domains'
 				$phpconfigs = '';
 				$phpconfigs_result = $db->query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
 
-				while($phpconfigs_row = $db->fetch_array($phpconfigs_result))
-				{
+				while ($phpconfigs_row = $db->fetch_array($phpconfigs_result)) {
 					$phpconfigs.= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true);
 				}
 
