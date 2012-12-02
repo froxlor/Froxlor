@@ -1985,7 +1985,7 @@ if(isFroxlorVersion('0.9.28-svn4')) {
 	updateToVersion('0.9.28-svn5');
 }
 
-if(isFroxlorVersion('0.9.28-svn5')) {
+if (isFroxlorVersion('0.9.28-svn5')) {
 	showUpdateStep("Updating from 0.9.28-svn5 to 0.9.28-svn6", true);
 	lastStepStatus(0);
 
@@ -2108,4 +2108,51 @@ if (isFroxlorVersion('0.9.29-dev2')) {
 	lastStepStatus(0);
 
 	updateToVersion('0.9.29-dev3');
+}
+
+if (isFroxlorVersion('0.9.29-dev3')) {
+
+	showUpdateStep("Updating from 0.9.29-dev3 to 0.9.29-dev4", false);
+
+	showUpdateStep("Adding new ip to domain - mapping-table");
+	$db->query("DROP TABLE IF EXISTS `panel_domaintoip`;");
+	$sql = "CREATE TABLE `".TABLE_DOMAINTOIP."` (
+		`id_domain` int(11) unsigned NOT NULL,
+		`id_ipandports` int(11) unsigned NOT NULL,
+		PRIMARY KEY (`id_domain`, `id_ipandports`)
+	) ENGINE=MyISAM ;";
+	$db->query($sql);
+	lastStepStatus(0);
+
+	showUpdateStep("Convert old domain to ip - mappings");
+	$result = $db->query("SELECT `id`, `ipandport`, `ssl_ipandport`, `ssl_redirect`, `parentdomainid` FROM `" . TABLE_PANEL_DOMAINS . "`;");
+	
+	while ($row = $db->fetch_array($result)) {
+		if ((int)$row['ipandport'] != 0) {
+			$db->query("INSERT INTO `".TABLE_DOMAINTOIP."` SET
+				`id_domain` = " . (int)$row['id'] . ",
+				`id_ipandports` = " . (int)$row['ipandport']);
+		}
+		if ((int)$row['ssl_ipandport'] != 0) {
+			$db->query("INSERT INTO `".TABLE_DOMAINTOIP."` SET
+				`id_domain` = " . (int)$row['id'] . ",
+				`id_ipandports` = " . (int)$row['ssl_ipandport']);
+		}
+		// Subdomains also have ssl ports if the parent has
+		elseif ((int)$row['ssl_ipandport'] == 0 && (int)$row['ssl_redirect'] != 0 && (int)$row['parentdomainid'] != 0) {
+			$db->query("INSERT INTO `".TABLE_DOMAINTOIP."` SET
+				`id_domain` = " . (int)$row['id'] . ",
+				`id_ipandports` = (SELECT `ssl_ipandport` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `id` = '".(int)$row['parentdomainid']."');");
+		}
+	    
+	}
+	lastStepStatus(0);
+
+	showUpdateStep("Updating table layouts");
+	$db->query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` DROP `ipandport`;");
+	$db->query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` DROP `ssl`;");
+	$db->query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` DROP `ssl_ipandport`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.28-svn6');
 }
