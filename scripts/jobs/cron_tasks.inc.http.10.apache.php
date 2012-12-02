@@ -56,6 +56,7 @@ class apache
 		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
 		$this->settings = $settings;
+
 	}
 
 	protected function getDB()
@@ -723,45 +724,49 @@ class apache
 	protected function getVhostContent($domain, $ssl_vhost = false)
 	{
 		if($ssl_vhost === true
-		   && $domain['ssl'] != '1')
+		    && ($domain['ssl_redirect'] != '1' && $domain['ssl'] != '1'))
 		{
 			return '';
 		}
 
-		if($ssl_vhost === true
-		   && $domain['ssl'] == '1')
+		$query = "SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` `i`, `".TABLE_DOMAINTOIP."` `dip`  WHERE dip.id_domain = '$domain[id]' AND i.id = dip.id_ipandports ";
+		if($ssl_vhost === true &&
+		   ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1'))
 		{
-			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ssl_ipandport'] . "'";
+			$query .= "AND i.ssl = 1 ORDER BY i.ssl_cert_file ASC;";		// by ordering by cert-file the row with filled out SSL-Fields will be shown last, thus it is enough to fill out 1 set of SSL-Fields
 		}
 		else
 		{
-			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ipandport'] . "'";
+			$query .= "AND i.ssl = '0';";
 		}
 
-		$ipandport = $this->db->query_first($query);
-		$domain['ip'] = $ipandport['ip'];
-		$domain['port'] = $ipandport['port'];
-		$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
+		$ipport = '';
+
+		$result = $this->db->query($query);
+		while ($ipandport = $this->db->fetch_array($result)) {
+
+			$domain['ip'] = $ipandport['ip'];
+			$domain['port'] = $ipandport['port'];
+
+			if(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+				$ipport .= "[$domain[ip]]:$domain[port] ";
+			else
+				$ipport .= "$domain[ip]:$domain[port] ";
+ 		}
+
+		$domain['ssl_cert_file'] = $ipandport['ssl_cert_file']; // save last delivered ssl settings
 		$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
 		$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
 		// #418
 		$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
 
-		if(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-		{
-			$ipport = '[' . $domain['ip'] . ']:' . $domain['port'];
-		}
-		else
-		{
-			$ipport = $domain['ip'] . ':' . $domain['port'];
-		}
-
 		$vhost_content = '<VirtualHost ' . $ipport . '>' . "\n";
+
 		$vhost_content.= $this->getServerNames($domain);
 
-		if($ssl_vhost == false
+		if(($ssl_vhost == false
 		   && $domain['ssl'] == '1'
-		   && $domain['ssl_redirect'] == '1')
+		   && $domain['ssl_redirect'] == '1'))
 		{
 			$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
 		}
@@ -770,6 +775,7 @@ class apache
 		   && $domain['ssl'] == '1'
 		   && $this->settings['system']['use_ssl'] == '1')
 		{
+
 			if($domain['ssl_cert_file'] == '')
 			{
 				$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
@@ -874,10 +880,35 @@ class apache
 
 	public function createVirtualHosts()
 	{
-		$result_domains = $this->db->query("SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, `d`.`mod_fcgid_maxrequests` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) " . "LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) " . "WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC");
+		//$result_domains = $this->db->query("SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, `d`.`mod_fcgid_maxrequests` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) " . "LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) " . "WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC");
+		$query = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
+			`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, 
+			`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
+			`c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, 
+			`d`.`mod_fcgid_maxrequests`, `p`.`ssl` AS `ssl`,
+			`p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile` 
+			  FROM `".TABLE_PANEL_DOMAINS."` `d`
+      
+			  LEFT JOIN `".TABLE_PANEL_CUSTOMERS."` `c` USING(`customerid`) 
+			  LEFT JOIN `".TABLE_PANEL_DOMAINS."` `pd` ON (`pd`.`id` = `d`.`parentdomainid`)
+			  
+			  INNER JOIN (
+			    SELECT * FROM ( 
+			      SELECT `di`.`id_domain` , `p`.`ssl`, `p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile` 
+			      FROM `".TABLE_DOMAINTOIP."` `di` , `".TABLE_PANEL_IPSANDPORTS."` `p` 
+			      WHERE `p`.`id` = `di`.`id_ipandports` 
+			      ORDER BY `p`.`ssl` DESC 
+			    ) AS my_table_tmp
+			    GROUP BY `id_domain`
+			  ) AS p ON p.`id_domain` = `d`.`id`
+			  
+			  WHERE `d`.`aliasdomain` IS NULL 
+			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
 
+		$result_domains = $this->db->query($query);
 		while($domain = $this->db->fetch_array($result_domains))
 		{
+
 			fwrite($this->debugHandler, '  apache::createVirtualHosts: creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname'] . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname']);
 			$vhosts_filename = $this->getVhostFilename($domain);
@@ -889,9 +920,9 @@ class apache
 			if($domain['deactivated'] != '1'
 			   || $this->settings['system']['deactivateddocroot'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= $this->getVhostContent($domain);
+				$this->virtualhosts_data[$vhosts_filename].= $this->getVhostContent($domain, false);	// Create vhost without ssl
 
-				if($domain['ssl'] == '1')
+				if($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')
 				{
 					// Adding ssl stuff if enabled
 
@@ -1269,6 +1300,7 @@ class apache
 				$this->wipeOutOldVhostConfigs();
 			}
 		}
+
 	}
 
 	/*
