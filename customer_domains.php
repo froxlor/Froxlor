@@ -234,9 +234,9 @@ elseif($page == 'domains')
 				$_doredirect = false;
 
 				if($aliasdomain != 0)
-				{
+				{ 
 					// also check ip/port combination to be the same, #176
-					$aliasdomain_check = $db->query_first('SELECT `id` FROM `' . TABLE_PANEL_DOMAINS . '` `d`,`' . TABLE_PANEL_CUSTOMERS . '` `c` WHERE `d`.`customerid`=\'' . (int)$userinfo['customerid'] . '\' AND `d`.`aliasdomain` IS NULL AND `d`.`id`<>`c`.`standardsubdomain` AND `c`.`customerid`=\'' . (int)$userinfo['customerid'] . '\' AND `d`.`id`=\'' . (int)$aliasdomain . '\' AND `d`.`ipandport` = \''.(int)$domain_check['ipandport'].'\'');
+					$aliasdomain_check = $db->query_first("SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d` , `" . TABLE_PANEL_CUSTOMERS . "` `c` , `".TABLE_DOMAINTOIP."` `dip` WHERE `d`.`aliasdomain` IS NULL AND `d`.`id` = '".(int)$aliasdomain."' AND `c`.`standardsubdomain` <> `d`.`id` AND `d`.`customerid` = '" . (int)$userinfo['customerid'] . "' AND `c`.`customerid` = `d`.`customerid` AND `d`.`id` = `dip`.`id_domain` AND `dip`.`id_ipandports` IN (SELECT `id_ipandports` FROM `".TABLE_DOMAINTOIP."` WHERE `id_domain` = '".(int)$aliasdomain."') GROUP BY `d`.`domain` ORDER BY `d`.`domain` ASC;");
 				}
 
 				if(isset($_POST['url'])
@@ -329,7 +329,6 @@ elseif($page == 'domains')
 								`customerid` = '" . (int)$userinfo['customerid'] . "',
 								`domain` = '" . $db->escape($completedomain) . "', 
 								`documentroot` = '" . $db->escape($path) . "', 
-								`ipandport` = '" . $db->escape($domain_check['ipandport']) . "', 
 								`aliasdomain` = ".(($aliasdomain != 0) ? "'" . $db->escape($aliasdomain) . "'" : "NULL") .", 
 								`parentdomainid` = '" . (int)$domain_check['id'] . "', 
 								`isemaildomain` = '" . ($domain_check['subcanemaildomain'] == '3' ? '1' : '0') . "', 
@@ -340,6 +339,8 @@ elseif($page == 'domains')
 								`specialsettings` = '" . $db->escape($domain_check['specialsettings']) . "', 
 								`ssl_redirect` = '" . $ssl_redirect . "', 
 								`phpsettingid` = '" . $phpsid_result['phpsettingid'] . "'");
+
+					$result = $db->query("INSERT INTO `".TABLE_DOMAINTOIP."` (`id_domain`, `id_ipandports`) SELECT LAST_INSERT_ID(), `id_ipandports` FROM `".TABLE_DOMAINTOIP."` WHERE `id_domain` = '" . (int)$domain_check['id'] . "';");
 
 					if($_doredirect)
 					{
@@ -405,10 +406,12 @@ elseif($page == 'domains')
 	elseif($action == 'edit'
 	       && $id != 0)
 	{
-		$result = $db->query_first("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir_path`, `d`.`ipandport`, `pd`.`subcanemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd` WHERE `d`.`customerid`='" . (int)$userinfo['customerid'] . "' AND `d`.`id`='" . (int)$id . "' AND ((`d`.`parentdomainid`!='0' AND `pd`.`id`=`d`.`parentdomainid`) OR (`d`.`parentdomainid`='0' AND `pd`.`id`=`d`.`id`)) AND `d`.`caneditdomain`='1'");
+		$result = $db->query_first("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir_path`, `pd`.`subcanemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd` WHERE `d`.`customerid`='" . (int)$userinfo['customerid'] . "' AND `d`.`id`='" . (int)$id . "' AND ((`d`.`parentdomainid`!='0' AND `pd`.`id`=`d`.`parentdomainid`) OR (`d`.`parentdomainid`='0' AND `pd`.`id`=`d`.`id`)) AND `d`.`caneditdomain`='1'");
 		$alias_check = $db->query_first('SELECT COUNT(`id`) AS count FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . (int)$result['id'] . '\'');
 		$alias_check = $alias_check['count'];
 		$_doredirect = false;
+
+		
 
 		if(isset($result['customerid'])
 		   && $result['customerid'] == $userinfo['customerid'])
@@ -545,9 +548,10 @@ elseif($page == 'domains')
 			else
 			{
 				$result['domain'] = $idna_convert->decode($result['domain']);
+  
 				$domains = makeoption($lng['domains']['noaliasdomain'], 0, $result['aliasdomain'], true);
 				// also check ip/port combination to be the same, #176
-				$result_domains = $db->query("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `d`.`aliasdomain` IS NULL AND `d`.`id`<>'" . (int)$result['id'] . "' AND `c`.`standardsubdomain`<>`d`.`id` AND `d`.`customerid`='" . (int)$userinfo['customerid'] . "' AND `c`.`customerid`=`d`.`customerid` AND `d`.`ipandport` = '".(int)$result['ipandport']."' ORDER BY `d`.`domain` ASC");
+				$result_domains = $db->query("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d` , `" . TABLE_PANEL_CUSTOMERS . "` `c` , `".TABLE_DOMAINTOIP."` `dip` WHERE `d`.`aliasdomain` IS NULL AND `d`.`id` <> '".(int)$result['id']."' AND `c`.`standardsubdomain` <> `d`.`id` AND `d`.`customerid` = '" . (int)$userinfo['customerid'] . "' AND `c`.`customerid` = `d`.`customerid` AND `d`.`id` = `dip`.`id_domain` AND `dip`.`id_ipandports` IN (SELECT `id_ipandports` FROM `".TABLE_DOMAINTOIP."` WHERE `id_domain` = '".(int)$result['id']."') GROUP BY `d`.`domain` ORDER BY `d`.`domain` ASC");
 
 				while($row_domain = $db->fetch_array($result_domains))
 				{
@@ -592,11 +596,26 @@ elseif($page == 'domains')
 				*/
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true);
 
-				$result_ipandport = $db->query_first("SELECT `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id`='".(int)$result['ipandport']."'");
+				$resultips = $db->query("SELECT `p`.`ip` AS `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` `p` LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON ( `dip`.`id_ipandports` = `p`.`id` ) WHERE `dip`.`id_domain` = '".(int)$result['id']."' GROUP BY `p`.`ip`");
+				$result_ipandport['ip'] = '';
+				while ($rowip = $db->fetch_array($resultips))
+					  {
+						  if(filter_var($rowip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+						  {
+							  $result_ipandport['ip'] .= '[' . $rowip['ip'] . ']' . "&nbsp;&nbsp;\n";
+						  }
+						  else
+						  {
+							  $result_ipandport['ip'] .= $rowip['ip'] . "&nbsp;&nbsp;\n";
+						  }
+					  }
+
+
 				if(filter_var($result_ipandport['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
 				{
 					$result_ipandport['ip'] = '[' . $result_ipandport['ip'] . ']';
 				}
+
 				$domainip = $result_ipandport['ip'];
 				$result = htmlentities_array($result);
 

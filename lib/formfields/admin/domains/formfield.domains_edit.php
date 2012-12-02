@@ -98,18 +98,16 @@ return array(
 					),
 					'ipandport' => array(
 						'label' => 'IP/Port',
-						'type' => 'select',
-						'select_var' => $ipsandports,
-						'mandatory' => true,
-					),
-					'ssl' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL',
 						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array($result['ssl'])
+						'values' => $ipsandports,
+						'value' => $usedips,
+						'mandatory' => true
+					),
+					'ssl_ipandport' => array(
+						'label' => 'IP/Port (SSL)',
+						'type' => 'checkbox',
+						'values' => $ssl_ipsandports,
+						'value' => $usedips
 					),
 					'ssl_redirect' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
@@ -119,12 +117,6 @@ return array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')
 									),
 						'value' => array($result['ssl_redirect'])
-					),
-					'ssl_ipandport' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL IP/Port',
-						'type' => 'select',
-						'select_var' => $ssl_ipsandports
 					),
 					'no_ssl_available_info' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports == '' ? true : false) : false),
@@ -214,7 +206,7 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['nameserversettings'],
 				'image' => 'icons/domain_edit.png',
-				'visible' => ($system['system']['bind_enable'] == '1' && $userinfo['change_serversettings'] == '1' ? true : false),
+				'visible' => ($settings['system']['bind_enable'] == '1' && $userinfo['change_serversettings'] == '1' ? true : false),
 				'fields' => array(
 					'isbinddomain' => array(
 						'label' => 'Nameserver',
