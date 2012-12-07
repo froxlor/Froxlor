@@ -1980,6 +1980,9 @@ if(isFroxlorVersion('0.9.28-svn4')) {
 	// Catchall functionality (enabled by default) see #1114
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('catchall', 'catchall_enabled', '1');");
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'stats_enable', '1')");
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'default_diroptions', 'All')");
+	$db->query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `diroptions` VARCHAR( 255 ) NOT NULL DEFAULT 'Default' AFTER `ipandport`");
+
 	lastStepStatus(0);
 
 	updateToVersion('0.9.28-svn5');

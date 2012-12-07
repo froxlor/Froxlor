@@ -1655,3 +1655,8 @@ $lng['serversettings']['catchall_enabled']['description']  = 'Möchten Sie Ihren
 
 $lng['serversettings']['statsenable']['title'] = 'Statistik aktivieren';
 $lng['serversettings']['statsenable']['description'] = 'Hier k&ouml;nnen Sie die Web-Statistiken global aktivieren bzw. deaktivieren.';
+
+$lng['serversettings']['default_diroptions']['title'] = 'Apache2 Standard Directory-Options';
+$lng['serversettings']['default_diroptions']['description'] = 'Wählen Sie hier die gewünschten <a target="blank" href="http://httpd.apache.org/docs/2.2/mod/core.html#options">Directory-Options</a> welche per default gesetzt sind.</br>Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt';
+
+$lng['domain']['diroptions'] = 'Wählen Sie hier die gewünschten <a target="blank" href="http://httpd.apache.org/docs/2.2/mod/core.html#options">Directory-Options</a> welche für diese Domain benutzt werden sollen.</br> Diese ersetzen die Globalen Directory-Options </br>Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt';

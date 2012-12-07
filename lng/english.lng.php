@@ -1930,3 +1930,8 @@ $lng['serversettings']['catchall_enabled']['description']  = 'Do you want to pro
 
 $lng['serversettings']['statsenable']['title'] = 'Enable Statistics';
 $lng['serversettings']['statsenable']['description'] = 'Here the Web-Statistics can be enabled and disabled globaly.';
+
+$lng['serversettings']['default_diroptions']['title'] = 'Apache2 default Directory-Options';
+$lng['serversettings']['default_diroptions']['description'] = 'Specify the default <a target="blank" href="http://httpd.apache.org/docs/2.2/mod/core.html#options">directory-options</a> which will be added to all vhosts.</br>To select multiple types, hold down CTRL while selecting';
+
+$lng['domain']['diroptions'] = 'Specify the <a target="blank" href="http://httpd.apache.org/docs/2.2/mod/core.html#options">directory-options</a> which will be used by this domain.</br>These settings will overwrite the global directory-options</br>To select multiple types, hold down CTRL while selecting';
