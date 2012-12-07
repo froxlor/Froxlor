@@ -1928,3 +1928,5 @@ $lng['error']['featureisdisabled'] = 'Feature %s is disabled. Please contact you
 $lng['serversettings']['catchall_enabled']['title']  = 'Use Catchall';
 $lng['serversettings']['catchall_enabled']['description']  = 'Do you want to provide your customers the catchall-feature?';
 
+$lng['serversettings']['statsenable']['title'] = 'Enable Statistics';
+$lng['serversettings']['statsenable']['description'] = 'Here the Web-Statistics can be enabled and disabled globaly.';

@@ -453,6 +453,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'default_vhostconf', ''),
 	('system', 'mail_quota_enabled', '0'),
 	('system', 'mail_quota', '100'),
+	('system', 'stats_enable', '1'),
 	('system', 'webalizer_enabled', '1'),
 	('system', 'awstats_enabled', '0'),
 	('system', 'httpuser', 'www-data'),

@@ -1979,7 +1979,7 @@ if(isFroxlorVersion('0.9.28-svn4')) {
 
 	// Catchall functionality (enabled by default) see #1114
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('catchall', 'catchall_enabled', '1');");
-
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'stats_enable', '1')");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.28-svn5');

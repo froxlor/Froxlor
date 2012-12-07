@@ -1653,3 +1653,5 @@ $lng['error']['featureisdisabled'] = 'Die Funktion %s wurde deaktiviert. Kontakt
 $lng['serversettings']['catchall_enabled']['title']  = 'Catchall verwenden';
 $lng['serversettings']['catchall_enabled']['description']  = 'Möchten Sie Ihren Kunden die Funktion Catchall zur Verfügung stellen?';
 
+$lng['serversettings']['statsenable']['title'] = 'Statistik aktivieren';
+$lng['serversettings']['statsenable']['description'] = 'Hier k&ouml;nnen Sie die Web-Statistiken global aktivieren bzw. deaktivieren.';

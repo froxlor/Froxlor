@@ -479,7 +479,9 @@ class lighttpd
 					$vhost_content.= $this->create_htaccess($domain);
 					$vhost_content.= $this->create_pathOptions($domain);
 					$vhost_content.= $this->composePhpOptions($domain);
-					$vhost_content.= $this->getStats($domain);
+					if ($settings['system']['stats_enable']) {
+						$vhost_content.= $this->getStats($domain);
+					}
 					$vhost_content.= $this->getSslSettings($domain, $ssl_vhost);
 				}
 				$vhost_content.= $this->getLogFiles($domain);

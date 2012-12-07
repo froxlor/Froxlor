@@ -844,7 +844,9 @@ class apache
 			$vhost_content.= $this->getWebroot($domain);
 			if ($this->_deactivated == false) {
 				$vhost_content.= $this->composePhpOptions($domain,$ssl_vhost);
-				$vhost_content.= $this->getStats($domain);
+				if ($settings['system']['stats_enable']) {
+					$vhost_content.= $this->getStats($domain);
+				}
 			}
 			$vhost_content.= $this->getLogfiles($domain);
 		}
