@@ -123,6 +123,8 @@ class htmlform
 				return self::_textArea($fieldname, $data); break;
 			case 'checkbox':
 				return self::_checkbox($fieldname, $data); break;
+			case 'option':
+				return self::_option($fieldname, $data); break;
 		}
 	}
 
@@ -286,6 +288,38 @@ class htmlform
 			$output .= '<label><input type="checkbox" name="'.$fieldname.$isArray.'" value="'.$val['value'].'" '.$isChecked.'/>'.$key.'</label>';
 		}
 		
+		return $output;
+	}
+
+	private static function _option($fieldname = '', $data = array())
+	{
+		// add support to save reloaded forms
+		if (isset($data['selected'])) {
+			$selected = explode("," , $data['selected']);
+		} elseif (isset($_SESSION['requestData'][$fieldname])) {
+			$selected = explode("," , $_SESSION['requestData'][$fieldname]);
+		} else {
+			$selected = '';
+		}
+
+		$output = '<select ';
+
+		if (isset($data['option_mode']) && $data['option_mode']=='multiple') {
+			$output .= 'multiple="multiple" ';
+		}
+		if (isset($data['size'])) {
+			$output .= 'size="'.$data['size'].'" ';
+		} else {
+			$output .= 'size="5" ';
+		}
+
+		$output .= 'id="'.$fieldname.'" name="'.$fieldname.'[]">';
+
+		foreach($data['option_options'] as $fieldid => $fielddata ) {
+			$output .= makeoption($fieldid , $fielddata, $selected );
+		}
+		$output .= 	'</select>';
+
 		return $output;
 	}
 	
