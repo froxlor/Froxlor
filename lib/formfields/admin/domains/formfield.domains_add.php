@@ -93,7 +93,7 @@ return array(
 						'size' => '6',
 						'option_mode' => 'multiple',
 						'option_options' => array('Default' => 'Default', 'None' => 'None', 'All' => 'All', 'FollowSymLinks' => 'FollowSymLinks', 'Indexes' => 'Indexes', 'SymLinksIfOwnerMatch' => 'SymLinksIfOwnerMatch'),
-						'selected' => 'default'
+						'selected' => 'Default'
 					),
 					'ipandport' => array(
 						'label' => 'IP/Port',
