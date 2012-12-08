@@ -241,6 +241,10 @@ if($page == 'domains'
 				if(isset($_POST['email_only']))
 					$email_only = intval($_POST['email_only']);
 
+				$iswildcarddomain = 0;
+				if(isset($_POST['iswildcarddomain']))
+					$iswildcarddomain = intval($_POST['iswildcarddomain']);
+
 				$wwwserveralias = 0;
 				if(isset($_POST['wwwserveralias']))
 					$wwwserveralias = intval($_POST['wwwserveralias']);
@@ -278,14 +282,18 @@ if($page == 'domains'
 				}
 
 				$documentroot = $customer['documentroot'];
+				$diroptions = 'Default';
 				$registration_date = trim($_POST['registration_date']);
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
 				if($userinfo['change_serversettings'] == '1')
 				{
 					$isbinddomain = intval($_POST['isbinddomain']);
-					$caneditdomain = isset($_POST['caneditdomain']) ? 1 : 0;
 					$zonefile = validate($_POST['zonefile'], 'zonefile');
+
+					$caneditdomain = 0;
+					if(isset($_POST['caneditdomain']))
+						$caneditdomain = intval($_POST['caneditdomain']);
 
 					if(isset($_POST['dkim']))
 					{
@@ -312,6 +320,15 @@ if($page == 'domains'
 							$documentroot = $_POST['documentroot'];
 						}
 					}
+					// Check domain_diroptions for usefull sets
+					if (is_array($_POST['diroptions']) && in_array('Default' , $_POST['diroptions']))
+						$_POST['diroptions'] = 'Default';
+					if (is_array($_POST['diroptions']) && in_array('None' , $_POST['diroptions']))
+						$_POST['diroptions'] = 'None';
+					if (is_array($_POST['diroptions']) && in_array('All' , $_POST['diroptions']))
+						$_POST['diroptions'] = 'All';
+					$diroptions = validate(is_array($_POST['diroptions']) ? implode(',' , $_POST['diroptions']) : $_POST['diroptions'], 'diroptions');
+
 				}
 				else
 				{
@@ -525,11 +542,13 @@ if($page == 'domains'
 						'customerid' => $customerid,
 						'adminid' => $adminid,
 						'documentroot' => $documentroot,
+						'diroptions' => $diroptions,
 						'alias' => $aliasdomain,
 						'isbinddomain' => $isbinddomain,
 						'isemaildomain' => $isemaildomain,
 						'email_only' => $email_only,
 						'subcanemaildomain' => $subcanemaildomain,
+						'iswildcarddomain' => $iswildcarddomain,
 						'caneditdomain' => $caneditdomain,
 						'zonefile' => $zonefile,
 						'dkim' => $dkim,
@@ -570,7 +589,7 @@ if($page == 'domains'
 						$question_nr++;
 					}
 
-					$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` (`domain`, `customerid`, `adminid`, `documentroot`, `ipandport`,`aliasdomain`, `zonefile`, `dkim`, `wwwserveralias`, `isbinddomain`, `isemaildomain`, `email_only`, `subcanemaildomain`, `caneditdomain`, `openbasedir`, `safemode`,`speciallogfile`, `specialsettings`, `ssl`, `ssl_redirect`, `ssl_ipandport`, `add_date`, `registration_date`, `phpsettingid`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `ismainbutsubto`) VALUES ('" . $db->escape($domain) . "', '" . (int)$customerid . "', '" . (int)$adminid . "', '" . $db->escape($documentroot) . "', '" . $db->escape($ipandport) . "', " . (($aliasdomain != 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", '" . $db->escape($zonefile) . "', '" . $db->escape($dkim) . "', '" . $db->escape($wwwserveralias) . "', '" . $db->escape($isbinddomain) . "', '" . $db->escape($isemaildomain) . "', '" . $db->escape($email_only) . "', '" . $db->escape($subcanemaildomain) . "', '" . $db->escape($caneditdomain) . "', '" . $db->escape($openbasedir) . "', '" . $db->escape($safemode) . "', '" . $db->escape($speciallogfile) . "', '" . $db->escape($specialsettings) . "', '" . $ssl . "', '" . $ssl_redirect . "' , '" . $ssl_ipandport . "', '" . $db->escape(time()) . "', '" . $db->escape($registration_date) . "', '" . (int)$phpsettingid . "', '" . (int)$mod_fcgid_starter . "', '" . (int)$mod_fcgid_maxrequests . "', '".(int)$issubof."')");
+					$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` (`domain`, `customerid`, `adminid`, `documentroot`, `diroptions` , `ipandport`,`aliasdomain`, `zonefile`, `dkim`, `iswildcarddomain`, `wwwserveralias`, `isbinddomain`, `isemaildomain`, `email_only`, `subcanemaildomain`, `caneditdomain`, `openbasedir`, `safemode`,`speciallogfile`, `specialsettings`, `ssl`, `ssl_redirect`, `ssl_ipandport`, `add_date`, `registration_date`, `phpsettingid`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `ismainbutsubto`) VALUES ('" . $db->escape($domain) . "', '" . (int)$customerid . "', '" . (int)$adminid . "', '" . $db->escape($documentroot) . "', '" . $db->escape($diroptions) . "', '" . $db->escape($ipandport) . "', " . (($aliasdomain != 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", '" . $db->escape($zonefile) . "', '" . $db->escape($dkim) . "', '" . $db->escape($iswildcarddomain) . "', '" . $db->escape($wwwserveralias) . "', '" . $db->escape($isbinddomain) . "', '" . $db->escape($isemaildomain) . "', '" . $db->escape($email_only) . "', '" . $db->escape($subcanemaildomain) . "', '" . $db->escape($caneditdomain) . "', '" . $db->escape($openbasedir) . "', '" . $db->escape($safemode) . "', '" . $db->escape($speciallogfile) . "', '" . $db->escape($specialsettings) . "', '" . $ssl . "', '" . $ssl_redirect . "' , '" . $ssl_ipandport . "', '" . $db->escape(time()) . "', '" . $db->escape($registration_date) . "', '" . (int)$phpsettingid . "', '" . (int)$mod_fcgid_starter . "', '" . (int)$mod_fcgid_maxrequests . "', '".(int)$issubof."')");
 					$domainid = $db->insert_id();
 					$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` + 1 WHERE `adminid` = '" . (int)$adminid . "'");
 					$log->logAction(ADM_ACTION, LOG_INFO, "added domain '" . $domain . "'");
@@ -795,9 +814,16 @@ if($page == 'domains'
 				$aliasdomain = intval($_POST['alias']);
 				$issubof = intval($_POST['issubof']);
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
-				$caneditdomain = isset($_POST['caneditdomain']) ? 1 : 0;
 				$registration_date = trim($_POST['registration_date']);
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
+
+				$iswildcarddomain = 0;
+				if(isset($_POST['iswildcarddomain']))
+					$iswildcarddomain = intval($_POST['iswildcarddomain']);
+
+				$caneditdomain = 0;
+				if(isset($_POST['caneditdomain']))
+					$caneditdomain = intval($_POST['caneditdomain']);
 
 				$isemaildomain = 0;
 				if(isset($_POST['isemaildomain']))
@@ -833,6 +859,15 @@ if($page == 'domains'
 					$specialsettings = validate(str_replace("\r\n", "\n", $_POST['specialsettings']), 'specialsettings', '/^[^\0]*$/');
 					$documentroot = validate($_POST['documentroot'], 'documentroot');
 
+					// Check domain_diroptions for usefull sets
+					if (is_array($_POST['diroptions']) && in_array('Default' , $_POST['diroptions']))
+						$_POST['diroptions'] = 'Default';
+					if (is_array($_POST['diroptions']) && in_array('None' , $_POST['diroptions']))
+						$_POST['diroptions'] = 'None';
+					if (is_array($_POST['diroptions']) && in_array('All' , $_POST['diroptions']))
+						$_POST['diroptions'] = 'All';
+					$diroptions = validate(is_array($_POST['diroptions']) ? implode(',' , $_POST['diroptions']) : $_POST['diroptions'], 'diroptions');
+
 					if($documentroot == '')
 					{
 						$documentroot = $customer['documentroot'];
@@ -851,6 +886,7 @@ if($page == 'domains'
 					$dkim = $result['dkim'];
 					$specialsettings = $result['specialsettings'];
 					$documentroot = $result['documentroot'];
+					$diroptions = $result['diroptions'];
 				}
 
 				if($userinfo['caneditphpsettings'] == '1'
@@ -984,6 +1020,11 @@ if($page == 'domains'
 					$dkim = '0';
 				}
 
+				if($iswildcarddomain != '1')
+				{
+					$iswildcarddomain = '0';
+				}
+
 				if($caneditdomain != '1')
 				{
 					$caneditdomain = '0';
@@ -1016,11 +1057,13 @@ if($page == 'domains'
 					'customerid' => $customerid,
 					'adminid' => $adminid,
 					'documentroot' => $documentroot,
+					'diroptions' => $diroptions,
 					'alias' => $aliasdomain,
 					'isbinddomain' => $isbinddomain,
 					'isemaildomain' => $isemaildomain,
 					'email_only' => $email_only,
 					'subcanemaildomain' => $subcanemaildomain,
+					'iswildcarddomain' => $iswildcarddomain,
 					'caneditdomain' => $caneditdomain,
 					'zonefile' => $zonefile,
 					'dkim' => $dkim,
@@ -1064,6 +1107,7 @@ if($page == 'domains'
 				   || $ssl != $result['ssl']
 				   || $ssl_redirect != $result['ssl_redirect']
 				   || $ssl_ipandport != $result['ssl_ipandport']
+				   || $diroptions != $result['diroptions']
 				   || $wwwserveralias != $result['wwwserveralias']
 				   || $openbasedir != $result['openbasedir']
 				   || $safemode != $result['safemode']
@@ -1138,7 +1182,7 @@ if($page == 'domains'
 					$log->logAction(ADM_ACTION, LOG_INFO, "removed specialsettings on all subdomains of domain #" . $id);
 				}
 
-				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `documentroot`='" . $db->escape($documentroot) . "', `ipandport`='" . $db->escape($ipandport) . "', `ssl`='" . (int)$ssl . "', `ssl_redirect`='" . (int)$ssl_redirect . "', `ssl_ipandport`='" . (int)$ssl_ipandport . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", `isbinddomain`='" . $db->escape($isbinddomain) . "', `isemaildomain`='" . $db->escape($isemaildomain) . "', `email_only`='" . $db->escape($email_only) . "', `subcanemaildomain`='" . $db->escape($subcanemaildomain) . "', `dkim`='" . $db->escape($dkim) . "', `caneditdomain`='" . $db->escape($caneditdomain) . "', `zonefile`='" . $db->escape($zonefile) . "', `wwwserveralias`='" . $db->escape($wwwserveralias) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `speciallogfile`='" . $db->escape($speciallogfile) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "', `specialsettings`='" . $db->escape($specialsettings) . "', `registration_date`='" . $db->escape($registration_date) . "', `ismainbutsubto`='" . (int)$issubof . "' WHERE `id`='" . (int)$id . "'");
+				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `documentroot`='" . $db->escape($documentroot) . "', `diroptions`='" . $db->escape($diroptions) . "', `ipandport`='" . $db->escape($ipandport) . "', `ssl`='" . (int)$ssl . "', `ssl_redirect`='" . (int)$ssl_redirect . "', `ssl_ipandport`='" . (int)$ssl_ipandport . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", `isbinddomain`='" . $db->escape($isbinddomain) . "', `isemaildomain`='" . $db->escape($isemaildomain) . "', `email_only`='" . $db->escape($email_only) . "', `subcanemaildomain`='" . $db->escape($subcanemaildomain) . "', `dkim`='" . $db->escape($dkim) . "', `iswildcarddomain`='" . $db->escape($iswildcarddomain) . "', `caneditdomain`='" . $db->escape($caneditdomain) . "', `zonefile`='" . $db->escape($zonefile) . "', `wwwserveralias`='" . $db->escape($wwwserveralias) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `speciallogfile`='" . $db->escape($speciallogfile) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "', `specialsettings`='" . $db->escape($specialsettings) . "', `registration_date`='" . $db->escape($registration_date) . "', `ismainbutsubto`='" . (int)$issubof . "' WHERE `id`='" . (int)$id . "'");
 				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `ipandport`='" . $db->escape($ipandport) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `safemode`='" . $db->escape($safemode) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "'" . $upd_specialsettings . $updatechildren . " WHERE `parentdomainid`='" . (int)$id . "'");
 				$log->logAction(ADM_ACTION, LOG_INFO, "edited domain #" . $id);
 				$redirect_props = Array(

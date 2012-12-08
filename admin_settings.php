@@ -70,6 +70,13 @@ if(($page == 'settings' || $page == 'overview')
 			standard_error($lng['error']['session_timeout'], $lng['error']['session_timeout_desc']);
 		}
 
+		// Check system_default_diroptions for usefull sets
+		if (is_array($_POST['system_default_diroptions']) && in_array('None' , $_POST['system_default_diroptions']))
+			$_POST['system_default_diroptions'] = 'None';
+
+		if (is_array($_POST['system_default_diroptions']) && in_array('All' , $_POST['system_default_diroptions']))
+			$_POST['system_default_diroptions'] = 'All';
+
 		if(processFormEx(
 			$settings_data,
 			$_POST,

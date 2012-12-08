@@ -104,6 +104,17 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					),
+				'system_default_diroptions' => array(
+					'visible' => ($settings['system']['webserver'] == 'apache2' ? true : false),
+					'label' => $lng['serversettings']['default_diroptions'],
+					'settinggroup' => 'system',
+					'varname' => 'default_diroptions',
+					'type' => 'option',
+					'default' => 'All',
+					'option_mode' => 'multiple',
+					'option_options' => array('None' => 'None', 'All' => 'All', 'FollowSymLinks' => 'FollowSymLinks', 'Indexes' => 'Indexes', 'SymLinksIfOwnerMatch' => 'SymLinksIfOwnerMatch'),
+					'save_method' => 'storeSettingField',
+				),
 				'system_default_vhostconf' => array(
 					'label' => $lng['serversettings']['default_vhostconf'],
 					'settinggroup' => 'system',

@@ -22,6 +22,15 @@ return array(
 		'statistics' => array(
 			'title' => $lng['admin']['statisticsettings'],
 			'fields' => array(
+				'statistic_enable' => array(
+						'label' => $lng['serversettings']['statsenable'],
+						'settinggroup' => 'system',
+						'varname' => 'stats_enable',
+						'type' => 'bool',
+						'default' => true,
+						'save_method' => 'storeSettingField',
+						'overview_option' => true
+				),
 				'system_webalizer_quiet' => array(
 					'label' => $lng['serversettings']['webalizer_quiet'],
 					'settinggroup' => 'system',

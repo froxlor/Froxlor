@@ -339,7 +339,7 @@ $lng['serversettings']['session_timeout']['description'] = 'How long does a user
 $lng['serversettings']['accountprefix']['title'] = 'Customer prefix';
 $lng['serversettings']['accountprefix']['description'] = 'Which prefix should customer accounts have?';
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL Prefix';
-$lng['serversettings']['mysqlprefix']['description'] = 'Which prefix should MySQL accounts have?';
+$lng['serversettings']['mysqlprefix']['description'] = 'Which prefix should MySQL accounts have?</br>Use "RANDOM" as vlaue to get a 3-digit random prefix';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP Prefix';
 $lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Home directory';
@@ -1928,3 +1928,10 @@ $lng['error']['featureisdisabled'] = 'Feature %s is disabled. Please contact you
 $lng['serversettings']['catchall_enabled']['title']  = 'Use Catchall';
 $lng['serversettings']['catchall_enabled']['description']  = 'Do you want to provide your customers the catchall-feature?';
 
+$lng['serversettings']['statsenable']['title'] = 'Enable Statistics';
+$lng['serversettings']['statsenable']['description'] = 'Here the Web-Statistics can be enabled and disabled globaly.';
+
+$lng['serversettings']['default_diroptions']['title'] = 'Apache2 default Directory-Options';
+$lng['serversettings']['default_diroptions']['description'] = 'Specify the default <a target="blank" href="http://httpd.apache.org/docs/2.2/mod/core.html#options">directory-options</a> which will be added to all vhosts.</br>To select multiple types, hold down CTRL while selecting';
+
+$lng['domain']['diroptions'] = 'Specify the <a target="blank" href="http://httpd.apache.org/docs/2.2/mod/core.html#options">directory-options</a> which will be used by this domain.</br>These settings will overwrite the global directory-options</br>To select multiple types, hold down CTRL while selecting';

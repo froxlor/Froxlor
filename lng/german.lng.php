@@ -339,7 +339,7 @@ $lng['serversettings']['session_timeout']['description'] = 'Wie lange muss ein B
 $lng['serversettings']['accountprefix']['title'] = 'Kundenprefix';
 $lng['serversettings']['accountprefix']['description'] = 'Welchen Prefix sollen die Kundenaccounts haben?';
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL-Prefix';
-$lng['serversettings']['mysqlprefix']['description'] = 'Welchen Prefix sollen die MySQL-Benutzerkonten haben?';
+$lng['serversettings']['mysqlprefix']['description'] = 'Welchen Prefix sollen die MySQL-Benutzerkonten haben?</br>Mit "RANDOM" als Wert wird ein 3-Stelliger Zufallswert als Prefix genutzt';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP-Prefix';
 $lng['serversettings']['ftpprefix']['description'] = 'Welchen Prefix sollen die FTP-Benutzerkonten haben?';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Heimatverzeichnis';
@@ -1653,3 +1653,10 @@ $lng['error']['featureisdisabled'] = 'Die Funktion %s wurde deaktiviert. Kontakt
 $lng['serversettings']['catchall_enabled']['title']  = 'Catchall verwenden';
 $lng['serversettings']['catchall_enabled']['description']  = 'Möchten Sie Ihren Kunden die Funktion Catchall zur Verfügung stellen?';
 
+$lng['serversettings']['statsenable']['title'] = 'Statistik aktivieren';
+$lng['serversettings']['statsenable']['description'] = 'Hier k&ouml;nnen Sie die Web-Statistiken global aktivieren bzw. deaktivieren.';
+
+$lng['serversettings']['default_diroptions']['title'] = 'Apache2 Standard Directory-Options';
+$lng['serversettings']['default_diroptions']['description'] = 'Wählen Sie hier die gewünschten <a target="blank" href="http://httpd.apache.org/docs/2.2/mod/core.html#options">Directory-Options</a> welche per default gesetzt sind.</br>Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt';
+
+$lng['domain']['diroptions'] = 'Wählen Sie hier die gewünschten <a target="blank" href="http://httpd.apache.org/docs/2.2/mod/core.html#options">Directory-Options</a> welche für diese Domain benutzt werden sollen.</br> Diese ersetzen die Globalen Directory-Options </br>Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt';

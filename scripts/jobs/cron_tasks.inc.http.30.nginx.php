@@ -564,7 +564,9 @@ class nginx
 					{
 						case '/awstats/':
 						case '/webalizer/':
-							$path_options.= $this->getStats($domain,$single);
+							if ($settings['system']['stats_enable']) {
+								$path_options.= $this->getStats($domain,$single);
+							}
 							unset($htpasswds[$idx]);
 						break;
 						default:
