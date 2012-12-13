@@ -350,13 +350,15 @@ milter_default_action = accept" >> /etc/postfix/main.cf',
 					'proftpd' => Array(
 						'label' => 'ProFTPd',
 						'commands_1' => Array(
-							'emerge -av proftpd'
+							'echo "net-ftp/proftpd mysql" >> /etc/portage/package.use',
+							'emerge -av proftpd',
+							'touch /etc/proftpd/proftpd.conf',
+							'useradd froxlorftpd'
 						),
 						'files' => Array(
 							'etc_proftpd_proftpd.conf' => '/etc/proftpd/proftpd.conf'
 						),
 						'commands_2' => Array(
-							'touch /etc/proftpd/proftpd.conf',
 							'chown root:0 /etc/proftpd/proftpd.conf',
 							'chmod 0600 /etc/proftpd/proftpd.conf',
 							'rc-update add proftpd default'
