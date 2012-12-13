@@ -303,7 +303,7 @@ milter_default_action = accept" >> /etc/postfix/main.cf',
 					'dovecot' => Array(
 						'label' => 'Dovecot 1',
 						'commands_1' => Array(
-							'echo "net-mail/dovecot mysql" >> /etc/portage/package.use'
+							'echo "net-mail/dovecot mysql" >> /etc/portage/package.use',
 							'emerge -av dovecot',
 							'mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.conf.gentoo',
 							'mv /etc/dovecot/dovecot-sql.conf /etc/dovecot/dovecot-sql.conf.gentoo',
@@ -325,7 +325,7 @@ milter_default_action = accept" >> /etc/postfix/main.cf',
 					'dovecot2' => Array(
 						'label' => 'Dovecot 2',
 						'commands_1' => Array(
-							'echo "net-mail/dovecot mysql" >> /etc/portage/package.use'
+							'echo "net-mail/dovecot mysql" >> /etc/portage/package.use',
 							'emerge -av dovecot',
 							'mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.conf.gentoo',
 							'mv /etc/dovecot/dovecot-sql.conf /etc/dovecot/dovecot-sql.conf.gentoo',
