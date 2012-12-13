@@ -74,6 +74,12 @@ $lng['install']['httpuser'] = 'HTTP Username';
 $lng['install']['httpgroup'] = 'HTTP Gruppenname';
 
 /**
+ * ADDED IN 1.2.19-svn7
+ */
+
+$lng['install']['servername_should_be_fqdn'] = 'Der Servername sollte eine FQDN sein und keine IP Adresse';
+
+/**
  * Renamed in 1.2.19-svn40
  */
 

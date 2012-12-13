@@ -781,7 +781,6 @@ $lng['message']['success'] = 'Bericht verzonden naar ontvagers %s';
 $lng['message']['noreceipients'] = 'Er is geen email verstuurd omdat er geen ontvangers in de database zijn';
 $lng['admin']['sslsettings'] = 'Instellingen voor SSL';
 $lng['cronjobs']['notyetrun'] = 'Nog niet uitgevoerd';
-$lng['install']['servername_should_be_fqdn'] = 'De servernaam dient een FQDN te zijn en geen IP-adres';
 $lng['serversettings']['default_vhostconf']['title'] = 'Standaard vhost-instellingen';
 $lng['serversettings']['default_vhostconf']['description'] = 'De inhoud van dit veld wordt rechtstreeks in de vhost-container geplaatst. N.B.: Deze code wordt niet op fouten gecontroleerd. In geval van fouten kan het zijn dat de webserver niet meer start!';
 $lng['error']['invalidip'] = '%s is een ongeldig IP-adres';

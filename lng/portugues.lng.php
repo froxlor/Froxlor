@@ -694,7 +694,6 @@ $lng['message']['success'] = 'Mensagens enviadas para %s destinatários com suce
 $lng['message']['noreceipients'] = 'Email não enviado porque não tem destinatário no banco de dados';
 $lng['admin']['sslsettings'] = 'Configuração de SSL';
 $lng['cronjobs']['notyetrun'] = 'Ainda não está rodando';
-$lng['install']['servername_should_be_fqdn'] = 'O nome do servidor deve ser a FQDN e não um endereço de IP';
 $lng['serversettings']['default_vhostconf']['title'] = 'Configuração de Vhost padrão';
 $lng['serversettings']['default_vhostconf']['description'] = 'O conteúdo deste campo será incluído a cada novo vhost criado. Atenção: O código será checado para algum erro. Se contiver erros, o apache pode não iniciar mais';
 $lng['emails']['quota'] = 'Quota';

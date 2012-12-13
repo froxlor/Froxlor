@@ -794,7 +794,6 @@ $lng['message']['success'] = 'Successfully sent message to %s recipients';
 $lng['message']['noreceipients'] = 'No e-mail has been sent because there are no recipients in the database';
 $lng['admin']['sslsettings'] = 'SSL settings';
 $lng['cronjobs']['notyetrun'] = 'Not yet run';
-$lng['install']['servername_should_be_fqdn'] = 'The servername should be a FQDN and not an IP address';
 $lng['serversettings']['default_vhostconf']['title'] = 'Default vHost-settings';
 $lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into the domain vHost container directly. Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['error']['invalidip'] = 'Invalid IP address: %s';
