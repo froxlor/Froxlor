@@ -439,6 +439,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'nameservers', ''),
 	('system', 'mxservers', ''),
 	('system', 'mod_log_sql', '0'),
+	('system', 'mpm_itk', '0'),
 	('system', 'mod_fcgid', '0'),
 	('system', 'apacheconf_vhost', '/etc/apache/vhosts.conf'),
 	('system', 'apacheconf_diroptions', '/etc/apache/diroptions.conf'),

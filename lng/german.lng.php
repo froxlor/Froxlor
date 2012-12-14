@@ -1652,4 +1652,7 @@ $lng['error']['operationnotpermitted'] = 'Diese Aktion ist nicht erlaubt!';
 $lng['error']['featureisdisabled'] = 'Die Funktion %s wurde deaktiviert. Kontaktieren Sie bitte Ihren Dienstleister.';
 $lng['serversettings']['catchall_enabled']['title']  = 'Catchall verwenden';
 $lng['serversettings']['catchall_enabled']['description']  = 'Möchten Sie Ihren Kunden die Funktion Catchall zur Verfügung stellen?';
+$lng['admin']['mpm_itk_settings'] = 'mpm_itk';
+$lng['serversettings']['mpm_itk']['title'] = 'mpm_itk nutzen';
+$lng['serversettings']['mpm_itk']['description'] = 'Hiermit werden alle Anfragen mit dem jeweiligen Benutzerkonto ausgeführt<br /><br /><b>Diese Einstellung benötigt eine spezielle Apache-Konfiguration</b>';
 

@@ -1927,4 +1927,7 @@ $lng['error']['operationnotpermitted'] = 'Operation not permitted!';
 $lng['error']['featureisdisabled'] = 'Feature %s is disabled. Please contact your service provider.';
 $lng['serversettings']['catchall_enabled']['title']  = 'Use Catchall';
 $lng['serversettings']['catchall_enabled']['description']  = 'Do you want to provide your customers the catchall-feature?';
+$lng['admin']['mpm_itk_settings'] = 'mpm_itk';
+$lng['serversettings']['mpm_itk']['title'] = 'Enable mpm_itk';
+$lng['serversettings']['mpm_itk']['description'] = 'Use this to process all requests with the corresponding user-account.<br /><br /><b>This needs a special configuration for Apache</b>';
 
