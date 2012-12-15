@@ -276,7 +276,7 @@ class apache
 
 					$php = new phpinterface($this->getDB(), $this->settings, $domain);
 					$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
-					if($this->settings['system']['mpm_itk'] == '1' ) {
+					if($this->settings['system']['mpm_itk'] == '1' ) {
 						$this->virtualhosts_data[$vhosts_filename].= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . $this->settings['phpfpm']['idle_timeout'] . "\n";
 					}else{				
 						$this->virtualhosts_data[$vhosts_filename].= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . 'fpm.external -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['system']['mod_fcgid_httpuser'] . ' -group ' . $this->settings['system']['mod_fcgid_httpuser'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
