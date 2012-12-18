@@ -284,8 +284,11 @@ if($page == 'domains'
 				if($userinfo['change_serversettings'] == '1')
 				{
 					$isbinddomain = intval($_POST['isbinddomain']);
-					$caneditdomain = isset($_POST['caneditdomain']) ? 1 : 0;
 					$zonefile = validate($_POST['zonefile'], 'zonefile');
+
+					$caneditdomain = 0;
+					if(isset($_POST['caneditdomain']))
+						$caneditdomain = intval($_POST['caneditdomain']);
 
 					if(isset($_POST['dkim']))
 					{
@@ -795,9 +798,12 @@ if($page == 'domains'
 				$aliasdomain = intval($_POST['alias']);
 				$issubof = intval($_POST['issubof']);
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
-				$caneditdomain = isset($_POST['caneditdomain']) ? 1 : 0;
 				$registration_date = trim($_POST['registration_date']);
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
+
+				$caneditdomain = 0;
+				if(isset($_POST['caneditdomain']))
+					$caneditdomain = intval($_POST['caneditdomain']);
 
 				$isemaildomain = 0;
 				if(isset($_POST['isemaildomain']))
