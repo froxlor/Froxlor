@@ -96,6 +96,16 @@ return array(
 						'type' => 'text',
 						'value' => $result['documentroot']
 					),
+					'diroptions' => array(
+						'visible' => ($settings['system']['webserver'] == 'apache2' ? true : false),
+						'label' => 'Apache DirectoryOptions',
+						'desc' => $lng['domain']['diroptions'],
+						'type' => 'option',
+						'size' => '6',
+						'option_mode' => 'multiple',
+						'option_options' => array('Default' => 'Default', 'None' => 'None', 'All' => 'All', 'FollowSymLinks' => 'FollowSymLinks', 'Indexes' => 'Indexes', 'SymLinksIfOwnerMatch' => 'SymLinksIfOwnerMatch'),
+						'selected' => $result['diroptions']
+					),
 					'ipandport' => array(
 						'label' => 'IP/Port',
 						'type' => 'select',
