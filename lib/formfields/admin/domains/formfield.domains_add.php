@@ -121,6 +121,14 @@ return array(
 						'type' => 'label',
 						'value' => $lng['panel']['nosslipsavailable']
 					),
+					'iswildcarddomain' => array(
+							'label' => $lng['domains']['wildcarddomain'],
+							'type' => 'checkbox',
+							'values' => array(
+									array ('label' => $lng['panel']['yes'], 'value' => '1')
+							),
+							'value' => array($result['iswildcarddomain'])
+					),
 					'wwwserveralias' => array(
 						'label' => $lng['admin']['wwwserveralias'],
 						'type' => 'checkbox',
