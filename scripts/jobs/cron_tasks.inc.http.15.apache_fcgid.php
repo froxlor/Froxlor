@@ -30,6 +30,10 @@ class apache_fcgid extends apache
 	{
 		$php_options_text = '';
 
+		$diroptions = preg_replace( '/\,/' , ' ' , $this->settings['system']['default_diroptions']);
+		if (isset($domain['diroptions']) && $domain['diroptions'] != 'Default')
+			$diroptions = preg_replace( '/\,/' , ' ' , $domain['diroptions']);
+
 		if($domain['phpenabled'] == '1')
 		{
 			$php = new phpinterface($this->getDB(), $this->settings, $domain);
@@ -49,6 +53,7 @@ class apache_fcgid extends apache
 				$php_options_text.= '      Action php5-fastcgi /fastcgiphp' . "\n";
 				$php_options_text.= '      Options +ExecCGI' . "\n";
 				$php_options_text.= '    </FilesMatch>' . "\n";
+				$php_options_text.= '    Options ' . $diroptions . "\n";
 				$php_options_text.= '    Order allow,deny' . "\n";
 				$php_options_text.= '    allow from all' . "\n";
 				$php_options_text.= '  </Directory>' . "\n";
@@ -78,7 +83,8 @@ class apache_fcgid extends apache
 						$php_options_text.= '      FCGIWrapper ' . $php->getInterface()->getStarterFile() . ' .' . $file_extension . "\n";
 					}
 					$php_options_text.= '      Options +ExecCGI' . "\n";
-				        $php_options_text.= '    </FilesMatch>' . "\n";
+					$php_options_text.= '    </FilesMatch>' . "\n";
+					$php_options_text.= '    Options ' . $diroptions . "\n";
 					$php_options_text.= '    Order allow,deny' . "\n";
 					$php_options_text.= '    allow from all' . "\n";
 					$php_options_text.= '  </Directory>' . "\n";

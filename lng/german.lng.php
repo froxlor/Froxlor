@@ -1653,3 +1653,6 @@ $lng['error']['featureisdisabled'] = 'Die Funktion %s wurde deaktiviert. Kontakt
 $lng['serversettings']['catchall_enabled']['title']  = 'Catchall verwenden';
 $lng['serversettings']['catchall_enabled']['description']  = 'Möchten Sie Ihren Kunden die Funktion Catchall zur Verfügung stellen?';
 
+$lng['serversettings']['default_diroptions']['title'] = 'Apache2 Standard Directory-Options';
+$lng['serversettings']['default_diroptions']['description'] = 'Wählen Sie hier die gewünschten <a target="blank" href="http://httpd.apache.org/docs/2.2/mod/core.html#options">Directory-Options</a> welche per default gesetzt sind.</br>Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt';
+$lng['domain']['diroptions'] = 'Wählen Sie hier die gewünschten <a target="blank" href="http://httpd.apache.org/docs/2.2/mod/core.html#options">Directory-Options</a> welche für diese Domain benutzt werden sollen.</br> Diese ersetzen die Globalen Directory-Options </br>Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt';
