@@ -1054,6 +1054,7 @@ class nginx
 					if (is_array($known_phpfpm_files)
 						&& $phpfpm_filename != '.'
 						&& $phpfpm_filename != '..'
+						&& isset($known_phpfpm_files)
 						&& !in_array($phpfpm_filename, $known_phpfpm_files)
 						&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename))
 					) {
