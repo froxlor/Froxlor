@@ -248,7 +248,7 @@ elseif($page == 'domains')
 				}
 				else
 				{
-					$path = validate($_POST['path'], 'path');
+					$path = validatePath($_POST['path']);
 				}
 
 				if(!preg_match('/^https?\:\/\//', $path)
@@ -425,7 +425,7 @@ elseif($page == 'domains')
 				}
 				else
 				{
-					$path = validate($_POST['path'], 'path');
+					$path = validatePath($_POST['path']);
 				}
 
 				if(!preg_match('/^https?\:\/\//', $path)
