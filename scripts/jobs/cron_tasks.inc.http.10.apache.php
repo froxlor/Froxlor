@@ -143,22 +143,22 @@ class apache
 
 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 ' . $this->settings['defaultwebsrverrhandler']['err401'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err401']) . '"' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err403'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 ' . $this->settings['defaultwebsrverrhandler']['err403'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err403']) . '"' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err404'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 ' . $this->settings['defaultwebsrverrhandler']['err404'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err404']) . '"' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 ' . $this->settings['defaultwebsrverrhandler']['err500'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 "' . $this->escapeConfigParamter($this->settings['defaultwebsrverrhandler']['err500']) . '"' . "\n";
 			}
 
 		}
