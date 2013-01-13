@@ -49,7 +49,7 @@ class nginx
 	 */
 	private $_deactivated = false;
 
-	public function __construct($db, $logger, $debugHandler, $idnaConvert, $settings, $nginx_server=array())
+	public function __construct($db, $logger, $debugHandler, $idnaConvert, $settings, $nginx_server=array(), $known_vhostfilenames=array())
 	{
 		$this->db = $db;
 		$this->logger = $logger;
