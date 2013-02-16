@@ -36,14 +36,14 @@ class nginx_phpfpm extends nginx
 		{
 			$php = new phpinterface($this->getDB(), $this->settings, $domain);
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
-			
+
 			$php_options_text = "\t".'location ~ \.php$ {'."\n";
 			$php_options_text.= "\t\t".'try_files $uri =404;'."\n";
 			$php_options_text.= "\t\t".'fastcgi_split_path_info ^(.+\.php)(/.+)$;'."\n";
 			$php_options_text.= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
 			$php_options_text.= "\t\t".'fastcgi_index index.php;'."\n";
 			$php_options_text.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
-			$php_options_text.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
+			$php_options_text .= "\t\t" . 'include ' . $this->_pathOfNginx() . '/fastcgi_params;'."\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
 				$php_options_text.= "\t\t".'fastcgi_param HTTPS on;'."\n";
 			}
@@ -51,7 +51,7 @@ class nginx_phpfpm extends nginx
 
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
-			
+
 			// create php.ini
 			// @TODO make php-fpm support this
 			$php->getInterface()->createIniFile($phpconfig);
@@ -91,7 +91,7 @@ class nginx_phpfpm extends nginx
 			// all the files and folders have to belong to the local user
 			// now because we also use fcgid for our own vhost
 			safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
-						
+
 			// get php.ini for our own vhost
 			$php = new phpinterface($this->getDB(), $this->settings, $domain);
 
@@ -100,7 +100,7 @@ class nginx_phpfpm extends nginx
 
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
-			
+
 			// create php.ini
 			// @TODO make php-fpm support this
 			$php->getInterface()->createIniFile($phpconfig);
