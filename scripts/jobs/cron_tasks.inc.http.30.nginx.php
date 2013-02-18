@@ -1040,6 +1040,7 @@ class nginx
 		}
 		if($this->settings['phpfpm']['enabled'] == '1')
 		{
+			$known_phpfpm_files = null;
 			foreach($this->known_vhostfilenames as $vhostfilename){
 				$known_phpfpm_files[]=preg_replace('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_/', '', $vhostfilename);
 			}
@@ -1054,6 +1055,7 @@ class nginx
 					if (is_array($known_phpfpm_files)
 						&& $phpfpm_filename != '.'
 						&& $phpfpm_filename != '..'
+						&& is_array($phpfpm_filename)
 						&& !in_array($phpfpm_filename, $known_phpfpm_files)
 						&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename))
 					) {
