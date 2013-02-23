@@ -8,12 +8,13 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright		(c) the authors
- * @author			Froxlor team <team@froxlor.org> (2010-)
- * @contributor	byteworkshosting <info@byteworkshosting.net>
- * @license			GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @date				2013-02-16
- * @package			Cron
+ * @copyright			(c)2010- the authors
+ * @author				Froxlor team <team@froxlor.org>
+ * @contributor		byteworkshosting <info@byteworkshosting.net>
+ * @license				GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @version				0.9.27
+ * @date					2013-02-23
+ * @package				Cron
  *
  **/
 
@@ -100,28 +101,50 @@ class nginx {
 	}
 
 
-	public function reload()
-	{
-		fwrite( $this->debugHandler, '   nginx::reload: reloading nginx' . "\n" );
+	/**
+	 * @brief Reloads the Webserver (nginx + php|php-fpm)
+	 *
+	 * @return void
+	 **/
+	public function reload() {
+
+
+		# Checking for up-to-date php version
+		(string) $php_version = phpversion();
+
+		if ( (int) str_replace('.', null, $php_version) < 5411) {
+
+			# Logging depricated version
+			$this->logger->logAction( LOG_ERROR, LOG_WARNING, 'PHP '. $php_version .' is depricated!' );
+
+		}
+
+		# Clearing variable $php_version
+		unset($php_version);
+
+
+		# reloading nginx
+		fwrite( $this->debugHandler, "\t". 'nginx::reload: reloading nginx' . PHP_EOL );
 		$this->logger->logAction( CRON_ACTION, LOG_INFO, 'reloading nginx' );
 		safe_exec( $this->settings['system']['apachereload_command'] );
 
-		/**
-		 * nginx does not auto-spawn fcgi-processes
-		 */
-		if ( $this->settings['system']['phpreload_command'] != ''
-			&& (int) $this->settings['phpfpm']['enabled'] == 0
-		 ) {
-		 	fwrite( $this->debugHandler, '   nginx::reload: restarting php processes' . "\n" );
+		# nginx does not auto-spawn fcgi-processes
+		if ( $this->settings['system']['phpreload_command'] && !$this->settings['phpfpm']['enabled'] ) {
+
+			# reloading php
+		 	fwrite( $this->debugHandler, "\t" . 'nginx::reload: restarting php processes' . PHP_EOL );
 			$this->logger->logAction( CRON_ACTION, LOG_INFO, 'restarting php processes' );
 			safe_exec( $this->settings['system']['phpreload_command'] );
-		}
-		elseif ( (int) $this->settings['phpfpm']['enabled'] == 1 )
-		{
-			fwrite( $this->debugHandler, '   nginx::reload: reloading php-fpm' . "\n" );
+
+		} elseif ( $this->settings['phpfpm']['enabled'] ) {
+
+			# reloading php-fpm
+			fwrite( $this->debugHandler, "\t" . 'nginx::reload: reloading php-fpm' . PHP_EOL );
 			$this->logger->logAction( CRON_ACTION, LOG_INFO, 'reloading php-fpm' );
-			safe_exec( escapeshellcmd($this->settings['phpfpm']['reload']) );
+			safe_exec( $this->settings['phpfpm']['reload'] );
+
 		}
+
 	}
 
 
@@ -1066,66 +1089,118 @@ class nginx {
 		}
 	}
 
-	protected function wipeOutOldVhostConfigs()
-	{
-		fwrite( $this->debugHandler, '  nginx::wipeOutOldVhostConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n" );
-		$this->logger->logAction( CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost'] );
 
-		if ( isConfigDir($this->settings['system']['apacheconf_vhost'], true) )
-		{
+	/**
+	 * @brief ...
+	 *
+	 * @return void
+	 **/
+	protected function wipeOutOldVhostConfigs() {
+
+
+		fwrite( $this->debugHandler, "\t" . 'nginx::wipeOutOldVhostConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . PHP_EOL);
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'cleaning ' . $this->settings['system']['apacheconf_vhost']);
+
+
+		if ( isConfigDir($this->settings['system']['apacheconf_vhost'], true) ) {
+
 			$vhost_file_dirhandle = opendir( $this->settings['system']['apacheconf_vhost'] );
 
-			while( false !== ($vhost_filename = readdir($vhost_file_dirhandle)) )
-			{
-				if ( $vhost_filename != '.'
-				&& $vhost_filename != '..'
-				&& !in_array($vhost_filename, $this->known_filenames)
-				&& preg_match('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
-				&& file_exists( makeCorrectFile( $this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename )) )
-				{
-					fwrite($this->debugHandler, '  nginx::wipeOutOldVhostConfigs: unlinking ' . $vhost_filename . "\n");
-					$this->logger->logAction( CRON_ACTION, LOG_NOTICE, 'unlinking ' . $vhost_filename );
+			while( $vhost_filename = readdir($vhost_file_dirhandle) !== false ) {
+
+				if ( $vhost_filename != '.' && $vhost_filename != '..'
+						 && !in_array($vhost_filename, $this->known_filenames)
+						 && preg_match('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
+						 && file_exists( makeCorrectFile( $this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename) ) ) {
+
+					fwrite($this->debugHandler, "\t" . 'nginx::wipeOutOldVhostConfigs: unlinking ' . $vhost_filename . PHP_EOL);
+					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $vhost_filename);
 					unlink(makeCorrectFile( $this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename ));
+
 				}
+
 			}
+
 		}
-		if ( $this->settings['phpfpm']['enabled'] == '1' )
-		{
-			foreach( $this->known_vhostfilenames as $vhostfilename ){
-				$known_phpfpm_files[]=preg_replace('/^( 05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_/', '', $vhostfilename);
+
+
+		if ( $this->settings['phpfpm']['enabled'] ) {
+
+
+			# Initiate required variables
+			$phpfpm_pools = (object) new stdClass;
+			$phpfpm_pools->elicit = array();
+			$phpfpm_pools->known = array();
+
+
+			# Elicit known vhosts for creating their phpfpm pool files
+			foreach ( $this->known_vhostfilenames as $vhost_filename ) {
+
+				$phpfpm_pools->elicit[] = preg_replace('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_/', null, $vhost_filename);
+
 			}
 
-			$configdir = $this->settings['phpfpm']['configdir'];
-			$phpfpm_file_dirhandle = opendir($this->settings['phpfpm']['configdir']);
 
-			if ( $phpfpm_file_dirhandle !== false ) {
+			# Select existing phpfpm pool files
+			$phpfpm_pools->known = scandir($this->settings['phpfpm']['configdir']);
 
-				while ( false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle)) ) {
+			# Remove dirs "." and ".." from known phpfpm filelist
+			unset($phpfpm_pools->known[0], $phpfpm_pools->known[1]);
 
-					if ( is_array( $known_phpfpm_files )
-						&& $phpfpm_filename != '.'
-						&& $phpfpm_filename != '..'
-						&& isset($known_phpfpm_files)
-						&& !in_array($phpfpm_filename, $known_phpfpm_files)
-						&& file_exists(makeCorrectFile( $this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename ))
-					 ) {
-						fwrite($this->debugHandler, '  nginx::wipeOutOldVhostConfigs: unlinking PHP5-FPM ' . $phpfpm_filename . "\n");
-						$this->logger->logAction( CRON_ACTION, LOG_NOTICE, 'unlinking ' . $phpfpm_filename );
-						unlink(makeCorrectFile( $this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename ));
+
+			if ( !empty($phpfpm_pools->elicit) ) {
+
+				foreach ( $phpfpm_pools->elicit as $elicit_phpfpm_pool_filename ) {
+
+					if ( !in_array($phpfpm_pools->known, $elicit_phpfpm_pool_filename)
+							 && file_exists( makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $elicit_phpfpm_pool_filename) ) ) {
+
+						# Messaging Debug-Handler
+						fwrite($this->debugHandler, "\t" . 'nginx::wipeOutOldVhostConfigs: unlinking PHP-FPM ' . $elicit_phpfpm_pool_filename . PHP_EOL);
+
+						# Logging unlink action
+						$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $elicit_phpfpm_pool_filename);
+
+						# Unlinking php-fpm pool file
+						unlink( makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $elicit_phpfpm_pool_filename) );
+
 					}
-					if ( !is_array($known_phpfpm_files) ) {
-						$this->logger->logAction( CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM Configs Not written!!" );
-					}
+
 				}
-			} else {
-				$this->logger->logAction( CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM configuration path could not be read (".$this->settings['phpfpm']['configdir'].")" );
+
+				# Clearing variable $elicit_phpfpm_pool_filename
+				unset($elicit_phpfpm_pool_filename);
+
+			} elseif ( empty($phpfpm_pools->elicit) ) {
+
+				# Logging warning message because phpfpm pools could not be elicited
+				$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'WARNING: PHP-FPM Configs Not written!');
+
 			}
+
+			# Clearing variable $phpfpm_pools->elicit
+			unset($phpfpm_pools->elicit);
+
+			# Logging warning message because existing phpfpm pools could not be read
+			if ( !$phpfpm_pools->known || empty($phpfpm_pools->known) ) {
+
+				$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'WARNING: PHP-FPM configuration path could not be read (' . $this->settings['phpfpm']['configdir'] . ')');
+
+			}
+
+			# Clearing variable $phpfpm_pools->known
+			unset($phpfpm_pools->known);
+
 		}
+
 	}
 
-	/*
-	 *	We remove old htpasswd config files
-	 */
+
+	/**
+	* @brief We remove old htpasswd config files
+	*
+	* @return void
+	**/
 	protected function wipeOutOldHtpasswdConfigs()
 	{
 		fwrite( $this->debugHandler, '  nginx::wipeOutOldHtpasswdConfigs: cleaning ' . $this->settings['system']['apacheconf_htpasswddir'] . "\n" );
