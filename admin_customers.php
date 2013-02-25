@@ -54,43 +54,12 @@ if($page == 'customers'
 			'c.diskspace' => $lng['customer']['diskspace'],
 			'c.diskspace_used' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
 			'c.traffic' => $lng['customer']['traffic'],
-			'c.traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
-			'c.backup_allowed' => $lng['backup_allowed']
-/*
-			'c.mysqls' => $lng['customer']['mysqls'],
-			'c.mysqls_used' => $lng['customer']['mysqls'] . ' (' . $lng['panel']['used'] . ')',
-			'c.ftps' => $lng['customer']['ftps'],
-			'c.ftps_used' => $lng['customer']['ftps'] . ' (' . $lng['panel']['used'] . ')',
-			'c.subdomains' => $lng['customer']['subdomains'],
-			'c.subdomains_used' => $lng['customer']['subdomains'] . ' (' . $lng['panel']['used'] . ')',
-			'c.emails' => $lng['customer']['emails'],
-			'c.emails_used' => $lng['customer']['emails'] . ' (' . $lng['panel']['used'] . ')',
-			'c.email_accounts' => $lng['customer']['accounts'],
-			'c.email_accounts_used' => $lng['customer']['accounts'] . ' (' . $lng['panel']['used'] . ')',
-			'c.email_forwarders' => $lng['customer']['forwarders'],
-			'c.email_forwarders_used' => $lng['customer']['forwarders'] . ' (' . $lng['panel']['used'] . ')',
-			'c.email_quota' => $lng['customer']['email_quota'],
-			'c.email_quota_used' => $lng['customer']['email_quota'] . ' (' . $lng['panel']['used'] . ')',
-			'c.deactivated' => $lng['admin']['deactivated'],
-			'c.lastlogin_succ' => $lng['admin']['lastlogin_succ'],
-			'c.phpenabled' => $lng['admin']['phpenabled'],
-			'c.perlenabled' => $lng['admin']['perlenabled']
-*/
+			'c.traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')'
 		);
 
-/*
-		if($settings['ticket']['enabled'] == 1)
-		{
-			$fields['c.tickets'] = $lng['customer']['tickets'];
-			$fields['c.tickets_used'] = $lng['customer']['tickets'] . ' (' . $lng['panel']['used'] . ')';
+		if ($settings['system']['backup_enabled'] == '1') {
+			$field['c.backup_allowed'] = $lng['backup_allowed'];
 		}
-
-		if($settings['autoresponder']['autoresponder_active'] == 1)
-		{
-			$fields['c.email_autoresponder'] = $lng['customer']['autoresponder'];
-			$fields['c.email_autoresponder_used'] = $lng['customer']['autoresponder'] . ' (' . $lng['panel']['used'] . ')';
-		}
-*/
 
 		$paging = new paging($userinfo, $db, TABLE_PANEL_CUSTOMERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$customers = '';

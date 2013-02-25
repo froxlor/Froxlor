@@ -195,9 +195,8 @@ if($page == 'domains'
 				updateCounters();
 				inserttask('1');
 
-				# Using nameserver, insert a task which rebuilds the server config
-				if ($settings['system']['bind_enable'])
-				{
+				// Using nameserver, insert a task which rebuilds the server config
+				if ($settings['system']['bind_enable'] = '1') {
 					inserttask('4');
 				}
 				redirectTo($filename, Array('page' => $page, 's' => $s));
@@ -283,9 +282,16 @@ if($page == 'domains'
 
 				if($userinfo['change_serversettings'] == '1')
 				{
-					$isbinddomain = intval($_POST['isbinddomain']);
 					$caneditdomain = isset($_POST['caneditdomain']) ? 1 : 0;
-					$zonefile = validate($_POST['zonefile'], 'zonefile');
+
+					$isbinddomain = '0';
+					$zonefile = '';
+					if ($settings['system']['bind_enable'] == '1') {
+						if (isset($_POST['isbinddomain'])) {
+							$isbinddomain = intval($_POST['isbinddomain']);
+						}
+						$zonefile = validate($_POST['zonefile'], 'zonefile');
+					}
 
 					if(isset($_POST['dkim']))
 					{
@@ -315,7 +321,10 @@ if($page == 'domains'
 				}
 				else
 				{
-					$isbinddomain = '1';
+					$isbinddomain = '0';
+					if ($settings['system']['bind_enable'] == '1') {
+						$isbinddomain = '1';
+					}
 					$caneditdomain = '1';
 					$zonefile = '';
 					$dkim = '1';
@@ -325,8 +334,8 @@ if($page == 'domains'
 				if($userinfo['caneditphpsettings'] == '1'
 				   || $userinfo['change_serversettings'] == '1')
 				{
-					$openbasedir = isset($_POST['openbasedir']) ? 1 : 0;
-					$safemode = isset($_POST['safemode']) ? 1 : 0;
+					$openbasedir = isset($_POST['openbasedir']) ? intval($_POST['openbasedir']) : 0;
+					$safemode = isset($_POST['safemode']) ? intval($_POST['safemode']) : 0;
 
 					if((int)$settings['system']['mod_fcgid'] == 1)
 					{
@@ -577,8 +586,7 @@ if($page == 'domains'
 					inserttask('1');
 
 					# Using nameserver, insert a task which rebuilds the server config
-					if ($settings['system']['bind_enable'])
-					{
+					if ($settings['system']['bind_enable']) {
 						inserttask('4');
 					}
 					redirectTo($filename, Array('page' => $page, 's' => $s));
@@ -683,19 +691,6 @@ if($page == 'domains'
 					$phpconfigs.= makeoption($row['description'], $row['id'], $settings['system']['mod_fcgid_defaultini'], true, true);
 				}
 
-				/*
-				$isbinddomain = makeyesno('isbinddomain', '1', '0', '1');
-				$isemaildomain = makeyesno('isemaildomain', '1', '0', '1');
-				$email_only = makeyesno('email_only', '1', '0', '0');
-				$dkim = makeyesno('dkim', '1', '0', '1');
-				$wwwserveralias = makeyesno('wwwserveralias', '1', '0', '1');
-				$caneditdomain = makeyesno('caneditdomain', '1', '0', '1');
-				$openbasedir = makeyesno('openbasedir', '1', '0', '1');
-				$safemode = makeyesno('safemode', '1', '0', '1');
-				$speciallogfile = makeyesno('speciallogfile', '1', '0', '0');
-				$ssl = makeyesno('ssl', '1', '0', '0');
-				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', '0');
-				*/
 				$subcanemaildomain = makeoption($lng['admin']['subcanemaildomain']['never'], '0', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['always'], '3', '0', true, true);
 				$add_date = date('Y-m-d');
 
@@ -818,8 +813,14 @@ if($page == 'domains'
 
 				if($userinfo['change_serversettings'] == '1')
 				{
-					$isbinddomain = intval($_POST['isbinddomain']);
-					$zonefile = validate($_POST['zonefile'], 'zonefile');
+					$isbinddomain = $result['isbinddomain'];
+					$zonefile = $result['zonefile'];
+					if ($settings['system']['bind_enable'] == '1') {
+						if (isset($_POST['isbinddomain'])) {
+							$isbinddomain = '1';
+						}
+						$zonefile = validate($_POST['zonefile'], 'zonefile');
+					}
 
 					if($settings['dkim']['use_dkim'] == '1')
 					{
@@ -856,8 +857,8 @@ if($page == 'domains'
 				if($userinfo['caneditphpsettings'] == '1'
 				   || $userinfo['change_serversettings'] == '1')
 				{
-					$openbasedir = isset($_POST['openbasedir']) ? 1 : 0;
-					$safemode = isset($_POST['safemode']) ? 1 : 0;
+					$openbasedir = isset($_POST['openbasedir']) ? intval($_POST['openbasedir']) : 0;
+					$safemode = isset($_POST['safemode']) ? intval($_POST['safemode']) : 0;
 
 					if((int)$settings['system']['mod_fcgid'] == 1)
 					{
@@ -1086,7 +1087,9 @@ if($page == 'domains'
 				   || $dkim != $result['dkim']
 				   || $ipandport != $result['ipandport'])
 				{
-					inserttask('4');
+					if ($settings['system']['bind_enable'] == '1') {
+						inserttask('4');
+					}
 				}
 
 				if($isemaildomain == '0'
@@ -1239,18 +1242,7 @@ if($page == 'domains'
 				}
 
 				$result['specialsettings'] = $result['specialsettings'];
-				/*
-				$isbinddomain = makeyesno('isbinddomain', '1', '0', $result['isbinddomain']);
-				$wwwserveralias = makeyesno('wwwserveralias', '1', '0', $result['wwwserveralias']);
-				$isemaildomain = makeyesno('isemaildomain', '1', '0', $result['isemaildomain']);
-				$email_only = makeyesno('email_only', '1', '0', $result['email_only']);
-				$ssl = makeyesno('ssl', '1', '0', $result['ssl']);
-				$ssl_redirect = makeyesno('ssl_redirect', '1', '0', $result['ssl_redirect']);
-				$dkim = makeyesno('dkim', '1', '0', $result['dkim']);
-				$caneditdomain = makeyesno('caneditdomain', '1', '0', $result['caneditdomain']);
-				$openbasedir = makeyesno('openbasedir', '1', '0', $result['openbasedir']);
-				$safemode = makeyesno('safemode', '1', '0', $result['safemode']);
-				*/
+
 				$subcanemaildomain = makeoption($lng['admin']['subcanemaildomain']['never'], '0', $result['subcanemaildomain'], true, true);
 				$subcanemaildomain.= makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', $result['subcanemaildomain'], true, true);
 				$subcanemaildomain.= makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', $result['subcanemaildomain'], true, true);
@@ -1265,10 +1257,6 @@ if($page == 'domains'
 				{
 					$phpconfigs.= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true);
 				}
-
-				/*
-				$specialsettingsforsubdomains = makeyesno('specialsettingsforsubdomains', '1', '0', '1');
-				*/
 
 				$result = htmlentities_array($result);
 
