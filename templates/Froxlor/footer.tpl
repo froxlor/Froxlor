@@ -9,8 +9,6 @@
 	<if $lng['translator'] != ''>
 		<br /><span>{$lng['panel']['translator']}: {$lng['translator']}
 	</if>
-	<br />
-	<span style="color:#f8f8f8;">and also The Game</span>
 </footer>
 </body>
 </html>
