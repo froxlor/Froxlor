@@ -671,7 +671,7 @@ if($page == 'admins'
 					$diskspace = intval($_POST['diskspace']);
 
 					$tickets_see_all = 0;
-					if (isset($_POST['tickets_see_all'])) 
+					if (isset($_POST['tickets_see_all']))
 						$tickets_see_all = intval($_POST['tickets_see_all']);
 
 					if(isset($_POST['diskspace_ul']))
