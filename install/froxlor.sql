@@ -532,6 +532,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'allow_preset', '1'),
 	('panel', 'allow_preset_admin', '0'),
 	('panel', 'password_regex', ''),
+	('panel', 'use_webfonts', '1'),
+	('panel', 'webfont', 'Numans'),
 	('panel', 'version', '0.9.28-svn6');
 
 

@@ -77,6 +77,23 @@ return array(
 					'option_options' => array('Manual' => $lng['serversettings']['manual'], 'Dropdown' => $lng['serversettings']['dropdown']),
 					'save_method' => 'storeSettingField',
 					),
+				'use_webfonts' => array(
+					'label' => 'Use a google-webfont for the panel',
+					'settinggroup' => 'panel',
+					'varname' => 'use_webfonts',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					),
+				'webfont' => array(
+					'label' => 'Use a google-webfont for the panel',
+					'settinggroup' => 'panel',
+					'varname' => 'webfont',
+					'type' => 'string',
+					'default' => 'Numans',
+					'string_emptyallowed' => false,
+					'save_method' => 'storeSettingField',
+					),
 				'panel_adminmail' => array(
 					'label' => $lng['serversettings']['adminmail'],
 					'settinggroup' => 'panel',

@@ -19,12 +19,20 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery.jqplot.css" />
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/traffic.js"></script>
 	</if>
+	<if $settings['panel']['use_webfonts'] == '1'>
+		<link href="//fonts.googleapis.com/css?family={$settings['panel']['webfont']}" rel="stylesheet">
+	</if>
 	<link href="templates/{$theme}/assets/css/main.css" rel="stylesheet" type="text/css" />
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/css/main_ie.css" type="text/css" /><![endif]-->
 	<link href="css/jquery.jquery-ui.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
+	<style type="text/css">
+	body {
+        font-family: <if $settings['panel']['use_webfonts'] == '1'>{$webfont},</if> Verdana, Geneva, sans-serif;
+	}
+	</style>
 </head>
 <body>
 

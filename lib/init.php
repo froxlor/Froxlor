@@ -455,6 +455,7 @@ if(AREA == 'admin' || AREA == 'customer')
 	unset($navigation_data);
 }
 
+$webfont = str_replace('+', ' ', $settings['panel']['webfont']);
 eval("\$header = \"" . getTemplate('header', '1') . "\";");
 
 $current_year = date('Y', time());
