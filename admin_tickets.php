@@ -873,6 +873,6 @@ elseif($page == 'archive'
 			ask_yesno('ticket_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 	}
+} else {
+	standard_error('nocustomerforticket');
 }
-
-?>
