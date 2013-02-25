@@ -413,6 +413,21 @@ while($row = $db->fetch_array($result_tasks))
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
 					safe_exec('rm -rf '.escapeshellarg($maildir));
 				}
+				else {
+					// backward-compatibility for old folder-structure
+					$maildir_old = makeCorrectDir($settings['system']['vmail_homedir'] .'/'. $row['data']['loginname'] .'/'. $row['data']['email']);
+
+					if ($maildir_old != '/' && !empty($maildir_old)
+						&& $maildir_old != $settings['system']['vmail_homedir']
+						&& substr($maildir_old, 0, strlen($settings['system']['vmail_homedir'])) == $settings['system']['vmail_homedir']
+						&& is_dir($maildir_old)
+						&& fileowner($maildir_old) == $settings['system']['vmail_uid']
+						&& filegroup($maildir_old) == $settings['system']['vmail_gid'])
+					{
+						$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir_old));
+						safe_exec('rm -rf '.escapeshellarg($maildir_old));
+					}
+				}
 			}
 		}
 	}
