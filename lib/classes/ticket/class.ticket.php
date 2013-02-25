@@ -449,9 +449,13 @@ class ticket
 	 * 
 	 * @return int highest order number
 	 */
-	static public function getHighestOrderNumber($_db = null)
+	static public function getHighestOrderNumber($_db = null, $_uid = 0)
 	{
-		$sql = "SELECT MAX(`logicalorder`) as `highestorder` FROM `" . TABLE_PANEL_TICKET_CATS . "`;";
+		$where = '';
+		if ($_uid > 0) {
+			$where = ' WHERE `adminid` = "'.(int)$_uid.'"';
+		}
+		$sql = "SELECT MAX(`logicalorder`) as `highestorder` FROM `" . TABLE_PANEL_TICKET_CATS . "`".$where.";";
 		$result = $_db->query_first($sql);
 		return (isset($result['highestorder']) ? (int)$result['highestorder'] : 0);
 	}

@@ -32,17 +32,20 @@ if(isset($_POST['id']))
 elseif(isset($_GET['id']))
 {
 	$id = intval($_GET['id']);
-	
-	if (!$userinfo['customers_see_all']) {
-		/*
-		 * Check if the current user is allowed to see the current ticket.
-		 */
-		$sql = "SELECT `id` FROM `panel_tickets` WHERE `id` = '".$id."' AND `adminid` = '".$userinfo['admindid']."'";
-		
-		$result = $db->query_first($sql);
-		if ($result == null) {
-			// no rights to see the requested ticket
-			standard_error(array('ticketnotaccessible'));
+
+	// only check if this is not a category-id
+	if (!isset($_GET['page']) || (isset($_GET['page']) && $_GET['page'] != 'categories')) {
+		if (!$userinfo['customers_see_all']) {
+			/*
+			 * Check if the current user is allowed to see the current ticket.
+			 */
+			$sql = "SELECT `id` FROM `panel_tickets` WHERE `id` = '".$id."' AND `adminid` = '".$userinfo['admindid']."'";
+
+			$result = $db->query_first($sql);
+			if ($result == null) {
+				// no rights to see the requested ticket
+				standard_error(array('ticketnotaccessible'));
+			}
 		}
 	}
 }
@@ -512,7 +515,7 @@ elseif($page == 'categories'
 			if($order < 1 || $order >= 1000)
 			{
 				// use the latest available
-				$order = ticket::getHighestOrderNumber($db) + 1;
+				$order = ticket::getHighestOrderNumber($db, $userinfo['adminid']) + 1;
 			}
 
 			if($category == '')
@@ -528,7 +531,7 @@ elseif($page == 'categories'
 		}
 		else
 		{
-			$order = ticket::getHighestOrderNumber($db) + 1;
+			$order = ticket::getHighestOrderNumber($db, $userinfo['adminid']) + 1;
 
 			$category_new_data = include_once dirname(__FILE__).'/lib/formfields/admin/tickets/formfield.category_new.php';
 			$category_new_form = htmlform::genHTMLForm($category_new_data);
