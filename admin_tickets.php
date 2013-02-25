@@ -462,7 +462,7 @@ elseif($page == 'categories'
 			'logicalorder' => $lng['ticket']['logicalorder']
 		);
 
-		$where = '';
+		$where = '1'; // WHERE 1 is like no 'where-clause'
 		if ($userinfo['tickets_see_all'] != '1') {
 			$where = " `main`.`adminid` = '" . (int)$userinfo['adminid'] . "'";
 		}
