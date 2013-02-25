@@ -108,6 +108,7 @@ CREATE TABLE `panel_admins` (
   `ftps_used` int(15) NOT NULL default '0',
   `tickets` int(15) NOT NULL default '-1',
   `tickets_used` int(15) NOT NULL default '0',
+  `tickets_see_all` tinyint(1) NOT NULL default '0',
   `subdomains` int(15) NOT NULL default '0',
   `subdomains_used` int(15) NOT NULL default '0',
   `traffic` bigint(30) NOT NULL default '0',

@@ -1930,3 +1930,4 @@ $lng['serversettings']['catchall_enabled']['description']  = 'Do you want to pro
 
 // ADDED IN 0.9.28.svn6
 $lng['serversettings']['apache_24'] = 'Use modifications for Apache 2.4';
+$lng['admin']['tickets_see_all'] = 'Can see all ticket-categories?';

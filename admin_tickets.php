@@ -216,12 +216,16 @@ if($page == 'tickets'
 			else
 			{
 				$categories = '';
-				$result = $db->query_first('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `adminid` = "' . $userinfo['adminid'] . '" ORDER BY `logicalorder`, `name` ASC');
+				$where = '';
+				if ($userinfo['tickets_see_all'] != '1') {
+					$where = 'WHERE `adminid` = "' . $userinfo['adminid'] . '"';
+				}
+				$result = $db->query_first('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` '.$where.' ORDER BY `logicalorder`, `name` ASC');
 
 				if(isset($result['name'])
 				   && $result['name'] != '')
 				{
-					$result2 = $db->query('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `adminid` = "' . $userinfo['adminid'] . '" ORDER BY `logicalorder`, `name` ASC');
+					$result2 = $db->query('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` '.$where.' ORDER BY `logicalorder`, `name` ASC');
 
 					while($row = $db->fetch_array($result2))
 					{
@@ -454,11 +458,16 @@ elseif($page == 'categories'
 			'name' => $lng['ticket']['category'],
 			'logicalorder' => $lng['ticket']['logicalorder']
 		);
+
+		$where = '';
+		if ($userinfo['tickets_see_all'] != '1') {
+			$where = " `main`.`adminid` = '" . (int)$userinfo['adminid'] . "'";
+		}
 		$paging = new paging($userinfo, $db, TABLE_PANEL_TICKET_CATS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$result = $db->query("SELECT `main`.`id`, `main`.`name`, `main`.`logicalorder`, (
                               SELECT COUNT(`sub`.`id`) FROM `" . TABLE_PANEL_TICKETS . "` `sub`
                               WHERE `sub`.`category` = `main`.`id`
-                              AND `sub`.`answerto` = '0' AND `sub`.`adminid` = '" . $userinfo['adminid'] . "')
+                              AND `sub`.`answerto` = '0'  AND `sub`.`adminid` = '" . $userinfo['adminid'] . "')
                               as `ticketcount`, (
                               SELECT COUNT(`sub2`.`id`) FROM `" . TABLE_PANEL_TICKETS . "` `sub2`
                               WHERE `sub2`.`category` = `main`.`id`
@@ -466,7 +475,7 @@ elseif($page == 'categories'
                               AND (`sub2`.`status` = '0' OR `sub2`.`status` = '1' OR `sub2`.`status` = '2')
                               AND `sub2`.`adminid` = '" . $userinfo['adminid'] . "'
                               ) as `ticketcountnotclosed`
-                              FROM `" . TABLE_PANEL_TICKET_CATS . "` `main` WHERE `main`.`adminid` = '" . (int)$userinfo['adminid'] . "' " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+                              FROM `" . TABLE_PANEL_TICKET_CATS . "` `main` WHERE " . $where . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		$paging->setEntries($db->num_rows($result));
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);

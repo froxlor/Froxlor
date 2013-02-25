@@ -221,12 +221,12 @@ elseif($page == 'tickets')
 			else
 			{
 				$categories = '';
-				$result = $db->query_first('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` ORDER BY `logicalorder`, `name` ASC');
+				$result = $db->query_first('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `adminid` = "' . $userinfo['adminid'] . '" ORDER BY `logicalorder`, `name` ASC');
 
 				if(isset($result['name'])
 				   && $result['name'] != '')
 				{
-					$result2 = $db->query('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` ORDER BY `logicalorder`, `name` ASC');
+					$result2 = $db->query('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `adminid` = "' . $userinfo['adminid'] . '" ORDER BY `logicalorder`, `name` ASC');
 
 					while($row = $db->fetch_array($result2))
 					{

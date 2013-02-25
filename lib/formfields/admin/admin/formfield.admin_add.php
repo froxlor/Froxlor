@@ -200,6 +200,14 @@ return array(
 						'visible' => ($settings['ticket']['enabled'] == '1' ? true : false),
 						'ul_field' => $tickets_ul
 					),
+					'tickets_see_all' => array(
+						'label' => $lng['admin']['tickets_see_all'],
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
+					),
 					'mysqls' => array(
 						'label' => $lng['customer']['mysqls'],
 						'type' => 'textul',

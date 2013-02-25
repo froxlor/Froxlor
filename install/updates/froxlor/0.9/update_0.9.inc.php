@@ -1991,10 +1991,16 @@ if(isFroxlorVersion('0.9.28-svn5')) {
 
 	$update_system_apache24 = isset($_POST['update_system_apache24']) ? (int)$_POST['update_system_apache24'] : '0';
 	showUpdateStep('Setting value for apache-2.4 modification', true);
-
 	// support for Apache-2.4
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apache24', '".$update_system_apache24."');");
+	lastStepStatus(0);
 
+	showUpdateStep("Inserting new tickets-see-all field to panel_admins", true);
+	$db->query("ALTER TABLE `panel_admins` ADD `tickets_see_all` tinyint(1) NOT NULL default '0' AFTER `tickets_used`");
+	lastStepStatus(0);
+
+	showUpdateStep("Updating main admin entry", true);
+	$db->query("UPDATE `panel_admins` SET `tickets_see_all` = '1' WHERE `adminid` = '".$userinfo['adminid']."';");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.28-svn6');

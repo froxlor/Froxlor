@@ -768,6 +768,7 @@ if(isset($_POST['installstep'])
 		`ftps_used` = 0,
 		`tickets` = -1,
 		`tickets_used` = 0,
+		`tickets_see_all` = 1,
 		`subdomains` = -1,
 		`subdomains_used` = 0,
 		`traffic` = -1048576,

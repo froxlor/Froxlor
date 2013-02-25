@@ -1655,3 +1655,4 @@ $lng['serversettings']['catchall_enabled']['description']  = 'Möchten Sie Ihren
 
 // ADDED IN 0.9.28.svn6
 $lng['serversettings']['apache_24'] = 'Anpassungen f&uuml;r Apache 2.4 verwenden';
+$lng['admin']['tickets_see_all'] = 'Kann alle Ticket-Kategorien sehen?';
