@@ -1928,3 +1928,5 @@ $lng['error']['featureisdisabled'] = 'Feature %s is disabled. Please contact you
 $lng['serversettings']['catchall_enabled']['title']  = 'Use Catchall';
 $lng['serversettings']['catchall_enabled']['description']  = 'Do you want to provide your customers the catchall-feature?';
 
+// ADDED IN 0.9.28.svn6
+$lng['serversettings']['apache_24'] = 'Use modifications for Apache 2.4';

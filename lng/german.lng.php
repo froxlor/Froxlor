@@ -1653,3 +1653,5 @@ $lng['error']['featureisdisabled'] = 'Die Funktion %s wurde deaktiviert. Kontakt
 $lng['serversettings']['catchall_enabled']['title']  = 'Catchall verwenden';
 $lng['serversettings']['catchall_enabled']['description']  = 'Möchten Sie Ihren Kunden die Funktion Catchall zur Verfügung stellen?';
 
+// ADDED IN 0.9.28.svn6
+$lng['serversettings']['apache_24'] = 'Anpassungen f&uuml;r Apache 2.4 verwenden';

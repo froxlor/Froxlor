@@ -1984,3 +1984,18 @@ if(isFroxlorVersion('0.9.28-svn4')) {
 
 	updateToVersion('0.9.28-svn5');
 }
+
+if(isFroxlorVersion('0.9.28-svn5')) {
+	showUpdateStep("Updating from 0.9.28-svn5 to 0.9.28-svn6", true);
+	lastStepStatus(0);
+
+	$update_system_apache24 = isset($_POST['update_system_apache24']) ? (int)$_POST['update_system_apache24'] : '0';
+	showUpdateStep('Setting value for apache-2.4 modification', true);
+
+	// support for Apache-2.4
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apache24', '".$update_system_apache24."');");
+
+	lastStepStatus(0);
+
+	updateToVersion('0.9.28-svn6');
+}

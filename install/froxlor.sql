@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS `ftp_groups`;
 CREATE TABLE `ftp_groups` (
   `id` int(20) NOT NULL auto_increment,
   `groupname` varchar(60) NOT NULL default '',
@@ -509,6 +508,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'nginx_php_backend', '127.0.0.1:8888'),
 	('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock'),
 	('system', 'phpreload_command', ''),
+	('system', 'apache24', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -531,7 +531,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'allow_preset', '1'),
 	('panel', 'allow_preset_admin', '0'),
 	('panel', 'password_regex', ''),
-	('panel', 'version', '0.9.28-svn5');
+	('panel', 'version', '0.9.28-svn6');
 
 
 

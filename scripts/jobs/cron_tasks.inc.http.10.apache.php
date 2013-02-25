@@ -109,8 +109,13 @@ class apache
 			}
 
 			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->settings['system']['documentroot_prefix'] . '">' . "\n";
-			$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
-			$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+			// >=apache-2.4 enabled?
+			if ($this->settings['system']['apache24'] == '1') {
+				$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
+			} else {
+				$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+			}
 			$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
 		}
 	}
@@ -196,8 +201,13 @@ class apache
 
 			if($row_ipsandports['namevirtualhost_statement'] == '1')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'NameVirtualHost ' . $ipport . "\n";
-				$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted namevirtualhost-statement');
+				// >=apache-2.4 enabled?
+				if ($this->settings['system']['apache24'] == '1') {
+					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, $ipport . ' :: namevirtualhost-statement no longer needed for apache-2.4');
+				} else {
+					$this->virtualhosts_data[$vhosts_filename].= 'NameVirtualHost ' . $ipport . "\n";
+					$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted namevirtualhost-statement');
+				}
 			}
 
 			if($row_ipsandports['vhostcontainer'] == '1')
@@ -252,8 +262,13 @@ class apache
 						$this->virtualhosts_data[$vhosts_filename].= '    AddHandler fcgid-script .php' . "\n";
 						$this->virtualhosts_data[$vhosts_filename].= '    FCGIWrapper ' . $starter_filename . ' .php' . "\n";
 						$this->virtualhosts_data[$vhosts_filename].= '    Options +ExecCGI' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+						// >=apache-2.4 enabled?
+						if ($this->settings['system']['apache24'] == '1') {
+							$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
+						} else {
+							$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+							$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+						}
 						$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
 					}
 				}
@@ -281,8 +296,13 @@ class apache
 					$this->virtualhosts_data[$vhosts_filename].= '    AddHandler php5-fastcgi .php'. "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    Action php5-fastcgi /fastcgiphp' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '    Options +ExecCGI' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+					// >=apache-2.4 enabled?
+					if ($this->settings['system']['apache24'] == '1') {
+						$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
+					} else {
+						$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+					}
 					$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
 					$this->virtualhosts_data[$vhosts_filename].= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . 'fpm.external' . "\n";
 				}
@@ -1023,8 +1043,13 @@ class apache
 				{
 					$this->diroptions_data[$diroptions_filename].= '  AllowOverride None' . "\n";
 					$this->diroptions_data[$diroptions_filename].= '  AddHandler cgi-script .cgi .pl' . "\n";
-					$this->diroptions_data[$diroptions_filename].= '  Order allow,deny' . "\n";
-					$this->diroptions_data[$diroptions_filename].= '  Allow from all' . "\n";
+					// >=apache-2.4 enabled?
+					if ($this->settings['system']['apache24'] == '1') {
+						$this->diroptions_data[$diroptions_filename].= '  Require all granted' . "\n";
+					} else {
+						$this->diroptions_data[$diroptions_filename].= '  Order allow,deny' . "\n";
+						$this->diroptions_data[$diroptions_filename].= '  Allow from all' . "\n";
+					}
 					fwrite($this->debugHandler, '  cron_tasks: Task3 - Enabling perl execution' . "\n");
 
 					// check for suexec-workaround, #319

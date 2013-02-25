@@ -33,6 +33,15 @@ return array(
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
 					),
+				'system_apache_24' => array(
+					'label' => $lng['serversettings']['apache_24'],
+					'settinggroup' => 'system',
+					'varname' => 'apache24',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2')
+					),
 				'system_httpuser' => array(
 					'label' => $lng['admin']['webserver_user'],
 					'settinggroup' => 'system',

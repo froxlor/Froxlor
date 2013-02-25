@@ -49,8 +49,13 @@ class apache_fcgid extends apache
 				$php_options_text.= '      Action php5-fastcgi /fastcgiphp' . "\n";
 				$php_options_text.= '      Options +ExecCGI' . "\n";
 				$php_options_text.= '    </FilesMatch>' . "\n";
-				$php_options_text.= '    Order allow,deny' . "\n";
-				$php_options_text.= '    allow from all' . "\n";
+				// >=apache-2.4 enabled?
+				if ($this->settings['system']['apache24'] == '1') {
+					$php_options_text.= '    Require all granted' . "\n";
+				} else {
+					$php_options_text.= '    Order allow,deny' . "\n";
+					$php_options_text.= '    allow from all' . "\n";
+				}
 				$php_options_text.= '  </Directory>' . "\n";
 				if ($domain['ssl'] == 1 && $ssl_vhost) {
 					$php_options_text.= '  Alias /fastcgiphp ' . makeCorrectDir($php->getInterface()->getAliasConfigDir()) . 'ssl-fpm.external' . "\n";
@@ -78,9 +83,14 @@ class apache_fcgid extends apache
 						$php_options_text.= '      FCGIWrapper ' . $php->getInterface()->getStarterFile() . ' .' . $file_extension . "\n";
 					}
 					$php_options_text.= '      Options +ExecCGI' . "\n";
-				        $php_options_text.= '    </FilesMatch>' . "\n";
-					$php_options_text.= '    Order allow,deny' . "\n";
-					$php_options_text.= '    allow from all' . "\n";
+					$php_options_text.= '    </FilesMatch>' . "\n";
+					// >=apache-2.4 enabled?
+					if ($this->settings['system']['apache24'] == '1') {
+						$php_options_text.= '    Require all granted' . "\n";
+					} else {
+						$php_options_text.= '    Order allow,deny' . "\n";
+						$php_options_text.= '    allow from all' . "\n";
+					}
 					$php_options_text.= '  </Directory>' . "\n";
 				}
 			}
