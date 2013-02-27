@@ -118,7 +118,7 @@ while($row = $db->fetch_array($result_tasks))
 				// now get rid of old stuff
 				//(but append /* so we don't delete the directory)
 				$configdir.='/*';
-				safe_exec('rm -rf '. escapeshellarg(makeCorrectFile($configdir)));
+				safe_exec('rm -rf '. makeCorrectFile($configdir));
 			}
 		}
 
@@ -132,7 +132,7 @@ while($row = $db->fetch_array($result_tasks))
 				// now get rid of old stuff
 				//(but append /* so we don't delete the directory)
 				$configdir.='/*';
-				safe_exec('rm -rf '. escapeshellarg(makeCorrectFile($configdir)));
+				safe_exec('rm -rf '. makeCorrectFile($configdir));
 			}
 		}
 
