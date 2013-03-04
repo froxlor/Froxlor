@@ -97,8 +97,19 @@ if($db->num_rows($result) > 0)
 			$filemtime = $it->getMTime(); 
 			if(time() - $filemtime <= $cycle)
 			{
-				$content = file($fullFilename);
-
+				// why not read up to k lines?
+				// I've been patching this forever, to avoid FATAL ERROR / memory exhausted
+				// (fgets() is now binary safe, too)
+				// $content = file($fullFilename);
+				$lcount = 0; $content = array(); $handle = @fopen($fullFilename, "r");
+				if ($handle) {
+				    // 1023 lines of an email should be enough to analyze it
+				    while (($count++<1023) && (($buffer = fgets($handle)) !== false)) {
+				        $content[]=$buffer;	
+				    }
+				    fclose($handle);
+				}
+				
 				// error reading mail contents or just empty
 				if(count($content) == 0)
 				{
