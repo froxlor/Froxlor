@@ -74,6 +74,12 @@ $lng['install']['openbasedir'] = 'Testing if open_basedir is enabled...';
 $lng['install']['openbasedirenabled'] = 'enabled. Froxlor will not work properly with open_basedir enabled. Please disable open_basedir for Froxlor';
 
 /**
+ * ADDED IN 1.2.19-svn7
+ */
+
+$lng['install']['servername_should_be_fqdn'] = 'The servername should be a FQDN and not an IP address';
+
+/**
  * Renamed in 1.2.19-svn40
  */
 

@@ -6,7 +6,6 @@
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
@@ -794,7 +793,6 @@ $lng['message']['success'] = 'Inviato correttamente il messaggio a %s recipients
 $lng['message']['noreceipients'] = 'Nessuna e-mail è stata inviata perch¸ non ci sono i destinatari nel database';
 $lng['admin']['sslsettings'] = 'Impostazioni SSL';
 $lng['cronjobs']['notyetrun'] = 'Non ancora avviato';
-$lng['install']['servername_should_be_fqdn'] = 'Il nomeserver deve essere un nome di dominio completo (FQDN) e non un indirizzo IP';
 $lng['serversettings']['default_vhostconf']['title'] = 'Impostazioni default vhost';
 $lng['serversettings']['default_vhostconf']['description'] = 'Il contenuto di questo campo sarà incluso direttamente nel contenitore di dominio vhost. Attenzione: Il codice non sarà controllato per eventuali errori. Se contiene errori, il webserver non riavviarsi correttamente!';
 $lng['error']['invalidip'] = 'Indirizzo IP non valido: %s';

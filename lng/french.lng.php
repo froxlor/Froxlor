@@ -798,7 +798,6 @@ $lng['message']['success'] = 'Le message a été envoyé aux destinataires "%s"'
 $lng['message']['noreceipients'] = 'Aucun e-mail n\'a été envoyé car il n\'existe aucun destinataire dans la base de données';
 $lng['admin']['sslsettings'] = 'Paramètres SSL';
 $lng['cronjobs']['notyetrun'] = 'Pas encore lancé';
-$lng['install']['servername_should_be_fqdn'] = 'Le nom du serveur doit être un nom FQDN, pas une adresse IP';
 $lng['serversettings']['default_vhostconf']['title'] = 'Paramètres par défaut pour les vHosts';
 $lng['emails']['quota'] = 'Quota';
 $lng['emails']['noquota'] = 'Pas de quota';
