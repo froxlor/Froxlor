@@ -2003,8 +2003,8 @@ if(isFroxlorVersion('0.9.28-svn5')) {
 	$db->query("UPDATE `panel_admins` SET `tickets_see_all` = '1' WHERE `adminid` = '".$userinfo['adminid']."';");
 	lastStepStatus(0);
 
-	showUpdateStep("Inserting new webfont-settings", true);
-	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'use_webfonts', '1');");
+	showUpdateStep("Inserting new panel webfont-settings (default: off)", true);
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'use_webfonts', '0');");
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'webfont', 'Numans');");
 	lastStepStatus(0);
 
@@ -2015,6 +2015,6 @@ if(isFroxlorVersion('0.9.28-svn5')) {
 	}
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('nginx', 'fastcgiparams', '".$db->escape($fastcgiparams)."')");
 	lastStepStatus(0);
-	
+
 	updateToVersion('0.9.28-svn6');
 }

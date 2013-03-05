@@ -104,12 +104,12 @@ if($db->num_rows($result) > 0)
 				$lcount = 0; $content = array(); $handle = @fopen($fullFilename, "r");
 				if ($handle) {
 				    // 1023 lines of an email should be enough to analyze it
-				    while (($count++<1023) && (($buffer = fgets($handle)) !== false)) {
-				        $content[]=$buffer;	
+				    while (($lcount++<1023) && (($buffer = fgets($handle)) !== false)) {
+				        $content[]=$buffer;
 				    }
 				    fclose($handle);
 				}
-				
+
 				// error reading mail contents or just empty
 				if(count($content) == 0)
 				{
