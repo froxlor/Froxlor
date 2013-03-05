@@ -177,9 +177,11 @@ elseif($page == 'mysqls')
 					{
 						$dbserver = 0;
 					}
+					
+					// validate description before actual adding the database, #1052
+					$databasedescription = validate(trim($_POST['description']), 'description');
 
 					// Begin root-session
-
 					$db_root = new db($sql_root[$dbserver]['host'], $sql_root[$dbserver]['user'], $sql_root[$dbserver]['password'], '');
 					$db_root->query('CREATE DATABASE `' . $db_root->escape($username) . '`');
 					$log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
@@ -195,8 +197,6 @@ elseif($page == 'mysqls')
 
 					// End root-session
 					// Statement modifyed for Database description -- PH 2004-11-29
-
-					$databasedescription = validate($_POST['description'], 'description');
 					$result = $db->query('INSERT INTO `' . TABLE_PANEL_DATABASES . '` (`customerid`, `databasename`, `description`, `dbserver`) VALUES ("' . (int)$userinfo['customerid'] . '", "' . $db->escape($username) . '", "' . $db->escape($databasedescription) . '", "' . $db->escape($dbserver) . '")');
 					$result = $db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`+1, `mysql_lastaccountnumber`=`mysql_lastaccountnumber`+1 WHERE `customerid`="' . (int)$userinfo['customerid'] . '"');
 
@@ -308,7 +308,6 @@ elseif($page == 'mysqls')
 				}
 
 				// Update the Database description -- PH 2004-11-29
-
 				$log->logAction(USR_ACTION, LOG_INFO, "edited database '" . $result['databasename'] . "'");
 				$databasedescription = validate($_POST['description'], 'description');
 				$result = $db->query('UPDATE `' . TABLE_PANEL_DATABASES . '` SET `description`="' . $db->escape($databasedescription) . '" WHERE `customerid`="' . (int)$userinfo['customerid'] . '" AND `id`="' . (int)$id . '"');
