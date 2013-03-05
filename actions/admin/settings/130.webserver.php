@@ -147,6 +147,15 @@ return array(
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('nginx')
 					),
+				'nginx_fastcgiparams' => array(
+					'label' => $lng['serversettings']['nginx_fastcgiparams'],
+					'settinggroup' => 'nginx',
+					'varname' => 'fastcgiparams',
+					'type' => 'string',
+					'default' => '/etc/nginx/fastcgi_params',
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('nginx')
+					),
 				'system_mod_log_sql' => array(
 					'label' => $lng['serversettings']['mod_log_sql'],
 					'settinggroup' => 'system',

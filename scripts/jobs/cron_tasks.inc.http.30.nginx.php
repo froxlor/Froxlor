@@ -232,8 +232,11 @@ class nginx
 			}
 			
 			$this->nginx_data[$vhost_filename].= "\t".'location ~ \.php$ {'."\n";
+			$this->nginx_data[$vhost_filename].= "\t\t".' if (!-f $request_filename) {'."\n";
+			$this->nginx_data[$vhost_filename].= "\t\t\t".'return 404;'."\n";
+			$this->nginx_data[$vhost_filename].= "\t\t".'}'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_index index.php;'."\n";
-			$this->nginx_data[$vhost_filename].= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
+			$this->nginx_data[$vhost_filename].= "\t\t".'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
 			if ($row_ipsandports['ssl'] == '1') {
 				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param HTTPS on;'."\n";
@@ -545,7 +548,7 @@ class nginx
 				$path_options.= "\t\t" . 'gzip off; #gzip makes scripts feel slower since they have to complete before getting gzipped' . "\n";
 	    			$path_options.= "\t\t" . 'fastcgi_pass  '. $this->settings['system']['perl_server'] . ';' . "\n";
    				$path_options.= "\t\t" . 'fastcgi_index index.cgi;' . "\n";
-				$path_options.= "\t\t" . 'include /etc/nginx/fastcgi_params;'."\n";
+				$path_options.= "\t\t" . 'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
 				$path_options.= "\t" . '}' . "\n";
 			}
 			
@@ -625,7 +628,7 @@ class nginx
 			$phpopts.= "\t\t".'fastcgi_index index.php;'."\n";
 			$phpopts.= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
 			$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
-			$phpopts.= "\t\t".'include /etc/nginx/fastcgi_params;'."\n";
+			$phpopts.= "\t\t".'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
 				$phpopts.= "\t\t".'fastcgi_param HTTPS on;'."\n";
 			}

@@ -453,12 +453,21 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	}
 
 	if (versionInUpdate($current_version, '0.9.28-svn6')) {
-		$has_preconfig = true;
-		$description = 'Froxlor now supports the new Apache 2.4. Please be aware that you need to load additional apache-modules in ordner to use it.<br />';
-		$description.= '<pre>LoadModule authz_core_module modules/mod_authz_core.so LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
-		$question = '<strong>Do you want to enable the Apache-2.4 modification?:</strong>&nbsp;';
-		$question.= makeyesno('update_system_apache24', '1', '0', '0');
-
-		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	
+		if ($settings['system']['webserver'] == 'apache2') {
+			$has_preconfig = true;
+			$description = 'Froxlor now supports the new Apache 2.4. Please be aware that you need to load additional apache-modules in ordner to use it.<br />';
+			$description.= '<pre>LoadModule authz_core_module modules/mod_authz_core.so LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
+			$question = '<strong>Do you want to enable the Apache-2.4 modification?:</strong>&nbsp;';
+			$question.= makeyesno('update_system_apache24', '1', '0', '0');
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		} elseif ($settings['system']['webserver'] == 'nginx') {
+			$has_preconfig = true;
+			$description = 'The path to nginx\'s fastcgi_params file is now customizable.<br /><br />';
+			$question = '<strong>Please enter full path to you nginx/fastcgi_params file (including filename):</strong>&nbsp;';
+			$question.= '<input type="text" class="text" name="nginx_fastcgi_params" value="/etc/nginx/fastcgi_params" />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");			
+		}
 	}
+
 }
