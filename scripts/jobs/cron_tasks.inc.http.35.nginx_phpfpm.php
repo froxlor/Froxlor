@@ -40,7 +40,7 @@ class nginx_phpfpm extends nginx
 			$php_options_text = "\t".'location ~ \.php$ {'."\n";
 			$php_options_text.= "\t\t".'try_files $uri =404;'."\n";
 			$php_options_text.= "\t\t".'fastcgi_split_path_info ^(.+\.php)(/.+)$;'."\n";
-			$php_options_text.= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
+			$php_options_text.= "\t\t".'fastcgi_pass "unix:' . $this->escapeConfigParamter($php->getInterface()->getSocketFile()) . '";' . "\n";
 			$php_options_text.= "\t\t".'fastcgi_index index.php;'."\n";
 			$php_options_text.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
 			$php_options_text.= "\t\t".'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";

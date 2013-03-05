@@ -131,6 +131,7 @@ class apache
 			|| $this->settings['defaultwebsrverrhandler']['err404'] != ''
 			|| $this->settings['defaultwebsrverrhandler']['err500'] != '')
 		) {
+
 			$vhosts_folder = '';
 			if(is_dir($this->settings['system']['apacheconf_vhost']))
 			{
@@ -148,22 +149,22 @@ class apache
 
 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 ' . $this->settings['defaultwebsrverrhandler']['err401'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 "' . $this->escapeConfigParameter($this->settings['defaultwebsrverrhandler']['err401']) . '"' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err403'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 ' . $this->settings['defaultwebsrverrhandler']['err403'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 "' . $this->escapeConfigParameter($this->settings['defaultwebsrverrhandler']['err403']) . '"' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err404'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 ' . $this->settings['defaultwebsrverrhandler']['err404'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 "' . $this->escapeConfigParameter($this->settings['defaultwebsrverrhandler']['err404']) . '"' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 ' . $this->settings['defaultwebsrverrhandler']['err500'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 "' . $this->escapeConfigParameter($this->settings['defaultwebsrverrhandler']['err500']) . '"' . "\n";
 			}
 
 		}
@@ -1022,19 +1023,19 @@ class apache
 				if(isset($row_diroptions['error404path'])
 				   && $row_diroptions['error404path'] != '')
 				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 404 ' . $row_diroptions['error404path'] . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 404 "' . $this->escapeConfigParameter($row_diroptions['error404path']) . '"' . "\n";
 				}
 
 				if(isset($row_diroptions['error403path'])
 				   && $row_diroptions['error403path'] != '')
 				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 403 ' . $row_diroptions['error403path'] . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 403 "' . $this->escapeConfigParameter($row_diroptions['error403path']) . '"' . "\n";
 				}
 
 				if(isset($row_diroptions['error500path'])
 				   && $row_diroptions['error500path'] != '')
 				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 500 ' . $row_diroptions['error500path'] . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 500 "' . $this->escapeConfigParameter($row_diroptions['error500path']) . '"' . "\n";
 				}
 
 				if($cperlenabled
@@ -1416,6 +1417,23 @@ class apache
 				}
 			}
 		}
+	}
+
+	/*
+	*       Escape parameters
+	*/
+	protected function escapeConfigParameter($parameter,$escapeds = true)
+	{
+		$out = str_replace('\\', '\\\\', $parameter);
+		$out = str_replace('"', '\"', $out);
+
+		// escape dollar sign
+		if($escapeds)
+		{
+			$out = str_replace('$', '\$"', $out);
+		}
+
+		return $out;
 	}
 }
 
