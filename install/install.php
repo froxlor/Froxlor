@@ -102,7 +102,6 @@ function page_header() {
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="Default-Style" content="text/css" />
-	<link href="//fonts.googleapis.com/css?family=Numans" rel="stylesheet">
 	<link rel="stylesheet" href="../templates/Froxlor/assets/css/main.css"  />
 	<!--[if IE]><link rel="stylesheet" href="../templates/Froxlor/assets/css/main_ie.css"  /><![endif]-->
 	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -112,7 +111,7 @@ function page_header() {
 	<title>Froxlor Server Management Panel - Installation</title>
 	<style>
 	body {
-        font-family: Numans, Verdana, Geneva, sans-serif;
+        font-family: Verdana, Geneva, sans-serif;
 	}
 	input {
 		background: #dae7ee url('../templates/Froxlor/assets/img/icons/text_align_left.png') no-repeat 5px 4px;
