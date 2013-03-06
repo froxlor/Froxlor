@@ -30,7 +30,7 @@ return array(
 					'save_method' => 'storeSettingField',
 					'plausibility_check_method' => 'checkFcgidPhpFpm',
 					'overview_option' => true
-					),					
+					),
 				'system_mod_fcgid_configdir' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['configdir'],
 					'settinggroup' => 'system',
@@ -66,7 +66,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_wrapper',
 					'type' => 'option',
-					'option_options' => array(0 => 'ScriptAlias', 1=> 'FCGIWrapper'),
+					'option_options' => array(0 => 'ScriptAlias', 1=> 'FcgidWrapper'),
 					'default' => 1,
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('apache2')

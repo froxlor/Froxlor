@@ -80,7 +80,7 @@ class apache_fcgid extends apache
 					$php_options_text.= '      SetHandler fcgid-script' . "\n";
 					foreach($file_extensions as $file_extension)
 					{
-						$php_options_text.= '      FCGIWrapper ' . $php->getInterface()->getStarterFile() . ' .' . $file_extension . "\n";
+						$php_options_text.= '      FcgidWrapper ' . $php->getInterface()->getStarterFile() . ' .' . $file_extension . "\n";
 					}
 					$php_options_text.= '      Options +ExecCGI' . "\n";
 					$php_options_text.= '    </FilesMatch>' . "\n";

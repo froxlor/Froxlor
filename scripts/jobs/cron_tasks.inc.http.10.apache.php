@@ -260,7 +260,7 @@ class apache
 						$this->virtualhosts_data[$vhosts_filename].= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
 						$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
 						$this->virtualhosts_data[$vhosts_filename].= '    AddHandler fcgid-script .php' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '    FCGIWrapper ' . $starter_filename . ' .php' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '    FcgidWrapper ' . $starter_filename . ' .php' . "\n";
 						$this->virtualhosts_data[$vhosts_filename].= '    Options +ExecCGI' . "\n";
 						// >=apache-2.4 enabled?
 						if ($this->settings['system']['apache24'] == '1') {
