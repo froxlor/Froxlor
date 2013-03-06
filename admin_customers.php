@@ -193,12 +193,17 @@ if($page == 'customers'
 						$last_dbserver = $row_database['dbserver'];
 					}
 
-					foreach(array_unique(explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host)
+					if(mysql_get_server_info() < '5.0.2') {
+						// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
+						$db_root->query('REVOKE ALL PRIVILEGES, GRANT OPTION FROM \'' . $db_root->escape($row_database['databasename']) .'\'',false,true);
+					}
+
+					$host_res = $db_root->query("SELECT `Host` FROM `mysql`.`user` WHERE `User`='" . $db_root->escape($row_database['databasename']) . "'");
+					while($host = $db_root->fetch_array($host_res))
 					{
-						$mysql_access_host = trim($mysql_access_host);
-						$db_root->query('REVOKE ALL PRIVILEGES ON * . * FROM `' . $db_root->escape($row_database['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`',false,true);
-						$db_root->query('REVOKE ALL PRIVILEGES ON `' . str_replace('_', '\_', $db_root->escape($row_database['databasename'])) . '` . * FROM `' . $db_root->escape($row_database['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`',false,true);
-						$db_root->query('DELETE FROM `mysql`.`user` WHERE `User` = "' . $db_root->escape($row_database['databasename']) . '" AND `Host` = "' . $db_root->escape($mysql_access_host) . '"');
+						// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
+						$db_root->query('DROP USER \'' . $db_root->escape($row_database['databasename']). '\'@\'' . $db_root->escape($host['Host']) . '\'', false, true);
+						
 					}
 
 					$db_root->query('DROP DATABASE IF EXISTS `' . $db_root->escape($row_database['databasename']) . '`');
@@ -1236,8 +1241,8 @@ if($page == 'customers'
 								/* Prevent access, if deactivated */
 								if($deactivated)
 								{
-									$db_root->query('REVOKE ALL PRIVILEGES ON * . * FROM `' . $db_root->escape($row_database['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`');
-									$db_root->query('REVOKE ALL PRIVILEGES ON `' . str_replace('_', '\_', $db_root->escape($row_database['databasename'])) . '` . * FROM `' . $db_root->escape($row_database['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`');
+									// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
+									$db_root->query('REVOKE ALL PRIVILEGES, GRANT OPTION FROM \'' . $db_root->escape($row_database['databasename']) .'\'',false,true);
 								}
 								else /* Otherwise grant access */
 								{
