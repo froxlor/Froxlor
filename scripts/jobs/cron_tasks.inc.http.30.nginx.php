@@ -117,22 +117,22 @@ class nginx
 	
 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
 			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 401 ' . $this->settings['defaultwebsrverrhandler']['err401'] . ';' . "\n";
+				$this->nginx_data[$vhosts_filename].= 'error_page 401 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err401']) . ';' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err403'] != '')
 			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 403 ' . $this->settings['defaultwebsrverrhandler']['err403'] . ';' . "\n";
+				$this->nginx_data[$vhosts_filename].= 'error_page 403 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err403']) . ';' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err404'] != '')
 			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 404 ' . $this->settings['defaultwebsrverrhandler']['err404'] . ';' . "\n";
+				$this->nginx_data[$vhosts_filename].= 'error_page 404 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err404']) . ';' . "\n";
 			}
 			
 			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
 			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 500 ' . $this->settings['defaultwebsrverrhandler']['err500'] . ';' . "\n";
+				$this->nginx_data[$vhosts_filename].= 'error_page 500 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err500']) . ';' . "\n";
 			}
 
 		}
@@ -464,17 +464,17 @@ class nginx
 		{
 			if(!empty($row['error404path']))
 			{
-				$path_options.= "\t".'error_page   404    ' . $row['error404path'] . ';' . "\n";
+				$path_options.= "\t".'error_page   404    ' . makeCorrectFile($row['error404path']) . ';' . "\n";
 			}
 
 			if(!empty($row['error403path']))
 			{
-				$path_options.= "\t".'error_page   403    ' . $row['error403path'] . ';' . "\n";
+				$path_options.= "\t".'error_page   403    ' . makeCorrectFile($row['error403path']) . ';' . "\n";
 			}
 
 			if(!empty($row['error500path']))
 			{
-				$path_options.= "\t".'error_page   502 503 504    ' . $row['error500path'] . ';' . "\n";
+				$path_options.= "\t".'error_page   502 503 504    ' . makeCorrectFile($row['error500path']) . ';' . "\n";
 			}
 
 //			if($row['options_indexes'] != '0')
@@ -507,7 +507,7 @@ class nginx
 								default:
 									if ($single['path']=='/'){
 										$path_options.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-										$path_options.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+										$path_options.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 										// remove already used entries so we do not have doubles
 										unset($htpasswds[$idx]);
 									}
@@ -546,7 +546,7 @@ class nginx
 				}
 				$path_options.= "\t" . 'location ~ \(.pl|.cgi)$ {' . "\n";
 				$path_options.= "\t\t" . 'gzip off; #gzip makes scripts feel slower since they have to complete before getting gzipped' . "\n";
-	    			$path_options.= "\t\t" . 'fastcgi_pass  '. $this->settings['system']['perl_server'] . ';' . "\n";
+	    		$path_options.= "\t\t" . 'fastcgi_pass  '. $this->settings['system']['perl_server'] . ';' . "\n";
    				$path_options.= "\t\t" . 'fastcgi_index index.cgi;' . "\n";
 				$path_options.= "\t\t" . 'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
 				$path_options.= "\t" . '}' . "\n";
@@ -571,9 +571,9 @@ class nginx
 							unset($htpasswds[$idx]);
 						break;
 						default:
-							$path_options.= "\t" . 'location ' . $single['path'] . ' {' . "\n";
+							$path_options.= "\t" . 'location ' . makeCorrectPath($single['path']) . ' {' . "\n";
 							$path_options.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-							$path_options.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+							$path_options.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 							$path_options.= "\t".'}' . "\n";
 					}
 				//}
@@ -645,7 +645,7 @@ class nginx
 		&& $this->settings['system']['deactivateddocroot'] != '')
 		{
 			$webroot_text.= "\t".'# Using docroot for deactivated users...' . "\n";
-			$webroot_text.= "\t".'root     '.$this->settings['system']['deactivateddocroot'].';'."\n";
+			$webroot_text.= "\t".'root     '.makeCorrectPath($this->settings['system']['deactivateddocroot']).';'."\n";
 			$this->_deactivated = true;
 		}
 		else
@@ -685,7 +685,7 @@ class nginx
 					$stats_text.= "\t" . 'location /awstats {' . "\n";
 					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
 					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
@@ -696,7 +696,7 @@ class nginx
 					$stats_text.= "\t" . 'location /webalizer {' . "\n";
 					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 				}
 			}
@@ -707,7 +707,7 @@ class nginx
 					$stats_text.= "\t" . 'location /awstats {' . "\n";
 					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . ';' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
 					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
@@ -718,7 +718,7 @@ class nginx
 					$stats_text.= "\t" . 'location /webalizer {' . "\n";
 					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . ';' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 
 				}
@@ -733,7 +733,7 @@ class nginx
 					$stats_text.= "\t" . 'location /awstats {' . "\n";
 					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
 					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
@@ -744,7 +744,7 @@ class nginx
 					$stats_text.= "\t" . 'location /webalizer {' . "\n";
 					$stats_text.= "\t\t" . 'root ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
 					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 					$stats_text.= "\t" . '}' . "\n";
 
 				}
@@ -758,14 +758,13 @@ class nginx
 				$stats_text.= "\t" . 'location /awstats {' . "\n";
 				$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
 				$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-				$stats_text.= "\t\t" . 'auth_basic_user_file  ' . $single['usrf'] . ';'."\n";
+				$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 				$stats_text.= "\t" . '}' . "\n";
 				$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
 				$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
 				$stats_text.= "\t" . '}' . "\n";
 			}
 		}
-		
 
 		return $stats_text;
 	}

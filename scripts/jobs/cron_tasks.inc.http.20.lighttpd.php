@@ -255,7 +255,7 @@ class lighttpd
 				$this->lighttpd_data[$vhost_filename] = '';
 			}
 
-			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "'.$this->settings['defaultwebsrverrhandler']['err404'].'"';
+			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "'.makeCorrectFile($this->settings['defaultwebsrverrhandler']['err404']).'"';
 		}
 	}
 
@@ -720,7 +720,7 @@ class lighttpd
 				}
 			}
 
-			$diroption_text.= '"' . $row_htpasswds['path'] . '" =>' . "\n";
+			$diroption_text.= '"' . makeCorrectDir($row_htpasswds['path']) . '" =>' . "\n";
 			$diroption_text.= '(' . "\n";
 			$diroption_text.= '   "method"  => "basic",' . "\n";
 			$diroption_text.= '   "realm"   => "'.$row_htpasswds['authname'].'",' . "\n";
@@ -829,7 +829,7 @@ class lighttpd
 		&& $this->settings['system']['deactivateddocroot'] != '')
 		{
 			$webroot_text.= '  # Using docroot for deactivated users...' . "\n";
-			$webroot_text.= '  server.document-root = "' . $this->settings['system']['deactivateddocroot'] . "\"\n";
+			$webroot_text.= '  server.document-root = "' . makeCorrectDir($this->settings['system']['deactivateddocroot']) . "\"\n";
 			$this->_deactivated = true;
 		}
 		else
@@ -996,10 +996,10 @@ class lighttpd
 			{
 				if(!is_dir($this->settings['system']['apacheconf_htpasswddir']))
 				{
-					mkdir($this->settings['system']['apacheconf_htpasswddir']);
+					mkdir(makeCorrectDir($this->settings['system']['apacheconf_htpasswddir']));
 				}
 
-				$filename = $this->settings['system']['apacheconf_htpasswddir'] . '/' . $key;
+				$filename = makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $key);
 				$htpasswd_handler = fopen($filename, 'w');
 				fwrite($htpasswd_handler, $data);
 				fclose($htpasswd_handler);

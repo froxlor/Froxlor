@@ -108,7 +108,7 @@ class apache
 				$this->virtualhosts_data[$vhosts_filename] = '';
 			}
 
-			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $this->settings['system']['documentroot_prefix'] . '">' . "\n";
+			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . makeCorrectDir($this->settings['system']['documentroot_prefix']) . '">' . "\n";
 			// >=apache-2.4 enabled?
 			if ($this->settings['system']['apache24'] == '1') {
 				$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
@@ -148,22 +148,22 @@ class apache
 
 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 ' . $this->settings['defaultwebsrverrhandler']['err401'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 "' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err401']) . '"'."\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err403'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 ' . $this->settings['defaultwebsrverrhandler']['err403'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 "' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err403']) . '"' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err404'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 ' . $this->settings['defaultwebsrverrhandler']['err404'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 "' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err404']) . '"' . "\n";
 			}
 
 			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
 			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 ' . $this->settings['defaultwebsrverrhandler']['err500'] . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 "' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err500']) . '"' . "\n";
 			}
 
 		}
@@ -513,7 +513,7 @@ class apache
 		   && $this->settings['system']['deactivateddocroot'] != '')
 		{
 			$webroot_text.= '  # Using docroot for deactivated users...' . "\n";
-			$webroot_text.= '  DocumentRoot "' . $this->settings['system']['deactivateddocroot'] . "\"\n";
+			$webroot_text.= '  DocumentRoot "' . makeCorrectDir($this->settings['system']['deactivateddocroot']) . "\"\n";
 			$this->_deactivated = true;
 		}
 		else
@@ -1022,19 +1022,19 @@ class apache
 				if(isset($row_diroptions['error404path'])
 				   && $row_diroptions['error404path'] != '')
 				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 404 ' . $row_diroptions['error404path'] . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 404 "' . makeCorrectFile($row_diroptions['error404path']) . '"' . "\n";
 				}
 
 				if(isset($row_diroptions['error403path'])
 				   && $row_diroptions['error403path'] != '')
 				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 403 ' . $row_diroptions['error403path'] . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 403 "' . makeCorrectFile($row_diroptions['error403path']) . '"' . "\n";
 				}
 
 				if(isset($row_diroptions['error500path'])
 				   && $row_diroptions['error500path'] != '')
 				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 500 ' . $row_diroptions['error500path'] . "\n";
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 500 "' . makeCorrectFile($row_diroptions['error500path']) . '"' . "\n";
 				}
 
 				if($cperlenabled
@@ -1352,42 +1352,6 @@ class apache
 				}
 			}
 		}
-		if($this->settings['phpfpm']['enabled'] == '1')
-		{
-			foreach($this->virtualhosts_data as $vhosts_filename => $vhosts_file)
-			{
-				$this->known_vhostfilenames[] = basename($vhosts_filename);
-			}
-
-			foreach($this->known_vhostfilenames as $vhostfilename){
-				$known_phpfpm_files[]=preg_replace('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_/', '', $vhostfilename);
-			}
-
-			$configdir = $this->settings['phpfpm']['configdir'];
-			$phpfpm_file_dirhandle = opendir($this->settings['phpfpm']['configdir']);
-
-			if ($phpfpm_file_dirhandle !== false) {
-				
-				while (false !== ($phpfpm_filename = readdir($phpfpm_file_dirhandle))) {
-	
-					if (is_array($known_phpfpm_files)
-						&& $phpfpm_filename != '.'
-						&& $phpfpm_filename != '..'
-						&& !in_array($phpfpm_filename, $known_phpfpm_files)
-						&& file_exists(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename))
-					) {
-							fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking PHP5-FPM ' . $phpfpm_filename . "\n");
-							$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $phpfpm_filename);
-							unlink(makeCorrectFile($this->settings['phpfpm']['configdir'] . '/' . $phpfpm_filename));
-					}
-					if (!is_array($known_phpfpm_files)) {
-						$this->logger->logAction(CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM Configs Not written!!");
-					}
-				}
-			} else {
-				$this->logger->logAction(CRON_ACTION, LOG_WARNING, "WARNING!! PHP-FPM configuration path could not be read (".$this->settings['phpfpm']['configdir'].")");
-			}
-		}
 	}
 
 	/*
@@ -1418,5 +1382,3 @@ class apache
 		}
 	}
 }
-
-?>
