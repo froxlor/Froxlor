@@ -102,11 +102,17 @@ elseif($page == 'mysqls')
 				// Begin root-session
 
 				$db_root = new db($sql_root[$result['dbserver']]['host'], $sql_root[$result['dbserver']]['user'], $sql_root[$result['dbserver']]['password'], '');
-				foreach(array_map('trim', array_unique(explode(',', $settings['system']['mysql_access_host']))) as $mysql_access_host)
+				$log->logAction(USR_ACTION, LOG_INFO, "deleted database '" . $result['databasename'] . "'");
+				if(mysql_get_server_info() < '5.0.2') { 
+					// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
+					$db_root->query('REVOKE ALL PRIVILEGES, GRANT OPTION FROM \'' . $db_root->escape($result['databasename']) .'\'',false,true);
+				}
+
+				$host_res = $db_root->query("SELECT `Host` FROM `mysql`.`user` WHERE `User`='" . $db_root->escape($result['databasename']) . "'");
+				while($host = $db_root->fetch_array($host_res)) 
 				{
-					$db_root->query('REVOKE ALL PRIVILEGES ON * . * FROM `' . $db_root->escape($result['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`');
-					$db_root->query('REVOKE ALL PRIVILEGES ON `' . str_replace('_', '\_', $db_root->escape($result['databasename'])) . '` . * FROM `' . $db_root->escape($result['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '`');
-					$db_root->query('DELETE FROM `mysql`.`user` WHERE `User` = "' . $db_root->escape($result['databasename']) . '" AND `Host` = "' . $db_root->escape($mysql_access_host) . '"');
+					// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
+					$db_root->query('DROP USER \'' . $db_root->escape($result['databasename']). '\'@\'' . $db_root->escape($host['Host']) . '\'', false, true);
 				}
 
 				$db_root->query('DROP DATABASE IF EXISTS `' . $db_root->escape($result['databasename']) . '`');
