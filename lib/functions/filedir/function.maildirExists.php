@@ -36,6 +36,12 @@ function maildirExists($result = null)
 			$maildir = makeCorrectDir($settings['system']['vmail_homedir'] .'/'. $loginname .'/'. $email_domain .'/'. $email_user . (!empty($maildirname)?'/'.$maildirname:''));
 			if(@file_exists($maildir)) {
 				return true;
+			} else {
+				// backward-compatibility for old folder-structure
+				$maildir_old = makeCorrectDir($settings['system']['vmail_homedir'] .'/'. $loginname .'/'. $email_user);
+				if (@file_exists($maildir_old)) {
+					return true;
+				}
 			}
 		}
 	}
