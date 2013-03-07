@@ -119,7 +119,7 @@ return array(
 					'type' => 'option',
 					'default' => 'static',
 					'option_mode' => 'one',
-					'option_options' => array('static' => 'static', 'dynamic' => 'dynamic'),
+					'option_options' => array('static' => 'static', 'dynamic' => 'dynamic', 'ondemand' => 'ondemand'),
 					'save_method' => 'storeSettingField',
 					),
 				'system_phpfpm_max_children' => array(
