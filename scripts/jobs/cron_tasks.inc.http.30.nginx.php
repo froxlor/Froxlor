@@ -107,14 +107,14 @@ class nginx
 			} else {
 				$vhosts_folder = makeCorrectDir(dirname($this->settings['system']['apacheconf_vhost']));
 			}
-			
+
 			$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
 
 			if(!isset($this->nginx_data[$vhosts_filename]))
 			{
 				$this->nginx_data[$vhosts_filename] = '';
 			}
-	
+
 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
 			{
 				$this->nginx_data[$vhosts_filename].= 'error_page 401 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err401']) . ';' . "\n";
@@ -129,7 +129,7 @@ class nginx
 			{
 				$this->nginx_data[$vhosts_filename].= 'error_page 404 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err404']) . ';' . "\n";
 			}
-			
+
 			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
 			{
 				$this->nginx_data[$vhosts_filename].= 'error_page 500 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err500']) . ';' . "\n";
@@ -197,7 +197,7 @@ class nginx
 					$this->nginx_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";
 				}
 			}
-				
+
 			/**
 			 * SSL config options
 			 */
@@ -223,14 +223,14 @@ class nginx
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl on;' . "\n";
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . ';' . "\n";
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate_key ' .makeCorrectFile($row_ipsandports['ssl_key_file']) . ';' .  "\n";
-						
+
 					if($row_ipsandports['ssl_ca_file'] != '')
 					{
 						$this->nginx_data[$vhost_filename].= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
 					}
 				}
 			}
-			
+
 			$this->nginx_data[$vhost_filename].= "\t".'location ~ \.php$ {'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t".' if (!-f $request_filename) {'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t\t".'return 404;'."\n";
@@ -272,7 +272,7 @@ class nginx
 
 			$this->createNginxHosts($row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'], $vhost_filename);
 		}
-		
+
 		/**
 		 * standard error pages
 		 */
@@ -422,7 +422,7 @@ class nginx
 
 			$vhost_content.= $this->getLogFiles($domain);
 			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
-			
+
 			if ($this->_deactivated == false) {
 				$vhost_content.= $this->create_pathOptions($domain);
 				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
@@ -438,7 +438,7 @@ class nginx
 					$vhost_content=preg_replace($l_regex2,"",$vhost_content,$replacements-1);
 					$vhost_content=preg_replace($l_regex2,"location / {"."\n\t\t". $replace_by ."\t}"."\n",$vhost_content);
 				}
-				
+
 				if ($domain['specialsettings'] != "") {
 					$vhost_content.= $domain['specialsettings'] . "\n";
 				}
@@ -529,7 +529,7 @@ class nginx
 					$path_options.= "\t".'} ' . "\n";
 				}
 //			}
-			
+
 			/**
 			 * Perl support
 			 * required the fastCGI wrapper to be running to receive the CGI requests.
@@ -551,7 +551,7 @@ class nginx
 				$path_options.= "\t\t" . 'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
 				$path_options.= "\t" . '}' . "\n";
 			}
-			
+
 		}
 
 		/*
@@ -930,13 +930,13 @@ class nginx
 		{
 			// Save one big file
 			$vhosts_file = '';
-				
+
 			// sort by filename so the order is:
 			// 1. subdomains
 			// 2. subdomains as main-domains
 			// 3. main-domains
 			ksort($this->nginx_data);
-				
+
 			foreach($this->nginx_data as $vhosts_filename => $vhost_content)
 			{
 				$vhosts_file.= $vhost_content . "\n\n";
@@ -978,9 +978,9 @@ class nginx
 				}
 
 			}
-				
+
 			$this->wipeOutOldVhostConfigs();
-				
+
 		}
 
 		/*
