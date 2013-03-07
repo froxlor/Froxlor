@@ -94,6 +94,13 @@ class phpinterface_fpm
 			$fpm_config.= 'pm = '.$fpm_pm."\n";
 			$fpm_config.= 'pm.max_children = '.$fpm_children."\n";
 			if($fpm_pm == 'dynamic' || $fpm_pm == 'ondemand') {
+				// failsafe, refs #955
+				if ($fpm_start_servers < $fpm_min_spare_servers) {
+					$fpm_start_servers = $fpm_min_spare_servers;
+				}
+				if ($fpm_start_servers > $fpm_max_spare_servers) {
+					$fpm_start_servers = $fpm_start_servers - (($fpm_start_servers - $fpm_max_spare_servers) + 1);
+				}
 				$fpm_config.= 'pm.start_servers = '.$fpm_start_servers."\n";
 				$fpm_config.= 'pm.min_spare_servers = '.$fpm_min_spare_servers."\n";
 				$fpm_config.= 'pm.max_spare_servers = '.$fpm_max_spare_servers."\n";
