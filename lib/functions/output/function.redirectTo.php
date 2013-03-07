@@ -59,7 +59,7 @@ function redirectTo($destination, $get_variables = array(), $isRelative = false)
 		if($isRelative)
 		{
 			$linker->protocol = '';
-			$linker->host = '';
+			$linker->hostname = '';
 			$path = './';
 		}
 		else
@@ -74,7 +74,7 @@ function redirectTo($destination, $get_variables = array(), $isRelative = false)
 				$linker->protocol = 'http';
 			}
 
-			$linker->host = $_SERVER['HTTP_HOST'];
+			$linker->hostname = $_SERVER['HTTP_HOST'];
 
 			if(dirname($_SERVER['PHP_SELF']) == '/')
 			{
