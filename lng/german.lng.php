@@ -1498,9 +1498,9 @@ $lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden %s wirklich e
 $lng['serversettings']['perl_server']['title'] = 'Perl Server Ort';
 $lng['serversettings']['perl_server']['description'] = 'Der Standardwert ist diesem Guide entnommen: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP Backend';
-$lng['serversettings']['nginx_php_backend']['description'] = 'Dies ist das Backend, auf dem PHP auf Anfragen von Nginx hört. Kann ein UNIX Socket oder eine IP:Port Kombination sein<br />*nur relevant bei php-fpm';
+$lng['serversettings']['nginx_php_backend']['description'] = 'Dies ist das Backend, auf dem PHP auf Anfragen von Nginx hört. Kann ein UNIX Socket oder eine IP:Port Kombination sein<br />*NICHT relevant bei php-fpm';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP Reload Befehl';
-$lng['serversettings']['phpreload_command']['description'] = 'Dieser wird benötigt, um das PHP Backend bei Bedarf durch den Cronjob neu zu laden. (Standard: leer)<br />*nur relevant bei php-fpm';
+$lng['serversettings']['phpreload_command']['description'] = 'Dieser wird benötigt, um das PHP Backend bei Bedarf durch den Cronjob neu zu laden. (Standard: leer)<br />*NICHT relevant bei php-fpm';
 
 // ADDED IN FROXLOR 0.9.16
 $lng['error']['intvaluetoolow'] = 'Die angegebene Zahl ist zu klein (Feld %s)';

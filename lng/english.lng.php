@@ -1516,9 +1516,9 @@ $lng['question']['customer_reallyunlock'] = 'Do you really want to unlock custom
 $lng['serversettings']['perl_server']['title'] = 'Perl server location';
 $lng['serversettings']['perl_server']['description'] = 'Default is set for using the guide found at: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
-$lng['serversettings']['nginx_php_backend']['description'] = 'this is where the PHP process is listening for requests from nginx, can be a unix socket of ip:port combination<br />*only used with php-fpm';
+$lng['serversettings']['nginx_php_backend']['description'] = 'this is where the PHP process is listening for requests from nginx, can be a unix socket of ip:port combination<br />*NOT used with php-fpm';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP reload command';
-$lng['serversettings']['phpreload_command']['description'] = 'this is used to reload the PHP backend if any is used<br />Default: blank<br />*only used with php-fpm';
+$lng['serversettings']['phpreload_command']['description'] = 'this is used to reload the PHP backend if any is used<br />Default: blank<br />*NOT used with php-fpm';
 
 // ADDED IN FROXLOR 0.9.16
 $lng['error']['intvaluetoolow'] = 'The given number is too low (field %s)';
