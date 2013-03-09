@@ -1932,3 +1932,7 @@ $lng['serversettings']['apache_24'] = 'Use modifications for Apache 2.4';
 $lng['admin']['tickets_see_all'] = 'Can see all ticket-categories?';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Path to fastcgi_params file';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Specify the path to nginx\'s fastcgi_params file including filename';
+$lng['serversettings']['enablewebfonts']['title'] = 'Enable usage of a google webfont for the panel';
+$lng['serversettings']['enablewebfonts']['description'] = 'If enabled, the defined webfont is being used for the font-display';
+$lng['serversettings']['definewebfont']['title'] = 'Define a <a href="http://www.google.com/webfonts" rel="external">google-webfont</a> for the panel';
+$lng['serversettings']['definewebfont']['description'] = 'If enabled, this wefont will be used for the font-display.<br />Note: replace spaces with the "+" sign, e.g. "Open+Sans"';

@@ -78,7 +78,7 @@ return array(
 					'save_method' => 'storeSettingField',
 					),
 				'use_webfonts' => array(
-					'label' => 'Use a google-webfont for the panel',
+					'label' => $lng['serversettings']['enablewebfonts'],
 					'settinggroup' => 'panel',
 					'varname' => 'use_webfonts',
 					'type' => 'bool',
@@ -86,7 +86,7 @@ return array(
 					'save_method' => 'storeSettingField',
 					),
 				'webfont' => array(
-					'label' => 'Use a google-webfont for the panel',
+					'label' => $lng['serversettings']['definewebfont']['title'],
 					'settinggroup' => 'panel',
 					'varname' => 'webfont',
 					'type' => 'string',

@@ -1657,3 +1657,7 @@ $lng['serversettings']['apache_24'] = 'Anpassungen f&uuml;r Apache 2.4 verwenden
 $lng['admin']['tickets_see_all'] = 'Kann alle Ticket-Kategorien sehen?';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Pfad zur fastcgi_params Datei';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Geben Sie den Pfad zu nginx\'s fastcgi_params Datei an. Inlkusive Dateiname!';
+$lng['serversettings']['enablewebfonts']['title'] = 'Verwende Google Webfonts im Panel';
+$lng['serversettings']['enablewebfonts']['description'] = 'Wenn aktiviert, wird die angegebene Google-Schriftart eingebunden und verwendet';
+$lng['serversettings']['definewebfont']['title'] = '<a href="http://www.google.com/webfonts" rel="external">Google Webfont</a> festlegen';
+$lng['serversettings']['definewebfont']['description'] = 'Wenn aktiviert, wird diese Schriftart im Panel verwendet.<br />Hinweis: Leerzeichen bitte mit einem "+" ersetzen, z.B. "Open+Sans"';
