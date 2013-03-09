@@ -107,14 +107,14 @@ class nginx
 			} else {
 				$vhosts_folder = makeCorrectDir(dirname($this->settings['system']['apacheconf_vhost']));
 			}
-			
+
 			$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
 
 			if(!isset($this->nginx_data[$vhosts_filename]))
 			{
 				$this->nginx_data[$vhosts_filename] = '';
 			}
-	
+
 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
 			{
 				$this->nginx_data[$vhosts_filename].= 'error_page 401 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err401']) . ';' . "\n";
@@ -129,7 +129,7 @@ class nginx
 			{
 				$this->nginx_data[$vhosts_filename].= 'error_page 404 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err404']) . ';' . "\n";
 			}
-			
+
 			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
 			{
 				$this->nginx_data[$vhosts_filename].= 'error_page 500 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err500']) . ';' . "\n";
@@ -197,7 +197,7 @@ class nginx
 					$this->nginx_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";
 				}
 			}
-				
+
 			/**
 			 * SSL config options
 			 */
@@ -223,14 +223,14 @@ class nginx
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl on;' . "\n";
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . ';' . "\n";
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate_key ' .makeCorrectFile($row_ipsandports['ssl_key_file']) . ';' .  "\n";
-						
+
 					if($row_ipsandports['ssl_ca_file'] != '')
 					{
 						$this->nginx_data[$vhost_filename].= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
 					}
 				}
 			}
-			
+
 			$this->nginx_data[$vhost_filename].= "\t".'location ~ \.php$ {'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t".' if (!-f $request_filename) {'."\n";
 			$this->nginx_data[$vhost_filename].= "\t\t\t".'return 404;'."\n";
@@ -272,7 +272,7 @@ class nginx
 
 			$this->createNginxHosts($row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'], $vhost_filename);
 		}
-		
+
 		/**
 		 * standard error pages
 		 */
@@ -422,7 +422,7 @@ class nginx
 
 			$vhost_content.= $this->getLogFiles($domain);
 			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
-			
+
 			if ($this->_deactivated == false) {
 				$vhost_content.= $this->create_pathOptions($domain);
 				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
@@ -438,7 +438,7 @@ class nginx
 					$vhost_content=preg_replace($l_regex2,"",$vhost_content,$replacements-1);
 					$vhost_content=preg_replace($l_regex2,"location / {"."\n\t\t". $replace_by ."\t}"."\n",$vhost_content);
 				}
-				
+
 				if ($domain['specialsettings'] != "") {
 					$vhost_content.= $domain['specialsettings'] . "\n";
 				}
@@ -529,7 +529,7 @@ class nginx
 					$path_options.= "\t".'} ' . "\n";
 				}
 //			}
-			
+
 			/**
 			 * Perl support
 			 * required the fastCGI wrapper to be running to receive the CGI requests.
@@ -551,7 +551,7 @@ class nginx
 				$path_options.= "\t\t" . 'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
 				$path_options.= "\t" . '}' . "\n";
 			}
-			
+
 		}
 
 		/*
@@ -584,20 +584,33 @@ class nginx
 		return $path_options;
 	}
 
-	protected function getHtpasswds($domain)
-	{
-		//$query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `customerid`='" . $domain['customerid'] . "'";
-		$query = "SELECT DISTINCT * FROM " . TABLE_PANEL_HTPASSWDS . " AS a JOIN " . TABLE_PANEL_DOMAINS . " AS b ON a.customerid=b.customerid WHERE b.customerid='" . $domain['customerid'] . "' AND a.path LIKE CONCAT(b.documentroot,'%') AND b.domain='" . $domain['domain'] . "'" ;
+
+	/**
+	 * @brief ...
+	 *
+	 * @param (array) $domain
+	 * @return (array) $return
+	 **/
+	protected function getHtpasswds( array $domain ) {
+
+		$return = array();
+
+		$query = 'SELECT DISTINCT *
+							FROM ' . TABLE_PANEL_HTPASSWDS . ' AS a
+							JOIN ' . TABLE_PANEL_DOMAINS . ' AS b
+							USING (`customerid`)
+							WHERE b.customerid=' . $domain['customerid'] . ' AND b.domain="' . $domain['domain'] . '";';
+
 
 		$result = $this->db->query($query);
 
-		$returnval = array();
-		$x = 0;
-		while($row_htpasswds = $this->db->fetch_array($result))
-		{
-			if(count($row_htpasswds) > 0)
-			{
-				$htpasswd_filename = makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd');
+		# loop counter
+		$i = 0;
+
+		while( $row_htpasswds = $this->db->fetch_array($result) ) {
+
+			if ( count($row_htpasswds) > 0 ) {
+
 
 				if(!isset($this->htpasswds_data[$htpasswd_filename]))
 				{
@@ -606,16 +619,39 @@ class nginx
 
 				$this->htpasswds_data[$htpasswd_filename].= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 
-				$path = makeCorrectDir(substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1));
 
-				$returnval[$x]['path'] = $path;
-				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
-				$returnval[$x]['usrf'] = $htpasswd_filename;
-				$x++;
+				# if the domains and their web contents are located in a subdirectory of
+				# the nginx user, we have to evaluate the right path which is to protect
+				if ( stripos($row_htpasswds['path'], $domain['documentroot']) !== false ) {
+
+					# if the website contents is located in the user directory
+					$path = makeCorrectDir( substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1) );
+
+				} else {
+
+					# if the website contents is located in a subdirectory of the user
+					preg_match('/^([\/[:print:]]*\/)([[:print:]\/]+){1}$/i', $row_htpasswds['path'], $matches);
+					$path = makeCorrectDir( substr($row_htpasswds['path'], strlen($matches[1]) - 1) );
+
+				}
+
+
+				# return
+				$return[$i]['path'] = $path;
+				$return[$i]['root'] = makeCorrectDir( $domain['documentroot'] );
+				$return[$i]['usrf'] = $htpasswd_filename;
+
+				# increment loop counter
+				$i++;
+
 			}
+
 		}
-		return $returnval;
+
+		return $return;
+
 	}
+
 
 	protected function composePhpOptions($domain, $ssl_vhost = false)
 	{
@@ -671,103 +707,51 @@ class nginx
 		return $webroot_text;
 	}
 
-	protected function getStats($domain,$single=array())
-	{
+
+	/**
+	 * @brief Awstats, Webalizer
+	 *
+	 * @param (array) $domain
+	 * @param (array) $single
+	 * @return (string) $stats_text
+	 **/
+	protected function getStats( array $domain, array $single ) {
+
 		$stats_text = '';
 
-		if($domain['speciallogfile'] == '1'
-		&& $this->settings['system']['mod_log_sql'] != '1')
-		{
-			if($domain['parentdomainid'] == '0')
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
-					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\t" . '}' . "\n";
-				}
-				else
-				{
-					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-				}
-			}
-			else
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
-					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\t" . '}' . "\n";
-				}
-				else
-				{
-					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
+		if ( $domain['speciallogfile'] ) {
 
-				}
-			}
-		}
-		else
-		{
-			if($domain['customerroot'] != $domain['documentroot'])
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
-					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\t\t" . '}' . "\n";
-				}
-				else
-				{
-					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'root ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
+			if ( $this->settings['system']['awstats_enabled'] ) {
 
-				}
+				# container for awstats
+				$stats_text .= "\t" . '# Awstats' . PHP_EOL;
+				$stats_text .= "\t" . 'location /awstats {' . PHP_EOL;
+				$stats_text .= "\t\t" . 'alias' . "\t\t\t" . makeCorrectFile( $domain['customerroot'] . '/awstats/' . ( $domain['parentdomainid'] == 0 ? $domain['domain'] : $domain['parentdomain'] ) ) . ';' . PHP_EOL;
+				$stats_text .= "\t\t" . 'auth_basic' . "\t\t" . '"Restricted Area";' . PHP_EOL;
+				$stats_text .= "\t\t" . 'auth_basic_user_file' . "\t" . $single['usrf'] . ';' . PHP_EOL;
+				$stats_text .= "\t" . '}' . PHP_EOL . PHP_EOL;
+				$stats_text .= "\t" . 'location /awstats-icon {' . PHP_EOL;
+				$stats_text .= "\t\t" . 'alias' . "\t\t\t" . makeCorrectDir( $this->settings['system']['awstats_icons'] ) . ';' . PHP_EOL;
+				$stats_text .= "\t" . '}' . PHP_EOL . PHP_EOL;
+
+			} elseif ( !$this->settings['system']['awstats_enabled'] ) {
+
+				# container for webalizer
+				$stats_text .= "\t" . '# Webalizer' . PHP_EOL;
+				$stats_text .= "\t" . 'location /webalizer {' . PHP_EOL;
+				$stats_text .= "\t\t" . 'alias' . "\t\t\t" .makeCorrectFile( $domain['customerroot'] . '/webalizer/' . ( $domain['parentdomainid'] == 0 ? $domain['domain'] : $domain['parentdomain'] ) ) . ';' . PHP_EOL;
+				$stats_text .= "\t\t" . 'auth_basic' . "\t\t" . '"Restricted Area";' . PHP_EOL;
+				$stats_text .= "\t\t" . 'auth_basic_user_file' . "\t" . $single['usrf'] . ';' . PHP_EOL;
+				$stats_text .= "\t" . '}' . PHP_EOL . PHP_EOL;
+
 			}
-			// if the docroots are equal, we still have to set an alias for awstats
-			// because the stats are in /awstats/[domain], not just /awstats/
-			// also, the awstats-icons are someplace else too!
-			// -> webalizer does not need this!
-			elseif($this->settings['system']['awstats_enabled'] == '1')
-			{
-				$stats_text.= "\t" . 'location /awstats {' . "\n";
-				$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
-				$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-				$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-				$stats_text.= "\t" . '}' . "\n";
-				$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-				$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-				$stats_text.= "\t" . '}' . "\n";
-			}
+
 		}
 
 		return $stats_text;
+
 	}
+
 
 	/**
 	 * @TODO mod_log_sql
@@ -930,13 +914,13 @@ class nginx
 		{
 			// Save one big file
 			$vhosts_file = '';
-				
+
 			// sort by filename so the order is:
 			// 1. subdomains
 			// 2. subdomains as main-domains
 			// 3. main-domains
 			ksort($this->nginx_data);
-				
+
 			foreach($this->nginx_data as $vhosts_filename => $vhost_content)
 			{
 				$vhosts_file.= $vhost_content . "\n\n";
@@ -978,9 +962,9 @@ class nginx
 				}
 
 			}
-				
+
 			$this->wipeOutOldVhostConfigs();
-				
+
 		}
 
 		/*
@@ -1071,3 +1055,6 @@ class nginx
 		}
 	}
 }
+
+?>
+
