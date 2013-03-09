@@ -611,18 +611,13 @@ class nginx
 
 			if ( count($row_htpasswds) > 0 ) {
 
-				# htpasswd filename
-				$htpasswd_filename = makeCorrectFile( $this->settings['system']['apacheconf_htpasswddir'] . '/' . $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd');
 
-				if ( isset( $this->htpasswds_data[$htpasswd_filename]) ) {
-
-					$this->htpasswds_data[$htpasswd_filename] .= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . PHP_EOL;
-
-				} else {
-
-					$this->htpasswds_data[$htpasswd_filename] = false;
-
+				if(!isset($this->htpasswds_data[$htpasswd_filename]))
+				{
+					$this->htpasswds_data[$htpasswd_filename] = '';
 				}
+
+				$this->htpasswds_data[$htpasswd_filename].= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 
 
 				# if the domains and their web contents are located in a subdirectory of
