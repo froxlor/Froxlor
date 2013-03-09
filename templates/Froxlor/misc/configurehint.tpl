@@ -10,9 +10,11 @@
 	<script type="text/javascript" src="templates/Froxlor/assets/js/main.js"></script>
 	<link href="templates/Froxlor/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title>Froxlor Server Management Panel - Installation</title>
-        body {
+	<style type="text/css">
+	body {
 		font-family: Verdana, Geneva, sans-serif;
-        }
+	}
+	</style>
 </head>
 <body>
 <div class="loginpage">
@@ -34,7 +36,7 @@
 </div>
 <footer>
 	<span>
-		Froxlor &copy; 2009-2012 by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a>
+		Froxlor &copy; 2009-2013 by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a>
 	</span>
 </footer>
 </body>

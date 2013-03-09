@@ -677,8 +677,6 @@ if(isset($_POST['installstep'])
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($languages[$language]) . "' WHERE `settinggroup` = 'panel' AND `varname` = 'standardlanguage'");
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($mysql_access_host) . "' WHERE `settinggroup` = 'system' AND `varname` = 'mysql_access_host'");
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($webserver) . "' WHERE `settinggroup` = 'system' AND `varname` = 'webserver'");
-	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($webserver) . "' WHERE `settinggroup` = 'system' AND `varname` = 'webserver'");
-
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($httpuser) . "' WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($httpgroup) . "' WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
 
@@ -696,23 +694,20 @@ if(isset($_POST['installstep'])
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/lighttpd reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/lighttpd.pem' WHERE `settinggroup` = 'system' AND `varname` = 'ssl_cert_file'");
-		$ssettings = '';
 	}
-        elseif($webserver == "nginx")
+	elseif($webserver == "nginx")
 	{
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_vhost'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_diroptions'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/nginx reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
-		$ssettings = '';
 	}
 
 	// insert the lastcronrun to be the installation date
-
 	$query = 'UPDATE `%s` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = \'system\'  AND `varname` = \'lastcronrun\'';
 	$query = sprintf($query, TABLE_PANEL_SETTINGS);
 	$db->query($query);
-	
+
 	// set specific times for some crons (traffic only at night, etc.)
 	$ts = mktime(0, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
 	$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_traffic.php';");
@@ -721,7 +716,6 @@ if(isset($_POST['installstep'])
 	$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_ticketarchive.php';");
 
 	// and lets insert the default ip and port
-
 	$query = "INSERT INTO `".TABLE_PANEL_IPSANDPORTS."` 
 			 SET `ip`= '".$db->escape($serverip)."', 
 			 `port` = '80',
@@ -732,14 +726,12 @@ if(isset($_POST['installstep'])
 	$defaultip = $db->insert_id();
 
 	// insert the defaultip
-
 	$query = 'UPDATE `%s` SET `value` = \'%s\' WHERE `settinggroup` = \'system\'  AND `varname` = \'defaultip\'';
 	$query = sprintf($query, TABLE_PANEL_SETTINGS, $db->escape($defaultip));
 	$db->query($query);
 	status_message('green', 'OK');
 
 	//last but not least create the main admin
-
 	status_message('begin', $lng['install']['adding_admin_user']);
 	$db->query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
 		`loginname` = '" . $db->escape($admin_user) . "',
@@ -784,7 +776,6 @@ if(isset($_POST['installstep'])
 	status_message('green', 'OK');
 
 	//now we create the userdata.inc.php with the mysql-accounts
-
 	status_message('begin', $lng['install']['creating_configfile']);
 	$userdata = "<?php\n";
 	$userdata.= "//automatically generated userdata.inc.php for Froxlor\n";
@@ -799,7 +790,6 @@ if(isset($_POST['installstep'])
 	$userdata.= "?>";
 
 	//we test now if we can store the userdata.inc.php in ../lib
-
 	if($fp = @fopen('../lib/userdata.inc.php', 'w'))
 	{
 		$result = @fputs($fp, $userdata, strlen($userdata));

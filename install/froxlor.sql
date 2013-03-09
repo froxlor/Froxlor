@@ -827,7 +827,7 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, 
 	(6, 'froxlor/ticket', 'cron_used_tickets_reset.php', '1 DAY', '1', 'cron_ticketsreset'),
 	(7, 'froxlor/ticket', 'cron_ticketarchive.php', '1 MONTH', '1', 'cron_ticketarchive'),
 	(8, 'froxlor/reports', 'cron_usage_report.php', '1 DAY', '1', 'cron_usage_report'),
-	(9, 'froxlor/backup', 'cron_backup.php', '1 Day', '1', 'cron_backup');
+	(9, 'froxlor/backup', 'cron_backup.php', '1 DAY', '1', 'cron_backup');
 
 
 
