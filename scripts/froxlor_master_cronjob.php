@@ -26,8 +26,10 @@ $jobs_to_run = includeCronjobs($debugHandler, $pathtophpfiles);
 if(isset($argv[1]) && strtolower($argv[1]) == '--force')
 {
 	$crontasks = makeCorrectFile($pathtophpfiles.'/scripts/jobs/cron_tasks.php');
-	if(!in_array($crontasks, $jobs_to_run))
-	{
+	// really force re-generating of config-files by
+	// inserting task 1
+	inserttask('1');
+	if (!in_array($crontasks, $jobs_to_run)) {
 		array_unshift($jobs_to_run, $crontasks);
 	}
 }
