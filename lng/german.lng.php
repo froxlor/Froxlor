@@ -1661,3 +1661,13 @@ $lng['serversettings']['enablewebfonts']['title'] = 'Verwende Google Webfonts im
 $lng['serversettings']['enablewebfonts']['description'] = 'Wenn aktiviert, wird die angegebene Google-Schriftart eingebunden und verwendet';
 $lng['serversettings']['definewebfont']['title'] = '<a href="http://www.google.com/webfonts" rel="external">Google Webfont</a> festlegen';
 $lng['serversettings']['definewebfont']['description'] = 'Wenn aktiviert, wird diese Schriftart im Panel verwendet.<br />Hinweis: Leerzeichen bitte mit einem "+" ersetzen, z.B. "Open+Sans"';
+
+// ADDED IN 0.9.28-svn7
+$lng['admin']['plans']['plan'] = 'Ressourcenvorlagen';
+$lng['admin']['plans']['usetemplate'] = 'Vordefinierte Vorlage nutzen';
+$lng['admin']['plans']['plan_name'] = 'Vorlagenname';
+$lng['admin']['plans']['plan_add'] = 'Neue Vorlage anlegen';
+$lng['admin']['plans']['plan_edit'] = 'Vorlage bearbeiten';
+$lng['admin']['plans']['plan_group'] = 'Vorlage f&uuml;r';
+$lng['question']['admin_plan_reallydelete'] = 'Wollen Sie die Ressourcenvorlage %s wirklich l&ouml;schen?';
+$lng['error']['nameexists'] = 'Der Vorlagenname %s ist nicht korrekt oder existiert bereits.';

@@ -468,6 +468,14 @@ if($page == 'admins'
 					$ips[] = $row['ip'];
 				}
 			}
+			
+			$plan_options = makeoption('', '');
+			$planlist = $db->query("SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE `adminid` = '" . (int)$userinfo['adminid'] . "' AND `plan_type` = '0' ORDER BY `plan_name`");
+			$plannum = $db->num_rows($planlist);
+			while($plan = $db->fetch_array($planlist))
+			{
+				$plan_options.= makeoption($plan['plan_name'], $plan['planid']);
+			}
 
 			$customers_ul = makecheckbox('customers_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
@@ -880,6 +888,14 @@ if($page == 'admins'
 						$ipaddress.= makeoption($row['ip'], $row['id'], $result['ip']);
 						$ips[] = $row['ip'];
 					}
+				}
+				
+				$plan_options = makeoption('', '');
+				$planlist = $db->query("SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE `adminid` = '" . (int)$userinfo['adminid'] . "' AND `plan_type` = '0' ORDER BY `plan_name`");
+				$plannum = $db->num_rows($planlist);
+				while($plan = $db->fetch_array($planlist))
+				{
+					$plan_options.= makeoption($plan['plan_name'], $plan['planid']);
 				}
 
 				/*

@@ -54,6 +54,7 @@ define('TABLE_PANEL_REDIRECTCODES', 'redirect_codes');
 define('TABLE_PANEL_DOMAINREDIRECTS', 'domain_redirect_codes');
 define('TABLE_PANEL_IPDOCROOTSETTINGS', 'ipsandports_docrootsettings');
 define('TABLE_PANEL_DOMDOCROOTSETTINGS', 'domain_docrootsettings');
+define('TABLE_PANEL_PLANS', 'panel_plans');
 
 // APS constants
 

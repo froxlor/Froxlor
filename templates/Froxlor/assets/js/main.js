@@ -74,6 +74,26 @@ $(document).ready(function() {
 		history.back();
 	});
 
+	function checkPlans(index, Element)
+	{
+		var $thisname = $(this).attr('name').substring(0, $(this).attr('name').length-3);
+		var $thisval = $(this).prop('checked');
+		$("table input[type=text][name="+$thisname+"]").prop('disabled', $thisval);
+	}
+	
+	$("#plan").change( function() {
+		$.get("admin_plans.php", { page: "show", s: $.getQueryVariable("s"), id: $(this).val() }, function(data){
+				$.each(data, function(key, value){
+					$("#"+key).val(value);
+					$("input[type=checkbox][name='"+key+"']").prop('checked', value);
+				});
+				$("table input[type=checkbox][name$=_ul]").each(checkPlans);
+		}, "json");
+	});
+
+	$("table input[type=checkbox][name$=_ul]").each(checkPlans);
+	$("table input[type=checkbox][name$=_ul]").change(checkPlans);
+
     $('input[name=speciallogfile]').click(function () {
             if($.getQueryVariable("page") == "domains" && $.getQueryVariable("action") == "edit") {
                     $speciallogdialog.dialog("open");

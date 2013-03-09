@@ -887,6 +887,14 @@ if($page == 'customers'
 				{
 					$language_options.= makeoption($language_name, $language_file, $settings['panel']['standardlanguage'], true);
 				}
+				
+				$plan_options = makeoption('', '');
+				$planlist = $db->query("SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE `adminid` = '" . (int)$userinfo['adminid'] . "' AND `plan_type` = '1' ORDER BY `plan_name`");
+				$plannum = $db->num_rows($planlist);
+				while($plan = $db->fetch_array($planlist))
+				{
+					$plan_options.= makeoption($plan['plan_name'], $plan['planid']);
+				}
 
 				$diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 				$traffic_ul = makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
@@ -1478,6 +1486,14 @@ if($page == 'customers'
 				while(list($language_file, $language_name) = each($languages))
 				{
 					$language_options.= makeoption($language_name, $language_file, $result['def_language'], true);
+				}
+				
+				$plan_options = makeoption('', '');
+				$planlist = $db->query("SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE `adminid` = '" . (int)$userinfo['adminid'] . "' AND `plan_type` = '1' ORDER BY `plan_name`");
+				$plannum = $db->num_rows($planlist);
+				while($plan = $db->fetch_array($planlist))
+				{
+					$plan_options.= makeoption($plan['plan_name'], $plan['planid']);
 				}
 
 				$result['traffic'] = round($result['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
