@@ -362,9 +362,18 @@ elseif($page == 'htaccess')
 				$options_cgi = '0';
 			} 
 
-			$error404path = correctErrorDocument($_POST['error404path']);
-			$error403path = correctErrorDocument($_POST['error403path']);
-			$error500path = correctErrorDocument($_POST['error500path']);
+			$error404path = '';
+			if (isset($_POST['error404path'])) {
+				$error404path = correctErrorDocument($_POST['error404path']);
+			}
+			$error403path = '';
+			if (isset($_POST['error403path'])) {
+				$error403path = correctErrorDocument($_POST['error403path']);
+			}
+			$error500path = '';
+			if (isset($_POST['error500path'])) {
+				$error500path = correctErrorDocument($_POST['error500path']);
+			}
 
 			if($path_dupe_check['path'] == $path)
 			{
