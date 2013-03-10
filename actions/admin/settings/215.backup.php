@@ -28,6 +28,7 @@ return array(
 					'varname' => 'backup_enabled',
 					'type' => 'bool',
 					'default' => false,
+					'cronmodule' => 'froxlor/backup',
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
 				),
