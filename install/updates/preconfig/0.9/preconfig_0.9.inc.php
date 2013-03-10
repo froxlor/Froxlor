@@ -457,7 +457,8 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		if ($settings['system']['webserver'] == 'apache2') {
 			$has_preconfig = true;
 			$description = 'Froxlor now supports the new Apache 2.4. Please be aware that you need to load additional apache-modules in ordner to use it.<br />';
-			$description.= '<pre>LoadModule authz_core_module modules/mod_authz_core.so LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
+			$description.= '<pre>LoadModule authz_core_module modules/mod_authz_core.so
+LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
 			$question = '<strong>Do you want to enable the Apache-2.4 modification?:</strong>&nbsp;';
 			$question.= makeyesno('update_system_apache24', '1', '0', '0');
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
