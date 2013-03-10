@@ -55,7 +55,7 @@ if($page == 'overview')
 	}
 
 	natsort($domainArray);
-	$domains = implode(', ', $domainArray);
+	$domains = implode(',<br />', $domainArray);
 	$userinfo['email'] = $idna_convert->decode($userinfo['email']);
 	$yesterday = time() - (60 * 60 * 24);
 	$month = date('M Y', $yesterday);
