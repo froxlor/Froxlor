@@ -584,38 +584,79 @@ class nginx
 		return $path_options;
 	}
 
-	protected function getHtpasswds($domain)
-	{
-		//$query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `customerid`='" . $domain['customerid'] . "'";
-		$query = "SELECT DISTINCT * FROM " . TABLE_PANEL_HTPASSWDS . " AS a JOIN " . TABLE_PANEL_DOMAINS . " AS b ON a.customerid=b.customerid WHERE b.customerid='" . $domain['customerid'] . "' AND a.path LIKE CONCAT(b.documentroot,'%') AND b.domain='" . $domain['domain'] . "'" ;
+
+	/**
+	 * @brief ...
+	 *
+	 * @param (array) $domain
+	 * @return (array) $return
+	 **/
+	protected function getHtpasswds( array $domain ) {
+
+		$return = array();
+
+		$query = 'SELECT DISTINCT *
+							FROM ' . TABLE_PANEL_HTPASSWDS . ' AS a
+							JOIN ' . TABLE_PANEL_DOMAINS . ' AS b
+							USING (`customerid`)
+							WHERE b.customerid=' . $domain['customerid'] . ' AND b.domain="' . $domain['domain'] . '";';
+
 
 		$result = $this->db->query($query);
 
-		$returnval = array();
-		$x = 0;
-		while($row_htpasswds = $this->db->fetch_array($result))
-		{
-			if(count($row_htpasswds) > 0)
-			{
-				$htpasswd_filename = makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd');
+		# loop counter
+		$i = 0;
 
-				if(!isset($this->htpasswds_data[$htpasswd_filename]))
-				{
-					$this->htpasswds_data[$htpasswd_filename] = '';
+		while( $row_htpasswds = $this->db->fetch_array($result) ) {
+
+			if ( count($row_htpasswds) > 0 ) {
+
+				# htpasswd filename
+				$htpasswd_filename = makeCorrectFile( $this->settings['system']['apacheconf_htpasswddir'] . '/' . $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd');
+
+				if ( isset( $this->htpasswds_data[$htpasswd_filename]) ) {
+
+					$this->htpasswds_data[$htpasswd_filename] .= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . PHP_EOL;
+
+				} else {
+
+					$this->htpasswds_data[$htpasswd_filename] = false;
+
 				}
 
-				$this->htpasswds_data[$htpasswd_filename].= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 
-				$path = makeCorrectDir(substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1));
+				# if the domains and their web contents are located in a subdirectory of
+				# the nginx user, we have to evaluate the right path which is to protect
+				if ( stripos($row_htpasswds['path'], $domain['documentroot']) !== false ) {
 
-				$returnval[$x]['path'] = $path;
-				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
-				$returnval[$x]['usrf'] = $htpasswd_filename;
-				$x++;
+					# if the website contents is located in the user directory
+					$path = makeCorrectDir( substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1) );
+
+				} else {
+
+					# if the website contents is located in a subdirectory of the user
+					preg_match('/^([\/[:print:]]*\/)([[:print:]\/]+){1}$/i', $row_htpasswds['path'], $matches);
+					$path = makeCorrectDir( substr($row_htpasswds['path'], strlen($matches[1]) - 1) );
+
+				}
+
+
+				# return
+				$return[$i]['path'] = $path;
+				$return[$i]['root'] = makeCorrectDir( $domain['documentroot'] );
+				$return[$i]['usrf'] = $htpasswd_filename;
+
+				# increment loop counter
+				$i++;
+
 			}
+
 		}
-		return $returnval;
+
+		return $return;
+
 	}
+
 
 	protected function composePhpOptions($domain, $ssl_vhost = false)
 	{
