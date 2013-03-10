@@ -499,7 +499,8 @@ class nginx
 							switch($single['path']){
 								case '/awstats/':
 								case '/webalizer/':
-								break;
+									// no stats-alias in "location /"-context
+									break;
 								default:
 									if ($single['path']=='/'){
 										$path_options.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
@@ -550,13 +551,6 @@ class nginx
 			
 		}
 
-		if ($domain['customerroot'] != $domain['documentroot']) {
-			// if this is a subdomain and we're in a subdirectory,
-			// we don't need an alias to the stats but a redirect
-			// to the parentdomain, providing the htaccess
-			$path_options.= $this->getStats($domain, null);
-		}
-
 		/*
 		 * now the rest of the htpasswds
 		 */
@@ -587,29 +581,40 @@ class nginx
 		return $path_options;
 	}
 
-	protected function getHtpasswds($domain)
-	{
-		//$query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `customerid`='" . $domain['customerid'] . "'";
-		$query = "SELECT DISTINCT * FROM " . TABLE_PANEL_HTPASSWDS . " AS a JOIN " . TABLE_PANEL_DOMAINS . " AS b ON a.customerid=b.customerid WHERE b.customerid='" . $domain['customerid'] . "' AND a.path LIKE CONCAT(b.documentroot,'%') AND b.domain='" . $domain['domain'] . "'" ;
+	protected function getHtpasswds($domain) {
+
+		$query = 'SELECT DISTINCT *
+			FROM ' . TABLE_PANEL_HTPASSWDS . ' AS a
+			JOIN ' . TABLE_PANEL_DOMAINS . ' AS b
+			USING (`customerid`)
+			WHERE b.customerid=' . $domain['customerid'] . ' AND b.domain="' . $domain['domain'] . '";';
 
 		$result = $this->db->query($query);
 
 		$returnval = array();
 		$x = 0;
-		while($row_htpasswds = $this->db->fetch_array($result))
-		{
-			if(count($row_htpasswds) > 0)
-			{
+		while ($row_htpasswds = $this->db->fetch_array($result)) {
+
+			if (count($row_htpasswds) > 0) {
 				$htpasswd_filename = makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd');
 
-				if(!isset($this->htpasswds_data[$htpasswd_filename]))
-				{
+				// ensure we can write to the array with index $htpasswd_filename
+				if (!isset($this->htpasswds_data[$htpasswd_filename])) {
 					$this->htpasswds_data[$htpasswd_filename] = '';
 				}
 
 				$this->htpasswds_data[$htpasswd_filename].= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 
-				$path = makeCorrectDir(substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1));
+				// if the domains and their web contents are located in a subdirectory of
+				// the nginx user, we have to evaluate the right path which is to protect
+				if (stripos($row_htpasswds['path'], $domain['documentroot']) !== false ) {
+					// if the website contents is located in the user directory
+					$path = makeCorrectDir(substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1));
+				} else {
+					// if the website contents is located in a subdirectory of the user
+					preg_match('/^([\/[:print:]]*\/)([[:print:]\/]+){1}$/i', $row_htpasswds['path'], $matches);
+					$path = makeCorrectDir(substr($row_htpasswds['path'], strlen($matches[1]) - 1));
+				}
 
 				$returnval[$x]['path'] = $path;
 				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
@@ -677,8 +682,6 @@ class nginx
 	protected function getStats($domain, $single) {
 
 		$stats_text = '';
-		$pd_url = '';
-		$is_redirect = false;
 
 		// define basic path to the stats
 		if ($this->settings['system']['awstats_enabled'] == '1') {
@@ -691,39 +694,20 @@ class nginx
 		if ($domain['parentdomainid'] == '0') {
 			$alias_dir = makeCorrectDir($alias_dir.'/'.$domain['domain']);
 		} else {
-			// now here's a tricky part:
-			// as subdomains don't have their own htaccess entry, instead of an alias,
-			// we'll create redirect to the parent-domain's stats-url 
-			$pd_url = 'http://'.$domain['parentdomainid'].'/';
-			if ($this->settings['system']['awstats_enabled'] == '1') {
-				$pd_url .= 'awstats/';
-			} else {
-				$pd_url .= 'webalizer/';
-			}
-			$pd_url .= $domain['parentdomainid'];
-			$is_redirect = true;
+			$alias_dir = makeCorrectDir($alias_dir.'/'.$domain['parentdomain']);
 		}
 
 		if ($this->settings['system']['awstats_enabled'] == '1') {
 			// awstats
-			if (!$is_redirect) {
-				$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-				$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-				$stats_text.= "\t" . '}' . "\n";
-			}
 			$stats_text.= "\t" . 'location /awstats {' . "\n";
 		} else {
 			// webalizer
 			$stats_text.= "\t" . 'location /webalizer {' . "\n";
 		}
 
-		if ($is_redirect) {
-			$stats_text.= "\t\t" . 'rewrite ^(.*)$ '.$pd_url.' permanent;'."\n";
-		} else {
-			$stats_text.= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";
-			$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-			$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-		}
+		$stats_text.= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";
+		$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+		$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 		$stats_text.= "\t" . '}' . "\n\n";
 
 		return $stats_text;
