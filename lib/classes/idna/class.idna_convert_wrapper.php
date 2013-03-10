@@ -124,7 +124,7 @@ class idna_convert_wrapper
 
 			if(strlen($domain) !== 0)
 			{
-				$domain = utf8_decode($this->idna_converter->$action(utf8_encode($domain . '.none')));
+				$domain = $this->idna_converter->$action($domain . '.none');
 				$domain = substr($domain, 0, strlen($domain) - 5);
 			}
 
