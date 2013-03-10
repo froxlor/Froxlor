@@ -393,36 +393,28 @@ class ApsInstaller extends ApsParser
 		//check for special PHP permissions
 		//must be done with xpath otherwise check not possible (XML parser problem with attributes)
 
-		if($ParentMapping && $ParentMapping !== null)
-		{
+		if ($ParentMapping && $ParentMapping !== null) {
+
 			$ParentMapping->registerXPathNamespace('p', 'http://apstandard.com/ns/1/php');
 			$Result = $ParentMapping->xpath('p:permissions');
-	
-			if($Result[0]['writable'] == 'true')
-			{
-				//fixing file permissions to writeable
-	
-				if(is_dir($Path))
-				{
-					chmod($Path, 0775);
+
+			if (is_array($Result) && isset($Result[0]) && is_array($Result[0])) {
+				if	(isset($Result[0]['writable']) && $Result[0]['writable'] == 'true') {
+					// fixing file permissions to writeable
+					if (is_dir($Path)) {
+						chmod($Path, 0775);
+					} else {
+						chmod($Path, 0664);
+					}
 				}
-				else
-				{
-					chmod($Path, 0664);
-				}
-			}
-	
-			if($Result[0]['readable'] == 'false')
-			{
-				//fixing file permissions to non readable
-	
-				if(is_dir($Path))
-				{
-					chmod($Path, 0333);
-				}
-				else
-				{
-					chmod($Path, 0222);
+
+				if (isset($Result[0]['readable']) && $Result[0]['readable'] == 'false') {
+					//fixing file permissions to non readable	
+					if (is_dir($Path)) {
+						chmod($Path, 0333);
+					} else {
+						chmod($Path, 0222);
+					}
 				}
 			}
 		}
