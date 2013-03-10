@@ -449,31 +449,27 @@ class nginx
 		return $vhost_content;
 	}
 
-	protected function create_pathOptions($domain)
-	{
+	protected function create_pathOptions($domain) {
 		$has_location = false;
 
 		$query = "SELECT * FROM " . TABLE_PANEL_HTACCESS . " WHERE `path` LIKE '" . $domain['documentroot'] . "%'";
 		$result = $this->db->query($query);
 
 		$path_options = '';
-
 		$htpasswds = $this->getHtpasswds($domain);
 
-		while($row = $this->db->fetch_array($result))
-		{
-			if(!empty($row['error404path']))
-			{
+		// for each entry in the htaccess table
+		while ($row = $this->db->fetch_array($result)) {
+
+			if (!empty($row['error404path'])) {
 				$path_options.= "\t".'error_page   404    ' . makeCorrectFile($row['error404path']) . ';' . "\n";
 			}
 
-			if(!empty($row['error403path']))
-			{
+			if (!empty($row['error403path'])) {
 				$path_options.= "\t".'error_page   403    ' . makeCorrectFile($row['error403path']) . ';' . "\n";
 			}
 
-			if(!empty($row['error500path']))
-			{
+			if (!empty($row['error500path'])) {
 				$path_options.= "\t".'error_page   502 503 504    ' . makeCorrectFile($row['error500path']) . ';' . "\n";
 			}
 
@@ -554,6 +550,13 @@ class nginx
 			
 		}
 
+		if ($domain['customerroot'] != $domain['documentroot']) {
+			// if this is a subdomain and we're in a subdirectory,
+			// we don't need an alias to the stats but a redirect
+			// to the parentdomain, providing the htaccess
+			$path_options.= $this->getStats($domain, null);
+		}
+
 		/*
 		 * now the rest of the htpasswds
 		 */
@@ -571,7 +574,7 @@ class nginx
 							unset($htpasswds[$idx]);
 						break;
 						default:
-							$path_options.= "\t" . 'location ' . makeCorrectPath($single['path']) . ' {' . "\n";
+							$path_options.= "\t" . 'location ' . makeCorrectDir($single['path']) . ' {' . "\n";
 							$path_options.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
 							$path_options.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 							$path_options.= "\t".'}' . "\n";
@@ -645,7 +648,7 @@ class nginx
 		&& $this->settings['system']['deactivateddocroot'] != '')
 		{
 			$webroot_text.= "\t".'# Using docroot for deactivated users...' . "\n";
-			$webroot_text.= "\t".'root     '.makeCorrectPath($this->settings['system']['deactivateddocroot']).';'."\n";
+			$webroot_text.= "\t".'root     '.makeCorrectDir($this->settings['system']['deactivateddocroot']).';'."\n";
 			$this->_deactivated = true;
 		}
 		else
@@ -671,100 +674,57 @@ class nginx
 		return $webroot_text;
 	}
 
-	protected function getStats($domain,$single=array())
-	{
+	protected function getStats($domain, $single) {
+
 		$stats_text = '';
+		$pd_url = '';
+		$is_redirect = false;
 
-		if($domain['speciallogfile'] == '1'
-		&& $this->settings['system']['mod_log_sql'] != '1')
-		{
-			if($domain['parentdomainid'] == '0')
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
-					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\t" . '}' . "\n";
-				}
-				else
-				{
-					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-				}
-			}
-			else
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
-					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\t" . '}' . "\n";
-				}
-				else
-				{
-					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-
-				}
-			}
+		// define basic path to the stats
+		if ($this->settings['system']['awstats_enabled'] == '1') {
+			$alias_dir = makeCorrectFile($domain['customerroot'] . '/awstats/');
+		} else {
+			$alias_dir = makeCorrectFile($domain['customerroot'] . '/webalizer/');
 		}
-		else
-		{
-			if($domain['customerroot'] != $domain['documentroot'])
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
-					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\t\t" . '}' . "\n";
-				}
-				else
-				{
-					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'root ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
 
-				}
+		// if this is a parentdomain, we use this domain-name
+		if ($domain['parentdomainid'] == '0') {
+			$alias_dir = makeCorrectDir($alias_dir.'/'.$domain['domain']);
+		} else {
+			// now here's a tricky part:
+			// as subdomains don't have their own htaccess entry, instead of an alias,
+			// we'll create redirect to the parent-domain's stats-url 
+			$pd_url = 'http://'.$domain['parentdomainid'].'/';
+			if ($this->settings['system']['awstats_enabled'] == '1') {
+				$pd_url .= 'awstats/';
+			} else {
+				$pd_url .= 'webalizer/';
 			}
-			// if the docroots are equal, we still have to set an alias for awstats
-			// because the stats are in /awstats/[domain], not just /awstats/
-			// also, the awstats-icons are someplace else too!
-			// -> webalizer does not need this!
-			elseif($this->settings['system']['awstats_enabled'] == '1')
-			{
-				$stats_text.= "\t" . 'location /awstats {' . "\n";
-				$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
-				$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-				$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-				$stats_text.= "\t" . '}' . "\n";
+			$pd_url .= $domain['parentdomainid'];
+			$is_redirect = true;
+		}
+
+		if ($this->settings['system']['awstats_enabled'] == '1') {
+			// awstats
+			if (!$is_redirect) {
 				$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
 				$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
 				$stats_text.= "\t" . '}' . "\n";
 			}
+			$stats_text.= "\t" . 'location /awstats {' . "\n";
+		} else {
+			// webalizer
+			$stats_text.= "\t" . 'location /webalizer {' . "\n";
 		}
+
+		if ($is_redirect) {
+			$stats_text.= "\t\t" . 'rewrite ^(.*)$ '.$pd_url.' permanent;'."\n";
+		} else {
+			$stats_text.= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";
+			$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+			$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
+		}
+		$stats_text.= "\t" . '}' . "\n\n";
 
 		return $stats_text;
 	}
