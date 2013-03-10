@@ -503,7 +503,8 @@ class nginx
 							switch($single['path']){
 								case '/awstats/':
 								case '/webalizer/':
-								break;
+									$path_options .= $this->getStats( $domain, $single ); break;
+
 								default:
 									if ($single['path']=='/'){
 										$path_options.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
@@ -695,7 +696,7 @@ class nginx
 			$this->_deactivated = false;
 		}
 
-		$webroot_text.= "\t".'location / {'."\n";
+		$webroot_text.= "\n\t".'location / {'."\n";
 		$webroot_text.= "\t\t".'index    index.php index.html index.htm;'."\n";
 		$webroot_text.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 
@@ -706,8 +707,8 @@ class nginx
 
 		$webroot_text.= "\t".'}'."\n\n";
 		$webroot_text.= "\tlocation @rewrites {\n";
-		$webroot_text.= "rewrite ^ /index.php last;\n";
-		$webroot_text.= "}\n\n";
+		$webroot_text.= "\t\trewrite ^ /index.php last;\n";
+		$webroot_text.= "\t}\n\n";
 
 		return $webroot_text;
 	}
