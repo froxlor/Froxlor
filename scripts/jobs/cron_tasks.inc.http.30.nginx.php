@@ -671,103 +671,51 @@ class nginx
 		return $webroot_text;
 	}
 
-	protected function getStats($domain,$single=array())
-	{
-		$stats_text = '';
 
-		if($domain['speciallogfile'] == '1'
-		&& $this->settings['system']['mod_log_sql'] != '1')
-		{
-			if($domain['parentdomainid'] == '0')
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
-					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\t" . '}' . "\n";
-				}
-				else
-				{
-					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-				}
-			}
-			else
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
-					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\t" . '}' . "\n";
-				}
-				else
-				{
-					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
+	/**
+	 * @brief Creates VHost-Container for Awstats and/or Webalizer
+	 *
+	 * @param (array) $domain
+	 * @param (array) $single
+	 * @return (string) $stats_container_text
+	 **/
+	protected function getStats( array $domain, array $single ) {
 
-				}
-			}
-		}
-		else
-		{
-			if($domain['customerroot'] != $domain['documentroot'])
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
-					$stats_text.= "\t" . 'location /awstats {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
-					$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-					$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-					$stats_text.= "\t\t" . '}' . "\n";
-				}
-				else
-				{
-					$stats_text.= "\t" . 'location /webalizer {' . "\n";
-					$stats_text.= "\t\t" . 'root ' .  makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . ';' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-					$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-					$stats_text.= "\t" . '}' . "\n";
+		$stats_container_text = '';
 
-				}
+		if ( $domain['speciallogfile'] ) {
+
+			if ( $this->settings['system']['awstats_enabled'] ) {
+
+				# container for awstats
+				$stats_container_text .= "\t" . '# Awstats' . PHP_EOL;
+				$stats_container_text .= "\t" . 'location /awstats {' . PHP_EOL;
+				$stats_container_text .= "\t\t" . 'alias' . "\t\t\t" . makeCorrectFile( $domain['customerroot'] . '/awstats/' . ( $domain['parentdomainid'] == 0 ? $domain['domain'] : $domain['parentdomain'] ) ) . ';' . PHP_EOL;
+				$stats_container_text .= "\t\t" . 'auth_basic' . "\t\t" . '"Restricted Area";' . PHP_EOL;
+				$stats_container_text .= "\t\t" . 'auth_basic_user_file' . "\t" . $single['usrf'] . ';' . PHP_EOL;
+				$stats_container_text .= "\t" . '}' . PHP_EOL . PHP_EOL;
+				$stats_container_text .= "\t" . 'location /awstats-icon {' . PHP_EOL;
+				$stats_container_text .= "\t\t" . 'alias' . "\t\t\t" . makeCorrectDir( $this->settings['system']['awstats_icons'] ) . ';' . PHP_EOL;
+				$stats_container_text .= "\t" . '}' . PHP_EOL . PHP_EOL;
+
+			} elseif ( !$this->settings['system']['awstats_enabled'] ) {
+
+				# container for webalizer
+				$stats_container_text .= "\t" . '# Webalizer' . PHP_EOL;
+				$stats_container_text .= "\t" . 'location /webalizer {' . PHP_EOL;
+				$stats_container_text .= "\t\t" . 'alias' . "\t\t\t" .makeCorrectFile( $domain['customerroot'] . '/webalizer/' . ( $domain['parentdomainid'] == 0 ? $domain['domain'] : $domain['parentdomain'] ) ) . ';' . PHP_EOL;
+				$stats_container_text .= "\t\t" . 'auth_basic' . "\t\t" . '"Restricted Area";' . PHP_EOL;
+				$stats_container_text .= "\t\t" . 'auth_basic_user_file' . "\t" . $single['usrf'] . ';' . PHP_EOL;
+				$stats_container_text .= "\t" . '}' . PHP_EOL . PHP_EOL;
+
 			}
-			// if the docroots are equal, we still have to set an alias for awstats
-			// because the stats are in /awstats/[domain], not just /awstats/
-			// also, the awstats-icons are someplace else too!
-			// -> webalizer does not need this!
-			elseif($this->settings['system']['awstats_enabled'] == '1')
-			{
-				$stats_text.= "\t" . 'location /awstats {' . "\n";
-				$stats_text.= "\t\t" . 'alias ' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . ';' . "\n";
-				$stats_text.= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
-				$stats_text.= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
-				$stats_text.= "\t" . '}' . "\n";
-				$stats_text.= "\t" . 'location /awstats-icon {' . "\n";
-				$stats_text.= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . ';' . "\n";
-				$stats_text.= "\t" . '}' . "\n";
-			}
+
 		}
 
-		return $stats_text;
+		return $stats_container_text;
+
 	}
+
 
 	/**
 	 * @TODO mod_log_sql
