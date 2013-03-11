@@ -1936,3 +1936,13 @@ $lng['serversettings']['enablewebfonts']['title'] = 'Enable usage of a google we
 $lng['serversettings']['enablewebfonts']['description'] = 'If enabled, the defined webfont is being used for the font-display';
 $lng['serversettings']['definewebfont']['title'] = 'Define a <a href="http://www.google.com/webfonts" rel="external">google-webfont</a> for the panel';
 $lng['serversettings']['definewebfont']['description'] = 'If enabled, this wefont will be used for the font-display.<br />Note: replace spaces with the "+" sign, e.g. "Open+Sans"';
+
+// ADDED IN 0.9.28-svn7
+$lng['admin']['plans']['plan'] = 'Hosting plans';
+$lng['admin']['plans']['usetemplate'] = 'Use predefined plan';
+$lng['admin']['plans']['plan_name'] = 'Plan name';
+$lng['admin']['plans']['plan_add'] = 'Create plan';
+$lng['admin']['plans']['plan_edit'] = 'Edit plan';
+$lng['admin']['plans']['plan_group'] = 'Plan for';
+$lng['question']['admin_plan_reallydelete'] = 'Do you really want to delete %s?';
+$lng['error']['nameexists'] = 'Plan name %s already exists or is not correct.';

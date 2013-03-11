@@ -270,6 +270,10 @@ return array (
 					'url' => 'admin_message.php?page=message',
 					'label' => $lng['admin']['message'],
 				),
+				array (
+					'url' => 'admin_plans.php?page=plan',
+					'label' => $lng['admin']['plans']['plan'],
+				),
 			),
 		),
 	),

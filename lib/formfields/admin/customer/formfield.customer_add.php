@@ -128,6 +128,12 @@ return array(
 				'title' => $lng['admin']['servicedata'],
 				'image' => 'icons/user_add.png',
 				'fields' => array(
+					'plan' => array(
+						'visible' => ($plannum > 0 ? true : false),
+						'label' => $lng['admin']['plans']['usetemplate'],
+						'type' => 'select',
+						'select_var' => $plan_options
+					),
 					'diskspace' => array(
 						'label' => $lng['customer']['diskspace'],
 						'type' => 'textul',

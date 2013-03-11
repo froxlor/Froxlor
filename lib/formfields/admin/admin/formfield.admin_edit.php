@@ -86,6 +86,12 @@ return array(
 						'type' => 'select',
 						'select_var' => $ipaddress
 					),
+					'plan' => array(
+						'visible' => ($plannum > 0 ? true : false),
+						'label' => $lng['admin']['plans']['usetemplate'],
+						'type' => 'select',
+						'select_var' => $plan_options
+					),
 					'change_serversettings' => array(
 						'label' => $lng['admin']['change_serversettings'],
 						'type' => 'checkbox',
