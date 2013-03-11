@@ -535,7 +535,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_regex', ''),
 	('panel', 'use_webfonts', '0'),
 	('panel', 'webfont', 'Numans'),
-	('panel', 'version', '0.9.28-svn6');
+	('panel', 'version', '0.9.28-rc1');
 
 
 
