@@ -103,6 +103,42 @@ return Array(
 			'dns' => Array(
 				'label' => $lng['admin']['configfiles']['dns'],
 				'daemons' => Array(
+
+					// Begin: Bind 9.x Config
+					'bind9' => array(
+					'label' => 'Bind9 Nameserver',
+					'commands_1' => array(
+							'cd /usr/ports/dns/bind99',
+							'make config',
+							'set [x] International Domain Names',
+							'set [x] IPv6 protocol (default)',
+							'set [x] 64-bit file support',
+							'set [x] Replace base BIND with this version',
+							'set [x] Enable RPZ NSDNAME policy records',
+							'set [x] Enable RPZ NSIP trigger rules',
+							'set [x] dig/host/nslookup will do DNSSEC validation',
+							'set [x] Build with OpenSSL (Required for DNSSEC) (default)',
+							'set [x] Threading support (default)',
+							'make install clean; rehash',
+						),
+						'commands_2' => array(
+							'echo "named_enable=\"YES\"" >> /etc/rc.conf',
+							PHP_EOL,
+							(strpos($settings['system']['bindconf_directory'], '/etc/namedb') === false) ? '(TIP: Be sure the path below is "/etc/namedb", if not you have configured the bind-directory in a false way in PANEL->SETTINGS->NAMESERVER SETTINGS!)' : null,
+							'echo "include \"'. $settings['system']['bindconf_directory'] .'froxlor_bind.conf\";" >> '. $settings['system']['bindconf_directory'] .'named.conf',
+							'echo "include \"'. $settings['system']['bindconf_directory'] .'default-zone\";" >> '. $settings['system']['bindconf_directory'] .'named.conf',
+						),
+						'files' => array(
+							'etc_namedb_named.conf' => $settings['system']['bindconf_directory'] .'named.conf',
+							'etc_namedb_master_default.zone' => $settings['system']['bindconf_directory'] .'master/default.zone',
+							'etc_namedb_default-zone' => $settings['system']['bindconf_directory'] .'default-zone',
+						),
+						'restart' => array(
+							'/etc/rc.d/named restart'
+						)
+					),
+					// End: Bind 9.x Config
+
 					'powerdns' => Array(
 						'label' => 'PowerDNS',
 						'commands_1' => Array(
