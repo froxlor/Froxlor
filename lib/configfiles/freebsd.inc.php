@@ -203,7 +203,39 @@ return Array(
 						'restart' => Array(
 							'sh /usr/local/etc/rc.d/dovecot restart'
 						)
+					),
+
+					// Begin: Dovecot 2.x Config
+					'dovecot2' => array(
+						'label' => 'Dovecot 2.x',
+						'commands_1' => array(
+							'cd /usr/ports/mail/dovecot2',
+							'make config',
+							'set [x] kqueue(2) support (default)',
+							'set [x] MySQL database',
+							'set [x] SSL protocol (default)',
+							'make install clean; rehash',
+						),
+						'commands_2' => array(
+							'echo "dovecot_enable=\"YES\"" >> /etc/rc.conf',
+							PHP_EOL,
+							'pw adduser '. $vmail_username .' -g '. $vmail_groupname .' -u '. $settings['system']['vmail_gid'] .' -d /nonexistent -s /usr/sbin/nologin -c "User for virtual mailtransport used by Postfix and Dovecot"',
+							PHP_EOL,
+							'chmod 0640 /usr/local/etc/dovecot-sql.conf'
+						),
+						'files' => array(
+							'usr_local_etc_dovecot_dovecot.conf' => '/usr/local/etc/dovecot/dovecot.conf',
+							'usr_local_etc_dovecot_dovecot-sql.conf' => '/usr/local/etc/dovecot/dovecot-sql.conf'
+						),
+						'commands_3' => array(
+							'echo "dovecot unix - n n - - pipe'. PHP_EOL .'flags=DRhu user='. $vmail_username .':'. $vmail_groupname .' argv=/usr/lib/dovecot/deliver -f ${sender} -d ${recipient} -a ${recipient}" >> /usr/local/etc/postfix/master.cf',
+						),
+						'restart' => array(
+							'/usr/local/etc/rc.d/dovecot restart'
+						)
 					)
+					// End: Dovecot 2.x Config
+
 				)
 			),
 			'ftp' => Array(
