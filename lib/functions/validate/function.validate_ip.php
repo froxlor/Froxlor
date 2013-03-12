@@ -22,25 +22,19 @@
  *
  * @return mixed 	ip address on success, standard_error on failure
  */
+function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
 
-function validate_ip($ip, $return_bool = false, $lng = 'invalidip')
-{
-	if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === FALSE
-	   && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === FALSE
-	   && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) === FALSE)
-	{
-		if($return_bool)
-		{
+	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false
+			&& filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false
+			&& filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) === false
+	) {
+		if ($return_bool) {
 			return false;
-		}
-		else
-		{
+		} else {
 			standard_error($lng, $ip);
 			exit;
 		}
-	}
-	else
-	{
+	} else {
 		return $ip;
 	}
 }
