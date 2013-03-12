@@ -39,6 +39,40 @@ return Array(
 			'http' => Array(
 				'label' => $lng['admin']['configfiles']['http'],
 				'daemons' => Array(
+
+					// Begin: Nginx Config
+					'nginx' => array(
+					'label' => 'Nginx Webserver',
+					'commands_1' => array(
+							'cd /usr/ports/www/nginx',
+							'make config',
+							'set [x] IPv6 protocol (default)',
+							'set [x] Enable HTTP module (default)',
+							'set [x] Enable http_cache module (default)',
+							'set [x] Enable http_gzip_static module',
+							'set [x] Enable http_rewrite module (default)',
+							'set [x] Enable http_ssl module (default)',
+							'set [x] Enable http_stub_status module (default)',
+							'make install clean; rehash',
+						),
+						'commands_2' => array(
+							$configcommand['vhost'],
+							$configcommand['diroptions'],
+							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p '. $settings['system']['deactivateddocroot'] : null,
+							'mkdir -p '. $settings['system']['documentroot_prefix'],
+							'mkdir -p '. $settings['system']['mod_fcgid_tmpdir'],
+							'mkdir -p '. $settings['system']['logfiles_directory'],
+							'echo "nginx_enable=\"YES\"" >> /etc/rc.conf'
+						),
+						'files' => array(
+							'usr_local_etc_nginx_nginx.conf' => '/usr/local/etc/nginx/nginx.conf',
+						),
+						'restart' => array(
+							'/usr/local/etc/rc.d/nginx restart'
+						)
+					),
+					// End: Nginx Config
+
 					'apache2' => Array(
 						'label' => 'Apache2 Webserver',
 						'commands' => Array(
