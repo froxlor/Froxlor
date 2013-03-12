@@ -39,6 +39,40 @@ return Array(
 			'http' => Array(
 				'label' => $lng['admin']['configfiles']['http'],
 				'daemons' => Array(
+
+					// Begin: Nginx Config
+					'nginx' => array(
+					'label' => 'Nginx Webserver',
+					'commands_1' => array(
+							'cd /usr/ports/www/nginx',
+							'make config',
+							'set [x] IPv6 protocol (default)',
+							'set [x] Enable HTTP module (default)',
+							'set [x] Enable http_cache module (default)',
+							'set [x] Enable http_gzip_static module',
+							'set [x] Enable http_rewrite module (default)',
+							'set [x] Enable http_ssl module (default)',
+							'set [x] Enable http_stub_status module (default)',
+							'make install clean; rehash',
+						),
+						'commands_2' => array(
+							$configcommand['vhost'],
+							$configcommand['diroptions'],
+							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p '. $settings['system']['deactivateddocroot'] : null,
+							'mkdir -p '. $settings['system']['documentroot_prefix'],
+							'mkdir -p '. $settings['system']['mod_fcgid_tmpdir'],
+							'mkdir -p '. $settings['system']['logfiles_directory'],
+							'echo "nginx_enable=\"YES\"" >> /etc/rc.conf'
+						),
+						'files' => array(
+							'usr_local_etc_nginx_nginx.conf' => '/usr/local/etc/nginx/nginx.conf',
+						),
+						'restart' => array(
+							'/usr/local/etc/rc.d/nginx restart'
+						)
+					),
+					// End: Nginx Config
+
 					'apache2' => Array(
 						'label' => 'Apache2 Webserver',
 						'commands' => Array(
@@ -69,6 +103,42 @@ return Array(
 			'dns' => Array(
 				'label' => $lng['admin']['configfiles']['dns'],
 				'daemons' => Array(
+
+					// Begin: Bind 9.x Config
+					'bind9' => array(
+					'label' => 'Bind9 Nameserver',
+					'commands_1' => array(
+							'cd /usr/ports/dns/bind99',
+							'make config',
+							'set [x] International Domain Names',
+							'set [x] IPv6 protocol (default)',
+							'set [x] 64-bit file support',
+							'set [x] Replace base BIND with this version',
+							'set [x] Enable RPZ NSDNAME policy records',
+							'set [x] Enable RPZ NSIP trigger rules',
+							'set [x] dig/host/nslookup will do DNSSEC validation',
+							'set [x] Build with OpenSSL (Required for DNSSEC) (default)',
+							'set [x] Threading support (default)',
+							'make install clean; rehash',
+						),
+						'commands_2' => array(
+							'echo "named_enable=\"YES\"" >> /etc/rc.conf',
+							PHP_EOL,
+							(strpos($settings['system']['bindconf_directory'], '/etc/namedb') === false) ? '(TIP: Be sure the path below is "/etc/namedb", if not you have configured the bind-directory in a false way in PANEL->SETTINGS->NAMESERVER SETTINGS!)' : null,
+							'echo "include \"'. $settings['system']['bindconf_directory'] .'froxlor_bind.conf\";" >> '. $settings['system']['bindconf_directory'] .'named.conf',
+							'echo "include \"'. $settings['system']['bindconf_directory'] .'default-zone\";" >> '. $settings['system']['bindconf_directory'] .'named.conf',
+						),
+						'files' => array(
+							'etc_namedb_named.conf' => $settings['system']['bindconf_directory'] .'named.conf',
+							'etc_namedb_master_default.zone' => $settings['system']['bindconf_directory'] .'master/default.zone',
+							'etc_namedb_default-zone' => $settings['system']['bindconf_directory'] .'default-zone',
+						),
+						'restart' => array(
+							'/etc/rc.d/named restart'
+						)
+					),
+					// End: Bind 9.x Config
+
 					'powerdns' => Array(
 						'label' => 'PowerDNS',
 						'commands_1' => Array(
@@ -203,7 +273,39 @@ return Array(
 						'restart' => Array(
 							'sh /usr/local/etc/rc.d/dovecot restart'
 						)
+					),
+
+					// Begin: Dovecot 2.x Config
+					'dovecot2' => array(
+						'label' => 'Dovecot 2.x',
+						'commands_1' => array(
+							'cd /usr/ports/mail/dovecot2',
+							'make config',
+							'set [x] kqueue(2) support (default)',
+							'set [x] MySQL database',
+							'set [x] SSL protocol (default)',
+							'make install clean; rehash',
+						),
+						'commands_2' => array(
+							'echo "dovecot_enable=\"YES\"" >> /etc/rc.conf',
+							PHP_EOL,
+							'pw adduser '. $vmail_username .' -g '. $vmail_groupname .' -u '. $settings['system']['vmail_gid'] .' -d /nonexistent -s /usr/sbin/nologin -c "User for virtual mailtransport used by Postfix and Dovecot"',
+							PHP_EOL,
+							'chmod 0640 /usr/local/etc/dovecot-sql.conf'
+						),
+						'files' => array(
+							'usr_local_etc_dovecot_dovecot.conf' => '/usr/local/etc/dovecot/dovecot.conf',
+							'usr_local_etc_dovecot_dovecot-sql.conf' => '/usr/local/etc/dovecot/dovecot-sql.conf'
+						),
+						'commands_3' => array(
+							'echo "dovecot unix - n n - - pipe'. PHP_EOL .'flags=DRhu user='. $vmail_username .':'. $vmail_groupname .' argv=/usr/lib/dovecot/deliver -f ${sender} -d ${recipient} -a ${recipient}" >> /usr/local/etc/postfix/master.cf',
+						),
+						'restart' => array(
+							'/usr/local/etc/rc.d/dovecot restart'
+						)
 					)
+					// End: Dovecot 2.x Config
+
 				)
 			),
 			'ftp' => Array(
