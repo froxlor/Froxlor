@@ -279,7 +279,7 @@ if($page == 'customers'
 
 				if($result['email_autoresponder'] != '-1')
 				{
-					$admin_update_query.= ", `email_autoresponder` = `email_autoresponder` - 0" . (int)$result['email_autoresponder'];
+					$admin_update_query.= ", `email_autoresponder_used` = `email_autoresponder_used` - 0" . (int)$result['email_autoresponder'];
 				}
 
 				if($result['subdomains'] != '-1')
@@ -299,7 +299,7 @@ if($page == 'customers'
 
 				if($result['aps_packages'] != '-1')
 				{
-					$admin_update_query.= ", `aps_packages` = `aps_packages` - 0" . (int)$result['aps_packages'];
+					$admin_update_query.= ", `aps_packages_used` = `aps_packages_used` - 0" . (int)$result['aps_packages'];
 				}
 
 				if(($result['diskspace'] / 1024) != '-1')
