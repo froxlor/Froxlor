@@ -1958,14 +1958,14 @@ if(isFroxlorVersion('0.9.28-svn3'))
 
 	showUpdateStep('Altering Froxlor database and tables to use UTF-8. This may take a while..', true);
 
-	$db->query('ALTER DATABASE ' . $db->getDbName() . ' CHARACTER SET utf8 COLLATE utf8_general_ci');
+	$db->query('ALTER DATABASE `' . $db->getDbName() . '` CHARACTER SET utf8 COLLATE utf8_general_ci');
 
 	$handle = $db->query('SHOW TABLES');
 	while ($row = $db->fetch_array($handle))
 	{
 		foreach ($row as $table)
 		{
-			$db->query('ALTER TABLE ' . $table . ' CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
+			$db->query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
 		}
 	}
 
