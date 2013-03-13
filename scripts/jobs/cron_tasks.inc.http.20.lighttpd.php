@@ -489,6 +489,15 @@ class lighttpd
 		if ($domain['specialsettings'] != "") {
 			$vhost_content.= $domain['specialsettings'] . "\n";
 		}
+
+		if ($ipandport['default_vhostconf_domain'] != '') {
+			$vhost_content.= $ipandport['default_vhostconf_domain'] . "\n";
+		}
+
+		if ($this->settings['system']['default_vhostconf'] != '') {
+			$vhost_content.= $this->settings['system']['default_vhostconf'] . "\n";
+		}
+
 		$vhost_content.= '}' . "\n";
 
 		return $vhost_content;
