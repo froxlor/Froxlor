@@ -167,10 +167,6 @@ $lng['extras']['directoryprotection_add'] = 'Crear Protección de Directorio';
 $lng['extras']['view_directory'] = 'Mostrar directorio';
 $lng['extras']['pathoptions_add'] = 'agregue las opciones del camino';
 $lng['extras']['directory_browsing'] = 'Mostrar contenido del Directorio';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'URL para errorDocumento 404';
 $lng['extras']['errordocument403path'] = 'URL para errorDocumento 403';
 $lng['extras']['errordocument500path'] = 'URL para errorDocumento 500';
@@ -443,5 +439,3 @@ $lng['panel']['search'] = 'Buscar';
 $lng['panel']['used'] = 'usado';
 $lng['panel']['translator'] = 'Traductor';
 $lng['error']['stringformaterror'] = 'El valor para la fila "%s" no esta dentro de los formatos esperados.';
-
-?>

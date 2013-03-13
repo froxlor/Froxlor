@@ -167,14 +167,6 @@ $lng['extras']['view_directory'] = 'Visa kataloginnehåll';
 $lng['extras']['pathoptions_add'] = '[Skapa ny regel för sökvägar]';
 $lng['extras']['directory_browsing'] = 'Visning av katalogstruktur';
 $lng['extras']['pathoptions_edit'] = 'Ändra sökvägsinställningar';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
-$lng['extras']['errordocument404path'] = 'URL to ErrorDocument 404';
-$lng['extras']['errordocument403path'] = 'URL to ErrorDocument 403';
-$lng['extras']['errordocument500path'] = 'URL to ErrorDocument 500';
-$lng['extras']['errordocument401path'] = 'URL to ErrorDocument 401';
 
 /**
  * Errors
@@ -401,9 +393,6 @@ $lng['question']['admin_ip_reallydelete'] = 'Är du säker på att du vill rader
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs and Ports';
 $lng['admin']['ipsandports']['add'] = '[Lägg till IP/Port]';
 $lng['admin']['ipsandports']['edit'] = 'Ändra IP/Port';
-$lng['admin']['ipsandports']['ipandport'] = 'IP/Port';
-$lng['admin']['ipsandports']['ip'] = 'IP';
-$lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
 
@@ -517,18 +506,8 @@ $lng['serversettings']['mailpwcleartext']['removelink'] = 'Klicka här för att 
 $lng['question']['admin_cleartextmailpws_reallywipe'] = 'Är du säker på att du vill radera alla okrupterade lösenord från tabellen mail_users? Du kan INTE ändra dig efteråt!';
 $lng['admin']['configfiles']['overview'] = 'Översikt';
 $lng['admin']['configfiles']['wizard'] = 'Guide';
-$lng['admin']['configfiles']['distribution'] = 'Distribution';
-$lng['admin']['configfiles']['service'] = 'Service';
-$lng['admin']['configfiles']['daemon'] = 'Daemon';
-$lng['admin']['configfiles']['http'] = 'Webserver (HTTP)';
-$lng['admin']['configfiles']['dns'] = 'Namnserver (DNS)';
 $lng['admin']['configfiles']['mail'] = 'E-postserver (POP3/IMAP)';
 $lng['admin']['configfiles']['smtp'] = 'E-postserver (SMTP)';
-$lng['admin']['configfiles']['ftp'] = 'FTP-Server';
-$lng['admin']['configfiles']['etc'] = 'Others (System)';
-$lng['admin']['configfiles']['choosedistribution'] = '-- Choose a distribution --';
-$lng['admin']['configfiles']['chooseservice'] = '-- Choose a service --';
-$lng['admin']['configfiles']['choosedaemon'] = '-- Choose a daemon --';
 $lng['admin']['trafficlastrun'] = 'Senaste trafikberäkningen gjordes';
 
 // ADDED IN 1.2.16-svn10
@@ -567,7 +546,6 @@ $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Var skall htp
 // ADDED IN 1.2.16-svn15
 
 $lng['error']['formtokencompromised'] = 'Den säkra anslutningen till Froxlor har avslutats och du har av säkerhetsskäl automatiskt loggats ur.';
-$lng['serversettings']['mysql_access_host']['title'] = 'MySQL-Access-Hosts';
 $lng['serversettings']['mysql_access_host']['description'] = 'En kommaseparerad lista med datornamn som tillåts att kontakta MySQL servern.';
 
 // ADDED IN 1.2.18-svn1
@@ -583,8 +561,6 @@ $lng['admin']['webalizersettings'] = 'Webalizer inställningar';
 $lng['admin']['webalizer']['normal'] = 'Normal';
 $lng['admin']['webalizer']['quiet'] = 'Tyst';
 $lng['admin']['webalizer']['veryquiet'] = 'Väldigt tyst';
-$lng['serversettings']['webalizer_quiet']['title'] = 'Webalizer output';
-$lng['serversettings']['webalizer_quiet']['description'] = 'Verbosity of the webalizer-program';
 
 // ADDED IN 1.2.18-svn3
 
@@ -738,5 +714,3 @@ $lng['traffic']['distribution'] = '<font color="#019522">FTP</font> | <font colo
 $lng['traffic']['sumhttp'] = 'Summa HTTP-Trafik i';
 $lng['traffic']['sumftp'] = 'Summa FTP-Trafik i';
 $lng['traffic']['summail'] = 'Summa E-posttrafik i';
-
-?>

@@ -165,10 +165,6 @@ $lng['extras']['view_directory'] = 'Zobrazi» obsah adresára';
 $lng['extras']['pathoptions_add'] = 'Prida» moŸnosti cesty';
 $lng['extras']['directory_browsing'] = 'Prezeranie obsahu adresáru';
 $lng['extras']['pathoptions_edit'] = 'Upravi» moŸnosti cesty';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'URL pre Chybový Dokument 404';
 $lng['extras']['errordocument403path'] = 'URL pre Chybový Dokument 403';
 $lng['extras']['errordocument500path'] = 'URL pre Chybový Dokument 500';
@@ -394,10 +390,6 @@ $lng['question']['admin_ip_reallydelete'] = 'Naozaj chcete zmaza» IP adresu %s?
 $lng['admin']['ipsandports']['ipsandports'] = 'IP a Port(y)';
 $lng['admin']['ipsandports']['add'] = 'Prida» IP/Port';
 $lng['admin']['ipsandports']['edit'] = 'Upravi»t IP/Port';
-$lng['admin']['ipsandports']['ipandport'] = 'IP/Port';
-$lng['admin']['ipsandports']['ip'] = 'IP';
-$lng['admin']['ipsandports']['port'] = 'Port';
-
 // ADDED IN 1.2.13-rc3
 
 $lng['error']['cantchangesystemip'] = 'NemôŸete zmeni» poslednú IP systému, ani vytvori» ïaµ¹iu novú IP/Port kombináciu pre IP systém alebo zmeni» systémovú IP.';
@@ -460,5 +452,3 @@ $lng['serversettings']['phpappendopenbasedir']['description'] = 'Tieto cesty (od
 // CHANGED IN 1.2.15-rc1
 
 $lng['error']['loginnameissystemaccount'] = 'NemôŸete vytvori» úèet, ktorý je podobný systémovému úètu (napríklad zaènite s &quot;%s&quot;). Prosím, zadajte iný názov úètu.';
-
-?>

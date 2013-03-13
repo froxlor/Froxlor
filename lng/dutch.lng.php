@@ -50,7 +50,6 @@ $lng['login']['profile_lng'] = 'Profiel taal';
  * Customer
  */
 
-$lng['customer']['documentroot'] = 'Home directory';
 $lng['customer']['name'] = 'Naam';
 $lng['customer']['firstname'] = 'Voornaam';
 $lng['customer']['company'] = 'Bedrijfsnaam';
@@ -63,11 +62,7 @@ $lng['customer']['email'] = 'Email';
 $lng['customer']['customernumber'] = 'Klant ID';
 $lng['customer']['diskspace'] = 'Webruimte (MB)';
 $lng['customer']['traffic'] = 'Verkeer (GB)';
-$lng['customer']['mysqls'] = 'MySQL-Databases';
 $lng['customer']['emails'] = 'E-mail-Adressen';
-$lng['customer']['accounts'] = 'E-mail-Accounts';
-$lng['customer']['forwarders'] = 'E-mail-Forwarders';
-$lng['customer']['ftps'] = 'FTP-Accounts';
 $lng['customer']['subdomains'] = 'Sub-Domein(en)';
 $lng['customer']['domains'] = 'Domein(en)';
 $lng['customer']['unlimited'] = 'onbeperkt';
@@ -79,18 +74,9 @@ $lng['customer']['unlimited'] = 'onbeperkt';
 $lng['menue']['main']['main'] = 'Main';
 $lng['menue']['main']['changepassword'] = 'Wijzig wachtwoord';
 $lng['menue']['main']['changelanguage'] = 'Wijzig taal';
-$lng['menue']['email']['email'] = 'E-mail';
 $lng['menue']['email']['emails'] = 'Adressen';
-$lng['menue']['email']['webmail'] = 'WebMail';
-$lng['menue']['mysql']['mysql'] = 'MySQL';
-$lng['menue']['mysql']['databases'] = 'Databases';
-$lng['menue']['mysql']['phpmyadmin'] = 'phpMyAdmin';
 $lng['menue']['domains']['domains'] = 'Domeinen';
 $lng['menue']['domains']['settings'] = 'Instellingen';
-$lng['menue']['ftp']['ftp'] = 'FTP';
-$lng['menue']['ftp']['accounts'] = 'Accounts';
-$lng['menue']['ftp']['webftp'] = 'WebFTP';
-$lng['menue']['extras']['extras'] = 'Extras';
 $lng['menue']['extras']['directoryprotection'] = 'Map beveiliging';
 $lng['menue']['extras']['pathoptions'] = 'pad opties';
 
@@ -134,12 +120,10 @@ $lng['emails']['emails_add'] = 'Maak nieuw e-mail adres';
 $lng['emails']['emails_edit'] = 'Bewerk e-mail-adres';
 $lng['emails']['catchall'] = 'Catchall';
 $lng['emails']['iscatchall'] = 'Definieer als catchall-adres?';
-$lng['emails']['account'] = 'Account';
 $lng['emails']['account_add'] = 'Maak nieuw account';
 $lng['emails']['account_delete'] = 'Verwijder account';
 $lng['emails']['from'] = 'Van';
 $lng['emails']['to'] = 'Aan';
-$lng['emails']['forwarders'] = 'Forwarders';
 $lng['emails']['forwarder_add'] = 'Maak forwarder';
 
 /**
@@ -167,10 +151,6 @@ $lng['extras']['view_directory'] = 'map inhoud laten zien';
 $lng['extras']['pathoptions_add'] = 'Pad opties toevoegen';
 $lng['extras']['directory_browsing'] = 'map inhoud browsen';
 $lng['extras']['pathoptions_edit'] = 'Pad opties bewerken';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'URL naar Foutdocument 404';
 $lng['extras']['errordocument403path'] = 'URL naar Foutdocument 403';
 $lng['extras']['errordocument500path'] = 'URL naar Foutdocument 500';
@@ -208,8 +188,6 @@ $lng['error']['newpasswordconfirmerror'] = 'Het nieuwe wacthwoord en de bevestig
 $lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
 $lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
 $lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
-$lng['error']['mydomain'] = '\'Domain\'';
-$lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Loginnaam %s bestaat al';
 $lng['error']['emailiswrong'] = 'E-mail Adres %s bevat illegale karakters of is niet compleet';
 $lng['error']['loginnameiswrong'] = 'Loginnaame %s bevat illegale karakters';
@@ -272,12 +250,10 @@ $lng['mails']['createcustomer']['subject'] = 'Account informatie';
 $lng['admin']['overview'] = 'Overzicht';
 $lng['admin']['ressourcedetails'] = 'Gebruikte resources';
 $lng['admin']['systemdetails'] = 'Systeem Details';
-$lng['admin']['froxlordetails'] = 'Froxlor Details';
 $lng['admin']['installedversion'] = 'Geinstalleerde Versie';
 $lng['admin']['latestversion'] = 'Laatste Versie';
 $lng['admin']['lookfornewversion']['clickhere'] = 'zoeken via webservice';
 $lng['admin']['lookfornewversion']['error'] = 'Fout tijdens lezen';
-$lng['admin']['resources'] = 'Resources';
 $lng['admin']['customer'] = 'Klant';
 $lng['admin']['customers'] = 'Klanten';
 $lng['admin']['customer_add'] = 'Maak klant';
@@ -448,12 +424,10 @@ $lng['error']['stringformaterror'] = 'De waarde voor het veld "%s" is niet in he
 
 // ADDED IN 1.2.15-rc1
 
-$lng['admin']['serversoftware'] = 'Serversoftware';
 $lng['admin']['phpversion'] = 'PHP-Versie';
 $lng['admin']['phpmemorylimit'] = 'PHP-Geheugen-Limiet';
 $lng['admin']['mysqlserverversion'] = 'MySQL Server Versie';
 $lng['admin']['mysqlclientversion'] = 'MySQL Client Versie';
-$lng['admin']['webserverinterface'] = 'Webserver Interface';
 $lng['domains']['isassigneddomain'] = 'Is toegewezen domein';
 $lng['serversettings']['phpappendopenbasedir']['title'] = 'Pad wat toegevoegd word aan OpenBasedir';
 $lng['serversettings']['phpappendopenbasedir']['description'] = 'Deze paden (gescheiden door dubbele punten) zullen worden toegevoegd aan het OpenBasedir-statement in iedere vhost-container.';
@@ -513,12 +487,6 @@ $lng['admin']['configfiles']['overview'] = 'Overzicht';
 $lng['admin']['configfiles']['wizard'] = 'Wizard';
 $lng['admin']['configfiles']['distribution'] = 'Distributie';
 $lng['admin']['configfiles']['service'] = 'Dienst';
-$lng['admin']['configfiles']['daemon'] = 'Daemon';
-$lng['admin']['configfiles']['http'] = 'Webserver (HTTP)';
-$lng['admin']['configfiles']['dns'] = 'Nameserver (DNS)';
-$lng['admin']['configfiles']['mail'] = 'Mailserver (IMAP/POP3)';
-$lng['admin']['configfiles']['smtp'] = 'Mailserver (SMTP)';
-$lng['admin']['configfiles']['ftp'] = 'FTP-Server';
 $lng['admin']['configfiles']['etc'] = 'Overigen (Systeem)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Kies een distributie --';
 $lng['admin']['configfiles']['chooseservice'] = '-- Kies een dienst --';
@@ -798,9 +766,6 @@ $lng['dkim']['dkim_dkimkeys']['description'] = '<em>Bestandsnaam</em> van het DK
 $lng['dkim']['dkimrestart_command']['title'] = 'Herstart-commando voor Milter';
 $lng['dkim']['dkimrestart_command']['description'] = 'Geef het commando om de milter-plugin te herstarten';
 
-// ADDED IN 1.2.19-svn9
-
-$lng['admin']['caneditphpsettings'] = 'Can change php-related domain settings?';
 
 // ADDED IN 1.2.19-svn12
 
@@ -1200,13 +1165,9 @@ $lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximaal aantal v
 $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Toegestane aantal verzoeken per domein';
 
 // fix bug #1124
-$lng['admin']['webserver'] = 'Webserver';
 $lng['error']['admin_domain_emailsystemhostname'] = 'De naam van de server kan niet gebruikt worden als domein voor e-mail.';
 $lng['aps']['license_link'] = 'Koppeling naar licentie';
 
-// ADDED IN 1.4.2.1-1
-
-$lng['mysql']['mysql_server'] = 'MySQL-Server';
 
 // ADDED IN 1.4.2.1-2
 
@@ -1221,7 +1182,6 @@ $lng['serversettings']['ssl']['ssl_ca_file'] = 'Pad naar SSL CA certificaat';
 
 $lng['error']['usernamealreadyexists'] = 'De gebruikersnaam %s is reeds in gebruik.';
 
-$lng['error']['plausibilitychecknotunderstood'] = 'Answer of plausibility check not understood.';
 $lng['error']['errorwhensaving'] = 'Fout tijdens opslaan veld %s';
 
 $lng['success']['success'] = 'Informatie';

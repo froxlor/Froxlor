@@ -438,19 +438,6 @@ $lng['extras']['directory_browsing'] = 'Показать содержимое к
 // Verzeichnisinhalt anzeigen
 
 $lng['extras']['pathoptions_edit'] = 'Изменить настройки пути';
-$lng['extras']['error404path'] = '404';
-
-// 404
-
-$lng['extras']['error403path'] = '403';
-
-// 403
-
-$lng['extras']['error500path'] = '500';
-
-// 500
-
-$lng['extras']['error401path'] = '401';
 
 // 401
 
@@ -1398,7 +1385,3 @@ $lng['admin']['mysqlclientversion'] = 'Версия клиента MySQL';
 $lng['admin']['webserverinterface'] = 'Интерфейс вебсервера';
 
 // Webserver Interface
-
-
-
-?>

@@ -178,10 +178,6 @@ $lng['extras']['view_directory'] = 'Aperçu du dossier';
 $lng['extras']['pathoptions_add'] = 'Ajouter des options sur le dossier';
 $lng['extras']['directory_browsing'] = 'Afficher le contenu des dossiers';
 $lng['extras']['pathoptions_edit'] = 'Modifier les options de dossier';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'Emplacement du document "Erreur 404"';
 $lng['extras']['errordocument403path'] = 'Emplacement du document "Erreur 403"';
 $lng['extras']['errordocument500path'] = 'Emplacement du document "Erreur 500"';
@@ -220,7 +216,6 @@ $lng['error']['myname'] = '"' . $lng['customer']['name'] . '"';
 $lng['error']['myfirstname'] = '"' . $lng['customer']['firstname'] . '"';
 $lng['error']['emailadd'] = '"' . $lng['customer']['email'] . '"';
 $lng['error']['mydomain'] = '"domaine"';
-$lng['error']['mydocumentroot'] = '"Documentroot"';
 $lng['error']['loginnameexists'] = 'L\'identifiant "%s" existe déjà.';
 $lng['error']['emailiswrong'] = 'L\'adresse "%s" contient des signes invalides ou est incomplète.';
 $lng['error']['loginnameiswrong'] = 'L\'identifiant "%s" contient des signes invalides.';
@@ -404,17 +399,12 @@ $lng['serversettings']['paging']['description'] = 'Nombre de résultats par page
 $lng['error']['ipstillhasdomains'] = 'La combinaison IP / port est encore utilisée, veuillez réassigner le ou les domaines existant(s) avec cette adresse IP / port concerné(s) à une autre combinaison IP / port avant de supprimer celle-ci.';
 $lng['error']['cantdeletedefaultip'] = 'Vous ne pouvez pas supprimer cette combinaison IP / Port, veuillez d\'abord attribuer une autre combinaison IP / Port par défaut à ce revendeur avant de supprimer celle-ci.';
 $lng['error']['cantdeletesystemip'] = 'Vous ne pouvez pas créer, modifier ou supprimer l\'IP du système.';
-$lng['error']['myipaddress'] = '"IP"';
-$lng['error']['myport'] = '"Port"';
 $lng['error']['myipdefault'] = 'Choissez une combinaison IP / port par défaut.';
 $lng['error']['myipnotdouble'] = 'Cette combinaison existe déjà';
 $lng['question']['admin_ip_reallydelete'] = 'Etes-vous sûr de vouloir supprimer l\'adresse IP "%s" ?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs et ports';
 $lng['admin']['ipsandports']['add'] = 'Ajouter une IP / port';
 $lng['admin']['ipsandports']['edit'] = 'Modifier une IP / port';
-$lng['admin']['ipsandports']['ipandport'] = 'IP / Port';
-$lng['admin']['ipsandports']['ip'] = 'IP';
-$lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
 
@@ -915,5 +905,3 @@ $lng['domains']['registration_date'] = 'Ajouter à l\'enregistrement';
 $lng['serversettings']['allow_password_reset']['description'] = 'Les clients peuvent réinitialiser leurs mots de passe et il sera envoyé à leurs propres adresses e-mails';
 $lng['serversettings']['allow_password_reset_admin']['title'] = 'Permettre la réinitialisation des mots de passe par les administrateurs';
 $lng['serversettings']['allow_password_reset_admin']['description'] = 'Les administrateurs / revendeurs peuvent réinitialiser leurs mots de passe et il sera envoyé à leurs propres adresses e-mails';
-
-?>

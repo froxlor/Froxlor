@@ -170,10 +170,6 @@ $lng['extras']['view_directory'] = 'Mostrar conteúdo do diretório';
 $lng['extras']['pathoptions_add'] = 'Adicionar opções de caminho';
 $lng['extras']['directory_browsing'] = 'Pesquizar conteúdo de diretório';
 $lng['extras']['pathoptions_edit'] = 'Esitar opções de caminhos';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'URL para página de erro 404';
 $lng['extras']['errordocument403path'] = 'URL para página de erro 403';
 $lng['extras']['errordocument500path'] = 'URL para página de erro 500';
@@ -1045,5 +1041,3 @@ $lng['admin']['phpsettings']['file_extensions_note'] = '(Sem pontos, separados p
 $lng['admin']['mod_fcgid_maxrequests']['title'] = 'Máximo de requisições php para este domínio (vazio para valor default)';
 $lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Máximo de solicitações por Domínio';
 $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Quantas solicitações serão aceitas por domínio?';
-
-?>

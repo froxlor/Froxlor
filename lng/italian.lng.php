@@ -22,7 +22,7 @@
  * Global
  */
 
-$lng['translator'] = 'Luca Longinotti  Luca Piona  Emilien';
+$lng['translator'] = 'Luca Longinotti, Luca Piona, Emilien';
 $lng['panel']['edit'] = 'Modifica';
 $lng['panel']['delete'] = 'Cancella';
 $lng['panel']['create'] = 'Crea';
@@ -169,10 +169,6 @@ $lng['extras']['view_directory'] = 'Mostra protezione cartella';
 $lng['extras']['pathoptions_add'] = 'Aggiungi opzioni cartella';
 $lng['extras']['directory_browsing'] = 'Visualizza file e cartelle';
 $lng['extras']['pathoptions_edit'] = 'Modifica opzioni cartella';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'URL to ErrorDocument 404';
 $lng['extras']['errordocument403path'] = 'URL to ErrorDocument 403';
 $lng['extras']['errordocument500path'] = 'URL to ErrorDocument 500';
@@ -460,9 +456,7 @@ $lng['error']['stringformaterror'] = 'Il valore per il campo "%s" non è nel for
 // ADDED IN 1.2.15-rc1
 // Translated by marone42@googlemail.com on 03/15/2007 (see https://trac.froxlor.org/ticket/126#comment:21)
 
-$lng['admin']['serversoftware'] = 'Serversoftware';
 $lng['admin']['phpversion'] = 'Versione PHP';
-$lng['admin']['phpmemorylimit'] = 'PHP-Memory-Limit';
 $lng['admin']['mysqlserverversion'] = 'Versione MySQL Server';
 $lng['admin']['mysqlclientversion'] = 'Version MySQL Client';
 $lng['admin']['webserverinterface'] = 'Interfaccia Webserver';
@@ -522,15 +516,9 @@ $lng['serversettings']['mailpwcleartext']['description'] = 'Se impostato a Si, t
 $lng['serversettings']['mailpwcleartext']['removelink'] = 'Clicca qui per cancellare tutte le password in chiaro dalla tabella.';
 $lng['question']['admin_cleartextmailpws_reallywipe'] = 'Sei sicuro di voler cancellare tutte le password in chiaro degli account email dalla tabella mail_users? Attenzione non si può tornare indietro!';
 $lng['admin']['configfiles']['overview'] = 'Panoramica';
-$lng['admin']['configfiles']['wizard'] = 'Wizard';
 $lng['admin']['configfiles']['distribution'] = 'Distribuzione';
 $lng['admin']['configfiles']['service'] = 'Servizio';
 $lng['admin']['configfiles']['daemon'] = 'Demone';
-$lng['admin']['configfiles']['http'] = 'Webserver (HTTP)';
-$lng['admin']['configfiles']['dns'] = 'Nameserver (DNS)';
-$lng['admin']['configfiles']['mail'] = 'Mailserver (IMAP/POP3)';
-$lng['admin']['configfiles']['smtp'] = 'Mailserver (SMTP)';
-$lng['admin']['configfiles']['ftp'] = 'FTP-Server';
 $lng['admin']['configfiles']['etc'] = 'Altro (Sistema)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Scegli una distribuzione --';
 $lng['admin']['configfiles']['chooseservice'] = '-- Scegli un servizio --';
@@ -572,7 +560,6 @@ $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Dove vuoi che
 // ADDED IN 1.2.16-svn15
 
 $lng['error']['formtokencompromised'] = 'La richiesta sembra essere compromessa. Per motivi di sicurezza sei stato disconnesso.';
-$lng['serversettings']['mysql_access_host']['title'] = 'MySQL-Access-Hosts';
 $lng['serversettings']['mysql_access_host']['description'] = 'Lista degli host (separati da una virgola) a cui gli utenti possono collegarsi al server MySQL.';
 
 // ADDED IN 1.2.18-svn1
@@ -588,7 +575,6 @@ $lng['admin']['webalizersettings'] = 'Impostazioni Webalizer';
 $lng['admin']['webalizer']['normal'] = 'Normale';
 $lng['admin']['webalizer']['quiet'] = 'Modesto';
 $lng['admin']['webalizer']['veryquiet'] = 'Niente';
-$lng['serversettings']['webalizer_quiet']['title'] = 'Webalizer output';
 $lng['serversettings']['webalizer_quiet']['description'] = 'Verbosità del programma webalizer';
 
 // ADDED IN 1.2.18-svn3
@@ -831,14 +817,8 @@ $lng['admin']['awstatssettings'] = 'Impostazioni Awstats';
 
 $lng['admin']['domain_dns_settings'] = 'Impostazioni dominio dns';
 $lng['dns']['destinationip'] = 'Dominio IP';
-$lng['dns']['standardip'] = 'Server standard IP';
 $lng['dns']['a_record'] = 'A-Record (IPv6 optionale)';
-$lng['dns']['cname_record'] = 'CNAME-Record';
 $lng['dns']['mxrecords'] = 'Definisci MX records';
-$lng['dns']['standardmx'] = 'Server standard MX record';
-$lng['dns']['mxconfig'] = 'Custom MX records';
-$lng['dns']['priority10'] = 'Priority 10';
-$lng['dns']['priority20'] = 'Priority 20';
 $lng['dns']['txtrecords'] = 'Definisci TXT records';
 $lng['dns']['txtexample'] = 'Esempio (SPF-entry):<br />v=spf1 ip4:xxx.xxx.xx.0/23 -all';
 $lng['serversettings']['selfdns']['title'] = 'Impostazioni dominio dns del cliente';
@@ -1602,7 +1582,6 @@ $lng['traffic']['months']['total'] = 'Totale';
 $lng['traffic']['details'] = 'Dettagli';
 $lng['menue']['traffic']['table'] = 'Traffico';
 $lng['error']['admin_domain_emailsystemhostname'] = 'Spiacente, l\'hostname di sistema non può essere usato come dominio di un cliente';
-$lng['backup'] = 'Backup';
 $lng['backup_allowed'] = 'Backup permesso';
 $lng['extras']['backup_create'] = 'Creare il Backup?';
 $lng['extras']['backup_info'] = 'Il Backup sarà eseguito una volta al giorno nella cartella "' . $settings['system']['backup_dir'] . '".';
@@ -1615,7 +1594,4 @@ $lng['serversettings']['backupdir']['description'] = 'Qual\'è il nome della car
 $lng['serversettings']['mysqldump_path']['description'] = 'Percorso del comando mysqldump?';
 $lng['serversettings']['backup_bigfile'] = 'Salvare il backup in un unico grande file al posto di salvare separatamente i file html e i database?';
 $lng['serversettings']['backup_ftp_enabled'] = 'Attiva o l\'upload FTP?';
-$lng['serversettings']['backup_ftp_server'] = 'Server FTP:';
 $lng['serversettings']['backup_ftp_user'] = 'Utente FTP:';
-$lng['serversettings']['backup_ftp_pass'] = 'Password FTP:';
-$lng['crondesc']['cron_backup'] = 'Backup cronjob';

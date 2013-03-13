@@ -166,10 +166,6 @@ $lng['extras']['view_directory'] = 'mostra el contingut del directori';
 $lng['extras']['pathoptions_add'] = 'afegir opcions de la ruta (PATH)';
 $lng['extras']['directory_browsing'] = 'navegar pel contingut del directori';
 $lng['extras']['pathoptions_edit'] = 'editar opcions de la ruta (PATH)';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'Ruta a ErrorDocument 404';
 $lng['extras']['errordocument403path'] = 'Ruta a ErrorDocument 403';
 $lng['extras']['errordocument500path'] = 'Ruta a ErrorDocument 500';
@@ -388,8 +384,3 @@ $lng['question']['admin_ip_reallydelete'] = 'Segur que vols esborrar la IP %s?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs i Ports';
 $lng['admin']['ipsandports']['add'] = 'Afegir IP/Port';
 $lng['admin']['ipsandports']['edit'] = 'Editar IP/Port';
-$lng['admin']['ipsandports']['ipandport'] = 'IP/Port';
-$lng['admin']['ipsandports']['ip'] = 'IP';
-$lng['admin']['ipsandports']['port'] = 'Port';
-
-?>

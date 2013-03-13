@@ -166,10 +166,6 @@ $lng['extras']['view_directory'] = 'A könyvtár tartalmának megmutatása';
 $lng['extras']['pathoptions_add'] = 'Útvonal opciók hozzáadása';
 $lng['extras']['directory_browsing'] = 'A könyvtár tartalmána böngészése';
 $lng['extras']['pathoptions_edit'] = 'Útvonal opciók szerkesztése';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'A 404-es hibaüzenet URL-je';
 $lng['extras']['errordocument403path'] = 'A 403-as hibaüzenet URL-je';
 $lng['extras']['errordocument500path'] = 'A 500-as hibaüzenet URL-je';
@@ -390,17 +386,12 @@ $lng['serversettings']['paging']['description'] = 'Hány bejegyzés jelenjen meg
 $lng['error']['ipstillhasdomains'] = 'A törölni kívánt IP/Port kombinációhoz domainek vannak rendelve. Rendelje hozzá ezeket egy másik IP/Port kombinációhoz, mielőtt a jelenlegi IP/Port kombinációt törli.';
 $lng['error']['cantdeletedefaultip'] = 'Nem törölheti az alapértelmezett viszonteladói  IP/Port kombinációt. Hozzon létre új  alapértelmezett IP/Port kombinációt a viszonteladóknak, mielőtt ezt az  IP/Port kombinációt törli.';
 $lng['error']['cantdeletesystemip'] = 'Nem törölheti a rendszer utolsó IP címét. Hozzon létre egy új IP/Port kombinációt a rendszer IP címére, vagy változatassa meg a rendszer IP címét.';
-$lng['error']['myipaddress'] = '\'IP\'';
-$lng['error']['myport'] = '\'Port\'';
 $lng['error']['myipdefault'] = 'Választania kell egy IP/Port kombinációt alapértelmezésnek.';
 $lng['error']['myipnotdouble'] = 'Ez az  IP/Port kombináció már létezik.';
 $lng['question']['admin_ip_reallydelete'] = 'Valóban törölni akarja a(z) %s IP címet?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IP címek és Portok';
 $lng['admin']['ipsandports']['add'] = 'IP/Port hozzáadása';
 $lng['admin']['ipsandports']['edit'] = 'IP/Port szerkesztése';
-$lng['admin']['ipsandports']['ipandport'] = 'IP/Port';
-$lng['admin']['ipsandports']['ip'] = 'IP';
-$lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
 
@@ -464,5 +455,3 @@ $lng['serversettings']['phpappendopenbasedir']['description'] = 'Ezek az útvona
 // CHANGED IN 1.2.15-rc1
 
 $lng['error']['loginnameissystemaccount'] = 'Nem hozhat létre olyan fiókot, amely hasonlít a rendszerfiókokhoz (mint pl. a "%s" kezdetűek). Kérem, adjon meg másik fióknevet!';
-
-?>

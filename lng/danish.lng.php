@@ -105,8 +105,6 @@ $lng['index']['accountdetails'] = 'Konto Detaljer';
  * Change Password
  */
 
-$lng['changepassword']['old_password'] = 'Old password';
-$lng['changepassword']['new_password'] = 'New password';
 $lng['changepassword']['new_password_confirm'] = 'Nyt kodeord (bekræft)';
 $lng['changepassword']['new_password_ifnotempty'] = 'Nyt kodeord (tom = ingen ændringer)';
 $lng['changepassword']['also_change_ftp'] = ' skift også kodeordet for hoved-ftp kontoen';
@@ -167,10 +165,6 @@ $lng['extras']['view_directory'] = 'vis mappe indhold';
 $lng['extras']['pathoptions_add'] = 'tilføj regler for sti';
 $lng['extras']['directory_browsing'] = 'vis mappe indhold?';
 $lng['extras']['pathoptions_edit'] = 'ændre regler for sti';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'URL til ErrorDocument 404';
 $lng['extras']['errordocument403path'] = 'URL til ErrorDocument 403';
 $lng['extras']['errordocument500path'] = 'URL til ErrorDocument 500';
@@ -448,5 +442,3 @@ $lng['admin']['phpmemorylimit'] = 'PHP Hukommelses Græse';
 $lng['admin']['mysqlserverversion'] = 'MySQL Server Version';
 $lng['admin']['mysqlclientversion'] = 'MySQL Klient Version';
 $lng['admin']['webserverinterface'] = 'Webserver Brugerflade';
-
-?>

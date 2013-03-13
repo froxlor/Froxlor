@@ -170,10 +170,6 @@ $lng['extras']['view_directory'] = '显示记录';
 $lng['extras']['pathoptions_add'] = '配置路径';
 $lng['extras']['directory_browsing'] = '显示记录内容';
 $lng['extras']['pathoptions_edit'] = '路径设置处理';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = '错误文件404路径';
 $lng['extras']['errordocument403path'] = '错误文件403路径';
 $lng['extras']['errordocument500path'] = '错误文件500路径';
@@ -452,5 +448,3 @@ $lng['admin']['phpmemorylimit'] = 'php内存限制';
 $lng['admin']['mysqlserverversion'] = 'mysql服务器版本';
 $lng['admin']['mysqlclientversion'] = 'mysql客户端版本';
 $lng['admin']['webserverinterface'] = '网页服务器接口';
-
-?>

@@ -167,10 +167,6 @@ $lng['extras']['view_directory'] = 'zobrazit obsah adresáøe';
 $lng['extras']['pathoptions_add'] = 'pøidat nastavení cesty';
 $lng['extras']['directory_browsing'] = 'prohlížení obsahu adresáøe';
 $lng['extras']['pathoptions_edit'] = 'upravit nastavení cesty';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'URL k Chybové stránce 404';
 $lng['extras']['errordocument403path'] = 'URL k Chybové stránce 403';
 $lng['extras']['errordocument500path'] = 'URL k Chybové stránce 500';
@@ -209,7 +205,6 @@ $lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
 $lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
 $lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Domain\'';
-$lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Pøihlašovací jméno %s již existuje';
 $lng['error']['emailiswrong'] = 'Emailová adresa %s obsahuje nepovolené znaky nebo je nekompletní';
 $lng['error']['loginnameiswrong'] = 'Pøihlašovací jméno %s obsahuje nepovolené znaky';
@@ -327,7 +322,6 @@ $lng['admin']['templates']['EMAIL'] = 'Nahrazeno adresou POP3/IMAP Úètu.';
  * Serversettings
  */
 
-$lng['serversettings']['session_timeout']['title'] = 'Session Timeout';
 $lng['serversettings']['session_timeout']['description'] = 'Jak dlouho musý být uživatel neaktivní, než session vyprší (sekundy)?';
 $lng['serversettings']['accountprefix']['title'] = 'Zákazníkova pøedpona';
 $lng['serversettings']['accountprefix']['description'] = 'Jké pøedpony by mì ly mít Úèty zákazníkù?';
@@ -400,9 +394,6 @@ $lng['question']['admin_ip_reallydelete'] = 'Chcete opravdu smayat IP adresu %s?
 $lng['admin']['ipsandports']['ipsandports'] = 'IP a Porty';
 $lng['admin']['ipsandports']['add'] = 'Pøidat IP/Port';
 $lng['admin']['ipsandports']['edit'] = 'Upravit IP/Port';
-$lng['admin']['ipsandports']['ipandport'] = 'IP/Port';
-$lng['admin']['ipsandports']['ip'] = 'IP';
-$lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
 
@@ -518,12 +509,6 @@ $lng['admin']['configfiles']['overview'] = 'Pøehled';
 $lng['admin']['configfiles']['wizard'] = 'Prùvodce';
 $lng['admin']['configfiles']['distribution'] = 'Distribuce';
 $lng['admin']['configfiles']['service'] = 'Služba';
-$lng['admin']['configfiles']['daemon'] = 'Daemon';
-$lng['admin']['configfiles']['http'] = 'Webserver (HTTP)';
-$lng['admin']['configfiles']['dns'] = 'Nameserver (DNS)';
-$lng['admin']['configfiles']['mail'] = 'Mailserver (IMAP/POP3)';
-$lng['admin']['configfiles']['smtp'] = 'Mailserver (SMTP)';
-$lng['admin']['configfiles']['ftp'] = 'FTP-Server';
 $lng['admin']['configfiles']['etc'] = 'Ostatní (System)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Vyberte distribuci --';
 $lng['admin']['configfiles']['chooseservice'] = '-- Vyberte službu --';
@@ -693,5 +678,3 @@ $lng['ticket']['awaitingticketreply'] = 'Máte %s nezodpovì zených tiketù pod
 // ADDED IN 1.2.18-svn5
 
 $lng['serversettings']['ticket']['noreply_name'] = 'Jméno odesílatele tiketù v emailu';
-
-?>
