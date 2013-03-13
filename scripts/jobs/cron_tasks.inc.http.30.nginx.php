@@ -184,9 +184,22 @@ class nginx
 			$this->nginx_data[$vhost_filename].= "\t".'access_log      /var/log/nginx/access.log;' . "\n";
 
 			$mypath = '';
-			if($row_ipsandports['vhostcontainer'] == '1')
-			{
-				$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+			if ($row_ipsandports['vhostcontainer'] == '1') {
+
+				// no custom docroot set?
+				if ($row_ipsandports['docroot'] == '') {
+					// check whether the hostname should directly point to
+					// the froxlor-installation or not
+					if ($this->settings['system']['froxlordirectlyviahostname']) {
+						$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+					} else {
+						$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
+					}
+				} else {
+					// user-defined docroot, #417
+					$mypath = makeCorrectDir($row_ipsandports['docroot']);
+				}
+
 				$this->nginx_data[$vhost_filename].= "\t".'root     '.$mypath.';'."\n";
 				$this->nginx_data[$vhost_filename].= "\t".'location / {'."\n";
 				$this->nginx_data[$vhost_filename].= "\t\t".'index    index.php index.html index.htm;'."\n";
