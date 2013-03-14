@@ -168,7 +168,6 @@ elseif($page == 'mysqls')
 				}
 				else
 				{
-					$username = $userinfo['loginname'] . $settings['customer']['mysqlprefix'] . (intval($userinfo['mysql_lastaccountnumber']) + 1);
 
 					if(count($sql_root) > 1)
 					{
@@ -189,6 +188,20 @@ elseif($page == 'mysqls')
 
 					// Begin root-session
 					$db_root = new db($sql_root[$dbserver]['host'], $sql_root[$dbserver]['user'], $sql_root[$dbserver]['password'], '');
+
+					if ($settings['customer']['mysqlprefix'] == "RANDOM") {
+						$result = $db_root->query('SELECT `User` FROM mysql.user');
+						while ($row = $db_root->fetch_array($result)) {
+							$allsqlusers[] = $row[User];
+						}
+						$username = $userinfo['loginname'] . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
+						while (in_Array($username , $allsqlusers)) {
+							$username = $userinfo['loginname'] . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
+						}
+					} else {
+						$username = $userinfo['loginname'] . $settings['customer']['mysqlprefix'] . (intval($userinfo['mysql_lastaccountnumber']) + 1);
+					}
+
 					$db_root->query('CREATE DATABASE `' . $db_root->escape($username) . '`');
 					$log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
 					foreach(array_map('trim', explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host)
