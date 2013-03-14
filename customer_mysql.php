@@ -189,7 +189,7 @@ elseif($page == 'mysqls')
 					// Begin root-session
 					$db_root = new db($sql_root[$dbserver]['host'], $sql_root[$dbserver]['user'], $sql_root[$dbserver]['password'], '');
 
-					if ($settings['customer']['mysqlprefix'] == "RANDOM") {
+					if (strtoupper($settings['customer']['mysqlprefix']) == "RANDOM") {
 						$result = $db_root->query('SELECT `User` FROM mysql.user');
 						while ($row = $db_root->fetch_array($result)) {
 							$allsqlusers[] = $row[User];
