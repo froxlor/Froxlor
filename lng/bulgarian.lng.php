@@ -197,7 +197,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'Трябва да изтриете 
 
 $lng['error']['ftp_cantdeletemainaccount'] = 'Не можете да изтриете главния си FTP акаунт';
 $lng['error']['login'] = 'Грешно име или парола. Моля опитайте отново!';
-$lng['error']['login_blocked'] = 'Този акаунт е бил блокиран заради прекалено много грешки. <br />Моля опитайте отново след: ' . $settings['login']['deactivatetime'] . ' секунди.';
+$lng['error']['login_blocked'] = 'Този акаунт е бил блокиран заради прекалено много грешки. <br />Моля опитайте отново след: %s секунди.';
 $lng['error']['notallreqfieldsorerrors'] = 'Не сте попълнили всички полета, или сте попълнили някое грешно.';
 $lng['error']['oldpasswordnotcorrect'] = 'Старата парола не съответства.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Вие не можете да заделят повече ресурси, отколкото притежаватe.';

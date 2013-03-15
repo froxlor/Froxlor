@@ -505,7 +505,7 @@ $lng['error']['login'] = 'Указанные имя пользователя и�
 
 // Der angegebene Benutzername/Passwort ist falsch.
 
-$lng['error']['login_blocked'] = 'Из-за многочисленных ошибочных попыток логина аккаунт временно закрыт. <br />Пожалуйста попробуйте через ' . $settings['login']['deactivatetime'] . ' секунд ещё раз.';
+$lng['error']['login_blocked'] = 'Из-за многочисленных ошибочных попыток логина аккаунт временно закрыт. <br />Пожалуйста попробуйте через %s секунд ещё раз.';
 
 // Dieser Account wurde aufgrund zu vieler Fehlversuche vorruebergehend geschlossen. <br />Bitte versuchen Sie es in '.$settings['login']['deactivatetime'].' Sekunden erneut.
 

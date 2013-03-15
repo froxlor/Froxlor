@@ -191,7 +191,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'You have to delete all subdomains f
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'You have already defined a catchall for this domain.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'You cannot delete your main FTP account';
 $lng['error']['login'] = 'The username or password you typed in is wrong. Please try it again!';
-$lng['error']['login_blocked'] = 'This account has been suspended because of too many login errors. <br />Please try again in ' . $settings['login']['deactivatetime'] . ' seconds.';
+$lng['error']['login_blocked'] = 'This account has been suspended because of too many login errors. <br />Please try again in %s seconds.';
 $lng['error']['notallreqfieldsorerrors'] = 'You have not filled in all or filled in some fields incorrectly.';
 $lng['error']['oldpasswordnotcorrect'] = 'The old password is not correct.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'You cannot allocate more resources than you own for yourself.';
@@ -920,7 +920,7 @@ $lng['customer']['mail_quota'] = 'Mailquota';
 $lng['panel']['megabyte'] = 'MegaByte';
 $lng['panel']['not_supported'] = 'Not supported in: ';
 $lng['emails']['quota_edit'] = 'Change E-Mail Quota';
-$lng['error']['allocatetoomuchquota'] = 'You tried to allocate %s MB ' . $lng['emails']['quota'] . ', but you do not have enough left.';
+$lng['error']['allocatetoomuchquota'] = 'You tried to allocate %s MB Quota, but you do not have enough left.';
 
 // Autoresponder module
 
@@ -1359,12 +1359,12 @@ $lng['ticket']['orderdesc'] = 'Here you can define your own logical order for th
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Enable default errordocuments for all customers';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'File/URL for error 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">Not supported in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'File/URL for error 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">Not supported in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'File/URL for error 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'File/URL for error 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">Not supported in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Default support-ticket priority';
@@ -1911,7 +1911,7 @@ $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Time
 // ADDED IN 0.9.27-svn2
 $lng['panel']['cancel'] = 'Cancel';
 $lng['admin']['delete_statistics'] = 'Delete Statistics';
-$lng['admin']['speciallogwarning'] = 'WARNING: By changing this setting you will lose all your old statistics for this domain. If you are 100% sure you wish to change this type "'.$lng['admin']['delete_statistics'].'" in the field below and click the "'.$lng['panel']['delete'].'" button.<br /><br />';
+$lng['admin']['speciallogwarning'] = 'WARNING: By changing this setting you will lose all your old statistics for this domain. If you are 100% sure you wish to change this type "'.$lng['admin']['delete_statistics'].'" in the field below and click the "delete" button.<br /><br />';
 
 // ADDED IN 0.9.28-svn2
 $lng['serversettings']['vmail_maildirname']['title'] = 'Maildir name';

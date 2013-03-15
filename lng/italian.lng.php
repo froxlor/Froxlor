@@ -189,7 +189,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'Prima di creare un dominio wildcard
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Hai già definito un catchall per questo dominio.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'Non puoi cancellare il tuo account FTP principale.';
 $lng['error']['login'] = 'Il nome utente o la password da te immessi sono incorretti. Per favore riprova!';
-$lng['error']['login_blocked'] = 'Questo account è stato sospeso per i troppi tentativi di login falliti. <br />Riprovi tra ' . $settings['login']['deactivatetime'] . ' secondi.';
+$lng['error']['login_blocked'] = 'Questo account è stato sospeso per i troppi tentativi di login falliti. <br />Riprovi tra %s secondi.';
 $lng['error']['notallreqfieldsorerrors'] = 'Alcuni campi sono stati lasciati vuoti o sono stati riempiti incorrettamente.';
 $lng['error']['oldpasswordnotcorrect'] = 'La vecchia password non è corretta.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Non puoi assegnare più risorse di quante ne possieda tu stesso.';
@@ -899,7 +899,7 @@ $lng['customer']['mail_quota'] = 'Limite Mail';
 $lng['panel']['megabyte'] = 'MegaByte';
 $lng['panel']['not_supported'] = 'Non supportato in: ';
 $lng['emails']['quota_edit'] = 'Cambia limite E-Mail';
-$lng['error']['allocatetoomuchquota'] = 'Si è tentato di allocare %s MB ' . $lng['emails']['quota'] . ', ma non c\'è abbastanza spazio disponibile.';
+$lng['error']['allocatetoomuchquota'] = 'Si è tentato di allocare %s MB Limite, ma non c\'è abbastanza spazio disponibile.';
 
 // Autoresponder module
 
@@ -1340,12 +1340,12 @@ $lng['ticket']['orderdesc'] = 'Qui è possibile definire il tuo ordine logico pe
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Abilita errordocuments in automatico per tutti i clienti';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'File/URL per l\'errore 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'File/URL per l\'errore 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'File/URL per l\'errore 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'File/URL per l\'errore 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Priorità predefinita per il supporto ticket';

@@ -171,7 +171,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'U moet eerst alle subdomeinen verwi
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'U heeft al een catchall voor dit domein aangemaakt.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'U kunt uw hoofd FTP account niet verwijderen';
 $lng['error']['login'] = 'De door u ingegeven gebruikersnaam en wacthwoord zijn verkeerd. Probeer opnieuw!';
-$lng['error']['login_blocked'] = 'Dit account is inactief vanwege teveel login fouten. <br />Probeer het nog eens over ' . $settings['login']['deactivatetime'] . ' seconden.';
+$lng['error']['login_blocked'] = 'Dit account is inactief vanwege teveel login fouten. <br />Probeer het nog eens over %s seconden.';
 $lng['error']['notallreqfieldsorerrors'] = 'U heeft niet alle velden goed, of helemaal niet ingevuld.';
 $lng['error']['oldpasswordnotcorrect'] = 'Het oude wachtwoord is niet correct.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'U kunt niet meer resources gebruiken dan dat u bezit.';
@@ -879,7 +879,7 @@ $lng['customer']['mail_quota'] = 'Mailquotum';
 $lng['panel']['megabyte'] = 'MegaByte';
 $lng['panel']['not_supported'] = 'Wordt niet ondersteund in: ';
 $lng['emails']['quota_edit'] = 'E-mailquotum aanpassen';
-$lng['error']['allocatetoomuchquota'] = 'U probeerde %s MB ' . $lng['emails']['quota'] . ' toe te kennen, maar u heeft niet voldoende over.';
+$lng['error']['allocatetoomuchquota'] = 'U probeerde %s MB Quotum toe te kennen, maar u heeft niet voldoende over.';
 
 // Autoresponder module
 
@@ -1314,12 +1314,12 @@ $lng['ticket']['orderdesc'] = 'Hier kunt u uw eigen logische volgorde instellen 
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Standaard foutdocumenten voor alle klanten activeren';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'Bestand/URL voor foutcode 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">Wordt niet ondersteund in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'Bestand/URL voor foutcode 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">Wordt niet ondersteund in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Bestand/URL voor foutcode 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Bestand/URL voor foutcode 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">Wordt niet ondersteund in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Standaardprioriteit voor support-tickets';
