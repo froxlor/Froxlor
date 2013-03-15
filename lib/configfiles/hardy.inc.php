@@ -36,7 +36,7 @@ if ($vmail_group === false) {
 
 return Array(
 	'ubuntu_hardy' => Array(
-		'label' => 'Ubuntu 8.04 (Hardy)',
+		'label' => 'Ubuntu 8.04 (Hardy) *deprecated*',
 		'services' => Array(
 			'http' => Array(
 				'label' => $lng['admin']['configfiles']['http'],
