@@ -544,8 +544,6 @@ $lng['panel']['back'] = 'Zurück';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_log_sql']['title'] = 'Logs in Datenbank zwischenspeichern';
-$lng['serversettings']['mod_log_sql']['description'] = '<a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe temporär zu speichern<br /><b>Dies benötigt eine spezielle Apache-Konfiguration</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP über mod_fcgid/suexec einbinden';
 $lng['serversettings']['mod_fcgid']['description'] = 'PHP unter dem jeweiligen Useraccount laufen lassen.<br /><br /><b>Dies benötigt eine spezielle Webserver-Konfiguration für Apache, siehe <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_Handbuch">FCGID-Handbuch</a>.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Alternative E-Mail-Adresse benutzen';

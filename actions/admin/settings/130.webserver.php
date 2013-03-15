@@ -156,15 +156,6 @@ return array(
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('nginx')
 					),
-				'system_mod_log_sql' => array(
-					'label' => $lng['serversettings']['mod_log_sql'],
-					'settinggroup' => 'system',
-					'varname' => 'mod_log_sql',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array('apache2')
-					),
 				'defaultwebsrverrhandler_enabled' => array(
 					'label' => $lng['serversettings']['defaultwebsrverrhandler_enabled'],
 					'settinggroup' => 'defaultwebsrverrhandler',

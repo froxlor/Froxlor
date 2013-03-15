@@ -735,27 +735,18 @@ class nginx
 		return $stats_text;
 	}
 
-	/**
-	 * @TODO mod_log_sql
-	 */
-	protected function getLogFiles($domain)
-	{
+	protected function getLogFiles($domain) {
+
 		$logfiles_text = '';
 
-		if($domain['speciallogfile'] == '1'
-		&& $this->settings['system']['mod_log_sql'] != '1')
-		{
-			if($domain['parentdomainid'] == '0')
-			{
+		if ($domain['speciallogfile'] == '1') {
+
+			if ($domain['parentdomainid'] == '0') {
 				$speciallogfile = '-' . $domain['domain'];
-			}
-			else
-			{
+			} else {
 				$speciallogfile = '-' . $domain['parentdomain'];
 			}
-		}
-		else
-		{
+		} else {
 			$speciallogfile = '';
 		}
 
@@ -775,50 +766,34 @@ class nginx
 		$logfiles_text.= "\t".'access_log    ' . $access_log . ' combined;' . "\n";
 		$logfiles_text.= "\t".'error_log    ' . $error_log . ' error;' . "\n";
 
-		if($this->settings['system']['awstats_enabled'] == '1')
-		{
-			if((int)$domain['parentdomainid'] == 0)
-			{
+		if ($this->settings['system']['awstats_enabled'] == '1') {
+			if ((int)$domain['parentdomainid'] == 0) {
 				// prepare the aliases and subdomains for stats config files
-
 				$server_alias = '';
 				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '`
 												WHERE `aliasdomain`=\'' . $domain['id'] . '\'
 												OR `parentdomainid` =\''. $domain['id']. '\'');
 
-				while(($alias_domain = $this->db->fetch_array($alias_domains)) !== false)
-				{
+				while (($alias_domain = $this->db->fetch_array($alias_domains)) !== false) {
 					$server_alias.= ' ' . $alias_domain['domain'] . ' ';
 
-					if($alias_domain['iswildcarddomain'] == '1')
-					{
+					if ($alias_domain['iswildcarddomain'] == '1') {
 						$server_alias.= '*.' . $domain['domain'];
-					}
-					else
-					{
-						if($alias_domain['wwwserveralias'] == '1')
-						{
+					} else {
+						if ($alias_domain['wwwserveralias'] == '1') {
 							$server_alias.= 'www.' . $alias_domain['domain'];
-						}
-						else
-						{
+						} else {
 							$server_alias.= '';
 						}
 					}
 				}
 
-				if($domain['iswildcarddomain'] == '1')
-				{
+				if ($domain['iswildcarddomain'] == '1') {
 					$alias = '*.' . $domain['domain'];
-				}
-				else
-				{
-					if($domain['wwwserveralias'] == '1')
-					{
+				} else {
+					if ($domain['wwwserveralias'] == '1') {
 						$alias = 'www.' . $domain['domain'];
-					}
-					else
-					{
+					} else {
 						$alias = '';
 					}
 				}

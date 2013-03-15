@@ -532,8 +532,6 @@ $lng['panel']['back'] = 'Indietro';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_log_sql']['title'] = 'Salva i log temporaneamente nel database';
-$lng['serversettings']['mod_log_sql']['description'] = 'Usa <a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> per salvare temporaneamente le richieste web<br /><b>Questo richiede una <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">configurazione di apache</a> particolare!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Includi PHP via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Usa mod_fcgid/suexec/libnss_mysql per avviare PHP con il corrispondente account-utente.<br/><b>Questo richiede una speciale configurazione del Webserver. Tutte le opzioni seguenti sono validi solo se il modulo è abilitato.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Usa un\'indirizzo email alternativo';

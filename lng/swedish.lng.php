@@ -518,8 +518,6 @@ $lng['panel']['back'] = 'Tillbaka';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_log_sql']['title'] = 'Tillfälligt spara loggfiler i databasen';
-$lng['serversettings']['mod_log_sql']['description'] = 'Använd <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> för att spara webfrågor tillfälligt<br /><b>Detta behöver en special <a href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Inkludera PHP via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Använd mod_fcgid/suexec/libnss_mysql för att köra PHP med tillhörande användarkonto.<br/><b>Denna inställning behöver en speciell apache-konfiguration!</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Använd en alternativ E-postadress';

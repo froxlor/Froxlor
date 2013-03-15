@@ -488,7 +488,6 @@ $lng['admin']['configfiles']['choosedaemon'] = 'Escolha um daemon';
 $lng['serversettings']['ftpdomain']['title'] = 'Contas FTP @domínio';
 $lng['serversettings']['ftpdomain']['description'] = 'Clientes podem criar contas de FTP user@domíniodocliente?';
 $lng['panel']['back'] = 'Volta';
-$lng['serversettings']['mod_log_sql']['title'] = 'Temporariamente salva os logs no banco de dados';
 $lng['serversettings']['mod_fcgid']['title'] = 'Incluir PHP via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Use mod_fcgid/suexec/libnss_mysql to run PHP with the corresponding useraccount.<br/><b>This needs a special Apache configuration. All following options are only valid if the module is enabled.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Utilize endereço de e-mail alternativo';

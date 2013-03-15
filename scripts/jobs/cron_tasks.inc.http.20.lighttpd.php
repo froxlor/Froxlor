@@ -535,91 +535,63 @@ class lighttpd
 		return $ssl_settings;
 	}
 
-	protected function getLogFiles($domain)
-	{
+	protected function getLogFiles($domain) {
+
 		$logfiles_text = '';
 		
-		if($domain['speciallogfile'] == '1'
-		   && $this->settings['system']['mod_log_sql'] != '1')
-		{
-			if($domain['parentdomainid'] == '0')
-			{
+		if($domain['speciallogfile'] == '1') {
+
+			if ($domain['parentdomainid'] == '0') {
 				$speciallogfile = '-' . $domain['domain'];
-			}
-			else
-			{
+			} else {
 				$speciallogfile = '-' . $domain['parentdomain'];
 			}
-		}
-		else
-		{
+		} else {
 			$speciallogfile = '';
 		}
 
-		if($this->settings['system']['mod_log_sql'] == 1)
-		{
-			// We are using mod_log_sql (http://www.outoforder.cc/projects/apache/mod_log_sql/)
-			// TODO: See how we are able emulate the error_log
-		}
-		else
-		{
-			// The normal access/error - logging is enabled
-			// error log cannot be set conditionally see
-			// https://redmine.lighttpd.net/issues/665
+		// The normal access/error - logging is enabled
+		// error log cannot be set conditionally see
+		// https://redmine.lighttpd.net/issues/665
 
-			$access_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
-			// Create the logfile if it does not exist (fixes #46)
-			touch($access_log);
-			chown($access_log, $this->settings['system']['httpuser']);
-			chgrp($access_log, $this->settings['system']['httpgroup']);
+		$access_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
+		// Create the logfile if it does not exist (fixes #46)
+		touch($access_log);
+		chown($access_log, $this->settings['system']['httpuser']);
+		chgrp($access_log, $this->settings['system']['httpgroup']);
 
-			$logfiles_text.= '  accesslog.filename	= "' . $access_log . '"' . "\n";
-		}
+		$logfiles_text.= '  accesslog.filename	= "' . $access_log . '"' . "\n";
 		
-		if($this->settings['system']['awstats_enabled'] == '1')
-		{
-			if((int)$domain['parentdomainid'] == 0) 
-			{
+		if ($this->settings['system']['awstats_enabled'] == '1') {
+
+			if ((int)$domain['parentdomainid'] == 0) {
 				// prepare the aliases and subdomains for stats config files
-	
 				$server_alias = '';
 				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` 
 												WHERE `aliasdomain`=\'' . $domain['id'] . '\'
 												OR `parentdomainid` =\''. $domain['id']. '\'');
 	
-				while(($alias_domain = $this->db->fetch_array($alias_domains)) !== false)
-				{
+				while (($alias_domain = $this->db->fetch_array($alias_domains)) !== false) {
+
 					$server_alias.= ' ' . $alias_domain['domain'] . ' ';
 	
-					if($alias_domain['iswildcarddomain'] == '1')
-					{
+					if ($alias_domain['iswildcarddomain'] == '1') {
 						$server_alias.= '*.' . $domain['domain'];
-					}
-					else
-					{
-						if($alias_domain['wwwserveralias'] == '1')
-						{
+					} else {
+						if ($alias_domain['wwwserveralias'] == '1') {
 							$server_alias.= 'www.' . $alias_domain['domain'];
-						}
-						else
-						{
+						} else {
 							$server_alias.= '';
 						}
 					}
 				}
 	
-				if($domain['iswildcarddomain'] == '1')
-				{
+				if ($domain['iswildcarddomain'] == '1') {
 					$alias = '*.' . $domain['domain'];
-				}
-				else
-				{
-					if($domain['wwwserveralias'] == '1')
-					{
+				} else {
+					if ($domain['wwwserveralias'] == '1') {
 						$alias = 'www.' . $domain['domain'];
-					}
-					else
-					{
+					} else {
 						$alias = '';
 					}
 				}
@@ -876,49 +848,33 @@ class lighttpd
 	*	Lets set the text part for the stats software
 	*/
 
-	protected function getStats($domain)
-	{
+	protected function getStats($domain) {
+
 		$stats_text = '';
 
-		if($domain['speciallogfile'] == '1'
-		   && $this->settings['system']['mod_log_sql'] != '1')
-		{
-			if($domain['parentdomainid'] == '0')
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
+		if ($domain['speciallogfile'] == '1') {
+
+			if ($domain['parentdomainid'] == '0') {
+				if ($this->settings['system']['awstats_enabled'] == '1') {
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
 					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
-				}
-				else
-				{
+				} else {
 					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']).'/" )' . "\n";					
 				}
-			}
-			else
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
+			} else {
+				if ($this->settings['system']['awstats_enabled'] == '1') {
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']).'" )' . "\n";
 					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
-				}
-				else
-				{
+				} else {
 					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']).'/" )' . "\n";
 				}
 			}
-		}
-		else
-		{
-			if($domain['customerroot'] != $domain['documentroot'])
-			{
-				if($this->settings['system']['awstats_enabled'] == '1')
-				{
+		} else {
+			if ($domain['customerroot'] != $domain['documentroot']) {
+				if ($this->settings['system']['awstats_enabled'] == '1') {
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
 					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
-				} 
-				else
-				{
+				} else {
 					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/').'" )' . "\n";
 				}
 			}
@@ -926,8 +882,7 @@ class lighttpd
 			// because the stats are in /awstats/[domain], not just /awstats/
 			// also, the awstats-icons are someplace else too!
 			// -> webalizer does not need this!
-			elseif($this->settings['system']['awstats_enabled'] == '1')
-			{
+			elseif ($this->settings['system']['awstats_enabled'] == '1') {
 				$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
 				$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
 			}

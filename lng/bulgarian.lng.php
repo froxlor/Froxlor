@@ -520,9 +520,6 @@ $lng['serversettings']['ftpdomain']['title'] = 'FTP акаунти @домейн
 $lng['serversettings']['ftpdomain']['description'] = 'Клиентите могат да създават FTP акаунти: потребител@домейн?';
 $lng['panel']['back'] = 'Назад';
 
-// ADDED IN 1.2.16-svn12
-
-$lng['serversettings']['mod_log_sql']['title'] = 'Временно запиши логовете в базата данни';
 
 $lng['customer']['tickets'] = 'Запитвания';
 

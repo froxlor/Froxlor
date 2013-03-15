@@ -500,8 +500,6 @@ $lng['panel']['back'] = 'Back';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_log_sql']['title'] = 'Logs tijdelijk opslaan in de database';
-$lng['serversettings']['mod_log_sql']['description'] = 'Gebruike <a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> om toegangslogs tijdelijk in de database op te slaan<br /><b>Dit vereist een speciale <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">configuratie van Apache</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP insluiten via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Gebruik mod_fcgid/suexec/libnss_mysql om PHP uit te voeren onder het gebruikersaccount.<br/><b>Dit vereist een aangepaste configuratie van de webserver. Alle volgende optie\'s zijn alleen geldig wanneer deze module actief is.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Gebruik alternatief emailadres';

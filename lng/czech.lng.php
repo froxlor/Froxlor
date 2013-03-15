@@ -522,8 +522,6 @@ $lng['panel']['back'] = 'Back';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_log_sql']['title'] = 'Doèasnì  ukládat logy do databáze';
-$lng['serversettings']['mod_log_sql']['description'] = 'Použít <a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> pro doèasné uložení webrequestù<br /><b>Toto vyžaduje speciální <a target="blank" href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - documentation">konfiguraci apache</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Includuj PHP pøes mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Použij mod_fcgid/suexec/libnss_mysql pro bì h PHP s odpovídajícím Úøivatelským Úètem.<br/><b>toto vyžaduje speciální konfiguraci apache!</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Použij alternativní e-mailovou adresu';

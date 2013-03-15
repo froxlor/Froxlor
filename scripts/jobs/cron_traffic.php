@@ -153,16 +153,14 @@ while($row_database = $db->fetch_array($databases))
 
 $db_root->close();
 
-# We are using the file-system quota, this will speed up the diskusage - collection
-if ($settings['system']['diskquota_enabled'])
-{
+// We are using the file-system quota, this will speed up the diskusage - collection
+if ($settings['system']['diskquota_enabled']) {
 	$usedquota = getFilesystemQuota();
 }
 
 $result = $db->query("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` ORDER BY `customerid` ASC");
 
-while($row = $db->fetch_array($result))
-{
+while ($row = $db->fetch_array($result)) {
 	/**
 	 * HTTP-Traffic
 	 */
@@ -170,31 +168,24 @@ while($row = $db->fetch_array($result))
 	fwrite($debugHandler, 'http traffic for ' . $row['loginname'] . ' started...' . "\n");
 	$httptraffic = 0;
 
-	if(isset($domainlist[$row['customerid']])
+	if (isset($domainlist[$row['customerid']])
 	   && is_array($domainlist[$row['customerid']])
-	   && count($domainlist[$row['customerid']]) != 0)
-	{
+	   && count($domainlist[$row['customerid']]) != 0
+	) {
 		// Examining which caption to use for default webalizer stats...
-
-		if($row['standardsubdomain'] != '0')
-		{
+		if ($row['standardsubdomain'] != '0') {
 			// ... of course we'd prefer to use the standardsubdomain ...
-
 			$caption = $domainlist[$row['customerid']][$row['standardsubdomain']];
-		}
-		else
-		{
+		} else {
 			// ... but if there is no standardsubdomain, we have to use the loginname ...
-
 			$caption = $row['loginname'];
 
 			// ... which results in non-usable links to files in the stats, so lets have a look if we find a domain which is not speciallogfiledomain
+			foreach ($domainlist[$row['customerid']] as $domainid => $domain) {
 
-			foreach($domainlist[$row['customerid']] as $domainid => $domain)
-			{
-				if(!isset($speciallogfile_domainlist[$row['customerid']])
-				   || !isset($speciallogfile_domainlist[$row['customerid']][$domainid]))
-				{
+				if (!isset($speciallogfile_domainlist[$row['customerid']])
+				   || !isset($speciallogfile_domainlist[$row['customerid']][$domainid])
+				) {
 					$caption = $domain;
 					break;
 				}
@@ -204,38 +195,25 @@ while($row = $db->fetch_array($result))
 		$httptraffic = 0;
 		reset($domainlist[$row['customerid']]);
 
-		if(isset($speciallogfile_domainlist[$row['customerid']])
+		if (isset($speciallogfile_domainlist[$row['customerid']])
 		   && is_array($speciallogfile_domainlist[$row['customerid']])
-		   && count($speciallogfile_domainlist[$row['customerid']]) != 0)
-		{
+		   && count($speciallogfile_domainlist[$row['customerid']]) != 0
+		) {
 			reset($speciallogfile_domainlist[$row['customerid']]);
-			foreach($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain)
-			{
-				if($settings['system']['mod_log_sql'] == 1)
-				{
-					safeSQLLogfile($domain, $row['loginname']);
-
-					// Remove this domain from the domainlist - it's already analysed
-					// and doesn't need to be selected twice
-
-					unset($domainlist[$row['customerid']][$domainid]);
-				}
-
-				if($settings['system']['awstats_enabled'] == '0')
-				{
+			if ($settings['system']['awstats_enabled'] == '0') {
+				foreach ($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain) {
 					$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
 				}
 			}
 		}
 
 		// logrotate speciallogfiles
-		if(isset($speciallogfile_domainlist[$row['customerid']])
-				&& is_array($speciallogfile_domainlist[$row['customerid']])
-				&& count($speciallogfile_domainlist[$row['customerid']]) != 0)
-		{
+		if (isset($speciallogfile_domainlist[$row['customerid']])
+			&& is_array($speciallogfile_domainlist[$row['customerid']])
+			&& count($speciallogfile_domainlist[$row['customerid']]) != 0
+		) {
 			reset($speciallogfile_domainlist[$row['customerid']]);
-			foreach($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain)
-			{
+			foreach ($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain) {
 				
 				$logrotatefile = '/tmp/froxlor_logrotate_tmpfile.conf';
 				$fh = fopen($logrotatefile, 'w');
@@ -264,21 +242,13 @@ while($row = $db->fetch_array($result))
 
 		reset($domainlist[$row['customerid']]);
 
-		if($settings['system']['mod_log_sql'] == 1)
-		{
-			safeSQLLogfile($domainlist[$row['customerid']], $row['loginname']);
-		}
-
 		// callAwstatsGetTraffic is called ONLY HERE and
 		// *not* also in the special-logfiles-loop, because the function
 		// will iterate through all customer-domains and the awstats-configs
 		// know the logfile-name, #246
-		if($settings['system']['awstats_enabled'] == '1')
-		{
+		if ($settings['system']['awstats_enabled'] == '1') {
 			$httptraffic+= floatval(callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']]));
-		}
-		else
-		{
+		} else {
 			$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
 		}
 
@@ -286,8 +256,7 @@ while($row = $db->fetch_array($result))
 		makeChownWithNewStats($row);
 		
 		// logrotate
-		if($settings['system']['logrotate_enabled'] == '1')
-		{
+		if ($settings['system']['logrotate_enabled'] == '1') {
 			fwrite($debugHandler, '   logrotate customers logs' . "\n");
 
 			$logrotatefile = '/tmp/froxlor_logrotate_tmpfile.conf';
@@ -318,8 +287,8 @@ while($row = $db->fetch_array($result))
 		 * Webalizer/AWStats might run for some time, so we'd better check if our database is still present
 		 */
 		if (empty($db->link_id)
-		   || $db->link_id === false)
-		{
+		   || $db->link_id === false
+		) {
 			fwrite($debugHandler, 'Database-connection seems to be down, trying to reconnect' . "\n");
 
 			// just in case
@@ -348,8 +317,7 @@ while($row = $db->fetch_array($result))
 	fwrite($debugHandler, 'ftp traffic for ' . $row['loginname'] . ' started...' . "\n");
 	$ftptraffic = $db->query_first("SELECT SUM(`up_bytes`) AS `up_bytes_sum`, SUM(`down_bytes`) AS `down_bytes_sum` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$row['customerid'] . "'");
 
-	if(!is_array($ftptraffic))
-	{
+	if (!is_array($ftptraffic)) {
 		$ftptraffic = array(
 			'up_bytes_sum' => 0,
 			'down_bytes_sum' => 0

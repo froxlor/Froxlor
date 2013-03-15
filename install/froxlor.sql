@@ -439,7 +439,6 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'last_tasks_run', '000000'),
 	('system', 'nameservers', ''),
 	('system', 'mxservers', ''),
-	('system', 'mod_log_sql', '0'),
 	('system', 'mod_fcgid', '0'),
 	('system', 'apacheconf_vhost', '/etc/apache/vhosts.conf'),
 	('system', 'apacheconf_diroptions', '/etc/apache/diroptions.conf'),
