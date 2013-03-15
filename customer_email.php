@@ -512,7 +512,7 @@ elseif($page == 'accounts')
 							$mail->Subject = $mail_subject;
 							$mail->AltBody = $mail_body;
 							$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-							$mail->AddAddress($email_full, getCorrectUserSalutation($userinfo));
+							$mail->AddAddress($email_full);
 							$mail->Send();
 						} catch(phpmailerException $e) {
 							$mailerr_msg = $e->errorMessage();
