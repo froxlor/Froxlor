@@ -175,7 +175,7 @@ class phpinterface_fcgid
 
 		$admin = $this->_getAdminData($this->_domain['adminid']);
 		$php_ini_variables = array(
-			'SAFE_MODE' => ($this->_domain['safemode'] == '0' ? 'Off' : 'On'),
+			'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
 			'PEAR_DIR' => $this->_settings['system']['mod_fcgid_peardir'],
 			'OPEN_BASEDIR' => $openbasedir,
 			'OPEN_BASEDIR_C' => $openbasedirc,

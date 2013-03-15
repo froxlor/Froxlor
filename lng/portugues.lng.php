@@ -827,7 +827,6 @@ $lng['error']['phpsettingidwrong'] = 'Não existe uma configuração de PHP para
 $lng['error']['descriptioninvalid'] = 'A descrição é muito curta, muito longa ou contem carácters ilegais';
 $lng['error']['info'] = 'Iinformações';
 $lng['admin']['phpconfig']['template_replace_vars'] = 'As variáveis que serão substituídas nas Configurações';
-$lng['admin']['phpconfig']['safe_mode'] = 'Vai ser substituído pelas configurações seguras deste domínios.';
 $lng['admin']['phpconfig']['pear_dir'] = 'Serão substituídos com a definição global para o diretório pear.';
 $lng['admin']['phpconfig']['open_basedir'] = 'Serão substituídos com a definição do domínio open_basedir.';
 $lng['admin']['phpconfig']['tmp_dir'] = 'Substituído com o diretório temporário do domínio.';

@@ -283,7 +283,6 @@ class apache
 						'mod_fcgid_maxrequests' => -1,
 						'guid' => $this->settings['phpfpm']['vhost_httpuser'],
 						'openbasedir' => 0,
-						'safemode' => '0',
 						'email' => $this->settings['panel']['adminmail'],
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath,
@@ -424,15 +423,6 @@ class apache
 				}
 
 				$php_options_text.= '  php_admin_value open_basedir "' . $_phpappendopenbasedir . '"'."\n";
-			}
-
-			if($domain['safemode'] == '0')
-			{
-				$php_options_text.= '  php_admin_flag safe_mode Off ' . "\n";
-			}
-			else
-			{
-				$php_options_text.= '  php_admin_flag safe_mode On ' . "\n";
 			}
 		}
 		else

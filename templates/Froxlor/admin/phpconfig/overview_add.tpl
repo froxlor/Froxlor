@@ -54,10 +54,6 @@ $header
 					</td>
 				</tr>
 				<tr>
-					<td><em>{SAFE_MODE}</em></td>
-					<td>{$lng['admin']['phpconfig']['safe_mode']}</td>
-				</tr>
-				<tr>
 					<td><em>{PEAR_DIR}</em></td>
 					<td>{$lng['admin']['phpconfig']['pear_dir']}</td>
 				</tr>

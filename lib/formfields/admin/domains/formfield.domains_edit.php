@@ -183,14 +183,6 @@ return array(
 									),
 						'value' => array($result['openbasedir'])
 					),
-					'safemode' => array(
-						'label' => 'Safemode',
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array($result['safemode'])
-					),
 					'phpsettingid' => array(
 						'visible' => ((int)$settings['system']['mod_fcgid'] == 1 ? true : false),
 						'label' => $lng['admin']['phpsettings']['title'],

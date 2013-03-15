@@ -930,7 +930,6 @@ $lng['error']['phpsettingidwrong'] = 'Een configuratie voor PHP met dit ID besta
 $lng['error']['descriptioninvalid'] = 'De omschrijving is te kort, te lang of bevat ongeldige karakters.';
 $lng['error']['info'] = 'Informatie';
 $lng['admin']['phpconfig']['template_replace_vars'] = 'Variabelen die worden vervangen in de instellingen';
-$lng['admin']['phpconfig']['safe_mode'] = 'Wordt vervangen door de safe_mode-instellingen voor het domein.';
 $lng['admin']['phpconfig']['pear_dir'] = 'Wordt vervangen door de globale pear-map.';
 $lng['admin']['phpconfig']['open_basedir_c'] = 'Voegt een ; (puntkomma) toe om open_basedir in- of uit te schakelen';
 $lng['admin']['phpconfig']['open_basedir'] = 'Wordt vervangen door de open_basedir-instellingen voor het domein.';

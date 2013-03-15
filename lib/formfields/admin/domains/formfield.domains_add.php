@@ -161,14 +161,6 @@ return array(
 									),
 						'value' => array('1')
 					),
-					'safemode' => array(
-						'label' => 'Safemode',
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array('1')
-					),
 					'phpsettingid' => array(
 						'visible' => ((int)$settings['system']['mod_fcgid'] == 1 ? true : false),
 						'label' => $lng['admin']['phpsettings']['title'],

@@ -134,7 +134,6 @@ class apache_fcgid extends apache
 				'mod_fcgid_maxrequests' => -1,
 				'guid' => $user,
 				'openbasedir' => 0,
-				'safemode' => '0',
 				'email' => $this->settings['panel']['adminmail'],
 				'loginname' => 'froxlor.panel',
 				'documentroot' => $mypath

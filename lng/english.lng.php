@@ -971,7 +971,6 @@ $lng['error']['phpsettingidwrong'] = 'A PHP Configuration with this id doesn\'t 
 $lng['error']['descriptioninvalid'] = 'The description is too short, too long or contains illegal characters.';
 $lng['error']['info'] = 'Info';
 $lng['admin']['phpconfig']['template_replace_vars'] = 'Variables that will be replaced in the configs';
-$lng['admin']['phpconfig']['safe_mode'] = 'Will be replaced with the safe_mode setting of the domain.';
 $lng['admin']['phpconfig']['pear_dir'] = 'Will be replaced with the global setting for the pear directory.';
 $lng['admin']['phpconfig']['open_basedir_c'] = 'Will insert a ; (semicolon) to comment-out/disable open_basedir when set';
 $lng['admin']['phpconfig']['open_basedir'] = 'Will be replaced with the open_basedir setting of the domain.';

@@ -164,7 +164,6 @@ class lighttpd
 						'mod_fcgid_maxrequests' => -1,
 						'guid' => $this->settings['phpfpm']['vhost_httpuser'],
 						'openbasedir' => 0,
-						'safemode' => '0',
 						'email' => $this->settings['panel']['adminmail'],
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath
