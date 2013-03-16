@@ -252,7 +252,7 @@ if($action == 'login')
 				$message = $lng['error']['login'];
 				break;
 			case 3:
-				$message = printf($lng['error']['login_blocked'],$settings['login']['deactivatetime']);
+				$message = sprintf($lng['error']['login_blocked'],$settings['login']['deactivatetime']);
 				break;
 			case 4:
 				$cmail = isset($_GET['customermail']) ? $_GET['customermail'] : 'unknown';
