@@ -87,7 +87,7 @@ command_directory = /usr/local/sbin
 daemon_directory = /usr/local/libexec/postfix
 data_directory = /var/db/postfix
 mail_owner = postfix
-myhostname = <SERVERNAME>
+myhostname = mail.$mydomain
 mydomain = <SERVERNAME>
 myorigin = $mydomain
 

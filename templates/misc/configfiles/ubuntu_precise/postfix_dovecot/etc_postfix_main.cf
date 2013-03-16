@@ -3,7 +3,7 @@
 mydomain = <SERVERNAME>
 
 # should be different from $mydomain eg. "mail.$mydomain"
-myhostname = <SERVERNAME>
+myhostname = mail.$mydomain
 
 mydestination = $myhostname,
 	$mydomain,
