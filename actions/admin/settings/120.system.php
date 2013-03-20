@@ -37,7 +37,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'documentroot_use_default_value',
 					'type' => 'bool',
-					'default' => true,
+					'default' => false,
 					'save_method' => 'storeSettingField',
 					),
 				'system_ipaddress' => array(

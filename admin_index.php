@@ -104,7 +104,9 @@ if($page == 'overview')
 					$_message = isset($latestversion[1]) ? $latestversion[1] : '';
 					$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
 
-					$lookfornewversion_lable = $_version;
+					// add the branding so debian guys are not gettings confused
+					// about their version-number
+					$lookfornewversion_lable = $_version.$branding;
 					$lookfornewversion_link = $_link;
 					$lookfornewversion_addinfo = $_message;
 

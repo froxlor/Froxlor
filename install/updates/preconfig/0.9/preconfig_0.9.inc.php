@@ -453,7 +453,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	}
 
 	if (versionInUpdate($current_version, '0.9.28-svn6')) {
-	
+
 		if ($settings['system']['webserver'] == 'apache2') {
 			$has_preconfig = true;
 			$description = 'Froxlor now supports the new Apache 2.4. Please be aware that you need to load additional apache-modules in ordner to use it.<br />';
@@ -471,14 +471,14 @@ LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
 		}
 	}
 
-	if(versionInUpdate($current_version, '0.9.28-rc2'))
-	{
+	if (versionInUpdate($current_version, '0.9.28-rc2')) {
+
 		$has_preconfig = true;
 
-		$description  = 'This version will add an option to set default path for all domains and subdomains, to be the full subdomain or domain name.<br />';
-		$description .= 'You can enable or disable this feature anytime from Server -> Settings -> System settings.<br />';
+		$description  = 'This version adds an option to append the domain-name to the document-root for domains and subdomains.<br />';
+		$description .= 'You can enable or disable this feature anytime from settings -> system settings.<br />';
 
-		$question .= '<strong>Do you want to Use domain name as default value for DocumentRoot path?:</strong>&nbsp;';
+		$question .= '<strong>Do you want to automatically append the domain-name to the documentroot of newly created domains?:</strong>&nbsp;';
 		$question.= makeyesno('update_system_documentroot_use_default_value', '1', '0', '1');
 
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
