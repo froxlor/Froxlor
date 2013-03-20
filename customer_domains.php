@@ -254,8 +254,17 @@ elseif($page == 'domains')
 				if(!preg_match('/^https?\:\/\//', $path)
 				   || !validateUrl($idna_convert->encode($path)))
 				{
-					$path = $userinfo['documentroot'] . '/' . $path;
-					$path = makeCorrectDir($path);
+					// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
+					// set default path to subdomain or domain name
+					if((($path == '') || ($path == '/'))
+						&& $settings['system']['documentroot_use_default_value'] == 1)
+					{
+						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $completedomain);
+					}
+					else
+					{
+						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
+					}
 					if (strstr($path, ":") !== FALSE)
 					{
 						standard_error('pathmaynotcontaincolon');
@@ -430,8 +439,17 @@ elseif($page == 'domains')
 				if(!preg_match('/^https?\:\/\//', $path)
 				   || !validateUrl($idna_convert->encode($path)))
 				{
-					$path = $userinfo['documentroot'] . '/' . $path;
-					$path = makeCorrectDir($path);
+					// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
+					// set default path to subdomain or domain name
+					if((($path == '') || ($path == '/'))
+						&& $settings['system']['documentroot_use_default_value'] == 1)
+					{
+						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $result['domain']);
+					}
+					else
+					{
+						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
+					}
 					if (strstr($path, ":") !== FALSE)
 					{
 						standard_error('pathmaynotcontaincolon');
