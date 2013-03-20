@@ -305,11 +305,13 @@ if($page == 'domains'
 					$specialsettings = validate(str_replace("\r\n", "\n", $_POST['specialsettings']), 'specialsettings', '/^[^\0]*$/');
 					validate($_POST['documentroot'], 'documentroot');
 
+					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
+					// set default path to subdomain or domain name
 					if(isset($_POST['documentroot'])
-					   && $_POST['documentroot'] != '')
+						&& ($_POST['documentroot'] != ''))
 					{
 						if(substr($_POST['documentroot'], 0, 1) != '/'
-						   && !preg_match('/^https?\:\/\//', $_POST['documentroot']))
+							&& !preg_match('/^https?\:\/\//', $_POST['documentroot']))
 						{
 							$documentroot.= '/' . $_POST['documentroot'];
 						}
@@ -317,6 +319,12 @@ if($page == 'domains'
 						{
 							$documentroot = $_POST['documentroot'];
 						}
+					}
+					elseif (isset($_POST['documentroot'])
+						&& ($_POST['documentroot'] == '') 
+						&& ($settings['system']['documentroot_use_default_value'] == 1))
+					{
+						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $domain);
 					}
 				}
 				else
@@ -828,7 +836,16 @@ if($page == 'domains'
 
 					if($documentroot == '')
 					{
-						$documentroot = $customer['documentroot'];
+						// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
+						// set default path to subdomain or domain name
+						if ($settings['system']['documentroot_use_default_value'] == 1)
+						{
+							$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
+						}
+						else
+						{
+							$documentroot = $customer['documentroot'];
+						}
 					}
 
 					if(!preg_match('/^https?\:\/\//', $documentroot)

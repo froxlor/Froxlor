@@ -471,4 +471,17 @@ LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
 		}
 	}
 
+	if(versionInUpdate($current_version, '0.9.28-rc2'))
+	{
+		$has_preconfig = true;
+
+		$description  = 'This version will add an option to set default path for all domains and subdomains, to be the full subdomain or domain name.<br />';
+		$description .= 'You can enable or disable this feature anytime from Server -> Settings -> System settings.<br />';
+
+		$question .= '<strong>Do you want to Use domain name as default value for DocumentRoot path?:</strong>&nbsp;';
+		$question.= makeyesno('update_system_documentroot_use_default_value', '1', '0', '1');
+
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
 }

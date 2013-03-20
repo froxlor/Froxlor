@@ -2024,3 +2024,15 @@ if (isFroxlorVersion('0.9.28-svn6')) {
 	lastStepStatus(0);
 	updateToVersion('0.9.28-rc1');
 }
+
+if (isFroxlorVersion('0.9.28-rc1')) {
+	$update_system_documentroot_use_default_value = isset($_POST['update_system_documentroot_use_default_value']) ? (int)$_POST['update_system_documentroot_use_default_value'] : '0';
+	showUpdateStep("Adding new settings for using domain name as default value for DocumentRoot path", true);
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'documentroot_use_default_value', '".$update_system_documentroot_use_default_value."');");
+	lastStepStatus(0);
+
+	showUpdateStep("Updating from 0.9.28-rc1 to 0.9.28-rc2", true);
+	lastStepStatus(0);
+
+	updateToVersion('0.9.28-rc2');
+}
