@@ -63,4 +63,3 @@ $header
 
 	</article>
 $footer
-

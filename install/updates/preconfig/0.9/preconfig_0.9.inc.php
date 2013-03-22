@@ -479,7 +479,7 @@ LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
 		$description .= 'You can enable or disable this feature anytime from settings -> system settings.<br />';
 
 		$question = '<strong>Do you want to automatically append the domain-name to the documentroot of newly created domains?:</strong>&nbsp;';
-		$question.= makeyesno('update_system_documentroot_use_default_value', '1', '0', '1');
+		$question.= makeyesno('update_system_documentroot_use_default_value', '1', '0', '0');
 
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}

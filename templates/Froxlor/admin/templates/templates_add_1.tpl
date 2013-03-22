@@ -27,4 +27,3 @@ $header
 		</section>
 	</article>
 $footer
-

@@ -54,23 +54,23 @@ $header
 					</td>
 				</tr>
 				<tr>
-					<td><em>{SERVERNAME}</em>:</td>
+					<td><em>{SERVERNAME}</em></td>
 					<td>{$lng['admin']['templates']['SERVERNAME']}</td>
 				</tr>
 				<tr>
-					<td><em>{CUSTOMER}</em>:</td>
+					<td><em>{CUSTOMER}</em></td>
 					<td>{$lng['admin']['templates']['CUSTOMER']}</td>
 				</tr>
 				<tr>
-					<td><em>{ADMIN}</em>:</td>
+					<td><em>{ADMIN}</em></td>
 					<td>{$lng['admin']['templates']['ADMIN']}</td>
 				</tr>
 				<tr>
-					<td><em>{CUSTOMER_EMAIL}</em>:</td>
+					<td><em>{CUSTOMER_EMAIL}</em></td>
 					<td>{$lng['admin']['templates']['CUSTOMER_EMAIL']}</td>
 				</tr>
 				<tr>
-					<td><em>{ADMIN_EMAIL}</em>:</td>
+					<td><em>{ADMIN_EMAIL}</em></td>
 					<td>{$lng['admin']['templates']['ADMIN_EMAIL']}</td>
 				</tr>
 			</tbody>
@@ -80,4 +80,3 @@ $header
 
 	</article>
 $footer
-
