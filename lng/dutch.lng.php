@@ -171,7 +171,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'U moet eerst alle subdomeinen verwi
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'U heeft al een catchall voor dit domein aangemaakt.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'U kunt uw hoofd FTP account niet verwijderen';
 $lng['error']['login'] = 'De door u ingegeven gebruikersnaam en wacthwoord zijn verkeerd. Probeer opnieuw!';
-$lng['error']['login_blocked'] = 'Dit account is inactief vanwege teveel login fouten. <br />Probeer het nog eens over ' . $settings['login']['deactivatetime'] . ' seconden.';
+$lng['error']['login_blocked'] = 'Dit account is inactief vanwege teveel login fouten. <br />Probeer het nog eens over %s seconden.';
 $lng['error']['notallreqfieldsorerrors'] = 'U heeft niet alle velden goed, of helemaal niet ingevuld.';
 $lng['error']['oldpasswordnotcorrect'] = 'Het oude wachtwoord is niet correct.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'U kunt niet meer resources gebruiken dan dat u bezit.';
@@ -179,15 +179,7 @@ $lng['error']['mustbeurl'] = 'U heeft geen goed of compleet URL ingegeven (bijv.
 $lng['error']['invalidpath'] = 'U heeft geen goed URL ingegeven (misschien een probleem met dirlisting?)';
 $lng['error']['stringisempty'] = 'Geen waarde in invoerveld';
 $lng['error']['stringiswrong'] = 'Verkeerde waarde in invoerveld';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'Het nieuwe wacthwoord en de bevestiging zijn niet gelijk';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['loginnameexists'] = 'Loginnaam %s bestaat al';
 $lng['error']['emailiswrong'] = 'E-mail Adres %s bevat illegale karakters of is niet compleet';
 $lng['error']['loginnameiswrong'] = 'Loginnaame %s bevat illegale karakters';
@@ -212,7 +204,6 @@ $lng['error']['destinationnonexist'] = 'Maak uw forwarder in het veld \'Destinat
 $lng['error']['destinationalreadyexistasmail'] = 'De forwarder naar %s bestaat reeds als actief e-mail adres.';
 $lng['error']['destinationalreadyexist'] = 'U heeft al een forwarder die verwijst naar %s .';
 $lng['error']['destinationiswrong'] = 'De forwarder naar %s bevat illegale karakter(s) of is niet compleet.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
@@ -620,13 +611,9 @@ $lng['question']['ticket_reallyclose'] = 'Weet u zeker dat u ticket "%s" wilt sl
 $lng['question']['ticket_reallydelete'] = 'Weet u zeker dat u ticket "%s" wilt verwijderen?';
 $lng['question']['ticket_reallydeletecat'] = 'Weet u zeker dat u de categorie "%s" wilt verwijderen?';
 $lng['question']['ticket_reallyarchive'] = 'Weet u zeker dat u ticket "%s" wilt archiveren?';
-$lng['error']['mysubject'] = '\'' . $lng['ticket']['subject'] . '\'';
-$lng['error']['mymessage'] = '\'' . $lng['ticket']['message'] . '\'';
-$lng['error']['mycategory'] = '\'' . $lng['ticket']['category'] . '\'';
 $lng['error']['nomoreticketsavailable'] = 'U hebt al uw beschikbare tickets verbruikt. Neem contact op met uw beheerder.';
 $lng['error']['nocustomerforticket'] = 'U kunt geen tickets aanmaken zonder gebruikers';
 $lng['error']['categoryhastickets'] = 'Deze categorie bevat nog tickets.<br />Verwijder de tickets eerst alvorens de categorie te verwijderen';
-$lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
 $lng['admin']['ticketsettings'] = 'Instellingen voor ondersteuningstickets';
 $lng['admin']['archivelastrun'] = 'Laatste archivering tickets';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Emailadres voor geen-antwoord';
@@ -879,7 +866,7 @@ $lng['customer']['mail_quota'] = 'Mailquotum';
 $lng['panel']['megabyte'] = 'MegaByte';
 $lng['panel']['not_supported'] = 'Wordt niet ondersteund in: ';
 $lng['emails']['quota_edit'] = 'E-mailquotum aanpassen';
-$lng['error']['allocatetoomuchquota'] = 'U probeerde %s MB ' . $lng['emails']['quota'] . ' toe te kennen, maar u heeft niet voldoende over.';
+$lng['error']['allocatetoomuchquota'] = 'U probeerde %s MB Quotum toe te kennen, maar u heeft niet voldoende over.';
 
 // Autoresponder module
 
@@ -1252,7 +1239,7 @@ $lng['dkim']['dkim_algorithm']['title'] = 'Toegestane hash-algoritmen';
 $lng['dkim']['dkim_algorithm']['description'] = 'Toegestane hash-algoritmen, kies "Alle" voor alle algoritmen of 1 of meerdere van onderstaande';
 $lng['dkim']['dkim_servicetype'] = 'Type services';
 $lng['dkim']['dkim_keylength']['title'] = 'Lengte sleutel';
-$lng['dkim']['dkim_keylength']['description'] = 'Let op: Indien u deze waarde wijzigt, dient u allen geheime en publieke sleutels in "'.$settings['dkim']['dkim_prefix'].'" te verwijderen';
+$lng['dkim']['dkim_keylength']['description'] = 'Let op: Indien u deze waarde wijzigt, dient u allen geheime en publieke sleutels in "%s" te verwijderen';
 $lng['dkim']['dkim_notes']['title'] = 'Notities voor DKIM';
 $lng['dkim']['dkim_notes']['description'] = 'Notities die van belang kunnen zijn voor mensen, bijvoorbeeld een URL als http://www.dnswatch.info. Geen enkel programma zal deze informatie verwerken. Deze informatie dient schaars te zijn gezien de beperkte ruimte in DNS. Dit is bedoeld voor beheerders, niet voor eindgebruikers.';
 $lng['dkim']['dkim_add_adsp']['title'] = 'DKIM ADSP toevoegen';
@@ -1314,12 +1301,12 @@ $lng['ticket']['orderdesc'] = 'Hier kunt u uw eigen logische volgorde instellen 
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Standaard foutdocumenten voor alle klanten activeren';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'Bestand/URL voor foutcode 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">Wordt niet ondersteund in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'Bestand/URL voor foutcode 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">Wordt niet ondersteund in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Bestand/URL voor foutcode 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Bestand/URL voor foutcode 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">Wordt niet ondersteund in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Standaardprioriteit voor support-tickets';

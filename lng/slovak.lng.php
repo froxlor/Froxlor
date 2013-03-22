@@ -185,7 +185,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'Pred vytvorením wildcard domény n
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Pre túto doménu ste uŸ doménový kô¹ nadefinovali.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'NemôŸete vymaza» Vá¹ hlavný FTP úèet';
 $lng['error']['login'] = 'UŸívateµské meno alebo heslo, ktoré ste zadali je nesprávne. Prosím, skúste znovu!';
-$lng['error']['login_blocked'] = 'Tento úèet bol suspendovaný z dôvodu veµkého mnoŸsta chybových prihlasení. <br />Prosím, skúste znovu za ' . $settings['login']['deactivatetime'] . ' sekúnd.';
+$lng['error']['login_blocked'] = 'Tento úèet bol suspendovaný z dôvodu veµkého mnoŸsta chybových prihlasení. <br />Prosím, skúste znovu za %s sekúnd.';
 $lng['error']['notallreqfieldsorerrors'] = 'Nevyplnili ste v¹etky polia, alebo sú niektoré nesprávne.';
 $lng['error']['oldpasswordnotcorrect'] = 'Stará heslo nie je správne.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'NemôŸete vymedzi» viac prostiedkov ako sú povolené pre Vás.';
@@ -193,15 +193,7 @@ $lng['error']['mustbeurl'] = 'Nezadali ste správu alebo kompletnú URL (napr. h
 $lng['error']['invalidpath'] = 'Nevybrali ste správu URL (moŸno je problém so zoznamom adresárov)';
 $lng['error']['stringisempty'] = 'Chýbajúce vstupné pole';
 $lng['error']['stringiswrong'] = 'Nesprávne vstupné pole';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'Nové a potvrdzujúce heslo sa nezhodujú';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Prihlasovacie meno %s uŸ existuje';
@@ -228,7 +220,6 @@ $lng['error']['destinationnonexist'] = 'Prosím, vytvorte Va¹e presmerovanie v 
 $lng['error']['destinationalreadyexistasmail'] = 'Presmerovanie na %s uŸ existuje s aktívnou E-mail adresou.';
 $lng['error']['destinationalreadyexist'] = 'UŸ ste definovali presmerovanie na %s .';
 $lng['error']['destinationiswrong'] = 'Presmerovanie %s obsahuje neplatný(é) znak(y) alebo je nekompletné.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions

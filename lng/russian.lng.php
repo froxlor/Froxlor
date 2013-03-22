@@ -505,7 +505,7 @@ $lng['error']['login'] = 'Указанные имя пользователя и�
 
 // Der angegebene Benutzername/Passwort ist falsch.
 
-$lng['error']['login_blocked'] = 'Из-за многочисленных ошибочных попыток логина аккаунт временно закрыт. <br />Пожалуйста попробуйте через ' . $settings['login']['deactivatetime'] . ' секунд ещё раз.';
+$lng['error']['login_blocked'] = 'Из-за многочисленных ошибочных попыток логина аккаунт временно закрыт. <br />Пожалуйста попробуйте через %s секунд ещё раз.';
 
 // Dieser Account wurde aufgrund zu vieler Fehlversuche vorruebergehend geschlossen. <br />Bitte versuchen Sie es in '.$settings['login']['deactivatetime'].' Sekunden erneut.
 
@@ -537,18 +537,10 @@ $lng['error']['stringiswrong'] = 'Неправильные данные в по�
 
 // Falsche Eingabe im Feld
 
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'Новый пароль и повторённый новый пароль отличаются.';
 
 // Das neue Passwort und die Bestaetigung sind nicht identisch.
 
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Домен\'';
 
 // \'Domain\'
@@ -653,7 +645,6 @@ $lng['error']['destinationiswrong'] = 'Адрес для пересылки %s �
 
 // Die Weiterleitungsadresse-Adresse %s beinhaltet ungueltige Zeichen oder ist nicht vollstaendig.
 
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions

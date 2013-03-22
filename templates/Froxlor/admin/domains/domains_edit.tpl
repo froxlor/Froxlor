@@ -15,7 +15,7 @@ $header
 
 					<div id="speciallogwarningpopup" name="speciallogwarningpopup" align="center">
 						<div class="warningtitle">{$lng['admin']['delete_statistics']}</div>
-						</p>{$lng['admin']['speciallogwarning']}</p>
+						</p>{$speciallogwarning}</p>
 						<input type="text" name="delete_stats" id="delete_stats"></p>
 						<div style="margin-top:10px;">
 							<input type="button" class="yesbutton" name="verifybutton" value="{$lng['panel']['delete']}" id="speciallogyesbutton" />&nbsp;

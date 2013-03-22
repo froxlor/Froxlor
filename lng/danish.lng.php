@@ -185,7 +185,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'Du skal først slette alle sub-dom�
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Du har allerede valgt en Fang-Alt adresse for dette domæne.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'Du kan ikke slette din primære FTP konto.';
 $lng['error']['login'] = 'Den indtastede bruger/kode er ikke korrekt. Forsøg venligst igen.';
-$lng['error']['login_blocked'] = 'Denne konto er blevet midlertidigt lukket grundet for mange fejlagtige logind forsøg.<br />Forsøg venligst igen om ' . $settings['login']['deactivatetime'] . ' sekunder.';
+$lng['error']['login_blocked'] = 'Denne konto er blevet midlertidigt lukket grundet for mange fejlagtige logind forsøg.<br />Forsøg venligst igen om %s sekunder.';
 $lng['error']['notallreqfieldsorerrors'] = 'Alle krævede felter er ikke udfyldt, eller der er fejl i en eller flere af udfyldningerne.';
 $lng['error']['oldpasswordnotcorrect'] = 'Det gamle kodeord er ikke indtastet korrekt.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Du kan ikke tildele flere ressourcer end du er blevet bevilliget.';
@@ -193,15 +193,7 @@ $lng['error']['mustbeurl'] = 'Din indtastning er ikke en gyldig URL (f.eks. http
 $lng['error']['invalidpath'] = 'Du har valgt en ikke gyldig url (måske et problem med mappe list?)';
 $lng['error']['stringisempty'] = 'Manglende intasting i feltet';
 $lng['error']['stringiswrong'] = 'Forkert indtastning i feltet';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'Det nye kodeord og kontrol indtastning stemmer ikke overens';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Domæne\'';
 $lng['error']['mydocumentroot'] = '\'Mapperod\'';
 $lng['error']['loginnameexists'] = 'Brugernavnet %s eksisterer allerede';
@@ -228,7 +220,6 @@ $lng['error']['destinationnonexist'] = 'Opret venligst videresenderen i feltet.'
 $lng['error']['destinationalreadyexistasmail'] = 'Videresenderen til %s eksisterer allerede som en aktiv eMail-adresse.';
 $lng['error']['destinationalreadyexist'] = 'Der er allerede angivet en videresender til %s .';
 $lng['error']['destinationiswrong'] = 'Videresenderen %s indeholder ugyldige tegn eller er ikke komplet.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
