@@ -189,7 +189,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'Prima di creare un dominio wildcard
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Hai già definito un catchall per questo dominio.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'Non puoi cancellare il tuo account FTP principale.';
 $lng['error']['login'] = 'Il nome utente o la password da te immessi sono incorretti. Per favore riprova!';
-$lng['error']['login_blocked'] = 'Questo account è stato sospeso per i troppi tentativi di login falliti. <br />Riprovi tra ' . $settings['login']['deactivatetime'] . ' secondi.';
+$lng['error']['login_blocked'] = 'Questo account è stato sospeso per i troppi tentativi di login falliti. <br />Riprovi tra %s secondi.';
 $lng['error']['notallreqfieldsorerrors'] = 'Alcuni campi sono stati lasciati vuoti o sono stati riempiti incorrettamente.';
 $lng['error']['oldpasswordnotcorrect'] = 'La vecchia password non è corretta.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Non puoi assegnare più risorse di quante ne possieda tu stesso.';
@@ -197,15 +197,7 @@ $lng['error']['mustbeurl'] = 'Non hai inserito un\'indirizzo valido o completo (
 $lng['error']['invalidpath'] = 'Non hai scelto un\'indirizzo valido.';
 $lng['error']['stringisempty'] = 'Manca il dato nel campo.';
 $lng['error']['stringiswrong'] = 'Dato incorretto.';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'La nuova password non corrisponde a quella vecchia.';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Dominio\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Il login %s esiste già.';
@@ -232,7 +224,6 @@ $lng['error']['destinationnonexist'] = 'Per favore crea il tuo reindirizzamento 
 $lng['error']['destinationalreadyexistasmail'] = 'Il reindirizzamento a %s esiste già come indirizzo Email attivo.';
 $lng['error']['destinationalreadyexist'] = 'Hai già definito un reindirizzamento per %s .';
 $lng['error']['destinationiswrong'] = 'Il reindirizzamento %s contiene caratteri invalidi o è incompleto.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
@@ -650,13 +641,9 @@ $lng['question']['ticket_reallyclose'] = 'Vuoi veramente chiudere il ticket"%s"?
 $lng['question']['ticket_reallydelete'] = 'Vuoi veramente cancellare il ticket"%s"?';
 $lng['question']['ticket_reallydeletecat'] = 'Vuoi veramente eliminare la categoria "%s"?';
 $lng['question']['ticket_reallyarchive'] = 'Vuoi veramente spostare il ticket "%s" in archivio?';
-$lng['error']['mysubject'] = '\'' . $lng['ticket']['subject'] . '\'';
-$lng['error']['mymessage'] = '\'' . $lng['ticket']['message'] . '\'';
-$lng['error']['mycategory'] = '\'' . $lng['ticket']['category'] . '\'';
 $lng['error']['nomoreticketsavailable'] = 'Sono stati usati tutti i ticket disponibili. Si prega di contattare l\'amministratore.';
 $lng['error']['nocustomerforticket'] = 'Impossibile creare ticket senza clienti';
 $lng['error']['categoryhastickets'] = 'La categoria contiene ancora ticket.<br />Si prega di cancellare i ticket per eliminare la categoria';
-$lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
 $lng['admin']['ticketsettings'] = 'Impostazioni Gestione Ticket';
 $lng['admin']['archivelastrun'] = 'Ultimo ticket archiviato';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Non rispondere a questo indirizzo email';
@@ -899,7 +886,7 @@ $lng['customer']['mail_quota'] = 'Limite Mail';
 $lng['panel']['megabyte'] = 'MegaByte';
 $lng['panel']['not_supported'] = 'Non supportato in: ';
 $lng['emails']['quota_edit'] = 'Cambia limite E-Mail';
-$lng['error']['allocatetoomuchquota'] = 'Si è tentato di allocare %s MB ' . $lng['emails']['quota'] . ', ma non c\'è abbastanza spazio disponibile.';
+$lng['error']['allocatetoomuchquota'] = 'Si è tentato di allocare %s MB Limite, ma non c\'è abbastanza spazio disponibile.';
 
 // Autoresponder module
 
@@ -1277,7 +1264,7 @@ $lng['dkim']['dkim_algorithm']['title'] = 'Ammessi Algoritmi Hash';
 $lng['dkim']['dkim_algorithm']['description'] = 'Definire gli algoritmi di hash permessi, scegliere "Tutti" per permettere tutti gli algoritmi oppure uno o più tra gli altri algoritmi disponibili';
 $lng['dkim']['dkim_servicetype'] = 'Tipi di Servizio';
 $lng['dkim']['dkim_keylength']['title'] = 'Lunghezza Chiave';
-$lng['dkim']['dkim_keylength']['description'] = 'Attenzione: Se si modifica questo valore è necessario eliminare tutte le chiavi private/pubbliche in "'.$settings['dkim']['dkim_prefix'].'"';
+$lng['dkim']['dkim_keylength']['description'] = 'Attenzione: Se si modifica questo valore è necessario eliminare tutte le chiavi private/pubbliche in "%s"';
 $lng['dkim']['dkim_notes']['title'] = 'Note DKIM';
 $lng['dkim']['dkim_notes']['description'] = 'Nota potrebbe essere di interesse, es. un URL come http://www.dnswatch.info. Nessuna interpretazione è fatta da nessun programma. Questo tag deve essere usato con parsimonia per ragioni di spazio nel DNS. Questo è destinato ad essere utilizzato dagli amministratori e non dagli utenti finali.';
 $lng['dkim']['dkim_add_adsp']['title'] = 'Aggiungi un valore DKIM ADSP';
@@ -1340,12 +1327,12 @@ $lng['ticket']['orderdesc'] = 'Qui è possibile definire il tuo ordine logico pe
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Abilita errordocuments in automatico per tutti i clienti';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'File/URL per l\'errore 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'File/URL per l\'errore 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'File/URL per l\'errore 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'File/URL per l\'errore 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Priorità predefinita per il supporto ticket';
@@ -1581,7 +1568,7 @@ $lng['menue']['traffic']['table'] = 'Traffico';
 $lng['error']['admin_domain_emailsystemhostname'] = 'Spiacente, l\'hostname di sistema non può essere usato come dominio di un cliente';
 $lng['backup_allowed'] = 'Backup permesso';
 $lng['extras']['backup_create'] = 'Creare il Backup?';
-$lng['extras']['backup_info'] = 'Il Backup sarà eseguito una volta al giorno nella cartella "' . $settings['system']['backup_dir'] . '".';
+$lng['extras']['backup_info'] = 'Il Backup sarà eseguito una volta al giorno nella cartella ...';
 $lng['extras']['backup_info_sep'] = 'Contiene gli archivi compressi dei file HTML Files e dei Database.';
 $lng['extras']['backup_info_big'] = 'Contiene un archivio compresso dei file HTML Files e dei Database.';
 $lng['extras']['backup_count_info'] = '<br /><br />Si tenga in considerazione che il backup utilizza lo spazio web!';

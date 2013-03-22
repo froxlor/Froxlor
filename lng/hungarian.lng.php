@@ -194,15 +194,7 @@ $lng['error']['mustbeurl'] = 'Nem teljes vagy nem érvényes URL-t (pl.: http://
 $lng['error']['invalidpath'] = 'Nem választott ki érvényes URL-t  (lehet, hogy probléma van a könyvtárlistázással?).';
 $lng['error']['stringisempty'] = 'A mezőben nincs adat.';
 $lng['error']['stringiswrong'] = 'A mezőben helytelen adat van.';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'Az új jelszó és annak megerősítése nem egyezik meg.';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['mydocumentroot'] = '\'Dokumentum útvonal\'';
 $lng['error']['loginnameexists'] = 'A(z) %s felhasználónév már létezik';
@@ -229,7 +221,6 @@ $lng['error']['destinationnonexist'] = 'Kérem, levél-továbbítóját a  \'Cé
 $lng['error']['destinationalreadyexistasmail'] = 'A(z) %s továbbító már létezik mint aktív e-mail cím.';
 $lng['error']['destinationalreadyexist'] = 'Ön már létrehozott egy továbbítót ehhez: %s .';
 $lng['error']['destinationiswrong'] = 'A(z) %s továbbító érvénytelen karakter(eke)t tartalmaz vagy nem teljes.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions

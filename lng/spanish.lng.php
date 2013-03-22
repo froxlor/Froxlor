@@ -187,7 +187,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'Usted debe primero borar todos los 
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Usted acaba de definer una Direccion como Catchall para este dominio.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'Usted no puede suprimir su cuenta principal del ftp';
 $lng['error']['login'] = 'El Nombre de Usuario/Clave esta Errado. Por favor intento otra vez!';
-$lng['error']['login_blocked'] = 'Esta cuenta fue cerrada transitoriamente debido a demasiados intentos falsos. <br />Por favor intente otra vez en ' . $settings['login']['deactivatetime'] . ' segundos.';
+$lng['error']['login_blocked'] = 'Esta cuenta fue cerrada transitoriamente debido a demasiados intentos falsos. <br />Por favor intente otra vez en %s segundos.';
 $lng['error']['notallreqfieldsorerrors'] = 'Usted no ha llenado todos los espacios asignados o ha colocado un dato Erroneo.';
 $lng['error']['oldpasswordnotcorrect'] = 'La Clave Vieja no es correcta.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Usted no puede afectar un aparato más recursos que los que usted posee.';
@@ -195,15 +195,7 @@ $lng['error']['mustbeurl'] = 'Usted tiene que dar una completa direccion URL(por
 $lng['error']['invalidpath'] = 'No ha seleccionado una URL válida (¿probablemente problemas con el listado de registros?)';
 $lng['error']['stringisempty'] = 'Falta un dato';
 $lng['error']['stringiswrong'] = 'Dato falso';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'La Clave Nueva a la Confirmacion de Clave no Coinciden';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'dominio\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Conexión-Nombre %s existe ya';
@@ -230,7 +222,6 @@ $lng['error']['destinationnonexist'] = 'Crear por favor su email-expedición en 
 $lng['error']['destinationalreadyexistasmail'] = 'La direccion Secundaria %s ya existe como Direccion e-mail activa.';
 $lng['error']['destinationalreadyexist'] = 'Ya existe una Direccion Secundaria para %s .';
 $lng['error']['destinationiswrong'] = 'La Direccion Secundaria %s contiene simbolos invalidos o esta incompleta.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions

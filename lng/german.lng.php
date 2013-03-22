@@ -191,7 +191,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'Sie müssen erst alle Subdomains l�
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Sie haben bereits eine Adresse als Catchall für diese Domain definiert.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'Sie können Ihren Hauptaccount nicht löschen.';
 $lng['error']['login'] = 'Der angegebene Benutzername/Passwort ist falsch.';
-$lng['error']['login_blocked'] = 'Dieser Account wurde aufgrund zu vieler Fehlversuche vorrübergehend geschlossen. <br />Bitte versuchen Sie es in ' . $settings['login']['deactivatetime'] . ' Sekunden erneut.';
+$lng['error']['login_blocked'] = 'Dieser Account wurde aufgrund zu vieler Fehlversuche vorrübergehend geschlossen. <br />Bitte versuchen Sie es in %s Sekunden erneut.';
 $lng['error']['notallreqfieldsorerrors'] = 'Sie haben nicht alle Felder oder ein Feld mit fehlerhaften Angaben ausgefüllt.';
 $lng['error']['oldpasswordnotcorrect'] = 'Das alte Passwort ist nicht korrekt.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Sie können nicht mehr Ressourcen verteilen als Sie noch frei haben.';
@@ -199,15 +199,7 @@ $lng['error']['mustbeurl'] = 'Sie müssen eine vollständige URL angeben (z.B. h
 $lng['error']['invalidpath'] = 'Sie haben keine gültige URL ausgewählt (Evtl. Probleme beim Verzeichnislisting?)';
 $lng['error']['stringisempty'] = 'Fehlende Eingabe im Feld';
 $lng['error']['stringiswrong'] = 'Falsche Eingabe im Feld';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'Das neue Passwort und die Bestätigung sind nicht identisch.';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Der Login-Name %s existiert bereits.';
@@ -234,7 +226,6 @@ $lng['error']['destinationnonexist'] = 'Bitte geben Sie Ihre Weiterleitungsadres
 $lng['error']['destinationalreadyexistasmail'] = 'Die Weiterleitung zu %s exisitiert bereits als aktive E-Mail-Adresse.';
 $lng['error']['destinationalreadyexist'] = 'Es gibt bereits eine Weiterleitung nach %s .';
 $lng['error']['destinationiswrong'] = 'Die Weiterleitungsadresse-Adresse %s enthält ungültige Zeichen oder ist nicht vollständig.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 $lng['error']['ticketnotaccessible'] = 'Sie können sich das Ticket nicht ansehen.';
 
 /**
@@ -668,13 +659,9 @@ $lng['question']['ticket_reallyclose'] = 'Wollen Sie das Ticket "%s" wirklich sc
 $lng['question']['ticket_reallydelete'] = 'Wollen Sie das Ticket "%s" wirklich löschen?';
 $lng['question']['ticket_reallydeletecat'] = 'Wollen Sie die Kategorie "%s" wirklich löschen?';
 $lng['question']['ticket_reallyarchive'] = 'Wollen Sie das Ticket "%s" wirklich in das Archiv verschieben?';
-$lng['error']['mysubject'] = '\'' . $lng['ticket']['subject'] . '\'';
-$lng['error']['mymessage'] = '\'' . $lng['ticket']['message'] . '\'';
-$lng['error']['mycategory'] = '\'' . $lng['ticket']['category'] . '\'';
 $lng['error']['nomoreticketsavailable'] = 'Sie haben Ihr Ticketkontingent aufgebraucht. Bitte kontaktieren Sie ihren Administrator.';
 $lng['error']['nocustomerforticket'] = 'Keine Kunden vorhanden um ein Ticket zu erstellen.';
 $lng['error']['categoryhastickets'] = 'In dieser Kategorie befinden sich noch Tickets.<br />Bitte löschen Sie diese um die Kategorie zu löschen';
-$lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
 $lng['admin']['ticketsettings'] = 'Support-Ticket Einstellungen';
 $lng['admin']['archivelastrun'] = 'Letzte Ticket-Archivierung';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Keine-Antwort E-Mail Adresse';
@@ -924,7 +911,7 @@ $lng['customer']['mail_quota'] = 'E-Mail Kontingent';
 $lng['panel']['megabyte'] = 'MegaByte';
 $lng['emails']['quota_edit'] = 'E-Mail Kontingent ändern';
 $lng['panel']['not_supported'] = 'Nicht unterstüzt in: ';
-$lng['error']['allocatetoomuchquota'] = 'Sie versuchen %s MB ' . $lng['emails']['quota'] . ' zu zuweisen, haben aber nicht genug übrig.';
+$lng['error']['allocatetoomuchquota'] = 'Sie versuchen %s MB Kontingent zu zuweisen, haben aber nicht genug übrig.';
 
 // Autoresponder module
 
@@ -1275,7 +1262,7 @@ $lng['dkim']['dkim_algorithm']['title'] = 'Gültige Hash Algorithmen';
 $lng['dkim']['dkim_algorithm']['description'] = 'Wählen sie einen Algorithmus, "All" für alle Algorithmen oder Einen oder Mehrere von den verfügbaren Algorithmen';
 $lng['dkim']['dkim_servicetype'] = 'Service Typen';
 $lng['dkim']['dkim_keylength']['title'] = 'Schlüssel-Länge';
-$lng['dkim']['dkim_keylength']['description'] = 'Achtung: Bei Änderung dieser Einstellung müssen alle private/public Schlüssel in "'.$settings['dkim']['dkim_prefix'].'" gelöscht werden.';
+$lng['dkim']['dkim_keylength']['description'] = 'Achtung: Bei Änderung dieser Einstellung müssen alle private/public Schlüssel in "%s" gelöscht werden.';
 $lng['dkim']['dkim_notes']['title'] = 'DKIM Notiz';
 $lng['dkim']['dkim_notes']['description'] = 'Eine Notiz, welche für Menschen interessant sein könnte, Z.B. eine URL wie http://www.dnswatch.info. Es gibt keine programmgesteuerte Interpretation für dieses Feld. Gehen sie sparsam mit der Anzahl der Zeichen um, da es Einschränkungen seitens des DNS Dienstes gibt. Dieses Feld ist für Administratoren gedacht, nicht für Benutzer.';
 $lng['dkim']['dkim_add_adsp']['title'] = 'DKIM ADSP Eintrag hinzufügen';
@@ -1354,12 +1341,12 @@ $lng['ticket']['orderdesc'] = 'Hier kann eine logische Sortierung für die Ticke
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Verwende Standard-Fehlerdokumente für alle Kunden';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'Datei/URL für Fehler 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">Nicht unterstüzt in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'Datei/URL für Fehler 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">Nicht unterstüzt in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Datei/URL für Fehler 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Datei/URL für Fehler 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">Nicht unterstüzt in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Voreingestellte Support-Ticket Priorität';
@@ -1641,7 +1628,7 @@ $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Time
 // ADDED IN 0.9.27-svn2
 $lng['panel']['cancel'] = 'abbrechen';
 $lng['admin']['delete_statistics'] = 'Statistiken Löschen';
-$lng['admin']['speciallogwarning'] = 'ACHTUNG: Durch diese Einstellungen werden Sie alle bisherige Statistiken dieser Domain verlieren. Wenn Sie dabei wirklich sicher sind, geben Sie bitte folgenden Text in das nachfolgende Textfeld ein: "'.$lng['admin']['delete_statistics'].'" und bestätigen Sie mit "'.$lng['panel']['delete'].'".<br /><br />';
+$lng['admin']['speciallogwarning'] = 'ACHTUNG: Durch diese Einstellungen werden Sie alle bisherige Statistiken dieser Domain verlieren. Wenn Sie dabei wirklich sicher sind, geben Sie bitte folgenden Text in das nachfolgende Textfeld ein: "%s" und bestätigen Sie mit "Löschen".<br /><br />';
 
 // ADDED IN 0.9.28-svn5
 $lng['error']['operationnotpermitted'] = 'Diese Aktion ist nicht erlaubt!';
