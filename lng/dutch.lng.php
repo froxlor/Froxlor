@@ -179,15 +179,7 @@ $lng['error']['mustbeurl'] = 'U heeft geen goed of compleet URL ingegeven (bijv.
 $lng['error']['invalidpath'] = 'U heeft geen goed URL ingegeven (misschien een probleem met dirlisting?)';
 $lng['error']['stringisempty'] = 'Geen waarde in invoerveld';
 $lng['error']['stringiswrong'] = 'Verkeerde waarde in invoerveld';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'Het nieuwe wacthwoord en de bevestiging zijn niet gelijk';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['loginnameexists'] = 'Loginnaam %s bestaat al';
 $lng['error']['emailiswrong'] = 'E-mail Adres %s bevat illegale karakters of is niet compleet';
 $lng['error']['loginnameiswrong'] = 'Loginnaame %s bevat illegale karakters';
@@ -212,7 +204,6 @@ $lng['error']['destinationnonexist'] = 'Maak uw forwarder in het veld \'Destinat
 $lng['error']['destinationalreadyexistasmail'] = 'De forwarder naar %s bestaat reeds als actief e-mail adres.';
 $lng['error']['destinationalreadyexist'] = 'U heeft al een forwarder die verwijst naar %s .';
 $lng['error']['destinationiswrong'] = 'De forwarder naar %s bevat illegale karakter(s) of is niet compleet.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
@@ -620,13 +611,9 @@ $lng['question']['ticket_reallyclose'] = 'Weet u zeker dat u ticket "%s" wilt sl
 $lng['question']['ticket_reallydelete'] = 'Weet u zeker dat u ticket "%s" wilt verwijderen?';
 $lng['question']['ticket_reallydeletecat'] = 'Weet u zeker dat u de categorie "%s" wilt verwijderen?';
 $lng['question']['ticket_reallyarchive'] = 'Weet u zeker dat u ticket "%s" wilt archiveren?';
-$lng['error']['mysubject'] = '\'' . $lng['ticket']['subject'] . '\'';
-$lng['error']['mymessage'] = '\'' . $lng['ticket']['message'] . '\'';
-$lng['error']['mycategory'] = '\'' . $lng['ticket']['category'] . '\'';
 $lng['error']['nomoreticketsavailable'] = 'U hebt al uw beschikbare tickets verbruikt. Neem contact op met uw beheerder.';
 $lng['error']['nocustomerforticket'] = 'U kunt geen tickets aanmaken zonder gebruikers';
 $lng['error']['categoryhastickets'] = 'Deze categorie bevat nog tickets.<br />Verwijder de tickets eerst alvorens de categorie te verwijderen';
-$lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
 $lng['admin']['ticketsettings'] = 'Instellingen voor ondersteuningstickets';
 $lng['admin']['archivelastrun'] = 'Laatste archivering tickets';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Emailadres voor geen-antwoord';

@@ -195,15 +195,7 @@ $lng['error']['mustbeurl'] = 'Vložili jste nesprávnou nebo nekompletní url (n
 $lng['error']['invalidpath'] = 'Nevybrali jste správnou url (možná problém s "dirlistingem"?)';
 $lng['error']['stringisempty'] = 'Chybì jící vstup v poli';
 $lng['error']['stringiswrong'] = 'špatný vstup v poli';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'Nové heslo se neshoduje s tím pro potvrzení';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['loginnameexists'] = 'Pøihlašovací jméno %s již existuje';
 $lng['error']['emailiswrong'] = 'Emailová adresa %s obsahuje nepovolené znaky nebo je nekompletní';
@@ -229,7 +221,6 @@ $lng['error']['destinationnonexist'] = 'Prosím vytvoøte pøeposílatele v poli
 $lng['error']['destinationalreadyexistasmail'] = 'Pøeposílaè na %s již existuje jako aktivní emailová adresa.';
 $lng['error']['destinationalreadyexist'] = 'Už jste nastavili pøeposílaè na %s .';
 $lng['error']['destinationiswrong'] = 'Pøeposílaè %s obsahuje nesprávné znaky nebo není kompletní.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
@@ -642,13 +633,9 @@ $lng['question']['ticket_reallyclose'] = 'Opravdu chcete zavøít tiket "%s"?';
 $lng['question']['ticket_reallydelete'] = 'Opravdu chcete smazat tiket "%s"?';
 $lng['question']['ticket_reallydeletecat'] = 'Opravdu chcete smazat kategorii "%s"?';
 $lng['question']['ticket_reallyarchive'] = 'Opravdu chcete pøesunout tiket "%s" do archivu?';
-$lng['error']['mysubject'] = '\'' . $lng['ticket']['subject'] . '\'';
-$lng['error']['mymessage'] = '\'' . $lng['ticket']['message'] . '\'';
-$lng['error']['mycategory'] = '\'' . $lng['ticket']['category'] . '\'';
 $lng['error']['nomoreticketsavailable'] = 'Použili jste všechny dostupné tikety. Prosím kontaktujte svého administrátora.';
 $lng['error']['nocustomerforticket'] = 'Nemohu vytváøet tikety bez zákazníkù';
 $lng['error']['categoryhastickets'] = 'Kategorie stále obsahuje tikety.<br />Prosím smažte tikety aby jste mohli smazat kategorii';
-$lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
 $lng['admin']['ticketsettings'] = 'Tikety-podpory nastavení';
 $lng['admin']['archivelastrun'] = 'Poslední archivace tiketù';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Bez odpovì dní e-mailová adresa';

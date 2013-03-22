@@ -191,15 +191,7 @@ $lng['error']['mustbeurl'] = 'Du har inte skrivit in en korrekt url (e.g. http:/
 $lng['error']['invalidpath'] = 'Du har inte valt en korrekt url (Kanske har du lagt till en katalogsäkerhet så att katalogerna inte kan visas?)';
 $lng['error']['stringisempty'] = 'Du måste skriva in något i fältet';
 $lng['error']['stringiswrong'] = 'Fel inatningsfält';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'New password and confirmation does not match';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Login-Name %s är upptaget';
@@ -226,7 +218,6 @@ $lng['error']['destinationnonexist'] = 'Skapa en forwarder i fältet \'Destinati
 $lng['error']['destinationalreadyexistasmail'] = 'Denna forwarder %s, finns redan som aktiv E-postadress.';
 $lng['error']['destinationalreadyexist'] = 'Du har redan skapat en forwarder till %s .';
 $lng['error']['destinationiswrong'] = 'Denna forwarder: %s innehåller ogiltiga tecken eller så är den inte komplett adress.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
@@ -638,13 +629,9 @@ $lng['question']['ticket_reallyclose'] = 'Är du säker på att du vill stänga 
 $lng['question']['ticket_reallydelete'] = 'Är du säker på att du vill radera supportärendet "%s"?';
 $lng['question']['ticket_reallydeletecat'] = 'Är du säker på att du vill radera kategorin "%s"?';
 $lng['question']['ticket_reallyarchive'] = 'Är du säker på att du vill flytta supportärendet "%s" till arkivet?';
-$lng['error']['mysubject'] = '\'' . $lng['ticket']['subject'] . '\'';
-$lng['error']['mymessage'] = '\'' . $lng['ticket']['message'] . '\'';
-$lng['error']['mycategory'] = '\'' . $lng['ticket']['category'] . '\'';
 $lng['error']['nomoreticketsavailable'] = 'Du har redan använt alla supportärenden som du fått tilldelade. Kontakta administratören om du behöver fler.';
 $lng['error']['nocustomerforticket'] = 'Det går inte att skapa ett supportärende utan kunder';
 $lng['error']['categoryhastickets'] = 'Denna kategori har fortfarande supportärenden.<br />Du måste radera dessa ärenden innan du kan radera denna kategori';
-$lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
 $lng['admin']['ticketsettings'] = 'Supportärende inställningar';
 $lng['admin']['archivelastrun'] = 'Sista supportärende som arkiverats';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Svara-Inte E-post adress';

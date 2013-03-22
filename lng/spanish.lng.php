@@ -195,15 +195,7 @@ $lng['error']['mustbeurl'] = 'Usted tiene que dar una completa direccion URL(por
 $lng['error']['invalidpath'] = 'No ha seleccionado una URL válida (¿probablemente problemas con el listado de registros?)';
 $lng['error']['stringisempty'] = 'Falta un dato';
 $lng['error']['stringiswrong'] = 'Dato falso';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'La Clave Nueva a la Confirmacion de Clave no Coinciden';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'dominio\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Conexión-Nombre %s existe ya';
@@ -230,7 +222,6 @@ $lng['error']['destinationnonexist'] = 'Crear por favor su email-expedición en 
 $lng['error']['destinationalreadyexistasmail'] = 'La direccion Secundaria %s ya existe como Direccion e-mail activa.';
 $lng['error']['destinationalreadyexist'] = 'Ya existe una Direccion Secundaria para %s .';
 $lng['error']['destinationiswrong'] = 'La Direccion Secundaria %s contiene simbolos invalidos o esta incompleta.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
