@@ -320,6 +320,7 @@ $lng['admin']['templates']['COMPANY'] = 'Wird mit dem Firmennamen des Kunden ers
 $lng['admin']['templates']['USERNAME'] = 'Wird mit dem Benutzernamen des neuen Kundenkontos ersetzt.';
 $lng['admin']['templates']['PASSWORD'] = 'Wird mit dem Passwort des neuen Kundenkontos ersetzt.';
 $lng['admin']['templates']['EMAIL'] = 'Wird mit der Adresse des neuen POP3/IMAP Kontos ersetzt.';
+$lng['admin']['ssl_settings'] = 'SSL Einstellungen';
 
 /**
  * Serversettings

@@ -102,36 +102,7 @@ return array(
 						'select_var' => $ipsandports,
 						'mandatory' => true,
 					),
-					'ssl' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL',
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array($result['ssl'])
-					),
-					'ssl_redirect' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL Redirect',
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array($result['ssl_redirect'])
-					),
-					'ssl_ipandport' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL IP/Port',
-						'type' => 'select',
-						'select_var' => $ssl_ipsandports
-					),
-					'no_ssl_available_info' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports == '' ? true : false) : false),
-						'label' => 'SSL',
-						'type' => 'label',
-						'value' => $lng['panel']['nosslipsavailable']
-					),
+
 					'wwwserveralias' => array(
 						'label' => $lng['admin']['wwwserveralias'],
 						'type' => 'checkbox',
@@ -170,7 +141,86 @@ return array(
 					)
 				)
 			),
+
+			// Begin: SSL-Settings
 			'section_c' => array(
+
+			  'title' => $lng['admin']['ssl_settings'],
+
+			  'image' => 'icons/domain_edit.png',
+
+			  'visible' => $settings['use_ssl'],
+
+			  'fields' => array(
+
+			    'no_ssl_available_info' => array(
+			      'visible' => !$ssl_ipsandports,
+			      'label' => 'SSL',
+			      'type' => 'label',
+			      'value' => $lng['panel']['nosslipsavailable']
+			      ),
+
+			    'ssl_domain_yesno' => array(
+			      'visible' => $ssl_ipsandports,
+			      'label' => 'SSL Domain',
+			      'type' => 'checkbox',
+			      'values' => array( array('label' => $lng['panel']['yes'], 'value' => true) ),
+			      'value' => array($result['ssl'])
+			    ),
+
+			    'ssl_redirect' => array(
+			      'visible' => $ssl_ipsandports,
+			      'label' => 'SSL Redirect',
+			      'type' => 'checkbox',
+			      'values' => array( array('label' => $lng['panel']['yes'], 'value' => true) ),
+			      'value' => array($result['ssl_redirect'])
+			    ),
+
+			    'ssl_ipandport' => array(
+			      'visible' => $ssl_ipsandports,
+			      'label' => 'SSL IP/Port',
+			      'type' => 'select',
+			      'select_var' => $ssl_ipsandports
+			    ),
+
+			    'ssl_ca' => array(
+			      'visible' => $ssl_ipsandports,
+			      'label' => 'Certificate Authority',
+			      'desc' => 'Path to Certificate Authority file',
+			      'type' => 'text',
+			      'value' => ( $result['ssl_ca'] ) ? $result['ssl_ca'] : ( $settings['ssl_ca_file'] ) ? $settings['ssl_ca_file'] : null
+			    ),
+
+			    'ssl_chain' => array(
+			      'visible' => $ssl_ipsandports,
+			      'label' => 'Certificate Chain',
+			      'desc' => 'Path to Certificate Chain file',
+			      'type' => 'text',
+			      'value' => ( $result['ssl_chain'] ) ? $result['ssl_chain'] : ( $settings['ssl_cert_chainfile'] ) ? $settings['ssl_cert_chainfile'] : null
+			    ),
+
+			    'ssl_cert' => array(
+			      'visible' => $ssl_ipsandports,
+			      'label' => 'Domain Certificate',
+			      'desc' => 'Path to Domain Certificate file',
+			      'type' => 'text',
+			      'value' => ( $result['ssl_cert'] ) ? $result['ssl_cert'] : ( $settings['ssl_cert_file'] ) ? $settings['ssl_cert_file'] : null
+			    ),
+
+			    'ssl_key' => array(
+			      'visible' => $ssl_ipsandports,
+			      'label' => 'Certificate Key',
+			      'desc' => 'Path to Certificate Key file',
+			      'type' => 'text',
+			      'value' => ( $result['ssl_key'] ) ? $result['ssl_key'] : ( $settings['ssl_key_file'] ) ? $settings['ssl_key_file'] : null
+			    )
+
+			  )
+
+			),
+			// End: SSL-Settings
+
+			'section_d' => array(
 				'title' => $lng['admin']['phpserversettings'],
 				'image' => 'icons/domain_edit.png',
 				'visible' => (($userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1') ? true : false),
@@ -203,7 +253,7 @@ return array(
 					)
 				)
 			),
-			'section_d' => array(
+			'section_e' => array(
 				'title' => $lng['admin']['nameserversettings'],
 				'image' => 'icons/domain_edit.png',
 				'visible' => ($settings['system']['bind_enable'] == '1' && $userinfo['change_serversettings'] == '1' ? true : false),
@@ -224,7 +274,7 @@ return array(
 					)
 				)
 			),
-			'section_e' => array(
+			'section_f' => array(
 				'title' => $lng['admin']['mailserversettings'],
 				'image' => 'icons/domain_edit.png',
 				'fields' => array(
