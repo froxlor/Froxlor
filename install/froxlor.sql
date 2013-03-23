@@ -237,9 +237,13 @@ CREATE TABLE `panel_domains` (
   `ssl` tinyint(4) NOT NULL default '0',
   `ssl_redirect` tinyint(4) NOT NULL default '0',
   `ssl_ipandport` tinyint(4) NOT NULL default '0',
+  `ssl_ca` TINYTEXT NULL COMMENT 'Path to Certificate Authority File',
+  `ssl_chain` TINYTEXT NULL COMMENT 'Path to Certificate Chain File',
+  `ssl_cert` TINYTEXT NULL COMMENT 'Path to Domain Certificate File',
+  `ssl_key` TINYTEXT NULL COMMENT 'Path to Domain Certificate Key File',
   `specialsettings` text NOT NULL,
   `deactivated` tinyint(1) NOT NULL default '0',
-  `bindserial` varchar(10) NOT NULL default '2000010100',
+  `bindserial` varchar(10) NOT NULL default '2013030100',
   `add_date` int( 11 ) NOT NULL default '0',
   `registration_date` date NOT NULL,
   `phpsettingid` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1',
@@ -846,7 +850,7 @@ CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
 
 
 
-INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES 
+INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES
 	('froxlor', 'user', 'false', 'hard', 0, 0, 0, 0, 0, 0);
 
 

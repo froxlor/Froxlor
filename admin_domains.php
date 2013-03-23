@@ -321,7 +321,7 @@ if($page == 'domains'
 						}
 					}
 					elseif (isset($_POST['documentroot'])
-						&& ($_POST['documentroot'] == '') 
+						&& ($_POST['documentroot'] == '')
 						&& ($settings['system']['documentroot_use_default_value'] == 1))
 					{
 						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $domain);
@@ -394,33 +394,36 @@ if($page == 'domains'
 					standard_error('ipportdoesntexist');
 				}
 
-				if($settings['system']['use_ssl'] == "1"
-				   && isset($_POST['ssl'])
-				   /*&& isset($_POST['ssl_redirect'])*/
-				   && isset($_POST['ssl_ipandport'])
-				   && $_POST['ssl'] != '0')
-				{
-					$ssl = 1; // if ssl is set and != 0 it can only be 1
-					$ssl_redirect = 0;
-					if (isset($_POST['ssl_redirect'])) {
-						$ssl_redirect = (int)$_POST['ssl_redirect'];
-					}
-					$ssl_ipandport = (int)$_POST['ssl_ipandport'];
-					$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' AND `ssl` = '1'" . $additional_ip_condition);
+				// SSL-Settings
+				if ( $settings['system']['use_ssl'] ) {
 
-					if(!isset($ssl_ipandport_check['id'])
-					   || $ssl_ipandport_check['id'] == '0'
-					   || $ssl_ipandport_check['id'] != $ssl_ipandport)
-					{
-						standard_error('ipportdoesntexist');
-					}
+				  $ssl = new stdClass;
+				  $ssl->domain_yesno = ( $_POST['ssl_domain_yesno'] ) ? 'TRUE' : 'FALSE';
+				  $ssl->redirect = ( $_POST['ssl_redirect'] ) ? 'TRUE' : 'FALSE';
+				  $ssl->ipandport = ( $_POST['ssl_ipandport'] ) ? $_POST['ssl_ipandport'] : 0;
+				  $ssl->ca = ( !empty($_POST['ssl_ca']) ) ? '"'. $_POST['ssl_ca'] .'"' : 'NULL';
+				  $ssl->chain = ( !empty($_POST['ssl_chain']) ) ? '"'. $_POST['ssl_chain'] .'"' : 'NULL';
+				  $ssl->cert = ( !empty($_POST['ssl_cert']) ) ? '"'. $_POST['ssl_cert'] .'"' : 'NULL';
+				  $ssl->key = ( !empty($_POST['ssl_key']) ) ? '"'. $_POST['ssl_key'] .'"' : 'NULL';
+
+				  $ssl_ipandport_check = $db->query_first('SELECT `id`, `ip`, `port`
+									  FROM `' . TABLE_PANEL_IPSANDPORTS .'`
+									  WHERE `id` = '. $_POST['ssl_ipandport'] .'
+									  AND `ssl` = TRUE '.
+									  $additional_ip_condition
+									  );
+
+				  if ( !isset($ssl_ipandport_check['id'] )
+				      || $ssl_ipandport_check['id'] == 0
+				      || $ssl_ipandport_check['id'] != $ssl->ipandport
+				      ) {
+
+				    standard_error('ipportdoesntexist');
+
+				  }
+
 				}
-				else
-				{
-					$ssl = 0;
-					$ssl_redirect = 0;
-					$ssl_ipandport = 0;
-				}
+
 
 				if(!preg_match('/^https?\:\/\//', $documentroot))
 				{
@@ -579,7 +582,9 @@ if($page == 'domains'
 						$question_nr++;
 					}
 
-					$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` (`domain`, `customerid`, `adminid`, `documentroot`, `ipandport`,`aliasdomain`, `zonefile`, `dkim`, `wwwserveralias`, `isbinddomain`, `isemaildomain`, `email_only`, `subcanemaildomain`, `caneditdomain`, `openbasedir`, `speciallogfile`, `specialsettings`, `ssl`, `ssl_redirect`, `ssl_ipandport`, `add_date`, `registration_date`, `phpsettingid`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `ismainbutsubto`) VALUES ('" . $db->escape($domain) . "', '" . (int)$customerid . "', '" . (int)$adminid . "', '" . $db->escape($documentroot) . "', '" . $db->escape($ipandport) . "', " . (($aliasdomain != 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", '" . $db->escape($zonefile) . "', '" . $db->escape($dkim) . "', '" . $db->escape($wwwserveralias) . "', '" . $db->escape($isbinddomain) . "', '" . $db->escape($isemaildomain) . "', '" . $db->escape($email_only) . "', '" . $db->escape($subcanemaildomain) . "', '" . $db->escape($caneditdomain) . "', '" . $db->escape($openbasedir) . "', '" . $db->escape($speciallogfile) . "', '" . $db->escape($specialsettings) . "', '" . $ssl . "', '" . $ssl_redirect . "' , '" . $ssl_ipandport . "', '" . $db->escape(time()) . "', '" . $db->escape($registration_date) . "', '" . (int)$phpsettingid . "', '" . (int)$mod_fcgid_starter . "', '" . (int)$mod_fcgid_maxrequests . "', '".(int)$issubof."')");
+					$db->query('INSERT INTO `' . TABLE_PANEL_DOMAINS . '` (`domain`, `customerid`, `adminid`, `documentroot`, `ipandport`,`aliasdomain`, `zonefile`, `dkim`, `wwwserveralias`, `isbinddomain`, `isemaildomain`, `email_only`, `subcanemaildomain`, `caneditdomain`, `openbasedir`, `speciallogfile`, `specialsettings`, `ssl`, `ssl_redirect`, `ssl_ipandport`, `ssl_ca`, `ssl_chain`, `ssl_cert`, `ssl_key`, `add_date`, `registration_date`, `phpsettingid`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `ismainbutsubto`)
+						   VALUES ("'. $db->escape($domain) .'", "'. $customerid .'","'. $adminid .'", "' . $db->escape($documentroot) .'", "' . $db->escape($ipandport) .'", "'. (($aliasdomain != 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') .'", "'. $db->escape($zonefile) .'", "'. $db->escape($dkim) .'", "'. $db->escape($wwwserveralias) .'", "'. $db->escape($isbinddomain) .'", "'. $db->escape($isemaildomain) .'", "'. $db->escape($email_only) .'", "'. $db->escape($subcanemaildomain) .'", "'. $db->escape($caneditdomain) .'", "'. $db->escape($openbasedir) .'", "'. $db->escape($speciallogfile) .'", "'. $db->escape($specialsettings) .'", '. $ssl->domain_yesno .', '. $ssl->redirect .', '. $ssl->ipandport .', "'. $db->escape($ssl->ca) .'", "'. $db->escape($ssl->chain) .'", "'. $db->escape($ssl->cert). '", "'. $db->escape($ssl->key) .'", "'. $db->escape(time()) .'", "'. $db->escape($registration_date) .'", '. $phpsettingid . ', '. $mod_fcgid_starter .', '. $mod_fcgid_maxrequests .', '. $issubof.');');
+
 					$domainid = $db->insert_id();
 					$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` + 1 WHERE `adminid` = '" . (int)$adminid . "'");
 					$log->logAction(ADM_ACTION, LOG_INFO, "added domain '" . $domain . "'");
@@ -1141,8 +1146,50 @@ if($page == 'domains'
 					$log->logAction(ADM_ACTION, LOG_INFO, "removed specialsettings on all subdomains of domain #" . $id);
 				}
 
-				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `documentroot`='" . $db->escape($documentroot) . "', `ipandport`='" . $db->escape($ipandport) . "', `ssl`='" . (int)$ssl . "', `ssl_redirect`='" . (int)$ssl_redirect . "', `ssl_ipandport`='" . (int)$ssl_ipandport . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ", `isbinddomain`='" . $db->escape($isbinddomain) . "', `isemaildomain`='" . $db->escape($isemaildomain) . "', `email_only`='" . $db->escape($email_only) . "', `subcanemaildomain`='" . $db->escape($subcanemaildomain) . "', `dkim`='" . $db->escape($dkim) . "', `caneditdomain`='" . $db->escape($caneditdomain) . "', `zonefile`='" . $db->escape($zonefile) . "', `wwwserveralias`='" . $db->escape($wwwserveralias) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `speciallogfile`='" . $db->escape($speciallogfile) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "', `specialsettings`='" . $db->escape($specialsettings) . "', `registration_date`='" . $db->escape($registration_date) . "', `ismainbutsubto`='" . (int)$issubof . "' WHERE `id`='" . (int)$id . "'");
-				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `customerid` = '" . (int)$customerid . "', `adminid` = '" . (int)$adminid . "', `ipandport`='" . $db->escape($ipandport) . "', `openbasedir`='" . $db->escape($openbasedir) . "', `phpsettingid`='" . $db->escape($phpsettingid) . "', `mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "'" . $upd_specialsettings . $updatechildren . " WHERE `parentdomainid`='" . (int)$id . "'");
+				// SSL-Settings
+				$ssl = new stdClass;
+				$ssl->domain_yesno = ( $_POST['ssl_domain_yesno'] ) ? 'TRUE' : 'FALSE';
+				$ssl->redirect = ( $_POST['ssl_redirect'] ) ? 'TRUE' : 'FALSE';
+				$ssl->ipandport = ( $_POST['ssl_ipandport'] ) ? $_POST['ssl_ipandport'] : 0;
+				$ssl->ca = ( !empty($_POST['ssl_ca']) ) ? '"'. $_POST['ssl_ca'] .'"' : 'NULL';
+				$ssl->chain = ( !empty($_POST['ssl_chain']) ) ? '"'. $_POST['ssl_chain'] .'"' : 'NULL';
+				$ssl->cert = ( !empty($_POST['ssl_cert']) ) ? '"'. $_POST['ssl_cert'] .'"' : 'NULL';
+				$ssl->key = ( !empty($_POST['ssl_key']) ) ? '"'. $_POST['ssl_key'] .'"' : 'NULL';
+
+
+				// Table update
+				$result = $db->query('UPDATE `'. TABLE_PANEL_DOMAINS .'` SET
+						     `customerid` = '. $customerid .',
+						     `adminid` = '. $adminid .',
+						     `documentroot` = "'. $db->escape($documentroot) .'",
+						     `ipandport` = "'. $db->escape($ipandport) .'",
+						     `ssl` = '. $ssl->domain_yesno .',
+						     `ssl_redirect` = '. $ssl->redirect .',
+						     `ssl_ipandport` = '. $ssl->ipandport .',
+						     `ssl_ca` = '. $db->escape($ssl->ca) .',
+						     `ssl_chain` = '. $db->escape($ssl->chain) .',
+						     `ssl_cert` = '. $db->escape($ssl->cert) .',
+						     `ssl_key` = '. $db->escape($ssl->key) .',
+						     `aliasdomain` = '. (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ',
+						     `isbinddomain` = "'. $db->escape($isbinddomain) .'",
+						     `isemaildomain` = "'. $db->escape($isemaildomain) .'",
+						     `email_only` = "'. $db->escape($email_only) .'",
+						     `subcanemaildomain` = "'. $db->escape($subcanemaildomain) .'",
+						     `dkim` = "'. $db->escape($dkim) .'",
+						     `caneditdomain` = "'. $db->escape($caneditdomain) .'",
+						     `zonefile` = "'. $db->escape($zonefile) .'",
+						     `wwwserveralias` = "'. $db->escape($wwwserveralias) .'",
+						     `openbasedir` = "'. $db->escape($openbasedir) .'",
+						     `speciallogfile` = "'. $db->escape($speciallogfile) .'",
+						     `phpsettingid` = "'. $db->escape($phpsettingid) .'",
+						     `mod_fcgid_starter` = "'. $db->escape($mod_fcgid_starter) .'",
+						     `mod_fcgid_maxrequests` = "'. $db->escape($mod_fcgid_maxrequests) .'",
+						     `specialsettings` = "'. $db->escape($specialsettings) .'",
+						     `registration_date` = "'. $db->escape($registration_date) .'",
+						     `ismainbutsubto` = '. $issubof .'
+						     WHERE `id` = '. $id .';');
+
+
 				$log->logAction(ADM_ACTION, LOG_INFO, "edited domain #" . $id);
 				$redirect_props = Array(
 					'page' => $page,

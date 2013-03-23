@@ -320,6 +320,7 @@ $lng['admin']['templates']['USERNAME'] = 'Replaced with the customers account us
 $lng['admin']['templates']['PASSWORD'] = 'Replaced with the customers account password.';
 $lng['admin']['templates']['EMAIL'] = 'Replaced with the address of the POP3/IMAP account.';
 $lng['admin']['webserver'] = 'Webserver';
+$lng['admin']['ssl_settings'] = 'SSL Settings';
 
 /**
  * Serversettings

@@ -1832,7 +1832,7 @@ if(isFroxlorVersion('0.9.27')) {
 	if ($db->num_rows($handle) < 1) {
 		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/');");
 	}
-    
+
  	updateToVersion('0.9.28-svn1');
 }
 
@@ -1844,9 +1844,9 @@ if(isFroxlorVersion('0.9.28-svn1')) {
 	$db->query("ALTER TABLE  `panel_languages` ADD  `iso` CHAR( 3 ) NOT NULL DEFAULT  'foo' AFTER  `language`");
 
 	$handle = $db->query("SELECT `language` FROM `panel_languages` WHERE `iso`='foo'");
-    
+
 	$langauges = $db->fetch_array($handle);
-	foreach($languages as $language){    
+	foreach($languages as $language){
 		switch ($language) {
 			case "Deutsch":
 				$db->query("UPDATE `panel_languages` SET `iso`='de' WHERE `language` = 'Deutsch'");
@@ -1910,10 +1910,10 @@ if(isFroxlorVersion('0.9.28-svn1')) {
 if(isFroxlorVersion('0.9.28-svn2')) {
 	showUpdateStep("Updating from 0.9.28-svn2 to 0.9.28-svn3");
 	lastStepStatus(0);
-	
+
 	// change lenght of passwd column
 	$db->query("ALTER TABLE `" . TABLE_FTP_USERS . "` MODIFY `password` varchar(128) NOT NULL default ''");
-	
+
 	// Add default setting for vmail_maildirname if not already in place
 	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'system' AND `varname` = 'vmail_maildirname';");
 	if ($db->num_rows($handle) < 1) {
@@ -2036,3 +2036,24 @@ if (isFroxlorVersion('0.9.28-rc1')) {
 
 	updateToVersion('0.9.28-rc2');
 }
+
+// 0.9.28-rc3
+if ( isFroxlorVersion('0.9.28-rc2') ) {
+
+  showUpdateStep('Updating from '. $settings['panel']['version'] .' to 0.9.28-rc3' . '<br />', true);
+
+  $db->query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "`
+	     ADD `ssl_ca` TINYTEXT NULL COMMENT 'Path to Certificate Authority File' AFTER `ssl_ipandport`,
+	     ADD `ssl_chain` TINYTEXT NULL COMMENT 'Path to Certificate Chain File' AFTER `ssl_ca`,
+	     ADD `ssl_cert` TINYTEXT NULL COMMENT 'Path to Domain Certificate File' AFTER `ssl_chain`,
+	     ADD `ssl_key` TINYTEXT NULL COMMENT 'Path to Domain Certificate Key File' AFTER `ssl_cert`;");
+
+  showUpdateStep('Adding new fields for SSL-Certificates per Domain to MySQL-Table `panel_domains`', true);
+
+  lastStepStatus(0);
+
+  updateToVersion('0.9.28-rc3');
+
+}
+
+?>
