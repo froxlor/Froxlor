@@ -1645,3 +1645,9 @@ $lng['serversettings']['enablewebfonts']['title'] = 'Verwende Google Webfonts im
 $lng['serversettings']['enablewebfonts']['description'] = 'Wenn aktiviert, wird die angegebene Google-Schriftart eingebunden und verwendet';
 $lng['serversettings']['definewebfont']['title'] = '<a href="http://www.google.com/webfonts" rel="external">Google Webfont</a> festlegen';
 $lng['serversettings']['definewebfont']['description'] = 'Wenn aktiviert, wird diese Schriftart im Panel verwendet.<br />Hinweis: Leerzeichen bitte mit einem "+" ersetzen, z.B. "Open+Sans"';
+
+// Added in Froxlor 0.9.28-rc2
+$lng['serversettings']['documentroot_use_default_value']['title'] = 'Verwende Domain-Namen im Documentroot';
+$lng['serversettings']['documentroot_use_default_value']['description'] = 'Wenn aktiviert wird dem standard Documentroot zusätzlich der Domain-Name angehängt.<br /><br />Beispiel:<br />/var/customers/customer_name/example.com/<br />/var/customers/customer_name/subdomain.example.com/';
+
+$lng['error']['usercurrentlydeactivated'] = 'Der Benutzer %s ist derzeit deaktiviert';
