@@ -44,8 +44,6 @@ echoNoticetoCallFroxlor() {
 	echo "http://<YOURIP>/froxlor/\n"
 }
 
-echo "\nStarting Froxlor post-installation script.."
-
 case "$1" in
     configure)
 	setPermissions
@@ -82,7 +80,5 @@ echo "To proceed with the Froxlor upgrade move your configuration file (lib/user
 esac
 
 exitcode="$?"
-
-echo "Leaving Froxlor post-installation script..\n"
 
 exit "$exitcode"

@@ -1,14 +1,5 @@
 Origin: froxlor.org
 Label: Froxlor
-Suite: oldstable
-Codename: lenny
-Architectures: amd64 arm armel i386
-Components: main
-Description: Froxlor repository
-SignWith: release@froxlor.org
-
-Origin: froxlor.org
-Label: Froxlor
 Suite: stable
 Codename: squeeze
 Architectures: amd64 armel i386

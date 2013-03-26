@@ -4,8 +4,6 @@
 
 set -e
 
-echo "\nStarting Froxlor pre-removing script.."
-
 if [ -d /var/www/froxlor ]; then
 	owner="$(stat -c %U /var/www/froxlor/)"
 	group="$(stat -c %G /var/www/froxlor/)"	
@@ -17,7 +15,5 @@ if [ -d /var/www/froxlor ]; then
 fi
 
 exitcode="$?"
-
-echo "Leaving Froxlor pre-removing script..\n"
 
 exit "$exitcode"
