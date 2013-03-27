@@ -79,7 +79,7 @@ return array(
 						'value' => array($result['isemaildomain'])
 					),
 					'ssl_redirect' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? true : false),
+						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
 						'label' => 'SSL Redirect',
 						'type' => 'checkbox',
 						'values' => array(

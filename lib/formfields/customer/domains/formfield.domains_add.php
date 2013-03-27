@@ -61,13 +61,13 @@ return array(
 						'select_var' => isset($redirectcode) ? $redirectcode : null
 					),
 					'ssl_redirect' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? true : false),
+						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
 						'label' => 'SSL Redirect',
 						'type' => 'checkbox',
 						'values' => array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')
 									),
-						'value' => array($result['ssl_redirect'])
+						'value' => array()
 					),
 					'openbasedir_path' => array(
 						'label' => $lng['domain']['openbasedirpath'],
