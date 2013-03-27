@@ -1266,6 +1266,8 @@ if($page == 'domains'
 				$title = $domain_edit_data['domain_edit']['title'];
 				$image = $domain_edit_data['domain_edit']['image'];
 
+				$speciallogwarning = sprintf($lng['admin']['speciallogwarning'], $lng['admin']['delete_statistics']);
+
 				eval("echo \"" . getTemplate("domains/domains_edit") . "\";");
 			}
 		}

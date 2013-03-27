@@ -1898,7 +1898,7 @@ $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Time
 // ADDED IN 0.9.27-svn2
 $lng['panel']['cancel'] = 'Cancel';
 $lng['admin']['delete_statistics'] = 'Delete Statistics';
-$lng['admin']['speciallogwarning'] = 'WARNING: By changing this setting you will lose all your old statistics for this domain. If you are 100% sure you wish to change this type "%s" in the field below and click the "delete" button.<br /><br />';
+$lng['admin']['speciallogwarning'] = 'WARNING: By changing this setting you will lose all your old statistics for this domain. If you are sure you wish to change this type "%s" in the field below and click the "delete" button.<br /><br />';
 
 // ADDED IN 0.9.28-svn2
 $lng['serversettings']['vmail_maildirname']['title'] = 'Maildir name';
