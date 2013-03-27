@@ -13,14 +13,16 @@ $(document).ready(function() {
 		return null;
 	}
 
-	var $speciallogdialog = $('#speciallogwarningpopup')
-		.dialog({
-			autoOpen: false,
-			closeOnEscape: false,
-			draggable: false,
-			modal: true,
-			resizable: false,
-		});
+	if ($('#speciallogwarningpopup').length) {
+		var $speciallogdialog = $('#speciallogwarningpopup')
+			.dialog({
+				autoOpen: false,
+				closeOnEscape: false,
+				draggable: false,
+				modal: true,
+				resizable: false,
+			});
+	}
 
 	// make rel="external" links open in a new window
 	$("a[rel='external']").attr('target', '_blank');
