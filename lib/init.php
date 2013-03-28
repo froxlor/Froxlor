@@ -346,6 +346,9 @@ if($language != 'English')
 	}
 }
 
+// last but not least include language error_references file
+include_once makeSecurePath('lng/error_references.php');
+
 // Initialize our new link - class
 
 $linker = new linker('index.php', $s);
