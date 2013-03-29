@@ -110,7 +110,6 @@ $lng['index']['accountdetails'] = '账户数据';
 $lng['changepassword']['old_password'] = '旧密码';
 $lng['changepassword']['new_password'] = '新密码';
 $lng['changepassword']['new_password_confirm'] = '新密码(确认)';
-$lng['changepassword']['new_password_ifnotempty'] = $lng['changepassword']['new_password'] . '(' . $lng['panel']['emptyfornochanges'] . ')';
 $lng['changepassword']['also_change_ftp'] = '改变主FTP入口的密码';
 
 /**
@@ -198,15 +197,7 @@ $lng['error']['mustbeurl'] = '您没有输入有效或者完整的url(例如http
 $lng['error']['invalidpath'] = '您没有选择有效的URL地址（可能是目录列表的问题）';
 $lng['error']['stringisempty'] = '缺少区域内的输入';
 $lng['error']['stringiswrong'] = '区域内输入错误';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = '新密码和新密码确定不匹配';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'域名\'';
 $lng['error']['mydocumentroot'] = '\'文件来源\'';
 $lng['error']['loginnameexists'] = '登陆名%s已经存在';
@@ -233,7 +224,6 @@ $lng['error']['destinationnonexist'] = '请在区域内建立你的代运人\'�
 $lng['error']['destinationalreadyexistasmail'] = '到%s的代运人已经作为一个电子邮件地址存在';
 $lng['error']['destinationalreadyexist'] = '你已经定义了到%s的代运人';
 $lng['error']['destinationiswrong'] = '代运人%s包含了无效的字符或者不完整';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
