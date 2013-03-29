@@ -466,42 +466,33 @@ while($row = $db->fetch_array($result_tasks))
 	/**
 	 * TYPE=10 Set the filesystem - quota
 	 */
-	elseif ($row['type'] == '10')
-	{
-		if ($settings['system']['diskquota_enabled'])
-		{
-			fwrite($debugHandler, '  cron_tasks: Task10 started - setting filesystem quota' . "\n");
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task10 started - setting filesystem quota');
+	elseif ($row['type'] == '10' && (int)$settings['system']['diskquota_enabled'] != 0) {
 
-			$usedquota = getFilesystemQuota();
+		fwrite($debugHandler, '  cron_tasks: Task10 started - setting filesystem quota' . "\n");
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task10 started - setting filesystem quota');
 
-			# Select all customers Froxlor knows about
-			$result = $db->query("SELECT `guid`, `loginname`, `diskspace` FROM `" . TABLE_PANEL_CUSTOMERS . "`;");
-			while($row = $db->fetch_array($result))
-			{
-				# We do not want to set a quota for root by accident
-				if ($row['guid'] != 0)
-				{
-					# The user has no quota in Froxlor, but on the filesystem
-					if (($row['diskspace'] == 0 || $row['diskspace'] == -1024) && $usedquota[$row['guid']]['block']['hard'] != 0)
-					{
-						$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Disabling quota for " . $row['loginname']);
-						safe_exec($settings['system']['diskquota_quotatool_path'] . " -u " . $row['guid'] . " -bl 0 -q 0 " . escapeshellarg($settings['system']['diskquota_customer_partition']));
-					}
+		$usedquota = getFilesystemQuota();
 
-					# The user quota in Froxlor is different than on the filesystem
-					elseif($row['diskspace'] != $usedquota[$row['guid']]['block']['hard'] && $row['diskspace'] != -1024)
-					{
-						$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Setting quota for " . $row['loginname'] . " from " . $usedquota[$row['guid']]['block']['hard'] . " to " . $row['diskspace']);
-						safe_exec($settings['system']['diskquota_quotatool_path'] . " -u " . $row['guid'] . " -bl " . $row['diskspace'] . " -q " . $row['diskspace'] . " " . escapeshellarg($settings['system']['diskquota_customer_partition']));
-					}
+		// Select all customers Froxlor knows about
+		$result = $db->query("SELECT `guid`, `loginname`, `diskspace` FROM `" . TABLE_PANEL_CUSTOMERS . "`;");
+		while ($row = $db->fetch_array($result)) {
+			// We do not want to set a quota for root by accident
+			if ($row['guid'] != 0) {
+				// The user has no quota in Froxlor, but on the filesystem
+				if (($row['diskspace'] == 0 || $row['diskspace'] == -1024) 
+						&& $usedquota[$row['guid']]['block']['hard'] != 0
+				) {
+					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Disabling quota for " . $row['loginname']);
+					safe_exec($settings['system']['diskquota_quotatool_path'] . " -u " . $row['guid'] . " -bl 0 -q 0 " . escapeshellarg($settings['system']['diskquota_customer_partition']));
+				}
+				// The user quota in Froxlor is different than on the filesystem
+				elseif ($row['diskspace'] != $usedquota[$row['guid']]['block']['hard'] 
+						&& $row['diskspace'] != -1024
+				) {
+					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Setting quota for " . $row['loginname'] . " from " . $usedquota[$row['guid']]['block']['hard'] . " to " . $row['diskspace']);
+					safe_exec($settings['system']['diskquota_quotatool_path'] . " -u " . $row['guid'] . " -bl " . $row['diskspace'] . " -q " . $row['diskspace'] . " " . escapeshellarg($settings['system']['diskquota_customer_partition']));
 				}
 			}
-		}
-		else
-		{
-			fwrite($debugHandler, '  cron_tasks: Task10 skipped - filesystem quota not enabled' . "\n");
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task10 skipped - filesystem quota not enabled');
 		}
 	}
 }
@@ -521,5 +512,3 @@ if($db->num_rows($result_tasks) != 0)
 }
 
 $db->query('UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = \'system\'   AND `varname` = \'last_tasks_run\' ');
-
-?>

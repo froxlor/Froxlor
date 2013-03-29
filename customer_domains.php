@@ -197,11 +197,9 @@ elseif($page == 'domains')
 				$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used`=`subdomains_used`-1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 				inserttask('1');
 
-				# Using nameserver, insert a task which rebuilds the server config
-				if ($settings['system']['bind_enable'])
-				{
-					inserttask('4');
-				}
+				// Using nameserver, insert a task which rebuilds the server config
+				inserttask('4');
+
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 			else
@@ -361,10 +359,8 @@ elseif($page == 'domains')
 					inserttask('1');
 
 					// Using nameserver, insert a task which rebuilds the server config
-					if ($settings['system']['bind_enable'])
-					{
-						inserttask('4');
-					}
+					inserttask('4');
+
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
 			}
@@ -556,10 +552,8 @@ elseif($page == 'domains')
 						inserttask('1');
 
 						// Using nameserver, insert a task which rebuilds the server config
-						if ($settings['system']['bind_enable'])
-						{
-							inserttask('4');
-						}
+						inserttask('4');
+
 					}
 
 					redirectTo($filename, Array('page' => $page, 's' => $s));

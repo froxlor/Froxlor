@@ -37,6 +37,14 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 	   || $type == '5'
 	   || $type == '10')
 	{
+		// 4 = bind -> if bind disabled -> no task
+		if ($type == '4' && $settings['system']['bind_enable'] == '0') {
+			return;
+		}
+		// 10 = quota -> if quota disabled -> no task
+		if ($type == '10' && $settings['system']['diskquota_enabled'] == '0') {
+			return;
+		} 
 		$db->query('DELETE FROM `' . TABLE_PANEL_TASKS . '` WHERE `type`="' . $type . '"');
 		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`) VALUES ("' . $type . '")');
 	}

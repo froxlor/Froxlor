@@ -196,9 +196,8 @@ if($page == 'domains'
 				inserttask('1');
 
 				// Using nameserver, insert a task which rebuilds the server config
-				if ($settings['system']['bind_enable'] = '1') {
-					inserttask('4');
-				}
+				inserttask('4');
+
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			}
 			elseif ($alias_check['count'] > 0) {
@@ -585,10 +584,9 @@ if($page == 'domains'
 					$log->logAction(ADM_ACTION, LOG_INFO, "added domain '" . $domain . "'");
 					inserttask('1');
 
-					# Using nameserver, insert a task which rebuilds the server config
-					if ($settings['system']['bind_enable']) {
-						inserttask('4');
-					}
+					// Using nameserver, insert a task which rebuilds the server config
+					inserttask('4');
+
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
 			}
@@ -1087,9 +1085,7 @@ if($page == 'domains'
 				   || $dkim != $result['dkim']
 				   || $ipandport != $result['ipandport'])
 				{
-					if ($settings['system']['bind_enable'] == '1') {
-						inserttask('4');
-					}
+					inserttask('4');
 				}
 
 				if($isemaildomain == '0'

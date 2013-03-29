@@ -84,11 +84,9 @@ if(($page == 'settings' || $page == 'overview')
 			inserttask('1');
 			inserttask('5');
 
-			# Using nameserver, insert a task which rebuilds the server config
-			if ($settings['system']['bind_enable'])
-			{
-				inserttask('4');
-			}
+			// Using nameserver, insert a task which rebuilds the server config
+			inserttask('4');
+
 			standard_success('settingssaved', '', array('filename' => $filename, 'action' => $action, 'page' => $page));
 		}
 	}
@@ -129,12 +127,9 @@ elseif($page == 'rebuildconfigs'
 		inserttask('1');
 		inserttask('5');
 		inserttask('10');
+		// Using nameserver, insert a task which rebuilds the server config
+		inserttask('4');
 
-		# Using nameserver, insert a task which rebuilds the server config
-		if ($settings['system']['bind_enable'])
-		{
-			inserttask('4');
-		}
 		standard_success('rebuildingconfigs', '', array('filename' => 'admin_index.php'));
 	}
 	else
