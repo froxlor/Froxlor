@@ -1651,3 +1651,5 @@ $lng['serversettings']['documentroot_use_default_value']['title'] = 'Verwende Do
 $lng['serversettings']['documentroot_use_default_value']['description'] = 'Wenn aktiviert wird dem standard Documentroot zusätzlich der Domain-Name angehängt.<br /><br />Beispiel:<br />/var/customers/customer_name/example.com/<br />/var/customers/customer_name/subdomain.example.com/';
 
 $lng['error']['usercurrentlydeactivated'] = 'Der Benutzer %s ist derzeit deaktiviert';
+$lng['admin']['speciallogfile']['title'] = 'Eigene Log-Datei';
+$lng['admin']['speciallogfile']['description'] = 'Aktiviere diese Option, um für diese Domain eine eigene Access-Log Datei zu erhalten';

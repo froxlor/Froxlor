@@ -141,7 +141,8 @@ return array(
 						'value' => array($result['wwwserveralias'])
 					),
 					'speciallogfile' => array(
-						'label' => 'Speciallogfile',
+						'label' => $lng['admin']['speciallogfile']['title'],
+						'desc' => $lng['admin']['speciallogfile']['description'],
 						'type' => 'checkbox',
 						'values' => array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')

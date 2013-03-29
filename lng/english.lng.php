@@ -1926,3 +1926,5 @@ $lng['serversettings']['documentroot_use_default_value']['title'] = 'Use domain 
 $lng['serversettings']['documentroot_use_default_value']['description'] = 'If enabled and DocumentRoot path is empty, default value will be the (sub)domain name.<br /><br />Examples: <br />/var/customers/customer_name/example.com/<br />/var/customers/customer_name/subdomain.example.com/';
 
 $lng['error']['usercurrentlydeactivated'] = 'The user %s is currently deactivated';
+$lng['admin']['speciallogfile']['title'] = 'Separate logfile';
+$lng['admin']['speciallogfile']['description'] = 'Enable this to get a separate access-log file for this domain';
