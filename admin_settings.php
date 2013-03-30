@@ -82,8 +82,6 @@ if(($page == 'settings' || $page == 'overview')
 		) {
 			$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles due to changed setting");
 			inserttask('1');
-			inserttask('5');
-
 			// Using nameserver, insert a task which rebuilds the server config
 			inserttask('4');
 
@@ -125,7 +123,6 @@ elseif($page == 'rebuildconfigs'
 	{
 		$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles");
 		inserttask('1');
-		inserttask('5');
 		inserttask('10');
 		// Using nameserver, insert a task which rebuilds the server config
 		inserttask('4');
