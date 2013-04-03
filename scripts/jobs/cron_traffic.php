@@ -533,8 +533,7 @@ $db->query('UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = UNIX_TIMESTAMP()
 
 closeRootDB();
 
-if(function_exists('pcntl_fork')) {
+if (function_exists('pcntl_fork')) {
+	@unlink($TrafficLock);
 	die();
 }
-
-?>
