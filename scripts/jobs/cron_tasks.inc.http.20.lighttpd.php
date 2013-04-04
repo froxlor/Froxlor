@@ -467,34 +467,34 @@ class lighttpd
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 
 			$only_webroot = false;
-			if($ssl_vhost === false && $domain['ssl_redirect'] == '1')
-			{
+			if ($ssl_vhost === false
+				&& $domain['ssl_redirect'] == '1'
+			) {
 				$only_webroot = true;
 			}
 			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
-			if(!$only_webroot)
-			{
+			if (!$only_webroot) {
 				if ($this->_deactivated == false) {
 					$vhost_content.= $this->create_htaccess($domain);
 					$vhost_content.= $this->create_pathOptions($domain);
 					$vhost_content.= $this->composePhpOptions($domain);
 					$vhost_content.= $this->getStats($domain);
 					$vhost_content.= $this->getSslSettings($domain, $ssl_vhost);
+
+					if ($domain['specialsettings'] != "") {
+						$vhost_content.= $domain['specialsettings'] . "\n";
+					}
+
+					if ($ipandport['default_vhostconf_domain'] != '') {
+						$vhost_content.= $ipandport['default_vhostconf_domain'] . "\n";
+					}
+
+					if ($this->settings['system']['default_vhostconf'] != '') {
+						$vhost_content.= $this->settings['system']['default_vhostconf'] . "\n";
+					}
 				}
 				$vhost_content.= $this->getLogFiles($domain);
 			}
-		}
-
-		if ($domain['specialsettings'] != "") {
-			$vhost_content.= $domain['specialsettings'] . "\n";
-		}
-
-		if ($ipandport['default_vhostconf_domain'] != '') {
-			$vhost_content.= $ipandport['default_vhostconf_domain'] . "\n";
-		}
-
-		if ($this->settings['system']['default_vhostconf'] != '') {
-			$vhost_content.= $this->settings['system']['default_vhostconf'] . "\n";
 		}
 
 		$vhost_content.= '}' . "\n";

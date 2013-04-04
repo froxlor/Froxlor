@@ -812,21 +812,18 @@ class apache
 				$vhost_content.= $this->getStats($domain);
 			}
 			$vhost_content.= $this->getLogfiles($domain);
-		}
 
-		if($domain['specialsettings'] != '')
-		{
-			$vhost_content.= $domain['specialsettings'] . "\n";
-		}
+			if ($domain['specialsettings'] != '') {
+				$vhost_content.= $domain['specialsettings'] . "\n";
+			}
 
-		if($ipandport['default_vhostconf_domain'] != '')
-		{
-			$vhost_content.= $ipandport['default_vhostconf_domain'] . "\n";
-		}
+			if ($ipandport['default_vhostconf_domain'] != '') {
+				$vhost_content.= $ipandport['default_vhostconf_domain'] . "\n";
+			}
 
-		if($this->settings['system']['default_vhostconf'] != '')
-		{
-			$vhost_content.= $this->settings['system']['default_vhostconf'] . "\n";
+			if ($this->settings['system']['default_vhostconf'] != '') {
+				$vhost_content.= $this->settings['system']['default_vhostconf'] . "\n";
+			}
 		}
 
 		$vhost_content.= '</VirtualHost>' . "\n";

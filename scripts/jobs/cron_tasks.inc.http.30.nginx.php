@@ -411,9 +411,12 @@ class nginx
 		}
 
 		$vhost_content = '';
-		$vhost_content.= 'server { ' . "\n";
-		$vhost_content.= "\t" . 'listen ' . $ipport . ';' . "\n";
 
+		// open vhost-container
+		$vhost_content.= 'server { ' . "\n";
+		// listening statement (required)
+		$vhost_content.= "\t" . 'listen ' . $ipport . ';' . "\n";
+		// get all server-names
 		$vhost_content.= $this->getServerNames($domain);
 
 		// respect ssl_redirect settings, #542
@@ -424,12 +427,10 @@ class nginx
 			$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
 		}
 
-		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
-		{
+		// if the documentroot is an URL we just redirect
+		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$vhost_content.= "\t".'rewrite ^(.*) '.$this->idnaConvert->encode($domain['documentroot']).'$1 permanent;'."\n";
-		}
-		else
-		{
+		} else {
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 
 			$vhost_content.= $this->getLogFiles($domain);
