@@ -1928,3 +1928,4 @@ $lng['serversettings']['documentroot_use_default_value']['description'] = 'If en
 $lng['error']['usercurrentlydeactivated'] = 'The user %s is currently deactivated';
 $lng['admin']['speciallogfile']['title'] = 'Separate logfile';
 $lng['admin']['speciallogfile']['description'] = 'Enable this to get a separate access-log file for this domain';
+$lng['error']['setlessthanalreadyused'] = 'You cannot set less resources of \'%s\' than this user already used';
