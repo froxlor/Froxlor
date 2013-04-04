@@ -25,18 +25,16 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function makeCorrectDir($dir)
-{
-	if(substr($dir, -1, 1) != '/')
-	{
+function makeCorrectDir($dir) {
+
+	$dir = trim($dir);
+
+	if (substr($dir, -1, 1) != '/') {
 		$dir.= '/';
 	}
-
-	if(substr($dir, 0, 1) != '/')
-	{
+	if (substr($dir, 0, 1) != '/') {
 		$dir = '/' . $dir;
 	}
-
 	$dir = makeSecurePath($dir);
 	return $dir;
 }
