@@ -198,6 +198,9 @@ return Array(
 							'usr_local_etc_postfix_mysql-virtual_sender_permissions.cf' => '/usr/local/etc/postfix/mysql-virtual_sender_permissions.cf'
 						),
 						'restart' => Array(
+							'newaliases',
+							'mkdir /var/spool/postfix/etc',
+							'cp /etc/resolv.conf /var/spool/postfix/etc',
 							'sh /usr/local/etc/rc.d/postfix restart'
 						)
 					),
