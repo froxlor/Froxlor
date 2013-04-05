@@ -448,7 +448,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mod_fcgid_tmpdir', '/var/customers/tmp'),
 	('system', 'ssl_cert_file', '/etc/apache2/apache2.pem'),
 	('system', 'use_ssl', '0'),
-	('system', 'openssl_cnf', '[ req ]\r\ndefault_bits = 1024\r\ndistinguished_name = req_distinguished_name\r\nattributes = req_attributes\r\nprompt = no\r\noutput_password =\r\ninput_password =\r\n[ req_distinguished_name ]\r\nC = DE\r\nST = froxlor\r\nL = froxlor    \r\nO = Testcertificate\r\nOU = froxlor        \r\nCN = @@domain_name@@\r\nemailAddress = @@email@@    \r\n[ req_attributes ]\r\nchallengePassword =\r\n'),
+	('system', 'openssl_cnf', '#\n# OpenSSL example configuration file by Froxlor.\n#\n\n\nssl_dir\t\t\t\t= /etc/ssl/froxlor\n\n\n[ ca ]\ndefault_ca\t\t\t= Server_CA\n\n\n### The Root CA section ###\n[ Root_CA ]\n\ndir\t\t\t\t= $ssl_dir\ncerts\t\t\t\t= $ssl_dir\ndatabase\t\t\t= $ssl_dir/froxlor.txt\nnew_certs_dir\t\t\t= $ssl_dir\ndefault_bits\t\t\t= 4096\ndefault_md\t\t\t= sha512\ndefault_days\t\t\t= 730\nx509_extensions\t\t\t= x509v3_PCA_ext\n\n\n### The Server CA section ###\n[ Server_CA ]\n\ndir\t\t\t\t= $ssl_dir\ncerts\t\t\t\t= $ssl_dir\ndatabase\t\t\t= $ssl_dir/froxlor.txt\nnew_certs_dir\t\t\t= $ssl_dir\ndefault_bits\t\t\t= 2048\ndefault_md\t\t\t= sha256\ndefault_days\t\t\t= 365\nx509_extensions\t\t\t= x509v3_SCA_ext\n\n\n### The Request section ###\n[ req ]\n\ndefault_bits\t\t\t= 2048\ndefault_md\t\t\t= sha256\ndistinguished_name\t\t= req_distinguished_name\nattributes\t\t\t= req_attributes\nprompt\t\t\t\t= no\noutput_password\t\t\t=\ninput_password\t\t\t=\nstring_mask\t\t\t= nombstr\n\n\n[ req_distinguished_name ]\n\ncountryName\t\t\t= Country Name (2 letter code)\ncountryName_default\t\t= DE\ncountryName_min\t\t\t= 2\ncountryName_max\t\t\t= 2\n\nstateOrProvinceName\t\t= State or Province Name (full name)\n\nlocalityName\t\t\t= Locality Name (eg, city)\n\n0.organizationName\t\t= Organization Name (eg, company)\n0.organizationName_default\t= Froxlor (www.froxlor.org)\n\norganizationalUnitName\t\t= Organizational Unit Name (eg, section)\norganizationalUnitName_default\t= Self-Signed OpenSSL-Server-Certificate\n\ncommonName\t\t\t= @@domain_name@@\ncommonName_max\t\t\t= 64\n\nemailAddress\t\t\t= @@email_address@@\nemailAddress_max\t\t\t= 60\n\n\n[ req_attributes ]\n\nchallengePassword\t\t=\nchallengePassword_min\t\t= 8\nchallengePassword_max\t\t= 20\nunstructuredName\t\t= Froxlor\n\n\n[ x509v3_PCA_ext ]\n\nbasicConstraints\t\t= critical, CA:TRUE\nkeyUsage\t\t\t= cRLSign, keyCertSign\nnsCertType\t\t\t= sslCA, emailCA, objCA\nnsComment\t\t\t= This certificate is a Root CA Certificate\n\n\n[ x509v3_SCA_ext ]\n\nbasicConstraints\t\t= critical, CA:FALSE\nkeyUsage\t\t\t= digitalSignature, keyEncipherment\nnsCertType\t\t\t= server\nnsComment\t\t\t= This certificate is a Server Certificate\n'),
 	('system', 'default_vhostconf', ''),
 	('system', 'mail_quota_enabled', '0'),
 	('system', 'mail_quota', '100'),
@@ -846,7 +846,7 @@ CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
 
 
 
-INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES 
+INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES
 	('froxlor', 'user', 'false', 'hard', 0, 0, 0, 0, 0, 0);
 
 
