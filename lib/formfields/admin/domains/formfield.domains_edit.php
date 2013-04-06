@@ -63,7 +63,8 @@ return array(
 						'value' => $subdomains.' '.$lng['customer']['subdomains'].', '.$alias_check.' '.$lng['domains']['aliasdomains'].', '.$emails.' '.$lng['customer']['emails'].', '.$email_accounts.' '.$lng['customer']['accounts'].', '.$email_forwarders.' '.$lng['customer']['forwarders']
 					),
 					'caneditdomain' => array(
-						'label' => $lng['admin']['domain_edit'],
+						'label' => $lng['admin']['domain_editable']['title'],
+						'desc' => $lng['admin']['domain_editable']['desc'],
 						'type' => 'checkbox',
 						'values' => array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')

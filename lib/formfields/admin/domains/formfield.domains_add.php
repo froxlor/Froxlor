@@ -54,7 +54,8 @@ return array(
 						'select_var' => $subtodomains
 					),
 					'caneditdomain' => array(
-						'label' => $lng['admin']['domain_edit'],
+						'label' => $lng['admin']['domain_editable']['title'],
+						'desc' => $lng['admin']['domain_editable']['desc'],
 						'type' => 'checkbox',
 						'values' => array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')
