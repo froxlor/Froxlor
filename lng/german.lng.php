@@ -564,10 +564,6 @@ $lng['error']['formtokencompromised'] = 'Das Formular scheint manipuliert worden
 $lng['serversettings']['mysql_access_host']['title'] = 'MySQL-Access-Hosts';
 $lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma getrennte Liste mit den Hostnamen aller Hostnames/IP-Adressen, von denen sich die Benutzer einloggen dürfen.';
 
-// CHANGED IN 1.2.18
-
-$lng['serversettings']['mod_log_sql']['description'] = '<a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> benutzen um die Webzugriffe temporär zu speichern<br /><b>Dies benötigt eine spezielle <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - Dokumentation">Apache-Konfiguration</a></b>';
-
 // ADDED IN 1.2.18-svn1
 
 $lng['admin']['ipsandports']['create_listen_statement'] = 'Erstelle Listen-Eintrag';
