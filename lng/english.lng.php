@@ -1929,3 +1929,4 @@ $lng['error']['usercurrentlydeactivated'] = 'The user %s is currently deactivate
 $lng['admin']['speciallogfile']['title'] = 'Separate logfile';
 $lng['admin']['speciallogfile']['description'] = 'Enable this to get a separate access-log file for this domain';
 $lng['error']['setlessthanalreadyused'] = 'You cannot set less resources of \'%s\' than this user already used';
+$lng['error']['stringmustntbeempty'] = 'The value for the field %s must not be empty';

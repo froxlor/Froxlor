@@ -1654,3 +1654,4 @@ $lng['error']['usercurrentlydeactivated'] = 'Der Benutzer %s ist derzeit deaktiv
 $lng['admin']['speciallogfile']['title'] = 'Eigene Log-Datei';
 $lng['admin']['speciallogfile']['description'] = 'Aktiviere diese Option, um für diese Domain eine eigene Access-Log Datei zu erhalten';
 $lng['error']['setlessthanalreadyused'] = 'Es können nicht weniger Resourcen von \'%s\' gesetzt werden, als der Benutzer bereits vergeben hat';
+$lng['error']['stringmustntbeempty'] = 'Der Wert für das Feld %s darf nicht leer sein';

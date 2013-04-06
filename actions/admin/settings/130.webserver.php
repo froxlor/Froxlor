@@ -218,72 +218,8 @@ return array(
 					'option_options_method' => 'getRedirectCodes',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('apache2', 'lighttpd')
-					),
-				),
-			),
-		'ssl' => array(
-			'title' => $lng['admin']['sslsettings'],
-			'fields' => array(
-				'system_ssl_enabled' => array(
-					'label' => $lng['serversettings']['ssl']['use_ssl'],
-					'settinggroup' => 'system',
-					'varname' => 'use_ssl',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					'overview_option' => true
-					),
-				'system_ssl_cert_file' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_cert_file'],
-					'settinggroup' => 'system',
-					'varname' => 'ssl_cert_file',
-					'type' => 'string',
-					'string_type' => 'file',
-					'string_emptyallowed' => true,
-					'default' => '/etc/apache2/apache2.pem',
-					'save_method' => 'storeSettingField',
-					),
-				'system_ssl_key_file' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_key_file'],
-					'settinggroup' => 'system',
-					'varname' => 'ssl_key_file',
-					'type' => 'string',
-					'string_type' => 'file',
-					'string_emptyallowed' => true,
-					'default' => '/etc/apache2/apache2.key',
-					'save_method' => 'storeSettingField',
-					),
-				'system_ssl_ca_file' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_ca_file'],
-					'settinggroup' => 'system',
-					'varname' => 'ssl_ca_file',
-					'type' => 'string',
-					'string_type' => 'file',
-					'string_emptyallowed' => true,
-					'default' => '',
-					'save_method' => 'storeSettingField',
-					),
-				'system_ssl_cert_chainfile' => array(
-					'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
-					'settinggroup' => 'system',
-					'varname' => 'ssl_cert_chainfile',
-					'type' => 'string',
-					'string_type' => 'file',
-					'string_emptyallowed' => true,
-					'default' => '',
-					'save_method' => 'storeSettingField',
-					),
-				'system_ssl_openssl_cnf' => array(
-					'label' => $lng['serversettings']['ssl']['openssl_cnf'],
-					'settinggroup' => 'system',
-					'varname' => 'openssl_cnf',
-					'type' => 'text',
-					'default' => '',
-					'save_method' => 'storeSettingField',
-					),
-				),
-			),
-		),
+					)
+				)
+			)
+		)
 	);
-
-?>
