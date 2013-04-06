@@ -301,7 +301,7 @@ milter_default_action = accept" >> /etc/postfix/main.cf',
 						)
 					),
 					'dovecot' => Array(
-						'label' => 'Dovecot 1',
+						'label' => 'Dovecot 1 *deprecated*',
 						'commands_1' => Array(
 							'echo "net-mail/dovecot mysql" >> /etc/portage/package.use',
 							'emerge -av dovecot',
