@@ -24,9 +24,8 @@
  * @return string The corrected path
  * @author Florian Lippert <flo@syscp.org>
  */
+function makeSecurePath($path) {
 
-function makeSecurePath($path)
-{
 	$search = Array(
 		'#/+#',
 		'#\.+#',
@@ -38,6 +37,9 @@ function makeSecurePath($path)
 		''
 	);
 	$path = preg_replace($search, $replace, $path);
+	// don't just replace a space with an escaped space
+	// it might be escaped already
+	$path = str_replace("\ ", " ", $path);
 	$path = str_replace(" ", "\ ", $path);
 	return $path;
 }
