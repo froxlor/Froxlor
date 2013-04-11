@@ -2041,7 +2041,7 @@ if (isFroxlorVersion('0.9.28-rc2')) {
 	showUpdateStep("Updating from 0.9.28-rc2 to 0.9.28 final", true);
 	$db->query("DELETE FROM `panel_settings` WHERE `settinggroup`='system' AND `varname`='mod_log_sql'");
 	$db->query("DELETE FROM `panel_settings` WHERE `settinggroup`='system' AND `varname`='openssl_cnf'");
-	$db->query("ALTER `panel_domains` DROP `safemode`");
+	$db->query("ALTER TABLE `panel_domains` DROP `safemode`");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.28');
