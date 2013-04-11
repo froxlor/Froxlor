@@ -484,4 +484,23 @@ LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
+	if (versionInUpdate($current_version, '0.9.28')) {
+
+		$has_preconfig = true;
+		// just an information about the new sendmail parameter (#1134)
+		$description  = 'Froxlor changed the default parameter-set of sendmail (php.ini)<br />';
+		$description .= 'sendmail_path = "/usr/sbin/sendmail -t <strong>-i</strong> -f {CUSTOMER_EMAIL}"<br /><br />';
+		$description .= 'If you don\'t have any problems with sending mails, you don\'t need to change this';
+		if ($this->_settings['system']['mod_fcgid'] == '1'
+				|| $this->_settings['phpfpm']['enabled'] == '1'
+		) {
+			// information about removal of php's safe_mode
+			$description .= '<br /><br />The php safe_mode flag has been removed as current versions of PHP<br />';
+			$description .= 'do not support it anymore.<br /><br />';
+			$description .= 'Please check your php-configurations and remove safe_mode-directives to avoid php notices/warnings.';
+		}
+		$question = '';
+
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

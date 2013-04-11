@@ -2026,13 +2026,23 @@ if (isFroxlorVersion('0.9.28-svn6')) {
 }
 
 if (isFroxlorVersion('0.9.28-rc1')) {
+	showUpdateStep("Updating from 0.9.28-rc1 to 0.9.28-rc2", true);
+	lastStepStatus(0);
+
 	$update_system_documentroot_use_default_value = isset($_POST['update_system_documentroot_use_default_value']) ? (int)$_POST['update_system_documentroot_use_default_value'] : '0';
 	showUpdateStep("Adding new settings for using domain name as default value for DocumentRoot path", true);
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'documentroot_use_default_value', '".$update_system_documentroot_use_default_value."');");
 	lastStepStatus(0);
 
-	showUpdateStep("Updating from 0.9.28-rc1 to 0.9.28-rc2", true);
+	updateToVersion('0.9.28-rc2');
+}
+
+if (isFroxlorVersion('0.9.28-rc2')) {
+	showUpdateStep("Updating from 0.9.28-rc2 to 0.9.28 final", true);
+	$db->query("DELETE FROM `panel_settings` WHERE `settinggroup`='system' AND `varname`='mod_log_sql'");
+	$db->query("DELETE FROM `panel_settings` WHERE `settinggroup`='system' AND `varname`='openssl_cnf'");
+	$db->query("ALTER `panel_domains` DROP `safemode`");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.28-rc2');
+	updateToVersion('0.9.28');
 }
