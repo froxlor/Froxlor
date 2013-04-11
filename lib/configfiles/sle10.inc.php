@@ -176,7 +176,8 @@ return Array(
 						'label' => 'Awstats',
 						'commands' => Array(
 							'mv '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf').' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
+							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
+							'# Please make sure you deactivate awstats own cronjob as Froxlor handles that itself'
 						)
 					)
 				)

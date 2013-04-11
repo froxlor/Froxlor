@@ -255,14 +255,8 @@ return Array(
 						'label' => 'Awstats',
 						'commands' => Array(
 							'cp /usr/share/doc/packages/awstats/awstats.model.conf /etc/awstats/',
-							/**makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf').' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),*/
 							'sed -i.bak \'s/^DirData/# DirData/\''.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-			                                'cp awstats.model.conf awstats.yourdomain.xx.conf #e.g one.example.com or example.com',
-                                                        'edit awstats.yourdomain.xx.conf',
-                                                        'change SiteDomain="yourdomain.xx #e.g SiteDomain="example.com" ',
-                                                        'change HostAliases="yourdomain.xx www.yourdomain.de 127.0.0.1 localhost" ',
-                                                        'Set DirIcons="/awstatsicons" ',
-                                                        'run awstats in your favorite browser by http://yourdomain.xx/cgi-bin/awstats.pl'
+							'# Please make sure you deactivate awstats own cronjob as Froxlor handles that itself'
 						)
 					)
 				)

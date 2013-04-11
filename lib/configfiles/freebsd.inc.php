@@ -362,7 +362,8 @@ return Array(
 							'sed -i.bak \'s/^LogSeparator/# LogSeparator/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
 							'sed -i.bak \'s/^SiteDomain/# SiteDomain/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
 							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^DirIcons=\"\/awstatsicons\"/DirIcons=\"\/awstats-icon\"/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
+							'sed -i.bak \'s/^DirIcons=\"\/awstatsicons\"/DirIcons=\"\/awstats-icon\"/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
+							'# Please make sure you deactivate awstats own cronjob as Froxlor handles that itself'
 						)
 					),
 					'libnss' => Array(
