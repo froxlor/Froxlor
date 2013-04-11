@@ -128,7 +128,7 @@ if($page == 'overview' || $page == 'customers')
 			
 			$traffic_list = $db->query("SELECT month, SUM(http+ftp_up+ftp_down+mail)*1024 AS traffic FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE year = " . (date("Y")-$years) . " AND `customerid` = '" . $customer_name['customerid'] . "' GROUP BY month ORDER BY month");
 			while($traffic_month = $db->fetch_array($traffic_list)) {
-				$virtual_host[$months[(int)$traffic_month['month']]] = size_readable($traffic_month['traffic'], 'GiB', 'bi', '%01.3f %s');
+				$virtual_host[$months[(int)$traffic_month['month']]] = size_readable($traffic_month['traffic'], 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
 				$totals[$months[(int)$traffic_month['month']]] += $traffic_month['traffic'];
 			}
 			eval("\$domain_list .= sprintf(\"%s\", \"" . getTemplate("traffic/index_table_row") . "\");");
@@ -138,7 +138,7 @@ if($page == 'overview' || $page == 'customers')
 			'name' => $lng['traffic']['months']['total'],
 		);
 		foreach($totals as $month => $bytes) {
-			$virtual_host[$month] = ($bytes == 0 ? '-' : size_readable($bytes, 'GiB', 'bi', '%01.3f %s'));
+			$virtual_host[$month] = ($bytes == 0 ? '-' : size_readable($bytes, 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s'));
 		}
 		$customerview = 0;
 		eval("\$total_list = sprintf(\"%s\", \"" . getTemplate("traffic/index_table_row") . "\");");
