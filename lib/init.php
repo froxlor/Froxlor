@@ -363,9 +363,14 @@ $theme = isset($settings['panel']['default_theme']) ? $settings['panel']['defaul
 /**
  * overwrite with customer/admin theme if defined
  */
-if(isset($userinfo['theme']) && $userinfo['theme'] != $theme)
-{
+if (isset($userinfo['theme']) && $userinfo['theme'] != $theme) {
 	$theme = $userinfo['theme'];
+}
+
+// check for existence of the theme
+if (!file_exists('templates/'.$theme.'/index.tpl')) {
+	// Fallback
+	$theme = 'Froxlor';
 }
 
 /*

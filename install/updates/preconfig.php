@@ -72,17 +72,20 @@ function version_compare2($a, $b) {
 		$x = explode("-", $a[count($a)-1]);
 		$a[count($a)-1] = $x[0];
 		if (stripos($x[1], 'rc') !== false) {
+			$a[] = '0';
 			$a[] = '2'; // rc > dev > svn
 			// number of rc
 			$a[] = substr($x[1], 2);
 		}
 		else if (stripos($x[1], 'dev') !== false) {
+			$a[] = '0';
 			$a[] = '1'; // svn < dev < rc
 			// number of dev
 			$a[] = substr($x[1], 3);
 		}
 		// -svn version are deprecated
 		else if (stripos($x[1], 'svn') !== false) {
+			$a[] = '0';
 			$a[] = '0'; // svn < dev < rc
 			// number of svn
 			$a[] = substr($x[1], 3);
@@ -97,17 +100,20 @@ function version_compare2($a, $b) {
 		$x = explode("-", $b[count($b)-1]);
 		$b[count($b)-1] = $x[0];
 		if (stripos($x[1], 'rc') !== false) {
+			$b[] = '0';
 			$b[] = '2'; // rc > dev > svn
 			// number of rc
 			$b[] = substr($x[1], 2);
 		}
 		else if (stripos($x[1], 'dev') !== false) {
+			$b[] = '0';
 			$b[] = '1'; // svn < dev < rc
 			// number of dev
 			$b[] = substr($x[1], 3);
 		}
 		// -svn version are deprecated
 		else if (stripos($x[1], 'svn') !== false) {
+			$b[] = '0';
 			$b[] = '0'; // svn < dev < rc
 			// number of svn
 			$b[] = substr($x[1], 3);
@@ -115,6 +121,17 @@ function version_compare2($a, $b) {
 		else {
 			// unknown version string
 			return 0;
+		}
+	}
+
+	if (count($a) > count($b)) {
+		if ($a[count($b)-1] == $b[count($b)-1]) {
+			return -1;
+		}
+	}
+	if (count($b) > count($a)) {
+		if ($b[count($a)-1] == $a[count($a)-1]) {
+			return 1;
 		}
 	}
 
