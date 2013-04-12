@@ -1,24 +1,23 @@
 --- a/lib/functions.php
 +++ b/lib/functions.php
-@@ -46,6 +46,7 @@
+@@ -46,6 +46,7 @@ function __autoload($classname)
  {
- 	global $libdirname;
+ 	global $libdirname, $theme;
  	findIncludeClass($libdirname . '/classes/', $classname);
 +	findIncludeClass('/usr/share/php/libphp-phpmailer/', $classname);
  }
  
  function findIncludeClass($dirname, $classname)
-@@ -61,6 +62,13 @@
- 				return;
+@@ -65,6 +66,12 @@ function findIncludeClass($dirname, $classname)
+ 			{
+ 				findIncludeClass($dirname . $filename . '/', $classname);
  			}
- 
 +			// added for using the system copy of PHPMailer
 +			if ($classname == 'PHPMailer' || $classname == 'SMTP')
 +			{
 +				findIncludeClass($dirname .  '/', strtolower($classname));
 +				return;
 +			}
-+
- 			if(is_dir($dirname . $filename))
- 			{
- 				findIncludeClass($dirname . $filename . '/', $classname);
+ 		}
+ 	}
+ 	closedir($dirhandle);

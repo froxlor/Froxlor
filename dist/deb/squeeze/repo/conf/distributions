@@ -11,7 +11,7 @@ Origin: froxlor.org
 Label: Froxlor
 Suite: unstable
 Codename: sid
-Architectures: amd64 armel i386
+Architectures: amd64 armel armhf i386
 Components: main
 Description: Froxlor repository
 SignWith: release@froxlor.org

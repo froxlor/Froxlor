@@ -1,3 +1,10 @@
+froxlor (0.9.28-1) stable; urgency=low
+
+  * new upstream release
+  * add missing css dir, closes: #1165
+
+ -- Froxlor Release Team <release@froxlor.org>  Fri, 12 Apr 2013 07:15:24 +0200
+
 froxlor (0.9.27-1) stable; urgency=low
 
   * new upstream release
