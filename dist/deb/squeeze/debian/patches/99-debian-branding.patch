@@ -2,7 +2,7 @@
 +++ b/lib/tables.inc.php
 @@ -75,4 +75,4 @@ define('PACKAGE_ENABLED', 2);
 
- $version = '0.9.28';
+ $version = '0.9.28.1';
  $dbversion = '2';
 -$branding = '';
 +$branding = '-1';
