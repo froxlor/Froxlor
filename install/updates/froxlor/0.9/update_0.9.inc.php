@@ -2046,3 +2046,9 @@ if (isFroxlorVersion('0.9.28-rc2')) {
 
 	updateToVersion('0.9.28');
 }
+
+if (isFroxlorVersion('0.9.28')) {
+	showUpdateStep("Updating from 0.9.28 final to 0.9.28.1");
+	lastStepStatus(0);
+	updateToVersion('0.9.28.1');
+}

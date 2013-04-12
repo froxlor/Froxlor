@@ -491,8 +491,8 @@ LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
 		$description  = 'Froxlor changed the default parameter-set of sendmail (php.ini)<br />';
 		$description .= 'sendmail_path = "/usr/sbin/sendmail -t <strong>-i</strong> -f {CUSTOMER_EMAIL}"<br /><br />';
 		$description .= 'If you don\'t have any problems with sending mails, you don\'t need to change this';
-		if ($this->_settings['system']['mod_fcgid'] == '1'
-				|| $this->_settings['phpfpm']['enabled'] == '1'
+		if ($settings['system']['mod_fcgid'] == '1'
+				|| $settings['phpfpm']['enabled'] == '1'
 		) {
 			// information about removal of php's safe_mode
 			$description .= '<br /><br />The php safe_mode flag has been removed as current versions of PHP<br />';
