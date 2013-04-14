@@ -35,7 +35,10 @@ function makeCorrectFile($filename)
 		$error = 'Given filename for function '.__FUNCTION__.' is empty.'."\n";
 		$error.= 'This is very dangerous and should not happen.'."\n";
 		$error.= 'Please inform the Froxlor team about this issue so they can fix it.';
-		die($error);
+		echo $error;
+		// so we can see WHERE this happened
+		debug_print_backtrace();
+		die();
 	}
 
 	if(substr($filename, 0, 1) != '/')
