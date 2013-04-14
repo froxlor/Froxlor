@@ -1653,3 +1653,7 @@ $lng['error']['setlessthanalreadyused'] = 'Es können nicht weniger Resourcen vo
 $lng['error']['stringmustntbeempty'] = 'Der Wert für das Feld %s darf nicht leer sein';
 $lng['admin']['domain_editable']['title'] = 'Erlaube Bearbeiten der Domain';
 $lng['admin']['domain_editable']['desc'] = 'Wenn ja, darf der Kunde verschiedene Einstellungen anpassen.<br />Wenn nein, darf nichts durch den Kunden geändert werden.';
+
+// Added in Froxlor 0.9.29-dev1
+$lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['title'] = 'Verstecke Standard-Subdomains in PHP-Konfigurations-Übersicht';
+$lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['description'] = 'Wenn aktiviert, werden die Standard-Subdomains der Kunden nicht mehr in der PHP-Konfigurations-Übersicht angezeigt.<br /><br />Hinweis: Nur relevant, wenn FCGID oder PHP-FPM aktiviert ist.';

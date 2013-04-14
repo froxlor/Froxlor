@@ -2052,3 +2052,15 @@ if (isFroxlorVersion('0.9.28')) {
 	lastStepStatus(0);
 	updateToVersion('0.9.28.1');
 }
+
+if(isFroxlorVersion('0.9.28.1')) {
+	showUpdateStep("Updating from 0.9.28.1 to 0.9.29-dev1", true);
+	lastStepStatus(0);
+
+	$hide_stdsubdomains = isset($_POST['hide_stdsubdomains']) ? (int)$_POST['hide_stdsubdomains'] : '0';
+	showUpdateStep('Setting value for "hide standard subdomains"', true);
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'phpconfigs_hidestdsubdomain', '".$hide_stdsubdomains."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.29-dev1');
+}

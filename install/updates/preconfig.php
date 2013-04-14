@@ -124,6 +124,7 @@ function version_compare2($a, $b) {
 		}
 	}
 
+	/*
 	if (count($a) > count($b)) {
 		if ($a[count($b)-1] == $b[count($b)-1]) {
 			return -1;
@@ -134,6 +135,7 @@ function version_compare2($a, $b) {
 			return 1;
 		}
 	}
+	*/
 
 	foreach ($a as $depth => $aVal) {
 		// iterate over each piece of A

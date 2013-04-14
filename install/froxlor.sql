@@ -534,7 +534,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_regex', ''),
 	('panel', 'use_webfonts', '0'),
 	('panel', 'webfont', 'Numans'),
-	('panel', 'version', '0.9.28.1');
+	('panel', 'phpconfigs_hidestdsubdomain', '0'),
+	('panel', 'version', '0.9.29-dev1');
 
 
 

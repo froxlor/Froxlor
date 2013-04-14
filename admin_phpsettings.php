@@ -25,47 +25,54 @@ define('AREA', 'admin');
 
 require ("./lib/init.php");
 
-if(isset($_POST['id']))
-{
+if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
-}
-elseif(isset($_GET['id']))
-{
+} elseif (isset($_GET['id'])) {
 	$id = intval($_GET['id']);
 }
 
-if($page == 'overview')
-{
-	if($action == '')
-	{
+if ($page == 'overview') {
+
+	if ($action == '') {
+
 		$tablecontent = '';
 		$count = 0;
 		$result = $db->query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
 
-		while($row = $db->fetch_array($result))
-		{
+		while ($row = $db->fetch_array($result)) {
+
 			$domainresult = false;
 
-			if((int)$userinfo['domains_see_all'] == 0)
-			{
-				$domainresult = $db->query("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `adminid` = " . (int)$userinfo['userid'] . " AND `phpsettingid` = " . (int)$row['id']);
-			}
-			else
-			{
-				$domainresult = $db->query("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `phpsettingid` = " . (int)$row['id']);
+			$query = "SELECT * FROM `".TABLE_PANEL_DOMAINS."`
+					WHERE `phpsettingid` = '".(int)$row['id']."'
+					AND `parentdomainid` = '0'";
+
+			if ((int)$userinfo['domains_see_all'] == 0) {
+				$query .= " AND `adminid` = '".(int)$userinfo['userid']."'";
 			}
 
-			$domains = '';
-
-			if($db->num_rows($domainresult) > 0)
-			{
-				while($row2 = $db->fetch_array($domainresult))
-				{
-					$domains.= $row2['domain'] . '<br/>';
+			if ((int)$settings['panel']['phpconfigs_hidestdsubdomain'] == 1) {
+				$query2 = "SELECT DISTINCT `standardsubdomain`
+						FROM `".TABLE_PANEL_CUSTOMERS."`
+						WHERE `standardsubdomain` > 0 ORDER BY `standardsubdomain` ASC;";
+				$ssdids_res = $db->query($query2);
+				$ssdids = array();
+				while ($ssd = $db->fetch_array($ssdids_res)) {
+					$ssdids[] = $ssd['standardsubdomain'];
+				}
+				if (count($ssdids) > 0) {
+					$query .= " AND `id` NOT IN (".implode(', ', $ssdids).")";
 				}
 			}
-			else
-			{
+
+			$domainresult = $db->query($query);
+
+			$domains = '';
+			if ($db->num_rows($domainresult) > 0) {
+				while ($row2 = $db->fetch_array($domainresult)) {
+					$domains.= $row2['domain'] . '<br/>';
+				}
+			} else {
 				$domains = $lng['admin']['phpsettings']['notused'];
 			}
 
