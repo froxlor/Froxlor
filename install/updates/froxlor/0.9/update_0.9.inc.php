@@ -2066,7 +2066,8 @@ if(isFroxlorVersion('0.9.28.1')) {
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'passwordcryptfunc', '1');");
 
 	$fastcgiparams = $settings['nginx']['fastcgiparams'];
-	if (substr($fastcgiparams, -1) == '/') {
+	// check the faulty value explicitly
+	if ($fastcgiparams == '/etc/nginx/fastcgi_params/') {
 		$fastcgiparams = makeCorrectFile(substr(fastcgiparams,0,-1));
 		$db->query("UPDATE TABLE `panel_settings` SET `value`='".$db->escape($fastcgiparams)."' WHERE `varname`='fastcgiparams';");
 	}
