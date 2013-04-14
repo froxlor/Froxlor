@@ -510,6 +510,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'phpreload_command', ''),
 	('system', 'apache24', '0'),
 	('system', 'documentroot_use_default_value', '0'),
+	('system', 'passwordcryptfunc', '1'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),

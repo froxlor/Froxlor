@@ -38,9 +38,17 @@ return array(
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					),
-				),
-			),
-		),
+				'system_passwordcryptfunc' => array(
+					'label' => $lng['serversettings']['passwordcryptfunc'],
+					'settinggroup' => 'system',
+					'varname' => 'passwordcryptfunc',
+					'type' => 'option',
+					'default' => 0,
+					'option_mode' => 'one',
+					'option_options' => array(0 => $lng['serversettings']['systemdefault'], 1 => 'MD5', 2 => 'BLOWFISH', 3 => 'SHA-256', 4 => 'SHA-512'),
+					'save_method' => 'storeSettingField',
+					)
+				)
+			)
+		)
 	);
-
-?>

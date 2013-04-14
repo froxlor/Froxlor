@@ -1936,3 +1936,5 @@ $lng['admin']['domain_editable']['desc'] = 'If set to yes, the customer is allow
 // Added in Froxlor 0.9.29-dev1
 $lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['title'] = 'Hide standard-subdomains in PHP-configuration overview';
 $lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['description'] = 'If activated the standard-subdomains for customers will not be displayed in the php-configurations overview<br /><br />Note: This is only visible if you have enabled FCGID or PHP-FPM';
+$lng['serversettings']['passwordcryptfunc']['title'] = 'Chose which password-crypt method is to be used';
+$lng['serversettings']['systemdefault'] = 'System default';

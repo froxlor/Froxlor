@@ -188,7 +188,7 @@ elseif($page == 'accounts')
 				{
 					$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 
-					$cryptPassword = makeCryptPassword($password, 1);
+					$cryptPassword = makeCryptPassword($password);
 					$db->query("INSERT INTO `" . TABLE_FTP_USERS . "` (`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) VALUES ('" . (int)$userinfo['customerid'] . "', '" . $db->escape($username) . "', '" . $db->escape($cryptPassword) . "', '" . $db->escape($path) . "', 'y', '" . (int)$userinfo['guid'] . "', '" . (int)$userinfo['guid'] . "')");
 					$result = $db->query("SELECT `bytes_in_used` FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = '" . $userinfo['loginname'] . "'");
 					while($row = $db->fetch_array($result))
@@ -312,7 +312,7 @@ elseif($page == 'accounts')
 					else
 					{
 						$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account password for '" . $result['username'] . "'");
-						$cryptPassword = makeCryptPassword($password, 1);
+						$cryptPassword = makeCryptPassword($password);
 						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 						
 						// also update customers backup user password if password of main ftp user is changed

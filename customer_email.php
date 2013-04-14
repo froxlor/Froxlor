@@ -458,7 +458,7 @@ elseif($page == 'accounts')
 							$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
 						}
 
-						$cryptPassword = makeCryptPassword($password, 1);
+						$cryptPassword = makeCryptPassword($password);
 
 						$email_user=substr($email_full,0,strrpos($email_full,"@"));
 						$email_domain=substr($email_full,strrpos($email_full,"@")+1);
@@ -607,7 +607,7 @@ elseif($page == 'accounts')
 				$password = validatePassword($password);
 				
 				$log->logAction(USR_ACTION, LOG_NOTICE, "changed email password for '" . $result['email_full'] . "'");
-				$cryptPassword = makeCryptPassword($password,1);
+				$cryptPassword = makeCryptPassword($password);
 				$result = $db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET " . ($settings['system']['mailpwcleartext'] == '1' ? "`password` = '" . $db->escape($password) . "', " : '') . " `password_enc`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$result['popaccountid'] . "'");
 				redirectTo($filename, Array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 			}

@@ -2062,5 +2062,7 @@ if(isFroxlorVersion('0.9.28.1')) {
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'phpconfigs_hidestdsubdomain', '".$hide_stdsubdomains."');");
 	lastStepStatus(0);
 
+	// don't advertise security questions - just set a default silently
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'passwordcryptfunc', '1');");
 	updateToVersion('0.9.29-dev1');
 }
