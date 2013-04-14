@@ -152,6 +152,7 @@ return array(
 					'settinggroup' => 'nginx',
 					'varname' => 'fastcgiparams',
 					'type' => 'string',
+					'string_type' => 'file',
 					'default' => '/etc/nginx/fastcgi_params',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('nginx')
