@@ -25,9 +25,23 @@
  * 
  * @return string
  */
-function appendOpenBasedirPath($path = '', $first = false)
-{
+function appendOpenBasedirPath($path = '', $first = false) {
+
 	$path = makeCorrectDir($path);
+
+	// check for php-version that requires the trailing
+	// slash to be removed as it does not allow the usage
+	// of the subfolders within the given folder, fixes #797
+	if ((PHP_MINOR_VERSION == 2 && PHP_VERSION_ID >= 50216)
+		|| PHP_VERSION_ID >= 50304
+	) {
+		// check trailing slash
+		if (substr($path, -1, 1) == '/') {
+			// remove it
+			$path = substr($path, 0, -1);
+		}
+	}
+
 	if($path != ''
 		&& $path != '/'
 		&& !preg_match("#^/dev#i", $path)                                                       
@@ -36,8 +50,9 @@ function appendOpenBasedirPath($path = '', $first = false)
 		&& !preg_match("#^/sys#i", $path)
 		&& !preg_match("#:#", $path)
 	) {
-		if($first)
+		if ($first) {
 			return $path;
+		}
 
 		return ':' . $path;
 	}
