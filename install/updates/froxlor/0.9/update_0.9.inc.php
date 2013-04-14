@@ -2011,7 +2011,7 @@ if(isFroxlorVersion('0.9.28-svn5')) {
 	showUpdateStep("Inserting settings for nginx fastcgi-params file", true);
 	$fastcgiparams = '/etc/nginx/fastcgi_params';
 	if (isset($_POST['nginx_fastcgi_params']) && $_POST['nginx_fastcgi_params'] != '') {
-		$fastcgiparams = makeCorrectDir($_POST['nginx_fastcgi_params']);
+		$fastcgiparams = makeCorrectFile($_POST['nginx_fastcgi_params']);
 	}
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('nginx', 'fastcgiparams', '".$db->escape($fastcgiparams)."')");
 	lastStepStatus(0);
@@ -2064,5 +2064,11 @@ if(isFroxlorVersion('0.9.28.1')) {
 
 	// don't advertise security questions - just set a default silently
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'passwordcryptfunc', '1');");
+
+	$fastcgiparams = $settings['nginx']['fastcgiparams'];
+	if (substr($fastcgiparams, -1) == '/') {
+		$fastcgiparams = makeCorrectFile(substr(fastcgiparams,0,-1));
+		$db->query("UPDATE TABLE `panel_settings` SET `value`='".$db->escape($fastcgiparams)."' WHERE `varname`='fastcgiparams';");
+	}
 	updateToVersion('0.9.29-dev1');
 }
