@@ -789,7 +789,7 @@ if($page == 'customers'
 					}
 
 					inserttask('1');
-					$cryptPassword = makeCryptPassword($db->escape($password),1);
+					$cryptPassword = makeCryptPassword($password ,1);
 					$result = $db->query("INSERT INTO `" . TABLE_FTP_USERS . "` " . "(`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) " . "VALUES ('" . (int)$customerid . "', '" . $db->escape($loginname) . "', '" . $db->escape($cryptPassword) . "', '" . $db->escape($documentroot) . "', 'y', '" . (int)$guid . "', '" . (int)$guid . "')");
 					$result = $db->query("INSERT INTO `" . TABLE_FTP_GROUPS . "` " . "(`customerid`, `groupname`, `gid`, `members`) " . "VALUES ('" . (int)$customerid . "', '" . $db->escape($loginname) . "', '" . $db->escape($guid) . "', '" . $db->escape($loginname) . "')");
 					$result = $db->query("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $db->escape($loginname) . "', 'user', '0', '0', '0', '0', '0', '0')");
