@@ -172,8 +172,12 @@ class nginx
 
 			/**
 			 * this HAS to be set for the default host in nginx or else no vhost will work
+			 * edit: as of #1076 this is optional but should be deactivated with CARE as it
+			 * might break a lot
 			 */
-			$this->nginx_data[$vhost_filename].= "\t". 'listen    ' . $ip . ':' . $port . ' default;' . "\n";
+			if ($row_ipsandports['listen_statement'] == '1') {
+				$this->nginx_data[$vhost_filename].= "\t". 'listen    ' . $ip . ':' . $port . ' default;' . "\n";
+			}
 
 			if($row_ipsandports['vhostcontainer'] == '1')
 			{
@@ -235,10 +239,12 @@ class nginx
 				{
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl on;' . "\n";
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . ';' . "\n";
-					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate_key ' .makeCorrectFile($row_ipsandports['ssl_key_file']) . ';' .  "\n";
-						
-					if($row_ipsandports['ssl_ca_file'] != '')
-					{
+
+					if ($row_ipsandports['ssl_key_file'] != '') {
+						$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate_key ' .makeCorrectFile($row_ipsandports['ssl_key_file']) . ';' .  "\n";
+					}
+
+					if ($row_ipsandports['ssl_ca_file'] != '') {
 						$this->nginx_data[$vhost_filename].= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
 					}
 				}
@@ -414,8 +420,15 @@ class nginx
 
 		// open vhost-container
 		$vhost_content.= 'server { ' . "\n";
-		// listening statement (required)
-		$vhost_content.= "\t" . 'listen ' . $ipport . ';' . "\n";
+		/**
+		 * listening statement (required)
+		 * edit: as of #1076 this is optional but should be deactivated with CARE as it
+		 * might break a lot
+		 */
+		if ($ipsandport['listen_statement'] == '1') {
+			$vhost_content.= "\t" . 'listen ' . $ipport . ';' . "\n";
+		}
+
 		// get all server-names
 		$vhost_content.= $this->getServerNames($domain);
 
