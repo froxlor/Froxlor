@@ -33,7 +33,7 @@ return array(
 					'save_method' => 'storeSettingField',
 					),
 				'panel_default_theme' => array(
-					'label' => $lng['serversettings']['default_theme'],
+					'label' => array('title' => $lng['panel']['theme'], 'description' => $lng['serversettings']['default_theme']),
 					'settinggroup' => 'panel',
 					'varname' => 'default_theme',
 					'type' => 'option',
@@ -41,6 +41,22 @@ return array(
 					'option_mode' => 'one',
 					'option_options_method' => 'getThemes',
 					'save_method' => 'storeSettingField',
+					),
+				'panel_allow_theme_change_customer' => array(
+					'label' => $lng['serversettings']['panel_allow_theme_change_customer'],
+					'settinggroup' => 'panel',
+					'varname' => 'allow_theme_change_customer',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					),
+				'panel_allow_theme_change_admin' => array(
+					'label' => $lng['serversettings']['panel_allow_theme_change_admin'],
+					'settinggroup' => 'panel',
+					'varname' => 'allow_theme_change_admin',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField'
 					),
 				'panel_natsorting' => array(
 					'label' => $lng['serversettings']['natsorting'],

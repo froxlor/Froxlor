@@ -516,4 +516,13 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if (versionInUpdate($current_version, '0.9.29-dev2')) {
+		$has_preconfig = true;
+		$description  = 'You can now decide whether admins/customers are able to change the theme<br />';
+		$question = '<strong>If you want to disallow theme-changing, uncheck the checkboxes below:</strong>&nbsp;';
+		$question.= "Admins: ". makeyesno('allow_themechange_a', '1', '0', '1');
+		$question.= "Customers: ".makeyesno('allow_themechange_c', '1', '0', '1');
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

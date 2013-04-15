@@ -1938,3 +1938,7 @@ $lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['title'] = 'Hide sta
 $lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['description'] = 'If activated the standard-subdomains for customers will not be displayed in the php-configurations overview<br /><br />Note: This is only visible if you have enabled FCGID or PHP-FPM';
 $lng['serversettings']['passwordcryptfunc']['title'] = 'Chose which password-crypt method is to be used';
 $lng['serversettings']['systemdefault'] = 'System default';
+
+// Added in Froxlor 0.9.29-dev2
+$lng['serversettings']['panel_allow_theme_change_admin'] = 'Allow admins to change the theme';
+$lng['serversettings']['panel_allow_theme_change_customer'] = 'Allow customers to change the theme';

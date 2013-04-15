@@ -37,6 +37,7 @@ return array (
 				array (
 					'url' => 'customer_index.php?page=change_theme',
 					'label' => $lng['menue']['main']['changetheme'],
+					'show_element' => (getSetting('panel', 'allow_theme_change_customer') == true)
 				),
 				array (
 					'url' => 'customer_index.php?action=logout',
@@ -166,6 +167,7 @@ return array (
 				array (
 					'url' => 'admin_index.php?page=change_theme',
 					'label' => $lng['menue']['main']['changetheme'],
+					'show_element' => (getSetting('panel', 'allow_theme_change_admin') == true)
 				),
 				array (
 					'url' => 'admin_index.php?action=logout',

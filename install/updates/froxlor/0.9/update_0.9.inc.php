@@ -2053,7 +2053,7 @@ if (isFroxlorVersion('0.9.28')) {
 	updateToVersion('0.9.28.1');
 }
 
-if(isFroxlorVersion('0.9.28.1')) {
+if (isFroxlorVersion('0.9.28.1')) {
 	showUpdateStep("Updating from 0.9.28.1 to 0.9.29-dev1", true);
 	lastStepStatus(0);
 
@@ -2072,4 +2072,18 @@ if(isFroxlorVersion('0.9.28.1')) {
 		$db->query("UPDATE TABLE `panel_settings` SET `value`='".$db->escape($fastcgiparams)."' WHERE `varname`='fastcgiparams';");
 	}
 	updateToVersion('0.9.29-dev1');
+}
+
+if (isFroxlorVersion('0.9.29-dev1')) {
+	showUpdateStep("Updating from 0.9.29-dev1 to 0.9.29-dev2", true);
+	lastStepStatus(0);
+
+	$allow_themechange_c = isset($_POST['allow_themechange_c']) ? (int)$_POST['allow_themechange_c'] : '1';
+	$allow_themechange_a = isset($_POST['allow_themechange_a']) ? (int)$_POST['allow_themechange_a'] : '1';
+	showUpdateStep("Inserting new setting to allow/disallow theme changes (default: on)", true);
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'allow_theme_change_admin', '".$allow_themechange_a."');");
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'allow_theme_change_customer', '".$allow_themechange_c."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.29-dev2');
 }
