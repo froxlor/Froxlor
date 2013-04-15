@@ -141,30 +141,26 @@ class nginx
 	}
 	public function createFileDirOptions(){
 	}
+
 	public function createIpPort()
 	{
 		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC";
 		$result_ipsandports = $this->db->query($query);
 
-		while($row_ipsandports = $this->db->fetch_array($result_ipsandports))
-		{
-			if(filter_var($row_ipsandports['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-			{
+		while ($row_ipsandports = $this->db->fetch_array($result_ipsandports)) {
+
+			if (filter_var($row_ipsandports['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ip = '[' . $row_ipsandports['ip'] . ']';
-				$port = $row_ipsandports['port'];
-			}
-			else
-			{
+			} else {
 				$ip = $row_ipsandports['ip'];
-				$port = $row_ipsandports['port'];
 			}
+			$port = $row_ipsandports['port'];
 
 			fwrite($this->debugHandler, '  nginx::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ip . ":" . $port);
 			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
-			if(!isset($this->nginx_data[$vhost_filename]))
-			{
+			if (!isset($this->nginx_data[$vhost_filename])) {
 				$this->nginx_data[$vhost_filename] = '';
 			}
 
@@ -206,74 +202,71 @@ class nginx
 				if ($row_ipsandports['specialsettings'] != '') {
 					$this->nginx_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";
 				}
-			}
 
-			/**
-			 * SSL config options
-			 */
-			if ($row_ipsandports['ssl'] == '1') {
-				if ($row_ipsandports['ssl_cert_file'] == '') {
-					$row_ipsandports['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+				/**
+				 * SSL config options
+				 */
+				if ($row_ipsandports['ssl'] == '1') {
+					if ($row_ipsandports['ssl_cert_file'] == '') {
+						$row_ipsandports['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+					}
+					if ($row_ipsandports['ssl_key_file'] == '') {
+						$row_ipsandports['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
+					}
+					if ($row_ipsandports['ssl_ca_file'] == '') {
+						$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
+					}
+					if ($row_ipsandports['ssl_cert_file'] != '') {
+						$this->nginx_data[$vhost_filename].= "\t" . 'ssl on;' . "\n";
+						$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . ';' . "\n";
+					}
+					if ($row_ipsandports['ssl_key_file'] != '') {
+						$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate_key ' .makeCorrectFile($row_ipsandports['ssl_key_file']) . ';' .  "\n";
+					}
+					if ($row_ipsandports['ssl_ca_file'] != '') {
+						$this->nginx_data[$vhost_filename].= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
+					}
 				}
-				if ($row_ipsandports['ssl_key_file'] == '') {
-					$row_ipsandports['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
-				}
-				if ($row_ipsandports['ssl_ca_file'] == '') {
-					$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
-				}
-				if ($row_ipsandports['ssl_cert_file'] != '') {
-					$this->nginx_data[$vhost_filename].= "\t" . 'ssl on;' . "\n";
-					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . ';' . "\n";
-				}
-				if ($row_ipsandports['ssl_key_file'] != '') {
-					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate_key ' .makeCorrectFile($row_ipsandports['ssl_key_file']) . ';' .  "\n";
-				}
-				if ($row_ipsandports['ssl_ca_file'] != '') {
-					$this->nginx_data[$vhost_filename].= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
-				}
-			}
-			
-			$this->nginx_data[$vhost_filename].= "\t".'location ~ \.php$ {'."\n";
-			$this->nginx_data[$vhost_filename].= "\t\t".' if (!-f $request_filename) {'."\n";
-			$this->nginx_data[$vhost_filename].= "\t\t\t".'return 404;'."\n";
-			$this->nginx_data[$vhost_filename].= "\t\t".'}'."\n";
-			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_index index.php;'."\n";
-			$this->nginx_data[$vhost_filename].= "\t\t".'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
-			$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
-			if ($row_ipsandports['ssl'] == '1') {
-				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param HTTPS on;'."\n";
-			}
-			if((int)$this->settings['phpfpm']['enabled'] == 1
-				&& (int)$this->settings['phpfpm']['enabled_ownvhost'] == 1
-			) {
-				$domain = array(
-					'id' => 'none',
-					'domain' => $this->settings['system']['hostname'],
-					'adminid' => 1, /* first admin-user (superadmin) */
-					'mod_fcgid_starter' => -1,
-					'mod_fcgid_maxrequests' => -1,
-					'guid' => $this->settings['phpfpm']['vhost_httpuser'],
-					'openbasedir' => 0,
-					'email' => $this->settings['panel']['adminmail'],
-					'loginname' => 'froxlor.panel',
-					'documentroot' => $mypath,
-				);
 
-				$php = new phpinterface($this->getDB(), $this->settings, $domain);
-				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
-			}
-			else
-			{
-				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
-			}
-			$this->nginx_data[$vhost_filename].= "\t".'}'."\n";
+				$this->nginx_data[$vhost_filename].= "\t".'location ~ \.php$ {'."\n";
+				$this->nginx_data[$vhost_filename].= "\t\t".' if (!-f $request_filename) {'."\n";
+				$this->nginx_data[$vhost_filename].= "\t\t\t".'return 404;'."\n";
+				$this->nginx_data[$vhost_filename].= "\t\t".'}'."\n";
+				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_index index.php;'."\n";
+				$this->nginx_data[$vhost_filename].= "\t\t".'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
+				$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
+				if ($row_ipsandports['ssl'] == '1') {
+					$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_param HTTPS on;'."\n";
+				}
+				if ((int)$this->settings['phpfpm']['enabled'] == 1
+					&& (int)$this->settings['phpfpm']['enabled_ownvhost'] == 1
+				) {
+					$domain = array(
+						'id' => 'none',
+						'domain' => $this->settings['system']['hostname'],
+						'adminid' => 1, /* first admin-user (superadmin) */
+						'mod_fcgid_starter' => -1,
+						'mod_fcgid_maxrequests' => -1,
+						'guid' => $this->settings['phpfpm']['vhost_httpuser'],
+						'openbasedir' => 0,
+						'email' => $this->settings['panel']['adminmail'],
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath,
+					);
 
-			$this->nginx_data[$vhost_filename].= '}' . "\n\n";
-			// End of Froxlor server{}-part
-		}
+					$php = new phpinterface($this->getDB(), $this->settings, $domain);
+					$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
+
+				} else {
+					$this->nginx_data[$vhost_filename].= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
+				}
+				$this->nginx_data[$vhost_filename].= "\t".'}'."\n";
+				$this->nginx_data[$vhost_filename].= '}' . "\n\n";
+				// End of Froxlor server{}-part
+			}
 			$this->createNginxHosts($row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'], $vhost_filename);
 		}
-		
+
 		/**
 		 * standard error pages
 		 */
