@@ -107,7 +107,7 @@ class nginx
 			} else {
 				$vhosts_folder = makeCorrectDir(dirname($this->settings['system']['apacheconf_vhost']));
 			}
-			
+
 			$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
 
 			if(!isset($this->nginx_data[$vhosts_filename]))
@@ -129,7 +129,7 @@ class nginx
 			{
 				$this->nginx_data[$vhosts_filename].= 'error_page 404 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err404']) . ';' . "\n";
 			}
-			
+
 			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
 			{
 				$this->nginx_data[$vhosts_filename].= 'error_page 500 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err500']) . ';' . "\n";
@@ -168,27 +168,21 @@ class nginx
 				$this->nginx_data[$vhost_filename] = '';
 			}
 
-			$this->nginx_data[$vhost_filename].= 'server { ' . "\n";
+			if ($row_ipsandports['vhostcontainer'] == '1') {
 
-			/**
-			 * this HAS to be set for the default host in nginx or else no vhost will work
-			 * edit: as of #1076 this is optional but should be deactivated with CARE as it
-			 * might break a lot
-			 */
-			if ($row_ipsandports['listen_statement'] == '1') {
+				$this->nginx_data[$vhost_filename].= 'server { ' . "\n";
+
+				/**
+				 * this HAS to be set for the default host in nginx or else no vhost will work
+				 */
 				$this->nginx_data[$vhost_filename].= "\t". 'listen    ' . $ip . ':' . $port . ' default;' . "\n";
-			}
 
-			if($row_ipsandports['vhostcontainer'] == '1')
-			{
 				$this->nginx_data[$vhost_filename].= "\t".'# Froxlor default vhost' . "\n";
 				$this->nginx_data[$vhost_filename].= "\t".'server_name    ' . $this->settings['system']['hostname'] . ';' . "\n";
-			}
 
-			$this->nginx_data[$vhost_filename].= "\t".'access_log      /var/log/nginx/access.log;' . "\n";
+				$this->nginx_data[$vhost_filename].= "\t".'access_log      /var/log/nginx/access.log;' . "\n";
 
-			$mypath = '';
-			if ($row_ipsandports['vhostcontainer'] == '1') {
+				$mypath = '';
 
 				// no custom docroot set?
 				if ($row_ipsandports['docroot'] == '') {
@@ -209,44 +203,33 @@ class nginx
 				$this->nginx_data[$vhost_filename].= "\t\t".'index    index.php index.html index.htm;'."\n";
 				$this->nginx_data[$vhost_filename].= "\t".'}'."\n";
 
-				if($row_ipsandports['specialsettings'] != '')
-				{
+				if ($row_ipsandports['specialsettings'] != '') {
 					$this->nginx_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";
 				}
 			}
-				
+
 			/**
 			 * SSL config options
 			 */
-			if($row_ipsandports['ssl'] == '1')
-			{
-				if($row_ipsandports['ssl_cert_file'] == '')
-				{
+			if ($row_ipsandports['ssl'] == '1') {
+				if ($row_ipsandports['ssl_cert_file'] == '') {
 					$row_ipsandports['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
 				}
-
-				if($row_ipsandports['ssl_key_file'] == '')
-				{
+				if ($row_ipsandports['ssl_key_file'] == '') {
 					$row_ipsandports['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
 				}
-
-				if($row_ipsandports['ssl_ca_file'] == '')
-				{
+				if ($row_ipsandports['ssl_ca_file'] == '') {
 					$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
 				}
-
-				if($row_ipsandports['ssl_cert_file'] != '')
-				{
+				if ($row_ipsandports['ssl_cert_file'] != '') {
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl on;' . "\n";
 					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . ';' . "\n";
-
-					if ($row_ipsandports['ssl_key_file'] != '') {
-						$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate_key ' .makeCorrectFile($row_ipsandports['ssl_key_file']) . ';' .  "\n";
-					}
-
-					if ($row_ipsandports['ssl_ca_file'] != '') {
-						$this->nginx_data[$vhost_filename].= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
-					}
+				}
+				if ($row_ipsandports['ssl_key_file'] != '') {
+					$this->nginx_data[$vhost_filename].= "\t" . 'ssl_certificate_key ' .makeCorrectFile($row_ipsandports['ssl_key_file']) . ';' .  "\n";
+				}
+				if ($row_ipsandports['ssl_ca_file'] != '') {
+					$this->nginx_data[$vhost_filename].= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
 				}
 			}
 			
@@ -287,7 +270,7 @@ class nginx
 
 			$this->nginx_data[$vhost_filename].= '}' . "\n\n";
 			// End of Froxlor server{}-part
-
+		}
 			$this->createNginxHosts($row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'], $vhost_filename);
 		}
 		
@@ -420,14 +403,8 @@ class nginx
 
 		// open vhost-container
 		$vhost_content.= 'server { ' . "\n";
-		/**
-		 * listening statement (required)
-		 * edit: as of #1076 this is optional but should be deactivated with CARE as it
-		 * might break a lot
-		 */
-		if ($ipsandport['listen_statement'] == '1') {
-			$vhost_content.= "\t" . 'listen ' . $ipport . ';' . "\n";
-		}
+		// listening statement (required)
+		$vhost_content.= "\t" . 'listen ' . $ipport . ';' . "\n";
 
 		// get all server-names
 		$vhost_content.= $this->getServerNames($domain);
