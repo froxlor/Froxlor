@@ -902,9 +902,6 @@ class nginx
 				}
 
 			}
-				
-			$this->wipeOutOldVhostConfigs();
-				
 		}
 
 		/*
@@ -934,62 +931,6 @@ class nginx
 					$htpasswd_file_handler = fopen($htpasswd_filename, 'w');
 					fwrite($htpasswd_file_handler, $htpasswd_file);
 					fclose($htpasswd_file_handler);
-				}
-
-				$this->wipeOutOldHtpasswdConfigs();
-			}
-		}
-	}
-
-	protected function wipeOutOldVhostConfigs()
-	{
-		fwrite($this->debugHandler, '  nginx::wipeOutOldVhostConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost']);
-
-		if(isConfigDir($this->settings['system']['apacheconf_vhost'], true))
-		{
-			$vhost_file_dirhandle = opendir($this->settings['system']['apacheconf_vhost']);
-
-			while(false !== ($vhost_filename = readdir($vhost_file_dirhandle)))
-			{
-				if($vhost_filename != '.'
-				&& $vhost_filename != '..'
-				&& !in_array($vhost_filename, $this->known_filenames)
-				&& preg_match('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
-				&& file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
-				{
-					fwrite($this->debugHandler, '  nginx::wipeOutOldVhostConfigs: unlinking ' . $vhost_filename . "\n");
-					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $vhost_filename);
-					unlink(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename));
-				}
-			}
-		}
-	}
-
-	/*
-	 *	We remove old htpasswd config files
-	 */
-	protected function wipeOutOldHtpasswdConfigs()
-	{
-		fwrite($this->debugHandler, '  nginx::wipeOutOldHtpasswdConfigs: cleaning ' . $this->settings['system']['apacheconf_htpasswddir'] . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_htpasswddir']);
-
-		if(isConfigDir($this->settings['system']['apacheconf_htpasswddir'])
-		&& file_exists($this->settings['system']['apacheconf_htpasswddir'])
-		&& is_dir($this->settings['system']['apacheconf_htpasswddir']))
-		{
-			$htpasswds_file_dirhandle = opendir($this->settings['system']['apacheconf_htpasswddir']);
-
-			while(false !== ($htpasswd_filename = readdir($htpasswds_file_dirhandle)))
-			{
-				if($htpasswd_filename != '.'
-				&& $htpasswd_filename != '..'
-				&& !in_array($htpasswd_filename, $this->known_htpasswdsfilenames)
-				&& file_exists(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $htpasswd_filename)))
-				{
-					fwrite($this->debugHandler, '  nginx::wipeOutOldHtpasswdConfigs: unlinking ' . $htpasswd_filename . "\n");
-					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $htpasswd_filename);
-					unlink(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $htpasswd_filename));
 				}
 			}
 		}

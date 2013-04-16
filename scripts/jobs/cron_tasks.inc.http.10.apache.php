@@ -1120,14 +1120,7 @@ class apache
 					fwrite($diroptions_file_handler, $diroptions_file);
 					fclose($diroptions_file_handler);
 				}
-
-				$this->wipeOutOldDiroptionConfigs();
 			}
-		}
-		else
-		{
-			// no more diroptions, but there might be some file-corpses which have to be removed
-			$this->wipeOutOldDiroptionConfigs();
 		}
 
 		// Write htpasswds
@@ -1154,8 +1147,6 @@ class apache
 					fwrite($htpasswd_file_handler, $htpasswd_file);
 					fclose($htpasswd_file_handler);
 				}
-
-				$this->wipeOutOldHtpasswdConfigs();
 			}
 			else
 			{
@@ -1163,11 +1154,6 @@ class apache
 				echo 'WARNING!!! ' . $this->settings['system']['apacheconf_htpasswddir'] . ' is not a directory. htpasswd directory protection is disabled!!!';
 				$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . $this->settings['system']['apacheconf_htpasswddir'] . ' is not a directory. htpasswd directory protection is disabled!!!');
 			}
-		}
-		else
-		{
-			// no more htpasswds, but there might be some file-corpses which have to be removed
-			$this->wipeOutOldHtpasswdConfigs();
 		}
 
 		// Write virtualhosts
@@ -1233,93 +1219,6 @@ class apache
 					fclose($vhosts_file_handler);
 				}
 
-				$this->wipeOutOldVhostConfigs();
-			}
-		}
-	}
-
-	/*
-	*	We remove old vhost config files
-	*/
-
-	protected function wipeOutOldVhostConfigs()
-	{
-		fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost']);
-
-		if(isConfigDir($this->settings['system']['apacheconf_vhost'], true))
-		{
-			$vhost_file_dirhandle = opendir($this->settings['system']['apacheconf_vhost']);
-
-			while(false !== ($vhost_filename = readdir($vhost_file_dirhandle)))
-			{
-				if($vhost_filename != '.'
-				   && $vhost_filename != '..'
-				   && !in_array($vhost_filename, $this->known_vhostfilenames)
-				   && preg_match('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
-				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
-				{
-					fwrite($this->debugHandler, '  apache::wipeOutOldVhostConfigs: unlinking ' . $vhost_filename . "\n");
-					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $vhost_filename);
-					unlink(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename));
-				}
-			}
-		}
-	}
-
-	/*
-	*	We remove old diroptions config files
-	*/
-
-	protected function wipeOutOldDiroptionConfigs()
-	{
-		fwrite($this->debugHandler, '  apache::wipeOutOldDiroptionConfigs: cleaning ' . $this->settings['system']['apacheconf_diroptions'] . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_diroptions']);
-
-		if(isConfigDir($this->settings['system']['apacheconf_diroptions'], true))
-		{
-			$diroptions_file_dirhandle = opendir($this->settings['system']['apacheconf_diroptions']);
-
-			while(false !== ($diroptions_filename = readdir($diroptions_file_dirhandle)))
-			{
-				if($diroptions_filename != '.'
-				   && $diroptions_filename != '..'
-				   && !in_array($diroptions_filename, $this->known_diroptionsfilenames)
-				   && preg_match('/^40_(froxlor|syscp)_diroption_(.+)\.conf$/', $diroptions_filename)
-				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_diroptions'] . '/' . $diroptions_filename)))
-				{
-					fwrite($this->debugHandler, '  apache::wipeOutOldDiroptionConfigs: unlinking ' . $diroptions_filename . "\n");
-					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $diroptions_filename);
-					unlink(makeCorrectFile($this->settings['system']['apacheconf_diroptions'] . '/' . $diroptions_filename));
-				}
-			}
-		}
-	}
-
-	/*
-	*	We remove old htpasswd config files
-	*/
-
-	protected function wipeOutOldHtpasswdConfigs()
-	{
-		fwrite($this->debugHandler, '  apache::wipeOutOldHtpasswdConfigs: cleaning ' . $this->settings['system']['apacheconf_htpasswddir'] . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_htpasswddir']);
-
-		if(isConfigDir($this->settings['system']['apacheconf_htpasswddir'], true))
-		{
-			$htpasswds_file_dirhandle = opendir($this->settings['system']['apacheconf_htpasswddir']);
-
-			while(false !== ($htpasswd_filename = readdir($htpasswds_file_dirhandle)))
-			{
-				if($htpasswd_filename != '.'
-				   && $htpasswd_filename != '..'
-				   && !in_array($htpasswd_filename, $this->known_htpasswdsfilenames)
-				   && file_exists(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $htpasswd_filename)))
-				{
-					fwrite($this->debugHandler, '  apache::wipeOutOldHtpasswdConfigs: unlinking ' . $htpasswd_filename . "\n");
-					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $htpasswd_filename);
-					unlink(makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $htpasswd_filename));
-				}
 			}
 		}
 	}

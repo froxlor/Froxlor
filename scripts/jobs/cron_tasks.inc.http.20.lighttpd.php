@@ -947,8 +947,6 @@ class lighttpd
 					fclose($vhosts_file_handler);
 				}
 			}
-
-			$this->wipeOutOldConfigs();
 		}
 
 		// Write the diroptions
@@ -966,31 +964,6 @@ class lighttpd
 				$htpasswd_handler = fopen($filename, 'w');
 				fwrite($htpasswd_handler, $data);
 				fclose($htpasswd_handler);
-			}
-		}
-	}
-
-	protected function wipeOutOldConfigs()
-	{
-		fwrite($this->debugHandler, '  lighttpd::wipeOutOldConfigs: cleaning ' . $this->settings['system']['apacheconf_vhost'] . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "cleaning " . $this->settings['system']['apacheconf_vhost']);
-
-		if(isConfigDir($this->settings['system']['apacheconf_vhost'], true))
-		{
-			$vhost_file_dirhandle = opendir($this->settings['system']['apacheconf_vhost']);
-
-			while(false !== ($vhost_filename = readdir($vhost_file_dirhandle)))
-			{
-				if($vhost_filename != '.'
-				&& $vhost_filename != '..'
-				&& !in_array($vhost_filename, $this->known_filenames)
-				&& preg_match('/^(05|10|20|21|22|30|50|51)_(froxlor|syscp)_(dirfix|ipandport|normal_vhost|wildcard_vhost|ssl_vhost)_(.+)\.conf$/', $vhost_filename)
-				&& file_exists(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename)))
-				{
-					fwrite($this->debugHandler, '  lighttpd::wipeOutOldConfigs: unlinking ' . $vhost_filename . "\n");
-					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . $vhost_filename);
-					unlink(makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/' . $vhost_filename));
-				}
 			}
 		}
 	}
