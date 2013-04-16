@@ -1960,13 +1960,10 @@ if(isFroxlorVersion('0.9.28-svn3'))
 
 	$db->query('ALTER DATABASE `' . $db->getDbName() . '` CHARACTER SET utf8 COLLATE utf8_general_ci');
 
-	$handle = $db->query('SHOW TABLES');
-	while ($row = $db->fetch_array($handle))
+	$tables = array("aps_instances", "aps_packages", "aps_settings", "aps_tasks", "aps_temp_settings", "cronjobs_run", "domain_docrootsettings", "domain_redirect_codes", "ftp_groups", "ftp_quotalimits", "ftp_quotatallies", "ftp_users", "ipsandports_docrootsettings", "mail_autoresponder", "mail_blockedrecipients", "mail_users", "mail_virtual", "modules_fetchmail", "modules_sasettings_desc", "modules_sasettings_preferences", "modules_sasettings_rights", "modules_sasettings_sa", "panel_admins", "panel_customers", "panel_databases", "panel_diskspace", "panel_diskspace_admins", "panel_domains", "panel_htaccess", "panel_htpasswds", "panel_ipsandports", "panel_languages", "panel_phpconfigs", "panel_sessions", "panel_settings", "panel_syslog", "panel_tasks", "panel_templates", "panel_ticket_categories", "panel_tickets", "panel_traffic", "panel_traffic_admins", "redirect_codes");
+	foreach ($tables as $table)
 	{
-		foreach ($row as $table)
-		{
-			$db->query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
-		}
+		$db->query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
 	}
 
 	lastStepStatus(0);
