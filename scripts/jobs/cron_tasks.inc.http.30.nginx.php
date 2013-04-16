@@ -422,18 +422,6 @@ class nginx
 			if ($this->_deactivated == false) {
 				$vhost_content.= $this->create_pathOptions($domain);
 				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
-
-				$l_regex1="/(location\ \/\ \{)(.*)(\})/smU";
-				$l_regex2="/(location\ \/\ \{.*\})/smU";
-				$replace_by="";
-				$replacements=preg_match_all($l_regex1,$vhost_content,$out);
-				if ($replacements>1){
-					foreach ($out[2] as $val) {
-						$replace_by.=$val."\n";
-					}
-					$vhost_content=preg_replace($l_regex2,"",$vhost_content,$replacements-1);
-					$vhost_content=preg_replace($l_regex2,"location / {"."\n\t\t". $replace_by ."\t}"."\n",$vhost_content);
-				}
 				
 				if ($domain['specialsettings'] != "") {
 					$vhost_content.= $domain['specialsettings'] . "\n";
@@ -446,7 +434,19 @@ class nginx
 				if ($this->settings['system']['default_vhostconf'] != '') {
 					$vhost_content.= $this->settings['system']['default_vhostconf'] . "\n";
 				}
+			}
 
+			// merge duplicate / sections, #1193
+			$l_regex1="/(location\ \/\ \{)(.*)(\})/smU";
+			$l_regex2="/(location\ \/\ \{.*\})/smU";
+			$replace_by="";
+			$replacements=preg_match_all($l_regex1,$vhost_content,$out);
+			if ($replacements > 1) {
+				foreach ($out[2] as $val) {
+					$replace_by.=$val."\n";
+				}
+				$vhost_content=preg_replace($l_regex2, "", $vhost_content, $replacements-1);
+				$vhost_content=preg_replace($l_regex2, "location / {\n\t\t". $replace_by ."\t}\n", $vhost_content);
 			}
 		}
 		$vhost_content.= '}' . "\n\n";
