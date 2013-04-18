@@ -525,4 +525,12 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= "Customers: ".makeyesno('allow_themechange_c', '1', '0', '1');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_version, '0.9.29-dev3')) {
+		$has_preconfig = true;
+		$description  = 'There is now a possibility to specify AFXR servers for your bind zone-configuration<br />';
+		$question = '<strong>Enter a comma-separated list of AFXR servers or leave empty (default):</strong>&nbsp;';
+		$question.= '<input type="text" class="text" name="system_afxrservers" value="" />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

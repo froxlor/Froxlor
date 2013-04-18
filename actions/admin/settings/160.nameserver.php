@@ -68,6 +68,16 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					),
+				'system_axfrservers' => array(
+					'label' => $lng['serversettings']['axfrservers'],
+					'settinggroup' => 'system',
+					'varname' => 'axfrservers',
+					'type' => 'string',
+					'string_regexp' => '/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(, ?(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3}))*$/i',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField',
+				),
 				'system_dns_createmailentry' => array(
 					'label' => $lng['serversettings']['mail_also_with_mxservers'],
 					'settinggroup' => 'system',

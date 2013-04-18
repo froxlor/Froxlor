@@ -36,26 +36,22 @@ class bind
 	public $settings = array();
 	public $nameservers = array();
 	public $mxservers = array();
+	public $axfrservers = array();
 
-	public function __construct($db, $logger, $debugHandler, $settings)
-	{
+	public function __construct($db, $logger, $debugHandler, $settings) {
+
 		$this->db = $db;
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
 		$this->settings = $settings;
 
-		if($this->settings['system']['nameservers'] != '')
-		{
+		if ($this->settings['system']['nameservers'] != '') {
 			$nameservers = explode(',', $this->settings['system']['nameservers']);
-			foreach($nameservers as $nameserver)
-			{
+			foreach ($nameservers as $nameserver) {
 				$nameserver_ip = gethostbyname(trim($nameserver));
-
-				if(substr($nameserver, -1, 1) != '.')
-				{
+				if (substr($nameserver, -1, 1) != '.') {
 					$nameserver.= '.';
 				}
-
 				$this->nameservers[] = array(
 					'hostname' => trim($nameserver),
 					'ip' => trim($nameserver_ip)
@@ -63,17 +59,21 @@ class bind
 			}
 		}
 
-		if($this->settings['system']['mxservers'] != '')
-		{
+		if ($this->settings['system']['mxservers'] != '') {
 			$mxservers = explode(',', $this->settings['system']['mxservers']);
-			foreach($mxservers as $mxserver)
-			{
-				if(substr($mxserver, -1, 1) != '.')
-				{
+			foreach ($mxservers as $mxserver) {
+				if (substr($mxserver, -1, 1) != '.') {
 					$mxserver.= '.';
 				}
-
 				$this->mxservers[] = $mxserver;
+			}
+		}
+
+		// AXFR server #100
+		if ($this->settings['system']['axfrservers'] != '') {
+			$axfrservers = explode(',', $this->settings['system']['axfrservers']);
+			foreach ($axfrservers as $axfrserver) {
+				$this->axfrservers[] = trim($axfrservers);
 			}
 		}
 	}
@@ -126,6 +126,15 @@ class bind
 				}
 
 				$bindconf_file.= '	};' . "\n";
+			}
+
+			// AXFR server #100
+			if (count($this->axfrservers) > 0) {
+				foreach ($this->axfrservers as $axfrserver) {
+					if (validate_ip($axfrserver, true) !== false) {
+						$bindconf_file.= '		' . $axfrserver . ';' . "\n";
+					}
+				}
 			}
 
 			$bindconf_file.= '};' . "\n";

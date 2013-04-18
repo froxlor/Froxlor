@@ -1933,12 +1933,12 @@ $lng['error']['stringmustntbeempty'] = 'The value for the field %s must not be e
 $lng['admin']['domain_editable']['title'] = 'Allow editing of domain';
 $lng['admin']['domain_editable']['desc'] = 'If set to yes, the customer is allowed to change several domain-settings.<br />If set to no, nothing can be changed by the customer.';
 
-// Added in Froxlor 0.9.29-dev1
+// Added in Froxlor 0.9.29-dev
 $lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['title'] = 'Hide standard-subdomains in PHP-configuration overview';
 $lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['description'] = 'If activated the standard-subdomains for customers will not be displayed in the php-configurations overview<br /><br />Note: This is only visible if you have enabled FCGID or PHP-FPM';
 $lng['serversettings']['passwordcryptfunc']['title'] = 'Chose which password-crypt method is to be used';
 $lng['serversettings']['systemdefault'] = 'System default';
-
-// Added in Froxlor 0.9.29-dev2
 $lng['serversettings']['panel_allow_theme_change_admin'] = 'Allow admins to change the theme';
 $lng['serversettings']['panel_allow_theme_change_customer'] = 'Allow customers to change the theme';
+$lng['serversettings']['axfrservers']['title'] = 'AXFR servers';
+$lng['serversettings']['axfrservers']['description'] = 'A comma separated list of IP addresses allowed to transfer (AXFR) dns zones.';

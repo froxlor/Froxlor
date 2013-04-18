@@ -511,6 +511,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'apache24', '0'),
 	('system', 'documentroot_use_default_value', '0'),
 	('system', 'passwordcryptfunc', '1'),
+	('system', 'axfrservers', ''),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -538,7 +539,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.29-dev2');
+	('panel', 'version', '0.9.29-dev3');
 
 
 

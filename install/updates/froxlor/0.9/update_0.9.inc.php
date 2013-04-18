@@ -2087,3 +2087,18 @@ if (isFroxlorVersion('0.9.29-dev1')) {
 
 	updateToVersion('0.9.29-dev2');
 }
+
+if (isFroxlorVersion('0.9.29-dev2')) {
+	showUpdateStep("Updating from 0.9.29-dev2 to 0.9.29-dev3", true);
+	lastStepStatus(0);
+
+	$system_afxrservers = isset($_POST['system_afxrservers']) ? $_POST['system_afxrservers'] : '';
+	if (!preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(, ?(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3}))*$/i', $system_afxrservers)) {
+		$system_afxrservers = '';
+	}
+	showUpdateStep("Inserting new setting for AFXR server", true);
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'axfrservers', '".$db->escape($system_afxrservers)."');");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.29-dev3');
+}
