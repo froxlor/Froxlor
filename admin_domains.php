@@ -815,7 +815,7 @@ if($page == 'domains'
 					$zonefile = $result['zonefile'];
 					if ($settings['system']['bind_enable'] == '1') {
 						if (isset($_POST['isbinddomain'])) {
-							$isbinddomain = '1';
+							$isbinddomain = (int)$_POST['isbinddomain'];
 						}
 						$zonefile = validate($_POST['zonefile'], 'zonefile');
 					}
