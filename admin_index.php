@@ -110,7 +110,7 @@ if($page == 'overview')
 					$lookfornewversion_link = $_link;
 					$lookfornewversion_addinfo = $_message;
 
-					if (version_compare($version, $_version) == -1) {
+					if (version_compare2($version, $_version) == -1) {
 						$isnewerversion = 1;
 					} else {
 						$isnewerversion = 0;

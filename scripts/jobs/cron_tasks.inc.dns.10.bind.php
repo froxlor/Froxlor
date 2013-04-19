@@ -117,15 +117,11 @@ class bind
 			$bindconf_file.= '	file "' . makeCorrectFile($this->settings['system']['bindconf_directory'] . '/' . $domain['zonefile']) . '";' . "\n";
 			$bindconf_file.= '	allow-query { any; };' . "\n";
 
-			if(count($this->nameservers) > 0)
-			{
+			if (count($this->nameservers) > 0) {
 				$bindconf_file.= '	allow-transfer {' . "\n";
-				for ($i = 0;$i < count($this->nameservers);$i++)
-				{
-					$bindconf_file.= '		' . $this->nameservers[$i]['ip'] . ';' . "\n";
+				foreach ($this->nameservers as $ns) {
+					$bindconf_file.= '		' . $ns['ip'] . ';' . "\n";
 				}
-
-				$bindconf_file.= '	};' . "\n";
 			}
 
 			// AXFR server #100
