@@ -19,7 +19,7 @@
  * report about diskusage for customers
  */
 $result = $db->query("SELECT
-	`c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`, `c`.`diskspace`, 
+	`c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`diskspace`,
 	`c`.`diskspace_used`, `c`.`email`, `c`.`def_language`, 
 	`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`
 	FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
@@ -35,8 +35,14 @@ while($row = $db->fetch_array($result))
 		&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)$settings['system']['report_webmax']
 	) {
 
+		$rep_userinfo = array(
+			'name' => $row['name'],
+			'firstname' => $row['firstname'],
+			'company' => $row['company']
+		);
 		$replace_arr = array(
-			'NAME' => $row['name'],
+			'SALUTATION' => getCorrectUserSalutation($rep_userinfo),
+			'NAME' => $row['name'], // < keep this for compatibility
 			'DISKAVAILABLE' => round(($row['diskspace'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 			'DISKUSED' => round($row['diskspace_used'] / 1024, 2), /* traffic is stored in KB, template uses MB */
 			'USAGE_PERCENT' => round(($row['diskspace_used'] * 100) / $row['diskspace'], 2),

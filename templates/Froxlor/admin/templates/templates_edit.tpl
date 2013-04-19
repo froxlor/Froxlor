@@ -125,6 +125,10 @@ $header
 					</td>
 				</tr>
 				<tr>
+					<td><em>{SALUTATION}</em></td>
+					<td>{$lng['admin']['templates']['SALUTATION']}</td>
+				</tr>
+				<tr>
 					<td><em>{TRAFFIC}</em></td>
 					<td>{$lng['admin']['templates']['TRAFFIC']}</td>
 				</tr>
@@ -144,6 +148,10 @@ $header
 					<td colspan="2">
 						<strong>{$lng['admin']['templates']['diskmaxpercent']}</strong>
 					</td>
+				</tr>
+				<tr>
+					<td><em>{SALUTATION}</em></td>
+					<td>{$lng['admin']['templates']['SALUTATION']}</td>
 				</tr>
 				<tr>
 					<td><em>{DISKAVAILABLE}</em></td>
@@ -192,8 +200,8 @@ $header
 					</td>
 				</tr>
 				<tr>
-					<td><em>{CUST_NAME}</em></td>
-					<td>{$lng['admin']['templates']['CUST_NAME']}</td>
+					<td><em>{SALUTATION}</em></td>
+					<td>{$lng['admin']['templates']['SALUTATION']}</td>
 				</tr>
 				<tr>
 					<td><em>{DB_NAME}</em></td>
@@ -221,8 +229,8 @@ $header
 					</td>
 				</tr>
 				<tr>
-					<td><em>{CUST_NAME}</em></td>
-					<td>{$lng['admin']['templates']['CUST_NAME']}</td>
+					<td><em>{SALUTATION}</em></td>
+					<td>{$lng['admin']['templates']['SALUTATION']}</td>
 				</tr>
 				<tr>
 					<td><em>{USR_NAME}</em></td>

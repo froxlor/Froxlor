@@ -228,7 +228,8 @@ elseif($page == 'mysqls')
 						}
 
 						$replace_arr = array(
-							'CUST_NAME' => getCorrectUserSalutation($userinfo),
+							'SALUTATION' => getCorrectUserSalutation($userinfo),
+							'CUST_NAME' => getCorrectUserSalutation($userinfo), // < keep this for compatibility
 							'DB_NAME' => $username,
 							'DB_PASS' => $password,
 							'DB_DESC' => $databasedescription,

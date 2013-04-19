@@ -30,7 +30,7 @@ $mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
 
 // Warn the customers at xx% traffic-usage
 
-$result = $db->query("SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`, `c`.`traffic`,
+$result = $db->query("SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`traffic`,
                              `c`.`email`, `c`.`def_language`, `a`.`name` AS `adminname`, `a`.`email` AS `adminmail`,
                            (SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
                             FROM `" . TABLE_PANEL_TRAFFIC . "` `t`
@@ -47,8 +47,14 @@ while($row = $db->fetch_array($result))
 	   && $row['traffic_used'] != NULL
 	   && (($row['traffic_used'] * 100) / $row['traffic']) >= (int)$settings['system']['report_trafficmax'])
 	{
+		$rep_userinfo = array(
+			'name' => $row['name'],
+			'firstname' => $row['firstname'],
+			'company' => $row['company']
+		);
 		$replace_arr = array(
-			'NAME' => $row['name'],
+			'SALUTATION' => getCorrectUserSalutation($rep_userinfo),
+			'NAME' => $row['name'], // < keep this for compatibility
 			'TRAFFIC' => round(($row['traffic'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 			'TRAFFICUSED' => round(($row['traffic_used'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 			'USAGE_PERCENT' => round(($row['traffic_used'] * 100) / $row['traffic'], 2),

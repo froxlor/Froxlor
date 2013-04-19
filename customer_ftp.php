@@ -204,7 +204,8 @@ elseif($page == 'accounts')
 					if($sendinfomail == 1)
 					{
 						$replace_arr = array(
-							'CUST_NAME' => getCorrectUserSalutation($userinfo),
+							'SALUTATION' => getCorrectUserSalutation($userinfo),
+							'CUST_NAME' => getCorrectUserSalutation($userinfo), // < keep this for compatibility
 							'USR_NAME' => $username,
 							'USR_PASS' => $password,
 							'USR_PATH' => makeCorrectDir(substr($path, strlen($userinfo['documentroot'])))
