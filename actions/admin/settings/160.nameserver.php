@@ -73,7 +73,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'axfrservers',
 					'type' => 'string',
-					'string_regexp' => '/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(, ?(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3}))*$/i',
+					'string_type' => 'validate_ip',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField',

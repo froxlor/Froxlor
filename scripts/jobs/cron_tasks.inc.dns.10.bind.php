@@ -19,11 +19,11 @@
 
 /*
  * This script creates the php.ini's used by mod_suPHP+php-cgi
- */
+*/
 
 if(@php_sapi_name() != 'cli'
-   && @php_sapi_name() != 'cgi'
-   && @php_sapi_name() != 'cgi-fcgi')
+		&& @php_sapi_name() != 'cgi'
+		&& @php_sapi_name() != 'cgi-fcgi')
 {
 	die('This script only works in the shell.');
 }
@@ -53,8 +53,8 @@ class bind
 					$nameserver.= '.';
 				}
 				$this->nameservers[] = array(
-					'hostname' => trim($nameserver),
-					'ip' => trim($nameserver_ip)
+						'hostname' => trim($nameserver),
+						'ip' => trim($nameserver_ip)
 				);
 			}
 		}
@@ -73,7 +73,7 @@ class bind
 		if ($this->settings['system']['axfrservers'] != '') {
 			$axfrservers = explode(',', $this->settings['system']['axfrservers']);
 			foreach ($axfrservers as $axfrserver) {
-				$this->axfrservers[] = trim($axfrservers);
+				$this->axfrservers[] = trim($axfrserver);
 			}
 		}
 	}
@@ -117,20 +117,27 @@ class bind
 			$bindconf_file.= '	file "' . makeCorrectFile($this->settings['system']['bindconf_directory'] . '/' . $domain['zonefile']) . '";' . "\n";
 			$bindconf_file.= '	allow-query { any; };' . "\n";
 
-			if (count($this->nameservers) > 0) {
+			if (count($this->nameservers) > 0
+					|| count($this->axfrservers) > 0
+			) {
+				// open allow-transfer
 				$bindconf_file.= '	allow-transfer {' . "\n";
-				foreach ($this->nameservers as $ns) {
-					$bindconf_file.= '		' . $ns['ip'] . ';' . "\n";
-				}
-			}
-
-			// AXFR server #100
-			if (count($this->axfrservers) > 0) {
-				foreach ($this->axfrservers as $axfrserver) {
-					if (validate_ip($axfrserver, true) !== false) {
-						$bindconf_file.= '		' . $axfrserver . ';' . "\n";
+				// put nameservers in allow-transfer
+				if (count($this->nameservers) > 0) {
+					foreach ($this->nameservers as $ns) {
+						$bindconf_file.= '		' . $ns['ip'] . ';' . "\n";
 					}
 				}
+				// AXFR server #100
+				if (count($this->axfrservers) > 0) {
+					foreach ($this->axfrservers as $axfrserver) {
+						if (validate_ip($axfrserver, true) !== false) {
+							$bindconf_file.= '		' . $axfrserver . ';' . "\n";
+						}
+					}
+				}
+				// close allow-transfer
+				$bindconf_file.= '};' . "\n";
 			}
 
 			$bindconf_file.= '};' . "\n";
@@ -148,7 +155,7 @@ class bind
 		$domains_dir = makeCorrectDir($this->settings['system']['bindconf_directory'] . '/domains/');
 
 		if(file_exists($domains_dir)
-		   && is_dir($domains_dir))
+				&& is_dir($domains_dir))
 		{
 			$domain_file_dirhandle = opendir($domains_dir);
 
@@ -157,10 +164,10 @@ class bind
 				$full_filename = makeCorrectFile($domains_dir . '/' . $domain_filename);
 
 				if($domain_filename != '.'
-				   && $domain_filename != '..'
-				   && !in_array($domain_filename, $known_filenames)
-				   && is_file($full_filename)
-				   && file_exists($full_filename))
+						&& $domain_filename != '..'
+						&& !in_array($domain_filename, $known_filenames)
+						&& is_file($full_filename)
+						&& file_exists($full_filename))
 				{
 					fwrite($this->debugHandler, '  cron_tasks: Task4 - unlinking ' . $domain_filename . "\n");
 					$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'Deleting ' . $domain_filename);
@@ -230,7 +237,7 @@ class bind
 			{
 				$zonefile.= '@	IN	MX	' . trim($mxserver) . "\n";
 			}
-			
+
 			if($this->settings['system']['dns_createmailentry'] == '1')
 			{
 				$zonefile.= 'mail	IN	' . $ip_a_record . "\n";
@@ -245,9 +252,9 @@ class bind
 
 		/*
 		 * @TODO domain-based spf-settings
-		 */
+		*/
 		if($this->settings['spf']['use_spf'] == '1'
-		   /*&& $domain['spf'] == '1' */)
+				/*&& $domain['spf'] == '1' */)
 		{
 			$zonefile.= $this->settings['spf']['spf_entry'] . "\n";
 		}
@@ -291,38 +298,38 @@ class bind
 
 		while($subdomain = $this->db->fetch_array($subdomains))
 		{
-                        if(filter_var($subdomain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
-                        {
-                                $zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      A       ' . $subdomain['ip'] . "\n";
-                                
-                                /* Check whether to add a www.-prefix */
-                                if($domain['wwwserveralias'] == '1')
-								{
-									$zonefile.= str_replace('www.' . $domain['domain'], '', $subdomain['domain']) . '  IN      A       ' . $subdomain['ip'] . "\n";
-								}
-                        }
-                        elseif(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-                        {
-                                $zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      AAAA    ' . $subdomain['ip'] . "\n";
-                                
-								/* Check whether to add a www.-prefix */
-                                if($domain['wwwserveralias'] == '1')
-								{
-									$zonefile.= str_replace('www.' . $domain['domain'], '', $subdomain['domain']) . '  IN      AAAA       ' . $subdomain['ip'] . "\n";
-								}
-                        }
+			if(filter_var($subdomain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+			{
+				$zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      A       ' . $subdomain['ip'] . "\n";
+
+				/* Check whether to add a www.-prefix */
+				if($domain['wwwserveralias'] == '1')
+				{
+					$zonefile.= str_replace('www.' . $domain['domain'], '', $subdomain['domain']) . '  IN      A       ' . $subdomain['ip'] . "\n";
+				}
+			}
+			elseif(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+			{
+				$zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      AAAA    ' . $subdomain['ip'] . "\n";
+
+				/* Check whether to add a www.-prefix */
+				if($domain['wwwserveralias'] == '1')
+				{
+					$zonefile.= str_replace('www.' . $domain['domain'], '', $subdomain['domain']) . '  IN      AAAA       ' . $subdomain['ip'] . "\n";
+				}
+			}
 		}
 
 		return $zonefile;
 	}
-	
+
 	private function generateDkim($domain)
 	{
 		$zone_dkim = '';
 
 		if($this->settings['dkim']['use_dkim'] == '1'
-		   && $domain['dkim'] == '1'
-		   && $domain['dkim_pubkey'] != '')
+				&& $domain['dkim'] == '1'
+				&& $domain['dkim_pubkey'] != '')
 		{
 			// start
 			$dkim_txt = 'v=DKIM1;';
@@ -341,12 +348,12 @@ class bind
 					$alg.=$a.':';
 				}
 			}
-			if($alg != '') 
+			if($alg != '')
 			{
 				$alg = substr($alg, 0, -1);
 				$dkim_txt.= 'h='.$alg.';';
 			}
-			
+
 			// notes
 			if(trim($this->settings['dkim']['dkim_notes'] != ''))
 			{
@@ -355,16 +362,16 @@ class bind
 
 			// key
 			$dkim_txt.= 'k=rsa;p='.trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))).';';
-			
+
 			// service-type
 			if($this->settings['dkim']['dkim_servicetype'] == '1')
 			{
 				$dkim_txt.=	's=email;';
 			}
-			
+
 			// end-part
 			$dkim_txt.='t=s';
-			
+
 			// split if necessary
 			$txt_record_split='';
 			$lbr=50;
@@ -375,7 +382,7 @@ class bind
 
 			// dkim-entry
 			$zone_dkim .= 'dkim_' . $domain['dkim_id'] . '._domainkey IN TXT ' . $txt_record_split;
-			
+
 			// adsp-entry
 			if($this->settings['dkim']['dkim_add_adsp'] == "1")
 			{
@@ -418,7 +425,7 @@ class bind
 				$pubkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id'] . '.public');
 
 				if($domain['dkim_privkey'] == ''
-				   || $domain['dkim_pubkey'] == '')
+						|| $domain['dkim_pubkey'] == '')
 				{
 					$max_dkim_id = $this->db->query_first("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
 					$domain['dkim_id'] = (int)$max_dkim_id['max_dkim_id'] + 1;
@@ -434,7 +441,7 @@ class bind
 				}
 
 				if(!file_exists($privkey_filename)
-				   && $domain['dkim_privkey'] != '')
+						&& $domain['dkim_privkey'] != '')
 				{
 					$privkey_file_handler = fopen($privkey_filename, "w");
 					fwrite($privkey_file_handler, $domain['dkim_privkey']);
@@ -443,7 +450,7 @@ class bind
 				}
 
 				if(!file_exists($pubkey_filename)
-				   && $domain['dkim_pubkey'] != '')
+						&& $domain['dkim_pubkey'] != '')
 				{
 					$pubkey_file_handler = fopen($pubkey_filename, "w");
 					fwrite($pubkey_file_handler, $domain['dkim_pubkey']);

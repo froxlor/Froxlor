@@ -86,6 +86,13 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 				$returnvalue = (($newfieldvalue == makeCorrectDir($newfieldvalue)) || ($newfieldvalue == makeCorrectFile($newfieldvalue)));
 			}
 		}
+		elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'validate_ip') {
+			$newfieldvalue = validate_ip($newfieldvalue, true);
+			if ($newfieldvalue === false) {
+				$newfieldvalue = '';
+			}
+			$returnvalue = false;
+		}
 		elseif (preg_match('/^[^\r\n\t\f\0]*$/D', $newfieldvalue)) {
 			$returnvalue = true;
 		}

@@ -21,7 +21,7 @@ if(isFroxlorVersion('0.9-r0'))
 	showUpdateStep("Performing database updates");
 	/*
 	 * add missing database-updates if necessary (old: update/update_database.php)
-	 */
+	*/
 	if(isset($settings['system']['dbversion']) && (int)$settings['system']['dbversion'] < 1)
 	{
 		$db->query("ALTER TABLE `panel_databases` ADD `dbserver` INT( 11 ) UNSIGNED NOT NULL default '0';");
@@ -29,9 +29,9 @@ if(isFroxlorVersion('0.9-r0'))
 	if(isset($settings['system']['dbversion']) && (int)$settings['system']['dbversion'] < 2)
 	{
 		$db->query("ALTER TABLE `panel_ipsandports` CHANGE `ssl_cert` `ssl_cert_file` VARCHAR( 255 ) NOT NULL,
-						ADD `ssl_key_file` VARCHAR( 255 ) NOT NULL,
-						ADD `ssl_ca_file` VARCHAR( 255 ) NOT NULL,
-						ADD `default_vhostconf_domain` TEXT NOT NULL;");
+				ADD `ssl_key_file` VARCHAR( 255 ) NOT NULL,
+				ADD `ssl_ca_file` VARCHAR( 255 ) NOT NULL,
+				ADD `default_vhostconf_domain` TEXT NOT NULL;");
 
 		$db->query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ssl_key_file', `value` = '';");
 		$db->query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ssl_ca_file', `value` = '';");
@@ -40,7 +40,7 @@ if(isFroxlorVersion('0.9-r0'))
 
 	/*
 	 * remove billing tables in database
-	 */
+	*/
 	define('TABLE_BILLING_INVOICES', 'billing_invoices');
 	define('TABLE_BILLING_INVOICES_ADMINS', 'billing_invoices_admins');
 	define('TABLE_BILLING_INVOICE_CHANGES', 'billing_invoice_changes');
@@ -67,116 +67,116 @@ if(isFroxlorVersion('0.9-r0'))
 
 	/*
 	 * update panel_domains, panel_customers, panel_admins
-	 */
+	*/
 	$db->query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "`
-		  DROP `firstname`,
-		  DROP `title`,
-		  DROP `company`,
-		  DROP `street`,
-		  DROP `zipcode`,
-		  DROP `city`,
-		  DROP `country`,
-		  DROP `phone`,
-		  DROP `fax`,
-		  DROP `taxid`,
-		  DROP `contract_date`,
-		  DROP `contract_number`,
-		  DROP `contract_details`,
-		  DROP `included_domains_qty`,
-		  DROP `included_domains_tld`,
-		  DROP `additional_traffic_fee`,
-		  DROP `additional_traffic_unit`,
-		  DROP `additional_diskspace_fee`,
-		  DROP `additional_diskspace_unit`,
-		  DROP `taxclass`,
-		  DROP `setup_fee`,
-		  DROP `interval_fee`,
-		  DROP `interval_length`,
-		  DROP `interval_type`,
-		  DROP `interval_payment`,
-		  DROP `calc_tax`,
-		  DROP `term_of_payment`,
-		  DROP `payment_every`,
-		  DROP `payment_method`,
-		  DROP `bankaccount_holder`,
-		  DROP `bankaccount_number`,
-		  DROP `bankaccount_blz`,
-		  DROP `bankaccount_bank`,
-		  DROP `service_active`,
-		  DROP `servicestart_date`,
-		  DROP `serviceend_date`,
-		  DROP `lastinvoiced_date`,
-		  DROP `lastinvoiced_date_traffic`,
-		  DROP `lastinvoiced_date_diskspace`,
-		  DROP `customer_categories_once`,
-		  DROP `customer_categories_period`,
-		  DROP `invoice_fee`,
-		  DROP `invoice_fee_hosting`,
-		  DROP `invoice_fee_hosting_customers`,
-		  DROP `invoice_fee_domains`,
-		  DROP `invoice_fee_traffic`,
-		  DROP `invoice_fee_diskspace`,
-		  DROP `invoice_fee_other`,
-		  DROP `edit_billingdata`;");
+			DROP `firstname`,
+			DROP `title`,
+			DROP `company`,
+			DROP `street`,
+			DROP `zipcode`,
+			DROP `city`,
+			DROP `country`,
+			DROP `phone`,
+			DROP `fax`,
+			DROP `taxid`,
+			DROP `contract_date`,
+			DROP `contract_number`,
+			DROP `contract_details`,
+			DROP `included_domains_qty`,
+			DROP `included_domains_tld`,
+			DROP `additional_traffic_fee`,
+			DROP `additional_traffic_unit`,
+			DROP `additional_diskspace_fee`,
+			DROP `additional_diskspace_unit`,
+			DROP `taxclass`,
+			DROP `setup_fee`,
+			DROP `interval_fee`,
+			DROP `interval_length`,
+			DROP `interval_type`,
+			DROP `interval_payment`,
+			DROP `calc_tax`,
+			DROP `term_of_payment`,
+			DROP `payment_every`,
+			DROP `payment_method`,
+			DROP `bankaccount_holder`,
+			DROP `bankaccount_number`,
+			DROP `bankaccount_blz`,
+			DROP `bankaccount_bank`,
+			DROP `service_active`,
+			DROP `servicestart_date`,
+			DROP `serviceend_date`,
+			DROP `lastinvoiced_date`,
+			DROP `lastinvoiced_date_traffic`,
+			DROP `lastinvoiced_date_diskspace`,
+			DROP `customer_categories_once`,
+			DROP `customer_categories_period`,
+			DROP `invoice_fee`,
+			DROP `invoice_fee_hosting`,
+			DROP `invoice_fee_hosting_customers`,
+			DROP `invoice_fee_domains`,
+			DROP `invoice_fee_traffic`,
+			DROP `invoice_fee_diskspace`,
+			DROP `invoice_fee_other`,
+			DROP `edit_billingdata`;");
 
 	$db->query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "`
-		  DROP `taxid`,
-		  DROP `title`,
-		  DROP `country`,
-		  DROP `additional_service_description`,
-		  DROP `contract_date`,
-		  DROP `contract_number`,
-		  DROP `contract_details`,
-		  DROP `included_domains_qty`,
-		  DROP `included_domains_tld`,
-		  DROP `additional_traffic_fee`,
-		  DROP `additional_traffic_unit`,
-		  DROP `additional_diskspace_fee`,
-		  DROP `additional_diskspace_unit`,
-		  DROP `taxclass`,
-		  DROP `setup_fee`,
-		  DROP `interval_fee`,
-		  DROP `interval_length`,
-		  DROP `interval_type`,
-		  DROP `interval_payment`,
-		  DROP `calc_tax`,
-		  DROP `term_of_payment`,
-		  DROP `payment_every`,
-		  DROP `payment_method`,
-		  DROP `bankaccount_holder`,
-		  DROP `bankaccount_number`,
-		  DROP `bankaccount_blz`,
-		  DROP `bankaccount_bank`,
-		  DROP `service_active`,
-		  DROP `servicestart_date`,
-		  DROP `serviceend_date`,
-		  DROP `lastinvoiced_date`,
-		  DROP `lastinvoiced_date_traffic`,
-		  DROP `lastinvoiced_date_diskspace`,
-		  DROP `invoice_fee`,
-		  DROP `invoice_fee_hosting`,
-		  DROP `invoice_fee_domains`,
-		  DROP `invoice_fee_traffic`,
-		  DROP `invoice_fee_diskspace`,
-		  DROP `invoice_fee_other`;");
+			DROP `taxid`,
+			DROP `title`,
+			DROP `country`,
+			DROP `additional_service_description`,
+			DROP `contract_date`,
+			DROP `contract_number`,
+			DROP `contract_details`,
+			DROP `included_domains_qty`,
+			DROP `included_domains_tld`,
+			DROP `additional_traffic_fee`,
+			DROP `additional_traffic_unit`,
+			DROP `additional_diskspace_fee`,
+			DROP `additional_diskspace_unit`,
+			DROP `taxclass`,
+			DROP `setup_fee`,
+			DROP `interval_fee`,
+			DROP `interval_length`,
+			DROP `interval_type`,
+			DROP `interval_payment`,
+			DROP `calc_tax`,
+			DROP `term_of_payment`,
+			DROP `payment_every`,
+			DROP `payment_method`,
+			DROP `bankaccount_holder`,
+			DROP `bankaccount_number`,
+			DROP `bankaccount_blz`,
+			DROP `bankaccount_bank`,
+			DROP `service_active`,
+			DROP `servicestart_date`,
+			DROP `serviceend_date`,
+			DROP `lastinvoiced_date`,
+			DROP `lastinvoiced_date_traffic`,
+			DROP `lastinvoiced_date_diskspace`,
+			DROP `invoice_fee`,
+			DROP `invoice_fee_hosting`,
+			DROP `invoice_fee_domains`,
+			DROP `invoice_fee_traffic`,
+			DROP `invoice_fee_diskspace`,
+			DROP `invoice_fee_other`;");
 	$db->query("ALTER TABLE `panel_domains`
-		  DROP `taxclass`,
-		  DROP `setup_fee`,
-		  DROP `interval_fee`,
-		  DROP `interval_length`,
-		  DROP `interval_type`,
-		  DROP `interval_payment`,
-		  DROP `service_active`,
-		  DROP `servicestart_date`,
-		  DROP `serviceend_date`,
-		  DROP `lastinvoiced_date`;");
+			DROP `taxclass`,
+			DROP `setup_fee`,
+			DROP `interval_fee`,
+			DROP `interval_length`,
+			DROP `interval_type`,
+			DROP `interval_payment`,
+			DROP `service_active`,
+			DROP `servicestart_date`,
+			DROP `serviceend_date`,
+			DROP `lastinvoiced_date`;");
 
 	$db->query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "`
-		WHERE `settinggroup` = 'billing';");
+			WHERE `settinggroup` = 'billing';");
 
 	$db->query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "`
-		  MODIFY `traffic` BIGINT(30),
-		  MODIFY `traffic_used` BIGINT(30)");
+			MODIFY `traffic` BIGINT(30),
+			MODIFY `traffic_used` BIGINT(30)");
 
 	lastStepStatus(0);
 
@@ -192,7 +192,7 @@ if(isFroxlorVersion('0.9-r1'))
 	$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'spf_entry', '@	IN	TXT	\"v=spf1 a mx -all\"');");
 	$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `varname` = 'froxlor_graphic' WHERE `varname` = 'syscp_graphic'");
 	if(isset($settings['admin']['syscp_graphic'])
-	&& $settings['admin']['syscp_graphic'] != ''
+			&& $settings['admin']['syscp_graphic'] != ''
 	){
 		$settings['admin']['froxlor_graphic'] = $settings['admin']['syscp_graphic'];
 	}
@@ -226,15 +226,15 @@ if(isFroxlorVersion('0.9-r3'))
 	showUpdateStep("Creating new table 'cronjobs_run'");
 
 	$db->query("CREATE TABLE IF NOT EXISTS `cronjobs_run` (
-				`id` bigint(20) NOT NULL auto_increment,
-				`module` varchar(250) NOT NULL,
-				`cronfile` varchar(250) NOT NULL,
-				`lastrun` int(15) NOT NULL DEFAULT '0',
-				`interval` varchar(100) NOT NULL DEFAULT '5 MINUTE',
-				`isactive` tinyint(1) DEFAULT '1',
-				`desc_lng_key` varchar(100) NOT NULL DEFAULT 'cron_unknown_desc',
-				PRIMARY KEY  (`id`)
-				) ENGINE=MyISAM;");
+			`id` bigint(20) NOT NULL auto_increment,
+			`module` varchar(250) NOT NULL,
+			`cronfile` varchar(250) NOT NULL,
+			`lastrun` int(15) NOT NULL DEFAULT '0',
+			`interval` varchar(100) NOT NULL DEFAULT '5 MINUTE',
+			`isactive` tinyint(1) DEFAULT '1',
+			`desc_lng_key` varchar(100) NOT NULL DEFAULT 'cron_unknown_desc',
+			PRIMARY KEY  (`id`)
+	) ENGINE=MyISAM;");
 
 	lastStepStatus(0);
 	showUpdateStep("Inserting new values into table");
@@ -305,8 +305,8 @@ if(isFroxlorVersion('0.9.1'))
 	$result = $db->query_first("SELECT MAX(`guid`) as `latestguid` FROM `".TABLE_PANEL_CUSTOMERS."`");
 
 	if (isset($result['latestguid'])
-	&& (int)$result['latestguid'] > 0
-	&& $result['latestguid'] != $settings['system']['lastguid']
+			&& (int)$result['latestguid'] > 0
+			&& $result['latestguid'] != $settings['system']['lastguid']
 	) {
 		checkLastGuid();
 		lastStepStatus(1, 'fixed');
@@ -409,9 +409,9 @@ if(isFroxlorVersion('0.9.4'))
 	 * some users might still have the setting in their database
 	 * because we already had this back in older versions.
 	 * To not confuse Froxlor, we just update old settings.
-	 */
+	*/
 	if(isset($settings['system']['awstats_path'])
-	&& $settings['system']['awstats_path'] != ''
+			&& $settings['system']['awstats_path'] != ''
 	) {
 		showUpdateStep("Updating awstats path setting");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/usr/bin/' WHERE `settinggroup` = 'system' AND `varname` = 'awstats_path';");
@@ -425,7 +425,7 @@ if(isFroxlorVersion('0.9.4'))
 	}
 
 	if(isset($settings['system']['awstats_domain_file'])
-	&& $settings['system']['awstats_domain_file'] != ''
+			&& $settings['system']['awstats_domain_file'] != ''
 	) {
 		showUpdateStep("Updating awstats configuration path setting");
 		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `varname` = 'awstats_conf' WHERE `varname` = 'awstats_domain_file';");
@@ -543,28 +543,28 @@ if(isFroxlorVersion('0.9.6-svn2'))
 		$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'enabled', '1');");
 
 		if(isset($_POST['update_deferr_500'])
-		&& trim($_POST['update_deferr_500']) != ''
+				&& trim($_POST['update_deferr_500']) != ''
 		) {
 			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err500', '".$db->escape($_POST['update_deferr_500'])."');");
 			$err500 = true;
 		}
 
 		if(isset($_POST['update_deferr_401'])
-		&& trim($_POST['update_deferr_401']) != ''
+				&& trim($_POST['update_deferr_401']) != ''
 		) {
 			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err401', '".$db->escape($_POST['update_deferr_401'])."');");
 			$err401 = true;
 		}
 
 		if(isset($_POST['update_deferr_403'])
-		&& trim($_POST['update_deferr_403']) != ''
+				&& trim($_POST['update_deferr_403']) != ''
 		) {
 			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err403', '".$db->escape($_POST['update_deferr_403'])."');");
 			$err403 = true;
 		}
 
 		if(isset($_POST['update_deferr_404'])
-		&& trim($_POST['update_deferr_404']) != ''
+				&& trim($_POST['update_deferr_404']) != ''
 		) {
 			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err404', '".$db->escape($_POST['update_deferr_404'])."');");
 			$err404 = true;
@@ -672,17 +672,17 @@ if(isFroxlorVersion('0.9.6'))
 
 	showUpdateStep("Adding new tables to database");
 	$db->query("CREATE TABLE IF NOT EXISTS `redirect_codes` (
-  `id` int(5) NOT NULL auto_increment,
-  `code` varchar(3) NOT NULL,
-  `enabled` tinyint(1) DEFAULT '1',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;");
+			`id` int(5) NOT NULL auto_increment,
+			`code` varchar(3) NOT NULL,
+			`enabled` tinyint(1) DEFAULT '1',
+			PRIMARY KEY  (`id`)
+	) ENGINE=MyISAM;");
 
 	$db->query("CREATE TABLE IF NOT EXISTS `domain_redirect_codes` (
-  `rid` int(5) NOT NULL,
-  `did` int(11) unsigned NOT NULL,
-  UNIQUE KEY `rc` (`rid`, `did`)
-) ENGINE=MyISAM;");
+			`rid` int(5) NOT NULL,
+			`did` int(11) unsigned NOT NULL,
+			UNIQUE KEY `rc` (`rid`, `did`)
+	) ENGINE=MyISAM;");
 	lastStepStatus(0);
 
 	showUpdateStep("Filling new tables with default data");
@@ -1202,8 +1202,8 @@ if(isFroxlorVersion('0.9.14-svn6'))
 
 /*
  * revert database changes we did for multiserver-support
- * before branching - sorry guys :/
- */
+* before branching - sorry guys :/
+*/
 if(isFroxlorVersion('0.9.14-svn9'))
 {
 	showUpdateStep("Reverting multiserver-patches (svn)", false);
@@ -1396,17 +1396,17 @@ if(isFroxlorVersion('0.9.17-svn1'))
 
 	showUpdateStep("Adding new tables to database");
 	$db->query("CREATE TABLE IF NOT EXISTS `ipsandports_docrootsettings` (
-  `id` int(5) NOT NULL auto_increment,
-  `fid` int(11) NOT NULL,
-  `docrootsettings` text NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;");
+			`id` int(5) NOT NULL auto_increment,
+			`fid` int(11) NOT NULL,
+			`docrootsettings` text NOT NULL,
+			PRIMARY KEY  (`id`)
+	) ENGINE=MyISAM;");
 	$db->query("CREATE TABLE IF NOT EXISTS `domain_docrootsettings` (
-  `id` int(5) NOT NULL auto_increment,
-  `fid` int(11) NOT NULL,
-  `docrootsettings` text NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;");
+			`id` int(5) NOT NULL auto_increment,
+			`fid` int(11) NOT NULL,
+			`docrootsettings` text NOT NULL,
+			PRIMARY KEY  (`id`)
+	) ENGINE=MyISAM;");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.17-svn2');
@@ -1553,7 +1553,7 @@ if(isFroxlorVersion('0.9.20.1'))
 	// The customer-table may miss the columns, if installed a fresh 0.9.20 or 0.9.20.1 - add them
 	$result = $db->query("DESCRIBE `" . TABLE_PANEL_CUSTOMERS . "`");
 	$columnfound = 0;
-        while($row = $db->fetch_array($result))
+	while($row = $db->fetch_array($result))
 	{
 		if($row['Field'] == 'backup_allowed')
 		{
@@ -1832,8 +1832,8 @@ if(isFroxlorVersion('0.9.27')) {
 	if ($db->num_rows($handle) < 1) {
 		$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/');");
 	}
-    
- 	updateToVersion('0.9.28-svn1');
+
+	updateToVersion('0.9.28-svn1');
 }
 
 if(isFroxlorVersion('0.9.28-svn1')) {
@@ -1844,9 +1844,9 @@ if(isFroxlorVersion('0.9.28-svn1')) {
 	$db->query("ALTER TABLE  `panel_languages` ADD  `iso` CHAR( 3 ) NOT NULL DEFAULT  'foo' AFTER  `language`");
 
 	$handle = $db->query("SELECT `language` FROM `panel_languages` WHERE `iso`='foo'");
-    
+
 	$langauges = $db->fetch_array($handle);
-	foreach($languages as $language){    
+	foreach($languages as $language){
 		switch ($language) {
 			case "Deutsch":
 				$db->query("UPDATE `panel_languages` SET `iso`='de' WHERE `language` = 'Deutsch'");
@@ -1910,10 +1910,10 @@ if(isFroxlorVersion('0.9.28-svn1')) {
 if(isFroxlorVersion('0.9.28-svn2')) {
 	showUpdateStep("Updating from 0.9.28-svn2 to 0.9.28-svn3");
 	lastStepStatus(0);
-	
+
 	// change lenght of passwd column
 	$db->query("ALTER TABLE `" . TABLE_FTP_USERS . "` MODIFY `password` varchar(128) NOT NULL default ''");
-	
+
 	// Add default setting for vmail_maildirname if not already in place
 	$handle = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'system' AND `varname` = 'vmail_maildirname';");
 	if ($db->num_rows($handle) < 1) {
@@ -2092,9 +2092,16 @@ if (isFroxlorVersion('0.9.29-dev2')) {
 	showUpdateStep("Updating from 0.9.29-dev2 to 0.9.29-dev3", true);
 	lastStepStatus(0);
 
-	$system_afxrservers = isset($_POST['system_afxrservers']) ? $_POST['system_afxrservers'] : '';
-	if (!preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(, ?(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3}))*$/i', $system_afxrservers)) {
-		$system_afxrservers = '';
+	$system_afxrservers = isset($_POST['system_afxrservers']) ? trim($_POST['system_afxrservers']) : '';
+	if ($system_afxrservers != '') {
+		$axfrservers = explode(',', $system_afxrservers);
+		$newaxfrserver = array();
+		foreach ($axfrservers as $index => $axfrserver) {
+			if (validate_ip($axfrserver, true) !== false) {
+				$newaxfrserver[] = $axfrserver;
+			}
+		}
+		$system_afxrservers = implode(", ", $newaxfrserver);
 	}
 	showUpdateStep("Inserting new setting for AFXR server", true);
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'axfrservers', '".$db->escape($system_afxrservers)."');");
