@@ -58,7 +58,10 @@ function validateUrl($url) {
 
 		$ip = substr($ip, 0, strpos($ip, '/'));
 		// possible : in IP (when a port is given), #1173
-		$ip = substr($ip, 0, strpos($ip, ':'));
+		// but only if there actually IS ONE
+		if (strpos($ip, ':') !== false) {
+			$ip = substr($ip, 0, strpos($ip, ':'));
+		}
 
 		if (validate_ip($ip, true) !== false) {
 			return true;

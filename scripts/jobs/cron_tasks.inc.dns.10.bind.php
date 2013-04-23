@@ -137,7 +137,7 @@ class bind
 					}
 				}
 				// close allow-transfer
-				$bindconf_file.= '};' . "\n";
+				$bindconf_file.= '	};' . "\n";
 			}
 
 			$bindconf_file.= '};' . "\n";
