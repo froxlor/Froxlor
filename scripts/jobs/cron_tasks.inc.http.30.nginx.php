@@ -114,7 +114,7 @@ class nginx
 			{
 				$this->nginx_data[$vhosts_filename] = '';
 			}
-	
+
 			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
 			{
 				$this->nginx_data[$vhosts_filename].= 'error_page 401 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err401']) . ';' . "\n";
@@ -171,7 +171,7 @@ class nginx
 				/**
 				 * this HAS to be set for the default host in nginx or else no vhost will work
 				 */
-				$this->nginx_data[$vhost_filename].= "\t". 'listen    ' . $ip . ':' . $port . ' default;' . "\n";
+				$this->nginx_data[$vhost_filename].= "\t". 'listen ' . $ip .':'. $port .' default'. ( $port == 443 ? ' ssl' : null ) .';'. "\n";
 
 				$this->nginx_data[$vhost_filename].= "\t".'# Froxlor default vhost' . "\n";
 				$this->nginx_data[$vhost_filename].= "\t".'server_name    ' . $this->settings['system']['hostname'] . ';' . "\n";
@@ -397,7 +397,7 @@ class nginx
 		// open vhost-container
 		$vhost_content.= 'server { ' . "\n";
 		// listening statement (required)
-		$vhost_content.= "\t" . 'listen ' . $ipport . ';' . "\n";
+		$vhost_content.= "\t" .'listen '. $ipport . ( $ssl_vhost ? ' ssl' : null ) .';'. "\n";
 
 		// get all server-names
 		$vhost_content.= $this->getServerNames($domain);
@@ -418,11 +418,11 @@ class nginx
 
 			$vhost_content.= $this->getLogFiles($domain);
 			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
-			
+
 			if ($this->_deactivated == false) {
 				$vhost_content.= $this->create_pathOptions($domain);
 				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
-				
+
 				if ($domain['specialsettings'] != "") {
 					$vhost_content.= $domain['specialsettings'] . "\n";
 				}
@@ -531,7 +531,7 @@ class nginx
 					$path_options.= "\t".'} ' . "\n";
 				}
 //			}
-			
+
 			/**
 			 * Perl support
 			 * required the fastCGI wrapper to be running to receive the CGI requests.
@@ -553,7 +553,7 @@ class nginx
 				$path_options.= "\t\t" . 'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
 				$path_options.= "\t" . '}' . "\n";
 			}
-			
+
 		}
 
 		/*
@@ -854,13 +854,13 @@ class nginx
 		{
 			// Save one big file
 			$vhosts_file = '';
-				
+
 			// sort by filename so the order is:
 			// 1. subdomains
 			// 2. subdomains as main-domains
 			// 3. main-domains
 			ksort($this->nginx_data);
-				
+
 			foreach($this->nginx_data as $vhosts_filename => $vhost_content)
 			{
 				$vhosts_file.= $vhost_content . "\n\n";
@@ -936,3 +936,5 @@ class nginx
 		}
 	}
 }
+
+?>
