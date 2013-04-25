@@ -29,6 +29,13 @@ $(document).ready(function() {
 	$(".main").css('min-height', $("nav").height() - 34);
 	$(".dboarditem:last").css('min-height', $(".dboarditem:first").height());
 	$(".dboarditem:first").css('min-height', $(".dboarditem:last").height());
+	if ($(".dboarditem").length > 0) {
+		var plush = 20;
+		if ($(".messagewrapperfull").length > 0) {
+			plush+=$(".messagewrapperfull").height();
+		}
+		$("article").css('height', $(".dboarditem:last").height()+plush);
+	}
 
 	// set focus on username-field if on loginpage
 	if ($(".loginpage").length != 0) {
