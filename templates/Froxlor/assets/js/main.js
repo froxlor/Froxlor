@@ -34,6 +34,9 @@ $(document).ready(function() {
 		if ($(".messagewrapperfull").length > 0) {
 			plush+=$(".messagewrapperfull").height();
 		}
+		if ($(".dboarditemfull").length > 0) {
+			plush+=$(".dboarditemfull").height()+20;
+		}
 		$("article").css('height', $(".dboarditem:last").height()+plush);
 	}
 
