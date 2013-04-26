@@ -115,24 +115,36 @@ class nginx
 				$this->nginx_data[$vhosts_filename] = '';
 			}
 	
-			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
-			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 401 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err401']) . ';' . "\n";
+			if ($this->settings['defaultwebsrverrhandler']['err401'] != '') {
+				$defhandler = $this->settings['defaultwebsrverrhandler']['err401'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$this->nginx_data[$vhosts_filename].= 'error_page 401 ' . $defhandler . ';' . "\n";
 			}
 
-			if($this->settings['defaultwebsrverrhandler']['err403'] != '')
-			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 403 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err403']) . ';' . "\n";
+			if ($this->settings['defaultwebsrverrhandler']['err403'] != '') {
+				$defhandler = $this->settings['defaultwebsrverrhandler']['err403'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$this->nginx_data[$vhosts_filename].= 'error_page 403 ' . $defhandler . ';' . "\n";
 			}
 
-			if($this->settings['defaultwebsrverrhandler']['err404'] != '')
-			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 404 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err404']) . ';' . "\n";
+			if ($this->settings['defaultwebsrverrhandler']['err404'] != '') {
+				$defhandler = $this->settings['defaultwebsrverrhandler']['err404'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$this->nginx_data[$vhosts_filename].= 'error_page 404 ' . $defhandler . ';' . "\n";
 			}
 
-			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
-			{
-				$this->nginx_data[$vhosts_filename].= 'error_page 500 ' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err500']) . ';' . "\n";
+			if ($this->settings['defaultwebsrverrhandler']['err500'] != '') {
+				$defhandler = $this->settings['defaultwebsrverrhandler']['err500'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$this->nginx_data[$vhosts_filename].= 'error_page 500 ' . $defhandler . ';' . "\n";
 			}
 
 		}
@@ -467,15 +479,27 @@ class nginx
 		while ($row = $this->db->fetch_array($result)) {
 
 			if (!empty($row['error404path'])) {
-				$path_options.= "\t".'error_page   404    ' . makeCorrectFile($row['error404path']) . ';' . "\n";
+				$defhandler = $row['error404path'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$path_options.= "\t".'error_page   404    ' . $defhandler . ';' . "\n";
 			}
 
 			if (!empty($row['error403path'])) {
-				$path_options.= "\t".'error_page   403    ' . makeCorrectFile($row['error403path']) . ';' . "\n";
+				$defhandler = $row['error403path'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$path_options.= "\t".'error_page   403    ' . $defhandler . ';' . "\n";
 			}
 
 			if (!empty($row['error500path'])) {
-				$path_options.= "\t".'error_page   502 503 504    ' . makeCorrectFile($row['error500path']) . ';' . "\n";
+				$defhandler = $row['error500path'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$path_options.= "\t".'error_page   500 502 503 504    ' . $defhandler . ';' . "\n";
 			}
 
 //			if($row['options_indexes'] != '0')

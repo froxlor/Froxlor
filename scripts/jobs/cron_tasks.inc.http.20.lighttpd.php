@@ -247,14 +247,18 @@ class lighttpd
 		if($this->settings['defaultwebsrverrhandler']['enabled'] == '1'
 			&& $this->settings['defaultwebsrverrhandler']['err404'] != ''
 		) {
-			$vhosts_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/05_froxlor_default_errorhandler.conf');
+			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/05_froxlor_default_errorhandler.conf');
 
 			if(!isset($this->lighttpd_data[$vhost_filename]))
 			{
 				$this->lighttpd_data[$vhost_filename] = '';
 			}
 
-			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "'.makeCorrectFile($this->settings['defaultwebsrverrhandler']['err404']).'"';
+			$defhandler = $this->settings['defaultwebsrverrhandler']['err404'];
+			if (!validateUrl($defhandler)) {
+				$defhandler = makeCorrectFile($defhandler);
+			}
+			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "'.$defhandler.'"';
 		}
 	}
 
@@ -352,34 +356,28 @@ class lighttpd
 				$_pos = strrpos($_tmp_path, '/');
 				$_inc_path = substr($_tmp_path, $_pos+1);
 
+				// subdomain
 				if((int)$domain['parentdomainid'] == 0 
 					&& isCustomerStdSubdomain((int)$domain['id']) == false
 					&& ((int)$domain['ismainbutsubto'] == 0
 					|| domainMainToSubExists($domain['ismainbutsubto']) == false) 
 				) {
-					$vhost_no = '52';
-					if($ssl == '1')
-					{
-						$vhost_no = '62';
-					}
+					$vhost_no = '50';
 				}
+				// sub-but-main-domain
 				elseif((int)$domain['parentdomainid'] == 0 
 					&& isCustomerStdSubdomain((int)$domain['id']) == false
 					&& (int)$domain['ismainbutsubto'] > 0
 				) {
 					$vhost_no = '51';
-					if($ssl == '1')
-					{
-						$vhost_no = '61';
-					}
 				}
-				else
-				{
-					$vhost_no = '50';
-					if($ssl == '1')
-					{
-						$vhost_no = '60';
-					}
+				// main domain
+				else {
+					$vhost_no = '52';
+				}
+
+				if ($ssl == '1') {
+					$vhost_no = (int)$vhost_no += 10;
 				}
 
 				$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'].'/vhosts/'.$vhost_no.'_'.$domain['domain'].'.conf');
@@ -614,11 +612,14 @@ class lighttpd
 		$path_options = '';
 		$error_string = '';
 
-		while($row = $this->db->fetch_array($result))
-		{
-			if(!empty($row['error404path']))
-			{
-				$error_string.= '  server.error-handler-404 = "' . makeCorrectFile($domain['documentroot'] . '/' . $row['error404path']) . '"' . "\n\n";
+		while ($row = $this->db->fetch_array($result)) {
+
+			if (!empty($row['error404path'])) {
+				$defhandler = $row['error404path'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($domain['documentroot'] . '/' . $defhandler);
+				}
+				$error_string.= '  server.error-handler-404 = "' . $defhandler . '"' . "\n\n";
 			}
 
 			if($row['options_indexes'] != '0')
@@ -901,10 +902,10 @@ class lighttpd
 			$vhosts_file = '';
 
 			// sort by filename so the order is:
-			// 1. subdomains
+			// 1. main-domains
 			// 2. subdomains as main-domains
-			// 3. main-domains
-			// #437
+			// 3. subdomains
+			// (former #437) - #833 (the numbering is done in createLighttpdHosts())
 			ksort($this->lighttpd_data);
 
 			foreach($this->lighttpd_data as $vhosts_filename => $vhost_content)

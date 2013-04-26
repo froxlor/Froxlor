@@ -146,24 +146,36 @@ class apache
 				$this->virtualhosts_data[$vhosts_filename] = '';
 			}
 
-			if($this->settings['defaultwebsrverrhandler']['err401'] != '')
-			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 "' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err401']) . '"'."\n";
+			if ($this->settings['defaultwebsrverrhandler']['err401'] != '') {
+				$defhandler = $this->settings['defaultwebsrverrhandler']['err401'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 401 "' . $defhandler . '"'."\n";
 			}
 
-			if($this->settings['defaultwebsrverrhandler']['err403'] != '')
-			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 "' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err403']) . '"' . "\n";
+			if ($this->settings['defaultwebsrverrhandler']['err403'] != '') {
+				$defhandler = $this->settings['defaultwebsrverrhandler']['err403'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 403 "' . $defhandler . '"' . "\n";
 			}
 
-			if($this->settings['defaultwebsrverrhandler']['err404'] != '')
-			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 "' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err404']) . '"' . "\n";
+			if ($this->settings['defaultwebsrverrhandler']['err404'] != '') {
+				$defhandler = $this->settings['defaultwebsrverrhandler']['err404'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 404 "' . $defhandler . '"' . "\n";
 			}
 
-			if($this->settings['defaultwebsrverrhandler']['err500'] != '')
-			{
-				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 "' . makeCorrectFile($this->settings['defaultwebsrverrhandler']['err500']) . '"' . "\n";
+			if ($this->settings['defaultwebsrverrhandler']['err500'] != '') {
+				$defhandler = $this->settings['defaultwebsrverrhandler']['err500'];
+				if (!validateUrl($defhandler)) {
+					$defhandler = makeCorrectFile($defhandler);
+				}
+				$this->virtualhosts_data[$vhosts_filename].= 'ErrorDocument 500 "' . $defhandler . '"' . "\n";
 			}
 
 		}
@@ -961,22 +973,34 @@ class apache
 					fwrite($this->debugHandler, '  cron_tasks: Task3 - Setting Options -Indexes' . "\n");
 				}
 
-				if(isset($row_diroptions['error404path'])
-				   && $row_diroptions['error404path'] != '')
-				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 404 "' . makeCorrectFile($row_diroptions['error404path']) . '"' . "\n";
+				if (isset($row_diroptions['error404path'])
+					&& $row_diroptions['error404path'] != ''
+				) {
+					$defhandler = $row_diroptions['error404path'];
+					if (!validateUrl($defhandler)) {
+						$defhandler = makeCorrectFile($defhandler);
+					}
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 404 "' . $defhandler. '"' . "\n";
 				}
 
-				if(isset($row_diroptions['error403path'])
-				   && $row_diroptions['error403path'] != '')
-				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 403 "' . makeCorrectFile($row_diroptions['error403path']) . '"' . "\n";
+				if (isset($row_diroptions['error403path'])
+					&& $row_diroptions['error403path'] != ''
+				) {
+					$defhandler = $row_diroptions['error403path'];
+					if (!validateUrl($defhandler)) {
+						$defhandler = makeCorrectFile($defhandler);
+					}
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 403 "' . $defhandler . '"' . "\n";
 				}
 
-				if(isset($row_diroptions['error500path'])
-				   && $row_diroptions['error500path'] != '')
-				{
-					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 500 "' . makeCorrectFile($row_diroptions['error500path']) . '"' . "\n";
+				if (isset($row_diroptions['error500path'])
+					&& $row_diroptions['error500path'] != ''
+				) {
+					$defhandler = $row_diroptions['error500path'];
+					if (!validateUrl($defhandler)) {
+						$defhandler = makeCorrectFile($defhandler);
+					}
+					$this->diroptions_data[$diroptions_filename].= '  ErrorDocument 500 "' . $defhandler . '"' . "\n";
 				}
 
 				if($cperlenabled
