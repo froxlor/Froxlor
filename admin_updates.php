@@ -16,10 +16,9 @@
  */
 
 define('AREA', 'admin');
-require ("./lib/init.php");
+require('./lib/init.php');
 
-if($page == 'overview')
-{
+if ($page == 'overview') {
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
 
 	/**
@@ -29,13 +28,13 @@ if($page == 'overview')
 	 */
 	if (!isFroxlor()) {
 		if (!isset($settings['panel']['version'])
-		|| $settings['panel']['version'] == ''
+			|| $settings['panel']['version'] == ''
 		) {
 			$settings['panel']['version'] = '1.4.2.1';
 			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel','version','".$settings['panel']['version']."')");
 		}
 		if (!isset($settings['system']['dbversion'])
-		|| $settings['system']['dbversion'] == ''
+			|| $settings['system']['dbversion'] == ''
 		) {
 			/**
 			 * for syscp-stable (1.4.2.1) this value has to be 0
@@ -43,11 +42,9 @@ if($page == 'overview')
 			 * and the svn-version has its value in the database
 			 * -> bug #54
 			 */
-			
 			$result = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `varname` = 'dbversion'");
-			
-			if(isset($result['value']))
-			{
+
+			if (isset($result['value'])) {
 				$settings['system']['dbversion'] = (int)$result['value'];
 			} else {
 				$settings['system']['dbversion'] = 0;
@@ -55,40 +52,36 @@ if($page == 'overview')
 		}
 	}
 
-	if(hasUpdates($version))
-	{
+	if (hasUpdates($version)) {
 		$successful_update = false;
 		$message = '';
 
-		if(isset($_POST['send'])
-		&& $_POST['send'] == 'send')
-		{
-			if((isset($_POST['update_preconfig'])
+		if (isset($_POST['send'])
+			&& $_POST['send'] == 'send'
+		) {
+			if ((isset($_POST['update_preconfig'])
 				&& isset($_POST['update_changesagreed'])
 				&& intval($_POST['update_changesagreed']) != 0)
 				|| !isset($_POST['update_preconfig'])
 			) {
-				eval("echo \"" . getTemplate("update/update_start") . "\";");
+				eval("echo \"" . getTemplate('update/update_start') . "\";");
 	
 				include_once './install/updatesql.php';
 	
 				$redirect_url = 'admin_index.php?s=' . $s;
-				eval("echo \"" . getTemplate("update/update_end") . "\";");
+				eval("echo \"" . getTemplate('update/update_end') . "\";");
 	
 				updateCounters();
 				inserttask('1');
 				@chmod('./lib/userdata.inc.php', 0440);
 				
 				$successful_update = true;
-			}
-			else
-			{
-				$message = '<br /><strong style="color:#ff0000;">You have to agree that you have read the update notifications.</strong>';
+			} else {
+				$message = '<br /><strong style="color: red">You have to agree that you have read the update notifications.</strong>';
 			}
 		}
 
-		if(!$successful_update)
-		{
+		if (!$successful_update) {
 			$current_version = $settings['panel']['version'];
 			$new_version = $version;
 
@@ -96,29 +89,23 @@ if($page == 'overview')
 			$ui_text = str_replace('%curversion', $current_version, $ui_text);
 			$ui_text = str_replace('%newversion', $new_version, $ui_text);
 			$update_information = $ui_text;
-			
+
 			include_once './install/updates/preconfig.php';
 			$preconfig = getPreConfig($current_version);
-			if($preconfig != '')
-			{
-				$update_information .= '<br />'.$preconfig.$message;
+			if ($preconfig != '') {
+				$update_information .= '<br />' . $preconfig . $message;
 			}
-			
+
 			$update_information .= $lng['update']['update_information']['part_b'];
 
-			eval("echo \"" . getTemplate("update/index") . "\";");
+			eval("echo \"" . getTemplate('update/index') . "\";");
 		}
-	}
-	else
-	{
+	} else {
 		/*
 		 * @TODO version-webcheck check here
 		 */
-
 		$success_message = $lng['update']['noupdatesavail'];
 		$redirect_url = 'admin_index.php?s=' . $s;
-		eval("echo \"" . getTemplate("update/noupdatesavail") . "\";");
+		eval("echo \"" . getTemplate('update/noupdatesavail') . "\";");
 	}
 }
-
-?>
