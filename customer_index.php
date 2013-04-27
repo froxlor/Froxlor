@@ -22,35 +22,27 @@ define('AREA', 'customer');
 /**
  * Include our init.php, which manages Sessions, Language etc.
  */
+require('./lib/init.php');
 
-require ("./lib/init.php");
+if ($action == 'logout') {
+	$log->logAction(USR_ACTION, LOG_NOTICE, 'logged out');
 
-if($action == 'logout')
-{
-	$log->logAction(USR_ACTION, LOG_NOTICE, "logged out");
-
-	if($settings['session']['allow_multiple_login'] == '1')
-	{
-		$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['customerid'] . "' AND `adminsession` = '0' AND `hash` = '" . $s . "'");
+        $query = "DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['customerid'] . "' AND `adminsession` = '0'";
+	if ($settings['session']['allow_multiple_login'] == '1') {
+		$query .= " AND `hash` = '" . $s . "'";
 	}
-	else
-	{
-		$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['customerid'] . "' AND `adminsession` = '0'");
-	}
-
+	$db->query($query);
 	redirectTo('index.php');
 	exit;
 }
 
-if($page == 'overview')
-{
+if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_index");
 	$domains = '';
 	$result = $db->query("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `parentdomainid`='0' AND `id` <> '" . (int)$userinfo['standardsubdomain'] . "' ");
 	$domainArray = array();
 
-	while($row = $db->fetch_array($result))
-	{
+	while ($row = $db->fetch_array($result)) {
 		$domainArray[] = $idna_convert->decode($row['domain']);
 	}
 
@@ -77,22 +69,15 @@ if($page == 'overview')
 	$awaitingtickets = $opentickets['count'];
 	$awaitingtickets_text = '';
 
-	if($opentickets > 0)
-	{
+	if ($opentickets > 0) {
 		$awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="customer_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
 	}
 
-	eval("echo \"" . getTemplate("index/index") . "\";");
-}
-elseif($page == 'change_password')
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+	eval("echo \"" . getTemplate('index/index') . "\";");
+} elseif ($page == 'change_password') {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = validate($_POST['old_password'], 'old password');
-
-		if(md5($old_password) != $userinfo['password'])
-		{
+		if (md5($old_password) != $userinfo['password']) {
 			standard_error('oldpasswordnotcorrect');
 			exit;
 		}
@@ -100,45 +85,33 @@ elseif($page == 'change_password')
 		$new_password = validatePassword($_POST['new_password'], 'new password');
 		$new_password_confirm = validatePassword($_POST['new_password_confirm'], 'new password confirm');
 
-		if($old_password == '')
-		{
+		if ($old_password == '') {
 			standard_error(array('stringisempty', 'oldpassword'));
-		}
-		elseif($new_password == '')
-		{
+		} elseif($new_password == '') {
 			standard_error(array('stringisempty', 'newpassword'));
-		}
-		elseif($new_password_confirm == '')
-		{
+		} elseif($new_password_confirm == '') {
 			standard_error(array('stringisempty', 'newpasswordconfirm'));
-		}
-		elseif($new_password != $new_password_confirm)
-		{
+		} elseif($new_password != $new_password_confirm) {
 			standard_error('newpasswordconfirmerror');
-		}
-		else
-		{
+		} else {
 			$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `password`='" . md5($new_password) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `password`='" . md5($old_password) . "'");
 			$log->logAction(USR_ACTION, LOG_NOTICE, 'changed password');
 
-			if(isset($_POST['change_main_ftp'])
-			   && $_POST['change_main_ftp'] == 'true')
-			{
+			if (isset($_POST['change_main_ftp'])
+			   && $_POST['change_main_ftp'] == 'true'
+			) {
 				$cryptPassword = makeCryptPassword($new_password);
 				$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $db->escape($userinfo['loginname']) . "'");
 				$log->logAction(USR_ACTION, LOG_NOTICE, 'changed main ftp password');
 			}
 
-			if(isset($_POST['change_webalizer'])
-			   && $_POST['change_webalizer'] == 'true')
-			{
-				if(CRYPT_STD_DES == 1)
-				{
+			if (isset($_POST['change_webalizer'])
+			   && $_POST['change_webalizer'] == 'true'
+			) {
+				if (CRYPT_STD_DES == 1) {
 					$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
 					$new_webalizer_password = crypt($new_password, $saltfordescrypt);
-				}
-				else
-				{
+				} else {
 					$new_webalizer_password = crypt($new_password);
 				}
 
@@ -147,72 +120,52 @@ elseif($page == 'change_password')
 
 			redirectTo($filename, Array('s' => $s));
 		}
+	} else {
+		eval("echo \"" . getTemplate('index/change_password') . "\";");
 	}
-	else
-	{
-		eval("echo \"" . getTemplate("index/change_password") . "\";");
-	}
-}
-elseif($page == 'change_language')
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+} elseif ($page == 'change_language') {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$def_language = validate($_POST['def_language'], 'default language');
-
-		if(isset($languages[$def_language]))
-		{
+		if (isset($languages[$def_language])) {
 			$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `def_language`='" . $db->escape($def_language) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 			$db->query("UPDATE `" . TABLE_PANEL_SESSIONS . "` SET `language`='" . $db->escape($def_language) . "' WHERE `hash`='" . $db->escape($s) . "'");
 			$log->logAction(USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
 		}
 
 		redirectTo($filename, Array('s' => $s));
-	}
-	else
-	{
-		$language_options = '';
-
+	} else {
 		$default_lang = $settings['panel']['standardlanguage'];
-		if($userinfo['def_language'] != '') { 
+		if ($userinfo['def_language'] != '') { 
 			$default_lang = $userinfo['def_language'];
 		}
 
-		while(list($language_file, $language_name) = each($languages))
-		{
-			$language_options.= makeoption($language_name, $language_file, $default_lang, true);
+		$language_options = '';
+		while (list($language_file, $language_name) = each($languages)) {
+			$language_options .= makeoption($language_name, $language_file, $default_lang, true);
 		}
 
-		eval("echo \"" . getTemplate("index/change_language") . "\";");
+		eval("echo \"" . getTemplate('index/change_language') . "\";");
 	}
-}
-elseif($page == 'change_theme')
-{
-	if(isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+} elseif ($page == 'change_theme') {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$theme = validate($_POST['theme'], 'theme');
  
 		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `theme`='" . $db->escape($theme) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 		$db->query("UPDATE `" . TABLE_PANEL_SESSIONS . "` SET `theme`='" . $db->escape($theme) . "' WHERE `hash`='" . $db->escape($s) . "'");
 		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
 		redirectTo($filename, Array('s' => $s));
-	}
-	else
-	{
-		$theme_options = '';
-
+	} else {
 		$default_theme = $settings['panel']['default_theme'];
-		if($userinfo['theme'] != '') {
+		if ($userinfo['theme'] != '') {
 			$default_theme = $userinfo['theme'];
 		}
 
+		$theme_options = '';
 		$themes_avail = getThemes();
-		foreach($themes_avail as $t)
-		{
-			$theme_options.= makeoption($t, $t, $default_theme, true);
+		foreach ($themes_avail as $t) {
+			$theme_options .= makeoption($t, $t, $default_theme, true);
 		}
 
-		eval("echo \"" . getTemplate("index/change_theme") . "\";");
+		eval("echo \"" . getTemplate('index/change_theme') . "\";");
 	}
 }
