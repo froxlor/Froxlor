@@ -627,7 +627,7 @@ class lighttpd
 			) {
 				$filename = $domain['customerid'] . '.htpasswd';
 
-				if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') 
+				if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') {
 					$auth_backend_loaded[$domain['ipandport']] = 'yes';
 					$diroption_text.= 'auth.backend = "htpasswd"' . "\n";
 					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";

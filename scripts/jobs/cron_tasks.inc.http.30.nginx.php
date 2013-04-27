@@ -157,10 +157,28 @@ class nginx
 
 				$this->nginx_data[$vhost_filename] .= 'server { ' . "\n";
 
+				// check for ssl before anything else so
+				// we know whether it's an ssl vhost or not
+				$ssl_vhost = false;
+				if ($row_ipsandports['ssl'] == '1') {
+					if ($row_ipsandports['ssl_cert_file'] == '') {
+						$row_ipsandports['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+					}
+					if ($row_ipsandports['ssl_key_file'] == '') {
+						$row_ipsandports['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
+					}
+					if ($row_ipsandports['ssl_ca_file'] == '') {
+						$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
+					}
+					if ($row_ipsandports['ssl_cert_file'] != '') {
+						$ssl_vhost = true;
+					}
+				}
+
 				/**
 				 * this HAS to be set for the default host in nginx or else no vhost will work
 				 */
-				$this->nginx_data[$vhost_filename] .= "\t". 'listen    ' . $ip . ':' . $port . ' default;' . "\n";
+				$this->nginx_data[$vhost_filename] .= "\t". 'listen    ' . $ip . ':' . $port . ' default'. ($ssl_vhost == true ? ' ssl' : '') . ';' . "\n";
 
 				$this->nginx_data[$vhost_filename] .= "\t".'# Froxlor default vhost' . "\n";
 				$this->nginx_data[$vhost_filename] .= "\t".'server_name    ' . $this->settings['system']['hostname'] . ';' . "\n";
@@ -196,17 +214,7 @@ class nginx
 				 * SSL config options
 				 */
 				if ($row_ipsandports['ssl'] == '1') {
-					if ($row_ipsandports['ssl_cert_file'] == '') {
-						$row_ipsandports['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
-					}
-					if ($row_ipsandports['ssl_key_file'] == '') {
-						$row_ipsandports['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
-					}
-					if ($row_ipsandports['ssl_ca_file'] == '') {
-						$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
-					}
 					if ($row_ipsandports['ssl_cert_file'] != '') {
-						$this->nginx_data[$vhost_filename] .= "\t" . 'ssl on;' . "\n";
 						$this->nginx_data[$vhost_filename] .= "\t" . 'ssl_certificate ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . ';' . "\n";
 					}
 					if ($row_ipsandports['ssl_key_file'] != '') {
@@ -367,7 +375,7 @@ class nginx
 		// open vhost-container
 		$vhost_content .= 'server { ' . "\n";
 		// listening statement (required)
-		$vhost_content .= "\t" . 'listen ' . $ipport . ';' . "\n";
+		$vhost_content .= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ';' . "\n";
 
 		// get all server-names
 		$vhost_content .= $this->getServerNames($domain);
