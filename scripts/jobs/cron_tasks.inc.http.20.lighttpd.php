@@ -68,8 +68,7 @@ class lighttpd
 
 	public function reload()
 	{
-		if((int)$this->settings['phpfpm']['enabled'] == 1)
-		{
+		if ((int)$this->settings['phpfpm']['enabled'] == 1) {
 			fwrite($this->debugHandler, '   lighttpd::reload: reloading php-fpm' . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
 			safe_exec(escapeshellcmd($this->settings['phpfpm']['reload']));
@@ -84,16 +83,12 @@ class lighttpd
 		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC";
 		$result_ipsandports = $this->db->query($query);
 
-		while($row_ipsandports = $this->db->fetch_array($result_ipsandports))
-		{
-			if(filter_var($row_ipsandports['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-			{
+		while ($row_ipsandports = $this->db->fetch_array($result_ipsandports)) {
+			if (filter_var($row_ipsandports['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ip = '[' . $row_ipsandports['ip'] . ']';
 				$port = $row_ipsandports['port'];
 				$ipv6 = 'server.use-ipv6 = "enable"'."\n";
-			}
-			else
-			{
+			} else {
 				$ip = $row_ipsandports['ip'];
 				$port = $row_ipsandports['port'];
 				$ipv6 = '';
@@ -103,39 +98,30 @@ class lighttpd
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ip . ":" . $port);
 			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
-			if(!isset($this->lighttpd_data[$vhost_filename]))
-			{
+			if (!isset($this->lighttpd_data[$vhost_filename])) {
 				$this->lighttpd_data[$vhost_filename] = '';
 			}
 
 			$this->lighttpd_data[$vhost_filename].= '$SERVER["socket"] == "' . $ip . ':' . $port . '" {' . "\n";
 
-			if($row_ipsandports['listen_statement'] == '1')
-			{
+			if ($row_ipsandports['listen_statement'] == '1') {
 				$this->lighttpd_data[$vhost_filename].= 'server.port = ' . $port . "\n";
 				$this->lighttpd_data[$vhost_filename].= 'server.bind = "' . $ip . '"' . "\n";
 				$this->lighttpd_data[$vhost_filename].= $ipv6;
 			}
-			
-			if($row_ipsandports['vhostcontainer'] == '1')
-			{
+
+			if ($row_ipsandports['vhostcontainer'] == '1') {
 				$myhost = str_replace('.', '\.', $this->settings['system']['hostname']);
 				$this->lighttpd_data[$vhost_filename].= '# Froxlor default vhost' . "\n";
 				$this->lighttpd_data[$vhost_filename].= '$HTTP["host"] =~ "^(?:www\.|)' . $myhost . '$" {' . "\n";
 
-				if($row_ipsandports['docroot'] == '')
-				{
-					if($this->settings['system']['froxlordirectlyviahostname'])
-					{
+				if ($row_ipsandports['docroot'] == '') {
+					if ($this->settings['system']['froxlordirectlyviahostname']) {
 						$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
-					}
-					else 
-					{
+					} else {
 						$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
 					}
-				}
-				else
-				{
+				} else {
 					// user-defined docroot, #417
 					$mypath = makeCorrectDir($row_ipsandports['docroot']);
 				}
@@ -154,8 +140,7 @@ class lighttpd
 				/**
 				 * own php-fpm vhost
 				 */
-				if((int)$this->settings['phpfpm']['enabled'] == 1)
-				{
+				if ((int)$this->settings['phpfpm']['enabled'] == 1) {
 					$domain = array(
 						'id' => 'none',
 						'domain' => $this->settings['system']['hostname'],
@@ -182,33 +167,27 @@ class lighttpd
 					$this->lighttpd_data[$vhost_filename].=	'  )'."\n";
 				}
 
-				if($row_ipsandports['specialsettings'] != '')
-				{
+				if ($row_ipsandports['specialsettings'] != '') {
 					$this->lighttpd_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";
 				}
 
 				$this->lighttpd_data[$vhost_filename].= '}' . "\n";
 			}
 	
-			if($row_ipsandports['ssl'] == '1')
-			{
-				if($row_ipsandports['ssl_cert_file'] == '')
-				{
+			if ($row_ipsandports['ssl'] == '1') {
+				if ($row_ipsandports['ssl_cert_file'] == '') {
 					$row_ipsandports['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
 				}
 
-				if($row_ipsandports['ssl_ca_file'] == '')
-				{
+				if ($row_ipsandports['ssl_ca_file'] == '') {
 					$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
 				}
 				
-				if($row_ipsandports['ssl_cert_file'] != '')
-				{
+				if ($row_ipsandports['ssl_cert_file'] != '') {
 					$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
 					$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . '"' . "\n";
-					
-					if($row_ipsandports['ssl_ca_file'] != '')
-					{
+
+					if ($row_ipsandports['ssl_ca_file'] != '') {
 						$this->lighttpd_data[$vhost_filename].= 'ssl.ca-file = "' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . '"' . "\n";
 					}
 				}
@@ -220,12 +199,11 @@ class lighttpd
 			 * refs #70
 			 */
 			$vhosts = $this->createLighttpdHosts($row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'], $vhost_filename);
-			if($vhosts !== null && is_array($vhosts) && isset($vhosts[0]))
-			{
+			if ($vhosts !== null && is_array($vhosts) && isset($vhosts[0])) {
 				// sort vhosts by number (subdomains first!)
 				sort($vhosts);
 
-				foreach($vhosts as $vhost) {
+				foreach ($vhosts as $vhost) {
 					$this->lighttpd_data[$vhost_filename].= ' include "'.$vhost.'"'."\n";
 				}
 			}
@@ -244,13 +222,12 @@ class lighttpd
 	 */
 	private function _createStandardErrorHandler()
 	{
-		if($this->settings['defaultwebsrverrhandler']['enabled'] == '1'
+		if ($this->settings['defaultwebsrverrhandler']['enabled'] == '1'
 			&& $this->settings['defaultwebsrverrhandler']['err404'] != ''
 		) {
 			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/05_froxlor_default_errorhandler.conf');
 
-			if(!isset($this->lighttpd_data[$vhost_filename]))
-			{
+			if (!isset($this->lighttpd_data[$vhost_filename])) {
 				$this->lighttpd_data[$vhost_filename] = '';
 			}
 
@@ -269,21 +246,18 @@ class lighttpd
 		$result_htpasswds = $this->db->query($htpasswd_query);
 
 		$htaccess_text = '';
-		while($row_htpasswds = $this->db->fetch_array($result_htpasswds))
-		{
+		while ($row_htpasswds = $this->db->fetch_array($result_htpasswds)) {
 			$row_htpasswds['path'] = makeCorrectDir($row_htpasswds['path']);
 			mkDirWithCorrectOwnership($domain['documentroot'], $row_htpasswds['path'], $domain['guid'], $domain['guid']);
 			
 			$filename = $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd';
 
-			if(!in_array($row_htpasswds['path'], $needed_htpasswds))
-			{
-				if(!isset($this->needed_htpasswds[$filename])) {
+			if (!in_array($row_htpasswds['path'], $needed_htpasswds)) {
+				if (!isset($this->needed_htpasswds[$filename])) {
 					$this->needed_htpasswds[$filename] = '';
 				}
 
-				if(!strstr($this->needed_htpasswds[$filename], $row_htpasswds['username'] . ':' . $row_htpasswds['password']))
-				{
+				if (!strstr($this->needed_htpasswds[$filename], $row_htpasswds['username'] . ':' . $row_htpasswds['password'])) {
 					$this->needed_htpasswds[$filename].= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 				}
 
@@ -331,22 +305,16 @@ class lighttpd
 		$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `ip`='" . $ip . "' AND `port`='" . $port . "'";
 		$ipandport = $this->db->query_first($query);
 
-		if($ssl == '0')
-		{
+		if ($ssl == '0') {
 			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC";
-		}
-		else
-		{
+		} else {
 			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ssl_ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC";
 		}
 
 		$included_vhosts = array();
 		$result_domains = $this->db->query($query2);
-		while($domain = $this->db->fetch_array($result_domains))
-		{
-			
-			if (is_dir($this->settings['system']['apacheconf_vhost']))
-			{
+		while ($domain = $this->db->fetch_array($result_domains)) {
+			if (is_dir($this->settings['system']['apacheconf_vhost'])) {
 				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'].'/vhosts/')));
 				
 				// determine correct include-path:
@@ -392,13 +360,10 @@ class lighttpd
 				&& !is_dir($this->settings['system']['apacheconf_vhost']))
 				|| is_dir($this->settings['system']['apacheconf_vhost'])
 			) {
-				if($ssl == '1')
-				{
+				if ($ssl == '1') {
 					$ssl_vhost = true;
 					$ips_and_ports_index = 'ssl_ipandport';
-				}
-				else
-				{
+				} else {
 					$ssl_vhost = false;
 					$ips_and_ports_index = 'ipandport';
 				}
@@ -418,13 +383,11 @@ class lighttpd
 			return '';
 		}
 
-		if($ssl_vhost === true
-		&& $domain['ssl'] == '1')
-		{
+		if ($ssl_vhost === true
+			&& $domain['ssl'] == '1'
+		) {
 			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ssl_ipandport'] . "'";
-		}
-		else
-		{
+		} else {
 			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ipandport'] . "'";
 		}
 
@@ -434,12 +397,9 @@ class lighttpd
 		$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
 		$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
 
-		if(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-		{
+		if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 			$ipport = '[' . $domain['ip'] . ']:' . $domain['port'];
-		}
-		else
-		{
+		} else {
 			$ipport = $domain['ip'] . ':' . $domain['port'];
 		}
 
@@ -454,14 +414,11 @@ class lighttpd
 			$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
 		}
 
-		if(preg_match('/^https?\:\/\//', $domain['documentroot']))
-		{
+		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$vhost_content.= '  url.redirect = (' . "\n";
 			$vhost_content.= '     "^/(.*)$" => "'. $this->idnaConvert->encode($domain['documentroot']) . '$1"'. "\n";
 			$vhost_content.= '  )' . "\n";
-		}
-		else
-		{
+		} else {
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 
 			$only_webroot = false;
@@ -508,23 +465,19 @@ class lighttpd
 			&& $domain['ssl'] == '1'
 			&& (int)$this->settings['system']['use_ssl'] == 1
 		) {
-			if($domain['ssl_cert_file'] == '')
-			{
+			if ($domain['ssl_cert_file'] == '') {
 				$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
 			}
 
-			if($domain['ssl_ca_file'] == '')
-			{
+			if ($domain['ssl_ca_file'] == '') {
 				$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
 			}
 			
-			if($domain['ssl_cert_file'] != '')
-			{
+			if ($domain['ssl_cert_file'] != '') {
 				$ssl_settings.= 'ssl.engine = "enable"' . "\n";
 				$ssl_settings.= 'ssl.pemfile = "' . makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
-				
-				if($domain['ssl_ca_file'] != '')
-				{
+
+				if ($domain['ssl_ca_file'] != '') {
 					$ssl_settings.= 'ssl.ca-file = "' . makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
 				}
 			}
@@ -536,15 +489,13 @@ class lighttpd
 
 		$logfiles_text = '';
 		
-		if($domain['speciallogfile'] == '1') {
-
+		$speciallogfile = '';
+		if ($domain['speciallogfile'] == '1') {
 			if ($domain['parentdomainid'] == '0') {
 				$speciallogfile = '-' . $domain['domain'];
 			} else {
 				$speciallogfile = '-' . $domain['parentdomain'];
 			}
-		} else {
-			$speciallogfile = '';
 		}
 
 		// The normal access/error - logging is enabled
@@ -622,10 +573,8 @@ class lighttpd
 				$error_string.= '  server.error-handler-404 = "' . $defhandler . '"' . "\n\n";
 			}
 
-			if($row['options_indexes'] != '0')
-			{
-				if(!empty($error_string))
-				{
+			if ($row['options_indexes'] != '0') {
+				if (!empty($error_string)) {
 					$path_options.= $error_string;
 					// reset $error_string here to prevent duplicate entries
 					$error_string = '';
@@ -635,21 +584,19 @@ class lighttpd
 				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
-				if($row['path'] != $domain['documentroot']) {
+				if ($row['path'] != $domain['documentroot']) {
 					$path = substr($path, 0, -1);
 				}
 				$path_options.= '  $HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
 				$path_options.= "\t" . 'dir-listing.activate = "enable"' . "\n";
 				$path_options.= '  }' . "\n\n";
-			}
-			else
-			{
+			} else {
 				$path_options = $error_string;
 			}
 
-			if(customerHasPerlEnabled($domain['customerid'])
-				&& $row['options_cgi'] != '0')
-			{
+			if (customerHasPerlEnabled($domain['customerid'])
+				&& $row['options_cgi'] != '0'
+			) {
 				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
 				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
 
@@ -674,24 +621,20 @@ class lighttpd
 		$query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `customerid`='" . $domain['customerid'] . "'";
 		$result = $this->db->query($query);
 
-		while($row_htpasswds = $this->db->fetch_array($result))
-		{
-			if($auth_backend_loaded[$domain['ipandport']] != 'yes'
-			&& $auth_backend_loaded[$domain['ssl_ipandport']] != 'yes')
-			{
+		while ($row_htpasswds = $this->db->fetch_array($result)) {
+			if ($auth_backend_loaded[$domain['ipandport']] != 'yes'
+				&& $auth_backend_loaded[$domain['ssl_ipandport']] != 'yes'
+			) {
 				$filename = $domain['customerid'] . '.htpasswd';
 
-				if($this->auth_backend_loaded[$domain['ipandport']] != 'yes')
-				{
+				if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') 
 					$auth_backend_loaded[$domain['ipandport']] = 'yes';
 					$diroption_text.= 'auth.backend = "htpasswd"' . "\n";
 					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text.= 'auth.require = ( ' . "\n";
 					$previous_domain_id = '1';
-				}
-				elseif($this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes')
-				{
+				} elseif($this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
 					$auth_backend_loaded[$domain['ssl_ipandport']] = 'yes';
 					$diroption_text.= 'auth.backend= "htpasswd"' . "\n";
 					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
@@ -708,13 +651,11 @@ class lighttpd
 			$diroption_text.= '   "require" => "valid-user"' . "\n";
 			$diroption_text.= ')' . "\n";
 
-			if($this->auth_backend_loaded[$domain['ssl_ipandport']] == 'yes')
-			{
+			if ($this->auth_backend_loaded[$domain['ssl_ipandport']] == 'yes') {
 				$this->needed_htpasswds[$domain['ssl_ipandport']].= $diroption_text;
 			}
 
-			if($this->auth_backend_loaded[$domain['ipandport']] != 'yes')
-			{
+			if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') {
 				$this->needed_htpasswds[$domain['ipandport']].= $diroption_text;
 			}
 		}
@@ -727,73 +668,51 @@ class lighttpd
 		$server_string = array();
 		$domain_name = str_replace('.', '\.', $domain['domain']);
 
-		if($domain['iswildcarddomain'] == '1')
-		{
+		if ($domain['iswildcarddomain'] == '1') {
 			$server_string[] = '(?:^|\.)' . $domain_name . '$';
-		}
-		else
-		{
-			if($domain['wwwserveralias'] == '1')
-			{
+		} else {
+			if ($domain['wwwserveralias'] == '1') {
 				$server_string[] = '^(?:www\.|)' . $domain_name . '$';
-			}
-			else
-			{
+			} else {
 				$server_string[] = '^'.$domain_name.'$';
 			}
 		}
 
 		$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . $domain['id'] . '\'');
 
-		while(($alias_domain = $this->db->fetch_array($alias_domains)) !== false)
-		{
+		while (($alias_domain = $this->db->fetch_array($alias_domains)) !== false) {
 			$alias_domain_name = ereg_replace('\.', '\.', $alias_domain['domain']);
 
-			if($alias_domain['iswildcarddomain'] == '1')
-			{
+			if ($alias_domain['iswildcarddomain'] == '1') {
 				$server_string[] = '(?:^|\.)' . $alias_domain_name . '$';
-			}
-			else
-			{
-				if($alias_domain['wwwserveralias'] == '1')
-				{
+			} else {
+				if ($alias_domain['wwwserveralias'] == '1') {
 					$server_string[] = '^(?:www\.|)' . $alias_domain_name . '$';
-				}
-				else
-				{
+				} else {
 					$server_string[] = '^'.$alias_domain_name . '$';
 				}
 			}
 		}
 
-		for ($i = 0;$i < sizeof($server_string);$i++)
-		{
+		for ($i = 0;$i < sizeof($server_string); $i++) {
 			$data = $server_string[$i];
 
-			if(sizeof($server_string) > 1)
-			{
-				if($i == 0)
-				{
+			if (sizeof($server_string) > 1) {
+				if ($i == 0) {
 					$servernames_text = '(' . $data . '|';
+				} elseif(sizeof($server_string) - 1 == $i) {
+					$servernames_text .= $data . ')';
+				} else {
+					$servernames_text .= $data . '|';
 				}
-				elseif(sizeof($server_string) - 1 == $i)
-				{
-					$servernames_text.= $data . ')';
-				}
-				else
-				{
-					$servernames_text.= $data . '|';
-				}
-			}
-			else
-			{
+			} else {
 				$servernames_text = $data;
 			}
 		}
 
 		unset($data);
 
-		if($servernames_text != '') {
+		if ($servernames_text != '') {
 			$servernames_text = '$HTTP["host"] =~ "' . $servernames_text . '"';
 		} else {
 			$servernames_text = '$HTTP["host"] == "' . $domain['domain'] . '"';
@@ -806,36 +725,30 @@ class lighttpd
 	{
 		$webroot_text = '';
 
-		if($domain['deactivated'] == '1'
-		&& $this->settings['system']['deactivateddocroot'] != '')
-		{
+		if ($domain['deactivated'] == '1'
+			&& $this->settings['system']['deactivateddocroot'] != ''
+		) {
 			$webroot_text.= '  # Using docroot for deactivated users...' . "\n";
 			$webroot_text.= '  server.document-root = "' . makeCorrectDir($this->settings['system']['deactivateddocroot']) . "\"\n";
 			$this->_deactivated = true;
-		}
-		else
-		{
-			if($ssl === false
-			&& $domain['ssl_redirect'] == '1')
-			{
+		} else {
+			if ($ssl === false
+				&& $domain['ssl_redirect'] == '1'
+			) {
 				$redirect_domain = $this->idnaConvert->encode('https://' . $domain['domain']);
 				$webroot_text.= '  url.redirect = ('."\n";
 				$webroot_text.= "\t" . '"^/(.*)" => "' . $redirect_domain . '/$1",' . "\n";
 				$webroot_text.= "\t" . '"" => "' . $redirect_domain . '",' . "\n";
 				$webroot_text.= "\t" . '"/" => "' . $redirect_domain . '"' . "\n";
 				$webroot_text.= '  )'."\n";
-			}
-			elseif(preg_match("#^https?://#i", $domain['documentroot']))
-			{
+			} elseif(preg_match("#^https?://#i", $domain['documentroot'])) {
 				$redirect_domain = $this->idnaConvert->encode($domain['documentroot']);
 				$webroot_text.= '  url.redirect = ('."\n";
 				$webroot_text.= "\t" . '"^/(.*)" => "' . $redirect_domain . '/$1",' . "\n";
 				$webroot_text.= "\t" . '"" => "' . $redirect_domain . '",' . "\n";
 				$webroot_text.= "\t" . '"/" => "' . $redirect_domain . '"' . "\n";
 				$webroot_text.= '  )'."\n";
-			}
-			else
-			{
+			} else {
 				$webroot_text.= '  server.document-root = "' . makeCorrectDir($domain['documentroot']) . "\"\n";
 			}
 			$this->_deactivated = false;
@@ -848,12 +761,11 @@ class lighttpd
 	*	Lets set the text part for the stats software
 	*/
 
-	protected function getStats($domain) {
-
+	protected function getStats($domain)
+	{
 		$stats_text = '';
 
 		if ($domain['speciallogfile'] == '1') {
-
 			if ($domain['parentdomainid'] == '0') {
 				if ($this->settings['system']['awstats_enabled'] == '1') {
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
@@ -896,8 +808,7 @@ class lighttpd
 		fwrite($this->debugHandler, '  lighttpd::writeConfigs: rebuilding ' . $this->settings['system']['apacheconf_vhost'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . $this->settings['system']['apacheconf_vhost']);
 
-		if(!isConfigDir($this->settings['system']['apacheconf_vhost']))
-		{
+		if (!isConfigDir($this->settings['system']['apacheconf_vhost'])) {
 			// Save one big file
 			$vhosts_file = '';
 
@@ -908,41 +819,32 @@ class lighttpd
 			// (former #437) - #833 (the numbering is done in createLighttpdHosts())
 			ksort($this->lighttpd_data);
 
-			foreach($this->lighttpd_data as $vhosts_filename => $vhost_content)
-			{
+			foreach ($this->lighttpd_data as $vhosts_filename => $vhost_content) {
 				$vhosts_file.= $vhost_content . "\n\n";
 			}
 
 			$vhosts_filename = $this->settings['system']['apacheconf_vhost'];
 
 			// Apply header
-
 			$vhosts_file = '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n" . $vhosts_file;
 			$vhosts_file_handler = fopen($vhosts_filename, 'w');
 			fwrite($vhosts_file_handler, $vhosts_file);
 			fclose($vhosts_file_handler);
-		}
-		else
-		{
-			if(!file_exists($this->settings['system']['apacheconf_vhost']))
-			{
+		} else {
+			if (!file_exists($this->settings['system']['apacheconf_vhost'])) {
 				fwrite($this->debugHandler, '  lighttpd::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'])) . "\n");
 				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'])));
 				safe_exec('mkdir ' . escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'])));
 			}
 
 			// Write a single file for every vhost
-
-			foreach($this->lighttpd_data as $vhosts_filename => $vhosts_file)
-			{
+			foreach ($this->lighttpd_data as $vhosts_filename => $vhosts_file) {
 				$this->known_filenames[] = basename($vhosts_filename);
 
 				// Apply header
-
 				$vhosts_file = '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n" . $vhosts_file;
 
-				if(!empty($vhosts_filename))
-				{
+				if (!empty($vhosts_filename)) {
 					$vhosts_file_handler = fopen($vhosts_filename, 'w');
 					fwrite($vhosts_file_handler, $vhosts_file);
 					fclose($vhosts_file_handler);
@@ -952,12 +854,9 @@ class lighttpd
 
 		// Write the diroptions
 
-		if(isConfigDir($this->settings['system']['apacheconf_htpasswddir']))
-		{
-			foreach($this->needed_htpasswds as $key => $data)
-			{
-				if(!is_dir($this->settings['system']['apacheconf_htpasswddir']))
-				{
+		if (isConfigDir($this->settings['system']['apacheconf_htpasswddir'])) {
+			foreach ($this->needed_htpasswds as $key => $data) {
+				if (!is_dir($this->settings['system']['apacheconf_htpasswddir'])) {
 					mkdir(makeCorrectDir($this->settings['system']['apacheconf_htpasswddir']));
 				}
 
