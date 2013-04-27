@@ -22,30 +22,22 @@ define('AREA', 'customer');
 /**
  * Include our init.php, which manages Sessions, Language etc.
  */
-
 $need_db_sql_data = true;
 $need_root_db_sql_data = true;
-require ("./lib/init.php");
+require('./lib/init.php');
 
-if(isset($_POST['id']))
-{
+if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
-}
-elseif(isset($_GET['id']))
-{
+} elseif(isset($_GET['id'])) {
 	$id = intval($_GET['id']);
 }
 
-if($page == 'overview')
-{
+if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_mysql");
 	$lng['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], $lng['mysql']['description']);
-	eval("echo \"" . getTemplate("mysql/mysql") . "\";");
-}
-elseif($page == 'mysqls')
-{
-	if($action == '')
-	{
+	eval("echo \"" . getTemplate('mysql/mysql') . "\";");
+} elseif($page == 'mysqls') {
+	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_mysql::mysqls");
 		$fields = array(
 			'databasename' => $lng['mysql']['databasename'],
@@ -64,53 +56,44 @@ elseif($page == 'mysqls')
 
 		// Begin root-session
 		$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
-		while($row = $db->fetch_array($result))
-		{
-			if($paging->checkDisplay($i))
-			{
+		while ($row = $db->fetch_array($result)) {
+			if ($paging->checkDisplay($i)) {
 				$row = htmlentities_array($row);
 				$mbdata = $db_root->query_first("SELECT SUM( data_length + index_length) / 1024 / 1024 'MB' FROM information_schema.TABLES WHERE table_schema = '" . $db_root->escape($row['databasename']) . "' GROUP BY table_schema ;");
 				$row['size'] = number_format($mbdata['MB'], 3, '.', '');
-				eval("\$mysqls.=\"" . getTemplate("mysql/mysqls_database") . "\";");
+				eval("\$mysqls.=\"" . getTemplate('mysql/mysqls_database') . "\";");
 				$count++;
 			}
-
 			$i++;
 		}
 		$db_root->close();
 		// End root-session
 
 		$mysqls_count = $db->num_rows($result);
-		eval("echo \"" . getTemplate("mysql/mysqls") . "\";");
-	}
-	elseif($action == 'delete'
-	       && $id != 0)
-	{
+		eval("echo \"" . getTemplate('mysql/mysqls') . "\";");
+	} elseif($action == 'delete' && $id != 0) {
 		$result = $db->query_first('SELECT `id`, `databasename`, `description`, `dbserver` FROM `' . TABLE_PANEL_DATABASES . '` WHERE `customerid`="' . (int)$userinfo['customerid'] . '" AND `id`="' . (int)$id . '"');
 
-		if(isset($result['databasename'])
-		   && $result['databasename'] != '')
-		{
-			if(!isset($sql_root[$result['dbserver']]) || !is_array($sql_root[$result['dbserver']]))
-			{
+		if (isset($result['databasename'])
+		   && $result['databasename'] != ''
+		) {
+			if (!isset($sql_root[$result['dbserver']]) || !is_array($sql_root[$result['dbserver']])) {
 				$result['dbserver'] = 0;
 			}
 
-			if(isset($_POST['send'])
-			   && $_POST['send'] == 'send')
-			{
+			if (isset($_POST['send'])
+			   && $_POST['send'] == 'send'
+			) {
 				// Begin root-session
-
 				$db_root = new db($sql_root[$result['dbserver']]['host'], $sql_root[$result['dbserver']]['user'], $sql_root[$result['dbserver']]['password'], '');
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted database '" . $result['databasename'] . "'");
-				if(mysql_get_server_info() < '5.0.2') { 
+				if (mysql_get_server_info() < '5.0.2') { 
 					// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
 					$db_root->query('REVOKE ALL PRIVILEGES, GRANT OPTION FROM \'' . $db_root->escape($result['databasename']) .'\'',false,true);
 				}
 
 				$host_res = $db_root->query("SELECT `Host` FROM `mysql`.`user` WHERE `User`='" . $db_root->escape($result['databasename']) . "'");
-				while($host = $db_root->fetch_array($host_res)) 
-				{
+				while ($host = $db_root->fetch_array($host_res)) {
 					// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
 					$db_root->query('DROP USER \'' . $db_root->escape($result['databasename']). '\'@\'' . $db_root->escape($host['Host']) . '\'', false, true);
 				}
@@ -118,69 +101,46 @@ elseif($page == 'mysqls')
 				$db_root->query('DROP DATABASE IF EXISTS `' . $db_root->escape($result['databasename']) . '`');
 				$db_root->query('FLUSH PRIVILEGES');
 				$db_root->close();
-
 				// End root-session
 
 				$db->query('DELETE FROM `' . TABLE_PANEL_DATABASES . '` WHERE `customerid`="' . (int)$userinfo['customerid'] . '" AND `id`="' . (int)$id . '"');
 
-				if($userinfo['mysqls_used'] == '1')
-				{
-					$resetaccnumber = " , `mysql_lastaccountnumber`='0' ";
-				}
-				else
-				{
-					$resetaccnumber = '';
-				}
+				$resetaccnumber = ($userinfo['mysqls_used'] == '1') ? " , `mysql_lastaccountnumber`='0' " : '';
 
 				$result = $db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`-1 ' . $resetaccnumber . 'WHERE `customerid`="' . (int)$userinfo['customerid'] . '"');
 				redirectTo($filename, Array('page' => $page, 's' => $s));
-			}
-			else
-			{
+			} else {
 				$dbnamedesc = $result['databasename'];
-				if(isset($result['description']) && $result['description'] != '') {
-					$dbnamedesc.= ' ('.$result['description'].')';
+				if (isset($result['description']) && $result['description'] != '') {
+					$dbnamedesc .= ' ('.$result['description'].')';
 				}
 				ask_yesno('mysql_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $dbnamedesc);
 			}
 		}
-	}
-	elseif($action == 'add')
-	{
-		if($userinfo['mysqls_used'] < $userinfo['mysqls']
-		   || $userinfo['mysqls'] == '-1')
-		{
-			if(isset($_POST['send'])
-			   && $_POST['send'] == 'send')
-			{
+	} elseif ($action == 'add') {
+		if ($userinfo['mysqls_used'] < $userinfo['mysqls']
+		   || $userinfo['mysqls'] == '-1'
+		) {
+			if (isset($_POST['send'])
+			   && $_POST['send'] == 'send'
+			) {
 				$password = validate($_POST['mysql_password'], 'password');
 				$password = validatePassword($password);
 
 				$sendinfomail = isset($_POST['sendinfomail']) ? 1 : 0;
-				if($sendinfomail != 1)
-				{
+				if ($sendinfomail != 1) {
 					$sendinfomail = 0;
 				}
 
-				if($password == '')
-				{
+				if ($password == '') {
 					standard_error(array('stringisempty', 'mypassword'));
-				}
-				else
-				{
-
-					if(count($sql_root) > 1)
-					{
+				} else {
+					$dbserver = 0;
+					if (count($sql_root) > 1) {
 						$dbserver = validate($_POST['mysql_server'], html_entity_decode($lng['mysql']['mysql_server']), '', '', 0);
-
-						if(!isset($sql_root[$dbserver]) || !is_array($sql_root[$dbserver]))
-						{
+						if (!isset($sql_root[$dbserver]) || !is_array($sql_root[$dbserver])) {
 							$dbserver = 0;
 						}
-					}
-					else
-					{
-						$dbserver = 0;
 					}
 					
 					// validate description before actual adding the database, #1052
@@ -189,13 +149,13 @@ elseif($page == 'mysqls')
 					// Begin root-session
 					$db_root = new db($sql_root[$dbserver]['host'], $sql_root[$dbserver]['user'], $sql_root[$dbserver]['password'], '');
 
-					if (strtoupper($settings['customer']['mysqlprefix']) == "RANDOM") {
+					if (strtoupper($settings['customer']['mysqlprefix']) == 'RANDOM') {
 						$result = $db_root->query('SELECT `User` FROM mysql.user');
 						while ($row = $db_root->fetch_array($result)) {
 							$allsqlusers[] = $row[User];
 						}
 						$username = $userinfo['loginname'] . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
-						while (in_Array($username , $allsqlusers)) {
+						while (in_array($username , $allsqlusers)) {
 							$username = $userinfo['loginname'] . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
 						}
 					} else {
@@ -204,8 +164,7 @@ elseif($page == 'mysqls')
 
 					$db_root->query('CREATE DATABASE `' . $db_root->escape($username) . '`');
 					$log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
-					foreach(array_map('trim', explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host)
-					{
+					foreach (array_map('trim', explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host) {
 						$db_root->query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $db_root->escape($username)) . '`.* TO `' . $db_root->escape($username) . '`@`' . $db_root->escape($mysql_access_host) . '` IDENTIFIED BY \'password\'');
 						$db_root->query('SET PASSWORD FOR `' . $db_root->escape($username) . '`@`' . $db_root->escape($mysql_access_host) . '` = PASSWORD(\'' . $db_root->escape($password) . '\')');
 						$log->logAction(USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
@@ -213,17 +172,15 @@ elseif($page == 'mysqls')
 
 					$db_root->query('FLUSH PRIVILEGES');
 					$db_root->close();
-
 					// End root-session
-					// Statement modifyed for Database description -- PH 2004-11-29
+
+					// Statement modified for Database description -- PH 2004-11-29
 					$result = $db->query('INSERT INTO `' . TABLE_PANEL_DATABASES . '` (`customerid`, `databasename`, `description`, `dbserver`) VALUES ("' . (int)$userinfo['customerid'] . '", "' . $db->escape($username) . '", "' . $db->escape($databasedescription) . '", "' . $db->escape($dbserver) . '")');
 					$result = $db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`+1, `mysql_lastaccountnumber`=`mysql_lastaccountnumber`+1 WHERE `customerid`="' . (int)$userinfo['customerid'] . '"');
 
-					if($sendinfomail == 1)
-					{
+					if ($sendinfomail == 1) {
 						$pma = $lng['admin']['notgiven'];
-						if($settings['panel']['phpmyadmin_url'] != '')
-						{
+						if ($settings['panel']['phpmyadmin_url'] != '') {
 							$pma = $settings['panel']['phpmyadmin_url'];
 						}
 
@@ -268,13 +225,10 @@ elseif($page == 'mysqls')
 
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
-			}
-			else
-			{
+			} else {
 				$mysql_servers = '';
 
-				foreach($sql_root as $mysql_server => $mysql_server_details)
-				{
+				foreach ($sql_root as $mysql_server => $mysql_server_details) {
 					$mysql_servers .= makeoption($mysql_server_details['caption'], $mysql_server);
 				}
 
@@ -286,44 +240,36 @@ elseif($page == 'mysqls')
 				$title = $mysql_add_data['mysql_add']['title'];
 				$image = $mysql_add_data['mysql_add']['image'];
 
-				eval("echo \"" . getTemplate("mysql/mysqls_add") . "\";");
+				eval("echo \"" . getTemplate('mysql/mysqls_add') . "\";");
 			}
 		}
-	}
-	elseif($action == 'edit'
-	       && $id != 0)
-	{
+	} elseif ($action == 'edit' && $id != 0) {
 		$result = $db->query_first('SELECT `id`, `databasename`, `description`, `dbserver` FROM `' . TABLE_PANEL_DATABASES . '` WHERE `customerid`="' . $userinfo['customerid'] . '" AND `id`="' . $id . '"');
 
-		if(isset($result['databasename'])
-		   && $result['databasename'] != '')
-		{
-			if(!isset($sql_root[$result['dbserver']]) || !is_array($sql_root[$result['dbserver']]))
-			{
+		if (isset($result['databasename'])
+		   && $result['databasename'] != ''
+		) {
+			if (!isset($sql_root[$result['dbserver']]) || !is_array($sql_root[$result['dbserver']])) {
 				$result['dbserver'] = 0;
 			}
 
-			if(isset($_POST['send'])
-			   && $_POST['send'] == 'send')
-			{
+			if (isset($_POST['send'])
+			   && $_POST['send'] == 'send'
+			) {
 				// Only change Password if it is set, do nothing if it is empty! -- PH 2004-11-29
 				$password = validate($_POST['mysql_password'], 'password');
-
-				if($password != '')
-				{
+				if ($password != '') {
 					// validate password
 					$password = validatePassword($password);
 
 					// Begin root-session
 					$db_root = new db($sql_root[$result['dbserver']]['host'], $sql_root[$result['dbserver']]['user'], $sql_root[$result['dbserver']]['password'], '');
-					foreach(array_map('trim', explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host)
-					{
+					foreach (array_map('trim', explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host) {
 						$db_root->query('SET PASSWORD FOR `' . $db_root->escape($result['databasename']) . '`@`' . $db_root->escape($mysql_access_host) . '` = PASSWORD(\'' . $db_root->escape($password) . '\')');
 					}
 
 					$db_root->query('FLUSH PRIVILEGES');
 					$db_root->close();
-
 					// End root-session
 				}
 
@@ -332,19 +278,15 @@ elseif($page == 'mysqls')
 				$databasedescription = validate($_POST['description'], 'description');
 				$result = $db->query('UPDATE `' . TABLE_PANEL_DATABASES . '` SET `description`="' . $db->escape($databasedescription) . '" WHERE `customerid`="' . (int)$userinfo['customerid'] . '" AND `id`="' . (int)$id . '"');
 				redirectTo($filename, Array('page' => $page, 's' => $s));
-			}
-			else
-			{
+			} else {
 				$mysql_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/mysql/formfield.mysql_edit.php';
 				$mysql_edit_form = htmlform::genHTMLForm($mysql_edit_data);
 
 				$title = $mysql_edit_data['mysql_edit']['title'];
 				$image = $mysql_edit_data['mysql_edit']['image'];
 
-				eval("echo \"" . getTemplate("mysql/mysqls_edit") . "\";");
+				eval("echo \"" . getTemplate('mysql/mysqls_edit') . "\";");
 			}
 		}
 	}
 }
-
-?>
