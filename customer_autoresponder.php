@@ -17,18 +17,14 @@
  *
  */
 
-// Required code
-
 define('AREA', 'customer');
-require ("./lib/init.php");
+require('./lib/init.php');
 
-// Create new autoresponder
-
-if($action == "add")
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+if ($action == 'add') {
+	// Create new autoresponder
+	if (isset($_POST['send'])
+	   && $_POST['send'] == 'send'
+	) {
 		$account = trim($_POST['account']);
 		$subject = trim($_POST['subject']);
 		$message = trim($_POST['message']);
@@ -42,39 +38,31 @@ if($action == "add")
 		$ts_from = -1;
 		$ts_until = -1;
 
-		if($date_from_off > -1)
-		{
+		if ($date_from_off > -1) {
 			$date_from = $_POST['date_from'];
 			$ts_from = mktime(0, 0, 0, substr($date_from, 3, 2), substr($date_from, 0, 2), substr($date_from, 6, 4));
 		}
-		if($date_until_off > -1)
-		{
+		if ($date_until_off > -1) {
 			$date_until = $_POST['date_until'];
 			$ts_until = mktime(0, 0, 0, substr($date_until, 3, 2), substr($date_until, 0, 2), substr($date_until, 6, 4));
 		}
 
-		if(empty($account)
+		if (empty($account)
 		   || empty($subject)
-		   || empty($message))
-		{
+		   || empty($message)
+		) {
 			standard_error('missingfields');
 		}
 
 		// Does account exist?
-
 		$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($account) . "' LIMIT 0,1");
-
-		if($db->num_rows($result) == 0)
-		{
+		if ($db->num_rows($result) == 0) {
 			standard_error('accountnotexisting');
 		}
 
 		// Does autoresponder exist?
-
 		$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($account) . "' LIMIT 0,1");
-
-		if($db->num_rows($result) == 1)
-		{
+		if ($db->num_rows($result) == 1) {
 			standard_error('autoresponderalreadyexists');
 		}
 
@@ -92,19 +80,14 @@ if($action == "add")
 	}
 
 	// Get accounts
-
 	$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` NOT IN (SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "`) ORDER BY email ASC");
-
-	if($db->num_rows($result) == 0)
-	{
+	if ($db->num_rows($result) == 0) {
 		standard_error('noemailaccount');
 	}
 
 	$accounts = '';
-
-	while($row = $db->fetch_array($result))
-	{
-		$accounts.= "<option value=\"" . $row['email'] . "\">" . $row['email'] . "</option>";
+	while ($row = $db->fetch_array($result)) {
+		$accounts .= '<option value="' . $row['email'] . '">' . $row['email'] . '</option>';
 	}
 
 	$date_from_off = makecheckbox('date_from_off', $lng['panel']['not_activated'], '-1', false, '-1', true, true);
@@ -118,18 +101,12 @@ if($action == "add")
 	$title = $autoresponder_add_data['autoresponder_add']['title'];
 	$image = $autoresponder_add_data['autoresponder_add']['image'];
 
-	eval("echo \"" . getTemplate("autoresponder/autoresponder_add") . "\";");
-}
-
-// Edit autoresponder
-
-else
-
-if($action == "edit")
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+	eval("echo \"" . getTemplate('autoresponder/autoresponder_add') . "\";");
+} elseif ($action == 'edit') {
+	// Edit autoresponder
+	if (isset($_POST['send'])
+	   && $_POST['send'] == 'send'
+	) {
 		$account = trim($_POST['account']);
 		$subject = trim($_POST['subject']);
 		$message = trim($_POST['message']);
@@ -143,49 +120,36 @@ if($action == "edit")
 		$ts_from = -1;
 		$ts_until = -1;
 
-		if($date_from_off > -1)
-		{
+		if ($date_from_off > -1) {
 			$date_from = $_POST['date_from'];
 			$ts_from = mktime(0, 0, 0, substr($date_from, 3, 2), substr($date_from, 0, 2), substr($date_from, 6, 4));
 		}
-		if($date_until_off > -1)
-		{
+		if ($date_until_off > -1) {
 			$date_until = $_POST['date_until'];
 			$ts_until = mktime(0, 0, 0, substr($date_until, 3, 2), substr($date_until, 0, 2), substr($date_until, 6, 4));
 		}
 
-		if(empty($account)
+		if (empty($account)
 		   || empty($subject)
-		   || empty($message))
-		{
+		   || empty($message)
+		) {
 			standard_error('missingfields');
 		}
 
 		// Does account exist?
-
 		$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($account) . "' LIMIT 0,1");
-
-		if($db->num_rows($result) == 0)
+		if ($db->num_rows($result) == 0)
 		{
 			standard_error('accountnotexisting');
 		}
 
 		// Does autoresponder exist?
-
 		$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($account) . "' LIMIT 0,1");
-
-		if($db->num_rows($result) == 0)
-		{
+		if ($db->num_rows($result) == 0) {
 			standard_error('invalidautoresponder');
 		}
 
-		$ResponderActive = 0;
-
-		if(isset($_POST['active'])
-		   && $_POST['active'] == '1')
-		{
-			$ResponderActive = 1;
-		}
+		$ResponderActive = (isset($_POST['active']) && $_POST['active'] == '1') ? 1 : 0;
 
 		$db->query("UPDATE `" . TABLE_MAIL_AUTORESPONDER . "`
 			SET `message` = '" . $db->escape($message) . "',
@@ -202,11 +166,8 @@ if($action == "edit")
 	$email = trim(htmlspecialchars($_GET['email']));
 
 	// Get account data
-
 	$result = $db->query("SELECT * FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($email) . "' LIMIT 0,1");
-
-	if($db->num_rows($result) == 0)
-	{
+	if ($db->num_rows($result) == 0) {
 		standard_error('invalidautoresponder');
 	}
 
@@ -217,25 +178,19 @@ if($action == "edit")
 	$date_from = (int)$row['date_from'];
 	$date_until = (int)$row['date_until'];
 
-	if($date_from == -1)
-	{
+	if ($date_from == -1) {
 		$deactivated = '-1';
 		$date_from = '';
-	}
-	else
-	{
+	} else {
 		$deactivated = '0';
 		$date_from = date('d-m-Y', $date_from);
 	}
 	$date_from_off = makecheckbox('date_from_off', $lng['panel']['not_activated'], '-1', false, $deactivated, true, true);
 
-	if($date_until == -1)
-	{
+	if ($date_until == -1) {
 		$deactivated = '-1';
 		$date_until = '';
-	}
-	else
-	{
+	} else {
 		$deactivated = '0';
 		$date_until = date('d-m-Y', $date_until);
 	}
@@ -249,26 +204,17 @@ if($action == "edit")
 	$title = $autoresponder_edit_data['autoresponder_edit']['title'];
 	$image = $autoresponder_edit_data['autoresponder_edit']['image'];
 
-	eval("echo \"" . getTemplate("autoresponder/autoresponder_edit") . "\";");
-}
-
-// Delete autoresponder
-
-else
-
-if($action == "delete")
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+	eval("echo \"" . getTemplate('autoresponder/autoresponder_edit') . "\";");
+} elseif ($action == 'delete') {
+	// Delete autoresponder
+	if (isset($_POST['send'])
+	   && $_POST['send'] == 'send'
+	) {
 		$account = trim($_POST['account']);
 
 		// Does autoresponder exist?
-
 		$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($account) . "' LIMIT 0,1");
-
-		if($db->num_rows($result) == 0)
-		{
+		if ($db->num_rows($result) == 0) {
 			standard_error('invalidautoresponder');
 		}
 
@@ -282,37 +228,25 @@ if($action == "delete")
 
 	$email = trim(htmlspecialchars($_GET['email']));
 	ask_yesno('autoresponderdelete', $filename, array('action' => $action, 'account' => $email));
-}
-
-// List existing autoresponders
-
-else
-{
+} else {
+	// List existing autoresponders
 	$autoresponder = '';
 	$count = 0;
 	$result = $db->query("SELECT * FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' ORDER BY email ASC");
 
-	while($row = $db->fetch_array($result))
-	{
-		if($row['date_from'] == -1 && $row['date_until'] == -1)
-		{
+	while ($row = $db->fetch_array($result)) {
+		if ($row['date_from'] == -1 && $row['date_until'] == -1) {
 			$activated_date = $lng['panel']['not_activated'];
-		}
-		elseif($row['date_from'] == -1 && $row['date_until'] != -1)
-		{
+		} elseif($row['date_from'] == -1 && $row['date_until'] != -1) {
 			$activated_date = $lng['autoresponder']['date_until'].': '.date('d-m-Y', $row['date_until']);
-		}
-		elseif($row['date_from'] != -1 && $row['date_until'] == -1)
-		{
+		} elseif($row['date_from'] != -1 && $row['date_until'] == -1) {
 			$activated_date = $lng['autoresponder']['date_from'].': '.date('d-m-Y', $row['date_from']);
-		}
-		else
-		{
+		} else {
 			$activated_date = date('d-m-Y', $row['date_from']) . ' - ' . date('d-m-Y', $row['date_until']);
 		}
-		eval("\$autoresponder.=\"" . getTemplate("autoresponder/autoresponder_autoresponder") . "\";");
+		eval("\$autoresponder.=\"" . getTemplate('autoresponder/autoresponder_autoresponder') . "\";");
 		$count++;
 	}
 
-	eval("echo \"" . getTemplate("autoresponder/autoresponder") . "\";");
+	eval("echo \"" . getTemplate('autoresponder/autoresponder') . "\";");
 }

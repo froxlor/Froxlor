@@ -17,18 +17,18 @@
  *
  */
 
-// Required code
-
 define('AREA', 'customer');
-require ("./lib/init.php");
+require ('./lib/init.php');
+
 $Id = 0;
+if (isset($_GET['id'])) {
+    $Id = (int)$_GET['id'];
+}
+if (isset($_POST['id'])) {
+    $Id = (int)$_POST['id'];
+}
 
-if(isset($_GET['id']))$Id = (int)$_GET['id'];
-
-if(isset($_POST['id']))$Id = (int)$_POST['id'];
-eval("echo \"" . getTemplate("aps/header") . "\";");
+eval("echo \"" . getTemplate('aps/header') . "\";");
 $Aps = new ApsParser($userinfo, $settings, $db);
 $Aps->MainHandler($action);
-eval("echo \"" . getTemplate("aps/footer") . "\";");
-
-?>
+eval("echo \"" . getTemplate('aps/footer') . "\";");

@@ -16,24 +16,17 @@
  */
 
 define('AREA', 'admin');
+require_once('./lib/init.php');
 
-require_once("./lib/init.php");
-
-if(isset($_POST['id']))
-{
+if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
-}
-elseif(isset($_GET['id']))
-{
+} elseif(isset($_GET['id'])) {
 	$id = intval($_GET['id']);
 }
 
-if($page == 'cronjobs'
-  || $page == 'overview')
-{
-	if($action == '')
-	{
-		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_cronjobs");
+if ($page == 'cronjobs' || $page == 'overview') {
+	if ($action == '') {
+		$log->logAction(ADM_ACTION, LOG_NOTICE, 'viewed admin_cronjobs');
 
 		$fields = array(
 			'c.lastrun' => $lng['cron']['lastrun'],
@@ -56,88 +49,65 @@ if($page == 'cronjobs'
 		$i = 0;
 		$count = 0;
 
-		while($row = $db->fetch_array($result))
-		{
-			if($paging->checkDisplay($i))
-			{
+		while ($row = $db->fetch_array($result)) {
+			if ($paging->checkDisplay($i)) {
 				$row = htmlentities_array($row);
-				
+
 				$row['lastrun'] = date('d.m.Y H:i', $row['lastrun']);
-				
-				if((int)$row['isactive'] == 1)
-				{
-					$row['isactive'] = $lng['panel']['yes'];
-				}
-				else
-				{
-					$row['isactive'] = $lng['panel']['no'];
-				}
-				
+				$row['isactive'] = ((int)$row['isactive'] == 1) ? $lng['panel']['yes'] : $lng['panel']['no'];
+
 				$description = $lng['crondesc'][$row['desc_lng_key']];
-				
-				eval("\$crons.=\"" . getTemplate("cronjobs/cronjobs_cronjob") . "\";");
+
+				eval("\$crons.=\"" . getTemplate('cronjobs/cronjobs_cronjob') . "\";");
 				$count++;
 			}
 
 			$i++;
 		}
 
-		eval("echo \"" . getTemplate("cronjobs/cronjobs") . "\";");
+		eval("echo \"" . getTemplate('cronjobs/cronjobs') . "\";");
 
-	}
-	elseif($action == 'new')
-	{
+	} elseif ($action == 'new') {
 		/*
 		 * @TODO later
 		 */
-	}
-	elseif($action == 'edit'
-	&& $id != 0)
-	{
+	} elseif ($action == 'edit' && $id != 0) {
 		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `id`='" . (int)$id . "'");
-		
-		if ($result['cronfile'] != '')
-		{
-			if(isset($_POST['send'])
-			   && $_POST['send'] == 'send')
-			{
+		if ($result['cronfile'] != '') {
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$isactive = isset($_POST['isactive']) ? 1 : 0;
 				$interval_value = validate($_POST['interval_value'], 'interval_value', '/^([0-9]+)$/Di', 'stringisempty');
 				$interval_interval = validate($_POST['interval_interval'], 'interval_interval');
-				
-				if($isactive != 1)
-				{
+
+				if ($isactive != 1) {
 					$isactive = 0;
 				}
-				
-				$interval = $interval_value.' '.strtoupper($interval_interval);
-				
+
+				$interval = $interval_value . ' ' . strtoupper($interval_interval);
+
 				$db->query("UPDATE `" . TABLE_PANEL_CRONRUNS . "` 
 							SET `isactive` = '".(int)$isactive."',
 							`interval` = '".$interval."'
 							WHERE `id` = '" . (int)$id . "'");
 
 				redirectTo($filename, Array('page' => $page, 's' => $s));
-			}
-			else
-			{
+			} else {
 				//$isactive = makeyesno('isactive', '1', '0', $result['isactive']);
 				// interval
 				$interval_nfo = explode(' ', $result['interval']);
 				$interval_value = $interval_nfo[0];
 
 				$interval_interval = '';
-				$interval_interval.= makeoption($lng['cronmgmt']['seconds'], 'SECOND', $interval_nfo[1]);
-				$interval_interval.= makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
-				$interval_interval.= makeoption($lng['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
-				$interval_interval.= makeoption($lng['cronmgmt']['days'], 'DAY', $interval_nfo[1]);
-				$interval_interval.= makeoption($lng['cronmgmt']['weeks'], 'WEEK', $interval_nfo[1]);
-				$interval_interval.= makeoption($lng['cronmgmt']['months'], 'MONTH', $interval_nfo[1]);
+				$interval_interval .= makeoption($lng['cronmgmt']['seconds'], 'SECOND', $interval_nfo[1]);
+				$interval_interval .= makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
+				$interval_interval .= makeoption($lng['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
+				$interval_interval .= makeoption($lng['cronmgmt']['days'], 'DAY', $interval_nfo[1]);
+				$interval_interval .= makeoption($lng['cronmgmt']['weeks'], 'WEEK', $interval_nfo[1]);
+				$interval_interval .= makeoption($lng['cronmgmt']['months'], 'MONTH', $interval_nfo[1]);
 				// end of interval
-				
+
 				$change_cronfile = false;
-				if (substr($result['module'], 0, strpos($result['module'], '/')) != 'froxlor')
-				{
+				if (substr($result['module'], 0, strpos($result['module'], '/')) != 'froxlor') {
 					$change_cronfile = true;
 				}
 
@@ -147,13 +117,11 @@ if($page == 'cronjobs'
 				$title = $cronjobs_edit_data['cronjobs_edit']['title'];
 				$image = $cronjobs_edit_data['cronjobs_edit']['image'];
 
-				eval("echo \"" . getTemplate("cronjobs/cronjob_edit") . "\";");
+				eval("echo \"" . getTemplate('cronjobs/cronjob_edit') . "\";");
 			}
 		}
 	}
-	elseif($action == 'delete'
-	&& $id != 0)
-	{
+	elseif ($action == 'delete' && $id != 0) {
 		/*
 		 * @TODO later
 		 */
