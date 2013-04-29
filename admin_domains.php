@@ -128,6 +128,8 @@ if($page == 'domains'
 			{
 				$row['customername'] = getCorrectFullUserDetails($row);
 				$row = htmlentities_array($row);
+				// display a nice list of IP's
+				$row['ipandport'] = str_replace("\n", "<br />", $row['ipandport']);
 				eval("\$domains.=\"" . getTemplate("domains/domains_domain") . "\";");
 				$count++;
 			}
@@ -993,32 +995,24 @@ if($page == 'domains'
 					$additional_ip_condition = '';
 				}
 
-				$ipandport = intval($_POST['ipandport']);
-				$ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' AND `ssl` = '0'" . $additional_ip_condition);
-
-                                $ipandports = array();
-				if (isset($_POST['ipandport']) && !is_array($_POST['ipandport']))
-				{
+				$ipandports = array();
+				if (isset($_POST['ipandport']) && !is_array($_POST['ipandport'])) {
 					$_POST['ipandport'] = unserialize($_POST['ipandport']);
 				}
-                                if (isset($_POST['ipandport']) && is_array($_POST['ipandport']))
-                                {
-                                        foreach($_POST['ipandport'] as $ipandport)
-                                        {
-                                                 $ipandport = intval($ipandport);
-                                                 $ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' " . $additional_ip_condition);
-                                                 if(!isset($ipandport_check['id'])
-                                                        || $ipandport_check['id'] == '0'
-                                                        || $ipandport_check['id'] != $ipandport)
-                                                {
-                                                        standard_error('ipportdoesntexist');
-                                                }
-                                                else
-                                                {
-                                                        $ipandports[] = $ipandport;
-                                                }
-                                        }
-                                }
+				if (isset($_POST['ipandport']) && is_array($_POST['ipandport'])) {
+					foreach($_POST['ipandport'] as $ipandport) {
+						$ipandport = intval($ipandport);
+						$ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' " . $additional_ip_condition);
+						if (!isset($ipandport_check['id'])
+							|| $ipandport_check['id'] == '0'
+							|| $ipandport_check['id'] != $ipandport
+						) {
+							standard_error('ipportdoesntexist');
+						} else {
+							$ipandports[] = $ipandport;
+						}
+					}
+				}
 
 				if($settings['system']['use_ssl'] == "1"
 				   && isset($_POST['ssl_ipandport']))
@@ -1029,28 +1023,20 @@ if($page == 'domains'
 						$ssl_redirect = (int)$_POST['ssl_redirect'];
 					}
 
-					$ssl_ipandport = intval($_POST['ssl_ipandport']);
-					$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' AND `ssl` = '1'" . $additional_ip_condition);
-
 					$ssl_ipandports = array();
-					if (isset($_POST['ssl_ipandport']) && !is_array($_POST['ssl_ipandport']))
-					{
+					if (isset($_POST['ssl_ipandport']) && !is_array($_POST['ssl_ipandport'])) {
 						$_POST['ssl_ipandport'] = unserialize($_POST['ssl_ipandport']);
 					}
-					if (isset($_POST['ssl_ipandport']) && is_array($_POST['ssl_ipandport']))
-					{
-						foreach($_POST['ssl_ipandport'] as $ssl_ipandport)
-						{
+					if (isset($_POST['ssl_ipandport']) && is_array($_POST['ssl_ipandport'])) {
+						foreach ($_POST['ssl_ipandport'] as $ssl_ipandport) {
 							$ssl_ipandport = intval($ssl_ipandport);
 							$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' " . $additional_ip_condition);
-							if(!isset($ssl_ipandport_check['id'])
+							if (!isset($ssl_ipandport_check['id'])
 								|| $ssl_ipandport_check['id'] == '0'
-								|| $ssl_ipandport_check['id'] != $ssl_ipandport)
-							{
+								|| $ssl_ipandport_check['id'] != $ssl_ipandport
+							) {
 								standard_error('ipportdoesntexist');
-							}
-							else
-							{
+							} else {
 								$ssl_ipandports[] = $ssl_ipandport;
 							}
 						}

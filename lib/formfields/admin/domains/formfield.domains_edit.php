@@ -102,13 +102,15 @@ return array(
 						'type' => 'checkbox',
 						'values' => $ipsandports,
 						'value' => $usedips,
+						'is_array' => 1,
 						'mandatory' => true
 					),
 					'ssl_ipandport' => array(
 						'label' => 'IP/Port (SSL)',
 						'type' => 'checkbox',
 						'values' => $ssl_ipsandports,
-						'value' => $usedips
+						'value' => $usedips,
+						'is_array' => 1
 					),
 					'ssl_redirect' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),

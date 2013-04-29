@@ -15,7 +15,7 @@
  *
  */
 
-class htmlform 
+class htmlform
 {
 	/**
 	 * internal tmp-variable to store form
@@ -39,7 +39,7 @@ class htmlform
 			{
 				/*
 				 * here be section title & image
-				 */
+				*/
 				$title = $section['title'];
 				$image = $section['image'];
 
@@ -47,7 +47,7 @@ class htmlform
 				{
 					continue;
 				}
-	
+
 				if (!isset($section['nobuttons']) || $section['nobuttons'] == false) {
 					eval("self::\$_form .= \"" . getTemplate("misc/form/table_section", "1") . "\";");
 				} else {
@@ -83,9 +83,9 @@ class htmlform
 						$data_field = str_replace("\t", "", $data_field);
 						$data_field = $fielddata['next_to_prefix'].$data_field;
 						self::$_form = str_replace(
-							'{NEXTTOFIELD_'.$fielddata['next_to'].'}',
-							$data_field,
-							self::$_form
+								'{NEXTTOFIELD_'.$fielddata['next_to'].'}',
+								$data_field,
+								self::$_form
 						);
 						$nexto = false;
 					}
@@ -150,8 +150,8 @@ class htmlform
 			$extras .= ' size="'.$data['size'].'"';
 		}
 		if(isset($data['autocomplete'])) {
-                        $extras .= ' autocomplete="'.$data['autocomplete'].'"';
-                }
+			$extras .= ' autocomplete="'.$data['autocomplete'].'"';
+		}
 
 		// add support to save reloaded forms
 		if (isset($data['value'])) {
@@ -161,7 +161,7 @@ class htmlform
 		} else {
 			$value = '';
 		}
-		
+
 		$ulfield = ($unlimited == true ? '&nbsp;'.$data['ul_field'] : '');
 		if(isset($data['display']) && $data['display'] != '')
 		{
@@ -182,7 +182,7 @@ class htmlform
 		if(isset($data['rows'])) {
 			$extras .= ' rows="'.$data['rows'].'"';
 		}
-		
+
 		// add support to save reloaded forms
 		if (isset($data['value'])) {
 			$value = $data['value'];
@@ -201,7 +201,7 @@ class htmlform
 	{
 		return $data['yesno_var'];
 	}
-	
+
 	private static function _labelField($data = array())
 	{
 		return $data['value'];
@@ -217,33 +217,33 @@ class htmlform
 		} else {
 			$select_var = '';
 		}
-		
-		return '<select 
-			id="'.$fieldname.'" 
-			name="'.$fieldname.'" 
-			'.(isset($data['class']) ? ' class="'.$data['class'] .'" ' : '').'
-			>'
-			.$select_var.
-			'</select>';
+
+		return '<select
+				id="'.$fieldname.'"
+						name="'.$fieldname.'"
+								'.(isset($data['class']) ? ' class="'.$data['class'] .'" ' : '').'
+										>'
+										.$select_var.
+										'</select>';
 	}
-	
+
 	/**
 	 * Function to generate checkboxes.
-	 * 
+	 *
 	 * <code>
 	 * $data = array(
-     *                       'label' => $lng['customer']['email_imap'],
-     *                       'type' => 'checkbox',
-     *                       'values' => array(
-     *                                         array(  'label' => 'active',
-     *                                                 'value' => '1'
-     *                                               )
-     *                                           ),
-     *                       'value' => array('1'),
-     *                       'mandatory' => true
-     *          )
+	 *                       'label' => $lng['customer']['email_imap'],
+	 *                       'type' => 'checkbox',
+	 *                       'values' => array(
+	 *                                         array(  'label' => 'active',
+	 *                                                 'value' => '1'
+	 *                                               )
+	 *                                           ),
+	 *                       'value' => array('1'),
+	 *                       'mandatory' => true
+	 *          )
 	 * </code>
-	 * 
+	 *
 	 * @param string $fieldname contains the fieldname
 	 * @param array $data contains the data array
 	 */
@@ -254,7 +254,7 @@ class htmlform
 		} else {
 			$checked = array();
 		}
-		
+
 		if (isset($_SESSION['requestData'])) {
 			if(isset($_SESSION['requestData'][$fieldname])) {
 				$checked = array($_SESSION['requestData'][$fieldname]);
@@ -262,14 +262,14 @@ class htmlform
 				$checked = array();
 			}
 		}
-		
+
 		// default value is none, so the checkbox isn't an array
 		$isArray = '';
-		
-		if (count($data['values']) > 1) {
+
+		if (count($data['values']) > 1 || (isset($data['is_array']) && $data['is_array'] == 1)) {
 			$isArray = '[]';
 		}
-		
+
 		// will contain the output
 		$output = "";
 		foreach($data['values'] as $val) {
@@ -282,11 +282,11 @@ class htmlform
 					break;
 				}
 			}
-			
+
 			$output .= '<label><input type="checkbox" name="'.$fieldname.$isArray.'" value="'.$val['value'].'" '.$isChecked.'/>'.$key.'</label>';
 		}
-		
+
 		return $output;
 	}
-	
+
 }

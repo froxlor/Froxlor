@@ -2154,5 +2154,5 @@ if (isFroxlorVersion('0.9.29-dev3')) {
 	$db->query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` DROP `ssl_ipandport`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.28-svn6');
+	updateToVersion('0.9.29-dev4');
 }
