@@ -676,7 +676,7 @@ class apache
 			$vhost_content .= '  <IfModule mod_rewrite.c>'."\n";
 			$vhost_content .= '    RewriteEngine On' . "\n";
 			$vhost_content .= '    RewriteCond %{HTTPS} off' . "\n";
-			$vhost_content .= '    RewriteRule (.*) '. $corrected_docroot.'%{REQUEST_URI} ' . $modrew_red . "\n";
+			$vhost_content .= '    RewriteRule ^/(.*) '. $corrected_docroot.'$1 ' . $modrew_red . "\n";
 			$vhost_content .= '  </IfModule>' . "\n";
 
 			$code = getDomainRedirectCode($domain['id']);
