@@ -16,30 +16,34 @@
  * @package    Functions
  *
  */
+function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue) {
 
-function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue)
-{
 	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
-	if($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'defaultip')
-	{
+	if ($returnvalue !== false
+			&& is_array($fielddata)
+			&& isset($fielddata['settinggroup'])
+			&& $fielddata['settinggroup'] == 'system'
+			&& isset($fielddata['varname'])
+			&& $fielddata['varname'] == 'defaultip'
+	) {
 		global $db, $theme;
-		
-		$customerstddomains_result = $db->query('SELECT `standardsubdomain` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `standardsubdomain` <> \'0\'');
+
+		$customerstddomains_result = $db->query("SELECT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `standardsubdomain` <> '0'");
 		$ids = array();
 
-		while($customerstddomains_row = $db->fetch_array($customerstddomains_result))
-		{
+		while($customerstddomains_row = $db->fetch_array($customerstddomains_result)) {
 			$ids[] = (int)$customerstddomains_row['standardsubdomain'];
 		}
 
-		if(count($ids) > 0)
-		{
-			$db->query('UPDATE `' . TABLE_PANEL_DOMAINS . '` SET `ipandport`=\'' . (int)$newfieldvalue . '\' WHERE `id` IN (\'' . implode('\',\'', $ids) . '\') AND `ipandport` = \'' . $db->escape(getSetting('system', 'defaultip')) . '\'');
+		if(count($ids) > 0) {
+			$db->query("UPDATE `" . TABLE_DOMAINTOIP . "` SET
+					`id_ipandports`='" . (int)$newfieldvalue . "'
+					WHERE `id_domain` IN ('" . implode(', ', $ids) . "')
+					AND `id_ipandports` = '" . $db->escape(getSetting('system', 'defaultip')) . "'"
+			);
 		}
 	}
-	
+
 	return $returnvalue;
 }
-
-?>

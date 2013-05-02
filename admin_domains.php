@@ -1098,23 +1098,24 @@ if($page == 'domains'
 					'id' => 0
 				);
 
-                                if($aliasdomain != 0)
-                                {
-                                        // Overwrite given ipandports with these of the "main" domain
-                                        $ipandports = array();
-                                        $origipresult = $db->query("SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP ."` WHERE `id_domain` = '" . (int)$aliasdomain . "'");
-                                        while($origip = $db->fetch_array($origipresult))
-                                        {
-                                                $ipandports[] = $origip['id_ipandports'];
-                                        }
+				if ($aliasdomain != 0) {
+					// Overwrite given ipandports with these of the "main" domain
+					$ipandports = array();
+					$origipresult = $db->query("SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP ."` WHERE `id_domain` = '" . (int)$aliasdomain . "'");
+					while ($origip = $db->fetch_array($origipresult)) {
+						$ipandports[] = $origip['id_ipandports'];
+					}
+					$aliasdomain_check = $db->query_first("SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c` 
+							WHERE `d`.`customerid`='" . (int)$customerid . "'
+							AND `d`.`aliasdomain` IS NULL AND
+							`d`.`id` <> `c`.`standardsubdomain`
+							AND `c`.`customerid`='" . (int)$customerid . "'
+							AND `d`.`id`='" . (int)$aliasdomain . "'");
+				}
 
-                                        $aliasdomain_check = $db->query_first('SELECT `d`.`id` FROM `' . TABLE_PANEL_DOMAINS . '` `d`,`' . TABLE_PANEL_CUSTOMERS . '` `c` WHERE `d`.`customerid`=\'' . (int)$customerid . '\' AND `d`.`aliasdomain` IS NULL AND `d`.`id`<>`c`.`standardsubdomain` AND `c`.`customerid`=\'' . (int)$customerid . '\' AND `d`.`id`=\'' . (int)$aliasdomain . '\'');
-                                }
-
-                                if(count($ipandports) == 0)
-                                {
-                                        standard_error('noipportgiven');
-                                }
+				if (count($ipandports) == 0) {
+					standard_error('noipportgiven');
+				}
 
 				if($aliasdomain_check['id'] != $aliasdomain)
 				{
@@ -1281,6 +1282,10 @@ if($page == 'domains'
 					" . $upd_specialsettings . $updatechildren . " 
 					WHERE `parentdomainid`='" . (int)$id . "'
 				");
+
+				// FIXME check how many we got and if the amount of assigned IP's
+				// has changed so we can insert a config-rebuild task if only
+				// the ip's of this domain were changed
 
 				// Cleanup domain <-> ip mapping
 				$db->query("DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = '" . (int)$id . "'");

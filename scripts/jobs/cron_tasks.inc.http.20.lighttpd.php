@@ -198,7 +198,7 @@ class lighttpd
 			 * if $this->settings['system']['apacheconf_vhost'] is a folder
 			 * refs #70
 			 */
-			$vhosts = $this->createLighttpdHosts($row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'], $vhost_filename);
+			$vhosts = $this->createLighttpdHosts($row_ipsandports['id'], $row_ipsandports['ssl'], $vhost_filename);
 			if ($vhosts !== null && is_array($vhosts) && isset($vhosts[0])) {
 				// sort vhosts by number (subdomains first!)
 				sort($vhosts);
@@ -300,19 +300,35 @@ class lighttpd
 	{
 	}
 
-	protected function createLighttpdHosts($ip, $port, $ssl, $vhost_filename)
+	protected function createLighttpdHosts($ipid, $ssl, $vhost_filename)
 	{
-		$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `ip`='" . $ip . "' AND `port`='" . $port . "'";
-		$ipandport = $this->db->query_first($query);
+		$query = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
+			`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`,
+			`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
+			`c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`,
+			`d`.`mod_fcgid_maxrequests`, `p`.`ssl` AS `ssl`,
+			`p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile`
+			  FROM `".TABLE_PANEL_DOMAINS."` `d`
 
-		if ($ssl == '0') {
-			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC";
-		} else {
-			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ssl_ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC";
-		}
+			  LEFT JOIN `".TABLE_PANEL_CUSTOMERS."` `c` USING(`customerid`)
+			  LEFT JOIN `".TABLE_PANEL_DOMAINS."` `pd` ON (`pd`.`id` = `d`.`parentdomainid`)
+
+			  INNER JOIN (
+			    SELECT * FROM (
+			      SELECT `di`.`id_domain` , `p`.`ssl`, `p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile`
+			      FROM `".TABLE_DOMAINTOIP."` `di` , `".TABLE_PANEL_IPSANDPORTS."` `p`
+			      WHERE `p`.`id` = `di`.`id_ipandports`
+			      AND `p`.`id` = '".(int)$ipid."'
+			      ORDER BY `p`.`ssl` DESC
+			    ) AS my_table_tmp
+			    GROUP BY `id_domain`
+			  ) AS p ON p.`id_domain` = `d`.`id`
+
+			  WHERE `d`.`aliasdomain` IS NULL 
+			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
 
 		$included_vhosts = array();
-		$result_domains = $this->db->query($query2);
+		$result_domains = $this->db->query($query);
 		while ($domain = $this->db->fetch_array($result_domains)) {
 			if (is_dir($this->settings['system']['apacheconf_vhost'])) {
 				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'].'/vhosts/')));
@@ -368,39 +384,25 @@ class lighttpd
 					$ips_and_ports_index = 'ipandport';
 				}
 
-				$this->lighttpd_data[$vhost_filename].= $this->getVhostContent($domain, $ssl_vhost);
-				$this->lighttpd_data[$vhost_filename].= isset($this->needed_htpasswds[$domain[$ips_and_ports_index]]) ? $this->needed_htpasswds[$domain[$ips_and_ports_index]] . "\n" : '';
+				// FIXME we get duplicate entries of a vhost if it has assigned more than one IP
+				// checking if the lightt_data for that filename is empty *might* be correct
+				if ($this->lighttpd_data[$vhost_filename] == '') {
+					$this->lighttpd_data[$vhost_filename] .= $this->getVhostContent($domain, $ssl_vhost, $ipid);
+				}
+				// FIXME did this ever work?
+				//$this->lighttpd_data[$vhost_filename].= isset($this->needed_htpasswds[$domain[$ips_and_ports_index]]) ? $this->needed_htpasswds[$domain[$ips_and_ports_index]] . "\n" : '';
 			}
 		}
 		return $included_vhosts;
 	}
 
-	protected function getVhostContent($domain, $ssl_vhost = false)
+	protected function getVhostContent($domain, $ssl_vhost = false, $ipid)
 	{
 		if($ssl_vhost === true
-		&& $domain['ssl'] != '1')
-		{
-			return '';
-		}
-
-		if ($ssl_vhost === true
-			&& $domain['ssl'] == '1'
+				&& $domain['ssl'] != '1'
+				&& $domain['ssl_redirect'] != '1'
 		) {
-			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ssl_ipandport'] . "'";
-		} else {
-			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ipandport'] . "'";
-		}
-
-		$ipandport = $this->db->query_first($query);
-		$domain['ip'] = $ipandport['ip'];
-		$domain['port'] = $ipandport['port'];
-		$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
-		$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
-
-		if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-			$ipport = '[' . $domain['ip'] . ']:' . $domain['port'];
-		} else {
-			$ipport = $domain['ip'] . ':' . $domain['port'];
+			return '';
 		}
 
 		$vhost_content = '';
@@ -440,6 +442,8 @@ class lighttpd
 						$vhost_content.= $domain['specialsettings'] . "\n";
 					}
 
+					$query = "SELECT `default_vhostconf_domain` FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id`='".$ipid."';";
+					$ipandport = $this->db->query_first($query);
 					if ($ipandport['default_vhostconf_domain'] != '') {
 						$vhost_content.= $ipandport['default_vhostconf_domain'] . "\n";
 					}

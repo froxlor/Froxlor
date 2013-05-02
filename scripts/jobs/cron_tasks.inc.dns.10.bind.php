@@ -17,9 +17,6 @@
  *
  */
 
-/*
- * This script creates the php.ini's used by mod_suPHP+php-cgi
-*/
 
 if(@php_sapi_name() != 'cli'
 		&& @php_sapi_name() != 'cgi'
@@ -179,23 +176,24 @@ class bind
 
 	protected function generateZone($domain)
 	{
-		/** Array to save all ips needed in the records (already including IN A/AAAA */
+		// Array to save all ips needed in the records (already including IN A/AAAA)
 		$ip_a_records = array();
-		/** Array to save DNS records */
+		// Array to save DNS records
 		$records = array();
 		
 		$result_ip = $this->db->query("SELECT `p`.`ip` AS `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` `p`, `".TABLE_DOMAINTOIP."` `di` WHERE `di`.`id_domain` = '$domain[id]' AND `p`.`id` = `di`.`id_ipandports` GROUP BY `p`.`ip`;");
 		
 		while ($ip = $this->db->fetch_array($result_ip)) {
   
-			if(filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+			if (filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 				$ip_a_records[] = "A         $ip[ip]";
-			
-			elseif(filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+			}
+			elseif (filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ip_a_records[] = "AAAA      $ip[ip]";
-			
-			else
-				return ";Error in at least one IP Adress ($ip[ip]), could not create zonefile!";
+			}
+			else {
+				return ";Error in at least one IP Adress (".$ip['ip']."), could not create zonefile!";
+			}
 		}
 
 		$date = date('Ymd');
@@ -214,17 +212,20 @@ class bind
 
 		$zonefile.= '	' . $bindserial . ' ; serial' . "\n" . '	8H ; refresh' . "\n" . '	2H ; retry' . "\n" . '	1W ; expiry' . "\n" . '	11h) ; minimum' . "\n";
 
+		// FIXME What is this? there is no $ip_a_record at this stage
+		/*
 		if(count($this->nameservers) == 0)
 		{
 			$zonefile.= '@	IN	NS	ns' . "\n" . 'ns	IN	' . $ip_a_record . "\n";
 		}
 		else
 		{
+		*/
 			foreach($this->nameservers as $nameserver)
 			{
 				$zonefile.= '@	IN	NS	' . trim($nameserver['hostname']) . "\n";
 			}
-		}
+		//}
 
 		if(count($this->mxservers) == 0)
 		{

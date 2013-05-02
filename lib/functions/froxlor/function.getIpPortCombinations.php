@@ -17,7 +17,7 @@
  *
  */
 
-function getIpPortCombinations($ssl = null)
+function getIpPortCombinations($ssl = false)
 {
 	global $db, $theme;
 	
