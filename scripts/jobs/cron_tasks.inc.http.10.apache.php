@@ -589,133 +589,136 @@ class apache
 		}
 
 		$query = "SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` `i`, `".TABLE_DOMAINTOIP."` `dip` 
-			WHERE dip.id_domain = '".$domain[id]."' AND i.id = dip.id_ipandports ";
+			WHERE dip.id_domain = '".$domain['id']."' AND i.id = dip.id_ipandports ";
 
 		if ($ssl_vhost === true 
 			&& ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')
 		) {
-			$query .= "AND i.ssl = 1 ORDER BY i.ssl_cert_file ASC;";		// by ordering by cert-file the row with filled out SSL-Fields will be shown last, thus it is enough to fill out 1 set of SSL-Fields
+			// by ordering by cert-file the row with filled out SSL-Fields will be shown last, thus it is enough to fill out 1 set of SSL-Fields
+			$query .= "AND i.ssl = 1 ORDER BY i.ssl_cert_file ASC;";
 		} else {
 			$query .= "AND i.ssl = '0';";
 		}
 
-		$ipport = '';
+		$vhost_content = '';
 
 		$result = $this->db->query($query);
 		while ($ipandport = $this->db->fetch_array($result)) {
 
+			$ipport = '';
 			$domain['ip'] = $ipandport['ip'];
 			$domain['port'] = $ipandport['port'];
 
 			if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-				$ipport .= '['.$domain[ip].']:'.$domain[port]. ' ';
+				$ipport = '['.$domain['ip'].']:'.$domain['port']. ' ';
 			} else {
-				$ipport .= $domain[ip].':'.$domain[port].' ';
-			}
- 		}
-
-		$domain['ssl_cert_file'] = $ipandport['ssl_cert_file']; // save last delivered ssl settings
-		$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
-		$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
-		// #418
-		$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
-
-		$vhost_content = '<VirtualHost ' . $ipport . '>' . "\n";
-
-		$vhost_content.= $this->getServerNames($domain);
-
-		if(($ssl_vhost == false
-		   && $domain['ssl'] == '1'
-		   && $domain['ssl_redirect'] == '1')
-		) {
-			$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
-		}
-		
-		if ($ssl_vhost === true
-		   && $domain['ssl'] == '1'
-		   && $this->settings['system']['use_ssl'] == '1'
-		) {
-			if ($domain['ssl_cert_file'] == '') {
-				$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+				$ipport = $domain['ip'].':'.$domain['port'].' ';
 			}
 
-			if ($domain['ssl_key_file'] == '') {
-				$domain['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
-			}
-
-			if ($domain['ssl_ca_file'] == '') {
-				$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
-			}
-
+			$domain['ssl_cert_file'] = $ipandport['ssl_cert_file']; // save last delivered ssl settings
+			$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
+			$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
 			// #418
-			if ($domain['ssl_cert_chainfile'] == '') {
-				$domain['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
+			$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
+
+			$vhost_content .= '<VirtualHost ' . $ipport . '>' . "\n";
+
+			$vhost_content.= $this->getServerNames($domain);
+
+			if(($ssl_vhost == false
+			   && $domain['ssl'] == '1'
+			   && $domain['ssl_redirect'] == '1')
+			) {
+				$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
 			}
 
-			if ($domain['ssl_cert_file'] != '') {
-				$vhost_content .= '  SSLEngine On' . "\n";
-				$vhost_content .= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
-
-				if ($domain['ssl_key_file'] != '') {
-					$vhost_content .= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
+			if ($ssl_vhost === true
+			   && $domain['ssl'] == '1'
+			   && $this->settings['system']['use_ssl'] == '1'
+			) {
+				if ($domain['ssl_cert_file'] == '') {
+					$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
 				}
 
-				if ($domain['ssl_ca_file'] != '') {
-					$vhost_content .= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
+				if ($domain['ssl_key_file'] == '') {
+					$domain['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
+				}
+
+				if ($domain['ssl_ca_file'] == '') {
+					$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
 				}
 
 				// #418
-				if ($domain['ssl_cert_chainfile'] != '') {
-					$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
+				if ($domain['ssl_cert_chainfile'] == '') {
+					$domain['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
+				}
+
+				if ($domain['ssl_cert_file'] != '') {
+					$vhost_content .= '  SSLEngine On' . "\n";
+					$vhost_content .= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
+
+					if ($domain['ssl_key_file'] != '') {
+						$vhost_content .= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
+					}
+
+					if ($domain['ssl_ca_file'] != '') {
+						$vhost_content .= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
+					}
+
+					// #418
+					if ($domain['ssl_cert_chainfile'] != '') {
+						$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
+					}
 				}
 			}
-		}
 
-		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$corrected_docroot = $this->idnaConvert->encode($domain['documentroot']);
-			if (substr($corrected_docroot, -1) == '/') {
-				$corrected_docroot = substr($corrected_docroot, 0, -1);
+			if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
+				$corrected_docroot = $this->idnaConvert->encode($domain['documentroot']);
+				if (substr($corrected_docroot, -1) == '/') {
+					$corrected_docroot = substr($corrected_docroot, 0, -1);
+				}
+
+				/* Get domain's redirect code */
+				$code = getDomainRedirectCode($domain['id']);
+				$modrew_red = '';
+				if ($code != '') {
+					$modrew_red = '[R='. $code . ';L]';
+				}
+
+				// redirect everything, not only root-directory, #541
+				$vhost_content .= '  <IfModule mod_rewrite.c>'."\n";
+				$vhost_content .= '    RewriteEngine On' . "\n";
+				$vhost_content .= '    RewriteCond %{HTTPS} off' . "\n";
+				$vhost_content .= '    RewriteRule (.*) '. $corrected_docroot.'%{REQUEST_URI} ' . $modrew_red . "\n";
+				$vhost_content .= '  </IfModule>' . "\n";
+
+				$code = getDomainRedirectCode($domain['id']);
+				$vhost_content .= '  Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
+			} else {
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
+				$vhost_content .= $this->getWebroot($domain);
+				if ($this->_deactivated == false) {
+					$vhost_content .= $this->composePhpOptions($domain,$ssl_vhost);
+					$vhost_content .= $this->getStats($domain);
+				}
+				$vhost_content .= $this->getLogfiles($domain);
+
+				if ($domain['specialsettings'] != '') {
+					$vhost_content .= $domain['specialsettings'] . "\n";
+				}
+
+				if ($ipandport['default_vhostconf_domain'] != '') {
+					$vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
+				}
+
+				if ($this->settings['system']['default_vhostconf'] != '') {
+					$vhost_content .= $this->settings['system']['default_vhostconf'] . "\n";
+				}
 			}
 
-			/* Get domain's redirect code */
-			$code = getDomainRedirectCode($domain['id']);
-			$modrew_red = '';
-			if ($code != '') {
-				$modrew_red = '[R='. $code . ';L]';
-			}
+			$vhost_content .= '</VirtualHost>' . "\n";
 
-			// redirect everything, not only root-directory, #541
-			$vhost_content .= '  <IfModule mod_rewrite.c>'."\n";
-			$vhost_content .= '    RewriteEngine On' . "\n";
-			$vhost_content .= '    RewriteCond %{HTTPS} off' . "\n";
-			$vhost_content .= '    RewriteRule (.*) '. $corrected_docroot.'%{REQUEST_URI} ' . $modrew_red . "\n";
-			$vhost_content .= '  </IfModule>' . "\n";
-
-			$code = getDomainRedirectCode($domain['id']);
-			$vhost_content .= '  Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
-		} else {
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
-			$vhost_content .= $this->getWebroot($domain);
-			if ($this->_deactivated == false) {
-				$vhost_content .= $this->composePhpOptions($domain,$ssl_vhost);
-				$vhost_content .= $this->getStats($domain);
-			}
-			$vhost_content .= $this->getLogfiles($domain);
-
-			if ($domain['specialsettings'] != '') {
-				$vhost_content .= $domain['specialsettings'] . "\n";
-			}
-
-			if ($ipandport['default_vhostconf_domain'] != '') {
-				$vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
-			}
-
-			if ($this->settings['system']['default_vhostconf'] != '') {
-				$vhost_content .= $this->settings['system']['default_vhostconf'] . "\n";
-			}
-		}
-
-		$vhost_content .= '</VirtualHost>' . "\n";
+		} // while ip's
 		return $vhost_content;
 	}
 
