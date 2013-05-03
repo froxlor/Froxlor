@@ -17,10 +17,6 @@
  *
  */
 
-/*
- * This script creates the php.ini's used by mod_suPHP+php-cgi
- */
-
 if(@php_sapi_name() != 'cli'
 && @php_sapi_name() != 'cgi'
 && @php_sapi_name() != 'cgi-fcgi')
@@ -389,8 +385,6 @@ class lighttpd
 				if ($this->lighttpd_data[$vhost_filename] == '') {
 					$this->lighttpd_data[$vhost_filename] .= $this->getVhostContent($domain, $ssl_vhost, $ipid);
 				}
-				// FIXME did this ever work?
-				//$this->lighttpd_data[$vhost_filename].= isset($this->needed_htpasswds[$domain[$ips_and_ports_index]]) ? $this->needed_htpasswds[$domain[$ips_and_ports_index]] . "\n" : '';
 			}
 		}
 		return $included_vhosts;
@@ -620,53 +614,6 @@ class lighttpd
 		return $path_options;
 	}
 
-	protected function getDirOptions($domain)
-	{
-		$query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `customerid`='" . $domain['customerid'] . "'";
-		$result = $this->db->query($query);
-
-		while ($row_htpasswds = $this->db->fetch_array($result)) {
-			if ($auth_backend_loaded[$domain['ipandport']] != 'yes'
-				&& $auth_backend_loaded[$domain['ssl_ipandport']] != 'yes'
-			) {
-				$filename = $domain['customerid'] . '.htpasswd';
-
-				if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') {
-					$auth_backend_loaded[$domain['ipandport']] = 'yes';
-					$diroption_text.= 'auth.backend = "htpasswd"' . "\n";
-					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
-					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
-					$diroption_text.= 'auth.require = ( ' . "\n";
-					$previous_domain_id = '1';
-				} elseif($this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
-					$auth_backend_loaded[$domain['ssl_ipandport']] = 'yes';
-					$diroption_text.= 'auth.backend= "htpasswd"' . "\n";
-					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
-					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
-					$diroption_text.= 'auth.require = ( ' . "\n";
-					$previous_domain_id = '1';
-				}
-			}
-
-			$diroption_text.= '"' . makeCorrectDir($row_htpasswds['path']) . '" =>' . "\n";
-			$diroption_text.= '(' . "\n";
-			$diroption_text.= '   "method"  => "basic",' . "\n";
-			$diroption_text.= '   "realm"   => "'.$row_htpasswds['authname'].'",' . "\n";
-			$diroption_text.= '   "require" => "valid-user"' . "\n";
-			$diroption_text.= ')' . "\n";
-
-			if ($this->auth_backend_loaded[$domain['ssl_ipandport']] == 'yes') {
-				$this->needed_htpasswds[$domain['ssl_ipandport']].= $diroption_text;
-			}
-
-			if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') {
-				$this->needed_htpasswds[$domain['ipandport']].= $diroption_text;
-			}
-		}
-
-		return '  auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
-	}
-
 	protected function getServerNames($domain)
 	{
 		$server_string = array();
@@ -857,7 +804,6 @@ class lighttpd
 		}
 
 		// Write the diroptions
-
 		if (isConfigDir($this->settings['system']['apacheconf_htpasswddir'])) {
 			foreach ($this->needed_htpasswds as $key => $data) {
 				if (!is_dir($this->settings['system']['apacheconf_htpasswddir'])) {
