@@ -186,10 +186,10 @@ class bind
 		while ($ip = $this->db->fetch_array($result_ip)) {
   
 			if (filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-				$ip_a_records[] = "A         $ip[ip]";
+				$ip_a_records[] = "A\t\t" . $ip['ip'];
 			}
 			elseif (filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-				$ip_a_records[] = "AAAA      $ip[ip]";
+				$ip_a_records[] = "AAAA\t\t" . $ip['ip'];
 			}
 			else {
 				return ";Error in at least one IP Adress (".$ip['ip']."), could not create zonefile!";
@@ -198,7 +198,7 @@ class bind
 
 		$date = date('Ymd');
 		$bindserial = (preg_match('/^' . $date . '/', $domain['bindserial']) ? $domain['bindserial'] + 1 : $date . '00');
-		$this->db->query('UPDATE `' . TABLE_PANEL_DOMAINS . '` SET `bindserial`=\'' . $bindserial . '\' WHERE `id`=\'' . $domain['id'] . '\'');
+		$this->db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `bindserial`='" . $bindserial . "' WHERE `id`='" . $domain['id'] . "'");
 		$zonefile = '$TTL ' . (int)$this->settings['system']['defaultttl'] . "\n";
 
 		if(count($this->nameservers) == 0)
@@ -212,44 +212,34 @@ class bind
 
 		$zonefile.= '	' . $bindserial . ' ; serial' . "\n" . '	8H ; refresh' . "\n" . '	2H ; retry' . "\n" . '	1W ; expiry' . "\n" . '	11h) ; minimum' . "\n";
 
-		// FIXME What is this? there is no $ip_a_record at this stage
-		/*
-		if(count($this->nameservers) == 0)
-		{
-			$zonefile.= '@	IN	NS	ns' . "\n" . 'ns	IN	' . $ip_a_record . "\n";
-		}
-		else
-		{
-		*/
-			foreach($this->nameservers as $nameserver)
-			{
-				$zonefile.= '@	IN	NS	' . trim($nameserver['hostname']) . "\n";
+		// no nameservers given, use all if the A/AAAA entries
+		if (count($this->nameservers) == 0) {
+			$zonefile .= '@    IN    NS    ns' . "\n";
+			foreach ($ip_a_records as $ip_a_record) {
+				$zonefile .= 'ns    IN    ' . $ip_a_record . "\n";
 			}
-		//}
+		} else {
+			foreach ($this->nameservers as $nameserver) {
+				$zonefile.= '@    IN    NS    ' . trim($nameserver['hostname']) . "\n";
+			}
+		}
 
-		if(count($this->mxservers) == 0)
-		{
+		if (count($this->mxservers) == 0) {
 			$zonefile.= '@	IN	MX	10 mail' . "\n";
 			$records[] = 'mail';
-			if($domain['iswildcarddomain'] != '1')
-			{
+			if ($domain['iswildcarddomain'] != '1') {
 				$records[] = 'imap';
 				$records[] = 'smtp';
 				$records[] = 'pop3';
 			}
-		}
-		else
-		{
-			foreach($this->mxservers as $mxserver)
-			{
-				$zonefile.= '@	IN	MX	' . trim($mxserver) . "\n";
+		} else {
+			foreach ($this->mxservers as $mxserver) {
+				$zonefile.= '@    IN    MX    ' . trim($mxserver) . "\n";
 			}
 
-			if($this->settings['system']['dns_createmailentry'] == '1')
-			{
+			if ($this->settings['system']['dns_createmailentry'] == '1') {
 				$records[] = 'mail';
-				if($domain['iswildcarddomain'] != '1')
-				{
+				if ($domain['iswildcarddomain'] != '1') {
 					$records[] = 'imap';
 					$records[] = 'smtp';
 					$records[] = 'pop3';
@@ -260,9 +250,9 @@ class bind
 		/*
 		 * @TODO domain-based spf-settings
 		*/
-		if($this->settings['spf']['use_spf'] == '1'
-				/*&& $domain['spf'] == '1' */)
-		{
+		if ($this->settings['spf']['use_spf'] == '1'
+				/*&& $domain['spf'] == '1' */
+		) {
 			$zonefile.= $this->settings['spf']['spf_entry'] . "\n";
 		}
 
