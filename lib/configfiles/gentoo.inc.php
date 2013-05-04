@@ -301,29 +301,7 @@ milter_default_action = accept" >> /etc/postfix/main.cf',
 						)
 					),
 					'dovecot' => Array(
-						'label' => 'Dovecot 1 *deprecated*',
-						'commands_1' => Array(
-							'echo "net-mail/dovecot mysql" >> /etc/portage/package.use',
-							'emerge -av dovecot',
-							'mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.conf.gentoo',
-							'mv /etc/dovecot/dovecot-sql.conf /etc/dovecot/dovecot-sql.conf.gentoo',
-							'touch /etc/dovecot/dovecot.conf',
-							'touch /etc/dovecot/dovecot-sql.conf',
-						),
-						'files' => Array(
-							'etc_dovecot_dovecot.conf' => '/etc/dovecot/dovecot.conf',
-							'etc_dovecot_dovecot-sql.conf' => '/etc/dovecot/dovecot-sql.conf'
-						),
-						'commands_2' => Array(
-							'chmod 0640 /etc/dovecot/dovecot-sql.conf',
-							'rc-update add dovecot default'
-						),
-						'restart' => Array(
-							'/etc/init.d/dovecot restart'
-						)
-					),
-					'dovecot2' => Array(
-						'label' => 'Dovecot 2',
+						'label' => 'Dovecot',
 						'commands_1' => Array(
 							'echo "net-mail/dovecot mysql" >> /etc/portage/package.use',
 							'emerge -av dovecot',
