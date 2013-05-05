@@ -1,6 +1,6 @@
 Origin: froxlor.org
 Label: Froxlor
-Suite: stable
+Suite: oldstable
 Codename: squeeze
 Architectures: amd64 armel i386
 Components: main
