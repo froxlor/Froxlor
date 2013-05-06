@@ -132,7 +132,7 @@ while ($row_database = $db->fetch_array($databases)) {
 	if (in_array(strtolower($row_database['databasename']), $databases_list)) {
 		// sum up data_length and index_length
 		$mysql_usage_result = $db_root->query("
-			SELECT SUM(data_length + index_length) AS usage
+			SELECT SUM(data_length + index_length) AS customerusage
 			FROM information_schema.TABLES
 			WHERE table_schema = '" . $db_root->escape($row_database['databasename']) . "'
 			GROUP BY table_schema;
@@ -144,7 +144,7 @@ while ($row_database = $db->fetch_array($databases)) {
 			$mysqlusage_all[$row_database['customerid']] = 0;
 		}
 		// sum up result
-		$mysqlusage_all[$row_database['customerid']] += floatval($mysql_usage_row['usage']);
+		$mysqlusage_all[$row_database['customerid']] += floatval($mysql_usage_row['customerusage']);
 	} else {
 		echo "Seems like the database " . $row_database['databasename'] . " had been removed manually.\n";
 	}
