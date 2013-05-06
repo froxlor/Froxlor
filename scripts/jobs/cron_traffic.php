@@ -111,42 +111,41 @@ $last_dbserver = 0;
 
 $databases_list = array();
 $databases_list_result = $db_root->query("show databases");
-while($databases_list_row = $db->fetch_array($databases_list_result))
-{
+while ($databases_list_row = $db->fetch_array($databases_list_result)) {
 	$databases_list[] = strtolower($databases_list_row['Database']);
 }
 
-while($row_database = $db->fetch_array($databases))
-{
-	if($last_dbserver != $row_database['dbserver'])
-	{
+while ($row_database = $db->fetch_array($databases)) {
+
+	if ($last_dbserver != $row_database['dbserver']) {
 		$db_root->close();
 		$db_root = new db($sql_root[$row_database['dbserver']]['host'], $sql_root[$row_database['dbserver']]['user'], $sql_root[$row_database['dbserver']]['password'], '');
 		$last_dbserver = $row_database['dbserver'];
 
 		$database_list = array();
 		$databases_list_result = $db_root->query("show databases");
-		while($databases_list_row = $db->fetch_array($databases_list_result))
-		{
+		while ($databases_list_row = $db->fetch_array($databases_list_result)) {
 			$databases_list[] = strtolower($databases_list_row['Database']);
 		}
 	}
 
-	if(in_array(strtolower($row_database['databasename']), $databases_list))
-	{
-		$mysql_usage_result = $db_root->query("SHOW TABLE STATUS FROM `" . $db_root->escape($row_database['databasename']) . "`");
-
-		while($mysql_usage_row = $db_root->fetch_array($mysql_usage_result))
-		{
-			if(!isset($mysqlusage_all[$row_database['customerid']]))
-			{
-				$mysqlusage_all[$row_database['customerid']] = 0;
-			}
-			$mysqlusage_all[$row_database['customerid']] += floatval($mysql_usage_row['Data_length'] + $mysql_usage_row['Index_length']);
+	if (in_array(strtolower($row_database['databasename']), $databases_list)) {
+		// sum up data_length and index_length
+		$mysql_usage_result = $db_root->query("
+			SELECT SUM(data_length + index_length) AS usage
+			FROM information_schema.TABLES
+			WHERE table_schema = '" . $db_root->escape($row_database['databasename']) . "'
+			GROUP BY table_schema;
+		");
+		// get the result
+		$mysql_usage_row = $db_root->fetch_array($mysql_usage_result);
+		// initialize counter for customer
+		if (!isset($mysqlusage_all[$row_database['customerid']])) {
+			$mysqlusage_all[$row_database['customerid']] = 0;
 		}
-	}
-	else
-	{
+		// sum up result
+		$mysqlusage_all[$row_database['customerid']] += floatval($mysql_usage_row['usage']);
+	} else {
 		echo "Seems like the database " . $row_database['databasename'] . " had been removed manually.\n";
 	}
 }
