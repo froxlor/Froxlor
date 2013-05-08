@@ -249,17 +249,15 @@ class htmlform
 	 */
 	public static function _checkbox($fieldname = '', $data = array()) {
 		// $data['value'] contains checked items
+
+		$checked = array();
 		if (isset($data['value'])) {
 			$checked = $data['value'];
-		} else {
-			$checked = array();
 		}
 
 		if (isset($_SESSION['requestData'])) {
 			if(isset($_SESSION['requestData'][$fieldname])) {
 				$checked = array($_SESSION['requestData'][$fieldname]);
-			} else {
-				$checked = array();
 			}
 		}
 
@@ -276,13 +274,14 @@ class htmlform
 			$key = $val['label'];
 			// is this box checked?
 			$isChecked = '';
-			foreach($checked as $tmp) {
-				if ($tmp == $val['value']) {
-					$isChecked = ' checked="checked" ';
-					break;
+			if (is_array($checked) && count($checked) > 0) {
+				foreach($checked as $tmp) {
+					if ($tmp == $val['value']) {
+						$isChecked = ' checked="checked" ';
+						break;
+					}
 				}
 			}
-
 			$output .= '<label><input type="checkbox" name="'.$fieldname.$isArray.'" value="'.$val['value'].'" '.$isChecked.'/>'.$key.'</label>';
 		}
 

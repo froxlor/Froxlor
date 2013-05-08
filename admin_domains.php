@@ -392,41 +392,35 @@ if($page == 'domains'
 				}
 
 				$ipandports = array();
-				if (isset($_POST['ipandport']) && !is_array($_POST['ipandport']))
-				{
+				if (isset($_POST['ipandport']) && !is_array($_POST['ipandport'])) {
 					$_POST['ipandport'] = unserialize($_POST['ipandport']);
 				}
 
-				if (isset($_POST['ipandport']) && is_array($_POST['ipandport']))
-				{
-					foreach($_POST['ipandport'] as $ipandport)
-					{
-						 $ipandport = intval($ipandport);
-						 $ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' " . $additional_ip_condition);
-						 if(!isset($ipandport_check['id'])
-						 	|| $ipandport_check['id'] == '0'
-							|| $ipandport_check['id'] != $ipandport)
-						{
+				if (isset($_POST['ipandport']) && is_array($_POST['ipandport'])) {
+					foreach($_POST['ipandport'] as $ipandport) {
+						$ipandport = intval($ipandport);
+						$ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' " . $additional_ip_condition);
+						if(!isset($ipandport_check['id'])
+							|| $ipandport_check['id'] == '0'
+							|| $ipandport_check['id'] != $ipandport
+						) {
 							standard_error('ipportdoesntexist');
-						}
-						else
-						{
+						} else {
 							$ipandports[] = $ipandport;
 						}
 					}
 				}
 
-				if($settings['system']['use_ssl'] == "1"
-				   && isset($_POST['ssl_ipandport']))
-				{
+				if ($settings['system']['use_ssl'] == "1"
+					&& isset($_POST['ssl_ipandport'])
+				) {
 					$ssl_redirect = 0;
 					if (isset($_POST['ssl_redirect'])) {
 						$ssl_redirect = (int)$_POST['ssl_redirect'];
 					}
 
 					$ssl_ipandports = array();
-					if (isset($_POST['ssl_ipandport']) && !is_array($_POST['ssl_ipandport']))
-					{
+					if (isset($_POST['ssl_ipandport']) && !is_array($_POST['ssl_ipandport'])) {
 						$_POST['ssl_ipandport'] = unserialize($_POST['ssl_ipandport']);
 					}
 
@@ -592,9 +586,9 @@ if($page == 'domains'
 						'dkim' => $dkim,
 						'speciallogfile' => $speciallogfile,
 						'wwwserveralias' => $wwwserveralias,
-						'ipandport' => $ipandport,
+						'ipandport' => serialize($ipandports),
 						'ssl_redirect' => $ssl_redirect,
-						'ssl_ipandport' => $ssl_ipandport,
+						'ssl_ipandport' => serialize($ssl_ipandports),
 						'openbasedir' => $openbasedir,
 						'phpsettingid' => $phpsettingid,
 						'mod_fcgid_starter' => $mod_fcgid_starter,
