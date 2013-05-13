@@ -1,0 +1,13 @@
+froxlor_mailalias:
+  debug_print = "R: froxlor_mailalias for $local_part@$domain"
+  driver = redirect
+  domains = +froxlor_domain
+  data = ${lookup mysql {FROXLOR_MAILALIAS}{$value}fail}
+
+froxlor_mailuser:
+  debug_print = "R: froxlor_mailuser for $local_part@$domain"
+  driver = redirect
+  domains = +froxlor_domain
+  data = ${lookup mysql {FROXLOR_MAILUSER}{$value}fail}
+  directory_transport = maildir_froxlor
+  no_more
