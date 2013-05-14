@@ -533,4 +533,12 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= '<input type="text" class="text" name="system_afxrservers" value="" />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_version, '0.9.29-dev4')) {
+		$has_preconfig = true;
+		$description  = 'As customers can now specify ssl-certificate data for their domains, you need to specify where the generated files are stored<br />';
+		$question = '<strong>Specify the directory for customer ssl-certificates:</strong>&nbsp;';
+		$question.= '<input type="text" class="text" name="system_customersslpath" value="/etc/apache2/ssl/" />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

@@ -94,6 +94,15 @@ return array(
 					'default' => '/var/customers/logs/',
 					'save_method' => 'storeSettingField',
 					),
+				'system_customersslpath' => array(
+					'label' => $lng['serversettings']['customerssl_directory'],
+					'settinggroup' => 'system',
+					'varname' => 'customer_ssl_path',
+					'type' => 'string',
+					'string_type' => 'dir',
+					'default' => '/etc/apache2/ssl/',
+					'save_method' => 'storeSettingField',
+					),
 				'system_phpappendopenbasedir' => array(
 					'label' => $lng['serversettings']['phpappendopenbasedir'],
 					'settinggroup' => 'system',

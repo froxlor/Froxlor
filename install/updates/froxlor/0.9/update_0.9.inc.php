@@ -2109,3 +2109,24 @@ if (isFroxlorVersion('0.9.29-dev2')) {
 
 	updateToVersion('0.9.29-dev3');
 }
+
+if (isFroxlorVersion('0.9.29-dev3')) {
+	showUpdateStep("Updating from 0.9.29-dev3 to 0.9.29-dev4", true);
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new tables to database");
+	$db->query("CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
+	`id` int(5) NOT NULL auto_increment,
+	`domainid` int(11) NOT NULL,
+	`ssl_cert_file` text NOT NULL,
+	`ssl_key_file` text NOT NULL,
+	`ssl_ca_file` text NOT NULL,
+	`ssl_cert_chainfile` text NOT NULL,
+	PRIMARY KEY  (`id`)
+	) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;");
+	lastStepStatus(0);
+
+	$system_customersslpath = isset($_POST['system_customersslpath']) ? makeCorrectDir($_POST['system_customersslpath']) : '/etc/apache2/ssl/';
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'customer_ssl_path', '".$db->escape($system_customersslpath)."');");
+	updateToVersion('0.9.29-dev4');
+}

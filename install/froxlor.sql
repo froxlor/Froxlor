@@ -512,6 +512,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'documentroot_use_default_value', '0'),
 	('system', 'passwordcryptfunc', '1'),
 	('system', 'axfrservers', ''),
+	('system', 'customer_ssl_path', '/etc/apache2/ssl/'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -539,7 +540,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.29-dev3');
+	('panel', 'version', '0.9.29-dev4');
 
 
 
@@ -917,3 +918,13 @@ CREATE TABLE IF NOT EXISTS `domain_docrootsettings` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
+DROP TABLE IF EXISTS `domain_ssl_settings`;
+CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
+  `id` int(5) NOT NULL auto_increment,
+  `domainid` int(11) NOT NULL,
+  `ssl_cert_file` text NOT NULL,
+  `ssl_key_file` text NOT NULL,
+  `ssl_ca_file` text NOT NULL,
+  `ssl_cert_chainfile` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
