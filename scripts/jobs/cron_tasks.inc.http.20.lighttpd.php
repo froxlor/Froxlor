@@ -397,6 +397,12 @@ class lighttpd
 		$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
 		$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
 
+		// SSL STUFF
+		$dssl = new DomainSSL($this->settings, $this->db);
+		// this sets the ssl-related array-indices in the $domain array
+		// if the domain has customer-defined ssl-certificates
+		$dssl->setDomainSSLFilesArray($domain);
+
 		if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 			$ipport = '[' . $domain['ip'] . ']:' . $domain['port'];
 		} else {

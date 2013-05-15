@@ -1,0 +1,113 @@
+<?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Michael Kaufmann <mkaufmann@nutime.de>
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    Cron
+ *
+ * @since      0.9.29
+ *
+ */
+
+class DomainSSL {
+
+	/**
+	 * internal settings array
+	 *
+	 * @var array
+	 */
+	private $_settings = null;
+
+	/**
+	 * internal database object
+	 *
+	 * @var db
+	 */
+	private $_db = null;
+
+	/**
+	 * constructor gets the froxlor settings as array
+	 * and the initialized database object
+	 */
+	public function __construct(array $settings = null, $db = null) {
+		$this->_settings = $settings;
+		$this->_db = $db;
+	}
+
+	/**
+	 * read domain-related (or if empty, parentdomain-related) ssl-certificates from the database
+	 * and (if not empty) set the corresponding array-indices (ssl_cert_file, ssl_key_file,
+	 * ssl_ca_file and ssl_cert_chainfile). Hence the parameter as reference.
+	 *
+	 * @param array $domain domain-array as reference so we can set the corresponding array-indices
+	 *
+	 * @return null
+	 */
+	public function setDomainSSLFilesArray(array &$domain = null) {
+		// check if the domain itself has a certificate defined
+		$dom_certs = $this->_db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` ='".$domain['id']."'");
+		if (!is_array($dom_certs)
+				|| !isset($dom_certs['ssl_cert_file'])
+				|| $dom_certs['ssl_cert_file'] == ''
+		) {
+			// maybe its parent?
+			if ($domain['parentdomainid'] != 0) {
+				$dom_certs = $this->_db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` ='".$domain['parentdomainid']."'");
+			}
+		}
+
+		// check if it's an array and if the most important field is set
+		if (is_array($dom_certs)
+				&& isset($dom_certs['ssl_cert_file'])
+				&& $dom_certs['ssl_cert_file'] != ''
+		) {
+			// get destination path
+			$sslcertpath = makeCorrectDir($this->_settings['system']['customer_ssl_path']);
+			// create path if it does not exist
+			if (!file_exists($sslcertpath)) {
+				safe_exec('mkdir -p '.escapeshellarg($sslcertpath));
+			}
+			// make correct files for the certificates
+			$ssl_files = array(
+					'ssl_cert_file' => makeCorrectFile($sslcertpath.'/'.$domain['domain'].'.crt'),
+					'ssl_key_file' => makeCorrectFile($sslcertpath.'/'.$domain['domain'].'.key')
+			);
+			// initialize optional files
+			$ssl_files['ssl_ca_file'] = '';
+			$ssl_files['ssl_cert_chainfile'] = '';
+			// set them if they are != empty
+			if ($dom_certs['ssl_ca_file'] != '') {
+				$ssl_files['ssl_ca_file'] = makeCorrectFile($sslcertpath.'/'.$domain['domain'].'_CA.pem');
+			}
+			if ($dom_certs['ssl_cert_chainfile'] != '') {
+				$ssl_files['ssl_cert_chainfile'] = makeCorrectFile($sslcertpath.'/'.$domain['domain'].'_chain.pem');
+			}
+			// create them on the filesystem
+			foreach ($ssl_files as $type => $filename) {
+				if ($filename != '') {
+					touch($filename);
+					$_fh = fopen($filename, 'w');
+					fwrite($_fh, $dom_certs[$type]);
+					fclose($_fh);
+					chmod($filename, 0600);
+				}
+			}
+			// override corresponding array values
+			$domain['ssl_cert_file'] = $ssl_files['ssl_cert_file'];
+			$domain['ssl_key_file'] = $ssl_files['ssl_key_file'];
+			$domain['ssl_ca_file'] = $ssl_files['ssl_ca_file'];
+			$domain['ssl_cert_chainfile'] = $ssl_files['ssl_cert_chainfile'];
+		}
+
+		return;
+	}
+}

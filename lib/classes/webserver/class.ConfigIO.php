@@ -57,6 +57,32 @@ class ConfigIO {
 
 		// old htpasswd files
 		$this->_cleanHtpasswdFiles();
+
+		// customer-specified ssl-certificates
+		$this->_cleanCustomerSslCerts();
+	}
+
+	/**
+	 * remove customer-specified auto-generated ssl-certificates
+	 * (they are being regenerated)
+	 *
+	 * @return null
+	 */
+	private function _cleanCustomerSslCerts() {
+
+		// get correct directory
+		$configdir = $this->_getFile('system', 'customer_ssl_path');
+		if ($configdir !== false) {
+
+			$configdir = makeCorrectDir($configdir);
+
+			if (@is_dir($configdir)) {
+				// now get rid of old stuff
+				//(but append /* so we don't delete the directory)
+				$configdir.='/*';
+				safe_exec('rm -rf '. makeCorrectFile($configdir));
+			}
+		}
 	}
 
 	/**
@@ -126,7 +152,7 @@ class ConfigIO {
 	 * @return null
 	 */
 	private function _cleanAwstatsFiles() {
-		
+
 		if ($this->_settings['system']['awstats_enabled'] == '0') {
 			return;
 		}
@@ -182,13 +208,13 @@ class ConfigIO {
 		if ($configdir !== false) {
 
 			$configdir = makeCorrectDir($configdir);
-	
+
 			if (@is_dir($configdir)) {
 				// create directory iterator
 				$its = new RecursiveIteratorIterator(
 						new RecursiveDirectoryIterator($configdir)
 				);
-	
+
 				// iterate through all subdirs,
 				// look for php-fcgi-starter files
 				// and take immutable-flag away from them
@@ -199,7 +225,7 @@ class ConfigIO {
 						removeImmutable($its->getPathname());
 					}
 				}
-	
+
 				// now get rid of old stuff
 				//(but append /* so we don't delete the directory)
 				$configdir.='/*';
