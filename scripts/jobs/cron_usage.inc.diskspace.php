@@ -82,7 +82,7 @@ while($row = $db->fetch_array($result))
 
 		$_mailerror = false;
 		try {
-			$mail->SetFrom($row['email'], $row['firstname'] . " " . $row['name']);
+			$mail->SetFrom($row['adminmail'], $row['adminname']);
 			$mail->Subject = $mail_subject;
 			$mail->AltBody = $mail_body;
 			$mail->MsgHTML(nl2br($mail_body));
