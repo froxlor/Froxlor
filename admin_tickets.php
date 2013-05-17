@@ -326,13 +326,20 @@ if($page == 'tickets'
 				$isclosed = 1;
 			}
 
-			if($mainticket->Get('by') == '1')
+			if ($mainticket->Get('by') == '1')
 			{
 				$by = $lng['ticket']['staff'];
 			}
 			else
 			{
-				$by = $lng['ticket']['customer'];
+				$cid = $mainticket->Get('customer');
+				$usr = $db->query_first('SELECT `customerid`, `firstname`, `name`, `company`, `loginname`
+						FROM `' . TABLE_PANEL_CUSTOMERS . '`
+						WHERE `customerid` = "' . (int)$cid . '"'
+				);
+				$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $cid)).'" rel="external">';
+				$by .= getCorrectFullUserDetails($usr).'</a>';
+				//$by = $lng['ticket']['customer'];
 			}
 
 			$subject = $mainticket->Get('subject');
@@ -354,7 +361,14 @@ if($page == 'tickets'
 				}
 				else
 				{
-					$by = $lng['ticket']['customer'];
+					$cid = $subticket->Get('customer');
+					$usr = $db->query_first('SELECT `customerid`, `firstname`, `name`, `company`, `loginname`
+						FROM `' . TABLE_PANEL_CUSTOMERS . '`
+						WHERE `customerid` = "' . (int)$cid . '"'
+					);
+					$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $cid)).'" rel="external">';
+					$by .= getCorrectFullUserDetails($usr).'</a>';
+					//$by = $lng['ticket']['customer'];
 				}
 
 				$subject = $subticket->Get('subject');
@@ -816,11 +830,18 @@ elseif($page == 'archive'
 		}
 		else
 		{
-			$by = $lng['ticket']['customer'];
+			$cid = $mainticket->Get('customer');
+			$usr = $db->query_first('SELECT `customerid`, `firstname`, `name`, `company`, `loginname`
+						FROM `' . TABLE_PANEL_CUSTOMERS . '`
+						WHERE `customerid` = "' . (int)$cid . '"'
+			);
+			$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $cid)).'" rel="external">';
+			$by .= getCorrectFullUserDetails($usr).'</a>';
+			//$by = $lng['ticket']['customer'];
 		}
 
-		$subject = htmlentities($mainticket->Get('subject'));
-		$message = htmlentities($mainticket->Get('message'));
+		$subject = $mainticket->Get('subject');
+		$message = $mainticket->Get('message');
 		eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_main") . "\";");
 		$result = $db->query('SELECT `name` FROM `' . TABLE_PANEL_TICKET_CATS . '`
                               WHERE `id`="' . (int)$mainticket->Get('category') . '"');
@@ -838,22 +859,28 @@ elseif($page == 'archive'
 			}
 			else
 			{
-				$by = $lng['ticket']['customer'];
+				$cid = $subticket->Get('customer');
+				$usr = $db->query_first('SELECT `customerid`, `firstname`, `name`, `company`, `loginname`
+						FROM `' . TABLE_PANEL_CUSTOMERS . '`
+						WHERE `customerid` = "' . (int)$cid . '"'
+				);
+				$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $cid)).'" rel="external">';
+				$by .= getCorrectFullUserDetails($usr).'</a>';
+				//$by = $lng['ticket']['customer'];
 			}
 
-			$subject = htmlentities($subticket->Get('subject'));
-			$message = htmlentities($subticket->Get('message'));
+			$subject = $subticket->Get('subject');
+			$message = $subticket->Get('message');
 			eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_list") . "\";");
 		}
 
 		$priorities = makeoption($lng['ticket']['high'], '1', htmlentities($mainticket->Get('priority')), true, true);
 		$priorities.= makeoption($lng['ticket']['normal'], '2', htmlentities($mainticket->Get('priority')), true, true);
 		$priorities.= makeoption($lng['ticket']['low'], '3', htmlentities($mainticket->Get('priority')), true, true);
-		$subject = htmlentities($mainticket->Get('subject'));
+		$subject = $mainticket->Get('subject');
 		$ticket_replies_count = $db->num_rows($andere) + 1;
 
 		// don't forget the main-ticket!
-
 		eval("echo \"" . getTemplate("tickets/tickets_view") . "\";");
 	}
 	elseif($action == 'delete'

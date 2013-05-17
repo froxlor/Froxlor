@@ -340,7 +340,13 @@ elseif($page == 'tickets')
 			}
 			else
 			{
-				$by = $lng['ticket']['customer'];
+				$cid = $mainticket->Get('customer');
+				$usr = $db->query_first('SELECT `customerid`, `firstname`, `name`, `company`, `loginname`
+						FROM `' . TABLE_PANEL_CUSTOMERS . '`
+						WHERE `customerid` = "' . (int)$cid . '"'
+				);
+				$by = getCorrectFullUserDetails($usr);
+				//$by = $lng['ticket']['customer'];
 			}
 
 			$subject = $mainticket->Get('subject');
@@ -362,7 +368,8 @@ elseif($page == 'tickets')
 				}
 				else
 				{
-					$by = $lng['ticket']['customer'];
+					$by = getCorrectFullUserDetails($usr);
+					//$by = $lng['ticket']['customer'];
 				}
 
 				$subject = $subticket->Get('subject');
