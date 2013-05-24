@@ -1,0 +1,28 @@
+MAILER-DAEMON:      postmaster
+postmaster:         root
+
+adm:                root
+bin:                root
+daemon:             root
+exim:               root
+lp:                 root
+mail:               root
+named:              root
+nobody:             root
+postfix:            root
+
+operator:           root
+
+abuse:              postmaster
+ftp:                root
+hostmaster:         root
+news:               usenet
+noc:                root
+security:           root
+usenet:             root
+uucp:               root
+webmaster:          root
+www:                webmaster
+
+# change this to a valid e-mail address you can access
+root:               root@<SERVERNAME>

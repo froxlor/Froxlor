@@ -116,7 +116,7 @@ return Array(
 						'label' => 'Bind9',
 						'commands' => Array(
 							'apt-get install bind9',
-							'echo "include \"' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf\";" >> /etc/bind/named.conf',
+							'echo "include \"' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf\";" >> /etc/bind/named.conf.local',
 							'touch ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
 							'chown root:bind ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
 							'chmod 0644 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf'
@@ -174,7 +174,8 @@ return Array(
 							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
 							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf',
-							'etc_postfix_sasl_smtpd.conf' => '/etc/postfix/sasl/smtpd.conf'
+							'etc_postfix_sasl_smtpd.conf' => '/etc/postfix/sasl/smtpd.conf',
+							'etc_aliases' => '/etc/aliases'
 						),
 						'restart' => Array(
 							'newaliases',
@@ -234,11 +235,12 @@ return Array(
 							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
 							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
 							'etc_postfix_mysql-virtual_mailbox_maps.cf' => '/etc/postfix/mysql-virtual_mailbox_maps.cf',
-							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf'
+							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf',
+							'etc_aliases' => '/etc/aliases'
 						),
 						'restart' => Array(
-							'/etc/init.d/postfix restart',
-							'newaliases'
+							'newaliases',
+							'/etc/init.d/postfix restart'
 						)
 					),
 					'postfix_mxaccess' => Array(
@@ -392,11 +394,41 @@ return Array(
 						'restart' => Array(
 							'/etc/init.d/nscd restart'
 						)
+					),
+					'fcgid' => array(
+						'label' => 'FCGID',
+						'commands' => array(
+							'apt-get install apache2-suexec libapache2-mod-fcgid php5-cgi',
+							'a2enmod suexec fcgid',
+							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'groupadd -f '.$settings['system']['mod_fcgid_httpgroup'] : null,
+							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'useradd -s /bin/false -g '.$settings['system']['mod_fcgid_httpgroup'].' '.$settings['system']['mod_fcgid_httpuser'] : null,
+							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'chown -R '.$settings['system']['mod_fcgid_httpuser'].':'.$settings['system']['mod_fcgid_httpgroup'].' '.$pathtophpfiles : null,
+							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'mkdir -p '.makeCorrectDir($settings['system']['mod_fcgid_configdir']) : null,
+							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'mkdir -p '.makeCorrectDir($settings['system']['mod_fcgid_tmpdir']) : null,
+							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'a2dismod php5' : null
+						),
+						'restart' => Array(
+							'/etc/init.d/apache2 restart'
+						)
+					),
+					'php-fpm' => array(
+						'label' => 'PHP-FPM',
+						'commands' => array(
+							'# add "non-free" after all occurances of "main" in /etc/apt/sources.list',
+							'# this is needed for libapache2-mod-fastcgi to install',
+							'apt-get install apache2-suexec libapache2-mod-fastcgi php5-fpm',
+							'# change fpm-configuration directory to "/etc/php5/fpm/pool.d/" in froxlor',
+							'sed -i.bak \'s/^;include=\/etc\/php5\/fpm/*.conf/include=include=\/etc\/php5\/fpm\/pool.d\/*.conf/\' /etc/php5/fpm/php-fpm.conf',
+							'rm /etc/php5/fpm/pool.d/www.conf',
+							'a2enmod suexec fastcgi actions',
+							($settings['phpfpm']['enabled_ownvhost'] == '1') ? 'groupadd -f '.$settings['phpfpm']['vhost_httpgroup'] : null,
+							($settings['phpfpm']['enabled_ownvhost'] == '1') ? 'useradd -s /bin/false -g '.$settings['phpfpm']['vhost_httpgroup'].' '.$settings['phpfpm']['vhost_httpuser'] : null,
+							($settings['phpfpm']['enabled_ownvhost'] == '1') ? 'chown -R '.$settings['phpfpm']['vhost_httpuser'].':'.$settings['phpfpm']['vhost_httpgroup'].' '.$pathtophpfiles : null,
+							($settings['phpfpm']['enabled_ownvhost'] == '1') ? 'a2dismod php5' : null
+						)
 					)
 				)
 			)
 		)
 	)
 );
-
-?>

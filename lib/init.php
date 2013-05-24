@@ -78,6 +78,8 @@ if(!is_readable('lib/userdata.inc.php'))
 	die('You have to make the file "lib/userdata.inc.php" readable for the http-process!');
 }
 
+define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
+
 /**
  * Includes the Usersettings eg. MySQL-Username/Passwort etc.
  */

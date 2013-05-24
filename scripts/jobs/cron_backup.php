@@ -51,7 +51,7 @@ if($settings['system']['backup_enabled'] == '1'){
 	    $dbs_result = $db->query("SELECT databasename FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = '" . $db->escape($row['customerid']) . "';");
 	    while($dbs_row = $db->fetch_array($dbs_result)){
 		// create customers sql backup
-		safe_exec(escapeshellarg($settings['system']['backup_mysqldump_path']) . ' --opt --force --allow-keywords -u ' . escapeshellarg($sql_root[0]['user']) . ' -p' . escapeshellarg($sql_root[0]['password']) . ' -h ' . $sql_root[0]['host'] . ' ' . escapeshellarg($dbs_row['databasename']) . ' -r ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/' . escapeshellarg($dbs_row['databasename']) . '.sql'  );
+		safe_exec(escapeshellcmd($settings['system']['backup_mysqldump_path']) . ' --opt --force --allow-keywords -u ' . escapeshellarg($sql_root[0]['user']) . ' -p' . escapeshellarg($sql_root[0]['password']) . ' -h ' . $sql_root[0]['host'] . ' -B ' . escapeshellarg($dbs_row['databasename']) . ' -r ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . '/' . escapeshellarg($dbs_row['databasename']) . '.sql'  );
 		// compress sql backup
 		safe_exec('tar -C ' . escapeshellarg($settings['system']['backup_dir']) . escapeshellarg($row['loginname']) . ' -c -z -f ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '/' . escapeshellarg($dbs_row['databasename']) . '.tar.gz ' . escapeshellarg($dbs_row['databasename']) . '.sql');
 		// remove uncompresed sql files
