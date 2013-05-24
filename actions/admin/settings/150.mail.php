@@ -58,6 +58,7 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => 'Maildir',
+					'string_emptyallowed' => true,
 					'save_method' => 'storeSettingField',
 					),
 				'panel_sendalternativemail' => array(
