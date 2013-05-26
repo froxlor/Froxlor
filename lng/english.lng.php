@@ -1912,7 +1912,8 @@ $lng['serversettings']['catchall_enabled']['title']  = 'Use Catchall';
 $lng['serversettings']['catchall_enabled']['description']  = 'Do you want to provide your customers the catchall-feature?';
 
 // ADDED IN 0.9.28.svn6
-$lng['serversettings']['apache_24'] = 'Use modifications for Apache 2.4';
+$lng['serversettings']['apache_24']['title'] = 'Use modifications for Apache 2.4';
+$lng['serversettings']['apache_24']['description'] = '<strong style="color:red;">ATTENTION:</strong> use only if you acutally have apache version 2.4 or higher installed<br />otherwise your webserver will not be able to start';
 $lng['admin']['tickets_see_all'] = 'Can see all ticket-categories?';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Path to fastcgi_params file';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Specify the path to nginx\'s fastcgi_params file including filename';
