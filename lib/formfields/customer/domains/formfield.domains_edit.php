@@ -88,6 +88,7 @@ return array(
 						'value' => array($result['ssl_redirect'])
 					),
 					'openbasedir_path' => array(
+						'visible' => ($result['openbasedir'] == '1') ? true : false,
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
 						'select_var' => $openbasedir
