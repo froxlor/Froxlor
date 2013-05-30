@@ -251,12 +251,12 @@ class apache
 					);
 
 					$php = new phpinterface($this->getDB(), $this->settings, $domain);
-					$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . $this->settings['phpfpm']['vhost_httpuser'] . '" "' . $this->settings['phpfpm']['vhost_httpgroup'] . '"' . "\n";
 					$srvName = 'fpm.external';
 					if ($row_ipsandports['ssl']) {
 						$srvName = 'ssl-fpm.external';
 					}
-					$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName .' -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['system']['mod_fcgid_httpuser'] . ' -group ' . $this->settings['system']['mod_fcgid_httpuser'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName .' -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['phpfpm']['vhost_httpuser'] . ' -group ' . $this->settings['phpfpm']['vhost_httpgroup'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
 					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
 					$this->virtualhosts_data[$vhosts_filename] .= '    AddHandler php5-fastcgi .php'. "\n";
 					$this->virtualhosts_data[$vhosts_filename] .= '    Action php5-fastcgi /fastcgiphp' . "\n";
