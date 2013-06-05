@@ -33,7 +33,7 @@ $lng['panel']['emptyfordefault'] = 'prázdné - pro výchozí';
 $lng['panel']['path'] = 'Cesta';
 $lng['panel']['toggle'] = 'Přepnout';
 $lng['panel']['next'] = 'další';
-$lng['panel']['dirsmissing'] = 'Nemohu nejít/číst adresář!';
+$lng['panel']['dirsmissing'] = 'Nemohu najít/číst adresář!';
 
 /**
  * Login
@@ -59,15 +59,15 @@ $lng['customer']['zipcode'] = 'PSČ';
 $lng['customer']['city'] = 'Město';
 $lng['customer']['phone'] = 'Telefon';
 $lng['customer']['fax'] = 'Fax';
-$lng['customer']['email'] = 'Email';
+$lng['customer']['email'] = 'E-mail';
 $lng['customer']['customernumber'] = 'Zákazníkovo ID';
 $lng['customer']['diskspace'] = 'Webový prostor (MB)';
 $lng['customer']['traffic'] = 'Přenosy (GB)';
 $lng['customer']['mysqls'] = 'MySQL-Databáze';
-$lng['customer']['emails'] = 'E-mailové-adresy';
-$lng['customer']['accounts'] = 'E-mailové-účty';
-$lng['customer']['forwarders'] = 'E-mailové-přeposílače';
-$lng['customer']['ftps'] = 'FTP-účty';
+$lng['customer']['emails'] = 'E-mailové adresy';
+$lng['customer']['accounts'] = 'E-mailové účty';
+$lng['customer']['forwarders'] = 'E-mailové přeposílače';
+$lng['customer']['ftps'] = 'FTP účty';
 $lng['customer']['subdomains'] = 'Sub-Domény';
 $lng['customer']['domains'] = 'Doména';
 $lng['customer']['unlimited'] = 'neomezeno';
@@ -129,11 +129,11 @@ $lng['domains']['noaliasdomain'] = 'žádný alias pro doménu';
  */
 
 $lng['emails']['description'] = 'Zde můžete také vytvořit a měnit e-mailové adresy.<br />Účet je jako Vaše poštovní schránka před Vaším domem. Pokud Vám někdo pošle e-mail, přijde na tento účet.<br /><br />Pro stažení e-mailů použijte následující nastavení ve svém poštovním klientu: (Data <i>kurzívou</i> musí být změněna podle toho, co jste zadali!)<br />Host: <b><i>Jméno domény</i></b><br />Uživatelské jméno: <b><i>Jméno účtu / e-mailové adresy</i></b><br />Heslo: <b><i>heslo které jste zadali</i></b>';
-$lng['emails']['emailaddress'] = 'E-mailová-adresa';
-$lng['emails']['emails_add'] = 'Vytvořit e-mailovou-adresu';
-$lng['emails']['emails_edit'] = 'Editovat e-mailovou-addresu';
+$lng['emails']['emailaddress'] = 'E-mailová adresa';
+$lng['emails']['emails_add'] = 'Vytvořit e-mailovou adresu';
+$lng['emails']['emails_edit'] = 'Editovat e-mailovou addresu';
 $lng['emails']['catchall'] = 'Catchall';
-$lng['emails']['iscatchall'] = 'Definovat jako catchall-adresu?';
+$lng['emails']['iscatchall'] = 'Definovat jako catchall adresu?';
 $lng['emails']['account'] = 'Účet';
 $lng['emails']['account_add'] = 'Vytvořit účet';
 $lng['emails']['account_delete'] = 'Smazat účet';
@@ -182,9 +182,9 @@ $lng['error']['filemustexist'] = 'Soubor %s musí existovat.';
 $lng['error']['allresourcesused'] = 'Už jste použili všechny své zdroje.';
 $lng['error']['domains_cantdeletemaindomain'] = 'Nemůžete smazat doménu, která se používá jako e-mailová doména.';
 $lng['error']['domains_canteditdomain'] = 'Nemůžete upravovat tuto doménu. Byla zakázána adminem.';
-$lng['error']['domains_cantdeletedomainwithemail'] = 'Nemůžete smazat doménu, která se používá jako e-mailová doména. Nejdříve smažte všechny emailové adresy.';
-$lng['error']['firstdeleteallsubdomains'] = 'Musíte smazat všechny subdomény než budete moci vytvořit "wildcard" doménu.';
-$lng['error']['youhavealreadyacatchallforthisdomain'] = 'Už jste definovali "catchall" pro tuto doménu.';
+$lng['error']['domains_cantdeletedomainwithemail'] = 'Nemůžete smazat doménu, která se používá jako e-mailová doména. Nejdříve smažte všechny e-mailové adresy.';
+$lng['error']['firstdeleteallsubdomains'] = 'Musíte smazat všechny subdomény než budete moci vytvořit „wildcard“ doménu.';
+$lng['error']['youhavealreadyacatchallforthisdomain'] = 'Už jste definovali „catchall“ pro tuto doménu.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'Nemůžete smazat svůj hlavní FTP účet';
 $lng['error']['login'] = 'Uživatelské jméno nebo heslo, které jste zadali, je špatné. Prosím zkuste to znovu!';
 $lng['error']['login_blocked'] = 'Tento účet byl zablokován z důvodu příliš velkého množství chyb při přihlášení. <br />Prosím, zkuste to znovu za %s sekund.';
@@ -192,13 +192,13 @@ $lng['error']['notallreqfieldsorerrors'] = 'Nevyplnili jste všechna políčka n
 $lng['error']['oldpasswordnotcorrect'] = 'Staré heslo není správné.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Nemůžete alokovat více zdrojů než sami vlastníte';
 $lng['error']['mustbeurl'] = 'Vložili jste nesprávnou nebo nekompletní url (např. http://somedomain.com/error404.htm)';
-$lng['error']['invalidpath'] = 'Nevybrali jste správnou url (možná problém s "dirlistingem"?)';
+$lng['error']['invalidpath'] = 'Nevybrali jste správnou url (možná problém s „dirlistingem“?)';
 $lng['error']['stringisempty'] = 'Chybějící vstup v poli';
 $lng['error']['stringiswrong'] = 'špatný vstup v poli';
 $lng['error']['newpasswordconfirmerror'] = 'Nové heslo se neshoduje s tím pro potvrzení';
 $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['loginnameexists'] = 'Přihlašovací jméno %s již existuje';
-$lng['error']['emailiswrong'] = 'Emailová adresa %s obsahuje nepovolené znaky nebo je nekompletní';
+$lng['error']['emailiswrong'] = 'E-mailová adresa %s obsahuje nepovolené znaky nebo je nekompletní';
 $lng['error']['loginnameiswrong'] = 'Přihlašovací jméno %s obsahuje nepovolené znaky';
 $lng['error']['userpathcombinationdupe'] = 'Kombinace Uživatelského jména a cesty již existuje';
 $lng['error']['patherror'] = 'Obecná chyba! Cesta nemůže být prázdná';
@@ -218,7 +218,7 @@ $lng['error']['domainisaliasorothercustomer'] = 'Vybraný alias pro doménu je b
 $lng['error']['emailexistalready'] = 'E-mailová adresa %s již existuje.';
 $lng['error']['maindomainnonexist'] = 'Hlavní doména %s neexistuje.';
 $lng['error']['destinationnonexist'] = 'Prosím vytvořte přeposílatele v poli \'Cíl\'.';
-$lng['error']['destinationalreadyexistasmail'] = 'Přeposílač na %s již existuje jako aktivní emailová adresa.';
+$lng['error']['destinationalreadyexistasmail'] = 'Přeposílač na %s již existuje jako aktivní e-mailová adresa.';
 $lng['error']['destinationalreadyexist'] = 'Už jste nastavili přeposílač na %s.';
 $lng['error']['destinationiswrong'] = 'Přeposílač %s obsahuje nesprávné znaky nebo není kompletní.';
 
@@ -271,7 +271,7 @@ $lng['admin']['customer_edit'] = 'Upravit zákazníka';
 $lng['admin']['domains'] = 'Domény';
 $lng['admin']['domain_add'] = 'Vytvořit doménu';
 $lng['admin']['domain_edit'] = 'Upravit doménu';
-$lng['admin']['subdomainforemail'] = 'Subdomény jako emailové domény';
+$lng['admin']['subdomainforemail'] = 'Subdomény jako e-mailové domény';
 $lng['admin']['admin'] = 'Administrátor';
 $lng['admin']['admins'] = 'Administrátoři';
 $lng['admin']['admin_add'] = 'Vytvořit administrátora';
@@ -290,18 +290,18 @@ $lng['admin']['deactivated_user'] = 'Deaktivovat uživatele';
 $lng['admin']['sendpassword'] = 'Zaslat heslo';
 $lng['admin']['ownvhostsettings'] = 'Vlastní vHost-nastavení';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Konfigurace';
-$lng['admin']['configfiles']['files'] = '<b>Konfigurační soubory:</b> Prosím změňte následující soubory nabo je vytvořte s<br /> následujícím obsahem, pokud neexistují.<br /><b>Poznámka:</b> MySQL heslo nebylo nahrazeno z bezpečnostních důvodů.<br />Prosím nahraďte "MYSQL_PASSWORD" svým vlastním. Pokud jste zapomněli své mysql heslo<br />najdete jej v "lib/userdata.inc.php".';
-$lng['admin']['configfiles']['commands'] = '<b>Příkazy:</b> Prosím spus?te následující příkazy v příkazovém řádku.';
-$lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Prosím spus?te nísledující příkazy v příkazovém řádku, aby jste nahráli novou konfiguraci.';
+$lng['admin']['configfiles']['files'] = '<b>Konfigurační soubory:</b> Prosím změňte následující soubory nabo je vytvořte s<br /> následujícím obsahem, pokud neexistují.<br /><b>Poznámka:</b> MySQL heslo nebylo nahrazeno z bezpečnostních důvodů.<br />Prosím nahraďte „MYSQL_PASSWORD“ svým vlastním. Pokud jste zapomněli své mysql heslo<br />najdete jej v „lib/userdata.inc.php“.';
+$lng['admin']['configfiles']['commands'] = '<b>Příkazy:</b> Prosím spusťte následující příkazy v příkazovém řádku.';
+$lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Prosím spusťte nísledující příkazy v příkazovém řádku, aby jste nahráli novou konfiguraci.';
 $lng['admin']['templates']['templates'] = 'šablony';
 $lng['admin']['templates']['template_add'] = 'Přidat šablonu';
 $lng['admin']['templates']['template_edit'] = 'Upravit šablonu';
 $lng['admin']['templates']['action'] = 'Akce';
-$lng['admin']['templates']['email'] = 'E-Mail';
+$lng['admin']['templates']['email'] = 'E-mail';
 $lng['admin']['templates']['subject'] = 'Předmět';
-$lng['admin']['templates']['mailbody'] = 'Tělo mailu';
+$lng['admin']['templates']['mailbody'] = 'Tělo e-mailu';
 $lng['admin']['templates']['createcustomer'] = 'Uvítací mail pro nové zákazníky';
-$lng['admin']['templates']['pop_success'] = 'Uvítací mail pro nové emailové účty';
+$lng['admin']['templates']['pop_success'] = 'Uvítací mail pro nové e-mailové účty';
 $lng['admin']['templates']['template_replace_vars'] = 'Proměnné k nahrazení v šabloně:';
 $lng['admin']['templates']['FIRSTNAME'] = 'Nahrazeno křestním jménem zákazníka.';
 $lng['admin']['templates']['NAME'] = 'Nahrazeno jménem zákazníka.';
@@ -313,9 +313,9 @@ $lng['admin']['templates']['EMAIL'] = 'Nahrazeno adresou POP3/IMAP účtu.';
  * Serversettings
  */
 
-$lng['serversettings']['session_timeout']['description'] = 'Jak dlouho musý být uživatel neaktivní, než session vyprší (sekundy)?';
+$lng['serversettings']['session_timeout']['description'] = 'Jak dlouho musí být uživatel neaktivní, než session vyprší (sekundy)?';
 $lng['serversettings']['accountprefix']['title'] = 'Zákazníkova předpona';
-$lng['serversettings']['accountprefix']['description'] = 'Jké předpony by měly mít účty zákazníků?';
+$lng['serversettings']['accountprefix']['description'] = 'Jaké předpony by měly mít účty zákazníků?';
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL předpona';
 $lng['serversettings']['mysqlprefix']['description'] = 'Jaké předpony by měly mít účty mysql?';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP předpona';
@@ -324,26 +324,26 @@ $lng['serversettings']['documentroot_prefix']['title'] = 'Domácí adresář';
 $lng['serversettings']['documentroot_prefix']['description'] = 'Kde by měly být uloženy všechny domácí adresáře?';
 $lng['serversettings']['logfiles_directory']['title'] = 'Adresář pro log soubory';
 $lng['serversettings']['logfiles_directory']['description'] = 'Kde by měly být všechny log soubory uloženy?';
-$lng['serversettings']['ipaddress']['title'] = 'IP-Adresa';
+$lng['serversettings']['ipaddress']['title'] = 'IP adresa';
 $lng['serversettings']['ipaddress']['description'] = 'Jaká je IP adresa tohoto serveru?';
 $lng['serversettings']['hostname']['title'] = 'Jméno hosta';
 $lng['serversettings']['hostname']['description'] = 'Jaké je jméno hosta tohoto serveru?';
 $lng['serversettings']['apachereload_command']['title'] = 'Příkaz pro reload apache';
 $lng['serversettings']['apachereload_command']['description'] = 'Jaký je příkaz, kterým apache znovunahraje své konfigurační soubory?';
 $lng['serversettings']['bindconf_directory']['title'] = 'Bindujte konfigurační adresář';
-$lng['serversettings']['bindconf_directory']['description'] = 'Kde by měly být uloženy "bind configfiles"?';
+$lng['serversettings']['bindconf_directory']['description'] = 'Kde by měly být uloženy „bind configfiles“?';
 $lng['serversettings']['bindreload_command']['title'] = 'Bind reload příkaz';
-$lng['serversettings']['bindreload_command']['description'] = 'Jaký je příkaz pro znovunahrání "bind configfiles"?';
+$lng['serversettings']['bindreload_command']['description'] = 'Jaký je příkaz pro znovunahrání „bind configfiles“?';
 $lng['serversettings']['binddefaultzone']['title'] = 'Bind výchozí zóna';
 $lng['serversettings']['binddefaultzone']['description'] = 'Jaký je název výchozí zóny?';
-$lng['serversettings']['vmail_uid']['title'] = 'UID-mailů';
+$lng['serversettings']['vmail_uid']['title'] = 'UID e-mailů';
 $lng['serversettings']['vmail_uid']['description'] = 'Jaké UserID by měly e-maily mít?';
-$lng['serversettings']['vmail_gid']['title'] = 'GID-mailů';
-$lng['serversettings']['vmail_gid']['description'] = 'Jaké GroupID by měly maily mít?';
+$lng['serversettings']['vmail_gid']['title'] = 'GID e-mailů';
+$lng['serversettings']['vmail_gid']['description'] = 'Jaké GroupID by měly e-maily mít?';
 $lng['serversettings']['vmail_homedir']['title'] = 'Mails-Home adresář';
-$lng['serversettings']['vmail_homedir']['description'] = 'Kam by se měly všechny maily ukládat?';
+$lng['serversettings']['vmail_homedir']['description'] = 'Kam by se měly všechny e-maily ukládat?';
 $lng['serversettings']['adminmail']['title'] = 'Odesílatel';
-$lng['serversettings']['adminmail']['description'] = 'Jaká je odesílatelova adresa pro emaily odeslané z Panelu?';
+$lng['serversettings']['adminmail']['description'] = 'Jaká je odesílatelova adresa pro e-maily odeslané z Panelu?';
 $lng['serversettings']['phpmyadmin_url']['title'] = 'phpMyAdminova URL';
 $lng['serversettings']['phpmyadmin_url']['description'] = 'Jaká je URL adresa phpMyAdmin? (musí začínat http(s)://)';
 $lng['serversettings']['webmail_url']['title'] = 'WebMailová URL';
@@ -381,7 +381,7 @@ $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Port\'';
 $lng['error']['myipdefault'] = 'Musíte vybrat IP/Port kombinaci která by se měla stát výchozí.';
 $lng['error']['myipnotdouble'] = 'Tato kombinace IP/Portu již existuje.';
-$lng['question']['admin_ip_reallydelete'] = 'Chcete opravdu smayat IP adresu %s?';
+$lng['question']['admin_ip_reallydelete'] = 'Chcete opravdu smazat IP adresu %s?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IP a Porty';
 $lng['admin']['ipsandports']['add'] = 'Přidat IP/Port';
 $lng['admin']['ipsandports']['edit'] = 'Upravit IP/Port';
@@ -389,31 +389,31 @@ $lng['admin']['ipsandports']['edit'] = 'Upravit IP/Port';
 // ADDED IN 1.2.13-rc3
 
 $lng['error']['cantchangesystemip'] = 'Nemůžete změnit poslední systémovou IP, buď vytvořte novou IP/Port kombinaci pro systémovou IP nebo změňte IP systému.';
-$lng['question']['admin_domain_reallydocrootoutofcustomerroot'] = 'Jste si jisti, že chcete aby root dokumentů pro tuto doménu nebyl v "customerroot" zákazníka?';
+$lng['question']['admin_domain_reallydocrootoutofcustomerroot'] = 'Jste si jisti, že chcete aby root dokumentů pro tuto doménu nebyl v „customerroot“ zákazníka?';
 
 // ADDED IN 1.2.14-rc1
 
 $lng['admin']['memorylimitdisabled'] = 'Zakázáno';
-$lng['domain']['openbasedirpath'] = 'OpenBasedir-cesta';
+$lng['domain']['openbasedirpath'] = 'OpenBasedir cesta';
 $lng['domain']['docroot'] = 'Cesta z políčka nahoře';
 $lng['domain']['homedir'] = 'Domovní adresář';
 $lng['admin']['valuemandatory'] = 'Tato hodnota je povinná';
-$lng['admin']['valuemandatorycompany'] = 'Buď "jméno" a "křestní jméno" nebo "společnost" musí být vyplněna';
+$lng['admin']['valuemandatorycompany'] = 'Buď „jméno“ a „křestní jméno“ nebo „společnost“ musí být vyplněna';
 $lng['menue']['main']['username'] = 'Přihlášen(a) jako: ';
 $lng['panel']['urloverridespath'] = 'URL (přepíše cestu)';
 $lng['panel']['pathorurl'] = 'Cesta nebo URL';
-$lng['error']['sessiontimeoutiswrong'] = 'Pouze číselné "Session Timeout" je povoleno.';
-$lng['error']['maxloginattemptsiswrong'] = 'Pouze číselné "Maximální počet pokusů o přihlášení" je povoleno.';
-$lng['error']['deactivatetimiswrong'] = 'Pouze číselné "čas deaktivace" je povoleno.';
-$lng['error']['accountprefixiswrong'] = '"Předpona uživatele" je špatně.';
-$lng['error']['mysqlprefixiswrong'] = '"SQL předpona" je špatně.';
-$lng['error']['ftpprefixiswrong'] = '"FTP předpona" je špatně.';
-$lng['error']['ipiswrong'] = '"IP-Adresa" je špatně. Pouze validní IP adresa je povolena.';
-$lng['error']['vmailuidiswrong'] = '"Mails-uid" je špatně. Je povoleno pouze číselné UID.';
-$lng['error']['vmailgidiswrong'] = '"Mails-gid" je špatně. Je povoleno pouze číselné GID.';
-$lng['error']['adminmailiswrong'] = '"Sender-address" je špatně. Je povolena pouze validní emailová adresa.';
-$lng['error']['pagingiswrong'] = '"Entries per Page"-value je špatně. Jsou povolena pouze čísla.';
-$lng['error']['phpmyadminiswrong'] = 'phpMyAdmin-url naní správná url.';
+$lng['error']['sessiontimeoutiswrong'] = 'Pouze číselné „Session Timeout“ je povoleno.';
+$lng['error']['maxloginattemptsiswrong'] = 'Pouze číselné „Maximální počet pokusů o přihlášení“ je povoleno.';
+$lng['error']['deactivatetimiswrong'] = 'Pouze číselné „čas deaktivace“ je povoleno.';
+$lng['error']['accountprefixiswrong'] = '„Předpona uživatele“ je špatně.';
+$lng['error']['mysqlprefixiswrong'] = '„SQL předpona“ je špatně.';
+$lng['error']['ftpprefixiswrong'] = '„FTP předpona“ je špatně.';
+$lng['error']['ipiswrong'] = '„IP adresa“ je špatně. Pouze validní IP adresa je povolena.';
+$lng['error']['vmailuidiswrong'] = '„Mail uid“ je špatně. Je povoleno pouze číselné UID.';
+$lng['error']['vmailgidiswrong'] = '„Mail gid“ je špatně. Je povoleno pouze číselné GID.';
+$lng['error']['adminmailiswrong'] = '„Sender-address“ je špatně. Je povolena pouze validní e-mailová adresa.';
+$lng['error']['pagingiswrong'] = '„Entries per Page“-value je špatně. Jsou povolena pouze čísla.';
+$lng['error']['phpmyadminiswrong'] = 'phpMyAdmin url není správná url.';
 $lng['error']['webmailiswrong'] = 'WebMail-odkaz není správný odkaz.';
 $lng['error']['webftpiswrong'] = 'WebFTP-odkaz není správný odkaz.';
 $lng['domains']['hasaliasdomains'] = 'Má aliasové domény';
@@ -431,7 +431,7 @@ $lng['panel']['translator'] = 'Překladatel';
 
 // ADDED IN 1.2.14-rc4
 
-$lng['error']['stringformaterror'] = 'Hodnota pole "%s" není v očekávaném formátu.';
+$lng['error']['stringformaterror'] = 'Hodnota pole „%s“ není v očekávaném formátu.';
 
 // ADDED IN 1.2.15-rc1
 
@@ -443,17 +443,17 @@ $lng['admin']['mysqlclientversion'] = 'MySQL verze klienta';
 $lng['admin']['webserverinterface'] = 'Webserver rozhraní';
 $lng['domains']['isassigneddomain'] = 'Je přiřazená doména';
 $lng['serversettings']['phpappendopenbasedir']['title'] = 'Cesty k přidání k OpenBasedir';
-$lng['serversettings']['phpappendopenbasedir']['description'] = 'Tyto cesty (odděleny pomocí "colons") budou vloženy  do OpenBasedir-statementu v každém vhost-containeru.';
+$lng['serversettings']['phpappendopenbasedir']['description'] = 'Tyto cesty (odděleny pomocí „colons“) budou vloženy do OpenBasedir statementu v každém vhost-containeru.';
 
 // CHANGED IN 1.2.15-rc1
 
-$lng['error']['loginnameissystemaccount'] = 'Nemůžete vytvořit účty, které jsou podobné systémovým účtům (například začínají "%s"). Prosím vložte jiné jméno účtu.';
+$lng['error']['loginnameissystemaccount'] = 'Nemůžete vytvořit účty, které jsou podobné systémovým účtům (například začínají „%s“). Prosím vložte jiné jméno účtu.';
 $lng['error']['youcantdeleteyourself'] = 'Z bezpečnostních důvodů se nemůžete smazat.';
 $lng['error']['youcanteditallfieldsofyourself'] = 'Poznámka: Z bezpečnostních důvodů nemůžete upravovat všechna pole svého účtu.';
 
 // ADDED IN 1.2.16-svn1
 
-$lng['serversettings']['natsorting']['title'] = 'Použít "lidské" třídění v seznamech';
+$lng['serversettings']['natsorting']['title'] = 'Použít „lidské“ třídění v seznamech';
 $lng['serversettings']['natsorting']['description'] = 'řadit seznamy jako web1 -> web2 -> web11 místo web1 -> web11 -> web2.';
 
 // ADDED IN 1.2.16-svn2
@@ -492,8 +492,8 @@ $lng['changepassword']['also_change_webalizer'] = ' také změňte heslo pro web
 
 // ADDED IN 1.2.16-svn8
 
-$lng['serversettings']['mailpwcleartext']['title'] = 'Také uložte hesla mailových účtů nešifrovaná v databázi';
-$lng['serversettings']['mailpwcleartext']['description'] = 'Pokud je toto nastaveno na "ano", všechna hesla budou ukládána bez šifrování (čístý text, čitelná pro kohokoliv s přístupem k databázi) v tabulce mail_users. Toto aktivujte jen pokud to opravdu potřebujete!';
+$lng['serversettings']['mailpwcleartext']['title'] = 'Také uložte hesla e-mailových účtů nešifrovaná v databázi';
+$lng['serversettings']['mailpwcleartext']['description'] = 'Pokud je toto nastaveno na „ano“, všechna hesla budou ukládána bez šifrování (čístý text, čitelná pro kohokoliv s přístupem k databázi) v tabulce mail_users. Toto aktivujte jen pokud to opravdu potřebujete!';
 $lng['serversettings']['mailpwcleartext']['removelink'] = 'Kliknutím zde vymažete všechna nezašifrovaná hesla z tabulky.';
 $lng['question']['admin_cleartextmailpws_reallywipe'] = 'Opravdu chcete vymazat všechna nezašifrovaná hesla pro e-mailové účty z tabulky mail_users? Tento krok nelze vrátit zpět!';
 $lng['admin']['configfiles']['overview'] = 'Přehled';
@@ -513,26 +513,26 @@ $lng['panel']['back'] = 'Back';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_fcgid']['title'] = 'Includuj PHP přes mod_fcgid/suexec';
-$lng['serversettings']['mod_fcgid']['description'] = 'Použij mod_fcgid/suexec/libnss_mysql pro běh PHP s odpovídajícím úřivatelským účtem.<br/><b>toto vyžaduje speciální konfiguraci apache!</b>';
+$lng['serversettings']['mod_fcgid']['title'] = 'Zpracuj PHP přes mod_fcgid/suexec';
+$lng['serversettings']['mod_fcgid']['description'] = 'Použij mod_fcgid/suexec/libnss_mysql pro běh PHP s odpovídajícím uživatelským účtem.<br/><b>toto vyžaduje speciální konfiguraci apache!</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Použij alternativní e-mailovou adresu';
-$lng['serversettings']['sendalternativemail']['description'] = 'Pošli email s heslem na jinou adresu při vytváření emailového účtu';
+$lng['serversettings']['sendalternativemail']['description'] = 'Pošli e-mail s heslem na jinou adresu při vytváření e-mailového účtu';
 $lng['emails']['alternative_emailaddress'] = 'Alternativní e-mailová adresa';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Vážený uživateli,\n\nVáš emailový účet {EMAIL}\nbyl úspěšně nastaven.\nVaše heslo je {PASSWORD}.\n\nTento e-mail byl automaticky vygenerován,\nprosím neodpovídejte na něj!\n\nPřejeme Vám hezký den, váš správce';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Vážený uživateli,\n\nVáš e-mailový účet {EMAIL}\nbyl úspěšně nastaven.\nVaše heslo je {PASSWORD}.\n\nTento e-mail byl automaticky vygenerován,\nprosím neodpovídejte na něj!\n\nPřejeme Vám hezký den, váš správce';
 $lng['mails']['pop_success_alternative']['subject'] = 'E-mailový účet byl úspěšně vytvořen';
 $lng['admin']['templates']['pop_success_alternative'] = 'Uvítací e-mail pro nové účty byl odeslán na alternativní adresu';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Nahrazeno heslem účtu POP3/IMAP.';
 
 // ADDED IN 1.2.16-svn13
 
-$lng['error']['documentrootexists'] = 'Adresář "%s" již existuje pro tohoto zákazníka. Prosím odstraňte jej, než budete znovu zákazníka vkládat.';
+$lng['error']['documentrootexists'] = 'Adresář „%s“ již existuje pro tohoto zákazníka. Prosím odstraňte jej, než budete znovu zákazníka vkládat.';
 
 // ADDED IN 1.2.16-svn14
 
 $lng['serversettings']['apacheconf_vhost']['title'] = 'Apache vhost konfigurační soubor/dirname';
 $lng['serversettings']['apacheconf_vhost']['description'] = 'Kde by měla být uložena konfigurace vhosta? Můžete zde buď specifikovat soubor (všichni vhosti v jednom souboru) nebo adresář (každý vhost má vlastní soubor).';
 $lng['serversettings']['apacheconf_diroptions']['title'] = 'Apache diroptions konfigurační soubor/dirname';
-$lng['serversettings']['apacheconf_diroptions']['description'] = 'Kde by měla být uložena konfigurace diroptions?  Můžete zde buď specifikovat soubor (všichni diroptions v jednom souboru) nebo adresář (každý diroption má vlastní soubor).';
+$lng['serversettings']['apacheconf_diroptions']['description'] = 'Kde by měla být uložena konfigurace diroptions? Můžete zde buď specifikovat soubor (všichni diroptions v jednom souboru) nebo adresář (každý diroption má vlastní soubor).';
 $lng['serversettings']['apacheconf_htpasswddir']['title'] = 'Apache htpasswd dirname';
 $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Kde by měly být uloženy htpasswd soubory pro ochranu adresářů?';
 
@@ -577,7 +577,7 @@ $lng['ticket']['ticketcount'] = 'Tikety';
 $lng['ticket']['ticket_answers'] = 'Odpovědi';
 $lng['ticket']['lastchange'] = 'Poslední akce';
 $lng['ticket']['subject'] = 'Předmět';
-$lng['ticket']['status'] = 'Status';
+$lng['ticket']['status'] = 'Stav';
 $lng['ticket']['lastreplier'] = 'Poslední odpovídající';
 $lng['ticket']['priority'] = 'Priorita';
 $lng['ticket']['low'] = 'Nízká';
@@ -609,7 +609,7 @@ $lng['ticket']['nocustomer'] = 'žádný výběr';
 $lng['ticket']['archivesearch'] = 'Výsledky prohledávání archivu';
 $lng['ticket']['noresults'] = 'Nenalezeny žádné tikety';
 $lng['ticket']['notmorethanxopentickets'] = 'Kvůli ochraně proti SPAMu nemůžete mít otevřeno víc jak %s tiketů';
-$lng['ticket']['supportstatus'] = 'Status-podpory';
+$lng['ticket']['supportstatus'] = 'Stav podpory';
 $lng['ticket']['supportavailable'] = '<span class="ticket_low">Naše podpora jsou k dispozici a připraveni pomoci.</span>';
 $lng['ticket']['supportnotavailable'] = '<span class="ticket_high">Naše podpora není momentálně dostupná</span>';
 $lng['admin']['templates']['ticket'] = 'Upozorňovací e-maily pro tikety podpory';
@@ -619,20 +619,20 @@ $lng['admin']['templates']['new_ticket_by_customer'] = 'Administrátorské upozo
 $lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Administrátorské upozornění, že přišla odpověď na tiket od zákazníka';
 $lng['admin']['templates']['new_ticket_by_staff'] = 'Zákaznické upozornění, že byl tiket otevřen personálem';
 $lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Zákaznické upozornění na odpověď na tiket od personálu';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\nVáš tiket podpory s předmětem "{SUBJECT}" byl odeslán.\n\nAž přijde odpověď na Váš tiket, budete upozorněni.\n\nDěkujeme,\n váš správce';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\nVáš tiket podpory s předmětem „{SUBJECT}“ byl odeslán.\n\nAž přijde odpověď na Váš tiket, budete upozorněni.\n\nDěkujeme,\n váš správce';
 $lng['mails']['new_ticket_for_customer']['subject'] = 'Váš tiket na podporu byl odeslán';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Milý administrátore,\n\nbyl odeslán nový tiket s předmětem "{SUBJECT}".\n\nProsím přihlašte se pro otevření tiketu.\n\nDěkujeme,\n váš správce';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Milý administrátore,\n\nbyl odeslán nový tiket s předmětem „{SUBJECT}“.\n\nProsím přihlašte se pro otevření tiketu.\n\nDěkujeme,\n váš správce';
 $lng['mails']['new_ticket_by_customer']['subject'] = 'Nový tiket podpory byl odeslán';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Milý administrátore,\n\ntiket podpory "{SUBJECT}" byl zodpovězen zákazníkem.\n\nProsím přihlašte se pro otevření tiketu.\n\nDěkujeme,\n váš správce';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Milý administrátore,\n\ntiket podpory „{SUBJECT}“ byl zodpovězen zákazníkem.\n\nProsím přihlašte se pro otevření tiketu.\n\nDěkujeme,\n váš správce';
 $lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nová odpověď na tiket podpory';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\nbyl pro Vás otevřen tiket podpory s předmětem "{SUBJECT}".\n\nProsím přihlašte se pro otevření tiketu.\n\nDěkujeme,\n váš správce';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\nbyl pro Vás otevřen tiket podpory s předmětem „{SUBJECT}“.\n\nProsím přihlašte se pro otevření tiketu.\n\nDěkujeme,\n váš správce';
 $lng['mails']['new_ticket_by_staff']['subject'] = 'Nový tiket podpory byl odeslán';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\ntiket podpory s předmětem "{SUBJECT}" byl zodpovězen naším personálem.\n\nPro přečtení tiketu se prosím přihlašte.\n\nDěkujem,\n váš správce';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Vážený uživateli {FIRSTNAME} {NAME},\n\ntiket podpory s předmětem „{SUBJECT}“ byl zodpovězen naším personálem.\n\nPro přečtení tiketu se prosím přihlašte.\n\nDěkujem,\n váš správce';
 $lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Nová odpověď na tiket podpory';
-$lng['question']['ticket_reallyclose'] = 'Opravdu chcete zavřít tiket "%s"?';
-$lng['question']['ticket_reallydelete'] = 'Opravdu chcete smazat tiket "%s"?';
-$lng['question']['ticket_reallydeletecat'] = 'Opravdu chcete smazat kategorii "%s"?';
-$lng['question']['ticket_reallyarchive'] = 'Opravdu chcete přesunout tiket "%s" do archivu?';
+$lng['question']['ticket_reallyclose'] = 'Opravdu chcete zavřít tiket „%s“?';
+$lng['question']['ticket_reallydelete'] = 'Opravdu chcete smazat tiket „%s“?';
+$lng['question']['ticket_reallydeletecat'] = 'Opravdu chcete smazat kategorii „%s“?';
+$lng['question']['ticket_reallyarchive'] = 'Opravdu chcete přesunout tiket „%s“ do archivu?';
 $lng['error']['nomoreticketsavailable'] = 'Použili jste všechny dostupné tikety. Prosím kontaktujte svého administrátora.';
 $lng['error']['nocustomerforticket'] = 'Nemohu vytvářet tikety bez zákazníků';
 $lng['error']['categoryhastickets'] = 'Kategorie stále obsahuje tikety.<br />Prosím smažte tikety aby jste mohli smazat kategorii';
@@ -647,7 +647,7 @@ $lng['serversettings']['ticket']['worktime_end']['description'] = 'End-time poku
 $lng['serversettings']['ticket']['worktime_sat'] = 'Je podpora k dispozici o sobotách?';
 $lng['serversettings']['ticket']['worktime_sun'] = 'Je podpora k dispozici o nedělích?';
 $lng['serversettings']['ticket']['worktime_all']['title'] = 'Podpora bez časového omezení';
-$lng['serversettings']['ticket']['worktime_all']['description'] = 'Pokud "Ano" možnosti začátku a konce práce podpory bude přepsána';
+$lng['serversettings']['ticket']['worktime_all']['description'] = 'Pokud „Ano“ možnosti začátku a konce práce podpory bude přepsána';
 $lng['serversettings']['ticket']['archiving_days'] = 'Po kolika dnech by měly být uzavřené tikety archivovány?';
 $lng['customer']['tickets'] = 'Tikety podpory';
 
@@ -656,10 +656,10 @@ $lng['customer']['tickets'] = 'Tikety podpory';
 $lng['admin']['domain_nocustomeraddingavailable'] = 'Momentálně není možné přidat doménu. Nejdříve musíte přidat aspoň jednoho zákazníka.';
 $lng['serversettings']['ticket']['enable'] = 'Zapnout systém tiketů';
 $lng['serversettings']['ticket']['concurrentlyopen'] = 'Kolik tiketů by mělo být k dispozici najednou?';
-$lng['error']['norepymailiswrong'] = '"Bezodpovědní adresa" je špatně. Je povolena pouze validní e-mailová adresa.';
-$lng['error']['tadminmailiswrong'] = '"Ticketadmin-adresa" je špatně. Je povolena pouze validní e-mailová adresa.';
+$lng['error']['norepymailiswrong'] = '„Bezodpovědní adresa“ je špatně. Je povolena pouze validní e-mailová adresa.';
+$lng['error']['tadminmailiswrong'] = '„Ticketadmin-adresa“ je špatně. Je povolena pouze validní e-mailová adresa.';
 $lng['ticket']['awaitingticketreply'] = 'Máte %s nezodpovězených tiketů podpory';
 
 // ADDED IN 1.2.18-svn5
 
-$lng['serversettings']['ticket']['noreply_name'] = 'Jméno odesílatele tiketů v emailu';
+$lng['serversettings']['ticket']['noreply_name'] = 'Jméno odesílatele tiketů v e-mailu';
