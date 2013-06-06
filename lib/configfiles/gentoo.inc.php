@@ -394,6 +394,7 @@ milter_default_action = accept" >> /etc/postfix/main.cf',
 						'commands' => Array(
 							'emerge awstats',
 							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
+							'sed -i.bak \'s|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
 							'# Please make sure you deactivate awstats own cronjob as Froxlor handles that itself',
 							'rm /etc/cron.d/awstats'
 						),
