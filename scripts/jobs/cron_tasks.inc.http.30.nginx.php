@@ -698,6 +698,13 @@ class nginx
 		$stats_text .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 		$stats_text .= "\t" . '}' . "\n\n";
 
+		 // awstats icons
+        if ($this->settings['system']['awstats_enabled'] == '1') {
+            $stats_text .= "\t" . 'location ~ ^/awstats-icon/(.*)$ {' . "\n";
+            $stats_text .= "\t\t" . 'alias ' . makeCorrectDir($this->settings['system']['awstats_icons']) . '$1;' . "\n";
+            $stats_text .= "\t" . '}' . "\n\n";
+        }
+		
 		return $stats_text;
 	}
 
