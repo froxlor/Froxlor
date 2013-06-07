@@ -270,8 +270,9 @@ if ($page == 'overview') {
 
 					if ($path != $result['homedir']) {
 						if (!file_exists($path)) {
-							mkDirWithCorrectOwnership($userinfo['documentroot'], $path, $result['uid'], $result['gid']);
-							inserttask(5); /* Let the cronjob do the rest */
+							// it's the task for "new ftp" but that will 
+							// create all directories and correct their permissions
+							inserttask(5);
 						}
 
 						$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account homdir for '" . $result['username'] . "'");
