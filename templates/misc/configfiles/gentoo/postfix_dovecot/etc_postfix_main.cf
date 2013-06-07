@@ -1,7 +1,7 @@
 # Postfix programs paths settings
 command_directory = /usr/sbin
-daemon_directory = /usr/lib/postfix
-program_directory = /usr/lib/postfix
+daemon_directory = /usr/libexec/postfix
+program_directory = /usr/libexec/postfix
 sendmail_path = /usr/sbin/sendmail
 
 ## General Postfix configuration
