@@ -128,7 +128,7 @@ $lng['domains']['noaliasdomain'] = 'Keine Aliasdomain';
  * eMails
  */
 
-$lng['emails']['description'] = 'Hier können Sie Ihre E-Mail Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustüre. Wenn jemand eine E-Mail an Sie schreibt, dann wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten von Ihrem Mailprogramm sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen!)<br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>';
+$lng['emails']['description'] = 'Hier können Sie Ihre E-Mail Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustür. Wenn jemand eine E-Mail an Sie schreibt, dann wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten von Ihrem Mailprogramm sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen!)<br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>';
 $lng['emails']['emailaddress'] = 'E-Mail-Adresse';
 $lng['emails']['emails_add'] = 'E-Mail-Adresse anlegen';
 $lng['emails']['emails_edit'] = 'E-Mail-Adresse ändern';
@@ -161,7 +161,7 @@ $lng['mysql']['database_create'] = 'Datenbank anlegen';
  * Extras
  */
 
-$lng['extras']['description'] = 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel Verzeichnisschutz.<br />Die Änderungen sind erst nach einer bestimmten Zeit wirksam.';
+$lng['extras']['description'] = 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.';
 $lng['extras']['directoryprotection_add'] = 'Verzeichnisschutz anlegen';
 $lng['extras']['view_directory'] = 'Verzeichnis anzeigen';
 $lng['extras']['pathoptions_add'] = 'Pfadoptionen hinzufügen';
@@ -181,8 +181,8 @@ $lng['extras']['errordocument401path'] = 'Fehlerdokument 401';
  */
 
 $lng['error']['error'] = 'Fehlermeldung';
-$lng['error']['directorymustexist'] = 'Das Verzeichnis %s muss existieren. Legen Sie es bitte mit Ihrem FTP-Programm an.';
-$lng['error']['filemustexist'] = 'Die Datei %s muss existieren.';
+$lng['error']['directorymustexist'] = 'Das Verzeichnis "%s" muss existieren. Legen Sie es bitte mit Ihrem FTP-Programm an.';
+$lng['error']['filemustexist'] = 'Die Datei "%s" muss existieren.';
 $lng['error']['allresourcesused'] = 'Sie haben bereits alle Ihnen zur Verfügung stehenden Ressourcen verbraucht.';
 $lng['error']['domains_cantdeletemaindomain'] = 'Sie können keine Domain, die als E-Mail-Domain verwendet wird, löschen. ';
 $lng['error']['domains_canteditdomain'] = 'Sie können diese Domain nicht bearbeiten. Dies wurde durch den Admin verweigert';
@@ -191,7 +191,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'Sie müssen erst alle Subdomains l�
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Sie haben bereits eine Adresse als Catchall für diese Domain definiert.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'Sie können Ihren Hauptaccount nicht löschen.';
 $lng['error']['login'] = 'Der angegebene Benutzername/Passwort ist falsch.';
-$lng['error']['login_blocked'] = 'Dieser Account wurde aufgrund zu vieler Fehlversuche vorrübergehend geschlossen. <br />Bitte versuchen Sie es in %s Sekunden erneut.';
+$lng['error']['login_blocked'] = 'Dieser Account wurde aufgrund zu vieler Fehlversuche vorrübergehend geschlossen. <br />Bitte versuchen Sie es in "%s" Sekunden erneut.';
 $lng['error']['notallreqfieldsorerrors'] = 'Sie haben nicht alle Felder oder ein Feld mit fehlerhaften Angaben ausgefüllt.';
 $lng['error']['oldpasswordnotcorrect'] = 'Das alte Passwort ist nicht korrekt.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Sie können nicht mehr Ressourcen verteilen als Sie noch frei haben.';
@@ -202,30 +202,30 @@ $lng['error']['stringiswrong'] = 'Falsche Eingabe im Feld';
 $lng['error']['newpasswordconfirmerror'] = 'Das neue Passwort und die Bestätigung sind nicht identisch.';
 $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
-$lng['error']['loginnameexists'] = 'Der Login-Name %s existiert bereits.';
-$lng['error']['emailiswrong'] = 'Die E-Mail-Adresse %s enthält ungültige Zeichen oder ist nicht vollständig.';
-$lng['error']['loginnameiswrong'] = 'Der Login-Name %s enthält ungültige Zeichen.';
+$lng['error']['loginnameexists'] = 'Der Login-Name "%s" existiert bereits.';
+$lng['error']['emailiswrong'] = 'Die E-Mail-Adresse "%s" enthält ungültige Zeichen oder ist nicht vollständig.';
+$lng['error']['loginnameiswrong'] = 'Der Login-Name "%s" enthält ungültige Zeichen.';
 $lng['error']['userpathcombinationdupe'] = 'Kombination aus Benutzername und Pfad existiert bereits.';
 $lng['error']['patherror'] = 'Allgemeiner Fehler! Pfad darf nicht leer sein.';
-$lng['error']['errordocpathdupe'] = 'Option für Pfad %s existiert bereits.';
+$lng['error']['errordocpathdupe'] = 'Option für Pfad "%s" existiert bereits.';
 $lng['error']['adduserfirst'] = 'Sie müssen zuerst einen Kunden anlegen.';
-$lng['error']['domainalreadyexists'] = 'Die Domain %s wurde bereits einem Kunden zugeordnet.';
-$lng['error']['nolanguageselect'] = 'Keine Sprache ausgewählt.';
-$lng['error']['nosubjectcreate'] = 'Sie müssen einen Betreff angeben.';
+$lng['error']['domainalreadyexists'] = 'Die Domain "%s" wurde bereits einem Kunden zugeordnet.';
+$lng['error']['nolanguageselect'] = 'Es wurde keine Sprache ausgewählt.';
+$lng['error']['nosubjectcreate'] = 'Sie müssen einen Betreff eingeben.';
 $lng['error']['nomailbodycreate'] = 'Sie müssen einen E-Mail-Text eingeben.';
 $lng['error']['templatenotfound'] = 'Vorlage wurde nicht gefunden.';
-$lng['error']['alltemplatesdefined'] = 'Sie können keine weiteren Vorlagen anlegen, da bereits alle Sprachen mit Vorlagen versorgt sind.';
-$lng['error']['wwwnotallowed'] = 'Ihre Subdomain darf nicht www heißen.';
-$lng['error']['subdomainiswrong'] = 'Die Subdomain %s enthält ungültige Zeichen.';
+$lng['error']['alltemplatesdefined'] = 'Sie können keine weiteren Vorlagen anlegen, da bereits für alle Sprachen eine Vorlage existiert.';
+$lng['error']['wwwnotallowed'] = 'Ihre Subdomain darf nicht \'www\' heißen.';
+$lng['error']['subdomainiswrong'] = 'Die Subdomain "%s" enthält ungültige Zeichen.';
 $lng['error']['domaincantbeempty'] = 'Der Domain-Name darf nicht leer sein.';
-$lng['error']['domainexistalready'] = 'Die Domain %s existiert bereits.';
+$lng['error']['domainexistalready'] = 'Die Domain "%s" existiert bereits.';
 $lng['error']['domainisaliasorothercustomer'] = 'Die ausgewählte Aliasdomain ist entweder selber eine Aliasdomain, hat nicht die gleiche IP/Port Kombination oder gehört zu einem anderen Kunden.';
-$lng['error']['emailexistalready'] = 'Die E-Mail-Adresse %s existiert bereits.';
-$lng['error']['maindomainnonexist'] = 'Die Haupt-Domain %s existiert nicht.';
+$lng['error']['emailexistalready'] = 'Die E-Mail-Adresse "%s" existiert bereits.';
+$lng['error']['maindomainnonexist'] = 'Die Haupt-Domain "%s" existiert nicht.';
 $lng['error']['destinationnonexist'] = 'Bitte geben Sie Ihre Weiterleitungsadresse im Feld \'Nach\' ein.';
-$lng['error']['destinationalreadyexistasmail'] = 'Die Weiterleitung zu %s exisitiert bereits als aktive E-Mail-Adresse.';
-$lng['error']['destinationalreadyexist'] = 'Es gibt bereits eine Weiterleitung nach %s .';
-$lng['error']['destinationiswrong'] = 'Die Weiterleitungsadresse-Adresse %s enthält ungültige Zeichen oder ist nicht vollständig.';
+$lng['error']['destinationalreadyexistasmail'] = 'Die Weiterleitung zu "%s" exisitiert bereits als aktive E-Mail-Adresse.';
+$lng['error']['destinationalreadyexist'] = 'Es existiert bereits eine Weiterleitung nach "%s" .';
+$lng['error']['destinationiswrong'] = 'Die Weiterleitungsadresse-Adresse "%s" enthält ungültige Zeichen oder ist nicht vollständig.';
 $lng['error']['ticketnotaccessible'] = 'Sie können sich das Ticket nicht ansehen.';
 
 /**
@@ -233,19 +233,19 @@ $lng['error']['ticketnotaccessible'] = 'Sie können sich das Ticket nicht ansehe
  */
 
 $lng['question']['question'] = 'Sicherheitsabfrage';
-$lng['question']['admin_customer_reallydelete'] = 'Wollen Sie den Kunden %s wirklich löschen?<br />ACHTUNG! Alle Daten gehen unwiderruflich verloren! Nach dem Vorgang müssen Sie die Daten aus dem Dateisystem noch manuell entfernen.';
-$lng['question']['admin_domain_reallydelete'] = 'Wollen Sie die Domain %s wirklich löschen?';
-$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Wollen Sie diese wichtige Sicherheitseinstellung OpenBasedir wirklich deaktivieren?';
-$lng['question']['admin_admin_reallydelete'] = 'Wollen Sie den Admin %s wirklich löschen?<br />Alle Kunden und Domains werden Ihrem Account zugeteilt.';
-$lng['question']['admin_template_reallydelete'] = 'Wollen Sie die Vorlage \'%s\' wirklich löschen?';
-$lng['question']['domains_reallydelete'] = 'Wollen Sie die Domain %s wirklich löschen?';
-$lng['question']['email_reallydelete'] = 'Wollen Sie die E-Mail-Adresse %s wirklich löschen?';
-$lng['question']['email_reallydelete_account'] = 'Wollen Sie das Konto von %s wirklich löschen?';
-$lng['question']['email_reallydelete_forwarder'] = 'Wollen Sie die Weiterleitung %s wirklich löschen?';
-$lng['question']['extras_reallydelete'] = 'Wollen Sie den Verzeichnisschutz für %s wirklich löschen?';
-$lng['question']['extras_reallydelete_pathoptions'] = 'Wollen Sie die Optionen für den Pfad %s wirklich löschen?';
-$lng['question']['ftp_reallydelete'] = 'Wollen Sie das FTP-Benutzerkonto %s wirklich löschen?';
-$lng['question']['mysql_reallydelete'] = 'Wollen Sie die Datenbank %s wirklich löschen?<br />ACHTUNG! Alle Daten gehen unwiderruflich verloren!';
+$lng['question']['admin_customer_reallydelete'] = 'Wollen Sie den Kunden "%s" wirklich löschen?<br />ACHTUNG! Alle Daten gehen unwiderruflich verloren! Nach dem Vorgang müssen Sie die Daten aus dem Dateisystem noch manuell entfernen.';
+$lng['question']['admin_domain_reallydelete'] = 'Wollen Sie die Domain "%s" wirklich löschen?';
+$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Wollen Sie die wichtige Sicherheitseinstellung \'OpenBasedir\' wirklich deaktivieren?';
+$lng['question']['admin_admin_reallydelete'] = 'Wollen Sie den Admin "%s" wirklich löschen?<br />Alle Kunden und Domains dieses Admins werden Ihnen zugeteilt.';
+$lng['question']['admin_template_reallydelete'] = 'Wollen Sie die Vorlage "%s" wirklich löschen?';
+$lng['question']['domains_reallydelete'] = 'Wollen Sie die Domain "%s" wirklich löschen?';
+$lng['question']['email_reallydelete'] = 'Wollen Sie die E-Mail-Adresse "%s" wirklich löschen?';
+$lng['question']['email_reallydelete_account'] = 'Wollen Sie das Konto von "%s" wirklich löschen?';
+$lng['question']['email_reallydelete_forwarder'] = 'Wollen Sie die Weiterleitung "%s" wirklich löschen?';
+$lng['question']['extras_reallydelete'] = 'Wollen Sie den Verzeichnisschutz für "%s" wirklich löschen?';
+$lng['question']['extras_reallydelete_pathoptions'] = 'Wollen Sie die Optionen für den Pfad "%s" wirklich löschen?';
+$lng['question']['ftp_reallydelete'] = 'Wollen Sie das FTP-Benutzerkonto "%s" wirklich löschen?';
+$lng['question']['mysql_reallydelete'] = 'Wollen Sie die Datenbank "%s" wirklich löschen?<br />ACHTUNG! Alle Daten gehen unwiderruflich verloren!';
 $lng['question']['admin_configs_reallyrebuild'] = 'Wollen Sie wirklich alle Konfigurationsdateien neu erstellen lassen?';
 $lng['question']['admin_customer_alsoremovefiles'] = 'Auch Kunden-Daten löschen?';
 $lng['question']['admin_customer_alsoremovemail'] = 'E-Mail Daten auf dem Dateisystem löschen?';
@@ -270,7 +270,7 @@ $lng['admin']['systemdetails'] = 'Systemdetails';
 $lng['admin']['froxlordetails'] = 'Froxlor-Details';
 $lng['admin']['installedversion'] = 'Installierte Version';
 $lng['admin']['latestversion'] = 'Neueste Version';
-$lng['admin']['lookfornewversion']['clickhere'] = 'per Webservice abfragen';
+$lng['admin']['lookfornewversion']['clickhere'] = 'per Webservice abfragen - Hier klicken';
 $lng['admin']['lookfornewversion']['error'] = 'Fehler beim Auslesen';
 $lng['admin']['resources'] = 'Ressourcen';
 $lng['admin']['customer'] = 'Kunde';
@@ -311,7 +311,7 @@ $lng['admin']['templates']['subject'] = 'Betreff';
 $lng['admin']['templates']['mailbody'] = 'Mailtext';
 $lng['admin']['templates']['createcustomer'] = 'Willkommensmail für neue Kunden';
 $lng['admin']['templates']['pop_success'] = 'Willkommensmail für neue E-Mail Konten';
-$lng['admin']['wwwserveralias'] = 'www. ServerAlias hinzufügen';
+$lng['admin']['wwwserveralias'] = '\'www.\' ServerAlias hinzufügen';
 $lng['admin']['templates']['template_replace_vars'] = 'Variablen, die in den Vorlagen ersetzt werden:';
 $lng['admin']['templates']['SALUTATION'] = 'Wird mit einer korrekten Anrede des Kunden ersetzt';
 $lng['admin']['templates']['FIRSTNAME'] = 'Wird mit dem Vornamen des Kunden ersetzt.';
@@ -325,7 +325,7 @@ $lng['admin']['templates']['EMAIL'] = 'Wird mit der Adresse des neuen POP3/IMAP 
  * Serversettings
  */
 
-$lng['serversettings']['session_timeout']['title'] = 'Session Timeout';
+$lng['serversettings']['session_timeout']['title'] = 'Session-Timeout';
 $lng['serversettings']['session_timeout']['description'] = 'Wie lange muss ein Benutzer inaktiv sein, damit die Session ungültig wird? (Sekunden)';
 $lng['serversettings']['accountprefix']['title'] = 'Kundenprefix';
 $lng['serversettings']['accountprefix']['description'] = 'Welchen Prefix sollen die Kundenaccounts haben?';
@@ -396,7 +396,7 @@ $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Port\'';
 $lng['error']['myipdefault'] = 'Sie müssen eine IP/Port Kombination auswählen, die den Standard defninieren soll.';
 $lng['error']['myipnotdouble'] = 'Diese Kombination aus IP und Post existiert bereits.';
-$lng['question']['admin_ip_reallydelete'] = 'Wollen Sie wirklich die IP %s löschen?';
+$lng['question']['admin_ip_reallydelete'] = 'Wollen Sie wirklich die IP "%s" löschen?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs und Ports';
 $lng['admin']['ipsandports']['add'] = 'IP/Port hinzufügen';
 $lng['admin']['ipsandports']['edit'] = 'IP/Port bearbeiten';
@@ -417,7 +417,7 @@ $lng['domain']['docroot'] = 'Oben eingegebener Pfad';
 $lng['domain']['homedir'] = 'Heimverzeichnis';
 $lng['admin']['valuemandatory'] = 'Dieses Feld muss ausgefüllt werden';
 $lng['admin']['valuemandatorycompany'] = 'Entweder "Name" und "Vorname" oder "Firma" muss ausgefüllt werden';
-$lng['menue']['main']['username'] = 'Angemeldet als: ';
+$lng['menue']['main']['username'] = 'Angemeldet als ';
 $lng['panel']['urloverridespath'] = 'URL (überschreibt Pfad)';
 $lng['panel']['pathorurl'] = 'Pfad oder URL';
 $lng['error']['sessiontimeoutiswrong'] = '"Session-Timeout" muss ein numerischer Wert sein.';
@@ -530,7 +530,7 @@ $lng['admin']['configfiles']['choosedaemon'] = '-- Daemon wählen --';
 // ADDED IN 1.2.16-svn10
 
 $lng['serversettings']['ftpdomain']['title'] = 'FTP-Benutzerkonten @domain';
-$lng['serversettings']['ftpdomain']['description'] = 'Können Kunden FTP-Benutzerkonten user@customerdomain anlegen?';
+$lng['serversettings']['ftpdomain']['description'] = 'Können Kunden FTP-Benutzerkonten user@domain anlegen?';
 $lng['panel']['back'] = 'Zurück';
 
 // ADDED IN 1.2.16-svn12
@@ -630,7 +630,7 @@ $lng['ticket']['search'] = 'Archiv durchsuchen';
 $lng['ticket']['nocustomer'] = 'Keine Angabe';
 $lng['ticket']['archivesearch'] = 'Archiv Suchergebnis';
 $lng['ticket']['noresults'] = 'Keine Tickets gefunden';
-$lng['ticket']['notmorethanxopentickets'] = 'Zum Schutz gegen Spam können Sie nicht mehr als %s offene Tickets haben';
+$lng['ticket']['notmorethanxopentickets'] = 'Zum Schutz gegen Spam können Sie nicht mehr als "%s" offene Tickets haben';
 $lng['ticket']['supportstatus'] = 'Support-Status';
 $lng['ticket']['supportavailable'] = '<span class="ticket_low">Der Support ist besetzt und steht zu Ihrer Verfügung.</span>';
 $lng['ticket']['supportnotavailable'] = '<span class="ticket_high">Der Support ist zur Zeit nicht besetzt.</span>';
@@ -680,7 +680,7 @@ $lng['serversettings']['ticket']['enable'] = 'Ticketsystem aktivieren';
 $lng['serversettings']['ticket']['concurrentlyopen'] = 'Wieviele Tickets kann ein Kunde gleichzeitig öffnen?';
 $lng['error']['norepymailiswrong'] = 'Die "Keine-Antwort-Adresse" ist fehlerhaft. Es ist nur eine gültige E-Mail-Adresse erlaubt';
 $lng['error']['tadminmailiswrong'] = 'Die "Ticket-Admin-Adresse" ist fehlerhaft. Es ist nur eine gültige E-Mail-Adresse erlaubt';
-$lng['ticket']['awaitingticketreply'] = 'Sie haben %s unbeantwortete(s) Support-Ticket(s)';
+$lng['ticket']['awaitingticketreply'] = 'Sie haben "%s" unbeantwortete(s) Support-Ticket(s)';
 
 // ADDED IN 1.2.18-svn5
 
@@ -740,7 +740,7 @@ $lng['admin']['logger']['paranoid'] = 'Paranoid';
 $lng['serversettings']['logger']['types']['title'] = 'Log-Art(en)';
 $lng['serversettings']['logger']['types']['description'] = 'Wählen Sie hier die gewünschten Logtypen. Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt<br />Mögliche Logtypen sind: syslog, file, mysql';
 $lng['serversettings']['logger']['logfile'] = 'Log-Datei Pfad inklusive Dateinamen';
-$lng['error']['logerror'] = 'Log-Fehler: %s';
+$lng['error']['logerror'] = 'Log-Fehler: "%s"';
 $lng['serversettings']['logger']['logcron'] = 'Logge Cronjobs (einen Durchgang)';
 $lng['question']['logger_reallytruncate'] = 'Wollen Sie die Tabelle "%s" wirklich leeren?';
 $lng['admin']['loggersystem'] = 'System-Logging';
@@ -774,13 +774,13 @@ $lng['admin']['text'] = 'Nachricht';
 $lng['menu']['message'] = 'Nachrichten';
 $lng['error']['errorsendingmail'] = 'Das Versenden der Nachricht an "%s" schlug fehl.';
 $lng['error']['cannotreaddir'] = 'Der Ordner "%s" kann nicht gelesen werden';
-$lng['message']['success'] = 'Nachricht erfolgreich an %s Empfänger gesendet';
+$lng['message']['success'] = 'Nachricht erfolgreich an "%s" Empfänger gesendet';
 $lng['message']['noreceipients'] = 'Es wurde keine E-Mail versendet da sich keine Empfänger in der Datenbank befinden';
 $lng['admin']['sslsettings'] = 'SSL Einstellungen';
 $lng['cronjobs']['notyetrun'] = 'Bisher nicht gestartet';
 $lng['serversettings']['default_vhostconf']['title'] = 'Standard Vhost-Einstellungen';
 $lng['serversettings']['default_vhostconf']['description'] = 'Der Inhalt dieses Feldes wird direkt in jeden Domain-vHost-Container übernommen. Achtung: Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
-$lng['error']['invalidip'] = 'Ungültige IP Adresse: %s';
+$lng['error']['invalidip'] = 'Ungültige IP Adresse: "%s"';
 $lng['serversettings']['decimal_places'] = 'Nachkommastellen bei der Ausgabe von Traffic/Webspace';
 
 // ADDED IN 1.2.19-svn8
@@ -806,7 +806,7 @@ $lng['panel']['nosslipsavailable'] = 'Für diesen Server wurden noch keine SSL I
 $lng['ticket']['by'] = 'von';
 $lng['dkim']['use_dkim']['title'] = 'DKIM Support aktivieren?';
 $lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain Keys (DKIM) System benutzen?';
-$lng['error']['invalidmysqlhost'] = 'Ungültige MySQL Host Adresse: %s';
+$lng['error']['invalidmysqlhost'] = 'Ungültige MySQL Host Adresse: "%s"';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'Webalizer und AWstats können nicht zur gleichen Zeit aktiviert werden, bitte wählen Sie eines aus';
 $lng['serversettings']['webalizer_enabled'] = 'Nutze Webalizer Statistiken';
 $lng['serversettings']['awstats_enabled'] = 'Nutze AWStats Statistiken';
@@ -836,7 +836,7 @@ $lng['admin']['or'] = 'oder';
 
 $lng['serversettings']['unix_names']['title'] = 'Benutze UNIX kompatible Benutzernamen';
 $lng['serversettings']['unix_names']['description'] = 'Erlaubt die Nutzung von <strong>-</strong> und <strong>_</strong> in Benutzernamen wenn <strong>Nein</strong>';
-$lng['error']['cannotwritetologfile'] = 'Logdatei %s konnte nicht für Schreiboperationen geöffnet werden.';
+$lng['error']['cannotwritetologfile'] = 'Logdatei "%s" konnte nicht für Schreiboperationen geöffnet werden.';
 $lng['admin']['sysload'] = 'System-Auslastung';
 $lng['admin']['noloadavailable'] = 'nicht verfügbar';
 $lng['admin']['nouptimeavailable'] = 'nicht verfügbar';
@@ -849,7 +849,7 @@ $lng['login']['email'] = 'E-Mail Adresse';
 $lng['login']['remind'] = 'Passwort zurücksetzen';
 $lng['login']['usernotfound'] = 'Fehler: Unbekannter Benutzer!';
 $lng['pwdreminder']['subject'] = 'Froxlor - Passwort zurückgesetzt';
-$lng['pwdreminder']['body'] = 'Hallo %s,\n\nIhr Froxlor Passwort wurde zurückgesetzt!\nDas neue Passwort lautet: %p\n\nVielen Dank,\nIhr Administrator';
+$lng['pwdreminder']['body'] = 'Hallo "%s",\n\nIhr Froxlor Passwort wurde zurückgesetzt!\nDas neue Passwort lautet: %p\n\nVielen Dank,\nIhr Administrator';
 $lng['pwdreminder']['success'] = 'Passwort erfolgreich zurückgesetzt.<br />Sie sollten nun eine E-Mail mit dem neuen Passwort erhalten.';
 
 // ADDED IN 1.2.19-svn18
@@ -907,7 +907,7 @@ $lng['customer']['mail_quota'] = 'E-Mail Kontingent';
 $lng['panel']['megabyte'] = 'MegaByte';
 $lng['emails']['quota_edit'] = 'E-Mail Kontingent ändern';
 $lng['panel']['not_supported'] = 'Nicht unterstüzt in: ';
-$lng['error']['allocatetoomuchquota'] = 'Sie versuchen %s MB Kontingent zu zuweisen, haben aber nicht genug übrig.';
+$lng['error']['allocatetoomuchquota'] = 'Sie versuchen "%s" MB Kontingent zu zuweisen, haben aber nicht genug übrig.';
 
 // Autoresponder module
 
@@ -937,28 +937,28 @@ $lng['admin']['froxlor_graphic']['description'] = 'Welche Grafik soll im Kopfber
 
 //improved froxlor
 
-$lng['menue']['phpsettings']['maintitle'] = 'PHP Konfigurationen';
-$lng['admin']['phpsettings']['title'] = 'PHP Konfiguration';
+$lng['menue']['phpsettings']['maintitle'] = 'PHP-Konfigurationen';
+$lng['admin']['phpsettings']['title'] = 'PHP-Konfiguration';
 $lng['admin']['phpsettings']['description'] = 'Kurzbeschreibung';
 $lng['admin']['phpsettings']['actions'] = 'Aktionen';
 $lng['admin']['phpsettings']['activedomains'] = 'In Verwendung für Domain(s)';
 $lng['admin']['phpsettings']['notused'] = 'Konfiguration wird nicht verwendet';
 $lng['admin']['misc'] = 'Sonstiges';
-$lng['admin']['phpsettings']['editsettings'] = 'PHP Konfiguration bearbeiten';
-$lng['admin']['phpsettings']['addsettings'] = 'PHP Konfiguration erstellen';
-$lng['admin']['phpsettings']['viewsettings'] = 'PHP Konfiguration ansehen';
-$lng['admin']['phpsettings']['phpinisettings'] = 'php.ini Einstellungen';
-$lng['error']['nopermissionsorinvalidid'] = 'Entweder fehlen Ihnen die nötigen Rechte diese Einstellung zu ändern oder es wurde eine ungültige Id übergeben';
+$lng['admin']['phpsettings']['editsettings'] = 'PHP-Konfiguration bearbeiten';
+$lng['admin']['phpsettings']['addsettings'] = 'PHP-Konfiguration erstellen';
+$lng['admin']['phpsettings']['viewsettings'] = 'PHP-Konfiguration ansehen';
+$lng['admin']['phpsettings']['phpinisettings'] = 'php.ini-Einstellungen';
+$lng['error']['nopermissionsorinvalidid'] = 'Entweder fehlen Ihnen die nötigen Rechte diese Einstellung zu ändern oder es wurde eine ungültige ID übergeben';
 $lng['panel']['view'] = 'ansehen';
-$lng['question']['phpsetting_reallydelete'] = 'Wollen Sie diese PHP Einstellungen wirklich löschen? Alle Domains die diese Einstellungen bis jetzt verwendet haben, werden dann auf die Standard Einstellungen umgestellt.';
+$lng['question']['phpsetting_reallydelete'] = 'Wollen Sie diese PHP-Einstellungen wirklich löschen? Alle Domains die diese Einstellungen bis jetzt verwendet haben, werden dann auf die Standardeinstellungen umgestellt.';
 $lng['admin']['phpsettings']['addnew'] = 'Neue Konfiguration erstellen';
-$lng['error']['phpsettingidwrong'] = 'Eine PHP Konfiguration mit dieser Id existiert nicht';
+$lng['error']['phpsettingidwrong'] = 'Eine PHP-Konfiguration mit dieser ID existiert nicht';
 $lng['error']['descriptioninvalid'] = 'Der Beschreibungstext ist zu kurz, zu lang oder enthält ungültige Zeichen';
 $lng['error']['info'] = 'Info';
 $lng['admin']['phpconfig']['template_replace_vars'] = 'Variablen, die in den Konfigurationen ersetzt werden';
 $lng['admin']['phpconfig']['pear_dir'] = 'Wird mit dem globalen Wert für das Include Verzeichnis ersetzt.';
 $lng['admin']['phpconfig']['open_basedir_c'] = 'Wird mit einem ; (Semikolon) ersetzt, um open_basedir auszukommentieren/deaktivieren, wenn eingestellt.';
-$lng['admin']['phpconfig']['open_basedir'] = 'Wird mit der open_basedir Einstellung der Domain ersetzt.';
+$lng['admin']['phpconfig']['open_basedir'] = 'Wird mit der open_basedir-Einstellung der Domain ersetzt.';
 $lng['admin']['phpconfig']['tmp_dir'] = 'Wird mit der Einstellung für das temporäre Verzeichnis der Domain ersetzt.';
 $lng['admin']['phpconfig']['open_basedir_global'] = 'Wird mit der globalen Einstellung des Pfades ersetzt, der dem open_basedir hinzugefügt wird.';
 $lng['admin']['phpconfig']['customer_email'] = 'Wird mit der E-Mail Adresse des Kunden ersetzt, dem die Domain gehört.';
@@ -968,13 +968,13 @@ $lng['admin']['phpconfig']['customer'] = 'Wird mit dem Loginnamen des Kunden ers
 $lng['admin']['phpconfig']['admin'] = 'Wird mit dem Loginnamen des Admins ersetzt, dem die Domain gehört.';
 $lng['login']['backtologin'] = 'Zurück zum Login';
 $lng['serversettings']['mod_fcgid']['starter']['title'] = 'Prozesse je Domain';
-$lng['serversettings']['mod_fcgid']['starter']['description'] = 'Wieviele PHP Prozesse pro Domain sollen gestartet/erlaubt werden. Der Wert 0 wird empfohlen, da PHP dann selbst die Anzahl effizient verwaltet.';
+$lng['serversettings']['mod_fcgid']['starter']['description'] = 'Wieviele PHP-Prozesse pro Domain sollen gestartet/erlaubt werden. Der Wert 0 wird empfohlen, da PHP die Anzahl dann selbst effizient verwaltet.';
 $lng['serversettings']['mod_fcgid']['wrapper']['title'] = 'Wrappereinbindung in Vhosts';
 $lng['serversettings']['mod_fcgid']['wrapper']['description'] = 'Wie sollen die Wrapper in den Vhosts eingebunden werden';
 $lng['serversettings']['mod_fcgid']['tmpdir']['description'] = 'Wo sollen die temporären Verzeichnisse erstellt werden';
 $lng['admin']['know_what_youre_doing'] = 'Ändern Sie diese Einstellungen nur, wenn Sie wissen was Sie tun!';
 $lng['serversettings']['mod_fcgid']['peardir']['title'] = 'Globale PEAR Verzeichnisse';
-$lng['serversettings']['mod_fcgid']['peardir']['description'] = 'Welche globalen PEAR Verzeichnisse sollen in den php.ini Einstellungen ersetzt werden? Einzelne Verzeichnisse sind mit einem Doppelpunkt zu trennen.';
+$lng['serversettings']['mod_fcgid']['peardir']['description'] = 'Welche globalen PEAR Verzeichnisse sollen in den php.ini-Einstellungen ersetzt werden? Einzelne Verzeichnisse sind mit einem Doppelpunkt zu trennen.';
 
 //improved Froxlor 2
 
@@ -992,12 +992,12 @@ $lng['serversettings']['index_file_extension']['title'] = 'Dateiendung für inde
 $lng['error']['index_file_extension'] = 'Die Dateiendung für die index Datei muss zwischen 1 und 6 Zeichen lang sein und darf nur aus den Zeichen a-z, A-Z und 0-9 bestehen';
 $lng['admin']['security_settings'] = 'Sicherheitseinstellungen';
 $lng['admin']['expert_settings'] = 'Experteneinstellungen!';
-$lng['admin']['mod_fcgid_starter']['title'] = 'PHP Prozesse für diese Domain (leer für Standardwert)';
+$lng['admin']['mod_fcgid_starter']['title'] = 'PHP-Prozesse für diese Domain (leer für Standardwert)';
 
 //added with aps installer
 
-$lng['admin']['aps'] = 'APS Installer';
-$lng['customer']['aps'] = 'APS Installer';
+$lng['admin']['aps'] = 'APS-Installer';
+$lng['customer']['aps'] = 'APS-Installer';
 $lng['aps']['scan'] = 'Neue Pakete einlesen';
 $lng['aps']['upload'] = 'Neue Pakete hochladen';
 $lng['aps']['managepackages'] = 'Pakete verwalten';
@@ -1005,7 +1005,7 @@ $lng['aps']['manageinstances'] = 'Instanzen verwalten';
 $lng['aps']['overview'] = 'Paketübersicht';
 $lng['aps']['status'] = 'Meine Pakete';
 $lng['aps']['search'] = 'Paket suchen';
-$lng['aps']['upload_description'] = 'Bitte wählen Sie die APS ZIP-Dateien aus, um diese im System zu installieren.';
+$lng['aps']['upload_description'] = 'Bitte wählen Sie die APS-ZIP-Dateien aus, um diese im System zu installieren.';
 $lng['aps']['search_description'] = 'Name, Beschreibung, Schlagwort, Version';
 $lng['aps']['detail'] = 'Weitere Informationen';
 $lng['aps']['install'] = 'Paket installieren';
@@ -1037,7 +1037,7 @@ $lng['aps']['filetoobig'] = 'Die Datei ist zu groß.';
 $lng['aps']['filenotcomplete'] = 'Die Datei wurde nicht vollständig hochgeladen.';
 $lng['aps']['phperror'] = 'Es trat ein PHP interner Fehler auf. Der Upload Fehlercode lautet #';
 $lng['aps']['moveproblem'] = 'Die hochgeladene Datei konnte nicht aus dem temporären Ordner verschoben werden. Prüfen Sie ob alle Rechte korrekt gesetzt sind. Dies gilt insbesondere fü die Ordner {$path}temp/ und {$path}packages/.';
-$lng['aps']['uploaderrors'] = '<strong>Fehler für die Datei <em>%s</em></strong><br/><ul>%s</ul>';
+$lng['aps']['uploaderrors'] = '<strong>Fehler für die Datei <em>"%s"</em></strong><br/><ul>"%s"</ul>';
 $lng['aps']['nospecialchars'] = 'Sonderzeichen sind im Suchausdruck nicht erlaubt!';
 $lng['aps']['noitemsfound'] = 'Es wurden keine Pakete gefunden!';
 $lng['aps']['nopackagesinstalled'] = 'Sie haben noch kein Paket installiert welches angezeigt werden könnte.';
@@ -1059,7 +1059,7 @@ $lng['aps']['mainsite'] = 'Hauptseite';
 $lng['aps']['uninstall'] = 'Paket deinstallieren';
 $lng['aps']['reconfigure'] = 'Einstellungen ändern';
 $lng['aps']['erroronnewinstance'] = '<strong>Dieses Paket kann nicht installiert werden.</strong><br/><br/>Bitte gehen Sie zurück zur Paketübersicht und starten Sie eine neue Installation.';
-$lng['aps']['successonnewinstance'] = '<strong><em>%s</em> wird nun installiert.</strong><br/><br/>Gehen Sie zurück zu "Meine Pakete" und warten Sie bis die Installation abgeschlossen ist. Dies kann einige Minuten in Anspruch nehmen.';
+$lng['aps']['successonnewinstance'] = '<strong><em>"%s"</em> wird nun installiert.</strong><br/><br/>Gehen Sie zurück zu "Meine Pakete" und warten Sie bis die Installation abgeschlossen ist. Dies kann einige Minuten in Anspruch nehmen.';
 $lng['aps']['php_misc_handler'] = 'PHP - Sonstiges - Es werden keine anderen Dateiendungen als .php zum Parsen unterstützt.';
 $lng['aps']['php_misc_directoryhandler'] = 'PHP - Sonstiges - Je Verzeichnis deaktivierte PHP Handler werden nicht unterstützt.';
 $lng['aps']['asp_net'] = 'ASP.NET - Paket wird nicht unterstützt.';
@@ -1070,25 +1070,25 @@ $lng['aps']['php_configuration'] = 'PHP - Konfiguration - Aktuelle "%s" Einstell
 $lng['aps']['php_configuration_post_max_size'] = 'PHP - Konfiguration - "post_max_size" Wert zu klein.';
 $lng['aps']['php_configuration_memory_limit'] = 'PHP - Konfiguration - "memory_limit" Wert zu klein.';
 $lng['aps']['php_configuration_max_execution_time'] = 'PHP - Konfiguration - "max_execution_time" Wert zu klein.';
-$lng['aps']['php_general_old'] = 'PHP - Generell - PHP Version zu alt.';
-$lng['aps']['php_general_new'] = 'PHP - Generell - PHP Version zu neu.';
+$lng['aps']['php_general_old'] = 'PHP - Generell - PHP-Version zu alt.';
+$lng['aps']['php_general_new'] = 'PHP - Generell - PHP-Version zu neu.';
 $lng['aps']['db_mysql_support'] = 'Datenbank - Das Paket benötigt eine andere Datenbank Engine als MySQL.';
 $lng['aps']['db_mysql_version'] = 'Datenbank - MySQL Server zu alt.';
 $lng['aps']['webserver_module'] = 'Webserver - Modul "%s" fehlt.';
-$lng['aps']['webserver_fcgid'] = 'Webserver - Von diesem Paket werden einige Webserver Module benötigt. Da Sie Froxlor in einer FastCGI/mod_fcgid Umgebung verwenden existiert die Funktion "apache_get_modules" nicht. Es kann also nicht ermittelt werden ob das Paket unterstützt wird.';
-$lng['aps']['webserver_htaccess'] = 'Webserver - Dieses Paket benötigt dass .htaccess Dateien vom Webserver geparst werden. Das Paket kann nicht installiert werden, da nicht ermittelt werden kann ob diese Funktion aktiviert ist.';
+$lng['aps']['webserver_fcgid'] = 'Webserver - Von diesem Paket werden einige Webserver Module benötigt. Da Sie Froxlor in einer FastCGI/mod_fcgid Umgebung verwenden, existiert die Funktion "apache_get_modules" nicht. Es kann also nicht ermittelt werden, ob das Paket unterstützt wird.';
+$lng['aps']['webserver_htaccess'] = 'Webserver - Dieses Paket benötigt, dass ".htaccess"-Dateien vom Webserver geparst werden. Das Paket kann nicht installiert werden, da nicht ermittelt werden kann, ob diese Funktion aktiviert ist.';
 $lng['aps']['misc_configscript'] = 'Sonstiges - Die Sprache des Konfigurationsskriptes wird nicht unterstützt.';
 $lng['aps']['misc_charset'] = 'Sonstiges - In der aktuellen Version wird eine Validierung gegen einen gewissen Zeichensatz im Installationsassitenten nicht unterstützt.';
 $lng['aps']['misc_version_already_installed'] = 'Die gleiche Paketversion ist bereits installiert.';
-$lng['aps']['misc_only_newer_versions'] = 'Aus Sicherheitsgründen können nur Pakete installiert werden die neuer sind als die, die bereits im System installiert sind.';
-$lng['aps']['erroronscan'] = '<strong>Fehler für <em>%s</em></strong><ul>%s</ul>';
-$lng['aps']['invalidzipfile'] = '<strong>Fehler für <em>%s</em></strong><br/><ul><li>Dies ist keine gültige APS ZIP-Datei!</li></ul>';
-$lng['aps']['successpackageupdate'] = '<strong><em>%s</em> erfolgreich als Paketupdate installiert</strong>';
-$lng['aps']['successpackageinstall'] = '<strong><em>%s</em> erfolgreich als neues Paket installiert</strong>';
-$lng['aps']['class_zip_missing'] = 'SimpleXML Klasse, exec Funktion oder ZIP Funktionen nicht vorhanden bzw. aktiviert! Für genauere Informationen zu diesem Problem schauen Sie bitte in das Handbuch zu diesem Modul.';
-$lng['aps']['dir_permissions'] = 'Der PHP bzw. Webserver Prozess muss Schreibrechte für {$path}temp/ und {$path}packages/ haben.';
-$lng['aps']['initerror'] = '<strong>Es gibt ein paar Probleme mit diesem Modul:</strong><ul>%s</ul>Beheben Sie diese Probleme oder das Modul kann nicht genutzt werden!';
-$lng['aps']['iderror'] = 'Es wurde eine falsche Id übergeben!';
+$lng['aps']['misc_only_newer_versions'] = 'Aus Sicherheitsgründen können nur Pakete installiert werden, die neuer sind als die bereits im System installierten Pakete sind.';
+$lng['aps']['erroronscan'] = '<strong>Fehler für <em>"%s"</em></strong><ul>"%s"</ul>';
+$lng['aps']['invalidzipfile'] = '<strong>Fehler für <em>"%s"</em></strong><br/><ul><li>Dies ist keine gültige APS-ZIP-Datei!</li></ul>';
+$lng['aps']['successpackageupdate'] = '<strong><em>"%s"</em> erfolgreich als Paketupdate installiert</strong>';
+$lng['aps']['successpackageinstall'] = '<strong><em>"%s"</em> erfolgreich als neues Paket installiert</strong>';
+$lng['aps']['class_zip_missing'] = 'SimpleXML-Klasse, exec-Funktion oder ZIP-Funktionen nicht vorhanden bzw. aktiviert! Für genauere Informationen zu diesem Problem schauen Sie bitte in das Handbuch zu diesem Modul.';
+$lng['aps']['dir_permissions'] = 'Der PHP- bzw. Webserver-Prozess muss Schreibrechte für {$path}temp/ und {$path}packages/ haben.';
+$lng['aps']['initerror'] = '<strong>Es gibt ein paar Probleme mit diesem Modul:</strong><ul>"%s"</ul>Beheben Sie diese Probleme, andernfalls kann das Modul nicht genutzt werden!';
+$lng['aps']['iderror'] = 'Es wurde eine falsche ID übergeben!';
 $lng['aps']['nopacketsforinstallation'] = 'Es wurden keine Pakete zur Installation gefunden.';
 $lng['aps']['nopackagestoinstall'] = 'Es existieren keine Pakete die angezeigt oder installiert werden könnten.';
 $lng['aps']['nodomains'] = 'Wählen Sie eine Domain aus der Liste. Sollte keine Domain vorhanden sein können Sie keine Pakete installieren!';
@@ -1096,7 +1096,7 @@ $lng['aps']['wrongpath'] = 'Entweder enthält dieser Pfad ungültige Zeichen ode
 $lng['aps']['dbpassword'] = 'Geben Sie ein Passwort mit einer minimalen Länge von 8 Zeichen ein.';
 $lng['aps']['error_text'] = 'Geben Sie einen Text ohne Sonderzeichen ein.';
 $lng['aps']['error_email'] = 'Geben Sie eine gültige E-Mail Adresse ein.';
-$lng['aps']['error_domain'] = 'Geben Sie eine gültige URL wie http://www.example.com/ ein.';
+$lng['aps']['error_domain'] = 'Geben Sie eine gültige URL wie "http://www.example.com/" ein.';
 $lng['aps']['error_integer'] = 'Geben Sie eine Zahl (Integer-Format) ein. Beispiel: <em>5</em> oder <em>7</em>.';
 $lng['aps']['error_float'] = 'Geben Sie eine Zahl (Float-Format) ein. Beispiel: <em>5,2432</em> oder <em>7,5346</em>.';
 $lng['aps']['error_password'] = 'Geben Sie ein Passwort ein.';
@@ -1109,8 +1109,8 @@ $lng['aps']['waitfortask'] = 'Es stehen momentan keine Aktionen zur Verfügung. 
 $lng['aps']['removetaskexisting'] = '<strong>Es gibt bereits einen Task zur Deinstallation.</strong><br/><br/>Bitte gehen Sie zurück zu "Meine Pakete" und warten Sie bis die Deinstallation abgeschlossen ist.';
 $lng['aps']['packagewillberemoved'] = '<strong>Das Paket wird nun deinstalliert.</strong><br/><br/>Gehen Sie zurück zu "Meine Pakete" und warten Sie bis die Deinstallation abgeschlossen ist.';
 $lng['question']['reallywanttoremove'] = '<strong>Wollen Sie dieses Paket wirklich deinstallieren?</strong><br/><br/>Alle Datenbankinhalte und Dateien werden unwiderruflich gelöscht. Wenn Sie die enthaltenen Daten weiterhin benötigen, stellen Sie sicher dass Sie diese vorher sichern!<br/><br/>';
-$lng['aps']['searchoneresult'] = '%s Paket gefunden';
-$lng['aps']['searchmultiresult'] = '%s Pakete gefunden';
+$lng['aps']['searchoneresult'] = '"%s" Paket gefunden';
+$lng['aps']['searchmultiresult'] = '"%s" Pakete gefunden';
 $lng['question']['reallywanttostop'] = 'Wollen Sie die Installation dieses Paketes wirklich abbrechen?<br/><br/>';
 $lng['aps']['packagenameandversion'] = 'Paketname & Version';
 $lng['aps']['package_locked'] = 'Gesperrt';
@@ -1122,8 +1122,8 @@ $lng['aps']['allpackages'] = 'Alle Pakete';
 $lng['question']['reallyremovepackages'] = '<strong>Wollen Sie diese Pakete wirklich löschen?</strong><br/><br/>Pakete mit Abhängigkeiten können erst gelöscht werden wenn die entsprechenden Instanzen dafür deinstalliert wurden!<br/><br/>';
 $lng['aps']['nopackagesinsystem'] = 'Es wurden noch keine Pakete im System installiert, die verwaltet werden könnten.';
 $lng['aps']['packagenameandstatus'] = 'Paketname & Status';
-$lng['aps']['activate_aps']['title'] = 'APS Installer aktivieren';
-$lng['aps']['activate_aps']['description'] = 'Hier können Sie den APS Installer global aktivieren bzw. deaktivieren.';
+$lng['aps']['activate_aps']['title'] = 'APS-Installer aktivieren';
+$lng['aps']['activate_aps']['description'] = 'Hier können Sie den APS-Installer global aktivieren bzw. deaktivieren.';
 $lng['aps']['packages_per_page']['title'] = 'Pakete pro Seite';
 $lng['aps']['packages_per_page']['description'] = 'Wieviele Pakete sollen Kunden pro Seite angezeigt bekommen?';
 $lng['aps']['upload_fields']['title'] = 'Uploadfelder pro Seite';
@@ -1132,35 +1132,35 @@ $lng['aps']['exceptions']['title'] = 'Ausnahmen für Paketvalidierung';
 $lng['aps']['exceptions']['description'] = 'Manche Pakete benötigen spezielle Konfigurationsparameter oder Module. Der Installer selbst kann nicht immer eindeutig feststellen ob diese Optionen/Erweiterungen aktiviert sind. Aus diesem Grund kann man hier nun Ausnahmen festlegen damit Pakete dann trotzdem installiert werden können. Wählen Sie nur die Optionen aus, die auch wirklich so mit der Realität übereinstimmen. Für genauere Informationen zu diesem Problem schauen Sie bitte in das Handbuch zu diesem Modul.';
 $lng['aps']['settings_php_extensions'] = 'PHP-Erweiterungen';
 $lng['aps']['settings_php_configuration'] = 'PHP-Konfiguration';
-$lng['aps']['settings_webserver_modules'] = 'Webserver Module';
-$lng['aps']['settings_webserver_misc'] = 'Webserver Sonstiges';
+$lng['aps']['settings_webserver_modules'] = 'Webserver-Module';
+$lng['aps']['settings_webserver_misc'] = 'Webserver - Sonstiges';
 $lng['aps']['specialoptions'] = 'Sonderoptionen';
 $lng['aps']['removeunused'] = 'Ungenutzte Pakete entfernen';
-$lng['aps']['enablenewest'] = 'Von jedem Paket neueste Version freigeben, alte sperren';
+$lng['aps']['enablenewest'] = 'Von jedem Paket neueste Version freigeben, alte Version sperren';
 $lng['aps']['installations'] = 'Installationen';
 $lng['aps']['statistics'] = 'Statistiken';
-$lng['aps']['numerofpackagesinstalled'] = '%s Pakete vorhanden<br/>';
-$lng['aps']['numerofpackagesenabled'] = '%s Pakete freigegeben<br/>';
-$lng['aps']['numerofpackageslocked'] = '%s Pakete gesperrt<br/>';
-$lng['aps']['numerofinstances'] = '%s Instanzen installiert<br/>';
+$lng['aps']['numerofpackagesinstalled'] = '"%s" Pakete vorhanden<br/>';
+$lng['aps']['numerofpackagesenabled'] = '"%s" Pakete freigegeben<br/>';
+$lng['aps']['numerofpackageslocked'] = '"%s" Pakete gesperrt<br/>';
+$lng['aps']['numerofinstances'] = '"%s" Instanzen installiert<br/>';
 $lng['question']['reallydoaction'] = '<strong>Wollen Sie die gewählten Aktionen wirklich durchführen?</strong><br/><br/>Daten, die durch diese Vorgänge möglicherweise gelöscht werden, können anschließend nicht wieder hergestellt werden.<br/><br/>';
-$lng['aps']['initerror_customer'] = 'Es gibt momentan ein Problem mit dieser Froxlor Erweiterung. Wenden Sie sich an Ihren Administrator für weitere Informationen.';
-$lng['aps']['numerofinstances'] = '%s Installationen insgesamt<br/>';
-$lng['aps']['numerofinstancessuccess'] = '%s erfolgreiche Installationen<br/>';
-$lng['aps']['numerofinstanceserror'] = '%s fehlgeschlagene Installationen<br/>';
-$lng['aps']['numerofinstancesaction'] = '%s geplante Installationen/Deinstallationen';
+$lng['aps']['initerror_customer'] = 'Es gibt momentan ein Problem mit dieser Froxlor-Erweiterung. Wenden Sie sich bitte für weitere Informationen an Ihren Administrator.';
+$lng['aps']['numerofinstances'] = '"%s" Installationen insgesamt<br/>';
+$lng['aps']['numerofinstancessuccess'] = '"%s" erfolgreiche Installationen<br/>';
+$lng['aps']['numerofinstanceserror'] = '"%s" fehlgeschlagene Installationen<br/>';
+$lng['aps']['numerofinstancesaction'] = '"%s" geplante Installationen/Deinstallationen';
 $lng['aps']['downloadallpackages'] = 'Alle Pakete vom Distributionsserver herunterladen';
 $lng['aps']['updateallpackages'] = 'Alle Pakete über Distributionsserver aktualisieren';
 $lng['aps']['downloadtaskexists'] = 'Es gibt bereits einen Task zum Download aller Pakete. Bitte warten Sie bis dieser abgeschlossen ist.';
 $lng['aps']['downloadtaskinserted'] = 'Es wurde ein Task zum Download aller Pakete erstellt. Dieser Vorgang kann einige Minuten in Anspruch nehmen.';
 $lng['aps']['updatetaskexists'] = 'Es gibt bereits einen Task zur Aktualisierung aller Pakete. Bitte warten Sie bis dieser abgeschlossen ist.';
 $lng['aps']['updatetaskinserted'] = 'Es wurde ein Task zur Aktualisierung aller Pakete erstellt. Dieser Vorgang kann einige Minuten in Anspruch nehmen.';
-$lng['aps']['canmanagepackages'] = 'Darf APS Pakete verwalten';
-$lng['aps']['numberofapspackages'] = 'Anzahl an APS Installationen';
-$lng['aps']['allpackagesused'] = '<strong>Fehler</strong><br/><br/>Sie haben bereits die Anzahl an installierbaren APS Anwendungen erreicht bzw. überschritten.';
+$lng['aps']['canmanagepackages'] = 'Darf APS-Pakete verwalten';
+$lng['aps']['numberofapspackages'] = 'Anzahl an APS-Installationen';
+$lng['aps']['allpackagesused'] = '<strong>Fehler</strong><br/><br/>Sie haben bereits die Anzahl an installierbaren APS-Anwendungen erreicht bzw. überschritten.';
 $lng['aps']['noinstancesexisting'] = 'Es gibt momentan noch keine Instanzen, die verwaltet werden könnten. Es muss mindestens eine Anwendung von einem Kunden installiert worden sein.';
 $lng['aps']['lightywarning'] = 'Warnung';
-$lng['aps']['lightywarningdescription'] = 'Sie verwenden den lighttpd Webserver zusammen mit Froxlor. Da das APS Modul hauptsächlich für den Apache Webserver geschrieben wurde, kann es unter Umständen vorkommen, dass gewisse Features mit lighttpd nicht funktionieren. Bitte beachten Sie dies bei der Verwendung des APS Moduls. Sollten Sie Fehler bei der Verwendung oder Probleme bei der Nutzung haben, so leiten Sie diese bitte an die Entwickler weiter, damit diese Probleme in der nächsten Version behoben werden können.';
+$lng['aps']['lightywarningdescription'] = 'Sie verwenden den lighttpd-Webserver zusammen mit Froxlor. Da das APS-Modul hauptsächlich für den Apache-Webserver geschrieben wurde, kann es unter Umständen vorkommen, dass gewisse Features mit lighttpd nicht funktionieren. Bitte beachten Sie dies bei der Verwendung des APS-Moduls. Sollten Sie Fehler bei der Verwendung oder Probleme bei der Nutzung haben, so leiten Sie diese bitte an die Entwickler weiter, damit diese Probleme in der nächsten Version behoben werden können.';
 $lng['error']['customerdoesntexist'] = 'Der ausgewählte Kunde existiert nicht.';
 $lng['error']['admindoesntexist'] = 'Der ausgewählte Admin existiert nicht.';
 
@@ -1178,13 +1178,13 @@ $lng['error']['ipportdoesntexist'] = 'Die gewählte IP/Port-Kombination existier
 
 // ADDED IN 1.2.19-svn38
 
-$lng['admin']['phpserversettings'] = 'PHP Einstellungen';
-$lng['admin']['phpsettings']['binary'] = 'PHP Binary';
+$lng['admin']['phpserversettings'] = 'PHP-Einstellungen';
+$lng['admin']['phpsettings']['binary'] = 'PHP-Binary';
 $lng['admin']['phpsettings']['file_extensions'] = 'Dateiendungen';
 $lng['admin']['phpsettings']['file_extensions_note'] = '(ohne Punkt, durch Leerzeichen getrennt)';
-$lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maxmale PHP Requests für diese Domain (leer für Standardwert)';
+$lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maxmale PHP-Requests für diese Domain (leer für Standardwert)';
 $lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximale Requests pro Domain';
-$lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Wieviele PHP Requests pro Domain sollen erlaubt werden?';
+$lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Wieviele PHP-Requests pro Domain sollen erlaubt werden?';
 
 // fix bug #1124
 $lng['admin']['webserver'] = 'Webserver';
@@ -1193,9 +1193,9 @@ $lng['aps']['license_link'] = 'Link zur Lizenz';
 
 // ADDED IN FROXLOR 0.9
 
-$lng['admin']['spfsettings'] = 'Domain SPF Einstellungen';
+$lng['admin']['spfsettings'] = 'Domain-SPF-Einstellungen';
 $lng['spf']['use_spf'] = 'Aktiviere SPF für Domains?';
-$lng['spf']['spf_entry'] = 'SPF Eintrag für alle Domains';
+$lng['spf']['spf_entry'] = 'SPF-Eintrag für alle Domains';
 $lng['panel']['dirsmissing'] = 'Das angegebene Verzeichnis konnte nicht gefunden werden.';
 $lng['panel']['toomanydirs'] = 'Zu viele Unterverzeichnisse. Weiche auf manuelle Verzeichniseingabe aus.';
 $lng['panel']['abort'] = 'Abbrechen';
@@ -1209,7 +1209,7 @@ $lng['panel']['off'] = 'aus';
 $lng['update']['updateinprogress_onlyadmincanlogin'] = 'Eine neuere Version von Froxlor wurde installiert, aber noch nicht eingerichtet.<br />Nur der Administrator kann sich anmelden und die Aktualisierung abschließen.';
 $lng['update']['update'] = 'Froxlor Aktualisierung';
 $lng['update']['proceed'] = 'Ausführen';
-$lng['update']['update_information']['part_a'] = 'Die Froxlor Dateien wurden aktualisiert. Neue Version ist <strong>%newversion</strong>. Die bisher installierte Version ist <strong>%curversion</strong>';
+$lng['update']['update_information']['part_a'] = 'Die Froxlor-Dateien wurden aktualisiert. Neue Version ist <strong>%newversion</strong>. Die bisher installierte Version ist <strong>%curversion</strong>';
 $lng['update']['update_information']['part_b'] = '<br /><br />Ein Kunden-Login ist vor Abschluss des Aktualisierungsvorganges nicht möglich.<br /><strong>Aktualisierung ausführen?</strong>';
 $lng['update']['noupdatesavail'] = '<strong>Ihre Froxlor-Version ist aktuell.</strong>';
 $lng['admin']['specialsettingsforsubdomains'] = 'Übernehme Einstellungen für alle Subdomains (*.beispiel.de)';
@@ -1243,7 +1243,7 @@ $lng['error']['hiddenfieldvaluechanged'] = 'Der Wert des verborgenen Feldes "%s"
 
 $lng['serversettings']['panel_password_min_length']['title'] = 'Mindestlänge von Passwörtern';
 $lng['serversettings']['panel_password_min_length']['description'] = 'Hier können Sie die Mindestlänge für Passwörter festlegen. \'0\' bedeutet: Keine Mindestlänge';
-$lng['error']['notrequiredpasswordlength'] = 'Das Passwort ist zu kurz. Bitte geben Sie mindestens %s Zeichen an.';
+$lng['error']['notrequiredpasswordlength'] = 'Das Passwort ist zu kurz. Bitte geben Sie mindestens "%s" Zeichen an.';
 $lng['serversettings']['system_store_index_file_subs']['title'] = 'Erstelle Index-Datei auch in neuen Unterordnern';
 $lng['serversettings']['system_store_index_file_subs']['description'] = 'Wenn aktiviert, wird für jede Subdomain mit neuem Unterordner die Standard-Index Datei angelegt.';
 
@@ -1251,22 +1251,22 @@ $lng['serversettings']['system_store_index_file_subs']['description'] = 'Wenn ak
 
 $lng['serversettings']['adminmail_return']['title'] = 'Antwort-Adresse';
 $lng['serversettings']['adminmail_return']['description'] = 'Standard-Antwort-Adresse für E-Mails aus dem Panel.';
-$lng['serversettings']['adminmail_defname'] = 'Panel Absender Name';
+$lng['serversettings']['adminmail_defname'] = 'Panel-Absender-Name';
 
 // ADDED IN FROXLOR 0.9.3-svn3
-$lng['dkim']['dkim_algorithm']['title'] = 'Gültige Hash Algorithmen';
+$lng['dkim']['dkim_algorithm']['title'] = 'Gültige Hash-Algorithmen';
 $lng['dkim']['dkim_algorithm']['description'] = 'Wählen sie einen Algorithmus, "All" für alle Algorithmen oder Einen oder Mehrere von den verfügbaren Algorithmen';
 $lng['dkim']['dkim_servicetype'] = 'Service Typen';
 $lng['dkim']['dkim_keylength']['title'] = 'Schlüssel-Länge';
 $lng['dkim']['dkim_keylength']['description'] = 'Achtung: Bei Änderung dieser Einstellung müssen alle private/public Schlüssel in "%s" gelöscht werden.';
 $lng['dkim']['dkim_notes']['title'] = 'DKIM Notiz';
-$lng['dkim']['dkim_notes']['description'] = 'Eine Notiz, welche für Menschen interessant sein könnte, Z.B. eine URL wie http://www.dnswatch.info. Es gibt keine programmgesteuerte Interpretation für dieses Feld. Gehen sie sparsam mit der Anzahl der Zeichen um, da es Einschränkungen seitens des DNS Dienstes gibt. Dieses Feld ist für Administratoren gedacht, nicht für Benutzer.';
-$lng['dkim']['dkim_add_adsp']['title'] = 'DKIM ADSP Eintrag hinzufügen';
+$lng['dkim']['dkim_notes']['description'] = 'Eine Notiz, welche für Menschen interessant sein könnte, Z.B. eine URL wie http://www.dnswatch.info. Es gibt keine programmgesteuerte Interpretation für dieses Feld. Gehen sie sparsam mit der Anzahl der Zeichen um, da es Einschränkungen seitens des DNS-Dienstes gibt. Dieses Feld ist für Administratoren gedacht, nicht für Benutzer.';
+$lng['dkim']['dkim_add_adsp']['title'] = 'DKIM-ADSP Eintrag hinzufügen';
 $lng['dkim']['dkim_add_adsp']['description'] = 'Wenn unsicher oder unbekannt, belassen sie es auf "aktiviert"';
-$lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP Richtlinie';
-$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Mehr Informationen zu dieser Einstellung (englisch) <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-dkim-adsp-policies">DKIM ADSP Policies</a>';
+$lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP-Richtlinie';
+$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Mehr Informationen zu dieser Einstellung (englisch) <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-dkim-adsp-policies">DKIM-ADSP-Policies</a>';
 
-$lng['admin']['cron']['cronsettings'] = 'Cronjob Einstellungen';
+$lng['admin']['cron']['cronsettings'] = 'Cronjob-Einstellungen';
 $lng['cron']['cronname'] = 'Cronjob-Name';
 $lng['cron']['lastrun'] = 'zuletzt gestartet';
 $lng['cron']['interval'] = 'Intervall';
@@ -1278,7 +1278,7 @@ $lng['crondesc']['cron_tasks'] = 'Erstellen von Konfigurationsdateien';
 $lng['crondesc']['cron_legacy'] = 'Legacy (alter) Cronjob';
 $lng['crondesc']['cron_apsinstaller'] = 'APS-Installer';
 $lng['crondesc']['cron_autoresponder'] = 'E-Mail Autoresponder';
-$lng['crondesc']['cron_apsupdater'] = 'Aktualisieren der APS Pakete';
+$lng['crondesc']['cron_apsupdater'] = 'Aktualisieren der APS-Pakete';
 $lng['crondesc']['cron_traffic'] = 'Traffic-Berechnung';
 $lng['crondesc']['cron_ticketsreset'] = 'Zurücksetzen der Ticket-Zähler';
 $lng['crondesc']['cron_ticketarchive'] = 'Archivieren alter Tickets';
@@ -1289,7 +1289,7 @@ $lng['cronmgmt']['days'] = 'Tage';
 $lng['cronmgmt']['weeks'] = 'Wochen';
 $lng['cronmgmt']['months'] = 'Monate';
 $lng['admin']['cronjob_edit'] = 'Cronjob bearbeiten';
-$lng['cronjob']['cronjobsettings'] = 'Cronjob Einstellungen';
+$lng['cronjob']['cronjobsettings'] = 'Cronjob-instellungen';
 $lng['cronjob']['cronjobintervalv'] = 'Laufzeit-Intervall Wert';
 $lng['cronjob']['cronjobinterval'] = 'Laufzeit-Intervall';
 $lng['panel']['options'] = 'Optionen';
@@ -1300,7 +1300,7 @@ $lng['serversettings']['stdsubdomainhost']['title'] = 'Kunden Standard-Subdomain
 $lng['serversettings']['stdsubdomainhost']['description'] = 'Welcher Hostname soll für das Erstellen der Kunden-Standard-Subdomain verwendet werden? Falls leer wird der System-Hostname verwendet.';
 
 // ADDED IN FROXLOR 0.9.4-svn1
-$lng['ftp']['account_edit'] = 'FTP Konto bearbeiten';
+$lng['ftp']['account_edit'] = 'FTP-Konto bearbeiten';
 $lng['ftp']['editpassdescription'] = 'Neues Passwort setzen oder leer für keine Änderung.';
 $lng['customer']['sendinfomail'] = 'Daten per E-Mail an mich senden';
 $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Neue Datenbank erstellt';
@@ -1312,17 +1312,17 @@ $lng['error']['overviewsettingoptionisnotavalidfield'] = 'Hoppla, ein Feld, dass
 $lng['admin']['configfiles']['compactoverview'] = 'Kompakt-Übersicht';
 
 $lng['mysql']['mysql_server'] = 'MySQL-Server';
-$lng['admin']['ipsandports']['webserverdefaultconfig'] = 'Webserver Standard Konfiguration';
-$lng['admin']['ipsandports']['webserverdomainconfig'] = 'Webserver Domain Konfiguration';
-$lng['admin']['ipsandports']['webserverssldomainconfig'] = 'Webserver SSL Konfiguration';
-$lng['admin']['ipsandports']['ssl_key_file'] = 'Pfad zu der SSL Schlüsseldatei';
-$lng['admin']['ipsandports']['ssl_ca_file'] = 'Pfad zu dem SSL CA Zertifikat';
+$lng['admin']['ipsandports']['webserverdefaultconfig'] = 'Webserver-Standard-Konfiguration';
+$lng['admin']['ipsandports']['webserverdomainconfig'] = 'Webserver-Domain-Konfiguration';
+$lng['admin']['ipsandports']['webserverssldomainconfig'] = 'Webserver-SSL-Konfiguration';
+$lng['admin']['ipsandports']['ssl_key_file'] = 'Pfad zu der SSL-Schlüsseldatei';
+$lng['admin']['ipsandports']['ssl_ca_file'] = 'Pfad zu dem SSL-CA-Zertifikat';
 $lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Standard vHost - Einstellungen für jeden Domain - Kontainer';
-$lng['serversettings']['ssl']['ssl_key_file'] = 'Pfad zu der SSL Schlüsseldatei';
-$lng['serversettings']['ssl']['ssl_ca_file'] = 'Pfad zu dem SSL CA Zertifikat';
-$lng['error']['usernamealreadyexists'] = 'Der Benutzername %s existiert bereits.';
+$lng['serversettings']['ssl']['ssl_key_file'] = 'Pfad zu der SSL-Schlüsseldatei';
+$lng['serversettings']['ssl']['ssl_ca_file'] = 'Pfad zu dem SSL-CA-Zertifikat';
+$lng['error']['usernamealreadyexists'] = 'Der Benutzername "%s" existiert bereits.';
 $lng['error']['plausibilitychecknotunderstood'] = 'Die Antwort des Plausibilitätschecks wurde nicht verstanden';
-$lng['error']['errorwhensaving'] = 'Bei dem Speichern des Feldes %s trat ein Fehler auf';
+$lng['error']['errorwhensaving'] = 'Bei dem Speichern des Feldes "%s" trat ein Fehler auf';
 $lng['success']['success'] = 'Information';
 $lng['success']['clickheretocontinue'] = 'Hier klicken um fortzufahren';
 $lng['success']['settingssaved'] = 'Die Einstellungen wurden erfolgreich gespeichert.';
@@ -1348,34 +1348,34 @@ $lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div 
 $lng['serversettings']['ticket']['default_priority'] = 'Voreingestellte Support-Ticket Priorität';
 
 // ADDED IN FROXLOR 0.9.6-svn5
-$lng['serversettings']['mod_fcgid']['defaultini'] = 'Voreingestellte PHP Konfiguration für neue Domains';
+$lng['serversettings']['mod_fcgid']['defaultini'] = 'Voreingestellte PHP-Konfiguration für neue Domains';
 
 // ADDED IN FROXLOR 0.9.6-svn5
-$lng['admin']['ftpserver'] = 'FTP Server';
-$lng['admin']['ftpserversettings'] = 'FTP Server Einstellungen';
+$lng['admin']['ftpserver'] = 'FTP-Server';
+$lng['admin']['ftpserversettings'] = 'FTP-Server-Einstellungen';
 $lng['serversettings']['ftpserver']['desc'] = 'Wenn pureftpd ausgewählt ist, werden die .ftpquota Dateien für das Quota erstellt und täglich aktualisiert.';
 
 // CHANGED IN FROXLOR 0.9.6-svn5
-$lng['serversettings']['ftpprefix']['description'] = 'Welchen Prefix sollen die FTP-Benutzerkonten haben?<br/><b>Wenn du das änderst, musst du auch das Quota SQL Query in der FTP Server Config ändern, solltest du FTP-Quotas benutzen!</b>';
+$lng['serversettings']['ftpprefix']['description'] = 'Welchen Prefix sollen die FTP-Benutzerkonten haben?<br/><b>Wenn du das änderst, musst du auch das Quota-SQL-Query in der FTP-Server-Config ändern, solltest du FTP-Quotas benutzen!</b>';
 
 // ADDED IN FROXLOR 0.9.7-svn1
 $lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] Neuer FTP-Benutzer erstellt';
 $lng['customer']['ftp_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade einen neuen FTP-Benutzer angelegt. Hier die angegebenen Informationen:\n\nBenutzername: {USR_NAME}\nPasswort: {USR_PASS}\nPfad: {USR_PATH}\n\nVielen Dank, Ihr Administrator";
 $lng['domains']['redirectifpathisurl'] = 'Redirect code (Standard: leer)';
-$lng['domains']['redirectifpathisurlinfo'] = 'Der Redirect code kann gewählt werden, wenn der eingegebene Pfad eine URL ist';
+$lng['domains']['redirectifpathisurlinfo'] = 'Der Redirect-Code kann gewählt werden, wenn der eingegebene Pfad eine URL ist';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Erlaube Kunden-Redirect';
 $lng['serversettings']['customredirect_enabled']['description'] = 'Erlaubt es Kunden den HTTP-Status Code für einen Redirect zu wählen';
-$lng['serversettings']['customredirect_default']['title'] = 'Standard Redirect';
+$lng['serversettings']['customredirect_default']['title'] = 'Standard-Redirect';
 $lng['serversettings']['customredirect_default']['description'] = 'Dieser Redirect wird immer genutzt, sofern der Kunde keinen anderen auswählt.';
 
 // ADDED IN FROXLOR 0.9.7-svn2
 $lng['error']['pathmaynotcontaincolon'] = 'Der eingegebene Pfad sollte keinen Doppelpunkt (":") enthalten. Bitte geben Sie einen korrekten Wert für den Pfad ein.';
-$lng['tasks']['aps_task_install'] = 'Installation eines oder mehrerer APS Pakete';
-$lng['tasks']['aps_task_remove'] = 'Deinstallation eines oder mehrerer APS Pakete';
-$lng['tasks']['aps_task_reconfigure'] = 'Rekonfiguration eines oder mehrerer APS Pakete';
-$lng['tasks']['aps_task_upgrade'] = 'Upgrade eines oder mehrerer APS Pakete';
-$lng['tasks']['aps_task_sysupdate'] = 'Aktualisiere alle APS Pakete';
-$lng['tasks']['aps_task_sysdownload'] = 'Herunterladen neuer APS Pakete';
+$lng['tasks']['aps_task_install'] = 'Installation eines oder mehrerer APS-Pakete';
+$lng['tasks']['aps_task_remove'] = 'Deinstallation eines oder mehrerer APS-Pakete';
+$lng['tasks']['aps_task_reconfigure'] = 'Rekonfiguration eines oder mehrerer APS-Pakete';
+$lng['tasks']['aps_task_upgrade'] = 'Upgrade eines oder mehrerer APS-Pakete';
+$lng['tasks']['aps_task_sysupdate'] = 'Aktualisiere alle APS-Pakete';
+$lng['tasks']['aps_task_sysdownload'] = 'Herunterladen neuer APS-Pakete';
 
 // ADDED IN FROXLOR 0.9.9-svn1
 $lng['serversettings']['mail_also_with_mxservers'] = 'Erstelle mail-, imap-, pop3- and smtp-"A Record" auch wenn MX-Server angegeben sind';
@@ -1405,14 +1405,14 @@ $lng['serversettings']['perl_path']['description'] = 'Standard ist /usr/bin/perl
 
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
-$lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Verwende FCGID im Froxlor Vhost';
+$lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Verwende FCGID im Froxlor-Vhost';
 $lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Wenn verwendet, wird Froxlor selbst unter einem lokalem Benutzer ausgeführt';
 $lng['admin']['mod_fcgid_user'] = 'Lokaler Benutzer für FCGID (Froxlor Vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Lokale Gruppe für FCGID (Froxlor Vhost)';
 
 // ADDED IN FROXLOR 0.9.12-svn2
 $lng['admin']['perl_settings'] = 'Perl/CGI';
-$lng['serversettings']['perl']['suexecworkaround']['title'] = 'Aktiviere SuExec Workaround';
+$lng['serversettings']['perl']['suexecworkaround']['title'] = 'Aktiviere SuExec-Workaround';
 $lng['serversettings']['perl']['suexecworkaround']['description'] = 'Aktivieren Sie den Workaround nur, wenn die Kunden-Heimatverzeichnisse sich nicht unterhalb des suexec-Pfades liegen.<br />Wenn aktiviert erstellt Froxlor eine Verknüpfung des vom Kunden für Perl aktiviertem Pfad + /cgi-bin/ im angegebenen suexec-Pfad.<br />Bitte beachten Sie, dass Perl dann nur im Unterordner /cgi-bin/ des Kunden-Ordners funktioniert und nicht direkt in diesem Ordner (wie es ohne den Workaround wäre!)';
 $lng['serversettings']['perl']['suexeccgipath']['title'] = 'Pfad für Verknüpfungen zu Kunden-Perl-Verzeichnis';
 $lng['serversettings']['perl']['suexeccgipath']['description'] = 'Diese Einstellung wird nur benötigt, wenn der SuExec-Workaround aktiviert ist.<br />ACHTUNG: Stellen Sie sicher, dass sich der angegebene Pfad innerhalb des Suexec-Pfades befindet ansonsten ist der Workaround nutzlos';
@@ -1436,9 +1436,9 @@ $lng['admin']['templates']['DB_DESC'] = 'Datenbankbeschreibung';
 $lng['admin']['templates']['DB_SRV'] = 'Datenbankserver';
 $lng['admin']['templates']['PMA_URI'] = 'URL zu phpMyAdmin (wenn angegeben)';
 $lng['admin']['notgiven'] = '[nicht angegeben]';
-$lng['admin']['templates']['USR_NAME'] = 'FTP Benutzername';
-$lng['admin']['templates']['USR_PASS'] = 'FTP Passwort';
-$lng['admin']['templates']['USR_PATH'] = 'FTP Heimatverzeichnis (relativ zum Kunden-Heimatverzeichnis)';
+$lng['admin']['templates']['USR_NAME'] = 'FTP-Benutzername';
+$lng['admin']['templates']['USR_PASS'] = 'FTP-Passwort';
+$lng['admin']['templates']['USR_PATH'] = 'FTP-Heimatverzeichnis (relativ zum Kunden-Heimatverzeichnis)';
 
 // ADDED IN FROXLOR 0.9.12-svn4
 $lng['serversettings']['awstats_awstatspath'] = 'Pfad zu AWStats \'awstats.pl\'';
@@ -1448,20 +1448,20 @@ $lng['extras']['htpasswdauthname'] = 'Authentifizierungs-Grund (AuthName)';
 $lng['extras']['directoryprotection_edit'] = 'Verzeichnisschutz bearbeiten';
 $lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zurücksetzen des Passworts';
 $lng['admin']['templates']['password_reset'] = 'Kunden-Benachrichtigung nach Zurücksetzen des Passworts';
-$lng['admin']['store_defaultindex'] = 'Erstelle standard Index-Datei in Kunden-Ordner';
+$lng['admin']['store_defaultindex'] = 'Erstelle Standard-Index-Datei im Kunden-Ordner';
 
 // ADDED IN FROXLOR 0.9.13-svn1
 $lng['customer']['autoresponder'] = 'Abwesenheitsnachrichten';
 
 // ADDED IN FROXLOR 0.9.14-svn1
-$lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PHP Konfiguration für den Froxlor-Vhost';
+$lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PHP-Konfiguration für den Froxlor-Vhost';
 
 // ADDED IN FROXLOR 0.9.14-svn3
-$lng['serversettings']['awstats_icons']['title'] = 'Pfad zum AWstats icons Ordner';
+$lng['serversettings']['awstats_icons']['title'] = 'Pfad zum AWstats-Icon-Ordner';
 $lng['serversettings']['awstats_icons']['description'] = 'z.B. /usr/share/awstats/htdocs/icon/';
 
 // ADDED IN FROXLOR 0.9.14-svn4
-$lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Pfad zu dem SSL CertificateChainFile';
+$lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Pfad zu dem SSL-CertificateChainFile';
 
 // ADDED IN FROXLOR 0.9.14-svn5
 $lng['admin']['ipsandports']['docroot']['title'] = 'Benutzerdefinierter Docroot (leer = zeige auf Froxlor)';
@@ -1472,22 +1472,22 @@ $lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
 
 // ADDED IN FROXLOR 0.9.14
 $lng['panel']['unlock'] = 'entsperren';
-$lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden %s wirklich entsperren?';
+$lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden "%s" wirklich entsperren?';
 
 // ADDED IN FROXLOR 0.9.15-svn1
-$lng['serversettings']['perl_server']['title'] = 'Perl Server Ort';
+$lng['serversettings']['perl_server']['title'] = 'Perl-Server-Ort';
 $lng['serversettings']['perl_server']['description'] = 'Der Standardwert ist diesem Guide entnommen: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
-$lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP Backend';
+$lng['serversettings']['nginx_php_backend']['title'] = 'Nginx-PHP-Backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'Dies ist das Backend, auf dem PHP auf Anfragen von Nginx hört. Kann ein UNIX Socket oder eine IP:Port Kombination sein<br />*NICHT relevant bei php-fpm';
-$lng['serversettings']['phpreload_command']['title'] = 'PHP Reload Befehl';
-$lng['serversettings']['phpreload_command']['description'] = 'Dieser wird benötigt, um das PHP Backend bei Bedarf durch den Cronjob neu zu laden. (Standard: leer)<br />*NICHT relevant bei php-fpm';
+$lng['serversettings']['phpreload_command']['title'] = 'PHP-Reload-Befehl';
+$lng['serversettings']['phpreload_command']['description'] = 'Dieser wird benötigt, um das PHP-Backend bei Bedarf durch den Cronjob neu zu laden. (Standard: leer)<br />*NICHT relevant bei php-fpm';
 
 // ADDED IN FROXLOR 0.9.16
-$lng['error']['intvaluetoolow'] = 'Die angegebene Zahl ist zu klein (Feld %s)';
-$lng['error']['intvaluetoohigh'] = 'Die angegebene Zahl ist zu groß (Feld %s)';
+$lng['error']['intvaluetoolow'] = 'Die angegebene Zahl ist zu klein (Feld "%s")';
+$lng['error']['intvaluetoohigh'] = 'Die angegebene Zahl ist zu groß (Feld "%s")';
 $lng['admin']['phpfpm_settings'] = 'PHP-FPM';
 $lng['serversettings']['phpfpm'] = 'Aktiviere php-fpm';
-$lng['serversettings']['phpfpm_settings']['configdir'] = 'Pfad zu php-fpm Konfigurationen';
+$lng['serversettings']['phpfpm_settings']['configdir'] = 'Pfad zu php-fpm-Konfigurationen';
 $lng['serversettings']['phpfpm_settings']['reload'] = 'Kommando zum Neustarten von php-fpm';
 $lng['serversettings']['phpfpm_settings']['pm'] = 'Prozess Manager Control (PM)';
 $lng['serversettings']['phpfpm_settings']['max_children']['title'] = 'Anzahl der Kind-Prozesse';
@@ -1502,9 +1502,9 @@ $lng['serversettings']['phpfpm_settings']['max_requests']['title'] = 'Requests p
 $lng['serversettings']['phpfpm_settings']['max_requests']['description'] = 'Für keine Begrenzung \'0\' angeben. Equivalent zu PHP_FCGI_MAX_REQUESTS.';
 $lng['error']['phpfpmstillenabled'] = 'PHP-FPM ist derzeit aktiviert. Bitte deaktiviere es, um FCGID zu aktivieren';
 $lng['error']['fcgidstillenabled'] = 'FCGID ist derzeit aktiviert. Bitte deaktiviere es, um PHP-FPM zu aktivieren';
-$lng['phpfpm']['vhost_httpuser'] = 'Lokaler Benutzer für PHP-FPM (Froxlor Vhost)';
-$lng['phpfpm']['vhost_httpgroup'] = 'Lokale Gruppe für PHP-FPM (Froxlor Vhost)';
-$lng['phpfpm']['ownvhost']['title'] = 'Verwende PHP-FPM im Froxlor Vhost';
+$lng['phpfpm']['vhost_httpuser'] = 'Lokaler Benutzer für PHP-FPM (Froxlor-Vhost)';
+$lng['phpfpm']['vhost_httpgroup'] = 'Lokale Gruppe für PHP-FPM (Froxlor-Vhost)';
+$lng['phpfpm']['ownvhost']['title'] = 'Verwende PHP-FPM im Froxlor-Vhost';
 $lng['phpfpm']['ownvhost']['description'] = 'Wenn verwendet, wird Froxlor selbst unter einem lokalem Benutzer ausgeführt';
 
 // ADDED IN FROXLOR 0.9.17
@@ -1528,10 +1528,10 @@ $lng['mysql']['database_edit'] = 'Datenbank bearbeiten';
 
 // ADDED IN FROXLOR 0.9.18
 $lng['error']['domains_cantdeletedomainwithaliases'] = 'Sie können keine Domain löschen, die noch von Alias-Domains verwendet wird. Löschen Sie zuerst alle Alias-Domains dieser Domain.';
-$lng['serversettings']['default_theme'] = 'Standard Theme';
+$lng['serversettings']['default_theme'] = 'Standard-Theme';
 $lng['menue']['main']['changetheme'] = 'Theme wechseln';
 $lng['panel']['theme'] = 'Theme';
-$lng['success']['rebuildingconfigs'] = 'Task für das Neuerstellen der Konfigurationen wurde erfolgreich eingetragen';
+$lng['success']['rebuildingconfigs'] = 'Task für Neuerstellung der Konfigurationen wurde erfolgreich eingetragen';
 $lng['panel']['variable'] = 'Variable';
 $lng['panel']['description'] = 'Beschreibung';
 $lng['emails']['back_to_overview'] = 'Zurück zur Übersicht';
@@ -1561,7 +1561,7 @@ $lng['traffic']['months']['dec'] = 'Dez';
 $lng['traffic']['months']['total'] = 'Gesamt';
 $lng['traffic']['details'] = 'Details';
 $lng['menue']['traffic']['table'] = 'Übersicht';
-$lng['error']['admin_domain_emailsystemhostname'] = 'Der System - Hostname kann leider nicht als Kundendomain verwendet werden.';
+$lng['error']['admin_domain_emailsystemhostname'] = 'Der System - Hostname kann nicht als Kundendomain verwendet werden.';
 $lng['backup'] = 'Backup';
 $lng['backup_allowed'] = 'Backup erlaubt';
 $lng['extras']['backup_create'] = 'Backup erstellen?';
@@ -1596,12 +1596,12 @@ $lng['serversettings']['diskquota_quotatool_path']['description'] = 'Pfad zu quo
 $lng['serversettings']['diskquota_customer_partition']['description'] = 'Partition, auf welcher die Kundendaten liegen';
 $lng['tasks']['diskspace_set_quota'] = 'Quota auf dem Dateisystem setzen';
 $lng['error']['session_timeout'] = 'Wert zu niedrig';
-$lng['error']['session_timeout_desc'] = 'Der Wert der Session Timeout sollte nicht unter einer Minute liegen.';
+$lng['error']['session_timeout_desc'] = 'Der Wert der Session-Timeout sollte nicht unter einer Minute liegen.';
 
 // ADDED IN FROXLOR 0.9.24-svn1
 $lng['logrotate'] = 'Logrotate';
 $lng['logrotate_enabled'] = 'Logrotate aktivieren?';
-$lng['logrotate_binary'] = 'Pfad zum logrotate binary?';
+$lng['logrotate_binary'] = 'Pfad zum logrotate-binary?';
 $lng['logrotate_interval'] = 'Intervall?';
 $lng['logrotate_keep'] = 'Wie viele Logdateien sollen aufbewahrt werden?';
 $lng['admin']['assignedmax'] = 'Zugewiesen / Max.';
@@ -1616,10 +1616,10 @@ $lng['traffic']['ftp'] = 'FTP (MB)';
 $lng['traffic']['mail'] = 'Mail (MB)';
 
 // ADDED IN 0.9.27-svn1
-$lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle Timeout';
-$lng['serversettings']['mod_fcgid']['idle_timeout']['description'] = 'Timeout einstellung für Mod FastCGI.';
-$lng['serversettings']['phpfpm_settings']['idle_timeout']['title'] = 'Idle Timeout';
-$lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Timeout einstellung für PHP5 FPM FastCGI.';
+$lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle-Timeout';
+$lng['serversettings']['mod_fcgid']['idle_timeout']['description'] = 'Timeout-Einstellung für mod_FastCGI.';
+$lng['serversettings']['phpfpm_settings']['idle_timeout']['title'] = 'Idle-Timeout';
+$lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Timeout-Einstellung für PHP5-FPM FastCGI.';
 
 // ADDED IN 0.9.27-svn2
 $lng['panel']['cancel'] = 'abbrechen';
@@ -1628,16 +1628,16 @@ $lng['admin']['speciallogwarning'] = 'ACHTUNG: Durch diese Einstellungen werden 
 
 // ADDED IN 0.9.28-svn5
 $lng['error']['operationnotpermitted'] = 'Diese Aktion ist nicht erlaubt!';
-$lng['error']['featureisdisabled'] = 'Die Funktion %s wurde deaktiviert. Kontaktieren Sie bitte Ihren Dienstleister.';
+$lng['error']['featureisdisabled'] = 'Die Funktion "%s" wurde deaktiviert. Kontaktieren Sie bitte Ihren Dienstleister.';
 $lng['serversettings']['catchall_enabled']['title']  = 'Catchall verwenden';
 $lng['serversettings']['catchall_enabled']['description']  = 'Möchten Sie Ihren Kunden die Funktion Catchall zur Verfügung stellen?';
 
 // ADDED IN 0.9.28.svn6
 $lng['serversettings']['apache_24']['title'] = 'Anpassungen f&uuml;r Apache 2.4 verwenden';
-$lng['serversettings']['apache_24']['description'] = '<strong style="color:red;">ACHTUNG:</strong> bitte nur verwenden, wenn wirklich Apache mit version 2.4 oder höher installiert ist,<br />ansonsten wird der Webserver nicht starten.';
+$lng['serversettings']['apache_24']['description'] = '<strong style="color:red;">ACHTUNG:</strong> Bitte nur verwenden, wenn wirklich Apache mit Version 2.4 oder höher installiert ist,<br />ansonsten wird der Webserver nicht starten.';
 $lng['admin']['tickets_see_all'] = 'Kann alle Ticket-Kategorien sehen?';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Pfad zur fastcgi_params Datei';
-$lng['serversettings']['nginx_fastcgiparams']['description'] = 'Geben Sie den Pfad zu nginx\'s fastcgi_params Datei an. Inlkusive Dateiname!';
+$lng['serversettings']['nginx_fastcgiparams']['description'] = 'Geben Sie den Pfad zu nginx\'s fastcgi_params Datei an. Inklusive Dateiname!';
 $lng['serversettings']['enablewebfonts']['title'] = 'Verwende Google Webfonts im Panel';
 $lng['serversettings']['enablewebfonts']['description'] = 'Wenn aktiviert, wird die angegebene Google-Schriftart eingebunden und verwendet';
 $lng['serversettings']['definewebfont']['title'] = '<a href="http://www.google.com/webfonts" rel="external">Google Webfont</a> festlegen';
@@ -1647,11 +1647,11 @@ $lng['serversettings']['definewebfont']['description'] = 'Wenn aktiviert, wird d
 $lng['serversettings']['documentroot_use_default_value']['title'] = 'Verwende Domain-Namen im Documentroot';
 $lng['serversettings']['documentroot_use_default_value']['description'] = 'Wenn aktiviert wird dem standard Documentroot zusätzlich der Domain-Name angehängt.<br /><br />Beispiel:<br />/var/customers/customer_name/example.com/<br />/var/customers/customer_name/subdomain.example.com/';
 
-$lng['error']['usercurrentlydeactivated'] = 'Der Benutzer %s ist derzeit deaktiviert';
+$lng['error']['usercurrentlydeactivated'] = 'Der Benutzer "%s" ist derzeit deaktiviert';
 $lng['admin']['speciallogfile']['title'] = 'Eigene Log-Datei';
 $lng['admin']['speciallogfile']['description'] = 'Aktiviere diese Option, um für diese Domain eine eigene Access-Log Datei zu erhalten';
-$lng['error']['setlessthanalreadyused'] = 'Es können nicht weniger Resourcen von \'%s\' gesetzt werden, als der Benutzer bereits vergeben hat';
-$lng['error']['stringmustntbeempty'] = 'Der Wert für das Feld %s darf nicht leer sein';
+$lng['error']['setlessthanalreadyused'] = 'Es können nicht weniger Resourcen von "%s" gesetzt werden, als der Benutzer bereits vergeben hat';
+$lng['error']['stringmustntbeempty'] = 'Der Wert für das Feld "%s" darf nicht leer sein';
 $lng['admin']['domain_editable']['title'] = 'Erlaube Bearbeiten der Domain';
 $lng['admin']['domain_editable']['desc'] = 'Wenn ja, darf der Kunde verschiedene Einstellungen anpassen.<br />Wenn nein, darf nichts durch den Kunden geändert werden.';
 
@@ -1663,18 +1663,19 @@ $lng['serversettings']['systemdefault'] = 'Systemstandard';
 $lng['serversettings']['panel_allow_theme_change_admin'] = 'Erlaube Admins das Theme zu wechseln';
 $lng['serversettings']['panel_allow_theme_change_customer'] = 'Erlaube Kunden das Theme zu wechseln';
 $lng['serversettings']['axfrservers']['title'] = 'AXFR Server';
-$lng['serversettings']['axfrservers']['description'] = 'Eine komma-getrennte Liste von IP Adressen, die DNS Zonen transferieren dürfen (AXFR).';
-$lng['panel']['ssleditor'] = 'SSL Einstellungen für diese Domain';
+$lng['serversettings']['axfrservers']['description'] = 'Eine durch Kommas getrennte Liste von IP Adressen, die DNS-Zonen transferieren dürfen (AXFR).';
+$lng['panel']['ssleditor'] = 'SSL-Einstellungen für diese Domain';
 $lng['admin']['ipsandports']['ssl_paste_description'] = 'Bitte den Inhalt der Zertifikatsdatei in das Textfeld kopieren';
-$lng['admin']['ipsandports']['ssl_cert_file_content'] = 'Inhalt des SSL Zertifikats';
+$lng['admin']['ipsandports']['ssl_cert_file_content'] = 'Inhalt des SSL-Zertifikats';
 $lng['admin']['ipsandports']['ssl_key_file_content'] = 'Inhalt der Key-Datei (private key)';
-$lng['admin']['ipsandports']['ssl_ca_file_content'] = 'Inhalt der SSL CA Datei (optional)';
-$lng['admin']['ipsandports']['ssl_cert_chainfile_content'] = 'Inhalt des Zertifikats-chainfile (optional)';
+$lng['admin']['ipsandports']['ssl_ca_file_content'] = 'Inhalt der SSL-CA-Datei (optional)';
+$lng['admin']['ipsandports']['ssl_cert_chainfile_content'] = 'Inhalt des Zertifikats-Chainfile (optional)';
 $lng['error']['sslcertificateismissingprivatekey'] = 'Für das Zertifikat muss eine Key-Datei (private key) angegeben werden';
 $lng['error']['sslcertificatewrongdomain'] = 'Das angegebene Zertifikat gilt nicht für die gewählte Domain';
 $lng['error']['sslcertificateinvalidcert'] = 'Der angegebene Zertifikatsinhalt scheint kein gültiges Zertifikat zu sein';
 $lng['error']['sslcertificateinvalidcertkeypair'] = 'Der angegebene Key (private-key) gehört nicht zum angegebenen Zertifikat';
-$lng['error']['sslcertificateinvalidca'] = 'Die angegebenen CA Zertifikatsdaten scheinen kein gültiges Zertifikat zu sein';
+$lng['error']['sslcertificateinvalidca'] = 'Die angegebenen CA-Zertifikatsdaten scheinen kein gültiges Zertifikat zu sein';
 $lng['error']['sslcertificateinvalidchain'] = 'Die angegebenen Zertifikats-Chain-Daten scheinen kein gültiges Zertifikat zu sein';
-$lng['serversettings']['customerssl_directory']['title'] = 'Webserver Kunden-SSL Zertifikats-Verzeichnis';
-$lng['serversettings']['customerssl_directory']['description'] = 'Wo sollen kundenspezifizierte SSL Zertifikate erstellt werden?';
+$lng['serversettings']['customerssl_directory']['title'] = 'Webserver-Kunden-SSL-Zertifikats-Verzeichnis';
+$lng['serversettings']['customerssl_directory']['description'] = 'Wo sollen kundenspezifizierte SSL-Zertifikate erstellt werden?';
+?>
