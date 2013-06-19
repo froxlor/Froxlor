@@ -1678,4 +1678,3 @@ $lng['error']['sslcertificateinvalidca'] = 'Die angegebenen CA-Zertifikatsdaten 
 $lng['error']['sslcertificateinvalidchain'] = 'Die angegebenen Zertifikats-Chain-Daten scheinen kein gültiges Zertifikat zu sein';
 $lng['serversettings']['customerssl_directory']['title'] = 'Webserver-Kunden-SSL-Zertifikats-Verzeichnis';
 $lng['serversettings']['customerssl_directory']['description'] = 'Wo sollen kundenspezifizierte SSL-Zertifikate erstellt werden?';
-?>
