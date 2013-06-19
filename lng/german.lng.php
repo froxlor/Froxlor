@@ -453,12 +453,12 @@ $lng['error']['stringformaterror'] = 'Der Wert des Feldes "%s" ist nicht im erwa
 
 // ADDED IN 1.2.15-rc1
 
-$lng['admin']['serversoftware'] = 'Serversoftware';
+$lng['admin']['serversoftware'] = 'Webserver';
 $lng['admin']['phpversion'] = 'PHP-Version';
 $lng['admin']['phpmemorylimit'] = 'PHP-Memory-Limit';
 $lng['admin']['mysqlserverversion'] = 'MySQL Server Version';
 $lng['admin']['mysqlclientversion'] = 'MySQL Client Version';
-$lng['admin']['webserverinterface'] = 'Webserver Interface';
+$lng['admin']['webserverinterface'] = 'Webserver-Interface';
 $lng['domains']['isassigneddomain'] = 'Ist zugewiesene Domain';
 $lng['serversettings']['phpappendopenbasedir']['title'] = 'An OpenBasedir anzuhängende Pfade';
 $lng['serversettings']['phpappendopenbasedir']['description'] = 'Diese (durch Doppelpunkte getrennten) Pfade werden dem OpenBasedir-Statement in jedem vHost-Container angehängt.';
@@ -585,15 +585,15 @@ $lng['serversettings']['webalizer_quiet']['description'] = 'Ausgabefreudigkeit d
 $lng['ticket']['admin_email'] = 'root@localhost';
 $lng['ticket']['noreply_email'] = 'tickets@froxlor';
 $lng['admin']['ticketsystem'] = 'Support-Tickets';
-$lng['menue']['ticket']['ticket'] = 'Support Tickets';
-$lng['menue']['ticket']['categories'] = 'Support Kategorien';
+$lng['menue']['ticket']['ticket'] = 'Support-Tickets';
+$lng['menue']['ticket']['categories'] = 'Support-Kategorien';
 $lng['menue']['ticket']['archive'] = 'Ticket-Archiv';
 $lng['ticket']['description'] = 'Hier können Sie Hilfe-Anfragen an Ihren zuständigen Administrator senden.<br />Benachrichtigungen werden per E-Mail verschickt.';
 $lng['ticket']['ticket_new'] = 'Neues Support-Ticket erstellen';
 $lng['ticket']['ticket_reply'] = 'Auf Support-Ticket antworten';
 $lng['ticket']['ticket_reopen'] = 'Ticket wiedereröffnen';
-$lng['ticket']['ticket_newcateory'] = 'Neue Kategorie erstellen';
-$lng['ticket']['ticket_editcateory'] = 'Kategorie bearbeiten';
+$lng['ticket']['ticket_newcateory'] = 'Neue Support-Kategorie erstellen';
+$lng['ticket']['ticket_editcateory'] = 'Support-Kategorie bearbeiten';
 $lng['ticket']['ticket_view'] = 'Ticketverlauf ansehen';
 $lng['ticket']['ticketcount'] = 'Anzahl Tickets';
 $lng['ticket']['ticket_answers'] = 'Antworten';
@@ -684,7 +684,7 @@ $lng['ticket']['awaitingticketreply'] = 'Sie haben %s unbeantwortete(s) Support-
 
 // ADDED IN 1.2.18-svn5
 
-$lng['serversettings']['ticket']['noreply_name'] = 'Ticket E-Mail Absendername';
+$lng['serversettings']['ticket']['noreply_name'] = 'E-Mail-Absendername für Tickets';
 
 // ADDED IN 1.2.19-svn
 
@@ -728,11 +728,11 @@ $lng['traffic']['summail'] = 'Summe Mail-Traffic in';
 
 // ADDED IN 1.2.19-svn4.5
 
-$lng['serversettings']['no_robots']['title'] = 'Erlaube die Indizierung Ihres Froxlor durch Suchmaschinen';
+$lng['serversettings']['no_robots']['title'] = 'Erlaube die Indizierung Ihrer Froxlor-Installation durch Suchmaschinen';
 
 // ADDED IN 1.2.19-svn6
 
-$lng['admin']['loggersettings'] = 'Log Einstellungen';
+$lng['admin']['loggersettings'] = 'Log-Einstellungen';
 $lng['serversettings']['logger']['enable'] = 'Logging ja/nein';
 $lng['serversettings']['logger']['severity'] = 'Logging Level';
 $lng['admin']['logger']['normal'] = 'Normal';
@@ -741,7 +741,7 @@ $lng['serversettings']['logger']['types']['title'] = 'Log-Art(en)';
 $lng['serversettings']['logger']['types']['description'] = 'Wählen Sie hier die gewünschten Logtypen. Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt<br />Mögliche Logtypen sind: syslog, file, mysql';
 $lng['serversettings']['logger']['logfile'] = 'Log-Datei Pfad inklusive Dateinamen';
 $lng['error']['logerror'] = 'Log-Fehler: %s';
-$lng['serversettings']['logger']['logcron'] = 'Log Cronjobs (einen Durchgang)';
+$lng['serversettings']['logger']['logcron'] = 'Logge Cronjobs (einen Durchgang)';
 $lng['question']['logger_reallytruncate'] = 'Wollen Sie die Tabelle "%s" wirklich leeren?';
 $lng['admin']['loggersystem'] = 'System-Logging';
 $lng['menue']['logger']['logger'] = 'System-Logging';
@@ -814,9 +814,9 @@ $lng['admin']['awstatssettings'] = 'AWstats Einstellungen';
 
 // ADDED IN 1.2.19-svn16
 
-$lng['admin']['domain_dns_settings'] = 'Domain DNS Einstellungen';
-$lng['dns']['destinationip'] = 'Domain IP';
-$lng['dns']['standardip'] = 'Server Standard IP';
+$lng['admin']['domain_dns_settings'] = 'Domain DNS-Einstellungen';
+$lng['dns']['destinationip'] = 'Domain-IP';
+$lng['dns']['standardip'] = 'Server-Standard-IP';
 $lng['dns']['a_record'] = 'A-Eintrag (IPv6 optional)';
 $lng['dns']['cname_record'] = 'CNAME-Eintrag';
 $lng['dns']['mxrecords'] = 'MX Einträge definieren';
