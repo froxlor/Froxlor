@@ -52,6 +52,7 @@ smtpd_helo_required = no
 smtpd_helo_restrictions =
 strict_rfc821_envelopes = no
 smtpd_recipient_restrictions = permit_mynetworks permit_sasl_authenticated reject_unauth_destination
+smtpd_relay_restrictions = 
 smtpd_sasl_auth_enable = yes
 smtpd_sasl_local_domain = $myhostname
 smtpd_sasl_security_options = noanonymous
