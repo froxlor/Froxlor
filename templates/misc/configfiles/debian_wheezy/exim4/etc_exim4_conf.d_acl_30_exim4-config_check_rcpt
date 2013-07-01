@@ -1,0 +1,358 @@
+
+### acl/30_exim4-config_check_rcpt
+#################################
+
+# This access control list is used for every RCPT command in an incoming
+# SMTP message. The tests are run in order until the address is either
+# accepted or denied.
+#
+acl_check_rcpt:
+
+  # Accept if the source is local SMTP (i.e. not over TCP/IP). We do this by
+  # testing for an empty sending host field.
+  accept
+    hosts = :
+    control = dkim_disable_verify
+
+  # Do not try to verify DKIM signatures of incoming mail if DC_minimaldns
+  # or DISABLE_DKIM_VERIFY are set.
+.ifdef DC_minimaldns
+  warn
+    control = dkim_disable_verify
+.else
+.ifdef DISABLE_DKIM_VERIFY
+  warn
+    control = dkim_disable_verify
+.endif
+.endif
+
+  # The following section of the ACL is concerned with local parts that contain
+  # certain non-alphanumeric characters. Dots in unusual places are
+  # handled by this ACL as well.
+  #
+  # Non-alphanumeric characters other than dots are rarely found in genuine
+  # local parts, but are often tried by people looking to circumvent
+  # relaying restrictions. Therefore, although they are valid in local
+  # parts, these rules disallow certain non-alphanumeric characters, as
+  # a precaution.
+  #
+  # Empty components (two dots in a row) are not valid in RFC 2822, but Exim
+  # allows them because they have been encountered. (Consider local parts
+  # constructed as "firstinitial.secondinitial.familyname" when applied to
+  # a name without a second initial.) However, a local part starting
+  # with a dot or containing /../ can cause trouble if it is used as part of a
+  # file name (e.g. for a mailing list). This is also true for local parts that
+  # contain slashes. A pipe symbol can also be troublesome if the local part is
+  # incorporated unthinkingly into a shell command line.
+  #
+  # These ACL components will block recipient addresses that are valid
+  # from an RFC2822 point of view. We chose to have them blocked by
+  # default for security reasons.
+  #
+  # If you feel that your site should have less strict recipient
+  # checking, please feel free to change the default values of the macros
+  # defined in main/01_exim4-config_listmacrosdefs or override them from a
+  # local configuration file.
+  # 
+  # Two different rules are used. The first one has a quite strict
+  # default, and is applied to messages that are addressed to one of the
+  # local domains handled by this host.
+
+  # The default value of CHECK_RCPT_LOCAL_LOCALPARTS is defined in
+  # main/01_exim4-config_listmacrosdefs:
+  # CHECK_RCPT_LOCAL_LOCALPARTS = ^[.] : ^.*[@%!/|`#&?]
+  # This blocks local parts that begin with a dot or contain a quite
+  # broad range of non-alphanumeric characters.
+  .ifdef CHECK_RCPT_LOCAL_LOCALPARTS
+  deny
+    domains = +local_domains:+froxlor_domain
+    local_parts = CHECK_RCPT_LOCAL_LOCALPARTS
+    message = restricted characters in address
+  .endif
+
+
+  # The second rule applies to all other domains, and its default is
+  # considerably less strict.
+  
+  # The default value of CHECK_RCPT_REMOTE_LOCALPARTS is defined in
+  # main/01_exim4-config_listmacrosdefs:
+  # CHECK_RCPT_REMOTE_LOCALPARTS = ^[./|] : ^.*[@%!`#&?] : ^.*/\\.\\./
+
+  # It allows local users to send outgoing messages to sites
+  # that use slashes and vertical bars in their local parts. It blocks
+  # local parts that begin with a dot, slash, or vertical bar, but allows
+  # these characters within the local part. However, the sequence /../ is
+  # barred. The use of some other non-alphanumeric characters is blocked.
+  # Single quotes might probably be dangerous as well, but they're
+  # allowed by the default regexps to avoid rejecting mails to Ireland.
+  # The motivation here is to prevent local users (or local users' malware)
+  # from mounting certain kinds of attack on remote sites.
+  .ifdef CHECK_RCPT_REMOTE_LOCALPARTS
+  deny
+    domains = !+local_domains
+    local_parts = CHECK_RCPT_REMOTE_LOCALPARTS
+    message = restricted characters in address
+  .endif
+
+
+  # Accept mail to postmaster in any local domain, regardless of the source,
+  # and without verifying the sender.
+  #
+  accept
+    .ifndef CHECK_RCPT_POSTMASTER
+    local_parts = postmaster
+    .else
+    local_parts = CHECK_RCPT_POSTMASTER
+    .endif
+    domains = +local_domains : +relay_to_domains : +froxlor_domain
+
+
+  # Deny unless the sender address can be verified.
+  #
+  # This is disabled by default so that DNSless systems don't break. If
+  # your system can do DNS lookups without delay or cost, you might want
+  # to enable this feature.
+  #
+  # This feature does not work in smarthost and satellite setups as
+  # with these setups all domains pass verification. See spec.txt chapter
+  # 39.31 with the added information that a smarthost/satellite setup
+  # routes all non-local e-mail to the smarthost.
+  .ifdef CHECK_RCPT_VERIFY_SENDER
+  deny
+    message = Sender verification failed
+    !acl = acl_local_deny_exceptions
+    !verify = sender
+  .endif
+
+  # Verify senders listed in local_sender_callout with a callout.
+  #
+  # In smarthost and satellite setups, this causes the callout to be
+  # done to the smarthost. Verification will thus only be reliable if the
+  # smarthost does reject illegal addresses in the SMTP dialog.
+  deny
+    !acl = acl_local_deny_exceptions
+    senders = ${if exists{CONFDIR/local_sender_callout}\
+                         {CONFDIR/local_sender_callout}\
+                   {}}
+    !verify = sender/callout
+
+
+  # Accept if the message comes from one of the hosts for which we are an
+  # outgoing relay. It is assumed that such hosts are most likely to be MUAs,
+  # so we set control=submission to make Exim treat the message as a
+  # submission. It will fix up various errors in the message, for example, the
+  # lack of a Date: header line. If you are actually relaying out out from
+  # MTAs, you may want to disable this. If you are handling both relaying from
+  # MTAs and submissions from MUAs you should probably split them into two
+  # lists, and handle them differently.
+
+  # Recipient verification is omitted here, because in many cases the clients
+  # are dumb MUAs that don't cope well with SMTP error responses. If you are
+  # actually relaying out from MTAs, you should probably add recipient
+  # verification here.
+
+  # Note that, by putting this test before any DNS black list checks, you will
+  # always accept from these hosts, even if they end up on a black list. The
+  # assumption is that they are your friends, and if they get onto black
+  # list, it is a mistake.
+  accept
+    hosts = +relay_from_hosts
+    control = submission/sender_retain
+    control = dkim_disable_verify
+
+
+  # Accept if the message arrived over an authenticated connection, from
+  # any host. Again, these messages are usually from MUAs, so recipient
+  # verification is omitted, and submission mode is set. And again, we do this
+  # check before any black list tests.
+  accept
+    authenticated = *
+    control = submission/sender_retain
+    control = dkim_disable_verify
+
+
+  # Insist that any other recipient address that we accept is either in one of
+  # our local domains, or is in a domain for which we explicitly allow
+  # relaying. Any other domain is rejected as being unacceptable for relaying.
+  require
+    message = relay not permitted
+    domains = +local_domains : +relay_to_domains
+
+
+  # We also require all accepted addresses to be verifiable. This check will
+  # do local part verification for local domains, but only check the domain
+  # for remote domains.
+  require
+    verify = recipient
+
+
+  # Verify recipients listed in local_rcpt_callout with a callout.
+  # This is especially handy for forwarding MX hosts (secondary MX or
+  # mail hubs) of domains that receive a lot of spam to non-existent
+  # addresses.  The only way to check local parts for remote relay
+  # domains is to use a callout (add /callout), but please read the
+  # documentation about callouts before doing this.
+  deny
+    !acl = acl_local_deny_exceptions
+    recipients = ${if exists{CONFDIR/local_rcpt_callout}\
+                            {CONFDIR/local_rcpt_callout}\
+                      {}}
+    !verify = recipient/callout
+
+
+  # CONFDIR/local_sender_blacklist holds a list of envelope senders that
+  # should have their access denied to the local host. Incoming messages
+  # with one of these senders are rejected at RCPT time.
+  #
+  # The explicit white lists are honored as well as negative items in
+  # the black list. See exim4-config_files(5) for details.
+  deny
+    message = sender envelope address $sender_address is locally blacklisted here. If you think this is wrong, get in touch with postmaster
+    !acl = acl_local_deny_exceptions
+    senders = ${if exists{CONFDIR/local_sender_blacklist}\
+                   {CONFDIR/local_sender_blacklist}\
+                   {}}
+
+
+  # deny bad sites (IP address)
+  # CONFDIR/local_host_blacklist holds a list of host names, IP addresses
+  # and networks (CIDR notation)  that should have their access denied to
+  # The local host. Messages coming in from a listed host will have all
+  # RCPT statements rejected.
+  #
+  # The explicit white lists are honored as well as negative items in
+  # the black list. See exim4-config_files(5) for details.
+  deny
+    message = sender IP address $sender_host_address is locally blacklisted here. If you think this is wrong, get in touch with postmaster
+    !acl = acl_local_deny_exceptions
+    hosts = ${if exists{CONFDIR/local_host_blacklist}\
+                 {CONFDIR/local_host_blacklist}\
+                 {}}
+
+
+  # Warn if the sender host does not have valid reverse DNS.
+  # 
+  # If your system can do DNS lookups without delay or cost, you might want
+  # to enable this.
+  # If sender_host_address is defined, it's a remote call.  If
+  # sender_host_name is not defined, then reverse lookup failed.  Use
+  # this instead of !verify = reverse_host_lookup to catch deferrals
+  # as well as outright failures.
+  .ifdef CHECK_RCPT_REVERSE_DNS
+  warn
+    condition = ${if and{{def:sender_host_address}{!def:sender_host_name}}\
+                      {yes}{no}}
+    add_header = X-Host-Lookup-Failed: Reverse DNS lookup failed for $sender_host_address (${if eq{$host_lookup_failed}{1}{failed}{deferred}})
+  .endif
+
+
+  # Use spfquery to perform a pair of SPF checks (for details, see
+  # http://www.openspf.org/)
+  #
+  # This is quite costly in terms of DNS lookups (~6 lookups per mail).  Do not
+  # enable if that's an issue.  Also note that if you enable this, you must
+  # install "spf-tools-perl" which provides the spfquery command.
+  # Missing spf-tools-perl will trigger the "Unexpected error in
+  # SPF check" warning.
+  .ifdef CHECK_RCPT_SPF
+  deny
+    message = [SPF] $sender_host_address is not allowed to send mail from \
+              ${if def:sender_address_domain {$sender_address_domain}{$sender_helo_name}}.  \
+              Please see \
+	      http://www.openspf.org/Why?scope=${if def:sender_address_domain \
+              {mfrom}{helo}};identity=${if def:sender_address_domain \
+              {$sender_address}{$sender_helo_name}};ip=$sender_host_address
+    log_message = SPF check failed.
+    !acl = acl_local_deny_exceptions
+    condition = ${run{/usr/bin/spfquery.mail-spf-perl --ip \
+                   ${quote:$sender_host_address} --identity \
+                   ${if def:sender_address_domain \
+                       {--scope mfrom  --identity ${quote:$sender_address}}\
+                       {--scope helo --identity ${quote:$sender_helo_name}}}}\
+                   {no}{${if eq {$runrc}{1}{yes}{no}}}}
+
+  defer
+    message = Temporary DNS error while checking SPF record.  Try again later.
+    !acl = acl_local_deny_exceptions
+    condition = ${if eq {$runrc}{5}{yes}{no}}
+
+  warn
+    condition = ${if <={$runrc}{6}{yes}{no}}
+    add_header = Received-SPF: ${if eq {$runrc}{0}{pass}\
+                                {${if eq {$runrc}{2}{softfail}\
+                                 {${if eq {$runrc}{3}{neutral}\
+				  {${if eq {$runrc}{4}{permerror}\
+				   {${if eq {$runrc}{6}{none}{error}}}}}}}}}\
+				} client-ip=$sender_host_address; \
+				${if def:sender_address_domain \
+				   {envelope-from=${sender_address}; }{}}\
+				helo=$sender_helo_name
+
+  warn
+    log_message = Unexpected error in SPF check.
+    condition = ${if >{$runrc}{6}{yes}{no}}
+  .endif
+
+
+  # Check against classic DNS "black" lists (DNSBLs) which list
+  # sender IP addresses
+  .ifdef CHECK_RCPT_IP_DNSBLS
+  warn
+    dnslists = CHECK_RCPT_IP_DNSBLS
+    add_header = X-Warning: $sender_host_address is listed at $dnslist_domain ($dnslist_value: $dnslist_text)
+    log_message = $sender_host_address is listed at $dnslist_domain ($dnslist_value: $dnslist_text)
+  .endif
+
+
+  # Check against DNSBLs which list sender domains, with an option to locally
+  # whitelist certain domains that might be blacklisted.
+  #
+  # Note: If you define CHECK_RCPT_DOMAIN_DNSBLS, you must append
+  # "/$sender_address_domain" after each domain.  For example:
+  # CHECK_RCPT_DOMAIN_DNSBLS = rhsbl.foo.org/$sender_address_domain \
+  #                            : rhsbl.bar.org/$sender_address_domain
+  .ifdef CHECK_RCPT_DOMAIN_DNSBLS
+  warn
+    !senders = ${if exists{CONFDIR/local_domain_dnsbl_whitelist}\
+                    {CONFDIR/local_domain_dnsbl_whitelist}\
+                    {}}
+    dnslists = CHECK_RCPT_DOMAIN_DNSBLS
+    add_header = X-Warning: $sender_address_domain is listed at $dnslist_domain ($dnslist_value: $dnslist_text)
+    log_message = $sender_address_domain is listed at $dnslist_domain ($dnslist_value: $dnslist_text)
+  .endif
+
+
+  # This hook allows you to hook in your own ACLs without having to
+  # modify this file. If you do it like we suggest, you'll end up with
+  # a small performance penalty since there is an additional file being
+  # accessed. This doesn't happen if you leave the macro unset.
+  .ifdef CHECK_RCPT_LOCAL_ACL_FILE
+  .include CHECK_RCPT_LOCAL_ACL_FILE
+  .endif
+
+
+  #############################################################################
+  # This check is commented out because it is recognized that not every
+  # sysadmin will want to do it. If you enable it, the check performs
+  # Client SMTP Authorization (csa) checks on the sending host. These checks
+  # do DNS lookups for SRV records. The CSA proposal is currently (May 2005)
+  # an Internet draft. You can, of course, add additional conditions to this
+  # ACL statement to restrict the CSA checks to certain hosts only.
+  #
+  # require verify = csa
+  #############################################################################
+
+
+  # Accept if the address is in a domain for which we are an incoming relay,
+  # but again, only if the recipient can be verified.
+
+  accept
+    domains = +relay_to_domains : +froxlor_domain
+    endpass
+    verify = recipient
+
+
+  # At this point, the address has passed all the checks that have been
+  # configured, so we accept it unconditionally.
+
+  accept
