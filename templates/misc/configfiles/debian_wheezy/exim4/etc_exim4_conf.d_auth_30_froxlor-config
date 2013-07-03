@@ -1,3 +1,4 @@
+
 ### auth/30_froxlor-config
 #################################
 
@@ -28,3 +29,16 @@ login_server:
 #   .ifndef AUTH_SERVER_ALLOW_NOTLS_PASSWORDS
 #   server_advertise_condition = ${if eq{$tls_cipher}{}{}{*}}
 #   .endif
+
+# comment the stuff above and use settings below if using dovecot
+#dovecot_login:
+#  driver = dovecot
+#  public_name = LOGIN
+#  server_socket = /var/run/dovecot/auth-client
+#  server_set_id = $auth1
+
+#dovecot_plain:
+#  driver = dovecot
+#  public_name = PLAIN
+#  server_socket = /var/run/dovecot/auth-client
+#  server_set_id = $auth1

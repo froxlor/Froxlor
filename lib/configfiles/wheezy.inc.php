@@ -129,7 +129,7 @@ return Array(
 						'label' => 'PowerDNS',
 						'files' => Array(
 							'etc_powerdns_pdns.conf' => '/etc/powerdns/pdns.conf',
-							'etc_powerdns_pdns-froxlor.conf' => '/etc/powerdns/pdns_froxlor.conf',
+							'etc_powerdns_bindbackend.conf' => '/etc/powerdns/bindbackend.conf',
 						),
 						'restart' => Array(
 							'/etc/init.d/pdns restart'
@@ -185,20 +185,20 @@ return Array(
 					'dkim' => Array(
 						'label' => 'DomainKey filter',
 						'commands_1' => Array(
-							'apt-get install dkim-filter',
+							'apt-get install opendkim',
 							'mkdir -p /etc/postfix/dkim'
 						),
 						'files' => Array(
-							'dkim-filter.conf' => '/etc/dkim-filter.conf'
+							'opendkim.conf' => '/etc/opendkim.conf'
 						),
 						'commands_2' => Array(
 							'echo "milter_default_action = accept" >> /etc/postfix/main.cf',
-							'echo "milter_protocol = 2" >> /etc/postfix/main.cf',
+							'echo "milter_protocol = 6" >> /etc/postfix/main.cf',
 							'echo "smtpd_milters = inet:localhost:8891" >> /etc/postfix/main.cf',
 							'echo "non_smtpd_milters = inet:localhost:8891" >> /etc/postfix/main.cf'
 						),
 						'restart' => Array(
-							'/etc/init.d/dkim-filter restart',
+							'/etc/init.d/opendkim restart',
 							'/etc/init.d/postfix restart'
 						)
 					),
@@ -263,7 +263,7 @@ return Array(
 							'# choose "no configuration at this time" and "splitted configuration files" in the dialog'
 						),
 						'files' => Array(
-							'etc_exim4_conf.d_acl_30_exim4-config_check_rcpt.rul' => '/etc/exim4/conf.d/acl/30_exim4-config_check_rcpt.rul',
+							'etc_exim4_conf.d_acl_30_exim4-config_check_rcpt' => '/etc/exim4/conf.d/acl/30_exim4-config_check_rcpt',
 							'etc_exim4_conf.d_auth_30_froxlor-config' => '/etc/exim4/conf.d/auth/30_froxlor-config',
 							'etc_exim4_conf.d_main_10_froxlor-config_options' => '/etc/exim4/conf.d/main/10_froxlor-config_options',
 							'etc_exim4_conf.d_router_180_froxlor-config' => '/etc/exim4/conf.d/router/180_froxlor-config',
@@ -299,14 +299,17 @@ return Array(
 					'dovecot' => Array(
 						'label' => 'Dovecot',
 						'commands_1' => Array(
-							'apt-get install dovecot-imapd dovecot-pop3d'
+							'apt-get install dovecot-imapd dovecot-pop3d dovecot-mysql'
 						),
 						'files' => Array(
+							'etc_dovecot_conf.d_10-auth.conf' => '/etc/dovecot/conf.d/10-auth.conf',
+							'etc_dovecot_conf.d_10-mail.conf' => '/etc/dovecot/conf.d/10-mail.conf',
+							'etc_dovecot_conf.d_10-master.conf' => '/etc/dovecot/conf.d/10-master.conf',
+							'etc_dovecot_conf.d_15-lda.conf' => '/etc/dovecot/conf.d/15-lda.conf',
+							'etc_dovecot_conf.d_20-imap.conf' => '/etc/dovecot/conf.d/20-imap.conf',
+							'etc_dovecot_conf.d_20-pop3.conf' => '/etc/dovecot/conf.d/20-pop3.conf',
 							'etc_dovecot_dovecot.conf' => '/etc/dovecot/dovecot.conf',
-							'etc_dovecot_dovecot-sql.conf' => '/etc/dovecot/dovecot-sql.conf'
-						),
-						'commands_2' => Array(
-							'chmod 0640 /etc/dovecot/dovecot-sql.conf'
+							'etc_dovecot_dovecot-sql.conf.ext' => '/etc/dovecot/dovecot-sql.conf.ext'
 						),
 						'restart' => Array(
 							'/etc/init.d/dovecot restart'

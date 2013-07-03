@@ -1,14 +1,288 @@
-MYSQL_SERVER <SQL_HOST>
-MYSQL_USERNAME <SQL_UNPRIVILEGED_USER>
-MYSQL_PASSWORD <SQL_UNPRIVILEGED_PASSWORD>
-MYSQL_PORT 3306
-MYSQL_DATABASE <SQL_DB>
-MYSQL_USER_TABLE mail_users
-MYSQL_CRYPT_PWFIELD password_enc
-MYSQL_UID_FIELD uid
-MYSQL_GID_FIELD gid
-MYSQL_LOGIN_FIELD username
-MYSQL_HOME_FIELD homedir
-MYSQL_MAILDIR_FIELD maildir
-MYSQL_QUOTA_FIELD (quota*1024*1024)
-MYSQL_AUXOPTIONS_FIELD CONCAT("allowimap=",imap,",allowpop3=",pop3)
+##VERSION: $Id: authmysqlrc,v 1.20 2007/10/07 02:50:45 mrsam Exp $
+#
+# Copyright 2000-2007 Double Precision, Inc.  See COPYING for
+# distribution information.
+#
+# Do not alter lines that begin with ##, they are used when upgrading
+# this configuration.
+#
+# authmysqlrc created from authmysqlrc.dist by sysconftool
+#
+# DO NOT INSTALL THIS FILE with world read permissions.  This file
+# might contain the MySQL admin password!
+#
+# Each line in this file must follow the following format:
+#
+# field[spaces|tabs]value
+#
+# That is, the name of the field, followed by spaces or tabs, followed by
+# field value.  Trailing spaces are prohibited.
+
+
+##NAME: LOCATION:0
+#
+# The server name, userid, and password used to log in.
+
+MYSQL_SERVER		<SQL_HOST>
+MYSQL_USERNAME		<SQL_UNPRIVILEGED_USER>
+MYSQL_PASSWORD		<SQL_UNPRIVILEGED_PASSWORD>
+
+##NAME: SSLINFO:0
+#
+# The SSL information.
+#
+# To use SSL-encrypted connections, define the following variables (available
+# in MySQL 4.0, or higher):
+#
+#
+# MYSQL_SSL_KEY        /path/to/file
+# MYSQL_SSL_CERT       /path/to/file
+# MYSQL_SSL_CACERT     /path/to/file
+# MYSQL_SSL_CAPATH     /path/to/file
+# MYSQL_SSL_CIPHERS    ALL:!DES
+
+##NAME: MYSQL_SOCKET:0
+#
+# MYSQL_SOCKET can be used with MySQL version 3.22 or later, it specifies the
+# filesystem pipe used for the connection
+#
+# MYSQL_SOCKET		/var/run/mysqld/mysqld.sock
+
+##NAME: MYSQL_PORT:0
+#
+# MYSQL_PORT can be used with MySQL version 3.22 or later to specify a port to
+# connect to.
+
+MYSQL_PORT		0
+
+##NAME: MYSQL_OPT:0
+#
+# Leave MYSQL_OPT as 0, unless you know what you're doing.
+
+MYSQL_OPT		0
+
+##NAME: MYSQL_DATABASE:0
+#
+# The name of the MySQL database we will open:
+
+MYSQL_DATABASE		<SQL_DB>
+
+#NAME: MYSQL_CHARACTER_SET:0
+#
+# This is optional. MYSQL_CHARACTER_SET installs a character set. This option
+# can be used with  MySQL version 4.1 or later. MySQL supports 70+ collations
+# for 30+ character sets. See MySQL documentations for more detalis.
+#
+# MYSQL_CHARACTER_SET latin1
+
+##NAME: MYSQL_USER_TABLE:0
+#
+# The name of the table containing your user data.  See README.authmysqlrc
+# for the required fields in this table. 
+
+MYSQL_USER_TABLE	mail_users
+
+##NAME: MYSQL_CRYPT_PWFIELD:0
+#
+# Either MYSQL_CRYPT_PWFIELD or MYSQL_CLEAR_PWFIELD must be defined.  Both
+# are OK too. crypted passwords go into MYSQL_CRYPT_PWFIELD, cleartext
+# passwords go into MYSQL_CLEAR_PWFIELD.  Cleartext passwords allow
+# CRAM-MD5 authentication to be implemented.
+
+MYSQL_CRYPT_PWFIELD	password_enc
+
+##NAME: MYSQL_CLEAR_PWFIELD:0
+#
+#
+# MYSQL_CLEAR_PWFIELD	clear
+
+##NAME: MYSQL_DEFAULT_DOMAIN:0
+#
+# If DEFAULT_DOMAIN is defined, and someone tries to log in as 'user',
+# we will look up 'user@DEFAULT_DOMAIN' instead.
+#
+#
+# DEFAULT_DOMAIN		example.com
+
+##NAME: MYSQL_UID_FIELD:0
+#
+# Other fields in the mysql table:
+#
+# MYSQL_UID_FIELD - contains the numerical userid of the account
+#
+MYSQL_UID_FIELD		uid
+
+##NAME: MYSQL_GID_FIELD:0
+#
+# Numerical groupid of the account
+
+MYSQL_GID_FIELD		gid
+
+##NAME: MYSQL_LOGIN_FIELD:0
+#
+# The login id, default is id.  Basically the query is:
+#
+#  SELECT MYSQL_UID_FIELD, MYSQL_GID_FIELD, ... WHERE id='loginid'
+#
+
+MYSQL_LOGIN_FIELD	username
+
+##NAME: MYSQL_HOME_FIELD:0
+#
+
+MYSQL_HOME_FIELD	homedir
+
+##NAME: MYSQL_NAME_FIELD:0
+#
+# The user's name (optional)
+
+#MYSQL_NAME_FIELD	name
+
+##NAME: MYSQL_MAILDIR_FIELD:0
+#
+# This is an optional field, and can be used to specify an arbitrary
+# location of the maildir for the account, which normally defaults to
+# $HOME/Maildir (where $HOME is read from MYSQL_HOME_FIELD).
+#
+# You still need to provide a MYSQL_HOME_FIELD, even if you uncomment this
+# out.
+#
+MYSQL_MAILDIR_FIELD	maildir
+
+##NAME: MYSQL_DEFAULTDELIVERY:0
+#
+# Courier mail server only: optional field specifies custom mail delivery
+# instructions for this account (if defined) -- essentially overrides
+# DEFAULTDELIVERY from ${sysconfdir}/courierd
+#
+# MYSQL_DEFAULTDELIVERY defaultdelivery
+
+##NAME: MYSQL_QUOTA_FIELD:0
+#
+# Define MYSQL_QUOTA_FIELD to be the name of the field that can optionally
+# specify a maildir quota.  See README.maildirquota for more information 
+#
+MYSQL_QUOTA_FIELD	(quota*1024*1024)
+
+##NAME: MYSQL_AUXOPTIONS:0
+#
+# Auxiliary options.  The MYSQL_AUXOPTIONS field should be a char field that
+# contains a single string consisting of comma-separated "ATTRIBUTE=NAME"
+# pairs.  These names are additional attributes that define various per-account
+# "options", as given in INSTALL's description of the "Account OPTIONS"
+# setting.
+#
+# MYSQL_AUXOPTIONS_FIELD	auxoptions
+#
+# You might want to try something like this, if you'd like to use a bunch
+# of individual fields, instead of a single text blob:
+#
+MYSQL_AUXOPTIONS_FIELD	CONCAT("allowimap=",imap,",allowpop3=",pop3)
+#
+# This will let you define fields called "disableimap", etc, with the end result
+# being something that the OPTIONS parser understands.
+
+
+##NAME: MYSQL_WHERE_CLAUSE:0
+#
+# This is optional, MYSQL_WHERE_CLAUSE can be basically set to an arbitrary
+# fixed string that is appended to the WHERE clause of our query
+#
+# MYSQL_WHERE_CLAUSE	server='mailhost.example.com'
+
+##NAME: MYSQL_SELECT_CLAUSE:0
+#
+# (EXPERIMENTAL)
+# This is optional, MYSQL_SELECT_CLAUSE can be set when you have a database,
+# which is structuraly different from proposed. The fixed string will
+# be used to do a SELECT operation on database, which should return fields
+# in order specified bellow:
+#
+# username, cryptpw, clearpw, uid, gid, home, maildir, quota, fullname, options
+#
+# The username field should include the domain (see example below).
+#
+# Enabling this option causes ignorance of any other field-related
+# options, excluding default domain.
+#
+# There are two variables, which you can use. Substitution will be made
+# for them, so you can put entered username (local part) and domain name
+# in the right place of your query. These variables are:
+#	 	$(local_part), $(domain), $(service)
+#
+# If a $(domain) is empty (not given by the remote user) the default domain
+# name is used in its place.
+#
+# $(service) will expand out to the service being authenticated: imap, imaps,
+# pop3 or pop3s.  Courier mail server only: service will also expand out to
+# "courier", when searching for local mail account's location.  In this case,
+# if the "maildir" field is not empty it will be used in place of
+# DEFAULTDELIVERY.  Courier mail server will also use esmtp when doing
+# authenticated ESMTP.
+#
+# This example is a little bit modified adaptation of vmail-sql
+# database scheme:
+#
+# MYSQL_SELECT_CLAUSE	SELECT CONCAT(popbox.local_part, '@', popbox.domain_name),			\
+#			CONCAT('{MD5}', popbox.password_hash),		\
+#			popbox.clearpw,					\
+#			domain.uid,					\
+#			domain.gid,					\
+#			CONCAT(domain.path, '/', popbox.mbox_name),	\
+#			'',						\
+#			domain.quota,					\
+#			'',						\
+#			CONCAT("disableimap=",disableimap,",disablepop3=",    \
+#                              disablepop3,",disablewebmail=",disablewebmail, \
+#                              ",sharedgroup=",sharedgroup)             \
+#			FROM popbox, domain				\
+#			WHERE popbox.local_part = '$(local_part)'	\
+#			AND popbox.domain_name = '$(domain)'		\
+#			AND popbox.domain_name = domain.domain_name
+
+
+##NAME: MYSQL_ENUMERATE_CLAUSE:1
+#
+# {EXPERIMENTAL}
+# Optional custom SQL query used to enumerate accounts for authenumerate,
+# in order to compile a list of accounts for shared folders.  The query
+# should return the following fields: name, uid, gid, homedir, maildir, options
+#
+# Example:
+# MYSQL_ENUMERATE_CLAUSE	SELECT CONCAT(popbox.local_part, '@', popbox.domain_name),			\
+#			domain.uid,					\
+#			domain.gid,					\
+#			CONCAT(domain.path, '/', popbox.mbox_name),	\
+#			'',						\
+#			CONCAT('sharedgroup=', sharedgroup)		\
+#			FROM popbox, domain				\
+#			WHERE popbox.local_part = '$(local_part)'	\
+#			AND popbox.domain_name = '$(domain)'		\
+#			AND popbox.domain_name = domain.domain_name
+
+
+
+##NAME: MYSQL_CHPASS_CLAUSE:0
+#
+# (EXPERIMENTAL)
+# This is optional, MYSQL_CHPASS_CLAUSE can be set when you have a database,
+# which is structuraly different from proposed. The fixed string will
+# be used to do an UPDATE operation on database. In other words, it is
+# used, when changing password.
+#
+# There are four variables, which you can use. Substitution will be made
+# for them, so you can put entered username (local part) and domain name
+# in the right place of your query. There variables are:
+# 	$(local_part) , $(domain) , $(newpass) , $(newpass_crypt)
+#
+# If a $(domain) is empty (not given by the remote user) the default domain
+# name is used in its place.
+# $(newpass) contains plain password
+# $(newpass_crypt) contains its crypted form
+#
+# MYSQL_CHPASS_CLAUSE	UPDATE	popbox					\
+#			SET	clearpw='$(newpass)',			\
+#				password_hash='$(newpass_crypt)'	\
+#			WHERE	local_part='$(local_part)'		\
+#			AND	domain_name='$(domain)'
+#

@@ -1,6 +1,6 @@
-##VERSION: $Id: authdaemonrc.in,v 1.8 2001/10/07 02:16:22 mrsam Exp $
+##VERSION: $Id: authdaemonrc.in,v 1.13 2005/10/05 00:07:32 mrsam Exp $
 #
-# Copyright 2000-2001 Double Precision, Inc.  See COPYING for
+# Copyright 2000-2005 Double Precision, Inc.  See COPYING for
 # distribution information.
 #
 # authdaemonrc created from authdaemonrc.dist by sysconftool
@@ -17,21 +17,21 @@
 # fit on one line.  Do not use any additional whitespace for indentation,
 # or anything else.
 
-##NAME: authmodulelist:0
+##NAME: authmodulelist:2
 #
 # The authentication modules that are linked into authdaemond.  The
 # default list is installed.  You may selectively disable modules simply
 # by removing them from the following list.  The available modules you
-# can use are: authcustom authcram authuserdb authldap authmysql authpam
+# can use are: authuserdb authpam authpgsql authldap authmysql authcustom authpipe
 
 authmodulelist="authmysql"
 
-##NAME: authmodulelistorig:1
+##NAME: authmodulelistorig:3
 #
 # This setting is used by Courier's webadmin module, and should be left
 # alone
 
-authmodulelistorig="authcustom authcram authuserdb authldap authmysql authpam"
+authmodulelistorig="authuserdb authpam authpgsql authldap authmysql authcustom authpipe"
 
 ##NAME: daemons:0
 #
@@ -52,17 +52,52 @@ authmodulelistorig="authcustom authcram authuserdb authldap authmysql authpam"
 
 daemons=5
 
-##NAME: version:0
-#
-# When you have multiple versions of authdaemond.* installed, authdaemond
-# just picks the first one it finds.  Set "version" to override that.
-# For example:  version=authdaemond.plain
-
-version=""
-
-##NAME: authdaemonvar:0
+##NAME: authdaemonvar:2
 #
 # authdaemonvar is here, but is not used directly by authdaemond.  It's
 # used by various configuration and build scripts, so don't touch it!
 
 authdaemonvar=/var/run/courier/authdaemon
+
+##NAME: DEBUG_LOGIN:0
+#
+# Dump additional diagnostics to syslog
+#
+# DEBUG_LOGIN=0   - turn off debugging
+# DEBUG_LOGIN=1   - turn on debugging
+# DEBUG_LOGIN=2   - turn on debugging + log passwords too
+#
+# ** YES ** - DEBUG_LOGIN=2 places passwords into syslog.
+#
+# Note that most information is sent to syslog at level 'debug', so
+# you may need to modify your /etc/syslog.conf to be able to see it.
+
+DEBUG_LOGIN=0
+
+##NAME: DEFAULTOPTIONS:0
+#
+# A comma-separated list of option=value pairs. Each option is applied
+# to an account if the account does not have its own specific value for
+# that option. So for example, you can set
+#   DEFAULTOPTIONS="disablewebmail=1,disableimap=1"
+# and then enable webmail and/or imap on individual accounts by setting
+# disablewebmail=0 and/or disableimap=0 on the account.
+
+DEFAULTOPTIONS=""
+
+##NAME: LOGGEROPTS:0
+#
+# courierlogger(1) options, e.g. to set syslog facility
+#
+
+LOGGEROPTS=""
+
+##NAME: LDAP_TLS_OPTIONS:0
+#
+# Options documented in ldap.conf(5) can be set here, prefixed with 'LDAP'.
+# Examples:
+#
+#LDAPTLS_CACERT=/path/to/cacert.pem
+#LDAPTLS_REQCERT=demand
+#LDAPTLS_CERT=/path/to/clientcert.pem
+#LDAPTLS_KEY=/path/to/clientkey.pem
