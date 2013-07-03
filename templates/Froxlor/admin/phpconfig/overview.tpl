@@ -7,6 +7,15 @@ $header
 			</h2>
 		</header>
 
+		<if $settings['phpfpm']['enabled'] == 1 >
+		<div class="messagewrapperfull">
+			<div class="warningcontainer bradius">
+				<div class="warningtitle">{$lng['admin']['note']}</div>
+				<div class="warning"><br /><strong>{$lng['admin']['phpfpm.ininote']}</strong></div>
+			</div>
+		</div>
+		</if>
+
 		<section>
 
 			<if 15 < $count>

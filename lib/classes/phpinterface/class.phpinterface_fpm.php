@@ -40,6 +40,23 @@ class phpinterface_fpm
 	private $_domain = array();
 
 	/**
+	 * Admin-Date cache array
+	 * @var array
+	 */
+	private $_admin_cache = array();
+
+	/**
+	 * defines what can be used for pool-config from php.ini
+	 * @var array
+	 */
+	private $_ini = array(
+		'php_value' => array('error_reporting', 'max_execution_time', 'include_path', 'upload_max_filesize'),
+		'php_flag' => array('short_open_tag', 'asp_tags', 'display_errors', 'display_startup_errors', 'log_errors', 'log_errors_max_len', 'track_errors', 'html_errors', 'magic_quotes_gpc', 'magic_quotes_runtime', 'magic_quotes_sybase'),
+		'php_admin_value' => array('precision', 'output_buffering', 'disable_functions', 'max_input_time', 'memory_limit', 'post_max_size', 'variables_order', 'gpc_order', 'date.timezone'),
+		'php_admin_flag' => array('allow_call_time_pass_reference', 'allow_url_fopen', 'expose_php', 'ignore_repeated_errors', 'ignore_repeated_source', 'report_memleaks', 'register_argc_argv', 'file_uploads', 'allow_url_fopen')
+	);
+
+	/**
 	 * main constructor
 	 */
 	public function __construct($db, $settings, $domain)
@@ -168,11 +185,42 @@ class phpinterface_fpm
 			$fpm_config.= 'php_admin_value[session.save_path] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
 			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
 
+			$admin = $this->_getAdminData($this->_domain['adminid']);
+			$php_ini_variables = array(
+					'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
+					'PEAR_DIR' => $this->_settings['system']['mod_fcgid_peardir'],
+					'TMP_DIR' => $this->getTempDir(),
+					'CUSTOMER_EMAIL' => $this->_domain['email'],
+					'ADMIN_EMAIL' => $admin['email'],
+					'DOMAIN' => $this->_domain['domain'],
+					'CUSTOMER' => $this->_domain['loginname'],
+					'ADMIN' => $admin['loginname']
+			);
+
+			$phpini = replace_variables($phpconfig['phpsettings'], $php_ini_variables);
+			$phpini_array = explode("\n", $phpini);
+
+			$fpm_config.= "\n\n";
+			foreach ($phpini_array as $inisection) {
+				$is = explode("=", $inisection);
+				foreach ($this->_ini as $sec => $possibles) {
+					if (in_array(trim($is[0]), $possibles)) {
+						$fpm_config.= $sec.'['.trim($is[0]).'] = ' . trim($is[1]) . "\n";
+					}
+				}
+			}
+
 			fwrite($fh, $fpm_config, strlen($fpm_config));
 			fclose($fh);
 		}
 	}
 
+	/**
+	 * this is done via createConfig as php-fpm defines
+	 * the ini-values/flags in its pool-config
+	 *
+	 * @param string $phpconfig
+	 */
 	public function createIniFile($phpconfig)
 	{
 		return;
@@ -240,7 +288,7 @@ class phpinterface_fpm
 		return $tmpdir;
 	}
 
-  /**
+	/**
  	 * fastcgi-fakedirectory directory
  	 *
  	 * @param boolean $createifnotexists create the directory if it does not exist
@@ -263,4 +311,24 @@ class phpinterface_fpm
 
  		return $configdir;
  	}
+
+	/**
+	 * return the admin-data of a specific admin
+	 *
+	 * @param int $adminid id of the admin-user
+	 *
+	 * @return array
+	 */
+	private function _getAdminData($adminid) {
+		$adminid = intval($adminid);
+
+		if (!isset($this->_admin_cache[$adminid])) {
+			$this->_admin_cache[$adminid] = $this->_db->query_first(
+				"SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "`
+				WHERE `adminid` = " . (int)$adminid
+			);
+		}
+
+		return $this->_admin_cache[$adminid];
+	}
 }

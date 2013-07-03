@@ -245,13 +245,9 @@ return array (
 					'url' => 'admin_phpsettings.php?page=overview',
 					'label' => $lng['menue']['phpsettings']['maintitle'],
 					'show_element' => ( 
-						getSetting('system', 'mod_fcgid') == true 
-						/* 
-						 * @TODO activate if phpfpm knows custom php.ini files
-						 * 
-						 * || getSetting('phpfpm', 'enabled') == true
-						 */
-						),
+						getSetting('system', 'mod_fcgid') == true ||
+						getSetting('phpfpm', 'enabled') == true
+					),
 				),
 			),
 		),
