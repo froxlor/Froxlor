@@ -50,8 +50,8 @@ class phpinterface_fpm
 	 * @var array
 	 */
 	private $_ini = array(
-		'php_value' => array('error_reporting', 'max_execution_time', 'include_path', 'upload_max_filesize'),
-		'php_flag' => array('short_open_tag', 'asp_tags', 'display_errors', 'display_startup_errors', 'log_errors', 'log_errors_max_len', 'track_errors', 'html_errors', 'magic_quotes_gpc', 'magic_quotes_runtime', 'magic_quotes_sybase'),
+		'php_value' => array('error_reporting', 'max_execution_time', 'include_path', 'upload_max_filesize', 'log_errors_max_len'),
+		'php_flag' => array('short_open_tag', 'asp_tags', 'display_errors', 'display_startup_errors', 'log_errors', 'track_errors', 'html_errors', 'magic_quotes_gpc', 'magic_quotes_runtime', 'magic_quotes_sybase'),
 		'php_admin_value' => array('precision', 'output_buffering', 'disable_functions', 'max_input_time', 'memory_limit', 'post_max_size', 'variables_order', 'gpc_order', 'date.timezone'),
 		'php_admin_flag' => array('allow_call_time_pass_reference', 'allow_url_fopen', 'expose_php', 'ignore_repeated_errors', 'ignore_repeated_source', 'report_memleaks', 'register_argc_argv', 'file_uploads', 'allow_url_fopen')
 	);
