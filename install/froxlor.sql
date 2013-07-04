@@ -424,7 +424,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'vmail_uid', '2000'),
 	('system', 'vmail_gid', '2000'),
 	('system', 'vmail_homedir', '/var/customers/mail/'),
-	('system', 'vmail_maildir', 'Maildir'),
+	('system', 'vmail_maildirname', 'Maildir'),
 	('system', 'bind_enable', '1'),
 	('system', 'bindconf_directory', '/etc/bind/'),
 	('system', 'bindreload_command', '/etc/init.d/bind9 reload'),
@@ -540,7 +540,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.29-dev4');
+	('panel', 'version', '0.9.29-rc1');
 
 
 

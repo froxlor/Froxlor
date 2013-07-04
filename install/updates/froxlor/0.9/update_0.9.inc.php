@@ -2114,7 +2114,7 @@ if (isFroxlorVersion('0.9.29-dev3')) {
 	showUpdateStep("Updating from 0.9.29-dev3 to 0.9.29-dev4", true);
 	lastStepStatus(0);
 
-	showUpdateStep("Adding new tables to database");
+	showUpdateStep("Adding new tables to database", true);
 	$db->query("CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
 	`id` int(5) NOT NULL auto_increment,
 	`domainid` int(11) NOT NULL,
@@ -2129,4 +2129,16 @@ if (isFroxlorVersion('0.9.29-dev3')) {
 	$system_customersslpath = isset($_POST['system_customersslpath']) ? makeCorrectDir($_POST['system_customersslpath']) : '/etc/apache2/ssl/';
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'customer_ssl_path', '".$db->escape($system_customersslpath)."');");
 	updateToVersion('0.9.29-dev4');
+}
+
+if (isFroxlorVersion('0.9.29-dev4')) {
+	showUpdateStep("Updating from 0.9.29-dev4 to 0.9.29-rc1", true);
+	lastStepStatus(0);
+
+	// check for wrong vmail_maildirname database-field-name (bug #1242)
+	showUpdateStep("correcting Maildir setting database-field-name (if needed).", true);
+	$db->query("UPDATE `panel_settings` SET `varname` = 'vmail_maildirname' WHERE `settinggroup` = 'system' AND `varname` = 'vmail_maildir'");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.29-rc1');
 }
