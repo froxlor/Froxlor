@@ -67,6 +67,8 @@ unset($value);
 unset($key);
 $filename = basename($_SERVER['PHP_SELF']);
 
+$pathtophpfiles = dirname(dirname(__FILE__));
+
 if(!file_exists('lib/userdata.inc.php'))
 {
 	$config_hint = file_get_contents('templates/Froxlor/misc/configurehint.tpl');
