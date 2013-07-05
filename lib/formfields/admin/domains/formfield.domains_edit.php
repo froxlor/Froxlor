@@ -186,7 +186,7 @@ return array(
 						'value' => array($result['openbasedir'])
 					),
 					'phpsettingid' => array(
-						'visible' => ((int)$settings['system']['mod_fcgid'] == 1 ? true : false),
+						'visible' => (((int)$settings['system']['mod_fcgid'] == 1 || (int)$settings['phpfpm']['enabled'] == 1) ? true : false),
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
 						'select_var' => $phpconfigs

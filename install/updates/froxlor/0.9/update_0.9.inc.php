@@ -2140,5 +2140,12 @@ if (isFroxlorVersion('0.9.29-dev4')) {
 	$db->query("UPDATE `panel_settings` SET `varname` = 'vmail_maildirname' WHERE `settinggroup` = 'system' AND `varname` = 'vmail_maildir'");
 	lastStepStatus(0);
 
+	showUpdateStep("setting default php-configuration for php-fpm", true);
+	$dval = (isset($settings['system']['mod_fcgid_defaultini']) ? $settings['system']['mod_fcgid_defaultini'] : '1');
+	$db->query("INSERT INTO `panel_settings` SET `settinggroup` = 'phpfpm', `varname` = 'defaultini', `value` = '".(int)$dval."'");
+	$dval = (isset($settings['system']['mod_fcgid_ownvhost']) ? $settings['system']['mod_fcgid_ownvhost'] : '1');
+	$db->query("INSERT INTO `panel_settings` SET `settinggroup` = 'phpfpm', `varname` = 'vhost_defaultini', `value` = '".(int)$dval."'");
+	lastStepStatus(0);
+
 	updateToVersion('0.9.29-rc1');
 }

@@ -94,8 +94,14 @@ class nginx_phpfpm extends nginx
 			// get php.ini for our own vhost
 			$php = new phpinterface($this->getDB(), $this->settings, $domain);
 
-			// @FIXME don't use fcgid settings, but we don't have anything else atm
-			$phpconfig = $php->getPhpConfig($this->settings['system']['mod_fcgid_defaultini_ownvhost']);
+			// get php-config
+			if ($this->settings['phpfpm']['enabled'] == '1') {
+				// fpm
+				$phpconfig = $php->getPhpConfig($this->settings['phpfpm']['vhost_defaultini']);
+			} else {
+				// fcgid
+				$phpconfig = $php->getPhpConfig($this->settings['system']['mod_fcgid_defaultini_ownvhost']);
+			}
 
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);

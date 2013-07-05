@@ -413,6 +413,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('phpfpm', 'vhost_httpgroup', 'froxlorlocal'),
 	('phpfpm', 'idle_timeout', '30'),
 	('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/'),
+	('phpfpm', 'defaultini', '1'),
+	('phpfpm', 'vhost_defaultini', '1'),
 	('nginx', 'fastcgiparams', '/etc/nginx/fastcgi_params'),
 	('system', 'lastaccountnumber', '0'),
 	('system', 'lastguid', '9999'),

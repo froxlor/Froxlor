@@ -54,9 +54,16 @@ return array(
 					'default' => 'froxlorlocal',
 					'save_method' => 'storeSettingField'
 					),
-				/*
-				 * @TODO implement if phpfpm knows custom php.ini files
-				 *
+				'system_phpfpm_defaultini' => array(
+					'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'defaultini',
+					'type' => 'option',
+					'default' => '1',
+					'option_mode' => 'one',
+					'option_options_method' => 'getPhpConfigs',
+					'save_method' => 'storeSettingField',
+					),
 				'system_phpfpm_defaultini_ownvhost' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'],
 					'settinggroup' => 'phpfpm',
@@ -67,7 +74,6 @@ return array(
 					'option_options_method' => 'getPhpConfigs',
 					'save_method' => 'storeSettingField',
 					),
-				*/
 				'system_phpfpm_configdir' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['configdir'],
 					'settinggroup' => 'phpfpm',

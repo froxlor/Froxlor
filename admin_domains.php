@@ -343,7 +343,7 @@ if($page == 'domains'
 				{
 					$openbasedir = isset($_POST['openbasedir']) ? intval($_POST['openbasedir']) : 0;
 
-					if((int)$settings['system']['mod_fcgid'] == 1)
+					if((int)$settings['system']['mod_fcgid'] == 1 || (int)$settings['phpfpm']['enabled'] == 1)
 					{
 						$phpsettingid = (int)$_POST['phpsettingid'];
 						$phpsettingid_check = $db->query_first("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = " . (int)$phpsettingid);
@@ -360,7 +360,11 @@ if($page == 'domains'
 					}
 					else
 					{
-						$phpsettingid = $settings['system']['mod_fcgid_defaultini'];
+						if ((int)$settings['phpfpm']['enabled'] == 1) {
+							$phpsettingid = $settings['phpfpm']['defaultini'];
+						} else {
+							$phpsettingid = $settings['system']['mod_fcgid_defaultini'];
+						}
 						$mod_fcgid_starter = '-1';
 						$mod_fcgid_maxrequests = '-1';
 					}
@@ -368,7 +372,11 @@ if($page == 'domains'
 				else
 				{
 					$openbasedir = '1';
-					$phpsettingid = $settings['system']['mod_fcgid_defaultini'];
+					if ((int)$settings['phpfpm']['enabled'] == 1) {
+						$phpsettingid = $settings['phpfpm']['defaultini'];
+					} else {
+						$phpsettingid = $settings['system']['mod_fcgid_defaultini'];
+					}
 					$mod_fcgid_starter = '-1';
 					$mod_fcgid_maxrequests = '-1';
 				}
@@ -686,7 +694,11 @@ if($page == 'domains'
 
 				while($row = $db->fetch_array($configs))
 				{
-					$phpconfigs.= makeoption($row['description'], $row['id'], $settings['system']['mod_fcgid_defaultini'], true, true);
+					if ((int)$settings['phpfpm']['enabled'] == 1) {
+						$phpconfigs.= makeoption($row['description'], $row['id'], $settings['phpfpm']['defaultini'], true, true);
+					} else {
+						$phpconfigs.= makeoption($row['description'], $row['id'], $settings['system']['mod_fcgid_defaultini'], true, true);
+					}
 				}
 
 				$subcanemaildomain = makeoption($lng['admin']['subcanemaildomain']['never'], '0', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['always'], '3', '0', true, true);
