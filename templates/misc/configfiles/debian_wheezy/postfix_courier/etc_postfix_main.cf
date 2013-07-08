@@ -635,40 +635,40 @@ debugger_command =
 # sendmail_path: The full pathname of the Postfix sendmail command.
 # This is the Sendmail-compatible mail posting interface.
 # 
-sendmail_path =
+sendmail_path = /usr/sbin/sendmail 
 
 # newaliases_path: The full pathname of the Postfix newaliases command.
 # This is the Sendmail-compatible command to build alias databases.
 #
-newaliases_path =
+newaliases_path = /usr/bin/newaliases
 
 # mailq_path: The full pathname of the Postfix mailq command.  This
 # is the Sendmail-compatible mail queue listing command.
 # 
-mailq_path =
+mailq_path = /usr/bin/mailq
 
 # setgid_group: The group for mail submission and queue management
 # commands.  This must be a group name with a numerical group ID that
 # is not shared with other accounts, not even with the Postfix account.
 #
-setgid_group =
+setgid_group = postdrop
 
 # html_directory: The location of the Postfix HTML documentation.
 #
-html_directory =
+html_directory = no
 
 # manpage_directory: The location of the Postfix on-line manual pages.
 #
-manpage_directory =
+manpage_directory = /usr/share/man
 
 # sample_directory: The location of the Postfix sample configuration files.
 # This parameter is obsolete as of Postfix 2.1.
 #
-sample_directory =
+sample_directory = /usr/share/doc/postfix
 
 # readme_directory: The location of the Postfix README files.
 #
-readme_directory =
+readme_directory = /usr/share/doc/postfix
 inet_protocols = ipv4
 
 append_dot_mydomain = no
@@ -689,9 +689,7 @@ smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
 	reject_unknown_client_hostname
 
-# Postfix 2.10 requires this option. Postfix < 2.10 ignores this.
-# The option is intentionally left empty.
-smtpd_relay_restrictions = 
+smtpd_relay_restrictions = permit_mynetworks,permit_sasl_authenticated,defer_unauth_destination
 
 # Maximum size of Message in bytes (50MB)
 message_size_limit = 52428800
