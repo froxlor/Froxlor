@@ -60,7 +60,9 @@ if($db->num_rows($result) > 0)
 		$ts_now = time();
 		$ts_start = (int)$row['date_from'];
 		$ts_end = (int)$row['date_until'];
-		
+
+		$row['email'] = strtolower($row['email']);
+
 		// not yet
 		if($ts_start != -1 && $ts_start > $ts_now) continue;
 		// already ended
@@ -134,24 +136,24 @@ if($db->num_rows($result) > 0)
 					if(!strlen($from)
 					   && preg_match("/^From:(.+)<(.*)>$/", $line, $match)
 					) {
-						$from = $match[2];
+						$from = strtolower($match[2]);
 					}
 					elseif(!strlen($from)
 					       && preg_match("/^From:\s+(.*@.*)$/", $line, $match)
 					) {
-						$from = $match[1];
+						$from = strtolower($match[1]);
 					}
 
 					//fetching to field
 					if((!strlen($to) || $to != $row['email'])
 						&& preg_match("/^To:(.+)<(.*)>$/", $line, $match)
 					) {
-						$to = $match[2];
+						$to = strtolower($match[2]);
 					}
 					elseif((!strlen($to) || $to != $row['email'])
 						&& preg_match("/^To:\s+(.*@.*)$/", $line, $match)
 					) {
-						$to = $match[1];
+						$to = strtolower($match[1]);
 					}
 					/*
 					 * if we still don't have a To:-address
@@ -162,30 +164,31 @@ if($db->num_rows($result) > 0)
 					elseif((!strlen($to) || $to != $row['email'])
 						&& preg_match("/^Cc:(.+)<(.*)>$/", $line, $match)
 					) {
-						$to = $match[2];
+						$to = strtolower($match[2]);
 					}
 					elseif((!strlen($to) || $to != $row['email'])
 						&& preg_match("/^Cc:\s+(.*@.*)$/", $line, $match)
 					) {
-						$to = $match[1];
+						$to = strtolower($match[1]);
 					}
 
 					//fetching sender field
 					if(!strlen($sender)
 					   && preg_match("/^Sender:(.+)<(.*)>$/", $line, $match)
 					) {
-						$sender = $match[2];
+						$sender = strtolower($match[2]);
 					}
 					elseif(!strlen($sender)
 					       && preg_match("/Sender:\s+(.*@.*)$/", $line, $match)
 					) {
-						$sender = $match[1];
+						$sender = strtolower($match[1]);
 					}
 
 					//check for amavis/spamassassin spam headers
 					if(preg_match("/^X-Spam-Status: (Yes|No)(.*)$/", $line, $match))
 					{
-						if($match[1] == 'Yes')$spam = true;
+						if($match[1] == 'Yes')
+							$spam = true;
 					}
 					
 					//check for precedence header
