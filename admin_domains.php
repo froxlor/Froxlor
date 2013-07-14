@@ -355,8 +355,13 @@ if($page == 'domains'
 							standard_error('phpsettingidwrong');
 						}
 
-						$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
-						$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
+						if( (int)$settings['system']['mod_fcgid'] == 1) {
+							$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
+							$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
+						} else {
+							$mod_fcgid_starter = '-1';
+							$mod_fcgid_maxrequests = '-1';
+						}
 					}
 					else
 					{
@@ -878,7 +883,7 @@ if($page == 'domains'
 				{
 					$openbasedir = isset($_POST['openbasedir']) ? intval($_POST['openbasedir']) : 0;
 
-					if((int)$settings['system']['mod_fcgid'] == 1)
+					if((int)$settings['system']['mod_fcgid'] == 1 || (int)$settings['phpfpm']['enabled'] == 1)
 					{
 						$phpsettingid = (int)$_POST['phpsettingid'];
 						$phpsettingid_check = $db->query_first("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = " . (int)$phpsettingid);
@@ -890,8 +895,13 @@ if($page == 'domains'
 							standard_error('phpsettingidwrong');
 						}
 
-						$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
-						$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
+						if ((int)$settings['system']['mod_fcgid'] == 1) {
+							$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
+							$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
+						} else {
+							$mod_fcgid_starter = $result['mod_fcgid_starter'];
+							$mod_fcgid_maxrequests = $result['mod_fcgid_maxrequests'];
+						}
 					}
 					else
 					{
