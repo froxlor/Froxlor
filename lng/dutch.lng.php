@@ -812,8 +812,6 @@ $lng['pwdreminder']['notallowed'] = 'Het opnieuw instellen van wachtwoorden is u
 
 // ADDED IN 1.2.19-svn20
 
-$lng['serversettings']['awstats_path']['title'] = 'Pad naar AWstats cgi-bin-map';
-$lng['serversettings']['awstats_path']['description'] = 'bijvoorbeeld /usr/share/webapps/awstats/6.1/webroot/cgi-bin/';
 $lng['serversettings']['awstats_updateall_command']['title'] = 'Pad naar "awstats_updateall.pl"';
 $lng['serversettings']['awstats_updateall_command']['description'] = 'bijvoorbeeld /usr/bin/awstats_updateall.pl';
 
