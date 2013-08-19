@@ -25,7 +25,7 @@ return array(
 				'fields' => array(
 					'path' => array(
 						'label' => $lng['extras']['backup_create'],
-						'desc' => $lng['extras']['backup_info'].'<br />'.($settings['system']['backup_bigfile'] == 1 ? $lng['extras']['backup_info_big'] : $lng['extras']['backup_info_sep']).'<br />'.($settings['system']['backup_count'] == 1 ? $lng['extras']['backup_count_info'] : ''),
+						'desc' => sprintf($lng['extras']['backup_info'], $userinfo['loginname']).'<br />'.($settings['system']['backup_bigfile'] == 1 ? $lng['extras']['backup_info_big'] : $lng['extras']['backup_info_sep']).'<br />'.($settings['system']['backup_count'] == 1 ? $lng['extras']['backup_count_info'] : ''),
 						'type' => 'yesno',
 						'yesno_var' => $backup_enabled
 					)
