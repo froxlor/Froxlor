@@ -260,9 +260,11 @@ return array(
 					),
 					'backup_allowed' => array(
 						'label' => $lng['backup_allowed'].'?',
-						'type' => 'yesno',
-						'value' => 0,
-						'yesno_var' => $backup_allowed,
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['backup_allowed']),
 						'visible' => ($settings['system']['backup_enabled'] == '1' ? true : false)
 					),
 					'number_of_aps_packages' => array(
