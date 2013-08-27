@@ -805,7 +805,7 @@ $lng['admin']['allips'] = 'Alle IP\'s';
 $lng['panel']['nosslipsavailable'] = 'Für diesen Server wurden noch keine SSL IP/Port Kombinationen eingetragen';
 $lng['ticket']['by'] = 'von';
 $lng['dkim']['use_dkim']['title'] = 'DKIM Support aktivieren?';
-$lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain Keys (DKIM) System benutzen?';
+$lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain Keys (DKIM) System benutzen?<br/><em style="color:red;font-weight:bold;">Hinweis: Der Zeit wird DKIM nur via dkim-filter unterstützt, nicht opendkim</em>';
 $lng['error']['invalidmysqlhost'] = 'Ungültige MySQL Host Adresse: "%s"';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'Webalizer und AWstats können nicht zur gleichen Zeit aktiviert werden, bitte wählen Sie eines aus';
 $lng['serversettings']['webalizer_enabled'] = 'Nutze Webalizer Statistiken';
