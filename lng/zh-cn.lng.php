@@ -14,6 +14,7 @@
  * @author     Wang Changyi <wangchangyi@hotmail.com>
  * @author     Patrick Brueckner <patrick_brueckner@yahoo.de>
  * @author     Yuan Yang <melodieyy@web.de>
+ * @author     Jason Zhang <service@hiwins.com>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  *
@@ -23,7 +24,7 @@
  * Global
  */
 
-$lng['translator'] = 'Jackie Zhang, Wang Changyi, Yuan Yang';
+$lng['translator'] = 'Jackie Zhang, Wang Changyi, Yuan Yang, Jason Zhang';
 $lng['panel']['edit'] = '编辑';
 $lng['panel']['delete'] = '删除';
 $lng['panel']['create'] = '创建';
@@ -33,6 +34,7 @@ $lng['panel']['no'] = '否';
 $lng['panel']['emptyfornochanges'] = '无改变清空';
 $lng['panel']['emptyfordefault'] = '默认值清空';
 $lng['panel']['path'] = '路径';
+$lng['panel']['options'] = '选项';
 $lng['panel']['toggle'] = '触发器';
 $lng['panel']['next'] = '下一个';
 $lng['panel']['dirsmissing'] = '目录不可添加或者不可读';
@@ -44,7 +46,7 @@ $lng['panel']['dirsmissing'] = '目录不可添加或者不可读';
 $lng['login']['username'] = '用户名';
 $lng['login']['password'] = '密码';
 $lng['login']['language'] = '语言';
-$lng['login']['login'] = '登陆';
+$lng['login']['login'] = '登录';
 $lng['login']['logout'] = '登出';
 $lng['login']['profile_lng'] = '用户标准语言';
 
@@ -66,12 +68,12 @@ $lng['customer']['customernumber'] = '顾客号';
 $lng['customer']['diskspace'] = '磁盘空间(MB)';
 $lng['customer']['traffic'] = '流量(GB)';
 $lng['customer']['mysqls'] = 'MySQL数据库';
-$lng['customer']['emails'] = '电子邮件地址';
+$lng['customer']['emails'] = '电子邮件账户';
 $lng['customer']['accounts'] = '电子邮件帐户';
 $lng['customer']['forwarders'] = '电子邮件转发';
-$lng['customer']['ftps'] = 'FTP文件格式';
-$lng['customer']['subdomains'] = '子域';
-$lng['customer']['domains'] = '域';
+$lng['customer']['ftps'] = 'FTP账户';
+$lng['customer']['subdomains'] = '子域名';
+$lng['customer']['domains'] = '域名';
 $lng['customer']['unlimited'] = '无限的';
 
 /**
@@ -80,21 +82,21 @@ $lng['customer']['unlimited'] = '无限的';
 
 $lng['menue']['main']['main'] = '主要的';
 $lng['menue']['main']['changepassword'] = '更改密码';
-$lng['menue']['main']['changelanguage'] = '语言转换';
+$lng['menue']['main']['changelanguage'] = '切换语言';
 $lng['menue']['email']['email'] = '电子邮件';
 $lng['menue']['email']['emails'] = '地址';
 $lng['menue']['email']['webmail'] = '网络邮件';
 $lng['menue']['mysql']['mysql'] = 'MySQL';
 $lng['menue']['mysql']['databases'] = '数据库';
 $lng['menue']['mysql']['phpmyadmin'] = 'phpMyAdmin';
-$lng['menue']['domains']['domains'] = '域';
+$lng['menue']['domains']['domains'] = '域名';
 $lng['menue']['domains']['settings'] = '设置';
 $lng['menue']['ftp']['ftp'] = 'FTP';
 $lng['menue']['ftp']['accounts'] = '账户';
 $lng['menue']['ftp']['webftp'] = '网络FTP地址';
-$lng['menue']['extras']['extras'] = '专用';
+$lng['menue']['extras']['extras'] = '附加功能';
 $lng['menue']['extras']['directoryprotection'] = '目录保护';
-$lng['menue']['extras']['pathoptions'] = '路径选择';
+$lng['menue']['extras']['pathoptions'] = '路径选项';
 
 /**
  * Index
@@ -111,16 +113,18 @@ $lng['changepassword']['old_password'] = '旧密码';
 $lng['changepassword']['new_password'] = '新密码';
 $lng['changepassword']['new_password_confirm'] = '新密码(确认)';
 $lng['changepassword']['also_change_ftp'] = '改变主FTP入口的密码';
+$lng['changepassword']['new_password_ifnotempty'] = '新密码 （不变请留空）';
+$lng['changepassword']['also_change_ftp'] = '同时改变主FTP密码';
 
 /**
  * Domains
  */
 
-$lng['domains']['description'] = '这里您可以设置域以及更改路径<br/>在每次更改后系统需要一些时间重新读取设置';
-$lng['domains']['domainsettings'] = '域设置';
+$lng['domains']['description'] = '这里您可以设置（子）域名并修改路径<br/>在每次更改后系统需要一些时间应用设置';
+$lng['domains']['domainsettings'] = '域名设置';
 $lng['domains']['domainname'] = '域名';
-$lng['domains']['subdomain_add'] = '添加子域';
-$lng['domains']['subdomain_edit'] = '编辑子域';
+$lng['domains']['subdomain_add'] = '添加子域名';
+$lng['domains']['subdomain_edit'] = '编辑子域名';
 $lng['domains']['wildcarddomain'] = '做为原始域登记';
 $lng['domains']['aliasdomain'] = '域别名';
 $lng['domains']['noaliasdomain'] = '无域别名';
@@ -438,3 +442,52 @@ $lng['admin']['phpmemorylimit'] = 'php内存限制';
 $lng['admin']['mysqlserverversion'] = 'mysql服务器版本';
 $lng['admin']['mysqlclientversion'] = 'mysql客户端版本';
 $lng['admin']['webserverinterface'] = '网页服务器接口';
+$lng['domains']['isassigneddomain'] = '已指派域名';
+
+// ADDED IN 1.2.16-svn7
+
+$lng['admin']['subcanemaildomain']['never'] = '从不';
+$lng['admin']['subcanemaildomain']['choosableno'] = '可选，默认为否';
+$lng['admin']['subcanemaildomain']['choosableyes'] = '可选，默认为是';
+$lng['admin']['subcanemaildomain']['always'] = '总是';
+$lng['changepassword']['also_change_webalizer'] = '同时修改统计页面密码';
+
+// ADDED IN 1.2.19-svn4
+
+$lng['menue']['traffic']['traffic'] = '流量';
+$lng['menue']['traffic']['current'] = '当前月';
+$lng['traffic']['month'] = "月";
+$lng['traffic']['day'] = "日";
+$lng['traffic']['months'][1] = "1月";
+$lng['traffic']['months'][2] = "2月";
+$lng['traffic']['months'][3] = "3月";
+$lng['traffic']['months'][4] = "4月";
+$lng['traffic']['months'][5] = "5月";
+$lng['traffic']['months'][6] = "6月";
+$lng['traffic']['months'][7] = "7月";
+$lng['traffic']['months'][8] = "8月";
+$lng['traffic']['months'][9] = "9月";
+$lng['traffic']['months'][10] = "10月";
+$lng['traffic']['months'][11] = "11月";
+$lng['traffic']['months'][12] = "12月";
+$lng['traffic']['mb'] = "流量 (MB)";
+$lng['traffic']['distribution'] = '<font color="#019522">FTP</font> | <font color="#0000FF">HTTP</font> | <font color="#800000">Mail</font>';
+$lng['traffic']['sumhttp'] = 'HTTP流量合计 - ';
+$lng['traffic']['sumftp'] = 'FTP流量合计 - ';
+$lng['traffic']['summail'] = '邮件流量合计 - ';
+
+// ADDED IN FROXLOR 0.9.24-svn1
+$lng['logrotate'] = '转储';
+$lng['logrotate_enabled'] = '开启转储？';
+$lng['logrotate_binary'] = '转储（Logrotate）二进制路径：';
+$lng['logrotate_interval'] = '间隔?';
+$lng['logrotate_keep'] = '保留多少日志文件？';
+$lng['admin']['assignedmax'] = '已指派 / 上限';
+$lng['admin']['usedmax'] = '已用 / 上限';
+$lng['admin']['used'] = '已用';
+$lng['mysql']['size'] = '数据库大小 (MB)';
+
+// ADDED IN FROXLOR 0.9.18
+$lng['serversettings']['default_theme'] = '默认主题';
+$lng['menue']['main']['changetheme'] = '修改主题';
+$lng['panel']['theme'] = '主题';
