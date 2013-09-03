@@ -732,6 +732,9 @@ elseif ($page == 'domainssleditor') {
 					".$qrywhere." `domainid`='".(int)$id."';"
 			);
 
+			// insert task to re-generate webserver-configs (#1260)
+			inserttask('1');
+
 			// back to domain overview
 			redirectTo($filename, array('page' => 'domains', 's' => $s));
 		}
