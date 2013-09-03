@@ -185,7 +185,7 @@ return Array(
 							'echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use',
               				'emerge -av postfix',
 							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R '.$vmail_user['name'].':'.$vmail_group['name'].' ' . $settings['system']['vmail_homedir'],
+							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . $settings['system']['vmail_homedir'],
 							'chmod 0750 ' . $settings['system']['vmail_homedir'],
 							'mv /etc/postfix/main.cf /etc/postfix/main.cf.gentoo',
 							'touch /etc/postfix/{main,master}.cf',
