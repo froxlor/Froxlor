@@ -673,9 +673,6 @@ class apache
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$corrected_docroot = $this->idnaConvert->encode($domain['documentroot']);
-			if (substr($corrected_docroot, -1) == '/') {
-				$corrected_docroot = substr($corrected_docroot, 0, -1);
-			}
 
 			/* Get domain's redirect code */
 			$code = getDomainRedirectCode($domain['id']);
