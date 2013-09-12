@@ -1678,6 +1678,6 @@ $lng['error']['sslcertificateinvalidcertkeypair'] = 'Der angegebene Key (private
 $lng['error']['sslcertificateinvalidca'] = 'Die angegebenen CA-Zertifikatsdaten scheinen kein gültiges Zertifikat zu sein';
 $lng['error']['sslcertificateinvalidchain'] = 'Die angegebenen Zertifikats-Chain-Daten scheinen kein gültiges Zertifikat zu sein';
 $lng['serversettings']['customerssl_directory']['title'] = 'Webserver-Kunden-SSL-Zertifikats-Verzeichnis';
-$lng['serversettings']['customerssl_directory']['description'] = 'Wo sollen kundenspezifizierte SSL-Zertifikate erstellt werden?';
+$lng['serversettings']['customerssl_directory']['description'] = 'Wo sollen kundenspezifizierte SSL-Zertifikate erstellt werden?<br /><br /><div style="color:red">ACHTUNG: Der Inhalt dieses Ordners wird regelmäßig geleert, daher sollten dort keinerlei Daten manuell abgelegt werden.</div>';
 $lng['admin']['note'] = 'Bitte beachten';
 $lng['admin']['phpfpm.ininote'] = 'Nicht alle gewünschten Werte können in der php-fpm pool Konfiguration verwendet werden';
