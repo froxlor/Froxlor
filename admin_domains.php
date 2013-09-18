@@ -833,6 +833,8 @@ if($page == 'domains'
 					if ($settings['system']['bind_enable'] == '1') {
 						if (isset($_POST['isbinddomain'])) {
 							$isbinddomain = (int)$_POST['isbinddomain'];
+						} else {
+							$isbindomain = 0;
 						}
 						$zonefile = validate($_POST['zonefile'], 'zonefile');
 					}
