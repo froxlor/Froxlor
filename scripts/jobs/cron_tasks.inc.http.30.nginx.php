@@ -182,7 +182,6 @@ class nginx
 
 				$this->nginx_data[$vhost_filename] .= "\t".'# Froxlor default vhost' . "\n";
 				$this->nginx_data[$vhost_filename] .= "\t".'server_name    ' . $this->settings['system']['hostname'] . ';' . "\n";
-
 				$this->nginx_data[$vhost_filename] .= "\t".'access_log      /var/log/nginx/access.log;' . "\n";
 
 				$mypath = '';
@@ -214,15 +213,7 @@ class nginx
 				 * SSL config options
 				 */
 				if ($row_ipsandports['ssl'] == '1') {
-					if ($row_ipsandports['ssl_cert_file'] != '') {
-						$this->nginx_data[$vhost_filename] .= "\t" . 'ssl_certificate ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . ';' . "\n";
-					}
-					if ($row_ipsandports['ssl_key_file'] != '') {
-						$this->nginx_data[$vhost_filename] .= "\t" . 'ssl_certificate_key ' .makeCorrectFile($row_ipsandports['ssl_key_file']) . ';' .  "\n";
-					}
-					if ($row_ipsandports['ssl_ca_file'] != '') {
-						$this->nginx_data[$vhost_filename] .= 'ssl_client_certificate ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . ';' . "\n";
-					}
+					$this->nginx_data[$vhost_filename].=$this->composeSslSettings($row_ipsandports);
 				}
 
 				$this->nginx_data[$vhost_filename] .= "\t".'location ~ \.php$ {'."\n";
@@ -260,8 +251,9 @@ class nginx
 				$this->nginx_data[$vhost_filename] .= '}' . "\n\n";
 				// End of Froxlor server{}-part
 			}
-			$this->createNginxHosts($row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'], $vhost_filename);
 		}
+
+		$this->createNginxHosts();
 
 		/**
 		 * standard error pages
@@ -269,21 +261,33 @@ class nginx
 		$this->_createStandardErrorHandler();
 	}
 
-	protected function createNginxHosts($ip, $port, $ssl, $vhost_filename)
+	protected function createNginxHosts()
 	{
-		$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `ip` = '" . $ip . "' AND `port` = '" . $port . "'";
-		$ipandport = $this->db->query_first($query);
+		$query = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
+			`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, 
+			`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
+			`c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, 
+			`d`.`mod_fcgid_maxrequests`, `p`.`ssl` AS `ssl`,
+			`p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile` 
+			  FROM `".TABLE_PANEL_DOMAINS."` `d`
+      
+			  LEFT JOIN `".TABLE_PANEL_CUSTOMERS."` `c` USING(`customerid`) 
+			  LEFT JOIN `".TABLE_PANEL_DOMAINS."` `pd` ON (`pd`.`id` = `d`.`parentdomainid`)
+			  
+			  INNER JOIN (
+			    SELECT * FROM ( 
+			      SELECT `di`.`id_domain` , `p`.`ssl`, `p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile` 
+			      FROM `".TABLE_DOMAINTOIP."` `di` , `".TABLE_PANEL_IPSANDPORTS."` `p` 
+			      WHERE `p`.`id` = `di`.`id_ipandports` 
+			      ORDER BY `p`.`ssl` DESC 
+			    ) AS my_table_tmp
+			    GROUP BY `id_domain`
+			  ) AS p ON p.`id_domain` = `d`.`id`
+			  
+			  WHERE `d`.`aliasdomain` IS NULL 
+			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
 
-		$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) ";
-		if ($ssl == '0') {
-			$query2 .= "WHERE `d`.`ipandport` = '" . $ipandport['id'] . "' ";
-		} else {
-			$query2 .= "WHERE `d`.`ssl_ipandport` = '" . $ipandport['id'] . "' ";
-		}
-		$query2 .= "AND `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`iswildcarddomain`, `d`.`domain` ASC";
-
-		$included_vhosts = array();
-		$result_domains = $this->db->query($query2);
+		$result_domains = $this->db->query($query);
 		while ($domain = $this->db->fetch_array($result_domains)) {
 			if (is_dir($this->settings['system']['apacheconf_vhost'])) {
 				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'])));
@@ -294,25 +298,20 @@ class nginx
 				$this->nginx_data[$vhost_filename] = '';
 			}
 
-			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ipandport'] . "'";
-			$ipandport = $this->db->query_first($query);
-			$domain['ip'] = $ipandport['ip'];
-			$domain['port'] = $ipandport['port'];
-			$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
-
-			if ((!empty($this->nginx_data[$vhost_filename]) && !is_dir($this->settings['system']['apacheconf_vhost']))
-				|| is_dir($this->settings['system']['apacheconf_vhost'])
+			if ((!empty($this->nginx_data[$vhost_filename]) 
+					&& !is_dir($this->settings['system']['apacheconf_vhost']))
+					|| is_dir($this->settings['system']['apacheconf_vhost'])
 			) {
-				if ($ssl == '1') {
-					$ssl_vhost = true;
-					$ips_and_ports_index = 'ssl_ipandport';
-				} else {
-					$ssl_vhost = false;
-					$ips_and_ports_index = 'ipandport';
+				// Create non-ssl host
+				$this->nginx_data[$vhost_filename].= $this->getVhostContent($domain, false);
+				if ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1') {
+					$vhost_filename_ssl = $this->getVhostFilename($domain, true);
+					if (!isset($this->nginx_data[$vhost_filename_ssl])) {
+						$this->nginx_data[$vhost_filename_ssl] = '';
+					}
+					// Now enable ssl stuff
+					$this->nginx_data[$vhost_filename_ssl] .= $this->getVhostContent($domain, true);
 				}
-
-				$this->nginx_data[$vhost_filename].= $this->getVhostContent($domain, $ssl_vhost);
-				$this->nginx_data[$vhost_filename].= isset($this->needed_htpasswds[$domain[$ips_and_ports_index]]) ? $this->needed_htpasswds[$domain[$ips_and_ports_index]] . "\n" : '';
 			}
 		}
 	}
@@ -347,95 +346,150 @@ class nginx
 	{
 		if ($ssl_vhost === true
 			&& $domain['ssl'] != '1'
+			&& $domain['ssl_redirect'] != '1'
 		) {
 			return '';
 		}
 
-		if ($ssl_vhost === true
-			&& $domain['ssl'] == '1'
-		) {
-			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ssl_ipandport'] . "'";
-		} else {
-			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ipandport'] . "'";
-		}
-
-		$ipandport = $this->db->query_first($query);
-		$domain['ip'] = $ipandport['ip'];
-		$domain['port'] = $ipandport['port'];
-		$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
-
-		// SSL STUFF
-		$dssl = new DomainSSL($this->settings, $this->db);
-		// this sets the ssl-related array-indices in the $domain array
-		// if the domain has customer-defined ssl-certificates
-		$dssl->setDomainSSLFilesArray($domain);
-
-		if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-			$ipport = '[' . $domain['ip'] . ']:' . $domain['port'];
-		} else {
-			$ipport = $domain['ip'] . ':' . $domain['port'];
-		}
-
 		$vhost_content = '';
 
-		// open vhost-container
-		$vhost_content .= 'server { ' . "\n";
-		// listening statement (required)
-		$vhost_content .= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ';' . "\n";
-
-		// get all server-names
-		$vhost_content .= $this->getServerNames($domain);
-
-		// respect ssl_redirect settings, #542
-		if ($ssl_vhost == false
-			&& $domain['ssl'] == '1'
-			&& $domain['ssl_redirect'] == '1'
+		$query = "SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` `i`, `".TABLE_DOMAINTOIP."` `dip`  WHERE dip.id_domain = '".$domain['id']."' AND i.id = dip.id_ipandports ";
+		if ($ssl_vhost === true 
+				&& ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')
 		) {
-			$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
-		}
-
-		// if the documentroot is an URL we just redirect
-		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$vhost_content .= "\t".'rewrite ^(.*) '.$this->idnaConvert->encode($domain['documentroot']).'$1 permanent;'."\n";
+			// by ordering by cert-file the row with filled out SSL-Fields will be shown last, 
+			// thus it is enough to fill out 1 set of SSL-Fields
+			$query .= "AND i.ssl = 1 ORDER BY i.ssl_cert_file ASC;";
 		} else {
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
+			$query .= "AND i.ssl = '0';";
+		}
 
-			$vhost_content .= $this->getLogFiles($domain);
-			$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
+		$result = $this->db->query($query);
+		while ($ipandport = $this->db->fetch_array($result)) {
+
+			$domain['ip'] = $ipandport['ip'];
+			$domain['port'] = $ipandport['port'];
+			$domain['ssl_cert_file'] = $ipandport['ssl_cert_file']; // save latest delivered ssl settings
+			$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
+			$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
+			// #418
+			$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
+
+			// SSL STUFF
+			$dssl = new DomainSSL($this->settings, $this->db);
+			// this sets the ssl-related array-indices in the $domain array
+			// if the domain has customer-defined ssl-certificates
+			$dssl->setDomainSSLFilesArray($domain);
 			
-			if ($this->_deactivated == false) {
-				$vhost_content .= $this->create_pathOptions($domain);
-				$vhost_content .= $this->composePhpOptions($domain, $ssl_vhost);
-				
-				if ($domain['specialsettings'] != "") {
-					$vhost_content .= $domain['specialsettings'] . "\n";
-				}
-
-				if ($ipandport['default_vhostconf_domain'] != '') {
-					$vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
-				}
-
-				if ($this->settings['system']['default_vhostconf'] != '') {
-					$vhost_content .= $this->settings['system']['default_vhostconf'] . "\n";
-				}
+			if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$ipport = '[' . $domain['ip'] . ']:' . $domain['port'];
+			} else {
+				$ipport = $domain['ip'] . ':' . $domain['port'];
 			}
 
-			// merge duplicate / sections, #1193
-			$l_regex1 = "/(location\ \/\ \{)(.*)(\})/smU";
-			$l_regex2 = "/(location\ \/\ \{.*\})/smU";
-			$replace_by = '';
-			$replacements = preg_match_all($l_regex1,$vhost_content,$out);
-			if ($replacements > 1) {
-				foreach ($out[2] as $val) {
-					$replace_by .= $val."\n";
+			$vhost_content.= 'server { ' . "\n";
+			$vhost_content.= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ';' . "\n";
+
+			// get all server-names
+			$vhost_content .= $this->getServerNames($domain);
+
+			// respect ssl_redirect settings, #542
+			if ($ssl_vhost == false
+				&& $domain['ssl'] == '1'
+				&& $domain['ssl_redirect'] == '1')
+			{
+				$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
+			}
+
+			// if the documentroot is an URL we just redirect
+			if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
+				$vhost_content .= "\t".'rewrite ^(.*) '.$this->idnaConvert->encode($domain['documentroot']).'$1 permanent;'."\n";
+			} else {
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
+
+				$vhost_content .= $this->getLogFiles($domain);
+				$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
+
+				if ($this->_deactivated == false) {
+
+					if ($ssl_vhost === true
+					    && $domain['ssl'] == '1'
+					    && $this->settings['system']['use_ssl'] == '1'
+					) {
+						$vhost_content.= $this->composeSslSettings($domain);
+					}
+					$vhost_content.= $this->create_pathOptions($domain);
+					$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
+
+					$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
+
+					if ($domain['specialsettings'] != "") {
+						$vhost_content .= $domain['specialsettings'] . "\n";
+					}
+
+					if ($ipandport['default_vhostconf_domain'] != '') {
+						$vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
+					}
+
+					if ($this->settings['system']['default_vhostconf'] != '') {
+						$vhost_content .= $this->settings['system']['default_vhostconf'] . "\n";
+					}
 				}
-				$vhost_content = preg_replace($l_regex2, "", $vhost_content, $replacements-1);
-				$vhost_content = preg_replace($l_regex2, "location / {\n\t\t". $replace_by ."\t}\n", $vhost_content);
+
+				// merge duplicate / sections, #1193
+				$l_regex1 = "/(location\ \/\ \{)(.*)(\})/smU";
+				$l_regex2 = "/(location\ \/\ \{.*\})/smU";
+				$replace_by = '';
+				$replacements = preg_match_all($l_regex1,$vhost_content,$out);
+				if ($replacements > 1) {
+					foreach ($out[2] as $val) {
+						$replace_by .= $val."\n";
+					}
+					$vhost_content = preg_replace($l_regex2, "", $vhost_content, $replacements-1);
+					$vhost_content = preg_replace($l_regex2, "location / {\n\t\t". $replace_by ."\t}\n", $vhost_content);
+				}
+			}
+			$vhost_content .= '}' . "\n\n";
+	}
+		return $vhost_content;
+	}
+
+	protected function composeSslSettings($domain) {
+    
+		$sslsettings = '';
+
+		if ($domain['ssl_cert_file'] == '') {
+			$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+		}
+
+		if ($domain['ssl_key_file'] == '') {
+			$domain['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
+		}
+
+		if ($domain['ssl_ca_file'] == '') {
+			$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
+		}
+
+		// #418
+		if ($domain['ssl_cert_chainfile'] == '') {
+			$domain['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
+		}
+
+		if ($domain['ssl_cert_file'] != '') {
+			// FIXME ssl on now belongs to the listen block as 'ssl' at the end
+			$sslsettings .= "\t" . 'ssl on;' . "\n";
+			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain['ssl_cert_file']) . ';' . "\n";
+
+			if ($domain['ssl_key_file'] != '') {
+				$sslsettings .= "\t" . 'ssl_certificate_key ' .makeCorrectFile($domain['ssl_key_file']) . ';' .  "\n";
+			}
+
+			if ($domain['ssl_ca_file'] != '') {
+				$sslsettings.= 'ssl_client_certificate ' . makeCorrectFile($domain['ssl_ca_file']) . ';' . "\n";
 			}
 		}
-		$vhost_content .= '}' . "\n\n";
 
-		return $vhost_content;
+		return $sslsettings;
 	}
 
 	protected function create_pathOptions($domain)

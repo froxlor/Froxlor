@@ -88,18 +88,18 @@ return array(
 					),
 					'ipandport' => array(
 						'label' => 'IP/Port',
-						'type' => 'select',
-						'select_var' => $ipsandports,
-						'mandatory' => true,
-					),
-					'ssl' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL',
 						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array()
+						'values' => $ipsandports,
+						'value' => array($settings['system']['defaultip']),
+						'is_array' => 1,
+						'mandatory' => true
+					),
+					'ssl_ipandport' => array(
+						'label' => 'IP/Port (SSL)',
+						'type' => 'checkbox',
+						'values' => $ssl_ipsandports,
+						'value' => '',
+						'is_array' => 1
 					),
 					'ssl_redirect' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
@@ -109,12 +109,6 @@ return array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')
 									),
 						'value' => array()
-					),
-					'ssl_ipandport' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL IP/Port',
-						'type' => 'select',
-						'select_var' => $ssl_ipsandports
 					),
 					'no_ssl_available_info' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports == '' ? true : false) : false),

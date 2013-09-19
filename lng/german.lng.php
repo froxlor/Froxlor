@@ -816,7 +816,7 @@ $lng['admin']['awstatssettings'] = 'AWstats Einstellungen';
 // ADDED IN 1.2.19-svn16
 
 $lng['admin']['domain_dns_settings'] = 'Domain DNS-Einstellungen';
-$lng['dns']['destinationip'] = 'Domain-IP';
+$lng['dns']['destinationip'] = 'Domain-IP(s)';
 $lng['dns']['standardip'] = 'Server-Standard-IP';
 $lng['dns']['a_record'] = 'A-Eintrag (IPv6 optional)';
 $lng['dns']['cname_record'] = 'CNAME-Eintrag';

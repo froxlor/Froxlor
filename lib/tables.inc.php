@@ -55,6 +55,7 @@ define('TABLE_PANEL_DOMAINREDIRECTS', 'domain_redirect_codes');
 define('TABLE_PANEL_IPDOCROOTSETTINGS', 'ipsandports_docrootsettings');
 define('TABLE_PANEL_DOMDOCROOTSETTINGS', 'domain_docrootsettings');
 define('TABLE_PANEL_DOMAIN_SSL_SETTINGS', 'domain_ssl_settings');
+define('TABLE_DOMAINTOIP', 'panel_domaintoip');
 
 // APS constants
 
@@ -73,7 +74,6 @@ define('PACKAGE_LOCKED', 1);
 define('PACKAGE_ENABLED', 2);
 
 // VERSION INFO
-
-$version = '0.9.29';
+$version = '0.9.29.1-dev1';
 $dbversion = '2';
 $branding = '';

@@ -17,9 +17,6 @@
  *
  */
 
-/*
- * This script creates the php.ini's used by mod_suPHP+php-cgi
-*/
 
 if(@php_sapi_name() != 'cli'
 		&& @php_sapi_name() != 'cgi'
@@ -92,7 +89,7 @@ class bind
 		$known_filenames = array();
 
 		$bindconf_file = '# ' . $this->settings['system']['bindconf_directory'] . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";
-		$result_domains = $this->db->query("SELECT `d`.`id`, `d`.`domain`, `d`.`iswildcarddomain`, `d`.`customerid`, `d`.`zonefile`, `d`.`bindserial`, `d`.`dkim`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `d`.`wwwserveralias`, `ip`.`ip`, `c`.`loginname`, `c`.`guid` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_IPSANDPORTS . "` AS `ip` ON(`d`.`ipandport`=`ip`.`id`) WHERE `d`.`isbinddomain` = '1' ORDER BY `d`.`domain` ASC");
+		$result_domains = $this->db->query("SELECT `d`.`id`, `d`.`domain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`customerid`, `d`.`zonefile`, `d`.`bindserial`, `d`.`dkim`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `c`.`loginname`, `c`.`guid` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) WHERE `d`.`isbinddomain` = '1' ORDER BY `d`.`domain` ASC");
 
 		while($domain = $this->db->fetch_array($result_domains))
 		{
@@ -179,22 +176,29 @@ class bind
 
 	protected function generateZone($domain)
 	{
-		if(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
-		{
-			$ip_a_record = 'A	' . $domain['ip'];
-		}
-		elseif(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-		{
-			$ip_a_record = 'AAAA	' . $domain['ip'];
-		}
-		else
-		{
-			return '';
+		// Array to save all ips needed in the records (already including IN A/AAAA)
+		$ip_a_records = array();
+		// Array to save DNS records
+		$records = array();
+		
+		$result_ip = $this->db->query("SELECT `p`.`ip` AS `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` `p`, `".TABLE_DOMAINTOIP."` `di` WHERE `di`.`id_domain` = '$domain[id]' AND `p`.`id` = `di`.`id_ipandports` GROUP BY `p`.`ip`;");
+		
+		while ($ip = $this->db->fetch_array($result_ip)) {
+  
+			if (filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+				$ip_a_records[] = "A\t\t" . $ip['ip'];
+			}
+			elseif (filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$ip_a_records[] = "AAAA\t\t" . $ip['ip'];
+			}
+			else {
+				return ";Error in at least one IP Adress (".$ip['ip']."), could not create zonefile!";
+			}
 		}
 
 		$date = date('Ymd');
 		$bindserial = (preg_match('/^' . $date . '/', $domain['bindserial']) ? $domain['bindserial'] + 1 : $date . '00');
-		$this->db->query('UPDATE `' . TABLE_PANEL_DOMAINS . '` SET `bindserial`=\'' . $bindserial . '\' WHERE `id`=\'' . $domain['id'] . '\'');
+		$this->db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `bindserial`='" . $bindserial . "' WHERE `id`='" . $domain['id'] . "'");
 		$zonefile = '$TTL ' . (int)$this->settings['system']['defaultttl'] . "\n";
 
 		if(count($this->nameservers) == 0)
@@ -208,44 +212,37 @@ class bind
 
 		$zonefile.= '	' . $bindserial . ' ; serial' . "\n" . '	8H ; refresh' . "\n" . '	2H ; retry' . "\n" . '	1W ; expiry' . "\n" . '	11h) ; minimum' . "\n";
 
-		if(count($this->nameservers) == 0)
-		{
-			$zonefile.= '@	IN	NS	ns' . "\n" . 'ns	IN	' . $ip_a_record . "\n";
-		}
-		else
-		{
-			foreach($this->nameservers as $nameserver)
-			{
-				$zonefile.= '@	IN	NS	' . trim($nameserver['hostname']) . "\n";
+		// no nameservers given, use all if the A/AAAA entries
+		if (count($this->nameservers) == 0) {
+			$zonefile .= '@    IN    NS    ns' . "\n";
+			foreach ($ip_a_records as $ip_a_record) {
+				$zonefile .= 'ns    IN    ' . $ip_a_record . "\n";
+			}
+		} else {
+			foreach ($this->nameservers as $nameserver) {
+				$zonefile.= '@    IN    NS    ' . trim($nameserver['hostname']) . "\n";
 			}
 		}
 
-		if(count($this->mxservers) == 0)
-		{
+		if (count($this->mxservers) == 0) {
 			$zonefile.= '@	IN	MX	10 mail' . "\n";
-			$zonefile.= 'mail	IN	' . $ip_a_record . "\n";
-			if($domain['iswildcarddomain'] != '1')
-			{
-				$zonefile.= 'imap	IN	' . $ip_a_record . "\n";
-				$zonefile.= 'smtp	IN	' . $ip_a_record . "\n";
-				$zonefile.= 'pop3	IN	' . $ip_a_record . "\n";
+			$records[] = 'mail';
+			if ($domain['iswildcarddomain'] != '1') {
+				$records[] = 'imap';
+				$records[] = 'smtp';
+				$records[] = 'pop3';
 			}
-		}
-		else
-		{
-			foreach($this->mxservers as $mxserver)
-			{
-				$zonefile.= '@	IN	MX	' . trim($mxserver) . "\n";
+		} else {
+			foreach ($this->mxservers as $mxserver) {
+				$zonefile.= '@    IN    MX    ' . trim($mxserver) . "\n";
 			}
 
-			if($this->settings['system']['dns_createmailentry'] == '1')
-			{
-				$zonefile.= 'mail	IN	' . $ip_a_record . "\n";
-				if($domain['iswildcarddomain'] != '1')
-				{
-					$zonefile.= 'imap	IN	' . $ip_a_record . "\n";
-					$zonefile.= 'smtp	IN	' . $ip_a_record . "\n";
-					$zonefile.= 'pop3	IN	' . $ip_a_record . "\n";
+			if ($this->settings['system']['dns_createmailentry'] == '1') {
+				$records[] = 'mail';
+				if ($domain['iswildcarddomain'] != '1') {
+					$records[] = 'imap';
+					$records[] = 'smtp';
+					$records[] = 'pop3';
 				}
 			}
 		}
@@ -253,9 +250,9 @@ class bind
 		/*
 		 * @TODO domain-based spf-settings
 		*/
-		if($this->settings['spf']['use_spf'] == '1'
-				/*&& $domain['spf'] == '1' */)
-		{
+		if ($this->settings['spf']['use_spf'] == '1'
+				/*&& $domain['spf'] == '1' */
+		) {
 			$zonefile.= $this->settings['spf']['spf_entry'] . "\n";
 		}
 
@@ -286,37 +283,34 @@ class bind
 			}
 		}
 
-		$zonefile.= '@	IN	' . $ip_a_record . "\n";
-		$zonefile.= 'www	IN	' . $ip_a_record . "\n";
+		$records[] = '@';
+		$records[] = 'www';
+ 
 
 		if($domain['iswildcarddomain'] == '1')
 		{
-			$zonefile.= '*	IN      ' . $ip_a_record . "\n";
+			$records[] = '*';
 		}
 
-		$subdomains = $this->db->query('SELECT `d`.`domain`, `ip`.`ip` AS `ip` FROM `' . TABLE_PANEL_DOMAINS . '` `d`, `' . TABLE_PANEL_IPSANDPORTS . '` `ip` WHERE `parentdomainid`=\'' . $domain['id'] . '\' AND `d`.`ipandport`=`ip`.`id`');
+		$subdomains = $this->db->query("SELECT `domain` FROM `".TABLE_PANEL_DOMAINS."` WHERE `parentdomainid` = '$domain[id]';");
 
 		while($subdomain = $this->db->fetch_array($subdomains))
 		{
-			if(filter_var($subdomain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
-			{
-				$zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      A       ' . $subdomain['ip'] . "\n";
-
-				/* Check whether to add a www.-prefix */
-				if($domain['wwwserveralias'] == '1')
-				{
-					$zonefile.= str_replace('www.' . $domain['domain'], '', $subdomain['domain']) . '  IN      A       ' . $subdomain['ip'] . "\n";
-				}
+			// Listing domains is enough as there currently is no support for choosing 
+			// different ips for a subdomain => use same IPs as toplevel
+			$records[] = str_replace('.' . $domain['domain'], '', $subdomain['domain']);
+			
+			// Check whether to add a www.-prefix 
+			if ($domain['wwwserveralias'] == '1') {
+				$records[] = str_replace('.' . $domain['domain'], '', $subdomain['domain']);
 			}
-			elseif(filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-			{
-				$zonefile.= str_replace('.' . $domain['domain'], '', $subdomain['domain']) . '  IN      AAAA    ' . $subdomain['ip'] . "\n";
+		}
 
-				/* Check whether to add a www.-prefix */
-				if($domain['wwwserveralias'] == '1')
-				{
-					$zonefile.= str_replace('www.' . $domain['domain'], '', $subdomain['domain']) . '  IN      AAAA       ' . $subdomain['ip'] . "\n";
-				}
+		// Create DNS-Records for every name we have saved
+		foreach ($records as $record) {
+			// we create an entry for every ip we have saved
+			foreach ($ip_a_records as $ip_a_record) {
+				$zonefile.= $record . "\tIN\t" . $ip_a_record . "\n";
 			}
 		}
 
