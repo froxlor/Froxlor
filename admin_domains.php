@@ -834,7 +834,7 @@ if($page == 'domains'
 						if (isset($_POST['isbinddomain'])) {
 							$isbinddomain = (int)$_POST['isbinddomain'];
 						} else {
-							$isbindomain = 0;
+							$isbinddomain = 0;
 						}
 						$zonefile = validate($_POST['zonefile'], 'zonefile');
 					}
