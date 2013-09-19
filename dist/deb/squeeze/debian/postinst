@@ -40,8 +40,8 @@ setPermissions() {
 }
 
 echoNoticetoCallFroxlor() {
-	echo "Please run Froxlor by opening it via your web browser:\n"
-	echo "http://<YOURIP>/froxlor/\n"
+	printf "Please run Froxlor by opening it via your web browser:\n"
+	printf "http://<YOURIP>/froxlor/\n"
 }
 
 case "$1" in
@@ -49,20 +49,17 @@ case "$1" in
 	setPermissions
 
 	if [ -d "/var/www/syscp" ] || [ -d "/var/syscp" ]; then
-		echo "Your SysCP installation (/var/www/syscp or /var/syscp) still exists."
-
-		
-echo "To proceed with the Froxlor upgrade move your configuration file (lib/userdata.inc.php) to \n/var/www/froxlor/lib/"
-
-		echo "After moving the configuration file, ensure \nit has the right permissions by running this two commands:"
-		echo "chmod 660 /var/www/froxlor/lib/userdata.inc.php"
-		echo "chown www-data:www-data /var/www/froxlor/lib/userdata.inc.php"
+		printf "Your SysCP installation (/var/www/syscp or /var/syscp) still exists.\n"
+		printf "To proceed with the Froxlor upgrade move your configuration file (lib/userdata.inc.php) to \n/var/www/froxlor/lib/\n"
+		printf "After moving the configuration file, ensure it has the right permissions by running this two commands:\n"
+		printf "chmod 660 /var/www/froxlor/lib/userdata.inc.php\n"
+		printf "chown www-data:www-data /var/www/froxlor/lib/userdata.inc.php\n"
 
 		echoNoticetoCallFroxlor
 		
-		echo "Please Note: you need to setup the Cronjob for Froxlor"
-		echo "after you have done the upgrades in the Panel"
-		echo "the SysCP cronjob will not run anymore since it got removed."
+		printf "Please Note: you need to setup the Cronjob for Froxlor\n"
+		printf "after you have done the upgrades in the Panel\n"
+		printf "the SysCP cronjob will not run anymore since it got removed.\n"
 	else
 		echoNoticetoCallFroxlor
 	fi
@@ -70,7 +67,6 @@ echo "To proceed with the Froxlor upgrade move your configuration file (lib/user
 	find /tmp/ -type f -name "froxlordir"* -delete;
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
-	/bin/true
     ;;
 
     *)

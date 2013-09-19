@@ -10,7 +10,7 @@ if [ -d /var/www/froxlor ]; then
 
 	if [ "${owner}" != "" ] && [ "$group" != "" ]; then
 		find /tmp/ -type f -name "froxlordir"* -delete
-		touch "/tmp/froxlordir_${owner}_${group}.tmp"
+		tempfile --dir=/tmp --name=froxlordir_${owner}_${group}.tmp
 	fi
 fi
 
