@@ -112,6 +112,7 @@ if ($page == 'overview') {
 			if (isset($_POST['send'])
 			   && $_POST['send'] == 'send'
 			) {
+				// @FIXME use a good path-validating regex here (refs #1231)
 				$path = validate($_POST['path'], 'path');
 				$password = validate($_POST['ftp_password'], 'password');
 				$password = validatePassword($password);
@@ -241,6 +242,7 @@ if ($page == 'overview') {
 			if (isset($_POST['send'])
 			   && $_POST['send'] == 'send'
 			) {
+				// @FIXME use a good path-validating regex here (refs #1231)
 				$path = validate($_POST['path'], 'path');
 				
 				$_setnewpass = false;

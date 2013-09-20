@@ -429,8 +429,6 @@ elseif($page == 'domains')
 		$alias_check = $alias_check['count'];
 		$_doredirect = false;
 
-		
-
 		if(isset($result['customerid'])
 		   && $result['customerid'] == $userinfo['customerid'])
 		{
@@ -625,22 +623,8 @@ elseif($page == 'domains')
 
 				$resultips = $db->query("SELECT `p`.`ip` AS `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` `p` LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON ( `dip`.`id_ipandports` = `p`.`id` ) WHERE `dip`.`id_domain` = '".(int)$result['id']."' GROUP BY `p`.`ip`");
 				$result_ipandport['ip'] = '';
-				while ($rowip = $db->fetch_array($resultips))
-					  {
-						  if(filter_var($rowip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-						  {
-							  $result_ipandport['ip'] .= '[' . $rowip['ip'] . ']' . "&nbsp;&nbsp;\n";
-						  }
-						  else
-						  {
-							  $result_ipandport['ip'] .= $rowip['ip'] . "&nbsp;&nbsp;\n";
-						  }
-					  }
-
-
-				if(filter_var($result_ipandport['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-				{
-					$result_ipandport['ip'] = '[' . $result_ipandport['ip'] . ']';
+				while ($rowip = $db->fetch_array($resultips)) {
+					$result_ipandport['ip'] .= $rowip['ip'] . "<br />";
 				}
 
 				$domainip = $result_ipandport['ip'];
