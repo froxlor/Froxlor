@@ -13,8 +13,11 @@ class HTMLPurifier_URIScheme_data extends HTMLPurifier_URIScheme {
         'image/gif' => true,
         'image/png' => true,
         );
+    // this is actually irrelevant since we only write out the path
+    // component
+    public $may_omit_host = true;
 
-    public function validate(&$uri, $config, $context) {
+    public function doValidate(&$uri, $config, $context) {
         $result = explode(',', $uri->path, 2);
         $is_base64 = false;
         $charset = null;
@@ -61,10 +64,12 @@ class HTMLPurifier_URIScheme_data extends HTMLPurifier_URIScheme {
         file_put_contents($file, $raw_data);
         if (function_exists('exif_imagetype')) {
             $image_code = exif_imagetype($file);
+            unlink($file);
         } elseif (function_exists('getimagesize')) {
             set_error_handler(array($this, 'muteErrorHandler'));
             $info = getimagesize($file);
             restore_error_handler();
+            unlink($file);
             if ($info == false) return false;
             $image_code = $info[2];
         } else {

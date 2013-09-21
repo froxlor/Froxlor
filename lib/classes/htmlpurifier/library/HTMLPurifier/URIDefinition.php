@@ -26,7 +26,9 @@ class HTMLPurifier_URIDefinition extends HTMLPurifier_Definition
     public function __construct() {
         $this->registerFilter(new HTMLPurifier_URIFilter_DisableExternal());
         $this->registerFilter(new HTMLPurifier_URIFilter_DisableExternalResources());
+        $this->registerFilter(new HTMLPurifier_URIFilter_DisableResources());
         $this->registerFilter(new HTMLPurifier_URIFilter_HostBlacklist());
+        $this->registerFilter(new HTMLPurifier_URIFilter_SafeIframe());
         $this->registerFilter(new HTMLPurifier_URIFilter_MakeAbsolute());
         $this->registerFilter(new HTMLPurifier_URIFilter_Munge());
     }
@@ -52,9 +54,13 @@ class HTMLPurifier_URIDefinition extends HTMLPurifier_Definition
 
     protected function setupFilters($config) {
         foreach ($this->registeredFilters as $name => $filter) {
-            $conf = $config->get('URI.' . $name);
-            if ($conf !== false && $conf !== null) {
+            if ($filter->always_load) {
                 $this->addFilter($filter, $config);
+            } else {
+                $conf = $config->get('URI.' . $name);
+                if ($conf !== false && $conf !== null) {
+                    $this->addFilter($filter, $config);
+                }
             }
         }
         unset($this->registeredFilters);
@@ -70,6 +76,10 @@ class HTMLPurifier_URIDefinition extends HTMLPurifier_Definition
             if (is_null($this->host)) $this->host = $this->base->host;
         }
         if (is_null($this->defaultScheme)) $this->defaultScheme = $config->get('URI.DefaultScheme');
+    }
+
+    public function getDefaultScheme($config, $context) {
+        return HTMLPurifier_URISchemeRegistry::instance()->getScheme($this->defaultScheme, $config, $context);
     }
 
     public function filter(&$uri, $config, $context) {
