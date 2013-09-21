@@ -48,6 +48,8 @@ function __autoload($classname)
 	findIncludeClass($libdirname . '/classes/', $classname);
 }
 
+spl_autoload_register('__autoload');
+
 function findIncludeClass($dirname, $classname)
 {
 	$dirhandle = opendir($dirname);
