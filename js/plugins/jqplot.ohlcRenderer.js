@@ -2,9 +2,10 @@
  * jqPlot
  * Pure JavaScript plotting plugin using jQuery
  *
- * Version: 1.0.0b2_r792
+ * Version: 1.0.8
+ * Revision: 1250
  *
- * Copyright (c) 2009-2011 Chris Leonello
+ * Copyright (c) 2009-2013 Chris Leonello
  * jqPlot is currently available for use in all personal or commercial projects 
  * under both the MIT (http://www.opensource.org/licenses/mit-license.php) and GPL 
  * version 2.0 (http://www.gnu.org/licenses/gpl-2.0.html) licenses. This means that you can 
@@ -64,7 +65,7 @@
      * 
      */
     $.jqplot.OHLCRenderer = function(){
-        // subclass line renderer to make use of some of it's methods.
+        // subclass line renderer to make use of some of its methods.
         $.jqplot.LineRenderer.call(this);
         // prop: candleStick
         // true to render chart as candleStick.
@@ -194,7 +195,7 @@
             var dwidth = this.gridData[xmaxidx-1][0] - this.gridData[xminidx][0];
             var nvisiblePoints = xmaxidx - xminidx;
             try {
-                var dinterval = Math.abs(this._xaxis.series_u2p(parseInt(this._xaxis._intervalStats[0].sortedIntervals[0].interval)) - this._xaxis.series_u2p(0)); 
+                var dinterval = Math.abs(this._xaxis.series_u2p(parseInt(this._xaxis._intervalStats[0].sortedIntervals[0].interval, 10)) - this._xaxis.series_u2p(0)); 
             }
 
             catch (e) {
@@ -206,7 +207,7 @@
                     r._bodyWidth = r.bodyWidth;
                 }
                 else {
-                    r._bodyWidth = Math.min(20, dinterval/1.75);
+                    r._bodyWidth = Math.min(20, dinterval/1.65);
                 }
             }
             else {

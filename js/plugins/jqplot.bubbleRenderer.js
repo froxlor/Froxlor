@@ -2,9 +2,10 @@
  * jqPlot
  * Pure JavaScript plotting plugin using jQuery
  *
- * Version: 1.0.0b2_r792
+ * Version: 1.0.8
+ * Revision: 1250
  *
- * Copyright (c) 2009-2011 Chris Leonello
+ * Copyright (c) 2009-2013 Chris Leonello
  * jqPlot is currently available for use in all personal or commercial projects 
  * under both the MIT (http://www.opensource.org/licenses/mit-license.php) and GPL 
  * version 2.0 (http://www.gnu.org/licenses/gpl-2.0.html) licenses. This means that you can 
@@ -631,6 +632,7 @@
             plot.target.trigger(evt1, ins);
             if (plot.series[ins[0]].highlightMouseOver && !(ins[0] == plot.plugins.bubbleRenderer.highlightedSeriesIndex && ins[1] == plot.series[ins[0]]._highlightedPoint)) {
                 var evt = jQuery.Event('jqplotDataHighlight');
+                evt.which = ev.which;
                 evt.pageX = ev.pageX;
                 evt.pageY = ev.pageY;
                 plot.target.trigger(evt, ins);
@@ -649,6 +651,7 @@
             var ins = [si, pi, neighbor.data, plot.series[si].gridData[pi][2]];
             if (plot.series[ins[0]].highlightMouseDown && !(ins[0] == plot.plugins.bubbleRenderer.highlightedSeriesIndex && ins[1] == plot.series[ins[0]]._highlightedPoint)) {
                 var evt = jQuery.Event('jqplotDataHighlight');
+                evt.which = ev.which;
                 evt.pageX = ev.pageX;
                 evt.pageY = ev.pageY;
                 plot.target.trigger(evt, ins);
@@ -673,6 +676,7 @@
             var pi = neighbor.pointIndex;
             var ins = [si, pi, neighbor.data, plot.series[si].gridData[pi][2]];
             var evt = jQuery.Event('jqplotDataClick');
+            evt.which = ev.which;
             evt.pageX = ev.pageX;
             evt.pageY = ev.pageY;
             plot.target.trigger(evt, ins);
@@ -689,6 +693,7 @@
                 unhighlight(plot);
             }
             var evt = jQuery.Event('jqplotDataRightClick');
+            evt.which = ev.which;
             evt.pageX = ev.pageX;
             evt.pageY = ev.pageY;
             plot.target.trigger(evt, ins);

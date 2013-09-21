@@ -2,9 +2,10 @@
  * jqPlot
  * Pure JavaScript plotting plugin using jQuery
  *
- * Version: 1.0.0b2_r792
+ * Version: 1.0.8
+ * Revision: 1250
  *
- * Copyright (c) 2009-2011 Chris Leonello
+ * Copyright (c) 2009-2013 Chris Leonello
  * jqPlot is currently available for use in all personal or commercial projects 
  * under both the MIT (http://www.opensource.org/licenses/mit-license.php) and GPL 
  * version 2.0 (http://www.gnu.org/licenses/gpl-2.0.html) licenses. This means that you can 
@@ -48,10 +49,10 @@
         // tick mark on the axis.  One of 'inside', 'outside', 'cross', '' or null.
         this.mark = 'outside';
         // prop: showMark
-        // wether or not to show the mark on the axis.
+        // whether or not to show the mark on the axis.
         this.showMark = true;
         // prop: showGridline
-        // wether or not to draw the gridline on the grid at this tick.
+        // whether or not to draw the gridline on the grid at this tick.
         this.showGridline = true;
         // prop: isMinorTick
         // if this is a minor tick.
@@ -64,10 +65,10 @@
         // will be stoked above and below axis, so total length will be twice this.
         this.markSize = 4;
         // prop: show
-        // wether or not to show the tick (mark and label).
+        // whether or not to show the tick (mark and label).
         this.show = true;
         // prop: showLabel
-        // wether or not to show the label.
+        // whether or not to show the label.
         this.showLabel = true;
         // prop: labelPosition
         // 'auto', 'start', 'middle' or 'end'.
@@ -132,12 +133,7 @@
         }
         
         if (this.enableFontSupport) {
-            
-            function support_canvas_text() {
-                return !!(document.createElement('canvas').getContext && typeof document.createElement('canvas').getContext('2d').fillText == 'function');
-            }
-            
-            if (support_canvas_text()) {
+            if ($.jqplot.support_canvas_text()) {
                 this._textRenderer = new $.jqplot.CanvasFontRenderer(ropts);
             }
             
@@ -184,6 +180,16 @@
             return w;
         }
     };
+
+    // return top.
+    $.jqplot.CanvasAxisTickRenderer.prototype.getTop = function(ctx) {
+        if (this._elem) {
+         return this._elem.position().top;
+        }
+        else {
+            return null;
+        }
+    };
     
     $.jqplot.CanvasAxisTickRenderer.prototype.getAngleRad = function() {
         var a = this.angle * Math.PI/180;
@@ -206,7 +212,7 @@
         
         // Memory Leaks patch
         if (this._elem) {
-            if ($.jqplot.use_excanvas) {
+            if ($.jqplot.use_excanvas && window.G_vmlCanvasManager.uninitElement !== undefined) {
                 window.G_vmlCanvasManager.uninitElement(this._elem.get(0));
             }
             
@@ -229,13 +235,13 @@
         elem.style.height = h;
         elem.style.textAlign = 'left';
         elem.style.position = 'absolute';
-		
-		elem = plot.canvasManager.initCanvas(elem);
-		
+
+        elem = plot.canvasManager.initCanvas(elem);
+
         this._elem = $(elem);
         this._elem.css(this._styles);
         this._elem.addClass('jqplot-'+this.axis+'-tick');
-		
+
         elem = null;
         return this._elem;
     };

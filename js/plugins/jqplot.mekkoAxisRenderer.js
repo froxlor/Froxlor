@@ -2,9 +2,10 @@
  * jqPlot
  * Pure JavaScript plotting plugin using jQuery
  *
- * Version: 1.0.0b2_r792
+ * Version: 1.0.8
+ * Revision: 1250
  *
- * Copyright (c) 2009-2011 Chris Leonello
+ * Copyright (c) 2009-2013 Chris Leonello
  * jqPlot is currently available for use in all personal or commercial projects 
  * under both the MIT (http://www.opensource.org/licenses/mit-license.php) and GPL 
  * version 2.0 (http://www.gnu.org/licenses/gpl-2.0.html) licenses. This means that you can 
@@ -83,14 +84,14 @@
     };
     
     // called with scope of axis
-    $.jqplot.MekkoAxisRenderer.prototype.draw = function(ctx) {
+    $.jqplot.MekkoAxisRenderer.prototype.draw = function(ctx, plot) {
         if (this.show) {
             // populate the axis label and value properties.
             // createTicks is a method on the renderer, but
             // call it within the scope of the axis.
             this.renderer.createTicks.call(this);
             // fill a div with axes labels in the right direction.
-            // Need to pregenerate each axis to get it's bounds and
+            // Need to pregenerate each axis to get its bounds and
             // position it and the labels correctly on the plot.
             var dim=0;
             var temp;
@@ -136,7 +137,7 @@
                     this._barLabels[i].show = false;
                 }
                 if (this._barLabels[i].show) {
-                    var elem = this._barLabels[i].draw(ctx);
+                    var elem = this._barLabels[i].draw(ctx, plot);
                     elem.removeClass('jqplot-'+this.name+'-label');
                     elem.addClass('jqplot-'+this.name+'-tick');
                     elem.addClass('jqplot-mekko-barLabel');

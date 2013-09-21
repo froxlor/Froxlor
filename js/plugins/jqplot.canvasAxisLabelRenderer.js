@@ -2,9 +2,10 @@
  * jqPlot
  * Pure JavaScript plotting plugin using jQuery
  *
- * Version: 1.0.0b2_r792
+ * Version: 1.0.8
+ * Revision: 1250
  *
- * Copyright (c) 2009-2011 Chris Leonello
+ * Copyright (c) 2009-2013 Chris Leonello
  * jqPlot is currently available for use in all personal or commercial projects 
  * under both the MIT (http://www.opensource.org/licenses/mit-license.php) and GPL 
  * version 2.0 (http://www.gnu.org/licenses/gpl-2.0.html) licenses. This means that you can 
@@ -51,10 +52,10 @@
         // name of the axis associated with this tick
         this.axis;
         // prop: show
-        // wether or not to show the tick (mark and label).
+        // whether or not to show the tick (mark and label).
         this.show = true;
         // prop: showLabel
-        // wether or not to show the label.
+        // whether or not to show the label.
         this.showLabel = true;
         // prop: label
         // label for the axis.
@@ -109,12 +110,7 @@
         }
         
         if (this.enableFontSupport) {
-            
-            function support_canvas_text() {
-                return !!(document.createElement('canvas').getContext && typeof document.createElement('canvas').getContext('2d').fillText == 'function');
-            }
-            
-            if (support_canvas_text()) {
+            if ($.jqplot.support_canvas_text()) {
                 this._textRenderer = new $.jqplot.CanvasFontRenderer(ropts);
             }
             
@@ -170,7 +166,7 @@
     $.jqplot.CanvasAxisLabelRenderer.prototype.draw = function(ctx, plot) {
           // Memory Leaks patch
           if (this._elem) {
-              if ($.jqplot.use_excanvas) {
+              if ($.jqplot.use_excanvas && window.G_vmlCanvasManager.uninitElement !== undefined) {
                   window.G_vmlCanvasManager.uninitElement(this._elem.get(0));
               }
             
@@ -190,8 +186,8 @@
         elem.style.width = w;
         elem.style.height = h;
         
-		elem = plot.canvasManager.initCanvas(elem);
-		
+        elem = plot.canvasManager.initCanvas(elem);
+
         this._elem = $(elem);
         this._elem.css({ position: 'absolute'});
         this._elem.addClass('jqplot-'+this.axis+'-label');

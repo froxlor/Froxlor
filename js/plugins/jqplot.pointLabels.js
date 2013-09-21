@@ -2,9 +2,10 @@
  * jqPlot
  * Pure JavaScript plotting plugin using jQuery
  *
- * Version: 1.0.0b2_r792
+ * Version: 1.0.8
+ * Revision: 1250
  *
- * Copyright (c) 2009-2011 Chris Leonello
+ * Copyright (c) 2009-2013 Chris Leonello
  * jqPlot is currently available for use in all personal or commercial projects 
  * under both the MIT (http://www.opensource.org/licenses/mit-license.php) and GPL 
  * version 2.0 (http://www.gnu.org/licenses/gpl-2.0.html) licenses. This means that you can 
@@ -135,10 +136,10 @@
     var oppositeLocations = ['se', 's', 'sw', 'w', 'nw', 'n', 'ne', 'e'];
     
     // called with scope of a series
-    $.jqplot.PointLabels.init = function (target, data, seriesDefaults, opts){
+    $.jqplot.PointLabels.init = function (target, data, seriesDefaults, opts, plot){
         var options = $.extend(true, {}, seriesDefaults, opts);
         options.pointLabels = options.pointLabels || {};
-        if (this.renderer.constructor == $.jqplot.BarRenderer && this.barDirection == 'horizontal' && !options.pointLabels.location) {
+        if (this.renderer.constructor === $.jqplot.BarRenderer && this.barDirection === 'horizontal' && !options.pointLabels.location) {
             options.pointLabels.location = 'e';
         }
         // add a pointLabels attribute to the series plugins
@@ -153,14 +154,14 @@
         if (p.seriesLabelIndex != null) {
             labelIdx = p.seriesLabelIndex;
         }
-        else if (this.renderer.constructor == $.jqplot.BarRenderer && this.barDirection == 'horizontal') {
-            labelIdx = 0;
+        else if (this.renderer.constructor === $.jqplot.BarRenderer && this.barDirection === 'horizontal') {
+           labelIdx = (this._plotData[0].length < 3) ? 0 : this._plotData[0].length -1;
         }
         else {
-            labelIdx = this._plotData[0].length -1;
+            labelIdx = (this._plotData.length === 0) ? 0 : this._plotData[0].length -1;
         }
         p._labels = [];
-        if (p.labels.length == 0 || p.labelsFromSeries) {    
+        if (p.labels.length === 0 || p.labelsFromSeries) {    
             if (p.stackedValue) {
                 if (this._plotData.length && this._plotData[0].length){
                     // var idx = p.seriesLabelIndex || this._plotData[0].length -1;
@@ -170,8 +171,9 @@
                 }
             }
             else {
-                var d = this._plotData;
-                if (this.renderer.constructor == $.jqplot.BarRenderer && this.waterfall) {
+                // var d = this._plotData;
+                var d = this.data;
+                if (this.renderer.constructor === $.jqplot.BarRenderer && this.waterfall) {
                     d = this._data;
                 }
                 if (d.length && d[0].length) {
@@ -263,7 +265,7 @@
     };
     
     // called with scope of series
-    $.jqplot.PointLabels.draw = function (sctx, options) {
+    $.jqplot.PointLabels.draw = function (sctx, options, plot) {
         var p = this.plugins.pointLabels;
         // set labels again in case they have changed.
         p.setLabels.call(this);
@@ -284,6 +286,7 @@
             }
         
             var pd = this._plotData;
+            var ppd = this._prevPlotData;
             var xax = this._xaxis;
             var yax = this._yaxis;
             var elem, helem;
@@ -291,13 +294,11 @@
             for (var i=0, l=p._labels.length; i < l; i++) {
                 var label = p._labels[i];
                 
-                if (p.hideZeros && parseInt(p._labels[i], 10) == 0) {
-                    label = '';
+                if (label == null || (p.hideZeros && parseInt(label, 10) == 0)) {
+                    continue;
                 }
                 
-                if (label != null) {
-                    label = p.formatter(p.formatString, label);
-                } 
+                label = p.formatter(p.formatString, label);
 
                 helem = document.createElement('div');
                 p._elems[i] = $(helem);
@@ -316,11 +317,25 @@
                     elem.html(label);
                 }
                 var location = p.location;
-                if ((this.fillToZero && pd[i][1] < 0) || (this.waterfall && parseInt(label, 10)) < 0) {
+                if ((this.fillToZero && pd[i][1] < 0) || (this.fillToZero && this._type === 'bar' && this.barDirection === 'horizontal' && pd[i][0] < 0) || (this.waterfall && parseInt(label, 10)) < 0) {
                     location = oppositeLocations[locationIndicies[location]];
                 }
+
+
                 var ell = xax.u2p(pd[i][0]) + p.xOffset(elem, location);
                 var elt = yax.u2p(pd[i][1]) + p.yOffset(elem, location);
+
+                // we have stacked chart but are not showing stacked values,
+                // place labels in center.
+                if (this._stack && !p.stackedValue) {
+                    if (this.barDirection === "vertical") {
+                        elt = (this._barPoints[i][0][1] + this._barPoints[i][1][1]) / 2 + plot._gridPadding.top - 0.5 * elem.outerHeight(true);
+                    }
+                    else {
+                        ell = (this._barPoints[i][2][0] + this._barPoints[i][0][0]) / 2 + plot._gridPadding.left - 0.5 * elem.outerWidth(true);
+                    }
+                }
+
                 if (this.renderer.constructor == $.jqplot.BarRenderer) {
                     if (this.barDirection == "vertical") {
                         ell += this._barNudge;
@@ -342,9 +357,18 @@
                 if (ell - et < scl || elt - et < sct || elr + et > scr || elb + et > scb) {
                     elem.remove();
                 }
+
                 elem = null;
                 helem = null;
             }
+
+            // finally, animate them if the series is animated
+            // if (this.renderer.animation && this.renderer.animation._supported && this.renderer.animation.show && plot._drawCount < 2) {
+            //     var sel = '.jqplot-point-label.jqplot-series-'+this.index;
+            //     $(sel).hide();
+            //     $(sel).fadeIn(1000);
+            // }
+
         }
     };
     
