@@ -5,7 +5,7 @@
 	<meta http-equiv="Default-Style" content="text/css" />
 	<link rel="stylesheet" href="../templates/Froxlor/assets/css/main.css" />
 	<!--[if IE]><link rel="stylesheet" href="../templates/Froxlor/assets/css/main_ie.css" /><![endif]-->
-	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<!--[if lt IE 9]><script src="js/html5shiv.js"></script><![endif]-->
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="../templates/Froxlor/assets/js/main.js"></script>
 	<link href="../templates/Froxlor/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
