@@ -11,12 +11,12 @@
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 	<if isset($intrafficpage)>
-	<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/excanvas.js"></script><![endif]-->
+	<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="js/jquery.jqplot.min.js"></script>
 	<script language="javascript" type="text/javascript" src="js/plugins/jqplot.barRenderer.min.js"></script>
 	<script language="javascript" type="text/javascript" src="js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
 	<script language="javascript" type="text/javascript" src="js/plugins/jqplot.pointLabels.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/jquery.jqplot.css" />
+	<link rel="stylesheet" type="text/css" href="css/jquery.jqplot.min.css" />
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/traffic.js"></script>
 	</if>
 	<if $settings['panel']['use_webfonts'] == '1'>
@@ -24,7 +24,7 @@
 	</if>
 	<link href="templates/{$theme}/assets/css/main.css" rel="stylesheet" type="text/css" />
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/css/main_ie.css" type="text/css" /><![endif]-->
-	<link href="css/jquery.jquery-ui.css" rel="stylesheet" type="text/css"/>
+	<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
