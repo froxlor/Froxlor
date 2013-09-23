@@ -963,6 +963,8 @@ if($page == 'domains'
 					$documentroot = $result['documentroot'];
 				}
 
+				$speciallogverified = (isset($_POST['speciallogverified']) ? (int)$_POST['speciallogverified'] : 0);
+
 				if($userinfo['caneditphpsettings'] == '1'
 				   || $userinfo['change_serversettings'] == '1')
 				{
@@ -1170,6 +1172,7 @@ if($page == 'domains'
 					'registration_date' => $registration_date,
 					'issubof' => $issubof,
 					'speciallogfile' => $speciallogfile,
+					'speciallogverified' => $speciallogverified,
 					'ipandport' => serialize($ipandports),
 					'ssl_ipandport' => serialize($ssl_ipandports)
 				);
@@ -1204,12 +1207,14 @@ if($page == 'domains'
 				   || $aliasdomain != $result['aliasdomain']
 				   || $issubof != $result['ismainbutsubto']
 				   || $email_only != $result['email_only']
-				   || ($speciallogfile != $result['speciallogfile'] && $_POST['speciallogverified'] == '1'))
+				   || ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1'))
 				{
 					inserttask('1');
 				}
 
-				if($speciallogfile != $result['speciallogfile'] && $_POST['speciallogverified'] != '1') $speciallogfile = $result['speciallogfile'];
+				if ($speciallogfile != $result['speciallogfile'] && $speciallogverified != '1') {
+					$speciallogfile = $result['speciallogfile'];
+				}
 
 				if($isbinddomain != $result['isbinddomain']
 				   || $zonefile != $result['zonefile']
