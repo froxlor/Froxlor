@@ -14,7 +14,7 @@
 function size_readable($size, $max = null, $system = 'si', $retstring = '%01.2f %s')
 {
 	// Pick units
-	$systems['si']['prefix'] = array('B', 'K', 'MB', 'GB', 'TB', 'PB');
+	$systems['si']['prefix'] = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
 	$systems['si']['size']   = 1000;
 	$systems['bi']['prefix'] = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
 	$systems['bi']['size']   = 1024;
