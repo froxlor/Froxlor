@@ -195,10 +195,13 @@ if(!isset($settings['panel']['version'])
 	/**
 	 * Do not proceed further if the Database version is not the same as the script version
 	 */
-
 	fclose($debugHandler);
 	unlink($lockfile);
-	die('Version of file doesnt match version of database. Exiting...');
+	$errormessage = "Version of file doesnt match version of database. Exiting...\n\n";
+	$errormessage.= "Possible reason: Froxlor update\n";
+	$errormessage.= "Information: Current version in database: ".$settings['panel']['version']." - version of Froxlor files: ".$version."\n";
+	$errormessage.= "Solution: Please visit your Foxlor admin interface for further information.\n";
+	die($errormessage);
 }
 
 fwrite($debugHandler, 'Froxlor version and database version are correct' . "\n");
