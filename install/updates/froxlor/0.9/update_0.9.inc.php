@@ -2207,3 +2207,15 @@ if (isFroxlorVersion('0.9.29')) {
 
 	updateToVersion('0.9.29.1-dev1');
 }
+
+if (isFroxlorVersion('0.9.29.1-dev1')) {
+	showUpdateStep("Updating from 0.9.29.1-dev1 to 0.9.29.1-dev2", true);
+	lastStepStatus(0);
+
+	showUpdateStep("Updating table layouts and contents");
+	$db->query("ALTER TABLE `".TABLE_MAIL_USERS."` ADD `mboxsize` bigint(30) NOT NULL default '0' AFTER `imap`;");
+	$db->query("INSERT INTO `cronjobs_run` SET `module` = 'froxlor/core', `cronfile` = 'cron_mailboxsize.php', `interval` = '6 HOUR', `isactive` = '1', `desc_lng_key` = 'cron_mailboxsize';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.29.1-dev2');
+}

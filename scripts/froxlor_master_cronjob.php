@@ -20,22 +20,40 @@ include_once(dirname(__FILE__) . '/../lib/cron_init.php');
 $jobs_to_run = includeCronjobs($debugHandler, $pathtophpfiles);
 
 /**
+ * check for --help
+ */
+if (isset($argv[1]) && strtolower($argv[1]) == '--help') {
+	echo "\n*** Froxlor Master Cronjob ***\n\n";
+	echo "Below are possible parameters for this file\n\n";
+	echo "--force\t\t\tforces re-generating of config-files (webserver, etc.)\n";
+	echo "--force-[cronname]\tforces the given cron to run, e.g. --force-backup, --force-traffic\n\n";
+}
+
+/**
  * check for --force to include cron_tasks 
  * even if it's not its turn
  */
-if(isset($argv[1]) && strtolower($argv[1]) == '--force')
-{
-	$crontasks = makeCorrectFile($pathtophpfiles.'/scripts/jobs/cron_tasks.php');
-	// really force re-generating of config-files by
-	// inserting task 1
-	inserttask('1');
-	if (!in_array($crontasks, $jobs_to_run)) {
-		array_unshift($jobs_to_run, $crontasks);
+for ($x = 1; $x < count($argv); $x++) {
+	if (isset($argv[$x]) && strtolower($argv[$x]) == '--force') {
+		$crontasks = makeCorrectFile($pathtophpfiles.'/scripts/jobs/cron_tasks.php');
+		// really force re-generating of config-files by
+		// inserting task 1
+		inserttask('1');
+		if (!in_array($crontasks, $jobs_to_run)) {
+			array_unshift($jobs_to_run, $crontasks);
+		}
+	}
+	elseif (isset($argv[$x]) && substr(strtolower($argv[$x]), 0, 8)  == '--force-') {
+		$crontasks = makeCorrectFile($pathtophpfiles.'/scripts/jobs/cron_'.substr(strtolower($argv[$x]), 8).'.php');
+		if (file_exists($crontasks)) {
+			if (!in_array($crontasks, $jobs_to_run)) {
+				array_unshift($jobs_to_run, $crontasks);
+			}
+		}
 	}
 }
 
-foreach($jobs_to_run as $cron)
-{
+foreach ($jobs_to_run as $cron) {
 	require_once($cron);
 }
 
@@ -53,5 +71,3 @@ checkLastGuid();
  * shutdown cron
  */
 include_once($pathtophpfiles . '/lib/cron_shutdown.php');
-
-?>

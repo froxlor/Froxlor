@@ -52,6 +52,7 @@ CREATE TABLE `mail_users` (
   `quota` bigint(13) NOT NULL default '0',
   `pop3` tinyint(1) NOT NULL default '1',
   `imap` tinyint(1) NOT NULL default '1',
+  `mboxsize` bigint(30) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -542,7 +543,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.29.1-dev1');
+	('panel', 'version', '0.9.29.1-dev2');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -832,7 +833,8 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, 
 	(6, 'froxlor/ticket', 'cron_used_tickets_reset.php', '1 DAY', '1', 'cron_ticketsreset'),
 	(7, 'froxlor/ticket', 'cron_ticketarchive.php', '1 MONTH', '1', 'cron_ticketarchive'),
 	(8, 'froxlor/reports', 'cron_usage_report.php', '1 DAY', '1', 'cron_usage_report'),
-	(9, 'froxlor/backup', 'cron_backup.php', '1 DAY', '1', 'cron_backup');
+	(9, 'froxlor/backup', 'cron_backup.php', '1 DAY', '1', 'cron_backup'),
+	(10, 'froxlor/core', 'cron_mailboxsize.php', '6 HOUR', '1', 'cron_mailboxsize');
 
 
 

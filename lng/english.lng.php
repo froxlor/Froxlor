@@ -1960,3 +1960,6 @@ $lng['serversettings']['customerssl_directory']['title'] = 'Webserver customer-s
 $lng['serversettings']['customerssl_directory']['description'] = 'Where should customer-specified ssl-certificates be created?<br /><br /><div style="color:red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
 $lng['admin']['note'] = 'Please note';
 $lng['admin']['phpfpm.ininote'] = 'Not all values you may want to define can be used in the php-fpm pool configuration';
+
+// Added in Froxlor 0.9.29.1-dev
+$lng['crondesc']['cron_mailboxsize'] = 'Calculating of mailbox-sizes';

@@ -66,6 +66,7 @@ elseif($page == 'emails')
 				$emails[$row['domain']] = array();
 			}
 
+			$row['mboxsize'] = size_readable($row['mboxsize']);
 			$emails[$row['domain']][$row['email_full']] = $row;
 		}
 
