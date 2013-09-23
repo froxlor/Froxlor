@@ -145,9 +145,11 @@ class apache
 				if ($this->settings['defaultwebsrverrhandler']['err' . $statusCode] != '') {
 					$defhandler = $this->settings['defaultwebsrverrhandler']['err' . $statusCode];
 					if (!validateUrl($defhandler)) {
-						$defhandler = makeCorrectFile($defhandler);
+						if (substr($defhandler, 0, 1) != '"' && substr($defhandler, -1, 1) != '"') {
+							$defhandler = '"'.makeCorrectFile($defhandler).'"';
+						}
 					}
-					$this->virtualhosts_data[$vhosts_filename] .= 'ErrorDocument ' . $statusCode . ' "' . $defhandler . '"'."\n";
+					$this->virtualhosts_data[$vhosts_filename] .= 'ErrorDocument ' . $statusCode . ' ' . $defhandler . "\n";
 				}
 			}
 		}
@@ -872,9 +874,11 @@ class apache
 					) {
 						$defhandler = $row_diroptions['error' . $statusCode . 'path'];
 						if (!validateUrl($defhandler)) {
-							$defhandler = makeCorrectFile($defhandler);
+							if (substr($defhandler, 0, 1) != '"' && substr($defhandler, -1, 1) != '"') {
+								$defhandler = '"'.makeCorrectFile($defhandler).'"';
+							}
 						}
-						$this->diroptions_data[$diroptions_filename].= '  ErrorDocument ' . $statusCode . ' "' . $defhandler. '"' . "\n";
+						$this->diroptions_data[$diroptions_filename].= '  ErrorDocument ' . $statusCode . ' ' . $defhandler . "\n";
 					}
 				}
 
