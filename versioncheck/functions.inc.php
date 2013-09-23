@@ -1,11 +1,9 @@
 <?php
 
-function checkGetVar($name = null)
-{
+function checkGetVar($name = null, $bool = false) {
 	$return = '';
-	if($name !== null && $name != '')
-	{
-		$return = (isset($_GET[$name]) && $_GET[$name] != '') ? $_GET[$name] : '';
+	if ($name !== null && $name != '') {
+		$return = (isset($_GET[$name]) && $_GET[$name] != '') ? $_GET[$name] : ($bool == true ? false : '');
 	}
 	return $return;
 }
@@ -27,9 +25,9 @@ function showSuccess($message = null)
 	}
 
 	$succ = '
-<div class="NoticeContainer">
-  <div class="NoticeTitle">Success</div>
-  <div class="Notice">'.$message.'</div>
+<div class="alert alert-success">
+	<h4>Up-to-date</h4>
+  <p>'.$message.'</p>
 </div>
 ';
 
@@ -43,10 +41,10 @@ function showWarning($message = null)
 		$message = 'unknown warning';
 	}
 
-	$warn = '
-<div class="WarningContainer">
-  <div class="WarningTitle">Attention</div>
-  <div class="Warning">'.$message.'</div>
+	$warn = '<div class="alert alert-block">
+	<h4>Attention</h4>
+<p>&nbsp;</p>
+  <p>'.$message.'</p>
 </div>
 ';
 
@@ -61,9 +59,10 @@ function dienice($message = null)
 	}
 
 	$err = '
-<div class="ErrorContainer">
-  <div class="ErrorTitle">Error</div>
-  <div class="Error">'.$message.'</div>
+<div class="alert alert-error">
+	<h4>Error</h4>
+<p>&nbsp;</p>
+  <p>'.$message.'</p>
 </div>
 ';
 
@@ -91,15 +90,15 @@ function getVersionInfoFromFile($version_file)
 	return array('error' => true, 'message' => 'Unknown vendor/module combination');
 }
 
-function getLatestFroxlorTestingVersion()
+function getLatestFroxlorTestingVersion($vendor = 'froxlor', $module = 'legacy')
 {
-	$version_file = dirname(__FILE__).'/vfiles/froxlor_legacy_testing.version';
+	$version_file = dirname(__FILE__).'/vfiles/'.strtolower($vendor).'_'.strtolower($module).'_testing.version';
 	$vf_data = getVersionInfoFromFile($version_file);
 	return $vf_data;
 }
 
-function getLatestFroxlorVersion($vendor, $module, $version)
-{
+function getLatestFroxlorVersion($vendor, $module, $version) {
+
 	$version_file = dirname(__FILE__).'/vfiles/'.strtolower($vendor).'_'.strtolower($module).'.version';
 	$vf_data = getVersionInfoFromFile($version_file);
 
@@ -111,7 +110,7 @@ function getLatestFroxlorVersion($vendor, $module, $version)
 		$u = isset($vf_data[1]) ? $vf_data[1] : '';
 		$m = isset($vf_data[2]) ? $vf_data[2] : '';
 
-		$vc = version_compare2($v, $version);
+		$vc = version_compare3($v, $version);
 
 		if($vc == 0) {
 			$return['has_latest'] = true;
@@ -128,14 +127,13 @@ function getLatestFroxlorVersion($vendor, $module, $version)
 			/*
 			 * maybe testing version?
 			 */
-			$vf_data = getLatestFroxlorTestingVersion();
+			$vf_data = getLatestFroxlorTestingVersion($vendor, $module);
 			if(!isset($vf_data['error']))
 			{
 				$v = $vf_data[0];
 				$u = isset($vf_data[1]) ? $vf_data[1] : '';
 				$m = isset($vf_data[2]) ? $vf_data[2] : '';
-
-				$vc = version_compare2($v, $version);
+				$vc = version_compare3($v, $version);
 
 				if($vc == 0) {
 					$return['has_latest'] = true;
@@ -170,39 +168,101 @@ function getLatestFroxlorVersion($vendor, $module, $version)
 	return $return;
 }
 
-//Compare two sets of versions, where major/minor/etc. releases are separated by dots.
-//Returns 0 if both are equal, 1 if A > B, and -1 if B < A.
-function version_compare2($a, $b)
-{
-	$a = explode(".", rtrim($a, ".0")); //Split version into pieces and remove trailing .0
-	$b = explode(".", rtrim($b, ".0")); //Split version into pieces and remove trailing .0
-	foreach ($a as $depth => $aVal)
-	{ //Iterate over each piece of A
-		if (isset($b[$depth]))
-		{ //If B matches A to this depth, compare the values
-			if ($aVal > $b[$depth]) return 1; //Return A > B
-			else if ($aVal < $b[$depth]) return -1; //Return B > A
-			//An equal result is inconclusive at this point
+/**
+ * compare of froxlor versions
+ *
+ * @param string $a
+ * @param string $b
+ *
+ * @return integer 0 if equal, 1 if a>b and -1 if b>a
+ */
+function version_compare3($a, $b) {
+
+	// split version into pieces and remove trailing .0
+	$a = explode(".", rtrim($a, ".0"));
+	$b = explode(".", rtrim($b, ".0"));
+
+	_parseVersionArray($a);
+	_parseVersionArray($b);
+
+	while (count($a) != count($b)) {
+		if (count($a) < count($b)) {
+			$a[] = '0';
 		}
-		else
-		{ //If B does not match A to this depth, then A comes after B in sort order
-			return 1; //so return A > B
+		elseif (count($b) < count($a)) {
+			$b[] = '0';
 		}
 	}
-	//At this point, we know that to the depth that A and B extend to, they are equivalent.
-	//Either the loop ended because A is shorter than B, or both are equal.
+
+	foreach ($a as $depth => $aVal) {
+		// iterate over each piece of A
+		if (isset($b[$depth])) {
+			// if B matches A to this depth, compare the values
+			if ($aVal > $b[$depth]) {
+				return 1; // A > B
+			}
+			else if ($aVal < $b[$depth]) {
+				return -1; // B > A
+			}
+			// an equal result is inconclusive at this point
+		} else {
+			// if B does not match A to this depth, then A comes after B in sort order
+			return 1; // so A > B
+		}
+	}
+	// at this point, we know that to the depth that A and B extend to, they are equivalent.
+	// either the loop ended because A is shorter than B, or both are equal.
 	return (count($a) < count($b)) ? -1 : 0;
+}
+
+function _parseVersionArray(&$arr = null) {
+	// -svn or -dev or -rc ?
+	if (stripos($arr[count($arr)-1], '-') !== false) {
+		$x = explode("-", $arr[count($arr)-1]);
+		$arr[count($arr)-1] = $x[0];
+		if (stripos($x[1], 'rc') !== false) {
+			$arr[] = '-1';
+			$arr[] = '2'; // rc > dev > svn
+			// number of rc
+			$arr[] = substr($x[1], 2);
+		}
+		else if (stripos($x[1], 'dev') !== false) {
+			$arr[] = '-1';
+			$arr[] = '1'; // svn < dev < rc
+			// number of dev
+			$arr[] = substr($x[1], 3);
+		}
+		// -svn version are deprecated
+		else if (stripos($x[1], 'svn') !== false) {
+			$arr[] = '-1';
+			$arr[] = '0'; // svn < dev < rc
+			// number of svn
+			$arr[] = substr($x[1], 3);
+		}
+	}
 }
 
 function htmlFooter()
 {
-	$out = '</div>
-	<div class="footer">
-		<ul>
-			<li>Froxlor Versioncheck &copy; 2010 by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a></li>
-		</ul>
+
+	$url = 'http://www.froxlor.org/';
+
+	$out = '		</div>
 	</div>
-	</body>
+</div>
+</div>
+
+<div class="footer-row">
+	<div class="container">
+		<div>
+			<p style="margin-top:20px;">
+                           <a href="'.$url.'">froxlor website</a> | <a href="'.$url.'/legal.html">Legal note</a> | <a href="'.$url.'/disclaimer.html">Disclaimer</a>
+			</p>
+                </div>
+		<p style="padding-top:14px;" class="muted credit">Froxlor &copy; 2009-'.date('Y', time()).' by <a href="'.$url.'">the Froxlor team</a></p>
+	</div>
+</div>
+</body>
 </html>';
 
 	return $out;
@@ -210,156 +270,76 @@ function htmlFooter()
 
 function htmlHeader($title)
 {
-	$out = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" >
-  <head>
-    <meta name="Publisher" content="Froxlor Staff" />
-    <meta name="Copyright" content="froxlor.org" /> 
-    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
-    <meta http-equiv="Content-Style-Type" content="text/css" />
-    <title>Froxlor - Versioncheck ['.$title.']</title>
-    <style type="text/css">
-    <!--
-      body { 
-        margin: auto; 
-        margin-top: 0; 
-        margin-left: 0; 
-        width: auto; 
-        text-align: center; 
-        font-family: Verdana, Arial, Helvetica, sans-serif;
-        font-size: 12px;
-      }
-      
-      a,a:visited,a:active {
-      	color				: #000000;
-      	text-decoration		: underline;
-        border: 0;
-      }
-      
-      a:hover {
-      	color				: #F89826;
-      	text-decoration		: none;
-        border: 0;
-      }
+	$url = 'http://www.froxlor.org/';
 
-      ul {
-      	margin				: 0;
-      	padding				: 0;
-      	list-style			: none;
-      }
-      
-      .content {
-		padding				: 10px 10px 50px 10px !important;
-		margin				: 1.75em 200px .75em 200px !important;
-      }      
-     
-      .header {
-		text-align			: center;
-      }
-      
-      .footer {
-      	margin-top			: 25px;
-      	text-align			: center;
-      }
-      
-	.ErrorContainer {
-		background: url(images/bad.png) 10px center no-repeat #FFEDEF;
-		border: 1px solid #FFC2CA;
-		padding: 10px !important;
-		margin: 1.75em 5% .75em 5% !important;
-		overflow: hidden;
-		text-align: left;
-	}
-	
-	.ErrorTitle {
-		font-weight: bold;
-		color: #c00 !important;
-		margin-bottom: .5em;
-		margin-left: 100px;		
-	}
-	
-	.Error {
-		color: #c00 !important;
-		margin-left: 100px;		
-	}
-	
-	.Error span a {
-		color: #c00 !important;
-	}
-	
-	.Error span a:hover {
-		color: #c00 !important;
-		text-decoration: underline;
-	}
-	
-	.WarningContainer {
-		background: url(images/warning.png) 10px center no-repeat #FFFECC;
-		border: 1px solid #FAEBB1;
-		padding: 10px !important;
-		margin: 1.75em 5% .75em 5% !important;
-		overflow: hidden;
-		text-align: left;		
-	}
-	
-	.WarningTitle {
-		font-weight: bold;
-		color: #D57D00;
-		margin-bottom: .5em;
-		margin-left: 100px;		
-	}
-	
-	.Warning {
-		color: #D57D00 !important;
-		margin-left: 100px;		
-	}
-	
-	.Warning span a {
-		color: #D57D00 !important;
-	}
-	
-	.Warning span a:hover {
-		color: #D57D00 !important;
-		text-decoration: underline;
-	}
-	
-	.NoticeContainer {
-		background: url(images/ok.png) 10px center no-repeat #E2F9E3;
-		border: 1px solid #9C9;
-		padding: 10px !important;
-		margin: 1.75em 5% .75em 5% !important;
-		overflow: hidden;
-		text-align: left;		
-	}
-	
-	.NoticeTitle {
-		font-weight: bold;
-		color: #060 !important;
-		margin-bottom: .5em;
-		margin-left: 100px;		
-	}
-	
-	.Notice {
-		color: #060 !important;
-		margin-left: 100px;		
-	}
-	
-	.Notice span a {
-		color: #060 !important;
-	}
-	
-	.Notice span a:hover {
-		color: #060 !important;
-		text-decoration: underline;
-	}	
-      -->
-    </style> 
-  </head>
-  <body>
-  	<div class="content">
-		<div class="header">
-  			<img src="images/header.png" alt="Froxlor" />
-		</div>';
+	$out = '<!doctype html>
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta charset="utf-8" />
+	<link href="//fonts.googleapis.com/css?family=Open+Sans:400&amp;lang=de" rel="stylesheet">
+	<link href="'.$url.'/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="'.$url.'/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+	<link href="'.$url.'/fontawesome/font-awesome.min.css" rel="stylesheet" media="screen">
+	<!--[if IE 7]>
+	<link rel="stylesheet" href="'.$url.'/fontawesome/font-awesome-ie7.min.css">
+	<![endif]-->
+	<link href="'.$url.'/assets/css/main.css" rel="stylesheet" type="text/css" />
+	<link href="'.$url.'/assets/images/favicon.ico" rel="shortcut icon" type="image/ico" />
+	<title>Froxlor Server Management Panel - Version check ['.$title.']</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+	<script type="text/javascript" src="'.$url.'/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="'.$url.'/assets/js/froxlor.js"></script>
 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="'.$url.'">
+	<meta property="og:image" content="'.$url.'/assets/images/logo.png">
+	<meta property="og:title" content="Froxlor: The server administration software for your needs.">
+	<meta property="og:site_name" content="Froxlor Website">
+</head>
+
+<body class="welcome" itemscope itemtype="http://schema.org/WebPage">
+<noscript>
+
+</noscript>
+<div class="wrapper">
+<!-- Header -->
+<div class="header-row">
+	<div class="container">
+		<div class="navbar">
+			<div class="container">
+				<a class="brand" href="'.$_SERVER['REQUEST_URI'].'">
+					<img src="'.$url.'/assets/images/logo.png" alt="Froxlor - Server Management Panel">
+				</a>
+				<div class="header-menu">
+					<!-- later -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container-main">
+<div class="hero-row">
+        <div class="container">
+                <div class="row-fluid">
+                        <div class="span8">
+                                <h1>froxlor <small>version check</small></h1>
+				<p>'.$title.'...</p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container" style="margin-top:15px;">
+        <div class="row-fluid">
+                <div class="span12">';
 	return $out;
 }
 
@@ -369,25 +349,16 @@ function updateStats($vendor, $module, $version)
 	/*
 	 $query = 'INSERT INTO
 	 `stats`
-		(
-		`vendor` ,
-		`module` ,
-		`version` ,
-		`ip`,
-		`time`
-		)
-		VALUES
+		(`vendor`, `module`, `version`, `ip`, `time`)
+	VALUES
 		(
 		\'' . $db->escape($vendor) . '\',
 		\'' . $db->escape($module) . '\',
 		\'' . $db->escape($version) . '\',
 		\'' . $db->escape($HTTP_SERVER_VARS["REMOTE_ADDR"]) . '\',
 		\'' . date('Y-m-d H:i:s') .'\'
-		);';
-		$db->query($query);
-
-		$db->close();
-		*/
+	);';
+	$db->query($query);
+	$db->close();
+	*/
 }
-
-?>
