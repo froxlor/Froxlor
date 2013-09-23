@@ -1,5 +1,5 @@
 #!/bin/bash
-# $1 = version with dots
+# $1 = version with dots etc.
 
 set -e
 
@@ -7,27 +7,45 @@ WORKDIR="./"
 
 if [ -z $1 ]; then
     echo You need to specify the version to be released:
-    echo make-release 0.9.5
+    echo make-release 1.2.3[-rc4|-dev4|.4]
     exit
 fi
 
 echo == Releasing version $1 ==
 
-echo -- making dir --
-rm -rf $WORKDIR/$1
+if [ -e $WORKDIR/$1 ]; then
+        echo "-- removing old directory --"
+        rm -rf $WORKDIR/$1
+        echo "done"
+fi
+echo -n "-- making dir --"
 mkdir -p $WORKDIR/$1
-echo -- cding to dir --
+echo "done"
+
+echo -n "-- cding to dir --"
 cd $WORKDIR/$1
+echo "done"
 
-echo -- exporting svn --
-svn export http://svn.froxlor.org/tags/$1 froxlor
+echo "-- cloning git repository --"
+git clone git@github.com:Froxlor/Froxlor.git .
+echo "done"
 
-echo -- cding to checkout --
-cd froxlor
+echo "-- tagging $1 in git --"
+# -s -> sign with private key
+# when signing (-s) we need to export GPG_TTY
+export GPG_TTY=`tty`
+# -a -> no sign (annotated)
+git tag -s $1 -m "tagging release $1"
+echo "done"
 
-echo -- removing .anything files \(except .ht*\) --
-find -iregex '.*/\.[^ht].*' -exec rm -rf {} \;
+echo "-- validating signed tag --"
+# this needs the public key
+git tag -v $1
+echo "done"
 
+echo "-- pushing tag to github --"
+git push --tags
+echo "done"
 echo -- setting general permissions --
 find -exec chmod ugo+r,u+w,go-w {} \;
 
@@ -40,12 +58,20 @@ find -type d -exec chmod ugo+x {} \;
 echo -- setting +w on special directories --
 chmod ug+w ./temp ./packages
 
-echo -- cding up --
+echo -- setting special permissions for HTMLPurifier --
+chmod -R 0755 ./lib/classes/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer
+
+echo -- creating archive using git archive command --
+git archive --format=tar.gz --prefix=froxlor/ $1 > ../froxlor-$1.tar.gz
+
+echo "-- cding up --"
 cd ..
 
-echo -- making .tar.gz --
-tar cvf froxlor-$1.tar froxlor
-gzip -9 froxlor-$1.tar
+echo -n "-- generating checksums --"
 md5sum froxlor-$1.tar.gz > froxlor-$1.tar.gz.md5
 sha1sum froxlor-$1.tar.gz > froxlor-$1.tar.gz.sha1
-echo -- done --
+echo "-- done --"
+
+echo -n "-- removing unused WORKDIR --"
+rm -rf $WORKDIR/$1
+echo "done"
