@@ -812,7 +812,6 @@ if($page == 'customers'
 							"`customerid` = '" . (int)$customerid . "', " .
 							"`adminid` = '" . (int)$userinfo['adminid'] . "', " .
 							"`parentdomainid` = '-1', " .
-							"`ipandport` = '" . $db->escape($settings['system']['defaultip']) . "', " .
 							"`documentroot` = '" . $db->escape($documentroot) . "', " .
 							"`zonefile` = '', " .
 							"`isemaildomain` = '0', " .
@@ -822,6 +821,12 @@ if($page == 'customers'
 							"`specialsettings` = '', " .
 							"`add_date` = '".date('Y-m-d')."'");
 						$domainid = $db->insert_id();
+						// set ip <-> domain connection
+						$db->query("INSERT INTO `".TABLE_DOMAINTOIP."` SET
+							`id_domain` = '".$domainid."',
+							`id_ipandports` = '".(int)$settings['system']['defaultip']."'"
+						);
+
 						$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `standardsubdomain`=\'' . (int)$domainid . '\' WHERE `customerid`=\'' . (int)$customerid . '\'');
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added standardsubdomain for user '" . $loginname . "'");
 						inserttask('1');
@@ -1157,9 +1162,30 @@ if($page == 'customers'
 							$_stdsubdomain = $result['loginname'] . '.' . $settings['system']['hostname'];
 						}
 
-						$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` " . "(`domain`, `customerid`, `adminid`, `parentdomainid`, `ipandport`, `documentroot`, `zonefile`, `isemaildomain`, `caneditdomain`, `openbasedir`, `speciallogfile`, `specialsettings`, `add_date`) " . "VALUES ('" . $db->escape($_stdsubdomain) . "', '" . (int)$result['customerid'] . "', '" . (int)$userinfo['adminid'] . "', '-1', '" . $db->escape($settings['system']['defaultip']) . "', '" . $db->escape($result['documentroot']) . "', '', '0', '0', '1', '0', '', '".date('Y-m-d')."')");
+						$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
+							`domain` = '" . $db->escape($_stdsubdomain) . "',
+							`customerid` = '" . (int)$result['customerid'] . "',
+							`adminid` = '" . (int)$userinfo['adminid'] . "',
+							`parentdomainid` = '-1',
+							`documentroot` = '" . $db->escape($result['documentroot']) . "',
+							`zonefile` = '',
+							`isemaildomain` = '0',
+							`caneditdomain` = '0',
+							`openbasedir` = '1',
+							`speciallogfile` = '0',
+							`specialsettings` = '',
+							`add_date` = '".date('Y-m-d')."'"
+						);
 						$domainid = $db->insert_id();
-						$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `standardsubdomain`=\'' . (int)$domainid . '\' WHERE `customerid`=\'' . (int)$result['customerid'] . '\'');
+						// set ip <-> domain connection
+						$db->query("INSERT INTO `".TABLE_DOMAINTOIP."` SET
+							`id_domain` = '".$domainid."',
+							`id_ipandports` = '".(int)$settings['system']['defaultip']."'"
+						);
+						$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+							`standardsubdomain`='" . (int)$domainid . "'
+							 WHERE `customerid`='" . (int)$result['customerid'] . "'"
+						);
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added standardsubdomain for user '" . $result['loginname'] . "'");
 						inserttask('1');
 					}
@@ -1167,8 +1193,12 @@ if($page == 'customers'
 					if($createstdsubdomain == '0'
 					   && $result['standardsubdomain'] != '0')
 					{
-						$db->query('DELETE FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `id`=\'' . (int)$result['standardsubdomain'] . '\'');
-						$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `standardsubdomain`=\'0\' WHERE `customerid`=\'' . (int)$result['customerid'] . '\'');
+						$db->query("DELETE FROM `" . TABLE_PANEL_DOMAINS . "`
+							WHERE `id`='" . (int)$result['standardsubdomain'] . "'");
+						$db->query("DELETE FROM `" . TABLE_DOMAINTOIP . "`
+							WHERE `id_domain`='" . (int)$result['standardsubdomain'] . "'");
+						$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+							`standardsubdomain`= '0' WHERE `customerid`= '" . (int)$result['customerid'] . "'");
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
 						inserttask('1');
 					}
