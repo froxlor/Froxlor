@@ -398,7 +398,11 @@ class nginx
 				&& $domain['ssl'] == '1'
 				&& $domain['ssl_redirect'] == '1')
 			{
-				$domain['documentroot'] = 'https://' . $domain['domain'] . '/';
+				$_sslport = '';
+				if ($domain['port'] != '443') {
+					$_sslport = ":".$domain['port'];
+				}
+				$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
 			}
 
 			// if the documentroot is an URL we just redirect
