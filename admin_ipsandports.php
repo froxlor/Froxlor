@@ -102,6 +102,10 @@ if($page == 'ipsandports'
 							   && $_POST['send'] == 'send')
 							{
 								$db->query("DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id`='" . (int)$id . "'");
+
+								// also, remove connections to domains (multi-stack)
+								$db->query("DELETE FROM `".TABLE_DOMAINTOIP."` WHERE `id`='".(int)$id."'");
+
 								$log->logAction(ADM_ACTION, LOG_WARNING, "deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
 								inserttask('1');
 
