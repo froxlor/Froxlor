@@ -222,20 +222,40 @@ class apache
 						$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= '  ScriptAlias /php/ ' . $configdir . "\n";
 					} else {
+						$domain = array(
+							'id' => 'none',
+							'domain' => $this->settings['system']['hostname'],
+							'adminid' => 1, /* first admin-user (superadmin) */
+							'mod_fcgid_starter' => -1,
+							'mod_fcgid_maxrequests' => -1,
+							'guid' => $user,
+							'openbasedir' => 0,
+							'email' => $this->settings['panel']['adminmail'],
+							'loginname' => 'froxlor.panel',
+							'documentroot' => $mypath
+						);
+						$php = new phpinterface($this->getDB(), $this->settings, $domain);
+						$phpconfig = $php->getPhpConfig($this->settings['system']['mod_fcgid_defaultini_ownvhost']);
+
 						$starter_filename = makeCorrectFile($configdir . '/php-fcgi-starter');
 						$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . $this->settings['system']['mod_fcgid_httpuser'] . '" "' . $this->settings['system']['mod_fcgid_httpgroup'] . '"' . "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '    AddHandler fcgid-script .php' . "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '    FcgidWrapper ' . $starter_filename . ' .php' . "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '    Options +ExecCGI' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
+						$file_extensions = explode(' ', $phpconfig['file_extensions']);
+						$this->virtualhosts_data[$vhosts_filename].= '    <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '      SetHandler fcgid-script' . "\n";
+						foreach ($file_extensions as $file_extension) {
+							$this->virtualhosts_data[$vhosts_filename].= '      FcgidWrapper ' . $starter_filename . ' .' . $file_extension . "\n";
+						}
+						$this->virtualhosts_data[$vhosts_filename].= '      Options +ExecCGI' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '    </FilesMatch>' . "\n";
 						// >=apache-2.4 enabled?
 						if ($this->settings['system']['apache24'] == '1') {
-							$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+							$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
 						} else {
-							$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
+							$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+							$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
 						}
-						$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
 					}
 				}
 				// create php-fpm <Directory>-Part (config is created in apache_fcgid)
