@@ -73,17 +73,20 @@ elseif($page == 'domains')
 				$parentdomains_count++;
 			}
 
-			$domains_count++;
-/*
-			$domainparts = explode('.', $row['domain']);
-			$domainparts = array_reverse($domainparts);
-			$sortkey = '';
-			foreach($domainparts as $key => $part)
-			{
-				$sortkey.= $part . '.';
+			/**
+			 * check for set ssl-certs to show either
+			 * a red or a green ssl-icon
+			 */
+			$row['domain_hascert'] = false;
+			$ssl_result = $db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid`='".(int)$row['id']."';");
+			if (is_array($ssl_result)
+				&& isset($ssl_result['ssl_cert_file'])
+				&& $ssl_result['ssl_cert_file'] != ''
+			) {
+				$row['domain_hascert'] = true;
 			}
-			$domain_array[$sortkey] = $row;
-*/
+
+			$domains_count++;
 			$domain_array[$row['domain']] = $row;
 		}
 
