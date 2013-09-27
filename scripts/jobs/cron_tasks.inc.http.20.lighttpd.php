@@ -15,16 +15,13 @@
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Cron
  *
- */
-
-/*
- * This script creates the php.ini's used by mod_suPHP+php-cgi
+ * @TODO ssl-redirect to non-standard port
  */
 
 if(@php_sapi_name() != 'cli'
-&& @php_sapi_name() != 'cgi'
-&& @php_sapi_name() != 'cgi-fcgi')
-{
+	&& @php_sapi_name() != 'cgi'
+	&& @php_sapi_name() != 'cgi-fcgi'
+) {
 	die('This script only works in the shell.');
 }
 
@@ -300,20 +297,37 @@ class lighttpd
 	{
 	}
 
-	protected function createLighttpdHosts($ip, $port, $ssl, $vhost_filename)
+	protected function createLighttpdHosts($ipid, $ssl, $vhost_filename)
 	{
-		$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `ip`='" . $ip . "' AND `port`='" . $port . "'";
-		$ipandport = $this->db->query_first($query);
+		$query = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
+			`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`,
+			`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
+			`c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`,
+			`d`.`mod_fcgid_maxrequests`, `p`.`ssl` AS `ssl`,
+			`p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile`
+			  FROM `".TABLE_PANEL_DOMAINS."` `d`
 
-		if ($ssl == '0') {
-			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC";
-		} else {
-			$query2 = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`, `c`.`guid`, `c`.`email`, `c`.`documentroot` AS `customerroot`, `c`.`deactivated`, `c`.`phpenabled` AS `phpenabled` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`) WHERE `d`.`ssl_ipandport`='" . $ipandport['id'] . "' AND `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> 1 ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC";
-		}
+			  LEFT JOIN `".TABLE_PANEL_CUSTOMERS."` `c` USING(`customerid`)
+			  LEFT JOIN `".TABLE_PANEL_DOMAINS."` `pd` ON (`pd`.`id` = `d`.`parentdomainid`)
+
+			  INNER JOIN (
+			    SELECT * FROM (
+			      SELECT `di`.`id_domain` , `p`.`ssl`, `p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile`
+			      FROM `".TABLE_DOMAINTOIP."` `di` , `".TABLE_PANEL_IPSANDPORTS."` `p`
+			      WHERE `p`.`id` = `di`.`id_ipandports`
+			      AND `p`.`id` = '".(int)$ipid."'
+			      ORDER BY `p`.`ssl` DESC
+			    ) AS my_table_tmp
+			    GROUP BY `id_domain`
+			  ) AS p ON p.`id_domain` = `d`.`id`
+
+			  WHERE `d`.`aliasdomain` IS NULL
+			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
 
 		$included_vhosts = array();
-		$result_domains = $this->db->query($query2);
+		$result_domains = $this->db->query($query);
 		while ($domain = $this->db->fetch_array($result_domains)) {
+
 			if (is_dir($this->settings['system']['apacheconf_vhost'])) {
 				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'].'/vhosts/')));
 				
@@ -351,12 +365,12 @@ class lighttpd
 				$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'].'/vhosts/'.$vhost_no.'_'.$domain['domain'].'.conf');
 				$included_vhosts[] = $_inc_path.'/vhosts/'.$vhost_no.'_'.$domain['domain'].'.conf';
 			}
-			if(!isset($this->lighttpd_data[$vhost_filename]))
-			{
+
+			if (!isset($this->lighttpd_data[$vhost_filename])) {
 				$this->lighttpd_data[$vhost_filename] = '';
 			}
 
-			if((!empty($this->lighttpd_data[$vhost_filename])
+			if ((!empty($this->lighttpd_data[$vhost_filename])
 				&& !is_dir($this->settings['system']['apacheconf_vhost']))
 				|| is_dir($this->settings['system']['apacheconf_vhost'])
 			) {
@@ -368,52 +382,30 @@ class lighttpd
 					$ips_and_ports_index = 'ipandport';
 				}
 
-				$this->lighttpd_data[$vhost_filename].= $this->getVhostContent($domain, $ssl_vhost);
-				$this->lighttpd_data[$vhost_filename].= isset($this->needed_htpasswds[$domain[$ips_and_ports_index]]) ? $this->needed_htpasswds[$domain[$ips_and_ports_index]] . "\n" : '';
+				// FIXME we get duplicate entries of a vhost if it has assigned more than one IP
+				// checking if the lightt_data for that filename is empty *might* be correct
+				if ($this->lighttpd_data[$vhost_filename] == '') {
+					$this->lighttpd_data[$vhost_filename] .= $this->getVhostContent($domain, $ssl_vhost, $ipid);
+				}
 			}
 		}
 		return $included_vhosts;
 	}
 
-	protected function getVhostContent($domain, $ssl_vhost = false)
+	protected function getVhostContent($domain, $ssl_vhost = false, $ipid)
 	{
-		if($ssl_vhost === true
-		&& $domain['ssl'] != '1')
-		{
-			return '';
-		}
-
 		if ($ssl_vhost === true
-			&& $domain['ssl'] == '1'
+			&& $domain['ssl'] != '1'
+			&& $domain['ssl_redirect'] != '1'
 		) {
-			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ssl_ipandport'] . "'";
-		} else {
-			$query = "SELECT * FROM " . TABLE_PANEL_IPSANDPORTS . " WHERE `id`='" . $domain['ipandport'] . "'";
-		}
-
-		$ipandport = $this->db->query_first($query);
-		$domain['ip'] = $ipandport['ip'];
-		$domain['port'] = $ipandport['port'];
-		$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
-		$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
-
-		// SSL STUFF
-		$dssl = new DomainSSL($this->settings, $this->db);
-		// this sets the ssl-related array-indices in the $domain array
-		// if the domain has customer-defined ssl-certificates
-		$dssl->setDomainSSLFilesArray($domain);
-
-		if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-			$ipport = '[' . $domain['ip'] . ']:' . $domain['port'];
-		} else {
-			$ipport = $domain['ip'] . ':' . $domain['port'];
+			return '';
 		}
 
 		$vhost_content = '';
 		$vhost_content.= $this->getServerNames($domain) . " {\n";
 
 		// respect ssl_redirect settings, #542
-		if($ssl_vhost == false
+		if ($ssl_vhost == false
 			&& $domain['ssl'] == '1'
 			&& $domain['ssl_redirect'] == '1'
 		) {
@@ -424,7 +416,9 @@ class lighttpd
 			$vhost_content.= '  url.redirect = (' . "\n";
 			$vhost_content.= '     "^/(.*)$" => "'. $this->idnaConvert->encode($domain['documentroot']) . '$1"'. "\n";
 			$vhost_content.= '  )' . "\n";
+
 		} else {
+
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 
 			$only_webroot = false;
@@ -433,6 +427,7 @@ class lighttpd
 			) {
 				$only_webroot = true;
 			}
+
 			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
 			if (!$only_webroot) {
 				if ($this->_deactivated == false) {
@@ -440,6 +435,24 @@ class lighttpd
 					$vhost_content.= $this->create_pathOptions($domain);
 					$vhost_content.= $this->composePhpOptions($domain);
 					$vhost_content.= $this->getStats($domain);
+
+					$query = "SELECT `default_vhostconf_domain` FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id`='".$ipid."';";
+					$ipandport = $this->db->query_first($query);
+
+					$domain['ip'] = $ipandport['ip'];
+					$domain['port'] = $ipandport['port'];
+					$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
+					$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
+					$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
+					// #418
+					$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
+
+					// SSL STUFF
+					$dssl = new DomainSSL($this->settings, $this->db);
+					// this sets the ssl-related array-indices in the $domain array
+					// if the domain has customer-defined ssl-certificates
+					$dssl->setDomainSSLFilesArray($domain);
+
 					$vhost_content.= $this->getSslSettings($domain, $ssl_vhost);
 
 					if ($domain['specialsettings'] != "") {
