@@ -1005,24 +1005,15 @@ if($page == 'domains'
 					$mod_fcgid_maxrequests = $result['mod_fcgid_maxrequests'];
 				}
 
-				if($userinfo['ip'] != "-1")
-				{
-					$admin_ip = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id`='" . (int)$userinfo['ip'] . "' ORDER BY `ip`, `port` ASC");
-					$additional_ip_condition = ' AND `ip` = \'' . $admin_ip['ip'] . '\' ';
-				}
-				else
-				{
-					$additional_ip_condition = '';
-				}
-
 				$ipandports = array();
 				if (isset($_POST['ipandport']) && !is_array($_POST['ipandport'])) {
 					$_POST['ipandport'] = unserialize($_POST['ipandport']);
 				}
 				if (isset($_POST['ipandport']) && is_array($_POST['ipandport'])) {
 					foreach($_POST['ipandport'] as $ipandport) {
+						if (trim($ipandport) == "") continue;
 						$ipandport = intval($ipandport);
-						$ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' " . $additional_ip_condition);
+						$ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ipandport) . "' ");
 						if (!isset($ipandport_check['id'])
 							|| $ipandport_check['id'] == '0'
 							|| $ipandport_check['id'] != $ipandport
@@ -1049,8 +1040,9 @@ if($page == 'domains'
 					}
 					if (isset($_POST['ssl_ipandport']) && is_array($_POST['ssl_ipandport'])) {
 						foreach ($_POST['ssl_ipandport'] as $ssl_ipandport) {
+							if (trim($ssl_ipandport) == "") continue;
 							$ssl_ipandport = intval($ssl_ipandport);
-							$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' " . $additional_ip_condition);
+							$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' ");
 							if (!isset($ssl_ipandport_check['id'])
 								|| $ssl_ipandport_check['id'] == '0'
 								|| $ssl_ipandport_check['id'] != $ssl_ipandport
