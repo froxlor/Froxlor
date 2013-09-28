@@ -33,3 +33,8 @@ $lng['error']['mysubject'] = '\'' . $lng['ticket']['subject'] . '\'';
 $lng['error']['mymessage'] = '\'' . $lng['ticket']['message'] . '\'';
 $lng['error']['mycategory'] = '\'' . $lng['ticket']['category'] . '\'';
 $lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
+
+/**
+ * other language-strings which need no translation
+ */
+$lng['domains']['ipandport_ssl_multi']['description'] = $lng['domains']['ipandport_multi']['description'];

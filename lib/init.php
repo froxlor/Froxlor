@@ -352,8 +352,8 @@ if($language != 'English')
 	}
 }
 
-// last but not least include language error_references file
-include_once makeSecurePath('lng/error_references.php');
+// last but not least include language references file
+include_once makeSecurePath('lng/lng_references.php');
 
 // Initialize our new link - class
 

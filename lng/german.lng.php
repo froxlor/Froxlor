@@ -1684,3 +1684,8 @@ $lng['admin']['phpfpm.ininote'] = 'Nicht alle gewünschten Werte können in der 
 
 // Added in Froxlor 0.9.29.1-dev
 $lng['crondesc']['cron_mailboxsize'] = 'Berechnung der Mailbox-Größen';
+$lng['domains']['ipandport_multi']['title'] = 'IP Adresse(n)';
+$lng['domains']['ipandport_multi']['description'] = 'Definiere eine oder mehrere IP Adresse(n) für diese Domain.<br /><br /><div style="color:red">Hinweis: Die IP Adressen können nicht geändert werden, sollte die Domain als <strong>Alias-Domain</strong> für eine andere Domain konfiguriert worden sein.</div>';
+$lng['domains']['ipandport_ssl_multi']['title'] = 'SSL IP Adresse(n)';
+$lng['domains']['ssl_redirect']['title'] = 'SSL Weiterleitung';
+$lng['domains']['ssl_redirect']['description'] = 'Diese Option erstellt für alle nicht-ssl vhosts eine Weiterleitung (Redirect), so dass alle Anfragen an den SSL-vhost übermittelt werden.<br /><br />z.B. eine Anfrage an <strong>http</strong>://domain.tld/ würde weiterleiten zu <strong>https</strong>://domain.tld/';
