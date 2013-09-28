@@ -691,11 +691,21 @@ class apache
 					// this makes it more secure, thx to Marcel (08/2013)
 					$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
 					$vhost_content .= '  SSLCipherSuite ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH' . "\n";
+					$vhost_content .= '  SSLVerifyDepth 10' . "\n";
 					$vhost_content .= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
 
 					if ($domain['ssl_key_file'] != '') {
 						$vhost_content .= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
 					}
+
+					if ($domain['ssl_ca_file'] != '') {
+						$vhost_content .= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
+					}
+
+					if ($domain['ssl_cert_chainfile'] != '') {
+						$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
+					}
+
 				}
 			}
 
