@@ -116,6 +116,7 @@ class phpinterface_fpm
 			$fpm_min_spare_servers = (int)$this->_settings['phpfpm']['min_spare_servers'];
 			$fpm_max_spare_servers = (int)$this->_settings['phpfpm']['max_spare_servers'];
 			$fpm_requests = (int)$this->_settings['phpfpm']['max_requests'];
+			$fpm_process_idle_timeout = (int)$this->_settings['phpfpm']['idle_timeout'];
 
 			if($fpm_children == 0) {
 				$fpm_children = 1;
@@ -149,7 +150,7 @@ class phpinterface_fpm
 
 			$fpm_config.= 'pm = '.$fpm_pm."\n";
 			$fpm_config.= 'pm.max_children = '.$fpm_children."\n";
-			if($fpm_pm == 'dynamic' || $fpm_pm == 'ondemand') {
+			if($fpm_pm == 'dynamic') {
 				// failsafe, refs #955
 				if ($fpm_start_servers < $fpm_min_spare_servers) {
 					$fpm_start_servers = $fpm_min_spare_servers;
@@ -160,7 +161,11 @@ class phpinterface_fpm
 				$fpm_config.= 'pm.start_servers = '.$fpm_start_servers."\n";
 				$fpm_config.= 'pm.min_spare_servers = '.$fpm_min_spare_servers."\n";
 				$fpm_config.= 'pm.max_spare_servers = '.$fpm_max_spare_servers."\n";
+			} elseif ($fpm_pm == 'ondemand') {
+				$fpm_config.= 'pm.start_servers = '.$fpm_start_servers."\n";
+                                $fpm_config.= 'pm.process_idle_timeout = '.$fpm_process_idle_timeout."\n";
 			}
+
 			$fpm_config.= 'pm.max_requests = '.$fpm_requests."\n";
 
 			$fpm_config.= ';chroot = '.makeCorrectDir($this->_domain['documentroot'])."\n";
