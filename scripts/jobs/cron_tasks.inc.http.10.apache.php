@@ -337,6 +337,7 @@ class apache
 						// this makes it more secure, thx to Marcel (08/2013)
 						$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH' . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= ' SSLVerifyDepth 10' . "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateFile ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . "\n";
 
 						if ($row_ipsandports['ssl_key_file'] != '') {
