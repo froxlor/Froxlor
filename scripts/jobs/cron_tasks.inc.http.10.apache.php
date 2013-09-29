@@ -228,7 +228,7 @@ class apache
 							'adminid' => 1, /* first admin-user (superadmin) */
 							'mod_fcgid_starter' => -1,
 							'mod_fcgid_maxrequests' => -1,
-							'guid' => $user,
+							'guid' => $this->settings['phpfpm']['vhost_httpuser'],
 							'openbasedir' => 0,
 							'email' => $this->settings['panel']['adminmail'],
 							'loginname' => 'froxlor.panel',
