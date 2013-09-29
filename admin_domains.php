@@ -475,23 +475,40 @@ if($page == 'domains'
 					}
 				}
 
-				$domain_check = $db->query_first("SELECT `id`, `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `domain` = '" . $db->escape(strtolower($domain)) . "'");
+				$domain_check = $db->query_first("SELECT `id`, `domain`
+						FROM `" . TABLE_PANEL_DOMAINS . "`
+						WHERE `domain` = '" . $db->escape(strtolower($domain)) . "'"
+				);
 				$aliasdomain_check = array(
 					'id' => 0
 				);
 
-				if($aliasdomain != 0)
-				{
+				if ($aliasdomain != 0) {
 					// Overwrite given ipandports with these of the "main" domain
 					$ipandports = array();
-					$origipresult = $db->query("SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP ."` WHERE `id_domain` = '" . (int)$aliasdomain . "'");
-					while($origip = $db->fetch_array($origipresult))
-					{
+					$origipresult = $db->query("SELECT `id_ipandports`
+						FROM `" . TABLE_DOMAINTOIP ."`
+						WHERE `id_domain` = '" . (int)$aliasdomain . "'"
+					);
+					while ($origip = $db->fetch_array($origipresult)) {
 						$ipandports[] = $origip['id_ipandports'];
 					}
 
 					// also check ip/port combination to be the same, #176
-					$aliasdomain_check = $db->query_first('SELECT `d`.`id` FROM `' . TABLE_PANEL_DOMAINS . '` `d`,`' . TABLE_PANEL_CUSTOMERS . '` `c` WHERE `d`.`customerid`=\'' . (int)$customerid . '\' AND `d`.`aliasdomain` IS NULL AND `d`.`id`<>`c`.`standardsubdomain` AND `c`.`customerid`=\'' . (int)$customerid . '\' AND `d`.`id`=\'' . (int)$aliasdomain . '\' AND `d`.`ipandport` = \''.(int)$ipandport.'\'');
+					// FIXME this thing is weird
+					$aliasdomain_check['id'] = $aliasdomain;
+					/*
+					$aliasdomain_check = $db->query_first(
+						"SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d`,
+							`" . TABLE_PANEL_CUSTOMERS . "` `c`,
+						WHERE `d`.`customerid`='" . (int)$customerid . "'
+						AND `d`.`aliasdomain` IS NULL
+						AND `d`.`id` <> `c`.`standardsubdomain`
+						AND `c`.`customerid`='" . (int)$customerid . "'
+						AND `d`.`id`= '" . (int)$aliasdomain . "'
+						AND `d`.`ipandport` = '".(int)$ipandport."'"
+					);
+					*/
 				}
 
 				if(count($ipandports) == 0)
