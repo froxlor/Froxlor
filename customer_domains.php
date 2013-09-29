@@ -74,16 +74,29 @@ elseif($page == 'domains')
 			}
 
 			/**
-			 * check for set ssl-certs to show either
-			 * a red or a green ssl-icon
+			 * check for set ssl-certs to show different state-icons
 			 */
-			$row['domain_hascert'] = false;
+			// nothing (ssl_global)
+			$row['domain_hascert'] = 0;
 			$ssl_result = $db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid`='".(int)$row['id']."';");
 			if (is_array($ssl_result)
 				&& isset($ssl_result['ssl_cert_file'])
 				&& $ssl_result['ssl_cert_file'] != ''
 			) {
-				$row['domain_hascert'] = true;
+				// own certificate (ssl_customer_green)
+				$row['domain_hascert'] = 1;
+			} else {
+				// check if it's parent has one set (shared)
+				if ($row['parentdomainid'] != 0) {
+					$ssl_result = $db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid`='".(int)$row['parentdomainid']."';");
+					if (is_array($ssl_result)
+							&& isset($ssl_result['ssl_cert_file'])
+							&& $ssl_result['ssl_cert_file'] != ''
+					) {
+						// parent has a certificate (ssl_shared)
+						$row['domain_hascert'] = 2;
+					}
+				}
 			}
 
 			$domains_count++;
