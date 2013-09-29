@@ -663,9 +663,14 @@ class apache
 			   && $domain['ssl'] == '1'
 			   && $domain['ssl_redirect'] == '1')
 			) {
-				$_sslport = '';
-				if ($domain['port'] != '443') {
-					$_sslport = ":".$domain['port'];
+				$_sslport = '';	// We must not check if our port differs from port 443, but if there is a destination-port != 443
+				// This returns the lowest port != 443 with ssl enabled, if any
+				$ssldestport = $this->db->query_first("SELECT `ip`.`port` FROM ".TABLE_PANEL_IPSANDPORTS." `ip` 
+								      LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
+								      WHERE `dip`.`id_domain` = '$domain[id]' AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
+								      ORDER BY `ip`.`port` LIMIT 1;");
+				if ($ssldestport['port'] != '') {
+					$_sslport = ":".$ssldestport['port'];
 				}
 				$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
 			}
