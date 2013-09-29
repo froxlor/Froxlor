@@ -493,22 +493,12 @@ if($page == 'domains'
 					while ($origip = $db->fetch_array($origipresult)) {
 						$ipandports[] = $origip['id_ipandports'];
 					}
-
-					// also check ip/port combination to be the same, #176
-					// FIXME this thing is weird
-					$aliasdomain_check['id'] = $aliasdomain;
-					/*
-					$aliasdomain_check = $db->query_first(
-						"SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d`,
-							`" . TABLE_PANEL_CUSTOMERS . "` `c`,
-						WHERE `d`.`customerid`='" . (int)$customerid . "'
-						AND `d`.`aliasdomain` IS NULL
-						AND `d`.`id` <> `c`.`standardsubdomain`
-						AND `c`.`customerid`='" . (int)$customerid . "'
-						AND `d`.`id`= '" . (int)$aliasdomain . "'
-						AND `d`.`ipandport` = '".(int)$ipandport."'"
-					);
-					*/
+					$aliasdomain_check = $db->query_first("SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
+							WHERE `d`.`customerid`='" . (int)$customerid . "'
+							AND `d`.`aliasdomain` IS NULL AND
+							`d`.`id` <> `c`.`standardsubdomain`
+							AND `c`.`customerid`='" . (int)$customerid . "'
+							AND `d`.`id`='" . (int)$aliasdomain . "'");
 				}
 
 				if(count($ipandports) == 0)
