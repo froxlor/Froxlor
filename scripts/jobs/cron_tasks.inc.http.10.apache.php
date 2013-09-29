@@ -274,6 +274,7 @@ class apache
 					);
 
 					$php = new phpinterface($this->getDB(), $this->settings, $domain);
+					$phpconfig = $php->getPhpConfig($this->settings['phpfpm']['vhost_defaultini']);
 					$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . $this->settings['phpfpm']['vhost_httpuser'] . '" "' . $this->settings['phpfpm']['vhost_httpgroup'] . '"' . "\n";
 					$srvName = 'fpm.external';
 					if ($row_ipsandports['ssl']) {
@@ -281,9 +282,12 @@ class apache
 					}
 					$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName .' -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $this->settings['phpfpm']['vhost_httpuser'] . ' -group ' . $this->settings['phpfpm']['vhost_httpgroup'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
 					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
-					$this->virtualhosts_data[$vhosts_filename] .= '    AddHandler php5-fastcgi .php'. "\n";
-					$this->virtualhosts_data[$vhosts_filename] .= '    Action php5-fastcgi /fastcgiphp' . "\n";
-					$this->virtualhosts_data[$vhosts_filename] .= '    Options +ExecCGI' . "\n";
+					$file_extensions = explode(' ', $phpconfig['file_extensions']);
+					$this->virtualhosts_data[$vhosts_filename] .= '   <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '     SetHandler php5-fastcgi .php'. "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '     Action php5-fastcgi /fastcgiphp' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '      Options +ExecCGI' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '    </FilesMatch>' . "\n";
 					// >=apache-2.4 enabled?
 					if ($this->settings['system']['apache24'] == '1') {
 						$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
