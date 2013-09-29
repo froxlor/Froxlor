@@ -17,7 +17,7 @@
 		</if>
 		<if $show_ssledit == 1>
 			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domainssleditor', 'action' => 'view', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="templates/{$theme}/assets/img/icons/ssl_<if $row['domain_hascert'] == 1>customer_green</if><if $row['domain_hascert'] == 2>shared</if><if $row['domain_hascert'] == 3>global</if>.png" alt="{$lng['panel']['ssleditor']}" />
+				<img src="templates/{$theme}/assets/img/icons/ssl_<if $row['domain_hascert'] == 1>customer_green</if><if $row['domain_hascert'] == 2>shared</if><if $row['domain_hascert'] == 0>global</if>.png" alt="{$lng['panel']['ssleditor']}" />
 			</a>&nbsp;
 		</if>
 		<if $row['parentdomainid'] == '0' && !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
