@@ -633,22 +633,24 @@ class apache
 		$vhost_content = '';
 		$result = $this->db->query($query);
 
+		$ipportlist = '';
 		while ($ipandport = $this->db->fetch_array($result)) {
 
 			$ipport = '';
 			$domain['ip'] = $ipandport['ip'];
 			$domain['port'] = $ipandport['port'];
-			$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
-			$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
-			$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
-			// #418
-			$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
-			
-			// SSL STUFF
-			$dssl = new DomainSSL($this->settings, $this->db);
-			// this sets the ssl-related array-indices in the $domain array
-			// if the domain has customer-defined ssl-certificates
-			$dssl->setDomainSSLFilesArray($domain);
+			if ($domain['ssl'] == '1') {
+				$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
+				$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
+				$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
+				$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
+
+				// SSL STUFF
+				$dssl = new DomainSSL($this->settings, $this->db);
+				// this sets the ssl-related array-indices in the $domain array
+				// if the domain has customer-defined ssl-certificates
+				$dssl->setDomainSSLFilesArray($domain);
+			}
 
 			if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ipport = '['.$domain['ip'].']:'.$domain['port']. ' ';
@@ -656,124 +658,123 @@ class apache
 				$ipport = $domain['ip'].':'.$domain['port'].' ';
 			}
 
-			$vhost_content .= '<VirtualHost ' . $ipport . '>' . "\n";
-			$vhost_content.= $this->getServerNames($domain);
+			$ipportlist .= $ipport;
+		}
 
-			if(($ssl_vhost == false
-			   && $domain['ssl'] == '1'
-			   && $domain['ssl_redirect'] == '1')
-			) {
-				// We must not check if our port differs from port 443,
-				// but if there is a destination-port != 443
-				$_sslport = '';
-				// This returns the first port that is != 443 with ssl enabled, if any
-				// ordered by ssl-certificate (if any) so that the ip/port combo
-				// with certificate is used
-				$ssldestport = $this->db->query_first(
-					"SELECT `ip`.`port` FROM ".TABLE_PANEL_IPSANDPORTS." `ip`
-					LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
-					WHERE `dip`.`id_domain` = '".(int)$domain['id']."'
-					AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
-					ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;"
-				);
+		$vhost_content .= '<VirtualHost ' . trim($ipportlist) . '>' . "\n";
+		$vhost_content.= $this->getServerNames($domain);
 
-				if ($ssldestport['port'] != '') {
-					$_sslport = ":".$ssldestport['port'];
-				}
+		if(($ssl_vhost == false
+		   && $domain['ssl'] == '1'
+		   && $domain['ssl_redirect'] == '1')
+		) {
+			// We must not check if our port differs from port 443,
+			// but if there is a destination-port != 443
+			$_sslport = '';
+			// This returns the first port that is != 443 with ssl enabled, if any
+			// ordered by ssl-certificate (if any) so that the ip/port combo
+			// with certificate is used
+			$ssldestport = $this->db->query_first(
+				"SELECT `ip`.`port` FROM ".TABLE_PANEL_IPSANDPORTS." `ip`
+				LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
+				WHERE `dip`.`id_domain` = '".(int)$domain['id']."'
+				AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
+				ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;"
+			);
 
-				$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			if ($ssldestport['port'] != '') {
+				$_sslport = ":".$ssldestport['port'];
 			}
 
-			if ($ssl_vhost === true
-			   && $domain['ssl'] == '1'
-			   && $this->settings['system']['use_ssl'] == '1'
-			) {
-				if ($domain['ssl_cert_file'] == '') {
-					$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
-				}
+			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+		}
 
-				if ($domain['ssl_key_file'] == '') {
-					$domain['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
-				}
-
-				if ($domain['ssl_ca_file'] == '') {
-					$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
-				}
-
-				// #418
-				if ($domain['ssl_cert_chainfile'] == '') {
-					$domain['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
-				}
-
-				if ($domain['ssl_cert_file'] != '') {
-					$vhost_content .= '  SSLEngine On' . "\n";
-					// this makes it more secure, thx to Marcel (08/2013)
-					$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
-					$vhost_content .= '  SSLCipherSuite ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH' . "\n";
-					$vhost_content .= '  SSLVerifyDepth 10' . "\n";
-					$vhost_content .= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
-
-					if ($domain['ssl_key_file'] != '') {
-						$vhost_content .= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
-					}
-
-					if ($domain['ssl_ca_file'] != '') {
-						$vhost_content .= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
-					}
-
-					if ($domain['ssl_cert_chainfile'] != '') {
-						$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
-					}
-
-				}
+		if ($ssl_vhost === true
+			&& $domain['ssl'] == '1'
+			&& $this->settings['system']['use_ssl'] == '1'
+		) {
+			if ($domain['ssl_cert_file'] == '') {
+				$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
 			}
 
-			if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-				$corrected_docroot = $this->idnaConvert->encode($domain['documentroot']);
-
-				/* Get domain's redirect code */
-				$code = getDomainRedirectCode($domain['id']);
-				$modrew_red = '';
-				if ($code != '') {
-					$modrew_red = '[R='. $code . ';L]';
-				}
-
-				// redirect everything, not only root-directory, #541
-				$vhost_content .= '  <IfModule mod_rewrite.c>'."\n";
-				$vhost_content .= '    RewriteEngine On' . "\n";
-				$vhost_content .= '    RewriteCond %{HTTPS} off' . "\n";
-				$vhost_content .= '    RewriteRule ^/(.*) '. $corrected_docroot.'$1 ' . $modrew_red . "\n";
-				$vhost_content .= '  </IfModule>' . "\n";
-
-				$code = getDomainRedirectCode($domain['id']);
-				$vhost_content .= '  Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
-
-			} else {
-
-				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
-				$vhost_content .= $this->getWebroot($domain);
-				if ($this->_deactivated == false) {
-					$vhost_content .= $this->composePhpOptions($domain,$ssl_vhost);
-					$vhost_content .= $this->getStats($domain);
-				}
-				$vhost_content .= $this->getLogfiles($domain);
-
-				if ($domain['specialsettings'] != '') {
-					$vhost_content .= $domain['specialsettings'] . "\n";
-				}
-
-				if ($ipandport['default_vhostconf_domain'] != '') {
-					$vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
-				}
-
-				if ($this->settings['system']['default_vhostconf'] != '') {
-					$vhost_content .= $this->settings['system']['default_vhostconf'] . "\n";
-				}
+			if ($domain['ssl_key_file'] == '') {
+				$domain['ssl_key_file'] = $this->settings['system']['ssl_key_file'];
 			}
 
-			$vhost_content .= '</VirtualHost>' . "\n";
+			if ($domain['ssl_ca_file'] == '') {
+				$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
+			}
 
-		} // while ip's
+			if ($domain['ssl_cert_chainfile'] == '') {
+				$domain['ssl_cert_chainfile'] = $this->settings['system']['ssl_cert_chainfile'];
+			}
+
+			if ($domain['ssl_cert_file'] != '') {
+				$vhost_content .= '  SSLEngine On' . "\n";
+				// this makes it more secure, thx to Marcel (08/2013)
+				$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
+				$vhost_content .= '  SSLCipherSuite ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH' . "\n";
+				$vhost_content .= '  SSLVerifyDepth 10' . "\n";
+				$vhost_content .= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
+
+				if ($domain['ssl_key_file'] != '') {
+					$vhost_content .= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
+				}
+
+				if ($domain['ssl_ca_file'] != '') {
+					$vhost_content .= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
+				}
+
+				if ($domain['ssl_cert_chainfile'] != '') {
+					$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
+				}
+			}
+		}
+
+		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
+			$corrected_docroot = $this->idnaConvert->encode($domain['documentroot']);
+
+			/* Get domain's redirect code */
+			$code = getDomainRedirectCode($domain['id']);
+			$modrew_red = '';
+			if ($code != '') {
+				$modrew_red = '[R='. $code . ';L]';
+			}
+
+			// redirect everything, not only root-directory, #541
+			$vhost_content .= '  <IfModule mod_rewrite.c>'."\n";
+			$vhost_content .= '    RewriteEngine On' . "\n";
+			$vhost_content .= '    RewriteCond %{HTTPS} off' . "\n";
+			$vhost_content .= '    RewriteRule ^/(.*) '. $corrected_docroot.'$1 ' . $modrew_red . "\n";
+			$vhost_content .= '  </IfModule>' . "\n";
+
+			$code = getDomainRedirectCode($domain['id']);
+			$vhost_content .= '  Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
+
+		} else {
+
+			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
+			$vhost_content .= $this->getWebroot($domain);
+			if ($this->_deactivated == false) {
+				$vhost_content .= $this->composePhpOptions($domain,$ssl_vhost);
+				$vhost_content .= $this->getStats($domain);
+			}
+			$vhost_content .= $this->getLogfiles($domain);
+
+			if ($domain['specialsettings'] != '') {
+				$vhost_content .= $domain['specialsettings'] . "\n";
+			}
+
+			if ($ipandport['default_vhostconf_domain'] != '') {
+				$vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
+			}
+
+			if ($this->settings['system']['default_vhostconf'] != '') {
+				$vhost_content .= $this->settings['system']['default_vhostconf'] . "\n";
+			}
+		}
+
+		$vhost_content .= '</VirtualHost>' . "\n";
 
 		return $vhost_content;
 	}
