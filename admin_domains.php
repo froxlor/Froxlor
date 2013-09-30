@@ -438,29 +438,29 @@ if($page == 'domains'
 					}
 
 					// Verify SSL-Ports
-					if (isset($_POST['ssl_ipandport']) && is_array($_POST['ssl_ipandport']))
-					{
-						foreach($_POST['ssl_ipandport'] as $ssl_ipandport)
-						{
+					if (isset($_POST['ssl_ipandport']) && is_array($_POST['ssl_ipandport'])) {
+						foreach ($_POST['ssl_ipandport'] as $ssl_ipandport) {
 							$ssl_ipandport = intval($ssl_ipandport);
 							$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' " . $additional_ip_condition);
-							if(!isset($ssl_ipandport_check['id'])
+							if (!isset($ssl_ipandport_check['id'])
 								|| $ssl_ipandport_check['id'] == '0'
-								|| $ssl_ipandport_check['id'] != $ssl_ipandport)
-							{
+								|| $ssl_ipandport_check['id'] != $ssl_ipandport
+							) {
 								standard_error('ipportdoesntexist');
-							}
-							else
-							{
+							} else {
 								$ssl_ipandports[] = $ssl_ipandport;
 							}
 						}
+					} else {
+						// we need this for the serialize
+						// if ssl is disabled or no ssl-ip/port exists
+						$ssl_ipandports[] = -1;
 					}
-		
-				}
-				else
-				{
+				} else {
 					$ssl_redirect = 0;
+					// we need this for the serialize
+					// if ssl is disabled or no ssl-ip/port exists
+					$ssl_ipandports[] = -1;
 				}
 
 				if(!preg_match('/^https?\:\/\//', $documentroot))
@@ -673,10 +673,12 @@ if($page == 'domains'
 						");
 					}
 					foreach ($ssl_ipandports as $ssl_ipportid) {
-						$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
-								`id_domain` = '" . $domainid . "',
-								`id_ipandports` = '" . (int)$ssl_ipportid . "';
-						");
+						if ($ssl_ipportid > 0) {
+							$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+									`id_domain` = '" . $domainid . "',
+									`id_ipandports` = '" . (int)$ssl_ipportid . "';
+							");
+						}
 					}
 					$log->logAction(ADM_ACTION, LOG_INFO, "added domain '" . $domain . "'");
 					inserttask('1');
@@ -1059,12 +1061,18 @@ if($page == 'domains'
 								$ssl_ipandports[] = $ssl_ipandport;
 							}
 						}
+					} else {
+						// we need this for the serialize
+						// if ssl is disabled or no ssl-ip/port exists
+						$ssl_ipandports[] = -1;
 					}
 				}
 				else
 				{
 					$ssl_redirect = 0;
-					$ssl_ipandports[] = '';
+					// we need this for the serialize
+					// if ssl is disabled or no ssl-ip/port exists
+					$ssl_ipandports[] = -1;
 				}
 
 				if(!preg_match('/^https?\:\/\//', $documentroot))
@@ -1319,10 +1327,12 @@ if($page == 'domains'
 					");
 				}
 				foreach ($ssl_ipandports as $ssl_ipportid) {
-					$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
-							`id_domain` = '" . (int)$id . "',
-							`id_ipandports` = '" . (int)$ssl_ipportid . "';
-					");
+					if ($ssl_ipportid > 0) {
+						$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+								`id_domain` = '" . (int)$id . "',
+								`id_ipandports` = '" . (int)$ssl_ipportid . "';
+						");
+					}
 				}
 
 				// Cleanup domain <-> ip mapping for subdomains
@@ -1336,10 +1346,12 @@ if($page == 'domains'
 						");
 					}
 					foreach ($ssl_ipandports as $ssl_ipportid) {
-						$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
-								`id_domain` = '" . (int)$row['id'] . "',
-								`id_ipandports` = '" . (int)$ssl_ipportid . "';
-						");
+						if ($ssl_ipportid > 0) {
+							$db->query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+									`id_domain` = '" . (int)$row['id'] . "',
+									`id_ipandports` = '" . (int)$ssl_ipportid . "';
+							");
+						}
 					}
 				}
 
