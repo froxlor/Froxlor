@@ -352,6 +352,7 @@ class nginx
 		}
 
 		$vhost_content = '';
+		$_vhost_content = '';
 
 		$query = "SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` `i`, `".TABLE_DOMAINTOIP."` `dip`  WHERE dip.id_domain = '".$domain['id']."' AND i.id = dip.id_ipandports ";
 		if ($ssl_vhost === true 
@@ -364,22 +365,26 @@ class nginx
 			$query .= "AND i.ssl = '0';";
 		}
 
+		// start vhost
+		$vhost_content.= 'server { ' . "\n";
+
 		$result = $this->db->query($query);
 		while ($ipandport = $this->db->fetch_array($result)) {
 
 			$domain['ip'] = $ipandport['ip'];
 			$domain['port'] = $ipandport['port'];
-			$domain['ssl_cert_file'] = $ipandport['ssl_cert_file']; // save latest delivered ssl settings
-			$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
-			$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
-			// #418
-			$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
+			if ($domain['ssl'] == '1') {
+				$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
+				$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
+				$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
+				$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
 
-			// SSL STUFF
-			$dssl = new DomainSSL($this->settings, $this->db);
-			// this sets the ssl-related array-indices in the $domain array
-			// if the domain has customer-defined ssl-certificates
-			$dssl->setDomainSSLFilesArray($domain);
+				// SSL STUFF
+				$dssl = new DomainSSL($this->settings, $this->db);
+				// this sets the ssl-related array-indices in the $domain array
+				// if the domain has customer-defined ssl-certificates
+				$dssl->setDomainSSLFilesArray($domain);
+			}
 			
 			if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ipport = '[' . $domain['ip'] . ']:' . $domain['port'];
@@ -387,88 +392,93 @@ class nginx
 				$ipport = $domain['ip'] . ':' . $domain['port'];
 			}
 
-			$vhost_content.= 'server { ' . "\n";
+			if ($ipandport['default_vhostconf_domain'] != '') {
+				$_vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
+			}
+
 			$vhost_content.= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ';' . "\n";
 
-			// get all server-names
-			$vhost_content .= $this->getServerNames($domain);
+		}
 
-			// respect ssl_redirect settings, #542
-			if ($ssl_vhost == false
-				&& $domain['ssl'] == '1'
-				&& $domain['ssl_redirect'] == '1')
-			{
-				// We must not check if our port differs from port 443,
-				// but if there is a destination-port != 443
-				$_sslport = '';
-				// This returns the first port that is != 443 with ssl enabled, if any
-				// ordered by ssl-certificate (if any) so that the ip/port combo
-				// with certificate is used
-				$ssldestport = $this->db->query_first(
-					"SELECT `ip`.`port` FROM ".TABLE_PANEL_IPSANDPORTS." `ip`
-					LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
-					WHERE `dip`.`id_domain` = '".(int)$domain['id']."'
-					AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
-					ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;"
-				);
+		// get all server-names
+		$vhost_content .= $this->getServerNames($domain);
 
-				if ($ssldestport['port'] != '') {
-					$_sslport = ":".$ssldestport['port'];
-				}
+		// respect ssl_redirect settings, #542
+		if ($ssl_vhost == false
+			&& $domain['ssl'] == '1'
+			&& $domain['ssl_redirect'] == '1')
+		{
+			// We must not check if our port differs from port 443,
+			// but if there is a destination-port != 443
+			$_sslport = '';
+			// This returns the first port that is != 443 with ssl enabled, if any
+			// ordered by ssl-certificate (if any) so that the ip/port combo
+			// with certificate is used
+			$ssldestport = $this->db->query_first(
+				"SELECT `ip`.`port` FROM ".TABLE_PANEL_IPSANDPORTS." `ip`
+				LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
+				WHERE `dip`.`id_domain` = '".(int)$domain['id']."'
+				AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
+				ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;"
+			);
 
-				$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			if ($ssldestport['port'] != '') {
+				$_sslport = ":".$ssldestport['port'];
 			}
 
-			// if the documentroot is an URL we just redirect
-			if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-				$vhost_content .= "\t".'rewrite ^(.*) '.$this->idnaConvert->encode($domain['documentroot']).'$1 permanent;'."\n";
-			} else {
-				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
+			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+		}
 
-				$vhost_content .= $this->getLogFiles($domain);
-				$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
+		// if the documentroot is an URL we just redirect
+		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
+			$vhost_content .= "\t".'rewrite ^(.*) '.$this->idnaConvert->encode($domain['documentroot']).'$1 permanent;'."\n";
+		} else {
+			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 
-				if ($this->_deactivated == false) {
+			$vhost_content .= $this->getLogFiles($domain);
+			$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
 
-					if ($ssl_vhost === true
-					    && $domain['ssl'] == '1'
-					    && $this->settings['system']['use_ssl'] == '1'
-					) {
-						$vhost_content.= $this->composeSslSettings($domain);
-					}
-					$vhost_content.= $this->create_pathOptions($domain);
-					$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
+			if ($this->_deactivated == false) {
 
-					$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
+				if ($ssl_vhost === true
+				    && $domain['ssl'] == '1'
+				    && $this->settings['system']['use_ssl'] == '1'
+				) {
+					$vhost_content.= $this->composeSslSettings($domain);
+				}
+				$vhost_content.= $this->create_pathOptions($domain);
+				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
 
-					if ($domain['specialsettings'] != "") {
-						$vhost_content .= $domain['specialsettings'] . "\n";
-					}
+				$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
 
-					if ($ipandport['default_vhostconf_domain'] != '') {
-						$vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
-					}
-
-					if ($this->settings['system']['default_vhostconf'] != '') {
-						$vhost_content .= $this->settings['system']['default_vhostconf'] . "\n";
-					}
+				if ($domain['specialsettings'] != "") {
+					$vhost_content .= $domain['specialsettings'] . "\n";
 				}
 
-				// merge duplicate / sections, #1193
-				$l_regex1 = "/(location\ \/\ \{)(.*)(\})/smU";
-				$l_regex2 = "/(location\ \/\ \{.*\})/smU";
-				$replace_by = '';
-				$replacements = preg_match_all($l_regex1,$vhost_content,$out);
-				if ($replacements > 1) {
-					foreach ($out[2] as $val) {
-						$replace_by .= $val."\n";
-					}
-					$vhost_content = preg_replace($l_regex2, "", $vhost_content, $replacements-1);
-					$vhost_content = preg_replace($l_regex2, "location / {\n\t\t". $replace_by ."\t}\n", $vhost_content);
+				if ($_vhost_content != '') {
+					$vhost_content .= $_vhost_content;
+				}
+
+				if ($this->settings['system']['default_vhostconf'] != '') {
+					$vhost_content .= $this->settings['system']['default_vhostconf'] . "\n";
 				}
 			}
-			$vhost_content .= '}' . "\n\n";
-	}
+
+			// merge duplicate / sections, #1193
+			$l_regex1 = "/(location\ \/\ \{)(.*)(\})/smU";
+			$l_regex2 = "/(location\ \/\ \{.*\})/smU";
+			$replace_by = '';
+			$replacements = preg_match_all($l_regex1,$vhost_content,$out);
+			if ($replacements > 1) {
+				foreach ($out[2] as $val) {
+					$replace_by .= $val."\n";
+				}
+				$vhost_content = preg_replace($l_regex2, "", $vhost_content, $replacements-1);
+				$vhost_content = preg_replace($l_regex2, "location / {\n\t\t". $replace_by ."\t}\n", $vhost_content);
+			}
+		}
+		$vhost_content .= '}' . "\n\n";
+
 		return $vhost_content;
 	}
 

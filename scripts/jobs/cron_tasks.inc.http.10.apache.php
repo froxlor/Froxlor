@@ -634,6 +634,7 @@ class apache
 		$result = $this->db->query($query);
 
 		$ipportlist = '';
+		$_vhost_content = '';
 		while ($ipandport = $this->db->fetch_array($result)) {
 
 			$ipport = '';
@@ -658,6 +659,9 @@ class apache
 				$ipport = $domain['ip'].':'.$domain['port'].' ';
 			}
 
+			if ($ipandport['default_vhostconf_domain'] != '') {
+				$_vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
+			}
 			$ipportlist .= $ipport;
 		}
 
@@ -765,8 +769,8 @@ class apache
 				$vhost_content .= $domain['specialsettings'] . "\n";
 			}
 
-			if ($ipandport['default_vhostconf_domain'] != '') {
-				$vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
+			if ($_vhost_content != '') {
+				$vhost_content .= $_vhost_content;
 			}
 
 			if ($this->settings['system']['default_vhostconf'] != '') {
