@@ -70,7 +70,6 @@
 			<li><a href="customer_index.php?action=logout&s={$userinfo['hash']}">{$lng['login']['logout']} {$userinfo['firstname']} {$userinfo['name']} ({$userinfo['loginname']})</a></li>
 		</if>
 		</ul>
-		<!--{$lng['admin']['lastlogin_succ']} <span id="lastlogin">{$userinfo['lastlogin_succ']}</span>-->
 	</div>
 </header>
 

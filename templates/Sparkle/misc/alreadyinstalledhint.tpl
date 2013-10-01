@@ -10,12 +10,15 @@
 	<script type="text/javascript" src="../templates/Sparkle/assets/js/main.js"></script>
 	<link href="../templates/Sparkle/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title>Froxlor Server Management Panel - Installation</title>
-        body {
-		font-family: Verdana, Geneva, sans-serif;
-        }
+	<style type="text/css">
+	body {
+        font-family: Verdana, Geneva, sans-serif;
+	}
+	</style>
 </head>
 <body>
 <div class="loginpage">
+	
 	<article class="login bradius">
 		<header class="dark">
 			<img src="../templates/Sparkle/assets/img/logo.png" alt="Froxlor Server Management Panel" />

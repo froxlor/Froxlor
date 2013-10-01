@@ -10,9 +10,11 @@
 	<script type="text/javascript" src="../templates/Froxlor/assets/js/main.js"></script>
 	<link href="../templates/Froxlor/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title>Froxlor Server Management Panel - Installation</title>
-        body {
-		font-family: Verdana, Geneva, sans-serif;
-        }
+	<style type="text/css">
+	body {
+        font-family: Verdana, Geneva, sans-serif;
+	}
+	</style>
 </head>
 <body>
 <div class="loginpage">
