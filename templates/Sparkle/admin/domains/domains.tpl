@@ -26,7 +26,7 @@
 				<thead>
 					<tr>
 						<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>
-						<th>{$lng['admin']['ipsandports']['ip']}&nbsp;{$arrowcode['ip.ip']}&nbsp;:&nbsp;{$lng['admin']['ipsandports']['port']}&nbsp;{$arrowcode['ip.port']}</th>
+						<th>{$lng['admin']['ipsandports']['ip']}&nbsp;:&nbsp;{$lng['admin']['ipsandports']['port']}</th>
 						<th>{$lng['admin']['customer']}&nbsp;&nbsp;{$arrowcode['c.loginname']}</th>
 						<th>{$lng['panel']['options']}</th>
 					</tr>
