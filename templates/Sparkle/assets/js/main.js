@@ -6,10 +6,19 @@ function twoDigits(value) {
 }
 
 $(document).ready(function() {
-	// Format date in header
-	var lastlogin = new Date($("#lastlogin").text() * 1000);
-	//var d = Date.parse(lastlogin);
-	$("#lastlogin").text(lastlogin.getFullYear() + "-" + twoDigits(lastlogin.getMonth()) + "-" + twoDigits(lastlogin.getDate()) + " " + twoDigits(lastlogin.getHours()) + ":" + twoDigits(lastlogin.getMinutes()) + ":" + twoDigits(lastlogin.getSeconds()));
+	// Scroll to top
+	$(window).scroll(function() {
+		if ($(this).scrollTop() > 100) {
+			$('.scrollup').fadeIn();
+		} else {
+			$('.scrollup').fadeOut();
+		}
+	});
+	
+	$('.scrollup').click(function() {
+		$("html, body").animate({ scrollTop: 0 }, 600);
+		return false;
+	});
 	
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
@@ -40,21 +49,11 @@ $(document).ready(function() {
 	// make rel="external" links open in a new window
 	$("a[rel='external']").attr('target', '_blank');
 	$(".main").css('min-height', $("nav").height() - 134);
-	//$(".dboarditem:last").css('min-height', $(".dboarditem:first").height());
-	//$(".dboarditem:first").css('min-height', $(".dboarditem:last").height());
-
+	
 	// set focus on username-field if on loginpage
 	if ($(".loginpage").length != 0) {
 		$("#loginname").focus();
 	}
-
-	/*if ($("table.formtable").length != 0) {
-		$("table.formtable tr").hover(function() {
-			$(this).css("background-color", "#f5f5f5");
-		}, function() {
-			$(this).css("background-color", "#fff");
-		});
-	}*/
 
 	if ($("table.bradiusodd").length != 0) {
 		$("table.bradiusodd tbody tr").hover(function() {

@@ -10,5 +10,6 @@
 		<br /><span>{$lng['panel']['translator']}: {$lng['translator']}
 	</if>
 </footer>
+<a href="#" class="scrollup">Scroll</a>
 </body>
 </html>
