@@ -138,6 +138,10 @@ ul.topheadernav li a:hover {
 }
 ul.topheadernav li ul {
 	display: none;
+	background-color: #eee;
+	padding: 5px 10px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+	margin-left: -10px;
 }
 ul.topheadernav li:hover ul {
 	display: block;
@@ -925,4 +929,16 @@ label.nobr {
 caption {
 	font-weight:700;
 	margin-bottom:.2em;
+}
+
+.scrollup {
+    width:40px;
+    height:40px;
+    opacity:0.3;
+    position:fixed;
+    bottom:15px;
+    left:100px;
+    display:none;
+    text-indent:-9999px;
+    background: url(../img/top.png) no-repeat;
 }
