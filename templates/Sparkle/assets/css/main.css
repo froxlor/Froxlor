@@ -138,6 +138,10 @@ ul.topheadernav li a:hover {
 }
 ul.topheadernav li ul {
 	display: none;
+	background-color: #eee;
+	padding: 5px 10px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+	margin-left: -10px;
 }
 ul.topheadernav li:hover ul {
 	display: block;
