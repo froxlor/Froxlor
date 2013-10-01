@@ -46,7 +46,7 @@
 		<ul class="topheadernav">
 		<if $userinfo['adminsession'] == 1 >
 			<li><a href="admin_index.php?s={$userinfo['hash']}">{$lng['admin']['overview']}</a></li>
-			<li><a href="#">Options</a>
+			<li><a href="#">{$lng['panel']['options']}</a>
 				<ul>
 					<li><a href="admin_index.php?page=change_password&s={$userinfo['hash']}">{$lng['login']['password']}</a></li>
 					<li><a href="admin_index.php?page=change_language&s={$userinfo['hash']}">{$lng['login']['language']}</a></li>
@@ -58,7 +58,7 @@
 			<li><a href="admin_index.php?action=logout&s={$userinfo['hash']}">{$lng['login']['logout']} {$userinfo['name']} ({$userinfo['loginname']})</a></li>
 		<else>
 			<li><a href="customer_index.php?s={$userinfo['hash']}">{$lng['admin']['overview']}</a></li>
-			<li><a href="#">Options</a>
+			<li><a href="#">{$lng['panel']['options']}</a>
 				<ul>
 					<li><a href="customer_index.php?page=change_password&s={$userinfo['hash']}">{$lng['login']['password']}</a></li>
 					<li><a href="customer_index.php?page=change_language&s={$userinfo['hash']}">{$lng['login']['language']}</a></li>
