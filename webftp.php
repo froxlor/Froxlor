@@ -149,6 +149,12 @@ if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggro
 {
 	list($settings['panel']['no_robots']) = $result->fetch_array();
 }
+$settings['panel']['use_webfonts'] = 0;
+if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'panel' AND `varname` = 'use_webfonts'"))
+{
+	list($settings['panel']['use_webfonts']) = $result->fetch_array();
+}
+
 
 // We don't need the database anymore
 $db->close();
