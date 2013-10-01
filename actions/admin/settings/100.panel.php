@@ -40,7 +40,7 @@ return array(
 					'default' => 'Froxlor',
 					'option_mode' => 'one',
 					'option_options_method' => 'getThemes',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingDefaultTheme',
 					),
 				'panel_allow_theme_change_customer' => array(
 					'label' => $lng['serversettings']['panel_allow_theme_change_customer'],
