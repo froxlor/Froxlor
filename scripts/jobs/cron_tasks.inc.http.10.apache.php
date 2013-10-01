@@ -242,7 +242,7 @@ class apache
 						$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
 						$file_extensions = explode(' ', $phpconfig['file_extensions']);
 						$this->virtualhosts_data[$vhosts_filename].= '    <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '      AddHandler fcgid-script' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '      AddHandler fcgid-script .php' . "\n";
 						foreach ($file_extensions as $file_extension) {
 							$this->virtualhosts_data[$vhosts_filename].= '      FcgidWrapper ' . $starter_filename . ' .' . $file_extension . "\n";
 						}
