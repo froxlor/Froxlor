@@ -7,13 +7,21 @@
 	<meta name="robots" content="noindex, nofollow, noarchive" />
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	{/if}
+	{if $settings.panel.use_webfonts == 1}
+		<link href="//fonts.googleapis.com/css?family={$settings.panel.webfont}" rel="stylesheet">
+	{/if}
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<link rel="stylesheet" href="templates/{$theme}/assets/css/main.css" />
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/assets/css/main_ie.css"  /><![endif]-->
-	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<!--[if lt IE 9]><script src="js/html5shiv.js"></script><![endif]-->
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
 	<title>{$title}Froxlor Server Management Panel</title>
+	<style type="text/css">
+	body {
+		font-family: {if $settings.panel.use_webfonts == 1}{$webfont},{/if} Verdana, Geneva, sans-serif;
+	}
+	</style>
 </head>
 <body>
 
