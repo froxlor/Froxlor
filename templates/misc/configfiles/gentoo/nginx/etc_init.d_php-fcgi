@@ -11,13 +11,13 @@ RETVAL="0"
 
 start() {
       echo -n "Starting PHP FastCGI: "
-      start-stop-daemon --quiet --start --background --chuid "$USER" --exec /usr/bin/env -- "$PHP_CGI_ARGS"
+      start-stop-daemon --quiet --start --background --chuid "$USER" --exec /usr/bin/env -- $PHP_CGI_ARGS
       RETVAL="$?"
       echo "${PHP_CGI_NAME}."
 }
 stop() {
       echo -n "Stopping PHP FastCGI: "
-      killall -q -w -u "${USER} ${PHP_CGI}"
+      killall -q -w -u ${USER} ${PHP_CGI}
       RETVAL="$?"
       echo "${PHP_CGI_NAME}."
 }
