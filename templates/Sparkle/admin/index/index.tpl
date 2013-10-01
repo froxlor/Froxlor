@@ -79,10 +79,6 @@ $header
 			<td>{$overview['tickets_used']} ({$userinfo['tickets_used']}/{$userinfo['tickets']})</td>
 		</tr>
 		</if>
-<!--		</table>
-	</section>
-	<section class="dboarditemfull bradiusodd">
-		<table>-->
 		<tr>
 			<th colspan="2">{$lng['admin']['systemdetails']}</th>
 		</tr>
