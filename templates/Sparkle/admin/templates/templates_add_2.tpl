@@ -191,8 +191,8 @@ $header
 					</td>
 				</tr>
 				<tr>
-					<td><em>{CUST_NAME}</em></td>
-					<td>{$lng['admin']['templates']['CUST_NAME']}</td>
+					<td><em>{SALUTATION}</em></td>
+					<td>{$lng['admin']['templates']['SALUTATION']}</td>
 				</tr>
 				<tr>
 					<td><em>{DB_NAME}</em></td>
@@ -220,8 +220,8 @@ $header
 					</td>
 				</tr>
 				<tr>
-					<td><em>{CUST_NAME}</em></td>
-					<td>{$lng['admin']['templates']['CUST_NAME']}</td>
+					<td><em>{SALUTATION}</em></td>
+					<td>{$lng['admin']['templates']['SALUTATION']}</td>
 				</tr>
 				<tr>
 					<td><em>{USR_NAME}</em></td>
