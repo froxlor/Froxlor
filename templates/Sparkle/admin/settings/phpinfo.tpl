@@ -7,8 +7,10 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradiusodd">
-			{$phpinfo}
+		<section class="dboarditemfull bradiusodd">
+			<table width="100%">
+				{$phpinfo}
+			</table>
 		</section>
 </article>
 $footer
