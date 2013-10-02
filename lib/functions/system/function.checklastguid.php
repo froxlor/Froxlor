@@ -29,8 +29,8 @@
  *
  * @return	null
  */
-function checkLastGuid()
-{
+function checkLastGuid() {
+
 	global $log, $cronlog, $db, $settings, $theme;
 	
 	$mylog = null;
@@ -50,26 +50,22 @@ function checkLastGuid()
 
 	$g_file = '/etc/group';
 
-	if(file_exists($g_file))
-	{
-		if(is_readable($g_file))
-		{
-			if(true == ($groups = file_get_contents($g_file)))
-			{
+	if (file_exists($g_file)) {
+		if (is_readable($g_file)) {
+			if (true == ($groups = file_get_contents($g_file))) {
+
 				$group_lines = explode("\n", $groups);
 
-				foreach($group_lines as $group)
-				{
+				foreach ($group_lines as $group) {
 					$group_guids[] = explode(":", $group);
 				}
 
-				foreach($group_guids as $idx => $group)
-				{
+				foreach ($group_guids as $idx => $group) {
 					/**
 					 * nogroup | nobody have very high guids
 					 * ignore them
 					 */
-					if($group[0] == 'nogroup'
+					if ($group[0] == 'nogroup'
 						|| $group[0] == 'nobody'
 					) {
 						continue;
@@ -77,36 +73,33 @@ function checkLastGuid()
 
 					$guid = isset($group[2]) ? (int)$group[2] : 0;
 
-					if($guid > $update_to_guid)
-					{
+					if ($guid > $update_to_guid) {
 						$update_to_guid = $guid;
 					}
 				}
 
-				if($update_to_guid < $froxlor_guid)
-				{
+				// if it's lower, then froxlor's highest guid is the last
+				if ($update_to_guid < $froxlor_guid) {
 					$update_to_guid = $froxlor_guid;
-					
-					if ($update_to_guid != $settings['system']['lastguid'])
-					{
-						$mylog->logAction(CRON_ACTION, LOG_NOTICE, 'Updating froxlor last guid to '.$update_to_guid);
-						saveSetting('system', 'lastguid', $update_to_guid);
-						$settings['system']['lastguid'] = $update_to_guid;
-					}
+				} elseif ($update_to_guid == $froxlor_guid) {
+					// if it's equal, that means we already have a collision
+					// to ensure it won't happen again, increase the guid by one
+					$update_to_guid = (int)$update_to_guid++;
 				}
-			}
-			else
-			{
+
+				// now check if it differs from our settings
+				if ($update_to_guid != $settings['system']['lastguid']) {
+					$mylog->logAction(CRON_ACTION, LOG_NOTICE, 'Updating froxlor last guid to '.$update_to_guid);
+					saveSetting('system', 'lastguid', $update_to_guid);
+					$settings['system']['lastguid'] = $update_to_guid;
+				}
+			} else {
 				$mylog->logAction(CRON_ACTION, LOG_NOTICE, 'File /etc/group not readable; cannot check for latest guid');
 			}
-		}
-		else
-		{
+		} else {
 			$mylog->logAction(CRON_ACTION, LOG_NOTICE, 'File /etc/group not readable; cannot check for latest guid');
 		}
-	}
-	else
-	{
+	} else {
 		$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'File /etc/group does not exist; cannot check for latest guid');
 	}
 }
