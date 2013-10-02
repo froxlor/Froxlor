@@ -1968,3 +1968,4 @@ $lng['domains']['ipandport_multi']['description'] = 'Specify one or more IP addr
 $lng['domains']['ipandport_ssl_multi']['title'] = 'SSL IP address(es)';
 $lng['domains']['ssl_redirect']['title'] = 'SSL redirect';
 $lng['domains']['ssl_redirect']['description'] = 'This option creates redirects for non-ssl vhosts so that all requests are redirected to the SSL-vhost.<br /><br />e.g. a request to <strong>http</strong>://domain.tld/ will redirect you to <strong>https</strong>://domain.tld/';
+$lng['admin']['phpinfo'] = 'PHPinfo()';

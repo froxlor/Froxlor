@@ -115,6 +115,46 @@ if(($page == 'settings' || $page == 'overview')
 
 	}
 }
+elseif($page == 'phpinfo'
+	&& $userinfo['change_serversettings'] == '1'
+) {
+		ob_start();
+		phpinfo();
+		$phpinfo = array('phpinfo' => array());
+		if (preg_match_all(
+				'#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
+				ob_get_clean(), $matches, PREG_SET_ORDER
+			)
+		) {
+		foreach ($matches as $match) {
+			$end = array_keys($phpinfo);
+			$end = end($end);
+			if (strlen($match[1])) {
+				$phpinfo[$match[1]] = array();
+			} elseif (isset($match[3])) {
+				$phpinfo[$end][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
+			} else {
+				$phpinfo[$end][] = $match[2];
+			}
+		}
+		$phpinfohtml = '';
+		foreach ($phpinfo as $name => $section) {
+			$phpinfoentries = "";
+			foreach ($section as $key => $val) {
+				if (is_array($val)) {
+					eval("\$phpinfoentries .= \"" . getTemplate("settings/phpinfo/phpinfo_3") . "\";");
+				} elseif (is_string($key)) {
+					eval("\$phpinfoentries .= \"" . getTemplate("settings/phpinfo/phpinfo_2") . "\";");
+				} else {
+					eval("\$phpinfoentries .= \"" . getTemplate("settings/phpinfo/phpinfo_1") . "\";");
+				}
+			}
+			eval("\$phpinfohtml .= \"" . getTemplate("settings/phpinfo/phpinfo_table") . "\";");
+		}
+		$phpinfo = $phpinfohtml;
+	}
+	eval("echo \"" . getTemplate("settings/phpinfo") . "\";");
+}
 elseif($page == 'rebuildconfigs'
        && $userinfo['change_serversettings'] == '1')
 {

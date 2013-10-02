@@ -222,6 +222,11 @@ return array (
 					'required_resources' => 'change_serversettings',
 				),
 				array (
+					'url' => 'admin_settings.php?page=phpinfo',
+					'label' => $lng['admin']['phpinfo'],
+					'required_resources' => 'change_serversettings',
+				),
+				array (
 					'url' => 'admin_ipsandports.php?page=ipsandports',
 					'label' => $lng['admin']['ipsandports']['ipsandports'],
 					'required_resources' => 'change_serversettings',
