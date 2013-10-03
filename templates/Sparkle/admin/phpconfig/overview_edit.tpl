@@ -33,10 +33,9 @@ $header
 	<br />
 	<article>
 		<header>
-			<h2>
-				<img src="templates/{$theme}/assets/img/icons/replace_vars.png" alt="" />&nbsp;
+			<h3>
 				{$lng['admin']['templates']['template_replace_vars']}
-			</h2>
+			</h3>
 		</header>
 		
 		<section>
