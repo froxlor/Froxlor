@@ -6,7 +6,7 @@
 			</h2>
 		</header>
 		
-		<section class="fullform bradiusodd">
+		<section class="fullform bradius">
 	        	<table class="formtable">
 						<tr>
 							<td><strong>{$lng['aps']['statistics']}</strong></td>
@@ -26,7 +26,7 @@
 			</h2>
 		</header>
 		
-		<section class="fullform bradiusodd">
+		<section class="fullform bradius">
 		<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 					<legend>Froxlor&nbsp;-&nbsp;{$lng['aps']['manageinstances']}</legend>

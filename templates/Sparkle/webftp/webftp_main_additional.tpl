@@ -1,5 +1,5 @@
 	<article>
-		<section class="dboarditem bradiusodd">
+		<section class="dboarditem bradius">
 			<h2>{t}Basic operations{/t}</h2>
 			<table>
 				<tr>
@@ -36,7 +36,7 @@
 				</tr>
 			</table>
 		</section>
-		<section class="dboarditem bradiusodd">
+		<section class="dboarditem bradius">
 			<h2>{t}Upload files{/t}</h2>
 			<form name="putForm" enctype="multipart/form-data" method="POST" action="webftp.php">
 				<input type="hidden" name="action" value="put" />
@@ -77,4 +77,4 @@
 			</form>
 		</section>
 		<br />
-		<section class="dboarditemfull bradiusodd">
+		<section class="dboarditemfull bradius">

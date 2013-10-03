@@ -11,7 +11,7 @@ $header
 
 			<form action="{$linker->getLink(array('section' => 'traffic'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
-					<table class="fullform bradiusodd">
+					<table class="fullform bradius">
 						<tr>
 							<th>{$lng['traffic']['sumftp']} GB</th>
 							<th>{$lng['traffic']['sumhttp']} GB</th>
@@ -23,7 +23,7 @@ $header
 							<td><div style="color:#800000;">{$traffic_complete['mail']}</div></td>
 						</tr>
 					</table><br />
-					<table class="fullform bradiusodd" id="datatable">
+					<table class="fullform bradius" id="datatable">
 						<tr id="datalegend">
 							<th>{$lng['traffic']['month']}</td>
 							<th>{$lng['traffic']['ftp']}</th>

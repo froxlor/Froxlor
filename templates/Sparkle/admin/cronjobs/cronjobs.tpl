@@ -6,7 +6,7 @@ $header
                 </header>
 
 		<section>
-			<table class="bradiusodd">
+			<table class="bradius">
 			<thead>
 				<tr>
 					<th>{$lng['cron']['description']}</th>

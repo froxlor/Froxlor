@@ -16,7 +16,7 @@
 			</div>
 			</if>
 
-			<table class="bradiusodd">
+			<table class="bradius">
 				<thead>
 					<tr>
 						<th>{$lng['emails']['emailaddress']}</th>

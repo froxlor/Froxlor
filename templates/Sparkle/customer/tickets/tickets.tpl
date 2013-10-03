@@ -35,7 +35,7 @@ $header
 			</div>
 			</if>
 
-			<table class="bradiusodd">
+			<table class="bradius">
 			<thead>
 				<tr>
 					<th>{$lng['ticket']['lastchange']}&nbsp;{$arrowcode['lastchange']}</th>

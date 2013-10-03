@@ -22,7 +22,7 @@ $header
 			</div>
 			</if>
 
-			<table class="bradiusodd">
+			<table class="bradius">
 			<thead>
 				<tr>
 					<th>{$lng['admin']['ipsandports']['ip']}&nbsp;{$arrowcode['ip']}&nbsp;:&nbsp;{$lng['admin']['ipsandports']['port']}&nbsp;{$arrowcode['port']}</th>
