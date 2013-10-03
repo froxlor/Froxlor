@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradiusodd">
+		<section class="fullform bradius">
 
 			<form action="{$linker->getLink(array('section' => 'phpsettings'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
@@ -39,7 +39,7 @@ $header
 		
 		<section>
 			
-			<table class="bradiusodd">
+			<table class="bradius">
 			<thead>
 				<tr>
 					<th>{$lng['panel']['variable']}</th>

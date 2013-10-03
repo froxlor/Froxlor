@@ -55,8 +55,8 @@ $(document).ready(function() {
 		$("#loginname").focus();
 	}
 
-	if ($("table.bradiusodd").length != 0) {
-		$("table.bradiusodd tbody tr").hover(function() {
+	if ($("table.bradius").length != 0) {
+		$("table.bradius tbody tr").hover(function() {
 			$(this).css("background-color", "#f5f5f5");
 		}, function() {
 			$(this).css("background-color", "#fff");

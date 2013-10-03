@@ -91,15 +91,8 @@ td a {
 	text-decoration:none;
 }
 
-.bradius,.ui-corner-all {
-	/*background: none repeat scroll 0 0 #FFFFFF;*/
+.bradius {
 	border-radius: 5px 5px 5px 5px;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-	/*padding: 40px;*/
-}
-
-.bradiusodd {
-	border-radius: 5px 5px 5px 5px !important;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
@@ -113,7 +106,7 @@ td a {
 	position:fixed;
 	z-index: 100;
 }
-.topheaderinfo {
+.topheader_navigation {
 	float: right;
 	margin: 35px 40px 0 0;
 }
@@ -165,6 +158,7 @@ nav div:first-child {
 	display: none;
 }
 
+/* FOOTER */
 footer {
 	clear:both;
 	text-align:center;
@@ -175,32 +169,22 @@ footer {
 }
 
 footer a,footer a:active,footer a:visited {
-	text-decoration:none;
 	color:rgb(136, 136, 136);
 }
 
-footer a:hover {
-	text-decoration:underline;
-}
-
-.login {
+.login, .install {
 	background-color:#fff;
 	margin-top:9%;
 	margin-left:auto;
 	margin-right:auto;
 	margin-bottom:12px;
-	width:600px;
-	/*border:1px solid #999;*/
 }
 
+.login {
+	width: 600px;
+}
 .install {
-	background-color:#fff;
-	margin-top:20px;
-	margin-left:auto;
-	margin-right:auto;
-	margin-bottom:12px;
-	width:800px;
-	border:1px solid #999;
+	width: 800px;
 }
 
 .fullform,.midform,.tinyform {
@@ -287,7 +271,6 @@ footer a:hover {
 .fullform label {
 	float:left;
 	width:26em;
-/*	margin-right: 1em; */
 	margin-top:6px;
 	text-align:right;
 }
@@ -377,7 +360,7 @@ p.submit {
  * error message display
  */
 .errorcontainer {
-	background:url(../img/icons/bad_big.png) 10px center no-repeat #ffedef;
+	background:url(../img/icons/error_big.png) 10px center no-repeat #ffedef;
 	border:1px solid #ffc2ca;
 	padding:10px 10px 10px 68px!important;
 	margin: 10px 0 10px 0 !important;
@@ -493,7 +476,9 @@ a:hover {
 	margin:0;
 	padding:0 0 0 20px;
 }
-
+.menuelement h4 a {
+	color: #000;
+}
 .menuelement ul {
 	list-style:none;
 	margin:3px 0 0px;
@@ -509,32 +494,20 @@ a:hover {
  * main container
  */
 .main {
-/* same value as nav-width */
 	margin-left:240px;
 	margin-right:10px;
 	margin-top:105px;
 	margin-bottom:0;
 	background-color:#fff;
 	padding: 30px 30px 30px 30px;
-	/*border:1px solid #666;*/
 	min-height:400px;
-/*	background:-webkit-gradient(linear,left top,right top,color-stop(0.16,#dcdcdc),color-stop(1,#fff));
-	background:-moz-linear-gradient(left center,#dcdcdc 16%,#fff 100%);
-/* For Internet Explorer 5.5 - 7
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorStr=#dcdcdc,endColorStr=#ffffff,GradientType=1);
-/* For Internet Explorer 8
-	-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#dcdcdc,endColorstr=#ffffff,GradientType=1)";*/
 }
 
 .noborder {
 	width:100%;
 	border-spacing:0;
-	background-color:#f8f8f8;
 	border-collapse:separate;
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:1px solid #666;
+	border: 0;
 }
 
 .noborder td {
@@ -606,10 +579,6 @@ table tbody tr:last-child td {
 	min-height: 20px;
 }
 
-.formlabeltd {
-
-}
-
 .formtable label {
 	float:none;
 	display:block;
@@ -643,7 +612,6 @@ table tfoot td {
 	height:25px;
 	border-top: 1px solid #d1d5d8;
 	background-color: #f2f8fa;
-	/*border-right:1px solid #666;*/
 }
 
 .tfootleft {
@@ -735,9 +703,7 @@ select {
 	background:#fff;
 	padding:4px;
 	border:1px solid #d9d9d9;
-	height: 26px;
 	margin-bottom: 5px;
-	border-radius: 0;
 }
 
 .customer_add {
@@ -924,11 +890,6 @@ label.nobr {
 	display:inline;
 	padding: 0;
 	margin: 0 10px 0 0;
-}
-
-caption {
-	font-weight:700;
-	margin-bottom:.2em;
 }
 
 .scrollup {

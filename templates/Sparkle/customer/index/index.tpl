@@ -10,7 +10,7 @@ $header
 	</div>
 	</if>
 
-	<section class="dboarditem bradiusodd">
+	<section class="dboarditem bradius">
 	<table>
 	<tr>
 		<th colspan="2">{$lng['index']['accountdetails']}</th>
@@ -83,7 +83,7 @@ $header
 		</table>
 	</section>
 
-    <section class="dboarditem bradiusodd">
+    <section class="dboarditem bradius">
         <table>
        	<tr>
 		<th colspan="2">{$lng['index']['customerdetails']}</th>

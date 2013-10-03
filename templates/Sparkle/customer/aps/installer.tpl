@@ -6,7 +6,7 @@
 		</h2>
 	</header>
 	
-	<section class="fullform bradiusodd">
+	<section class="fullform bradius">
 
 			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>

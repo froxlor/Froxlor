@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="dboarditemfull bradiusodd">
+		<section class="dboarditemfull bradius">
 			<table width="100%">
 				{$phpinfo}
 			</table>

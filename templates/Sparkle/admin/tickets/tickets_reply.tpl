@@ -20,7 +20,7 @@ $header
 			$ticket_replies
 		</if>
 
-		<section class="fullform bradiusodd">
+		<section class="fullform bradius">
 
 			<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
