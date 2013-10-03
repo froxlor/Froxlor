@@ -22,7 +22,7 @@ $header
 				</div>
 			</if>
 
-			<table class="bradiusodd">
+			<table class="bradius">
 			<thead>
 				<tr>
 					<th>{$lng['logger']['date']}&nbsp;&nbsp;{$arrowcode['date']}</th>

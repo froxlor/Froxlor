@@ -8,7 +8,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="tinyform bradiusodd">
+		<section class="tinyform bradius">
 			<form action="$filename" method="get" enctype="application/x-www-form-urlencoded">
 			<fieldset>
 					<legend>Froxlor&nbsp;-&nbsp;Wizard</legend>

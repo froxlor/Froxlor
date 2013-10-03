@@ -42,7 +42,7 @@
 		<h1>Froxlor Server Management Panel</h1>
 	</hgroup>
 	<img src="{$header_logo}" alt="Froxlor Server Management Panel" />
-	<div class="topheaderinfo">
+	<div class="topheader_navigation">
 		<ul class="topheadernav">
 		<if $userinfo['adminsession'] == 1 >
 			<li><a href="admin_index.php?s={$userinfo['hash']}">{$lng['admin']['overview']}</a></li>
@@ -74,7 +74,5 @@
 </header>
 
 	<nav>$navigation</nav>
-	<div class="main bradiusodd">
-<else>
-	<div class="loginpage">
+	<div class="main bradius">
 </if>

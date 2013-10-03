@@ -1,5 +1,5 @@
 	<h3>{$lng['traffic']['trafficoverview']}&nbsp;{$overview['type']}&nbsp;{$overview['year']}</h3>
-	<table class="bradiusodd" id="stats{$overview['year']}">
+	<table class="bradius" id="stats{$overview['year']}">
 		<thead>
 			<tr>
 				<th>{$overview['type']}</th>

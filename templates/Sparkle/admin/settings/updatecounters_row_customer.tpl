@@ -3,7 +3,7 @@
 				<b><if $customer['name'] != '' && $customer['firstname'] != ''>{$customer['name']}, {$customer['firstname']}</if><if $customer['name'] != '' && $customer['firstname'] != '' && $customer['company'] != ''> | </if><if $customer['company'] != ''>{$customer['company']}</if> (<a href="{$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $customer['customerid']))}" target="_blank">{$customer['loginname']}</a>):</b>
 			</td>
 			<td>
-				<section class="fullform bradiusodd">
+				<section class="fullform bradius">
 					<table class="formtable" border="0" style="text-align: left; width: 100%">
 						<tr>
 							<td>{$lng['customer']['subdomains']}:</td>

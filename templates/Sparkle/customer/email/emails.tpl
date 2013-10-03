@@ -22,7 +22,7 @@
 				</div>
 			</if>
 
-			<table class="bradiusodd">
+			<table class="bradius">
 				<thead>
 					<tr>
 						<th>{$lng['emails']['emailaddress']}&nbsp;{$arrowcode['m.email_full']}</th>

@@ -37,7 +37,7 @@
 {/if}
 
 {if $loggedin}
-	<div class="main bradiusodd">
+	<div class="main bradius">
 {else}
 	<div class="loginpage">
 {/if}

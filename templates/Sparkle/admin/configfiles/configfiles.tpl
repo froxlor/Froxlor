@@ -10,7 +10,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradiusodd">
+		<section class="fullform bradius">
         	<table class="formtable">
 				{$configpage}
 				<if $restart != ''>

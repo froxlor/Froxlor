@@ -3,7 +3,7 @@
 			<input type="hidden" name="action" value="multiple" />
 			<input type="hidden" name="currentDir" value="{$currentDir}" />
 			<input type="hidden" name="mode" value="{$mode}" />
-			<table class="bradiusodd">
+			<table class="bradius">
 				<thead>
 					<tr>
 						<th>&nbsp;</th>
