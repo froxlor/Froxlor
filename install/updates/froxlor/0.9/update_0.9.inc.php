@@ -2092,19 +2092,19 @@ if (isFroxlorVersion('0.9.29-dev2')) {
 	showUpdateStep("Updating from 0.9.29-dev2 to 0.9.29-dev3", true);
 	lastStepStatus(0);
 
-	$system_afxrservers = isset($_POST['system_afxrservers']) ? trim($_POST['system_afxrservers']) : '';
-	if ($system_afxrservers != '') {
-		$axfrservers = explode(',', $system_afxrservers);
+	$system_axfrservers = isset($_POST['system_afxrservers']) ? trim($_POST['system_afxrservers']) : '';
+	if ($system_axfrservers != '') {
+		$axfrservers = explode(',', $system_axfrservers);
 		$newaxfrserver = array();
 		foreach ($axfrservers as $index => $axfrserver) {
 			if (validate_ip($axfrserver, true) !== false) {
 				$newaxfrserver[] = $axfrserver;
 			}
 		}
-		$system_afxrservers = implode(", ", $newaxfrserver);
+		$system_axfrservers = implode(", ", $newaxfrserver);
 	}
-	showUpdateStep("Inserting new setting for AFXR server", true);
-	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'axfrservers', '".$db->escape($system_afxrservers)."');");
+	showUpdateStep("Inserting new setting for AXFR server", true);
+	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'axfrservers', '".$db->escape($system_axfrservers)."');");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.29-dev3');
