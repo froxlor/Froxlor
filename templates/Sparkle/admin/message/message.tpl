@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="midform bradiusodd">
+		<section class="midform bradius">
 
 			<if 0 < $success >
 				<div class="successcontainer bradius">

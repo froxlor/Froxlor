@@ -3,7 +3,7 @@
 				<b><if $admin['adminid'] != $userinfo['userid']><a href="{$linker->getLink(array('section' => 'admins', 'page' => 'admins', 'action' => 'su', 'id' => $admin['adminid']))}" target="_blank">{$admin['loginname']}</a></if><if $admin['adminid'] == $userinfo['userid']>{$admin['loginname']}</if>:</b>
 			</td>
 			<td>
-				<section class="fullform bradiusodd">
+				<section class="fullform bradius">
 					<table class="formtable" border="0" style="text-align: left; width: 100%">
 						<tr>
 							<td>{$lng['admin']['customers']}:</td>

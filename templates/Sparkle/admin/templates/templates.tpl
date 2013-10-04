@@ -8,7 +8,7 @@ $header
 		</header>
 
 		<section>
-			<table class="bradiusodd">
+			<table class="bradius">
 			<thead>
 				<tr>
 					<th>{$lng['login']['language']}</th>
@@ -41,7 +41,7 @@ $header
 		</header>
 
 		<section>
-			<table class="bradiusodd">
+			<table class="bradius">
 			<thead>
 				<tr>
 					<th>{$lng['admin']['templates']['action']}</th>

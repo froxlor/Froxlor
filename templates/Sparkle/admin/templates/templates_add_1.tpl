@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="tinyform bradiusodd">
+		<section class="tinyform bradius">
 			<form method="post" action="{$linker->getLink(array('section' => 'templates'))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 				<legend>Froxlor&nbsp;-&nbsp;{$lng['menue']['main']['changelanguage']}</legend>

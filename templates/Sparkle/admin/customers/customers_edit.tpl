@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradiusodd">
+		<section class="fullform bradius">
 
 			<form action="{$linker->getLink(array('section' => 'customers'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
@@ -32,7 +32,7 @@ $header
 	</article>
 	<br />
 	<article>
-		<section class="fullform bradiusodd">
+		<section class="fullform bradius">
 			<p style="margin-left:15px;">
 				<span style="color:#ff0000;">*</span>: {$lng['admin']['valuemandatory']}<br />
 				<span style="color:#ff0000;">**</span>: {$lng['admin']['valuemandatorycompany']}

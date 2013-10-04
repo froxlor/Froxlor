@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradiusodd">
+		<section class="fullform bradius">
 
 			<form action="{$linker->getLink(array('section' => 'phpsettings'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
@@ -32,15 +32,14 @@ $header
 	<br />
 	<article>
 		<header>
-			<h2>
-				<img src="templates/{$theme}/assets/img/icons/replace_vars.png" alt="" />&nbsp;
+			<h3>
 				{$lng['admin']['templates']['template_replace_vars']}
-			</h2>
+			</h3>
 		</header>
 		
 		<section>
 			
-			<table class="bradiusodd">
+			<table class="bradius">
 			<thead>
 				<tr>
 					<th>{$lng['panel']['variable']}</th>

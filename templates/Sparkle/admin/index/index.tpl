@@ -10,7 +10,7 @@ $header
 	</div>
 	</if>
 
-	<section class="dboarditemfull bradiusodd">
+	<section class="dboarditemfull bradius">
 		<table>
 		<tr>
 			<th colspan="2">{$lng['admin']['ressourcedetails']}</th>

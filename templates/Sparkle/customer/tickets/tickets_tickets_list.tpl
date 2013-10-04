@@ -1,4 +1,4 @@
-<section class="fullform bradiusodd">
+<section class="fullform bradius">
 	<table class="formtable">
 		<tr>
 			<th><strong>{$lastchange}&nbsp;{$lng['ticket']['by']}&nbsp;{$by}</strong></th>

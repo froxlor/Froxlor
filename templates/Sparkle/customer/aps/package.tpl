@@ -6,7 +6,7 @@
 		</h2>
 	</header>
 	
-	<section class="fullform bradiusodd">
+	<section class="fullform bradius">
 
 				<fieldset>
 					<legend>Froxlor&nbsp;-&nbsp;</legend>

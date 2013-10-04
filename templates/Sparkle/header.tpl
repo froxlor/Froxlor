@@ -42,39 +42,26 @@
 		<h1>Froxlor Server Management Panel</h1>
 	</hgroup>
 	<img src="{$header_logo}" alt="Froxlor Server Management Panel" />
-	<div class="topheaderinfo">
+	<div class="topheader_navigation">
 		<ul class="topheadernav">
-		<if $userinfo['adminsession'] == 1 >
-			<li><a href="admin_index.php?s={$userinfo['hash']}">{$lng['admin']['overview']}</a></li>
+			<li><a href="{$linker->getLink(array('section' => 'index'))}">{$lng['admin']['overview']}</a></li>
 			<li><a href="#">{$lng['panel']['options']}</a>
 				<ul>
-					<li><a href="admin_index.php?page=change_password&s={$userinfo['hash']}">{$lng['login']['password']}</a></li>
-					<li><a href="admin_index.php?page=change_language&s={$userinfo['hash']}">{$lng['login']['language']}</a></li>
-					<if $settings['panel']['allow_theme_change_admin'] == '1'>
-						<li><a href="admin_index.php?page=change_theme&s={$userinfo['hash']}">{$lng['panel']['theme']}</a></li>
+					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_password'))}">{$lng['login']['password']}</a></li>
+					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_language'))}">{$lng['login']['language']}</a></li>
+					<if $settings['panel']['allow_theme_change_admin'] == '1' && $userinfo['adminsession'] == 1>
+						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
+					</if>
+					<if $settings['panel']['allow_theme_change_customer'] == '1' && $userinfo['adminsession'] == 0>
+						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
 					</if>
 				</ul>
 			</li>
-			<li><a href="admin_index.php?action=logout&s={$userinfo['hash']}">{$lng['login']['logout']} {$userinfo['name']} ({$userinfo['loginname']})</a></li>
-		<else>
-			<li><a href="customer_index.php?s={$userinfo['hash']}">{$lng['admin']['overview']}</a></li>
-			<li><a href="#">{$lng['panel']['options']}</a>
-				<ul>
-					<li><a href="customer_index.php?page=change_password&s={$userinfo['hash']}">{$lng['login']['password']}</a></li>
-					<li><a href="customer_index.php?page=change_language&s={$userinfo['hash']}">{$lng['login']['language']}</a></li>
-					<if $settings['panel']['allow_theme_change_customer'] == '1'>
-						<li><a href="customer_index.php?page=change_theme&s={$userinfo['hash']}">{$lng['panel']['theme']}</a></li>
-					</if>
-				</ul>
-			</li>
-			<li><a href="customer_index.php?action=logout&s={$userinfo['hash']}">{$lng['login']['logout']} {$userinfo['firstname']} {$userinfo['name']} ({$userinfo['loginname']})</a></li>
-		</if>
+			<li><a href="{$linker->getLink(array('section' => 'index', 'action' => 'logout'))}">{$lng['login']['logout']} {$userinfo['loginname']}</a></li>
 		</ul>
 	</div>
 </header>
 
 	<nav>$navigation</nav>
-	<div class="main bradiusodd">
-<else>
-	<div class="loginpage">
+	<div class="main bradius">
 </if>

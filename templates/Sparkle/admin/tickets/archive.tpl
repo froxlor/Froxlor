@@ -9,7 +9,7 @@ $header
 
 		<section>
 
-			<table class="bradiusodd">
+			<table class="bradius">
 			<thead>
 				<tr>
 					<th>{$lng['ticket']['archivedtime']}</th>
@@ -37,7 +37,7 @@ $header
 			</h3>
 		</header>
 
-		<section class="fullform bradiusodd">
+		<section class="fullform bradius">
 
 			<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post" enctype="application/x-www-form-urlencoded">
 

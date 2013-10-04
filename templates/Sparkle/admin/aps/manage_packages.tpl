@@ -6,7 +6,7 @@
 		</h2>
 	</header>
 
-	<section class="midform midformaps_2 bradiusodd">
+	<section class="midform midformaps_2 bradius">
 	
 		<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
 			<p style="margin-left:10px;">
@@ -53,7 +53,7 @@
 
 	</section>
 	<br />
-	<section class="midform bradiusodd">
+	<section class="midform bradius">
 		<p style="margin-left:10px;"><strong>{$lng['aps']['statistics']}</strong></p>
 		<p style="margin-left:10px;">{$Statistics}</p>
 	</section>
@@ -71,7 +71,7 @@
 	
 		<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
 
-			<table class="bradiusodd aps">
+			<table class="bradius aps">
 			<thead>
 				<tr>
 					<th style="width:30%;">{$lng['aps']['packagenameandversion']}</th>
