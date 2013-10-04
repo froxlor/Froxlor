@@ -220,10 +220,6 @@ footer a,footer a:active,footer a:visited {
 	margin-left:15px;
 }
 
-.installstatus {
-	width:150px;
-}
-
 .tinyform,.loginsec {
 	margin-top:10px;
 	padding:10px 0;
@@ -328,6 +324,10 @@ p.submit {
 	text-align:left;
 	padding-top:10px;
 	padding-left:10px;
+}
+.installsec aside {
+	text-align: right;
+	padding: 10px;
 }
 
 .messagewrapper {
