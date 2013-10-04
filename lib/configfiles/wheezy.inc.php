@@ -420,8 +420,6 @@ return Array(
 							'# add "non-free" after all occurances of "main" in /etc/apt/sources.list',
 							'# this is needed for libapache2-mod-fastcgi to install',
 							'apt-get install apache2-suexec libapache2-mod-fastcgi php5-fpm',
-							'# change fpm-configuration directory to "/etc/php5/fpm/pool.d/" in froxlor',
-							'sed -e \'s|;include=\/etc\/php5\/fpm\/\*.conf|include=\/etc\/php5\/fpm\/pool.d\/\*.conf|g\' -i /etc/php5/fpm/php-fpm.conf',
 							'rm /etc/php5/fpm/pool.d/www.conf',
 							'a2enmod suexec fastcgi actions',
 							($settings['phpfpm']['enabled_ownvhost'] == '1') ? 'groupadd -f '.$settings['phpfpm']['vhost_httpgroup'] : null,
