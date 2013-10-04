@@ -1,33 +1,13 @@
 @charset "UTF-8";
 
 /* RESET */
-html,body,div,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,p,blockquote,fieldset,input {
-	margin:0;
-	padding:0;
-}
-
-h1,h2,h3,h4,h5,h6,pre,code,address,caption,cite,code,em,strong,th {
-	font-size:1em;
-	font-weight:400;
-	font-style:normal;
-}
-
-ul,ol {
-	list-style:none;
-}
-
-fieldset,img {
-	border:none;
-}
-
-caption,th {
-	text-align:left;
-}
-
-table {
-	border-collapse:collapse;
-	border-spacing:0;
-}
+html,body,div,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,p,blockquote,fieldset,input { margin:0; padding:0; }
+h1,h2,h3,h4,h5,h6,pre,code,address,caption,cite,code,em,strong,th { font-size:1em; font-weight:400; font-style:normal; }
+ul,ol { list-style:none; }
+fieldset,img { border:none; }
+caption,th { text-align:left; }
+table { border-collapse:collapse; border-spacing:0; }
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { display:block; }
 
 /* TYPE */
 html,body {
@@ -36,21 +16,9 @@ html,body {
 	color:#333;
 }
 
-/*Opera Fix*/
-body:before {
-	content:"";
-	float:left;
-	width:0;
-	margin-top:-32767px;
-}
-
 body {
 	margin:0;
 	padding:0;
-}
-
-article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {
-	display:block;
 }
 
 .dark {
@@ -66,21 +34,20 @@ h1 {
 	display:none;
 }
 
+h2, h3 {
+	margin: 0 0 1em 0;
+	padding: 0;
+	font-weight: bold;
+}
+
 h2 {
 	font-size:17px;
-	font-weight: bold;
-	margin:0;
-	margin-bottom:1em;
-	padding:0;
 }
 
 h3 {
 	font-size: 15px;
-	font-weight: bold;
-	margin: 0;
-	margin-bottom: 1em;
-	padding: 0;
 }
+
 
 img {
 	border:0;
@@ -93,15 +60,15 @@ td a {
 
 .bradius {
 	border-radius: 5px 5px 5px 5px;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+	box-shadow: rgba(0, 0, 0, 0.34902) 0px 1px 3px 0px;
 }
 
 .topheader {
-	background: #f6f9fb;
+	background: #e9edf0;
+	background: rgba(234,238,240,0.9);
 	top: 0px;
 	width: 100%;
-	padding-left:5px;
-	padding-top:2px;
+	padding: 2px 0 0 5px;
 	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
 	position:fixed;
 	z-index: 100;
@@ -148,7 +115,6 @@ ul.topheadernav li ul li a:hover {
 	color: #111;
 }
 
-
 nav {
 	float:left;
 	width:230px;
@@ -162,25 +128,21 @@ nav div:first-child {
 footer {
 	clear:both;
 	text-align:center;
-	color:rgb(136, 136, 136);
+	color: #888;
 	font-size:10px !important;
-	margin-top:10px;
-	margin-bottom:10px;
+	margin: 10px 0;
 }
 
 footer a,footer a:active,footer a:visited {
-	color:rgb(136, 136, 136);
+	color: #888;
 }
 
 .login, .install {
 	background-color:#fff;
-	margin-top:9%;
-	margin-left:auto;
-	margin-right:auto;
-	margin-bottom:12px;
-}
-
-.login {
+	margin: 9%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 12px;
 	width: 600px;
 }
 .install {
@@ -213,11 +175,14 @@ footer a,footer a:active,footer a:visited {
 .installsec table {
 	width:100%;
 	padding:0 10px;
-	border-spacing:4px;
+	margin: 15px 0 15px 0;
 }
 
 .installsec h2 {
-	margin-left:15px;
+	display: block;
+	border-bottom: 1px solid #d1d5d8;
+	margin: 0;
+	padding: 5px 15px 15px 15px;
 }
 
 .tinyform,.loginsec {
