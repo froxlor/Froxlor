@@ -22,12 +22,12 @@
 				</div>
 			</if>
 
-			<table class="bradius">
+			<table class="bradius" <if 0 < $ftps_count>id="sortable"</if>>
 				<thead>
 					<tr>
-						<th>{$lng['login']['username']}&nbsp;&nbsp;{$arrowcode['username']}</th>
-						<th>{$lng['panel']['path']}&nbsp;&nbsp;{$arrowcode['homedir']}</th>
-						<th>{$lng['panel']['options']}</th>
+						<th>{$lng['login']['username']}</th>
+						<th>{$lng['panel']['path']}</th>
+						<th class="nosort">{$lng['panel']['options']}</th>
 					</tr>
 				</thead>
 				<if $pagingcode != ''>

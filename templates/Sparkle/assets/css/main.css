@@ -506,21 +506,53 @@ th a:hover {
 	text-decoration: none;
 }
 th a img {
-	height: 10px;
-	width: 10px;
 }
 th a:nth-child(odd) img {
 	position: relative;
 	top: -5px;
+	left: 4px;
 }
 th a:nth-child(even) img {
 	position: relative;
 	top: 3px;
-	left: -14px;
+	left: -7px;
 }
 
 table thead:first-child th {
 	border-top: 0;
+}
+
+/* dataTables */
+table thead th.sorting_asc {
+    background-image: url('../img/icons/sort_down.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    padding-left: 25px;
+}
+ 
+table thead th.sorting_desc {
+    background-image: url('../img/icons/sort_up.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    padding-left: 25px;
+}
+ 
+table thead th.sorting {
+    background-image: url('../img/icons/sort_both.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    padding-left: 25px;
+}
+
+table thead th.nosort {
+	background-image: none;
+	padding-left: 8px;
+}
+.dataTables_length {
+	float: left;
+}
+.dataTables_filter {
+	float: right;
 }
 
 table tbody td {
