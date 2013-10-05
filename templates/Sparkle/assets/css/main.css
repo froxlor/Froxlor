@@ -522,6 +522,10 @@ table thead:first-child th {
 	border-top: 0;
 }
 
+.disabled td, .disabled td a {
+	color: #cfcfcf;
+}
+
 /* dataTables */
 table thead th.sorting_asc {
     background-image: url('../img/icons/sort_down.png');

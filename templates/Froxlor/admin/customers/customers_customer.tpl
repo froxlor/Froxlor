@@ -1,4 +1,4 @@
-<tr>
+<tr <if $row['deactivated'] == 1>class="disabled"</if>>
 	<td>
 		<strong>
 		<if $row['name'] != '' && $row['firstname'] != ''>
@@ -55,6 +55,11 @@
 		</a>&nbsp;
 		<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'delete', 'id' => $row['customerid']))}" style="text-decoration:none;">
 			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" />
+		</a>&nbsp;
+		<if $islocked == 1>
+		<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'unlock', 'id' => $row['customerid']))}">
+			<img src="templates/{$theme}/assets/img/icons/unlock.png" alt="{$lng['panel']['unlock']}" />
 		</a>
+		</if>
 	</td>
 </tr>
