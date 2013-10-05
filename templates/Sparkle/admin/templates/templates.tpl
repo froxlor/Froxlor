@@ -8,12 +8,12 @@ $header
 		</header>
 
 		<section>
-			<table class="bradius">
+			<table class="bradius" id="sortable">
 			<thead>
 				<tr>
 					<th>{$lng['login']['language']}</th>
 					<th>{$lng['admin']['templates']['action']}</th>
-					<th>{$lng['panel']['options']}</th>
+					<th class="nosort">{$lng['panel']['options']}</th>
 				</tr>
 			</thead>
 			<tbody>

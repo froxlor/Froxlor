@@ -20,6 +20,14 @@ $(document).ready(function() {
 		return false;
 	});
 	
+	// Enable datatable
+    $('#sortable').dataTable({
+	    "bFilter": false,
+	    "bInfo": false,
+	    "bPaginate": false
+    });
+    $('.nosort').unbind('click');
+	
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
 		var urlParams = decodeURI( window.location.search.substring(1) );

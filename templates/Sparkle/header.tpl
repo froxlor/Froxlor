@@ -26,6 +26,7 @@
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/css/main_ie.css" type="text/css" /><![endif]-->
 	<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
+	<script type="text/javascript" src="templates/{$theme}/assets/js/jquery.dataTables.js"></script>
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
 	<style type="text/css">

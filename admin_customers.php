@@ -104,13 +104,11 @@ if($page == 'customers'
 					$traffic_doublepercent = 0;
 				}
 
-				$column_style = '';
-				$unlock_link = '';
+				$islocked = 0;
 				if($row['loginfail_count'] >= $settings['login']['maxloginattempts']
 					&& $row['lastlogin_fail'] > (time() - $settings['login']['deactivatetime'])
 				) {
-					$column_style = ' style="background-color: #f99122;"';
-					$unlock_link = '<a href="'.$filename.'?s='.$s.'&amp;page='.$page.'&amp;action=unlock&amp;id='.$row['customerid'].'">'.$lng['panel']['unlock'].'</a><br />';
+					$islocked = 1;
 				}
 
 				$row = str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps tickets subdomains email_autoresponder');
