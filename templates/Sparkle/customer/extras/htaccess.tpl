@@ -22,18 +22,18 @@
 				</div>
 			</if>
 
-			<table class="bradius">
+			<table class="bradius" <if 0 < $count>id="sortable"</if>>
 				<thead>
 					<tr>
-						<th>{$lng['panel']['path']}&nbsp;{$arrowcode['path']}</th>
-						<th>{$lng['extras']['view_directory']}&nbsp;{$arrowcode['options_indexes']}</th>
-						<th>{$lng['extras']['error404path']}&nbsp;{$arrowcode['error404path']}</th>
-						<th>{$lng['extras']['error403path']}&nbsp;{$arrowcode['error403path']}</th>
-						<th>{$lng['extras']['error500path']}&nbsp;{$arrowcode['error500path']}</th>
+						<th>{$lng['panel']['path']}</th>
+						<th>{$lng['extras']['view_directory']}</th>
+						<th>{$lng['extras']['error404path']}</th>
+						<th>{$lng['extras']['error403path']}</th>
+						<th>{$lng['extras']['error500path']}</th>
 						<if $cperlenabled == 1 >
-						<th>{$lng['extras']['execute_perl']}&nbsp;{$arrowcode['options_cgi']}</th>
+						<th>{$lng['extras']['execute_perl']}</th>
 						</if>
-						<th>{$lng['panel']['options']}</th>
+						<th class="nosort">{$lng['panel']['options']}</th>
 					</tr>
 				</thead>
 				<if $pagingcode != ''>

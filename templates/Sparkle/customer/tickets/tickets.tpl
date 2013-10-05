@@ -35,16 +35,16 @@ $header
 			</div>
 			</if>
 
-			<table class="bradius">
+			<table class="bradius" <if 0 < $tickets_count>id="sortable"</if>>
 			<thead>
 				<tr>
-					<th>{$lng['ticket']['lastchange']}&nbsp;{$arrowcode['lastchange']}</th>
-					<th>{$lng['ticket']['ticket_answers']}&nbsp;{$arrowcode['ticket_answers']}</th>
-					<th>{$lng['ticket']['subject']}&nbsp;{$arrowcode['subject']}</th>
-					<th>{$lng['ticket']['status']}&nbsp;{$arrowcode['status']}</th>
-					<th>{$lng['ticket']['lastreplier']}&nbsp;{$arrowcode['lastreplier']}</th>
-					<th>{$lng['ticket']['priority']}&nbsp;{$arrowcode['priority']}</th>
-					<th>{$lng['panel']['options']}</th>
+					<th>{$lng['ticket']['lastchange']}</th>
+					<th>{$lng['ticket']['ticket_answers']}</th>
+					<th>{$lng['ticket']['subject']}</th>
+					<th>{$lng['ticket']['status']}</th>
+					<th>{$lng['ticket']['lastreplier']}</th>
+					<th>{$lng['ticket']['priority']}</th>
+					<th class="nosort">{$lng['panel']['options']}</th>
 				</tr>
 			</thead>
 			<if $pagingcode != ''>

@@ -22,12 +22,12 @@ $header
 				</div>
 			</if>
 
-			<table class="bradius">
+			<table class="bradius" id="sortable">
 			<thead>
 				<tr>
-					<th>{$lng['logger']['date']}&nbsp;&nbsp;{$arrowcode['date']}</th>
-					<th>{$lng['logger']['type']}&nbsp;&nbsp;{$arrowcode['type']}</th>
-					<th>{$lng['logger']['user']}&nbsp;&nbsp;{$arrowcode['user']}</th>
+					<th>{$lng['logger']['date']}</th>
+					<th>{$lng['logger']['type']}</th>
+					<th>{$lng['logger']['user']}</th>
 					<th style="width: 60%;">{$lng['logger']['action']}</th>
 				</tr>
 			</thead>

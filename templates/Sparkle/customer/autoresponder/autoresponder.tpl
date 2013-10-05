@@ -16,13 +16,13 @@
 			</div>
 			</if>
 
-			<table class="bradius">
+			<table class="bradius" <if 0 < $count>id="sortable"</if>>
 				<thead>
 					<tr>
 						<th>{$lng['emails']['emailaddress']}</th>
 						<th>{$lng['autoresponder']['active']}</th>
 						<th>{$lng['autoresponder']['startenddate']}</th>
-						<th>{$lng['panel']['options']}</th>
+						<th class="nosort">{$lng['panel']['options']}</th>
 					</tr>
 				</thead>
 
