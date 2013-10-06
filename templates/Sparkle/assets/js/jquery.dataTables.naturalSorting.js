@@ -7804,7 +7804,7 @@
 		 *  @type string
 		 *  @default null
 		 */
-		"sType": null,
+		"sType": "natural",
 		
 		/**
 		 * Width of the column
@@ -10493,7 +10493,7 @@
 		 *      } );
 		 *    } );
 		 */
-		"sType": null,
+		"sType": "natural",
 	
 	
 		/**
@@ -11812,14 +11812,58 @@
 			return a.toLowerCase();
 		},
 	
-		"string-asc": function ( x, y )
+		"string-asc": function ( s1, s2 )
 		{
-			return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+			var n = /^(\d+)(.*)$/;
+			s1 = s1.replace( /<.*?>/g, "" ).toLowerCase();
+			s2 = s2.replace( /<.*?>/g, "" ).toLowerCase();
+			while (true) {
+				if (s1 == s2) { return 0; }
+				if (s1 == '') { return -1; }
+				if (s2 == '') { return 1; }
+				var n1 = n.exec(s1);
+				var n2 = n.exec(s2);
+				if ( (n1 != null) && (n2 != null) ) {
+					if (n1[1] != n2[1]) {
+						return n1[1] - n2[1];
+					}
+					s1 = n1[2];
+					s2 = n2[2];
+				} else {
+					n1 = s1.charCodeAt(0);
+					n2 = s2.charCodeAt(0);
+					if (n1 != n2) { return n1 - n2; }
+					s1 = s1.substr(1);
+					s2 = s2.substr(1);
+				}
+			}
 		},
 		
-		"string-desc": function ( x, y )
+		"string-desc": function ( s1, s2 )
 		{
-			return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+			var n = /^(\d+)(.*)$/;
+			s1 = s1.replace( /<.*?>/g, "" ).toLowerCase();
+			s2 = s2.replace( /<.*?>/g, "" ).toLowerCase();
+			while (true) {
+				if (s1 == s2) { return 0; }
+				if (s1 == '') { return 1; }
+				if (s2 == '') { return -1; }
+				var n1 = n.exec(s1);
+				var n2 = n.exec(s2);
+				if ( (n1 != null) && (n2 != null) ) {
+					if (n1[1] != n2[1]) {
+						return (n1[1] - n2[1]) * -1;
+					}
+					s1 = n1[2];
+					s2 = n2[2];
+				} else {
+					n1 = s1.charCodeAt(0);
+					n2 = s2.charCodeAt(0);
+					if (n1 != n2) { return (n1 - n2) * -1; }
+					s1 = s1.substr(1);
+					s2 = s2.substr(1);
+				}
+			}
 		},
 		
 		
@@ -12096,4 +12140,3 @@
 }));
 
 }(window, document));
-
