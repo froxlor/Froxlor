@@ -22,13 +22,13 @@
 				</div>
 			</if>
 
-			<table class="bradiusodd">
+			<table class="bradiusodd" id="sortable">
 				<thead>
 					<tr>
-						<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>
-						<th>{$lng['admin']['ipsandports']['ip']}&nbsp;:&nbsp;{$lng['admin']['ipsandports']['port']}</th>
-						<th>{$lng['admin']['customer']}&nbsp;&nbsp;{$arrowcode['c.loginname']}</th>
-						<th>{$lng['panel']['options']}</th>
+						<th>{$lng['domains']['domainname']}</th>
+						<th>{$lng['admin']['ipsandports']['ip']}</th>
+						<th>{$lng['admin']['customer']}</th>
+						<th class="nosort">{$lng['panel']['options']}</th>
 					</tr>
 				</thead>
 				<if $pagingcode != ''>

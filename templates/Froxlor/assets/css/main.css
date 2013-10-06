@@ -761,19 +761,22 @@ table thead th.sorting_asc {
     background-image: url('../img/icons/sort_down.png');
     background-repeat: no-repeat;
     background-position: 10px center;
-    padding-left: 25px;
+    padding-left: 0px;
 }
  
 table thead th.sorting_desc {
     background-image: url('../img/icons/sort_up.png');
     background-repeat: no-repeat;
     background-position: 10px center;
-    padding-left: 25px;
+    padding-left: 0px;
 }
  
 table thead th.sorting {
     background-image: url('../img/icons/sort_both.png');
     background-repeat: no-repeat;
     background-position: 10px center;
-    padding-left: 25px;
+    padding-left: 0px;
+}
+table thead th.nosort {
+	background-image: none;
 }

@@ -22,14 +22,14 @@
 				</div>
 			</if>
 
-			<table class="bradiusodd">
+			<table class="bradiusodd" id="sortable">
 				<thead>
 					<tr>
-						<th>{$lng['mysql']['databasename']}&nbsp;{$arrowcode['databasename']}</th>
-						<th>{$lng['mysql']['databasedescription']}&nbsp;{$arrowcode['description']}</th>
+						<th>{$lng['mysql']['databasename']}</th>
+						<th>{$lng['mysql']['databasedescription']}</th>
 						<th>{$lng['mysql']['size']}</th>
 						<if 1 < count($sql_root)><th>{$lng['mysql']['mysql_server']}</th></if>
-						<th>{$lng['panel']['options']}</th>
+						<th class="nosort">{$lng['panel']['options']}</th>
 					</tr>
 				</thead>
 				<if $pagingcode != ''>
