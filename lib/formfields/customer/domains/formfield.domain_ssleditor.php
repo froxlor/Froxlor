@@ -29,8 +29,8 @@ return array(
 						'label' => $lng['admin']['ipsandports']['ssl_cert_file_content'],
 						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'],
 						'type' => 'textarea',
-						'cols' => 60,
-						'rows' => 12,
+						'cols' => 100,
+						'rows' => 15,
 						'value' => $result['ssl_cert_file']
 					),
 					'ssl_key_file' => array(
@@ -38,26 +38,26 @@ return array(
 						'label' => $lng['admin']['ipsandports']['ssl_key_file_content'],
 						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'],
 						'type' => 'textarea',
-						'cols' => 60,
-						'rows' => 12,
+						'cols' => 100,
+						'rows' => 15,
 						'value' => $result['ssl_key_file']
 					),
 					'ssl_cert_chainfile' => array(
 						'style' => 'vertical-align:top;',
 						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile_content'],
-						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'],
+						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'].$lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'],
 						'type' => 'textarea',
-						'cols' => 60,
-						'rows' => 12,
+						'cols' => 100,
+						'rows' => 15,
 						'value' => $result['ssl_cert_chainfile']
 					),
 					'ssl_ca_file' => array(
 						'style' => 'vertical-align:top;',
 						'label' => $lng['admin']['ipsandports']['ssl_ca_file_content'],
-						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'],
+						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'].$lng['admin']['ipsandports']['ssl_ca_file_content_desc'],
 						'type' => 'textarea',
-						'cols' => 60,
-						'rows' => 12,
+						'cols' => 100,
+						'rows' => 15,
 						'value' => $result['ssl_ca_file']
 					)
 				)
