@@ -81,6 +81,13 @@ class DomainSSL {
 					'ssl_cert_file' => makeCorrectFile($sslcertpath.'/'.$domain['domain'].'.crt'),
 					'ssl_key_file' => makeCorrectFile($sslcertpath.'/'.$domain['domain'].'.key')
 			);
+
+			if ($this->_settings['system']['webserver'] == 'lighttpd') {
+				// put my.crt and my.key together for lighty.
+				$dom_certs['ssl_cert_file'] .= $dom_certs['ssl_key_file'];
+				$ssl_files['ssl_key_file'] = '';
+			}
+
 			// initialize optional files
 			$ssl_files['ssl_ca_file'] = '';
 			$ssl_files['ssl_cert_chainfile'] = '';
@@ -89,7 +96,12 @@ class DomainSSL {
 				$ssl_files['ssl_ca_file'] = makeCorrectFile($sslcertpath.'/'.$domain['domain'].'_CA.pem');
 			}
 			if ($dom_certs['ssl_cert_chainfile'] != '') {
-				$ssl_files['ssl_cert_chainfile'] = makeCorrectFile($sslcertpath.'/'.$domain['domain'].'_chain.pem');
+				if ($this->_settings['system']['webserver'] == 'nginx') {
+					// put ca.crt in my.crt, as nginx does not support a separate chain file.
+					$dom_certs['ssl_cert_file'] .= $dom_certs['ssl_cert_chainfile'];
+				} else {
+					$ssl_files['ssl_cert_chainfile'] = makeCorrectFile($sslcertpath.'/'.$domain['domain'].'_chain.pem');
+				}
 			}
 			// create them on the filesystem
 			foreach ($ssl_files as $type => $filename) {

@@ -42,15 +42,6 @@ return array(
 						'rows' => 12,
 						'value' => $result['ssl_key_file']
 					),
-					'ssl_ca_file' => array(
-						'style' => 'vertical-align:top;',
-						'label' => $lng['admin']['ipsandports']['ssl_ca_file_content'],
-						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'],
-						'type' => 'textarea',
-						'cols' => 60,
-						'rows' => 12,
-						'value' => $result['ssl_ca_file']
-					),
 					'ssl_cert_chainfile' => array(
 						'style' => 'vertical-align:top;',
 						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile_content'],
@@ -59,6 +50,15 @@ return array(
 						'cols' => 60,
 						'rows' => 12,
 						'value' => $result['ssl_cert_chainfile']
+					),
+					'ssl_ca_file' => array(
+						'style' => 'vertical-align:top;',
+						'label' => $lng['admin']['ipsandports']['ssl_ca_file_content'],
+						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12,
+						'value' => $result['ssl_ca_file']
 					)
 				)
 			)
