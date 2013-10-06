@@ -1,4 +1,17 @@
 $(document).ready(function() {
+	// Enable datatable
+	var sortColumn = $('#sortable').attr('sort-column');
+	if (sortColumn == null) { sortColumn = "0"; }
+	var sortDirection = $('#sortable').attr('sort-direction');
+	if (sortDirection == null) { sortDirection = "asc"; }
+    var sortTable = $('#sortable').dataTable({
+	    "bFilter": false,
+	    "bInfo": false,
+	    "bPaginate": false,
+	    "aaSorting": [[sortColumn, sortDirection]]
+    });
+    $('.nosort').unbind('click');
+
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
 		var urlParams = decodeURI( window.location.search.substring(1) );

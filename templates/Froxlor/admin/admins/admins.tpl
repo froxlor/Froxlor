@@ -22,14 +22,14 @@ $header
 				</div>
 			</if>
 
-			<table class="bradiusodd">
+			<table class="bradiusodd" id="sortable" sort-column="1">
 			<thead>
 				<tr>
-					<th>
-						{$lng['customer']['name']}&nbsp;&nbsp;{$arrowcode['name']}&nbsp;
-						{$lng['login']['username']}&nbsp;{$arrowcode['loginname']}
-					</th>
-					<th>{$lng['panel']['options']}</th>
+					<th>{$lng['customer']['name']}</th>
+					<th>{$lng['login']['username']}</th>
+					<th>{$lng['admin']['customers']}</th>
+					<th class="nosort">&nbsp;</th>
+					<th class="nosort">{$lng['panel']['options']}</th>
 				</tr>
 			</thead>
 			<if $pagingcode != ''>

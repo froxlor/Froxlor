@@ -19,6 +19,11 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery.jqplot.min.css" />
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/traffic.js"></script>
 	</if>
+	<if $settings['panel']['natsorting'] == '0'>
+		<script type="text/javascript" src="js/jquery.dataTables.default.js"></script>
+	<else>
+		<script type="text/javascript" src="js/jquery.dataTables.natural.js"></script>
+	</if>
 	<if $settings['panel']['use_webfonts'] == '1'>
 		<link href="//fonts.googleapis.com/css?family={$settings['panel']['webfont']}" rel="stylesheet">
 	</if>
@@ -26,6 +31,7 @@
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/css/main_ie.css" type="text/css" /><![endif]-->
 	<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
+	<script type="text/javascript" src="templates/{$theme}/assets/js/jquery.dataTables.js"></script>
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
 	<style type="text/css">
