@@ -22,7 +22,7 @@ $header
 				</div>
 			</if>
 
-			<table class="bradius" id="sortable">
+			<table class="bradius" id="sortable" sort-column="1">
 			<thead>
 				<tr>
 					<th>
