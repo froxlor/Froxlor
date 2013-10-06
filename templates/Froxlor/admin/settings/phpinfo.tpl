@@ -7,8 +7,9 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradiusodd">
+			<table style="margin-right:10px;">
 			{$phpinfo}
-		</section>
+			</table>
+
 </article>
 $footer

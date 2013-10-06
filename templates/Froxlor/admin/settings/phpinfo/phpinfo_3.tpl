@@ -1,5 +1,4 @@
 <tr>
 	<td>{$key}</td>
-	<td>{$val[0]}</td>
-	<td>{$val[1]}</td>
+	<td>{$val[0]}<br /><small>{$val[1]}</small></td>
 </tr>
