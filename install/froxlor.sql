@@ -264,7 +264,7 @@ CREATE TABLE `panel_ipsandports` (
   `namevirtualhost_statement` tinyint(1) NOT NULL default '0',
   `vhostcontainer` tinyint(1) NOT NULL default '0',
   `vhostcontainer_servername_statement` tinyint(1) NOT NULL default '0',
-  `specialsettings` text NOT NULL,
+  `specialsettings` text NOT NULL default '',
   `ssl` tinyint(4) NOT NULL default '0',
   `ssl_cert_file` varchar(255) NOT NULL,
   `ssl_key_file` varchar(255) NOT NULL,
