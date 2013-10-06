@@ -22,22 +22,22 @@ $header
 				{$searchcode}
 			</div>
 
-			<table class="bradius" id="sortable" sort-column="1">
+			<table class="bradius">
 			<thead>
 				<tr>
 					<th>
 						{$lng['customer']['name']},
-						{$lng['customer']['firstname']}
+						{$lng['customer']['firstname']}&nbsp;{$arrowcode['c.name']}
 					</th>
 					<th>
-						{$lng['login']['username']}
+						{$lng['login']['username']}&nbsp;{$arrowcode['c.loginname']}
 					</th>
 					<th>
-						{$lng['admin']['admin']}
+						{$lng['admin']['admin']}&nbsp;{$arrowcode['a.loginname']}
 					</th>
 					<th>{$lng['admin']['lastlogin_succ']}</th>
-					<th class="nosort"></th>
-					<th class="nosort">{$lng['panel']['options']}</th>
+					<th></th>
+					<th>{$lng['panel']['options']}</th>
 				</tr>
 			</thead>
 			
