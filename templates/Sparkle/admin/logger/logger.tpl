@@ -22,7 +22,7 @@ $header
 				</div>
 			</if>
 
-			<table class="bradius" id="sortable">
+			<table class="bradius" id="sortable" sort-direction="desc">
 			<thead>
 				<tr>
 					<th>{$lng['logger']['date']}</th>
