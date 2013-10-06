@@ -483,6 +483,10 @@ table tbody td {
 	border-right: 1px solid #666;
 }
 
+.disabled td, .disabled td a {
+	color: #cfcfcf;
+}
+
 .formtable {
 	width: 100%;
 	border-spacing: 0;
@@ -750,4 +754,26 @@ label.nobr {
 caption {
 	font-weight: bold;
 	margin-bottom: 0.2em;
+}
+
+/* dataTables */
+table thead th.sorting_asc {
+    background-image: url('../img/icons/sort_down.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    padding-left: 25px;
+}
+ 
+table thead th.sorting_desc {
+    background-image: url('../img/icons/sort_up.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    padding-left: 25px;
+}
+ 
+table thead th.sorting {
+    background-image: url('../img/icons/sort_both.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    padding-left: 25px;
 }

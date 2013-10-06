@@ -22,12 +22,12 @@
 				</div>
 			</if>
 
-			<table class="bradius">
+			<table class="bradius" id="sortable">
 				<thead>
 					<tr>
-						<th>{$lng['login']['username']}&nbsp;{$arrowcode['username']}</th>
-						<th>{$lng['panel']['path']}&nbsp;{$arrowcode['path']}</th>
-						<th>{$lng['panel']['options']}</th>
+						<th>{$lng['login']['username']}</th>
+						<th>{$lng['panel']['path']}</th>
+						<th class="nosort">{$lng['panel']['options']}</th>
 					</tr>
 				</thead>
 				<if $pagingcode != ''>

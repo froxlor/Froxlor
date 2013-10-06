@@ -11,35 +11,40 @@ $header
 
 			<form action="{$linker->getLink(array('section' => 'customers'))}" method="post" enctype="application/x-www-form-urlencoded">
 
-			<div class="overviewsearch">
-				{$searchcode}
-			</div>
-
 			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $userinfo['customers_used'] >
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>
 				</div>
 			</if>
+			
+			<div class="overviewsearch">
+				{$searchcode}
+			</div>
 
-			<table class="bradius">
+			<table class="bradius" id="sortable" sort-column="1">
 			<thead>
 				<tr>
 					<th>
-						{$lng['customer']['name']}&nbsp;&nbsp;{$arrowcode['c.name']}
-						{$lng['customer']['firstname']}&nbsp;&nbsp;{$arrowcode['c.firstname']}
+						{$lng['customer']['name']},
+						{$lng['customer']['firstname']}
 					</th>
 					<th>
-						{$lng['login']['username']}&nbsp;{$arrowcode['c.loginname']}
+						{$lng['login']['username']}
 					</th>
 					<th>
-						{$lng['admin']['admin']}&nbsp;{$arrowcode['a.loginname']}
+						{$lng['admin']['admin']}
 					</th>
 					<th>{$lng['admin']['lastlogin_succ']}</th>
-					<th></th>
-					<th>{$lng['panel']['options']}</th>
+					<th class="nosort"></th>
+					<th class="nosort">{$lng['panel']['options']}</th>
 				</tr>
 			</thead>
+			
+			<tbody>
+				$customers
+			</tbody>
+			
 			<if $pagingcode != ''>
 				<tfoot>
 					<tr>
@@ -47,9 +52,6 @@ $header
 					</tr>
 				</tfoot>
 			</if>
-			<tbody>
-				$customers
-			</tbody>
 			</table>
 
 			<p style="display:none;">
