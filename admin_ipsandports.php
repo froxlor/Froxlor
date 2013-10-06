@@ -83,7 +83,7 @@ if($page == 'ipsandports'
 		if(isset($result['id'])
 		   && $result['id'] == $id)
 		{
-			$result_checkdomain = $db->query_first("SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `ipandport`='" . (int)$id . "'");
+			$result_checkdomain = $db->query_first("SELECT `id_domain` as `id` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandport`='" . (int)$id . "'");
 
 			if($result_checkdomain['id'] == '')
 			{
