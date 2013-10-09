@@ -258,6 +258,16 @@ class ConfigIO {
 				safe_exec('rm -rf '. makeCorrectFile($configdir));
 			}
 		}
+
+		// also remove aliasconfigdir #1273
+		$aliasconfigdir = $this->_getFile('phpfpm', 'aliasconfigdir');
+		if ($aliasconfigdir !== false) {
+			$aliasconfigdir = makeCorrectDir($aliasconfigdir);
+			if (@is_dir($aliasconfigdir)) {
+				$aliasconfigdir.='/*';
+				safe_exec('rm -rf '. makeCorrectFile($aliasconfigdir));
+			}
+		}
 	}
 
 	/**
