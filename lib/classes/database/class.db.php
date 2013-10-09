@@ -367,7 +367,21 @@ class db
 		openlog("Froxlor", LOG_NDELAY, LOG_USER);
 		syslog(LOG_ERR, $text . "; $md5");
 		closelog();
-		die("We are sorry, but a MySQL - error occurred. The administrator may find more information in syslog with the ID $md5");
+
+		/**
+		 * log to a file, so we can actually ask people for the error
+		 * (no one seems to find the stuff in the syslog)
+		 */
+		$sl_dir = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__))))."/logs/");
+		if (!file_exists($sl_dir)) {
+			@mkdir($sl_dir, 0755);
+		}
+		$sl_file = makeCorrectFile($sl_dir."/sql-error.log");
+		$sqllog = @fopen($sl_file, 'a');
+		@fwrite($sqllog, date('d.m.Y H:i', time())." --- ".$text."\n");
+		@fclose($sqllog);
+
+		die("We are sorry, but a MySQL - error occurred. The administrator may find more information in syslog with the ID ".$md5." or in the sql-error.log in the logs/ directory");
 	}
 }
 
