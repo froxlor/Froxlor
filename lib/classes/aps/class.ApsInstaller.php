@@ -236,6 +236,7 @@ class ApsInstaller extends ApsParser
 				$Xml->registerXPathNamespace('db', 'http://apstandard.com/ns/1/db');
 	
 				$XmlDb = new DynamicProperties;
+				$XmlDb->db = new DynamicProperties;
 				$XmlDb->db->id = getXPathValue($Xml, '//db:id');
 			}
 
@@ -500,6 +501,7 @@ class ApsInstaller extends ApsParser
 			$Xml->registerXPathNamespace('db', 'http://apstandard.com/ns/1/db');
 
 			$XmlDb = new DynamicProperties;
+			$XmlDb->db = new DynamicProperties;
 			$XmlDb->db->id = getXPathValue($Xml, '//db:id');
 		}
 
