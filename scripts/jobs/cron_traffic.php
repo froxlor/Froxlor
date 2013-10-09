@@ -81,7 +81,7 @@ fwrite($debugHandler, 'Traffic run started...' . "\n");
 $admin_traffic = array();
 $domainlist = array();
 $speciallogfile_domainlist = array();
-$result_domainlist = $db->query("SELECT `id`, `domain`, `customerid`, `parentdomainid`, `speciallogfile` FROM `" . TABLE_PANEL_DOMAINS . "` ;");
+$result_domainlist = $db->query("SELECT `id`, `domain`, `customerid`, `parentdomainid`, `speciallogfile` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` IS NULL AND `email_only` <> '1' ;");
 
 while($row_domainlist = $db->fetch_array($result_domainlist))
 {
@@ -206,39 +206,6 @@ while ($row = $db->fetch_array($result)) {
 			}
 		}
 
-		// logrotate speciallogfiles
-		if (isset($speciallogfile_domainlist[$row['customerid']])
-			&& is_array($speciallogfile_domainlist[$row['customerid']])
-			&& count($speciallogfile_domainlist[$row['customerid']]) != 0
-		) {
-			reset($speciallogfile_domainlist[$row['customerid']]);
-			foreach ($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain) {
-				
-				$logrotatefile = '/tmp/froxlor_logrotate_tmpfile.conf';
-				$fh = fopen($logrotatefile, 'w');
-
-				$logconf = '# ' . basename($logrotatefile) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" .
-						$settings['system']['logfiles_directory'] . $row['loginname'] .'-' . $domain . '-access.log ' .
-						$settings['system']['logfiles_directory'] . $row['loginname'] .'-' . $domain . '-error.log {' . "\n" .
-						$settings['system']['logrotate_interval'] . "\n" .
-						'missingok' . "\n" .
-						'rotate ' . $settings['system']['logrotate_keep'] . "\n" .
-						'compress' . "\n" .
-						'delaycompress' . "\n" .
-						'notifempty' . "\n" .
-						'create' . "\n" .
-						'}' . "\n";
-
-				fwrite($fh, $logconf);
-				fclose($fh);
-
-				safe_exec(escapeshellcmd($settings['system']['logrotate_binary']) . ' ' . $logrotatefile);
-
-				fwrite($debugHandler, '   apache::reload: reloading apache' . "\n");
-				safe_exec(escapeshellcmd($settings['system']['apachereload_command']));
-			}
-		}
-
 		reset($domainlist[$row['customerid']]);
 
 		// callAwstatsGetTraffic is called ONLY HERE and
@@ -253,34 +220,6 @@ while ($row = $db->fetch_array($result)) {
 
 		// make the stuff readable for the customer, #258
 		makeChownWithNewStats($row);
-		
-		// logrotate
-		if ($settings['system']['logrotate_enabled'] == '1') {
-			fwrite($debugHandler, '   logrotate customers logs' . "\n");
-
-			$logrotatefile = '/tmp/froxlor_logrotate_tmpfile.conf';
-			$fh = fopen($logrotatefile, 'w');
-
-			$logconf = '# ' . basename($logrotatefile) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" .
-				$settings['system']['logfiles_directory'] . $row['loginname'] . '-access.log ' .
-				$settings['system']['logfiles_directory'] . $row['loginname'] . '-error.log {' . "\n" .
-				$settings['system']['logrotate_interval'] . "\n" .
-				'missingok' . "\n" .
-				'rotate ' . $settings['system']['logrotate_keep'] . "\n" .
-				'compress' . "\n" .
-				'delaycompress' . "\n" .
-				'notifempty' . "\n" .
-				'create' . "\n" .
-				'}' . "\n";
-
-			fwrite($fh, $logconf);
-			fclose($fh);
-
-			safe_exec(escapeshellcmd($settings['system']['logrotate_binary']) . ' ' . $logrotatefile);
-
-			fwrite($debugHandler, '   apache::reload: reloading apache' . "\n");
-			safe_exec(escapeshellcmd($settings['system']['apachereload_command']));
-		}
 
 		/**
 		 * Webalizer/AWStats might run for some time, so we'd better check if our database is still present

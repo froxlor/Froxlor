@@ -1,0 +1,16 @@
+#
+# Froxlor logrotate snipet
+#
+<CUSTOMER_LOGS>*.log {
+  missingok
+  weekly
+  rotate 4
+  compress
+  delaycompress
+  notifempty
+  create
+  sharedscripts
+  postrotate
+  <WEBSERVER_RELOAD_CMD> > /dev/null 2>&1 || true
+  endscript
+}

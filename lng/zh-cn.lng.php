@@ -477,11 +477,6 @@ $lng['traffic']['sumftp'] = 'FTP流量合计 - ';
 $lng['traffic']['summail'] = '邮件流量合计 - ';
 
 // ADDED IN FROXLOR 0.9.24-svn1
-$lng['logrotate'] = '转储';
-$lng['logrotate_enabled'] = '开启转储？';
-$lng['logrotate_binary'] = '转储（Logrotate）二进制路径：';
-$lng['logrotate_interval'] = '间隔?';
-$lng['logrotate_keep'] = '保留多少日志文件？';
 $lng['admin']['assignedmax'] = '已指派 / 上限';
 $lng['admin']['usedmax'] = '已用 / 上限';
 $lng['admin']['used'] = '已用';
