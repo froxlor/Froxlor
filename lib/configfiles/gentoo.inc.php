@@ -416,6 +416,21 @@ milter_default_action = accept" >> /etc/postfix/main.cf',
 						'restart' => Array(
 							'/etc/init.d/nscd restart'
 						)
+					),
+					'logrotate' => array(
+						'label' => 'Logrotate',
+						'commands_1' => array(
+							'emerge -av app-admin/logrotate',
+							'touch /etc/logrotate.d/froxlor',
+							'chmod 644 /etc/logrotate.d/froxlor'
+						),
+						'files' => array(
+							'etc_logrotated_froxlor' => '/etc/logrotate.d/froxlor'
+						),
+						'commands_2' => array(
+							'# emerge automatically adds a daily cronjob for logrotate',
+							'# you do not have to do anything else :)'
+						)
 					)
 				)
 			)

@@ -384,6 +384,22 @@ return Array(
 						'restart' => Array(
 							'sh /etc/rc.d/nscd restart'
 						)
+					),
+					'logrotate' => array(
+						'label' => 'Logrotate',
+						'commands_1' => array(
+							'cd /usr/ports/sysutils/logrotate/',
+							'make install clean clean-depends',
+							'touch /etc/logrotate.d/froxlor',
+							'chmod 644 /etc/logrotate.d/froxlor'
+						),
+						'files' => array(
+							'etc_logrotated_froxlor' => '/etc/logrotate.d/froxlor'
+						),
+						'commands_2' => array(
+							'# create cronjob-entry (daily-recommended)',
+							'0 2 * * * /usr/local/sbin/logrotate -f /etc/logrotate.d/froxlor'
+						)
 					)
 				)
 			)

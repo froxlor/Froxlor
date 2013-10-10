@@ -83,7 +83,7 @@ if($page == 'ipsandports'
 		if(isset($result['id'])
 		   && $result['id'] == $id)
 		{
-			$result_checkdomain = $db->query_first("SELECT `id_domain` as `id` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandport`='" . (int)$id . "'");
+			$result_checkdomain = $db->query_first("SELECT `id_domain` as `id` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports`='" . (int)$id . "'");
 
 			if($result_checkdomain['id'] == '')
 			{
@@ -104,7 +104,7 @@ if($page == 'ipsandports'
 								$db->query("DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id`='" . (int)$id . "'");
 
 								// also, remove connections to domains (multi-stack)
-								$db->query("DELETE FROM `".TABLE_DOMAINTOIP."` WHERE `id`='".(int)$id."'");
+								$db->query("DELETE FROM `".TABLE_DOMAINTOIP."` WHERE `id_ipandports`='".(int)$id."'");
 
 								$log->logAction(ADM_ACTION, LOG_WARNING, "deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
 								inserttask('1');

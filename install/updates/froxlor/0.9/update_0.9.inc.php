@@ -2219,3 +2219,17 @@ if (isFroxlorVersion('0.9.29.1-dev1')) {
 
 	updateToVersion('0.9.29.1-dev2');
 }
+
+if (isFroxlorVersion('0.9.29.1-dev2')) {
+	showUpdateStep("Updating from 0.9.29.1-dev2 to 0.9.29.1-dev3", true);
+	lastStepStatus(0);
+
+	showUpdateStep("Removing old logrotate settings");
+	$db->query("DELETE FROM `panel_settings` WHERE `varname` = 'logrotate_enabled';");
+	$db->query("DELETE FROM `panel_settings` WHERE `varname` = 'logrotate_binary';");
+	$db->query("DELETE FROM `panel_settings` WHERE `varname` = 'logrotate_interval';");
+	$db->query("DELETE FROM `panel_settings` WHERE `varname` = 'logrotate_keep';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.29.1-dev3');
+}

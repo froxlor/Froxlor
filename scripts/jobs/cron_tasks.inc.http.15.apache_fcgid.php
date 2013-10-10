@@ -37,12 +37,11 @@ class apache_fcgid extends apache
 
 			if((int)$this->settings['phpfpm']['enabled'] == 1)
 			{
-				$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
 				$srvName = 'fpm.external';
 				if ($domain['ssl'] == 1 && $ssl_vhost) {
 					$srvName = 'ssl-fpm.external';
 				}
-				$php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile() . ' -user ' . $domain['loginname'] . ' -group ' . $domain['loginname'] . " -idle-timeout " . $this->settings['phpfpm']['idle_timeout'] . "\n";
+				$php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile()  . ' -idle-timeout ' . $this->settings['phpfpm']['idle_timeout'] . "\n";
 				$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
 				$php_options_text.= '    <FilesMatch "\.php$">' . "\n";
 				$php_options_text.= '      SetHandler php5-fastcgi'. "\n";

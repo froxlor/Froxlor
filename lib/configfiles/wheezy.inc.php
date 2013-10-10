@@ -398,6 +398,21 @@ return Array(
 							'/etc/init.d/nscd restart'
 						)
 					),
+					'logrotate' => array(
+						'label' => 'Logrotate',
+						'commands_1' => array(
+							'apt-get install logrotate',
+							'touch /etc/logrotate.d/froxlor',
+							'chmod 644 /etc/logrotate.d/froxlor'
+						),
+						'files' => array(
+							'etc_logrotated_froxlor' => '/etc/logrotate.d/froxlor'
+						),
+						'commands_2' => array(
+							'# apt automatically adds a daily cronjob for logrotate',
+							'# you do not have to do anything else :)'
+						)
+					),
 					'fcgid' => array(
 						'label' => 'FCGID',
 						'commands' => array(

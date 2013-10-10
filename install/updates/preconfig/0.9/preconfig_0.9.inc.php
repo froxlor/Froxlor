@@ -541,4 +541,11 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= '<input type="text" class="text" name="system_customersslpath" value="/etc/apache2/ssl/" />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_version, '0.9.29.1-dev3')) {
+		$has_preconfig = true;
+		$description  = 'The build in logrotation-feature has been removed. Please follow the configuration-instructions for your system to enable logrotating again.';
+		$question = '';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }
