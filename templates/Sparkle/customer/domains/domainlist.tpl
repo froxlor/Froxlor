@@ -25,8 +25,8 @@
 			<table class="bradius">
 				<thead>
 					<tr>
-						<th>{$arrowcode['d.domain']}{$lng['domains']['domainname']}</th>
-						<th>{$arrowcode['d.documentroot']}{$lng['panel']['path']}</th>
+						<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>
+						<th>{$lng['panel']['path']}&nbsp;{$arrowcode['d.documentroot']}</th>
 						<th>{$lng['panel']['options']}</th>
 					</tr>
 				</thead>

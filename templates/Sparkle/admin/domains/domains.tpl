@@ -22,13 +22,13 @@
 				</div>
 			</if>
 
-			<table class="bradius" id="sortable">
+			<table class="bradius">
 				<thead>
 					<tr>
-						<th>{$lng['domains']['domainname']}</th>
+						<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>
 						<th>{$lng['admin']['ipsandports']['ip']}</th>
-						<th>{$lng['admin']['customer']}</th>
-						<th class="nosort">{$lng['panel']['options']}</th>
+						<th>{$lng['admin']['customer']}&nbsp;{$arrowcode['c.loginname']}</th>
+						<th>{$lng['panel']['options']}</th>
 					</tr>
 				</thead>
 
