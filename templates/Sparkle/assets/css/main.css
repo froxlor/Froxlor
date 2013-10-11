@@ -11,9 +11,10 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { 
 
 /* TYPE */
 html,body {
-	font:12px/18px "Lucida Grande","Lucida Sans Unicode",Helvetica,Arial,Verdana,sans-serif;
+	font:12px/18px Helvetica,Arial,Verdana,sans-serif;
 	background-color:#f2f2f2;
 	color:#333;
+	-webkit-font-smoothing: antialiased;
 }
 
 body {
@@ -64,8 +65,8 @@ td a {
 }
 
 .topheader {
-	background: #e9edf0;
-	background: rgba(234,238,240,0.9);
+	background: #fafafa;
+	background: rgba(250,250,250,0.9);
 	top: 0px;
 	width: 100%;
 	padding: 2px 0 0 5px;
@@ -75,16 +76,17 @@ td a {
 }
 .topheader_navigation {
 	float: right;
-	margin: 35px 40px 0 0;
+	margin: 36px 50px 0 0;
+	text-transform: uppercase;
 }
 
 /* TOPHEADER NAV */
 ul.topheadernav {
 	list-style-type: none;
-	font-size: 14px;
+	font-size: 13px;
 }
 ul.topheadernav li {
-	padding: 0 0 0 30px;
+	padding: 0 0 0 50px;
 	float: left;
 	position: relative;
 }
@@ -109,7 +111,7 @@ ul.topheadernav li:hover ul {
 }
 ul.topheadernav li ul li {
 	font-size: 11px;
-	margin-left: -30px;
+	margin-left: -50px;
 }
 ul.topheadernav li ul li a:hover {
 	color: #111;
