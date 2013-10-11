@@ -22,18 +22,18 @@ $header
 			</div>
 			</if>
 
-			<table class="bradius" id="sortable">
+			<table class="bradius">
 			<thead>
 				<tr>
-					<th>{$lng['admin']['ipsandports']['ip']}</th>
-					<th>{$lng['admin']['ipsandports']['port']}</th>
+					<th>{$lng['admin']['ipsandports']['ip']}&nbsp;{$arrowcode['ip']}</th>
+					<th>{$lng['admin']['ipsandports']['port']}&nbsp;{$arrowcode['port']}</th>
 					<th>Listen</th>
 					<th>NameVirtualHost</th>
 					<th>vHost-Container</th>
 					<th>Specialsettings</th>
 					<th>ServerName</th>
 					<th>SSL</th>
-					<th class="nosort">{$lng['panel']['options']}</th>
+					<th>{$lng['panel']['options']}</th>
 				</tr>
 			</thead>
 			<if $pagingcode != ''>

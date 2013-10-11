@@ -19,20 +19,6 @@ $(document).ready(function() {
 		$("html, body").animate({ scrollTop: 0 }, 600);
 		return false;
 	});
-	
-	// Enable datatable
-	var sortColumn = $('#sortable').attr('sort-column');
-	if (sortColumn == null) { sortColumn = "0"; }
-	var sortDirection = $('#sortable').attr('sort-direction');
-	if (sortDirection == null) { sortDirection = "asc"; }
-    var sortTable = $('#sortable').dataTable({
-	    "bFilter": false,
-	    "bInfo": false,
-	    "bPaginate": false,
-	    "aaSorting": [[sortColumn, sortDirection]]
-    });
-    $('.nosort').unbind('click');
-    
 
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {

@@ -25,8 +25,8 @@
 			<table class="bradius">
 				<thead>
 					<tr>
-						<th>{$arrowcode['m.email_full']}{$lng['emails']['emailaddress']}</th>
-						<th>{$arrowcode['m.destination']}{$lng['emails']['forwarders']}</th>
+						<th>{$lng['emails']['emailaddress']}&nbsp;{$arrowcode['m.email_full']}</th>
+						<th>{$lng['emails']['forwarders']}&nbsp;{$arrowcode['m.destination']}</th>
 						<th>{$lng['emails']['account']}</th>
 						<if $settings['catchall']['catchall_enabled'] == '1'><th>{$lng['emails']['catchall']}</th></if>
 						<if $settings['system']['mail_quota_enabled'] == '1'>
