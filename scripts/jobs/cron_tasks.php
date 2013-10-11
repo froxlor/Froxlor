@@ -244,33 +244,22 @@ while ($row = $db->fetch_array($result_tasks)) {
 				/*
 				 * see if we have some php-fcgid leftovers if used
 				 * and remove them, #200
+				 * UPDATE: this is being done in ConfigIO::cleanUp()
 				 */
-				if($settings['system']['mod_fcgid'] == 1)
-				{
-					// e.g. /var/www/php-fcgi-starter/web1/
-					$configdir = makeCorrectDir($settings['system']['mod_fcgid_configdir'] . '/' . $row['data']['loginname'] . '/');
 
-					if (is_dir($configdir))
-					{
-						$its = new RecursiveIteratorIterator(
-							new RecursiveDirectoryIterator($configdir)
-						);
-
-						// iterate through all subdirs,
-						// look for php-fcgi-starter files
-						// and take immutable-flag away from them
-						// so we can delete them :)
-						foreach ($its as $fullFileName => $it )
-						{
-							if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter')
-							{
-								removeImmutable($its->getPathname());
-							}
-						}
-						// now get rid of old stuff
-						safe_exec('rm -rf '. escapeshellarg($configdir));
-					}
+				/**
+				 * webserver logs
+				 */
+				$logsdir = makeCorrectFile($settings['system']['logfiles_directory'].'/'.$row['data']['loginname']);
+				if ($logsdir != '/'
+					&& $logsdir != makeCorrectDir($settings['system']['logfiles_directory'])
+					&& substr($logsdir, 0, strlen($settings['system']['logfiles_directory'])) == $settings['system']['logfiles_directory']
+				) {
+					// build up wildcard for webX-{access,error}.log{*}
+					$logfiles = $logsdir.'-*';
+					safe_exec('rm -f '.escapeshellarg($logfiles));
 				}
+
 			}
 		}
 	}
