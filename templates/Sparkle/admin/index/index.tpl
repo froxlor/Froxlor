@@ -3,9 +3,9 @@ $header
 
 	<if 0 < $awaitingtickets && $settings['ticket']['enabled'] == 1 >
 	<div class="messagewrapperfull">
-		<div class="warningcontainer bradius">
-			<div class="warningtitle">{$lng['admin']['warning']}</div>
-			<div class="warning"><br /><strong>{$awaitingtickets_text}</strong></div>
+		<div class="neutralcontainer bradius">
+			<div class="neutraltitle">{$lng['admin']['note']}</div>
+			<div class="neutral">{$awaitingtickets_text}</div>
 		</div>
 	</div>
 	</if>
