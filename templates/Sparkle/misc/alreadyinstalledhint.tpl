@@ -39,9 +39,8 @@
 </div>
 <footer>
 	<span>
-		Froxlor &copy; 2009-2010 by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a>
+		Froxlor &copy; 2009-2013 by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a>
 	</span>
 </footer>
 </body>
 </html>
-

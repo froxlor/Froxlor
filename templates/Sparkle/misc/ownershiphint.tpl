@@ -12,28 +12,36 @@
 	<title>Froxlor Server Management Panel - Installation</title>
 	<style type="text/css">
 	body {
-		font-family: Verdana, Geneva, sans-serif;
+        font-family: Verdana, Geneva, sans-serif;
 	}
 	</style>
 </head>
 <body>
 <div class="loginpage">
+	
 	<article class="login bradius">
 		<header class="dark">
 			<img src="templates/Sparkle/assets/img/logo.png" alt="Froxlor Server Management Panel" />
 		</header>
 
 		<section class="loginsec">
-			<h2>Welcome to Froxlor</h2>
-			<p>It seems that Froxlor has not been installed yet.</p>
-			<p>Click on the link below to start the installation.</p>
-			<p>&nbsp;</p>
+			<div class="errorcontainer bradius">
+				<div class="errortitle">Whoops!</div>
+				<div class="error">
+					<p>The configuration file <b>lib/userdata.inc.php</b> cannot be read from the webserver.</p>
+					<p>&nbsp;</p>
+					<p>This mostly happens due to wrong ownership.<br />Try the following command to correct the ownership:</p>
+					<p>&nbsp;</p>
+					<p><pre>chown -R <USER>:<GROUP> <FROXLOR_INSTALL_DIR></pre></p>
+				</div>
+			</div>
 			<aside class="right">
-				<a href="./install/install.php" title="Click to start the install process">Start install</a>
+				<a href="index.php" title="Click to refresh">Refresh</a>
 			</aside>
 		</section>
 
 	</article>
+
 </div>
 <footer>
 	<span>
