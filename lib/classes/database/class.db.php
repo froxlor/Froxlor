@@ -307,6 +307,15 @@ class db {
 		@fwrite($sqllog, date('d.m.Y H:i', time())." --- ".$text."\n");
 		@fclose($sqllog);
 
+		if (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] != '') {
+			// if we're not on the shell, output a nicer error-message
+			$err_hint = file_get_contents(dirname($sl_dir).'/templates/'.$theme.'/misc/dberrornice.tpl');
+			// replace values
+			$err_hint = str_replace("<TEXT>", $errormsg, $err_hint);
+			$err_hint = str_replace("<DEBUG>", $text, $err_hint);
+			// show
+			die($err_hint);
+		}
 		die("We are sorry, but a MySQL - error occurred. The administrator may find more information in syslog with the ID ".$md5." or in the sql-error.log in the logs/ directory");
 	}
 }
