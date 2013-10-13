@@ -26,7 +26,7 @@
 				<thead>
 					<tr>
 						<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>
-						<th>{$lng['panel']['path']}&nbsp;{$arrowcode['d.documentroot']}</th>
+						<th>{$lng['panel']['path']}</th>
 						<th>{$lng['panel']['options']}</th>
 					</tr>
 				</thead>

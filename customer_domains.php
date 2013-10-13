@@ -45,9 +45,7 @@ elseif($page == 'domains')
 	{
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
 		$fields = array(
-			'd.domain' => $lng['domains']['domainname'],
-			'd.documentroot' => $lng['panel']['path'],
-			'd.aliasdomain' => $lng['domains']['aliasdomain']
+			'd.domain' => $lng['domains']['domainname']
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_DOMAINS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$result = $db->query("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id` LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id` WHERE `d`.`customerid`='" . (int)$userinfo['customerid'] . "' AND `d`.`email_only`='0' AND `d`.`id` <> " . (int)$userinfo['standardsubdomain'] . " " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
