@@ -45,7 +45,7 @@
 	<div class="topheader_navigation">
 		<ul class="topheadernav">
 			<li><a href="{$linker->getLink(array('section' => 'index'))}">{$lng['admin']['overview']}</a></li>
-			<li><a href="#">{$lng['panel']['options']}</a>
+			<li><a href="#">{$lng['panel']['options']}&nbsp;&#x25BE;</a>
 				<ul>
 					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_password'))}">{$lng['login']['password']}</a></li>
 					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_language'))}">{$lng['login']['language']}</a></li>
