@@ -54,7 +54,7 @@ $lng['install']['admin_user'] = 'Administrator-Benutzername';
 $lng['install']['admin_pass1'] = 'Administrator-Passwort';
 $lng['install']['admin_pass2'] = 'Administrator-Passwort (Bestätigung)';
 $lng['install']['serversettings'] = 'Servereinstellungen';
-$lng['install']['servername'] = 'Servername (FQDN)';
+$lng['install']['servername'] = 'Servername (FQDN, keine IP-Adresse)';
 $lng['install']['serverip'] = 'Server-IP';
 $lng['install']['webserver'] = 'Webserver';
 $lng['install']['apache2'] = 'Apache 2';
@@ -63,8 +63,6 @@ $lng['install']['nginx'] = 'NGINX';
 $lng['install']['httpuser'] = 'HTTP Username';
 $lng['install']['httpgroup'] = 'HTTP Gruppenname';
 
-$lng['install']['system_servername'] = 'System ServerName';
-$lng['install']['servername_should_be_fqdn'] = 'Der Servername sollte ein vollqualifizierter Domainname sein und keine IP Adresse.';
 $lng['install']['testing_mysql'] = 'Teste MySQL-Root Zugang...';
 $lng['install']['backup_old_db'] = 'Sicherung vorheriger Datenbank...';
 $lng['install']['backup_binary_missing'] = 'Konnte mysqldump nicht finden';

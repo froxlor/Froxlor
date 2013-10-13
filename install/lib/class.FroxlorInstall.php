@@ -172,6 +172,11 @@ class FroxlorInstall {
 			$this->_data['mysql_access_host'] = $this->_data['serverip'];
 		}
 
+		// check system-hostname to be a FQDN
+		if ($this->_validate_ip($this->_data['servername'], true) !== false) {
+			$this->_data['servername'] = '';
+		}
+
 		if (isset($_POST['installstep'])
 				&& $_POST['installstep'] == '1'
 				&& $this->_data['admin_pass1'] == $this->_data['admin_pass2']
@@ -199,16 +204,9 @@ class FroxlorInstall {
 
 		$content = "<table class=\"noborder\">";
 
-		// check system-hostname to be a FQDN
-		$content .= $this->_status_message('begin', $this->_lng['install']['system_servername']);
-		if ($this->_validate_ip($_SERVER['SERVER_NAME'], true) !== false) {
-			$content .= $this->_status_message('red', $this->_lng['install']['servername_should_be_fqdn']);
-		} else {
-			$content .= $this->_status_message('green', 'OK');
-		}
-
 		// check for mysql-root-connection
 		$content .= $this->_status_message('begin', $this->_lng['install']['testing_mysql']);
+
 		$db_root = new db(
 				$this->_data['mysql_host'],
 				$this->_data['mysql_root_user'],
@@ -218,7 +216,6 @@ class FroxlorInstall {
 		// ok, if we are here, the database class is build up
 		// (otherwise it would have already die'd this script)
 		$content .= $this->_status_message('green', "OK");
-
 		// check for existing db
 		$content .= $this->_backupExistingDatabase($db_root);
 		// create unprivileged user and the database itself
@@ -512,7 +509,7 @@ class FroxlorInstall {
 
 		// check for existing of former database
 		$tables_exist = false;
-		$sql = "SHOW TABLES FROM `".$this->_data['mysql_database']."`";
+		$sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '".$this->_data['mysql_database']."'";
 		$result = $db_root->query($sql);
 
 		// check result
