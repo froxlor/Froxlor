@@ -28,12 +28,14 @@
 			<h2>Welcome to Froxlor</h2>
 			<p>It seems that Froxlor has already been configured.</p>
 			<p>Click on the link below to go to the login page.</p>
-			<p class="submit">
+			<p>&nbsp;</p>
+			<aside class="right">
 				<a href="../index.php" title="Click to go to the login page">Go to login</a>
-			</p>
+			</aside>
 		</section>
 
 	</article>
+
 </div>
 <footer>
 	<span>

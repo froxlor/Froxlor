@@ -27,9 +27,10 @@
 			<h2>Welcome to Froxlor</h2>
 			<p>It seems that Froxlor has not been installed yet.</p>
 			<p>Click on the link below to start the installation.</p>
-			<p class="submit">
+			<p>&nbsp;</p>
+			<aside class="right">
 				<a href="./install/install.php" title="Click to start the install process">Start install</a>
-			</p>
+			</aside>
 		</section>
 
 	</article>
