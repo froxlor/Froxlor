@@ -1,7 +1,7 @@
 <article>
 	<header>
 		<h2>
-			<img src="templates/{$theme}/assets/img/icons/aps.png" alt=""{$lng['aps']['search']} />&nbsp;
+			<img src="templates/{$theme}/assets/img/icons/aps_big.png" alt=""{$lng['aps']['search']} />&nbsp;
 			{$lng['aps']['search']}
 		</h2>
 	</header>
