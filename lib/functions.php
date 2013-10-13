@@ -42,39 +42,87 @@ function includeFunctions($dirname)
 	closedir($dirhandle);
 }
 
-function __autoload($classname)
-{
-	global $libdirname, $theme;
-	findIncludeClass($libdirname . '/classes/', $classname);
-}
-
-spl_autoload_register('__autoload');
-
-function findIncludeClass($dirname, $classname)
-{
-	$dirhandle = opendir($dirname);
-	while(false !== ($filename = readdir($dirhandle)))
-	{
-		if($filename != '.' && $filename != '..' && $filename != '')
-		{
-			if($filename == 'class.' . $classname . '.php' || $filename == 'abstract.' . $classname . '.php' || $filename == 'interface.' . $classname . '.php')
-			{
-				include($dirname . $filename);
-				return;
-			}
-
-			if(is_dir($dirname . $filename))
-			{
-				findIncludeClass($dirname . $filename . '/', $classname);
-			}
-		}
-	}
-	closedir($dirhandle);
-}
-
-
 function exportDetails($fielddata, $newfieldvalue)
 {
 	print_r($newfieldvalue);
 }
 
+Autoloader::init();
+
+/**
+ * Class Autoloader
+ *
+ * iterates through given directory and includes
+ * the file which matches $classname
+ *
+ * @copyright  (c) the authors
+ * @author     Froxlor team <team@froxlor.org> (2013-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    Autoloader
+ * @since      0.9.29.1
+ */
+class Autoloader {
+
+	/**
+	 * returns a new AutoLoader-object
+	 * @return Autoloader
+	 */
+	public static function init() {
+		return new self();
+	}
+
+	/**
+	 * class constructor
+	 *
+	 * @return null
+	 */
+	public function __construct() {
+		// register autoload.function
+		spl_autoload_register(array($this, 'doAutoload'));
+	}
+
+	/**
+	 * gets the class to load as parameter, searches the library-paths
+	 * recursively for this class and includes it
+	 *
+	 * @param string $class
+	 *
+	 * @throws Exception
+	 * @return boolean
+	 */
+	public function doAutoload($class) {
+
+		// define the paths where to look for classes
+		$paths = array(
+				dirname(__FILE__) . '/',
+				dirname(dirname(__FILE__)) . '/scripts/',
+				dirname(dirname(__FILE__)) . '/install/',
+		);
+
+		// now iterate through the paths
+		foreach ($paths as $path) {
+			// valid directory?
+			if (is_dir($path)) {
+				// create RecursiveIteratorIterator
+				$its = new RecursiveIteratorIterator(
+						new RecursiveDirectoryIterator($path)
+				);
+
+				// check every file
+				foreach ($its as $fullFileName => $it ) {
+					// does it match the Filename pattern?
+					if (preg_match("/^(class|module|interface|abstract|)\.?$class\.php$/i", $it->getFilename())) {
+						// include the file and return from the loop
+						include_once $fullFileName;
+						return true;
+					}
+				}
+			} else {
+				// yikes - no valid directory to check
+				throw new Exception("Cannot autoload from directory '".$path."'. No such directory.");
+			}
+		}
+		// yikes - class not found
+		throw new Exception("Could not find class '".$class."'");
+	}
+}

@@ -92,7 +92,6 @@ CREATE TABLE `panel_admins` (
   `domains_see_all` tinyint(1) NOT NULL default '0',
   `caneditphpsettings` tinyint(1) NOT NULL default '0',
   `change_serversettings` tinyint(1) NOT NULL default '0',
-  `edit_billingdata` tinyint(1) NOT NULL DEFAULT '0',
   `diskspace` int(15) NOT NULL default '0',
   `diskspace_used` int(15) NOT NULL default '0',
   `mysqls` int(15) NOT NULL default '0',
@@ -124,7 +123,7 @@ CREATE TABLE `panel_admins` (
   `aps_packages_used` int(5) NOT NULL default '0',
   `email_autoresponder` int(5) NOT NULL default '0',
   `email_autoresponder_used` int(5) NOT NULL default '0',
-  `theme` varchar(255) NOT NULL default 'Froxlor',
+  `theme` varchar(255) NOT NULL default 'Sparkle',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -187,7 +186,7 @@ CREATE TABLE `panel_customers` (
   `perlenabled` tinyint(1) NOT NULL default '0',
   `email_autoresponder` int(5) NOT NULL default '0',
   `email_autoresponder_used` int(5) NOT NULL default '0',
-  `theme` varchar(255) NOT NULL default 'Froxlor',
+  `theme` varchar(255) NOT NULL default 'Sparkle',
   `backup_allowed` TINYINT( 1 ) NOT NULL DEFAULT '1',
   `backup_enabled` TINYINT( 1 ) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`customerid`),
@@ -495,10 +494,6 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'diskquota_repquota_path', '/usr/sbin/repquota'),
 	('system', 'diskquota_quotatool_path', '/usr/bin/quotatool'),
 	('system', 'diskquota_customer_partition', '/dev/root'),
-	('system', 'logrotate_enabled', '0'),
-	('system', 'logrotate_binary', '/usr/sbin/logrotate'),
-	('system', 'logrotate_interval', 'weekly'),
-	('system', 'logrotate_keep', '4'),
 	('system', 'mod_fcgid_idle_timeout', '30'),
 	('system', 'perl_path', '/usr/bin/perl'),
 	('system', 'mod_fcgid_ownvhost', '0'),
@@ -530,7 +525,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'allow_domain_change_admin', '0'),
 	('panel', 'allow_domain_change_customer', '0'),
 	('panel', 'frontend', 'froxlor'),
-	('panel', 'default_theme', 'Froxlor'),
+	('panel', 'default_theme', 'Sparkle'),
 	('panel', 'password_min_length', '0'),
 	('panel', 'adminmail_defname', 'Froxlor Administrator'),
 	('panel', 'adminmail_return', ''),
@@ -543,7 +538,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.29.1-dev2');
+	('panel', 'version', '0.9.29.1-dev4');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

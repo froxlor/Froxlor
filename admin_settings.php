@@ -149,6 +149,10 @@ elseif($page == 'phpinfo'
 					eval("\$phpinfoentries .= \"" . getTemplate("settings/phpinfo/phpinfo_1") . "\";");
 				}
 			}
+			// first header -> show actual php version
+			if (strtolower($name) == "phpinfo") {
+				$name = "PHP ".PHP_VERSION;
+			}
 			eval("\$phpinfohtml .= \"" . getTemplate("settings/phpinfo/phpinfo_table") . "\";");
 		}
 		$phpinfo = $phpinfohtml;

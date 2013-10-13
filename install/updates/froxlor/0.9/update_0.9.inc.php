@@ -2116,13 +2116,13 @@ if (isFroxlorVersion('0.9.29-dev3')) {
 
 	showUpdateStep("Adding new tables to database", true);
 	$db->query("CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
-	`id` int(5) NOT NULL auto_increment,
-	`domainid` int(11) NOT NULL,
-	`ssl_cert_file` text NOT NULL,
-	`ssl_key_file` text NOT NULL,
-	`ssl_ca_file` text NOT NULL,
-	`ssl_cert_chainfile` text NOT NULL,
-	PRIMARY KEY  (`id`)
+			`id` int(5) NOT NULL auto_increment,
+			`domainid` int(11) NOT NULL,
+			`ssl_cert_file` text NOT NULL,
+			`ssl_key_file` text NOT NULL,
+			`ssl_ca_file` text NOT NULL,
+			`ssl_cert_chainfile` text NOT NULL,
+			PRIMARY KEY  (`id`)
 	) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;");
 	lastStepStatus(0);
 
@@ -2163,10 +2163,10 @@ if (isFroxlorVersion('0.9.29')) {
 	showUpdateStep("Adding new ip to domain - mapping-table");
 	$db->query("DROP TABLE IF EXISTS `panel_domaintoip`;");
 	$sql = "CREATE TABLE `".TABLE_DOMAINTOIP."` (
-		`id_domain` int(11) unsigned NOT NULL,
-		`id_ipandports` int(11) unsigned NOT NULL,
-		PRIMARY KEY (`id_domain`, `id_ipandports`)
-	) ENGINE=MyISAM ;";
+			`id_domain` int(11) unsigned NOT NULL,
+			`id_ipandports` int(11) unsigned NOT NULL,
+			PRIMARY KEY (`id_domain`, `id_ipandports`)
+			) ENGINE=MyISAM ;";
 	$db->query($sql);
 	lastStepStatus(0);
 
@@ -2176,23 +2176,23 @@ if (isFroxlorVersion('0.9.29')) {
 	while ($row = $db->fetch_array($result)) {
 		if ((int)$row['ipandport'] != 0) {
 			$db->query("INSERT INTO `".TABLE_DOMAINTOIP."` SET
-				`id_domain` = " . (int)$row['id'] . ",
-				`id_ipandports` = " . (int)$row['ipandport']);
+					`id_domain` = " . (int)$row['id'] . ",
+					`id_ipandports` = " . (int)$row['ipandport']);
 		}
 		if ((int)$row['ssl_ipandport'] != 0) {
 			$db->query("INSERT INTO `".TABLE_DOMAINTOIP."` SET
-				`id_domain` = " . (int)$row['id'] . ",
-				`id_ipandports` = " . (int)$row['ssl_ipandport']);
+					`id_domain` = " . (int)$row['id'] . ",
+					`id_ipandports` = " . (int)$row['ssl_ipandport']);
 		}
 		// Subdomains also have ssl ports if the parent has
-		elseif ((int)$row['ssl_ipandport'] == 0 
-			&& (int)$row['ssl_redirect'] != 0 
-			&& (int)$row['parentdomainid'] != 0
+		elseif ((int)$row['ssl_ipandport'] == 0
+				&& (int)$row['ssl_redirect'] != 0
+				&& (int)$row['parentdomainid'] != 0
 		) {
 			$db->query("INSERT INTO `".TABLE_DOMAINTOIP."` SET
-				`id_domain` = " . (int)$row['id'] . ",
-				`id_ipandports` = (
-					SELECT `ssl_ipandport` FROM `" . TABLE_PANEL_DOMAINS . "` 
+					`id_domain` = " . (int)$row['id'] . ",
+					`id_ipandports` = (
+					SELECT `ssl_ipandport` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `id` = '".(int)$row['parentdomainid']."');"
 			);
 		}
@@ -2232,4 +2232,15 @@ if (isFroxlorVersion('0.9.29.1-dev2')) {
 	lastStepStatus(0);
 
 	updateToVersion('0.9.29.1-dev3');
+}
+
+if (isFroxlorVersion('0.9.29.1-dev3')) {
+	showUpdateStep("Updating from 0.9.29.1-dev3 to 0.9.29.1-dev4", true);
+	lastStepStatus(0);
+
+	showUpdateStep("Removing old billing-field from admin-users");
+	$db->query("ALTER TABLE `".TABLE_PANEL_ADMINS."` DROP `edit_billingdata`");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.29.1-dev4');
 }
