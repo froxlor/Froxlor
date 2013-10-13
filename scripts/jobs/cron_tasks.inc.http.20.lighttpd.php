@@ -34,7 +34,7 @@ class lighttpd
 
 	//	protected
 
-	protected $settings = array(); 
+	protected $settings = array();
 	protected $lighttpd_data = array();
 	protected $needed_htpasswds = array();
 	protected $auth_backend_loaded = false;
@@ -44,7 +44,7 @@ class lighttpd
 	/**
 	 * indicator whether a customer is deactivated or not
 	 * if yes, only the webroot will be generated
-	 * 
+	 *
 	 * @var bool
 	 */
 	private $_deactivated = false;
@@ -150,7 +150,7 @@ class lighttpd
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath
 					);
-	
+
 					$php = new phpinterface($this->getDB(), $this->settings, $domain);
 
 					$this->lighttpd_data[$vhost_filename].= '  fastcgi.server = ( '."\n";
@@ -170,7 +170,7 @@ class lighttpd
 
 				$this->lighttpd_data[$vhost_filename].= '}' . "\n";
 			}
-	
+
 			if ($row_ipsandports['ssl'] == '1') {
 				if ($row_ipsandports['ssl_cert_file'] == '') {
 					$row_ipsandports['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
@@ -179,7 +179,7 @@ class lighttpd
 				if ($row_ipsandports['ssl_ca_file'] == '') {
 					$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
 				}
-				
+
 				if ($row_ipsandports['ssl_cert_file'] != '') {
 					$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
 					$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . '"' . "\n";
@@ -195,7 +195,7 @@ class lighttpd
 			 * if $this->settings['system']['apacheconf_vhost'] is a folder
 			 * refs #70
 			 */
-			$vhosts = $this->createLighttpdHosts($row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'], $vhost_filename);
+			$vhosts = $this->createLighttpdHosts($row_ipsandports['id'], $row_ipsandports['ssl'], $vhost_filename);
 			if ($vhosts !== null && is_array($vhosts) && isset($vhosts[0])) {
 				// sort vhosts by number (subdomains first!)
 				sort($vhosts);
@@ -204,7 +204,7 @@ class lighttpd
 					$this->lighttpd_data[$vhost_filename].= ' include "'.$vhost.'"'."\n";
 				}
 			}
-			
+
 			$this->lighttpd_data[$vhost_filename].= '}' . "\n";
 		}
 
@@ -454,7 +454,7 @@ class lighttpd
 					$vhost_content.= $this->composePhpOptions($domain);
 					$vhost_content.= $this->getStats($domain);
 
-					$query = "SELECT `default_vhostconf_domain` FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id`='".$ipid."';";
+					$query = "SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id`='".$ipid."';";
 					$ipandport = $this->db->query_first($query);
 
 					$domain['ip'] = $ipandport['ip'];

@@ -538,7 +538,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.29.1-dev4');
+	('panel', 'version', '0.9.30-dev1');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
