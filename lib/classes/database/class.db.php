@@ -21,63 +21,54 @@
  * Class to manage the connection to the Database
  * @package Functions
  */
+class db {
 
-class db
-{
 	/**
 	 * Link ID for every connection
 	 * @var int
 	 */
-
 	public $link_id = 0;
 
 	/**
 	 * Query ID for every query
 	 * @var int
 	 */
-
 	private $query_id = 0;
 
 	/**
 	 * Errordescription, if an error occures
 	 * @var string
 	 */
-
 	public $errdesc = '';
 
 	/**
 	 * Errornumber, if an error occures
 	 * @var int
 	 */
-
 	public $errno = 0;
 
 	/**
 	 * Servername
 	 * @var string
 	 */
-
 	private $server = '';
 
 	/**
 	 * Username
 	 * @var string
 	 */
-
 	private $user = '';
 
 	/**
 	 * Password
 	 * @var string
 	 */
-
 	private $password = '';
 
 	/**
 	 * Database
 	 * @var string
 	 */
-
 	private $database = '';
 
 	/**
@@ -88,14 +79,11 @@ class db
 	 * @param string Password
 	 * @param string Database
 	 */
+	public function __construct($server, $user, $password, $database = '') {
 
-	function db($server, $user, $password, $database = '')
-	{
 		// check for mysql extension
-
-		if(!extension_loaded('mysql'))
-		{
-			$this->showerror('You should install the PHP MySQL extension!', false);
+		if (!extension_loaded('mysql')) {
+			$this->_showerror('You should install the PHP MySQL extension!', false);
 		}
 
 		$this->server = $server;
@@ -104,34 +92,25 @@ class db
 		$this->database = $database;
 		$this->link_id = @mysql_connect($this->server, $this->user, $this->password, 1);
 
-		if(!$this->link_id)
-		{
-			//try to connect with no password and change it afterwards. only for root user
+		if (!$this->link_id) {
 
-			if($this->user == 'root')
-			{
+			//try to connect with no password and change it afterwards. only for root user
+			if ($this->user == 'root') {
 				$this->link_id = @mysql_connect($this->server, $this->user, '', 1);
 
-				if($this->link_id)
-				{
+				if ($this->link_id) {
 					$this->query("SET PASSWORD = PASSWORD('" . $this->escape($this->password) . "')");
+				} else {
+					$this->_showerror('Establishing connection failed, exiting');
 				}
-				else
-				{
-					$this->showerror('Establishing connection failed, exiting');
-				}
-			}
-			else
-			{
-				$this->showerror('Establishing connection failed, exiting');
+			} else {
+				$this->_showerror('Establishing connection failed, exiting');
 			}
 		}
 
-		if($this->database != '')
-		{
-			if(!@mysql_select_db($this->database, $this->link_id))
-			{
-				$this->showerror('Trying to use database ' . $this->database . ' failed, exiting');
+		if ($this->database != '') {
+			if (!@mysql_select_db($this->database, $this->link_id)) {
+				$this->_showerror('Trying to use database ' . $this->database . ' failed, exiting');
 			}
 		}
 
@@ -141,14 +120,11 @@ class db
 	/**
 	 * Closes connection to Databaseserver
 	 */
-
-	function close()
-	{
+	public function close() {
 		return @mysql_close($this->link_id);
 	}
 
-	function getDbName()
-	{
+	public function getDbName() {
 		return $this->database;
 	}
 
@@ -158,19 +134,12 @@ class db
 	 * @param string $input
 	 * @return string escaped string
 	 */
-
-	function escape($input)
-	{
-		if(is_int($input))
-		{
+	public function escape($input) {
+		if (is_int($input)) {
 			return (int)$input;
-		}
-		elseif(is_float($input))
-		{
+		} elseif(is_float($input)) {
 			return (float)$input;
-		}
-		else
-		{
+		} else {
 			return mysql_real_escape_string($input, $this->link_id);
 		}
 	}
@@ -182,54 +151,40 @@ class db
 	 * @param bool Unbuffered query?
 	 * @return string RessourceId
 	 */
-
-	function query($query_str, $unbuffered = false, $suppress_error = false)
-	{
+	public function query($query_str, $unbuffered = false, $suppress_error = false) {
 
 		global $numbqueries, $theme;
 
-		if (!mysql_ping($this->link_id))
-		{
+		// check if connection is still alive
+		if (!mysql_ping($this->link_id)) {
 			$this->link_id = mysql_connect($this->server,$this->user,$this->password);
-			if(!$this->database)
-			{
+			if (!$this->database) {
 				return false;
 			}
 			mysql_select_db($this->database);
 		}
 
-		if(!$unbuffered)
-		{
-			if($suppress_error)
-			{
+		if (!$unbuffered) {
+			if ($suppress_error) {
 				$this->query_id = @mysql_query($query_str, $this->link_id);
 			} else {
 				$this->query_id = mysql_query($query_str, $this->link_id);
 			}
-		}
-		else
-		{
-			if($suppress_error)
-			{
+		} else {
+			if ($suppress_error) {
 				$this->query_id = @mysql_unbuffered_query($query_str, $this->link_id);
 			} else {
 				$this->query_id = mysql_unbuffered_query($query_str, $this->link_id);
 			}
 		}
 
-		if(!$this->query_id && !$suppress_error)
-		{
-			$this->showerror('Invalid SQL: ' . $query_str);
-		}
-		elseif(!$this->query_id && $suppress_error)
-		{
+		if (!$this->query_id && !$suppress_error) {
+			$this->_showerror('Invalid SQL: ' . $query_str);
+		} elseif(!$this->query_id && $suppress_error) {
 			return false;
 		}
 
 		$numbqueries++;
-
-		//echo $query_str.' '.$numbqueries.'<br />';
-
 		return $this->query_id;
 	}
 
@@ -240,21 +195,14 @@ class db
 	 * @param string Datatype, num or assoc
 	 * @return array The row
 	 */
-
-	function fetch_array($query_id = - 1, $datatype = 'assoc')
-	{
-		if($query_id != - 1)
-		{
+	public function fetch_array($query_id = - 1, $_datatype = 'assoc') {
+		if ($query_id != - 1) {
 			$this->query_id = $query_id;
 		}
 
-		if($datatype == 'num')
-		{
+		$datatype = MYSQL_ASSOC;
+		if ($_datatype == 'num') {
 			$datatype = MYSQL_NUM;
-		}
-		else
-		{
-			$datatype = MYSQL_ASSOC;
 		}
 
 		$this->record = mysql_fetch_array($this->query_id, $datatype);
@@ -268,9 +216,7 @@ class db
 	 * @param string Datatype, num or assoc
 	 * @return array The first row
 	 */
-
-	function query_first($query_string, $datatype = 'assoc')
-	{
+	public function query_first($query_string, $datatype = 'assoc') {
 		$this->query($query_string);
 		return $this->fetch_array($this->query_id, $datatype);
 	}
@@ -281,14 +227,10 @@ class db
 	 * @param string RessourceId
 	 * @return int Number of rows
 	 */
-
-	function num_rows($query_id = - 1)
-	{
-		if($query_id != - 1)
-		{
+	public function num_rows($query_id = - 1) {
+		if ($query_id != - 1) {
 			$this->query_id = $query_id;
 		}
-
 		return mysql_num_rows($this->query_id);
 	}
 
@@ -297,9 +239,7 @@ class db
 	 *
 	 * @return int auto_incremental-Value
 	 */
-
-	function insert_id()
-	{
+	public function insert_id() {
 		return mysql_insert_id($this->link_id);
 	}
 
@@ -308,9 +248,7 @@ class db
 	 *
 	 * @return int affected rows
 	 */
-
-	function affected_rows()
-	{
+	public function affected_rows() {
 		return mysql_affected_rows($this->link_id);
 	}
 
@@ -319,22 +257,15 @@ class db
 	 *
 	 * @return int Errornumber
 	 */
-
-	function geterrdescno()
-	{
-		if($this->link_id != 0)
-		{
+	private function _geterrdescno() {
+		if ($this->link_id != 0) {
 			$this->errdesc = mysql_error($this->link_id);
 			$this->errno = mysql_errno($this->link_id);
-		}
-		else
-		{
+		} else {
 			// Maybe we don't have any linkid so let's try to catch at least anything
-
 			$this->errdesc = mysql_error();
 			$this->errno = mysql_errno();
 		}
-
 		return $this->errno;
 	}
 
@@ -343,24 +274,19 @@ class db
 	 *
 	 * @param string Errormessage
 	 */
-
-	function showerror($errormsg, $mysqlActive = true)
-	{
+	private function _showerror($errormsg, $mysqlActive = true) {
 		global $filename, $theme;
 
 		$text = 'MySQL - Error: ' . str_replace("\n", "\t", $errormsg);
-		if($mysqlActive)
-		{
-			$this->geterrdescno();
+
+		if ($mysqlActive) {
+			$this->_geterrdescno();
 			$text .= "; ErrNo: " . $this->errno . "; Desc: " . $this->errdesc;
 		}
 
-		if($filename != 'cronscript.php')
-		{
+		if ($filename != 'froxlor_master_cronjob.php') {
 			$text .= "; Script: " . getenv('REQUEST_URI') . "; Ref: " . getenv('HTTP_REFERER');
-		}
-		else
-		{
+		} else {
 			$text .= "; Script: cronscript";
 		}
 		$md5 = md5($text . time());
@@ -384,5 +310,3 @@ class db
 		die("We are sorry, but a MySQL - error occurred. The administrator may find more information in syslog with the ID ".$md5." or in the sql-error.log in the logs/ directory");
 	}
 }
-
-?>
