@@ -1,6 +1,6 @@
+		<p style="margin: 20px 20px 0 !important">{$this->_lng['install']['title']}</p>
 		<form action="{$formaction}" method="get">
 			<fieldset>
-				<legend>{$this->_lng['install']['title']}</legend>
 				{$formdata}
 				<p class="submit">
 					<input type="hidden" name="check" value="1" />
@@ -8,4 +8,3 @@
 				</p>
 			</fieldset>
 		</form>
-		<aside>&nbsp;</aside>
