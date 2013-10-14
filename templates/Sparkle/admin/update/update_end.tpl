@@ -1,6 +1,6 @@
-		<p class="submit">
+		</section>
+		<aside>
 			<a href="{$redirect_url}">{$lng['success']['clickheretocontinue']}</a>
-		</p>
-		</section>		
+		</aside>
 	</article>
 $footer

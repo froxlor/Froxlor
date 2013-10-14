@@ -548,4 +548,26 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question = '';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	// let the apache+fpm users know that they MUST change their config
+	// for the domains / webserver to work after the update
+	if (versionInUpdate($current_version, '0.9.30-dev1')) {
+		if ($settings['system']['webserver'] == 'apache2'
+			&& $settings['phpfpm']['enabled'] == '1'
+		) {
+			$has_preconfig = true;
+			$description  = 'The PHP-FPM implementation for apache2 has changed. Please look for the "<b>fastcgi.conf</b>" (Debian/Ubuntu) or "<b>70_fastcgi.conf</b>" (Gentoo) within /etc/apache2/ and change it as shown below:<br /><br />';
+			$description .= '<pre style="width:500px;border:1px solid #ccc;padding:4px;">&lt;IfModule mod_fastcgi.c&gt;
+    FastCgiIpcDir /var/run/apache2/
+    &lt;Location "/fastcgiphp"&gt;
+        Order Deny,Allow
+        Deny from All
+        # Prevent accessing this path directly
+        Allow from env=REDIRECT_STATUS
+    &lt;/Location&gt;
+&lt;/IfModule&gt;</pre>';
+			$question = '';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
 }

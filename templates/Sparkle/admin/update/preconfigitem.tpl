@@ -1,6 +1,4 @@
 <div class="preconfigitem">
-	<p>
-		<span class="preconfdesc">{$description}</span>
-		{$question}
-	</p>
+	<span class="preconfdesc">{$description}</span>
+	{$question}
 </div>
