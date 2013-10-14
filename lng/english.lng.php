@@ -1958,7 +1958,7 @@ $lng['serversettings']['customerssl_directory']['description'] = 'Where should c
 $lng['admin']['note'] = 'Please note';
 $lng['admin']['phpfpm.ininote'] = 'Not all values you may want to define can be used in the php-fpm pool configuration';
 
-// Added in Froxlor 0.9.29.1-dev
+// Added in Froxlor 0.9.30
 $lng['crondesc']['cron_mailboxsize'] = 'Calculating of mailbox-sizes';
 $lng['domains']['ipandport_multi']['title'] = 'IP address(es)';
 $lng['domains']['ipandport_multi']['description'] = 'Specify one or more IP address for the domain.<br /><br /><div style="color:red">NOTE: IP addresses cannot be changed when the domain is configured as <strong>alias-domain</strong> of another domain.</div>';
@@ -1966,3 +1966,8 @@ $lng['domains']['ipandport_ssl_multi']['title'] = 'SSL IP address(es)';
 $lng['domains']['ssl_redirect']['title'] = 'SSL redirect';
 $lng['domains']['ssl_redirect']['description'] = 'This option creates redirects for non-ssl vhosts so that all requests are redirected to the SSL-vhost.<br /><br />e.g. a request to <strong>http</strong>://domain.tld/ will redirect you to <strong>https</strong>://domain.tld/';
 $lng['admin']['phpinfo'] = 'PHPinfo()';
+$lng['admin']['selectserveralias'] = 'ServerAlias value for the domain';
+$lng['admin']['selectserveralias_desc'] = 'Chose whether froxlor should create a wildcard-entry (*.domain.tld), a WWW-alias (www.domain.tld) or no alias at all';
+$lng['domains']['serveraliasoption_wildcard'] = 'Wildcard (*.domain.tld)';
+$lng['domains']['serveraliasoption_www'] = 'WWW (www.domain.tld)';
+$lng['domains']['serveraliasoption_none'] = 'No alias';

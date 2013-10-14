@@ -119,13 +119,11 @@ return array(
 						'type' => 'label',
 						'value' => $lng['panel']['nosslipsavailable']
 					),
-					'wwwserveralias' => array(
-						'label' => $lng['admin']['wwwserveralias'],
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array('1')
+					'selectserveralias' => array(
+						'label' => $lng['admin']['selectserveralias'],
+						'desc' => $lng['admin']['selectserveralias_desc'],
+						'type' => 'select',
+						'select_var' => $serveraliasoptions
 					),
 					'speciallogfile' => array(
 						'label' => $lng['admin']['speciallogfile']['title'],

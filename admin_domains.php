@@ -247,9 +247,9 @@ if($page == 'domains'
 				if(isset($_POST['email_only']))
 					$email_only = intval($_POST['email_only']);
 
-				$wwwserveralias = 0;
-				if(isset($_POST['wwwserveralias']))
-					$wwwserveralias = intval($_POST['wwwserveralias']);
+				$serveraliasoption = 0;
+				if(isset($_POST['selectserveralias']))
+					$serveraliasoption = intval($_POST['selectserveralias']);
 
 				$speciallogfile = 0;
 				if(isset($_POST['speciallogfile']))
@@ -547,9 +547,8 @@ if($page == 'domains'
 					$dkim = '0';
 				}
 
-				if($wwwserveralias != '1')
-				{
-					$wwwserveralias = '0';
+				if ($serveraliasoption != '1' && $serveraliasoption != '2') {
+					$serveraliasoption = '0';
 				}
 
 				if($caneditdomain != '1')
@@ -605,7 +604,7 @@ if($page == 'domains'
 						'zonefile' => $zonefile,
 						'dkim' => $dkim,
 						'speciallogfile' => $speciallogfile,
-						'wwwserveralias' => $wwwserveralias,
+						'selectserveralias' => $serveraliasoption,
 						'ipandport' => serialize($ipandports),
 						'ssl_redirect' => $ssl_redirect,
 						'ssl_ipandport' => serialize($ssl_ipandports),
@@ -639,6 +638,9 @@ if($page == 'domains'
 						$question_nr++;
 					}
 
+					$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
+					$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
+
 					$db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
 						`domain` = '" . $db->escape($domain) . "',
 						`customerid` = '" . (int)$customerid . "',
@@ -648,6 +650,7 @@ if($page == 'domains'
 						`zonefile` = '" . $db->escape($zonefile) . "',
 						`dkim` = '" . $db->escape($dkim) . "',
 						`wwwserveralias` = '" . $db->escape($wwwserveralias) . "',
+						`iswildcarddomain` = '" . $db->escape($iswildcarddomain) . "',
 						`isbinddomain` = '" . $db->escape($isbinddomain) . "',
 						`isemaildomain` = '" . $db->escape($isemaildomain) . "',
 						`email_only` = '" . $db->escape($email_only) . "',
@@ -791,6 +794,12 @@ if($page == 'domains'
 					}
 				}
 
+				// create serveralias options
+				$serveraliasoptions = "";
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', '0', true, true);
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', '0', true, true);
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', '0', true, true);
+
 				$subcanemaildomain = makeoption($lng['admin']['subcanemaildomain']['never'], '0', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', '0', true, true) . makeoption($lng['admin']['subcanemaildomain']['always'], '3', '0', true, true);
 				$add_date = date('Y-m-d');
 
@@ -909,9 +918,15 @@ if($page == 'domains'
 				if(isset($_POST['email_only']))
 					$email_only = intval($_POST['email_only']);
 
-				$wwwserveralias = 0;
-				if(isset($_POST['wwwserveralias']))
-					$wwwserveralias = intval($_POST['wwwserveralias']);
+				$serveraliasoption = '2';
+				if ($result['iswildcarddomain'] == '1') {
+					$serveraliasoption = '0';
+				} elseif ($result['wwwserveralias'] == '1') {
+					$serveraliasoption = '1';
+				}
+				if (isset($_POST['selectserveralias'])) {
+					$serveraliasoption = intval($_POST['selectserveralias']);
+				}
 
 				$speciallogfile = 0;
 				if(isset($_POST['speciallogfile']))
@@ -1154,6 +1169,10 @@ if($page == 'domains'
 					$issubof = '0';
 				}
 
+				if ($serveraliasoption != '1' && $serveraliasoption != '2') {
+					$serveraliasoption = '0';
+				}
+
 				$params = array(
 					'id' => $id,
 					'page' => $page,
@@ -1169,7 +1188,7 @@ if($page == 'domains'
 					'caneditdomain' => $caneditdomain,
 					'zonefile' => $zonefile,
 					'dkim' => $dkim,
-					'wwwserveralias' => $wwwserveralias,
+					'selectserveralias' => $serveraliasoption,
 					'ssl_redirect' => $ssl_redirect,
 					'openbasedir' => $openbasedir,
 					'phpsettingid' => $phpsettingid,
@@ -1203,9 +1222,13 @@ if($page == 'domains'
 					}
 				}
 
+				$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
+				$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
+
 				if($documentroot != $result['documentroot']
 				   || $ssl_redirect != $result['ssl_redirect']
 				   || $wwwserveralias != $result['wwwserveralias']
+				   || $iswildcarddomain != $result['iswildcarddomain']
 				   || $openbasedir != $result['openbasedir']
 				   || $phpsettingid != $result['phpsettingid']
 				   || $mod_fcgid_starter != $result['mod_fcgid_starter']
@@ -1279,6 +1302,9 @@ if($page == 'domains'
 					$log->logAction(ADM_ACTION, LOG_INFO, "removed specialsettings on all subdomains of domain #" . $id);
 				}
 
+				$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
+				$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
+
 				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET 
 					`customerid` = '" . (int)$customerid . "',
 					`adminid` = '" . (int)$adminid . "',
@@ -1293,6 +1319,7 @@ if($page == 'domains'
 					`caneditdomain`='" . $db->escape($caneditdomain) . "',
 					`zonefile`='" . $db->escape($zonefile) . "',
 					`wwwserveralias`='" . $db->escape($wwwserveralias) . "',
+					`iswildcarddomain`='" . $db->escape($iswildcarddomain) . "',
 					`openbasedir`='" . $db->escape($openbasedir) . "',
 					`speciallogfile`='" . $db->escape($speciallogfile) . "',
 					`phpsettingid`='" . $db->escape($phpsettingid) . "',
@@ -1452,6 +1479,18 @@ if($page == 'domains'
 				}
 
 				$result['specialsettings'] = $result['specialsettings'];
+
+				// create serveralias options
+				$serveraliasoptions = "";
+				$values = array('0' => '0', '1' => '0', '2' => '1');
+				if ($result['iswildcarddomain'] == '1') {
+					$values = array('0' => '1', '1' => '0', '2' => '0');
+				} elseif ($result['wwwserveralias'] == '1') {
+					$values = array('0' => '0', '1' => '1', '2' => '0');
+				}
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $values['0'], true, true);
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', $values['1'], true, true);
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', $values['2'], true, true);
 
 				$subcanemaildomain = makeoption($lng['admin']['subcanemaildomain']['never'], '0', $result['subcanemaildomain'], true, true);
 				$subcanemaildomain.= makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', $result['subcanemaildomain'], true, true);
