@@ -60,14 +60,12 @@ return array(
 						'type' => 'select',
 						'select_var' => $redirectcode
 					),
-					'iswildcarddomain' => array(
+					'selectserveralias' => array(
 						'visible' => (($result['parentdomainid'] == '0' && $userinfo['subdomains'] != '0') ? true : false),
-						'label' => $lng['domains']['wildcarddomain'],
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array($result['iswildcarddomain'])
+						'label' => $lng['admin']['selectserveralias'],
+						'desc' => $lng['admin']['selectserveralias_desc'],
+						'type' => 'select',
+						'select_var' => $serveraliasoptions
 					),
 					'isemaildomain' => array(
 						'visible' => ((( $result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2' ) && $result['parentdomainid'] != '0') ? true : false),

@@ -1482,15 +1482,15 @@ if($page == 'domains'
 
 				// create serveralias options
 				$serveraliasoptions = "";
-				$values = array('0' => '0', '1' => '0', '2' => '1');
+				$_value = '2';
 				if ($result['iswildcarddomain'] == '1') {
-					$values = array('0' => '1', '1' => '0', '2' => '0');
+					$_value = '0';
 				} elseif ($result['wwwserveralias'] == '1') {
-					$values = array('0' => '0', '1' => '1', '2' => '0');
+					$_value = '1';
 				}
-				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $values['0'], true, true);
-				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', $values['1'], true, true);
-				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', $values['2'], true, true);
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', $_value, true, true);
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', $_value, true, true);
 
 				$subcanemaildomain = makeoption($lng['admin']['subcanemaildomain']['never'], '0', $result['subcanemaildomain'], true, true);
 				$subcanemaildomain.= makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', $result['subcanemaildomain'], true, true);

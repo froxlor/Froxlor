@@ -438,7 +438,7 @@ elseif($page == 'domains')
 	elseif($action == 'edit'
 	       && $id != 0)
 	{
-		$result = $db->query_first("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `pd`.`subcanemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd` WHERE `d`.`customerid`='" . (int)$userinfo['customerid'] . "' AND `d`.`id`='" . (int)$id . "' AND ((`d`.`parentdomainid`!='0' AND `pd`.`id`=`d`.`parentdomainid`) OR (`d`.`parentdomainid`='0' AND `pd`.`id`=`d`.`id`)) AND `d`.`caneditdomain`='1'");
+		$result = $db->query_first("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `pd`.`subcanemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd` WHERE `d`.`customerid`='" . (int)$userinfo['customerid'] . "' AND `d`.`id`='" . (int)$id . "' AND ((`d`.`parentdomainid`!='0' AND `pd`.`id`=`d`.`parentdomainid`) OR (`d`.`parentdomainid`='0' AND `pd`.`id`=`d`.`id`)) AND `d`.`caneditdomain`='1'");
 		$alias_check = $db->query_first('SELECT COUNT(`id`) AS count FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . (int)$result['id'] . '\'');
 		$alias_check = $alias_check['count'];
 		$_doredirect = false;
@@ -487,15 +487,14 @@ elseif($page == 'domains')
 
 				$aliasdomain = intval($_POST['alias']);
 
-				if(isset($_POST['iswildcarddomain'])
-				   && $_POST['iswildcarddomain'] == '1'
+				if(isset($_POST['selectserveralias'])
 				   && $result['parentdomainid'] == '0'
-				){
-					$iswildcarddomain = '1';
-				}
-				else
-				{
+				) {
+					$iswildcarddomain = ($_POST['selectserveralias'] == '0') ? '1' : '0';
+					$wwwserveralias = ($_POST['selectserveralias'] == '1') ? '1' : '0';
+				} else {
 					$iswildcarddomain = '0';
+					$wwwserveralias = '0';
 				}
 
 				if($result['parentdomainid'] != '0'
@@ -565,13 +564,23 @@ elseif($page == 'domains')
 
 					if($path != $result['documentroot']
 					   || $isemaildomain != $result['isemaildomain']
+					   || $wwwserveralias != $result['wwwserveralias']
 					   || $iswildcarddomain != $result['iswildcarddomain']
 					   || $aliasdomain != $result['aliasdomain']
 					   || $openbasedir_path != $result['openbasedir_path']
 					   || $ssl_redirect != $result['ssl_redirect'])
 					{
 						$log->logAction(USR_ACTION, LOG_INFO, "edited domain '" . $idna_convert->decode($result['domain']) . "'");
-						$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `documentroot`='" . $db->escape($path) . "', `isemaildomain`='" . (int)$isemaildomain . "', `iswildcarddomain`='" . (int)$iswildcarddomain . "', `aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ",`openbasedir_path`='" . $db->escape($openbasedir_path) . "', `ssl_redirect`='" . $ssl_redirect . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+						$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+							`documentroot`='" . $db->escape($path) . "',
+							`isemaildomain`='" . (int)$isemaildomain . "',
+							`wwwserveralias`='" . (int)$wwwserveralias . "',
+							`iswildcarddomain`='" . (int)$iswildcarddomain . "',
+							`aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ",
+							`openbasedir_path`='" . $db->escape($openbasedir_path) . "',
+							`ssl_redirect`='" . $ssl_redirect . "'
+							WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'"
+						);
 						inserttask('1');
 
 						// Using nameserver, insert a task which rebuilds the server config
@@ -634,6 +643,18 @@ elseif($page == 'domains')
 				}
 
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true);
+
+				// create serveralias options
+				$serveraliasoptions = "";
+				$_value = '2';
+				if ($result['iswildcarddomain'] == '1') {
+					$_value = '0';
+				} elseif ($result['wwwserveralias'] == '1') {
+					$_value = '1';
+				}
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', $_value, true, true);
+				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', $_value, true, true);
 
 				$resultips = $db->query("SELECT `p`.`ip` AS `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` `p` LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON ( `dip`.`id_ipandports` = `p`.`id` ) WHERE `dip`.`id_domain` = '".(int)$result['id']."' GROUP BY `p`.`ip`");
 				$result_ipandport['ip'] = '';
@@ -782,4 +803,3 @@ elseif ($page == 'domainssleditor') {
 		eval("echo \"" . getTemplate("domains/domain_ssleditor") . "\";");
 	}
 }
-
