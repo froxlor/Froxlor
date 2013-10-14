@@ -1,7 +1,7 @@
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/group_edit.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/group_edit_big.png" alt="" />&nbsp;
 				{$connected_to} ({$mode})
 			</h2>
 		</header>
