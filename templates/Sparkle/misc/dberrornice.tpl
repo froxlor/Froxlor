@@ -35,7 +35,7 @@
 				</div>
 			</div>
 			<aside class="right">
-				<a href="index.php" title="Click here to go back">Go to index</a>
+				<a href="javascript:history.go(-1)" title="Click here to go back">Go back</a>
 			</aside>
 		</section>
 
