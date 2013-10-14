@@ -1,7 +1,7 @@
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/group_edit.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/group_edit_big.png" alt="" />&nbsp;
 				{t}Creating a file in{/t}: <a href="webftp.php?action=cd&amp;file={$currentDir}">{$currentDir}</a> ({$mode})
 			</h2>
 		</header>

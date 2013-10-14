@@ -1,7 +1,9 @@
 	<article>
-		<section class="dboarditem bradius">
-			<h2>{t}Basic operations{/t}</h2>
+		<section class="dboarditem bradiusodd">
 			<table>
+				<thead>
+					<tr><th>{t}Basic operations{/t}</th></tr>
+				</thead>
 				<tr>
 					<td>
 						<form name="cdDirect" method="POST" action="webftp.php">
@@ -36,13 +38,17 @@
 				</tr>
 			</table>
 		</section>
-		<section class="dboarditem bradius">
-			<h2>{t}Upload files{/t}</h2>
+		<section class="dboarditem bradiusodd">
 			<form name="putForm" enctype="multipart/form-data" method="POST" action="webftp.php">
 				<input type="hidden" name="action" value="put" />
 				<input type="hidden" name="currentDir" value="{$currentDir}" />
 				<input type="hidden" name="mode" value="{$mode}" />
 				<table>
+					<thead>
+						<tr>
+							<th>{t}Upload files{/t}</th>
+						</tr>
+					</thead>
 					<tr>
 						<td valign="top">
 							<input type="file" name="file1" />
@@ -69,7 +75,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td valign="top">
+						<td valign="top" align="right">
 							<input name="submit2" type="submit" style="width: 150;" value="{t}Upload file(s){/t}">
 						</td>
 					</tr>
@@ -77,4 +83,3 @@
 			</form>
 		</section>
 		<br />
-		<section class="dboarditemfull bradius">

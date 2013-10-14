@@ -18,9 +18,9 @@
 	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
 	<title>{$title}Froxlor Server Management Panel</title>
 	<style type="text/css">
-	body {
-		font-family: {if $settings.panel.use_webfonts == 1}{$webfont},{/if} Verdana, Geneva, sans-serif;
-	}
+		body {
+			font-family: {if $settings.panel.use_webfonts == 1}{$webfont},{/if} Verdana, Geneva, sans-serif;
+		}
 	</style>
 </head>
 <body>
@@ -33,7 +33,9 @@
 	<img src="{$header_logo}" alt="Froxlor Server Management Panel" />
 </header>
 
-<nav>{$navigation}</nav>
+<nav><div class="menuelement bradiusodd">
+	<h4>Froxlor WebFTP</h4>
+</div>{$navigation}</nav>
 {/if}
 
 {if $loggedin}
