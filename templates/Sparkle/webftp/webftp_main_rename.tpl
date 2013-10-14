@@ -1,4 +1,4 @@
-<table border="0" cellspacing="2" cellpadding="2">
+<table border="0" cellspacing="2" cellpadding="2" class="bradius">
 	<form name="rename" method="post" action="webftp.php">
 		<tr>
 			<td>
@@ -17,4 +17,3 @@
 		</tr>
 	</form>
 </table>
-<hr />

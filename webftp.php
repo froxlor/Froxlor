@@ -70,7 +70,7 @@ if(function_exists("date_default_timezone_set") && function_exists("date_default
 // Load the database - connection parameters
 if(!file_exists('./lib/userdata.inc.php'))
 {
-	$config_hint = file_get_contents('./templates/Froxlor/misc/configurehint.tpl');
+	$config_hint = file_get_contents('./templates/Sparkle/misc/configurehint.tpl');
 	die($config_hint);
 }
 
@@ -83,7 +83,7 @@ require ('./lib/userdata.inc.php');
 
 if(!isset($sql) || !is_array($sql))
 {
-	$config_hint = file_get_contents('./templates/Froxlor/misc/configurehint.tpl');
+	$config_hint = file_get_contents('./templates/Sparkle/misc/configurehint.tpl');
 	die($config_hint);
 }
 
@@ -114,7 +114,7 @@ else
 }
 */
 // Until we have other themes: enforce the Froxlor - layout
-$settings['panel']['default_theme'] = 'Froxlor';
+$settings['panel']['default_theme'] = 'Sparkle';
 
 // Initialize Smarty
 include('./lib/classes/Smarty/Smarty.class.php');
