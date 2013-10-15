@@ -62,62 +62,71 @@ if(isset( $_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off' ))
 header('X-Content-Type-Options: nosniff' );
 
 // ensure that default timezone is set
-if(function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get"))
-{
+if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get")) {
 	@date_default_timezone_set(@date_default_timezone_get());
 }
 
-// Load the database - connection parameters
-if(!file_exists('./lib/userdata.inc.php'))
-{
-	$config_hint = file_get_contents('./templates/Sparkle/misc/configurehint.tpl');
+define('FROXLOR_INSTALL_DIR', dirname(__FILE__));
+$_deftheme = 'Sparkle';
+
+// check whether the userdata file exists
+if (!file_exists(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
+	$config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
 	die($config_hint);
 }
 
-if(!is_readable('./lib/userdata.inc.php'))
-{
-	die('You have to make the file "./lib/userdata.inc.php" readable for the http-process!');
+// check whether we can read the userdata file
+if (!is_readable(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
+	// get possible owner
+	$posixusername = posix_getpwuid(posix_getuid());
+	$posixgroup = posix_getgrgid(posix_getgid());
+	// get hint-template
+	$owner_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/ownershiphint.tpl');
+	// replace values
+	$owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
+	$owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
+	$owner_hint = str_replace("<FROXLOR_INSTALL_DIR>", FROXLOR_INSTALL_DIR, $owner_hint);
+	// show
+	die($owner_hint);
 }
 
-require ('./lib/userdata.inc.php');
+require (FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php');
 
-if(!isset($sql) || !is_array($sql))
-{
-	$config_hint = file_get_contents('./templates/Sparkle/misc/configurehint.tpl');
+if (!isset($sql)
+   || !is_array($sql)
+) {
+	$config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
 	die($config_hint);
 }
 
-if(!function_exists("ftp_connect"))
-{
+if (!function_exists("ftp_connect")) {
 	die('No FTP support');
 }
 
 // Create the database - connection
 $db = new mysqli($sql['host'], $sql['user'], $sql['password'], $sql['db']);
 unset($sql);
-if ($db->connect_error)
-{
-    die('Connect Error (' . $db->connect_errno . ') ' . $db->connect_error);
+if ($db->connect_error) {
+	// output a nicer error-message
+	$err_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/dberrornice.tpl');
+	// replace values
+	$err_hint = str_replace("<TEXT>", 'Connect Error (' . $db->connect_errno . ')', $err_hint);
+	$err_hint = str_replace("<DEBUG>", $db->connect_error, $err_hint);
+	// show
+	die($err_hint);
 }
 
 $settings = array();
-/*
 // Let's get the theme we need
-if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `varname` = 'default_theme'"))
-{
+if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `varname` = 'default_theme'")) {
 	list($settings['panel']['default_theme']) = $result->fetch_array();
+} else {
+	// Default will be Sparkle
+	$settings['panel']['default_theme'] = 'Sparkle';
 }
-else
-{
-	// Default will be Froxlor ;)
-	$settings['panel']['default_theme'] = 'Froxlor';
-}
-*/
-// Until we have other themes: enforce the Froxlor - layout
-$settings['panel']['default_theme'] = 'Sparkle';
 
 // Initialize Smarty
-include('./lib/classes/Smarty/Smarty.class.php');
+include(FROXLOR_INSTALL_DIR.'/lib/classes/Smarty/Smarty.class.php');
 $smarty = new Smarty;
 
 $smarty->template_dir = './templates/' . $settings['panel']['default_theme'] . '/';
@@ -125,14 +134,14 @@ $smarty->compile_dir  = './templates_c/';
 $smarty->cache_dir    = './cache/';
 
 // Set the language
-require('./lib/classes/output/class.languageSelect.php');
+require(FROXLOR_INSTALL_DIR.'/lib/classes/output/class.languageSelect.php');
 $language = new languageSelect();
 $language->useBrowser = true;
 $language->setLanguage();
 
 // Activate gettext for smarty;
 define('HAVE_GETTEXT', true);
-require ('./lib/functions/smarty_plugins/gettext-prefilter.php');
+require (FROXLOR_INSTALL_DIR.'/lib/functions/smarty_plugins/gettext-prefilter.php');
 
 $settings['admin']['show_version_login'] = 0;
 if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'admin' AND `varname` = 'show_version_login'"))
@@ -155,20 +164,15 @@ if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggro
 	list($settings['panel']['use_webfonts']) = $result->fetch_array();
 }
 
-
 // We don't need the database anymore
 $db->close();
 unset($db);
 
-
 // global Theme-variable
-
-$theme = isset($settings['panel']['default_theme']) ? $settings['panel']['default_theme'] : 'Froxlor';
+$theme = $settings['panel']['default_theme'];
 
 // overwrite with customer/admin theme if defined
-
-if(isset($userinfo['theme']) && $userinfo['theme'] != $theme)
-{
+if (isset($userinfo['theme']) && $userinfo['theme'] != $theme) {
 	$theme = $userinfo['theme'];
 }
 
@@ -176,7 +180,7 @@ if(isset($userinfo['theme']) && $userinfo['theme'] != $theme)
 $hl_path = 'templates/'.$theme.'/assets/img';
 $header_logo = $hl_path.'/logo.png';
 
-if(file_exists($hl_path.'/logo_custom.png')) {
+if (file_exists($hl_path.'/logo_custom.png')) {
 	$header_logo = $hl_path.'/logo_custom.png';
 }
 
