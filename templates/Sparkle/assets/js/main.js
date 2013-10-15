@@ -19,6 +19,11 @@ $(document).ready(function() {
 		$("html, body").animate({ scrollTop: 0 }, 600);
 		return false;
 	});
+	
+	$('#historyback').click(function() {
+		parent.history.back();
+		return false;
+	});
 
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
