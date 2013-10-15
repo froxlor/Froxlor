@@ -100,7 +100,7 @@ return array(
 					'varname' => 'customer_ssl_path',
 					'type' => 'string',
 					'string_type' => 'dir',
-					'default' => '/etc/apache2/ssl/',
+					'default' => '/etc/ssl/froxlor-custom/',
 					'save_method' => 'storeSettingField',
 					),
 				'system_phpappendopenbasedir' => array(

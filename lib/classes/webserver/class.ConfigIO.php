@@ -70,17 +70,22 @@ class ConfigIO {
 	 */
 	private function _cleanCustomerSslCerts() {
 
-		// get correct directory
-		$configdir = $this->_getFile('system', 'customer_ssl_path');
-		if ($configdir !== false) {
+		/*
+		 * only clean up if we're actually using SSL
+		 */
+		if ($this->_settings['system']['use_ssl'] == '1') {
+			// get correct directory
+			$configdir = $this->_getFile('system', 'customer_ssl_path');
+			if ($configdir !== false) {
 
-			$configdir = makeCorrectDir($configdir);
+				$configdir = makeCorrectDir($configdir);
 
-			if (@is_dir($configdir)) {
-				// now get rid of old stuff
-				//(but append /* so we don't delete the directory)
-				$configdir.='/*';
-				safe_exec('rm -rf '. makeCorrectFile($configdir));
+				if (@is_dir($configdir)) {
+					// now get rid of old stuff
+					//(but append /* so we don't delete the directory)
+					$configdir.='/*';
+					safe_exec('rm -rf '. makeCorrectFile($configdir));
+				}
 			}
 		}
 	}

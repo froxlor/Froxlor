@@ -2126,7 +2126,11 @@ if (isFroxlorVersion('0.9.29-dev3')) {
 	) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;");
 	lastStepStatus(0);
 
-	$system_customersslpath = isset($_POST['system_customersslpath']) ? makeCorrectDir($_POST['system_customersslpath']) : '/etc/apache2/ssl/';
+	$system_customersslpath = isset($_POST['system_customersslpath']) ? makeCorrectDir($_POST['system_customersslpath']) : '/etc/ssl/froxlor-custom/';
+	if (trim($system_customersslpath) == '/') {
+		// prevent users from specifying nonsense here
+		$system_customersslpath = '/etc/ssl/froxlor-custom/';
+	}
 	$db->query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'customer_ssl_path', '".$db->escape($system_customersslpath)."');");
 	updateToVersion('0.9.29-dev4');
 }

@@ -538,7 +538,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$has_preconfig = true;
 		$description  = 'As customers can now specify ssl-certificate data for their domains, you need to specify where the generated files are stored<br />';
 		$question = '<strong>Specify the directory for customer ssl-certificates:</strong>&nbsp;';
-		$question.= '<input type="text" class="text" name="system_customersslpath" value="/etc/apache2/ssl/" />';
+		$question.= '<input type="text" class="text" name="system_customersslpath" value="/etc/ssl/froxlor-custom/" />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 

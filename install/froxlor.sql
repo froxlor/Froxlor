@@ -510,7 +510,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'documentroot_use_default_value', '0'),
 	('system', 'passwordcryptfunc', '1'),
 	('system', 'axfrservers', ''),
-	('system', 'customer_ssl_path', '/etc/apache2/ssl/'),
+	('system', 'customer_ssl_path', '/etc/ssl/froxlor-custom/'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
