@@ -2238,9 +2238,15 @@ if (isFroxlorVersion('0.9.29.1-dev3')) {
 	showUpdateStep("Updating from 0.9.29.1-dev3 to 0.9.29.1-dev4", true);
 	lastStepStatus(0);
 
-	showUpdateStep("Removing old billing-field from admin-users");
-	$db->query("ALTER TABLE `".TABLE_PANEL_ADMINS."` DROP `edit_billingdata`");
-	lastStepStatus(0);
+	// If you upgraded from SysCP the edit_billingdata field has been
+	// removed in one of the first upgrades to froxlor. Sadly, one field
+	// remained in the install.sql so  we remove it now if it exists
+	$bd_exists = $db->query("SHOW COLUMNS FROM `".TABLE_PANEL_ADMINS."` LIKE 'edit_billingdata';");
+	if ($db->num_rows() > 0) {
+		showUpdateStep("Removing old billing-field from admin-users");
+		$db->query("ALTER TABLE `".TABLE_PANEL_ADMINS."` DROP `edit_billingdata`");
+		lastStepStatus(0);
+	}
 
 	updateToVersion('0.9.29.1-dev4');
 }
