@@ -32,7 +32,7 @@
 				</div>
 			</div>
 			<p class="submit">
-				<a href="javascript:history.go(-1)" title="Click here to go back">Go back</a>
+				<a href="#" title="Click here to go back" id="historyback">Go back</a>
 			</p>
 		</section>
 

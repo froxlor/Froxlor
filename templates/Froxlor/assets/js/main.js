@@ -1,4 +1,9 @@
 $(document).ready(function() {
+	$('#historyback').click(function() {
+		parent.history.back();
+		return false;
+	});
+	
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
 		var urlParams = decodeURI( window.location.search.substring(1) );
