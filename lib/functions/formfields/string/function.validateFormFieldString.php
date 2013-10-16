@@ -68,6 +68,26 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 				$returnvalue = ($newfieldvalue == makeCorrectDir($newfieldvalue));
 			}
 		}
+		elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'confdir') {
+			// check for empty value (it might be allowed)
+			if (trim($newfieldvalue) == '') {
+				$newfieldvalue = '';
+				$returnvalue = 'stringmustntbeempty';
+			} else {
+				// add trailing slash to validate path if needed
+				// refs #331
+				if (substr($newfieldvalue, -1) != '/') {
+					$newfieldvalue.= '/';
+				}
+				// if this is a configuration directory, check for stupidity of admins :p
+				if (checkDisallowedPaths($newfieldvalue) !== true) {
+					$newfieldvalue = '';
+					$returnvalue = 'givendirnotallowed';
+				} else {
+					$returnvalue = ($newfieldvalue == makeCorrectDir($newfieldvalue));
+				}
+			}
+		}
 		elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'file') {
 			// check for empty value (it might be allowed)
 			if (trim($newfieldvalue) == '') {

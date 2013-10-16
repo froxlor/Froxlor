@@ -1691,3 +1691,4 @@ $lng['admin']['selectserveralias_desc'] = 'Wählen Sie hier, ob für diese Domai
 $lng['domains']['serveraliasoption_wildcard'] = 'Wildcard (*.domain.tld)';
 $lng['domains']['serveraliasoption_www'] = 'WWW (www.domain.tld)';
 $lng['domains']['serveraliasoption_none'] = 'Kein alias';
+$lng['error']['givendirnotallowed'] = 'Das angegebene Verzeichnis im Feld %s ist nicht erlaubt.';

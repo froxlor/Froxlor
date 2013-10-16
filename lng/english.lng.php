@@ -1971,3 +1971,4 @@ $lng['admin']['selectserveralias_desc'] = 'Chose whether froxlor should create a
 $lng['domains']['serveraliasoption_wildcard'] = 'Wildcard (*.domain.tld)';
 $lng['domains']['serveraliasoption_www'] = 'WWW (www.domain.tld)';
 $lng['domains']['serveraliasoption_none'] = 'No alias';
+$lng['error']['givendirnotallowed'] = 'The given directory in field %s is not allowed.';
