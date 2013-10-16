@@ -36,7 +36,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_configdir',
 					'type' => 'string',
-					'string_type' => 'dir',
+					'string_type' => 'confdir',
 					'default' => '/var/www/php-fcgi-scripts/',
 					'plausibility_check_method' => 'checkPathConflicts',
 					'save_method' => 'storeSettingField',
