@@ -44,6 +44,7 @@
 	<img src="{$header_logo}" alt="Froxlor Server Management Panel" />
 	<div class="topheader_navigation">
 		<ul class="topheadernav">
+			<li>{$userinfo['loginname']}</li>
 			<li><a href="{$linker->getLink(array('section' => 'index'))}">{$lng['admin']['overview']}</a></li>
 			<li><a href="#">{$lng['panel']['options']}&nbsp;&#x25BE;</a>
 				<ul>
@@ -57,7 +58,7 @@
 					</if>
 				</ul>
 			</li>
-			<li><a href="{$linker->getLink(array('section' => 'index', 'action' => 'logout'))}">{$lng['login']['logout']} {$userinfo['loginname']}</a></li>
+			<li><a href="{$linker->getLink(array('section' => 'index', 'action' => 'logout'))}" style="color: #cc0000;">{$lng['login']['logout']}</a></li>
 		</ul>
 	</div>
 </header>

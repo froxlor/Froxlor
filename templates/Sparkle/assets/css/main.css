@@ -29,6 +29,7 @@ body {
 
 header img {
 	padding:10px 0 10px 10px;
+	height: 30px;
 }
 
 h1 {
@@ -76,8 +77,7 @@ td a {
 }
 .topheader_navigation {
 	float: right;
-	margin: 36px 50px 0 0;
-	text-transform: uppercase;
+	margin: 15px 50px 0 0;
 }
 
 /* TOPHEADER NAV */
@@ -93,7 +93,7 @@ ul.topheadernav li {
 ul.topheadernav li a {
 	display: block;
 	text-decoration: none;
-	color: #666;
+	color: #0f3e4e;
 }
 ul.topheadernav li a:hover {
 	color: #111;
@@ -320,7 +320,7 @@ aside.right {
 
 .overviewsearch {
 	position:absolute;
-	top:155px;
+	top:125px;
 	right:36px;
 	font-size:80%;
 }
@@ -471,7 +471,7 @@ a:hover {
 .main {
 	margin-left:240px;
 	margin-right:10px;
-	margin-top:105px;
+	margin-top:65px;
 	margin-bottom:0;
 	background-color:#fff;
 	padding: 30px 30px 30px 30px;
