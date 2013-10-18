@@ -41,7 +41,7 @@
 	<hgroup>
 		<h1>Froxlor Server Management Panel</h1>
 	</hgroup>
-	<img src="{$header_logo}" alt="Froxlor Server Management Panel" />
+	<img src="{$header_logo}" alt="Froxlor Server Management Panel" class="small" />
 	<div class="topheader_navigation">
 		<ul class="topheadernav">
 			<li>{$userinfo['loginname']}</li>

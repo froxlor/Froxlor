@@ -29,6 +29,8 @@ body {
 
 header img {
 	padding:10px 0 10px 10px;
+}
+img.small {
 	height: 30px;
 }
 
