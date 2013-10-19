@@ -431,6 +431,40 @@ if (AREA == 'admin' || AREA == 'customer') {
 	unset($navigation_data);
 }
 
+/**
+ * header information about open tickets (only if used)
+ */
+if ($settings['ticket']['enabled'] == '1') {
+	$awaitingtickets = 0;
+	$awaitingtickets_text = '';
+	$opentickets = 0;
+
+	if (AREA == 'admin' && isset($userinfo['adminid'])) {
+		$opentickets = $db->query_first('
+			SELECT COUNT(`id`) as `count` FROM `' . TABLE_PANEL_TICKETS . '`
+			WHERE `answerto` = "0" AND (`status` = "0" OR `status` = "1")
+			AND `lastreplier`="0" AND `adminid` = "' . $userinfo['adminid'] . '"
+		');
+		$awaitingtickets = $opentickets['count'];
+
+		if ($opentickets > 0) {
+			$awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="admin_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
+		}
+	}
+	elseif (AREA == 'customer' && isset($userinfo['customerid'])) {
+		$opentickets = $db->query_first('
+			SELECT COUNT(`id`) as `count` FROM `' . TABLE_PANEL_TICKETS . '`
+			WHERE `answerto` = "0" AND (`status` = "0" OR `status` = "2")
+			AND `lastreplier`="1" AND `customerid` = "' . $userinfo['customerid'] . '"
+		');
+		$awaitingtickets = $opentickets['count'];
+
+		if ($opentickets > 0) {
+			$awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="customer_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
+		}
+	}
+}
+
 $webfont = str_replace('+', ' ', $settings['panel']['webfont']);
 eval("\$header = \"" . getTemplate('header', '1') . "\";");
 
