@@ -56,10 +56,8 @@ $(document).ready(function() {
 	$(".main").css('min-height', $("nav").height() - 134);
 	
 	// set focus on username-field if on loginpage
-	if ($(".loginpage").length != 0) {
-		$("#loginname").focus();
-	}
-
+	$("#loginname").focus();
+	
 	if ($("table.bradius").length != 0) {
 		$("table.bradius tbody tr").hover(function() {
 			$(this).css("background-color", "#f5f5f5");

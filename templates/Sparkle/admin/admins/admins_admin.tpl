@@ -19,16 +19,16 @@
 				<span>Webspace:</span>
 				<if $row['diskspace'] != 'UL'>
 					<if (($row['diskspace']/100)*(int)$settings['system']['report_webmax']) < $row['diskspace_used']>
-						<div class="progress progress-danger progress-striped">
+						<div class="progress progress-danger">
 							<div class="bar" style="width: {$disk_percent}%"></div>
 						</div>
 					<else>
-						<div class="progress progress-striped">
+						<div class="progress">
 							<div class="bar" style="width: {$disk_percent}%"></div>
 						</div>
 					</if>
 				<else>
-					<div class="progress progress-striped">
+					<div class="progress">
 							<div class="bar" style="width: 0%"></div>
 					</div>
 				</if>
@@ -37,16 +37,16 @@
 				<span>Traffic:</span>
 				<if $row['traffic'] != 'UL'>
 					<if (($row['traffic']/100)*(int)$settings['system']['report_trafficmax']) < $row['traffic_used']>
-						<div class="progress progress-danger progress-striped">
+						<div class="progress progress-danger">
 							<div class="bar" style="width: {$traffic_percent}%"></div>
 						</div>
 					<else>
-						<div class="progress progress-striped">
+						<div class="progress">
 							<div class="bar" style="width: {$traffic_percent}%"></div>
 						</div>
 					</if>
 				<else>
-					<div class="progress progress-striped">
+					<div class="progress">
 						<div class="bar" style="width: 0%"></div>
 					</div>
 				</if>
