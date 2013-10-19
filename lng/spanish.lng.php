@@ -430,3 +430,6 @@ $lng['panel']['search'] = 'Buscar';
 $lng['panel']['used'] = 'usado';
 $lng['panel']['translator'] = 'Traductor';
 $lng['error']['stringformaterror'] = 'El valor para la fila "%s" no esta dentro de los formatos esperados.';
+
+$lng['mails']['webmaxpercent']['subject'] = 'Su cuenta esta llegando al Límite de almacenamiento';
+$lng['mails']['webmaxpercent']['mailbody'] = 'Estimado {NAME} \n\nsu cuota actual de  {DISKAVAILABLE} MB esta siendo ocupada por {DISKUSED} MB.\nEsta usando actualmente más del {MAX_PERCENT}%.\n\nPor favor contacte con su Administrador.\nDisculpe las molestias ocasionadas.';
