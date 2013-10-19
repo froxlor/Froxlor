@@ -148,18 +148,6 @@ if($page == 'overview')
 	$cron_last_runs = getCronjobsLastRun();
 	$outstanding_tasks = getOutstandingTasks();
 
-	$opentickets = 0;
-	$opentickets = $db->query_first('SELECT COUNT(`id`) as `count` FROM `' . TABLE_PANEL_TICKETS . '`
-                                   WHERE `answerto` = "0" AND (`status` = "0" OR `status` = "1")
-                                   AND `lastreplier`="0" AND `adminid` = "' . $userinfo['adminid'] . '"');
-	$awaitingtickets = $opentickets['count'];
-	$awaitingtickets_text = '';
-
-	if($opentickets > 0)
-	{
-		$awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="admin_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
-	}
-
 	if(function_exists('sys_getloadavg'))
 	{
 		$loadArray = sys_getloadavg();

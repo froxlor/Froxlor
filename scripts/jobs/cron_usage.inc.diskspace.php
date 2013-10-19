@@ -49,20 +49,24 @@ while($row = $db->fetch_array($result))
 			'MAX_PERCENT' => $settings['system']['report_webmax']
 		);
 
-		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-									WHERE `language` ='" . $row['def_language'] . "'");
+		$lngfile = $db->query_first("
+			SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
+			WHERE `language` ='" . $row['def_language'] . "'
+		");
 
-		if($lngfile !== NULL)
-		{
+		if ($lngfile !== null) {
+			$langfile = $lngfile['file'];
+		} else {
+			$lngfile = $db->query_first("
+				SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
+				WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'
+			");
 			$langfile = $lngfile['file'];
 		}
-		else
-		{
-			$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-										WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'");
-			$langfile = $lngfile['file'];
-		}
 
+		// include english language file (fallback)
+		include_once makeCorrectFile($pathtophpfiles . '/lng/english.lng.php');
+		// include admin/customer language file
 		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
 
 		// Get mail templates from database; the ones from 'admin' are fetched for fallback
