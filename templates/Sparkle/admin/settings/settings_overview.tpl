@@ -9,12 +9,23 @@
 		
 		<section class="fullform bradius">
         	<table class="formtable">
+			<thead>
+				<tr>
+					<th class="maintitle_apply_right" nowrap="nowrap" colspan="3" style="text-align: right !important;">
+						<input class="bottom" type="reset" value="{$lng['panel']['reset']}" /><input class="bottom" type="submit" value="{$lng['panel']['save']}" />
+					</th>
+				</tr>
+			</thead>
+			<tbody>
 			$fields
-			<tr>
-				<td class="maintitle_apply_right" nowrap="nowrap" colspan="2">
-					<input class="bottom" type="reset" value="{$lng['panel']['reset']}" /><input class="bottom" type="submit" value="{$lng['panel']['save']}" />
-				</td>
-			</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td class="maintitle_apply_right" nowrap="nowrap" colspan="3" style="text-align: right !important;">
+						<input class="bottom" type="reset" value="{$lng['panel']['reset']}" /><input class="bottom" type="submit" value="{$lng['panel']['save']}" />
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 		</section>
 </article>
