@@ -10,33 +10,38 @@ $header
 		<section class="tinyform bradius">
 			<form method="post" action="{$linker->getLink(array('section' => 'index'))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
-				<legend>Froxlor&nbsp;-&nbsp{$lng['menue']['main']['changepassword']}</legend>
-				<p>
-					<label for="old_password">{$lng['changepassword']['old_password']}:</label>&nbsp;
-					<input type="password" id="old_password" name="old_password" />
-				</p>
-				<p>
-					<label for="new_password">{$lng['changepassword']['new_password']}:</label>&nbsp;
-					<input type="password" id="new_password" name="new_password" />
-				</p>
-				<p>
-					<label for="new_password_confirm">{$lng['changepassword']['new_password_confirm']}:</label>&nbsp;
-					<input type="password" id="new_password_confirm" name="new_password_confirm" />
-				</p>
-				<p>
-					<input type="checkbox" name="change_main_ftp" id="change_main_ftp" value="true" />&nbsp;
-					{$lng['changepassword']['also_change_ftp']}
-				</p>
-				<p>
-					<input type="checkbox" name="change_webalizer" id="change_webalizer" value="true" />&nbsp;
-					{$lng['changepassword']['also_change_webalizer']}
-				</p>
-				<p class="submit">
 					<input type="hidden" name="s" value="$s" />
 					<input type="hidden" name="page" value="$page" />
 					<input type="hidden" name="send" value="send" />
-					<input type="submit" value="{$lng['menue']['main']['changepassword']}" />
-				</p>
+					<table class="formtable fullform">
+						<tr>
+							<td width="50%"><label for="old_password">{$lng['changepassword']['old_password']}:</label></td>
+							<td><input type="password" id="old_password" name="old_password" /></td>
+						</tr>
+						<tr>
+							<td><label for="new_password">{$lng['changepassword']['new_password']}:</label></td>
+							<td><input type="password" id="new_password" name="new_password" /></td>
+						</tr>
+						<tr>
+							<td><label for="new_password_confirm">{$lng['changepassword']['new_password_confirm']}:</label></td>
+							<td><input type="password" id="new_password_confirm" name="new_password_confirm" /></td>
+						</tr>
+						<tr>
+							<td><label for="change_main_ftp">{$lng['changepassword']['also_change_ftp']}:</label></td>
+							<td><input type="checkbox" name="change_main_ftp" id="change_main_ftp" value="true" /></td>
+						</tr>
+						<tr>
+							<td><label for="change_webalizer">{$lng['changepassword']['also_change_webalizer']}:</label></td>
+							<td><input type="checkbox" name="change_webalizer" id="change_webalizer" value="true" /></td>
+						</tr>
+						<tfoot>
+							<tr>
+								<td colspan="2" align="center">
+									<input type="submit" value="{$lng['menue']['main']['changepassword']}" />
+								</td>
+							</tr>
+						</tfoot>
+					</table>
 				</fieldset>
 			</form>
 		</section>

@@ -191,7 +191,7 @@ footer img {
 }
 
 .tinyform input {
-	width:50%;
+	/*width:50%;*/
 }
 
 .tinyform input[type="checkbox"] {
@@ -622,6 +622,8 @@ table tfoot td {
 	height:25px;
 	border-top: 1px solid #d1d5d8;
 	background-color: #f2f8fa;
+}
+.formtable tfoot td {
 	padding-right: 0px;
 }
 
@@ -636,8 +638,8 @@ table tfoot td {
 /* input elements */
 input {
 	background: #fff url(../img/icons/text_align_left.png) no-repeat 5px 4px;
-	padding:2px 4px 2px 24px;
-	height:22px;
+	padding:1px 4px 2px 24px;
+	height:23px;
 	border: 1px solid #d9d9d9;
 	margin-bottom: 5px;
 	border-radius: 3px;
