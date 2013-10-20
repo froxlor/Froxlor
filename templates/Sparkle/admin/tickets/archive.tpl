@@ -31,12 +31,6 @@ $header
 	<br />
 	<br />
 	<article>
-		<header>
-			<h3>
-				{$lng['ticket']['search']}
-			</h3>
-		</header>
-
 		<section class="fullform bradius">
 
 			<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post" enctype="application/x-www-form-urlencoded">
@@ -46,6 +40,11 @@ $header
 			<input type="hidden" name="send" value="send" />
 	
 			<table class="formtable">
+			<thead>
+				<tr>
+					<th colspan="2">{$lng['ticket']['search']}</th>
+				</tr>
+			</thead>
 			<tr>
 				<td>{$lng['ticket']['subject']}:</td>
 				<td ><input type="text" name="subject" /></td>
@@ -60,10 +59,10 @@ $header
  			</tr>
  			<tr>
 				<td>{$lng['ticket']['lastchange']}:</td>
-				<td><label for="fromdate">{$lng['ticket']['lastchange_from']}</label>
-					<input type="text" id="fromdate" name="fromdate" /><br /><br />
-					<label for="todate">{$lng['ticket']['lastchange_to']}</label>
-					<input type="text" id="todate" name="todate" /></td>
+				<td>
+					<label for="fromdate">{$lng['ticket']['lastchange_from']}<br /><input type="text" id="fromdate" name="fromdate" /></label>
+					<label for="todate">{$lng['ticket']['lastchange_to']}<br /><input type="text" id="todate" name="todate" /></label>
+				</td>
  			</tr>
 			<tr>
 				<td>{$lng['ticket']['message']}:</td>
@@ -73,9 +72,11 @@ $header
 				<td>{$lng['ticket']['customer']}:</td>
 				<td><select name="customer">$customers</select></td>
  			</tr>
-			<tr>
-				<td class="main_field_confirm" colspan="2"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['panel']['search']}" /></td>
-			</tr>
+ 			<tfoot>
+				<tr>
+					<td class="main_field_confirm" colspan="2" align="right"><input type="hidden" name="send" value="send" /><input type="submit" class="bottom" value="{$lng['panel']['search']}" /></td>
+				</tr>
+ 			</tfoot>
 			</table>
 
 			</form>
