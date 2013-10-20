@@ -222,6 +222,9 @@ footer img {
 	padding:10px 0;
 	text-align:center;
 }
+.tinyform {
+	padding: 0;
+}
 
 .fullform {
 	width:100%;
@@ -234,6 +237,9 @@ footer img {
 	margin:0 auto;
 	padding:10px 0;
 	text-align:left;
+}
+.midform {
+	padding: 0;
 }
 
 .tinyform,.loginsec form {
@@ -616,6 +622,7 @@ table tfoot td {
 	height:25px;
 	border-top: 1px solid #d1d5d8;
 	background-color: #f2f8fa;
+	padding-right: 0px;
 }
 
 .tfootleft {

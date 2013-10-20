@@ -2,13 +2,13 @@
 	<td>
 		<if $row['company'] != '' && $row['name'] != ''>
 			{$row['company']}<br />
-			<small>{$row['name']}&nbsp;{$row['firstname']}</small>
+			<small>{$row['name']}, {$row['firstname']}</small>
 		</if>
 		<if $row['company'] != '' && $row['name'] == ''>
 			{$row['company']}
 		</if>
 		<if $row['company'] == ''>
-			{$row['name']}&nbsp;{$row['firstname']}
+			{$row['name']}, {$row['firstname']}
 		</if>
 	</td>
 	<td>
@@ -36,7 +36,7 @@
 					</if>
 				<else>
 					<div class="progress">
-							<div class="bar" style="width: 0px"></div>
+							<div class="bar" style="width: 50%"></div>
 					</div>
 				</if>
 			</span>
@@ -54,7 +54,7 @@
 					</if>
 				<else>
 					<div class="progress">
-						<div class="bar" style="width: 0%"></div>
+						<div class="bar" style="width: 50%"></div>
 					</div>
 				</if>
 			</span>

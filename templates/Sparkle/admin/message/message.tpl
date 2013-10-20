@@ -17,27 +17,34 @@ $header
 			</if>
 
 			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
+				<input type="hidden" name="s" value="$s"/>
+				<input type="hidden" name="page" value="$page"/>
+				<input type="hidden" name="action" value="$action"/>
+				<input type="hidden" name="send" value="send"/>
+				
 				<fieldset>
 				<legend>Froxlor&nbsp;-&nbsp;{$lng['admin']['message']}</legend>
-				<p>
-					<label for="receipient">{$lng['admin']['receipient']}</label>&nbsp;
-					<select name="receipient" id="receipient">$receipients</select>
-				</p>
-				<p>
-					<label for="subject">{$lng['admin']['subject']}</label>&nbsp;
-					<input type="text" name="subject" id="subject" value="{$lng['admin']['nosubject']}"/>
-				</p>
-				<p>
-					<label for="message">{$lng['admin']['text']}</label>&nbsp;
-					<textarea rows="12" name="message" id="message"></textarea>
-				</p>
-				<p class="submit">
-					<input type="hidden" name="s" value="$s"/>
-					<input type="hidden" name="page" value="$page"/>
-					<input type="hidden" name="action" value="$action"/>
-					<input type="hidden" name="send" value="send"/>
-					<input type="submit" value="{$lng['panel']['send']}" />
-				</p>
+				<table class="formtable">
+					<tr>
+						<td><label for="receipient">{$lng['admin']['receipient']}</label></td>
+						<td><select name="receipient" id="receipient">$receipients</select></td>
+					</tr>
+					<tr>
+						<td><label for="subject">{$lng['admin']['subject']}</label></td>
+						<td><input type="text" name="subject" id="subject" value="{$lng['admin']['nosubject']}"/></td>
+					</tr>
+					<tr>
+						<td><label for="message">{$lng['admin']['text']}</label></td>
+						<td><textarea rows="12" name="message" id="message"></textarea></td>
+					</tr>
+					<tfoot>
+						<tr>
+							<td align="right" colspan="2">
+								<input type="submit" value="{$lng['panel']['send']}" />
+							</td>
+						</tr>
+					</tfoot>
+				</table>
 				</fieldset>
 			</form>
 
