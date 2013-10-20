@@ -1,15 +1,6 @@
 $header
 	<article>
 
-	<if 0 < $awaitingtickets && $settings['ticket']['enabled'] == 1 >
-	<div class="messagewrapperfull">
-		<div class="warningcontainer bradius">
-			<div class="warningtitle">{$lng['admin']['warning']}</div>
-			<div class="warning"><br /><strong>{$awaitingtickets_text}</strong></div>
-		</div>
-	</div>
-	</if>
-
 	<section class="dboarditem bradius">
 	<table>
 	<tr>

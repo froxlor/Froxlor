@@ -1,15 +1,6 @@
 $header
 	<article>
-
-	<if 0 < $awaitingtickets && $settings['ticket']['enabled'] == 1 >
-	<div class="messagewrapperfull">
-		<div class="neutralcontainer bradius">
-			<div class="neutraltitle">{$lng['admin']['note']}</div>
-			<div class="neutral">{$awaitingtickets_text}</div>
-		</div>
-	</div>
-	</if>
-
+	
 	<section class="dboarditemfull bradius">
 		<table>
 		<tr>
