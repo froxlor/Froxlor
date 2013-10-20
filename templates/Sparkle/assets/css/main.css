@@ -88,7 +88,8 @@ ul.topheadernav {
 	font-size: 13px;
 }
 ul.topheadernav li {
-	padding: 0 0 0 50px;
+	padding: 0px;
+	margin-left: 50px;
 	float: left;
 	position: relative;
 }
@@ -103,9 +104,9 @@ ul.topheadernav li a:hover {
 ul.topheadernav li ul {
 	display: none;
 	background-color: #eee;
-	padding: 5px 10px;
+	padding: 5px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-	margin-left: -10px;
+	margin-left: 0px;
 	border-radius: 3px;
 }
 ul.topheadernav li:hover ul {
@@ -114,7 +115,7 @@ ul.topheadernav li:hover ul {
 }
 ul.topheadernav li ul li {
 	font-size: 11px;
-	margin-left: -50px;
+	margin-left: 0px;
 }
 ul.topheadernav li ul li a:hover {
 	color: #111;
@@ -127,6 +128,24 @@ nav {
 }
 nav div:first-child {
 	display: none;
+}
+
+.topheadernav img {
+	padding: 0px;
+	margin: 0px;
+}
+.countbubble {
+	display: block;
+	font-size: 9px;
+	color: #fff;
+	background-color: #dd0000;
+	position: absolute;
+	padding: 3px;
+	font-weight: bold;
+	line-height: 9px;
+	border-radius: 3px;
+	right: -6px;
+	bottom: -3px;
 }
 
 /* FOOTER */
@@ -478,7 +497,7 @@ a:hover {
 .main {
 	margin-left:240px;
 	margin-right:10px;
-	margin-top:65px;
+	margin-top:64px;
 	margin-bottom:0;
 	background-color:#fff;
 	padding: 30px 30px 30px 30px;
