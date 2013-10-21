@@ -269,18 +269,21 @@ class ApsInstaller extends ApsParser
 			$this->db->query('DELETE FROM `' . TABLE_APS_INSTANCES . '` WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
 			$this->db->query('DELETE FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
 
-			//remove data,  #273
-			if($this->DomainPath != '' && $this->DomainPath != '/') {
-				self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/');
-			} else {
-				// save awstats/webalizer folder if it's the docroot
-				self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/', true);
-				// place standard-index file
-				$loginname = getLoginNameByUid($Row['CustomerID']);
-				if($loginname !== false)
-				{
-					storeDefaultIndex($loginname, $this->RealPath . $this->DomainPath . '/');
-				}
+			if($this->RealPath != '' && checkDisallowedPaths($this->RealPath))
+			{
+				//remove data,  #273
+				if($this->DomainPath != '' && $this->DomainPath != '/') {
+					self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/');
+				} else {
+					// save awstats/webalizer folder if it's the docroot
+					self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/', true);
+					// place standard-index file
+					$loginname = getLoginNameByUid($Row['CustomerID']);
+					if($loginname !== false)
+					{
+						storeDefaultIndex($loginname, $this->RealPath . $this->DomainPath . '/');
+					}
+				}				
 			}
 		}
 	}
@@ -335,7 +338,13 @@ class ApsInstaller extends ApsParser
 			$mapping_path = $Xml->mapping['path'];
 			$mapping_url = $Xml->mapping['url'];
 		}
-		
+
+		if ($this->RealPath == '' || !checkDisallowedPaths($this->RealPath))
+		{
+			$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
+			return false;
+		}
+
 		if($Task == TASK_INSTALL)
 		{
 			//FIXME truncate customer directory
