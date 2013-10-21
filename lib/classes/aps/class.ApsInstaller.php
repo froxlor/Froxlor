@@ -335,7 +335,13 @@ class ApsInstaller extends ApsParser
 			$mapping_path = $Xml->mapping['path'];
 			$mapping_url = $Xml->mapping['url'];
 		}
-		
+
+		if($this->DomainPath == '')
+		{
+			$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
+			return false;
+		}
+
 		if($Task == TASK_INSTALL)
 		{
 			//FIXME truncate customer directory
