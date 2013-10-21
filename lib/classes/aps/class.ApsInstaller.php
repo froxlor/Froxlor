@@ -269,12 +269,10 @@ class ApsInstaller extends ApsParser
 			$this->db->query('DELETE FROM `' . TABLE_APS_INSTANCES . '` WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
 			$this->db->query('DELETE FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
 
-			if($this->DomainPath != '' && checkDisallowedPaths($this->DomainPath))
+			if($this->RealPath != '' && checkDisallowedPaths($this->RealPath))
 			{
-				$documentroot = getCustomerDetail($Row['CustomerID'],'documentroot');
-	
 				//remove data,  #273
-				if($this->DomainPath != $documentroot) {
+				if($this->DomainPath != '' && $this->DomainPath != '/') {
 					self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/');
 				} else {
 					// save awstats/webalizer folder if it's the docroot
@@ -341,7 +339,7 @@ class ApsInstaller extends ApsParser
 			$mapping_url = $Xml->mapping['url'];
 		}
 
-		if (($this->DomainPath == '') || ($this->DomainPath == '/'))
+		if ($this->RealPath == '' || !checkDisallowedPaths($this->RealPath))
 		{
 			$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
 			return false;
