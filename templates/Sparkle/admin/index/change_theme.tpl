@@ -10,17 +10,22 @@ $header
 		<section class="tinyform bradius">
 			<form method="post" action="{$linker->getLink(array('section' => 'index'))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
-				<legend>Froxlor&nbsp;-&nbsp;{$lng['menue']['main']['changetheme']}</legend>
-				<p>
-					<label for="theme">{$lng['panel']['theme']}:</label>&nbsp;
-					<select id="theme" name="theme">$theme_options</select>
-				</p>
-				<p class="submit">
 					<input type="hidden" name="s" value="$s" />
 					<input type="hidden" name="page" value="$page" />
 					<input type="hidden" name="send" value="send" />
-					<input class="bottom" type="submit" value="{$lng['menue']['main']['changetheme']}" />
-				</p>
+					<table class="formtable tinyform">
+						<tr>
+							<td><label for="theme">{$lng['panel']['theme']}:</label></td>
+							<td><select id="theme" name="theme">$theme_options</select></td>
+						</tr>
+						<tfoot>
+							<tr>
+								<td colspan="2" align="center">
+									<input class="bottom" type="submit" value="{$lng['menue']['main']['changetheme']}" />
+								</td>
+							</tr>
+						</tfoot>
+					</table>
 				</fieldset>
 			</form>
 		</section>

@@ -10,17 +10,22 @@ $header
 		<section class="tinyform bradius">
 			<form method="post" action="{$linker->getLink(array('section' => 'index'))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
-				<legend>Froxlor&nbsp;-&nbsp;{$lng['menue']['main']['changelanguage']}</legend>
-				<p>
-					<label for="def_language">{$lng['login']['language']}:</label>&nbsp;
-					<select id="def_language" name="def_language">$language_options</select>
-				</p>
-				<p class="submit">
 					<input type="hidden" name="s" value="$s" />
 					<input type="hidden" name="page" value="$page" />
 					<input type="hidden" name="send" value="send" />
-					<input type="submit" value="{$lng['menue']['main']['changelanguage']}" />
-				</p>
+					<table class="formtable tinyform">
+						<tr>
+							<td><label for="def_language">{$lng['login']['language']}:</label></td>
+							<td><select id="def_language" name="def_language">$language_options</select></td>
+						</tr>
+						<tfoot>
+							<tr>
+								<td colspan="2" align="center">
+									<input type="submit" value="{$lng['menue']['main']['changelanguage']}" />
+								</td>
+							</tr>
+						</tfoot>
+					</table>
 				</fieldset>
 			</form>
 		</section>
