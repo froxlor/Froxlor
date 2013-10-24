@@ -10,11 +10,13 @@
 		<section class="fullform bradius">
 			<table class="formtable">
 			$fields
-			<tr>
-				<td class="maintitle_apply_right" nowrap="nowrap" colspan="2">
-					<input class="bottom" type="reset" value="{$lng['panel']['reset']}" /><input class="bottom" type="submit" value="{$lng['panel']['save']}" />
-				</td>
-			</tr>
+			<tfoot>
+				<tr>
+					<td class="maintitle_apply_right" nowrap="nowrap" colspan="2" align="right">
+						<input class="bottom" type="reset" value="{$lng['panel']['reset']}" /><input class="bottom" type="submit" value="{$lng['panel']['save']}" />
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 		</section>
 </article>
