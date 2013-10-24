@@ -31,6 +31,15 @@ return array(
 									'save_method' => 'storeSettingField',
 									'overview_option' => true
 							),
+							'system_ssl_cipher_list' => array(
+									'label' => $lng['serversettings']['ssl']['ssl_cipher_list'],
+									'settinggroup' => 'system',
+									'varname' => 'ssl_cipher_list',
+									'type' => 'string',
+									'string_emptyallowed' => false,
+									'default' => 'ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH',
+									'save_method' => 'storeSettingField',
+							),
 							'system_ssl_cert_file' => array(
 									'label' => $lng['serversettings']['ssl']['ssl_cert_file'],
 									'settinggroup' => 'system',
@@ -51,20 +60,20 @@ return array(
 									'default' => '/etc/apache2/apache2.key',
 									'save_method' => 'storeSettingField',
 							),
-							'system_ssl_ca_file' => array(
-									'label' => $lng['serversettings']['ssl']['ssl_ca_file'],
+							'system_ssl_cert_chainfile' => array(
+									'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
 									'settinggroup' => 'system',
-									'varname' => 'ssl_ca_file',
+									'varname' => 'ssl_cert_chainfile',
 									'type' => 'string',
 									'string_type' => 'file',
 									'string_emptyallowed' => true,
 									'default' => '',
 									'save_method' => 'storeSettingField',
 							),
-							'system_ssl_cert_chainfile' => array(
-									'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
+							'system_ssl_ca_file' => array(
+									'label' => $lng['serversettings']['ssl']['ssl_ca_file'],
 									'settinggroup' => 'system',
-									'varname' => 'ssl_cert_chainfile',
+									'varname' => 'ssl_ca_file',
 									'type' => 'string',
 									'string_type' => 'file',
 									'string_emptyallowed' => true,

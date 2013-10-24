@@ -2266,3 +2266,14 @@ if (isFroxlorVersion('0.9.30-dev1')) {
 	lastStepStatus(0);
 	updateToVersion('0.9.30-rc1');
 }
+
+if (isFroxlorVersion('0.9.30-rc1')) {
+	showUpdateStep("Updating from 0.9.30-rc1 to 0.9.30 final", true);
+	lastStepStatus(0);
+
+	showUpdateStep("Adding ssl-cipher-list setting");
+	$db->query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ssl_cipher_list', `value` = 'ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH'");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.30');
+}

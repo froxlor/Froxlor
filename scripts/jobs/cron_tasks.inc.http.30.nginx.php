@@ -506,7 +506,7 @@ class nginx
 			// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
 			//$sslsettings .= "\t" . 'ssl on;' . "\n";
 			$sslsettings .= "\t" . 'ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;' . "\n";
-			$sslsettings .= "\t" . 'ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-RC4-SHA:ECDHE-RSA-AES128-SHA:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH:!CAMELLIA;' . "\n";
+			$sslsettings .= "\t" . 'ssl_ciphers ' . $this->settings['system']['ssl_cipher_list'] . ';' . "\n";
 			$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
 			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain['ssl_cert_file']) . ';' . "\n";
 
@@ -515,7 +515,7 @@ class nginx
 			}
 
 			if ($domain['ssl_ca_file'] != '') {
-				$sslsettings.= 'ssl_client_certificate ' . makeCorrectFile($domain['ssl_ca_file']) . ';' . "\n";
+				$sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain['ssl_ca_file']) . ';' . "\n";
 			}
 		}
 

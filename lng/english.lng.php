@@ -755,8 +755,10 @@ $lng['logger']['truncate'] = 'Empty log';
 
 // ADDED IN 1.2.19-svn7
 
-$lng['serversettings']['ssl']['use_ssl'] = 'Use SSL';
-$lng['serversettings']['ssl']['ssl_cert_file'] = 'Path to the SSL certificate';
+$lng['serversettings']['ssl']['use_ssl']['title'] = 'Enable SSL usage';
+$lng['serversettings']['ssl']['use_ssl']['description'] = 'Check this if you want to use SSL for your webserver';
+$lng['serversettings']['ssl']['ssl_cert_file']['title'] = 'Path to the SSL certificate';
+$lng['serversettings']['ssl']['ssl_cert_file']['description'] = 'Specify the path including the filename of the .crt or .pem file (main certificate)';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Defaults for creating the Cert file';
 $lng['panel']['reseller'] = 'reseller';
 $lng['panel']['admin'] = 'admin';
@@ -1205,8 +1207,10 @@ $lng['admin']['ipsandports']['webserverssldomainconfig'] = 'Webserver SSL config
 $lng['admin']['ipsandports']['ssl_key_file'] = 'Path to the SSL Keyfile';
 $lng['admin']['ipsandports']['ssl_ca_file'] = 'Path to the SSL CA certificate';
 $lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Default vHost-settings for every domain container';
-$lng['serversettings']['ssl']['ssl_key_file'] = 'Path to the SSL Keyfile';
-$lng['serversettings']['ssl']['ssl_ca_file'] = 'Path to the SSL CA certificate';
+$lng['serversettings']['ssl']['ssl_key_file']['title'] = 'Path to the SSL Keyfile';
+$lng['serversettings']['ssl']['ssl_key_file']['description'] = 'Specify the path including the filename for the private-key file (.key mostly)';
+$lng['serversettings']['ssl']['ssl_ca_file']['title'] = 'Path to the SSL CA certificate (optional)';
+$lng['serversettings']['ssl']['ssl_ca_file']['description'] = 'Client authentification, set this only if you know what it is.';
 
 $lng['error']['usernamealreadyexists'] = 'The username %s already exists.';
 
@@ -1476,28 +1480,19 @@ $lng['admin']['store_defaultindex'] = 'Store default index-file to customers doc
 // ADDED IN FROXLOR 0.9.13-svn1
 $lng['customer']['autoresponder'] = 'Autoresponder';
 
-// ADDED IN FROXLOR 0.9.14-svn1
+// ADDED IN FROXLOR 0.9.14
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Default PHP configuration for Froxlor-vHost';
-
-// ADDED IN FROXLOR 0.9.14-svn3
 $lng['serversettings']['awstats_icons']['title'] = 'Path to AWstats icons folder';
 $lng['serversettings']['awstats_icons']['description'] = 'e.g. /usr/share/awstats/htdocs/icon/';
-
-// ADDED IN FROXLOR 0.9.14-svn4
-$lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Path to the SSL CertificateChainFile';
-
-// ADDED IN FROXLOR 0.9.14-svn5
+$lng['admin']['ipsandports']['ssl_cert_chainfile']['title'] = 'Path to the SSL CertificateChainFile';
+$lng['admin']['ipsandports']['ssl_cert_chainfile']['description'] = 'Mostly CA_Bundle, or similar, you probably want to set this if you bought a SSL certificate.';
 $lng['admin']['ipsandports']['docroot']['title'] = 'Custom docroot (empty = point to Froxlor)';
 $lng['admin']['ipsandports']['docroot']['description'] = 'You can define a custom document-root (the destination for a request) for this ip/port combination here.<br /><strong>ATTENTION:</strong> Please be careful with what you enter here!';
-
-// ADDED IN FROXLOR 0.9.14-svn6
 $lng['serversettings']['login_domain_login'] = 'Allow login with domains';
-
-// ADDED IN FROXLOR 0.9.14
 $lng['panel']['unlock'] = 'unlock';
 $lng['question']['customer_reallyunlock'] = 'Do you really want to unlock customer %s?';
 
-// ADDED IN FROXLOR 0.9.15-svn1
+// ADDED IN FROXLOR 0.9.15
 $lng['serversettings']['perl_server']['title'] = 'Perl server location';
 $lng['serversettings']['perl_server']['description'] = 'Default is set for using the guide found at: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
@@ -1972,3 +1967,5 @@ $lng['domains']['serveraliasoption_wildcard'] = 'Wildcard (*.domain.tld)';
 $lng['domains']['serveraliasoption_www'] = 'WWW (www.domain.tld)';
 $lng['domains']['serveraliasoption_none'] = 'No alias';
 $lng['error']['givendirnotallowed'] = 'The given directory in field %s is not allowed.';
+$lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Configure the allowed SSL ciphers';
+$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'This is a list of ciphers that you want (or don\'t want) to use when talking SSL. For a list of ciphers and how to include/exclude them, see sections "CIPHER LIST FORMAT" and "CIPHER STRINGS" on <a href="http://openssl.org/docs/apps/ciphers.html">the man-page for ciphers</a>.<br /><br /><b>Default value is:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
