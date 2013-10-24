@@ -754,8 +754,10 @@ $lng['logger']['truncate'] = 'Log leeren';
 
 // ADDED IN 1.2.19-svn7
 
-$lng['serversettings']['ssl']['use_ssl'] = 'SSL nutzen';
-$lng['serversettings']['ssl']['ssl_cert_file'] = 'Pfad zum Zertifikat';
+$lng['serversettings']['ssl']['use_ssl']['title'] = 'Aktiviere SSL';
+$lng['serversettings']['ssl']['use_ssl']['description'] = 'Erlaubt die Nutzung von SSL für den Webserver';
+$lng['serversettings']['ssl']['ssl_cert_file']['title'] = 'Pfad zum SSL-Zertifikat';
+$lng['serversettings']['ssl']['ssl_cert_file']['description'] = 'Geben Sie den Pfad inklusive Dateinamen des Zertifikats an (meist .crt or .pem).';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Standardwerte zum Erstellen eines Zertifikats';
 $lng['panel']['reseller'] = 'Reseller';
 $lng['panel']['admin'] = 'Administrator';
@@ -1319,8 +1321,10 @@ $lng['admin']['ipsandports']['webserverssldomainconfig'] = 'Webserver-SSL-Konfig
 $lng['admin']['ipsandports']['ssl_key_file'] = 'Pfad zu der SSL-Schlüsseldatei';
 $lng['admin']['ipsandports']['ssl_ca_file'] = 'Pfad zu dem SSL-CA-Zertifikat';
 $lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Standard vHost - Einstellungen für jeden Domain - Kontainer';
-$lng['serversettings']['ssl']['ssl_key_file'] = 'Pfad zu der SSL-Schlüsseldatei';
-$lng['serversettings']['ssl']['ssl_ca_file'] = 'Pfad zu dem SSL-CA-Zertifikat';
+$lng['serversettings']['ssl']['ssl_key_file']['title'] = 'Pfad zum SSL Private-key';
+$lng['serversettings']['ssl']['ssl_key_file']['description'] = 'Geben Sie den Pfad inklusive Dateinamen der Schlüssel-Datei an (der private-key, meist .key).';
+$lng['serversettings']['ssl']['ssl_ca_file']['title'] = 'Pfad zu dem SSL-CA-Zertifikat (optional)';
+$lng['serversettings']['ssl']['ssl_ca_file']['description'] = 'Client Authentifizierung, dieses Feld sollte nur gesetzt werden, wenn es wirklich gebraucht wird.';
 $lng['error']['usernamealreadyexists'] = 'Der Benutzername "%s" existiert bereits.';
 $lng['error']['plausibilitychecknotunderstood'] = 'Die Antwort des Plausibilitätschecks wurde nicht verstanden';
 $lng['error']['errorwhensaving'] = 'Bei dem Speichern des Feldes "%s" trat ein Fehler auf';
@@ -1454,28 +1458,19 @@ $lng['admin']['store_defaultindex'] = 'Erstelle Standard-Index-Datei im Kunden-O
 // ADDED IN FROXLOR 0.9.13-svn1
 $lng['customer']['autoresponder'] = 'Abwesenheitsnachrichten';
 
-// ADDED IN FROXLOR 0.9.14-svn1
+// ADDED IN FROXLOR 0.9.14
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PHP-Konfiguration für den Froxlor-Vhost';
-
-// ADDED IN FROXLOR 0.9.14-svn3
 $lng['serversettings']['awstats_icons']['title'] = 'Pfad zum AWstats-Icon-Ordner';
 $lng['serversettings']['awstats_icons']['description'] = 'z.B. /usr/share/awstats/htdocs/icon/';
-
-// ADDED IN FROXLOR 0.9.14-svn4
-$lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Pfad zu dem SSL-CertificateChainFile';
-
-// ADDED IN FROXLOR 0.9.14-svn5
+$lng['admin']['ipsandports']['ssl_cert_chainfile']['title'] = 'Pfad zu dem SSL-CertificateChainFile (optional)';
+$lng['admin']['ipsandports']['ssl_cert_chainfile']['description'] = 'Meist CA_Bundle, o.Ä., dies ist das Feld, dass gesetzt werden sollte, wenn ein gekauftes SSL-Zertifikat vorliegt.';
 $lng['admin']['ipsandports']['docroot']['title'] = 'Benutzerdefinierter Docroot (leer = zeige auf Froxlor)';
 $lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzerdefinierter Document-Root (der Zielordner für einen Zugriff) für diese IP/Port Kombination gesetzt werden.<br /><strong>ACHTUNG:</strong> Bitte überlege vorher, welchen Pfad du hier angibst!';
-
-// ADDED IN FROXLOR 0.9.14-svn6
 $lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
-
-// ADDED IN FROXLOR 0.9.14
 $lng['panel']['unlock'] = 'entsperren';
 $lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden "%s" wirklich entsperren?';
 
-// ADDED IN FROXLOR 0.9.15-svn1
+// ADDED IN FROXLOR 0.9.15
 $lng['serversettings']['perl_server']['title'] = 'Perl-Server-Ort';
 $lng['serversettings']['perl_server']['description'] = 'Der Standardwert ist diesem Guide entnommen: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx-PHP-Backend';
@@ -1692,3 +1687,5 @@ $lng['domains']['serveraliasoption_wildcard'] = 'Wildcard (*.domain.tld)';
 $lng['domains']['serveraliasoption_www'] = 'WWW (www.domain.tld)';
 $lng['domains']['serveraliasoption_none'] = 'Kein alias';
 $lng['error']['givendirnotallowed'] = 'Das angegebene Verzeichnis im Feld %s ist nicht erlaubt.';
+$lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Erlaubte SSL Ciphers festlegen';
+$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Dies ist eine Liste von Ciphers die genutzt werden sollen (oder auch nicht genutzt werden sollen) wenn eine SSL Verbindung besteht. Eine Liste aller Ciphers und wie diese hinzugefügt/ausgeschlossen werden ist in den Abschnitten "CIPHER LIST FORMAT" und "CIPHER STRINGS" in <a href="http://openssl.org/docs/apps/ciphers.html">der man-page für Ciphers</a> zu finden.<br /><br /><b>Standard-Wert ist:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';

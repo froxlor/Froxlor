@@ -182,6 +182,9 @@ class lighttpd
 
 				if ($row_ipsandports['ssl_cert_file'] != '') {
 					$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
+					$this->lighttpd_data[$vhost_filename].= 'ssl.use-sslv2 = "disable"' . "\n";
+					$this->lighttpd_data[$vhost_filename].= 'ssl.cipher-list = "' . $this->settings['system']['ssl_cipher_list'] . '"' . "\n";
+					$this->lighttpd_data[$vhost_filename].= 'ssl.honor-cipher-order = "enable"' . "\n";
 					$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . '"' . "\n";
 
 					if ($row_ipsandports['ssl_ca_file'] != '') {
@@ -512,6 +515,9 @@ class lighttpd
 			
 			if ($domain['ssl_cert_file'] != '') {
 				$ssl_settings.= 'ssl.engine = "enable"' . "\n";
+				$ssl_settings.= 'ssl.use-sslv2 = "disable"' . "\n";
+				$ssl_settings.= 'ssl.cipher-list = "' . $this->settings['system']['ssl_cipher_list'] . '"' . "\n";
+				$ssl_settings.= 'ssl.honor-cipher-order = "enable"' . "\n";
 				$ssl_settings.= 'ssl.pemfile = "' . makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
 
 				if ($domain['ssl_ca_file'] != '') {

@@ -87,6 +87,13 @@ while ($row = $db->fetch_array($result_tasks)) {
 		} else {
 			echo "Please check you Webserver settings\n";
 		}
+
+		/**
+		 * as we might have a change from mod_php to fcgid/fpm or the other way around
+		 * we need to check customer directory permissions
+		 * -> 0.9.31
+		 */
+
 	}
 
 	/**
@@ -387,14 +394,11 @@ while ($row = $db->fetch_array($result_tasks)) {
 	}
 }
 
-if($db->num_rows($result_tasks) != 0)
-{
+if ($db->num_rows($result_tasks) != 0) {
 	$where = array();
-	foreach($resultIDs as $id)
-	{
+	foreach ($resultIDs as $id) {
 		$where[] = '`id`=\'' . (int)$id . '\'';
 	}
-
 	$where = implode($where, ' OR ');
 	$db->query('DELETE FROM `' . TABLE_PANEL_TASKS . '` WHERE ' . $where);
 	unset($resultIDs);
