@@ -6,7 +6,6 @@ include /usr/share/cdbs/1/rules/upstream-tarball.mk
 
 # Add here any variable or target overrides you need.
 DEB_UPSTREAM_URL = http://files.froxlor.org/releases
-DEB_UPSTREAM_REPACKAGE_EXCLUDES = ./lib/classes/phpmailer/
 DEB_UPSTREAM_TARBALL_SRCDIR = froxlor
 
 # as upstream, kill the package tagging.

@@ -1,3 +1,12 @@
+froxlor (0.9.30-1) oldstable; urgency=low
+
+  * new upstream release
+  * drop 01-use-libphp-phpmailer-instead-of-prepackaged-version.patch
+    since bundled version is newer, we want to use that, also drop
+    libphp-phpmailer dependency
+
+ -- Froxlor Release Team <release@froxlor.org>  Fri, 25 Oct 2013 12:26:34 +0200
+
 froxlor (0.9.29-1+squeeze1) oldstable; urgency=low
 
   * new upstream release
