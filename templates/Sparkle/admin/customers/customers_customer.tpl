@@ -20,7 +20,7 @@
 	<td>
 		{$last_login}
 	</td>
-	<td style="min-width:270px;">
+	<td>
 		<div>
 			<span class="overviewcustomerextras">
 				<span>Webspace:</span>

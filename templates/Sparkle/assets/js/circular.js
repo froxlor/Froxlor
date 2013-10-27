@@ -46,9 +46,9 @@ $(document).ready(function() {
 	
 	$(".circular").each(function(index, element) {
 		var canvas = "#" + $(element).attr("id") + "-canvas";
-		var used = parseFloat($(element).attr("used"));
-		var available = $(element).attr("available");
-		var assigned = parseFloat($(element).attr("assigned"));
+		var used = parseFloat($(element).data("used"));
+		var available = $(element).data("available");
+		var assigned = parseFloat($(element).data("assigned"));
 		var usedD, usedP, assignedP, assignedD;
 				
 		// Draw basic circle

@@ -6,7 +6,7 @@ $header
 		</h2>
 		<div class="canvasitems" id="statsbox">
 			<div class="canvasbox">
-				<input type="hidden" id="customers" class="circular" used="{$overview['number_customers']}" available="{$userinfo['customers']}">
+				<input type="hidden" id="customers" class="circular" data-used="{$overview['number_customers']}" data-available="{$userinfo['customers']}">
 				<canvas id="customers-canvas" width="120" height="76"></canvas><br/>
 				{$lng['admin']['customers']}<br />
 				<small>
@@ -18,7 +18,7 @@ $header
 			</div>
 			
 			<div class="canvasbox">
-				<input type="hidden" id="domains" class="circular" used="{$overview['number_domains']}" available="{$userinfo['domains']}">
+				<input type="hidden" id="domains" class="circular" data-used="{$overview['number_domains']}" data-available="{$userinfo['domains']}">
 				<canvas id="domains-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['domains']}<br />
 				<small>
@@ -30,7 +30,7 @@ $header
 			</div>
 			
 			<div class="canvasbox">
-				<input type="hidden" id="subdomains" class="circular" used="{$overview['subdomains_used']}" available="{$userinfo['subdomains']}" assigned="{$userinfo['subdomains_used']}">
+				<input type="hidden" id="subdomains" class="circular" data-used="{$overview['subdomains_used']}" data-available="{$userinfo['subdomains']}" data-assigned="{$userinfo['subdomains_used']}">
 				<canvas id="subdomains-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['subdomains']}<br />
 				<small>
@@ -43,7 +43,7 @@ $header
 			</div>
 			
 			<div class="canvasbox">
-				<input type="hidden" id="diskspace" class="circular" used="{$overview['diskspace_used']}" available="{$userinfo['diskspace']}" assigned="{$userinfo['diskspace_used']}">
+				<input type="hidden" id="diskspace" class="circular" data-used="{$overview['diskspace_used']}" data-available="{$userinfo['diskspace']}" data-assigned="{$userinfo['diskspace_used']}">
 				<canvas id="diskspace-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['diskspace']}<br />
 				<small>
@@ -56,7 +56,7 @@ $header
 			</div>
 			
 			<div class="canvasbox">
-				<input type="hidden" id="traffic" class="circular" used="{$overview['traffic_used']}" available="{$userinfo['traffic']}" assigned="{$userinfo['traffic_used']}">
+				<input type="hidden" id="traffic" class="circular" data-used="{$overview['traffic_used']}" data-available="{$userinfo['traffic']}" data-assigned="{$userinfo['traffic_used']}">
 				<canvas id="traffic-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['traffic']}<br />
 				<small>
@@ -69,7 +69,7 @@ $header
 			</div>
 			
 			<div class="canvasbox">
-				<input type="hidden" id="mysqls" class="circular" used="{$overview['mysqls_used']}" available="{$userinfo['mysqls']}" assigned="{$userinfo['mysqls_used']}">
+				<input type="hidden" id="mysqls" class="circular" data-used="{$overview['mysqls_used']}" data-available="{$userinfo['mysqls']}" data-assigned="{$userinfo['mysqls_used']}">
 				<canvas id="mysqls-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['mysqls']}<br />
 				<small>
@@ -82,7 +82,7 @@ $header
 			</div>
 			
 			<div class="canvasbox">
-			<input type="hidden" id="emails" class="circular" used="{$overview['emails_used']}" available="{$userinfo['emails']}" assigned="{$userinfo['emails_used']}">
+			<input type="hidden" id="emails" class="circular" data-used="{$overview['emails_used']}" data-available="{$userinfo['emails']}" data-assigned="{$userinfo['emails_used']}">
 			<canvas id="emails-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['emails']}<br />
 				<small>
@@ -95,7 +95,7 @@ $header
 			</div>
 			
 			<div class="canvasbox">
-				<input type="hidden" id="email_accounts" class="circular" used="{$overview['email_accounts_used']}" available="{$userinfo['email_accounts']}" assigned="{$userinfo['email_accounts_used']}">
+				<input type="hidden" id="email_accounts" class="circular" data-used="{$overview['email_accounts_used']}" data-available="{$userinfo['email_accounts']}" data-assigned="{$userinfo['email_accounts_used']}">
 				<canvas id="email_accounts-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['accounts']}<br />
 				<small>
@@ -108,7 +108,7 @@ $header
 			</div>
 			
 			<div class="canvasbox">
-				<input type="hidden" id="email_forwarders" class="circular" used="{$overview['email_forwarders_used']}" available="{$userinfo['email_forwarders']}" assigned="{$userinfo['email_forwarders_used']}">
+				<input type="hidden" id="email_forwarders" class="circular" data-used="{$overview['email_forwarders_used']}" data-available="{$userinfo['email_forwarders']}" data-assigned="{$userinfo['email_forwarders_used']}">
 				<canvas id="email_forwarders-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['forwarders']}<br />
 				<small>
@@ -122,7 +122,7 @@ $header
 			
 			<if $settings['system']['mail_quota_enabled'] == 1>
 			<div class="canvasbox">
-				<input type="hidden" id="email_quota" class="circular" used="{$overview['email_quota_used']}" available="{$userinfo['email_quota']}" assigned="{$userinfo['email_quota_used']}">
+				<input type="hidden" id="email_quota" class="circular" data-used="{$overview['email_quota_used']}" data-available="{$userinfo['email_quota']}" data-assigned="{$userinfo['email_quota_used']}">
 				<canvas id="email_quota-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['email_quota']}<br />
 				<small>
@@ -137,7 +137,7 @@ $header
 			
 			<if $settings['autoresponder']['autoresponder_active'] == 1>
 			<div class="canvasbox">
-				<input type="hidden" id="email_autoresponder" class="circular" used="{$overview['email_autoresponder_used']}" available="{$userinfo['email_autoresponder']}" assigned="{$userinfo['email_autoresponder_used']}">
+				<input type="hidden" id="email_autoresponder" class="circular" data-used="{$overview['email_autoresponder_used']}" data-available="{$userinfo['email_autoresponder']}" data-assigned="{$userinfo['email_autoresponder_used']}">
 				<canvas id="email_autoresponder-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['autoresponder']}<br />
 				<small>
@@ -152,7 +152,7 @@ $header
 			
 			<if (int)$settings['aps']['aps_active'] == 1>
 			<div class="canvasbox">
-				<input type="hidden" id="aps_packages" class="circular" used="{$overview['aps_packages_used']}" available="{$userinfo['aps_packages']}" assigned="{$userinfo['aps_packages_used']}">
+				<input type="hidden" id="aps_packages" class="circular" data-used="{$overview['aps_packages_used']}" data-available="{$userinfo['aps_packages']}" data-assigned="{$userinfo['aps_packages_used']}">
 				<canvas id="aps_packages-canvas" width="120" height="76"></canvas><br/>
 				{$lng['aps']['numberofapspackages']}<br />
 				<small>
@@ -166,7 +166,7 @@ $header
 			</if>
 			
 			<div class="canvasbox">
-				<input type="hidden" id="ftps" class="circular" used="{$overview['ftps_used']}" available="{$userinfo['ftps']}" assigned="{$userinfo['ftps_used']}">
+				<input type="hidden" id="ftps" class="circular" data-used="{$overview['ftps_used']}" data-available="{$userinfo['ftps']}" data-assigned="{$userinfo['ftps_used']}">
 				<canvas id="ftps-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['ftps']}<br />
 				<small>
@@ -180,7 +180,7 @@ $header
 			
 			<if $settings['ticket']['enabled'] == 1>
 			<div class="canvasbox">
-				<input type="hidden" id="tickets" class="circular" used="{$overview['tickets_used']}" available="{$userinfo['tickets']}" assigned="{$userinfo['tickets_used']}">
+				<input type="hidden" id="tickets" class="circular" data-used="{$overview['tickets_used']}" data-available="{$userinfo['tickets']}" data-assigned="{$userinfo['tickets_used']}">
 				<canvas id="tickets-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['tickets']}<br />
 				<small>
