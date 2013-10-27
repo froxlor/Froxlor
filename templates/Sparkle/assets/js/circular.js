@@ -2,6 +2,7 @@ $(document).ready(function() {
 	var usedColor = "#91c46b";
 	var assiColor = "#287e7e";
 	var unliColor = "#56606e";
+	var overColor = "#dd514c";
 	
 	$(".circular").each(function(index, element) {
 		var canvas = "#" + $(element).attr("id") + "-canvas";
@@ -15,6 +16,7 @@ $(document).ready(function() {
 		
 		// Draw percentages
 		if (!isNaN(assigned) && available == "∞") {
+			// Unlimited ressource and assigned
 			if (assigned > used) {
 				// Draw assigned as full circle
 				circularCircle(canvas, 38, 0, 270, 4, assiColor);
@@ -35,6 +37,7 @@ $(document).ready(function() {
 			}
 			circularText(canvas, 60, 42, 26, "∞")
 		} else if (!isNaN(assigned)) {
+			// Limited ressources but assigned
 			available = parseFloat(available);
 			
 			assignedP = Math.round(100 / available * assigned);
@@ -48,6 +51,7 @@ $(document).ready(function() {
 			circularCircle(canvas, 40, 0, 270, 8, unliColor);
 			circularText(canvas, 60, 42, 26, "∞")
 		} else {
+			// Limited ressources
 			available = parseFloat(available);
 			usedP = 100 / available * used;
 			if (usedP < 1 && usedP > 0) {
@@ -55,9 +59,21 @@ $(document).ready(function() {
 			} else {
 				usedP = Math.round(usedP);
 			}
+			// Check if customer is over Limit
 			usedD = 270 * usedP / 100;
-			circularCircle(canvas, 40, 0, usedD, 8, usedColor);
-			circularText(canvas, 60, 42, 22, usedP + "%")
+			if (usedD > 270) { usedD = 270; }
+			if (usedP > 90) {
+				circularCircle(canvas, 40, 0, usedD, 8, overColor);
+			} else {
+				circularCircle(canvas, 40, 0, usedD, 8, usedColor);
+			}
+			if (usedP > 100) {
+				circularText(canvas, 60, 42, 22, usedP + "%", overColor);
+			} else {
+				circularText(canvas, 60, 42, 22, usedP + "%")
+			}
+			
+			
 		}
 		
 	});
@@ -74,9 +90,10 @@ function circularCircle(canvas, radius, start, end, stroke, color) {
 		rotate: -135
 	});
 }
-function circularText(canvas, x, y, size, text) {
+function circularText(canvas, x, y, size, text, color) {
+	color = color || "#343a41";
 	$(canvas).drawText({
-		fillStyle: "#343a41",
+		fillStyle: color,
 		x: x, y: y,
 		fontSize: size,
 		fontFamily: "Lucida Grande, Verdana, sans-serif",
