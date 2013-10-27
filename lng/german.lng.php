@@ -1695,3 +1695,4 @@ $lng['panel']['dashboard'] = "Dashboard";
 $lng['panel']['used'] = "genutzt";
 $lng['panel']['assigned'] = "zugewiesen";
 $lng['panel']['available'] = "verfügbar";
+$lng['customer']['services'] = "Dienste";

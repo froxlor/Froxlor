@@ -6,12 +6,11 @@ $header
 		</h2>
 		<div class="canvasitems" id="statsbox">
 			<div class="canvasbox">
-				<input type="hidden" id="customers" class="circular" used="{$overview['number_customers']}" available="{$userinfo['customers']}" assigned="{$userinfo['customers_used']}">
+				<input type="hidden" id="customers" class="circular" used="{$overview['number_customers']}" available="{$userinfo['customers']}">
 				<canvas id="customers-canvas" width="120" height="76"></canvas><br/>
 				{$lng['admin']['customers']}<br />
 				<small>
 					{$overview['number_customers']} {$lng['panel']['used']}<br />
-					{$userinfo['customers_used']} {$lng['panel']['assigned']}<br />
 					<if $userinfo['customers'] != '∞'>
 					{$userinfo['customers']} {$lng['panel']['available']}
 					</if>
@@ -19,12 +18,11 @@ $header
 			</div>
 			
 			<div class="canvasbox">
-				<input type="hidden" id="domains" class="circular" used="{$overview['number_domains']}" available="{$userinfo['domains']}" assigned="{$userinfo['domains_used']}">
+				<input type="hidden" id="domains" class="circular" used="{$overview['number_domains']}" available="{$userinfo['domains']}">
 				<canvas id="domains-canvas" width="120" height="76"></canvas><br/>
 				{$lng['customer']['domains']}<br />
 				<small>
 					{$overview['number_domains']} {$lng['panel']['used']}<br />
-					{$userinfo['domains_used']} {$lng['panel']['assigned']}<br />
 					<if $userinfo['domains'] != '∞'>
 					{$userinfo['domains']} {$lng['panel']['available']}
 					</if>
