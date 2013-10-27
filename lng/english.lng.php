@@ -59,17 +59,17 @@ $lng['customer']['zipcode'] = 'Zipcode';
 $lng['customer']['city'] = 'City';
 $lng['customer']['phone'] = 'Phone';
 $lng['customer']['fax'] = 'Fax';
-$lng['customer']['email'] = 'Email';
+$lng['customer']['email'] = 'email';
 $lng['customer']['customernumber'] = 'Customer ID';
 $lng['customer']['diskspace'] = 'Webspace (MB)';
 $lng['customer']['traffic'] = 'Traffic (GB)';
 $lng['customer']['mysqls'] = 'MySQL-databases';
-$lng['customer']['emails'] = 'E-mail-Addresses';
-$lng['customer']['accounts'] = 'E-mail-Accounts';
-$lng['customer']['forwarders'] = 'E-mail-Forwarders';
+$lng['customer']['emails'] = 'email-Addresses';
+$lng['customer']['accounts'] = 'email-Accounts';
+$lng['customer']['forwarders'] = 'email-Forwarders';
 $lng['customer']['ftps'] = 'FTP-Accounts';
-$lng['customer']['subdomains'] = 'Sub-Domain';
-$lng['customer']['domains'] = 'Domain';
+$lng['customer']['subdomains'] = 'Subdomains';
+$lng['customer']['domains'] = 'Domains';
 $lng['customer']['unlimited'] = '∞';
 
 /**
@@ -1969,3 +1969,9 @@ $lng['domains']['serveraliasoption_none'] = 'No alias';
 $lng['error']['givendirnotallowed'] = 'The given directory in field %s is not allowed.';
 $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Configure the allowed SSL ciphers';
 $lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'This is a list of ciphers that you want (or don\'t want) to use when talking SSL. For a list of ciphers and how to include/exclude them, see sections "CIPHER LIST FORMAT" and "CIPHER STRINGS" on <a href="http://openssl.org/docs/apps/ciphers.html">the man-page for ciphers</a>.<br /><br /><b>Default value is:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
+
+// Added in Froxlor 0.9.31
+$lng['panel']['dashboard'] = "Dashboard";
+$lng['panel']['used'] = "used";
+$lng['panel']['assigned'] = "assigned";
+$lng['panel']['available'] = "available";

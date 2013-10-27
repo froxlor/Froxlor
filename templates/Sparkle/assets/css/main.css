@@ -11,7 +11,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { 
 
 /* TYPE */
 html,body {
-	font:12px/18px Helvetica,Arial,Verdana,sans-serif;
+	font:12px/18px 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif;
 	background-color:#f2f2f2;
 	color:#333;
 	-webkit-font-smoothing: antialiased;
@@ -23,7 +23,7 @@ body {
 }
 
 .dark {
-	background-color: #e9edf0;
+	background: #f0f2f4;
 	border-bottom:1px solid #d1d5d8;
 }
 
@@ -45,11 +45,15 @@ h2, h3 {
 }
 
 h2 {
-	font-size:17px;
+	font-size:24px;
+	font-weight: normal;
 }
 
 h3 {
-	font-size: 15px;
+	font-size: 16px;
+}
+h4 {
+	font-size: 1em;
 }
 
 
@@ -68,24 +72,27 @@ td a {
 }
 
 .topheader {
-	background: #fafafa;
-	background: rgba(250,250,250,0.9);
+	background: #f0f2f4;
+	background: rgba(240, 242, 244, 0.85098);
 	top: 0px;
 	width: 100%;
 	padding: 2px 0 0 5px;
-	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.10);
 	position:fixed;
 	z-index: 100;
+	border-bottom-color: rgb(221, 221, 221);
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
 }
 .topheader_navigation {
 	float: right;
-	margin: 14px 50px 0 0;
+	margin: 17px 50px 0 0;
 }
 
 /* TOPHEADER NAV */
 ul.topheadernav {
 	list-style-type: none;
-	font-size: 13px;
+	font-size: 12px;
 }
 ul.topheadernav li {
 	padding: 0px;
@@ -132,7 +139,7 @@ nav div:first-child {
 
 .topheadernav img {
 	padding: 0px;
-	margin: 0px;
+	margin: -4px 0 0 0;
 }
 .countbubble {
 	display: block;
@@ -145,7 +152,7 @@ nav div:first-child {
 	line-height: 9px;
 	border-radius: 3px;
 	right: -6px;
-	bottom: -3px;
+	bottom: -1px;
 }
 
 /* FOOTER */
@@ -653,6 +660,10 @@ textarea {
 	border-radius: 3px;
 }
 
+input[type="text"], input[type="password"] {
+	width: 400px;
+}
+
 input[type="password"] {
 	background:#fff url(../img/icons/password.png) no-repeat 5px 4px;
 }
@@ -749,6 +760,17 @@ select[multiple="multiple"] {
 	padding:0;
 	box-shadow: 0px 0px 0px black;
 	border: 1px solid #d1d5d8;
+}
+
+.dboardcanvas {
+	float:left;
+	width: 48%;
+	margin-top:15px;
+	margin-right:0;
+	margin-bottom:15px;
+	margin-left:15px;
+	padding:0;
+	box-shadow: 0px 0px 0px black;
 }
 
 .dboarditemfull {
@@ -883,4 +905,21 @@ label.nobr {
     display:none;
     text-indent:-9999px;
     background: url(../img/top.png) no-repeat;
+}
+
+/* CANVAS STUFF */
+.canvasitems {
+	margin: 0 auto;
+	text-align: center;
+}
+.canvasbox {
+	width: 130px !important;
+	margin: 10px;
+	text-align: center;
+	float: left;
+	height: 150px;
+	line-height: normal;
+}
+canvas {
+	width: 120px;
 }
