@@ -363,6 +363,9 @@ aside.right {
 	right:36px;
 	font-size:80%;
 }
+.overviewsearch input[type="text"] {
+	width: 150px;
+}
 
 .overviewadd {
 	padding:10px;
@@ -834,6 +837,7 @@ select[multiple="multiple"] {
 	-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);
 	-moz-box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);
 	box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);
+	text-align: center;
 }
 .progress .bar {
 	width:1px;
@@ -908,12 +912,16 @@ label.nobr {
 
 /* CANVAS STUFF */
 .canvasitems {
-	margin: 0 auto;
-	text-align: center;
+	position:relative;
+	overflow:hidden;
+	width:100%;
+	margin-top:10px;
+	margin-bottom:10px;
+	padding: 0 0 0 10px;
 }
 .canvasbox {
-	width: 130px !important;
-	margin: 10px;
+	width: 130px;
+	margin: 10px 20px 10px 0;
 	text-align: center;
 	float: left;
 	height: 150px;

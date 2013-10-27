@@ -1,4 +1,44 @@
+(function($,sr){
+  var debounce = function (func, threshold, execAsap) {
+      var timeout;
+
+      return function debounced () {
+          var obj = this, args = arguments;
+          function delayed () {
+              if (!execAsap)
+                  func.apply(obj, args);
+              timeout = null;
+          };
+
+          if (timeout)
+              clearTimeout(timeout);
+          else if (execAsap)
+              func.apply(obj, args);
+
+          timeout = setTimeout(delayed, threshold || 100);
+      };
+  }
+  // smartresize 
+  jQuery.fn[sr] = function(fn){  return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
+
+})(jQuery,'smartresize');
+
+
+$(window).smartresize(function(){
+	resizecanvas();
+});
+
+function resizecanvas() {
+	var divwidth = $('#statsbox').width();
+	var space = divwidth % 150;
+	var elementspl = (divwidth - space) / 150;
+	var elementwidth = 130 + Math.round(space / elementspl) - 1;
+	$(".canvasbox").animate({width: elementwidth}, 500);
+}
+
 $(document).ready(function() {
+	resizecanvas();
+	
 	var usedColor = "#91c46b";
 	var assiColor = "#287e7e";
 	var unliColor = "#56606e";
