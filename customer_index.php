@@ -61,6 +61,15 @@ if ($page == 'overview') {
 	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
 	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota email_autoresponder ftps tickets subdomains aps_packages');
 
+	$services_enabled = "";
+	$se = array();
+	if ($userinfo['imap'] == '1') $se[] = "IMAP";
+	if ($userinfo['pop3'] == '1') $se[] = "POP3";
+	if ($userinfo['phpenabled'] == '1') $se[] = "PHP";
+	if ($userinfo['perlenabled'] == '1') $se[] = "Perl/CGI";
+	if ($userinfo['backup_enabled'] == '1' && $userinfo['backup_allowed'] == '1') $se[] = "Backup";
+	$services_enabled = implode(", ", $se);
+
 	eval("echo \"" . getTemplate('index/index') . "\";");
 } elseif ($page == 'change_password') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
