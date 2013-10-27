@@ -19,6 +19,8 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery.jqplot.min.css" />
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/traffic.js"></script>
 	</if>
+	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/jcanvas.min.js"></script>
+	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/circular.js"></script>
 	<if $settings['panel']['use_webfonts'] == '1'>
 		<link href="//fonts.googleapis.com/css?family={$settings['panel']['webfont']}" rel="stylesheet">
 	</if>
@@ -57,7 +59,7 @@
 				</li>
 			</if>
 			<li>{$userinfo['loginname']}</li>
-			<li><a href="{$linker->getLink(array('section' => 'index'))}">{$lng['admin']['overview']}</a></li>
+			<li><a href="{$linker->getLink(array('section' => 'index'))}">{$lng['panel']['dashboard']}</a></li>
 			<li><a href="#">{$lng['panel']['options']}&nbsp;&#x25BE;</a>
 				<ul>
 					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_password'))}">{$lng['login']['password']}</a></li>

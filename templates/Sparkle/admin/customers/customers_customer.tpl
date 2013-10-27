@@ -35,8 +35,8 @@
 						</div>
 					</if>
 				<else>
-					<div class="progress">
-							<div class="bar" style="width: 50%"></div>
+					<div class="progress">∞
+							<div class="bar" style="width: 0%"></div>
 					</div>
 				</if>
 			</span>
@@ -53,8 +53,8 @@
 						</div>
 					</if>
 				<else>
-					<div class="progress">
-						<div class="bar" style="width: 50%"></div>
+					<div class="progress">∞
+						<div class="bar" style="width: 0%"></div>
 					</div>
 				</if>
 			</span>

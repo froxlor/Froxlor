@@ -1,11 +1,185 @@
 $header
 	<article>
+		<h2>
+			<img src="templates/{$theme}/assets/img/icons/domains_big.png" alt="" />
+			{$lng['panel']['dashboard']}
+		</h2>
+		
+		<section class="dboardcanvas" id="statsbox">
+		<if $userinfo['subdomains'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="subdomains" class="circular" used="{$userinfo['subdomains_used']}" available="{$userinfo['subdomains']}">
+			<canvas id="subdomains-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['subdomains']}<br />
+			<small>
+				{$userinfo['subdomains_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['subdomains'] != '∞'>
+				{$userinfo['subdomains']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+		
+		<if $userinfo['diskspace'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="diskspace" class="circular" used="{$userinfo['diskspace_used']}" available="{$userinfo['diskspace']}">
+			<canvas id="diskspace-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['diskspace']}<br />
+			<small>
+				{$userinfo['diskspace_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['diskspace'] != '∞'>
+				{$userinfo['diskspace']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+		
+		<if $userinfo['traffic'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="traffic" class="circular" used="{$userinfo['traffic_used']}" available="{$userinfo['traffic']}">
+			<canvas id="traffic-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['traffic']}<br />
+			<small>
+				{$userinfo['traffic_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['traffic'] != '∞'>
+				{$userinfo['traffic']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+		
+		<if $userinfo['emails'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="emails" class="circular" used="{$userinfo['emails_used']}" available="{$userinfo['emails']}">
+			<canvas id="emails-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['emails']}<br />
+			<small>
+				{$userinfo['emails_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['emails'] != '∞'>
+				{$userinfo['emails']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+		
+		<if $userinfo['email_accounts'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="email_accounts" class="circular" used="{$userinfo['email_accounts_used']}" available="{$userinfo['email_accounts']}">
+			<canvas id="email_accounts-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['accounts']}<br />
+			<small>
+				{$userinfo['email_accounts_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['email_accounts'] != '∞'>
+				{$userinfo['email_accounts']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+		
+		<if $userinfo['email_forwarders'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="email_forwarders" class="circular" used="{$userinfo['email_forwarders_used']}" available="{$userinfo['email_forwarders']}">
+			<canvas id="email_forwarders-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['forwarders']}<br />
+			<small>
+				{$userinfo['email_forwarders_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['email_forwarders'] != '∞'>
+				{$userinfo['email_forwarders']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+		
+		<if $settings['system']['mail_quota_enabled'] == 1 && $userinfo['email_quota'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="email_quota" class="circular" used="{$userinfo['email_quota_used']}" available="{$userinfo['email_quota']}">
+			<canvas id="email_forwarders-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['email_quota']}<br />
+			<small>
+				{$userinfo['email_quota_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['email_quota'] != '∞'>
+				{$userinfo['email_quota']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+		
+		<if $settings['autoresponder']['autoresponder_active'] == 1 && $userinfo['email_autoresponder'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="email_autoresponder" class="circular" used="{$userinfo['email_autoresponder_used']}" available="{$userinfo['email_autoresponder']}">
+			<canvas id="email_autoresponder-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['autoresponder']}<br />
+			<small>
+				{$userinfo['email_autoresponder_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['email_autoresponder'] != '∞'>
+				{$userinfo['email_autoresponder']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
 
-	<section class="dboarditem bradius">
-	<table>
-	<tr>
+		<if $userinfo['mysqls'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="mysqls" class="circular" used="{$userinfo['mysqls_used']}" available="{$userinfo['mysqls']}">
+			<canvas id="mysqls-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['mysqls']}<br />
+			<small>
+				{$userinfo['mysqls_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['mysqls'] != '∞'>
+				{$userinfo['mysqls']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+		
+		<if $userinfo['ftps'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="ftps" class="circular" used="{$userinfo['ftps_used']}" available="{$userinfo['ftps']}">
+			<canvas id="ftps-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['ftps']}<br />
+			<small>
+				{$userinfo['ftps_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['ftps'] != '∞'>
+				{$userinfo['ftps']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+		
+		<if (int)$settings['aps']['aps_active'] == 1 && $userinfo['aps_packages'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="aps_packages" class="circular" used="{$userinfo['aps_packages_used']}" available="{$userinfo['aps_packages']}">
+			<canvas id="aps_packages-canvas" width="120" height="76"></canvas><br />
+			{$lng['aps']['numberofapspackages']}<br />
+			<small>
+				{$userinfo['aps_packages_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['aps_packages'] != '∞'>
+				{$userinfo['aps_packages']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+		
+		<if (int)$settings['ticket']['enabled'] == 1 && $userinfo['tickets'] != '0'>
+		<div class="canvasbox">
+			<input type="hidden" id="tickets" class="circular" used="{$userinfo['tickets_used']}" available="{$userinfo['tickets']}">
+			<canvas id="tickets-canvas" width="120" height="76"></canvas><br />
+			{$lng['customer']['tickets']}<br />
+			<small>
+				{$userinfo['tickets_used']} {$lng['panel']['used']}<br />
+				<if $userinfo['tickets'] != '∞'>
+				{$userinfo['tickets']} {$lng['panel']['available']}
+				</if>
+			</small>
+		</div>
+		</if>
+	</section>
+
+    <section class="dboarditem bradius">
+        <table>
+       	<tr>
 		<th colspan="2">{$lng['index']['accountdetails']}</th>
-	</tr>
+		</tr>
 		<tr>
 			<td>{$lng['login']['username']}</td>
 			<td>{$userinfo['loginname']}</td>
@@ -15,70 +189,8 @@ $header
 			<td>$domains</td>
 		</tr>
 		<tr>
-			<td>{$lng['customer']['subdomains']}<br /><small>{$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['subdomains_used']}/{$userinfo['subdomains']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['diskspace']}<br /><small>{$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['diskspace_used']}/{$userinfo['diskspace']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['traffic']}<br /><small>$month, {$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['traffic_used']}/{$userinfo['traffic']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['emails']}<br /><small>{$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['emails_used']}/{$userinfo['emails']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['accounts']}<br /><small>{$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['email_accounts_used']}/{$userinfo['email_accounts']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['forwarders']}<br /><small>{$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['email_forwarders_used']}/{$userinfo['email_forwarders']}</td>
-		</tr>
-		<if $settings['system']['mail_quota_enabled'] == 1>
-		<tr>
-			<td>{$lng['customer']['email_quota']}<br /><small>{{$lng['panel']['megabyte']}, {$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['email_quota_used']}/{$userinfo['email_quota']}</td>
-		</tr>
-		</if>
-		</tr>
-		<if $settings['autoresponder']['autoresponder_active'] == 1>
-		<tr>
-			<td>{$lng['customer']['autoresponder']} <br /><small>{$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['email_autoresponder_used']}/{$userinfo['email_autoresponder']}</td>
-		</tr>
-		</if>
-		<tr>
-			<td>{$lng['customer']['mysqls']}<br /><small>{$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['mysqls_used']}/{$userinfo['mysqls']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['ftps']}<br /><small>{$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['ftps_used']}/{$userinfo['ftps']}</td>
-		</tr>
-		<if (int)$settings['aps']['aps_active'] == 1>
-		<tr>
-			<td>{$lng['aps']['numberofapspackages']}<br /><small>{$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['aps_packages_used']}/{$userinfo['aps_packages']}</td>
-		</tr>
-		</if>
-		<if $settings['ticket']['enabled'] == 1 >
-		<tr>
-			<td>{$lng['customer']['tickets']}<br /><small>{$lng['customer']['usedmax']}</small></td>
-			<td>{$userinfo['tickets_used']}/{$userinfo['tickets']}</td>
-		</tr>
-		</if>
-		</table>
-	</section>
-
-    <section class="dboarditem bradius">
-        <table>
-       	<tr>
 		<th colspan="2">{$lng['index']['customerdetails']}</th>
-	</tr>
+		</tr>
         <if $userinfo['customernumber'] >
         <tr>
             <td>{$lng['customer']['customernumber']}:</td>
