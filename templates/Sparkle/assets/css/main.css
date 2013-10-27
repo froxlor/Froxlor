@@ -806,9 +806,8 @@ select[multiple="multiple"] {
 .cronjobtask li {
 	background-image: url(../img/icons/clock.png);
 	background-repeat: no-repeat;
-	background-position: 0px center; 
-	padding-left: 18px; 
-	height: 18px;
+	background-position: 0px 1px; 
+	padding-left: 18px;
 }
 
 .overviewheading {
