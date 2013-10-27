@@ -440,6 +440,9 @@ if($page == 'domains'
 					// Verify SSL-Ports
 					if (isset($_POST['ssl_ipandport']) && is_array($_POST['ssl_ipandport'])) {
 						foreach ($_POST['ssl_ipandport'] as $ssl_ipandport) {
+							if (trim($ssl_ipandport) == "") continue;
+							// fix if no ssl-ip/port is checked
+							if (trim($ssl_ipandport) < 1) continue;
 							$ssl_ipandport = intval($ssl_ipandport);
 							$ssl_ipandport_check = $db->query_first("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = '" . $db->escape($ssl_ipandport) . "' " . $additional_ip_condition);
 							if (!isset($ssl_ipandport_check['id'])
