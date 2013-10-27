@@ -87,6 +87,7 @@ $(document).ready(function() {
 			usedP = Math.round(100 / available * used);
 			usedD = 270 * usedP / 100;
 			circularCircle(canvas, 42, 0, usedD, 4, usedColor);
+			circularText(canvas, 60, 42, 22, usedP + "%");
 		} else if (available == "∞") {
 			circularCircle(canvas, 40, 0, 270, 8, unliColor);
 			circularText(canvas, 60, 42, 26, "∞")

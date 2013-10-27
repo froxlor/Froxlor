@@ -181,12 +181,16 @@ $header
 		<th colspan="2">{$lng['index']['accountdetails']}</th>
 		</tr>
 		<tr>
-			<td>{$lng['login']['username']}</td>
+			<td>{$lng['login']['username']}:</td>
 			<td>{$userinfo['loginname']}</td>
 		</tr>
 		<tr>
-			<td>{$lng['customer']['domains']}</td>
+			<td>{$lng['customer']['domains']}:</td>
 			<td>$domains</td>
+		</tr>
+		<tr>
+			<td>{$lng['customer']['services']}:</td>
+			<td>$services_enabled</td>
 		</tr>
 		<tr>
 		<th colspan="2">{$lng['index']['customerdetails']}</th>
