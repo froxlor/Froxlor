@@ -196,8 +196,7 @@ $header
 			</if>
 			
 		</div>
-		
-		<h3>System Information</h3>
+
 		<section class="dboarditem bradius">
 		<table>
 		<tr>
