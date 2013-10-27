@@ -927,6 +927,6 @@ label.nobr {
 	height: 150px;
 	line-height: normal;
 }
-canvas {
+.canvasbox canvas {
 	width: 120px;
 }
