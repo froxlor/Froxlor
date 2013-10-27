@@ -60,21 +60,24 @@ function getNextCronjobs()
 
 function includeCronjobs($debugHandler, $pathtophpfiles)
 {
-	global $settings, $theme;
+	global $settings, $theme, $cronlog;
 
 	$cronjobs = getNextCronjobs();
 
 	$jobs_to_run = array();
 	$cron_path = makeCorrectDir($pathtophpfiles.'/scripts/jobs/');
 
-	if($cronjobs !== false
-	&& is_array($cronjobs)
-	&& isset($cronjobs[0]))
-	{
-		foreach($cronjobs as $cronjob)
-		{
+	if ($cronjobs !== false
+		&& is_array($cronjobs)
+		&& isset($cronjobs[0])
+	) {
+		foreach ($cronjobs as $cronjob) {
 			$cron_file = makeCorrectFile($cron_path.$cronjob);
-			$jobs_to_run[] = $cron_file;
+			if (!file_exists($cron_file)) {
+				$cronlog->logAction(CRON_ACTION, LOG_ERROR, 'Wanted to include cronfile "'.$cron_file.'" but this file does not exist!!!');
+			} else {
+				$jobs_to_run[] = $cron_file;
+			}
 		}
 	}
 
