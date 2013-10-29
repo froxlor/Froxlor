@@ -11,7 +11,7 @@ $header
 
 			<form action="{$linker->getLink(array('section' => 'customers'))}" method="post" enctype="application/x-www-form-urlencoded">
 
-			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $userinfo['customers_used'] >
+			<if $userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1'>
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>
@@ -61,7 +61,7 @@ $header
 
 			</form>
 
-			<if $userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1'>
+			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $userinfo['customers_used'] >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>

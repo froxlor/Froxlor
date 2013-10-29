@@ -8,7 +8,7 @@ $header
 		<section class="dboardcanvas" id="statsbox">
 		<if $userinfo['subdomains'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="subdomains" class="circular" used="{$userinfo['subdomains_used']}" available="{$userinfo['subdomains']}">
+			<input type="hidden" id="subdomains" class="circular" data-used="{$userinfo['subdomains_used']}" data-available="{$userinfo['subdomains']}">
 			<canvas id="subdomains-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['subdomains']}<br />
 			<small>
@@ -22,7 +22,7 @@ $header
 		
 		<if $userinfo['diskspace'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="diskspace" class="circular" used="{$userinfo['diskspace_used']}" available="{$userinfo['diskspace']}">
+			<input type="hidden" id="diskspace" class="circular" data-used="{$userinfo['diskspace_used']}" data-available="{$userinfo['diskspace']}">
 			<canvas id="diskspace-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['diskspace']}<br />
 			<small>
@@ -36,7 +36,7 @@ $header
 		
 		<if $userinfo['traffic'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="traffic" class="circular" used="{$userinfo['traffic_used']}" available="{$userinfo['traffic']}">
+			<input type="hidden" id="traffic" class="circular" data-used="{$userinfo['traffic_used']}" data-available="{$userinfo['traffic']}">
 			<canvas id="traffic-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['traffic']}<br />
 			<small>
@@ -50,7 +50,7 @@ $header
 		
 		<if $userinfo['emails'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="emails" class="circular" used="{$userinfo['emails_used']}" available="{$userinfo['emails']}">
+			<input type="hidden" id="emails" class="circular" data-used="{$userinfo['emails_used']}" data-available="{$userinfo['emails']}">
 			<canvas id="emails-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['emails']}<br />
 			<small>
@@ -64,7 +64,7 @@ $header
 		
 		<if $userinfo['email_accounts'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="email_accounts" class="circular" used="{$userinfo['email_accounts_used']}" available="{$userinfo['email_accounts']}">
+			<input type="hidden" id="email_accounts" class="circular" data-used="{$userinfo['email_accounts_used']}" data-available="{$userinfo['email_accounts']}">
 			<canvas id="email_accounts-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['accounts']}<br />
 			<small>
@@ -78,7 +78,7 @@ $header
 		
 		<if $userinfo['email_forwarders'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="email_forwarders" class="circular" used="{$userinfo['email_forwarders_used']}" available="{$userinfo['email_forwarders']}">
+			<input type="hidden" id="email_forwarders" class="circular" data-used="{$userinfo['email_forwarders_used']}" data-available="{$userinfo['email_forwarders']}">
 			<canvas id="email_forwarders-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['forwarders']}<br />
 			<small>
@@ -92,7 +92,7 @@ $header
 		
 		<if $settings['system']['mail_quota_enabled'] == 1 && $userinfo['email_quota'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="email_quota" class="circular" used="{$userinfo['email_quota_used']}" available="{$userinfo['email_quota']}">
+			<input type="hidden" id="email_quota" class="circular" data-used="{$userinfo['email_quota_used']}" data-available="{$userinfo['email_quota']}">
 			<canvas id="email_forwarders-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['email_quota']}<br />
 			<small>
@@ -106,7 +106,7 @@ $header
 		
 		<if $settings['autoresponder']['autoresponder_active'] == 1 && $userinfo['email_autoresponder'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="email_autoresponder" class="circular" used="{$userinfo['email_autoresponder_used']}" available="{$userinfo['email_autoresponder']}">
+			<input type="hidden" id="email_autoresponder" class="circular" data-used="{$userinfo['email_autoresponder_used']}" data-available="{$userinfo['email_autoresponder']}">
 			<canvas id="email_autoresponder-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['autoresponder']}<br />
 			<small>
@@ -120,7 +120,7 @@ $header
 
 		<if $userinfo['mysqls'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="mysqls" class="circular" used="{$userinfo['mysqls_used']}" available="{$userinfo['mysqls']}">
+			<input type="hidden" id="mysqls" class="circular" data-used="{$userinfo['mysqls_used']}" data-available="{$userinfo['mysqls']}">
 			<canvas id="mysqls-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['mysqls']}<br />
 			<small>
@@ -134,7 +134,7 @@ $header
 		
 		<if $userinfo['ftps'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="ftps" class="circular" used="{$userinfo['ftps_used']}" available="{$userinfo['ftps']}">
+			<input type="hidden" id="ftps" class="circular" data-used="{$userinfo['ftps_used']}" data-available="{$userinfo['ftps']}">
 			<canvas id="ftps-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['ftps']}<br />
 			<small>
@@ -148,7 +148,7 @@ $header
 		
 		<if (int)$settings['aps']['aps_active'] == 1 && $userinfo['aps_packages'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="aps_packages" class="circular" used="{$userinfo['aps_packages_used']}" available="{$userinfo['aps_packages']}">
+			<input type="hidden" id="aps_packages" class="circular" data-used="{$userinfo['aps_packages_used']}" data-available="{$userinfo['aps_packages']}">
 			<canvas id="aps_packages-canvas" width="120" height="76"></canvas><br />
 			{$lng['aps']['numberofapspackages']}<br />
 			<small>
@@ -162,7 +162,7 @@ $header
 		
 		<if (int)$settings['ticket']['enabled'] == 1 && $userinfo['tickets'] != '0'>
 		<div class="canvasbox">
-			<input type="hidden" id="tickets" class="circular" used="{$userinfo['tickets_used']}" available="{$userinfo['tickets']}">
+			<input type="hidden" id="tickets" class="circular" data-used="{$userinfo['tickets_used']}" data-available="{$userinfo['tickets']}">
 			<canvas id="tickets-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['tickets']}<br />
 			<small>
