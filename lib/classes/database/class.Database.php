@@ -54,6 +54,15 @@ class Database {
 	}
 
 	/**
+	 * returns the number of found rows of the last select query
+	 *
+	 * @return int
+	 */
+	public static function num_rows($stmt) {
+		return Database::query("SELECT FOUND_ROWS()")->fetchColumn();
+	}
+
+	/**
 	 * let's us interact with the PDO-Object by using static
 	 * call like "Database::function()"
 	 *
@@ -165,7 +174,7 @@ class Database {
 		 * log to a file, so we can actually ask people for the error
 		 * (no one seems to find the stuff in the syslog)
 		*/
-		$sl_dir = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__))))."/logs/");
+		$sl_dir = makeCorrectDir(FROXLOR_INSTALL_DIR."/logs/");
 		if (!file_exists($sl_dir)) {
 			@mkdir($sl_dir, 0755);
 		}
