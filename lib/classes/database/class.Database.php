@@ -39,6 +39,11 @@ class Database {
 	private static $_link = null ;
 
 	/**
+	 * indicator whether to use root-connection or not
+	 */
+	private static $_needroot = false;
+
+	/**
 	 * Wrapper for PDOStatement::execute so we can catch the PDOException
 	 * and display the error nicely on the panel
 	 *
@@ -63,6 +68,20 @@ class Database {
 	}
 
 	/**
+	 * enabled the usage of a root-connection to the database
+	 * Note: must be called *before* any prepare/query/etc.
+	 * and should be called again with 'false'-parameter to resume
+	 * the 'normal' database-connection
+	 *
+	 * @param bool $needroot
+	 */
+	public static function needRoot($needroot = false) {
+		// force re-connecting to the db with corresponding user
+		self::$_link = null;
+		self::$_needroot = $needroot;
+	}
+
+	/**
 	 * let's us interact with the PDO-Object by using static
 	 * call like "Database::function()"
 	 *
@@ -72,7 +91,7 @@ class Database {
 	 * @return mixed
 	 */
 	public static function __callStatic($name, $args) {
-		$callback = array(self::getDB(), $name);
+		$callback = array(self::getDB(self::$_needroot), $name);
 		$result = null;
 		try {
 			$result = call_user_func_array($callback, $args );
