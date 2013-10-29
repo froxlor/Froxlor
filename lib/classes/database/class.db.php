@@ -277,7 +277,7 @@ class db {
 	private function _showerror($errormsg, $mysqlActive = true) {
 		global $filename, $theme;
 
-		$text = 'MySQL - Error: ' . str_replace("\n", "\t", $errormsg);
+		$text = 'MySQL - Error: ' . $errormsg;
 
 		if ($mysqlActive) {
 			$this->_geterrdescno();
@@ -297,7 +297,7 @@ class db {
 		/**
 		 * log to a file, so we can actually ask people for the error
 		 * (no one seems to find the stuff in the syslog)
-		 */
+		*/
 		$sl_dir = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__))))."/logs/");
 		if (!file_exists($sl_dir)) {
 			@mkdir($sl_dir, 0755);
@@ -307,7 +307,7 @@ class db {
 		@fwrite($sqllog, date('d.m.Y H:i', time())." --- ".$text."\n");
 		@fclose($sqllog);
 
-		if (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] != '') {
+		if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 			// if we're not on the shell, output a nicer error-message
 			$err_hint = file_get_contents(dirname($sl_dir).'/templates/'.$theme.'/misc/dberrornice.tpl');
 			// replace values

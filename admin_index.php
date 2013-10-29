@@ -22,39 +22,42 @@ define('AREA', 'admin');
 /**
  * Include our init.php, which manages Sessions, Language etc.
  */
-
 require ("./lib/init.php");
 
-if($action == 'logout')
-{
+if ($action == 'logout')  {
+
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "logged out");
 
-	if($settings['session']['allow_multiple_login'] == '1')
-	{
-		$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['adminid'] . "' AND `adminsession` = '1' AND `hash` = '" . $s . "'");
+	$params = array('adminid' => (int)$userinfo['adminid']);
+
+	if ($settings['session']['allow_multiple_login'] == '1') {
+		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
+			WHERE `userid` = :adminid
+			AND `adminsession` = '1'
+			AND `hash` = :hash"
+		);
+		$params['hash'] = $s;
+	} else {
+		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
+			WHERE `userid` = :adminid
+			AND `adminsession` = '1'"
+		);
 	}
-	else
-	{
-		$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['adminid'] . "' AND `adminsession` = '1'");
-	}
+	Database::pexecute($stmt, $params);
 
 	redirectTo('index.php');
 	exit;
 }
 
-if(isset($_POST['id']))
-{
+if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
-}
-elseif(isset($_GET['id']))
-{
+} elseif(isset($_GET['id'])) {
 	$id = intval($_GET['id']);
 }
 
-if($page == 'overview')
-{
+if ($page == 'overview') {
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_index");
-	$overview = $db->query_first("SELECT COUNT(*) AS `number_customers`,
+	$overview_stmt = Database::prepare("SELECT COUNT(*) AS `number_customers`,
 				SUM(`diskspace_used`) AS `diskspace_used`,
 				SUM(`mysqls_used`) AS `mysqls_used`,
 				SUM(`emails_used`) AS `emails_used`,
@@ -67,7 +70,10 @@ if($page == 'overview')
 				SUM(`subdomains_used`) AS `subdomains_used`,
 				SUM(`traffic_used`) AS `traffic_used`,
 				SUM(`aps_packages_used`) AS `aps_packages_used`
-				FROM `" . TABLE_PANEL_CUSTOMERS . "`" . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int)$userinfo['adminid'] . "' "));
+				FROM `" . TABLE_PANEL_CUSTOMERS . "`" . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid "));
+	Database::pexecute($overview_stmt, array('adminid' => $userinfo['adminid']));
+	$overview = $overview_stmt->fetch(PDO::FETCH_ASSOC);
+
 	$overview['traffic_used'] = round($overview['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
 	$overview['diskspace_used'] = round($overview['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
 	$number_domains = $db->query_first("SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `parentdomainid`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = '" . (int)$userinfo['adminid'] . "' "));
@@ -75,8 +81,7 @@ if($page == 'overview')
 	$phpversion = phpversion();
 	$phpmemorylimit = @ini_get("memory_limit");
 
-	if($phpmemorylimit == "")
-	{
+	if ($phpmemorylimit == "") {
 		$phpmemorylimit = $lng['admin']['memorylimitdisabled'];
 	}
 
@@ -84,22 +89,20 @@ if($page == 'overview')
 	$mysqlclientversion = mysql_get_client_info();
 	$webserverinterface = strtoupper(@php_sapi_name());
 
-	if((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes')
-	|| (isset($lookfornewversion) && $lookfornewversion == 'yes'))
-	{
+	if ((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes')
+		|| (isset($lookfornewversion) && $lookfornewversion == 'yes')
+	) {
 		$update_check_uri = 'http://version.froxlor.org/Froxlor/legacy/' . $version;
 
-		if(ini_get('allow_url_fopen'))
-		{
+		if (ini_get('allow_url_fopen')) {
 			$latestversion = @file($update_check_uri);
 
-			if (isset($latestversion[0]))
-			{
+			if (isset($latestversion[0])) {
 				$latestversion = explode('|', $latestversion[0]);
 
-				if(is_array($latestversion)
-				&& count($latestversion) >= 1)
-				{
+				if (is_array($latestversion)
+					&& count($latestversion) >= 1
+				) {
 					$_version = $latestversion[0];
 					$_message = isset($latestversion[1]) ? $latestversion[1] : '';
 					$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
@@ -115,24 +118,16 @@ if($page == 'overview')
 					} else {
 						$isnewerversion = 0;
 					}
-				}
-				else
-				{
+				} else {
 					redirectTo($update_check_uri.'/pretty', NULL);
 				}
-			}
-			else
-			{
+			} else {
 				redirectTo($update_check_uri.'/pretty', NULL);
 			}
-		}
-		else
-		{
+		} else {
 			redirectTo($update_check_uri.'/pretty', NULL);
 		}
-	}
-	else
-	{
+	} else {
 		$lookfornewversion_lable = $lng['admin']['lookfornewversion']['clickhere'];
 		$lookfornewversion_link = htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
 		$lookfornewversion_addinfo = '';
@@ -148,44 +143,35 @@ if($page == 'overview')
 	$cron_last_runs = getCronjobsLastRun();
 	$outstanding_tasks = getOutstandingTasks();
 
-	if(function_exists('sys_getloadavg'))
-	{
+	if (function_exists('sys_getloadavg')) {
 		$loadArray = sys_getloadavg();
 		$load = number_format($loadArray[0], 2, '.', '') . " / " . number_format($loadArray[1], 2, '.', '') . " / " . number_format($loadArray[2], 2, '.', '');
-	}
-	else
-	{
+	} else {
 		$load = @file_get_contents('/proc/loadavg');
 
-		if(!$load)
-		{
+		if (!$load) {
 			$load = $lng['admin']['noloadavailable'];
 		}
 	}
 
-	if(function_exists('posix_uname'))
-	{
+	if (function_exists('posix_uname')) {
 		$showkernel = 1;
 		$kernel_nfo = posix_uname();
 		$kernel = $kernel_nfo['release'] . ' (' . $kernel_nfo['machine'] . ')';
-	}
-	else
-	{
+	} else {
 		$showkernel = 0;
 		$kernel = '';
 	}
 
 	// Try to get the uptime
 	// First: With exec (let's hope it's enabled for the Froxlor - vHost)
-
 	$uptime_array = explode(" ", @file_get_contents("/proc/uptime"));
 
-	if(is_array($uptime_array)
-	&& isset($uptime_array[0])
-	&& is_numeric($uptime_array[0]))
-	{
+	if (is_array($uptime_array)
+		&& isset($uptime_array[0])
+		&& is_numeric($uptime_array[0])
+	) {
 		// Some calculatioon to get a nicly formatted display
-
 		$seconds = round($uptime_array[0], 0);
 		$minutes = $seconds / 60;
 		$hours = $minutes / 60;
@@ -196,27 +182,22 @@ if($page == 'overview')
 		$uptime = "{$days}d, {$hours}h, {$minutes}m, {$seconds}s";
 
 		// Just cleanup
-
 		unset($uptime_array, $seconds, $minutes, $hours, $days);
-	}
-	else
-	{
+	} else {
 		// Nothing of the above worked, show an error :/
-
 		$uptime = '';
 	}
 
 	eval("echo \"" . getTemplate("index/index") . "\";");
-}
-elseif($page == 'change_password')
-{
-	if(isset($_POST['send'])
-	&& $_POST['send'] == 'send')
-	{
+
+} elseif($page == 'change_password') {
+
+	if (isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
 		$old_password = validate($_POST['old_password'], 'old password');
 
-		if(md5($old_password) != $userinfo['password'])
-		{
+		if (md5($old_password) != $userinfo['password']) {
 			standard_error('oldpasswordnotcorrect');
 			exit;
 		}
@@ -224,92 +205,122 @@ elseif($page == 'change_password')
 		$new_password = validate($_POST['new_password'], 'new password');
 		$new_password_confirm = validate($_POST['new_password_confirm'], 'new password confirm');
 
-		if($old_password == '')
-		{
+		if ($old_password == '') {
 			standard_error(array('stringisempty', 'oldpassword'));
-		}
-		elseif($new_password == '')
-		{
+		} elseif($new_password == '') {
 			standard_error(array('stringisempty', 'newpassword'));
-		}
-		elseif($new_password_confirm == '')
-		{
+		} elseif($new_password_confirm == '') {
 			standard_error(array('stringisempty', 'newpasswordconfirm'));
-		}
-		elseif($new_password != $new_password_confirm)
-		{
+		} elseif($new_password != $new_password_confirm) {
 			standard_error('newpasswordconfirmerror');
-		}
-		else
-		{
-			$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `password`='" . md5($new_password) . "' WHERE `adminid`='" . (int)$userinfo['adminid'] . "' AND `password`='" . md5($old_password) . "'");
+		} else {
+			$chgpwd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_ADMINS . "`
+				SET `password`= :newpasswd
+				WHERE `adminid`= :adminid
+				AND `password`= :oldpasswd"
+			);
+			Database::pexecute($chgpwd_stmt, array(
+				'newpasswd' => md5($new_password),
+				'adminid' => (int)$userinfo['adminid'],
+				'oldpasswd' => md5($old_password)
+			));
 			$log->logAction(ADM_ACTION, LOG_NOTICE, 'changed password');
 			redirectTo($filename, Array('s' => $s));
 		}
-	}
-	else
-	{
+	} else {
 		eval("echo \"" . getTemplate("index/change_password") . "\";");
 	}
-}
-elseif($page == 'change_language')
-{
-	if(isset($_POST['send'])
-	&& $_POST['send'] == 'send')
-	{
+
+} elseif($page == 'change_language') {
+
+	if (isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
 		$def_language = validate($_POST['def_language'], 'default language');
 
-		if(isset($languages[$def_language]))
-		{
-			$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `def_language`='" . $db->escape($def_language) . "' WHERE `adminid`='" . (int)$userinfo['adminid'] . "'");
-			$db->query("UPDATE `" . TABLE_PANEL_SESSIONS . "` SET `language`='" . $db->escape($def_language) . "' WHERE `hash`='" . $db->escape($s) . "'");
+		if (isset($languages[$def_language])) {
+			$lng_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_ADMINS . "`
+				SET `def_language`= :deflng
+				WHERE `adminid`= :adminid"
+			);
+			Database::pexecute($lng_stmt, array(
+				'deflng' => $def_language,
+				'adminid' => (int)$userinfo['adminid']
+			));
+
+			$lng_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_SESSIONS . "`
+				SET `language`= :lng
+				WHERE `hash`= :hash"
+			);
+			Database::pexecute($lng_stmt, array(
+				'lng' => $def_language,
+				'hash' => $s
+			));
 		}
 
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "changed his/her default language to '" . $def_language . "'");
-		redirectTo($filename, Array('s' => $s));
-	}
-	else
-	{
+		redirectTo($filename, array('s' => $s));
+
+	} else {
+
 		$language_options = '';
 
 		$default_lang = $settings['panel']['standardlanguage'];
-		if($userinfo['def_language'] != '') {
+		if ($userinfo['def_language'] != '') {
 			$default_lang = $userinfo['def_language'];
 		}
 
-		while(list($language_file, $language_name) = each($languages))
-		{
+		while (list($language_file, $language_name) = each($languages)) {
 			$language_options.= makeoption($language_name, $language_file, $default_lang, true);
 		}
 
 		eval("echo \"" . getTemplate("index/change_language") . "\";");
 	}
-}
-elseif($page == 'change_theme')
-{
-	if(isset($_POST['send'])
+
+} elseif ($page == 'change_theme') {
+
+	if (isset($_POST['send'])
 		&& $_POST['send'] == 'send'
 	) {
 		$theme = validate($_POST['theme'], 'theme');
 
-		$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `theme`='" . $db->escape($theme) . "' WHERE `adminid`='" . (int)$userinfo['adminid'] . "'");
-		$db->query("UPDATE `" . TABLE_PANEL_SESSIONS . "` SET `theme`='" . $db->escape($theme) . "' WHERE `hash`='" . $db->escape($s) . "'");
+		$theme_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_ADMINS . "`
+				SET `theme`= :theme
+				WHERE `adminid`= :adminid"
+		);
+		Database::pexecute($theme_stmt, array(
+			'theme' => $theme,
+			'adminid' => (int)$userinfo['adminid']
+		));
+
+		$theme_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_SESSIONS . "`
+				SET `theme`= :theme
+				WHERE `hash`= :hash"
+		);
+		Database::pexecute($theme_stmt, array(
+			'theme' => $theme,
+			'hash' => $s
+		));
 
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "changed his/her theme to '" . $theme . "'");
-		redirectTo($filename, Array('s' => $s));
-	}
-	else
-	{
+		redirectTo($filename, array('s' => $s));
+
+	} else {
+
 		$theme_options = '';
 
 		$default_theme = $settings['panel']['default_theme'];
-		if($userinfo['theme'] != '') {
+		if ($userinfo['theme'] != '') {
 			$default_theme = $userinfo['theme'];
 		}
 
 		$themes_avail = getThemes();
-		foreach($themes_avail as $t)
-		{
+		foreach ($themes_avail as $t) {
 			$theme_options.= makeoption($t, $t, $default_theme, true);
 		}
 

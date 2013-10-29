@@ -30,7 +30,7 @@
 				<div class="error">
 					<p><TEXT></p>
 					<p>&nbsp;</p>
-					<p><DEBUG></p>
+					<pre style="overflow:auto;"><DEBUG></pre>
 					<p>&nbsp;</p>
 				</div>
 			</div>

@@ -761,6 +761,16 @@ class FroxlorInstall {
 			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
 		}
 
+		// check for php_pdo and pdo_mysql
+		$content .= $this->_status_message('begin', $this->_lng['requirements']['phppdo']);
+
+		if (!extension_loaded('pdo') || in_array("mysql", PDO::getAvailableDrivers()) == false) {
+			$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
+			$_die = true;
+		} else {
+			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
+		}
+
 		// check for xml-extension
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpxml']);
 

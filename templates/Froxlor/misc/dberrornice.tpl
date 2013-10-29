@@ -28,7 +28,7 @@
 				<div class="errortitle">A database error occured</div>
 				<div class="error">
 					<p><TEXT></p>
-					<p><DEBUG></p>
+					<pre style="overflow:auto;"><DEBUG></pre>
 				</div>
 			</div>
 			<p class="submit">

@@ -41,7 +41,7 @@ function standard_error($errors = '', $replacer = '')
 
 	$link = '';
 	if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
-		$link = '<a href="'.$_SERVER['HTTP_REFERER'].'">'.$lng['panel']['back'].'</a>';
+		$link = '<a href="'.htmlentities($_SERVER['HTTP_REFERER']).'">'.$lng['panel']['back'].'</a>';
 	}
 
 	$error = '';
