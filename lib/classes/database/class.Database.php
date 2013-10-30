@@ -44,17 +44,23 @@ class Database {
 	private static $_needroot = false;
 
 	/**
+	 * indicator which database-server we're on (not really used)
+	 */
+	private static $_dbserver = 0;
+
+	/**
 	 * Wrapper for PDOStatement::execute so we can catch the PDOException
 	 * and display the error nicely on the panel
 	 *
 	 * @param PDOStatement $stmt
 	 * @param array $params (optional)
+	 * @param bool $showerror suppress errordisplay (default true)
 	 */
-	public static function pexecute(&$stmt, $params = null) {
+	public static function pexecute(&$stmt, $params = null, $showerror = true) {
 		try {
 			$stmt->execute($params);
 		} catch (PDOException $e) {
-			self::_showerror($e);
+			self::_showerror($e, $showerror);
 		}
 	}
 
@@ -63,7 +69,7 @@ class Database {
 	 *
 	 * @return int
 	 */
-	public static function num_rows($stmt) {
+	public static function num_rows() {
 		return Database::query("SELECT FOUND_ROWS()")->fetchColumn();
 	}
 
@@ -74,11 +80,23 @@ class Database {
 	 * the 'normal' database-connection
 	 *
 	 * @param bool $needroot
+	 * @param int $dbserver optional
 	 */
-	public static function needRoot($needroot = false) {
+	public static function needRoot($needroot = false, $dbserver = 0) {
 		// force re-connecting to the db with corresponding user
-		self::$_link = null;
+		// and set the $dbserver (mostly to 0 = default)
+		self::_setServer($dbserver);
 		self::$_needroot = $needroot;
+	}
+
+	/**
+	 * set the database-server (relevant for root-connection)
+	 *
+	 * @param int $dbserver
+	 */
+	private static function _setServer($dbserver = 0) {
+		self::$_dbserver = $dbserver;
+		self::$_link = null;
 	}
 
 	/**
@@ -137,9 +155,9 @@ class Database {
 
 		// either root or unprivileged user
 		if ($root) {
-			$user = $sql_root[0]['user'];
-			$password = $sql_root[0]['password'];
-			$host = $sql_root[0]['host'];
+			$user = $sql_root[self::$_dbserver]['user'];
+			$password = $sql_root[self::$_dbserver]['password'];
+			$host = $sql_root[self::$_dbserver]['host'];
 		} else {
 			$user = $sql["user"];
 			$password = $sql["password"];
@@ -185,14 +203,15 @@ class Database {
 	 * display a nice error if it occurs and log everything
 	 *
 	 * @param PDOException $error
+	 * @param bool $showerror if set to false, the error will be logged but we go on
 	 */
-	private static function _showerror($error) {
+	private static function _showerror($error, $showerror = true) {
 		global $theme;
 
 		/**
 		 * log to a file, so we can actually ask people for the error
 		 * (no one seems to find the stuff in the syslog)
-		*/
+		 */
 		$sl_dir = makeCorrectDir(FROXLOR_INSTALL_DIR."/logs/");
 		if (!file_exists($sl_dir)) {
 			@mkdir($sl_dir, 0755);
@@ -202,15 +221,17 @@ class Database {
 		@fwrite($sqllog, date('d.m.Y H:i', time())." --- ".str_replace("\n", " ", $error->getMessage())."\n");
 		@fclose($sqllog);
 
-		if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
-			// if we're not on the shell, output a nicer error-message
-			$err_hint = file_get_contents(dirname($sl_dir).'/templates/'.$theme.'/misc/dberrornice.tpl');
-			// replace values
-			$err_hint = str_replace("<TEXT>", $error->getMessage(), $err_hint);
-			$err_hint = str_replace("<DEBUG>", $error->getTraceAsString(), $err_hint);
-			// show
-			die($err_hint);
+		if ($showerror) {
+			if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
+				// if we're not on the shell, output a nicer error-message
+				$err_hint = file_get_contents(dirname($sl_dir).'/templates/'.$theme.'/misc/dberrornice.tpl');
+				// replace values
+				$err_hint = str_replace("<TEXT>", $error->getMessage(), $err_hint);
+				$err_hint = str_replace("<DEBUG>", $error->getTraceAsString(), $err_hint);
+				// show
+				die($err_hint);
+			}
+			die("We are sorry, but a MySQL - error occurred. The administrator may find more information in in the sql-error.log in the logs/ directory");
 		}
-		die("We are sorry, but a MySQL - error occurred. The administrator may find more information in in the sql-error.log in the logs/ directory");
 	}
 }
