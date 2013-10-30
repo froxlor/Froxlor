@@ -15,12 +15,10 @@ $header
 				{$searchcode}
 			</div>
 
-			<if 15 < $count >
-				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a>
-				</div>
-			</if>
+			<div class="overviewadd">
+				<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
+				<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a>
+			</div>
 
 			<table class="bradius">
 			<thead>
@@ -55,10 +53,12 @@ $header
 
 			</form>
 
-			<div class="overviewadd">
-				<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a>
-			</div>
+			<if 15 < $count >
+				<div class="overviewadd">
+					<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
+					<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a>
+				</div>
+			</if>
 
 		</section>
 

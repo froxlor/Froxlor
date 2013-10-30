@@ -15,7 +15,7 @@
 				{$searchcode}
 			</div>
 
-			<if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') && 15 < $mysqls_count >
+			<if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') >
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/mysql_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'mysql', 'page' => 'mysqls', 'action' => 'add'))}">{$lng['mysql']['database_create']}</a>
@@ -51,7 +51,7 @@
 
 			</form>
 
-			<if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') >
+			<if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') && 15 < $mysqls_count >
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/mysql_add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'mysql', 'page' => 'mysqls', 'action' => 'add'))}">{$lng['mysql']['database_create']}</a>

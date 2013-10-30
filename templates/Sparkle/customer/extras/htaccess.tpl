@@ -15,13 +15,11 @@
 				{$searchcode}
 			</div>
 
-			<if 15 < $count >
-				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/htaccess_add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
-				</div>
-			</if>
-
+			<div class="overviewadd">
+				<img src="templates/{$theme}/assets/img/icons/htaccess_add.png" alt="" />&nbsp;
+				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
+			</div>
+		
 			<table class="bradius">
 				<thead>
 					<tr>
@@ -52,11 +50,13 @@
 				<input type="hidden" name="s" value="$s" />
 				<input type="hidden" name="page" value="$page" />
 			</p>
-
-			<div class="overviewadd">
-				<img src="templates/{$theme}/assets/img/icons/htaccess_add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
-			</div>
+			
+			<if 15 < $count >
+				<div class="overviewadd">
+					<img src="templates/{$theme}/assets/img/icons/htaccess_add.png" alt="" />&nbsp;
+					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
+				</div>
+			</if>
 
 		</section>
 	</article>

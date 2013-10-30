@@ -15,12 +15,10 @@ $header
 				{$searchcode}
 			</div>
 
-			<if 15 < $categories_count >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/categories_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'addcategory'))}">{$lng['ticket']['ticket_newcateory']}</a>
 			</div>
-			</if>
 
 			<table class="bradius">
 			<thead>
@@ -51,10 +49,12 @@ $header
 
 			</form>
 
-			<div class="overviewadd">
-				<img src="templates/{$theme}/assets/img/icons/categories_add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'addcategory'))}">{$lng['ticket']['ticket_newcateory']}</a>
-			</div>
+			<if 15 < $categories_count >
+				<div class="overviewadd">
+					<img src="templates/{$theme}/assets/img/icons/categories_add.png" alt="" />&nbsp;
+					<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'addcategory'))}">{$lng['ticket']['ticket_newcateory']}</a>
+				</div>
+			</if>
 
 		</section>
 

@@ -15,12 +15,11 @@ $header
 				{$searchcode}
 			</div>
 
-			<if 15 < $log_count >
-				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/syslog_truncate.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a>
-				</div>
-			</if>
+			
+			<div class="overviewadd">
+				<img src="templates/{$theme}/assets/img/icons/syslog_truncate.png" alt="" />&nbsp;
+				<a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a>
+			</div>
 
 			<table class="bradius">
 			<thead>
@@ -44,10 +43,12 @@ $header
 
 			</form>
 
+			<if 15 < $log_count >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/syslog_truncate.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a>
 			</div>
+			</if>
 
 		</section>
 

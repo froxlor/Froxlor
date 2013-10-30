@@ -9,12 +9,10 @@ $header
 
 		<section>
 
-			<if 15 < $count>
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/phpsettings_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>
 			</div>
-			</if>
 
 			<table class="bradius">
 			<thead>
@@ -29,11 +27,13 @@ $header
 				$tablecontent
 			</tbody>
 			</table>
-
-			<div class="overviewadd">
-				<img src="templates/{$theme}/assets/img/icons/phpsettings_add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>
-			</div>
+			
+			<if 15 < $count>
+				<div class="overviewadd">
+					<img src="templates/{$theme}/assets/img/icons/phpsettings_add.png" alt="" />&nbsp;
+					<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>
+				</div>
+			</if>
 
 		</section>
 

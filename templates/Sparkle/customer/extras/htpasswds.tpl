@@ -15,12 +15,11 @@
 				{$searchcode}
 			</div>
 
-			<if 15 < $count >
-				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/htpasswd_add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
-				</div>
-			</if>
+			
+			<div class="overviewadd">
+				<img src="templates/{$theme}/assets/img/icons/htpasswd_add.png" alt="" />&nbsp;
+				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
+			</div>
 
 			<table class="bradius">
 				<thead>
@@ -48,12 +47,14 @@
 			</p>
 
 			</form>
-
-			<div class="overviewadd">
-				<img src="templates/{$theme}/assets/img/icons/htpasswd_add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
-			</div>
-
+			
+			<if 15 < $count >
+				<div class="overviewadd">
+					<img src="templates/{$theme}/assets/img/icons/htpasswd_add.png" alt="" />&nbsp;
+					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
+				</div>
+			</if>
+			
 		</section>
 	</article>
 $footer
