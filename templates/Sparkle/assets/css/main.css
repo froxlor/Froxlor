@@ -358,10 +358,9 @@ aside.right {
 }
 
 .overviewsearch {
-	position:absolute;
-	top:125px;
-	right:36px;
+	float: right;
 	font-size:80%;
+	text-align: right;
 }
 .overviewsearch input[type="text"] {
 	width: 150px;

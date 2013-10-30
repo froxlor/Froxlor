@@ -8,6 +8,13 @@ $header
 		</header>
 
 		<section>
+			<if $add>
+				<div class="overviewadd">
+					<img src="templates/{$theme}/assets/img/icons/templates_add.png" alt="" />&nbsp;
+					<a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['templates']['template_add']}</a>
+				</div>
+			</if>
+		
 			<table class="bradius">
 			<thead>
 				<tr>
@@ -20,14 +27,6 @@ $header
 				{$templates}
 			</tbody>
 			</table>
-
-			<if $add>
-				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/templates_add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['templates']['template_add']}</a>
-				</div>
-			</if>
-
 		</section>
 
 	</article>
@@ -41,6 +40,13 @@ $header
 		</header>
 
 		<section>
+			<if $filetemplateadd>
+				<div class="overviewadd">
+					<img src="templates/{$theme}/assets/img/icons/templates_add.png" alt="" />&nbsp;
+					<a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add', 'files' => 'files'))}">{$lng['admin']['templates']['template_add']}</a>
+				</div>
+			</if>
+			
 			<table class="bradius">
 			<thead>
 				<tr>
@@ -52,13 +58,6 @@ $header
 				{$filetemplates}
 			</tbody>
 			</table>
-
-			<if $filetemplateadd>
-				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/templates_add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add', 'files' => 'files'))}">{$lng['admin']['templates']['template_add']}</a>
-				</div>
-			</if>
 		</section>
 
 	</article>
