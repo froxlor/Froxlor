@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/display.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/display_big.png" alt="" />&nbsp;
 				{$lng['menue']['main']['changetheme']}
 			</h2>
 		</header>

@@ -18,7 +18,7 @@
 			
 			<if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && $emaildomains_count !=0 >
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/email_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'email', 'page' => $page, 'action' => 'add'))}">{$lng['emails']['emails_add']}</a>
 				</div>
 			</if>
@@ -57,7 +57,7 @@
 
 			<if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && 15 < $emails_count && $emaildomains_count !=0 >
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/email_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'email', 'page' => $page, 'action' => 'add'))}">{$lng['emails']['emails_add']}</a>
 				</div>
 			</if>

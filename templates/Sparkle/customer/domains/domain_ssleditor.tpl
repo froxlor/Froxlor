@@ -2,7 +2,7 @@ $header
 <article>
 	<header>
 		<h2>
-			<img src="templates/{$theme}/assets/img/icons/ssl_big.png" alt="{$title}" />&nbsp;
+			<img src="templates/{$theme}/assets/img/icons/lock_big.png" alt="{$title}" />&nbsp;
 			{$title}
 		</h2>
 	</header>

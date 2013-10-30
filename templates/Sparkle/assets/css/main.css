@@ -197,12 +197,8 @@ footer img {
 	margin: 10px !important;
 }
 
-.tinyform input {
-	/*width:50%;*/
-}
-
-.tinyform input[type="checkbox"] {
-	width:auto;
+table.tinyform input {
+	width:120px;
 }
 
 .fullform,.midform,.installsec {
@@ -667,7 +663,7 @@ input[type="text"], input[type="password"] {
 }
 
 input[type="password"] {
-	background:#fff url(../img/icons/password.png) no-repeat 5px 4px;
+	background:#fff url(../img/icons/lock.png) no-repeat 5px 4px;
 }
 
 /*
@@ -680,7 +676,7 @@ input[type="button"],input[type="submit"],input[type="reset"] {
 	border: 0;
 	background-color: #eee;
 	min-width: 80px;
-	height: 26px;
+	height: 28px;
 	background-image: none;
 	border-width: 0px;
 }

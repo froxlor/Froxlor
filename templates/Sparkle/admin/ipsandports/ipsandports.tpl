@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/ipsports.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/ipsports_big.png" alt="" />&nbsp;
 				{$lng['admin']['ipsandports']['ipsandports']}
 			</h2>
 		</header>
@@ -16,7 +16,7 @@ $header
 			</div>
 
 			<div class="overviewadd">
-				<img src="templates/{$theme}/assets/img/icons/ipsports_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['ipsandports']['add']}</a>
 			</div>
 
@@ -55,7 +55,7 @@ $header
 
 			<if 15 < $count>
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/ipsports_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['ipsandports']['add']}</a>
 				</div>
 			</if>

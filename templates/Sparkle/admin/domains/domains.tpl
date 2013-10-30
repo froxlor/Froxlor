@@ -17,7 +17,7 @@
 
 			<if ($userinfo['domains_used'] < $userinfo['domains'] || $userinfo['domains'] == '-1') && $countcustomers !=0 >
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/domain_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['domain_add']}</a>
 				</div>
 			</if>
@@ -63,7 +63,7 @@
 
 			<if ($userinfo['domains_used'] < $userinfo['domains'] || $userinfo['domains'] == '-1') && 15 < $count && 0 < $countcustomers >
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/domain_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['domain_add']}</a>
 				</div>
 			</if>

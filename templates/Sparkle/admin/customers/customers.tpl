@@ -11,16 +11,16 @@ $header
 
 			<form action="{$linker->getLink(array('section' => 'customers'))}" method="post" enctype="application/x-www-form-urlencoded">
 
-			<if $userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1'>
-				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>
-				</div>
-			</if>
-			
 			<div class="overviewsearch">
 				{$searchcode}
 			</div>
+			
+			<if $userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1'>
+				<div class="overviewadd">
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
+					<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>
+				</div>
+			</if>
 
 			<table class="bradius">
 			<thead>
@@ -63,7 +63,7 @@ $header
 
 			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $userinfo['customers_used'] >
 			<div class="overviewadd">
-				<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>
 			</div>
 			</if>
