@@ -27,22 +27,40 @@ require('./lib/init.php');
 if ($action == 'logout') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, 'logged out');
 
-        $query = "DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['customerid'] . "' AND `adminsession` = '0'";
+    $params = array("customerid" => $userinfo['customerid']);
 	if ($settings['session']['allow_multiple_login'] == '1') {
-		$query .= " AND `hash` = '" . $s . "'";
+		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
+			WHERE `userid` = :customerid
+			AND `adminsession` = '0'
+			AND `hash` = :hash"
+		);
+		$params["hash"] = $s;
+	} else {
+		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
+			WHERE `userid` = :customerid
+			AND `adminsession` = '0'"
+		);
 	}
-	$db->query($query);
+	Database::pexecute($stmt, $params);
+	
 	redirectTo('index.php');
 	exit;
 }
 
 if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_index");
+	
+	$domain_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+		WHERE `customerid` = :customerid
+		AND `parentdomainid` = '0'
+		AND `id` <> :standardsubdomain"
+	);
+	Database::pexecute($domain_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));
+	
 	$domains = '';
-	$result = $db->query("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `parentdomainid`='0' AND `id` <> '" . (int)$userinfo['standardsubdomain'] . "' ");
 	$domainArray = array();
 
-	while ($row = $db->fetch_array($result)) {
+	while ($row = $domain_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$domainArray[] = $idna_convert->decode($row['domain']);
 	}
 
@@ -51,9 +69,6 @@ if ($page == 'overview') {
 	$userinfo['email'] = $idna_convert->decode($userinfo['email']);
 	$yesterday = time() - (60 * 60 * 24);
 	$month = date('M Y', $yesterday);
-
-	/*		$traffic=$db->query_first("SELECT SUM(http) AS http_sum, SUM(ftp_up) AS ftp_up_sum, SUM(ftp_down) AS ftp_down_sum, SUM(mail) AS mail_sum FROM ".TABLE_PANEL_TRAFFIC." WHERE year='".date('Y')."' AND month='".date('m')."' AND day<='".date('d')."' AND customerid='".$userinfo['customerid']."'");
-		$userinfo['traffic_used']=$traffic['http_sum']+$traffic['ftp_up_sum']+$traffic['ftp_down_sum']+$traffic['mail_sum'];*/
 
 	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, $settings['panel']['decimal_places']);
 	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
@@ -91,28 +106,57 @@ if ($page == 'overview') {
 		} elseif($new_password != $new_password_confirm) {
 			standard_error('newpasswordconfirmerror');
 		} else {
-			$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `password`='" . md5($new_password) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `password`='" . md5($old_password) . "'");
+			// Update user password
+			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+				SET `password` = :newpassword
+				WHERE `customerid` = :customerid
+				AND `password` = :oldpassword"
+			);
+			$params = array(
+				"newpassword" => md5($new_password),
+				"customerid" => $userinfo['customerid'],
+				"oldpassword" => md5($old_password)
+			);
+			Database::pexecute($stmt, $params);
 			$log->logAction(USR_ACTION, LOG_NOTICE, 'changed password');
 
-			if (isset($_POST['change_main_ftp'])
-			   && $_POST['change_main_ftp'] == 'true'
-			) {
+			// Update ftp password
+			if (isset($_POST['change_main_ftp']) && $_POST['change_main_ftp'] == 'true') {
 				$cryptPassword = makeCryptPassword($new_password);
-				$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $db->escape($userinfo['loginname']) . "'");
+				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
+					SET `password` = :password
+					WHERE `customerid` = :customerid
+					AND `username` = :username"
+				);
+				$params = array(
+					"password" => $cryptPassword,
+					"customerid" => $userinfo['customerid'],
+					"username" => $userinfo['loginname']
+				);
+				Database::pexecute($stmt, $params);
 				$log->logAction(USR_ACTION, LOG_NOTICE, 'changed main ftp password');
 			}
 
-			if (isset($_POST['change_webalizer'])
-			   && $_POST['change_webalizer'] == 'true'
-			) {
+			// Update webalizer password
+			if (isset($_POST['change_webalizer']) && $_POST['change_webalizer'] == 'true') {
 				if (CRYPT_STD_DES == 1) {
 					$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
 					$new_webalizer_password = crypt($new_password, $saltfordescrypt);
 				} else {
 					$new_webalizer_password = crypt($new_password);
 				}
-
-				$db->query("UPDATE `" . TABLE_PANEL_HTPASSWDS . "` SET `password`='" . $db->escape($new_webalizer_password) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $db->escape($userinfo['loginname']) . "'");
+				
+				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTPASSWDS . "`
+					SET `password` = :password
+					WHERE `customerid` = :customerid
+					AND `username` = :username"
+				);
+				$params = array(
+					"password" => $new_webalizer_password,
+					"customerid" => $userinfo['customerid'],
+					"username" => $userinfo['loginname']
+				);
+				Database::pexecute($stmt, $params);
 			}
 
 			redirectTo($filename, Array('s' => $s));
@@ -124,8 +168,18 @@ if ($page == 'overview') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$def_language = validate($_POST['def_language'], 'default language');
 		if (isset($languages[$def_language])) {
-			$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `def_language`='" . $db->escape($def_language) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
-			$db->query("UPDATE `" . TABLE_PANEL_SESSIONS . "` SET `language`='" . $db->escape($def_language) . "' WHERE `hash`='" . $db->escape($s) . "'");
+			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+				SET `def_language` = :lang
+				WHERE `customerid` = :customerid"
+			);
+			Database::pexecute($stmt, array("lang" => $def_language, "customerid" => $userinfo['customerid']));
+			
+			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
+				SET `language` = :lang
+				WHERE `hash` = :hash"
+			);
+			Database::pexecute($stmt, array("lang" => $def_language, "hash" => $s));
+			
 			$log->logAction(USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
 		}
 
@@ -147,8 +201,18 @@ if ($page == 'overview') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$theme = validate($_POST['theme'], 'theme');
  
-		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `theme`='" . $db->escape($theme) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
-		$db->query("UPDATE `" . TABLE_PANEL_SESSIONS . "` SET `theme`='" . $db->escape($theme) . "' WHERE `hash`='" . $db->escape($s) . "'");
+		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+			SET `theme` = :theme
+			WHERE `customerid` = :customerid"
+		);
+		Database::pexecute($stmt, array("theme" => $theme, "customerid" => $userinfo['customerid']));
+		
+		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
+			SET `theme` = :theme
+			WHERE `hash` = :hash"
+		);
+		Database::pexecute($stmt, array("theme" => $theme, "hash" => $s));
+		
 		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
 		redirectTo($filename, Array('s' => $s));
 	} else {

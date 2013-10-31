@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/encrypted_big.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/lock_big.png" alt="" />&nbsp;
 				{$lng['menue']['main']['changepassword']}
 			</h2>
 		</header>

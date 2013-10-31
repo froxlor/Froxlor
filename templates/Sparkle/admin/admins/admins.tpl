@@ -16,7 +16,7 @@ $header
 			</div>
 
 			<div class="overviewadd">
-				<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />
 				<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a>
 			</div>
 
@@ -55,7 +55,7 @@ $header
 
 			<if 15 < $count >
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />
 					<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a>
 				</div>
 			</if>

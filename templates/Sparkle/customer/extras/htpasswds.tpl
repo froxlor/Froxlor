@@ -17,7 +17,7 @@
 
 			
 			<div class="overviewadd">
-				<img src="templates/{$theme}/assets/img/icons/htpasswd_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
 			</div>
 
@@ -50,7 +50,7 @@
 			
 			<if 15 < $count >
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/htpasswd_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
 				</div>
 			</if>

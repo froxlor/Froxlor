@@ -10,7 +10,7 @@ $header
 		<section>
 			<if $add>
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/templates_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['templates']['template_add']}</a>
 				</div>
 			</if>
@@ -42,7 +42,7 @@ $header
 		<section>
 			<if $filetemplateadd>
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/templates_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'templates', 'page' => $page, 'action' => 'add', 'files' => 'files'))}">{$lng['admin']['templates']['template_add']}</a>
 				</div>
 			</if>

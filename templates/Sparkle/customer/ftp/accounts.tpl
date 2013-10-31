@@ -17,7 +17,7 @@
 
 			<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') >
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{$lng['ftp']['account_add']}</a>
 				</div>
 			</if>
@@ -51,7 +51,7 @@
 
 			<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') && 15 < $ftps_count >
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/user_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{$lng['ftp']['account_add']}</a>
 				</div>
 			</if>

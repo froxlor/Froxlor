@@ -16,7 +16,7 @@
 			</div>
 
 			<div class="overviewadd">
-				<img src="templates/{$theme}/assets/img/icons/htaccess_add.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
 			</div>
 		
@@ -53,7 +53,7 @@
 			
 			<if 15 < $count >
 				<div class="overviewadd">
-					<img src="templates/{$theme}/assets/img/icons/htaccess_add.png" alt="" />&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
 				</div>
 			</if>

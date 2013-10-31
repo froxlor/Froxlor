@@ -8,20 +8,20 @@
 	<td>
 		<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'answer', 'id' => $row['id']))}" style="text-decoration:none;">
 			<if $cananswer < 1 >
-				<img src="templates/{$theme}/assets/img/icons/ticket_show.png" alt="{$lng['ticket']['show']}"/>
+				<img src="templates/{$theme}/assets/img/icons/view.png" alt="{$lng['ticket']['show']}"/>
 			</if>
 			<if 0 < $cananswer >
-				<img src="templates/{$theme}/assets/img/icons/ticket_answer.png" alt="{$lng['ticket']['answer']}"/>
+				<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['ticket']['answer']}"/>
 			</if>
 		</a>
 		<if $reopen < 1 >
 			&nbsp;<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'close', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="templates/{$theme}/assets/img/icons/ticket_close.png" alt="{$lng['ticket']['close']}"/>
+				<img src="templates/{$theme}/assets/img/icons/lock.png" alt="{$lng['ticket']['close']}"/>
 			</a>
 		</if>
 		<if 0 < $reopen >
 			&nbsp;<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'reopen', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="templates/{$theme}/assets/img/icons/ticket_reopen.png" alt="{$lng['ticket']['reopen']}"/>
+				<img src="templates/{$theme}/assets/img/icons/unlock.png" alt="{$lng['ticket']['reopen']}"/>
 			</a>
 		</if>
 	</td>
