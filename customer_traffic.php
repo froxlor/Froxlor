@@ -28,23 +28,15 @@ $traffic = '';
 $month = null;
 $year = null;
 
-if (isset($_POST['month'])
-	&& isset($_POST['year'])
-) {
+if (isset($_POST['month']) && isset($_POST['year'])) {
 	$month = intval($_POST['month']);
 	$year = intval($_POST['year']);
-} elseif (isset($_GET['month'])
-	&& isset($_GET['year'])
-) {
+} elseif (isset($_GET['month']) && isset($_GET['year'])) {
 	$month = intval($_GET['month']);
 	$year = intval($_GET['year']);
 }
-
 //BAM! $_GET???
-
-elseif (isset($_GET['page'])
-	&& $_GET['page'] == 'current'
-) {
+elseif (isset($_GET['page']) && $_GET['page'] == 'current') {
 	if (date('d') != '01') {
 		$month = date('m');
 		$year = date('Y');
@@ -59,22 +51,28 @@ elseif (isset($_GET['page'])
 	}
 }
 
-if (!is_null($month)
-	&& !is_null($year)) {
+if (!is_null($month) && !is_null($year)) {
 	$traf['byte'] = 0;
-	$result = $db->query("SELECT
-                                SUM(`http`) as 'http', SUM(`ftp_up`) AS 'ftp_up', SUM(`ftp_down`) as 'ftp_down', SUM(`mail`) as 'mail',
-                                `day`, `month`, `year`
-                             FROM `" . TABLE_PANEL_TRAFFIC . "`
-	                     WHERE `customerid`='" . $userinfo['customerid'] . "'
-	                     AND `month` = '" . $month . "' AND `year` = '" . $year . "'
-	                     GROUP BY `day` ORDER BY `day` ASC");
+	$result_stmt = Database::prepare("SELECT SUM(`http`) as 'http', SUM(`ftp_up`) AS 'ftp_up', SUM(`ftp_down`) as 'ftp_down', SUM(`mail`) as 'mail', `day`, `month`, `year`
+		FROM `" . TABLE_PANEL_TRAFFIC . "`
+		WHERE `customerid`= :customerid
+		AND `month` = :month
+		AND `year` = :year
+		GROUP BY `day`
+		ORDER BY `day` ASC"
+	);
+	$params = array(
+		"customerid" => $userinfo['customerid'],
+		"month" => $month,
+		"year" => $year
+	);
+	Database::pexecute($result_stmt, $params);
 	$traffic_complete['http'] = 0;
 	$traffic_complete['ftp'] = 0;
 	$traffic_complete['mail'] = 0;
 	$show = '';
 
-	while ($row = $db->fetch_array($result)) {
+	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$http = $row['http'];
 		$ftp = $row['ftp_up'] + $row['ftp_down'];
 		$mail = $row['mail'];
@@ -118,14 +116,19 @@ if (!is_null($month)
 
 	eval("echo \"" . getTemplate('traffic/traffic_details') . "\";");
 } else {
-	$result = $db->query("SELECT `month`, `year`, SUM(`http`) AS http, SUM(`ftp_up`) AS ftp_up, SUM(`ftp_down`) AS ftp_down, SUM(`mail`) AS mail
-	                     FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid` = '" . $userinfo['customerid'] . "'
-	                     GROUP BY CONCAT(`year`,`month`) ORDER BY CONCAT(`year`,`month`) DESC LIMIT 12");
+	$result_stmt = Database::prepare("SELECT `month`, `year`, SUM(`http`) AS http, SUM(`ftp_up`) AS ftp_up, SUM(`ftp_down`) AS ftp_down, SUM(`mail`) AS mail
+		FROM `" . TABLE_PANEL_TRAFFIC . "`
+		WHERE `customerid` = :customerid
+		GROUP BY CONCAT(`year`,`month`)
+		ORDER BY CONCAT(`year`,`month`) DESC
+		LIMIT 12"
+	);
+	Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
 	$traffic_complete['http'] = 0;
 	$traffic_complete['ftp'] = 0;
 	$traffic_complete['mail'] = 0;
 
-	while ($row = $db->fetch_array($result)) {
+	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$http = $row['http'];
 		$ftp_up = $row['ftp_up'];
 		$ftp_down = $row['ftp_down'];
