@@ -76,8 +76,15 @@ if ($page == 'overview') {
 
 	$overview['traffic_used'] = round($overview['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
 	$overview['diskspace_used'] = round($overview['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
-	$number_domains = $db->query_first("SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `parentdomainid`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = '" . (int)$userinfo['adminid'] . "' "));
+
+	$number_domains_stmt = Database::prepare("
+		SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "`
+		WHERE `parentdomainid`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
+	);
+	Database::pexecute($number_domains_stmt, array('adminid' => $userinfo['adminid']));
+	$number_domains = $number_domains_stmt->fetch(PDO::FETCH_ASSOC);
 	$overview['number_domains'] = $number_domains['number_domains'];
+
 	$phpversion = phpversion();
 	$phpmemorylimit = @ini_get("memory_limit");
 
