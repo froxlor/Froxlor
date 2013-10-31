@@ -19,9 +19,6 @@
 
 define('AREA', 'admin');
 
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
 require('./lib/init.php');
 
 if ($page == 'log'
@@ -37,26 +34,28 @@ if ($page == 'log'
 		$paging = new paging($userinfo, $db, TABLE_PANEL_LOG, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$paging->sortfield = 'date';
 		$paging->sortorder = 'desc';
-		$result = $db->query('SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy() . ' ' . $paging->getSqlLimit());
-		$paging->setEntries($db->num_rows($result));
+		$result_stmt = Database::query('
+			SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy() . ' ' . $paging->getSqlLimit()
+		);
+		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$clog = array();
 
-		while ($row = $db->fetch_array($result)) {
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+
 			if (!isset($clog[$row['action']])
-			   || !is_array($clog[$row['action']])
+				|| !is_array($clog[$row['action']])
 			) {
 				$clog[$row['action']] = array();
 			}
-
 			$clog[$row['action']][$row['logid']] = $row;
 		}
 
 		if ($paging->sortfield == 'date'
-		   && $paging->sortorder == 'desc'
+			&& $paging->sortorder == 'desc'
 		) {
 			krsort($clog);
 		} else {
@@ -135,17 +134,19 @@ if ($page == 'log'
 		}
 
 		eval("echo \"" . getTemplate('logger/logger') . "\";");
+
 	} elseif ($action == 'truncate') {
+
 		if (isset($_POST['send'])
 		   && $_POST['send'] == 'send'
 		) {
-			$yesterday = time() - (60 * 10);
-
-			/* (60*60*24); */
-
-			$db->query("DELETE FROM `" . TABLE_PANEL_LOG . "` WHERE `date` < '" . $yesterday . "'");
+			$truncatedate = time() - (60 * 10);
+			$trunc_stmt = Database::prepare("
+				DELETE FROM `" . TABLE_PANEL_LOG . "` WHERE `date` < :trunc"
+			);
+			Database::pexecute($trunc_stmt, array('trunc' => $truncatedate));
 			$log->logAction(ADM_ACTION, LOG_WARNING, 'truncated the system-log (mysql)');
-			redirectTo($filename, Array('page' => $page, 's' => $s));
+			redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
 			ask_yesno('logger_reallytruncate', $filename, array('page' => $page, 'action' => $action), TABLE_PANEL_LOG);
 		}

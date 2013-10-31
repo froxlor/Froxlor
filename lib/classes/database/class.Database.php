@@ -109,7 +109,7 @@ class Database {
 	 * @return mixed
 	 */
 	public static function __callStatic($name, $args) {
-		$callback = array(self::getDB(self::$_needroot), $name);
+		$callback = array(self::getDB(), $name);
 		$result = null;
 		try {
 			$result = call_user_func_array($callback, $args );
@@ -127,7 +127,7 @@ class Database {
 	 *
 	 * @return object
 	 */
-	private static function getDB($root = false) {
+	private static function getDB() {
 
 		if (!extension_loaded('pdo') || in_array("mysql", PDO::getAvailableDrivers()) == false) {
 			self::_showerror(new Exception("The php PDO extension or PDO-MySQL driver is not available"));
@@ -143,7 +143,7 @@ class Database {
 		require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
 
 		// le format
-		if ($root = true
+		if (self::$_needroot == true
 				&& isset($sql['root_user'])
 				&& isset($sql['root_password'])
 				&& (!isset($sql_root) || !is_array($sql_root))
@@ -154,7 +154,7 @@ class Database {
 		}
 
 		// either root or unprivileged user
-		if ($root) {
+		if (self::$_needroot) {
 			$user = $sql_root[self::$_dbserver]['user'];
 			$password = $sql_root[self::$_dbserver]['password'];
 			$host = $sql_root[self::$_dbserver]['host'];
