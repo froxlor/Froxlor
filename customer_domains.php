@@ -25,31 +25,31 @@ define('AREA', 'customer');
 
 require ("./lib/init.php");
 
-if(isset($_POST['id']))
-{
+if(isset($_POST['id'])) {
 	$id = intval($_POST['id']);
-}
-elseif(isset($_GET['id']))
-{
+} elseif(isset($_GET['id'])) {
 	$id = intval($_GET['id']);
 }
 
-if($page == 'overview')
-{
+if($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_domains");
 	eval("echo \"" . getTemplate("domains/domains") . "\";");
-}
-elseif($page == 'domains')
-{
-	if($action == '')
-	{
+} elseif($page == 'domains') {
+	if($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
 		$fields = array(
 			'd.domain' => $lng['domains']['domainname']
 		);
 		$paging = new paging($userinfo, $db, TABLE_PANEL_DOMAINS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$result = $db->query("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id` LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id` WHERE `d`.`customerid`='" . (int)$userinfo['customerid'] . "' AND `d`.`email_only`='0' AND `d`.`id` <> " . (int)$userinfo['standardsubdomain'] . " " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		$paging->setEntries($db->num_rows($result));
+		$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias` FROM `" . TABLE_PANEL_DOMAINS . "` `d`
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
+			WHERE `d`.`customerid`= :customerid'
+			AND `d`.`email_only`='0'
+			AND `d`.`id` <> :standardsubdomain " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
+		);
+		Database::pexecute($domains_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));
+		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
@@ -59,15 +59,12 @@ elseif($page == 'domains')
 		$domains_count = 0;
 		$domain_array = array();
 
-		while($row = $db->fetch_array($result))
-		{
+		while($row = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$row['domain'] = $idna_convert->decode($row['domain']);
 			$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
 			$row['domainalias'] = $idna_convert->decode($row['domainalias']);
 
-			if($row['parentdomainid'] == '0'
-			   && $row['caneditdomain'] == '1')
-			{
+			if($row['parentdomainid'] == '0' && $row['caneditdomain'] == '1') {
 				$parentdomains_count++;
 			}
 
@@ -76,21 +73,19 @@ elseif($page == 'domains')
 			 */
 			// nothing (ssl_global)
 			$row['domain_hascert'] = 0;
-			$ssl_result = $db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid`='".(int)$row['id']."';");
-			if (is_array($ssl_result)
-				&& isset($ssl_result['ssl_cert_file'])
-				&& $ssl_result['ssl_cert_file'] != ''
-			) {
+			$ssl_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` = :domainid");
+			Database::pexecute($ssl_stmt, array("domainid" => $row['id']));
+			$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
+			if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
 				// own certificate (ssl_customer_green)
 				$row['domain_hascert'] = 1;
 			} else {
 				// check if it's parent has one set (shared)
 				if ($row['parentdomainid'] != 0) {
-					$ssl_result = $db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid`='".(int)$row['parentdomainid']."';");
-					if (is_array($ssl_result)
-							&& isset($ssl_result['ssl_cert_file'])
-							&& $ssl_result['ssl_cert_file'] != ''
-					) {
+					$ssl_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` = :domainid");
+					Database::pexecute($ssl_stmt, array("domainid" => $row['parentdomainid']));
+					$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
+					if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
 						// parent has a certificate (ssl_shared)
 						$row['domain_hascert'] = 2;
 					}
@@ -103,42 +98,30 @@ elseif($page == 'domains')
 
 		ksort($domain_array);
 		$domain_id_array = array();
-		foreach($domain_array as $sortkey => $row)
-		{
+		foreach($domain_array as $sortkey => $row) {
 			$domain_id_array[$row['id']] = $sortkey;
 		}
 
 		$domain_sort_array = array();
-		foreach($domain_array as $sortkey => $row)
-		{
-			if($row['parentdomainid'] == 0)
-			{
+		foreach($domain_array as $sortkey => $row) {
+			if($row['parentdomainid'] == 0) {
 				$domain_sort_array[$sortkey][$sortkey] = $row;
-			}
-			else
-			{
+			} else {
 				$domain_sort_array[$domain_id_array[$row['parentdomainid']]][$sortkey] = $row;
 			}
 		}
 
 		$domain_array = array();
 
-		if($paging->sortfield == 'd.domain'
-		   && $paging->sortorder == 'asc')
-		{
+		if($paging->sortfield == 'd.domain' && $paging->sortorder == 'asc') {
 			ksort($domain_sort_array);
-		}
-		elseif($paging->sortfield == 'd.domain'
-		       && $paging->sortorder == 'desc')
-		{
+		} elseif($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
 			krsort($domain_sort_array);
 		}
 
 		$i = 0;
-		foreach($domain_sort_array as $sortkey => $domain_array)
-		{
-			if($paging->checkDisplay($i))
-			{
+		foreach($domain_sort_array as $sortkey => $domain_array) {
+			if($paging->checkDisplay($i)) {
 				$row = htmlentities_array($domain_array[$sortkey]);
 				if($settings['system']['awstats_enabled'] == '1') {
 					$statsapp = 'awstats';
@@ -147,30 +130,20 @@ elseif($page == 'domains')
 				}
 				eval("\$domains.=\"" . getTemplate("domains/domains_delimiter") . "\";");
 
-				if($paging->sortfield == 'd.domain'
-				   && $paging->sortorder == 'asc')
-				{
+				if($paging->sortfield == 'd.domain' && $paging->sortorder == 'asc') {
 					ksort($domain_array);
-				}
-				elseif($paging->sortfield == 'd.domain'
-				       && $paging->sortorder == 'desc')
-				{
+				} elseif($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
 					krsort($domain_array);
 				}
 
-				foreach($domain_array as $row)
-				{
-					if(strpos($row['documentroot'], $userinfo['documentroot']) === 0)
-					{
+				foreach($domain_array as $row) {
+					if(strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
 						$row['documentroot'] = makeCorrectDir(substr($row['documentroot'], strlen($userinfo['documentroot'])));
 					}
 
 					// get ssl-ips if activated
 					$show_ssledit = false;
-					if ($settings['system']['use_ssl'] == '1'
-							&& domainHasSslIpPort($row['id'])
-							&& $row['caneditdomain'] == '1'
-					) {
+					if ($settings['system']['use_ssl'] == '1' && domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1') {
 						$show_ssledit = true;
 					}
 					$row = htmlentities_array($row);
@@ -182,26 +155,29 @@ elseif($page == 'domains')
 		}
 
 		eval("echo \"" . getTemplate("domains/domainlist") . "\";");
-	}
-	elseif($action == 'delete'
-	       && $id != 0)
-	{
-		$result = $db->query_first("SELECT `id`, `customerid`, `domain`, `documentroot`, `isemaildomain`, `parentdomainid` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
-		$alias_check = $db->query_first('SELECT COUNT(`id`) AS `count` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . (int)$id . '\'');
-
-		if(isset($result['parentdomainid'])
-		   && $result['parentdomainid'] != '0'
-		   && $alias_check['count'] == 0)
-		{
-			if(isset($_POST['send'])
-			   && $_POST['send'] == 'send')
-			{
-				if($result['isemaildomain'] == '1')
-				{
-					$emails = $db->query_first('SELECT COUNT(`id`) AS `count` FROM `' . TABLE_MAIL_VIRTUAL . '` WHERE `customerid`=\'' . (int)$userinfo['customerid'] . '\' AND `domainid`=\'' . (int)$id . '\'');
-
-					if($emails['count'] != '0')
-					{
+	} elseif($action == 'delete' && $id != 0) {
+		$stmt = Database::prepare("SELECT `id`, `customerid`, `domain`, `documentroot`, `isemaildomain`, `parentdomainid` FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `customerid` = :customerid
+			AND `id` = :id"
+		);
+		Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		
+		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` = :aliasdomain");
+		Database::pexecute($alias_stmt, array("aliasdomain" => $id));
+		$alias_check = $alias_stmt->fetch(PDO::FETCH_ASSOC);
+		
+		if(isset($result['parentdomainid']) && $result['parentdomainid'] != '0' && $alias_check['count'] == 0) {
+			if(isset($_POST['send']) && $_POST['send'] == 'send') {
+				if($result['isemaildomain'] == '1') {
+					$emails_stmt = Database::prepare("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_MAIL_VIRTUAL . "`
+						WHERE `customerid` = :customerid
+						AND `domainid` = :domainid"
+					);
+					Database::pexecute($emails_stmt, array("customerid" => $userinfo['customerid'], "domainid" => $id));
+					$emails = $emails_stmt->fetch(PDO::FETCH_ASSOC);
+					
+					if($emails['count'] != '0') {
 						standard_error('domains_cantdeletedomainwithemail');
 					}
 				}
@@ -209,175 +185,194 @@ elseif($page == 'domains')
 				/*
 				 * check for APS packages used with this domain, #110
 				 */
-				if(domainHasApsInstances($id))
-				{
+				if(domainHasApsInstances($id)) {
 					standard_error('domains_cantdeletedomainwithapsinstances');
 				}
 
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted subdomain '" . $idna_convert->decode($result['domain']) . "'");
-				$result = $db->query("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
-				$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used`=`subdomains_used`-1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE
+					`customerid` = :customerid
+					AND `id` = :id"
+				);
+				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+				
+				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+					SET `subdomains_used` = `subdomains_used` - 1
+					WHERE `customerid` = :customerid"
+				);
+				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
+				
 				inserttask('1');
 
 				// Using nameserver, insert a task which rebuilds the server config
 				inserttask('4');
 
 				redirectTo($filename, Array('page' => $page, 's' => $s));
-			}
-			else
-			{
+			} else {
 				ask_yesno('domains_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['domain']));
 			}
-		}
-		else
-		{
+		} else {
 			standard_error('domains_cantdeletemaindomain');
 		}
-	}
-	elseif($action == 'add')
-	{
-		if($userinfo['subdomains_used'] < $userinfo['subdomains']
-		   || $userinfo['subdomains'] == '-1')
-		{
-			if(isset($_POST['send'])
-			   && $_POST['send'] == 'send')
-			{
+	} elseif($action == 'add') {
+		if($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') {
+			if(isset($_POST['send']) && $_POST['send'] == 'send') {
 				$subdomain = $idna_convert->encode(preg_replace(Array('/\:(\d)+$/', '/^https?\:\/\//'), '', validate($_POST['subdomain'], 'subdomain', '', 'subdomainiswrong')));
 				$domain = $idna_convert->encode($_POST['domain']);
-				$domain_check = $db->query_first("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `domain`='" . $db->escape($domain) . "' AND `customerid`='" . (int)$userinfo['customerid'] . "' AND `parentdomainid`='0' AND `email_only`='0' AND `caneditdomain`='1' ");
-				$completedomain = $subdomain . '.' . $domain;
-				$completedomain_check = $db->query_first("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `domain`='" . $db->escape($completedomain) . "' AND `customerid`='" . (int)$userinfo['customerid'] . "' AND `email_only`='0' AND `caneditdomain` = '1'");
-				$aliasdomain = intval($_POST['alias']);
-				$aliasdomain_check = array(
-					'id' => 0
+				$domain_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `domain` = :domain
+					AND `customerid` = :customerid
+					AND `parentdomainid` = '0'
+					AND `email_only` = '0'
+					AND `caneditdomain` = '1'"
 				);
+				Database::pexecute($domain_stmt, array("domain" => $domain, "customerid" => $userinfo['customerid']));
+				$domain_check = $domain_stmt->fetch(PDO::FETCH_ASSOC);
+				
+				$completedomain = $subdomain . '.' . $domain;
+				$completedomain_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `domain` = :domain
+					AND `customerid` = :customerid
+					AND `email_only` = '0'
+					AND `caneditdomain` = '1'"
+				);
+				Database::pexecute($completedomain_stmt, array("domain" => $completedomain, "customerid" => $userinfo['customerid']));
+				$completedomain_check = $completedomain_stmt->fetch(PDO::FETCH_ASSOC);
+				
+				$aliasdomain = intval($_POST['alias']);
+				$aliasdomain_check = array('id' => 0);
 				$_doredirect = false;
 
-				if($aliasdomain != 0)
-				{ 
+				if($aliasdomain != 0) { 
 					// also check ip/port combination to be the same, #176
-					$aliasdomain_check = $db->query_first("SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d` , `" . TABLE_PANEL_CUSTOMERS . "` `c` , `".TABLE_DOMAINTOIP."` `dip` WHERE `d`.`aliasdomain` IS NULL AND `d`.`id` = '".(int)$aliasdomain."' AND `c`.`standardsubdomain` <> `d`.`id` AND `d`.`customerid` = '" . (int)$userinfo['customerid'] . "' AND `c`.`customerid` = `d`.`customerid` AND `d`.`id` = `dip`.`id_domain` AND `dip`.`id_ipandports` IN (SELECT `id_ipandports` FROM `".TABLE_DOMAINTOIP."` WHERE `id_domain` = '".(int)$aliasdomain."') GROUP BY `d`.`domain` ORDER BY `d`.`domain` ASC;");
+					$aliasdomain_stmt = Database::prepare("SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d` , `" . TABLE_PANEL_CUSTOMERS . "` `c` , `".TABLE_DOMAINTOIP."` `dip`
+						WHERE `d`.`aliasdomain` IS NULL
+						AND `d`.`id` = :id
+						AND `c`.`standardsubdomain` <> `d`.`id`
+						AND `d`.`customerid` = :customerid
+						AND `c`.`customerid` = `d`.`customerid`
+						AND `d`.`id` = `dip`.`id_domain`
+						AND `dip`.`id_ipandports`
+						IN (SELECT `id_ipandports` FROM `".TABLE_DOMAINTOIP."`
+							WHERE `id_domain` = :id )
+						GROUP BY `d`.`domain
+						ORDER BY `d`.`domain` ASC;"
+					);
+					Database::pexecute($aliasdomain_stmt, array("id" => $aliasdomain, "customerid" => $userinfo['customerid']));
+					$aliasdomain_check = $aliasdomain_stmt->fetch(PDO::FETCH_ASSOC);
 				}
 
-				if(isset($_POST['url'])
-				   && $_POST['url'] != ''
-				   && validateUrl($idna_convert->encode($_POST['url'])))
-				{
+				if(isset($_POST['url']) && $_POST['url'] != '' && validateUrl($idna_convert->encode($_POST['url']))) {
 					$path = $_POST['url'];
 					$_doredirect = true;
-				}
-				else
-				{
+				} else {
 					$path = validate($_POST['path'], 'path');
 				}
 
-				if(!preg_match('/^https?\:\/\//', $path)
-				   || !validateUrl($idna_convert->encode($path)))
-				{
+				if(!preg_match('/^https?\:\/\//', $path) || !validateUrl($idna_convert->encode($path))) {
 					// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
-					if((($path == '') || ($path == '/'))
-						&& $settings['system']['documentroot_use_default_value'] == 1)
-					{
+					if((($path == '') || ($path == '/')) && $settings['system']['documentroot_use_default_value'] == 1) {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $completedomain);
-					}
-					else
-					{
+					} else {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 					}
-					if (strstr($path, ":") !== FALSE)
-					{
+					if (strstr($path, ":") !== FALSE) {
 						standard_error('pathmaynotcontaincolon');
 					}
-				}
-				else
-				{
+				} else {
 					$_doredirect = true;
 				}
 
-				if(isset($_POST['openbasedir_path'])
-				   && $_POST['openbasedir_path'] == '1')
-				{
+				if(isset($_POST['openbasedir_path']) && $_POST['openbasedir_path'] == '1') {
 					$openbasedir_path = '1';
-				}
-				else
-				{
+				} else {
 					$openbasedir_path = '0';
 				}
 
-				if(isset($_POST['ssl_redirect'])
-				   && $_POST['ssl_redirect'] == '1')
-				{
+				if(isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
 					$ssl_redirect = '1';
-				}
-				else
-				{
+				} else {
 					$ssl_redirect = '0';
 				}
 
-				if($path == '')
-				{
+				if($path == '') {
 					standard_error('patherror');
-				}
-				elseif($subdomain == '')
-				{
+				} elseif($subdomain == '') {
 					standard_error(array('stringisempty', 'domainname'));
-				}
-				elseif($subdomain == 'www' && $domain_check['wwwserveralias'] == '1')
-				{
+				} elseif($subdomain == 'www' && $domain_check['wwwserveralias'] == '1') {
 					standard_error('wwwnotallowed');
-				}
-				elseif($domain == '')
-				{
+				} elseif($domain == '') {
 					standard_error('domaincantbeempty');
-				}
-				elseif(strtolower($completedomain_check['domain']) == strtolower($completedomain))
-				{
+				} elseif(strtolower($completedomain_check['domain']) == strtolower($completedomain)) {
 					standard_error('domainexistalready', $completedomain);
-				}
-				elseif(strtolower($domain_check['domain']) != strtolower($domain))
-				{
+				} elseif(strtolower($domain_check['domain']) != strtolower($domain)) {
 					standard_error('maindomainnonexist', $domain);
-				}
-				elseif($aliasdomain_check['id'] != $aliasdomain)
-				{
+				} elseif($aliasdomain_check['id'] != $aliasdomain) {
 					standard_error('domainisaliasorothercustomer');
-				}
-				else
-				{
+				} else {
 					// get the phpsettingid from parentdomain, #107
-					$phpsid_result = $db->query_first("SELECT `phpsettingid` FROM `".TABLE_PANEL_DOMAINS."` WHERE `id` = '".(int)$domain_check['id']."'");
-					if(!isset($phpsid_result['phpsettingid'])
-						|| (int)$phpsid_result['phpsettingid'] <= 0
-					) {
+					$phpsid_stmt = Database::prepare("SELECT `phpsettingid` FROM `".TABLE_PANEL_DOMAINS."`
+						WHERE `id` = :id"
+					);
+					Database::pexecute($phpsid_stmt, array("id" => $domain_check['id']));
+					$phpsid_result = $phpsid_stmt->fetch(PDO::FETCH_ASSOC);
+					
+					if(!isset($phpsid_result['phpsettingid']) || (int)$phpsid_result['phpsettingid'] <= 0) {
 						// assign default config
 						$phpsid_result['phpsettingid'] = 1;
 					}
 
-					$result = $db->query("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET 
-								`customerid` = '" . (int)$userinfo['customerid'] . "',
-								`domain` = '" . $db->escape($completedomain) . "', 
-								`documentroot` = '" . $db->escape($path) . "', 
-								`aliasdomain` = ".(($aliasdomain != 0) ? "'" . $db->escape($aliasdomain) . "'" : "NULL") .", 
-								`parentdomainid` = '" . (int)$domain_check['id'] . "', 
-								`isemaildomain` = '" . ($domain_check['subcanemaildomain'] == '3' ? '1' : '0') . "', 
-								`openbasedir` = '" . $db->escape($domain_check['openbasedir']) . "', 
-								`openbasedir_path` = '" . $db->escape($openbasedir_path) . "',
-								`speciallogfile` = '" . $db->escape($domain_check['speciallogfile']) . "', 
-								`specialsettings` = '" . $db->escape($domain_check['specialsettings']) . "', 
-								`ssl_redirect` = '" . $ssl_redirect . "', 
-								`phpsettingid` = '" . $phpsid_result['phpsettingid'] . "'");
+					$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET 
+						`customerid` = :customerid,
+						`domain` = :domain, 
+						`documentroot` = :documentroot, 
+						`aliasdomain` = :aliasdomain, 
+						`parentdomainid` = :parentdomainid, 
+						`isemaildomain` = :isemaildomain, 
+						`openbasedir` = :openbasedir, 
+						`openbasedir_path` = :openbasedir_path,
+						`speciallogfile` = :speciallogfile, 
+						`specialsettings` = :specialsettings, 
+						`ssl_redirect` = :ssl_redirect, 
+						`phpsettingid` = :phpsettingid"
+					);
+					$params = array(
+						"customerid" => $userinfo['customerid'],
+						"domain" => $completedomain,
+						"documentroot" => $path,
+						"aliasdomain" => $aliasdomain != 0 ? $aliasdomain : "NULL",
+						"parentdomainid" => $domain_check['id'],
+						"isemaildomain" => $domain_check['subcanemaildomain'] == '3' ? '1' : '0',
+						"openbasedir" => $domain_check['openbasedir'],
+						"openbasedir_path" => $openbasedir_path,
+						"speciallogfile" => $domain_check['speciallogfile'],
+						"specialsettings" => $domain_check['specialsettings'],
+						"ssl_redirect" => $ssl_redirect,
+						"phpsettingid" => $phpsid_result['phpsettingid']
+					);
+					Database::pexecute($stmt, $params);
 
-					$result = $db->query("INSERT INTO `".TABLE_DOMAINTOIP."` (`id_domain`, `id_ipandports`) SELECT LAST_INSERT_ID(), `id_ipandports` FROM `".TABLE_DOMAINTOIP."` WHERE `id_domain` = '" . (int)$domain_check['id'] . "';");
-
-					if($_doredirect)
-					{
-						$did = $db->insert_id();
+					if($_doredirect) {
+						$did = Database::lastInsertId();
 						$redirect = isset($_POST['redirectcode']) ? (int)$_POST['redirectcode'] : $settings['customredirect']['default'];
 						addRedirectToDomain($did, $redirect);
 					}
+					
+					$stmt = Database::prepare("INSERT INTO `".TABLE_DOMAINTOIP."`
+						(`id_domain`, `id_ipandports`)
+						SELECT LAST_INSERT_ID(), `id_ipandports`
+							FROM `".TABLE_DOMAINTOIP."`
+							WHERE `id_domain` = :id_domain"
+					);
+					Database::pexecute($stmt, array("id_domain" => $domain_check['id']));
 
-					$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `subdomains_used`=`subdomains_used`+1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
+					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+						SET `subdomains_used` = `subdomains_used` + 1
+						WHERE `customerid` = :customerid"
+					);
+					Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
+					
 					$log->logAction(USR_ACTION, LOG_INFO, "added subdomain '" . $completedomain . "'");
 					inserttask('1');
 
@@ -386,38 +381,49 @@ elseif($page == 'domains')
 
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
-			}
-			else
-			{
-				$result = $db->query("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `parentdomainid`='0' AND `email_only`='0' AND `caneditdomain`='1' ORDER BY `domain` ASC");
+			} else {
+				$stmt = Database::prepare("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `customerid` = :customerid
+					AND `parentdomainid` = '0'
+					AND `email_only` = '0'
+					AND `caneditdomain` = '1'
+					ORDER BY `domain` ASC"
+				);
+				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
 				$domains = '';
 
-				while($row = $db->fetch_array($result))
-				{
-					$domains.= makeoption($idna_convert->decode($row['domain']), $row['domain']);
+				while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+					$domains .= makeoption($idna_convert->decode($row['domain']), $row['domain']);
 				}
 
 				$aliasdomains = makeoption($lng['domains']['noaliasdomain'], 0, NULL, true);
-				$result_domains = $db->query("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `d`.`aliasdomain` IS NULL AND `d`.`id` <> `c`.`standardsubdomain` AND `d`.`customerid`=`c`.`customerid` AND `d`.`email_only`='0' AND `d`.`customerid`=" . (int)$userinfo['customerid'] . " ORDER BY `d`.`domain` ASC");
+				$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
+					WHERE `d`.`aliasdomain` IS NULL
+					AND `d`.`id` <> `c`.`standardsubdomain`
+					AND `d`.`customerid`=`c`.`customerid`
+					AND `d`.`email_only`='0'
+					AND `d`.`customerid`= :customerid
+					ORDER BY `d`.`domain` ASC"
+				);
+				Database::pexecute($domains_stmt, array("customerid" => $userinfo['customerid']));
 
-				while($row_domain = $db->fetch_array($result_domains))
-				{
-					$aliasdomains.= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id']);
+				while($row_domain = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+					$aliasdomains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id']);
 				}
 
 				$redirectcode = '';
-				if($settings['customredirect']['enabled'] == '1')
-				{
+				if($settings['customredirect']['enabled'] == '1') {
 					$codes = getRedirectCodesArray();
-					foreach($codes as $rc)
-					{
+					foreach($codes as $rc) {
 						$redirectcode .= makeoption($rc['code']. ' ('.$lng['redirect_desc'][$rc['desc']].')', $rc['id'], $settings['customredirect']['default']);
 					}
 				}
 
 				// check if we at least have one ssl-ip/port, #1179
 				$ssl_ipsandports = '';
-				$resultX = $db->query_first("SELECT COUNT(*) as countSSL FROM `panel_ipsandports` WHERE `ssl`='1'");
+				$ssl_ip_stmt = Database::prepare("SELECT COUNT(*) as countSSL FROM `panel_ipsandports` WHERE `ssl`='1'");
+				Database::pexecute($ssl_ip_stmt);
+				$resultX = $ssl_ip_stmt->fetch(PDO::FETCH_ASSOC);
 				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
 					$ssl_ipsandports = 'notempty';
 				}
@@ -434,62 +440,53 @@ elseif($page == 'domains')
 				eval("echo \"" . getTemplate("domains/domains_add") . "\";");
 			}
 		}
-	}
-	elseif($action == 'edit'
-	       && $id != 0)
-	{
-		$result = $db->query_first("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `pd`.`subcanemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd` WHERE `d`.`customerid`='" . (int)$userinfo['customerid'] . "' AND `d`.`id`='" . (int)$id . "' AND ((`d`.`parentdomainid`!='0' AND `pd`.`id`=`d`.`parentdomainid`) OR (`d`.`parentdomainid`='0' AND `pd`.`id`=`d`.`id`)) AND `d`.`caneditdomain`='1'");
-		$alias_check = $db->query_first('SELECT COUNT(`id`) AS count FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . (int)$result['id'] . '\'');
+	} elseif($action == 'edit' && $id != 0) {
+		$stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`,
+			`d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `pd`.`subcanemaildomain`
+			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
+			WHERE `d`.`customerid` = :customerid
+			AND `d`.`id` = :id
+			AND ((`d`.`parentdomainid`!='0' 
+					AND `pd`.`id` = `d`.`parentdomainid`)
+				OR (`d`.`parentdomainid`='0'
+					AND `pd`.`id` = `d`.`id`))
+			AND `d`.`caneditdomain`='1'");
+		Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		
+		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain`= :aliasdomain");
+		Database::pexecute($alias_stmt, array("aliasdomain" => $result['id']));
+		$alias_check = $alias_stmt->fetch(PDO::FETCH_ASSOC);
 		$alias_check = $alias_check['count'];
 		$_doredirect = false;
 
-		if(isset($result['customerid'])
-		   && $result['customerid'] == $userinfo['customerid'])
-		{
-			if(isset($_POST['send'])
-			   && $_POST['send'] == 'send')
-			{
-				if(isset($_POST['url'])
-				   && $_POST['url'] != ''
-				   && validateUrl($idna_convert->encode($_POST['url'])))
-				{
+		if(isset($result['customerid']) && $result['customerid'] == $userinfo['customerid']) {
+			if(isset($_POST['send']) && $_POST['send'] == 'send') {
+				if(isset($_POST['url']) && $_POST['url'] != '' && validateUrl($idna_convert->encode($_POST['url']))) {
 					$path = $_POST['url'];
 					$_doredirect = true;
-				}
-				else
-				{
+				} else {
 					$path = validate($_POST['path'], 'path');
 				}
 
-				if(!preg_match('/^https?\:\/\//', $path)
-				   || !validateUrl($idna_convert->encode($path)))
-				{
+				if(!preg_match('/^https?\:\/\//', $path) || !validateUrl($idna_convert->encode($path))) {
 					// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
-					if((($path == '') || ($path == '/'))
-						&& $settings['system']['documentroot_use_default_value'] == 1)
-					{
+					if((($path == '') || ($path == '/')) && $settings['system']['documentroot_use_default_value'] == 1) {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $result['domain']);
-					}
-					else
-					{
+					} else {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 					}
-					if (strstr($path, ":") !== FALSE)
-					{
+					if (strstr($path, ":") !== FALSE) {
 						standard_error('pathmaynotcontaincolon');
 					}
-				}
-				else
-				{
+				} else {
 					$_doredirect = true;
 				}
 
 				$aliasdomain = intval($_POST['alias']);
 
-				if(isset($_POST['selectserveralias'])
-				   && $result['parentdomainid'] == '0'
-				) {
+				if(isset($_POST['selectserveralias']) && $result['parentdomainid'] == '0' ) {
 					$iswildcarddomain = ($_POST['selectserveralias'] == '0') ? '1' : '0';
 					$wwwserveralias = ($_POST['selectserveralias'] == '1') ? '1' : '0';
 				} else {
@@ -497,67 +494,55 @@ elseif($page == 'domains')
 					$wwwserveralias = '0';
 				}
 
-				if($result['parentdomainid'] != '0'
-				   && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2')
-				   && isset($_POST['isemaildomain']))
-				{
+				if($result['parentdomainid'] != '0' && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && isset($_POST['isemaildomain'])) {
 					$isemaildomain = intval($_POST['isemaildomain']);
-				}
-				else
-				{
+				} else {
 					$isemaildomain = $result['isemaildomain'];
 				}
 
-				$aliasdomain_check = array(
-					'id' => 0
-				);
+				$aliasdomain_check = array('id' => 0);
 
-				if($aliasdomain != 0)
-				{
-					$aliasdomain_check = $db->query_first('SELECT `id` FROM `' . TABLE_PANEL_DOMAINS . '` `d`,`' . TABLE_PANEL_CUSTOMERS . '` `c` WHERE `d`.`customerid`=\'' . (int)$result['customerid'] . '\' AND `d`.`aliasdomain` IS NULL AND `d`.`id`<>`c`.`standardsubdomain` AND `c`.`customerid`=\'' . (int)$result['customerid'] . '\' AND `d`.`id`=\'' . (int)$aliasdomain . '\'');
+				if($aliasdomain != 0) {
+					$aliasdomain_stmt = Database::prepare("SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` `d`,`" . TABLE_PANEL_CUSTOMERS . "` `c`
+						WHERE `d`.`customerid`= :customerid
+						AND `d`.`aliasdomain` IS NULL
+						AND `d`.`id`<>`c`.`standardsubdomain`
+						AND `c`.`customerid`= :customerid
+						AND `d`.`id`= :id"
+					);
+					Database::pexecute($aliasdomain_stmt, array("customerid" => $result['customerid'], "id" => $aliasdomain));
+					$aliasdomain_check = $aliasdomain_stmt->fetch(PDO::FETCH_ASSOC);
 				}
 
-				if($aliasdomain_check['id'] != $aliasdomain)
-				{
+				if($aliasdomain_check['id'] != $aliasdomain) {
 					standard_error('domainisaliasorothercustomer');
 				}
 
-				if(isset($_POST['openbasedir_path'])
-				   && $_POST['openbasedir_path'] == '1')
-				{
+				if(isset($_POST['openbasedir_path']) && $_POST['openbasedir_path'] == '1') {
 					$openbasedir_path = '1';
-				}
-				else
-				{
+				} else {
 					$openbasedir_path = '0';
 				}
 
-				if(isset($_POST['ssl_redirect'])
-				   && $_POST['ssl_redirect'] == '1')
-				{
+				if(isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
 					$ssl_redirect = '1';
-				}
-				else
-				{
+				} else {
 					$ssl_redirect = '0';
 				}
 
-				if($path == '')
-				{
+				if($path == '') {
 					standard_error('patherror');
-				}
-				else
-				{
-					if(($result['isemaildomain'] == '1')
-					   && ($isemaildomain == '0'))
-					{
-						$db->query("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `domainid`='" . (int)$id . "'");
-						$db->query("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `domainid`='" . (int)$id . "'");
+				} else {
+					if(($result['isemaildomain'] == '1') && ($isemaildomain == '0')) {
+						$params = array("customerid" => $userinfo['customerid'], "domainid" => $id);
+						$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`= :customerid AND `domainid`= :domainid");
+						Database::pexecute($stmt, $params);
+						$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`= :customerid AND `domainid`= :domainid");
+						Database::pexecute($stmt, $params);
 						$log->logAction(USR_ACTION, LOG_NOTICE, "automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
 					}
 
-					if($_doredirect)
-					{
+					if($_doredirect) {
 						$redirect = isset($_POST['redirectcode']) ? (int)$_POST['redirectcode'] : false;
 						updateRedirectOfDomain($id, $redirect);
 					}
@@ -568,19 +553,32 @@ elseif($page == 'domains')
 					   || $iswildcarddomain != $result['iswildcarddomain']
 					   || $aliasdomain != $result['aliasdomain']
 					   || $openbasedir_path != $result['openbasedir_path']
-					   || $ssl_redirect != $result['ssl_redirect'])
-					{
+					   || $ssl_redirect != $result['ssl_redirect']) {
 						$log->logAction(USR_ACTION, LOG_INFO, "edited domain '" . $idna_convert->decode($result['domain']) . "'");
-						$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
-							`documentroot`='" . $db->escape($path) . "',
-							`isemaildomain`='" . (int)$isemaildomain . "',
-							`wwwserveralias`='" . (int)$wwwserveralias . "',
-							`iswildcarddomain`='" . (int)$iswildcarddomain . "',
-							`aliasdomain`=" . (($aliasdomain != 0 && $alias_check == 0) ? '\'' . $db->escape($aliasdomain) . '\'' : 'NULL') . ",
-							`openbasedir_path`='" . $db->escape($openbasedir_path) . "',
-							`ssl_redirect`='" . $ssl_redirect . "'
-							WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'"
+						
+						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+							`documentroot`= :documentroot,
+							`isemaildomain`= :isemaildomain,
+							`wwwserveralias`= :wwwserveralias,
+							`iswildcarddomain`= :iswildcarddomain,
+							`aliasdomain`= :aliasdomain,
+							`openbasedir_path`= :openbasedir_path,
+							`ssl_redirect`= :ssl_redirect
+							WHERE `customerid`= :customerid
+							AND `id`= :id"
 						);
+						$params = array(
+							"documentroot" => $path,
+							"isemaildomain" => $isemaildomain,
+							"wwwserveralias" => $wwwserveralias,
+							"iswildcarddomain" => $iswildcarddomain,
+							"aliasdomain" => ($aliasdomain != 0 && $alias_check == 0) ? $aliasdomain : 'NULL',
+							"openbasedir_path" => $openbasedir_path,
+							"ssl_redirect" => $ssl_redirect,
+							"customerid" => $userinfo['customerid'],
+							"id" => $id
+						);
+						Database::pexecute($stmt, $params);
 						inserttask('1');
 
 						// Using nameserver, insert a task which rebuilds the server config
@@ -590,54 +588,57 @@ elseif($page == 'domains')
 
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
-			}
-			else
-			{
+			} else {
 				$result['domain'] = $idna_convert->decode($result['domain']);
   
 				$domains = makeoption($lng['domains']['noaliasdomain'], 0, $result['aliasdomain'], true);
 				// also check ip/port combination to be the same, #176
-				$result_domains = $db->query("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d` , `" . TABLE_PANEL_CUSTOMERS . "` `c` , `".TABLE_DOMAINTOIP."` `dip` WHERE `d`.`aliasdomain` IS NULL AND `d`.`id` <> '".(int)$result['id']."' AND `c`.`standardsubdomain` <> `d`.`id` AND `d`.`customerid` = '" . (int)$userinfo['customerid'] . "' AND `c`.`customerid` = `d`.`customerid` AND `d`.`id` = `dip`.`id_domain` AND `dip`.`id_ipandports` IN (SELECT `id_ipandports` FROM `".TABLE_DOMAINTOIP."` WHERE `id_domain` = '".(int)$result['id']."') GROUP BY `d`.`domain` ORDER BY `d`.`domain` ASC");
+				$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d` , `" . TABLE_PANEL_CUSTOMERS . "` `c` , `".TABLE_DOMAINTOIP."` `dip`
+					WHERE `d`.`aliasdomain` IS NULL
+					AND `d`.`id` <> :id
+					AND `c`.`standardsubdomain` <> `d`.`id`
+					AND `d`.`customerid` = :customerid
+					AND `c`.`customerid` = `d`.`customerid`
+					AND `d`.`id` = `dip`.`id_domain`
+					AND `dip`.`id_ipandports`
+					IN (SELECT `id_ipandports` FROM `".TABLE_DOMAINTOIP."`
+						WHERE `id_domain` = :id)
+					GROUP BY `d`.`domain`
+					ORDER BY `d`.`domain` ASC"
+				);
+				Database::pexecute($domains_stmt, array("id" => $result['id'], "customerid" => $userinfo['customerid']));
 
-				while($row_domain = $db->fetch_array($result_domains))
-				{
-					$domains.= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
+				while($row_domain = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+					$domains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
 				}
 
-				if(preg_match('/^https?\:\/\//', $result['documentroot'])
-				   && validateUrl($idna_convert->encode($result['documentroot']))
-				) {
-					if($settings['panel']['pathedit'] == 'Dropdown')
-					{
+				if(preg_match('/^https?\:\/\//', $result['documentroot']) && validateUrl($idna_convert->encode($result['documentroot']))) {
+					if($settings['panel']['pathedit'] == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
 						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
-					}
-					else
-					{
+					} else {
 						$urlvalue = '';
 						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $result['documentroot'], true);						
 					}
-				}
-				else
-				{
+				} else {
 					$urlvalue = '';
 					$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $result['documentroot']);
 				}
 
 				$redirectcode = '';
-				if($settings['customredirect']['enabled'] == '1')
-				{
+				if($settings['customredirect']['enabled'] == '1') {
 					$def_code = getDomainRedirectId($id);
 					$codes = getRedirectCodesArray();
-					foreach($codes as $rc)
-					{
+					foreach($codes as $rc) {
 						$redirectcode .= makeoption($rc['code']. ' ('.$lng['redirect_desc'][$rc['desc']].')', $rc['id'], $def_code);
 					}
 				}
 
 				// check if we at least have one ssl-ip/port, #1179
 				$ssl_ipsandports = '';
-				$resultX = $db->query_first("SELECT COUNT(*) as countSSL FROM `panel_ipsandports` WHERE `ssl`='1'");
+				$ssl_ip_stmt = Database::prepare("SELECT COUNT(*) as countSSL FROM `panel_ipsandports` WHERE `ssl`='1'");
+				Database::pexecute($ssl_ip_stmt);
+				$resultX = $ssl_ip_stmt->fetch(PDO::FETCH_ASSOC);
 				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
 					$ssl_ipsandports = 'notempty';
 				}
@@ -655,10 +656,16 @@ elseif($page == 'domains')
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', $_value, true, true);
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', $_value, true, true);
-
-				$resultips = $db->query("SELECT `p`.`ip` AS `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` `p` LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON ( `dip`.`id_ipandports` = `p`.`id` ) WHERE `dip`.`id_domain` = '".(int)$result['id']."' GROUP BY `p`.`ip`");
+				
+				$ips_stmt = Database::prepare("SELECT `p`.`ip` AS `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` `p`
+					LEFT JOIN `".TABLE_DOMAINTOIP."` `dip`
+					ON ( `dip`.`id_ipandports` = `p`.`id` )
+					WHERE `dip`.`id_domain` = :id_domain
+					GROUP BY `p`.`ip`"
+				);
+				Database::pexecute($ips_stmt, array("id_domain" => $result['id']));
 				$result_ipandport['ip'] = '';
-				while ($rowip = $db->fetch_array($resultips)) {
+				while ($rowip = $ips_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$result_ipandport['ip'] .= $rowip['ip'] . "<br />";
 				}
 
@@ -673,21 +680,14 @@ elseif($page == 'domains')
 
 				eval("echo \"" . getTemplate("domains/domains_edit") . "\";");
 			}
-		}
-		else
-		{
+		} else {
 			standard_error('domains_canteditdomain');
 		}
 	}
-}
-elseif ($page == 'domainssleditor') {
+} elseif ($page == 'domainssleditor') {
 
-	if ($action == ''
-			|| $action == 'view'
-	) {
-		if (isset($_POST['send'])
-				&& $_POST['send'] == 'send'
-		) {
+	if ($action == '' || $action == 'view') {
+		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 			$ssl_cert_file = isset($_POST['ssl_cert_file']) ? $_POST['ssl_cert_file'] : '';
 			$ssl_key_file = isset($_POST['ssl_key_file']) ? $_POST['ssl_key_file'] : '';
@@ -716,10 +716,7 @@ elseif ($page == 'domainssleditor') {
 				// subject name, issuer name, purposes, valid from and valid to dates etc.
 				$cert_content = openssl_x509_parse($ssl_cert_file);
 
-				if (is_array($cert_content)
-						&& isset($cert_content['subject'])
-						&& isset($cert_content['subject']['CN'])
-				) {
+				if (is_array($cert_content) && isset($cert_content['subject']) && isset($cert_content['subject']['CN'])) {
 					// TODO self-signed certs might differ and don't need/want this
 					/*
 					$domain = $db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAINS."` WHERE `id`='".(int)$id."'");
@@ -761,13 +758,21 @@ elseif ($page == 'domainssleditor') {
 				$qrystart = "INSERT INTO ";
 				$qrywhere = ", ";
 			}
-			$db->query($qrystart." `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` SET
-					`ssl_cert_file` = '".$db->escape($ssl_cert_file)."',
-					`ssl_key_file` = '".$db->escape($ssl_key_file)."',
-					`ssl_ca_file` = '".$db->escape($ssl_ca_file)."',
-					`ssl_cert_chainfile` = '".$db->escape($ssl_cert_chainfile)."'
-					".$qrywhere." `domainid`='".(int)$id."';"
+			$stmt = Database::prepare($qrystart." `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` SET
+				`ssl_cert_file` = :ssl_cert_file,
+				`ssl_key_file` = :ssl_key_file,
+				`ssl_ca_file` = :ssl_ca_file,
+				`ssl_cert_chainfile` = :ssl_cert_chainfile
+				".$qrywhere." `domainid`= :domainid"
 			);
+			$params = array(
+				"ssl_cert_file" => $ssl_cert_file,
+				"ssl_key_file" => $ssl_key_file,
+				"ssl_ca_file" => $ssl_ca_file,
+				"ssl_cert_chainfile" => $ssl_cert_chainfile,
+				"domainid" => $id
+			);
+			Database::pexecute($stmt, $params);
 
 			// insert task to re-generate webserver-configs (#1260)
 			inserttask('1');
@@ -776,9 +781,11 @@ elseif ($page == 'domainssleditor') {
 			redirectTo($filename, array('page' => 'domains', 's' => $s));
 		}
 
-		$result = $db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."`
-			WHERE `domainid`='".(int)$id."';"
+		$stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."`
+			WHERE `domainid`= :domainid"
 		);
+		Database::pexecute($stmt, array("domainid" => $id));
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 		$do_insert = false;
 		// if no entry can be found, behave like we have empty values

@@ -53,40 +53,73 @@ if ($action == 'add') {
 		) {
 			standard_error('missingfields');
 		}
-
+		
 		// Does account exist?
-		$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($account) . "' LIMIT 0,1");
-		if ($db->num_rows($result) == 0) {
+		$stmt = Database::prepare("SELECT `email` FROM `" . TABLE_MAIL_USERS . "`
+			WHERE `customerid` = :customerid
+			AND `email` = :account
+			LIMIT 0,1"
+		);
+		Database::pexecute($stmt, array("account" => $account, "customerid" => $userinfo['customerid']));
+		if (Database::num_rows() == 0) {
 			standard_error('accountnotexisting');
 		}
 
 		// Does autoresponder exist?
-		$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($account) . "' LIMIT 0,1");
-		if ($db->num_rows($result) == 1) {
+		$stmt = Database::prepare("SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "`
+			WHERE `customerid` = :customerid
+			AND `email` = :account
+			LIMIT 0,1"
+		);
+		Database::pexecute($stmt, array("account" => $account, "customerid" => $userinfo['customerid']));
+		if (Database::num_rows() == 1) {
 			standard_error('autoresponderalreadyexists');
 		}
-
-		$db->query("INSERT INTO `" . TABLE_MAIL_AUTORESPONDER . "`
-			SET `email` = '" . $db->escape($account) . "',
-			`message` = '" . $db->escape($message) . "',
-			`enabled` = '" . (int)$_POST['active'] . "',
-			`date_from` = '" . (int)$ts_from . "',
-			`date_until` = '" . (int)$ts_until . "',
-			`subject` = '" . $db->escape($subject) . "',
-			`customerid` = '" . $db->escape((int)$userinfo['customerid']) . "'
-			");
-		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_autoresponder_used` = `email_autoresponder_used` + 1 WHERE `customerid` = '" . $db->escape((int)$userinfo['customerid']). "'");
+		
+		// Create autoresponder
+		$stmt = Database::prepare("INSERT INTO `" . TABLE_MAIL_AUTORESPONDER . "`
+			SET `email` = :account,
+			`message` = :message,
+			`enabled` = :enabled,
+			`date_from` = :date_from,
+			`date_until` = :date_until,
+			`subject` = :subject,
+			`customerid` = :customerid"
+		);
+		$params = array(
+			"account" => $account,
+			"message" => $message,
+			"enabled" => $_POST['active'],
+			"date_from" => $ts_from,
+			"date_until" => $ts_until,
+			"subject" => $subject,
+			"customerid" => $userinfo['customerid']
+		);
+		Database::pexecute($stmt, $params);
+		
+		// Update email_autoresponder_used count
+		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+			SET `email_autoresponder_used` = `email_autoresponder_used` + 1
+			WHERE `customerid` = :customerid"
+		);
+		Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
 		redirectTo($filename, Array('s' => $s));
 	}
 
 	// Get accounts
-	$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` NOT IN (SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "`) ORDER BY email ASC");
-	if ($db->num_rows($result) == 0) {
+	$params = array("customerid" => $userinfo['customerid']);
+	$acc_stmt = Database::prepare("SELECT `email` FROM `" . TABLE_MAIL_USERS . "`
+		WHERE `customerid` = :customerid
+		AND `email` NOT IN (SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "`)
+		ORDER BY email ASC"
+	);
+	Database::pexecute($acc_stmt, $params);
+	if (Database::num_rows() == 0) {
 		standard_error('noemailaccount');
 	}
 
 	$accounts = '';
-	while ($row = $db->fetch_array($result)) {
+	while ($row = $acc_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$accounts .= '<option value="' . $row['email'] . '">' . $row['email'] . '</option>';
 	}
 
@@ -137,41 +170,64 @@ if ($action == 'add') {
 		}
 
 		// Does account exist?
-		$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($account) . "' LIMIT 0,1");
-		if ($db->num_rows($result) == 0)
-		{
+		$stmt = Database::prepare("SELECT `email` FROM `" . TABLE_MAIL_USERS . "`
+			WHERE `customerid` = :customerid
+			AND `email` = :account
+			LIMIT 0,1"
+		);
+		Database::pexecute($stmt, array("account" => $account, "customerid" => $userinfo['customerid']));
+		if (Database::num_rows() == 0) {
 			standard_error('accountnotexisting');
 		}
 
 		// Does autoresponder exist?
-		$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($account) . "' LIMIT 0,1");
-		if ($db->num_rows($result) == 0) {
+		$stmt = Database::prepare("SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "`
+			WHERE `customerid` = :customerid
+			AND `email` = :account
+			LIMIT 0,1"
+		);
+		Database::pexecute($stmt, array("account" => $account, "customerid" => $userinfo['customerid']));
+		if (Database::num_rows() == 0) {
 			standard_error('invalidautoresponder');
 		}
 
-		$ResponderActive = (isset($_POST['active']) && $_POST['active'] == '1') ? 1 : 0;
-
-		$db->query("UPDATE `" . TABLE_MAIL_AUTORESPONDER . "`
-			SET `message` = '" . $db->escape($message) . "',
-			`enabled` = '" . (int)$ResponderActive . "',
-			`date_from` = '" . (int)$ts_from . "',
-			`date_until` = '" . (int)$ts_until . "',
-			`subject` = '" . $db->escape($subject) . "'
-			WHERE `email` = '" . $db->escape($account) . "'
-			AND `customerid` = '" . $db->escape((int)$userinfo['customerid']) . "'
-			");
+		// Update autoresponder
+		$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_AUTORESPONDER . "`
+			SET `message` = :message,
+			`enabled` = :enabled,
+			`date_from` = :date_from,
+			`date_until` = :date_until,
+			`subject` = :subject
+			WHERE `email` = :account
+			AND `customerid` = :customerid"
+		);
+		$params = array(
+			"account" => $account,
+			"message" => $message,
+			"enabled" => $_POST['active'],
+			"date_from" => $ts_from,
+			"date_until" => $ts_until,
+			"subject" => $subject,
+			"customerid" => $userinfo['customerid']
+		);
+		Database::pexecute($stmt, $params);
 		redirectTo($filename, Array('s' => $s));
 	}
 
 	$email = trim(htmlspecialchars($_GET['email']));
 
 	// Get account data
-	$result = $db->query("SELECT * FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($email) . "' LIMIT 0,1");
-	if ($db->num_rows($result) == 0) {
+	$acc_stmt = Database::prepare("SELECT * FROM `" . TABLE_MAIL_AUTORESPONDER . "`
+		WHERE `customerid` = :customerid
+		AND `email` = :account
+		LIMIT 0,1"
+	);
+	Database::pexecute($acc_stmt, array("account" => $email, "customerid" => $userinfo['customerid']));
+	if (Database::num_rows() == 0) {
 		standard_error('invalidautoresponder');
 	}
 
-	$row = $db->fetch_array($result);
+	$row = $acc_stmt->fetch(PDO::FETCH_ASSOC);
 	$subject = htmlspecialchars($row['subject']);
 	$message = htmlspecialchars($row['message']);
 
@@ -207,22 +263,33 @@ if ($action == 'add') {
 	eval("echo \"" . getTemplate('autoresponder/autoresponder_edit') . "\";");
 } elseif ($action == 'delete') {
 	// Delete autoresponder
-	if (isset($_POST['send'])
-	   && $_POST['send'] == 'send'
-	) {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$account = trim($_POST['account']);
 
 		// Does autoresponder exist?
-		$result = $db->query("SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' AND `email` = '" . $db->escape($account) . "' LIMIT 0,1");
-		if ($db->num_rows($result) == 0) {
+		$stmt = Database::prepare("SELECT `email` FROM `" . TABLE_MAIL_AUTORESPONDER . "`
+			WHERE `customerid` = :customerid
+			AND `email` = :account
+			LIMIT 0,1"
+		);
+		Database::pexecute($stmt, array("account" => $account, "customerid" => $userinfo['customerid']));
+		if (Database::num_rows() == 0) {
 			standard_error('invalidautoresponder');
 		}
-
-		$db->query("DELETE FROM `" . TABLE_MAIL_AUTORESPONDER . "`
-			WHERE `email` = '" . $db->escape($account) . "'
-			AND `customerid` = '" . $db->escape((int)$userinfo['customerid']) . "'
-			");
-		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_autoresponder_used` = `email_autoresponder_used` - 1 WHERE `customerid` = '" . $db->escape((int)$userinfo['customerid']). "'");
+		
+		// Delete autoresponder
+		$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_AUTORESPONDER . "`
+			WHERE `email` = :account
+			AND `customerid` = :customerid"
+		);
+		Database::pexecute($stmt, array("account" => $account, "customerid" => $userinfo['customerid']));
+			
+		// Update email_autoresponder_used count
+		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+			SET `email_autoresponder_used` = `email_autoresponder_used` - 1
+			WHERE `customerid` = :customerid"
+		);
+		Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
 		redirectTo($filename, Array('s' => $s));
 	}
 
@@ -232,9 +299,13 @@ if ($action == 'add') {
 	// List existing autoresponders
 	$autoresponder = '';
 	$count = 0;
-	$result = $db->query("SELECT * FROM `" . TABLE_MAIL_AUTORESPONDER . "` WHERE `customerid` = '" . (int)$userinfo['customerid'] . "' ORDER BY email ASC");
+	$stmt = Database::prepare("SELECT * FROM `" . TABLE_MAIL_AUTORESPONDER . "`
+		WHERE `customerid` = :customerid
+		ORDER BY email ASC"
+	);
+	Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
 
-	while ($row = $db->fetch_array($result)) {
+	while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 		if ($row['date_from'] == -1 && $row['date_until'] == -1) {
 			$activated_date = $lng['panel']['not_activated'];
 		} elseif($row['date_from'] == -1 && $row['date_until'] != -1) {
