@@ -42,8 +42,14 @@ if ($page == 'overview') {
 			'homedir' => $lng['panel']['path']
 		);
 		$paging = new paging($userinfo, $db, TABLE_FTP_USERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$result = $db->query("SELECT `id`, `username`, `homedir` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . $userinfo['customerid'] . "'  AND `username` NOT LIKE '%_backup'" . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		$paging->setEntries($db->num_rows($result));
+		
+		$result_stmt = Database::prepare("SELECT `id`, `username`, `homedir` FROM `" . TABLE_FTP_USERS . "`
+			WHERE `customerid`= :customerid 
+			AND `username` NOT LIKE '%_backup'" . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
+		);
+		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
+		$ftps_count = Database::num_rows();
+		$paging->setEntries($ftps_count);
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
@@ -52,7 +58,7 @@ if ($page == 'overview') {
 		$count = 0;
 		$accounts = '';
 
-		while ($row = $db->fetch_array($result)) {
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
 				if (strpos($row['homedir'], $userinfo['documentroot']) === 0) {
 					$row['documentroot'] = substr($row['homedir'], strlen($userinfo['documentroot']));
@@ -70,34 +76,70 @@ if ($page == 'overview') {
 			$i++;
 		}
 
-		$ftps_count = $db->num_rows($result);
 		eval("echo \"" . getTemplate('ftp/accounts') . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
-		$result = $db->query_first("SELECT `id`, `username`, `homedir`, `up_count`, `up_bytes`, `down_count`, `down_bytes` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+		$result_stmt = Database::prepare("SELECT `id`, `username`, `homedir`, `up_count`, `up_bytes`, `down_count`, `down_bytes` FROM `" . TABLE_FTP_USERS . "`
+			WHERE `customerid` = :customerid
+			AND `id` = :id"
+		);
+		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		
+		if (isset($result['username']) && $result['username'] != $userinfo['loginname']) {
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
+					SET `up_count` = `up_count` + :up_count,
+					`up_bytes` = `up_bytes` + :up_bytes,
+					`down_count` = `down_count` + :down_count,
+					`down_bytes` = `down_bytes` + :down_bytes
+					WHERE `username` = :username"
+				);
+				$params = array(
+					"up_count" => $result['up_count'],
+					"up_bytes" => $result['up_bytes'],
+					"down_count" => $result['down_count'],
+					"down_bytes" => $result['down_bytes'],
+					"username" => $userinfo['loginname']
+				);
+				Database::pexecute($stmt, $params);
+				
+				$result_stmt = Database::prepare("SELECT `username`, `homedir` FROM `" . TABLE_FTP_USERS . "`
+					WHERE `customerid` = :customerid
+					AND `id` = :id"
+				);
+				Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+				$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+				
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = :name");
+				Database::pexecute($stmt, array("name" => $result['username']));
+				
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_FTP_USERS . "`
+					WHERE `customerid` = :customerid
+					AND `id` = :id"
+				);
+				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+				
+				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_GROUPS . "`
+					SET `members`=REPLACE(`members`,'," . $db->escape($result['username']) . "','')
+					WHERE `customerid`='" . (int)$userinfo['customerid'] . "'"
+				);
+				Database::pexecute($stmt, array("username" => $result['username'], "customerid" => $userinfo['customerid']));
 
-		if (isset($result['username'])
-		   && $result['username'] != $userinfo['loginname']
-		) {
-			if (isset($_POST['send'])
-			   && $_POST['send'] == 'send'
-			) {
-				$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `up_count`=`up_count`+'" . (int)$result['up_count'] . "', `up_bytes`=`up_bytes`+'" . (int)$result['up_bytes'] . "', `down_count`=`down_count`+'" . (int)$result['down_count'] . "', `down_bytes`=`down_bytes`+'" . (int)$result['down_bytes'] . "' WHERE `username`='" . $db->escape($userinfo['loginname']) . "'");
-				$result = $db->query_first("SELECT `username`, `homedir` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
-				$db->query("DELETE FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = '" . $db->escape($result['username']) . "'");
-				$db->query("DELETE FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted ftp-account '" . $result['username'] . "'");
-				$db->query("UPDATE `" . TABLE_FTP_GROUPS . "` SET `members`=REPLACE(`members`,'," . $db->escape($result['username']) . "','') WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
 
 				$resetaccnumber = ($userinfo['ftps_used'] == '1') ? " , `ftp_lastaccountnumber`='0'" : '';
 
 				// refs #293
-				if (isset($_POST['delete_userfiles'])
-				  && (int)$_POST['delete_userfiles'] == 1
-				) {
+				if (isset($_POST['delete_userfiles']) && (int)$_POST['delete_userfiles'] == 1) {
 					inserttask('8', $userinfo['loginname'], $result['homedir']);
 				}
-
-				$result = $db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `ftps_used`=`ftps_used`-1 $resetaccnumber WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
+				
+				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+					SET `ftps_used` = `ftps_used` - 1 $resetaccnumber
+					WHERE `customerid` = :customerid"
+				);
+				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
+				
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			} else {
 				ask_yesno_withcheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['username']);
@@ -106,12 +148,9 @@ if ($page == 'overview') {
 			standard_error('ftp_cantdeletemainaccount');
 		}
 	} elseif ($action == 'add') {
-		if ($userinfo['ftps_used'] < $userinfo['ftps']
-		   || $userinfo['ftps'] == '-1'
-		) {
+		if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') {
 			if (isset($_POST['send'])
-			   && $_POST['send'] == 'send'
-			) {
+			   && $_POST['send'] == 'send') {
 				// @FIXME use a good path-validating regex here (refs #1231)
 				$path = validate($_POST['path'], 'path');
 				$password = validate($_POST['ftp_password'], 'password');
@@ -128,7 +167,13 @@ if ($page == 'overview') {
 						standard_error(array('stringisempty', 'username'));
 					}
 					$ftpdomain = $idna_convert->encode(validate($_POST['ftp_domain'], 'domain'));
-					$ftpdomain_check = $db->query_first("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `domain`='" . $db->escape($ftpdomain) . "' AND `customerid`='" . (int)$userinfo['customerid'] . "'");
+					$ftpdomain_check_stmt = Datbase::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
+						WHERE `domain` = :domain
+						AND `customerid` = :customerid"
+					);
+					Database::pexecute($ftpdomain_check_stmt, array("domain" => $ftpdomain, "customerid" => $userinfo['customerid']));
+					$ftpdomain_check = $ftpdomain_check_stmt->fetch(PDO::FETCH_ASSOC);
+					
 					if ($ftpdomain_check['domain'] != $ftpdomain) {
 						standard_error('maindomainnonexist', $domain);
 					}
@@ -137,7 +182,11 @@ if ($page == 'overview') {
 					$username = $userinfo['loginname'] . $settings['customer']['ftpprefix'] . (intval($userinfo['ftp_lastaccountnumber']) + 1);
 				}
 				
-				$username_check = $db->query_first('SELECT * FROM `' . TABLE_FTP_USERS .'` WHERE `username` = \'' . $db->escape($username) . '\'');
+				$username_check_stmt = Database::prepare("SELECT * FROM `" . TABLE_FTP_USERS . "`
+					WHERE `username` = :username"
+				);
+				Database::pexecute($username_check_stmt, array("username" => $username));
+				$username_check = $username_check_stmt->fetch(PDO::FETCH_ASSOC);
 				
 				if (!empty($username_check) && $username_check['username'] = $username) {
 					standard_error('usernamealreadyexists', $username);
@@ -149,13 +198,51 @@ if ($page == 'overview') {
 					$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 
 					$cryptPassword = makeCryptPassword($password);
-					$db->query("INSERT INTO `" . TABLE_FTP_USERS . "` (`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`) VALUES ('" . (int)$userinfo['customerid'] . "', '" . $db->escape($username) . "', '" . $db->escape($cryptPassword) . "', '" . $db->escape($path) . "', 'y', '" . (int)$userinfo['guid'] . "', '" . (int)$userinfo['guid'] . "')");
-					$result = $db->query("SELECT `bytes_in_used` FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = '" . $userinfo['loginname'] . "'");
-					while ($row = $db->fetch_array($result)) {
-						$db->query("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $db->escape($username) . "', 'user', '" . $db->escape($row['bytes_in_used']) . "', '0', '0', '0', '0', '0')");
+					
+					$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
+						(`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`)
+						VALUES (:customerid, :username, :password, :homedir, 'y', :guid, :guid)"
+					);
+					$params = array(
+						"customerid" => $userinfo['customerid'],
+						"username" => $username,
+						"password" => $cryptPassword,
+						"homedir" => $path,
+						"guid" => $userinfo['guid']
+					);
+					Database::pexecute($stmt, $params);
+					
+					$result_stmt = Database::prepare("SELECT `bytes_in_used` FROM `" . TABLE_FTP_QUOTATALLIES . "`
+						WHERE `name` = :name"
+					);
+					Database::pexecute($result_stmt, array("name" => $userinfo['loginname']));
+					
+					while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+						$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "`
+							(`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) 
+							VALUES (:name, 'user', :bytes_in_used, '0', '0', '0', '0', '0')"
+						);
+						Database::pexecute($stmt, array("name" => $username, "bytes_in_used" => $row['bytes_in_used']));
 					}
-					$db->query("UPDATE `" . TABLE_FTP_GROUPS . "` SET `members`=CONCAT_WS(',',`members`,'" . $db->escape($username) . "') WHERE `customerid`='" . $userinfo['customerid'] . "' AND `gid`='" . (int)$userinfo['guid'] . "'");
-					$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `ftps_used`=`ftps_used`+1, `ftp_lastaccountnumber`=`ftp_lastaccountnumber`+1 WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
+					
+					$stmt = Database::prepare("UPDATE `" . TABLE_FTP_GROUPS . "`
+						SET `members` = CONCAT_WS(',',`members`, :username)
+						WHERE `customerid`= :customerid
+						AND `gid`= :guid"
+					);
+					$params = array(
+						"username" => $username,
+						"customerid" => $userinfo['customerid'],
+						"guid" => $userinfo['guid']
+					);
+					Database::pexecute($stmt, $params);
+					
+					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+						SET `ftps_used` = `ftps_used` + 1,
+						`ftp_lastaccountnumber` = `ftp_lastaccountnumber` + 1
+						WHERE `customerid` = :customerid"
+					);
+					Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
 
 					$log->logAction(USR_ACTION, LOG_INFO, "added ftp-account '" . $username . " (" . $path . ")'");
 					inserttask(5);
@@ -170,9 +257,25 @@ if ($page == 'overview') {
 						);
 						
 						$def_language = $userinfo['def_language'];
-						$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$userinfo['adminid'] . '\' AND `language`=\'' . $db->escape($def_language) . '\' AND `templategroup`=\'mails\' AND `varname`=\'new_ftpaccount_by_customer_subject\'');
+						$result_stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+							WHERE `adminid` = :adminid
+							AND `language` = :lang
+							AND `templategroup`='mails'
+							AND `varname`='new_ftpaccount_by_customer_subject'"
+						);
+						Database::pexecute($result_stmt, array("adminid" => $userinfo['adminid'], "lang" => $def_language));
+						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['customer']['ftp_add']['infomail_subject']), $replace_arr));
-						$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$userinfo['adminid'] . '\' AND `language`=\'' . $db->escape($def_language) . '\' AND `templategroup`=\'mails\' AND `varname`=\'new_ftpaccount_by_customer_mailbody\'');
+						
+						$def_language = $userinfo['def_language'];
+						$result_stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+							WHERE `adminid` = :adminid
+							AND `language` = :lang
+							AND `templategroup`='mails'
+							AND `varname`='new_ftpaccount_by_customer_mailbody'"
+						);
+						Database::pexecute($result_stmt, array("adminid" => $userinfo['adminid'], "lang" => $def_language));
+						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['customer']['ftp_add']['infomail_body']['main']), $replace_arr));
 						
 						$_mailerror = false;
@@ -207,9 +310,12 @@ if ($page == 'overview') {
 					$domainlist = array();
 					$domains = '';
 
-					$result_domains = $db->query("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
+					$result_domains_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+						WHERE `customerid`= :customerid"
+					);
+					Database::pexecute($result_domains_stmt, array("customerid" => $userinfo['customerid']));
 
-					while ($row_domain = $db->fetch_array($result_domains)) {
+					while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 						$domainlist[] =  $row_domain['domain'];
 					}
 
@@ -234,14 +340,15 @@ if ($page == 'overview') {
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-		$result = $db->query_first("SELECT `id`, `username`, `homedir`, `uid`, `gid` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+		$result_stmt = Database::prepare("SELECT `id`, `username`, `homedir`, `uid`, `gid` FROM `" . TABLE_FTP_USERS . "`
+			WHERE `customerid` = :customerid
+			AND `id` = :id"
+		);
+		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-		if (isset($result['username'])
-		   && $result['username'] != ''
-		) {
-			if (isset($_POST['send'])
-			   && $_POST['send'] == 'send'
-			) {
+		if (isset($result['username']) && $result['username'] != '') {
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				// @FIXME use a good path-validating regex here (refs #1231)
 				$path = validate($_POST['path'], 'path');
 				
@@ -259,11 +366,27 @@ if ($page == 'overview') {
 					}
 					$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account password for '" . $result['username'] . "'");
 					$cryptPassword = makeCryptPassword($password);
-					$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");
+					
+					$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
+						SET `password` = :password
+						WHERE `customerid` = :customerid
+						AND `id` = :id"
+					);
+					Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id, "password" => $cryptPassword));
 						
 					// also update customers backup user password if password of main ftp user is changed
-					if(!preg_match('/' . $settings['customer']['ftpprefix'] . '/', $result['username'])){
-					    $db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $result['username'] . "_backup'");
+					if(!preg_match('/' . $settings['customer']['ftpprefix'] . '/', $result['username'])) {
+						$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
+							SET `password` = :password
+							WHERE `customerid` = :customerid
+							AND `username` = :username"
+						);
+						$params = array(
+							"password" => $cryptPassword,
+							"customerid" => $userinfo['customerid'],
+							"username" => $result['username'] . "_backup"
+						);
+						Database::pexecute($stmt, $params);
 					}
 				}
 				
@@ -278,7 +401,18 @@ if ($page == 'overview') {
 						}
 
 						$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account homdir for '" . $result['username'] . "'");
-						$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `homedir`= '" . $db->escape($path) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `id`='" . (int)$id . "'");						
+						
+						$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
+							SET `homedir` = :homedir
+							WHERE `customerid` = :customerid
+							AND `id` = :id"
+						);
+						$params = array(
+							"homedir" => $path,
+							"customerid" => $userinfo['customerid'],
+							"id" => $id
+						);
+						Database::pexecute($stmt, $params);		
 					}
 				}
 
@@ -296,9 +430,12 @@ if ($page == 'overview') {
 				if ($settings['customer']['ftpatdomain'] == '1') {
 					$domains = '';
 
-					$result_domains = $db->query("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
+					$result_domains_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+						WHERE `customerid` = :customerid"
+					);
+					Database::pexecute($result_domains_stmt, array("customerid" => $userinfo['customerid']));
 
-					while ($row_domain = $db->fetch_array($result_domains)) {
+					while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 						$domains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['domain']);
 					}
 				}
