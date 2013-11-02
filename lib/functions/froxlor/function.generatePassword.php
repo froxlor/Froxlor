@@ -18,11 +18,6 @@
 /**
  * Generates a random password
  */
-
-function generatePassword()
-{
-	global $db, $settings, $theme;
-
+function generatePassword() {
 	return substr(md5(uniqid(microtime(), 1)), 24, 10);
 }
-?>
