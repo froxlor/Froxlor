@@ -18,11 +18,6 @@
  */
 
 define('AREA', 'admin');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-
 require ("./lib/init.php");
 
 if (isset($_POST['id'])) {
@@ -37,27 +32,27 @@ if ($page == 'overview') {
 
 		$tablecontent = '';
 		$count = 0;
-		$result = $db->query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
+		$result = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
 
-		while ($row = $db->fetch_array($result)) {
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
 			$domainresult = false;
 
 			$query = "SELECT * FROM `".TABLE_PANEL_DOMAINS."`
-					WHERE `phpsettingid` = '".(int)$row['id']."'
+					WHERE `phpsettingid` = :id
 					AND `parentdomainid` = '0'";
 
 			if ((int)$userinfo['domains_see_all'] == 0) {
-				$query .= " AND `adminid` = '".(int)$userinfo['userid']."'";
+				$query .= " AND `adminid` = :adminid";
 			}
 
 			if ((int)$settings['panel']['phpconfigs_hidestdsubdomain'] == 1) {
-				$query2 = "SELECT DISTINCT `standardsubdomain`
-						FROM `".TABLE_PANEL_CUSTOMERS."`
-						WHERE `standardsubdomain` > 0 ORDER BY `standardsubdomain` ASC;";
-				$ssdids_res = $db->query($query2);
+				$ssdids_res = Database::query("
+					SELECT DISTINCT `standardsubdomain` FROM `".TABLE_PANEL_CUSTOMERS."`
+					WHERE `standardsubdomain` > 0 ORDER BY `standardsubdomain` ASC;"
+				);
 				$ssdids = array();
-				while ($ssd = $db->fetch_array($ssdids_res)) {
+				while ($ssd = $ssdids_res->fetch(PDO::FETCH_ASSOC)) {
 					$ssdids[] = $ssd['standardsubdomain'];
 				}
 				if (count($ssdids) > 0) {
@@ -65,17 +60,17 @@ if ($page == 'overview') {
 				}
 			}
 
-			$domainresult = $db->query($query);
+			$domainresult_stmt = Database::prepare($query);
+			Database::pexecute($domainresult_stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
 
 			$domains = '';
-			if ($db->num_rows($domainresult) > 0) {
-				while ($row2 = $db->fetch_array($domainresult)) {
+			if (Database::num_rows() > 0) {
+				while ($row2 = $domainresult_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$domains.= $row2['domain'] . '<br/>';
 				}
 			} else {
 				$domains = $lng['admin']['phpsettings']['notused'];
 			}
-
 			$count ++;
 			eval("\$tablecontent.=\"" . getTemplate("phpconfig/overview_overview") . "\";");
 		}
@@ -84,13 +79,13 @@ if ($page == 'overview') {
 		eval("echo \"" . getTemplate("phpconfig/overview") . "\";");
 	}
 
-	if($action == 'add')
-	{
-		if((int)$userinfo['change_serversettings'] == 1)
-		{
-			if(isset($_POST['send'])
-			   && $_POST['send'] == 'send')
-			{
+	if ($action == 'add') {
+
+		if ((int)$userinfo['change_serversettings'] == 1) {
+
+			if (isset($_POST['send'])
+				&& $_POST['send'] == 'send'
+			) {
 				$description = validate($_POST['description'], 'description');
 				$binary = makeCorrectFile(validate($_POST['binary'], 'binary'));
 				$file_extensions = validate($_POST['file_extensions'], 'file_extensions', '/^[a-zA-Z0-9\s]*$/');
@@ -98,20 +93,39 @@ if ($page == 'overview') {
 				$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
 				$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
 
-				if(strlen($description) == 0
-				   || strlen($description) > 50)
-				{
+				if (strlen($description) == 0
+					|| strlen($description) > 50
+				) {
 					standard_error('descriptioninvalid');
 				}
 
-				$db->query("INSERT INTO `" . TABLE_PANEL_PHPCONFIGS . "` SET `description` = '" . $db->escape($description) . "', `binary` = '" . $db->escape($binary) . "', `file_extensions` = '" . $db->escape($file_extensions) . "', `mod_fcgid_starter` = '" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests` = '" . $db->escape($mod_fcgid_maxrequests) . "', `phpsettings` = '" . $db->escape($phpsettings) . "'");
+				$ins_stmt = Database::prepare("
+					INSERT INTO `" . TABLE_PANEL_PHPCONFIGS . "` SET
+						`description` = :desc,
+						`binary` = :binary,
+						`file_extensions` = :fext,
+						`mod_fcgid_starter` = :starter,
+						`mod_fcgid_maxrequests` = :mreq,
+						`phpsettings` = :phpsettings"
+				);
+				$ins_data = array(
+					'desc' => $description,
+					'binary' => $binary,
+					'fext' => $file_extensions,
+					'starter' => $mod_fcgid_starter,
+					'mreq' => $mod_fcgid_maxrequests,
+					'phpsettings' => $phpsettings
+				);
+				Database::pexecute($ins_stmt, $ins_data);
+
 				inserttask('1');
 				$log->logAction(ADM_ACTION, LOG_INFO, "php.ini setting with description '" . $description . "' has been created by '" . $userinfo['loginname'] . "'");
-				redirectTo($filename, Array('page' => $page, 's' => $s));
-			}
-			else
-			{
-				$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = 1");
+				redirectTo($filename, array('page' => $page, 's' => $s));
+
+			} else {
+
+				$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = 1");
+				$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 				$phpconfig_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/phpconfig/formfield.phpconfig_add.php';
 				$phpconfig_add_form = htmlform::genHTMLForm($phpconfig_add_data);
@@ -121,53 +135,70 @@ if ($page == 'overview') {
 
 				eval("echo \"" . getTemplate("phpconfig/overview_add") . "\";");
 			}
-		}
-		else
-		{
+
+		} else {
 			standard_error('nopermissionsorinvalidid');
 		}
 	}
 
-	if($action == 'delete')
-	{
-		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = " . (int)$id);
+	if ($action == 'delete') {
 
-		if($result['id'] != 0
-		   && $result['id'] == $id
-		   && (int)$userinfo['change_serversettings'] == 1
-		   && $id != 1)
-		{
-			if(isset($_POST['send'])
-			   && $_POST['send'] == 'send')
-			{
-				$db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `phpsettingid` = 1 WHERE `phpsettingid` = " . (int)$id);
-				$db->query("DELETE FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = " . (int)$id);
+		$result_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id"
+		);
+		Database::pexecute($result_stmt, array('id' => $id));
+		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
+		if ($result['id'] != 0
+			&& $result['id'] == $id
+			&& (int)$userinfo['change_serversettings'] == 1
+			&& $id != 1 // cannot delete the default php.config
+		) {
+
+			if (isset($_POST['send'])
+				&& $_POST['send'] == 'send'
+			) {
+				// set php-config to default for all domains using the
+				// config that is to be deleted
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+					`phpsettingid` = 1 WHERE `phpsettingid` = :id"
+				);
+				Database::pexecute($upd_stmt, array('id' => $id));
+
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id"
+				);
+				Database::pexecute($del_stmt, array('id' => $id));
+
 				inserttask('1');
 				$log->logAction(ADM_ACTION, LOG_INFO, "php.ini setting with id #" . (int)$id . " has been deleted by '" . $userinfo['loginname'] . "'");
-				redirectTo($filename, Array('page' => $page, 's' => $s));
-			}
-			else
-			{
+				redirectTo($filename, array('page' => $page, 's' => $s));
+
+			} else {
 				ask_yesno('phpsetting_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['description']);
 			}
-		}
-		else
-		{
+		} else {
 			standard_error('nopermissionsorinvalidid');
 		}
 	}
 
-	if($action == 'edit')
-	{
-		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = " . (int)$id);
+	if ($action == 'edit') {
 
-		if($result['id'] != 0
-		   && $result['id'] == $id
-		   && (int)$userinfo['change_serversettings'] == 1)
-		{
-			if(isset($_POST['send'])
-			   && $_POST['send'] == 'send')
-			{
+		$result_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id"
+		);
+		Database::pexecute($result_stmt, array('id' => $id));
+		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
+		if ($result['id'] != 0
+			&& $result['id'] == $id
+			&& (int)$userinfo['change_serversettings'] == 1
+		) {
+
+			if (isset($_POST['send'])
+				&& $_POST['send'] == 'send'
+			) {
 				$description = validate($_POST['description'], 'description');
 				$binary = makeCorrectFile(validate($_POST['binary'], 'binary'));
 				$file_extensions = validate($_POST['file_extensions'], 'file_extensions', '/^[a-zA-Z0-9\s]*$/');
@@ -175,19 +206,39 @@ if ($page == 'overview') {
 				$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
 				$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
 
-				if(strlen($description) == 0
-				   || strlen($description) > 50)
-				{
+				if (strlen($description) == 0
+					|| strlen($description) > 50
+				) {
 					standard_error('descriptioninvalid');
 				}
 
-				$db->query("UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET `description` = '" . $db->escape($description) . "', `binary` = '" . $db->escape($binary) . "', `file_extensions` = '" . $db->escape($file_extensions) . "', `mod_fcgid_starter` = '" . $db->escape($mod_fcgid_starter) . "', `mod_fcgid_maxrequests` = '" . $db->escape($mod_fcgid_maxrequests) . "', `phpsettings` = '" . $db->escape($phpsettings) . "' WHERE `id` = " . (int)$id);
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET
+						`description` = :desc,
+						`binary` = :binary,
+						`file_extensions` = :fext,
+						`mod_fcgid_starter` = :starter,
+						`mod_fcgid_maxrequests` = :mreq,
+						`phpsettings` = :phpsettings
+					WHERE `id` = :id"
+				);
+				$upd_data = array(
+						'desc' => $description,
+						'binary' => $binary,
+						'fext' => $file_extensions,
+						'starter' => $mod_fcgid_starter,
+						'mreq' => $mod_fcgid_maxrequests,
+						'phpsettings' => $phpsettings,
+						'id' => $id
+				);
+				Database::pexecute($upd_stmt, $upd_data);
+
 				inserttask('1');
 				$log->logAction(ADM_ACTION, LOG_INFO, "php.ini setting with description '" . $description . "' has been changed by '" . $userinfo['loginname'] . "'");
-				redirectTo($filename, Array('page' => $page, 's' => $s));
-			}
-			else
-			{
+				redirectTo($filename, array('page' => $page, 's' => $s));
+
+			} else {
+
 				$phpconfig_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/phpconfig/formfield.phpconfig_edit.php';
 				$phpconfig_edit_form = htmlform::genHTMLForm($phpconfig_edit_data);
 
@@ -196,12 +247,9 @@ if ($page == 'overview') {
 
 				eval("echo \"" . getTemplate("phpconfig/overview_edit") . "\";");
 			}
-		}
-		else
-		{
+
+		} else {
 			standard_error('nopermissionsorinvalidid');
 		}
 	}
 }
-
-?>
