@@ -23,7 +23,7 @@ if ($page == 'overview') {
 
 	/**
 	 * this is a dirty hack but syscp 1.4.2.1 does not
-	 * has any version/dbversion in the database (don't know why)
+	 * have any version/dbversion in the database (don't know why)
 	 * so we have to set them both to run a correct upgrade
 	 */
 	if (!isFroxlor()) {
@@ -31,7 +31,13 @@ if ($page == 'overview') {
 			|| $settings['panel']['version'] == ''
 		) {
 			$settings['panel']['version'] = '1.4.2.1';
-			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel','version','".$settings['panel']['version']."')");
+			$stmt = Database::prepare("
+				INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET
+					`settinggroup` = 'panel',
+					`varname` = 'version',
+					`value` = :version"
+			);
+			Database::pexecute($stmt, array('version' => $settings['panel']['version']));
 		}
 		if (!isset($settings['system']['dbversion'])
 			|| $settings['system']['dbversion'] == ''
@@ -42,7 +48,10 @@ if ($page == 'overview') {
 			 * and the svn-version has its value in the database
 			 * -> bug #54
 			 */
-			$result = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `varname` = 'dbversion'");
+			$result_stmt = Database::query("
+				SELECT `value` FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `varname` = 'dbversion'"
+			);
+			$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 			if (isset($result['value'])) {
 				$settings['system']['dbversion'] = (int)$result['value'];
@@ -101,9 +110,6 @@ if ($page == 'overview') {
 			eval("echo \"" . getTemplate('update/index') . "\";");
 		}
 	} else {
-		/*
-		 * @TODO version-webcheck check here
-		 */
 		$success_message = $lng['update']['noupdatesavail'];
 		$redirect_url = 'admin_index.php?s=' . $s;
 		eval("echo \"" . getTemplate('update/noupdatesavail') . "\";");
