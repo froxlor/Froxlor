@@ -24,7 +24,7 @@
  */
 function maildirExists($result = null)
 {
-	global $settings, $theme;
+	global $settings;
 
 	if(is_array($result))
 	{

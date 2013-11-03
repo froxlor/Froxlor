@@ -15,25 +15,27 @@
  *
  */
 
-/*
+/**
  * Function customerHasPerlEnabled
  *
  * returns true or false whether perl is
  * enabled for the given customer
  *
- * @param	int		customer-id
+ * @param int customer-id
  *
- * @return	boolean
+ * @return boolean
  */
-function customerHasPerlEnabled($cid = 0)
-{
-	global $db, $theme;
+function customerHasPerlEnabled($cid = 0) {
 
-	if($cid > 0)
-	{
-		$result = $db->query_first("SELECT `perlenabled` FROM `".TABLE_PANEL_CUSTOMERS."` WHERE `customerid` = '".(int)$cid."'");
-		if(is_array($result) 
-			&& isset($result['perlenabled'])
+	if ($cid > 0) {
+		$result_stmt = Database::prepare("
+				SELECT `perlenabled` FROM `".TABLE_PANEL_CUSTOMERS."` WHERE `customerid` = :cid"
+		);
+		Database::pexecute($result_stmt, array('cid' => $cid));
+		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
+		if (is_array($result)
+				&& isset($result['perlenabled'])
 		) {
 			return ($result['perlenabled'] == '1') ? true : false;
 		}

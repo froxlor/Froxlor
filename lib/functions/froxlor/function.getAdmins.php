@@ -17,8 +17,8 @@
  *
  */
 
-function getAdmins($limit_resource = '')
-{
+function getAdmins($limit_resource = '') {
+
 	global $db, $theme;
 
 	$additional_conditions = '';

@@ -18,15 +18,25 @@
  *
  */
 
+/**
+ * Check whether a given domain has an ssl-ip/port assigned
+ *
+ * @param int $domainid
+ *
+ * @return boolean
+ */
 function domainHasSslIpPort($domainid = 0) {
-	global $db;
-	
-	$result = $db->query_first("
-		SELECT `dt`.* FROM `".TABLE_DOMAINTOIP."` `dt`, `".TABLE_PANEL_IPSANDPORTS."` `iap` 
-		WHERE `dt`.`id_ipandports` = `iap`.`id` AND `iap`.`ssl` = '1' AND `dt`.`id_domain` = '".(int)$domainid."';
-	");
 
-	if (is_array($result) && isset($result['id_ipandports'])) {
+	$result_stmt = Database::prepare("
+			SELECT `dt`.* FROM `".TABLE_DOMAINTOIP."` `dt`, `".TABLE_PANEL_IPSANDPORTS."` `iap`
+			WHERE `dt`.`id_ipandports` = `iap`.`id` AND `iap`.`ssl` = '1' AND `dt`.`id_domain` = :domainid;"
+	);
+	Database::pexecute($result_stmt, array('domainid' => $domainid));
+	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
+	if (is_array($result)
+			&& isset($result['id_ipandports'])
+	) {
 		return true;
 	}
 	return false;

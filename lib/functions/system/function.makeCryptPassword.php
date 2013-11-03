@@ -10,6 +10,8 @@
  *
  * @copyright  (c) the authors
  * @author     Michal Wojcik <m.wojcik@sonet3.pl>
+ * @author     Michael Kaufmann <mkaufmann@nutime.de>
+ * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Functions
  *
@@ -21,6 +23,8 @@
  * @return string encrypted password
  *
  * @author Michal Wojcik <m.wojcik@sonet3.pl>
+ * @author Michael Kaufmann <mkaufmann@nutime.de>
+ * @author Froxlor team <team@froxlor.org> (2010-)
  *
  * 0 - default crypt (depenend on system configuration)
  * 1 - MD5 $1$

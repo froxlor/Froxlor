@@ -19,7 +19,7 @@ define('MASTER_CRONJOB', 1);
 
 include_once(dirname(__FILE__) . '/../lib/cron_init.php');
 
-$jobs_to_run = includeCronjobs($debugHandler, $pathtophpfiles);
+$jobs_to_run = includeCronjobs($debugHandler);
 
 /**
  * check for --help

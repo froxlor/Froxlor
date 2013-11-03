@@ -26,7 +26,7 @@
  */
 function makeChownWithNewStats($row)
 {
-	global $settings, $theme;
+	global $settings;
 
 	// get correct user
 	if($settings['system']['mod_fcgid'] == '1' && isset($row['deactivated']) && $row['deactivated'] == '0')
