@@ -49,6 +49,11 @@ class Database {
 	private static $_dbserver = 0;
 
 	/**
+	 * used database-name
+	 */
+	private static $_dbname = null;
+
+	/**
 	 * Wrapper for PDOStatement::execute so we can catch the PDOException
 	 * and display the error nicely on the panel
 	 *
@@ -74,6 +79,15 @@ class Database {
 	}
 
 	/**
+	 * returns the database-name which is used
+	 *
+	 * @return string
+	 */
+	public static function getDbName() {
+		return self::$_dbname;
+	}
+
+	/**
 	 * enabled the usage of a root-connection to the database
 	 * Note: must be called *before* any prepare/query/etc.
 	 * and should be called again with 'false'-parameter to resume
@@ -87,16 +101,6 @@ class Database {
 		// and set the $dbserver (mostly to 0 = default)
 		self::_setServer($dbserver);
 		self::$_needroot = $needroot;
-	}
-
-	/**
-	 * set the database-server (relevant for root-connection)
-	 *
-	 * @param int $dbserver
-	 */
-	private static function _setServer($dbserver = 0) {
-		self::$_dbserver = $dbserver;
-		self::$_link = null;
 	}
 
 	/**
@@ -117,6 +121,16 @@ class Database {
 			self::_showerror($e);
 		}
 		return $result;
+	}
+
+	/**
+	 * set the database-server (relevant for root-connection)
+	 *
+	 * @param int $dbserver
+	 */
+	private static function _setServer($dbserver = 0) {
+		self::$_dbserver = $dbserver;
+		self::$_link = null;
 	}
 
 	/**
@@ -174,6 +188,8 @@ class Database {
 				'host' => $host,
 				'dbname' => $sql["db"]
 		);
+
+		self::$_dbname = $sql["db"];
 
 		// add options to dsn-string
 		foreach ($dbconf["dsn"] as $k => $v) {

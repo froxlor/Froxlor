@@ -24,7 +24,6 @@
  * @return string The corrected dirname
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function makeCorrectDir($dir) {
 
 	$dir = trim($dir);
