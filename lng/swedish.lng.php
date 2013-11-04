@@ -369,8 +369,6 @@ $lng['mysql']['description'] = 'Här ändras eller skapas MySQL-Databaser.<br />
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
-
-$lng['admin']['cronlastrun'] = 'Konfigurerinsfilerna skapades sist';
 $lng['serversettings']['paging']['title'] = 'Antal rader per sida';
 $lng['serversettings']['paging']['description'] = 'Hur många rader skall det vara på en sida? (0 = Stäng av sidbrytning)';
 $lng['error']['ipstillhasdomains'] = 'IP/Port kombinationen som du vill radera har fortfarande domäner anslutna till sig, Flytta dessa till någon annan IP/Port kombination innan du raderar denna IP/Port kombination.';
@@ -474,10 +472,6 @@ $lng['question']['admin_counters_reallyupdate'] = 'Vill du uppdatera alla status
 $lng['panel']['pathDescription'] = 'Katalogen kommer att skapas om den inte redan finns.';
 
 // ADDED IN 1.2.16-svn6
-
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Varning {NAME},\n\nDu har nu använt {TRAFFICUSED} MB av ditt tillgängliga {TRAFFIC} MB för trafik.\nDetta är mer än 90%.\n\nHälsningar, Froxlor team';
-$lng['mails']['trafficninetypercent']['subject'] = 'Du är på väg att nå din tillåtna trafikgräns';
-$lng['admin']['templates']['trafficninetypercent'] = 'Meddelande till kund när mer än nittio procent av trafiken utnyttjas';
 $lng['admin']['templates']['TRAFFIC'] = 'Ersatt med trafikbegrnsningen som var tilldelad till kunden.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Ersatt med trafikbegrnsningen som var överskriden av kunden.';
 
@@ -499,7 +493,6 @@ $lng['admin']['configfiles']['overview'] = 'Översikt';
 $lng['admin']['configfiles']['wizard'] = 'Guide';
 $lng['admin']['configfiles']['mail'] = 'E-postserver (POP3/IMAP)';
 $lng['admin']['configfiles']['smtp'] = 'E-postserver (SMTP)';
-$lng['admin']['trafficlastrun'] = 'Senaste trafikberäkningen gjordes';
 
 // ADDED IN 1.2.16-svn10
 
@@ -576,9 +569,6 @@ $lng['ticket']['priority'] = 'Prioritet';
 $lng['ticket']['low'] = '<span class="Ärende_låg">Låg</span>';
 $lng['ticket']['normal'] = '<span class="Ärende_norm">Normal</span>';
 $lng['ticket']['high'] = '<span class="Ärende_hög">Hög</span>';
-$lng['ticket']['unf_low'] = 'Låg';
-$lng['ticket']['unf_normal'] = 'Normal';
-$lng['ticket']['unf_high'] = 'Hög';
 $lng['ticket']['lastchange'] = 'Ändrad';
 $lng['ticket']['lastchange_from'] = 'Från datum (dd.mm.yyyy)';
 $lng['ticket']['lastchange_to'] = 'Till datum (dd.mm.yyyy)';

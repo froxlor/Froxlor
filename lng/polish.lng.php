@@ -438,13 +438,8 @@ $lng['question']['ticket_reallydelete'] = 'Czy na pewno chcesz skasowac zg&#322o
 $lng['question']['ticket_reallydeletecat'] = 'Czy na pewno chcesz skasowac kategori&#281 "%s"?';
 $lng['admin']['ticketsettings'] = 'Ustawienia wsparcia technicznego';
 $lng['admin']['archivelastrun'] = 'Ostatnia archiwizacja zg&#322osze&#324 pomocy technicznej';
-$lng['serversettings']['ticket']['worktime_begin'] = 'Pocz&#261tek czasu wsparcia technicznego (hh:mm)';
-$lng['serversettings']['ticket']['worktime_begin_desc'] = 'Pocz&#261tek czasu od kiedy wsparcie techniczne jest dost&#281pne';
-$lng['serversettings']['ticket']['worktime_end'] = 'Koniec czasu wsparcia technicznego (hh:mm)';
-$lng['serversettings']['ticket']['worktime_end_desc'] = 'Koniec czasu do kiedy wsparcie techniczne jest dost&#281pne';
 $lng['serversettings']['ticket']['worktime_sat'] = 'Dzia&#322 pomocy technicznej dost&#281pny w soboty?';
 $lng['serversettings']['ticket']['worktime_sun'] = 'Dzia&#322 pomocy technicznej dost&#281pny w niedziele?';
-$lng['serversettings']['ticket']['worktime_all'] = 'Dzia&#322 pomocy technicznej dzia&#322a bez przerwy';
 $lng['customer']['tickets'] = 'Zg&#322oszenia wsparcia technicznego';
 
 // ADDED IN 1.2.18-svn4
@@ -454,14 +449,7 @@ $lng['serversettings']['ticket']['enable'] = 'Wspracie techniczne w&#322&#261czo
 $lng['serversettings']['ticket']['concurrentlyopen'] = 'Ile zg&#322osze&#324 mo&#380e by&#263 otwartych w jednym czasie?';
 $lng['ticket']['awaitingticketreply'] = 'Masz %s zg&#322osze&#324 do pomocy technicznej';
 
-// ADDED IN 1.2.19-svn1
-
-$lng['serversettings']['mod_fcgid']['tmpdir'] = 'Katalog plik&#243w tymczasowych';
-
 // ADDED IN 1.2.19-svn3
-
-$lng['serversettings']['ticket']['reset_cycle'] = 'Okresowe reset licznika u&#380ycia zg&#322osze&#324 pomocy technicznej';
-$lng['serversettings']['ticket']['reset_cycle_desc'] = 'Resetowanie zg&#322osze&#324 pomocy technicznej powoduje ustawienie licznika na warto&#347&#263 0 przy ka&#380dym cyklu';
 $lng['admin']['tickets']['daily'] = 'Dziennie';
 $lng['admin']['tickets']['weekly'] = 'Wygodniowo';
 $lng['admin']['tickets']['monthly'] = 'Miesi&#281cznie';
@@ -501,7 +489,6 @@ $lng['serversettings']['logger']['enable'] = 'Logowanie w&#322&#261czone/wy&#322
 $lng['serversettings']['logger']['severity'] = 'Poziom logowania';
 $lng['admin']['logger']['normal'] = 'normalny';
 $lng['admin']['logger']['paranoid'] = 'paranoidalny';
-$lng['serversettings']['logger']['types'] = 'Rodzaj(e) log&#243w';
 $lng['error']['logerror'] = 'System logowania b&#322&#281d&#243w: %s';
 $lng['question']['logger_reallytruncate'] = 'Czy na pewno chcesz wyszy&#347ci&#263 tabel&#281 &quot;%s&quot;?';
 $lng['admin']['loggersystem'] = 'System logowania';
@@ -513,9 +500,6 @@ $lng['logger']['user'] = 'U&#380ytkownik';
 $lng['logger']['truncate'] = 'Wyszy&#347&#263 logi';
 
 // ADDED IN 1.2.19-svn7
-
-$lng['serversettings']['ssl']['use_ssl'] = 'U&#380yj SSL';
-$lng['serversettings']['ssl']['ssl_cert_file'] = 'Gdzie jest zlokalizowany Certyfikat';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Standardowe dane do tworzenia pliku certyfikatu';
 $lng['panel']['customer'] = 'klient/ci';
 $lng['error']['nomessagetosend'] = 'Nie wprowadzono wiadomo&#347ci.';

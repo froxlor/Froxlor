@@ -485,10 +485,6 @@ $lng['question']['admin_counters_reallyupdate'] = 'Sei sicuro di voler ricacolar
 $lng['panel']['pathDescription'] = 'Se la cartella non esiste, viene creata automaticamente.';
 
 // ADDED IN 1.2.16-svn6
-
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Salve {NAME},\n\nHai usato {TRAFFICUSED} MB su {TRAFFIC} MB di traffico disponibile.\nPiù del 90%.\n\nCordiali Saluti, Amministratore.';
-$lng['mails']['trafficninetypercent']['subject'] = 'Hai raggiunto il limite di Traffico';
-$lng['admin']['templates']['trafficninetypercent'] = 'Notifica email per i clienti che hanno superato il 90% del traffico';
 $lng['admin']['templates']['TRAFFIC'] = 'Sostituito con il traffico che è stato assegnato al cliente.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Sostituito con il traffico che è stato usato dal cliente.';
 
@@ -738,9 +734,6 @@ $lng['logger']['user'] = 'Utente';
 $lng['logger']['truncate'] = 'Log vuoto';
 
 // ADDED IN 1.2.19-svn7
-
-$lng['serversettings']['ssl']['use_ssl'] = 'Usa SSL';
-$lng['serversettings']['ssl']['ssl_cert_file'] = 'Percorso del certificato SSL (SSL certificate)';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Defaults per la creazione del file Cert';
 $lng['panel']['reseller'] = 'rivenditore';
 $lng['panel']['admin'] = 'amministratore';
@@ -1145,9 +1138,6 @@ $lng['error']['customerdoesntexist'] = 'Il cliente che si è selezionato non esi
 $lng['error']['admindoesntexist'] = 'L\'amministratore che si è selezionato non esiste.';
 
 // ADDED IN 1.2.19-svn37
-
-$lng['serversettings']['system_realtime_port']['title'] = 'Porta per il realtime di Froxlor';
-$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor si connette a questa porta in localhost ogni volta che un nuovo task cron viene programmato. Se il valore è 0 (zero), questa funzionalità è disabilitata.<br />Vedi anche: <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Permettere login multipli';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Se attivato un utente può accedere più volte.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Permettere di spostare domini tra gli amministratori';
@@ -1185,8 +1175,6 @@ $lng['admin']['ipsandports']['webserverssldomainconfig'] = 'COnfigura SSL Webser
 $lng['admin']['ipsandports']['ssl_key_file'] = 'Percorso al Keyfile SSL';
 $lng['admin']['ipsandports']['ssl_ca_file'] = 'Percorso al CA certificate SSL';
 $lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Impostazioni predefinite vhost per ogni contenitore di dominio';
-$lng['serversettings']['ssl']['ssl_key_file'] = 'Percorso al Keyfile SSL';
-$lng['serversettings']['ssl']['ssl_ca_file'] = 'Percorso al CA certificate SSL';
 
 $lng['error']['usernamealreadyexists'] = 'Esiste già il nome utente: %s';
 
@@ -1309,7 +1297,6 @@ $lng['ftp']['account_edit'] = 'Modifica acocunt FTP';
 $lng['ftp']['editpassdescription'] = 'Imposta una nuova password o lascia vuoto per non cambiarla.';
 $lng['customer']['sendinfomail'] = 'Inviami i dati via email';
 $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Nuovo database creato';
-$lng['customer']['mysql_add']['infomail_body']['pma'] = "\nPuoi accedere ai database da phpMyAdmin all\'indirizzo {URI}\n";
 $lng['customer']['mysql_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nhai appena aggiunto un nuovo database. Ecco le informazioni inserite:\n\nNome database: {DB_NAME}\nPassword: {DB_PASS}\nDescrizione: {DB_DESC}\nDB-Hostname: {DB_SRV}\n{PMA_URI}\nCordiali Saluti, Team Froxlor";
 $lng['error']['domains_cantdeletedomainwithapsinstances'] = 'Non è possibile eliminare un dominio che è utilizzato da un pacchetto installato da APS. È necessario disinstallare prima il pacchetto APS.';
 $lng['serversettings']['awstats_path'] = 'Percorso a AWStats \'awstats_buildstaticpages.pl\'';
@@ -1461,9 +1448,6 @@ $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Configurazione di 
 // ADDED IN FROXLOR 0.9.14-svn3
 $lng['serversettings']['awstats_icons']['title'] = 'Percorso della cartella delle icone di AWstats';
 $lng['serversettings']['awstats_icons']['description'] = 'es. /usr/share/awstats/htdocs/icon/';
-
-// ADDED IN FROXLOR 0.9.14-svn4
-$lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Percorso SSL CertificateChainFile';
 
 // ADDED IN FROXLOR 0.9.14-svn5
 $lng['admin']['ipsandports']['docroot']['title'] = 'Imposta Cartella principale (vuoto = va in Froxlor)';

@@ -453,10 +453,6 @@ $lng['question']['admin_counters_reallyupdate'] = 'Weet u zeker dat u gebruikte 
 $lng['panel']['pathDescription'] = 'Indien de map niet bestaat wordt deze automatisch aangemaakt.<br /><br />Indien u wilt doorverwijzen naar een ander domein dient deze te beginnen met http:// of https://';
 
 // ADDED IN 1.2.16-svn6
-
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Beste {NAME},\n\nU hebt {TRAFFICUSED} MB van de beschikbare {TRAFFIC} MB verbruikt.\nDit is meer dan 90%.\n\nMet vriendelijke groet, uw beheerder';
-$lng['mails']['trafficninetypercent']['subject'] = 'Limiet dataverkeer bereikt';
-$lng['admin']['templates']['trafficninetypercent'] = 'E-mail ter notificatie aan klanten indien zij 90 procent van het dataverkeer is verbruikt';
 $lng['admin']['templates']['TRAFFIC'] = 'Wordt vervangen door aan klant toegewezen dataverkeer.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Wordt vervangen door het verbruikte dataverkeer.';
 
@@ -708,9 +704,6 @@ $lng['logger']['user'] = 'Gebruiker';
 $lng['logger']['truncate'] = 'Log legen';
 
 // ADDED IN 1.2.19-svn7
-
-$lng['serversettings']['ssl']['use_ssl'] = 'Gebruik SSL';
-$lng['serversettings']['ssl']['ssl_cert_file'] = 'Pad naar SSL-certificaat';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Standaardinstellingen certificaat';
 $lng['panel']['reseller'] = 'wederverkoper';
 $lng['panel']['admin'] = 'beheerder';
@@ -809,11 +802,6 @@ $lng['pwdreminder']['success'] = 'Wachtwoord opnieuw ingesteld.<br />U ontvangt 
 
 $lng['serversettings']['allow_password_reset']['title'] = 'Klanten toestaan hun wachtwoord opnieuw in te stellen';
 $lng['pwdreminder']['notallowed'] = 'Het opnieuw instellen van wachtwoorden is uitgeschakeld';
-
-// ADDED IN 1.2.19-svn20
-
-$lng['serversettings']['awstats_updateall_command']['title'] = 'Pad naar "awstats_updateall.pl"';
-$lng['serversettings']['awstats_updateall_command']['description'] = 'bijvoorbeeld /usr/bin/awstats_updateall.pl';
 
 // ADDED IN 1.2.19-svn21
 
@@ -1123,9 +1111,6 @@ $lng['error']['customerdoesntexist'] = 'De gekozen klant bestaat niet.';
 $lng['error']['admindoesntexist'] = 'De gekozen beheerder bestaat niet.';
 
 // ADDED IN 1.2.19-svn37
-
-$lng['serversettings']['system_realtime_port']['title'] = 'Poort voor realtime Froxlor';
-$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor maakt verbinding met deze poort wanneer een nieuwe taak gepland wordt. Indien deze waarde 0 (nul) is, is deze uitgeschakeld.<br />Zie ook: <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Meerdere logins toestaan';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Indien dit is ingeschakeld kan een klant meerdere malen tegelijkertijd inloggen.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Het verplaatsen van domeinen tussen beheerders toestaan';
@@ -1159,8 +1144,6 @@ $lng['admin']['ipsandports']['webserverssldomainconfig'] = 'SSL-configuratie web
 $lng['admin']['ipsandports']['ssl_key_file'] = 'Pad naar SSL keyfile';
 $lng['admin']['ipsandports']['ssl_ca_file'] = 'Pad naar SSL CA certificaat';
 $lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Standaard VHost-instellingen voor iedere domeincontainer';
-$lng['serversettings']['ssl']['ssl_key_file'] = 'Pad naar SSL keyfile';
-$lng['serversettings']['ssl']['ssl_ca_file'] = 'Pad naar SSL CA certificaat';
 
 $lng['error']['usernamealreadyexists'] = 'De gebruikersnaam %s is reeds in gebruik.';
 
@@ -1423,9 +1406,6 @@ $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Standaard configur
 // ADDED IN FROXLOR 0.9.14-svn3
 $lng['serversettings']['awstats_icons']['title'] = 'Pad naar iconen AWstats icons';
 $lng['serversettings']['awstats_icons']['description'] = 'bijvoorbeeld /usr/share/awstats/htdocs/icon/';
-
-// ADDED IN FROXLOR 0.9.14-svn4
-$lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Pad naar SSL CertificateChainFile';
 
 // ADDED IN FROXLOR 0.9.14-svn5
 $lng['admin']['ipsandports']['docroot']['title'] = 'Aangepaste docroot (leeg = verwijzing naar Froxlor)';

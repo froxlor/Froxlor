@@ -475,10 +475,6 @@ $lng['question']['admin_counters_reallyupdate'] = 'Opravdu chcete přepočítat 
 $lng['panel']['pathDescription'] = 'Pokud adresář neexistuje, bude vytvořen automaticky.';
 
 // ADDED IN 1.2.16-svn6
-
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Vážený uživateli {NAME},\n\nPoužil jste {TRAFFICUSED} MB z Vámi dostupných {TRAFFIC} MB přenosů.\nTo je více jak 90%.\n\nPřejeme hezký den, váš správce';
-$lng['mails']['trafficninetypercent']['subject'] = 'Dosahujíc vašeho limitu přenosů';
-$lng['admin']['templates']['trafficninetypercent'] = 'Upozorňovací mail pro zákazníky, pokud vyčerpají 90% z přenosů';
 $lng['admin']['templates']['TRAFFIC'] = 'Nahrazeno přenosy, které byly přiděleny uživateli.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Nahrazeno přenosy, které byly vyčerpány zákazníkem.';
 

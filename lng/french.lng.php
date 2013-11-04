@@ -486,10 +486,6 @@ $lng['question']['admin_counters_reallyupdate'] = 'Etes-vous sûr de vouloir rec
 $lng['panel']['pathDescription'] = 'Si le dossier n\'existe pas, il sera créé automatiquement.';
 
 // ADDED IN 1.2.16-svn6
-
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVous utilisez {TRAFFICUSED} Mo sur {TRAFFIC} Mo de votre quota de trafic.\nCe dernier est à plus de 90%.\n\nCordialement,\nL\'équipe Froxlor.';
-$lng['mails']['trafficninetypercent']['subject'] = 'Limite de trafic bientôt atteinte.';
-$lng['admin']['templates']['trafficninetypercent'] = 'E-mail de notification pour les utilisateurs, lorsque leur taux de trafic atteint plus de 90%.';
 $lng['admin']['templates']['TRAFFIC'] = 'Sera remplacé par le taux de trafic qui a été attribué à l\'utilisateur.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Sera remplacé par le taux de trafic qui a été consommé par l\'utilisateur.';
 
@@ -747,9 +743,6 @@ $lng['logger']['user'] = 'Utilisateur';
 $lng['logger']['truncate'] = 'Vider les logs';
 
 // ADDED IN 1.2.19-svn7
-
-$lng['serversettings']['ssl']['use_ssl'] = 'Utiliser SSL ?';
-$lng['serversettings']['ssl']['ssl_cert_file'] = 'Oû est situé le fichier de certificat ?';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Paramètres par défaut pour créer le certificat';
 $lng['panel']['reseller'] = 'revendeur';
 $lng['panel']['admin'] = 'administrateur';

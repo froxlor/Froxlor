@@ -367,7 +367,6 @@ $lng['mysql']['description'] = 'Tu môŸete vytvára» a meni» Va¹e MySQL data
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['admin']['cronlastrun'] = 'Posledný Cron';
 $lng['serversettings']['paging']['title'] = 'Záznamov na stránku';
 $lng['serversettings']['paging']['description'] = 'Koµko záznamov bude zobrazených na jednej stránke? (0 = zakázané stránkovanie)';
 $lng['error']['ipstillhasdomains'] = 'IP/Port kombinácia ktorú chcete zmaza» má stále priradené domenény. Pred zmazaním tejto IP/Port kombinácie prosím znovu priraïte tieto k ostatným IP/Port kombináciam.';
