@@ -29,14 +29,16 @@ if ($action == '') {
 }
 
 if ($action == 'login') {
-	if (isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$loginname = validate($_POST['loginname'], 'loginname');
 		$password = validate($_POST['password'], 'password');
-
-		$row = $db->query_first("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
-
+		
+		$stmt = Database::prepare("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "`
+			WHERE `loginname`= :loginname"
+		);
+		Database::pexecute($stmt, array("loginname" => $loginname));
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		
 		if ($row['customer'] == $loginname) {
 			$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
 			$uid = 'customerid';
@@ -45,16 +47,21 @@ if ($action == 'login') {
 		} else {
 			$is_admin = true;
 			if ((int)$settings['login']['domain_login'] == 1) {
-				/**
-				 * check if the customer tries to login with a domain, #374
-				 */
 				$domainname = $idna_convert->encode(preg_replace(Array('/\:(\d)+$/', '/^https?\:\/\//'), '', $loginname));
-				$row2 = $db->query_first("SELECT `customerid` FROM `".TABLE_PANEL_DOMAINS."` WHERE `domain` = '".$db->escape($domainname)."'");
-	
+				$stmt = Database::prepare("SELECT `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `domain` = :domain"
+				);
+				Database::pexecute($stmt, array("domain" => $domainname));
+				$row2 = $stmt->fetch(PDO::FETCH_ASSOC);
+				
 				if (isset($row2['customerid']) && $row2['customerid'] > 0) {
 					$loginname = getCustomerDetail($row2['customerid'], 'loginname');
 					if ($loginname !== false) {
-						$row3 = $db->query_first("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
+						$stmt = Database::prepare("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "`
+							WHERE `loginname`= :loginname"
+						);
+						Database::pexecute($stmt, array("loginname" => $loginname));
+						$row3 = $stmt->fetch(PDO::FETCH_ASSOC);
 						if ($row3['customer'] == $loginname) {
 							$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
 							$uid = 'customerid';
@@ -73,16 +80,23 @@ if ($action == 'login') {
 
 		if ($is_admin) {
 			if (hasUpdates($version)) {
-				$row = $db->query_first("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname`='" . $db->escape($loginname) . "' AND `change_serversettings` = '1'");
-				/*
-				 * not an admin who can see updates
-				 */
+				$stmt = Database::prepare("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "`
+					WHERE `loginname`= :loginname
+					AND `change_serversettings` = '1'"
+				);
+				Database::pexecute($stmt, array("loginname" => $loginname));
+				$row = $stmt->fetch(PDO::FETCH_ASSOC);
 				if (!isset($row['admin'])) {
+					// not an admin who can see updates
 					redirectTo('index.php');
 					exit;
 				}
 			} else {
-				$row = $db->query_first("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname`='" . $db->escape($loginname) . "'");
+				$stmt = Database::prepare("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "`
+					WHERE `loginname`= :loginname"
+				);
+				Database::pexecute($stmt, array("loginname" => $loginname));
+				$row = $stmt->fetch(PDO::FETCH_ASSOC);
 			}
 
 			if ($row['admin'] == $loginname) {
@@ -95,30 +109,38 @@ if ($action == 'login') {
 			}
 		}
 
-		$userinfo = $db->query_first("SELECT * FROM $table WHERE `loginname`='" . $db->escape($loginname) . "'");
+		$userinfo_stmt = Database::prepare("SELECT * FROM $table
+			WHERE `loginname`= :loginname"
+		);
+		Database::pexecute($userinfo_stmt, array("loginname" => $loginname));
+		$userinfo = $userinfo_stmt->fetch(PDO::FETCH_ASSOC);
 
-		if ($userinfo['loginfail_count'] >= $settings['login']['maxloginattempts']
-			&& $userinfo['lastlogin_fail'] > (time() - $settings['login']['deactivatetime'])
-		) {
+		if ($userinfo['loginfail_count'] >= $settings['login']['maxloginattempts'] && $userinfo['lastlogin_fail'] > (time() - $settings['login']['deactivatetime'])) {
 			redirectTo('index.php', Array('showmessage' => '3'), true);
 			exit;
 		} elseif($userinfo['password'] == md5($password)) {
 			// login correct
 			// reset loginfail_counter, set lastlogin_succ
-			$db->query("UPDATE $table SET `lastlogin_succ`='" . time() . "', `loginfail_count`='0' WHERE `$uid`='" . (int)$userinfo[$uid] . "'");
+			$stmt = Database::prepare("UPDATE $table
+				SET `lastlogin_succ`= :lastlogin_succ, `loginfail_count`='0'
+				WHERE `$uid`= :uid"
+			);
+			Database::pexecute($stmt, array("lastlogin_succ" => time(), "uid" => $userinfo[$uid]));
 			$userinfo['userid'] = $userinfo[$uid];
 			$userinfo['adminsession'] = $adminsession;
 		} else {
 			// login incorrect
-			$db->query("UPDATE $table SET `lastlogin_fail`='" . time() . "', `loginfail_count`=`loginfail_count`+1 WHERE `$uid`='" . (int)$userinfo[$uid] . "'");
+			$stmt = Database::prepare("UPDATE $table
+				SET `lastlogin_fail`= :lastlogin_fail, `loginfail_count`=`loginfail_count`+1
+				WHERE `$uid`= :uid"
+			);
+			Database::pexecute($stmt, array("lastlogin_fail" => time(), "uid" => $userinfo[$uid]));
 			unset($userinfo);
 			redirectTo('index.php', Array('showmessage' => '2'), true);
 			exit;
 		}
 
-		if (isset($userinfo['userid'])
-			&& $userinfo['userid'] != ''
-		) {
+		if (isset($userinfo['userid']) && $userinfo['userid'] != '') {
 			$s = md5(uniqid(microtime(), 1));
 
 			if (isset($_POST['language'])) {
@@ -139,22 +161,46 @@ if ($action == 'login') {
 			}
 
 			if ($settings['session']['allow_multiple_login'] != '1') {
-				$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['userid'] . "' AND `adminsession` = '" . $db->escape($userinfo['adminsession']) . "'");
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
+					WHERE `userid` = :uid
+					AND `adminsession` = :adminsession"
+				);
+				Database::pexecute($stmt, array("uid" => $userinfo['userid'], "adminsession" => $userinfo['adminsession']));
 			}
 
 			// check for field 'theme' in session-table, refs #607
-			$fields = mysql_list_fields($db->getDbName(), TABLE_PANEL_SESSIONS);
-			$columns = mysql_num_fields($fields);
-			$field_array = array();
-			for ($i = 0; $i < $columns; $i++) {
-				$field_array[] = mysql_field_name($fields, $i);
+			// Changed with #1287 to new method
+			$theme_field = false;
+			$stmt = Database::query("SHOW COLUMNS FROM panel_sessions LIKE 'theme'");
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				if ($row['Field'] == "theme") {
+					$has_theme = true;
+				}
 			}
-
-			if (!in_array('theme', $field_array)) {
-				$db->query("INSERT INTO `" . TABLE_PANEL_SESSIONS . "` (`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`) VALUES ('" . $db->escape($s) . "', '" . (int)$userinfo['userid'] . "', '" . $db->escape($remote_addr) . "', '" . $db->escape($http_user_agent) . "', '" . time() . "', '" . $db->escape($language) . "', '" . $db->escape($userinfo['adminsession']) . "')");
-    			} else {
-    				$db->query("INSERT INTO `" . TABLE_PANEL_SESSIONS . "` (`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`, `theme`) VALUES ('" . $db->escape($s) . "', '" . (int)$userinfo['userid'] . "', '" . $db->escape($remote_addr) . "', '" . $db->escape($http_user_agent) . "', '" . time() . "', '" . $db->escape($language) . "', '" . $db->escape($userinfo['adminsession']) . "', '" . $db->escape($theme) . "')");
-    			}
+			
+			$params = array(
+				"hash" => $s,
+				"userid" => $userinfo['userid'],
+				"ipaddress" => $remote_addr,
+				"useragent" => $http_user_agent,
+				"lastactivity" => time(),
+				"language" => $language,
+				"adminsession" => $userinfo['adminsession']
+			);
+			
+			if ($has_theme) {
+				$params["theme"] = $theme;
+				$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_SESSIONS . "`
+					(`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`, `theme`)
+					VALUES (:hash, :userid, :ipaddress, :useragent, :lastactivity, :language, :adminsession, :theme)"
+				);
+    		} else {
+    			$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_SESSIONS . "`
+					(`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`)
+					VALUES (:hash, :userid, :ipaddress, :useragent, :lastactivity, :language, :adminsession)"
+				);
+    		}
+    		Database::pexecute($stmt, $params);
 
 			if ($userinfo['adminsession'] == '1') {
 				if (hasUpdates($version)) {
@@ -213,31 +259,31 @@ if ($action == 'forgotpwd') {
 	$adminchecked = false;
 	$message = '';
 
-	if (isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$loginname = validate($_POST['loginname'], 'loginname');
 		$email = validateEmail($_POST['loginemail'], 'email');
-		$sql = "SELECT `adminid`, `customerid`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
-				WHERE `loginname`='" . $db->escape($loginname) . "'
-				AND `email`='" . $db->escape($email) . "'";
-		$result = $db->query($sql);
+		$result_stmt = Database::prepare("SELECT `adminid`, `customerid`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
+			WHERE `loginname`= :loginname
+			AND `email`= :email"
+		);
+		Database::pexecute($result_stmt, array("loginname" => $loginname, "email" => $email));
 
-		if ($db->num_rows() == 0) {
-			$sql = "SELECT `adminid`, `name`, `email`, `loginname`, `def_language` FROM `" . TABLE_PANEL_ADMINS . "`
-				WHERE `loginname`='" . $db->escape($loginname) . "'
-				AND `email`='" . $db->escape($email) . "'";
-			$result = $db->query($sql);
+		if (Database::num_rows() == 0) {
+			$result_stmt = Database::prepare("SELECT `adminid`, `name`, `email`, `loginname`, `def_language` FROM `" . TABLE_PANEL_ADMINS . "`
+				WHERE `loginname`= :loginname
+				AND `email`= :email"
+			);
+			Database::pexecute($result_stmt, array("loginname" => $loginname, "email" => $email));
 				
-			if ($db->num_rows() > 0) {
+			if (Database::num_rows() > 0) {
 				$adminchecked = true;
 			} else {
-				$result = null;
+				$result_stmt = null;
 			}
 		}
 
-		if ($result !== null) {
-			$user = $db->fetch_array($result);
+		if ($result_stmt !== null) {
+			$user = $result_stmt->fetch(PDO::FETCH_ASSOC);
 			
 			/* Check whether user is banned */
 			if ($user['deactivated']) {
@@ -245,9 +291,7 @@ if ($action == 'forgotpwd') {
 				redirectTo('index.php', Array('showmessage' => '5'), true);
 			}
 
-			if (($adminchecked && $settings['panel']['allow_preset_admin'] == '1')
-				|| $adminchecked == false
-			) {
+			if (($adminchecked && $settings['panel']['allow_preset_admin'] == '1') || $adminchecked == false) {
 				if ($user !== false) {
 					if ($settings['panel']['password_min_length'] <= 6) {
 						$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
@@ -262,9 +306,11 @@ if ($action == 'forgotpwd') {
 					}
 
 					$passwordTable = $adminchecked ? TABLE_PANEL_ADMINS : TABLE_PANEL_CUSTOMERS;
-					$db->query("UPDATE `" . $passwordTable . "` SET `password`='" . md5($password) . "'
-							WHERE `loginname`='" . $user['loginname'] . "'
-							AND `email`='" . $user['email'] . "'");
+					$stmt = Database::prepare("UPDATE `" . $passwordTable . "` SET `password`= :password
+						WHERE `loginname`= :loginname
+						AND `email`= :email"
+					);
+					Database::pexecute($stmt, array("password" => md5($password), "loginname" => $user['loginname'], "email" => $user['email']));
 
 					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
 					$rstlog->logAction(USR_ACTION, LOG_WARNING, "Password for user '" . $user['loginname'] . "' has been reset!");
@@ -278,9 +324,24 @@ if ($action == 'forgotpwd') {
 					$body = strtr($lng['pwdreminder']['body'], array('%s' => $user['firstname'] . ' ' . $user['name'], '%p' => $password));
 
 					$def_language = ($user['def_language'] != '') ? $user['def_language'] : $settings['panel']['standardlanguage'];
-					$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$user['adminid'] . '\' AND `language`=\'' . $db->escape($def_language) . '\' AND `templategroup`=\'mails\' AND `varname`=\'password_reset_subject\'');
+					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
+						WHERE `adminid`= :adminid
+						AND `language`= :lang
+						AND `templategroup`=\'mails\' 
+						AND `varname`=\'password_reset_subject\''
+					);
+					Database::pexecute($result_stmt, array("adminid" => $user['adminid'], "lang" => $def_language));
+					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 					$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['pwdreminder']['subject']), $replace_arr));
-					$result = $db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '` WHERE `adminid`=\'' . (int)$user['adminid'] . '\' AND `language`=\'' . $db->escape($def_language) . '\' AND `templategroup`=\'mails\' AND `varname`=\'password_reset_mailbody\'');
+					
+					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
+						WHERE `adminid`= :adminid
+						AND `language`= :lang
+						AND `templategroup`=\'mails\'
+						AND `varname`=\'password_reset_mailbody\''
+					);
+					Database::pexecute($result_stmt, array("adminid" => $user['adminid'], "lang" => $def_language));
+					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 					$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $body), $replace_arr));
 						
 					$_mailerror = false;
