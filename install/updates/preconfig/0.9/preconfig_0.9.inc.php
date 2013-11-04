@@ -26,7 +26,7 @@
  */
 function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 {
-	global $settings, $lng, $db, $theme;
+	global $settings, $lng;
 
 	if(versionInUpdate($current_version, '0.9.4-svn2'))
 	{
@@ -127,10 +127,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.7-svn2'))
 	{
-		$result = $db->query("SELECT `domain` FROM " . TABLE_PANEL_DOMAINS . " WHERE `documentroot` LIKE '%:%' AND `documentroot` NOT LIKE 'http://%' AND `openbasedir_path` = '0' AND `openbasedir` = '1'");
+		$result = Database::query("SELECT `domain` FROM " . TABLE_PANEL_DOMAINS . " WHERE `documentroot` LIKE '%:%' AND `documentroot` NOT LIKE 'http://%' AND `openbasedir_path` = '0' AND `openbasedir` = '1'");
 		$wrongOpenBasedirDomain = array();
-		while($row = $db->fetch_array($result))
-		{
+		while($row = $result->fetch(PDO::FETCH_ASSOC)) {
 			$wrongOpenBasedirDomain[] = $row['domain'];
 		}
 
@@ -164,7 +163,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$has_nouser = false;
 		$has_nogroup = false;
 
-		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
+		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
+		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
 		if(!isset($result) || !isset($result['value']))
 		{
 			$has_preconfig = true;
@@ -178,7 +179,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			}
 		}
 
-		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
+		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
+		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
 		if(!isset($result) || !isset($result['value']))
 		{
 			$has_preconfig = true;
