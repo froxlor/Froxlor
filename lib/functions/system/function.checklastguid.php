@@ -15,23 +15,20 @@
  *
  */
 
-/*
+/**
  * Function checkLastGuid
  *
- * Checks if the system's last guid
- * is not higher than the one saved
- * in froxlor's database.
- * If it's higher, froxlor needs to
- * set its last guid to this one
- * to avoid conflicts with libnss-users
+ * Checks if the system's last guid is not higher than the one saved
+ * in froxlor's database. If it's higher, froxlor needs to
+ * set its last guid to this one to avoid conflicts with libnss-users
  *
- * @param	int		guid (from froxlor database)
+ * @param int guid (from froxlor database)
  *
- * @return	null
+ * @return null
  */
 function checkLastGuid() {
 
-	global $log, $cronlog, $db, $settings, $theme;
+	global $log, $cronlog, $settings;
 	
 	$mylog = null;
 	if (isset($cronlog) && $cronlog instanceof FroxlorLogger) {
@@ -45,7 +42,8 @@ function checkLastGuid() {
 	$update_to_guid = 0;
 	
 	$froxlor_guid = 0;
-	$result = $db->query_first("SELECT MAX(`guid`) as `fguid` FROM `".TABLE_PANEL_CUSTOMERS."`");
+	$result_stmt = Database::query("SELECT MAX(`guid`) as `fguid` FROM `".TABLE_PANEL_CUSTOMERS."`");
+	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 	$froxlor_guid = $result['fguid'];
 
 	$g_file = '/etc/group';

@@ -22,7 +22,9 @@ showUpdateStep("Upgrading SysCP ".$settings['panel']['version']." to Froxlor ". 
 updateToVersion($updateto);
 
 // add field frontend
-$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel','frontend','".$frontend."')");
+Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET
+	`settinggroup` = 'panel',
+	`varname` = 'frontend',
+	`value` = 'froxlor'"
+);
 $settings['panel']['frontend'] = $frontend;
-
-?>

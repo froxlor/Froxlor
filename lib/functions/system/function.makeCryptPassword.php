@@ -32,7 +32,6 @@
  * 3 - SHA-256 $5$
  * 4 - SHA-512 $6$
  */
-
 function makeCryptPassword ($password) {
 
 	global $settings;
