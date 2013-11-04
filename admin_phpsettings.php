@@ -37,6 +37,7 @@ if ($page == 'overview') {
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
 			$domainresult = false;
+			$query_params = array('id' => $row['id']);
 
 			$query = "SELECT * FROM `".TABLE_PANEL_DOMAINS."`
 					WHERE `phpsettingid` = :id
@@ -44,6 +45,7 @@ if ($page == 'overview') {
 
 			if ((int)$userinfo['domains_see_all'] == 0) {
 				$query .= " AND `adminid` = :adminid";
+				$query_params['adminid'] = $userinfo['adminid'];
 			}
 
 			if ((int)$settings['panel']['phpconfigs_hidestdsubdomain'] == 1) {
@@ -61,7 +63,7 @@ if ($page == 'overview') {
 			}
 
 			$domainresult_stmt = Database::prepare($query);
-			Database::pexecute($domainresult_stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
+			Database::pexecute($domainresult_stmt, $query_params);
 
 			$domains = '';
 			if (Database::num_rows() > 0) {
