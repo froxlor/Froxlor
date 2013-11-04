@@ -1484,6 +1484,7 @@ $lng['error']['intvaluetoohigh'] = 'Die angegebene Zahl ist zu groß (Feld "%s")
 $lng['admin']['phpfpm_settings'] = 'PHP-FPM';
 $lng['serversettings']['phpfpm'] = 'Aktiviere php-fpm';
 $lng['serversettings']['phpfpm_settings']['configdir'] = 'Pfad zu php-fpm-Konfigurationen';
+$lng['serversettings']['phpfpm_settings']['aliasconfigdir'] = 'Alias-Ordner der php-fpm Konfiguration';
 $lng['serversettings']['phpfpm_settings']['reload'] = 'Kommando zum Neustarten von php-fpm';
 $lng['serversettings']['phpfpm_settings']['pm'] = 'Prozess Manager Control (PM)';
 $lng['serversettings']['phpfpm_settings']['max_children']['title'] = 'Anzahl der Kind-Prozesse';
@@ -1616,6 +1617,11 @@ $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Time
 $lng['panel']['cancel'] = 'abbrechen';
 $lng['admin']['delete_statistics'] = 'Statistiken Löschen';
 $lng['admin']['speciallogwarning'] = 'ACHTUNG: Durch diese Einstellungen werden Sie alle bisherige Statistiken dieser Domain verlieren. Wenn Sie dabei wirklich sicher sind, geben Sie bitte folgenden Text in das nachfolgende Textfeld ein: "%s" und bestätigen Sie mit "Löschen".<br /><br />';
+
+// ADDED IN 0.9.28-svn2
+$lng['serversettings']['vmail_maildirname']['title'] = 'Maildir (Unter-)Ordner';
+$lng['serversettings']['vmail_maildirname']['description'] = 'Der Maildir Ordner innerhalb des Kontos des Benutzers. Normalerweise \'Maildir\', in manchen Fällen auch \'.maildir\'. Sollen E-Mails direkt in das Verzeichnis, diese Option leer lassen';
+$lng['tasks']['remove_emailacc_files'] = 'Kunden E-Mail Dateien löschen';
 
 // ADDED IN 0.9.28-svn5
 $lng['error']['operationnotpermitted'] = 'Diese Aktion ist nicht erlaubt!';
