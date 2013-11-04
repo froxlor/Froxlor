@@ -169,16 +169,19 @@ if($page == 'overview') {
 			} elseif($path == '') {
 				standard_error('patherror');
 			} else {
-				$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "`
-					(`customerid`, `username`, `password`, `path`, `authname`)
-					VALUES (:customerid, :username, :password, :path, :authname)"
+				$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "` SET
+					`customerid` = :customerid,
+					`username` = :username,
+					`password` = :password,
+					`path` = :path,
+					`authname` = :authname"
 				);
 				$params = array(
 					"customerid" => $userinfo['customerid'],
 					"username" => $username,
 					"password" => $password,
 					"path" => $path,
-					"autname" => $authname
+					"authname" => $authname
 				);
 				Database::pexecute($stmt, $params);
 				$log->logAction(USR_ACTION, LOG_INFO, "added htpasswd for '" . $username . " (" . $path . ")'");
