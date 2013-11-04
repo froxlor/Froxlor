@@ -17,7 +17,7 @@
  *
  */
 
-$updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'), $db, $settings);
+$updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'), $settings);
 
 $updatelogfile = validateUpdateLogFile(makeCorrectFile(dirname(__FILE__).'/update.log'));
 $filelog = FileLogger::getInstanceOf(array('loginname' => 'updater'), $settings);

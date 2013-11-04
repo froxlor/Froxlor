@@ -266,7 +266,7 @@ if ($action == 'forgotpwd') {
 							WHERE `loginname`='" . $user['loginname'] . "'
 							AND `email`='" . $user['email'] . "'");
 
-					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
+					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
 					$rstlog->logAction(USR_ACTION, LOG_WARNING, "Password for user '" . $user['loginname'] . "' has been reset!");
 
 					$replace_arr = array(
@@ -299,7 +299,7 @@ if ($action == 'forgotpwd') {
 					}
 
 					if ($_mailerror) {
-						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
+						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
 						$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 						redirectTo('index.php', Array('showmessage' => '4', 'customermail' => $user['email']), true);
 						exit;
@@ -309,7 +309,7 @@ if ($action == 'forgotpwd') {
 					redirectTo('index.php', Array('showmessage' => '1'), true);
 					exit;
 				} else {
-					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $db, $settings);
+					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
 					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to reset pwd but wasn't found in database!");
 					$message = $lng['login']['combination_not_found'];
 				}

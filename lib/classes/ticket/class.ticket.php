@@ -26,42 +26,36 @@ class ticket
 	 * Userinfo
 	 * @var array
 	 */
-
 	private $userinfo = array();
 
 	/**
 	 * Database handler
 	 * @var db
 	 */
-
 	private $db = false;
 
 	/**
 	 * Settings array
 	 * @var settings
 	 */
-
 	private $settings = array();
 
 	/**
 	 * Ticket ID
 	 * @var tid
 	 */
-
 	private $tid = - 1;
 
 	/**
 	 * Ticket Data Array
 	 * @var t_data
 	 */
-
 	private $t_data = array();
 
 	/**
 	 * Ticket-Object-Array
 	 * @var tickets
 	 */
-
 	static private $tickets = array();
 
 	/**
@@ -78,7 +72,6 @@ class ticket
 	 * @param array settings
 	 * @param int ticket id
 	 */
-
 	private function __construct($userinfo, $db, $settings, $tid = - 1)
 	{
 		$this->userinfo = $userinfo;
@@ -94,11 +87,9 @@ class ticket
 		$this->_purifier = new HTMLPurifier($config);
 
 		// initialize data array
-
 		$this->initData();
 
 		// read data from database
-
 		$this->readData();
 	}
 
@@ -107,7 +98,6 @@ class ticket
 	 *
 	 * @param int ticket id
 	 */
-
 	static public function getInstanceOf($_usernfo, $_db, $_settings, $_tid)
 	{
 		if(!isset(self::$tickets[$_tid]))
@@ -121,7 +111,6 @@ class ticket
 	/**
 	 * Initialize data-array
 	 */
-
 	private function initData()
 	{
 		$this->Set('customer', 0, true, true);
@@ -143,7 +132,6 @@ class ticket
 	/**
 	 * Read ticket data from database.
 	 */
-
 	private function readData()
 	{
 		if(isset($this->tid)
@@ -170,7 +158,6 @@ class ticket
 	/**
 	 * Insert data to database
 	 */
-
 	public function Insert()
 	{
 		$this->db->query("INSERT INTO `" . TABLE_PANEL_TICKETS . "`
@@ -208,7 +195,6 @@ class ticket
 	/**
 	 * Update data in database
 	 */
-
 	public function Update()
 	{
 		// Update "main" ticket
@@ -225,15 +211,12 @@ class ticket
 	/**
 	 * Moves a ticket to the archive
 	 */
-
 	public function Archive()
 	{
 		// Update "main" ticket
-
 		$this->db->query('UPDATE `' . TABLE_PANEL_TICKETS . '` SET `archived` = "1" WHERE `id` = "' . (int)$this->tid . '";');
 
 		// Update "answers" to ticket
-
 		$this->db->query('UPDATE `' . TABLE_PANEL_TICKETS . '` SET `archived` = "1" WHERE `answerto` = "' . (int)$this->tid . '";');
 		return true;
 	}
@@ -241,15 +224,12 @@ class ticket
 	/**
 	 * Remove ticket from database
 	 */
-
 	public function Delete()
 	{
 		// Delete "main" ticket
-
 		$this->db->query('DELETE FROM `' . TABLE_PANEL_TICKETS . '` WHERE `id` = "' . (int)$this->tid . '";');
 
 		// Delete "answers" to ticket"
-
 		$this->db->query('DELETE FROM `' . TABLE_PANEL_TICKETS . '` WHERE `answerto` = "' . (int)$this->tid . '";');
 		return true;
 	}
@@ -257,17 +237,14 @@ class ticket
 	/**
 	 * Mail notifications
 	 */
-
 	public function sendMail($customerid = - 1, $template_subject = null, $default_subject = null, $template_body = null, $default_body = null)
 	{
 		global $mail, $theme;
 
 		// Some checks are to be made here in the future
-
 		if($customerid != - 1)
 		{
 			// Get e-mail message for customer
-
 			$usr = $this->db->query_first('SELECT `name`, `firstname`, `company`, `email`
                                FROM `' . TABLE_PANEL_CUSTOMERS . '` 
                                WHERE `customerid` = "' . (int)$customerid . '"');
@@ -318,7 +295,7 @@ class ticket
 			}
 
 			if ($_mailerror) {
-				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->db, $this->settings);
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->settings);
 				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 				standard_error('errorsendingmail', $usr['email']);
 			}
@@ -346,7 +323,7 @@ class ticket
 			}
 
 			if ($_mailerror) {
-				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->db, $this->settings);
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->settings);
 				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 				standard_error('errorsendingmail', $admin['email']);
 			}
@@ -358,7 +335,6 @@ class ticket
 	/**
 	 * Add a support-categories
 	 */
-
 	static public function addCategory($_db, $_category = null, $_admin = 1, $_order = 1)
 	{
 		if($_category != null
@@ -381,7 +357,6 @@ class ticket
 	/**
 	 * Edit a support-categories
 	 */
-
 	static public function editCategory($_db, $_category = null, $_id = 0, $_order = 1)
 	{
 		if($_category != null
@@ -405,7 +380,6 @@ class ticket
 	/**
 	 * Delete a support-categories
 	 */
-
 	static public function deleteCategory($_db, $_id = 0)
 	{
 		if($_id != 0)
@@ -430,7 +404,6 @@ class ticket
 	/**
 	 * Return a support-category-name
 	 */
-
 	static public function getCategoryName($_db, $_id = 0)
 	{
 		if($_id != 0)
@@ -463,7 +436,6 @@ class ticket
 	/**
 	 * returns the last x archived tickets
 	 */
-
 	static public function getLastArchived($_db, $_num = 10, $_admin = 1)
 	{
 		if($_num > 0)
@@ -511,7 +483,6 @@ class ticket
 	/**
 	 * Returns a sql-statement to search the archive
 	 */
-
 	static public function getArchiveSearchStatement($db, $subject = NULL, $priority = NULL, $fromdate = NULL, $todate = NULL, $message = NULL, $customer = - 1, $admin = 1, $categories = NULL)
 	{
 		$query = 'SELECT `main`.*,
@@ -641,7 +612,6 @@ class ticket
 	/**
 	 * Get statustext by status-no
 	 */
-
 	static public function getStatusText($_lng, $_status = 0)
 	{
 		switch($_status)
@@ -664,7 +634,6 @@ class ticket
 	/**
 	 * Get prioritytext by priority-no
 	 */
-
 	static public function getPriorityText($_lng, $_priority = 0)
 	{
 		switch($_priority)
@@ -702,7 +671,7 @@ class ticket
 		return $str;
 	}
 
-	/*
+	/**
 	 * function customerHasTickets
 	 *
 	 * @param	object	mysql-db-object
@@ -731,7 +700,6 @@ class ticket
 	/**
 	 * Get a data-var
 	 */
-
 	public function Get($_var = '', $_vartrusted = false)
 	{
 		if($_var != '')
@@ -766,7 +734,6 @@ class ticket
 	/**
 	 * Set a data-var
 	 */
-
 	public function Set($_var = '', $_value = '', $_vartrusted = false, $_valuetrusted = false)
 	{
 		if($_var != ''
@@ -791,5 +758,3 @@ class ticket
 		}
 	}
 }
-
-?>

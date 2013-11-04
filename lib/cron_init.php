@@ -185,5 +185,5 @@ $cronscriptDebug = ($settings['system']['debug_cron'] == '1') ? true : false;
 $idna_convert = new idna_convert_wrapper();
 
 // Initialize logging
-$cronlog = FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'), $db, $settings);
+$cronlog = FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'), $settings);
 fwrite($debugHandler, 'Logger has been included' . "\n");

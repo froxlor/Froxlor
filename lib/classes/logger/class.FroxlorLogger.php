@@ -26,35 +26,24 @@ class FroxlorLogger
 	 * Userinfo
 	 * @var array
 	 */
-
 	private $userinfo = array();
-
-	/**
-	 * Database handler
-	 * @var db
-	 */
-
-	private $db = false;
 
 	/**
 	 * Settings array
 	 * @var settings
 	 */
-
 	private $settings = array();
 
 	/**
 	 * LogTypes Array
 	 * @var logtypes
 	 */
-
 	static private $logtypes = null;
 
 	/**
 	 * Logger-Object-Array
 	 * @var loggers
 	 */
-
 	static private $loggers = null;
 
 	/**
@@ -63,31 +52,24 @@ class FroxlorLogger
 	 * @param array userinfo
 	 * @param array settings
 	 */
-
-	protected function __construct($userinfo, $db, $settings)
-	{
+	protected function __construct($userinfo, $settings) {
 		$this->userinfo = $userinfo;
-		$this->db = $db;
 		$this->settings = $settings;
 		self::$logtypes = array();
 
-		if(!isset($this->settings['logger']['logtypes'])
+		if (!isset($this->settings['logger']['logtypes'])
 		   && (!isset($this->settings['logger']['logtypes']) || $this->settings['logger']['logtypes'] == '')
 		   && isset($this->settings['logger']['enabled'])
-		   && $this->settings['logger']['enabled'])
-		{
+		   && $this->settings['logger']['enabled']
+		) {
 			self::$logtypes[0] = 'syslog';
 			self::$logtypes[1] = 'mysql';
-		}
-		else
-		{
-			if(isset($this->settings['logger']['logtypes'])
-			   && $this->settings['logger']['logtypes'] != '')
-			{
+		}  else {
+			if (isset($this->settings['logger']['logtypes'])
+			   && $this->settings['logger']['logtypes'] != ''
+			) {
 				self::$logtypes = explode(',', $this->settings['logger']['logtypes']);
-			}
-			else
-			{
+			} else {
 				self::$logtypes = null;
 			}
 		}
@@ -97,40 +79,37 @@ class FroxlorLogger
 	 * Singleton ftw ;-)
 	 *
 	 */
-
-	static public function getInstanceOf($_usernfo, $_db, $_settings)
+	static public function getInstanceOf($_usernfo, $_settings)
 	{
-		if(!isset($_usernfo)
-		   || $_usernfo == null)
-		{
+		if (!isset($_usernfo)
+		   || $_usernfo == null
+		) {
 			$_usernfo = array();
 			$_usernfo['loginname'] = 'unknown';
 		}
 
-		if(!isset(self::$loggers[$_usernfo['loginname']]))
-		{
-			self::$loggers[$_usernfo['loginname']] = new FroxlorLogger($_usernfo, $_db, $_settings);
+		if (!isset(self::$loggers[$_usernfo['loginname']])) {
+			self::$loggers[$_usernfo['loginname']] = new FroxlorLogger($_usernfo, $_settings);
 		}
 
 		return self::$loggers[$_usernfo['loginname']];
 	}
 
-	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null)
-	{
-		if(self::$logtypes == null)
-		{
+	public function logAction ($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
+
+		if (self::$logtypes == null) {
 			return;
 		}
 
-		if($this->settings['logger']['log_cron'] == '0'
-		   && $action == CRON_ACTION)
-		{
+		if ($this->settings['logger']['log_cron'] == '0'
+		   && $action == CRON_ACTION
+		) {
 			return;
 		}
 
-		foreach(self::$logtypes as $logger)
-		{
-			switch($logger)
+		foreach (self::$logtypes as $logger) {
+
+			switch ($logger)
 			{
 				case 'syslog':
 					$_log = SysLogger::getInstanceOf($this->userinfo, $this->settings);
@@ -140,43 +119,30 @@ class FroxlorLogger
 					{
 						$_log = FileLogger::getInstanceOf($this->userinfo, $this->settings);
 					}
-
 					catch(Exception $e)
 					{
-						if($action != CRON_ACTION)
-						{
+						if ($action != CRON_ACTION) {
 							standard_error('logerror', $e->getMessage());
-						}
-						else
-						{
+						} else {
 							echo "Log-Error: " . $e->getMessage();
 						}
 					}
-
 					break;
 				case 'mysql':
-					$_log = MysqlLogger::getInstanceOf($this->userinfo, $this->settings, $this->db);
+					$_log = MysqlLogger::getInstanceOf($this->userinfo, $this->settings);
 					break;
 				default:
 					$_log = null;
 					break;
 			}
 
-			if($_log != null)
-			{
-				try
-				{
+			if ($_log != null) {
+				try {
 					$_log->logAction($action, $type, $text);
-				}
-
-				catch(Exception $e)
-				{
-					if($action != CRON_ACTION)
-					{
+				} catch(Exception $e) {
+					if ($action != CRON_ACTION) {
 						standard_error('logerror', $e->getMessage());
-					}
-					else
-					{
+					} else {
 						echo "Log-Error: " . $e->getMessage();
 					}
 				}
@@ -184,20 +150,22 @@ class FroxlorLogger
 		}
 	}
 
-	public function setCronLog($_cronlog = 0)
-	{
+	public function setCronLog($_cronlog = 0) {
+
 		$_cronlog = (int)$_cronlog;
 
-		if($_cronlog != 0
-		   && $_cronlog != 1)
-		{
+		if ($_cronlog != 0
+		   && $_cronlog != 1
+		) {
 			$_cronlog = 0;
 		}
 
-		$this->db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` 
-				  SET `value`='" . $this->db->escape($_cronlog) . "' 
-				  WHERE `settinggroup`='logger' 
-				  AND `varname`='log_cron'");
+		$stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_SETTINGS . "` SET
+			`value` = :value
+			WHERE `settinggroup`='logger' AND `varname`='log_cron'"
+		);
+		Database::pexecute($stmt, array('value' => $_cronlog));
 		return true;
 	}
 }
