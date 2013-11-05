@@ -211,7 +211,7 @@ if ($page == 'overview') {
 					);
 					$params = array(
 						"customerid" => $userinfo['customerid'],
-						"username" => $username,
+						"databasename" => $username,
 						"description" => $databasedescription,
 						"dbserver" => $dbserver
 					);
