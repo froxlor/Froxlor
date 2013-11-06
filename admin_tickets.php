@@ -18,11 +18,6 @@
  */
 
 define('AREA', 'admin');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-
 require ("./lib/init.php");
 
 if (isset($_POST['id'])) {
