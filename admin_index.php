@@ -18,10 +18,6 @@
  */
 
 define('AREA', 'admin');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
 require ("./lib/init.php");
 
 if ($action == 'logout')  {
@@ -71,8 +67,7 @@ if ($page == 'overview') {
 				SUM(`traffic_used`) AS `traffic_used`,
 				SUM(`aps_packages_used`) AS `aps_packages_used`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "`" . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid "));
-	Database::pexecute($overview_stmt, array('adminid' => $userinfo['adminid']));
-	$overview = $overview_stmt->fetch(PDO::FETCH_ASSOC);
+	$overview = Database::pexecute_first($overview_stmt, array('adminid' => $userinfo['adminid']));
 
 	$overview['traffic_used'] = round($overview['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
 	$overview['diskspace_used'] = round($overview['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
@@ -81,8 +76,8 @@ if ($page == 'overview') {
 		SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "`
 		WHERE `parentdomainid`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
 	);
-	Database::pexecute($number_domains_stmt, array('adminid' => $userinfo['adminid']));
-	$number_domains = $number_domains_stmt->fetch(PDO::FETCH_ASSOC);
+	$number_domains = Database::pexecute_first($number_domains_stmt, array('adminid' => $userinfo['adminid']));
+
 	$overview['number_domains'] = $number_domains['number_domains'];
 
 	$phpversion = phpversion();

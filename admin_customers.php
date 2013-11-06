@@ -394,11 +394,11 @@ if ($page == 'customers'
 				/*
 				 * move old tickets to archive
 				 */
-				$tickets = ticket::customerHasTickets($db, $id);
+				$tickets = ticket::customerHasTickets($id);
 				if ($tickets !== false && isset($tickets[0])) {
 					foreach ($tickets as $ticket) {
 						$now = time();
-						$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$ticket);
+						$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$ticket);
 						$mainticket->Set('lastchange', $now, true, true);
 						$mainticket->Set('lastreplier', '1', true, true);
 						$mainticket->Set('status', '3', true, true);
