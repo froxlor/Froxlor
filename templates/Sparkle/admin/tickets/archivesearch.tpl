@@ -1,6 +1,6 @@
 $header
 	<header>
-		<h3><img src="templates/{$theme}/assets/img/icons/ticket_archive.png" alt="" />&nbsp;{$lng['ticket']['archivesearch']}</h3>
+		<h2><img src="templates/{$theme}/assets/img/icons/ticket_archive_big.png" alt="" />&nbsp;{$lng['ticket']['archivesearch']}</h2>
 	</header>
 	<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post">
 		<input type="hidden" name="s" value="$s"/>
