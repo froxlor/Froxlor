@@ -37,8 +37,7 @@ if (isset($_POST['id'])) {
 				SELECT `id` FROM `panel_tickets`
 				WHERE `id` = :id AND `adminid` = :adminid
 			");
-			Database::pexecute($stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
-			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			$result = Database::pexecute_first($stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
 
 			if ($result == null) {
 				// no rights to see the requested ticket
@@ -57,8 +56,7 @@ if ($page == 'tickets'
 		FROM `" . TABLE_PANEL_CUSTOMERS . "` " .
 		($userinfo['customers_see_all'] ? '' : "WHERE `adminid` = :adminid")
 	);
-	Database::pexecute($countcustomers_stmt, array('adminid' => $userinfo['adminid']));
-	$countcustomers = $countcustomers_stmt->fetch(PDO::FETCH_ASSOC);
+	$countcustomers = Database::pexecute_first($countcustomers_stmt, array('adminid' => $userinfo['adminid']));
 	$countcustomers = (int)$countcustomers['countcustomers'];
 
 	if ($action == '') {
@@ -130,8 +128,7 @@ if ($page == 'tickets'
 							FROM `' . TABLE_PANEL_CUSTOMERS . '`
 							WHERE `customerid` = :cid'
 						);
-						Database::pexecute($usr_stmt, array('cid' => $cid));
-						$usr = $usr_stmt->fetch(PDO::FETCH_ASSOC);
+						$usr = Database::pexecute_first($usr_stmt, array('cid' => $cid));
 
 						if (isset($usr['loginname'])) {
 							$customer = getCorrectFullUserDetails($usr);
@@ -186,7 +183,7 @@ if ($page == 'tickets'
 			if (isset($_POST['send'])
 				&& $_POST['send'] == 'send'
 			) {
-				$newticket = ticket::getInstanceOf($userinfo, $db, $settings, -1);
+				$newticket = ticket::getInstanceOf($userinfo, $settings, -1);
 				$newticket->Set('subject', validate($_POST['subject'], 'subject'), true, false);
 				$newticket->Set('priority', validate($_POST['priority'], 'priority'), true, false);
 				$newticket->Set('category', validate($_POST['category'], 'category'), true, false);
@@ -221,8 +218,7 @@ if ($page == 'tickets'
 					SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '`
 					'.$where.' ORDER BY `logicalorder`, `name` ASC'
 				);
-				Database::pexecute($result_stmt, array('adminid' => $userinfo['adminid']));
-				$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+				$result = Database::pexecute_first($result_stmt, array('adminid' => $userinfo['adminid']));
 
 				if (isset($result['name'])
 					&& $result['name'] != ''
@@ -278,7 +274,7 @@ if ($page == 'tickets'
 			&& $_POST['send'] == 'send'
 		) {
 
-			$replyticket = ticket::getInstanceOf($userinfo, $db, $settings, -1);
+			$replyticket = ticket::getInstanceOf($userinfo, $settings, -1);
 			$replyticket->Set('subject', validate($_POST['subject'], 'subject'), true, false);
 			$replyticket->Set('priority', validate($_POST['priority'], 'priority'), true, false);
 			$replyticket->Set('message', validate(htmlentities(str_replace("\r\n", "\n", $_POST['message'])), 'message', '/^[^\0]*$/'), true, false);
@@ -287,7 +283,7 @@ if ($page == 'tickets'
 				standard_error(array('stringisempty', 'mymessage'));
 			} else {
 				$now = time();
-				$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+				$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 				$replyticket->Set('customerid', $mainticket->Get('customer'), true, true);
 				$replyticket->Set('lastchange', $now, true, true);
 				$replyticket->Set('ip', $_SERVER['REMOTE_ADDR'], true, true);
@@ -313,7 +309,7 @@ if ($page == 'tickets'
 		} else {
 
 			$ticket_replies = '';
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			$dt = date("d.m.Y H:i\h", $mainticket->Get('dt'));
 			$status = ticket::getStatusText($lng, $mainticket->Get('status'));
 
@@ -334,8 +330,7 @@ if ($page == 'tickets'
 					FROM `' . TABLE_PANEL_CUSTOMERS . '`
 					WHERE `customerid` = :cid'
 				);
-				Database::pexecute($usr_stmt, array('cid' => $cid));
-				$usr = $usr_stmt->fetch(PDO::FETCH_ASSOC);
+				$usr = Database::pexecute_first($usr_stmt, array('cid' => $cid));
 				$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $cid)).'" rel="external">';
 				$by .= getCorrectFullUserDetails($usr).'</a>';
 			}
@@ -347,8 +342,7 @@ if ($page == 'tickets'
 			$result_stmt = Database::prepare('
 				SELECT `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `id` = :cid'
 			);
-			Database::pexecute($result_stmt, array('cid' => $mainticket->Get('category')));
-			$row = $result_stmt->fetch(PDO::FETCH_ASSOC);
+			$row = Database::pexecute_first($result_stmt, array('cid' => $mainticket->Get('category')));
 
 			$andere_stmt = Database::prepare('
 				SELECT * FROM `' . TABLE_PANEL_TICKETS . '`
@@ -359,7 +353,7 @@ if ($page == 'tickets'
 
 			while ($row2 = $andere_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-				$subticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$row2['id']);
+				$subticket = ticket::getInstanceOf($userinfo, $settings, (int)$row2['id']);
 				$lastchange = date("d.m.Y H:i\h", $subticket->Get('lastchange'));
 
 				if ($subticket->Get('by') == '1') {
@@ -371,8 +365,7 @@ if ($page == 'tickets'
 						FROM `' . TABLE_PANEL_CUSTOMERS . '`
 						WHERE `customerid` = :cid'
 					);
-					Database::pexecute($usr_stmt, array('cid' => $cid));
-					$usr = $usr_stmt->fetch(PDO::FETCH_ASSOC);
+					$usr = Database::pexecute_first($usr_stmt, array('cid' => $cid));
 					$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $cid)).'" rel="external">';
 					$by .= getCorrectFullUserDetails($usr).'</a>';
 				}
@@ -405,15 +398,15 @@ if ($page == 'tickets'
 			&& $_POST['send'] == 'send'
 		) {
 			$now = time();
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			$mainticket->Set('lastchange', $now, true, true);
 			$mainticket->Set('lastreplier', '1', true, true);
 			$mainticket->Set('status', '3', true, true);
 			$mainticket->Update();
 			$log->logAction(ADM_ACTION, LOG_NOTICE, "closed ticket '" . $mainticket->Get('subject') . "'");
-			redirectTo($filename, Array('page' => $page, 's' => $s));
+			redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			ask_yesno('ticket_reallyclose', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 
@@ -421,13 +414,13 @@ if ($page == 'tickets'
 		&& $id != 0
 	) {
 		$now = time();
-		$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+		$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 		$mainticket->Set('lastchange', $now, true, true);
 		$mainticket->Set('lastreplier', '1', true, true);
 		$mainticket->Set('status', '0', true, true);
 		$mainticket->Update();
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "reopened ticket '" . $mainticket->Get('subject') . "'");
-		redirectTo($filename, Array('page' => $page, 's' => $s));
+		redirectTo($filename, array('page' => $page, 's' => $s));
 
 	} elseif($action == 'archive'
 		&& $id != 0
@@ -436,16 +429,16 @@ if ($page == 'tickets'
 			&& $_POST['send'] == 'send'
 		) {
 			$now = time();
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			$mainticket->Set('lastchange', $now, true, true);
 			$mainticket->Set('lastreplier', '1', true, true);
 			$mainticket->Set('status', '3', true, true);
 			$mainticket->Update();
 			$mainticket->Archive();
 			$log->logAction(ADM_ACTION, LOG_NOTICE, "archived ticket '" . $mainticket->Get('subject') . "'");
-			redirectTo($filename, Array('page' => $page, 's' => $s));
+			redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			ask_yesno('ticket_reallyarchive', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 
@@ -455,12 +448,12 @@ if ($page == 'tickets'
 		if (isset($_POST['send'])
 			&& $_POST['send'] == 'send'
 		) {
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			$log->logAction(ADM_ACTION, LOG_INFO, "deleted ticket '" . $mainticket->Get('subject') . "'");
 			$mainticket->Delete();
-			redirectTo($filename, Array('page' => $page, 's' => $s));
+			redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			ask_yesno('ticket_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 	}
@@ -533,18 +526,18 @@ if ($page == 'tickets'
 
 			if ($order < 1 || $order >= 1000) {
 				// use the latest available
-				$order = ticket::getHighestOrderNumber($db, $userinfo['adminid']) + 1;
+				$order = ticket::getHighestOrderNumber($userinfo['adminid']) + 1;
 			}
 
 			if ($category == '') {
 				standard_error(array('stringisempty', 'mycategory'));
 			} else {
-				ticket::addCategory($db, $category, $userinfo['adminid'], $order);
+				ticket::addCategory($category, $userinfo['adminid'], $order);
 				$log->logAction(ADM_ACTION, LOG_INFO, "added ticket-category '" . $category . "'");
-				redirectTo($filename, Array('page' => $page, 's' => $s));
+				redirectTo($filename, array('page' => $page, 's' => $s));
 			}
 		} else {
-			$order = ticket::getHighestOrderNumber($db, $userinfo['adminid']) + 1;
+			$order = ticket::getHighestOrderNumber($userinfo['adminid']) + 1;
 
 			$category_new_data = include_once dirname(__FILE__).'/lib/formfields/admin/tickets/formfield.category_new.php';
 			$category_new_form = htmlform::genHTMLForm($category_new_data);
@@ -572,16 +565,15 @@ if ($page == 'tickets'
 			if ($category == '') {
 				standard_error(array('stringisempty', 'mycategory'));
 			} else {
-				ticket::editCategory($db, $category, $id, $order);
+				ticket::editCategory($category, $id, $order);
 				$log->logAction(ADM_ACTION, LOG_INFO, "edited ticket-category '" . $category . "'");
-				redirectTo($filename, Array('page' => $page, 's' => $s));
+				redirectTo($filename, array('page' => $page, 's' => $s));
 			}
 		} else {
 			$row_stmt = Database::prepare('
 				SELECT * FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `id` = :id'
 			);
-			Database::pexecute($row_stmt, array('id' => $id));
-			$row = $row_stmt->fetch(PDO::FETCH_ASSOC);
+			$row = Database::pexecute_first($row_stmt, array('id' => $id));
 			$category_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/tickets/formfield.category_edit.php';
 			$category_edit_form = htmlform::genHTMLForm($category_edit_data);
 
@@ -597,15 +589,15 @@ if ($page == 'tickets'
 		if (isset($_POST['send'])
 			&& $_POST['send'] == 'send'
 		) {
-			if (ticket::deleteCategory($db, $id) == false) {
+			if (ticket::deleteCategory($id) == false) {
 				standard_error('categoryhastickets');
 			}
 
 			$log->logAction(ADM_ACTION, LOG_INFO, "deleted ticket-category #" . $id);
-			redirectTo($filename, Array('page' => $page, 's' => $s));
+			redirectTo($filename, array('page' => $page, 's' => $s));
 
 		} else {
-			$name = ticket::getCategoryName($db, $id);
+			$name = ticket::getCategoryName($id);
 			ask_yesno('ticket_reallydeletecat', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $name);
 		}
 	}
@@ -697,8 +689,7 @@ if ($page == 'tickets'
 								FROM `' . TABLE_PANEL_CUSTOMERS . '`
 								WHERE `customerid` = :cid'
 							);
-							Database::pexecute($usr_stmt, array('cid' => $cid));
-							$usr = $usr_stmt->fetch(PDO::FETCH_ASSOC);
+							$usr = Database::pexecute_first($usr_stmt, array('cid' => $cid));
 
 							if (isset($usr['loginname'])) {
 								$customer = getCorrectFullUserDetails($usr);
@@ -745,7 +736,7 @@ if ($page == 'tickets'
 		} else {
 
 			$archived = array();
-			$archived = ticket::getLastArchived($db, 6, $userinfo['adminid']);
+			$archived = ticket::getLastArchived(6, $userinfo['adminid']);
 			$tickets = '';
 
 			if ($archived !== false) {
@@ -800,27 +791,22 @@ if ($page == 'tickets'
 	) {
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed archived-ticket #" . $id);
 		$ticket_replies = '';
-		$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+		$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 		$lastchange = date("d.m.Y H:i\h", $mainticket->Get('lastchange'));
 		$dt = date("d.m.Y H:i\h", $mainticket->Get('dt'));
 		$status = ticket::getStatusText($lng, $mainticket->Get('status'));
 		$isclosed = 1;
 
-		if($mainticket->Get('by') == '1')
-		{
+		if ($mainticket->Get('by') == '1') {
 			$by = $lng['ticket']['staff'];
-		}
-		else
-		{
+		} else {
 			$cid = $mainticket->Get('customer');
 			$usr_stmt = Database::prepare('
 				SELECT `customerid`, `firstname`, `name`, `company`, `loginname`
 				FROM `' . TABLE_PANEL_CUSTOMERS . '`
 				WHERE `customerid` = :cid'
 			);
-			Database::pexecute($usr_stmt, array('cid' => $cid));
-			$usr = $usr_stmt->fetch(PDO::FETCH_ASSOC);
-
+			$usr = Database::pexecute_first($usr_stmt, array('cid' => $cid));
 			$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $cid)).'" rel="external">';
 			$by .= getCorrectFullUserDetails($usr).'</a>';
 		}
@@ -832,8 +818,7 @@ if ($page == 'tickets'
 		$result_stmt = Database::prepare('
 			SELECT `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `id` = :cid'
 		);
-		Database::pexecute($result_stmt, array('cid' => $mainticket->Get('category')));
-		$row = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		$row = Database::pexecute_first($result_stmt, array('cid' => $mainticket->Get('category')));
 
 		$andere_stmt = Database::prepare('
 			SELECT * FROM `' . TABLE_PANEL_TICKETS . '` WHERE `answerto` = :id'
@@ -843,7 +828,7 @@ if ($page == 'tickets'
 
 		while ($row2 = $andere_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-			$subticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$row2['id']);
+			$subticket = ticket::getInstanceOf($userinfo, $settings, (int)$row2['id']);
 			$lastchange = date("d.m.Y H:i\h", $subticket->Get('lastchange'));
 
 			if ($subticket->Get('by') == '1') {
@@ -855,9 +840,7 @@ if ($page == 'tickets'
 					FROM `' . TABLE_PANEL_CUSTOMERS . '`
 					WHERE `customerid` = :cid'
 				);
-				Database::pexecute($usr_stmt, array('cid' => $cid));
-				$usr = $usr_stmt->fetch(PDO::FETCH_ASSOC);
-
+				$usr = Database::pexecute_first($usr_stmt, array('cid' => $cid));
 				$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $cid)).'" rel="external">';
 				$by .= getCorrectFullUserDetails($usr).'</a>';
 			}
@@ -882,12 +865,12 @@ if ($page == 'tickets'
 		if (isset($_POST['send'])
 			&& $_POST['send'] == 'send'
 		) {
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			$log->logAction(ADM_ACTION, LOG_INFO, "deleted archived ticket '" . $mainticket->Get('subject') . "'");
 			$mainticket->Delete();
-			redirectTo($filename, Array('page' => $page, 's' => $s));
+			redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			ask_yesno('ticket_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 	}
