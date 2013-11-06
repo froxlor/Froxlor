@@ -257,8 +257,7 @@ class phpinterface_fcgid {
 			$stmt = Database::prepare("TABLE_PANEL_ADMINS
 					SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :id"
 			);
-			Database::pexecute($stmt, array('id' => $adminid));
-			$this->_admin_cache[$adminid] = $stmt->fetch(PDO::FETCH_ASSOC);
+			$this->_admin_cache[$adminid] = Database::pexecute_first($stmt, array('id' => $adminid));
 		}
 		return $this->_admin_cache[$adminid];
 	}

@@ -97,8 +97,7 @@ class phpinterface {
 			$stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id"
 			);
-			Database::pexecute($stmt, array('id' => $php_config_id));
-			$this->_php_configs_cache[$php_config_id] = $stmt->fetch(PDO::FETCH_ASSOC);
+			$this->_php_configs_cache[$php_config_id] = Database::pexecute_first($stmt, array('id' => $php_config_id));
 		}
 
 		return $this->_php_configs_cache[$php_config_id];
