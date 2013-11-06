@@ -26,17 +26,19 @@
  *
  * @return boolean
  */
-function domainHasApsInstances($domainid = 0)
-{
-	global $db, $settings, $theme;
+function domainHasApsInstances($domainid = 0) {
+
+	global $settings, $theme;
 	
-	if($settings['aps']['aps_active'] == '1')
-	{
-		if($domainid > 0)
-		{
-			$instances = $db->query_first("SELECT COUNT(`ID`) AS `count` FROM `" . TABLE_APS_SETTINGS . "` WHERE `Name`='main_domain' AND `Value`='" . (int)$domainid . "'");
-			if((int)$instances['count'] != 0)
-			{
+	if ($settings['aps']['aps_active'] == '1') {
+		if ($domainid > 0) {
+			$instances_stmt = Database::prepare("
+				SELECT COUNT(`ID`) AS `count` FROM `" . TABLE_APS_SETTINGS . "`
+				WHERE `Name` = 'main_domain' AND `Value` = :domainid"
+			);
+			$instances = Database::pexecute_first($instances_stmt, array('domainid' => $domainid));
+
+			if ((int)$instances['count'] != 0) {
 				return true;
 			}
 		}
