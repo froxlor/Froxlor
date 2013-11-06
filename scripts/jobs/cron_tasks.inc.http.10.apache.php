@@ -234,7 +234,7 @@ class apache
 							'loginname' => 'froxlor.panel',
 							'documentroot' => $mypath
 						);
-						$php = new phpinterface($this->getDB(), $this->settings, $domain);
+						$php = new phpinterface($this->settings, $domain);
 						$phpconfig = $php->getPhpConfig($this->settings['system']['mod_fcgid_defaultini_ownvhost']);
 
 						$starter_filename = makeCorrectFile($configdir . '/php-fcgi-starter');
@@ -273,7 +273,7 @@ class apache
 						'documentroot' => $mypath,
 					);
 
-					$php = new phpinterface($this->getDB(), $this->settings, $domain);
+					$php = new phpinterface($this->settings, $domain);
 					$phpconfig = $php->getPhpConfig($this->settings['phpfpm']['vhost_defaultini']);
 					$srvName = substr(md5($ipport),0,4).'.fpm.external';
 					if ($row_ipsandports['ssl']) {

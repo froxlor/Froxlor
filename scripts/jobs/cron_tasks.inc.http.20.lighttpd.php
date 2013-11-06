@@ -151,7 +151,7 @@ class lighttpd
 						'documentroot' => $mypath
 					);
 
-					$php = new phpinterface($this->getDB(), $this->settings, $domain);
+					$php = new phpinterface($this->settings, $domain);
 
 					$this->lighttpd_data[$vhost_filename].= '  fastcgi.server = ( '."\n";
 					$this->lighttpd_data[$vhost_filename].=	"\t".'".php" => ('."\n";

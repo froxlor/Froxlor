@@ -242,7 +242,7 @@ class nginx
 						'documentroot' => $mypath,
 					);
 
-					$php = new phpinterface($this->getDB(), $this->settings, $domain);
+					$php = new phpinterface($this->settings, $domain);
 					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
 				} else {
 					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
