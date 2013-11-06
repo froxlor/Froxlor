@@ -750,7 +750,7 @@ if ($page == 'customers'
 						`email_quota` = :email_quota,
 						`ftps` = :ftps,
 						`tickets` = :tickets,
-						`mysqls` = :mysql,
+						`mysqls` = :mysqls,
 						`standardsubdomain` = '0',
 						`phpenabled` = :phpenabled,
 						`imap` = :imap,
@@ -1045,12 +1045,15 @@ if ($page == 'customers'
 		&& $id != 0
 	) {
 
+		$result_data = array('id' => $id);
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE `customerid`= :id " . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
+			WHERE `customerid` = :id" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
 		);
-		Database::pexecute($result_stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		if ($userinfo['customers_see_all'] == '0') {
+			$result_data['adminid'] = $userinfo['adminid'];
+		}
+		$result = Database::pexecute_first($result_stmt, $result_data);
 
 		if ($result['loginname'] != '') {
 
@@ -1465,7 +1468,7 @@ if ($page == 'customers'
 						`email_forwarders` = :email_forwarders,
 						`ftps` = :ftps,
 						`tickets` = :tickets,
-						`mysqls` = :mysql,
+						`mysqls` = :mysqls,
 						`deactivated` = :deactivated,
 						`phpenabled` = :phpenabled,
 						`email_quota` = :email_quota,
