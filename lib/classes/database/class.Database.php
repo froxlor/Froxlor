@@ -70,6 +70,22 @@ class Database {
 	}
 
 	/**
+	 * Wrapper for PDOStatement::execute so we can catch the PDOException
+	 * and display the error nicely on the panel - also fetches the
+	 * result from the statement and returns the resulting array
+	 *
+	 * @param PDOStatement $stmt
+	 * @param array $params (optional)
+	 * @param bool $showerror suppress errordisplay (default true)
+	 *
+	 * @return array
+	 */
+	public static function pexecute_first(&$stmt, $params = null, $showerror = true) {
+		self::pexecute($stmt, $params, $showerror);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
+	/**
 	 * returns the number of found rows of the last select query
 	 *
 	 * @return int

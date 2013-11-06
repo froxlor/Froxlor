@@ -32,7 +32,7 @@ class apache_fcgid extends apache
 
 		if($domain['phpenabled'] == '1')
 		{
-			$php = new phpinterface($this->getDB(), $this->settings, $domain);
+			$php = new phpinterface($this->settings, $domain);
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
 
 			if((int)$this->settings['phpfpm']['enabled'] == 1)
@@ -93,8 +93,8 @@ class apache_fcgid extends apache
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
 
-			// create php.ini
-			// @TODO make php-fpm support this
+			// create php.ini (fpm does nothing here, as it
+			// defines ini-settings in its pool config)
 			$php->getInterface()->createIniFile($phpconfig);
 		}
 		else
@@ -143,7 +143,7 @@ class apache_fcgid extends apache
 			safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
 
 			// get php.ini for our own vhost
-			$php = new phpinterface($this->getDB(), $this->settings, $domain);
+			$php = new phpinterface($this->settings, $domain);
 
 			// get php-config
 			if ($this->settings['phpfpm']['enabled'] == '1') {
@@ -157,8 +157,8 @@ class apache_fcgid extends apache
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
 
-			// create php.ini
-			// @TODO make php-fpm support this
+			// create php.ini (fpm does nothing here, as it
+			// defines ini-settings in its pool config)
 			$php->getInterface()->createIniFile($phpconfig);
 		}
 	}

@@ -18,22 +18,18 @@
  */
 
 define('AREA', 'customer');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-
 require ("./lib/init.php");
 
-if(isset($_POST['id'])) {
+if (isset($_POST['id'])) {
+
 	$id = intval($_POST['id']);
 	
 	/*
 	 * Check if the current user is allowed to see the current ticket.
 	 */
 	$stmt = Database::prepare("SELECT `id` FROM `panel_tickets` WHERE `id` = :id AND `customerid` = :customerid");
-	Database::pexecute($stmt, array("id" => $id, "customerid" => $userinfo['customerid']));
-	$result = $stmt->fetch(PDO::FETCH_ASSOC);
+	$result = Database::pexecute_first($stmt, array("id" => $id, "customerid" => $userinfo['customerid']));
+
 	if ($result == null) {
 		// no rights to see the requested ticket
 		standard_error(array('ticketnotaccessible'));
@@ -141,8 +137,7 @@ if($page == 'overview') {
 			AND `answerto` = "0"
 			AND (`status` = "0" OR `status` = "1" OR `status` = "2")'
 		);
-		Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
-		$opentickets = $stmt->fetch(PDO::FETCH_ASSOC);
+		$opentickets = Database::pexecute_first($stmt, array("customerid" => $userinfo['customerid']));
 
 		if($settings['ticket']['concurrently_open'] != - 1 && $settings['ticket']['concurrently_open'] != '') {
 			$notmorethanxopentickets = strtr($lng['ticket']['notmorethanxopentickets'], array('%s' => $settings['ticket']['concurrently_open']));
@@ -152,10 +147,11 @@ if($page == 'overview') {
 
 		$ticketsopen = (int)$opentickets['count'];
 		eval("echo \"" . getTemplate("tickets/tickets") . "\";");
+
 	} elseif($action == 'new') {
 		if($userinfo['tickets_used'] < $userinfo['tickets'] || $userinfo['tickets'] == '-1') {
 			if(isset($_POST['send']) && $_POST['send'] == 'send') {
-				$newticket = ticket::getInstanceOf($userinfo, $db, $settings, -1);
+				$newticket = ticket::getInstanceOf($userinfo, $settings, -1);
 				$newticket->Set('subject', validate($_POST['subject'], 'subject'), true, false);
 				$newticket->Set('priority', validate($_POST['priority'], 'priority'), true, false);
 				$newticket->Set('category', validate($_POST['category'], 'category'), true, false);
@@ -185,11 +181,9 @@ if($page == 'overview') {
 					Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
 
 					// Customer mail
-
 					$newticket->sendMail((int)$userinfo['customerid'], 'new_ticket_for_customer_subject', $lng['mails']['new_ticket_for_customer']['subject'], 'new_ticket_for_customer_mailbody', $lng['mails']['new_ticket_for_customer']['mailbody']);
 
 					// Admin mail
-
 					$newticket->sendMail(-1, 'new_ticket_by_customer_subject', $lng['mails']['new_ticket_by_customer']['subject'], 'new_ticket_by_customer_mailbody', $lng['mails']['new_ticket_by_customer']['mailbody']);
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
@@ -199,10 +193,9 @@ if($page == 'overview') {
 					WHERE `adminid` = :adminid
 					ORDER BY `logicalorder`, `name` ASC'
 				);
-				Database::pexecute($result_stmt, array("adminid" => $userinfo['adminid']));
-				$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+				$result = Database::pexecute_first($result_stmt, array("adminid" => $userinfo['adminid']));
 				
-				if(isset($result['name']) && $result['name'] != '') {
+				if (isset($result['name']) && $result['name'] != '') {
 					$result2_stmt = Database::prepare('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '`
 						WHERE `adminid` = :adminid
 						ORDER BY `logicalorder`, `name` ASC'
@@ -225,10 +218,11 @@ if($page == 'overview') {
 					AND `answerto` = "0"
 					AND (`status` = "0" OR `status` = "1" OR `status` = "2")'
 				);
-				Database::pexecute($opentickets_stmt, array("customerid" => $userinfo['customerid']));					   
-				$opentickets = $opentickets_stmt->fetch(PDO::FETCH_ASSOC);
+				$opentickets = Database::pexecute_first($opentickets_stmt, array("customerid" => $userinfo['customerid']));
 
-				if($settings['ticket']['concurrently_open'] != - 1 && $settings['ticket']['concurrently_open'] != '') {
+				if ($settings['ticket']['concurrently_open'] != - 1
+					&& $settings['ticket']['concurrently_open'] != ''
+				) {
 					$notmorethanxopentickets = strtr($lng['ticket']['notmorethanxopentickets'], array('%s' => $settings['ticket']['concurrently_open']));
 				} else {
 					$notmorethanxopentickets = '';
@@ -249,7 +243,7 @@ if($page == 'overview') {
 		}
 	} elseif($action == 'answer' && $id != 0) {
 		if(isset($_POST['send']) && $_POST['send'] == 'send') {
-			$replyticket = ticket::getInstanceOf($userinfo, $db, $settings, -1);
+			$replyticket = ticket::getInstanceOf($userinfo, $settings, -1);
 			$replyticket->Set('subject', validate($_POST['subject'], 'subject'), true, false);
 			$replyticket->Set('priority', validate($_POST['priority'], 'priority'), true, false);
 			$replyticket->Set('message', validate(str_replace("\r\n", "\n", $_POST['message']), 'message', '/^[^\0]*$/'), true, false);
@@ -267,8 +261,7 @@ if($page == 'overview') {
 				$replyticket->Insert();
 
 				// Update priority if changed
-
-				$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+				$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 
 				if($replyticket->Get('priority') != $mainticket->Get('priority')) {
 					$mainticket->Set('priority', $replyticket->Get('priority'), true);
@@ -284,7 +277,7 @@ if($page == 'overview') {
 			}
 		} else {
 			$ticket_replies = '';
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			$dt = date("d.m.Y H:i\h", $mainticket->Get('dt'));
 			$status = ticket::getStatusText($lng, $mainticket->Get('status'));
 
@@ -302,10 +295,8 @@ if($page == 'overview') {
 					FROM `' . TABLE_PANEL_CUSTOMERS . '`
 					WHERE `customerid` = :customerid '
 				);
-				Database::pexecute($usr_stmt, array("customerid" => $cid));
-				$usr = $usr_stmt->fetch(PDO::FETCH_ASSOC);
+				$usr = Database::pexecute_first($usr_stmt, array("customerid" => $cid));
 				$by = getCorrectFullUserDetails($usr);
-				//$by = $lng['ticket']['customer'];
 			}
 
 			$subject = $mainticket->Get('subject');
@@ -314,24 +305,23 @@ if($page == 'overview') {
 			$result_stmt = Database::prepare('SELECT `name` FROM `' . TABLE_PANEL_TICKET_CATS . '`
 				WHERE `id`= :id '
 			);
-			Database::pexecute($result_stmt, array("id" => $mainticket->Get('category')));
-			$row = $result_stmt->fetch(PDO::FETCH_ASSOC);
+			$row = Database::pexecute_first($result_stmt, array("id" => $mainticket->Get('category')));
 			
 			$andere_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_TICKETS . '`
 				WHERE `answerto`= :answerto
 				ORDER BY `lastchange` ASC'
 			);
 			Database::pexecute($andere_stmt, array("answerto" => $id));
-			
+			$numrows_andere = Database::num_rows();
+
 			while($row2 = $andere_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$subticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$row2['id']);
+				$subticket = ticket::getInstanceOf($userinfo, $settings, (int)$row2['id']);
 				$lastchange = date("d.m.Y H:i\h", $subticket->Get('lastchange'));
 
 				if($subticket->Get('by') == '1') {
 					$by = $lng['ticket']['staff'];
 				} else {
 					$by = getCorrectFullUserDetails($usr);
-					//$by = $lng['ticket']['customer'];
 				}
 
 				$subject = $subticket->Get('subject');
@@ -343,10 +333,9 @@ if($page == 'overview') {
 			$priorities.= makeoption($lng['ticket']['normal'], '2', $mainticket->Get('priority'), true, true);
 			$priorities.= makeoption($lng['ticket']['low'], '3', $mainticket->Get('priority'), true, true);
 			$subject = $mainticket->Get('subject');
-			$ticket_replies_count = $db->num_rows($andere) + 1;
+			$ticket_replies_count = $numrows_andere + 1;
 
 			// don't forget the main-ticket!
-
 			$ticket_reply_data = include_once dirname(__FILE__).'/lib/formfields/customer/tickets/formfield.ticket_reply.php';
 			$ticket_reply_form = htmlform::genHTMLForm($ticket_reply_data);
 
@@ -358,7 +347,7 @@ if($page == 'overview') {
 	} elseif($action == 'close' && $id != 0) {
 		if(isset($_POST['send']) && $_POST['send'] == 'send') {
 			$now = time();
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			$mainticket->Set('lastchange', $now, true, true);
 			$mainticket->Set('lastreplier', '0', true, true);
 			$mainticket->Set('status', '3', true, true);
@@ -366,7 +355,7 @@ if($page == 'overview') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "closed support-ticket '" . $mainticket->Get('subject') . "'");
 			redirectTo($filename, Array('page' => $page, 's' => $s));
 		} else {
-			$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 			ask_yesno('ticket_reallyclose', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 	} elseif($action == 'reopen' && $id != 0) {
@@ -376,8 +365,7 @@ if($page == 'overview') {
 			AND `answerto` = "0"
 			AND (`status` = "0" OR `status` = "1" OR `status` = "2")'
 		);
-		Database::pexecute($opentickets_stmt, array("customerid" => $userinfo['customerid']));
-		$opentickets = $opentickets_stmt->fetch(PDO::FETCH_ASSOC);
+		$opentickets = Database::pexecute_first($opentickets_stmt, array("customerid" => $userinfo['customerid']));
 		$ticketsopen = (int)$opentickets['count'];
 
 		if($ticketsopen > $settings['ticket']['concurrently_open'] && $settings['ticket']['concurrently_open'] != - 1 && $settings['ticket']['concurrently_open'] != '') {
@@ -385,14 +373,12 @@ if($page == 'overview') {
 		}
 
 		$now = time();
-		$mainticket = ticket::getInstanceOf($userinfo, $db, $settings, (int)$id);
+		$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
 		$mainticket->Set('lastchange', $now, true, true);
 		$mainticket->Set('lastreplier', '0', true, true);
 		$mainticket->Set('status', '0', true, true);
 		$mainticket->Update();
 		$log->logAction(USR_ACTION, LOG_NOTICE, "reopened support-ticket '" . $mainticket->Get('subject') . "'");
-		redirectTo($filename, Array('page' => $page, 's' => $s));
+		redirectTo($filename, array('page' => $page, 's' => $s));
 	}
 }
-
-?>

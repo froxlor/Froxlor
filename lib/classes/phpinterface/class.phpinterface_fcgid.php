@@ -19,13 +19,7 @@
  *
  */
 
-class phpinterface_fcgid
-{
-	/**
-	 * Database handler
-	 * @var object
-	 */
-	private $_db = false;
+class phpinterface_fcgid {
 
 	/**
 	 * Settings array
@@ -36,27 +30,25 @@ class phpinterface_fcgid
 	/**
 	 * Domain-Data array
 	 * @var array
-	 */
+	*/
 	private $_domain = array();
 
 	/**
 	 * Admin-Date cache array
 	 * @var array
-	 */
+	*/
 	private $_admin_cache = array();
 
 	/**
 	 * main constructor
-	 */
-	public function __construct($db, $settings, $domain)
-	{
-		$this->_db = $db;
+	*/
+	public function __construct($settings, $domain) {
 		$this->_settings = $settings;
 		$this->_domain = $domain;
 	}
 
-	public function createConfig($phpconfig)
-	{
+	public function createConfig($phpconfig) {
+
 		// create starter
 		$starter_file = "#!/bin/sh\n\n";
 		$starter_file.= "#\n";
@@ -68,18 +60,13 @@ class phpinterface_fcgid
 		$starter_file.= "export PHPRC\n";
 
 		// set number of processes for one domain
-		if((int)$this->_domain['mod_fcgid_starter'] != - 1)
-		{
+		if ((int)$this->_domain['mod_fcgid_starter'] != - 1) {
 			$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$this->_domain['mod_fcgid_starter'] . "\n";
-		}
-		else
-		{
-			if((int)$phpconfig['mod_fcgid_starter'] != - 1)
-			{
+
+		} else {
+			if ((int)$phpconfig['mod_fcgid_starter'] != - 1) {
 				$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$phpconfig['mod_fcgid_starter'] . "\n";
-			}
-			else
-			{
+			} else {
 				$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$this->_settings['system']['mod_fcgid_starter'] . "\n";
 			}
 		}
@@ -87,18 +74,12 @@ class phpinterface_fcgid
 		$starter_file.= "export PHP_FCGI_CHILDREN\n";
 
 		// set number of maximum requests for one domain
-		if((int)$this->_domain['mod_fcgid_maxrequests'] != - 1)
-		{
+		if ((int)$this->_domain['mod_fcgid_maxrequests'] != - 1) {
 			$starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$this->_domain['mod_fcgid_maxrequests'] . "\n";
-		}
-		else
-		{
-			if((int)$phpconfig['mod_fcgid_maxrequests'] != - 1)
-			{
+		} else {
+			if ((int)$phpconfig['mod_fcgid_maxrequests'] != - 1) {
 				$starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$phpconfig['mod_fcgid_maxrequests'] . "\n";
-			}
-			else
-			{
+			} else {
 				$starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$this->_settings['system']['mod_fcgid_maxrequests'] . "\n";
 			}
 		}
@@ -109,8 +90,7 @@ class phpinterface_fcgid
 		$starter_file.= "exec " . $phpconfig['binary'] . " -c " . escapeshellarg($this->getConfigDir()) . "\n";
 
 		//remove +i attibute, so starter can be overwritten
-		if(file_exists($this->getStarterFile()))
-		{
+		if (file_exists($this->getStarterFile())) {
 			removeImmutable($this->getStarterFile());
 		}
 
@@ -122,34 +102,36 @@ class phpinterface_fcgid
 		setImmutable($this->getStarterFile());
 	}
 
-	public function createIniFile($phpconfig)
-	{
+	/**
+	 * create customized php.ini
+	 *
+	 * @param array $phpconfig
+	 */
+	public function createIniFile($phpconfig) {
+
 		$openbasedir = '';
 		$openbasedirc = ';';
 
-		if($this->_domain['openbasedir'] == '1')
-		{
+		if ($this->_domain['openbasedir'] == '1') {
+
 			$openbasedirc = '';
 			$_phpappendopenbasedir = '';
 
 			$_custom_openbasedir = explode(':', $this->_settings['system']['mod_fcgid_peardir']);
-			foreach($_custom_openbasedir as $cobd)
-			{
+			foreach ($_custom_openbasedir as $cobd) {
 				$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 			}
 
 			$_custom_openbasedir = explode(':', $this->_settings['system']['phpappendopenbasedir']);
-			foreach($_custom_openbasedir as $cobd)
-			{
+			foreach ($_custom_openbasedir as $cobd) {
 				$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 			}
 
-			if($this->_domain['openbasedir_path'] == '0' && strstr($this->_domain['documentroot'], ":") === false)
-			{
+			if ($this->_domain['openbasedir_path'] == '0'
+					&& strstr($this->_domain['documentroot'], ":") === false
+			) {
 				$openbasedir = appendOpenBasedirPath($this->_domain['documentroot'], true);
-			}
-			else
-			{
+			} else {
 				$openbasedir = appendOpenBasedirPath($this->_domain['customerroot'], true);
 			}
 
@@ -158,34 +140,31 @@ class phpinterface_fcgid
 
 			$openbasedir = explode(':', $openbasedir);
 			$clean_openbasedir = array();
-			foreach($openbasedir as $number => $path)
-			{
-				if(trim($path) != '/')
-				{
+			foreach ($openbasedir as $number => $path) {
+				if (trim($path) != '/') {
 					$clean_openbasedir[] = makeCorrectDir($path);
 				}
 			}
 			$openbasedir = implode(':', $clean_openbasedir);
-		}
-		else
-		{
+
+		} else {
 			$openbasedir = 'none';
 			$openbasedirc = ';';
 		}
 
 		$admin = $this->_getAdminData($this->_domain['adminid']);
 		$php_ini_variables = array(
-			'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
-			'PEAR_DIR' => $this->_settings['system']['mod_fcgid_peardir'],
-			'OPEN_BASEDIR' => $openbasedir,
-			'OPEN_BASEDIR_C' => $openbasedirc,
-			'OPEN_BASEDIR_GLOBAL' => $this->_settings['system']['phpappendopenbasedir'],
-			'TMP_DIR' => $this->getTempDir(),
-			'CUSTOMER_EMAIL' => $this->_domain['email'],
-			'ADMIN_EMAIL' => $admin['email'],
-			'DOMAIN' => $this->_domain['domain'],
-			'CUSTOMER' => $this->_domain['loginname'],
-			'ADMIN' => $admin['loginname']
+				'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
+				'PEAR_DIR' => $this->_settings['system']['mod_fcgid_peardir'],
+				'OPEN_BASEDIR' => $openbasedir,
+				'OPEN_BASEDIR_C' => $openbasedirc,
+				'OPEN_BASEDIR_GLOBAL' => $this->_settings['system']['phpappendopenbasedir'],
+				'TMP_DIR' => $this->getTempDir(),
+				'CUSTOMER_EMAIL' => $this->_domain['email'],
+				'ADMIN_EMAIL' => $admin['email'],
+				'DOMAIN' => $this->_domain['domain'],
+				'CUSTOMER' => $this->_domain['loginname'],
+				'ADMIN' => $admin['loginname']
 		);
 
 		//insert a small header for the file
@@ -206,17 +185,16 @@ class phpinterface_fcgid
 
 	/**
 	 * fcgid-config directory
-	 * 
+	 *
 	 * @param boolean $createifnotexists create the directory if it does not exist
-	 * 
+	 *
 	 * @return string the directory
 	 */
-	public function getConfigDir($createifnotexists = true)
-	{
+	public function getConfigDir($createifnotexists = true) {
+
 		$configdir = makeCorrectDir($this->_settings['system']['mod_fcgid_configdir'] . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
 
-		if(!is_dir($configdir) && $createifnotexists)
-		{
+		if (!is_dir($configdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
 			safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($configdir));
 		}
@@ -226,66 +204,61 @@ class phpinterface_fcgid
 
 	/**
 	 * fcgid-temp directory
-	 * 
+	 *
 	 * @param boolean $createifnotexists create the directory if it does not exist
-	 * 
+	 *
 	 * @return string the directory
 	 */
-	public function getTempDir($createifnotexists = true)
-	{
+	public function getTempDir($createifnotexists = true) {
+
 		$tmpdir = makeCorrectDir($this->_settings['system']['mod_fcgid_tmpdir'] . '/' . $this->_domain['loginname'] . '/');
 
-		if(!is_dir($tmpdir) && $createifnotexists)
-		{
+		if (!is_dir($tmpdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
 			safe_exec('chown -R ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($tmpdir));
 			safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
 		}
-		
+
 		return $tmpdir;
 	}
 
 	/**
 	 * return path of php-starter file
-	 * 
+	 *
 	 * @return string the directory
 	 */
-	public function getStarterFile()
-	{
+	public function getStarterFile() {
 		$starter_filename = makeCorrectFile($this->getConfigDir() . '/php-fcgi-starter');
 		return $starter_filename;
 	}
 
 	/**
 	 * return path of php.ini file
-	 * 
+	 *
 	 * @return string full with path file-name
 	 */
-	public function getIniFile()
-	{
+	public function getIniFile() {
 		$phpini_filename = makeCorrectFile($this->getConfigDir() . '/php.ini');
 		return $phpini_filename;
 	}
 
 	/**
 	 * return the admin-data of a specific admin
-	 * 
+	 *
 	 * @param int $adminid id of the admin-user
-	 * 
+	 *
 	 * @return array
 	 */
-	private function _getAdminData($adminid)
-	{
+	private function _getAdminData($adminid) {
+
 		$adminid = intval($adminid);
 
-		if(!isset($this->_admin_cache[$adminid]))
-		{
-			$this->_admin_cache[$adminid] = $this->_db->query_first(
-				"SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` 
-				WHERE `adminid` = " . (int)$adminid
+		if (!isset($this->_admin_cache[$adminid])) {
+			$stmt = Database::prepare("TABLE_PANEL_ADMINS
+					SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :id"
 			);
+			$this->_admin_cache[$adminid] = Database::pexecute_first($stmt, array('id' => $adminid));
 		}
-
 		return $this->_admin_cache[$adminid];
 	}
 }

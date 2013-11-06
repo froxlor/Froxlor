@@ -242,7 +242,7 @@ class nginx
 						'documentroot' => $mypath,
 					);
 
-					$php = new phpinterface($this->getDB(), $this->settings, $domain);
+					$php = new phpinterface($this->settings, $domain);
 					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
 				} else {
 					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
@@ -284,7 +284,7 @@ class nginx
 			    GROUP BY `id_domain`
 			  ) AS p ON p.`id_domain` = `d`.`id`
 			  
-			  WHERE `d`.`aliasdomain` IS NULL 
+			  WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` = '0'
 			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
 
 		$result_domains = $this->db->query($query);

@@ -151,7 +151,7 @@ class lighttpd
 						'documentroot' => $mypath
 					);
 
-					$php = new phpinterface($this->getDB(), $this->settings, $domain);
+					$php = new phpinterface($this->settings, $domain);
 
 					$this->lighttpd_data[$vhost_filename].= '  fastcgi.server = ( '."\n";
 					$this->lighttpd_data[$vhost_filename].=	"\t".'".php" => ('."\n";
@@ -324,7 +324,7 @@ class lighttpd
 			    GROUP BY `id_domain`
 			  ) AS p ON p.`id_domain` = `d`.`id`
 
-			  WHERE `d`.`aliasdomain` IS NULL
+			  WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` = '0'
 			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
 
 		$included_vhosts = array();

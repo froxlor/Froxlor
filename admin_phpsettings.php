@@ -148,8 +148,7 @@ if ($page == 'overview') {
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id"
 		);
-		Database::pexecute($result_stmt, array('id' => $id));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		$result = Database::pexecute_first($result_stmt, array('id' => $id));
 
 		if ($result['id'] != 0
 			&& $result['id'] == $id
@@ -190,8 +189,7 @@ if ($page == 'overview') {
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id"
 		);
-		Database::pexecute($result_stmt, array('id' => $id));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		$result = Database::pexecute_first($result_stmt, array('id' => $id));
 
 		if ($result['id'] != 0
 			&& $result['id'] == $id

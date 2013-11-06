@@ -15,10 +15,6 @@
  *
  */
 
-/*
- * This script creates the php.ini's used by mod_suPHP+php-cgi
- */
-
 if(@php_sapi_name() != 'cli'
 && @php_sapi_name() != 'cgi'
 && @php_sapi_name() != 'cgi-fcgi')
@@ -34,7 +30,7 @@ class nginx_phpfpm extends nginx
 
 		if($domain['phpenabled'] == '1')
 		{
-			$php = new phpinterface($this->getDB(), $this->settings, $domain);
+			$php = new phpinterface($this->settings, $domain);
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
 			
 			$php_options_text = "\t".'location ~ \.php$ {'."\n";
@@ -52,8 +48,8 @@ class nginx_phpfpm extends nginx
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
 			
-			// create php.ini
-			// @TODO make php-fpm support this
+			// create php.ini (fpm does nothing here, as it
+			// defines ini-settings in its pool config)
 			$php->getInterface()->createIniFile($phpconfig);
 		}
 		else
@@ -92,7 +88,7 @@ class nginx_phpfpm extends nginx
 			safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
 						
 			// get php.ini for our own vhost
-			$php = new phpinterface($this->getDB(), $this->settings, $domain);
+			$php = new phpinterface($this->settings, $domain);
 
 			// get php-config
 			if ($this->settings['phpfpm']['enabled'] == '1') {
@@ -106,8 +102,8 @@ class nginx_phpfpm extends nginx
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
 			
-			// create php.ini
-			// @TODO make php-fpm support this
+			// create php.ini (fpm does nothing here, as it
+			// defines ini-settings in its pool config)
 			$php->getInterface()->createIniFile($phpconfig);
 		}
 	}

@@ -29,8 +29,7 @@ function domainHasMainSubDomains($id = 0) {
 		SELECT COUNT(`id`) as `mainsubs` FROM `".TABLE_PANEL_DOMAINS."`
 		WHERE `ismainbutsubto` = :id"
 	);
-	Database::pexecute($result_stmt, array('id' => $id));
-	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+	$result = Database::pexecute_first($result_stmt, array('id' => $id));
 
 	if (isset($result['mainsubs'])
 		&& $result['mainsubs'] > 0
