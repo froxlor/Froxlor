@@ -499,9 +499,9 @@ class ticket {
 				FROM `" . TABLE_PANEL_TICKETS . "` `main`
 				WHERE `main`.`answerto` = '0' AND `main`.`archived` = '1'
 				AND `main`.`adminid` = :adminid
-				ORDER BY `main`.`lastchange` DESC LIMIT 0, :limit"
+				ORDER BY `main`.`lastchange` DESC LIMIT 0, ".(int)$_num
 			);
-			Database::pexecute($result_stmt, array('adminid' => $_admin, 'limit' => $_num));
+			Database::pexecute($result_stmt, array('adminid' => $_admin));
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -531,133 +531,136 @@ class ticket {
 
 	/**
 	 * Returns a sql-statement to search the archive
+	 * including necessary parameter-array for PDO
 	 *
-	 * @FIXME migrate to PDO
+	 * @return array 0 = query, 1 = params-array
 	 */
-	static public function getArchiveSearchStatement($db, $subject = NULL, $priority = NULL, $fromdate = NULL, $todate = NULL, $message = NULL, $customer = - 1, $admin = 1, $categories = NULL)
+	static public function getArchiveSearchStatement($subject = null, $priority = null, $fromdate = null, $todate = null, $message = null, $customer = - 1, $admin = 1, $categories = null)
 	{
-		$query = 'SELECT `main`.*,
-                (SELECT COUNT(`sub`.`id`) FROM `' . TABLE_PANEL_TICKETS . '` `sub` 
-                 WHERE `sub`.`answerto` = `main`.`id`) as `ticket_answers` 
-              FROM `' . TABLE_PANEL_TICKETS . '` `main` 
-              WHERE `main`.`archived` = "1" AND `main`.`adminid` = "' . (int)$admin . '" ';
+		$search_params = array();
 
-		if($subject != NULL
-		&& $subject != '')
-		{
-			$query.= 'AND `main`.`subject` LIKE "' . $db->escape("%$subject%") . '" ';
+		$query = "
+			SELECT `main`.*, (
+				SELECT COUNT(`sub`.`id`) FROM `" . TABLE_PANEL_TICKETS . "` `sub`
+				WHERE `sub`.`answerto` = `main`.`id`
+			) as `ticket_answers`
+			FROM `" . TABLE_PANEL_TICKETS . "` `main`
+			WHERE `main`.`archived` = '1' AND `main`.`adminid` = :admin"
+		;
+
+		$search_params['admin'] = $admin;
+
+		if ($subject != NULL
+			&& $subject != ''
+		) {
+			$query .= " AND `main`.`subject` LIKE :subject";
+			$search_params['subject'] = "%".$subject."%";
 		}
 
-		if($priority != NULL
-		&& isset($priority[0])
-		&& $priority[0] != '')
-		{
-			if(isset($priority[1])
-			&& $priority[1] != '')
-			{
-				if(isset($priority[2])
-				&& $priority[2] != '')
-				{
-					$query.= 'AND (`main`.`priority` = "1"
-                     OR `main`.`priority` = "2" 
-                     OR `main`.`priority` = "3") ';
+		if ($priority != null
+			&& isset($priority[0])
+			&& $priority[0] != ''
+		) {
+
+			if (isset($priority[1])
+				&& $priority[1] != ''
+			) {
+
+				if (isset($priority[2])
+					&& $priority[2] != ''
+				) {
+
+					$query .= " AND (`main`.`priority` = '1' OR `main`.`priority` = '2' OR `main`.`priority` = '3')";
+
+				} else {
+
+					$query .= " AND (`main`.`priority` = '1' OR `main`.`priority` = '1')";
 				}
-				else
-				{
-					$query.= 'AND (`main`.`priority` = "1"
-                     OR `main`.`priority` = "2") ';
-				}
+
+			} elseif (isset($priority[2])
+				&& $priority[2] != ''
+			) {
+
+				$query .= " AND (`main`.`priority` = '1' OR `main`.`priority` = '3')";
+
+			} else {
+				$query .= " AND `main`.`priority` = '1'";
 			}
-			elseif(isset($priority[2])
-			&& $priority[2] != '')
-			{
-				$query.= 'AND (`main`.`priority` = "1"
-                     OR `main`.`priority` = "3") ';
+
+		} elseif($priority != null
+			&& isset($priority[1])
+			&& $priority[1] != ''
+		) {
+			if (isset($priority[2])
+				&& $priority[2] != ''
+			) {
+				$query .= " AND (`main`.`priority` = '2' OR `main`.`priority` = '3')";
+			} else {
+				$query .= " AND `main`.`priority` = '2'";
 			}
-			else
-			{
-				$query.= 'AND `main`.`priority` = "1" ';
-			}
-		}
-		elseif($priority != NULL
-		&& isset($priority[1])
-		&& $priority[1] != '')
-		{
-			if(isset($priority[2])
-			&& $priority[2] != '')
-			{
-				$query.= 'AND (`main`.`priority` = "2" OR `main`.`priority` = "3") ';
-			}
-			else
-			{
-				$query.= 'AND `main`.`priority` = "2" ';
-			}
-		}
-		elseif($priority != NULL)
-		{
-			if(isset($priority[3])
-			&& $priority[3] != '')
-			{
-				$query.= 'AND `main`.`priority` = "3" ';
+
+		} elseif($priority != null) {
+
+			if (isset($priority[3])
+				&& $priority[3] != ''
+			) {
+				$query .= " AND `main`.`priority` = '3'";
 			}
 		}
 
-		if($fromdate != NULL
-		&& $fromdate > 0)
-		{
-			$query.= 'AND `main`.`lastchange` > "' . $db->escape(strtotime($fromdate)) . '" ';
+		if ($fromdate != null
+			&& $fromdate > 0
+		) {
+			$query .= " AND `main`.`lastchange` > :fromdate";
+			$search_params['fromdate'] = strtotime($fromdate);
 		}
 
-		if($todate != NULL
-		&& $todate > 0)
-		{
-			$query.= 'AND `main`.`lastchange` < "' . $db->escape(strtotime($todate)) . '" ';
+		if ($todate != null
+			&& $todate > 0
+		) {
+			$query .= " AND `main`.`lastchange` < :todate";
+			$search_params['todate'] = strtotime($todate);
 		}
 
-		if($message != NULL
-		&& $message != '')
-		{
-			$query.= 'AND `main`.`message` LIKE "' . $db->escape("%$message%") . '" ';
+		if ($message != null
+			&& $message != ''
+		) {
+			$query .= " AND `main`.`message` LIKE :message";
+			$search_params['message'] = "%".$message."%";
 		}
 
-		if($customer != - 1)
-		{
-			$query.= 'AND `main`.`customerid` = "' . (int)$customer . '" ';
+		if ($customer != - 1) {
+			$query .= " AND `main`.`customerid` = :customer";
+			$search_params['customer'] = $customer;
 		}
 
-		if($categories != NULL)
-		{
+		if ($categories != null) {
+
 			$cats = array();
-			foreach($categories as $index => $catid)
-			{
-				if ($catid != "")
-				{
+			foreach ($categories as $index => $catid) {
+				if ($catid != "") {
 					$cats[] = $catid;
 				}
 			}
 
-			if (count($cats) > 0)
-			{
-				$query.= 'AND (';
+			if (count($cats) > 0) {
+				$query .= " AND (";
 			}
 
-			foreach($cats as $catid)
-			{
-				if(isset($catid)
-				&& $catid > 0)
-				{
-					$query.= '`main`.`category` = "' . (int)$catid . '" OR ';
+			foreach ($cats as $catid) {
+				if (isset($catid) && $catid > 0) {
+					$query .= "`main`.`category` = :catid_".$catid." OR ";
+					$search_params['catid_'.$catid] = $catid;
 				}
 			}
 
-			if (count($cats) > 0)
-			{
+			if (count($cats) > 0) {
 				$query = substr($query, 0, strlen($query) - 3);
-				$query.= ') ';
+				$query .= ") ";
 			}
 		}
 
-		return $query;
+		return array('0' => $query, '1' => $search_params);
 	}
 
 	/**

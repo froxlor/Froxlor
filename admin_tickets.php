@@ -630,8 +630,11 @@ if ($page == 'tickets'
 				$categories[$x] = isset($_POST['category' . $x]) ? $_POST['category' . $x] : '';
 			}
 
-			// FIXME migrate to PDO
-			$query = ticket::getArchiveSearchStatement($db, $subject, $priority, $fromdate, $todate, $message, $customer, $userinfo['adminid'], $categories);
+			$archive_search = ticket::getArchiveSearchStatement($subject, $priority, $fromdate, $todate, $message, $customer, $userinfo['adminid'], $categories);
+
+			$query = $archive_search[0];
+			$archive_params = $archive_search[1];
+
 			$fields = array(
 				'lastchange' => $lng['ticket']['lastchange'],
 				'ticket_answers' => $lng['ticket']['ticket_answers'],
@@ -640,15 +643,15 @@ if ($page == 'tickets'
 				'priority' => $lng['ticket']['priority']
 			);
 			$paging = new paging($userinfo, $db, TABLE_PANEL_TICKETS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-			// FIXME migrate (the above) to PDO
-			$result = $db->query($query . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+			$result_stmt = Database::prepare($query . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+			Database::pexecute($result_stmt, $archive_params);
 			$sortcode = $paging->getHtmlSortCode($lng);
 			$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 			$searchcode = $paging->getHtmlSearchCode($lng);
 			$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 			$ctickets = array();
 
-			while ($row = $db->fetch_array($result)) {
+			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				if (!isset($ctickets[$row['customerid']])
 					|| !is_array($ctickets[$row['customerid']])
 				) {
@@ -678,7 +681,7 @@ if ($page == 'tickets'
 					ksort($ticketrows);
 				}
 
-				$_cid = 0;
+				$_cid = -1;
 				foreach ($ticketrows as $ticket) {
 					if ($paging->checkDisplay($i)) {
 						$ticket['lastchange'] = date("d.m.y H:i", $ticket['lastchange']);
@@ -697,6 +700,8 @@ if ($page == 'tickets'
 								$customerid = $usr['customerid'];
 							} else {
 								$customer = $lng['ticket']['nonexistingcustomer'];
+								$customerid = 0;
+								$customerloginname = '';
 							}
 							eval("\$tickets.=\"" . getTemplate("tickets/tickets_customer") . "\";");
 						}
