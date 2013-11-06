@@ -809,7 +809,7 @@ class apache
 			    GROUP BY `id_domain`
 			  ) AS p ON p.`id_domain` = `d`.`id`
 			  
-			  WHERE `d`.`aliasdomain` IS NULL 
+			  WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` = '0'
 			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
 
 		$result_domains = $this->db->query($query);
