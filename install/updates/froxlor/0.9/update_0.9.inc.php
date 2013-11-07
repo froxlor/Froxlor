@@ -2410,3 +2410,16 @@ if (isFroxlorVersion('0.9.30-rc1')) {
 
 	updateToVersion('0.9.30');
 }
+
+if (isFroxlorVersion('0.9.30')) {
+
+	showUpdateStep("Updating from 0.9.30 to 0.9.31-dev1", true);
+	lastStepStatus(0);
+
+	showUpdateStep("Removing unsused tables");
+	Database::query("DROP TABLE IF EXISTS `ipsandports_docrootsettings`;");
+	Database::query("DROP TABLE IF EXISTS `domain_docrootsettings`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.31-dev1');
+}
