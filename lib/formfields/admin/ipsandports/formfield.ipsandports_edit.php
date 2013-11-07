@@ -134,7 +134,8 @@ return array(
 						'value' => $result['ssl_ca_file']
 					),
 					'ssl_cert_chainfile' => array(
-						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
+						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'],
+						'desc' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'],
 						'type' => 'text',
 						'value' => $result['ssl_cert_chainfile']
 					)
