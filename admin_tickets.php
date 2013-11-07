@@ -372,6 +372,8 @@ if ($page == 'tickets'
 
 				$subject = $subticket->Get('subject');
 				$message = $subticket->Get('message');
+
+				$row2 = htmlentities_array($row2);
 				eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_list") . "\";");
 			}
 
@@ -574,6 +576,7 @@ if ($page == 'tickets'
 				SELECT * FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `id` = :id'
 			);
 			$row = Database::pexecute_first($row_stmt, array('id' => $id));
+			$row = htmlentities_array($row);
 			$category_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/tickets/formfield.category_edit.php';
 			$category_edit_form = htmlform::genHTMLForm($category_edit_data);
 

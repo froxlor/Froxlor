@@ -933,7 +933,7 @@ if ($page == 'customers'
 							`caneditdomain` = '0',
 							`openbasedir` = '1',
 							`speciallogfile` = '0',
-							`specialsettings` = ''
+							`specialsettings` = '',
 							`add_date` = :adddate"
 						);
 						Database::pexecute($ins_stmt, $ins_data);
@@ -1285,7 +1285,7 @@ if ($page == 'customers'
 							`caneditdomain` = '0',
 							`openbasedir` = '1',
 							`speciallogfile` = '0',
-							`specialsettings` = ''
+							`specialsettings` = '',
 							`add_date` = :adddate"
 						);
 						Database::pexecute($ins_stmt, $ins_data);
