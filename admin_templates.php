@@ -125,7 +125,7 @@ if ($action == '') {
 		SELECT `id`, `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `templategroup`='files'"
 	);
-	Database::pexecute($result_stmt, array('adminid' => $adminid));
+	Database::pexecute($result_stmt, array('adminid' => $userinfo['adminid']));
 
 	if (Database::num_rows() != count($file_templates)) {
 		$filetemplateadd = true;
@@ -219,7 +219,7 @@ if ($action == '') {
 		$result_stmt = Database::prepare("
 			SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 			WHERE `adminid`= :adminid AND `language`= :lang
-			AND `templategroup` = 'mails' AND `varname` LIKE '%_subject\'"
+			AND `templategroup` = 'mails' AND `varname` LIKE '%_subject'"
 		);
 		Database::pexecute($result_stmt, array('adminid' => $userinfo['adminid'], 'lang' => $language));
 
@@ -308,7 +308,7 @@ if ($action == '') {
 			INSERT INTO `" . TABLE_PANEL_TEMPLATES . "` SET
 				`adminid` = :adminid,
 				`language` = '',
-				`templategroup` = 'files,
+				`templategroup` = 'files',
 				`varname` = :var,
 				`value` = :value"
 		);

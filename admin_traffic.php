@@ -62,7 +62,11 @@ if ($page == 'overview' || $page == 'customers') {
 			WHERE `customerid` = :id" . 
 			($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
 		);
-		Database::pexecute($result_stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
+		$params = array('id' => $id);
+		if ($userinfo['customers_see_all'] == '0') {
+			$params['adminid'] = $userinfo['adminid'];
+		}
+		Database::pexecute($result_stmt, params);
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 		if ($result['loginname'] != '') {
