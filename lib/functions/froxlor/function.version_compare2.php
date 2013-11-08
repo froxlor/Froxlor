@@ -26,8 +26,8 @@
 function version_compare2($a, $b) {
 
 	// split version into pieces and remove trailing .0
-	$a = explode(".", rtrim($a, ".0"));
-	$b = explode(".", rtrim($b, ".0"));
+	$a = explode(".", $a);
+	$b = explode(".", $b);
 
 	_parseVersionArray($a);
 	_parseVersionArray($b);
