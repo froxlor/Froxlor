@@ -115,7 +115,7 @@ if ($page == 'overview') {
 				}
 				
 				$stmt = Database::prepare("DROP DATABASE IF EXISTS `" . $result['databasename'] . "`");
-				Database::pexecute($stmt);
+				Database::pexecute($stmt, array(), false);
 				$stmt = Database::prepare("FLUSH PRIVILEGES");
 				Database::pexecute($stmt);
 				Database::needRoot(false);
