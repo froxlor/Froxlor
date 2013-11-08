@@ -140,8 +140,11 @@ if ($page == 'customers'
 			WHERE `customerid` = :id" .
 			($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
 		);
-		Database::pexecute($result_stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		$params = array('id' => $id);
+		if ($userinfo['customers_see_all'] == '0') {
+			$params['adminid'] = $userinfo['adminid'];
+		}
+		$result = Database::pexecute_first($result_stmt, $params);
 
 		$destination_user = $result['loginname'];
 
@@ -155,8 +158,8 @@ if ($page == 'customers'
 				WHERE `userid` = :id
 				AND `hash` = :hash"
 			);
-			Database::pexecute($result_stmt, array('id' => $userinfo['userid'], 'hash' => $s));
-			$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+			$result = Database::pexecute_first($result_stmt, array('id' => $userinfo['userid'], 'hash' => $s));
+
 			$s = md5(uniqid(microtime(), 1));
 			$insert = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_SESSIONS . "` SET
@@ -168,7 +171,7 @@ if ($page == 'customers'
 					`language` = :lang,
 					`adminsession` = '0'"
 				);
-			Database::pexecute($stmt, array(
+			Database::pexecute($insert, array(
 				'hash' => $s,
 				'id' => $id,
 				'ip' => $result['ipaddress'],
@@ -191,8 +194,7 @@ if ($page == 'customers'
 			WHERE `customerid` = :id" .
 			($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
 		);
-		Database::pexecute($result_stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		$result = Database::pexecute_first($result_stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
 
 		if ($result['loginname'] != '') {
 
@@ -220,8 +222,11 @@ if ($page == 'customers'
 			WHERE `customerid` = :id" .
 			($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
 		);
-		Database::pexecute($result_stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		$params = array('id' => $id);
+		if ($userinfo['customers_see_all'] == '0') {
+			$params['adminid'] = $userinfo['adminid'];
+		}
+		$result = Database::pexecute_first($result_stmt, $params);
 
 		if ($result['loginname'] != '') {
 
@@ -641,14 +646,12 @@ if ($page == 'customers'
 					$loginname_check_stmt = Database::prepare("
 						SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname` = :loginname"
 					);
-					Database::pexecute($loginname_check_stmt, array('loginname' => $loginname));
-					$loginname_check = $loginname_check_stmt->fetch(PDO::FETCH_ASSOC);
+					$loginname_check = Database::pexecute_first($loginname_check_stmt, array('loginname' => $loginname));
 
 					$loginname_check_admin_stmt = Database::prepare("
 						SELECT `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname` = :loginname"
 					);
-					Database::pexecute($loginname_check_admin_stmt, array('loginname' => $loginname));
-					$loginname_check_admin = $loginname_check_admin_stmt->fetch(PDO::FETCH_ASSOC);
+					$loginname_check_admin = Database::pexecute_first($loginname_check_admin_stmt, array('loginname' => $loginname));
 
 					if (strtolower($loginname_check['loginname']) == strtolower($loginname)
 						|| strtolower($loginname_check_admin['loginname']) == strtolower($loginname)
@@ -969,16 +972,14 @@ if ($page == 'customers'
 							SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 							WHERE `adminid` = :adminid AND `language` = :deflang AND `templategroup` = 'mails' AND `varname` = 'createcustomer_subject'"
 						);
-						Database::pexecute($result_stmt, array('adminid' => $userinfo['adminid'], 'deflang' => $def_language));
-						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+						$result = Database::pexecute_first($result_stmt, array('adminid' => $userinfo['adminid'], 'deflang' => $def_language));
 						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['createcustomer']['subject']), $replace_arr));
 
 						$result_stmt = Database::prepare("
 							SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 							WHERE `adminid` = :adminid AND `language` = :deflang AND `templategroup` = 'mails' AND `varname` = 'createcustomer_mailbody'"
 						);
-						Database::pexecute($result_stmt, array('adminid' => $userinfo['adminid'], 'deflang' => $def_language));
-						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+						$result = Database::pexecute_first($result_stmt, array('adminid' => $userinfo['adminid'], 'deflang' => $def_language));
 						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['createcustomer']['mailbody']), $replace_arr));
 
 						$_mailerror = false;
