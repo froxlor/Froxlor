@@ -348,7 +348,7 @@ class phpinterface_fpm {
 		$adminid = intval($adminid);
 
 		if (!isset($this->_admin_cache[$adminid])) {
-			$stmt = Database::prepare("TABLE_PANEL_ADMINS
+			$stmt = Database::prepare("
 					SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :id"
 			);
 			$this->_admin_cache[$adminid] = Database::pexecute_first($stmt, array('id' => $adminid));
