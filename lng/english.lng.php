@@ -1527,7 +1527,7 @@ $lng['phpfpm']['ownvhost']['title'] = 'Enable PHP-FPM for the Froxlor vHost';
 $lng['phpfpm']['ownvhost']['description'] = 'If enabled, Froxlor will also be running under a local user';
 
 // ADDED IN FROXLOR 0.9.17
-$lng['crondesc']['cron_usage_report'] = 'sends reports about web- and traffic-usage';
+$lng['crondesc']['cron_usage_report'] = 'Web- and traffic-reports';
 $lng['serversettings']['report']['report'] = 'Enable sending of reports about web- and traffic-usage';
 $lng['serversettings']['report']['webmax'] = 'Warning-level in percent for webspace';
 $lng['serversettings']['report']['trafficmax'] = 'Warning-level in percent for traffic';

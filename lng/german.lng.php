@@ -1505,7 +1505,7 @@ $lng['phpfpm']['ownvhost']['title'] = 'Verwende PHP-FPM im Froxlor-Vhost';
 $lng['phpfpm']['ownvhost']['description'] = 'Wenn verwendet, wird Froxlor selbst unter einem lokalem Benutzer ausgeführt';
 
 // ADDED IN FROXLOR 0.9.17
-$lng['crondesc']['cron_usage_report'] = 'Sende Reports über Webspace- und Trafficverbrauch';
+$lng['crondesc']['cron_usage_report'] = 'Webspace- und Trafficreport';
 $lng['serversettings']['report']['report'] = 'Aktiviere das Senden von Reports über Webspace- und Trafficverbrauch';
 $lng['serversettings']['report']['webmax'] = 'Warn-Level in Prozent für Webspace';
 $lng['serversettings']['report']['trafficmax'] = 'Warn-Level in Prozent für Traffic';
