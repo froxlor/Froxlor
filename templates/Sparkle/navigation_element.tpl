@@ -1,4 +1,4 @@
-<div class="menuelement bradius">
+<div class="menuelement">
 	<h4>{$completeLink}</h4>
 	<ul>
 		{$navigation_links}

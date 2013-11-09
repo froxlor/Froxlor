@@ -1,5 +1,7 @@
 <if isset($userinfo['loginname'])>
 	</div>
+	<div style="clear:both;"></div> 
+	</div>
 </if>
 <footer>
 	<span><img src="templates/{$theme}/assets/img/logo_grey.png" alt="Froxlor" /> 

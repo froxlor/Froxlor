@@ -78,7 +78,7 @@
 		</ul>
 	</div>
 </header>
-
-	<nav>$navigation</nav>
-	<div class="main bradius">
+<div class="content">
+	<nav id="sidenavigation">$navigation</nav>
+	<div class="main" id="maincontent">
 </if>
