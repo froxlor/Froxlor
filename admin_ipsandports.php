@@ -68,8 +68,7 @@ if ($page == 'ipsandports'
 		&& $id != 0
 	) {
 		$result_stmt = Database::prepare("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :id");
-		Database::pexecute($result_stmt, array('id' => $id));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		$result = Database::pexecute_first($result_stmt, array('id' => $id));
 
 		if (isset($result['id'])
 			&& $result['id'] == $id
@@ -77,8 +76,7 @@ if ($page == 'ipsandports'
 			$result_checkdomain_stmt = Database::prepare("
 				SELECT `id_domain` as `id` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id"
 			);
-			Database::pexecute($result_checkdomain_stmt, array('id' => $id));
-			$result_checkdomain = $result_checkdomain_stmt->fetch(PDO::FETCH_ASSOC);
+			$result_checkdomain = Database::pexecute_first($result_checkdomain_stmt, array('id' => $id));
 
 			if ($result_checkdomain['id'] == '') {
 				if ($result['id'] != $settings['system']['defaultip']) {
@@ -87,8 +85,7 @@ if ($page == 'ipsandports'
 						SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
 						WHERE `ip` = :ip AND `id` <> :id"
 					);
-					Database::pexecute($result_sameipotherport_stmt, array('id' => $id, 'ip' => $result['ip']));
-					$result_sameipotherport = $result_sameipotherport_stmt->fetch(PDO::FETCH_ASSOC);
+					$result_sameipotherport = Database::pexecute_first($result_sameipotherport_stmt, array('id' => $id, 'ip' => $result['ip']));
 
 					if (($result['ip'] != $settings['system']['ipaddress'])
 						|| ($result['ip'] == $settings['system']['ipaddress']
@@ -98,8 +95,7 @@ if ($page == 'ipsandports'
 							SELECT `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
 							WHERE `id` = :id"
 						);
-						Database::pexecute($result_stmt, array('id' => $id));
-						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+						$result = Database::pexecute_first($result_stmt, array('id' => $id));
 
 						if ($result['ip'] != '') {
 
@@ -216,8 +212,7 @@ if ($page == 'ipsandports'
 				SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
 				WHERE `ip` = :ip AND `port` = :port"
 			);
-			Database::pexecute($result_checkfordouble_stmt, array('ip' => $ip, 'port' => $port));
-			$result_checkfordouble = $result_checkfordouble_stmt->fetch(PDO::FETCH_ASSOC);
+			$result_checkfordouble = Database::pexecute_first($result_checkfordouble_stmt, array('ip' => $ip, 'port' => $port));
 
 			if ($result_checkfordouble['id'] != '') {
 				standard_error('myipnotdouble');
@@ -279,8 +274,7 @@ if ($page == 'ipsandports'
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :id"
 		);
-		Database::pexecute($result_stmt, array('id' => $id));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		$result = Database::pexecute_first($result_stmt, array('id' => $id));
 
 		if ($result['ip'] != '') {
 
@@ -302,21 +296,15 @@ if ($page == 'ipsandports'
 					SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
 					WHERE `ip` = :ip AND `port` = :port"
 				);
-				Database::pexecute($result_checkfordouble_stmt, array('ip' => $ip, 'port' => $port));
-				$result_checkfordouble = $result_checkfordouble_stmt->fetch(PDO::FETCH_ASSOC);
+				$result_checkfordouble = Database::pexecute_first($result_checkfordouble_stmt, array('ip' => $ip, 'port' => $port));
 
 				$result_sameipotherport_stmt = Database::prepare("
 					SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
 					WHERE `ip` = :ip AND `id` <> :id"
 				);
-				Database::pexecute($result_sameipotherport_stmt, array('ip' => $ip, 'id' => $id));
-				$result_sameipotherport = $result_sameipotherport_stmt->fetch(PDO::FETCH_ASSOC);
+				$result_sameipotherport = Database::pexecute_first($result_sameipotherport_stmt, array('ip' => $ip, 'id' => $id));
 
 				if ((int)$settings['system']['use_ssl'] == 1
-					/* 
-					 * check here if ssl is even checked, cause if not, we don't need
-					 * to validate and set all the $ssl_*_file vars
-					 */
 					&& isset($_POST['ssl'])
 					&& $_POST['ssl'] != 0
 				) {
