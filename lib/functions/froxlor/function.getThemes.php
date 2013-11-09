@@ -20,21 +20,18 @@
  *
  * @return array
  */
-function getThemes()
-{
-	$themespath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))).'/templates/');
+function getThemes() {
+
+	$themespath = makeCorrectDir(FROXLOR_INSTALL_DIR.'/templates/');
 	$themes_available = array();
 
-	if (is_dir($themespath))
-	{
+	if (is_dir($themespath)) {
 		$its = new DirectoryIterator($themespath);
 
-		foreach ($its as $it)
-		{
+		foreach ($its as $it) {
 			if ($it->isDir() 
 				&& $it->getFilename() != '.' 
 				&& $it->getFilename() != '..'
-				&& $it->getFilename() != '.svn'
 				&& $it->getFilename() != 'misc'
 			) {
 				$themes_available[$it->getFilename()] = $it->getFilename();

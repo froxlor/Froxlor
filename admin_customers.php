@@ -944,7 +944,7 @@ if ($page == 'customers'
 
 						// set ip <-> domain connection
 						$ins_stmt = Database::prepare("
-							INSERT INTO `".TABLE_DOMAINTOIP."` SET `id_domain` = :domainid, `id_ipandports` = :ipid'"
+							INSERT INTO `".TABLE_DOMAINTOIP."` SET `id_domain` = :domainid, `id_ipandports` = :ipid"
 						);
 						Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => $settings['system']['defaultip']));
 
