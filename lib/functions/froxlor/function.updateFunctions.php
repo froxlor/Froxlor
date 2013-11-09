@@ -15,7 +15,7 @@
  *
  */
 
-/*
+/**
  * Function updateToVersion
  *
  * updates the panel.version field
@@ -25,40 +25,41 @@
  *
  * @return	bool		true on success, else false
  */
-function updateToVersion($new_version = null)
-{
-	global $db, $settings, $theme;
+function updateToVersion($new_version = null) {
 
-	if($new_version !== null && $new_version != '')
-	{
-		$query = "UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = '" . $new_version . "' WHERE `settinggroup` = 'panel' AND `varname` = 'version'";
-		$db->query($query);
+	global $settings;
+
+	if ($new_version !== null && $new_version != '') {
+		$upd_stmt = Database::prepare("
+				UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = :newversion
+				WHERE `settinggroup` = 'panel' AND `varname` = 'version'"
+		);
+		Database::pexecute($upd_stmt, array('newversion' => $new_version));
 		$settings['panel']['version'] = $new_version;
 		return true;
 	}
 	return false;
 }
 
-/*
+/**
  * Function isFroxlor
  *
  * checks if the panel is froxlor
  *
  * @return	bool		true if panel is froxlor, else false
  */
-function isFroxlor()
-{
-	global $settings, $theme;
+function isFroxlor() {
+	global $settings;
 
-	if(isset($settings['panel']['frontend'])
-	&& $settings['panel']['frontend'] == 'froxlor')
-	{
+	if (isset($settings['panel']['frontend'])
+			&& $settings['panel']['frontend'] == 'froxlor'
+	) {
 		return true;
 	}
 	return false;
 }
 
-/*
+/**
  * Function isFroxlorVersion
  *
  * checks if a given version is the
@@ -68,19 +69,19 @@ function isFroxlor()
  *
  * @return	bool		true if version to check matches, else false
  */
-function isFroxlorVersion($to_check = null)
-{
-	global $settings, $theme;
+function isFroxlorVersion($to_check = null) {
 
-	if($settings['panel']['frontend'] == 'froxlor'
-	&& $settings['panel']['version'] == $to_check)
-	{
+	global $settings;
+
+	if ($settings['panel']['frontend'] == 'froxlor'
+			&& $settings['panel']['version'] == $to_check
+	) {
 		return true;
 	}
 	return false;
 }
 
-/*
+/**
  * Function isFroxlorVersion
  *
  * checks if a given version is the
@@ -90,19 +91,19 @@ function isFroxlorVersion($to_check = null)
  *
  * @return	bool		true if version to check matches, else false
  */
-function hasUpdates($to_check = null)
-{
-	global $settings, $theme;
+function hasUpdates($to_check = null) {
 
-	if(!isset($settings['panel']['version'])
-	|| $settings['panel']['version'] != $to_check)
-	{
+	global $settings;
+
+	if (!isset($settings['panel']['version'])
+			|| $settings['panel']['version'] != $to_check
+	) {
 		return true;
 	}
 	return false;
 }
 
-/*
+/**
  * Function showUpdateStep
  *
  * outputs and logs the current
@@ -113,65 +114,63 @@ function hasUpdates($to_check = null)
  *
  * @return	string		formatted output and log-entry
  */
-function showUpdateStep($task = null, $needs_status = true)
-{
-	global $updatelog, $filelog, $theme;
-	
+function showUpdateStep($task = null, $needs_status = true) {
+
+	global $updatelog, $filelog;
+
 	// output
 	echo $task;
-	
-	if(!$needs_status)
-	{
+
+	if (!$needs_status) {
 		echo "<br />";
 	}
-	
+
 	$updatelog->logAction(ADM_ACTION, LOG_WARNING, $task);
 	$filelog->logAction(ADM_ACTION, LOG_WARNING, $task);
 }
 
-/*
+/**
  * Function lastStepStatus
- * 
+ *
  * outputs [OK] (success), [??] (warning) or [!!] (failure)
  * of the last update-step
- * 
+ *
  * @param	int			status	(0 = success, 1 = warning, 2 = failure)
- * 
+ *
  * @return	string		formatted output and log-entry
  */
-function lastStepStatus($status = -1, $message = '')
-{
-	global $updatelog, $filelog, $theme;
-	
-	switch($status)
-	{
+function lastStepStatus($status = -1, $message = '') {
+
+	global $updatelog, $filelog;
+
+	switch($status) {
+
 		case 0:
 			$status_sign = ($message != '') ? '['.$message.']' : '[OK]';
 			$status_color = '1dcd00';
 			break;
 		case 1:
 			$status_sign = ($message != '') ? '['.$message.']' : '[??]';
-			$status_color = 'db7100';			
+			$status_color = 'db7100';
 			break;
 		case 2:
 			$status_sign = ($message != '') ? '['.$message.']' : '[!!]';
-			$status_color = 'ff0000';			
+			$status_color = 'ff0000';
 			break;
 		default:
 			$status_sign = '[unknown]';
-			$status_color = '000000';			
+			$status_color = '000000';
 			break;
 	}
+
 	// output
 	echo "<span style=\"margin-left: 5em; font-weight: bold; color: #".$status_color."\">".$status_sign."</span><br />";
-	
-	if($status == -1 || $status == 2)
-	{
+
+	if ($status == -1 || $status == 2) {
 		$updatelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
 		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
-	}
-	elseif($status == 0 || $status == 1)
-	{
+
+	} elseif($status == 0 || $status == 1) {
 		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Success');
 	}
 }
@@ -179,18 +178,16 @@ function lastStepStatus($status = -1, $message = '')
 /**
  * validate if full path to update.log is sane
  * if not, the update.log is created in /tmp/
- *  
+ *
  * @param string $filename the file name to validate
- * 
+ *
  * @return string the full path with filename (can differ if not writeable => /tmp)
  */
-function validateUpdateLogFile($filename)
-{
-	if(!is_dir($filename))
-	{
+function validateUpdateLogFile($filename) {
+
+	if (!is_dir($filename)) {
 		$fh = @fopen($filename, 'a');
-		if($fh)
-		{
+		if ($fh) {
 			fclose($fh);
 			return $filename;
 		}

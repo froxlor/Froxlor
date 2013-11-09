@@ -284,7 +284,7 @@ if ($page == 'tickets'
 			} else {
 				$now = time();
 				$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
-				$replyticket->Set('customerid', $mainticket->Get('customer'), true, true);
+				$replyticket->Set('customer', $mainticket->Get('customer'), true, true);
 				$replyticket->Set('lastchange', $now, true, true);
 				$replyticket->Set('ip', $_SERVER['REMOTE_ADDR'], true, true);
 				$replyticket->Set('status', '1', true, true);
@@ -303,7 +303,7 @@ if ($page == 'tickets'
 				$mainticket->Update();
 				$mainticket->sendMail((int)$mainticket->Get('customer'), 'new_reply_ticket_by_staff_subject', $lng['mails']['new_reply_ticket_by_staff']['subject'], 'new_reply_ticket_by_staff_mailbody', $lng['mails']['new_reply_ticket_by_staff']['mailbody']);
 				$log->logAction(ADM_ACTION, LOG_NOTICE, "answered ticket '" . $mainticket->Get('subject') . "'");
-				redirectTo($filename, Array('page' => $page, 's' => $s));
+				redirectTo($filename, array('page' => $page, 's' => $s));
 			}
 
 		} else {

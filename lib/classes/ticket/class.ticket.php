@@ -177,8 +177,8 @@ class ticket {
 			'priority' => $this->Get('priority'),
 			'subject' => $this->Get('subject'),
 			'message' => $this->Get('message'),
-			'dt' => $this->Get('dt'),
-			'lastchange' => $this->Get('lastchange'),
+			'dt' => time(),
+			'lastchange' => time(),
 			'ip' => $this->Get('ip'),
 			'status' => $this->Get('status'),
 			'lastreplier' => $this->Get('lastreplier'),
@@ -296,7 +296,7 @@ class ticket {
 		$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $default_subject), $replace_arr));
 
 		unset($tpl_seldata['tplsubject']);
-		$tpl_seldata['tplbody'] = $template_body;
+		$tpl_seldata['tplmailbody'] = $template_body;
 
 		$result_stmt = Database::prepare("
 			SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
@@ -337,7 +337,7 @@ class ticket {
 				SELECT `name`, `email` FROM `" . TABLE_PANEL_ADMINS . "`
 				WHERE `adminid` = :adminid"
 			);
-			$admin = Database::pexecute_first($admin_stmt, array('adminid' => $userinfo['adminid']));
+			$admin = Database::pexecute_first($admin_stmt, array('adminid' => $this->userinfo['adminid']));
 			$_mailerror = false;
 			try {
 				$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);

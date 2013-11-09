@@ -251,6 +251,7 @@ class Database {
 		$sl_file = makeCorrectFile($sl_dir."/sql-error.log");
 		$sqllog = @fopen($sl_file, 'a');
 		@fwrite($sqllog, date('d.m.Y H:i', time())." --- ".str_replace("\n", " ", $error->getMessage())."\n");
+		@fwrite($sqllog, date('d.m.Y H:i', time())." --- DEBUG: \n".$error->getTraceAsString()."\n");
 		@fclose($sqllog);
 
 		if ($showerror) {

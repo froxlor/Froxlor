@@ -24,9 +24,7 @@ if (isset($_POST['id'])) {
 
 	$id = intval($_POST['id']);
 	
-	/*
-	 * Check if the current user is allowed to see the current ticket.
-	 */
+	//Check if the current user is allowed to see the current ticket.
 	$stmt = Database::prepare("SELECT `id` FROM `panel_tickets` WHERE `id` = :id AND `customerid` = :customerid");
 	$result = Database::pexecute_first($stmt, array("id" => $id, "customerid" => $userinfo['customerid']));
 
@@ -185,7 +183,7 @@ if($page == 'overview') {
 
 					// Admin mail
 					$newticket->sendMail(-1, 'new_ticket_by_customer_subject', $lng['mails']['new_ticket_by_customer']['subject'], 'new_ticket_by_customer_mailbody', $lng['mails']['new_ticket_by_customer']['mailbody']);
-					redirectTo($filename, Array('page' => $page, 's' => $s));
+					redirectTo($filename, array('page' => $page, 's' => $s));
 				}
 			} else {
 				$categories = '';
@@ -252,7 +250,7 @@ if($page == 'overview') {
 				standard_error(array('stringisempty', 'mymessage'));
 			} else {
 				$now = time();
-				$replyticket->Set('customerid', (int)$userinfo['customerid'], true, true);
+				$replyticket->Set('customer', (int)$userinfo['customerid'], true, true);
 				$replyticket->Set('lastchange', $now, true, true);
 				$replyticket->Set('ip', $_SERVER['REMOTE_ADDR'], true, true);
 				$replyticket->Set('status', '1', true, true);

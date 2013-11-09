@@ -539,7 +539,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.30');
+	('panel', 'version', '0.9.31-dev1');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -894,25 +894,6 @@ CREATE TABLE IF NOT EXISTS `domain_redirect_codes` (
   `rid` int(5) NOT NULL,
   `did` int(11) unsigned NOT NULL,
   UNIQUE KEY `rc` (`rid`, `did`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
-
-DROP TABLE IF EXISTS `ipsandports_docrootsettings`;
-CREATE TABLE IF NOT EXISTS `ipsandports_docrootsettings` (
-  `id` int(5) NOT NULL auto_increment,
-  `fid` int(11) NOT NULL,
-  `docrootsettings` text NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
-DROP TABLE IF EXISTS `domain_docrootsettings`;
-CREATE TABLE IF NOT EXISTS `domain_docrootsettings` (
-  `id` int(5) NOT NULL auto_increment,
-  `fid` int(11) NOT NULL,
-  `docrootsettings` text NOT NULL,
-  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
