@@ -105,7 +105,7 @@ class SysLogger extends AbstractLogger
 			}
 			else
 			{
-				$name = " (" . $this->userinfo['loginname'] . ")";
+				$name = $this->userinfo['loginname'];
 			}
 
 			openlog("Froxlor", LOG_NDELAY, LOG_USER);
@@ -124,5 +124,3 @@ class SysLogger extends AbstractLogger
 		}
 	}
 }
-
-?>

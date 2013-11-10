@@ -137,7 +137,7 @@ class FileLogger extends AbstractLogger
 			}
 			else
 			{
-				$name = " (" . $this->userinfo['loginname'] . ")";
+				$name = $this->userinfo['loginname'];
 			}
 
 			$fp = @fopen($this->logfile, 'a');
@@ -184,5 +184,3 @@ class FileLogger extends AbstractLogger
 		return false;
 	}
 }
-
-?>

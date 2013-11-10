@@ -169,5 +169,3 @@ class FroxlorLogger
 		return true;
 	}
 }
-
-?>

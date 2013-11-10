@@ -72,7 +72,7 @@ class MysqlLogger extends AbstractLogger {
 			) {
 				$name = 'unknown';
 			} else {
-				$name = " (" . $this->userinfo['loginname'] . ")";
+				$name = $this->userinfo['loginname'];
 			}
 
 			$now = time();
