@@ -19,9 +19,6 @@
 
 define('AREA', 'customer');
 
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
 $need_db_sql_data = true;
 $need_root_db_sql_data = true;
 require('./lib/init.php');

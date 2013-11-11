@@ -180,7 +180,13 @@ if ($page == 'customers'
 				'lang' => $result['language']
 			));
 			$log->logAction(ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");
-			redirectTo('customer_index.php', array('s' => $s), true);
+
+			$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
+			$redirect = "customer_".$target.".php";
+			if (!file_exists(FROXLOR_INSTALL_DIR."/".$redirect)) {
+				$redirect = "customer_index.php";
+			}
+			redirectTo($redirect, array('s' => $s), true);
 
 		} else {
 			redirectTo('index.php', array('action' => 'login'));
@@ -1005,7 +1011,7 @@ if ($page == 'customers'
 						$mail->ClearAddresses();
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically sent password to user '" . $loginname . "'");
 					}
-					redirectTo($filename, Array('page' => $page, 's' => $s));
+					redirectTo($filename, array('page' => $page, 's' => $s));
 				}
 
 			} else {
