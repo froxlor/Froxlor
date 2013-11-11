@@ -32,7 +32,7 @@
 	</hgroup>
 	<img src="{$header_logo}" alt="Froxlor Server Management Panel" />
 </header>
-
+<div class="content">
 <nav><div class="menuelement bradiusodd">
 	<h4>Froxlor WebFTP</h4>
 </div>{$navigation}</nav>
@@ -45,6 +45,10 @@
 {/if}
 {$body}
 </div>
+{if $loggedin}
+	<div style="clear:both;"></div> 
+	</div>
+{/if}
 <footer>
 	<span>Froxlor
 		{if ($settings.admin.show_version_login == '1' && $loggedin == 0) || ($settings.admin.show_version_footer == '1' && $loggedin == 1)}

@@ -34,6 +34,4 @@ $header
 			{$stats_tables}
 		</article>
 	</div>
-	<br />
-	<br />
 $footer

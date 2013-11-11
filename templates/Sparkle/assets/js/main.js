@@ -24,6 +24,13 @@ $(document).ready(function() {
 		parent.history.back();
 		return false;
 	});
+	
+	// Height of divs fix
+	var snheight = $('#sidenavigation').height();
+	var mainheight = $('#maincontent').height();
+	if (snheight > mainheight) {
+		$('#maincontent').height(snheight - 60);
+	}
 
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {

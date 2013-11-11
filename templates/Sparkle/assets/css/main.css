@@ -22,6 +22,24 @@ body {
 	padding:0;
 }
 
+.content {
+	background-color: #f7f8fa;
+	margin-top: 53px;
+	min-width: 100%;
+	border-bottom: 1px solid #b6c0cd;
+}
+
+/*
+ * main container
+ */
+.main {
+	margin-left: 230px;
+	padding: 30px;
+	background-color: #fff;
+	border-left: 1px solid #b6c0cd;
+	margin-bottom: 0px;
+}
+
 .dark {
 	background: #f0f2f4;
 	border-bottom:1px solid #d1d5d8;
@@ -39,7 +57,7 @@ h1 {
 }
 
 h2, h3 {
-	margin: 0 0 1em 0;
+	margin: 0 0 10px 0;
 	padding: 0;
 	font-weight: bold;
 }
@@ -67,7 +85,7 @@ td a {
 }
 
 .bradius {
-	border-radius: 5px 5px 5px 5px;
+	border-radius: 3px;
 	box-shadow: rgba(0, 0, 0, 0.34902) 0px 1px 3px 0px;
 }
 
@@ -128,15 +146,6 @@ ul.topheadernav li ul li a:hover {
 	color: #111;
 }
 
-nav {
-	float:left;
-	width:230px;
-	margin: -4px 20px 0 0;
-}
-nav div:first-child {
-	display: none;
-}
-
 .topheadernav img {
 	padding: 0px;
 	margin: -4px 0 0 0;
@@ -161,7 +170,8 @@ footer {
 	text-align:center;
 	color: #888;
 	font-size:10px !important;
-	margin: 10px 0;
+	padding: 10px 0;
+	bottom: 0px;
 }
 
 footer a,footer a:active,footer a:visited {
@@ -178,7 +188,7 @@ footer img {
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 12px;
-	width: 600px;
+	width: 500px;
 }
 .login div.warningcontainer, .login div.errorcontainer, .login div.successcontainer {
 	margin: 10px !important;
@@ -476,10 +486,25 @@ a:hover {
 }
 
 /* navigation */
+nav {
+	float: left;
+	width:230px;
+	background-color:#f7f8fa;
+}
+nav div:first-child {
+	display: none;
+}
+nav div:nth-child(2) {
+	border-top: 0 !important;
+}
 .menuelement {
-	margin: 4px 0 10px 10px;
-	padding:10px;
-	background-color:#fff;
+	margin: 0 15px 0 15px;
+	padding:15px 0 15px 5px;
+	border-bottom: 1px solid #e1e7f0;
+	border-top: 1px solid #fff;
+}
+nav div:last-child {
+	border-bottom: 0 !important;
 }
 
 .menuelement h4 {
@@ -487,9 +512,10 @@ a:hover {
 	font-weight: bold;
 	margin:0;
 	padding:0 0 0 20px;
+	color: #626976;
 }
 .menuelement h4 a {
-	color: #000;
+	color: #626976;
 }
 .menuelement ul {
 	list-style:none;
@@ -498,21 +524,8 @@ a:hover {
 }
 
 .menuelement ul li {
-	margin:0 0 0 20px;
+	margin:2px 0 2px 20px;
 	padding:0;
-}
-
-/*
- * main container
- */
-.main {
-	margin-left:240px;
-	margin-right:10px;
-	margin-top:64px;
-	margin-bottom:0;
-	background-color:#fff;
-	padding: 30px 30px 30px 30px;
-	min-height:400px;
 }
 
 .noborder {
@@ -899,8 +912,8 @@ label.nobr {
     height:40px;
     opacity:0.3;
     position:fixed;
-    bottom:15px;
-    left:100px;
+    bottom:50px;
+    left:95px;
     display:none;
     text-indent:-9999px;
     background: url(../img/top.png) no-repeat;
