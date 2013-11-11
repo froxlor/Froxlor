@@ -64,6 +64,7 @@ class phpinterface_fpm {
 					'magic_quotes_sybase'
 			),
 			'php_admin_value' => array(
+					'open_basedir',
 					'precision',
 					'output_buffering',
 					'disable_functions',
@@ -86,7 +87,7 @@ class phpinterface_fpm {
 					'register_argc_argv',
 					'file_uploads',
 					'allow_url_fopen'
-							)
+			)
 	);
 
 	/**
@@ -173,9 +174,9 @@ class phpinterface_fpm {
 
 			$fpm_config.= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f '.$this->_domain['email']."\n";
 
+			$openbasedir = '';
 			if ($this->_domain['loginname'] != 'froxlor.panel') {
 				if ($this->_domain['openbasedir'] == '1') {
-					$openbasedir = '';
 					$_phpappendopenbasedir = '';
 					$_custom_openbasedir = explode(':', $this->_settings['phpfpm']['peardir']);
 					foreach ($_custom_openbasedir as $cobd) {
@@ -206,8 +207,6 @@ class phpinterface_fpm {
 						}
 					}
 					$openbasedir = implode(':', $clean_openbasedir);
-
-					$fpm_config.= 'php_admin_value[open_basedir] = ' . $openbasedir . "\n";
 				}
 			}
 			$fpm_config.= 'php_admin_value[session.save_path] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
@@ -223,7 +222,9 @@ class phpinterface_fpm {
 					'ADMIN_EMAIL' => $admin['email'],
 					'DOMAIN' => $this->_domain['domain'],
 					'CUSTOMER' => $this->_domain['loginname'],
-					'ADMIN' => $admin['loginname']
+					'ADMIN' => $admin['loginname'],
+					'OPEN_BASEDIR' => $openbasedir,
+					'OPEN_BASEDIR_C' => ''
 			);
 
 			$phpini = replace_variables($phpconfig['phpsettings'], $php_ini_variables);
@@ -234,6 +235,10 @@ class phpinterface_fpm {
 				$is = explode("=", $inisection);
 				foreach ($this->_ini as $sec => $possibles) {
 					if (in_array(trim($is[0]), $possibles)) {
+						// check explictly for open_basedir
+						if (trim($is[0]) == 'open_basedir' && $openbasedir == '') {
+							continue;
+						}
 						$fpm_config.= $sec.'['.trim($is[0]).'] = ' . trim($is[1]) . "\n";
 					}
 				}

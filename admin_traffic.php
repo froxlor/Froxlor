@@ -55,55 +55,6 @@ $months = array(
 
 if ($page == 'overview' || $page == 'customers') {
 
-	if ($action == 'su' && $id != 0) {
-
-		$result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE `customerid` = :id" . 
-			($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
-		);
-		$params = array('id' => $id);
-		if ($userinfo['customers_see_all'] == '0') {
-			$params['adminid'] = $userinfo['adminid'];
-		}
-		Database::pexecute($result_stmt, params);
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-
-		if ($result['loginname'] != '') {
-			$result2_stmt = Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_SESSIONS . "`
-				WHERE `userid` = :id"
-			);
-			Database::pexecute($result2_stmt, array('id' => $userinfo['userid']));
-			$result2 = $result2_stmt->fetch(PDO::FETCH_ASSOC);
-			$s = md5(uniqid(microtime(), 1));
-			$ins_stmt = Database::prepare("
-				INSERT INTO `" . TABLE_PANEL_SESSIONS . "` SET
-					`hash` = :hash,
-					`userid` = :id,
-					`ipaddress` = :ip,
-					`useragent` = :ua,
-					`lastactivity` = :la,
-					`language` = :lang,
-					`adminsession` = '0'
-			");
-			$ins_data = array(
-				'hash' => $s,
-				'id' => $id,
-				'ip' => $result['ipaddress'],
-				'ua' => $result['useragent'],
-				'la' => time(),
-				'lang' => $result['language']
-			);
-			Database::pexecute($ins_stmt, $ins_data);
-
-			redirectTo('customer_traffic.php', array('s' => $s));
-
-		} else {
-			redirectTo('index.php', array('action' => 'login'));
-		}
-	}
-
 	$customerview = 1;
 	$stats_tables = '';
 	$minyear_stmt = Database::query("SELECT `year` FROM `". TABLE_PANEL_TRAFFIC . "` ORDER BY `year` ASC LIMIT 1");

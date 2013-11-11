@@ -289,10 +289,12 @@ class nginx
 
 		$result_domains = $this->db->query($query);
 		while ($domain = $this->db->fetch_array($result_domains)) {
+
 			if (is_dir($this->settings['system']['apacheconf_vhost'])) {
 				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'])));
-				$vhost_filename = $this->getVhostFilename($domain);
 			}
+
+			$vhost_filename = $this->getVhostFilename($domain);
 
 			if (!isset($this->nginx_data[$vhost_filename])) {
 				$this->nginx_data[$vhost_filename] = '';
