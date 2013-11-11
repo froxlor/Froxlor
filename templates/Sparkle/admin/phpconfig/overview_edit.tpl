@@ -2,7 +2,7 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/phpsettings_edit_big.png" alt="{$title}" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/phpsettings_edit_big.png" alt="{$title}" />&nbsp;
 				{$title}
 			</h2>
 		</header>
@@ -48,11 +48,6 @@ $header
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td colspan="2">
-						<strong>{$lng['admin']['phpconfig']['template_replace_vars']}</strong>
-					</td>
-				</tr>
 				<tr>
 					<td><em>{PEAR_DIR}</em></td>
 					<td>{$lng['admin']['phpconfig']['pear_dir']}</td>
