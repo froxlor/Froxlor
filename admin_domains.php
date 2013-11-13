@@ -1043,8 +1043,12 @@ if ($page == 'domains'
 				");
 				$customer = Database::pexecute_first($customer_stmt, array('customerid' => $result['customerid']));
 
-				$customerid = intval($_POST['customerid']);
-				if (isset($_POST['customerid'])
+				$customerid = -1;
+				if (isset($_POST['customerid'])) {
+					$customerid = intval($_POST['customerid']);
+				}
+
+				if ($customerid > 0
 					&& $customerid != $result['customerid']
 					&& $settings['panel']['allow_domain_change_customer'] == '1'
 				) {
@@ -1087,8 +1091,12 @@ if ($page == 'domains'
 
 				if ($userinfo['customers_see_all'] == '1') {
 
-					$adminid = intval($_POST['adminid']);
-					if (isset($_POST['adminid'])
+					$adminid = -1;
+					if (isset($_POST['adminid'])) {
+						$adminid = intval($_POST['adminid']);
+					}
+
+					if ($adminid > 0
 						&& $adminid != $result['adminid']
 						&& $settings['panel']['allow_domain_change_admin'] == '1'
 					) {
