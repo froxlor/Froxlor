@@ -1041,7 +1041,7 @@ if ($page == 'domains'
 				$customer_stmt = Database::prepare("
 					SELECT * FROM " . TABLE_PANEL_CUSTOMERS . " WHERE `customerid` = :customerid
 				");
-				$customer = $customer_old = Database::pexecute_first($customer_stmt, array('customerid' => $result['customerid']));
+				$customer = Database::pexecute_first($customer_stmt, array('customerid' => $result['customerid']));
 
 				$customerid = intval($_POST['customerid']);
 				if (isset($_POST['customerid'])
@@ -1083,7 +1083,7 @@ if ($page == 'domains'
 				$customer_stmt = Database::prepare("
 					SELECT * FROM " . TABLE_PANEL_ADMINS . " WHERE `adminid` = :adminid
 				");
-				$admin = $admin_old = Database::pexecute_first($customer_stmt, array('adminid' => $result['adminid']));
+				$admin = Database::pexecute_first($customer_stmt, array('adminid' => $result['adminid']));
 
 				if ($userinfo['customers_see_all'] == '1') {
 
@@ -1616,14 +1616,14 @@ if ($page == 'domains'
 
 				$_update_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
-					`customerid` = .customerid,
+					`customerid` = :customerid,
 					`adminid` = :adminid,
 					`openbasedir` = :openbasedir,
 					`phpsettingid` = :phpsettingid,
 					`mod_fcgid_starter` = :mod_fcgid_starter,
 					`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests
 					" . $upd_specialsettings . $updatechildren . " 
-					WHERE `parentdomainid` = parentdomainid
+					WHERE `parentdomainid` = :parentdomainid
 				");
 				Database::pexecute($_update_stmt, $_update_data);
 
