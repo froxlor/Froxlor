@@ -986,7 +986,7 @@ if ($page == 'domains'
 
 		if ($result['domain'] != '') {
 
-			$subdomains_stmt = Datbase::prepare("
+			$subdomains_stmt = Database::prepare("
 				SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE
 				`parentdomainid` = :resultid
 			");
