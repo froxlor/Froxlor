@@ -1002,7 +1002,7 @@ if ($page == 'domains'
 
 			$domain_emails_result_stmt = Database::prepare("
 				SELECT `email`, `email_full`, `destination`, `popaccountid` AS `number_email_forwarders`
-				FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid` = :cusotmerid AND `domainid` = :id
+				FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid` = :customerid AND `domainid` = :id
 			");
 			Database::pexecute($domain_emails_result_stmt, array('customerid' => $result['customerid'], 'id' => $result['id']));
 
