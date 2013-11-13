@@ -760,10 +760,10 @@ if ($page == 'domains'
 						`specialsettings` = :specialsettings,
 						`ssl_redirect` = :ssl_redirect,
 						`add_date` = :add_date,
-						`registration_date` = .registration_date,
+						`registration_date` = :registration_date,
 						`phpsettingid` = :phpsettingid,
 						`mod_fcgid_starter` = :mod_fcgid_starter,
-						`mod_fcgid_maxrequests` = .mod_fcgid_maxrequests,
+						`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
 						`ismainbutsubto` = :ismainbutsubto
 					");
 					Database::pexecute($ins_stmt, $ins_data);
