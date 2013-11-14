@@ -561,7 +561,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			$has_preconfig = true;
 			$description  = 'The PHP-FPM implementation for apache2 has changed. Please look for the "<b>fastcgi.conf</b>" (Debian/Ubuntu) or "<b>70_fastcgi.conf</b>" (Gentoo) within /etc/apache2/ and change it as shown below:<br /><br />';
 			$description .= '<pre style="width:500px;border:1px solid #ccc;padding:4px;">&lt;IfModule mod_fastcgi.c&gt;
-    FastCgiIpcDir /var/run/apache2/
+    FastCgiIpcDir /var/lib/apache2/fastcgi/
     &lt;Location "/fastcgiphp"&gt;
         Order Deny,Allow
         Deny from All
@@ -569,6 +569,17 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
         Allow from env=REDIRECT_STATUS
     &lt;/Location&gt;
 &lt;/IfModule&gt;</pre>';
+			$question = '';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
+
+	if (versionInUpdate($current_version, '0.9.31-dev2')) {
+		if ($settings['system']['webserver'] == 'apache2'
+				&& $settings['phpfpm']['enabled'] == '1'
+		) {
+			$has_preconfig = true;
+			$description  = 'The FPM socket directory is now a setting in froxlor. Its default is <b>/var/lib/apache2/fastcgi/</b>.<br/>If you are using <b>/var/run/apache2</b> in the "<b>fastcgi.conf</b>" (Debian/Ubuntu) or "<b>70_fastcgi.conf</b>" (Gentoo) please correct this path accordingly<br />';
 			$question = '';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}

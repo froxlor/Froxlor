@@ -100,7 +100,8 @@ if($userinfo['change_serversettings'] == '1')
 			'<BASE_PATH>' => makeCorrectDir(dirname(__FILE__)),
 			'<BIND_CONFIG_PATH>' => makeCorrectDir($settings['system']['bindconf_directory']),
 			'<WEBSERVER_RELOAD_CMD>' => $settings['system']['apachereload_command'],
-			'<CUSTOMER_LOGS>' => makeCorrectDir($settings['system']['logfiles_directory'])
+			'<CUSTOMER_LOGS>' => makeCorrectDir($settings['system']['logfiles_directory']),
+			'<FPM_IPCDIR>' => makeCorrectDir($settings['phpfpm']['fastcgi_ipcdir'])
 		);
 		$files = '';
 		$configpage = '';

@@ -287,7 +287,9 @@ class phpinterface_fpm {
 	 */
 	public function getSocketFile($createifnotexists = true) {
 
-		$socketdir = makeCorrectDir('/var/run/'.$this->_settings['system']['webserver'].'/');
+		// see #1300 why this has changed
+		//$socketdir = makeCorrectDir('/var/run/'.$this->_settings['system']['webserver'].'/');
+		$socketdir = makeCorrectDir($this->_settings['phpfpm']['fastcgi_ipcdir']);
 		$socket = makeCorrectFile($socketdir.'/'.$this->_domain['loginname'].'-'.$this->_domain['domain'].'-php-fpm.socket');
 
 		if (!is_dir($socketdir) && $createifnotexists) {

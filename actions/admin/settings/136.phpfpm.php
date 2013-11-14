@@ -62,7 +62,7 @@ return array(
 					'default' => '1',
 					'option_mode' => 'one',
 					'option_options_method' => 'getPhpConfigs',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_defaultini_ownvhost' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'],
@@ -72,7 +72,7 @@ return array(
 					'default' => '1',
 					'option_mode' => 'one',
 					'option_options_method' => 'getPhpConfigs',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_configdir' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['configdir'],
@@ -81,7 +81,7 @@ return array(
 					'type' => 'string',
 					'string_type' => 'confdir',
 					'default' => '/etc/php-fpm.d/',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_aliasconfigdir' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['aliasconfigdir'],
@@ -90,7 +90,7 @@ return array(
 					'type' => 'string',
 					'string_type' => 'confdir',
 					'default' => '/var/www/php-fpm/',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_tmpdir' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['tmpdir'],
@@ -99,7 +99,7 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/var/customers/tmp/',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_peardir' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['peardir'],
@@ -108,7 +108,16 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/usr/share/php/:/usr/share/php5/',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
+					),
+				'system_phpfpm_fastcgi_ipcdir' => array(
+					'label' => $lng['serversettings']['phpfpm_settings']['ipcdir'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'fastcgi_ipcdir',
+					'type' => 'string',
+					'string_type' => 'dir',
+					'default' => '/var/lib/apache2/fastcgi/',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_reload' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['reload'],
@@ -116,7 +125,7 @@ return array(
 					'varname' => 'reload',
 					'type' => 'string',
 					'default' => '/etc/init.d/php-fpm restart',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_pm' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['pm'],
@@ -126,7 +135,7 @@ return array(
 					'default' => 'static',
 					'option_mode' => 'one',
 					'option_options' => array('static' => 'static', 'dynamic' => 'dynamic', 'ondemand' => 'ondemand'),
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_max_children' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['max_children'],
@@ -134,7 +143,7 @@ return array(
 					'varname' => 'max_children',
 					'type' => 'int',
 					'default' => 1,
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_start_servers' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['start_servers'],
@@ -142,7 +151,7 @@ return array(
 					'varname' => 'start_servers',
 					'type' => 'int',
 					'default' => 20,
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_min_spare_servers' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['min_spare_servers'],
@@ -150,7 +159,7 @@ return array(
 					'varname' => 'min_spare_servers',
 					'type' => 'int',
 					'default' => 5,
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_max_spare_servers' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['max_spare_servers'],
@@ -158,7 +167,7 @@ return array(
 					'varname' => 'max_spare_servers',
 					'type' => 'int',
 					'default' => 35,
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_max_requests' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['max_requests'],
@@ -166,7 +175,7 @@ return array(
 					'varname' => 'max_requests',
 					'type' => 'int',
 					'default' => 0,
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_idle_timeout' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['idle_timeout'],

@@ -2423,3 +2423,26 @@ if (isFroxlorVersion('0.9.30')) {
 
 	updateToVersion('0.9.31-dev1');
 }
+
+if (isFroxlorVersion('0.9.31-dev1')) {
+
+	showUpdateStep("Updating from 0.9.31-dev1 to 0.9.31-dev2", true);
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new phpfpm-ipcdir setting");
+	$ins_stmt = Database::prepare("
+		INSERT INTO `".TABLE_PANEL_SETTINGS."` SET `settinggroup` = 'phpfpm', `varname` = 'fastcgi_ipcdir', `value` = :value
+	");
+	$params = array();
+	if ($settings['system']['webserver'] == 'apache2') {
+		$params['value'] = '/var/lib/apache2/fastcgi/';
+	} elseif ($settings['system']['webserver'] == 'lighttpd') {
+		$params['value'] = '/var/run/lighttpd/';
+	} elseif ($settings['system']['webserver'] == 'nginx') {
+		$params['value'] = '/var/run/nginx/';
+	}
+	Database::pexecute($ins_stmt, $params);
+	lastStepStatus(0);
+
+	updateToVersion('0.9.31-dev2');
+}

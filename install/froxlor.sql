@@ -415,6 +415,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/'),
 	('phpfpm', 'defaultini', '1'),
 	('phpfpm', 'vhost_defaultini', '1'),
+	('phpfpm', 'fastcgi_ipcdir', '/var/lib/apache2/fastcgi/'),
 	('nginx', 'fastcgiparams', '/etc/nginx/fastcgi_params'),
 	('system', 'lastaccountnumber', '0'),
 	('system', 'lastguid', '9999'),
@@ -539,7 +540,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.31-dev1');
+	('panel', 'version', '0.9.31-dev2');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

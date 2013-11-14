@@ -385,12 +385,14 @@ class FroxlorInstall {
 			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
 			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/lighttpd reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
 			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/lighttpd.pem' WHERE `settinggroup` = 'system' AND `varname` = 'ssl_cert_file'");
+			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/var/run/lighttpd/' WHERE `settinggroup` = 'phpfpm' AND `varname` = 'fastcgi_ipcdir'");
 		} elseif ($this->_data['webserver'] == "nginx") {
 			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_vhost'");
 			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_diroptions'");
 			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
 			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/nginx reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
 			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/nginx.pem' WHERE `settinggroup` = 'system' AND `varname` = 'ssl_cert_file'");
+			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/var/run/nginx/' WHERE `settinggroup` = 'phpfpm' AND `varname` = 'fastcgi_ipcdir'");
 		}
 
 		// insert the lastcronrun to be the installation date
@@ -733,7 +735,7 @@ class FroxlorInstall {
 		// check for correct php version
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpversion']);
 
-		if (version_compare("5.2.0", PHP_VERSION, ">=")) {
+		if (version_compare("5.3.0", PHP_VERSION, ">=")) {
 			$content .= $this->_status_message('red', $this->_lng['requirements']['notfound'].' ('.PHP_VERSION.')');
 			$_die = true;
 		} else {

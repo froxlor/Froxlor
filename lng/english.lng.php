@@ -1976,3 +1976,5 @@ $lng['panel']['used'] = "used";
 $lng['panel']['assigned'] = "assigned";
 $lng['panel']['available'] = "available";
 $lng['customer']['services'] = "Services";
+$lng['serversettings']['phpfpm_settings']['ipcdir']['title'] = 'FastCGI IPC directory';
+$lng['serversettings']['phpfpm_settings']['ipcdir']['description'] = 'The directory where the php-fpm sockets will be stored by the webserver.<br />This directory has to be readable for the webserver';
