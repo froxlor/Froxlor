@@ -42,7 +42,7 @@ function validateDomain($domainname)
 	// a dash (-) in it. As the PHP_VERSION constant
 	// gives also patch-brandings, e.g. '5.3.2-pl0-gentoo'
 	// we just always use our regex
-	$pattern = '/^http:\/\/([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z0-9\-]{2,8}$/i';
+	$pattern = '/^http:\/\/([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z0-9\-]{1,8}$/i';
 	if(preg_match($pattern, $domainname_tmp))
 	{	
 		return $domainname;

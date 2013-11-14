@@ -125,6 +125,14 @@ return array(
 						'type' => 'select',
 						'select_var' => $serveraliasoptions
 					),
+					'nonwwwredirect' => array(
+						'label' => $lng['domains']['nonwwwredirect'],
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
+					),
 					'speciallogfile' => array(
 						'label' => $lng['admin']['speciallogfile']['title'],
 						'desc' => $lng['admin']['speciallogfile']['description'],
@@ -139,6 +147,14 @@ return array(
 						'style' => 'vertical-align:top;',
 						'label' => $lng['admin']['ownvhostsettings'],
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12
+					),
+					'specialredirects' => array(
+						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
+						'style' => 'vertical-align:top;',
+						'label' => $lng['admin']['ownvhostredirects'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12

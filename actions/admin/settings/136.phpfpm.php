@@ -54,6 +54,14 @@ return array(
 					'default' => 'froxlorlocal',
 					'save_method' => 'storeSettingField'
 					),
+				'system_phpfpm_usetcp' => array(
+					'label' => $lng['serversettings']['phpfpm_settings']['usetcp'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'usetcp',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+					),
 				'system_phpfpm_defaultini' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
 					'settinggroup' => 'phpfpm',

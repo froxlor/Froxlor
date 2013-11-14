@@ -341,7 +341,7 @@ if($page == 'overview') {
 						"customerid" => $userinfo['customerid'],
 						"domain" => $completedomain,
 						"documentroot" => $path,
-						"aliasdomain" => $aliasdomain != 0 ? $aliasdomain : "NULL",
+						"aliasdomain" => $aliasdomain != 0 ? $aliasdomain : NULL,
 						"parentdomainid" => $domain_check['id'],
 						"isemaildomain" => $domain_check['subcanemaildomain'] == '3' ? '1' : '0',
 						"openbasedir" => $domain_check['openbasedir'],

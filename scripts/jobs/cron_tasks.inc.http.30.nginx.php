@@ -243,7 +243,13 @@ class nginx
 					);
 
 					$php = new phpinterface($this->getDB(), $this->settings, $domain);
-					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
+					$connect = 'fastcgi_pass ';
+					if ((int)$this->settings['phpfpm']['usetcp']) { 
+						$connect .= $php->getInterface()->getConnectLink();
+					} else {
+						$connect .= 'unix:' . $php->getInterface()->getSocketFile();
+					}
+					$this->nginx_data[$vhost_filename] .= "\t\t". $connect . ';' . "\n";
 				} else {
 					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
 				}
@@ -737,7 +743,15 @@ class nginx
 		$webroot_text .= "\n\t".'location / {'."\n";
 		$webroot_text .= "\t\t".'index    index.php index.html index.htm;'."\n";
 		$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
-
+		if ($domain['nonwwwredirect']) {
+			$domainMask = strtr($domain['domain'], array('.' => '\.'));
+			$webroot_text .= "\t\t" . 'if ($host !~* ^www\.' . $domainMask . ') {'."\n";
+			$webroot_text .= "\t\t" . 'rewrite  ^/(.*)$  http://www.' . $domain['domain'] . '/$1  permanent;'."\n";
+			$webroot_text .= "\t\t" . '}'."\n";
+		}
+		if (!empty($domain['specialredirects'])) {
+			$webroot_text .= $domain['specialredirects'] . "\n";
+		}
 		if ($this->vhost_root_autoindex) {
 			$webroot_text .= "\t\t".'autoindex on;'."\n";
 			$this->vhost_root_autoindex = false;

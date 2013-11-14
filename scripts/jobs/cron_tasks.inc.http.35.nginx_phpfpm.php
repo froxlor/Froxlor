@@ -34,13 +34,41 @@ class nginx_phpfpm extends nginx
 
 		if($domain['phpenabled'] == '1')
 		{
-			$php = new phpinterface($this->getDB(), $this->settings, $domain);
+			$db = $this->getDB();
+			$php = new phpinterface($db, $this->settings, $domain);
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
 			
-			$php_options_text = "\t".'location ~ \.php$ {'."\n";
+			$connect = 'fastcgi_pass ';
+			if ((int)$this->settings['phpfpm']['usetcp']) { 
+				$connect .= $php->getInterface()->getConnectLink();
+			} else {
+				$connect .= 'unix:' . $php->getInterface()->getSocketFile();
+			}
+			$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC";
+			$result_ipsandports = $db->query($query);
+			$ips = array();
+			while ($row_ipsandports = $db->fetch_array($result_ipsandports)) {
+				$ips[$row_ipsandports['ip']] = $row_ipsandports['ip'];
+			}
+
+			$php_options_text = "\t".'location /php_fpm_status {'."\n";
+			$php_options_text.= "\t\t".'access_log off;'."\n";
+			foreach ($ips as $value) {
+				$php_options_text.= "\t\t".'allow ' . $value . ';'."\n";
+			}
+			$php_options_text.= "\t\t".'allow 127.0.0.1;'."\n";
+			$php_options_text.= "\t\t".'deny all;'."\n";
+			$php_options_text.= "\t\t". $connect . ';' . "\n";
+			$php_options_text.= "\t\t".'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
+			if ($domain['ssl'] == '1' && $ssl_vhost) {
+				$php_options_text.= "\t\t".'fastcgi_param HTTPS on;'."\n";
+			}
+			$php_options_text.= "\t".'}'."\n\n";
+
+			$php_options_text.= "\t".'location ~ \.php$ {'."\n";
 			$php_options_text.= "\t\t".'try_files $uri =404;'."\n";
 			$php_options_text.= "\t\t".'fastcgi_split_path_info ^(.+\.php)(/.+)$;'."\n";
-			$php_options_text.= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
+			$php_options_text.= "\t\t". $connect . ';' . "\n";
 			$php_options_text.= "\t\t".'fastcgi_index index.php;'."\n";
 			$php_options_text.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
 			$php_options_text.= "\t\t".'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";

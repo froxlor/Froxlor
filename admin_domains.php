@@ -251,6 +251,7 @@ if($page == 'domains'
 				if(isset($_POST['selectserveralias']))
 					$serveraliasoption = intval($_POST['selectserveralias']);
 
+				$nonwwwredirect = intval($_POST['nonwwwredirect']);
 				$speciallogfile = 0;
 				if(isset($_POST['speciallogfile']))
 					$speciallogfile = intval($_POST['speciallogfile']);
@@ -310,6 +311,7 @@ if($page == 'domains'
 					}
 
 					$specialsettings = validate(str_replace("\r\n", "\n", $_POST['specialsettings']), 'specialsettings', '/^[^\0]*$/');
+					$specialredirects = validate(str_replace("\r\n", "\n", $_POST['specialredirects']), 'specialredirects', '/^[^\0]*$/');
 					validate($_POST['documentroot'], 'documentroot');
 
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
@@ -344,6 +346,7 @@ if($page == 'domains'
 					$zonefile = '';
 					$dkim = '1';
 					$specialsettings = '';
+					$specialredirects = '';
 				}
 
 				if($userinfo['caneditphpsettings'] == '1'
@@ -564,6 +567,11 @@ if($page == 'domains'
 					$issubof = '0';
 				}
 
+				if($nonwwwredirect != '1')
+				{
+					$nonwwwredirect = '0';
+				}
+
 				if($domain == '')
 				{
 					standard_error(array('stringisempty', 'mydomain'));
@@ -616,8 +624,10 @@ if($page == 'domains'
 						'mod_fcgid_starter' => $mod_fcgid_starter,
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 						'specialsettings' => $specialsettings,
+						'specialredirects' => $specialredirects,
 						'registration_date' => $registration_date,
-						'issubof' => $issubof
+						'issubof' => $issubof,
+						'nonwwwredirect' => $nonwwwredirect
 					);
 
 					$security_questions = array(
@@ -654,6 +664,7 @@ if($page == 'domains'
 						`dkim` = '" . $db->escape($dkim) . "',
 						`wwwserveralias` = '" . $db->escape($wwwserveralias) . "',
 						`iswildcarddomain` = '" . $db->escape($iswildcarddomain) . "',
+						`nonwwwredirect` = '" . $db->escape($nonwwwredirect) . "',
 						`isbinddomain` = '" . $db->escape($isbinddomain) . "',
 						`isemaildomain` = '" . $db->escape($isemaildomain) . "',
 						`email_only` = '" . $db->escape($email_only) . "',
@@ -662,6 +673,7 @@ if($page == 'domains'
 						`openbasedir` = '" . $db->escape($openbasedir) . "',
 						`speciallogfile` = '" . $db->escape($speciallogfile) . "',
 						`specialsettings` = '" . $db->escape($specialsettings) . "',
+						`specialredirects` = '" . $db->escape($specialredirects) . "',
 						`ssl_redirect` = '" . $ssl_redirect . "',
 						`add_date` = '" . $db->escape(time()) . "',
 						`registration_date` = '" . $db->escape($registration_date) . "',
@@ -908,6 +920,7 @@ if($page == 'domains'
 
 				$aliasdomain = intval($_POST['alias']);
 				$issubof = intval($_POST['issubof']);
+				$nonwwwredirect = intval($_POST['nonwwwredirect']);
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
 				$caneditdomain = isset($_POST['caneditdomain']) ? intval($_POST['caneditdomain']) : 0;
 				$registration_date = trim($_POST['registration_date']);
@@ -959,6 +972,7 @@ if($page == 'domains'
 					}
 
 					$specialsettings = validate(str_replace("\r\n", "\n", $_POST['specialsettings']), 'specialsettings', '/^[^\0]*$/');
+					$specialredirects = validate(str_replace("\r\n", "\n", $_POST['specialredirects']), 'specialredirects', '/^[^\0]*$/');
 					$documentroot = validate($_POST['documentroot'], 'documentroot');
 
 					if($documentroot == '')
@@ -987,6 +1001,7 @@ if($page == 'domains'
 					$zonefile = $result['zonefile'];
 					$dkim = $result['dkim'];
 					$specialsettings = $result['specialsettings'];
+					$specialredirects = $result['specialredirects'];
 					$documentroot = $result['documentroot'];
 				}
 
@@ -1200,12 +1215,14 @@ if($page == 'domains'
 					'mod_fcgid_starter' => $mod_fcgid_starter,
 					'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 					'specialsettings' => $specialsettings,
+					'specialredirects' => $specialredirects,
 					'registration_date' => $registration_date,
 					'issubof' => $issubof,
 					'speciallogfile' => $speciallogfile,
 					'speciallogverified' => $speciallogverified,
 					'ipandport' => serialize($ipandports),
-					'ssl_ipandport' => serialize($ssl_ipandports)
+					'ssl_ipandport' => serialize($ssl_ipandports),
+					'nonwwwredirect' => $nonwwwredirect
 				);
 
 				$security_questions = array(
@@ -1234,11 +1251,13 @@ if($page == 'domains'
 				   || $ssl_redirect != $result['ssl_redirect']
 				   || $wwwserveralias != $result['wwwserveralias']
 				   || $iswildcarddomain != $result['iswildcarddomain']
+				   || $nonwwwredirect != $result['nonwwwredirect']
 				   || $openbasedir != $result['openbasedir']
 				   || $phpsettingid != $result['phpsettingid']
 				   || $mod_fcgid_starter != $result['mod_fcgid_starter']
 				   || $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests']
 				   || $specialsettings != $result['specialsettings']
+				   || $specialredirects != $result['specialredirects']
 				   || $aliasdomain != $result['aliasdomain']
 				   || $issubof != $result['ismainbutsubto']
 				   || $email_only != $result['email_only']
@@ -1309,7 +1328,6 @@ if($page == 'domains'
 
 				$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
 				$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
-
 				$result = $db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET 
 					`customerid` = '" . (int)$customerid . "',
 					`adminid` = '" . (int)$adminid . "',
@@ -1325,12 +1343,14 @@ if($page == 'domains'
 					`zonefile`='" . $db->escape($zonefile) . "',
 					`wwwserveralias`='" . $db->escape($wwwserveralias) . "',
 					`iswildcarddomain`='" . $db->escape($iswildcarddomain) . "',
+					`nonwwwredirect`='" . $db->escape($nonwwwredirect) . "',
 					`openbasedir`='" . $db->escape($openbasedir) . "',
 					`speciallogfile`='" . $db->escape($speciallogfile) . "',
 					`phpsettingid`='" . $db->escape($phpsettingid) . "',
 					`mod_fcgid_starter`='" . $db->escape($mod_fcgid_starter) . "',
 					`mod_fcgid_maxrequests`='" . $db->escape($mod_fcgid_maxrequests) . "',
 					`specialsettings`='" . $db->escape($specialsettings) . "',
+					`specialredirects`='" . $db->escape($specialredirects) . "',
 					`registration_date`='" . $db->escape($registration_date) . "',
 					`ismainbutsubto`='" . (int)$issubof . "' WHERE `id`='" . (int)$id . "'
 				");
@@ -1484,6 +1504,7 @@ if($page == 'domains'
 				}
 
 				$result['specialsettings'] = $result['specialsettings'];
+				$result['specialredirects'] = $result['specialredirects'];
 
 				// create serveralias options
 				$serveraliasoptions = "";

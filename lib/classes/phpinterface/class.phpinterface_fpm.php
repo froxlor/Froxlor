@@ -55,7 +55,10 @@ class phpinterface_fpm
 			'max_execution_time',
 			'include_path',
 			'upload_max_filesize',
-			'log_errors_max_len'
+			'log_errors_max_len',
+			'max_input_time',
+			'memory_limit',
+			'newrelic.license'
 		),
 		'php_flag' => array(
 			'short_open_tag',
@@ -73,12 +76,11 @@ class phpinterface_fpm
 			'precision',
 			'output_buffering',
 			'disable_functions',
-			'max_input_time',
-			'memory_limit',
 			'post_max_size',
 			'variables_order',
 			'gpc_order',
-			'date.timezone'
+			'date.timezone',
+			'extension'
 		),
 		'php_admin_flag' => array(
 			'allow_call_time_pass_reference',
@@ -117,6 +119,7 @@ class phpinterface_fpm
 			$fpm_max_spare_servers = (int)$this->_settings['phpfpm']['max_spare_servers'];
 			$fpm_requests = (int)$this->_settings['phpfpm']['max_requests'];
 			$fpm_process_idle_timeout = (int)$this->_settings['phpfpm']['idle_timeout'];
+			$fpm_use_tcp = (int)$this->_settings['phpfpm']['usetcp'];
 
 			if($fpm_children == 0) {
 				$fpm_children = 1;
@@ -124,7 +127,7 @@ class phpinterface_fpm
 
 			$fpm_config = ';PHP-FPM configuration for "'.$this->_domain['domain'].'" created on ' . date("Y.m.d H:i:s") . "\n";
 			$fpm_config.= '['.$this->_domain['domain'].']'."\n";
-			$fpm_config.= 'listen = '.$this->getSocketFile()."\n";
+			$fpm_config.= 'listen = '. ($fpm_use_tcp ? $this->getConnectLink() : $this->getSocketFile())."\n";
 			if($this->_domain['loginname'] == 'froxlor.panel')
 			{
 				$fpm_config.= 'listen.owner = '.$this->_domain['guid']."\n";
@@ -167,6 +170,8 @@ class phpinterface_fpm
 			}
 
 			$fpm_config.= 'pm.max_requests = '.$fpm_requests."\n";
+			$fpm_config.= 'pm.status_path = /php_fpm_status'."\n";
+
 
 			$fpm_config.= ';chroot = '.makeCorrectDir($this->_domain['documentroot'])."\n";
 
@@ -226,8 +231,8 @@ class phpinterface_fpm
 					$fpm_config.= 'php_admin_value[open_basedir] = ' . $openbasedir . "\n";
 				}
 			}
-			$fpm_config.= 'php_admin_value[session.save_path] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
-			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
+			$fpm_config.= 'php_value[session.save_path] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
+			$fpm_config.= 'php_value[upload_tmp_dir] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
 
 			$admin = $this->_getAdminData($this->_domain['adminid']);
 			$php_ini_variables = array(
@@ -309,6 +314,21 @@ class phpinterface_fpm
 		}
 
 		return $socket;
+	}
+
+	/**
+	 * return path of fpm-socket file
+	 *
+	 * @param boolean $createifnotexists create the directory if it does not exist
+	 *
+	 * @return string the full path to the socket
+	 */
+	public function getConnectLink()
+	{
+		$socketdir = makeCorrectDir('/var/run/'.$this->_settings['system']['webserver'].'/');
+		$link = '127.0.0.1:' . (10000 + (int)$this->_domain['id']);
+		
+		return $link;
 	}
 
 	/**

@@ -123,6 +123,7 @@ $lng['domains']['subdomain_edit'] = 'Edit (sub)domain';
 $lng['domains']['wildcarddomain'] = 'Create as wildcarddomain?';
 $lng['domains']['aliasdomain'] = 'Alias for domain';
 $lng['domains']['noaliasdomain'] = 'No alias domain';
+$lng['domains']['nonwwwredirect'] = 'Redirect non www to www domain';
 
 /**
  * E-mails
@@ -298,6 +299,7 @@ $lng['admin']['deactivated'] = 'Deactivated';
 $lng['admin']['deactivated_user'] = 'Deactivate user';
 $lng['admin']['sendpassword'] = 'Send password';
 $lng['admin']['ownvhostsettings'] = 'Own vHost-settings';
+$lng['admin']['ownvhostredirects'] = 'Own vHost-redirects in Location /';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configuration';
 $lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Please change the following files or create them with<br />the following content if they do not exist.<br /><b>Please note:</b> The MySQL-password has not been replaced for security reasons.<br />Please replace "MYSQL_PASSWORD" on your own. If you forgot your MySQL-password<br />you\'ll find it in "lib/userdata.inc.php".';
 $lng['admin']['configfiles']['commands'] = '<b>Commands:</b> Please execute the following commands in a shell.';
@@ -1505,6 +1507,7 @@ $lng['error']['intvaluetoolow'] = 'The given number is too low (field %s)';
 $lng['error']['intvaluetoohigh'] = 'The given number is too high (field %s)';
 $lng['admin']['phpfpm_settings'] = 'PHP-FPM';
 $lng['serversettings']['phpfpm'] = 'Enable php-fpm';
+$lng['serversettings']['phpfpm_settings']['usetcp'] = 'Use TCP instead of socket for php-fpm';
 $lng['serversettings']['phpfpm_settings']['configdir'] = 'Configuration directory of php-fpm';
 $lng['serversettings']['phpfpm_settings']['aliasconfigdir'] = 'Configuration Alias-directory of php-fpm';
 $lng['serversettings']['phpfpm_settings']['reload'] = 'php-fpm restart command';
