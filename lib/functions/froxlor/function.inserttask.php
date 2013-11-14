@@ -27,16 +27,16 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '')
-{
-	global $db, $settings, $theme;
+function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '') {
 
-	if($type == '1'
-	   || $type == '3'
-	   || $type == '4'
-	   || $type == '5'
-	   || $type == '10')
-	{
+	global $settings;
+
+	if ($type == '1'
+		|| $type == '3'
+		|| $type == '4'
+		|| $type == '5'
+		|| $type == '10'
+	) {
 		// 4 = bind -> if bind disabled -> no task
 		if ($type == '4' && $settings['system']['bind_enable'] == '0') {
 			return;
@@ -44,50 +44,69 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		// 10 = quota -> if quota disabled -> no task
 		if ($type == '10' && $settings['system']['diskquota_enabled'] == '0') {
 			return;
-		} 
-		$db->query('DELETE FROM `' . TABLE_PANEL_TASKS . '` WHERE `type`="' . $type . '"');
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`) VALUES ("' . $type . '")');
-	}
-	elseif($type == '2'
-	       && $param1 != ''
-	       && $param2 != ''
-	       && $param3 != ''
-	       && ($param4 == 0 || $param4 == 1)
+		}
+		$del_stmt = Database::prepare("
+			DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = :type
+		");
+		Database::pexecute($del_stmt, array('type' => $type));
+		$ins_stmt = Database::prepare("
+			INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = :type
+		");
+		Database::pexecute($ins_stmt, array('type' => $type));
+
+	} elseif ($type == '2'
+		&& $param1 != ''
+		&& $param2 != ''
+		&& $param3 != ''
+		&& ($param4 == 0 || $param4 == 1)
 	) {
-		$data = Array();
+		$data = array();
 		$data['loginname'] = $param1;
 		$data['uid'] = $param2;
 		$data['gid'] = $param3;
 		$data['store_defaultindex'] = $param4;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("2", "' . $db->escape($data) . '")');
-	}
-	elseif($type == '6'
-			&& $param1 != '')
-	{
-		$data = Array();
+		$ins_stmt = Database::prepare("
+			INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = '2', `data` = :data
+		");
+		Database::pexecute($ins_stmt, array('data' => $data));
+
+	} elseif ($type == '6'
+		&& $param1 != ''
+	) {
+		$data = array();
 		$data['loginname'] = $param1;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("6", "' . $db->escape($data) . '")');
-	}
-	elseif($type == '7'
-			&& $param1 != ''
-			&& $param2 != '')
-	{
-		$data = Array();
+		$ins_stmt = Database::prepare("
+			INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = '6', `data` = :data
+		");
+		Database::pexecute($ins_stmt, array('data' => $data));
+
+	} elseif ($type == '7'
+		&& $param1 != ''
+		&& $param2 != ''
+	) {
+		$data = array();
 		$data['loginname'] = $param1;
 		$data['email'] = $param2;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("7", "' . $db->escape($data) . '")');
-	}
-	elseif($type == '8'
-			&& $param1 != ''
-			&& $param2 != '')
-	{
-		$data = Array();
+		$ins_stmt = Database::prepare("
+			INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = '7', `data` = :data
+		");
+		Database::pexecute($ins_stmt, array('data' => $data));
+
+	} elseif ($type == '8'
+		&& $param1 != ''
+		&& $param2 != ''
+	) {
+		$data = array();
 		$data['loginname'] = $param1;
 		$data['homedir'] = $param2;
 		$data = serialize($data);
-		$db->query('INSERT INTO `' . TABLE_PANEL_TASKS . '` (`type`, `data`) VALUES ("8", "' . $db->escape($data) . '")');
+		$ins_stmt = Database::prepare("
+			INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = '8', `data` = :data
+		");
+		Database::pexecute($ins_stmt, array('data' => $data));
+
 	}
 }

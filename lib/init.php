@@ -177,7 +177,7 @@ if (get_magic_quotes_gpc()) {
  * Selects settings from MySQL-Table
  */
 $settings_data = loadConfigArrayDir('actions/admin/settings/');
-$settings = loadSettings($settings_data, $db);
+$settings = loadSettings($settings_data);
 
 /**
  * SESSION MANAGEMENT
@@ -434,9 +434,10 @@ if (AREA == 'admin' || AREA == 'customer') {
 /**
  * header information about open tickets (only if used)
  */
+$awaitingtickets = 0;
+$awaitingtickets_text = '';
 if ($settings['ticket']['enabled'] == '1') {
-	$awaitingtickets = 0;
-	$awaitingtickets_text = '';
+
 	$opentickets = 0;
 
 	if (AREA == 'admin' && isset($userinfo['adminid'])) {

@@ -35,20 +35,25 @@ function storeSettingDefaultTheme($fieldname, $fielddata, $newfieldvalue) {
 	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 	if ($returnvalue !== false
-			&& is_array($fielddata)
-			&& isset($fielddata['settinggroup'])
-			&& $fielddata['settinggroup'] == 'panel'
-			&& isset($fielddata['varname'])
-			&& $fielddata['varname'] == 'default_theme'
+		&& is_array($fielddata)
+		&& isset($fielddata['settinggroup'])
+		&& $fielddata['settinggroup'] == 'panel'
+		&& isset($fielddata['varname'])
+		&& $fielddata['varname'] == 'default_theme'
 	) {
-		global $db;
 		// now, if changing themes is disabled we recursivly set
 		// the new theme (customers and admin, depending on settings)
 		if (getSetting('panel', 'allow_theme_change_customer') == '0') {
-			$db->query("UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `theme`='".$db->escape($newfieldvalue)."'");
+			$upd_stmt = Database::prepare("
+				UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `theme` = :theme
+			");
+			Database::pexecute($upd_stmt, array('theme' => $newfieldvalue));
 		}
 		if (getSetting('panel', 'allow_theme_change_admin') == '0') {
-			$db->query("UPDATE `".TABLE_PANEL_ADMINS."` SET `theme`='".$db->escape($newfieldvalue)."'");
+			$upd_stmt = Database::prepare("
+				UPDATE `".TABLE_PANEL_ADMINS."` SET `theme` = :theme
+			");
+			Database::pexecute($upd_stmt, array('theme' => $newfieldvalue));
 		}
 	}
 

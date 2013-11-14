@@ -15,11 +15,9 @@
  *
  */
 
-function setCycleOfCronjob($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
-{
-	global $settings, $db, $theme;
+function setCycleOfCronjob($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
 
-	switch($newfieldvalue)
+	switch ($newfieldvalue)
 	{
 		case 0:
 			$interval = 'DAY';
@@ -38,7 +36,7 @@ function setCycleOfCronjob($fieldname, $fielddata, $newfieldvalue, $allnewfieldv
 			break;
 	}
 	
-	$db->query("UPDATE `cronjobs_run` SET `interval` = '1 ".$interval."' WHERE `cronfile` = 'cron_used_tickets_reset.php';");
+	Database::query("UPDATE `cronjobs_run` SET `interval` = '1 ".$interval."' WHERE `cronfile` = 'cron_used_tickets_reset.php';");
 
 	return array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 }

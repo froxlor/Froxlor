@@ -21,27 +21,32 @@ function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue) {
 	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 	if ($returnvalue !== false
-			&& is_array($fielddata)
-			&& isset($fielddata['settinggroup'])
-			&& $fielddata['settinggroup'] == 'system'
-			&& isset($fielddata['varname'])
-			&& $fielddata['varname'] == 'defaultip'
+		&& is_array($fielddata)
+		&& isset($fielddata['settinggroup'])
+		&& $fielddata['settinggroup'] == 'system'
+		&& isset($fielddata['varname'])
+		&& $fielddata['varname'] == 'defaultip'
 	) {
-		global $db, $theme;
 
-		$customerstddomains_result = $db->query("SELECT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `standardsubdomain` <> '0'");
+		$customerstddomains_result_stmt = Database::prepare("
+			SELECT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `standardsubdomain` <> '0'
+		");
+		Database::pexecute($customerstddomains_result_stmt);
+
 		$ids = array();
 
-		while($customerstddomains_row = $db->fetch_array($customerstddomains_result)) {
+		while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$ids[] = (int)$customerstddomains_row['standardsubdomain'];
 		}
 
-		if(count($ids) > 0) {
-			$db->query("UPDATE `" . TABLE_DOMAINTOIP . "` SET
-					`id_ipandports`='" . (int)$newfieldvalue . "'
-					WHERE `id_domain` IN ('" . implode(', ', $ids) . "')
-					AND `id_ipandports` = '" . $db->escape(getSetting('system', 'defaultip')) . "'"
-			);
+		if (count($ids) > 0) {
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_DOMAINTOIP . "` SET
+				`id_ipandports` = :newval
+				WHERE `id_domain` IN ('" . implode(', ', $ids) . "')
+				AND `id_ipandports` = :defaultip
+			");
+			Database::pexecute($upd_stmt, array('newval' => $newfieldvalue, 'defaultip' => getSetting('system', 'defaultip')));
 		}
 	}
 

@@ -7,12 +7,14 @@
  * 
  * @return string customers loginname
  */
-function getLoginNameByUid($uid = null)
-{
-	global $db, $theme;
-	
-	$result = $db->query_first("SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `guid` = '".(int)$uid."'");
-	if(is_array($result)
+function getLoginNameByUid($uid = null) {
+
+	$result_stmt = Database::prepare("
+		SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `guid` = :guid
+	");
+	$result = Database::pexecute_first($result_stmt, array('guid' => $uid));
+
+	if (is_array($result)
 		&& isset($result['loginname'])
 	) {
 		return $result['loginname'];

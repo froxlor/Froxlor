@@ -20,26 +20,20 @@
  * 
  * @return array
  */
-function getPhpConfigs()
-{
-	global $db, $theme;
-	
-	$query = 'SELECT * FROM `' . TABLE_PANEL_PHPCONFIGS . '` ';
-	$result = $db->query($query, false, true);
+function getPhpConfigs() {
+
+	$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
+	$result = Database::pexecute_first($result_stmt, null, false);
 	$configs_array = array();
 
 	// if the table does not yet exist, we just use the default php.ini
-	if(!$result)
-	{
+	if ($result == false) {
 		$configs_array[1] = 'Default php.ini';
-	}
-	else
-	{
-		while($row = $db->fetch_array($result))
-		{
-			if(!isset($configs_array[$row['id']])
-			   && !in_array($row['id'], $configs_array))
-			{
+	} else {
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			if (!isset($configs_array[$row['id']])
+				&& !in_array($row['id'], $configs_array)
+			) {
 				$configs_array[$row['id']] = html_entity_decode($row['description']);
 			}
 		}

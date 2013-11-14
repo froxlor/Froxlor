@@ -17,11 +17,12 @@
  *
  */
 
-function saveSetting($settinggroup, $varname, $newvalue)
-{
-	global $db, $theme;
-	$query = 'UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = \'' . $db->escape($newvalue) . '\' WHERE `settinggroup` = \'' . $db->escape($settinggroup) . '\' AND `varname`=\'' . $db->escape($varname) . '\'';
-	return $db->query($query);
-}
+function saveSetting($settinggroup, $varname, $newvalue) {
 
-?>
+	$upd_stmt = Database::Prepare("
+		UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = :newvalue
+		WHERE `settinggroup` = :group AND `varname` = :varname
+	");
+	Database::pexecute($upd_stmt, array('newvalue' => $newvalue, 'group' => $settinggroup, 'varname' => $varname));
+	return true;
+}
