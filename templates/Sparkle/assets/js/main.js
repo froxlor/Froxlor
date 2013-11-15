@@ -31,6 +31,14 @@ $(document).ready(function() {
 	if (snheight > mainheight) {
 		$('#maincontent').height(snheight - 60);
 	}
+	
+	// Load Newsfeed
+	var ajax_load = "<div id='newsitem'>Loading newsfeed...</div>";
+	$("#newsfeed").html(ajax_load).load("lib/ajax.php?action=newsfeed", function() {
+		if ($("#newsfeed").html() != "") {
+			$("#newsfeed").slideDown();
+		}
+	});
 
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {

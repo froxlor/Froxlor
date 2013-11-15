@@ -4,6 +4,9 @@ $header
 			<img src="templates/{$theme}/assets/img/icons/domains_big.png" alt="" />
 			{$lng['panel']['dashboard']}
 		</h2>
+		<div class="dboarditemfull bradius" id="newsfeed" style="display: none"></div>
+		<br />
+		<br />
 		<div class="canvasitems" id="statsbox">
 			<div class="canvasbox">
 				<input type="hidden" id="customers" class="circular" data-used="{$overview['number_customers']}" data-available="{$userinfo['customers']}">
