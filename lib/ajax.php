@@ -29,16 +29,14 @@ if ($action == "newsfeed") {
 	$news = simplexml_load_file('http://froxlor.org/feed.rss.php', null, LIBXML_NOCDATA);
 
 	if ($news !== false) {
-		$json = array();
 		for ($i = 0; $i < 3; $i++) {
 			$item = $news->channel->item[$i];
-			$json[] = array(
-				'title'=> (string)$item->title,
-				'url'=> (string)$item->link,
-				'content' => preg_replace("/[\r\n]+/", "", strip_tags($item->description))
-			);
 			
-			echo "<div class=\"newsitem\"><a href=\"" . (string)$item->link . "\" target=\"_blank\"><b>" . (string)$item->title . "</b>" . preg_replace("/[\r\n]+/", "", strip_tags($item->description)) . "</a></div>";
+			$title = (string)$item->title;
+			$link = (string)$item->link;
+			$content = preg_replace("/[\r\n]+/", "", strip_tags($item->description));
+			
+			echo "<div class=\"newsitem\"><a href=\"" . $link . "\" target=\"_blank\"><b>" . $title . "</b>" . $content . "</a></div>";
 		}
 	} else {
 		echo "";

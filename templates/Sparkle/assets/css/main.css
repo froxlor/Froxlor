@@ -955,6 +955,12 @@ label.nobr {
 .newsitem a {
 	color: #333;
 }
+.newsitem a:hover {
+	text-decoration: none;
+}
+.newsitem a:hover b {
+	text-decoration: underline;
+}
 .newsitem b {
 	margin-right: 15px;
 }
