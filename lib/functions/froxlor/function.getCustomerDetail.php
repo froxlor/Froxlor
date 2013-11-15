@@ -20,7 +20,7 @@
 function getCustomerDetail($customerid, $varname) {
 
 	$customer_stmt = Database::prepare("
-		SELECT `' . $varname . '` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :customerid 
+		SELECT `" . $varname . "` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :customerid
 	");
 	$customer = Database::pexecute_first($customer_stmt, array('customerid' => $customerid));
 
