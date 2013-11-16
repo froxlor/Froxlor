@@ -26,6 +26,10 @@ if(isset($_POST['action'])) {
 }
 
 if ($action == "newsfeed") {
+	if (function_exists("simplexml_load_file") == false) {
+		die();
+	}
+	
 	$news = simplexml_load_file('http://froxlor.org/feed.rss.php', null, LIBXML_NOCDATA);
 
 	if ($news !== false) {
