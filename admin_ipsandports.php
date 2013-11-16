@@ -376,7 +376,7 @@ if ($page == 'ipsandports'
 
 				} else {
 
-					$upd_stmt = Datbase::prepare("
+					$upd_stmt = Database::prepare("
 						UPDATE `" . TABLE_PANEL_IPSANDPORTS . "`
 						SET
 							`ip` = :ip, `port` = :port, `listen_statement` = :ls,
