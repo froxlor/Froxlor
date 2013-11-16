@@ -167,7 +167,7 @@ if ($page == 'overview') {
 						standard_error(array('stringisempty', 'username'));
 					}
 					$ftpdomain = $idna_convert->encode(validate($_POST['ftp_domain'], 'domain'));
-					$ftpdomain_check_stmt = Datbase::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
+					$ftpdomain_check_stmt = Database::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
 						WHERE `domain` = :domain
 						AND `customerid` = :customerid"
 					);
