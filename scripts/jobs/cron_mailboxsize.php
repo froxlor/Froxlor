@@ -20,9 +20,15 @@
 
 fwrite($debugHandler, "calculating mailspace usage\n");
 
-$maildirs = $db->query("SELECT `id`, CONCAT(`homedir`, `maildir`) AS `maildirpath` FROM `".TABLE_MAIL_USERS."` ORDER BY `id`");
+$maildirs_stmt = Database::query("
+	SELECT `id`, CONCAT(`homedir`, `maildir`) AS `maildirpath` FROM `".TABLE_MAIL_USERS."` ORDER BY `id`
+");
 
-while ($maildir = $db->fetch_array($maildirs)) {
+$upd_stmt = Database::prepare("
+	UPDATE `".TABLE_MAIL_USERS."` SET `mboxsize` = :size WHERE `id` = :id
+");
+
+while ($maildir = $maildirs_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	$_maildir = makeCorrectDir($maildir['maildirpath']);
 
@@ -35,7 +41,7 @@ while ($maildir = $db->fetch_array($maildirs)) {
 		}
 		$emailusage = floatval($emailusage['0']);
 		unset($back);
-		$db->query("UPDATE `".TABLE_MAIL_USERS."` SET `mboxsize` = '".(int)$emailusage."' WHERE `id` ='".(int)$maildir['id']."'");
+		Database::pexecute($upd_stmt, array('size' => $emailusage, 'id' => $maildir['id']));
 	} else {
 		fwrite($debugHandler, 'maildir ' . $_maildir . ' does not exist' . "\n");
 	}
