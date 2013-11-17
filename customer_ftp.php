@@ -119,11 +119,12 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
 				
-				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_GROUPS . "`
-					SET `members`=REPLACE(`members`,'," . $db->escape($result['username']) . "','')
-					WHERE `customerid`='" . (int)$userinfo['customerid'] . "'"
-				);
-				Database::pexecute($stmt, array("username" => $result['username'], "customerid" => $userinfo['customerid']));
+				$stmt = Database::prepare("
+					UPDATE `" . TABLE_FTP_GROUPS . "` SET
+					`members` = REPLACE(`members`, :username,'')
+					WHERE `customerid` = :customerid
+				");
+				Database::pexecute($stmt, array("username" => ",".$result['username'], "customerid" => $userinfo['customerid']));
 
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted ftp-account '" . $result['username'] . "'");
 
@@ -140,7 +141,7 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
 				
-				redirectTo($filename, Array('page' => $page, 's' => $s));
+				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				ask_yesno_withcheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['username']);
 			}

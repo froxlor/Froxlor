@@ -18,11 +18,6 @@
  */
 
 define('AREA', 'customer');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-
 require ("./lib/init.php");
 
 if(isset($_POST['id'])) {
@@ -717,14 +712,6 @@ if($page == 'overview') {
 				$cert_content = openssl_x509_parse($ssl_cert_file);
 
 				if (is_array($cert_content) && isset($cert_content['subject']) && isset($cert_content['subject']['CN'])) {
-					// TODO self-signed certs might differ and don't need/want this
-					/*
-					$domain = $db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAINS."` WHERE `id`='".(int)$id."'");
-					if (strtolower($cert_content['subject']['CN']) != strtolower($idna_convert->decode($domain['domain']))) {
-						standard_error('sslcertificatewrongdomain');
-					}
-					*/
-
 					// bool openssl_x509_check_private_key ( mixed $cert , mixed $key )
 					// Checks whether the given key is the private key that corresponds to cert.
 					if (openssl_x509_check_private_key($ssl_cert_file, $ssl_key_file) === false) {
