@@ -81,14 +81,7 @@ if ($page == 'overview') {
 	$overview['number_domains'] = $number_domains['number_domains'];
 
 	$phpversion = phpversion();
-	$phpmemorylimit = @ini_get("memory_limit");
-
-	if ($phpmemorylimit == "") {
-		$phpmemorylimit = $lng['admin']['memorylimitdisabled'];
-	}
-
-	$mysqlserverversion = mysql_get_server_info();
-	$mysqlclientversion = mysql_get_client_info();
+	$mysqlserverversion = Database::getAttribute(PDO::ATTR_SERVER_VERSION);
 	$webserverinterface = strtoupper(@php_sapi_name());
 
 	if ((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes')

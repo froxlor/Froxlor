@@ -25,15 +25,14 @@
  * @author Florian Lippert <flo@syscp.org>
  * @author Ron Brand <ron.brand@web.de>
  */
+function standard_error($errors = '', $replacer = '') {
 
-function standard_error($errors = '', $replacer = '')
-{
-	global $db, $userinfo, $s, $header, $footer, $lng, $theme;
+	global $userinfo, $s, $header, $footer, $lng, $theme;
+
 	$_SESSION['requestData'] = $_POST;
 	$replacer = htmlentities($replacer);
 
-	if(!is_array($errors))
-	{
+	if (!is_array($errors)) {
 		$errors = array(
 			$errors
 		);
@@ -45,25 +44,18 @@ function standard_error($errors = '', $replacer = '')
 	}
 
 	$error = '';
-	foreach($errors as $single_error)
-	{
-		if(isset($lng['error'][$single_error]))
-		{
+	foreach ($errors as $single_error) {
+		if (isset($lng['error'][$single_error])) {
 			$single_error = $lng['error'][$single_error];
 			$single_error = strtr($single_error, array('%s' => $replacer));
-		}
-		else
-		{
+		} else {
 			$error = 'Unknown Error (' . $single_error . '): ' . $replacer;
 			break;
 		}
 
-		if(empty($error))
-		{
+		if (empty($error)) {
 			$error = $single_error;
-		}
-		else
-		{
+		} else {
 			$error.= ' ' . $single_error;
 		}
 	}

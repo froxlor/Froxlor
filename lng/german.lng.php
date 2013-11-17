@@ -455,9 +455,7 @@ $lng['error']['stringformaterror'] = 'Der Wert des Feldes "%s" ist nicht im erwa
 
 $lng['admin']['serversoftware'] = 'Webserver';
 $lng['admin']['phpversion'] = 'PHP-Version';
-$lng['admin']['phpmemorylimit'] = 'PHP-Memory-Limit';
 $lng['admin']['mysqlserverversion'] = 'MySQL Server Version';
-$lng['admin']['mysqlclientversion'] = 'MySQL Client Version';
 $lng['admin']['webserverinterface'] = 'Webserver-Interface';
 $lng['domains']['isassigneddomain'] = 'Ist zugewiesene Domain';
 $lng['serversettings']['phpappendopenbasedir']['title'] = 'An OpenBasedir anzuhängende Pfade';

@@ -456,10 +456,8 @@ $lng['error']['stringformaterror'] = 'The value for the field "%s" is not in the
 
 $lng['admin']['serversoftware'] = 'Serversoftware';
 $lng['admin']['phpversion'] = 'PHP-Version';
-$lng['admin']['phpmemorylimit'] = 'PHP-Memory-Limit';
-$lng['admin']['mysqlserverversion'] = 'MySQL Server Version';
-$lng['admin']['mysqlclientversion'] = 'MySQL Client Version';
-$lng['admin']['webserverinterface'] = 'Webserver Interface';
+$lng['admin']['mysqlserverversion'] = 'MySQL server version';
+$lng['admin']['webserverinterface'] = 'Webserver interface';
 $lng['domains']['isassigneddomain'] = 'Is assigned domain';
 $lng['serversettings']['phpappendopenbasedir']['title'] = 'Paths to append to OpenBasedir';
 $lng['serversettings']['phpappendopenbasedir']['description'] = 'These paths (separated by colons) will be added to the OpenBasedir-statement in every vHost-container.';

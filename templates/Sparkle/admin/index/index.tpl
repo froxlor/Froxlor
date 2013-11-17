@@ -209,19 +209,11 @@ $header
 		</tr>
 		<tr>
 			<td>{$lng['admin']['phpversion']}:</td>
-			<td>$phpversion</td>
-		</tr>
-		<tr>
-			<td>{$lng['admin']['phpmemorylimit']}:</td>
-			<td>$phpmemorylimit</td>
+			<td><a href="{$linker->getLink(array('section' => 'settings', 'page' => 'phpinfo'))}">$phpversion</a></td>
 		</tr>
 		<tr>
 			<td>{$lng['admin']['mysqlserverversion']}:</td>
 			<td>$mysqlserverversion</td>
-		</tr>
-		<tr>
-			<td>{$lng['admin']['mysqlclientversion']}:</td>
-			<td>$mysqlclientversion</td>
 		</tr>
 		<tr>
 			<td>{$lng['admin']['webserverinterface']}:</td>
