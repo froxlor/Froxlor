@@ -14,10 +14,15 @@ $header
 				<legend>Froxlor&nbsp;-&nbsp;{$title}</legend>
 
 				<table class="formtable">
+					<thead>
+						<tr><th colspan="2"></th></tr>
+					</thead>
 					{$email_edit_form}
+					<tfoot>
 					<tr>
-						<td class="maintitle" colspan="2"><a href="{$linker->getLink(array('section' => 'email', 'page' => 'emails'))}">{$lng['emails']['back_to_overview']}</a></td>
+						<td colspan="2"><a href="{$linker->getLink(array('section' => 'email', 'page' => 'emails'))}">{$lng['emails']['back_to_overview']}</a></td>
 					</tr>
+					</tfoot>
 				</table>
 			</fieldset>
 		</form>

@@ -778,7 +778,7 @@ if ($page == 'overview') {
 	if ($action == 'add' && $id != 0) {
 		if ($userinfo['email_forwarders_used'] < $userinfo['email_forwarders'] || $userinfo['email_forwarders'] == '-1') {
 			$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid`, `domainid` FROM `" . TABLE_MAIL_VIRTUAL . "`
-				WHERE `customerid`= :customerid
+				WHERE `customerid`= :cid
 				AND `id`= :id"
 			);
 			$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
