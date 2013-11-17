@@ -490,6 +490,7 @@ nav {
 	float: left;
 	width:230px;
 	background-color:#f7f8fa;
+	min-height: 500px;
 }
 nav div:first-child {
 	display: none;
@@ -938,4 +939,28 @@ label.nobr {
 }
 .canvasbox canvas {
 	width: 120px;
+}
+
+/* NEWSFEED */
+.newsitem {
+	border-bottom: 1px solid #f1f2f3;
+	padding: 6px 10px 8px 10px;
+	height: 16px;
+	line-height: 20px;
+	margin: 0 10px;
+	overflow: hidden; 
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.newsitem a {
+	color: #333;
+}
+.newsitem a:hover {
+	text-decoration: none;
+}
+.newsitem a:hover b {
+	text-decoration: underline;
+}
+.newsitem b {
+	margin-right: 15px;
 }
