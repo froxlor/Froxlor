@@ -199,7 +199,7 @@ $header
 		<section class="dboarditem bradius" id="newsfeed" style="display: none">
 			<table>
 				<tr>
-					<th>News</th>
+					<th>{$lng['panel']['news']}</th>
 				</tr>
 			</table>
 			<div id="newsfeeditems"></div>
@@ -223,11 +223,11 @@ $header
 			<td>$mysqlserverversion</td>
 		</tr>
 		<tr>
-			<td>{$lng['admin']['webserverinterface']}:</td>
+			<td class="nowrap">{$lng['admin']['webserverinterface']}:</td>
 			<td>$webserverinterface</td>
 		</tr>
 		<tr>
-			<td>{$lng['admin']['sysload']}:</td>
+			<td class="nowrap">{$lng['admin']['sysload']}:</td>
 			<td>$load</td>
 		</tr>
 		<if $showkernel == 1>

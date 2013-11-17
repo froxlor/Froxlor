@@ -40,7 +40,7 @@ if ($action == "newsfeed") {
 			$link = (string)$item->link;
 			$content = preg_replace("/[\r\n]+/", "", strip_tags($item->description));
 			
-			echo "<div class=\"newsitem\"><a href=\"" . $link . "\" target=\"_blank\"><b>" . $title . "</b>" . $content . "</a></div>";
+			echo "<div class=\"newsitem\"><a href=\"" . $link . "\" target=\"_blank\"><b>" . $title . "</b><br />" . $content . "</a></div>";
 		}
 	} else {
 		echo "";

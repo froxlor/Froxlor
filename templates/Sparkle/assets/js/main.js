@@ -34,8 +34,8 @@ $(document).ready(function() {
 	
 	// Load Newsfeed
 	var ajax_load = "<div id='newsitem'>Loading newsfeed...</div>";
-	$("#newsfeed").html(ajax_load).load("lib/ajax.php?action=newsfeed", function() {
-		if ($("#newsfeed").html() != "") {
+	$("#newsfeeditems").html(ajax_load).load("lib/ajax.php?action=newsfeed", function() {
+		if ($("#newsfeeditems").html() != "") {
 			$("#newsfeed").slideDown();
 		}
 	});

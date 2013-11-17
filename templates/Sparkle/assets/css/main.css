@@ -920,12 +920,16 @@ label.nobr {
     background: url(../img/top.png) no-repeat;
 }
 
+.nowrap {
+	white-space: nowrap;
+}
+
 /* CANVAS STUFF */
 .canvasitems {
 	position:relative;
 	overflow:hidden;
 	width:100%;
-	margin-top:10px;
+	margin-top:0px;
 	margin-bottom:10px;
 	padding: 0 0 0 10px;
 }
@@ -939,15 +943,16 @@ label.nobr {
 }
 .canvasbox canvas {
 	width: 120px;
+	margin-bottom: 5px;
 }
 
 /* NEWSFEED */
 .newsitem {
 	border-bottom: 1px solid #f1f2f3;
-	padding: 6px 10px 8px 10px;
-	height: 16px;
+	padding: 6px 5px 8px 5px;
+	height: 36px;
 	line-height: 20px;
-	margin: 0 10px;
+	margin: 0 5px;
 	overflow: hidden; 
 	text-overflow: ellipsis;
 	white-space: nowrap;
