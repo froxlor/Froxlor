@@ -1702,3 +1702,4 @@ $lng['panel']['available'] = "verfügbar";
 $lng['customer']['services'] = "Dienste";
 $lng['serversettings']['phpfpm_settings']['ipcdir']['title'] = 'FastCGI IPC Verzeichnis';
 $lng['serversettings']['phpfpm_settings']['ipcdir']['description'] = 'In dieses Verzeichnis werden die php-fpm Sockets vom Webserver abgelegt.<br />Das Verzeichnis muss für den Webserver lesbar sein.';
+$lng['panel']['news'] = "Neuigkeiten";

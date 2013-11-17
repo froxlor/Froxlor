@@ -4,10 +4,7 @@ $header
 			<img src="templates/{$theme}/assets/img/icons/domains_big.png" alt="" />
 			{$lng['panel']['dashboard']}
 		</h2>
-		<div class="dboarditemfull bradius" id="newsfeed" style="display: none"></div>
-		<br />
-		<br />
-		<div class="canvasitems" id="statsbox">
+		<section class="dboardcanvas" id="statsbox">
 			<div class="canvasbox">
 				<input type="hidden" id="customers" class="circular" data-used="{$overview['number_customers']}" data-available="{$userinfo['customers']}">
 				<canvas id="customers-canvas" width="120" height="76"></canvas><br/>
@@ -196,15 +193,25 @@ $header
 			</div>
 			</if>
 			
-		</div>
-
+		</section>
+		
+		
+		<section class="dboarditem bradius" id="newsfeed" style="display: none">
+			<table>
+				<tr>
+					<th>News</th>
+				</tr>
+			</table>
+			<div id="newsfeeditems"></div>
+		</section>
+		
 		<section class="dboarditem bradius">
 		<table>
 		<tr>
 			<th colspan="2">{$lng['admin']['systemdetails']}</th>
 		</tr>
 		<tr>
-			<td width="50%">{$lng['admin']['serversoftware']}:</td>
+			<td>{$lng['admin']['serversoftware']}:</td>
 			<td>{$_SERVER['SERVER_SOFTWARE']}</td>
 		</tr>
 		<tr>
@@ -212,7 +219,7 @@ $header
 			<td><a href="{$linker->getLink(array('section' => 'settings', 'page' => 'phpinfo'))}">$phpversion</a></td>
 		</tr>
 		<tr>
-			<td>{$lng['admin']['mysqlserverversion']}:</td>
+			<td class="nowrap">{$lng['admin']['mysqlserverversion']}:</td>
 			<td>$mysqlserverversion</td>
 		</tr>
 		<tr>
