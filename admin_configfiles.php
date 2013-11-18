@@ -18,14 +18,10 @@
  */
 
 define('AREA', 'admin');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-
 $need_db_sql_data = true;
-require ("./lib/init.php");
-require ("./lib/configfiles_index.inc.php");
+require './lib/init.php';
+require './lib/configfiles_index.inc.php';
+
 $distribution = '';
 $distributions_select = '';
 $service = '';

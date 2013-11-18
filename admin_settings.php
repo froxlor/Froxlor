@@ -18,10 +18,9 @@
  */
 
 define('AREA', 'admin');
-
 $need_db_sql_data = true;
 $need_root_db_sql_data = true;
-require ("./lib/init.php");
+require './lib/init.php';
 
 if (($page == 'settings' || $page == 'overview')
 	&& $userinfo['change_serversettings'] == '1'

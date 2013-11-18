@@ -18,8 +18,7 @@
  */
 
 define('AREA', 'admin');
-
-require('./lib/init.php');
+require './lib/init.php';
 
 if ($page == 'log'
    && $userinfo['change_serversettings'] == '1'

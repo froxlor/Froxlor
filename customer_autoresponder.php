@@ -18,7 +18,7 @@
  */
 
 define('AREA', 'customer');
-require('./lib/init.php');
+require './lib/init.php';
 
 if ($action == 'add') {
 	// Create new autoresponder

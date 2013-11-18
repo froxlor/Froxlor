@@ -18,7 +18,7 @@
  */
 
 define('AREA', 'admin');
-require ("./lib/init.php");
+require './lib/init.php';
 
 if ($action == 'logout')  {
 

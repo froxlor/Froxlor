@@ -18,12 +18,8 @@
  */
 
 define('AREA', 'customer');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
 $intrafficpage = 1;
-require('./lib/init.php');
+require './lib/init.php';
 $traffic = '';
 $month = null;
 $year = null;
