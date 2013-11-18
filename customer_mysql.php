@@ -21,7 +21,7 @@ define('AREA', 'customer');
 
 $need_db_sql_data = true;
 $need_root_db_sql_data = true;
-require('./lib/init.php');
+require './lib/init.php';
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);

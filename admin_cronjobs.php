@@ -16,7 +16,7 @@
  */
 
 define('AREA', 'admin');
-require_once('./lib/init.php');
+require './lib/init.php';
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);

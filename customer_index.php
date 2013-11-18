@@ -18,11 +18,7 @@
  */
 
 define('AREA', 'customer');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-require('./lib/init.php');
+require './lib/init.php';
 
 if ($action == 'logout') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, 'logged out');

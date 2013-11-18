@@ -17,128 +17,118 @@
  *
  */
 
-//Check Traffic-Lock
-if(function_exists('pcntl_fork')) {
-	$TrafficLock = dirname($lockfile)."/froxlor_cron_traffic.lock";
-	if(file_exists($TrafficLock) &&  is_numeric($TrafficPid=file_get_contents($TrafficLock))) {
-		if(function_exists('posix_kill')) {
+// Check Traffic-Lock
+if (function_exists('pcntl_fork')) {
+	$TrafficLock = makeCorrectFile(dirname($lockfile)."/froxlor_cron_traffic.lock");
+	if (file_exists($TrafficLock)
+		&& is_numeric($TrafficPid=file_get_contents($TrafficLock))
+	) {
+		if (function_exists('posix_kill')) {
 			$TrafficPidStatus = @posix_kill($TrafficPid,0);
-		}
-		else {
+		} else {
 			system("kill -CHLD " . $TrafficPid . " 1> /dev/null 2> /dev/null", $TrafficPidStatus);
 			$TrafficPidStatus = $TrafficPidStatus ? false : true;
 		}
-		if($TrafficPidStatus) {
+		if ($TrafficPidStatus) {
 			fwrite($debugHandler,"Traffic Run already in progress\n");
 			return 1;
 		}
 	}
-	//Create Traffic Log and Fork
+	// Create Traffic Log and Fork
 	// We close the database - connection before we fork, so we don't share resources with the child
-	$db->close();
-	unset($db);
+	Database::needRoot(false); // this forces the connection to be set to null
 	$TrafficPid = pcntl_fork();
-	if($TrafficPid) { //Parent
-		file_put_contents($TrafficLock,$TrafficPid);
-		// Recreate the database - connection
-		require ($pathtophpfiles . '/lib/userdata.inc.php');
-		if(isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
-			$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
-			unset($sql['root_user']);
-			unset($sql['root_password']);
-		}
-		$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
+	// Parent
+	if ($TrafficPid) {
+		file_put_contents($TrafficLock, $TrafficPid);
+		// unnecessary to recreate database connection here
 		return 0;
+
 	}
-	elseif($TrafficPid == 0) { //Child
+	//Child
+	elseif ($TrafficPid == 0) {
 		posix_setsid();
 		fclose($debugHandler);
-		$debugHandler = fopen("/tmp/froxlor_traffic.log","w");
-		require ($pathtophpfiles . '/lib/userdata.inc.php'); //There is no bloody reason not to have sql values in the backend ready!
-		if(isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
-			$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
-			unset($sql['root_user']);
-			unset($sql['root_password']);
-		}
-		$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']); //database handler renewal after fork()
+		$debugHandler = fopen("/tmp/froxlor_traffic.log", "w");
+		// re-create db
+		Database::needRoot(false);
 	}
-	else { //Fork failed
+	//Fork failed
+	else {
 		return 1;
 	}
-}
-else {
+
+} else {
 	fwrite($debugHandler,"PHP compiled without pcntl. Not forking traffic-cron, this may take a long time!");
 }
 
-openRootDB($debugHandler, $lockfile);
-require_once(makeCorrectFile(dirname(__FILE__) . '/cron_traffic.inc.functions.php'));
+
+require_once makeCorrectFile(dirname(__FILE__) . '/cron_traffic.inc.functions.php');
 
 /**
  * TRAFFIC AND DISKUSAGE MESSURE
  */
-
 fwrite($debugHandler, 'Traffic run started...' . "\n");
 $admin_traffic = array();
 $domainlist = array();
 $speciallogfile_domainlist = array();
-$result_domainlist = $db->query("SELECT `id`, `domain`, `customerid`, `parentdomainid`, `speciallogfile` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` IS NULL AND `email_only` <> '1' ;");
+$result_domainlist_stmt = Database::query("
+	SELECT `id`, `domain`, `customerid`, `parentdomainid`, `speciallogfile`
+	FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` IS NULL AND `email_only` <> '1';
+");
 
-while($row_domainlist = $db->fetch_array($result_domainlist))
-{
-	if(!isset($domainlist[$row_domainlist['customerid']]))
-	{
+while ($row_domainlist = $result_domainlist_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+	if (!isset($domainlist[$row_domainlist['customerid']])) {
 		$domainlist[$row_domainlist['customerid']] = array();
 	}
 
 	$domainlist[$row_domainlist['customerid']][$row_domainlist['id']] = $row_domainlist['domain'];
 
-	if($row_domainlist['parentdomainid'] == '0'
-	   && $row_domainlist['speciallogfile'] == '1')
-	{
-		if(!isset($speciallogfile_domainlist[$row_domainlist['customerid']]))
-		{
+	if ($row_domainlist['parentdomainid'] == '0'
+		&& $row_domainlist['speciallogfile'] == '1'
+	) {
+		if (!isset($speciallogfile_domainlist[$row_domainlist['customerid']])) {
 			$speciallogfile_domainlist[$row_domainlist['customerid']] = array();
 		}
-
 		$speciallogfile_domainlist[$row_domainlist['customerid']][$row_domainlist['id']] = $row_domainlist['domain'];
 	}
 }
 
 $mysqlusage_all = array();
-$databases = $db->query("SELECT * FROM " . TABLE_PANEL_DATABASES . " ORDER BY `dbserver`");
-$db_root = new db($sql_root[0]['host'], $sql_root[0]['user'], $sql_root[0]['password'], '');
+$databases_stmt = Database::query("SELECT * FROM " . TABLE_PANEL_DATABASES . " ORDER BY `dbserver`");
 $last_dbserver = 0;
 
 $databases_list = array();
-$databases_list_result = $db_root->query("show databases");
-while ($databases_list_row = $db->fetch_array($databases_list_result)) {
+Database::needRoot(true);
+$databases_list_result_stmt = Database::query("SHOW DATABASES");
+while ($databases_list_row = $databases_list_result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$databases_list[] = strtolower($databases_list_row['Database']);
 }
 
-while ($row_database = $db->fetch_array($databases)) {
+while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	if ($last_dbserver != $row_database['dbserver']) {
-		$db_root->close();
-		$db_root = new db($sql_root[$row_database['dbserver']]['host'], $sql_root[$row_database['dbserver']]['user'], $sql_root[$row_database['dbserver']]['password'], '');
+		Database::needRoot(true, $row_database['dbserver']);
 		$last_dbserver = $row_database['dbserver'];
 
 		$database_list = array();
-		$databases_list_result = $db_root->query("show databases");
-		while ($databases_list_row = $db->fetch_array($databases_list_result)) {
+		$databases_list_result_stmt = Database::query("SHOW DATABASES");
+		while ($databases_list_row = $databases_list_result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$databases_list[] = strtolower($databases_list_row['Database']);
 		}
 	}
 
 	if (in_array(strtolower($row_database['databasename']), $databases_list)) {
 		// sum up data_length and index_length
-		$mysql_usage_result = $db_root->query("
+		$mysql_usage_result_stmt = Database::prepare("
 			SELECT SUM(data_length + index_length) AS customerusage
 			FROM information_schema.TABLES
-			WHERE table_schema = '" . $db_root->escape($row_database['databasename']) . "'
+			WHERE table_schema = :database
 			GROUP BY table_schema;
 		");
 		// get the result
-		$mysql_usage_row = $db_root->fetch_array($mysql_usage_result);
+		$mysql_usage_row = Database::pexecute_first($mysql_usage_result_stmt, array('database' => $row_database['databasename']));
 		// initialize counter for customer
 		if (!isset($mysqlusage_all[$row_database['customerid']])) {
 			$mysqlusage_all[$row_database['customerid']] = 0;
@@ -150,20 +140,19 @@ while ($row_database = $db->fetch_array($databases)) {
 	}
 }
 
-$db_root->close();
+Database::needRoot(false);
 
 // We are using the file-system quota, this will speed up the diskusage - collection
 if ($settings['system']['diskquota_enabled']) {
 	$usedquota = getFilesystemQuota();
 }
 
-$result = $db->query("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` ORDER BY `customerid` ASC");
+$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` ORDER BY `customerid` ASC");
 
-while ($row = $db->fetch_array($result)) {
+while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	/**
 	 * HTTP-Traffic
 	 */
-
 	fwrite($debugHandler, 'http traffic for ' . $row['loginname'] . ' started...' . "\n");
 	$httptraffic = 0;
 
@@ -220,40 +209,17 @@ while ($row = $db->fetch_array($result)) {
 
 		// make the stuff readable for the customer, #258
 		makeChownWithNewStats($row);
-
-		/**
-		 * Webalizer/AWStats might run for some time, so we'd better check if our database is still present
-		 */
-		if (empty($db->link_id)
-		   || $db->link_id === false
-		) {
-			fwrite($debugHandler, 'Database-connection seems to be down, trying to reconnect' . "\n");
-
-			// just in case
-			$db->close();
-			require_once ($pathtophpfiles . '/lib/userdata.inc.php');
-			$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
-
-			if ($db->link_id == 0) {
-				fclose($debugHandler);
-				unlink($lockfile);
-				$cronlog->logAction(CRON_ACTION, LOG_ERR, 'Database-connection crashed during traffic-cronjob, could not reconnect!');
-				die('Froxlor can\'t connect to mysqlserver. Exiting...');
-			}
-
-			fwrite($debugHandler, 'Database-connection re-established' . "\n");
-			unset($sql);
-			$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Database-connection crashed during traffic-cronjob, reconnected!');
-		}
-
 	}
 
 	/**
 	 * FTP-Traffic
 	 */
-
 	fwrite($debugHandler, 'ftp traffic for ' . $row['loginname'] . ' started...' . "\n");
-	$ftptraffic = $db->query_first("SELECT SUM(`up_bytes`) AS `up_bytes_sum`, SUM(`down_bytes`) AS `down_bytes_sum` FROM `" . TABLE_FTP_USERS . "` WHERE `customerid`='" . (int)$row['customerid'] . "'");
+	$ftptraffic_stmt = Database::prepare("
+		SELECT SUM(`up_bytes`) AS `up_bytes_sum`, SUM(`down_bytes`) AS `down_bytes_sum`
+		FROM `" . TABLE_FTP_USERS . "` WHERE `customerid` = :customerid
+	");
+	$ftptraffic = Database::pexecute_first($ftptraffic_stmt, array('customerid' => $row['customerid']));
 
 	if (!is_array($ftptraffic)) {
 		$ftptraffic = array(
@@ -262,18 +228,19 @@ while ($row = $db->fetch_array($result)) {
 		);
 	}
 
-	$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `up_bytes`='0', `down_bytes`='0' WHERE `customerid`='" . (int)$row['customerid'] . "'");
+	$upd_stmt = Database::prepare("
+		UPDATE `" . TABLE_FTP_USERS . "` SET `up_bytes` = '0', `down_bytes` = '0' WHERE `customerid` = :customerid
+	");
+	Database::pexecute($upd_stmt, array('customerid' => $row['customerid']));
 
 	/**
 	 * Mail-Traffic
 	 */
-
 	$mailtraffic = 0;
 
 	/**
 	 * Total Traffic
 	 */
-
 	fwrite($debugHandler, 'total traffic for ' . $row['loginname'] . ' started' . "\n");
 	$current_traffic = array();
 	$current_traffic['http'] = floatval($httptraffic);
@@ -281,13 +248,42 @@ while ($row = $db->fetch_array($result)) {
 	$current_traffic['ftp_down'] = floatval(($ftptraffic['down_bytes_sum'] / 1024));
 	$current_traffic['mail'] = floatval($mailtraffic);
 	$current_traffic['all'] = $current_traffic['http'] + $current_traffic['ftp_up'] + $current_traffic['ftp_down'] + $current_traffic['mail'];
-	$db->query("INSERT INTO `" . TABLE_PANEL_TRAFFIC . "` (`customerid`, `year`, `month`, `day`, `stamp`, `http`, `ftp_up`, `ftp_down`, `mail`) VALUES('" . (int)$row['customerid'] . "', '" . date('Y') . "', '" . date('m') . "', '" . date('d') . "', '" . time() . "', '" . (float)$current_traffic['http'] . "', '" . (float)$current_traffic['ftp_up'] . "', '" . (float)$current_traffic['ftp_down'] . "', '" . (float)$current_traffic['mail'] . "')");
-	$sum_month_traffic = $db->query_first("SELECT SUM(`http`) AS `http`, SUM(`ftp_up`) AS `ftp_up`, SUM(`ftp_down`) AS `ftp_down`, SUM(`mail`) AS `mail` FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `year`='" . date('Y') . "' AND `month`='" . date('m') . "' AND `customerid`='" . (int)$row['customerid'] . "'");
+
+	$ins_data = array(
+		'customerid' => $row['customerid'],
+		'year' => date('Y', time()),
+		'month' => date('m', time()),
+		'day' => date('d', time()),
+		'stamp' => $time(),
+		'http' => $current_traffic['http'],
+		'ftp_up' => $current_traffic['ftp_up'],
+		'ftp_down' => $current_traffic['ftp_down'],
+		'mail' => $current_traffic['mail']
+	);
+	$ins_stmt = Database::prepare("
+		INSERT INTO `" . TABLE_PANEL_TRAFFIC . "` SET
+		`customerid` = :customerid,
+		`year` = :year,
+		`month` = :month,
+		`day` = :day,
+		`stamp` = :stamp,
+		`http` = :http,
+		`ftp_up` = :ftp_up,
+		`ftp_down` = :ftp_down,
+		`mail` = :mail
+	");
+	Database::pexecute($ins_stmt, $ins_data);
+
+	$sum_month_traffic_stmt = Database::prepare("
+		SELECT SUM(`http`) AS `http`, SUM(`ftp_up`) AS `ftp_up`, SUM(`ftp_down`) AS `ftp_down`, SUM(`mail`) AS `mail`
+		FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `year` = :year AND `month` = :month AND `customerid` = :customerid
+	");
+	$sum_month_traffic = Database::pexecute_first($sum_month_traffic_stmt, array('year' => date('Y', time()), 'month' => date('m', time()), 'customerid' => $row['customerid']));
 	$sum_month_traffic['all'] = $sum_month_traffic['http'] + $sum_month_traffic['ftp_up'] + $sum_month_traffic['ftp_down'] + $sum_month_traffic['mail'];
 
-	if(!isset($admin_traffic[$row['adminid']])
-	   || !is_array($admin_traffic[$row['adminid']]))
-	{
+	if (!isset($admin_traffic[$row['adminid']])
+		|| !is_array($admin_traffic[$row['adminid']])
+	) {
 		$admin_traffic[$row['adminid']]['http'] = 0;
 		$admin_traffic[$row['adminid']]['ftp_up'] = 0;
 		$admin_traffic[$row['adminid']]['ftp_down'] = 0;
@@ -306,32 +302,32 @@ while ($row = $db->fetch_array($result)) {
 	/**
 	 * WebSpace-Usage
 	 */
-
 	fwrite($debugHandler, 'calculating webspace usage for ' . $row['loginname'] . "\n");
 	$webspaceusage = 0;
 
-	# Using repquota, it's faster using this tool than using du traversing the complete directory
-	if ($settings['system']['diskquota_enabled'] && isset($usedquota[$row['guid']]['block']['used']) && $usedquota[$row['guid']]['block']['used'] >= 1)
-	{
-		# We may use the array we created earlier, the used diskspace is stored in [<guid>][block][used]
+	// Using repquota, it's faster using this tool than using du traversing the complete directory
+	if ($settings['system']['diskquota_enabled']
+		&& isset($usedquota[$row['guid']]['block']['used'])
+		&& $usedquota[$row['guid']]['block']['used'] >= 1
+	) {
+		// We may use the array we created earlier, the used diskspace is stored in [<guid>][block][used]
 		$webspaceusage = floatval($usedquota[$row['guid']]['block']['used']);
-	}
-	else
-	{
-		# Use the old fashioned way with "du"
-		if(file_exists($row['documentroot']) && is_dir($row['documentroot']))
-		{
+
+	} else {
+
+		// Use the old fashioned way with "du"
+		if (file_exists($row['documentroot'])
+			&& is_dir($row['documentroot'])
+		) {
 			$back = safe_exec('du -sk ' . escapeshellarg($row['documentroot']) . '');
-			foreach($back as $backrow)
-			{
+			foreach ($back as $backrow) {
 				$webspaceusage = explode(' ', $backrow);
 			}
 
 			$webspaceusage = floatval($webspaceusage['0']);
 			unset($back);
-		}
-		else
-		{
+
+		} else {
 			fwrite($debugHandler, 'documentroot ' . $row['documentroot'] . ' does not exist' . "\n");
 		}
 	}
@@ -339,36 +335,30 @@ while ($row = $db->fetch_array($result)) {
 	/**
 	 * MailSpace-Usage
 	 */
-
 	fwrite($debugHandler, 'calculating mailspace usage for ' . $row['loginname'] . "\n");
 	$emailusage = 0;
 
 	$maildir = makeCorrectDir($settings['system']['vmail_homedir'] . $row['loginname']);
-	if(file_exists($maildir) && is_dir($maildir))
-	{
+	if (file_exists($maildir) && is_dir($maildir)) {
 		$back = safe_exec('du -sk ' . escapeshellarg($maildir) . '');
-		foreach($back as $backrow)
-		{
+		foreach ($back as $backrow) {
 			$emailusage = explode(' ', $backrow);
 		}
 
 		$emailusage = floatval($emailusage['0']);
 		unset($back);
-	}
-	else
-	{
+
+	} else {
 		fwrite($debugHandler, 'maildir ' . $maildir . ' does not exist' . "\n");
 	}
 
 	/**
 	 * MySQLSpace-Usage
 	 */
-
 	fwrite($debugHandler, 'calculating mysqlspace usage for ' . $row['loginname'] . "\n");
 	$mysqlusage = 0;
 
-	if(isset($mysqlusage_all[$row['customerid']]))
-	{
+	if (isset($mysqlusage_all[$row['customerid']])) {
 		$mysqlusage = floatval($mysqlusage_all[$row['customerid']] / 1024);
 	}
 
@@ -377,11 +367,33 @@ while ($row = $db->fetch_array($result)) {
 	$current_diskspace['mail'] = floatval($emailusage);
 	$current_diskspace['mysql'] = floatval($mysqlusage);
 	$current_diskspace['all'] = $current_diskspace['webspace'] + $current_diskspace['mail'] + $current_diskspace['mysql'];
-	$db->query("INSERT INTO `" . TABLE_PANEL_DISKSPACE . "` (`customerid`, `year`, `month`, `day`, `stamp`, `webspace`, `mail`, `mysql`) VALUES('" . (int)$row['customerid'] . "', '" . date('Y') . "', '" . date('m') . "', '" . date('d') . "', '" . time() . "', '" . (float)$current_diskspace['webspace'] . "', '" . (float)$current_diskspace['mail'] . "', '" . (float)$current_diskspace['mysql'] . "')");
 
-	if(!isset($admin_diskspace[$row['adminid']])
-	   || !is_array($admin_diskspace[$row['adminid']]))
-	{
+	$ins_data = array(
+		'customerid' => $row['customerid'],
+		'year' => date('Y', time()),
+		'month' => date('m', time()),
+		'day' => date('d', time()),
+		'stamp' => time(),
+		'webspace' => $current_diskspace['webspace'],
+		'mail' => $current_diskspace['mail'],
+		'mysql' => $current_diskspace['mysql']
+	);
+	$ins_stmt = Database::preapre("
+		INSERT INTO `" . TABLE_PANEL_DISKSPACE . "` SET
+		`customerid` = :customerid,
+		`year` = :year,
+		`month` = :month,
+		`day` = :day,
+		`stamp` = :stamp,
+		`webspace` = :webspace,
+		`mail` = :mail,
+		`mysql` = :mysql
+	");
+	Database::pexecute($ins_stmt, $ins_data);
+
+	if (!isset($admin_diskspace[$row['adminid']])
+		|| !is_array($admin_diskspace[$row['adminid']])
+	) {
 		$admin_diskspace[$row['adminid']] = array();
 		$admin_diskspace[$row['adminid']]['webspace'] = 0;
 		$admin_diskspace[$row['adminid']]['mail'] = 0;
@@ -397,45 +409,64 @@ while ($row = $db->fetch_array($result)) {
 	/**
 	 * Total Usage
 	 */
-
-	if($settings['system']['backup_count'] == 0 && file_exists($settings['system']['backup_dir'] . $row['loginname'])){
+	if ($settings['system']['backup_count'] == 0
+		&& file_exists($settings['system']['backup_dir'] . $row['loginname'])
+	) {
 		$backupsize = exec('du -s ' . escapeshellarg($settings['system']['backup_dir']) . $row['loginname'] . '');
-                $diskusage = floatval($webspaceusage + $emailusage + $mysqlusage - $backupsize);
-        }
-        else{
+		$diskusage = floatval($webspaceusage + $emailusage + $mysqlusage - $backupsize);
+	} else {
 		$diskusage = floatval($webspaceusage + $emailusage + $mysqlusage);
-        }
+	}
 
-	$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `diskspace_used`='" . (float)$current_diskspace['all'] . "', `traffic_used`='" . (float)$sum_month_traffic['all'] . "' WHERE `customerid`='" . (int)$row['customerid'] . "'");
+	$upd_data = array(
+		'diskspace' => $current_diskspace['all'],
+		'traffic' => $sum_month_traffic['all'],
+		'customerid' => $row['customerid']
+	);
+	$upd_stmt = Database::prepare("
+		UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+		`diskspace_used` = :diskspace,
+		`traffic_used` = :traffic
+		WHERE `customerid` = :customerid
+	");
+	Database::pexecute($upd_stmt, $upd_data);
 
 	/**
 	 * Proftpd Quota
 	 */
-
-	$db->query("UPDATE `" . TABLE_FTP_QUOTATALLIES . "` SET `bytes_in_used`='" . (float)$current_diskspace['all'] . "'*1024 WHERE `name` = '" . $row['loginname'] . "' OR `name` LIKE '" . $row['loginname'] . $settings['customer']['ftpprefix'] . "%'");
+	$upd_data = array(
+		'biu' => ($current_diskspace['all'] * 1024),
+		'loginname' => $row['loginname'],
+		'loginnamelike' => $row['loginname'] . $settings['customer']['ftpprefix'] . "%"
+	);
+	$upd_stmt = Database::prepare("
+		UPDATE `" . TABLE_FTP_QUOTATALLIES . "` SET
+		`bytes_in_used` = :biu WHERE `name` = :loginname OR `name` LIKE :loginnamelike
+	");
+	Database::pexecute($upd_stmt, $upd_data);
 
 	/**
 	 * Pureftpd Quota
 	 */
+	if ($settings['system']['ftpserver'] == "pureftpd") {
 
-	if($settings['system']['ftpserver'] == "pureftpd")
-	{
-		$result_quota = $db->query("SELECT homedir FROM `" . TABLE_FTP_USERS . "` WHERE customerid = '" . $row['customerid'] . "'");
+		$result_quota_stmt = Database::prepare("
+			SELECT homedir FROM `" . TABLE_FTP_USERS . "` WHERE customerid = :customerid
+		");
+		Database::pexecute($result_quota_stmt, array('customerid' => $row['customerid']));
 
-	        // get correct user
-	        if($settings['system']['mod_fcgid'] == 1 && $row['deactivated'] == '0')
-	        {
-        	        $user = $row['loginname'];
-	                $group = $row['loginname'];
-	        }
-	        else
-	        {
-	                $user = $row['guid'];
-	                $group = $row['guid'];
-	        }
+		// get correct user
+		if ($settings['system']['mod_fcgid'] == 1
+			&& $row['deactivated'] == '0'
+		) {
+			$user = $row['loginname'];
+			$group = $row['loginname'];
+		} else {
+			$user = $row['guid'];
+			$group = $row['guid'];
+		}
 
-		while($row_quota = $db->fetch_array($result_quota))
-		{
+		while ($row_quota = $result_quota_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$quotafile = "" . $row_quota['homedir'] . ".ftpquota";
 			$fh = fopen($quotafile, 'w');
 			$stringdata = "0 " . $current_diskspace['all']*1024 . "";
@@ -449,27 +480,88 @@ while ($row = $db->fetch_array($result)) {
 /**
  * Admin Usage
  */
+$result_stmt = Database::query("SELECT `adminid` FROM `" . TABLE_PANEL_ADMINS . "` ORDER BY `adminid` ASC");
 
-$result = $db->query("SELECT `adminid` FROM `" . TABLE_PANEL_ADMINS . "` ORDER BY `adminid` ASC");
+while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-while($row = $db->fetch_array($result))
-{
-	if(isset($admin_traffic[$row['adminid']]))
-	{
-		$db->query("INSERT INTO `" . TABLE_PANEL_TRAFFIC_ADMINS . "` (`adminid`, `year`, `month`, `day`, `stamp`, `http`, `ftp_up`, `ftp_down`, `mail`) VALUES('" . (int)$row['adminid'] . "', '" . date('Y') . "', '" . date('m') . "', '" . date('d') . "', '" . time() . "', '" . (float)$admin_traffic[$row['adminid']]['http'] . "', '" . (float)$admin_traffic[$row['adminid']]['ftp_up'] . "', '" . (float)$admin_traffic[$row['adminid']]['ftp_down'] . "', '" . (float)$admin_traffic[$row['adminid']]['mail'] . "')");
-		$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `traffic_used`='" . (float)$admin_traffic[$row['adminid']]['sum_month'] . "' WHERE `adminid`='" . (float)$row['adminid'] . "'");
+	if (isset($admin_traffic[$row['adminid']])) {
+
+		$ins_data = array(
+			'adminid' => $row['adminid'],
+			'year' => date('Y', time()),
+			'month' => date('m', time()),
+			'day' => date('d', time()),
+			'stamp' => $time(),
+			'http' => $admin_traffic[$row['adminid']]['http'],
+			'ftp_up' => $admin_traffic[$row['adminid']]['ftp_up'],
+			'ftp_down' => $admin_traffic[$row['adminid']]['ftp_down'],
+			'mail' => $admin_traffic[$row['adminid']]['mail']
+		);
+		$ins_stmt = Database::prepare("
+			INSERT INTO `" . TABLE_PANEL_TRAFFIC_ADMINS . "` SET
+			`adminid` = :adminid,
+			`year` = :year,
+			`month` = :month,
+			`day` = :day,
+			`stamp` = :stamp,
+			`http` = :http,
+			`ftp_up` = :ftp_up,
+			`ftp_down` = :ftp_down,
+			`mail` = :mail
+		");
+		Database::pexecute($ins_stmt, $ins_data);
+
+		$upd_data = array(
+			'traffic' => $admin_traffic[$row['adminid']]['sum_month'],
+			'adminid' => $row['adminid']
+		);
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_ADMINS . "` SET
+			`traffic_used` = :traffic
+			WHERE `adminid` = :adminid
+		");
+		Database::pexecute($upd_stmt, $upd_data);
 	}
 
-	if(isset($admin_diskspace[$row['adminid']]))
-	{
-		$db->query("INSERT INTO `" . TABLE_PANEL_DISKSPACE_ADMINS . "` (`adminid`, `year`, `month`, `day`, `stamp`, `webspace`, `mail`, `mysql`) VALUES('" . (int)$row['adminid'] . "', '" . date('Y') . "', '" . date('m') . "', '" . date('d') . "', '" . time() . "', '" . (float)$admin_diskspace[$row['adminid']]['webspace'] . "', '" . (float)$admin_diskspace[$row['adminid']]['mail'] . "', '" . (float)$admin_diskspace[$row['adminid']]['mysql'] . "')");
-		$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `diskspace_used`='" . (float)$admin_diskspace[$row['adminid']]['all'] . "' WHERE `adminid`='" . (float)$row['adminid'] . "'");
+	if (isset($admin_diskspace[$row['adminid']])) {
+
+		$ins_data = array(
+			'adminid' => $row['adminid'],
+			'year' => date('Y', time()),
+			'month' => date('m', time()),
+			'day' => date('d', time()),
+			'stamp' => time(),
+			'webspace' => $admin_diskspace[$row['adminid']]['webspace'],
+			'mail' => $admin_diskspace[$row['adminid']]['mail'],
+			'mysql' => $admin_diskspace[$row['adminid']]['mysql']
+		);
+		$ins_stmt = Database::preapre("
+			INSERT INTO `" . TABLE_PANEL_DISKSPACE_ADMINS . "` SET
+			`adminid` = :adminid,
+			`year` = :year,
+			`month` = :month,
+			`day` = :day,
+			`stamp` = :stamp,
+			`webspace` = :webspace,
+			`mail` = :mail,
+			`mysql` = :mysql
+		");
+
+		$upd_data = array(
+			'diskspace' => $admin_diskspace[$row['adminid']]['all'],
+			'adminid' => $row['adminid']
+		);
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_ADMINS . "` SET
+			`diskspace_used` = :diskspace
+			WHERE `adminid` = :adminid
+		");
+		Database::pexecute($upd_stmt, $upd_data);
+
 	}
 }
 
-$db->query('UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = \'system\'   AND `varname`      = \'last_traffic_run\' ');
-
-closeRootDB();
+Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = 'system' AND `varname` = 'last_traffic_run'");
 
 if (function_exists('pcntl_fork')) {
 	@unlink($TrafficLock);

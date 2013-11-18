@@ -30,23 +30,32 @@ $mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
 
 // Warn the customers at xx% traffic-usage
 
-$result = $db->query("SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`traffic`,
-                             `c`.`email`, `c`.`def_language`, `a`.`name` AS `adminname`, `a`.`email` AS `adminmail`,
-                           (SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
-                            FROM `" . TABLE_PANEL_TRAFFIC . "` `t`
-                            WHERE `t`.`customerid` = `c`.`customerid` AND `t`.`year` = '" . (int)date("Y", $yesterday) . "'
-                            AND `t`.`month` = '" . date("m", $yesterday) . "') as `traffic_used`
-                      FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
-                      LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a` ON `a`.`adminid` = `c`.`adminid`
-                      WHERE `c`.`reportsent` <> '1'");
+$result_stmt = Database::prepare("
+	SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
+	`c`.`company`, `c`.`traffic`, `c`.`email`, `c`.`def_language`,
+	`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`,
+	(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
+	FROM `" . TABLE_PANEL_TRAFFIC . "` `t`
+	WHERE `t`.`customerid` = `c`.`customerid` AND `t`.`year` = :year AND `t`.`month` = :month
+	) as `traffic_used`
+	FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
+	LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a`
+	ON `a`.`adminid` = `c`.`adminid` WHERE `c`.`reportsent` <> '1'
+");
 
-while($row = $db->fetch_array($result))
-{
-	if(isset($row['traffic'])
-	   && $row['traffic'] > 0
-	   && $row['traffic_used'] != NULL
-	   && (($row['traffic_used'] * 100) / $row['traffic']) >= (int)$settings['system']['report_trafficmax'])
-	{
+$result_data = array(
+	'year' => date("Y", $yesterday),
+	'month' => date("m", $yesterday)
+);
+Database::pexecute($result_stmt, $result_data);
+
+while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+	if (isset($row['traffic'])
+		&& $row['traffic'] > 0
+		&& $row['traffic_used'] != null
+		&& (($row['traffic_used'] * 100) / $row['traffic']) >= (int)$settings['system']['report_trafficmax']
+	) {
 		$rep_userinfo = array(
 			'name' => $row['name'],
 			'firstname' => $row['firstname'],
@@ -60,35 +69,42 @@ while($row = $db->fetch_array($result))
 			'USAGE_PERCENT' => round(($row['traffic_used'] * 100) / $row['traffic'], 2),
 			'MAX_PERCENT' => $settings['system']['report_trafficmax']
 		);
-		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-                                 WHERE `language` ='" . $row['def_language'] . "'");
 
-		if($lngfile !== NULL)
-		{
+		$lngfile_stmt = Database::prepare("
+			SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
+			WHERE `language` = :deflang
+		");
+		$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $row['def_language']));
+
+		if ($lngfile !== null) {
+			$langfile = $lngfile['file'];
+		} else {
+			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $settings['panel']['standardlanguage']));
 			$langfile = $lngfile['file'];
 		}
-		else
-		{
-			$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-                                  WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'");
-			$langfile = $lngfile['file'];
-		}
 
+		// include english language file (fallback)
+		include_once makeCorrectFile($pathtophpfiles . '/lng/english.lng.php');
+		// include admin/customer language file
 		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
 
 		// Get mail templates from database; the ones from 'admin' are fetched for fallback
-
-		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-                                AND `language`='" . $db->escape($row['def_language']) . "'
-                                AND `templategroup`='mails'
-                                AND `varname`='trafficmaxpercent_subject'");
+		$result2_stmt = Database::prepare("
+			SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+			WHERE `adminid` = :adminid
+			AND `language` = :lang
+			AND `templategroup` = 'mails' AND `varname` = :varname
+		");
+		$resul2_data = array(
+				'adminid' => $row['adminid'],
+				'lang' => $row['def_language'],
+				'varname' => 'trafficmaxpercent_subject'
+		);
+		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
-		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-                                AND `language`='" . $db->escape($row['def_language']) . "'
-                                AND `templategroup`='mails'
-                                AND `varname`='trafficmaxpercent_mailbody'");
+
+		$resul2_data['varname'] = 'trafficmaxpercent_mailbody';
+		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
 		
 		$_mailerror = false;
@@ -107,33 +123,43 @@ while($row = $db->fetch_array($result))
 			$_mailerror = true;
 		}
 
-		if($_mailerror)
-		{
+		if ($_mailerror) {
 			$cronlog->logAction(CRON_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
 			echo 'Error sending mail: ' . $mailerr_msg . "\n";
 		}
 
 		$mail->ClearAddresses();
-		$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `reportsent`=\'1\'
-                WHERE `customerid`=\'' . (int)$row['customerid'] . '\'');
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = '1'
+			WHERE `customerid` = :customerid
+		");
+		Database::pexecute($upd_stmt, array('customerid' => $row['customerid']));
 	}
 }
 
 // Warn the admins at xx% traffic-usage
+$result_stmt = Database::prepare("
+	SELECT `a`.*,
+	(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
+	FROM `" . TABLE_PANEL_TRAFFIC_ADMINS . "` `t`
+	WHERE `t`.`adminid` = `a`.`adminid` AND `t`.`year` = :year AND `t`.`month` = :month
+	) as `traffic_used_total`
+	FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` = '0'
+");
 
-$result = $db->query("SELECT `a`.*,
-                       (SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
-                        FROM `" . TABLE_PANEL_TRAFFIC_ADMINS . "` `t`
-                        WHERE `t`.`adminid` = `a`.`adminid` AND `t`.`year` = '" . (int)date("Y", $yesterday) . "'
-                        AND `t`.`month` = '" . date("m", $yesterday) . "') as `traffic_used_total`
-                      FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` = '0'");
+$result_data = array(
+		'year' => date("Y", $yesterday),
+		'month' => date("m", $yesterday)
+);
+Database::pexecute($result_stmt, $result_data);
 
-while($row = $db->fetch_array($result))
-{
-	if(isset($row['traffic'])
-	   && $row['traffic'] > 0
-	   && (($row['traffic_used_total'] * 100) / $row['traffic']) >= (int)$settings['system']['report_trafficmax'])
-	{
+while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+	if (isset($row['traffic'])
+		&& $row['traffic'] > 0
+		&& (($row['traffic_used_total'] * 100) / $row['traffic']) >= (int)$settings['system']['report_trafficmax']
+	) {
+
 		$replace_arr = array(
 			'NAME' => $row['name'],
 			'TRAFFIC' => round(($row['traffic'] / 1024), 2), /* traffic is stored in KB, template uses MB */
@@ -141,37 +167,44 @@ while($row = $db->fetch_array($result))
 			'USAGE_PERCENT' => round(($row['traffic_used_total'] * 100) / $row['traffic'], 2),
 			'MAX_PERCENT' => $settings['system']['report_trafficmax']
 		);
-		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-                                 WHERE `language` ='" . $row['def_language'] . "'");
 
-		if($lngfile !== NULL)
-		{
+		$lngfile_stmt = Database::prepare("
+			SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
+			WHERE `language` = :deflang
+		");
+		$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $row['def_language']));
+
+		if ($lngfile !== null) {
+			$langfile = $lngfile['file'];
+		} else {
+			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $settings['panel']['standardlanguage']));
 			$langfile = $lngfile['file'];
 		}
-		else
-		{
-			$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-                                  WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'");
-			$langfile = $lngfile['file'];
-		}
 
+		// include english language file (fallback)
+		include_once makeCorrectFile($pathtophpfiles . '/lng/english.lng.php');
+		// include admin/customer language file
 		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
 
 		// Get mail templates from database; the ones from 'admin' are fetched for fallback
-
-		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-                                AND `language`='" . $db->escape($row['def_language']) . "'
-                                AND `templategroup`='mails'
-                                AND `varname`='trafficmaxpercent_subject'");
+		$result2_stmt = Database::prepare("
+			SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+			WHERE `adminid` = :adminid
+			AND `language` = :lang
+			AND `templategroup` = 'mails' AND `varname` = :varname
+		");
+		$resul2_data = array(
+				'adminid' => $row['adminid'],
+				'lang' => $row['def_language'],
+				'varname' => 'trafficmaxpercent_subject'
+		);
+		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
-		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-                                AND `language`='" . $db->escape($row['def_language']) . "'
-                                AND `templategroup`='mails'
-                                AND `varname`='trafficmaxpercent_mailbody'");
+
+		$resul2_data['varname'] = 'trafficmaxpercent_mailbody';
+		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
-		
+
 		$_mailerror = false;
 		try {
 			$mail->SetFrom($row['email'], $row['name']);
@@ -194,27 +227,36 @@ while($row = $db->fetch_array($result))
 		}
 
 		$mail->ClearAddresses();
-		$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent`='1'
-                WHERE `adminid`='" . (int)$row['adminid'] . "'");
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = '1'
+			WHERE `adminid` = :adminid
+		");
+		Database::pexecute($upd_stmt, array('adminid' => $row['adminid']));
 	}
 
 	// Another month, let's build our report
+	if (date('d') == '01') {
 
-	if(date('d') == '01')
-	{
 		$mail_subject = 'Trafficreport ' . date("m/y", $yesterday) . ' for ' . $row['name'];
 		$mail_body = 'Trafficreport ' . date("m/y", $yesterday) . ' for ' . $row['name'] . "\n";
 		$mail_body.= '---------------------------------------------' . "\n";
 		$mail_body.= 'Loginname       Traffic used (Percent) | Traffic available' . "\n";
-		$customers = $db->query("SELECT `c`.*,
-                            (SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
-                            FROM `" . TABLE_PANEL_TRAFFIC . "` `t`
-                            WHERE `t`.`customerid` = `c`.`customerid` AND `t`.`year` = '" . (int)date("Y", $yesterday) . "'
-                            AND `t`.`month` = '" . date("m", $yesterday) . "') as `traffic_used_total`
-                            FROM `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `c`.`adminid` = '" . $row['adminid'] . "'");
+		$customers_stmt = Database::prepare("
+			SELECT `c`.*,
+			(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
+			FROM `" . TABLE_PANEL_TRAFFIC . "` `t`
+			WHERE `t`.`customerid` = `c`.`customerid` AND `t`.`year` = :year AND `t`.`month` = :month
+			) as `traffic_used_total`
+			FROM `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `c`.`adminid` = :adminid
+		");
+		$customers_data = array(
+			'year' => date("Y", $yesterday),
+			'month' => date("m", $yesterday),
+			'adminid' => $row['adminid']
+		);
+		Database::pexecute($customers_stmt, $customers_data);
 
-		while($customer = $db->fetch_array($customers))
-		{
+		while ($customer = $customers_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($customer['traffic'] > 0) {
 				$mail_body.= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-12d', $customer['traffic_used_total']) . ' (' . sprintf('%00.3f%%', (($customer['traffic_used_total'] * 100) / $customer['traffic'])) . ')   ' . $customer['traffic'] . "\n";
 			} else {
@@ -253,9 +295,7 @@ while($row = $db->fetch_array($result))
 include dirname(__FILE__).'/cron_usage.inc.diskspace.php';
 
 // Another month, reset the reportstatus
-
-if(date('d') == '01')
-{
-	$db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `reportsent` = \'0\';');
-	$db->query('UPDATE `' . TABLE_PANEL_ADMINS . '` SET `reportsent` = \'0\';');
+if (date('d') == '01') {
+	Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = '0';");
+	Database::query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = '0';");
 }

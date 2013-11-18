@@ -20,7 +20,7 @@
 // Required code
 
 define('AREA', 'admin');
-require ("./lib/init.php");
+require './lib/init.php';
 $Id = 0;
 
 if(isset($_GET['id']))$Id = (int)$_GET['id'];

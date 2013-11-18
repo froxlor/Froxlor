@@ -18,12 +18,7 @@
  */
 
 define('AREA', 'customer');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-
-require ("./lib/init.php");
+require './lib/init.php';
 
 if(isset($_POST['id'])) {
 	$id = intval($_POST['id']);

@@ -16,7 +16,7 @@
  */
 
 define('AREA', 'admin');
-require('./lib/init.php');
+require './lib/init.php';
 
 if ($page == 'overview') {
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
