@@ -41,7 +41,7 @@ if ($page == 'overview') {
 			'username' => $lng['login']['username'],
 			'homedir' => $lng['panel']['path']
 		);
-		$paging = new paging($userinfo, $db, TABLE_FTP_USERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_FTP_USERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		
 		$result_stmt = Database::prepare("SELECT `id`, `username`, `homedir` FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid`= :customerid 

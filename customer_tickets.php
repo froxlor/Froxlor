@@ -50,7 +50,7 @@ if($page == 'overview') {
 			'subject' => $lng['ticket']['subject'],
 			'lastreplier' => $lng['ticket']['lastreplier']
 		);
-		$paging = new paging($userinfo, $db, TABLE_PANEL_TICKETS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_TICKETS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$paging->sortfield = 'lastchange';
 		$paging->sortorder = 'desc';
 		$stmt = Database::prepare('SELECT `main`.`id`, (SELECT COUNT(`sub`.`id`) FROM `' . TABLE_PANEL_TICKETS . '` `sub`
