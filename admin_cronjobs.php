@@ -33,7 +33,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 			'c.interval' => $lng['cron']['interval'],
 			'c.isactive' => $lng['cron']['isactive']
 		);
-		$paging = new paging($userinfo, $db, TABLE_PANEL_CRONRUNS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_CRONRUNS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 
 		/*
 		 * @TODO Fix sorting

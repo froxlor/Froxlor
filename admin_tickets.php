@@ -69,7 +69,7 @@ if ($page == 'tickets'
 			'subject' => $lng['ticket']['subject'],
 			'lastreplier' => $lng['ticket']['lastreplier']
 		);
-		$paging = new paging($userinfo, $db, TABLE_PANEL_TICKETS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_TICKETS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$paging->sortfield = 'lastchange';
 		$paging->sortorder = 'desc';
 		$result_stmt = Database::prepare("
@@ -475,7 +475,7 @@ if ($page == 'tickets'
 		if ($userinfo['tickets_see_all'] != '1') {
 			$where = " `main`.`adminid` = :adminid";
 		}
-		$paging = new paging($userinfo, $db, TABLE_PANEL_TICKET_CATS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_TICKET_CATS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$result_stmt = Database::prepare("
 			SELECT `main`.`id`, `main`.`name`, `main`.`logicalorder`, (
 				SELECT COUNT(`sub`.`id`) FROM `" . TABLE_PANEL_TICKETS . "` `sub`
@@ -645,7 +645,7 @@ if ($page == 'tickets'
 				'lastreplier' => $lng['ticket']['lastreplier'],
 				'priority' => $lng['ticket']['priority']
 			);
-			$paging = new paging($userinfo, $db, TABLE_PANEL_TICKETS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+			$paging = new paging($userinfo, TABLE_PANEL_TICKETS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 			$result_stmt = Database::prepare($query . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 			Database::pexecute($result_stmt, $archive_params);
 			$sortcode = $paging->getHtmlSortCode($lng);

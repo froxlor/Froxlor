@@ -51,7 +51,7 @@ if ($page == 'customers'
 			$field['c.backup_allowed'] = $lng['backup_allowed'];
 		}
 
-		$paging = new paging($userinfo, $db, TABLE_PANEL_CUSTOMERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_CUSTOMERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$customers = '';
 		$result_stmt = Database::prepare("
 			SELECT `c`.*, `a`.`loginname` AS `adminname`
