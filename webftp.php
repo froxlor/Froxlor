@@ -19,7 +19,7 @@ define('AREA', 'login');
 /**
  * Include our init.php, which manages Sessions, Language etc.
  */
-require ('./lib/init.php');
+require './lib/init.php';
 
 // Configuration
 // Server to connect to:
