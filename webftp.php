@@ -90,7 +90,7 @@ if (!is_readable(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
 	die($owner_hint);
 }
 
-require (FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php');
+require FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php';
 
 if (!isset($sql)
    || !is_array($sql)

@@ -18,11 +18,7 @@
  */
 
 define('AREA', 'login');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-require ('./lib/init.php');
+require './lib/init.php';
 
 if ($action == '') {
 	$action = 'login';
@@ -32,13 +28,13 @@ if ($action == 'login') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$loginname = validate($_POST['loginname'], 'loginname');
 		$password = validate($_POST['password'], 'password');
-		
+
 		$stmt = Database::prepare("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `loginname`= :loginname"
 		);
 		Database::pexecute($stmt, array("loginname" => $loginname));
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-		
+
 		if ($row['customer'] == $loginname) {
 			$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
 			$uid = 'customerid';
@@ -53,7 +49,7 @@ if ($action == 'login') {
 				);
 				Database::pexecute($stmt, array("domain" => $domainname));
 				$row2 = $stmt->fetch(PDO::FETCH_ASSOC);
-				
+
 				if (isset($row2['customerid']) && $row2['customerid'] > 0) {
 					$loginname = getCustomerDetail($row2['customerid'], 'loginname');
 					if ($loginname !== false) {
@@ -177,7 +173,7 @@ if ($action == 'login') {
 					$has_theme = true;
 				}
 			}
-			
+
 			$params = array(
 				"hash" => $s,
 				"userid" => $userinfo['userid'],
@@ -187,7 +183,7 @@ if ($action == 'login') {
 				"language" => $language,
 				"adminsession" => $userinfo['adminsession']
 			);
-			
+
 			if ($has_theme) {
 				$params["theme"] = $theme;
 				$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_SESSIONS . "`
@@ -274,7 +270,7 @@ if ($action == 'forgotpwd') {
 				AND `email`= :email"
 			);
 			Database::pexecute($result_stmt, array("loginname" => $loginname, "email" => $email));
-				
+
 			if (Database::num_rows() > 0) {
 				$adminchecked = true;
 			} else {
@@ -284,7 +280,7 @@ if ($action == 'forgotpwd') {
 
 		if ($result_stmt !== null) {
 			$user = $result_stmt->fetch(PDO::FETCH_ASSOC);
-			
+
 			/* Check whether user is banned */
 			if ($user['deactivated']) {
 				$message = $lng['pwdreminder']['notallowed'];
@@ -327,13 +323,13 @@ if ($action == 'forgotpwd') {
 					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
 						WHERE `adminid`= :adminid
 						AND `language`= :lang
-						AND `templategroup`=\'mails\' 
+						AND `templategroup`=\'mails\'
 						AND `varname`=\'password_reset_subject\''
 					);
 					Database::pexecute($result_stmt, array("adminid" => $user['adminid'], "lang" => $def_language));
 					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 					$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['pwdreminder']['subject']), $replace_arr));
-					
+
 					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
 						WHERE `adminid`= :adminid
 						AND `language`= :lang
@@ -343,7 +339,7 @@ if ($action == 'forgotpwd') {
 					Database::pexecute($result_stmt, array("adminid" => $user['adminid'], "lang" => $def_language));
 					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 					$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $body), $replace_arr));
-						
+
 					$_mailerror = false;
 					try {
 						$mail->Subject = $mail_subject;
