@@ -18,19 +18,20 @@
 /**
  * report about diskusage for customers
  */
-$result = $db->query("SELECT
-	`c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`diskspace`,
-	`c`.`diskspace_used`, `c`.`email`, `c`.`def_language`, 
+$result_stmt = Database::query("
+	SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
+	`c`.`company`, `c`.`diskspace`, `c`.`diskspace_used`, `c`.`email`, `c`.`def_language`,
 	`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`
 	FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
-    LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a` 
+    LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a`
     ON `a`.`adminid` = `c`.`adminid`
-    WHERE `c`.`diskspace` > '0' AND `c`.`reportsent` <> '2'");
+    WHERE `c`.`diskspace` > '0' AND `c`.`reportsent` <> '2'
+");
 
-while($row = $db->fetch_array($result))
-{
-	if(isset($row['diskspace'])
-		&& $row['diskspace_used'] != NULL
+while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+	if (isset($row['diskspace'])
+		&& $row['diskspace_used'] != null
 		&& $row['diskspace_used'] > 0
 		&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)$settings['system']['report_webmax']
 	) {
@@ -49,18 +50,16 @@ while($row = $db->fetch_array($result))
 			'MAX_PERCENT' => $settings['system']['report_webmax']
 		);
 
-		$lngfile = $db->query_first("
+		$lngfile_stmt = Database::prepare("
 			SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-			WHERE `language` ='" . $row['def_language'] . "'
+			WHERE `language` = :deflang
 		");
+		$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $row['def_language']));
 
 		if ($lngfile !== null) {
 			$langfile = $lngfile['file'];
 		} else {
-			$lngfile = $db->query_first("
-				SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-				WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'
-			");
+			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $settings['panel']['standardlanguage']));
 			$langfile = $lngfile['file'];
 		}
 
@@ -70,18 +69,22 @@ while($row = $db->fetch_array($result))
 		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
 
 		// Get mail templates from database; the ones from 'admin' are fetched for fallback
-		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-	                                AND `language`='" . $db->escape($row['def_language']) . "'
-	                                AND `templategroup`='mails'
-	                                AND `varname`='diskmaxpercent_subject'");
+		$result2_stmt = Database::prepare("
+			SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+			WHERE `adminid` = :adminid
+			AND `language` = :lang
+			AND `templategroup` = 'mails' AND `varname` = :varname
+		");
+		$resul2_data = array(
+			'adminid' => $row['adminid'],
+			'lang' => $row['def_language'],
+			'varname' => 'diskmaxpercent_subject'
+		);
+		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
 
-		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-	                                AND `language`='" . $db->escape($row['def_language']) . "'
-	                                AND `templategroup`='mails'
-	                                AND `varname`='diskmaxpercent_mailbody'");
+		$resul2_data['varname'] = 'diskmaxpercent_mailbody';
+		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
 
 		$_mailerror = false;
@@ -106,20 +109,25 @@ while($row = $db->fetch_array($result))
 		}
 
 		$mail->ClearAddresses();
-		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent`='2'
-	                WHERE `customerid`='" . (int)$row['customerid'] . "'");
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = '2'
+			WHERE `customerid` = :customerid
+		");
+		Database::pexecute($upd_stmt, array('customerid' => $row['customerid']));
 	}
 }
 
 /**
  * report about diskusage for admins/reseller
  */
-$result = $db->query("SELECT `a`.* FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` <> '2'");
+$result_stmt = Database::query("
+	SELECT `a`.* FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` <> '2'
+");
 
-while($row = $db->fetch_array($result))
-{
-	if(isset($row['diskspace'])
-		&& $row['diskspace_used'] != NULL
+while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+	if (isset($row['diskspace'])
+		&& $row['diskspace_used'] != null
 		&& $row['diskspace_used'] > 0
 		&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)$settings['system']['report_webmax']
 	) {
@@ -132,35 +140,41 @@ while($row = $db->fetch_array($result))
 			'MAX_PERCENT' => $settings['system']['report_webmax']
 		);
 
-		$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-									WHERE `language` ='" . $row['def_language'] . "'");
+		$lngfile_stmt = Database::prepare("
+			SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
+			WHERE `language` = :deflang
+		");
+		$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $row['def_language']));
 
-		if($lngfile !== NULL)
-		{
+		if ($lngfile !== null) {
+			$langfile = $lngfile['file'];
+		} else {
+			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $settings['panel']['standardlanguage']));
 			$langfile = $lngfile['file'];
 		}
-		else
-		{
-			$lngfile = $db->query_first("SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-										WHERE `language` ='" . $settings['panel']['standardlanguage'] . "'");
-			$langfile = $lngfile['file'];
-		}
 
+		// include english language file (fallback)
+		include_once makeCorrectFile($pathtophpfiles . '/lng/english.lng.php');
+		// include admin/customer language file
 		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
 
 		// Get mail templates from database; the ones from 'admin' are fetched for fallback
-		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-	                                AND `language`='" . $db->escape($row['def_language']) . "'
-	                                AND `templategroup`='mails'
-	                                AND `varname`='diskmaxpercent_subject'");
+		$result2_stmt = Database::prepare("
+			SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+			WHERE `adminid` = :adminid
+			AND `language` = :lang
+			AND `templategroup` = 'mails' AND `varname` = :varname
+		");
+		$resul2_data = array(
+			'adminid' => $row['adminid'],
+			'lang' => $row['def_language'],
+			'varname' => 'diskmaxpercent_subject'
+		);
+		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
 
-		$result2 = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-	                                WHERE `adminid`='" . (int)$row['adminid'] . "'
-	                                AND `language`='" . $db->escape($row['def_language']) . "'
-	                                AND `templategroup`='mails'
-	                                AND `varname`='diskmaxpercent_mailbody'");
+		$resul2_data['varname'] = 'diskmaxpercent_mailbody';
+		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
 
 		$_mailerror = false;
@@ -185,7 +199,10 @@ while($row = $db->fetch_array($result))
 		}
 
 		$mail->ClearAddresses();
-		$db->query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent`='2'
-	                WHERE `adminid`='" . (int)$row['adminid'] . "'");
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = '2'
+			WHERE `adminid` = :adminid
+		");
+		Database::pexecute($upd_stmt, array('adminid' => $row['adminid']));
 	}
 }
