@@ -32,7 +32,7 @@ if (isset($argv[1]) && strtolower($argv[1]) == '--help') {
 }
 
 /**
- * check for --force to include cron_tasks 
+ * check for --force to include cron_tasks
  * even if it's not its turn
  */
 for ($x = 1; $x < count($argv); $x++) {
@@ -56,7 +56,7 @@ for ($x = 1; $x < count($argv); $x++) {
 }
 
 foreach ($jobs_to_run as $cron) {
-	require_once($cron);
+	require_once $cron;
 }
 
 fwrite($debugHandler, 'Cronfiles have been included' . "\n");
