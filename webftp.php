@@ -14,6 +14,13 @@
  *
  */
 
+define('AREA', 'login');
+
+/**
+ * Include our init.php, which manages Sessions, Language etc.
+ */
+require ('./lib/init.php');
+
 // Configuration
 // Server to connect to:
 $server = 'localhost';
@@ -35,94 +42,8 @@ $MAX_FILE_SIZE = 1907300;
 // The color of a marked row
 $marked_color = '#FFC2CA';
 
-header("Content-Type: text/html; charset=utf-8");
-
-// prevent Froxlor pages from being cached
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Pragma: no-cache");
-header('Last-Modified: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
-header('Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
-
-// Prevent inline - JS to be executed (i.e. XSS) in browsers which support this,
-// Inline-JS is no longer allowed and used
-// See: http://people.mozilla.org/~bsterne/content-security-policy/index.html
-header("X-Content-Security-Policy: allow 'self'; frame-ancestors 'none'");
-
-// Don't allow to load Froxlor in an iframe to prevent i.e. clickjacking
-header('X-Frame-Options: DENY');
-
-// If Froxlor was called via HTTPS -> enforce it for the next time
-if(isset( $_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off' ))
-{
-	header('Strict-Transport-Security: max-age=500');
-}
-
-// Internet Explorer shall not guess the Content-Type, see:
-// http://blogs.msdn.com/ie/archive/2008/07/02/ie8-security-part-v-comprehensive-protection.aspx
-header('X-Content-Type-Options: nosniff' );
-
-// ensure that default timezone is set
-if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get")) {
-	@date_default_timezone_set(@date_default_timezone_get());
-}
-
-define('FROXLOR_INSTALL_DIR', dirname(__FILE__));
-$_deftheme = 'Sparkle';
-
-// check whether the userdata file exists
-if (!file_exists(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
-	$config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
-	die($config_hint);
-}
-
-// check whether we can read the userdata file
-if (!is_readable(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
-	// get possible owner
-	$posixusername = posix_getpwuid(posix_getuid());
-	$posixgroup = posix_getgrgid(posix_getgid());
-	// get hint-template
-	$owner_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/ownershiphint.tpl');
-	// replace values
-	$owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
-	$owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
-	$owner_hint = str_replace("<FROXLOR_INSTALL_DIR>", FROXLOR_INSTALL_DIR, $owner_hint);
-	// show
-	die($owner_hint);
-}
-
-require (FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php');
-
-if (!isset($sql)
-   || !is_array($sql)
-) {
-	$config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
-	die($config_hint);
-}
-
 if (!function_exists("ftp_connect")) {
 	die('No FTP support');
-}
-
-// Create the database - connection
-$db = new mysqli($sql['host'], $sql['user'], $sql['password'], $sql['db']);
-unset($sql);
-if ($db->connect_error) {
-	// output a nicer error-message
-	$err_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/dberrornice.tpl');
-	// replace values
-	$err_hint = str_replace("<TEXT>", 'Connect Error (' . $db->connect_errno . ')', $err_hint);
-	$err_hint = str_replace("<DEBUG>", $db->connect_error, $err_hint);
-	// show
-	die($err_hint);
-}
-
-$settings = array();
-// Let's get the theme we need
-if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `varname` = 'default_theme'")) {
-	list($settings['panel']['default_theme']) = $result->fetch_array();
-} else {
-	// Default will be Sparkle
-	$settings['panel']['default_theme'] = 'Sparkle';
 }
 
 // Initialize Smarty
@@ -143,42 +64,8 @@ $language->setLanguage();
 define('HAVE_GETTEXT', true);
 require (FROXLOR_INSTALL_DIR.'/lib/functions/smarty_plugins/gettext-prefilter.php');
 
-$settings['admin']['show_version_login'] = 0;
-if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'admin' AND `varname` = 'show_version_login'"))
-{
-	list($settings['admin']['show_version_login']) = $result->fetch_array();
-}
-$settings['admin']['show_version_footer'] = 0;
-if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'admin' AND `varname` = 'show_version_footer'"))
-{
-	list($settings['admin']['show_version_footer']) = $result->fetch_array();
-}
-$settings['panel']['no_robots'] = 0;
-if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'panel' AND `varname` = 'no_robots'"))
-{
-	list($settings['panel']['no_robots']) = $result->fetch_array();
-}
-$settings['panel']['use_webfonts'] = 0;
-if ($result = $db->query("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'panel' AND `varname` = 'use_webfonts'"))
-{
-	list($settings['panel']['use_webfonts']) = $result->fetch_array();
-}
-
-// We don't need the database anymore
-$db->close();
-unset($db);
-
 // global Theme-variable
 $theme = $settings['panel']['default_theme'];
-
-// overwrite with customer/admin theme if defined
-if (isset($userinfo['theme']) && $userinfo['theme'] != $theme) {
-	$theme = $userinfo['theme'];
-}
-
-// Set default options for template
-$hl_path = 'templates/'.$theme.'/assets/img';
-$header_logo = $hl_path.'/logo.png';
 
 if (file_exists($hl_path.'/logo_custom.png')) {
 	$header_logo = $hl_path.'/logo_custom.png';
@@ -195,35 +82,25 @@ $smarty->assign('title', 'WebFTP - ');
 session_start();
 $s = session_id();
 
-if (isset($_GET['logoff']) || isset($_POST['logoff']))
-{
+if (isset($_GET['logoff']) || isset($_POST['logoff'])) {
 	unset($_SESSION['server'],$_SESSION['user'],$_SESSION['password']);
 	session_destroy();
 	$smarty->assign('successmessage', _('Successfully logged out'));
 	$body = $smarty->fetch('login/login_ftp.tpl');
-}
-
-elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($_SESSION['user']) && !empty($_SESSION['password']) && !empty($_SESSION['server'])))
-{
-	if(empty($_SESSION['server']))
-	{
+} elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($_SESSION['user']) && !empty($_SESSION['password']) && !empty($_SESSION['server']))) {
+	if (empty($_SESSION['server'])) {
 		$_SESSION['server'] = $server;
 	}
-	if(isset($_POST['loginname']))
-	{
+	if (isset($_POST['loginname'])) {
 		$_SESSION['user'] = $_POST['loginname'];
 	}
-	if(isset($_POST['password']))
-	{
-		 $_SESSION['password'] = $_POST['password'];
+	if (isset($_POST['password'])) {
+		$_SESSION['password'] = $_POST['password'];
 	}
 
-	if ($useSsl)
-	{
+	if ($useSsl) {
 		$connection = @ftp_ssl_connect($_SESSION['server']);
-	}
-	else
-	{
+	} else {
 		$connection = @ftp_connect($_SESSION['server']);
 	}
 	$loggedOn = @ftp_login($connection, $_SESSION['user'], $_SESSION['password']);
@@ -231,100 +108,69 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 	$pasv = @ftp_pasv($connection, false);
 
 	// Mode setzen
-	if(isset($_POST['mode']))
-	{
+	if (isset($_POST['mode'])) {
 		$mode = $_POST['mode'];
 		$_SESSION['mode'] = $mode;
-	}
-	elseif(isset($_GET['mode']))
-	{
+	} elseif (isset($_GET['mode'])) {
 		$mode = $_GET['mode'];
 		$_SESSION['mode'] = $mode;
-	}
-	elseif(isset($_SESSION['mode']))
-	{
+	} elseif (isset($_SESSION['mode'])) {
 		$mode = $_SESSION['mode'];
-	}
-	else
-	{
+	} else {
 		$mode = $default_mode;
 		$_SESSION['mode'] = $default_mode;
 	}
 	$smarty->assign('mode', $mode);
 
-	if(isset($_POST['file']) && is_array($_POST['file']))
-	{
+	if (isset($_POST['file']) && is_array($_POST['file'])) {
 		$file = $_POST['file'];
-		if(get_magic_quotes_gpc())
-		{
-			foreach($_POST['file'] as $key => $val)
-			{
+		if (get_magic_quotes_gpc()) {
+			foreach ($_POST['file'] as $key => $val) {
 				$_POST['file'][$key] = stripslashes($val);
 			}
-			foreach($_POST as $key => $val)
-			{
+			foreach ($_POST as $key => $val) {
 				$_POST[$key] = stripslashes($val);
 			}
-			foreach($_GET as $key => $val)
-			{
+			foreach ($_GET as $key => $val) {
 				$_GET[$key] = stripslashes($val);
 			}
 		}
-	}
-	else
-	{
-		if(get_magic_quotes_gpc())
-		{
-			foreach($_POST as $key => $val)
-			{
+	} else {
+		if (get_magic_quotes_gpc()) {
+			foreach ($_POST as $key => $val) {
 				$_POST[$key] = stripslashes($val);
 			}
-			foreach($_GET as $key => $val)
-			{
+			foreach ($_GET as $key => $val) {
 				$_GET[$key] = stripslashes($val);
 			}
 		}
-		if(isset($_POST['file']))
-		{
+		if (isset($_POST['file'])) {
 			$file = $_POST['file'];
 			$smarty->assign('file', $file);
-		}
-		elseif(isset($_GET['file']))
-		{
+		} elseif (isset($_GET['file'])) {
 			$file = $_GET['file'];
 			$smarty->assign('file', $file);
 		}
 		//$file = htmlentities($file);
 	}
 
-	if(isset($_POST['action']))
-	{
+	if (isset($_POST['action'])) {
 		$action = $_POST['action'];
-	}
-	elseif(isset($_GET['action']))
-	{
+	} elseif (isset($_GET['action'])) {
 		$action = $_GET['action'];
-	}
-	else
-	{
+	} else {
 		$action = '';
 	}
 
-	if ($loggedOn)
-	{
+	if ($loggedOn) {
 		$smarty->assign('loggedin', true);
 
-		if (isset($_POST['currentDir']))
-		{
-			if (!@ftp_chdir($connection, html_entity_decode($_POST['currentDir'])))
-			{
+		if (isset($_POST['currentDir'])) {
+			if (!@ftp_chdir($connection, html_entity_decode($_POST['currentDir']))) {
 				$smarty->assign('errormessage', sprintf(_('Directory change to \'%1$s\' failed!'), $file));
 			}
-		}
-		elseif (isset($_GET['currentDir']))
-		{
-			if(!@ftp_chdir($connection, html_entity_decode($_GET['currentDir'])))
-			{
+		} elseif (isset($_GET['currentDir'])) {
+			if (!@ftp_chdir($connection, html_entity_decode($_GET['currentDir']))) {
 				$smarty->assign('errormessage', sprintf(_('Directory change to \'%1$s\' failed!'), $file));
 			}
 		}
@@ -337,476 +183,370 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 		// was soll gemacht werden
 		$errormessage = '';
 		$successmessage = '';
-		switch ($action)
-		{
-			case "cd":			// Ordner wechseln
-				//First try : normal directory
-				if(@ftp_chdir($connection, html_entity_decode($currentDir) . "/" .  html_entity_decode($file)))
-				{
-					$currentDir =  htmlentities(str_replace("\"\"","\"", @ftp_pwd($connection)));
-					$smarty->assign('curdir', sprintf(_('current folder = [%1$s]'), $currentDir));
-					$smarty->assign('currentDir', $currentDir);
-				}
-				elseif(@ftp_chdir($connection,  html_entity_decode($file)))
-				{ // symbolischer Link
-					$currentDir =  htmlentities(str_replace("\"\"","\"", @ftp_pwd($connection)));
-					$smarty->assign('curdir', sprintf(_('current folder = [%1$s]'), $currentDir));
-					$smarty->assign('currentDir', $currentDir);
-				}
-				else
-				{ // link zu einer Datei, abrufen...
-					header("Content-disposition: filename=$file");
-					header("Content-type: application/octetstream");
-					header("Pragma: no-cache");
-					header("Expires: 0");
-
-					// original Dateiname
-					$filearray = explode("/",$file);
-					$file = $filearray[sizeof($filearray)-1];
-					$msg = $file;
-
-					// Datei vom FTP temporär speichern
-					$fp = fopen($downloadDir .  killslashes(html_entity_decode($file))."_".$s, "w");
-					if($mode == "FTP_ASCII")
-					{
-						$downloadStatus = @ftp_fget($connection,$fp, html_entity_decode($file),FTP_ASCII);
-					}
-					elseif($mode == "FTP_BINARY")
-					{
-						$downloadStatus = @ftp_fget($connection,$fp, html_entity_decode($file),FTP_BINARY);
-					}
-
-					if(!$downloadStatus)
-					{
-						fclose($fp);
-						exit;
-					}
-					fclose($fp);
-					// temporäre Datei lesen und ausgeben
-					$data = file($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
-					/*$i=0;
-					while ($data[$i] != ""){
-						echo $data[$i];
-						$i++;
-					}*/
-					foreach($data as $outData)
-					{
-						echo $outData;
-					}
-					unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
-					exit;
-				}
-				break;
-			case "cddirect":
-				if(@ftp_chdir($connection, $file))
-				{
-					$currentDir = htmlentities(str_replace("\"\"","\"",@ftp_pwd($connection)));
-					$smarty->assign('curdir', sprintf(_('current folder = [%1$s]'), $currentDir));
-				}
-				else
-				{
-					$errormessage = sprintf(_('Directory change to \'%1$s\' failed!') . "\n", $file);
-				}
-				break;
-			case "get":			// Datei dwonload
-				header("Content-disposition: filename=".killslashes(html_entity_decode($file)));
+		switch ($action) {
+		case "cd":   // Ordner wechseln
+			//First try : normal directory
+			if (@ftp_chdir($connection, html_entity_decode($currentDir) . "/" .  html_entity_decode($file))) {
+				$currentDir =  htmlentities(str_replace("\"\"","\"", @ftp_pwd($connection)));
+				$smarty->assign('curdir', sprintf(_('current folder = [%1$s]'), $currentDir));
+				$smarty->assign('currentDir', $currentDir);
+			} elseif (@ftp_chdir($connection,  html_entity_decode($file))) { // symbolischer Link
+				$currentDir =  htmlentities(str_replace("\"\"","\"", @ftp_pwd($connection)));
+				$smarty->assign('curdir', sprintf(_('current folder = [%1$s]'), $currentDir));
+				$smarty->assign('currentDir', $currentDir);
+			} else { // link zu einer Datei, abrufen...
+				header("Content-disposition: filename=$file");
 				header("Content-type: application/octetstream");
 				header("Pragma: no-cache");
 				header("Expires: 0");
+
+				// original Dateiname
+				$filearray = explode("/",$file);
+				$file = $filearray[sizeof($filearray)-1];
+				$msg = $file;
+
 				// Datei vom FTP temporär speichern
-				$fp = fopen($downloadDir . killslashes(html_entity_decode($file))."_".$s, "w");
-				if($mode == "FTP_ASCII")
-				{
-					$downloadStatus = ftp_fget($connection,$fp, html_entity_decode($file),FTP_ASCII);
+				$fp = fopen($downloadDir .  killslashes(html_entity_decode($file))."_".$s, "w");
+				if ($mode == "FTP_ASCII") {
+					$downloadStatus = @ftp_fget($connection,$fp, html_entity_decode($file),FTP_ASCII);
+				} elseif ($mode == "FTP_BINARY") {
+					$downloadStatus = @ftp_fget($connection,$fp, html_entity_decode($file),FTP_BINARY);
 				}
-				elseif($mode == "FTP_BINARY")
-				{
-					$downloadStatus = ftp_fget($connection,$fp, html_entity_decode($file),FTP_BINARY);
+
+				if (!$downloadStatus) {
+					fclose($fp);
+					exit;
 				}
 				fclose($fp);
-
 				// temporäre Datei lesen und ausgeben
 				$data = file($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
-				//print_r($data);
-				/*$i=0;
+
+				foreach ($data as $outData) {
+					echo $outData;
+				}
+				unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
+				exit;
+			}
+			break;
+		case "cddirect":
+			if (@ftp_chdir($connection, $file)) {
+				$currentDir = htmlentities(str_replace("\"\"","\"",@ftp_pwd($connection)));
+				$smarty->assign('curdir', sprintf(_('current folder = [%1$s]'), $currentDir));
+			} else {
+				$errormessage = sprintf(_('Directory change to \'%1$s\' failed!') . "\n", $file);
+			}
+			break;
+		case "get":   // Datei dwonload
+			header("Content-disposition: filename=".killslashes(html_entity_decode($file)));
+			header("Content-type: application/octetstream");
+			header("Pragma: no-cache");
+			header("Expires: 0");
+			// Datei vom FTP temporär speichern
+			$fp = fopen($downloadDir . killslashes(html_entity_decode($file))."_".$s, "w");
+			if ($mode == "FTP_ASCII") {
+				$downloadStatus = ftp_fget($connection,$fp, html_entity_decode($file),FTP_ASCII);
+			}
+			elseif ($mode == "FTP_BINARY") {
+				$downloadStatus = ftp_fget($connection,$fp, html_entity_decode($file),FTP_BINARY);
+			}
+			fclose($fp);
+
+			// temporäre Datei lesen und ausgeben
+			$data = file($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
+			//print_r($data);
+			/*$i=0;
 				while ($data[$i] != "")
 				{
 					echo $data[$i];
 					$i++;
 				}*/
-				foreach($data as $outData)
-				{
-					echo $outData;
+			foreach ($data as $outData) {
+				echo $outData;
+			}
+			unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
+			exit;
+			break;
+		case "put":   // Datei hochladen
+			foreach ($_FILES as $myFile => $dummyvar) {
+				if (file_exists($_FILES[$myFile]['tmp_name']) && ($_FILES[$myFile]['size'] > $MAX_FILE_SIZE && $MAX_FILE_SIZE!=0)) {
+					$errormessage .= sprintf(_('File \'%1$s\' is to big! (max. %2$u bytes)') . "\n", $_FILES[$myFile]['name'], $MAX_FILE_SIZE);
 				}
-				unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
-				exit;
-				break;
-			case "put":			// Datei hochladen
-				foreach($_FILES as $myFile => $dummyvar)
-				{
-					if(file_exists($_FILES[$myFile]['tmp_name']) && ($_FILES[$myFile]['size'] > $MAX_FILE_SIZE && $MAX_FILE_SIZE!=0))
-					{
-						$errormessage .= sprintf(_('File \'%1$s\' is to big! (max. %2$u bytes)') . "\n", $_FILES[$myFile]['name'], $MAX_FILE_SIZE);
+				elseif (file_exists($_FILES[$myFile]['tmp_name'])) {
+					if ($mode == "FTP_ASCII") {
+						$uploadStatus = ftp_put($connection, html_entity_decode($currentDir) . "/" . $_FILES[$myFile]['name'], $_FILES[$myFile]['tmp_name'], FTP_ASCII);
 					}
-					elseif(file_exists($_FILES[$myFile]['tmp_name']))
-					{
-						if($mode == "FTP_ASCII")
-						{
-							$uploadStatus = ftp_put($connection, html_entity_decode($currentDir) . "/" . $_FILES[$myFile]['name'], $_FILES[$myFile]['tmp_name'], FTP_ASCII);
-						}
-						elseif($mode == "FTP_BINARY")
-						{
-							$uploadStatus = ftp_put($connection, html_entity_decode($currentDir) . "/" . $_FILES[$myFile]['name'], $_FILES[$myFile]['tmp_name'], FTP_BINARY);
-						}
+					elseif ($mode == "FTP_BINARY") {
+						$uploadStatus = ftp_put($connection, html_entity_decode($currentDir) . "/" . $_FILES[$myFile]['name'], $_FILES[$myFile]['tmp_name'], FTP_BINARY);
+					}
 
-						if(!$uploadStatus)
-						{
-							$errormessage .= sprintf(_('File \'%1$s\' couldn\'t be uploaded!') . "\n", $_FILES[$myFile]['name']);
-						}
-						else
-						{
-							$successmessage .= sprintf(_('File \'%1$s\' was successfully uploaded!') . "\n", $_FILES[$myFile]['name']);
-						}
+					if (!$uploadStatus) {
+						$errormessage .= sprintf(_('File \'%1$s\' couldn\'t be uploaded!') . "\n", $_FILES[$myFile]['name']);
+					}
+					else {
+						$successmessage .= sprintf(_('File \'%1$s\' was successfully uploaded!') . "\n", $_FILES[$myFile]['name']);
+					}
 
-						unlink($_FILES[$myFile]['tmp_name']);
-					}
+					unlink($_FILES[$myFile]['tmp_name']);
 				}
-				break;
-			case "deldir":		// Ordner löschen
-				if(ftp_rmdir($connection,  html_entity_decode($file)))
-				{
-					$successmessage = sprintf(_('Directory \'%1$s\' deleted!') . "\n", $file);
+			}
+			break;
+		case "deldir":  // Ordner löschen
+			if (ftp_rmdir($connection,  html_entity_decode($file))) {
+				$successmessage = sprintf(_('Directory \'%1$s\' deleted!') . "\n", $file);
+			}
+			else {
+				$errormessage = sprintf(_('Directory \'%1$s\' couldn\'t be deleted!') . "\n", $file);
+			}
+			break;
+		case "delfile":  // Datei löschen
+			if (@ftp_delete($connection,  $file)) {
+				$successmessage = sprintf(_('\'%1$s\' deleted!') . "\n", $file);
+			}
+			else {
+				$errormessage = sprintf(_('\'%1$s\' couldn\'t be deleted!') . "\n", $file);
+			}
+			break;
+		case "rename":  // Datei umbennenen
+			if ($_POST['op']=="do") {
+				if (@ftp_rename($connection, $file, $_POST['file2'])) {
+					$successmessage = sprintf(_('\'%1$s\' renamed to \'%2$s\'') . "\n", $file, $_POST['file2']);
 				}
-				else
-				{
-					$errormessage = sprintf(_('Directory \'%1$s\' couldn\'t be deleted!') . "\n", $file);
+				else {
+					$errormessage = sprintf(_('\'%1$s\' couldn\'t be renamed to \'%2$s\'!') . "\n", $file, $_POST['file2']);
 				}
-				break;
-			case "delfile":		// Datei löschen
-				if (@ftp_delete($connection,  $file))
-				{
-					$successmessage = sprintf(_('\'%1$s\' deleted!') . "\n", $file);
+			}
+			elseif ($_GET['op']=="show") {
+				$smarty->assign('rename_text', sprintf(_('File \'%1$s\' rename/move to') . "\n", $file));
+			}
+			break;
+		case "createdir":  // neuen Ordner erstellen
+			if (@ftp_mkdir($connection,  $file)) {
+				$successmessage = sprintf(_('Directory \'%1$s\' created') . "\n", $file);
+			}
+			else {
+				$errormessage = sprintf(_('Directory \'%1$s\' couldn\'t be created!') . "\n", $file);
+			}
+			break;
+		case "chmod":  // Berechtigungen setzen
+			$wrongchmod = false;
+			$split = preg_split('//', $_POST['file2'], -1, PREG_SPLIT_NO_EMPTY);
+			foreach ($split as $char) {
+				if ($char < 0 || $char > 7) {
+					$wrongchmod = true;
 				}
-				else
-				{
-					$errormessage = sprintf(_('\'%1$s\' couldn\'t be deleted!') . "\n", $file);
+			}
+			if ($wrongchmod || strlen($_POST['chmod']) > 3) {
+				$errormessage = sprintf(_('The permission \'%1$s\' you entered is not valid!') . "\n", $_POST['file2']);
+			}
+			else {
+				$command = "chmod {$_POST['file2']} {$_POST['file']}";
+				if (!$wrongchmod && ftp_site($connection,$command)) {
+					$successmessage = sprintf(_('The permission of \'%1$s\' is set to \'%2$s\'!') . "\n", $file, $_POST['file2']);
 				}
-				break;
-			case "rename":		// Datei umbennenen
-				if($_POST['op']=="do")
-				{
-					if (@ftp_rename($connection, $file, $_POST['file2']))
-					{
-						$successmessage = sprintf(_('\'%1$s\' renamed to \'%2$s\'') . "\n", $file, $_POST['file2']);
-					}
-					else
-					{
-						$errormessage = sprintf(_('\'%1$s\' couldn\'t be renamed to \'%2$s\'!') . "\n", $file, $_POST['file2']);
-					}
+				else {
+					$errormessage = sprintf(_('The permission of \'%1$s\' couldn\'t be set to \'%2$s\'!') . "\n", $file, $_POST['file2']);
 				}
-				elseif($_GET['op']=="show")
-				{
-					$smarty->assign('rename_text', sprintf(_('File \'%1$s\' rename/move to') . "\n", $file));
-				}
-				break;
-			case "createdir":  // neuen Ordner erstellen
-				if(@ftp_mkdir($connection,  $file))
-				{
-					$successmessage = sprintf(_('Directory \'%1$s\' created') . "\n", $file);
-				}
-				else
-				{
-					$errormessage = sprintf(_('Directory \'%1$s\' couldn\'t be created!') . "\n", $file);
-				}
-				break;
-			case "chmod":  // Berechtigungen setzen
-				$wrongchmod = false;
-				$split = preg_split('//', $_POST['file2'], -1, PREG_SPLIT_NO_EMPTY);
-				foreach($split as $char)
-				{
-					if ($char < 0 || $char > 7)
-					{
-						$wrongchmod = true;
-					}
-				}
-				if ($wrongchmod || strlen($_POST['chmod']) > 3)
-				{
-					$errormessage = sprintf(_('The permission \'%1$s\' you entered is not valid!') . "\n", $_POST['file2']);
-				}
-				else
-				{
-					$command = "chmod {$_POST['file2']} {$_POST['file']}";
-					if(!$wrongchmod && ftp_site($connection,$command))
-					{
-						$successmessage = sprintf(_('The permission of \'%1$s\' is set to \'%2$s\'!') . "\n", $file, $_POST['file2']);
-					}
-					else
-					{
-						$errormessage = sprintf(_('The permission of \'%1$s\' couldn\'t be set to \'%2$s\'!') . "\n", $file, $_POST['file2']);
-					}
-				}
-				break;
-			case "multiple":		// merhfachaktionen
-				if(isset($_POST['yes']) && $_POST['yes']!="" && !isset($_POST['no']))
-				{
-					if ($_POST['op']=="chmod")
-					{
-						$wrongchmod = false;
-						$split = preg_split('//', $_POST['chmod'], -1, PREG_SPLIT_NO_EMPTY);
-						foreach($split as $char)
-						{
-							if($char<0||$char>7)
-							{
-								$wrongchmod = true;
-							}
+			}
+			break;
+		case "multiple":  // merhfachaktionen
+			if (isset($_POST['yes']) && $_POST['yes']!="" && !isset($_POST['no'])) {
+				if ($_POST['op']=="chmod") {
+					$wrongchmod = false;
+					$split = preg_split('//', $_POST['chmod'], -1, PREG_SPLIT_NO_EMPTY);
+					foreach ($split as $char) {
+						if ($char<0||$char>7) {
+							$wrongchmod = true;
 						}
-						if($wrongchmod || strlen($_POST['chmod'])>3)
-						{
-							$errormessage .= sprintf(_('The permission \'%1$s\' you entered is not valid!') . "\n", $_POST['file2']);
-						}
-						else
-						{
-							if(is_array($file))
-							{
-								foreach ($file as $myID => $myName)
-								{
-									$command = "chmod $_POST[chmod] ".$myName;
-									if (ftp_site($connection,$command))
-									{
-										$successmessage .= sprintf(_('The permission of \'%1$s\' is set to \'%2$s\'!') . "\n", $myName, $_POST['chmod']);
-									}
-									else
-									{
-										$errormessage .= sprintf(_('The permission of \'%1$s\' couldn\'t be set to \'%2$s\'!') . "\n", $myName, $_POST['chmod']);
-									}
+					}
+					if ($wrongchmod || strlen($_POST['chmod'])>3) {
+						$errormessage .= sprintf(_('The permission \'%1$s\' you entered is not valid!') . "\n", $_POST['file2']);
+					} else {
+						if (is_array($file)) {
+							foreach ($file as $myID => $myName) {
+								$command = "chmod $_POST[chmod] ".$myName;
+								if (ftp_site($connection,$command)) {
+									$successmessage .= sprintf(_('The permission of \'%1$s\' is set to \'%2$s\'!') . "\n", $myName, $_POST['chmod']);
+								}
+								else {
+									$errormessage .= sprintf(_('The permission of \'%1$s\' couldn\'t be set to \'%2$s\'!') . "\n", $myName, $_POST['chmod']);
 								}
 							}
 						}
 					}
-					elseif($_POST['op']=="delete")
-					{
-						if(is_array($file))
-						{
-							foreach ($file as $myID => $myName)
-							{
-								if(ftp_chdir($connection, $myName))
-								{
-									ftp_chdir($connection, html_entity_decode($currentDir));
-									$del_status = ftp_rmdir($connection, html_entity_decode($myName));
-								}
-								else
-								{
-									ftp_chdir($connection, html_entity_decode($currentDir));
-									$del_status = ftp_delete($connection, $myName);
-								}
+				} elseif ($_POST['op']=="delete") {
+					if (is_array($file)) {
+						foreach ($file as $myID => $myName) {
+							if (ftp_chdir($connection, $myName)) {
+								ftp_chdir($connection, html_entity_decode($currentDir));
+								$del_status = ftp_rmdir($connection, html_entity_decode($myName));
+							} else {
+								ftp_chdir($connection, html_entity_decode($currentDir));
+								$del_status = ftp_delete($connection, $myName);
+							}
 
-								if($del_status)
-								{
-									$successmessage .= sprintf(_('\'%1$s\' deleted!') . "\n", $myName);
+							if ($del_status) {
+								$successmessage .= sprintf(_('\'%1$s\' deleted!') . "\n", $myName);
+							} else {
+								$errormessage .= sprintf(_('\'%1$s\' couldn\'t be deleted!') . "\n", $myName);
+							}
+						}
+					}
+				} elseif ($_POST['op']=="move") {
+					if (ftp_chdir($connection, $_POST['move_to'])) {
+						ftp_chdir($connection, html_entity_decode($currentDir));
+						if (substr($_POST['move_to'],-1)!="/") {
+							$_POST['move_to'] .= "/";
+						}
+						if (is_array($file)) {
+							foreach ($file as $myID => $myName) {
+								if (ftp_rename($connection, $myName,$_POST['move_to'].$myName)) {
+									$successmessage .= sprintf(_('File \'%1$s\' moved') . "\n", $myName);
 								}
-								else
-								{
-									$errormessage .= sprintf(_('\'%1$s\' couldn\'t be deleted!') . "\n", $myName);
+								else {
+									$errormessage .= sprintf(_('File \'%1$s\' couldn\'t be moved') . "\n", $myName);
 								}
 							}
 						}
 					}
-					elseif($_POST['op']=="move")
-					{
-						if(ftp_chdir($connection, $_POST['move_to']))
-						{
-							ftp_chdir($connection, html_entity_decode($currentDir));
-							if(substr($_POST['move_to'],-1)!="/")
-							{
-								$_POST['move_to'] .= "/";
-							}
-							if(is_array($file))
-							{
-								foreach ($file as $myID => $myName)
-								{
-									if(ftp_rename($connection, $myName,$_POST['move_to'].$myName))
-									{
-										$successmessage .= sprintf(_('File \'%1$s\' moved') . "\n", $myName);
-									}
-									else
-									{
-										$errormessage .= sprintf(_('File \'%1$s\' couldn\'t be moved') . "\n", $myName);
-									}
-								}
-							}
-						}
-						else
-						{
-							$errormessage = sprintf(_('The directory \'%1$s\' doesn\'t exist') . "\n", $_POST['move_to']);
-						}
+					else {
+						$errormessage = sprintf(_('The directory \'%1$s\' doesn\'t exist') . "\n", $_POST['move_to']);
 					}
 				}
-				break;
-			case "edit":
-				$extarray = explode(".", $file);
-				$extension = $extarray[sizeof($extarray)-1];
-				$editAble = false;
-				foreach($editFileExtensions as $regex)
-				{
-					if(preg_match("/$regex/i", $extension))
-					{
-						$editAble = true;
-						break;
-					}
-				}
-				if($extension == $file && $editFileNoExtension)
-				{
+			}
+			break;
+		case "edit":
+			$extarray = explode(".", $file);
+			$extension = $extarray[sizeof($extarray)-1];
+			$editAble = false;
+			foreach ($editFileExtensions as $regex) {
+				if (preg_match("/$regex/i", $extension)) {
 					$editAble = true;
+					break;
 				}
+			}
+			if ($extension == $file && $editFileNoExtension) {
+				$editAble = true;
+			}
 
-				if($editAble)
-				{
-					if ((isset($_GET['op']) && $_GET['op'] == "open") || (isset($_POST['op']) && $_POST['op'] == "open"))
-					{//datei auslesen und im Browser anzeigen
-						// original Dateiname
-						$filearray = explode("/",$file);
-						$file = $filearray[sizeof($filearray)-1];
+			if ($editAble) {
+				if ((isset($_GET['op']) && $_GET['op'] == "open") || (isset($_POST['op']) && $_POST['op'] == "open")) {//datei auslesen und im Browser anzeigen
+					// original Dateiname
+					$filearray = explode("/",$file);
+					$file = $filearray[sizeof($filearray)-1];
 
-						// Datei vom FTP temporär speichern
-						$fp = fopen($downloadDir . killslashes(html_entity_decode($file)) . "_" . $s, "w");
-						if($mode == "FTP_BINARY")
-						{
-							$downloadStatus = ftp_fget($connection, $fp, html_entity_decode($file),FTP_BINARY);
-						}
-						else
-						{
-							$downloadStatus = ftp_fget($connection, $fp, html_entity_decode($file),FTP_ASCII);
-						}
-
-						if(!$downloadStatus)
-						{
-							fclose($fp);
-							$errormessage = sprintf(_('File \'%1$s\' couldn\'t be downloaded!') . "\n", $file);
-							$myFileContent = '';
-						}
-						else
-						{
-							fclose($fp);
-							// temporäre Datei lesen und ausgeben
-							$myFileContent = implode("",file($downloadDir .  killslashes(html_entity_decode($file))."_".$s));
-						}
-						$smarty->assign('myFileContent', $myFileContent);
-						unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
+					// Datei vom FTP temporär speichern
+					$fp = fopen($downloadDir . killslashes(html_entity_decode($file)) . "_" . $s, "w");
+					if ($mode == "FTP_BINARY") {
+						$downloadStatus = ftp_fget($connection, $fp, html_entity_decode($file),FTP_BINARY);
 					}
-					elseif ((isset($_GET['op']) && $_GET['op'] == "save") || (isset($_POST['op']) && $_POST['op'] == "save"))
-					{// datei speichern
-						$fp = fopen($downloadDir .  killslashes(html_entity_decode($file))."_".$s, "w");
-						if ((isset($_GET['op']) && $_GET['op'] != "new") && (isset($_POST['op']) && $_POST['op'] != "new"))
-						{
-							fputs($fp, $_POST['fileContent'], strlen($_POST['fileContent']));
-						}
-						else
-						{
-							fputs($fp, html_entity_decode($_POST['fileContent']), strlen(html_entity_decode($_POST['fileContent'])));
-						}
+					else {
+						$downloadStatus = ftp_fget($connection, $fp, html_entity_decode($file),FTP_ASCII);
+					}
+
+					if (!$downloadStatus) {
 						fclose($fp);
-
-						$uploadStatus = false;
-						if($mode == "FTP_BINARY")
-						{
-							$uploadStatus = ftp_put($connection, html_entity_decode($currentDir). "/" . html_entity_decode($file), $downloadDir .  killslashes(html_entity_decode($file))."_".$s, FTP_BINARY);
-						}
-						else
-						{
-							$uploadStatus = ftp_put($connection, html_entity_decode($currentDir). "/" . html_entity_decode($file), $downloadDir .  killslashes(html_entity_decode($file))."_".$s, FTP_ASCII);
-						}
-
-						if(!$uploadStatus)
-						{
-							$errormessage = sprintf(_('File \'%1$s\' couldn\'t be saved!') . "\n", $file);
-						}
-						else
-						{
-							$successmessage = sprintf(_('File \'%1$s\' was saved succesfully!') . "\n", $file);
-						}
-						unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
+						$errormessage = sprintf(_('File \'%1$s\' couldn\'t be downloaded!') . "\n", $file);
+						$myFileContent = '';
 					}
-				}
-				else
-				{
-					$errormessage = sprintf(_('Files with this extension can\'t be created/edited!') . "\n", $file);
-				}
-
-				if((isset($_GET['op']) && $_GET['op'] != "new") && (isset($_POST['op']) && $_POST['op'] != "new"))
-				{
-					if($file == "")
-					{
-						$editAble = false;
-						$errormessage = _('Please enter a filename!') . "\n";
+					else {
+						fclose($fp);
+						// temporäre Datei lesen und ausgeben
+						$myFileContent = implode("",file($downloadDir .  killslashes(html_entity_decode($file))."_".$s));
 					}
+					$smarty->assign('myFileContent', $myFileContent);
+					unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
 				}
-				break;
-			case "mode":
-				if($_GET['mode'] == "FTP_BINARY")
-				{
-					$mode = "FTP_BINARY";
-					$_SESSION['mode'] = "FTP_BINARY";
+				elseif ((isset($_GET['op']) && $_GET['op'] == "save") || (isset($_POST['op']) && $_POST['op'] == "save")) {// datei speichern
+					$fp = fopen($downloadDir .  killslashes(html_entity_decode($file))."_".$s, "w");
+					if ((isset($_GET['op']) && $_GET['op'] != "new") && (isset($_POST['op']) && $_POST['op'] != "new")) {
+						fputs($fp, $_POST['fileContent'], strlen($_POST['fileContent']));
+					}
+					else {
+						fputs($fp, html_entity_decode($_POST['fileContent']), strlen(html_entity_decode($_POST['fileContent'])));
+					}
+					fclose($fp);
+
+					$uploadStatus = false;
+					if ($mode == "FTP_BINARY") {
+						$uploadStatus = ftp_put($connection, html_entity_decode($currentDir). "/" . html_entity_decode($file), $downloadDir .  killslashes(html_entity_decode($file))."_".$s, FTP_BINARY);
+					}
+					else {
+						$uploadStatus = ftp_put($connection, html_entity_decode($currentDir). "/" . html_entity_decode($file), $downloadDir .  killslashes(html_entity_decode($file))."_".$s, FTP_ASCII);
+					}
+
+					if (!$uploadStatus) {
+						$errormessage = sprintf(_('File \'%1$s\' couldn\'t be saved!') . "\n", $file);
+					}
+					else {
+						$successmessage = sprintf(_('File \'%1$s\' was saved succesfully!') . "\n", $file);
+					}
+					unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
 				}
-				else
-				{
-					$mode = "FTP_ASCII";
-					$_SESSION['mode'] = "FTP_ASCII";
+			}
+			else {
+				$errormessage = sprintf(_('Files with this extension can\'t be created/edited!') . "\n", $file);
+			}
+
+			if ((isset($_GET['op']) && $_GET['op'] != "new") && (isset($_POST['op']) && $_POST['op'] != "new")) {
+				if ($file == "") {
+					$editAble = false;
+					$errormessage = _('Please enter a filename!') . "\n";
 				}
-				$smarty->assign('mode', $mode);
-				break;
+			}
+			break;
+		case "mode":
+			if ($_GET['mode'] == "FTP_BINARY") {
+				$mode = "FTP_BINARY";
+				$_SESSION['mode'] = "FTP_BINARY";
+			}
+			else {
+				$mode = "FTP_ASCII";
+				$_SESSION['mode'] = "FTP_ASCII";
+			}
+			$smarty->assign('mode', $mode);
+			break;
 		}
 
-		if (strlen($errormessage) > 0)
-		{
+		if (strlen($errormessage) > 0) {
 			$smarty->assign('errormessage', $errormessage);
 		}
-		if (strlen($successmessage) > 0)
-		{
+		if (strlen($successmessage) > 0) {
 			$smarty->assign('successmessage', $successmessage);
 		}
 
-		if ($action == "edit" && ((isset($_GET['op']) && $_GET['op'] == "open") || (isset($_POST['op']) && $_POST['op'] == "open")))
-		{
+		if ($action == "edit" && ((isset($_GET['op']) && $_GET['op'] == "open") || (isset($_POST['op']) && $_POST['op'] == "open"))) {
 			$file = htmlentities($file);
 			$smarty->assign('file', $file);
 			$body = $smarty->fetch('webftp/webftp_edit.tpl');
 		}
-		elseif ($action == "edit" && ((isset($_GET['op']) && $_GET['op'] == "new") || (isset($_POST['op']) && $_POST['op'] == "new")))
-		{
+		elseif ($action == "edit" && ((isset($_GET['op']) && $_GET['op'] == "new") || (isset($_POST['op']) && $_POST['op'] == "new"))) {
 			$file = htmlentities($file);
 			$smarty->assign('file', $file);
 			$body = $smarty->fetch('webftp/webftp_edit_new.tpl');
 		}
-		else
-		{
-			$list = Array();
+		else {
+			$list = array();
 			$list = ftp_rawlist($connection, "-a ./");
 
 			$countArray = array("dir" => 0, "dirsize" => 0, "file" => 0, "filesize" => 0, "link" => 0);
 			$list = parse_ftp_rawlist($list, $systype);
-			if (!isset($file))
-			{
+			if (!isset($file)) {
 				$file = "";
 			}
-			if (is_array($list))
-			{
+			if (is_array($list)) {
 				// Ordner
 				$output_dir = '';
-				foreach($list as $myDir)
-				{
-					if ($myDir["is_dir"] == 1)
-					{
+				foreach ($list as $myDir) {
+					if ($myDir["is_dir"] == 1) {
 						$countArray['dir']++;
 						$countArray['dirsize'] += $myDir['size'];
 						$fileAction = "cd";
 						$fileName = $myDir["name"];
-						if(is_array($file) && in_array($fileName, $file))
-						{
+						if (is_array($file) && in_array($fileName, $file)) {
 							$smarty->assign('checked', 'checked');
 							$smarty->assign('checked_color', "bgcolor=\"".$marked_color."\"");
 						}
-						else
-						{
+						else {
 							$smarty->assign('checked', "");
 							$smarty->assign('checked_color', "");
 						}
@@ -817,20 +557,16 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 
 				// Links
 				$output_link = '';
-				foreach($list as $myDir)
-				{
-					if ($myDir["is_link"] == 1)
-					{
+				foreach ($list as $myDir) {
+					if ($myDir["is_link"] == 1) {
 						$countArray['link']++;
 						$fileAction = "cd";
 						$fileName = $myDir["target"];
-						if (is_array($file) && in_array($fileName, $file))
-						{
+						if (is_array($file) && in_array($fileName, $file)) {
 							$smarty->assign('checked', 'checked');
 							$smarty->assign('checked_color', "bgcolor=\"".$marked_color."\"");
 						}
-						else
-						{
+						else {
 							$smarty->assign('checked', "");
 							$smarty->assign('checked_color', "");
 						}
@@ -841,21 +577,17 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 
 				// Dateien
 				$output_file = '';
-				foreach($list as $myDir)
-				{
-					if ($myDir["is_link"] != 1 && $myDir["is_dir"] != 1)
-					{
+				foreach ($list as $myDir) {
+					if ($myDir["is_link"] != 1 && $myDir["is_dir"] != 1) {
 						$countArray['file']++;
 						$countArray['filesize'] += $myDir['size'];
 						$fileAction = "get";
 						$fileName = $myDir["name"];
-						if (is_array($file) && in_array($fileName, $file))
-						{
+						if (is_array($file) && in_array($fileName, $file)) {
 							$smarty->assign('checked', 'checked');
 							$smarty->assign('checked_color', "bgcolor=\"".$marked_color."\"");
 						}
-						else
-						{
+						else {
 							$smarty->assign('checked', "");
 							$smarty->assign('checked_color', "");
 						}
@@ -863,16 +595,13 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 						$extarray = explode(".",$fileName);
 						$extension = $extarray[sizeof($extarray)-1];
 						$smarty->assign('editable', false);
-						foreach($editFileExtensions as $regex)
-						{
-							if(preg_match("/$regex/i", $extension))
-							{
+						foreach ($editFileExtensions as $regex) {
+							if (preg_match("/$regex/i", $extension)) {
 								$smarty->assign('editable', true);
 								break;
 							}
 						}
-						if($extension == $fileName && $editFileNoExtension)
-						{
+						if ($extension == $fileName && $editFileNoExtension) {
 							$smarty->assign('editable', true);
 						}
 						$smarty->assign('myDir', $myDir);
@@ -881,8 +610,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 				}
 			}
 
-			if(!is_array($file))
-			{
+			if (!is_array($file)) {
 				$file = htmlentities($file);
 				$smarty->assign('file', $file);
 			}
@@ -892,8 +620,7 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 			$body = $smarty->fetch('webftp/webftp_main_header.tpl');
 			$body .= $smarty->fetch('webftp/webftp_main_additional.tpl');
 
-			if($action == "rename" && $_GET['op']=="show")
-			{
+			if ($action == "rename" && $_GET['op']=="show") {
 				$body .= $smarty->fetch('webftp/webftp_main_rename.tpl');
 			}
 			$smarty->assign('output_dir', $output_dir);
@@ -902,27 +629,22 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 			$smarty->assign('countArray', $countArray);
 			$body .= $smarty->fetch('webftp/webftp_main.tpl');
 
-			if ($action == "multiple" && (!isset($_POST['yes']) || $_POST['yes']=="") && (!isset($_POST['no']) || $_POST['no']==""))
-			{
-				if($_POST['op']=="delete")
-				{
+			if ($action == "multiple" && (!isset($_POST['yes']) || $_POST['yes']=="") && (!isset($_POST['no']) || $_POST['no']=="")) {
+				if ($_POST['op']=="delete") {
 					$smarty->assign('action_text', _('Do you really want to delete the selected files?') . "\n");
 				}
-				elseif($_POST['op']=="move")
-				{
+				elseif ($_POST['op']=="move") {
 					$smarty->assign('action_text', sprintf(_('Do you really want to move the selected files to \'%1$s\'?') . "\n", $_POST['move_to']));
 					$smarty->assign('move_to', $_POST['move_to']);
 				}
-				elseif($_POST['op']=="chmod")
-				{
+				elseif ($_POST['op']=="chmod") {
 					$smarty->assign('action_text', sprintf(_('Do you really want to set the permission of the selected files to \'%1$s\'?') . "\n", $_POST['chmod']));
 					$smarty->assign('chmod', $_POST['chmod']);
 				}
 				$smarty->assign('op', $_POST['op']);
 				$body .= $smarty->fetch('webftp/webftp_main_prompt.tpl');
 			}
-			else
-			{
+			else {
 				$body .= $smarty->fetch('webftp/webftp_main_multiple.tpl');
 			}
 		}
@@ -936,15 +658,13 @@ elseif ((!empty($_POST['loginname']) && !empty($_POST['password'])) || (!empty($
 		$smarty->assign('navigation_links', $navlinks);
 		$smarty->assign('navigation', $smarty->fetch('navigation_element.tpl'));
 	}
-	else
-	{
+	else {
 		$smarty->assign('errormessage', _('Login failed, please try again') . "\n");
 		session_destroy();
 		$body = $smarty->fetch('login/login_ftp.tpl');
 	}
 }
-else
-{
+else {
 	$body = $smarty->fetch('login/login_ftp.tpl');
 }
 
@@ -955,47 +675,39 @@ $smarty->display('index.tpl');
  * Functions
  * This should all be checked if still necessary
  */
-function killslashes($input)
-{
+function killslashes($input) {
 	return str_replace("\\","",str_replace('\'','',str_replace("\"","",$input)));
 }
 
-function parse_ftp_rawlist($list, $type = "UNIX")
-{
-	if ($type == "UNIX")
-	{
+
+function parse_ftp_rawlist($list, $type = "UNIX") {
+	if ($type == "UNIX") {
 		$regexp = "/([-ldrswx]{10})[ ]+([0-9]+)[ ]+([-A-Z0-9_]+)[ ]+([-A-Z0-9_]+)[ ]+([0-9]+)[ ]+([A-Z]{3}[ ]+[0-9]{1,2}[ ]+[0-9:]{4,5})[ ]+(.*)/i";
 		$i = 0;
-		foreach ($list as $line)
-		{
+		foreach ($list as $line) {
 			$is_dir = $is_link = FALSE;
-			if (preg_match($regexp, $line, $regs))
-			{
-				if (!preg_match("/^[\.]{2}/i", $regs[7]) && $regs[7]!=".")
-				{
+			if (preg_match($regexp, $line, $regs)) {
+				if (!preg_match("/^[\.]{2}/i", $regs[7]) && $regs[7]!=".") {
 					$i++;
-					if (preg_match("/^[d]/i", $regs[1]))
-					{
+					if (preg_match("/^[d]/i", $regs[1])) {
 						$is_dir = TRUE;
 					}
-					elseif (preg_match("/^[l]/i", $regs[1]))
-					{
+					elseif (preg_match("/^[l]/i", $regs[1])) {
 						$is_link = TRUE;
 						list($regs[7], $target) = explode(" -> ", $regs[7]);
 					}
 					$files[$i] = array (
-						"is_dir"	=> $is_dir,
-						"name"		=> htmlentities($regs[7]),
-						"perms"		=> $regs[1],
-						"num"		=> $regs[2],
-						"user"		=> $regs[3],
-						"group"		=> $regs[4],
-						"size"		=> $regs[5],
-						"date"		=> $regs[6],
-						"is_link"	=> $is_link,
+						"is_dir" => $is_dir,
+						"name"  => htmlentities($regs[7]),
+						"perms"  => $regs[1],
+						"num"  => $regs[2],
+						"user"  => $regs[3],
+						"group"  => $regs[4],
+						"size"  => $regs[5],
+						"date"  => $regs[6],
+						"is_link" => $is_link,
 					);
-					if (isset($target))
-					{
+					if (isset($target)) {
 						$files[$i]['target'] = $target;
 						unset ($target);
 					}
@@ -1003,40 +715,34 @@ function parse_ftp_rawlist($list, $type = "UNIX")
 			}
 		}
 	}
-	else
-	{
+	else {
 		$regexp = "/([0-9\-]{8})[ ]+([0-9:]{5}[APM]{2})[ ]+([0-9|<DIR>]+)[ ]+(.*)/i";
-		foreach ($list as $line)
-		{
+		foreach ($list as $line) {
 			$is_dir = false;
 			//print $line . "<BR>\n";
-			if (preg_match($regexp, $line, $regs))
-			{
-				if (!preg_match("/^[.]/i", $regs[4]))
-				{
-					if($regs[3] == "<DIR>")
-					{
+			if (preg_match($regexp, $line, $regs)) {
+				if (!preg_match("/^[.]/i", $regs[4])) {
+					if ($regs[3] == "<DIR>") {
 						$is_dir = true;
 						$regs[3] = '';
 					}
 					$i++;
 					$files[$i] = array (
-						"is_dir"	=> $is_dir,
-						"name"		=> htmlentities($regs[4]),
-						"date"		=> $regs[1],
-						"time"		=> $regs[2],
-						"size"		=> $regs[3],
-						"is_link"	=> 0,
-						"target"	=> "",
-						"num"		=> ""
+						"is_dir" => $is_dir,
+						"name"  => htmlentities($regs[4]),
+						"date"  => $regs[1],
+						"time"  => $regs[2],
+						"size"  => $regs[3],
+						"is_link" => 0,
+						"target" => "",
+						"num"  => ""
 					);
 				}
 			}
 		}
 	}
 
-	if ( is_array($files)  AND count($files) > 0)
-	{
+	if ( is_array($files)  and count($files) > 0) {
 		asort($files);
 		//natcasesort($files);
 		reset($files);
