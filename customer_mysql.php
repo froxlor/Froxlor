@@ -40,7 +40,7 @@ if ($page == 'overview') {
 			'databasename' => $lng['mysql']['databasename'],
 			'description' => $lng['mysql']['databasedescription']
 		);
-		$paging = new paging($userinfo, $db, TABLE_PANEL_DATABASES, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_DATABASES, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);

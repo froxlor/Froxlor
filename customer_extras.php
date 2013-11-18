@@ -71,7 +71,7 @@ if($page == 'overview') {
 			'username' => $lng['login']['username'],
 			'path' => $lng['panel']['path']
 		);
-		$paging = new paging($userinfo, $db, TABLE_PANEL_HTPASSWDS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_HTPASSWDS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "` 
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
@@ -279,7 +279,7 @@ if($page == 'overview') {
 			'error500path' => $lng['extras']['error500path'],
 			'options_cgi' => $lng['extras']['execute_perl']
 		);
-		$paging = new paging($userinfo, $db, TABLE_PANEL_HTACCESS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_HTACCESS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
