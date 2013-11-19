@@ -30,7 +30,9 @@
 	<hgroup>
 		<h1>Froxlor Server Management Panel</h1>
 	</hgroup>
-	<img src="{$header_logo}" alt="Froxlor Server Management Panel" />
+	<a href="{$linker->getLink(array('section' => 'index'))}">
+		<img src="{$header_logo}" alt="Froxlor Server Management Panel" class="small" />
+	</a>
 </header>
 <div class="content">
 <nav><div class="menuelement bradiusodd">
@@ -39,7 +41,7 @@
 {/if}
 
 {if $loggedin}
-	<div class="main bradius">
+	<div class="main">
 {else}
 	<div class="loginpage">
 {/if}

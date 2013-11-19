@@ -224,12 +224,12 @@ if ($page == 'overview') {
 				$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "`
 					WHERE (`email` = :email
 					OR `email_full` = :emailfull )
-					AND `customerid`= :customerid"
+					AND `customerid`= :cid"
 				);
 				$params = array(
 					"email" => $email,
-					"email_full" => $email_full,
-					"customerid" => $userinfo['customerid']
+					"emailfull" => $email_full,
+					"cid" => $userinfo['customerid']
 				);
 				$email_check = Database::pexecute_first($stmt, $params);
 				
