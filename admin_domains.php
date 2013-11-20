@@ -222,7 +222,7 @@ if ($page == 'domains'
 					WHERE `id` = :id OR `parentdomainid` = :id ".$rsd_sql
 				);
 				Database::pexecute($del_stmt, array('id' => $id));
-				$deleted_domains = Database::rowCount();
+				$deleted_domains = $del_stmt->rowCount();
 
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
