@@ -247,7 +247,7 @@ if ($page == 'domains'
 
 				$del_stmt = Database::prepare("
 					DELETE FROM `" . TABLE_DOMAINTOIP . "`
-					WHERE `id_domain` = :domaind"
+					WHERE `id_domain` = :domainid"
 				);
 				Database::pexecute($del_stmt, array('domainid' => $id));
 
