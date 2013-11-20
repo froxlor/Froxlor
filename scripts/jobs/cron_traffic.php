@@ -378,7 +378,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		'mail' => $current_diskspace['mail'],
 		'mysql' => $current_diskspace['mysql']
 	);
-	$ins_stmt = Database::preapre("
+	$ins_stmt = Database::prepare("
 		INSERT INTO `" . TABLE_PANEL_DISKSPACE . "` SET
 		`customerid` = :customerid,
 		`year` = :year,
@@ -535,7 +535,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			'mail' => $admin_diskspace[$row['adminid']]['mail'],
 			'mysql' => $admin_diskspace[$row['adminid']]['mysql']
 		);
-		$ins_stmt = Database::preapre("
+		$ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_PANEL_DISKSPACE_ADMINS . "` SET
 			`adminid` = :adminid,
 			`year` = :year,

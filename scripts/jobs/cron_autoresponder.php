@@ -24,39 +24,39 @@
 $mail = new PHPMailer(true);
 
 //dont do anything when module is disabled
-if((int)$settings['autoresponder']['autoresponder_active'] == 0)
-{
+if ((int)$settings['autoresponder']['autoresponder_active'] == 0) {
 	return;
 }
 
 //only send autoresponder to mails which were delivered since last run
-if((int)$settings['autoresponder']['last_autoresponder_run'] == 0)
-{
+if ((int)$settings['autoresponder']['last_autoresponder_run'] == 0) {
 	//mails from last 5 minutes, otherwise all mails will be parsed -> mailbomb prevention
 	$cycle = 300;
-}
-else
-{
+} else {
 	// calculate seconds since last check
 	$cycle = time() - (int)$settings['autoresponder']['last_autoresponder_run'];
-
 	//prevent mailbombs when cycle is bigger than two days
 	if($cycle > (2 * 60 * 60 * 24))$cycle = (60 * 60 * 24);
 }
 
 // set last_autoresponder_run
-$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . (int)time() . "' WHERE `settinggroup` = 'autoresponder' AND `varname` = 'last_autoresponder_run'");
+$upd_stmt = Database::prepare("
+	UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = :timeval
+	WHERE `settinggroup` = 'autoresponder' AND `varname` = 'last_autoresponder_run'
+");
+Database::pexecute($upd_stmt, array('timeval' => time()));
 
 // get all customer set ip autoresponders
-$result = $db->query("SELECT * FROM `" . TABLE_MAIL_AUTORESPONDER . "` INNER JOIN `" . TABLE_MAIL_USERS . "` ON `" . TABLE_MAIL_AUTORESPONDER . "`.`email` = `" . TABLE_MAIL_USERS . "`.`email` WHERE `enabled` = 1");
+$result_stmt = Database::query("
+	SELECT * FROM `" . TABLE_MAIL_AUTORESPONDER . "` INNER JOIN `" . TABLE_MAIL_USERS . "`
+	ON `" . TABLE_MAIL_AUTORESPONDER . "`.`email` = `" . TABLE_MAIL_USERS . "`.`email`
+	WHERE `enabled` = 1
+");
 
-if($db->num_rows($result) > 0)
-{
-	while($row = $db->fetch_array($result))
-	{
-		/*
-		 * check if specific autoresponder should be used
-		 */
+if (Database::num_rows() > 0) {
+
+	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		//check if specific autoresponder should be used
 		$ts_now = time();
 		$ts_start = (int)$row['date_from'];
 		$ts_end = (int)$row['date_until'];
@@ -69,11 +69,10 @@ if($db->num_rows($result) > 0)
 		if($ts_end != -1 && $ts_end < $ts_now) continue;
 
 		// setup mail-path (e.g. /var/customers/mail/[loginname]/[user@domain.tld]/new
-		$path = $row['homedir'] . $row['maildir'] . "new/";
+		$path = makeCorrectDir($row['homedir'] . $row['maildir'] . "new/");
 
 		// if the directory does not exist, inform syslog
-		if(!is_dir($path))
-		{
+		if (!is_dir($path)) {
 			$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Error accessing maildir: " . $path);
 			continue;
 		}
@@ -84,10 +83,8 @@ if($db->num_rows($result) > 0)
 		);
 
 		$responded_counter = 0;
-		foreach ($its as $fullFilename => $it ) 
-		{
-			if($it->getFilename() == '.' || $it->getFilename() == '..')
-			{
+		foreach ($its as $fullFilename => $it ) {
+			if ($it->getFilename() == '.' || $it->getFilename() == '..') {
 				continue;
 			}
 
@@ -97,8 +94,7 @@ if($db->num_rows($result) > 0)
 			 * than our cycle-seconds?
 			 */
 			$filemtime = $it->getMTime(); 
-			if(time() - $filemtime <= $cycle)
-			{
+			if (time() - $filemtime <= $cycle) {
 				// why not read up to k lines?
 				// I've been patching this forever, to avoid FATAL ERROR / memory exhausted
 				// (fgets() is now binary safe, too)
@@ -113,8 +109,7 @@ if($db->num_rows($result) > 0)
 				}
 
 				// error reading mail contents or just empty
-				if(count($content) == 0)
-				{
+				if (count($content) == 0) {
 					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Unable to read mail from maildir: " . dirname($fullFilename));
 					continue;
 				}
@@ -124,33 +119,31 @@ if($db->num_rows($result) > 0)
 				$to = '';
 				$sender = '';
 				$spam = false;
-				foreach($content as $line)
-				{
+				foreach ($content as $line) {
 					// header ends on first empty line, skip rest of mail
-					if(strlen(rtrim($line)) == 0)
-					{
+					if (strlen(rtrim($line)) == 0) {
 						break;
 					}
 
 					//fetching from field
-					if(!strlen($from)
-					   && preg_match("/^From:(.+)<(.*)>$/", $line, $match)
+					if (!strlen($from)
+						&& preg_match("/^From:(.+)<(.*)>$/", $line, $match)
 					) {
 						$from = strtolower($match[2]);
 					}
-					elseif(!strlen($from)
-					       && preg_match("/^From:\s+(.*@.*)$/", $line, $match)
+					elseif (!strlen($from)
+						&& preg_match("/^From:\s+(.*@.*)$/", $line, $match)
 					) {
 						$from = strtolower($match[1]);
 					}
 
 					//fetching to field
-					if((!strlen($to) || $to != $row['email'])
+					if ((!strlen($to) || $to != $row['email'])
 						&& preg_match("/^To:(.+)<(.*)>$/", $line, $match)
 					) {
 						$to = strtolower($match[2]);
 					}
-					elseif((!strlen($to) || $to != $row['email'])
+					elseif ((!strlen($to) || $to != $row['email'])
 						&& preg_match("/^To:\s+(.*@.*)$/", $line, $match)
 					) {
 						$to = strtolower($match[1]);
@@ -161,39 +154,38 @@ if($db->num_rows($result) > 0)
 					 * of the customer which autoresponder this is
 					 * we have to check for CC too, #476
 					 */
-					elseif((!strlen($to) || $to != $row['email'])
+					elseif ((!strlen($to) || $to != $row['email'])
 						&& preg_match("/^Cc:(.+)<(.*)>$/", $line, $match)
 					) {
 						$to = strtolower($match[2]);
 					}
-					elseif((!strlen($to) || $to != $row['email'])
+					elseif ((!strlen($to) || $to != $row['email'])
 						&& preg_match("/^Cc:\s+(.*@.*)$/", $line, $match)
 					) {
 						$to = strtolower($match[1]);
 					}
 
-					//fetching sender field
-					if(!strlen($sender)
-					   && preg_match("/^Sender:(.+)<(.*)>$/", $line, $match)
+					// fetching sender field
+					if (!strlen($sender)
+						&& preg_match("/^Sender:(.+)<(.*)>$/", $line, $match)
 					) {
 						$sender = strtolower($match[2]);
 					}
-					elseif(!strlen($sender)
-					       && preg_match("/Sender:\s+(.*@.*)$/", $line, $match)
+					elseif (!strlen($sender)
+						&& preg_match("/Sender:\s+(.*@.*)$/", $line, $match)
 					) {
 						$sender = strtolower($match[1]);
 					}
 
 					//check for amavis/spamassassin spam headers
-					if(preg_match("/^X-Spam-Status: (Yes|No)(.*)$/", $line, $match))
-					{
-						if($match[1] == 'Yes')
+					if (preg_match("/^X-Spam-Status: (Yes|No)(.*)$/", $line, $match)) {
+						if(strtolower($match[1]) == 'yes') {
 							$spam = true;
+						}
 					}
-					
+
 					//check for precedence header
-					if(preg_match("/^Precedence: (bulk|list|junk)(.*)$/", $line, $match))
-					{
+					if (preg_match("/^Precedence: (bulk|list|junk)(.*)$/", $line, $match)) {
 						// use the spam flag to skip reply
 						$spam = true;
 					}
@@ -201,20 +193,17 @@ if($db->num_rows($result) > 0)
 
 				// check if the receiver is really the one 
 				// with the autoresponder
-				if(!strlen($to) || $to != $row['email'])
-				{
+				if (!strlen($to) || $to != $row['email']) {
 					$to = '';
 				}
 
 				//skip mail when marked as spam
-				if($spam == true)
-				{
+				if ($spam == true) {
 					continue;
 				}
 
 				//error while parsing mail
-				if($to == '' || $from == '')
-				{
+				if ($to == '' || $from == '') {
 					$cronlog->logAction(CRON_ACTION, LOG_WARNING, "No valid headers found in mail to parse");
 					continue;
 				}
@@ -222,8 +211,7 @@ if($db->num_rows($result) > 0)
 				//important! prevent mailbombs when mail comes from a maildaemon/mailrobot
 				//robot/daemon mails must go to Sender: field in envelope header
 				//refers to "Das Postfix-Buch" / RFC 2822
-				if($sender != '')
-				{
+				if ($sender != '') {
 					$from = $sender;
 				}
 
@@ -233,8 +221,7 @@ if($db->num_rows($result) > 0)
 				//check if mail is already an answer
 				$fullcontent = implode("", $content);
 
-				if(strstr($fullcontent, $message) || $from == $to)
-				{
+				if (strstr($fullcontent, $message) || $from == $to) {
 					continue;
 				}
 
