@@ -17,9 +17,5 @@
  *
  */
 
-openRootDB($debugHandler, $lockfile);
-$Aps = new ApsInstaller($settings, $db, $db_root);
+$Aps = new ApsInstaller($settings);
 $Aps->InstallHandler();
-closeRootDB();
-
-?>

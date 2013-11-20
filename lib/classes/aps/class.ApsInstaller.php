@@ -23,10 +23,8 @@
  *				folder truncation/tar all files
  */
 
-class ApsInstaller extends ApsParser
-{
-	private $db = false;
-	private $db_root = false;
+class ApsInstaller extends ApsParser {
+
 	private $DomainPath = '';
 	private $Domain = '';
 	private $RealPath = '';
@@ -37,15 +35,10 @@ class ApsInstaller extends ApsParser
 	/**
 	 * constructor of class. setup some basic variables
 	 *
-	 * @param	settings	array with the global settings from syscp
-	 * @param	db			instance of the database class from syscp
-	 * @param	db_root		instance of the database class from syscp with root permissions
+	 * @param	settings	array with the global settings from froxlor
 	 */
+	public function __construct($settings) {
 
-	public function __construct($settings, $db, $db_root)
-	{
-		$this->db = $db;
-		$this->db_root = $db_root;
 		$this->RootDir = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
 		$this->Hosts = $settings['system']['mysql_access_host'];
 	}
@@ -53,34 +46,39 @@ class ApsInstaller extends ApsParser
 	/**
 	 * main function of class which handles all
 	 */
+	public function InstallHandler() {
 
-	public function InstallHandler()
-	{
 		chdir($this->RootDir);
-		$result = $this->db->query('SELECT * FROM `' . TABLE_APS_TASKS . '` AS `t` INNER JOIN `' . TABLE_APS_INSTANCES . '` AS `i` ON `t`.`InstanceID` = `i`.`ID` INNER JOIN `' . TABLE_APS_PACKAGES . '` AS `p` ON `i`.`PackageID` = `p`.`ID` INNER JOIN `' . TABLE_PANEL_CUSTOMERS . '` AS `c` ON `i`.`CustomerID` = `c`.`customerid` WHERE `TASK` NOT IN (' . TASK_SYSTEM_UPDATE . ', ' . TASK_SYSTEM_DOWNLOAD . ')');
+		$result_stmt = Database::query("
+			SELECT * FROM `" . TABLE_APS_TASKS . "` AS `t`
+			INNER JOIN `" . TABLE_APS_INSTANCES . "` AS `i` ON `t`.`InstanceID` = `i`.`ID`
+			INNER JOIN `" . TABLE_APS_PACKAGES . "` AS `p` ON `i`.`PackageID` = `p`.`ID`
+			INNER JOIN `" . TABLE_PANEL_CUSTOMERS . "` AS `c` ON `i`.`CustomerID` = `c`.`customerid`
+			WHERE `TASK` NOT IN (" . TASK_SYSTEM_UPDATE . ", " . TASK_SYSTEM_DOWNLOAD . ")
+		");
 
-		while($Row = $this->db->fetch_array($result))
-		{
+		while ($Row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			//check for existing aps xml file
-
-			if(!file_exists($this->RootDir . 'packages/' . $Row['Path'] . '/APP-META.xml'))
-			{
-				$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
+			if (!file_exists($this->RootDir . 'packages/' . $Row['Path'] . '/APP-META.xml')) {
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_APS_INSTANCES . "` SET `Status` = " . INSTANCE_ERROR . " WHERE `ID` = :id
+				");
+				Database::pexecute($upd_stmt, array('id' => $Row['InstanceID']));
 				continue;
 			}
 
 			//get contents and parse them
-
 			$XmlContent = file_get_contents($this->RootDir . 'packages/' . $Row['Path'] . '/APP-META.xml');
 			$Xml = new SimpleXMLElement($XmlContent);
 			
 			$this->aps_version = isset($Xml->attributes()->version) ? (string)$Xml->attributes()->version : '1.0';
 
 			//check for unparseable xml data
-
-			if($Xml == false)
-			{
-				$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
+			if ($Xml == false) {
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_APS_INSTANCES . "` SET `Status` = " . INSTANCE_ERROR . " WHERE `ID` = :id
+				");
+				Database::pexecute($upd_stmt, array('id' => $Row['InstanceID']));
 				continue;
 			}
 
@@ -90,32 +88,26 @@ class ApsInstaller extends ApsParser
 			$this->RealPath = '';
 
 			//lock instance so installation cannot be canceled from the panel
-
-			$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_TASK_ACTIVE . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_APS_INSTANCES . "` SET `Status` = " . INSTANCE_TASK_ACTIVE . " WHERE `ID` = :id
+			");
+			Database::pexecute($upd_stmt, array('id' => $Row['InstanceID']));
 
 			//setup environment with data for domain/installation location
-
 			self::PrepareBasics($Row);
 
 			//create database if necessary and setup environment variables
-
 			self::PrepareDatabase($Xml, $Row, $Task);
 
 			//unpack installation scripts and package files if necessary
-
-			if(self::PrepareFiles($Xml, $Row, $Task))
-			{
+			if (self::PrepareFiles($Xml, $Row, $Task)) {
 				//setup environment variables fetched from installation wizard
-
 				self::PrepareWizardData($Xml, $Row, $Task);
-
 				//run installation scripts from packages
-
 				self::RunInstaller($Xml, $Row, $Task);
 			}
 
 			//remove installation scripts
-
 			self::CleanupData($Xml, $Row, $Task);
 			unset($Xml);
 		}
@@ -129,17 +121,12 @@ class ApsInstaller extends ApsParser
 	 * @param	task		numeric code to specify what to do
 	 * @return	success true/error false
 	 */
-
-	private function RunInstaller($Xml, $Row, $Task)
-	{
+	private function RunInstaller($Xml, $Row, $Task) {
 		//installation
 
-		if($Task == TASK_INSTALL)
-		{
+		if ($Task == TASK_INSTALL) {
 			//setup right path and run installation script
-
-			if(!is_dir($this->RealPath . $this->DomainPath . '/install_scripts/'))
-			{
+			if (!is_dir($this->RealPath . $this->DomainPath . '/install_scripts/')) {
 				echo 'Directory: '. $this->RealPath . $this->DomainPath . '/install_scripts/ does not exist';
 				return;
 			}
@@ -147,15 +134,14 @@ class ApsInstaller extends ApsParser
 			chdir($this->RealPath . $this->DomainPath . '/install_scripts/');
 
 			// make configure-script executable
-			if($this->aps_version != '1.0')
-			{
+			if ($this->aps_version != '1.0') {
 				$scriptname = (string)$Xml->service->provision->{'configuration-script'}['name'];
 			} else {
 				$scriptname = 'configure';
 			}
 
 			chmod($this->RealPath . $this->DomainPath . '/install_scripts/'.$scriptname, 0755);
-			
+
 			$Return = array();
 			
 			// first 'true' to indicate that we want the return-status from exec.
@@ -165,36 +151,36 @@ class ApsInstaller extends ApsParser
 
 			$Return = safe_exec('php ' . escapeshellarg($this->RealPath . $this->DomainPath . '/install_scripts/'.$scriptname) . ' install', $ReturnStatus);
 
-			if($ReturnStatus != 0)
-			{
+			if ($ReturnStatus != 0) {
 				//write output of script on error into database for admin
-
 				$Buffer = '';
 				$Count = 0;
-				foreach($Return as $Line)
-				{
+				foreach ($Return as $Line) {
 					$Count+= 1;
 					$Buffer.= $Line;
-
-					if($Count != count($Return))$Buffer.= "\n";
+					if ($Count != count($Return)) {
+						$Buffer.= "\n";
+					}
 				}
 
 				//FIXME error logging
-
 				echo ("error : installer\n" . $Buffer . "\n");
-				$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_APS_INSTANCES . "` SET `Status` = " . INSTANCE_ERROR . " WHERE `ID` = :id
+				");
+				Database::pexecute($upd_stmt, array('id' => $Row['InstanceID']));
 				return false;
-			}
-			else
-			{
+
+			} else {
 				//installation succeeded
 				//chown all files if installtion script has created some new files. otherwise customers cannot edit the files via ftp
-
 				safe_exec('chown -R ' . (int)$Row['guid'] . ':' . (int)$Row['guid'] . ' ' . escapeshellarg($this->RealPath . $this->DomainPath . '/'));
 
 				//update database
-
-				$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_SUCCESS . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_APS_INSTANCES . "` SET `Status` = " . INSTANCE_SUCCESS . " WHERE `ID` = :id
+				");
+				Database::pexecute($upd_stmt, array('id' => $Row['InstanceID']));
 				return true;
 			}
 		}
@@ -207,31 +193,26 @@ class ApsInstaller extends ApsParser
 	 * @param	row			current entry from the database for app to handle
 	 * @param	task		numeric code to specify what to do
 	 */
+	private function CleanupData($Xml, $Row, $Task) {
 
-	private function CleanupData($Xml, $Row, $Task)
-	{
 		chdir($this->RootDir);
 
-		if($Task == TASK_INSTALL)
-		{
+		if ($Task == TASK_INSTALL) {
 			//cleanup installation
-
 			self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/install_scripts/');
-
 			//remove task
+			$del_stmt = Database::prepare("
+				DELETE FROM `" . TABLE_APS_TASKS . "` WHERE `Task` = " . TASK_INSTALL . " AND `InstanceID` = :id
+			");
+			Database::pexecute($del_stmt, array('id' => $Row['InstanceID']));
 
-			$this->db->query('DELETE FROM `' . TABLE_APS_TASKS . '` WHERE `Task` = ' . TASK_INSTALL . ' AND `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
-		}
-		elseif($Task == TASK_REMOVE)
-		{
+		} elseif($Task == TASK_REMOVE) {
+
 			// check for database
-			if ($this->aps_version == '1.0')
-			{
+			if ($this->aps_version == '1.0') {
 				// the good ole way
 				$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
-			} 
-			else 
-			{
+			} else {
 				// since 1.1
 				$Xml->registerXPathNamespace('db', 'http://apstandard.com/ns/1/db');
 	
@@ -240,47 +221,85 @@ class ApsInstaller extends ApsParser
 				$XmlDb->db->id = getXPathValue($Xml, '//db:id');
 			}
 
-			if($XmlDb->db->id)
-			{
+			if ($XmlDb->db->id) {
 				//drop database permissions
-
+				Database::needRoot(true);
+// FIXME ### here
 				$Database = 'web' . $Row['CustomerID'] . 'aps' . $Row['InstanceID'];
-				foreach(array_map('trim', explode(',', $this->Hosts)) as $DatabaseHost)
-				{
-					$this->db_root->query('REVOKE ALL PRIVILEGES ON * . * FROM `' . $this->db->escape($Database) . '`@`' . $this->db->escape($DatabaseHost) . '`');
-					$this->db_root->query('REVOKE ALL PRIVILEGES ON `' . $this->db->escape($Database) . '` . * FROM `' . $this->db->escape($Database) . '`@`' . $this->db->escape($DatabaseHost) . '`');
-					$this->db_root->query('DELETE FROM `mysql`.`user` WHERE `User` = "' . $this->db->escape($Database) . '" AND `Host` = "' . $this->db->escape($DatabaseHost) . '"');
+				foreach (array_map('trim', explode(',', $this->Hosts)) as $DatabaseHost) {
+
+					if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
+						// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
+						$stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM :databasename");
+						Database::pexecute($stmt, array("databasename" => $DatabaseHost));
+					}
+
+					$host_res_stmt = Database::prepare("
+						SELECT `Host` FROM `mysql`.`user`
+						WHERE `User`= :databasename
+					");
+					Database::pexecute($host_res_stmt, array("databasename" => $DatabaseHost));
+
+					while ($host = $host_res_stmt->fetch(PDO::FETCH_ASSOC)) {
+						// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
+						$stmt = Database::prepare("DROP USER :databasename@:host");
+						Database::pexecute($stmt, array("databasename" => $DatabaseHost, "host" => $host['Host']));
+					}
 				}
 
-				//drop database
-				$this->db_root->query('DROP DATABASE IF EXISTS `' . $this->db->escape($Database) . '`');
-				$this->db_root->query('FLUSH PRIVILEGES');
+				// drop database
+				$stmt = Database::prepare("DROP DATABASE IF EXISTS `" . $DatabaseHost . "`");
+				Database::pexecute($stmt, array(), false);
+				$stmt = Database::prepare("FLUSH PRIVILEGES");
+				Database::pexecute($stmt);
+				Database::needRoot(false);
 
-				/*
-				 * remove database from customer-mysql overview, #272
-				 */
-				$this->db->query('DELETE FROM `' . TABLE_PANEL_DATABASES . '` WHERE `customerid`="' . (int)$Row['CustomerID'] . '" AND `databasename`="' . $this->db->escape($Database) . '" AND `apsdb`="1"');
-				$result = $this->db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`-1 WHERE `customerid`="' . (int)$Row['CustomerID'] . '"');
+				// remove database from customer-mysql overview, #272
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DATABASES . "`
+					WHERE `customerid` = :customerid
+					AND `databasename` = :databasename
+					AND `apsdb` = '1'
+				");
+				Database::pexecute($stmt, array("customerid" => $Row['CustomerID'], "databasename" => $Database));
+
+				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+					SET `mysqls_used` = `mysqls_used` - 1
+					WHERE `customerid` = :customerid"
+				);
+				Database::pexecute($stmt, array("customerid" => $Row['CustomerID']));
 			}
 
-			//remove task & delete package instance + settings
+			// remove task & delete package instance + settings
+			$del_stmt = Database::prepare("
+				DELETE FROM `" . TABLE_APS_TASKS . "` WHERE `Task` = '" . TASK_REMOVE . "'
+				AND `InstanceID` = :instanceid
+			");
+			Database::pexecute($del_stmt, array('instanceid' => $Row['InstanceID']));
 
-			$this->db->query('DELETE FROM `' . TABLE_APS_TASKS . '` WHERE `Task` = ' . TASK_REMOVE . ' AND `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
-			$this->db->query('DELETE FROM `' . TABLE_APS_INSTANCES . '` WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
-			$this->db->query('DELETE FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
+			$del_stmt = Database::prepare("
+				DELETE FROM `" . TABLE_APS_INSTANCES . "` WHERE `ID` = :instanceid
+			");
+			Database::pexecute($del_stmt, array('instanceid' => $Row['InstanceID']));
 
-			if($this->RealPath != '' && checkDisallowedPaths($this->RealPath))
-			{
+			$del_stmt = Database::prepare("
+				DELETE FROM `" . TABLE_APS_SETTINGS . "` WHERE `InstanceID` = :instanceid
+			");
+			Database::pexecute($del_stmt, array('instanceid' => $Row['InstanceID']));
+
+			if ($this->RealPath != ''
+				&& checkDisallowedPaths($this->RealPath)
+			) {
 				//remove data,  #273
-				if($this->DomainPath != '' && $this->DomainPath != '/') {
+				if ($this->DomainPath != ''
+					&& $this->DomainPath != '/'
+				) {
 					self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/');
 				} else {
 					// save awstats/webalizer folder if it's the docroot
 					self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/', true);
 					// place standard-index file
 					$loginname = getLoginNameByUid($Row['CustomerID']);
-					if($loginname !== false)
-					{
+					if ($loginname !== false) {
 						storeDefaultIndex($loginname, $this->RealPath . $this->DomainPath . '/');
 					}
 				}				
@@ -295,22 +314,24 @@ class ApsInstaller extends ApsParser
 	 * @param	row			current entry from the database for app to handle
 	 * @param	task		numeric code to specify what to do
 	 */
+	private function PrepareWizardData($Xml, $Row, $Task) {
 
-	private function PrepareWizardData($Xml, $Row, $Task)
-	{
 		//data collected by wizard
 		//FIXME install_only parameter/reconfigure
+		$result_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_APS_SETTINGS . "` WHERE `InstanceID` = :instanceid
+		");
+		Database::pexecute($result_stmt, array('instanceid' => $Row['InstanceID']));
 
-		$result = $this->db->query('SELECT * FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']));
-
-		while($Row2 = $this->db->fetch_array($result))
-		{
+		while ($Row2 = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			//skip APS internal data
-
-			if($Row2['Name'] == 'main_location'
-			|| $Row2['Name'] == 'main_domain'
-			|| $Row2['Name'] == 'main_database_password'
-			|| $Row2['Name'] == 'license')continue;
+			if ($Row2['Name'] == 'main_location'
+				|| $Row2['Name'] == 'main_domain'
+				|| $Row2['Name'] == 'main_database_password'
+				|| $Row2['Name'] == 'license'
+			) {
+				continue;
+			}
 			putenv('SETTINGS_' . $Row2['Name'] . '=' . $Row2['Value']);
 		}
 	}
@@ -323,69 +344,68 @@ class ApsInstaller extends ApsParser
 	 * @param	task		numeric code to specify what to do
 	 * @return	success true/error false
 	 */
+	private function PrepareFiles($Xml, $Row, $Task) {
 
-	private function PrepareFiles($Xml, $Row, $Task)
-	{
-		if($this->aps_version != '1.0')
-		{
+		if ($this->aps_version != '1.0') {
 			$mapping = $Xml->service->provision->{'url-mapping'}->mapping;
 			$mapping_path = $Xml->service->provision->{'url-mapping'}->mapping['path'];
 			$mapping_url = $Xml->service->provision->{'url-mapping'}->mapping['url'];
-		}
-		else 
-		{
+		} else {
 			$mapping = $Xml->mapping;
 			$mapping_path = $Xml->mapping['path'];
 			$mapping_url = $Xml->mapping['url'];
 		}
 
-		if ($this->RealPath == '' || !checkDisallowedPaths($this->RealPath))
-		{
-			$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
+		if ($this->RealPath == '' || !checkDisallowedPaths($this->RealPath)) {
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_APS_INSTANCES . "` SET `Status` = " . INSTANCE_ERROR . " WHERE `ID` = :id
+			");
+			Database::pexecute($upd_stmt, array('id' => $Row['InstanceID']));
 			return false;
 		}
 
-		if($Task == TASK_INSTALL)
-		{
+		if ($Task == TASK_INSTALL) {
 			//FIXME truncate customer directory
 			//remove files from: $this->RealPath . $this->DomainPath . '/*'
-
-			if(!file_exists($this->RealPath . $this->DomainPath . '/'))mkdir($this->RealPath . $this->DomainPath . '/', 0777, true);
+			if (!file_exists($this->RealPath . $this->DomainPath . '/')) {
+				mkdir($this->RealPath . $this->DomainPath . '/', 0777, true);
+			}
 
 			//extract all files and chown them to the customer guid
-
-			if(self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], $mapping_path, $this->RealPath . $this->DomainPath . '/') == false
-			|| self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], 'scripts', $this->RealPath . $this->DomainPath . '/install_scripts/') == false)
-			{
-				$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
+			if (self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], $mapping_path, $this->RealPath . $this->DomainPath . '/') == false
+				|| self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], 'scripts', $this->RealPath . $this->DomainPath . '/install_scripts/') == false
+			) {
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_APS_INSTANCES . "` SET `Status` = " . INSTANCE_ERROR . " WHERE `ID` = :id
+				");
+				Database::pexecute($upd_stmt, array('id' => $Row['InstanceID']));
 
 				//FIXME clean up already installed data
 				//remove files from: $this->RealPath . $this->DomainPath . '/*'
-
 				return false;
 			}
 
 			safe_exec('chown -R ' . (int)$Row['guid'] . ':' . (int)$Row['guid'] . ' ' . escapeshellarg($this->RealPath . $this->DomainPath . '/'));
-		}
-		else
-		{
-			if(self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], 'scripts', $this->RealPath . $this->DomainPath . '/install_scripts/') == false)
-			{
-				$this->db->query('UPDATE `' . TABLE_APS_INSTANCES . '` SET `Status` = ' . INSTANCE_ERROR . ' WHERE `ID` = ' . $this->db->escape($Row['InstanceID']));
+
+		} else {
+
+			if (self::ExtractZip($this->RootDir . 'packages/' . $Row['Path'] . '/' . $Row['Path'], 'scripts', $this->RealPath . $this->DomainPath . '/install_scripts/') == false) {
+
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_APS_INSTANCES . "` SET `Status` = " . INSTANCE_ERROR . " WHERE `ID` = :id
+				");
+				Database::pexecute($upd_stmt, array('id' => $Row['InstanceID']));
 
 				//clean up already installed data
-
 				self::UnlinkRecursive($this->RealPath . $this->DomainPath . '/install_scripts/');
 				return false;
 			}
 
 			//set right file owner
-
 			safe_exec('chown -R ' . (int)$Row['guid'] . ':' . (int)$Row['guid'] . ' ' . escapeshellarg($this->RealPath . $this->DomainPath . '/'));
 		}
 
 		//recursive mappings
-
 		self::PrepareMappings($mapping, $mapping_url, $this->RealPath . $this->DomainPath . '/');
 		return true;
 	}
@@ -397,9 +417,8 @@ class ApsInstaller extends ApsParser
 	 * @param	url				relative path for application specifying the current path within the mapping tree
 	 * @param	path			absolute path for application specifying the current path within the mapping tree
 	 */
+	private function PrepareMappings($ParentMapping, $Url, $Path) {
 
-	private function PrepareMappings($ParentMapping, $Url, $Path)
-	{
 		//check for special PHP permissions
 		//must be done with xpath otherwise check not possible (XML parser problem with attributes)
 
@@ -408,8 +427,13 @@ class ApsInstaller extends ApsParser
 			$ParentMapping->registerXPathNamespace('p', 'http://apstandard.com/ns/1/php');
 			$Result = $ParentMapping->xpath('p:permissions');
 
-			if (is_array($Result) && isset($Result[0]) && is_array($Result[0])) {
-				if	(isset($Result[0]['writable']) && $Result[0]['writable'] == 'true') {
+			if (is_array($Result)
+				&& isset($Result[0])
+				&& is_array($Result[0])
+			) {
+				if (isset($Result[0]['writable'])
+					&& $Result[0]['writable'] == 'true'
+				) {
 					// fixing file permissions to writeable
 					if (is_dir($Path)) {
 						chmod($Path, 0775);
@@ -418,7 +442,9 @@ class ApsInstaller extends ApsParser
 					}
 				}
 
-				if (isset($Result[0]['readable']) && $Result[0]['readable'] == 'false') {
+				if (isset($Result[0]['readable'])
+					&& $Result[0]['readable'] == 'false'
+				) {
 					//fixing file permissions to non readable	
 					if (is_dir($Path)) {
 						chmod($Path, 0333);
@@ -430,23 +456,16 @@ class ApsInstaller extends ApsParser
 		}
 
 		//set environment variables
-
 		$EnvVariable = str_replace("/", "_", $Url);
 		putenv('WEB_' . $EnvVariable . '_DIR=' . $Path);
 
 		//resolve deeper mappings
-		if($ParentMapping && $ParentMapping !== null)
-		{
-			foreach($ParentMapping->mapping as $Mapping)
-			{
+		if ($ParentMapping && $ParentMapping !== null) {
+			foreach ($ParentMapping->mapping as $Mapping) {
 				//recursive check of other mappings
-	
-				if($Url == '/')
-				{
+				if ($Url == '/') {
 					self::PrepareMappings($Mapping, $Url . $Mapping['url'], $Path . $Mapping['url']);
-				}
-				else
-				{
+				} else {
 					self::PrepareMappings($Mapping, $Url . '/' . $Mapping['url'], $Path . '/' . $Mapping['url']);
 				}
 			}
@@ -458,30 +477,33 @@ class ApsInstaller extends ApsParser
 	 *
 	 * @param	xml			instance of a valid xml object with a parsed APP-META.xml file
 	 */
-
-	private function PrepareBasics($Row)
-	{
+	private function PrepareBasics($Row) {
 		//domain
+		$result_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_APS_SETTINGS . "` WHERE `InstanceID` = :instanceid AND `Name` = 'main_domain'
+		");
+		$Row3 = Database::pexecute_first($result_stmt, array('instanceid' => $Row['InstanceID']));
 
-		$result = $this->db->query('SELECT * FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']) . ' AND `Name` = "main_domain"');
-		$Row3 = $this->db->fetch_array($result);
-		$result2 = $this->db->query('SELECT * FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `id` = ' . $this->db->escape($Row3['Value']));
-		$Row3 = $this->db->fetch_array($result2);
+		$result_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `id` = :domainid
+		");
+		$Row3 = Database::pexecute_first($result_stmt, array('instanceid' => $Row3['Value']));
 		$this->Domain = $Row3['domain'];
 		$this->RealPath = $Row3['documentroot'];
 
 		//location
-
-		$result3 = $this->db->query('SELECT * FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']) . ' AND `Name` = "main_location"');
-		$Row3 = $this->db->fetch_array($result3);
+		$result3_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_APS_SETTINGS . "` WHERE `InstanceID` = :instanceid AND `Name` = 'main_location'
+		");
+		$Row3 = Database::pexecute_first($result_stmt, array('instanceid' => $Row['InstanceID']));
 		$this->DomainPath = $Row3['Value'];
 
 		//if application is directly installed on domain remove / at the end
-
-		if($this->DomainPath == '')$this->RealPath = substr($this->RealPath, 0, strlen($this->RealPath) - 1);
+		if ($this->DomainPath == '') {
+			$this->RealPath = substr($this->RealPath, 0, strlen($this->RealPath) - 1);
+		}
 
 		//url environment variables
-
 		putenv('BASE_URL_HOST=' . $this->Domain);
 		putenv('BASE_URL_PATH=' . $this->DomainPath . '/');
 		putenv('BASE_URL_SCHEME=http');
@@ -494,18 +516,14 @@ class ApsInstaller extends ApsParser
 	 * @param	row			current entry from the database for app to handle
 	 * @param	task		numeric code to specify what to do
 	 */
+	private function PrepareDatabase($Xml, $Row, $Task) {
 
-	private function PrepareDatabase($Xml, $Row, $Task)
-	{
 		$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
 
-		if ($this->aps_version == '1.0')
-		{
+		if ($this->aps_version == '1.0') {
 			// the good ole way
 			$XmlDb = $Xml->requirements->children('http://apstandard.com/ns/1/db');
-		} 
-		else
-		{
+		} else {
 			// since 1.1
 			$Xml->registerXPathNamespace('db', 'http://apstandard.com/ns/1/db');
 
@@ -514,48 +532,67 @@ class ApsInstaller extends ApsParser
 			$XmlDb->db->id = getXPathValue($Xml, '//db:id');
 		}
 
-		if($XmlDb->db->id)
-		{
+		if ($XmlDb->db->id) {
 			//database management
-
 			$NewDatabase = 'web' . $Row['CustomerID'] . 'aps' . $Row['InstanceID'];
-			$result = $this->db->query('SELECT * FROM `' . TABLE_APS_SETTINGS . '` WHERE `InstanceID` = ' . $this->db->escape($Row['InstanceID']) . ' AND `Name` = "main_database_password"');
-			$Row3 = $this->db->fetch_array($result);
+			$result_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_APS_SETTINGS . "` WHERE `InstanceID` = :instanceid AND `Name` = 'main_database_password'
+			");
+			$Row3 = Database::pexecute_first($result_stmt, array('instanceid' => $Row['InstanceID']));
 			$DbPassword = $Row3['Value'];
 
-			if($Task == TASK_INSTALL)
-			{
-				$this->db_root->query('DROP DATABASE IF EXISTS `' . $this->db->escape($NewDatabase) . '`');
-				$this->db_root->query('CREATE DATABASE IF NOT EXISTS `' . $this->db->escape($NewDatabase) . '`');
-				foreach(array_map('trim', explode(',', $this->Hosts)) as $DatabaseHost)
-				{
-					$this->db_root->query('GRANT ALL PRIVILEGES ON `' . $this->db->escape($NewDatabase) . '`.* TO `' . $this->db->escape($NewDatabase) . '`@`' . $this->db->escape($DatabaseHost) . '` IDENTIFIED BY \'password\'');
-					$this->db_root->query('SET PASSWORD FOR `' . $this->db->escape($NewDatabase) . '`@`' . $this->db->escape($DatabaseHost) . '` = PASSWORD(\'' . $DbPassword . '\')');
+			if ($Task == TASK_INSTALL) {
+				Database::needRoot(true);
+				$drp_stmt = Database::prepare("DROP DATABASE IF EXISTS :newdb");
+				Database::pexecute($drp_stmt, array('newdb' => $NewDatabase));
+				$crt_stmt = Database::prepare("CREATE DATABASE IF NOT EXISTS :newdb");
+				Database::pexecute($crt_stmt, array('newdb' => $NewDatabase));
+
+				foreach (array_map('trim', explode(',', $this->Hosts)) as $DatabaseHost) {
+					$stmt = Database::prepare("GRANT ALL PRIVILEGES ON `" . $NewDatabase . "`.*
+							TO :username@:host
+							IDENTIFIED BY 'password'"
+					);
+					Database::pexecute($stmt, array("username" => $NewDatabase, "host" => $DatabaseHost));
+					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
+					Database::pexecute($stmt, array("username" => $NewDatabase, "host" => $DatabaseHost, "password" => $DbPassword));
 				}
+				Database::query('FLUSH PRIVILEGES');
+				Database::needRoot(false);
 
-				$this->db_root->query('FLUSH PRIVILEGES');
-
-				/*
-				 * add database to customers databases, #272
-				 */
+				// add database to customers databases, #272
 				$databasedescription = $Xml->name.' '.$Xml->version.' (Release ' . $Xml->release . ')'; 
-				$result = $this->db->query('INSERT INTO `' . TABLE_PANEL_DATABASES . '` (`customerid`, `databasename`, `description`, `dbserver`, `apsdb`) VALUES ("' . (int)$Row['CustomerID'] . '", "' . $this->db->escape($NewDatabase) . '", "' . $this->db->escape($databasedescription) . '", "0", "1")');
-				$result = $this->db->query('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `mysqls_used`=`mysqls_used`+1 WHERE `customerid`="' . (int)$Row['CustomerID'] . '"');	
+				$ins_stmt = Database::prepare("
+					INSERT INTO `" . TABLE_PANEL_DATABASES . "`
+					(`customerid`, `databasename`, `description`, `dbserver`, `apsdb`)
+					VALUES
+					(:customerid, :databasename, :desc, '0', '1')
+				");
+				$ins_data = array(
+					'customerid' => $Row['CustomerID'],
+					'databasename' => $NewDatabase,
+					'desc' => $databasedescription
+				);
+				Database::pexecute($ins_stmt, $ins_data);
+
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+					`mysqls_used`=`mysqls_used`+1 WHERE `customerid` = :customerid
+				");
+				Database::pexecute($upd_stmt, array('customerid' => $Row['CustomerID']));
 			}
 
 			//get first mysql access host
-
 			$AccessHosts = array_map('trim', explode(',', $this->Hosts));
 
 			//environment variables
-
 			putenv('DB_' . $XmlDb->db->id . '_TYPE=mysql');
 			putenv('DB_' . $XmlDb->db->id . '_NAME=' . $NewDatabase);
 			putenv('DB_' . $XmlDb->db->id . '_LOGIN=' . $NewDatabase);
 			putenv('DB_' . $XmlDb->db->id . '_PASSWORD=' . $DbPassword);
 			putenv('DB_' . $XmlDb->db->id . '_HOST=' . $AccessHosts[0]);
 			putenv('DB_' . $XmlDb->db->id . '_PORT=3306');
-			putenv('DB_' . $XmlDb->db->id . '_VERSION=' . mysql_get_server_info());
+			putenv('DB_' . $XmlDb->db->id . '_VERSION=' . Database::getAttribute(PDO::ATTR_SERVER_VERSION));
 		}
 	}
 
@@ -567,44 +604,39 @@ class ApsInstaller extends ApsParser
 	 * @param	destination		destination directory for files to extract
 	 * @return	success true/error false
 	 */
+	private function ExtractZip($Filename, $Directory, $Destination) {
 
-	private function ExtractZip($Filename, $Directory, $Destination)
-	{
-		if(!file_exists($Filename))return false;
+		if (!file_exists($Filename)) {
+			return false;
+		}
 
-		//fix slash notation for correct paths
+		// fix slash notation for correct paths
+		if (substr($Directory, -1, 1) == '/') {
+			$Directory = substr($Directory, 0, strlen($Directory) - 1);
+		}
 
-		if(substr($Directory, -1, 1) == '/')$Directory = substr($Directory, 0, strlen($Directory) - 1);
-
-		if(substr($Destination, -1, 1) != '/')$Destination.= '/';
+		if (substr($Destination, -1, 1) != '/') {
+			$Destination.= '/';
+		}
 
 		//open zipfile to read its contents
-
 		$ZipHandle = zip_open(realpath($Filename));
 
-		if(is_resource($ZipHandle))
-		{
-			while($ZipEntry = zip_read($ZipHandle))
-			{
-				if(substr(zip_entry_name($ZipEntry), 0, strlen($Directory)) == $Directory)
-				{
-					//fix relative path from zipfile
+		if (is_resource($ZipHandle)) {
 
+			while ($ZipEntry = zip_read($ZipHandle)) {
+
+				if (substr(zip_entry_name($ZipEntry), 0, strlen($Directory)) == $Directory) {
+					//fix relative path from zipfile
 					$NewPath = zip_entry_name($ZipEntry);
 					$NewPath = substr($NewPath, strlen($Directory));
 
 					//directory
-
-					if(substr($NewPath, -1, 1) == '/')
-					{
+					if (substr($NewPath, -1, 1) == '/') {
 						if(!file_exists($Destination . $NewPath))mkdir($Destination . $NewPath, 0777, true);
-					}
-					else
-					{
+					} else {
 						//files
-
-						if(zip_entry_open($ZipHandle, $ZipEntry))
-						{
+						if (zip_entry_open($ZipHandle, $ZipEntry)) {
 							// handle new directory
 							$dir = dirname($Destination.$NewPath);
 							if (!file_exists($dir)) {
@@ -613,17 +645,12 @@ class ApsInstaller extends ApsParser
 
 							$File = fopen($Destination . $NewPath, "wb");
 
-							if($File)
-							{
-								while($Line = zip_entry_read($ZipEntry))
-								{
+							if ($File) {
+								while ($Line = zip_entry_read($ZipEntry)) {
 									fwrite($File, $Line);
 								}
-
 								fclose($File);
-							}
-							else
-							{
+							} else {
 								return false;
 							}
 						}
@@ -633,9 +660,9 @@ class ApsInstaller extends ApsParser
 
 			zip_close($ZipHandle);
 			return true;
-		}
-		else
-		{
+
+		} else {
+
 			$ReturnLines = array();
 			
 			// first 'true' to indicate that we want the return-status from exec.
@@ -645,24 +672,20 @@ class ApsInstaller extends ApsParser
 
 
 			//on 64 bit systems the zip functions can fail -> use exec to extract the files
-
 			$ReturnLines = safe_exec('unzip -o -qq ' . escapeshellarg(realpath($Filename)) . ' ' . escapeshellarg($Directory . '/*') . ' -d ' . escapeshellarg(sys_get_temp_dir()), $ReturnVal);
 
-			if($ReturnVal == 0)
-			{
+			if ($ReturnVal == 0) {
 				//fix absolute structure of extracted data
-
-				if(!file_exists($Destination))mkdir($Destination, 0777, true);
+				if (!file_exists($Destination)) {
+					mkdir($Destination, 0777, true);
+				}
 				safe_exec('cp -Rf ' . sys_get_temp_dir() . '/' . $Directory . '/*' . ' ' . escapeshellarg($Destination));
 				self::UnlinkRecursive(sys_get_temp_dir() . '/' . $Directory . '/');
 				return true;
-			}
-			else
-			{
+			} else {
 				return false;
 			}
 		}
-
 		return false;
 	}
 }

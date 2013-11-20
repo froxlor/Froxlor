@@ -17,7 +17,5 @@
  *
  */
 
-$Aps = new ApsUpdater($db, $cronlog);
+$Aps = new ApsUpdater($cronlog);
 $Aps->UpdateHandler();
-
-?>
