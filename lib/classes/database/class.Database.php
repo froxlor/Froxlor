@@ -54,6 +54,12 @@ class Database {
 	private static $_dbname = null;
 
 	/**
+	 * sql-access data
+	 */
+	private static $_needsqldata = false;
+	private static $_sqldata = null;
+
+	/**
 	 * Wrapper for PDOStatement::execute so we can catch the PDOException
 	 * and display the error nicely on the panel
 	 *
@@ -117,6 +123,40 @@ class Database {
 		// and set the $dbserver (mostly to 0 = default)
 		self::_setServer($dbserver);
 		self::$_needroot = $needroot;
+	}
+
+	/**
+	 * enable the temporary access to sql-access data
+	 * note: if you want root-sqldata you need to
+	 * call needRoot(true) first. Also, this will
+	 * only give you the data ONCE as it disable itself
+	 * after the first access to the data
+	 *
+	 * @param bool $needsql
+	 */
+	public static function needSqlData($needsql = false) {
+		self::$_needsqldata = $needsql;
+		self::$_sqldata = array();
+		self::$_link = null;
+	}
+
+	/**
+	 * returns the sql-access data as array using indeces
+	 * 'user', 'passwd' and 'host'. Returns false if not enabled
+	 *
+	 * @return array|bool
+	 */
+	public static function getSqlData() {
+		if (self::$_sqldata !== null
+				&& is_array(self::$_sqldata)
+				&& isset(self::$_sqldata['user'])
+		) {
+			return self::$_sqldata;
+			// automatically disable sql-data
+			self::$_sqldata = null;
+			self::$_needsqldata = false;
+		}
+		return false;
 	}
 
 	/**
@@ -192,6 +232,15 @@ class Database {
 			$user = $sql["user"];
 			$password = $sql["password"];
 			$host = $sql["host"];
+		}
+
+		// save sql-access-data if needed
+		if (self::$_needsqldata) {
+			self::$_sqldata = array(
+					'user' => $user,
+					'passwd' => $password,
+					'host' => $host
+			);
 		}
 
 		// build up connection string
