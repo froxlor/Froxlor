@@ -803,7 +803,7 @@ if ($page == 'admins'
 						`deactivated` = :deactivated,
 						`can_manage_aps_packages` = :can_manage_aps_packages,
 						`aps_packages` = :aps_packages,
-						`email_autoresponder` = :autoresponder,
+						`email_autoresponder` = :autoresponder
 						WHERE `adminid` = :adminid
 					");
 					Database::pexecute($upd_stmt, $upd_data);
