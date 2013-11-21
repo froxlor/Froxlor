@@ -41,7 +41,7 @@ if ($action == "newsfeed") {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			$output = curl_exec($ch);
 			curl_close($ch);
-			$news = simplexml_load_file(trim($output));
+			$news = simplexml_load_string(trim($output));
 		} else {
 			$news = false;
 		}
