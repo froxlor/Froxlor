@@ -588,7 +588,7 @@ table thead:first-child th {
 }
 
 table tbody td {
-	border-bottom:1px dotted #ccc;
+	border-bottom:1px solid #f1f2f3;
 }
 table tbody tr:last-child td {
 	border-bottom: 0;
@@ -604,7 +604,7 @@ table tbody tr:last-child td {
 
 .formtable tbody td {
 	border:0;
-	border-bottom:1px dotted #ccc;
+	border-bottom:1px solid #f1f2f3;
 	min-height: 20px;
 }
 
@@ -811,7 +811,7 @@ select[multiple="multiple"] {
 
 .dboarditem td,.dboarditemfull td {
 	border-right:0;
-	border-bottom:1px dotted #ccc;
+	border-bottom:1px solid #f1f2f3;
 	padding: 4px 0px 4px 8px;
 }
 

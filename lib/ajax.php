@@ -26,11 +26,26 @@ if(isset($_POST['action'])) {
 }
 
 if ($action == "newsfeed") {
+	$feed = "http://forum.froxlor.org/index.php/rss/forums/1-froxlor-announcements/";
+
 	if (function_exists("simplexml_load_file") == false) {
 		die();
 	}
 	
-	$news = simplexml_load_file('http://froxlor.org/feed.rss.php', null, LIBXML_NOCDATA);
+	if (ini_get('allow_url_fopen')) {
+		$news = simplexml_load_file($feed, null, LIBXML_NOCDATA);
+	} else {
+		if (function_exists('curl_version')) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $feed);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$output = curl_exec($ch);
+			curl_close($ch);
+			$news = simplexml_load_file(trim($output));
+		} else {
+			$news = false;
+		}
+	}
 
 	if ($news !== false) {
 		for ($i = 0; $i < 3; $i++) {
