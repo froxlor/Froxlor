@@ -221,8 +221,7 @@ if($page == 'overview') {
 					AND `email_only` = '0'
 					AND `caneditdomain` = '1'"
 				);
-				Database::pexecute($domain_stmt, array("domain" => $domain, "customerid" => $userinfo['customerid']));
-				$domain_check = $domain_stmt->fetch(PDO::FETCH_ASSOC);
+				$domain_check = Database::pexecute_first($domain_stmt, array("domain" => $domain, "customerid" => $userinfo['customerid']));
 				
 				$completedomain = $subdomain . '.' . $domain;
 				$completedomain_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
@@ -231,8 +230,7 @@ if($page == 'overview') {
 					AND `email_only` = '0'
 					AND `caneditdomain` = '1'"
 				);
-				Database::pexecute($completedomain_stmt, array("domain" => $completedomain, "customerid" => $userinfo['customerid']));
-				$completedomain_check = $completedomain_stmt->fetch(PDO::FETCH_ASSOC);
+				$completedomain_check = Database::pexecute_first($completedomain_stmt, array("domain" => $completedomain, "customerid" => $userinfo['customerid']));
 				
 				$aliasdomain = intval($_POST['alias']);
 				$aliasdomain_check = array('id' => 0);
@@ -253,8 +251,7 @@ if($page == 'overview') {
 						GROUP BY `d`.`domain
 						ORDER BY `d`.`domain` ASC;"
 					);
-					Database::pexecute($aliasdomain_stmt, array("id" => $aliasdomain, "customerid" => $userinfo['customerid']));
-					$aliasdomain_check = $aliasdomain_stmt->fetch(PDO::FETCH_ASSOC);
+					$aliasdomain_check = Database::pexecute_first($aliasdomain_stmt, array("id" => $aliasdomain, "customerid" => $userinfo['customerid']));
 				}
 
 				if(isset($_POST['url']) && $_POST['url'] != '' && validateUrl($idna_convert->encode($_POST['url']))) {
@@ -279,16 +276,20 @@ if($page == 'overview') {
 					$_doredirect = true;
 				}
 
-				if(isset($_POST['openbasedir_path']) && $_POST['openbasedir_path'] == '1') {
+				$openbasedir_path = '0';
+				if (isset($_POST['openbasedir_path']) && $_POST['openbasedir_path'] == '1') {
 					$openbasedir_path = '1';
-				} else {
-					$openbasedir_path = '0';
 				}
 
-				if(isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
-					$ssl_redirect = '1';
-				} else {
-					$ssl_redirect = '0';
+				$ssl_redirect = '0';
+				if (isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
+					// a ssl-redirect only works of there actually is a
+					// ssl ip/port assigned to the domain
+					if (domainHasSslIpPort($domain_check['id']) == true) {
+						$ssl_redirect = '1';
+					} else {
+						standard_error('sslredirectonlypossiblewithsslipport');
+					}
 				}
 
 				if($path == '') {
@@ -374,7 +375,7 @@ if($page == 'overview') {
 					// Using nameserver, insert a task which rebuilds the server config
 					inserttask('4');
 
-					redirectTo($filename, Array('page' => $page, 's' => $s));
+					redirectTo($filename, array('page' => $page, 's' => $s));
 				}
 			} else {
 				$stmt = Database::prepare("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "`
@@ -436,6 +437,7 @@ if($page == 'overview') {
 			}
 		}
 	} elseif($action == 'edit' && $id != 0) {
+
 		$stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`,
 			`d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `pd`.`subcanemaildomain`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
@@ -446,12 +448,10 @@ if($page == 'overview') {
 				OR (`d`.`parentdomainid`='0'
 					AND `pd`.`id` = `d`.`id`))
 			AND `d`.`caneditdomain`='1'");
-		Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		$result = Database::pexecute_first($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
 		
 		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain`= :aliasdomain");
-		Database::pexecute($alias_stmt, array("aliasdomain" => $result['id']));
-		$alias_check = $alias_stmt->fetch(PDO::FETCH_ASSOC);
+		$alias_check = Database::pexecute_first($alias_stmt, array("aliasdomain" => $result['id']));
 		$alias_check = $alias_check['count'];
 		$_doredirect = false;
 
@@ -505,8 +505,7 @@ if($page == 'overview') {
 						AND `c`.`customerid`= :customerid
 						AND `d`.`id`= :id"
 					);
-					Database::pexecute($aliasdomain_stmt, array("customerid" => $result['customerid'], "id" => $aliasdomain));
-					$aliasdomain_check = $aliasdomain_stmt->fetch(PDO::FETCH_ASSOC);
+					$aliasdomain_check = Database::pexecute_first($aliasdomain_stmt, array("customerid" => $result['customerid'], "id" => $aliasdomain));
 				}
 
 				if($aliasdomain_check['id'] != $aliasdomain) {
@@ -519,8 +518,14 @@ if($page == 'overview') {
 					$openbasedir_path = '0';
 				}
 
-				if(isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
-					$ssl_redirect = '1';
+				if (isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
+					// a ssl-redirect only works of there actually is a
+					// ssl ip/port assigned to the domain
+					if (domainHasSslIpPort($id) == true) {
+						$ssl_redirect = '1';
+					} else {
+						standard_error('sslredirectonlypossiblewithsslipport');
+					}
 				} else {
 					$ssl_redirect = '0';
 				}

@@ -1695,11 +1695,12 @@ $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Erlaubte SSL Cipher
 $lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Dies ist eine Liste von Ciphers die genutzt werden sollen (oder auch nicht genutzt werden sollen) wenn eine SSL Verbindung besteht. Eine Liste aller Ciphers und wie diese hinzugefügt/ausgeschlossen werden ist in den Abschnitten "CIPHER LIST FORMAT" und "CIPHER STRINGS" in <a href="http://openssl.org/docs/apps/ciphers.html">der man-page für Ciphers</a> zu finden.<br /><br /><b>Standard-Wert ist:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
 
 // Added in Froxlor 0.9.31
-$lng['panel']['dashboard'] = "Dashboard";
-$lng['panel']['used'] = "genutzt";
-$lng['panel']['assigned'] = "zugewiesen";
-$lng['panel']['available'] = "verfügbar";
-$lng['customer']['services'] = "Dienste";
+$lng['panel']['dashboard'] = 'Dashboard';
+$lng['panel']['used'] = 'genutzt';
+$lng['panel']['assigned'] = 'zugewiesen';
+$lng['panel']['available'] = 'verfügbar';
+$lng['customer']['services'] = 'Dienste';
 $lng['serversettings']['phpfpm_settings']['ipcdir']['title'] = 'FastCGI IPC Verzeichnis';
 $lng['serversettings']['phpfpm_settings']['ipcdir']['description'] = 'In dieses Verzeichnis werden die php-fpm Sockets vom Webserver abgelegt.<br />Das Verzeichnis muss für den Webserver lesbar sein.';
-$lng['panel']['news'] = "Neuigkeiten";
+$lng['panel']['news'] = 'Neuigkeiten';
+$lng['error']['sslredirectonlypossiblewithsslipport'] = 'Eine SSL-Weiterleitung ist nur möglich, wenn der Domain mindestens eine IP/Port Kombination zugewiesen wurde, bei der SSL aktiviert ist.';

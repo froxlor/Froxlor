@@ -544,6 +544,7 @@ if ($page == 'domains'
 							}
 						}
 					} else {
+						$ssl_redirect = 0;
 						// we need this for the serialize
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = -1;
@@ -1299,6 +1300,7 @@ if ($page == 'domains'
 							}
 						}
 					} else {
+						$ssl_redirect = 0;
 						// we need this for the serialize
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = -1;

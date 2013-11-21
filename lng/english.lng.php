@@ -1969,11 +1969,12 @@ $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Configure the allow
 $lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'This is a list of ciphers that you want (or don\'t want) to use when talking SSL. For a list of ciphers and how to include/exclude them, see sections "CIPHER LIST FORMAT" and "CIPHER STRINGS" on <a href="http://openssl.org/docs/apps/ciphers.html">the man-page for ciphers</a>.<br /><br /><b>Default value is:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
 
 // Added in Froxlor 0.9.31
-$lng['panel']['dashboard'] = "Dashboard";
-$lng['panel']['used'] = "used";
-$lng['panel']['assigned'] = "assigned";
-$lng['panel']['available'] = "available";
-$lng['customer']['services'] = "Services";
+$lng['panel']['dashboard'] = 'Dashboard';
+$lng['panel']['used'] = 'used';
+$lng['panel']['assigned'] = 'assigned';
+$lng['panel']['available'] = 'available';
+$lng['customer']['services'] = 'Services';
 $lng['serversettings']['phpfpm_settings']['ipcdir']['title'] = 'FastCGI IPC directory';
 $lng['serversettings']['phpfpm_settings']['ipcdir']['description'] = 'The directory where the php-fpm sockets will be stored by the webserver.<br />This directory has to be readable for the webserver';
-$lng['panel']['news'] = "News";
+$lng['panel']['news'] = 'News';
+$lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using the SSL redirect is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
