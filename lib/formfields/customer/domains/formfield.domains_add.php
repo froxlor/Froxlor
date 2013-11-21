@@ -62,7 +62,8 @@ return array(
 					),
 					'ssl_redirect' => array(
 						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL Redirect',
+						'label' => $lng['domains']['ssl_redirect']['title'],
+						'desc' => $lng['domains']['ssl_redirect']['description'],
 						'type' => 'checkbox',
 						'values' => array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')
