@@ -35,12 +35,16 @@ if ($action == "newsfeed") {
 	if (ini_get('allow_url_fopen')) {
 		$news = simplexml_load_file($feed, null, LIBXML_NOCDATA);
 	} else {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $feed);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$output = curl_exec($ch);
-		curl_close($ch);
-		$news = simplexml_load_file(trim($output));
+		if (function_exists('curl_version')) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $feed);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$output = curl_exec($ch);
+			curl_close($ch);
+			$news = simplexml_load_file(trim($output));
+		} else {
+			$news = false;
+		}
 	}
 
 	if ($news !== false) {
