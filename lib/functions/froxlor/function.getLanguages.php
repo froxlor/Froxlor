@@ -19,7 +19,7 @@
 
 function getLanguages() {
 
-	$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "` ";
+	$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "` ");
 	$languages_array = array();
 
 	while ($row = $result_stmt->fetch(PDO::FETCH_ARRAY)) {
