@@ -84,7 +84,7 @@ class DomainSSL {
 
 			if ($this->_settings['system']['webserver'] == 'lighttpd') {
 				// put my.crt and my.key together for lighty.
-				$dom_certs['ssl_cert_file'] .= $dom_certs['ssl_key_file'];
+				$dom_certs['ssl_cert_file'] = trim($dom_certs['ssl_cert_file'])."\n".trim($dom_certs['ssl_key_file'])."\n";
 				$ssl_files['ssl_key_file'] = '';
 			}
 
@@ -98,7 +98,7 @@ class DomainSSL {
 			if ($dom_certs['ssl_cert_chainfile'] != '') {
 				if ($this->_settings['system']['webserver'] == 'nginx') {
 					// put ca.crt in my.crt, as nginx does not support a separate chain file.
-					$dom_certs['ssl_cert_file'] .= $dom_certs['ssl_cert_chainfile'];
+					$dom_certs['ssl_cert_file'] = trim($dom_certs['ssl_cert_file'])."\n".trim($dom_certs['ssl_cert_chainfile'])."\n";
 				} else {
 					$ssl_files['ssl_cert_chainfile'] = makeCorrectFile($sslcertpath.'/'.$domain['domain'].'_chain.pem');
 				}
