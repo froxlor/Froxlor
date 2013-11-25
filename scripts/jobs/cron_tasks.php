@@ -175,7 +175,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			WHERE `f`.`username` NOT LIKE '%_backup'
 		");
 
-		while ($directory = $db->fetch_array($result_directories)) {
+		while ($directory = $result_directories_stmt->fetch(PDO::FETCH_ASSOC)) {
 			mkDirWithCorrectOwnership($directory['customerroot'], $directory['homedir'], $directory['uid'], $directory['gid']);
 		}
 	}
