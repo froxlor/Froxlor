@@ -464,23 +464,70 @@ class nginx
 					$vhost_content .= $this->settings['system']['default_vhostconf'] . "\n";
 				}
 			}
-
-			// merge duplicate / sections, #1193
-			$l_regex1 = "/(location\ \/\ \{)(.*)(\})/smU";
-			$l_regex2 = "/(location\ \/\ \{.*\})/smU";
-			$replace_by = '';
-			$replacements = preg_match_all($l_regex1,$vhost_content,$out);
-			if ($replacements > 1) {
-				foreach ($out[2] as $val) {
-					$replace_by .= $val."\n";
-				}
-				$vhost_content = preg_replace($l_regex2, "", $vhost_content, $replacements-1);
-				$vhost_content = preg_replace($l_regex2, "location / {\n\t\t". $replace_by ."\t}\n", $vhost_content);
-			}
 		}
 		$vhost_content .= '}' . "\n\n";
 
-		return $vhost_content;
+		return $this->mergeVhostBlocks($vhost_content);
+	}
+	
+	protected function mergeVhostBlocks($vhost_content) {
+		$vhost_content = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_content))));
+		$vhost_content = array_filter($vhost_content, create_function('$a','return preg_match("#\S#", $a);'));
+	
+		// Merge similar blocks
+		$new_vhost_content = array();
+		$isOpen = false;
+		$addAfter = false;
+		foreach ($vhost_content as $line) {
+			if (substr_count($line, "{") != 0 && substr_count($line, "}") == 0 && substr_count($line, "server") == 0 && $isOpen === false) {
+				$isOpen = true;
+				$addAfter = array_search($line, $new_vhost_content);
+				if ($addAfter === false) {
+					$new_vhost_content[] = $line;
+				}
+			} elseif ($isOpen === true) {
+				if (substr_count($line, "}") != 0 && substr_count($line, "{") == 0) {
+					$isOpen = false;
+					if ($addAfter === false) {
+						$new_vhost_content[] = "}";
+					} else {
+						$addAfter = false;
+					}
+				} else {
+					if ($addAfter != false) {
+						for ($i = $addAfter; $i < count($new_vhost_content); $i++) {
+							if ($new_vhost_content[$i] == "}") {
+								$addAt = $i;
+								break;
+							}
+						}
+						array_splice($new_vhost_content, $addAt, 0, $line);
+					} else {
+						$new_vhost_content[] = $line;
+					}
+				}
+			} else {
+				$new_vhost_content[] = $line;
+			}
+		}
+		
+		// Fix idention
+		$nextLevel = 0;
+		for ($i = 0; $i < count($new_vhost_content); $i++) {
+			if (substr_count($new_vhost_content[$i], "}") != 0 && substr_count($new_vhost_content[$i], "{") == 0) {
+				$nextLevel -= 1;
+			}
+			if ($nextLevel > 0) {
+				for ($j = 0; $j < $nextLevel; $j++) {
+					$new_vhost_content[$i] = "	" . $new_vhost_content[$i];
+				}
+			}
+			if (substr_count($new_vhost_content[$i], "{") != 0 && substr_count($new_vhost_content[$i], "}") == 0) {
+				$nextLevel += 1;
+			}
+		}
+		
+		return implode("\n", $new_vhost_content);
 	}
 
 	protected function composeSslSettings($domain) {
