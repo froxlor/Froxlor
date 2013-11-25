@@ -28,19 +28,10 @@ class DomainSSL {
 	private $_settings = null;
 
 	/**
-	 * internal database object
-	 *
-	 * @var db
-	 */
-	private $_db = null;
-
-	/**
 	 * constructor gets the froxlor settings as array
-	 * and the initialized database object
 	 */
-	public function __construct(array $settings = null, $db = null) {
+	public function __construct(array $settings = null) {
 		$this->_settings = $settings;
-		$this->_db = $db;
 	}
 
 	/**
@@ -54,14 +45,18 @@ class DomainSSL {
 	 */
 	public function setDomainSSLFilesArray(array &$domain = null) {
 		// check if the domain itself has a certificate defined
-		$dom_certs = $this->_db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` ='".$domain['id']."'");
+		$dom_certs_stmt = Database::prepare("
+			SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` = :domid
+		");
+		$dom_certs = Database::pexecute_first($dom_certs_stmt, array('domid' => $domain['id']));
+
 		if (!is_array($dom_certs)
 				|| !isset($dom_certs['ssl_cert_file'])
 				|| $dom_certs['ssl_cert_file'] == ''
 		) {
 			// maybe its parent?
 			if ($domain['parentdomainid'] != 0) {
-				$dom_certs = $this->_db->query_first("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` ='".$domain['parentdomainid']."'");
+				$dom_certs = Database::pexecute_first($dom_certs_stmt, array('domid' => $domain['parentdomainid']));
 			}
 		}
 

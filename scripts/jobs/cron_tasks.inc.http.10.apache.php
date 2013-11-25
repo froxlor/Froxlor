@@ -646,7 +646,7 @@ class apache
 				$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
 
 				// SSL STUFF
-				$dssl = new DomainSSL($this->settings, $this->db);
+				$dssl = new DomainSSL($this->settings);
 				// this sets the ssl-related array-indices in the $domain array
 				// if the domain has customer-defined ssl-certificates
 				$dssl->setDomainSSLFilesArray($domain);
