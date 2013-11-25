@@ -29,6 +29,6 @@ if (isset($_POST['id'])) {
 }
 
 eval("echo \"" . getTemplate('aps/header') . "\";");
-$Aps = new ApsParser($userinfo, $settings, $db);
+$Aps = new ApsParser($userinfo, $settings);
 $Aps->MainHandler($action);
 eval("echo \"" . getTemplate('aps/footer') . "\";");

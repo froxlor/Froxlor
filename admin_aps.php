@@ -27,8 +27,7 @@ if(isset($_GET['id']))$Id = (int)$_GET['id'];
 
 if(isset($_POST['id']))$Id = (int)$_POST['id'];
 eval("echo \"" . getTemplate("aps/header") . "\";");
-$Aps = new ApsParser($userinfo, $settings, $db);
+$Aps = new ApsParser($userinfo, $settings);
 $Aps->MainHandler($action);
 eval("echo \"" . getTemplate("aps/footer") . "\";");
 
-?>
