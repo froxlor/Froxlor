@@ -22,7 +22,7 @@ require './lib/init.php';
 
 // get sql-root access data
 Database::needRoot(true);
-Database::needSqlData(true);
+Database::needSqlData();
 $sql_root = Database::getSqlData();
 Database::needRoot(false);
 
@@ -34,6 +34,8 @@ if (isset($_POST['id'])) {
 
 if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_mysql");
+	Database::needSqlData();
+	$sql = Database::getSqlData();
 	$lng['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], $lng['mysql']['description']);
 	eval("echo \"" . getTemplate('mysql/mysql') . "\";");
 } elseif($page == 'mysqls') {

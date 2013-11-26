@@ -132,12 +132,17 @@ class Database {
 	 * only give you the data ONCE as it disable itself
 	 * after the first access to the data
 	 *
-	 * @param bool $needsql
 	 */
-	public static function needSqlData($needsql = false) {
-		self::$_needsqldata = $needsql;
+	public static function needSqlData() {
+		self::$_needsqldata = true;
 		self::$_sqldata = array();
 		self::$_link = null;
+		// we need a connection here because
+		// if getSqlData() is called RIGHT after
+		// this function and no "real" PDO
+		// function was called, getDB() wasn't
+		// involved and no data collected
+		self::getDB();
 	}
 
 	/**
@@ -147,16 +152,17 @@ class Database {
 	 * @return array|bool
 	 */
 	public static function getSqlData() {
+		$return = false;
 		if (self::$_sqldata !== null
 				&& is_array(self::$_sqldata)
 				&& isset(self::$_sqldata['user'])
 		) {
-			return self::$_sqldata;
+			$return = self::$_sqldata;
 			// automatically disable sql-data
 			self::$_sqldata = null;
 			self::$_needsqldata = false;
 		}
-		return false;
+		return $return;
 	}
 
 	/**

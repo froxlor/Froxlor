@@ -18,9 +18,13 @@
  */
 
 define('AREA', 'admin');
-$need_db_sql_data = true;
-$need_root_db_sql_data = true;
 require './lib/init.php';
+
+// get sql-root access data
+Database::needRoot(true);
+Database::needSqlData();
+$sql_root = Database::getSqlData();
+Database::needRoot(false);
 
 if (($page == 'settings' || $page == 'overview')
 	&& $userinfo['change_serversettings'] == '1'

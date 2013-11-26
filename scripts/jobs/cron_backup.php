@@ -24,7 +24,7 @@ if ($settings['system']['backup_enabled'] == '1') {
 
 	// get sql-root access data for mysqldump
 	Database::needRoot(true);
-	Database::needSqlData(true);
+	Database::needSqlData();
 	$sql_root = Database::getSqlData();
 	Database::needRoot(false);
 

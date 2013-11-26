@@ -23,7 +23,7 @@ function correctMysqlUsers($mysql_access_host_array) {
 
 	// get sql-root access data
 	Database::needRoot(true);
-	Database::needSqlData(true);
+	Database::needSqlData();
 	$sql_root = Database::getSqlData();
 	Database::needRoot(false);
 
