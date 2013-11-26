@@ -2446,3 +2446,9 @@ if (isFroxlorVersion('0.9.31-dev1')) {
 
 	updateToVersion('0.9.31-dev2');
 }
+
+if (isFroxlorVersion('0.9.31-dev2')) {
+	showUpdateStep("Updating from 0.9.31-dev2 to 0.9.31-dev3", true);
+	lastStepStatus(0);
+	updateToVersion('0.9.31-dev3');
+}

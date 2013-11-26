@@ -584,4 +584,16 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if (versionInUpdate($current_version, '0.9.31-dev3')) {
+		if (!extension_loaded('pdo')
+			|| in_array("mysql", PDO::getAvailableDrivers()) == false
+		) {
+			$has_preconfig = true;
+			$description  = '<b>Froxlor now uses PHP PDO as database backend. Please be sure that you have the php-pdo extension with mysql-driver installed.</b><br /><br />';
+			$description .= 'Check your distributions manuals on how to install php-pdo.';
+			$question = '';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
 }
