@@ -239,7 +239,8 @@ class Database {
 			self::$_sqldata = array(
 					'user' => $user,
 					'passwd' => $password,
-					'host' => $host
+					'host' => $host,
+					'db' => $sql["db"]
 			);
 		}
 
