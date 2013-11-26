@@ -178,7 +178,7 @@ function updateCounters($returndebuginfo = false) {
 		$customer['email_forwarders_used_new'] = $customer_email_forwarders;
 		
 		$customer_ftps_stmt = Database::prepare('SELECT COUNT(*) AS `number_ftps` FROM `' . TABLE_FTP_USERS . '` WHERE `customerid` = :cid');
-		$customer_ftps = Database::pexecute_first($customer_emails_result_stmt, array("cid" => $customer['customerid']));
+		$customer_ftps = Database::pexecute_first($customer_ftps_stmt, array("cid" => $customer['customerid']));
 		$customer['ftps_used_new'] = ((int)$customer_ftps['number_ftps'] - 1);
 		
 		$customer_tickets_stmt = Database::prepare('SELECT COUNT(*) AS `number_tickets` FROM `' . TABLE_PANEL_TICKETS . '` WHERE `answerto` = "0" AND `customerid` =  :cid');
