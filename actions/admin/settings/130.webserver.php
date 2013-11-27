@@ -31,6 +31,7 @@ return array(
 					'option_mode' => 'one',
 					'option_options' => array('apache2' => 'Apache 2', 'lighttpd' => 'ligHTTPd', 'nginx' => 'Nginx'),
 					'save_method' => 'storeSettingField',
+					'plausibility_check_method' => 'checkPhpInterfaceSetting',
 					'overview_option' => true
 					),
 				'system_apache_24' => array(
