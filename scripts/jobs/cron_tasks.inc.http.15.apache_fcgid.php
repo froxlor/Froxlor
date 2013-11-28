@@ -17,13 +17,6 @@
  *
  */
 
-if(@php_sapi_name() != 'cli'
-   && @php_sapi_name() != 'cgi'
-   && @php_sapi_name() != 'cgi-fcgi')
-{
-	die('This script only works in the shell.');
-}
-
 class apache_fcgid extends apache
 {
 	protected function composePhpOptions($domain, $ssl_vhost = false)

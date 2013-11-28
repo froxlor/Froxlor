@@ -63,12 +63,10 @@ unset($key);
 
 $filename = basename($_SERVER['PHP_SELF']);
 
-// keep this for compatibility reasons
-$pathtophpfiles = dirname(dirname(__FILE__));
-
 // define default theme for configurehint, etc.
 $_deftheme = 'Sparkle';
 
+// define installation directory
 define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
 
 // check whether the userdata file exists

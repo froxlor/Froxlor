@@ -17,7 +17,7 @@
 
 define('MASTER_CRONJOB', 1);
 
-include_once(dirname(dirname(__FILE__)) . '/lib/cron_init.php');
+include_once dirname(dirname(__FILE__)) . '/lib/cron_init.php';
 
 $jobs_to_run = includeCronjobs($debugHandler);
 
@@ -37,7 +37,7 @@ if (isset($argv[1]) && strtolower($argv[1]) == '--help') {
  */
 for ($x = 1; $x < count($argv); $x++) {
 	if (isset($argv[$x]) && strtolower($argv[$x]) == '--force') {
-		$crontasks = makeCorrectFile($pathtophpfiles.'/scripts/jobs/cron_tasks.php');
+		$crontasks = makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/jobs/cron_tasks.php');
 		// really force re-generating of config-files by
 		// inserting task 1
 		inserttask('1');
@@ -46,7 +46,7 @@ for ($x = 1; $x < count($argv); $x++) {
 		}
 	}
 	elseif (isset($argv[$x]) && substr(strtolower($argv[$x]), 0, 8)  == '--force-') {
-		$crontasks = makeCorrectFile($pathtophpfiles.'/scripts/jobs/cron_'.substr(strtolower($argv[$x]), 8).'.php');
+		$crontasks = makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/jobs/cron_'.substr(strtolower($argv[$x]), 8).'.php');
 		if (file_exists($crontasks)) {
 			if (!in_array($crontasks, $jobs_to_run)) {
 				array_unshift($jobs_to_run, $crontasks);
@@ -69,7 +69,5 @@ fwrite($debugHandler, 'Cronfiles have been included' . "\n");
 $cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
 checkLastGuid();
 
-/*
- * shutdown cron
- */
-include_once($pathtophpfiles . '/lib/cron_shutdown.php');
+// shutdown cron
+include_once FROXLOR_INSTALL_DIR . '/lib/cron_shutdown.php';

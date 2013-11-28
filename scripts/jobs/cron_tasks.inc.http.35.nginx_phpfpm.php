@@ -15,13 +15,6 @@
  *
  */
 
-if(@php_sapi_name() != 'cli'
-&& @php_sapi_name() != 'cgi'
-&& @php_sapi_name() != 'cgi-fcgi')
-{
-	die('This script only works in the shell.');
-}
-
 class nginx_phpfpm extends nginx
 {
 	protected function composePhpOptions($domain, $ssl_vhost = false)

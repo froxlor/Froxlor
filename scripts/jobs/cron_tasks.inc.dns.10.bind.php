@@ -17,17 +17,8 @@
  *
  */
 
-
-if(@php_sapi_name() != 'cli'
-		&& @php_sapi_name() != 'cgi'
-		&& @php_sapi_name() != 'cgi-fcgi')
-{
-	die('This script only works in the shell.');
-}
-
 class bind
 {
-	public $db = false;
 	public $logger = false;
 	public $debugHandler = false;
 	public $settings = array();
@@ -35,9 +26,8 @@ class bind
 	public $mxservers = array();
 	public $axfrservers = array();
 
-	public function __construct($db, $logger, $debugHandler, $settings) {
+	public function __construct($logger, $debugHandler, $settings) {
 
-		$this->db = $db;
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
 		$this->settings = $settings;
@@ -89,10 +79,14 @@ class bind
 		$known_filenames = array();
 
 		$bindconf_file = '# ' . $this->settings['system']['bindconf_directory'] . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";
-		$result_domains = $this->db->query("SELECT `d`.`id`, `d`.`domain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`customerid`, `d`.`zonefile`, `d`.`bindserial`, `d`.`dkim`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `c`.`loginname`, `c`.`guid` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`) WHERE `d`.`isbinddomain` = '1' ORDER BY `d`.`domain` ASC");
+		$result_domains_stmt = Database::query("
+			SELECT `d`.`id`, `d`.`domain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`customerid`, `d`.`zonefile`, `d`.`bindserial`, `d`.`dkim`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `c`.`loginname`, `c`.`guid`
+			FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
+			WHERE `d`.`isbinddomain` = '1' ORDER BY `d`.`domain` ASC
+		");
 
-		while($domain = $this->db->fetch_array($result_domains))
-		{
+		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+
 			fwrite($this->debugHandler, '  cron_tasks: Task4 - Writing ' . $domain['id'] . '::' . $domain['domain'] . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Writing ' . $domain['id'] . '::' . $domain['domain']);
 
@@ -181,9 +175,15 @@ class bind
 		// Array to save DNS records
 		$records = array();
 		
-		$result_ip = $this->db->query("SELECT `p`.`ip` AS `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` `p`, `".TABLE_DOMAINTOIP."` `di` WHERE `di`.`id_domain` = '$domain[id]' AND `p`.`id` = `di`.`id_ipandports` GROUP BY `p`.`ip`;");
+		$result_ip_stmt = Database::prepare("
+			SELECT `p`.`ip` AS `ip`
+			FROM `".TABLE_PANEL_IPSANDPORTS."` `p`, `".TABLE_DOMAINTOIP."` `di`
+			WHERE `di`.`id_domain` = :domainid AND `p`.`id` = `di`.`id_ipandports`
+			GROUP BY `p`.`ip`;
+		");
+		Database::pexecute($result_ip_stmt, array('domainid' => $domain['id']));
 		
-		while ($ip = $this->db->fetch_array($result_ip)) {
+		while ($ip = $result_ip_stmt->fetch(PDO::FETCH_ASSOC)) {
   
 			if (filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 				$ip_a_records[] = "A\t\t" . $ip['ip'];
@@ -198,15 +198,18 @@ class bind
 
 		$date = date('Ymd');
 		$bindserial = (preg_match('/^' . $date . '/', $domain['bindserial']) ? $domain['bindserial'] + 1 : $date . '00');
-		$this->db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `bindserial`='" . $bindserial . "' WHERE `id`='" . $domain['id'] . "'");
-		$zonefile = '$TTL ' . (int)$this->settings['system']['defaultttl'] . "\n";
 
-		if(count($this->nameservers) == 0)
-		{
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+			`bindserial` = :serial
+			 WHERE `id` = :id
+		");
+		Database::pexecute($upd_stmt, array('serial' => $bindserial, 'id' => $domain['id']));
+
+		$zonefile = '$TTL ' . (int)$this->settings['system']['defaultttl'] . "\n";
+		if (count($this->nameservers) == 0) {
 			$zonefile.= '@ IN SOA ns ' . str_replace('@', '.', $this->settings['panel']['adminmail']) . '. (' . "\n";
-		}
-		else
-		{
+		} else {
 			$zonefile.= '@ IN SOA ' . $this->nameservers[0]['hostname'] . ' ' . str_replace('@', '.', $this->settings['panel']['adminmail']) . '. (' . "\n";
 		}
 
@@ -261,22 +264,22 @@ class bind
 		 */
 		$zonefile.= $this->generateDkim($domain);
 
-		$nssubdomains = $this->db->query('SELECT `domain` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `isbinddomain`=\'1\' AND `domain` LIKE \'%.' . $domain['domain'] . '\'');
+		$nssubdomains_stmt = Database::prepare("
+			SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `isbinddomain` = '1' AND `domain` LIKE :domain
+		");
+		Database::pexecute($nssubdomains_stmt, array('domain' => '%.' . $domain['domain']));
 
-		while($nssubdomain = $this->db->fetch_array($nssubdomains))
-		{
-			if(preg_match('/^[^\.]+\.' . preg_quote($domain['domain'], '/') . '/', $nssubdomain['domain']))
-			{
+		while ($nssubdomain = $nssubdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+			if (preg_match('/^[^\.]+\.' . preg_quote($domain['domain'], '/') . '/', $nssubdomain['domain'])) {
+
 				$nssubdomain = str_replace('.' . $domain['domain'], '', $nssubdomain['domain']);
 
-				if(count($this->nameservers) == 0)
-				{
+				if (count($this->nameservers) == 0) {
 					$zonefile.= $nssubdomain . '	IN	NS	ns.' . $nssubdomain . "\n";
-				}
-				else
-				{
-					foreach($this->nameservers as $nameserver)
-					{
+				} else {
+					foreach ($this->nameservers as $nameserver) {
 						$zonefile.= $nssubdomain . '	IN	NS	' . trim($nameserver['hostname']) . "\n";
 					}
 				}
@@ -285,21 +288,22 @@ class bind
 
 		$records[] = '@';
 		$records[] = 'www';
- 
 
-		if($domain['iswildcarddomain'] == '1')
-		{
+		if ($domain['iswildcarddomain'] == '1') {
 			$records[] = '*';
 		}
 
-		$subdomains = $this->db->query("SELECT `domain` FROM `".TABLE_PANEL_DOMAINS."` WHERE `parentdomainid` = '$domain[id]';");
+		$subdomains_stmt = Database::prepare("
+			SELECT `domain` FROM `".TABLE_PANEL_DOMAINS."`
+			WHERE `parentdomainid` = :domainid
+		");
+		Database::pexecute($subdomains_stmt, array('domainid' => $domain['id']));
 
-		while($subdomain = $this->db->fetch_array($subdomains))
-		{
+		while ($subdomain = $subdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
 			// Listing domains is enough as there currently is no support for choosing 
 			// different ips for a subdomain => use same IPs as toplevel
 			$records[] = str_replace('.' . $domain['domain'], '', $subdomain['domain']);
-			
+
 			// Check whether to add a www.-prefix 
 			if ($domain['wwwserveralias'] == '1') {
 				$records[] = str_replace('.' . $domain['domain'], '', $subdomain['domain']);
@@ -331,26 +335,21 @@ class bind
 			// algorithm
 			$algorithm = explode(',', $this->settings['dkim']['dkim_algorithm']);
 			$alg = '';
-			foreach($algorithm as $a)
-			{
-				if($a == 'all')
-				{
+			foreach ($algorithm as $a) {
+				if ($a == 'all') {
 					break;
-				}
-				else
-				{
+				} else {
 					$alg.=$a.':';
 				}
 			}
-			if($alg != '')
-			{
+
+			if ($alg != '') {
 				$alg = substr($alg, 0, -1);
 				$dkim_txt.= 'h='.$alg.';';
 			}
 
 			// notes
-			if(trim($this->settings['dkim']['dkim_notes'] != ''))
-			{
+			if (trim($this->settings['dkim']['dkim_notes'] != '')) {
 				$dkim_txt.= 'n='.trim($this->settings['dkim']['dkim_notes']).';';
 			}
 
@@ -358,8 +357,7 @@ class bind
 			$dkim_txt.= 'k=rsa;p='.trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))).';';
 
 			// service-type
-			if($this->settings['dkim']['dkim_servicetype'] == '1')
-			{
+			if ($this->settings['dkim']['dkim_servicetype'] == '1') {
 				$dkim_txt.=	's=email;';
 			}
 
@@ -369,8 +367,7 @@ class bind
 			// split if necessary
 			$txt_record_split='';
 			$lbr=50;
-			for($pos=0; $pos<=strlen($dkim_txt)-1; $pos+=$lbr)
-			{
+			for ($pos=0; $pos<=strlen($dkim_txt)-1; $pos+=$lbr) {
 				$txt_record_split.= (($pos==0) ? '("' : "\t\t\t\t\t \"") . substr($dkim_txt, $pos, $lbr) . (($pos>=strlen($dkim_txt)-$lbr) ? '")' : '"' ) ."\n";
 			}
 
@@ -378,8 +375,8 @@ class bind
 			$zone_dkim .= 'dkim_' . $domain['dkim_id'] . '._domainkey IN TXT ' . $txt_record_split;
 
 			// adsp-entry
-			if($this->settings['dkim']['dkim_add_adsp'] == "1")
-			{
+			if ($this->settings['dkim']['dkim_add_adsp'] == "1") {
+
 				$zone_dkim .= '_adsp._domainkey IN TXT "dkim=';
 				switch((int)$this->settings['dkim']['dkim_add_adsppolicy'])
 				{
@@ -411,17 +408,21 @@ class bind
 
 			$dkimdomains = '';
 			$dkimkeys = '';
-			$result_domains = $this->db->query("SELECT `id`, `domain`, `dkim`, `dkim_id`, `dkim_pubkey`, `dkim_privkey` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `dkim` = '1' ORDER BY `id` ASC");
+			$result_domains_stmt = Database::query("
+				SELECT `id`, `domain`, `dkim`, `dkim_id`, `dkim_pubkey`, `dkim_privkey`
+				FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `dkim` = '1' ORDER BY `id` ASC
+			");
 
-			while($domain = $this->db->fetch_array($result_domains))
-			{
+			while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+
 				$privkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id']);
 				$pubkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id'] . '.public');
 
 				if($domain['dkim_privkey'] == ''
 						|| $domain['dkim_pubkey'] == '')
 				{
-					$max_dkim_id = $this->db->query_first("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
+					$max_dkim_id_stmt = Database::query("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
+					$max_dkim_id = $max_dkim_id_stmt->fetch(PDO::FETCH_ASSOC);
 					$domain['dkim_id'] = (int)$max_dkim_id['max_dkim_id'] + 1;
 					$privkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id']);
 					safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . $this->settings['dkim']['dkim_keylength']);
@@ -431,7 +432,20 @@ class bind
 					safe_exec('openssl rsa -in ' . escapeshellarg($privkey_filename) . ' -pubout -outform pem -out ' . escapeshellarg($pubkey_filename));
 					$domain['dkim_pubkey'] = file_get_contents($pubkey_filename);
 					safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
-					$this->db->query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `dkim_id` = '" . $domain['dkim_id'] . "', `dkim_privkey` = '" . $domain['dkim_privkey'] . "', `dkim_pubkey` = '" . $domain['dkim_pubkey'] . "' WHERE `id` = '" . $domain['id'] . "'");
+					$upd_stmt = Database::prepare("
+						UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+						`dkim_id` = :dkimid,
+						`dkim_privkey` = :privkey,
+						`dkim_pubkey` = :pubkey
+						WHERE `id` = :id
+					");
+					$upd_data = array(
+						'dkimid' => $domain['dkim_id'],
+						'privkey' => $domain['dkim_privkey'],
+						'pubkey' => $domain['dkim_pubkey'],
+						'id' => $domain['id']
+					);
+					Database::pexecute($upd_stmt, $upd_data);
 				}
 
 				if(!file_exists($privkey_filename)
@@ -471,5 +485,3 @@ class bind
 		}
 	}
 }
-
-?>

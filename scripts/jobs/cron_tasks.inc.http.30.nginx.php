@@ -15,23 +15,14 @@
  *
  */
 
-if(@php_sapi_name() != 'cli'
-&& @php_sapi_name() != 'cgi'
-&& @php_sapi_name() != 'cgi-fcgi')
-{
-	die('This script only works in the shell.');
-}
-
 class nginx
 {
-	private $db = false;
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
 	private $nginx_server = array();
 
 	//	protected
-
 	protected $settings = array();
 	protected $nginx_data = array();
 	protected $needed_htpasswds = array();
@@ -49,19 +40,13 @@ class nginx
 	 */
 	private $_deactivated = false;
 
-	public function __construct($db, $logger, $debugHandler, $idnaConvert, $settings, $nginx_server=array())
+	public function __construct($logger, $debugHandler, $idnaConvert, $settings, $nginx_server=array())
 	{
-		$this->db = $db;
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
 		$this->settings = $settings;
 		$this->nginx_server = $nginx_server;
-	}
-
-	protected function getDB()
-	{
-		return $this->db;
 	}
 
 	public function reload()
@@ -134,10 +119,11 @@ class nginx
 
 	public function createIpPort()
 	{
-		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC";
-		$result_ipsandports = $this->db->query($query);
+		$result_ipsandports_stmt = Database::query("
+			SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC
+		");
 
-		while ($row_ipsandports = $this->db->fetch_array($result_ipsandports)) {
+		while ($row_ipsandports = $result_ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if (filter_var($row_ipsandports['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ip = '[' . $row_ipsandports['ip'] . ']';
 			} else {
@@ -287,8 +273,8 @@ class nginx
 			  WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> '1'
 			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
 
-		$result_domains = $this->db->query($query);
-		while ($domain = $this->db->fetch_array($result_domains)) {
+		$result_domains_stmt = Database::query($query);
+		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			if (is_dir($this->settings['system']['apacheconf_vhost'])) {
 				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'])));
@@ -356,7 +342,9 @@ class nginx
 		$vhost_content = '';
 		$_vhost_content = '';
 
-		$query = "SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` `i`, `".TABLE_DOMAINTOIP."` `dip`  WHERE dip.id_domain = '".$domain['id']."' AND i.id = dip.id_ipandports ";
+		$query = "SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` `i`, `".TABLE_DOMAINTOIP."` `dip`
+			WHERE dip.id_domain = :domainid AND i.id = dip.id_ipandports ";
+
 		if ($ssl_vhost === true 
 				&& ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')
 		) {
@@ -370,8 +358,10 @@ class nginx
 		// start vhost
 		$vhost_content.= 'server { ' . "\n";
 
-		$result = $this->db->query($query);
-		while ($ipandport = $this->db->fetch_array($result)) {
+		$result_stmt = Database::prepare($query);
+		Database::pexecute($result_stmt, array('domainid' => $domain['id']));
+
+		while ($ipandport = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			$domain['ip'] = $ipandport['ip'];
 			$domain['port'] = $ipandport['port'];
@@ -415,13 +405,14 @@ class nginx
 			// This returns the first port that is != 443 with ssl enabled, if any
 			// ordered by ssl-certificate (if any) so that the ip/port combo
 			// with certificate is used
-			$ssldestport = $this->db->query_first(
+			$ssldestport_stmt = Database::prepare(
 				"SELECT `ip`.`port` FROM ".TABLE_PANEL_IPSANDPORTS." `ip`
 				LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
-				WHERE `dip`.`id_domain` = '".(int)$domain['id']."'
+				WHERE `dip`.`id_domain` = :domainid
 				AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
 				ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;"
 			);
+			$ssldestport = Database::pexecute_first($ssldestport_stmt, array('domainid' => $domain['id']));
 
 			if ($ssldestport['port'] != '') {
 				$_sslport = ":".$ssldestport['port'];
@@ -575,14 +566,17 @@ class nginx
 	{
 		$has_location = false;
 
-		$query = "SELECT * FROM " . TABLE_PANEL_HTACCESS . " WHERE `path` LIKE '" . $domain['documentroot'] . "%'";
-		$result = $this->db->query($query);
+		$result_stmt = Database::prepare("
+			SELECT * FROM " . TABLE_PANEL_HTACCESS . "
+			WHERE `path` LIKE :docroot
+		");
+		Database::pexecute($result_stmt, array('docroot' => $domain['documentroot'] . '%'));
 
 		$path_options = '';
 		$htpasswds = $this->getHtpasswds($domain);
 
 		// for each entry in the htaccess table
-		while ($row = $this->db->fetch_array($result)) {
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if (!empty($row['error404path'])) {
 				$defhandler = $row['error404path'];
 				if (!validateUrl($defhandler)) {
@@ -680,9 +674,7 @@ class nginx
 			
 		}
 
-		/*
-		 * now the rest of the htpasswds
-		 */
+		// now the rest of the htpasswds
 		if (count($htpasswds) > 0) {
 			foreach ($htpasswds as $idx => $single) {
 				//if ($single['path'] != '/') {
@@ -708,17 +700,17 @@ class nginx
 
 	protected function getHtpasswds($domain) {
 
-		$query = 'SELECT DISTINCT *
-			FROM ' . TABLE_PANEL_HTPASSWDS . ' AS a
-			JOIN ' . TABLE_PANEL_DOMAINS . ' AS b
-			USING (`customerid`)
-			WHERE b.customerid=' . $domain['customerid'] . ' AND b.domain="' . $domain['domain'] . '";';
-
-		$result = $this->db->query($query);
+		$result_stmt = Database::prepare("
+			SELECT DISTINCT *
+			FROM `" . TABLE_PANEL_HTPASSWDS . "` AS a
+			JOIN `" . TABLE_PANEL_DOMAINS . "` AS b USING (`customerid`)
+			WHERE b.customerid = :customerid AND b.domain = :domain
+		");
+		Database::pexecute($result_stmt, array('customerid' => $domain['customerid'], 'domain' => $domain['domain']));
 
 		$returnval = array();
 		$x = 0;
-		while ($row_htpasswds = $this->db->fetch_array($result)) {
+		while ($row_htpasswds = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if (count($row_htpasswds) > 0) {
 				$htpasswd_filename = makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd');
 
@@ -874,11 +866,14 @@ class nginx
 			if ((int)$domain['parentdomainid'] == 0) {
 				// prepare the aliases and subdomains for stats config files
 				$server_alias = '';
-				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '`
-												WHERE `aliasdomain`=\'' . $domain['id'] . '\'
-												OR `parentdomainid` =\''. $domain['id']. '\'');
+				$alias_domains_stmt = Database::prepare("
+					SELECT `domain`, `iswildcarddomain`, `wwwserveralias`
+					FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `aliasdomain` = :domainid OR `parentdomainid` = :domainid
+				");
+				Database::pexecute($alias_domains_stmt, array('domainid' => $domain['id']));
 
-				while (($alias_domain = $this->db->fetch_array($alias_domains)) !== false) {
+				while (($alias_domain = $alias_domains_stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
 					$server_alias .= ' ' . $alias_domain['domain'] . ' ';
 
 					if ($alias_domain['iswildcarddomain'] == '1') {
@@ -924,9 +919,14 @@ class nginx
 			$server_alias = 'www.' . $domain['domain'];
 		}
 
-		$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . $domain['id'] . '\'');
+		$alias_domains_stmt = Database::prepare("
+			SELECT `domain`, `iswildcarddomain`, `wwwserveralias`
+			FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `aliasdomain` = :domainid
+		");
+		Database::pexecute($alias_domains_stmt, array('domainid' => $domain['id']));
 
-		while (($alias_domain = $this->db->fetch_array($alias_domains)) !== false) {
+		while (($alias_domain = $alias_domains_stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
 			$server_alias .= ' ' . $alias_domain['domain'];
 
 			if ($alias_domain['iswildcarddomain'] == '1') {
@@ -994,9 +994,7 @@ class nginx
 			}
 		}
 
-		/*
-		 * htaccess stuff
-		 */
+		// htaccess stuff
 		if (count($this->htpasswds_data) > 0) {
 			if (!file_exists($this->settings['system']['apacheconf_htpasswddir'])) {
 				$umask = umask();

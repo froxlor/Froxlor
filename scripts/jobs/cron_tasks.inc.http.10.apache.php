@@ -17,22 +17,13 @@
  *
  */
 
-if(@php_sapi_name() != 'cli'
-   && @php_sapi_name() != 'cgi'
-   && @php_sapi_name() != 'cgi-fcgi')
-{
-	die('This script only works in the shell.');
-}
-
 class apache
 {
-	private $db = false;
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
 
 	//	protected
-
 	protected $settings = array();
 	protected $known_vhostfilenames = array();
 	protected $known_diroptionsfilenames = array();
@@ -49,19 +40,13 @@ class apache
 	 */
 	private $_deactivated = false;
 
-	public function __construct($db, $logger, $debugHandler, $idnaConvert, $settings)
+	public function __construct($logger, $debugHandler, $idnaConvert, $settings)
 	{
-		$this->db = $db;
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
 		$this->settings = $settings;
 
-	}
-
-	protected function getDB()
-	{
-		return $this->db;
 	}
 
 	public function reload()
@@ -157,9 +142,9 @@ class apache
 
 	public function createIpPort()
 	{
-		$result_ipsandports = $this->db->query("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC");
+		$result_ipsandports_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC");
 
-		while ($row_ipsandports = $this->db->fetch_array($result_ipsandports)) {
+		while ($row_ipsandports = $result_ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if (filter_var($row_ipsandports['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ipport = '[' . $row_ipsandports['ip'] . ']:' . $row_ipsandports['port'];
 			} else {
@@ -375,10 +360,14 @@ class apache
 		$this->_createStandardErrorHandler();
 	}
 
-	/*
-	*	We put together the needed php options in the virtualhost entries
-	*/
-
+	/**
+	 * We put together the needed php options in the virtualhost entries
+	 * 
+	 * @param array $domain
+	 * @param bool $ssl_vhost
+	 *
+	 * @return string
+	 */
 	protected function composePhpOptions($domain, $ssl_vhost = false)
 	{
 		$php_options_text = '';
@@ -404,12 +393,10 @@ class apache
 		return $php_options_text;
 	}
 
-	public function createOwnVhostStarter()
-	{
-	}
+	public function createOwnVhostStarter() {}
 
-	/*
-	 *	We collect all servernames and Aliases
+	/**
+	 * We collect all servernames and Aliases
 	 */
 	protected function getServerNames($domain)
 	{
@@ -426,9 +413,14 @@ class apache
 			$servernames_text .= '  ServerAlias ' . $server_alias . "\n";
 		}
 
-		$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . $domain['id'] . '\'');
+		$alias_domains_stmt = Database::prepare("
+			SELECT `domain`, `iswildcarddomain`, `wwwserveralias`
+			FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `aliasdomain`= :domainid
+		");
+		Database::pexecute($alias_domains_stmt, array('domainid' => $domain['id']));
 
-		while (($alias_domain = $this->db->fetch_array($alias_domains)) !== false) {
+		while (($alias_domain = $alias_domains_stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
 			$server_alias = '  ServerAlias ' . $alias_domain['domain'];
 
 			if ($alias_domain['iswildcarddomain'] == '1') {
@@ -446,7 +438,7 @@ class apache
 		return $servernames_text;
 	}
 
-	/*
+	/**
 	 *	Let's get the webroot
 	 */
 	protected function getWebroot($domain)
@@ -469,7 +461,7 @@ class apache
 		return $webroot_text;
 	}
 
-	/*
+	/**
 	 *	Lets set the text part for the stats software
 	 */
 	protected function getStats($domain)
@@ -506,9 +498,9 @@ class apache
 		return $stats_text;
 	}
 
-	/*
-	*	Lets set the logfiles
-	*/
+	/**
+	 * Lets set the logfiles
+	 */
 	protected function getLogfiles($domain) {
 
 		$logfiles_text = '';
@@ -543,11 +535,14 @@ class apache
 			if ((int)$domain['parentdomainid'] == 0) {
 				// prepare the aliases and subdomains for stats config files
 				$server_alias = '';
-				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '`
-												WHERE `aliasdomain`=\'' . $domain['id'] . '\'
-												OR `parentdomainid` =\''. $domain['id']. '\'');
+				$alias_domains_stmt = Database::prepare("
+					SELECT `domain`, `iswildcarddomain`, `wwwserveralias`
+					FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `aliasdomain` = :domainid OR `parentdomainid` = :domainid
+				");
+				Database::pexecute($alias_domains_stmt, array('domainid' => $domain['id']));
 
-				while (($alias_domain = $this->db->fetch_array($alias_domains)) !== false) {
+				while (($alias_domain = $alias_domains_stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
 
 					$server_alias .= ' ' . $alias_domain['domain'] . ' ';
 
@@ -576,7 +571,7 @@ class apache
 		return $logfiles_text;
 	}
 
-	/*
+	/**
 	 *	Get the filename for the virtualhost
 	 */
 	protected function getVhostFilename($domain, $ssl_vhost = false)
@@ -605,7 +600,7 @@ class apache
 		return $vhost_filename;
 	}
 
-	/*
+	/**
 	 *	We compose the virtualhost entry for one domain
 	 */
 	protected function getVhostContent($domain, $ssl_vhost = false)
@@ -618,7 +613,7 @@ class apache
 		}
 
 		$query = "SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` `i`, `".TABLE_DOMAINTOIP."` `dip` 
-			WHERE dip.id_domain = '".(int)$domain['id']."' AND i.id = dip.id_ipandports ";
+			WHERE dip.id_domain = :domainid AND i.id = dip.id_ipandports ";
 
 		if ($ssl_vhost === true
 				&& ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')
@@ -630,11 +625,12 @@ class apache
 		}
 
 		$vhost_content = '';
-		$result = $this->db->query($query);
+		$result_stmt = Database::prepare($query);
+		Database::pexecute($result_stmt, array('domainid' => $domain['id']));
 
 		$ipportlist = '';
 		$_vhost_content = '';
-		while ($ipandport = $this->db->fetch_array($result)) {
+		while ($ipandport = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			$ipport = '';
 			$domain['ip'] = $ipandport['ip'];
@@ -677,13 +673,14 @@ class apache
 			// This returns the first port that is != 443 with ssl enabled, if any
 			// ordered by ssl-certificate (if any) so that the ip/port combo
 			// with certificate is used
-			$ssldestport = $this->db->query_first(
-				"SELECT `ip`.`port` FROM ".TABLE_PANEL_IPSANDPORTS." `ip`
+			$ssldestport_stmt = Database::prepare("
+				SELECT `ip`.`port` FROM ".TABLE_PANEL_IPSANDPORTS." `ip`
 				LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
-				WHERE `dip`.`id_domain` = '".(int)$domain['id']."'
+				WHERE `dip`.`id_domain` = :domainid
 				AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
-				ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;"
-			);
+				ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;
+			");
+			$ssldestport = Database::pexecute_first($ssldestport_stmt, array('domainid' => $domain['id']));
 
 			if ($ssldestport['port'] != '') {
 				$_sslport = ":".$ssldestport['port'];
@@ -737,7 +734,7 @@ class apache
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$corrected_docroot = $this->idnaConvert->encode($domain['documentroot']);
 
-			/* Get domain's redirect code */
+			// Get domain's redirect code
 			$code = getDomainRedirectCode($domain['id']);
 			$modrew_red = '';
 			if ($code != '') {
@@ -782,7 +779,7 @@ class apache
 		return $vhost_content;
 	}
 
-	/*
+	/**
 	 *	We compose the virtualhost entries for the domains
 	 */
 	public function createVirtualHosts()
@@ -811,8 +808,8 @@ class apache
 			  WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> '1'
 			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
 
-		$result_domains = $this->db->query($query);
-		while ($domain = $this->db->fetch_array($result_domains)) {
+		$result_domains_stmt = Database::query($query);
+		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 			fwrite($this->debugHandler, '  apache::createVirtualHosts: creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname'] . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname']);
 			$vhosts_filename = $this->getVhostFilename($domain);
@@ -838,15 +835,20 @@ class apache
 		}
 	}
 
-	/*
+	/**
 	 *	We compose the diroption entries for the paths
 	 */
 	public function createFileDirOptions()
 	{
-		$result = $this->db->query('SELECT `htac`.*, `c`.`guid`, `c`.`documentroot` AS `customerroot` FROM `' . TABLE_PANEL_HTACCESS . '` `htac` LEFT JOIN `' . TABLE_PANEL_CUSTOMERS . '` `c` USING (`customerid`) ORDER BY `htac`.`path`');
+		$result_stmt = Database::query("
+			SELECT `htac`.*, `c`.`guid`, `c`.`documentroot` AS `customerroot`
+			FROM `" . TABLE_PANEL_HTACCESS . "` `htac`
+			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING (`customerid`)
+			ORDER BY `htac`.`path`
+		");
 		$diroptions = array();
 
-		while ($row_diroptions = $this->db->fetch_array($result)) {
+		while ($row_diroptions = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($row_diroptions['customerid'] != 0
 			   && isset($row_diroptions['customerroot'])
 			   && $row_diroptions['customerroot'] != ''
@@ -856,9 +858,14 @@ class apache
 			}
 		}
 
-		$result = $this->db->query('SELECT `htpw`.*, `c`.`guid`, `c`.`documentroot` AS `customerroot` FROM `' . TABLE_PANEL_HTPASSWDS . '` `htpw` LEFT JOIN `' . TABLE_PANEL_CUSTOMERS . '` `c` USING (`customerid`) ORDER BY `htpw`.`path`, `htpw`.`username`');
+		$result_stmt = Database::query("
+			SELECT `htpw`.*, `c`.`guid`, `c`.`documentroot` AS `customerroot`
+			FROM `" . TABLE_PANEL_HTPASSWDS . "` `htpw`
+			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING (`customerid`)
+			ORDER BY `htpw`.`path`, `htpw`.`username`
+		");
 
-		while ($row_htpasswds = $this->db->fetch_array($result)) {
+		while ($row_htpasswds = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($row_htpasswds['customerid'] != 0
 			   && isset($row_htpasswds['customerroot'])
 			   && $row_htpasswds['customerroot'] != ''
@@ -1013,20 +1020,18 @@ class apache
 		}
 	}
 
-	/*
+	/**
 	 *	We write the configs
 	 */
 	public function writeConfigs()
 	{
 		// Write diroptions
-
 		fwrite($this->debugHandler, '  apache::writeConfigs: rebuilding ' . $this->settings['system']['apacheconf_diroptions'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . $this->settings['system']['apacheconf_diroptions']);
 
 		if (count($this->diroptions_data) > 0) {
 			if (!isConfigDir($this->settings['system']['apacheconf_diroptions'])) {
 				// Save one big file
-
 				$diroptions_file = '';
 
 				foreach ($this->diroptions_data as $diroptions_filename => $diroptions_content) {
@@ -1036,7 +1041,6 @@ class apache
 				$diroptions_filename = $this->settings['system']['apacheconf_diroptions'];
 
 				// Apply header
-
 				$diroptions_file = '# ' . basename($diroptions_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n" . $diroptions_file;
 				$diroptions_file_handler = fopen($diroptions_filename, 'w');
 				fwrite($diroptions_file_handler, $diroptions_file);
@@ -1049,7 +1053,6 @@ class apache
 				}
 
 				// Write a single file for every diroption
-
 				foreach ($this->diroptions_data as $diroptions_filename => $diroptions_file) {
 					$this->known_diroptionsfilenames[] = basename($diroptions_filename);
 
@@ -1063,7 +1066,6 @@ class apache
 		}
 
 		// Write htpasswds
-
 		fwrite($this->debugHandler, '  apache::writeConfigs: rebuilding ' . $this->settings['system']['apacheconf_htpasswddir'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . $this->settings['system']['apacheconf_htpasswddir']);
 
@@ -1090,7 +1092,6 @@ class apache
 		}
 
 		// Write virtualhosts
-
 		fwrite($this->debugHandler, '  apache::writeConfigs: rebuilding ' . $this->settings['system']['apacheconf_vhost'] . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . $this->settings['system']['apacheconf_vhost']);
 
@@ -1111,7 +1112,6 @@ class apache
 				}
 
 				// Include diroptions file in case it exists
-
 				if (file_exists($this->settings['system']['apacheconf_diroptions'])) {
 					$vhosts_file.= "\n" . 'Include ' . $this->settings['system']['apacheconf_diroptions'] . "\n\n";
 				}

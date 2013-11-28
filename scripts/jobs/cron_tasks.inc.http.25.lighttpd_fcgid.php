@@ -15,13 +15,6 @@
  *
  */
 
-if(@php_sapi_name() != 'cli'
-&& @php_sapi_name() != 'cgi'
-&& @php_sapi_name() != 'cgi-fcgi')
-{
-	die('This script only works in the shell.');
-}
-
 class lighttpd_fcgid extends lighttpd
 {
 	protected function composePhpOptions($domain)

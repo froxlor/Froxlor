@@ -18,22 +18,13 @@
  * @TODO ssl-redirect to non-standard port
  */
 
-if(@php_sapi_name() != 'cli'
-	&& @php_sapi_name() != 'cgi'
-	&& @php_sapi_name() != 'cgi-fcgi'
-) {
-	die('This script only works in the shell.');
-}
-
 class lighttpd
 {
-	private $db = false;
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
 
 	//	protected
-
 	protected $settings = array();
 	protected $lighttpd_data = array();
 	protected $needed_htpasswds = array();
@@ -49,18 +40,12 @@ class lighttpd
 	 */
 	private $_deactivated = false;
 
-	public function __construct($db, $logger, $debugHandler, $idnaConvert, $settings)
+	public function __construct($logger, $debugHandler, $idnaConvert, $settings)
 	{
-		$this->db = $db;
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
 		$this->settings = $settings;
-	}
-
-	protected function getDB()
-	{
-		return $this->db;
 	}
 
 	public function reload()
@@ -77,10 +62,9 @@ class lighttpd
 
 	public function createIpPort()
 	{
-		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC";
-		$result_ipsandports = $this->db->query($query);
+		$result_ipsandports_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC");
 
-		while ($row_ipsandports = $this->db->fetch_array($result_ipsandports)) {
+		while ($row_ipsandports = $result_ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if (filter_var($row_ipsandports['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ip = '[' . $row_ipsandports['ip'] . ']';
 				$port = $row_ipsandports['port'];
@@ -242,11 +226,14 @@ class lighttpd
 	protected function create_htaccess($domain)
 	{
 		$needed_htpasswds = array();
-		$htpasswd_query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `path` LIKE '" . $domain['documentroot'] . "%'";
-		$result_htpasswds = $this->db->query($htpasswd_query);
+		$result_htpasswds_stmt = Database::prepare("
+			SELECT * FROM " . TABLE_PANEL_HTPASSWDS . "
+			WHERE `path` LIKE :docroot
+		");
+		Database::pexecute($result_htpasswds_stmt, array('docroot' => $domain['documentroot'] . '%'));
 
 		$htaccess_text = '';
-		while ($row_htpasswds = $this->db->fetch_array($result_htpasswds)) {
+		while ($row_htpasswds = $result_htpasswds_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$row_htpasswds['path'] = makeCorrectDir($row_htpasswds['path']);
 			mkDirWithCorrectOwnership($domain['documentroot'], $row_htpasswds['path'], $domain['guid'], $domain['guid']);
 			
@@ -328,8 +315,8 @@ class lighttpd
 			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
 
 		$included_vhosts = array();
-		$result_domains = $this->db->query($query);
-		while ($domain = $this->db->fetch_array($result_domains)) {
+		$result_domains_stmt = Database::query($query);
+		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			if (is_dir($this->settings['system']['apacheconf_vhost'])) {
 				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'].'/vhosts/')));
@@ -418,13 +405,14 @@ class lighttpd
 			// This returns the first port that is != 443 with ssl enabled, if any
 			// ordered by ssl-certificate (if any) so that the ip/port combo
 			// with certificate is used
-			$ssldestport = $this->db->query_first(
+			$ssldestport_stmt = Database::prepare(
 				"SELECT `ip`.`port` FROM ".TABLE_PANEL_IPSANDPORTS." `ip`
 				LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
-				WHERE `dip`.`id_domain` = '".(int)$domain['id']."'
+				WHERE `dip`.`id_domain` = :domainid
 				AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
 				ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;"
 			);
+			$ssldestport = Database::pexecute_first($ssldestport_stmt, array('domainid' => $domain['id']));
 
 			if ($ssldestport['port'] != '') {
 				$_sslport = ":".$ssldestport['port'];
@@ -457,8 +445,11 @@ class lighttpd
 					$vhost_content.= $this->composePhpOptions($domain);
 					$vhost_content.= $this->getStats($domain);
 
-					$query = "SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id`='".$ipid."';";
-					$ipandport = $this->db->query_first($query);
+					$ipandport_stmt = Database::prepare("
+						SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."`
+						WHERE `id` = :id
+					");
+					$ipandport = Database::pexecute_first($ipandport_stmt, array('id' => $ipid));
 
 					$domain['ip'] = $ipandport['ip'];
 					$domain['port'] = $ipandport['port'];
@@ -544,7 +535,6 @@ class lighttpd
 		// The normal access/error - logging is enabled
 		// error log cannot be set conditionally see
 		// https://redmine.lighttpd.net/issues/665
-
 		$access_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
 		// Create the logfile if it does not exist (fixes #46)
 		touch($access_log);
@@ -558,11 +548,14 @@ class lighttpd
 			if ((int)$domain['parentdomainid'] == 0) {
 				// prepare the aliases and subdomains for stats config files
 				$server_alias = '';
-				$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` 
-												WHERE `aliasdomain`=\'' . $domain['id'] . '\'
-												OR `parentdomainid` =\''. $domain['id']. '\'');
+				$alias_domains_stmt = Database::prepare("
+					SELECT `domain`, `iswildcarddomain`, `wwwserveralias`
+					FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `aliasdomain` = :domainid OR `parentdomainid` = :domainid
+				");
+				Database::pexecute($alias_domains_stmt, array('domainid' => $domain['id']));
 	
-				while (($alias_domain = $this->db->fetch_array($alias_domains)) !== false) {
+				while (($alias_domain = $alias_domains_stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
 
 					$server_alias.= ' ' . $alias_domain['domain'] . ' ';
 	
@@ -600,13 +593,16 @@ class lighttpd
 
 	protected function create_pathOptions($domain)
 	{
-		$query = "SELECT * FROM " . TABLE_PANEL_HTACCESS . " WHERE `path` LIKE '" . $domain['documentroot'] . "%'";
-		$result = $this->db->query($query);
+		$result_stmt = Database::prepare("
+			SELECT * FROM " . TABLE_PANEL_HTACCESS . "
+			WHERE `path` LIKE :docroot
+		");
+		Database::pexecute($result_stmt, array('docroot' => $domain['documentroot'] . '%'));
 
 		$path_options = '';
 		$error_string = '';
 
-		while ($row = $this->db->fetch_array($result)) {
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			if (!empty($row['error404path'])) {
 				$defhandler = $row['error404path'];
@@ -661,10 +657,13 @@ class lighttpd
 
 	protected function getDirOptions($domain)
 	{
-		$query = "SELECT * FROM " . TABLE_PANEL_HTPASSWDS . " WHERE `customerid`='" . $domain['customerid'] . "'";
-		$result = $this->db->query($query);
+		$result_stmt = Database::prepare("
+			SELECT * FROM " . TABLE_PANEL_HTPASSWDS . "
+			WHERE `customerid` = :customerid
+		");
+		Database::pexecute($result_stmt, array('customerid' => $domain['customerid']));
 
-		while ($row_htpasswds = $this->db->fetch_array($result)) {
+		while ($row_htpasswds = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($auth_backend_loaded[$domain['ipandport']] != 'yes'
 				&& $auth_backend_loaded[$domain['ssl_ipandport']] != 'yes'
 			) {
@@ -721,9 +720,14 @@ class lighttpd
 			}
 		}
 
-		$alias_domains = $this->db->query('SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `aliasdomain`=\'' . $domain['id'] . '\'');
+		$alias_domains_stmt = Database::prepare("
+			SELECT `domain`, `iswildcarddomain`, `wwwserveralias`
+			FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `aliasdomain` = :domainid
+		");
+		Database::pexecute($alias_domains_stmt, array('domainid' => $domain['id']));
 
-		while (($alias_domain = $this->db->fetch_array($alias_domains)) !== false) {
+		while (($alias_domain = $alias_domains_stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
 			$alias_domain_name = ereg_replace('\.', '\.', $alias_domain['domain']);
 
 			if ($alias_domain['iswildcarddomain'] == '1') {
@@ -800,10 +804,9 @@ class lighttpd
 		return $webroot_text;
 	}
 	
-	/*
-	*	Lets set the text part for the stats software
-	*/
-
+	/**
+	 * Lets set the text part for the stats software
+	 */
 	protected function getStats($domain)
 	{
 		$stats_text = '';
@@ -896,7 +899,6 @@ class lighttpd
 		}
 
 		// Write the diroptions
-
 		if (isConfigDir($this->settings['system']['apacheconf_htpasswddir'])) {
 			foreach ($this->needed_htpasswds as $key => $data) {
 				if (!is_dir($this->settings['system']['apacheconf_htpasswddir'])) {

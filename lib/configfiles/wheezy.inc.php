@@ -420,7 +420,7 @@ return Array(
 							'a2enmod suexec fcgid',
 							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'groupadd -f '.$settings['system']['mod_fcgid_httpgroup'] : null,
 							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'useradd -s /bin/false -g '.$settings['system']['mod_fcgid_httpgroup'].' '.$settings['system']['mod_fcgid_httpuser'] : null,
-							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'chown -R '.$settings['system']['mod_fcgid_httpuser'].':'.$settings['system']['mod_fcgid_httpgroup'].' '.$pathtophpfiles : null,
+							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'chown -R '.$settings['system']['mod_fcgid_httpuser'].':'.$settings['system']['mod_fcgid_httpgroup'].' '.FROXLOR_INSTALL_DIR : null,
 							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'mkdir -p '.makeCorrectDir($settings['system']['mod_fcgid_configdir']) : null,
 							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'mkdir -p '.makeCorrectDir($settings['system']['mod_fcgid_tmpdir']) : null,
 							($settings['system']['mod_fcgid_ownvhost'] == '1') ? 'a2dismod php5' : null
@@ -439,7 +439,7 @@ return Array(
 							'a2enmod suexec fastcgi actions',
 							($settings['phpfpm']['enabled_ownvhost'] == '1') ? 'groupadd -f '.$settings['phpfpm']['vhost_httpgroup'] : null,
 							($settings['phpfpm']['enabled_ownvhost'] == '1') ? 'useradd -s /bin/false -g '.$settings['phpfpm']['vhost_httpgroup'].' '.$settings['phpfpm']['vhost_httpuser'] : null,
-							($settings['phpfpm']['enabled_ownvhost'] == '1') ? 'chown -R '.$settings['phpfpm']['vhost_httpuser'].':'.$settings['phpfpm']['vhost_httpgroup'].' '.$pathtophpfiles : null,
+							($settings['phpfpm']['enabled_ownvhost'] == '1') ? 'chown -R '.$settings['phpfpm']['vhost_httpuser'].':'.$settings['phpfpm']['vhost_httpgroup'].' '.FROXLOR_INSTALL_DIR : null,
 							($settings['phpfpm']['enabled_ownvhost'] == '1') ? 'a2dismod php5' : null
 						)
 					)

@@ -73,7 +73,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 				}
 			}
 
-			$webserver = new $websrv($db, $cronlog, $debugHandler, $idna_convert, $settings);
+			$webserver = new $websrv($cronlog, $debugHandler, $idna_convert, $settings);
 		}
 
 		if (isset($webserver)) {
@@ -153,7 +153,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 */
 	elseif ($row['type'] == '4' && (int)$settings['system']['bind_enable'] != 0) {
 		if (!isset($nameserver)) {
-			$nameserver = new bind($db, $cronlog, $debugHandler, $settings);
+			$nameserver = new bind($cronlog, $debugHandler, $settings);
 		}
 
 		if ($settings['dkim']['use_dkim'] == '1') {

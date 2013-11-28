@@ -16,10 +16,11 @@
  * @package    Cron
  *
  */
-if(@php_sapi_name() != 'cli'
-   && @php_sapi_name() != 'cgi'
-   && @php_sapi_name() != 'cgi-fcgi')
-{
+
+if (@php_sapi_name() != 'cli'
+	&& @php_sapi_name() != 'cgi'
+	&& @php_sapi_name() != 'cgi-fcgi'
+) {
 	die('This script will only work in the shell.');
 }
 
@@ -39,17 +40,12 @@ $lockfile = $lockdir . $lockfName;
 // normally you should not need to modify this script anymore, if your
 // froxlor installation isn't in /var/www/froxlor
 define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
-// TODO remove when not needed anymore
-$pathtophpfiles = dirname(dirname(__FILE__));
 
-// should the froxlor installation guessing not work correctly,
-// uncomment the following line, and put your path in there!
-//$pathtophpfiles = '/var/www/froxlor/';
 // create and open the lockfile!
 $keepLockFile = false;
 $debugHandler = fopen($lockfile, 'w');
 fwrite($debugHandler, 'Setting Lockfile to ' . $lockfile . "\n");
-fwrite($debugHandler, 'Setting Froxlor installation path to ' . $pathtophpfiles . "\n");
+fwrite($debugHandler, 'Setting Froxlor installation path to ' . FROXLOR_INSTALL_DIR . "\n");
 
 // open the lockfile directory and scan for existing lockfiles
 $lockDirHandle = opendir($lockdir);
@@ -119,27 +115,28 @@ require FROXLOR_INSTALL_DIR . '/lib/functions.php';
 require FROXLOR_INSTALL_DIR . '/lib/tables.inc.php';
 fwrite($debugHandler, 'Table definitions included' . "\n");
 
-//Includes the MySQL-Connection-Class
-fwrite($debugHandler, 'Database Class has been loaded' . "\n");
-$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
-
-if ($db->link_id == 0) {
+// try database connection, it will throw
+// and exception itself if failed
+try {
+	Database::query("SELECT 1");
+} catch (Exception $e) {
 	// Do not proceed further if no database connection could be established
 	fclose($debugHandler);
 	unlink($lockfile);
-	die('Froxlor can\'t connect to mysqlserver. Please check userdata.inc.php! Exiting...');
+	die($e->getMessage());
 }
 
 fwrite($debugHandler, 'Database-connection established' . "\n");
-unset($sql);
-$result = $db->query("SELECT `settingid`, `settinggroup`, `varname`, `value` FROM `" . TABLE_PANEL_SETTINGS . "`");
+$result_stmt = Database::query("
+	SELECT `settingid`, `settinggroup`, `varname`, `value`
+	FROM `" . TABLE_PANEL_SETTINGS . "`
+");
 
-while ($row = $db->fetch_array($result)) {
+while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$settings[$row['settinggroup']][$row['varname']] = $row['value'];
 }
 
 unset($row);
-unset($result);
 fwrite($debugHandler, 'Froxlor settings have been loaded from the database' . "\n");
 
 /**
@@ -150,7 +147,7 @@ if ((int)$settings['system']['mod_fcgid'] == 1
 	&& (int)$settings['system']['mod_fcgid_ownvhost'] == 1
 ) {
 	fwrite($debugHandler, 'Checking froxlor file permissions');
-	$mypath = makeCorrectDir(dirname(dirname(__FILE__))); // /var/www/froxlor, needed for chown
+	$mypath = makeCorrectDir(FROXLOR_INSTALL_DIR);
 	$user = $settings['system']['mod_fcgid_httpuser'];
 	$group = $settings['system']['mod_fcgid_httpgroup'];
 	// all the files and folders have to belong to the local user
@@ -160,7 +157,6 @@ if ((int)$settings['system']['mod_fcgid'] == 1
 
 // be sure HTMLPurifier's cache folder is writable
 safe_exec('chmod -R 0755 '.escapeshellarg(dirname(__FILE__).'/classes/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer'));
-
 
 if (!isset($settings['panel']['version'])
    || $settings['panel']['version'] != $version

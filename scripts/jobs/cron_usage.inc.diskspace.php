@@ -64,9 +64,9 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		}
 
 		// include english language file (fallback)
-		include_once makeCorrectFile($pathtophpfiles . '/lng/english.lng.php');
+		include_once makeCorrectFile(FROXLOR_INSTALL_DIR . '/lng/english.lng.php');
 		// include admin/customer language file
-		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
+		include_once makeCorrectFile(FROXLOR_INSTALL_DIR . '/' . $langfile);
 
 		// Get mail templates from database; the ones from 'admin' are fetched for fallback
 		$result2_stmt = Database::prepare("
@@ -154,9 +154,9 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		}
 
 		// include english language file (fallback)
-		include_once makeCorrectFile($pathtophpfiles . '/lng/english.lng.php');
+		include_once makeCorrectFile(FROXLOR_INSTALL_DIR . '/lng/english.lng.php');
 		// include admin/customer language file
-		include_once makeCorrectFile($pathtophpfiles . '/' . $langfile);
+		include_once makeCorrectFile(FROXLOR_INSTALL_DIR . '/' . $langfile);
 
 		// Get mail templates from database; the ones from 'admin' are fetched for fallback
 		$result2_stmt = Database::prepare("
