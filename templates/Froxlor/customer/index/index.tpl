@@ -21,6 +21,12 @@ $header
 			<td>{$lng['customer']['domains']}:</td>
 			<td>$domains</td>
 		</tr>
+		<if $stdsubdomain != ''>
+			<tr>
+				<td>{$lng['admin']['stdsubdomain']}:</td>
+				<td>$stdsubdomain</td>
+			</tr>
+		</if>
 		<tr>
 			<td>{$lng['customer']['subdomains']} ({$lng['customer']['usedmax']}):</td>
 			<td>{$userinfo['subdomains_used']}/{$userinfo['subdomains']}</td>

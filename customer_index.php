@@ -49,8 +49,8 @@ if ($page == 'overview') {
 	$domain_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
 		WHERE `customerid` = :customerid
 		AND `parentdomainid` = '0'
-		AND `id` <> :standardsubdomain"
-	);
+		AND `id` <> :standardsubdomain
+	");
 	Database::pexecute($domain_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));
 	
 	$domains = '';
@@ -62,6 +62,19 @@ if ($page == 'overview') {
 
 	natsort($domainArray);
 	$domains = implode(',<br />', $domainArray);
+
+	// standard-subdomain
+	$stdsubdomain = '';
+	if ($userinfo['standardsubdomain'] != '0') {
+		$std_domain_stmt = Database::prepare("
+			SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `customerid` = :customerid
+			AND `id` = :standardsubdomain
+		");
+		$std_domain = Database::pexecute_first($std_domain_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));
+		$stdsubdomain = $std_domain['domain'];
+	}
+
 	$userinfo['email'] = $idna_convert->decode($userinfo['email']);
 	$yesterday = time() - (60 * 60 * 24);
 	$month = date('M Y', $yesterday);
