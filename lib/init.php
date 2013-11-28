@@ -95,7 +95,7 @@ if (!is_readable(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
 /**
  * Includes the Usersettings eg. MySQL-Username/Passwort etc.
  */
-require (FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php');
+require FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php';
 
 if (!isset($sql)
    || !is_array($sql)
@@ -104,43 +104,15 @@ if (!isset($sql)
 	die($config_hint);
 }
 
-// Legacy sql-root-information
-if (isset($sql['root_user'])
-	&& isset($sql['root_password'])
-	&& (!isset($sql_root) || !is_array($sql_root))
-) {
-	$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
-	unset($sql['root_user']);
-	unset($sql['root_password']);
-}
-
 /**
  * Includes the Functions
  */
-require (FROXLOR_INSTALL_DIR.'/lib/functions.php');
+require FROXLOR_INSTALL_DIR.'/lib/functions.php';
 
 /**
  * Includes the MySQL-Tabledefinitions etc.
  */
-require (FROXLOR_INSTALL_DIR.'/lib/tables.inc.php');
-
-/**
- * Includes the MySQL-Connection-Class
- */
-$db = new db($sql['host'], $sql['user'], $sql['password'], $sql['db']);
-unset($sql['password']);
-
-// we will try to unset most of the $sql information if they are not needed
-// by the calling script.
-if (!isset($need_db_sql_data) || $need_db_sql_data !== true) {
-	unset($sql);
-	$sql = array();
-}
-
-if (!isset($need_root_db_sql_data) || $need_root_db_sql_data !== true) {
-	unset($sql_root);
-	$sql_root = array();
-}
+require FROXLOR_INSTALL_DIR.'/lib/tables.inc.php';
 
 /**
  * Create a new idna converter
@@ -207,7 +179,11 @@ if (isset($_POST['s'])) {
 }
 
 $timediff = time() - $settings['session']['sessiontimeout'];
-$db->query('DELETE FROM `' . TABLE_PANEL_SESSIONS . '` WHERE `lastactivity` < "' . (int)$timediff . '"');
+$del_stmt = Database::prepare("
+	DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `lastactivity` < :timediff
+");
+Database::pexecute($del_stmt, array('timediff' => $timediff));
+
 $userinfo = array();
 
 if (isset($s)
@@ -219,25 +195,46 @@ if (isset($s)
 	ini_set("session.use_cookies", false);
 	session_id($s);
 	session_start();
-	$query = 'SELECT `s`.*, `u`.* FROM `' . TABLE_PANEL_SESSIONS . '` `s` LEFT JOIN `';
+	$query = "SELECT `s`.*, `u`.* FROM `" . TABLE_PANEL_SESSIONS . "` `s` LEFT JOIN `";
 
 	if (AREA == 'admin') {
-		$query.= TABLE_PANEL_ADMINS . '` `u` ON (`s`.`userid` = `u`.`adminid`)';
+		$query.= TABLE_PANEL_ADMINS . "` `u` ON (`s`.`userid` = `u`.`adminid`)";
 		$adminsession = '1';
 	} else {
-		$query.= TABLE_PANEL_CUSTOMERS . '` `u` ON (`s`.`userid` = `u`.`customerid`)';
+		$query.= TABLE_PANEL_CUSTOMERS . "` `u` ON (`s`.`userid` = `u`.`customerid`)";
 		$adminsession = '0';
 	}
 
-	$query.= 'WHERE `s`.`hash`="' . $db->escape($s) . '" AND `s`.`ipaddress`="' . $db->escape($remote_addr) . '" AND `s`.`useragent`="' . $db->escape($http_user_agent) . '" AND `s`.`lastactivity` > "' . (int)$timediff . '" AND `s`.`adminsession` = "' . $db->escape($adminsession) . '"';
-	$userinfo = $db->query_first($query);
+	$query.= "WHERE `s`.`hash` = :hash AND `s`.`ipaddress` = :ipaddr
+		AND `s`.`useragent` = :ua AND `s`.`lastactivity` > :timediff
+		AND `s`.`adminsession` = :adminsession
+	";
 
-	if ((($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid'])))
-	   && (!isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')
+	$userinfo_data = array(
+		'hash' => $s,
+		'ipaddr' => $remote_addr,
+		'ua' => $http_user_agent,
+		'timediff' => $timediff,
+		'adminsession' => $adminsession
+	);
+	$userinfo_stmt = Database::prepare($query);
+	$userinfo = Database::pexecute_first($userinfo_stmt, $userinfo_data);
+
+	if ((($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid']))
+		|| ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid'])))
+		&& (!isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')
 	) {
-		$userinfo['newformtoken'] = strtolower(md5(uniqid(microtime(), 1)));
-		$query = 'UPDATE `' . TABLE_PANEL_SESSIONS . '` SET `lastactivity`="' . time() . '", `formtoken`="' . $userinfo['newformtoken'] . '" WHERE `hash`="' . $db->escape($s) . '" AND `adminsession` = "' . $db->escape($adminsession) . '"';
-		$db->query($query);
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
+			`lastactivity` = :lastactive, `formtoken` = NULL
+			WHERE `hash` = :hash AND `adminsession` = :adminsession
+		");
+		$upd_data = array(
+			'lastactive' => time(),
+			'hash' => $s,
+			'adminsession' => $adminsession
+		);
+		Database::pexecute($upd_stmt, $upd_data);
 		$nosession = 0;
 	} else {
 		$nosession = 1;
@@ -254,11 +251,10 @@ $languages = array();
 $iso = array();
 
 // query the whole table
-$query = 'SELECT * FROM `' . TABLE_PANEL_LANGUAGE . '` ';
-$result = $db->query($query);
+$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
 
 // presort languages
-while ($row = $db->fetch_array($result)) {
+while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$langs[$row['language']][] = $row;
 	// check for row[iso] cause older froxlor
 	// versions didn't have that and it will
@@ -335,7 +331,7 @@ $linker = new linker('index.php', $s);
 /**
  * global Theme-variable
  */
-$theme = isset($settings['panel']['default_theme']) ? $settings['panel']['default_theme'] : 'Froxlor';
+$theme = isset($settings['panel']['default_theme']) ? $settings['panel']['default_theme'] : 'Sparkle';
 
 /**
  * overwrite with customer/admin theme if defined
@@ -347,12 +343,10 @@ if (isset($userinfo['theme']) && $userinfo['theme'] != $theme) {
 // check for existence of the theme
 if (!file_exists('templates/'.$theme.'/index.tpl')) {
 	// Fallback
-	$theme = 'Froxlor';
+	$theme = 'Sparkle';
 }
 
-/*
- * check for custom header-graphic
- */
+// check for custom header-graphic
 $hl_path = 'templates/'.$theme.'/assets/img';
 $header_logo = $hl_path.'/logo.png';
 
@@ -441,11 +435,12 @@ if ($settings['ticket']['enabled'] == '1') {
 	$opentickets = 0;
 
 	if (AREA == 'admin' && isset($userinfo['adminid'])) {
-		$opentickets = $db->query_first('
-			SELECT COUNT(`id`) as `count` FROM `' . TABLE_PANEL_TICKETS . '`
-			WHERE `answerto` = "0" AND (`status` = "0" OR `status` = "1")
-			AND `lastreplier`="0" AND `adminid` = "' . $userinfo['adminid'] . '"
-		');
+		$opentickets_stmt = Database::prepare("
+			SELECT COUNT(`id`) as `count` FROM `" . TABLE_PANEL_TICKETS . "`
+			WHERE `answerto` = '0' AND (`status` = '0' OR `status` = '1')
+			AND `lastreplier` = '0' AND `adminid` = :adminid
+		");
+		$opentickets = Database::pexecute_first($opentickets_stmt, array('adminid' => $userinfo['adminid']));
 		$awaitingtickets = $opentickets['count'];
 
 		if ($opentickets > 0) {
@@ -453,11 +448,12 @@ if ($settings['ticket']['enabled'] == '1') {
 		}
 	}
 	elseif (AREA == 'customer' && isset($userinfo['customerid'])) {
-		$opentickets = $db->query_first('
-			SELECT COUNT(`id`) as `count` FROM `' . TABLE_PANEL_TICKETS . '`
-			WHERE `answerto` = "0" AND (`status` = "0" OR `status` = "2")
-			AND `lastreplier`="1" AND `customerid` = "' . $userinfo['customerid'] . '"
-		');
+		$opentickets_stmt = Database::prepare("
+			SELECT COUNT(`id`) as `count` FROM `" . TABLE_PANEL_TICKETS . "`
+			WHERE `answerto` = '0' AND (`status` = '0' OR `status` = '2')
+			AND `lastreplier` = '1' AND `customerid` = :customerid
+		");
+		$opentickets = Database::pexecute_first($opentickets_stmt, array('customerid' => $userinfo['customerid']));
 		$awaitingtickets = $opentickets['count'];
 
 		if ($opentickets > 0) {

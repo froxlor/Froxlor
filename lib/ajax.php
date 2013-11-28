@@ -2,8 +2,7 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
- * Copyright (c) 2010 the Froxlor Team (see authors).
+ * Copyright (c) 2013 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
@@ -31,7 +30,7 @@ if ($action == "newsfeed") {
 	if (function_exists("simplexml_load_file") == false) {
 		die();
 	}
-	
+
 	if (ini_get('allow_url_fopen')) {
 		$news = simplexml_load_file($feed, null, LIBXML_NOCDATA);
 	} else {
@@ -50,11 +49,11 @@ if ($action == "newsfeed") {
 	if ($news !== false) {
 		for ($i = 0; $i < 3; $i++) {
 			$item = $news->channel->item[$i];
-			
+
 			$title = (string)$item->title;
 			$link = (string)$item->link;
 			$content = preg_replace("/[\r\n]+/", "", strip_tags($item->description));
-			
+
 			echo "<div class=\"newsitem\"><a href=\"" . $link . "\" target=\"_blank\"><b>" . $title . "</b><br />" . $content . "</a></div>";
 		}
 	} else {
