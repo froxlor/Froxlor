@@ -977,7 +977,7 @@ if ($page == 'domains'
 		$result_stmt = Database::prepare("
 			SELECT `d`.*, `c`.`customerid` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 			WHERE `d`.`parentdomainid` = '0' AND `d`.`id` = :id" .
-			($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = '" . (int)$userinfo['adminid'] . "' ")
+			($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid")
 		);
 		$params = array('id' => $id);
 		if ($userinfo['customers_see_all'] == '0') {
