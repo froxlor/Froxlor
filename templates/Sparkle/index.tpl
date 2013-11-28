@@ -30,9 +30,7 @@
 	<hgroup>
 		<h1>Froxlor Server Management Panel</h1>
 	</hgroup>
-	<a href="{$linker->getLink(array('section' => 'index'))}">
-		<img src="{$header_logo}" alt="Froxlor Server Management Panel" class="small" />
-	</a>
+	<img src="{$header_logo}" alt="Froxlor Server Management Panel" class="small" />
 </header>
 <div class="content">
 <nav><div class="menuelement bradiusodd">
