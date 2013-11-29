@@ -310,6 +310,19 @@ class Database {
 		@fwrite($sqllog, date('d.m.Y H:i', time())." --- DEBUG: \n".$error->getTraceAsString()."\n");
 		@fclose($sqllog);
 
+		/**
+		 * log error for reporting
+		*/
+		$errid = substr(md5(microtime()), 5, 5);
+		$err_file = makeCorrectFile($sl_dir."/".$errid."_sql-error.log");
+		$errlog = @fopen($err_file, 'w');
+		@fwrite($errlog, "|CODE ".$error->getCode()."\n");
+		@fwrite($errlog, "|MSG ".$error->getMessage()."\n");
+		@fwrite($errlog, "|FILE ".$error->getFile()."\n");
+		@fwrite($errlog, "|LINE ".$error->getLine()."\n");
+		@fwrite($errlog, "|TRACE\n".$error->getTraceAsString()."\n");
+		@fclose($errlog);
+
 		if ($showerror) {
 			if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 				// if we're not on the shell, output a nicer error-message
@@ -317,6 +330,7 @@ class Database {
 				// replace values
 				$err_hint = str_replace("<TEXT>", $error->getMessage(), $err_hint);
 				$err_hint = str_replace("<DEBUG>", $error->getTraceAsString(), $err_hint);
+				$err_hint = str_replace("<LINK>", $linker->getLink(array('section' => 'index', 'page' => 'send_error_report', 'errorid' => $errid)), $err_hint);
 				// show
 				die($err_hint);
 			}

@@ -34,8 +34,14 @@
 					<p>&nbsp;</p>
 				</div>
 			</div>
-			<aside class="right">
-				<a href="#" title="Click here to go back" id="historyback">Go back</a>
+			<aside>
+				<div style="float:left;">
+					<a href="#" title="Click here to go back" id="historyback">Go back</a>
+				</div>
+				<div style="float:right;">
+					<a href="<LINK>" title="Click here to report error">Report error</a>
+				</div>
+				<div style="clear:both;"></div>
 			</aside>
 		</section>
 
