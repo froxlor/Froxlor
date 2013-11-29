@@ -8,7 +8,7 @@ $header
 		</header>
 
 		<section>
-			<form method="post" action="{$linker->getLink(array('section' => 'index'))}" enctype="application/x-www-form-urlencoded">
+			<form method="post" action="{$linker->getLink(array('section' => 'index', 'errorid' => $errid))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 				<input type="hidden" name="s" value="$s" />
 				<input type="hidden" name="page" value="$page" />
@@ -16,10 +16,10 @@ $header
 				<table class="bradius">
 					<thead>
 					<tr>
-						<td>
+						<th>
 							<p>Thank you for reporting this error and helping us to make froxlor better.</p>
 							<p>This is the e-mail that will be sent to the froxlor developer team:</p>
-						</td>
+						</th>
 					</tr>
 					</thead>
 					<tbody>

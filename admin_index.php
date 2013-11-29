@@ -351,10 +351,11 @@ if ($page == 'overview') {
 			$mail_body = "Dear froxlor-team,\n\n";
 			$mail_body .= "the following error has been reported by a user:\n\n";
 			$mail_body .= "-------------------------------------------------------------\n";
-			$mail_body .= $_error['code'].' '.$_error['message']."\n";
-			$mail_body .= $_error['file'].':'.$_error['line']."\n\n";
-			$mail_body .= "Trace:\n".$_error['trace']."\n\n";
-			$mail_body .= "-------------------------------------------------------------\n";
+			$mail_body .= $_error['code'].' '.$_error['message']."\n\n";
+			$mail_body .= "File: ".$_error['file'].':'.$_error['line']."\n\n";
+			$mail_body .= "Trace:\n".trim($_error['trace'])."\n\n";
+			$mail_body .= "-------------------------------------------------------------\n\n";
+			$mail_body .= "Froxlor-version: ".$version."\n\n";
 			$mail_body .= "End of report";
 			$mail_html = str_replace("\n", "<br />", $mail_body);
 
