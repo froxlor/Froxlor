@@ -56,8 +56,7 @@ if ($page == 'overview') {
 			if (!isset($emails[$row['domain']]) || !is_array($emails[$row['domain']])) {
 				$emails[$row['domain']] = array();
 			}
-
-			$row['mboxsize'] = size_readable($row['mboxsize']);
+			
 			$emails[$row['domain']][$row['email_full']] = $row;
 		}
 
@@ -106,6 +105,8 @@ if ($page == 'overview') {
 					if (strlen($row['destination']) > 35) {
 						$row['destination'] = substr($row['destination'], 0, 32) . '... (' . $destinations_count . ')';
 					}
+					
+					$row['mboxsize'] = size_readable($row['mboxsize'], 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
 
 					$row = htmlentities_array($row);
 					eval("\$accounts.=\"" . getTemplate("email/emails_email") . "\";");

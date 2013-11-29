@@ -15,9 +15,9 @@ $header
 
 					<table class="formtable">
 						<tr>
-							<td>{$lng['traffic']['sumftp']} MB</td>
-							<td>{$lng['traffic']['sumhttp']} MB</td>
-							<td>{$lng['traffic']['summail']} MB</td>
+							<td>{$lng['traffic']['sumftp']}</td>
+							<td>{$lng['traffic']['sumhttp']}</td>
+							<td>{$lng['traffic']['summail']}</td>
 						</tr>
 						<tr>
 							<td><div style="color:#019522;text-align:center">{$traffic_complete['ftp']}</div></td>

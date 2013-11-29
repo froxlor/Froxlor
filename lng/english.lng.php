@@ -61,8 +61,8 @@ $lng['customer']['phone'] = 'Phone';
 $lng['customer']['fax'] = 'Fax';
 $lng['customer']['email'] = 'Email';
 $lng['customer']['customernumber'] = 'Customer ID';
-$lng['customer']['diskspace'] = 'Webspace (MB)';
-$lng['customer']['traffic'] = 'Traffic (GB)';
+$lng['customer']['diskspace'] = 'Webspace (MiB)';
+$lng['customer']['traffic'] = 'Traffic (GiB)';
 $lng['customer']['mysqls'] = 'MySQL-databases';
 $lng['customer']['emails'] = 'Email-addresses';
 $lng['customer']['accounts'] = 'Email-accounts';
@@ -720,11 +720,11 @@ $lng['traffic']['months'][9] = "September";
 $lng['traffic']['months'][10] = "October";
 $lng['traffic']['months'][11] = "November";
 $lng['traffic']['months'][12] = "December";
-$lng['traffic']['mb'] = "Traffic (MB)";
+$lng['traffic']['mb'] = "Traffic (MiB)";
 $lng['traffic']['distribution'] = '<font color="#019522">FTP</font> | <font color="#0000FF">HTTP</font> | <font color="#800000">Mail</font>';
-$lng['traffic']['sumhttp'] = 'Summation HTTP-Traffic in';
-$lng['traffic']['sumftp'] = 'Summation FTP-Traffic in';
-$lng['traffic']['summail'] = 'Summation Mail-Traffic in';
+$lng['traffic']['sumhttp'] = 'Total HTTP-Traffic';
+$lng['traffic']['sumftp'] = 'Total FTP-Traffic';
+$lng['traffic']['summail'] = 'Total Mail-Traffic';
 
 // ADDED IN 1.2.19-svn4.5
 
@@ -1870,13 +1870,13 @@ $lng['error']['session_timeout_desc'] = 'You should not set the session timeout 
 $lng['admin']['assignedmax'] = 'Assigned / Max';
 $lng['admin']['usedmax'] = 'Used / Max';
 $lng['admin']['used'] = 'Used';
-$lng['mysql']['size'] = 'Database size (MB)';
+$lng['mysql']['size'] = 'Size';
 
 $lng['error']['invalidhostname'] = 'Hostname can\'t be empty nor can it consist only of whitespaces';
 
-$lng['traffic']['http'] = 'HTTP (MB)';
-$lng['traffic']['ftp'] = 'FTP (MB)';
-$lng['traffic']['mail'] = 'Mail (MB)';
+$lng['traffic']['http'] = 'HTTP (MiB)';
+$lng['traffic']['ftp'] = 'FTP (MiB)';
+$lng['traffic']['mail'] = 'Mail (MiB)';
 
 // ADDED IN 0.9.27-svn1
 $lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle Timeout';

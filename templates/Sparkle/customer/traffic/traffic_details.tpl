@@ -14,11 +14,13 @@ $header
 					<legend>Froxlor&nbsp;-&nbsp;{$lng['menue']['traffic']['traffic']} $show</legend>
 
 					<table class="formtable">
-						<tr>
-							<td>{$lng['traffic']['sumftp']} MB</td>
-							<td>{$lng['traffic']['sumhttp']} MB</td>
-							<td>{$lng['traffic']['summail']} MB</td>
-						</tr>
+						<thead>
+							<tr>
+								<th>{$lng['traffic']['sumftp']}</th>
+								<th>{$lng['traffic']['sumhttp']}</th>
+								<th>{$lng['traffic']['summail']}</th>
+							</tr>
+						</thead>
 						<tr>
 							<td><div style="color:#019522;text-align:center">{$traffic_complete['ftp']}</div></td>
 							<td><div style="color:#0000FF;text-align:center">{$traffic_complete['http']}</div></td>
