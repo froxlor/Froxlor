@@ -1705,3 +1705,6 @@ $lng['serversettings']['phpfpm_settings']['ipcdir']['description'] = 'In dieses 
 $lng['panel']['news'] = 'Neuigkeiten';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Eine SSL-Weiterleitung ist nur möglich, wenn der Domain mindestens eine IP/Port Kombination zugewiesen wurde, bei der SSL aktiviert ist.';
 $lng['error']['fcgidstillenableddeadlock'] = 'FCGID ist derzeit aktiviert.<br />Bitte deaktiviere es, um einen anderen Webserver als Apache2 auswählen zu können.';
+$lng['error']['send_report_title'] = 'Fehler melden';
+$lng['error']['send_report_desc'] = 'Danke, dass Sie uns diesen Fehler melden und damit helfen Froxlor zu verbessern.<br />Folgender Bericht wird per Mail an das Froxlor Entwickler Team gesendet.';
+$lng['error']['send_report'] = 'Fehlerbericht senden';

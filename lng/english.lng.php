@@ -1979,3 +1979,6 @@ $lng['serversettings']['phpfpm_settings']['ipcdir']['description'] = 'The direct
 $lng['panel']['news'] = 'News';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using the SSL redirect is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
 $lng['error']['fcgidstillenableddeadlock'] = 'FCGID is currently active.<br />Please deactivate it before switching to another webserver than Apache2';
+$lng['error']['send_report_title'] = 'Send error report';
+$lng['error']['send_report_desc'] = 'Thank you for reporting this error and helping us to froxlor improve froxlor.<br />This is the email which will be sent to the froxlor developer team:';
+$lng['error']['send_report'] = 'Send report';
