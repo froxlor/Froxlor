@@ -25,20 +25,21 @@ $(document).ready(function() {
 		return false;
 	});
 	
+	// Load Newsfeed
+	var ajax_load = "<div id='newsitem'>Loading newsfeed...</div>";
+	$("#newsfeeditems").html(ajax_load).load("lib/ajax.php?action=newsfeed", function() {
+		if ($("#newsfeeditems").html() != "") {
+			$(window).trigger('resize');
+			$("#newsfeed").slideDown();
+		}
+	});	
+	
 	// Height of divs fix
 	var snheight = $('#sidenavigation').height();
 	var mainheight = $('#maincontent').height();
 	if (snheight > mainheight) {
 		$('#maincontent').height(snheight - 60);
 	}
-	
-	// Load Newsfeed
-	var ajax_load = "<div id='newsitem'>Loading newsfeed...</div>";
-	$("#newsfeeditems").html(ajax_load).load("lib/ajax.php?action=newsfeed", function() {
-		if ($("#newsfeeditems").html() != "") {
-			$("#newsfeed").slideDown();
-		}
-	});
 
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
