@@ -13,9 +13,9 @@ $header
 				<fieldset>
 					<table class="fullform bradius">
 						<tr>
-							<th>{$lng['traffic']['sumftp']} GB</th>
-							<th>{$lng['traffic']['sumhttp']} GB</th>
-							<th>{$lng['traffic']['summail']} GB</th>
+							<th>{$lng['traffic']['sumftp']}</th>
+							<th>{$lng['traffic']['sumhttp']}</th>
+							<th>{$lng['traffic']['summail']}</th>
 						</tr>
 						<tr>
 							<td><div style="color:#019522;">{$traffic_complete['ftp']}</div></td>

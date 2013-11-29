@@ -124,6 +124,10 @@ footer a:hover {
 	border: 1px solid #999999;
 }
 
+.errorbox {
+	width: 800px;
+}
+
 .fullform,.midform,.tinyform {
 	border: 1px solid #666;
 	background-color: #f8f8f8;

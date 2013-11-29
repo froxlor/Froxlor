@@ -66,13 +66,13 @@ if ($page == 'overview') {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
 				$row = htmlentities_array($row);
-				$mbdata_stmt = Database::prepare("SELECT SUM( data_length + index_length) / 1024 / 1024 'MB' FROM information_schema.TABLES
+				$mbdata_stmt = Database::prepare("SELECT SUM(data_length + index_length) FROM information_schema.TABLES
 					WHERE table_schema = :table_schema
 					GROUP BY table_schema"
 				);
 				Database::pexecute($mbdata_stmt, array("table_schema" => $row['databasename']));
 				$mbdata = $mbdata_stmt->fetch(PDO::FETCH_ASSOC);
-				$row['size'] = number_format($mbdata['MB'], 3, '.', '');
+				$row['size'] = size_readable($mbdata['MB'], 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
 				eval("\$mysqls.=\"" . getTemplate('mysql/mysqls_database') . "\";");
 				$count++;
 			}

@@ -61,8 +61,8 @@ $lng['customer']['phone'] = 'Telefon';
 $lng['customer']['fax'] = 'Fax';
 $lng['customer']['email'] = 'E-Mail';
 $lng['customer']['customernumber'] = 'Kundennummer';
-$lng['customer']['diskspace'] = 'Webspace (MB)';
-$lng['customer']['traffic'] = 'Traffic (GB)';
+$lng['customer']['diskspace'] = 'Webspace (MiB)';
+$lng['customer']['traffic'] = 'Traffic (GiB)';
 $lng['customer']['mysqls'] = 'MySQL-Datenbanken';
 $lng['customer']['emails'] = 'E-Mail-Adressen';
 $lng['customer']['accounts'] = 'E-Mail-Konten';
@@ -718,12 +718,12 @@ $lng['traffic']['months'][9] = "September";
 $lng['traffic']['months'][10] = "Oktober";
 $lng['traffic']['months'][11] = "November";
 $lng['traffic']['months'][12] = "Dezember";
-$lng['traffic']['mb'] = "Traffic (MB)";
+$lng['traffic']['mb'] = "Traffic (MiB)";
 $lng['traffic']['day'] = "Tag";
 $lng['traffic']['distribution'] = '<font color="#019522">FTP</font> | <font color="#0000FF">HTTP</font> | <font color="#800000">Mail</font>';
-$lng['traffic']['sumhttp'] = 'Summe HTTP-Traffic in';
-$lng['traffic']['sumftp'] = 'Summe FTP-Traffic in';
-$lng['traffic']['summail'] = 'Summe Mail-Traffic in';
+$lng['traffic']['sumhttp'] = 'Gesamt HTTP-Traffic';
+$lng['traffic']['sumftp'] = 'Gesamt FTP-Traffic';
+$lng['traffic']['summail'] = 'Gesamt Mail-Traffic';
 
 // ADDED IN 1.2.19-svn4.5
 
@@ -1597,13 +1597,13 @@ $lng['error']['session_timeout_desc'] = 'Der Wert der Session-Timeout sollte nic
 $lng['admin']['assignedmax'] = 'Zugewiesen / Max.';
 $lng['admin']['usedmax'] = 'Benutzt / Max.';
 $lng['admin']['used'] = 'Benutzt';
-$lng['mysql']['size'] = 'Datenbankgröße (MB)';
+$lng['mysql']['size'] = 'Datenbankgröße';
 
 $lng['error']['invalidhostname'] = 'Hostname darf nicht leer sein oder nur aus Leerzeichen bestehen';
 
-$lng['traffic']['http'] = 'HTTP (MB)';
-$lng['traffic']['ftp'] = 'FTP (MB)';
-$lng['traffic']['mail'] = 'Mail (MB)';
+$lng['traffic']['http'] = 'HTTP (MiB)';
+$lng['traffic']['ftp'] = 'FTP (MiB)';
+$lng['traffic']['mail'] = 'Mail (MiB)';
 
 // ADDED IN 0.9.27-svn1
 $lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle-Timeout';
