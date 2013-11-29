@@ -18,7 +18,7 @@
 </head>
 <body>
 <div class="loginpage">
-	<article class="login bradius">
+	<article class="login errorbox bradius">
 		<header class="dark">
 			<img src="templates/Froxlor/assets/img/logo.png" alt="Froxlor Server Management Panel" />
 		</header>

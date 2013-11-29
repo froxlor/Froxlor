@@ -182,7 +182,7 @@ footer img {
 	height: 13px;
 }
 
-.login, .install {
+.login, .install, .errorbox {
 	background-color:#fff;
 	margin: 9%;
 	margin-left: auto;
@@ -194,7 +194,7 @@ footer img {
 	margin: 10px !important;
 }
 
-.install {
+.install, .errorbox {
 	width: 800px;
 }
 
@@ -230,10 +230,13 @@ table.tinyform input {
 	padding: 5px 15px 15px 15px;
 }
 
-.tinyform,.loginsec {
+.tinyform, .loginsec, .errorsec {
 	margin-top:10px;
 	padding:10px 0;
 	text-align:center;
+}
+.errorsec {
+	padding: 10px 10px;
 }
 .tinyform {
 	padding: 0;
@@ -332,7 +335,7 @@ p.submit {
 	padding-right:46px;
 }
 
-.installsec aside,.loginsec aside {
+.installsec aside,.loginsec aside, .errorsec aside {
 	border-top:1px solid #d1d5d8;
 	clear:both;
 	float:none;
