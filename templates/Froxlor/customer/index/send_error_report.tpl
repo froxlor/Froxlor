@@ -2,18 +2,18 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/error_report_big.png" alt="" />&nbsp;
+				<img src="templates/{$theme}/assets/img/icons/display.png" alt="" />&nbsp;
 				{$lng['error']['send_report_title']}
 			</h2>
 		</header>
 
-		<section class="fullform bradius">
+		<section>
 			<form method="post" action="{$linker->getLink(array('section' => 'index', 'errorid' => $errid))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 				<input type="hidden" name="s" value="$s" />
 				<input type="hidden" name="page" value="$page" />
 				<input type="hidden" name="send" value="send" />
-				<table class="formtable">
+				<table class="bradiusodd">
 					<thead>
 					<tr>
 						<th>

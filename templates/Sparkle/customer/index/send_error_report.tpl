@@ -2,23 +2,22 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/display_big.png" alt="" />&nbsp;
-				Send error report
+				<img src="templates/{$theme}/assets/img/icons/error_report_big.png" alt="" />&nbsp;
+				{$lng['error']['send_report_title']}
 			</h2>
 		</header>
 
-		<section>
+		<section class="fullform bradius">
 			<form method="post" action="{$linker->getLink(array('section' => 'index', 'errorid' => $errid))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 				<input type="hidden" name="s" value="$s" />
 				<input type="hidden" name="page" value="$page" />
 				<input type="hidden" name="send" value="send" />
-				<table class="bradius">
+				<table class="formtable">
 					<thead>
 					<tr>
 						<th>
-							<p>Thank you for reporting this error and helping us to make froxlor better.</p>
-							<p>This is the e-mail that will be sent to the froxlor developer team:</p>
+							<p>{$lng['error']['send_report_desc']}</p>
 						</th>
 					</tr>
 					</thead>
@@ -32,7 +31,7 @@ $header
 					<tfoot>
 						<tr>
 							<td align="center">					
-								<input class="bottom" type="submit" value="Send report" />
+								<input class="bottom" type="submit" value="{$lng['error']['send_report']}" />
 							</td>
 						</tr>
 					</tfoot>

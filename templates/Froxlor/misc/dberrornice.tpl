@@ -31,9 +31,15 @@
 					<pre style="overflow:auto;"><DEBUG></pre>
 				</div>
 			</div>
-			<p class="submit">
-				<a href="#" title="Click here to go back" id="historyback">Go back</a>
-			</p>
+			<aside>
+				<div style="float:left;">
+					<a href="#" title="Click here to go back" id="historyback">Go back</a>
+				</div>
+				<div style="float:right;">
+					<a href="<LINK>" title="Click here to report error">Report error</a>
+				</div>
+				<div style="clear:both;"></div>
+			</aside>
 		</section>
 
 	</article>
