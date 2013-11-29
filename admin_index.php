@@ -369,7 +369,7 @@ if ($page == 'overview') {
 					$mail->Subject = '[Froxlor] Error report by user';
 					$mail->AltBody = $mail_body;
 					$mail->MsgHTML($mail_html);
-					$mail->AddAddress('team@froxlor.org', 'Froxlor Developer Team');
+					$mail->AddAddress('error-reports@froxlor.org', 'Froxlor Developer Team');
 					$mail->Send();
 				} catch(phpmailerException $e) {
 					$mailerr_msg = $e->errorMessage();

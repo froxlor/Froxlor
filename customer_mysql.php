@@ -52,7 +52,7 @@ if ($page == 'overview') {
 		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
 		$mysqls_count = Database::num_rows();
 		$paging->setEntries($mysqls_count);
-		
+
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
@@ -66,7 +66,7 @@ if ($page == 'overview') {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
 				$row = htmlentities_array($row);
-				$mbdata_stmt = Database::prepare("SELECT SUM(data_length + index_length) FROM information_schema.TABLES
+				$mbdata_stmt = Database::prepare("SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
 					WHERE table_schema = :table_schema
 					GROUP BY table_schema"
 				);
@@ -89,7 +89,7 @@ if ($page == 'overview') {
 		);
 		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-		
+
 		if (isset($result['databasename']) && $result['databasename'] != '') {
 			if (!isset($sql_root[$result['dbserver']]) || !is_array($sql_root[$result['dbserver']])) {
 				$result['dbserver'] = 0;
@@ -99,7 +99,7 @@ if ($page == 'overview') {
 				// Begin root-session
 				Database::needRoot(true);
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted database '" . $result['databasename'] . "'");
-				if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') { 
+				if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
 					// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
 					$stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM :databasename");
 					Database::pexecute($stmt, array("databasename" => $result['databasename']));
@@ -109,13 +109,13 @@ if ($page == 'overview') {
 					WHERE `User`= :databasename"
 				);
 				Database::pexecute($host_res_stmt, array("databasename" => $result['databasename']));
-				
+
 				while ($host = $host_res_stmt->fetch(PDO::FETCH_ASSOC)) {
 					// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
 					$stmt = Database::prepare("DROP USER :databasename@:host");
 					Database::pexecute($stmt, array("databasename" => $result['databasename'], "host" => $host['Host']));
 				}
-				
+
 				$stmt = Database::prepare("DROP DATABASE IF EXISTS `" . $result['databasename'] . "`");
 				Database::pexecute($stmt, array(), false);
 				$stmt = Database::prepare("FLUSH PRIVILEGES");
@@ -130,13 +130,13 @@ if ($page == 'overview') {
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
 
 				$resetaccnumber = ($userinfo['mysqls_used'] == '1') ? " , `mysql_lastaccountnumber` = '0' " : '';
-				
+
 				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
 					SET `mysqls_used` = `mysqls_used` - 1 " . $resetaccnumber . "
 					WHERE `customerid` = :customerid"
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
-				
+
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			} else {
 				$dbnamedesc = $result['databasename'];
@@ -167,7 +167,7 @@ if ($page == 'overview') {
 							$dbserver = 0;
 						}
 					}
-					
+
 					// validate description before actual adding the database, #1052
 					$databasedescription = validate(trim($_POST['description']), 'description');
 
@@ -186,7 +186,7 @@ if ($page == 'overview') {
 					} else {
 						$username = $userinfo['loginname'] . $settings['customer']['mysqlprefix'] . (intval($userinfo['mysql_lastaccountnumber']) + 1);
 					}
-					
+
 					$stmt = Database::prepare("CREATE DATABASE `" . $username . "`");
 					Database::pexecute($stmt);
 					$log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
@@ -218,7 +218,7 @@ if ($page == 'overview') {
 						"dbserver" => $dbserver
 					);
 					Database::pexecute($stmt, $params);
-					
+
 					$stmt = Database::prepare('UPDATE `' . TABLE_PANEL_CUSTOMERS . '`
 						SET `mysqls_used` = `mysqls_used` + 1, `mysql_lastaccountnumber` = `mysql_lastaccountnumber` + 1
 						WHERE `customerid` = :customerid'
@@ -238,9 +238,9 @@ if ($page == 'overview') {
 							'DB_PASS' => $password,
 							'DB_DESC' => $databasedescription,
 							'DB_SRV' => $sql_root[$dbserver]['host'],
-							'PMA_URI' => $pma 
+							'PMA_URI' => $pma
 						);
-						
+
 						$def_language = $userinfo['def_language'];
 						$result_stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 							WHERE `adminid` = :adminid
@@ -251,7 +251,7 @@ if ($page == 'overview') {
 						Database::pexecute($result_stmt, array("adminid" => $userinfo['adminid'], "lang" => $def_language));
 						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['customer']['mysql_add']['infomail_subject']), $replace_arr));
-						
+
 						$result_stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 							WHERE `adminid`= :adminid
 							AND `language`= :lang
