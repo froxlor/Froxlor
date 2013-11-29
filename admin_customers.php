@@ -285,9 +285,9 @@ if ($page == 'customers'
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
 				$domains_deleted = $stmt->rowCount();
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE` WHERE `customerid` = :id");
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTACCESS . "` WHERE` WHERE `customerid` = :id");
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTACCESS . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `customerid` = :id AND `adminsession` = '0'");
 				Database::pexecute($stmt, array('id' => $id));
