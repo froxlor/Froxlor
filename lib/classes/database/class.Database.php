@@ -294,7 +294,7 @@ class Database {
 	 * @param bool $showerror if set to false, the error will be logged but we go on
 	 */
 	private static function _showerror($error, $showerror = true) {
-		global $theme;
+		global $theme, $linker;
 
 		/**
 		 * log to a file, so we can actually ask people for the error
