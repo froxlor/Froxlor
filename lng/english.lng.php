@@ -107,7 +107,7 @@ $lng['index']['accountdetails'] = 'Account details';
 
 $lng['changepassword']['old_password'] = 'Old password';
 $lng['changepassword']['new_password'] = 'New password';
-$lng['changepassword']['new_password_confirm'] = 'New password (confirm)';
+$lng['changepassword']['new_password_confirm'] = 'Confirm password';
 $lng['changepassword']['new_password_ifnotempty'] = 'New password (empty = no change)';
 $lng['changepassword']['also_change_ftp'] = ' also change password of the main FTP account';
 
@@ -851,8 +851,8 @@ $lng['login']['email'] = 'E-mail address';
 $lng['login']['remind'] = 'Reset my password';
 $lng['login']['usernotfound'] = 'User not found!';
 $lng['pwdreminder']['subject'] = 'Froxlor - Password reset';
-$lng['pwdreminder']['body'] = 'Hello %s,\n\nyour froxlor password has been reset!\nThe new password is: %p\n\nThank you,\nyour administrator';
-$lng['pwdreminder']['success'] = 'Password reset successfully.<br />You now should receive an email with your new password.';
+$lng['pwdreminder']['body'] = 'Hello %s,\n\nhere is your link for setting a new password. This link is valid for the next 24 hours.\n\n%a\n\nThank you,\nyour administrator';
+$lng['pwdreminder']['success'] = 'Password reset successfully requested. Please follow the instructions in the email you received.';
 
 // ADDED IN 1.2.19-svn18
 
@@ -1982,3 +1982,7 @@ $lng['error']['fcgidstillenableddeadlock'] = 'FCGID is currently active.<br />Pl
 $lng['error']['send_report_title'] = 'Send error report';
 $lng['error']['send_report_desc'] = 'Thank you for reporting this error and helping us to froxlor improve froxlor.<br />This is the email which will be sent to the froxlor developer team:';
 $lng['error']['send_report'] = 'Send report';
+$lng['pwdreminder']['changed'] = 'Your password has been successfully changed. You can now login using this password.';
+$lng['pwdreminder']['wrongcode'] = 'Sorry, the used activationcode does not exist or is already expired.';
+$lng['admin']['templates']['LINK'] = 'Replaced with the customers password reset link.';
+$lng['pwdreminder']['choosenew'] = 'Choose new password';

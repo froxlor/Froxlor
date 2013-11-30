@@ -107,7 +107,7 @@ $lng['index']['accountdetails'] = 'Kontodaten';
 
 $lng['changepassword']['old_password'] = 'Altes Passwort';
 $lng['changepassword']['new_password'] = 'Neues Passwort';
-$lng['changepassword']['new_password_confirm'] = 'Neues Passwort (bestätigen)';
+$lng['changepassword']['new_password_confirm'] = 'Passwortbestätigung';
 $lng['changepassword']['new_password_ifnotempty'] = 'Neues Passwort (leer = nicht ändern)';
 $lng['changepassword']['also_change_ftp'] = 'Auch Passwort vom Haupt-FTP-Zugang ändern';
 
@@ -850,8 +850,8 @@ $lng['login']['email'] = 'E-Mail Adresse';
 $lng['login']['remind'] = 'Passwort zurücksetzen';
 $lng['login']['usernotfound'] = 'Fehler: Unbekannter Benutzer!';
 $lng['pwdreminder']['subject'] = 'Froxlor - Passwort zurückgesetzt';
-$lng['pwdreminder']['body'] = 'Hallo "%s",\n\nIhr Froxlor Passwort wurde zurückgesetzt!\nDas neue Passwort lautet: %p\n\nVielen Dank,\nIhr Administrator';
-$lng['pwdreminder']['success'] = 'Passwort erfolgreich zurückgesetzt.<br />Sie sollten nun eine E-Mail mit dem neuen Passwort erhalten.';
+$lng['pwdreminder']['body'] = 'Hallo "%s",\n\nHiermit erhalten Sie den Link um ein neues Passwort zu setzen. Dieser Link ist für die nächsten 24 Stunden gültig.\n\n%a\n\nVielen Dank,\nIhr Administrator';
+$lng['pwdreminder']['success'] = 'Das Zurücksetzen des Passworts wurde erfolgreich angefordert. Sie sollten nun eine E-Mail mit weiteren Anweisungen erhalten.';
 
 // ADDED IN 1.2.19-svn18
 
@@ -1708,3 +1708,7 @@ $lng['error']['fcgidstillenableddeadlock'] = 'FCGID ist derzeit aktiviert.<br />
 $lng['error']['send_report_title'] = 'Fehler melden';
 $lng['error']['send_report_desc'] = 'Danke, dass Sie uns diesen Fehler melden und damit helfen Froxlor zu verbessern.<br />Folgender Bericht wird per Mail an das Froxlor Entwickler Team gesendet.';
 $lng['error']['send_report'] = 'Fehlerbericht senden';
+$lng['pwdreminder']['changed'] = 'Ihr Passwort wurde erfolgreich geändert. Sie können sich nun damit ';
+$lng['pwdreminder']['wrongcode'] = 'Der verwendete Aktivierungscode ist entweder nicht gültig oder bereits abgelaufen.';
+$lng['admin']['templates']['LINK'] = 'Wird mit dem Link zum Zurücksetzen des Passworts ersetzt.';
+$lng['pwdreminder']['choosenew'] = 'Neues Passwort auswählen';

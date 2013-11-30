@@ -23,6 +23,7 @@ define('TABLE_FTP_QUOTALIMITS', 'ftp_quotalimits');
 define('TABLE_FTP_QUOTATALLIES', 'ftp_quotatallies');
 define('TABLE_MAIL_USERS', 'mail_users');
 define('TABLE_MAIL_VIRTUAL', 'mail_virtual');
+define('TABLE_PANEL_ACTIVATION', 'panel_activation');
 define('TABLE_PANEL_ADMINS', 'panel_admins');
 define('TABLE_PANEL_CUSTOMERS', 'panel_customers');
 define('TABLE_PANEL_DATABASES', 'panel_databases');

@@ -240,6 +240,12 @@ if ($action == 'login') {
 			case 5:
 				$message = $lng['error']['user_banned'];
 				break;
+			case 6:
+				$successmessage = $lng['pwdreminder']['changed'];
+				break;
+			case 7:
+				$message = $lng['pwdreminder']['wrongcode'];
+				break;
 		}
 
 		$update_in_progress = '';
@@ -265,7 +271,7 @@ if ($action == 'forgotpwd') {
 		Database::pexecute($result_stmt, array("loginname" => $loginname, "email" => $email));
 
 		if (Database::num_rows() == 0) {
-			$result_stmt = Database::prepare("SELECT `adminid`, `name`, `email`, `loginname`, `def_language` FROM `" . TABLE_PANEL_ADMINS . "`
+			$result_stmt = Database::prepare("SELECT `adminid`, `name`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_ADMINS . "`
 				WHERE `loginname`= :loginname
 				AND `email`= :email"
 			);
@@ -289,35 +295,53 @@ if ($action == 'forgotpwd') {
 
 			if (($adminchecked && $settings['panel']['allow_preset_admin'] == '1') || $adminchecked == false) {
 				if ($user !== false) {
-					if ($settings['panel']['password_min_length'] <= 6) {
-						$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
-					} else {
-						// make it two times larger than password_min_length
-						$rnd = '';
-						$minlength = $settings['panel']['password_min_length'];
-						while (strlen($rnd) < ($minlength * 2)) {
-							$rnd .= md5(uniqid(microtime(), 1));
-						}
-						$password = substr($rnd, (int)($minlength / 2), $minlength);
-					}
-
-					$passwordTable = $adminchecked ? TABLE_PANEL_ADMINS : TABLE_PANEL_CUSTOMERS;
-					$stmt = Database::prepare("UPDATE `" . $passwordTable . "` SET `password`= :password
-						WHERE `loginname`= :loginname
-						AND `email`= :email"
+					// build a activation code
+					$timestamp = time();
+					$first = substr(md5($user['loginname'] . $timestamp), 0, 15);
+					$third = substr(md5($user['email'] . $timestamp), -15);
+					$activationcode = $first . $timestamp . $third . substr(md5($third . $timestamp), 0, 10);
+					
+					// Drop all existing activation codes for this user
+					$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_ACTIVATION . "`
+						WHERE `userid` = :userid
+						AND `admin` = :admin"
 					);
-					Database::pexecute($stmt, array("password" => md5($password), "loginname" => $user['loginname'], "email" => $user['email']));
+					$params = array(
+						"userid" => $adminchecked ? $user['adminid'] : $user['customerid'],
+						"admin" => $adminchecked ? 1 : 0
+					);
+					Database::pexecute($stmt, $params);
+					
+					// Add new activation code to database
+					$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_ACTIVATION . "`
+						(userid, admin, creation, activationcode)
+						VALUES (:userid, :admin, :creation, :activationcode)"
+					);
+					$params = array(
+						"userid" => $adminchecked ? $user['adminid'] : $user['customerid'],
+						"admin" => $adminchecked ? 1 : 0,
+						"creation" => $timestamp,
+						"activationcode" => $activationcode
+					);
+					Database::pexecute($stmt, $params);
 
 					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
-					$rstlog->logAction(USR_ACTION, LOG_WARNING, "Password for user '" . $user['loginname'] . "' has been reset!");
-
+					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $user['loginname'] . "' requested a link for setting a new password.");
+					
+					// Set together our activation link
+					$protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http' : 'https';
+					$host = $_SERVER['HTTP_HOST'];
+					$port = $_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '';
+					$script = $_SERVER['SCRIPT_NAME'];
+					$activationlink = $protocol . '://' . $host . $port . $script . '?action=resetpwd&resetcode=' . $activationcode;
+					
 					$replace_arr = array(
 						'SALUTATION' => getCorrectUserSalutation($user),
 						'USERNAME' => $user['loginname'],
-						'PASSWORD' => $password
+						'LINK' => $activationlink
 					);
 
-					$body = strtr($lng['pwdreminder']['body'], array('%s' => $user['firstname'] . ' ' . $user['name'], '%p' => $password));
+					$body = strtr($lng['pwdreminder']['body'], array('%s' => $user['firstname'] . ' ' . $user['name'], '%a' => $activationlink));
 
 					$def_language = ($user['def_language'] != '') ? $user['def_language'] : $settings['panel']['standardlanguage'];
 					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
@@ -339,7 +363,7 @@ if ($action == 'forgotpwd') {
 					Database::pexecute($result_stmt, array("adminid" => $user['adminid'], "lang" => $def_language));
 					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 					$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $body), $replace_arr));
-
+					
 					$_mailerror = false;
 					try {
 						$mail->Subject = $mail_subject;
@@ -358,16 +382,16 @@ if ($action == 'forgotpwd') {
 					if ($_mailerror) {
 						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
 						$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-						redirectTo('index.php', Array('showmessage' => '4', 'customermail' => $user['email']), true);
+						redirectTo('index.php', array('showmessage' => '4', 'customermail' => $user['email']), true);
 						exit;
 					}
 
 					$mail->ClearAddresses();
-					redirectTo('index.php', Array('showmessage' => '1'), true);
+					redirectTo('index.php', array('showmessage' => '1'), true);
 					exit;
 				} else {
 					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
-					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to reset pwd but wasn't found in database!");
+					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $loginname . "' requested to set a new password, but was not found in database!");
 					$message = $lng['login']['combination_not_found'];
 				}
 
@@ -390,4 +414,78 @@ if ($action == 'forgotpwd') {
 	}
 
 	eval("echo \"" . getTemplate('fpwd') . "\";");
+}
+
+if ($action == 'resetpwd') {
+	$message = '';
+	
+	if (isset($_GET['resetcode']) && strlen($_GET['resetcode']) == 50) {
+		// Check if activation code is valid
+		$activationcode = $_GET['resetcode'];
+		$timestamp = substr($activationcode, 15, 10);
+		$third = substr($activationcode, 25, 15);
+		$check = substr($activationcode, 40, 10);
+		
+		if (substr(md5($third . $timestamp), 0, 10) == $check && $timestamp >= time() - 86400) {
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+				$stmt = Database::prepare("SELECT `userid`, `admin` FROM `" . TABLE_PANEL_ACTIVATION . "`
+					WHERE `activationcode` = :activationcode"
+				);
+				$result = Database::pexecute_first($stmt, array("activationcode" => $activationcode));
+				
+				if ($result !== false) {
+					if ($result['admin'] == 1) {
+						$new_password = validate($_POST['new_password'], 'new password');
+						$new_password_confirm = validate($_POST['new_password_confirm'], 'new password confirm');
+					} else {
+						$new_password = validatePassword($_POST['new_password'], 'new password');
+						$new_password_confirm = validatePassword($_POST['new_password_confirm'], 'new password confirm');
+					}
+					
+					if ($new_password == '') {
+						$message = $new_password;
+					} elseif($new_password_confirm == '') {
+						$message = $new_password_confirm;
+					} elseif($new_password != $new_password_confirm) {
+						$message = $new_password . " != " . $new_password_confirm;
+					} else {
+						// Update user password
+						if ($result['admin'] == 1) {
+							$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_ADMINS . "`
+								SET `password` = :newpassword
+								WHERE `adminid` = :userid"
+							);
+						} else {
+							$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+								SET `password` = :newpassword
+								WHERE `customerid` = :userid"
+							);
+						}
+						Database::pexecute($stmt, array("newpassword" => md5($new_password), "userid" => $result['userid']));
+						
+						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
+						$rstlog->logAction(USR_ACTION, LOG_NOTICE, "changed password using password reset.");
+						
+						// Remove activation code from DB
+						$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_ACTIVATION . "`
+							WHERE `activationcode` = :activationcode
+							AND `userid` = :userid"
+						);
+						Database::pexecute($stmt, array("activationcode" => $activationcode, "userid" => $result['userid']));
+						redirectTo('index.php', array("showmessage" => '6'), true);
+					}
+				} else {
+					redirectTo('index.php', array("showmessage" => '7'), true);
+				}
+			}
+			
+			eval("echo \"" . getTemplate('rpwd') . "\";");
+			
+		} else {
+			redirectTo('index.php', array("showmessage" => '7'), true);
+		}
+		
+	} else {
+		redirectTo('index.php');
+	}
 }
