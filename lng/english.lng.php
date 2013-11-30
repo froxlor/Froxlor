@@ -1982,3 +1982,4 @@ $lng['error']['fcgidstillenableddeadlock'] = 'FCGID is currently active.<br />Pl
 $lng['error']['send_report_title'] = 'Send error report';
 $lng['error']['send_report_desc'] = 'Thank you for reporting this error and helping us to froxlor improve froxlor.<br />This is the email which will be sent to the froxlor developer team:';
 $lng['error']['send_report'] = 'Send report';
+$lng['error']['notallowedtouseaccounts'] = 'Your account does not allow using IMAP/POP3. You cannot add email accounts.';

@@ -403,12 +403,17 @@ if ($page == 'overview') {
 } elseif ($page == 'accounts') {
 	if ($action == 'add' && $id != 0) {
 		// ensure the int is a positive one
-
 		if (isset($_POST['email_quota'])) {
 			$quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong');
 		}
 
 		if ($userinfo['email_accounts'] == '-1' || ($userinfo['email_accounts_used'] < $userinfo['email_accounts'])) {
+
+			// check for imap||pop3 == 1, see #1298
+			if ($userinfo['imap'] != '1' && $userinfo['pop3'] != '1') {
+				standard_error('notallowedtouseaccounts');
+			}
+
 			$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid`, `domainid` FROM `" . TABLE_MAIL_VIRTUAL . "`
 				WHERE `customerid`= :cid
 				AND `id`= :id"
