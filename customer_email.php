@@ -143,7 +143,6 @@ if ($page == 'overview') {
 
 					if ($result['popaccountid'] != 0) {
 						// Free the Quota used by the email account
-
 						if ($settings['system']['mail_quota_enabled'] == 1) {
 							$stmt = Database::prepare("SELECT `quota` FROM `" . TABLE_MAIL_USERS . "`
 								WHERE `customerid`= :customerid
@@ -167,7 +166,8 @@ if ($page == 'overview') {
 				}
 
 				if (isset($_POST['delete_userfiles'])
-					&& (int)$_POST['delete_userfiles'] == 1) {
+					&& (int)$_POST['delete_userfiles'] == 1
+				) {
 					inserttask('7', $userinfo['loginname'], $result['email_full']);
 				}
 
@@ -188,7 +188,7 @@ if ($page == 'overview') {
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted email address '" . $result['email'] . "'");
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
-				if (maildirExists($result)) {
+				if ($result['popaccountid'] != '0') {
 					$show_checkbox = true;
 				} else {
 					$show_checkbox = false;
