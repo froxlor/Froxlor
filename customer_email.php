@@ -143,7 +143,6 @@ if ($page == 'overview') {
 
 					if ($result['popaccountid'] != 0) {
 						// Free the Quota used by the email account
-
 						if ($settings['system']['mail_quota_enabled'] == 1) {
 							$stmt = Database::prepare("SELECT `quota` FROM `" . TABLE_MAIL_USERS . "`
 								WHERE `customerid`= :customerid
@@ -167,7 +166,8 @@ if ($page == 'overview') {
 				}
 
 				if (isset($_POST['delete_userfiles'])
-					&& (int)$_POST['delete_userfiles'] == 1) {
+					&& (int)$_POST['delete_userfiles'] == 1
+				) {
 					inserttask('7', $userinfo['loginname'], $result['email_full']);
 				}
 
@@ -188,7 +188,7 @@ if ($page == 'overview') {
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted email address '" . $result['email'] . "'");
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
-				if (maildirExists($result)) {
+				if ($result['popaccountid'] != '0') {
 					$show_checkbox = true;
 				} else {
 					$show_checkbox = false;
@@ -403,12 +403,17 @@ if ($page == 'overview') {
 } elseif ($page == 'accounts') {
 	if ($action == 'add' && $id != 0) {
 		// ensure the int is a positive one
-
 		if (isset($_POST['email_quota'])) {
 			$quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong');
 		}
 
 		if ($userinfo['email_accounts'] == '-1' || ($userinfo['email_accounts_used'] < $userinfo['email_accounts'])) {
+
+			// check for imap||pop3 == 1, see #1298
+			if ($userinfo['imap'] != '1' && $userinfo['pop3'] != '1') {
+				standard_error('notallowedtouseaccounts');
+			}
+
 			$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid`, `domainid` FROM `" . TABLE_MAIL_VIRTUAL . "`
 				WHERE `customerid`= :cid
 				AND `id`= :id"

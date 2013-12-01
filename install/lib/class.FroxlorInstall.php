@@ -207,12 +207,29 @@ class FroxlorInstall {
 		// check for mysql-root-connection
 		$content .= $this->_status_message('begin', $this->_lng['install']['testing_mysql']);
 
-		$db_root = new db(
-				$this->_data['mysql_host'],
-				$this->_data['mysql_root_user'],
-				$this->_data['mysql_root_pass'],
-				''
-		);
+		$options = array('PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8');
+		$dsn = "mysql:host=".$this->_data['mysql_host'].";";
+		try {
+			$db_root = new PDO(
+					$dsn, $this->_data['mysql_root_user'], $this->_data['mysql_root_pass'], $options
+			);
+		} catch (PDOException $e) {
+			// possibly without passwd?
+			try {
+				$db_root = new PDO(
+						$dsn, $this->_data['mysql_root_user'], '', $options
+				);
+				// set the given password
+				$passwd_stmt = $db_root->prepare("
+						SET PASSWORD = PASSWORD(:passwd)
+						");
+				$passwd_stmt->execute(array('passwd' => $this->_data['mysql_root_pass']));
+			} catch (PDOException $e) {
+				// nope
+				$content .= $this->_status_message('red', $e->getMessage());
+			}
+		}
+
 		// ok, if we are here, the database class is build up
 		// (otherwise it would have already die'd this script)
 		$content .= $this->_status_message('green', "OK");
@@ -223,18 +240,25 @@ class FroxlorInstall {
 		// importing data to new database
 		$content .= $this->_importDatabaseData();
 		// create DB object for new database
-		$db = new db(
-				$this->_data['mysql_host'],
-				$this->_data['mysql_unpriv_user'],
-				$this->_data['mysql_unpriv_pass'],
-				$this->_data['mysql_database']
-		);
+		$options = array('PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8');
+		$dsn = "mysql:host=".$this->_data['mysql_host'].";dbname=".$this->_data['mysql_database'].";";
+		try {
+			$db = new PDO(
+					$dsn, $this->_data['mysql_unpriv_user'], $this->_data['mysql_unpriv_pass'], $options
+			);
+		} catch (PDOException $e) {
+			// dafuq? this should have happened in _importDatabaseData()
+			$content .= $this->_status_message('red', $e->getMessage());
+			die;
+		};
+
 		// change settings accordingly
 		$content .= $this->_doSettings($db);
 		// create entries
 		$content .= $this->_doDataEntries($db);
+		$db = null;
 		// create config-file
-		$content .= $this->_createUserdataConf($db);
+		$content .= $this->_createUserdataConf();
 
 		$content .= "</table>";
 
@@ -305,31 +329,42 @@ class FroxlorInstall {
 		$content .= $this->_status_message('begin', $this->_lng['install']['creating_entries']);
 
 		// and lets insert the default ip and port
-		$query = "INSERT INTO `".TABLE_PANEL_IPSANDPORTS."`
-				SET `ip`= '".$db->escape($this->_data['serverip'])."',
-						`port` = '80',
-						`namevirtualhost_statement` = '1',
-						`vhostcontainer` = '1',
-						`vhostcontainer_servername_statement` = '1'";
-		$db->query($query);
-		$defaultip = $db->insert_id();
+		$stmt = $db->prepare("
+				INSERT INTO `".TABLE_PANEL_IPSANDPORTS."` SET
+				`ip`= :serverip,
+				`port` = '80',
+				`namevirtualhost_statement` = '1',
+				`vhostcontainer` = '1',
+				`vhostcontainer_servername_statement` = '1'
+				");
+		$stmt->execute(array('serverip' => $this->_data['serverip']));
+		$defaultip = $db->lastInsertId();
 
 		// insert the defaultip
-		$query = "UPDATE `".TABLE_PANEL_SETTINGS."`
-				SET `value` = '".$defaultip."'
-						WHERE `settinggroup` = 'system' AND `varname` = 'defaultip'";
-		$db->query($query);
+		$upd_stmt = $db->prepare("
+				UPDATE `".TABLE_PANEL_SETTINGS."` SET
+				`value` = :defaultip
+				WHERE `settinggroup` = 'system' AND `varname` = 'defaultip'
+				");
+		$upd_stmt->execute(array('defaultip' => $defaultip));
 
 		$content .= $this->_status_message('green', 'OK');
 
 		//last but not least create the main admin
 		$content .= $this->_status_message('begin', $this->_lng['install']['adding_admin_user']);
-		$db->query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
-				`loginname` = '" . $db->escape($this->_data['admin_user']) . "',
-				`password` = '" . md5($this->_data['admin_pass1']) . "',
+		$ins_data = array(
+				'loginname' => $this->_data['admin_user'],
+				'password' => md5($this->_data['admin_pass1']),
+				'email' => 'admin@' . $this->_data['servername'],
+				'deflang' => $this->_languages[$this->_activelng]
+		);
+		$ins_stmt = $db->prepare("
+				INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
+				`loginname` = :loginname,
+				`password` = :password,
 				`name` = 'Froxlor-Administrator',
-				`email` = 'admin@" . $db->escape($this->_data['servername']) . "',
-				`def_language` = '". $db->escape($this->_languages[$this->_activelng]) . "',
+				`email` = :email,
+				`def_language` = :deflang,
 				`customers` = -1,
 				`customers_see_all` = 1,
 				`caneditphpsettings` = 1,
@@ -352,9 +387,27 @@ class FroxlorInstall {
 				`email_autoresponder` = -1
 				");
 
+		$ins_stmt->execute($ins_data);
+
 		$content .= $this->_status_message('green', 'OK');
 
 		return $content;
+	}
+
+	/**
+	 * execute prepared statement to update settings
+	 *
+	 * @param PDOStatement $stmt
+	 * @param string $group
+	 * @param string $varname
+	 * @param string $value
+	 */
+	private function _updateSetting(&$stmt = null, $value = null, $group = null, $varname = null) {
+		$stmt->exceute(array(
+				'group' => $group,
+				'varname' => $varname,
+				'value' => $value
+		));
 	}
 
 	/**
@@ -369,36 +422,40 @@ class FroxlorInstall {
 		$content = "";
 
 		$content .= $this->_status_message('begin', $this->_lng['install']['changing_data']);
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = 'admin@" . $db->escape($this->_data['servername']) . "' WHERE `settinggroup` = 'panel' AND `varname` = 'adminmail'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($this->_data['serverip']) . "' WHERE `settinggroup` = 'system' AND `varname` = 'ipaddress'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($this->_data['servername']) . "' WHERE `settinggroup` = 'system' AND `varname` = 'hostname'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($this->_languages[$this->_activelng]) . "' WHERE `settinggroup` = 'panel' AND `varname` = 'standardlanguage'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($this->_data['mysql_access_host']) . "' WHERE `settinggroup` = 'system' AND `varname` = 'mysql_access_host'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($this->_data['webserver']) . "' WHERE `settinggroup` = 'system' AND `varname` = 'webserver'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($this->_data['httpuser']) . "' WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '" . $db->escape($this->_data['httpgroup']) . "' WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
+		$upd_stmt = $db->prepare("
+				UPDATE `" . TABLE_PANEL_SETTINGS . "` SET
+				`value` = :value
+				WHERE `settinggroup` = :group AND `varname` = :varname
+				");
+
+		$this->_updateSetting($upd_stmt, 'admin@' . $this->_data['servername'], 'panel', 'adminmail');
+		$this->_updateSetting($upd_stmt, $this->_data['serverip'], 'system', 'ipaddress');
+		$this->_updateSetting($upd_stmt, $this->_data['servername'], 'system', 'hostname');
+		$this->_updateSetting($upd_stmt, $this->_languages[$this->_activelng], 'panel', 'standardlanguage');
+		$this->_updateSetting($upd_stmt, $this->_data['mysql_access_host'], 'system', 'mysql_access_host');
+		$this->_updateSetting($upd_stmt, $this->_data['webserver'], 'system', 'webserver');
+		$this->_updateSetting($upd_stmt, $this->_data['httpuser'], 'system', 'httpuser');
+		$this->_updateSetting($upd_stmt, $this->_data['httpgroup'], 'system', 'httpgroup');
 
 		// necessary changes for webservers != apache2
 		if ($this->_data['webserver'] == "lighttpd") {
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/conf-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_vhost'");
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/froxlor-diroptions/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_diroptions'");
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/lighttpd reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/lighttpd/lighttpd.pem' WHERE `settinggroup` = 'system' AND `varname` = 'ssl_cert_file'");
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/var/run/lighttpd/' WHERE `settinggroup` = 'phpfpm' AND `varname` = 'fastcgi_ipcdir'");
+			$this->_updateSetting($upd_stmt, '/etc/lighttpd/conf-enabled/', 'system', 'apacheconf_vhost');
+			$this->_updateSetting($upd_stmt, '/etc/lighttpd/froxlor-diroptions/', 'system', 'apacheconf_diroptions');
+			$this->_updateSetting($upd_stmt, '/etc/lighttpd/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
+			$this->_updateSetting($upd_stmt, '/etc/init.d/lighttpd reload', 'system', 'apachereload_command');
+			$this->_updateSetting($upd_stmt, '/etc/lighttpd/lighttpd.pem', 'system', 'ssl_cert_file');
+			$this->_updateSetting($upd_stmt, '/var/run/lighttpd/', 'phpfpm', 'fastcgi_ipcdir');
 		} elseif ($this->_data['webserver'] == "nginx") {
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_vhost'");
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/sites-enabled/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_diroptions'");
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/froxlor-htpasswd/' WHERE `settinggroup` = 'system' AND `varname` = 'apacheconf_htpasswddir'");
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/init.d/nginx reload' WHERE `settinggroup` = 'system' AND `varname` = 'apachereload_command'");
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/etc/nginx/nginx.pem' WHERE `settinggroup` = 'system' AND `varname` = 'ssl_cert_file'");
-			$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/var/run/nginx/' WHERE `settinggroup` = 'phpfpm' AND `varname` = 'fastcgi_ipcdir'");
+			$this->_updateSetting($upd_stmt, '/etc/nginx/sites-enabled/', 'system', 'apacheconf_vhost');
+			$this->_updateSetting($upd_stmt, '/etc/nginx/sites-enabled/', 'system', 'apacheconf_diroptions');
+			$this->_updateSetting($upd_stmt, '/etc/nginx/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
+			$this->_updateSetting($upd_stmt, '/etc/init.d/nginx reload', 'system', 'apachereload_command');
+			$this->_updateSetting($upd_stmt, '/etc/nginx/nginx.pem', 'system', 'ssl_cert_file');
+			$this->_updateSetting($upd_stmt, '/var/run/nginx/', 'phpfpm', 'fastcgi_ipcdir');
 		}
 
 		// insert the lastcronrun to be the installation date
-		$query = "UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = UNIX_TIMESTAMP()
-				WHERE `settinggroup` = 'system'  AND `varname` = 'lastcronrun'";
-		$db->query($query);
+		$this->_updateSetting($upd_stmt, time(), 'system', 'lastcronrun');
 
 		// set specific times for some crons (traffic only at night, etc.)
 		$ts = mktime(0, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
@@ -423,12 +480,16 @@ class FroxlorInstall {
 		$content = "";
 
 		$content .= $this->_status_message('begin', $this->_lng['install']['testing_new_db']);
-		$db = new db(
-				$this->_data['mysql_host'],
-				$this->_data['mysql_unpriv_user'],
-				$this->_data['mysql_unpriv_pass'],
-				$this->_data['mysql_database']
-		);
+		$options = array('PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8');
+		$dsn = "mysql:host=".$this->_data['mysql_host'].";dbname=".$this->_data['mysql_database'].";";
+		try {
+			$db = new PDO(
+					$dsn, $this->_data['mysql_unpriv_user'], $this->_data['mysql_unpriv_pass'], $options
+			);
+		} catch (PDOException $e) {
+			$content .= $this->_status_message('red', $e->getMessage());
+			die;
+		};
 		$content .= $this->_status_message('green', 'OK');
 
 		$content .= $this->_status_message('begin', $this->_lng['install']['importing_data']);
@@ -441,7 +502,7 @@ class FroxlorInstall {
 				$result = $db->query($sql_query[$i]);
 			}
 		}
-		$db->close();
+		$db = null;
 
 		$content .= $this->_status_message('green', 'OK');
 	}
@@ -460,17 +521,30 @@ class FroxlorInstall {
 		// so first we have to delete the database and
 		// the user given for the unpriv-user if they exit
 		$content .= $this->_status_message('begin', $this->_lng['install']['prepare_db']);
-		$db_root->query("DELETE FROM `mysql`.`user` WHERE `User` = '" . $db_root->escape($this->_data['mysql_unpriv_user']) . "' AND `Host` = '" . $db_root->escape($this->_data['mysql_access_host']) . "'");
-		$db_root->query("DELETE FROM `mysql`.`db` WHERE `User` = '" . $db_root->escape($this->_data['mysql_unpriv_user']) . "' AND `Host` = '" . $db_root->escape($this->_data['mysql_access_host']) . "'");
-		$db_root->query("DELETE FROM `mysql`.`tables_priv` WHERE `User` = '" . $db_root->escape($this->_data['mysql_unpriv_user']) . "' AND `Host` = '" . $db_root->escape($this->_data['mysql_access_host']) . "'");
-		$db_root->query("DELETE FROM `mysql`.`columns_priv` WHERE `User` = '" . $db_root->escape($this->_data['mysql_unpriv_user']) . "' AND `Host` = '" . $db_root->escape($this->_data['mysql_access_host']) . "'");
-		$db_root->query("DROP DATABASE IF EXISTS `" . $db_root->escape(str_replace('`', '', $this->_data['mysql_database'])) . "` ;");
+
+		$del_stmt = $db_root->prepare("DELETE FROM `mysql`.`user` WHERE `User` = :user AND `Host` = :accesshost");
+		$del_stmt->execute(array('user' => $this->_data['mysql_unpriv_user'], 'accesshost' => $this->_data['mysql_access_host']));
+
+		$del_stmt = $db_root->prepare("DELETE FROM `mysql`.`db` WHERE `User` = :user AND `Host` = :accesshost");
+		$del_stmt->execute(array('user' => $this->_data['mysql_unpriv_user'], 'accesshost' => $this->_data['mysql_access_host']));
+
+		$del_stmt = $db_root->prepare("DELETE FROM `mysql`.`tables_priv` WHERE `User` = :user AND `Host` =:accesshost");
+		$del_stmt->execute(array('user' => $this->_data['mysql_unpriv_user'], 'accesshost' => $this->_data['mysql_access_host']));
+
+		$del_stmt = $db_root->prepare("DELETE FROM `mysql`.`columns_priv` WHERE `User` = :user AND `Host` = :accesshost");
+		$del_stmt->execute(array('user' => $this->_data['mysql_unpriv_user'], 'accesshost' => $this->_data['mysql_access_host']));
+
+		$del_stmt = $db_root->prepare("DROP DATABASE IF EXISTS :database;");
+		$del_stmt->execute(array('database' => str_replace('`', '', $this->_data['mysql_database'])));
+
 		$db_root->query("FLUSH PRIVILEGES;");
 		$content .= $this->_status_message('green', 'OK');
 
 		// we have to create a new user and database for the froxlor unprivileged mysql access
 		$content .= $this->_status_message('begin', $this->_lng['install']['create_mysqluser_and_db']);
-		$db_root->query("CREATE DATABASE `" . $db_root->escape(str_replace('`', '', $this->_data['mysql_database'])) . "`");
+		$ins_stmt = $db_root->prepare("CREATE DATABASE :database");
+		$ins_stmt->execute(array('database' => str_replace('`', '', $this->_data['mysql_database'])));
+
 		$mysql_access_host_array = array_map('trim', explode(',', $this->_data['mysql_access_host']));
 
 		if (in_array('127.0.0.1', $mysql_access_host_array)
@@ -487,8 +561,15 @@ class FroxlorInstall {
 
 		$mysql_access_host_array[] = $this->_data['serverip'];
 		foreach ($mysql_access_host_array as $mysql_access_host) {
-			$db_root->query("GRANT ALL PRIVILEGES ON `" . $db_root->escape(str_replace('`', '', $this->_data['mysql_database'])) . "`.* TO '" . $db_root->escape($this->_data['mysql_unpriv_user']) . "'@'" . $db_root->escape($mysql_access_host) . "' IDENTIFIED BY 'password'");
-			$db_root->query("SET PASSWORD FOR '" . $db_root->escape($this->_data['mysql_unpriv_user']) . "'@'" . $db_root->escape($mysql_access_host) . "' = PASSWORD('" . $db_root->escape($this->_data['mysql_unpriv_pass']) . "')");
+			$_db = str_replace('`', '', $this->_data['mysql_database']);
+			$stmt = $db_root->prepare("
+					GRANT ALL PRIVILEGES ON `" . $_db . "`.*
+					TO :username@:host
+					IDENTIFIED BY 'password'"
+			);
+			$stmt->execute(array("username" => $this->_data['mysql_unpriv_user'], "host" => $mysql_access_host));
+			$stmt = $db_root->prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
+			$stmt->execute(array("username" => $this->_data['mysql_unpriv_user'], "host" => $mysql_access_host, "password" => $this->_data['mysql_unpriv_pass']));
 		}
 
 		$db_root->query("FLUSH PRIVILEGES;");
@@ -511,11 +592,13 @@ class FroxlorInstall {
 
 		// check for existing of former database
 		$tables_exist = false;
-		$sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '".$this->_data['mysql_database']."'";
-		$result = $db_root->query($sql);
+		$sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :database";
+		$result_stmt = $db_root->prepare($sql);
+		$result_stmt->execute(array('database' => $this->_data['mysql_database']));
+		$rows = $db_root->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 		// check result
-		if ($result !== false && $db_root->num_rows($result) > 0) {
+		if ($result !== false && $rows > 0) {
 			$tables_exist = true;
 		}
 
@@ -750,17 +833,6 @@ class FroxlorInstall {
 			$content .= $this->_status_message('orange', $this->_lng['requirements']['not_true'] . "<br />". $this->_lng['requirements']['phpmagic_quotes_runtime_description']);
 		} else {
 			$content .= $this->_status_message('green', 'off');
-		}
-
-		// check for mysql-extension
-		// @FIXME mysql extension will soon be deprecated and removed!!!
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpmysql']);
-
-		if (!extension_loaded('mysql') && !extension_loaded('mysqlnd')) {
-			$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
-			$_die = true;
-		} else {
-			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
 		}
 
 		// check for php_pdo and pdo_mysql

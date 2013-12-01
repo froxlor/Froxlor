@@ -1415,7 +1415,7 @@ if ($page == 'customers'
 					// Disable or enable IMAP Login for customers Mail Accounts
 					if ($email_imap != $result['imap']) {
 						$upd_stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "` SET `imap` = :imap WHERE `customerid` = :customerid");
-						Database::pexecute($upd_stmt, array('pop3' => $email_imap, 'customerid' => $id));
+						Database::pexecute($upd_stmt, array('imap' => $email_imap, 'customerid' => $id));
 					}
 
 					$upd_data = array(
