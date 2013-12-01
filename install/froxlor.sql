@@ -74,6 +74,16 @@ CREATE TABLE `mail_virtual` (
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
+DROP TABLE IF EXISTS `panel_activation`;
+CREATE TABLE `panel_activation` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `userid` int(11) unsigned NOT NULL default '0',
+  `admin` tinyint(1) unsigned NOT NULL default '0',
+  `creation` int(11) unsigned NOT NULL default '0',
+  `activationcode` varchar(50) default NULL,
+  PRIMARY KEY (id)
+) ENGINE=MyISAM  CHARSET=utf8 COLLATE=utf8_general_ci;
+
 
 DROP TABLE IF EXISTS `panel_admins`;
 CREATE TABLE `panel_admins` (
@@ -540,7 +550,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.31-dev3');
+	('panel', 'version', '0.9.31-dev4');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

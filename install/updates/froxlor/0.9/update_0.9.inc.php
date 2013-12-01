@@ -2452,3 +2452,23 @@ if (isFroxlorVersion('0.9.31-dev2')) {
 	lastStepStatus(0);
 	updateToVersion('0.9.31-dev3');
 }
+
+if (isFroxlorVersion('0.9.31-dev3')) {
+	showUpdateStep("Updating from 0.9.31-dev3 to 0.9.31-dev4", true);
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new panel_activation table");
+	Database::query("DROP TABLE IF EXISTS `panel_activation`;");
+	$sql = "CREATE TABLE `" . TABLE_PANEL_ACTIVATION . "` (
+		id int(11) unsigned NOT NULL AUTO_INCREMENT,
+		userid int(11) unsigned NOT NULL DEFAULT '0',
+		admin tinyint(1) unsigned NOT NULL DEFAULT '0',
+		creation int(11) unsigned NOT NULL DEFAULT '0',
+		activationcode varchar(50) DEFAULT NULL,
+		PRIMARY KEY (id)
+		) ENGINE=MyISAM;";
+	Database::query($sql);
+	lastStepStatus(0);
+
+	updateToVersion('0.9.31-dev4');
+}
