@@ -363,7 +363,7 @@ if ($action == 'forgotpwd') {
 					Database::pexecute($result_stmt, array("adminid" => $user['adminid'], "lang" => $def_language));
 					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 					$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $body), $replace_arr));
-					
+
 					$_mailerror = false;
 					try {
 						$mail->Subject = $mail_subject;

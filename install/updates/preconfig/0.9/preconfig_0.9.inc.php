@@ -584,4 +584,11 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+	
+	if (versionInUpdate($current_version, '0.9.31-dev4')) {
+		$has_preconfig = true;
+		$description  = 'The template-variable {PASSWORD} has been replaced with {LINK}. Please update your password reset templates!<br />';
+		$question = '';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

@@ -2455,7 +2455,8 @@ if (isFroxlorVersion('0.9.31-dev2')) {
 
 if (isFroxlorVersion('0.9.31-dev3')) {
 	showUpdateStep("Updating from 0.9.31-dev3 to 0.9.31-dev4", true);
-	
+	lastStepStatus(0);
+
 	showUpdateStep("Adding new panel_activation table");
 	Database::query("DROP TABLE IF EXISTS `panel_activation`;");
 	$sql = "CREATE TABLE `" . TABLE_PANEL_ACTIVATION . "` (
@@ -2467,7 +2468,7 @@ if (isFroxlorVersion('0.9.31-dev3')) {
 		PRIMARY KEY (id)
 		) ENGINE=MyISAM;";
 	Database::query($sql);
-	
 	lastStepStatus(0);
+
 	updateToVersion('0.9.31-dev4');
 }
