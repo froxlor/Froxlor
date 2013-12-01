@@ -72,6 +72,6 @@ define('PACKAGE_LOCKED', 1);
 define('PACKAGE_ENABLED', 2);
 
 // VERSION INFO
-$version = '0.9.31-dev3';
+$version = '0.9.31-dev4';
 $dbversion = '2';
 $branding = '';

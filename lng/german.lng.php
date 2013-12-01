@@ -1713,4 +1713,3 @@ $lng['pwdreminder']['changed'] = 'Ihr Passwort wurde erfolgreich geändert. Sie 
 $lng['pwdreminder']['wrongcode'] = 'Der verwendete Aktivierungscode ist entweder nicht gültig oder bereits abgelaufen.';
 $lng['admin']['templates']['LINK'] = 'Wird mit dem Link zum Zurücksetzen des Passworts ersetzt.';
 $lng['pwdreminder']['choosenew'] = 'Neues Passwort auswählen';
-$lng['error']['notallowedtouseaccounts'] = 'Ihrem Konto ist die Nutzung von IMAP/POP3 nicht erlaubt, daher können keine E-Mail Konten angelegt werden';
