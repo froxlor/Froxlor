@@ -63,16 +63,11 @@ virtual_mailbox_limit = 0
 virtual_mailbox_maps = proxy:mysql:/usr/local/etc/postfix/mysql-virtual_mailbox_maps.cf
 virtual_uid_maps        = static:<VIRTUAL_UID_MAPS>
 virtual_gid_maps        = static:<VIRTUAL_GID_MAPS>
-virtual_create_maildirsize = yes
-virtual_mailbox_extended = yes
 proxy_read_maps = $local_recipient_maps $mydestination $virtual_alias_maps
     $virtual_alias_domains $virtual_mailbox_maps $virtual_mailbox_domains
     $relay_recipient_maps $relay_domains $canonical_maps $sender_canonical_maps
     $recipient_canonical_maps $relocated_maps $transport_maps $mynetworks
     $smtpd_sender_login_maps
-virtual_mailbox_limit_override = yes
-virtual_maildir_limit_message = Sorry, this user has overdrawn their diskspace quota. Please try again later.
-virtual_overquota_bounce = yes
 virtual_transport = virtual
 ## Dovecot Settings for deliver, SASL Auth and virtual transport
 # uncomment those line to use Dovecot
