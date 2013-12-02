@@ -594,7 +594,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if (versionInUpdate($current_version, '0.9.31-dev5')) {
 		$has_preconfig = true;
-		$description  = 'You can enbable/disable error-reporting for admins and customers!<br />br />';
+		$description  = 'You can enbable/disable error-reporting for admins and customers!<br /><br />';
 		$question = '<strong>Do you want to enable error-reporting for admins? (default: yes):</strong>&nbsp;';
 		$question.= makeyesno('update_error_report_admin', '1', '0', '1').'<br />';
 		$question.= '<strong>Do you want to enable error-reporting for customers? (default: no):</strong>&nbsp;';
