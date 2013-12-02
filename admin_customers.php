@@ -628,7 +628,7 @@ if ($page == 'customers'
 						&& $_POST['new_loginname'] != ''
 					) {
 						$accountnumber = intval($settings['system']['lastaccountnumber']);
-						$loginname = validate($_POST['new_loginname'], 'loginname', '/^[a-z0-9\-_]+$/i');
+						$loginname = validate($_POST['new_loginname'], 'loginname', '/^[a-z][a-z0-9\-_]+$/i');
 
 						// Accounts which match systemaccounts are not allowed, filtering them
 						if (preg_match('/^' . preg_quote($settings['customer']['accountprefix'], '/') . '([0-9]+)/', $loginname)) {
@@ -665,7 +665,7 @@ if ($page == 'customers'
 						standard_error('loginnameexists', $loginname);
 
 					} elseif (!validateUsername($loginname, $settings['panel']['unix_names'], 14 - strlen($settings['customer']['mysqlprefix']))) {
-						standard_error('loginnameiswrong', $loginname);
+						standard_error('loginnameiswrong', 14 - strlen($settings['customer']['mysqlprefix']));
 					}
 
 					$guid = intval($settings['system']['lastguid']) + 1;
