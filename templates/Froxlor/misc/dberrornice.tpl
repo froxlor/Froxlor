@@ -36,7 +36,7 @@
 					<a href="#" title="Click here to go back" id="historyback">Go back</a>
 				</div>
 				<div style="float:right;">
-					<a href="<LINK>" title="Click here to report error">Report error</a>
+					<REPORT>
 				</div>
 				<div style="clear:both;"></div>
 			</aside>

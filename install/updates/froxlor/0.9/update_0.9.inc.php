@@ -2472,3 +2472,30 @@ if (isFroxlorVersion('0.9.31-dev3')) {
 
 	updateToVersion('0.9.31-dev4');
 }
+
+if (isFroxlorVersion('0.9.31-dev4')) {
+
+	showUpdateStep("Updating from 0.9.31-dev4 to 0.9.31-dev5", true);
+	lastStepStatus(0);
+
+	$update_error_report_admin = isset($_POST['update_error_report_admin']) ? (int)$_POST['update_error_report_admin'] : '1';
+	$update_error_report_customer = isset($_POST['update_error_report_customer']) ? (int)$_POST['update_error_report_customer'] : '0';
+
+	showUpdateStep("Adding new error-reporting options");
+	$ins_stmt = Database::prepare("
+		INSERT INTO `".TABLE_PANEL_SETTINGS."` SET `settinggroup` = 'system', `varname` = :varname, `value` = :value
+	");
+	$params = array();
+	// admins
+	$params['varname'] = 'allow_error_report_admin';
+	$params['value'] = $update_error_report_admin;
+	Database::pexecute($ins_stmt, $params);
+	// customer
+	$params['varname'] = 'allow_error_report_customer';
+	$params['value'] = $update_error_report_customer;
+	Database::pexecute($ins_stmt, $params);
+
+	lastStepStatus(0);
+
+	updateToVersion('0.9.31-dev5');
+}

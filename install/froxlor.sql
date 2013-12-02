@@ -523,6 +523,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'passwordcryptfunc', '1'),
 	('system', 'axfrservers', ''),
 	('system', 'customer_ssl_path', '/etc/ssl/froxlor-custom/'),
+	('system', 'allow_error_report_admin', '1'),
+	('system', 'allow_error_report_customer', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -550,7 +552,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.31-dev4');
+	('panel', 'version', '0.9.31-dev5');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

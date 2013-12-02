@@ -322,7 +322,9 @@ if ($page == 'overview') {
 		eval("echo \"" . getTemplate("index/change_theme") . "\";");
 	}
 
-} elseif ($page == 'send_error_report') {
+} elseif ($page == 'send_error_report'
+	&& $settings['system']['allow_error_report_admin'] == '1'
+) {
 
 	// only show this if we really have an exception to report
 	if (isset($_GET['errorid'])
@@ -381,6 +383,7 @@ if ($page == 'overview') {
 
 				if ($_mailerror) {
 					// error when reporting an error...LOLFUQ
+					standard_error('send_report_error', $mailerr_msg);
 				}
 
 				// finally remove error from fs

@@ -584,11 +584,21 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
-	
+
 	if (versionInUpdate($current_version, '0.9.31-dev4')) {
 		$has_preconfig = true;
 		$description  = 'The template-variable {PASSWORD} has been replaced with {LINK}. Please update your password reset templates!<br />';
 		$question = '';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.31-dev5')) {
+		$has_preconfig = true;
+		$description  = 'You can enbable/disable error-reporting for admins and customers!<br />br />';
+		$question = '<strong>Do you want to enable error-reporting for admins? (default: yes):</strong>&nbsp;';
+		$question.= makeyesno('update_error_report_admin', '1', '0', '1').'<br />';
+		$question.= '<strong>Do you want to enable error-reporting for customers? (default: no):</strong>&nbsp;';
+		$question.= makeyesno('update_error_report_customer', '1', '0', '0');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 }
