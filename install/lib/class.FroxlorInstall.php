@@ -403,7 +403,7 @@ class FroxlorInstall {
 	 * @param string $value
 	 */
 	private function _updateSetting(&$stmt = null, $value = null, $group = null, $varname = null) {
-		$stmt->exceute(array(
+		$stmt->execute(array(
 				'group' => $group,
 				'varname' => $varname,
 				'value' => $value
