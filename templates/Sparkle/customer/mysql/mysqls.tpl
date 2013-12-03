@@ -28,7 +28,7 @@
 						<th>{$lng['mysql']['databasename']}&nbsp;{$arrowcode['databasename']}</th>
 						<th>{$lng['mysql']['databasedescription']}&nbsp;{$arrowcode['description']}</th>
 						<th>{$lng['mysql']['size']}</th>
-						<if 1 < count($sql_root)><th>{$lng['mysql']['mysql_server']}</th></if>
+						<if 1 < $count_mysqlservers><th>{$lng['mysql']['mysql_server']}</th></if>
 						<th>{$lng['panel']['options']}</th>
 					</tr>
 				</thead>

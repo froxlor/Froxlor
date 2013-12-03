@@ -231,10 +231,12 @@ class Database {
 
 		// either root or unprivileged user
 		if (self::$_needroot) {
+			$caption = $sql_root[self::$_dbserver]['caption'];
 			$user = $sql_root[self::$_dbserver]['user'];
 			$password = $sql_root[self::$_dbserver]['password'];
 			$host = $sql_root[self::$_dbserver]['host'];
 		} else {
+			$caption = 'localhost';
 			$user = $sql["user"];
 			$password = $sql["password"];
 			$host = $sql["host"];
@@ -246,7 +248,8 @@ class Database {
 					'user' => $user,
 					'passwd' => $password,
 					'host' => $host,
-					'db' => $sql["db"]
+					'db' => $sql["db"],
+					'caption' => $caption
 			);
 		}
 

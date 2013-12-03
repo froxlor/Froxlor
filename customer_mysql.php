@@ -61,6 +61,10 @@ if ($page == 'overview') {
 		$count = 0;
 		$mysqls = '';
 
+		$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `".TABLE_PANEL_DATABASES."`");
+		$dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC);
+		$count_mysqlservers = $dbserver['numservers'];
+
 		// Begin root-session
 		Database::needRoot(true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -82,6 +86,7 @@ if ($page == 'overview') {
 		// End root-session
 
 		eval("echo \"" . getTemplate('mysql/mysqls') . "\";");
+
 	} elseif($action == 'delete' && $id != 0) {
 		$result_stmt = Database::prepare('SELECT `id`, `databasename`, `description`, `dbserver` FROM `' . TABLE_PANEL_DATABASES . '`
 			WHERE `customerid`="' . (int)$userinfo['customerid'] . '"
@@ -91,13 +96,19 @@ if ($page == 'overview') {
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 		if (isset($result['databasename']) && $result['databasename'] != '') {
+
+			Database::needRoot(true, $result['dbserver']);
+			Database::needSqlData();
+			$sql_root = Database::getSqlData();
+			Database::needRoot(false);
+
 			if (!isset($sql_root[$result['dbserver']]) || !is_array($sql_root[$result['dbserver']])) {
 				$result['dbserver'] = 0;
 			}
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				// Begin root-session
-				Database::needRoot(true);
+				Database::needRoot(true, $result['dbserver']);
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted database '" . $result['databasename'] . "'");
 				if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
 					// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
@@ -137,7 +148,7 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
 
-				redirectTo($filename, Array('page' => $page, 's' => $s));
+				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				$dbnamedesc = $result['databasename'];
 				if (isset($result['description']) && $result['description'] != '') {
@@ -161,9 +172,16 @@ if ($page == 'overview') {
 					standard_error(array('stringisempty', 'mypassword'));
 				} else {
 					$dbserver = 0;
-					if (count($sql_root) > 1) {
+					$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `".TABLE_PANEL_DATABASES."`");
+					$_dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC);
+					$count_mysqlservers = $_dbserver['numservers'];
+					if ($count_mysqlservers > 1) {
 						$dbserver = validate($_POST['mysql_server'], html_entity_decode($lng['mysql']['mysql_server']), '', '', 0);
-						if (!isset($sql_root[$dbserver]) || !is_array($sql_root[$dbserver])) {
+						Database::needRoot(true, $dbserver);
+						Database::needSqlData();
+						$sql_root = Database::getSqlData();
+						Database::needRoot(false);
+						if (!isset($sql_root) || !is_array($sql_root)) {
 							$dbserver = 0;
 						}
 					}
@@ -231,13 +249,18 @@ if ($page == 'overview') {
 							$pma = $settings['panel']['phpmyadmin_url'];
 						}
 
+						Database::needRoot(true, $dbserver);
+						Database::needSqlData();
+						$sql_root = Database::getSqlData();
+						Database::needRoot(false);
+
 						$replace_arr = array(
 							'SALUTATION' => getCorrectUserSalutation($userinfo),
 							'CUST_NAME' => getCorrectUserSalutation($userinfo), // < keep this for compatibility
 							'DB_NAME' => $username,
 							'DB_PASS' => $password,
 							'DB_DESC' => $databasedescription,
-							'DB_SRV' => $sql_root[$dbserver]['host'],
+							'DB_SRV' => $sql_root['caption'],
 							'PMA_URI' => $pma
 						);
 
@@ -288,13 +311,18 @@ if ($page == 'overview') {
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
 			} else {
+
+				$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `".TABLE_PANEL_DATABASES."`");
 				$mysql_servers = '';
-
-				foreach ($sql_root as $mysql_server => $mysql_server_details) {
-					$mysql_servers .= makeoption($mysql_server_details['caption'], $mysql_server);
+				$count_mysqlservers = 0;
+				while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
+					Database::needRoot(true, $dbserver['dbserver']);
+					Database::needSqlData();
+					$sql_root = Database::getSqlData();
+					$mysql_servers .= makeoption($sql_root['caption'], $dbserver['dbserver']);
+					$count_mysqlservers++;
 				}
-
-				//$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
+				Database::needRoot(false);
 
 				$mysql_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/mysql/formfield.mysql_add.php';
 				$mysql_add_form = htmlform::genHTMLForm($mysql_add_data);
@@ -354,6 +382,16 @@ if ($page == 'overview') {
 				Database::pexecute($stmt, array("desc" => $databasedescription, "customerid" => $userinfo['customerid'], "id" => $id));
 				redirectTo($filename, Array('page' => $page, 's' => $s));
 			} else {
+
+				$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `".TABLE_PANEL_DATABASES."`");
+				$dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC);
+				$count_mysqlservers = $dbserver['numservers'];
+
+				Database::needRoot(true, $result['dbserver']);
+				Database::needSqlData();
+				$sql_root = Database::getSqlData();
+				Database::needRoot(false);
+
 				$mysql_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/mysql/formfield.mysql_edit.php';
 				$mysql_edit_form = htmlform::genHTMLForm($mysql_edit_data);
 
