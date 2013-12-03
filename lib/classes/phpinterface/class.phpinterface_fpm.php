@@ -162,6 +162,16 @@ class phpinterface_fpm {
 			}
 
 			$fpm_config.= 'pm.max_requests = '.$fpm_requests."\n";
+
+			// possible slowlog configs
+			if ($phpconfig['fpm_slowlog'] == '1') {
+				$fpm_config.= 'request_terminate_timeout = ' . $phpconfig['fpm_reqterm'] . "\n";
+				$fpm_config.= 'request_slowlog_timeout = ' . $phpconfig['fpm_reqslow'] . "\n";
+				$slowlog = makeCorrectFile($this->_settings['system']['logfiles_directory'] . '/' . $this->_domain['loginname'] . '-php-slow.log');
+				$fpm_config.= 'slowlog = ' . $slowlog . "\n";
+				$fpm_config.= 'catch_workers_output = yes' . "\n";
+			}
+
 			$fpm_config.= ';chroot = '.makeCorrectDir($this->_domain['documentroot'])."\n";
 
 			$tmpdir = makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/');

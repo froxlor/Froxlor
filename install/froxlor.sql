@@ -552,7 +552,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.31-dev5');
+	('panel', 'version', '0.9.31-dev6');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -752,6 +752,9 @@ CREATE TABLE `panel_phpconfigs` (
   `file_extensions` varchar(255) NOT NULL,
   `mod_fcgid_starter` int(4) NOT NULL DEFAULT '-1',
   `mod_fcgid_maxrequests` int(4) NOT NULL DEFAULT '-1',
+  `fpm_slowlog` tinyint(1) NOT NULL default '0',
+  `fpm_reqterm` varchar(15) NOT NULL default '0',
+  `fpm_reqslow` varchar(15) NOT NULL default '0',
   `phpsettings` text NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;

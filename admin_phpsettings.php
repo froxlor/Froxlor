@@ -89,11 +89,28 @@ if ($page == 'overview') {
 				&& $_POST['send'] == 'send'
 			) {
 				$description = validate($_POST['description'], 'description');
-				$binary = makeCorrectFile(validate($_POST['binary'], 'binary'));
-				$file_extensions = validate($_POST['file_extensions'], 'file_extensions', '/^[a-zA-Z0-9\s]*$/');
 				$phpsettings = validate(str_replace("\r\n", "\n", $_POST['phpsettings']), 'phpsettings', '/^[^\0]*$/');
-				$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
-				$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
+
+				if ($settings['system']['mod_fcgid'] == 1) {
+					$binary = makeCorrectFile(validate($_POST['binary'], 'binary'));
+					$file_extensions = validate($_POST['file_extensions'], 'file_extensions', '/^[a-zA-Z0-9\s]*$/');
+					$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
+					$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
+					// disable fpm stuff
+					$fpm_enableslowlog = 0;
+					$fpm_reqtermtimeout = 0;
+					$fpm_reqslowtimeout = 0;
+				}
+				elseif ($settings['phpfpm']['enabled'] == 1) {
+					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int)$_POST['phpfpm_enable_slowlog'] : 0;
+					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
+					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
+					// disable fcgid stuff
+					$binary = '/usr/bin/php-cgi';
+					$file_extensions = 'php';
+					$mod_fcgid_starter = 0;
+					$mod_fcgid_maxrequests = 0;
+				}
 
 				if (strlen($description) == 0
 					|| strlen($description) > 50
@@ -108,6 +125,9 @@ if ($page == 'overview') {
 						`file_extensions` = :fext,
 						`mod_fcgid_starter` = :starter,
 						`mod_fcgid_maxrequests` = :mreq,
+						`fpm_slowlog` = :fpmslow,
+						`fpm_reqterm` = :fpmreqterm,
+						`fpm_reqslow` = :fpmreqslow,
 						`phpsettings` = :phpsettings"
 				);
 				$ins_data = array(
@@ -116,6 +136,9 @@ if ($page == 'overview') {
 					'fext' => $file_extensions,
 					'starter' => $mod_fcgid_starter,
 					'mreq' => $mod_fcgid_maxrequests,
+					'fpmslow' => $fpm_enableslowlog,
+					'fpmreqterm' => $fpm_reqtermtimeout,
+					'fpmreqslow' => $fpm_reqslowtimeout,
 					'phpsettings' => $phpsettings
 				);
 				Database::pexecute($ins_stmt, $ins_data);
@@ -200,11 +223,28 @@ if ($page == 'overview') {
 				&& $_POST['send'] == 'send'
 			) {
 				$description = validate($_POST['description'], 'description');
-				$binary = makeCorrectFile(validate($_POST['binary'], 'binary'));
-				$file_extensions = validate($_POST['file_extensions'], 'file_extensions', '/^[a-zA-Z0-9\s]*$/');
 				$phpsettings = validate(str_replace("\r\n", "\n", $_POST['phpsettings']), 'phpsettings', '/^[^\0]*$/');
-				$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
-				$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
+
+				if ($settings['system']['mod_fcgid'] == 1) {
+					$binary = makeCorrectFile(validate($_POST['binary'], 'binary'));
+					$file_extensions = validate($_POST['file_extensions'], 'file_extensions', '/^[a-zA-Z0-9\s]*$/');
+					$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
+					$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
+					// disable fpm stuff
+					$fpm_enableslowlog = 0;
+					$fpm_reqtermtimeout = 0;
+					$fpm_reqslowtimeout = 0;
+				}
+				elseif ($settings['phpfpm']['enabled'] == 1) {
+					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int)$_POST['phpfpm_enable_slowlog'] : 0;
+					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
+					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
+					// disable fcgid stuff
+					$binary = '/usr/bin/php-cgi';
+					$file_extensions = 'php';
+					$mod_fcgid_starter = 0;
+					$mod_fcgid_maxrequests = 0;
+				}
 
 				if (strlen($description) == 0
 					|| strlen($description) > 50
@@ -219,6 +259,9 @@ if ($page == 'overview') {
 						`file_extensions` = :fext,
 						`mod_fcgid_starter` = :starter,
 						`mod_fcgid_maxrequests` = :mreq,
+						`fpm_slowlog` = :fpmslow,
+						`fpm_reqterm` = :fpmreqterm,
+						`fpm_reqslow` = :fpmreqslow,
 						`phpsettings` = :phpsettings
 					WHERE `id` = :id"
 				);
@@ -228,6 +271,9 @@ if ($page == 'overview') {
 						'fext' => $file_extensions,
 						'starter' => $mod_fcgid_starter,
 						'mreq' => $mod_fcgid_maxrequests,
+						'fpmslow' => $fpm_enableslowlog,
+						'fpmreqterm' => $fpm_reqtermtimeout,
+						'fpmreqslow' => $fpm_reqslowtimeout,
 						'phpsettings' => $phpsettings,
 						'id' => $id
 				);

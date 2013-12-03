@@ -1718,3 +1718,6 @@ $lng['serversettings']['allow_error_report_admin']['title'] = 'Erlaube Administr
 $lng['serversettings']['allow_error_report_admin']['description'] = 'Bitte beachten: Senden Sie zu keiner Zeit irgendwelche datenschutzrelevanten/persönliche (Kunden-)Daten an uns!';
 $lng['serversettings']['allow_error_report_customer']['title'] = 'Erlaube Kunden das Melden von Datenbankfehler an Froxlor';
 $lng['serversettings']['allow_error_report_customer']['description'] = 'Bitte beachten: Senden Sie zu keiner Zeit irgendwelche datenschutzrelevanten/persönliche (Kunden-)Daten an uns!';
+$lng['admin']['phpsettings']['enable_slowlog'] = 'FPM slowlog pro Domain aktivieren';
+$lng['admin']['phpsettings']['request_terminate_timeout'] = 'Request terminate-timeout';
+$lng['admin']['phpsettings']['request_slowlog_timeout'] = 'Request slowlog-timeout';

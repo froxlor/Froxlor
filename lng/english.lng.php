@@ -1992,3 +1992,6 @@ $lng['serversettings']['allow_error_report_admin']['title'] = 'Allow administrat
 $lng['serversettings']['allow_error_report_admin']['description'] = 'Please note: Never send any personal (customer-)data to us!';
 $lng['serversettings']['allow_error_report_customer']['title'] = 'Allow customers to report database-errors to Froxlor';
 $lng['serversettings']['allow_error_report_customer']['description'] = 'Please note: Never send any personal (customer-)data to us!';
+$lng['admin']['phpsettings']['enable_slowlog'] = 'Enable slowlog (per domain)';
+$lng['admin']['phpsettings']['request_terminate_timeout'] = 'Request terminate-timeout';
+$lng['admin']['phpsettings']['request_slowlog_timeout'] = 'Request slowlog-timeout';
