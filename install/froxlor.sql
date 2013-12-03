@@ -753,8 +753,8 @@ CREATE TABLE `panel_phpconfigs` (
   `mod_fcgid_starter` int(4) NOT NULL DEFAULT '-1',
   `mod_fcgid_maxrequests` int(4) NOT NULL DEFAULT '-1',
   `fpm_slowlog` tinyint(1) NOT NULL default '0',
-  `fpm_reqterm` varchar(15) NOT NULL default '0',
-  `fpm_reqslow` varchar(15) NOT NULL default '0',
+  `fpm_reqterm` varchar(15) NOT NULL default '60s',
+  `fpm_reqslow` varchar(15) NOT NULL default '5s',
   `phpsettings` text NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;

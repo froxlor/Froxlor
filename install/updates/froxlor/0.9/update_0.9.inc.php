@@ -2507,8 +2507,8 @@ if (isFroxlorVersion('0.9.31-dev5')) {
 
 	showUpdateStep("Adding new fpm-configuration options (slowlog)");
 	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `fpm_slowlog` tinyint(1) NOT NULL default '0' AFTER `mod_fcgid_maxrequests`;");
-	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `fpm_reqterm` varchar(15) NOT NULL default '0' AFTER `fpm_slowlog`;");
-	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `fpm_reqslow` varchar(15) NOT NULL default '0' AFTER `fpm_reqterm`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `fpm_reqterm` varchar(15) NOT NULL default '60s' AFTER `fpm_slowlog`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `fpm_reqslow` varchar(15) NOT NULL default '5s' AFTER `fpm_reqterm`;");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.31-dev6');
