@@ -665,7 +665,11 @@ if ($page == 'customers'
 						standard_error('loginnameexists', $loginname);
 
 					} elseif (!validateUsername($loginname, $settings['panel']['unix_names'], 14 - strlen($settings['customer']['mysqlprefix']))) {
-						standard_error('loginnameiswrong', 14 - strlen($settings['customer']['mysqlprefix']));
+						if (strlen($loginname) > 14 - strlen($settings['customer']['mysqlprefix'])) {
+							standard_error('loginnameiswrong2', 14 - strlen($settings['customer']['mysqlprefix']));
+						} else {
+							standard_error('loginnameiswrong', $loginname);
+						}
 					}
 
 					$guid = intval($settings['system']['lastguid']) + 1;
