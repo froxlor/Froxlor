@@ -73,7 +73,9 @@ class phpinterface_fpm {
 					'post_max_size',
 					'variables_order',
 					'gpc_order',
-					'date.timezone'
+					'date.timezone',
+					'session.gc_divisor',
+					'session.gc_probability'
 			),
 			'php_admin_flag' => array(
 					'allow_call_time_pass_reference',
