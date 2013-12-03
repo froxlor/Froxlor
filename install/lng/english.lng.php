@@ -64,6 +64,7 @@ $lng['install']['httpuser'] = 'HTTP username';
 $lng['install']['httpgroup'] = 'HTTP groupname';
 
 $lng['install']['testing_mysql'] = 'Checking MySQL-root access...';
+$lng['install']['testing_mysql_fail'] = 'There seems to be a problem with the database-connection. Cannot continue. Please go back and check your credentials.';
 $lng['install']['backup_old_db'] = 'Creating backup of old database...';
 $lng['install']['backup_binary_missing'] = 'Could not find mysqldump';
 $lng['install']['backup_failed'] = 'Could not backup database';
@@ -80,5 +81,6 @@ $lng['install']['creating_configfile_failed'] = 'Could not create lib/userdata.i
 $lng['install']['froxlor_succ_installed'] = 'Froxlor was installed successfully.';
 
 $lng['click_here_to_refresh'] = 'Click here to check again';
+$lng['click_here_to_goback'] = 'Click here to go back';
 $lng['click_here_to_continue'] = 'Click here to continue';
 $lng['click_here_to_login'] = 'Click here to login.';

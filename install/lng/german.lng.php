@@ -64,6 +64,7 @@ $lng['install']['httpuser'] = 'HTTP Username';
 $lng['install']['httpgroup'] = 'HTTP Gruppenname';
 
 $lng['install']['testing_mysql'] = 'Teste MySQL-Root Zugang...';
+$lng['install']['testing_mysql_fail'] = 'Bei der Verwendung der Datenbank gibt es scheinbar Probleme. Installation kann nicht fortgesetzt werden. Bitte Zugangsdaten prüfen und erneut versuchen.';
 $lng['install']['backup_old_db'] = 'Sicherung vorheriger Datenbank...';
 $lng['install']['backup_binary_missing'] = 'Konnte mysqldump nicht finden';
 $lng['install']['backup_failed'] = 'Sicherung fehlgeschlagen';
@@ -80,5 +81,6 @@ $lng['install']['creating_configfile_failed'] = 'Konnte lib/userdata.inc.php nic
 $lng['install']['froxlor_succ_installed'] = 'Froxlor wurde erfolgreich installiert.';
 
 $lng['click_here_to_refresh'] = 'Hier klicken, um erneut zu prüfen';
+$lng['click_here_to_goback'] = 'Einen Schritt zurück';
 $lng['click_here_to_continue'] = 'Installation fortführen';
 $lng['click_here_to_login'] = 'Hier geht es weiter zum Login-Fenster.';

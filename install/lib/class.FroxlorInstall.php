@@ -209,6 +209,7 @@ class FroxlorInstall {
 
 		$options = array('PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8');
 		$dsn = "mysql:host=".$this->_data['mysql_host'].";";
+		$fatal_fail = false;
 		try {
 			$db_root = new PDO(
 					$dsn, $this->_data['mysql_root_user'], $this->_data['mysql_root_pass'], $options
@@ -227,47 +228,63 @@ class FroxlorInstall {
 			} catch (PDOException $e) {
 				// nope
 				$content .= $this->_status_message('red', $e->getMessage());
+				$fatal_fail = true;
 			}
 		}
 
-		// ok, if we are here, the database class is build up
-		// (otherwise it would have already die'd this script)
-		$content .= $this->_status_message('green', "OK");
-		// check for existing db
-		$content .= $this->_backupExistingDatabase($db_root);
-		// create unprivileged user and the database itself
-		$content .= $this->_createDatabaseAndUser($db_root);
-		// importing data to new database
-		$content .= $this->_importDatabaseData();
-		// create DB object for new database
-		$options = array('PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8');
-		$dsn = "mysql:host=".$this->_data['mysql_host'].";dbname=".$this->_data['mysql_database'].";";
-		try {
-			$db = new PDO(
-					$dsn, $this->_data['mysql_unpriv_user'], $this->_data['mysql_unpriv_pass'], $options
-			);
-		} catch (PDOException $e) {
-			// dafuq? this should have happened in _importDatabaseData()
-			$content .= $this->_status_message('red', $e->getMessage());
-			die;
-		};
+		if (!$fatal_fail) {
 
-		// change settings accordingly
-		$content .= $this->_doSettings($db);
-		// create entries
-		$content .= $this->_doDataEntries($db);
-		$db = null;
-		// create config-file
-		$content .= $this->_createUserdataConf();
+			// ok, if we are here, the database connection is up and running
+			$content .= $this->_status_message('green', "OK");
+			// check for existing db and create backup if so
+			$content .= $this->_backupExistingDatabase($db_root);
+			// create unprivileged user and the database itself
+			$content .= $this->_createDatabaseAndUser($db_root);
+			// importing data to new database
+			$content .= $this->_importDatabaseData();
+			// create DB object for new database
+			$options = array('PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8');
+			$dsn = "mysql:host=".$this->_data['mysql_host'].";dbname=".$this->_data['mysql_database'].";";
+			$another_fail = false;
+			try {
+				$db = new PDO(
+						$dsn, $this->_data['mysql_unpriv_user'], $this->_data['mysql_unpriv_pass'], $options
+				);
+			} catch (PDOException $e) {
+				// dafuq? this should have happened in _importDatabaseData()
+				$content .= $this->_status_message('red', $e->getMessage());
+				$another_fail = true;
+			};
+
+			if (!$another_fail) {
+				// change settings accordingly
+				$content .= $this->_doSettings($db);
+				// create entries
+				$content .= $this->_doDataEntries($db);
+				$db = null;
+				// create config-file
+				$content .= $this->_createUserdataConf();
+			}
+		}
 
 		$content .= "</table>";
 
 		// check if we have unrecoverable errors
-		$navigation = '';
-		$msgcolor = 'green';
-		$message = $this->_lng['install']['froxlor_succ_installed'];
-		$link = '../index.php';
-		$linktext = $this->_lng['click_here_to_login'];
+		if ($fatal_fail || $another_fail) {
+			// D'oh
+			$navigation = '';
+			$msgcolor = 'red';
+			$message = $this->_lng['install']['testing_mysql_fail'];
+			$link = 'install.php';
+			$linktext = $this->_lng['click_here_to_goback'];
+		} else {
+			// all good
+			$navigation = '';
+			$msgcolor = 'green';
+			$message = $this->_lng['install']['froxlor_succ_installed'];
+			$link = '../index.php';
+			$linktext = $this->_lng['click_here_to_login'];
+		}
 
 		eval("\$navigation .= \"" . $this->_getTemplate("pagebottom") . "\";");
 
@@ -477,34 +494,41 @@ class FroxlorInstall {
 	 * @return string status messages
 	 */
 	private function _importDatabaseData() {
-		$content = "";
 
+		$content = "";
 		$content .= $this->_status_message('begin', $this->_lng['install']['testing_new_db']);
 		$options = array('PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8');
 		$dsn = "mysql:host=".$this->_data['mysql_host'].";dbname=".$this->_data['mysql_database'].";";
+		$fatal_fail = false;
 		try {
 			$db = new PDO(
 					$dsn, $this->_data['mysql_unpriv_user'], $this->_data['mysql_unpriv_pass'], $options
 			);
 		} catch (PDOException $e) {
 			$content .= $this->_status_message('red', $e->getMessage());
-			die;
+			$fatal_fail = true;
 		};
-		$content .= $this->_status_message('green', 'OK');
 
-		$content .= $this->_status_message('begin', $this->_lng['install']['importing_data']);
-		$db_schema = dirname(dirname(__FILE__)).'/froxlor.sql';
-		$sql_query = @file_get_contents($db_schema);
-		$sql_query = $this->_remove_remarks($sql_query);
-		$sql_query = $this->_split_sql_file($sql_query, ';');
-		for ($i = 0; $i < sizeof($sql_query); $i++) {
-			if (trim($sql_query[$i]) != '') {
-				$result = $db->query($sql_query[$i]);
+		if (!$fatal_fail) {
+
+			$content .= $this->_status_message('green', 'OK');
+
+			$content .= $this->_status_message('begin', $this->_lng['install']['importing_data']);
+			$db_schema = dirname(dirname(__FILE__)).'/froxlor.sql';
+			$sql_query = @file_get_contents($db_schema);
+			$sql_query = $this->_remove_remarks($sql_query);
+			$sql_query = $this->_split_sql_file($sql_query, ';');
+			for ($i = 0; $i < sizeof($sql_query); $i++) {
+				if (trim($sql_query[$i]) != '') {
+					$result = $db->query($sql_query[$i]);
+				}
 			}
-		}
-		$db = null;
+			$db = null;
 
-		$content .= $this->_status_message('green', 'OK');
+			$content .= $this->_status_message('green', 'OK');
+		}
+
+		return $content;
 	}
 
 	/**
@@ -534,16 +558,16 @@ class FroxlorInstall {
 		$del_stmt = $db_root->prepare("DELETE FROM `mysql`.`columns_priv` WHERE `User` = :user AND `Host` = :accesshost");
 		$del_stmt->execute(array('user' => $this->_data['mysql_unpriv_user'], 'accesshost' => $this->_data['mysql_access_host']));
 
-		$del_stmt = $db_root->prepare("DROP DATABASE IF EXISTS :database;");
-		$del_stmt->execute(array('database' => str_replace('`', '', $this->_data['mysql_database'])));
+		$del_stmt = $db_root->prepare("DROP DATABASE IF EXISTS `".str_replace('`', '', $this->_data['mysql_database'])."`;");
+		$del_stmt->execute();
 
 		$db_root->query("FLUSH PRIVILEGES;");
 		$content .= $this->_status_message('green', 'OK');
 
 		// we have to create a new user and database for the froxlor unprivileged mysql access
 		$content .= $this->_status_message('begin', $this->_lng['install']['create_mysqluser_and_db']);
-		$ins_stmt = $db_root->prepare("CREATE DATABASE :database");
-		$ins_stmt->execute(array('database' => str_replace('`', '', $this->_data['mysql_database'])));
+		$ins_stmt = $db_root->prepare("CREATE DATABASE `".str_replace('`', '', $this->_data['mysql_database'])."`");
+		$ins_stmt->execute();
 
 		$mysql_access_host_array = array_map('trim', explode(',', $this->_data['mysql_access_host']));
 
@@ -598,7 +622,7 @@ class FroxlorInstall {
 		$rows = $db_root->query("SELECT FOUND_ROWS()")->fetchColumn();
 
 		// check result
-		if ($result !== false && $rows > 0) {
+		if ($result_stmt !== false && $rows > 0) {
 			$tables_exist = true;
 		}
 
