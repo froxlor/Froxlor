@@ -31,6 +31,8 @@ $header
 
 	</article>
 	<br />
+	<br />
+	<br />
 	<article>
 		<header>
 			<h2>
