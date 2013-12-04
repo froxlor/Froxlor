@@ -22,6 +22,10 @@ body {
 	padding:0;
 }
 
+strong {
+	font-weight: 600;
+}
+
 .content {
 	background-color: #f7f8fa;
 	margin-top: 53px;

@@ -236,7 +236,7 @@ if ($page == 'domains'
 					`domains_used` = `domains_used` - 1
 					WHERE `adminid` = :adminid"
 				);
-				Database::pexecute($upd_stmt, array('adminid' => $userinfo['admind']));
+				Database::pexecute($upd_stmt, array('adminid' => $userinfo['adminid']));
 
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
