@@ -38,7 +38,7 @@ $(document).ready(function() {
 	var snheight = $('#sidenavigation').height();
 	var mainheight = $('#maincontent').height();
 	if (snheight > mainheight) {
-		$('#maincontent').height(snheight - 60);
+		$('#maincontent').height(snheight);
 	}
 
 	// this is necessary for the special setting feature (ref #1010)
