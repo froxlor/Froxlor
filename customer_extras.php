@@ -29,36 +29,6 @@ if(isset($_POST['id'])) {
 if($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras");
 	eval("echo \"" . getTemplate("extras/extras") . "\";");
-} elseif($page == 'backup') {
-    $log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras_backup");
-
-    $result_stmt = Database::prepare("SELECT `backup_enabled` FROM `" . TABLE_PANEL_CUSTOMERS . "`
-    	WHERE `customerid`= :customerid"
-    );
-    Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
-    $row = $result_stmt->fetch(PDO::FETCH_ASSOC);
-
-    $backup_enabled = makeyesno('backup_enabled', '1', '0', $row['backup_enabled']);
-
-    if(isset($_POST['send']) && $_POST['send'] == 'send') {
-		$backup_enabled = ($_POST['backup_enabled'] == '1' ? '1' : '0');
-	
-        $stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-        	SET `backup_enabled`= :backupenabled
-        	WHERE `customerid`= :customerid"
-        );
-        Database::pexecute($stmt, array("backupenabled" => $backup_enabled, "customerid" => $userinfo['customerid']));
-		
-		redirectTo($filename, Array('page' => $page, 's' => $s));
-    }
-
-    $backup_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.backup.php';
-	$backup_form = htmlform::genHTMLForm($backup_data);
-
-	$title = $backup_data['backup']['title'];
-	$image = $backup_data['backup']['image'];
-    
-    eval("echo \"" . getTemplate("extras/backup") . "\";");
 } elseif($page == 'htpasswds') {
 	if($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::htpasswds");
@@ -67,7 +37,7 @@ if($page == 'overview') {
 			'path' => $lng['panel']['path']
 		);
 		$paging = new paging($userinfo, TABLE_PANEL_HTPASSWDS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "` 
+		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
 		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
@@ -110,7 +80,7 @@ if($page == 'overview') {
 					AND `id`= :id"
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-				
+
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
 				inserttask('1');
 				redirectTo($filename, Array('page' => $page, 's' => $s));
@@ -130,7 +100,7 @@ if($page == 'overview') {
 			$username = validate($_POST['username'], 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/');
 			$authname = validate($_POST['directory_authname'], 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/');
 			validate($_POST['directory_password'], 'password');
-			
+
 			$username_path_check_stmt = Database::prepare("SELECT `id`, `username`, `path` FROM `" . TABLE_PANEL_HTPASSWDS . "`
 				WHERE `username`= :username
 				AND `path`= :path
@@ -213,18 +183,18 @@ if($page == 'overview') {
 				} else {
 					$password = crypt($_POST['directory_password']);
 				}
-				
+
 				$params = array(
 					"customerid" => $userinfo['customerid'],
 					"id" => $id
 				);
-				
+
 				$pwd_sql = '';
 				if($_POST['directory_password'] != '') {
 					$pwd_sql = "`password`= :password ";
 					$params["password"] = $password;
 				}
-				
+
 				$auth_sql = '';
 				if($authname != $result['authname']) {
 					$auth_sql = "`authname`= :authname ";
@@ -344,7 +314,7 @@ if($page == 'overview') {
 			);
 			Database::pexecute($path_dupe_check_stmt, array("path" => $path, "customerid" => $userinfo['customerid']));
 			$path_dupe_check = $path_dupe_check_stmt->fetch(PDO::FETCH_ASSOC);
-			
+
 			if(!$_POST['path']) {
 				standard_error('invalidpath');
 			}
@@ -353,18 +323,18 @@ if($page == 'overview') {
 				$options_cgi = '1';
 			} else {
 				$options_cgi = '0';
-			} 
+			}
 
 			$error404path = '';
 			if (isset($_POST['error404path'])) {
 				$error404path = correctErrorDocument($_POST['error404path']);
 			}
-			
+
 			$error403path = '';
 			if (isset($_POST['error403path'])) {
 				$error403path = correctErrorDocument($_POST['error403path']);
 			}
-			
+
 			$error500path = '';
 			if (isset($_POST['error500path'])) {
 				$error500path = correctErrorDocument($_POST['error500path']);
@@ -402,10 +372,6 @@ if($page == 'overview') {
 		} else {
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
 			$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
-			/*
-			$options_indexes = makeyesno('options_indexes', '1', '0', '0');
-			$options_cgi = makeyesno('options_cgi', '1', '0', '0');
-			*/
 
 			$htaccess_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htaccess_add.php';
 			$htaccess_add_form = htmlform::genHTMLForm($htaccess_add_data);
@@ -417,7 +383,7 @@ if($page == 'overview') {
 		}
 	} elseif(($action == 'edit') && ($id != 0)) {
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid` = :customerid 
+			WHERE `customerid` = :customerid
 			AND `id` = :id"
 		);
 		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
@@ -444,8 +410,9 @@ if($page == 'overview') {
 					|| ($error404path != $result['error404path'])
 					|| ($error403path != $result['error403path'])
 					|| ($error500path != $result['error500path'])
-					|| ($options_cgi != $result['options_cgi'])) {
-					
+					|| ($options_cgi != $result['options_cgi'])
+				) {
+
 					inserttask('1');
 					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTACCESS . "`
 						SET `options_indexes` = :options_indexes,
@@ -489,7 +456,7 @@ if($page == 'overview') {
 
 				$htaccess_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htaccess_edit.php';
 				$htaccess_edit_form = htmlform::genHTMLForm($htaccess_edit_data);
-	
+
 				$title = $htaccess_edit_data['htaccess_edit']['title'];
 				$image = $htaccess_edit_data['htaccess_edit']['image'];
 
@@ -498,5 +465,3 @@ if($page == 'overview') {
 		}
 	}
 }
-
-?>
