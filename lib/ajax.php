@@ -52,10 +52,10 @@ if ($action == "newsfeed") {
 
 			$title = (string)$item->title;
 			$link = (string)$item->link;
-			$date = date("D, j. F Y, G:i", strtotime($item->pubDate));
+			$date = date("Y-m-d G:i", strtotime($item->pubDate));
 			$content = preg_replace("/[\r\n]+/", "", strip_tags($item->description));
 
-			echo "<div class=\"newsitem\"><a href=\"" . $link . "\" target=\"_blank\"><b>" . $title . "</b><br /><small>" . $date . "</small><br />" . $content . "</a></div>";
+			echo "<div class=\"newsitem\"><small>" . $date . "</small><br /><a href=\"" . $link . "\" target=\"_blank\"><b>" . $title . "</b><br />" . $content . "</a></div>";
 		}
 	} else {
 		echo "";
