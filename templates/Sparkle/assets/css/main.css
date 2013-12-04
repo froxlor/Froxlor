@@ -953,7 +953,7 @@ label.nobr {
 .newsitem {
 	border-bottom: 1px solid #f1f2f3;
 	padding: 6px 5px 8px 5px;
-	height: 36px;
+	height: 56px;
 	line-height: 20px;
 	margin: 0 5px;
 	overflow: hidden; 
@@ -971,4 +971,8 @@ label.nobr {
 }
 .newsitem b {
 	margin-right: 15px;
+}
+.newsitem small {
+	font-size: 10px;
+	color: gray;
 }
