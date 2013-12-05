@@ -172,7 +172,7 @@ if ($page == 'overview') {
 
 					// create database, user, set permissions, etc.pp.
 					$dbm = new DbManager($settings);
-					$dbm->createDatabase(
+					$username = $dbm->createDatabase(
 						$userinfo['loginname'],
 						$password,
 						$userinfo['mysql_lastaccountnumber']
