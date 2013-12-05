@@ -1773,3 +1773,7 @@ $lng['serversettings']['allow_error_report_customer']['description'] = 'Please n
 $lng['admin']['phpsettings']['enable_slowlog'] = 'Enable slowlog (per domain)';
 $lng['admin']['phpsettings']['request_terminate_timeout'] = 'Request terminate-timeout';
 $lng['admin']['phpsettings']['request_slowlog_timeout'] = 'Request slowlog-timeout';
+$lng['admin']['templates']['SERVER_HOSTNAME'] = 'Replaces the system-hostname (URL to froxlor)';
+$lng['admin']['templates']['SERVER_IP'] = 'Replaces the default server ip-address';
+$lng['admin']['templates']['SERVER_PORT'] = 'Replaces the default server port';
+$lng['admin']['templates']['DOMAINNAME'] = 'Replaces the customers standard-subdomain (can be empty if none is generated)';
