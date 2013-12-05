@@ -81,7 +81,7 @@ if ($page == 'admins'
 					$traffic_doublepercent = 0;
 				}
 
-				$row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota email_autoresponder ftps subdomains tickets');
+				$row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains tickets');
 				$row = htmlentities_array($row);
 				eval("\$admins.=\"" . getTemplate("admins/admins_admin") . "\";");
 				$count++;
@@ -233,16 +233,6 @@ if ($page == 'admins'
 				$email_quota = - 1;
 			}
 
-			if ($settings['autoresponder']['autoresponder_active'] == '1') {
-
-				$email_autoresponder = intval_ressource($_POST['email_autoresponder']);
-				if (isset($_POST['email_autoresponder_ul'])) {
-					$email_autoresponder = - 1;
-				}
-			} else {
-				$email_autoresponder = 0;
-			}
-
 			$ftps = intval_ressource($_POST['ftps']);
 			if (isset($_POST['ftps_ul'])) {
 				$ftps = - 1;
@@ -261,19 +251,6 @@ if ($page == 'admins'
 			$mysqls = intval_ressource($_POST['mysqls']);
 			if (isset($_POST['mysqls_ul'])) {
 				$mysqls = - 1;
-			}
-
-			if ($settings['aps']['aps_active'] == '1') {
-
-				$number_of_aps_packages = intval_ressource($_POST['number_of_aps_packages']);
-				if (isset($_POST['number_of_aps_packages_ul'])) {
-					$number_of_aps_packages = - 1;
-				}
-				$can_manage_aps_packages = isset($_POST['can_manage_aps_packages']) ? 1 : 0;
-
-			} else {
-				$number_of_aps_packages = 0;
-				$can_manage_aps_packages = 0;
 			}
 
 			$customers_see_all = 0;
@@ -401,9 +378,6 @@ if ($page == 'admins'
 					'tickets_see_all' => $tickets_see_all,
 					'mysqls' => $mysqls,
 					'ip' => $ipaddress,
-					'can_manage_aps_packages' => $can_manage_aps_packages,
-					'aps_packages' => $number_of_aps_packages,
-					'autoresponder' => $email_autoresponder,
 					'theme' => $_theme
 				);
 
@@ -432,9 +406,6 @@ if ($page == 'admins'
 					`tickets_see_all` = :tickets_see_all,
 					`mysqls` = :mysqls,
 					`ip` = :ip,
-					`can_manage_aps_packages` = :can_manage_aps_packages,
-					`aps_packages` = :aps_packages,
-					`email_autoresponder` = :autoresponder,
 					`theme` = :theme
 				");
 				Database::pexecute($ins_stmt, $ins_data);
@@ -476,11 +447,9 @@ if ($page == 'admins'
 			$email_accounts_ul = makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_forwarders_ul = makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_quota_ul = makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$email_autoresponder_ul = makecheckbox('email_autoresponder_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$number_of_aps_packages_ul = makecheckbox('number_of_aps_packages_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 
 			$admin_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/admin/formfield.admin_add.php';
 			$admin_add_form = htmlform::genHTMLForm($admin_add_data);
@@ -520,7 +489,6 @@ if ($page == 'admins'
 					$email_accounts = $result['email_accounts'];
 					$email_forwarders = $result['email_forwarders'];
 					$email_quota = $result['email_quota'];
-					$email_autoresponder = $result['email_autoresponder'];
 					$ftps = $result['ftps'];
 					$tickets = $result['tickets'];
 					$mysqls = $result['mysqls'];
@@ -532,8 +500,6 @@ if ($page == 'admins'
 					$diskspace = $result['diskspace'];
 					$traffic = $result['traffic'];
 					$ipaddress = $result['ip'];
-					$can_manage_aps_packages = $result['can_manage_aps_packages'];
-					$number_of_aps_packages = $result['aps_packages'];
 
 				} else {
 
@@ -580,15 +546,6 @@ if ($page == 'admins'
 						$email_quota = -1;
 					}
 
-					if ($settings['autoresponder']['autoresponder_active'] == '1') {
-						$email_autoresponder = intval_ressource($_POST['email_autoresponder']);
-						if (isset($_POST['email_autoresponder_ul'])) {
-							$email_autoresponder = -1;
-						}
-					} else {
-						$email_autoresponder = 0;
-					}
-
 					$ftps = intval_ressource($_POST['ftps']);
 					if (isset($_POST['ftps_ul'])) {
 						$ftps = -1;
@@ -606,16 +563,6 @@ if ($page == 'admins'
 					$mysqls = intval_ressource($_POST['mysqls']);
 					if (isset($_POST['mysqls_ul'])) {
 						$mysqls = - 1;
-					}
-
-					if ($settings['aps']['aps_active'] == '1') {
-						$number_of_aps_packages = intval_ressource($_POST['number_of_aps_packages']);
-						if (isset($_POST['number_of_aps_packages_ul'])) {
-							$number_of_aps_packages = -1;
-						}
-						$can_manage_aps_packages = isset($_POST['can_manage_aps_packages']) ? 1 : 0;
-					} else {
-						$number_of_aps_packages = 0;
 					}
 
 					$customers_see_all = 0;
@@ -723,9 +670,6 @@ if ($page == 'admins'
 					if ($email_quota != $result['email_quota'] && $email_quota < $result['email_quota_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email quota');
 					}
-					if ($email_autoresponder != $result['email_autoresponder'] && $email_autoresponder < $result['email_autoresponder_used']) {
-						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email autoresponder');
-					}
 					if ($ftps != $result['ftps'] && $ftps < $result['ftps_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'ftps');
 					}
@@ -734,9 +678,6 @@ if ($page == 'admins'
 					}
 					if ($mysqls != $result['mysqls'] && $mysqls < $result['mysqls_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'mysqls');
-					}
-					if ($number_of_aps_packages != $result['aps_packages'] && $number_of_aps_packages < $result['aps_packages_used']) {
-						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'aps packages');
 					}
 
 					if ($res_warning != "") {
@@ -770,9 +711,6 @@ if ($page == 'admins'
 						'mysqls' => $mysqls,
 						'ip' => $ipaddress,
 						'deactivated' => $deactivated,
-						'can_manage_aps_packages' => $can_manage_aps_packages,
-						'aps_packages' => $number_of_aps_packages,
-						'autoresponder' => $email_autoresponder,
 						'adminid' => $id
 					);
 
@@ -800,10 +738,7 @@ if ($page == 'admins'
 						`tickets_see_all` = :tickets_see_all,
 						`mysqls` = :mysqls,
 						`ip` = :ip,
-						`deactivated` = :deactivated,
-						`can_manage_aps_packages` = :can_manage_aps_packages,
-						`aps_packages` = :aps_packages,
-						`email_autoresponder` = :autoresponder
+						`deactivated` = :deactivated
 						WHERE `adminid` = :adminid
 					");
 					Database::pexecute($upd_stmt, $upd_data);
@@ -863,11 +798,6 @@ if ($page == 'admins'
 					$result['email_quota'] = '';
 				}
 
-				$email_autoresponder_ul = makecheckbox('email_autoresponder_ul', $lng['customer']['unlimited'], '-1', false, $result['email_autoresponder'], true, true);
-				if ($result['email_autoresponder'] == '-1') {
-					$result['email_autoresponder'] = '';
-				}
-
 				$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, $result['ftps'], true, true);
 				if ($result['ftps'] == '-1') {
 					$result['ftps'] = '';
@@ -881,11 +811,6 @@ if ($page == 'admins'
 				$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, $result['mysqls'], true, true);
 				if ($result['mysqls'] == '-1') {
 					$result['mysqls'] = '';
-				}
-
-				$number_of_aps_packages_ul = makecheckbox('number_of_aps_packages_ul', $lng['customer']['unlimited'], '-1', false, $result['aps_packages'], true, true);
-				if ($result['aps_packages'] == '-1') {
-					$result['aps_packages'] = '';
 				}
 
 				$language_options = '';

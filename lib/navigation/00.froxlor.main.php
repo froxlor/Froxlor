@@ -60,12 +60,6 @@ return array (
 					'required_resources' => 'emails'
 				),
 				array (
-					'url' => 'customer_autoresponder.php',
-					'label' => $lng['menue']['email']['autoresponder'],
-					'required_resources' => 'emails',
-					'show_element' => ( getSetting('autoresponder', 'autoresponder_active') == true ),
-				),
-				array (
 					'url' => getSetting('panel', 'webmail_url'),
 					'new_window' => true,
 					'label' => $lng['menue']['email']['webmail'],
@@ -129,11 +123,6 @@ return array (
 				array (
 					'url' => 'customer_extras.php?page=htaccess',
 					'label' => $lng['menue']['extras']['pathoptions'],
-				),
-				array (
-					'url' => 'customer_extras.php?page=backup',
-					'label' => $lng['backup'],
-					'required_resources' => 'backup_allowed',
 				),
 			),
 		),

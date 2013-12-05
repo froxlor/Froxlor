@@ -60,12 +60,10 @@ if ($page == 'overview') {
 				SUM(`email_accounts_used`) AS `email_accounts_used`,
 				SUM(`email_forwarders_used`) AS `email_forwarders_used`,
 				SUM(`email_quota_used`) AS `email_quota_used`,
-				SUM(`email_autoresponder_used`) AS `email_autoresponder_used`,
 				SUM(`ftps_used`) AS `ftps_used`,
 				SUM(`tickets_used`) AS `tickets_used`,
 				SUM(`subdomains_used`) AS `subdomains_used`,
-				SUM(`traffic_used`) AS `traffic_used`,
-				SUM(`aps_packages_used`) AS `aps_packages_used`
+				SUM(`traffic_used`) AS `traffic_used`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "`" . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid "));
 	$overview = Database::pexecute_first($overview_stmt, array('adminid' => $userinfo['adminid']));
 
@@ -133,7 +131,7 @@ if ($page == 'overview') {
 	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
 	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
 	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
-	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota email_autoresponder ftps tickets subdomains aps_packages');
+	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains');
 
 	$cron_last_runs = getCronjobsLastRun();
 	$outstanding_tasks = getOutstandingTasks();

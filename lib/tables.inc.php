@@ -43,33 +43,12 @@ define('TABLE_PANEL_IPSANDPORTS', 'panel_ipsandports');
 define('TABLE_PANEL_TICKETS', 'panel_tickets');
 define('TABLE_PANEL_TICKET_CATS', 'panel_ticket_categories');
 define('TABLE_PANEL_LOG', 'panel_syslog');
-define('TABLE_MAIL_AUTORESPONDER', 'mail_autoresponder');
 define('TABLE_PANEL_PHPCONFIGS', 'panel_phpconfigs');
-define('TABLE_APS_PACKAGES', 'aps_packages');
-define('TABLE_APS_INSTANCES', 'aps_instances');
-define('TABLE_APS_SETTINGS', 'aps_settings');
-define('TABLE_APS_TASKS', 'aps_tasks');
-define('TABLE_APS_TEMP_SETTINGS', 'aps_temp_settings');
 define('TABLE_PANEL_CRONRUNS', 'cronjobs_run');
 define('TABLE_PANEL_REDIRECTCODES', 'redirect_codes');
 define('TABLE_PANEL_DOMAINREDIRECTS', 'domain_redirect_codes');
 define('TABLE_PANEL_DOMAIN_SSL_SETTINGS', 'domain_ssl_settings');
 define('TABLE_DOMAINTOIP', 'panel_domaintoip');
-
-// APS constants
-define('TASK_INSTALL', 1);
-define('TASK_REMOVE', 2);
-define('TASK_RECONFIGURE', 3);
-define('TASK_UPGRADE', 4);
-define('TASK_SYSTEM_UPDATE', 5);
-define('TASK_SYSTEM_DOWNLOAD', 6);
-define('INSTANCE_INSTALL', 1);
-define('INSTANCE_TASK_ACTIVE', 2);
-define('INSTANCE_SUCCESS', 3);
-define('INSTANCE_ERROR', 4);
-define('INSTANCE_UNINSTALL', 5);
-define('PACKAGE_LOCKED', 1);
-define('PACKAGE_ENABLED', 2);
 
 // VERSION INFO
 $version = '0.9.31-rc1';

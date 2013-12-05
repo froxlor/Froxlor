@@ -104,20 +104,6 @@ $header
 		</div>
 		</if>
 		
-		<if $settings['autoresponder']['autoresponder_active'] == 1 && $userinfo['email_autoresponder'] != '0'>
-		<div class="canvasbox">
-			<input type="hidden" id="email_autoresponder" class="circular" data-used="{$userinfo['email_autoresponder_used']}" data-available="{$userinfo['email_autoresponder']}">
-			<canvas id="email_autoresponder-canvas" width="120" height="76"></canvas><br />
-			{$lng['customer']['autoresponder']}<br />
-			<small>
-				{$userinfo['email_autoresponder_used']} {$lng['panel']['used']}<br />
-				<if $userinfo['email_autoresponder'] != '∞'>
-				{$userinfo['email_autoresponder']} {$lng['panel']['available']}
-				</if>
-			</small>
-		</div>
-		</if>
-
 		<if $userinfo['mysqls'] != '0'>
 		<div class="canvasbox">
 			<input type="hidden" id="mysqls" class="circular" data-used="{$userinfo['mysqls_used']}" data-available="{$userinfo['mysqls']}">
@@ -141,20 +127,6 @@ $header
 				{$userinfo['ftps_used']} {$lng['panel']['used']}<br />
 				<if $userinfo['ftps'] != '∞'>
 				{$userinfo['ftps']} {$lng['panel']['available']}
-				</if>
-			</small>
-		</div>
-		</if>
-		
-		<if (int)$settings['aps']['aps_active'] == 1 && $userinfo['aps_packages'] != '0'>
-		<div class="canvasbox">
-			<input type="hidden" id="aps_packages" class="circular" data-used="{$userinfo['aps_packages_used']}" data-available="{$userinfo['aps_packages']}">
-			<canvas id="aps_packages-canvas" width="120" height="76"></canvas><br />
-			{$lng['aps']['numberofapspackages']}<br />
-			<small>
-				{$userinfo['aps_packages_used']} {$lng['panel']['used']}<br />
-				<if $userinfo['aps_packages'] != '∞'>
-				{$userinfo['aps_packages']} {$lng['panel']['available']}
 				</if>
 			</small>
 		</div>

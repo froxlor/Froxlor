@@ -177,13 +177,6 @@ if($page == 'overview') {
 					}
 				}
 
-				/*
-				 * check for APS packages used with this domain, #110
-				 */
-				if(domainHasApsInstances($id)) {
-					standard_error('domains_cantdeletedomainwithapsinstances');
-				}
-
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted subdomain '" . $idna_convert->decode($result['domain']) . "'");
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE
 					`customerid` = :customerid

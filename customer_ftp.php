@@ -40,8 +40,7 @@ if ($page == 'overview') {
 		$paging = new paging($userinfo, TABLE_FTP_USERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 		
 		$result_stmt = Database::prepare("SELECT `id`, `username`, `homedir` FROM `" . TABLE_FTP_USERS . "`
-			WHERE `customerid`= :customerid 
-			AND `username` NOT LIKE '%_backup'" . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
+			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
 		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
 		$ftps_count = Database::num_rows();
@@ -370,21 +369,6 @@ if ($page == 'overview') {
 						AND `id` = :id"
 					);
 					Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id, "password" => $cryptPassword));
-						
-					// also update customers backup user password if password of main ftp user is changed
-					if(!preg_match('/' . $settings['customer']['ftpprefix'] . '/', $result['username'])) {
-						$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
-							SET `password` = :password
-							WHERE `customerid` = :customerid
-							AND `username` = :username"
-						);
-						$params = array(
-							"password" => $cryptPassword,
-							"customerid" => $userinfo['customerid'],
-							"username" => $result['username'] . "_backup"
-						);
-						Database::pexecute($stmt, $params);
-					}
 				}
 				
 				if ($path != '') {
