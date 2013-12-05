@@ -47,12 +47,6 @@
 							<td><span <if $admin['email_quota_used'] == $admin['email_quota_used_new']>style="color:green"<else>style="color:red"</if>><b>{$admin['email_quota_used']} -&gt; {$admin['email_quota_used_new']}</b></span></td>
 						</tr>
 						</if>
-						<if $settings['autoresponder']['autoresponder_active'] == 1>
-						<tr>
-							<td>{$lng['customer']['autoresponder']}:</td>
-							<td><span <if $admin['email_autoresponder_used'] == $admin['email_autoresponder_used_new']>style="color:green"<else>style="color:red"</if>><b>{$admin['email_autoresponder_used']} -&gt; {$admin['email_autoresponder_used_new']}</b></span></td>
-						</tr>
-						</if>
 						<tr>
 							<td>{$lng['customer']['ftps']}:</td>
 							<td><span <if $admin['ftps_used'] == $admin['ftps_used_new']>style="color:green"<else>style="color:red"</if>><b>{$admin['ftps_used']} -&gt; {$admin['ftps_used_new']}</b></span></td>
@@ -61,12 +55,6 @@
 						<tr>
 							<td>{$lng['customer']['tickets']}:</td>
 							<td><span <if $admin['tickets_used'] == $admin['tickets_used_new']>style="color:green"<else>style="color:red"</if>><b>{$admin['tickets_used']} -&gt; {$admin['tickets_used_new']}</b></span></td>
-						</tr>
-						</if>
-						<if $settings['aps']['aps_active'] == '1'>
-						<tr>
-							<td>{$lng['customer']['aps']}:</td>
-							<td><span <if $admin['aps_packages_used'] == $admin['aps_packages_used_new']>style="color:green"<else>style="color:red"</if>><b>{$admin['aps_packages_used']} -&gt; {$admin['aps_packages_used_new']}</b></span></td>
 						</tr>
 						</if>
 					</table>

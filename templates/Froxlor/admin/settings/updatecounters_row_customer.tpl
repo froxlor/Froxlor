@@ -31,12 +31,6 @@
 							<td><span <if $customer['email_quota_used'] == $customer['email_quota_used_new']>style="color:green"<else>style="color:red"</if>><b>{$customer['email_quota_used']} -&gt; {$customer['email_quota_used_new']}</b></span></td>
 						</tr>
 						</if>
-						<if $settings['autoresponder']['autoresponder_active'] == 1>
-						<tr>
-							<td>{$lng['customer']['autoresponder']}:</td>
-							<td><span <if $customer['email_autoresponder_used'] == $customer['email_autoresponder_used_new']>style="color:green"<else>style="color:red"</if>><b>{$customer['email_autoresponder_used']} -&gt; {$customer['email_autoresponder_used_new']}</b></span></td>
-						</tr>
-						</if>
 						<tr>
 							<td>{$lng['customer']['ftps']}:</td>
 							<td><span <if $customer['ftps_used'] == $customer['ftps_used_new']>style="color:green"<else>style="color:red"</if>><b>{$customer['ftps_used']} -&gt; {$customer['ftps_used_new']}</b></span></td>
@@ -45,12 +39,6 @@
 						<tr>
 							<td>{$lng['customer']['tickets']}:</td>
 							<td><span <if $customer['tickets_used'] == $customer['tickets_used_new']>style="color:green"<else>style="color:red"</if>><b>{$customer['tickets_used']} -&gt; {$customer['tickets_used_new']}</b></span></td>
-						</tr>
-						</if>
-						<if $settings['aps']['aps_active'] == '1'>
-						<tr>
-							<td>{$lng['customer']['aps']}:</td>
-							<td><span <if $customer['aps_packages_used'] == $customer['aps_packages_used_new']>style="color:green"<else>style="color:red"</if>><b>{$customer['aps_packages_used']} -&gt; {$customer['aps_packages_used_new']}</b></span></td>
 						</tr>
 						</if>
 					</table>

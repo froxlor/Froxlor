@@ -179,11 +179,6 @@ if ($page == 'domains'
 			if (isset($_POST['send'])
 				&& $_POST['send'] == 'send'
 			) {
-				//check for APS packages used with this domain, #110
-				if (domainHasApsInstances($id)) {
-					standard_error('domains_cantdeletedomainwithapsinstances');
-				}
-
 				// check for deletion of main-domains which are logically subdomains, #329
 				$rsd_sql = '';
 				$remove_subbutmain_domains = isset($_POST['delete_userfiles']) ? 1 : 0;
