@@ -1722,3 +1722,7 @@ $lng['serversettings']['allow_error_report_customer']['description'] = 'Bitte be
 $lng['admin']['phpsettings']['enable_slowlog'] = 'FPM slowlog pro Domain aktivieren';
 $lng['admin']['phpsettings']['request_terminate_timeout'] = 'Request terminate-timeout';
 $lng['admin']['phpsettings']['request_slowlog_timeout'] = 'Request slowlog-timeout';
+$lng['admin']['templates']['SERVER_HOSTNAME'] = 'Wird mit dem System-Hostname (URL zu froxlor) ersetzt';
+$lng['admin']['templates']['SERVER_IP'] = 'Wird mit der standard System IP-Adresse ersetzt';
+$lng['admin']['templates']['SERVER_PORT'] = 'Wird mit dem standard Port ersetzt';
+$lng['admin']['templates']['DOMAINNAME'] = 'Wird mit der Standardsubdomain des Kunden ersetzt (kann leer sein, wenn keine erstellt werden soll)';

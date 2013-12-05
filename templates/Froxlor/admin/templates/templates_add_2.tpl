@@ -78,6 +78,22 @@ $header
 					<td>{$lng['admin']['templates']['PASSWORD']}</td>
 				</tr>
 				<tr>
+					<td><em>{SERVER_HOSTNAME}</em></td>
+					<td>{$lng['admin']['templates']['SERVER_HOSTNAME']}</td>
+				</tr>
+				<tr>
+					<td><em>{SERVER_IP}</em></td>
+					<td>{$lng['admin']['templates']['SERVER_IP']}</td>
+				</tr>
+				<tr>
+					<td><em>{SERVER_PORT}</em></td>
+					<td>{$lng['admin']['templates']['SERVER_PORT']}</td>
+				</tr>
+				<tr>
+					<td><em>{DOMAINNAME}</em></td>
+					<td>{$lng['admin']['templates']['DOMAINNAME']}</td>
+				</tr>
+				<tr>
 					<td colspan="2">
 						<strong>{$lng['admin']['templates']['pop_success']}</strong>
 					</td>

@@ -917,6 +917,8 @@ if ($page == 'customers'
 					Database::pexecute($ins_stmt, array('name' => $loginname));
 					$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added ftp-account for user '" . $loginname . "'");
 
+					$_stdsubdomain = '';
+
 					if ($createstdsubdomain == '1') {
 
 						if (isset($settings['system']['stdsubdomain'])
@@ -968,13 +970,28 @@ if ($page == 'customers'
 
 					if ($sendpassword == '1') {
 
+						$srv_hostname = $settings['system']['hostname'];
+						if ($settings['system']['froxlordirectlyviahostname'] == '0') {
+							$srv_hostname .= '/froxlor';
+						}
+
+						$srv_ip_stmt = Database::prepare("
+							SELECT ip, port FROM `".TABLE_PANEL_IPSANDPORTS."`
+							WHERE `id` = :defaultip
+						");
+						$srv_ip = Database::pexecute_first($srv_ip_stmt, array('defaultip' => $settings['system']['defaultip']));
+
 						$replace_arr = array(
 							'FIRSTNAME' => $firstname,
 							'NAME' => $name,
 							'COMPANY' => $company,
 							'SALUTATION' => getCorrectUserSalutation(array('firstname' => $firstname, 'name' => $name, 'company' => $company)),
 							'USERNAME' => $loginname,
-							'PASSWORD' => $password
+							'PASSWORD' => $password,
+							'SERVER_HOSTNAME' => $srv_hostname,
+							'SERVER_IP' => isset($srv_ip['ip']) ? $srv_ip['ip'] : '',
+							'SERVER_PORT' => isset($srv_ip['port']) ? $srv_ip['port'] : '',
+							'DOMAINNAME' => $_stdsubdomain
 						);
 
 						// Get mail templates from database; the ones from 'admin' are fetched for fallback
