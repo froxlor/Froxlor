@@ -247,36 +247,20 @@ if ($page == 'customers'
 				Database::needRoot(true);
 				$last_dbserver = 0;
 
+				$dbm = new DbManager($settings);
+
 				while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 					if ($last_dbserver != $row_database['dbserver']) {
 						Database::needRoot(true, $row_database['dbserver']);
-						Database::query('FLUSH PRIVILEGES;');
+						$dbm->getManager()->flushPrivileges();
 						$last_dbserver = $row_database['dbserver'];
 					}
 
-					if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
-						// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
-						$stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM `".$row_database['databasename']."`");
-						Database::pexecute($stmt, array(), false);
-					}
-
-					$host_res_stmt = Database::prepare("
-						SELECT `Host` FROM `mysql`.`user`
-						WHERE `User` = :dbname"
-					);
-					Database::pexecute($host_res_stmt, array('dbname' => $row_database['databasename']));
-					while ($host = $host_res_stmt->fetch(PDO::FETCH_ASSOC)) {
-						// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-						$drop_stmt = Database::prepare("DROP USER :dbname@:host");
-						Database::pexecute($drop_stmt, array(':dbname' => $row_database['databasename'], ':host' => $host['Host']), false);
-					}
-
-					$drop_stmt = Database::prepare("DROP DATABASE IF EXISTS `".$row_database['databasename']."`");
-					Database::pexecute($drop_stmt);
+					$dbm->getManager()->deleteDatabase($row_database['databasename']);
 				}
 
-				Database::query('FLUSH PRIVILEGES;');
+				$dbm->getManager()->flushPrivileges();
 				Database::needRoot(false);
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
@@ -1393,11 +1377,14 @@ if ($page == 'customers'
 
 						Database::needRoot(true);
 						$last_dbserver = 0;
+
+						$dbm = new DbManager($settings);
+
 						// For each of them
 						while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 							if ($last_dbserver != $row_database['dbserver']) {
-								Database::query('FLUSH PRIVILEGES;');
+								$dbm->getManager()->flushPrivileges();
 								Database::needRoot(true, $row_database['dbserver']);
 								$last_dbserver = $row_database['dbserver'];
 							}
@@ -1408,19 +1395,16 @@ if ($page == 'customers'
 								// Prevent access, if deactivated
 								if ($deactivated) {
 									// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
-									$stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM `".$row_database['databasename']."`");
-									Database::pexecute($stmt, array(), false);
-
+									$dbm->getManager()->disableUser($row_database['databasename'], $mysql_access_host);
 								} else {
 									// Otherwise grant access
-									Database::query('GRANT ALL PRIVILEGES ON `' . $row_database['databasename'] .'`.* TO `' . $row_database['databasename'] . '`@`' . $mysql_access_host . '`');
-									Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $row_database['databasename']) . '` . * TO `' . $row_database['databasename'] . '`@`' . $mysql_access_host . '`');
+									$dbm->getManager()->enableUser($row_database['databasename'], $mysql_access_host);
 								}
 							}
 						}
 
-						/* At last flush the new privileges */
-						Database::query('FLUSH PRIVILEGES;');
+						// At last flush the new privileges
+						$dbm->getManager()->flushPrivileges();
 						Database::needRoot(false);
 
 						$log->logAction(ADM_ACTION, LOG_INFO, "deactivated user '" . $result['loginname'] . "'");
