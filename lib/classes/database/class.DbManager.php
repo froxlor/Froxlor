@@ -72,7 +72,7 @@ class DbManager {
 	 * @param string $password
 	 * @param int $last_accnumber
 	 *
-	 * @return bool
+	 * @return string $username
 	 */
 	public function createDatabase($loginname = null, $password = null, $last_accnumber = 0) {
 
@@ -106,7 +106,7 @@ class DbManager {
 
 		Database::needRoot(false);
 
-		return true;
+		return $username;
 	}
 
 	/**
