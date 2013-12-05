@@ -28,7 +28,7 @@ if (isset($argv[1]) && strtolower($argv[1]) == '--help') {
 	echo "\n*** Froxlor Master Cronjob ***\n\n";
 	echo "Below are possible parameters for this file\n\n";
 	echo "--force\t\t\tforces re-generating of config-files (webserver, etc.)\n";
-	echo "--force-[cronname]\tforces the given cron to run, e.g. --force-backup, --force-traffic\n\n";
+	echo "--force-[cronname]\tforces the given cron to run, e.g. --force-mailboxsize, --force-traffic\n\n";
 }
 
 /**

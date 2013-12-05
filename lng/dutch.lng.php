@@ -853,26 +853,8 @@ $lng['panel']['megabyte'] = 'MegaByte';
 $lng['panel']['not_supported'] = 'Wordt niet ondersteund in: ';
 $lng['emails']['quota_edit'] = 'E-mailquotum aanpassen';
 $lng['error']['allocatetoomuchquota'] = 'U probeerde %s MB Quotum toe te kennen, maar u heeft niet voldoende over.';
-
-// Autoresponder module
-
-$lng['menue']['email']['autoresponder'] = 'Automatische beantwoorder';
-$lng['autoresponder']['active'] = 'Active';
-$lng['autoresponder']['autoresponder_add'] = 'Automatische beantwoorder toevoegen';
-$lng['autoresponder']['autoresponder_edit'] = 'Automatische beantwoorder aanpassen';
-$lng['autoresponder']['autoresponder_new'] = 'Automatische beantwoorder aanmaken';
-$lng['autoresponder']['subject'] = 'Onderwerp';
-$lng['autoresponder']['message'] = 'Bericht';
-$lng['autoresponder']['account'] = 'Account';
-$lng['autoresponder']['sender'] = 'Afzender';
-$lng['question']['autoresponderdelete'] = 'Weet u zeker dat u de automatische beantwoorder wilt verwijderen?';
-$lng['error']['noemailaccount'] = 'Er kunnen twee redenen zijn waarom u geen automatische beantwoorder kunt aanmaken: 1) U dient minimaal een (1) e-mailaccount te hebben. 2) Het is mogelijk dat alle accounts reeds een automatische beantwoorder hebben';
 $lng['error']['missingfields'] = 'Niet alle vereiste velden zijn ingevuld.';
 $lng['error']['accountnotexisting'] = 'Het opgegeven e-mailaccount bestaat niet.';
-$lng['error']['autoresponderalreadyexists'] = 'Er is reeds een automatische beantwoorder voor dit account geconfigureerd.';
-$lng['error']['invalidautoresponder'] = 'Het opgegeven account is ongeldig.';
-$lng['serversettings']['autoresponder_active']['title'] = 'Module \'Automatische beantwoorder\' gebruiken';
-$lng['serversettings']['autoresponder_active']['description'] = 'Wilt u deze module gebruiken?';
 $lng['admin']['security_settings'] = 'Beveiliging';
 $lng['admin']['know_what_youre_doing'] = 'Verander dit alleen wanneer u zeker weet wat u doet!';
 $lng['admin']['show_version_login']['title'] = 'Toon versie van Froxlor bij het inloggen';
@@ -994,9 +976,6 @@ $lng['panel']['toomanydirs'] = 'Teveel submappen. Er wordt teruggevallen op hand
 $lng['panel']['abort'] = 'Afbreken';
 $lng['serversettings']['cron']['debug']['title'] = 'Foutopsporing cronscript';
 $lng['serversettings']['cron']['debug']['description'] = 'Activeer dit om het lockbestand te bewaren nadat de cron-taak is afgehandeld, zodat het gerbuikt kan worden voor het opsporen van fouten.<br /><b>Let op:</b>Het vastzetten van het lockbestand kan ervoor zorgen dat de volgende cron-taak niet naar behoren functioneert.';
-$lng['autoresponder']['date_from'] = 'Startdatum';
-$lng['autoresponder']['date_until'] = 'Einddatum';
-$lng['autoresponder']['startenddate'] = 'Start-/einddatum';
 $lng['panel']['not_activated'] = 'niet actief';
 $lng['panel']['off'] = 'uit';
 $lng['update']['updateinprogress_onlyadmincanlogin'] = 'Een nieuwere versie van Froxlor is geinstalleerd maar is nog niet geconfigureerd.<br />Alleen de beheerder kan inloggen en de update voltooien.';
@@ -1069,7 +1048,6 @@ $lng['crondesc']['cron_unknown_desc'] = 'geen beschrijving opgegeven';
 $lng['admin']['cron']['add'] = 'Cron-taak toevoegen';
 $lng['crondesc']['cron_tasks'] = 'aanmaken configuratiebestanden';
 $lng['crondesc']['cron_legacy'] = 'oude cron-taak';
-$lng['crondesc']['cron_autoresponder'] = 'autobeantwoorder e-mail';
 $lng['crondesc']['cron_traffic'] = 'berekenen verkeersgegevens';
 $lng['crondesc']['cron_ticketsreset'] = 'opnieuw instellen ticket-tellers';
 $lng['crondesc']['cron_ticketarchive'] = 'oude tickets archiveren';
@@ -1217,8 +1195,6 @@ $lng['admin']['templates']['forgotpwd'] = 'Notificatie mails voor opnieuw instel
 $lng['admin']['templates']['password_reset'] = 'Klantnotificatie voor opnieuw instellen wachtwoord';
 $lng['admin']['store_defaultindex'] = 'Standaard indexbestand opslaan in map klant';
 
-// ADDED IN FROXLOR 0.9.13-svn1
-$lng['customer']['autoresponder'] = 'Automatische beantwoorder';
 // ADDED IN FROXLOR 0.9.14-svn1
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Standaard configuratie voor Froxlor-vHost';
 

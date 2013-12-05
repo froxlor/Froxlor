@@ -547,17 +547,6 @@ $lng['customer']['title'] = 'Tytu&#322';
 $lng['customer']['country'] = 'Kraj';
 
 
-$lng['menue']['email']['autoresponder'] = 'Autoresponder';
-$lng['autoresponder']['active'] = 'Aktywny';
-$lng['autoresponder']['autoresponder_add'] = 'Dodaj autoresponder';
-$lng['autoresponder']['autoresponder_edit'] = 'Edytuj autoresponder';
-$lng['autoresponder']['autoresponder_new'] = 'Utw&#243rz nowy autoresponder';
-$lng['autoresponder']['subject'] = 'Temat';
-$lng['autoresponder']['message'] = 'Wiadomo&#347&#263';
-$lng['autoresponder']['account'] = 'Konto';
-$lng['autoresponder']['sender'] = 'Nadawca';
-$lng['question']['autoresponderdelete'] = 'Czy napewno chcesz skasowa&#263 autoresponder?';
-$lng['serversettings']['autoresponder_active']['title'] = 'U&#380yj modu&#322u autorespondera';
 $lng['admin']['know_what_youre_doing'] = 'Zmie&#324 TYLKO je&#347li wiesz co robisz!';
 $lng['admin']['show_version_login']['title'] = 'Pokazuj wersj&#281 Froxlora przy logowaniu';
 $lng['admin']['show_version_login']['description'] = 'Pokazuj wersj&#281 Froxlora w stopce struno logowania';
@@ -601,9 +590,6 @@ $lng['admin']['phpserversettings'] = 'Ustawienia PHP';
 $lng['admin']['spfsettings'] = 'Ustawienia SPF dla domeny';
 $lng['spf']['use_spf'] = 'SPF dla domeny aktywne?';
 $lng['spf']['spf_entry'] = 'SPF entry for all domains';
-$lng['autoresponder']['date_from'] = 'Data pocz&#261tkowa';
-$lng['autoresponder']['date_until'] = 'Data ko&#324cowa';
-$lng['autoresponder']['startenddate'] = 'Pocz&#261tek/koniec daty';
 $lng['panel']['not_activated'] = 'Nie aktywowany';
 $lng['update']['update'] = 'Aktualizacja Froxlora';
 $lng['admin']['cron']['cronsettings'] = 'ustawienia Cronjob';

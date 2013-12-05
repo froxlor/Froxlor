@@ -880,26 +880,8 @@ $lng['panel']['megabyte'] = 'MegaByte';
 $lng['panel']['not_supported'] = 'Non supportato in: ';
 $lng['emails']['quota_edit'] = 'Cambia limite E-Mail';
 $lng['error']['allocatetoomuchquota'] = 'Si è tentato di allocare %s MB Limite, ma non c\'è abbastanza spazio disponibile.';
-
-// Autoresponder module
-
-$lng['menue']['email']['autoresponder'] = 'Autorisponditore';
-$lng['autoresponder']['active'] = 'Attivo';
-$lng['autoresponder']['autoresponder_add'] = 'Aggiungi autorisponditore';
-$lng['autoresponder']['autoresponder_edit'] = 'Modifica autorisponditore';
-$lng['autoresponder']['autoresponder_new'] = 'Crea nuovo autorisponditore';
-$lng['autoresponder']['subject'] = 'Oggetto';
-$lng['autoresponder']['message'] = 'Messaggio';
-$lng['autoresponder']['account'] = 'Account';
-$lng['autoresponder']['sender'] = 'Mittente';
-$lng['question']['autoresponderdelete'] = 'Sei sicuro di voler cancellare l\'autorisponditore?';
-$lng['error']['noemailaccount'] = 'Ci possono essere due motivi per cui non è possibile creare un nuovo autorisponditore: Hai bisogno almeno di un account di posta elettronica per creare un nuovo autorisponditore. In secondo luogo può essere che tutti gli account abbiano già configurato un autorisponditore.';
 $lng['error']['missingfields'] = 'Non tutti i campi obbligatori sono stati compilati.';
 $lng['error']['accountnotexisting'] = 'L\'account di posta elettronica dato non esiste.';
-$lng['error']['autoresponderalreadyexists'] = 'C\'è già un autorisponditore configurato per questo account.';
-$lng['error']['invalidautoresponder'] = 'L\'account non è valido';
-$lng['serversettings']['autoresponder_active']['title'] = 'Usa il modulo autorisponditore';
-$lng['serversettings']['autoresponder_active']['description'] = 'Vuoi utilizzare il modulo autorisponditore?';
 $lng['admin']['security_settings'] = 'Opzioni di Sicurezza';
 $lng['admin']['know_what_youre_doing'] = 'Modifica solo, se sai quello che stai facendo!';
 $lng['admin']['show_version_login']['title'] = 'Mostra la versione di Froxlor quando si effettua l\'accesso';
@@ -1026,9 +1008,6 @@ $lng['panel']['toomanydirs'] = 'Troppe sottocartelle. Rifare tornando indietro n
 $lng['panel']['abort'] = 'Termina';
 $lng['serversettings']['cron']['debug']['title'] = 'Debug Cronscript';
 $lng['serversettings']['cron']['debug']['description'] = 'Attiva per mantenere il file lock dopo l\'avvio di cron, solo per debug<br /><b>Attenzione:</b>Mantenendo il file di lock al successivo avvio cron potrebbe non funzionare correttamente';
-$lng['autoresponder']['date_from'] = 'Data di partenza';
-$lng['autoresponder']['date_until'] = 'Data di fine';
-$lng['autoresponder']['startenddate'] = 'Data di Inizio/Fine';
 $lng['panel']['not_activated'] = 'non attivato';
 $lng['panel']['off'] = 'off';
 $lng['update']['updateinprogress_onlyadmincanlogin'] = 'Una nuova versione di Froxlor è stata installata ma non ancora impostata.<br />Solo l\'amministratore può accedere e completare l\'aggiornamento.';
@@ -1101,7 +1080,6 @@ $lng['crondesc']['cron_unknown_desc'] = 'nessuna descrizione fornita';
 $lng['admin']['cron']['add'] = 'Aggiungi cronjob';
 $lng['crondesc']['cron_tasks'] = 'generazione del file di configurazione';
 $lng['crondesc']['cron_legacy'] = 'legacy (vecchi) cronjob';
-$lng['crondesc']['cron_autoresponder'] = 'autorisponditore e-mail';
 $lng['crondesc']['cron_traffic'] = 'calcolo del traffico';
 $lng['crondesc']['cron_ticketsreset'] = 'reset dei contatori dei ticket';
 $lng['crondesc']['cron_ticketarchive'] = 'archiviazione vecchi ticket';
@@ -1258,9 +1236,6 @@ $lng['extras']['directoryprotection_edit'] = 'modifica la protezione della direc
 $lng['admin']['templates']['forgotpwd'] = 'Mail di notifica per il reset della password';
 $lng['admin']['templates']['password_reset'] = 'Notifica al cliente per il reset della password';
 
-// ADDED IN FROXLOR 0.9.13-svn1
-$lng['customer']['autoresponder'] = 'Risponditore Automatico';
-
 // ADDED IN FROXLOR 0.9.14-svn1
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Configurazione di Default di PHP per Froxlor-vhost';
 
@@ -1369,16 +1344,3 @@ $lng['traffic']['months']['total'] = 'Totale';
 $lng['traffic']['details'] = 'Dettagli';
 $lng['menue']['traffic']['table'] = 'Traffico';
 $lng['error']['admin_domain_emailsystemhostname'] = 'Spiacente, l\'hostname di sistema non può essere usato come dominio di un cliente';
-$lng['backup_allowed'] = 'Backup permesso';
-$lng['extras']['backup_create'] = 'Creare il Backup?';
-$lng['extras']['backup_info'] = 'Il Backup sarà eseguito una volta al giorno nella cartella ...';
-$lng['extras']['backup_info_sep'] = 'Contiene gli archivi compressi dei file HTML Files e dei Database.';
-$lng['extras']['backup_info_big'] = 'Contiene un archivio compresso dei file HTML Files e dei Database.';
-$lng['extras']['backup_count_info'] = '<br /><br />Si tenga in considerazione che il backup utilizza lo spazio web!';
-$lng['serversettings']['backup_count'] = 'Viene sottratta la dimensione del backup dalla spazio web disponibile?';
-$lng['serversettings']['backup_enabled'] = 'Attivo il Backup?';
-$lng['serversettings']['backupdir']['description'] = 'Qual\'è il nome della cartella di backup dell\'utente?';
-$lng['serversettings']['mysqldump_path']['description'] = 'Percorso del comando mysqldump?';
-$lng['serversettings']['backup_bigfile'] = 'Salvare il backup in un unico grande file al posto di salvare separatamente i file html e i database?';
-$lng['serversettings']['backup_ftp_enabled'] = 'Attiva o l\'upload FTP?';
-$lng['serversettings']['backup_ftp_user'] = 'Utente FTP:';

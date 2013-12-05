@@ -2538,6 +2538,7 @@ if (isFroxlorVersion('0.9.31-rc1')) {
 	Database::query("DROP TABLE IF EXISTS `aps_settings`;");
 	Database::query("DROP TABLE IF EXISTS `aps_tasks`;");
 	Database::query("DROP TABLE IF EXISTS `aps_temp_settings`;");
+	Database::query("DELETE FROM `".TABLE_PANEL_CRONRUNS."` WHERE `module` = 'froxlor/aps';");
 	lastStepStatus(0);
 
 	showUpdateStep("Removing backup-module (deprecated)");
@@ -2553,6 +2554,7 @@ if (isFroxlorVersion('0.9.31-rc1')) {
 	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_ftp_passive';");
 	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `backup_allowed`;");
 	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `backup_enabled`;");
+	Database::query("DELETE FROM `".TABLE_PANEL_CRONRUNS."` WHERE `module` = 'froxlor/backup';");
 	lastStepStatus(0);
 
 	showUpdateStep("Removing autoresponder-module (deprecated)");
