@@ -2530,6 +2530,7 @@ if (isFroxlorVersion('0.9.31-rc1')) {
 		INSERT INTO `".TABLE_PANEL_SETTINGS."` SET `settinggroup` = 'admin', `varname` = 'show_news_feed', `value` = :value
 	");
 	Database::pexecute($ins_stmt, array('value' => $update_admin_news_feed));
+	lastStepStatus(0);
 
 	updateToVersion('0.9.31-rc2');
 }
