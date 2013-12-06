@@ -199,7 +199,7 @@ return array(
 					'settinggroup' => 'admin',
 					'varname' => 'show_news_feed',
 					'type' => 'bool',
-					'default' => false,
+					'default' => true,
 					'save_method' => 'storeSettingField',
 					),
 				'panel_allow_domain_change_admin' => array(
