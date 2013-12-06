@@ -537,7 +537,7 @@ $lng['panel']['back'] = 'Back';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_fcgid']['title'] = 'Enable FCGID';
-$lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with the corresponding useraccount.<br /><br /><b>This needs a special webserver configuration for Apache, see <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_handbook">FCGI - handbook</a></b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with the corresponding useraccount.<br /><br /><b>This needs a special webserver configuration for Apache, see <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_fcgid">FCGID - handbook</a></b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
@@ -1216,7 +1216,7 @@ $lng['serversettings']['froxlordirectlyviahostname'] = 'Access Froxlor directly 
 
 // ADDED IN FROXLOR 0.9.11-svn1
 $lng['serversettings']['panel_password_regex']['title'] = 'Regular expression for passwords';
-$lng['serversettings']['panel_password_regex']['description'] = 'Here you can set a regular expression for passwords-complexity.<br />Empty = no specific requirement<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">regex help/examples</a>)';
+$lng['serversettings']['panel_password_regex']['description'] = 'Here you can set a regular expression for passwords-complexity.<br />Empty = no specific requirement';
 $lng['error']['notrequiredpasswordcomplexity'] = 'The specified password-complexity was not satisfied.<br />Please contact your administrator if you have any questions about the complexity-specification';
 
 // ADDED IN FROXLOR 0.9.11-svn2
@@ -1298,7 +1298,8 @@ $lng['serversettings']['phpreload_command']['description'] = 'this is used to re
 $lng['error']['intvaluetoolow'] = 'The given number is too low (field %s)';
 $lng['error']['intvaluetoohigh'] = 'The given number is too high (field %s)';
 $lng['admin']['phpfpm_settings'] = 'PHP-FPM';
-$lng['serversettings']['phpfpm'] = 'Enable php-fpm';
+$lng['serversettings']['phpfpm']['title'] = 'Enable php-fpm';
+$lng['serversettings']['phpfpm']['description'] = '<b>This needs a special webserver configuration see FPM-handbook for <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_phpfpm">Apache2</a> or <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookNginx_phpfpm">nginx</a></b>';
 $lng['serversettings']['phpfpm_settings']['configdir'] = 'Configuration directory of php-fpm';
 $lng['serversettings']['phpfpm_settings']['aliasconfigdir'] = 'Configuration Alias-directory of php-fpm';
 $lng['serversettings']['phpfpm_settings']['reload'] = 'php-fpm restart command';

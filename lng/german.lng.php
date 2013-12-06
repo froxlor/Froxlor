@@ -536,7 +536,7 @@ $lng['panel']['back'] = 'Zurück';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP über mod_fcgid/suexec einbinden';
-$lng['serversettings']['mod_fcgid']['description'] = 'PHP unter dem jeweiligen Useraccount laufen lassen.<br /><br /><b>Dies benötigt eine spezielle Webserver-Konfiguration für Apache, siehe <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_Handbuch">FCGID-Handbuch</a>.</b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'PHP wird unter dem Benutzer des Kunden ausgeführt.<br /><br /><b>Dies benötigt eine spezielle Webserver-Konfiguration für Apache, siehe <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_fcgid">FCGID-Handbuch</a>.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Alternative E-Mail-Adresse benutzen';
 $lng['serversettings']['sendalternativemail']['description'] = 'Während des Erstellens eines Accounts das Passwort an eine andere E-Mail-Adresse senden';
 $lng['emails']['alternative_emailaddress'] = 'Alternative E-Mail-Adresse';
@@ -1195,7 +1195,7 @@ $lng['serversettings']['froxlordirectlyviahostname'] = 'Froxlor direkt über den
 
 // ADDED IN FROXLOR 0.9.11-svn1
 $lng['serversettings']['panel_password_regex']['title'] = 'Regulärer Ausdruck für Passwörter';
-$lng['serversettings']['panel_password_regex']['description'] = 'Hier können Sie einen regulären Ausdruck für Passwort-Komplexität festlegen.<br />Leer = keine bestimmten Anforderungen<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">RegEx Hilfe/Beispiele</a>)';
+$lng['serversettings']['panel_password_regex']['description'] = 'Hier können Sie einen regulären Ausdruck für Passwort-Komplexität festlegen.<br />Leer = keine bestimmten Anforderungen';
 $lng['error']['notrequiredpasswordcomplexity'] = 'Die vorgegebene Passwort-Komplexität wurde nicht erfüllt.<br />Bitte kontaktieren Sie Ihren Administrator, wenn Sie Fragen zur Komplexitäts-Vorgabe haben.';
 
 // ADDED IN FROXLOR 0.9.11-svn2
@@ -1277,7 +1277,8 @@ $lng['serversettings']['phpreload_command']['description'] = 'Dieser wird benöt
 $lng['error']['intvaluetoolow'] = 'Die angegebene Zahl ist zu klein (Feld "%s")';
 $lng['error']['intvaluetoohigh'] = 'Die angegebene Zahl ist zu groß (Feld "%s")';
 $lng['admin']['phpfpm_settings'] = 'PHP-FPM';
-$lng['serversettings']['phpfpm'] = 'Aktiviere php-fpm';
+$lng['serversettings']['phpfpm']['title'] = 'Aktiviere PHP-FPM';
+$lng['serversettings']['phpfpm']['description'] = '<b>Dies benötigt eine spezielle Webserver-Konfiguration, siehe FPM-Handbuch für <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_phpfpm">Apache2</a> oder <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookNginx_phpfpm">nginx</a></b>';
 $lng['serversettings']['phpfpm_settings']['configdir'] = 'Pfad zu php-fpm-Konfigurationen';
 $lng['serversettings']['phpfpm_settings']['aliasconfigdir'] = 'Alias-Ordner der php-fpm Konfiguration';
 $lng['serversettings']['phpfpm_settings']['reload'] = 'Kommando zum Neustarten von php-fpm';

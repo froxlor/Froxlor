@@ -1179,7 +1179,7 @@ $lng['serversettings']['froxlordirectlyviahostname'] = 'Accedi direttamente a Fr
 
 // ADDED IN FROXLOR 0.9.11-svn1
 $lng['serversettings']['panel_password_regex']['title'] = 'Espressione per le password';
-$lng['serversettings']['panel_password_regex']['description'] = 'Qui è possibile impostare una espressione regolare per la complessità delle password.<br />Vuoto = nessun requisito specificato<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">aiuto/esempi regex</a>)';
+$lng['serversettings']['panel_password_regex']['description'] = 'Qui è possibile impostare una espressione regolare per la complessità delle password.<br />Vuoto = nessun requisito specificato';
 $lng['error']['notrequiredpasswordcomplexity'] = 'La complessita della password specificata non è soddisfacente.<br />Si prega di contattare l\'amministratore se avete domande sulla complessità della password';
 
 // ADDED IN FROXLOR 0.9.11-svn2
@@ -1193,7 +1193,7 @@ $lng['serversettings']['perl_path']['description'] = 'Rilevante solo se si utili
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
 $lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Abilita FCGID per i vhost Froxlor';
-$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Se attivato, Froxlor verrà eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_handbook">FCGID - handbook</a>';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Se attivato, Froxlor verrà eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_fcgid">FCGID - handbook</a>';
 $lng['admin']['mod_fcgid_user'] = 'Utente locale per FCGID (Froxlor vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Gruppo locale per FCGID (Froxlor vhost)';
 
