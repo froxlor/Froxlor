@@ -15,8 +15,11 @@ $header
 				{$configpage}
 				<if $restart != ''>
 				<tr>
-					<td>{$lng['admin']['configfiles']['restart']}<br /><br />
-					<textarea class="textarea_border" rows="3" cols="70" readonly="readonly">$restart</textarea></td>
+					<th>{$lng['admin']['configfiles']['restart']}</th>
+				<tr>
+				<tr>
+					<td>
+					<textarea class="textarea_border" rows="" cols="70" readonly="readonly">$restart</textarea></td>
 				</tr>
 				</if>
 		</table>
