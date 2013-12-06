@@ -195,7 +195,8 @@ $header
 			
 		</section>
 		
-		
+
+		<if $settings['admin']['show_news_feed'] == '1'>
 		<section class="dboarditem bradius" id="newsfeed" style="display: none">
 			<table>
 				<tr>
@@ -204,7 +205,8 @@ $header
 			</table>
 			<div id="newsfeeditems"></div>
 		</section>
-		
+		</if>
+
 		<section class="dboarditem bradius">
 		<table>
 		<tr>

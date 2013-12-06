@@ -376,6 +376,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('dkim', 'dkimrestart_command', '/etc/init.d/dkim-filter restart'),
 	('autoresponder', 'autoresponder_active', '0'),
 	('autoresponder', 'last_autoresponder_run', '0'),
+	('admin', 'show_news_feed', '1'),
 	('admin', 'show_version_login', '0'),
 	('admin', 'show_version_footer', '0'),
 	('aps', 'items_per_page', '20'),
