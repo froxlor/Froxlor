@@ -185,14 +185,6 @@ return array(
 						'mandatory' => true,
 						'ul_field' => $email_quota_ul
 					),
-					'email_autoresponder' => array(
-						'label' => $lng['customer']['autoresponder'],
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'visible' => ($settings['autoresponder']['autoresponder_active'] == '1' ? true : false),
-						'ul_field' => $email_autoresponder_ul
-					),
 					'email_imap' => array(
 						'label' => $lng['customer']['email_imap'],
 						'type' => 'checkbox',
@@ -248,22 +240,6 @@ return array(
 						'values' => array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')
 									)
-					),
-					'backup_allowed' => array(
-						'label' => $lng['backup_allowed'].'?',
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'visible' => ($settings['system']['backup_enabled'] == '1' ? true : false)
-					),
-					'number_of_aps_packages' => array(
-						'label' => $lng['aps']['numberofapspackages'],
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'visible' => ($settings['aps']['aps_active'] == '1' ? true : false),
-						'ul_field' => $number_of_aps_packages_ul
 					)
 				)
 			)

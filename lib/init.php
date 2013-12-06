@@ -61,7 +61,7 @@ unset($_);
 unset($value);
 unset($key);
 
-$filename = basename($_SERVER['PHP_SELF']);
+$filename = htmlentities(basename($_SERVER['PHP_SELF']));
 
 // define default theme for configurehint, etc.
 $_deftheme = 'Sparkle';

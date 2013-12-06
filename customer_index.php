@@ -38,21 +38,21 @@ if ($action == 'logout') {
 		);
 	}
 	Database::pexecute($stmt, $params);
-	
+
 	redirectTo('index.php');
 	exit;
 }
 
 if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_index");
-	
+
 	$domain_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
 		WHERE `customerid` = :customerid
 		AND `parentdomainid` = '0'
 		AND `id` <> :standardsubdomain
 	");
 	Database::pexecute($domain_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));
-	
+
 	$domains = '';
 	$domainArray = array();
 
@@ -83,7 +83,7 @@ if ($page == 'overview') {
 	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
 	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
 	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
-	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota email_autoresponder ftps tickets subdomains aps_packages');
+	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains');
 
 	$services_enabled = "";
 	$se = array();
@@ -91,7 +91,6 @@ if ($page == 'overview') {
 	if ($userinfo['pop3'] == '1') $se[] = "POP3";
 	if ($userinfo['phpenabled'] == '1') $se[] = "PHP";
 	if ($userinfo['perlenabled'] == '1') $se[] = "Perl/CGI";
-	if ($userinfo['backup_enabled'] == '1' && $userinfo['backup_allowed'] == '1') $se[] = "Backup";
 	$services_enabled = implode(", ", $se);
 
 	eval("echo \"" . getTemplate('index/index') . "\";");
@@ -154,7 +153,7 @@ if ($page == 'overview') {
 				} else {
 					$new_webalizer_password = crypt($new_password);
 				}
-				
+
 				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTPASSWDS . "`
 					SET `password` = :password
 					WHERE `customerid` = :customerid
@@ -182,20 +181,20 @@ if ($page == 'overview') {
 				WHERE `customerid` = :customerid"
 			);
 			Database::pexecute($stmt, array("lang" => $def_language, "customerid" => $userinfo['customerid']));
-			
+
 			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
 				SET `language` = :lang
 				WHERE `hash` = :hash"
 			);
 			Database::pexecute($stmt, array("lang" => $def_language, "hash" => $s));
-			
+
 			$log->logAction(USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
 		}
 
 		redirectTo($filename, Array('s' => $s));
 	} else {
 		$default_lang = $settings['panel']['standardlanguage'];
-		if ($userinfo['def_language'] != '') { 
+		if ($userinfo['def_language'] != '') {
 			$default_lang = $userinfo['def_language'];
 		}
 
@@ -209,19 +208,19 @@ if ($page == 'overview') {
 } elseif ($page == 'change_theme') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$theme = validate($_POST['theme'], 'theme');
- 
+
 		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
 			SET `theme` = :theme
 			WHERE `customerid` = :customerid"
 		);
 		Database::pexecute($stmt, array("theme" => $theme, "customerid" => $userinfo['customerid']));
-		
+
 		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
 			SET `theme` = :theme
 			WHERE `hash` = :hash"
 		);
 		Database::pexecute($stmt, array("theme" => $theme, "hash" => $s));
-		
+
 		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
 		redirectTo($filename, Array('s' => $s));
 	} else {

@@ -2519,3 +2519,52 @@ if (isFroxlorVersion('0.9.31-dev6')) {
 	lastStepStatus(0);
 	updateToVersion('0.9.31-rc1');
 }
+
+if (isFroxlorVersion('0.9.31-rc1')) {
+	showUpdateStep("Updating from 0.9.31-rc1 to 0.9.31-rc99");
+	lastStepStatus(0);
+
+	showUpdateStep("Removing APS-module (deprecated)");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'aps';");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` DROP `can_manage_aps_packages`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` DROP `aps_packages`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` DROP `aps_packages_used`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `aps_packages`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `aps_packages_used`;");
+	// FIXME what to do with APS-databases? (before dropping the field)
+	Database::query("ALTER TABLE `".TABLE_PANEL_DATABASES."` DROP `apsdb`;");
+	Database::query("DROP TABLE IF EXISTS `aps_packages`;");
+	Database::query("DROP TABLE IF EXISTS `aps_instances`;");
+	Database::query("DROP TABLE IF EXISTS `aps_settings`;");
+	Database::query("DROP TABLE IF EXISTS `aps_tasks`;");
+	Database::query("DROP TABLE IF EXISTS `aps_temp_settings`;");
+	Database::query("DELETE FROM `".TABLE_PANEL_CRONRUNS."` WHERE `module` = 'froxlor/aps';");
+	lastStepStatus(0);
+
+	showUpdateStep("Removing backup-module (deprecated)");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_enabled';");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_dir';");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_mysqldump_path';");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_count';");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_bigfile';");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_ftp_enabled';");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_ftp_server';");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_ftp_user';");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_ftp_pass';");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `varname` = 'backup_ftp_passive';");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `backup_allowed`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `backup_enabled`;");
+	Database::query("DELETE FROM `".TABLE_PANEL_CRONRUNS."` WHERE `module` = 'froxlor/backup';");
+	lastStepStatus(0);
+
+	showUpdateStep("Removing autoresponder-module (deprecated)");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'autoresponder';");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` DROP `email_autoresponder`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` DROP `email_autoresponder_used`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `email_autoresponder`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `email_autoresponder_used`;");
+	Database::query("DROP TABLE IF EXISTS `mail_autoresponder`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.31-rc99');
+}

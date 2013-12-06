@@ -58,12 +58,6 @@ $header
 		</tr>
 		</if>
 		</tr>
-		<if $settings['autoresponder']['autoresponder_active'] == 1>
-		<tr>
-			<td>{$lng['customer']['autoresponder']} ({$lng['customer']['usedmax']}):</td>
-			<td>{$userinfo['email_autoresponder_used']}/{$userinfo['email_autoresponder']}</td>
-		</tr>
-		</if>
 		<tr>
 			<td>{$lng['customer']['mysqls']} ({$lng['customer']['usedmax']}):</td>
 			<td>{$userinfo['mysqls_used']}/{$userinfo['mysqls']}</td>
@@ -72,12 +66,6 @@ $header
 			<td>{$lng['customer']['ftps']} ({$lng['customer']['usedmax']}):</td>
 			<td>{$userinfo['ftps_used']}/{$userinfo['ftps']}</td>
 		</tr>
-		<if (int)$settings['aps']['aps_active'] == 1>
-		<tr>
-			<td>{$lng['aps']['numberofapspackages']} ({$lng['customer']['usedmax']}):</td>
-			<td>{$userinfo['aps_packages_used']}/{$userinfo['aps_packages']}</td>
-		</tr>
-		</if>
 		<if $settings['ticket']['enabled'] == 1 >
 		<tr>
 			<td>{$lng['customer']['tickets']} ({$lng['customer']['usedmax']}):</td>

@@ -85,21 +85,6 @@ return array(
 					'default' => 100,
 					'save_method' => 'storeSettingField',
 					),
-				'system_autoresponder_enabled' => array(
-					'label' => $lng['serversettings']['autoresponder_active'],
-					'settinggroup' => 'autoresponder',
-					'varname' => 'autoresponder_active',
-					'type' => 'bool',
-					'default' => false,
-					'cronmodule' => 'froxlor/autoresponder',
-					'save_method' => 'storeSettingField',
-					),
-				'system_last_autoresponder_run' => array(
-					'settinggroup' => 'autoresponder',
-					'varname' => 'last_autoresponder_run',
-					'type' => 'hidden',
-					'default' => 0,
-					),
 				'system_catchall_enabled' => array(
 					'label' => $lng['serversettings']['catchall_enabled'],
 					'settinggroup' => 'catchall',

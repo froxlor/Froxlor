@@ -25,7 +25,6 @@
  * @author Florian Lippert <flo@syscp.org> (2003-2009)
  * @author Froxlor team <team@froxlor.org> (2010-)
  */
-
 function updateCounters($returndebuginfo = false) {
 	global $theme;
 	$returnval = array();
@@ -119,28 +118,12 @@ function updateCounters($returndebuginfo = false) {
 			$admin_resources[$customer['adminid']]['email_quota_used']+= intval_ressource($customer['email_quota']);
 		}
 
-		if(!isset($admin_resources[$customer['adminid']]['email_autoresponder_used'])) {
-			$admin_resources[$customer['adminid']]['email_autoresponder_used'] = 0;
-		}
-
-		if($customer['email_autoresponder'] != '-1') {
-			$admin_resources[$customer['adminid']]['email_autoresponder_used']+= intval_ressource($customer['email_autoresponder']);
-		}
-
 		if(!isset($admin_resources[$customer['adminid']]['subdomains_used'])) {
 			$admin_resources[$customer['adminid']]['subdomains_used'] = 0;
 		}
 
 		if($customer['subdomains'] != '-1') {
 			$admin_resources[$customer['adminid']]['subdomains_used']+= intval_ressource($customer['subdomains']);
-		}
-
-		if(!isset($admin_resources[$customer['adminid']]['aps_packages_used'])) {
-			$admin_resources[$customer['adminid']]['aps_packages_used'] = 0;
-		}
-
-		if($customer['aps_packages'] != '-1') {
-			$admin_resources[$customer['adminid']]['aps_packages_used']+= intval_ressource($customer['aps_packages']);
 		}
 
 		$customer_mysqls_stmt = Database::prepare('SELECT COUNT(*) AS `number_mysqls` FROM `' . TABLE_PANEL_DATABASES . '`
@@ -192,14 +175,6 @@ function updateCounters($returndebuginfo = false) {
 		$customer_email_quota_stmt = Database::prepare('SELECT SUM(`quota`) AS `email_quota` FROM `' . TABLE_MAIL_USERS . '` WHERE `customerid` = :cid');
 		$customer_email_quota = Database::pexecute_first($customer_email_quota_stmt, array("cid" => $customer['customerid']));
 		$customer['email_quota_used_new'] = (int)$customer_email_quota['email_quota'];
-		
-		$customer_email_autoresponder_stmt = Database::prepare('SELECT COUNT(*) AS `number_autoresponder` FROM `' . TABLE_MAIL_AUTORESPONDER . '` WHERE `customerid` = :cid');
-		$customer_email_autoresponder = Database::pexecute_first($customer_email_autoresponder_stmt, array("cid" => $customer['customerid']));
-		$customer['email_autoresponder_used_new'] = (int)$customer_email_autoresponder['number_autoresponder'];
-		
-		$customer_aps_packages_stmt = Database::prepare('SELECT COUNT(*) AS `number_apspackages` FROM `' . TABLE_APS_INSTANCES . '` WHERE `CustomerID` = :cid');
-		$customer_aps_packages = Database::pexecute_first($customer_aps_packages_stmt, array("cid" => $customer['customerid']));
-		$customer['aps_packages_used_new'] = (int)$customer_aps_packages['number_apspackages'];
 
 		$stmt = Database::prepare('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` 
 			SET `mysqls_used` = :mysqls_used,
@@ -207,11 +182,9 @@ function updateCounters($returndebuginfo = false) {
 				`email_accounts_used` = :email_accounts_used,
 				`email_forwarders_used` = :email_forwarders_used,
 				`email_quota_used` = :email_quota_used,
-				`email_autoresponder_used` = :email_autoresponder_used,
 				`ftps_used` = :ftps_used, 
 				`tickets_used` = :tickets_used,
-				`subdomains_used` = :subdomains_used,
-				`aps_packages_used` = :aps_packages_used
+				`subdomains_used` = :subdomains_used
 			WHERE `customerid` = :cid'
 		);
 		$params = array(
@@ -220,11 +193,9 @@ function updateCounters($returndebuginfo = false) {
 			"email_accounts_used" => $customer['email_accounts_used_new'],
 			"email_forwarders_used" => $customer['email_forwarders_used_new'],
 			"email_quota_used" => $customer['email_quota_used_new'],
-			"email_autoresponder_used" => $customer['email_autoresponder_used_new'],
 			"ftps_used" => $customer['ftps_used_new'],
 			"tickets_used" => $customer['tickets_used_new'],
 			"subdomains_used" => $customer['subdomains_used_new'],
-			"aps_packages_used" => $customer['aps_packages_used_new'],
 			"cid" => $customer['customerid']
 		);
 		Database::pexecute($stmt, $params);
@@ -306,23 +277,11 @@ function updateCounters($returndebuginfo = false) {
 
 		$admin['email_quota_used_new'] = $admin_resources[$admin['adminid']]['email_quota_used'];
 
-		if(!isset($admin_resources[$admin['adminid']]['email_autoresponder_used'])) {
-			$admin_resources[$admin['adminid']]['email_autoresponder_used'] = 0;
-		}
-
-		$admin['email_autoresponder_used_new'] = $admin_resources[$admin['adminid']]['email_autoresponder_used'];
-
 		if(!isset($admin_resources[$admin['adminid']]['subdomains_used'])) {
 			$admin_resources[$admin['adminid']]['subdomains_used'] = 0;
 		}
 
 		$admin['subdomains_used_new'] = $admin_resources[$admin['adminid']]['subdomains_used'];
-		
-		if(!isset($admin_resources[$admin['adminid']]['aps_packages_used'])) {
-			$admin_resources[$admin['adminid']]['aps_packages_used'] = 0;
-		}
-
-		$admin['aps_packages_used_new'] = $admin_resources[$admin['adminid']]['aps_packages_used'];
 
 		$stmt = Database::prepare('UPDATE `' . TABLE_PANEL_ADMINS . '` 
 			SET `customers_used` = :customers_used,
@@ -333,12 +292,10 @@ function updateCounters($returndebuginfo = false) {
 				`email_accounts_used` = :email_accounts_used,
 				`email_forwarders_used` = :email_forwarders_used,
 				`email_quota_used` = :email_quota_used,
-				`email_autoresponder_used` = :email_autoresponder_used,
 				`ftps_used` = :ftps_used, 
 				`tickets_used` = :tickets_used,
 				`subdomains_used` = :subdomains_used,
-				`traffic_used` = :traffic_used,
-				`aps_packages_used` = :aps_packages_used
+				`traffic_used` = :traffic_used
 			WHERE `adminid` = :aid'
 		);
 		$params = array(
@@ -350,12 +307,10 @@ function updateCounters($returndebuginfo = false) {
 			"email_accounts_used" => $admin['email_accounts_used_new'],
 			"email_forwarders_used" => $admin['email_forwarders_used_new'],
 			"email_quota_used" => $admin['email_quota_used_new'],
-			"email_autoresponder_used" => $admin['email_autoresponder_used_new'],
 			"ftps_used" => $admin['ftps_used_new'],
 			"tickets_used" => $admin['tickets_used_new'],
 			"subdomains_used" => $admin['subdomains_used_new'],
 			"traffic_used" => $admin['traffic_used_new'],
-			"aps_packages_used" => $admin['aps_packages_used_new'],
 			"aid" => $admin['adminid']
 		);
 		Database::pexecute($stmt, $params);

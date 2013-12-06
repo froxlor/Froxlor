@@ -15,7 +15,7 @@
  *
  */
 
-/*
+/**
  * Function getNextCronjobs
  *
  * checks which cronjobs have to be executed
@@ -199,40 +199,6 @@ function getOutstandingTasks() {
 		// unknown
 		else {
 			$task_desc = "ERROR: Unknown task type '".$row['type']."'";
-		}
-
-		if($task_desc != '') {
-			$tasks .= '<li>'.$task_desc.'</li>';
-		}
-	}
-
-	$query2 = "SELECT DISTINCT `Task` FROM `".TABLE_APS_TASKS."` ORDER BY `Task` ASC";
-	$result2 = Database::query($query2);
-
-	while ($row2 = $result2->fetch(PDO::FETCH_ASSOC)) {
-		// install
-		if ($row2['Task'] == '1') {
-			$task_desc = $lng['tasks']['aps_task_install'];
-		}
-		// remove
-		elseif ($row2['Task'] == '2') {
-			$task_desc = $lng['tasks']['aps_task_remove'];
-		}
-		// reconfigure
-		elseif ($row2['Task'] == '3') {
-			$task_desc = $lng['tasks']['aps_task_reconfigure'];
-		}
-		// upgrade
-		elseif ($row2['Task'] == '4') {
-			$task_desc = $lng['tasks']['aps_task_upgrade'];
-		}
-		// system update
-		elseif ($row2['Task'] == '5') {
-			$task_desc = $lng['tasks']['aps_task_sysupdate'];
-		}
-		// system download
-		elseif ($row2['Task'] == '6') {
-			$task_desc = $lng['tasks']['aps_task_sysdownload'];
 		}
 
 		if($task_desc != '') {

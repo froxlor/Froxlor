@@ -135,36 +135,6 @@ $header
 			</div>
 			</if>
 			
-			<if $settings['autoresponder']['autoresponder_active'] == 1>
-			<div class="canvasbox">
-				<input type="hidden" id="email_autoresponder" class="circular" data-used="{$overview['email_autoresponder_used']}" data-available="{$userinfo['email_autoresponder']}" data-assigned="{$userinfo['email_autoresponder_used']}">
-				<canvas id="email_autoresponder-canvas" width="120" height="76"></canvas><br/>
-				{$lng['customer']['autoresponder']}<br />
-				<small>
-					{$overview['email_autoresponder_used']} {$lng['panel']['used']}<br />
-					{$userinfo['email_autoresponder_used']} {$lng['panel']['assigned']}<br />
-					<if $userinfo['email_autoresponder'] != '∞'>
-					{$userinfo['email_autoresponder']} {$lng['panel']['available']}
-					</if>
-				</small>
-			</div>
-			</if>
-			
-			<if (int)$settings['aps']['aps_active'] == 1>
-			<div class="canvasbox">
-				<input type="hidden" id="aps_packages" class="circular" data-used="{$overview['aps_packages_used']}" data-available="{$userinfo['aps_packages']}" data-assigned="{$userinfo['aps_packages_used']}">
-				<canvas id="aps_packages-canvas" width="120" height="76"></canvas><br/>
-				{$lng['aps']['numberofapspackages']}<br />
-				<small>
-					{$overview['aps_packages_used']} {$lng['panel']['used']}<br />
-					{$userinfo['aps_packages_used']} {$lng['panel']['assigned']}<br />
-					<if $userinfo['aps_packages'] != '∞'>
-					{$userinfo['aps_packages']} {$lng['panel']['available']}
-					</if>
-				</small>
-			</div>
-			</if>
-			
 			<div class="canvasbox">
 				<input type="hidden" id="ftps" class="circular" data-used="{$overview['ftps_used']}" data-available="{$userinfo['ftps']}" data-assigned="{$userinfo['ftps_used']}">
 				<canvas id="ftps-canvas" width="120" height="76"></canvas><br/>

@@ -57,18 +57,6 @@ $header
 			<td>{$overview['email_quota_used']} ({$userinfo['email_quota_used']}/{$userinfo['email_quota']})</td>
 		</tr>
 		</if>
-		<if $settings['autoresponder']['autoresponder_active'] == 1>
-		<tr>
-			<td>{$lng['customer']['autoresponder']}  ({$lng['admin']['usedmax']}):</td>
-			<td>{$userinfo['email_autoresponder_used']} ({$userinfo['email_autoresponder']})</td>
-		</tr>
-		</if>
-		<if (int)$settings['aps']['aps_active'] == 1>
-		<tr>
-			<td>{$lng['aps']['numberofapspackages']} ({$lng['admin']['used']} ({$lng['admin']['assignedmax']})):</td>
-			<td>{$overview['aps_packages_used']} ({$userinfo['aps_packages_used']}/{$userinfo['aps_packages']})</td>
-		</tr>
-		</if>
 		<tr>
 			<td>{$lng['customer']['ftps']} ({$lng['admin']['used']} ({$lng['admin']['assignedmax']})):</td>
 			<td>{$overview['ftps_used']} ({$userinfo['ftps_used']}/{$userinfo['ftps']})</td>

@@ -153,7 +153,7 @@ if ($page == 'ipsandports'
 			$docroot = validate($_POST['docroot'], 'docroot');
 
 			if ((int)$settings['system']['use_ssl'] == 1) {
-				$ssl = intval($_POST['ssl']);
+				$ssl = isset($_POST['ssl']) ? intval($_POST['ssl']) : 0;
 				$ssl_cert_file = validate($_POST['ssl_cert_file'], 'ssl_cert_file');
 				$ssl_key_file = validate($_POST['ssl_key_file'], 'ssl_key_file');
 				$ssl_ca_file = validate($_POST['ssl_ca_file'], 'ssl_ca_file');

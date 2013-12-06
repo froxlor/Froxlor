@@ -109,28 +109,9 @@ if ($page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				// Begin root-session
 				Database::needRoot(true, $result['dbserver']);
+				$dbm = new DbManager($settings);
+				$dbm->getManager()->deleteDatabase($result['databasename']);
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted database '" . $result['databasename'] . "'");
-				if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
-					// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
-					$stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM :databasename");
-					Database::pexecute($stmt, array("databasename" => $result['databasename']));
-				}
-
-				$host_res_stmt = Database::prepare("SELECT `Host` FROM `mysql`.`user`
-					WHERE `User`= :databasename"
-				);
-				Database::pexecute($host_res_stmt, array("databasename" => $result['databasename']));
-
-				while ($host = $host_res_stmt->fetch(PDO::FETCH_ASSOC)) {
-					// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-					$stmt = Database::prepare("DROP USER :databasename@:host");
-					Database::pexecute($stmt, array("databasename" => $result['databasename'], "host" => $host['Host']));
-				}
-
-				$stmt = Database::prepare("DROP DATABASE IF EXISTS `" . $result['databasename'] . "`");
-				Database::pexecute($stmt, array(), false);
-				$stmt = Database::prepare("FLUSH PRIVILEGES");
-				Database::pexecute($stmt);
 				Database::needRoot(false);
 				// End root-session
 
@@ -189,40 +170,13 @@ if ($page == 'overview') {
 					// validate description before actual adding the database, #1052
 					$databasedescription = validate(trim($_POST['description']), 'description');
 
-					// Begin root-session
-					Database::needRoot(true);
-					if (strtoupper($settings['customer']['mysqlprefix']) == 'RANDOM') {
-						$result_stmt = Database::prepare('SELECT `User` FROM mysql.user');
-						Database::pexecute($result_stmt);
-						while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-							$allsqlusers[] = $row[User];
-						}
-						$username = $userinfo['loginname'] . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
-						while (in_array($username , $allsqlusers)) {
-							$username = $userinfo['loginname'] . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
-						}
-					} else {
-						$username = $userinfo['loginname'] . $settings['customer']['mysqlprefix'] . (intval($userinfo['mysql_lastaccountnumber']) + 1);
-					}
-
-					$stmt = Database::prepare("CREATE DATABASE `" . $username . "`");
-					Database::pexecute($stmt);
-					$log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
-					foreach (array_map('trim', explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host) {
-						$stmt = Database::prepare("GRANT ALL PRIVILEGES ON `" . $username . "`.*
-							TO :username@:host
-							IDENTIFIED BY 'password'"
-						);
-						Database::pexecute($stmt, array("username" => $username, "host" => $mysql_access_host));
-						$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
-						Database::pexecute($stmt, array("username" => $username, "host" => $mysql_access_host, "password" => $password));
-						$log->logAction(USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
-					}
-
-					$stmt = Database::prepare("FLUSH PRIVILEGES");
-					Database::pexecute($stmt);
-					Database::needRoot(false);
-					// End root-session
+					// create database, user, set permissions, etc.pp.
+					$dbm = new DbManager($settings);
+					$username = $dbm->createDatabase(
+						$userinfo['loginname'],
+						$password,
+						$userinfo['mysql_lastaccountnumber']
+					);
 
 					// Statement modified for Database description -- PH 2004-11-29
 					$stmt = Database::prepare('INSERT INTO `' . TABLE_PANEL_DATABASES . '`

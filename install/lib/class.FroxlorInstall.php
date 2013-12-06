@@ -398,10 +398,7 @@ class FroxlorInstall {
 				`tickets` = -1,
 				`tickets_see_all` = 1,
 				`subdomains` = -1,
-				`traffic` = -1048576,
-				`can_manage_aps_packages` = 1,
-				`aps_packages` = -1,
-				`email_autoresponder` = -1
+				`traffic` = -1048576
 				");
 
 		$ins_stmt->execute($ins_data);

@@ -536,7 +536,7 @@ $lng['panel']['back'] = 'Zurück';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP über mod_fcgid/suexec einbinden';
-$lng['serversettings']['mod_fcgid']['description'] = 'PHP unter dem jeweiligen Useraccount laufen lassen.<br /><br /><b>Dies benötigt eine spezielle Webserver-Konfiguration für Apache, siehe <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_Handbuch">FCGID-Handbuch</a>.</b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'PHP wird unter dem Benutzer des Kunden ausgeführt.<br /><br /><b>Dies benötigt eine spezielle Webserver-Konfiguration für Apache, siehe <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_fcgid">FCGID-Handbuch</a>.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Alternative E-Mail-Adresse benutzen';
 $lng['serversettings']['sendalternativemail']['description'] = 'Während des Erstellens eines Accounts das Passwort an eine andere E-Mail-Adresse senden';
 $lng['emails']['alternative_emailaddress'] = 'Alternative E-Mail-Adresse';
@@ -911,25 +911,8 @@ $lng['emails']['quota_edit'] = 'E-Mail Kontingent ändern';
 $lng['panel']['not_supported'] = 'Nicht unterstüzt in: ';
 $lng['error']['allocatetoomuchquota'] = 'Sie versuchen "%s" MB Kontingent zu zuweisen, haben aber nicht genug übrig.';
 
-// Autoresponder module
-
-$lng['menue']['email']['autoresponder'] = 'Abwesenheitsnachrichten';
-$lng['autoresponder']['active'] = 'Aktiviert';
-$lng['autoresponder']['autoresponder_add'] = 'Abwesenheitsnachricht hinzufügen';
-$lng['autoresponder']['autoresponder_edit'] = 'Abwesenheitsnachricht bearbeiten';
-$lng['autoresponder']['autoresponder_new'] = 'Neue Abwesenheitsnachricht erstellen';
-$lng['autoresponder']['subject'] = 'Betreff';
-$lng['autoresponder']['message'] = 'Nachricht';
-$lng['autoresponder']['account'] = 'Konto';
-$lng['autoresponder']['sender'] = 'Absender';
-$lng['question']['autoresponderdelete'] = 'Abwesenheitsnachricht wirklich löschen?';
-$lng['error']['noemailaccount'] = 'Es gibt zwei mögliche Gründe warum keine Abwesenheitsnachricht erstellt werden kann: Sie benötigen mindestens einen E-Mail Account. Zweitens kann es sein dass bereits für alle Accounts eine Abwesenheitsnachricht eingerichtet wurde.';
 $lng['error']['missingfields'] = 'Es wurden nicht alle Felder augefüllt.';
 $lng['error']['accountnotexisting'] = 'Der angegebene E-Mail-Account existiert nicht.';
-$lng['error']['autoresponderalreadyexists'] = 'Für dieses Konto existiert bereits eine Abwesenheitsnachricht.';
-$lng['error']['invalidautoresponder'] = 'Das angegebene Konto ist ungültig.';
-$lng['serversettings']['autoresponder_active']['title'] = 'Abwesenheitsnachrichten-Modul verwenden';
-$lng['serversettings']['autoresponder_active']['description'] = 'Möchten Sie das Abwesenheitsnachrichten-Modul verwenden?';
 $lng['admin']['show_version_login']['title'] = 'Zeige Froxlor Version beim Login';
 $lng['admin']['show_version_login']['description'] = 'Zeige Froxlor Version in der Fußzeile der Loginseite';
 $lng['admin']['show_version_footer']['title'] = 'Zeige Froxlor Version in Fußzeile';
@@ -996,173 +979,6 @@ $lng['admin']['security_settings'] = 'Sicherheitseinstellungen';
 $lng['admin']['expert_settings'] = 'Experteneinstellungen!';
 $lng['admin']['mod_fcgid_starter']['title'] = 'PHP-Prozesse für diese Domain (leer für Standardwert)';
 
-//added with aps installer
-
-$lng['admin']['aps'] = 'APS-Installer';
-$lng['customer']['aps'] = 'APS-Installer';
-$lng['aps']['scan'] = 'Neue Pakete einlesen';
-$lng['aps']['upload'] = 'Neue Pakete hochladen';
-$lng['aps']['managepackages'] = 'Pakete verwalten';
-$lng['aps']['manageinstances'] = 'Instanzen verwalten';
-$lng['aps']['overview'] = 'Paketübersicht';
-$lng['aps']['status'] = 'Meine Pakete';
-$lng['aps']['search'] = 'Paket suchen';
-$lng['aps']['upload_description'] = 'Bitte wählen Sie die APS-ZIP-Dateien aus, um diese im System zu installieren.';
-$lng['aps']['search_description'] = 'Name, Beschreibung, Schlagwort, Version';
-$lng['aps']['detail'] = 'Weitere Informationen';
-$lng['aps']['install'] = 'Paket installieren';
-$lng['aps']['data'] = 'Daten';
-$lng['aps']['version'] = 'Version';
-$lng['aps']['homepage'] = 'Homepage';
-$lng['aps']['installed_size'] = 'Größe nach Installation';
-$lng['aps']['categories'] = 'Kategorien';
-$lng['aps']['languages'] = 'Sprachen';
-$lng['aps']['long_description'] = 'Langbeschreibung';
-$lng['aps']['configscript'] = 'Konfigurationskript';
-$lng['aps']['changelog'] = 'Changelog';
-$lng['aps']['license'] = 'Lizenz';
-$lng['aps']['linktolicense'] = 'Link zur Lizenz';
-$lng['aps']['screenshots'] = 'Screenshots';
-$lng['aps']['back'] = 'Zurück zur Übersicht';
-$lng['aps']['install_wizard'] = 'Installationsassistent...';
-$lng['aps']['wizard_error'] = 'Ihre Eingaben enthalten ungültige Daten. Bitte korrigieren Sie diese, um mit der Installation fortzufahren.';
-$lng['aps']['basic_settings'] = 'Grundlegende Einstellungen';
-$lng['aps']['application_location'] = 'Installationsort';
-$lng['aps']['application_location_description'] = 'Ort an dem die Anwendung installiert werden soll.';
-$lng['aps']['no_domains'] = 'Keine Domains gefunden';
-$lng['aps']['database_password'] = 'Datenbankpasswort';
-$lng['aps']['database_password_description'] = 'Passwort welches für die neu zu erstellende Datenbank verwendet werden soll.';
-$lng['aps']['license_agreement'] = 'Zustimmung';
-$lng['aps']['cancel_install'] = 'Installation abbrechen';
-$lng['aps']['notazipfile'] = 'Die hochgeladene Datei ist keine gültige ZIP-Datei.';
-$lng['aps']['filetoobig'] = 'Die Datei ist zu groß.';
-$lng['aps']['filenotcomplete'] = 'Die Datei wurde nicht vollständig hochgeladen.';
-$lng['aps']['phperror'] = 'Es trat ein PHP interner Fehler auf. Der Upload Fehlercode lautet #';
-$lng['aps']['moveproblem'] = 'Die hochgeladene Datei konnte nicht aus dem temporären Ordner verschoben werden. Prüfen Sie ob alle Rechte korrekt gesetzt sind. Dies gilt insbesondere fü die Ordner {$path}temp/ und {$path}packages/.';
-$lng['aps']['uploaderrors'] = '<strong>Fehler für die Datei <em>"%s"</em></strong><br/><ul>"%s"</ul>';
-$lng['aps']['nospecialchars'] = 'Sonderzeichen sind im Suchausdruck nicht erlaubt!';
-$lng['aps']['noitemsfound'] = 'Es wurden keine Pakete gefunden!';
-$lng['aps']['nopackagesinstalled'] = 'Sie haben noch kein Paket installiert welches angezeigt werden könnte.';
-$lng['aps']['instance_install'] = 'Paket wurde zur Installation vorgemerkt';
-$lng['aps']['instance_task_active'] = 'Paket wird gerade bearbeitet';
-$lng['aps']['instance_success'] = 'Paket ist installiert bzw. wurde erfolgreich installiert';
-$lng['aps']['instance_error'] = 'Paket ist nicht installiert - bei der Installation traten Fehler auf';
-$lng['aps']['instance_uninstall'] = 'Paket wurde zur Deinstallation vorgemerkt';
-$lng['aps']['unknown_status'] = 'Fehler - Unbekannter Wert';
-$lng['aps']['currentstatus'] = 'Aktueller Status';
-$lng['aps']['activetasks'] = 'Aktuelle Jobs';
-$lng['aps']['task_install'] = 'Installation ausstehend';
-$lng['aps']['task_remove'] = 'Deinstallation ausstehend';
-$lng['aps']['task_reconfigure'] = 'Neukonfiguration ausstehend';
-$lng['aps']['task_upgrade'] = 'Aktualisierung ausstehend';
-$lng['aps']['no_task'] = 'Kein Task ausstehend';
-$lng['aps']['applicationlinks'] = 'Anwendungslinks';
-$lng['aps']['mainsite'] = 'Hauptseite';
-$lng['aps']['uninstall'] = 'Paket deinstallieren';
-$lng['aps']['reconfigure'] = 'Einstellungen ändern';
-$lng['aps']['erroronnewinstance'] = '<strong>Dieses Paket kann nicht installiert werden.</strong><br/><br/>Bitte gehen Sie zurück zur Paketübersicht und starten Sie eine neue Installation.';
-$lng['aps']['successonnewinstance'] = '<strong><em>"%s"</em> wird nun installiert.</strong><br/><br/>Gehen Sie zurück zu "Meine Pakete" und warten Sie bis die Installation abgeschlossen ist. Dies kann einige Minuten in Anspruch nehmen.';
-$lng['aps']['php_misc_handler'] = 'PHP - Sonstiges - Es werden keine anderen Dateiendungen als .php zum Parsen unterstützt.';
-$lng['aps']['php_misc_directoryhandler'] = 'PHP - Sonstiges - Je Verzeichnis deaktivierte PHP Handler werden nicht unterstützt.';
-$lng['aps']['asp_net'] = 'ASP.NET - Paket wird nicht unterstützt.';
-$lng['aps']['cgi'] = 'CGI - Paket wird nicht unterstützt.';
-$lng['aps']['php_extension'] = 'PHP - Erweiterung "%s" fehlt.';
-$lng['aps']['php_function'] = 'PHP - Funktion "%s" fehlt.';
-$lng['aps']['php_configuration'] = 'PHP - Konfiguration - Aktuelle "%s" Einstellung wird von Paket nicht unterstützt.';
-$lng['aps']['php_configuration_post_max_size'] = 'PHP - Konfiguration - "post_max_size" Wert zu klein.';
-$lng['aps']['php_configuration_memory_limit'] = 'PHP - Konfiguration - "memory_limit" Wert zu klein.';
-$lng['aps']['php_configuration_max_execution_time'] = 'PHP - Konfiguration - "max_execution_time" Wert zu klein.';
-$lng['aps']['php_general_old'] = 'PHP - Generell - PHP-Version zu alt.';
-$lng['aps']['php_general_new'] = 'PHP - Generell - PHP-Version zu neu.';
-$lng['aps']['db_mysql_support'] = 'Datenbank - Das Paket benötigt eine andere Datenbank Engine als MySQL.';
-$lng['aps']['db_mysql_version'] = 'Datenbank - MySQL Server zu alt.';
-$lng['aps']['webserver_module'] = 'Webserver - Modul "%s" fehlt.';
-$lng['aps']['webserver_fcgid'] = 'Webserver - Von diesem Paket werden einige Webserver Module benötigt. Da Sie Froxlor in einer FastCGI/mod_fcgid Umgebung verwenden, existiert die Funktion "apache_get_modules" nicht. Es kann also nicht ermittelt werden, ob das Paket unterstützt wird.';
-$lng['aps']['webserver_htaccess'] = 'Webserver - Dieses Paket benötigt, dass ".htaccess"-Dateien vom Webserver geparst werden. Das Paket kann nicht installiert werden, da nicht ermittelt werden kann, ob diese Funktion aktiviert ist.';
-$lng['aps']['misc_configscript'] = 'Sonstiges - Die Sprache des Konfigurationsskriptes wird nicht unterstützt.';
-$lng['aps']['misc_charset'] = 'Sonstiges - In der aktuellen Version wird eine Validierung gegen einen gewissen Zeichensatz im Installationsassitenten nicht unterstützt.';
-$lng['aps']['misc_version_already_installed'] = 'Die gleiche Paketversion ist bereits installiert.';
-$lng['aps']['misc_only_newer_versions'] = 'Aus Sicherheitsgründen können nur Pakete installiert werden, die neuer sind als die bereits im System installierten Pakete sind.';
-$lng['aps']['erroronscan'] = '<strong>Fehler für <em>"%s"</em></strong><ul>"%s"</ul>';
-$lng['aps']['invalidzipfile'] = '<strong>Fehler für <em>"%s"</em></strong><br/><ul><li>Dies ist keine gültige APS-ZIP-Datei!</li></ul>';
-$lng['aps']['successpackageupdate'] = '<strong><em>"%s"</em> erfolgreich als Paketupdate installiert</strong>';
-$lng['aps']['successpackageinstall'] = '<strong><em>"%s"</em> erfolgreich als neues Paket installiert</strong>';
-$lng['aps']['class_zip_missing'] = 'SimpleXML-Klasse, exec-Funktion oder ZIP-Funktionen nicht vorhanden bzw. aktiviert! Für genauere Informationen zu diesem Problem schauen Sie bitte in das Handbuch zu diesem Modul.';
-$lng['aps']['dir_permissions'] = 'Der PHP- bzw. Webserver-Prozess muss Schreibrechte für {$path}temp/ und {$path}packages/ haben.';
-$lng['aps']['initerror'] = '<strong>Es gibt ein paar Probleme mit diesem Modul:</strong><ul>"%s"</ul>Beheben Sie diese Probleme, andernfalls kann das Modul nicht genutzt werden!';
-$lng['aps']['iderror'] = 'Es wurde eine falsche ID übergeben!';
-$lng['aps']['nopacketsforinstallation'] = 'Es wurden keine Pakete zur Installation gefunden.';
-$lng['aps']['nopackagestoinstall'] = 'Es existieren keine Pakete die angezeigt oder installiert werden könnten.';
-$lng['aps']['nodomains'] = 'Wählen Sie eine Domain aus der Liste. Sollte keine Domain vorhanden sein können Sie keine Pakete installieren!';
-$lng['aps']['wrongpath'] = 'Entweder enthält dieser Pfad ungültige Zeichen oder es ist bereits eine Anwendung am gegebenen Ort installiert.';
-$lng['aps']['dbpassword'] = 'Geben Sie ein Passwort mit einer minimalen Länge von 8 Zeichen ein.';
-$lng['aps']['error_text'] = 'Geben Sie einen Text ohne Sonderzeichen ein.';
-$lng['aps']['error_email'] = 'Geben Sie eine gültige E-Mail Adresse ein.';
-$lng['aps']['error_domain'] = 'Geben Sie eine gültige URL wie "http://www.example.com/" ein.';
-$lng['aps']['error_integer'] = 'Geben Sie eine Zahl (Integer-Format) ein. Beispiel: <em>5</em> oder <em>7</em>.';
-$lng['aps']['error_float'] = 'Geben Sie eine Zahl (Float-Format) ein. Beispiel: <em>5,2432</em> oder <em>7,5346</em>.';
-$lng['aps']['error_password'] = 'Geben Sie ein Passwort ein.';
-$lng['aps']['error_license'] = 'Ja, ich habe die Lizenz gelesen und willige ein diese zu befolgen.';
-$lng['aps']['error_licensenoaccept'] = 'Sie müssen die Lizenz annehmen um die Anwendung installieren zu können.';
-$lng['aps']['stopinstall'] = 'Installation abbrechen';
-$lng['aps']['installstopped'] = 'Die Installation für dieses Paket wurde erfolgreich abgebrochen.';
-$lng['aps']['installstoperror'] = 'Die Installation kann nicht mehr abgebrochen werden, da diese bereits gestartet wurde. Möchten Sie das Paket entfernen, so warten Sie die Installation ab und entfernen Sie dann das Paket unter "Meine Pakete"';
-$lng['aps']['waitfortask'] = 'Es stehen momentan keine Aktionen zur Verfügung. Warten Sie bis alle Tasks abgearbeitet wurden.';
-$lng['aps']['removetaskexisting'] = '<strong>Es gibt bereits einen Task zur Deinstallation.</strong><br/><br/>Bitte gehen Sie zurück zu "Meine Pakete" und warten Sie bis die Deinstallation abgeschlossen ist.';
-$lng['aps']['packagewillberemoved'] = '<strong>Das Paket wird nun deinstalliert.</strong><br/><br/>Gehen Sie zurück zu "Meine Pakete" und warten Sie bis die Deinstallation abgeschlossen ist.';
-$lng['question']['reallywanttoremove'] = '<strong>Wollen Sie dieses Paket wirklich deinstallieren?</strong><br/><br/>Alle Datenbankinhalte und Dateien werden unwiderruflich gelöscht. Wenn Sie die enthaltenen Daten weiterhin benötigen, stellen Sie sicher dass Sie diese vorher sichern!<br/><br/>';
-$lng['aps']['searchoneresult'] = '"%s" Paket gefunden';
-$lng['aps']['searchmultiresult'] = '"%s" Pakete gefunden';
-$lng['question']['reallywanttostop'] = 'Wollen Sie die Installation dieses Paketes wirklich abbrechen?<br/><br/>';
-$lng['aps']['packagenameandversion'] = 'Paketname & Version';
-$lng['aps']['package_locked'] = 'Gesperrt';
-$lng['aps']['package_enabled'] = 'Freigegeben';
-$lng['aps']['lock'] = 'Sperren';
-$lng['aps']['unlock'] = 'Freigeben';
-$lng['aps']['remove'] = 'Löschen';
-$lng['aps']['allpackages'] = 'Alle Pakete';
-$lng['question']['reallyremovepackages'] = '<strong>Wollen Sie diese Pakete wirklich löschen?</strong><br/><br/>Pakete mit Abhängigkeiten können erst gelöscht werden wenn die entsprechenden Instanzen dafür deinstalliert wurden!<br/><br/>';
-$lng['aps']['nopackagesinsystem'] = 'Es wurden noch keine Pakete im System installiert, die verwaltet werden könnten.';
-$lng['aps']['packagenameandstatus'] = 'Paketname & Status';
-$lng['aps']['activate_aps']['title'] = 'APS-Installer aktivieren';
-$lng['aps']['activate_aps']['description'] = 'Hier können Sie den APS-Installer global aktivieren bzw. deaktivieren.';
-$lng['aps']['packages_per_page']['title'] = 'Pakete pro Seite';
-$lng['aps']['packages_per_page']['description'] = 'Wieviele Pakete sollen Kunden pro Seite angezeigt bekommen?';
-$lng['aps']['upload_fields']['title'] = 'Uploadfelder pro Seite';
-$lng['aps']['upload_fields']['description'] = 'Wieviele Uploadfelder sollen im Panel zur Installation von Paketen angezeigt werden?';
-$lng['aps']['exceptions']['title'] = 'Ausnahmen für Paketvalidierung';
-$lng['aps']['exceptions']['description'] = 'Manche Pakete benötigen spezielle Konfigurationsparameter oder Module. Der Installer selbst kann nicht immer eindeutig feststellen ob diese Optionen/Erweiterungen aktiviert sind. Aus diesem Grund kann man hier nun Ausnahmen festlegen damit Pakete dann trotzdem installiert werden können. Wählen Sie nur die Optionen aus, die auch wirklich so mit der Realität übereinstimmen. Für genauere Informationen zu diesem Problem schauen Sie bitte in das Handbuch zu diesem Modul.';
-$lng['aps']['settings_php_extensions'] = 'PHP-Erweiterungen';
-$lng['aps']['settings_php_configuration'] = 'PHP-Konfiguration';
-$lng['aps']['settings_webserver_modules'] = 'Webserver-Module';
-$lng['aps']['settings_webserver_misc'] = 'Webserver - Sonstiges';
-$lng['aps']['specialoptions'] = 'Sonderoptionen';
-$lng['aps']['removeunused'] = 'Ungenutzte Pakete entfernen';
-$lng['aps']['enablenewest'] = 'Von jedem Paket neueste Version freigeben, alte Version sperren';
-$lng['aps']['installations'] = 'Installationen';
-$lng['aps']['statistics'] = 'Statistiken';
-$lng['aps']['numerofpackagesinstalled'] = '"%s" Pakete vorhanden<br/>';
-$lng['aps']['numerofpackagesenabled'] = '"%s" Pakete freigegeben<br/>';
-$lng['aps']['numerofpackageslocked'] = '"%s" Pakete gesperrt<br/>';
-$lng['aps']['numerofinstances'] = '"%s" Instanzen installiert<br/>';
-$lng['question']['reallydoaction'] = '<strong>Wollen Sie die gewählten Aktionen wirklich durchführen?</strong><br/><br/>Daten, die durch diese Vorgänge möglicherweise gelöscht werden, können anschließend nicht wieder hergestellt werden.<br/><br/>';
-$lng['aps']['initerror_customer'] = 'Es gibt momentan ein Problem mit dieser Froxlor-Erweiterung. Wenden Sie sich bitte für weitere Informationen an Ihren Administrator.';
-$lng['aps']['numerofinstances'] = '"%s" Installationen insgesamt<br/>';
-$lng['aps']['numerofinstancessuccess'] = '"%s" erfolgreiche Installationen<br/>';
-$lng['aps']['numerofinstanceserror'] = '"%s" fehlgeschlagene Installationen<br/>';
-$lng['aps']['numerofinstancesaction'] = '"%s" geplante Installationen/Deinstallationen';
-$lng['aps']['downloadallpackages'] = 'Alle Pakete vom Distributionsserver herunterladen';
-$lng['aps']['updateallpackages'] = 'Alle Pakete über Distributionsserver aktualisieren';
-$lng['aps']['downloadtaskexists'] = 'Es gibt bereits einen Task zum Download aller Pakete. Bitte warten Sie bis dieser abgeschlossen ist.';
-$lng['aps']['downloadtaskinserted'] = 'Es wurde ein Task zum Download aller Pakete erstellt. Dieser Vorgang kann einige Minuten in Anspruch nehmen.';
-$lng['aps']['updatetaskexists'] = 'Es gibt bereits einen Task zur Aktualisierung aller Pakete. Bitte warten Sie bis dieser abgeschlossen ist.';
-$lng['aps']['updatetaskinserted'] = 'Es wurde ein Task zur Aktualisierung aller Pakete erstellt. Dieser Vorgang kann einige Minuten in Anspruch nehmen.';
-$lng['aps']['canmanagepackages'] = 'Darf APS-Pakete verwalten';
-$lng['aps']['numberofapspackages'] = 'Anzahl an APS-Installationen';
-$lng['aps']['allpackagesused'] = '<strong>Fehler</strong><br/><br/>Sie haben bereits die Anzahl an installierbaren APS-Anwendungen erreicht bzw. überschritten.';
-$lng['aps']['noinstancesexisting'] = 'Es gibt momentan noch keine Instanzen, die verwaltet werden könnten. Es muss mindestens eine Anwendung von einem Kunden installiert worden sein.';
-$lng['aps']['lightywarning'] = 'Warnung';
-$lng['aps']['lightywarningdescription'] = 'Sie verwenden den lighttpd-Webserver zusammen mit Froxlor. Da das APS-Modul hauptsächlich für den Apache-Webserver geschrieben wurde, kann es unter Umständen vorkommen, dass gewisse Features mit lighttpd nicht funktionieren. Bitte beachten Sie dies bei der Verwendung des APS-Moduls. Sollten Sie Fehler bei der Verwendung oder Probleme bei der Nutzung haben, so leiten Sie diese bitte an die Entwickler weiter, damit diese Probleme in der nächsten Version behoben werden können.';
 $lng['error']['customerdoesntexist'] = 'Der ausgewählte Kunde existiert nicht.';
 $lng['error']['admindoesntexist'] = 'Der ausgewählte Admin existiert nicht.';
 
@@ -1191,7 +1007,6 @@ $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Wieviele PH
 // fix bug #1124
 $lng['admin']['webserver'] = 'Webserver';
 $lng['error']['admin_domain_emailsystemhostname'] = 'Der Server-Hostname kann leider nicht als E-Mail-Domain verwendet werden.';
-$lng['aps']['license_link'] = 'Link zur Lizenz';
 
 // ADDED IN FROXLOR 0.9
 
@@ -1203,9 +1018,6 @@ $lng['panel']['toomanydirs'] = 'Zu viele Unterverzeichnisse. Weiche auf manuelle
 $lng['panel']['abort'] = 'Abbrechen';
 $lng['serversettings']['cron']['debug']['title'] = 'Debuggen des Cronscripts';
 $lng['serversettings']['cron']['debug']['description'] = 'Wenn aktiviert, wird die Lockdatei nach dem Cronlauf zum Debuggen nicht gelöscht<br /><b>Achtung:</b> Eine alte Lockdatei kann weitere Cronjobs behindern und dafür sorgen, dass diese nicht vollständig ausgeführt werden.';
-$lng['autoresponder']['date_from'] = 'Start-Datum';
-$lng['autoresponder']['date_until'] = 'End-Datum';
-$lng['autoresponder']['startenddate'] = 'Start/End-Datum';
 $lng['panel']['not_activated'] = 'Nicht aktiviert';
 $lng['panel']['off'] = 'aus';
 $lng['update']['updateinprogress_onlyadmincanlogin'] = 'Eine neuere Version von Froxlor wurde installiert, aber noch nicht eingerichtet.<br />Nur der Administrator kann sich anmelden und die Aktualisierung abschließen.';
@@ -1278,9 +1090,6 @@ $lng['crondesc']['cron_unknown_desc'] = 'Keine Beschreibung angegeben';
 $lng['admin']['cron']['add'] = 'Cronjob hinzufügen';
 $lng['crondesc']['cron_tasks'] = 'Erstellen von Konfigurationsdateien';
 $lng['crondesc']['cron_legacy'] = 'Legacy (alter) Cronjob';
-$lng['crondesc']['cron_apsinstaller'] = 'APS-Installer';
-$lng['crondesc']['cron_autoresponder'] = 'E-Mail Autoresponder';
-$lng['crondesc']['cron_apsupdater'] = 'Aktualisieren der APS-Pakete';
 $lng['crondesc']['cron_traffic'] = 'Traffic-Berechnung';
 $lng['crondesc']['cron_ticketsreset'] = 'Zurücksetzen der Ticket-Zähler';
 $lng['crondesc']['cron_ticketarchive'] = 'Archivieren alter Tickets';
@@ -1307,7 +1116,6 @@ $lng['ftp']['editpassdescription'] = 'Neues Passwort setzen oder leer für keine
 $lng['customer']['sendinfomail'] = 'Daten per E-Mail an mich senden';
 $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Neue Datenbank erstellt';
 $lng['customer']['mysql_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade eine neue Datenbank angelegt. Hier die angegebenen Informationen:\n\nDatenbankname: {DB_NAME}\nPasswort: {DB_PASS}\nBeschreibung: {DB_DESC}\nDatenbank-Server: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nVielen Dank, Ihr Administrator";
-$lng['error']['domains_cantdeletedomainwithapsinstances'] = 'Sie können keine Domain löschen, die noch von APS Paketen verwendet wird. Löschen Sie zuerst alle installierten APS Pakete dieser Domain.';
 $lng['serversettings']['awstats_path'] = 'Pfad zu AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'AWStats Konfigurations-Pfad';
 $lng['error']['overviewsettingoptionisnotavalidfield'] = 'Hoppla, ein Feld, dass als Option in der Konfigurationsübersicht angezeigt werden soll, hat nicht den erwarteten Wert. Sie können den Entwicklern die Schuld geben. Dies sollte nicht passieren!';
@@ -1374,20 +1182,11 @@ $lng['serversettings']['customredirect_default']['description'] = 'Dieser Redire
 
 // ADDED IN FROXLOR 0.9.7-svn2
 $lng['error']['pathmaynotcontaincolon'] = 'Der eingegebene Pfad sollte keinen Doppelpunkt (":") enthalten. Bitte geben Sie einen korrekten Wert für den Pfad ein.';
-$lng['tasks']['aps_task_install'] = 'Installation eines oder mehrerer APS-Pakete';
-$lng['tasks']['aps_task_remove'] = 'Deinstallation eines oder mehrerer APS-Pakete';
-$lng['tasks']['aps_task_reconfigure'] = 'Rekonfiguration eines oder mehrerer APS-Pakete';
-$lng['tasks']['aps_task_upgrade'] = 'Upgrade eines oder mehrerer APS-Pakete';
-$lng['tasks']['aps_task_sysupdate'] = 'Aktualisiere alle APS-Pakete';
-$lng['tasks']['aps_task_sysdownload'] = 'Herunterladen neuer APS-Pakete';
 
 // ADDED IN FROXLOR 0.9.9-svn1
 $lng['serversettings']['mail_also_with_mxservers'] = 'Erstelle mail-, imap-, pop3- and smtp-"A Record" auch wenn MX-Server angegeben sind';
 
 // ADDED IN FROXLOR 0.9.10-svn1
-$lng['aps']['nocontingent'] = 'Sie haben kein ausreichendes APS-Kontingent und können daher keine Pakete installieren.';
-$lng['aps']['packageneedsdb'] = 'Dieses Paket benötigt eine Datenbank, Sie haben allerdings keine mehr frei';
-$lng['aps']['cannoteditordeleteapsdb'] = 'APS-Datenbanken können hier nicht bearbeitet oder gelöscht werden';
 $lng['admin']['webserver_user'] = 'Benutzername Webserver';
 $lng['admin']['webserver_group'] = 'Gruppenname Webserver';
 
@@ -1396,7 +1195,7 @@ $lng['serversettings']['froxlordirectlyviahostname'] = 'Froxlor direkt über den
 
 // ADDED IN FROXLOR 0.9.11-svn1
 $lng['serversettings']['panel_password_regex']['title'] = 'Regulärer Ausdruck für Passwörter';
-$lng['serversettings']['panel_password_regex']['description'] = 'Hier können Sie einen regulären Ausdruck für Passwort-Komplexität festlegen.<br />Leer = keine bestimmten Anforderungen<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">RegEx Hilfe/Beispiele</a>)';
+$lng['serversettings']['panel_password_regex']['description'] = 'Hier können Sie einen regulären Ausdruck für Passwort-Komplexität festlegen.<br />Leer = keine bestimmten Anforderungen';
 $lng['error']['notrequiredpasswordcomplexity'] = 'Die vorgegebene Passwort-Komplexität wurde nicht erfüllt.<br />Bitte kontaktieren Sie Ihren Administrator, wenn Sie Fragen zur Komplexitäts-Vorgabe haben.';
 
 // ADDED IN FROXLOR 0.9.11-svn2
@@ -1454,9 +1253,6 @@ $lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zurückse
 $lng['admin']['templates']['password_reset'] = 'Kunden-Benachrichtigung nach Zurücksetzen des Passworts';
 $lng['admin']['store_defaultindex'] = 'Erstelle Standard-Index-Datei im Kunden-Ordner';
 
-// ADDED IN FROXLOR 0.9.13-svn1
-$lng['customer']['autoresponder'] = 'Abwesenheitsnachrichten';
-
 // ADDED IN FROXLOR 0.9.14
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PHP-Konfiguration für den Froxlor-Vhost';
 $lng['serversettings']['awstats_icons']['title'] = 'Pfad zum AWstats-Icon-Ordner';
@@ -1481,7 +1277,8 @@ $lng['serversettings']['phpreload_command']['description'] = 'Dieser wird benöt
 $lng['error']['intvaluetoolow'] = 'Die angegebene Zahl ist zu klein (Feld "%s")';
 $lng['error']['intvaluetoohigh'] = 'Die angegebene Zahl ist zu groß (Feld "%s")';
 $lng['admin']['phpfpm_settings'] = 'PHP-FPM';
-$lng['serversettings']['phpfpm'] = 'Aktiviere php-fpm';
+$lng['serversettings']['phpfpm']['title'] = 'Aktiviere PHP-FPM';
+$lng['serversettings']['phpfpm']['description'] = '<b>Dies benötigt eine spezielle Webserver-Konfiguration, siehe FPM-Handbuch für <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_phpfpm">Apache2</a> oder <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookNginx_phpfpm">nginx</a></b>';
 $lng['serversettings']['phpfpm_settings']['configdir'] = 'Pfad zu php-fpm-Konfigurationen';
 $lng['serversettings']['phpfpm_settings']['aliasconfigdir'] = 'Alias-Ordner der php-fpm Konfiguration';
 $lng['serversettings']['phpfpm_settings']['reload'] = 'Kommando zum Neustarten von php-fpm';
@@ -1558,31 +1355,12 @@ $lng['traffic']['months']['total'] = 'Gesamt';
 $lng['traffic']['details'] = 'Details';
 $lng['menue']['traffic']['table'] = 'Übersicht';
 $lng['error']['admin_domain_emailsystemhostname'] = 'Der System - Hostname kann nicht als Kundendomain verwendet werden.';
-$lng['backup'] = 'Backup';
-$lng['backup_allowed'] = 'Backup erlaubt';
-$lng['extras']['backup_create'] = 'Backup erstellen?';
-$lng['extras']['backup_info'] = 'Das Backup wird täglich in einem FTP Verzeichnis abgelegt. Der FTP Username ist "%s_backup". Das FTP Passwort ist das gleiche wie bei ihrem Haupt FTP Account.';
-$lng['extras']['backup_info_sep'] = 'Es sind komprimierte Archive von Ihrem Webverzeichnis und Ihren Datenbanken enthalten.';
-$lng['extras']['backup_info_big'] = 'Es ist ein komprimiertes Archiv von Ihrem Webverzeichnis und Ihren Datenbanken enthalten.';
-$lng['extras']['backup_count_info'] = '<br /><br />Beachten Sie bitte, dass das Backup den verfügbaren Speicherplatz belastet!';
-$lng['serversettings']['backup_count'] = 'Soll die Größe des Backups vom verfügbaren Webspace-Limit abgezogen werden?';
-$lng['serversettings']['backup_enabled'] = 'Backup aktivieren?';
-$lng['serversettings']['backup_ftp_enabled'] = 'FTP Upload aktivieren?';
-$lng['serversettings']['backup_ftp_server'] = 'FTP Server:';
-$lng['serversettings']['backup_ftp_user'] = 'FTP Benutzer:';
-$lng['serversettings']['backup_ftp_pass'] = 'FTP Passwort:';
-$lng['serversettings']['backupdir']['description'] = 'Pfad des Backup-Verzeichnisses?';
-$lng['serversettings']['mysqldump_path']['description'] = 'Pfad zum mysqldump Programm:';
-$lng['serversettings']['backup_count'] = 'Soll die Größe des Backups vom verfügbaren Webspace abgezogen werden?';
-$lng['crondesc']['cron_backup'] = 'Backup Cronjob';
 
 // ADDED IN FROXLOR 0.9.21
 $lng['gender']['title'] = 'Geschlecht';
 $lng['gender']['male'] = 'Herr';
 $lng['gender']['female'] = 'Frau';
 $lng['gender']['undef'] = '';
-$lng['serversettings']['backup_ftp_passive_mode'] = 'Passiven Übertragungsmodus verwenden';
-$lng['serversettings']['backup_bigfile'] = 'Backup von Kundenverzeichnissen und Datenbanken in eine Datei speichern, statt zu splitten?';
 
 // ADDED IN FROXLOR 0.9.22-svn1
 $lng['diskquota'] = 'Quota';
@@ -1722,3 +1500,7 @@ $lng['serversettings']['allow_error_report_customer']['description'] = 'Bitte be
 $lng['admin']['phpsettings']['enable_slowlog'] = 'FPM slowlog pro Domain aktivieren';
 $lng['admin']['phpsettings']['request_terminate_timeout'] = 'Request terminate-timeout';
 $lng['admin']['phpsettings']['request_slowlog_timeout'] = 'Request slowlog-timeout';
+$lng['admin']['templates']['SERVER_HOSTNAME'] = 'Wird mit dem System-Hostname (URL zu froxlor) ersetzt';
+$lng['admin']['templates']['SERVER_IP'] = 'Wird mit der standard System IP-Adresse ersetzt';
+$lng['admin']['templates']['SERVER_PORT'] = 'Wird mit dem standard Port ersetzt';
+$lng['admin']['templates']['DOMAINNAME'] = 'Wird mit der Standardsubdomain des Kunden ersetzt (kann leer sein, wenn keine erstellt werden soll)';

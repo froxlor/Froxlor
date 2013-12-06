@@ -168,11 +168,9 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 */
 	elseif ($row['type'] == '5') {
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Creating new FTP-home');
-		// FIXME %_backup clause not necessary after backup-feature is being removed
 		$result_directories_stmt = Database::query("
 			SELECT `f`.`homedir`, `f`.`uid`, `f`.`gid`, `c`.`documentroot` AS `customerroot`
 			FROM `" . TABLE_FTP_USERS . "` `f` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING (`customerid`)
-			WHERE `f`.`username` NOT LIKE '%_backup'
 		");
 
 		while ($directory = $result_directories_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -200,20 +198,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($homedir));
 					safe_exec('rm -rf '.escapeshellarg($homedir));
 				}
-				
-				// remove backup dir
-				// FIXME remove when backup-feature has been removed
-				$backupdir = makeCorrectDir($settings['system']['backup_dir'] . $row['data']['loginname']);
 
-				if (file_exists($backupdir)
-					&& $backupdir != '/'
-					&& $backupdir != $settings['system']['backup_dir']
-					&& substr($backupdir, 0, strlen($settings['system']['backup_dir'])) == $settings['system']['backup_dir']
-				) {
-					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($backupdir));
-					safe_exec('rm -rf '.escapeshellarg($backupdir));
-				}
-				
 				// remove maildir
 				$maildir = makeCorrectDir($settings['system']['vmail_homedir'] . '/' . $row['data']['loginname']);
 
