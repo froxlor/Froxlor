@@ -1,3 +1,6 @@
 <tr>
-	<td>{$lng['admin']['configfiles']['files']}<br /><br />{$files}</td>
+	<th>{$lng['admin']['configfiles']['files']}</th>
+</tr>
+<tr>
+	<td>{$files}</td>
 </tr>

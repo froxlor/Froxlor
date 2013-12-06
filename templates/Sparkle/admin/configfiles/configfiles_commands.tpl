@@ -1,4 +1,6 @@
 <tr>
-	<td>{$lng['admin']['configfiles']['commands']}<br /><br />
-	<textarea rows="6" cols="70" readonly="readonly">{$commands}</textarea></td>
+	<th>{$lng['admin']['configfiles']['commands']}</th>
+</tr>
+<tr>
+	<td><textarea rows="10" cols="70" readonly="readonly">{$commands}</textarea></td>
 </tr>
