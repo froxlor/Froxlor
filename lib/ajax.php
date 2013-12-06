@@ -15,7 +15,7 @@
  * @package    AJAX
  *
  */
- 
+
 if(isset($_POST['action'])) {
 	$action = $_POST['action'];
 } elseif(isset($_GET['action'])) {
@@ -25,22 +25,25 @@ if(isset($_POST['action'])) {
 }
 
 if ($action == "newsfeed") {
-	$feed = "http://forum.froxlor.org/index.php/rss/forums/1-froxlor-announcements/";
+	$feed = "http://inside.froxlor.org/news/";
 
 	if (function_exists("simplexml_load_file") == false) {
 		die();
 	}
 
-	if (ini_get('allow_url_fopen')) {
-		$news = simplexml_load_file($feed, null, LIBXML_NOCDATA);
+	if (function_exists('curl_version')) {
+		// get version
+		require './tables.inc.php';
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $feed);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Froxlor/'.$version);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		$output = curl_exec($ch);
+		curl_close($ch);
+		$news = simplexml_load_string(trim($output));
 	} else {
-		if (function_exists('curl_version')) {
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $feed);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			$output = curl_exec($ch);
-			curl_close($ch);
-			$news = simplexml_load_string(trim($output));
+		if (ini_get('allow_url_fopen')) {
+			$news = simplexml_load_file($feed, null, LIBXML_NOCDATA);
 		} else {
 			$news = false;
 		}
