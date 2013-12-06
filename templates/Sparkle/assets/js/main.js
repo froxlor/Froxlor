@@ -20,7 +20,7 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	$('#historyback').click(function() {
+	$('#historyback, .historyback').click(function() {
 		parent.history.back();
 		return false;
 	});
