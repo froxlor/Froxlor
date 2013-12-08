@@ -362,6 +362,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('dkim', 'dkim_domains', 'domains'),
 	('dkim', 'dkim_dkimkeys', 'dkim-keys.conf'),
 	('dkim', 'dkimrestart_command', '/etc/init.d/dkim-filter restart'),
+	('admin', 'show_news_feed', '1'),
 	('admin', 'show_version_login', '0'),
 	('admin', 'show_version_footer', '0'),
 	('spf', 'use_spf', '0'),

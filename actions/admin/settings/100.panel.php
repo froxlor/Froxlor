@@ -194,6 +194,14 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					),
+				'admin_show_news_feed' => array(
+					'label' => $lng['admin']['show_news_feed'],
+					'settinggroup' => 'admin',
+					'varname' => 'show_news_feed',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					),
 				'panel_allow_domain_change_admin' => array(
 					'label' => $lng['serversettings']['panel_allow_domain_change_admin'],
 					'settinggroup' => 'panel',

@@ -601,4 +601,13 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= makeyesno('update_error_report_customer', '1', '0', '0');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_version, '0.9.31-rc2')) {
+		$has_preconfig = true;
+		$description  = 'You can enable/disable the display/usage of the news-feed for admins<br /><br />';
+		$question = '<strong>Do you want to enable the news-feed for admins? (default: yes):</strong>&nbsp;';
+		$question.= makeyesno('update_admin_news_feed', '1', '0', '1').'<br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
 }

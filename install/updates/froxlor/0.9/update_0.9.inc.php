@@ -2521,6 +2521,22 @@ if (isFroxlorVersion('0.9.31-dev6')) {
 }
 
 if (isFroxlorVersion('0.9.31-rc1')) {
+	showUpdateStep("Updating from 0.9.31-rc1 to 0.9.31-rc2");
+	lastStepStatus(0);
+
+	$update_admin_news_feed = isset($_POST['update_admin_news_feed']) ? (int)$_POST['update_admin_news_feed'] : '1';
+	showUpdateStep("Adding new news-feed option");
+	$ins_stmt = Database::prepare("
+		INSERT INTO `".TABLE_PANEL_SETTINGS."` SET `settinggroup` = 'admin', `varname` = 'show_news_feed', `value` = :value
+	");
+	Database::pexecute($ins_stmt, array('value' => $update_admin_news_feed));
+	lastStepStatus(0);
+
+	updateToVersion('0.9.31-rc2');
+}
+
+if (isFroxlorVersion('0.9.31-rc2')) {
+
 	showUpdateStep("Updating from 0.9.31-rc1 to 0.9.31-rc99");
 	lastStepStatus(0);
 

@@ -31,9 +31,10 @@ if ($action == "newsfeed") {
 		die();
 	}
 
+	// get version
+	require './tables.inc.php';
+
 	if (function_exists('curl_version')) {
-		// get version
-		require './tables.inc.php';
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $feed);
 		curl_setopt($ch, CURLOPT_USERAGENT, 'Froxlor/'.$version);
@@ -43,6 +44,7 @@ if ($action == "newsfeed") {
 		$news = simplexml_load_string(trim($output));
 	} else {
 		if (ini_get('allow_url_fopen')) {
+			ini_set('user_agent', 'Froxlor/'.$version);
 			$news = simplexml_load_file($feed, null, LIBXML_NOCDATA);
 		} else {
 			$news = false;

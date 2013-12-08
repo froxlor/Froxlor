@@ -1778,3 +1778,4 @@ $lng['admin']['templates']['SERVER_HOSTNAME'] = 'Replaces the system-hostname (U
 $lng['admin']['templates']['SERVER_IP'] = 'Replaces the default server ip-address';
 $lng['admin']['templates']['SERVER_PORT'] = 'Replaces the default server port';
 $lng['admin']['templates']['DOMAINNAME'] = 'Replaces the customers standard-subdomain (can be empty if none is generated)';
+$lng['admin']['show_news_feed'] = 'Show news-feed on admin-dashboard';
