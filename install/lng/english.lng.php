@@ -37,7 +37,7 @@ $lng['requirements']['openbasedirenabled'] = 'Froxlor will not work properly wit
 $lng['requirements']['diedbecauseofrequirements'] = 'Cannot install Froxlor without these requirements! Try to fix them and retry.';
 $lng['requirements']['froxlor_succ_checks'] = 'All requirements are satisfied';
 
-$lng['install']['title'] = 'Froxlor install - chose language';
+$lng['install']['lngtitle'] = 'Froxlor install - choose language';
 $lng['install']['language'] = 'Installation language';
 $lng['install']['lngbtn_go'] = 'Change language';
 $lng['install']['title'] = 'Froxlor install - setup';
