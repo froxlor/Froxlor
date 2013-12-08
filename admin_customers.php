@@ -809,7 +809,7 @@ if ($page == 'customers'
 							'customerid' => $customerid,
 							'groupname' => $loginname,
 							'guid' => $guid,
-							'members' => $loginname
+							'members' => $loginname.','.$settings['system']['httpuser']
 					);
 					Database::pexecute($ins_stmt, $ins_data);
 					// FTP-Quotatallies

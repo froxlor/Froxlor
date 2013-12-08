@@ -2537,7 +2537,7 @@ if (isFroxlorVersion('0.9.31-rc1')) {
 
 if (isFroxlorVersion('0.9.31-rc2')) {
 
-	showUpdateStep("Updating from 0.9.31-rc1 to 0.9.31-rc99");
+	showUpdateStep("Updating from 0.9.31-rc2 to 0.9.31-rc99");
 	lastStepStatus(0);
 
 	showUpdateStep("Removing APS-module (deprecated)");
@@ -2580,6 +2580,10 @@ if (isFroxlorVersion('0.9.31-rc2')) {
 	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `email_autoresponder`;");
 	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `email_autoresponder_used`;");
 	Database::query("DROP TABLE IF EXISTS `mail_autoresponder`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Updating ftp-groups entries");
+	Database::query("UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, ',".$settings['system']['httpuser']."');");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.31-rc99');
