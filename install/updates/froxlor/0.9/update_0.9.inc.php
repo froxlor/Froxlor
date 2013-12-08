@@ -2535,9 +2535,9 @@ if (isFroxlorVersion('0.9.31-rc1')) {
 	updateToVersion('0.9.31-rc2');
 }
 
-if (isFroxlorVersion('0.9.31-rc2')) {
+if (isFroxlorVersion('0.9.31')) {
 
-	showUpdateStep("Updating from 0.9.31-rc2 to 0.9.31-rc99");
+	showUpdateStep("Updating from 0.9.31 to 0.9.32-dev1");
 	lastStepStatus(0);
 
 	showUpdateStep("Removing APS-module (deprecated)");
@@ -2586,5 +2586,5 @@ if (isFroxlorVersion('0.9.31-rc2')) {
 	Database::query("UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, ',".$settings['system']['httpuser']."');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.31-rc99');
+	updateToVersion('0.9.32-dev1');
 }
