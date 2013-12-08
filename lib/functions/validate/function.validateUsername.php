@@ -35,6 +35,6 @@ function validateUsername($username, $unix_names = 1, $mysql_max = '') {
 			return false;
 		}
 	} else {
-		return (preg_match('/^[a-z][a-z0-9]{1,' . (int)$mysql_max . '}$/Di', $username) != false);
+		return (preg_match('/^[a-z][a-z0-9]{1,' . $mysql_max . '}$/Di', $username) != false);
 	}
 }
