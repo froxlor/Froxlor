@@ -273,7 +273,7 @@ if ($page == 'customers'
 				Database::pexecute($stmt, array('id' => $id));
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTACCESS . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `customerid` = :id AND `adminsession` = '0'");
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = :id AND `adminsession` = '0'");
 				Database::pexecute($stmt, array('id' => $id));
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
@@ -808,6 +808,10 @@ if ($page == 'customers'
 						$admin_update_query.= ", `diskspace_used` = `diskspace_used` + 0" . (int)$diskspace;
 					}
 
+					if (($traffic / 1024 / 1024) != '-1') {
+						$admin_update_query.= ", `traffic_used` = `traffic_used` + 0" . (int)$traffic;
+					}
+
 					if ($number_of_aps_packages != '-1') {
 						$admin_update_query.= ", `aps_packages_used` = `aps_packages_used` + 0" . (int)$number_of_aps_packages;
 					}
@@ -1214,6 +1218,7 @@ if ($page == 'customers'
 				$traffic = $traffic * 1024 * 1024;
 
 				if (((($userinfo['diskspace_used'] + $diskspace - $result['diskspace']) > $userinfo['diskspace']) && ($userinfo['diskspace'] / 1024) != '-1')
+				   || ((($userinfo['traffic_used'] + $traffic - $result['traffic']) > $userinfo['traffic']) && ($userinfo['traffic'] / 1024 / 1024) != '-1')
 				   || ((($userinfo['mysqls_used'] + $mysqls - $result['mysqls']) > $userinfo['mysqls']) && $userinfo['mysqls'] != '-1')
 				   || ((($userinfo['emails_used'] + $emails - $result['emails']) > $userinfo['emails']) && $userinfo['emails'] != '-1')
 				   || ((($userinfo['email_accounts_used'] + $email_accounts - $result['email_accounts']) > $userinfo['email_accounts']) && $userinfo['email_accounts'] != '-1')
@@ -1224,6 +1229,7 @@ if ($page == 'customers'
 				   || ((($userinfo['tickets_used'] + $tickets - $result['tickets']) > $userinfo['tickets']) && $userinfo['tickets'] != '-1')
 				   || ((($userinfo['subdomains_used'] + $subdomains - $result['subdomains']) > $userinfo['subdomains']) && $userinfo['subdomains'] != '-1')
 				   || (($diskspace / 1024) == '-1' && ($userinfo['diskspace'] / 1024) != '-1')
+				   || (($traffic / 1024 / 1024) == '-1' && ($userinfo['traffic'] / 1024 / 1024) != '-1')
 				   || ((($userinfo['aps_packages'] + $number_of_aps_packages - $result['aps_packages']) > $userinfo['aps_packages']) && $userinfo['aps_packages'] != '-1' && $settings['aps']['aps_active'] == '1')
 				   || ($mysqls == '-1' && $userinfo['mysqls'] != '-1')
 				   || ($emails == '-1' && $userinfo['emails'] != '-1')
@@ -1606,6 +1612,17 @@ if ($page == 'customers'
 						}
 						if (($result['diskspace'] / 1024) != '-1') {
 							$admin_update_query.= " - 0" . (int)$result['diskspace'] . " ";
+						}
+					}
+
+					if (($traffic / 1024 / 1024) != '-1' || ($result['traffic'] / 1024 / 1024) != '-1') {
+						$admin_update_query.= ", `traffic_used` = `traffic_used` ";
+
+						if (($traffic / 1024 / 1024) != '-1') {
+							$admin_update_query.= " + 0" . (int)$traffic . " ";
+						}
+						if (($result['traffic'] / 1024 / 1024) != '-1') {
+							$admin_update_query.= " - 0" . (int)$result['traffic'] . " ";
 						}
 					}
 
