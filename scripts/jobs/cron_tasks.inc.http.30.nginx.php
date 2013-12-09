@@ -247,34 +247,13 @@ class nginx
 		$this->_createStandardErrorHandler();
 	}
 
-	protected function createNginxHosts()
-	{
-		$query = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
-			`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, 
-			`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
-			`c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, 
-			`d`.`mod_fcgid_maxrequests`, `p`.`ssl` AS `ssl`,
-			`p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile` 
-			  FROM `".TABLE_PANEL_DOMAINS."` `d`
-      
-			  LEFT JOIN `".TABLE_PANEL_CUSTOMERS."` `c` USING(`customerid`) 
-			  LEFT JOIN `".TABLE_PANEL_DOMAINS."` `pd` ON (`pd`.`id` = `d`.`parentdomainid`)
-			  
-			  INNER JOIN (
-			    SELECT * FROM ( 
-			      SELECT `di`.`id_domain` , `p`.`ssl`, `p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile` 
-			      FROM `".TABLE_DOMAINTOIP."` `di` , `".TABLE_PANEL_IPSANDPORTS."` `p` 
-			      WHERE `p`.`id` = `di`.`id_ipandports` 
-			      ORDER BY `p`.`ssl` DESC 
-			    ) AS my_table_tmp
-			    GROUP BY `id_domain`
-			  ) AS p ON p.`id_domain` = `d`.`id`
-			  
-			  WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> '1'
-			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
+	/**
+	 * create vhosts
+	 */
+	protected function createNginxHosts() {
 
-		$result_domains_stmt = Database::query($query);
-		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+		$domains = WebserverBase::getVhostsToCreate();
+		foreach ($domains as $domain) {
 
 			if (is_dir($this->settings['system']['apacheconf_vhost'])) {
 				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'])));

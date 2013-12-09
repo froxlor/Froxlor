@@ -782,34 +782,11 @@ class apache
 	/**
 	 *	We compose the virtualhost entries for the domains
 	 */
-	public function createVirtualHosts()
-	{
-		$query = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
-			`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`, 
-			`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
-			`c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`, 
-			`d`.`mod_fcgid_maxrequests`, `p`.`ssl` AS `ssl`,
-			`p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile` 
-			  FROM `".TABLE_PANEL_DOMAINS."` `d`
-      
-			  LEFT JOIN `".TABLE_PANEL_CUSTOMERS."` `c` USING(`customerid`) 
-			  LEFT JOIN `".TABLE_PANEL_DOMAINS."` `pd` ON (`pd`.`id` = `d`.`parentdomainid`)
-			  
-			  INNER JOIN (
-			    SELECT * FROM ( 
-			      SELECT `di`.`id_domain` , `p`.`ssl`, `p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile` 
-			      FROM `".TABLE_DOMAINTOIP."` `di` , `".TABLE_PANEL_IPSANDPORTS."` `p` 
-			      WHERE `p`.`id` = `di`.`id_ipandports` 
-			      ORDER BY `p`.`ssl` DESC 
-			    ) AS my_table_tmp
-			    GROUP BY `id_domain`
-			  ) AS p ON p.`id_domain` = `d`.`id`
-			  
-			  WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> '1'
-			  ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;";
+	public function createVirtualHosts() {
 
-		$result_domains_stmt = Database::query($query);
-		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+		$domains = WebserverBase::getVhostsToCreate();
+		foreach ($domains as $domain) {
+
 			fwrite($this->debugHandler, '  apache::createVirtualHosts: creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname'] . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname']);
 			$vhosts_filename = $this->getVhostFilename($domain);
