@@ -2,6 +2,7 @@ packages/*
 lib/classes/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer/*/
 temp/*
 templates/*
+logs/*
 install/update.log
 .buildpath
 .project
