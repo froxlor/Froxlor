@@ -175,7 +175,7 @@ class paging {
 			&& (preg_match('/[-_@\p{L}\p{N}*.]+$/u', $_REQUEST['searchtext'])
 			|| $_REQUEST['searchtext'] === '')
 		) {
-			$this->searchtext = $_REQUEST['searchtext'];
+			$this->searchtext = trim($_REQUEST['searchtext']);
 		} else {
 			if ($checklastpaging
 				&& isset($this->userinfo['lastpaging']['searchtext'])
@@ -279,8 +279,27 @@ class paging {
 			}
 
 			$searchfield = implode('.', $searchfield);
-			$searchtext = str_replace('*', '%', $this->searchtext);
-			$condition.= $searchfield . " LIKE " . Database::quote($searchtext);
+			// check for logical operators and whether searchtext is a number
+			// in any other case the logical-operators would make no sense
+			$ops = array('<', '>', '=');
+			if (in_array(substr($this->searchtext, 0, 1), $ops) && is_numeric(substr($this->searchtext, 1))) {
+				// if we're checking on traffic or diskspace, we need to adjust the search-value
+				if (strpos($searchfield, 'diskspace') > 0) {
+					// anything with diskspace is *1024
+					$searchtext = ((int)substr($this->searchtext, 1))*1024;
+				} elseif (strpos($searchfield, 'traffic') > 0) {
+					// anything with traffic is *1024*1024
+					$searchtext = ((int)substr($this->searchtext, 1))*1024*1024;
+				} else {
+					// any other field
+					$searchtext = substr($this->searchtext, 1);
+				}
+				// now as we use >, < or = we use the given operator and not LIKE
+				$condition.= $searchfield . " ".substr($this->searchtext, 0, 1)." " . Database::quote($searchtext);
+			} else {
+				$searchtext = str_replace('*', '%', $this->searchtext);
+				$condition.= $searchfield . " LIKE " . Database::quote($searchtext);
+			}
 		} else {
 			$condition = '';
 		}
