@@ -26,12 +26,12 @@
  */
 function makeSecurePath($path) {
 
-	$search = Array(
+	$search = array(
 		'#/+#',
 		'#\.+#',
 		'#\0+#'
 	);
-	$replace = Array(
+	$replace = array(
 		'/',
 		'.',
 		''
@@ -41,5 +41,14 @@ function makeSecurePath($path) {
 	// it might be escaped already
 	$path = str_replace("\ ", " ", $path);
 	$path = str_replace(" ", "\ ", $path);
+
+	// check for bad characters, some are allowed with escaping
+	// but we generally don't want them in our directory-names,
+	// thx to aaronmueller for this snipped
+	$badchars = array(':', ';', '|', '&', '>', '<', '`', '$', '~', '?');
+	foreach ($badchars as $bc) {
+		str_replace($bc, "", $path);
+	}
+
 	return $path;
 }
