@@ -257,6 +257,9 @@ class bind
 				/*&& $domain['spf'] == '1' */
 		) {
 			$zonefile.= $this->settings['spf']['spf_entry'] . "\n";
+			if (in_array('mail', $records)) {
+				$zonefile.= str_replace('@', 'mail', $this->settings['spf']['spf_entry']) . "\n";
+			}
 		}
 
 		/**
