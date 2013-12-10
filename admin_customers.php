@@ -269,7 +269,7 @@ if ($page == 'customers'
 				Database::pexecute($stmt, array('id' => $id));
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTACCESS . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `customerid` = :id AND `adminsession` = '0'");
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = :id AND `adminsession` = '0'");
 				Database::pexecute($stmt, array('id' => $id));
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));

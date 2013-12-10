@@ -19,5 +19,9 @@
  * Generates a random password
  */
 function generatePassword() {
-	return substr(md5(uniqid(microtime(), 1)), 24, 10);
+	global $settings;
+	return substr(
+		base64_encode(sha1(md5(uniqid(microtime(), 1))).md5(uniqid(microtime(), 1)).sha1(md5(uniqid(microtime(), 1)))),
+		rand(5, 50), ($settings['panel']['password_min_length'] > 0 ? $settings['panel']['password_min_length'] : 10)
+	);
 }
