@@ -109,7 +109,7 @@ if ($page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				// Begin root-session
 				Database::needRoot(true, $result['dbserver']);
-				$dbm = new DbManager($settings);
+				$dbm = new DbManager($settings, $log);
 				$dbm->getManager()->deleteDatabase($result['databasename']);
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted database '" . $result['databasename'] . "'");
 				Database::needRoot(false);
@@ -171,7 +171,7 @@ if ($page == 'overview') {
 					$databasedescription = validate(trim($_POST['description']), 'description');
 
 					// create database, user, set permissions, etc.pp.
-					$dbm = new DbManager($settings);
+					$dbm = new DbManager($settings, $log);
 					$username = $dbm->createDatabase(
 						$userinfo['loginname'],
 						$password,
