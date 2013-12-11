@@ -279,27 +279,40 @@ class paging {
 			}
 
 			$searchfield = implode('.', $searchfield);
-			// check for logical operators and whether searchtext is a number
-			// in any other case the logical-operators would make no sense
+			
 			$ops = array('<', '>', '=');
-			if (in_array(substr($this->searchtext, 0, 1), $ops) && is_numeric(substr($this->searchtext, 1))) {
-				// if we're checking on traffic or diskspace, we need to adjust the search-value
-				if (strpos($searchfield, 'diskspace') > 0) {
-					// anything with diskspace is *1024
-					$searchtext = ((int)substr($this->searchtext, 1))*1024;
-				} elseif (strpos($searchfield, 'traffic') > 0) {
-					// anything with traffic is *1024*1024
-					$searchtext = ((int)substr($this->searchtext, 1))*1024*1024;
-				} else {
-					// any other field
-					$searchtext = substr($this->searchtext, 1);
-				}
+			
+			// check if we use an operator or not
+			$useOper = 0;
+			$oper = "=";
+			if (in_array(substr($this->searchtext, 0, 1), $ops)) {
+				$useOper = 1;
+				$oper = substr($this->searchtext, 0, 1);
+			}
+			
+			// check for diskspace and whether searchtext is a number
+			// in any other case the logical-operators would make no sense
+			if (strpos($searchfield, 'diskspace') > 0 && is_numeric(substr($this->searchtext, $useOper))) {
+				// anything with diskspace is *1024
+				$searchtext = ((int)substr($this->searchtext, $useOper))*1024;
+				$useOper = 1;
+			} elseif (strpos($searchfield, 'traffic') > 0 && is_numeric(substr($this->searchtext, $useOper))) {
+				// anything with traffic is *1024*1024
+				$searchtext = ((int)substr($this->searchtext, $useOper))*1024*1024;
+				$useOper = 1;
+			} else {
+				// any other field
+				$searchtext = substr($this->searchtext, $useOper);
+			}
+			
+			if ($useOper == 1 && is_numeric(substr($this->searchtext, $useOper))) {
 				// now as we use >, < or = we use the given operator and not LIKE
-				$condition.= $searchfield . " ".substr($this->searchtext, 0, 1)." " . Database::quote($searchtext);
+				$condition.= $searchfield . " ".$oper." " . Database::quote($searchtext);
 			} else {
 				$searchtext = str_replace('*', '%', $this->searchtext);
 				$condition.= $searchfield . " LIKE " . Database::quote($searchtext);
 			}
+			
 		} else {
 			$condition = '';
 		}
