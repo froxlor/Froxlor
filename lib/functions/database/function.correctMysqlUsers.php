@@ -19,7 +19,7 @@
 
 function correctMysqlUsers($mysql_access_host_array) {
 
-	global $settings;
+	global $settings, $log;
 
 	// get sql-root access data
 	Database::needRoot(true);
@@ -36,7 +36,7 @@ function correctMysqlUsers($mysql_access_host_array) {
 		Database::needSqlData();
 		$sql_root = Database::getSqlData();
 
-		$dbm = new DbManager($settings);
+		$dbm = new DbManager($settings, $log);
 		$users = $dbm->getManager()->getAllSqlUsers(false);
 
 		$databases = array(

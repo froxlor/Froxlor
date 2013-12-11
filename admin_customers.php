@@ -243,7 +243,7 @@ if ($page == 'customers'
 				Database::needRoot(true);
 				$last_dbserver = 0;
 
-				$dbm = new DbManager($settings);
+				$dbm = new DbManager($settings, $log);
 
 				while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -1265,7 +1265,7 @@ if ($page == 'customers'
 						Database::needRoot(true);
 						$last_dbserver = 0;
 
-						$dbm = new DbManager($settings);
+						$dbm = new DbManager($settings, $log);
 
 						// For each of them
 						while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
