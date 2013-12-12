@@ -129,7 +129,7 @@ $header
 				<td><a href="$lookfornewversion_link">$lookfornewversion_lable</a></td>
 			</if>
 		</tr>
-		<if $isnewerversion != 0 >
+		<if $isnewerversion == 1 >
 		<tr>
 			<td colspan="2"><strong>{$lng['admin']['newerversionavailable']}</strong></td>
 		</tr>

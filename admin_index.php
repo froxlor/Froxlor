@@ -106,7 +106,12 @@ if ($page == 'overview') {
 					$lookfornewversion_link = $_link;
 					$lookfornewversion_addinfo = $_message;
 
-					if (version_compare2($version, $_version) == -1) {
+					// not numeric -> error-message
+					if (!is_numeric($_version)) {
+						// check for customized version to not output
+						// "There is a newer version of froxlor" besides the error-message
+						$isnewerversion = 2;
+					} elseif (version_compare2($version, $_version) == -1) {
 						$isnewerversion = 1;
 					} else {
 						$isnewerversion = 0;

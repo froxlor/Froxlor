@@ -35,11 +35,16 @@ while ($maildir = $maildirs_stmt->fetch(PDO::FETCH_ASSOC)) {
 	if (file_exists($_maildir) 
 		&& is_dir($_maildir)
 	) {
-		$back = safe_exec('du -sb ' . escapeshellarg($_maildir) . '');
+		$back = safe_exec('du -sk ' . escapeshellarg($_maildir) . '');
 		foreach ($back as $backrow) {
 			$emailusage = explode(' ', $backrow);
 		}
 		$emailusage = floatval($emailusage['0']);
+
+		// as freebsd does not have the -b flag for 'du' which gives
+		// the size in bytes, we use "-sk" for all and calculate from KiB
+		$emailusage *= 1024;
+
 		unset($back);
 		Database::pexecute($upd_stmt, array('size' => $emailusage, 'id' => $maildir['id']));
 	} else {
