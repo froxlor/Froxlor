@@ -815,8 +815,22 @@ if ($page == 'tickets'
 				WHERE `customerid` = :cid'
 			);
 			$usr = Database::pexecute_first($usr_stmt, array('cid' => $cid));
-			$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $cid)).'" rel="external">';
-			$by .= getCorrectFullUserDetails($usr).'</a>';
+
+			if (isset($usr['loginname'])) {
+				$customer = getCorrectFullUserDetails($usr);
+				$customerloginname = ' ('.$usr['loginname'].')';
+				$customerid = $usr['customerid'];
+			} else {
+				$customer = $lng['ticket']['nonexistingcustomer'];
+				$customerid = 0;
+				$customerloginname = '';
+			}
+			if ($customerid != 0) {
+				$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $customerid)).'" rel="external">';
+				$by .= $customer.$customerloginname.'</a>';
+			} else {
+				$by = $customer;
+			}
 		}
 
 		$subject = $mainticket->Get('subject');
@@ -849,8 +863,22 @@ if ($page == 'tickets'
 					WHERE `customerid` = :cid'
 				);
 				$usr = Database::pexecute_first($usr_stmt, array('cid' => $cid));
-				$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $cid)).'" rel="external">';
-				$by .= getCorrectFullUserDetails($usr).'</a>';
+
+				if (isset($usr['loginname'])) {
+					$customer = getCorrectFullUserDetails($usr);
+					$customerloginname = ' ('.$usr['loginname'].')';
+					$customerid = $usr['customerid'];
+				} else {
+					$customer = $lng['ticket']['nonexistingcustomer'];
+					$customerid = 0;
+					$customerloginname = '';
+				}
+				if ($customerid != 0) {
+					$by = '<a href="'.$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $customerid)).'" rel="external">';
+					$by .= $customer.$customerloginname.'</a>';
+				} else {
+					$by = $customer;
+				}
 			}
 
 			$subject = $subticket->Get('subject');
