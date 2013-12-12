@@ -129,7 +129,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_defaultini_ownvhost',
 					'type' => 'option',
-					'default' => '1',
+					'default' => '2',
 					'option_mode' => 'one',
 					'option_options_method' => 'getPhpConfigs',
 					'save_method' => 'storeSettingField',

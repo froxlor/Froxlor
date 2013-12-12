@@ -69,7 +69,7 @@ return array(
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_defaultini',
 					'type' => 'option',
-					'default' => '1',
+					'default' => '2',
 					'option_mode' => 'one',
 					'option_options_method' => 'getPhpConfigs',
 					'save_method' => 'storeSettingField'

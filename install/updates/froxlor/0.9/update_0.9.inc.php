@@ -2534,3 +2534,33 @@ if (isFroxlorVersion('0.9.31-rc1')) {
 
 	updateToVersion('0.9.31-rc2');
 }
+
+if (isFroxlorVersion('0.9.31-rc2')) {
+	showUpdateStep("Updating from 0.9.31-rc2 to 0.9.31-rc3");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new php-config for froxlor-vhost");
+	Database::query("
+		INSERT INTO `panel_phpconfigs` SET
+			`description` = 'Froxlor Vhost Config', `binary` = '/usr/bin/php-cgi',
+			`file_extensions` = 'php', `mod_fcgid_starter` = '-1', `mod_fcgid_maxrequests` = '-1',
+			`phpsettings` = 'allow_call_time_pass_reference = Off\r\nallow_url_fopen = On\r\nasp_tags = Off\r\ndisable_classes =\r\ndisable_functions = curl_multi_exec,exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\ncgi.force_redirect = 1\r\ngpc_order = \"GPC\"\r\nhtml_errors = Off\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = \".:{PEAR_DIR}\"\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmagic_quotes_gpc = Off\r\nmagic_quotes_runtime = Off\r\nmagic_quotes_sybase = Off\r\nmax_execution_time = 60\r\nmax_input_time = 60\r\nmemory_limit = 16M\r\nnoutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nregister_globals = Off\r\nreport_memleaks = On\r\nsendmail_path = \"/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}\"\r\nsession.auto_start = 0\r\nsession.bug_compat_42 = 0\r\nsession.bug_compat_warn = 1\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.entropy_file = /dev/urandom\r\nsession.entropy_length = 16\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 1\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = \"{TMP_DIR}\"\r\nsession.serialize_handler = php\r\nsession.use_cookies = 1\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nsuhosin.mail.protect = 1\r\nsuhosin.simulation = Off\r\ntrack_errors = Off\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = \"{TMP_DIR}\"\r\nvariables_order = \"GPCS\"\r\n'
+	");
+	$frxvhostconfid = Database::lastInsertId();
+	// update default vhosts-config for froxlor if they are on the system-default
+	if ($settings['system']['mod_fcgid_defaultini_ownvhost'] == '1') {
+		$upd_stmt = Database::prepare("
+			UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = :value WHERE `settinggroup` = 'system' AND `varname` = 'mod_fcgid_defaultini_ownvhost'
+		");
+		Database::pexecute($upd_stmt, array('value' => $frxvhostconfid));
+	}
+	if ($settings['phpfpm']['vhost_defaultini'] == '1') {
+		$upd_stmt = Database::prepare("
+			UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = :value WHERE `settinggroup` = 'phpfpm' AND `varname` = 'vhost_defaultini'
+		");
+		Database::pexecute($upd_stmt, array('value' => $frxvhostconfid));
+	}
+	lastStepStatus(0);
+
+	updateToVersion('0.9.31-rc3');
+}
