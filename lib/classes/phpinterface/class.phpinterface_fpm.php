@@ -74,6 +74,7 @@ class phpinterface_fpm {
 					'variables_order',
 					'gpc_order',
 					'date.timezone',
+					'sendmail_path',
 					'session.gc_divisor',
 					'session.gc_probability'
 			),
@@ -178,13 +179,10 @@ class phpinterface_fpm {
 			if (!is_dir($tmpdir)) {
 				$this->getTempDir();
 			}
-			//$slowlog = makeCorrectFile($this->_settings['system']['logfiles_directory'] . $this->_domain['loginname'] . '/php-fpm_slow.log');
 
 			$fpm_config.= 'env[TMP] = '.$tmpdir."\n";
 			$fpm_config.= 'env[TMPDIR] = '.$tmpdir."\n";
 			$fpm_config.= 'env[TEMP] = '.$tmpdir."\n";
-
-			$fpm_config.= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f '.$this->_domain['email']."\n";
 
 			$openbasedir = '';
 			if ($this->_domain['loginname'] != 'froxlor.panel') {
@@ -254,6 +252,12 @@ class phpinterface_fpm {
 						$fpm_config.= $sec.'['.trim($is[0]).'] = ' . trim($is[1]) . "\n";
 					}
 				}
+			}
+
+			// now check if 'sendmail_path' has not beed set in the custom-php.ini
+			// if not we use our fallback-default as usual
+			if (strpos($fpm_config, 'php_admin_value[sendmail_path]') === false) {
+				$fpm_config.= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f '.$this->_domain['email']."\n";
 			}
 
 			fwrite($fh, $fpm_config, strlen($fpm_config));
