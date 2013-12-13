@@ -300,7 +300,7 @@ if ($page == 'customers'
 					DELETE FROM `" . TABLE_PANEL_TASKS . "`
 					WHERE `type` = '2' AND `data` LIKE :loginname"
 				);
-				Database::pexecute($del_stmt, array(':loginname' => "%:{$result['loginname']};%"));
+				Database::pexecute($del_stmt, array('loginname' => "%:{$result['loginname']};%"));
 
 				// remove everything APS-related, #216
 				$apsresult_stmt = Database::prepare("SELECT `ID` FROM `".TABLE_APS_INSTANCES."` WHERE `CustomerID` = :id");
@@ -315,7 +315,7 @@ if ($page == 'customers'
 					Database::pexecute($del_stmt, array('iid' => $apsrow['ID']));
 				}
 				// now remove all user instances
-				$stmt = Database::prepare("DELETE FROM `".TABLE_APS_INSTANCES."` WHERE `CustomerID` = :id'");
+				$stmt = Database::prepare("DELETE FROM `".TABLE_APS_INSTANCES."` WHERE `CustomerID` = :id");
 				Database::pexecute($stmt, array('id' => $id));
 				// eventually some temp-setting-leftovers
 				$stmt = Database::prepare("DELETE FROM `".TABLE_APS_TEMP_SETTINGS."` WHERE `CustomerID` = :id");
