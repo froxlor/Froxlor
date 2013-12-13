@@ -364,7 +364,7 @@ if ($page == 'overview') {
 			$mail_body .= "-------------------------------------------------------------\n\n";
 			$mail_body .= "Froxlor-version: ".$version."\n\n";
 			$mail_body .= "End of report";
-			$mail_html = str_replace("\n", "<br />", $mail_body);
+			$mail_html = nl2br($mail_body);
 
 			// send actual report to dev-team
 			if (isset($_POST['send'])
