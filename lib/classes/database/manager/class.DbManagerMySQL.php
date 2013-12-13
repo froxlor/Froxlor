@@ -106,7 +106,7 @@ class DbManagerMySQL {
 		while ($host = $host_res_stmt->fetch(PDO::FETCH_ASSOC)) {
 			// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
 			$drop_stmt = Database::prepare("DROP USER :dbname@:host");
-			Database::pexecute($drop_stmt, array(':dbname' => $dbname, ':host' => $host['Host']), false);
+			Database::pexecute($drop_stmt, array('dbname' => $dbname, 'host' => $host['Host']), false);
 		}
 
 		$drop_stmt = Database::prepare("DROP DATABASE IF EXISTS `".$dbname."`");

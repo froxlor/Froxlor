@@ -294,7 +294,7 @@ if ($page == 'customers'
 					DELETE FROM `" . TABLE_PANEL_TASKS . "`
 					WHERE `type` = '2' AND `data` LIKE :loginname"
 				);
-				Database::pexecute($del_stmt, array(':loginname' => "%:{$result['loginname']};%"));
+				Database::pexecute($del_stmt, array('loginname' => "%:{$result['loginname']};%"));
 
 				$admin_update_query = "UPDATE `" . TABLE_PANEL_ADMINS . "` SET `customers_used` = `customers_used` - 1 ";
 				$admin_update_query.= ", `domains_used` = `domains_used` - 0" . (int)($domains_deleted - $result['subdomains_used']);
