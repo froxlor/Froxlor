@@ -63,15 +63,11 @@ if ($page == 'tickets'
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_tickets");
 		$fields = array(
 			'status' => $lng['ticket']['status'],
-			'priority' => $lng['ticket']['priority'],
 			'lastchange' => $lng['ticket']['lastchange'],
-			'ticket_answers' => $lng['ticket']['ticket_answers'],
 			'subject' => $lng['ticket']['subject'],
 			'lastreplier' => $lng['ticket']['lastreplier']
 		);
 		$paging = new paging($userinfo, TABLE_PANEL_TICKETS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$paging->sortfield = 'lastchange';
-		$paging->sortorder = 'desc';
 		$result_stmt = Database::prepare("
 			SELECT `main`.`id`, `main`.`customerid`, (
 				SELECT COUNT(`sub`.`id`)
@@ -170,8 +166,8 @@ if ($page == 'tickets'
 					$count++;
 					$_cid = $row['customerid'];
 				}
+				$i++;
 			}
-			$i++;
 		}
 		eval("echo \"" . getTemplate("tickets/tickets") . "\";");
 
