@@ -1779,3 +1779,11 @@ $lng['admin']['templates']['SERVER_IP'] = 'Replaces the default server ip-addres
 $lng['admin']['templates']['SERVER_PORT'] = 'Replaces the default server port';
 $lng['admin']['templates']['DOMAINNAME'] = 'Replaces the customers standard-subdomain (can be empty if none is generated)';
 $lng['admin']['show_news_feed'] = 'Show news-feed on admin-dashboard';
+
+// Added in Froxlor 0.9.32
+$lng['logger']['reseller'] = "Reseller";
+$lng['logger']['admin'] = "Administrator";
+$lng['logger']['cron'] = "Cronjob";
+$lng['logger']['login'] = "Login";
+$lng['logger']['intern'] = "Internal";
+$lng['logger']['unknown'] = "Unknown";

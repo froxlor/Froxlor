@@ -25,5 +25,7 @@ if(!defined('ADM_ACTION'))
 	define('ADM_ACTION', '30');
 if(!defined('CRON_ACTION'))
 	define('CRON_ACTION', '40');
+if(!defined('LOGIN_ACTION'))
+	define('LOGIN_ACTION', '50');
 if(!defined('LOG_ERROR'))
 	define('LOG_ERROR', '99');

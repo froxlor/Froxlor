@@ -100,6 +100,10 @@ if ($action == 'login') {
 				$uid = 'adminid';
 				$adminsession = '1';
 			} else {
+				// Log failed login
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => $_SERVER['REMOTE_ADDR']), $settings);
+				$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "Unknown user '" . $loginname . "' tried to login.");
+
 				redirectTo('index.php', Array('showmessage' => '2'), true);
 				exit;
 			}
@@ -131,6 +135,11 @@ if ($action == 'login') {
 				WHERE `$uid`= :uid"
 			);
 			Database::pexecute($stmt, array("lastlogin_fail" => time(), "uid" => $userinfo[$uid]));
+
+			// Log failed login
+			$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => $_SERVER['REMOTE_ADDR']), $settings);
+			$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to login with wrong password.");
+
 			unset($userinfo);
 			redirectTo('index.php', Array('showmessage' => '2'), true);
 			exit;

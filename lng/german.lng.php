@@ -1505,3 +1505,11 @@ $lng['admin']['templates']['SERVER_IP'] = 'Wird mit der standard System IP-Adres
 $lng['admin']['templates']['SERVER_PORT'] = 'Wird mit dem standard Port ersetzt';
 $lng['admin']['templates']['DOMAINNAME'] = 'Wird mit der Standardsubdomain des Kunden ersetzt (kann leer sein, wenn keine erstellt werden soll)';
 $lng['admin']['show_news_feed'] = 'Zeige News-Feed im Admin-Dashboard';
+
+// Added in Froxlor 0.9.32
+$lng['logger']['reseller'] = "Reseller";
+$lng['logger']['admin'] = "Administrator";
+$lng['logger']['cron'] = "Cronjob";
+$lng['logger']['login'] = "Login";
+$lng['logger']['intern'] = "Intern";
+$lng['logger']['unknown'] = "Unbekannt";

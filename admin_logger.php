@@ -78,19 +78,22 @@ if ($page == 'log'
 								$_action = $lng['admin']['customer'];
 								break;
 							case RES_ACTION:
-								$_action = 'Reseller';
+								$_action = $lng['logger']['reseller'];
 								break;
 							case ADM_ACTION:
-								$_action = 'Administrator';
+								$_action = $lng['logger']['admin'];
 								break;
 							case CRON_ACTION:
-								$_action = 'Cronjob';
+								$_action = $lng['logger']['cron'];
+								break;
+							case LOGIN_ACTION:
+								$_action = $lng['logger']['login'];
 								break;
 							case LOG_ERROR:
-								$_action = 'Internal';
+								$_action = $lng['logger']['intern'];
 								break;
 							default:
-								$_action = 'Unknown';
+								$_action = $lng['logger']['unknown'];
 								break;
 						}
 
