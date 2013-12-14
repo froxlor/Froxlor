@@ -217,7 +217,7 @@ return array (
 					'required_resources' => 'change_serversettings',
 				),
 				array (
-					'url' => 'admin_settings.php?page=settings',
+					'url' => 'admin_settings.php?page=overview',
 					'label' => $lng['admin']['serversettings'],
 					'required_resources' => 'change_serversettings',
 				),
