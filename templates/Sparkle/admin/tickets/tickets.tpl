@@ -26,11 +26,11 @@ $header
 			<thead>
 				<tr>
 					<th>{$lng['ticket']['lastchange']}&nbsp;{$arrowcode['lastchange']}</th>
-					<th>{$lng['ticket']['ticket_answers']}&nbsp;{$arrowcode['ticket_answers']}</th>
+					<th>{$lng['ticket']['ticket_answers']}</th>
 					<th>{$lng['ticket']['subject']}&nbsp;{$arrowcode['subject']}</th>
 					<th>{$lng['ticket']['status']}&nbsp;{$arrowcode['status']}</th>
 					<th>{$lng['ticket']['lastreplier']}&nbsp;{$arrowcode['lastreplier']}</th>
-					<th>{$lng['ticket']['priority']}&nbsp;{$arrowcode['priority']}</th>
+					<th>{$lng['ticket']['priority']}</th>
 					<th>{$lng['panel']['options']}</th>
 				</tr>
 			</thead>

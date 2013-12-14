@@ -17,8 +17,8 @@
  *
  */
 
-function loadConfigArrayDir()
-{
+function loadConfigArrayDir() {
+
 	// Workaround until we use gettext
 	global $lng, $theme;
 
@@ -26,7 +26,9 @@ function loadConfigArrayDir()
 	// so we can read from more than one directory
 	// and still be valid for old calls
 	$numargs = func_num_args();
-	if($numargs <= 0) { return null; }
+	if($numargs <= 0) {
+		return null;
+	}
 
 	// variable that holds all dirs that will
 	// be parsed for inclusion
@@ -48,28 +50,25 @@ function loadConfigArrayDir()
 	$data_files = array();
 	$has_data = false;
 
-	foreach($configdirs as $data_dirname)
-	{
-		if(is_dir($data_dirname))
-		{
+	foreach ($configdirs as $data_dirname) {
+		if (is_dir($data_dirname)) {
 			$data_dirhandle = opendir($data_dirname);
-			while(false !== ($data_filename = readdir($data_dirhandle)))
-			{
-				if($data_filename != '.' && $data_filename != '..' && $data_filename != '' && substr($data_filename, -4 ) == '.php')
-				{
+			while (false !== ($data_filename = readdir($data_dirhandle))) {
+				if ($data_filename != '.'
+						&& $data_filename != '..'
+						&& $data_filename != ''
+						&& substr($data_filename, -4 ) == '.php'
+				) {
 					$data_files[] = $data_dirname . $data_filename;
 				}
 			}
 			$has_data = true;
 		}
 	}
-	
-	if($has_data)
-	{
-		sort($data_files);
 
-		foreach($data_files as $data_filename)
-		{
+	if ($has_data) {
+		sort($data_files);
+		foreach ($data_files as $data_filename) {
 			$data = array_merge_recursive($data, include($data_filename));
 		}
 	}
@@ -78,15 +77,14 @@ function loadConfigArrayDir()
 	// to select, we'll handle this here
 	// (this is for multiserver-client settings)
 	$_data = array();
-	if($selection != null
-		&& is_array($selection)
-		&& isset($selection[0])
+	if ($selection != null
+			&& is_array($selection)
+			&& isset($selection[0])
 	) {
 		$_data['groups'] = array();
-		foreach($data['groups'] as $group => $data)
-		{
-			if(in_array($group, $selection)) {
-				$_data['groups'][$group] = $data;  
+		foreach ($data['groups'] as $group => $data) {
+			if (in_array($group, $selection)) {
+				$_data['groups'][$group] = $data;
 			}
 		}
 		$data = $_data;
