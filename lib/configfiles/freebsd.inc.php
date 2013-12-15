@@ -16,8 +16,8 @@
  */
 
 // Try to guess user/group from settings' email UID/GID
-$vmail_user=posix_getpwuid($settings['system']['vmail_uid']);
-$vmail_group=posix_getgrgid($settings['system']['vmail_gid']);
+$vmail_user=posix_getpwuid(Settings::Get('system.vmail_uid'));
+$vmail_group=posix_getgrgid(Settings::Get('system.vmail_gid'));
 
 /* If one of them are not set, call it 'vmail' and suggest creating user/group
  * in scripts. */
@@ -32,18 +32,18 @@ if ($vmail_group === false) {
 	$vmail_groupname=$vmail_group['name'];
 }
 
-return Array(
-	'freebsd' => Array(
+return array(
+	'freebsd' => array(
 		'label' => 'FreeBSD',
-		'services' => Array(
-			'http' => Array(
+		'services' => array(
+			'http' => array(
 				'label' => $lng['admin']['configfiles']['http'],
-				'daemons' => Array(
+				'daemons' => array(
 
 					// Begin: Nginx Config
 					'nginx' => array(
-					'label' => 'Nginx Webserver',
-					'commands_1' => array(
+						'label' => 'Nginx Webserver',
+						'commands_1' => array(
 							'cd /usr/ports/www/nginx',
 							'make config',
 							'set [x] IPv6 protocol (default)',
@@ -58,10 +58,10 @@ return Array(
 						'commands_2' => array(
 							$configcommand['vhost'],
 							$configcommand['diroptions'],
-							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p '. $settings['system']['deactivateddocroot'] : null,
-							'mkdir -p '. $settings['system']['documentroot_prefix'],
-							'mkdir -p '. $settings['system']['mod_fcgid_tmpdir'],
-							'mkdir -p '. $settings['system']['logfiles_directory'],
+							(Settings::Get('system.deactivateddocroot') != '') ? 'mkdir -p '. Settings::Get('system.deactivateddocroot') : null,
+							'mkdir -p '. Settings::Get('system.documentroot_prefix'),
+							'mkdir -p '. Settings::Get('system.mod_fcgid_tmpdir'),
+							'mkdir -p '. Settings::Get('system.logfiles_directory'),
 							'echo "nginx_enable=\"YES\"" >> /etc/rc.conf'
 						),
 						'files' => array(
@@ -73,41 +73,41 @@ return Array(
 					),
 					// End: Nginx Config
 
-					'apache2' => Array(
+					'apache2' => array(
 						'label' => 'Apache2 Webserver',
-						'commands' => Array(
+						'commands' => array(
 							'cd /usr/ports/www/apache22',
 							'make config',
 							'make install',
 							$configcommand['vhost'],
-							'chown root:0 ' . $settings['system']['apacheconf_vhost'],
-							'chmod 0600 ' . $settings['system']['apacheconf_vhost'],
+							'chown root:0 ' . Settings::Get('system.apacheconf_vhost'),
+							'chmod 0600 ' . Settings::Get('system.apacheconf_vhost'),
 							$configcommand['diroptions'],
-							'chown root:0 ' . $settings['system']['apacheconf_diroptions'],
-							'chmod 0600 ' . $settings['system']['apacheconf_diroptions'],
-							'mkdir -p ' . $settings['system']['documentroot_prefix'],
-							'mkdir -p ' . $settings['system']['logfiles_directory'],
-							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p ' . $settings['system']['deactivateddocroot'] : '',
-							'mkdir -p ' . $settings['system']['mod_fcgid_tmpdir'],
-							'chmod 1777 ' . $settings['system']['mod_fcgid_tmpdir'],
+							'chown root:0 ' . Settings::Get('system.apacheconf_diroptions'),
+							'chmod 0600 ' . Settings::Get('system.apacheconf_diroptions'),
+							'mkdir -p ' . Settings::Get('system.documentroot_prefix'),
+							'mkdir -p ' . Settings::Get('system.logfiles_directory'),
+							(Settings::Get('system.deactivateddocroot') != '') ? 'mkdir -p ' . Settings::Get('system.deactivateddocroot') : '',
+							'mkdir -p ' . Settings::Get('system.mod_fcgid_tmpdir'),
+							'chmod 1777 ' . Settings::Get('system.mod_fcgid_tmpdir'),
 							'echo "accf_http_load=\"YES\"" >> /boot/loader.conf',
 							'echo "accf_data_load=\"YES\"" >> /boot/loader.conf',
 							'echo "apache22_enable=\"YES\"" >> /etc/rc.conf',
 						),
-						'restart' => Array(
+						'restart' => array(
 							'sh /usr/local/etc/rc.d/apache22 restart'
 						)
 					)
 				)
 			),
-			'dns' => Array(
+			'dns' => array(
 				'label' => $lng['admin']['configfiles']['dns'],
-				'daemons' => Array(
+				'daemons' => array(
 
 					// Begin: Bind 9.x Config
 					'bind9' => array(
-					'label' => 'Bind9 Nameserver',
-					'commands_1' => array(
+						'label' => 'Bind9 Nameserver',
+						'commands_1' => array(
 							'cd /usr/ports/dns/bind99',
 							'make config',
 							'set [x] International Domain Names',
@@ -124,14 +124,14 @@ return Array(
 						'commands_2' => array(
 							'echo "named_enable=\"YES\"" >> /etc/rc.conf',
 							PHP_EOL,
-							(strpos($settings['system']['bindconf_directory'], '/etc/namedb') === false) ? '(TIP: Be sure the path below is "/etc/namedb", if not you have configured the bind-directory in a false way in PANEL->SETTINGS->NAMESERVER SETTINGS!)' : null,
-							'echo "include \"'. $settings['system']['bindconf_directory'] .'froxlor_bind.conf\";" >> '. $settings['system']['bindconf_directory'] .'named.conf',
-							'echo "include \"'. $settings['system']['bindconf_directory'] .'default-zone\";" >> '. $settings['system']['bindconf_directory'] .'named.conf',
+							(strpos(Settings::Get('system.bindconf_directory'), '/etc/namedb') === false) ? '(TIP: Be sure the path below is "/etc/namedb", if not you have configured the bind-directory in a false way in PANEL->SETTINGS->NAMESERVER SETTINGS!)' : null,
+							'echo "include \"'. Settings::Get('system.bindconf_directory') .'froxlor_bind.conf\";" >> '. Settings::Get('system.bindconf_directory') .'named.conf',
+							'echo "include \"'. Settings::Get('system.bindconf_directory') .'default-zone\";" >> '. Settings::Get('system.bindconf_directory') .'named.conf',
 						),
 						'files' => array(
-							'etc_namedb_named.conf' => $settings['system']['bindconf_directory'] .'named.conf',
-							'etc_namedb_master_default.zone' => $settings['system']['bindconf_directory'] .'master/default.zone',
-							'etc_namedb_default-zone' => $settings['system']['bindconf_directory'] .'default-zone',
+							'etc_namedb_named.conf' => Settings::Get('system.bindconf_directory') .'named.conf',
+							'etc_namedb_master_default.zone' => Settings::Get('system.bindconf_directory') .'master/default.zone',
+							'etc_namedb_default-zone' => Settings::Get('system.bindconf_directory') .'default-zone',
 						),
 						'restart' => array(
 							'/etc/rc.d/named restart'
@@ -139,35 +139,35 @@ return Array(
 					),
 					// End: Bind 9.x Config
 
-					'powerdns' => Array(
+					'powerdns' => array(
 						'label' => 'PowerDNS',
-						'commands_1' => Array(
+						'commands_1' => array(
 							'cd /usr/ports/dns/powerdns',
 							'make config',
 							'set MySQL backend',
 							'make install',
 							'echo "pdns_enable=\"YES\"" >> /etc/rc.conf',
 						),
-						'files' => Array(
+						'files' => array(
 							'usr_local_etc_pdns_pdns.conf' => '/usr/local/etc/pdns/pdns.conf'
 						),
-						'commands' => Array(
-							'touch ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
-							'chown root:0 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
-							'chmod 0600 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf'
+						'commands' => array(
+							'touch ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf',
+							'chown root:0 ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf',
+							'chmod 0600 ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'sh /usr/local/etc/rc.d/pdns restart'
 						)
 					),
 				)
 			),
-			'smtp' => Array(
+			'smtp' => array(
 				'label' => $lng['admin']['configfiles']['smtp'],
-				'daemons' => Array(
-					'postfix' => Array(
+				'daemons' => array(
+					'postfix' => array(
 						'label' => 'Postfix',
-						'commands_1' => Array(
+						'commands_1' => array(
 							'cd /usr/ports/mail/postfix',
 							'make config',
 							'set Dovecot SASL authentication method',
@@ -175,21 +175,21 @@ return Array(
 							'set MySQL maps (choose version with WITH_MYSQL_VER)',
 							'make install'
 						),
-						'commands_2' => Array(
-							($vmail_group === false) ? 'pw groupadd ' . $vmail_groupname . ' -g '.$settings['system']['vmail_gid'] : '',
-							($vmail_user === false) ? 'pw useradd ' . $vmail_username . ' -u '.$settings['system']['vmail_uid'].' -g '.$settings['system']['vmail_gid'].' -s/sbin/nologin -d/dev/null' : '',
-							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . $settings['system']['vmail_homedir'],
-							'chmod 0750 ' . $settings['system']['vmail_homedir']
+						'commands_2' => array(
+							($vmail_group === false) ? 'pw groupadd ' . $vmail_groupname . ' -g '.Settings::Get('system.vmail_gid') : '',
+							($vmail_user === false) ? 'pw useradd ' . $vmail_username . ' -u '.Settings::Get('system.vmail_uid').' -g '.Settings::Get('system.vmail_gid').' -s/sbin/nologin -d/dev/null' : '',
+							'mkdir -p ' . Settings::Get('system.vmail_homedir'),
+							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . Settings::Get('system.vmail_homedir'),
+							'chmod 0750 ' . Settings::Get('system.vmail_homedir')
 						),
-						'commands_3' => Array(
+						'commands_3' => array(
 							'echo "sendmail_enable=\"NO\"" >> /etc/rc.conf',
 							'echo "sendmail_submit_enable=\"NO\"" >> /etc/rc.conf',
 							'echo "sendmail_outbound_enable=\"NO\"" >> /etc/rc.conf',
 							'echo "sendmail_msp_queue_enable=\"NO\"" >> /etc/rc.conf',
 							'echo "postfix_enable=\"YES\"" >> /etc/rc.conf'
 						),
-						'files' => Array(
+						'files' => array(
 							'etc_periodic.conf' => '/etc/periodic.conf',
 							'usr_local_etc_postfix_main.cf' => '/usr/local/etc/postfix/main.cf',
 							'usr_local_etc_postfix_mysql-virtual_alias_maps.cf' => '/usr/local/etc/postfix/mysql-virtual_alias_maps.cf',
@@ -197,64 +197,64 @@ return Array(
 							'usr_local_etc_postfix_mysql-virtual_mailbox_maps.cf' => '/usr/local/etc/postfix/mysql-virtual_mailbox_maps.cf',
 							'usr_local_etc_postfix_mysql-virtual_sender_permissions.cf' => '/usr/local/etc/postfix/mysql-virtual_sender_permissions.cf'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'newaliases',
 							'mkdir /var/spool/postfix/etc',
 							'cp /etc/resolv.conf /var/spool/postfix/etc',
 							'sh /usr/local/etc/rc.d/postfix restart'
 						)
 					),
-					'postgrey' => Array(
+					'postgrey' => array(
 						'label' => 'Postgrey',
-						'commands_1' => Array(
+						'commands_1' => array(
 							'cd /usr/ports/mail/postgrey',
 							'make install clean'
 						),
-						'commands_2' => Array(
+						'commands_2' => array(
 							'sed -i.bak \'s/# *check_policy_service  *inet:127\.0\.0\.1:10023/    check_policy_service inet:127\.0\.0\.1:10023/\' /usr/local/etc/postfix/main.cf',
 							'echo "postgrey_enable=\"YES\"" >> /etc/rc.conf'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'/usr/local/etc/rc.d/postgrey restart',
 							'/usr/local/etc/rc.d/postfix restart'
 						)
 					),
-					'postfix_mxaccess' => Array(
+					'postfix_mxaccess' => array(
 						'label' => 'Postfix MX-Access (anti spam)',
-						'files' => Array(
+						'files' => array(
 							'etc_postfix_mx_access' => '/usr/local/etc/postfix/mx_access',
 							'etc_postfix_main.cf' => '/usr/local/etc/postfix/main.cf'
 						),
-						'commands_1' => Array(
+						'commands_1' => array(
 							'postmap /usr/local/etc/postfix/mx_access'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'/usr/local/etc/rc.d/postfix restart'
 						)
 					),
-					'dkim' => Array(
+					'dkim' => array(
 						'label' => 'DomainKey filter',
-						'commands' => Array(
+						'commands' => array(
 							'cd /usr/ports/mail/dkim-milter/',
 							'make install clean',
 							'touch /usr/local/etc/mail/dkim-filter.conf'
 						),
-						'files' => Array(
+						'files' => array(
 							'dkim-filter.conf' => '/usr/local/etc/mail/dkim-filter.conf',
 							'postfix_dkim_addition.cf' => '/usr/local/etc/postfix/main.cf'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'/usr/local/etc/rc.d/milter-dkim restart '
 						)
 					)
 				)
 			),
-			'mail' => Array(
+			'mail' => array(
 				'label' => $lng['admin']['configfiles']['mail'],
-				'daemons' => Array(
-					'dovecot' => Array(
+				'daemons' => array(
+					'dovecot' => array(
 						'label' => 'Dovecot',
-						'commands_1' => Array(
+						'commands_1' => array(
 							'cd /usr/ports/mail/dovecot',
 							'make config',
 							'set kqueue(2) support ',
@@ -264,16 +264,16 @@ return Array(
 							'make install',
 							'echo "dovecot_enable=\"YES\"" >> /etc/rc.conf'
 						),
-						'files' => Array(
+						'files' => array(
 							'usr_local_etc_dovecot.conf' => '/usr/local/etc/dovecot.conf',
 							'usr_local_etc_dovecot-sql.conf' => '/usr/local/etc/dovecot-sql.conf'
 						),
-						'commands_2' => Array(
+						'commands_2' => array(
 							'echo "dovecot unix - n n - - pipe
     flags=DRhu user='.$vmail_username.':'.$vmail_groupname.' argv=/usr/local/libexec/dovecot/deliver -f ${sender} -d ${recipient}" >> /usr/local/etc/postfix/master.cf',
 							'chmod 0640 /usr/local/etc/dovecot-sql.conf'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'sh /usr/local/etc/rc.d/dovecot restart'
 						)
 					),
@@ -292,7 +292,7 @@ return Array(
 						'commands_2' => array(
 							'echo "dovecot_enable=\"YES\"" >> /etc/rc.conf',
 							PHP_EOL,
-							'pw adduser '. $vmail_username .' -g '. $vmail_groupname .' -u '. $settings['system']['vmail_gid'] .' -d /nonexistent -s /usr/sbin/nologin -c "User for virtual mailtransport used by Postfix and Dovecot"',
+							'pw adduser '. $vmail_username .' -g '. $vmail_groupname .' -u '. Settings::Get('system.vmail_gid') .' -d /nonexistent -s /usr/sbin/nologin -c "User for virtual mailtransport used by Postfix and Dovecot"',
 							PHP_EOL,
 							'chmod 0640 /usr/local/etc/dovecot-sql.conf'
 						),
@@ -311,77 +311,77 @@ return Array(
 
 				)
 			),
-			'ftp' => Array(
+			'ftp' => array(
 				'label' => $lng['admin']['configfiles']['ftp'],
-				'daemons' => Array(
-					'proftpd' => Array(
+				'daemons' => array(
+					'proftpd' => array(
 						'label' => 'ProFTPd',
-                                                'commands_1' => Array(
+						'commands_1' => array(
 							'cd /usr/ports/ftp/proftpd',
 							'make config',
 							'set MySQL auth',
 							'set Include mod_quota',
 							'make install clean'
-                                                ),
-						'commands_2' => Array(
-                                                        'touch /usr/local/etc/proftpd.conf',
-                                                        'chown root:0 /usr/local/etc/proftpd.conf',
-                                                        'chmod 0600 /usr/local/etc/proftpd.conf',
+						),
+						'commands_2' => array(
+							'touch /usr/local/etc/proftpd.conf',
+							'chown root:0 /usr/local/etc/proftpd.conf',
+							'chmod 0600 /usr/local/etc/proftpd.conf',
 							'echo "proftpd_enable=\"YES\"" >> /etc/rc.conf'
 						),
-						'files' => Array(
+						'files' => array(
 							'etc_proftpd_proftpd.conf' => '/usr/local/etc/proftpd.conf'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'/usr/local/etc/rc.d/proftpd restart'
 						)
 					)
 				)
 			),
-			'etc' => Array(
+			'etc' => array(
 				'label' => $lng['admin']['configfiles']['etc'],
-				'daemons' => Array(
-					'cron' => Array(
+				'daemons' => array(
+					'cron' => array(
 						'label' => 'Crond (cronscript)',
-						'commands' => Array(
+						'commands' => array(
 							'echo "*/5 * * * *     root     nice -n 5	/usr/local/bin/php -q '.makeCorrectDir(dirname(dirname(dirname(__FILE__)))).'scripts/froxlor_master_cronjob.php" >> /etc/crontab'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'/etc/rc.d/cron restart'
 						)
 					),
-					'awstats' => Array(
+					'awstats' => array(
 						'label' => 'Awstats',
-						'commands' => Array(
+						'commands' => array(
 							'cd /usr/ports/www/awstats/',
 							'make install clean',
-							'cp /usr/local/www/awstats/cgi-bin/awstats.model.conf '.makeCorrectDir($settings['system']['awstats_conf']),
-							'sed -i.bak \'s/^LogFile/# LogFile/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^LogType/# LogType/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^LogFormat/# LogFormat/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^LogSeparator/# LogSeparator/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^SiteDomain/# SiteDomain/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^DirIcons=\"\/awstatsicons\"/DirIcons=\"\/awstats-icon\"/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
+							'cp /usr/local/www/awstats/cgi-bin/awstats.model.conf '.makeCorrectDir(Settings::Get('system.awstats_conf')),
+							'sed -i.bak \'s/^LogFile/# LogFile/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s/^LogType/# LogType/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s/^LogFormat/# LogFormat/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s/^LogSeparator/# LogSeparator/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s/^SiteDomain/# SiteDomain/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s/^DirIcons=\"\/awstatsicons\"/DirIcons=\"\/awstats-icon\"/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'# Please make sure you deactivate awstats own cronjob as Froxlor handles that itself'
 						)
 					),
-					'libnss' => Array(
+					'libnss' => array(
 						'label' => 'libnss (system login with mysql)',
-						'commands_1' => Array(
+						'commands_1' => array(
 							'cd /usr/ports/net/libnss-mysql',
 							'make install clean',
 							'echo "nscd_enable=\"YES\"" >> /etc/rc.conf'
 						),
-						'files' => Array(
+						'files' => array(
 							'usr_local_etc_libnss-mysql.cfg' => '/usr/local/etc/libnss-mysql.cfg',
 							'usr_local_etc_libnss-mysql-root.cfg' => '/usr/local/etc/libnss-mysql-root.cfg',
 							'etc_nsswitch.conf' => '/etc/nsswitch.conf'
 						),
-						'commands_2' => Array(
+						'commands_2' => array(
 							'chmod 600 /usr/local/etc/libnss-mysql.cfg /usr/local/etc/libnss-mysql-root.cfg'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'sh /etc/rc.d/nscd restart'
 						)
 					),
