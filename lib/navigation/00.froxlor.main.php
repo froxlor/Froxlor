@@ -60,7 +60,7 @@ return array (
 					'required_resources' => 'emails'
 				),
 				array (
-					'url' => Setting::Get('panel.webmail_url'),
+					'url' => Settings::Get('panel.webmail_url'),
 					'new_window' => true,
 					'label' => $lng['menue']['email']['webmail'],
 					'required_resources' => 'emails_used',
@@ -156,7 +156,7 @@ return array (
 				array (
 					'url' => 'admin_index.php?page=change_theme',
 					'label' => $lng['menue']['main']['changetheme'],
-					'show_element' => (Setting::Get('panel.allow_theme_change_admin') == true)
+					'show_element' => (Settings::Get('panel.allow_theme_change_admin') == true)
 				),
 				array (
 					'url' => 'admin_index.php?action=logout',
