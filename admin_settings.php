@@ -26,9 +26,7 @@ Database::needSqlData();
 $sql_root = Database::getSqlData();
 Database::needRoot(false);
 
-if (($page == 'settings' || $page == 'overview')
-	&& $userinfo['change_serversettings'] == '1'
-) {
+if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	$settings_data = loadConfigArrayDir('./actions/admin/settings/');
 	$settings = loadSettings($settings_data);
 

@@ -488,6 +488,10 @@ a:hover {
 	text-decoration:underline;
 }
 
+a.active {
+	font-weight: bold;
+}
+
 .infotext {
 	font-size:11px;
 }
