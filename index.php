@@ -42,8 +42,8 @@ if ($action == 'login') {
 			$is_admin = false;
 		} else {
 			$is_admin = true;
-			if ((int)$settings['login']['domain_login'] == 1) {
-				$domainname = $idna_convert->encode(preg_replace(Array('/\:(\d)+$/', '/^https?\:\/\//'), '', $loginname));
+			if ((int)Settings::Get('login.domain_login') == 1) {
+				$domainname = $idna_convert->encode(preg_replace(array('/\:(\d)+$/', '/^https?\:\/\//'), '', $loginname));
 				$stmt = Database::prepare("SELECT `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `domain` = :domain"
 				);
@@ -101,10 +101,10 @@ if ($action == 'login') {
 				$adminsession = '1';
 			} else {
 				// Log failed login
-				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => $_SERVER['REMOTE_ADDR']), $settings);
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => $_SERVER['REMOTE_ADDR']));
 				$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "Unknown user '" . $loginname . "' tried to login.");
 
-				redirectTo('index.php', Array('showmessage' => '2'), true);
+				redirectTo('index.php', array('showmessage' => '2'), true);
 				exit;
 			}
 		}
@@ -115,10 +115,10 @@ if ($action == 'login') {
 		Database::pexecute($userinfo_stmt, array("loginname" => $loginname));
 		$userinfo = $userinfo_stmt->fetch(PDO::FETCH_ASSOC);
 
-		if ($userinfo['loginfail_count'] >= $settings['login']['maxloginattempts'] && $userinfo['lastlogin_fail'] > (time() - $settings['login']['deactivatetime'])) {
-			redirectTo('index.php', Array('showmessage' => '3'), true);
+		if ($userinfo['loginfail_count'] >= Settings::Get('login.maxloginattempts') && $userinfo['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))) {
+			redirectTo('index.php', array('showmessage' => '3'), true);
 			exit;
-		} elseif($userinfo['password'] == md5($password)) {
+		} elseif ($userinfo['password'] == md5($password)) {
 			// login correct
 			// reset loginfail_counter, set lastlogin_succ
 			$stmt = Database::prepare("UPDATE $table
@@ -137,11 +137,11 @@ if ($action == 'login') {
 			Database::pexecute($stmt, array("lastlogin_fail" => time(), "uid" => $userinfo[$uid]));
 
 			// Log failed login
-			$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => $_SERVER['REMOTE_ADDR']), $settings);
+			$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => $_SERVER['REMOTE_ADDR']));
 			$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to login with wrong password.");
 
 			unset($userinfo);
-			redirectTo('index.php', Array('showmessage' => '2'), true);
+			redirectTo('index.php', array('showmessage' => '2'), true);
 			exit;
 		}
 
@@ -152,20 +152,20 @@ if ($action == 'login') {
 				$language = validate($_POST['language'], 'language');
 				if ($language == 'profile') {
 					$language = $userinfo['def_language'];
-				} elseif(!isset($languages[$language])) {
-					$language = $settings['panel']['standardlanguage'];
+				} elseif (!isset($languages[$language])) {
+					$language = Settings::Get('panel.standardlanguage');
 				}
 			} else {
-				$language = $settings['panel']['standardlanguage'];
+				$language = Settings::Get('panel.standardlanguage');
 			}
 
 			if (isset($userinfo['theme']) && $userinfo['theme'] != '') {
 				$theme = $userinfo['theme'];
 			} else {
-				$theme = $settings['panel']['default_theme'];
+				$theme = Settings::Get('panel.default_theme');
 			}
 
-			if ($settings['session']['allow_multiple_login'] != '1') {
+			if (Settings::Get('session.allow_multiple_login') != '1') {
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
 					WHERE `userid` = :uid
 					AND `adminsession` = :adminsession"
@@ -199,25 +199,25 @@ if ($action == 'login') {
 					(`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`, `theme`)
 					VALUES (:hash, :userid, :ipaddress, :useragent, :lastactivity, :language, :adminsession, :theme)"
 				);
-    		} else {
-    			$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_SESSIONS . "`
+			} else {
+				$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_SESSIONS . "`
 					(`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`)
 					VALUES (:hash, :userid, :ipaddress, :useragent, :lastactivity, :language, :adminsession)"
 				);
-    		}
-    		Database::pexecute($stmt, $params);
+			}
+			Database::pexecute($stmt, $params);
 
 			if ($userinfo['adminsession'] == '1') {
 				if (hasUpdates($version)) {
-					redirectTo('admin_updates.php', Array('s' => $s), true);
+					redirectTo('admin_updates.php', array('s' => $s), true);
 				} else {
-					redirectTo('admin_index.php', Array('s' => $s), true);
+					redirectTo('admin_index.php', array('s' => $s), true);
 				}
 			} else {
-				redirectTo('customer_index.php', Array('s' => $s), true);
+				redirectTo('customer_index.php', array('s' => $s), true);
 			}
 		} else {
-			redirectTo('index.php', Array('showmessage' => '2'), true);
+			redirectTo('index.php', array('showmessage' => '2'), true);
 		}
 		exit;
 	} else {
@@ -233,28 +233,28 @@ if ($action == 'login') {
 		$successmessage = '';
 
 		switch ($smessage) {
-			case 1:
-				$successmessage = $lng['pwdreminder']['success'];
-				break;
-			case 2:
-				$message = $lng['error']['login'];
-				break;
-			case 3:
-				$message = sprintf($lng['error']['login_blocked'],$settings['login']['deactivatetime']);
-				break;
-			case 4:
-				$cmail = isset($_GET['customermail']) ? $_GET['customermail'] : 'unknown';
-				$message = str_replace('%s', $cmail, $lng['error']['errorsendingmail']);
-				break;
-			case 5:
-				$message = $lng['error']['user_banned'];
-				break;
-			case 6:
-				$successmessage = $lng['pwdreminder']['changed'];
-				break;
-			case 7:
-				$message = $lng['pwdreminder']['wrongcode'];
-				break;
+		case 1:
+			$successmessage = $lng['pwdreminder']['success'];
+			break;
+		case 2:
+			$message = $lng['error']['login'];
+			break;
+		case 3:
+			$message = sprintf($lng['error']['login_blocked'], Settings::Get('login.deactivatetime'));
+			break;
+		case 4:
+			$cmail = isset($_GET['customermail']) ? $_GET['customermail'] : 'unknown';
+			$message = str_replace('%s', $cmail, $lng['error']['errorsendingmail']);
+			break;
+		case 5:
+			$message = $lng['error']['user_banned'];
+			break;
+		case 6:
+			$successmessage = $lng['pwdreminder']['changed'];
+			break;
+		case 7:
+			$message = $lng['pwdreminder']['wrongcode'];
+			break;
 		}
 
 		$update_in_progress = '';
@@ -299,17 +299,17 @@ if ($action == 'forgotpwd') {
 			/* Check whether user is banned */
 			if ($user['deactivated']) {
 				$message = $lng['pwdreminder']['notallowed'];
-				redirectTo('index.php', Array('showmessage' => '5'), true);
+				redirectTo('index.php', array('showmessage' => '5'), true);
 			}
 
-			if (($adminchecked && $settings['panel']['allow_preset_admin'] == '1') || $adminchecked == false) {
+			if (($adminchecked && Settings::Get('panel.allow_preset_admin') == '1') || $adminchecked == false) {
 				if ($user !== false) {
 					// build a activation code
 					$timestamp = time();
 					$first = substr(md5($user['loginname'] . $timestamp . rand(0, $timestamp)), 0, 15);
 					$third = substr(md5($user['email'] . $timestamp . rand(0, $timestamp)), -15);
 					$activationcode = $first . $timestamp . $third . substr(md5($third . $timestamp), 0, 10);
-					
+
 					// Drop all existing activation codes for this user
 					$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_ACTIVATION . "`
 						WHERE `userid` = :userid
@@ -320,7 +320,7 @@ if ($action == 'forgotpwd') {
 						"admin" => $adminchecked ? 1 : 0
 					);
 					Database::pexecute($stmt, $params);
-					
+
 					// Add new activation code to database
 					$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_ACTIVATION . "`
 						(userid, admin, creation, activationcode)
@@ -334,16 +334,16 @@ if ($action == 'forgotpwd') {
 					);
 					Database::pexecute($stmt, $params);
 
-					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
+					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'));
 					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $user['loginname'] . "' requested a link for setting a new password.");
-					
+
 					// Set together our activation link
 					$protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http' : 'https';
 					$host = $_SERVER['HTTP_HOST'];
 					$port = $_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '';
 					$script = $_SERVER['SCRIPT_NAME'];
 					$activationlink = $protocol . '://' . $host . $port . $script . '?action=resetpwd&resetcode=' . $activationcode;
-					
+
 					$replace_arr = array(
 						'SALUTATION' => getCorrectUserSalutation($user),
 						'USERNAME' => $user['loginname'],
@@ -352,7 +352,7 @@ if ($action == 'forgotpwd') {
 
 					$body = strtr($lng['pwdreminder']['body'], array('%s' => $user['firstname'] . ' ' . $user['name'], '%a' => $activationlink));
 
-					$def_language = ($user['def_language'] != '') ? $user['def_language'] : $settings['panel']['standardlanguage'];
+					$def_language = ($user['def_language'] != '') ? $user['def_language'] : Settings::Get('panel.standardlanguage');
 					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
 						WHERE `adminid`= :adminid
 						AND `language`= :lang
@@ -389,7 +389,7 @@ if ($action == 'forgotpwd') {
 					}
 
 					if ($_mailerror) {
-						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
+						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'));
 						$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 						redirectTo('index.php', array('showmessage' => '4', 'customermail' => $user['email']), true);
 						exit;
@@ -399,7 +399,7 @@ if ($action == 'forgotpwd') {
 					redirectTo('index.php', array('showmessage' => '1'), true);
 					exit;
 				} else {
-					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
+					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'));
 					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $loginname . "' requested to set a new password, but was not found in database!");
 					$message = $lng['login']['combination_not_found'];
 				}
@@ -412,12 +412,12 @@ if ($action == 'forgotpwd') {
 	}
 
 	if ($adminchecked) {
-		if ($settings['panel']['allow_preset_admin'] != '1') {
+		if (Settings::Get('panel.allow_preset_admin') != '1') {
 			$message = $lng['pwdreminder']['notallowed'];
 			unset ($adminchecked);
 		}
 	} else {
-		if ($settings['panel']['allow_preset'] != '1') {
+		if (Settings::Get('panel.allow_preset') != '1') {
 			$message = $lng['pwdreminder']['notallowed'];
 		}
 	}
@@ -427,27 +427,27 @@ if ($action == 'forgotpwd') {
 
 if ($action == 'resetpwd') {
 	$message = '';
-	
+
 	// Remove old activation codes
 	$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_ACTIVATION . "`
 		WHERE creation < :oldest"
 	);
 	Database::pexecute($stmt, array("oldest" => time() - 86400));
-	
+
 	if (isset($_GET['resetcode']) && strlen($_GET['resetcode']) == 50) {
 		// Check if activation code is valid
 		$activationcode = $_GET['resetcode'];
 		$timestamp = substr($activationcode, 15, 10);
 		$third = substr($activationcode, 25, 15);
 		$check = substr($activationcode, 40, 10);
-		
+
 		if (substr(md5($third . $timestamp), 0, 10) == $check && $timestamp >= time() - 86400) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$stmt = Database::prepare("SELECT `userid`, `admin` FROM `" . TABLE_PANEL_ACTIVATION . "`
 					WHERE `activationcode` = :activationcode"
 				);
 				$result = Database::pexecute_first($stmt, array("activationcode" => $activationcode));
-				
+
 				if ($result !== false) {
 					if ($result['admin'] == 1) {
 						$new_password = validate($_POST['new_password'], 'new password');
@@ -456,12 +456,12 @@ if ($action == 'resetpwd') {
 						$new_password = validatePassword($_POST['new_password'], 'new password');
 						$new_password_confirm = validatePassword($_POST['new_password_confirm'], 'new password confirm');
 					}
-					
+
 					if ($new_password == '') {
 						$message = $new_password;
-					} elseif($new_password_confirm == '') {
+					} elseif ($new_password_confirm == '') {
 						$message = $new_password_confirm;
-					} elseif($new_password != $new_password_confirm) {
+					} elseif ($new_password != $new_password_confirm) {
 						$message = $new_password . " != " . $new_password_confirm;
 					} else {
 						// Update user password
@@ -477,10 +477,10 @@ if ($action == 'resetpwd') {
 							);
 						}
 						Database::pexecute($stmt, array("newpassword" => md5($new_password), "userid" => $result['userid']));
-						
-						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'), $settings);
+
+						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'));
 						$rstlog->logAction(USR_ACTION, LOG_NOTICE, "changed password using password reset.");
-						
+
 						// Remove activation code from DB
 						$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_ACTIVATION . "`
 							WHERE `activationcode` = :activationcode
@@ -493,13 +493,13 @@ if ($action == 'resetpwd') {
 					redirectTo('index.php', array("showmessage" => '7'), true);
 				}
 			}
-			
+
 			eval("echo \"" . getTemplate('rpwd') . "\";");
-			
+
 		} else {
 			redirectTo('index.php', array("showmessage" => '7'), true);
 		}
-		
+
 	} else {
 		redirectTo('index.php');
 	}

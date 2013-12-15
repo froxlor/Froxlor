@@ -79,30 +79,30 @@ if (!is_null($month) && !is_null($year)) {
 		$traf['day'] = $row['day'] . '.';
 
 		if (extension_loaded('bcmath')) {
-			$traf['ftptext'] = bcdiv($row['ftp_up'], 1024, $settings['panel']['decimal_places']) . " MiB up/ " . bcdiv($row['ftp_down'], 1024, $settings['panel']['decimal_places']) . " MiB down (FTP)";
-			$traf['httptext'] = bcdiv($http, 1024, $settings['panel']['decimal_places']) . " MiB (HTTP)";
-			$traf['mailtext'] = bcdiv($mail, 1024, $settings['panel']['decimal_places']) . " MiB (Mail)";
-			$traf['ftp'] = bcdiv($ftp, 1024, $settings['panel']['decimal_places']);
-			$traf['http'] = bcdiv($http, 1024, $settings['panel']['decimal_places']);
-			$traf['mail'] = bcdiv($mail, 1024, $settings['panel']['decimal_places']);
-			$traf['byte'] = bcdiv($traf['byte'], 1024, $settings['panel']['decimal_places']);
+			$traf['ftptext'] = bcdiv($row['ftp_up'], 1024, Settings::Get('panel.decimal_places')) . " MiB up/ " . bcdiv($row['ftp_down'], 1024, Settings::Get('panel.decimal_places')) . " MiB down (FTP)";
+			$traf['httptext'] = bcdiv($http, 1024, Settings::Get('panel.decimal_places')) . " MiB (HTTP)";
+			$traf['mailtext'] = bcdiv($mail, 1024, Settings::Get('panel.decimal_places')) . " MiB (Mail)";
+			$traf['ftp'] = bcdiv($ftp, 1024, Settings::Get('panel.decimal_places'));
+			$traf['http'] = bcdiv($http, 1024, Settings::Get('panel.decimal_places'));
+			$traf['mail'] = bcdiv($mail, 1024, Settings::Get('panel.decimal_places'));
+			$traf['byte'] = bcdiv($traf['byte'], 1024, Settings::Get('panel.decimal_places'));
 		} else {
-			$traf['ftptext'] = round($row['ftp_up'] / 1024, $settings['panel']['decimal_places']) . " MiB up/ " . round($row['ftp_down'] / 1024, $settings['panel']['decimal_places']) . " MiB down (FTP)";
-			$traf['httptext'] = round($http / 1024, $settings['panel']['decimal_places']) . " MiB (HTTP)";
-			$traf['mailtext'] = round($mail / 1024, $settings['panel']['decimal_places']) . " MiB (Mail)";
-			$traf['http'] = round($http, $settings['panel']['decimal_places']);
-			$traf['ftp'] = round($ftp, $settings['panel']['decimal_places']);
-			$traf['mail'] = round($mail, $settings['panel']['decimal_places']);
-			$traf['byte'] = round($traf['byte'] / 1024, $settings['panel']['decimal_places']);
+			$traf['ftptext'] = round($row['ftp_up'] / 1024, Settings::Get('panel.decimal_places')) . " MiB up/ " . round($row['ftp_down'] / 1024, Settings::Get('panel.decimal_places')) . " MiB down (FTP)";
+			$traf['httptext'] = round($http / 1024, Settings::Get('panel.decimal_places')) . " MiB (HTTP)";
+			$traf['mailtext'] = round($mail / 1024, Settings::Get('panel.decimal_places')) . " MiB (Mail)";
+			$traf['http'] = round($http, Settings::Get('panel.decimal_places'));
+			$traf['ftp'] = round($ftp, Settings::Get('panel.decimal_places'));
+			$traf['mail'] = round($mail, Settings::Get('panel.decimal_places'));
+			$traf['byte'] = round($traf['byte'] / 1024, Settings::Get('panel.decimal_places'));
 		}
 
 		eval("\$traffic.=\"" . getTemplate('traffic/traffic_month') . "\";");
 		$show = $lng['traffic']['months'][intval($row['month'])] . ' ' . $row['year'];
 	}
-	
-	$traffic_complete['http'] = size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
-	$traffic_complete['ftp'] = size_readable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
-	$traffic_complete['mail'] = size_readable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
+
+	$traffic_complete['http'] = size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['ftp'] = size_readable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['mail'] = size_readable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
 
 	eval("echo \"" . getTemplate('traffic/traffic_details') . "\";");
 } else {
@@ -132,29 +132,29 @@ if (!is_null($month) && !is_null($year)) {
 		$traf['byte'] = $http + $ftp_up + $ftp_down + $mail;
 
 		if (extension_loaded('bcmath')) {
-			$traf['ftptext'] = bcdiv($ftp_up, 1024, $settings['panel']['decimal_places']) . " MiB up/ " . bcdiv($ftp_down, 1024, $settings['panel']['decimal_places']) . " MiB down (FTP)";
-			$traf['httptext'] = bcdiv($http, 1024, $settings['panel']['decimal_places']) . " MiB (HTTP)";
-			$traf['mailtext'] = bcdiv($mail, 1024, $settings['panel']['decimal_places']) . " MiB (Mail)";
-			$traf['ftp'] = bcdiv(($ftp_up + $ftp_down), 1024, $settings['panel']['decimal_places']);
-			$traf['http'] = bcdiv($http, 1024, $settings['panel']['decimal_places']);
-			$traf['mail'] = bcdiv($mail, 1024, $settings['panel']['decimal_places']);
-			$traf['byte'] = bcdiv($traf['byte'], 1024 * 1024, $settings['panel']['decimal_places']);
+			$traf['ftptext'] = bcdiv($ftp_up, 1024, Settings::Get('panel.decimal_places')) . " MiB up/ " . bcdiv($ftp_down, 1024, Settings::Get('panel.decimal_places')) . " MiB down (FTP)";
+			$traf['httptext'] = bcdiv($http, 1024, Settings::Get('panel.decimal_places')) . " MiB (HTTP)";
+			$traf['mailtext'] = bcdiv($mail, 1024, Settings::Get('panel.decimal_places')) . " MiB (Mail)";
+			$traf['ftp'] = bcdiv(($ftp_up + $ftp_down), 1024, Settings::Get('panel.decimal_places'));
+			$traf['http'] = bcdiv($http, 1024, Settings::Get('panel.decimal_places'));
+			$traf['mail'] = bcdiv($mail, 1024, Settings::Get('panel.decimal_places'));
+			$traf['byte'] = bcdiv($traf['byte'], 1024 * 1024, Settings::Get('panel.decimal_places'));
 		} else {
-			$traf['ftptext'] = round($ftp_up / 1024, $settings['panel']['decimal_places']) . " MiB up/ " . round($ftp_down / 1024, $settings['panel']['decimal_places']) . " MiB down (FTP)";
-			$traf['httptext'] = round($http / 1024, $settings['panel']['decimal_places']) . " MiB (HTTP)";
-			$traf['mailtext'] = round($mail / 1024, $settings['panel']['decimal_places']) . " MiB (Mail)";
-			$traf['ftp'] = round(($ftp_up + $ftp_down) / 1024, $settings['panel']['decimal_places']);
-			$traf['http'] = round($http / 1024, $settings['panel']['decimal_places']);
-			$traf['mail'] = round($mail / 1024, $settings['panel']['decimal_places']);
-			$traf['byte'] = round($traf['byte'] / (1024 * 1024), $settings['panel']['decimal_places']);
+			$traf['ftptext'] = round($ftp_up / 1024, Settings::Get('panel.decimal_places')) . " MiB up/ " . round($ftp_down / 1024, Settings::Get('panel.decimal_places')) . " MiB down (FTP)";
+			$traf['httptext'] = round($http / 1024, Settings::Get('panel.decimal_places')) . " MiB (HTTP)";
+			$traf['mailtext'] = round($mail / 1024, Settings::Get('panel.decimal_places')) . " MiB (Mail)";
+			$traf['ftp'] = round(($ftp_up + $ftp_down) / 1024, Settings::Get('panel.decimal_places'));
+			$traf['http'] = round($http / 1024, Settings::Get('panel.decimal_places'));
+			$traf['mail'] = round($mail / 1024, Settings::Get('panel.decimal_places'));
+			$traf['byte'] = round($traf['byte'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 		}
 
 		eval("\$traffic.=\"" . getTemplate('traffic/traffic_traffic') . "\";");
 	}
 
-	$traffic_complete['http'] = size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
-	$traffic_complete['ftp'] = size_readable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
-	$traffic_complete['mail'] = size_readable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
+	$traffic_complete['http'] = size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['ftp'] = size_readable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['mail'] = size_readable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
 
 	eval("echo \"" . getTemplate('traffic/traffic') . "\";");
 }

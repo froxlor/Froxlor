@@ -37,7 +37,7 @@ if ($page == 'overview') {
 			'm.email_full' => $lng['emails']['emailaddress'],
 			'm.destination' => $lng['emails']['forwarders']
 		);
-		$paging = new paging($userinfo, TABLE_MAIL_VIRTUAL, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_MAIL_VIRTUAL, $fields);
 		$result_stmt = Database::prepare('SELECT `m`.`id`, `m`.`domainid`, `m`.`email`, `m`.`email_full`, `m`.`iscatchall`, `u`.`quota`, `m`.`destination`, `m`.`popaccountid`, `d`.`domain`, `u`.`mboxsize` FROM `' . TABLE_MAIL_VIRTUAL . '` `m`
 			LEFT JOIN `' . TABLE_PANEL_DOMAINS . '` `d` ON (`m`.`domainid` = `d`.`id`)
 			LEFT JOIN `' . TABLE_MAIL_USERS . '` `u` ON (`m`.`popaccountid` = `u`.`id`)
@@ -56,7 +56,7 @@ if ($page == 'overview') {
 			if (!isset($emails[$row['domain']]) || !is_array($emails[$row['domain']])) {
 				$emails[$row['domain']] = array();
 			}
-			
+
 			$emails[$row['domain']][$row['email_full']] = $row;
 		}
 
@@ -105,8 +105,8 @@ if ($page == 'overview') {
 					if (strlen($row['destination']) > 35) {
 						$row['destination'] = substr($row['destination'], 0, 32) . '... (' . $destinations_count . ')';
 					}
-					
-					$row['mboxsize'] = size_readable($row['mboxsize'], 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
+
+					$row['mboxsize'] = size_readable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s');
 
 					$row = htmlentities_array($row);
 					eval("\$accounts.=\"" . getTemplate("email/emails_email") . "\";");
@@ -132,7 +132,7 @@ if ($page == 'overview') {
 			AND `id`= :id"
 		);
 		$result = Database::pexecute_first($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-		
+
 		if (isset($result['email']) && $result['email'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$update_users_query_addon = '';
@@ -143,7 +143,7 @@ if ($page == 'overview') {
 
 					if ($result['popaccountid'] != 0) {
 						// Free the Quota used by the email account
-						if ($settings['system']['mail_quota_enabled'] == 1) {
+						if (Settings::Get('system.mail_quota_enabled') == 1) {
 							$stmt = Database::prepare("SELECT `quota` FROM `" . TABLE_MAIL_USERS . "`
 								WHERE `customerid`= :customerid
 								AND `id`= :id"
@@ -176,7 +176,7 @@ if ($page == 'overview') {
 					AND `id`= :id"
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-				
+
 				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
 					SET `emails_used`=`emails_used` - 1 ,
 					`email_forwarders_used` = `email_forwarders_used` - :nforwarders
@@ -184,7 +184,7 @@ if ($page == 'overview') {
 					WHERE `customerid`= :customerid"
 				);
 				Database::pexecute($stmt, array("nforwarders" => $number_forwarders, "customerid" => $userinfo['customerid']));
-				
+
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted email address '" . $result['email'] . "'");
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
@@ -207,7 +207,7 @@ if ($page == 'overview') {
 					AND `isemaildomain`='1' "
 				);
 				$domain_check = Database::pexecute_first($stmt, array("domain" => $domain, "customerid" => $userinfo['customerid']));
-				
+
 				if (isset($_POST['iscatchall']) && $_POST['iscatchall'] == '1') {
 					$iscatchall = '1';
 					$email = '@' . $domain;
@@ -233,7 +233,7 @@ if ($page == 'overview') {
 					"cid" => $userinfo['customerid']
 				);
 				$email_check = Database::pexecute_first($stmt, $params);
-				
+
 				if ($email == '' || $email_full == '' || $email_part == '') {
 					standard_error(array('stringisempty', 'emailadd'));
 				} elseif ($domain == '') {
@@ -258,14 +258,14 @@ if ($page == 'overview') {
 						"domainid" => $domain_check['id']
 					);
 					Database::pexecute($stmt, $params);
-					
+
 					$address_id = Database::lastInsertId();
 					$stmt = Database::prepare("UPDATE " . TABLE_PANEL_CUSTOMERS . "
 						SET `emails_used` = `emails_used` + 1
 						WHERE `customerid`= :cid"
 					);
 					Database::pexecute($stmt, array("cid" => $userinfo['customerid']));
-					
+
 					$log->logAction(USR_ACTION, LOG_INFO, "added email address '" . $email_full . "'");
 					redirectTo($filename, array('page' => $page, 'action' => 'edit', 'id' => $address_id, 's' => $s));
 				}
@@ -286,7 +286,7 @@ if ($page == 'overview') {
 
 				$email_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_add.php';
 
-				if ($settings['catchall']['catchall_enabled'] != '1') {
+				if (Settings::Get('catchall.catchall_enabled') != '1') {
 					unset($email_add_data['emails_add']['sections']['section_a']['fields']['iscatchall']);
 				}
 
@@ -302,14 +302,14 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		$stmt = Database::prepare("SELECT `v`.`id`, `v`.`email`, `v`.`email_full`, `v`.`iscatchall`, `v`.`destination`, `v`.`customerid`, `v`.`popaccountid`, `u`.`quota`
-			FROM `" . TABLE_MAIL_VIRTUAL . "` `v` 
+			FROM `" . TABLE_MAIL_VIRTUAL . "` `v`
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` `u`
 			ON(`v`.`popaccountid` = `u`.`id`)
 			WHERE `v`.`customerid`= :cid
 			AND `v`.`id`= :id"
 		);
 		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
-		
+
 		if (isset($result['email']) && $result['email'] != '') {
 			$result['email'] = $idna_convert->decode($result['email']);
 			$result['email_full'] = $idna_convert->decode($result['email_full']);
@@ -334,7 +334,7 @@ if ($page == 'overview') {
 
 			$email_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_edit.php';
 
-			if ( $settings['catchall']['catchall_enabled'] != '1' ) {
+			if (Settings::Get('catchall.catchall_enabled') != '1') {
 				unset($email_edit_data['emails_edit']['sections']['section_a']['fields']['mail_catchall']);
 			}
 
@@ -346,13 +346,13 @@ if ($page == 'overview') {
 			eval("echo \"" . getTemplate("email/emails_edit") . "\";");
 		}
 	} elseif ($action == 'togglecatchall' && $id != 0) {
-		if ( $settings['catchall']['catchall_enabled'] == '1' ) {
+		if (Settings::Get('catchall.catchall_enabled') == '1') {
 			$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid` FROM `" . TABLE_MAIL_VIRTUAL . "`
 				WHERE `customerid`= :cid
 				AND `id`= :id"
 			);
 			$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
-			
+
 			if (isset($result['email']) && $result['email'] != '') {
 				if ($result['iscatchall'] == '1') {
 					$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_VIRTUAL . "`
@@ -374,7 +374,7 @@ if ($page == 'overview') {
 						AND `customerid`= :cid"
 					);
 					$email_check = Database::pexecute_first($stmt, array("email" => $email, "cid" => $userinfo['customerid']));
-					
+
 					if ($email_check['email'] == $email) {
 						standard_error('youhavealreadyacatchallforthisdomain');
 						exit;
@@ -419,7 +419,7 @@ if ($page == 'overview') {
 				AND `id`= :id"
 			);
 			$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
-			
+
 			if (isset($result['email']) && $result['email'] != '' && $result['popaccountid'] == '0') {
 				if (isset($_POST['send']) && $_POST['send'] == 'send') {
 					$email_full = $result['email_full'];
@@ -427,13 +427,13 @@ if ($page == 'overview') {
 					$password = validate($_POST['email_password'], 'password');
 					$password = validatePassword($password);
 
-					if ($settings['panel']['sendalternativemail'] == 1) {
+					if (Settings::Get('panel.sendalternativemail') == 1) {
 						$alternative_email = $idna_convert->encode(validate($_POST['alternative_email'], 'alternative_email'));
 					} else {
 						$alternative_email = '';
 					}
 
-					if ($settings['system']['mail_quota_enabled'] == 1) {
+					if (Settings::Get('system.mail_quota_enabled') == 1) {
 						if ($userinfo['email_quota'] != '-1' && ($quota == 0 || ($quota + $userinfo['email_quota_used']) > $userinfo['email_quota'])) {
 							standard_error('allocatetoomuchquota', $quota);
 						}
@@ -444,7 +444,7 @@ if ($page == 'overview') {
 					if ($email_full == '') {
 						standard_error(array('stringisempty', 'emailadd'));
 					}
-					elseif ($password == '' && !($settings['panel']['sendalternativemail'] == 1 && validateEmail($alternative_email))) {
+					elseif ($password == '' && !(Settings::Get('panel.sendalternativemail') == 1 && validateEmail($alternative_email))) {
 						standard_error(array('stringisempty', 'mypassword'));
 					} else {
 						if ($password == '') {
@@ -455,30 +455,30 @@ if ($page == 'overview') {
 
 						$email_user=substr($email_full,0,strrpos($email_full,"@"));
 						$email_domain=substr($email_full,strrpos($email_full,"@")+1);
-						$maildirname=trim($settings['system']['vmail_maildirname']);
+						$maildirname=trim(Settings::Get('system.vmail_maildirname'));
 						// Add trailing slash to Maildir if needed
 						$maildirpath=$maildirname;
 						if (!empty($maildirname) and substr($maildirname,-1) != "/") $maildirpath.="/";
 
 						$stmt = Database::prepare("INSERT INTO `" . TABLE_MAIL_USERS . "`
-							(`customerid`, `email`, `username`, " . ($settings['system']['mailpwcleartext'] == '1' ? '`password`, ' : '') . " `password_enc`, `homedir`, `maildir`, `uid`, `gid`, `domainid`, `postfix`, `quota`, `imap`, `pop3`) ".
-							"VALUES (:cid, :email, :username, " . ($settings['system']['mailpwcleartext'] == '1' ? ":password, " : '') . ":password_enc, :homedir, :maildir, :uid, :gid, :domainid, 'y', :quota, :imap, :pop3)"
+							(`customerid`, `email`, `username`, " . (Settings::Get('system.mailpwcleartext') == '1' ? '`password`, ' : '') . " `password_enc`, `homedir`, `maildir`, `uid`, `gid`, `domainid`, `postfix`, `quota`, `imap`, `pop3`) ".
+							"VALUES (:cid, :email, :username, " . (Settings::Get('system.mailpwcleartext') == '1' ? ":password, " : '') . ":password_enc, :homedir, :maildir, :uid, :gid, :domainid, 'y', :quota, :imap, :pop3)"
 						);
 						$params = array(
 							"cid" => $userinfo['customerid'],
 							"email" => $email_full,
 							"username" => $username,
 							"password_enc" => $cryptPassword,
-							"homedir" => $settings['system']['vmail_homedir'],
+							"homedir" => Settings::Get('system.vmail_homedir'),
 							"maildir" => $userinfo['loginname'] . '/' . $email_domain . "/" . $email_user . "/" . $maildirpath,
-							"uid" => $settings['system']['vmail_uid'],
-							"gid" => $settings['system']['vmail_gid'],
+							"uid" => Settings::Get('system.vmail_uid'),
+							"gid" => Settings::Get('system.vmail_gid'),
 							"domainid" => $result['domainid'],
 							"quota" => $quota,
 							"imap" => $userinfo['imap'],
 							"pop3" => $userinfo['pop3']
 						);
-						if ($settings['system']['mailpwcleartext'] == '1') { $params["password"] = $password; }
+						if (Settings::Get('system.mailpwcleartext') == '1') { $params["password"] = $password; }
 						Database::pexecute($stmt, $params);
 
 						$popaccountid = Database::lastInsertId();
@@ -496,24 +496,24 @@ if ($page == 'overview') {
 							"id" => $id
 						);
 						Database::pexecute($stmt, $params);
-						
+
 						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
 							SET `email_accounts_used`=`email_accounts_used`+1,
 								`email_quota_used`=`email_quota_used`+ :quota
 							WHERE `customerid`= :cid"
 						);
 						Database::pexecute($stmt, array("quota" => $quota, "cid" => $userinfo['customerid']));
-						
+
 						$log->logAction(USR_ACTION, LOG_INFO, "added email account for '" . $email_full . "'");
 						$replace_arr = array(
 							'EMAIL' => $email_full,
 							'USERNAME' => $username,
 							'PASSWORD' => $password
 						);
-						
+
 						$stmt = Database::prepare("SELECT `name`, `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`= :adminid");
 						$admin = Database::pexecute_first($stmt, array("adminid" => $userinfo['adminid']));
-						
+
 						$stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 							WHERE `adminid`= :adminid
 							AND `language`= :lang
@@ -522,7 +522,7 @@ if ($page == 'overview') {
 						);
 						$result = Database::pexecute_first($stmt, array("adminid" => $userinfo['adminid'], "lang" => $userinfo['def_language']));
 						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['pop_success']['subject']), $replace_arr));
-						
+
 						$stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 							WHERE `adminid`= :adminid
 							AND `language`= :lang
@@ -555,7 +555,7 @@ if ($page == 'overview') {
 
 						$mail->ClearAddresses();
 
-						if (validateEmail($alternative_email) && $settings['panel']['sendalternativemail'] == 1) {
+						if (validateEmail($alternative_email) && Settings::Get('panel.sendalternativemail') == 1) {
 							$stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 								WHERE `adminid`= :adminid
 								AND `language`= :lang
@@ -564,7 +564,7 @@ if ($page == 'overview') {
 							);
 							$result = Database::pexecute_first($stmt, array("adminid" => $userinfo['adminid'], "lang" => $userinfo['def_language']));
 							$mail_subject = replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['pop_success_alternative']['subject']), $replace_arr);
-							
+
 							$stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 								WHERE `adminid`= :adminid
 								AND `language`= :lang
@@ -603,9 +603,9 @@ if ($page == 'overview') {
 				} else {
 					$result['email_full'] = $idna_convert->decode($result['email_full']);
 					$result = htmlentities_array($result);
-					$quota = $settings['system']['mail_quota'];
+					$quota = Settings::Get('system.mail_quota');
 
-					$account_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_addaccount.php';
+					$account_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addaccount.php';
 					$account_add_form = htmlform::genHTMLForm($account_add_data);
 
 					$title = $account_add_data['emails_addaccount']['title'];
@@ -623,7 +623,7 @@ if ($page == 'overview') {
 			AND `id`= :id"
 		);
 		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
-		
+
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$password = validate($_POST['email_password'], 'password');
@@ -638,7 +638,7 @@ if ($page == 'overview') {
 				$log->logAction(USR_ACTION, LOG_NOTICE, "changed email password for '" . $result['email_full'] . "'");
 				$cryptPassword = makeCryptPassword($password);
 				$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "`
-					SET " . ($settings['system']['mailpwcleartext'] == '1' ? "`password` = :password, " : '') . "
+					SET " . (Settings::Get('system.mailpwcleartext') == '1' ? "`password` = :password, " : '') . "
 						`password_enc`= :password_enc
 					WHERE `customerid`= :cid
 					AND `id`= :id"
@@ -648,9 +648,9 @@ if ($page == 'overview') {
 					"cid" => $userinfo['customerid'],
 					"id" => $result['popaccountid']
 				);
-				if ($settings['system']['mailpwcleartext'] == '1') { $params["password"] = $password; }
+				if (Settings::Get('system.mailpwcleartext') == '1') { $params["password"] = $password; }
 				Database::pexecute($stmt, $params);
-				
+
 				redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
@@ -665,7 +665,7 @@ if ($page == 'overview') {
 				eval("echo \"" . getTemplate("email/account_changepw") . "\";");
 			}
 		}
-	} elseif ($action == 'changequota' && $settings['system']['mail_quota_enabled'] == '1' && $id != 0) {
+	} elseif ($action == 'changequota' && Settings::Get('system.mail_quota_enabled') == '1' && $id != 0) {
 		$stmt = Database::prepare("SELECT `v`.`id`, `v`.`email`, `v`.`email_full`, `v`.`iscatchall`, `v`.`destination`, `v`.`customerid`, `v`.`popaccountid`, `u`.`quota`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` `v`
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` `u`
@@ -674,7 +674,7 @@ if ($page == 'overview') {
 			AND `v`.`id`= :id"
 		);
 		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
-		
+
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$quota = (int)validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong');
@@ -728,7 +728,7 @@ if ($page == 'overview') {
 			AND `v`.`id`='" . (int)$id . "'"
 		);
 		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
-		
+
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_USERS . "`
@@ -737,7 +737,7 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($stmt, array("cid" => $userinfo['customerid'], "id" => $result['popaccountid']));
 				$result['destination'] = str_replace($result['email_full'], '', $result['destination']);
-				
+
 				$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_VIRTUAL . "`
 					SET `destination` = :dest,
 						`popaccountid` = '0'
@@ -751,7 +751,7 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($stmt, $params);
 
-				if ($settings['system']['mail_quota_enabled'] == '1' && $userinfo['email_quota'] != '-1') {
+				if (Settings::Get('system.mail_quota_enabled') == '1' && $userinfo['email_quota'] != '-1') {
 					$quota = (int)$result['quota'];
 				} else {
 					$quota = 0;
@@ -767,7 +767,7 @@ if ($page == 'overview') {
 					WHERE `customerid`= :cid"
 				);
 				Database::pexecute($stmt, array("quota" => $quota, "cid" => $userinfo['customerid']));
-				
+
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted email account for '" . $result['email_full'] . "'");
 				redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 			} else {
@@ -783,7 +783,7 @@ if ($page == 'overview') {
 				AND `id`= :id"
 			);
 			$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
-			
+
 			if (isset($result['email']) && $result['email'] != '') {
 				if (isset($_POST['send']) && $_POST['send'] == 'send') {
 					$destination = $idna_convert->encode($_POST['destination']);
@@ -810,13 +810,13 @@ if ($page == 'overview') {
 							"id" => $id
 						);
 						Database::pexecute($stmt, $params);
-						
+
 						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
 							SET `email_forwarders_used` = `email_forwarders_used` + 1
 							WHERE `customerid`= :cid"
 						);
 						Database::pexecute($stmt, array("cid" => $userinfo['customerid']));
-						
+
 						$log->logAction(USR_ACTION, LOG_NOTICE, "added email forwarder for '" . $result['email_full'] . "'");
 						redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 					}
@@ -842,7 +842,7 @@ if ($page == 'overview') {
 			AND `id`='" . (int)$id . "'"
 		);
 		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid']));
-		
+
 		if (isset($result['destination']) && $result['destination'] != '') {
 			if (isset($_POST['forwarderid'])) {
 				$forwarderid = intval($_POST['forwarderid']);
@@ -871,13 +871,13 @@ if ($page == 'overview') {
 						"id" => $id
 					);
 					Database::pexecute($stmt, $params);
-					
+
 					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
 						SET `email_forwarders_used` = `email_forwarders_used` - 1
 						WHERE `customerid`= :cid"
 					);
 					Database::pexecute($stmt, array("cid" => $userinfo['customerid']));
-					
+
 					$log->logAction(USR_ACTION, LOG_NOTICE, "deleted email forwarder for '" . $result['email_full'] . "'");
 					redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 				} else {

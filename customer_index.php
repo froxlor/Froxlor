@@ -23,8 +23,8 @@ require './lib/init.php';
 if ($action == 'logout') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, 'logged out');
 
-    $params = array("customerid" => $userinfo['customerid']);
-	if ($settings['session']['allow_multiple_login'] == '1') {
+	$params = array("customerid" => $userinfo['customerid']);
+	if (Settings::Get('session.allow_multiple_login') == '1') {
 		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
 			WHERE `userid` = :customerid
 			AND `adminsession` = '0'
@@ -79,10 +79,10 @@ if ($page == 'overview') {
 	$yesterday = time() - (60 * 60 * 24);
 	$month = date('M Y', $yesterday);
 
-	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, $settings['panel']['decimal_places']);
-	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
-	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
-	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
+	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, Settings::Get('panel.decimal_places'));
+	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, Settings::Get('panel.decimal_places'));
+	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
+	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains');
 
 	$services_enabled = "";
@@ -107,11 +107,11 @@ if ($page == 'overview') {
 
 		if ($old_password == '') {
 			standard_error(array('stringisempty', 'oldpassword'));
-		} elseif($new_password == '') {
+		} elseif ($new_password == '') {
 			standard_error(array('stringisempty', 'newpassword'));
-		} elseif($new_password_confirm == '') {
+		} elseif ($new_password_confirm == '') {
 			standard_error(array('stringisempty', 'newpasswordconfirm'));
-		} elseif($new_password != $new_password_confirm) {
+		} elseif ($new_password != $new_password_confirm) {
 			standard_error('newpasswordconfirmerror');
 		} else {
 			// Update user password
@@ -167,7 +167,7 @@ if ($page == 'overview') {
 				Database::pexecute($stmt, $params);
 			}
 
-			redirectTo($filename, Array('s' => $s));
+			redirectTo($filename, array('s' => $s));
 		}
 	} else {
 		eval("echo \"" . getTemplate('index/change_password') . "\";");
@@ -191,9 +191,9 @@ if ($page == 'overview') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
 		}
 
-		redirectTo($filename, Array('s' => $s));
+		redirectTo($filename, array('s' => $s));
 	} else {
-		$default_lang = $settings['panel']['standardlanguage'];
+		$default_lang = Settings::Get('panel.standardlanguage');
 		if ($userinfo['def_language'] != '') {
 			$default_lang = $userinfo['def_language'];
 		}
@@ -222,9 +222,9 @@ if ($page == 'overview') {
 		Database::pexecute($stmt, array("theme" => $theme, "hash" => $s));
 
 		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
-		redirectTo($filename, Array('s' => $s));
+		redirectTo($filename, array('s' => $s));
 	} else {
-		$default_theme = $settings['panel']['default_theme'];
+		$default_theme = Settings::Get('panel.default_theme');
 		if ($userinfo['theme'] != '') {
 			$default_theme = $userinfo['theme'];
 		}
@@ -238,14 +238,10 @@ if ($page == 'overview') {
 		eval("echo \"" . getTemplate('index/change_theme') . "\";");
 	}
 
-} elseif ($page == 'send_error_report'
-	&& $settings['system']['allow_error_report_customer'] == '1'
-) {
+} elseif ($page == 'send_error_report' && Settings::Get('system.allow_error_report_customer') == '1') {
 
 	// only show this if we really have an exception to report
-	if (isset($_GET['errorid'])
-			&& $_GET['errorid'] != ''
-	) {
+	if (isset($_GET['errorid']) && $_GET['errorid'] != '') {
 
 		$errid = $_GET['errorid'];
 		// read error file
@@ -279,7 +275,7 @@ if ($page == 'overview') {
 
 			// send actual report to dev-team
 			if (isset($_POST['send'])
-					&& $_POST['send'] == 'send'
+				&& $_POST['send'] == 'send'
 			) {
 				// send mail and say thanks
 				$_mailerror = false;

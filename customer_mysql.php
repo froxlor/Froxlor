@@ -28,7 +28,7 @@ Database::needRoot(false);
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
-} elseif(isset($_GET['id'])) {
+} elseif (isset($_GET['id'])) {
 	$id = intval($_GET['id']);
 }
 
@@ -38,14 +38,14 @@ if ($page == 'overview') {
 	$sql = Database::getSqlData();
 	$lng['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], $lng['mysql']['description']);
 	eval("echo \"" . getTemplate('mysql/mysql') . "\";");
-} elseif($page == 'mysqls') {
+} elseif ($page == 'mysqls') {
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_mysql::mysqls");
 		$fields = array(
 			'databasename' => $lng['mysql']['databasename'],
 			'description' => $lng['mysql']['databasedescription']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_DATABASES, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_DATABASES, $fields);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
@@ -76,7 +76,7 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($mbdata_stmt, array("table_schema" => $row['databasename']));
 				$mbdata = $mbdata_stmt->fetch(PDO::FETCH_ASSOC);
-				$row['size'] = size_readable($mbdata['MB'], 'GiB', 'bi', '%01.'.(int)$settings['panel']['decimal_places'].'f %s');
+				$row['size'] = size_readable($mbdata['MB'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s');
 				eval("\$mysqls.=\"" . getTemplate('mysql/mysqls_database') . "\";");
 				$count++;
 			}
@@ -87,7 +87,7 @@ if ($page == 'overview') {
 
 		eval("echo \"" . getTemplate('mysql/mysqls') . "\";");
 
-	} elseif($action == 'delete' && $id != 0) {
+	} elseif ($action == 'delete' && $id != 0) {
 		$result_stmt = Database::prepare('SELECT `id`, `databasename`, `description`, `dbserver` FROM `' . TABLE_PANEL_DATABASES . '`
 			WHERE `customerid`="' . (int)$userinfo['customerid'] . '"
 			AND `id`="' . (int)$id . '"'
@@ -109,7 +109,7 @@ if ($page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				// Begin root-session
 				Database::needRoot(true, $result['dbserver']);
-				$dbm = new DbManager($settings, $log);
+				$dbm = new DbManager($log);
 				$dbm->getManager()->deleteDatabase($result['databasename']);
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted database '" . $result['databasename'] . "'");
 				Database::needRoot(false);
@@ -171,7 +171,7 @@ if ($page == 'overview') {
 					$databasedescription = validate(trim($_POST['description']), 'description');
 
 					// create database, user, set permissions, etc.pp.
-					$dbm = new DbManager($settings, $log);
+					$dbm = new DbManager($log);
 					$username = $dbm->createDatabase(
 						$userinfo['loginname'],
 						$password,
@@ -199,8 +199,8 @@ if ($page == 'overview') {
 
 					if ($sendinfomail == 1) {
 						$pma = $lng['admin']['notgiven'];
-						if ($settings['panel']['phpmyadmin_url'] != '') {
-							$pma = $settings['panel']['phpmyadmin_url'];
+						if (Settings::Get('panel.phpmyadmin_url') != '') {
+							$pma = Settings::Get('panel.phpmyadmin_url');
 						}
 
 						Database::needRoot(true, $dbserver);
@@ -262,7 +262,7 @@ if ($page == 'overview') {
 						$mail->ClearAddresses();
 					}
 
-					redirectTo($filename, Array('page' => $page, 's' => $s));
+					redirectTo($filename, array('page' => $page, 's' => $s));
 				}
 			} else {
 
@@ -309,7 +309,7 @@ if ($page == 'overview') {
 
 					// Begin root-session
 					Database::needRoot(true);
-					foreach (array_map('trim', explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host) {
+					foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 						$stmt = Database::prepare("SET PASSWORD FOR :dbname@:host = PASSWORD(:password)");
 						$params = array(
 							"dbname" => $result['databasename'],
@@ -334,7 +334,7 @@ if ($page == 'overview') {
 					AND `id` = :id"
 				);
 				Database::pexecute($stmt, array("desc" => $databasedescription, "customerid" => $userinfo['customerid'], "id" => $id));
-				redirectTo($filename, Array('page' => $page, 's' => $s));
+				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 
 				$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `".TABLE_PANEL_DATABASES."`");
