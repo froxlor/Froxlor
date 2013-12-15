@@ -27,10 +27,8 @@
  */
 function storeDefaultIndex($loginname = null, $destination = null, $logger = null, $force = false) {
 
-	global $settings;
-
 	if ($force
-		|| (int)$settings['system']['store_index_file_subs'] == 1
+		|| (int)Settings::Get('system.store_index_file_subs') == 1
 	) {
 		$result_stmt = Database::prepare("
 			SELECT `t`.`value`, `c`.`email` AS `customer_email`, `a`.`email` AS `admin_email`, `c`.`loginname` AS `customer_login`, `a`.`loginname` AS `admin_login`
@@ -46,7 +44,7 @@ function storeDefaultIndex($loginname = null, $destination = null, $logger = nul
 			$template = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 			$replace_arr = array(
-				'SERVERNAME' => $settings['system']['hostname'],
+				'SERVERNAME' => Settings::Get('system.hostname'),
 				'CUSTOMER' => $template['customer_login'],
 				'ADMIN' => $template['admin_login'],
 				'CUSTOMER_EMAIL' => $template['customer_email'],
@@ -54,12 +52,12 @@ function storeDefaultIndex($loginname = null, $destination = null, $logger = nul
 			);
 
 			$htmlcontent = replace_variables($template['value'], $replace_arr);
-			$indexhtmlpath = makeCorrectFile($destination . '/index.' . $settings['system']['index_file_extension']);
+			$indexhtmlpath = makeCorrectFile($destination . '/index.' . Settings::Get('system.index_file_extension'));
 			$index_html_handler = fopen($indexhtmlpath, 'w');
 			fwrite($index_html_handler, $htmlcontent);
 			fclose($index_html_handler);
 			if ($logger !== null) {
-				$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Creating \'index.' . $settings['system']['index_file_extension'] . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath));
+				$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Creating \'index.' . Settings::Get('system.index_file_extension') . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath));
 			}
 
 		} else {

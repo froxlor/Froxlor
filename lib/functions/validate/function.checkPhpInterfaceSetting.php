@@ -18,11 +18,9 @@
 
 function checkPhpInterfaceSetting($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
 
-	global $settings;
-
 	$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 
-	if ((int)$settings['system']['mod_fcgid'] == 1) {
+	if ((int)Settings::Get('system.mod_fcgid') == 1) {
 		// now check if we enable a webserver != apache
 		if (strtolower($newfieldvalue) != 'apache2') {
 			$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'fcgidstillenableddeadlock');

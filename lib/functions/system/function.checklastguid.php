@@ -28,8 +28,8 @@
  */
 function checkLastGuid() {
 
-	global $log, $cronlog, $settings;
-	
+	global $log, $cronlog;
+
 	$mylog = null;
 	if (isset($cronlog) && $cronlog instanceof FroxlorLogger) {
 		$mylog = $cronlog;
@@ -86,10 +86,9 @@ function checkLastGuid() {
 				}
 
 				// now check if it differs from our settings
-				if ($update_to_guid != $settings['system']['lastguid']) {
+				if ($update_to_guid != Settings::Get('system.lastguid')) {
 					$mylog->logAction(CRON_ACTION, LOG_NOTICE, 'Updating froxlor last guid to '.$update_to_guid);
-					saveSetting('system', 'lastguid', $update_to_guid);
-					$settings['system']['lastguid'] = $update_to_guid;
+					Settings::Set('system.lastguid', $update_to_guid);
 				}
 			} else {
 				$mylog->logAction(CRON_ACTION, LOG_NOTICE, 'File /etc/group not readable; cannot check for latest guid');

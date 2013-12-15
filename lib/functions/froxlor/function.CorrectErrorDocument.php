@@ -26,7 +26,7 @@
  */
 function correctErrorDocument($errdoc = null) {
 
-	global $settings, $idna_convert;
+	global $idna_convert;
 
 	if ($errdoc !== null && $errdoc != '') {
 		// not a URL
@@ -45,15 +45,14 @@ function correctErrorDocument($errdoc = null) {
 			// a string (check for ending ")
 			else {
 				// string won't work for lighty
-				if ($settings['system']['webserver'] == 'lighttpd') {
+				if (Settings::Get('system.webserver') == 'lighttpd') {
 					standard_error('stringerrordocumentnotvalidforlighty');
-
 				} elseif(substr($errdoc, -1) != '"') {
 					$errdoc .= '"';
 				}
 			}
 		} else {
-			if ($settings['system']['webserver'] == 'lighttpd') {
+			if (Settings::Get('system.webserver') == 'lighttpd') {
 				standard_error('urlerrordocumentnotvalidforlighty');
 			}
 		}

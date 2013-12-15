@@ -17,20 +17,20 @@
  *
  */
 
-function checkUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
-{
-	global $settings, $theme;
-	if(!isset($allnewfieldvalues['customer_mysqlprefix']))
-	{
-		$allnewfieldvalues['customer_mysqlprefix'] = $settings['customer']['mysqlprefix'];
+function checkUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
+
+	if (!isset($allnewfieldvalues['customer_mysqlprefix'])) {
+		$allnewfieldvalues['customer_mysqlprefix'] = Settings::Get('customer.mysqlprefix');
 	}
+
 	$returnvalue = array();
-	if(validateUsername($newfieldvalue, $settings['panel']['unix_names'], 14 - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true)
-	{
+	if (validateUsername(
+		$newfieldvalue,
+		Settings::Get('panel.unix_names'),
+		14 - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true
+	) {
 		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
-	}
-	else
-	{
+	} else {
 		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'accountprefixiswrong');
 	}
 	return $returnvalue;
