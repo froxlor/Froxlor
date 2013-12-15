@@ -69,6 +69,7 @@ class FileLogger extends AbstractLogger {
 	 * @param string $text
 	 */
 	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
+		global $lng;
 
 		if (parent::isEnabled()) {
 

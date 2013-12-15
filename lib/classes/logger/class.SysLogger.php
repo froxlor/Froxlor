@@ -63,6 +63,7 @@ class SysLogger extends AbstractLogger {
 	 */
 	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
 
+		global $lng;
 		if (parent::isEnabled()) {
 
 			if (parent::getSeverity() <= 1
