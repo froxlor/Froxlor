@@ -26,7 +26,7 @@ if ($action == 'logout')  {
 
 	$params = array('adminid' => (int)$userinfo['adminid']);
 
-	if ($settings['session']['allow_multiple_login'] == '1') {
+	if (Settings::Get('session.allow_multiple_login') == '1') {
 		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
 			WHERE `userid` = :adminid
 			AND `adminsession` = '1'
@@ -67,8 +67,9 @@ if ($page == 'overview') {
 				FROM `" . TABLE_PANEL_CUSTOMERS . "`" . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid "));
 	$overview = Database::pexecute_first($overview_stmt, array('adminid' => $userinfo['adminid']));
 
-	$overview['traffic_used'] = round($overview['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
-	$overview['diskspace_used'] = round($overview['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
+	$dec_places = Settings::Get('panel.decimal_places');
+	$overview['traffic_used'] = round($overview['traffic_used'] / (1024 * 1024), $dec_places);
+	$overview['diskspace_used'] = round($overview['diskspace_used'] / 1024, $dec_places);
 
 	$number_domains_stmt = Database::prepare("
 		SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "`
@@ -132,10 +133,11 @@ if ($page == 'overview') {
 		$isnewerversion = 0;
 	}
 
-	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, $settings['panel']['decimal_places']);
-	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
-	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
-	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
+	$dec_places = Settings::Get('panel.decimal_places');
+	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, $dec_places);
+	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $dec_places);
+	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), $dec_places);
+	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $dec_places);
 	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains');
 
 	$cron_last_runs = getCronjobsLastRun();
@@ -266,7 +268,7 @@ if ($page == 'overview') {
 
 		$language_options = '';
 
-		$default_lang = $settings['panel']['standardlanguage'];
+		$default_lang = Settings::Get('panel.standardlanguage');
 		if ($userinfo['def_language'] != '') {
 			$default_lang = $userinfo['def_language'];
 		}
@@ -312,7 +314,7 @@ if ($page == 'overview') {
 
 		$theme_options = '';
 
-		$default_theme = $settings['panel']['default_theme'];
+		$default_theme = Settings::Get('panel.default_theme');
 		if ($userinfo['theme'] != '') {
 			$default_theme = $userinfo['theme'];
 		}
@@ -326,7 +328,7 @@ if ($page == 'overview') {
 	}
 
 } elseif ($page == 'send_error_report'
-	&& $settings['system']['allow_error_report_admin'] == '1'
+	&& Settings::Get('system.allow_error_report_admin') == '1'
 ) {
 
 	// only show this if we really have an exception to report

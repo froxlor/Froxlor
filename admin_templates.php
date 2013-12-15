@@ -45,14 +45,14 @@ $available_templates = array(
 );
 
 // only show templates of features that are enabled #1191
-if ((int)$settings['system']['report_enable'] == 1) {
+if ((int)Settings::Get('system.report_enable') == 1) {
 	array_push($available_templates,
 		'trafficmaxpercent',
 		'diskmaxpercent'
 	);
 }
 
-if ((int)$settings['ticket']['enabled'] == 1) {
+if ((int)Settings::Get('ticket.enabled') == 1) {
 	array_push($available_templates,
 		'new_ticket_by_customer',
 		'new_ticket_for_customer',
@@ -70,7 +70,7 @@ if ($action == '') {
 	//email templates
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_templates");
 
-	if ($settings['panel']['sendalternativemail'] == 1) {
+	if (Settings::Get('panel.sendalternativemail') == 1) {
 		$available_templates[] = 'pop_success_alternative';
 	}
 
@@ -206,7 +206,7 @@ if ($action == '') {
 
 } elseif($action == 'add') {
 
-	if ($settings['panel']['sendalternativemail'] == 1) {
+	if (Settings::Get('panel.sendalternativemail') == 1) {
 		$available_templates[] = 'pop_success_alternative';
 	}
 

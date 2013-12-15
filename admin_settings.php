@@ -245,7 +245,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			");
 
 			while ($array = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$difference = $settings['system']['mail_quota'] - $array['quota'];
+				$difference = Settings::Get('system.mail_quota') - $array['quota'];
 				Database::pexecute($upd_stmt, array('diff' => $difference, 'customerid' => $customerid));
 			}
 		}
@@ -254,11 +254,11 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_MAIL_USERS . "` SET `quota` = :quota
 		");
-		Database::pexecute($upd_stmt, array('quota' => $settings['system']['mail_quota']));
+		Database::pexecute($upd_stmt, array('quota' => Settings::Get('system.mail_quota')));
 
 		// Update the Customer, if the used quota is bigger than the allowed quota
 		Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_quota` = `email_quota_used` WHERE `email_quota` < `email_quota_used`");
-		$log->logAction(ADM_ACTION, LOG_WARNING, 'enforcing mailquota to all customers: ' . $settings['system']['mail_quota'] . ' MB');
+		$log->logAction(ADM_ACTION, LOG_WARNING, 'enforcing mailquota to all customers: ' . Settings::Get('system.mail_quota') . ' MB');
 		redirectTo('admin_settings.php', array('s' => $s));
 
 	} else {

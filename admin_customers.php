@@ -47,7 +47,7 @@ if ($page == 'customers'
 			'c.traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')'
 		);
 
-		$paging = new paging($userinfo, TABLE_PANEL_CUSTOMERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_CUSTOMERS, $fields);
 		$customers = '';
 		$result_stmt = Database::prepare("
 			SELECT `c`.*, `a`.`loginname` AS `adminname`
@@ -56,7 +56,7 @@ if ($page == 'customers'
 			($userinfo['customers_see_all'] ? '' : " `c`.`adminid` = :adminid AND ") . "
 			`c`.`adminid` = `a`.`adminid` " .
 			$paging->getSqlWhere(true) . " " .
-			$paging->getSqlOrderBy($settings['panel']['natsorting']) . " " .
+			$paging->getSqlOrderBy() . " " .
 			$paging->getSqlLimit()
 		);
 		Database::pexecute($result_stmt, array('adminid' => $userinfo['adminid']));
@@ -83,10 +83,11 @@ if ($page == 'customers'
 				Database::pexecute($domains_stmt, array('cid' => $row['customerid'], 'stdd' => $row['standardsubdomain']));
 				$domains = $domains_stmt->fetch(PDO::FETCH_ASSOC);
 				$row['domains'] = intval($domains['domains']);
-				$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
-				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
-				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
-				$row['diskspace'] = round($row['diskspace'] / 1024, $settings['panel']['decimal_places']);
+				$dec_places = Settings::Get('panel.decimal_places');
+				$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $dec_places);
+				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $dec_places);
+				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $dec_places);
+				$row['diskspace'] = round($row['diskspace'] / 1024, $dec_places);
 				$last_login = ((int)$row['lastlogin_succ'] == 0) ? $lng['panel']['neverloggedin'] : date('d.m.Y', $row['lastlogin_succ']);
 
 				/**
@@ -110,8 +111,8 @@ if ($page == 'customers'
 				}
 
 				$islocked = 0;
-				if ($row['loginfail_count'] >= $settings['login']['maxloginattempts']
-					&& $row['lastlogin_fail'] > (time() - $settings['login']['deactivatetime'])
+				if ($row['loginfail_count'] >= Settings::Get('login.maxloginattempts')
+					&& $row['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))
 				) {
 					$islocked = 1;
 				}
@@ -243,7 +244,7 @@ if ($page == 'customers'
 				Database::needRoot(true);
 				$last_dbserver = 0;
 
-				$dbm = new DbManager($settings, $log);
+				$dbm = new DbManager($log);
 
 				while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -359,6 +360,7 @@ if ($page == 'customers'
 				if ($tickets !== false && isset($tickets[0])) {
 					foreach ($tickets as $ticket) {
 						$now = time();
+						// FIXME ticket -> settings
 						$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$ticket);
 						$mainticket->Set('lastchange', $now, true, true);
 						$mainticket->Set('lastreplier', '1', true, true);
@@ -426,7 +428,7 @@ if ($page == 'customers'
 					$email_forwarders = - 1;
 				}
 
-				if ($settings['system']['mail_quota_enabled'] == '1') {
+				if (Settings::Get('system.mail_quota_enabled') == '1') {
 					$email_quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array('0', ''));
 					if (isset($_POST['email_quota_ul'])) {
 						$email_quota = - 1;
@@ -453,9 +455,9 @@ if ($page == 'customers'
 					$ftps = - 1;
 				}
 
-				$tickets = ($settings['ticket']['enabled'] == 1 ? intval_ressource($_POST['tickets']) : 0);
+				$tickets = (Settings::Get('ticket.enabled') == 1 ? intval_ressource($_POST['tickets']) : 0);
 				if (isset($_POST['tickets_ul'])
-					&& $settings['ticket']['enabled'] == '1'
+					&& Settings::Get('ticket.enabled') == '1'
 				) {
 					$tickets = - 1;
 				}
@@ -510,7 +512,7 @@ if ($page == 'customers'
 				   || ((($userinfo['emails_used'] + $emails) > $userinfo['emails']) && $userinfo['emails'] != '-1')
 				   || ((($userinfo['email_accounts_used'] + $email_accounts) > $userinfo['email_accounts']) && $userinfo['email_accounts'] != '-1')
 				   || ((($userinfo['email_forwarders_used'] + $email_forwarders) > $userinfo['email_forwarders']) && $userinfo['email_forwarders'] != '-1')
-				   || ((($userinfo['email_quota_used'] + $email_quota) > $userinfo['email_quota']) && $userinfo['email_quota'] != '-1' && $settings['system']['mail_quota_enabled'] == '1')
+				   || ((($userinfo['email_quota_used'] + $email_quota) > $userinfo['email_quota']) && $userinfo['email_quota'] != '-1' && Settings::Get('system.mail_quota_enabled') == '1')
 				   || ((($userinfo['ftps_used'] + $ftps) > $userinfo['ftps']) && $userinfo['ftps'] != '-1')
 				   || ((($userinfo['tickets_used'] + $tickets) > $userinfo['tickets']) && $userinfo['tickets'] != '-1')
 				   || ((($userinfo['subdomains_used'] + $subdomains) > $userinfo['subdomains']) && $userinfo['subdomains'] != '-1')
@@ -519,7 +521,7 @@ if ($page == 'customers'
 				   || ($emails == '-1' && $userinfo['emails'] != '-1')
 				   || ($email_accounts == '-1' && $userinfo['email_accounts'] != '-1')
 				   || ($email_forwarders == '-1' && $userinfo['email_forwarders'] != '-1')
-				   || ($email_quota == '-1' && $userinfo['email_quota'] != '-1' && $settings['system']['mail_quota_enabled'] == '1')
+				   || ($email_quota == '-1' && $userinfo['email_quota'] != '-1' && Settings::Get('system.mail_quota_enabled') == '1')
 				   || ($ftps == '-1' && $userinfo['ftps'] != '-1')
 				   || ($tickets == '-1' && $userinfo['tickets'] != '-1')
 				   || ($subdomains == '-1' && $userinfo['subdomains'] != '-1')
@@ -546,12 +548,12 @@ if ($page == 'customers'
 					if (isset($_POST['new_loginname'])
 						&& $_POST['new_loginname'] != ''
 					) {
-						$accountnumber = intval($settings['system']['lastaccountnumber']);
+						$accountnumber = intval(Settings::Get('system.lastaccountnumber'));
 						$loginname = validate($_POST['new_loginname'], 'loginname', '/^[a-z][a-z0-9\-_]+$/i');
 
 						// Accounts which match systemaccounts are not allowed, filtering them
-						if (preg_match('/^' . preg_quote($settings['customer']['accountprefix'], '/') . '([0-9]+)/', $loginname)) {
-							standard_error('loginnameissystemaccount', $settings['customer']['accountprefix']);
+						if (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
+							standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'));
 						}
 
 						// Additional filtering for Bug #962
@@ -559,12 +561,12 @@ if ($page == 'customers'
 								&& !in_array("posix_getpwnam", explode(",", ini_get('disable_functions')))
 								&& posix_getpwnam($loginname)
 						) {
-							standard_error('loginnameissystemaccount', $settings['customer']['accountprefix']);
+							standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'));
 						}
 
 					} else {
-						$accountnumber = intval($settings['system']['lastaccountnumber']) + 1;
-						$loginname = $settings['customer']['accountprefix'] . $accountnumber;
+						$accountnumber = intval(Settings::Get('system.lastaccountnumber')) + 1;
+						$loginname = Settings::Get('customer.accountprefix') . $accountnumber;
 					}
 
 					// Check if the account already exists
@@ -583,16 +585,16 @@ if ($page == 'customers'
 					) {
 						standard_error('loginnameexists', $loginname);
 
-					} elseif (!validateUsername($loginname, $settings['panel']['unix_names'], 14 - strlen($settings['customer']['mysqlprefix']))) {
-						if (strlen($loginname) > 14 - strlen($settings['customer']['mysqlprefix'])) {
-							standard_error('loginnameiswrong2', 14 - strlen($settings['customer']['mysqlprefix']));
+					} elseif (!validateUsername($loginname, Settings::Get('panel.unix_names'), 14 - strlen(Settings::Get('customer.mysqlprefix')))) {
+						if (strlen($loginname) > 14 - strlen(Settings::Get('customer.mysqlprefix'))) {
+							standard_error('loginnameiswrong2', 14 - strlen(Settings::Get('customer.mysqlprefix')));
 						} else {
 							standard_error('loginnameiswrong', $loginname);
 						}
 					}
 
-					$guid = intval($settings['system']['lastguid']) + 1;
-					$documentroot = makeCorrectDir($settings['system']['documentroot_prefix'] . '/' . $loginname);
+					$guid = intval(Settings::Get('system.lastguid')) + 1;
+					$documentroot = makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $loginname);
 
 					if (file_exists($documentroot)) {
 						standard_error('documentrootexists', $documentroot);
@@ -614,7 +616,7 @@ if ($page == 'customers'
 						$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
 					}
 
-					$_theme = $settings['panel']['default_theme'];
+					$_theme = Settings::Get('panel.default_theme');
 
 					$ins_data = array(
 						'adminid' => $userinfo['adminid'],
@@ -722,7 +724,7 @@ if ($page == 'customers'
 					}
 
 					if ($tickets != '-1'
-						&& $settings['ticket']['enabled'] == 1
+						&& Settings::Get('ticket.enabled') == 1
 					) {
 						$admin_update_query.= ", `tickets_used` = `tickets_used` + 0" . (int)$tickets;
 					}
@@ -741,7 +743,7 @@ if ($page == 'customers'
 					);
 					Database::pexecute($upd_stmt, array('guid' => $guid));
 
-					if ($accountnumber != intval($settings['system']['lastaccountnumber'])) {
+					if ($accountnumber != intval(Settings::Get('system.lastaccountnumber'))) {
 						$upd_stmt = Database::prepare("
 						UPDATE `" . TABLE_PANEL_SETTINGS . "` SET
 							`value` = :accno
@@ -777,7 +779,7 @@ if ($page == 'customers'
 						'passwd' => $htpasswdPassword
 					);
 
-					if ($settings['system']['awstats_enabled'] == '1') {
+					if (Settings::Get('system.awstats_enabled') == '1') {
 						$ins_data['path'] = makeCorrectDir($documentroot . '/awstats/');
 						$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically added awstats htpasswd for user '" . $loginname . "'");
 					} else {
@@ -809,7 +811,7 @@ if ($page == 'customers'
 							'customerid' => $customerid,
 							'groupname' => $loginname,
 							'guid' => $guid,
-							'members' => $loginname.','.$settings['system']['httpuser']
+							'members' => $loginname.','.Settings::Get('system.httpuser')
 					);
 					Database::pexecute($ins_stmt, $ins_data);
 					// FTP-Quotatallies
@@ -824,12 +826,12 @@ if ($page == 'customers'
 
 					if ($createstdsubdomain == '1') {
 
-						if (isset($settings['system']['stdsubdomain'])
-							&& $settings['system']['stdsubdomain'] != ''
+						if (Settings::Get('system.stdsubdomain') !== null
+							&& Settings::Get('system.stdsubdomain') != ''
 						) {
-							$_stdsubdomain = $loginname . '.' . $settings['system']['stdsubdomain'];
+							$_stdsubdomain = $loginname . '.' . Settings::Get('system.stdsubdomain');
 						} else {
-							$_stdsubdomain = $loginname . '.' . $settings['system']['hostname'];
+							$_stdsubdomain = $loginname . '.' . Settings::Get('system.hostname');
 						}
 
 						$ins_data = array(
@@ -861,7 +863,7 @@ if ($page == 'customers'
 						$ins_stmt = Database::prepare("
 							INSERT INTO `".TABLE_DOMAINTOIP."` SET `id_domain` = :domainid, `id_ipandports` = :ipid"
 						);
-						Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => $settings['system']['defaultip']));
+						Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => Settings::Get('system.defaultip')));
 
 						$upd_stmt = Database::prepare("
 							UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `standardsubdomain` = :domainid WHERE `customerid` = :customerid"
@@ -873,8 +875,8 @@ if ($page == 'customers'
 
 					if ($sendpassword == '1') {
 
-						$srv_hostname = $settings['system']['hostname'];
-						if ($settings['system']['froxlordirectlyviahostname'] == '0') {
+						$srv_hostname = Settings::Get('system.hostname');
+						if (Settings::Get('system.froxlordirectlyviahostname') == '0') {
 							$srv_hostname .= '/froxlor';
 						}
 
@@ -882,7 +884,7 @@ if ($page == 'customers'
 							SELECT ip, port FROM `".TABLE_PANEL_IPSANDPORTS."`
 							WHERE `id` = :defaultip
 						");
-						$srv_ip = Database::pexecute_first($srv_ip_stmt, array('defaultip' => $settings['system']['defaultip']));
+						$srv_ip = Database::pexecute_first($srv_ip_stmt, array('defaultip' => Settings::Get('system.defaultip')));
 
 						$replace_arr = array(
 							'FIRSTNAME' => $firstname,
@@ -942,7 +944,7 @@ if ($page == 'customers'
 				$language_options = '';
 
 				while (list($language_file, $language_name) = each($languages)) {
-					$language_options.= makeoption($language_name, $language_file, $settings['panel']['standardlanguage'], true);
+					$language_options.= makeoption($language_name, $language_file, Settings::Get('panel.standardlanguage'), true);
 				}
 
 				$diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
@@ -1034,7 +1036,7 @@ if ($page == 'customers'
 					$email_forwarders = - 1;
 				}
 
-				if ($settings['system']['mail_quota_enabled'] == '1') {
+				if (Settings::Get('system.mail_quota_enabled') == '1') {
 					$email_quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array('0', ''));
 					if (isset($_POST['email_quota_ul'])) {
 						$email_quota = - 1;
@@ -1061,9 +1063,9 @@ if ($page == 'customers'
 					$ftps = - 1;
 				}
 
-				$tickets = ($settings['ticket']['enabled'] == 1 ? intval_ressource($_POST['tickets']) : 0);
+				$tickets = (Settings::Get('ticket.enabled') == 1 ? intval_ressource($_POST['tickets']) : 0);
 				if (isset($_POST['tickets_ul'])
-					&& $settings['ticket']['enabled'] == '1'
+					&& Settings::Get('ticket.enabled') == '1'
 				) {
 					$tickets = - 1;
 				}
@@ -1109,7 +1111,7 @@ if ($page == 'customers'
 				   || ((($userinfo['emails_used'] + $emails - $result['emails']) > $userinfo['emails']) && $userinfo['emails'] != '-1')
 				   || ((($userinfo['email_accounts_used'] + $email_accounts - $result['email_accounts']) > $userinfo['email_accounts']) && $userinfo['email_accounts'] != '-1')
 				   || ((($userinfo['email_forwarders_used'] + $email_forwarders - $result['email_forwarders']) > $userinfo['email_forwarders']) && $userinfo['email_forwarders'] != '-1')
-				   || ((($userinfo['email_quota_used'] + $email_quota - $result['email_quota']) > $userinfo['email_quota']) && $userinfo['email_quota'] != '-1' && $settings['system']['mail_quota_enabled'] == '1')
+				   || ((($userinfo['email_quota_used'] + $email_quota - $result['email_quota']) > $userinfo['email_quota']) && $userinfo['email_quota'] != '-1' && Settings::Get('system.mail_quota_enabled') == '1')
 				   || ((($userinfo['ftps_used'] + $ftps - $result['ftps']) > $userinfo['ftps']) && $userinfo['ftps'] != '-1')
 				   || ((($userinfo['tickets_used'] + $tickets - $result['tickets']) > $userinfo['tickets']) && $userinfo['tickets'] != '-1')
 				   || ((($userinfo['subdomains_used'] + $subdomains - $result['subdomains']) > $userinfo['subdomains']) && $userinfo['subdomains'] != '-1')
@@ -1118,7 +1120,7 @@ if ($page == 'customers'
 				   || ($emails == '-1' && $userinfo['emails'] != '-1')
 				   || ($email_accounts == '-1' && $userinfo['email_accounts'] != '-1')
 				   || ($email_forwarders == '-1' && $userinfo['email_forwarders'] != '-1')
-				   || ($email_quota == '-1' && $userinfo['email_quota'] != '-1' && $settings['system']['mail_quota_enabled'] == '1')
+				   || ($email_quota == '-1' && $userinfo['email_quota'] != '-1' && Settings::Get('system.mail_quota_enabled') == '1')
 				   || ($ftps == '-1' && $userinfo['ftps'] != '-1')
 				   || ($tickets == '-1' && $userinfo['tickets'] != '-1')
 				   || ($subdomains == '-1' && $userinfo['subdomains'] != '-1')
@@ -1157,12 +1159,12 @@ if ($page == 'customers'
 						&& $result['standardsubdomain'] == '0'
 					) {
 
-						if (isset($settings['system']['stdsubdomain'])
-							&& $settings['system']['stdsubdomain'] != ''
+						if (Settings::Get('system.stdsubdomain') !== null
+							&& Settings::Get('system.stdsubdomain') != ''
 						) {
-							$_stdsubdomain = $result['loginname'] . '.' . $settings['system']['stdsubdomain'];
+							$_stdsubdomain = $result['loginname'] . '.' . Settings::Get('system.stdsubdomain');
 						} else {
-							$_stdsubdomain = $result['loginname'] . '.' . $settings['system']['hostname'];
+							$_stdsubdomain = $result['loginname'] . '.' . Settings::Get('system.hostname');
 						}
 
 						$ins_data = array(
@@ -1194,7 +1196,7 @@ if ($page == 'customers'
 						$ins_stmt = Database::prepare("
 							INSERT INTO `".TABLE_DOMAINTOIP."` SET `id_domain` = :domainid, `id_ipandports` = :ipid"
 						);
-						Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => $settings['system']['defaultip']));
+						Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => Settings::Get('system.defaultip')));
 
 						$upd_stmt = Database::prepare("
 							UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `standardsubdomain` = :domainid WHERE `customerid` = :customerid"
@@ -1265,7 +1267,7 @@ if ($page == 'customers'
 						Database::needRoot(true);
 						$last_dbserver = 0;
 
-						$dbm = new DbManager($settings, $log);
+						$dbm = new DbManager($log);
 
 						// For each of them
 						while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -1276,7 +1278,7 @@ if ($page == 'customers'
 								$last_dbserver = $row_database['dbserver'];
 							}
 
-							foreach (array_unique(explode(',', $settings['system']['mysql_access_host'])) as $mysql_access_host) {
+							foreach (array_unique(explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 								$mysql_access_host = trim($mysql_access_host);
 
 								// Prevent access, if deactivated
@@ -1497,8 +1499,9 @@ if ($page == 'customers'
 					$language_options.= makeoption($language_name, $language_file, $result['def_language'], true);
 				}
 
-				$result['traffic'] = round($result['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
-				$result['diskspace'] = round($result['diskspace'] / 1024, $settings['panel']['decimal_places']);
+				$dec_places = Settings::Get('panel.decimal_places');
+				$result['traffic'] = round($result['traffic'] / (1024 * 1024), $dec_places);
+				$result['diskspace'] = round($result['diskspace'] / 1024, $dec_places);
 				$result['email'] = $idna_convert->decode($result['email']);
 
 				$diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, $result['diskspace'], true, true);

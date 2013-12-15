@@ -33,12 +33,6 @@
 class DbManager {
 
 	/**
-	 * Settings array
-	 * @var array
-	 */
-	private $_settings = null;
-
-	/**
 	 * FroxlorLogger object
 	 * @var object
 	 */
@@ -53,11 +47,9 @@ class DbManager {
 	/**
 	 * main constructor
 	 *
-	 * @param array $settings
 	 * @param FroxlorLogger $log
 	 */
-	public function __construct($settings, &$log = null) {
-		$this->_settings = $settings;
+	public function __construct(&$log = null) {
 		$this->_log = $log;
 		$this->_setManager();
 	}
@@ -79,7 +71,7 @@ class DbManager {
 		Database::needRoot(true);
 
 		// check whether we shall create a random username
-		if (strtoupper($this->_settings['customer']['mysqlprefix']) == 'RANDOM') {
+		if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'RANDOM') {
 			// get all usernames from db-manager
 			$allsqlusers = $this->getManager()->getAllSqlUsers();
 			// generate random username
@@ -89,7 +81,7 @@ class DbManager {
 				$username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
 			}
 		} else {
-			$username = $loginname . $this->_settings['customer']['mysqlprefix'] . (intval($last_accnumber) + 1);
+			$username = $loginname . Settings::Get('customer.mysqlprefix') . (intval($last_accnumber) + 1);
 		}
 
 		// now create the database itself
@@ -97,7 +89,7 @@ class DbManager {
 		$this->_log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
 
 		// and give permission to the user on every access-host we have
-		foreach (array_map('trim', explode(',', $this->_settings['system']['mysql_access_host'])) as $mysql_access_host) {
+		foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 			$this->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host);
 			$this->_log->logAction(USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
 		}
@@ -125,6 +117,6 @@ class DbManager {
 	 */
 	private function _setManager() {
 		// TODO read different dbms from settings later
-		$this->_manager = new DbManagerMySQL($this->_settings, $this->_log);
+		$this->_manager = new DbManagerMySQL($this->_log);
 	}
 }

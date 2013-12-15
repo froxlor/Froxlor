@@ -27,20 +27,13 @@ if ($page == 'overview') {
 	 * so we have to set them both to run a correct upgrade
 	 */
 	if (!isFroxlor()) {
-		if (!isset($settings['panel']['version'])
-			|| $settings['panel']['version'] == ''
+		if (Settings::Get('panel.version') == null
+			|| Settings::Get('panel.version') == ''
 		) {
-			$settings['panel']['version'] = '1.4.2.1';
-			$stmt = Database::prepare("
-				INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET
-					`settinggroup` = 'panel',
-					`varname` = 'version',
-					`value` = :version"
-			);
-			Database::pexecute($stmt, array('version' => $settings['panel']['version']));
+			Settings::Set('panel.version', '1.4.2.1');
 		}
-		if (!isset($settings['system']['dbversion'])
-			|| $settings['system']['dbversion'] == ''
+		if (Settings::Get('system.dbversion') == null
+			|| Settings::Get('system.dbversion') == ''
 		) {
 			/**
 			 * for syscp-stable (1.4.2.1) this value has to be 0
@@ -54,9 +47,9 @@ if ($page == 'overview') {
 			$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 			if (isset($result['value'])) {
-				$settings['system']['dbversion'] = (int)$result['value'];
+				Settings::Set('system.dbversion', (int)$result['value'], false);
 			} else {
-				$settings['system']['dbversion'] = 0;
+				Settings::Set('system.dbversion', 0, false);
 			}
 		}
 	}
@@ -91,7 +84,7 @@ if ($page == 'overview') {
 		}
 
 		if (!$successful_update) {
-			$current_version = $settings['panel']['version'];
+			$current_version = Settings::Get('panel.version');
 			$new_version = $version;
 
 			$ui_text = $lng['update']['update_information']['part_a'];

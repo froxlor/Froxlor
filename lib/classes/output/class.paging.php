@@ -27,67 +27,67 @@ class paging {
 	 * Userinfo
 	 * @var array
 	 */
-	var $userinfo = array();
+	private $userinfo = array();
 
 	/**
 	 * MySQL-Table
 	 * @var string
 	 */
-	var $table = '';
+	private $table = '';
 
 	/**
 	 * Fields with description which should be selectable
 	 * @var array
 	 */
-	var $fields = array();
+	private $fields = array();
 
 	/**
 	 * Entries per page
 	 * @var int
 	 */
-	var $entriesperpage = 0;
+	private $entriesperpage = 0;
 
 	/**
 	 * Number of entries of table
 	 * @var int
 	 */
-	var $entries = 0;
+	private $entries = 0;
 
 	/**
 	 * Sortorder, asc or desc
 	 * @var string
 	 */
-	var $sortorder = 'asc';
+	public $sortorder = 'asc';
 
 	/**
 	 * Sortfield
 	 * @var string
 	 */
-	var $sortfield = '';
+	public $sortfield = '';
 
 	/**
 	 * Searchfield
 	 * @var string
 	 */
-	var $searchfield = '';
+	private $searchfield = '';
 
 	/**
 	 * Searchtext
 	 * @var string
 	 */
-	var $searchtext = '';
+	private $searchtext = '';
 
 	/**
 	 * Pagenumber
 	 * @var int
 	 */
-	var $pageno = 0;
+	private $pageno = 0;
 
 	/**
 	 * Switch natsorting on/off
 	 * @var bool
 	 */
-	var $natSorting = false;
+	private $natSorting = false;
 
 	/**
 	 * Class constructor. Loads settings from request or from userdata and saves them to session.
@@ -95,10 +95,19 @@ class paging {
 	 * @param array userinfo
 	 * @param string Name of Table
 	 * @param array Fields, in format array( 'fieldname_in_mysql' => 'field_caption' )
-	 * @param int entries per page
-	 * @param bool Switch natsorting on/off (global, affects all calls of sort)
+	 * @param int *deprecated* entries per page
+	 * @param bool *deprecated* Switch natsorting on/off (global, affects all calls of sort)
+	 * @param int $default_field default sorting-field-index
+	 * @param string $default_order default sorting order 'asc' or 'desc'
+	 *
 	 */
-	function paging($userinfo, $table, $fields, $entriesperpage, $natSorting = false) {
+	public function __construct($userinfo, $table, $fields, $entriesperpage = 0, $natSorting = false, $default_field = 0, $default_order = 'asc') {
+
+		// entries per page and natsorting-flag are not
+		// passed as parameter anymore, because these are
+		// from the settings anyway
+		$entriesperpage = Settings::Get('panel.paging');
+		$natSorting = Settings::Get('panel.natsorting');
 
 		$this->userinfo = $userinfo;
 
@@ -129,7 +138,7 @@ class paging {
 				$this->sortorder = strtolower($this->userinfo['lastpaging']['sortorder']);
 
 			} else {
-				$this->sortorder = 'asc';
+				$this->sortorder = $default_order;
 			}
 		}
 
@@ -147,7 +156,7 @@ class paging {
 				$this->sortfield = $this->userinfo['lastpaging']['sortfield'];
 			} else {
 				$fieldnames = array_keys($fields);
-				$this->sortfield = $fieldnames[0];
+				$this->sortfield = $fieldnames[$default_field];
 			}
 		}
 
@@ -228,7 +237,7 @@ class paging {
 	 *
 	 * @param int entries
 	 */
-	function setEntries($entries) {
+	public function setEntries($entries) {
 
 		$this->entries = $entries;
 
@@ -245,7 +254,7 @@ class paging {
 	 * @param int number of row
 	 * @return bool to display or not to display, that's the question
 	 */
-	function checkDisplay($count) {
+	public function checkDisplay($count) {
 		$begin = (intval($this->pageno) - 1) * intval($this->entriesperpage);
 		$end = (intval($this->pageno) * intval($this->entriesperpage));
 		return (($count >= $begin && $count < $end) || $this->entriesperpage == 0);
@@ -257,7 +266,7 @@ class paging {
 	 * @param bool should returned condition code start with WHERE (false) or AND (true)?
 	 * @return string the condition code
 	 */
-	function getSqlWhere($append = false) {
+	public function getSqlWhere($append = false) {
 		if ($this->searchtext != '') {
 			if ($append == true) {
 				$condition = ' AND ';
@@ -326,7 +335,7 @@ class paging {
 	 * @param bool Switch natsorting on/off (local, affects just this call)
 	 * @return string the "order by"-code
 	 */
-	function getSqlOrderBy($natSorting = null) {
+	public function getSqlOrderBy($natSorting = null) {
 
 		$sortfield = explode('.', $this->sortfield);
 		foreach ($sortfield as $id => $field) {
@@ -366,7 +375,7 @@ class paging {
 	 *
 	 * @return string always empty
 	 */
-	function getSqlLimit() {
+	public function getSqlLimit() {
 		/**
 		 * currently not in use
 		 */
@@ -379,7 +388,7 @@ class paging {
 	 * @param array Language array
 	 * @return string the html sortcode
 	 */
-	function getHtmlSortCode($lng, $break = false) {
+	public function getHtmlSortCode($lng, $break = false) {
 
 		$sortcode = '';
 		$fieldoptions = '';
@@ -405,7 +414,7 @@ class paging {
 	 * @param string If set, only this field will be returned
 	 * @return mixed An array or a string (if field is set) of html code of arrows
 	 */
-	function getHtmlArrowCode($baseurl, $field = '') {
+	public function getHtmlArrowCode($baseurl, $field = '') {
 
 		global $theme;
 
@@ -433,7 +442,7 @@ class paging {
 	 * @param array Language array
 	 * @return string the html searchcode
 	 */
-	function getHtmlSearchCode($lng) {
+	public function getHtmlSearchCode($lng) {
 
 		$searchcode = '';
 		$fieldoptions = '';
@@ -451,7 +460,7 @@ class paging {
 	 * @param string URL to use as base for links
 	 * @return string the html pagingcode
 	 */
-	function getHtmlPagingCode($baseurl) {
+	public function getHtmlPagingCode($baseurl) {
 		if ($this->entriesperpage == 0) {
 			return '';
 		} else {

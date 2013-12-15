@@ -33,12 +33,6 @@
 class DbManagerMySQL {
 
 	/**
-	 * Settings array
-	 * @var array
-	 */
-	private $_settings = null;
-
-	/**
 	 * FroxlorLogger object
 	 * @var object
 	 */
@@ -47,11 +41,9 @@ class DbManagerMySQL {
 	/**
 	 * main constructor
 	 *
-	 * @param array $settings
 	 * @param FroxlorLogger $log
 	 */
-	public function __construct($settings, &$log = null) {
-		$this->_settings = $settings;
+	public function __construct(&$log = null) {
 		$this->_log = $log;
 	}
 

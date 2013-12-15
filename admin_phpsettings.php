@@ -48,7 +48,7 @@ if ($page == 'overview') {
 				$query_params['adminid'] = $userinfo['adminid'];
 			}
 
-			if ((int)$settings['panel']['phpconfigs_hidestdsubdomain'] == 1) {
+			if ((int)Settings::Get('panel.phpconfigs_hidestdsubdomain') == 1) {
 				$ssdids_res = Database::query("
 					SELECT DISTINCT `standardsubdomain` FROM `".TABLE_PANEL_CUSTOMERS."`
 					WHERE `standardsubdomain` > 0 ORDER BY `standardsubdomain` ASC;"
@@ -91,7 +91,7 @@ if ($page == 'overview') {
 				$description = validate($_POST['description'], 'description');
 				$phpsettings = validate(str_replace("\r\n", "\n", $_POST['phpsettings']), 'phpsettings', '/^[^\0]*$/');
 
-				if ($settings['system']['mod_fcgid'] == 1) {
+				if (Settings::Get('system.mod_fcgid') == 1) {
 					$binary = makeCorrectFile(validate($_POST['binary'], 'binary'));
 					$file_extensions = validate($_POST['file_extensions'], 'file_extensions', '/^[a-zA-Z0-9\s]*$/');
 					$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
@@ -101,7 +101,7 @@ if ($page == 'overview') {
 					$fpm_reqtermtimeout = 0;
 					$fpm_reqslowtimeout = 0;
 				}
-				elseif ($settings['phpfpm']['enabled'] == 1) {
+				elseif (Settings::Get('phpfpm.enabled') == 1) {
 					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int)$_POST['phpfpm_enable_slowlog'] : 0;
 					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
@@ -225,7 +225,7 @@ if ($page == 'overview') {
 				$description = validate($_POST['description'], 'description');
 				$phpsettings = validate(str_replace("\r\n", "\n", $_POST['phpsettings']), 'phpsettings', '/^[^\0]*$/');
 
-				if ($settings['system']['mod_fcgid'] == 1) {
+				if (Settings::Get('system.mod_fcgid') == 1) {
 					$binary = makeCorrectFile(validate($_POST['binary'], 'binary'));
 					$file_extensions = validate($_POST['file_extensions'], 'file_extensions', '/^[a-zA-Z0-9\s]*$/');
 					$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
@@ -235,7 +235,7 @@ if ($page == 'overview') {
 					$fpm_reqtermtimeout = 0;
 					$fpm_reqslowtimeout = 0;
 				}
-				elseif ($settings['phpfpm']['enabled'] == 1) {
+				elseif (Settings::Get('phpfpm.enabled') == 1) {
 					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int)$_POST['phpfpm_enable_slowlog'] : 0;
 					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');

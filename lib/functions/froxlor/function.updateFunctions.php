@@ -21,13 +21,11 @@
  * updates the panel.version field
  * to the given value (no checks here!)
  *
- * @param	string		new-version
+ * @param string $new_version new-version
  *
- * @return	bool		true on success, else false
+ * @return bool true on success, else false
  */
 function updateToVersion($new_version = null) {
-
-	global $settings;
 
 	if ($new_version !== null && $new_version != '') {
 		$upd_stmt = Database::prepare("
@@ -35,7 +33,7 @@ function updateToVersion($new_version = null) {
 				WHERE `settinggroup` = 'panel' AND `varname` = 'version'"
 		);
 		Database::pexecute($upd_stmt, array('newversion' => $new_version));
-		$settings['panel']['version'] = $new_version;
+		Settings::Set('panel.version', $new_version);
 		return true;
 	}
 	return false;
@@ -46,13 +44,12 @@ function updateToVersion($new_version = null) {
  *
  * checks if the panel is froxlor
  *
- * @return	bool		true if panel is froxlor, else false
+ * @return bool true if panel is froxlor, else false
  */
 function isFroxlor() {
-	global $settings;
 
-	if (isset($settings['panel']['frontend'])
-			&& $settings['panel']['frontend'] == 'froxlor'
+	if (Settings::Get('panel.frontend') !== null
+			&& Settings::Get('panel.frontend') == 'froxlor'
 	) {
 		return true;
 	}
@@ -65,16 +62,14 @@ function isFroxlor() {
  * checks if a given version is the
  * current one (and panel is froxlor)
  *
- * @param	string		version to check
+ * @param string $to_check version to check
  *
- * @return	bool		true if version to check matches, else false
+ * @return bool true if version to check matches, else false
  */
 function isFroxlorVersion($to_check = null) {
 
-	global $settings;
-
-	if ($settings['panel']['frontend'] == 'froxlor'
-			&& $settings['panel']['version'] == $to_check
+	if (Settings::Get('panel.frontend') == 'froxlor'
+			&& Settings::Get('panel.version') == $to_check
 	) {
 		return true;
 	}
@@ -82,21 +77,18 @@ function isFroxlorVersion($to_check = null) {
 }
 
 /**
- * Function isFroxlorVersion
+ * Function hasUpdates
  *
- * checks if a given version is the
- * current one (and panel is froxlor)
+ * checks if a given version is not equal the current one
  *
- * @param	string		version to check
+ * @param string $to_check version to check
  *
- * @return	bool		true if version to check matches, else false
+ * @return bool true if version to check does not match, else false
  */
 function hasUpdates($to_check = null) {
 
-	global $settings;
-
-	if (!isset($settings['panel']['version'])
-			|| $settings['panel']['version'] != $to_check
+	if (Settings::Get('panel.version') == null
+			|| Settings::Get('panel.version') != $to_check
 	) {
 		return true;
 	}

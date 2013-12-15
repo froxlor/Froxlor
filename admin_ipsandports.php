@@ -37,7 +37,7 @@ if ($page == 'ipsandports'
 			'ip' => $lng['admin']['ipsandports']['ip'],
 			'port' => $lng['admin']['ipsandports']['port']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_IPSANDPORTS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_IPSANDPORTS, $fields);
 		$ipsandports = '';
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt);
@@ -79,7 +79,7 @@ if ($page == 'ipsandports'
 			$result_checkdomain = Database::pexecute_first($result_checkdomain_stmt, array('id' => $id));
 
 			if ($result_checkdomain['id'] == '') {
-				if ($result['id'] != $settings['system']['defaultip']) {
+				if ($result['id'] != Settings::Get('system.defaultip')) {
 
 					$result_sameipotherport_stmt = Database::prepare("
 						SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
@@ -87,8 +87,8 @@ if ($page == 'ipsandports'
 					);
 					$result_sameipotherport = Database::pexecute_first($result_sameipotherport_stmt, array('id' => $id, 'ip' => $result['ip']));
 
-					if (($result['ip'] != $settings['system']['ipaddress'])
-						|| ($result['ip'] == $settings['system']['ipaddress']
+					if (($result['ip'] != Settings::Get('system.ipaddress'))
+						|| ($result['ip'] == Settings::Get('system.ipaddress')
 						&& $result_sameipotherport['id'] != '')
 					) {
 						$result_stmt = Database::prepare("
@@ -152,7 +152,7 @@ if ($page == 'ipsandports'
 			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 			$docroot = validate($_POST['docroot'], 'docroot');
 
-			if ((int)$settings['system']['use_ssl'] == 1) {
+			if ((int)Settings::Get('system.use_ssl') == 1) {
 				$ssl = isset($_POST['ssl']) ? intval($_POST['ssl']) : 0;
 				$ssl_cert_file = validate($_POST['ssl_cert_file'], 'ssl_cert_file');
 				$ssl_key_file = validate($_POST['ssl_key_file'], 'ssl_key_file');
@@ -304,7 +304,7 @@ if ($page == 'ipsandports'
 				);
 				$result_sameipotherport = Database::pexecute_first($result_sameipotherport_stmt, array('ip' => $ip, 'id' => $id));
 
-				if ((int)$settings['system']['use_ssl'] == 1
+				if ((int)Settings::Get('system.use_ssl') == 1
 					&& isset($_POST['ssl'])
 					&& $_POST['ssl'] != 0
 				) {
@@ -364,7 +364,7 @@ if ($page == 'ipsandports'
 				}
 
 				if ($result['ip'] != $ip
-					&& $result['ip'] == $settings['system']['ipaddress']
+					&& $result['ip'] == Settings::Get('system.ipaddress')
 					&& $result_sameipotherport['id'] == ''
 				) {
 					standard_error('cantchangesystemip');

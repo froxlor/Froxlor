@@ -42,7 +42,7 @@ if ($page == 'admins'
 			'traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
 			'deactivated' => $lng['admin']['deactivated']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_ADMINS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_ADMINS, $fields);
 		$admins = '';
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_ADMINS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		$numrows_admins = Database::num_rows();
@@ -54,14 +54,16 @@ if ($page == 'admins'
 		$i = 0;
 		$count = 0;
 
+		$dec_places = Settings::Get('panel.decimal_places');
+
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			if ($paging->checkDisplay($i)) {
 
-				$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
-				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
-				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
-				$row['diskspace'] = round($row['diskspace'] / 1024, $settings['panel']['decimal_places']);
+				$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $dec_places);
+				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $dec_places);
+				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $dec_places);
+				$row['diskspace'] = round($row['diskspace'] / 1024, $dec_places);
 
 				// percent-values for progressbar
 				// For Disk usage
@@ -223,7 +225,7 @@ if ($page == 'admins'
 				$email_forwarders = - 1;
 			}
 
-			if ($settings['system']['mail_quota_enabled'] == '1') {
+			if (Settings::Get('system.mail_quota_enabled') == '1') {
 
 				$email_quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array('0', ''));
 				if (isset($_POST['email_quota_ul'])) {
@@ -238,7 +240,7 @@ if ($page == 'admins'
 				$ftps = - 1;
 			}
 
-			if ($settings['ticket']['enabled'] == 1) {
+			if (Settings::Get('ticket.enabled') == 1) {
 
 				$tickets = intval_ressource($_POST['tickets']);
 				if (isset($_POST['tickets_ul'])) {
@@ -312,8 +314,8 @@ if ($page == 'admins'
 				standard_error('loginnameexists', $loginname);
 			}
 			// Accounts which match systemaccounts are not allowed, filtering them
-			elseif (preg_match('/^' . preg_quote($settings['customer']['accountprefix'], '/') . '([0-9]+)/', $loginname)) {
-				standard_error('loginnameissystemaccount', $settings['customer']['accountprefix']);
+			elseif (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
+				standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'));
 			}
 			elseif (!validateUsername($loginname)) {
 				standard_error('loginnameiswrong', $loginname);
@@ -352,7 +354,7 @@ if ($page == 'admins'
 					$tickets_see_all  = '0';
 				}
 
-				$_theme = $settings['panel']['default_theme'];
+				$_theme = Settings::Get('panel.default_theme');
 
 				$ins_data = array(
 					'loginname' => $loginname,
@@ -537,7 +539,7 @@ if ($page == 'admins'
 						$email_forwarders = -1;
 					}
 
-					if ($settings['system']['mail_quota_enabled'] == '1') {
+					if (Settings('system.mail_quota_enabled') == '1') {
 						$email_quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array('0', ''));
 						if (isset($_POST['email_quota_ul'])) {
 							$email_quota = -1;
@@ -551,7 +553,7 @@ if ($page == 'admins'
 						$ftps = -1;
 					}
 					
-					if ($settings['ticket']['enabled'] == 1) {
+					if (Settings::Get('ticket.enabled') == 1) {
 						$tickets = intval_ressource($_POST['tickets']);
 						if (isset($_POST['tickets_ul'])) {
 							$tickets = -1;
@@ -749,8 +751,9 @@ if ($page == 'admins'
 
 			} else {
 
-				$result['traffic'] = round($result['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
-				$result['diskspace'] = round($result['diskspace'] / 1024, $settings['panel']['decimal_places']);
+				$dec_places = Settings::Get('panel.decimal_places');
+				$result['traffic'] = round($result['traffic'] / (1024 * 1024), $dec_places);
+				$result['diskspace'] = round($result['diskspace'] / 1024, $dec_places);
 				$result['email'] = $idna_convert->decode($result['email']);
 
 				$customers_ul = makecheckbox('customers_ul', $lng['customer']['unlimited'], '-1', false, $result['customers'], true, true);

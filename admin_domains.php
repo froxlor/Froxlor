@@ -51,7 +51,7 @@ if ($page == 'domains'
 			'c.loginname' => $lng['login']['username'],
 			'd.aliasdomain' => $lng['domains']['aliasdomain']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_DOMAINS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
+		$paging = new paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
 		$domains = '';
 		$result_stmt = Database::prepare("
 			SELECT `d`.*, `c`.`loginname`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`
@@ -283,7 +283,7 @@ if ($page == 'domains'
 				&& $_POST['send'] == 'send'
 			) {
 
-				if ($_POST['domain'] == $settings['system']['hostname']) {
+				if ($_POST['domain'] == Settings::Get('system.hostname')) {
 					standard_error('admin_domain_emailsystemhostname');
 					exit;
 				}
@@ -361,7 +361,7 @@ if ($page == 'domains'
 
 					$isbinddomain = '0';
 					$zonefile = '';
-					if ($settings['system']['bind_enable'] == '1') {
+					if (Settings::Get('system.bind_enable') == '1') {
 						if (isset($_POST['isbinddomain'])) {
 							$isbinddomain = intval($_POST['isbinddomain']);
 						}
@@ -391,14 +391,14 @@ if ($page == 'domains'
 						}
 					} elseif (isset($_POST['documentroot'])
 						&& ($_POST['documentroot'] == '') 
-						&& ($settings['system']['documentroot_use_default_value'] == 1)
+						&& (Settings::Get('system.documentroot_use_default_value') == 1)
 					) {
 						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $domain);
 					}
 
 				} else {
 					$isbinddomain = '0';
-					if ($settings['system']['bind_enable'] == '1') {
+					if (Settings::Get('system.bind_enable') == '1') {
 						$isbinddomain = '1';
 					}
 					$caneditdomain = '1';
@@ -413,8 +413,8 @@ if ($page == 'domains'
 
 					$openbasedir = isset($_POST['openbasedir']) ? intval($_POST['openbasedir']) : 0;
 
-					if ((int)$settings['system']['mod_fcgid'] == 1
-						|| (int)$settings['phpfpm']['enabled'] == 1
+					if ((int)Settings::Get('system.mod_fcgid') == 1
+						|| (int)Settings::Get('phpfpm.enabled') == 1
 					) {
 						$phpsettingid = (int)$_POST['phpsettingid'];
 						$phpsettingid_check_stmt = Database::prepare("
@@ -430,7 +430,7 @@ if ($page == 'domains'
 							standard_error('phpsettingidwrong');
 						}
 
-						if ((int)$settings['system']['mod_fcgid'] == 1) {
+						if ((int)Settings::Get('system.mod_fcgid') == 1) {
 							$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
 							$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
 						} else {
@@ -440,10 +440,10 @@ if ($page == 'domains'
 
 					} else {
 
-						if ((int)$settings['phpfpm']['enabled'] == 1) {
-							$phpsettingid = $settings['phpfpm']['defaultini'];
+						if ((int)Settings::Get('phpfpm.enabled') == 1) {
+							$phpsettingid = Settings::Get('phpfpm.defaultini');
 						} else {
-							$phpsettingid = $settings['system']['mod_fcgid_defaultini'];
+							$phpsettingid = Settings::Get('system.mod_fcgid_defaultini');
 						}
 						$mod_fcgid_starter = '-1';
 						$mod_fcgid_maxrequests = '-1';
@@ -452,10 +452,10 @@ if ($page == 'domains'
 				} else {
 
 					$openbasedir = '1';
-					if ((int)$settings['phpfpm']['enabled'] == 1) {
-						$phpsettingid = $settings['phpfpm']['defaultini'];
+					if ((int)Settings::Get('phpfpm.enabled') == 1) {
+						$phpsettingid = Settings::Get('phpfpm.defaultini');
 					} else {
-						$phpsettingid = $settings['system']['mod_fcgid_defaultini'];
+						$phpsettingid = Settings::Get('system.mod_fcgid_defaultini');
 					}
 					$mod_fcgid_starter = '-1';
 					$mod_fcgid_maxrequests = '-1';
@@ -501,7 +501,7 @@ if ($page == 'domains'
 					}
 				}
 
-				if ($settings['system']['use_ssl'] == "1"
+				if (Settings::Get('system.use_ssl') == "1"
 					&& isset($_POST['ssl_ipandport'])
 				) {
 					$ssl_redirect = 0;
@@ -646,7 +646,7 @@ if ($page == 'domains'
 					standard_error(array('stringisempty', 'mydomain'));
 				}
 				// Check whether domain validation is enabled and if, validate the domain
-				elseif ($settings['system']['validate_domain'] && !validateDomain($domain)) {
+				elseif (Settings::Get('system.validate_domain') && !validateDomain($domain)) {
 					standard_error(array('stringiswrong', 'mydomain'));
 				} elseif($documentroot == '') {
 					standard_error(array('stringisempty', 'mydocumentroot'));
@@ -935,10 +935,10 @@ if ($page == 'domains'
 				$configs = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
 
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
-					if ((int)$settings['phpfpm']['enabled'] == 1) {
-						$phpconfigs.= makeoption($row['description'], $row['id'], $settings['phpfpm']['defaultini'], true, true);
+					if ((int)Settings::Get('phpfpm.enabled') == 1) {
+						$phpconfigs.= makeoption($row['description'], $row['id'], Settings::Get('phpfpm.defaultini'), true, true);
 					} else {
-						$phpconfigs.= makeoption($row['description'], $row['id'], $settings['system']['mod_fcgid_defaultini'], true, true);
+						$phpconfigs.= makeoption($row['description'], $row['id'], Settings::Get('system.mod_fcgid_defaultini'), true, true);
 					}
 				}
 
@@ -1046,7 +1046,7 @@ if ($page == 'domains'
 
 				if ($customerid > 0
 					&& $customerid != $result['customerid']
-					&& $settings['panel']['allow_domain_change_customer'] == '1'
+					&& Settings::Get('panel.allow_domain_change_customer') == '1'
 				) {
 
 					$customer_stmt = Database::prepare("
@@ -1094,7 +1094,7 @@ if ($page == 'domains'
 
 					if ($adminid > 0
 						&& $adminid != $result['adminid']
-						&& $settings['panel']['allow_domain_change_admin'] == '1'
+						&& Settings::Get('panel.allow_domain_change_admin') == '1'
 					) {
 
 						$admin_stmt = Database::prepare("
@@ -1150,7 +1150,7 @@ if ($page == 'domains'
 				if ($userinfo['change_serversettings'] == '1') {
 					$isbinddomain = $result['isbinddomain'];
 					$zonefile = $result['zonefile'];
-					if ($settings['system']['bind_enable'] == '1') {
+					if (Settings::Get('system.bind_enable') == '1') {
 						if (isset($_POST['isbinddomain'])) {
 							$isbinddomain = (int)$_POST['isbinddomain'];
 						} else {
@@ -1159,7 +1159,7 @@ if ($page == 'domains'
 						$zonefile = validate($_POST['zonefile'], 'zonefile');
 					}
 
-					if ($settings['dkim']['use_dkim'] == '1') {
+					if (Settings::Get('dkim.use_dkim') == '1') {
 						$dkim = isset($_POST['dkim']) ? 1 : 0;
 					} else {
 						$dkim = $result['dkim'];
@@ -1171,7 +1171,7 @@ if ($page == 'domains'
 					if ($documentroot == '') {
 						// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 						// set default path to subdomain or domain name
-						if ($settings['system']['documentroot_use_default_value'] == 1) {
+						if (Settings::Get('system.documentroot_use_default_value') == 1) {
 							$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
 						} else {
 							$documentroot = $customer['documentroot'];
@@ -1200,8 +1200,8 @@ if ($page == 'domains'
 
 					$openbasedir = isset($_POST['openbasedir']) ? intval($_POST['openbasedir']) : 0;
 
-					if ((int)$settings['system']['mod_fcgid'] == 1
-						|| (int)$settings['phpfpm']['enabled'] == 1
+					if ((int)Settings::Get('system.mod_fcgid') == 1
+						|| (int)Settings::Get('phpfpm.enabled') == 1
 					) {
 						$phpsettingid = (int)$_POST['phpsettingid'];
 						$phpsettingid_check_stmt = Database::prepare("
@@ -1216,7 +1216,7 @@ if ($page == 'domains'
 							standard_error('phpsettingidwrong');
 						}
 
-						if ((int)$settings['system']['mod_fcgid'] == 1) {
+						if ((int)Settings::Get('system.mod_fcgid') == 1) {
 							$mod_fcgid_starter = validate($_POST['mod_fcgid_starter'], 'mod_fcgid_starter', '/^[0-9]*$/', '', array('-1', ''));
 							$mod_fcgid_maxrequests = validate($_POST['mod_fcgid_maxrequests'], 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array('-1', ''));
 						} else {
@@ -1261,7 +1261,7 @@ if ($page == 'domains'
 					}
 				}
 
-				if ($settings['system']['use_ssl'] == '1'
+				if (Settings::Get('system.use_ssl') == '1'
 					&& isset($_POST['ssl_ipandport'])
 				) {
 					$ssl = 1; // if ssl is set and != 0, it can only be 1
@@ -1490,7 +1490,7 @@ if ($page == 'domains'
 				}
 
 				if ($customerid != $result['customerid']
-					&& $settings['panel']['allow_domain_change_customer'] == '1'
+					&& Settings::Get('panel.allow_domain_change_customer') == '1'
 				) {
 					$upd_data = array('customerid' => $customerid, 'domainid' => $result['id']);
 					$upd_stmt = Database::prepare("
@@ -1526,7 +1526,7 @@ if ($page == 'domains'
 				}
 
 				if ($adminid != $result['adminid']
-					&& $settings['panel']['allow_domain_change_admin'] == '1'
+					&& Settings::Get('panel.allow_domain_change_admin') == '1'
 				) {
 					$upd_stmt = Database::prepare("
 						UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` + 1 WHERE `adminid` = :adminid
@@ -1688,7 +1688,7 @@ if ($page == 'domains'
 			} else {
 
 
-				if ($settings['panel']['allow_domain_change_customer'] == '1') {
+				if (Settings::Get('panel.allow_domain_change_customer') == '1') {
 					$customers = '';
 					$result_customers_stmt = Database::prepare("
 						SELECT `customerid`, `loginname`, `name`, `firstname`, `company` FROM `" . TABLE_PANEL_CUSTOMERS . "`
@@ -1725,7 +1725,7 @@ if ($page == 'domains'
 				}
 
 				if ($userinfo['customers_see_all'] == '1') {
-					if ($settings['panel']['allow_domain_change_admin'] == '1') {
+					if (Settings::Get('panel.allow_domain_change_admin') == '1') {
 
 						$admins = '';
 						$result_admins_stmt = Database::prepare("
