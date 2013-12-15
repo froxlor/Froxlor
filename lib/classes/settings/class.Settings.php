@@ -78,8 +78,14 @@ class Settings {
 	 * and set the internal $_data array
 	 */
 	private function _readSettings() {
-		$settings_data = loadConfigArrayDir('actions/admin/settings/');
-		self::$_data = loadSettings($settings_data);
+		$result_stmt = Database::query("
+			SELECT `settingid`, `settinggroup`, `varname`, `value`
+			FROM `" . TABLE_PANEL_SETTINGS . "`
+		");
+		self::$_data = array();
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			self::$_data[$row['settinggroup']][$row['varname']] = $row['value'];
+		}
 	}
 
 	/**

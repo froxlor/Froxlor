@@ -81,7 +81,7 @@ return array(
 				'dkim_keylength' => array(
 					'label' => array(
 						'title' => $lng['dkim']['dkim_keylength']['title'],
-						'description' => $lng['dkim']['dkim_keylength']['description']
+						'description' => sprintf($lng['dkim_keylength']['label']['description'], Settings::Get('dkim.dkim_prefix'))
 					),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_keylength',
