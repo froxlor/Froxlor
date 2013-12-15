@@ -60,37 +60,50 @@ $(document).ready(function(){
 	//alert(ftp);
 	var plot2 = $.jqplot('chartdiv', [ftp, http, mail], {
 		series: [
+			
 			{
 				lineWidth:1,
 				color: '#019522',
 				label: 'FTP',
-				showMarker: false
+				markerOptions: { style:"circle", size: 5, shadow: false },
+				rendererOptions: { smooth: true },
+				pointLabels: { show:true, formatString: "%#.2f" }
 			},
 			{
 				lineWidth:1,
 				color: '#0000FF',
 				label: 'HTTP',
-				showMarker: false
+				markerOptions: { style:"circle", size: 5, shadow: false },
+				rendererOptions: { smooth: true },
+				pointLabels: { show:true, formatString: "%#.2f" }
 			},
 			{
 				lineWidth:1,
 				color: '#800000',
 				label: 'Mail',
-				showMarker: false
+				markerOptions: { style: "circle", size: 5, shadow: false },
+				rendererOptions: { smooth: true },
+				pointLabels: { show:true, formatString: "%#.2f" }
 			}	
 		],
 		axes: {
 			yaxis: {
 				min: 0,
-				numberTicks: 10
+				numberTicks: 5,
+				rendererOptions: {drawBaseline: false}
 			},
 			xaxis: {
+				tickOptions:{
+					showGridline: false
+				},
 				pad: 0,
 				ticks: aticks
 			},
 		},
 		grid: {
+			show: false,
 			background: '#fff',
+			gridLineColor: '#e2e4e6',
 			borderWidth: 0,
 			shadow: false
 		}
