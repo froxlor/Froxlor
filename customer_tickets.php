@@ -23,7 +23,7 @@ require './lib/init.php';
 if (isset($_POST['id'])) {
 
 	$id = intval($_POST['id']);
-	
+
 	//Check if the current user is allowed to see the current ticket.
 	$stmt = Database::prepare("SELECT `id` FROM `panel_tickets` WHERE `id` = :id AND `customerid` = :customerid");
 	$result = Database::pexecute_first($stmt, array("id" => $id, "customerid" => $userinfo['customerid']));
@@ -44,15 +44,11 @@ if($page == 'overview') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_tickets::tickets");
 		$fields = array(
 			'status' => $lng['ticket']['status'],
-			'priority' => $lng['ticket']['priority'],
 			'lastchange' => $lng['ticket']['lastchange'],
-			'ticket_answers' => $lng['ticket']['ticket_answers'],
 			'subject' => $lng['ticket']['subject'],
 			'lastreplier' => $lng['ticket']['lastreplier']
 		);
 		$paging = new paging($userinfo, TABLE_PANEL_TICKETS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$paging->sortfield = 'lastchange';
-		$paging->sortorder = 'desc';
 		$stmt = Database::prepare('SELECT `main`.`id`, (SELECT COUNT(`sub`.`id`) FROM `' . TABLE_PANEL_TICKETS . '` `sub`
 			WHERE `sub`.`answerto` = `main`.`id`) AS `ticket_answers`, `main`.`lastchange`, `main`.`subject`, `main`.`status`, `main`.`lastreplier`, `main`.`priority`
 			FROM `' . TABLE_PANEL_TICKETS . '` as `main`
@@ -61,7 +57,7 @@ if($page == 'overview') {
 			AND `customerid`= :customerid ' . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
 		Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
-		
+
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
@@ -171,7 +167,7 @@ if($page == 'overview') {
 					$newticket->Set('by', '0', true, true);
 					$newticket->Insert();
 					$log->logAction(USR_ACTION, LOG_NOTICE, "opened support-ticket '" . $newticket->Get('subject') . "'");
-					
+
 					$stmt = Database::prepare('UPDATE `' . TABLE_PANEL_CUSTOMERS . '`
 						SET `tickets_used`=`tickets_used` + 1
 						WHERE `customerid`= :customerid'
@@ -192,7 +188,7 @@ if($page == 'overview') {
 					ORDER BY `logicalorder`, `name` ASC'
 				);
 				$result = Database::pexecute_first($result_stmt, array("adminid" => $userinfo['adminid']));
-				
+
 				if (isset($result['name']) && $result['name'] != '') {
 					$result2_stmt = Database::prepare('SELECT `id`, `name` FROM `' . TABLE_PANEL_TICKET_CATS . '`
 						WHERE `adminid` = :adminid
@@ -304,7 +300,7 @@ if($page == 'overview') {
 				WHERE `id`= :id '
 			);
 			$row = Database::pexecute_first($result_stmt, array("id" => $mainticket->Get('category')));
-			
+
 			$andere_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_TICKETS . '`
 				WHERE `answerto`= :answerto
 				ORDER BY `lastchange` ASC'
