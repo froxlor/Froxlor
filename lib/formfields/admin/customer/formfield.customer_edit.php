@@ -38,16 +38,16 @@ return array(
 						'label' => $lng['admin']['stdsubdomain_add'].'?',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array(($result['standardsubdomain'] != '0') ? '1' : '0')
 					),
 					'deactivated' => array(
 						'label' => $lng['admin']['deactivated_user'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array($result['deactivated'])
 					),
 					'new_customer_password' => array(
@@ -189,7 +189,7 @@ return array(
 						'type' => 'textul',
 						'value' => $result['email_quota'],
 						'maxlength' => 9,
-						'visible' => ($settings['system']['mail_quota_enabled'] == '1' ? true : false),
+						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'mandatory' => true,
 						'ul_field' => $email_quota_ul
 					),
@@ -197,8 +197,8 @@ return array(
 						'label' => $lng['customer']['email_imap'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array($result['imap']),
 						'mandatory' => true
 					),
@@ -206,8 +206,8 @@ return array(
 						'label' => $lng['customer']['email_pop3'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array($result['pop3']),
 						'mandatory' => true
 					),
@@ -223,7 +223,7 @@ return array(
 						'type' => 'textul',
 						'value' => $result['tickets'],
 						'maxlength' => 9,
-						'visible' => ($settings['ticket']['enabled'] == '1' ? true : false),
+						'visible' => (Settings::Get('ticket.enabled') == '1' ? true : false),
 						'ul_field' => $tickets_ul
 					),
 					'mysqls' => array(
@@ -238,16 +238,16 @@ return array(
 						'label' => $lng['admin']['phpenabled'].'?',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array($result['phpenabled'])
 					),
 					'perlenabled' => array(
 						'label' => $lng['admin']['perlenabled'].'?',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array($result['perlenabled'])
 					)
 				)

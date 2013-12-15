@@ -42,19 +42,19 @@ return array(
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescriptionSubdomain'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescriptionSubdomain'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
 					),
 					'url' => array(
-						'visible' => ($settings['panel']['pathedit'] == 'Dropdown' ? true : false),
+						'visible' => (Settings::Get('panel.pathedit') == 'Dropdown' ? true : false),
 						'label' => $lng['panel']['urloverridespath'],
 						'type' => 'text',
 						'value' => $urlvalue
 					),
 					'redirectcode' => array(
-						'visible' => (($settings['system']['webserver'] == 'apache2' && $settings['customredirect']['enabled'] == '1') ? true : false),
+						'visible' => ((Settings::Get('system.webserver') == 'apache2' && Settings::Get('customredirect.enabled') == '1') ? true : false),
 						'label' => $lng['domains']['redirectifpathisurl'],
 						'desc' => $lng['domains']['redirectifpathisurlinfo'],
 						'type' => 'select',
@@ -77,7 +77,7 @@ return array(
 						'value' => array($result['isemaildomain'])
 					),
 					'ssl_redirect' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? (domainHasSslIpPort($result['id']) ? true : false) : false) : false),
+						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? (domainHasSslIpPort($result['id']) ? true : false) : false) : false),
 						'label' => $lng['domains']['ssl_redirect']['title'],
 						'desc' => $lng['domains']['ssl_redirect']['description'],
 						'type' => 'checkbox',

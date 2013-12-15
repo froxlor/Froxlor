@@ -34,8 +34,8 @@ return array(
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12
-                                        )
-				 )
+					)
+				)
 			)
 		)
 	)

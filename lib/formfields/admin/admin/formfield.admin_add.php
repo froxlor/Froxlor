@@ -173,7 +173,7 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => ($settings['system']['mail_quota_enabled'] == '1' ? true : false),
+						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'mandatory' => true,
 						'ul_field' => $email_quota_ul
 					),
@@ -189,7 +189,7 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => ($settings['ticket']['enabled'] == '1' ? true : false),
+						'visible' => (Settings::Get('ticket.enabled') == '1' ? true : false),
 						'ul_field' => $tickets_ul
 					),
 					'tickets_see_all' => array(

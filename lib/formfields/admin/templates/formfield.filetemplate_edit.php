@@ -36,8 +36,8 @@ return array(
 						'cols' => 60,
 						'rows' => 12,
 						'value' => $row['value']
-                                        )
-				 )
+					)
+				)
 			)
 		)
 	)

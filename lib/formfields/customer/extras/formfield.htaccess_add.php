@@ -26,7 +26,7 @@ return array(
 				'fields' => array(
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
@@ -45,13 +45,13 @@ return array(
 						'type' => 'text'
 					),
 					'error403path' => array(
-						'visible' => ($settings['system']['webserver'] == 'apache2'),
+						'visible' => (Settings::Get('system.webserver') == 'apache2'),
 						'label' => $lng['extras']['errordocument403path'],
 						'desc' => $lng['panel']['descriptionerrordocument'],
 						'type' => 'text'
 					),
 					'error500path' => array(
-						'visible' => ($settings['system']['webserver'] == 'apache2'),
+						'visible' => (Settings::Get('system.webserver') == 'apache2'),
 						'label' => $lng['extras']['errordocument500path'],
 						'desc' => $lng['panel']['descriptionerrordocument'],
 						'type' => 'text'

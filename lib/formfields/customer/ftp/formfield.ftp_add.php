@@ -24,19 +24,19 @@ return array(
 				'image' => 'icons/user_add.png',
 				'fields' => array(
 					'ftp_username' => array(
-						'visible' => ($settings['customer']['ftpatdomain'] == '1' ? true : false),
+						'visible' => (Settings::Get('customer.ftpatdomain') == '1' ? true : false),
 						'label' => $lng['login']['username'],
 						'type' => 'text'
 					),
 					'ftp_domain' => array(
-						'visible' => ($settings['customer']['ftpatdomain'] == '1' ? true : false),
+						'visible' => (Settings::Get('customer.ftpatdomain') == '1' ? true : false),
 						'label' => $lng['domains']['domainname'],
 						'type' => 'select',
 						'select_var' => (isset($domains) ? $domains : ""),
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
