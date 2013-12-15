@@ -17,37 +17,34 @@
  *
  */
 
-class bind
-{
+class bind {
 	public $logger = false;
 	public $debugHandler = false;
-	public $settings = array();
 	public $nameservers = array();
 	public $mxservers = array();
 	public $axfrservers = array();
 
-	public function __construct($logger, $debugHandler, $settings) {
+	public function __construct($logger, $debugHandler) {
 
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
-		$this->settings = $settings;
 
-		if ($this->settings['system']['nameservers'] != '') {
-			$nameservers = explode(',', $this->settings['system']['nameservers']);
+		if (Settings::Get('system.nameservers') != '') {
+			$nameservers = explode(',', Settings::Get('system.nameservers'));
 			foreach ($nameservers as $nameserver) {
 				$nameserver_ip = gethostbyname(trim($nameserver));
 				if (substr($nameserver, -1, 1) != '.') {
 					$nameserver.= '.';
 				}
 				$this->nameservers[] = array(
-						'hostname' => trim($nameserver),
-						'ip' => trim($nameserver_ip)
+					'hostname' => trim($nameserver),
+					'ip' => trim($nameserver_ip)
 				);
 			}
 		}
 
-		if ($this->settings['system']['mxservers'] != '') {
-			$mxservers = explode(',', $this->settings['system']['mxservers']);
+		if (Settings::Get('system.mxservers') != '') {
+			$mxservers = explode(',', Settings::Get('system.mxservers'));
 			foreach ($mxservers as $mxserver) {
 				if (substr($mxserver, -1, 1) != '.') {
 					$mxserver.= '.';
@@ -57,28 +54,27 @@ class bind
 		}
 
 		// AXFR server #100
-		if ($this->settings['system']['axfrservers'] != '') {
-			$axfrservers = explode(',', $this->settings['system']['axfrservers']);
+		if (Settings::Get('system.axfrservers') != '') {
+			$axfrservers = explode(',', Settings::Get('system.axfrservers'));
 			foreach ($axfrservers as $axfrserver) {
 				$this->axfrservers[] = trim($axfrserver);
 			}
 		}
 	}
 
-	public function writeConfigs()
-	{
+
+	public function writeConfigs() {
 		fwrite($this->debugHandler, '  cron_tasks: Task4 started - Rebuilding froxlor_bind.conf' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Rebuilding froxlor_bind.conf');
 
-		if(!file_exists(makeCorrectDir($this->settings['system']['bindconf_directory'] . '/domains/')))
-		{
-			$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir($this->settings['system']['bindconf_directory'] . '/domains/')));
-			safe_exec('mkdir ' . escapeshellarg(makeCorrectDir($this->settings['system']['bindconf_directory'] . '/domains/')));
+		if (!file_exists(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/'))) {
+			$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
+			safe_exec('mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
 		}
 
 		$known_filenames = array();
 
-		$bindconf_file = '# ' . $this->settings['system']['bindconf_directory'] . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";
+		$bindconf_file = '# ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";
 		$result_domains_stmt = Database::query("
 			SELECT `d`.`id`, `d`.`domain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`customerid`, `d`.`zonefile`, `d`.`bindserial`, `d`.`dkim`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `c`.`loginname`, `c`.`guid`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
@@ -90,11 +86,10 @@ class bind
 			fwrite($this->debugHandler, '  cron_tasks: Task4 - Writing ' . $domain['id'] . '::' . $domain['domain'] . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Writing ' . $domain['id'] . '::' . $domain['domain']);
 
-			if($domain['zonefile'] == '')
-			{
+			if ($domain['zonefile'] == '') {
 				$zonefile = $this->generateZone($domain);
 				$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
-				$zonefile_name = makeCorrectFile($this->settings['system']['bindconf_directory'] . '/' . $domain['zonefile']);
+				$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
 				$known_filenames[] = basename($zonefile_name);
 				$zonefile_handler = fopen($zonefile_name, 'w');
 				fwrite($zonefile_handler, $zonefile);
@@ -105,11 +100,11 @@ class bind
 			$bindconf_file.= '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
 			$bindconf_file.= 'zone "' . $domain['domain'] . '" in {' . "\n";
 			$bindconf_file.= '	type master;' . "\n";
-			$bindconf_file.= '	file "' . makeCorrectFile($this->settings['system']['bindconf_directory'] . '/' . $domain['zonefile']) . '";' . "\n";
+			$bindconf_file.= '	file "' . makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']) . '";' . "\n";
 			$bindconf_file.= '	allow-query { any; };' . "\n";
 
 			if (count($this->nameservers) > 0
-					|| count($this->axfrservers) > 0
+				|| count($this->axfrservers) > 0
 			) {
 				// open allow-transfer
 				$bindconf_file.= '	allow-transfer {' . "\n";
@@ -135,31 +130,28 @@ class bind
 			$bindconf_file.= "\n";
 		}
 
-		$bindconf_file_handler = fopen(makeCorrectFile($this->settings['system']['bindconf_directory'] . '/froxlor_bind.conf'), 'w');
+		$bindconf_file_handler = fopen(makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
 		fwrite($bindconf_file_handler, $bindconf_file);
 		fclose($bindconf_file_handler);
 		fwrite($this->debugHandler, '  cron_tasks: Task4 - froxlor_bind.conf written' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
-		safe_exec(escapeshellcmd($this->settings['system']['bindreload_command']));
+		safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
 		fwrite($this->debugHandler, '  cron_tasks: Task4 - Bind9 reloaded' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
-		$domains_dir = makeCorrectDir($this->settings['system']['bindconf_directory'] . '/domains/');
+		$domains_dir = makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/');
 
-		if(file_exists($domains_dir)
-				&& is_dir($domains_dir))
-		{
+		if (file_exists($domains_dir)
+			&& is_dir($domains_dir)) {
 			$domain_file_dirhandle = opendir($domains_dir);
 
-			while(false !== ($domain_filename = readdir($domain_file_dirhandle)))
-			{
+			while (false !== ($domain_filename = readdir($domain_file_dirhandle))) {
 				$full_filename = makeCorrectFile($domains_dir . '/' . $domain_filename);
 
-				if($domain_filename != '.'
-						&& $domain_filename != '..'
-						&& !in_array($domain_filename, $known_filenames)
-						&& is_file($full_filename)
-						&& file_exists($full_filename))
-				{
+				if ($domain_filename != '.'
+					&& $domain_filename != '..'
+					&& !in_array($domain_filename, $known_filenames)
+					&& is_file($full_filename)
+					&& file_exists($full_filename)) {
 					fwrite($this->debugHandler, '  cron_tasks: Task4 - unlinking ' . $domain_filename . "\n");
 					$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'Deleting ' . $domain_filename);
 					unlink(makeCorrectFile($domains_dir . '/' . $domain_filename));
@@ -168,13 +160,13 @@ class bind
 		}
 	}
 
-	protected function generateZone($domain)
-	{
+
+	protected function generateZone($domain) {
 		// Array to save all ips needed in the records (already including IN A/AAAA)
 		$ip_a_records = array();
 		// Array to save DNS records
 		$records = array();
-		
+
 		$result_ip_stmt = Database::prepare("
 			SELECT `p`.`ip` AS `ip`
 			FROM `".TABLE_PANEL_IPSANDPORTS."` `p`, `".TABLE_DOMAINTOIP."` `di`
@@ -182,9 +174,9 @@ class bind
 			GROUP BY `p`.`ip`;
 		");
 		Database::pexecute($result_ip_stmt, array('domainid' => $domain['id']));
-		
+
 		while ($ip = $result_ip_stmt->fetch(PDO::FETCH_ASSOC)) {
-  
+
 			if (filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 				$ip_a_records[] = "A\t\t" . $ip['ip'];
 			}
@@ -206,11 +198,11 @@ class bind
 		");
 		Database::pexecute($upd_stmt, array('serial' => $bindserial, 'id' => $domain['id']));
 
-		$zonefile = '$TTL ' . (int)$this->settings['system']['defaultttl'] . "\n";
+		$zonefile = '$TTL ' . (int)Settings::Get('system.defaultttl') . "\n";
 		if (count($this->nameservers) == 0) {
-			$zonefile.= '@ IN SOA ns ' . str_replace('@', '.', $this->settings['panel']['adminmail']) . '. (' . "\n";
+			$zonefile.= '@ IN SOA ns ' . str_replace('@', '.', Settings::Get('panel.adminmail')) . '. (' . "\n";
 		} else {
-			$zonefile.= '@ IN SOA ' . $this->nameservers[0]['hostname'] . ' ' . str_replace('@', '.', $this->settings['panel']['adminmail']) . '. (' . "\n";
+			$zonefile.= '@ IN SOA ' . $this->nameservers[0]['hostname'] . ' ' . str_replace('@', '.', Settings::Get('panel.adminmail')) . '. (' . "\n";
 		}
 
 		$zonefile.= '	' . $bindserial . ' ; serial' . "\n" . '	8H ; refresh' . "\n" . '	2H ; retry' . "\n" . '	1W ; expiry' . "\n" . '	11h) ; minimum' . "\n";
@@ -240,7 +232,7 @@ class bind
 				$zonefile.= '@    IN    MX    ' . trim($mxserver) . "\n";
 			}
 
-			if ($this->settings['system']['dns_createmailentry'] == '1') {
+			if (Settings::Get('system.dns_createmailentry') == '1') {
 				$records[] = 'mail';
 				if ($domain['iswildcarddomain'] != '1') {
 					$records[] = 'imap';
@@ -253,12 +245,12 @@ class bind
 		/*
 		 * @TODO domain-based spf-settings
 		*/
-		if ($this->settings['spf']['use_spf'] == '1'
-				/*&& $domain['spf'] == '1' */
+		if (Settings::Get('spf.use_spf') == '1'
+			/*&& $domain['spf'] == '1' */
 		) {
-			$zonefile.= $this->settings['spf']['spf_entry'] . "\n";
+			$zonefile.= Settings::Get('spf.spf_entry') . "\n";
 			if (in_array('mail', $records)) {
-				$zonefile.= str_replace('@', 'mail', $this->settings['spf']['spf_entry']) . "\n";
+				$zonefile.= str_replace('@', 'mail', Settings::Get('spf.spf_entry')) . "\n";
 			}
 		}
 
@@ -303,11 +295,11 @@ class bind
 		Database::pexecute($subdomains_stmt, array('domainid' => $domain['id']));
 
 		while ($subdomain = $subdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
-			// Listing domains is enough as there currently is no support for choosing 
+			// Listing domains is enough as there currently is no support for choosing
 			// different ips for a subdomain => use same IPs as toplevel
 			$records[] = str_replace('.' . $domain['domain'], '', $subdomain['domain']);
 
-			// Check whether to add a www.-prefix 
+			// Check whether to add a www.-prefix
 			if ($domain['wwwserveralias'] == '1') {
 				$records[] = str_replace('.' . $domain['domain'], '', $subdomain['domain']);
 			}
@@ -324,19 +316,18 @@ class bind
 		return $zonefile;
 	}
 
-	private function generateDkim($domain)
-	{
+
+	private function generateDkim($domain) {
 		$zone_dkim = '';
 
-		if($this->settings['dkim']['use_dkim'] == '1'
-				&& $domain['dkim'] == '1'
-				&& $domain['dkim_pubkey'] != '')
-		{
+		if (Settings::Get('dkim.use_dkim') == '1'
+			&& $domain['dkim'] == '1'
+			&& $domain['dkim_pubkey'] != '') {
 			// start
 			$dkim_txt = 'v=DKIM1;';
 
 			// algorithm
-			$algorithm = explode(',', $this->settings['dkim']['dkim_algorithm']);
+			$algorithm = explode(',', Settings::Get('dkim.dkim_algorithm'));
 			$alg = '';
 			foreach ($algorithm as $a) {
 				if ($a == 'all') {
@@ -352,16 +343,16 @@ class bind
 			}
 
 			// notes
-			if (trim($this->settings['dkim']['dkim_notes'] != '')) {
-				$dkim_txt.= 'n='.trim($this->settings['dkim']['dkim_notes']).';';
+			if (trim(Settings::Get('dkim.dkim_notes') != '')) {
+				$dkim_txt.= 'n='.trim(Settings::Get('dkim.dkim_notes')).';';
 			}
 
 			// key
 			$dkim_txt.= 'k=rsa;p='.trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))).';';
 
 			// service-type
-			if ($this->settings['dkim']['dkim_servicetype'] == '1') {
-				$dkim_txt.=	's=email;';
+			if (Settings::Get('dkim.dkim_servicetype') == '1') {
+				$dkim_txt.= 's=email;';
 			}
 
 			// end-part
@@ -378,20 +369,19 @@ class bind
 			$zone_dkim .= 'dkim_' . $domain['dkim_id'] . '._domainkey IN TXT ' . $txt_record_split;
 
 			// adsp-entry
-			if ($this->settings['dkim']['dkim_add_adsp'] == "1") {
+			if (Settings::Get('dkim.dkim_add_adsp') == "1") {
 
 				$zone_dkim .= '_adsp._domainkey IN TXT "dkim=';
-				switch((int)$this->settings['dkim']['dkim_add_adsppolicy'])
-				{
-					case 0:
-						$zone_dkim .= 'unknown"'. "\n";
-						break;
-					case 1:
-						$zone_dkim .= 'all"'. "\n";
-						break;
-					case 2:
-						$zone_dkim .= 'discardable"'. "\n";
-						break;
+				switch ((int)Settings::Get('dkim.dkim_add_adsppolicy')) {
+				case 0:
+					$zone_dkim .= 'unknown"'. "\n";
+					break;
+				case 1:
+					$zone_dkim .= 'all"'. "\n";
+					break;
+				case 2:
+					$zone_dkim .= 'discardable"'. "\n";
+					break;
 				}
 			}
 		}
@@ -399,14 +389,12 @@ class bind
 		return $zone_dkim;
 	}
 
-	public function writeDKIMconfigs()
-	{
-		if($this->settings['dkim']['use_dkim'] == '1')
-		{
-			if(!file_exists(makeCorrectDir($this->settings['dkim']['dkim_prefix'])))
-			{
-				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir -p ' . escapeshellarg(makeCorrectDir($this->settings['dkim']['dkim_prefix'])));
-				safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir($this->settings['dkim']['dkim_prefix'])));
+
+	public function writeDKIMconfigs() {
+		if (Settings::Get('dkim.use_dkim') == '1') {
+			if (!file_exists(makeCorrectDir(Settings::Get('dkim.dkim_prefix')))) {
+				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir -p ' . escapeshellarg(makeCorrectDir(Settings::Get('dkim.dkim_prefix'))));
+				safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir(Settings::Get('dkim.dkim_prefix'))));
 			}
 
 			$dkimdomains = '';
@@ -418,20 +406,19 @@ class bind
 
 			while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-				$privkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id']);
-				$pubkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id'] . '.public');
+				$privkey_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id']);
+				$pubkey_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id'] . '.public');
 
-				if($domain['dkim_privkey'] == ''
-						|| $domain['dkim_pubkey'] == '')
-				{
+				if ($domain['dkim_privkey'] == ''
+					|| $domain['dkim_pubkey'] == '') {
 					$max_dkim_id_stmt = Database::query("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
 					$max_dkim_id = $max_dkim_id_stmt->fetch(PDO::FETCH_ASSOC);
 					$domain['dkim_id'] = (int)$max_dkim_id['max_dkim_id'] + 1;
-					$privkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id']);
-					safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . $this->settings['dkim']['dkim_keylength']);
+					$privkey_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id']);
+					safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . Settings::Get('dkim.dkim_keylength'));
 					$domain['dkim_privkey'] = file_get_contents($privkey_filename);
 					safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
-					$pubkey_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/dkim_' . $domain['dkim_id'] . '.public');
+					$pubkey_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id'] . '.public');
 					safe_exec('openssl rsa -in ' . escapeshellarg($privkey_filename) . ' -pubout -outform pem -out ' . escapeshellarg($pubkey_filename));
 					$domain['dkim_pubkey'] = file_get_contents($pubkey_filename);
 					safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
@@ -451,18 +438,16 @@ class bind
 					Database::pexecute($upd_stmt, $upd_data);
 				}
 
-				if(!file_exists($privkey_filename)
-						&& $domain['dkim_privkey'] != '')
-				{
+				if (!file_exists($privkey_filename)
+					&& $domain['dkim_privkey'] != '') {
 					$privkey_file_handler = fopen($privkey_filename, "w");
 					fwrite($privkey_file_handler, $domain['dkim_privkey']);
 					fclose($privkey_file_handler);
 					safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
 				}
 
-				if(!file_exists($pubkey_filename)
-						&& $domain['dkim_pubkey'] != '')
-				{
+				if (!file_exists($pubkey_filename)
+					&& $domain['dkim_pubkey'] != '') {
 					$pubkey_file_handler = fopen($pubkey_filename, "w");
 					fwrite($pubkey_file_handler, $domain['dkim_pubkey']);
 					fclose($pubkey_file_handler);
@@ -473,18 +458,20 @@ class bind
 				$dkimkeys.= "*@" . $domain['domain'] . ":" . $domain['domain'] . ":" . $privkey_filename . "\n";
 			}
 
-			$dkimdomains_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/' . $this->settings['dkim']['dkim_domains']);
+			$dkimdomains_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/' . Settings::Get('dkim.dkim_domains'));
 			$dkimdomains_file_handler = fopen($dkimdomains_filename, "w");
 			fwrite($dkimdomains_file_handler, $dkimdomains);
 			fclose($dkimdomains_file_handler);
-			$dkimkeys_filename = makeCorrectFile($this->settings['dkim']['dkim_prefix'] . '/' . $this->settings['dkim']['dkim_dkimkeys']);
+			$dkimkeys_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/' . Settings::Get('dkim.dkim_dkimkeys'));
 			$dkimkeys_file_handler = fopen($dkimkeys_filename, "w");
 			fwrite($dkimkeys_file_handler, $dkimkeys);
 			fclose($dkimkeys_file_handler);
 
-			safe_exec(escapeshellcmd($this->settings['dkim']['dkimrestart_command']));
+			safe_exec(escapeshellcmd(Settings::Get('dkim.dkimrestart_command')));
 			fwrite($this->debugHandler, '  cron_tasks: Task4 - Dkim-milter reloaded' . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Dkim-milter reloaded');
 		}
 	}
+
+
 }

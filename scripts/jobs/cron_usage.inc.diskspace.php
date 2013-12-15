@@ -33,7 +33,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	if (isset($row['diskspace'])
 		&& $row['diskspace_used'] != null
 		&& $row['diskspace_used'] > 0
-		&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)$settings['system']['report_webmax']
+		&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)Settings::Get('system.report_webmax')
 	) {
 
 		$rep_userinfo = array(
@@ -47,7 +47,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			'DISKAVAILABLE' => round(($row['diskspace'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 			'DISKUSED' => round($row['diskspace_used'] / 1024, 2), /* traffic is stored in KB, template uses MB */
 			'USAGE_PERCENT' => round(($row['diskspace_used'] * 100) / $row['diskspace'], 2),
-			'MAX_PERCENT' => $settings['system']['report_webmax']
+			'MAX_PERCENT' => Settings::Get('system.report_webmax')
 		);
 
 		$lngfile_stmt = Database::prepare("
@@ -59,7 +59,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		if ($lngfile !== null) {
 			$langfile = $lngfile['file'];
 		} else {
-			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $settings['panel']['standardlanguage']));
+			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => Settings::Get('panel.standardlanguage')));
 			$langfile = $lngfile['file'];
 		}
 
@@ -129,7 +129,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	if (isset($row['diskspace'])
 		&& $row['diskspace_used'] != null
 		&& $row['diskspace_used'] > 0
-		&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)$settings['system']['report_webmax']
+		&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)Settings::Get('system.report_webmax')
 	) {
 
 		$replace_arr = array(
@@ -137,7 +137,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			'DISKAVAILABLE' => ($row['diskspace'] / 1024), /* traffic is stored in KB, template uses MB */
 			'DISKUSED' => round($row['diskspace_used'] / 1024, 2), /* traffic is stored in KB, template uses MB */
 			'USAGE_PERCENT' => ($row['diskspace_used'] * 100) / $row['diskspace'],
-			'MAX_PERCENT' => $settings['system']['report_webmax']
+			'MAX_PERCENT' => Settings::Get('system.report_webmax')
 		);
 
 		$lngfile_stmt = Database::prepare("
@@ -149,7 +149,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		if ($lngfile !== null) {
 			$langfile = $lngfile['file'];
 		} else {
-			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $settings['panel']['standardlanguage']));
+			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => Settings::Get('panel.standardlanguage')));
 			$langfile = $lngfile['file'];
 		}
 

@@ -27,16 +27,16 @@ $result_tickets_stmt = Database::query("
 );
 $archiving_count = 0;
 
-while($row_ticket = $result_tickets_stmt->fetch(PDO::FETCH_ASSOC)) {
+while ($row_ticket = $result_tickets_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	$lastchange = $row_ticket['lastchange'];
 	$now = time();
 	$days = (int)(($now - $lastchange) / 86400);
 
-	if ($days >= $settings['ticket']['archiving_days']) {
+	if ($days >= Settings::Get('ticket.archiving_days')) {
 
 		fwrite($debugHandler, 'archiving ticket "' . $row_ticket['subject'] . '" (ID #' . $row_ticket['id'] . ')' . "\n");
-		$mainticket = ticket::getInstanceOf(null, $settings, (int)$row_ticket['id']);
+		$mainticket = ticket::getInstanceOf(null, (int)$row_ticket['id']);
 		$mainticket->Set('lastchange', $now, true, true);
 		$mainticket->Set('lastreplier', '1', true, true);
 		$mainticket->Set('status', '3', true, true);

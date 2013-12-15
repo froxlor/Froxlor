@@ -27,7 +27,7 @@ class lighttpd_fcgid extends lighttpd
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
 
 			// vhost data for php-fpm
-			if((int)$this->settings['phpfpm']['enabled'] == 1)
+			if((int)Settings::Get('phpfpm.enabled') == 1)
 			{
 				$php_options_text = '  fastcgi.server = ( '."\n";
 				$php_options_text.=	"\t".'".php" => ('."\n";
@@ -40,7 +40,7 @@ class lighttpd_fcgid extends lighttpd
 				$php_options_text.=	'  )'."\n";				
 			}
 			// vhost data for fcgid
-			elseif((int)$this->settings['system']['mod_fcgid'] == 1)
+			elseif((int)Settings::Get('system.mod_fcgid') == 1)
 			{
 				$php_options_text = '  fastcgi.server = ( '."\n";
 				$file_extensions = explode(' ', $phpconfig['file_extensions']);
@@ -63,7 +63,7 @@ class lighttpd_fcgid extends lighttpd
 						}
 						else
 						{
-							$php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)$this->settings['system']['mod_fcgid_starter'] . '",'."\n";
+							$php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)Settings::Get('system.mod_fcgid_starter') . '",'."\n";
 						}
 					}
 	
@@ -79,7 +79,7 @@ class lighttpd_fcgid extends lighttpd
 						}
 						else
 						{
-							$php_options_text.=	"\t\t\t".'"PHP_FCGI_MAX_REQUESTS" => "' . (int)$this->settings['system']['mod_fcgid_maxrequests'] . '"'."\n";
+							$php_options_text.=	"\t\t\t".'"PHP_FCGI_MAX_REQUESTS" => "' . (int)Settings::Get('system.mod_fcgid_maxrequests') . '"'."\n";
 						}
 					}
 	
@@ -108,23 +108,23 @@ class lighttpd_fcgid extends lighttpd
 
 	public function createOwnVhostStarter()
 	{
-		if ($this->settings['phpfpm']['enabled'] == '1'
-			&& $this->settings['phpfpm']['enabled_ownvhost'] == '1'
+		if (Settings::Get('phpfpm.enabled') == '1'
+			&& Settings::Get('phpfpm.enabled_ownvhost') == '1'
 		) {
 			$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
 
-			$user = $this->settings['phpfpm']['vhost_httpuser'];
-			$group = $this->settings['phpfpm']['vhost_httpgroup'];	
+			$user = Settings::Get('phpfpm.vhost_httpuser');
+			$group = Settings::Get('phpfpm.vhost_httpgroup');	
 
 			$domain = array(
 				'id' => 'none',
-				'domain' => $this->settings['system']['hostname'],
+				'domain' => Settings::Get('system.hostname'),
 				'adminid' => 1, /* first admin-user (superadmin) */
 				'mod_fcgid_starter' => -1,
 				'mod_fcgid_maxrequests' => -1,
 				'guid' => $user,
 				'openbasedir' => 0,
-				'email' => $this->settings['panel']['adminmail'],
+				'email' => Settings::Get('panel.adminmail'),
 				'loginname' => 'froxlor.panel',
 				'documentroot' => $mypath
 			);
@@ -137,12 +137,12 @@ class lighttpd_fcgid extends lighttpd
 			$php = new phpinterface($domain);
 
 			// get php-config
-			if ($this->settings['phpfpm']['enabled'] == '1') {
+			if (Settings::Get('phpfpm.enabled') == '1') {
 				// fpm
-				$phpconfig = $php->getPhpConfig($this->settings['phpfpm']['vhost_defaultini']);
+				$phpconfig = $php->getPhpConfig(Settings::Get('phpfpm.vhost_defaultini'));
 			} else {
 				// fcgid
-				$phpconfig = $php->getPhpConfig($this->settings['system']['mod_fcgid_defaultini_ownvhost']);
+				$phpconfig = $php->getPhpConfig(Settings::Get('system.mod_fcgid_defaultini_ownvhost'));
 			}
 
 			// create starter-file | config-file

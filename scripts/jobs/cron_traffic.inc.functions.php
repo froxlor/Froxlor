@@ -19,10 +19,10 @@
 
 function awstatsDoSingleDomain($domain, $outputdir) {
 
-	global $cronlog, $settings, $theme;
+	global $cronlog, $theme;
 	$returnval = 0;
 
-	$domainconfig = makeCorrectFile($settings['system']['awstats_conf'].'/awstats.' . $domain . '.conf');
+	$domainconfig = makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.' . $domain . '.conf');
 
 	if (file_exists($domainconfig)) {
 
@@ -33,18 +33,18 @@ function awstatsDoSingleDomain($domain, $outputdir) {
 		}
 
 		//check for correct path of awstats_buildstaticpages.pl
-		$awbsp = makeCorrectFile($settings['system']['awstats_path'].'/awstats_buildstaticpages.pl');
-		$awprog = makeCorrectFile($settings['system']['awstats_awstatspath'].'/awstats.pl');
-		
+		$awbsp = makeCorrectFile(Settings::Get('system.awstats_path').'/awstats_buildstaticpages.pl');
+		$awprog = makeCorrectFile(Settings::Get('system.awstats_awstatspath').'/awstats.pl');
+
 		if (!file_exists($awbsp)) {
 			echo "WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting";
 			$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting");
-			exit;	
+			exit;
 		}
 
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '".$domain."' (Output: '".$outputdir."')");
 		safe_exec($awbsp.' -awstatsprog='.escapeshellarg($awprog).' -update -month=' . date('n') . ' -year=' . date('Y') . ' -config=' . $domain . ' -dir='.escapeshellarg($outputdir));
-		
+
 		// index file is saved like 'awstats.[domain].html',
 		// so link a index.html to it
 		$original_index = makeCorrectFile($outputdir.'/awstats.'.$domain.'.html');
@@ -62,7 +62,7 @@ function awstatsDoSingleDomain($domain, $outputdir) {
 			$content = @file_get_contents($file);
 			if ($content !== false) {
 				$content_array = explode("\n", $content);
-				
+
 				$count_bdw = false;
 				foreach ($content_array as $line) {
 					// skip empty lines and comments
@@ -96,6 +96,7 @@ function awstatsDoSingleDomain($domain, $outputdir) {
 	}
 	return $returnval;
 }
+
 
 function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist) {
 
@@ -146,6 +147,7 @@ function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist) {
 	return floatval($returnval);
 }
 
+
 /**
  * Function which make webalizer statistics and returns used traffic since last run
  *
@@ -157,11 +159,11 @@ function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist) {
  */
 function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlist) {
 
-	global $settings, $cronlog;
+	global $cronlog;
 
 	$returnval = 0;
 
-	$logfile = makeCorrectFile($settings['system']['logfiles_directory'] . $logfile . '-access.log');
+	$logfile = makeCorrectFile(Settings::Get('system.logfiles_directory') . $logfile . '-access.log');
 	if (file_exists($logfile)) {
 		$domainargs = '';
 		foreach ($usersdomainlist as $domainid => $domain) {
@@ -185,14 +187,14 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 		}
 
 		$verbosity = '';
-		if ($settings['system']['webalizer_quiet'] == '1') {
+		if (Settings::Get('system.webalizer_quiet') == '1') {
 			$verbosity = '-q';
-		} elseif($settings['system']['webalizer_quiet'] == '2') {
+		} elseif (Settings::Get('system.webalizer_quiet') == '2') {
 			$verbosity = '-Q';
 		}
 
 		$we = '/usr/bin/webalizer';
-		
+
 		// FreeBSD uses other paths, #140
 		if (!file_exists($we)) {
 			$we = '/usr/local/bin/webalizer';
@@ -267,7 +269,7 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 			foreach ($months as $month => $traffic) {
 				if (!isset($httptrafficlast[$year][$month])) {
 					$returnval+= $traffic;
-				} elseif($httptrafficlast[$year][$month] < $httptraffic[$year][$month]) {
+				} elseif ($httptrafficlast[$year][$month] < $httptraffic[$year][$month]) {
 					$returnval+= ($httptraffic[$year][$month] - $httptrafficlast[$year][$month]);
 				}
 			}

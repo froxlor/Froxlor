@@ -18,14 +18,12 @@
  * @TODO ssl-redirect to non-standard port
  */
 
-class lighttpd
-{
+class lighttpd {
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
 
-	//	protected
-	protected $settings = array();
+	// protected
 	protected $lighttpd_data = array();
 	protected $needed_htpasswds = array();
 	protected $auth_backend_loaded = false;
@@ -40,28 +38,26 @@ class lighttpd
 	 */
 	private $_deactivated = false;
 
-	public function __construct($logger, $debugHandler, $idnaConvert, $settings)
-	{
+	public function __construct($logger, $debugHandler, $idnaConvert) {
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
-		$this->settings = $settings;
 	}
 
-	public function reload()
-	{
-		if ((int)$this->settings['phpfpm']['enabled'] == 1) {
+
+	public function reload() {
+		if ((int)Settings::Get('phpfpm.enabled') == 1) {
 			fwrite($this->debugHandler, '   lighttpd::reload: reloading php-fpm' . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
-			safe_exec(escapeshellcmd($this->settings['phpfpm']['reload']));
+			safe_exec(escapeshellcmd(Settings::Get('phpfpm.reload')));
 		}
 		fwrite($this->debugHandler, '   lighttpd::reload: reloading lighttpd' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading lighttpd');
-		safe_exec(escapeshellcmd($this->settings['system']['apachereload_command']));
+		safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
 	}
 
-	public function createIpPort()
-	{
+
+	public function createIpPort() {
 		$result_ipsandports_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC");
 
 		while ($row_ipsandports = $result_ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -77,7 +73,7 @@ class lighttpd
 
 			fwrite($this->debugHandler, '  lighttpd::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ip . ":" . $port);
-			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
+			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
 			if (!isset($this->lighttpd_data[$vhost_filename])) {
 				$this->lighttpd_data[$vhost_filename] = '';
@@ -92,12 +88,12 @@ class lighttpd
 			}
 
 			if ($row_ipsandports['vhostcontainer'] == '1') {
-				$myhost = str_replace('.', '\.', $this->settings['system']['hostname']);
+				$myhost = str_replace('.', '\.', Settings::Get('system.hostname'));
 				$this->lighttpd_data[$vhost_filename].= '# Froxlor default vhost' . "\n";
 				$this->lighttpd_data[$vhost_filename].= '$HTTP["host"] =~ "^(?:www\.|)' . $myhost . '$" {' . "\n";
 
 				if ($row_ipsandports['docroot'] == '') {
-					if ($this->settings['system']['froxlordirectlyviahostname']) {
+					if (Settings::Get('system.froxlordirectlyviahostname')) {
 						$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
 					} else {
 						$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
@@ -113,24 +109,24 @@ class lighttpd
 				 * dirprotection, see #72
 				 * @TODO use better regex for this, deferred until 0.9.5
 				 *
-				$this->lighttpd_data[$vhost_filename].= '  $HTTP["url"] =~ "^/(.+)\/(.+)\.php" {' . "\n";
-				$this->lighttpd_data[$vhost_filename].= '    url.access-deny = ("")' . "\n";
-				$this->lighttpd_data[$vhost_filename].= '  }' . "\n";
-				*/
+				 $this->lighttpd_data[$vhost_filename].= '  $HTTP["url"] =~ "^/(.+)\/(.+)\.php" {' . "\n";
+				 $this->lighttpd_data[$vhost_filename].= '    url.access-deny = ("")' . "\n";
+				 $this->lighttpd_data[$vhost_filename].= '  }' . "\n";
+				 */
 
 				/**
 				 * own php-fpm vhost
 				 */
-				if ((int)$this->settings['phpfpm']['enabled'] == 1) {
+				if ((int)Settings::Get('phpfpm.enabled') == 1) {
 					$domain = array(
 						'id' => 'none',
-						'domain' => $this->settings['system']['hostname'],
+						'domain' => Settings::Get('system.hostname'),
 						'adminid' => 1, /* first admin-user (superadmin) */
 						'mod_fcgid_starter' => -1,
 						'mod_fcgid_maxrequests' => -1,
-						'guid' => $this->settings['phpfpm']['vhost_httpuser'],
+						'guid' => Settings::Get('phpfpm.vhost_httpuser'),
 						'openbasedir' => 0,
-						'email' => $this->settings['panel']['adminmail'],
+						'email' => Settings::Get('panel.adminmail'),
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath
 					);
@@ -138,14 +134,14 @@ class lighttpd
 					$php = new phpinterface($domain);
 
 					$this->lighttpd_data[$vhost_filename].= '  fastcgi.server = ( '."\n";
-					$this->lighttpd_data[$vhost_filename].=	"\t".'".php" => ('."\n";
-					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"localhost" => ('."\n";
-					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"socket" => "'.$php->getInterface()->getSocketFile().'",'."\n";
-					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"check-local" => "enable",'."\n";
-					$this->lighttpd_data[$vhost_filename].=	"\t\t".'"disable-time" => 1'."\n";
-					$this->lighttpd_data[$vhost_filename].=	"\t".')'."\n";
-					$this->lighttpd_data[$vhost_filename].=	"\t".')'."\n";
-					$this->lighttpd_data[$vhost_filename].=	'  )'."\n";
+					$this->lighttpd_data[$vhost_filename].= "\t".'".php" => ('."\n";
+					$this->lighttpd_data[$vhost_filename].= "\t\t".'"localhost" => ('."\n";
+					$this->lighttpd_data[$vhost_filename].= "\t\t".'"socket" => "'.$php->getInterface()->getSocketFile().'",'."\n";
+					$this->lighttpd_data[$vhost_filename].= "\t\t".'"check-local" => "enable",'."\n";
+					$this->lighttpd_data[$vhost_filename].= "\t\t".'"disable-time" => 1'."\n";
+					$this->lighttpd_data[$vhost_filename].= "\t".')'."\n";
+					$this->lighttpd_data[$vhost_filename].= "\t".')'."\n";
+					$this->lighttpd_data[$vhost_filename].= '  )'."\n";
 				}
 
 				if ($row_ipsandports['specialsettings'] != '') {
@@ -157,17 +153,17 @@ class lighttpd
 
 			if ($row_ipsandports['ssl'] == '1') {
 				if ($row_ipsandports['ssl_cert_file'] == '') {
-					$row_ipsandports['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+					$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 				}
 
 				if ($row_ipsandports['ssl_ca_file'] == '') {
-					$row_ipsandports['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
+					$row_ipsandports['ssl_ca_file'] = Settings::Get('system.ssl_ca_file');
 				}
 
 				if ($row_ipsandports['ssl_cert_file'] != '') {
 					$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
 					$this->lighttpd_data[$vhost_filename].= 'ssl.use-sslv2 = "disable"' . "\n";
-					$this->lighttpd_data[$vhost_filename].= 'ssl.cipher-list = "' . $this->settings['system']['ssl_cipher_list'] . '"' . "\n";
+					$this->lighttpd_data[$vhost_filename].= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
 					$this->lighttpd_data[$vhost_filename].= 'ssl.honor-cipher-order = "enable"' . "\n";
 					$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . '"' . "\n";
 
@@ -179,7 +175,7 @@ class lighttpd
 
 			/**
 			 * this function will create a new file which will be included
-			 * if $this->settings['system']['apacheconf_vhost'] is a folder
+			 * if Settings::Get('system.apacheconf_vhost') is a folder
 			 * refs #70
 			 */
 			$vhosts = $this->createLighttpdHosts($row_ipsandports['id'], $row_ipsandports['ssl'], $vhost_filename);
@@ -201,21 +197,21 @@ class lighttpd
 		$this->_createStandardErrorHandler();
 	}
 
+
 	/**
 	 * define a default server.error-handler-404-statement, bug #unknown-yet
 	 */
-	private function _createStandardErrorHandler()
-	{
-		if ($this->settings['defaultwebsrverrhandler']['enabled'] == '1'
-			&& $this->settings['defaultwebsrverrhandler']['err404'] != ''
+	private function _createStandardErrorHandler() {
+		if (Settings::Get('defaultwebsrverrhandler.enabled') == '1'
+			&& Settings::Get('defaultwebsrverrhandler.err404') != ''
 		) {
-			$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'] . '/05_froxlor_default_errorhandler.conf');
+			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/05_froxlor_default_errorhandler.conf');
 
 			if (!isset($this->lighttpd_data[$vhost_filename])) {
 				$this->lighttpd_data[$vhost_filename] = '';
 			}
 
-			$defhandler = $this->settings['defaultwebsrverrhandler']['err404'];
+			$defhandler = Settings::Get('defaultwebsrverrhandler.err404');
 			if (!validateUrl($defhandler)) {
 				$defhandler = makeCorrectFile($defhandler);
 			}
@@ -223,8 +219,8 @@ class lighttpd
 		}
 	}
 
-	protected function create_htaccess($domain)
-	{
+
+	protected function create_htaccess($domain) {
 		$needed_htpasswds = array();
 		$result_htpasswds_stmt = Database::prepare("
 			SELECT * FROM " . TABLE_PANEL_HTPASSWDS . "
@@ -236,7 +232,7 @@ class lighttpd
 		while ($row_htpasswds = $result_htpasswds_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$row_htpasswds['path'] = makeCorrectDir($row_htpasswds['path']);
 			mkDirWithCorrectOwnership($domain['documentroot'], $row_htpasswds['path'], $domain['guid'], $domain['guid']);
-			
+
 			$filename = $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd';
 
 			if (!in_array($row_htpasswds['path'], $needed_htpasswds)) {
@@ -253,7 +249,7 @@ class lighttpd
 
 				$htaccess_text.= '  $HTTP["url"] =~ "^'.$htaccess_path.'" {' . "\n";
 				$htaccess_text.= '    auth.backend = "htpasswd"' . "\n";
-				$htaccess_text.= '    auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
+				$htaccess_text.= '    auth.backend.htpasswd.userfile = "' . makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 				$htaccess_text.= '    auth.require = ( ' . "\n";
 				$htaccess_text.= '      "' . $htaccess_path . '" =>' . "\n";
 				$htaccess_text.= '      (' . "\n";
@@ -271,47 +267,48 @@ class lighttpd
 		return $htaccess_text;
 	}
 
-	public function createVirtualHosts()
-	{
+
+	public function createVirtualHosts() {
 	}
 
-	public function createFileDirOptions()
-	{
+
+	public function createFileDirOptions() {
 	}
 
-	protected function composePhpOptions($domain)
-	{
+
+	protected function composePhpOptions($domain) {
 	}
 
-	public function createOwnVhostStarter()
-	{
+
+	public function createOwnVhostStarter() {
 	}
+
 
 	protected function createLighttpdHosts($ipid, $ssl, $vhost_filename) {
 
 		$domains = WebserverBase::getVhostsToCreate();
 		foreach ($domains as $domain) {
 
-			if (is_dir($this->settings['system']['apacheconf_vhost'])) {
-				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'].'/vhosts/')));
-				
+			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
+				safe_exec('mkdir -p '.escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost').'/vhosts/')));
+
 				// determine correct include-path:
 				// e.g. '/etc/lighttpd/conf-enabled/vhosts/ has to become'
 				// 'conf-enabled/vhosts/' (damn debian, but luckily works too on other distros)
-				$_tmp_path = substr(makeCorrectDir($this->settings['system']['apacheconf_vhost']), 0, -1);
+				$_tmp_path = substr(makeCorrectDir(Settings::Get('system.apacheconf_vhost')), 0, -1);
 				$_pos = strrpos($_tmp_path, '/');
 				$_inc_path = substr($_tmp_path, $_pos+1);
 
 				// subdomain
-				if((int)$domain['parentdomainid'] == 0 
+				if ((int)$domain['parentdomainid'] == 0
 					&& isCustomerStdSubdomain((int)$domain['id']) == false
 					&& ((int)$domain['ismainbutsubto'] == 0
-					|| domainMainToSubExists($domain['ismainbutsubto']) == false) 
+						|| domainMainToSubExists($domain['ismainbutsubto']) == false)
 				) {
 					$vhost_no = '50';
 				}
 				// sub-but-main-domain
-				elseif((int)$domain['parentdomainid'] == 0 
+				elseif ((int)$domain['parentdomainid'] == 0
 					&& isCustomerStdSubdomain((int)$domain['id']) == false
 					&& (int)$domain['ismainbutsubto'] > 0
 				) {
@@ -326,7 +323,7 @@ class lighttpd
 					$vhost_no = (int)$vhost_no += 10;
 				}
 
-				$vhost_filename = makeCorrectFile($this->settings['system']['apacheconf_vhost'].'/vhosts/'.$vhost_no.'_'.$domain['domain'].'.conf');
+				$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost').'/vhosts/'.$vhost_no.'_'.$domain['domain'].'.conf');
 				$included_vhosts[] = $_inc_path.'/vhosts/'.$vhost_no.'_'.$domain['domain'].'.conf';
 			}
 
@@ -335,8 +332,8 @@ class lighttpd
 			}
 
 			if ((!empty($this->lighttpd_data[$vhost_filename])
-				&& !is_dir($this->settings['system']['apacheconf_vhost']))
-				|| is_dir($this->settings['system']['apacheconf_vhost'])
+					&& !is_dir(Settings::Get('system.apacheconf_vhost')))
+				|| is_dir(Settings::Get('system.apacheconf_vhost'))
 			) {
 				if ($ssl == '1') {
 					$ssl_vhost = true;
@@ -356,8 +353,8 @@ class lighttpd
 		return $included_vhosts;
 	}
 
-	protected function getVhostContent($domain, $ssl_vhost = false, $ipid)
-	{
+
+	protected function getVhostContent($domain, $ssl_vhost = false, $ipid) {
 		if ($ssl_vhost === true
 			&& $domain['ssl'] != '1'
 			&& $domain['ssl_redirect'] != '1'
@@ -449,8 +446,8 @@ class lighttpd
 						$vhost_content.= $ipandport['default_vhostconf_domain'] . "\n";
 					}
 
-					if ($this->settings['system']['default_vhostconf'] != '') {
-						$vhost_content.= $this->settings['system']['default_vhostconf'] . "\n";
+					if (Settings::Get('system.default_vhostconf') != '') {
+						$vhost_content.= Settings::Get('system.default_vhostconf') . "\n";
 					}
 				}
 				$vhost_content.= $this->getLogFiles($domain);
@@ -462,26 +459,26 @@ class lighttpd
 		return $vhost_content;
 	}
 
-	protected function getSslSettings($domain, $ssl_vhost)
-	{
+
+	protected function getSslSettings($domain, $ssl_vhost) {
 		$ssl_settings = '';
-		
-		if($ssl_vhost === true
+
+		if ($ssl_vhost === true
 			&& $domain['ssl'] == '1'
-			&& (int)$this->settings['system']['use_ssl'] == 1
+			&& (int)Settings::Get('system.use_ssl') == 1
 		) {
 			if ($domain['ssl_cert_file'] == '') {
-				$domain['ssl_cert_file'] = $this->settings['system']['ssl_cert_file'];
+				$domain['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 			}
 
 			if ($domain['ssl_ca_file'] == '') {
-				$domain['ssl_ca_file'] = $this->settings['system']['ssl_ca_file'];
+				$domain['ssl_ca_file'] = Settings::Get('system.ssl_ca_file');
 			}
-			
+
 			if ($domain['ssl_cert_file'] != '') {
 				$ssl_settings.= 'ssl.engine = "enable"' . "\n";
 				$ssl_settings.= 'ssl.use-sslv2 = "disable"' . "\n";
-				$ssl_settings.= 'ssl.cipher-list = "' . $this->settings['system']['ssl_cipher_list'] . '"' . "\n";
+				$ssl_settings.= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
 				$ssl_settings.= 'ssl.honor-cipher-order = "enable"' . "\n";
 				$ssl_settings.= 'ssl.pemfile = "' . makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
 
@@ -493,10 +490,11 @@ class lighttpd
 		return $ssl_settings;
 	}
 
+
 	protected function getLogFiles($domain) {
 
 		$logfiles_text = '';
-		
+
 		$speciallogfile = '';
 		if ($domain['speciallogfile'] == '1') {
 			if ($domain['parentdomainid'] == '0') {
@@ -509,15 +507,15 @@ class lighttpd
 		// The normal access/error - logging is enabled
 		// error log cannot be set conditionally see
 		// https://redmine.lighttpd.net/issues/665
-		$access_log = makeCorrectFile($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log');
+		$access_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
 		// Create the logfile if it does not exist (fixes #46)
 		touch($access_log);
-		chown($access_log, $this->settings['system']['httpuser']);
-		chgrp($access_log, $this->settings['system']['httpgroup']);
+		chown($access_log, Settings::Get('system.httpuser'));
+		chgrp($access_log, Settings::Get('system.httpgroup'));
 
 		$logfiles_text.= '  accesslog.filename	= "' . $access_log . '"' . "\n";
-		
-		if ($this->settings['system']['awstats_enabled'] == '1') {
+
+		if (Settings::Get('system.awstats_enabled') == '1') {
 
 			if ((int)$domain['parentdomainid'] == 0) {
 				// prepare the aliases and subdomains for stats config files
@@ -528,11 +526,11 @@ class lighttpd
 					WHERE `aliasdomain` = :domainid OR `parentdomainid` = :domainid
 				");
 				Database::pexecute($alias_domains_stmt, array('domainid' => $domain['id']));
-	
+
 				while (($alias_domain = $alias_domains_stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
 
 					$server_alias.= ' ' . $alias_domain['domain'] . ' ';
-	
+
 					if ($alias_domain['iswildcarddomain'] == '1') {
 						$server_alias.= '*.' . $domain['domain'];
 					} else {
@@ -543,7 +541,7 @@ class lighttpd
 						}
 					}
 				}
-	
+
 				if ($domain['iswildcarddomain'] == '1') {
 					$alias = '*.' . $domain['domain'];
 				} else {
@@ -553,20 +551,20 @@ class lighttpd
 						$alias = '';
 					}
 				}
-	
-				// After inserting the AWStats information, 
+
+				// After inserting the AWStats information,
 				// be sure to build the awstats conf file as well
 				// and chown it using $awstats_params, #258
 				// Bug 960 + Bug 970 : Use full $domain instead of custom $awstats_params as following classes depend on the informations
-				createAWStatsConf($this->settings['system']['logfiles_directory'] . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
+				createAWStatsConf(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
 			}
 		}
 
 		return $logfiles_text;
 	}
 
-	protected function create_pathOptions($domain)
-	{
+
+	protected function create_pathOptions($domain) {
 		$result_stmt = Database::prepare("
 			SELECT * FROM " . TABLE_PANEL_HTACCESS . "
 			WHERE `path` LIKE :docroot
@@ -594,7 +592,7 @@ class lighttpd
 				}
 
 				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
-				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
+				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
 				if ($row['path'] != $domain['documentroot']) {
@@ -611,16 +609,16 @@ class lighttpd
 				&& $row['options_cgi'] != '0'
 			) {
 				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
-				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);				
+				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
-				if($row['path'] != $domain['documentroot']) {
+				if ($row['path'] != $domain['documentroot']) {
 					$path = substr($path, 0, -1);
 				}
 				$path_options.= '  $HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
 				$path_options.= "\t" . 'cgi.assign = (' . "\n";
-				$path_options.= "\t\t" . '".pl" => "'.makeCorrectFile($this->settings['system']['perl_path']).'",' . "\n";
-				$path_options.= "\t\t" . '".cgi" => "'.makeCorrectFile($this->settings['system']['perl_path']).'"' . "\n";
+				$path_options.= "\t\t" . '".pl" => "'.makeCorrectFile(Settings::Get('system.perl_path')).'",' . "\n";
+				$path_options.= "\t\t" . '".cgi" => "'.makeCorrectFile(Settings::Get('system.perl_path')).'"' . "\n";
 				$path_options.= "\t" . ')' . "\n";
 				$path_options.= '  }' . "\n\n";
 			}
@@ -629,8 +627,8 @@ class lighttpd
 		return $path_options;
 	}
 
-	protected function getDirOptions($domain)
-	{
+
+	protected function getDirOptions($domain) {
 		$result_stmt = Database::prepare("
 			SELECT * FROM " . TABLE_PANEL_HTPASSWDS . "
 			WHERE `customerid` = :customerid
@@ -646,14 +644,14 @@ class lighttpd
 				if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') {
 					$auth_backend_loaded[$domain['ipandport']] = 'yes';
 					$diroption_text.= 'auth.backend = "htpasswd"' . "\n";
-					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
+					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text.= 'auth.require = ( ' . "\n";
 					$previous_domain_id = '1';
-				} elseif($this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
+				} elseif ($this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
 					$auth_backend_loaded[$domain['ssl_ipandport']] = 'yes';
 					$diroption_text.= 'auth.backend= "htpasswd"' . "\n";
-					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
+					$diroption_text.= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text.= 'auth.require = ( ' . "\n";
 					$previous_domain_id = '1';
@@ -676,11 +674,11 @@ class lighttpd
 			}
 		}
 
-		return '  auth.backend.htpasswd.userfile = "' . makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $filename) . '"' . "\n";
+		return '  auth.backend.htpasswd.userfile = "' . makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 	}
 
-	protected function getServerNames($domain)
-	{
+
+	protected function getServerNames($domain) {
 		$server_string = array();
 		$domain_name = str_replace('.', '\.', $domain['domain']);
 
@@ -721,7 +719,7 @@ class lighttpd
 			if (sizeof($server_string) > 1) {
 				if ($i == 0) {
 					$servernames_text = '(' . $data . '|';
-				} elseif(sizeof($server_string) - 1 == $i) {
+				} elseif (sizeof($server_string) - 1 == $i) {
 					$servernames_text .= $data . ')';
 				} else {
 					$servernames_text .= $data . '|';
@@ -742,15 +740,15 @@ class lighttpd
 		return $servernames_text;
 	}
 
-	protected function getWebroot($domain, $ssl)
-	{
+
+	protected function getWebroot($domain, $ssl) {
 		$webroot_text = '';
 
 		if ($domain['deactivated'] == '1'
-			&& $this->settings['system']['deactivateddocroot'] != ''
+			&& Settings::Get('system.deactivateddocroot') != ''
 		) {
 			$webroot_text.= '  # Using docroot for deactivated users...' . "\n";
-			$webroot_text.= '  server.document-root = "' . makeCorrectDir($this->settings['system']['deactivateddocroot']) . "\"\n";
+			$webroot_text.= '  server.document-root = "' . makeCorrectDir(Settings::Get('system.deactivateddocroot')) . "\"\n";
 			$this->_deactivated = true;
 		} else {
 			if ($ssl === false
@@ -762,7 +760,7 @@ class lighttpd
 				$webroot_text.= "\t" . '"" => "' . $redirect_domain . '",' . "\n";
 				$webroot_text.= "\t" . '"/" => "' . $redirect_domain . '"' . "\n";
 				$webroot_text.= '  )'."\n";
-			} elseif(preg_match("#^https?://#i", $domain['documentroot'])) {
+			} elseif (preg_match("#^https?://#i", $domain['documentroot'])) {
 				$redirect_domain = $this->idnaConvert->encode($domain['documentroot']);
 				$webroot_text.= '  url.redirect = ('."\n";
 				$webroot_text.= "\t" . '"^/(.*)" => "' . $redirect_domain . '/$1",' . "\n";
@@ -777,35 +775,35 @@ class lighttpd
 
 		return $webroot_text;
 	}
-	
+
+
 	/**
 	 * Lets set the text part for the stats software
 	 */
-	protected function getStats($domain)
-	{
+	protected function getStats($domain) {
 		$stats_text = '';
 
 		if ($domain['speciallogfile'] == '1') {
 			if ($domain['parentdomainid'] == '0') {
-				if ($this->settings['system']['awstats_enabled'] == '1') {
+				if (Settings::Get('system.awstats_enabled') == '1') {
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
-					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
 				} else {
-					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']).'/" )' . "\n";					
+					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']).'/" )' . "\n";
 				}
 			} else {
-				if ($this->settings['system']['awstats_enabled'] == '1') {
+				if (Settings::Get('system.awstats_enabled') == '1') {
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']).'" )' . "\n";
-					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
 				} else {
 					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']).'/" )' . "\n";
 				}
 			}
 		} else {
 			if ($domain['customerroot'] != $domain['documentroot']) {
-				if ($this->settings['system']['awstats_enabled'] == '1') {
+				if (Settings::Get('system.awstats_enabled') == '1') {
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
-					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
 				} else {
 					$stats_text.= '  alias.url = ( "/webalizer/" => "'.makeCorrectFile($domain['customerroot'] . '/webalizer/').'" )' . "\n";
 				}
@@ -814,21 +812,21 @@ class lighttpd
 			// because the stats are in /awstats/[domain], not just /awstats/
 			// also, the awstats-icons are someplace else too!
 			// -> webalizer does not need this!
-			elseif ($this->settings['system']['awstats_enabled'] == '1') {
+			elseif (Settings::Get('system.awstats_enabled') == '1') {
 				$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
-				$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir($this->settings['system']['awstats_icons']) . '" )' . "\n";
+				$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
 			}
 		}
 
 		return $stats_text;
 	}
 
-	public function writeConfigs()
-	{
-		fwrite($this->debugHandler, '  lighttpd::writeConfigs: rebuilding ' . $this->settings['system']['apacheconf_vhost'] . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . $this->settings['system']['apacheconf_vhost']);
 
-		if (!isConfigDir($this->settings['system']['apacheconf_vhost'])) {
+	public function writeConfigs() {
+		fwrite($this->debugHandler, '  lighttpd::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
+
+		if (!isConfigDir(Settings::Get('system.apacheconf_vhost'))) {
 			// Save one big file
 			$vhosts_file = '';
 
@@ -843,7 +841,7 @@ class lighttpd
 				$vhosts_file.= $vhost_content . "\n\n";
 			}
 
-			$vhosts_filename = $this->settings['system']['apacheconf_vhost'];
+			$vhosts_filename = Settings::Get('system.apacheconf_vhost');
 
 			// Apply header
 			$vhosts_file = '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n" . $vhosts_file;
@@ -851,10 +849,10 @@ class lighttpd
 			fwrite($vhosts_file_handler, $vhosts_file);
 			fclose($vhosts_file_handler);
 		} else {
-			if (!file_exists($this->settings['system']['apacheconf_vhost'])) {
-				fwrite($this->debugHandler, '  lighttpd::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'])) . "\n");
-				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'])));
-				safe_exec('mkdir ' . escapeshellarg(makeCorrectDir($this->settings['system']['apacheconf_vhost'])));
+			if (!file_exists(Settings::Get('system.apacheconf_vhost'))) {
+				fwrite($this->debugHandler, '  lighttpd::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))) . "\n");
+				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				safe_exec('mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
 			// Write a single file for every vhost
@@ -873,13 +871,13 @@ class lighttpd
 		}
 
 		// Write the diroptions
-		if (isConfigDir($this->settings['system']['apacheconf_htpasswddir'])) {
+		if (isConfigDir(Settings::Get('system.apacheconf_htpasswddir'))) {
 			foreach ($this->needed_htpasswds as $key => $data) {
-				if (!is_dir($this->settings['system']['apacheconf_htpasswddir'])) {
-					mkdir(makeCorrectDir($this->settings['system']['apacheconf_htpasswddir']));
+				if (!is_dir(Settings::Get('system.apacheconf_htpasswddir'))) {
+					mkdir(makeCorrectDir(Settings::Get('system.apacheconf_htpasswddir')));
 				}
 
-				$filename = makeCorrectFile($this->settings['system']['apacheconf_htpasswddir'] . '/' . $key);
+				$filename = makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $key);
 				$htpasswd_handler = fopen($filename, 'w');
 				fwrite($htpasswd_handler, $data);
 				fclose($htpasswd_handler);

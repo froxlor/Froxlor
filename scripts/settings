@@ -1,0 +1,357 @@
+jobs/cron_tasks.inc.dns.10.bind.php:		$this->logger = $logger;
+jobs/cron_tasks.inc.dns.10.bind.php:		$this->debugHandler = $debugHandler;
+jobs/cron_tasks.inc.dns.10.bind.php:				$this->nameservers[] = array(
+jobs/cron_tasks.inc.dns.10.bind.php:				$this->mxservers[] = $mxserver;
+jobs/cron_tasks.inc.dns.10.bind.php:				$this->axfrservers[] = trim($axfrserver);
+jobs/cron_tasks.inc.dns.10.bind.php:		fwrite($this->debugHandler, '  cron_tasks: Task4 started - Rebuilding froxlor_bind.conf' . "\n");
+jobs/cron_tasks.inc.dns.10.bind.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Rebuilding froxlor_bind.conf');
+jobs/cron_tasks.inc.dns.10.bind.php:			$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
+jobs/cron_tasks.inc.dns.10.bind.php:			fwrite($this->debugHandler, '  cron_tasks: Task4 - Writing ' . $domain['id'] . '::' . $domain['domain'] . "\n");
+jobs/cron_tasks.inc.dns.10.bind.php:			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Writing ' . $domain['id'] . '::' . $domain['domain']);
+jobs/cron_tasks.inc.dns.10.bind.php:				$zonefile = $this->generateZone($domain);
+jobs/cron_tasks.inc.dns.10.bind.php:				fwrite($this->debugHandler, '  cron_tasks: Task4 - `' . $zonefile_name . '` zone written' . "\n");
+jobs/cron_tasks.inc.dns.10.bind.php:			if (count($this->nameservers) > 0
+jobs/cron_tasks.inc.dns.10.bind.php:				|| count($this->axfrservers) > 0
+jobs/cron_tasks.inc.dns.10.bind.php:				if (count($this->nameservers) > 0) {
+jobs/cron_tasks.inc.dns.10.bind.php:					foreach ($this->nameservers as $ns) {
+jobs/cron_tasks.inc.dns.10.bind.php:				if (count($this->axfrservers) > 0) {
+jobs/cron_tasks.inc.dns.10.bind.php:					foreach ($this->axfrservers as $axfrserver) {
+jobs/cron_tasks.inc.dns.10.bind.php:		fwrite($this->debugHandler, '  cron_tasks: Task4 - froxlor_bind.conf written' . "\n");
+jobs/cron_tasks.inc.dns.10.bind.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
+jobs/cron_tasks.inc.dns.10.bind.php:		fwrite($this->debugHandler, '  cron_tasks: Task4 - Bind9 reloaded' . "\n");
+jobs/cron_tasks.inc.dns.10.bind.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
+jobs/cron_tasks.inc.dns.10.bind.php:					fwrite($this->debugHandler, '  cron_tasks: Task4 - unlinking ' . $domain_filename . "\n");
+jobs/cron_tasks.inc.dns.10.bind.php:					$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'Deleting ' . $domain_filename);
+jobs/cron_tasks.inc.dns.10.bind.php:		if (count($this->nameservers) == 0) {
+jobs/cron_tasks.inc.dns.10.bind.php:			$zonefile.= '@ IN SOA ' . $this->nameservers[0]['hostname'] . ' ' . str_replace('@', '.', Settings::Get('panel.adminmail')) . '. (' . "\n";
+jobs/cron_tasks.inc.dns.10.bind.php:		if (count($this->nameservers) == 0) {
+jobs/cron_tasks.inc.dns.10.bind.php:			foreach ($this->nameservers as $nameserver) {
+jobs/cron_tasks.inc.dns.10.bind.php:		if (count($this->mxservers) == 0) {
+jobs/cron_tasks.inc.dns.10.bind.php:			foreach ($this->mxservers as $mxserver) {
+jobs/cron_tasks.inc.dns.10.bind.php:		$zonefile.= $this->generateDkim($domain);
+jobs/cron_tasks.inc.dns.10.bind.php:				if (count($this->nameservers) == 0) {
+jobs/cron_tasks.inc.dns.10.bind.php:					foreach ($this->nameservers as $nameserver) {
+jobs/cron_tasks.inc.dns.10.bind.php:				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir -p ' . escapeshellarg(makeCorrectDir(Settings::Get('dkim.dkim_prefix'))));
+jobs/cron_tasks.inc.dns.10.bind.php:			fwrite($this->debugHandler, '  cron_tasks: Task4 - Dkim-milter reloaded' . "\n");
+jobs/cron_tasks.inc.dns.10.bind.php:			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Dkim-milter reloaded');
+jobs/cron_tasks.inc.http.10.apache.php:		$this->logger = $logger;
+jobs/cron_tasks.inc.http.10.apache.php:		$this->debugHandler = $debugHandler;
+jobs/cron_tasks.inc.http.10.apache.php:		$this->idnaConvert = $idnaConvert;
+jobs/cron_tasks.inc.http.10.apache.php:			fwrite($this->debugHandler, '   apache::reload: reloading php-fpm' . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
+jobs/cron_tasks.inc.http.10.apache.php:		fwrite($this->debugHandler, '   apache::reload: reloading apache' . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading apache');
+jobs/cron_tasks.inc.http.10.apache.php:				fwrite($this->debugHandler, '  apache::_createStandardDirectoryEntry: unlinking ' . basename($vhosts_filename) . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . basename($vhosts_filename));
+jobs/cron_tasks.inc.http.10.apache.php:			if (!isset($this->virtualhosts_data[$vhosts_filename])) {
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename] = '';
+jobs/cron_tasks.inc.http.10.apache.php:			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . makeCorrectDir(Settings::Get('system.documentroot_prefix')) . '">' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:			$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:			if (!isset($this->virtualhosts_data[$vhosts_filename])) {
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename] = '';
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= 'ErrorDocument ' . $statusCode . ' ' . $defhandler . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:			fwrite($this->debugHandler, '  apache::createIpPort: creating ip/port settings for  ' . $ipport . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ipport);
+jobs/cron_tasks.inc.http.10.apache.php:			if (!isset($this->virtualhosts_data[$vhosts_filename])) {
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename] = '';
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename] .= 'Listen ' . $ipport . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:				$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted listen-statement');
+jobs/cron_tasks.inc.http.10.apache.php:					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, $ipport . ' :: namevirtualhost-statement no longer needed for apache-2.4');
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename].= 'NameVirtualHost ' . $ipport . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted namevirtualhost-statement');
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename] .= '<VirtualHost ' . $ipport . '>' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename] .= 'DocumentRoot "'.$mypath.'"'."\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= ' ServerName ' . Settings::Get('system.hostname') . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= '  FcgidIdleTimeout ' . Settings::Get('system.mod_fcgid_idle_timeout') . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_httpuser') . '" "' . Settings::Get('system.mod_fcgid_httpgroup') . '"' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= '  ScriptAlias /php/ ' . $configdir . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_httpuser') . '" "' . Settings::Get('system.mod_fcgid_httpgroup') . '"' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename].= '    <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename].= '      SetHandler fcgid-script' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:							$this->virtualhosts_data[$vhosts_filename].= '      FcgidWrapper ' . $starter_filename . ' .' . $file_extension . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename].= '      Options +ExecCGI' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename].= '    </FilesMatch>' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:							$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:							$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:							$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName .' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= '   <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= '     AddHandler php5-fastcgi .php'. "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= '     Action php5-fastcgi /fastcgiphp' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename].= '      Options +ExecCGI' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename].= '    </FilesMatch>' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . $srvName . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:				 $this->virtualhosts_data[$vhosts_filename] .= "\t<Directory \"'.$mypath.'(images|packages|templates)\">\n";
+jobs/cron_tasks.inc.http.10.apache.php:				 $this->virtualhosts_data[$vhosts_filename] .= "\t\tAllow from all\n";
+jobs/cron_tasks.inc.http.10.apache.php:				 $this->virtualhosts_data[$vhosts_filename] .= "\t\tOptions -Indexes\n";
+jobs/cron_tasks.inc.http.10.apache.php:				 $this->virtualhosts_data[$vhosts_filename] .= "\t</Directory>\n";
+jobs/cron_tasks.inc.http.10.apache.php:				 $this->virtualhosts_data[$vhosts_filename] .= "\t<Directory \"'.$mypath.'*\">\n";
+jobs/cron_tasks.inc.http.10.apache.php:				 $this->virtualhosts_data[$vhosts_filename] .= "\t\tOrder Deny,Allow\n";
+jobs/cron_tasks.inc.http.10.apache.php:				 $this->virtualhosts_data[$vhosts_filename] .= "\t\tDeny from All\n";
+jobs/cron_tasks.inc.http.10.apache.php:				 $this->virtualhosts_data[$vhosts_filename] .= "\t</Directory>\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename] .= $row_ipsandports['specialsettings'] . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= ' SSLVerifyDepth 10' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateFile ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateKeyFile ' . makeCorrectFile($row_ipsandports['ssl_key_file']) . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCACertificateFile ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:							$this->virtualhosts_data[$vhosts_filename] .= '  SSLCertificateChainFile ' . makeCorrectFile($row_ipsandports['ssl_cert_chainfile']) . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename] .= '</VirtualHost>' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:				$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted vhostcontainer');
+jobs/cron_tasks.inc.http.10.apache.php:		$this->_createStandardDirectoryEntry();
+jobs/cron_tasks.inc.http.10.apache.php:		$this->_createStandardErrorHandler();
+jobs/cron_tasks.inc.http.10.apache.php:			$this->_deactivated = true;
+jobs/cron_tasks.inc.http.10.apache.php:			$this->_deactivated = false;
+jobs/cron_tasks.inc.http.10.apache.php:		$vhost_content.= $this->getServerNames($domain);
+jobs/cron_tasks.inc.http.10.apache.php:			$corrected_docroot = $this->idnaConvert->encode($domain['documentroot']);
+jobs/cron_tasks.inc.http.10.apache.php:			$vhost_content .= '  Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:			$vhost_content .= $this->getWebroot($domain);
+jobs/cron_tasks.inc.http.10.apache.php:			if ($this->_deactivated == false) {
+jobs/cron_tasks.inc.http.10.apache.php:				$vhost_content .= $this->composePhpOptions($domain,$ssl_vhost);
+jobs/cron_tasks.inc.http.10.apache.php:				$vhost_content .= $this->getStats($domain);
+jobs/cron_tasks.inc.http.10.apache.php:			$vhost_content .= $this->getLogfiles($domain);
+jobs/cron_tasks.inc.http.10.apache.php:			fwrite($this->debugHandler, '  apache::createVirtualHosts: creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname'] . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname']);
+jobs/cron_tasks.inc.http.10.apache.php:			$vhosts_filename = $this->getVhostFilename($domain);
+jobs/cron_tasks.inc.http.10.apache.php:			$this->virtualhosts_data[$vhosts_filename] = '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename].= $this->getVhostContent($domain, false);
+jobs/cron_tasks.inc.http.10.apache.php:					$vhosts_filename_ssl = $this->getVhostFilename($domain, true);
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename_ssl] = '# Domain ID: ' . $domain['id'] . ' (SSL) - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->virtualhosts_data[$vhosts_filename_ssl] .= $this->getVhostContent($domain, true);
+jobs/cron_tasks.inc.http.10.apache.php:				$this->virtualhosts_data[$vhosts_filename] .= '# Customer deactivated and a docroot for deactivated users hasn\'t been set.' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:			if (!isset($this->diroptions_data[$diroptions_filename])) {
+jobs/cron_tasks.inc.http.10.apache.php:				$this->diroptions_data[$diroptions_filename] = '';
+jobs/cron_tasks.inc.http.10.apache.php:				$this->diroptions_data[$diroptions_filename] .= '<Directory "' . $row_diroptions['path'] . '">' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->diroptions_data[$diroptions_filename] .= '  Options +Indexes';
+jobs/cron_tasks.inc.http.10.apache.php:						$this->diroptions_data[$diroptions_filename] .= ' ExecCGI -MultiViews +SymLinksIfOwnerMatch +FollowSymLinks'."\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->diroptions_data[$diroptions_filename] .= "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					fwrite($this->debugHandler, '  cron_tasks: Task3 - Setting Options +Indexes' . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:					$this->diroptions_data[$diroptions_filename] .= '  Options -Indexes';
+jobs/cron_tasks.inc.http.10.apache.php:						$this->diroptions_data[$diroptions_filename] .= ' ExecCGI -MultiViews +SymLinksIfOwnerMatch +FollowSymLinks'."\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->diroptions_data[$diroptions_filename] .= "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					fwrite($this->debugHandler, '  cron_tasks: Task3 - Setting Options -Indexes' . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:						$this->diroptions_data[$diroptions_filename].= '  ErrorDocument ' . $statusCode . ' ' . $defhandler . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->diroptions_data[$diroptions_filename] .= '  AllowOverride None' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->diroptions_data[$diroptions_filename] .= '  AddHandler cgi-script .cgi .pl' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->diroptions_data[$diroptions_filename] .= '  Require all granted' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->diroptions_data[$diroptions_filename] .= '  Order allow,deny' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:						$this->diroptions_data[$diroptions_filename] .= '  Allow from all' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					fwrite($this->debugHandler, '  cron_tasks: Task3 - Enabling perl execution' . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:					if (!isset($this->htpasswds_data[$htpasswd_filename])) {
+jobs/cron_tasks.inc.http.10.apache.php:						$this->htpasswds_data[$htpasswd_filename] = '';
+jobs/cron_tasks.inc.http.10.apache.php:						$this->htpasswds_data[$htpasswd_filename] .= $row_htpasswd['username'] . ':' . $row_htpasswd['password'] . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->diroptions_data[$diroptions_filename] .= '  AuthType Basic' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->diroptions_data[$diroptions_filename] .= '  AuthName "'.$row_htpasswd['authname'].'"' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->diroptions_data[$diroptions_filename] .= '  AuthUserFile ' . $htpasswd_filename . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:					$this->diroptions_data[$diroptions_filename] .= '  require valid-user' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:				$this->diroptions_data[$diroptions_filename] .= '</Directory>' . "\n";
+jobs/cron_tasks.inc.http.10.apache.php:		fwrite($this->debugHandler, '  apache::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_diroptions') . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_diroptions'));
+jobs/cron_tasks.inc.http.10.apache.php:		if (count($this->diroptions_data) > 0) {
+jobs/cron_tasks.inc.http.10.apache.php:				foreach ($this->diroptions_data as $diroptions_filename => $diroptions_content) {
+jobs/cron_tasks.inc.http.10.apache.php:					fwrite($this->debugHandler, '  apache::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))) . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))));
+jobs/cron_tasks.inc.http.10.apache.php:				foreach ($this->diroptions_data as $diroptions_filename => $diroptions_file) {
+jobs/cron_tasks.inc.http.10.apache.php:					$this->known_diroptionsfilenames[] = basename($diroptions_filename);
+jobs/cron_tasks.inc.http.10.apache.php:		fwrite($this->debugHandler, '  apache::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_htpasswddir') . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_htpasswddir'));
+jobs/cron_tasks.inc.http.10.apache.php:		if (count($this->htpasswds_data) > 0) {
+jobs/cron_tasks.inc.http.10.apache.php:				foreach ($this->htpasswds_data as $htpasswd_filename => $htpasswd_file) {
+jobs/cron_tasks.inc.http.10.apache.php:					$this->known_htpasswdsfilenames[] = basename($htpasswd_filename);
+jobs/cron_tasks.inc.http.10.apache.php:				fwrite($this->debugHandler, '  cron_tasks: WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!' . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:				$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!');
+jobs/cron_tasks.inc.http.10.apache.php:		fwrite($this->debugHandler, '  apache::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
+jobs/cron_tasks.inc.http.10.apache.php:		if (count($this->virtualhosts_data) > 0) {
+jobs/cron_tasks.inc.http.10.apache.php:				ksort($this->virtualhosts_data);
+jobs/cron_tasks.inc.http.10.apache.php:				foreach ($this->virtualhosts_data as $vhosts_filename => $vhost_content) {
+jobs/cron_tasks.inc.http.10.apache.php:					fwrite($this->debugHandler, '  apache::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))) . "\n");
+jobs/cron_tasks.inc.http.10.apache.php:					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+jobs/cron_tasks.inc.http.10.apache.php:				foreach ($this->virtualhosts_data as $vhosts_filename => $vhosts_file) {
+jobs/cron_tasks.inc.http.10.apache.php:					$this->known_vhostfilenames[] = basename($vhosts_filename);
+jobs/cron_tasks.inc.http.20.lighttpd.php:		$this->logger = $logger;
+jobs/cron_tasks.inc.http.20.lighttpd.php:		$this->debugHandler = $debugHandler;
+jobs/cron_tasks.inc.http.20.lighttpd.php:		$this->idnaConvert = $idnaConvert;
+jobs/cron_tasks.inc.http.20.lighttpd.php:			fwrite($this->debugHandler, '   lighttpd::reload: reloading php-fpm' . "\n");
+jobs/cron_tasks.inc.http.20.lighttpd.php:			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
+jobs/cron_tasks.inc.http.20.lighttpd.php:		fwrite($this->debugHandler, '   lighttpd::reload: reloading lighttpd' . "\n");
+jobs/cron_tasks.inc.http.20.lighttpd.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading lighttpd');
+jobs/cron_tasks.inc.http.20.lighttpd.php:			fwrite($this->debugHandler, '  lighttpd::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port . "\n");
+jobs/cron_tasks.inc.http.20.lighttpd.php:			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ip . ":" . $port);
+jobs/cron_tasks.inc.http.20.lighttpd.php:			if (!isset($this->lighttpd_data[$vhost_filename])) {
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->lighttpd_data[$vhost_filename] = '';
+jobs/cron_tasks.inc.http.20.lighttpd.php:			$this->lighttpd_data[$vhost_filename].= '$SERVER["socket"] == "' . $ip . ':' . $port . '" {' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->lighttpd_data[$vhost_filename].= 'server.port = ' . $port . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->lighttpd_data[$vhost_filename].= 'server.bind = "' . $ip . '"' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->lighttpd_data[$vhost_filename].= $ipv6;
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->lighttpd_data[$vhost_filename].= '# Froxlor default vhost' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->lighttpd_data[$vhost_filename].= '$HTTP["host"] =~ "^(?:www\.|)' . $myhost . '$" {' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->lighttpd_data[$vhost_filename].= '  server.document-root = "'.$mypath.'"'."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:				 $this->lighttpd_data[$vhost_filename].= '  $HTTP["url"] =~ "^/(.+)\/(.+)\.php" {' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:				 $this->lighttpd_data[$vhost_filename].= '    url.access-deny = ("")' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:				 $this->lighttpd_data[$vhost_filename].= '  }' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= '  fastcgi.server = ( '."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= "\t".'".php" => ('."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= "\t\t".'"localhost" => ('."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= "\t\t".'"socket" => "'.$php->getInterface()->getSocketFile().'",'."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= "\t\t".'"check-local" => "enable",'."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= "\t\t".'"disable-time" => 1'."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= "\t".')'."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= "\t".')'."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= '  )'."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->lighttpd_data[$vhost_filename].= '}' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= 'ssl.use-sslv2 = "disable"' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= 'ssl.honor-cipher-order = "enable"' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . '"' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:						$this->lighttpd_data[$vhost_filename].= 'ssl.ca-file = "' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . '"' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:			$vhosts = $this->createLighttpdHosts($row_ipsandports['id'], $row_ipsandports['ssl'], $vhost_filename);
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename].= ' include "'.$vhost.'"'."\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:			$this->lighttpd_data[$vhost_filename].= '}' . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:		$this->_createStandardErrorHandler();
+jobs/cron_tasks.inc.http.20.lighttpd.php:			if (!isset($this->lighttpd_data[$vhost_filename])) {
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->lighttpd_data[$vhost_filename] = '';
+jobs/cron_tasks.inc.http.20.lighttpd.php:			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "'.$defhandler.'"';
+jobs/cron_tasks.inc.http.20.lighttpd.php:				if (!isset($this->needed_htpasswds[$filename])) {
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->needed_htpasswds[$filename] = '';
+jobs/cron_tasks.inc.http.20.lighttpd.php:				if (!strstr($this->needed_htpasswds[$filename], $row_htpasswds['username'] . ':' . $row_htpasswds['password'])) {
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->needed_htpasswds[$filename].= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:			if (!isset($this->lighttpd_data[$vhost_filename])) {
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->lighttpd_data[$vhost_filename] = '';
+jobs/cron_tasks.inc.http.20.lighttpd.php:			if ((!empty($this->lighttpd_data[$vhost_filename])
+jobs/cron_tasks.inc.http.20.lighttpd.php:				if ($this->lighttpd_data[$vhost_filename] == '') {
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->lighttpd_data[$vhost_filename] .= $this->getVhostContent($domain, $ssl_vhost, $ipid);
+jobs/cron_tasks.inc.http.20.lighttpd.php:		$vhost_content.= $this->getServerNames($domain) . " {\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:			$vhost_content.= '     "^/(.*)$" => "'. $this->idnaConvert->encode($domain['documentroot']) . '$1"'. "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:			$vhost_content.= $this->getWebroot($domain, $ssl_vhost);
+jobs/cron_tasks.inc.http.20.lighttpd.php:				if ($this->_deactivated == false) {
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$vhost_content.= $this->create_htaccess($domain);
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$vhost_content.= $this->create_pathOptions($domain);
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$vhost_content.= $this->composePhpOptions($domain);
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$vhost_content.= $this->getStats($domain);
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$vhost_content.= $this->getSslSettings($domain, $ssl_vhost);
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$vhost_content.= $this->getLogFiles($domain);
+jobs/cron_tasks.inc.http.20.lighttpd.php:				if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') {
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:				} elseif ($this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
+jobs/cron_tasks.inc.http.20.lighttpd.php:					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
+jobs/cron_tasks.inc.http.20.lighttpd.php:			if ($this->auth_backend_loaded[$domain['ssl_ipandport']] == 'yes') {
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->needed_htpasswds[$domain['ssl_ipandport']].= $diroption_text;
+jobs/cron_tasks.inc.http.20.lighttpd.php:			if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') {
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->needed_htpasswds[$domain['ipandport']].= $diroption_text;
+jobs/cron_tasks.inc.http.20.lighttpd.php:			$this->_deactivated = true;
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$redirect_domain = $this->idnaConvert->encode('https://' . $domain['domain']);
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$redirect_domain = $this->idnaConvert->encode($domain['documentroot']);
+jobs/cron_tasks.inc.http.20.lighttpd.php:			$this->_deactivated = false;
+jobs/cron_tasks.inc.http.20.lighttpd.php:		fwrite($this->debugHandler, '  lighttpd::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
+jobs/cron_tasks.inc.http.20.lighttpd.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
+jobs/cron_tasks.inc.http.20.lighttpd.php:			ksort($this->lighttpd_data);
+jobs/cron_tasks.inc.http.20.lighttpd.php:			foreach ($this->lighttpd_data as $vhosts_filename => $vhost_content) {
+jobs/cron_tasks.inc.http.20.lighttpd.php:				fwrite($this->debugHandler, '  lighttpd::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))) . "\n");
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+jobs/cron_tasks.inc.http.20.lighttpd.php:			foreach ($this->lighttpd_data as $vhosts_filename => $vhosts_file) {
+jobs/cron_tasks.inc.http.20.lighttpd.php:				$this->known_filenames[] = basename($vhosts_filename);
+jobs/cron_tasks.inc.http.20.lighttpd.php:			foreach ($this->needed_htpasswds as $key => $data) {
+jobs/cron_tasks.inc.http.30.nginx.php:		$this->logger = $logger;
+jobs/cron_tasks.inc.http.30.nginx.php:		$this->debugHandler = $debugHandler;
+jobs/cron_tasks.inc.http.30.nginx.php:		$this->idnaConvert = $idnaConvert;
+jobs/cron_tasks.inc.http.30.nginx.php:		$this->nginx_server = $nginx_server;
+jobs/cron_tasks.inc.http.30.nginx.php:		fwrite($this->debugHandler, '   nginx::reload: reloading nginx' . "\n");
+jobs/cron_tasks.inc.http.30.nginx.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading nginx');
+jobs/cron_tasks.inc.http.30.nginx.php:			fwrite($this->debugHandler, '   nginx::reload: restarting php processes' . "\n");
+jobs/cron_tasks.inc.http.30.nginx.php:			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'restarting php processes');
+jobs/cron_tasks.inc.http.30.nginx.php:			fwrite($this->debugHandler, '   nginx::reload: reloading php-fpm' . "\n");
+jobs/cron_tasks.inc.http.30.nginx.php:			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
+jobs/cron_tasks.inc.http.30.nginx.php:			if (!isset($this->nginx_data[$vhosts_filename])) {
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhosts_filename] = '';
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->nginx_data[$vhosts_filename].= 'error_page ' . $statusCode . ' ' . $defhandler . ';' . "\n";
+jobs/cron_tasks.inc.http.30.nginx.php:			fwrite($this->debugHandler, '  nginx::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port . "\n");
+jobs/cron_tasks.inc.http.30.nginx.php:			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ip . ":" . $port);
+jobs/cron_tasks.inc.http.30.nginx.php:			if (!isset($this->nginx_data[$vhost_filename])) {
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] = '';
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= 'server { ' . "\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t". 'listen    ' . $ip . ':' . $port . ' default'. ($ssl_vhost == true ? ' ssl' : '') . ';' . "\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t".'# Froxlor default vhost' . "\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t".'server_name    ' . Settings::Get('system.hostname') . ';' . "\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t".'access_log      /var/log/nginx/access.log;' . "\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t".'root     '.$mypath.';'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t".'location / {'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t\t".'index    index.php index.html index.htm;'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t".'}'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->nginx_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->nginx_data[$vhost_filename].=$this->composeSslSettings($row_ipsandports);
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t".'location ~ \.php$ {'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t\t".' if (!-f $request_filename) {'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t\t\t".'return 404;'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t\t".'}'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_index index.php;'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t\t".'include '.Settings::Get('nginx.fastcgiparams').';'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_param HTTPS on;'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass ' . Settings::Get('system.nginx_php_backend') . ';' . "\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= "\t".'}'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] .= '}' . "\n\n";
+jobs/cron_tasks.inc.http.30.nginx.php:		$this->createNginxHosts();
+jobs/cron_tasks.inc.http.30.nginx.php:		$this->_createStandardErrorHandler();
+jobs/cron_tasks.inc.http.30.nginx.php:			$vhost_filename = $this->getVhostFilename($domain);
+jobs/cron_tasks.inc.http.30.nginx.php:			if (!isset($this->nginx_data[$vhost_filename])) {
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename] = '';
+jobs/cron_tasks.inc.http.30.nginx.php:			if ((!empty($this->nginx_data[$vhost_filename])
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->nginx_data[$vhost_filename].= $this->getVhostContent($domain, false);
+jobs/cron_tasks.inc.http.30.nginx.php:					$vhost_filename_ssl = $this->getVhostFilename($domain, true);
+jobs/cron_tasks.inc.http.30.nginx.php:					if (!isset($this->nginx_data[$vhost_filename_ssl])) {
+jobs/cron_tasks.inc.http.30.nginx.php:						$this->nginx_data[$vhost_filename_ssl] = '';
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->nginx_data[$vhost_filename_ssl] .= $this->getVhostContent($domain, true);
+jobs/cron_tasks.inc.http.30.nginx.php:		$vhost_content .= $this->getServerNames($domain);
+jobs/cron_tasks.inc.http.30.nginx.php:			$vhost_content .= "\t".'rewrite ^(.*) '.$this->idnaConvert->encode($domain['documentroot']).'$1 permanent;'."\n";
+jobs/cron_tasks.inc.http.30.nginx.php:			$vhost_content .= $this->getLogFiles($domain);
+jobs/cron_tasks.inc.http.30.nginx.php:			$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
+jobs/cron_tasks.inc.http.30.nginx.php:			if ($this->_deactivated == false) {
+jobs/cron_tasks.inc.http.30.nginx.php:					$vhost_content.= $this->composeSslSettings($domain);
+jobs/cron_tasks.inc.http.30.nginx.php:				$vhost_content.= $this->create_pathOptions($domain);
+jobs/cron_tasks.inc.http.30.nginx.php:				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
+jobs/cron_tasks.inc.http.30.nginx.php:				$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
+jobs/cron_tasks.inc.http.30.nginx.php:		return $this->mergeVhostBlocks($vhost_content);
+jobs/cron_tasks.inc.http.30.nginx.php:		$htpasswds = $this->getHtpasswds($domain);
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->vhost_root_autoindex = true;
+jobs/cron_tasks.inc.http.30.nginx.php:				if ($this->vhost_root_autoindex) {
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->vhost_root_autoindex = false;
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->vhost_root_autoindex = false;
+jobs/cron_tasks.inc.http.30.nginx.php:				if ($this->vhost_root_autoindex) {
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->vhost_root_autoindex = false;
+jobs/cron_tasks.inc.http.30.nginx.php:					$path_options .= $this->getStats($domain,$single);
+jobs/cron_tasks.inc.http.30.nginx.php:				if (!isset($this->htpasswds_data[$htpasswd_filename])) {
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->htpasswds_data[$htpasswd_filename] = '';
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->htpasswds_data[$htpasswd_filename].= $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
+jobs/cron_tasks.inc.http.30.nginx.php:			$this->_deactivated = true;
+jobs/cron_tasks.inc.http.30.nginx.php:			$this->_deactivated = false;
+jobs/cron_tasks.inc.http.30.nginx.php:		if ($this->vhost_root_autoindex) {
+jobs/cron_tasks.inc.http.30.nginx.php:			$this->vhost_root_autoindex = false;
+jobs/cron_tasks.inc.http.30.nginx.php:		fwrite($this->debugHandler, '  nginx::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
+jobs/cron_tasks.inc.http.30.nginx.php:		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
+jobs/cron_tasks.inc.http.30.nginx.php:			ksort($this->nginx_data);
+jobs/cron_tasks.inc.http.30.nginx.php:			foreach ($this->nginx_data as $vhosts_filename => $vhost_content) {
+jobs/cron_tasks.inc.http.30.nginx.php:				fwrite($this->debugHandler, '  nginx::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))) . "\n");
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+jobs/cron_tasks.inc.http.30.nginx.php:			foreach ($this->nginx_data as $vhosts_filename => $vhosts_file) {
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->known_filenames[] = basename($vhosts_filename);
+jobs/cron_tasks.inc.http.30.nginx.php:		if (count($this->htpasswds_data) > 0) {
+jobs/cron_tasks.inc.http.30.nginx.php:				fwrite($this->debugHandler, '  cron_tasks: WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!' . "\n");
+jobs/cron_tasks.inc.http.30.nginx.php:				$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!');
+jobs/cron_tasks.inc.http.30.nginx.php:				foreach ($this->htpasswds_data as $htpasswd_filename => $htpasswd_file) {
+jobs/cron_tasks.inc.http.30.nginx.php:					$this->known_htpasswdsfilenames[] = basename($htpasswd_filename);

@@ -26,7 +26,7 @@ $yesterday = time() - (60 * 60 * 24);
 $mail = new PHPMailer(true);
 
 $mail->CharSet = "UTF-8";
-$mail->SetFrom($settings['panel']['adminmail'], 'Froxlor Administrator');
+$mail->SetFrom(Settings::Get('panel.adminmail'), 'Froxlor Administrator');
 
 // Warn the customers at xx% traffic-usage
 
@@ -54,7 +54,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	if (isset($row['traffic'])
 		&& $row['traffic'] > 0
 		&& $row['traffic_used'] != null
-		&& (($row['traffic_used'] * 100) / $row['traffic']) >= (int)$settings['system']['report_trafficmax']
+		&& (($row['traffic_used'] * 100) / $row['traffic']) >= (int)Settings::Get('system.report_trafficmax')
 	) {
 		$rep_userinfo = array(
 			'name' => $row['name'],
@@ -67,7 +67,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			'TRAFFIC' => round(($row['traffic'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 			'TRAFFICUSED' => round(($row['traffic_used'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 			'USAGE_PERCENT' => round(($row['traffic_used'] * 100) / $row['traffic'], 2),
-			'MAX_PERCENT' => $settings['system']['report_trafficmax']
+			'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
 		);
 
 		$lngfile_stmt = Database::prepare("
@@ -79,7 +79,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		if ($lngfile !== null) {
 			$langfile = $lngfile['file'];
 		} else {
-			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $settings['panel']['standardlanguage']));
+			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => Settings::Get('panel.standardlanguage')));
 			$langfile = $lngfile['file'];
 		}
 
@@ -96,9 +96,9 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			AND `templategroup` = 'mails' AND `varname` = :varname
 		");
 		$resul2_data = array(
-				'adminid' => $row['adminid'],
-				'lang' => $row['def_language'],
-				'varname' => 'trafficmaxpercent_subject'
+			'adminid' => $row['adminid'],
+			'lang' => $row['def_language'],
+			'varname' => 'trafficmaxpercent_subject'
 		);
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
@@ -106,7 +106,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$resul2_data['varname'] = 'trafficmaxpercent_mailbody';
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
-		
+
 		$_mailerror = false;
 		try {
 			$mail->SetFrom($row['adminmail'], $row['adminname']);
@@ -148,8 +148,8 @@ $result_stmt = Database::prepare("
 ");
 
 $result_data = array(
-		'year' => date("Y", $yesterday),
-		'month' => date("m", $yesterday)
+	'year' => date("Y", $yesterday),
+	'month' => date("m", $yesterday)
 );
 Database::pexecute($result_stmt, $result_data);
 
@@ -157,7 +157,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	if (isset($row['traffic'])
 		&& $row['traffic'] > 0
-		&& (($row['traffic_used_total'] * 100) / $row['traffic']) >= (int)$settings['system']['report_trafficmax']
+		&& (($row['traffic_used_total'] * 100) / $row['traffic']) >= (int)Settings::Get('system.report_trafficmax')
 	) {
 
 		$replace_arr = array(
@@ -165,7 +165,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			'TRAFFIC' => round(($row['traffic'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 			'TRAFFICUSED' => round(($row['traffic_used_total'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 			'USAGE_PERCENT' => round(($row['traffic_used_total'] * 100) / $row['traffic'], 2),
-			'MAX_PERCENT' => $settings['system']['report_trafficmax']
+			'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
 		);
 
 		$lngfile_stmt = Database::prepare("
@@ -177,7 +177,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		if ($lngfile !== null) {
 			$langfile = $lngfile['file'];
 		} else {
-			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $settings['panel']['standardlanguage']));
+			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => Settings::Get('panel.standardlanguage')));
 			$langfile = $lngfile['file'];
 		}
 
@@ -194,9 +194,9 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			AND `templategroup` = 'mails' AND `varname` = :varname
 		");
 		$resul2_data = array(
-				'adminid' => $row['adminid'],
-				'lang' => $row['def_language'],
-				'varname' => 'trafficmaxpercent_subject'
+			'adminid' => $row['adminid'],
+			'lang' => $row['def_language'],
+			'varname' => 'trafficmaxpercent_subject'
 		);
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
@@ -266,7 +266,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 		$mail_body.= '---------------------------------------------' . "\n";
 		$mail_body.= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-12d', $row['traffic_used_total']) . ' (' . sprintf('%00.3f%%', (($row['traffic_used_total'] * 100) / $row['traffic'])) . ')   ' . $row['traffic'] . "\n";
-		
+
 		$_mailerror = false;
 		try {
 			$mail->SetFrom($row['email'], $row['name']);

@@ -32,7 +32,7 @@ while ($maildir = $maildirs_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	$_maildir = makeCorrectDir($maildir['maildirpath']);
 
-	if (file_exists($_maildir) 
+	if (file_exists($_maildir)
 		&& is_dir($_maildir)
 	) {
 		$back = safe_exec('du -sk ' . escapeshellarg($_maildir) . '');

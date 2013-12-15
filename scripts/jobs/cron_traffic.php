@@ -143,7 +143,7 @@ while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 Database::needRoot(false);
 
 // We are using the file-system quota, this will speed up the diskusage - collection
-if ($settings['system']['diskquota_enabled']) {
+if (Settings::Get('system.diskquota_enabled')) {
 	$usedquota = getFilesystemQuota();
 }
 
@@ -157,8 +157,8 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$httptraffic = 0;
 
 	if (isset($domainlist[$row['customerid']])
-	   && is_array($domainlist[$row['customerid']])
-	   && count($domainlist[$row['customerid']]) != 0
+		&& is_array($domainlist[$row['customerid']])
+		&& count($domainlist[$row['customerid']]) != 0
 	) {
 		// Examining which caption to use for default webalizer stats...
 		if ($row['standardsubdomain'] != '0') {
@@ -172,7 +172,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			foreach ($domainlist[$row['customerid']] as $domainid => $domain) {
 
 				if (!isset($speciallogfile_domainlist[$row['customerid']])
-				   || !isset($speciallogfile_domainlist[$row['customerid']][$domainid])
+					|| !isset($speciallogfile_domainlist[$row['customerid']][$domainid])
 				) {
 					$caption = $domain;
 					break;
@@ -184,11 +184,11 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		reset($domainlist[$row['customerid']]);
 
 		if (isset($speciallogfile_domainlist[$row['customerid']])
-		   && is_array($speciallogfile_domainlist[$row['customerid']])
-		   && count($speciallogfile_domainlist[$row['customerid']]) != 0
+			&& is_array($speciallogfile_domainlist[$row['customerid']])
+			&& count($speciallogfile_domainlist[$row['customerid']]) != 0
 		) {
 			reset($speciallogfile_domainlist[$row['customerid']]);
-			if ($settings['system']['awstats_enabled'] == '0') {
+			if (Settings::Get('system.awstats_enabled') == '0') {
 				foreach ($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain) {
 					$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
 				}
@@ -201,7 +201,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		// *not* also in the special-logfiles-loop, because the function
 		// will iterate through all customer-domains and the awstats-configs
 		// know the logfile-name, #246
-		if ($settings['system']['awstats_enabled'] == '1') {
+		if (Settings::Get('system.awstats_enabled') == '1') {
 			$httptraffic+= floatval(callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']]));
 		} else {
 			$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
@@ -306,7 +306,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$webspaceusage = 0;
 
 	// Using repquota, it's faster using this tool than using du traversing the complete directory
-	if ($settings['system']['diskquota_enabled']
+	if (Settings::Get('system.diskquota_enabled')
 		&& isset($usedquota[$row['guid']]['block']['used'])
 		&& $usedquota[$row['guid']]['block']['used'] >= 1
 	) {
@@ -338,7 +338,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	fwrite($debugHandler, 'calculating mailspace usage for ' . $row['loginname'] . "\n");
 	$emailusage = 0;
 
-	$maildir = makeCorrectDir($settings['system']['vmail_homedir'] . $row['loginname']);
+	$maildir = makeCorrectDir(Settings::Get('system.vmail_homedir') . $row['loginname']);
 	if (file_exists($maildir) && is_dir($maildir)) {
 		$back = safe_exec('du -sk ' . escapeshellarg($maildir) . '');
 		foreach ($back as $backrow) {
@@ -430,7 +430,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$upd_data = array(
 		'biu' => ($current_diskspace['all'] * 1024),
 		'loginname' => $row['loginname'],
-		'loginnamelike' => $row['loginname'] . $settings['customer']['ftpprefix'] . "%"
+		'loginnamelike' => $row['loginname'] . Settings::Get('customer.ftpprefix') . "%"
 	);
 	$upd_stmt = Database::prepare("
 		UPDATE `" . TABLE_FTP_QUOTATALLIES . "` SET
@@ -441,7 +441,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	/**
 	 * Pureftpd Quota
 	 */
-	if ($settings['system']['ftpserver'] == "pureftpd") {
+	if (Settings::Get('system.ftpserver') == "pureftpd") {
 
 		$result_quota_stmt = Database::prepare("
 			SELECT homedir FROM `" . TABLE_FTP_USERS . "` WHERE customerid = :customerid
@@ -449,7 +449,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		Database::pexecute($result_quota_stmt, array('customerid' => $row['customerid']));
 
 		// get correct user
-		if ($settings['system']['mod_fcgid'] == 1
+		if (Settings::Get('system.mod_fcgid') == 1
 			&& $row['deactivated'] == '0'
 		) {
 			$user = $row['loginname'];

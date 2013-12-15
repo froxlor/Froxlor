@@ -17,22 +17,20 @@
 
 class nginx_phpfpm extends nginx
 {
-	protected function composePhpOptions($domain, $ssl_vhost = false)
-	{
+	protected function composePhpOptions($domain, $ssl_vhost = false) {
 		$php_options_text = '';
 
-		if($domain['phpenabled'] == '1')
-		{
+		if ($domain['phpenabled'] == '1') {
 			$php = new phpinterface($domain);
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
-			
+
 			$php_options_text = "\t".'location ~ \.php$ {'."\n";
 			$php_options_text.= "\t\t".'try_files $uri =404;'."\n";
 			$php_options_text.= "\t\t".'fastcgi_split_path_info ^(.+\.php)(/.+)$;'."\n";
 			$php_options_text.= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
 			$php_options_text.= "\t\t".'fastcgi_index index.php;'."\n";
 			$php_options_text.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
-			$php_options_text.= "\t\t".'include '.$this->settings['nginx']['fastcgiparams'].';'."\n";
+			$php_options_text.= "\t\t".'include '.Settings::Get('nginx.fastcgiparams').';'."\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
 				$php_options_text.= "\t\t".'fastcgi_param HTTPS on;'."\n";
 			}
@@ -40,38 +38,37 @@ class nginx_phpfpm extends nginx
 
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
-			
+
 			// create php.ini (fpm does nothing here, as it
 			// defines ini-settings in its pool config)
 			$php->getInterface()->createIniFile($phpconfig);
 		}
-		else
-		{
+		else {
 			$php_options_text.= '  # PHP is disabled for this vHost' . "\n";
 		}
 
 		return $php_options_text;
 	}
 
-	public function createOwnVhostStarter()
-	{
-		if ($this->settings['phpfpm']['enabled'] == '1'
-			&& $this->settings['phpfpm']['enabled_ownvhost'] == '1'
+
+	public function createOwnVhostStarter() {
+		if (Settings::Get('phpfpm.enabled') == '1'
+			&& Settings::Get('phpfpm.enabled_ownvhost') == '1'
 		) {
 			$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
 
-			$user = $this->settings['phpfpm']['vhost_httpuser'];
-			$group = $this->settings['phpfpm']['vhost_httpgroup'];
+			$user = Settings::Get('phpfpm.vhost_httpuser');
+			$group = Settings::Get('phpfpm.vhost_httpgroup');
 
 			$domain = array(
 				'id' => 'none',
-				'domain' => $this->settings['system']['hostname'],
+				'domain' => Settings::Get('system.hostname'),
 				'adminid' => 1, /* first admin-user (superadmin) */
 				'mod_fcgid_starter' => -1,
 				'mod_fcgid_maxrequests' => -1,
 				'guid' => $user,
 				'openbasedir' => 0,
-				'email' => $this->settings['panel']['adminmail'],
+				'email' => Settings::Get('panel.adminmail'),
 				'loginname' => 'froxlor.panel',
 				'documentroot' => $mypath
 			);
@@ -79,25 +76,27 @@ class nginx_phpfpm extends nginx
 			// all the files and folders have to belong to the local user
 			// now because we also use fcgid for our own vhost
 			safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
-						
+
 			// get php.ini for our own vhost
 			$php = new phpinterface($domain);
 
 			// get php-config
-			if ($this->settings['phpfpm']['enabled'] == '1') {
+			if (Settings::Get('phpfpm.enabled') == '1') {
 				// fpm
-				$phpconfig = $php->getPhpConfig($this->settings['phpfpm']['vhost_defaultini']);
+				$phpconfig = $php->getPhpConfig(Settings::Get('phpfpm.vhost_defaultini'));
 			} else {
 				// fcgid
-				$phpconfig = $php->getPhpConfig($this->settings['system']['mod_fcgid_defaultini_ownvhost']);
+				$phpconfig = $php->getPhpConfig(Settings::Get('system.mod_fcgid_defaultini_ownvhost'));
 			}
 
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
-			
+
 			// create php.ini (fpm does nothing here, as it
 			// defines ini-settings in its pool config)
 			$php->getInterface()->createIniFile($phpconfig);
 		}
 	}
+
+
 }
