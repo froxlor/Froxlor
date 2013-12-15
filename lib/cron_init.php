@@ -127,11 +127,12 @@ try {
 }
 
 fwrite($debugHandler, 'Database-connection established' . "\n");
+
+// TODO remove when fully migrated to new Settings class
 $result_stmt = Database::query("
 	SELECT `settingid`, `settinggroup`, `varname`, `value`
 	FROM `" . TABLE_PANEL_SETTINGS . "`
 ");
-
 while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$settings[$row['settinggroup']][$row['varname']] = $row['value'];
 }
@@ -140,26 +141,37 @@ unset($row);
 fwrite($debugHandler, 'Froxlor settings have been loaded from the database' . "\n");
 
 /**
- * if settings['system']['mod_fcgid_ownvhost'] is set, we have to check
+ * if using fcgid or fpm for froxlor-vhost itself, we have to check
  * whether the permission of the files are still correct
  */
-if ((int)$settings['system']['mod_fcgid'] == 1
-	&& (int)$settings['system']['mod_fcgid_ownvhost'] == 1
+fwrite($debugHandler, 'Checking froxlor file permissions');
+$_mypath = makeCorrectDir(FROXLOR_INSTALL_DIR);
+
+if (((int)Settings::Get('system.mod_fcgid') == 1 && (int)Settings::Get('system.mod_fcgid_ownvhost') == 1)
+		|| ((int)Settings::Get('phpfpm.enabled') == 1 && (int)Settings::Get('phpfpm.enabled_ownvhost') == 1)
 ) {
-	fwrite($debugHandler, 'Checking froxlor file permissions');
-	$mypath = makeCorrectDir(FROXLOR_INSTALL_DIR);
-	$user = $settings['system']['mod_fcgid_httpuser'];
-	$group = $settings['system']['mod_fcgid_httpgroup'];
+	$user = Settings::Get('system.mod_fcgid_httpuser');
+	$group = Settings::Get('system.mod_fcgid_httpgroup');
+
+	if (Settings::Get('phpfpm.enabled') == 1) {
+		$user = Settings::Get('phpfpm.vhost_httpuser');
+		$group = Settings::Get('phpfpm.vhost_httpgroup');
+	}
 	// all the files and folders have to belong to the local user
 	// now because we also use fcgid for our own vhost
-	safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
+	safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($_mypath));
+} else {
+	// back to webserver permission
+	$user = Settings::Get('system.httpuser');
+	$group = Settings::Get('system.httpgroup');
+	safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($_mypath));
 }
 
 // be sure HTMLPurifier's cache folder is writable
 safe_exec('chmod -R 0755 '.escapeshellarg(dirname(__FILE__).'/classes/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer'));
 
-if (!isset($settings['panel']['version'])
-   || $settings['panel']['version'] != $version
+if (Settings::Get('panel.version') == null
+   || Settings::Get('panel.version') != $version
 ) {
 	/**
 	 * Do not proceed further if the Database version is not the same as the script version
@@ -168,18 +180,18 @@ if (!isset($settings['panel']['version'])
 	unlink($lockfile);
 	$errormessage = "Version of file doesnt match version of database. Exiting...\n\n";
 	$errormessage.= "Possible reason: Froxlor update\n";
-	$errormessage.= "Information: Current version in database: ".$settings['panel']['version']." - version of Froxlor files: ".$version."\n";
+	$errormessage.= "Information: Current version in database: ".Settings::Get('panel.version')." - version of Froxlor files: ".$version."\n";
 	$errormessage.= "Solution: Please visit your Foxlor admin interface for further information.\n";
 	die($errormessage);
 }
 
 fwrite($debugHandler, 'Froxlor version and database version are correct' . "\n");
 
-$cronscriptDebug = ($settings['system']['debug_cron'] == '1') ? true : false;
+$cronscriptDebug = (Settings::Get('system.debug_cron') == '1') ? true : false;
 
 // Create a new idna converter
 $idna_convert = new idna_convert_wrapper();
 
 // Initialize logging
-$cronlog = FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'), $settings);
+$cronlog = FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'));
 fwrite($debugHandler, 'Logger has been included' . "\n");

@@ -24,9 +24,9 @@
  *
  * @return null
  */
-function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
-{
-	global $settings, $lng;
+function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
+
+	global $lng;
 
 	if(versionInUpdate($current_version, '0.9.4-svn2'))
 	{
@@ -42,11 +42,11 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.6-svn2'))
 	{
-		if(!PHPMailer::ValidateAddress($settings['panel']['adminmail']))
+		if(!PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')))
 		{
 			$has_preconfig = true;
 			$description = 'Froxlor uses a newer version of the phpMailerClass and determined that your current admin-mail address is invalid.';
-			$question = '<strong>Please specify a new admin-email address:</strong>&nbsp;<input type="text" class="text" name="update_adminmail" value="'.$settings['panel']['adminmail'].'" />';
+			$question = '<strong>Please specify a new admin-email address:</strong>&nbsp;<input type="text" class="text" name="update_adminmail" value="'.Settings::Get('panel.adminmail').'" />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
@@ -57,7 +57,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$description = 'You now have the possibility to define default error-documents for your webserver which replace the default webserver error-messages.';
 		$question = '<strong>Do you want to enable default error-documents?:</strong>&nbsp;';
 		$question .= makeyesno('update_deferr_enable', '1', '0', '0').'<br /><br />';
-		if($settings['system']['webserver'] == 'apache2')
+		if(Settings::Get('system.webserver') == 'apache2')
 		{
 			$question .= 'Path/URL for error 500:&nbsp;<input type="text" class="text" name="update_deferr_500" /><br /><br />';
 			$question .= 'Path/URL for error 401:&nbsp;<input type="text" class="text" name="update_deferr_401" /><br /><br />';
@@ -244,7 +244,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.12-svn1'))
 	{
-		if($settings['system']['mod_fcgid'] == 1)
+		if(Settings::Get('system.mod_fcgid') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'You can chose whether you want Froxlor to use FCGID itself too now.';
@@ -273,19 +273,19 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.12-svn4'))
 	{
-		if((int)$settings['system']['awstats_enabled'] == 1)
+		if((int)Settings::Get('system.awstats_enabled') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'Due to different paths of awstats_buildstaticpages.pl and awstats.pl you can set a different path for awstats.pl now.';
 			$question = '<strong>Path to \'awstats.pl\'?:</strong>&nbsp;';
-			$question.= '<input type="text" class="text" name="update_awstats_awstatspath" value="'.$settings['system']['awstats_path'].'" /><br />';
+			$question.= '<input type="text" class="text" name="update_awstats_awstatspath" value="'.Settings::Get('system.awstats_path').'" /><br />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
 
 	if(versionInUpdate($current_version, '0.9.13-svn1'))
 	{
-		if((int)$settings['autoresponder']['autoresponder_active'] == 1)
+		if((int)Settings::Get('autoresponder.autoresponder_active') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'Froxlor can now limit the number of autoresponder-entries for each user. Here you can set the value which will be available for each customer (Of course you can change the value for each customer separately after the update).';
@@ -297,7 +297,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.13.1'))
 	{
-		if((int)$settings['system']['mod_fcgid_ownvhost'] == 1)
+		if((int)Settings::Get('system.mod_fcgid_ownvhost') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'You have FCGID for Froxlor itself activated. You can now specify a PHP-configuration for this.';
@@ -316,24 +316,24 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.14-svn3'))
 	{
-		if((int)$settings['system']['awstats_enabled'] == 1)
+		if((int)Settings::Get('system.awstats_enabled') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'To have icons in AWStats statistic-pages please enter the path to AWStats icons folder.';
 			$question = '<strong>Path to AWSTats icons folder:</strong>&nbsp;';
-			$question.= '<input type="text" class="text" name="update_awstats_icons" value="'.$settings['system']['awstats_icons'].'" />';
+			$question.= '<input type="text" class="text" name="update_awstats_icons" value="'.Settings::Get('system.awstats_icons').'" />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
 
 	if(versionInUpdate($current_version, '0.9.14-svn4'))
 	{
-		if((int)$settings['system']['use_ssl'] == 1)
+		if((int)Settings::Get('system.use_ssl') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'Froxlor now has the possibility to set \'SSLCertificateChainFile\' for the apache webserver.';
 			$question = '<strong>Enter filename (leave empty for none):</strong>&nbsp;';
-			$question.= '<input type="text" class="text" name="update_ssl_cert_chainfile" value="'.$settings['system']['ssl_cert_chainfile'].'" />';
+			$question.= '<input type="text" class="text" name="update_ssl_cert_chainfile" value="'.Settings::Get('system.ssl_cert_chainfile').'" />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
@@ -390,7 +390,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.16-svn2'))
 	{
-		if((int)$settings['phpfpm']['enabled'] == 1)
+		if((int)Settings::Get('phpfpm.enabled') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'You can chose whether you want Froxlor to use PHP-FPM itself too now.';
@@ -398,9 +398,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			$question.= makeyesno('update_phpfpm_enabled_ownvhost', '1', '0', '0').'<br /><br />';
 			$question.= '<strong>If \'yes\', please specify local user/group (have to exist, Froxlor does not add them automatically):</strong><br /><br />';
 			$question.= 'Local user:&nbsp;';
-			$question.= '<input type="text" class="text" name="update_phpfpm_httpuser" value="'.$settings['system']['mod_fcgid_httpuser'].'" /><br /><br />';
+			$question.= '<input type="text" class="text" name="update_phpfpm_httpuser" value="'.Settings::Get('system.mod_fcgid_httpuser').'" /><br /><br />';
 			$question.= 'Local group:&nbsp;';
-			$question.= '<input type="text" class="text" name="update_phpfpm_httpgroup" value="'.$settings['system']['mod_fcgid_httpgroup'].'" /><br />';
+			$question.= '<input type="text" class="text" name="update_phpfpm_httpgroup" value="'.Settings::Get('system.mod_fcgid_httpgroup').'" /><br />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
@@ -457,7 +457,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if (versionInUpdate($current_version, '0.9.28-svn6')) {
 
-		if ($settings['system']['webserver'] == 'apache2') {
+		if (Settings::Get('system.webserver') == 'apache2') {
 			$has_preconfig = true;
 			$description = 'Froxlor now supports the new Apache 2.4. Please be aware that you need to load additional apache-modules in ordner to use it.<br />';
 			$description.= '<pre>LoadModule authz_core_module modules/mod_authz_core.so
@@ -465,7 +465,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			$question = '<strong>Do you want to enable the Apache-2.4 modification?:</strong>&nbsp;';
 			$question.= makeyesno('update_system_apache24', '1', '0', '0');
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
-		} elseif ($settings['system']['webserver'] == 'nginx') {
+		} elseif (Settings::Get('system.webserver') == 'nginx') {
 			$has_preconfig = true;
 			$description = 'The path to nginx\'s fastcgi_params file is now customizable.<br /><br />';
 			$question = '<strong>Please enter full path to you nginx/fastcgi_params file (including filename):</strong>&nbsp;';
@@ -494,8 +494,8 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$description  = 'Froxlor changed the default parameter-set of sendmail (php.ini)<br />';
 		$description .= 'sendmail_path = "/usr/sbin/sendmail -t <strong>-i</strong> -f {CUSTOMER_EMAIL}"<br /><br />';
 		$description .= 'If you don\'t have any problems with sending mails, you don\'t need to change this';
-		if ($settings['system']['mod_fcgid'] == '1'
-				|| $settings['phpfpm']['enabled'] == '1'
+		if (Settings::Get('system.mod_fcgid') == '1'
+				|| Settings::Get('phpfpm.enabled') == '1'
 		) {
 			// information about removal of php's safe_mode
 			$description .= '<br /><br />The php safe_mode flag has been removed as current versions of PHP<br />';
@@ -509,8 +509,8 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if (versionInUpdate($current_version, '0.9.29-dev1')) {
 		// we only need to ask if fcgid|php-fpm is enabled
-		if ($settings['system']['mod_fcgid'] == '1'
-				|| $settings['phpfpm']['enabled'] == '1'
+		if (Settings::Get('system.mod_fcgid') == '1'
+				|| Settings::Get('phpfpm.enabled') == '1'
 		) {
 			$has_preconfig = true;
 			$description  = 'Standard-subdomains can now be hidden from the php-configuration overview.<br />';
@@ -555,8 +555,8 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	// let the apache+fpm users know that they MUST change their config
 	// for the domains / webserver to work after the update
 	if (versionInUpdate($current_version, '0.9.30-dev1')) {
-		if ($settings['system']['webserver'] == 'apache2'
-			&& $settings['phpfpm']['enabled'] == '1'
+		if (Settings::Get('system.webserver') == 'apache2'
+			&& Settings::Get('phpfpm.enabled') == '1'
 		) {
 			$has_preconfig = true;
 			$description  = 'The PHP-FPM implementation for apache2 has changed. Please look for the "<b>fastcgi.conf</b>" (Debian/Ubuntu) or "<b>70_fastcgi.conf</b>" (Gentoo) within /etc/apache2/ and change it as shown below:<br /><br />';
@@ -575,8 +575,8 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	}
 
 	if (versionInUpdate($current_version, '0.9.31-dev2')) {
-		if ($settings['system']['webserver'] == 'apache2'
-				&& $settings['phpfpm']['enabled'] == '1'
+		if (Settings::Get('system.webserver') == 'apache2'
+				&& Settings::Get('phpfpm.enabled') == '1'
 		) {
 			$has_preconfig = true;
 			$description  = 'The FPM socket directory is now a setting in froxlor. Its default is <b>/var/lib/apache2/fastcgi/</b>.<br/>If you are using <b>/var/run/apache2</b> in the "<b>fastcgi.conf</b>" (Debian/Ubuntu) or "<b>70_fastcgi.conf</b>" (Gentoo) please correct this path accordingly<br />';

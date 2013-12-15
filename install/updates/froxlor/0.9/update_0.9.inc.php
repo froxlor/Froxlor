@@ -21,13 +21,12 @@ if (isFroxlorVersion('0.9-r0')) {
 	showUpdateStep("Performing database updates");
 
 	// add missing database-updates if necessary (old: update/update_database.php)
-	if (isset($settings['system']['dbversion']) && (int)$settings['system']['dbversion'] < 1) {
+	if (Settings::Get('system.dbversion') !== null && (int)Settings::Get('system.dbversion') < 1) {
 		Database::query("
 			ALTER TABLE `panel_databases` ADD `dbserver` INT( 11 ) UNSIGNED NOT NULL default '0';"
 		);
 	}
-	if(isset($settings['system']['dbversion']) && (int)$settings['system']['dbversion'] < 2)
-	{
+	if (Settings::Get('system.dbversion') !== null && (int)Settings::Get('system.dbversion') < 2) {
 		Database::query("ALTER TABLE `panel_ipsandports` CHANGE `ssl_cert` `ssl_cert_file` VARCHAR( 255 ) NOT NULL,
 				ADD `ssl_key_file` VARCHAR( 255 ) NOT NULL,
 				ADD `ssl_ca_file` VARCHAR( 255 ) NOT NULL,
@@ -181,22 +180,19 @@ if (isFroxlorVersion('0.9-r0')) {
 
 if (isFroxlorVersion('0.9-r1')) {
 	showUpdateStep("Updating from 0.9-r1 to 0.9-r2", false);
-	showUpdateStep("Updating settings table");
 
+	showUpdateStep("Updating settings table");
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'use_spf', '0');");
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('spf', 'spf_entry', '@	IN	TXT	\"v=spf1 a mx -all\"');");
 	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `varname` = 'froxlor_graphic' WHERE `varname` = 'syscp_graphic'");
 
-	if(isset($settings['admin']['syscp_graphic'])
-			&& $settings['admin']['syscp_graphic'] != ''
+	if (Settings::Get('admin.syscp_graphic') !== null
+			&& Settings::Get('admin.syscp_graphic') != ''
 	){
-		$settings['admin']['froxlor_graphic'] = $settings['admin']['syscp_graphic'];
+		Settings::Set('admin.froxlor_graphic', Settings::Get('admin.syscp_graphic'));
+	} else {
+		Settings::Set('admin.froxlor_graphic', 'images/header.gif');
 	}
-	else
-	{
-		$settings['admin']['froxlor_graphic'] = 'images/header.gif';
-	}
-
 	lastStepStatus(0);
 
 	updateToVersion('0.9-r2');
@@ -236,19 +232,19 @@ if (isFroxlorVersion('0.9-r3')) {
 
 	// checking for active ticket-module
 	$ticket_active = 0;
-	if ((int)$settings['ticket']['enabled'] == 1) {
+	if ((int)Settings::Get('ticket.enabled') == 1) {
 		$ticket_active = 1;
 	}
 
 	// checking for active aps-module
 	$aps_active = 0;
-	if ((int)$settings['aps']['aps_active'] == 1) {
+	if ((int)Settings::Get('aps.aps_active') == 1) {
 		$aps_active = 1;
 	}
 
 	// checking for active autoresponder-module
 	$ar_active = 0;
-	if ((int)$settings['autoresponder']['autoresponder_active'] == 1) {
+	if ((int)Settings::Get('autoresponder.autoresponder_active') == 1) {
 		$ar_active = 1;
 	}
 
@@ -297,7 +293,7 @@ if (isFroxlorVersion('0.9.1')) {
 
 	if (isset($result['latestguid'])
 			&& (int)$result['latestguid'] > 0
-			&& $result['latestguid'] != $settings['system']['lastguid']
+			&& $result['latestguid'] != Settings::Get('system.lastguid')
 	) {
 		checkLastGuid();
 		lastStepStatus(1, 'fixed');
@@ -399,22 +395,22 @@ if (isFroxlorVersion('0.9.4')) {
 	 * because we already had this back in older versions.
 	 * To not confuse Froxlor, we just update old settings.
 	*/
-	if(isset($settings['system']['awstats_path'])
-			&& $settings['system']['awstats_path'] != ''
+	if(Settings::Get('system.awstats_path') !== null
+			&& Settings::Get('system.awstats_path') != ''
 	) {
 		showUpdateStep("Updating awstats path setting");
 		Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/usr/bin/' WHERE `settinggroup` = 'system' AND `varname` = 'awstats_path';");
 		lastStepStatus(0);
 	}
-	elseif(!isset($settings['system']['awstats_path']))
+	elseif(Settings::Get('system.awstats_path') == null)
 	{
 		showUpdateStep("Adding new awstats path setting");
 		Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'awstats_path', '/usr/bin/');");
 		lastStepStatus(0);
 	}
 
-	if(isset($settings['system']['awstats_domain_file'])
-			&& $settings['system']['awstats_domain_file'] != ''
+	if(Settings::Get('system.awstats_domain_file') !== null
+			&& Settings::Get('system.awstats_domain_file') != ''
 	) {
 		showUpdateStep("Updating awstats configuration path setting");
 		Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `varname` = 'awstats_conf' WHERE `varname` = 'awstats_domain_file';");
@@ -635,7 +631,7 @@ if (isFroxlorVersion('0.9.6-svn5')) {
 	while ($row_ftp_users = $result_ftp_users_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$result_ftp_quota_stmt = Database::query("
 			SELECT diskspace_used FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE loginname = SUBSTRING_INDEX('" . $row_ftp_users['username'] . "', '" . $settings['customer']['ftpprefix'] . "', 1);"
+			WHERE loginname = SUBSTRING_INDEX('" . $row_ftp_users['username'] . "', '" . Settings::Get('customer.ftpprefix') . "', 1);"
 		);
 		$row_ftp_quota = $result_ftp_quota_stmt->fetch(PDO::FETCH_ASSOC);
 		Database::query("INSERT INTO `ftp_quotatallies` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $row_ftp_users['username'] . "', 'user', '" . $row_ftp_quota[0] . "'*1024, '0', '0', '0', '0', '0');");
@@ -697,13 +693,13 @@ if (isFroxlorVersion('0.9.6')) {
 
 	// need to fix default-error-copy-and-paste-shizzle
 	showUpdateStep("Checking if anything is ok with the default-error-handler");
-	if (!isset($settings['defaultwebsrverrhandler']['err404'])) {
+	if (Settings::Get('defaultwebsrverrhandler.err404') == null) {
 		Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err404', '');");
 	}
-	if (!isset($settings['defaultwebsrverrhandler']['err403'])) {
+	if (Settings::Get('defaultwebsrverrhandler.err403') == null) {
 		Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err403', '');");
 	}
-	if (!isset($settings['defaultwebsrverrhandler']['err401'])) {
+	if (Settings::Get('defaultwebsrverrhandler.err401') == null) {
 		Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('defaultwebsrverrhandler', 'err401', '');");
 	}
 	lastStepStatus(0);
@@ -1009,7 +1005,7 @@ if (isFroxlorVersion('0.9.12-svn3')) {
 
 	showUpdateStep("Updating from 0.9.12-svn3 to 0.9.12-svn4", false);
 
-	$update_awstats_awstatspath = isset($_POST['update_awstats_awstatspath']) ? makeCorrectDir($_POST['update_awstats_awstatspath']) : $settings['system']['awstats_path'];
+	$update_awstats_awstatspath = isset($_POST['update_awstats_awstatspath']) ? makeCorrectDir($_POST['update_awstats_awstatspath']) : Settings::Get('system.awstats_path');
 
 	showUpdateStep("Adding new settings for awstats");
 	$stmt = Database::prepare("
@@ -1066,7 +1062,7 @@ if (isFroxlorVersion('0.9.12')) {
 	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `email_autoresponder_used` int(5) NOT NULL default '0' AFTER `email_autoresponder`;");
 	lastStepStatus(0);
 
-	if ((int)$settings['autoresponder']['autoresponder_active'] == 1) {
+	if ((int)Settings::Get('autoresponder.autoresponder_active') == 1) {
 		$update_autoresponder_default = isset($_POST['update_autoresponder_default']) ? intval_ressource($_POST['update_autoresponder_default']) : 0;
 		if (isset($_POST['update_autoresponder_default_ul'])) {
 			$update_autoresponder_default = -1;
@@ -1121,9 +1117,9 @@ if (isFroxlorVersion('0.9.14-svn1')) {
 if (isFroxlorVersion('0.9.13.1')) {
 	showUpdateStep("Updating from 0.9.13.1 to 0.9.14-svn2", false);
 
-	if ($settings['ticket']['enabled'] == '1') {
+	if (Settings::Get('ticket.enabled') == '1') {
 		showUpdateStep("Setting INTERVAL for used-tickets cronjob");
-		setCycleOfCronjob(null, null, $settings['ticket']['reset_cycle'], null);
+		setCycleOfCronjob(null, null, Settings::Get('ticket.reset_cycle'), null);
 		lastStepStatus(0);
 	}
 	updateToVersion('0.9.14-svn2');
@@ -1132,7 +1128,7 @@ if (isFroxlorVersion('0.9.13.1')) {
 if (isFroxlorVersion('0.9.14-svn2')) {
 	showUpdateStep("Updating from 0.9.14-svn2 to 0.9.14-svn3", false);
 
-	$update_awstats_icons = isset($_POST['update_awstats_icons']) ? makeCorrectDir($_POST['update_awstats_icons']) : $settings['system']['awstats_icons'];
+	$update_awstats_icons = isset($_POST['update_awstats_icons']) ? makeCorrectDir($_POST['update_awstats_icons']) : Settings::Get('system.awstats_icons');
 
 	showUpdateStep("Adding AWStats icons path to the settings");
 	$stmt = Database::prepare("
@@ -1504,7 +1500,7 @@ if (isFroxlorVersion('0.9.17')) {
 			`varname` = 'httpgroup',
 			`value` = :value"
 		);
-		Database::pexecute($stmt, array('value' => $settings['system']['httpuser']));
+		Database::pexecute($stmt, array('value' => Settings::Get('system.httpuser')));
 		lastStepStatus(0);
 	}
 
@@ -1984,7 +1980,7 @@ if (isFroxlorVersion('0.9.28-svn3')) {
 	showUpdateStep('Setting replacement for the discontinued and removed Classic theme (if active)', true);
 
 	// Updating default theme setting
-	if ($settings['panel']['default_theme'] == 'Classic') {
+	if (Settings::Get('panel.default_theme') == 'Classic') {
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_SETTINGS . "` SET
 				`value` = :theme
@@ -2159,7 +2155,7 @@ if (isFroxlorVersion('0.9.28.1')) {
 	// don't advertise security questions - just set a default silently
 	Database::query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'passwordcryptfunc', '1');");
 
-	$fastcgiparams = $settings['nginx']['fastcgiparams'];
+	$fastcgiparams = Settings::Get('nginx.fastcgiparams');
 	// check the faulty value explicitly
 	if ($fastcgiparams == '/etc/nginx/fastcgi_params/') {
 		$fastcgiparams = makeCorrectFile(substr($fastcgiparams,0,-1));
@@ -2272,9 +2268,9 @@ if (isFroxlorVersion('0.9.29-dev4')) {
 		`varname` = :varname,
 		`value` = :value"
 	);
-	$dval = (isset($settings['system']['mod_fcgid_defaultini']) ? $settings['system']['mod_fcgid_defaultini'] : '1');
+	$dval = (Settings::Get('system.mod_fcgid_defaultini') !== null ? Settings::Get('system.mod_fcgid_defaultini') : '1');
 	Database::pexecute($stmt, array('varname' => 'defaultini', 'value' => $dval));
-	$dval = (isset($settings['system']['mod_fcgid_ownvhost']) ? $settings['system']['mod_fcgid_ownvhost'] : '1');
+	$dval = (Settings::Get('system.mod_fcgid_ownvhost') !== null ? Settings::Get('system.mod_fcgid_ownvhost') : '1');
 	Database::pexecute($stmt, array('varname' => 'vhost_defaultini', 'value' => $dval));
 	lastStepStatus(0);
 
@@ -2434,11 +2430,11 @@ if (isFroxlorVersion('0.9.31-dev1')) {
 		INSERT INTO `".TABLE_PANEL_SETTINGS."` SET `settinggroup` = 'phpfpm', `varname` = 'fastcgi_ipcdir', `value` = :value
 	");
 	$params = array();
-	if ($settings['system']['webserver'] == 'apache2') {
+	if (Settings::Get('system.webserver') == 'apache2') {
 		$params['value'] = '/var/lib/apache2/fastcgi/';
-	} elseif ($settings['system']['webserver'] == 'lighttpd') {
+	} elseif (Settings::Get('system.webserver') == 'lighttpd') {
 		$params['value'] = '/var/run/lighttpd/';
-	} elseif ($settings['system']['webserver'] == 'nginx') {
+	} elseif (Settings::Get('system.webserver') == 'nginx') {
 		$params['value'] = '/var/run/nginx/';
 	}
 	Database::pexecute($ins_stmt, $params);
@@ -2548,13 +2544,13 @@ if (isFroxlorVersion('0.9.31-rc2')) {
 	");
 	$frxvhostconfid = Database::lastInsertId();
 	// update default vhosts-config for froxlor if they are on the system-default
-	if ($settings['system']['mod_fcgid_defaultini_ownvhost'] == '1') {
+	if (Settings::Get('system.mod_fcgid_defaultini_ownvhost') == '1') {
 		$upd_stmt = Database::prepare("
 			UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = :value WHERE `settinggroup` = 'system' AND `varname` = 'mod_fcgid_defaultini_ownvhost'
 		");
 		Database::pexecute($upd_stmt, array('value' => $frxvhostconfid));
 	}
-	if ($settings['phpfpm']['vhost_defaultini'] == '1') {
+	if (Settings::Get('phpfpm.vhost_defaultini') == '1') {
 		$upd_stmt = Database::prepare("
 			UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = :value WHERE `settinggroup` = 'phpfpm' AND `varname` = 'vhost_defaultini'
 		");
@@ -2613,7 +2609,7 @@ if (isFroxlorVersion('0.9.31')) {
 	lastStepStatus(0);
 
 	showUpdateStep("Updating ftp-groups entries");
-	Database::query("UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, ',".$settings['system']['httpuser']."');");
+	Database::query("UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, ',".Settings::Get('system.httpuser')."');");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.32-dev1');

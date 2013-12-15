@@ -34,7 +34,7 @@
  */
 function makeCryptPassword ($password) {
 
-	$type = isset(Settings::Get('system.passwordcryptfunc')) ? (int)Settings::Get('system.passwordcryptfunc') : 1;
+	$type = Settings::Get('system.passwordcryptfunc') !== null ? (int)Settings::Get('system.passwordcryptfunc') : 1;
 
 	switch ($type) {
 		case 0:

@@ -18,7 +18,7 @@
 $updateto = '0.9-r0';
 $frontend = 'froxlor';
 
-showUpdateStep("Upgrading SysCP ".$settings['panel']['version']." to Froxlor ". $updateto, false);
+showUpdateStep("Upgrading SysCP ".Settings::Get('panel.version')." to Froxlor ". $updateto, false);
 updateToVersion($updateto);
 
 // add field frontend
@@ -27,4 +27,4 @@ Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET
 	`varname` = 'frontend',
 	`value` = 'froxlor'"
 );
-$settings['panel']['frontend'] = $frontend;
+Settings::Set('panel.frontend', $frontend);

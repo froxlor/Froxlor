@@ -145,6 +145,7 @@ if (get_magic_quotes_gpc()) {
 
 /**
  * Selects settings from MySQL-Table
+ * TODO remove when completely migrated to new Settings class
  */
 $settings_data = loadConfigArrayDir('actions/admin/settings/');
 $settings = loadSettings($settings_data);
@@ -176,7 +177,7 @@ if (isset($_POST['s'])) {
 	$nosession = 1;
 }
 
-$timediff = time() - $settings['session']['sessiontimeout'];
+$timediff = time() - Settings::Get('session.sessiontimeout');
 $del_stmt = Database::prepare("
 	DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `lastactivity` < :timediff
 ");
@@ -270,7 +271,7 @@ foreach ($langs as $key => $value) {
 
 // set default langauge before anything else to
 // ensure that we can display messages
-$language = $settings['panel']['standardlanguage'];
+$language = Settings::Get('panel.standardlanguage');
 
 if (isset($userinfo['language']) && isset($languages[$userinfo['language']])) {
 	// default: use language from session, #277
@@ -299,7 +300,7 @@ if (isset($userinfo['language']) && isset($languages[$userinfo['language']])) {
 
 				// if HTTP_ACCEPT_LANGUAGES has no valid langs, use default (very unlikely)
 				if (!strlen($language)>0) {
-					$language = $settings['panel']['standardlanguage'];
+					$language = Settings::Get('panel.standardlanguage');
 				}
 			}
 		}
@@ -329,7 +330,7 @@ $linker = new linker('index.php', $s);
 /**
  * global Theme-variable
  */
-$theme = isset($settings['panel']['default_theme']) ? $settings['panel']['default_theme'] : 'Sparkle';
+$theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : 'Sparkle';
 
 /**
  * overwrite with customer/admin theme if defined
@@ -374,7 +375,7 @@ if (isset($userinfo['loginname'])
 ) {
 	$lng['menue']['main']['username'].= $userinfo['loginname'];
 	//Initialize logging
-	$log = FroxlorLogger::getInstanceOf($userinfo, $settings);
+	$log = FroxlorLogger::getInstanceOf($userinfo);
 }
 
 /**
@@ -428,7 +429,7 @@ if (AREA == 'admin' || AREA == 'customer') {
  */
 $awaitingtickets = 0;
 $awaitingtickets_text = '';
-if ($settings['ticket']['enabled'] == '1') {
+if (Settings::Get('ticket.enabled') == '1') {
 
 	$opentickets = 0;
 
@@ -460,7 +461,7 @@ if ($settings['ticket']['enabled'] == '1') {
 	}
 }
 
-$webfont = str_replace('+', ' ', $settings['panel']['webfont']);
+$webfont = str_replace('+', ' ', Settings::Get('panel.webfont'));
 eval("\$header = \"" . getTemplate('header', '1') . "\";");
 
 $current_year = date('Y', time());
@@ -496,10 +497,10 @@ if ($page == '') {
 $mail = new PHPMailer(true);
 $mail->CharSet = "UTF-8";
 
-if (PHPMailer::ValidateAddress($settings['panel']['adminmail']) !== false) {
+if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 	// set return-to address and custom sender-name, see #76
-	$mail->SetFrom($settings['panel']['adminmail'], $settings['panel']['adminmail_defname']);
-	if ($settings['panel']['adminmail_return'] != '') {
-		$mail->AddReplyTo($settings['panel']['adminmail_return'], $settings['panel']['adminmail_defname']);
+	$mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+	if (Settings::Get('panel.adminmail_return') != '') {
+		$mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
 	}
 }

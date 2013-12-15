@@ -17,10 +17,10 @@
  *
  */
 
-$updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'), $settings);
+$updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'));
 
 $updatelogfile = validateUpdateLogFile(makeCorrectFile(dirname(__FILE__).'/update.log'));
-$filelog = FileLogger::getInstanceOf(array('loginname' => 'updater'), $settings);
+$filelog = FileLogger::getInstanceOf(array('loginname' => 'updater'));
 $filelog->setLogFile($updatelogfile);
 
 // if first writing does not work we'll stop, tell the user to fix it

@@ -86,14 +86,6 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 		} else {
 			echo "Please check you Webserver settings\n";
 		}
-
-		/**
-		 * FIXME
-		 * as we might have a change from mod_php to fcgid/fpm or the other way around
-		 * we need to check customer directory permissions
-		 * -> 0.9.31
-		 */
-
 	}
 
 	/**

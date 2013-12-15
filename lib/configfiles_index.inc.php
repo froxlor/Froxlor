@@ -19,31 +19,33 @@
 
 $configcommand = array();
 
-if(isConfigDir($settings['system']['apacheconf_vhost']))
-{
-	$configcommand['vhost'] = 'mkdir -p ' . $settings['system']['apacheconf_vhost'];
-	$configcommand['include'] = 'echo -e "\\nInclude ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . '*.conf" >> ' . makeCorrectFile(makeCorrectDir('/etc/apache2/httpd.conf'));
-	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude_shell "cat ' . makeCorrectDir($settings['system']['apacheconf_vhost']) . '*.conf"\' >> /etc/lighttpd/lighttpd.conf';
-}
-else
-{
-	$configcommand['vhost'] = 'touch ' . $settings['system']['apacheconf_vhost'];
-	$configcommand['include'] = 'echo -e "\\nInclude ' . $settings['system']['apacheconf_vhost'] . '" >> ' . makeCorrectFile('/etc/apache2/httpd.conf');
-	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude "' . $settings['system']['apacheconf_vhost'] . '"\' >> /etc/lighttpd/lighttpd.conf';
+if (isConfigDir(Settings::Get('system.apacheconf_vhost'))) {
+	$configcommand['vhost'] = 'mkdir -p ' . Settings::Get('system.apacheconf_vhost');
+	$configcommand['include'] = 'echo -e "\\nInclude ' . makeCorrectDir(Settings::Get('system.apacheconf_vhost')) . '*.conf" >> ' . makeCorrectFile(makeCorrectDir('/etc/apache2/httpd.conf'));
+	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude_shell "cat ' . makeCorrectDir(Settings::Get('system.apacheconf_vhost')) . '*.conf"\' >> /etc/lighttpd/lighttpd.conf';
+} else {
+	$configcommand['vhost'] = 'touch ' . Settings::Get('system.apacheconf_vhost');
+	$configcommand['include'] = 'echo -e "\\nInclude ' . Settings::Get('system.apacheconf_vhost') . '" >> ' . makeCorrectFile('/etc/apache2/httpd.conf');
+	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude "' . Settings::Get('system.apacheconf_vhost') . '"\' >> /etc/lighttpd/lighttpd.conf';
 }
 
-if(isConfigDir($settings['system']['apacheconf_diroptions']))
-{
-	$configcommand['diroptions'] = 'mkdir -p ' . $settings['system']['apacheconf_diroptions'];
-	$configcommand['d_inclighty'] = 'echo -e \'\\ninclude_shell "cat ' . makeCorrectDir($settings['system']['apacheconf_diroptions']) . '*.conf"\' >> /etc/lighttpd/lighttpd.conf';
-}
-else
-{
-	$configcommand['diroptions'] = 'touch ' . $settings['system']['apacheconf_diroptions'];
-	$configcommand['d_inclighty'] = 'echo -e \'\\ninclude "' . $settings['system']['apacheconf_diroptions'] . '"\' >> /etc/lighttpd/lighttpd.conf';
+if (isConfigDir(Settings::Get('system.apacheconf_diroptions'))) {
+	$configcommand['diroptions'] = 'mkdir -p ' . Settings::Get('system.apacheconf_diroptions');
+	$configcommand['d_inclighty'] = 'echo -e \'\\ninclude_shell "cat ' . makeCorrectDir(Settings::Get('system.apacheconf_diroptions')) . '*.conf"\' >> /etc/lighttpd/lighttpd.conf';
+} else {
+	$configcommand['diroptions'] = 'touch ' . Settings::Get('system.apacheconf_diroptions');
+	$configcommand['d_inclighty'] = 'echo -e \'\\ninclude "' . Settings::Get('system.apacheconf_diroptions') . '"\' >> /etc/lighttpd/lighttpd.conf';
 }
 
 $cfgPath = 'lib/configfiles/';
-$configfiles = Array();
-$configfiles = array_merge(include $cfgPath . 'wheezy.inc.php', include $cfgPath . 'squeeze.inc.php', include $cfgPath . 'precise.inc.php', include $cfgPath . 'lucid.inc.php', include $cfgPath . 'gentoo.inc.php', include $cfgPath . 'suse11.inc.php', include $cfgPath . 'sle10.inc.php', include $cfgPath . 'freebsd.inc.php');
-
+$configfiles = array();
+$configfiles = array_merge(
+	include $cfgPath . 'wheezy.inc.php',
+	include $cfgPath . 'squeeze.inc.php',
+	include $cfgPath . 'precise.inc.php',
+	include $cfgPath . 'lucid.inc.php',
+	include $cfgPath . 'gentoo.inc.php',
+	include $cfgPath . 'suse11.inc.php',
+	include $cfgPath . 'sle10.inc.php',
+	include $cfgPath . 'freebsd.inc.php'
+);

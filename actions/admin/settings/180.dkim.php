@@ -17,8 +17,6 @@
  *
  */
 
-global $settings;
-
 return array(
 	'groups' => array(
 		'dkim' => array(
@@ -82,8 +80,8 @@ return array(
 					),
 				'dkim_keylength' => array(
 					'label' => array(
-						'title' => $lng['dkim']['dkim_keylength']['title'], 
-						'description' => sprintf($lng['dkim']['dkim_keylength']['description'],$settings['dkim']['dkim_prefix'])
+						'title' => $lng['dkim']['dkim_keylength']['title'],
+						'description' => sprintf($lng['dkim']['dkim_keylength']['description'],Settings::Get('dkim.dkim_prefix'))
 					),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_keylength',
