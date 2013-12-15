@@ -25,7 +25,7 @@ function storeSettingField($fieldname, $fielddata, $newfieldvalue) {
 			&& isset($fielddata['varname'])
 			&& $fielddata['varname'] != ''
 	) {
-		if (saveSetting($fielddata['settinggroup'], $fielddata['varname'], $newfieldvalue) != false) {
+		if (Settings::Set($fielddata['settinggroup'].'.'.$fielddata['varname'], $newfieldvalue) !== false) {
 			/*
 			 * when fielddata[cronmodule] is set, this means enable/disable a cronjob
 			*/
@@ -63,7 +63,7 @@ function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue)
 			&& isset($fielddata['varname'])
 			&& $fielddata['varname'] != ''
 	) {
-		if (saveSetting($fielddata['settinggroup'], $fielddata['varname'], $newfieldvalue) != false) {
+		if (Settings::Set($fielddata['settinggroup'].'.'.$fielddata['varname'], $newfieldvalue) !== false) {
 			return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
 		} else {
 			return false;

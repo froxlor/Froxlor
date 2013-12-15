@@ -31,7 +31,7 @@ function storeSettingHostname($fieldname, $fielddata, $newfieldvalue) {
 		&& $fielddata['varname'] == 'hostname'
 	) {
 		$newfieldvalue = $idna_convert->encode($newfieldvalue);
-		
+
 		$customerstddomains_result_stmt = Database::prepare("
 			SELECT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `standardsubdomain` <> '0'
 		");
@@ -49,7 +49,7 @@ function storeSettingHostname($fieldname, $fielddata, $newfieldvalue) {
 				`domain` = REPLACE(`domain`, :host, :newval)
 				WHERE `id` IN ('" . implode(', ', $ids) . "')
 			");
-			Database::pexecute($upd_stmt, array('host' => getSetting('system', 'hostname'), 'newval' => $newfieldvalue));
+			Database::pexecute($upd_stmt, array('host' => Settings::Get('system.hostname'), 'newval' => $newfieldvalue));
 		}
 	}
 

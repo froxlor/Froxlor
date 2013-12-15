@@ -17,6 +17,13 @@
  *
  */
 
+/**
+ * @FIXME remove when fully migrated to new Settings class
+ *
+ * @param array $settings_data
+ *
+ * @return array
+ */
 function loadSettings(&$settings_data) {
 
 	$settings = array();

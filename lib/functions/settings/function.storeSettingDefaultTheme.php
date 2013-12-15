@@ -43,13 +43,13 @@ function storeSettingDefaultTheme($fieldname, $fielddata, $newfieldvalue) {
 	) {
 		// now, if changing themes is disabled we recursivly set
 		// the new theme (customers and admin, depending on settings)
-		if (getSetting('panel', 'allow_theme_change_customer') == '0') {
+		if (Settings::Get('panel.allow_theme_change_customer') == '0') {
 			$upd_stmt = Database::prepare("
 				UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `theme` = :theme
 			");
 			Database::pexecute($upd_stmt, array('theme' => $newfieldvalue));
 		}
-		if (getSetting('panel', 'allow_theme_change_admin') == '0') {
+		if (Settings::Get('panel.allow_theme_change_admin') == '0') {
 			$upd_stmt = Database::prepare("
 				UPDATE `".TABLE_PANEL_ADMINS."` SET `theme` = :theme
 			");

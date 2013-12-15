@@ -46,7 +46,7 @@ function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue) {
 				WHERE `id_domain` IN ('" . implode(', ', $ids) . "')
 				AND `id_ipandports` = :defaultip
 			");
-			Database::pexecute($upd_stmt, array('newval' => $newfieldvalue, 'defaultip' => getSetting('system', 'defaultip')));
+			Database::pexecute($upd_stmt, array('newval' => $newfieldvalue, 'defaultip' => Settings::Get('system.defaultip')));
 		}
 	}
 

@@ -140,7 +140,9 @@ class Settings {
 				}
 				self::$_data[$sstr[0]][$sstr[1]] = $value;
 			}
+			return true;
 		}
+		return false;
 	}
 
 	/**
