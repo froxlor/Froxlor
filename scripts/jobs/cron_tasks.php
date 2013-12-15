@@ -51,7 +51,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	if ($row['type'] == '1') {
 
 		// get configuration-I/O object
-		$configio = new ConfigIO($settings);
+		$configio = new ConfigIO();
 		// clean up old configs
 		$configio->cleanUp();
 

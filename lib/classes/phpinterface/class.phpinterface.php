@@ -22,12 +22,6 @@
 class phpinterface {
 
 	/**
-	 * Settings array
-	 * @var array
-	 */
-	private $_settings = array();
-
-	/**
 	 * Domain-Data array
 	 * @var array
 	 */
@@ -48,8 +42,7 @@ class phpinterface {
 	/**
 	 * main constructor
 	 */
-	public function __construct($settings, $domain) {
-		$this->_settings = $settings;
+	public function __construct($domain) {
 		$this->_domain = $domain;
 		$this->_setInterface();
 	}
@@ -69,11 +62,11 @@ class phpinterface {
 	 */
 	private function _setInterface() {
 		// php-fpm
-		if ((int)$this->_settings['phpfpm']['enabled'] == 1) {
-			$this->_interface = new phpinterface_fpm($this->_settings, $this->_domain);
+		if ((int)Settings::Get('phpfpm.enabled') == 1) {
+			$this->_interface = new phpinterface_fpm($this->_domain);
 
-		} elseif ((int)$this->_settings['system']['mod_fcgid'] == 1) {
-			$this->_interface = new phpinterface_fcgid($this->_settings, $this->_domain);
+		} elseif ((int)Settings::Get('system.mod_fcgid') == 1) {
+			$this->_interface = new phpinterface_fcgid($this->_domain);
 		}
 	}
 

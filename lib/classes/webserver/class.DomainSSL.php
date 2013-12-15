@@ -21,18 +21,9 @@
 class DomainSSL {
 
 	/**
-	 * internal settings array
-	 *
-	 * @var array
+	 * constructor
 	 */
-	private $_settings = null;
-
-	/**
-	 * constructor gets the froxlor settings as array
-	 */
-	public function __construct(array $settings = null) {
-		$this->_settings = $settings;
-	}
+	public function __construct() {}
 
 	/**
 	 * read domain-related (or if empty, parentdomain-related) ssl-certificates from the database
@@ -66,7 +57,7 @@ class DomainSSL {
 				&& $dom_certs['ssl_cert_file'] != ''
 		) {
 			// get destination path
-			$sslcertpath = makeCorrectDir($this->_settings['system']['customer_ssl_path']);
+			$sslcertpath = makeCorrectDir(Settings::Get('system.customer_ssl_path'));
 			// create path if it does not exist
 			if (!file_exists($sslcertpath)) {
 				safe_exec('mkdir -p '.escapeshellarg($sslcertpath));
@@ -77,7 +68,7 @@ class DomainSSL {
 					'ssl_key_file' => makeCorrectFile($sslcertpath.'/'.$domain['domain'].'.key')
 			);
 
-			if ($this->_settings['system']['webserver'] == 'lighttpd') {
+			if (Settings::Get('system.webserver') == 'lighttpd') {
 				// put my.crt and my.key together for lighty.
 				$dom_certs['ssl_cert_file'] = trim($dom_certs['ssl_cert_file'])."\n".trim($dom_certs['ssl_key_file'])."\n";
 				$ssl_files['ssl_key_file'] = '';
@@ -91,7 +82,7 @@ class DomainSSL {
 				$ssl_files['ssl_ca_file'] = makeCorrectFile($sslcertpath.'/'.$domain['domain'].'_CA.pem');
 			}
 			if ($dom_certs['ssl_cert_chainfile'] != '') {
-				if ($this->_settings['system']['webserver'] == 'nginx') {
+				if (Settings::Get('system.webserver') == 'nginx') {
 					// put ca.crt in my.crt, as nginx does not support a separate chain file.
 					$dom_certs['ssl_cert_file'] = trim($dom_certs['ssl_cert_file'])."\n".trim($dom_certs['ssl_cert_chainfile'])."\n";
 				} else {

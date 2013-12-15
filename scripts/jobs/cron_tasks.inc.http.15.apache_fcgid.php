@@ -25,7 +25,7 @@ class apache_fcgid extends apache
 
 		if($domain['phpenabled'] == '1')
 		{
-			$php = new phpinterface($this->settings, $domain);
+			$php = new phpinterface($domain);
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
 
 			if((int)$this->settings['phpfpm']['enabled'] == 1)
@@ -141,7 +141,7 @@ class apache_fcgid extends apache
 			safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
 
 			// get php.ini for our own vhost
-			$php = new phpinterface($this->settings, $domain);
+			$php = new phpinterface($domain);
 
 			// get php-config
 			if ($this->settings['phpfpm']['enabled'] == '1') {

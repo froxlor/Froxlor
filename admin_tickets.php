@@ -179,8 +179,7 @@ if ($page == 'tickets'
 			if (isset($_POST['send'])
 				&& $_POST['send'] == 'send'
 			) {
-				// FIXME ticket -> settings
-				$newticket = ticket::getInstanceOf($userinfo, $settings, -1);
+				$newticket = ticket::getInstanceOf($userinfo, -1);
 				$newticket->Set('subject', validate($_POST['subject'], 'subject'), true, false);
 				$newticket->Set('priority', validate($_POST['priority'], 'priority'), true, false);
 				$newticket->Set('category', validate($_POST['category'], 'category'), true, false);
@@ -271,8 +270,7 @@ if ($page == 'tickets'
 		if (isset($_POST['send'])
 			&& $_POST['send'] == 'send'
 		) {
-			// FIXME ticket -> settings
-			$replyticket = ticket::getInstanceOf($userinfo, $settings, -1);
+			$replyticket = ticket::getInstanceOf($userinfo, -1);
 			$replyticket->Set('subject', validate($_POST['subject'], 'subject'), true, false);
 			$replyticket->Set('priority', validate($_POST['priority'], 'priority'), true, false);
 			$replyticket->Set('message', validate(htmlentities(str_replace("\r\n", "\n", $_POST['message'])), 'message', '/^[^\0]*$/'), true, false);
@@ -281,8 +279,7 @@ if ($page == 'tickets'
 				standard_error(array('stringisempty', 'mymessage'));
 			} else {
 				$now = time();
-				// FIXME ticket -> settings
-				$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+				$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 				$replyticket->Set('customer', $mainticket->Get('customer'), true, true);
 				$replyticket->Set('lastchange', $now, true, true);
 				$replyticket->Set('ip', $_SERVER['REMOTE_ADDR'], true, true);
@@ -308,8 +305,7 @@ if ($page == 'tickets'
 		} else {
 
 			$ticket_replies = '';
-			// FIXME ticket -> settings
-			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 			$dt = date("d.m.Y H:i\h", $mainticket->Get('dt'));
 			$status = ticket::getStatusText($lng, $mainticket->Get('status'));
 
@@ -352,8 +348,7 @@ if ($page == 'tickets'
 			$numrows_andere = Database::num_rows();
 
 			while ($row2 = $andere_stmt->fetch(PDO::FETCH_ASSOC)) {
-				// FIXME ticket -> settings
-				$subticket = ticket::getInstanceOf($userinfo, $settings, (int)$row2['id']);
+				$subticket = ticket::getInstanceOf($userinfo, (int)$row2['id']);
 				$lastchange = date("d.m.Y H:i\h", $subticket->Get('lastchange'));
 
 				if ($subticket->Get('by') == '1') {
@@ -400,8 +395,7 @@ if ($page == 'tickets'
 			&& $_POST['send'] == 'send'
 		) {
 			$now = time();
-			// FIXME ticket -> settings
-			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 			$mainticket->Set('lastchange', $now, true, true);
 			$mainticket->Set('lastreplier', '1', true, true);
 			$mainticket->Set('status', '3', true, true);
@@ -409,8 +403,7 @@ if ($page == 'tickets'
 			$log->logAction(ADM_ACTION, LOG_NOTICE, "closed ticket '" . $mainticket->Get('subject') . "'");
 			redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
-			// FIXME ticket -> settings
-			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 			ask_yesno('ticket_reallyclose', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 
@@ -418,8 +411,7 @@ if ($page == 'tickets'
 		&& $id != 0
 	) {
 		$now = time();
-		// FIXME ticket -> settings
-		$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+		$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 		$mainticket->Set('lastchange', $now, true, true);
 		$mainticket->Set('lastreplier', '1', true, true);
 		$mainticket->Set('status', '0', true, true);
@@ -434,8 +426,7 @@ if ($page == 'tickets'
 			&& $_POST['send'] == 'send'
 		) {
 			$now = time();
-			// FIXME ticket -> settings
-			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 			$mainticket->Set('lastchange', $now, true, true);
 			$mainticket->Set('lastreplier', '1', true, true);
 			$mainticket->Set('status', '3', true, true);
@@ -444,8 +435,7 @@ if ($page == 'tickets'
 			$log->logAction(ADM_ACTION, LOG_NOTICE, "archived ticket '" . $mainticket->Get('subject') . "'");
 			redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
-			// FIXME ticket -> settings
-			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 			ask_yesno('ticket_reallyarchive', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 
@@ -455,14 +445,12 @@ if ($page == 'tickets'
 		if (isset($_POST['send'])
 			&& $_POST['send'] == 'send'
 		) {
-			// FIXME ticket -> settings
-			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 			$log->logAction(ADM_ACTION, LOG_INFO, "deleted ticket '" . $mainticket->Get('subject') . "'");
 			$mainticket->Delete();
 			redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
-			// FIXME ticket -> settings
-			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 			ask_yesno('ticket_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 	}
@@ -804,8 +792,7 @@ if ($page == 'tickets'
 	) {
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed archived-ticket #" . $id);
 		$ticket_replies = '';
-		// FIXME ticket -> settings
-		$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+		$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 		$lastchange = date("d.m.Y H:i\h", $mainticket->Get('lastchange'));
 		$dt = date("d.m.Y H:i\h", $mainticket->Get('dt'));
 		$status = ticket::getStatusText($lng, $mainticket->Get('status'));
@@ -855,8 +842,7 @@ if ($page == 'tickets'
 		$numrows_andere = Database::num_rows();
 
 		while ($row2 = $andere_stmt->fetch(PDO::FETCH_ASSOC)) {
-			// FIXME ticket -> settings
-			$subticket = ticket::getInstanceOf($userinfo, $settings, (int)$row2['id']);
+			$subticket = ticket::getInstanceOf($userinfo, (int)$row2['id']);
 			$lastchange = date("d.m.Y H:i\h", $subticket->Get('lastchange'));
 
 			if ($subticket->Get('by') == '1') {
@@ -907,14 +893,12 @@ if ($page == 'tickets'
 		if (isset($_POST['send'])
 			&& $_POST['send'] == 'send'
 		) {
-			// FIXME ticket -> settings
-			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 			$log->logAction(ADM_ACTION, LOG_INFO, "deleted archived ticket '" . $mainticket->Get('subject') . "'");
 			$mainticket->Delete();
 			redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
-			// FIXME ticket -> settings
-			$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$id);
+			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
 			ask_yesno('ticket_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 	}

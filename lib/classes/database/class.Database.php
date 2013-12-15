@@ -297,7 +297,7 @@ class Database {
 	 * @param bool $showerror if set to false, the error will be logged but we go on
 	 */
 	private static function _showerror($error, $showerror = true) {
-		global $userinfo, $settings, $theme, $linker;
+		global $userinfo, $theme, $linker;
 
 		/**
 		 * log to a file, so we can actually ask people for the error
@@ -336,8 +336,8 @@ class Database {
 
 				$err_report_html = '';
 				if (is_array($userinfo) && (
-					($userinfo['adminsession'] == '1' && $settings['system']['allow_error_report_admin'] == '1')
-					|| ($userinfo['adminsession'] == '0' && $settings['system']['allow_error_report_customer'] == '1'))
+					($userinfo['adminsession'] == '1' && Settings::Get('system.allow_error_report_admin') == '1')
+					|| ($userinfo['adminsession'] == '0' && Settings::Get('system.allow_error_report_customer') == '1'))
 				) {
 					$err_report_html = '<a href="<LINK>" title="Click here to report error">Report error</a>';
 					$err_report_html = str_replace("<LINK>", $linker->getLink(array('section' => 'index', 'page' => 'send_error_report', 'errorid' => $errid)), $err_report_html);

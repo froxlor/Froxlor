@@ -29,12 +29,6 @@ class ticket {
 	private $userinfo = array();
 
 	/**
-	 * Settings array
-	 * @var settings
-	 */
-	private $settings = array();
-
-	/**
 	 * Ticket ID
 	 * @var tid
 	 */
@@ -62,12 +56,10 @@ class ticket {
 	 * Class constructor.
 	 *
 	 * @param array userinfo
-	 * @param array settings
 	 * @param int ticket id
 	 */
-	private function __construct($userinfo, $settings, $tid = - 1) {
+	private function __construct($userinfo, $tid = - 1) {
 		$this->userinfo = $userinfo;
-		$this->settings = $settings;
 		$this->tid = $tid;
 
 		// initialize purifier
@@ -88,12 +80,11 @@ class ticket {
 	 * Singleton ftw ;-)
 	 *
 	 * @param array userinfo
-	 * @param array settings
 	 * @param int ticket id
 	 */
-	static public function getInstanceOf($_usernfo, $_settings, $_tid) {
+	static public function getInstanceOf($_usernfo, $_tid) {
 		if (!isset(self::$tickets[$_tid])) {
-			self::$tickets[$_tid] = new ticket($_usernfo, $_settings, $_tid);
+			self::$tickets[$_tid] = new ticket($_usernfo, $_tid);
 		}
 		return self::$tickets[$_tid];
 	}
@@ -310,7 +301,7 @@ class ticket {
 		if ($customerid != - 1) {
 			$_mailerror = false;
 			try {
-				$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
+				$mail->SetFrom(Settings::Get('ticket.noreply_email'), Settings::Get('ticket.noreply_name'));
 				$mail->Subject = $mail_subject;
 				$mail->AltBody = $mail_body;
 				$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
@@ -325,7 +316,7 @@ class ticket {
 			}
 
 			if ($_mailerror) {
-				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->settings);
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'));
 				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 				standard_error('errorsendingmail', $usr['email']);
 			}
@@ -340,7 +331,7 @@ class ticket {
 			$admin = Database::pexecute_first($admin_stmt, array('adminid' => $this->userinfo['adminid']));
 			$_mailerror = false;
 			try {
-				$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
+				$mail->SetFrom(Settings::Get('ticket.noreply_email'), Settings::Get('ticket.noreply_name'));
 				$mail->Subject = $mail_subject;
 				$mail->AltBody = $mail_body;
 				$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
@@ -355,7 +346,7 @@ class ticket {
 			}
 
 			if ($_mailerror) {
-				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->settings);
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'));
 				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 				standard_error('errorsendingmail', $admin['email']);
 			}

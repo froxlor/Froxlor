@@ -33,68 +33,65 @@ LOG_DEBUG 	  debug-level message
 
 */
 
-abstract class AbstractLogger
-{
-	/**
-	 * Settings array
-	 * @var settings
-	 */
-
-	private $settings = array();
+abstract class AbstractLogger {
 
 	/** 
 	 * Enable/Disable Logging
 	 * @var logenabled
 	 */
-
 	private $logenabled = false;
 
 	/** 
 	 * Enable/Disable Cronjob-Logging
 	 * @var logcronjob
 	 */
-
 	private $logcronjob = false;
 
 	/** 
 	 * Loggin-Severity
 	 * @var severity
 	 */
-
 	private $severity = 1;
-
-	// normal
 
 	/**
 	 * setup the main logger
-	 *
-	 * @param array settings
 	 */
-
-	protected function setupLogger($settings)
-	{
-		$this->settings = $settings;
-		$this->logenabled = $this->settings['logger']['enabled'];
-		$this->logcronjob = $this->settings['logger']['log_cron'];
-		$this->severity = $this->settings['logger']['severity'];
+	protected function setupLogger() {
+		$this->logenabled = Settings::Get('logger.enabled');
+		$this->logcronjob = Settings::Get('logger.log_cron');
+		$this->severity = Settings::Get('logger.severity');
 	}
 
-	protected function isEnabled()
-	{
+	/**
+	 * return whether this logging is enabled
+	 *
+	 * @return bool
+	 */
+	protected function isEnabled() {
 		return $this->logenabled;
 	}
 
-	protected function getSeverity()
-	{
+	/**
+	 * return the log severity
+	 *
+	 * @return int
+	 */
+	protected function getSeverity() {
 		return $this->severity;
 	}
 
-	protected function logCron()
-	{
+	/**
+	 * whether to log cron-runs or not
+	 *
+	 * @return bool
+	 */
+	protected function logCron() {
 		return $this->logcronjob;
 	}
 
+	/**
+	 * logs a given text
+	 */
 	abstract public function logAction();
-}
 
-?>
+}
