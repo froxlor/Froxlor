@@ -360,8 +360,7 @@ if ($page == 'customers'
 				if ($tickets !== false && isset($tickets[0])) {
 					foreach ($tickets as $ticket) {
 						$now = time();
-						// FIXME ticket -> settings
-						$mainticket = ticket::getInstanceOf($userinfo, $settings, (int)$ticket);
+						$mainticket = ticket::getInstanceOf($userinfo, (int)$ticket);
 						$mainticket->Set('lastchange', $now, true, true);
 						$mainticket->Set('lastreplier', '1', true, true);
 						$mainticket->Set('status', '3', true, true);

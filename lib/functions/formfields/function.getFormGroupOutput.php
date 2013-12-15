@@ -17,17 +17,17 @@
  *
  */
 
-function getFormGroupOutput($groupname, $groupdetails)
-{
+function getFormGroupOutput($groupname, $groupdetails) {
+
 	global $lng, $theme;
 	eval("\$group = \"" . getTemplate("settings/settings_group") . "\";");
 	return $group;
 }
 
-function getFormOverviewGroupOutput($groupname, $groupdetails)
-{
-	global $lng, $settings, $filename, $s, $theme;
-	
+function getFormOverviewGroupOutput($groupname, $groupdetails) {
+
+	global $lng, $filename, $s, $theme;
+
 	$group = '';
 	$title = $groupdetails['title'];
 	$part = $groupname;
@@ -53,7 +53,7 @@ function getFormOverviewGroupOutput($groupname, $groupdetails)
 					$options = '';
 					foreach($options_array as $value => $vtitle)
 					{
-						$options .= makeoption($vtitle, $value, $settings[$fielddetails['settinggroup']][$fielddetails['varname']]);
+						$options .= makeoption($vtitle, $value, Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']));
 					}
 					$option.= $fielddetails['label'].':&nbsp;';
 					$option.= '<select class="dropdown_noborder" name="'.$fieldname.'">';
@@ -64,30 +64,27 @@ function getFormOverviewGroupOutput($groupname, $groupdetails)
 				else
 				{
 					$option.= $lng['admin']['activated'].':&nbsp;';
-					$option.= makeyesno($fieldname, '1', '0', $settings[$fielddetails['settinggroup']][$fielddetails['varname']]);
-					$activated = (int)$settings[$fielddetails['settinggroup']][$fielddetails['varname']];
+					$option.= makeyesno($fieldname, '1', '0', Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']));
+					$activated = (int)Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']);
 				}
 			}
 		}
 	}
 
 	/**
-	 * this part checks for the 'websrv_avail' entry in the settings-array
+	 * this part checks for the 'websrv_avail' entry in the settings
 	 * if found, we check if the current webserver is in the array. If this
 	 * is not the case, we change the setting type to "hidden", #502
 	 */
 	$do_show = true;
-	if(isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail']))
-	{
-		$websrv = $settings['system']['webserver'];
-		if(!in_array($websrv, $groupdetails['websrv_avail']))
-		{
+	if (isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail'])) {
+		$websrv = Settings::Get('system.webserver');
+		if (!in_array($websrv, $groupdetails['websrv_avail'])) {
 			$do_show = false;
 		}
 	}	
 
-	if($do_show)
-	{
+	if ($do_show) {
 		eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
 	}
 	return $group;
