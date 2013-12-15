@@ -15,27 +15,21 @@
  *
  */
 
-function checkFcgidPhpFpm($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
-{
-	global $settings, $theme;
+function checkFcgidPhpFpm($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
 
 	$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 
-	/*
-	 * check whether fcgid should be enabled but php-fpm is
-	 */
+	// check whether fcgid should be enabled but php-fpm is
 	if($fieldname == 'system_mod_fcgid_enabled'
 		&& (int)$newfieldvalue == 1
-		&& (int)$settings['phpfpm']['enabled'] == 1
+		&& (int)Settings::Get('phpfpm.enabled') == 1
 	) {
 		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'phpfpmstillenabled');
 	}
-	/*
-	 * check whether php-fpm should be enabled but fcgid is
-	 */
+	// check whether php-fpm should be enabled but fcgid is
 	elseif($fieldname == 'system_phpfpm_enabled'
 		&& (int)$newfieldvalue == 1
-		&& (int)$settings['system']['mod_fcgid'] == 1
+		&& (int)Settings::Get('system.mod_fcgid') == 1
 	) {
 		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'fcgidstillenabled');
 	}

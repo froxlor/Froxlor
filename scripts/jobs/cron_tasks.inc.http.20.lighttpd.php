@@ -135,7 +135,7 @@ class lighttpd
 						'documentroot' => $mypath
 					);
 
-					$php = new phpinterface($this->settings, $domain);
+					$php = new phpinterface($domain);
 
 					$this->lighttpd_data[$vhost_filename].= '  fastcgi.server = ( '."\n";
 					$this->lighttpd_data[$vhost_filename].=	"\t".'".php" => ('."\n";
@@ -434,7 +434,7 @@ class lighttpd
 					$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
 
 					// SSL STUFF
-					$dssl = new DomainSSL($this->settings);
+					$dssl = new DomainSSL();
 					// this sets the ssl-related array-indices in the $domain array
 					// if the domain has customer-defined ssl-certificates
 					$dssl->setDomainSSLFilesArray($domain);

@@ -26,24 +26,22 @@
  *
  * @return string either the password or an errormessage+exit
  */
-function validatePassword($password = null)
-{
-	global $settings, $theme;
+function validatePassword($password = null) {
 	
-	if ($settings['panel']['password_min_length'] > 0) {
+	if (Settings::Get('panel.password_min_length') > 0) {
 		$password = validate(
 			$password, 
-			$settings['panel']['password_min_length'], /* replacer needs to be password length, not the fieldname */
-			'/^.{'.(int)$settings['panel']['password_min_length'].',}$/D', 
+			Settings::Get('panel.password_min_length'),
+			'/^.{'.(int)Settings::Get('panel.password_min_length').',}$/D',
 			'notrequiredpasswordlength'
 		);
 	}
 	
-	if ($settings['panel']['password_regex'] != '') {
+	if (Settings::Get('panel.password_regex') != '') {
 		$password = validate(
 			$password, 
-			$settings['panel']['password_regex'],
-			$settings['panel']['password_regex'], 
+			Settings::Get('panel.password_regex'),
+			Settings::Get('panel.password_regex'),
 			'notrequiredpasswordcomplexity'
 		);
 	}

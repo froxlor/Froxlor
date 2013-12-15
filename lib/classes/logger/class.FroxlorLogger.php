@@ -16,23 +16,17 @@
  * @package    Logger
  *
  * @link       http://www.nutime.de/
- * 
+ *
  * Logger - Froxlor-Base-Logger-Class
  */
 
-class FroxlorLogger
-{
+class FroxlorLogger {
+
 	/**
 	 * Userinfo
 	 * @var array
 	 */
 	private $userinfo = array();
-
-	/**
-	 * Settings array
-	 * @var settings
-	 */
-	private $settings = array();
 
 	/**
 	 * LogTypes Array
@@ -50,25 +44,21 @@ class FroxlorLogger
 	 * Class constructor.
 	 *
 	 * @param array userinfo
-	 * @param array settings
 	 */
-	protected function __construct($userinfo, $settings) {
+	protected function __construct($userinfo) {
 		$this->userinfo = $userinfo;
-		$this->settings = $settings;
 		self::$logtypes = array();
 
-		if (!isset($this->settings['logger']['logtypes'])
-		   && (!isset($this->settings['logger']['logtypes']) || $this->settings['logger']['logtypes'] == '')
-		   && isset($this->settings['logger']['enabled'])
-		   && $this->settings['logger']['enabled']
+		if ((Settings::Get('logger.logtypes') == null || Settings::Get('logger.logtypes') == '')
+		   && (Settings::Get('logger.enabled') !== null && Settings::Get('logger.enabled'))
 		) {
 			self::$logtypes[0] = 'syslog';
 			self::$logtypes[1] = 'mysql';
 		}  else {
-			if (isset($this->settings['logger']['logtypes'])
-			   && $this->settings['logger']['logtypes'] != ''
+			if (Settings::Get('logger.logtypes') !== null
+			   && Settings::Get('logger.logtypes') != ''
 			) {
-				self::$logtypes = explode(',', $this->settings['logger']['logtypes']);
+				self::$logtypes = explode(',', Settings::Get('logger.logtypes'));
 			} else {
 				self::$logtypes = null;
 			}
@@ -79,8 +69,8 @@ class FroxlorLogger
 	 * Singleton ftw ;-)
 	 *
 	 */
-	static public function getInstanceOf($_usernfo, $_settings)
-	{
+	static public function getInstanceOf($_usernfo) {
+
 		if (!isset($_usernfo)
 		   || $_usernfo == null
 		) {
@@ -89,19 +79,26 @@ class FroxlorLogger
 		}
 
 		if (!isset(self::$loggers[$_usernfo['loginname']])) {
-			self::$loggers[$_usernfo['loginname']] = new FroxlorLogger($_usernfo, $_settings);
+			self::$loggers[$_usernfo['loginname']] = new FroxlorLogger($_usernfo);
 		}
 
 		return self::$loggers[$_usernfo['loginname']];
 	}
 
+	/**
+	 * logs a given text to all enabled logger-facilities
+	 *
+	 * @param int $action
+	 * @param int $type
+	 * @param string $text
+	 */
 	public function logAction ($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
 
 		if (self::$logtypes == null) {
 			return;
 		}
 
-		if ($this->settings['logger']['log_cron'] == '0'
+		if (Settings::Get('logger.log_cron') == '0'
 		   && $action == CRON_ACTION
 		) {
 			return;
@@ -112,12 +109,12 @@ class FroxlorLogger
 			switch ($logger)
 			{
 				case 'syslog':
-					$_log = SysLogger::getInstanceOf($this->userinfo, $this->settings);
+					$_log = SysLogger::getInstanceOf($this->userinfo);
 					break;
 				case 'file':
 					try
 					{
-						$_log = FileLogger::getInstanceOf($this->userinfo, $this->settings);
+						$_log = FileLogger::getInstanceOf($this->userinfo);
 					}
 					catch(Exception $e)
 					{
@@ -129,7 +126,7 @@ class FroxlorLogger
 					}
 					break;
 				case 'mysql':
-					$_log = MysqlLogger::getInstanceOf($this->userinfo, $this->settings);
+					$_log = MysqlLogger::getInstanceOf($this->userinfo);
 					break;
 				default:
 					$_log = null;
@@ -150,6 +147,13 @@ class FroxlorLogger
 		}
 	}
 
+	/**
+	 * Set whether to log cron-runs
+	 *
+	 * @param bool $_cronlog
+	 *
+	 * @return boolean
+	 */
 	public function setCronLog($_cronlog = 0) {
 
 		$_cronlog = (int)$_cronlog;
@@ -159,13 +163,7 @@ class FroxlorLogger
 		) {
 			$_cronlog = 0;
 		}
-
-		$stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_SETTINGS . "` SET
-			`value` = :value
-			WHERE `settinggroup`='logger' AND `varname`='log_cron'"
-		);
-		Database::pexecute($stmt, array('value' => $_cronlog));
+		Settings::Set('logger.log_cron', $_cronlog);
 		return true;
 	}
 }

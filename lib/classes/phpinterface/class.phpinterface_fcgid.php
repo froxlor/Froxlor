@@ -22,12 +22,6 @@
 class phpinterface_fcgid {
 
 	/**
-	 * Settings array
-	 * @var array
-	 */
-	private $_settings = array();
-
-	/**
 	 * Domain-Data array
 	 * @var array
 	*/
@@ -42,11 +36,14 @@ class phpinterface_fcgid {
 	/**
 	 * main constructor
 	*/
-	public function __construct($settings, $domain) {
-		$this->_settings = $settings;
+	public function __construct($domain) {
 		$this->_domain = $domain;
 	}
 
+	/**
+	 * create fcgid-starter-file
+	 * @param array $phpconfig
+	 */
 	public function createConfig($phpconfig) {
 
 		// create starter
@@ -67,7 +64,7 @@ class phpinterface_fcgid {
 			if ((int)$phpconfig['mod_fcgid_starter'] != - 1) {
 				$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$phpconfig['mod_fcgid_starter'] . "\n";
 			} else {
-				$starter_file.= "PHP_FCGI_CHILDREN=" . (int)$this->_settings['system']['mod_fcgid_starter'] . "\n";
+				$starter_file.= "PHP_FCGI_CHILDREN=" . (int)Settings::Get('system.mod_fcgid_starter') . "\n";
 			}
 		}
 
@@ -80,7 +77,7 @@ class phpinterface_fcgid {
 			if ((int)$phpconfig['mod_fcgid_maxrequests'] != - 1) {
 				$starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$phpconfig['mod_fcgid_maxrequests'] . "\n";
 			} else {
-				$starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$this->_settings['system']['mod_fcgid_maxrequests'] . "\n";
+				$starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)Settings::Get('system.mod_fcgid_maxrequests') . "\n";
 			}
 		}
 
@@ -117,12 +114,12 @@ class phpinterface_fcgid {
 			$openbasedirc = '';
 			$_phpappendopenbasedir = '';
 
-			$_custom_openbasedir = explode(':', $this->_settings['system']['mod_fcgid_peardir']);
+			$_custom_openbasedir = explode(':', Settings::Get('system.mod_fcgid_peardir'));
 			foreach ($_custom_openbasedir as $cobd) {
 				$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 			}
 
-			$_custom_openbasedir = explode(':', $this->_settings['system']['phpappendopenbasedir']);
+			$_custom_openbasedir = explode(':', Settings::Get('system.phpappendopenbasedir'));
 			foreach ($_custom_openbasedir as $cobd) {
 				$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 			}
@@ -155,10 +152,10 @@ class phpinterface_fcgid {
 		$admin = $this->_getAdminData($this->_domain['adminid']);
 		$php_ini_variables = array(
 				'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
-				'PEAR_DIR' => $this->_settings['system']['mod_fcgid_peardir'],
+				'PEAR_DIR' => Settings::Get('system.mod_fcgid_peardir'),
 				'OPEN_BASEDIR' => $openbasedir,
 				'OPEN_BASEDIR_C' => $openbasedirc,
-				'OPEN_BASEDIR_GLOBAL' => $this->_settings['system']['phpappendopenbasedir'],
+				'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.hpappendopenbasedir'),
 				'TMP_DIR' => $this->getTempDir(),
 				'CUSTOMER_EMAIL' => $this->_domain['email'],
 				'ADMIN_EMAIL' => $admin['email'],
@@ -192,7 +189,7 @@ class phpinterface_fcgid {
 	 */
 	public function getConfigDir($createifnotexists = true) {
 
-		$configdir = makeCorrectDir($this->_settings['system']['mod_fcgid_configdir'] . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
+		$configdir = makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
 
 		if (!is_dir($configdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
@@ -211,7 +208,7 @@ class phpinterface_fcgid {
 	 */
 	public function getTempDir($createifnotexists = true) {
 
-		$tmpdir = makeCorrectDir($this->_settings['system']['mod_fcgid_tmpdir'] . '/' . $this->_domain['loginname'] . '/');
+		$tmpdir = makeCorrectDir(Settings::Get('system.mod_fcgid_tmpdir') . '/' . $this->_domain['loginname'] . '/');
 
 		if (!is_dir($tmpdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($tmpdir));

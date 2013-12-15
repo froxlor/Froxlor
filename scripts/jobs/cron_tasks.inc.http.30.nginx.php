@@ -228,7 +228,7 @@ class nginx
 						'documentroot' => $mypath,
 					);
 
-					$php = new phpinterface($this->settings, $domain);
+					$php = new phpinterface($domain);
 					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
 				} else {
 					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass ' . $this->settings['system']['nginx_php_backend'] . ';' . "\n";
@@ -351,7 +351,7 @@ class nginx
 				$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
 
 				// SSL STUFF
-				$dssl = new DomainSSL($this->settings);
+				$dssl = new DomainSSL();
 				// this sets the ssl-related array-indices in the $domain array
 				// if the domain has customer-defined ssl-certificates
 				$dssl->setDomainSSLFilesArray($domain);

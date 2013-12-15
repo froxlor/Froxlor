@@ -21,19 +21,9 @@
 class ConfigIO {
 
 	/**
-	 * internal settings array
-	 *
-	 * @var array
+	 * constructor
 	 */
-	private $_settings = null;
-
-	/**
-	 * constructor gets the froxlor settings
-	 * as array
-	 */
-	public function __construct(array $settings = null) {
-		$this->_settings = $settings;
-	}
+	public function __construct() {}
 
 	/**
 	 * clean up former created configs, including (if enabled)
@@ -73,7 +63,7 @@ class ConfigIO {
 		/*
 		 * only clean up if we're actually using SSL
 		 */
-		if ($this->_settings['system']['use_ssl'] == '1') {
+		if (Settings::Get('system.use_ssl') == '1') {
 			// get correct directory
 			$configdir = $this->_getFile('system', 'customer_ssl_path');
 			if ($configdir !== false) {
@@ -158,7 +148,7 @@ class ConfigIO {
 	 */
 	private function _cleanAwstatsFiles() {
 
-		if ($this->_settings['system']['awstats_enabled'] == '0') {
+		if (Settings::Get('system.awstats_enabled') == '0') {
 			return;
 		}
 
@@ -204,7 +194,7 @@ class ConfigIO {
 	 */
 	private function _cleanFcgidFiles() {
 
-		if ($this->_settings['system']['mod_fcgid'] == '0') {
+		if (Settings::Get('system.mod_fcgid') == '0') {
 			return;
 		}
 
@@ -246,7 +236,7 @@ class ConfigIO {
 	 */
 	private function _cleanFpmFiles() {
 
-		if ($this->_settings['phpfpm']['enabled'] == '0') {
+		if (Settings::Get('phpfpm.enabled') == '0') {
 			return;
 		}
 
@@ -276,7 +266,7 @@ class ConfigIO {
 	}
 
 	/**
-	 * returns a file/direcotry from the settings array and checks whether it exists
+	 * returns a file/direcotry from the settings and checks whether it exists
 	 *
 	 * @param string $group         settings-group
 	 * @param string $varname       var-name
@@ -287,7 +277,7 @@ class ConfigIO {
 	private function _getFile($group, $varname, $check_exists = true) {
 
 		// read from settings
-		$file = $this->_settings[$group][$varname];
+		$file = Settings::Get($group.'.'.$varname);
 
 		// check whether it exists
 		if ($check_exists && @file_exists($file) == false) {

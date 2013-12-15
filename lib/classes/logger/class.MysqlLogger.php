@@ -38,25 +38,29 @@ class MysqlLogger extends AbstractLogger {
 	 * Class constructor.
 	 *
 	 * @param array userinfo
-	 * @param array settings
 	 */
-	protected function __construct($userinfo, $settings) {
-		parent::setupLogger($settings);
+	protected function __construct($userinfo) {
+		parent::setupLogger();
 		$this->userinfo = $userinfo;
 	}
 
 	/**
 	 * Singleton ftw ;-)
-	 *
 	 */
-	static public function getInstanceOf($_usernfo, $_settings) {
-
+	static public function getInstanceOf($_usernfo) {
 		if (!isset(self::$loggers[$_usernfo['loginname']])) {
-			self::$loggers[$_usernfo['loginname']] = new MysqlLogger($_usernfo, $_settings);
+			self::$loggers[$_usernfo['loginname']] = new MysqlLogger($_usernfo);
 		}
 		return self::$loggers[$_usernfo['loginname']];
 	}
 
+	/**
+	 * logs a given text to all enabled logger-facilities
+	 *
+	 * @param int $action
+	 * @param int $type
+	 * @param string $text
+	 */
 	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
 
 		if (parent::isEnabled()) {

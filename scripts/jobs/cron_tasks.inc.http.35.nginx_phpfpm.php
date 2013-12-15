@@ -23,7 +23,7 @@ class nginx_phpfpm extends nginx
 
 		if($domain['phpenabled'] == '1')
 		{
-			$php = new phpinterface($this->settings, $domain);
+			$php = new phpinterface($domain);
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
 			
 			$php_options_text = "\t".'location ~ \.php$ {'."\n";
@@ -81,7 +81,7 @@ class nginx_phpfpm extends nginx
 			safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($mypath));
 						
 			// get php.ini for our own vhost
-			$php = new phpinterface($this->settings, $domain);
+			$php = new phpinterface($domain);
 
 			// get php-config
 			if ($this->settings['phpfpm']['enabled'] == '1') {

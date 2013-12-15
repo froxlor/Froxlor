@@ -22,12 +22,6 @@
 class phpinterface_fpm {
 
 	/**
-	 * Settings array
-	 * @var array
-	 */
-	private $_settings = array();
-
-	/**
 	 * Domain-Data array
 	 * @var array
 	*/
@@ -96,8 +90,7 @@ class phpinterface_fpm {
 	/**
 	 * main constructor
 	*/
-	public function __construct($settings, $domain) {
-		$this->_settings = $settings;
+	public function __construct($domain) {
 		$this->_domain = $domain;
 	}
 
@@ -111,13 +104,13 @@ class phpinterface_fpm {
 		$fh = @fopen($this->getConfigFile(), 'w');
 
 		if ($fh) {
-			$fpm_pm = $this->_settings['phpfpm']['pm'];
-			$fpm_children = (int)$this->_settings['phpfpm']['max_children'];
-			$fpm_start_servers = (int)$this->_settings['phpfpm']['start_servers'];
-			$fpm_min_spare_servers = (int)$this->_settings['phpfpm']['min_spare_servers'];
-			$fpm_max_spare_servers = (int)$this->_settings['phpfpm']['max_spare_servers'];
-			$fpm_requests = (int)$this->_settings['phpfpm']['max_requests'];
-			$fpm_process_idle_timeout = (int)$this->_settings['phpfpm']['idle_timeout'];
+			$fpm_pm = Settings::Get('phpfpm.pm');
+			$fpm_children = (int)Settings::Get('phpfpm.max_children');
+			$fpm_start_servers = (int)Settings::Get('phpfpm.start_servers');
+			$fpm_min_spare_servers = (int)Settings::Get('phpfpm.min_spare_servers');
+			$fpm_max_spare_servers = (int)Settings::Get('phpfpm.max_spare_servers');
+			$fpm_requests = (int)Settings::Get('phpfpm.max_requests');
+			$fpm_process_idle_timeout = (int)Settings::Get('phpfpm.idle_timeout');
 
 			if ($fpm_children == 0) {
 				$fpm_children = 1;
@@ -168,14 +161,14 @@ class phpinterface_fpm {
 			if ($phpconfig['fpm_slowlog'] == '1') {
 				$fpm_config.= 'request_terminate_timeout = ' . $phpconfig['fpm_reqterm'] . "\n";
 				$fpm_config.= 'request_slowlog_timeout = ' . $phpconfig['fpm_reqslow'] . "\n";
-				$slowlog = makeCorrectFile($this->_settings['system']['logfiles_directory'] . '/' . $this->_domain['loginname'] . '-php-slow.log');
+				$slowlog = makeCorrectFile(Settings::Get('system.logfiles_directory') . '/' . $this->_domain['loginname'] . '-php-slow.log');
 				$fpm_config.= 'slowlog = ' . $slowlog . "\n";
 				$fpm_config.= 'catch_workers_output = yes' . "\n";
 			}
 
 			$fpm_config.= ';chroot = '.makeCorrectDir($this->_domain['documentroot'])."\n";
 
-			$tmpdir = makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/');
+			$tmpdir = makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/');
 			if (!is_dir($tmpdir)) {
 				$this->getTempDir();
 			}
@@ -188,12 +181,12 @@ class phpinterface_fpm {
 			if ($this->_domain['loginname'] != 'froxlor.panel') {
 				if ($this->_domain['openbasedir'] == '1') {
 					$_phpappendopenbasedir = '';
-					$_custom_openbasedir = explode(':', $this->_settings['phpfpm']['peardir']);
+					$_custom_openbasedir = explode(':', Settings::Get('phpfpm.peardir'));
 					foreach ($_custom_openbasedir as $cobd) {
 						$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 					}
 
-					$_custom_openbasedir = explode(':', $this->_settings['system']['phpappendopenbasedir']);
+					$_custom_openbasedir = explode(':', Settings::Get('system.phpappendopenbasedir'));
 					foreach ($_custom_openbasedir as $cobd) {
 						$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 					}
@@ -219,14 +212,14 @@ class phpinterface_fpm {
 					$openbasedir = implode(':', $clean_openbasedir);
 				}
 			}
-			$fpm_config.= 'php_admin_value[session.save_path] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
-			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/') . "\n";
+			$fpm_config.= 'php_admin_value[session.save_path] = ' . makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/') . "\n";
+			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/') . "\n";
 
 			$admin = $this->_getAdminData($this->_domain['adminid']);
 
 			$php_ini_variables = array(
 					'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
-					'PEAR_DIR' => $this->_settings['system']['mod_fcgid_peardir'],
+					'PEAR_DIR' => Settings::Get('system.mod_fcgid_peardir'),
 					'TMP_DIR' => $this->getTempDir(),
 					'CUSTOMER_EMAIL' => $this->_domain['email'],
 					'ADMIN_EMAIL' => $admin['email'],
@@ -284,7 +277,7 @@ class phpinterface_fpm {
 	 */
 	public function getConfigFile($createifnotexists = true) {
 
-		$configdir = makeCorrectDir($this->_settings['phpfpm']['configdir']);
+		$configdir = makeCorrectDir(Settings::Get('phpfpm.configdir'));
 		$config = makeCorrectFile($configdir.'/'.$this->_domain['domain'].'.conf');
 
 		if (!is_dir($configdir) && $createifnotexists) {
@@ -303,14 +296,12 @@ class phpinterface_fpm {
 	 */
 	public function getSocketFile($createifnotexists = true) {
 
-		// see #1300 why this has changed
-		//$socketdir = makeCorrectDir('/var/run/'.$this->_settings['system']['webserver'].'/');
-		$socketdir = makeCorrectDir($this->_settings['phpfpm']['fastcgi_ipcdir']);
+		$socketdir = makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir'));
 		$socket = makeCorrectFile($socketdir.'/'.$this->_domain['loginname'].'-'.$this->_domain['domain'].'-php-fpm.socket');
 
 		if (!is_dir($socketdir) && $createifnotexists) {
 			safe_exec('mkdir -p '.escapeshellarg($socketdir));
-			safe_exec('chown -R '.$this->_settings['system']['httpuser'].':'.$this->_settings['system']['httpgroup'].' '.escapeshellarg($socketdir));
+			safe_exec('chown -R '.Settings::Get('system.httpuser').':'.Settings::Get('system.httpgroup').' '.escapeshellarg($socketdir));
 		}
 
 		return $socket;
@@ -325,7 +316,7 @@ class phpinterface_fpm {
 	 */
 	public function getTempDir($createifnotexists = true) {
 
-		$tmpdir = makeCorrectDir($this->_settings['phpfpm']['tmpdir'] . '/' . $this->_domain['loginname'] . '/');
+		$tmpdir = makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/');
 
 		if (!is_dir($tmpdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
@@ -346,11 +337,11 @@ class phpinterface_fpm {
 	public function getAliasConfigDir($createifnotexists = true) {
 
 		// ensure default...
-		if (!isset($this->_settings['phpfpm']['aliasconfigdir'])) {
-			$this->_settings['phpfpm']['aliasconfigdir'] = '/var/www/php-fpm';
+		if (Settings::Get('phpfpm.aliasconfigdir') == null) {
+			Settings::Set('phpfpm.aliasconfigdir', '/var/www/php-fpm');
 		}
 
-		$configdir = makeCorrectDir($this->_settings['phpfpm']['aliasconfigdir'] . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
+		$configdir = makeCorrectDir(Settings::Get('phpfpm.aliasconfigdir') . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
 		if (!is_dir($configdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
 			safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($configdir));

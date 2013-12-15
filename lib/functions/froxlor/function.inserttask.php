@@ -29,8 +29,6 @@
 
 function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '') {
 
-	global $settings;
-
 	if ($type == '1'
 		|| $type == '3'
 		|| $type == '4'
@@ -38,11 +36,11 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		|| $type == '10'
 	) {
 		// 4 = bind -> if bind disabled -> no task
-		if ($type == '4' && $settings['system']['bind_enable'] == '0') {
+		if ($type == '4' && Settings::Get('system.bind_enable') == '0') {
 			return;
 		}
 		// 10 = quota -> if quota disabled -> no task
-		if ($type == '10' && $settings['system']['diskquota_enabled'] == '0') {
+		if ($type == '10' && Settings::Get('system.diskquota_enabled') == '0') {
 			return;
 		}
 		$del_stmt = Database::prepare("
