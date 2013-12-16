@@ -17,53 +17,44 @@
  *
  */
 
-function getFormFieldOutput($fieldname, $fielddata)
-{
-	global $settings, $theme;
+function getFormFieldOutput($fieldname, $fielddata) {
 
 	$returnvalue = '';
-	if(is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('getFormFieldOutput' . ucfirst($fielddata['type'])))
-	{
-		if(isset($fielddata['label']) && is_array($fielddata['label']))
-		{
-			if(isset($fielddata['label']['title']) && isset($fielddata['label']['description']))
-			{
+	if (is_array($fielddata)
+		&& isset($fielddata['type'])
+		&& $fielddata['type'] != ''
+		&& function_exists('getFormFieldOutput' . ucfirst($fielddata['type']))
+	) {
+		if (isset($fielddata['label']) && is_array($fielddata['label'])) {
+			if (isset($fielddata['label']['title']) && isset($fielddata['label']['description'])) {
 				$fielddata['label'] = '<b>' . $fielddata['label']['title'] . '</b><br />' . $fielddata['label']['description'];
-			}
-			else
-			{
+			} else {
 				$fielddata['label'] = implode(' ', $fielddata['label']);
 			}
 		}
-		if(!isset($fielddata['value']))
-		{
-			if(isset($fielddata['default']))
-			{
+
+		if (!isset($fielddata['value'])) {
+			if (isset($fielddata['default'])) {
 				$fielddata['value'] = $fielddata['default'];
-			}
-			else
-			{
+			} else {
 				$fielddata['value'] = null;
 			}
 		}
-		
+
 		/**
 		 * this part checks for the 'websrv_avail' entry in the settings-array
 		 * if found, we check if the current webserver is in the array. If this
 		 * is not the case, we change the setting type to "hidden", #502
 		 */
 		$do_show = true;
-		if(isset($fielddata['websrv_avail']) && is_array($fielddata['websrv_avail']))
-		{
-			$websrv = $settings['system']['webserver'];
-			if(!in_array($websrv, $fielddata['websrv_avail']))
-			{
+		if (isset($fielddata['websrv_avail']) && is_array($fielddata['websrv_avail'])) {
+			$websrv = Settings::Get('system.webserver');
+			if (!in_array($websrv, $fielddata['websrv_avail'])) {
 				$do_show = false;
 			}
 		}
 
-		if($do_show)
-		{
+		if ($do_show) {
 			$returnvalue = call_user_func('getFormFieldOutput' . ucfirst($fielddata['type']), $fieldname, $fielddata);
 		}
 	}

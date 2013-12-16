@@ -50,7 +50,7 @@ if (!function_exists("ftp_connect")) {
 include(FROXLOR_INSTALL_DIR.'/lib/classes/Smarty/Smarty.class.php');
 $smarty = new Smarty;
 
-$smarty->template_dir = './templates/' . $settings['panel']['default_theme'] . '/';
+$smarty->template_dir = './templates/' . Settings::Get('panel.default_theme') . '/';
 $smarty->compile_dir  = './templates_c/';
 $smarty->cache_dir    = './cache/';
 
@@ -65,7 +65,7 @@ define('HAVE_GETTEXT', true);
 require (FROXLOR_INSTALL_DIR.'/lib/functions/smarty_plugins/gettext-prefilter.php');
 
 // global Theme-variable
-$theme = $settings['panel']['default_theme'];
+$theme = Settings::Get('panel.default_theme');
 
 if (file_exists($hl_path.'/logo_custom.png')) {
 	$header_logo = $hl_path.'/logo_custom.png';
@@ -73,7 +73,11 @@ if (file_exists($hl_path.'/logo_custom.png')) {
 
 $smarty->assign('header_logo', $header_logo);
 $smarty->assign('theme', $theme);
-$smarty->assign('settings', $settings);
+$smarty->assign('no_robots', Settings::Get('panel.no_robots'));
+$smarty->assign('use_webfonts', Settings::Get('panel.use_webfonts'));
+$smarty->assign('webfont', Settings::Get('panel.webfont'));
+$smarty->assign('show_version_login', Settings::Get('admin.show_version_login'));
+$smarty->assign('show_version_footer', Settings::Get('admin.show_version_footer'));
 $smarty->assign('loggedin', 0);
 $smarty->assign('current_year', date('Y'));
 $smarty->assign('title', 'WebFTP - ');

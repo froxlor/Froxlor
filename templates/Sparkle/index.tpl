@@ -3,12 +3,12 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="Default-Style" content="text/css" />
-	{if $settings.panel.no_robots == 0}
+	{if $no_robots == 0}
 	<meta name="robots" content="noindex, nofollow, noarchive" />
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	{/if}
-	{if $settings.panel.use_webfonts == 1}
-		<link href="//fonts.googleapis.com/css?family={$settings.panel.webfont}" rel="stylesheet">
+	{if $use_webfonts == 1}
+		<link href="//fonts.googleapis.com/css?family={$webfont}" rel="stylesheet">
 	{/if}
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<link rel="stylesheet" href="templates/{$theme}/assets/css/main.css" />
@@ -19,7 +19,7 @@
 	<title>{$title}Froxlor Server Management Panel</title>
 	<style type="text/css">
 		body {
-			font-family: {if $settings.panel.use_webfonts == 1}{$webfont},{/if} Verdana, Geneva, sans-serif;
+			font-family: {if $use_webfonts == 1}{$webfont},{/if} Verdana, Geneva, sans-serif;
 		}
 	</style>
 </head>
@@ -51,7 +51,7 @@
 {/if}
 <footer>
 	<span>Froxlor
-		{if ($settings.admin.show_version_login == '1' && $loggedin == 0) || ($settings.admin.show_version_footer == '1' && $loggedin == 1)}
+		{if ($show_version_login == '1' && $loggedin == 0) || ($show_version_footer == '1' && $loggedin == 1)}
 			{$version}{$branding}
 		{/if}
 		&copy; 2009-{$current_year} by <a href="http://www.froxlor.org/" rel="external">{t}the Froxlor Team{/t}</a>
