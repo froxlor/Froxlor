@@ -379,7 +379,7 @@ if ($page == 'overview') {
 						standard_error('youhavealreadyacatchallforthisdomain');
 						exit;
 					} else {
-						$stmt = Database::pexecute("UPDATE `" . TABLE_MAIL_VIRTUAL . "`
+						$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_VIRTUAL . "`
 							SET `email` = :email , `iscatchall` = '1'
 							WHERE `customerid`= :cid
 							AND `id`= :id"
