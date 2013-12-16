@@ -79,9 +79,9 @@ class Settings {
 	 */
 	private function _readSettings() {
 		$result_stmt = Database::query("
-			SELECT `settingid`, `settinggroup`, `varname`, `value`
-			FROM `" . TABLE_PANEL_SETTINGS . "`
-		");
+				SELECT `settingid`, `settinggroup`, `varname`, `value`
+				FROM `" . TABLE_PANEL_SETTINGS . "`
+				");
 		self::$_data = array();
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			self::$_data[$row['settinggroup']][$row['varname']] = $row['value'];
@@ -136,6 +136,9 @@ class Settings {
 		if (Settings::Get($setting) !== null) {
 			// set new value in array
 			$sstr = explode(".", $setting);
+			if (!isset($sstr[1])) {
+				return false;
+			}
 			self::$_data[$sstr[0]][$sstr[1]] = $value;
 			// should we store to db instantly?
 			if ($instant_save) {
@@ -146,6 +149,41 @@ class Settings {
 				}
 				self::$_data[$sstr[0]][$sstr[1]] = $value;
 			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * add a new setting to the database (mainly used in updater)
+	 *
+	 * @param string $setting a group and a varname separated by a dot (group.varname)
+	 * @param string $value
+	 *
+	 * @return boolean
+	 */
+	public function pAddNew($setting = null, $value = null) {
+
+		// first check if it doesn't exist
+		if (Settings::Get($setting) === null) {
+			// validate parameter
+			$sstr = explode(".", $setting);
+			if (!isset($sstr[1])) {
+				return false;
+			}
+			// prepare statement
+			$ins_stmt = Database::prepare("
+					INSERT INTO `".TABLE_PANEL_SETTINGS."` SET
+					`settinggroup` = :group,
+					`varname` = :varname,
+					`value` = :value
+					");
+			$ins_data = array(
+					'settinggroup' => $sstr[0],
+					'varname' => $sstr[1],
+					'value' => $value
+			);
+			Database::pexecute($ins_stmt, $ins_data);
 			return true;
 		}
 		return false;

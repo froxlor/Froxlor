@@ -106,6 +106,7 @@ if (!isset($sql)
  * Includes the Functions
  */
 require FROXLOR_INSTALL_DIR.'/lib/functions.php';
+@set_error_handler('phpErrHandler');
 
 /**
  * Includes the MySQL-Tabledefinitions etc.
@@ -121,7 +122,7 @@ $idna_convert = new idna_convert_wrapper();
  * disable magic_quotes_runtime if enabled
  */
 if (get_magic_quotes_runtime()) {
-	//Deactivate
+	// deactivate
 	set_magic_quotes_runtime(false);
 }
 
