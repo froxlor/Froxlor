@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="Default-Style" content="text/css" />
-	<if $settings['panel']['no_robots'] == '0'>
+	<if Settings::Get('panel.no_robots') == '0'>
 	<meta name="robots" content="noindex, nofollow, noarchive" />
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	</if>
@@ -21,8 +21,8 @@
 	</if>
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/jcanvas.min.js"></script>
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/circular.js"></script>
-	<if $settings['panel']['use_webfonts'] == '1'>
-		<link href="//fonts.googleapis.com/css?family={$settings['panel']['webfont']}" rel="stylesheet">
+	<if Settings::Get('panel.use_webfonts') == '1'>
+		<link href="//fonts.googleapis.com/css?family={Settings::Get('panel.webfont')}" rel="stylesheet">
 	</if>
 	<link href="templates/{$theme}/assets/css/main.css" rel="stylesheet" type="text/css" />
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/css/main_ie.css" type="text/css" /><![endif]-->
@@ -32,7 +32,7 @@
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
 	<style type="text/css">
 	body {
-        font-family: <if $settings['panel']['use_webfonts'] == '1'>{$webfont},</if> Verdana, Geneva, sans-serif;
+        font-family: <if Settings::Get('panel.use_webfonts') == '1'>{$webfont},</if> Verdana, Geneva, sans-serif;
 	}
 	</style>
 </head>
@@ -48,7 +48,7 @@
 	</a>
 	<div class="topheader_navigation">
 		<ul class="topheadernav">
-			<if $settings['ticket']['enabled'] == 1>
+			<if Settings::Get('ticket.enabled') == 1>
 				<li>
 					<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets'))}">
 						<if 0 < $awaitingtickets>
@@ -66,10 +66,10 @@
 				<ul>
 					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_password'))}">{$lng['login']['password']}</a></li>
 					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_language'))}">{$lng['login']['language']}</a></li>
-					<if $settings['panel']['allow_theme_change_admin'] == '1' && $userinfo['adminsession'] == 1>
+					<if Settings::Get('panel.allow_theme_change_admin') == '1' && $userinfo['adminsession'] == 1>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
 					</if>
-					<if $settings['panel']['allow_theme_change_customer'] == '1' && $userinfo['adminsession'] == 0>
+					<if Settings::Get('panel.allow_theme_change_customer') == '1' && $userinfo['adminsession'] == 0>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
 					</if>
 				</ul>

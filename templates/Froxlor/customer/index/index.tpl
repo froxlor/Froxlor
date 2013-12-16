@@ -1,7 +1,7 @@
 $header
 	<article>
 
-	<if 0 < $awaitingtickets && $settings['ticket']['enabled'] == 1 >
+	<if 0 < $awaitingtickets && Settings::Get('ticket.enabled') == 1 >
 	<div class="messagewrapperfull">
 		<div class="warningcontainer bradius">
 			<div class="warningtitle">{$lng['admin']['warning']}</div>
@@ -51,7 +51,7 @@ $header
 			<td>{$lng['customer']['forwarders']} ({$lng['customer']['usedmax']}):</td>
 			<td>{$userinfo['email_forwarders_used']}/{$userinfo['email_forwarders']}</td>
 		</tr>
-		<if $settings['system']['mail_quota_enabled'] == 1>
+		<if Settings::Get('system.mail_quota_enabled') == 1>
 		<tr>
 			<td>{$lng['customer']['email_quota']} ({$lng['panel']['megabyte']}, {$lng['customer']['usedmax']}):</td>
 			<td>{$userinfo['email_quota_used']}/{$userinfo['email_quota']}</td>
@@ -66,7 +66,7 @@ $header
 			<td>{$lng['customer']['ftps']} ({$lng['customer']['usedmax']}):</td>
 			<td>{$userinfo['ftps_used']}/{$userinfo['ftps']}</td>
 		</tr>
-		<if $settings['ticket']['enabled'] == 1 >
+		<if Settings::Get('ticket.enabled') == 1 >
 		<tr>
 			<td>{$lng['customer']['tickets']} ({$lng['customer']['usedmax']}):</td>
 			<td>{$userinfo['tickets_used']}/{$userinfo['tickets']}</td>

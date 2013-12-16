@@ -41,7 +41,7 @@
 							<td>{$lng['customer']['forwarders']}:</td>
 							<td><span <if $admin['email_forwarders_used'] == $admin['email_forwarders_used_new']>style="color:green"<else>style="color:red"</if>><b>{$admin['email_forwarders_used']} -&gt; {$admin['email_forwarders_used_new']}</b></span></td>
 						</tr>
-						<if $settings['system']['mail_quota_enabled'] == 1>
+						<if Settings::Get('system.mail_quota_enabled') == 1>
 						<tr>
 							<td>{$lng['customer']['email_quota']}:</td>
 							<td><span <if $admin['email_quota_used'] == $admin['email_quota_used_new']>style="color:green"<else>style="color:red"</if>><b>{$admin['email_quota_used']} -&gt; {$admin['email_quota_used_new']}</b></span></td>
@@ -51,7 +51,7 @@
 							<td>{$lng['customer']['ftps']}:</td>
 							<td><span <if $admin['ftps_used'] == $admin['ftps_used_new']>style="color:green"<else>style="color:red"</if>><b>{$admin['ftps_used']} -&gt; {$admin['ftps_used_new']}</b></span></td>
 						</tr>
-						<if $settings['ticket']['enabled'] == '1'>
+						<if Settings::Get('ticket.enabled') == '1'>
 						<tr>
 							<td>{$lng['customer']['tickets']}:</td>
 							<td><span <if $admin['tickets_used'] == $admin['tickets_used_new']>style="color:green"<else>style="color:red"</if>><b>{$admin['tickets_used']} -&gt; {$admin['tickets_used_new']}</b></span></td>

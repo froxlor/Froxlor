@@ -90,7 +90,7 @@ $header
 		</div>
 		</if>
 		
-		<if $settings['system']['mail_quota_enabled'] == 1 && $userinfo['email_quota'] != '0'>
+		<if Settings::Get('system.mail_quota_enabled') == 1 && $userinfo['email_quota'] != '0'>
 		<div class="canvasbox">
 			<input type="hidden" id="email_quota" class="circular" data-used="{$userinfo['email_quota_used']}" data-available="{$userinfo['email_quota']}">
 			<canvas id="email_forwarders-canvas" width="120" height="76"></canvas><br />
@@ -132,7 +132,7 @@ $header
 		</div>
 		</if>
 		
-		<if (int)$settings['ticket']['enabled'] == 1 && $userinfo['tickets'] != '0'>
+		<if (int)Settings::Get('ticket.enabled') == 1 && $userinfo['tickets'] != '0'>
 		<div class="canvasbox">
 			<input type="hidden" id="tickets" class="circular" data-used="{$userinfo['tickets_used']}" data-available="{$userinfo['tickets']}">
 			<canvas id="tickets-canvas" width="120" height="76"></canvas><br />

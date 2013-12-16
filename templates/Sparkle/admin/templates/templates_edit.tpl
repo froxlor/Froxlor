@@ -86,7 +86,7 @@ $header
 					<td><em>{EMAIL}</em></td>
 					<td>{$lng['admin']['templates']['EMAIL']}</td>
 				</tr>
-				<if $settings['panel']['sendalternativemail'] == 1>
+				<if Settings::Get('panel.sendalternativemail') == 1>
 				<tr>
 					<td colspan="2">
 						<strong>{$lng['admin']['templates']['pop_success_alternative']}</strong>

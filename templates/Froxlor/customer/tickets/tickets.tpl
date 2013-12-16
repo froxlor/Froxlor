@@ -28,7 +28,7 @@ $header
 				</div>
 			</if>
 
-			<if ($userinfo['tickets_used'] < $userinfo['tickets'] || $userinfo['tickets'] == '-1') && 15 < $tickets_count && ($ticketsopen < $settings['ticket']['concurrently_open'] || ($settings['ticket']['concurrently_open'] == '-1' || $settings['ticket']['concurrently_open'] == '')) >
+			<if ($userinfo['tickets_used'] < $userinfo['tickets'] || $userinfo['tickets'] == '-1') && 15 < $tickets_count && ($ticketsopen < Settings::Get('ticket.concurrently_open') || (Settings::Get('ticket.concurrently_open') == '-1' || Settings::Get('ticket.concurrently_open') == '')) >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/ticket_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'new'))}">{$lng['ticket']['ticket_new']}</a>
@@ -67,7 +67,7 @@ $header
 
 			</form>
 
-			<if ($userinfo['tickets_used'] < $userinfo['tickets'] || $userinfo['tickets'] == '-1') && ($ticketsopen < $settings['ticket']['concurrently_open'] || ($settings['ticket']['concurrently_open'] == '-1' || $settings['ticket']['concurrently_open'] == '')) >
+			<if ($userinfo['tickets_used'] < $userinfo['tickets'] || $userinfo['tickets'] == '-1') && ($ticketsopen < Settings::Get('ticket.concurrently_open') || (Settings::Get('ticket.concurrently_open') == '-1' || Settings::Get('ticket.concurrently_open') == '')) >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/ticket_add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets', 'action' => 'new'))}">{$lng['ticket']['ticket_new']}</a>

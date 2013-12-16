@@ -48,7 +48,7 @@ $header
 			</form>
 
 			<aside>
-				<if $settings['panel']['allow_preset'] == '1'>
+				<if Settings::Get('panel.allow_preset') == '1'>
 					<a href="$filename?action=forgotpwd">{$lng['login']['forgotpwd']}</a>
 				<else>
 					&nbsp;

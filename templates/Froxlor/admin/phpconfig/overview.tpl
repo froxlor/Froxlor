@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<if $settings['phpfpm']['enabled'] == 1 >
+		<if Settings::Get('phpfpm.enabled') == 1 >
 		<div class="messagewrapperfull">
 			<div class="warningcontainer bradius">
 				<div class="warningtitle">{$lng['admin']['note']}</div>
