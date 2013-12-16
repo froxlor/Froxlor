@@ -398,11 +398,11 @@ class ticket {
 			}
 
 			$upd_stmt = Database::prepare("
-				UPDATE `' . TABLE_PANEL_TICKET_CATS . '` SET
+				UPDATE `" . TABLE_PANEL_TICKET_CATS . "` SET
 					`name` = :name,
 					`logicalorder` = :lo
-                  WHERE `id` = :id"
-			);
+                  WHERE `id` = :id
+			");
 			Database::pexecute($upd_stmt, array('name' => $_category, 'lo' => $_order, 'id' => $_id));
 			return true;
 		}
