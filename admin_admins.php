@@ -539,7 +539,7 @@ if ($page == 'admins'
 						$email_forwarders = -1;
 					}
 
-					if (Settings('system.mail_quota_enabled') == '1') {
+					if (Settings::Get('system.mail_quota_enabled') == '1') {
 						$email_quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array('0', ''));
 						if (isset($_POST['email_quota_ul'])) {
 							$email_quota = -1;
