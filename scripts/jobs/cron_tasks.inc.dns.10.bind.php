@@ -309,7 +309,7 @@ class bind
 
 			// Check whether to add a www.-prefix 
 			if ($domain['wwwserveralias'] == '1') {
-				$records[] = str_replace('.' . $domain['domain'], '', $subdomain['domain']);
+				$records[] = 'www.'.str_replace('.' . $domain['domain'], '', $subdomain['domain']);
 			}
 		}
 
