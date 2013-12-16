@@ -34,6 +34,11 @@ $(document).ready(function() {
 		}
 	});	
 	
+	// Enable Newsfeeds
+	$(".tipper").tipper({
+		direction: "right"
+	});
+	
 	// Height of divs fix
 	var snheight = $('#sidenavigation').height();
 	var mainheight = $('#maincontent').height();

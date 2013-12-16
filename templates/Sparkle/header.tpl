@@ -19,6 +19,7 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery.jqplot.min.css" />
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/traffic.js"></script>
 	</if>
+	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/tipper.min.js"></script>
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/jcanvas.min.js"></script>
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/circular.js"></script>
 	<if Settings::Get('panel.use_webfonts') == '1'>

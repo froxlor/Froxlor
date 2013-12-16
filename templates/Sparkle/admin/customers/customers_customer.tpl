@@ -26,11 +26,11 @@
 				<span>Webspace:</span>
 				<if $row['diskspace'] != 'UL'>
 					<if (($row['diskspace']/100)*(int)Settings::Get('system.report_webmax')) < $row['diskspace_used']>
-						<div class="progress progress-danger">
+						<div class="progress progress-danger tipper" title="{$row['diskspace_used']} {$lng['panel']['used']}, {$row['diskspace']} {$lng['panel']['assigned']}">
 							<div class="bar" style="width: {$disk_percent}%"></div>
 						</div>
 					<else>
-						<div class="progress">
+						<div class="progress tipper" title="{$row['diskspace_used']} {$lng['panel']['used']}, {$row['diskspace']} {$lng['panel']['assigned']}">
 							<div class="bar" style="width: {$disk_percent}%"></div>
 						</div>
 					</if>
@@ -44,11 +44,11 @@
 				<span>Traffic:</span>
 				<if $row['traffic'] != 'UL'>
 					<if (($row['traffic']/100)*(int)Settings::Get('system.report_trafficmax')) < $row['traffic_used']>
-						<div class="progress progress-danger">
+						<div class="progress progress-danger tipper" title="{$row['traffic_used']} {$lng['panel']['used']}, {$row['traffic']} {$lng['panel']['assigned']}">
 							<div class="bar" style="width: {$traffic_percent}%"></div>
 						</div>
 					<else>
-						<div class="progress">
+						<div class="progress tipper" title="{$row['traffic_used']} {$lng['panel']['used']}, {$row['traffic']} {$lng['panel']['assigned']}">
 							<div class="bar" style="width: {$traffic_percent}%"></div>
 						</div>
 					</if>
