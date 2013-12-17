@@ -35,11 +35,8 @@ if ($page == 'cronjobs' || $page == 'overview') {
 		);
 		$paging = new paging($userinfo, TABLE_PANEL_CRONRUNS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
 
-		/*
-		 * @TODO Fix sorting
-		 */
 		$crons = '';
-		$result_stmt = Database::prepare("SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` ORDER BY `cronfile` ASC");
+		$result_stmt = Database::prepare("SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` ORDER BY `module` ASC, `cronfile` ASC");
 		Database::pexecute($result_stmt);
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
@@ -49,8 +46,14 @@ if ($page == 'cronjobs' || $page == 'overview') {
 
 		$i = 0;
 		$count = 0;
+		$cmod = '';
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			if ($cmod != $row['module']) {
+				$module = ucfirst(explode("/", $row['module'])[1]);
+				eval("\$crons.=\"" . getTemplate('cronjobs/cronjobs_cronjobmodule') . "\";");
+				$cmod = $row['module'];
+			}
 			if ($paging->checkDisplay($i)) {
 				$row = htmlentities_array($row);
 
