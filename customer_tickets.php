@@ -326,7 +326,7 @@ if($page == 'overview') {
 			$priorities = makeoption($lng['ticket']['high'], '1', $mainticket->Get('priority'), true, true);
 			$priorities.= makeoption($lng['ticket']['normal'], '2', $mainticket->Get('priority'), true, true);
 			$priorities.= makeoption($lng['ticket']['low'], '3', $mainticket->Get('priority'), true, true);
-			$subject = $mainticket->Get('subject');
+			$subject = htmlentities($mainticket->Get('subject'));
 			$ticket_replies_count = $numrows_andere + 1;
 
 			// don't forget the main-ticket!
