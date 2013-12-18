@@ -57,56 +57,71 @@ $(document).ready(function(){
 		});
 		tmp.insertBefore($('#datatable'));
 	}
-	//alert(ftp);
-	var plot2 = $.jqplot('chartdiv', [ftp, http, mail], {
-		series: [
-			
-			{
-				lineWidth:1,
-				color: '#019522',
-				label: 'FTP',
-				markerOptions: { style:"circle", size: 5, shadow: false },
-				rendererOptions: { smooth: true },
-				pointLabels: { show:true, formatString: "%#.2f" }
-			},
-			{
-				lineWidth:1,
-				color: '#0000FF',
-				label: 'HTTP',
-				markerOptions: { style:"circle", size: 5, shadow: false },
-				rendererOptions: { smooth: true },
-				pointLabels: { show:true, formatString: "%#.2f" }
-			},
-			{
-				lineWidth:1,
-				color: '#800000',
-				label: 'Mail',
-				markerOptions: { style: "circle", size: 5, shadow: false },
-				rendererOptions: { smooth: true },
-				pointLabels: { show:true, formatString: "%#.2f" }
-			}	
-		],
-		axes: {
-			yaxis: {
-				min: 0,
-				numberTicks: 5,
-				rendererOptions: {drawBaseline: false}
-			},
-			xaxis: {
-				tickOptions:{
-					showGridline: false
-				},
-				pad: 0,
-				ticks: aticks
-			},
+	
+	var dataset = [
+		{
+			label: 'FTP',
+			data: ftp,
+			color: '#019522'
+		},
+		{
+			label: 'HTTP',
+			data: http,
+			color: '#0000FF'
+		},
+		{
+			label: 'Mail',
+			data: mail,
+			color: '#800000'
+		}
+	];
+	
+	var options = {
+		series: {
+			shadowSize: 0,
+			curvedLines: { active: true, apply: false, fitPointDist: true },
+		},
+		lines: {
+			show: true
+		},
+		points: {
+            radius: 2,
+            show: true
+        },
+		legend: {
+			show: false
 		},
 		grid: {
-			show: false,
-			background: '#fff',
-			gridLineColor: '#e2e4e6',
-			borderWidth: 0,
-			shadow: false
+			hoverable: true,
+			borderWidth: 0
 		}
-	});
+	}
+	
+	
+	var flot1 = $.plot('#chartdiv', dataset, options);
+
+	$("<div id='tooltip'></div>").css({
+		position: "absolute",
+		display: "none",
+		padding: "4px 8px",
+		"background-color": "#000",
+		opacity: 0.85,
+		color: "#fff",
+		"font-size": "11px"
+	}).appendTo("body");
+	
+	$("#chartdiv").bind("plothover", function (event, pos, item) {
+		if (item) {
+			var x = item.datapoint[0].toFixed(2),
+				y = item.datapoint[1].toFixed(2);
+
+			$("#tooltip").html(item.series.label + ": " + y + " GiB")
+				.css({top: item.pageY+5, left: item.pageX+5})
+				.fadeIn(200);
+		} else {
+			$("#tooltip").hide();
+		}
+	});	
+
 });
 
