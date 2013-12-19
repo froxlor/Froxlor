@@ -686,7 +686,7 @@ function killslashes($input) {
 
 function parse_ftp_rawlist($list, $type = "UNIX") {
 	if ($type == "UNIX") {
-		$regexp = "/([-ldrswx]{10})[ ]+([0-9]+)[ ]+([-A-Z0-9_]+)[ ]+([-A-Z0-9_]+)[ ]+([0-9]+)[ ]+([A-Z]{3}[ ]+[0-9]{1,2}[ ]+[0-9:]{4,5})[ ]+(.*)/i";
+		$regexp = "/([-ldrswx]{10})[ ]+([0-9]+)[ ]+([-A-Z0-9_@\.]+)[ ]+([-A-Z0-9_@\.]+)[ ]+([0-9]+)[ ]+([A-Z]{3}[ ]+[0-9]{1,2}[ ]+[0-9:]{4,5})[ ]+(.*)/i";
 		$i = 0;
 		foreach ($list as $line) {
 			$is_dir = $is_link = FALSE;
