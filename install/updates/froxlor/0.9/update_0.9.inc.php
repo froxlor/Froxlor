@@ -2570,3 +2570,9 @@ if (isFroxlorVersion('0.9.31-rc3')) {
 	lastStepStatus(0);
 	updateToVersion('0.9.31');
 }
+
+if (isFroxlorVersion('0.9.31')) {
+        showUpdateStep("Updating from 0.9.31 to 0.9.31.1 final", true);
+        lastStepStatus(0);
+        updateToVersion('0.9.31.1');
+}

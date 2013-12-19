@@ -53,7 +53,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'allow_error_report_admin',
 					'type' => 'bool',
-					'default' => true, // TODO: will be false in final release
+					'default' => false,
 					'save_method' => 'storeSettingField',
 					),
 				'system_allow_error_report_customer' => array(
