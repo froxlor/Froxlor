@@ -12,11 +12,7 @@
 	<!--[if lt IE 9]><script src="js/html5shiv.js"></script><![endif]-->
 	<if isset($intrafficpage)>
 	<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="js/jquery.jqplot.min.js"></script>
-	<script language="javascript" type="text/javascript" src="js/plugins/jqplot.barRenderer.min.js"></script>
-	<script language="javascript" type="text/javascript" src="js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-	<script language="javascript" type="text/javascript" src="js/plugins/jqplot.pointLabels.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/jquery.jqplot.min.css" />
+	<script language="javascript" type="text/javascript" src="js/jquery.flot.min.js"></script>
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/traffic.js"></script>
 	</if>
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/tipper.min.js"></script>
