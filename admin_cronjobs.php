@@ -50,7 +50,8 @@ if ($page == 'cronjobs' || $page == 'overview') {
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($cmod != $row['module']) {
-				$module = ucfirst(explode("/", $row['module'])[1]);
+				$_mod = explode("/", $row['module']);
+				$module = ucfirst($_mod[1]);
 				eval("\$crons.=\"" . getTemplate('cronjobs/cronjobs_cronjobmodule') . "\";");
 				$cmod = $row['module'];
 			}
