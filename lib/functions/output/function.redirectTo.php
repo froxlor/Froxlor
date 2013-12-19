@@ -36,61 +36,47 @@
  *          - fixed bug #91
  */
 
-function redirectTo($destination, $get_variables = array(), $isRelative = false)
-{
-	global $s, $theme;
+function redirectTo($destination, $get_variables = null, $isRelative = false) {
 
-	if(is_array($get_variables))
-	{
-		if (isset($get_variables['s']))
-		{
+	global $s;
+
+	if (is_array($get_variables)) {
+		if (isset($get_variables['s'])) {
 			$linker = new linker($destination, $get_variables['s']);
-		}
-		else
-		{
+		} else {
 			$linker = new linker($destination, $s);
 		}
 
-		foreach($get_variables as $key => $value)
-		{
+		foreach ($get_variables as $key => $value) {
 			$linker->add($key, $value);
 		}
 
-		if($isRelative)
-		{
+		if ($isRelative) {
 			$linker->protocol = '';
 			$linker->hostname = '';
 			$path = './';
-		}
-		else
-		{
-			if(isset($_SERVER['HTTPS'])
-			   && strtolower($_SERVER['HTTPS']) == 'on')
-			{
+		} else {
+			if (isset($_SERVER['HTTPS'])
+					&& strtolower($_SERVER['HTTPS']) == 'on'
+			) {
 				$linker->protocol = 'https';
-			}
-			else
-			{
+			} else {
 				$linker->protocol = 'http';
 			}
 
 			$linker->hostname = $_SERVER['HTTP_HOST'];
 
-			if(dirname($_SERVER['PHP_SELF']) == '/')
-			{
+			if (dirname($_SERVER['PHP_SELF']) == '/') {
 				$path = '/';
-			}
-			else
-			{
+			} else {
 				$path = dirname($_SERVER['PHP_SELF']) . '/';
 			}
 			$linker->filename = $path . $destination;
 		}
 		header('Location: ' . $linker->getLink());
 		exit;
-	}
-	elseif($get_variables == null)
-	{
+
+	} elseif ($get_variables == null) {
 		$linker = new linker($destination, $s);
 		header('Location: ' . $linker->getLink());
 		exit;
