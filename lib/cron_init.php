@@ -128,18 +128,6 @@ try {
 
 fwrite($debugHandler, 'Database-connection established' . "\n");
 
-// TODO remove when fully migrated to new Settings class
-$result_stmt = Database::query("
-	SELECT `settingid`, `settinggroup`, `varname`, `value`
-	FROM `" . TABLE_PANEL_SETTINGS . "`
-");
-while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-	$settings[$row['settinggroup']][$row['varname']] = $row['value'];
-}
-
-unset($row);
-fwrite($debugHandler, 'Froxlor settings have been loaded from the database' . "\n");
-
 /**
  * if using fcgid or fpm for froxlor-vhost itself, we have to check
  * whether the permission of the files are still correct

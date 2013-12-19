@@ -145,13 +145,6 @@ if (get_magic_quotes_gpc()) {
 }
 
 /**
- * Selects settings from MySQL-Table
- * TODO remove when completely migrated to new Settings class
- */
-$settings_data = loadConfigArrayDir('actions/admin/settings/');
-$settings = loadSettings($settings_data);
-
-/**
  * SESSION MANAGEMENT
  */
 $remote_addr = $_SERVER['REMOTE_ADDR'];
