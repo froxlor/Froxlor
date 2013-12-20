@@ -34,7 +34,7 @@ $(document).ready(function() {
 		}
 	});	
 	
-	// Enable Newsfeeds
+	// Enable Infobubbles
 	$(".tipper").tipper({
 		direction: "right"
 	});

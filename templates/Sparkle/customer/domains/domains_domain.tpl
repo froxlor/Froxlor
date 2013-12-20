@@ -6,18 +6,18 @@
 	</td>
 	<td>
 		<if $row['caneditdomain'] == '1'>
-			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" />
+			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $row['id']))}">
+				<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" title="{$lng['panel']['edit']}" />
 			</a>&nbsp;
 		</if>
 		<if $row['parentdomainid'] != '0' && !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
-			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'delete', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" />
+			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'delete', 'id' => $row['id']))}">
+				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
 			</a>&nbsp;
 		</if>
 		<if $show_ssledit == 1>
-			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domainssleditor', 'action' => 'view', 'id' => $row['id']))}" style="text-decoration:none;">
-				<img src="templates/{$theme}/assets/img/icons/ssl_<if $row['domain_hascert'] == 1>customer</if><if $row['domain_hascert'] == 2>shared</if><if $row['domain_hascert'] == 0>global</if>.png" alt="{$lng['panel']['ssleditor']}" />
+			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domainssleditor', 'action' => 'view', 'id' => $row['id']))}">
+				<img src="templates/{$theme}/assets/img/icons/ssl_<if $row['domain_hascert'] == 1>customer</if><if $row['domain_hascert'] == 2>shared</if><if $row['domain_hascert'] == 0>global</if>.png" alt="{$lng['panel']['ssleditor']}" title="{$lng['panel']['ssleditor']}" />
 			</a>&nbsp;
 		</if>
 		<if $row['parentdomainid'] == '0' && !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
