@@ -78,6 +78,8 @@ $smarty->assign('use_webfonts', Settings::Get('panel.use_webfonts'));
 $smarty->assign('webfont', Settings::Get('panel.webfont'));
 $smarty->assign('show_version_login', Settings::Get('admin.show_version_login'));
 $smarty->assign('show_version_footer', Settings::Get('admin.show_version_footer'));
+$smarty->assign('version', Settings::Get('panel.version'));
+$smarty->assign('branding', $branding);
 $smarty->assign('loggedin', 0);
 $smarty->assign('current_year', date('Y'));
 $smarty->assign('title', 'WebFTP - ');
