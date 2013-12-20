@@ -2568,8 +2568,14 @@ if (isFroxlorVersion('0.9.31-rc3')) {
 }
 
 if (isFroxlorVersion('0.9.31')) {
+	showUpdateStep("Updating from 0.9.31 to 0.9.31.1 final", true);
+	lastStepStatus(0);
+	updateToVersion('0.9.31.1');
+}
 
-	showUpdateStep("Updating from 0.9.31 to 0.9.32-dev1");
+if (isFroxlorVersion('0.9.31.1')) {
+
+	showUpdateStep("Updating from 0.9.31.1 to 0.9.32-dev1");
 	lastStepStatus(0);
 
 	showUpdateStep("Removing APS-module (deprecated)");
@@ -2579,7 +2585,6 @@ if (isFroxlorVersion('0.9.31')) {
 	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` DROP `aps_packages_used`;");
 	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `aps_packages`;");
 	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `aps_packages_used`;");
-	// FIXME what to do with APS-databases? (before dropping the field)
 	Database::query("ALTER TABLE `".TABLE_PANEL_DATABASES."` DROP `apsdb`;");
 	Database::query("DROP TABLE IF EXISTS `aps_packages`;");
 	Database::query("DROP TABLE IF EXISTS `aps_instances`;");
