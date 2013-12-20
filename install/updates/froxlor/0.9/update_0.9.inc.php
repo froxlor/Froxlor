@@ -2625,3 +2625,23 @@ if (isFroxlorVersion('0.9.31.1')) {
 
 	updateToVersion('0.9.32-dev1');
 }
+
+if (isFroxlorVersion('0.9.32-dev1')) {
+
+	showUpdateStep("Updating from 0.9.32-dev1 to 0.9.32-dev2");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding mailserver - settings for traffic analysis");
+	$ins_stmt = Database::prepare("
+		INSERT INTO `".TABLE_PANEL_SETTINGS."` SET `settinggroup` = 'system', `varname` = :varname, `value` = :value
+	");
+
+	Database::pexecute($ins_stmt, array('varname' => 'mailtraffic_enabled', 'value' => isset($_POST['mailtraffic_enabled']) ? (int)$_POST['mailtraffic_enabled'] : '1'));
+	Database::pexecute($ins_stmt, array('varname' => 'mdalog', 'value' => isset($_POST['mdalog']) ? $_POST['mdalog'] : '/var/log/mail.log'));
+	Database::pexecute($ins_stmt, array('varname' => 'mtalog', 'value' => isset($_POST['mtalog']) ? $_POST['mtalog'] : '/var/log/mail.log'));
+	Database::pexecute($ins_stmt, array('varname' => 'mdaserver', 'value' => isset($_POST['mdaserver']) ? $_POST['mdaserver'] : 'dovecot'));
+	Database::pexecute($ins_stmt, array('varname' => 'mtaserver', 'value' => isset($_POST['mtaserver']) ? $_POST['mtaserver'] : 'postfix'));
+	lastStepStatus(0);
+
+	updateToVersion('0.9.32-dev2');
+}

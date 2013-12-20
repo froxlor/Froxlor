@@ -147,6 +147,15 @@ if (Settings::Get('system.diskquota_enabled')) {
 	$usedquota = getFilesystemQuota();
 }
 
+/**
+ * MAIL-Traffic
+ */
+if (Settings::Get("system.mailtraffic_enabled")) {
+	$stmt = Database::prepare("SELECT lastrun FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `cronfile` = 'cron_traffic.php'");
+	$result = Database::pexecute_first($stmt, array());
+	$mailTrafficCalc = new MailLogParser(0);
+}
+
 $result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` ORDER BY `customerid` ASC");
 
 while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -237,6 +246,48 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 * Mail-Traffic
 	 */
 	$mailtraffic = 0;
+	if (Settings::Get("system.mailtraffic_enabled")) {
+		fwrite($debugHandler, 'mail traffic usage for ' . $row['loginname'] . " started...\n");
+
+		$currentDay = date("Y-m-d");
+
+		$domains_stmt = Database::prepare("SELECT domain FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :cid");
+		Database::pexecute($domains_stmt, array("cid" => $row['customerid']));
+		while ($domainRow = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$domainMailTraffic = $mailTrafficCalc->getDomainTraffic($domainRow["domain"]);
+			if (!is_array($domainMailTraffic)) { continue; }
+
+			foreach ($domainMailTraffic as $day => $dayTraffic) {
+				$dayTraffic = floatval($dayTraffic / 1024);
+
+				list($year, $month, $day) = explode("-", $day);
+				if ($day == $currentDay) {
+					$mailtraffic = $dayTraffic;
+				} else {
+					// Check if an entry for the given day exists
+					$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_TRAFFIC . "`
+						WHERE `customerid` = :cid
+						AND `year` = :year
+						AND `month` = :month
+						AND `day` = :day");
+					$params = array(
+						"cid" => $row['customerid'],
+						"year" => $year,
+						"month" => $month,
+						"day" => $day
+					);
+					Database::pexecute($stmt, $params);
+					if ($stmt->rowCount() > 0) {
+						$updRow = $stmt->fetch(PDO::FETCH_ASSOC);
+						$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_TRAFFIC . "` SET
+							`mail` = :mail
+							WHERE `id` = :id");
+						Database::pexecute($upd_stmt, array("mail" => $updRow['mail'] + $dayTraffic, "id" => $updRow['id']));
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * Total Traffic

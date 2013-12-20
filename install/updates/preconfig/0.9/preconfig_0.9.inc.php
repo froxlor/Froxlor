@@ -610,4 +610,28 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
+	if (versionInUpdate($current_version, '0.9.32-dev2')) {
+		$has_preconfig = true;
+		$description  = 'To enable logging of the mail-traffic, you need to set the following settings accordingly<br /><br />';
+		$question = '<strong>Do you want to enable the traffic collection for mail? (default: yes):</strong>&nbsp;';
+		$question.= makeyesno('mailtraffic_enabled', '1', '0', '1').'<br />';
+		$question.= '<strong>Mail Transfer Agent</strong><br />';
+		$question.= 'Type of your MTA:&nbsp;';
+		$question.= '<select name="mtaserver">';
+		$question.= makeoption('Postfix', 'postfix', 'postfix');
+		$question.= makeoption('Exim4', 'exim4', 'postfix');
+		$question.= '</select><br />';
+		$question.= 'Logfile for your MTA:&nbsp;';
+		$question.= '<input type="text" class="text" name="mtalog" value="/var/log/mail.log" /><br />';
+		$question.= '<strong>Mail Delivery Agent</strong><br />';
+		$question.= 'Type of your MDA:&nbsp;';
+		$question.= '<select name="mdaserver">';
+		$question.= makeoption('Dovecot', 'dovecot', 'dovecot');
+		$question.= makeoption('Courier', 'courier', 'dovecot');
+		$question.= '</select><br /><br />';
+		$question.= 'Logfile for your MDA:&nbsp;';
+		$question.= '<input type="text" class="text" name="mdalog" value="/var/log/mail.log" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
 }
