@@ -64,7 +64,7 @@ case "$1" in
 		echoNoticetoCallFroxlor
 	fi
 
-	find /tmp/ -type f -name "froxlordir"* -delete;
+	find /tmp/ -type f -name 'froxlordir*' -delete;
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;

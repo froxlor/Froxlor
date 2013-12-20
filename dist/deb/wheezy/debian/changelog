@@ -1,3 +1,9 @@
+froxlor (0.9.31.1-2) stable; urgency=low
+
+  * fix glob escaping
+
+ -- Froxlor Release Team <release@froxlor.org>  Sat, 21 Dec 2013 00:46:37 +0100
+
 froxlor (0.9.31.1-1) stable; urgency=low
 
   * new upstream release

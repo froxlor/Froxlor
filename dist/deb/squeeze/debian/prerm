@@ -9,7 +9,7 @@ if [ -d /var/www/froxlor ]; then
 	group="$(stat -c %G /var/www/froxlor/)"	
 
 	if [ "${owner}" != "" ] && [ "$group" != "" ]; then
-		find /tmp/ -type f -name "froxlordir"* -delete
+		find /tmp/ -type f -name 'froxlordir*' -delete
 		tempfile --dir=/tmp --name=froxlordir_${owner}_${group}.tmp
 	fi
 fi
