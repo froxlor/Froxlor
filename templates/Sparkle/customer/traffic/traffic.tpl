@@ -38,6 +38,6 @@ $header
 				</fieldset>
 			</form>
 	</section>
-	<div id="chartdiv" style="height:300px;width:100%"></div>
+	<div id="chartdiv" style="width:100%"></div>
 </article>
 $footer

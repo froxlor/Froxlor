@@ -1003,6 +1003,11 @@ label.nobr {
 	white-space:nowrap;
 }
 
+#chartdiv {
+	height: 500px;
+	margin: 15px 0;
+}
+
 /* CANVAS STUFF */
 .canvasitems {
 	position:relative;

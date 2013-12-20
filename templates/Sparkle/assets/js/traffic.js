@@ -12,7 +12,7 @@ $(document).ready(function(){
 	var i = 1;
 	var links = [];
 	$('#datalegend').remove();
-	$('#datatable tr').reverse().each(function() {
+	$('#datatable tr').each(function() {
 		var row = $(this);
 		var day = $(row).children().first().text();
 		var ftpd = $(row).children().first().next().text();
@@ -112,8 +112,8 @@ $(document).ready(function(){
 	
 	$("#chartdiv").bind("plothover", function (event, pos, item) {
 		if (item) {
-			var x = item.datapoint[0].toFixed(2),
-				y = item.datapoint[1].toFixed(2);
+			var x = item.datapoint[0].toFixed(3),
+				y = item.datapoint[1].toFixed(3);
 
 			$("#tooltip").html(item.series.label + ": " + y + " GiB")
 				.css({top: item.pageY+5, left: item.pageX+5})

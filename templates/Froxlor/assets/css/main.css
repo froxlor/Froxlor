@@ -786,3 +786,8 @@ table thead th.sorting {
     background-position: 10px center;
     padding-left: 25px;
 }
+
+#chartdiv {
+	height: 500px;
+	margin: 30px 60px;
+}
