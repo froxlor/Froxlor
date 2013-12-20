@@ -24,7 +24,7 @@ $(document).ready(function(){
 		}
 		ftp.push([i, parseFloat(ftpd) / 1024]);
 		http.push([i, parseFloat(httpd) / 1024]);
-		mail.push([i, parseFloat(maild)] / 1024);
+		mail.push([i, parseFloat(maild) / 1024]);
 		aticks.push([i, day]);
 		if (ftpd > max)
 		{
