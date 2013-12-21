@@ -25,7 +25,7 @@ case "$1" in
 
 		if [ "${owner}" != "" ] && [ "$group" != "" ]; then
 			find /tmp/ -type f -name 'froxlordir*' -delete
-			tempfile --dir=/tmp --name=froxlordir_${owner}_${group}.tmp
+			touch "/tmp/froxlordir_${owner}_${group}.tmp"
 		fi
 	fi
     ;;

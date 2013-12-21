@@ -19,7 +19,7 @@ set -e
 # the debian-policy package
 
 setPermissions() {
-	tmpfile="$( find /tmp/ -type f -name froxlordir* )"
+	tmpfile="$( find /tmp/ -type f -name 'froxlordir*' )"
 
 	if [ -f "$tmpfile" ]; then
 		raw_data_u="${tmpfile#*_}"
