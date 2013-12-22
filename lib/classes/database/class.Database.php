@@ -327,25 +327,51 @@ class Database {
 		@fclose($errlog);
 
 		if ($showerror) {
-			if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
-				// if we're not on the shell, output a nicer error-message
-				$err_hint = file_get_contents(dirname($sl_dir).'/templates/'.$theme.'/misc/dberrornice.tpl');
-				// replace values
-				$err_hint = str_replace("<TEXT>", $error->getMessage(), $err_hint);
-				$err_hint = str_replace("<DEBUG>", $error->getTraceAsString(), $err_hint);
 
-				$err_report_html = '';
-				if (is_array($userinfo) && (
-					($userinfo['adminsession'] == '1' && $settings['system']['allow_error_report_admin'] == '1')
-					|| ($userinfo['adminsession'] == '0' && $settings['system']['allow_error_report_customer'] == '1'))
-				) {
-					$err_report_html = '<a href="<LINK>" title="Click here to report error">Report error</a>';
-					$err_report_html = str_replace("<LINK>", $linker->getLink(array('section' => 'index', 'page' => 'send_error_report', 'errorid' => $errid)), $err_report_html);
+			Database::needSqlData();
+			$sqldata = Database::getSqlData();
+			Database::needRoot(true);
+			Database::needSqlData();
+			$sqlrootdata = Database::getSqlData();
+
+			// hide username/password in messages
+			$error_message = $error->getMessage();
+			$error_trace = $error->getTraceAsString();
+			// error-message
+			$error_message = str_replace($sqldata['passwd'], 'DB_UNPRIV_PWD', $error_message);
+			$error_message = str_replace($sqlrootdata['passwd'], 'DB_ROOT_PWD', $error_message);
+			// error-trace
+			$error_trace = str_replace($sqldata['passwd'], 'DB_UNPRIV_PWD', $error_trace);
+			$error_trace = str_replace($sqlrootdata['passwd'], 'DB_ROOT_PWD', $error_trace);
+
+			// clean up sensitive data
+			unset($sqldata);
+			unset($sqlrootdata);
+
+			if ((isset($theme) && $theme != '')
+					&& !isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')
+			) {
+				// if we're not on the shell, output a nice error
+				$_errtpl = dirname($sl_dir).'/templates/'.$theme.'/misc/dberrornice.tpl';
+				if (file_exists($_errtpl)) {
+					$err_hint = file_get_contents($_errtpl);
+					// replace values
+					$err_hint = str_replace("<TEXT>", $error_message, $err_hint);
+					$err_hint = str_replace("<DEBUG>", $error_trace, $err_hint);
+
+					$err_report_html = '';
+					if (is_array($userinfo) && (
+							($userinfo['adminsession'] == '1' && $settings['system']['allow_error_report_admin'] == '1')
+							|| ($userinfo['adminsession'] == '0' && $settings['system']['allow_error_report_customer'] == '1'))
+					) {
+						$err_report_html = '<a href="<LINK>" title="Click here to report error">Report error</a>';
+						$err_report_html = str_replace("<LINK>", $linker->getLink(array('section' => 'index', 'page' => 'send_error_report', 'errorid' => $errid)), $err_report_html);
+					}
+					$err_hint = str_replace("<REPORT>", $err_report_html, $err_hint);
+
+					// show
+					die($err_hint);
 				}
-				$err_hint = str_replace("<REPORT>", $err_report_html, $err_hint);
-
-				// show
-				die($err_hint);
 			}
 			die("We are sorry, but a MySQL - error occurred. The administrator may find more information in in the sql-error.log in the logs/ directory");
 		}
