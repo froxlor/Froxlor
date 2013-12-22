@@ -55,7 +55,7 @@ if (!is_null($month) && !is_null($year)) {
 		AND `month` = :month
 		AND `year` = :year
 		GROUP BY `day`
-		ORDER BY `day` ASC"
+		ORDER BY `day` DESC"
 	);
 	$params = array(
 		"customerid" => $userinfo['customerid'],

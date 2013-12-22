@@ -12,7 +12,7 @@ $(document).ready(function(){
 	var i = 1;
 	var links = [];
 	$('#datalegend').remove();
-	$('#datatable tr').each(function() {
+	$('#datatable tr').reverse().each(function() {
 		var row = $(this);
 		var day = $(row).children().first().text();
 		var ftpd = $(row).children().first().next().text();

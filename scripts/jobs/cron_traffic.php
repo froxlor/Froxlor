@@ -151,9 +151,7 @@ if (Settings::Get('system.diskquota_enabled')) {
  * MAIL-Traffic
  */
 if (Settings::Get("system.mailtraffic_enabled")) {
-	$stmt = Database::prepare("SELECT lastrun FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `cronfile` = 'cron_traffic.php'");
-	$lastRunResult = Database::pexecute_first($stmt, array());
-	$mailTrafficCalc = new MailLogParser($lastRunResult['lastrun']);
+	$mailTrafficCalc = new MailLogParser(Settings::Get("system.last_traffic_run"));
 }
 
 $result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` ORDER BY `customerid` ASC");

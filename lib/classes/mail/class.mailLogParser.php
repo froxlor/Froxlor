@@ -156,6 +156,8 @@ class MailLogParser {
 				}
 			}
 		}
+		fclose($file_handle);
+		return true;
 	}
 
 
@@ -196,6 +198,8 @@ class MailLogParser {
 				}
 			}
 		}
+		fclose($file_handle);
+		return true;
 	}
 
 
@@ -233,6 +237,8 @@ class MailLogParser {
 				}
 			}
 		}
+		fclose($file_handle);
+		return true;
 	}
 
 
