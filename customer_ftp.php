@@ -38,7 +38,7 @@ if ($page == 'overview') {
 			'homedir' => $lng['panel']['path']
 		);
 		$paging = new paging($userinfo, TABLE_FTP_USERS, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		
+
 		$result_stmt = Database::prepare("SELECT `id`, `username`, `homedir` FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid`= :customerid 
 			AND `username` NOT LIKE '%_backup'" . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
@@ -63,7 +63,7 @@ if ($page == 'overview') {
 				}
 
 				$row['documentroot'] = makeCorrectDir($row['documentroot']);
-				
+
 				$row = htmlentities_array($row);
 				eval("\$accounts.=\"" . getTemplate('ftp/accounts_account') . "\";");
 				$count++;
@@ -80,7 +80,7 @@ if ($page == 'overview') {
 		);
 		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-		
+
 		if (isset($result['username']) && $result['username'] != $userinfo['loginname']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
@@ -98,23 +98,23 @@ if ($page == 'overview') {
 					"username" => $userinfo['loginname']
 				);
 				Database::pexecute($stmt, $params);
-				
+
 				$result_stmt = Database::prepare("SELECT `username`, `homedir` FROM `" . TABLE_FTP_USERS . "`
 					WHERE `customerid` = :customerid
 					AND `id` = :id"
 				);
 				Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
 				$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-				
+
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = :name");
 				Database::pexecute($stmt, array("name" => $result['username']));
-				
+
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_FTP_USERS . "`
 					WHERE `customerid` = :customerid
 					AND `id` = :id"
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-				
+
 				$stmt = Database::prepare("
 					UPDATE `" . TABLE_FTP_GROUPS . "` SET
 					`members` = REPLACE(`members`, :username,'')
@@ -130,13 +130,13 @@ if ($page == 'overview') {
 				if (isset($_POST['delete_userfiles']) && (int)$_POST['delete_userfiles'] == 1) {
 					inserttask('8', $userinfo['loginname'], $result['homedir']);
 				}
-				
+
 				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
 					SET `ftps_used` = `ftps_used` - 1 $resetaccnumber
 					WHERE `customerid` = :customerid"
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
-				
+
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				ask_yesno_withcheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['username']);
@@ -170,7 +170,7 @@ if ($page == 'overview') {
 					);
 					Database::pexecute($ftpdomain_check_stmt, array("domain" => $ftpdomain, "customerid" => $userinfo['customerid']));
 					$ftpdomain_check = $ftpdomain_check_stmt->fetch(PDO::FETCH_ASSOC);
-					
+
 					if ($ftpdomain_check['domain'] != $ftpdomain) {
 						standard_error('maindomainnonexist', $domain);
 					}
@@ -178,13 +178,13 @@ if ($page == 'overview') {
 				} else {
 					$username = $userinfo['loginname'] . $settings['customer']['ftpprefix'] . (intval($userinfo['ftp_lastaccountnumber']) + 1);
 				}
-				
+
 				$username_check_stmt = Database::prepare("SELECT * FROM `" . TABLE_FTP_USERS . "`
 					WHERE `username` = :username"
 				);
 				Database::pexecute($username_check_stmt, array("username" => $username));
 				$username_check = $username_check_stmt->fetch(PDO::FETCH_ASSOC);
-				
+
 				if (!empty($username_check) && $username_check['username'] = $username) {
 					standard_error('usernamealreadyexists', $username);
 				} elseif ($password == '') {
@@ -195,7 +195,7 @@ if ($page == 'overview') {
 					$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 
 					$cryptPassword = makeCryptPassword($password);
-					
+
 					$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
 						(`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`)
 						VALUES (:customerid, :username, :password, :homedir, 'y', :guid, :guid)"
@@ -208,12 +208,12 @@ if ($page == 'overview') {
 						"guid" => $userinfo['guid']
 					);
 					Database::pexecute($stmt, $params);
-					
+
 					$result_stmt = Database::prepare("SELECT `bytes_in_used` FROM `" . TABLE_FTP_QUOTATALLIES . "`
 						WHERE `name` = :name"
 					);
 					Database::pexecute($result_stmt, array("name" => $userinfo['loginname']));
-					
+
 					while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 						$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "`
 							(`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) 
@@ -221,7 +221,7 @@ if ($page == 'overview') {
 						);
 						Database::pexecute($stmt, array("name" => $username, "bytes_in_used" => $row['bytes_in_used']));
 					}
-					
+
 					$stmt = Database::prepare("UPDATE `" . TABLE_FTP_GROUPS . "`
 						SET `members` = CONCAT_WS(',',`members`, :username)
 						WHERE `customerid`= :customerid
@@ -233,7 +233,7 @@ if ($page == 'overview') {
 						"guid" => $userinfo['guid']
 					);
 					Database::pexecute($stmt, $params);
-					
+
 					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
 						SET `ftps_used` = `ftps_used` + 1,
 						`ftp_lastaccountnumber` = `ftp_lastaccountnumber` + 1
@@ -252,7 +252,7 @@ if ($page == 'overview') {
 							'USR_PASS' => $password,
 							'USR_PATH' => makeCorrectDir(substr($path, strlen($userinfo['documentroot'])))
 						);
-						
+
 						$def_language = $userinfo['def_language'];
 						$result_stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 							WHERE `adminid` = :adminid
@@ -263,7 +263,7 @@ if ($page == 'overview') {
 						Database::pexecute($result_stmt, array("adminid" => $userinfo['adminid'], "lang" => $def_language));
 						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['customer']['ftp_add']['infomail_subject']), $replace_arr));
-						
+
 						$def_language = $userinfo['def_language'];
 						$result_stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 							WHERE `adminid` = :adminid
@@ -274,7 +274,7 @@ if ($page == 'overview') {
 						Database::pexecute($result_stmt, array("adminid" => $userinfo['adminid'], "lang" => $def_language));
 						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['customer']['ftp_add']['infomail_body']['main']), $replace_arr));
-						
+
 						$_mailerror = false;
 						try {
 							$mail->Subject = $mail_subject;
@@ -301,7 +301,7 @@ if ($page == 'overview') {
 					redirectTo($filename, Array('page' => $page, 's' => $s));
 				}
 			} else {
-				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], '/');
+				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], '/');
 
 				if ($settings['customer']['ftpatdomain'] == '1') {
 					$domainlist = array();
@@ -348,7 +348,7 @@ if ($page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				// @FIXME use a good path-validating regex here (refs #1231)
 				$path = validate($_POST['path'], 'path');
-				
+
 				$_setnewpass = false;
 				if (isset($_POST['ftp_password']) && $_POST['ftp_password'] != '') {
 					$password = validate($_POST['ftp_password'], 'password');
@@ -363,14 +363,14 @@ if ($page == 'overview') {
 					}
 					$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account password for '" . $result['username'] . "'");
 					$cryptPassword = makeCryptPassword($password);
-					
+
 					$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
 						SET `password` = :password
 						WHERE `customerid` = :customerid
 						AND `id` = :id"
 					);
 					Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id, "password" => $cryptPassword));
-						
+
 					// also update customers backup user password if password of main ftp user is changed
 					if(!preg_match('/' . $settings['customer']['ftpprefix'] . '/', $result['username'])) {
 						$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
@@ -386,7 +386,7 @@ if ($page == 'overview') {
 						Database::pexecute($stmt, $params);
 					}
 				}
-				
+
 				if ($path != '') {
 					$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 
@@ -398,7 +398,7 @@ if ($page == 'overview') {
 						}
 
 						$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account homdir for '" . $result['username'] . "'");
-						
+
 						$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
 							SET `homedir` = :homedir
 							WHERE `customerid` = :customerid
@@ -409,7 +409,7 @@ if ($page == 'overview') {
 							"customerid" => $userinfo['customerid'],
 							"id" => $id
 						);
-						Database::pexecute($stmt, $params);		
+						Database::pexecute($stmt, $params);
 					}
 				}
 
@@ -422,7 +422,7 @@ if ($page == 'overview') {
 				}
 				$homedir = makeCorrectDir($homedir);
 
-				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $homedir);
+				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $homedir);
 
 				if ($settings['customer']['ftpatdomain'] == '1') {
 					$domains = '';

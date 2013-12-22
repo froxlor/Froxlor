@@ -157,11 +157,11 @@ if($page == 'overview') {
 		);
 		Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
-		
+
 		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` = :aliasdomain");
 		Database::pexecute($alias_stmt, array("aliasdomain" => $id));
 		$alias_check = $alias_stmt->fetch(PDO::FETCH_ASSOC);
-		
+
 		if(isset($result['parentdomainid']) && $result['parentdomainid'] != '0' && $alias_check['count'] == 0) {
 			if(isset($_POST['send']) && $_POST['send'] == 'send') {
 				if($result['isemaildomain'] == '1') {
@@ -171,7 +171,7 @@ if($page == 'overview') {
 					);
 					Database::pexecute($emails_stmt, array("customerid" => $userinfo['customerid'], "domainid" => $id));
 					$emails = $emails_stmt->fetch(PDO::FETCH_ASSOC);
-					
+
 					if($emails['count'] != '0') {
 						standard_error('domains_cantdeletedomainwithemail');
 					}
@@ -190,13 +190,13 @@ if($page == 'overview') {
 					AND `id` = :id"
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-				
+
 				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
 					SET `subdomains_used` = `subdomains_used` - 1
 					WHERE `customerid` = :customerid"
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
-				
+
 				inserttask('1');
 
 				// Using nameserver, insert a task which rebuilds the server config
@@ -222,7 +222,7 @@ if($page == 'overview') {
 					AND `caneditdomain` = '1'"
 				);
 				$domain_check = Database::pexecute_first($domain_stmt, array("domain" => $domain, "customerid" => $userinfo['customerid']));
-				
+
 				$completedomain = $subdomain . '.' . $domain;
 				$completedomain_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `domain` = :domain
@@ -231,12 +231,12 @@ if($page == 'overview') {
 					AND `caneditdomain` = '1'"
 				);
 				$completedomain_check = Database::pexecute_first($completedomain_stmt, array("domain" => $completedomain, "customerid" => $userinfo['customerid']));
-				
+
 				$aliasdomain = intval($_POST['alias']);
 				$aliasdomain_check = array('id' => 0);
 				$_doredirect = false;
 
-				if($aliasdomain != 0) { 
+				if($aliasdomain != 0) {
 					// also check ip/port combination to be the same, #176
 					$aliasdomain_stmt = Database::prepare("SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d` , `" . TABLE_PANEL_CUSTOMERS . "` `c` , `".TABLE_DOMAINTOIP."` `dip`
 						WHERE `d`.`aliasdomain` IS NULL
@@ -313,24 +313,24 @@ if($page == 'overview') {
 					);
 					Database::pexecute($phpsid_stmt, array("id" => $domain_check['id']));
 					$phpsid_result = $phpsid_stmt->fetch(PDO::FETCH_ASSOC);
-					
+
 					if(!isset($phpsid_result['phpsettingid']) || (int)$phpsid_result['phpsettingid'] <= 0) {
 						// assign default config
 						$phpsid_result['phpsettingid'] = 1;
 					}
 
-					$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET 
+					$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
 						`customerid` = :customerid,
-						`domain` = :domain, 
-						`documentroot` = :documentroot, 
-						`aliasdomain` = :aliasdomain, 
-						`parentdomainid` = :parentdomainid, 
-						`isemaildomain` = :isemaildomain, 
-						`openbasedir` = :openbasedir, 
+						`domain` = :domain,
+						`documentroot` = :documentroot,
+						`aliasdomain` = :aliasdomain,
+						`parentdomainid` = :parentdomainid,
+						`isemaildomain` = :isemaildomain,
+						`openbasedir` = :openbasedir,
 						`openbasedir_path` = :openbasedir_path,
-						`speciallogfile` = :speciallogfile, 
-						`specialsettings` = :specialsettings, 
-						`ssl_redirect` = :ssl_redirect, 
+						`speciallogfile` = :speciallogfile,
+						`specialsettings` = :specialsettings,
+						`ssl_redirect` = :ssl_redirect,
 						`phpsettingid` = :phpsettingid"
 					);
 					$params = array(
@@ -354,7 +354,7 @@ if($page == 'overview') {
 						$redirect = isset($_POST['redirectcode']) ? (int)$_POST['redirectcode'] : $settings['customredirect']['default'];
 						addRedirectToDomain($did, $redirect);
 					}
-					
+
 					$stmt = Database::prepare("INSERT INTO `".TABLE_DOMAINTOIP."`
 						(`id_domain`, `id_ipandports`)
 						SELECT LAST_INSERT_ID(), `id_ipandports`
@@ -368,7 +368,7 @@ if($page == 'overview') {
 						WHERE `customerid` = :customerid"
 					);
 					Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
-					
+
 					$log->logAction(USR_ACTION, LOG_INFO, "added subdomain '" . $completedomain . "'");
 					inserttask('1');
 
@@ -425,7 +425,7 @@ if($page == 'overview') {
 				}
 
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
-				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
+				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
 				$subdomain_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domains_add.php';
 				$subdomain_add_form = htmlform::genHTMLForm($subdomain_add_data);
@@ -443,13 +443,13 @@ if($page == 'overview') {
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
 			WHERE `d`.`customerid` = :customerid
 			AND `d`.`id` = :id
-			AND ((`d`.`parentdomainid`!='0' 
+			AND ((`d`.`parentdomainid`!='0'
 					AND `pd`.`id` = `d`.`parentdomainid`)
 				OR (`d`.`parentdomainid`='0'
 					AND `pd`.`id` = `d`.`id`))
 			AND `d`.`caneditdomain`='1'");
 		$result = Database::pexecute_first($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-		
+
 		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain`= :aliasdomain");
 		$alias_check = Database::pexecute_first($alias_stmt, array("aliasdomain" => $result['id']));
 		$alias_check = $alias_check['count'];
@@ -555,7 +555,7 @@ if($page == 'overview') {
 					   || $openbasedir_path != $result['openbasedir_path']
 					   || $ssl_redirect != $result['ssl_redirect']) {
 						$log->logAction(USR_ACTION, LOG_INFO, "edited domain '" . $idna_convert->decode($result['domain']) . "'");
-						
+
 						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 							`documentroot`= :documentroot,
 							`isemaildomain`= :isemaildomain,
@@ -590,7 +590,7 @@ if($page == 'overview') {
 				}
 			} else {
 				$result['domain'] = $idna_convert->decode($result['domain']);
-  
+
 				$domains = makeoption($lng['domains']['noaliasdomain'], 0, $result['aliasdomain'], true);
 				// also check ip/port combination to be the same, #176
 				$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d` , `" . TABLE_PANEL_CUSTOMERS . "` `c` , `".TABLE_DOMAINTOIP."` `dip`
@@ -615,14 +615,14 @@ if($page == 'overview') {
 				if(preg_match('/^https?\:\/\//', $result['documentroot']) && validateUrl($idna_convert->encode($result['documentroot']))) {
 					if($settings['panel']['pathedit'] == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
-						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
+						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 					} else {
 						$urlvalue = '';
-						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $result['documentroot'], true);						
+						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot'], true);
 					}
 				} else {
 					$urlvalue = '';
-					$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $result['documentroot']);
+					$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot']);
 				}
 
 				$redirectcode = '';
@@ -656,7 +656,7 @@ if($page == 'overview') {
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', $_value, true, true);
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', $_value, true, true);
-				
+
 				$ips_stmt = Database::prepare("SELECT `p`.`ip` AS `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` `p`
 					LEFT JOIN `".TABLE_DOMAINTOIP."` `dip`
 					ON ( `dip`.`id_ipandports` = `p`.`id` )
