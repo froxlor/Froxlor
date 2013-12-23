@@ -318,7 +318,9 @@ if ($page == 'overview') {
 						`documentroot` = :documentroot,
 						`aliasdomain` = :aliasdomain,
 						`parentdomainid` = :parentdomainid,
+						`wwwserveralias` = :wwwserveralias,
 						`isemaildomain` = :isemaildomain,
+						`iswildcarddomain` = :iswildcarddomain,
 						`openbasedir` = :openbasedir,
 						`openbasedir_path` = :openbasedir_path,
 						`speciallogfile` = :speciallogfile,
@@ -332,6 +334,8 @@ if ($page == 'overview') {
 						"documentroot" => $path,
 						"aliasdomain" => $aliasdomain != 0 ? $aliasdomain : null,
 						"parentdomainid" => $domain_check['id'],
+						"wwwserveralias" => $domain_check['wwwserveralias'] == '1' ? '1' : '0',
+						"iswildcarddomain" => $domain_check['iswildcarddomain'] == '1' ? '1' : '0',
 						"isemaildomain" => $domain_check['subcanemaildomain'] == '3' ? '1' : '0',
 						"openbasedir" => $domain_check['openbasedir'],
 						"openbasedir_path" => $openbasedir_path,
@@ -478,8 +482,8 @@ if ($page == 'overview') {
 					$iswildcarddomain = ($_POST['selectserveralias'] == '0') ? '1' : '0';
 					$wwwserveralias = ($_POST['selectserveralias'] == '1') ? '1' : '0';
 				} else {
-					$iswildcarddomain = '0';
-					$wwwserveralias = '0';
+					$iswildcarddomain = $result['iswildcarddomain'];
+					$wwwserveralias = $result['wwwserveralias'];
 				}
 
 				if ($result['parentdomainid'] != '0' && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && isset($_POST['isemaildomain'])) {
