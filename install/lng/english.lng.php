@@ -23,7 +23,7 @@ $lng['requirements']['not_true'] = 'no';
 $lng['requirements']['notfound'] = 'not found';
 $lng['requirements']['notinstalled'] = 'not installed';
 $lng['requirements']['activated'] = 'enabled';
-$lng['requirements']['phpversion'] = 'PHP version >= 5.2';
+$lng['requirements']['phpversion'] = 'PHP version >= 5.3';
 $lng['requirements']['phpmagic_quotes_runtime'] = 'magic_quotes_runtime...';
 $lng['requirements']['phpmagic_quotes_runtime_description'] = 'PHP setting "magic_quotes_runtime" must be set to "Off". We have disabled it temporary for now please fix the coresponding php.ini.';
 $lng['requirements']['phppdo'] = 'PHP PDO extension and PDO-MySQL driver...';
