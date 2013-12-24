@@ -425,7 +425,7 @@ if($page == 'overview') {
 				}
 
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
-				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
+				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
 				$subdomain_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domains_add.php';
 				$subdomain_add_form = htmlform::genHTMLForm($subdomain_add_data);
@@ -615,14 +615,14 @@ if($page == 'overview') {
 				if(preg_match('/^https?\:\/\//', $result['documentroot']) && validateUrl($idna_convert->encode($result['documentroot']))) {
 					if($settings['panel']['pathedit'] == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
-						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit']);
+						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 					} else {
 						$urlvalue = '';
-						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $result['documentroot'], true);						
+						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot'], true);
 					}
 				} else {
 					$urlvalue = '';
-					$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $settings['panel']['pathedit'], $result['documentroot']);
+					$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot']);
 				}
 
 				$redirectcode = '';
