@@ -328,25 +328,31 @@ class Database {
 
 		if ($showerror) {
 
-			Database::needSqlData();
-			$sqldata = Database::getSqlData();
-			Database::needRoot(true);
-			Database::needSqlData();
-			$sqlrootdata = Database::getSqlData();
+			// include userdata.inc.php
+			require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+
+			// le format
+			if (self::$_needroot == true
+				&& isset($sql['root_user'])
+				&& isset($sql['root_password'])
+				&& (!isset($sql_root) || !is_array($sql_root))
+			) {
+				$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+			}
 
 			// hide username/password in messages
 			$error_message = $error->getMessage();
 			$error_trace = $error->getTraceAsString();
 			// error-message
-			$error_message = str_replace($sqldata['passwd'], 'DB_UNPRIV_PWD', $error_message);
-			$error_message = str_replace($sqlrootdata['passwd'], 'DB_ROOT_PWD', $error_message);
+			$error_message = str_replace($sql['password'], 'DB_UNPRIV_PWD', $error_message);
+			$error_message = str_replace($sql_root[0]['password'], 'DB_ROOT_PWD', $error_message);
 			// error-trace
-			$error_trace = str_replace($sqldata['passwd'], 'DB_UNPRIV_PWD', $error_trace);
-			$error_trace = str_replace($sqlrootdata['passwd'], 'DB_ROOT_PWD', $error_trace);
+			$error_trace = str_replace($sql['password'], 'DB_UNPRIV_PWD', $error_trace);
+			$error_trace = str_replace($sql_root[0]['password'], 'DB_ROOT_PWD', $error_trace);
 
 			// clean up sensitive data
-			unset($sqldata);
-			unset($sqlrootdata);
+			unset($sql);
+			unset($sql_root);
 
 			if ((isset($theme) && $theme != '')
 					&& !isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')
