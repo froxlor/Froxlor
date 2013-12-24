@@ -412,7 +412,6 @@ if ($page == 'overview') {
 					|| ($error500path != $result['error500path'])
 					|| ($options_cgi != $result['options_cgi'])
 				) {
-
 					inserttask('1');
 					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTACCESS . "`
 						SET `options_indexes` = :options_indexes,

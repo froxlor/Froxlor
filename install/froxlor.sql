@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `ftp_groups`;
 CREATE TABLE `ftp_groups` (
   `id` int(20) NOT NULL auto_increment,
   `groupname` varchar(60) NOT NULL default '',
@@ -331,8 +332,6 @@ CREATE TABLE `panel_settings` (
   PRIMARY KEY  (`settingid`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-
-
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('catchall', 'catchall_enabled', '1'),
 	('session', 'allow_multiple_login', '0'),
@@ -494,10 +493,10 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'customer_ssl_path', '/etc/ssl/froxlor-custom/'),
 	('system', 'allow_error_report_admin', '1'),
 	('system', 'allow_error_report_customer', '0'),
-	('system', 'mdalog' '/var/log/mail.log'),
-	('system', 'mtalog' '/var/log/mail.log'),
-	('system', 'mdaserver' 'dovecot'),
-	('system', 'mtaserver' 'postfix'),
+	('system', 'mdalog', '/var/log/mail.log'),
+	('system', 'mtalog', '/var/log/mail.log'),
+	('system', 'mdaserver', 'dovecot'),
+	('system', 'mtaserver', 'postfix'),
 	('system', 'mailtraffic_enabled', '1'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
