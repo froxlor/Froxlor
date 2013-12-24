@@ -905,6 +905,15 @@ class FroxlorInstall {
 			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
 		}
 
+		// check for curl extension
+		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpcurl']);
+
+		if (!extension_loaded('curl')) {
+			$content .= $this->_status_message('orange', $this->_lng['requirements']['notinstalled'] . "<br />" . $this->_lng['requirements']['curldescription']);
+		} else {
+			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
+		}
+
 		// check for open_basedir
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['openbasedir']);
 		$php_ob = @ini_get("open_basedir");
