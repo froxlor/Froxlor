@@ -23,7 +23,7 @@ $lng['requirements']['not_true'] = 'nein';
 $lng['requirements']['notfound'] = 'nicht gefunden';
 $lng['requirements']['notinstalled'] = 'nicht installiert';
 $lng['requirements']['activated'] = 'ist aktiviert.';
-$lng['requirements']['phpversion'] = 'PHP Version >= 5.2';
+$lng['requirements']['phpversion'] = 'PHP Version >= 5.3';
 $lng['requirements']['phpmagic_quotes_runtime'] = 'magic_quotes_runtime';
 $lng['requirements']['phpmagic_quotes_runtime_description'] = 'Die PHP Einstellung "magic_quotes_runtime" muss deaktiviert sein ("Off"). Die Einstellung wurde temporär deaktiviert, bitte ändern Sie diese in der entsprechenden php.ini.';
 $lng['requirements']['phppdo'] = 'PHP PDO Erweiterung und PDO-MySQL Treiber...';
@@ -36,7 +36,7 @@ $lng['requirements']['bcmathdescription'] = 'Traffic-Berechnungs bezogene Funkti
 $lng['requirements']['curldescription'] = 'Versions-Prüfung und News-Feed stehen nicht vollständig zur Verfügung!';
 $lng['requirements']['openbasedir'] = 'open_basedir genutzt wird...';
 $lng['requirements']['openbasedirenabled'] = 'Froxlor wird mit aktiviertem open_basedir nicht vollständig funktionieren. Bitte deaktivieren Sie open_basedir für Froxlor in der entsprechenden php.ini';
-$lng['requirements']['diedbecauseofrequirements'] = 'Kann Froxlor ohne diese Voraussetzungen nicht installieren! Versuchen Sie die angezeigten Problem zu beheben und versuchen Sie es erneut.';
+$lng['requirements']['diedbecauseofrequirements'] = 'Kann Froxlor ohne diese Voraussetzungen nicht installieren! Beheben Sie die angezeigten Probleme und versuchen Sie es erneut.';
 $lng['requirements']['froxlor_succ_checks'] = 'Alle Vorraussetzungen sind erfüllt';
 
 $lng['install']['lngtitle'] = 'Froxlor Installation - Sprache auswählen';
