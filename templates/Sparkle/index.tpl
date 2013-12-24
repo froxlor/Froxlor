@@ -50,7 +50,7 @@
 	</div>
 {/if}
 <footer>
-	<span>Froxlor
+	<span><img src="templates/{$theme}/assets/img/logo_grey.png" alt="Froxlor" /> 
 		{if ($show_version_login == '1' && $loggedin == 0) || ($show_version_footer == '1' && $loggedin == 1)}
 			{$version}{$branding}
 		{/if}

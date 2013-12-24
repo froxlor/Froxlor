@@ -1,42 +1,17 @@
 @charset "UTF-8";
-
 /* RESET */
-html,body,div,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,p,blockquote,fieldset,input {
-	margin:0;
-	padding:0;
-}
-
-h1,h2,h3,h4,h5,h6,pre,code,address,caption,cite,code,em,strong,th {
-	font-size:1em;
-	font-weight:400;
-	font-style:normal;
-}
-
-ul,ol {
-	list-style:none;
-}
-
-fieldset,img {
-	border:none;
-}
-
-caption,th {
-	text-align:left;
-}
-
-table {
-	border-collapse:collapse;
-	border-spacing:0;
-}
-
-article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {
-	display:block;
-}
+html,body,div,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,p,blockquote,fieldset,input { margin:0; padding:0; }
+h1,h2,h3,h4,h5,h6,pre,code,address,caption,cite,code,em,strong,th { font-size:1em; font-weight:400; font-style:normal; }
+ul,ol { list-style:none; }
+fieldset,img { border:none; }
+caption,th { text-align:left; }
+table { border-collapse:collapse; border-spacing:0; }
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { display:block; }
 
 /* TYPE */
 html,body {
 	font:12px/18px 'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,Verdana,sans-serif;
-	background-color:#f2f2f2;
+	background-color: #f5f5f5;
 	color:#333;
 	-webkit-font-smoothing:antialiased;
 }
@@ -101,12 +76,13 @@ h3 {
 }
 
 h4 {
-	font-size:1em;
+	font-size:12px;
 }
 
 img {
 	border:0;
 	vertical-align:middle;
+	text-decoration: none;
 }
 
 td a {
@@ -114,7 +90,7 @@ td a {
 }
 
 .bradius {
-	border-radius:3px;
+	border-radius: 1px;
 	box-shadow:rgba(0,0,0,0.34902) 0 1px 3px 0;
 }
 
@@ -124,12 +100,9 @@ td a {
 	top:0;
 	width:100%;
 	padding:2px 0 0 5px;
-	box-shadow:0 1px 8px rgba(0,0,0,0.10);
 	position:fixed;
 	z-index:100;
-	border-bottom-color:#ddd;
-	border-bottom-style:solid;
-	border-bottom-width:1px;
+	border-bottom: 1px solid #ddd;
 }
 
 .topheader_navigation {
@@ -221,7 +194,7 @@ footer img {
 	height:13px;
 }
 
-.login,.install,.errorbox {
+.login, .errorbox {
 	background-color:#fff;
 	margin:9%;
 	margin-left:auto;
@@ -230,11 +203,11 @@ footer img {
 	width:500px;
 }
 
-.login div.warningcontainer,.login div.errorcontainer,.login div.successcontainer {
+.login div.warningcontainer, .login div.errorcontainer, .login div.successcontainer {
 	margin:10px!important;
 }
 
-.install,.errorbox {
+.errorbox {
 	width:800px;
 }
 
@@ -258,20 +231,7 @@ table.tinyform input {
 	text-align:left;
 }
 
-.installsec table {
-	width:100%;
-	padding:0 10px;
-	margin:15px 0;
-}
-
-.installsec h2 {
-	display:block;
-	border-bottom:1px solid #d1d5d8;
-	margin:0;
-	padding:5px 15px 15px;
-}
-
-.tinyform,.loginsec,.errorsec {
+.tinyform, .loginsec, .errorsec {
 	margin-top:10px;
 	padding:10px 0;
 	text-align:center;
@@ -291,7 +251,7 @@ table.tinyform input {
 	text-align:left;
 }
 
-.midform,.installsec form {
+.midform {
 	width:600px;
 	margin:0 auto;
 	padding:10px 0;
@@ -302,13 +262,13 @@ table.tinyform input {
 	padding:0;
 }
 
-.tinyform,.loginsec form {
+.tinyform, .loginsec form {
 	width:400px;
 	margin:0 auto;
 	text-align:left;
 }
 
-.installsec fieldset,.loginsec fieldset {
+.loginsec fieldset {
 	border:0;
 	float:left;
 	clear:left;
@@ -323,7 +283,7 @@ table.tinyform input {
 	padding:0;
 }
 
-.fullform legend,.installsec legend,.loginsec legend,.midform legend,.tinyform legend {
+.fullform legend,.loginsec legend,.midform legend,.tinyform legend {
 	display:none;
 }
 
@@ -334,15 +294,7 @@ table.tinyform input {
 	text-align:right;
 }
 
-.installsec label {
-	float:left;
-	width:26em;
-	margin-right:1em;
-	margin-top:6px;
-	text-align:left;
-}
-
-.midform label,.tinyform label,.loginsec label {
+.midform label, .tinyform label, .loginsec label {
 	float:left;
 	width:10em;
 	margin-right:1em;
@@ -350,27 +302,15 @@ table.tinyform input {
 	text-align:right;
 }
 
-.midformaps_1 {
-	padding:10px;
-}
-
-.midformaps_2 {
-	padding:5px;
-}
-
-.midformaps form input {
-	text-align:center;
-}
-
 .fullform textarea,.midform textarea {
 	width:60%;
 }
 
-.loginsec input[type="text"],.loginsec input[type="password"] {
+.loginsec input[type="text"], .loginsec input[type="password"] {
 	width:183px;
 }
 
-.tinyform select,.loginsec select {
+.tinyform select, .loginsec select {
 	width:213px;
 }
 
@@ -379,18 +319,13 @@ p.submit {
 	padding-right:46px;
 }
 
-.installsec aside,.loginsec aside,.errorsec aside {
+.loginsec aside,.errorsec aside {
 	border-top:1px solid #d1d5d8;
 	clear:both;
 	float:none;
 	width:auto;
 	text-align:left;
 	padding:10px 10px 0;
-}
-
-.installsec aside {
-	text-align:right;
-	padding:10px;
 }
 
 aside.right {
@@ -534,10 +469,6 @@ a.active {
 	font-weight:700;
 }
 
-.infotext {
-	font-size:11px;
-}
-
 /* navigation */
 nav {
 	float:left;
@@ -626,9 +557,6 @@ table th {
 
 th a:hover {
 	text-decoration:none;
-}
-
-th a img {
 }
 
 th a:nth-child(odd) img {
@@ -826,8 +754,6 @@ select {
 	appearance:none;
 	min-width:170px;
 	text-indent:.01px;
-/* Removes default arrow from firefox*/
-	text-overflow:;
 }
 
 select[multiple="multiple"] {
@@ -1070,7 +996,7 @@ label.nobr {
 .tipper-positioner {
 	left:-99999px;
 	position:absolute;
-	pointer-events:none;
+	pointer-events: none;
 	top:-99999px;
 }
 
