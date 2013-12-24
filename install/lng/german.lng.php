@@ -34,7 +34,7 @@ $lng['requirements']['phpbcmath'] = 'PHP bcmath-Erweiterung...';
 $lng['requirements']['bcmathdescription'] = 'Traffic-Berechnungs bezogene Funktionen stehen nicht vollständig zur Verfügung!';
 $lng['requirements']['openbasedir'] = 'open_basedir genutzt wird...';
 $lng['requirements']['openbasedirenabled'] = 'Froxlor wird mit aktiviertem open_basedir nicht vollständig funktionieren. Bitte deaktivieren Sie open_basedir für Froxlor in der entsprechenden php.ini';
-$lng['requirements']['diedbecauseofrequirements'] = 'Kann Froxlor ohne diese Voraussetzungen nicht installieren! Versuchen Sie die angezeigten Problem zu beheben und versuchen Sie es erneut.';
+$lng['requirements']['diedbecauseofrequirements'] = 'Kann Froxlor ohne diese Voraussetzungen nicht installieren! Beheben Sie die angezeigten Probleme und versuchen Sie es erneut.';
 $lng['requirements']['froxlor_succ_checks'] = 'Alle Vorraussetzungen sind erfüllt';
 
 $lng['install']['lngtitle'] = 'Froxlor Installation - Sprache auswählen';
