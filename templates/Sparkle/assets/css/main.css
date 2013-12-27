@@ -90,7 +90,7 @@ td a {
 }
 
 .bradius {
-	border-radius: 1px;
+	border-radius: 3px;
 	box-shadow:rgba(0,0,0,0.34902) 0 1px 3px 0;
 }
 
@@ -929,9 +929,10 @@ label.nobr {
 	white-space:nowrap;
 }
 
-#chartdiv {
-	height: 500px;
-	margin: 15px 0;
+.trafficchart {
+	height: 150px;
+	width: 100%;
+	margin: 15px 0 30px 0;
 }
 
 /* CANVAS STUFF */
@@ -968,6 +969,10 @@ label.nobr {
 	overflow:hidden;
 	text-overflow:ellipsis;
 	white-space:nowrap;
+}
+
+.newsitem:last-child {
+	border: 0px;
 }
 
 .newsitem a {

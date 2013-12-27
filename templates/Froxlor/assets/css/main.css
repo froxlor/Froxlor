@@ -787,7 +787,8 @@ table thead th.sorting {
     padding-left: 25px;
 }
 
-#chartdiv {
-	height: 500px;
-	margin: 30px 60px;
+.trafficchart {
+	height: 150px;
+	width: 100%;
+	margin: 15px 0 30px 0;
 }
