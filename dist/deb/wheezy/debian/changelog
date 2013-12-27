@@ -1,3 +1,9 @@
+froxlor (0.9.31.2-1) stable; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Fri, 27 Dec 2013 17:26:58 +0100
+
 froxlor (0.9.31.1-3) stable; urgency=low
 
   * fix postrm script for real this time
