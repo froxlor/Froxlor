@@ -197,7 +197,11 @@ if ($page == 'customers'
 			WHERE `customerid` = :id" .
 			($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
 		);
-		$result = Database::pexecute_first($result_stmt, array('id' => $id, 'adminid' => $userinfo['adminid']));
+		$result_data = array('id' => $id);
+		if ($userinfo['customers_see_all'] == '0') {
+			$result_data['adminid'] = $userinfo['adminid'];
+		}
+		$result = Database::pexecute_first($result_stmt, $result_data);
 
 		if ($result['loginname'] != '') {
 
