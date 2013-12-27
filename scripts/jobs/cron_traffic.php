@@ -247,7 +247,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	if (Settings::Get("system.mailtraffic_enabled")) {
 		fwrite($debugHandler, 'mail traffic usage for ' . $row['loginname'] . " started...\n");
 
-		$currentDay = date("Y-m-d");
+		$currentDate = date("Y-m-d");
 
 		$domains_stmt = Database::prepare("SELECT domain FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :cid");
 		Database::pexecute($domains_stmt, array("cid" => $row['customerid']));
@@ -255,11 +255,11 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$domainMailTraffic = $mailTrafficCalc->getDomainTraffic($domainRow["domain"]);
 			if (!is_array($domainMailTraffic)) { continue; }
 
-			foreach ($domainMailTraffic as $day => $dayTraffic) {
+			foreach ($domainMailTraffic as $dateTraffic => $dayTraffic) {
 				$dayTraffic = floatval($dayTraffic / 1024);
 
-				list($year, $month, $day) = explode("-", $day);
-				if ($day == $currentDay) {
+				list($year, $month, $day) = explode("-", $dateTraffic);
+				if ($dateTraffic == $currentDate) {
 					$mailtraffic = $dayTraffic;
 				} else {
 					// Check if an entry for the given day exists
