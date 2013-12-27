@@ -5,6 +5,7 @@ $(document).ready(function() {
 	var ftp = [];
 	var http = [];
 	var mail = [];
+	var ticks = [];
 	var i = 1;
 	var links = [];
 	$('#datatable tbody tr').reverse().each(function() {
@@ -14,6 +15,9 @@ $(document).ready(function() {
 		var maild = $(row).children().first().next().next().next().text();
 		if ($(row).children().first().find("a").length > 0) {
 			links.push($(row).children().first().html());
+			ticks.push([i, $(row).children().first().find("a").html().split(" ")[0]]);
+		} else {
+			ticks.push([i, $(row).children().first().html()]);
 		}
 		ftp.push([i, parseFloat(ftpd / 1024)]);
 		http.push([i, parseFloat(httpd / 1024)]);
@@ -39,25 +43,31 @@ $(document).ready(function() {
 	var ftpdata = [{
 		label: 'FTP',
 		data: ftp,
-		color: '#019522'
+		color: '#1db34f'
 	}];
 	var httpdata = [{
 		label: 'HTTP',
 		data: http,
-		color: '#0000FF'
+		color: '#0a90d8'
 	}];
 	var maildata = [{
 		label: 'Mail',
 		data: mail,
-		color: '#800000'
+		color: '#f17f49'
 	}];
 
 	var options = {
 		series: {
-			shadowSize: 0
+			shadowSize: 0,
+			curvedLines: {
+				active: true,
+				apply: false,
+				fitPointDist: true
+			}
 		},
 		lines: {
-			show: true
+			show: true,
+			fill: true
 		},
 		points: {
 			radius: 2,
@@ -72,10 +82,13 @@ $(document).ready(function() {
 		},
 		xaxis: {
 			tickSize: 1,
-			tickLength: 0
+			tickLength: 0,
+			ticks: ticks,
+			labelAngle: 45
 		},
 		yaxis: {
-			tickColor: '#eee'
+			tickColor: '#eee',
+			min: 0
 		}
 	};
 
