@@ -261,7 +261,8 @@ class Database {
 
 		$dbconf["dsn"] = array(
 				'host' => $host,
-				'dbname' => $sql["db"]
+				'dbname' => $sql["db"],
+				'charset' => 'utf8'
 		);
 
 		self::$_dbname = $sql["db"];
