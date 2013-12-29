@@ -338,7 +338,7 @@ if ($action == 'forgotpwd') {
 					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $user['loginname'] . "' requested a link for setting a new password.");
 
 					// Set together our activation link
-					$protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http' : 'https';
+					$protocol = empty( $_SERVER['HTTPS'] ) ? 'http' : 'https';				
 					$host = $_SERVER['HTTP_HOST'];
 					$port = $_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '';
 					$script = $_SERVER['SCRIPT_NAME'];
