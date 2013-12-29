@@ -324,7 +324,7 @@ $linker = new linker('index.php', $s);
 /**
  * global Theme-variable
  */
-$theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : 'Sparkle';
+$theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : $_deftheme;
 
 /**
  * overwrite with customer/admin theme if defined
@@ -333,10 +333,25 @@ if (isset($userinfo['theme']) && $userinfo['theme'] != $theme) {
 	$theme = $userinfo['theme'];
 }
 
+// Check if a different variant of the theme is used
+$themevariant = "default";
+if (preg_match("/([a-z0-9\.\-]+)_([a-z0-9\.\-]+)/i", $theme, $matches)) {
+	$theme = $matches[1];
+	$themevariant = $matches[2];
+}
+
 // check for existence of the theme
-if (!file_exists('templates/'.$theme.'/index.tpl')) {
+if (!file_exists('templates/'.$theme.'/config.json')) {
 	// Fallback
-	$theme = 'Sparkle';
+	$theme = $_deftheme;
+}
+
+$_themeoptions = json_decode(file_get_contents('templates/'.$theme.'/config.json'), true);
+
+// check for existence of variant in theme
+if (!array_key_exists('variants', $_themeoptions) || !array_key_exists($themevariant, $_themeoptions['variants']))
+{
+	$themevariant = "default";
 }
 
 // check for custom header-graphic
@@ -456,7 +471,26 @@ if (Settings::Get('ticket.enabled') == '1') {
 }
 
 $webfont = str_replace('+', ' ', Settings::Get('panel.webfont'));
+$js = "";
+if (array_key_exists('js', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['js'])) {
+	foreach ($_themeoptions['variants'][$themevariant]['js'] as $jsfile) {
+		if (file_exists('templates/'.$theme.'/assets/js/'.$jsfile)) {
+			$js .= '<script type="text/javascript" src="templates/' . $theme . '/assets/js/' . $jsfile . '"></script>' . "\n";
+		}
+	}
+}
+
+$css = "";
+if (array_key_exists('css', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['css'])) {
+	foreach ($_themeoptions['variants'][$themevariant]['css'] as $cssfile) {
+		if (file_exists('templates/'.$theme.'/assets/css/'.$cssfile)) {
+			$css .= '<link href="templates/' . $theme . '/assets/css/' . $cssfile . '" rel="stylesheet" type="text/css" />' . "\n";
+		}
+	}
+}
 eval("\$header = \"" . getTemplate('header', '1') . "\";");
+unset($js);
+unset($css);
 
 $current_year = date('Y', time());
 eval("\$footer = \"" . getTemplate('footer', '1') . "\";");

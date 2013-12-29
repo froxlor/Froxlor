@@ -34,7 +34,21 @@ function getThemes() {
 				&& $it->getFilename() != '..'
 				&& $it->getFilename() != 'misc'
 			) {
-				$themes_available[$it->getFilename()] = $it->getFilename();
+				$theme = $themespath . $it->getFilename();
+				if (file_exists($theme . '/config.json')) {
+					$themeconfig = json_decode(file_get_contents($theme . '/config.json'), true);
+					if (array_key_exists('variants', $themeconfig) && is_array($themeconfig['variants'])) {
+						foreach ($themeconfig['variants'] as $variant => $data) {
+							if ($variant == "default") {
+								$themes_available[$it->getFilename()] = $it->getFilename();
+							} else {
+								$themes_available[$it->getFilename() . '_' . $variant] = $it->getFilename() . ' (' . $data['description'] . ')';
+							}
+						}
+					} else {
+						$themes_available[$it->getFilename()] = $it->getFilename();
+					}
+				}
 			}
 		}
 	}

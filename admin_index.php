@@ -320,8 +320,8 @@ if ($page == 'overview') {
 		}
 
 		$themes_avail = getThemes();
-		foreach ($themes_avail as $t) {
-			$theme_options.= makeoption($t, $t, $default_theme, true);
+		foreach ($themes_avail as $t => $d) {
+			$theme_options.= makeoption($d, $t, $default_theme, true);
 		}
 
 		eval("echo \"" . getTemplate("index/change_theme") . "\";");
