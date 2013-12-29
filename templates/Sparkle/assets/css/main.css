@@ -160,6 +160,9 @@ ul.topheadernav li ul li a:hover {
 	padding:0;
 	margin:-4px 0 0;
 }
+.topheadernav a.logoutlink {
+	color: #cc0000;
+}
 
 .countbubble {
 	display:block;
@@ -538,6 +541,10 @@ table {
 	box-shadow:0 0 0 #000!important;
 }
 
+table tr.top td {
+	vertical-align: top;
+}
+
 table thead th,table th {
 	border-top:1px solid #d1d5d8;
 	border-bottom:1px solid #d1d5d8;
@@ -553,6 +560,10 @@ table thead:first-child th,table:first-child th {
 
 table th {
 	border-top:0;
+}
+
+table th.right, table td.right {
+	text-align: right;
 }
 
 th a:hover {
@@ -595,10 +606,10 @@ table tbody tr:last-child td {
 	margin:0;
 }
 
-.formtable tbody td {
+.formtable tbody td, .formtable td {
 	border:0;
 	border-bottom:1px solid #f1f2f3;
-	min-height:20px;
+	height: 30px;
 }
 
 .formtable label {
@@ -628,7 +639,6 @@ td {
 	padding-left:10px;
 	padding-right:10px;
 	padding-bottom:5px;
-	min-height:20px;
 }
 
 table tfoot td {
@@ -960,6 +970,9 @@ label.nobr {
 }
 
 /* NEWSFEED */
+#newsfeed {
+	display: none;
+}
 .newsitem {
 	border-bottom:1px solid #f1f2f3;
 	padding:6px 5px 8px;
@@ -1077,4 +1090,31 @@ label.nobr {
 	background-position:center top;
 	top:-5px;
 	left:0;
+}
+
+.red {
+	color: #ff0000;
+}
+.green {
+	color: green;
+}
+
+.phpinfo, .overflow {
+	overflow: scroll;
+}
+.phperror {
+	margin-top: 50px;
+	margin-bottom: -55px;
+}
+.clear {
+	clear: both;
+}
+.hidden {
+	display: none;
+}
+div.left {
+	float: left;
+}
+div.right {
+	float: right;
 }

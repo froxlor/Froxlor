@@ -13,6 +13,7 @@
 	<if isset($intrafficpage)>
 	<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="js/jquery.flot.min.js"></script>
+	<script language="javascript" type="text/javascript" src="js/plugins/flot.resize.min.js"></script>
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/traffic.js"></script>
 	</if>
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/tipper.min.js"></script>
@@ -71,7 +72,7 @@
 					</if>
 				</ul>
 			</li>
-			<li><a href="{$linker->getLink(array('section' => 'index', 'action' => 'logout'))}" style="color: #cc0000;">{$lng['login']['logout']}</a></li>
+			<li><a href="{$linker->getLink(array('section' => 'index', 'action' => 'logout'))}" class="logoutlink">{$lng['login']['logout']}</a></li>
 		</ul>
 	</div>
 </header>

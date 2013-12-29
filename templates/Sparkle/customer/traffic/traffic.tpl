@@ -16,7 +16,7 @@ $header
 						<th>{$lng['traffic']['ftp']}</th>
 						<th>{$lng['traffic']['http']}</th>
 						<th>{$lng['traffic']['mail']}</th>
-						<th class="text-align:right;">{$lng['customer']['traffic']}</th>
+						<th>{$lng['customer']['traffic']}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -36,13 +36,13 @@ $header
 		</fieldset>
 	</form>
 	
-	<div id="charts" style="display: none">
+	<div id="charts" class="hidden">
 		<h3>HTTP {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['http']})</h3>
-		<div id="httpchart" class="trafficchart" style="width:100%"></div>
+		<div id="httpchart" class="trafficchart"></div>
 		<h3>FTP {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['ftp']})</h3>
-		<div id="ftpchart" class="trafficchart" style="width:100%"></div>
+		<div id="ftpchart" class="trafficchart"></div>
 		<h3>Mail {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['mail']})</h3>
-		<div id="mailchart" class="trafficchart" style="width:100%"></div>
+		<div id="mailchart" class="trafficchart"></div>
 	</div>
 </article>
 $footer

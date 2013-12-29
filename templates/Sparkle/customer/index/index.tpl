@@ -211,7 +211,7 @@ $header
         </if>
         </table>
     </section>
-    <section style="clear:both"></section>
+    <section class="clear"></section>
 
 	</article>
 $footer

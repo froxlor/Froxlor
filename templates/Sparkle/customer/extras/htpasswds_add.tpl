@@ -10,20 +10,14 @@ $header
 		<section class="fullform bradius">
 
 			<form action="{$linker->getLink(array('section' => 'extras'))}" method="post" enctype="application/x-www-form-urlencoded">
-				<fieldset>
-					<legend>Froxlor&nbsp;-&nbsp;{$title}</legend>
+				<input type="hidden" name="s" value="$s" />
+				<input type="hidden" name="page" value="$page" />
+				<input type="hidden" name="action" value="$action" />
+				<input type="hidden" name="send" value="send" />
 
-					<table class="formtable">
-						{$htpasswd_add_form}
-					</table>
-
-					<p style="display: none;">
-						<input type="hidden" name="s" value="$s" />
-						<input type="hidden" name="page" value="$page" />
-						<input type="hidden" name="action" value="$action" />
-						<input type="hidden" name="send" value="send" />
-					</p>
-				</fieldset>
+				<table class="formtable">
+					{$htpasswd_add_form}
+				</table>
 			</form>
 
 		</section>

@@ -9,8 +9,8 @@
 						<form name="cdDirect" method="POST" action="webftp.php">
 							<input type="hidden" name="action" value="cddirect" />
 							<input type="hidden" name="currentDir" value="{$currentDir}" />
-							<input type="text" name="file" value="" style="width:170px;" />
-							<input name="submit" type="submit" style="width: 150;" value="{t}Change dir{/t}" />
+							<input type="text" name="file" value="" />
+							<input name="submit" type="submit" value="{t}Change dir{/t}" />
 						</form>
 					</td>
 				</tr>
@@ -18,10 +18,10 @@
 					<td>
 						<form name="dirinput" method="POST" action="webftp.php">
 							<input type="hidden" name="action" value="createdir" />
-							<input type="hidden" name="currentDir" value="{$currentDir}" style="width=150;" />
+							<input type="hidden" name="currentDir" value="{$currentDir}" />
 							<input type="hidden" name="mode" value="{$mode}" />
-							<input type="text" name="file" value="" style="width:170px;" />
-							<input name="submit" type="submit" style="width: 150;" value="{t}Create dir{/t}" />
+							<input type="text" name="file" value="" />
+							<input name="submit" type="submit" value="{t}Create dir{/t}" />
 						</form>
 					</td>
 				</tr>
@@ -31,8 +31,8 @@
 							<input type="hidden" name="currentDir" value="{$currentDir}" />
 							<input type="hidden" name="action" value="edit" />
 							<input type="hidden" name="op" value="new" />
-							<input type="text" name="file" value="file.txt" style="width:170px;" />
-							<input name="submit" type="submit" style="width: 150;" value="{t}Create new file in current directory{/t}">
+							<input type="text" name="file" value="file.txt"  />
+							<input name="submit" type="submit" value="{t}Create new file in current directory{/t}">
 						</form>
 					</td>
 				</tr>
@@ -76,7 +76,7 @@
 					</tr>
 					<tr>
 						<td valign="top" align="right">
-							<input name="submit2" type="submit" style="width: 150;" value="{t}Upload file(s){/t}">
+							<input name="submit2" type="submit" value="{t}Upload file(s){/t}">
 						</td>
 					</tr>
 				</table>

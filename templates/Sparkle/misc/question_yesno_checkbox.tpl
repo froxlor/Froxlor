@@ -6,7 +6,7 @@ $header
 			<div class="warning">
 				$text
 				<div class="messagecheckbox">$checkbox</div>
-				<div style="text-align:right;margin-top:10px;">
+				<div>
 					<input type="hidden" name="s" value="$s" />
 					<input type="hidden" name="send" value="send" />
 					{$hiddenparams}

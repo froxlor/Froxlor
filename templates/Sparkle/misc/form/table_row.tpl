@@ -1,8 +1,8 @@
 <tr>
-	<td{$style} class="formlabeltd" style="width:50%">
-		<label for="{$fieldname}">{$label}{$mandatory}:
+	<td class="formlabeltd">
+		<label for="{$fieldname}"><strong>{$label}</strong>{$mandatory}:
 		<if $desc != ''>
-			<br /><span style="font-size:85%;">{$desc}</span>
+			<br /><small>{$desc}</small>
 		</if>
 		</label>
 	</td>

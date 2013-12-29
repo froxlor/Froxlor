@@ -30,7 +30,7 @@ $header
 			$traffic
 		</tbody>
 	</table>
-	<div id="charts" style="display: none">
+	<div id="charts" class="hidden">
 		<h3>HTTP {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['http']})</h3>
 		<div id="httpchart" class="trafficchart"></div>
 		<h3>FTP {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['ftp']})</h3>

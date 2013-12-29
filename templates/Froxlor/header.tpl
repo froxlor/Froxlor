@@ -13,6 +13,7 @@
 	<if isset($intrafficpage)>
 	<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="js/jquery.flot.min.js"></script>
+	<script language="javascript" type="text/javascript" src="js/plugins/flot.resize.min.js"></script>
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/traffic.js"></script>
 	</if>
 	<if Settings::Get('panel.use_webfonts') == '1'>

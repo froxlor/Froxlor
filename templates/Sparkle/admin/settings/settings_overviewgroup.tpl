@@ -1,5 +1,5 @@
 <tr>
-	<td class="formlabeltd" style="line-height:33px;">
+	<td class="formlabeltd">
 		<label for="name"><strong>{$title}&nbsp;</strong></label>
 	</td>
 	<td>{$option}</td>

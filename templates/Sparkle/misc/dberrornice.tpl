@@ -30,18 +30,18 @@
 				<div class="error">
 					<p><TEXT></p>
 					<p>&nbsp;</p>
-					<pre style="overflow:auto;"><DEBUG></pre>
+					<pre class="overflow"><DEBUG></pre>
 					<p>&nbsp;</p>
 				</div>
 			</div>
 			<aside>
-				<div style="float:left;">
+				<div class="left">
 					<a href="#" title="Click here to go back" id="historyback">Go back</a>
 				</div>
-				<div style="float:right;">
+				<div class="right">
 					<REPORT>
 				</div>
-				<div style="clear:both;"></div>
+				<div class="clear"></div>
 			</aside>
 		</section>
 

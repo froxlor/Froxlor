@@ -5,7 +5,7 @@ $header
 			<div class="warningtitle">{$lng['question']['question']}</div>
 			<div class="warning">
 				$text
-				<div style="text-align:right;margin-top:10px;">
+				<div>
 					<input type="hidden" name="s" value="$s" />
 					<input type="hidden" name="send" value="send" />
 					{$hiddenparams}

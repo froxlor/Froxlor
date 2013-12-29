@@ -11,7 +11,7 @@
         	<table class="formtable">
 			<thead>
 				<tr>
-					<th class="maintitle_apply_right" nowrap="nowrap" colspan="3" style="text-align: right !important;">
+					<th colspan="3" class="right">
 						<input class="bottom" type="reset" value="{$lng['panel']['reset']}" /><input class="bottom" type="submit" value="{$lng['panel']['save']}" />
 					</th>
 				</tr>
@@ -21,7 +21,7 @@
 			</tbody>
 			<tfoot>
 				<tr>
-					<td class="maintitle_apply_right" nowrap="nowrap" colspan="3" style="text-align: right !important;">
+					<td nowrap="nowrap" colspan="3" class="right">
 						<input class="bottom" type="reset" value="{$lng['panel']['reset']}" /><input class="bottom" type="submit" value="{$lng['panel']['save']}" />
 					</td>
 				</tr>

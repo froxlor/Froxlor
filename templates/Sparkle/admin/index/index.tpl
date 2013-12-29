@@ -167,7 +167,7 @@ $header
 		
 
 		<if Settings::Get('admin.show_news_feed') == '1'>
-		<section class="dboarditem bradius" id="newsfeed" style="display: none">
+		<section class="dboarditem bradius" id="newsfeed">
 			<table>
 				<tr>
 					<th>News</th>
@@ -247,7 +247,7 @@ $header
 		</if>
 		</table>
 	</section>
-	<section style="clear:both"></section>
+	<section class="clear"></section>
 
 	</article>
 $footer

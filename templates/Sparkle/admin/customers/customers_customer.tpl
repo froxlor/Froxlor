@@ -60,7 +60,7 @@
 			</span>
 		</div>
 	</td>
-	<td style="white-space: nowrap;">
+	<td>
 		<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'edit', 'id' => $row['customerid']))}">
 			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" title="{$lng['panel']['edit']}" />
 		</a>&nbsp;

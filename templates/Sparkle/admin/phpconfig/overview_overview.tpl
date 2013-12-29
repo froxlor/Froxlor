@@ -1,16 +1,16 @@
-<tr>
-	<td style="vertical-align:top;"><strong>{$row['description']}</strong></td>
-	<td style="vertical-align:top;">{$domains}</td>
-	<td style="vertical-align:top;">{$row['binary']}</td>
-	<td style="vertical-align:top;">{$row['file_extensions']}</td>
-	<td style="vertical-align:top;">
+<tr class="top">
+	<td><strong>{$row['description']}</strong></td>
+	<td>{$domains}</td>
+	<td>{$row['binary']}</td>
+	<td>{$row['file_extensions']}</td>
+	<td>
 		<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'edit', 'id' => $row['id']))}">
 			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" title="{$lng['panel']['edit']}" />
 		</a>
 		<if $row['id'] != 1>
-			&nbsp;<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'delete', 'id' => $row['id']))}">
-				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
-			</a>
+		&nbsp;<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'delete', 'id' => $row['id']))}">
+			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
+		</a>
 		</if>
 	</td>
 </tr>

@@ -46,7 +46,7 @@
 {$body}
 </div>
 {if $loggedin}
-	<div style="clear:both;"></div> 
+	<div class="clear"></div> 
 	</div>
 {/if}
 <footer>

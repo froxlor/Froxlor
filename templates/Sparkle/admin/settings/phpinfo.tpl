@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="dboarditemfull bradius" style="overflow: scroll;">
+		<section class="dboarditemfull bradius phpinfo">
 			<table width="100%">
 				{$phpinfo}
 			</table>
