@@ -664,11 +664,8 @@ table tbody tr:last-child td:first-child {
 
 table.bradius tfoot tr:last-child td:first-child, table.bradius tbody tr:last-child td:first-child {
 	border-bottom:0;
-	-webkit-border-top-right-radius: 20px;
 	-webkit-border-bottom-left-radius: 20px;
-	-moz-border-radius-topright: 20px;
 	-moz-border-radius-bottomleft: 20px;
-	border-top-right-radius: 20px;
 	border-bottom-left-radius: 20px;
 }
 
