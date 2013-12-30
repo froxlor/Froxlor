@@ -135,7 +135,8 @@ nav div:last-child {
 }
 
 .menuelement ul li {
-	margin: 0 0 3px 20px;
+	margin:0;
+	margin-left:20px;
 }
 
 .menuelement h4 {
