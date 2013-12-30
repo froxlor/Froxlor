@@ -10,7 +10,7 @@ html,body {
 .content {
 	background-color:#eeeeee;
 	min-width:100%;
-	margin-top:100px;
+	margin-top:95px;
 	border-bottom:0;
 }
 
@@ -107,6 +107,7 @@ nav {
 
 nav div:first-child {
 	display:block;
+	margin-top:0;
 }
 
 nav div:nth-child(2) {
