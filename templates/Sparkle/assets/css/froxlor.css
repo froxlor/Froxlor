@@ -254,7 +254,7 @@ select {
 	-moz-border-radius-bottomleft:20px;
 	border-top-right-radius:20px;
 	border-bottom-left-radius:20px;
-	padding: 4px 0 4px 8px;
+	padding:0;
 }
 
 .dboarditem th,.dboarditemfull th {
@@ -264,4 +264,17 @@ select {
 .dboarditem td,.dboarditemfull td {
 	border-bottom:1px dotted #ccc;
 	background-color:#f8f8f8;
+	padding-left:20px;
+}
+
+.dboarditem table tbody tr:first-child th {
+	-webkit-border-top-right-radius:20px;
+	-moz-border-radius-topright:20px;
+	border-top-right-radius:20px;	
+}
+
+.dboarditem table tbody tr:last-child td:first-child {
+	-webkit-border-bottom-left-radius:20px;
+	-moz-border-radius-bottomleft:20px;
+	border-bottom-left-radius:20px;	
 }
