@@ -13,7 +13,7 @@ $header
 					<input type="hidden" name="s" value="$s" />
 					<input type="hidden" name="page" value="$page" />
 					<input type="hidden" name="send" value="send" />
-					<table class="formtable tinyform">
+					<table class="formtable">
 						<tr>
 							<td><label for="theme">{$lng['panel']['theme']}:</label></td>
 							<td><select id="theme" name="theme">$theme_options</select></td>

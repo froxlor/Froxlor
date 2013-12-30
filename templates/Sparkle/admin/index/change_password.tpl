@@ -13,7 +13,7 @@ $header
 					<input type="hidden" name="s" value="$s" />
 					<input type="hidden" name="page" value="$page" />
 					<input type="hidden" name="send" value="send" />
-					<table class="formtable tinyform">
+					<table class="formtable">
 						<tr>
 							<td><label for="old_password">{$lng['changepassword']['old_password']}:</label></td>
 							<td><input type="password" id="old_password" name="old_password" /></td>

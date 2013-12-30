@@ -13,7 +13,7 @@ $header
 					<input type="hidden" name="s" value="$s" />
 					<input type="hidden" name="page" value="$page" />
 					<input type="hidden" name="send" value="send" />
-					<table class="formtable tinyform">
+					<table class="formtable">
 						<tr>
 							<td><label for="def_language">{$lng['login']['language']}:</label></td>
 							<td><select id="def_language" name="def_language">$language_options</select></td>
