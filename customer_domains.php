@@ -241,7 +241,7 @@ if ($page == 'overview') {
 						AND `dip`.`id_ipandports`
 						IN (SELECT `id_ipandports` FROM `".TABLE_DOMAINTOIP."`
 							WHERE `id_domain` = :id )
-						GROUP BY `d`.`domain
+						GROUP BY `d`.`domain`
 						ORDER BY `d`.`domain` ASC;"
 					);
 					$aliasdomain_check = Database::pexecute_first($aliasdomain_stmt, array("id" => $aliasdomain, "customerid" => $userinfo['customerid']));
