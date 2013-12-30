@@ -212,6 +212,12 @@ table tfoot td {
 	padding-right:0;
 }
 
+input {
+	color:#000;
+	background-color:#dae7ee!important;
+	border:1px solid #666666;
+}
+
 /*
  *  BUTTONS
  */
@@ -232,26 +238,21 @@ input[type="button"],input[type="submit"],input[type="reset"] {
 }
 
 input[type="submit"],input[class="yesbutton"],input[type="submit"]:hover,input[class="yesbutton"]:hover,input[type="submit"]:active,input[class="yesbutton"]:active {
-	color: green!important;
-	background: #ccc url('../img/icons/button_ok.png') no-repeat 4px 8px!important;
-	padding-left: 25px;
+	color:green!important;
+	background:#ccc url('../img/icons/button_ok.png') no-repeat 4px 8px!important;
+	padding-left:25px;
 }
 
 input[class="nobutton"],input[type="reset"],input[class="nobutton"]:hover,input[type="reset"]:hover,input[class="nobutton"]:active,input[type="reset"]:active {
-	color: red!important;
-	background: #ccc url('../img/icons/cancel.png') no-repeat 4px 8px!important;
-	padding-left: 25px;
+	color:red!important;
+	background:#ccc url('../img/icons/cancel.png') no-repeat 4px 8px!important;
+	padding-left:25px;
 }
 
 select {
 	color:#000;
 	background:#dae7ee;
-	padding:4px;
 	border:1px solid #666;
-	-moz-border-radius:5px;
-	-khtml-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
 	-webkit-appearance:menulist-button;
 	-moz-appearance:menulist-button;
 	appearance:menulist-button;
