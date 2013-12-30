@@ -186,6 +186,22 @@ table.bradius tfoot tr:last-child td {
 	border-bottom: 1px dotted #ccc;
 }
 
+.formtable tbody tr th {
+	background-color: rgb(245, 245, 245);
+}
+
+.formtable tbody tr:first-child th {
+	-webkit-border-top-right-radius: 20px;
+	-moz-border-radius-topright: 20px;
+	border-top-right-radius: 20px;
+}
+
+.formtable tfoot tr:last-child td:first-child {
+	-webkit-border-bottom-left-radius: 20px;
+	-moz-border-radius-bottomleft: 20px;
+	border-bottom-left-radius: 20px;
+}
+
 table tfoot td {
 	height:25px;
 	border-top:0;
