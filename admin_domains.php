@@ -464,10 +464,10 @@ if ($page == 'domains'
 				if ($userinfo['ip'] != "-1") {
 					$admin_ip_stmt = Database::prepare("
 						SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-						WHERE `id` = :ip ORDER BY `ip`, `port` ASC"
+						WHERE `id` = :id ORDER BY `ip`, `port` ASC"
 					);
 					$admin_ip = Database::pexecute_first($admin_ip_stmt, array('id' => $userinfo['ip']));
-					$additional_ip_condition = " AND `ip` = '" . $admin_ip['ip'] . "' ";
+					$additional_ip_condition = " AND `ip` = :adminip ";
 					$aip_param = array('adminip' => $admin_ip['ip']);
 				} else {
 					$additional_ip_condition = '';
