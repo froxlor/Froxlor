@@ -108,7 +108,7 @@ if ($page == 'overview') {
 					$lookfornewversion_addinfo = $_message;
 
 					// not numeric -> error-message
-					if (!is_numeric($_version)) {
+					if (!preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
 						// check for customized version to not output
 						// "There is a newer version of froxlor" besides the error-message
 						$isnewerversion = 2;
