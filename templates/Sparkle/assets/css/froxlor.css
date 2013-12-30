@@ -109,6 +109,27 @@ td a {
 	box-shadow:rgba(0,0,0,0.34902) 0 1px 3px 0;
 }
 
+table.bradius {
+	width: 100%;
+	border-spacing: 0;
+	background-color: #f8f8f8;
+	border-top: 0;
+	border-left: 1px solid #666;
+	border-bottom: 1px solid #666;
+	border-collapse: separate;
+	-webkit-border-top-right-radius:20px;
+	-webkit-border-bottom-left-radius:20px;
+	-moz-border-radius-topright:20px;
+	-moz-border-radius-bottomleft:20px;
+	border-top-right-radius:20px;
+	border-bottom-left-radius:20px;
+	border-collapse: separate;
+}
+
+table.bradius tbody tr td {
+	border-right: 1px solid #666;
+}
+
 .topheader {
 	background:#cccccc url('../img/header_g_froxlor.png') 0 bottom repeat-x;
 	top:0;
@@ -241,6 +262,13 @@ footer img {
 	border:1px solid #666;
 	background-color:#f8f8f8;
 }
+
+.tinyform tbody tr:first-child td:last-child {
+	-webkit-border-top-right-radius:20px;
+	-moz-border-radius-topright:20px;
+	border-top-right-radius:20px;
+}
+
 .fullform p {
 	margin:10px!important;
 }
@@ -568,12 +596,16 @@ table tr.top td {
 	vertical-align: top;
 }
 
-table thead th,table th {
-	border-top:1px solid #d1d5d8;
-	border-bottom:1px solid #d1d5d8;
-	height:25px!important;
-	padding:5px 0 5px 8px;
-	font-weight:700;
+table thead th {
+	color: #fff;
+	background-color: #176fa1;
+	border: 1px solid #176fa1;
+	-webkit-border-top-right-radius: 20px;
+	-webkit-border-bottom-left-radius: 20px;
+	-moz-border-radius-topright: 20px;
+	-moz-border-radius-bottomleft: 20px;
+	border-top-right-radius: 20px;
+	border-bottom-left-radius: 20px;
 }
 
 table thead:first-child th,table:first-child th {
@@ -582,6 +614,8 @@ table thead:first-child th,table:first-child th {
 
 table th {
 	border-top:0;
+	font-weight:700;
+	text-align:center;
 }
 
 table th.right, table td.right {
@@ -616,8 +650,30 @@ table tbody td {
 	border-bottom:1px solid #f1f2f3;
 }
 
+table tbody tr {
+	background-color: #fff;
+}
+
 table tbody tr:last-child td {
 	border-bottom:0;
+}
+
+table tbody tr:last-child td:first-child {
+	border-bottom:0;
+}
+
+table.bradius tfoot tr:last-child td:first-child, table.bradius tbody tr:last-child td:first-child {
+	border-bottom:0;
+	-webkit-border-top-right-radius: 20px;
+	-webkit-border-bottom-left-radius: 20px;
+	-moz-border-radius-topright: 20px;
+	-moz-border-radius-bottomleft: 20px;
+	border-top-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+}
+
+table.bradius tfoot tr:last-child td {
+	border-right:1px solid #000;
 }
 
 .formtable {
