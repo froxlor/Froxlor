@@ -41,8 +41,10 @@ function getThemes() {
 						foreach ($themeconfig['variants'] as $variant => $data) {
 							if ($variant == "default") {
 								$themes_available[$it->getFilename()] = $it->getFilename();
+							} elseif (array_key_exists('description', $data)) {
+								$themes_available[$it->getFilename() . '_' . $variant] = $data['description'];
 							} else {
-								$themes_available[$it->getFilename() . '_' . $variant] = $it->getFilename() . ' (' . $data['description'] . ')';
+								$themes_available[$it->getFilename() . '_' . $variant] = $it->getFilename() . ' (' . $variant . ')';
 							}
 						}
 					} else {
