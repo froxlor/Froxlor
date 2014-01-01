@@ -2651,3 +2651,20 @@ if (isFroxlorVersion('0.9.32-dev1')) {
 
 	updateToVersion('0.9.32-dev2');
 }
+
+if (isFroxlorVersion('0.9.32-dev2')) {
+
+	showUpdateStep("Updating from 0.9.32-dev2 to 0.9.32-dev3");
+	lastStepStatus(0);
+
+	showUpdateStep("Updating froxlor - theme");
+	Database::query("UPDATE `".TABLE_PANEL_ADMINS."` SET `theme` = 'Sparkle_froxlor' WHERE `theme` = 'Froxlor';");
+	Database::query("UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `theme` = 'Sparkle_froxlor' WHERE `theme` = 'Froxlor';");
+	Database::query("UPDATE `".TABLE_PANEL_SESSIONS."` SET `theme` = 'Sparkle_froxlor' WHERE `theme` = 'Froxlor';");
+	if (Settings::Get('panel.default_theme') == 'Froxlor') {
+		Settings::Set('panel.default_theme', 'Sparkle_froxlor');
+	}
+	lastStepStatus(0);
+
+	updateToVersion('0.9.32-dev3');
+}
