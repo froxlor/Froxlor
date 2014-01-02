@@ -75,7 +75,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			AND `language` = :lang
 			AND `templategroup` = 'mails' AND `varname` = :varname
 		");
-		$resul2_data = array(
+		$result2_data = array(
 			'adminid' => $row['adminid'],
 			'lang' => $row['def_language'],
 			'varname' => 'diskmaxpercent_subject'
@@ -165,7 +165,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			AND `language` = :lang
 			AND `templategroup` = 'mails' AND `varname` = :varname
 		");
-		$resul2_data = array(
+		$result2_data = array(
 			'adminid' => $row['adminid'],
 			'lang' => $row['def_language'],
 			'varname' => 'diskmaxpercent_subject'
