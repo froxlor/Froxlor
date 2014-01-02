@@ -28,6 +28,7 @@
 					<thead>
 						<tr>
 							<th>{$lng['login']['username']}&nbsp;{$arrowcode['username']}</th>
+							<th>{$lng['panel']['ftpdesc']}&nbsp;{$arrowcode['description']}</th>
 							<th>{$lng['panel']['path']}&nbsp;{$arrowcode['homedir']}</th>
 							<th>{$lng['panel']['options']}</th>
 						</tr>

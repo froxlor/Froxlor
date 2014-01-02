@@ -1,5 +1,6 @@
 <tr>
 	<td>{$row['username']}</td>
+	<td>{$row['description']}</td>
 	<td>{$row['documentroot']}</td>
 	<td>
 		<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'edit', 'id' => $row['id']))}">

@@ -35,11 +35,12 @@ if ($page == 'overview') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_ftp::accounts");
 		$fields = array(
 			'username' => $lng['login']['username'],
-			'homedir' => $lng['panel']['path']
+			'homedir' => $lng['panel']['path'],
+			'description' => $lng['panel']['ftpdesc']
 		);
 		$paging = new paging($userinfo, TABLE_FTP_USERS, $fields);
 
-		$result_stmt = Database::prepare("SELECT `id`, `username`, `homedir` FROM `" . TABLE_FTP_USERS . "`
+		$result_stmt = Database::prepare("SELECT `id`, `username`, `description`, `homedir` FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
 		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
@@ -147,6 +148,7 @@ if ($page == 'overview') {
 		if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') {
 			if (isset($_POST['send'])
 				&& $_POST['send'] == 'send') {
+				$description = validate($_POST['ftp_description'], 'description');
 				// @FIXME use a good path-validating regex here (refs #1231)
 				$path = validate($_POST['path'], 'path');
 				$password = validate($_POST['ftp_password'], 'password');
@@ -196,12 +198,13 @@ if ($page == 'overview') {
 					$cryptPassword = makeCryptPassword($password);
 
 					$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
-						(`customerid`, `username`, `password`, `homedir`, `login_enabled`, `uid`, `gid`)
-						VALUES (:customerid, :username, :password, :homedir, 'y', :guid, :guid)"
+						(`customerid`, `username`, `description`, `password`, `homedir`, `login_enabled`, `uid`, `gid`)
+						VALUES (:customerid, :username, :description, :password, :homedir, 'y', :guid, :guid)"
 					);
 					$params = array(
 						"customerid" => $userinfo['customerid'],
 						"username" => $username,
+						"description" => $description,
 						"password" => $cryptPassword,
 						"homedir" => $path,
 						"guid" => $userinfo['guid']
@@ -336,7 +339,7 @@ if ($page == 'overview') {
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT `id`, `username`, `homedir`, `uid`, `gid` FROM `" . TABLE_FTP_USERS . "`
+		$result_stmt = Database::prepare("SELECT `id`, `username`, `description`, `homedir`, `uid`, `gid` FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid` = :customerid
 			AND `id` = :id"
 		);
@@ -396,6 +399,15 @@ if ($page == 'overview') {
 						Database::pexecute($stmt, $params);
 					}
 				}
+
+				$log->logAction(USR_ACTION, LOG_INFO, "edited ftp-account '" . $result['username'] . "'");
+				$description = validate($_POST['ftp_description'], 'description');
+				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
+					SET `description` = :desc
+					WHERE `customerid` = :customerid
+					AND `id` = :id"
+				);
+				Database::pexecute($stmt, array("desc" => $description, "customerid" => $userinfo['customerid'], "id" => $id));
 
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {

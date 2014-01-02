@@ -1523,3 +1523,4 @@ $lng['serversettings']['mtaserver']['title'] = "Typ des MTA";
 $lng['serversettings']['mtaserver']['description'] = "Der eingesetzte Mail Transfer Agent";
 $lng['serversettings']['mtalog']['title'] = "Logdatei des MTA";
 $lng['serversettings']['mtalog']['description'] = "Die Logdatei des Mail Transfer Agent";
+$lng['panel']['ftpdesc'] = 'FTP Beschreibung';

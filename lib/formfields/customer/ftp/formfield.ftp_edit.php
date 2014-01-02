@@ -28,6 +28,11 @@ return array(
 						'type' => 'label',
 						'value' => $result['username'],
 					),
+					'ftp_description' => array(
+						'label' => $lng['panel']['ftpdesc'] = 'FTP description',
+						'type' => 'text',
+						'value' => $result['description']
+					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
 						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),

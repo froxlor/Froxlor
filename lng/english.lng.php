@@ -1797,3 +1797,4 @@ $lng['serversettings']['mtaserver']['title'] = "MTA type";
 $lng['serversettings']['mtaserver']['description'] = "Type of the Mail Transfer Agent";
 $lng['serversettings']['mtalog']['title'] = "MTA log";
 $lng['serversettings']['mtalog']['description'] = "Logfile of the Mail Transfer Agent";
+$lng['panel']['ftpdesc'] = 'FTP description';

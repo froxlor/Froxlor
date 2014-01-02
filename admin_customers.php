@@ -795,7 +795,7 @@ if ($page == 'customers'
 					$cryptPassword = makeCryptPassword($password);
 					// FTP-User
 					$ins_stmt = Database::prepare("
-						INSERT INTO `" . TABLE_FTP_USERS . "` SET `customerid` = :customerid, `username` = :username,
+						INSERT INTO `" . TABLE_FTP_USERS . "` SET `customerid` = :customerid, `username` = :username, `description` = :desc,
 							`password` = :passwd, `homedir` = :homedir, `login_enabled` = 'y', `uid` = :guid, `gid` = :guid"
 					);
 					$ins_data = array(
@@ -803,7 +803,8 @@ if ($page == 'customers'
 						'username' => $loginname,
 						'passwd' => $cryptPassword,
 						'homedir' => $documentroot,
-						'guid' => $guid
+						'guid' => $guid,
+						'desc' => "Default"
 					);
 					Database::pexecute($ins_stmt, $ins_data);
 					// FTP-Group

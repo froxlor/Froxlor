@@ -29,6 +29,7 @@ CREATE TABLE `ftp_users` (
   `down_count` int(15) NOT NULL default '0',
   `down_bytes` bigint(30) NOT NULL default '0',
   `customerid` int(11) NOT NULL default '0',
+  `description` varchar(255) NOT NULL DEFAULT ''
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `customerid` (`customerid`)
@@ -525,7 +526,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.32-dev3');
+	('panel', 'version', '0.9.32-dev4');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
