@@ -149,11 +149,11 @@ class FileLogger extends AbstractLogger {
 				if($text != null
 						&& $text != '')
 				{
-					fwrite($fp, date("d.m.Y H:i:s", $now) . " [" . $_type . "] [" . $_action . "-action" . $name . "] " . $text . "\n");
+					fwrite($fp, date("d.m.Y H:i:s", $now) . " [" . $_type . "] [" . $_action . "-action " . $name . "] " . $text . "\n");
 				}
 				else
 				{
-					fwrite($fp, date("d.m.Y H:i:s", $now) . " [" . $_type . "] [" . $_action . "-action" . $name . "] No text given!!! Check scripts!\n");
+					fwrite($fp, date("d.m.Y H:i:s", $now) . " [" . $_type . "] [" . $_action . "-action " . $name . "] No text given!!! Check scripts!\n");
 				}
 
 				fclose($fp);

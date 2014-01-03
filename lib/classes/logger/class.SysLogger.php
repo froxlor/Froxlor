@@ -114,9 +114,9 @@ class SysLogger extends AbstractLogger {
 			if ($text != null
 					&& $text != ''
 			) {
-				syslog((int)$type, "[" . ucfirst($_action) . " Action" . $name . "] " . $text);
+				syslog((int)$type, "[" . ucfirst($_action) . " Action " . $name . "] " . $text);
 			} else {
-				syslog((int)$type, "[" . ucfirst($_action) . " Action" . $name . "] No text given!!! Check scripts!");
+				syslog((int)$type, "[" . ucfirst($_action) . " Action " . $name . "] No text given!!! Check scripts!");
 			}
 
 			closelog();
