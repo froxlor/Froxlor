@@ -2674,7 +2674,7 @@ if (isFroxlorVersion('0.9.32-dev3')) {
 	showUpdateStep("Updating from 0.9.32-dev3 to 0.9.32-dev4");
 	lastStepStatus(0);
 
-	showUpdateStep("Adding news FTP-description field");
+	showUpdateStep("Adding new FTP-description field");
 	Database::query("ALTER TABLE `".TABLE_FTP_USERS."` ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `customerid`;");
 	lastStepStatus(0);
 
