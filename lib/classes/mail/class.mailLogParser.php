@@ -269,7 +269,7 @@ class MailLogParser {
 	 * return int
 	 */
 	private function _getLogTimestamp($line) {
-		if (preg_match("/((?:[A-Z]{3} |\d{4}-\d{2}-)\d{2} \d{2}:\d{2}:\d{2})/i", $line, $matches)) {
+		if (preg_match("/((?:[A-Z]{3}\s{1,2}\d{1,2}|\d{4}-\d{2}-\d{2}) \d{2}:\d{2}:\d{2})/i", $line, $matches)) {
 			return strtotime($matches[1]);
 		} else {
 			return 0;
