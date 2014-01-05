@@ -249,17 +249,21 @@ class MailLogParser {
 	 * @param int traffic
 	 */
 	private function _addDomainTraffic($domain, $traffic, $timestamp) {
-		$date = date("Y-m-d", $timestamp);
-		if (in_array($domain, $this->myDomains)) {
-			if (array_key_exists($domain, $this->domainTraffic) && array_key_exists($date, $this->domainTraffic[$domain])) {
-				$this->domainTraffic[$domain][$date] += (int)$traffic;
-			} else {
-				if (!array_key_exists($domain, $this->domainTraffic)) {
-					$this->domainTraffic[$domain] = array();
+		if ($timestamp < ($this->startTime + 60 * 60 * 24)) {
+			// Only add traffic if it's not in the future!
+			$date = date("Y-m-d", $timestamp);
+			if (in_array($domain, $this->myDomains)) {
+				if (array_key_exists($domain, $this->domainTraffic) && array_key_exists($date, $this->domainTraffic[$domain])) {
+					$this->domainTraffic[$domain][$date] += (int)$traffic;
+				} else {
+					if (!array_key_exists($domain, $this->domainTraffic)) {
+						$this->domainTraffic[$domain] = array();
+					}
+					$this->domainTraffic[$domain][$date] = (int)$traffic;
 				}
-				$this->domainTraffic[$domain][$date] = (int)$traffic;
 			}
 		}
+
 	}
 
 
