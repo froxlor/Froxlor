@@ -23,7 +23,7 @@
 		<link href="//fonts.googleapis.com/css?family={$webfont}" rel="stylesheet">
 	</if>
 	{$css}
-	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/css/main_ie.css" type="text/css" /><![endif]-->
+	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/assets/css/main_ie.css" type="text/css" /><![endif]-->
 	<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
 	{$js}
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
