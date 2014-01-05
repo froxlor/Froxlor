@@ -249,21 +249,17 @@ class MailLogParser {
 	 * @param int traffic
 	 */
 	private function _addDomainTraffic($domain, $traffic, $timestamp) {
-		if ($timestamp < ($this->startTime + 60 * 60 * 24)) {
-			// Only add traffic if it's not in the future!
-			$date = date("Y-m-d", $timestamp);
-			if (in_array($domain, $this->myDomains)) {
-				if (array_key_exists($domain, $this->domainTraffic) && array_key_exists($date, $this->domainTraffic[$domain])) {
-					$this->domainTraffic[$domain][$date] += (int)$traffic;
-				} else {
-					if (!array_key_exists($domain, $this->domainTraffic)) {
-						$this->domainTraffic[$domain] = array();
-					}
-					$this->domainTraffic[$domain][$date] = (int)$traffic;
+		$date = date("Y-m-d", $timestamp);
+		if (in_array($domain, $this->myDomains)) {
+			if (array_key_exists($domain, $this->domainTraffic) && array_key_exists($date, $this->domainTraffic[$domain])) {
+				$this->domainTraffic[$domain][$date] += (int)$traffic;
+			} else {
+				if (!array_key_exists($domain, $this->domainTraffic)) {
+					$this->domainTraffic[$domain] = array();
 				}
+				$this->domainTraffic[$domain][$date] = (int)$traffic;
 			}
 		}
-
 	}
 
 
@@ -274,7 +270,12 @@ class MailLogParser {
 	 */
 	private function _getLogTimestamp($line) {
 		if (preg_match("/((?:[A-Z]{3}\s{1,2}\d{1,2}|\d{4}-\d{2}-\d{2}) \d{2}:\d{2}:\d{2})/i", $line, $matches)) {
-			return strtotime($matches[1]);
+			$timestamp = strtotime($matches[1]);
+			if ($timestamp > ($this->startTime + 60 * 60 * 24)) {
+				return strtotime($matches[1] . " -1 year");
+			} else {
+				return strtotime($matches[1]);
+			}
 		} else {
 			return 0;
 		}
