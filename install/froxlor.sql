@@ -29,7 +29,7 @@ CREATE TABLE `ftp_users` (
   `down_count` int(15) NOT NULL default '0',
   `down_bytes` bigint(30) NOT NULL default '0',
   `customerid` int(11) NOT NULL default '0',
-  `description` varchar(255) NOT NULL DEFAULT ''
+  `description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `customerid` (`customerid`)
