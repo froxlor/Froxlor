@@ -28,7 +28,7 @@ $(document).ready(function() {
 	// Load Newsfeed
 	var ajax_load = "<div id='newsitem'>Loading newsfeed...</div>";
 	$("#newsfeeditems").html(ajax_load).load("lib/ajax.php?action=newsfeed", function() {
-		if ($("#newsfeeditems").html() != "") {
+		if ($("#newsfeeditems").html().length > 0) {
 			$(window).trigger('resize');
 			$("#newsfeed").slideDown();
 		}
@@ -37,6 +37,12 @@ $(document).ready(function() {
 	// Enable Infobubbles
 	$(".tipper").tipper({
 		direction: "right"
+	});
+	
+	// Enable reset search click
+	$(".resetsearch").click(function() {
+		$(".searchtext").val("");
+		$(".submitsearch").click();
 	});
 	
 	// Height of divs fix
@@ -49,7 +55,7 @@ $(document).ready(function() {
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
 		var urlParams = decodeURI( window.location.search.substring(1) );
-		if(urlParams == false | urlParams == '') return null;
+		if(urlParams === false | urlParams === '') return null;
 		var vars = urlParams.split("&");
 		for (var i=0;i<vars.length;i++) {
 			var pair = vars[i].split("=");
@@ -58,7 +64,7 @@ $(document).ready(function() {
 			}
 		}
 		return null;
-	}
+	};
 
 	if ($('#speciallogwarningpopup').length) {
 		var $speciallogdialog = $('#speciallogwarningpopup')
@@ -67,19 +73,18 @@ $(document).ready(function() {
 				closeOnEscape: false,
 				draggable: false,
 				modal: true,
-				resizable: false,
+				resizable: false
 			});
 	}
 	
 
 	// make rel="external" links open in a new window
 	$("a[rel='external']").attr('target', '_blank');
-	$(".main").css('min-height', $("nav").height() - 134);
 	
 	// set focus on username-field if on loginpage
 	$("#loginname").focus();
 	
-	if ($("table.bradius").length != 0) {
+	if ($("table.bradius").length !== 0) {
 		$("table.bradius tbody tr").hover(function() {
 			$(this).css("background-color", "#f5f5f5");
 		}, function() {
@@ -114,7 +119,7 @@ $(document).ready(function() {
             $speciallogdialog.dialog("close");
             if($('#delete_stats').val().toLowerCase() != $('#delete_statistics_str').val().toLowerCase()) {
                     $("#speciallogverified").val("0");
-                    if($('input[name=speciallogfile]').prop("checked") != false) {
+                    if($('input[name=speciallogfile]').prop("checked") !== false) {
                             $('input[name=speciallogfile]').attr("checked", false);
                     } else {
                             $('input[name=speciallogfile]').attr("checked", true);
@@ -127,7 +132,7 @@ $(document).ready(function() {
     $('input[id=speciallognobutton]').click(function () {
             $speciallogdialog.dialog("close");
             $("#speciallogverified").val("0");
-            if($('input[name=speciallogfile]').prop("checked") != false) {
+            if($('input[name=speciallogfile]').prop("checked") !== false) {
                     $('input[name=speciallogfile]').attr("checked", false);
             } else {
                     $('input[name=speciallogfile]').attr("checked", true);
