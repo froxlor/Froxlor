@@ -20,7 +20,7 @@
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/jcanvas.min.js"></script>
 	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/circular.js"></script>
 	<if Settings::Get('panel.use_webfonts') == '1'>
-		<link href="//fonts.googleapis.com/css?family={Settings::Get('panel.webfont')}" rel="stylesheet">
+		<link href="//fonts.googleapis.com/css?family={$webfont}" rel="stylesheet">
 	</if>
 	{$css}
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/css/main_ie.css" type="text/css" /><![endif]-->
