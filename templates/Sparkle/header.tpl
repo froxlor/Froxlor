@@ -28,11 +28,11 @@
 	{$js}
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
+	<if Settings::Get('panel.use_webfonts') == '1'>
 	<style type="text/css">
-	body {
-        font-family: <if Settings::Get('panel.use_webfonts') == '1'>{$webfont},</if> 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif;
-	}
+		body { font-family: {$webfont}, 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif; }
 	</style>
+	</if>
 </head>
 <body>
 

@@ -17,11 +17,11 @@
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
 	<title>{$title}Froxlor Server Management Panel</title>
+	{if $use_webfonts == 1}
 	<style type="text/css">
-		body {
-			font-family: {if $use_webfonts == 1}{$webfont},{/if} 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif;
-		}
+		body { font-family: {$webfont}, 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif; }
 	</style>
+	{/if}
 </head>
 <body>
 
