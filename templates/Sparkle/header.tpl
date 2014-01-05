@@ -30,7 +30,7 @@
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
 	<style type="text/css">
 	body {
-        font-family: <if Settings::Get('panel.use_webfonts') == '1'>{$webfont},</if> Verdana, Geneva, sans-serif;
+        font-family: <if Settings::Get('panel.use_webfonts') == '1'>{$webfont},</if> 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif;
 	}
 	</style>
 </head>

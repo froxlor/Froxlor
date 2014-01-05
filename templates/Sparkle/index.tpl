@@ -19,7 +19,7 @@
 	<title>{$title}Froxlor Server Management Panel</title>
 	<style type="text/css">
 		body {
-			font-family: {if $use_webfonts == 1}{$webfont},{/if} Verdana, Geneva, sans-serif;
+			font-family: {if $use_webfonts == 1}{$webfont},{/if} 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif;
 		}
 	</style>
 </head>
