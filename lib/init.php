@@ -367,7 +367,11 @@ if (file_exists($hl_path.'/logo_custom.png')) {
  */
 if ($nosession == 1 && AREA != 'login') {
 	unset($userinfo);
-	redirectTo('index.php');
+	$params = array(
+		"script" => basename($_SERVER["SCRIPT_NAME"]),
+		"qrystr" => $_SERVER["QUERY_STRING"]
+	);
+	redirectTo('index.php', $params);
 	exit;
 }
 

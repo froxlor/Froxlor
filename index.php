@@ -206,15 +206,29 @@ if ($action == 'login') {
 				);
 			}
 			Database::pexecute($stmt, $params);
-
+			
+			$qryparams = array();
+			if (isset($_POST['qrystr']) && $_POST['qrystr'] != "") {
+				parse_str(urldecode($_POST['qrystr']), $qryparams);
+			}
+			$qryparams['s'] = $s;
+			
 			if ($userinfo['adminsession'] == '1') {
 				if (hasUpdates($version)) {
 					redirectTo('admin_updates.php', array('s' => $s), true);
 				} else {
-					redirectTo('admin_index.php', array('s' => $s), true);
+					if (isset($_POST['script']) && $_POST['script'] != "") {
+						redirectTo($_POST['script'], $qryparams, true);
+					} else {
+						redirectTo('admin_index.php', $qryparams, true);
+					}
 				}
 			} else {
-				redirectTo('customer_index.php', array('s' => $s), true);
+				if (isset($_POST['script']) && $_POST['script'] != "") {
+					redirectTo($_POST['script'], $qryparams, true);
+				} else {
+					redirectTo('customer_index.php', $qryparams, true);
+				}
 			}
 		} else {
 			redirectTo('index.php', array('showmessage' => '2'), true);
@@ -260,6 +274,16 @@ if ($action == 'login') {
 		$update_in_progress = '';
 		if (hasUpdates($version)) {
 			$update_in_progress = $lng['update']['updateinprogress_onlyadmincanlogin'];
+		}
+		
+		// Pass the last used page if needed
+		$lastscript = "";
+		if (isset($_REQUEST['script']) && $_REQUEST['script'] != "") {
+			$lastscript = $_REQUEST['script'];
+		}
+		$lastqrystr = "";
+		if (isset($_REQUEST['qrystr']) && $_REQUEST['qrystr'] != "") {
+			$lastqrystr = $_REQUEST['qrystr'];
 		}
 
 		eval("echo \"" . getTemplate('login') . "\";");

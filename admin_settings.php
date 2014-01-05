@@ -57,7 +57,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		
 		// check if the session timeout is too low #815
 		if (isset($_POST['session_sessiontimeout'])
-			&& $_POST['session_sessiontimeout'] <= 60
+			&& $_POST['session_sessiontimeout'] < 60
 		) {
 			standard_error($lng['error']['session_timeout'], $lng['error']['session_timeout_desc']);
 		}

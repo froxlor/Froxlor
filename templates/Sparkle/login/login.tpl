@@ -26,6 +26,8 @@ $header
 
 		<section class="loginsec">
 			<form method="post" action="$filename" enctype="application/x-www-form-urlencoded">
+				<input type="hidden" name="script" value="{$lastscript}" />
+				<input type="hidden" name="qrystr" value="{$lastqrystr}" />
 				<fieldset>
 				<legend>Froxlor&nbsp;-&nbsp;Login</legend>
 				<p>
