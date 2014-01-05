@@ -11,6 +11,8 @@
 		<link href="//fonts.googleapis.com/css?family={$webfont}" rel="stylesheet">
 	{/if}
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
+	<link href="templates/{$theme}/assets/img/touchicon.png" rel="shortcut" />
+	<link href="templates/{$theme}/assets/img/touchicon.png" rel="apple-touch-icon" />
 	<link rel="stylesheet" href="templates/{$theme}/assets/css/main.css" />
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/assets/css/main_ie.css"  /><![endif]-->
 	<!--[if lt IE 9]><script src="js/html5shiv.js"></script><![endif]-->

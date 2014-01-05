@@ -27,6 +27,8 @@
 	<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
 	{$js}
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
+	<link href="templates/{$theme}/assets/img/touchicon.png" rel="shortcut" />
+	<link href="templates/{$theme}/assets/img/touchicon.png" rel="apple-touch-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
 	<if Settings::Get('panel.use_webfonts') == '1'>
 	<style type="text/css">
