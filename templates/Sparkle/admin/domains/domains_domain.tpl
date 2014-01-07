@@ -1,4 +1,4 @@
-<tr class="" onmouseover="this.className='RowOverSelected';" onmouseout="this.className='';">
+<tr>
 	<td>{$row['domain']}
 		<if (isset($row['standardsubdomain']) && $row['standardsubdomain'] == $row['id'])>
 			&nbsp;({$lng['admin']['stdsubdomain']})

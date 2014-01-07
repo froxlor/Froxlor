@@ -1,4 +1,4 @@
-<tr class="" onmouseover="this.className='RowOverSelected';" onmouseout="this.className='';">
+<tr>
 	<td><a href="http://{$row['domain']}" target="_blank">{$row['domain']}</a></td>
 	<td>
 		<if $row['aliasdomain'] == ''>{$row['documentroot']}</if>

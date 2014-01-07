@@ -11,7 +11,7 @@ $header
 					<input type="hidden" name="send" value="send" />
 					{$hiddenparams}
 					<input type="submit" name="submitbutton" value="{$lng['panel']['yes']}" />&nbsp;
-					<input type="button" class="nobutton" value="{$lng['panel']['no']}" id="yesnobutton" />
+					<input type="button" class="nobutton" value="{$lng['panel']['no']}" id="historyback" />
 				</div>
 			</div>
 		</div>

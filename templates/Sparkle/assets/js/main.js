@@ -20,6 +20,7 @@ $(document).ready(function() {
 		return false;
 	});
 	
+	// Back buttons
 	$('#historyback, .historyback').click(function() {
 		parent.history.back();
 		return false;
@@ -83,14 +84,6 @@ $(document).ready(function() {
 	
 	// set focus on username-field if on loginpage
 	$("#loginname").focus();
-	
-	if ($("table.bradius").length !== 0) {
-		$("table.bradius tbody tr").hover(function() {
-			$(this).css("background-color", "#f5f5f5");
-		}, function() {
-			$(this).css("background-color", "#fff");
-		});
-	}
 
 	// Auto-select next field in configfile - wizard
 	$('#config_distribution').change(function (){
@@ -103,11 +96,7 @@ $(document).ready(function() {
 		window.location.href=window.location.href + '&daemon=' + this.options[ this.selectedIndex ].value;
 	});
 
-	// Back-button
-	$('#yesnobutton').click(function() {
-		history.back();
-	});
-
+	// Speciallogfile popup dialog
     $('input[name=speciallogfile]').click(function () {
             if($.getQueryVariable("page") == "domains" && $.getQueryVariable("action") == "edit") {
                     $speciallogdialog.dialog("open");
