@@ -30,7 +30,7 @@ function isCustomerStdSubdomain($did = 0) {
 			SELECT `customerid` FROM `".TABLE_PANEL_CUSTOMERS."`
 			WHERE `standardsubdomain` = :did
 		");
-		$result = Database::pexecute($result_stmt, array('did' => $did));
+		$result = Database::pexecute_first($result_stmt, array('did' => $did));
 
 		if (is_array($result)
 			&& isset($result['customerid'])
