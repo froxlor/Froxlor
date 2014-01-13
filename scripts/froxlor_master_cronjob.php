@@ -53,9 +53,9 @@ for ($x = 1; $x < count($argv); $x++) {
 		// --[cronname]
 		elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {
 			if (strlen($argv[$x]) > 3) {
-				$cronfile = makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/jobs/cron_'.substr(strtolower($argv[$x]), 3).'.php');
+				$cronfile = makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/jobs/cron_'.substr(strtolower($argv[$x]), 2).'.php');
 				addToQueue($jobs_to_run, $cronfile);
-				$lastrun_update[substr(strtolower($argv[$x]), 3)] = $cronfile;
+				$lastrun_update[substr(strtolower($argv[$x]), 2)] = $cronfile;
 			}
 		}
 	}
