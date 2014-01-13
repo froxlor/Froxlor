@@ -48,14 +48,14 @@ for ($x = 1; $x < count($argv); $x++) {
 			// inserting task 1
 			inserttask('1');
 			addToQueue($jobs_to_run, $crontasks);
-			$lastrun_update['tasks'] = crontasks;
+			$lastrun_update['tasks'] = $crontasks;
 		}
 		// --[cronname]
 		elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {
 			if (strlen($argv[$x]) > 3) {
 				$cronfile = makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/jobs/cron_'.substr(strtolower($argv[$x]), 3).'.php');
 				addToQueue($jobs_to_run, $cronfile);
-				$lastrun_update[substr(strtolower($argv[$x]), 3)] = cronfile;
+				$lastrun_update[substr(strtolower($argv[$x]), 3)] = $cronfile;
 			}
 		}
 	}
@@ -85,7 +85,7 @@ include_once FROXLOR_INSTALL_DIR . '/lib/cron_shutdown.php';
 
 // -- helper function
 function addToQueue(&$jobs_to_run, $cronfile = null, $checkExists = true) {
-	if ($checkExists == false || ($checkExists && file_exists($crontasks))) {
+	if ($checkExists == false || ($checkExists && file_exists($cronfile))) {
 		if (!in_array($cronfile, $jobs_to_run)) {
 			array_unshift($jobs_to_run, $cronfile);
 		}
