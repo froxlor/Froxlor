@@ -32,9 +32,8 @@ function checkCrondConfigurationFile() {
 	if ($num_results > 0) {
 
 		// get all crons and their intervals
-		$cronfile = "# automatically generated cron-configuration by froxlor\ņ";
-		$cronfile.= "# do not manually edit this file as it will be re-generated periodically.\ņ";
-		$cronfile.= "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n#\n";
+		$cronfile = "# automatically generated cron-configuration by froxlor\n";
+		$cronfile.= "# do not manually edit this file as it will be re-generated periodically.\n";
 		$cronfile.= "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n#\n";
 
 		// get all the crons
