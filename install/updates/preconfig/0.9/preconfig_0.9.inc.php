@@ -634,4 +634,11 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
+	if (versionInUpdate($current_version, '0.9.32-dev5')) {
+		$has_preconfig = true;
+		$description = 'Froxlor now generates a cron-configuration file for the cron-daemon. Please set a filename which will be included automatically by your crond (e.g. files in /etc/cron.d/)<br /><br />';
+		$question = '<strong>Path to the cron-service configuration-file.</strong> This file will be updated regularly and automatically by froxlor.<br />';
+		$question.= '<input type="text" class="text" name="crondfile" value="/etc/cron.d/froxlor" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

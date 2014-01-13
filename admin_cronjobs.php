@@ -99,15 +99,17 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				);
 				Database::pexecute($upd, array('isactive' => $isactive, 'int' => $interval, 'id' => $id));
 
-				redirectTo($filename, Array('page' => $page, 's' => $s));
+				// insert task to re-generate the cron.d-file
+				inserttask('99');
+
+				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
-				//$isactive = makeyesno('isactive', '1', '0', $result['isactive']);
+
 				// interval
 				$interval_nfo = explode(' ', $result['interval']);
 				$interval_value = $interval_nfo[0];
 
 				$interval_interval = '';
-				$interval_interval .= makeoption($lng['cronmgmt']['seconds'], 'SECOND', $interval_nfo[1]);
 				$interval_interval .= makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
 				$interval_interval .= makeoption($lng['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
 				$interval_interval .= makeoption($lng['cronmgmt']['days'], 'DAY', $interval_nfo[1]);

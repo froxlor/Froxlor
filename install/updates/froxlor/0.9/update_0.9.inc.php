@@ -2430,9 +2430,9 @@ if (isFroxlorVersion('0.9.31-dev1')) {
 		INSERT INTO `".TABLE_PANEL_SETTINGS."` SET `settinggroup` = 'phpfpm', `varname` = 'fastcgi_ipcdir', `value` = :value
 	");
 	$params = array();
-	if (Settings::Get('system.webserver') == 'apache2') {
-		$params['value'] = '/var/lib/apache2/fastcgi/';
-	} elseif (Settings::Get('system.webserver') == 'lighttpd') {
+	// set default for apache (which will suite in most cases)
+	$params['value'] = '/var/lib/apache2/fastcgi/';
+	if (Settings::Get('system.webserver') == 'lighttpd') {
 		$params['value'] = '/var/run/lighttpd/';
 	} elseif (Settings::Get('system.webserver') == 'nginx') {
 		$params['value'] = '/var/run/nginx/';
@@ -2679,4 +2679,25 @@ if (isFroxlorVersion('0.9.32-dev3')) {
 	lastStepStatus(0);
 
 	updateToVersion('0.9.32-dev4');
+}
+
+if (isFroxlorVersion('0.9.32-dev4')) {
+
+	showUpdateStep("Updating from 0.9.32-dev4 to 0.9.32-dev5");
+	lastStepStatus(0);
+
+	showUpdateStep("Updating cronjob table");
+	Database::query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `cronfile` = REPLACE( REPLACE(`cronfile`, 'cron_', ''), '.php', '')");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new settings for cron");
+	// get user-chosen value
+	$crondfile = isset($_POST['crondfile']) ? $_POST['crondfile'] : "/etc/cron.d/froxlor";
+	$crondfile = makeCorrectFile($crondfile);
+	Settings::AddNew("system.cronconfig", $crondfile);
+	// add task to generate cron.d-file
+	inserttask('99');
+	lastStepStatus(0);
+
+	updateToVersion('0.9.32-dev5');
 }

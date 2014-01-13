@@ -179,7 +179,7 @@ class Settings {
 					`value` = :value
 					");
 			$ins_data = array(
-					'settinggroup' => $sstr[0],
+					'group' => $sstr[0],
 					'varname' => $sstr[1],
 					'value' => $value
 			);

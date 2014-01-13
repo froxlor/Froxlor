@@ -160,17 +160,7 @@ return array(
 					'default' => 90,
 					'save_method' => 'storeSettingField',
 					),
-				'system_debug_cron' => array(
-					'label' => $lng['serversettings']['cron']['debug'],
-					'settinggroup' => 'system',
-					'varname' => 'debug_cron',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					),
 				),
 			),
 		),
 	);
-
-?>

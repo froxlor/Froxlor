@@ -1093,7 +1093,6 @@ $lng['crondesc']['cron_legacy'] = 'Legacy (alter) Cronjob';
 $lng['crondesc']['cron_traffic'] = 'Traffic-Berechnung';
 $lng['crondesc']['cron_ticketsreset'] = 'Zurücksetzen der Ticket-Zähler';
 $lng['crondesc']['cron_ticketarchive'] = 'Archivieren alter Tickets';
-$lng['cronmgmt']['seconds'] = 'Sekunden';
 $lng['cronmgmt']['minutes'] = 'Minuten';
 $lng['cronmgmt']['hours'] = 'Stunden';
 $lng['cronmgmt']['days'] = 'Tage';
@@ -1506,7 +1505,7 @@ $lng['admin']['templates']['SERVER_PORT'] = 'Wird mit dem standard Port ersetzt'
 $lng['admin']['templates']['DOMAINNAME'] = 'Wird mit der Standardsubdomain des Kunden ersetzt (kann leer sein, wenn keine erstellt werden soll)';
 $lng['admin']['show_news_feed'] = 'Zeige News-Feed im Admin-Dashboard';
 
-// Added in Froxlor 0.9.32
+// Added in Froxlfor 0.9.32
 $lng['logger']['reseller'] = "Reseller";
 $lng['logger']['admin'] = "Administrator";
 $lng['logger']['cron'] = "Cronjob";
@@ -1524,3 +1523,6 @@ $lng['serversettings']['mtaserver']['description'] = "Der eingesetzte Mail Trans
 $lng['serversettings']['mtalog']['title'] = "Logdatei des MTA";
 $lng['serversettings']['mtalog']['description'] = "Die Logdatei des Mail Transfer Agent";
 $lng['panel']['ftpdesc'] = 'FTP Beschreibung';
+$lng['admin']['cronsettings'] = 'Cronjob Einstellungen';
+$lng['serversettings']['system_cronconfig']['title'] = 'Cron-Konfigurationsdatei';
+$lng['serversettings']['system_cronconfig']['description'] = 'Pfad zur Konfigurationsdatei des Cron-Dienstes. Diese Datei wird von froxlor automatisch aktualisiert.';

@@ -499,6 +499,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mdaserver', 'dovecot'),
 	('system', 'mtaserver', 'postfix'),
 	('system', 'mailtraffic_enabled', '1'),
+	('system', 'cronconfig', '/etc/cron.d/froxlor'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -526,7 +527,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.32-dev4');
+	('panel', 'version', '0.9.32-dev5');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -737,12 +738,12 @@ CREATE TABLE IF NOT EXISTS `cronjobs_run` (
 
 
 INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES
-	(1, 'froxlor/core', 'cron_tasks.php', '5 MINUTE', '1', 'cron_tasks'),
-	(2, 'froxlor/core', 'cron_traffic.php', '1 DAY', '1', 'cron_traffic'),
-	(3, 'froxlor/ticket', 'cron_used_tickets_reset.php', '1 DAY', '1', 'cron_ticketsreset'),
-	(4, 'froxlor/ticket', 'cron_ticketarchive.php', '1 MONTH', '1', 'cron_ticketarchive'),
-	(5, 'froxlor/reports', 'cron_usage_report.php', '1 DAY', '1', 'cron_usage_report'),
-	(6, 'froxlor/core', 'cron_mailboxsize.php', '6 HOUR', '1', 'cron_mailboxsize');
+	(1, 'froxlor/core', 'tasks', '5 MINUTE', '1', 'cron_tasks'),
+	(2, 'froxlor/core', 'traffic', '1 DAY', '1', 'cron_traffic'),
+	(3, 'froxlor/ticket', 'used_tickets_reset', '1 DAY', '1', 'cron_ticketsreset'),
+	(4, 'froxlor/ticket', 'ticketarchive', '1 MONTH', '1', 'cron_ticketarchive'),
+	(5, 'froxlor/reports', 'usage_report', '1 DAY', '1', 'cron_usage_report'),
+	(6, 'froxlor/core', 'mailboxsize', '6 HOUR', '1', 'cron_mailboxsize');
 
 
 

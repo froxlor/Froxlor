@@ -183,3 +183,6 @@ $idna_convert = new idna_convert_wrapper();
 // Initialize logging
 $cronlog = FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'));
 fwrite($debugHandler, 'Logger has been included' . "\n");
+
+// check for cron.d-generation task and create it if necessary
+checkCrondConfigurationFile();
