@@ -2692,7 +2692,7 @@ if (isFroxlorVersion('0.9.32-dev4')) {
 
 	showUpdateStep("Adding new settings for cron");
 	// get user-chosen value
-	$crondfile = isset($_POST['crondfile']) ? $_POST['crondfile'] : "/etc/cron.d/froxlor";
+	$crondfile = isset($_POST['crondfile']) ? $_POST['crondfile'] : "/etc/cron.d/froxlor-services";
 	$crondfile = makeCorrectFile($crondfile);
 	Settings::AddNew("system.cronconfig", $crondfile);
 	// add task to generate cron.d-file

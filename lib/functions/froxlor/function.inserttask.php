@@ -34,6 +34,7 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		|| $type == '4'
 		|| $type == '5'
 		|| $type == '10'
+		|| $type == '99'
 	) {
 		// 4 = bind -> if bind disabled -> no task
 		if ($type == '4' && Settings::Get('system.bind_enable') == '0') {

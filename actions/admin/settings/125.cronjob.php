@@ -26,7 +26,7 @@ return array(
 					'varname' => 'cronconfig',
 					'type' => 'string',
 					'string_type' => 'file',
-					'default' => '/etc/cron.d/froxlor',
+					'default' => '/etc/cron.d/froxlor-services',
 					'save_method' => 'storeSettingField',
 					),
 				'system_debug_cron' => array(

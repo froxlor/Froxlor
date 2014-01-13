@@ -1799,4 +1799,4 @@ $lng['serversettings']['mtalog']['description'] = "Logfile of the Mail Transfer 
 $lng['panel']['ftpdesc'] = 'FTP description';
 $lng['admin']['cronsettings'] = 'Cronjob settings';
 $lng['serversettings']['system_cronconfig']['title'] = 'Cron configuration file';
-$lng['serversettings']['system_cronconfig']['description'] = 'Path to the cron-service configuration-file. This file will be updated regularly and automatically by froxlor.';
+$lng['serversettings']['system_cronconfig']['description'] = 'Path to the cron-service configuration-file. This file will be updated regularly and automatically by froxlor.<br />Note: Do <b>not</b> use the same filename as for the main froxlor cronjob (/etc/cron.d/froxlor)!';

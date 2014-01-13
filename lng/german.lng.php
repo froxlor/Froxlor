@@ -1525,4 +1525,4 @@ $lng['serversettings']['mtalog']['description'] = "Die Logdatei des Mail Transfe
 $lng['panel']['ftpdesc'] = 'FTP Beschreibung';
 $lng['admin']['cronsettings'] = 'Cronjob Einstellungen';
 $lng['serversettings']['system_cronconfig']['title'] = 'Cron-Konfigurationsdatei';
-$lng['serversettings']['system_cronconfig']['description'] = 'Pfad zur Konfigurationsdatei des Cron-Dienstes. Diese Datei wird von froxlor automatisch aktualisiert.';
+$lng['serversettings']['system_cronconfig']['description'] = 'Pfad zur Konfigurationsdatei des Cron-Dienstes. Diese Datei wird von froxlor automatisch aktualisiert.<br />Hinweis: bitte <b>nicht</b> die gleiche Datei wie für den Froxlor-Hautp-Cronjob angeben (/etc/cron.d/froxlor)!';
