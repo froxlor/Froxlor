@@ -47,25 +47,30 @@ function checkCrondConfigurationFile() {
 		while ($row_cronentry = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			// create cron.d-entry
 			if (preg_match("/(\d+) (MINUTE|HOUR|DAY|WEEK|MONTH)/", $row_cronentry['interval'], $matches)) {
+				if ($matches[1] == 1) {
+					$minvalue = "*";
+				} else {
+					$minvalue = "*/".$matches[1];
+				}
 				switch($matches[2]) {
 					case "MINUTE":
-						$cronfile .= "*/" . $matches[1] . " * * * * ";
+						$cronfile .= $minvalue . " * * * * ";
 						break;
 					case "HOUR":
-						$cronfile .= $hour_delay." */" . $matches[1] . " * * * ";
+						$cronfile .= $hour_delay." " . $minvalue . " * * * ";
 						$hour_delay += 3;
 						break;
 					case "DAY":
 						if ($row_cronentry['cronfile'] == 'traffic') {
 							// traffic at exactly 0:00 o'clock
-							$cronfile .= "0 0 */" . $matches[1] . " * * ";
+							$cronfile .= "0 0 " . $minvalue . " * * ";
 						} else {
-							$cronfile .= $day_delay." 0 */" . $matches[1] . " * * ";
+							$cronfile .= $day_delay." 0 " . $minvalue . " * * ";
 							$day_delay += 5;
 						}
 						break;
 					case "MONTH":
-						$cronfile .= $month_delay." 0 0 */" . $matches[1] . " * ";
+						$cronfile .= $month_delay." 0 0 " . $minvalue . " * ";
 						$month_delay += 7;
 						break;
 					case "WEEK":
@@ -76,7 +81,7 @@ function checkCrondConfigurationFile() {
 
 				// create entry-line
 				$binpath = "/usr/bin/nice -n 5 /usr/bin/php5 -q";
-				$cronfile .= "root " . $binpath." " . FROXLOR_INSTALL_DIR . "/scripts/froxlor_master_cronjob.php --" . $row_cronentry['cronfile'] . " 1 > /dev/null\n";
+				$cronfile .= "root " . $binpath." " . FROXLOR_INSTALL_DIR . "/scripts/froxlor_master_cronjob.php --" . $row_cronentry['cronfile'] . " 1> /dev/null\n";
 			}
 		}
 
