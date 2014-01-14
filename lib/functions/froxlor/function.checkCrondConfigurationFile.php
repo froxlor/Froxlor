@@ -56,17 +56,17 @@ function checkCrondConfigurationFile() {
 						$hour_delay += 3;
 						break;
 					case "DAY":
-						$cronfile .= $day_delay." 0 */" . $matches[1] . " * * ";
-						$day_delay += 5;
-						break;
-					case "MONTH":
 						if ($row_cronentry['cronfile'] == 'traffic') {
 							// traffic at exactly 0:00 o'clock
-							$cronfile .= "0 0 0 */" . $matches[1] . " * ";
+							$cronfile .= "0 0 */" . $matches[1] . " * * ";
 						} else {
-							$cronfile .= $month_delay." 0 0 */" . $matches[1] . " * ";
-							$month_delay += 7;
+							$cronfile .= $day_delay." 0 */" . $matches[1] . " * * ";
+							$day_delay += 5;
 						}
+						break;
+					case "MONTH":
+						$cronfile .= $month_delay." 0 0 */" . $matches[1] . " * ";
+						$month_delay += 7;
 						break;
 					case "WEEK":
 						$cronfile .= $day_delay." 0 " . ($matches[1] * 7) . " * * ";
