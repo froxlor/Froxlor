@@ -41,6 +41,9 @@ function checkCrondConfigurationFile() {
 				SELECT * FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `isactive` = '1'
 				");
 
+		$hour_delay = 0;
+		$day_delay = 5;
+		$month_delay = 7;
 		while ($row_cronentry = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			// create cron.d-entry
 			if (preg_match("/(\d+) (MINUTE|HOUR|DAY|WEEK|MONTH)/", $row_cronentry['interval'], $matches)) {
@@ -49,16 +52,25 @@ function checkCrondConfigurationFile() {
 						$cronfile .= "*/" . $matches[1] . " * * * * ";
 						break;
 					case "HOUR":
-						$cronfile .= "* */" . $matches[1] . " * * * ";
+						$cronfile .= $hour_delay." */" . $matches[1] . " * * * ";
+						$hour_delay += 3;
 						break;
 					case "DAY":
-						$cronfile .= "* * */" . $matches[1] . " * * ";
-						break;
-					case "WEEK":
-						$cronfile .= "* * * */" . $matches[1] . " * ";
+						$cronfile .= $day_delay." 0 */" . $matches[1] . " * * ";
+						$day_delay += 5;
 						break;
 					case "MONTH":
-						$cronfile .= "* * * * */" . $matches[1] . " ";
+						if ($row_cronentry['cronfile'] == 'traffic') {
+							// traffic at exactly 0:00 o'clock
+							$cronfile .= "0 0 0 */" . $matches[1] . " * ";
+						} else {
+							$cronfile .= $month_delay." 0 0 */" . $matches[1] . " * ";
+							$month_delay += 7;
+						}
+						break;
+					case "WEEK":
+						$cronfile .= $day_delay." 0 " . ($matches[1] * 7) . " * * ";
+						$day_delay += 5;
 						break;
 				}
 
