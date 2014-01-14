@@ -96,13 +96,21 @@ function getOutstandingTasks() {
 			$task_desc = $lng['tasks']['deleting_customerfiles'];
 			$task_desc = str_replace('%loginname%', $loginname, $task_desc);
 		}
-		// deleteing email-account
+		// deleting email-account
 		elseif ($row['type'] == '7') {
 			$task_desc = $lng['tasks']['remove_emailacc_files'];
+		}
+		// deleting ftp-account
+		elseif ($row['type'] == '8') {
+			$task_desc = $lng['tasks']['remove_ftpacc_files'];
 		}
 		// Set FS - quota
 		elseif ($row['type'] == '10') {
 			$task_desc = $lng['tasks']['diskspace_set_quota'];
+		}
+		// re-generating of cron.d-file
+		elseif ($row['type'] == '99') {
+			$task_desc = $lng['tasks']['regenerating_crond'];
 		}
 		// unknown
 		else {
