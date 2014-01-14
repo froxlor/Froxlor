@@ -70,7 +70,7 @@ function checkCrondConfigurationFile() {
 						}
 						break;
 					case "MONTH":
-						$cronfile .= $month_delay." 0 0 " . $minvalue . " * ";
+						$cronfile .= $month_delay." 0 1 " . $minvalue . " * ";
 						$month_delay += 7;
 						break;
 					case "WEEK":
