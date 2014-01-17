@@ -102,7 +102,10 @@ abstract class DnsBase
 				`d`.`dkim_pubkey`,
 				`d`.`ismainbutsubto`,
 				`c`.`loginname`,
-				`c`.`guid`
+				`c`.`guid`,
+				`d`.`isdynamicdomain`,
+				`d`.`dynamicipv4`,
+				`d`.`dynamicipv6`
 			FROM
 				`" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
@@ -133,7 +136,8 @@ abstract class DnsBase
 				'iswildcarddomain' => '1',
 				'ismainbutsubto' => '0',
 				'zonefile' => '',
-				'froxlorhost' => '1'
+				'froxlorhost' => '1',
+				'isdynamicdomain' => '0'
 			);
 			$domains['none'] = $hostname_arr;
 		}

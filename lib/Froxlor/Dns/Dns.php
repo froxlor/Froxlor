@@ -70,8 +70,11 @@ class Dns
 		// check for required records
 		$required_entries = array();
 
-		self::addRequiredEntry('@', 'A', $required_entries);
-		self::addRequiredEntry('@', 'AAAA', $required_entries);
+		$dynamicIPv4 = ($domain['isdynamicdomain'] && $domain['dynamicipv4'] != null) ? $domain['dynamicipv4'] : null;
+		$dynamicIPv6 = ($domain['isdynamicdomain'] && $domain['dynamicipv6'] != null) ? $domain['dynamicipv6'] : null;
+		self::addRequiredEntry('@', 'A', $required_entries, $dynamicIPv4);
+		self::addRequiredEntry('@', 'AAAA', $required_entries, $dynamicIPv6);
+
 		if (! $isMainButSubTo) {
 			self::addRequiredEntry('@', 'NS', $required_entries);
 		}
@@ -106,7 +109,7 @@ class Dns
 		if (! $froxlorhostname) {
 			// additional required records for subdomains
 			$subdomains_stmt = Database::prepare("
-			SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `" . TABLE_PANEL_DOMAINS . "`
+			SELECT `domain`, `iswildcarddomain`, `wwwserveralias`, `isdynamicdomain`, `dynamicipv4`, `dynamicipv6` FROM `" . TABLE_PANEL_DOMAINS . "`
 			WHERE `parentdomainid` = :domainid
 		");
 			Database::pexecute($subdomains_stmt, array(
@@ -114,18 +117,21 @@ class Dns
 			));
 
 			while ($subdomain = $subdomains_stmt->fetch(\PDO::FETCH_ASSOC)) {
+				$dynamicIPv4 = ($subdomain['isdynamicdomain'] && $subdomain['dynamicipv4'] != null) ? $subdomain['dynamicipv4'] : null;
+				$dynamicIPv6 = ($subdomain['isdynamicdomain'] && $subdomain['dynamicipv6'] != null) ? $subdomain['dynamicipv6'] : null;
+
 				// Listing domains is enough as there currently is no support for choosing
 				// different ips for a subdomain => use same IPs as toplevel
-				self::addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
-				self::addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
+				self::addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries, $dynamicIPv4);
+				self::addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries, $dynamicIPv6);
 
 				// Check whether to add a www.-prefix
 				if ($subdomain['iswildcarddomain'] == '1') {
-					self::addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
-					self::addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
+					self::addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries, $dynamicIPv4);
+					self::addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries, $dynamicIPv6);
 				} elseif ($subdomain['wwwserveralias'] == '1') {
-					self::addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
-					self::addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
+					self::addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries, $dynamicIPv4);
+					self::addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries, $dynamicIPv6);
 				}
 			}
 		}
@@ -188,10 +194,16 @@ class Dns
 				foreach ($all_ips as $ip) {
 					foreach ($required_entries as $type => $records) {
 						foreach ($records as $record) {
-							if ($type == 'A' && filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
-								$zonerecords[] = new DnsEntry($record, 'A', $ip['ip']);
-							} elseif ($type == 'AAAA' && filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
-								$zonerecords[] = new DnsEntry($record, 'AAAA', $ip['ip']);
+							if ($type == 'A') {
+								$finalIP = $record[1] != null ? $record[1] : $ip['ip'];
+								if (filter_var($finalIP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
+									$zonerecords[] = new DnsEntry($record[0], 'A', $finalIP);
+								}
+							} elseif ($type == 'AAAA') {
+								$finalIP = $record[1] != null ? $record[1] : $ip['ip'];
+								if (filter_var($finalIP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
+									$zonerecords[] = new DnsEntry($record[0], 'AAAA', $finalIP);
+								}
 							}
 						}
 					}
@@ -217,7 +229,7 @@ class Dns
 										// use the first NS entry as primary ns
 										$primary_ns = $nameserver;
 									}
-									$zonerecords[] = new DnsEntry($record, 'NS', $nameserver);
+									$zonerecords[] = new DnsEntry($record[0], 'NS', $nameserver);
 								}
 							}
 						}
@@ -244,7 +256,7 @@ class Dns
 						foreach ($required_entries as $type => $records) {
 							if ($type == 'MX') {
 								foreach ($records as $record) {
-									$zonerecords[] = new DnsEntry($record, 'MX', $mx_details[1], $mx_details[0]);
+									$zonerecords[] = new DnsEntry($record[0], 'MX', $mx_details[1], $mx_details[0]);
 								}
 							}
 						}
@@ -263,16 +275,16 @@ class Dns
 				foreach ($required_entries as $type => $records) {
 					if ($type == 'TXT') {
 						foreach ($records as $record) {
-							if ($record == '@SPF@') {
+							if ($record[0] == '@SPF@') {
 								$txt_content = Settings::Get('spf.spf_entry');
 								$zonerecords[] = new DnsEntry('@', 'TXT', self::encloseTXTContent($txt_content));
-							} elseif ($record == 'dkim_' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
+							} elseif ($record[0] == 'dkim_' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
 								// check for multiline entry
 								$multiline = false;
 								if (substr($dkim_entries[0], 0, 1) == '(') {
 									$multiline = true;
 								}
-								$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($dkim_entries[0], $multiline));
+								$zonerecords[] = new DnsEntry($record[0], 'TXT', self::encloseTXTContent($dkim_entries[0], $multiline));
 							}
 						}
 					}
@@ -315,12 +327,12 @@ class Dns
 		return $zone;
 	}
 
-	private static function addRequiredEntry($record = '@', $type = 'A', &$required = array())
+	private static function addRequiredEntry($record = '@', $type = 'A', &$required = array(), $dynamicIP = null)
 	{
 		if (! isset($required[$type])) {
 			$required[$type] = array();
 		}
-		$required[$type][md5($record)] = $record;
+		$required[$type][md5($record)] = array($record, $dynamicIP);
 	}
 
 	public static function encloseTXTContent($txt_content, $isMultiLine = false)

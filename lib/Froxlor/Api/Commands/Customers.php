@@ -160,6 +160,10 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional amount of subdomains available for customer, default 0
 	 * @param bool $subdomains_ul
 	 *        	optional, whether customer should have unlimited subdomains, default 0 (false)
+	 * @param int $dynamicdomains
+	 *        	optional amount of dynamicdomains available for customer, default 0
+	 * @param bool $dynamicdomains_ul
+	 *        	optional, whether customer should have unlimited dynamicdomains, default 0 (false)
 	 * @param int $emails
 	 *        	optional amount of emails available for customer, default 0
 	 * @param bool $emails_ul
@@ -234,6 +238,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
 				$traffic = $this->getUlParam('traffic', 'traffic_ul', true, 0);
 				$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, 0);
+				$dynamicdomains = $this->getUlParam('dynamicdomains', 'dynamicdomains_ul', true, 0);
 				$emails = $this->getUlParam('emails', 'emails_ul', true, 0);
 				$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, 0);
 				$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, 0);
@@ -296,7 +301,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$diskspace = $diskspace * 1024;
 				$traffic = $traffic * 1024 * 1024;
 
-				if (((($this->getUserDetail('diskspace_used') + $diskspace) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
+				if (((($this->getUserDetail('diskspace_used') + $diskspace) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1') || ($dynamicdomains == '-1' && $this->getUserDetail('dynamicdomains') != '-1')) {
 					\Froxlor\UI\Response::standard_error('youcantallocatemorethanyouhave', '', true);
 				}
 
@@ -404,6 +409,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						'diskspace' => $diskspace,
 						'traffic' => $traffic,
 						'subdomains' => $subdomains,
+						'dynamicdomains' => $dynamicdomains,
 						'emails' => $emails,
 						'email_accounts' => $email_accounts,
 						'email_forwarders' => $email_forwarders,
@@ -444,6 +450,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						`diskspace` = :diskspace,
 						`traffic` = :traffic,
 						`subdomains` = :subdomains,
+						`dynamicdomains` = :dynamicdomains,
 						`emails` = :emails,
 						`email_accounts` = :email_accounts,
 						`email_forwarders` = :email_forwarders,
@@ -492,6 +499,10 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 					if ($subdomains != '-1') {
 						$admin_update_query .= ", `subdomains_used` = `subdomains_used` + 0" . (int) $subdomains;
+					}
+
+					if ($dynamicdomains != '-1') {
+						$admin_update_query .= ", `dynamicdomains_used` = `dynamicdomains_used` + 0" . (int) $dynamicdomains;
 					}
 
 					if ($ftps != '-1') {
@@ -780,6 +791,10 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional amount of subdomains available for customer, default 0
 	 * @param bool $subdomains_ul
 	 *        	optional, whether customer should have unlimited subdomains, default 0 (false)
+	 * @param int $dynamicdomains
+	 *        	optional amount of dynamicdomains available for customer, default 0
+	 * @param bool $dynamicdomains_ul
+	 *        	optional, whether customer should have unlimited dynamicdomains, default 0 (false)
 	 * @param int $emails
 	 *        	optional amount of emails available for customer, default 0
 	 * @param bool $emails_ul
@@ -864,6 +879,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, round($result['diskspace'] / 1024, $dec_places));
 			$traffic = $this->getUlParam('traffic', 'traffic_ul', true, round($result['traffic'] / (1024 * 1024), $dec_places));
 			$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, $result['subdomains']);
+			$dynamicdomains = $this->getUlParam('dynamicdomains', 'dynamicdomains_ul', true, $result['dynamicdomains']);
 			$emails = $this->getUlParam('emails', 'emails_ul', true, $result['emails']);
 			$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, $result['email_accounts']);
 			$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, $result['email_forwarders']);
@@ -920,7 +936,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$diskspace = $diskspace * 1024;
 			$traffic = $traffic * 1024 * 1024;
 
-			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
+			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1') || ($dynamicdomains == '-1' && $this->getUserDetail('dynamicdomains') != '-1')) {
 				\Froxlor\UI\Response::standard_error('youcantallocatemorethanyouhave', '', true);
 			}
 
@@ -1144,6 +1160,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				'diskspace' => $diskspace,
 				'traffic' => $traffic,
 				'subdomains' => $subdomains,
+				'dynamicdomains' => $dynamicdomains,
 				'emails' => $emails,
 				'email_accounts' => $email_accounts,
 				'email_forwarders' => $email_forwarders,
@@ -1185,6 +1202,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				`diskspace` = :diskspace,
 				`traffic` = :traffic,
 				`subdomains` = :subdomains,
+				`dynamicdomains` = :dynamicdomains,
 				`emails` = :emails,
 				`email_accounts` = :email_accounts,
 				`email_forwarders` = :email_forwarders,
@@ -1276,6 +1294,17 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				}
 				if ($result['subdomains'] != '-1') {
 					$admin_update_query .= " - 0" . (int) $result['subdomains'] . " ";
+				}
+			}
+
+			if ($dynamicdomains != '-1' || $result['dynamicdomains'] != '-1') {
+				$admin_update_query .= ", `dynamicdomains_used` = `dynamicdomains_used` ";
+
+				if ($dynamicdomains != '-1') {
+					$admin_update_query .= " + 0" . (int) $dynamicdomains . " ";
+				}
+				if ($result['dynamicdomains'] != '-1') {
+					$admin_update_query .= " - 0" . (int) $result['dynamicdomains'] . " ";
 				}
 			}
 
@@ -1524,6 +1553,10 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 			if ($result['subdomains'] != '-1') {
 				$admin_update_query .= ", `subdomains_used` = `subdomains_used` - 0" . (int) $result['subdomains'];
+			}
+
+			if ($result['dynamicdomains'] != '-1') {
+				$admin_update_query .= ", `dynamicdomains_used` = `dynamicdomains_used` - 0" . (int) $result['dynamicdomains'];
 			}
 
 			if ($result['ftps'] != '-1') {

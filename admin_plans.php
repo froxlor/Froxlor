@@ -122,6 +122,11 @@ if ($page == '' || $page == 'overview') {
 				$value_arr['subdomains'] = - 1;
 			}
 
+			$value_arr['dynamicdomains'] = (int)($_POST['dynamicdomains']);
+			if (isset($_POST['dynamicdomains_ul'])) {
+				$value_arr['dynamicdomains'] = - 1;
+			}
+
 			$value_arr['emails'] = (int)($_POST['emails']);
 			if (isset($_POST['emails_ul'])) {
 				$value_arr['emails'] = - 1;
@@ -214,6 +219,7 @@ if ($page == '' || $page == 'overview') {
 			$diskspace_ul = \Froxlor\UI\HTML::makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$traffic_ul = \Froxlor\UI\HTML::makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$subdomains_ul = \Froxlor\UI\HTML::makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$dynamicdomains_ul = \Froxlor\UI\HTML::makecheckbox('dynamicdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$emails_ul = \Froxlor\UI\HTML::makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_accounts_ul = \Froxlor\UI\HTML::makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_forwarders_ul = \Froxlor\UI\HTML::makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
@@ -298,6 +304,11 @@ if ($page == '' || $page == 'overview') {
 				$value_arr['subdomains'] = (int)($_POST['subdomains']);
 				if (isset($_POST['subdomains_ul'])) {
 					$value_arr['subdomains'] = - 1;
+				}
+
+				$value_arr['dynamicdomains'] = (int)($_POST['dynamicdomains']);
+				if (isset($_POST['dynamicdomains_ul'])) {
+					$value_arr['dynamicdomains'] = - 1;
 				}
 
 				$value_arr['emails'] = (int)($_POST['emails']);
@@ -405,7 +416,13 @@ if ($page == '' || $page == 'overview') {
 					$result['subdomains'] = '';
 				}
 
+				$dynamicdomains_ul = \Froxlor\UI\HTML::makecheckbox('dynamicdomains_ul', $lng['customer']['unlimited'], '-1', false, $result['dynamicdomains'], true, true);
+				if ($result['dynamicdomains'] == '-1') {
+					$result['dynamicdomains'] = '';
+				}
+
 				$emails_ul = \Froxlor\UI\HTML::makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, $result['emails'], true, true);
+
 				if ($result['emails'] == '-1') {
 					$result['emails'] = '';
 				}

@@ -2050,3 +2050,12 @@ $lng['panel']['ihave_configured'] = 'I have configured the services';
 $lng['panel']['system_is_configured'] = 'System is already set as configured';
 $lng['panel']['settings_before_configuration'] = 'Please be sure you adjusted the settings prior to configuring the services here';
 $lng['panel']['alternative_cmdline_config'] = 'Alternatively, just run the following command as root-user in you shell to configure the services automatically';
+
+// Dynamic DNS
+$lng['domain']['dynamic_domain']['title'] = 'Domain with dynamically changing IP';
+$lng['domain']['dynamic_domain']['desc'] = 'When yes, the IP address associated with the domain can be changed dynamically. If the option is enabled but no ip addresses are given the ip addresses of the server are used.';
+$lng['domain']['dynamic_ipv4'] = 'Dynamically assigned IPv4';
+$lng['domain']['dynamic_ipv6'] = 'Dynamically assigned IPv6';
+$lng['customer']['dynamicdomains'] = 'Dynamic domain(s)';
+$lng['error']['dynamicdomainslimit'] = "You can not have more dynamic domains.";
+$lng['admin']['dynamicdns'] = "Dynamic DNS";

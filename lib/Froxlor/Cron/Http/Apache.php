@@ -241,6 +241,7 @@ class Apache extends HttpConfigBase
 						$this->virtualhosts_data[$vhosts_filename] .= '  FcgidIdleTimeout ' . Settings::Get('system.mod_fcgid_idle_timeout') . "\n";
 						if ((int) Settings::Get('system.mod_fcgid_wrapper') == 0) {
 							$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_httpuser') . '" "' . Settings::Get('system.mod_fcgid_httpgroup') . '"' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  ScriptAlias /php/ ' . $configdir . "\n";
 						} else {
 							$domain = array(
@@ -261,6 +262,7 @@ class Apache extends HttpConfigBase
 
 							$starter_filename = \Froxlor\FileDir::makeCorrectFile($configdir . '/php-fcgi-starter');
 							$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_httpuser') . '" "' . Settings::Get('system.mod_fcgid_httpgroup') . '"' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
 							$file_extensions = explode(' ', $phpconfig['file_extensions']);
 							$this->virtualhosts_data[$vhosts_filename] .= '    <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";

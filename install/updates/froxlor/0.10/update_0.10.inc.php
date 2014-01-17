@@ -187,3 +187,18 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201812180')) {
 
 	\Froxlor\Froxlor::updateToDbVersion('201812190');
 }
+
+if (isDatabaseVersion('201812190')) {
+	showUpdateStep("Adding new dynamic domain field");
+	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `isdynamicdomain` tinyint(1) NOT NULL DEFAULT '0' AFTER `caneditdomain`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `dynamicipv4` varchar(15) NULL DEFAULT NULL AFTER `isdynamicdomain`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `dynamicipv6` varchar(39) NULL DEFAULT NULL AFTER `dynamicipv4`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `dynamicdomains` int(15) NOT NULL default '0' AFTER `subdomains_used`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `dynamicdomains_used` int(15) NOT NULL default '0' AFTER `dynamicdomains`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `dynamicdomains` int(15) NOT NULL default '0' AFTER `subdomains_used`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `dynamicdomains_used` int(15) NOT NULL default '0' AFTER `dynamicdomains`;");
+	// admin gets unlimited dynamic domains
+	Database::query("UPDATE `".TABLE_PANEL_ADMINS."` SET `dynamicdomains`='-1' WHERE `adminid` = '".(int)$userinfo['adminid']."'");
+
+	updateToDbVersion('201812290');
+}

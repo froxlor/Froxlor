@@ -405,6 +405,32 @@ return array(
 						)
 					)
 				)
+			),
+			'section_f' => array(
+				'title' => $lng['admin']['dynamicdns'],
+				'image' => 'icons/domain_add.png',
+				'visible' => $userinfo['dynamicdomains'] > 0 || $userinfo['dynamicdomains'] == -1,
+				'fields' => array(
+					'isdynamicdomain' => array(
+						'label' => $lng['domain']['dynamic_domain']['title'],
+						'desc' => $lng['domain']['dynamic_domain']['desc'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array(0)
+					),
+					'dynamicipv4' => array(
+						'label' => $lng['domain']['dynamic_ipv4'],
+						'type' => 'text',
+						'size' => 10
+					),
+					'dynamicipv6' => array(
+						'label' => $lng['domain']['dynamic_ipv6'],
+						'type' => 'text',
+						'size' => 10
+					),
+				)
 			)
 		)
 	)

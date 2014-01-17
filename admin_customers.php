@@ -288,6 +288,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			$diskspace_ul = \Froxlor\UI\HTML::makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$traffic_ul = \Froxlor\UI\HTML::makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$subdomains_ul = \Froxlor\UI\HTML::makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$dynamicdomains_ul = \Froxlor\UI\HTML::makecheckbox('dynamicdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$emails_ul = \Froxlor\UI\HTML::makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_accounts_ul = \Froxlor\UI\HTML::makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_forwarders_ul = \Froxlor\UI\HTML::makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
@@ -406,6 +407,11 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				$subdomains_ul = \Froxlor\UI\HTML::makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, $result['subdomains'], true, true);
 				if ($result['subdomains'] == '-1') {
 					$result['subdomains'] = '';
+				}
+
+				$dynamicdomains_ul = \Froxlor\UI\HTML::makecheckbox('dynamicdomains_ul', $lng['customer']['unlimited'], '-1', false, $result['dynamicdomains'], true, true);
+				if ($result['dynamicdomains'] == '-1') {
+					$result['dynamicdomains'] = '';
 				}
 
 				$emails_ul = \Froxlor\UI\HTML::makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, $result['emails'], true, true);
