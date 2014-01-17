@@ -261,7 +261,7 @@ class nginx {
 				$this->nginx_data[$vhost_filename] = '';
 			}
 
-			if ((!empty($this->nginx_data[$vhost_filename])
+			if ((empty($this->nginx_data[$vhost_filename])
 					&& !is_dir(Settings::Get('system.apacheconf_vhost')))
 				|| is_dir(Settings::Get('system.apacheconf_vhost'))
 			) {
