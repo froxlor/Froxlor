@@ -97,7 +97,8 @@ if($userinfo['change_serversettings'] == '1')
 			'<BIND_CONFIG_PATH>' => makeCorrectDir(Settings::Get('system.bindconf_directory')),
 			'<WEBSERVER_RELOAD_CMD>' => Settings::Get('system.apachereload_command'),
 			'<CUSTOMER_LOGS>' => makeCorrectDir(Settings::Get('system.logfiles_directory')),
-			'<FPM_IPCDIR>' => makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir'))
+			'<FPM_IPCDIR>' => makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
+			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup')
 		);
 		$files = '';
 		$configpage = '';
