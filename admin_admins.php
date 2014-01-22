@@ -197,54 +197,54 @@ if ($page == 'admins'
 
 			$customers = intval_ressource($_POST['customers']);
 			if (isset($_POST['customers_ul'])) {
-				$customers = - 1;
+				$customers = -1;
 			}
 
 			$domains = intval_ressource($_POST['domains']);
 			if (isset($_POST['domains_ul'])) {
-				$domains = - 1;
+				$domains = -1;
 			}
 
 			$subdomains = intval_ressource($_POST['subdomains']);
 			if (isset($_POST['subdomains_ul'])) {
-				$subdomains = - 1;
+				$subdomains = -1;
 			}
 
 			$emails = intval_ressource($_POST['emails']);
 			if (isset($_POST['emails_ul'])) {
-				$emails = - 1;
+				$emails = -1;
 			}
 
 			$email_accounts = intval_ressource($_POST['email_accounts']);
 			if (isset($_POST['email_accounts_ul'])) {
-				$email_accounts = - 1;
+				$email_accounts = -1;
 			}
 
 			$email_forwarders = intval_ressource($_POST['email_forwarders']);
 			if (isset($_POST['email_forwarders_ul'])) {
-				$email_forwarders = - 1;
+				$email_forwarders = -1;
 			}
 
 			if (Settings::Get('system.mail_quota_enabled') == '1') {
 
 				$email_quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array('0', ''));
 				if (isset($_POST['email_quota_ul'])) {
-					$email_quota = - 1;
+					$email_quota = -1;
 				}
 			} else {
-				$email_quota = - 1;
+				$email_quota = -1;
 			}
 
 			$ftps = intval_ressource($_POST['ftps']);
 			if (isset($_POST['ftps_ul'])) {
-				$ftps = - 1;
+				$ftps = -1;
 			}
 
 			if (Settings::Get('ticket.enabled') == 1) {
 
 				$tickets = intval_ressource($_POST['tickets']);
 				if (isset($_POST['tickets_ul'])) {
-					$tickets = - 1;
+					$tickets = -1;
 				}
 			} else {
 				$tickets = 0;
@@ -252,7 +252,7 @@ if ($page == 'admins'
 
 			$mysqls = intval_ressource($_POST['mysqls']);
 			if (isset($_POST['mysqls_ul'])) {
-				$mysqls = - 1;
+				$mysqls = -1;
 			}
 
 			$customers_see_all = 0;
@@ -277,12 +277,12 @@ if ($page == 'admins'
 
 			$diskspace = intval_ressource($_POST['diskspace']);
 			if (isset($_POST['diskspace_ul'])) {
-				$diskspace = - 1;
+				$diskspace = -1;
 			}
 
 			$traffic = doubleval_ressource($_POST['traffic']);
 			if (isset($_POST['traffic_ul'])) {
-				$traffic = - 1;
+				$traffic = -1;
 			}
 
 			$tickets_see_all = 0;
@@ -552,7 +552,7 @@ if ($page == 'admins'
 					if (isset($_POST['ftps_ul'])) {
 						$ftps = -1;
 					}
-					
+
 					if (Settings::Get('ticket.enabled') == 1) {
 						$tickets = intval_ressource($_POST['tickets']);
 						if (isset($_POST['tickets_ul'])) {
@@ -564,7 +564,7 @@ if ($page == 'admins'
 
 					$mysqls = intval_ressource($_POST['mysqls']);
 					if (isset($_POST['mysqls_ul'])) {
-						$mysqls = - 1;
+						$mysqls = -1;
 					}
 
 					$customers_see_all = 0;
@@ -648,10 +648,10 @@ if ($page == 'admins'
 					// check if a resource was set to something lower
 					// than actually used by the admin/reseller
 					$res_warning = "";
-					if ($customers != $result['customers'] && $customers < $result['customers_used']) {
+					if ($customers != $result['customers'] && $customers != -1 && $customers < $result['customers_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'customers');
 					}
-					if ($domains != $result['domains'] && $domains < $result['domains_used']) {
+					if ($domains != $result['domains'] && $domains != -1 && $domains < $result['domains_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'domains');
 					}
 					if ($diskspace != $result['diskspace'] && ($diskspace / 1024) != -1 && $diskspace < $result['diskspace_used']) {
@@ -660,25 +660,25 @@ if ($page == 'admins'
 					if ($traffic != $result['traffic'] && ($traffic / 1024 / 1024) != -1 && $traffic < $result['traffic_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'traffic');
 					}
-					if ($emails != $result['emails'] && $emails < $result['emails_used']) {
+					if ($emails != $result['emails'] && $emails != -1 && $emails < $result['emails_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'emails');
 					}
-					if ($email_accounts != $result['email_accounts'] && $email_accounts < $result['email_accounts_used']) {
+					if ($email_accounts != $result['email_accounts'] && $email_accounts != -1 && $email_accounts < $result['email_accounts_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email accounts');
 					}
-					if ($email_forwarders != $result['email_forwarders'] && $email_forwarders < $result['email_forwarders_used']) {
+					if ($email_forwarders != $result['email_forwarders'] && $email_forwarders != -1 && $email_forwarders < $result['email_forwarders_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email forwarders');
 					}
-					if ($email_quota != $result['email_quota'] && $email_quota < $result['email_quota_used']) {
+					if ($email_quota != $result['email_quota'] && $email_quota != -1 && $email_quota < $result['email_quota_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email quota');
 					}
-					if ($ftps != $result['ftps'] && $ftps < $result['ftps_used']) {
+					if ($ftps != $result['ftps'] && $ftps != -1 && $ftps < $result['ftps_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'ftps');
 					}
-					if ($tickets != $result['tickets'] && $tickets < $result['tickets_used']) {
+					if ($tickets != $result['tickets'] && $tickets != -1 && $tickets < $result['tickets_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'tickets');
 					}
-					if ($mysqls != $result['mysqls'] && $mysqls < $result['mysqls_used']) {
+					if ($mysqls != $result['mysqls'] && $mysqls != -1 && $mysqls < $result['mysqls_used']) {
 						$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'mysqls');
 					}
 
