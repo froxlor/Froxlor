@@ -190,6 +190,19 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
 
+				// remove connections to ips and domainredirects
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_DOMAINTOIP . "`
+					WHERE `id_domain` = :domainid"
+				);
+				Database::pexecute($del_stmt, array('domainid' => $id));
+
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_PANEL_DOMAINREDIRECTS . "`
+					WHERE `did` = :domainid"
+				);
+				Database::pexecute($del_stmt, array('domainid' => $id));
+
 				inserttask('1');
 
 				// Using nameserver, insert a task which rebuilds the server config
