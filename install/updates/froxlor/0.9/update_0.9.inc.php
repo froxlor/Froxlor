@@ -2702,7 +2702,7 @@ if (isFroxlorVersion('0.9.32-dev4')) {
 	updateToVersion('0.9.32-dev5');
 }
 
-if (isFroxlorVersion('0.9.32-dev54')) {
+if (isFroxlorVersion('0.9.32-dev5')) {
 
 	showUpdateStep("Updating from 0.9.32-dev5 to 0.9.32-dev6", false);
 
