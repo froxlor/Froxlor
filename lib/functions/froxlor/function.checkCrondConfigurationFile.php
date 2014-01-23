@@ -93,6 +93,9 @@ function checkCrondConfigurationFile() {
 
 		// remove all re-generation tasks
 		Database::query("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '99'");
+
+		// run reload command
+		safe_exec(escapeshellcmd(Settings::Get('system.crondreload')));
 	}
 	return true;
 }

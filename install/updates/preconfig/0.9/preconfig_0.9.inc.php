@@ -638,7 +638,16 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 		$has_preconfig = true;
 		$description = 'Froxlor now generates a cron-configuration file for the cron-daemon. Please set a filename which will be included automatically by your crond (e.g. files in /etc/cron.d/)<br /><br />';
 		$question = '<strong>Path to the cron-service configuration-file.</strong> This file will be updated regularly and automatically by froxlor.<br />Note: Do <b>not</b> use the same filename as for the main froxlor cronjob (/etc/cron.d/froxlor)!<br />';
-		$question.= '<input type="text" class="text" name="crondfile" value="/etc/cron.d/froxlor" /><br />';
+		$question.= '<input type="text" class="text" name="crondfile" value="/etc/cron.d/froxlor-services" /><br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_version, '0.9.32-dev6')) {
+		$has_preconfig = true;
+		$description = 'In order for the new cron.d file to work properly, we need to know about the cron-service reload command.<br /><br />';
+		$question = '<strong>Please specify the reload-command of your cron-daemon</strong> (default: /etc/init.d/cron reload)<br />';
+		$question.= '<input type="text" class="text" name="crondreload" value="/etc/init.d/cron reload" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
 }

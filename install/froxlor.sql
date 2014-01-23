@@ -499,7 +499,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mdaserver', 'dovecot'),
 	('system', 'mtaserver', 'postfix'),
 	('system', 'mailtraffic_enabled', '1'),
-	('system', 'cronconfig', '/etc/cron.d/froxlor'),
+	('system', 'cronconfig', '/etc/cron.d/froxlor-services'),
+	('system', 'crondreload', '/etc/init.d/cron reload'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -527,7 +528,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.32-dev5');
+	('panel', 'version', '0.9.32-dev6');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

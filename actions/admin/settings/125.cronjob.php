@@ -29,6 +29,14 @@ return array(
 					'default' => '/etc/cron.d/froxlor-services',
 					'save_method' => 'storeSettingField',
 					),
+				'system_crondreload' => array(
+					'label' => $lng['serversettings']['system_crondreload'],
+					'settinggroup' => 'system',
+					'varname' => 'crondreload',
+					'type' => 'string',
+					'default' => '/etc/init.d/cron reload',
+					'save_method' => 'storeSettingField',
+				),
 				'system_debug_cron' => array(
 					'label' => $lng['serversettings']['cron']['debug'],
 					'settinggroup' => 'system',

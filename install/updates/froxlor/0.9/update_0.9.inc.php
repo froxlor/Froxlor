@@ -2701,3 +2701,18 @@ if (isFroxlorVersion('0.9.32-dev4')) {
 
 	updateToVersion('0.9.32-dev5');
 }
+
+if (isFroxlorVersion('0.9.32-dev54')) {
+
+	showUpdateStep("Updating from 0.9.32-dev5 to 0.9.32-dev6", false);
+
+	showUpdateStep("Adding new settings for cron-daemon reload command");
+	// get user-chosen value
+	$crondreload = isset($_POST['crondreload']) ? $_POST['crondreload'] : "/etc/init.d/cron reload";
+	Settings::AddNew("system.crondreload", $crondreload);
+	// add task to generate cron.d-file
+	inserttask('99');
+	lastStepStatus(0);
+
+	updateToVersion('0.9.32-dev6');
+}

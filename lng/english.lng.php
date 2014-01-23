@@ -1802,3 +1802,5 @@ $lng['serversettings']['system_cronconfig']['title'] = 'Cron configuration file'
 $lng['serversettings']['system_cronconfig']['description'] = 'Path to the cron-service configuration-file. This file will be updated regularly and automatically by froxlor.<br />Note: Do <b>not</b> use the same filename as for the main froxlor cronjob (/etc/cron.d/froxlor)!';
 $lng['tasks']['remove_ftpacc_files'] = 'Delete customer ftp-account data.';
 $lng['tasks']['regenerating_crond'] = 'Rebuilding the cron.d-file';
+$lng['serversettings']['system_crondreload']['title'] = 'Cron-daemon reload command';
+$lng['serversettings']['system_crondreload']['description'] = 'Specify the command to execute in order to reload your systems cron-daemon';
