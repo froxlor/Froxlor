@@ -43,7 +43,11 @@ $MAX_FILE_SIZE = 1907300;
 $marked_color = '#FFC2CA';
 
 if (!function_exists("ftp_connect")) {
-	die('No FTP support');
+	die('Please compile PHP with FTP support');
+}
+
+if (!function_exists("bindtextdomain")) {
+	die('Please compile PHP with gettext support');
 }
 
 // Initialize Smarty
