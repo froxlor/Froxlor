@@ -499,7 +499,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mdaserver', 'dovecot'),
 	('system', 'mtaserver', 'postfix'),
 	('system', 'mailtraffic_enabled', '1'),
-	('system', 'cronconfig', '/etc/cron.d/froxlor-services'),
+	('system', 'cronconfig', '/etc/cron.d/froxlor'),
 	('system', 'crondreload', '/etc/init.d/cron reload'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),

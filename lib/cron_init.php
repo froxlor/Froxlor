@@ -31,8 +31,19 @@ if (function_exists("date_default_timezone_set")
 	@date_default_timezone_set(@date_default_timezone_get());
 }
 
+$basename = basename($_SERVER['PHP_SELF'], '.php');
+if (isset($argv) && is_array($argv) && count($argv) > 1) {
+	for($x=1;$x < count($argv);$x++) {
+		if (substr(strtolower($argv[$x]), 0, 2) == '--'
+			&& strlen($argv[$x]) > 3
+		) {
+			$basename .= "-".substr(strtolower($argv[$x]), 2);
+			break;
+		}
+	}
+}
 $lockdir = '/var/run/';
-$lockFilename = 'froxlor_' . basename($_SERVER['PHP_SELF'], '.php') . '.lock-';
+$lockFilename = 'froxlor_' . $basename . '.lock-';
 $lockfName = $lockFilename . getmypid();
 $lockfile = $lockdir . $lockfName;
 
