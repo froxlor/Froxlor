@@ -252,11 +252,8 @@ input[class="nobutton"],input[type="reset"],input[class="nobutton"]:hover,input[
 
 select {
 	color:#000;
-	background:#dae7ee;
+	background-color:#dae7ee;
 	border:1px solid #666;
-	-webkit-appearance:menulist-button;
-	-moz-appearance:menulist-button;
-	appearance:menulist-button;
 }
 
 .dboarditem {
