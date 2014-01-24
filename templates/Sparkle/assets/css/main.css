@@ -761,7 +761,7 @@ input[type="checkbox"] {
 }
 
 select {
-	padding:2px 4px 2px 24px;
+	padding:1px 4px 2px 24px !important;
 	color: #333;
 	height:28px;
 	border:1px solid #d9d9d9;
@@ -772,7 +772,8 @@ select {
 	-moz-appearance:none;
 	appearance:none;
 	min-width:170px;
-	text-indent:.01px;
+	text-indent:0.01px;
+	text-overflow: '';
 }
 
 select[multiple="multiple"] {

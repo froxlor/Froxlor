@@ -43,7 +43,7 @@ h2 img {
 }
 
 table.bradius {
-	width: 100%;
+	/* width: 100%; */
 	border-spacing: 0;
 	background-color: #f8f8f8;
 	border-top: 0;
@@ -147,9 +147,9 @@ nav div:last-child {
 	color:#000;
 }
 
-table thead th {
+table thead th, table th {
 	color: #fff;
-	background-color: #176fa1;
+	background-color: #176fa1 !important;
 	border: 1px solid #176fa1;
 	-webkit-border-top-right-radius: 20px;
 	-webkit-border-bottom-left-radius: 20px;
