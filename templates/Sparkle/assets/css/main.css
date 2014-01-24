@@ -13,7 +13,7 @@ html,body {
 	font:12px/18px 'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,Verdana,sans-serif;
 	background-color: #f5f5f5;
 	color:#333;
-	-webkit-font-smoothing:antialiased;
+	-webkit-font-smoothing: subpixel-antialiased;
 }
 
 body {
@@ -91,7 +91,6 @@ td a {
 
 .bradius {
 	border-radius: 3px;
-	box-shadow:rgba(0,0,0,0.34902) 0 1px 3px 0;
 }
 
 .topheader {
@@ -204,6 +203,7 @@ footer img {
 	margin-right:auto;
 	margin-bottom:12px;
 	width:500px;
+	box-shadow:rgba(0,0,0,0.34902) 0 1px 3px 0;
 }
 
 .login div.warningcontainer, .login div.errorcontainer, .login div.successcontainer {
@@ -217,7 +217,6 @@ footer img {
 .fullform,.midform,.tinyform {
 	background-color:#fff;
 	border:1px solid #d1d5d8;
-	box-shadow:0 0 0 #000!important;
 }
 
 .fullform p {
@@ -538,8 +537,9 @@ table {
 	width:100%;
 	border-spacing:0;
 	border:1px solid #d1d5d8;
+	border-bottom: 0px;
 	border-collapse:separate;
-	box-shadow:0 0 0 #000!important;
+	box-shadow:0 0 0 #000 !important;
 }
 
 table.bradius tbody tr:hover {
@@ -600,7 +600,7 @@ table tbody td {
 }
 
 table tbody tr:last-child td {
-	border-bottom:0;
+	border-bottom: 1px solid #d1d5d8;
 }
 
 .formtable {
@@ -680,12 +680,13 @@ textarea {
 	color: #333;
 	padding:4px 4px 2px 24px;
 	border:1px solid #d9d9d9;
-	margin-bottom:5px;
+	margin: 5px 0 5px 0;
 	border-radius:3px;
 }
 
 input[type="text"],input[type="password"] {
 	width:400px;
+	margin-top: 5px;
 }
 
 input[type="password"] {
@@ -764,7 +765,7 @@ select {
 	color: #333;
 	height:28px;
 	border:1px solid #d9d9d9;
-	margin:0 5px 5px 0!important;
+	margin:5px 5px 5px 0!important;
 	border-radius:3px;
 	background:url(../img/icons/down.png) no-repeat 9px;
 	-webkit-appearance:none;
@@ -792,7 +793,9 @@ select[multiple="multiple"] {
 	margin-bottom:15px;
 	margin-left:15px;
 	padding:0;
-	box-shadow:0 0 0 #000;
+}
+
+.dboarditemnews {
 	border:1px solid #d1d5d8;
 }
 
@@ -803,8 +806,6 @@ select[multiple="multiple"] {
 	margin-right:0;
 	margin-bottom:15px;
 	margin-left:15px;
-	padding:0;
-	box-shadow:0 0 0 #000;
 }
 
 .dboarditemfull {
@@ -814,7 +815,6 @@ select[multiple="multiple"] {
 	margin-top:10px;
 	margin-bottom:10px;
 	padding:0;
-	box-shadow:0 0 0 #000;
 	border:1px solid #d1d5d8;
 }
 

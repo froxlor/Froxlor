@@ -147,70 +147,73 @@ $header
 		</if>
 	</section>
 
-    <section class="dboarditem bradius">
-        <table>
-       	<tr>
-		<th colspan="2">{$lng['index']['accountdetails']}</th>
-		</tr>
-		<tr>
-			<td>{$lng['login']['username']}:</td>
-			<td>{$userinfo['loginname']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['customer']['domains']}:</td>
-			<td>$domains</td>
-		</tr>
-		<if $stdsubdomain != ''>
+    <table class="dboarditem bradius">
+		<thead>
 			<tr>
-				<td>{$lng['admin']['stdsubdomain']}:</td>
-				<td>$stdsubdomain</td>
+				<th colspan="2">{$lng['index']['accountdetails']}</th>
 			</tr>
-		</if>
-		<tr>
-			<td>{$lng['customer']['services']}:</td>
-			<td>$services_enabled</td>
-		</tr>
-		<tr>
-		<th colspan="2">{$lng['index']['customerdetails']}</th>
-		</tr>
-        <if $userinfo['customernumber'] >
-        <tr>
-            <td>{$lng['customer']['customernumber']}:</td>
-            <td>{$userinfo['customernumber']}</td>
-        </tr>
-        </if>
-        <if $userinfo['company'] >
-        <tr>
-            <td>{$lng['customer']['company']}:</td>
-            <td>{$userinfo['company']}</td>
-        </tr>
-        </if>
-        <if $userinfo['name'] >
-        <tr>
-            <td>{$lng['customer']['name']}:</td>
-            <td>{$userinfo['firstname']} {$userinfo['name']}</td>
-        </tr>
-        </if>
-        <if $userinfo['street'] >
-        <tr>
-            <td>{$lng['customer']['street']}:</td>
-            <td>{$userinfo['street']}</td>
-        </tr>
-        </if>
-        <if $userinfo['city'] >
-        <tr>
-            <td>{$lng['customer']['zipcode']}/{$lng['customer']['city']}:</td>
-            <td>{$userinfo['zipcode']} {$userinfo['city']}</td>
-        </tr>
-        </if>
-        <if $userinfo['email'] >
-        <tr>
-            <td>{$lng['customer']['email']}:</td>
-            <td>{$userinfo['email']}</td>
-        </tr>
-        </if>
-        </table>
-    </section>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{$lng['login']['username']}:</td>
+				<td>{$userinfo['loginname']}</td>
+			</tr>
+			<tr>
+				<td>{$lng['customer']['domains']}:</td>
+				<td>$domains</td>
+			</tr>
+			<if $stdsubdomain != ''>
+				<tr>
+					<td>{$lng['admin']['stdsubdomain']}:</td>
+					<td>$stdsubdomain</td>
+				</tr>
+			</if>
+			<tr>
+				<td>{$lng['customer']['services']}:</td>
+				<td>$services_enabled</td>
+			</tr>
+			<tr>
+			<th colspan="2">{$lng['index']['customerdetails']}</th>
+			</tr>
+	        <if $userinfo['customernumber'] >
+	        <tr>
+	            <td>{$lng['customer']['customernumber']}:</td>
+	            <td>{$userinfo['customernumber']}</td>
+	        </tr>
+	        </if>
+	        <if $userinfo['company'] >
+	        <tr>
+	            <td>{$lng['customer']['company']}:</td>
+	            <td>{$userinfo['company']}</td>
+	        </tr>
+	        </if>
+	        <if $userinfo['name'] >
+	        <tr>
+	            <td>{$lng['customer']['name']}:</td>
+	            <td>{$userinfo['firstname']} {$userinfo['name']}</td>
+	        </tr>
+	        </if>
+	        <if $userinfo['street'] >
+	        <tr>
+	            <td>{$lng['customer']['street']}:</td>
+	            <td>{$userinfo['street']}</td>
+	        </tr>
+	        </if>
+	        <if $userinfo['city'] >
+	        <tr>
+	            <td>{$lng['customer']['zipcode']}/{$lng['customer']['city']}:</td>
+	            <td>{$userinfo['zipcode']} {$userinfo['city']}</td>
+	        </tr>
+	        </if>
+	        <if $userinfo['email'] >
+	        <tr>
+	            <td>{$lng['customer']['email']}:</td>
+	            <td>{$userinfo['email']}</td>
+	        </tr>
+	        </if>
+		</tbody>
+    </table>
+
     <section class="clear"></section>
 
 	</article>

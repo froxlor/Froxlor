@@ -167,7 +167,7 @@ $header
 		
 
 		<if Settings::Get('admin.show_news_feed') == '1'>
-		<section class="dboarditem bradius" id="newsfeed">
+		<section class="dboarditem dboarditemnews bradius" id="newsfeed">
 			<table>
 				<tr>
 					<th>News</th>
@@ -177,76 +177,81 @@ $header
 		</section>
 		</if>
 
-		<section class="dboarditem bradius">
-		<table>
-		<tr>
-			<th colspan="2">{$lng['admin']['systemdetails']}</th>
-		</tr>
-		<tr>
-			<td>{$lng['admin']['serversoftware']}:</td>
-			<td>{$_SERVER['SERVER_SOFTWARE']}</td>
-		</tr>
-		<tr>
-			<td>{$lng['admin']['phpversion']}:</td>
-			<td><a href="{$linker->getLink(array('section' => 'settings', 'page' => 'phpinfo'))}">$phpversion</a></td>
-		</tr>
-		<tr>
-			<td class="nowrap">{$lng['admin']['mysqlserverversion']}:</td>
-			<td>$mysqlserverversion</td>
-		</tr>
-		<tr>
-			<td>{$lng['admin']['webserverinterface']}:</td>
-			<td>$webserverinterface</td>
-		</tr>
-		<tr>
-			<td>{$lng['admin']['sysload']}:</td>
-			<td>$load</td>
-		</tr>
-		<if $showkernel == 1>
-			<tr>
-				<td>Kernel:</td>
-				<td>$kernel</td>
-			</tr>
-		</if>
-		<if $uptime != ''>
-		<tr>
-			<td>Uptime:</td>
-			<td>$uptime</td>
-		</tr>
-		</if>
+		<table class="dboarditem bradius">
+			<thead>
+				<tr>
+					<th colspan="2">{$lng['admin']['systemdetails']}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{$lng['admin']['serversoftware']}:</td>
+					<td>{$_SERVER['SERVER_SOFTWARE']}</td>
+				</tr>
+				<tr>
+					<td>{$lng['admin']['phpversion']}:</td>
+					<td><a href="{$linker->getLink(array('section' => 'settings', 'page' => 'phpinfo'))}">$phpversion</a></td>
+				</tr>
+				<tr>
+					<td class="nowrap">{$lng['admin']['mysqlserverversion']}:</td>
+					<td>$mysqlserverversion</td>
+				</tr>
+				<tr>
+					<td>{$lng['admin']['webserverinterface']}:</td>
+					<td>$webserverinterface</td>
+				</tr>
+				<tr>
+					<td>{$lng['admin']['sysload']}:</td>
+					<td>$load</td>
+				</tr>
+				<if $showkernel == 1>
+					<tr>
+						<td>Kernel:</td>
+						<td>$kernel</td>
+					</tr>
+				</if>
+				<if $uptime != ''>
+				<tr>
+					<td>Uptime:</td>
+					<td>$uptime</td>
+				</tr>
+				</if>
+			</tbody>
 		</table>
-		</section>
-		<section class="dboarditem bradius">
-		<table>
-		<tr>
-			<th colspan="2">{$lng['admin']['froxlordetails']}</th>
-		</tr>
-		{$outstanding_tasks}		
-		{$cron_last_runs}
-		<tr width="50%">
-			<td>{$lng['admin']['installedversion']}:</td>
-			<td>{$version}{$branding}</td>
-		</tr>
-		<tr>
-			<td>{$lng['admin']['latestversion']}:</td>
-			<if $isnewerversion != 0 >
-				<td><a href="$lookfornewversion_link"><strong>$lookfornewversion_lable</strong></a></td>
-			<else>
-				<td><a href="$lookfornewversion_link">$lookfornewversion_lable</a></td>
-			</if>
-		</tr>
-		<if $isnewerversion == 1 >
-		<tr>
-			<td colspan="2"><strong>{$lng['admin']['newerversionavailable']}</strong></td>
-		</tr>
-			<if $lookfornewversion_addinfo != ''>
-			<tr>
-				<td colspan="2">$lookfornewversion_addinfo</td>
-			</tr>
-			</if>
-		</if>
+
+		<table class="dboarditem bradius">
+			<thead>
+				<tr>
+					<th colspan="2">{$lng['admin']['froxlordetails']}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{$outstanding_tasks}
+				{$cron_last_runs}
+				<tr>
+					<td>{$lng['admin']['installedversion']}:</td>
+					<td>{$version}{$branding}</td>
+				</tr>
+				<tr>
+					<td>{$lng['admin']['latestversion']}:</td>
+					<if $isnewerversion != 0 >
+						<td><a href="$lookfornewversion_link"><strong>$lookfornewversion_lable</strong></a></td>
+					<else>
+						<td><a href="$lookfornewversion_link">$lookfornewversion_lable</a></td>
+					</if>
+				</tr>
+				<if $isnewerversion == 1 >
+				<tr>
+					<td colspan="2"><strong>{$lng['admin']['newerversionavailable']}</strong></td>
+				</tr>
+					<if $lookfornewversion_addinfo != ''>
+					<tr>
+						<td colspan="2">$lookfornewversion_addinfo</td>
+					</tr>
+					</if>
+				</if>
+		</tbody>
 		</table>
-	</section>
 	<section class="clear"></section>
 
 	</article>
