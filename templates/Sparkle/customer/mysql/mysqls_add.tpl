@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradius">
+		<section>
 
 			<form action="{$linker->getLink(array('section' => 'mysql'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" name="s" value="$s" />
@@ -15,7 +15,7 @@ $header
 				<input type="hidden" name="action" value="$action" />
 				<input type="hidden" name="send" value="send" />
 
-				<table class="formtable">
+				<table class="full">
 					{$mysql_add_form}
 				</table>
 			</form>

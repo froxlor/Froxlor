@@ -14,14 +14,14 @@ $header
 			</div>
 		</if>
 
-		<section class="fullform bradius">
+		<section>
 			<form action="$filename" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" name="s" value="$s"/>
 				<input type="hidden" name="page" value="$page"/>
 				<input type="hidden" name="action" value="$action"/>
 				<input type="hidden" name="send" value="send"/>
 				
-				<table class="formtable">
+				<table class="full">
 					<tr>
 						<td><b><label for="receipient">{$lng['admin']['receipient']}</label></b></td>
 						<td><select name="receipient" id="receipient">$receipients</select></td>
@@ -32,7 +32,7 @@ $header
 					</tr>
 					<tr>
 						<td><b><label for="message">{$lng['admin']['text']}</label></b></td>
-						<td><textarea rows="12" name="message" id="message"></textarea></td>
+						<td><textarea rows="12" cols="80" name="message" id="message"></textarea></td>
 					</tr>
 					<tfoot>
 						<tr>

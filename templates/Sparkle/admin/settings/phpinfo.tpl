@@ -7,8 +7,8 @@ $header
 			</h2>
 		</header>
 
-		<section class="dboarditemfull bradius phpinfo">
-			<table width="100%">
+		<section>
+			<table class="full">
 				{$phpinfo}
 			</table>
 		</section>

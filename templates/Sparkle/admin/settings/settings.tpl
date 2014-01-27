@@ -7,8 +7,8 @@
 			</h2>
 		</header>
 		
-		<section class="fullform bradius">
-			<table class="formtable">
+		<section>
+			<table class="full">
 			$fields
 			<tfoot>
 				<tr>

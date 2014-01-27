@@ -1,4 +1,4 @@
-<tr>
+<tr class="section">
 	<th>{$lng['admin']['configfiles']['commands']}</th>
 </tr>
 <tr>

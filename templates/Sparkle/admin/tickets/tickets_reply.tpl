@@ -20,7 +20,7 @@ $header
 			$ticket_replies
 		</if>
 
-		<section class="fullform bradius">
+		<section>
 
 			<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" name="s" value="$s" />
@@ -29,7 +29,7 @@ $header
 				<input type="hidden" name="id" value="$id" />
 				<input type="hidden" name="send" value="send" />
 
-				<table class="formtable">
+				<table class="full">
 					{$ticket_reply_form}
 				</table>
 			</form>

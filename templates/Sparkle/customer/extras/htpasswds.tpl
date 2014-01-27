@@ -22,7 +22,7 @@
 					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
 				</div>
 
-				<table class="bradius">
+				<table class="full hl">
 					<thead>
 						<tr>
 							<th>{$lng['login']['username']}&nbsp;{$arrowcode['username']}</th>

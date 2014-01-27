@@ -7,7 +7,7 @@ $header
 		</h2>
 	</header>
 
-	<section class="fullform bradius">
+	<section>
 
 		<form action="{$linker->getLink(array('section' => 'domains'))}" method="post" enctype="application/x-www-form-urlencoded">
 			<if $do_insert == 1>
@@ -19,7 +19,7 @@ $header
 			<input type="hidden" name="id" value="$id" />
 			<input type="hidden" name="send" value="send" />
 
-			<table class="formtable">
+			<table class="full">
 			  {$ssleditor_form}
 			</table>
 		</form>

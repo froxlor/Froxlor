@@ -13,7 +13,7 @@ $header
 		</div>
 		
 		<section>
-			<table class="bradius">
+			<table class="full">
 			<thead>
 				<tr>
 					<th>{$lng['cron']['description']}</th>

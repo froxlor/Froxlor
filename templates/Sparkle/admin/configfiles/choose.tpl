@@ -8,17 +8,14 @@ $header
 			</h2>
 		</header>
 
-		<section class="tinyform bradius">
+		<section>
 			<form action="{$linker->getLink(array('section' => 'configfiles'))}" method="get" enctype="application/x-www-form-urlencoded">
-			<fieldset>
-					<legend>Froxlor&nbsp;-&nbsp;{$lng['admin']['configfiles']['serverconfiguration']}</legend>
-						<input type="hidden" name="s" value="$s" />
-						<input type="hidden" name="page" value="$page" />
+				<input type="hidden" name="s" value="$s" />
+				<input type="hidden" name="page" value="$page" />
 
-						<table class="formtable">
-							$distributions
-						</table>
-			</fieldset>
+				<table class="tiny center">
+					$distributions
+				</table>
 			</form>
 		</section>
 	</article>

@@ -1,5 +1,6 @@
 	<h3>{$lng['traffic']['trafficoverview']}&nbsp;{$overview['type']}&nbsp;{$overview['year']}</h3>
-	<table class="bradius" id="stats{$overview['year']}">
+	<section>
+	<table class="full" id="stats{$overview['year']}">
 		<thead>
 			<tr>
 				<th>{$overview['type']}</th>
@@ -24,6 +25,7 @@
 			{$total_list}
 		</tfoot>
 	</table>
+	</section>
 	<script type="text/javascript">
 		var myTextExtraction = function(node)  
 		{  

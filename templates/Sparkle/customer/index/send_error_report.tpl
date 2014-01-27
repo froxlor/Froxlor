@@ -7,26 +7,26 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradius">
+		<section>
 			<form method="post" action="{$linker->getLink(array('section' => 'index', 'errorid' => $errid))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 				<input type="hidden" name="s" value="$s" />
 				<input type="hidden" name="page" value="$page" />
 				<input type="hidden" name="send" value="send" />
-				<table class="formtable">
+				<table class="full">
 					<thead>
-					<tr>
-						<th>
-							<p>{$lng['error']['send_report_desc']}</p>
-						</th>
-					</tr>
+						<tr>
+							<th>
+								<p>{$lng['error']['send_report_desc']}</p>
+							</th>
+						</tr>
 					</thead>
 					<tbody>
-					<tr>
-						<td>
-							<code>{$mail_html}</code>
-						</td>
-					</tr>
+						<tr>
+							<td>
+								<code>{$mail_html}</code>
+							</td>
+						</tr>
 					</tbody>
 					<tfoot>
 						<tr>

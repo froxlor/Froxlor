@@ -24,7 +24,7 @@
 				</div>
 				</if>
 	
-				<table class="bradius">
+				<table class="full hl">
 					<thead>
 						<tr>
 							<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>

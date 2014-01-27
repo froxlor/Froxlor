@@ -3,5 +3,4 @@
 		</if>
 	</form>
 	<br />
-	<br />
 $footer

@@ -14,18 +14,18 @@ $header
 				<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>
 			</div>
 
-			<table class="bradius">
-			<thead>
-				<tr>
-					<th>{$lng['admin']['phpsettings']['description']}</th>
-					<th>{$lng['admin']['phpsettings']['activedomains']}</th>
-					<th>{$lng['admin']['phpsettings']['binary']}</th>
-					<th>{$lng['admin']['phpsettings']['file_extensions']}</th>
-					<th>{$lng['panel']['options']}</th>
-			</thead>
-			<tbody>
-				$tablecontent
-			</tbody>
+			<table class="full hl">
+				<thead>
+					<tr>
+						<th>{$lng['admin']['phpsettings']['description']}</th>
+						<th>{$lng['admin']['phpsettings']['activedomains']}</th>
+						<th>{$lng['admin']['phpsettings']['binary']}</th>
+						<th>{$lng['admin']['phpsettings']['file_extensions']}</th>
+						<th>{$lng['panel']['options']}</th>
+				</thead>
+				<tbody>
+					$tablecontent
+				</tbody>
 			</table>
 			
 			<if 15 < $count>

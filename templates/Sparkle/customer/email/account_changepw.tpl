@@ -7,8 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradius">
-
+		<section>
 			<form action="{$linker->getLink(array('section' => 'email'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" name="s" value="$s" />
 				<input type="hidden" name="page" value="$page" />
@@ -16,7 +15,7 @@ $header
 				<input type="hidden" name="id" value="$id" />
 				<input type="hidden" name="send" value="send" />
 
-				<table class="formtable">
+				<table class="full">
 					{$account_changepw_form}
 				</table>
 			</form>

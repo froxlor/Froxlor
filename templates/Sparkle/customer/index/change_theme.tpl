@@ -7,13 +7,13 @@ $header
 			</h2>
 		</header>
 
-		<section class="tinyform bradius">
+		<section>
 			<form method="post" action="{$linker->getLink(array('section' => 'index'))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 				<input type="hidden" name="s" value="$s" />
 				<input type="hidden" name="page" value="$page" />
 				<input type="hidden" name="send" value="send" />
-				<table class="formtable">
+				<table class="tiny center">
 					<tr>
 						<td width="50%"><label for="theme">{$lng['panel']['theme']}:</label></td>
 						<td><select id="theme" name="theme">$theme_options</select></td>

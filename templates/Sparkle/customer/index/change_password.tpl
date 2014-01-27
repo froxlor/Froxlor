@@ -7,13 +7,13 @@ $header
 			</h2>
 		</header>
 
-		<section class="tinyform bradius">
+		<section>
 			<form method="post" action="{$linker->getLink(array('section' => 'index'))}" enctype="application/x-www-form-urlencoded">
 				<fieldset>
 					<input type="hidden" name="s" value="$s" />
 					<input type="hidden" name="page" value="$page" />
 					<input type="hidden" name="send" value="send" />
-					<table class="formtable">
+					<table class="middle center">
 						<tr>
 							<td width="50%"><label for="old_password">{$lng['changepassword']['old_password']}:</label></td>
 							<td><input type="password" id="old_password" name="old_password" /></td>
@@ -27,12 +27,18 @@ $header
 							<td><input type="password" id="new_password_confirm" name="new_password_confirm" /></td>
 						</tr>
 						<tr>
-							<td><label for="change_main_ftp">{$lng['changepassword']['also_change_ftp']}:</label></td>
-							<td><input type="checkbox" name="change_main_ftp" id="change_main_ftp" value="true" /></td>
+							<td>&nbsp;</td>
+							<td>
+								<input type="checkbox" name="change_main_ftp" id="change_main_ftp" value="true" />
+								<label for="change_main_ftp">{$lng['changepassword']['also_change_ftp']}</label>
+							</td>
 						</tr>
 						<tr>
-							<td><label for="change_webalizer">{$lng['changepassword']['also_change_webalizer']}:</label></td>
-							<td><input type="checkbox" name="change_webalizer" id="change_webalizer" value="true" /></td>
+							<td>&nbsp;</td>
+							<td>
+								<input type="checkbox" name="change_webalizer" id="change_webalizer" value="true" />
+								<label for="change_webalizer">{$lng['changepassword']['also_change_webalizer']}</label>
+							</td>
 						</tr>
 						<tfoot>
 							<tr>

@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradius">
+		<section>
 
 			<form action="{$linker->getLink(array('section' => 'domains'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" name="delete_statistics_str" id="delete_statistics_str" value="{$lng['admin']['delete_statistics']}">
@@ -28,13 +28,13 @@ $header
 					</div>
 				</div>
 
-				<table class="formtable">
+				<table class="full">
 					{$domain_edit_form}
 				</table>
 			</form>
 		</section>
 		<br />
-		<section class="fullform bradius">
+		<section>
 			<p>
 				<span class="red">*</span>: {$lng['admin']['valuemandatory']}
 			</p>

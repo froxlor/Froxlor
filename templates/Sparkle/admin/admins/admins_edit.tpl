@@ -12,7 +12,7 @@ $header
 			</div>
 		</if>
 
-		<section class="fullform bradius">
+		<section>
 
 			<form action="{$linker->getLink(array('section' => 'admins'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" name="s" value="$s" />
@@ -21,7 +21,7 @@ $header
 				<input type="hidden" name="id" value="$id" />
 				<input type="hidden" name="send" value="send" />
 
-				<table class="formtable">
+				<table class="full">
 					{$admin_edit_form}
 				</table>
 			</form>
@@ -31,7 +31,7 @@ $header
 	</article>
 	<br />
 	<article>
-		<section class="fullform bradius">
+		<section>
 			<p>
 				<span class="red">*</span>: {$lng['admin']['valuemandatory']}
 			</p>

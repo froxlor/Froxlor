@@ -11,7 +11,7 @@ $header
 		$ticket_replies
 		</if>
 
-		<section class="fullform bradius">
+		<section>
 			
 			<form action="{$linker->getLink(array('section' => 'tickets'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" name="s" value="$s" />
@@ -21,7 +21,7 @@ $header
 				<input type="hidden" name="id" value="$id" />
 
 				<if $isclosed < 1 >
-				<table class="formtable">
+				<table class="full">
 					{$ticket_reply_form}
 				</table>
 				</if>

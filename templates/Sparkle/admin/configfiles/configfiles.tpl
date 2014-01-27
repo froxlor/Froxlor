@@ -10,11 +10,11 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradius">
-        	<table class="formtable">
+		<section>
+			<table class="full">
 				{$configpage}
 				<if $restart != ''>
-				<tr>
+				<tr class="section">
 					<th>{$lng['admin']['configfiles']['restart']}</th>
 				<tr>
 				<tr>
@@ -23,7 +23,7 @@ $header
 				</tr>
 				</if>
 		</table>
-		<br /><br />
+		<br />
 		</section>
 </article>
 $footer

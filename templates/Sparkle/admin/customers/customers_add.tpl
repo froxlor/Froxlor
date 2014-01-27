@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradius">
+		<section>
 
 			<form action="{$linker->getLink(array('section' => 'customers'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" name="s" value="$s" />
@@ -15,7 +15,7 @@ $header
 				<input type="hidden" name="action" value="$action" />
 				<input type="hidden" name="send" value="send" />
 				
-				<table class="formtable">
+				<table class="full">
 					{$customer_add_form}
 				</table>
 			</form>
@@ -25,7 +25,7 @@ $header
 	</article>
 	<br />
 	<article>
-		<section class="fullform bradius">
+		<section>
 			<p>
 				<span class="red">*</span>: {$lng['admin']['valuemandatory']}<br />
 				<span class="red">**</span>: {$lng['admin']['valuemandatorycompany']}

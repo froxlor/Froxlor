@@ -7,7 +7,7 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradius">
+		<section>
 
 			<form action="{$linker->getLink(array('section' => 'templates'))}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" name="s" value="$s" />
@@ -16,7 +16,7 @@ $header
 				<input type="hidden" name="id" value="$id" />
 				<input type="hidden" name="filesend" value="filesend" />
 
-				<table class="formtable">
+				<table class="full">
 					{$filetemplate_edit_form}
 				</table>
 			</form>
@@ -33,7 +33,7 @@ $header
 		
 		<section>
 			
-			<table class="bradius">
+			<table class="full">
 			<thead>
 				<tr>
 					<th>{$lng['panel']['variable']}</th>

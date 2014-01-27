@@ -22,7 +22,7 @@
 					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
 				</div>
 		
-				<table class="bradius">
+				<table class="full hl">
 					<thead>
 						<tr>
 							<th>{$lng['panel']['path']}&nbsp;{$arrowcode['path']}</th>

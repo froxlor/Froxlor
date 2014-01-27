@@ -23,7 +23,7 @@ $header
 					<a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a>
 				</div>
 	
-				<table class="bradius">
+				<table class="full hl">
 					<thead>
 						<tr>
 							<th>{$lng['logger']['date']}&nbsp;{$arrowcode['date']}</th>

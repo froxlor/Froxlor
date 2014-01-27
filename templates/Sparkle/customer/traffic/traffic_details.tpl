@@ -7,7 +7,7 @@ $header
 		</h2>
 	</header>
 	
-	<table class="bradius" id="datatable">
+	<table class="full hl" id="datatable">
 		<thead>
 			<tr>
 				<th>{$lng['traffic']['day']}</th>

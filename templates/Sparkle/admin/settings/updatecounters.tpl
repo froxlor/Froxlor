@@ -7,20 +7,20 @@ $header
 			</h2>
 		</header>
 
-		<section class="fullform bradius">
-        	<table class="formtable">
+		<section>
+			<table class="full">
 				<thead>
 				<tr>
 					<th colspan="3">{$lng['admin']['customers']}</th>
 				</tr>
 				</thead>
-{$customers}
+					{$customers}
 				<thead>
 				<tr>
 					<th colspan="3">{$lng['admin']['admins']}</th>
 				</tr>
 				</thead>
-{$admins}
+					{$admins}
 			</table>
 		</section>
 </article>

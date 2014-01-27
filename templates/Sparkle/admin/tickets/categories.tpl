@@ -23,7 +23,7 @@ $header
 					<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'categories', 'action' => 'addcategory'))}">{$lng['ticket']['ticket_newcateory']}</a>
 				</div>
 	
-				<table class="bradius">
+				<table class="full hl">
 					<thead>
 						<tr>
 							<th>{$lng['ticket']['category']}&nbsp;{$arrowcode['name']}</th>

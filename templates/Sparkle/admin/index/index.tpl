@@ -167,7 +167,7 @@ $header
 		
 
 		<if Settings::Get('admin.show_news_feed') == '1'>
-		<section class="dboarditem dboarditemnews bradius" id="newsfeed">
+		<section class="dboarditem dboarditemnews" id="newsfeed">
 			<table>
 				<tr>
 					<th>News</th>
@@ -177,7 +177,7 @@ $header
 		</section>
 		</if>
 
-		<table class="dboarditem bradius">
+		<table class="dboarditem">
 			<thead>
 				<tr>
 					<th colspan="2">{$lng['admin']['systemdetails']}</th>

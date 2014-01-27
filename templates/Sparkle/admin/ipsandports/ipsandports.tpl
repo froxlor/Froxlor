@@ -21,7 +21,7 @@ $header
 					<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['ipsandports']['add']}</a>
 				</div>
 	
-				<table class="bradius">
+				<table class="full hl">
 					<thead>
 						<tr>
 							<th>{$lng['admin']['ipsandports']['ip']}&nbsp;{$arrowcode['ip']}</th>

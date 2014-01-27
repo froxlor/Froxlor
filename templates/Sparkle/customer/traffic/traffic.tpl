@@ -9,7 +9,7 @@ $header
 
 	<form action="{$linker->getLink(array('section' => 'traffic'))}" method="post" enctype="application/x-www-form-urlencoded">
 		<fieldset>
-			<table class="fullform bradius" id="datatable">
+			<table class="full hl" id="datatable">
 				<thead>
 					<tr>
 						<th>{$lng['traffic']['month']}</td>

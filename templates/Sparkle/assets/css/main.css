@@ -12,7 +12,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { 
 html,body {
 	font:12px/18px 'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,Verdana,sans-serif;
 	background-color: #f5f5f5;
-	color:#333;
+	color:#444;
 	-webkit-font-smoothing: subpixel-antialiased;
 }
 
@@ -58,6 +58,7 @@ img.small {
 
 h1 {
 	display:none;
+	font-size: 2em;
 }
 
 h2,h3 {
@@ -76,7 +77,7 @@ h3 {
 }
 
 h4 {
-	font-size:12px;
+	font-size:13px;
 }
 
 img {
@@ -214,26 +215,13 @@ footer img {
 	width:800px;
 }
 
-.fullform,.midform,.tinyform {
-	background-color:#fff;
-	border:1px solid #d1d5d8;
-}
-
-.fullform p {
-	margin:10px!important;
-}
-
-table.tinyform input {
-	width:120px;
-}
-
-.fullform,.midform,.installsec {
+.installsec {
 	margin-top:10px;
 	padding:0;
 	text-align:left;
 }
 
-.tinyform, .loginsec, .errorsec {
+.loginsec, .errorsec {
 	margin-top:10px;
 	padding:10px 0;
 	text-align:center;
@@ -243,28 +231,7 @@ table.tinyform input {
 	padding:10px;
 }
 
-.tinyform {
-	padding:0;
-}
-
-.fullform {
-	width:100%;
-	margin:0 auto;
-	text-align:left;
-}
-
-.midform {
-	width:600px;
-	margin:0 auto;
-	padding:10px 0;
-	text-align:left;
-}
-
-.midform {
-	padding:0;
-}
-
-.tinyform, .loginsec form {
+.loginsec form {
 	width:400px;
 	margin:0 auto;
 	text-align:left;
@@ -279,24 +246,11 @@ table.tinyform input {
 	padding:0;
 }
 
-.fullform fieldset,.midform fieldset,.tinyform fieldset {
-	border:0;
-	width:100%;
-	padding:0;
-}
-
-.fullform legend,.loginsec legend,.midform legend,.tinyform legend {
+.loginsec legend {
 	display:none;
 }
 
-.fullform label {
-	float:left;
-	width:26em;
-	margin-top:6px;
-	text-align:right;
-}
-
-.midform label, .tinyform label, .loginsec label {
+.loginsec label {
 	float:left;
 	width:10em;
 	margin-right:1em;
@@ -304,15 +258,11 @@ table.tinyform input {
 	text-align:right;
 }
 
-.fullform textarea,.midform textarea {
-	width:60%;
-}
-
 .loginsec input[type="text"], .loginsec input[type="password"] {
 	width:183px;
 }
 
-.tinyform select, .loginsec select {
+.loginsec select {
 	width:213px;
 }
 
@@ -529,103 +479,74 @@ nav div:last-child {
 	border:0;
 }
 
-.noborder td {
-	border:0;
-}
-
+/* TABLES */
 table {
-	width:100%;
-	border-spacing:0;
-	border:1px solid #d1d5d8;
-	border-bottom: 0px;
-	border-collapse:separate;
-	box-shadow:0 0 0 #000 !important;
+	border-radius: 3px;
+	border: 1px solid #d1d5d8;
+	border-spacing: 0;
+	border-collapse: separate;
 }
 
-table.bradius tbody tr:hover {
+table thead th, table th {
+	border-bottom: 1px solid #d1d5d8;
+	height: 25px;
+	padding: 5px 0 5px 8px;
+	background-color: #e9edf0;
+	font-weight: 700;
+}
+
+table tr.section:not(:first-child) th {
+	border-top: 1px solid #d1d5d8;
+}
+
+table tbody tr td {
+	border-bottom:1px solid #f1f2f3;
+}
+table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+table.hl tbody tr:hover {
 	background-color: #f5f5f5;
 }
 
-table tr.top td {
-	vertical-align: top;
-}
-
-table thead th,table th {
+table tfoot tr td {
+	height:25px;
 	border-top:1px solid #d1d5d8;
-	border-bottom:1px solid #d1d5d8;
-	height:25px!important;
-	padding:5px 0 5px 8px;
-	background-color:#e9edf0;
-	font-weight:700;
+	background-color:#f2f8fa;
+	padding-right: 0px;
 }
 
-table thead:first-child th,table:first-child th {
-	border-top:none!important;
-}
-
-table th {
-	border-top:0;
+table td {
+	padding: 5px 10px;
+	height: 25px;
+    min-height: 25px;
 }
 
 table th.right, table td.right {
 	text-align: right;
 }
 
-th a:hover {
-	text-decoration:none;
+table.tiny {
+	width: 400px;
 }
-
-th a:nth-child(odd) img {
-	position:relative;
-	top:-5px;
-	left:4px;
+table.middle {
+	width: 600px;
 }
-
-th a:nth-child(even) img {
-	position:relative;
-	top:3px;
-	left:-7px;
+table.full {
+	width: 100%;
 }
-
-table thead:first-child th {
-	border-top:0;
+table.center {
+	margin: 0 auto;
 }
-
-.disabled td,.disabled td a {
+table tr.top {
+	vertical-align: top;
+}
+tr.disabled td, tr.disabled td a {
 	color:#cfcfcf;
 }
 
-table tbody td {
-	border-bottom:1px solid #f1f2f3;
-}
-
-table tbody tr:last-child td {
-	border-bottom: 1px solid #d1d5d8;
-}
-
-.formtable {
-	width:100%;
-	border-spacing:0;
-	border:0;
-	border-collapse:separate;
-	margin:0;
-}
-
-.formtable tbody td, .formtable td {
-	border:0;
-	border-bottom:1px solid #f1f2f3;
-	height: 30px;
-}
-
-.formtable label {
-	float:none;
-	display:block;
-	padding:0;
-	margin:0;
-	width:100%;
-	text-align:left;
-}
-
+/* ADMIN/CUSTOMER BARS */
 .overviewcustomerextras {
 	line-height:15px;
 	font-size:10px;
@@ -639,32 +560,7 @@ table tbody tr:last-child td {
 	float:left;
 }
 
-td {
-	padding-top:5px;
-	padding-left:10px;
-	padding-right:10px;
-	padding-bottom:5px;
-}
-
-table tfoot td {
-	height:25px;
-	border-top:1px solid #d1d5d8;
-	background-color:#f2f8fa;
-}
-
-.formtable tfoot td {
-	padding-right:0;
-}
-
-.tfootleft {
-	text-align:left;
-}
-
-.maintitle {
-	padding-top:20px;
-}
-
-/* input elements */
+/* INPUT ELEMENTS */
 input {
 	background:#fff url(../img/icons/text_align_left.png) no-repeat 5px 4px;
 	color: #333;

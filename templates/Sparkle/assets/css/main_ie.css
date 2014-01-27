@@ -9,10 +9,6 @@ input[type="submit"],input[class="nobutton"],input[type="reset"] {
 	padding-left: 24px;
 }
 
-.midform input[type="file"] {
-	width: 90%;
-}
-
 table thead th {
 	border-right: 1px solid #333;
 }

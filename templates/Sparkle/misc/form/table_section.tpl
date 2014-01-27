@@ -1,4 +1,4 @@
-<tr>
+<tr class="section">
 	<th>
 		{$title}
 	</th>

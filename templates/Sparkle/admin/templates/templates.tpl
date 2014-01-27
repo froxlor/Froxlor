@@ -3,11 +3,14 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/templates_big.png" alt="" />&nbsp;
-				{$lng['admin']['templates']['templates']}
+				{$lng['admin']['templates']['email']}
 			</h2>
 		</header>
 
 		<section>
+			<h3>
+				{$lng['admin']['templates']['templates']}
+			</h3>
 			<if $add>
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
@@ -15,7 +18,7 @@ $header
 				</div>
 			</if>
 		
-			<table class="bradius">
+			<table class="full hl">
 			<thead>
 				<tr>
 					<th>{$lng['login']['language']}</th>
@@ -28,20 +31,12 @@ $header
 			</tbody>
 			</table>
 		</section>
-
-	</article>
-	<br />
-	<br />
-	<br />
-	<article>
-		<header>
-			<h2>
-				<img src="templates/{$theme}/assets/img/icons/templates_big.png" alt="" />&nbsp;
-				{$lng['admin']['templates']['filetemplates']}
-			</h2>
-		</header>
-
+		<br />
+		<br />
 		<section>
+			<h3>
+				{$lng['admin']['templates']['filetemplates']}
+			</h3>
 			<if $filetemplateadd>
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
@@ -49,7 +44,7 @@ $header
 				</div>
 			</if>
 			
-			<table class="bradius">
+			<table class="full hl">
 			<thead>
 				<tr>
 					<th>{$lng['admin']['templates']['action']}</th>
