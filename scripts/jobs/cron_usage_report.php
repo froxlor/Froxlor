@@ -95,7 +95,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			AND `language` = :lang
 			AND `templategroup` = 'mails' AND `varname` = :varname
 		");
-		$resul2_data = array(
+		$result2_data = array(
 			'adminid' => $row['adminid'],
 			'lang' => $row['def_language'],
 			'varname' => 'trafficmaxpercent_subject'
@@ -103,7 +103,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
 
-		$resul2_data['varname'] = 'trafficmaxpercent_mailbody';
+		$result2_data['varname'] = 'trafficmaxpercent_mailbody';
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
 
