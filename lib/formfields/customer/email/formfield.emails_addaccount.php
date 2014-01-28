@@ -42,7 +42,7 @@ return array(
 					'email_quota' => array(
 						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'label' => $lng['emails']['quota'],
-						'desc' => $lng['panel']['megabyte'],
+						'desc' => "MiB",
 						'type' => 'text',
 						'value' => $quota
 					),

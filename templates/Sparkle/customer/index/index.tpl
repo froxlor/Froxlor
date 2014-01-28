@@ -93,7 +93,7 @@ $header
 		<if Settings::Get('system.mail_quota_enabled') == 1 && $userinfo['email_quota'] != '0'>
 		<div class="canvasbox">
 			<input type="hidden" id="email_quota" class="circular" data-used="{$userinfo['email_quota_used']}" data-available="{$userinfo['email_quota']}">
-			<canvas id="email_forwarders-canvas" width="120" height="76"></canvas><br />
+			<canvas id="email_quota-canvas" width="120" height="76"></canvas><br />
 			{$lng['customer']['email_quota']}<br />
 			<small>
 				{$userinfo['email_quota_used']} {$lng['panel']['used']}<br />
