@@ -37,8 +37,13 @@ $editFileExtensions = array("php[345]?$","sh$","txt$","[ps]?htm[l]?$","tpl$","pl
 $editFileNoExtension = true;
 // Which FTP - mode should be used by default?
 $default_mode = "FTP_BINARY";
-// Max. uploadsize (0 = unlimited)
-$MAX_FILE_SIZE = 1907300;
+// Max. uploadsize (0 = unlimited) - read from php.ini
+$_mfs = ini_get('upload_max_filesize');
+if ($_mfs === false || is_numeric(_mfs) == false) {
+	$MAX_FILE_SIZE = 1907300;
+} else {
+	$MAX_FILE_SIZE = $_mfs;
+}
 // The color of a marked row
 $marked_color = '#FFC2CA';
 
