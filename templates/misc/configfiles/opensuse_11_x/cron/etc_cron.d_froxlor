@@ -5,4 +5,6 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 #
 # Regular cron jobs for the froxlor package
 #
+# Please check that all following paths are correct
+#
 */5 * * * *	root	/usr/bin/nice -n 5 /usr/bin/php5 -q /srv/www/froxlor/scripts/froxlor_master_cronjob.php
