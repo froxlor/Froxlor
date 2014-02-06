@@ -682,26 +682,13 @@ select[multiple="multiple"] {
 }
 
 .dboarditem {
-	float:left;
-	width:48%;
-	margin-top:15px;
-	margin-right:0;
-	margin-bottom:15px;
-	margin-left:15px;
+	width: 100%;
 	padding:0;
+	margin-bottom: 20px;
 }
 
 .dboarditemnews {
 	border:1px solid #d1d5d8;
-}
-
-.dboardcanvas {
-	float:left;
-	width:48%;
-	margin-top:15px;
-	margin-right:0;
-	margin-bottom:15px;
-	margin-left:15px;
 }
 
 .dboarditemfull {
@@ -1021,4 +1008,50 @@ div.left {
 }
 div.right {
 	float: right;
+}
+
+/* GRID */
+.grid-g {
+	letter-spacing: -0.31em;
+	*letter-spacing: normal;
+	*word-spacing: -0.43em;
+	text-rendering: optimizespeed;
+	padding-top: 35px;
+}
+
+.opera-only :-o-prefocus,
+.grid-g {
+	word-spacing: -0.43em;
+}
+
+
+.grid-u {
+	display: inline-block;
+	zoom: 1; *display: inline;
+	letter-spacing: normal;
+	word-spacing: normal;
+	vertical-align: top;
+	text-rendering: auto;
+}
+
+
+.grid-u-1,.grid-u-1-2 {
+	display: inline-block;
+	zoom: 1; *display: inline; 
+	letter-spacing: normal;
+	word-spacing: normal;
+	vertical-align: top;
+	text-rendering: auto;
+}
+
+.grid-u-1 {
+	display:block;
+}
+
+.grid-u-1-2 {
+	width: 50%;
+}
+
+.grid-offset-1-2 {
+	margin-left: 50%;
 }

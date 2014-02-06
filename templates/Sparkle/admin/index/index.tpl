@@ -4,7 +4,8 @@ $header
 			<img src="templates/{$theme}/assets/img/icons/domains_big.png" alt="" />
 			{$lng['panel']['dashboard']}
 		</h2>
-		<section class="dboardcanvas" id="statsbox">
+		<div class="grid-g">
+			<div class="grid-u-1-2">
 			<div class="canvasbox">
 				<input type="hidden" id="customers" class="circular" data-used="{$overview['number_customers']}" data-available="{$userinfo['customers']}">
 				<canvas id="customers-canvas" width="120" height="76"></canvas><br/>
@@ -163,9 +164,9 @@ $header
 			</div>
 			</if>
 			
-		</section>
+		</div>
 		
-
+		<div class="grid-u-1-2">
 		<if Settings::Get('admin.show_news_feed') == '1'>
 		<section class="dboarditem dboarditemnews" id="newsfeed">
 			<table>
@@ -252,7 +253,8 @@ $header
 				</if>
 		</tbody>
 		</table>
-	<section class="clear"></section>
+		</div>
+		</div>
 
 	</article>
 $footer
