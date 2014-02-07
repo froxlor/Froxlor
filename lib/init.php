@@ -219,7 +219,7 @@ if (isset($s)
 	) {
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
-			`lastactivity` = :lastactive, `formtoken` = NULL
+			`lastactivity` = :lastactive
 			WHERE `hash` = :hash AND `adminsession` = :adminsession
 		");
 		$upd_data = array(
