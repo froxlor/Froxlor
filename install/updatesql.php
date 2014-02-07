@@ -44,6 +44,23 @@ if(!isFroxlor()) {
 
 if (isFroxlor()) {
 	include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/0.9/update_0.9.inc.php'));
+
+	// Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)
+	showUpdateStep("Checking database integrity");
+
+	$integrity = new IntegrityCheck();
+	if (!$integrity->checkAll()) {
+		lastStepStatus(2, 'Monkeys ate the integrity');
+		showUpdateStep("Trying to remove monkeys, feeding bananas");
+		if(!$integrity->fixAll()) {
+			lastStepStatus(2, 'Some monkeys just would not move');
+		} else {
+			lastStepStatus(0);
+		}
+	} else {
+		lastStepStatus(0);
+	}
+
 	$filelog->logAction(ADM_ACTION, LOG_WARNING, '--------------- END LOG ---------------');
 	unset($filelog);
 }
