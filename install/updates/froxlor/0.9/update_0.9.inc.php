@@ -2722,7 +2722,7 @@ if (isFroxlorVersion('0.9.32-dev6')) {
 	showUpdateStep("Updating from 0.9.32-dev6 to 0.9.32-rc1", false);
 
 	showUpdateStep("Enhancing tasks-table");
-	Database::query("ALTER `".TABLE_PANEL_TASKS."` MODIFY `data` text NOT NULL default ''");
+	Database::query("ALTER TABLE `".TABLE_PANEL_TASKS."` MODIFY `data` text NOT NULL default ''");
 	lastStepStatus(0);
 
 	updateToVersion('0.9.32-rc1');
