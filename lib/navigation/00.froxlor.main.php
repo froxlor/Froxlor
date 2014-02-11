@@ -236,6 +236,11 @@ return array (
 					'required_resources' => 'change_serversettings',
 				),
 				array (
+					'url' => 'admin_settings.php?page=integritycheck',
+					'label' => $lng['admin']['integritycheck'],
+					'required_resources' => 'change_serversettings',
+				),
+				array (
 					'url' => 'admin_phpsettings.php?page=overview',
 					'label' => $lng['menue']['phpsettings']['maintitle'],
 					'show_element' => (

@@ -264,4 +264,24 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	} else {
 		ask_yesno('admin_quotas_reallyenforce', $filename, array('page' => $page));
 	}
+} elseif ($page == 'integritycheck'
+	&& $userinfo['change_serversettings'] == '1'
+) {
+	$integrity = new IntegrityCheck();
+	if (isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
+		$integrity->fixAll();
+	} elseif(isset($_GET['action'])
+		 && $_GET['action'] == "fix") {
+		ask_yesno('admin_integritycheck_reallyfix', $filename, array('page' => $page));
+	}
+
+	$integritycheck = '';
+	foreach ($integrity->available as $id => $check) {
+		$displayid = $id + 1;
+		$result = $integrity->$check();
+		eval("\$integritycheck.=\"" . getTemplate("settings/integritycheck_row") . "\";");
+	}
+	eval("echo \"" . getTemplate("settings/integritycheck") . "\";");
 }

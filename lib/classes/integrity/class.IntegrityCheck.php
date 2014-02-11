@@ -20,6 +20,22 @@
 
 class IntegrityCheck {
 
+	// Store all available checks
+	public $available = array();
+
+	/**
+	 * Constructor
+	 * Parses all available checks into $this->available 
+	 */
+	public function __construct() {
+		$this->available = get_class_methods($this);
+		unset($this->available[array_search('__construct', $this->available)]);
+		unset($this->available[array_search('checkAll', $this->available)]);
+		unset($this->available[array_search('fixAll', $this->available)]);
+		sort($this->available);
+		
+	}
+
 	/**
 	 * Check all occuring integrity problems at once
 	 */
