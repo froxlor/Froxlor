@@ -1619,6 +1619,13 @@ if ($page == 'domains'
 				$_update_data['mod_fcgid_maxrequests'] = $mod_fcgid_maxrequests;
 				$_update_data['parentdomainid'] = $id;
 
+				// if we have no more ssl-ip's for this domain,
+				// all its subdomains must have "ssl-redirect = 0"
+				$update_sslredirect = '';
+				if (count($ssl_ipandports) == 1 && $ssl_ipandports[0] == -1) {
+					$update_sslredirect = ", `ssl_redirect = '0' ";
+				}
+
 				$_update_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 					`customerid` = :customerid,
@@ -1627,7 +1634,7 @@ if ($page == 'domains'
 					`phpsettingid` = :phpsettingid,
 					`mod_fcgid_starter` = :mod_fcgid_starter,
 					`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests
-					" . $upd_specialsettings . $updatechildren . " 
+					" . $upd_specialsettings . $updatechildren . $update_sslredirect . "
 					WHERE `parentdomainid` = :parentdomainid
 				");
 				Database::pexecute($_update_stmt, $_update_data);
