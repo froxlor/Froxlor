@@ -1623,7 +1623,7 @@ if ($page == 'domains'
 				// all its subdomains must have "ssl-redirect = 0"
 				$update_sslredirect = '';
 				if (count($ssl_ipandports) == 1 && $ssl_ipandports[0] == -1) {
-					$update_sslredirect = ", `ssl_redirect = '0' ";
+					$update_sslredirect = ", `ssl_redirect` = '0' ";
 				}
 
 				$_update_stmt = Database::prepare("
