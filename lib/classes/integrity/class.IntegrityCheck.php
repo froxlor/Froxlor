@@ -41,7 +41,9 @@ class IntegrityCheck {
 	 */
 	public function checkAll() {
 		$integrityok = true;
-		$integrityok = $this->DomainIpTable() ? $integrityok : false;
+		foreach ($this->available as $check) {
+			$integrityok = $this->$check() ? $integrityok : false;
+		}
 		return $integrityok;
 	}
 
@@ -50,7 +52,9 @@ class IntegrityCheck {
 	 */
 	public function fixAll() {
 		$integrityok = true;
-		$integrityok = $this->DomainIpTable(true) ? $integrityok : false;
+		foreach ($this->available as $check) {
+			$integrityok = $this->$check(true) ? $integrityok : false;
+		}
 		return $integrityok;
 	}
 
@@ -142,4 +146,71 @@ class IntegrityCheck {
 		}
 	}
 
+	/**
+	 * Check if all subdomain have ssl-redirect = 0 if domain has no ssl-port
+	 * @param $fix Fix everything found directly
+	 */
+	public function SubdomainSslRedirect($fix = false) {
+		$ips = array();
+		$parentdomains = array();
+		$subdomains = array();
+
+		if ($fix) {
+			// Prepare update statement for the fixes
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_DOMAINS . "`
+				SET `ssl_redirect` = 0 WHERE `parentdomainid` = :domainid"
+			);
+		}
+
+		// Cache all ssl ip/port - combinations
+		$result_stmt = Database::prepare("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ssl` = 1 ORDER BY `id` ASC");
+		Database::pexecute($result_stmt);
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$ips[$row['id']] = $row['ip'] . ':' . $row['port'];
+		}
+		
+		// Cache all configured domains
+		$result_stmt = Database::prepare("SELECT `id`, `parentdomainid`, `ssl_redirect` FROM `" . TABLE_PANEL_DOMAINS . "` ORDER BY `id` ASC");
+		$ip_stmt = Database::prepare("SELECT `id_domain`, `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :domainid");
+		Database::pexecute($result_stmt);
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			if ($row['parentdomainid'] == 0) {
+				// All parentdomains by default have no ssl - ip/port
+				$parentdomains[$row['id']] = false;
+				Database::pexecute($ip_stmt, array('domainid' => $row['id']));
+				while ($iprow = $ip_stmt->fetch(PDO::FETCH_ASSOC)) {
+					// If the parentdomain has an ip/port assigned which we know is SSL enabled, set the parentdomain to "true"
+					if (array_key_exists($iprow['id_ipandports'], $ips)) { $parentdomains[$row['id']] = true; } 
+				}
+			} elseif ($row['ssl_redirect'] == 1)  {
+				// All subdomains with enabled ssl_redirect enabled are stored
+				if (!isset($subdomains[$row['parentdomainid']])) { $subdomains[$row['parentdomainid']] = array(); }
+				$subdomains[$row['parentdomainid']][] = $row['id'];
+			}
+		}
+		
+		// Check if every parentdomain with enabled ssl_redirect as SSL enabled
+		foreach ($parentdomains as $id => $sslavailable) {
+			// This parentdomain has no subdomains
+			if (!isset($subdomains[$id])) { continue; }
+			// This parentdomain has SSL enabled, doesn't matter what status the subdomains have
+			if ($sslavailable) { continue; }
+			
+			// At this point only parentdomains reside which have ssl_redirect enabled subdomains
+			if ($fix) {
+				// We make a blanket update to all subdomains of this parentdomain, doesn't matter which one is wrong, all have to be disabled
+				Database::pexecute($upd_stmt, array('domainid' => $id));
+			} else {
+				// It's just the check, let the function fail
+				return false;
+			}
+		}
+		
+		if ($fix) {
+			return $this->SubdomainSslRedirect();
+		} else {
+			return true;
+		}
+	}
 }
