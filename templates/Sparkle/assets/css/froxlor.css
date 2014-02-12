@@ -188,7 +188,6 @@ select {
 	margin-right: 0;
 	margin-bottom: 18px;
 	margin-left: 12px;
-	background-color:#f8f8f8;
 	border: 1px solid #666;
 	-webkit-border-top-right-radius:20px;
 	-webkit-border-bottom-left-radius:20px;
@@ -200,12 +199,11 @@ select {
 }
 
 .dboarditem th,.dboarditemfull th {
-	background-color:inherit;
+
 }
 
 .dboarditem td,.dboarditemfull td {
 	border-bottom:1px dotted #ccc;
-	background-color:#f8f8f8;
 	padding-left:20px;
 }
 
