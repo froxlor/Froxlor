@@ -107,7 +107,6 @@ nav div:last-child {
 
 /* TABLES */
 table {
-	border-radius: 0;
 	border: 1px solid #666;
 	-webkit-border-top-right-radius:20px;
 	-webkit-border-bottom-left-radius:20px;
@@ -123,15 +122,24 @@ table thead th, table th {
 	background-color: #176fa1;
 	border: 1px solid #176fa1;
 	text-align: center;
+}
+
+table thead th:last-child {
 	-webkit-border-top-right-radius:20px;
-	-webkit-border-bottom-left-radius:20px;
 	-moz-border-radius-topright:20px;
-	-moz-border-radius-bottomleft:20px;
 	border-top-right-radius:20px;
-	border-bottom-left-radius:20px;
 }
 
 table tfoot tr td {
+	-webkit-border-top-right-radius: 20px;
+	-webkit-border-bottom-left-radius: 20px;
+	-moz-border-radius-topright: 20px;
+	-moz-border-radius-bottomleft: 20px;
+	border-top-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+}
+
+table.hl tbody tr:hover:last-child td:first-child {
 	-webkit-border-top-right-radius: 20px;
 	-webkit-border-bottom-left-radius: 20px;
 	-moz-border-radius-topright: 20px;
@@ -198,12 +206,7 @@ select {
 	padding:0;
 }
 
-.dboarditem th,.dboarditemfull th {
-
-}
-
 .dboarditem td,.dboarditemfull td {
-	border-bottom:1px dotted #ccc;
 	padding-left:20px;
 }
 
