@@ -93,7 +93,7 @@ return array(
 					'default_vhostconf_domain' => array(
 						'style' => 'vertical-align:top;',
 						'label' => $lng['admin']['ipsandports']['default_vhostconf_domain'],
-						'desc' => $lng['serversettings']['default_vhostconf']['description'],
+						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12

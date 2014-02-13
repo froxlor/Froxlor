@@ -782,7 +782,8 @@ $lng['message']['noreceipients'] = 'No e-mail has been sent because there are no
 $lng['admin']['sslsettings'] = 'SSL settings';
 $lng['cronjobs']['notyetrun'] = 'Not yet run';
 $lng['serversettings']['default_vhostconf']['title'] = 'Default vHost-settings';
-$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into the domain vHost container directly. Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
+$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into this ip/port vHost container directly. Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
+$lng['serversettings']['default_vhostconf_domain']['description'] = 'The content of this field will be included into the domain vHost container directly. Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['error']['invalidip'] = 'Invalid IP address: %s';
 $lng['serversettings']['decimal_places'] = 'Number of decimal places in traffic/webspace output';
 
