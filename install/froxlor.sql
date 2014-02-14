@@ -539,6 +539,7 @@ CREATE TABLE `panel_tasks` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
+INSERT INTO `panel_tasks` (`type`) VALUES ('99');
 
 
 DROP TABLE IF EXISTS `panel_templates`;
