@@ -284,6 +284,7 @@ class FroxlorInstall {
 			$message = $this->_lng['install']['froxlor_succ_installed'];
 			$link = '../index.php';
 			$linktext = $this->_lng['click_here_to_login'];
+			inserttask('99');
 		}
 
 		eval("\$navigation .= \"" . $this->_getTemplate("pagebottom") . "\";");
