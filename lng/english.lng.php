@@ -1814,3 +1814,4 @@ $lng['question']['admin_integritycheck_reallyfix'] = 'Do you really want to try 
 $lng['serversettings']['system_croncmdline']['title'] = 'Cron execution command (php-binary)';
 $lng['serversettings']['system_croncmdline']['description'] = 'Command to execute our cronjobs. Change this only if you know what you are doing (default: "/usr/bin/nice -n 5 /usr/bin/php5 -q")!';
 $lng['error']['cannotdeletehostnamephpconfig'] = 'This PHP-configuration is used by the Froxlor-vhost and cannot be deleted.';
+$lng['error']['cannotdeletedefaultphpconfig'] = 'This PHP-configuration is set as default and cannot be deleted.';

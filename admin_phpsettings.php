@@ -72,6 +72,7 @@ if ($page == 'overview') {
 				}
 			}
 
+			// check whether we use that config as froxor-vhost config
 			if (Settings::Get('system.mod_fcgid_defaultini_ownvhost') == $row['id']
 				|| Settings::Get('phpfpm.vhost_defaultini') == $row['id']
 			) {
@@ -81,6 +82,16 @@ if ($page == 'overview') {
 			if ($domains == '') {
 				$domains = $lng['admin']['phpsettings']['notused'];
 			}
+
+			// check whether this is our default config
+			if ((Settings::Get('system.mod_fcgid') == '1'
+				&& Settings::Get('system.mod_fcgid_defaultini') == $id)
+				|| (Settings::Get('phpfpm.enabled') == '1'
+				&& Settings::Get('phpfpm.defaultini') == $id)
+			) {
+				$row['description'] = '<b>'.$row['description'].'</b>';
+			}
+
 			$count ++;
 			eval("\$tablecontent.=\"" . getTemplate("phpconfig/overview_overview") . "\";");
 		}
@@ -187,6 +198,14 @@ if ($page == 'overview') {
 			&& Settings::Get('phpfpm.vhost_defaultini') == $id)
 		) {
 			standard_error('cannotdeletehostnamephpconfig');
+		}
+
+		if ((Settings::Get('system.mod_fcgid') == '1'
+			&& Settings::Get('system.mod_fcgid_defaultini') == $id)
+			|| (Settings::Get('phpfpm.enabled') == '1'
+			&& Settings::Get('phpfpm.defaultini') == $id)
+		) {
+			standard_error('cannotdeletedefaultphpconfig');
 		}
 
 		if ($result['id'] != 0
