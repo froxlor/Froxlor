@@ -1537,3 +1537,6 @@ $lng['admin']['integrityname'] = 'Name';
 $lng['admin']['integrityresult'] = 'Ergebnis';
 $lng['admin']['integrityfix'] = 'Probleme automatisch beheben';
 $lng['question']['admin_integritycheck_reallyfix'] = 'M&ouml;chten Sie wirklich versuchen s&auml;tliche Datenbank - Integrit&auml;tsprobleme automatisch zu beheben?';
+$lng['serversettings']['system_croncmdline']['title'] = 'Cron Startbefehl (php Programm)';
+$lng['serversettings']['system_croncmdline']['description'] = 'Befehl zum Ausführen des Cronjobs. Ändern dieser Einstellung nur wenn nötig (Standard: "/usr/bin/nice -n 5 /usr/bin/php5 -q")!';
+$lng['error']['cannotdeletehostnamephpconfig'] = 'Diese PHP-Konfiguration ist dem Froxlor-Vhost zugewiesen und kann daher nicht gelöscht werden.';

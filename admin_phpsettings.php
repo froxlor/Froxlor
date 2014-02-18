@@ -70,7 +70,15 @@ if ($page == 'overview') {
 				while ($row2 = $domainresult_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$domains.= $row2['domain'] . '<br/>';
 				}
-			} else {
+			}
+
+			if (Settings::Get('system.mod_fcgid_defaultini_ownvhost') == $row['id']
+				|| Settings::Get('phpfpm.vhost_defaultini') == $row['id']
+			) {
+				$domains .= Settings::Get('system.hostname');
+			}
+
+			if ($domains == '') {
 				$domains = $lng['admin']['phpsettings']['notused'];
 			}
 			$count ++;
@@ -173,6 +181,14 @@ if ($page == 'overview') {
 		);
 		$result = Database::pexecute_first($result_stmt, array('id' => $id));
 
+		if ((Settings::Get('system.mod_fcgid') == '1'
+			&& Settings::Get('system.mod_fcgid_defaultini_ownvhost') == $id)
+			|| (Settings::Get('phpfpm.enabled') == '1'
+			&& Settings::Get('phpfpm.vhost_defaultini') == $id)
+		) {
+			standard_error('cannotdeletehostnamephpconfig');
+		}
+
 		if ($result['id'] != 0
 			&& $result['id'] == $id
 			&& (int)$userinfo['change_serversettings'] == 1
@@ -186,7 +202,7 @@ if ($page == 'overview') {
 				// config that is to be deleted
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
-					`phpsettingid` = 1 WHERE `phpsettingid` = :id"
+					`phpsettingid` = '1' WHERE `phpsettingid` = :id"
 				);
 				Database::pexecute($upd_stmt, array('id' => $id));
 
