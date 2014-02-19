@@ -118,13 +118,13 @@ if ($page == 'overview') {
 						$isnewerversion = 0;
 					}
 				} else {
-					redirectTo($update_check_uri.'/pretty', NULL);
+					redirectTo($update_check_uri.'/pretty', NULL, false);
 				}
 			} else {
-				redirectTo($update_check_uri.'/pretty', NULL);
+				redirectTo($update_check_uri.'/pretty', NULL, false);
 			}
 		} else {
-			redirectTo($update_check_uri.'/pretty', NULL);
+			redirectTo($update_check_uri.'/pretty', NULL, false);
 		}
 	} else {
 		$lookfornewversion_lable = $lng['admin']['lookfornewversion']['clickhere'];

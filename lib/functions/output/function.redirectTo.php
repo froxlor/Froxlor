@@ -36,7 +36,7 @@
  *          - fixed bug #91
  */
 
-function redirectTo($destination, $get_variables = null, $isRelative = false) {
+function redirectTo($destination, $get_variables = null, $isRelative = true) {
 
 	global $s;
 
@@ -77,7 +77,11 @@ function redirectTo($destination, $get_variables = null, $isRelative = false) {
 		exit;
 
 	} elseif ($get_variables == null) {
-		$linker = new linker($destination, $s);
+		if ($isRelative) {
+			$linker = new linker($destination, $s);
+		} else {
+			$linker = new linker($destination);
+		}
 		header('Location: ' . $linker->getLink());
 		exit;
 	}

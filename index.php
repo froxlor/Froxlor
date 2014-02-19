@@ -104,7 +104,7 @@ if ($action == 'login') {
 				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => $_SERVER['REMOTE_ADDR']));
 				$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "Unknown user '" . $loginname . "' tried to login.");
 
-				redirectTo('index.php', array('showmessage' => '2'), true);
+				redirectTo('index.php', array('showmessage' => '2'));
 				exit;
 			}
 		}
@@ -116,7 +116,7 @@ if ($action == 'login') {
 		$userinfo = $userinfo_stmt->fetch(PDO::FETCH_ASSOC);
 
 		if ($userinfo['loginfail_count'] >= Settings::Get('login.maxloginattempts') && $userinfo['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))) {
-			redirectTo('index.php', array('showmessage' => '3'), true);
+			redirectTo('index.php', array('showmessage' => '3'));
 			exit;
 		} elseif ($userinfo['password'] == md5($password)) {
 			// login correct
@@ -141,7 +141,7 @@ if ($action == 'login') {
 			$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to login with wrong password.");
 
 			unset($userinfo);
-			redirectTo('index.php', array('showmessage' => '2'), true);
+			redirectTo('index.php', array('showmessage' => '2'));
 			exit;
 		}
 
@@ -206,32 +206,32 @@ if ($action == 'login') {
 				);
 			}
 			Database::pexecute($stmt, $params);
-			
+
 			$qryparams = array();
 			if (isset($_POST['qrystr']) && $_POST['qrystr'] != "") {
 				parse_str(urldecode($_POST['qrystr']), $qryparams);
 			}
 			$qryparams['s'] = $s;
-			
+
 			if ($userinfo['adminsession'] == '1') {
 				if (hasUpdates($version)) {
-					redirectTo('admin_updates.php', array('s' => $s), true);
+					redirectTo('admin_updates.php', array('s' => $s));
 				} else {
 					if (isset($_POST['script']) && $_POST['script'] != "") {
-						redirectTo($_POST['script'], $qryparams, true);
+						redirectTo($_POST['script'], $qryparams);
 					} else {
-						redirectTo('admin_index.php', $qryparams, true);
+						redirectTo('admin_index.php', $qryparams);
 					}
 				}
 			} else {
 				if (isset($_POST['script']) && $_POST['script'] != "") {
-					redirectTo($_POST['script'], $qryparams, true);
+					redirectTo($_POST['script'], $qryparams);
 				} else {
-					redirectTo('customer_index.php', $qryparams, true);
+					redirectTo('customer_index.php', $qryparams);
 				}
 			}
 		} else {
-			redirectTo('index.php', array('showmessage' => '2'), true);
+			redirectTo('index.php', array('showmessage' => '2'));
 		}
 		exit;
 	} else {
@@ -323,7 +323,7 @@ if ($action == 'forgotpwd') {
 			/* Check whether user is banned */
 			if ($user['deactivated']) {
 				$message = $lng['pwdreminder']['notallowed'];
-				redirectTo('index.php', array('showmessage' => '5'), true);
+				redirectTo('index.php', array('showmessage' => '5'));
 			}
 
 			if (($adminchecked && Settings::Get('panel.allow_preset_admin') == '1') || $adminchecked == false) {
@@ -415,12 +415,12 @@ if ($action == 'forgotpwd') {
 					if ($_mailerror) {
 						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'));
 						$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-						redirectTo('index.php', array('showmessage' => '4', 'customermail' => $user['email']), true);
+						redirectTo('index.php', array('showmessage' => '4', 'customermail' => $user['email']));
 						exit;
 					}
 
 					$mail->ClearAddresses();
-					redirectTo('index.php', array('showmessage' => '1'), true);
+					redirectTo('index.php', array('showmessage' => '1'));
 					exit;
 				} else {
 					$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'));
@@ -511,17 +511,17 @@ if ($action == 'resetpwd') {
 							AND `userid` = :userid"
 						);
 						Database::pexecute($stmt, array("activationcode" => $activationcode, "userid" => $result['userid']));
-						redirectTo('index.php', array("showmessage" => '6'), true);
+						redirectTo('index.php', array("showmessage" => '6'));
 					}
 				} else {
-					redirectTo('index.php', array("showmessage" => '7'), true);
+					redirectTo('index.php', array("showmessage" => '7'));
 				}
 			}
 
 			eval("echo \"" . getTemplate('rpwd') . "\";");
 
 		} else {
-			redirectTo('index.php', array("showmessage" => '7'), true);
+			redirectTo('index.php', array("showmessage" => '7'));
 		}
 
 	} else {
