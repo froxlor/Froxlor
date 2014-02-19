@@ -80,7 +80,7 @@ function correctMysqlUsers($mysql_access_host_array) {
 			}
 		}
 
-		$dbm->flushPrivileges();
+		$dbm->getManager()->flushPrivileges();
 		Database::needRoot(false);
 	}
 }
