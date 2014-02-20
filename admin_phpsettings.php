@@ -85,9 +85,9 @@ if ($page == 'overview') {
 
 			// check whether this is our default config
 			if ((Settings::Get('system.mod_fcgid') == '1'
-				&& Settings::Get('system.mod_fcgid_defaultini') == $id)
+				&& Settings::Get('system.mod_fcgid_defaultini') == $row['id'])
 				|| (Settings::Get('phpfpm.enabled') == '1'
-				&& Settings::Get('phpfpm.defaultini') == $id)
+				&& Settings::Get('phpfpm.defaultini') == $row['id'])
 			) {
 				$row['description'] = '<b>'.$row['description'].'</b>';
 			}
