@@ -256,7 +256,7 @@ class Database {
 		// build up connection string
 		$driver = 'mysql';
 		$dsn = $driver.":";
-		$options = array('PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8');
+		$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'set names utf8');
 		$attributes = array('ATTR_ERRMODE' => 'ERRMODE_EXCEPTION');
 
 		$dbconf["dsn"] = array(
