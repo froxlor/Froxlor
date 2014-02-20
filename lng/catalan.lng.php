@@ -68,7 +68,6 @@ $lng['customer']['forwarders'] = 'Redireccionadors de correu';
 $lng['customer']['ftps'] = 'Comptes FTP';
 $lng['customer']['subdomains'] = 'Subdomini(s)';
 $lng['customer']['domains'] = 'Domini(s)';
-$lng['customer']['unlimited'] = 'ilimitat';
 
 /**
  * Customermenue

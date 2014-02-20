@@ -65,7 +65,6 @@ $lng['customer']['traffic'] = 'Verkeer (GB)';
 $lng['customer']['emails'] = 'E-mail-Adressen';
 $lng['customer']['subdomains'] = 'Sub-Domein(en)';
 $lng['customer']['domains'] = 'Domein(en)';
-$lng['customer']['unlimited'] = 'onbeperkt';
 
 /**
  * Customermenue

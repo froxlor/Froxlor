@@ -71,7 +71,6 @@ $lng['customer']['forwarders'] = 'Reindirizzamenti Email';
 $lng['customer']['ftps'] = 'Account FTP';
 $lng['customer']['subdomains'] = 'Sottodomini';
 $lng['customer']['domains'] = 'Domini';
-$lng['customer']['unlimited'] = 'illimitati';
 
 /**
  * Customermenue

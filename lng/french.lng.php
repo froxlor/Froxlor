@@ -81,7 +81,6 @@ $lng['customer']['forwarders'] = 'Transfert(s) e-mail';
 $lng['customer']['ftps'] = 'Accès FTP';
 $lng['customer']['subdomains'] = 'Sous-domaine(s)';
 $lng['customer']['domains'] = 'Domaine(s)';
-$lng['customer']['unlimited'] = 'illimité';
 
 /**
  * Customermenue

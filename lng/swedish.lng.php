@@ -70,7 +70,6 @@ $lng['customer']['forwarders'] = 'E-post_skicka_vidare';
 $lng['customer']['ftps'] = 'FTP_Kto';
 $lng['customer']['subdomains'] = 'Sub-Domäner';
 $lng['customer']['domains'] = 'Domäner';
-$lng['customer']['unlimited'] = 'Obegränsad';
 
 /**
  * Customermenue

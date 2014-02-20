@@ -66,7 +66,6 @@ $lng['customer']['forwarders'] = 'Пересылки eMail (forwarder)';
 $lng['customer']['ftps'] = 'Аккаунты FTP';
 $lng['customer']['subdomains'] = 'Поддомены';
 $lng['customer']['domains'] = 'Домены';
-$lng['customer']['unlimited'] = 'без ограничений';
 
 /**
  * Customermenue

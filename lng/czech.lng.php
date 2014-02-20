@@ -70,7 +70,6 @@ $lng['customer']['forwarders'] = 'E-mailové přeposílače';
 $lng['customer']['ftps'] = 'FTP účty';
 $lng['customer']['subdomains'] = 'Sub-Domény';
 $lng['customer']['domains'] = 'Doména';
-$lng['customer']['unlimited'] = 'neomezeno';
 
 /**
  * Customermenue

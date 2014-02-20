@@ -69,7 +69,6 @@ $lng['customer']['forwarders'] = 'E-mail továbbítók';
 $lng['customer']['ftps'] = 'FTP fiókok';
 $lng['customer']['subdomains'] = 'Aldomain(ek)';
 $lng['customer']['domains'] = 'Domain(ek)';
-$lng['customer']['unlimited'] = 'korlátlan';
 
 /**
  * Customermenue

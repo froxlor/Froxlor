@@ -71,7 +71,6 @@ $lng['customer']['forwarders'] = 'e-mail de reenvío';
 $lng['customer']['ftps'] = 'FTP-Cuentas';
 $lng['customer']['subdomains'] = 'Subdominios';
 $lng['customer']['domains'] = 'Dominios';
-$lng['customer']['unlimited'] = 'infinito';
 
 /**
  * Customermenue

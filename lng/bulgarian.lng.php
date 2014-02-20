@@ -70,7 +70,6 @@ $lng['customer']['forwarders'] = 'Препращане на е-поща';
 $lng['customer']['ftps'] = 'FTP акаунти';
 $lng['customer']['subdomains'] = 'Поддомейн(и)';
 $lng['customer']['domains'] = 'Домейн(и)';
-$lng['customer']['unlimited'] = 'неограничен';
 
 /**
  * Customermenue

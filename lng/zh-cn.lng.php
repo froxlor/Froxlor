@@ -74,7 +74,6 @@ $lng['customer']['forwarders'] = '电子邮件转发';
 $lng['customer']['ftps'] = 'FTP账户';
 $lng['customer']['subdomains'] = '子域名';
 $lng['customer']['domains'] = '域名';
-$lng['customer']['unlimited'] = '无限的';
 
 /**
  * Customermenue
