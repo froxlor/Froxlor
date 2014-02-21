@@ -22,8 +22,7 @@
  * 
  * @return boolean
  */
-function setImmutable($filename = null)
-{
+function setImmutable($filename = null) {
 	safe_exec(_getImmutableFunction(false).escapeshellarg($filename));
 }
 
@@ -34,8 +33,7 @@ function setImmutable($filename = null)
  * 
  * @return boolean
  */
-function removeImmutable($filename = null)
-{
+function removeImmutable($filename = null) {
 	safe_exec(_getImmutableFunction(true).escapeshellarg($filename));
 }
 
@@ -47,19 +45,12 @@ function removeImmutable($filename = null)
  * 
  * @return string functionname + parameter (not the file)
  */
-function _getImmutableFunction($remove = false)
-{
-	$output = array();
-	$return_var = 0;
-	exec('which chattr 2>&1', $output, $return_var);
+function _getImmutableFunction($remove = false) {
 
-	if((int)$return_var != 0)
-	{
+	if (isFreeBSD()) {
 		// FreeBSD style
 		return 'chflags '.(($remove === true) ? 'noschg ' : 'schg ');  
-	}
-	else
-	{
+	} else {
 		// Linux style
 		return 'chattr '.(($remove === true) ? '-i ' : '+i ');
 	}

@@ -17,32 +17,47 @@
 
 function getFilesystemQuota() {
 
+	// enabled at all?
 	if (Settings::Get('system.diskquota_enabled')) {
 
+		// set linux defaults
+		$repquota_params = "-np";
+		//$quota_line_regex = "/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/i";
+		$quota_line_regex = "/^#([0-9]+)\s+[+-]{2}\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/i";
+
+		// check for freebsd - which needs other values
+		if (isFreeBSD()) {
+			$repquota_params = "-nu";
+			$quota_line_regex = "/^([0-9]+)\s+[+-]{2}\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)/i";
+		}
+
 		// Fetch all quota in the desired partition
-		exec(Settings::Get('system.diskquota_repquota_path') . " -np " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')), $repquota);
+		exec(Settings::Get('system.diskquota_repquota_path') . " " . $repquota_params . " " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')), $repquota);
 
 		$usedquota = array();
 		foreach ($repquota as $tmpquota) {
+
 			// Let's see if the line matches a quota - line
-			if (preg_match('/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/i', $tmpquota, $matches)) {
+			if (preg_match($quota_line_regex, $tmpquota, $matches)) {
+
 				// It matches - put it into an array with userid as key (for easy lookup later)
 				$usedquota[$matches[1]] = array(
 						'block' => array(
 								'used' => $matches[2],
 								'soft' => $matches[3],
 								'hard' => $matches[4],
-								'grace' => $matches[5]
+								'grace' => (isFreeBSD() ? '0' : $matches[5])
 						),
 						'file' => array(
 								'used' => $matches[6],
 								'soft' => $matches[7],
 								'hard' => $matches[8],
-								'grace' => $matches[9]
+								'grace' => (isFreeBSD() ? '0' : $matches[9])
 						),
 				);
 			}
 		}
+
 		return $usedquota;
 	}
 	return false;
