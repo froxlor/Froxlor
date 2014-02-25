@@ -80,7 +80,12 @@ function checkCrondConfigurationFile() {
 				}
 
 				// create entry-line
-				$binpath = "/usr/bin/nice -n 5 /usr/bin/php5 -q";
+				$binpath = Settings::Get("system.croncmdline");
+				// fallback as it is important
+				if ($binpath === null) {
+					$binpath = "/usr/bin/nice -n 5 /usr/bin/php5 -q";
+				}
+
 				$cronfile .= "root " . $binpath." " . FROXLOR_INSTALL_DIR . "/scripts/froxlor_master_cronjob.php --" . $row_cronentry['cronfile'] . " 1> /dev/null\n";
 			}
 		}

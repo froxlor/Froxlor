@@ -275,7 +275,7 @@ class FroxlorInstall {
 			$navigation = '';
 			$msgcolor = 'red';
 			$message = $this->_lng['install']['testing_mysql_fail'];
-			$link = 'install.php';
+			$link = 'install.php?check=1';
 			$linktext = $this->_lng['click_here_to_goback'];
 		} else {
 			// all good

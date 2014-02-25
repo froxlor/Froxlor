@@ -501,6 +501,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mailtraffic_enabled', '1'),
 	('system', 'cronconfig', '/etc/cron.d/froxlor'),
 	('system', 'crondreload', '/etc/init.d/cron reload'),
+	('system', 'croncmdline', '/usr/bin/nice -n 5 /usr/bin/php5 -q'),
+	('system', 'cron_allowautoupdate', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -528,7 +530,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.32-rc1');
+	('panel', 'version', '0.9.32-rc2');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

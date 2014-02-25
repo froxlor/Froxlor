@@ -2727,3 +2727,29 @@ if (isFroxlorVersion('0.9.32-dev6')) {
 
 	updateToVersion('0.9.32-rc1');
 }
+
+if (isFroxlorVersion('0.9.32-rc1')) {
+
+	showUpdateStep("Updating from 0.9.32-rc1 to 0.9.32-rc2", false);
+
+	showUpdateStep("Removing autoresponder-cronjob (deprecated)");
+	Database::query("DELETE FROM `".TABLE_PANEL_CRONRUNS."` WHERE `module` = 'froxlor/autoresponder';");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new settings for cron");
+	// get user-chosen value
+	$croncmdline = isset($_POST['croncmdline']) ? $_POST['croncmdline'] : "/usr/bin/nice -n 5 /usr/bin/php5 -q";
+	Settings::AddNew("system.croncmdline", $croncmdline);
+	// add task to generate cron.d-file
+	inserttask('99');
+	// silenty add the auto-update setting - we do not want everybody to know and use this
+	// as it is a very dangerous setting
+	Settings::AddNew("system.cron_allowautoupdate", 0);
+	lastStepStatus(0);
+
+	showUpdateStep("Removing backup-module ftp-users (deprecated)");
+	Database::query("DELETE FROM `".TABLE_FTP_USERS."` WHERE `username` LIKE '%_backup';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.32-rc2');
+}

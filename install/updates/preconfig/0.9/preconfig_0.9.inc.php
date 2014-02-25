@@ -650,4 +650,12 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
+	if (versionInUpdate($current_version, '0.9.32-rc2')) {
+		$has_preconfig = true;
+		$description = 'To customize the command which executes the cronjob (php - basically) change the path below according to your system.<br /><br />';
+		$question = '<strong>Please specify the command to execute cronscripts</strong> (default: "/usr/bin/nice -n 5 /usr/bin/php5 -q")<br />';
+		$question.= '<input type="text" class="text" name="croncmdline" value="/usr/bin/nice -n 5 /usr/bin/php5 -q" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
 }
