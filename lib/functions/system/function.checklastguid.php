@@ -46,6 +46,11 @@ function checkLastGuid() {
 	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 	$froxlor_guid = $result['fguid'];
 
+	// possibly no customers yet or f*cked up lastguid settings
+	if ($froxlor_guid < Settings::Get('system.lastguid')) {
+		$froxlor_guid = Settings::Get('system.lastguid');
+	}
+
 	$g_file = '/etc/group';
 
 	if (file_exists($g_file)) {
