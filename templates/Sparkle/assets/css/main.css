@@ -168,14 +168,13 @@ ul.topheadernav li ul li a:hover {
 	display:block;
 	font-size:9px;
 	color:#fff;
-	background-color:#d00;
+	background-color:#d90000;
 	position:absolute;
 	padding:3px;
-	font-weight:700;
 	line-height:9px;
 	border-radius:3px;
 	right:-6px;
-	bottom:-1px;
+	bottom:-4px;
 }
 
 /* FOOTER */
