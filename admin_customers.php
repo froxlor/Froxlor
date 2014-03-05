@@ -858,6 +858,9 @@ if ($page == 'customers'
 							`openbasedir` = '1',
 							`speciallogfile` = '0',
 							`specialsettings` = '',
+							`dkim_id` = '0',
+							`dkim_privkey` = '',
+							`dkim_pubkey` = '',
 							`add_date` = :adddate"
 						);
 						Database::pexecute($ins_stmt, $ins_data);
