@@ -653,7 +653,7 @@ if ($page == 'customers'
 						'imap' => $email_imap,
 						'pop3' => $email_pop3,
 						'perlenabled' => $perlenabled,
-						'theme' => $theme
+						'theme' => $_theme
 					);
 
 					$ins_stmt = Database::prepare("
