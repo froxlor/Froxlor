@@ -440,7 +440,6 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mod_fcgid_tmpdir', '/var/customers/tmp'),
 	('system', 'ssl_cert_file', '/etc/apache2/apache2.pem'),
 	('system', 'use_ssl', '0'),
-	('system', 'openssl_cnf', '[ req ]\r\ndefault_bits = 1024\r\ndistinguished_name = req_distinguished_name\r\nattributes = req_attributes\r\nprompt = no\r\noutput_password =\r\ninput_password =\r\n[ req_distinguished_name ]\r\nC = DE\r\nST = froxlor\r\nL = froxlor    \r\nO = Testcertificate\r\nOU = froxlor        \r\nCN = @@domain_name@@\r\nemailAddress = @@email@@    \r\n[ req_attributes ]\r\nchallengePassword =\r\n'),
 	('system', 'default_vhostconf', ''),
 	('system', 'mail_quota_enabled', '0'),
 	('system', 'mail_quota', '100'),
