@@ -24,6 +24,8 @@ class bind {
 	public $mxservers = array();
 	public $axfrservers = array();
 
+	private $_known_filenames = array();
+
 	public function __construct($logger, $debugHandler) {
 
 		$this->logger = $logger;
@@ -72,7 +74,7 @@ class bind {
 			safe_exec('mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
 		}
 
-		$known_filenames = array();
+		$this->_known_filenames = array();
 
 		$bindconf_file = '# ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";
 		$result_domains_stmt = Database::query("
@@ -118,7 +120,7 @@ class bind {
 
 				if ($domain_filename != '.'
 					&& $domain_filename != '..'
-					&& !in_array($domain_filename, $known_filenames)
+					&& !in_array($domain_filename, $this->_known_filenames)
 					&& is_file($full_filename)
 					&& file_exists($full_filename)) {
 					fwrite($this->debugHandler, '  cron_tasks: Task4 - unlinking ' . $domain_filename . "\n");
@@ -140,7 +142,7 @@ class bind {
 			$zonefile = $this->generateZone($domain, $froxlorhost);
 			$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
 			$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
-			$known_filenames[] = basename($zonefile_name);
+			$this->_known_filenames[] = basename($zonefile_name);
 			$zonefile_handler = fopen($zonefile_name, 'w');
 			fwrite($zonefile_handler, $zonefile);
 			fclose($zonefile_handler);
@@ -200,16 +202,22 @@ class bind {
 		$domainidquery = '';
 		$query_params = array();
 		if (!$froxlorhost) {
+
 			$domainidquery = "`di`.`id_domain` = :domainid AND ";
 			$query_params['domainid'] = $domain['id'];
-		}
 
-		$result_ip_stmt = Database::prepare("
-			SELECT `p`.`ip` AS `ip`
-			FROM `".TABLE_PANEL_IPSANDPORTS."` `p`, `".TABLE_DOMAINTOIP."` `di`
-			WHERE ".$domainidquery."`p`.`id` = `di`.`id_ipandports`
-			GROUP BY `p`.`ip`;
-		");
+			$result_ip_stmt = Database::prepare("
+				SELECT `p`.`ip` AS `ip`
+				FROM `".TABLE_PANEL_IPSANDPORTS."` `p`, `".TABLE_DOMAINTOIP."` `di`
+				WHERE ".$domainidquery."`p`.`id` = `di`.`id_ipandports`
+				GROUP BY `p`.`ip`;
+			");
+		} else {
+			// use all available IP's for the froxlor-hostname
+			$result_ip_stmt = Database::prepare("
+				SELECT `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` GROUP BY `ip`
+			");
+		}
 		Database::pexecute($result_ip_stmt, $query_params);
 
 		while ($ip = $result_ip_stmt->fetch(PDO::FETCH_ASSOC)) {
