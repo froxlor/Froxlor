@@ -81,54 +81,23 @@ class bind {
 			WHERE `d`.`isbinddomain` = '1' ORDER BY `d`.`domain` ASC
 		");
 
+		// customer-domains
 		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-
-			fwrite($this->debugHandler, '  cron_tasks: Task4 - Writing ' . $domain['id'] . '::' . $domain['domain'] . "\n");
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Writing ' . $domain['id'] . '::' . $domain['domain']);
-
-			if ($domain['zonefile'] == '') {
-				$zonefile = $this->generateZone($domain);
-				$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
-				$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
-				$known_filenames[] = basename($zonefile_name);
-				$zonefile_handler = fopen($zonefile_name, 'w');
-				fwrite($zonefile_handler, $zonefile);
-				fclose($zonefile_handler);
-				fwrite($this->debugHandler, '  cron_tasks: Task4 - `' . $zonefile_name . '` zone written' . "\n");
-			}
-
-			$bindconf_file.= '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
-			$bindconf_file.= 'zone "' . $domain['domain'] . '" in {' . "\n";
-			$bindconf_file.= '	type master;' . "\n";
-			$bindconf_file.= '	file "' . makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']) . '";' . "\n";
-			$bindconf_file.= '	allow-query { any; };' . "\n";
-
-			if (count($this->nameservers) > 0
-				|| count($this->axfrservers) > 0
-			) {
-				// open allow-transfer
-				$bindconf_file.= '	allow-transfer {' . "\n";
-				// put nameservers in allow-transfer
-				if (count($this->nameservers) > 0) {
-					foreach ($this->nameservers as $ns) {
-						$bindconf_file.= '		' . $ns['ip'] . ';' . "\n";
-					}
-				}
-				// AXFR server #100
-				if (count($this->axfrservers) > 0) {
-					foreach ($this->axfrservers as $axfrserver) {
-						if (validate_ip($axfrserver, true) !== false) {
-							$bindconf_file.= '		' . $axfrserver . ';' . "\n";
-						}
-					}
-				}
-				// close allow-transfer
-				$bindconf_file.= '	};' . "\n";
-			}
-
-			$bindconf_file.= '};' . "\n";
-			$bindconf_file.= "\n";
+			$bindconf_file .= $this->_generateDomainConfig($domain);
 		}
+
+		// frolxor-hostname (#1090)
+		$hostname_arr = array(
+			'id' => 'none',
+			'domain' => Settings::Get('system.hostname'),
+			'customerid' => 'none',
+			'loginname' => 'froxlor.panel',
+			'bindserial' => date('Ymd').'00',
+			'dkim' => '0',
+			'iswildcarddomain' => '1',
+			'zonefile' => ''
+		);
+		$bindconf_file .= $this->_generateDomainConfig($hostname_arr, true);
 
 		$bindconf_file_handler = fopen(makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
 		fwrite($bindconf_file_handler, $bindconf_file);
@@ -160,20 +129,88 @@ class bind {
 		}
 	}
 
+	private function _generateDomainConfig($domain = array(), $froxlorhost = false) {
 
-	protected function generateZone($domain) {
+		$bindconf_file = '';
+
+		fwrite($this->debugHandler, '  cron_tasks: Task4 - Writing ' . $domain['id'] . '::' . $domain['domain'] . "\n");
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Writing ' . $domain['id'] . '::' . $domain['domain']);
+
+		if ($domain['zonefile'] == '') {
+			$zonefile = $this->generateZone($domain, $froxlorhost);
+			$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
+			$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
+			$known_filenames[] = basename($zonefile_name);
+			$zonefile_handler = fopen($zonefile_name, 'w');
+			fwrite($zonefile_handler, $zonefile);
+			fclose($zonefile_handler);
+			fwrite($this->debugHandler, '  cron_tasks: Task4 - `' . $zonefile_name . '` zone written' . "\n");
+		}
+
+		$bindconf_file.= '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
+		$bindconf_file.= 'zone "' . $domain['domain'] . '" in {' . "\n";
+		$bindconf_file.= '	type master;' . "\n";
+		$bindconf_file.= '	file "' . makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']) . '";' . "\n";
+		$bindconf_file.= '	allow-query { any; };' . "\n";
+
+		if (count($this->nameservers) > 0
+				|| count($this->axfrservers) > 0
+		) {
+			// open allow-transfer
+			$bindconf_file.= '	allow-transfer {' . "\n";
+			// put nameservers in allow-transfer
+			if (count($this->nameservers) > 0) {
+				foreach ($this->nameservers as $ns) {
+					$bindconf_file.= '		' . $ns['ip'] . ';' . "\n";
+				}
+			}
+			// AXFR server #100
+			if (count($this->axfrservers) > 0) {
+				foreach ($this->axfrservers as $axfrserver) {
+					if (validate_ip($axfrserver, true) !== false) {
+						$bindconf_file.= '		' . $axfrserver . ';' . "\n";
+					}
+				}
+			}
+			// close allow-transfer
+			$bindconf_file.= '	};' . "\n";
+		}
+
+		$bindconf_file.= '};' . "\n";
+		$bindconf_file.= "\n";
+
+		return $bindconf_file;
+	}
+
+	/**
+	 * generate bind zone content. If froxlorhost is true,
+	 * we will use ALL available IP addresses
+	 *
+	 * @param array $domain
+	 * @param boolean $froxlorhost
+	 *
+	 * @return string
+	 */
+	protected function generateZone($domain, $froxlorhost = false) {
 		// Array to save all ips needed in the records (already including IN A/AAAA)
 		$ip_a_records = array();
 		// Array to save DNS records
 		$records = array();
 
+		$domainidquery = '';
+		$query_params = array();
+		if (!$froxlorhost) {
+			$domainidquery = "`di`.`id_domain` = :domainid AND ";
+			$query_params['domainid'] = $domain['id'];
+		}
+
 		$result_ip_stmt = Database::prepare("
 			SELECT `p`.`ip` AS `ip`
 			FROM `".TABLE_PANEL_IPSANDPORTS."` `p`, `".TABLE_DOMAINTOIP."` `di`
-			WHERE `di`.`id_domain` = :domainid AND `p`.`id` = `di`.`id_ipandports`
+			WHERE ".$domainidquery."`p`.`id` = `di`.`id_ipandports`
 			GROUP BY `p`.`ip`;
 		");
-		Database::pexecute($result_ip_stmt, array('domainid' => $domain['id']));
+		Database::pexecute($result_ip_stmt, $query_params);
 
 		while ($ip = $result_ip_stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -191,12 +228,14 @@ class bind {
 		$date = date('Ymd');
 		$bindserial = (preg_match('/^' . $date . '/', $domain['bindserial']) ? $domain['bindserial'] + 1 : $date . '00');
 
-		$upd_stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
-			`bindserial` = :serial
-			 WHERE `id` = :id
-		");
-		Database::pexecute($upd_stmt, array('serial' => $bindserial, 'id' => $domain['id']));
+		if (!$froxlorhost) {
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+				`bindserial` = :serial
+				 WHERE `id` = :id
+			");
+			Database::pexecute($upd_stmt, array('serial' => $bindserial, 'id' => $domain['id']));
+		}
 
 		$zonefile = '$TTL ' . (int)Settings::Get('system.defaultttl') . "\n";
 		if (count($this->nameservers) == 0) {
@@ -259,23 +298,25 @@ class bind {
 		 */
 		$zonefile.= $this->generateDkim($domain);
 
-		$nssubdomains_stmt = Database::prepare("
-			SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
-			WHERE `isbinddomain` = '1' AND `domain` LIKE :domain
-		");
-		Database::pexecute($nssubdomains_stmt, array('domain' => '%.' . $domain['domain']));
+		if (!$froxlorhost) {
+			$nssubdomains_stmt = Database::prepare("
+				SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+				WHERE `isbinddomain` = '1' AND `domain` LIKE :domain
+			");
+			Database::pexecute($nssubdomains_stmt, array('domain' => '%.' . $domain['domain']));
 
-		while ($nssubdomain = $nssubdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($nssubdomain = $nssubdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-			if (preg_match('/^[^\.]+\.' . preg_quote($domain['domain'], '/') . '/', $nssubdomain['domain'])) {
+				if (preg_match('/^[^\.]+\.' . preg_quote($domain['domain'], '/') . '/', $nssubdomain['domain'])) {
 
-				$nssubdomain = str_replace('.' . $domain['domain'], '', $nssubdomain['domain']);
+					$nssubdomain = str_replace('.' . $domain['domain'], '', $nssubdomain['domain']);
 
-				if (count($this->nameservers) == 0) {
-					$zonefile.= $nssubdomain . '	IN	NS	ns.' . $nssubdomain . "\n";
-				} else {
-					foreach ($this->nameservers as $nameserver) {
-						$zonefile.= $nssubdomain . '	IN	NS	' . trim($nameserver['hostname']) . "\n";
+					if (count($this->nameservers) == 0) {
+						$zonefile.= $nssubdomain . '	IN	NS	ns.' . $nssubdomain . "\n";
+					} else {
+						foreach ($this->nameservers as $nameserver) {
+							$zonefile.= $nssubdomain . '	IN	NS	' . trim($nameserver['hostname']) . "\n";
+						}
 					}
 				}
 			}
@@ -288,20 +329,22 @@ class bind {
 			$records[] = '*';
 		}
 
-		$subdomains_stmt = Database::prepare("
-			SELECT `domain` FROM `".TABLE_PANEL_DOMAINS."`
-			WHERE `parentdomainid` = :domainid
-		");
-		Database::pexecute($subdomains_stmt, array('domainid' => $domain['id']));
+		if (!$froxlorhost) {
+			$subdomains_stmt = Database::prepare("
+				SELECT `domain` FROM `".TABLE_PANEL_DOMAINS."`
+				WHERE `parentdomainid` = :domainid
+			");
+			Database::pexecute($subdomains_stmt, array('domainid' => $domain['id']));
 
-		while ($subdomain = $subdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
-			// Listing domains is enough as there currently is no support for choosing
-			// different ips for a subdomain => use same IPs as toplevel
-			$records[] = str_replace('.' . $domain['domain'], '', $subdomain['domain']);
+			while ($subdomain = $subdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
+				// Listing domains is enough as there currently is no support for choosing
+				// different ips for a subdomain => use same IPs as toplevel
+				$records[] = str_replace('.' . $domain['domain'], '', $subdomain['domain']);
 
-			// Check whether to add a www.-prefix
-			if ($domain['wwwserveralias'] == '1') {
-				$records[] = 'www.'.str_replace('.' . $domain['domain'], '', $subdomain['domain']);
+				// Check whether to add a www.-prefix
+				if ($domain['wwwserveralias'] == '1') {
+					$records[] = 'www.'.str_replace('.' . $domain['domain'], '', $subdomain['domain']);
+				}
 			}
 		}
 
@@ -472,6 +515,4 @@ class bind {
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Dkim-milter reloaded');
 		}
 	}
-
-
 }
