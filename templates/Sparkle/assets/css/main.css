@@ -316,23 +316,22 @@ aside.right {
  * error message display
  */
 .errorcontainer {
-	background:url(../img/icons/error_big.png) 10px center no-repeat #ffedef;
+	background:url(../img/icons/error_big.png) 15px 15px no-repeat rgb(242, 222, 222);
 	border:1px solid #ffc2ca;
-	padding:10px 10px 10px 68px!important;
-	margin:10px 0!important;
-	text-align:left!important;
+	padding: 15px 15px 15px 60px;
+	margin:10px 0;
 	overflow:hidden;
 	box-shadow:0 0 0 #000;
+	border-radius: 4px;
+	color:rgb(169, 68, 66);
 }
 
 .errortitle {
 	font-weight:700;
-	color:#c00!important;
 }
 
 .error {
 	font-weight:400!important;
-	color:#c00!important;
 }
 
 /*
@@ -520,11 +519,6 @@ table td {
 	padding: 5px 10px;
 	height: 25px;
     min-height: 25px;
-}
-
-table label {
-	display: block;
-	clear: both;
 }
 
 table th.right, table td.right {
