@@ -173,7 +173,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
 
-		$resul2_data['varname'] = 'diskmaxpercent_mailbody';
+		$result2_data['varname'] = 'diskmaxpercent_mailbody';
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
 
