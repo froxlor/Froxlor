@@ -351,7 +351,14 @@ if ($page == 'domains'
 					$admin = $userinfo;
 				}
 
-				$documentroot = $customer['documentroot'];
+				// set default path if admin/reseller has "change_serversettings == false" but we still
+				// need to respect the documentroot_use_default_value - setting
+				$path_suffix = '';
+				if (Settings::Get('system.documentroot_use_default_value') == 1) {
+					$path_suffix = '/'.$domain;
+				}
+				$documentroot = makeCorrectDir($customer['documentroot'] . $path_suffix);
+
 				$registration_date = trim($_POST['registration_date']);
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
