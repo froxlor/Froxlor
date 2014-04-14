@@ -2753,3 +2753,15 @@ if (isFroxlorVersion('0.9.32-rc1')) {
 
 	updateToVersion('0.9.32-rc2');
 }
+
+if (isFroxlorVersion('0.9.32-rc2')) {
+	showUpdateStep("Updating from 0.9.32-rc2 to 0.9.32-rc3", false);
+
+	showUpdateStep("Removing outdated languages");
+	Database::query("DELETE FROM `" . TABLE_PANEL_LANGUAGE . "` WHERE `iso` REGEXP '(bg|ca|cz|da|hu|pl|ru|sk|es|zh)';");
+	Database::query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `def_language` = 'English' WHERE `def_language` NOT REGEXP '(Dutch|English|Français|Deutsch|Italian|Portugu\&ecirc;s|Swedish)';");
+	Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `def_language` = 'English' WHERE `def_language` NOT REGEXP '(Dutch|English|Français|Deutsch|Italian|Portugu&ecirc;s|Swedish)';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.32-rc3');
+}

@@ -529,7 +529,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),
-	('panel', 'version', '0.9.32-rc2');
+	('panel', 'version', '0.9.32-rc3');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -642,20 +642,10 @@ INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
     (1, 'Deutsch', 'de', 'lng/german.lng.php'),
     (2, 'English', 'en', 'lng/english.lng.php'),
     (3, 'Français', 'fr', 'lng/french.lng.php'),
-    (4, 'Chinese', 'zh', 'lng/zh-cn.lng.php'),
-    (5, 'Catalan', 'ca', 'lng/catalan.lng.php'),
-    (6, 'Espa&ntilde;ol', 'es', 'lng/spanish.lng.php'),
-    (7, 'Portugu&ecirc;s', 'pt', 'lng/portugues.lng.php'),
-    (8, 'Russian', 'ru', 'lng/russian.lng.php'),
-    (9, 'Danish', 'da', 'lng/danish.lng.php'),
-    (10, 'Italian', 'it', 'lng/italian.lng.php'),
-    (11, 'Bulgarian', 'bg', 'lng/bulgarian.lng.php'),
-    (12, 'Slovak', 'sk', 'lng/slovak.lng.php'),
-    (13, 'Dutch', 'nl', 'lng/dutch.lng.php'),
-    (14, 'Hungarian', 'hu', 'lng/hungarian.lng.php'),
-    (15, 'Swedish', 'sv', 'lng/swedish.lng.php'),
-    (16, 'Czech', 'cz', 'lng/czech.lng.php'),
-    (17, 'Polski', 'pl', 'lng/polish.lng.php');
+    (4, 'Portugu&ecirc;s', 'pt', 'lng/portugues.lng.php'),
+    (5, 'Italian', 'it', 'lng/italian.lng.php'),
+    (6, 'Dutch', 'nl', 'lng/dutch.lng.php'),
+    (7, 'Swedish', 'sv', 'lng/swedish.lng.php');
 
 
 
