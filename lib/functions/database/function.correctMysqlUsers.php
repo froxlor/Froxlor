@@ -67,7 +67,7 @@ function correctMysqlUsers($mysql_access_host_array) {
 					$mysql_access_host = trim($mysql_access_host);
 
 					if (!in_array($mysql_access_host, $users[$username]['hosts'])) {
-						$dbm->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host);
+						$dbm->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host, true);
 					}
 				}
 

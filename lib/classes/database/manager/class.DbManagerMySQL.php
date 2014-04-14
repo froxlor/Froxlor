@@ -63,8 +63,9 @@ class DbManagerMySQL {
 	 * @param string $username
 	 * @param string $password
 	 * @param string $access_host
+	 * @param bool $p_encrypted optional, whether the password is encrypted or not, default false
 	 */
-	public function grantPrivilegesTo($username = null, $password = null, $access_host = null) {
+	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false) {
 		// grant privileges
 		$stmt = Database::prepare("
 				GRANT ALL PRIVILEGES ON `" . $username . "`.*
@@ -72,7 +73,11 @@ class DbManagerMySQL {
 				");
 		Database::pexecute($stmt, array("username" => $username, "host" => $access_host));
 		// set passoword
-		$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
+		if ($p_encrypted) {
+			$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
+		} else {
+			$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
+		}
 		Database::pexecute($stmt, array("username" => $username, "host" => $access_host, "password" => $password));
 	}
 
