@@ -95,6 +95,8 @@ function checkCrondConfigurationFile() {
 			// oh snap cannot create new crond-file
 			die("Oh snap, we cannot create the cron.d file. This should not happen.\nPlease check the path and permissions, the cron will keep trying if you don't stop the cron-service.\n\n");
 		}
+		// correct permissions
+		chmod(Settings::Get("system.cronconfig"), 0640);
 
 		// remove all re-generation tasks
 		Database::query("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '99'");
