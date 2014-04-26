@@ -313,11 +313,20 @@ if ($page == 'overview') {
 				if ($subticket->Get('by') == '1') {
 					$by = $lng['ticket']['staff'];
 				} else {
+					$cid = $subticket->Get('customer');
+					$usr_stmt = Database::prepare('
+						SELECT `customerid`, `firstname`, `name`, `company`, `loginname`
+						FROM `' . TABLE_PANEL_CUSTOMERS . '`
+						WHERE `customerid` = :customerid '
+					);
+					$usr = Database::pexecute_first($usr_stmt, array("customerid" => $cid));
 					$by = getCorrectFullUserDetails($usr);
 				}
 
 				$subject = $subticket->Get('subject');
 				$message = $subticket->Get('message');
+				
+				$row2 = htmlentities_array($row2);
 				eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_list") . "\";");
 			}
 
