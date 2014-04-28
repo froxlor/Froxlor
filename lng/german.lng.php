@@ -127,7 +127,7 @@ $lng['domains']['noaliasdomain'] = 'Keine Aliasdomain';
  * eMails
  */
 
-$lng['emails']['description'] = 'Hier können Sie Ihre E-Mail Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustür. Wenn jemand eine E-Mail an Sie schreibt,  wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten von Ihrem Mailprogramm sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen!)<br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>';
+$lng['emails']['description'] = 'Hier können Sie Ihre E-Mail Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustür. Wenn jemand eine E-Mail an Sie schreibt, wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten von Ihrem Mailprogramm sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen!)<br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>';
 $lng['emails']['emailaddress'] = 'E-Mail-Adresse';
 $lng['emails']['emails_add'] = 'E-Mail-Adresse anlegen';
 $lng['emails']['emails_edit'] = 'E-Mail-Adresse ändern';
@@ -1402,8 +1402,8 @@ $lng['tasks']['remove_emailacc_files'] = 'Kunden E-Mail Dateien löschen';
 // ADDED IN 0.9.28-svn5
 $lng['error']['operationnotpermitted'] = 'Diese Aktion ist nicht erlaubt!';
 $lng['error']['featureisdisabled'] = 'Die Funktion "%s" wurde deaktiviert. Kontaktieren Sie bitte Ihren Dienstleister.';
-$lng['serversettings']['catchall_enabled']['title']  = 'Catchall verwenden';
-$lng['serversettings']['catchall_enabled']['description']  = 'Möchten Sie Ihren Kunden die Funktion Catchall zur Verfügung stellen?';
+$lng['serversettings']['catchall_enabled']['title'] = 'Catchall verwenden';
+$lng['serversettings']['catchall_enabled']['description'] = 'Möchten Sie Ihren Kunden die Funktion Catchall zur Verfügung stellen?';
 
 // ADDED IN 0.9.28.svn6
 $lng['serversettings']['apache_24']['title'] = 'Anpassungen für Apache 2.4 verwenden';
