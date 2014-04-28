@@ -65,7 +65,8 @@ class FroxlorInstall {
 	 */
 	private $_languages = array(
 			'german' => 'Deutsch',
-			'english' => 'English'
+			'english' => 'English',
+			'french' => 'Français'
 	);
 
 	/**
