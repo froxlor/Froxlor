@@ -652,6 +652,7 @@ input[type="checkbox"] {
 	margin:0 5px 0 0;
 	vertical-align:middle;
 	height:26px;
+	width:26px;
 }
 
 select {
