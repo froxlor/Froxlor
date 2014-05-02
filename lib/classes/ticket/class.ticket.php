@@ -754,6 +754,8 @@ class ticket {
 
 			if (isset($this->t_data[$_var])) {
 				if (strtolower($_var) == 'message') {
+					// avoid double line-breaks, #1413
+					$this->t_data[$_var] = str_replace("<br />\n", "\n", $this->t_data[$_var]);
 					return nl2br($this->t_data[$_var]);
 				} elseif(strtolower($_var) == 'subject') {
 					return nl2br($this->t_data[$_var]);
