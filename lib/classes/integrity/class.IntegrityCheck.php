@@ -83,7 +83,7 @@ class IntegrityCheck {
 			$adm_stmt = Database::prepare("SELECT `adminid`, `ip` FROM `" . TABLE_PANEL_ADMINS . "` ORDER BY `adminid` ASC");
 			Database::pexecute($adm_stmt);
 			while ($row = $adm_stmt->fetch(PDO::FETCH_ASSOC)) {
-				if ($row['ip'] == -1) {
+				if ($row['ip'] < 0 || is_null($row['ip']) || empty($row['ip'])) {
 					// Admin uses default-IP
 					$admips[$row['adminid']] = Settings::Get('system.defaultip');
 				} else {
