@@ -397,7 +397,11 @@ class nginx {
 
 		// if the documentroot is an URL we just redirect
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$vhost_content .= "\t".'rewrite ^(.*) '.$this->idnaConvert->encode($domain['documentroot']).'$1 permanent;'."\n";
+			$uri = $this->idnaConvert->encode($domain['documentroot']);
+			if (substr($uri, -1) == '/') {
+				$uri = substr($uri, 0, -1);
+			}
+			$vhost_content .= "\t".'rewrite ^(.*) '.$uri.'$1 permanent;'."\n";
 		} else {
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 
