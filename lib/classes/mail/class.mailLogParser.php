@@ -192,7 +192,7 @@ class MailLogParser {
 				if (preg_match("/dovecot.*(?::|\]) imap\(.*@([a-z0-9\.\-]+)\):.*(?:in=(\d+) out=(\d+)|bytes=(\d+)\/(\d+))/i", $line, $matches)) {
 					// Dovecot IMAP
 					$this->_addDomainTraffic($matches[1], (int)$matches[2] + (int)$matches[3], $timestamp);
-				} elseif (preg_match("/dovecot.*(?::|\]) pop3\(.*@([a-z0-9\.\-]+)\):.*size=(\d+)/i", $line, $matches)) {
+				} elseif (preg_match("/dovecot.*(?::|\]) pop3\(.*@([a-z0-9\.\-]+)\):.*in=(\d+).*out=(\d+)/i", $line, $matches)) {
 					// Dovecot POP3
 					$this->_addDomainTraffic($matches[1], $matches[2], $timestamp);
 				}
