@@ -61,7 +61,7 @@ function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = ar
 			// Allows letters a-z, digits, space (\\040), hyphen (\\-), underscore (\\_) and backslash (\\\\),
 			// everything else is removed from the string.
 			$allowed = "/[^a-z0-9\\040\\.\\-\\_\\\\]/i";
-			preg_replace($allowed, "", $str);
+			$str = preg_replace($allowed, "", $str);
 			$log->logAction(USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
 		}
 	}
