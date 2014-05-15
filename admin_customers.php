@@ -267,6 +267,13 @@ if ($page == 'customers'
 				Database::pexecute($stmt, array('id' => $id));
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
+				// first gather all domain-id's to clean up panel_domaintoip accordingly
+				$did_stmt = Database::prepare("SELECT `id` FROM `".TABLE_PANEL_DOMAINS."` WHERE `customerid` = :id");
+				Database::pexecute($did_stmt, array('id' => $id));
+				while ($row = $did_stmt->fetch(PDO::FETCH_ASSOC)) {
+					$stmt = Database::prepare("DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :did");
+					Database::pexecute($stmt, array('did' => $row['id']));
+				}
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
 				$domains_deleted = $stmt->rowCount();
