@@ -192,6 +192,8 @@ if ($page == 'overview') {
 					standard_error(array('stringisempty', 'mypassword'));
 				} elseif ($path == '') {
 					standard_error('patherror');
+				} elseif ($username == $password) {
+					standard_error('passwordshouldnotbeusername');
 				} else {
 					$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 
@@ -361,6 +363,9 @@ if ($page == 'overview') {
 				if ($_setnewpass) {
 					if ($password == '') {
 						standard_error(array('stringisempty', 'mypassword'));
+						exit;
+					} elseif ($result['username'] == $password) {
+						standard_error('passwordshouldnotbeusername');
 						exit;
 					}
 					$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account password for '" . $result['username'] . "'");

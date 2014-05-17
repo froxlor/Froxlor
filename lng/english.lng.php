@@ -1817,3 +1817,4 @@ $lng['error']['cannotdeletehostnamephpconfig'] = 'This PHP-configuration is used
 $lng['error']['cannotdeletedefaultphpconfig'] = 'This PHP-configuration is set as default and cannot be deleted.';
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Allow automatic database updates';
 $lng['serversettings']['system_cron_allowautoupdate']['description'] = '<div style="color:red"><b>ATTENTION:</b></div> This settings allows the cronjob to bypass the version-check of froxlors files and database and runs the database-updates in case a version-mismatch occurs.<br><br><div style="color:red">Auto-update will always set default values for new settings or changes. This might not always suite your system. Please think twice before activating this option</div>';
+$lng['error']['passwordshouldnotbeusername'] = 'The password should not be the same as the username.';
