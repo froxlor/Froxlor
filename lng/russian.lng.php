@@ -22,18 +22,18 @@
  */
 
 $lng['translator'] = 'Vladimir Krasnopoyas';
-$lng['panel']['edit'] = 'edit';
-$lng['panel']['delete'] = 'delete';
-$lng['panel']['create'] = 'create';
-$lng['panel']['save'] = 'save';
-$lng['panel']['yes'] = 'yes';
-$lng['panel']['no'] = 'no';
-$lng['panel']['emptyfornochanges'] = 'empty for no changes';
-$lng['panel']['emptyfordefault'] = 'empty for defaults';
-$lng['panel']['path'] = 'Path';
+$lng['panel']['edit'] = 'Редактировать';
+$lng['panel']['delete'] = 'Удалить';
+$lng['panel']['create'] = 'Создать';
+$lng['panel']['save'] = 'Сохранить';
+$lng['panel']['yes'] = 'Да';
+$lng['panel']['no'] = 'Нет';
+$lng['panel']['emptyfornochanges'] = 'Не внесены изменения';
+$lng['panel']['emptyfordefault'] = 'по-умолчанию';
+$lng['panel']['path'] = 'Путь';
 $lng['panel']['toggle'] = 'Toggle';
-$lng['panel']['next'] = 'next';
-$lng['panel']['dirsmissing'] = 'Can not find or read the directory!';
+$lng['panel']['next'] = 'Далее';
+$lng['panel']['dirsmissing'] = 'Невозможно найти или прочитать директорию!';
 
 /**
  * Login
