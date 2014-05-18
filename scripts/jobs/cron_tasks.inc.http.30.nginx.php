@@ -441,7 +441,9 @@ class nginx {
 
 
 	protected function mergeVhostBlocks($vhost_content) {
-		$vhost_content = str_replace(array("{", "}"), array("{\n", "\n}"), $vhost_content);
+		$vhost_content = str_replace("\r", "\n", $vhost_content); // Remove windows linebreaks
+		$vhost_content = preg_replace('/^[\s\t]*#.*/m', "", $vhost_content); // Remove comments
+		$vhost_content = str_replace(array("{", "}"), array("{\n", "\n}"), $vhost_content); // Break blocks into lines
 		$vhost_content = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_content))));
 		$vhost_content = array_filter($vhost_content, create_function('$a','return preg_match("#\S#", $a);'));
 
@@ -451,6 +453,7 @@ class nginx {
 		$addAfter = false;
 		foreach ($vhost_content as $line) {
 			$line = trim($line);
+
 			if (substr_count($line, "{") != 0 && substr_count($line, "}") == 0 && substr_count($line, "server") == 0 && $isOpen === false) {
 				$isOpen = true;
 				$addAfter = array_search($line, $new_vhost_content);
