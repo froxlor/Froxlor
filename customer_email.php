@@ -635,7 +635,7 @@ if ($page == 'overview') {
 					standard_error(array('stringisempty', 'mypassword'));
 					exit;
 				}
-				elseif ($password = $result['email_full']) {
+				elseif ($password == $result['email_full']) {
 					standard_error('passwordshouldnotbeusername');
 					exit;
 				}
