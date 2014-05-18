@@ -446,6 +446,9 @@ if ($page == 'overview') {
 					}
 					elseif ($password == '' && !(Settings::Get('panel.sendalternativemail') == 1 && validateEmail($alternative_email))) {
 						standard_error(array('stringisempty', 'mypassword'));
+					}
+					elseif ($password == $email_full) {
+						standard_error('passwordshouldnotbeusername');
 					} else {
 						if ($password == '') {
 							$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
@@ -630,6 +633,10 @@ if ($page == 'overview') {
 
 				if ($password == '') {
 					standard_error(array('stringisempty', 'mypassword'));
+					exit;
+				}
+				elseif ($password = $result['email_full']) {
+					standard_error('passwordshouldnotbeusername');
 					exit;
 				}
 
@@ -887,5 +894,3 @@ if ($page == 'overview') {
 		}
 	}
 }
-
-?>

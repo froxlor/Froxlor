@@ -64,7 +64,7 @@ class DbManager {
 	 * @param string $password
 	 * @param int $last_accnumber
 	 *
-	 * @return string $username
+	 * @return string|bool $username if successful or false of username is equal to the password
 	 */
 	public function createDatabase($loginname = null, $password = null, $last_accnumber = 0) {
 
@@ -82,6 +82,11 @@ class DbManager {
 			}
 		} else {
 			$username = $loginname . Settings::Get('customer.mysqlprefix') . (intval($last_accnumber) + 1);
+		}
+
+		// don't use a password that is the same as the username
+		if ($username == $password) {
+			return false;
 		}
 
 		// now create the database itself

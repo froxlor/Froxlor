@@ -133,6 +133,8 @@ if ($page == 'overview') {
 				standard_error(array('stringisempty', 'mypassword'));
 			} elseif ($path == '') {
 				standard_error('patherror');
+			} elseif ($_POST['directory_password'] == $username) {
+				standard_error('passwordshouldnotbeusername');
 			} else {
 				$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "` SET
 					`customerid` = :customerid,
@@ -182,6 +184,10 @@ if ($page == 'overview') {
 					$password = crypt($_POST['directory_password'], $saltfordescrypt);
 				} else {
 					$password = crypt($_POST['directory_password']);
+				}
+
+				if ($_POST['directory_password'] == $result['username']) {
+					standard_error('passwordshouldnotbeusername');
 				}
 
 				$params = array(

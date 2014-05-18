@@ -178,6 +178,11 @@ if ($page == 'overview') {
 						$userinfo['mysql_lastaccountnumber']
 					);
 
+					// we've checked against the password in dbm->createDatabase
+					if ($username == false) {
+						standard_error('passwordshouldnotbeusername');
+					}
+
 					// Statement modified for Database description -- PH 2004-11-29
 					$stmt = Database::prepare('INSERT INTO `' . TABLE_PANEL_DATABASES . '`
 						(`customerid`, `databasename`, `description`, `dbserver`)
@@ -306,6 +311,10 @@ if ($page == 'overview') {
 				if ($password != '') {
 					// validate password
 					$password = validatePassword($password);
+
+					if ($password == $result['databasename']) {
+						standard_error('passwordshouldnotbeusername');
+					}
 
 					// Begin root-session
 					Database::needRoot(true);
