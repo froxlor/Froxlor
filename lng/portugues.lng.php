@@ -126,7 +126,7 @@ $lng['domains']['aliasdomain'] = 'Aliás para o domínio';
 $lng['domains']['noaliasdomain'] = 'Não domínio do aliás';
 
 /**
- * eMails
+ * E-mails
  */
 
 $lng['emails']['description'] = 'Aqui você pode criar e alterer seus e-mails.<br />Uma conta é como uma caixa de correio na frente de sua casa. Quando alguem envia para você um e-mail, ele é colocado nesta conta.<br /><br />Para baixar seus e-mails use as seguintes configurações no seu propraga de e-mails favorito: (Os dados em <i>italico</i> devem ser substituidos pelo equivalente da conta que você criou!)<br />Hostname: <b><i>Nome de seu domínio</i></b><br />Usuário: <b><i>Nome da conta / Endereço de e-mail</i></b><br />Senha: <b><i>a senha que você escolheu</i></b>';
@@ -201,8 +201,9 @@ $lng['error']['newpasswordconfirmerror'] = 'A nova senha e a confirmação não 
 $lng['error']['mydomain'] = '\'Domínio\'';
 $lng['error']['mydocumentroot'] = '\'Documento principal\'';
 $lng['error']['loginnameexists'] = 'Login %s já existe';
-$lng['error']['emailiswrong'] = 'E-mail %s contem caracteres inválidos ou está incompleto';
-$lng['error']['loginnameiswrong'] = 'Login %s contem caracteres inválidos';
+$lng['error']['emailiswrong'] = 'E-mail %s contém caracteres inválidos ou está incompleto';
+$lng['error']['loginnameiswrong'] = 'Login %s contém caracteres inválidos';
+$lng['error']['loginnameiswrong2'] = 'Login contém muitos caracteres. Somente %s caracteres são aceitos.';
 $lng['error']['userpathcombinationdupe'] = 'Usuario e caminho já existem';
 $lng['error']['patherror'] = 'Erro geral! o caminho não pode ficar em branco';
 $lng['error']['errordocpathdupe'] = 'Opção de caminho %s já existe';
@@ -223,7 +224,7 @@ $lng['error']['maindomainnonexist'] = 'O domínio principal %s não existe.';
 $lng['error']['destinationnonexist'] = 'Por favor crie seu redirecionamento no campo \'Destino\'.';
 $lng['error']['destinationalreadyexistasmail'] = 'O redirecionamento %s já existe como uma conta de e-mail.';
 $lng['error']['destinationalreadyexist'] = 'Você já definiu um redirecionamento para %s .';
-$lng['error']['destinationiswrong'] = 'O redirecionamento %s contem caracteres inválidos ou incompletos.';
+$lng['error']['destinationiswrong'] = 'O redirecionamento %s contém caracteres inválidos ou incompletos.';
 
 /**
  * Questions
@@ -790,8 +791,8 @@ $lng['panel']['view'] = 'Visualizar';
 $lng['question']['phpsetting_reallydelete'] = 'Você realmente deseja apagar esta configuração? Todos os domínios que atualmente utilizam esta configuração serão alterada para a configuração padrão.';
 $lng['admin']['phpsettings']['addnew'] = 'Criar novas configurações';
 $lng['error']['phpsettingidwrong'] = 'Não existe uma configuração de PHP para este ID';
-$lng['error']['descriptioninvalid'] = 'A descrição é muito curta, muito longa ou contem carácters ilegais';
-$lng['error']['info'] = 'Iinformações';
+$lng['error']['descriptioninvalid'] = 'A descrição é muito curta, muito longa ou contém caracteres ilegais';
+$lng['error']['info'] = 'Informações';
 $lng['admin']['phpconfig']['template_replace_vars'] = 'As variáveis que serão substituídas nas Configurações';
 $lng['admin']['phpconfig']['pear_dir'] = 'Serão substituídos com a definição global para o diretório pear.';
 $lng['admin']['phpconfig']['open_basedir'] = 'Serão substituídos com a definição do domínio open_basedir.';
@@ -826,7 +827,7 @@ $lng['admin']['expert_settings'] = 'Configurações Avançadas';
 $lng['admin']['mod_fcgid_starter']['title'] = 'Processos PHP para este domínio (vazio para usar valor padrão)';
 $lng['error']['customerdoesntexist'] = 'O cliente que você escolheu não existe';
 $lng['error']['admindoesntexist'] = 'O administrador que você escolheu não existe';
-$lng['serversettings']['session_allow_multiple_login']['title'] = 'AAtiva login múltiplo';
+$lng['serversettings']['session_allow_multiple_login']['title'] = 'Ativa login múltiplo';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Se ativado um usuário pode ter múltiplos logins';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Ativa mover domínios entre admins';
 $lng['serversettings']['panel_allow_domain_change_admin']['description'] = 'If activated you can change the admin of a domain at domainsettings.<br /><b>Attention:</b> If a customer isn\'t assigned to the same admin as the domain, the admin can see every other domain of that customer!';
