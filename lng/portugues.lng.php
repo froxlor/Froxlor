@@ -52,12 +52,12 @@ $lng['login']['profile_lng'] = 'Idioma padrão';
  * Customer
  */
 
-$lng['customer']['documentroot'] = 'Diretorio home';
+$lng['customer']['documentroot'] = 'Diretório home';
 $lng['customer']['name'] = 'Sobrenome';
 $lng['customer']['firstname'] = 'Primeiro nome';
 $lng['customer']['company'] = 'Empresa';
 $lng['customer']['street'] = 'Endereço';
-$lng['customer']['zipcode'] = 'Cep';
+$lng['customer']['zipcode'] = 'CEP';
 $lng['customer']['city'] = 'Cidade';
 $lng['customer']['phone'] = 'Telefone';
 $lng['customer']['fax'] = 'Fax';
@@ -70,8 +70,8 @@ $lng['customer']['emails'] = 'Endereços de e-mail';
 $lng['customer']['accounts'] = 'Contas de e-mail';
 $lng['customer']['forwarders'] = 'Redirecionamentos de e-mail';
 $lng['customer']['ftps'] = 'Contas de FTP';
-$lng['customer']['subdomains'] = 'Sub-Dominio(s)';
-$lng['customer']['domains'] = 'Dominio(s)';
+$lng['customer']['subdomains'] = 'Sub-Domínio(s)';
+$lng['customer']['domains'] = 'Domínio(s)';
 
 /**
  * Customermenue
@@ -80,20 +80,20 @@ $lng['customer']['domains'] = 'Dominio(s)';
 $lng['menue']['main']['main'] = 'Principal';
 $lng['menue']['main']['changepassword'] = 'Trocar senha';
 $lng['menue']['main']['changelanguage'] = 'Trocar idioma';
-$lng['menue']['email']['email'] = 'e-mail';
+$lng['menue']['email']['email'] = 'E-mail';
 $lng['menue']['email']['emails'] = 'Endereços';
 $lng['menue']['email']['webmail'] = 'WebMail';
 $lng['menue']['mysql']['mysql'] = 'MySQL';
 $lng['menue']['mysql']['databases'] = 'Banco de dados';
 $lng['menue']['mysql']['phpmyadmin'] = 'phpMyAdmin';
-$lng['menue']['domains']['domains'] = 'Dominios';
+$lng['menue']['domains']['domains'] = 'Domínios';
 $lng['menue']['domains']['settings'] = 'Configurações';
 $lng['menue']['ftp']['ftp'] = 'FTP';
 $lng['menue']['ftp']['accounts'] = 'Contas';
 $lng['menue']['ftp']['webftp'] = 'WebFTP';
 $lng['menue']['extras']['extras'] = 'Extras';
-$lng['menue']['extras']['directoryprotection'] = 'Diretorio protegido';
-$lng['menue']['extras']['pathoptions'] = 'opções de caminhos';
+$lng['menue']['extras']['directoryprotection'] = 'Diretório protegido';
+$lng['menue']['extras']['pathoptions'] = 'Opções de caminhos';
 
 /**
  * Index
@@ -116,20 +116,20 @@ $lng['changepassword']['also_change_ftp'] = ' trocar tambem a senha da conta pri
  * Domains
  */
 
-$lng['domains']['description'] = 'Aqui voce pode criar(sub-)dominios e alterar seu destino.<br />O sistema irá levar algum tempo para aplicar as novas configurações depois de salvas.';
-$lng['domains']['domainsettings'] = 'Configurar Dominio';
-$lng['domains']['domainname'] = 'Nome do dominio';
-$lng['domains']['subdomain_add'] = 'Criar Sub-dominio';
-$lng['domains']['subdomain_edit'] = 'Editar (sub)dominio';
+$lng['domains']['description'] = 'Aqui você pode criar (sub-)domínios e alterar seu destino.<br />O sistema irá levar algum tempo para aplicar as novas configurações depois de salvas.';
+$lng['domains']['domainsettings'] = 'Configurar Domínio';
+$lng['domains']['domainname'] = 'Nome do domínio';
+$lng['domains']['subdomain_add'] = 'Criar Sub-domínio';
+$lng['domains']['subdomain_edit'] = 'Editar (sub)domínio';
 $lng['domains']['wildcarddomain'] = 'Criar um wildcarddomain?';
-$lng['domains']['aliasdomain'] = 'Aliás para o dominio';
-$lng['domains']['noaliasdomain'] = 'Não dominio do aliás';
+$lng['domains']['aliasdomain'] = 'Aliás para o domínio';
+$lng['domains']['noaliasdomain'] = 'Não domínio do aliás';
 
 /**
- * eMails
+ * E-mails
  */
 
-$lng['emails']['description'] = 'Aqui voce pode criar e alterer seus e-mails.<br />Uma conta é como uma caixa de correio na frente de sua casa. Quando alguem envia para voce um e-mail, ele é colocado nesta conta.<br /><br />Para baixar seus e-mails use as seguintes configurações no seu propraga de e-mails favorito: (Os dados em <i>italico</i> devem ser substituidos pelo equivalente da conta que voce criou!)<br />Hostname: <b><i>Nome de seu dominio</i></b><br />Usuário: <b><i>Nome da conta / Endereço de e-mail</i></b><br />Senha: <b><i>a senha que voce escolheu</i></b>';
+$lng['emails']['description'] = 'Aqui você pode criar e alterer seus e-mails.<br />Uma conta é como uma caixa de correio na frente de sua casa. Quando alguem envia para você um e-mail, ele é colocado nesta conta.<br /><br />Para baixar seus e-mails use as seguintes configurações no seu propraga de e-mails favorito: (Os dados em <i>italico</i> devem ser substituidos pelo equivalente da conta que você criou!)<br />Hostname: <b><i>Nome de seu domínio</i></b><br />Usuário: <b><i>Nome da conta / Endereço de e-mail</i></b><br />Senha: <b><i>a senha que você escolheu</i></b>';
 $lng['emails']['emailaddress'] = 'Endereços de e-mail';
 $lng['emails']['emails_add'] = 'Criar e-mail';
 $lng['emails']['emails_edit'] = 'Editar e-mail';
@@ -147,14 +147,14 @@ $lng['emails']['forwarder_add'] = 'Criar redirecionamento';
  * FTP
  */
 
-$lng['ftp']['description'] = 'Aqui voce pode criar e alterar suas contas de FTP.<br />As alterações são instantâneas e podem ser utilizadas imediatamente depois de salvas.';
+$lng['ftp']['description'] = 'Aqui você pode criar e alterar suas contas de FTP.<br />As alterações são instantâneas e podem ser utilizadas imediatamente depois de salvas.';
 $lng['ftp']['account_add'] = 'Criar conta';
 
 /**
  * MySQL
  */
 
-$lng['mysql']['description'] = 'Aqui voce pode criar e alterar seus bancos de dados MySQL.<br />As alterações são instantâneas e podem ser utilizadas imediatamente depois de salvas.<br />No menu do lado esquerdo voce pode encontrar a ferramenta phpMyAdmin e com ela facilmente administrar seus bancos de dados.<br /><br />Para usar seu banco de dados com scripts em PHP use as seguintes configurações: (Os dados em <i>italico</i> devem ser substituidos pelo equivalente do banco de dados que voce criou!)<br />Hostname: <b><SQL_HOST></b><br />Usuario: <b><i>Nome do banco de dadose</i></b><br />Senha: <b><i>a senha que voce escolheu</i></b><br />Banco de dados: <b><i>Nome do banco de dados';
+$lng['mysql']['description'] = 'Aqui você pode criar e alterar seus bancos de dados MySQL.<br />As alterações são instantâneas e podem ser utilizadas imediatamente depois de salvas.<br />No menu do lado esquerdo você pode encontrar a ferramenta phpMyAdmin e com ela facilmente administrar seus bancos de dados.<br /><br />Para usar seu banco de dados com scripts em PHP use as seguintes configurações: (Os dados em <i>italico</i> devem ser substituidos pelo equivalente do banco de dados que você criou!)<br />Hostname: <b><SQL_HOST></b><br />Usuario: <b><i>Nome do banco de dadose</i></b><br />Senha: <b><i>a senha que você escolheu</i></b><br />Banco de dados: <b><i>Nome do banco de dados';
 $lng['mysql']['databasename'] = 'Usuario / Nome do banco de dados';
 $lng['mysql']['databasedescription'] = 'Descrição do banco de dados';
 $lng['mysql']['database_create'] = 'Criar banco de dados';
@@ -163,7 +163,7 @@ $lng['mysql']['database_create'] = 'Criar banco de dados';
  * Extras
  */
 
-$lng['extras']['description'] = 'Aqui voce pode adicoionar alguns recursos extras, como por exemplo um diretório protegido.<br />O sistema ira precisar de algum tempo para aplicar suas alterações depois de salvas.';
+$lng['extras']['description'] = 'Aqui você pode adicoionar alguns recursos extras, como por exemplo um diretório protegido.<br />O sistema ira precisar de algum tempo para aplicar suas alterações depois de salvas.';
 $lng['extras']['directoryprotection_add'] = 'Adicionar diretório pretogido';
 $lng['extras']['view_directory'] = 'Mostrar conteúdo do diretório';
 $lng['extras']['pathoptions_add'] = 'Adicionar opções de caminho';
@@ -181,69 +181,73 @@ $lng['extras']['errordocument401path'] = 'URL para página de erro 401';
 $lng['error']['error'] = 'Erro';
 $lng['error']['directorymustexist'] = 'O diretório %s deve existir. Por favor crie ele primeiro com seu programa de FTP.';
 $lng['error']['filemustexist'] = 'O arquivo %s deve existir.';
-$lng['error']['allresourcesused'] = 'Voce já usou todos os seus recursos.';
-$lng['error']['domains_cantdeletemaindomain'] = 'Voce não pode deletar um dominio que esta sendo usado como email-domain.';
-$lng['error']['domains_canteditdomain'] = 'Voce não pode editar este dominio. Ele foi desabilitado pelo administrador.';
-$lng['error']['domains_cantdeletedomainwithemail'] = 'Voce não pode deletar um dominio que é usado como email-domain. Delete todos as contas de e-mail primeiro.';
-$lng['error']['firstdeleteallsubdomains'] = 'Voce deve deletar todos subdominios antes de poder criar um wildcard domain.';
-$lng['error']['youhavealreadyacatchallforthisdomain'] = 'Voce já definiu uma conta pega tudo para este dominio.';
-$lng['error']['ftp_cantdeletemainaccount'] = 'Voce não pode deletar a conta principal de FTP';
+$lng['error']['allresourcesused'] = 'Você já usou todos os seus recursos.';
+$lng['error']['domains_cantdeletemaindomain'] = 'Você não pode deletar um domínio que esta sendo usado como email-domain.';
+$lng['error']['domains_canteditdomain'] = 'Você não pode editar este domínio. Ele foi desabilitado pelo administrador.';
+$lng['error']['domains_cantdeletedomainwithemail'] = 'Você não pode deletar um domínio que é usado como email-domain. Delete todos as contas de e-mail primeiro.';
+$lng['error']['firstdeleteallsubdomains'] = 'Você deve deletar todos subdomínios antes de poder criar um wildcard domain.';
+$lng['error']['youhavealreadyacatchallforthisdomain'] = 'Você já definiu uma conta pega tudo para este domínio.';
+$lng['error']['ftp_cantdeletemainaccount'] = 'Você não pode deletar a conta principal de FTP';
 $lng['error']['login'] = 'O usuário ou senha digitados, não estão corretos. Por favor tente novamente!';
 $lng['error']['login_blocked'] = 'Esta conta está suspensa por exceder as tentativas de login permitidas. <br />Por favor tente novamente em %s segundos.';
-$lng['error']['notallreqfieldsorerrors'] = 'Voce não preencheu todos os campos ou preencheu algum campo incorretamente.';
+$lng['error']['notallreqfieldsorerrors'] = 'Você não preencheu todos os campos ou preencheu algum campo incorretamente.';
 $lng['error']['oldpasswordnotcorrect'] = 'A senha antiga não confere.';
-$lng['error']['youcantallocatemorethanyouhave'] = 'Voce não pode alocar mais recursos do que voce mesmo possui.';
-$lng['error']['mustbeurl'] = 'Voce não digitou uma URL válida (ex. http://seudominio.com/erro404.htm)';
+$lng['error']['youcantallocatemorethanyouhave'] = 'Você não pode alocar mais recursos do que você mesmo possui.';
+$lng['error']['mustbeurl'] = 'Você não digitou uma URL válida (ex. http://seudominio.com/erro404.htm)';
 $lng['error']['invalidpath'] = 'Optou por um URL não válido (eventuais problemas na lista do directório)';
 $lng['error']['stringisempty'] = 'Faltando informação no campo';
 $lng['error']['stringiswrong'] = 'Erro na informação do campo';
 $lng['error']['newpasswordconfirmerror'] = 'A nova senha e a confirmação não conferem';
-$lng['error']['mydomain'] = '\'Dominio\'';
+$lng['error']['mydomain'] = '\'Domínio\'';
 $lng['error']['mydocumentroot'] = '\'Documento principal\'';
 $lng['error']['loginnameexists'] = 'Login %s já existe';
-$lng['error']['emailiswrong'] = 'E-mail %s contem caracteres inválidos ou está incompleto';
-$lng['error']['loginnameiswrong'] = 'Login %s contem caracteres inválidos';
+$lng['error']['emailiswrong'] = 'E-mail %s contém caracteres inválidos ou está incompleto';
+$lng['error']['loginnameiswrong'] = 'Login %s contém caracteres inválidos';
+$lng['error']['loginnameiswrong2'] = 'Login contém muitos caracteres. Somente %s caracteres são aceitos.';
 $lng['error']['userpathcombinationdupe'] = 'Usuario e caminho já existem';
 $lng['error']['patherror'] = 'Erro geral! o caminho não pode ficar em branco';
 $lng['error']['errordocpathdupe'] = 'Opção de caminho %s já existe';
 $lng['error']['adduserfirst'] = 'Por favor crie um cliente primeiro';
-$lng['error']['domainalreadyexists'] = 'O dominio %s já está apontado para outro cliente';
+$lng['error']['domainalreadyexists'] = 'O domínio %s já está apontado para outro cliente';
 $lng['error']['nolanguageselect'] = 'Nenhum idioma selecionado.';
-$lng['error']['nosubjectcreate'] = 'Voce deve definir um nome para este e-mail template.';
-$lng['error']['nomailbodycreate'] = 'Voce deve definir o texto para este e-mail template.';
+$lng['error']['nosubjectcreate'] = 'Você deve definir um nome para este e-mail template.';
+$lng['error']['nomailbodycreate'] = 'Você deve definir o texto para este e-mail template.';
 $lng['error']['templatenotfound'] = 'Template não encontrado.';
-$lng['error']['alltemplatesdefined'] = 'Voce não pode definir mais templates, todos idiomas já suportados.';
-$lng['error']['wwwnotallowed'] = 'www não é permitido como nome de subdominio.';
-$lng['error']['subdomainiswrong'] = 'O subdominio %s contém caracteres inválidos.';
-$lng['error']['domaincantbeempty'] = 'O nome do dominio não pode estar vazio.';
-$lng['error']['domainexistalready'] = 'O dominio %s já existe.';
+$lng['error']['alltemplatesdefined'] = 'Você não pode definir mais templates, todos idiomas já suportados.';
+$lng['error']['wwwnotallowed'] = 'www não é permitido como nome de subdomínio.';
+$lng['error']['subdomainiswrong'] = 'O subdomínio %s contém caracteres inválidos.';
+$lng['error']['domaincantbeempty'] = 'O nome do domínio não pode estar vazio.';
+$lng['error']['domainexistalready'] = 'O domínio %s já existe.';
 $lng['error']['domainisaliasorothercustomer'] = 'O domínio-alias escolhido é ele próprio um domínio-alias ou este pertence a um outro cliente.';
 $lng['error']['emailexistalready'] = 'O E-mail %s já existe.';
-$lng['error']['maindomainnonexist'] = 'O dominio principal %s não existe.';
+$lng['error']['maindomainnonexist'] = 'O domínio principal %s não existe.';
 $lng['error']['destinationnonexist'] = 'Por favor crie seu redirecionamento no campo \'Destino\'.';
 $lng['error']['destinationalreadyexistasmail'] = 'O redirecionamento %s já existe como uma conta de e-mail.';
-$lng['error']['destinationalreadyexist'] = 'Voce já definiu um redirecionamento para %s .';
-$lng['error']['destinationiswrong'] = 'O redirecionamento %s contem caracteres inválidos ou incompletos.';
+$lng['error']['destinationalreadyexist'] = 'Você já definiu um redirecionamento para %s .';
+$lng['error']['destinationiswrong'] = 'O redirecionamento %s contém caracteres inválidos ou incompletos.';
 
 /**
  * Questions
  */
 
 $lng['question']['question'] = 'Pergunta de segurança';
-$lng['question']['admin_customer_reallydelete'] = 'Voce realmente deseja deletar o cliente %s? Este comando não poderá ser cancelado!';
-$lng['question']['admin_domain_reallydelete'] = 'Voce realmente deseja deletar o dominio %s?';
-$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Voce realmente deseja desativar estas configurações de segurança (OpenBasedir)?';
-$lng['question']['admin_admin_reallydelete'] = 'Voce realmente deseja deletar o administrador %s? Todos clientes e dominios serão realocados para o administrador principal.';
-$lng['question']['admin_template_reallydelete'] = 'Voce realmente deseja deletar o template \'%s\'?';
-$lng['question']['domains_reallydelete'] = 'Voce realmente deseja deletar o dominio %s?';
-$lng['question']['email_reallydelete'] = 'Voce realmente deseja deletar o e-mail %s?';
-$lng['question']['email_reallydelete_account'] = 'Voce realmente deseja deletar a conta de e-mail %s?';
-$lng['question']['email_reallydelete_forwarder'] = 'Voce realmente deseja deletar o redirecionamento %s?';
-$lng['question']['extras_reallydelete'] = 'Voce realmente deseja deletar a proteção do diretório %s?';
-$lng['question']['extras_reallydelete_pathoptions'] = 'Voce realmente deseja deletar o caminho %s?';
-$lng['question']['ftp_reallydelete'] = 'Voce realmente deseja deletar a conta de FTP %s?';
-$lng['question']['mysql_reallydelete'] = 'Voce realmente deseja deletar o banco de dados %s? Este comando não poderá ser cancelado!';
+$lng['question']['admin_customer_reallydelete'] = 'Você realmente deseja deletar o cliente %s? Este comando não poderá ser cancelado!';
+$lng['question']['admin_domain_reallydelete'] = 'Você realmente deseja deletar o domínio %s?';
+$lng['question']['admin_domain_reallydisablesecuritysetting'] = 'Você realmente deseja desativar estas configurações de segurança (OpenBasedir)?';
+$lng['question']['admin_admin_reallydelete'] = 'Você realmente deseja deletar o administrador %s? Todos clientes e domínios serão realocados para o administrador principal.';
+$lng['question']['admin_template_reallydelete'] = 'Você realmente deseja deletar o template \'%s\'?';
+$lng['question']['domains_reallydelete'] = 'Você realmente deseja deletar o domínio %s?';
+$lng['question']['email_reallydelete'] = 'Você realmente deseja deletar o e-mail %s?';
+$lng['question']['email_reallydelete_account'] = 'Você realmente deseja deletar a conta de e-mail %s?';
+$lng['question']['email_reallydelete_forwarder'] = 'Você realmente deseja deletar o redirecionamento %s?';
+$lng['question']['extras_reallydelete'] = 'Você realmente deseja deletar a proteção do diretório %s?';
+$lng['question']['extras_reallydelete_pathoptions'] = 'Você realmente deseja deletar o caminho %s?';
+$lng['question']['ftp_reallydelete'] = 'Você realmente deseja deletar a conta de FTP %s?';
+$lng['question']['mysql_reallydelete'] = 'Você realmente deseja deletar o banco de dados %s? Este comando não poderá ser cancelado!';
 $lng['question']['admin_configs_reallyrebuild'] = 'Está certo que quer deixar reconfigurar os ficheiros de configuração de Apache e Bind?';
+$lng['question']['admin_customer_alsoremovefiles'] = 'Remover arquivos do usuário também?';
+$lng['question']['admin_customer_alsoremovemail'] = 'Remover todos os dados de e-mail do sistema de arquivos?';
+$lng['question']['admin_customer_alsoremoveftphomedir'] = 'Remover o diretório home do usuário FTP?';
 
 /**
  * Mails
@@ -271,28 +275,29 @@ $lng['admin']['customer'] = 'Cliente';
 $lng['admin']['customers'] = 'Clientes';
 $lng['admin']['customer_add'] = 'Criar cliente';
 $lng['admin']['customer_edit'] = 'Editar cliente';
-$lng['admin']['domains'] = 'Dominios';
-$lng['admin']['domain_add'] = 'Criar dominio';
-$lng['admin']['domain_edit'] = 'Editar dominio';
-$lng['admin']['subdomainforemail'] = 'Subdominio como "emaildomains"';
+$lng['admin']['domains'] = 'Domínios';
+$lng['admin']['domain_add'] = 'Criar domínio';
+$lng['admin']['domain_edit'] = 'Editar domínio';
+$lng['admin']['subdomainforemail'] = 'Subdomínio como "emaildomains"';
 $lng['admin']['admin'] = 'Administrador';
 $lng['admin']['admins'] = 'Administradores';
 $lng['admin']['admin_add'] = 'Criar administrador';
 $lng['admin']['admin_edit'] = 'Editar administrador';
 $lng['admin']['customers_see_all'] = 'Mostrar todos os clientes';
-$lng['admin']['domains_see_all'] = 'Mostrar todos os dominios';
+$lng['admin']['domains_see_all'] = 'Mostrar todos os domínios';
 $lng['admin']['change_serversettings'] = 'Alterar configuraççes do servidor?';
 $lng['admin']['server'] = 'Servidor';
-$lng['admin']['serversettings'] = 'Configuraççes';
+$lng['admin']['serversettings'] = 'Configurações';
 $lng['admin']['rebuildconf'] = 'Escrever de novo os configs';
-$lng['admin']['stdsubdomain'] = 'Subdominio padrão';
-$lng['admin']['stdsubdomain_add'] = 'Criar Subdominio padrão';
+$lng['admin']['stdsubdomain'] = 'Subdomínio padrão';
+$lng['admin']['stdsubdomain_add'] = 'Criar Subdomínio padrão';
+$lng['admin']['phpenabled'] = 'PHP habilitado';
 $lng['admin']['deactivated'] = 'Desativado';
 $lng['admin']['deactivated_user'] = 'Desativar usuário';
 $lng['admin']['sendpassword'] = 'Enviar senha';
 $lng['admin']['ownvhostsettings'] = 'Own vHost-Settings';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configurações';
-$lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Por favor altere os seguintes arquivos ou crie eles com<br />o seguinte conteúdo se ele não existir.<br /><b>Por favor observe:</b> A senha do MySQL nï¿½o foi alterada por razões de segurança.<br />Por favor substitua "MYSQL_PASSWORD" por uma sua. Se voce esqueceu a senha do MySQL<br />voce pode verificar em "lib/userdata.inc.php".';
+$lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Por favor altere os seguintes arquivos ou crie eles com<br />o seguinte conteúdo se ele não existir.<br /><b>Por favor observe:</b> A senha do MySQL não foi alterada por razões de segurança.<br />Por favor substitua "MYSQL_PASSWORD" por uma sua. Se você esqueceu a senha do MySQL<br />você pode verificar em "lib/userdata.inc.php".';
 $lng['admin']['configfiles']['commands'] = '<b>Commands:</b> Por favor execute as seguintes comandos no shell.';
 $lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Por favor execute as seguintes comandos no shell para carregar aas novas configurações.';
 $lng['admin']['templates']['templates'] = 'Templates';
@@ -333,6 +338,8 @@ $lng['serversettings']['hostname']['title'] = 'Hostname';
 $lng['serversettings']['hostname']['description'] = 'Qual o Hostname deste servidor?';
 $lng['serversettings']['apachereload_command']['title'] = 'Comando de reiniciar o Apache';
 $lng['serversettings']['apachereload_command']['description'] = 'Qual o comando para reiniciar o apache?';
+$lng['serversettings']['bindenable']['title'] = 'Habilitar Servidor de Nomes';
+$lng['serversettings']['bindenable']['description'] = 'Aqui o servidor de nomes pode ser habilitado ou desabilitado globalmente.';
 $lng['serversettings']['bindconf_directory']['title'] = 'Diretório de configuração do Bind';
 $lng['serversettings']['bindconf_directory']['description'] = 'Aonde estão os arquivos de configuração do bind?';
 $lng['serversettings']['bindreload_command']['title'] = 'Comando de reiniciar o Bind';
@@ -367,14 +374,14 @@ $lng['serversettings']['pathedit']['description'] = 'A escolha do file tem que s
 
 $lng['serversettings']['paging']['title'] = 'Entradas por pagina';
 $lng['serversettings']['paging']['description'] = 'Quantas entradas devem ser mostradas por pagina? (0 = desabilitar paginas)';
-$lng['error']['ipstillhasdomains'] = 'O IP/Porta que voce quer deletar ainda possui dominios associados e eles, por favor altere o IP/Porta destes dominios antes de deletá-los.';
-$lng['error']['cantdeletedefaultip'] = 'Voce não pode deletar o IP/Porta padrão do revendedor, por favor defina outro IP/Porta como padrão antes deletar o IP/Porta desejado';
-$lng['error']['cantdeletesystemip'] = 'Voce não pode deletar o IP do sistema, nem criar uma nova combinação IP/Porta para o sistema ou trocar o IP do sistema.';
+$lng['error']['ipstillhasdomains'] = 'O IP/Porta que você quer deletar ainda possui domínios associados e eles, por favor altere o IP/Porta destes domínios antes de deletá-los.';
+$lng['error']['cantdeletedefaultip'] = 'Você não pode deletar o IP/Porta padrão do revendedor, por favor defina outro IP/Porta como padrão antes deletar o IP/Porta desejado';
+$lng['error']['cantdeletesystemip'] = 'Você não pode deletar o IP do sistema, nem criar uma nova combinação IP/Porta para o sistema ou trocar o IP do sistema.';
 $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Porta\'';
-$lng['error']['myipdefault'] = 'Voce precisa selecionar o IP/Porta que será padrão.';
+$lng['error']['myipdefault'] = 'Você precisa selecionar o IP/Porta que será padrão.';
 $lng['error']['myipnotdouble'] = 'Esta combinação  IP/Porta já existe.';
-$lng['question']['admin_ip_reallydelete'] = 'Voce realmente deseja deletar este endereço IP?';
+$lng['question']['admin_ip_reallydelete'] = 'Você realmente deseja deletar este endereço IP?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs e Portas';
 $lng['admin']['ipsandports']['add'] = 'Adicionar IP/Porta';
 $lng['admin']['ipsandports']['edit'] = 'Editar IP/Porta';
@@ -446,7 +453,7 @@ $lng['admin']['webserversettings'] = 'Configurações do WebServer';
 $lng['admin']['mailserversettings'] = 'Configurações do Servidor de Email';
 $lng['admin']['nameserversettings'] = 'Configurações dos Servidores de Nomes';
 $lng['admin']['updatecounters'] = 'Recalcular utilização de recursos';
-$lng['question']['admin_counters_reallyupdate'] = 'Voce deseja recalcular os recursos utilizados?';
+$lng['question']['admin_counters_reallyupdate'] = 'Você deseja recalcular os recursos utilizados?';
 $lng['panel']['pathDescription'] = 'Se o diretório não existir, será criado automaticamente';
 $lng['admin']['templates']['TRAFFIC'] = 'Substituído com o tráfego, o que foi atribuído ao cliente.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Substituído com o tráfego, que foi esgotado pela cliente.';
@@ -726,7 +733,7 @@ $lng['admin']['activated'] = 'Ativado';
 $lng['admin']['statisticsettings'] = 'Configurações de Estatísticas';
 $lng['admin']['or'] = 'ou';
 $lng['serversettings']['unix_names']['title'] = 'Usar nomes compatíveis com UNIX';
-$lng['serversettings']['unix_names']['description'] = 'Aceita voce usar <strong>-</strong> and <strong>_</strong> em nomes de usuários se <strong>No</strong>estiver marcado';
+$lng['serversettings']['unix_names']['description'] = 'Aceita você usar <strong>-</strong> and <strong>_</strong> em nomes de usuários se <strong>No</strong>estiver marcado';
 $lng['error']['cannotwritetologfile'] = 'Não pode abrir arquivo de log %s para escrita';
 $lng['admin']['sysload'] = 'Carga do Sistema';
 $lng['admin']['noloadavailable'] = 'Não disponível';
@@ -790,8 +797,8 @@ $lng['panel']['view'] = 'Visualizar';
 $lng['question']['phpsetting_reallydelete'] = 'Você realmente deseja apagar esta configuração? Todos os domínios que atualmente utilizam esta configuração serão alterada para a configuração padrão.';
 $lng['admin']['phpsettings']['addnew'] = 'Criar novas configurações';
 $lng['error']['phpsettingidwrong'] = 'Não existe uma configuração de PHP para este ID';
-$lng['error']['descriptioninvalid'] = 'A descrição é muito curta, muito longa ou contem carácters ilegais';
-$lng['error']['info'] = 'Iinformações';
+$lng['error']['descriptioninvalid'] = 'A descrição é muito curta, muito longa ou contém caracteres ilegais';
+$lng['error']['info'] = 'Informações';
 $lng['admin']['phpconfig']['template_replace_vars'] = 'As variáveis que serão substituídas nas Configurações';
 $lng['admin']['phpconfig']['pear_dir'] = 'Serão substituídos com a definição global para o diretório pear.';
 $lng['admin']['phpconfig']['open_basedir'] = 'Serão substituídos com a definição do domínio open_basedir.';
@@ -826,7 +833,7 @@ $lng['admin']['expert_settings'] = 'Configurações Avançadas';
 $lng['admin']['mod_fcgid_starter']['title'] = 'Processos PHP para este domínio (vazio para usar valor padrão)';
 $lng['error']['customerdoesntexist'] = 'O cliente que você escolheu não existe';
 $lng['error']['admindoesntexist'] = 'O administrador que você escolheu não existe';
-$lng['serversettings']['session_allow_multiple_login']['title'] = 'AAtiva login múltiplo';
+$lng['serversettings']['session_allow_multiple_login']['title'] = 'Ativa login múltiplo';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Se ativado um usuário pode ter múltiplos logins';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Ativa mover domínios entre admins';
 $lng['serversettings']['panel_allow_domain_change_admin']['description'] = 'If activated you can change the admin of a domain at domainsettings.<br /><b>Attention:</b> If a customer isn\'t assigned to the same admin as the domain, the admin can see every other domain of that customer!';
