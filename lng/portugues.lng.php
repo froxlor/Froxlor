@@ -245,6 +245,9 @@ $lng['question']['extras_reallydelete_pathoptions'] = 'Você realmente deseja de
 $lng['question']['ftp_reallydelete'] = 'Você realmente deseja deletar a conta de FTP %s?';
 $lng['question']['mysql_reallydelete'] = 'Você realmente deseja deletar o banco de dados %s? Este comando não poderá ser cancelado!';
 $lng['question']['admin_configs_reallyrebuild'] = 'Está certo que quer deixar reconfigurar os ficheiros de configuração de Apache e Bind?';
+$lng['question']['admin_customer_alsoremovefiles'] = 'Remover arquivos do usuário também?';
+$lng['question']['admin_customer_alsoremovemail'] = 'Remover todos os dados de e-mail do sistema de arquivos?';
+$lng['question']['admin_customer_alsoremoveftphomedir'] = 'Remover o diretório home do usuário FTP?';
 
 /**
  * Mails
@@ -288,6 +291,7 @@ $lng['admin']['serversettings'] = 'Configurações';
 $lng['admin']['rebuildconf'] = 'Escrever de novo os configs';
 $lng['admin']['stdsubdomain'] = 'Subdomínio padrão';
 $lng['admin']['stdsubdomain_add'] = 'Criar Subdomínio padrão';
+$lng['admin']['phpenabled'] = 'PHP habilitado';
 $lng['admin']['deactivated'] = 'Desativado';
 $lng['admin']['deactivated_user'] = 'Desativar usuário';
 $lng['admin']['sendpassword'] = 'Enviar senha';
@@ -334,6 +338,8 @@ $lng['serversettings']['hostname']['title'] = 'Hostname';
 $lng['serversettings']['hostname']['description'] = 'Qual o Hostname deste servidor?';
 $lng['serversettings']['apachereload_command']['title'] = 'Comando de reiniciar o Apache';
 $lng['serversettings']['apachereload_command']['description'] = 'Qual o comando para reiniciar o apache?';
+$lng['serversettings']['bindenable']['title'] = 'Habilitar Servidor de Nomes';
+$lng['serversettings']['bindenable']['description'] = 'Aqui o servidor de nomes pode ser habilitado ou desabilitado globalmente.';
 $lng['serversettings']['bindconf_directory']['title'] = 'Diretório de configuração do Bind';
 $lng['serversettings']['bindconf_directory']['description'] = 'Aonde estão os arquivos de configuração do bind?';
 $lng['serversettings']['bindreload_command']['title'] = 'Comando de reiniciar o Bind';
