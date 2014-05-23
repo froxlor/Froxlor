@@ -1,8 +1,8 @@
 --- a/lib/tables.inc.php
 +++ b/lib/tables.inc.php
-@@ -76,4 +76,4 @@
+@@ -53,4 +53,4 @@
  // VERSION INFO
- $version = '0.9.31.2';
+ $version = '0.9.32';
  $dbversion = '2';
 -$branding = '';
-+$branding = '-1';
++$branding = '-1+squeeze1';
