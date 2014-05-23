@@ -36,7 +36,7 @@ if ($vmail_group === false) {
 
 return array(
 	'sle_10' => array(
-		'label' => 'SUSE Linux Enterprise 10',
+		'label' => 'SUSE Linux Enterprise 10 (deprecated)',
 		'services' => array(
 			'http' => array(
 				'label' => $lng['admin']['configfiles']['http'],

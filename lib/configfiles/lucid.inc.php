@@ -36,7 +36,7 @@ if ($vmail_group === false) {
 
 return array(
 	'ubuntu_lucid' => array(
-		'label' => 'Ubuntu 10.04 (Lucid)',
+		'label' => 'Ubuntu 10.04 (Lucid) [deprecated]',
 		'services' => array(
 			'http' => array(
 				'label' => $lng['admin']['configfiles']['http'],

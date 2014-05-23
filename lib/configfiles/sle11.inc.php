@@ -35,8 +35,8 @@ if ($vmail_group === false) {
 }
 
 return array(
-	'opensuse_11_x' => array(
-		'label' => 'openSUSE 11.x',
+	'sle_11' => array(
+		'label' => 'SUSE Linux Enterprise 11',
 		'services' => array(
 			'http' => array(
 				'label' => $lng['admin']['configfiles']['http'],
