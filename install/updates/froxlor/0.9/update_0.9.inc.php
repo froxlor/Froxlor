@@ -2765,3 +2765,8 @@ if (isFroxlorVersion('0.9.32-rc2')) {
 
 	updateToVersion('0.9.32-rc3');
 }
+
+if (isFroxlorVersion('0.9.32-rc3')) {
+	showUpdateStep("Updating from 0.9.32-rc3 to 0.9.32 final", false);
+	updateToVersion('0.9.32');
+}
