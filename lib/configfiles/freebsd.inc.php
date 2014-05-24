@@ -347,7 +347,7 @@ return array(
 							'echo "*/5 * * * *     root     nice -n 5	/usr/local/bin/php -q '.makeCorrectDir(dirname(dirname(dirname(__FILE__)))).'scripts/froxlor_master_cronjob.php" >> /etc/crontab'
 						),
 						'restart' => array(
-							'/etc/rc.d/cron restart'
+							Settings::Get('system.crondreload')
 						)
 					),
 					'awstats' => array(
