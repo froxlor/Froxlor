@@ -369,7 +369,7 @@ return array(
 							'etc_cron.d_froxlor' => '/etc/cron.d/froxlor'
 						),
 						'restart' => array(
-							'/etc/init.d/cron restart'
+							Settings::Get('system.crondreload')
 						)
 					),
 					'awstats' => array(
@@ -426,7 +426,7 @@ return array(
 							(Settings::Get('system.mod_fcgid_ownvhost') == '1') ? 'a2dismod php5' : null
 						),
 						'restart' => array(
-							'/etc/init.d/apache2 restart'
+							Settings::Get('system.apachereload_command')
 						)
 					),
 					'php-fpm' => array(
@@ -443,7 +443,7 @@ return array(
 							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'a2dismod php5' : null
 						),
 						'restart' => array(
-							'/etc/init.d/apache2 restart'
+							Settings::Get('system.apachereload_command')
 						)
 					)
 				)
