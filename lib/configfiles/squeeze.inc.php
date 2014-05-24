@@ -36,7 +36,7 @@ if ($vmail_group === false) {
 
 return array(
 	'debian_squeeze' => array(
-		'label' => 'Debian 6.0 (Squeeze)',
+		'label' => 'Debian 6.0 (Squeeze) [deprecated]',
 		'services' => array(
 			'http' => array(
 				'label' => $lng['admin']['configfiles']['http'],

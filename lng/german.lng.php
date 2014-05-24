@@ -1250,7 +1250,7 @@ $lng['extras']['htpasswdauthname'] = 'Grund der Authentifizierung (AuthName)';
 $lng['extras']['directoryprotection_edit'] = 'Verzeichnisschutz bearbeiten';
 $lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zurücksetzen des Passworts';
 $lng['admin']['templates']['password_reset'] = 'Kunden-Benachrichtigung nach Zurücksetzen des Passworts';
-$lng['admin']['store_defaultindex'] = 'Standard-Index-Datei im Kundenordner erstellen?';
+$lng['admin']['store_defaultindex'] = 'Standard-Index-Datei im Kundenordner erstellen';
 
 // ADDED IN FROXLOR 0.9.14
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PHP-Konfiguration für den Froxlor-Vhost';

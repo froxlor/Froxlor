@@ -45,7 +45,7 @@ $configfiles = array_merge(
 	include $cfgPath . 'precise.inc.php',
 	include $cfgPath . 'lucid.inc.php',
 	include $cfgPath . 'gentoo.inc.php',
-	include $cfgPath . 'suse11.inc.php',
+	include $cfgPath . 'sle11.inc.php',
 	include $cfgPath . 'sle10.inc.php',
 	include $cfgPath . 'freebsd.inc.php'
 );
