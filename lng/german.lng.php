@@ -127,7 +127,7 @@ $lng['domains']['noaliasdomain'] = 'Keine Aliasdomain';
  * eMails
  */
 
-$lng['emails']['description'] = 'Hier können Sie Ihre E-Mail Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustür. Wenn jemand eine E-Mail an Sie schreibt, wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten von Ihrem Mailprogramm sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen!)<br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>';
+$lng['emails']['description'] = 'Hier können Sie Ihre E-Mail Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustür. Wenn jemand eine E-Mail an Sie schreibt, wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten lauten wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br /><br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>';
 $lng['emails']['emailaddress'] = 'E-Mail-Adresse';
 $lng['emails']['emails_add'] = 'E-Mail-Adresse anlegen';
 $lng['emails']['emails_edit'] = 'E-Mail-Adresse ändern';
@@ -375,13 +375,13 @@ $lng['serversettings']['pathedit']['description'] = 'Soll ein Pfad via Auswahlli
 $lng['serversettings']['nameservers']['title'] = 'Nameserver';
 $lng['serversettings']['nameservers']['description'] = 'Eine durch Komma getrennte Liste mit den Hostnamen aller Nameserver. Der Erste ist der Primäre.';
 $lng['serversettings']['mxservers']['title'] = 'MX-Server';
-$lng['serversettings']['mxservers']['description'] = 'Eine durch Komma getrenne Liste, die ein Paar mit einer Nummer und den Hostnamen einen MX-Servers, getrennt durch ein Leerzeichen, enthält (z. B. \'10 mx.example.com\').';
+$lng['serversettings']['mxservers']['description'] = 'Eine durch Komma getrenne Liste, die ein Paar mit einer Nummer und den Hostnamen einen MX-Servers, getrennt durch ein Leerzeichen, enthält (z. B. \'10 mx.example.tld\').';
 
 /**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['mysql']['description'] = 'Hier können Sie MySQL-Datenbanken anlegen und löschen.<br />Die Änderungen werden sofort wirksam und die Datenbanken ist sofort benutzbar.<br />Im Menü finden Sie einen Link zu phpMyAdmin, mit dem Sie Ihre Datenbankinhalte komfortabel bearbeiten können.<br /><br />Die Zugangsdaten sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br />Hostname: <b><SQL_HOST></b><br />Benutzername: <b><i>Datenbankname</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b><br />Datenbank: <b><i>Datenbankname</i></b>';
+$lng['mysql']['description'] = 'Hier können Sie MySQL-Datenbanken anlegen und löschen.<br />Die Änderungen werden sofort wirksam und die Datenbanken ist sofort benutzbar.<br />Im Menü finden Sie einen Link zu phpMyAdmin, mit dem Sie Ihre Datenbankinhalte komfortabel bearbeiten können.<br /><br />Die Zugangsdaten lauten wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br />Hostname: <b><SQL_HOST></b><br />Benutzername: <b><i>Datenbankname</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b><br />Datenbank: <b><i>Datenbankname</i></b>';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
@@ -413,7 +413,7 @@ $lng['question']['admin_domain_reallydocrootoutofcustomerroot'] = 'Sind Sie sich
 
 $lng['admin']['memorylimitdisabled'] = 'Deaktiviert';
 $lng['domain']['openbasedirpath'] = 'OpenBasedir-Pfad';
-$lng['domain']['docroot'] = 'Oben eingegebener Pfad';
+$lng['domain']['docroot'] = 'Oben angegebener Pfad';
 $lng['domain']['homedir'] = 'Heimverzeichnis';
 $lng['admin']['valuemandatory'] = 'Dieses Feld muss ausgefüllt werden.';
 $lng['admin']['valuemandatorycompany'] = 'Entweder "Name" und "Vorname" oder "Firma" muss ausgefüllt werden.';
@@ -489,8 +489,8 @@ $lng['admin']['nameserversettings'] = 'Nameserver-Einstellungen';
 $lng['admin']['updatecounters'] = 'Ressourcenverbrauch';
 $lng['question']['admin_counters_reallyupdate'] = 'Wollen Sie den Ressourcenverbrauch neu berechnen?';
 $lng['panel']['pathDescription'] = 'Sollte das Verzeichnis nicht existieren, wird es automatisch erstellt.';
-$lng['panel']['pathDescriptionEx'] = '<br /><br />Sollte eine Weiterleitung auf eine andere Domain gewünscht sein, muss der Eintrag mit http:// oder https:// beginnen.';
-$lng['panel']['pathDescriptionSubdomain'] = $lng['panel']['pathDescription'].$lng['panel']['pathDescriptionEx']."<br /><br />Endet die URL mit einem / (Slash) geht Froxlor von einem Ordner aus, wenn nicht, wird es wie eine Datei behandelt.";
+$lng['panel']['pathDescriptionEx'] = '<br />Sollte eine Weiterleitung auf eine andere Domain gewünscht sein, muss der Eintrag mit http:// oder https:// beginnen.';
+$lng['panel']['pathDescriptionSubdomain'] = $lng['panel']['pathDescription'].$lng['panel']['pathDescriptionEx']."<br />Endet die URL mit einem / (Slash) geht Froxlor von einem Ordner aus, wenn nicht, wird es wie eine Datei behandelt.";
 
 // ADDED IN 1.2.16-svn6
 
@@ -1172,7 +1172,7 @@ $lng['serversettings']['ftpprefix']['description'] = 'Welchen Präfix sollen die
 // ADDED IN FROXLOR 0.9.7-svn1
 $lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] Neuer FTP-Benutzer erstellt';
 $lng['customer']['ftp_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade einen neuen FTP-Benutzer angelegt. Hier die angegebenen Informationen:\n\nBenutzername: {USR_NAME}\nPasswort: {USR_PASS}\nPfad: {USR_PATH}\n\nVielen Dank, Ihr Administrator";
-$lng['domains']['redirectifpathisurl'] = 'Redirect code (Standard: leer)';
+$lng['domains']['redirectifpathisurl'] = 'Redirect-Code (Standard: leer)';
 $lng['domains']['redirectifpathisurlinfo'] = 'Der Redirect-Code kann gewählt werden, wenn der eingegebene Pfad eine URL ist';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Erlaube Kunden-Redirect';
 $lng['serversettings']['customredirect_enabled']['description'] = 'Erlaubt es Kunden den HTTP-Status Code für einen Redirect zu wählen';
@@ -1250,14 +1250,14 @@ $lng['extras']['htpasswdauthname'] = 'Grund der Authentifizierung (AuthName)';
 $lng['extras']['directoryprotection_edit'] = 'Verzeichnisschutz bearbeiten';
 $lng['admin']['templates']['forgotpwd'] = 'Benachrichtigungs-Mails bei Zurücksetzen des Passworts';
 $lng['admin']['templates']['password_reset'] = 'Kunden-Benachrichtigung nach Zurücksetzen des Passworts';
-$lng['admin']['store_defaultindex'] = 'Standard-Index-Datei im Kundenordner erstellen?';
+$lng['admin']['store_defaultindex'] = 'Standard-Index-Datei im Kundenordner erstellen';
 
 // ADDED IN FROXLOR 0.9.14
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PHP-Konfiguration für den Froxlor-Vhost';
 $lng['serversettings']['awstats_icons']['title'] = 'Pfad zum AWstats-Icon-Ordner';
 $lng['serversettings']['awstats_icons']['description'] = 'z. B. /usr/share/awstats/htdocs/icon/';
 $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'] = 'Pfad zu dem SSL-CertificateChainFile (optional)';
-$lng['admin']['ipsandports']['ssl_cert_chainfile']['description'] = 'Meist CA_Bundle, o. Ä., dies ist das Feld, dass gesetzt werden sollte, wenn ein gekauftes SSL-Zertifikat vorliegt.';
+$lng['admin']['ipsandports']['ssl_cert_chainfile']['description'] = 'Meist CA_Bundle, o. Ä., dies ist das Feld, das gesetzt werden sollte, wenn ein gekauftes SSL-Zertifikat vorliegt.';
 $lng['admin']['ipsandports']['docroot']['title'] = 'Benutzerdefinierter Docroot (wenn leer, zeige auf Froxlor)';
 $lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzerdefinierter Document-Root (der Zielordner für einen Zugriff) für diese IP/Port Kombination gesetzt werden.<br /><strong>ACHTUNG:</strong> Bitte überlege vorher, welchen Pfad du hier angibst!';
 $lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
@@ -1417,7 +1417,7 @@ $lng['serversettings']['definewebfont']['description'] = 'Wenn aktiviert, wird d
 
 // Added in Froxlor 0.9.28-rc2
 $lng['serversettings']['documentroot_use_default_value']['title'] = 'Verwende Domainnamen im Documentroot';
-$lng['serversettings']['documentroot_use_default_value']['description'] = 'Wenn aktiviert wird dem standard Documentroot zusätzlich der Domain-Name angehängt.<br /><br />Beispiel:<br />/var/customers/customer_name/example.com/<br />/var/customers/customer_name/subdomain.example.com/';
+$lng['serversettings']['documentroot_use_default_value']['description'] = 'Wenn aktiviert wird dem standard Documentroot zusätzlich der Domain-Name angehängt.<br /><br />Beispiel:<br />/var/customers/customer_name/example.tld/<br />/var/customers/customer_name/subdomain.example.tld/';
 
 $lng['error']['usercurrentlydeactivated'] = 'Der Benutzer "%s" ist derzeit deaktiviert';
 $lng['admin']['speciallogfile']['title'] = 'Eigene Log-Datei';
@@ -1443,7 +1443,7 @@ $lng['admin']['ipsandports']['ssl_key_file_content'] = 'Inhalt der Key-Datei (Pr
 $lng['admin']['ipsandports']['ssl_ca_file_content'] = 'Inhalt der SSL-CA-Datei (optional)';
 $lng['admin']['ipsandports']['ssl_ca_file_content_desc'] = '<br /><br />Client Authentifizierung, dieses Feld sollte nur gesetzt werden, wenn es wirklich gebraucht wird.';
 $lng['admin']['ipsandports']['ssl_cert_chainfile_content'] = 'Inhalt des SSL-CertificateChainFile (optional)';
-$lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'] = '<br /><br />Meist CA_Bundle, o. Ä. Dies ist das Feld, dass gesetzt werden sollte, wenn ein gekauftes SSL-Zertifikat vorliegt.';
+$lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'] = '<br /><br />Meist CA_Bundle, o. Ä., dies ist das Feld, das gesetzt werden sollte, wenn ein gekauftes SSL-Zertifikat vorliegt.';
 $lng['error']['sslcertificateismissingprivatekey'] = 'Für das Zertifikat muss eine Key-Datei (Private-Key) angegeben werden.';
 $lng['error']['sslcertificatewrongdomain'] = 'Das angegebene Zertifikat gilt nicht für die gewählte Domain.';
 $lng['error']['sslcertificateinvalidcert'] = 'Der angegebene Zertifikatsinhalt scheint kein gültiges Zertifikat zu sein.';
@@ -1460,13 +1460,13 @@ $lng['crondesc']['cron_mailboxsize'] = 'Berechnung der Mailbox-Größen';
 $lng['domains']['ipandport_multi']['title'] = 'IP-Adresse(n)';
 $lng['domains']['ipandport_multi']['description'] = 'Definiere eine oder mehrere IP-Adresse(n) für diese Domain.<br /><br /><div style="color:red">Hinweis: Die IP-Adressen können nicht geändert werden, sollte die Domain als <strong>Alias-Domain</strong> für eine andere Domain konfiguriert worden sein.</div>';
 $lng['domains']['ipandport_ssl_multi']['title'] = 'SSL-IP-Adresse(n)';
-$lng['domains']['ssl_redirect']['title'] = 'SSL Weiterleitung';
-$lng['domains']['ssl_redirect']['description'] = 'Diese Option erstellt für alle nicht-ssl vhosts eine Weiterleitung (Redirect), so dass alle Anfragen an den SSL-vhost übermittelt werden.<br /><br />z. B. eine Anfrage an <strong>http</strong>://domain.tld/ würde weiterleiten zu <strong>https</strong>://domain.tld/';
+$lng['domains']['ssl_redirect']['title'] = 'SSL-Weiterleitung';
+$lng['domains']['ssl_redirect']['description'] = 'Diese Option erstellt für alle Nicht-SSL-vHosts eine Weiterleitung (Redirect), so dass alle Anfragen an den SSL-vHost übermittelt werden (z. B. würde eine Anfrage an <strong>http</strong>://domain.tld/ weitergeleitet werden zu <strong>https</strong>://domain.tld/).';
 $lng['admin']['selectserveralias'] = 'ServerAlias-Angabe für Domain';
 $lng['admin']['selectserveralias_desc'] = 'Wählen Sie hier, ob für diese Domain ein Wildcard-Eintrag (*.domain.tld), ein www-Alias (www.domain.tld) oder gar kein Alias angelegt werden soll.';
 $lng['domains']['serveraliasoption_wildcard'] = 'Wildcard (*.domain.tld)';
-$lng['domains']['serveraliasoption_www'] = 'WWW (www.domain.tld)';
-$lng['domains']['serveraliasoption_none'] = 'Kein alias';
+$lng['domains']['serveraliasoption_www'] = 'www (www.domain.tld)';
+$lng['domains']['serveraliasoption_none'] = 'Kein Alias';
 $lng['error']['givendirnotallowed'] = 'Das angegebene Verzeichnis im Feld %s ist nicht erlaubt.';
 $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Erlaubte SSL Ciphers festlegen';
 $lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Dies ist eine Liste von Ciphers die genutzt werden sollen (oder auch nicht genutzt werden sollen) wenn eine SSL Verbindung besteht. Eine Liste aller Ciphers und wie diese hinzugefügt/ausgeschlossen werden ist in den Abschnitten "CIPHER LIST FORMAT" und "CIPHER STRINGS" in <a href="http://openssl.org/docs/apps/ciphers.html">der man-page für Ciphers</a> zu finden.<br /><br /><b>Standard-Wert ist:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
@@ -1540,4 +1540,4 @@ $lng['serversettings']['system_croncmdline']['description'] = 'Befehl zum Ausfü
 $lng['error']['cannotdeletehostnamephpconfig'] = 'Diese PHP-Konfiguration ist dem Froxlor-Vhost zugewiesen und kann daher nicht gelöscht werden.';
 $lng['error']['cannotdeletedefaultphpconfig'] = 'Diese PHP-Konfiguration ist als Standard hinterlegt und kann daher nicht gelöscht werden.';
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Erlaube automatische Datenbank-Aktualisierungen';
-$lng['serversettings']['system_cron_allowautoupdate']['description'] = '<div style="color:red"><b>WARNUNG:</b></div> Diese Einstellung erlaubt es dem Cronjob die Prüfung der Dateien- und Datenbank-Version zu umgehen und bei einem Versions-Unterschied die Datenbank-Aktualisierungen automatisiert auszuführen.<br><br><div style="color:red">Das automatische Update setzt für neue Einstellungen und Änderungen immer die default-Werte. Diese müssen nicht zwingend zu dem genutzten System passen. Bitte zwei mal nachdenken, bevor diese Option aktiviert wird.</div>';
+$lng['serversettings']['system_cron_allowautoupdate']['description'] = '<strong style="color:red">WARNUNG:</strong> Diese Einstellung erlaubt es dem Cronjob die Prüfung der Dateien- und Datenbank-Version zu umgehen und bei einem Versions-Unterschied die Datenbank-Aktualisierungen automatisiert auszuführen.<br /><br /><div style="color:red">Das automatische Update setzt für neue Einstellungen und Änderungen immer die default-Werte. Diese müssen nicht zwingend zu dem genutzten System passen. Bitte zwei mal nachdenken, bevor diese Option aktiviert wird.</div>';
