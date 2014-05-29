@@ -381,7 +381,7 @@ $lng['serversettings']['mxservers']['description'] = 'Eine durch Komma getrenne 
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['mysql']['description'] = 'Hier können Sie MySQL-Datenbanken anlegen und löschen.<br />Die Änderungen werden sofort wirksam und die Datenbanken ist sofort benutzbar.<br />Im Menü finden Sie einen Link zu phpMyAdmin, mit dem Sie Ihre Datenbankinhalte komfortabel bearbeiten können.<br /><br />Die Zugangsdaten lauten wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br />Hostname: <b><SQL_HOST></b><br />Benutzername: <b><i>Datenbankname</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b><br />Datenbank: <b><i>Datenbankname</i></b>';
+$lng['mysql']['description'] = 'Hier können Sie MySQL-Datenbanken anlegen und löschen.<br />Die Änderungen werden sofort wirksam und die Datenbanken sind sofort benutzbar.<br />Im Menü finden Sie einen Link zu phpMyAdmin, mit dem Sie Ihre Datenbankinhalte komfortabel bearbeiten können.<br /><br />Die Zugangsdaten lauten wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br />Hostname: <b><SQL_HOST></b><br />Benutzername: <b><i>Datenbankname</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b><br />Datenbank: <b><i>Datenbankname</i></b>';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
@@ -657,7 +657,7 @@ $lng['question']['ticket_reallyarchive'] = 'Wollen Sie das Ticket "%s" wirklich 
 $lng['error']['nomoreticketsavailable'] = 'Sie haben Ihr Ticketkontingent aufgebraucht. Bitte kontaktieren Sie ihren Administrator.';
 $lng['error']['nocustomerforticket'] = 'Keine Kunden vorhanden um ein Ticket zu erstellen.';
 $lng['error']['categoryhastickets'] = 'In dieser Kategorie befinden sich noch Tickets.<br />Bitte löschen Sie diese um die Kategorie zu löschen';
-$lng['admin']['ticketsettings'] = 'Support-Ticket Einstellungen';
+$lng['admin']['ticketsettings'] = 'Support-Ticket-Einstellungen';
 $lng['admin']['archivelastrun'] = 'Letzte Ticket-Archivierung';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Keine-Antwort E-Mail Adresse';
 $lng['serversettings']['ticket']['noreply_email']['description'] = 'Die Absender-Adresse der Support-Tickets. Meist sowas wie KEINE-ANTWORT@domain.tld';
@@ -777,7 +777,7 @@ $lng['error']['errorsendingmail'] = 'Das Versenden der Nachricht an "%s" schlug 
 $lng['error']['cannotreaddir'] = 'Der Ordner "%s" kann nicht gelesen werden';
 $lng['message']['success'] = 'Nachricht erfolgreich an "%s" Empfänger gesendet';
 $lng['message']['noreceipients'] = 'Es wurde keine E-Mail versendet da sich keine Empfänger in der Datenbank befinden';
-$lng['admin']['sslsettings'] = 'SSL Einstellungen';
+$lng['admin']['sslsettings'] = 'SSL-Einstellungen';
 $lng['cronjobs']['notyetrun'] = 'Bisher nicht gestartet';
 $lng['serversettings']['default_vhostconf']['title'] = 'Standard vHost-Einstellungen';
 $lng['serversettings']['default_vhostconf']['description'] = 'Der Inhalt dieses Feldes wird direkt in den IP/Port-vHost-Container übernommen.<br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
@@ -787,15 +787,15 @@ $lng['serversettings']['decimal_places'] = 'Nachkommastellen bei der Ausgabe von
 
 // ADDED IN 1.2.19-svn8
 
-$lng['admin']['dkimsettings'] = 'DomainKey - Einstellungen';
+$lng['admin']['dkimsettings'] = 'DomainKey-Einstellungen';
 $lng['dkim']['dkim_prefix']['title'] = 'Prefix';
-$lng['dkim']['dkim_prefix']['description'] = 'Wie lautet der Pfad zu den DKIM RSA-Dateien sowie den Einstellungsdateien des Milter-Plugins?';
-$lng['dkim']['dkim_domains']['title'] = 'Domains Dateiname';
-$lng['dkim']['dkim_domains']['description'] = '<em>Dateiname</em> der DKIM Domains Angabe aus der dkim-milter-Konfigurationsdatei';
+$lng['dkim']['dkim_prefix']['description'] = 'Wie lautet der Pfad zu den DKIM-RSA-Dateien sowie den Einstellungsdateien des Milter-Plugins?';
+$lng['dkim']['dkim_domains']['title'] = 'Domains-Dateiname';
+$lng['dkim']['dkim_domains']['description'] = 'Dateiname der DKIM-Domains-Angabe aus der DKIM-Milter-Konfigurationsdatei.';
 $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList Dateiname';
-$lng['dkim']['dkim_dkimkeys']['description'] = '<em>Dateiname</em> der DKIM KeyList Angabe aus der dkim-milter-Konfigurationsdatei';
-$lng['dkim']['dkimrestart_command']['title'] = 'Milter Restart Kommando';
-$lng['dkim']['dkimrestart_command']['description'] = 'Wie lautet das Kommando zum Neustarten des DKIM Milter Dienstes?';
+$lng['dkim']['dkim_dkimkeys']['description'] = 'Dateiname der DKIM-KeyList-Angabe aus der DKIM-Milter-Konfigurationsdatei.';
+$lng['dkim']['dkimrestart_command']['title'] = 'Milter-Restart-Kommando';
+$lng['dkim']['dkimrestart_command']['description'] = 'Wie lautet das Kommando zum Neustarten des DKIM-Milter-Dienstes?';
 
 // ADDED IN 1.2.19-svn9
 
@@ -803,20 +803,20 @@ $lng['admin']['caneditphpsettings'] = 'Kann PHP-bezogene Domaineinstellungen mac
 
 // ADDED IN 1.2.19-svn12
 
-$lng['admin']['allips'] = 'Alle IP\'s';
+$lng['admin']['allips'] = 'Alle IPs';
 $lng['panel']['nosslipsavailable'] = 'Für diesen Server wurden noch keine SSL IP/Port Kombinationen eingetragen';
 $lng['ticket']['by'] = 'von';
-$lng['dkim']['use_dkim']['title'] = 'DKIM Support aktivieren?';
-$lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain Keys (DKIM) System benutzen?<br/><em style="color:red;font-weight:bold;">Hinweis: Derzeit wird DKIM nur via dkim-filter unterstützt, nicht opendkim</em>';
-$lng['error']['invalidmysqlhost'] = 'Ungültige MySQL Host Adresse: "%s"';
-$lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'Webalizer und AWstats können nicht zur gleichen Zeit aktiviert werden, bitte wählen Sie eines aus';
-$lng['serversettings']['webalizer_enabled'] = 'Nutze Webalizer Statistiken';
-$lng['serversettings']['awstats_enabled'] = 'Nutze AWStats Statistiken';
-$lng['admin']['awstatssettings'] = 'AWstats Einstellungen';
+$lng['dkim']['use_dkim']['title'] = 'DKIM-Support aktivieren?';
+$lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain-Keys-System (DKIM) benutzen?<br/><em style="color:red;font-weight:bold;">Hinweis: Derzeit wird DKIM nur via dkim-filter unterstützt, nicht opendkim.</em>';
+$lng['error']['invalidmysqlhost'] = 'Ungültige MySQL-Host-Adresse: "%s"';
+$lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'Webalizer und AWstats können nicht zur gleichen Zeit aktiviert werden, bitte wählen Sie eines aus.';
+$lng['serversettings']['webalizer_enabled'] = 'Nutze Webalizer-Statistiken';
+$lng['serversettings']['awstats_enabled'] = 'Nutze AWStats-Statistiken';
+$lng['admin']['awstatssettings'] = 'AWstats-Einstellungen';
 
 // ADDED IN 1.2.19-svn16
 
-$lng['admin']['domain_dns_settings'] = 'Domain DNS-Einstellungen';
+$lng['admin']['domain_dns_settings'] = 'Domain-DNS-Einstellungen';
 $lng['dns']['destinationip'] = 'Domain-IP(s)';
 $lng['dns']['standardip'] = 'Server-Standard-IP';
 $lng['dns']['a_record'] = 'A-Eintrag (IPv6 optional)';
@@ -826,18 +826,18 @@ $lng['dns']['standardmx'] = 'Server Standard MX Eintrag';
 $lng['dns']['mxconfig'] = 'Eigene MX Einträge';
 $lng['dns']['priority10'] = 'Priorität 10';
 $lng['dns']['priority20'] = 'Priorität 20';
-$lng['dns']['txtrecords'] = 'TXT Einträge definieren';
+$lng['dns']['txtrecords'] = 'TXT-Einträge definieren';
 $lng['dns']['txtexample'] = 'Beispiel (SPF-Eintrag):<br />v=spf1 ip4:xxx.xxx.xx.0/23 -all';
-$lng['serversettings']['selfdns']['title'] = 'Manuelle DNS Einstellungen für Domains';
-$lng['serversettings']['selfdnscustomer']['title'] = 'Erlaube Kunden eigene DNS Einstellungen vornehmen zu können';
+$lng['serversettings']['selfdns']['title'] = 'Manuelle DNS-Einstellungen für Domains';
+$lng['serversettings']['selfdnscustomer']['title'] = 'Erlaube Kunden eigene DNS-Einstellungen vorzunehmen.';
 $lng['admin']['activated'] = 'Aktiviert';
-$lng['admin']['statisticsettings'] = 'Statistik Einstellungen';
+$lng['admin']['statisticsettings'] = 'Statistik-Einstellungen';
 $lng['admin']['or'] = 'oder';
 
 // ADDED IN 1.2.19-svn17
 
-$lng['serversettings']['unix_names']['title'] = 'Benutze UNIX kompatible Benutzernamen';
-$lng['serversettings']['unix_names']['description'] = 'Erlaubt die Nutzung von <strong>-</strong> und <strong>_</strong> in Benutzernamen wenn <strong>Nein</strong>';
+$lng['serversettings']['unix_names']['title'] = 'Benutze UNIX-kompatible Benutzernamen.';
+$lng['serversettings']['unix_names']['description'] = 'Erlaubt die Nutzung von <strong>-</strong> und <strong>_</strong> in Benutzernamen wenn <strong>Nein</strong>.';
 $lng['error']['cannotwritetologfile'] = 'Logdatei "%s" konnte nicht für Schreiboperationen geöffnet werden.';
 $lng['admin']['sysload'] = 'System-Auslastung';
 $lng['admin']['noloadavailable'] = 'nicht verfügbar';
@@ -847,7 +847,7 @@ $lng['admin']['nosubject'] = '(Kein Betreff)';
 $lng['admin']['configfiles']['statistics'] = 'Statistik';
 $lng['login']['forgotpwd'] = 'Passwort vergessen?';
 $lng['login']['presend'] = 'Passwort zurücksetzen';
-$lng['login']['email'] = 'E-Mail Adresse';
+$lng['login']['email'] = 'E-Mail-Adresse';
 $lng['login']['remind'] = 'Passwort zurücksetzen';
 $lng['login']['usernotfound'] = 'Fehler: Unbekannter Benutzer!';
 $lng['pwdreminder']['subject'] = 'Froxlor - Passwort zurückgesetzt';
@@ -856,8 +856,8 @@ $lng['pwdreminder']['success'] = 'Das Zurücksetzen des Passworts wurde erfolgre
 
 // ADDED IN 1.2.19-svn18
 
-$lng['serversettings']['allow_password_reset']['title'] = 'Erlaube das Zurücksetzen des Kundenpassworts';
-$lng['pwdreminder']['notallowed'] = 'Das Zurücksetzen des Passworts ist deaktiviert';
+$lng['serversettings']['allow_password_reset']['title'] = 'Erlaube das Zurücksetzen des Kundenpassworts.';
+$lng['pwdreminder']['notallowed'] = 'Das Zurücksetzen des Passworts ist deaktiviert.';
 
 // ADDED IN 1.2.19-svn21
 
@@ -894,11 +894,11 @@ $lng['emails']['quota'] = 'Kontingent';
 $lng['emails']['noquota'] = 'Kein Kontingent';
 $lng['emails']['updatequota'] = 'Update Kontingent';
 $lng['serversettings']['mail_quota']['title'] = 'Mailbox-Kontingent';
-$lng['serversettings']['mail_quota']['description'] = 'Standard-Kontingent für neuerstellte E-Mail Benutzerkonten (MegaByte)';
+$lng['serversettings']['mail_quota']['description'] = 'Standard-Kontingent für neu erstellte E-Mail-Benutzerkonten (Megabyte).';
 $lng['serversettings']['mail_quota_enabled']['title'] = 'Nutze E-Mail-Kontingent für Kunden';
-$lng['serversettings']['mail_quota_enabled']['description'] = 'Aktiviere Kontingent für E-Mailkonten. Standard ist <b>Nein</b> da dies eine spezielle Konfiguration voraussetzt.';
+$lng['serversettings']['mail_quota_enabled']['description'] = 'Aktiviere Kontingent für E-Mailkonten. Standard ist <b>Nein</b>, da dies eine spezielle Konfiguration voraussetzt.';
 $lng['serversettings']['mail_quota_enabled']['removelink'] = 'Hier klicken, um alle E-Mail-Kontingente zu entfernen';
-$lng['serversettings']['mail_quota_enabled']['enforcelink'] = 'Hier klicken, um allen Benutzern das Standard Kontingent zu zuweisen';
+$lng['serversettings']['mail_quota_enabled']['enforcelink'] = 'Hier klicken, um allen Benutzern das Standard-Kontingent zu zuweisen.';
 $lng['question']['admin_quotas_reallywipe'] = 'Sind Sie sicher, dass alle E-Mail-Kontingente aus der Tabelle mail_users entfernt werden sollen? Dieser Schritt kann nicht rückgängig gemacht werden!';
 $lng['question']['admin_quotas_reallyenforce'] = 'Sind Sie sicher, dass Sie allen Benutzern das Default-Quota zuweisen wollen? Dies kann nicht rückgängig gemacht werden!';
 $lng['error']['vmailquotawrong'] = 'Die Kontingent-Größe muss positiv sein.';
@@ -1124,7 +1124,7 @@ $lng['mysql']['mysql_server'] = 'MySQL-Server';
 $lng['admin']['ipsandports']['webserverdefaultconfig'] = 'Webserver-Standard-Konfiguration';
 $lng['admin']['ipsandports']['webserverdomainconfig'] = 'Webserver-Domain-Konfiguration';
 $lng['admin']['ipsandports']['webserverssldomainconfig'] = 'Webserver-SSL-Konfiguration';
-$lng['admin']['ipsandports']['ssl_key_file'] = 'Pfad zum SSL Private-Key';
+$lng['admin']['ipsandports']['ssl_key_file'] = 'Pfad zum SSL-Private-Key';
 $lng['admin']['ipsandports']['ssl_ca_file'] = 'Pfad zum SSL-CA-Zertifikat (optional)';
 $lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Standard vHost-Einstellungen für jeden Domain-Container';
 $lng['serversettings']['ssl']['ssl_key_file']['title'] = 'Pfad zum SSL Private-Key';
@@ -1257,7 +1257,7 @@ $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Voreingestellte PH
 $lng['serversettings']['awstats_icons']['title'] = 'Pfad zum AWstats-Icon-Ordner';
 $lng['serversettings']['awstats_icons']['description'] = 'z. B. /usr/share/awstats/htdocs/icon/';
 $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'] = 'Pfad zu dem SSL-CertificateChainFile (optional)';
-$lng['admin']['ipsandports']['ssl_cert_chainfile']['description'] = 'Meist CA_Bundle, o. Ä., dies ist das Feld, das gesetzt werden sollte, wenn ein gekauftes SSL-Zertifikat vorliegt.';
+$lng['admin']['ipsandports']['ssl_cert_chainfile']['description'] = 'Meist CA_Bundle, o. Ä. Dies ist das Feld, das gesetzt werden sollte, wenn ein gekauftes SSL-Zertifikat vorliegt.';
 $lng['admin']['ipsandports']['docroot']['title'] = 'Benutzerdefinierter Docroot (wenn leer, zeige auf Froxlor)';
 $lng['admin']['ipsandports']['docroot']['description'] = 'Hier kann ein benutzerdefinierter Document-Root (der Zielordner für einen Zugriff) für diese IP/Port Kombination gesetzt werden.<br /><strong>ACHTUNG:</strong> Bitte überlege vorher, welchen Pfad du hier angibst!';
 $lng['serversettings']['login_domain_login'] = 'Erlaube Anmeldung mit Domains';
@@ -1443,7 +1443,7 @@ $lng['admin']['ipsandports']['ssl_key_file_content'] = 'Inhalt der Key-Datei (Pr
 $lng['admin']['ipsandports']['ssl_ca_file_content'] = 'Inhalt der SSL-CA-Datei (optional)';
 $lng['admin']['ipsandports']['ssl_ca_file_content_desc'] = '<br /><br />Client Authentifizierung, dieses Feld sollte nur gesetzt werden, wenn es wirklich gebraucht wird.';
 $lng['admin']['ipsandports']['ssl_cert_chainfile_content'] = 'Inhalt des SSL-CertificateChainFile (optional)';
-$lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'] = '<br /><br />Meist CA_Bundle, o. Ä., dies ist das Feld, das gesetzt werden sollte, wenn ein gekauftes SSL-Zertifikat vorliegt.';
+$lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'] = '<br /><br />Meist CA_Bundle, o. Ä. Dies ist das Feld, das gesetzt werden sollte, wenn ein gekauftes SSL-Zertifikat vorliegt.';
 $lng['error']['sslcertificateismissingprivatekey'] = 'Für das Zertifikat muss eine Key-Datei (Private-Key) angegeben werden.';
 $lng['error']['sslcertificatewrongdomain'] = 'Das angegebene Zertifikat gilt nicht für die gewählte Domain.';
 $lng['error']['sslcertificateinvalidcert'] = 'Der angegebene Zertifikatsinhalt scheint kein gültiges Zertifikat zu sein.';
