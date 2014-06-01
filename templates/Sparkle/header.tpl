@@ -9,16 +9,16 @@
 	</if>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-	<!--[if lt IE 9]><script src="js/html5shiv.min.js"></script><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="js/html5shiv.min.js"></script><![endif]-->
 	<if isset($intrafficpage)>
-	<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="js/jquery.flot.min.js"></script>
-	<script language="javascript" type="text/javascript" src="js/plugins/jquery.flot.resize.min.js"></script>
-	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/traffic.js"></script>
+	<!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+	<script type="text/javascript" src="js/jquery.flot.min.js"></script>
+	<script type="text/javascript" src="js/plugins/jquery.flot.resize.min.js"></script>
+	<script type="text/javascript" src="templates/{$theme}/assets/js/traffic.js"></script>
 	</if>
-	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/tipper.min.js"></script>
-	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/jcanvas.min.js"></script>
-	<script language="javascript" type="text/javascript" src="templates/{$theme}/assets/js/circular.js"></script>
+	<script type="text/javascript" src="templates/{$theme}/assets/js/tipper.min.js"></script>
+	<script type="text/javascript" src="templates/{$theme}/assets/js/jcanvas.min.js"></script>
+	<script type="text/javascript" src="templates/{$theme}/assets/js/circular.js"></script>
 	<if Settings::Get('panel.use_webfonts') == '1'>
 		<link href="//fonts.googleapis.com/css?family={$webfont}" rel="stylesheet">
 	</if>
