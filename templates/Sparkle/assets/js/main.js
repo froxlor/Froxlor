@@ -28,13 +28,17 @@ $(document).ready(function() {
 	
 	// Load Newsfeed
 	var ajax_load = "<div id='newsitem'>Loading newsfeed...</div>";
-	$("#newsfeeditems").html(ajax_load).load("lib/ajax.php?action=newsfeed", function() {
+	var url = "";
+	if (typeof $("#newsfeed").data("url") !== "undefined") {
+		url = "&url=" + $("#newsfeed").data("url");
+	}
+	$("#newsfeeditems").html(ajax_load).load("lib/ajax.php?action=newsfeed" + url, function() {
 		if ($("#newsfeeditems").html().length > 0) {
 			$(window).trigger('resize');
 			$("#newsfeed").slideDown();
 		}
 	});	
-	
+
 	// Enable Infobubbles
 	$(".tipper").tipper({
 		direction: "right"

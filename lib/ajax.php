@@ -25,7 +25,11 @@ if(isset($_POST['action'])) {
 }
 
 if ($action == "newsfeed") {
-	$feed = "http://inside.froxlor.org/news/";
+	if (isset($_GET['url'])) {
+		$feed = $_GET['url'];
+	} else {
+		$feed = "http://inside.froxlor.org/news/";
+	}
 
 	if (function_exists("simplexml_load_file") == false) {
 		die();

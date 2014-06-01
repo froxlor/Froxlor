@@ -2770,3 +2770,14 @@ if (isFroxlorVersion('0.9.32-rc3')) {
 	showUpdateStep("Updating from 0.9.32-rc3 to 0.9.32 final", false);
 	updateToVersion('0.9.32');
 }
+
+if (isFroxlorVersion('0.9.32')) {
+	showUpdateStep("Updating from 0.9.32 to 0.9.33-dev1", false);
+
+	showUpdateStep("Adding settings for custom newsfeed on customer-dashboard");
+	Settings::AddNew("customer.show_news_feed", isset($_POST['customer_show_news_feed']) ? (int)$_POST['customer_show_news_feed'] : '0');
+	Settings::AddNew("customer.news_feed_url", isset($_POST['customer_news_feed_url']) ? $_POST['customer_news_feed_url'] : '');
+	lastStepStatus(0);
+
+	updateToVersion('0.9.33-dev1');
+}

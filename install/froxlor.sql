@@ -341,6 +341,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('customer', 'ftpprefix', 'ftp'),
 	('customer', 'mysqlprefix', 'sql'),
 	('customer', 'ftpatdomain', '0'),
+	('customer', 'show_news_feed', '0'),
+	('customer', 'news_feed_url', ''),
 	('ticket', 'noreply_email', 'NO-REPLY@SERVERNAME'),
 	('ticket', 'worktime_all', '1'),
 	('ticket', 'worktime_begin', '00:00'),

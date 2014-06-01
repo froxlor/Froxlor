@@ -149,6 +149,18 @@ $header
 			</div>
 
 			<div class="grid-u-1-2">
+				<if Settings::Get('customer.show_news_feed') == '1'>
+				<table class="dboarditem full" id="newsfeed" data-url="{$news_feed_url}">
+					<thead>
+						<tr>
+							<th>News</th>
+						</tr>
+					</thead>
+					<tbody id="newsfeeditems">
+					</tbody>
+				</table>
+				</if>
+
 				<table class="dboarditem">
 					<thead>
 						<tr>
@@ -174,10 +186,17 @@ $header
 							<td>{$lng['customer']['services']}:</td>
 							<td>$services_enabled</td>
 						</tr>
+					</tbody>
+				</table>
+
+				<table class="dboarditem">
+					<thead>
 						<tr>
-						<th colspan="2">{$lng['index']['customerdetails']}</th>
+							<th colspan="2">{$lng['index']['customerdetails']}</th>
 						</tr>
-				        <if $userinfo['customernumber'] >
+					</thead>
+					<tbody>
+						<if $userinfo['customernumber'] >
 				        <tr>
 				            <td>{$lng['customer']['customernumber']}:</td>
 				            <td>{$userinfo['customernumber']}</td>
