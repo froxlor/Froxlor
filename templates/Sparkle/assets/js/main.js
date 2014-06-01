@@ -28,11 +28,11 @@ $(document).ready(function() {
 	
 	// Load Newsfeed
 	var ajax_load = "<div id='newsitem'>Loading newsfeed...</div>";
-	var url = "";
-	if (typeof $("#newsfeed").data("url") !== "undefined") {
-		url = "&url=" + $("#newsfeed").data("url");
+	var role = "";
+	if (typeof $("#newsfeed").data("role") !== "undefined") {
+		role = "&role=" + $("#newsfeed").data("role");
 	}
-	$("#newsfeeditems").html(ajax_load).load("lib/ajax.php?action=newsfeed" + url, function() {
+	$("#newsfeeditems").html(ajax_load).load("lib/ajax.php?action=newsfeed" + role, function() {
 		if ($("#newsfeeditems").html().length > 0) {
 			$(window).trigger('resize');
 			$("#newsfeed").slideDown();

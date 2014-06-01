@@ -16,6 +16,16 @@
  *
  */
 
+// Load the user settings
+define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
+if (!file_exists('./userdata.inc.php')) {
+	die();
+}
+require './userdata.inc.php';
+require './tables.inc.php';
+require './classes/database/class.Database.php';
+require './classes/settings/class.Settings.php';
+
 if(isset($_POST['action'])) {
 	$action = $_POST['action'];
 } elseif(isset($_GET['action'])) {
@@ -25,8 +35,8 @@ if(isset($_POST['action'])) {
 }
 
 if ($action == "newsfeed") {
-	if (isset($_GET['url'])) {
-		$feed = $_GET['url'];
+	if (isset($_GET['role']) && $_GET['role'] == "customer") {
+		$feed = Settings::Get("customer.news_feed_url");
 	} else {
 		$feed = "http://inside.froxlor.org/news/";
 	}
@@ -34,9 +44,6 @@ if ($action == "newsfeed") {
 	if (function_exists("simplexml_load_file") == false) {
 		die();
 	}
-
-	// get version
-	require './tables.inc.php';
 
 	if (function_exists('curl_version')) {
 		$ch = curl_init();

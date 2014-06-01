@@ -93,8 +93,6 @@ if ($page == 'overview') {
 	if ($userinfo['perlenabled'] == '1') $se[] = "Perl/CGI";
 	$services_enabled = implode(", ", $se);
 
-	$news_feed_url = Settings::Get('customer.news_feed_url');
-
 	eval("echo \"" . getTemplate('index/index') . "\";");
 } elseif ($page == 'change_password') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {

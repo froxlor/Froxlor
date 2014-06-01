@@ -150,7 +150,7 @@ $header
 
 			<div class="grid-u-1-2">
 				<if Settings::Get('customer.show_news_feed') == '1'>
-				<table class="dboarditem full" id="newsfeed" data-url="{$news_feed_url}">
+				<table class="dboarditem full" id="newsfeed" data-role="customer">
 					<thead>
 						<tr>
 							<th>News</th>
