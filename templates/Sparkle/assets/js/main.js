@@ -53,7 +53,7 @@ $(document).ready(function() {
 	// Height of divs fix
 	var snheight = $('#sidenavigation').height();
 	var mainheight = $('#maincontent').height();
-	if (snheight > mainheight) {
+	if (snheight > mainheight && !$('#newsfeed').length) {
 		$('#maincontent').height(snheight);
 	}
 
