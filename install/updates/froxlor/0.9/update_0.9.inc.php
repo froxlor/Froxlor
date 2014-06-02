@@ -2781,3 +2781,13 @@ if (isFroxlorVersion('0.9.32')) {
 
 	updateToVersion('0.9.33-dev1');
 }
+
+if (isFroxlorVersion('0.9.33-dev1')) {
+	showUpdateStep("Updating from 0.9.33-dev1 to 0.9.33-dev2", false);
+
+	showUpdateStep("Adding settings for hostname-dns-entry");
+	Settings::AddNew("system.dns_createhostnameentry", isset($_POST['dns_createhostnameentry']) ? (int)$_POST['dns_createhostnameentry'] : '0');
+	lastStepStatus(0);
+
+	updateToVersion('0.9.33-dev2');
+}

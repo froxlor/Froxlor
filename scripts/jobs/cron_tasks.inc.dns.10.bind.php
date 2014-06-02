@@ -89,17 +89,19 @@ class bind {
 		}
 
 		// frolxor-hostname (#1090)
-		$hostname_arr = array(
-			'id' => 'none',
-			'domain' => Settings::Get('system.hostname'),
-			'customerid' => 'none',
-			'loginname' => 'froxlor.panel',
-			'bindserial' => date('Ymd').'00',
-			'dkim' => '0',
-			'iswildcarddomain' => '1',
-			'zonefile' => ''
-		);
-		$bindconf_file .= $this->_generateDomainConfig($hostname_arr, true);
+		if (Settings::get('system.dns_createhostnameentry') == 1) {
+			$hostname_arr = array(
+				'id' => 'none',
+				'domain' => Settings::Get('system.hostname'),
+				'customerid' => 'none',
+				'loginname' => 'froxlor.panel',
+				'bindserial' => date('Ymd').'00',
+				'dkim' => '0',
+				'iswildcarddomain' => '1',
+				'zonefile' => ''
+			);
+			$bindconf_file .= $this->_generateDomainConfig($hostname_arr, true);
+		}
 
 		$bindconf_file_handler = fopen(makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
 		fwrite($bindconf_file_handler, $bindconf_file);

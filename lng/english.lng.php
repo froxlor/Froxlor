@@ -1822,3 +1822,4 @@ $lng['error']['passwordshouldnotbeusername'] = 'The password should not be the s
 // Added in Froxlor 0.9.33
 $lng['admin']['customer_show_news_feed'] = "Show custom newsfeed on customer-dashboard";
 $lng['admin']['customer_news_feed_url'] = "RSS-Feed for the custom newsfeed";
+$lng['serversettings']['dns_createhostnameentry'] = "Create bind-zone/config for system hostname";

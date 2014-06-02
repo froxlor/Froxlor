@@ -1546,3 +1546,4 @@ $lng['error']['passwordshouldnotbeusername'] = 'Das Passwort sollte nicht mit de
 // Added in Froxlor 0.9.33
 $lng['admin']['customer_show_news_feed'] = "Zeige benutzerdefinierten Newsfeed im Kunden-Dashboard";
 $lng['admin']['customer_news_feed_url'] = "RSS-Feed für den benutzerdefinierten Newsfeed";
+$lng['serversettings']['dns_createhostnameentry'] = "Erstelle bind-Zone/Konfiguration für den System-Hostnamen";

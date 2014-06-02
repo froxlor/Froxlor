@@ -668,4 +668,15 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
+	if (versionInUpdate($current_version, '0.9.33-dev2')) {
+		// only if bind is used - if not the default will be set, which is '0' (off)
+		if (Settings::get('system.bind_enable') == 1) {
+			$has_preconfig = true;
+			$description  = 'You can enable/disable the generation of the bind-zone / config for the system hostname.<br /><br />';
+			$question = '<strong>Do you want to generate a bind-zone for the system-hostname? (default: no):</strong>&nbsp;';
+			$question.= makeyesno('dns_createhostnameentry', '1', '0', '0').'<br />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
+
 }

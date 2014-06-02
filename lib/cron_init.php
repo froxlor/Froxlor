@@ -143,7 +143,7 @@ fwrite($debugHandler, 'Database-connection established' . "\n");
  * if using fcgid or fpm for froxlor-vhost itself, we have to check
  * whether the permission of the files are still correct
  */
-fwrite($debugHandler, 'Checking froxlor file permissions');
+fwrite($debugHandler, 'Checking froxlor file permissions'."\n");
 $_mypath = makeCorrectDir(FROXLOR_INSTALL_DIR);
 
 if (((int)Settings::Get('system.mod_fcgid') == 1 && (int)Settings::Get('system.mod_fcgid_ownvhost') == 1)
