@@ -882,7 +882,7 @@ if ($page == 'domains'
 						$row_ipandport['ip'] = '[' . $row_ipandport['ip'] . ']';
 					}
 
-					$ipsandports[] = array('label' => $row_ipandport['ip'] . ':' . $row_ipandport['port'], 'value' => $row_ipandport['id']);
+					$ipsandports[] = array('label' => $row_ipandport['ip'] . ':' . $row_ipandport['port'] . '<br />', 'value' => $row_ipandport['id']);
 				}
 
 				$ssl_ipsandports = array();
@@ -892,7 +892,7 @@ if ($page == 'domains'
 						$row_ssl_ipandport['ip'] = '[' . $row_ssl_ipandport['ip'] . ']';
 					}
 
-					$ssl_ipsandports[] = array('label' => $row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'], 'value' => $row_ssl_ipandport['id']);
+					$ssl_ipsandports[] = array('label' => $row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'] . '<br />', 'value' => $row_ssl_ipandport['id']);
 				}
 
 				$standardsubdomains = array();
@@ -1825,7 +1825,7 @@ if ($page == 'domains'
 					if (filter_var($row_ipandport['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 						$row_ipandport['ip'] = '[' . $row_ipandport['ip'] . ']';
 					}
-					$ipsandports[] = array('label' => $row_ipandport['ip'] . ':' . $row_ipandport['port'], 'value' => $row_ipandport['id']);
+					$ipsandports[] = array('label' => $row_ipandport['ip'] . ':' . $row_ipandport['port'] . '<br />', 'value' => $row_ipandport['id']);
 				}
 
 				$ssl_ipsandports = array();
@@ -1833,7 +1833,7 @@ if ($page == 'domains'
 					if (filter_var($row_ssl_ipandport['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 						$row_ssl_ipandport['ip'] = '[' . $row_ssl_ipandport['ip'] . ']';
 					}
-					$ssl_ipsandports[] = array('label' => $row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'], 'value' => $row_ssl_ipandport['id']);
+					$ssl_ipsandports[] = array('label' => $row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'] . '<br />', 'value' => $row_ssl_ipandport['id']);
 				}
 
 				$result['specialsettings'] = $result['specialsettings'];
