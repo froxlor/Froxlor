@@ -22,7 +22,7 @@
  * it consists only of the following characters ([a-z0-9][a-z0-9\-]+\.)+[a-z]{2,4}
  *
  * @param string The domainname which should be checked.
- * @return boolean True if the domain is valid, false otherwise
+ * @return string|boolean the domain-name if the domain is valid, false otherwise
  * @author Florian Lippert <flo@syscp.org>
  * @author Michael Duergner
  *

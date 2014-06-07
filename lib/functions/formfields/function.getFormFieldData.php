@@ -39,5 +39,5 @@ function getFormFieldData($fieldname, $fielddata, &$input)
 		}
 	}
 	
-	return $newfieldvalue;
+	return trim($newfieldvalue);
 }
