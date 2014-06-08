@@ -39,7 +39,7 @@ $editFileNoExtension = true;
 $default_mode = "FTP_BINARY";
 // Max. uploadsize (0 = unlimited) - read from php.ini
 $_mfs = ini_get('upload_max_filesize');
-if ($_mfs === false || is_numeric(_mfs) == false) {
+if ($_mfs === false || is_numeric($_mfs) == false) {
 	$MAX_FILE_SIZE = 1907300;
 } else {
 	$MAX_FILE_SIZE = $_mfs;
