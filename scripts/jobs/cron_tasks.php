@@ -134,8 +134,14 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($userhomedir));
 			safe_exec('chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($userhomedir));
-			// don't allow others to access the directory (webserver will be the group)
-			safe_exec('chmod 0750 ' . escapeshellarg($userhomedir));
+			// don't allow others to access the directory (webserver will be the group via libnss-mysql)
+			if (Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) {
+				// fcgid or fpm
+				safe_exec('chmod 0750 ' . escapeshellarg($userhomedir));
+			} else {
+				// mod_php -> no libnss-mysql -> no webserver-user in group
+				safe_exec('chmod 0755 ' . escapeshellarg($userhomedir));
+			}
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)Settings::Get('system.vmail_uid') . ':' . (int)Settings::Get('system.vmail_gid') . ' ' . escapeshellarg($usermaildir));
 			safe_exec('chown -R ' . (int)Settings::Get('system.vmail_uid') . ':' . (int)Settings::Get('system.vmail_gid') . ' ' . escapeshellarg($usermaildir));
 		}
