@@ -548,9 +548,14 @@ if (isset($_GET['logoff']) || isset($_POST['logoff'])) {
 			if (!isset($file)) {
 				$file = "";
 			}
+
+			// initialize output-variables
+			$output_dir = '';
+			$output_link = '';
+			$output_file = '';
+
 			if (is_array($list)) {
 				// Ordner
-				$output_dir = '';
 				foreach ($list as $myDir) {
 					if ($myDir["is_dir"] == 1) {
 						$countArray['dir']++;
@@ -571,7 +576,6 @@ if (isset($_GET['logoff']) || isset($_POST['logoff'])) {
 				}
 
 				// Links
-				$output_link = '';
 				foreach ($list as $myDir) {
 					if ($myDir["is_link"] == 1) {
 						$countArray['link']++;
@@ -591,7 +595,6 @@ if (isset($_GET['logoff']) || isset($_POST['logoff'])) {
 				}
 
 				// Dateien
-				$output_file = '';
 				foreach ($list as $myDir) {
 					if ($myDir["is_link"] != 1 && $myDir["is_dir"] != 1) {
 						$countArray['file']++;
@@ -696,6 +699,10 @@ function killslashes($input) {
 
 
 function parse_ftp_rawlist($list, $type = "UNIX") {
+
+	// initialize files-array
+	$files = array();
+
 	if ($type == "UNIX") {
 		$regexp = "/([-ldrswx]{10})[ ]+([0-9]+)[ ]+([-A-Z0-9_@\.]+)[ ]+([-A-Z0-9_@\.]+)[ ]+([0-9]+)[ ]+([A-Z]{3}[ ]+[0-9]{1,2}[ ]+[0-9:]{4,5})[ ]+(.*)/i";
 		$i = 0;
@@ -734,6 +741,8 @@ function parse_ftp_rawlist($list, $type = "UNIX") {
 		$regexp = "/([0-9\-]{8})[ ]+([0-9:]{5}[APM]{2})[ ]+([0-9|<DIR>]+)[ ]+(.*)/i";
 		foreach ($list as $line) {
 			$is_dir = false;
+			// initialize regs-array
+			$regs = array();
 			//print $line . "<BR>\n";
 			if (preg_match($regexp, $line, $regs)) {
 				if (!preg_match("/^[.]/i", $regs[4])) {
