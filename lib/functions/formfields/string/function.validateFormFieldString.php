@@ -107,11 +107,8 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 			}
 		}
 		elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'validate_ip') {
-			$newfieldvalue = validate_ip($newfieldvalue, true);
-			if ($newfieldvalue === false) {
-				$newfieldvalue = '';
-			}
-			$returnvalue = false;
+			$newfieldvalue = validate_ip2($newfieldvalue);
+			$returnvalue = ($newfieldvalue !== false ? true : 'invalidip');
 		}
 		elseif (preg_match('/^[^\r\n\t\f\0]*$/D', $newfieldvalue)) {
 			$returnvalue = true;

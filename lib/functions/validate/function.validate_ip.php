@@ -21,6 +21,7 @@
  * Checks whether it is a valid ip
  *
  * @return mixed 	ip address on success, standard_error on failure
+ * @deprecated use validate_ip2
  */
 function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
 
@@ -32,9 +33,32 @@ function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
 			return false;
 		} else {
 			standard_error($lng, $ip);
-			exit;
+			exit();
 		}
 	} else {
 		return $ip;
+	}
+
+}
+
+/**
+ * Checks whether it is a valid ip
+ *
+ * @return mixed 	ip address on success, false on failure
+ */
+function validate_ip2($ip, $return_bool = false, $lng = 'invalidip') {
+
+	if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)
+			|| filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+			&& filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE)
+	) {
+		return $ip;
+	}
+
+	if ($return_bool) {
+		return false;
+	} else {
+		standard_error($lng, $ip);
+		exit();
 	}
 }
