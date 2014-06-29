@@ -362,10 +362,15 @@ if ($action == 'forgotpwd') {
 					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $user['loginname'] . "' requested a link for setting a new password.");
 
 					// Set together our activation link
-					$protocol = empty( $_SERVER['HTTPS'] ) ? 'http' : 'https';				
-					$host = $_SERVER['HTTP_HOST'];
+					$protocol = empty( $_SERVER['HTTPS'] ) ? 'http' : 'https';
+					// this can be a fixed value to avoid potential exploiting by modifying headers
+					$host = Settings::Get('system.hostname'); // $_SERVER['HTTP_HOST'];
 					$port = $_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '';
-					$script = $_SERVER['SCRIPT_NAME'];
+					// there can be only one script to handle this so we can use a fixed value here
+					$script = "/index.php"; // $_SERVER['SCRIPT_NAME'];
+					if (Settings::Get('system.froxlordirectlyviahostname') == 0) {
+						$script = makeCorrectFile("/".basename(__DIR__)."/".$script);
+					}
 					$activationlink = $protocol . '://' . $host . $port . $script . '?action=resetpwd&resetcode=' . $activationcode;
 
 					$replace_arr = array(
