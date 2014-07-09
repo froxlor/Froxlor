@@ -1652,6 +1652,8 @@ if ($page == 'domains'
 				// FIXME check how many we got and if the amount of assigned IP's
 				// has changed so we can insert a config-rebuild task if only
 				// the ip's of this domain were changed
+				// -> for now, always insert a rebuild-task
+				inserttask('1');
 
 				// Cleanup domain <-> ip mapping
 				$del_stmt = Database::prepare("
