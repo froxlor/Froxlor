@@ -37,7 +37,7 @@ return array(
 						'visible' => (1 < $count_mysqlservers ? true : false),
 						'label' => $lng['mysql']['mysql_server'],
 						'type' => 'label',
-						'value' => $sql_root['caption']
+						'value' => $sql_root[$result['dbserver']]['caption']
 					),
 					'mysql_password' => array(
 						'label' => $lng['changepassword']['new_password_ifnotempty'],

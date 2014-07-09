@@ -63,12 +63,13 @@ class DbManager {
 	 * @param string $loginname
 	 * @param string $password
 	 * @param int $last_accnumber
+	 * @param int $dbserver
 	 *
 	 * @return string|bool $username if successful or false of username is equal to the password
 	 */
-	public function createDatabase($loginname = null, $password = null, $last_accnumber = 0) {
+	public function createDatabase($loginname = null, $password = null, $last_accnumber = 0, $dbserver = 0) {
 
-		Database::needRoot(true);
+		Database::needRoot(true, $dbserver, true);
 
 		// check whether we shall create a random username
 		if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'RANDOM') {
@@ -91,12 +92,16 @@ class DbManager {
 
 		// now create the database itself
 		$this->getManager()->createDatabase($username);
+		Database::needRoot(false);
 		$this->_log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
+		Database::needRoot(true, $dbserver, true);
 
 		// and give permission to the user on every access-host we have
 		foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 			$this->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host);
+			Database::needRoot(false);
 			$this->_log->logAction(USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
+			Database::needRoot(true, $dbserver, true);
 		}
 
 		$this->getManager()->flushPrivileges();
