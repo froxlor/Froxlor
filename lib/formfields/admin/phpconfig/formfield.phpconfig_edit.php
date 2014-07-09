@@ -31,12 +31,14 @@ return array(
 						'value' => $result['description']
 					),
 					'binary' => array(
+						'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['phpsettings']['binary'],
 						'type' => 'text',
 						'maxlength' => 255,
 						'value' => $result['binary']
 					),
 					'file_extensions' => array(
+						'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['phpsettings']['file_extensions'],
 						'desc' => $lng['admin']['phpsettings']['file_extensions_note'],
 						'type' => 'text',
@@ -44,14 +46,39 @@ return array(
 						'value' => $result['file_extensions']
 					),
 					'mod_fcgid_starter' => array(
+						'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_starter']['title'],
 						'type' => 'text',
 						'value' => ((int)$result['mod_fcgid_starter'] != - 1 ? $result['mod_fcgid_starter'] : '')
 					),
 					'mod_fcgid_maxrequests' => array(
+						'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
 						'type' => 'text',
 						'value' => ((int)$result['mod_fcgid_maxrequests'] != - 1 ? $result['mod_fcgid_maxrequests'] : '')
+					),
+					'phpfpm_enable_slowlog' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'label' => $lng['admin']['phpsettings']['enable_slowlog'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['fpm_slowlog'])
+					),
+					'phpfpm_reqtermtimeout' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'label' => $lng['admin']['phpsettings']['request_terminate_timeout'],
+						'type' => 'text',
+						'maxlength' => 10,
+						'value' => $result['fpm_reqterm']
+					),
+					'phpfpm_reqslowtimeout' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'label' => $lng['admin']['phpsettings']['request_slowlog_timeout'],
+						'type' => 'text',
+						'maxlength' => 10,
+						'value' => $result['fpm_reqslow']
 					),
 					'phpsettings' => array(
 						'style' => 'vertical-align:top;',

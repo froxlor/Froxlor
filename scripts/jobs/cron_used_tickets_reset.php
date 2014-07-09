@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('MASTER_CRONJOB')) die('You cannot access this file directly!');
 
 /**
  * This file is part of the Froxlor project.
@@ -20,7 +20,6 @@
 /**
  * RESET USED TICKETS COUNTER
  */
-
 fwrite($debugHandler, 'Resetting customers used ticket counter' . "\n");
 $cronlog->logAction(CRON_ACTION, LOG_INFO, "Resetting customers used ticket counter");
-$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `tickets_used` = '0'");
+Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `tickets_used` = '0'");

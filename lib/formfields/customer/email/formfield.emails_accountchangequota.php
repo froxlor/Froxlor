@@ -30,7 +30,7 @@ return array(
 						'value' => $result['email_full']
 					),
 					'email_quota' => array(
-						'label' => $lng['emails']['quota'].' ('.$lng['panel']['megabyte'].')',
+						'label' => $lng['emails']['quota'].' (MiB)',
 						'type' => 'text',
 						'value' => $result['quota']
 					)

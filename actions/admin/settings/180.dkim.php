@@ -79,7 +79,10 @@ return array(
 					'save_method' => 'storeSettingFieldInsertBindTask',
 					),
 				'dkim_keylength' => array(
-					'label' => $lng['dkim']['dkim_keylength'],
+					'label' => array(
+						'title' => $lng['dkim']['dkim_keylength']['title'],
+						'description' => sprintf($lng['dkim']['dkim_keylength']['description'], Settings::Get('dkim.dkim_prefix'))
+					),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_keylength',
 					'type' => 'option',

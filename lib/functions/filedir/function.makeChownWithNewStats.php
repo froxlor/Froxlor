@@ -24,34 +24,30 @@
  *
  * @return void
  */
-function makeChownWithNewStats($row)
-{
-	global $settings, $theme;
+function makeChownWithNewStats($row) {
 
 	// get correct user
-	if($settings['system']['mod_fcgid'] == '1' && isset($row['deactivated']) && $row['deactivated'] == '0')
-	{
+	if ((Settings::Get('system.mod_fcgid') == '1' || Settings::Get('phpfpm.enabled') == '1')
+		&& isset($row['deactivated'])
+		&& $row['deactivated'] == '0'
+	) {
 		$user = $row['loginname'];
 		$group = $row['loginname'];
-	}
-	else
-	{
+	} else {
 		$user = $row['guid'];
 		$group = $row['guid'];
 	}
 
 	// get correct directory
 	$dir = $row['documentroot'];
-	if($settings['system']['awstats_enabled'] == '1')
-	{
+	if (Settings::Get('system.awstats_enabled') == '1') {
 		$dir .= '/awstats/';
 	} else {
 		$dir .= '/webalizer/';
 	}
 
 	// only run chown if directory exists
-	if (file_exists($dir))
-	{
+	if (file_exists($dir)) {
 		// run chown
 		safe_exec('chown -R '.escapeshellarg($user).':'.escapeshellarg($group).' '.escapeshellarg(makeCorrectDir($dir)));
 	}

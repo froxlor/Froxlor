@@ -42,32 +42,30 @@ return array(
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => ($settings['panel']['pathedit'] != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescriptionSubdomain'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
 					),
 					'url' => array(
-						'visible' => ($settings['panel']['pathedit'] == 'Dropdown' ? true : false),
+						'visible' => (Settings::Get('panel.pathedit') == 'Dropdown' ? true : false),
 						'label' => $lng['panel']['urloverridespath'],
 						'type' => 'text',
 						'value' => $urlvalue
 					),
 					'redirectcode' => array(
-						'visible' => (($settings['system']['webserver'] == 'apache2' && $settings['customredirect']['enabled'] == '1') ? true : false),
+						'visible' => ((Settings::Get('system.webserver') == 'apache2' && Settings::Get('customredirect.enabled') == '1') ? true : false),
 						'label' => $lng['domains']['redirectifpathisurl'],
 						'desc' => $lng['domains']['redirectifpathisurlinfo'],
 						'type' => 'select',
 						'select_var' => $redirectcode
 					),
-					'iswildcarddomain' => array(
+					'selectserveralias' => array(
 						'visible' => (($result['parentdomainid'] == '0' && $userinfo['subdomains'] != '0') ? true : false),
-						'label' => $lng['domains']['wildcarddomain'],
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array($result['iswildcarddomain'])
+						'label' => $lng['admin']['selectserveralias'],
+						'desc' => $lng['admin']['selectserveralias_desc'],
+						'type' => 'select',
+						'select_var' => $serveraliasoptions
 					),
 					'isemaildomain' => array(
 						'visible' => ((( $result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2' ) && $result['parentdomainid'] != '0') ? true : false),
@@ -79,8 +77,9 @@ return array(
 						'value' => array($result['isemaildomain'])
 					),
 					'ssl_redirect' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? true : false),
-						'label' => 'SSL Redirect',
+						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? (domainHasSslIpPort($result['id']) ? true : false) : false) : false),
+						'label' => $lng['domains']['ssl_redirect']['title'],
+						'desc' => $lng['domains']['ssl_redirect']['description'],
 						'type' => 'checkbox',
 						'values' => array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')
@@ -88,6 +87,7 @@ return array(
 						'value' => array($result['ssl_redirect'])
 					),
 					'openbasedir_path' => array(
+						'visible' => ($result['openbasedir'] == '1') ? true : false,
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
 						'select_var' => $openbasedir

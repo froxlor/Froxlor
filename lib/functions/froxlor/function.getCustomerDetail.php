@@ -17,19 +17,16 @@
  *
  */
 
-function getCustomerDetail($customerid, $varname)
-{
-	global $db, $theme;
+function getCustomerDetail($customerid, $varname) {
 
-	$query = 'SELECT `' . $db->escape($varname) . '` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = \'' . (int)$customerid . '\'';
-	$customer = $db->query_first($query);
+	$customer_stmt = Database::prepare("
+		SELECT `" . $varname . "` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :customerid
+	");
+	$customer = Database::pexecute_first($customer_stmt, array('customerid' => $customerid));
 
-	if(isset($customer[$varname]))
-	{
+	if (isset($customer[$varname])) {
 		return $customer[$varname];
-	}
-	else
-	{
+	} else {
 		return false;
 	}
 }

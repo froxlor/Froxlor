@@ -18,59 +18,51 @@
  */
 
 define('AREA', 'admin');
+require './lib/init.php';
 
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
+// get sql-root access data
+Database::needRoot(true);
+Database::needSqlData();
+$sql_root = Database::getSqlData();
+Database::needRoot(false);
 
-$need_db_sql_data = true;
-$need_root_db_sql_data = true;
-require ("./lib/init.php");
-
-if(($page == 'settings' || $page == 'overview')
-   && $userinfo['change_serversettings'] == '1')
-{
+if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	$settings_data = loadConfigArrayDir('./actions/admin/settings/');
-	$settings = loadSettings($settings_data, $db);
+	$settings = loadSettings($settings_data);
 
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+	if (isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
+
 		$_part = isset($_GET['part']) ? $_GET['part'] : '';
-
-		if($_part == '')
-		{
+		if ($_part == '') {
 			$_part = isset($_POST['part']) ? $_POST['part'] : '';
 		}
 
-		if($_part != '')
-		{
-			if($_part == 'all')
-			{
+		if ($_part != '') {
+			if ($_part == 'all') {
 				$settings_all = true;
 				$settings_part = false;
-			}
-			else
-			{
+			} else {
 				$settings_all = false;
 				$settings_part = true;
 			}
-
 			$only_enabledisable = false;
-		}
-		else
-		{
+
+		} else {
 			$settings_all = false;
 			$settings_part = false;
 			$only_enabledisable = true;
 		}
 		
 		// check if the session timeout is too low #815
-		if (isset($_POST['session_sessiontimeout']) && $_POST['session_sessiontimeout'] <= 60) {
+		if (isset($_POST['session_sessiontimeout'])
+			&& $_POST['session_sessiontimeout'] < 60
+		) {
 			standard_error($lng['error']['session_timeout'], $lng['error']['session_timeout_desc']);
 		}
 
-		if(processFormEx(
+		if (processFormEx(
 			$settings_data,
 			$_POST,
 			array('filename' => $filename, 'action' => $action, 'page' => $page),
@@ -82,34 +74,25 @@ if(($page == 'settings' || $page == 'overview')
 		) {
 			$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles due to changed setting");
 			inserttask('1');
-			inserttask('5');
+			// Using nameserver, insert a task which rebuilds the server config
+			inserttask('4');
 
-			# Using nameserver, insert a task which rebuilds the server config
-			if ($settings['system']['bind_enable'])
-			{
-				inserttask('4');
-			}
 			standard_success('settingssaved', '', array('filename' => $filename, 'action' => $action, 'page' => $page));
 		}
-	}
-	else
-	{
-		$_part = isset($_GET['part']) ? $_GET['part'] : '';
 
-		if($_part == '')
-		{
+	} else {
+
+		$_part = isset($_GET['part']) ? $_GET['part'] : '';
+		if ($_part == '') {
 			$_part = isset($_POST['part']) ? $_POST['part'] : '';
 		}
 
 		$fields = buildFormEx($settings_data, $_part);
 
 		$settings_page = '';
-		if($_part == '')
-		{
+		if ($_part == '') {
 			eval("\$settings_page .= \"" . getTemplate("settings/settings_overview") . "\";");
-		}
-		else
-		{
+		} else {
 			eval("\$settings_page .= \"" . getTemplate("settings/settings") . "\";");
 		}
 
@@ -118,120 +101,187 @@ if(($page == 'settings' || $page == 'overview')
 		eval("echo \"" . getTemplate("settings/settings_form_end") . "\";");
 
 	}
-}
-elseif($page == 'rebuildconfigs'
-       && $userinfo['change_serversettings'] == '1')
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+
+} elseif($page == 'phpinfo'
+	&& $userinfo['change_serversettings'] == '1'
+) {
+		ob_start();
+		phpinfo();
+		$phpinfo = array('phpinfo' => array());
+		if (preg_match_all(
+				'#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
+				ob_get_clean(), $matches, PREG_SET_ORDER
+			)
+		) {
+		foreach ($matches as $match) {
+			$end = array_keys($phpinfo);
+			$end = end($end);
+			if (strlen($match[1])) {
+				$phpinfo[$match[1]] = array();
+			} elseif (isset($match[3])) {
+				$phpinfo[$end][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
+			} else {
+				$phpinfo[$end][] = $match[2];
+			}
+		}
+		$phpinfohtml = '';
+		foreach ($phpinfo as $name => $section) {
+			$phpinfoentries = "";
+			foreach ($section as $key => $val) {
+				if (is_array($val)) {
+					eval("\$phpinfoentries .= \"" . getTemplate("settings/phpinfo/phpinfo_3") . "\";");
+				} elseif (is_string($key)) {
+					eval("\$phpinfoentries .= \"" . getTemplate("settings/phpinfo/phpinfo_2") . "\";");
+				} else {
+					eval("\$phpinfoentries .= \"" . getTemplate("settings/phpinfo/phpinfo_1") . "\";");
+				}
+			}
+			// first header -> show actual php version
+			if (strtolower($name) == "phpinfo") {
+				$name = "PHP ".PHP_VERSION;
+			}
+			eval("\$phpinfohtml .= \"" . getTemplate("settings/phpinfo/phpinfo_table") . "\";");
+		}
+		$phpinfo = $phpinfohtml;
+	}
+	eval("echo \"" . getTemplate("settings/phpinfo") . "\";");
+
+} elseif($page == 'rebuildconfigs'
+	&& $userinfo['change_serversettings'] == '1'
+) {
+	if (isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
+
 		$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles");
 		inserttask('1');
-		inserttask('5');
 		inserttask('10');
+		// Using nameserver, insert a task which rebuilds the server config
+		inserttask('4');
 
-		# Using nameserver, insert a task which rebuilds the server config
-		if ($settings['system']['bind_enable'])
-		{
-			inserttask('4');
-		}
 		standard_success('rebuildingconfigs', '', array('filename' => 'admin_index.php'));
-	}
-	else
-	{
+
+	} else {
 		ask_yesno('admin_configs_reallyrebuild', $filename, array('page' => $page));
 	}
-}
-elseif($page == 'updatecounters'
-       && $userinfo['change_serversettings'] == '1')
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+
+} elseif($page == 'updatecounters'
+	&& $userinfo['change_serversettings'] == '1'
+) {
+
+	if (isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
+
 		$log->logAction(ADM_ACTION, LOG_INFO, "updated resource-counters");
 		$updatecounters = updateCounters(true);
 		$customers = '';
-		foreach($updatecounters['customers'] as $customerid => $customer)
-		{
+		foreach ($updatecounters['customers'] as $customerid => $customer) {
 			eval("\$customers.=\"" . getTemplate("settings/updatecounters_row_customer") . "\";");
 		}
 
 		$admins = '';
-		foreach($updatecounters['admins'] as $adminid => $admin)
-		{
+		foreach ($updatecounters['admins'] as $adminid => $admin) {
 			eval("\$admins.=\"" . getTemplate("settings/updatecounters_row_admin") . "\";");
 		}
 
 		eval("echo \"" . getTemplate("settings/updatecounters") . "\";");
-	}
-	else
-	{
+
+	} else {
 		ask_yesno('admin_counters_reallyupdate', $filename, array('page' => $page));
 	}
-}
-elseif($page == 'wipecleartextmailpws'
-       && $userinfo['change_serversettings'] == '1')
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+
+} elseif ($page == 'wipecleartextmailpws'
+	&& $userinfo['change_serversettings'] == '1'
+) {
+
+	if (isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
+
 		$log->logAction(ADM_ACTION, LOG_WARNING, "wiped all cleartext mail passwords");
-		$db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password`='' ");
-		$db->query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value`='0' WHERE `settinggroup`='system' AND `varname`='mailpwcleartext'");
-		redirectTo('admin_settings.php', array('s' => $s));
-	}
-	else
-	{
+		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password` = '';");
+		Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '0' WHERE `settinggroup` = 'system' AND `varname` = 'mailpwcleartext'");
+		redirectTo($filename, array('s' => $s));
+
+	} else {
 		ask_yesno('admin_cleartextmailpws_reallywipe', $filename, array('page' => $page));
 	}
-}
-elseif($page == 'wipequotas'
-       && $userinfo['change_serversettings'] == '1')
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+
+} elseif($page == 'wipequotas'
+	&& $userinfo['change_serversettings'] == '1'
+) {
+
+	if (isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
+
 		$log->logAction(ADM_ACTION, LOG_WARNING, "wiped all mailquotas");
 
 		// Set the quota to 0 which means unlimited
+		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `quota` = '0';");
+		Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_quota_used` = '0'");
+		redirectTo($filename, array('s' => $s));
 
-		$db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET `quota`='0' ");
-		$db->query("UPDATE " . TABLE_PANEL_CUSTOMERS . " SET `email_quota_used` = 0");
-		redirectTo('admin_settings.php', array('s' => $s));
-	}
-	else
-	{
+	} else {
 		ask_yesno('admin_quotas_reallywipe', $filename, array('page' => $page));
 	}
-}
-elseif($page == 'enforcequotas'
-       && $userinfo['change_serversettings'] == '1')
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+
+} elseif ($page == 'enforcequotas'
+	&& $userinfo['change_serversettings'] == '1'
+) {
+	if (isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
 		// Fetch all accounts
+		$result_stmt = Database::query("SELECT `quota`, `customerid` FROM `" . TABLE_MAIL_USERS . "`");
 
-		$result = $db->query("SELECT `quota`, `customerid` FROM " . TABLE_MAIL_USERS);
+		if (Database::num_rows() > 0) {
 
-		while($array = $db->fetch_array($result))
-		{
-			$difference = $settings['system']['mail_quota'] - $array['quota'];
-			$db->query("UPDATE " . TABLE_PANEL_CUSTOMERS . " SET `email_quota_used` = `email_quota_used` + " . (int)$difference . " WHERE `customerid` = '" . $array['customerid'] . "'");
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+				`email_quota_used` = `email_quota_used` + :diff
+				WHERE `customerid` = :customerid
+			");
+
+			while ($array = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+				$difference = Settings::Get('system.mail_quota') - $array['quota'];
+				Database::pexecute($upd_stmt, array('diff' => $difference, 'customerid' => $customerid));
+			}
 		}
 
 		// Set the new quota
-
-		$db->query("UPDATE `" . TABLE_MAIL_USERS . "` SET `quota`='" . $settings['system']['mail_quota'] . "'");
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_MAIL_USERS . "` SET `quota` = :quota
+		");
+		Database::pexecute($upd_stmt, array('quota' => Settings::Get('system.mail_quota')));
 
 		// Update the Customer, if the used quota is bigger than the allowed quota
+		Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_quota` = `email_quota_used` WHERE `email_quota` < `email_quota_used`");
+		$log->logAction(ADM_ACTION, LOG_WARNING, 'enforcing mailquota to all customers: ' . Settings::Get('system.mail_quota') . ' MB');
+		redirectTo($filename, array('s' => $s));
 
-		$db->query("UPDATE " . TABLE_PANEL_CUSTOMERS . " SET `email_quota` = `email_quota_used` WHERE `email_quota` < `email_quota_used`");
-		$log->logAction(ADM_ACTION, LOG_WARNING, 'enforcing mailquota to all customers: ' . $settings['system']['mail_quota'] . ' MB');
-		redirectTo('admin_settings.php', array('s' => $s));
-	}
-	else
-	{
+	} else {
 		ask_yesno('admin_quotas_reallyenforce', $filename, array('page' => $page));
 	}
+} elseif ($page == 'integritycheck'
+	&& $userinfo['change_serversettings'] == '1'
+) {
+	$integrity = new IntegrityCheck();
+	if (isset($_POST['send'])
+		&& $_POST['send'] == 'send'
+	) {
+		$integrity->fixAll();
+	} elseif(isset($_GET['action'])
+		 && $_GET['action'] == "fix") {
+		ask_yesno('admin_integritycheck_reallyfix', $filename, array('page' => $page));
+	}
+
+	$integritycheck = '';
+	foreach ($integrity->available as $id => $check) {
+		$displayid = $id + 1;
+		$result = $integrity->$check();
+		eval("\$integritycheck.=\"" . getTemplate("settings/integritycheck_row") . "\";");
+	}
+	eval("echo \"" . getTemplate("settings/integritycheck") . "\";");
 }

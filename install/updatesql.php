@@ -17,10 +17,10 @@
  *
  */
 
-$updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'), $db, $settings);
+$updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'));
 
 $updatelogfile = validateUpdateLogFile(makeCorrectFile(dirname(__FILE__).'/update.log'));
-$filelog = FileLogger::getInstanceOf(array('loginname' => 'updater'), $settings);
+$filelog = FileLogger::getInstanceOf(array('loginname' => 'updater'));
 $filelog->setLogFile($updatelogfile);
 
 // if first writing does not work we'll stop, tell the user to fix it
@@ -35,73 +35,32 @@ try {
  * since froxlor, we have to check if there's still someone
  * out there using syscp and needs to upgrade
  */
-if(!isFroxlor())
-{
-	/**
-	 * First case: We are updating from a version < 1.0.10
-	 */
-
-	if(!isset($settings['panel']['version'])
-	|| (substr($settings['panel']['version'], 0, 3) == '1.0' && $settings['panel']['version'] != '1.0.10'))
-	{
-		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 1.0 to 1.0.10");
-		include_once (makeCorrectFile(dirname(__FILE__).'/updates/syscp/1.0/update_1.0_1.0.10.inc.php'));
-	}
-
-	/**
-	 * Second case: We are updating from version = 1.0.10
-	 */
-
-	if($settings['panel']['version'] == '1.0.10')
-	{
-		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 1.0.10 to 1.2-beta1");
-		include_once (makeCorrectFile(dirname(__FILE__).'/updates/syscp/1.0/update_1.0.10_1.2-beta1.inc.php'));
-	}
-
-	/**
-	 * Third case: We are updating from a version > 1.2-beta1
-	 */
-
-	if(substr($settings['panel']['version'], 0, 3) == '1.2')
-	{
-		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 1.2-beta1 to 1.2.19");
-		include_once (makeCorrectFile(dirname(__FILE__).'/updates/syscp/1.2/update_1.2-beta1_1.2.19.inc.php'));
-	}
-
-	/**
-	 * 4th case: We are updating from 1.2.19 to 1.2.20 (prolly the last from the 1.2.x series)
-	 */
-
-	if(substr($settings['panel']['version'], 0, 6) == '1.2.19')
-	{
-		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 1.2.19 to 1.4");
-		include_once (makeCorrectFile(dirname(__FILE__).'/updates/syscp/1.2/update_1.2.19_1.4.inc.php'));
-	}
-
-	/**
-	 * 5th case: We are updating from a version >= 1.4
-	 */
-
-	if(substr($settings['panel']['version'], 0, 3) == '1.4')
-	{
-		$updatelog->logAction(ADM_ACTION, LOG_WARNING, "Updating from 1.4");
-		include_once (makeCorrectFile(dirname(__FILE__).'/updates/syscp/1.4/update_1.4.inc.php'));
-	}
-
+if(!isFroxlor()) {
 	/**
 	 * Upgrading SysCP to Froxlor-0.9
-	 *
-	 * when we reach this part, all necessary updates
-	 * should have been installes automatically by the
-	 * update scripts.
 	 */
 	include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/upgrade_syscp.inc.php'));
-
 }
 
-if(isFroxlor())
-{
+if (isFroxlor()) {
 	include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/0.9/update_0.9.inc.php'));
+
+	// Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)
+	showUpdateStep("Checking database integrity");
+
+	$integrity = new IntegrityCheck();
+	if (!$integrity->checkAll()) {
+		lastStepStatus(2, 'Monkeys ate the integrity');
+		showUpdateStep("Trying to remove monkeys, feeding bananas");
+		if(!$integrity->fixAll()) {
+			lastStepStatus(2, 'Some monkeys just would not move');
+		} else {
+			lastStepStatus(0);
+		}
+	} else {
+		lastStepStatus(0);
+	}
+
 	$filelog->logAction(ADM_ACTION, LOG_WARNING, '--------------- END LOG ---------------');
 	unset($filelog);
 }

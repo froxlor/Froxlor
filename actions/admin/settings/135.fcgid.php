@@ -30,13 +30,13 @@ return array(
 					'save_method' => 'storeSettingField',
 					'plausibility_check_method' => 'checkFcgidPhpFpm',
 					'overview_option' => true
-					),					
+					),
 				'system_mod_fcgid_configdir' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['configdir'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_configdir',
 					'type' => 'string',
-					'string_type' => 'dir',
+					'string_type' => 'confdir',
 					'default' => '/var/www/php-fcgi-scripts/',
 					'plausibility_check_method' => 'checkPathConflicts',
 					'save_method' => 'storeSettingField',
@@ -66,7 +66,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_wrapper',
 					'type' => 'option',
-					'option_options' => array(0 => 'ScriptAlias', 1=> 'FCGIWrapper'),
+					'option_options' => array(0 => 'ScriptAlias', 1=> 'FcgidWrapper'),
 					'default' => 1,
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('apache2')
@@ -129,7 +129,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_defaultini_ownvhost',
 					'type' => 'option',
-					'default' => '1',
+					'default' => '2',
 					'option_mode' => 'one',
 					'option_options_method' => 'getPhpConfigs',
 					'save_method' => 'storeSettingField',

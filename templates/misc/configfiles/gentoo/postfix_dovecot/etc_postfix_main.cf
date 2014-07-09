@@ -1,7 +1,7 @@
 # Postfix programs paths settings
 command_directory = /usr/sbin
-daemon_directory = /usr/lib/postfix
-program_directory = /usr/lib/postfix
+daemon_directory = /usr/libexec/postfix
+program_directory = /usr/libexec/postfix
 sendmail_path = /usr/sbin/sendmail
 
 ## General Postfix configuration
@@ -42,6 +42,11 @@ smtpd_sender_restrictions = permit_mynetworks,
 smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
 	reject_unknown_client
+
+smtpd_relay_restrictions = permit_mynetworks,
+	permit_sasl_authenticated,
+	defer_unauth_destination
+
 # Maximum size of Message in bytes (512MB)
 message_size_limit = 536870912
 

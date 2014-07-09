@@ -50,7 +50,6 @@ $lng['login']['profile_lng'] = 'Profiel taal';
  * Customer
  */
 
-$lng['customer']['documentroot'] = 'Home directory';
 $lng['customer']['name'] = 'Naam';
 $lng['customer']['firstname'] = 'Voornaam';
 $lng['customer']['company'] = 'Bedrijfsnaam';
@@ -63,14 +62,9 @@ $lng['customer']['email'] = 'Email';
 $lng['customer']['customernumber'] = 'Klant ID';
 $lng['customer']['diskspace'] = 'Webruimte (MB)';
 $lng['customer']['traffic'] = 'Verkeer (GB)';
-$lng['customer']['mysqls'] = 'MySQL-Databases';
 $lng['customer']['emails'] = 'E-mail-Adressen';
-$lng['customer']['accounts'] = 'E-mail-Accounts';
-$lng['customer']['forwarders'] = 'E-mail-Forwarders';
-$lng['customer']['ftps'] = 'FTP-Accounts';
 $lng['customer']['subdomains'] = 'Sub-Domein(en)';
 $lng['customer']['domains'] = 'Domein(en)';
-$lng['customer']['unlimited'] = 'onbeperkt';
 
 /**
  * Customermenue
@@ -79,18 +73,9 @@ $lng['customer']['unlimited'] = 'onbeperkt';
 $lng['menue']['main']['main'] = 'Main';
 $lng['menue']['main']['changepassword'] = 'Wijzig wachtwoord';
 $lng['menue']['main']['changelanguage'] = 'Wijzig taal';
-$lng['menue']['email']['email'] = 'E-mail';
 $lng['menue']['email']['emails'] = 'Adressen';
-$lng['menue']['email']['webmail'] = 'WebMail';
-$lng['menue']['mysql']['mysql'] = 'MySQL';
-$lng['menue']['mysql']['databases'] = 'Databases';
-$lng['menue']['mysql']['phpmyadmin'] = 'phpMyAdmin';
 $lng['menue']['domains']['domains'] = 'Domeinen';
 $lng['menue']['domains']['settings'] = 'Instellingen';
-$lng['menue']['ftp']['ftp'] = 'FTP';
-$lng['menue']['ftp']['accounts'] = 'Accounts';
-$lng['menue']['ftp']['webftp'] = 'WebFTP';
-$lng['menue']['extras']['extras'] = 'Extras';
 $lng['menue']['extras']['directoryprotection'] = 'Map beveiliging';
 $lng['menue']['extras']['pathoptions'] = 'pad opties';
 
@@ -134,12 +119,10 @@ $lng['emails']['emails_add'] = 'Maak nieuw e-mail adres';
 $lng['emails']['emails_edit'] = 'Bewerk e-mail-adres';
 $lng['emails']['catchall'] = 'Catchall';
 $lng['emails']['iscatchall'] = 'Definieer als catchall-adres?';
-$lng['emails']['account'] = 'Account';
 $lng['emails']['account_add'] = 'Maak nieuw account';
 $lng['emails']['account_delete'] = 'Verwijder account';
 $lng['emails']['from'] = 'Van';
 $lng['emails']['to'] = 'Aan';
-$lng['emails']['forwarders'] = 'Forwarders';
 $lng['emails']['forwarder_add'] = 'Maak forwarder';
 
 /**
@@ -167,10 +150,6 @@ $lng['extras']['view_directory'] = 'map inhoud laten zien';
 $lng['extras']['pathoptions_add'] = 'Pad opties toevoegen';
 $lng['extras']['directory_browsing'] = 'map inhoud browsen';
 $lng['extras']['pathoptions_edit'] = 'Pad opties bewerken';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'URL naar Foutdocument 404';
 $lng['extras']['errordocument403path'] = 'URL naar Foutdocument 403';
 $lng['extras']['errordocument500path'] = 'URL naar Foutdocument 500';
@@ -191,7 +170,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'U moet eerst alle subdomeinen verwi
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'U heeft al een catchall voor dit domein aangemaakt.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'U kunt uw hoofd FTP account niet verwijderen';
 $lng['error']['login'] = 'De door u ingegeven gebruikersnaam en wacthwoord zijn verkeerd. Probeer opnieuw!';
-$lng['error']['login_blocked'] = 'Dit account is inactief vanwege teveel login fouten. <br />Probeer het nog eens over ' . $settings['login']['deactivatetime'] . ' seconden.';
+$lng['error']['login_blocked'] = 'Dit account is inactief vanwege teveel login fouten. <br />Probeer het nog eens over %s seconden.';
 $lng['error']['notallreqfieldsorerrors'] = 'U heeft niet alle velden goed, of helemaal niet ingevuld.';
 $lng['error']['oldpasswordnotcorrect'] = 'Het oude wachtwoord is niet correct.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'U kunt niet meer resources gebruiken dan dat u bezit.';
@@ -199,17 +178,7 @@ $lng['error']['mustbeurl'] = 'U heeft geen goed of compleet URL ingegeven (bijv.
 $lng['error']['invalidpath'] = 'U heeft geen goed URL ingegeven (misschien een probleem met dirlisting?)';
 $lng['error']['stringisempty'] = 'Geen waarde in invoerveld';
 $lng['error']['stringiswrong'] = 'Verkeerde waarde in invoerveld';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'Het nieuwe wacthwoord en de bevestiging zijn niet gelijk';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
-$lng['error']['mydomain'] = '\'Domain\'';
-$lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Loginnaam %s bestaat al';
 $lng['error']['emailiswrong'] = 'E-mail Adres %s bevat illegale karakters of is niet compleet';
 $lng['error']['loginnameiswrong'] = 'Loginnaame %s bevat illegale karakters';
@@ -234,7 +203,6 @@ $lng['error']['destinationnonexist'] = 'Maak uw forwarder in het veld \'Destinat
 $lng['error']['destinationalreadyexistasmail'] = 'De forwarder naar %s bestaat reeds als actief e-mail adres.';
 $lng['error']['destinationalreadyexist'] = 'U heeft al een forwarder die verwijst naar %s .';
 $lng['error']['destinationiswrong'] = 'De forwarder naar %s bevat illegale karakter(s) of is niet compleet.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
@@ -272,12 +240,10 @@ $lng['mails']['createcustomer']['subject'] = 'Account informatie';
 $lng['admin']['overview'] = 'Overzicht';
 $lng['admin']['ressourcedetails'] = 'Gebruikte resources';
 $lng['admin']['systemdetails'] = 'Systeem Details';
-$lng['admin']['froxlordetails'] = 'Froxlor Details';
 $lng['admin']['installedversion'] = 'Geinstalleerde Versie';
 $lng['admin']['latestversion'] = 'Laatste Versie';
 $lng['admin']['lookfornewversion']['clickhere'] = 'zoeken via webservice';
 $lng['admin']['lookfornewversion']['error'] = 'Fout tijdens lezen';
-$lng['admin']['resources'] = 'Resources';
 $lng['admin']['customer'] = 'Klant';
 $lng['admin']['customers'] = 'Klanten';
 $lng['admin']['customer_add'] = 'Maak klant';
@@ -448,12 +414,10 @@ $lng['error']['stringformaterror'] = 'De waarde voor het veld "%s" is niet in he
 
 // ADDED IN 1.2.15-rc1
 
-$lng['admin']['serversoftware'] = 'Serversoftware';
 $lng['admin']['phpversion'] = 'PHP-Versie';
 $lng['admin']['phpmemorylimit'] = 'PHP-Geheugen-Limiet';
 $lng['admin']['mysqlserverversion'] = 'MySQL Server Versie';
 $lng['admin']['mysqlclientversion'] = 'MySQL Client Versie';
-$lng['admin']['webserverinterface'] = 'Webserver Interface';
 $lng['domains']['isassigneddomain'] = 'Is toegewezen domein';
 $lng['serversettings']['phpappendopenbasedir']['title'] = 'Pad wat toegevoegd word aan OpenBasedir';
 $lng['serversettings']['phpappendopenbasedir']['description'] = 'Deze paden (gescheiden door dubbele punten) zullen worden toegevoegd aan het OpenBasedir-statement in iedere vhost-container.';
@@ -488,10 +452,6 @@ $lng['question']['admin_counters_reallyupdate'] = 'Weet u zeker dat u gebruikte 
 $lng['panel']['pathDescription'] = 'Indien de map niet bestaat wordt deze automatisch aangemaakt.<br /><br />Indien u wilt doorverwijzen naar een ander domein dient deze te beginnen met http:// of https://';
 
 // ADDED IN 1.2.16-svn6
-
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Beste {NAME},\n\nU hebt {TRAFFICUSED} MB van de beschikbare {TRAFFIC} MB verbruikt.\nDit is meer dan 90%.\n\nMet vriendelijke groet, uw beheerder';
-$lng['mails']['trafficninetypercent']['subject'] = 'Limiet dataverkeer bereikt';
-$lng['admin']['templates']['trafficninetypercent'] = 'E-mail ter notificatie aan klanten indien zij 90 procent van het dataverkeer is verbruikt';
 $lng['admin']['templates']['TRAFFIC'] = 'Wordt vervangen door aan klant toegewezen dataverkeer.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Wordt vervangen door het verbruikte dataverkeer.';
 
@@ -513,12 +473,6 @@ $lng['admin']['configfiles']['overview'] = 'Overzicht';
 $lng['admin']['configfiles']['wizard'] = 'Wizard';
 $lng['admin']['configfiles']['distribution'] = 'Distributie';
 $lng['admin']['configfiles']['service'] = 'Dienst';
-$lng['admin']['configfiles']['daemon'] = 'Daemon';
-$lng['admin']['configfiles']['http'] = 'Webserver (HTTP)';
-$lng['admin']['configfiles']['dns'] = 'Nameserver (DNS)';
-$lng['admin']['configfiles']['mail'] = 'Mailserver (IMAP/POP3)';
-$lng['admin']['configfiles']['smtp'] = 'Mailserver (SMTP)';
-$lng['admin']['configfiles']['ftp'] = 'FTP-Server';
 $lng['admin']['configfiles']['etc'] = 'Overigen (Systeem)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Kies een distributie --';
 $lng['admin']['configfiles']['chooseservice'] = '-- Kies een dienst --';
@@ -532,8 +486,6 @@ $lng['panel']['back'] = 'Back';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_log_sql']['title'] = 'Logs tijdelijk opslaan in de database';
-$lng['serversettings']['mod_log_sql']['description'] = 'Gebruike <a target="blank" href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> om toegangslogs tijdelijk in de database op te slaan<br /><b>Dit vereist een speciale <a target="blank" href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">configuratie van Apache</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP insluiten via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Gebruik mod_fcgid/suexec/libnss_mysql om PHP uit te voeren onder het gebruikersaccount.<br/><b>Dit vereist een aangepaste configuratie van de webserver. Alle volgende optie\'s zijn alleen geldig wanneer deze module actief is.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Gebruik alternatief emailadres';
@@ -654,13 +606,9 @@ $lng['question']['ticket_reallyclose'] = 'Weet u zeker dat u ticket "%s" wilt sl
 $lng['question']['ticket_reallydelete'] = 'Weet u zeker dat u ticket "%s" wilt verwijderen?';
 $lng['question']['ticket_reallydeletecat'] = 'Weet u zeker dat u de categorie "%s" wilt verwijderen?';
 $lng['question']['ticket_reallyarchive'] = 'Weet u zeker dat u ticket "%s" wilt archiveren?';
-$lng['error']['mysubject'] = '\'' . $lng['ticket']['subject'] . '\'';
-$lng['error']['mymessage'] = '\'' . $lng['ticket']['message'] . '\'';
-$lng['error']['mycategory'] = '\'' . $lng['ticket']['category'] . '\'';
 $lng['error']['nomoreticketsavailable'] = 'U hebt al uw beschikbare tickets verbruikt. Neem contact op met uw beheerder.';
 $lng['error']['nocustomerforticket'] = 'U kunt geen tickets aanmaken zonder gebruikers';
 $lng['error']['categoryhastickets'] = 'Deze categorie bevat nog tickets.<br />Verwijder de tickets eerst alvorens de categorie te verwijderen';
-$lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
 $lng['admin']['ticketsettings'] = 'Instellingen voor ondersteuningstickets';
 $lng['admin']['archivelastrun'] = 'Laatste archivering tickets';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Emailadres voor geen-antwoord';
@@ -755,9 +703,6 @@ $lng['logger']['user'] = 'Gebruiker';
 $lng['logger']['truncate'] = 'Log legen';
 
 // ADDED IN 1.2.19-svn7
-
-$lng['serversettings']['ssl']['use_ssl'] = 'Gebruik SSL';
-$lng['serversettings']['ssl']['ssl_cert_file'] = 'Pad naar SSL-certificaat';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Standaardinstellingen certificaat';
 $lng['panel']['reseller'] = 'wederverkoper';
 $lng['panel']['admin'] = 'beheerder';
@@ -781,7 +726,6 @@ $lng['message']['success'] = 'Bericht verzonden naar ontvagers %s';
 $lng['message']['noreceipients'] = 'Er is geen email verstuurd omdat er geen ontvangers in de database zijn';
 $lng['admin']['sslsettings'] = 'Instellingen voor SSL';
 $lng['cronjobs']['notyetrun'] = 'Nog niet uitgevoerd';
-$lng['install']['servername_should_be_fqdn'] = 'De servernaam dient een FQDN te zijn en geen IP-adres';
 $lng['serversettings']['default_vhostconf']['title'] = 'Standaard vhost-instellingen';
 $lng['serversettings']['default_vhostconf']['description'] = 'De inhoud van dit veld wordt rechtstreeks in de vhost-container geplaatst. N.B.: Deze code wordt niet op fouten gecontroleerd. In geval van fouten kan het zijn dat de webserver niet meer start!';
 $lng['error']['invalidip'] = '%s is een ongeldig IP-adres';
@@ -799,9 +743,6 @@ $lng['dkim']['dkim_dkimkeys']['description'] = '<em>Bestandsnaam</em> van het DK
 $lng['dkim']['dkimrestart_command']['title'] = 'Herstart-commando voor Milter';
 $lng['dkim']['dkimrestart_command']['description'] = 'Geef het commando om de milter-plugin te herstarten';
 
-// ADDED IN 1.2.19-svn9
-
-$lng['admin']['caneditphpsettings'] = 'Can change php-related domain settings?';
 
 // ADDED IN 1.2.19-svn12
 
@@ -861,13 +802,6 @@ $lng['pwdreminder']['success'] = 'Wachtwoord opnieuw ingesteld.<br />U ontvangt 
 $lng['serversettings']['allow_password_reset']['title'] = 'Klanten toestaan hun wachtwoord opnieuw in te stellen';
 $lng['pwdreminder']['notallowed'] = 'Het opnieuw instellen van wachtwoorden is uitgeschakeld';
 
-// ADDED IN 1.2.19-svn20
-
-$lng['serversettings']['awstats_path']['title'] = 'Pad naar AWstats cgi-bin-map';
-$lng['serversettings']['awstats_path']['description'] = 'bijvoorbeeld /usr/share/webapps/awstats/6.1/webroot/cgi-bin/';
-$lng['serversettings']['awstats_updateall_command']['title'] = 'Pad naar "awstats_updateall.pl"';
-$lng['serversettings']['awstats_updateall_command']['description'] = 'bijvoorbeeld /usr/bin/awstats_updateall.pl';
-
 // ADDED IN 1.2.19-svn21
 
 $lng['customer']['title'] = 'Titel';
@@ -917,27 +851,9 @@ $lng['customer']['mail_quota'] = 'Mailquotum';
 $lng['panel']['megabyte'] = 'MegaByte';
 $lng['panel']['not_supported'] = 'Wordt niet ondersteund in: ';
 $lng['emails']['quota_edit'] = 'E-mailquotum aanpassen';
-$lng['error']['allocatetoomuchquota'] = 'U probeerde %s MB ' . $lng['emails']['quota'] . ' toe te kennen, maar u heeft niet voldoende over.';
-
-// Autoresponder module
-
-$lng['menue']['email']['autoresponder'] = 'Automatische beantwoorder';
-$lng['autoresponder']['active'] = 'Active';
-$lng['autoresponder']['autoresponder_add'] = 'Automatische beantwoorder toevoegen';
-$lng['autoresponder']['autoresponder_edit'] = 'Automatische beantwoorder aanpassen';
-$lng['autoresponder']['autoresponder_new'] = 'Automatische beantwoorder aanmaken';
-$lng['autoresponder']['subject'] = 'Onderwerp';
-$lng['autoresponder']['message'] = 'Bericht';
-$lng['autoresponder']['account'] = 'Account';
-$lng['autoresponder']['sender'] = 'Afzender';
-$lng['question']['autoresponderdelete'] = 'Weet u zeker dat u de automatische beantwoorder wilt verwijderen?';
-$lng['error']['noemailaccount'] = 'Er kunnen twee redenen zijn waarom u geen automatische beantwoorder kunt aanmaken: 1) U dient minimaal een (1) e-mailaccount te hebben. 2) Het is mogelijk dat alle accounts reeds een automatische beantwoorder hebben';
+$lng['error']['allocatetoomuchquota'] = 'U probeerde %s MB Quotum toe te kennen, maar u heeft niet voldoende over.';
 $lng['error']['missingfields'] = 'Niet alle vereiste velden zijn ingevuld.';
 $lng['error']['accountnotexisting'] = 'Het opgegeven e-mailaccount bestaat niet.';
-$lng['error']['autoresponderalreadyexists'] = 'Er is reeds een automatische beantwoorder voor dit account geconfigureerd.';
-$lng['error']['invalidautoresponder'] = 'Het opgegeven account is ongeldig.';
-$lng['serversettings']['autoresponder_active']['title'] = 'Module \'Automatische beantwoorder\' gebruiken';
-$lng['serversettings']['autoresponder_active']['description'] = 'Wilt u deze module gebruiken?';
 $lng['admin']['security_settings'] = 'Beveiliging';
 $lng['admin']['know_what_youre_doing'] = 'Verander dit alleen wanneer u zeker weet wat u doet!';
 $lng['admin']['show_version_login']['title'] = 'Toon versie van Froxlor bij het inloggen';
@@ -968,7 +884,6 @@ $lng['error']['phpsettingidwrong'] = 'Een configuratie voor PHP met dit ID besta
 $lng['error']['descriptioninvalid'] = 'De omschrijving is te kort, te lang of bevat ongeldige karakters.';
 $lng['error']['info'] = 'Informatie';
 $lng['admin']['phpconfig']['template_replace_vars'] = 'Variabelen die worden vervangen in de instellingen';
-$lng['admin']['phpconfig']['safe_mode'] = 'Wordt vervangen door de safe_mode-instellingen voor het domein.';
 $lng['admin']['phpconfig']['pear_dir'] = 'Wordt vervangen door de globale pear-map.';
 $lng['admin']['phpconfig']['open_basedir_c'] = 'Voegt een ; (puntkomma) toe om open_basedir in- of uit te schakelen';
 $lng['admin']['phpconfig']['open_basedir'] = 'Wordt vervangen door de open_basedir-instellingen voor het domein.';
@@ -1005,181 +920,10 @@ $lng['error']['index_file_extension'] = 'Het achtervoegsel dient tussen de 1 en 
 $lng['admin']['expert_settings'] = 'Instellingen voor experts!';
 $lng['admin']['mod_fcgid_starter']['title'] = 'Aantal PHP-processen voor dit domein. (Leeg betekent standaardinstellingen.)';
 
-//added with aps installer
-
-$lng['admin']['aps'] = 'APS installatie-programma';
-$lng['customer']['aps'] = 'APS installatie-programma';
-$lng['aps']['scan'] = 'Zoeken naar nieuwe pakketten';
-$lng['aps']['upload'] = 'Nieuwe pakketten uploaden';
-$lng['aps']['managepackages'] = 'Pakketten beheren';
-$lng['aps']['manageinstances'] = 'Instanties beheren';
-$lng['aps']['overview'] = 'Overzicht pakketten';
-$lng['aps']['status'] = 'Mijn pakketten';
-$lng['aps']['search'] = 'Zoeken naar pakketten';
-$lng['aps']['upload_description'] = 'Kies de ZIP-bestanden van het APS installatieprogramma om te installeren op het systeem.';
-$lng['aps']['search_description'] = 'Naam, omschrijving, sleutelwoord, versie';
-$lng['aps']['detail'] = 'Meer informatie';
-$lng['aps']['install'] = 'Pakket installeren';
-$lng['aps']['data'] = 'Data';
-$lng['aps']['version'] = 'Versie';
-$lng['aps']['homepage'] = 'Homepage';
-$lng['aps']['installed_size'] = 'Grootte na installatie';
-$lng['aps']['categories'] = 'CategorieÃ«n';
-$lng['aps']['languages'] = 'Talen';
-$lng['aps']['long_description'] = 'Lange omschrijving';
-$lng['aps']['configscript'] = 'Configuratiescript';
-$lng['aps']['changelog'] = 'Lijst met veranderingen';
-$lng['aps']['license'] = 'Licentie';
-$lng['aps']['license_link'] = 'Link naar licentie';
-$lng['aps']['screenshots'] = 'Schermafdrukken';
-$lng['aps']['back'] = 'Terug naar overzicht';
-$lng['aps']['install_wizard'] = 'Installatie-wizard...';
-$lng['aps']['wizard_error'] = 'Uw invoer bevat ongeldige gegevens. Verbeter deze om de installatie voort te zetten.';
-$lng['aps']['basic_settings'] = 'Basisinstellingen';
-$lng['aps']['application_location'] = 'Locatie';
-$lng['aps']['application_location_description'] = 'Locatie waar de applicatie geinstalleerd wordt.';
-$lng['aps']['no_domains'] = 'Geen domeinen gevonden';
-$lng['aps']['database_password'] = 'Wachtwoord voor database';
-$lng['aps']['database_password_description'] = 'Wachtwoord dat gebruikt wordt voor installatie.';
-$lng['aps']['license_agreement'] = 'Overeenkomst';
-$lng['aps']['cancel_install'] = 'Installatie afbreken';
-$lng['aps']['notazipfile'] = 'Het geuploade bestand is geen ZIP-bestand.';
-$lng['aps']['filetoobig'] = 'Het bestand is te groot.';
-$lng['aps']['filenotcomplete'] = 'Het bestand werd niet volledig ontvangen.';
-$lng['aps']['phperror'] = 'Er is een interne fout van PHP opgetreden. De foutcode van PHP is #';
-$lng['aps']['moveproblem'] = 'Het script kon het geuploade bestand niet naar de doelmap verplaatsen. Zorg ervoor dat de rechten juist staan ingesteld.';
-$lng['aps']['uploaderrors'] = '<strong>Fouten voor het bestand <em>%s</em></strong><br/><ul>%s</ul>';
-$lng['aps']['nospecialchars'] = 'Speciale tekens zijn niet toegestaan in de zoekterm!';
-$lng['aps']['noitemsfound'] = 'Geen pakketten gevonden!';
-$lng['aps']['nopackagesinstalled'] = 'U hebt nog geen pakketten geinstalleerd die kunnen worden weergegeven.';
-$lng['aps']['instance_install'] = 'Installatie van het pakket in afwachting';
-$lng['aps']['instance_task_active'] = 'Het pakket wordt op dit moment verwerkt';
-$lng['aps']['instance_success'] = 'Het pakket is correct geinstalleerd';
-$lng['aps']['instance_error'] = 'Het pakket is niet geinstalleerd. - Er zijn enkele fouten opgetreden:';
-$lng['aps']['instance_uninstall'] = 'Het deinstalleren van het pakket is in afwachting';
-$lng['aps']['unknown_status'] = 'Fout - Onbekende waarde';
-$lng['aps']['currentstatus'] = 'Huidige status';
-$lng['aps']['activetasks'] = 'Actieve taken';
-$lng['aps']['task_install'] = 'Installatie in afwachting';
-$lng['aps']['task_remove'] = 'Deinstallatie in afwachting';
-$lng['aps']['task_reconfigure'] = 'Herconfiguratie in afwachting';
-$lng['aps']['task_upgrade'] = 'Opwaarderen in afwachting';
-$lng['aps']['no_task'] = 'Geen wachtende taken';
-$lng['aps']['applicationlinks'] = 'Links van applicatie';
-$lng['aps']['mainsite'] = 'Hoofdsite';
-$lng['aps']['uninstall'] = 'Pakket deinstalleren';
-$lng['aps']['reconfigure'] = 'Instellingen wijzigen';
-$lng['aps']['erroronnewinstance'] = '<strong>Dit pakket kan niet geinstalleerd worden.</strong><br/><br/>U kunt een nieuw pakket installeren wanneer u teruggaat naar het overzicht.';
-$lng['aps']['successonnewinstance'] = '<strong><em>%s</em> wordt op dit moment geinstalleerd.</strong><br/><br/>U kunt het verloop van de installatie volgen onder "Mijn pakketten". Installatie kan enige tijd duren.';
-$lng['aps']['php_misc_handler'] = 'PHP - Diversen - Er is geen ondersteuning voor achtervoegsel anders dan .php voor PHP.';
-$lng['aps']['php_misc_directoryhandler'] = 'PHP - Diversen - Er is geen ondersteuning voor PHP met instellingen per map.';
-$lng['aps']['asp_net'] = 'ASP.NET - Pakket wordt niet ondersteund.';
-$lng['aps']['cgi'] = 'CGI - Pakket wordt niet ondersteund.';
-$lng['aps']['php_extension'] = 'PHP - Extensie "%s" ontbreekt.';
-$lng['aps']['php_function'] = 'PHP - Functie "%s" ontbreekt.';
-$lng['aps']['php_configuration'] = 'PHP - Configuratie - Huidge instelling "%s" wordt niet door het pakket ondersteund.';
-$lng['aps']['php_configuration_post_max_size'] = 'PHP - Configuratie - Waarde voor "post_max_size" is te laag.';
-$lng['aps']['php_configuration_memory_limit'] = 'PHP - Configuratie - Waarde voor "memory_limit" is te laag.';
-$lng['aps']['php_configuration_max_execution_time'] = 'PHP - Configuratie - Waarde voor "max_execution_time" is te laag.';
-$lng['aps']['php_general_old'] = 'PHP - Algemeen - Versie van PHP is te oud.';
-$lng['aps']['php_general_new'] = 'PHP - Algemeen - Versie van PHP is te oud.';
-$lng['aps']['db_mysql_support'] = 'Database - Het pakket vereist een andere databaseserver dan MySQL.';
-$lng['aps']['db_mysql_version'] = 'Database - MySQL server te oud';
-$lng['aps']['webserver_module'] = 'Webserver - Module "%s" ontbreekt.';
-$lng['aps']['webserver_fcgid'] = 'Webserver - Dit pakket vereist aanvullende modules van de webserver. In uw FastCGI/mod_fcgid-omgeving bestaat de functie "apache_get_modules" niet. Het pakket kan niet geinstalleerd worden omdat de aanwezigheid van deze modules niet kan worden gecontroleerd.';
-$lng['aps']['webserver_htaccess'] = 'Webserver - Dit pakket vereist dat .htaccess-bestanden worden verwerkt door de webserver. Dit pakket kan niet worden geinstalleerd omdat APS installatieprogramma niet vast kan stellen of dit het geval is.';
-$lng['aps']['misc_configscript'] = 'Diversen - De taal van het configuratiescript wordt niet ondersteund.';
-$lng['aps']['misc_charset'] = 'Diversen - In de huidge versie van het installatieprogramma is het niet mogelijk om formuliervelden te controleren op een specifieke tekenset. Het pakket kan niet worden geinstalleerd.';
-$lng['aps']['misc_version_already_installed'] = 'Dezelfde versie van het pakket is reeds geinstalleerd.';
-$lng['aps']['misc_only_newer_versions'] = 'Om veiligheidsredenen kunnen alleen nieuwere versie\'s van bestaande pakketten worden geinstalleerd.';
-$lng['aps']['erroronscan'] = '<strong>Fouten voor <em>%s</em></strong><ul>%s</ul>';
-$lng['aps']['invalidzipfile'] = '<strong>Fouten voor <em>%s</em></strong><br/><ul><li>Dit is geen geldig APS ZIP-bestand.</li></ul>';
-$lng['aps']['successpackageupdate'] = '<strong><em>%s</em> met succes geinstalleerd als opgewaardeerd pakket</strong>';
-$lng['aps']['successpackageinstall'] = '<strong><em>%s</em> met succes geinstalleerd als nieuw pakket</strong>';
-$lng['aps']['class_zip_missing'] = 'Klasse SimpleXML, de functie exec of functionaliteit voor ZIP ontbreken of zijn niet actief! Voor meer informatie over dit probleem kunt u de handleiding van de betreffende module raadplegen.';
-$lng['aps']['dir_permissions'] = 'Het proces van PHP/de webserver moet in staat zijn om naar de mappen {$path}temp/ en {$path}packages/ te schrijven';
-$lng['aps']['initerror'] = '<strong>Er zijn enkele problemen met deze module:</strong><ul>%s</ul>U dient deze problemen te verhelpen voordat de module gebruikt kan worden!';
-$lng['aps']['iderror'] = 'Verkeerde ID op gegeven.';
-$lng['aps']['nopacketsforinstallation'] = 'Er zijn geen te installeren pakketten.';
-$lng['aps']['nopackagestoinstall'] = 'Er zijn geen pakketten om weer te geven of te installeren.';
-$lng['aps']['nodomains'] = 'Kies een domein uit de lijst. Indien de lijst leeg is kan het pakket niet worden geinstalleerd!';
-$lng['aps']['wrongpath'] = 'Het pad bevat ongeldige karakters of er is reeds een andere applicatie geinstalleerd.';
-$lng['aps']['dbpassword'] = 'Het wachtwoord dient minimaal 8 karakters te bevatten.';
-$lng['aps']['error_text'] = 'Geef een tekst zonder speciale karakters op.';
-$lng['aps']['error_email'] = 'Geef een geldig e-mailadres op.';
-$lng['aps']['error_domain'] = 'Geef een geldige URL op, bijvoorbeeld http://www.example.com/';
-$lng['aps']['error_integer'] = 'Geef een numerieke waarde (gehele getallen), bijvoorbeeld <em>5</em> of <em>7</em>.';
-$lng['aps']['error_float'] = 'Geef een numerieke waarde (gebroken getallen) bijvoorbeeld <em>5,2432</em> of <em>7,5346</em>.';
-$lng['aps']['error_password'] = 'Geef een wachtwoord.';
-$lng['aps']['error_license'] = 'Ja, ik heb de licentie gelezen en zal mij aan de voorwaarden houden.';
-$lng['aps']['error_licensenoaccept'] = 'Om deze applicatie te installeren dient u akkoord te gaan met de licentievoorwaarden.';
-$lng['aps']['stopinstall'] = 'Installatie afbreken.';
-$lng['aps']['installstopped'] = 'De installatie van dit pakket is afgebroken.';
-$lng['aps']['installstoperror'] = 'De installatie kan niet meer worden afgebroken aangezien de installatie reeds gestart is. Indien u een installatie ongedaan wenst te maken, dient u te wachten tot de installatie is voltooid en kunt vervolgens het pakket markeren voor verwijderen onder "Mijn pakketten".';
-$lng['aps']['waitfortask'] = 'Er zijn geen te kiezen acties. Wacht totdat alle taken zijn beeindigd.';
-$lng['aps']['removetaskexisting'] = '<strong>Er staat reeds een taak voor verwijdering.</strong><br/><br/>Ga terug naar "Mijn pakketten" en wacht totdat het verwijderen is voltooid.';
-$lng['aps']['packagewillberemoved'] = '<strong>Het pakket wordt nu verwijderd.</strong><br/><br/>Ga terug naar "Mijn pakketten" en wacht totdat het verwijderen is voltooid.';
-$lng['question']['reallywanttoremove'] = '<strong>Weet u zeker dat u dit pakket wilt verwijderen?</strong><br/><br/>Alle database-inhoud en bestanden van dit pakket worden verwijderd. Maak zelf een reservekopie van de database en/of de bestanden die u wenst te behouden!<br/><br/>';
-$lng['aps']['searchoneresult'] = '%s pakket gevonden';
-$lng['aps']['searchmultiresult'] = '%s pakketten gevonden';
-$lng['question']['reallywanttostop'] = 'Weet u zeker dat u de installatie van dit pakket wilt afbreken?<br/><br/>';
-$lng['aps']['packagenameandversion'] = 'Pakket & versie';
-$lng['aps']['package_locked'] = 'Vergrendeld';
-$lng['aps']['package_enabled'] = 'Beschikbaar';
-$lng['aps']['lock'] = 'Vergrendelen';
-$lng['aps']['unlock'] = 'Beschikbaar maken';
-$lng['aps']['remove'] = 'Verwijderen';
-$lng['aps']['allpackages'] = 'Alle pakketten';
-$lng['question']['reallyremovepackages'] = '<strong>Weet u zeker dat u deze pakketten wilt verwijderen?</strong><br/><br/>Pakketten met afhankelijkheden kunnen alleen verwijderd worden indien de betreffende afhankelijkheden zijn verwijderd!<br/><br/>';
-$lng['aps']['nopackagesinsystem'] = 'Er zijn geen pakketten op dit systeem geinstalleerd die beheerd kunnen worden.';
-$lng['aps']['packagenameandstatus'] = 'Pakket & status';
-$lng['aps']['activate_aps']['title'] = 'APS Installatieprogramma inschakelen';
-$lng['aps']['activate_aps']['description'] = 'Het APS installatieprogramma kan hier ingeschakeld worden.';
-$lng['aps']['packages_per_page']['title'] = 'Pakketten per pagina';
-$lng['aps']['packages_per_page']['description'] = 'Hoeveel pakketten worden er voor de klant getoond per pagina?';
-$lng['aps']['upload_fields']['title'] = 'Aantal velden voor uploads';
-$lng['aps']['upload_fields']['description'] = 'Hoeveel gelijktijdige uploads wilt u toestaan?';
-$lng['aps']['exceptions']['title'] = 'Uitzonderingen voor pakketten';
-$lng['aps']['exceptions']['description'] = 'Enkele pakketten vereisen speciale parameters of modules. Het installatieprogramma kan niet in alle gevallen vaststellen of deze instellingen of uitbreidingen beschikbaar zijn. Om deze reden kunt u hier uitzonderingen opgeven waarvan het pakket worden geinstalleerd. Kies alleen de instellingen die overeenkomen met de echte configuratie van het systeem. Voor meer informatie kunt u de handleiding van de betreffende module raadplegen.';
-$lng['aps']['settings_php_extensions'] = 'PHP-uitbreidingen';
-$lng['aps']['settings_php_configuration'] = 'PHP-configuratie';
-$lng['aps']['settings_webserver_modules'] = 'Webserver modules';
-$lng['aps']['settings_webserver_misc'] = 'Webserver diversen';
-$lng['aps']['specialoptions'] = 'Speciale instellingen';
-$lng['aps']['removeunused'] = 'Ongebruikte pakketten verwijderen';
-$lng['aps']['enablenewest'] = 'Nieuwste versies van de pakketten beschikbaar maken en de overigen uitschakelen';
-$lng['aps']['installations'] = 'Installaties';
-$lng['aps']['statistics'] = 'Statistieken';
-$lng['aps']['numerofpackagesinstalled'] = '%s pakketten geinstalleerd<br/>';
-$lng['aps']['numerofpackagesenabled'] = '%s pakketten beschikbaar<br/>';
-$lng['aps']['numerofpackageslocked'] = '%s pakketten vergrendeld<br/>';
-$lng['aps']['numerofinstances'] = '%s pakketten geinstalleerd<br/>';
-$lng['question']['reallydoaction'] = '<strong>Weet u zeker dat u de geselecteerde opdrachten wilt uitvoeren?</strong><br/><br/>Er kan permanente dataverlies optreden wanneer u doorgaat.<br/><br/>';
-$lng['aps']['linktolicense'] = 'Koppeling naar licentie';
-$lng['aps']['initerror_customer'] = 'Er is op dit moment een fout met dit programma. Neem contact op met uw beheerder voor meer informatie.';
-$lng['aps']['numerofinstances'] = '%s installaties over het geheel<br/>';
-$lng['aps']['numerofinstancessuccess'] = '%s succesvolle installaties<br/>';
-$lng['aps']['numerofinstanceserror'] = '%s mislukte installaties<br/>';
-$lng['aps']['numerofinstancesaction'] = '%s geplande installaties/deinstallaties';
-$lng['aps']['downloadallpackages'] = 'Alle pakketten downloaden van distributieserver';
-$lng['aps']['updateallpackages'] = 'Alle pakketten bijwerken van distributieserver';
-$lng['aps']['downloadtaskexists'] = 'Er is reeds een taak om alle pakketten te downloaden. Wacht totdat deze taak is voltooid.';
-$lng['aps']['downloadtaskinserted'] = 'Er is een taak voor het downloaden van alle pakketten gemaakt. Dit kan enige tijd in beslag nemen.';
-$lng['aps']['updatetaskexists'] = 'Er is reeds een taak om alle pakketten bij te werken. Wacht totdat deze taak is voltooid.';
-$lng['aps']['updatetaskinserted'] = 'Er is een taak voor het downloaden van alle pakketten gemaakt. Dit kan enige tijd in beslag nemen.';
-$lng['aps']['canmanagepackages'] = 'Kan APS pakketten beheren';
-$lng['aps']['numberofapspackages'] = 'Aantal APS installaties';
-$lng['aps']['allpackagesused'] = '<strong>Fout</strong><br/><br/>U hebt de limiet van het te aantal te installeren APS pakketten bereikt.';
-$lng['aps']['noinstancesexisting'] = 'Er zijn op dit moment geen pakketten die kunnen worden beheerd. Er dient minimaal een pakket bij een klant zijn geinstalleerd.';
-$lng['aps']['lightywarning'] = 'Waarschuwing';
-$lng['aps']['lightywarningdescription'] = 'U maakt gebruik van de lighttpd server in combinatie met Froxlor. De APS module is voornamelijk bedoeld voor Apache, het is mogelijk dat enige functionaliteit niet werkt. Indien u tegen problemen aanloopt tijdens het gebruik van deze module, dan wordt u verzocht dit aan de ontwikkelaars van Froxlor te melden. Zij kunnen dan het probleem eventueel verhelpen.';
 $lng['error']['customerdoesntexist'] = 'De gekozen klant bestaat niet.';
 $lng['error']['admindoesntexist'] = 'De gekozen beheerder bestaat niet.';
 
 // ADDED IN 1.2.19-svn37
-
-$lng['serversettings']['system_realtime_port']['title'] = 'Poort voor realtime Froxlor';
-$lng['serversettings']['system_realtime_port']['description'] = 'Froxlor maakt verbinding met deze poort wanneer een nieuwe taak gepland wordt. Indien deze waarde 0 (nul) is, is deze uitgeschakeld.<br />Zie ook: <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-realtime">Make Froxlor work in realtime (Froxlor Wiki)</a>';
 $lng['serversettings']['session_allow_multiple_login']['title'] = 'Meerdere logins toestaan';
 $lng['serversettings']['session_allow_multiple_login']['description'] = 'Indien dit is ingeschakeld kan een klant meerdere malen tegelijkertijd inloggen.';
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Het verplaatsen van domeinen tussen beheerders toestaan';
@@ -1201,13 +945,8 @@ $lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximaal aantal v
 $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Toegestane aantal verzoeken per domein';
 
 // fix bug #1124
-$lng['admin']['webserver'] = 'Webserver';
 $lng['error']['admin_domain_emailsystemhostname'] = 'De naam van de server kan niet gebruikt worden als domein voor e-mail.';
-$lng['aps']['license_link'] = 'Koppeling naar licentie';
 
-// ADDED IN 1.4.2.1-1
-
-$lng['mysql']['mysql_server'] = 'MySQL-Server';
 
 // ADDED IN 1.4.2.1-2
 
@@ -1217,12 +956,9 @@ $lng['admin']['ipsandports']['webserverssldomainconfig'] = 'SSL-configuratie web
 $lng['admin']['ipsandports']['ssl_key_file'] = 'Pad naar SSL keyfile';
 $lng['admin']['ipsandports']['ssl_ca_file'] = 'Pad naar SSL CA certificaat';
 $lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Standaard VHost-instellingen voor iedere domeincontainer';
-$lng['serversettings']['ssl']['ssl_key_file'] = 'Pad naar SSL keyfile';
-$lng['serversettings']['ssl']['ssl_ca_file'] = 'Pad naar SSL CA certificaat';
 
 $lng['error']['usernamealreadyexists'] = 'De gebruikersnaam %s is reeds in gebruik.';
 
-$lng['error']['plausibilitychecknotunderstood'] = 'Answer of plausibility check not understood.';
 $lng['error']['errorwhensaving'] = 'Fout tijdens opslaan veld %s';
 
 $lng['success']['success'] = 'Informatie';
@@ -1239,9 +975,6 @@ $lng['panel']['toomanydirs'] = 'Teveel submappen. Er wordt teruggevallen op hand
 $lng['panel']['abort'] = 'Afbreken';
 $lng['serversettings']['cron']['debug']['title'] = 'Foutopsporing cronscript';
 $lng['serversettings']['cron']['debug']['description'] = 'Activeer dit om het lockbestand te bewaren nadat de cron-taak is afgehandeld, zodat het gerbuikt kan worden voor het opsporen van fouten.<br /><b>Let op:</b>Het vastzetten van het lockbestand kan ervoor zorgen dat de volgende cron-taak niet naar behoren functioneert.';
-$lng['autoresponder']['date_from'] = 'Startdatum';
-$lng['autoresponder']['date_until'] = 'Einddatum';
-$lng['autoresponder']['startenddate'] = 'Start-/einddatum';
 $lng['panel']['not_activated'] = 'niet actief';
 $lng['panel']['off'] = 'uit';
 $lng['update']['updateinprogress_onlyadmincanlogin'] = 'Een nieuwere versie van Froxlor is geinstalleerd maar is nog niet geconfigureerd.<br />Alleen de beheerder kan inloggen en de update voltooien.';
@@ -1296,7 +1029,7 @@ $lng['dkim']['dkim_algorithm']['title'] = 'Toegestane hash-algoritmen';
 $lng['dkim']['dkim_algorithm']['description'] = 'Toegestane hash-algoritmen, kies "Alle" voor alle algoritmen of 1 of meerdere van onderstaande';
 $lng['dkim']['dkim_servicetype'] = 'Type services';
 $lng['dkim']['dkim_keylength']['title'] = 'Lengte sleutel';
-$lng['dkim']['dkim_keylength']['description'] = 'Let op: Indien u deze waarde wijzigt, dient u allen geheime en publieke sleutels in "'.$settings['dkim']['dkim_prefix'].'" te verwijderen';
+$lng['dkim']['dkim_keylength']['description'] = 'Let op: Indien u deze waarde wijzigt, dient u allen geheime en publieke sleutels in "%s" te verwijderen';
 $lng['dkim']['dkim_notes']['title'] = 'Notities voor DKIM';
 $lng['dkim']['dkim_notes']['description'] = 'Notities die van belang kunnen zijn voor mensen, bijvoorbeeld een URL als http://www.dnswatch.info. Geen enkel programma zal deze informatie verwerken. Deze informatie dient schaars te zijn gezien de beperkte ruimte in DNS. Dit is bedoeld voor beheerders, niet voor eindgebruikers.';
 $lng['dkim']['dkim_add_adsp']['title'] = 'DKIM ADSP toevoegen';
@@ -1314,9 +1047,6 @@ $lng['crondesc']['cron_unknown_desc'] = 'geen beschrijving opgegeven';
 $lng['admin']['cron']['add'] = 'Cron-taak toevoegen';
 $lng['crondesc']['cron_tasks'] = 'aanmaken configuratiebestanden';
 $lng['crondesc']['cron_legacy'] = 'oude cron-taak';
-$lng['crondesc']['cron_apsinstaller'] = 'APS-installatieprogramma';
-$lng['crondesc']['cron_autoresponder'] = 'autobeantwoorder e-mail';
-$lng['crondesc']['cron_apsupdater'] = 'bijwerken APS-pakketten';
 $lng['crondesc']['cron_traffic'] = 'berekenen verkeersgegevens';
 $lng['crondesc']['cron_ticketsreset'] = 'opnieuw instellen ticket-tellers';
 $lng['crondesc']['cron_ticketarchive'] = 'oude tickets archiveren';
@@ -1342,7 +1072,6 @@ $lng['ftp']['editpassdescription'] = 'Nieuw wachtwoord of leeg voor het oude wac
 $lng['customer']['sendinfomail'] = 'Stuur gegevens naar mij via e-mail';
 $lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Nieuwe database aangemaakt';
 $lng['customer']['mysql_add']['infomail_body']['main'] = "Geachte {CUST_NAME},\n\nu hebt zojuist een nieuwe database aangemaakt. Hier zijn nogmaals de ingevoerde gegevens:\n\nNaam database: {DB_NAME}\nWachtwoord: {DB_PASS}\nBeschrijving: {DB_DESC}\nHostnaam database: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nMet vriendelijke groet, uw beheerder";
-$lng['error']['domains_cantdeletedomainwithapsinstances'] = 'U kunt geen domeinen verwijderen die in gebruik zijn door APS-pakketten. U dient deze eerst te verwijderen.';
 $lng['serversettings']['awstats_path'] = 'Pad naar \'awstats_buildstaticpages.pl\' van AWStats';
 $lng['serversettings']['awstats_conf'] = 'AWStats configuratiepad';
 $lng['error']['overviewsettingoptionisnotavalidfield'] = 'Woops, a field that should be displayed as an option in the settings-overview is not an excepted type. You can blame the developers for this. This should not happen!';
@@ -1358,12 +1087,12 @@ $lng['ticket']['orderdesc'] = 'Hier kunt u uw eigen logische volgorde instellen 
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Standaard foutdocumenten voor alle klanten activeren';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'Bestand/URL voor foutcode 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">Wordt niet ondersteund in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'Bestand/URL voor foutcode 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">Wordt niet ondersteund in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Bestand/URL voor foutcode 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Bestand/URL voor foutcode 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">'.$lng['panel']['not_supported'].'lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">Wordt niet ondersteund in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Standaardprioriteit voor support-tickets';
@@ -1391,12 +1120,6 @@ $lng['serversettings']['customredirect_default']['description'] = 'Kies de stand
 
 // ADDED IN FROXLOR 0.9.7-svn2
 $lng['error']['pathmaynotcontaincolon'] = 'Het opgegeven pad mag geen dubbele punt (":") bevatten. Geef een correct pad op.';
-$lng['tasks']['aps_task_install'] = 'Installeren van 1 of meerdere APS-pakketten';
-$lng['tasks']['aps_task_remove'] = 'Verwijderen van 1 of meerdere APS-pakketten';
-$lng['tasks']['aps_task_reconfigure'] = 'Herconfigureren van 1 of meerdere APS-pakketten';
-$lng['tasks']['aps_task_upgrade'] = 'Bijwerken van 1 of meerdere APS-pakketten';
-$lng['tasks']['aps_task_sysupdate'] = 'Bijwerken van alle APS-pakketten';
-$lng['tasks']['aps_task_sysdownload'] = 'Downloaden van alle APS-pakketten';
 
 // ADDED IN FROXLOR 0.9.8
 $lng['error']['exception'] = '%s';
@@ -1405,9 +1128,6 @@ $lng['error']['exception'] = '%s';
 $lng['serversettings']['mail_also_with_mxservers'] = 'Maak mail-, imap-, pop3- en smtp-"A record" ook wanneer MX-Servers zijn ingesteld';
 
 // ADDED IN FROXLOR 0.9.10-svn1
-$lng['aps']['nocontingent'] = 'Uw aantal APS-installaties is onvoldoende. U kunt geen enkel pakket installeren.';
-$lng['aps']['packageneedsdb'] = 'Dit pakket vereist een database, maar uw quotum is reeds verbruikt';
-$lng['aps']['cannoteditordeleteapsdb'] = 'APS databases kunnen hier niet verwijderd of aangepast worden';
 $lng['admin']['webserver_user'] = 'Gebruikersnaam webserver';
 $lng['admin']['webserver_group'] = 'Groepnaam webserver';
 
@@ -1416,7 +1136,7 @@ $lng['serversettings']['froxlordirectlyviahostname'] = 'Froxlor is direct toegan
 
 // ADDED IN FROXLOR 0.9.11-svn1
 $lng['serversettings']['panel_password_regex']['title'] = 'Reguliere expressie voor wachtwoorden';
-$lng['serversettings']['panel_password_regex']['description'] = 'Hier kunt u een reguliere expressie opgeven voor de complexiteit van wachtwoorden.<br />Leeg betekent geen speciale complexiteit<br />(<a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-password-regex-examples">regex hulp/voorbeelden</a>)';
+$lng['serversettings']['panel_password_regex']['description'] = 'Hier kunt u een reguliere expressie opgeven voor de complexiteit van wachtwoorden.<br />Leeg betekent geen speciale complexiteit';
 $lng['error']['notrequiredpasswordcomplexity'] = 'Er is niet voldaan aan de complexiteit voor het wachtwoord (regex: %s)';
 
 // ADDED IN FROXLOR 0.9.11-svn2
@@ -1430,7 +1150,7 @@ $lng['serversettings']['perl_path']['description'] = 'Alleen relevant voor light
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
 $lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'FCGID inschakelen voor de VHost voor Froxlor';
-$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Indien ingeschakeld wordt Froxlor ook uitgevoerd onder een lokale gebruiker<br /><strong>Let op:</strong>Dit vereist handmatige configuratie, zie <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/FCGID_-_handbook">FCGID - handbook</a>';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Indien ingeschakeld wordt Froxlor ook uitgevoerd onder een lokale gebruiker<br /><strong>Let op:</strong>Dit vereist handmatige configuratie, zie <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_fcgid">FCGID - handbook</a>';
 $lng['admin']['mod_fcgid_user'] = 'Lokale gebruiker voor FCGID (Froxlor vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Lokale groep voor FCGID (Froxlor vhost)';
 
@@ -1474,17 +1194,12 @@ $lng['admin']['templates']['forgotpwd'] = 'Notificatie mails voor opnieuw instel
 $lng['admin']['templates']['password_reset'] = 'Klantnotificatie voor opnieuw instellen wachtwoord';
 $lng['admin']['store_defaultindex'] = 'Standaard indexbestand opslaan in map klant';
 
-// ADDED IN FROXLOR 0.9.13-svn1
-$lng['customer']['autoresponder'] = 'Automatische beantwoorder';
 // ADDED IN FROXLOR 0.9.14-svn1
 $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'] = 'Standaard configuratie voor Froxlor-vHost';
 
 // ADDED IN FROXLOR 0.9.14-svn3
 $lng['serversettings']['awstats_icons']['title'] = 'Pad naar iconen AWstats icons';
 $lng['serversettings']['awstats_icons']['description'] = 'bijvoorbeeld /usr/share/awstats/htdocs/icon/';
-
-// ADDED IN FROXLOR 0.9.14-svn4
-$lng['admin']['ipsandports']['ssl_cert_chainfile'] = 'Pad naar SSL CertificateChainFile';
 
 // ADDED IN FROXLOR 0.9.14-svn5
 $lng['admin']['ipsandports']['docroot']['title'] = 'Aangepaste docroot (leeg = verwijzing naar Froxlor)';

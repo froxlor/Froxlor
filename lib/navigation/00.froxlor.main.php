@@ -37,6 +37,7 @@ return array (
 				array (
 					'url' => 'customer_index.php?page=change_theme',
 					'label' => $lng['menue']['main']['changetheme'],
+					'show_element' => (Settings::Get('panel.allow_theme_change_customer') == true)
 				),
 				array (
 					'url' => 'customer_index.php?action=logout',
@@ -59,17 +60,11 @@ return array (
 					'required_resources' => 'emails'
 				),
 				array (
-					'url' => 'customer_autoresponder.php',
-					'label' => $lng['menue']['email']['autoresponder'],
-					'required_resources' => 'emails',
-					'show_element' => ( getSetting('autoresponder', 'autoresponder_active') == true ),
-				),
-				array (
-					'url' => getSetting('panel', 'webmail_url'),
+					'url' => Settings::Get('panel.webmail_url'),
 					'new_window' => true,
 					'label' => $lng['menue']['email']['webmail'],
 					'required_resources' => 'emails_used',
-					'show_element' => ( getSetting('panel', 'webmail_url') != '' ),
+					'show_element' => ( Settings::Get('panel.webmail_url') != '' ),
 				),
 			),
 		),
@@ -83,11 +78,11 @@ return array (
 					'required_resources' => 'mysqls',
 				),
 				array (
-					'url' => getSetting('panel', 'phpmyadmin_url'),
+					'url' => Settings::Get('panel.phpmyadmin_url'),
 					'new_window' => true,
 					'label' => $lng['menue']['mysql']['phpmyadmin'],
 					'required_resources' => 'mysqls_used',
-					'show_element' => ( getSetting('panel', 'phpmyadmin_url') != '' ),
+					'show_element' => ( Settings::Get('panel.phpmyadmin_url') != '' ),
 				),
 			),
 		),
@@ -110,10 +105,10 @@ return array (
 					'label' => $lng['menue']['ftp']['accounts'],
 				),
 				array (
-					'url' => getSetting('panel', 'webftp_url'),
+					'url' => Settings::Get('panel.webftp_url'),
 					'new_window' => true,
 					'label' => $lng['menue']['ftp']['webftp'],
-					'show_element' => ( getSetting('panel', 'webftp_url') != '' ),
+					'show_element' => ( Settings::Get('panel.webftp_url') != '' ),
 				),
 			),
 		),
@@ -128,11 +123,6 @@ return array (
 				array (
 					'url' => 'customer_extras.php?page=htaccess',
 					'label' => $lng['menue']['extras']['pathoptions'],
-				),
-				array (
-					'url' => 'customer_extras.php?page=backup',
-					'label' => $lng['backup'],
-					'required_resources' => 'backup_allowed',
 				),
 			),
 		),
@@ -166,6 +156,7 @@ return array (
 				array (
 					'url' => 'admin_index.php?page=change_theme',
 					'label' => $lng['menue']['main']['changetheme'],
+					'show_element' => (Settings::Get('panel.allow_theme_change_admin') == true)
 				),
 				array (
 					'url' => 'admin_index.php?action=logout',
@@ -215,8 +206,13 @@ return array (
 					'required_resources' => 'change_serversettings',
 				),
 				array (
-					'url' => 'admin_settings.php?page=settings',
+					'url' => 'admin_settings.php?page=overview',
 					'label' => $lng['admin']['serversettings'],
+					'required_resources' => 'change_serversettings',
+				),
+				array (
+					'url' => 'admin_settings.php?page=phpinfo',
+					'label' => $lng['admin']['phpinfo'],
 					'required_resources' => 'change_serversettings',
 				),
 				array (
@@ -240,16 +236,17 @@ return array (
 					'required_resources' => 'change_serversettings',
 				),
 				array (
+					'url' => 'admin_settings.php?page=integritycheck',
+					'label' => $lng['admin']['integritycheck'],
+					'required_resources' => 'change_serversettings',
+				),
+				array (
 					'url' => 'admin_phpsettings.php?page=overview',
 					'label' => $lng['menue']['phpsettings']['maintitle'],
-					'show_element' => ( 
-						getSetting('system', 'mod_fcgid') == true 
-						/* 
-						 * @TODO activate if phpfpm knows custom php.ini files
-						 * 
-						 * || getSetting('phpfpm', 'enabled') == true
-						 */
-						),
+					'show_element' => (
+						Settings::Get('system.mod_fcgid') == true ||
+						Settings::Get('phpfpm.enabled') == true
+					),
 				),
 			),
 		),
@@ -264,7 +261,7 @@ return array (
 					'url' => 'admin_logger.php?page=log',
 					'label' => $lng['menue']['logger']['logger'],
 					'required_resources' => 'change_serversettings',
-					'show_element' => ( getSetting('logger', 'enabled') == true ),
+					'show_element' => ( Settings::Get('logger.enabled') == true ),
 				),
 				array (
 					'url' => 'admin_message.php?page=message',

@@ -17,26 +17,22 @@
  */
 
 define('AREA', 'admin');
+require './lib/init.php';
 
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-
-require ("./lib/init.php");
-
-if($action == 'logout')
-{
-	$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['adminid'] . "' AND `adminsession` = '1'");
+if ($action == 'logout') {
+	$logout_stmt = Database::prepare("
+		DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
+		WHERE `userid` = :adminid
+		AND `adminsession` = '1'"
+	);
+	Database::pexecute($logout_stmt, array('adminid' => $userinfo['adminid']));
 	redirectTo('index.php');
 	exit;
 }
 
-if(isset($_POST['id']))
-{
+if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
-}
-elseif(isset($_GET['id']))
-{
+} elseif(isset($_GET['id'])) {
 	$id = intval($_GET['id']);
 }
 
@@ -56,59 +52,50 @@ $months = array(
 	'12' => 'dec',
 );
 
-if($page == 'overview' || $page == 'customers') 
-{
-	if($action == 'su' && $id != 0)
-	{
-		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid`='" . (int)$id . "' " . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = '" . (int)$userinfo['adminid'] . "' "));
+if ($page == 'overview' || $page == 'customers') {
 
-		if($result['loginname'] != '')
-		{
-			$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid`='" . (int)$userinfo['userid'] . "'");
-			$s = md5(uniqid(microtime(), 1));
-			$db->query("INSERT INTO `" . TABLE_PANEL_SESSIONS . "` (`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`) VALUES ('" . $db->escape($s) . "', '" . (int)$id . "', '" . $db->escape($result['ipaddress']) . "', '" . $db->escape($result['useragent']) . "', '" . time() . "', '" . $db->escape($result['language']) . "', '0')");
-			redirectTo('customer_traffic.php', Array(
-				's' => $s
-			));
-		}
-		else
-		{
-			redirectTo('index.php', Array(
-				'action' => 'login'
-			));
-		}
-	}
 	$customerview = 1;
 	$stats_tables = '';
-	$minyear = $db->query_first("SELECT `year` FROM `". TABLE_PANEL_TRAFFIC . "` ORDER BY `year` ASC LIMIT 1");
-	if (!isset($minyear['year']) || $minyear['year'] == 0)
-	{
+	$minyear_stmt = Database::query("SELECT `year` FROM `". TABLE_PANEL_TRAFFIC . "` ORDER BY `year` ASC LIMIT 1");
+	$minyear = $minyear_stmt->fetch(PDO::FETCH_ASSOC);
+
+	if (!isset($minyear['year']) || $minyear['year'] == 0) {
 		$maxyears = 0;
-	}
-	else
-	{
+	} else {
 		$maxyears = date("Y") - $minyear['year'];
 	}
-	for($years = 0; $years<=$maxyears; $years++) {
+
+	for ($years = 0; $years<=$maxyears; $years++) {
+
 		$overview['year'] = date("Y")-$years;
 		$overview['type'] = $lng['traffic']['customer'];
 		$domain_list = '';
-		$customer_name_list = $db->query("SELECT `customerid`,`company`,`name`,`firstname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `deactivated`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = '" . (int)$userinfo['adminid'] . "' ") . " ORDER BY name");
 		$totals = array(
-			'jan' => 0,
-			'feb' => 0,
-			'mar' => 0,
-			'apr' => 0,
-			'may' => 0,
-			'jun' => 0,
-			'jul' => 0,
-			'aug' => 0,
-			'sep' => 0,
-			'oct' => 0,
-			'nov' => 0,
-			'dec' => 0,
+				'jan' => 0,
+				'feb' => 0,
+				'mar' => 0,
+				'apr' => 0,
+				'may' => 0,
+				'jun' => 0,
+				'jul' => 0,
+				'aug' => 0,
+				'sep' => 0,
+				'oct' => 0,
+				'nov' => 0,
+				'dec' => 0,
 		);
-		while($customer_name = $db->fetch_array($customer_name_list)) {
+
+		$customer_name_list_stmt = Database::prepare("
+			SELECT `customerid`,`company`,`name`,`firstname`
+			FROM `" . TABLE_PANEL_CUSTOMERS . "`
+			WHERE `deactivated`='0'" .
+			($userinfo['customers_see_all'] ? '' : " AND `adminid` = :id") . "
+			ORDER BY name"
+		);
+		Database::pexecute($customer_name_list_stmt, array('id' => $userinfo['adminid']));
+
+		while($customer_name = $customer_name_list_stmt->fetch(PDO::FETCH_ASSOC)) {
+
 			$virtual_host = array(
 				'name' => ($customer_name['company'] == '' ? $customer_name['name'] . ", " . $customer_name['firstname'] : $customer_name['company']),
 				'customerid' => $customer_name['customerid'],
@@ -125,10 +112,17 @@ if($page == 'overview' || $page == 'customers')
 				'nov' => '-',
 				'dec' => '-',
 			);
-			
-			$traffic_list = $db->query("SELECT month, SUM(http+ftp_up+ftp_down+mail)*1024 AS traffic FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE year = " . (date("Y")-$years) . " AND `customerid` = '" . $customer_name['customerid'] . "' GROUP BY month ORDER BY month");
-			while($traffic_month = $db->fetch_array($traffic_list)) {
-				$virtual_host[$months[(int)$traffic_month['month']]] = size_readable($traffic_month['traffic'], 'GiB', 'bi', '%01.3f %s');
+
+			$traffic_list_stmt = Database::prepare("
+				SELECT month, SUM(http+ftp_up+ftp_down+mail)*1024 AS traffic
+				FROM `" . TABLE_PANEL_TRAFFIC . "`
+				WHERE year = :year AND `customerid` = :id
+				GROUP BY month ORDER BY month"
+			);
+			Database::pexecute($traffic_list_stmt, array('year' => (date("Y")-$years), 'id' => $customer_name['customerid']));
+
+			while ($traffic_month = $traffic_list_stmt->fetch(PDO::FETCH_ASSOC)) {
+				$virtual_host[$months[(int)$traffic_month['month']]] = size_readable($traffic_month['traffic'], 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
 				$totals[$months[(int)$traffic_month['month']]] += $traffic_month['traffic'];
 			}
 			eval("\$domain_list .= sprintf(\"%s\", \"" . getTemplate("traffic/index_table_row") . "\");");
@@ -137,8 +131,8 @@ if($page == 'overview' || $page == 'customers')
 		$virtual_host = array(
 			'name' => $lng['traffic']['months']['total'],
 		);
-		foreach($totals as $month => $bytes) {
-			$virtual_host[$month] = ($bytes == 0 ? '-' : size_readable($bytes, 'GiB', 'bi', '%01.3f %s'));
+		foreach ($totals as $month => $bytes) {
+			$virtual_host[$month] = ($bytes == 0 ? '-' : size_readable($bytes, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s'));
 		}
 		$customerview = 0;
 		eval("\$total_list = sprintf(\"%s\", \"" . getTemplate("traffic/index_table_row") . "\");");

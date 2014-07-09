@@ -31,7 +31,17 @@ return array(
 					'option_mode' => 'one',
 					'option_options' => array('apache2' => 'Apache 2', 'lighttpd' => 'ligHTTPd', 'nginx' => 'Nginx'),
 					'save_method' => 'storeSettingField',
+					'plausibility_check_method' => 'checkPhpInterfaceSetting',
 					'overview_option' => true
+					),
+				'system_apache_24' => array(
+					'label' => $lng['serversettings']['apache_24'],
+					'settinggroup' => 'system',
+					'varname' => 'apache24',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2')
 					),
 				'system_httpuser' => array(
 					'label' => $lng['admin']['webserver_user'],
@@ -72,7 +82,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'apacheconf_htpasswddir',
 					'type' => 'string',
-					'string_type' => 'dir',
+					'string_type' => 'confdir',
 					'default' => '/etc/apache2/htpasswd/',
 					'save_method' => 'storeSettingField',
 					),
@@ -83,6 +93,15 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/var/customers/logs/',
+					'save_method' => 'storeSettingField',
+					),
+				'system_customersslpath' => array(
+					'label' => $lng['serversettings']['customerssl_directory'],
+					'settinggroup' => 'system',
+					'varname' => 'customer_ssl_path',
+					'type' => 'string',
+					'string_type' => 'confdir',
+					'default' => '/etc/ssl/froxlor-custom/',
 					'save_method' => 'storeSettingField',
 					),
 				'system_phpappendopenbasedir' => array(
@@ -124,7 +143,7 @@ return array(
 					'label' => $lng['serversettings']['phpreload_command'],
 					'settinggroup' => 'system',
 					'varname' => 'phpreload_command',
-					'type' => (getSetting('phpfpm', 'enabled') == '1') ? 'hidden' : 'string',
+					'type' => 'string',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('nginx')
@@ -133,19 +152,20 @@ return array(
 					'label' => $lng['serversettings']['nginx_php_backend'],
 					'settinggroup' => 'system',
 					'varname' => 'nginx_php_backend',
-					'type' => (getSetting('phpfpm', 'enabled') == '1') ? 'hidden' : 'string',
+					'type' => 'string',
 					'default' => '127.0.0.1:8888',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('nginx')
 					),
-				'system_mod_log_sql' => array(
-					'label' => $lng['serversettings']['mod_log_sql'],
-					'settinggroup' => 'system',
-					'varname' => 'mod_log_sql',
-					'type' => 'bool',
-					'default' => false,
+				'nginx_fastcgiparams' => array(
+					'label' => $lng['serversettings']['nginx_fastcgiparams'],
+					'settinggroup' => 'nginx',
+					'varname' => 'fastcgiparams',
+					'type' => 'string',
+					'string_type' => 'file',
+					'default' => '/etc/nginx/fastcgi_params',
 					'save_method' => 'storeSettingField',
-					'websrv_avail' => array('apache2')
+					'websrv_avail' => array('nginx')
 					),
 				'defaultwebsrverrhandler_enabled' => array(
 					'label' => $lng['serversettings']['defaultwebsrverrhandler_enabled'],
@@ -209,72 +229,8 @@ return array(
 					'option_options_method' => 'getRedirectCodes',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('apache2', 'lighttpd')
-					),
-				),
-			),
-		'ssl' => array(
-			'title' => $lng['admin']['sslsettings'],
-			'fields' => array(
-				'system_ssl_enabled' => array(
-					'label' => $lng['serversettings']['ssl']['use_ssl'],
-					'settinggroup' => 'system',
-					'varname' => 'use_ssl',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					'overview_option' => true
-					),
-				'system_ssl_cert_file' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_cert_file'],
-					'settinggroup' => 'system',
-					'varname' => 'ssl_cert_file',
-					'type' => 'string',
-					'string_type' => 'file',
-					'string_emptyallowed' => true,
-					'default' => '/etc/apache2/apache2.pem',
-					'save_method' => 'storeSettingField',
-					),
-				'system_ssl_key_file' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_key_file'],
-					'settinggroup' => 'system',
-					'varname' => 'ssl_key_file',
-					'type' => 'string',
-					'string_type' => 'file',
-					'string_emptyallowed' => true,
-					'default' => '/etc/apache2/apache2.key',
-					'save_method' => 'storeSettingField',
-					),
-				'system_ssl_ca_file' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_ca_file'],
-					'settinggroup' => 'system',
-					'varname' => 'ssl_ca_file',
-					'type' => 'string',
-					'string_type' => 'file',
-					'string_emptyallowed' => true,
-					'default' => '',
-					'save_method' => 'storeSettingField',
-					),
-				'system_ssl_cert_chainfile' => array(
-					'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
-					'settinggroup' => 'system',
-					'varname' => 'ssl_cert_chainfile',
-					'type' => 'string',
-					'string_type' => 'file',
-					'string_emptyallowed' => true,
-					'default' => '',
-					'save_method' => 'storeSettingField',
-					),
-				'system_ssl_openssl_cnf' => array(
-					'label' => $lng['serversettings']['ssl']['openssl_cnf'],
-					'settinggroup' => 'system',
-					'varname' => 'openssl_cnf',
-					'type' => 'text',
-					'default' => '',
-					'save_method' => 'storeSettingField',
-					),
-				),
-			),
-		),
+					)
+				)
+			)
+		)
 	);
-
-?>

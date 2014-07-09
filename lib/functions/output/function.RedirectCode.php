@@ -12,7 +12,6 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Functions
- * @version    $$
  */
 
 /**
@@ -20,19 +19,16 @@
  * 
  * @return array array of enabled redirect-codes
  */
-function getRedirectCodesArray()
-{
-	global $db, $theme;
+function getRedirectCodesArray() {
 	
 	$sql = "SELECT * FROM `".TABLE_PANEL_REDIRECTCODES."` WHERE `enabled` = '1' ORDER BY `id` ASC";
-	$result = $db->query($sql);
-	
+	$result_stmt = Database::query($sql);
+
 	$codes = array();
-	while($rc = $db->fetch_array($result))
-	{
+	while ($rc = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$codes[] = $rc;
 	}
-	
+
 	return $codes;
 }
 
@@ -42,19 +38,18 @@ function getRedirectCodesArray()
  * 
  * @return array array of enabled redirect-codes
  */
-function getRedirectCodes()
-{
-	global $db, $lng, $theme;
+function getRedirectCodes() {
+
+	global $lng;
 	
 	$sql = "SELECT * FROM `".TABLE_PANEL_REDIRECTCODES."` WHERE `enabled` = '1' ORDER BY `id` ASC";
-	$result = $db->query($sql);
-	
+	$result_stmt = Database::query($sql);
+
 	$codes = array();
-	while($rc = $db->fetch_array($result))
-	{
+	while ($rc = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$codes[$rc['id']] = $rc['code']. ' ('.$lng['redirect_desc'][$rc['desc']].')';
 	}
-	
+
 	return $codes;
 }
 
@@ -66,20 +61,19 @@ function getRedirectCodes()
  * 
  * @return string redirect-code
  */
-function getDomainRedirectCode($domainid = 0)
-{
-	global $db, $theme;
+function getDomainRedirectCode($domainid = 0) {
 
 	$code = '';
-	if($domainid > 0)
-	{
-		$sql = "SELECT `r`.`code` as `redirect` 
-				FROM `".TABLE_PANEL_REDIRECTCODES."` `r`, `".TABLE_PANEL_DOMAINREDIRECTS."` `rc` 
-				WHERE `r`.`id` = `rc`.`rid` and `rc`.`did` = '".(int)$domainid."'";
-		
-		$result = $db->query_first($sql);
-		
-		if(is_array($result)
+	if ($domainid > 0) {
+
+		$result_stmt = Database::prepare("
+			SELECT `r`.`code` as `redirect`
+			FROM `".TABLE_PANEL_REDIRECTCODES."` `r`, `".TABLE_PANEL_DOMAINREDIRECTS."` `rc`
+			WHERE `r`.`id` = `rc`.`rid` and `rc`.`did` = :domainid
+		");
+		$result = Database::pexecute_first($result_stmt, array('domainid' => $domainid));
+
+		if (is_array($result)
 			&& isset($result['redirect'])
 		) {
 			$code = ($result['redirect'] == '---') ? '' : $result['redirect'];
@@ -96,20 +90,18 @@ function getDomainRedirectCode($domainid = 0)
  * 
  * @return integer redirect-code-id
  */
-function getDomainRedirectId($domainid = 0)
-{
-	global $db, $theme;
+function getDomainRedirectId($domainid = 0) {
 
 	$code = 1;
-	if($domainid > 0)
-	{
-		$sql = "SELECT `r`.`id` as `redirect` 
-				FROM `".TABLE_PANEL_REDIRECTCODES."` `r`, `".TABLE_PANEL_DOMAINREDIRECTS."` `rc` 
-				WHERE `r`.`id` = `rc`.`rid` and `rc`.`did` = '".(int)$domainid."'";
-		
-		$result = $db->query_first($sql);
-		
-		if(is_array($result)
+	if ($domainid > 0) {
+		$result_stmt = Database::prepare("
+			SELECT `r`.`id` as `redirect`
+			FROM `".TABLE_PANEL_REDIRECTCODES."` `r`, `".TABLE_PANEL_DOMAINREDIRECTS."` `rc`
+			WHERE `r`.`id` = `rc`.`rid` and `rc`.`did` = :domainid
+		");
+		$result = Database::pexecute_first($result_stmt, array('domainid' => $domainid));
+
+		if (is_array($result)
 			&& isset($result['redirect'])
 		) {
 			$code = (int)$result['redirect'];
@@ -126,13 +118,12 @@ function getDomainRedirectId($domainid = 0)
  * 
  * @return null
  */
-function addRedirectToDomain($domainid = 0, $redirect = 1)
-{
-	global $db, $theme;
-	if($domainid > 0)
-	{
-		$db->query("INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."`
-					SET `rid` = '".(int)$redirect."', `did` = '".(int)$domainid."'");
+function addRedirectToDomain($domainid = 0, $redirect = 1) {
+	if ($domainid > 0) {
+		$ins_stmt = Database::prepare("
+			INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."` SET `rid` = :rid, `did` = :did
+		");
+		Database::pexecute($ins_stmt, array('rid' => $redirect, 'did' => $domainid));
 	}
 }
 
@@ -145,20 +136,21 @@ function addRedirectToDomain($domainid = 0, $redirect = 1)
  * 
  * @return null
  */
-function updateRedirectOfDomain($domainid = 0, $redirect = false)
-{
-	global $db, $theme;
+function updateRedirectOfDomain($domainid = 0, $redirect = false) {
 
-	if($redirect == false)
-	{
+	if ($redirect == false) {
 		return;
 	}
-	
-	if($domainid > 0)
-	{
-		$db->query("DELETE FROM `".TABLE_PANEL_DOMAINREDIRECTS."` 
-					WHERE `did` = '".(int)$domainid."'");
-		$db->query("INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."`
-					SET `rid` = '".(int)$redirect."', `did` = '".(int)$domainid."'");
+
+	if ($domainid > 0) {
+		$del_stmt = Database::prepare("
+			DELETE FROM `".TABLE_PANEL_DOMAINREDIRECTS."` WHERE `did` = :domainid
+		");
+		Database::pexecute($del_stmt, array('domainid' => $domainid));
+
+		$ins_stmt = Database::prepare("
+			INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."` SET `rid` = :rid, `did` = :did
+		");
+		Database::pexecute($ins_stmt, array('rid' => $redirect, 'did' => $domainid));
 	}
 }

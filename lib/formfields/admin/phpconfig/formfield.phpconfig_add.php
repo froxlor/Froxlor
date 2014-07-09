@@ -30,12 +30,14 @@ return array(
 						'maxlength' => 50
 					),
 					'binary' => array(
+						'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['phpsettings']['binary'],
 						'type' => 'text',
 						'maxlength' => 255,
 						'value' => '/usr/bin/php-cgi'
 					),
 					'file_extensions' => array(
+						'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['phpsettings']['file_extensions'],
 						'desc' => $lng['admin']['phpsettings']['file_extensions_note'],
 						'type' => 'text',
@@ -43,12 +45,37 @@ return array(
 						'value' => 'php'
 					),
 					'mod_fcgid_starter' => array(
+						'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_starter']['title'],
 						'type' => 'text'
 					),
 					'mod_fcgid_maxrequests' => array(
+						'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
 						'type' => 'text'
+					),
+					'phpfpm_enable_slowlog' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'label' => $lng['admin']['phpsettings']['enable_slowlog'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array()
+					),
+					'phpfpm_reqtermtimeout' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'label' => $lng['admin']['phpsettings']['request_terminate_timeout'],
+						'type' => 'text',
+						'maxlength' => 10,
+						'value' => '60s'
+					),
+					'phpfpm_reqslowtimeout' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'label' => $lng['admin']['phpsettings']['request_slowlog_timeout'],
+						'type' => 'text',
+						'maxlength' => 10,
+						'value' => '5s'
 					),
 					'phpsettings' => array(
 						'style' => 'vertical-align:top;',

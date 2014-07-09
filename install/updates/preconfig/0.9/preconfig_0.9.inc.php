@@ -24,9 +24,9 @@
  *
  * @return null
  */
-function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
-{
-	global $settings, $lng, $db, $theme;
+function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
+
+	global $lng;
 
 	if(versionInUpdate($current_version, '0.9.4-svn2'))
 	{
@@ -42,11 +42,11 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.6-svn2'))
 	{
-		if(!PHPMailer::ValidateAddress($settings['panel']['adminmail']))
+		if(!PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')))
 		{
 			$has_preconfig = true;
 			$description = 'Froxlor uses a newer version of the phpMailerClass and determined that your current admin-mail address is invalid.';
-			$question = '<strong>Please specify a new admin-email address:</strong>&nbsp;<input type="text" class="text" name="update_adminmail" value="'.$settings['panel']['adminmail'].'" />';
+			$question = '<strong>Please specify a new admin-email address:</strong>&nbsp;<input type="text" class="text" name="update_adminmail" value="'.Settings::Get('panel.adminmail').'" />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
@@ -57,7 +57,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$description = 'You now have the possibility to define default error-documents for your webserver which replace the default webserver error-messages.';
 		$question = '<strong>Do you want to enable default error-documents?:</strong>&nbsp;';
 		$question .= makeyesno('update_deferr_enable', '1', '0', '0').'<br /><br />';
-		if($settings['system']['webserver'] == 'apache2')
+		if(Settings::Get('system.webserver') == 'apache2')
 		{
 			$question .= 'Path/URL for error 500:&nbsp;<input type="text" class="text" name="update_deferr_500" /><br /><br />';
 			$question .= 'Path/URL for error 401:&nbsp;<input type="text" class="text" name="update_deferr_401" /><br /><br />';
@@ -127,10 +127,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.7-svn2'))
 	{
-		$result = $db->query("SELECT `domain` FROM " . TABLE_PANEL_DOMAINS . " WHERE `documentroot` LIKE '%:%' AND `documentroot` NOT LIKE 'http://%' AND `openbasedir_path` = '0' AND `openbasedir` = '1'");
+		$result = Database::query("SELECT `domain` FROM " . TABLE_PANEL_DOMAINS . " WHERE `documentroot` LIKE '%:%' AND `documentroot` NOT LIKE 'http://%' AND `openbasedir_path` = '0' AND `openbasedir` = '1'");
 		$wrongOpenBasedirDomain = array();
-		while($row = $db->fetch_array($result))
-		{
+		while($row = $result->fetch(PDO::FETCH_ASSOC)) {
 			$wrongOpenBasedirDomain[] = $row['domain'];
 		}
 
@@ -158,34 +157,38 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= makeyesno('update_defdns_mailentry', '1', '0', '0');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
-	
+
 	if(versionInUpdate($current_version, '0.9.10-svn1'))
 	{
 		$has_nouser = false;
 		$has_nogroup = false;
 
-		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
+		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
+		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
 		if(!isset($result) || !isset($result['value']))
 		{
 			$has_preconfig = true;
 			$has_nouser = true;
 			$guessed_user = 'www-data';
 			if(function_exists('posix_getuid')
-				&& function_exists('posix_getpwuid')
+					&& function_exists('posix_getpwuid')
 			) {
 				$_httpuser = posix_getpwuid(posix_getuid());
 				$guessed_user = $_httpuser['name'];
 			}
 		}
-		
-		$result = $db->query_first("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
+
+		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
+		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
 		if(!isset($result) || !isset($result['value']))
 		{
 			$has_preconfig = true;
 			$has_nogroup = true;
 			$guessed_group = 'www-data';
 			if(function_exists('posix_getgid')
-				&& function_exists('posix_getgrgid')
+					&& function_exists('posix_getgrgid')
 			) {
 				$_httpgroup = posix_getgrgid(posix_getgid());
 				$guessed_group = $_httpgroup['name'];
@@ -198,8 +201,8 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			if($has_nouser)
 			{
 				$question = '<strong>Please enter the webservers username:</strong>&nbsp;<input type="text" class="text" name="update_httpuser" value="'.$guessed_user.'" />';
-			} 
-			elseif($has_nogroup) 
+			}
+			elseif($has_nogroup)
 			{
 				$question2 = '<strong>Please enter the webservers groupname:</strong>&nbsp;<input type="text" class="text" name="update_httpgroup" value="'.$guessed_group.'" />';
 				if($has_nouser) {
@@ -238,10 +241,10 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 		$question.= '<input type="text" class="text" name="update_perlpath" value="/usr/bin/perl" />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
-	
+
 	if(versionInUpdate($current_version, '0.9.12-svn1'))
 	{
-		if($settings['system']['mod_fcgid'] == 1)
+		if(Settings::Get('system.mod_fcgid') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'You can chose whether you want Froxlor to use FCGID itself too now.';
@@ -270,19 +273,19 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.12-svn4'))
 	{
-		if((int)$settings['system']['awstats_enabled'] == 1)
+		if((int)Settings::Get('system.awstats_enabled') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'Due to different paths of awstats_buildstaticpages.pl and awstats.pl you can set a different path for awstats.pl now.';
 			$question = '<strong>Path to \'awstats.pl\'?:</strong>&nbsp;';
-			$question.= '<input type="text" class="text" name="update_awstats_awstatspath" value="'.$settings['system']['awstats_path'].'" /><br />';
+			$question.= '<input type="text" class="text" name="update_awstats_awstatspath" value="'.Settings::Get('system.awstats_path').'" /><br />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
 
 	if(versionInUpdate($current_version, '0.9.13-svn1'))
 	{
-		if((int)$settings['autoresponder']['autoresponder_active'] == 1)
+		if((int)Settings::Get('autoresponder.autoresponder_active') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'Froxlor can now limit the number of autoresponder-entries for each user. Here you can set the value which will be available for each customer (Of course you can change the value for each customer separately after the update).';
@@ -294,7 +297,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.13.1'))
 	{
-		if((int)$settings['system']['mod_fcgid_ownvhost'] == 1)
+		if((int)Settings::Get('system.mod_fcgid_ownvhost') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'You have FCGID for Froxlor itself activated. You can now specify a PHP-configuration for this.';
@@ -313,24 +316,24 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.14-svn3'))
 	{
-		if((int)$settings['system']['awstats_enabled'] == 1)
+		if((int)Settings::Get('system.awstats_enabled') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'To have icons in AWStats statistic-pages please enter the path to AWStats icons folder.';
 			$question = '<strong>Path to AWSTats icons folder:</strong>&nbsp;';
-			$question.= '<input type="text" class="text" name="update_awstats_icons" value="'.$settings['system']['awstats_icons'].'" />';
+			$question.= '<input type="text" class="text" name="update_awstats_icons" value="'.Settings::Get('system.awstats_icons').'" />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
 
 	if(versionInUpdate($current_version, '0.9.14-svn4'))
 	{
-		if((int)$settings['system']['use_ssl'] == 1)
+		if((int)Settings::Get('system.use_ssl') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'Froxlor now has the possibility to set \'SSLCertificateChainFile\' for the apache webserver.';
 			$question = '<strong>Enter filename (leave empty for none):</strong>&nbsp;';
-			$question.= '<input type="text" class="text" name="update_ssl_cert_chainfile" value="'.$settings['system']['ssl_cert_chainfile'].'" />';
+			$question.= '<input type="text" class="text" name="update_ssl_cert_chainfile" value="'.Settings::Get('system.ssl_cert_chainfile').'" />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
@@ -345,13 +348,13 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	}
 
 	if(versionInUpdate($current_version, '0.9.14-svn10'))
-	{       
+	{
 		$has_preconfig = true;
-		$description = '<strong>This update removes the unsupported real-time option. Additionally the deprecated tables for navigation and cronscripts are removed, any modules using these tables need to be updated to the new structure!</strong>'; 
+		$description = '<strong>This update removes the unsupported real-time option. Additionally the deprecated tables for navigation and cronscripts are removed, any modules using these tables need to be updated to the new structure!</strong>';
 		$question = '';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
-	
+
 	if(versionInUpdate($current_version, '0.9.16-svn1'))
 	{
 		$has_preconfig = true;
@@ -387,7 +390,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 	if(versionInUpdate($current_version, '0.9.16-svn2'))
 	{
-		if((int)$settings['phpfpm']['enabled'] == 1)
+		if((int)Settings::Get('phpfpm.enabled') == 1)
 		{
 			$has_preconfig = true;
 			$description = 'You can chose whether you want Froxlor to use PHP-FPM itself too now.';
@@ -395,9 +398,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 			$question.= makeyesno('update_phpfpm_enabled_ownvhost', '1', '0', '0').'<br /><br />';
 			$question.= '<strong>If \'yes\', please specify local user/group (have to exist, Froxlor does not add them automatically):</strong><br /><br />';
 			$question.= 'Local user:&nbsp;';
-			$question.= '<input type="text" class="text" name="update_phpfpm_httpuser" value="'.$settings['system']['mod_fcgid_httpuser'].'" /><br /><br />';
+			$question.= '<input type="text" class="text" name="update_phpfpm_httpuser" value="'.Settings::Get('system.mod_fcgid_httpuser').'" /><br /><br />';
 			$question.= 'Local group:&nbsp;';
-			$question.= '<input type="text" class="text" name="update_phpfpm_httpgroup" value="'.$settings['system']['mod_fcgid_httpgroup'].'" /><br />';
+			$question.= '<input type="text" class="text" name="update_phpfpm_httpgroup" value="'.Settings::Get('system.mod_fcgid_httpgroup').'" /><br />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
@@ -419,7 +422,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 	if(versionInUpdate($current_version, '0.9.18-svn2'))
 	{
 		$has_preconfig = true;
-		$description = 'As you can (obviously) see, Froxlor now comes with a new theme. You also have the possibility to switch back to "Classic" if you want to.'; 
+		$description = 'As you can (obviously) see, Froxlor now comes with a new theme. You also have the possibility to switch back to "Classic" if you want to.';
 		$question = '<strong>Select default panel theme:</strong>&nbsp;';
 		$question.= '<select name="update_default_theme">';
 		$themes = getThemes();
@@ -451,4 +454,229 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version)
 
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_version, '0.9.28-svn6')) {
+
+		if (Settings::Get('system.webserver') == 'apache2') {
+			$has_preconfig = true;
+			$description = 'Froxlor now supports the new Apache 2.4. Please be aware that you need to load additional apache-modules in ordner to use it.<br />';
+			$description.= '<pre>LoadModule authz_core_module modules/mod_authz_core.so
+					LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
+			$question = '<strong>Do you want to enable the Apache-2.4 modification?:</strong>&nbsp;';
+			$question.= makeyesno('update_system_apache24', '1', '0', '0');
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		} elseif (Settings::Get('system.webserver') == 'nginx') {
+			$has_preconfig = true;
+			$description = 'The path to nginx\'s fastcgi_params file is now customizable.<br /><br />';
+			$question = '<strong>Please enter full path to you nginx/fastcgi_params file (including filename):</strong>&nbsp;';
+			$question.= '<input type="text" class="text" name="nginx_fastcgi_params" value="/etc/nginx/fastcgi_params" />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
+
+	if (versionInUpdate($current_version, '0.9.28-rc2')) {
+
+		$has_preconfig = true;
+
+		$description  = 'This version adds an option to append the domain-name to the document-root for domains and subdomains.<br />';
+		$description .= 'You can enable or disable this feature anytime from settings -> system settings.<br />';
+
+		$question = '<strong>Do you want to automatically append the domain-name to the documentroot of newly created domains?:</strong>&nbsp;';
+		$question.= makeyesno('update_system_documentroot_use_default_value', '1', '0', '0');
+
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.28')) {
+
+		$has_preconfig = true;
+		// just an information about the new sendmail parameter (#1134)
+		$description  = 'Froxlor changed the default parameter-set of sendmail (php.ini)<br />';
+		$description .= 'sendmail_path = "/usr/sbin/sendmail -t <strong>-i</strong> -f {CUSTOMER_EMAIL}"<br /><br />';
+		$description .= 'If you don\'t have any problems with sending mails, you don\'t need to change this';
+		if (Settings::Get('system.mod_fcgid') == '1'
+				|| Settings::Get('phpfpm.enabled') == '1'
+		) {
+			// information about removal of php's safe_mode
+			$description .= '<br /><br />The php safe_mode flag has been removed as current versions of PHP<br />';
+			$description .= 'do not support it anymore.<br /><br />';
+			$description .= 'Please check your php-configurations and remove safe_mode-directives to avoid php notices/warnings.';
+		}
+		$question = '';
+
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.29-dev1')) {
+		// we only need to ask if fcgid|php-fpm is enabled
+		if (Settings::Get('system.mod_fcgid') == '1'
+				|| Settings::Get('phpfpm.enabled') == '1'
+		) {
+			$has_preconfig = true;
+			$description  = 'Standard-subdomains can now be hidden from the php-configuration overview.<br />';
+			$question = '<strong>Do you want to hide the standard-subdomains (this can be changed in the settings any time)?:</strong>&nbsp;';
+			$question.= makeyesno('hide_stdsubdomains', '1', '0', '0');
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
+
+	if (versionInUpdate($current_version, '0.9.29-dev2')) {
+		$has_preconfig = true;
+		$description  = 'You can now decide whether admins/customers are able to change the theme<br />';
+		$question = '<strong>If you want to disallow theme-changing, select "no" from the dropdowns:</strong>&nbsp;';
+		$question.= "Admins: ". makeyesno('allow_themechange_a', '1', '0', '1').'&nbsp;&nbsp;';
+		$question.= "Customers: ".makeyesno('allow_themechange_c', '1', '0', '1');
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.29-dev3')) {
+		$has_preconfig = true;
+		$description  = 'There is now a possibility to specify AXFR servers for your bind zone-configuration<br />';
+		$question = '<strong>Enter a comma-separated list of AXFR servers or leave empty (default):</strong>&nbsp;';
+		$question.= '<input type="text" class="text" name="system_afxrservers" value="" />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.29-dev4')) {
+		$has_preconfig = true;
+		$description  = 'As customers can now specify ssl-certificate data for their domains, you need to specify where the generated files are stored<br />';
+		$question = '<strong>Specify the directory for customer ssl-certificates:</strong>&nbsp;';
+		$question.= '<input type="text" class="text" name="system_customersslpath" value="/etc/ssl/froxlor-custom/" />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.29.1-dev3')) {
+		$has_preconfig = true;
+		$description  = 'The build in logrotation-feature has been removed. Please follow the configuration-instructions for your system to enable logrotating again.';
+		$question = '';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	// let the apache+fpm users know that they MUST change their config
+	// for the domains / webserver to work after the update
+	if (versionInUpdate($current_version, '0.9.30-dev1')) {
+		if (Settings::Get('system.webserver') == 'apache2'
+			&& Settings::Get('phpfpm.enabled') == '1'
+		) {
+			$has_preconfig = true;
+			$description  = 'The PHP-FPM implementation for apache2 has changed. Please look for the "<b>fastcgi.conf</b>" (Debian/Ubuntu) or "<b>70_fastcgi.conf</b>" (Gentoo) within /etc/apache2/ and change it as shown below:<br /><br />';
+			$description .= '<pre style="width:500px;border:1px solid #ccc;padding:4px;">&lt;IfModule mod_fastcgi.c&gt;
+    FastCgiIpcDir /var/lib/apache2/fastcgi/
+    &lt;Location "/fastcgiphp"&gt;
+        Order Deny,Allow
+        Deny from All
+        # Prevent accessing this path directly
+        Allow from env=REDIRECT_STATUS
+    &lt;/Location&gt;
+&lt;/IfModule&gt;</pre>';
+			$question = '';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
+
+	if (versionInUpdate($current_version, '0.9.31-dev2')) {
+		if (Settings::Get('system.webserver') == 'apache2'
+				&& Settings::Get('phpfpm.enabled') == '1'
+		) {
+			$has_preconfig = true;
+			$description  = 'The FPM socket directory is now a setting in froxlor. Its default is <b>/var/lib/apache2/fastcgi/</b>.<br/>If you are using <b>/var/run/apache2</b> in the "<b>fastcgi.conf</b>" (Debian/Ubuntu) or "<b>70_fastcgi.conf</b>" (Gentoo) please correct this path accordingly<br />';
+			$question = '';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
+
+	if (versionInUpdate($current_version, '0.9.31-dev4')) {
+		$has_preconfig = true;
+		$description  = 'The template-variable {PASSWORD} has been replaced with {LINK}. Please update your password reset templates!<br />';
+		$question = '';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.31-dev5')) {
+		$has_preconfig = true;
+		$description  = 'You can enable/disable error-reporting for admins and customers!<br /><br />';
+		$question = '<strong>Do you want to enable error-reporting for admins? (default: yes):</strong>&nbsp;';
+		$question.= makeyesno('update_error_report_admin', '1', '0', '1').'<br />';
+		$question.= '<strong>Do you want to enable error-reporting for customers? (default: no):</strong>&nbsp;';
+		$question.= makeyesno('update_error_report_customer', '1', '0', '0');
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.31-rc2')) {
+		$has_preconfig = true;
+		$description  = 'You can enable/disable the display/usage of the news-feed for admins<br /><br />';
+		$question = '<strong>Do you want to enable the news-feed for admins? (default: yes):</strong>&nbsp;';
+		$question.= makeyesno('update_admin_news_feed', '1', '0', '1').'<br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.32-dev2')) {
+		$has_preconfig = true;
+		$description  = 'To enable logging of the mail-traffic, you need to set the following settings accordingly<br /><br />';
+		$question = '<strong>Do you want to enable the traffic collection for mail? (default: yes):</strong>&nbsp;';
+		$question.= makeyesno('mailtraffic_enabled', '1', '0', '1').'<br />';
+		$question.= '<strong>Mail Transfer Agent</strong><br />';
+		$question.= 'Type of your MTA:&nbsp;';
+		$question.= '<select name="mtaserver">';
+		$question.= makeoption('Postfix', 'postfix', 'postfix');
+		$question.= makeoption('Exim4', 'exim4', 'postfix');
+		$question.= '</select><br />';
+		$question.= 'Logfile for your MTA:&nbsp;';
+		$question.= '<input type="text" class="text" name="mtalog" value="/var/log/mail.log" /><br />';
+		$question.= '<strong>Mail Delivery Agent</strong><br />';
+		$question.= 'Type of your MDA:&nbsp;';
+		$question.= '<select name="mdaserver">';
+		$question.= makeoption('Dovecot', 'dovecot', 'dovecot');
+		$question.= makeoption('Courier', 'courier', 'dovecot');
+		$question.= '</select><br /><br />';
+		$question.= 'Logfile for your MDA:&nbsp;';
+		$question.= '<input type="text" class="text" name="mdalog" value="/var/log/mail.log" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.32-dev5')) {
+		$has_preconfig = true;
+		$description = 'Froxlor now generates a cron-configuration file for the cron-daemon. Please set a filename which will be included automatically by your crond (e.g. files in /etc/cron.d/)<br /><br />';
+		$question = '<strong>Path to the cron-service configuration-file.</strong> This file will be updated regularly and automatically by froxlor.<br />Note: please <b>be sure</b> to use the same filename as for the main froxlor cronjob (default: /etc/cron.d/froxlor)!<br />';
+		$question.= '<input type="text" class="text" name="crondfile" value="/etc/cron.d/froxlor" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.32-dev6')) {
+		$has_preconfig = true;
+		$description = 'In order for the new cron.d file to work properly, we need to know about the cron-service reload command.<br /><br />';
+		$question = '<strong>Please specify the reload-command of your cron-daemon</strong> (default: /etc/init.d/cron reload)<br />';
+		$question.= '<input type="text" class="text" name="crondreload" value="/etc/init.d/cron reload" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.32-rc2')) {
+		$has_preconfig = true;
+		$description = 'To customize the command which executes the cronjob (php - basically) change the path below according to your system.<br /><br />';
+		$question = '<strong>Please specify the command to execute cronscripts</strong> (default: "/usr/bin/nice -n 5 /usr/bin/php5 -q")<br />';
+		$question.= '<input type="text" class="text" name="croncmdline" value="/usr/bin/nice -n 5 /usr/bin/php5 -q" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.33-dev1')) {
+		$has_preconfig = true;
+		$description  = 'You can enable/disable the display/usage of the custom newsfeed for customers.<br /><br />';
+		$question = '<strong>Do you want to enable the custom newsfeed for customer? (default: no):</strong>&nbsp;';
+		$question.= makeyesno('customer_show_news_feed', '1', '0', '0').'<br />';
+		$question.= '<strong>You have to set the URL for your RSS-feed here, if you have choosen to enable the custom newsfeed on the customer-dashboard:</strong>&nbsp;';
+		$question.= '<input type="text" class="text" name="customer_news_feed_url" value="" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.33-dev2')) {
+		// only if bind is used - if not the default will be set, which is '0' (off)
+		if (Settings::get('system.bind_enable') == 1) {
+			$has_preconfig = true;
+			$description  = 'You can enable/disable the generation of the bind-zone / config for the system hostname.<br /><br />';
+			$question = '<strong>Do you want to generate a bind-zone for the system-hostname? (default: no):</strong>&nbsp;';
+			$question.= makeyesno('dns_createhostnameentry', '1', '0', '0').'<br />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
+
 }

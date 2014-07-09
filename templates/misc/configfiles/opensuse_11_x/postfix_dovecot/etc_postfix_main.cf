@@ -1,7 +1,9 @@
 ## General Postfix configuration
 
+mydomain = <SERVERNAME>
+
 # should be different from $mydomain eg. "mail.$mydomain"
-myhostname = <SERVERNAME>
+myhostname = mail.$mydomain
 
 mydestination = $myhostname,
 	$mydomain,
@@ -34,6 +36,11 @@ smtpd_sender_restrictions = permit_mynetworks,
 smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
 	reject_unknown_client_hostname
+
+# Postfix 2.10 requires this option. Postfix < 2.10 ignores this.
+# The option is intentionally left empty.
+smtpd_relay_restrictions = 
+
 # Maximum size of Message in bytes (50MB)
 message_size_limit = 52428800
 

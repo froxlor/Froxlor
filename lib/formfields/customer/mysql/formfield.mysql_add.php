@@ -28,7 +28,7 @@ return array(
 						'type' => 'text',
 					),
 					'mysql_server' => array(
-						'visible' => (1 < count($sql_root) ? true : false),
+						'visible' => (1 < $count_mysqlservers ? true : false),
 						'label' => $lng['mysql']['mysql_server'],
 						'type' => 'select',
 						'select_var' => $mysql_servers,

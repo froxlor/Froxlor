@@ -17,34 +17,57 @@
  *
  */
 
-function loadSettings(&$settings_data, $db)
-{
+/**
+ * @FIXME remove when fully migrated to new Settings class
+ *
+ * @param array $settings_data
+ *
+ * @return array
+ */
+function loadSettings(&$settings_data) {
+
 	$settings = array();
 
-	if(is_array($settings_data) && isset($settings_data['groups']) && is_array($settings_data['groups']))
-	{
-		foreach($settings_data['groups'] as $settings_part => $settings_part_details)
-		{
-			if(is_array($settings_part_details) && isset($settings_part_details['fields']) && is_array($settings_part_details['fields']))
-			{
-				foreach($settings_part_details['fields'] as $field_name => $field_details)
-				{
-					if(isset($field_details['settinggroup']) && isset($field_details['varname']) && isset($field_details['default']))
-					{
-						$row = $db->query_first('SELECT `settinggroup`, `varname`, `value` FROM `' . TABLE_PANEL_SETTINGS . '` WHERE `settinggroup` = \'' . $db->escape($field_details['settinggroup']) . '\' AND `varname` = \'' . $db->escape($field_details['varname']) . '\' ');
-						if(!empty($row))
-						{
+	if (is_array($settings_data)
+		&& isset($settings_data['groups'])
+		&& is_array($settings_data['groups'])
+	) {
+
+		// prepare for use in for-loop
+		$row_stmt = Database::prepare("
+			SELECT `settinggroup`, `varname`, `value`
+			FROM `" . TABLE_PANEL_SETTINGS . "`
+			WHERE `settinggroup` = :group AND `varname` = :varname
+		");
+
+		foreach ($settings_data['groups'] as $settings_part => $settings_part_details) {
+
+			if (is_array($settings_part_details)
+				&& isset($settings_part_details['fields'])
+				&& is_array($settings_part_details['fields'])
+			) {
+
+				foreach ($settings_part_details['fields'] as $field_name => $field_details) {
+
+					if (isset($field_details['settinggroup'])
+						&& isset($field_details['varname'])
+						&& isset($field_details['default'])
+					) {
+						// execute prepared statement
+						$row = Database::pexecute_first($row_stmt, array(
+							'group' => $field_details['settinggroup'],
+							'varname' => $field_details['varname']
+						));
+
+						if (!empty($row)) {
 							$varvalue = $row['value'];
-						}
-						else
-						{
+						} else {
 							$varvalue = $field_details['default'];
 						}
 
 						$settings[$field_details['settinggroup']][$field_details['varname']] = $varvalue;
-					}
-					else
-					{
+
+					} else {
 						$varvalue = false;
 					}
 
@@ -56,5 +79,3 @@ function loadSettings(&$settings_data, $db)
 
 	return $settings;
 }
-
-?>

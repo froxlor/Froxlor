@@ -44,26 +44,26 @@ return array(
 					'listen_statement' => array(
 						'label' => $lng['admin']['ipsandports']['create_listen_statement'],
 						'type' => 'checkbox',
-                        'values' => array(
-                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                    ),
-                        'value' => array($result['listen_statement'])
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['listen_statement'])
 					),
 					'namevirtualhost_statement' => array(
 						'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
 						'type' => 'checkbox',
-                        'values' => array(
-                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                    ),
-                        'value' => array($result['namevirtualhost_statement'])
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['namevirtualhost_statement'])
 					),
 					'vhostcontainer' => array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer'],
 						'type' => 'checkbox',
-                        'values' => array(
-                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                    ),
-                        'value' => array($result['vhostcontainer'])
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['vhostcontainer'])
 					),
 					'docroot' => array(
 						'label' => $lng['admin']['ipsandports']['docroot']['title'],
@@ -83,10 +83,10 @@ return array(
 					'vhostcontainer_servername_statement' => array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
 						'type' => 'checkbox',
-                        'values' => array(
-                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                    ),
-                        'value' => array($result['vhostcontainer_servername_statement'])
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['vhostcontainer_servername_statement'])
 					)
 				)
 			),
@@ -97,7 +97,7 @@ return array(
 					'default_vhostconf_domain' => array(
 						'style' => 'vertical-align:top;',
 						'label' => $lng['admin']['ipsandports']['default_vhostconf_domain'],
-						'desc' => $lng['serversettings']['default_vhostconf']['description'],
+						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12,
@@ -108,15 +108,15 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['ipsandports']['webserverssldomainconfig'],
 				'image' => 'icons/ipsports_edit.png',
-				'visible' => ($settings['system']['use_ssl'] == 1 ? true : false),
+				'visible' => (Settings::Get('system.use_ssl') == 1 ? true : false),
 				'fields' => array(
 					'ssl' => array(
 						'label' => $lng['admin']['ipsandports']['enable_ssl'],
 						'type' => 'checkbox',
-                        'values' => array(
-                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                    ),
-                        'value' => array($result['ssl'])
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['ssl'])
 					),
 					'ssl_cert_file' => array(
 						'label' => $lng['admin']['ipsandports']['ssl_cert_file'],
@@ -134,7 +134,8 @@ return array(
 						'value' => $result['ssl_ca_file']
 					),
 					'ssl_cert_chainfile' => array(
-						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
+						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'],
+						'desc' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'],
 						'type' => 'text',
 						'value' => $result['ssl_cert_chainfile']
 					)

@@ -54,11 +54,12 @@ return array(
 						'select_var' => $subtodomains
 					),
 					'caneditdomain' => array(
-						'label' => $lng['admin']['domain_edit'],
+						'label' => $lng['admin']['domain_editable']['title'],
+						'desc' => $lng['admin']['domain_editable']['desc'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array('1')
 					),
 					'add_date' => array(
@@ -86,55 +87,51 @@ return array(
 						'type' => 'text'
 					),
 					'ipandport' => array(
-						'label' => 'IP/Port',
-						'type' => 'select',
-						'select_var' => $ipsandports,
-						'mandatory' => true,
-					),
-					'ssl' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL',
+						'label' => $lng['domains']['ipandport_multi']['title'],
+						'desc' => $lng['domains']['ipandport_multi']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array()
-					),
-					'ssl_redirect' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL Redirect',
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array()
+						'values' => $ipsandports,
+						'value' => array(Settings::Get('system.defaultip')),
+						'is_array' => 1,
+						'mandatory' => true
 					),
 					'ssl_ipandport' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => 'SSL IP/Port',
-						'type' => 'select',
-						'select_var' => $ssl_ipsandports
+						'label' => $lng['domains']['ipandport_ssl_multi']['title'],
+						'desc' => $lng['domains']['ipandport_ssl_multi']['description'],
+						'type' => 'checkbox',
+						'values' => $ssl_ipsandports,
+						'value' => '',
+						'is_array' => 1
+					),
+					'ssl_redirect' => array(
+						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
+						'label' => $lng['domains']['ssl_redirect']['title'],
+						'desc' => $lng['domains']['ssl_redirect']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array()
 					),
 					'no_ssl_available_info' => array(
-						'visible' => ($settings['system']['use_ssl'] == '1' ? ($ssl_ipsandports == '' ? true : false) : false),
+						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports == '' ? true : false) : false),
 						'label' => 'SSL',
 						'type' => 'label',
 						'value' => $lng['panel']['nosslipsavailable']
 					),
-					'wwwserveralias' => array(
-						'label' => $lng['admin']['wwwserveralias'],
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array('1')
+					'selectserveralias' => array(
+						'label' => $lng['admin']['selectserveralias'],
+						'desc' => $lng['admin']['selectserveralias_desc'],
+						'type' => 'select',
+						'select_var' => $serveraliasoptions
 					),
 					'speciallogfile' => array(
-						'label' => 'Speciallogfile',
+						'label' => $lng['admin']['speciallogfile']['title'],
+						'desc' => $lng['admin']['speciallogfile']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array()
 					),
 					'specialsettings' => array(
@@ -157,31 +154,23 @@ return array(
 						'label' => 'OpenBasedir',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array('1')
-					),
-					'safemode' => array(
-						'label' => 'Safemode',
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array('1')
 					),
 					'phpsettingid' => array(
-						'visible' => ((int)$settings['system']['mod_fcgid'] == 1 ? true : false),
+						'visible' => (((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) ? true : false),
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
 						'select_var' => $phpconfigs
 					),
 					'mod_fcgid_starter' => array(
-						'visible' => ((int)$settings['system']['mod_fcgid'] == 1 ? true : false),
+						'visible' => ((int)Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_starter']['title'],
 						'type' => 'text'
 					),
 					'mod_fcgid_maxrequests' => array(
-						'visible' => ((int)$settings['system']['mod_fcgid'] == 1 ? true : false),
+						'visible' => ((int)Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
 						'type' => 'text'
 					)
@@ -190,14 +179,14 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['nameserversettings'],
 				'image' => 'icons/domain_add.png',
-				'visible' => ($system['system']['bind_enable'] == '1' && $userinfo['change_serversettings'] == '1' ? true : false),
+				'visible' => (Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1' ? true : false),
 				'fields' => array(
 					'isbinddomain' => array(
 						'label' => 'Nameserver',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array('1')
 					),
 					'zonefile' => array(
@@ -215,16 +204,16 @@ return array(
 						'label' => $lng['admin']['emaildomain'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array('1')
 					),
 					'email_only' => array(
 						'label' => $lng['admin']['email_only'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array()
 					),
 					'subcanemaildomain' => array(
@@ -233,12 +222,12 @@ return array(
 						'select_var' => $subcanemaildomain
 					),
 					'dkim' => array(
-						'visible' => ($settings['dkim']['use_dkim'] == '1' ? true : false),
+						'visible' => (Settings::Get('dkim.use_dkim') == '1' ? true : false),
 						'label' => 'DomainKeys',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array('1')
 					)
 				)

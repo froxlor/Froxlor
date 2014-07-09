@@ -1,0 +1,26 @@
+# Configuration for pure-ftpd
+# (this file is sourced by /bin/sh, edit accordingly)
+
+# STANDALONE_OR_INETD
+# valid values are "standalone" and "inetd".
+# Any change here overrides the setting in debconf.
+STANDALONE_OR_INETD=standalone
+
+# VIRTUALCHROOT: 
+# whether to use binary with virtualchroot support
+# valid values are "true" or "false"
+# Any change here overrides the setting in debconf.
+VIRTUALCHROOT=false
+
+# UPLOADSCRIPT: if this is set and the daemon is run in standalone mode,
+# pure-uploadscript will also be run to spawn the program given below
+# for handling uploads. see /usr/share/doc/pure-ftpd/README.gz or
+# pure-uploadscript(8)
+
+# example: UPLOADSCRIPT=/usr/local/sbin/uploadhandler.pl
+UPLOADSCRIPT=
+
+# if set, pure-uploadscript will spawn  running as the
+# given uid and gid
+UPLOADUID=
+UPLOADGID=

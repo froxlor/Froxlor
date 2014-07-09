@@ -23,18 +23,16 @@
  * @param string  path      The path to start searching in
  * @param integer uid       The uid which must match the found directories
  * @param integer gid       The gid which must match the found direcotries
- * @param string  fieldType Either "Manual" or "Dropdown"
  * @param string  value     the value for the input-field
- * 
+ *
  * @return string   The html tag for the choosen $fieldType
  *
  * @author Martin Burchert  <martin.burchert@syscp.de>
  * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
  */
+function makePathfield($path, $uid, $gid, $value = '', $dom = false) {
 
-function makePathfield($path, $uid, $gid, $fieldType, $value = '', $dom = false)
-{
-	global $lng, $theme;
+	global $lng;
 
 	$value = str_replace($path, '', $value);
 	$field = array();
@@ -47,41 +45,34 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '', $dom = false)
 		$value = '/'.$value;
 	}
 
-	if($fieldType == 'Manual')
-	{
+	$fieldType = Settings::Get('panel.pathedit');
+
+	if ($fieldType == 'Manual') {
+
 		$field = array(
 			'type' => 'text',
 			'value' => htmlspecialchars($value)
 		);
-		
-	}
-	elseif($fieldType == 'Dropdown')
-	{
+
+	} elseif($fieldType == 'Dropdown') {
+
 		$dirList = findDirs($path, $uid, $gid);
-		
 		natcasesort($dirList);
 
-		if(sizeof($dirList) > 0)
-		{
-			if(sizeof($dirList) <= 100)
-			{
+		if (sizeof($dirList) > 0) {
+			if (sizeof($dirList) <= 100) {
 				$_field = '';
-				foreach($dirList as $key => $dir)
-				{
-					if(strpos($dir, $path) === 0)
-					{
+				foreach ($dirList as $key => $dir) {
+					if (strpos($dir, $path) === 0) {
 						$dir = makeCorrectDir(substr($dir, strlen($path)));
 					}
-	
 					$_field.= makeoption($dir, $dir, $value);
 				}
 				$field = array(
 					'type' => 'select',
 					'value' => $_field
 				);
-			}
-			else
-			{
+			} else {
 				// remove starting slash we added
 				// for the Dropdown, #225
 				$value = substr($value, 1);
@@ -92,9 +83,7 @@ function makePathfield($path, $uid, $gid, $fieldType, $value = '', $dom = false)
 					'note' => $lng['panel']['toomanydirs']
 				);
 			}
-		}
-		else
-		{
+		} else {
 			//$field = $lng['panel']['dirsmissing'];
 			//$field = '<input type="hidden" name="path" value="/" />';
 			$field = array(

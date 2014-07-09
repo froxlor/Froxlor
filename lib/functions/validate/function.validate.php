@@ -31,12 +31,11 @@
  *
  */
 
-function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array())
-{
+function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array()) {
+
 	global $log, $theme;
 
-	if(!is_array($emptydefault))
-	{
+	if (!is_array($emptydefault)) {
 		$emptydefault_array = array(
 			$emptydefault
 		);
@@ -46,37 +45,32 @@ function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = ar
 	}
 
 	// Check if the $str is one of the values which represent the default for an 'empty' value
-
-	if(is_array($emptydefault)
+	if (is_array($emptydefault)
 	   && !empty($emptydefault)
 	   && in_array($str, $emptydefault)
-	   && isset($emptydefault[0]))
-	{
+	   && isset($emptydefault[0])
+	) {
 		return $emptydefault[0];
 	}
 
-	if($pattern == '')
-	{
+	if ($pattern == '') {
+
 		$pattern = '/^[^\r\n\t\f\0]*$/D';
 
-		if(!preg_match($pattern, $str))
-		{
+		if (!preg_match($pattern, $str)) {
 			// Allows letters a-z, digits, space (\\040), hyphen (\\-), underscore (\\_) and backslash (\\\\),
 			// everything else is removed from the string.
-
 			$allowed = "/[^a-z0-9\\040\\.\\-\\_\\\\]/i";
-			preg_replace($allowed, "", $str);
-			$log->logAction(null, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
+			$str = preg_replace($allowed, "", $str);
+			$log->logAction(USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
 		}
 	}
 
-	if(preg_match($pattern, $str))
-	{
+	if (preg_match($pattern, $str)) {
 		return $str;
 	}
 
-	if($lng == '')
-	{
+	if ($lng == '') {
 		$lng = 'stringformaterror';
 	}
 

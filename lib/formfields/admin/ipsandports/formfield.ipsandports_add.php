@@ -43,24 +43,24 @@ return array(
 						'label' => $lng['admin']['ipsandports']['create_listen_statement'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array('1')
 					),
 					'namevirtualhost_statement' => array(
 						'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array('1')
 					),
 					'vhostcontainer' => array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array('1')
 					),
 					'docroot' => array(
@@ -80,8 +80,8 @@ return array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array('1')
 					)
 				)
@@ -93,7 +93,7 @@ return array(
 					'default_vhostconf_domain' => array(
 						'style' => 'vertical-align:top;',
 						'label' => $lng['admin']['ipsandports']['default_vhostconf_domain'],
-						'desc' => $lng['serversettings']['default_vhostconf']['description'],
+						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12
@@ -103,14 +103,14 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['ipsandports']['webserverssldomainconfig'],
 				'image' => 'icons/ipsports_add.png',
-				'visible' => ($settings['system']['use_ssl'] == 1 ? true : false),
+				'visible' => (Settings::Get('system.use_ssl') == 1 ? true : false),
 				'fields' => array(
 					'ssl' => array(
 						'label' => $lng['admin']['ipsandports']['enable_ssl'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
 						'value' => array()
 					),
 					'ssl_cert_file' => array(
@@ -126,7 +126,8 @@ return array(
 						'type' => 'text'
 					),
 					'ssl_cert_chainfile' => array(
-						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
+						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'],
+						'desc' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'],
 						'type' => 'text'
 					)
 				)

@@ -70,7 +70,6 @@ $lng['customer']['forwarders'] = 'E-post_skicka_vidare';
 $lng['customer']['ftps'] = 'FTP_Kto';
 $lng['customer']['subdomains'] = 'Sub-Domäner';
 $lng['customer']['domains'] = 'Domäner';
-$lng['customer']['unlimited'] = 'Obegränsad';
 
 /**
  * Customermenue
@@ -167,14 +166,6 @@ $lng['extras']['view_directory'] = 'Visa kataloginnehåll';
 $lng['extras']['pathoptions_add'] = '[Skapa ny regel för sökvägar]';
 $lng['extras']['directory_browsing'] = 'Visning av katalogstruktur';
 $lng['extras']['pathoptions_edit'] = 'Ändra sökvägsinställningar';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
-$lng['extras']['errordocument404path'] = 'URL to ErrorDocument 404';
-$lng['extras']['errordocument403path'] = 'URL to ErrorDocument 403';
-$lng['extras']['errordocument500path'] = 'URL to ErrorDocument 500';
-$lng['extras']['errordocument401path'] = 'URL to ErrorDocument 401';
 
 /**
  * Errors
@@ -191,7 +182,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'Du måste radera alla sub-domäner 
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Du har redan skapat en maildump för denna domän.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'Det går inte att radera huvud FTP kontot för domänen';
 $lng['error']['login'] = 'Användarnamnet eller lösenordet var felaktigt, försök igen!';
-$lng['error']['login_blocked'] = 'Kontot har blivit avstängt på grund av för många felaktiga inloggningsförsök. <br />Försök igen om ' . $settings['login']['deactivatetime'] . ' sekunder.';
+$lng['error']['login_blocked'] = 'Kontot har blivit avstängt på grund av för många felaktiga inloggningsförsök. <br />Försök igen om %s sekunder.';
 $lng['error']['notallreqfieldsorerrors'] = 'Du har inte fyllt i alla fält eller så har du skrivit in något som inte accepteras.';
 $lng['error']['oldpasswordnotcorrect'] = 'Det gamla lösenordet är fel.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Du kan inte skapa fler resurser än du äger själv (You cannot allocate more resources than you own for yourself).';
@@ -199,15 +190,7 @@ $lng['error']['mustbeurl'] = 'Du har inte skrivit in en korrekt url (e.g. http:/
 $lng['error']['invalidpath'] = 'Du har inte valt en korrekt url (Kanske har du lagt till en katalogsäkerhet så att katalogerna inte kan visas?)';
 $lng['error']['stringisempty'] = 'Du måste skriva in något i fältet';
 $lng['error']['stringiswrong'] = 'Fel inatningsfält';
-$lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
-$lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
-$lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';
-$lng['error']['newpassword'] = '\'' . $lng['changepassword']['new_password'] . '\'';
-$lng['error']['newpasswordconfirm'] = '\'' . $lng['changepassword']['new_password_confirm'] . '\'';
 $lng['error']['newpasswordconfirmerror'] = 'New password and confirmation does not match';
-$lng['error']['myname'] = '\'' . $lng['customer']['name'] . '\'';
-$lng['error']['myfirstname'] = '\'' . $lng['customer']['firstname'] . '\'';
-$lng['error']['emailadd'] = '\'' . $lng['customer']['email'] . '\'';
 $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Login-Name %s är upptaget';
@@ -234,7 +217,6 @@ $lng['error']['destinationnonexist'] = 'Skapa en forwarder i fältet \'Destinati
 $lng['error']['destinationalreadyexistasmail'] = 'Denna forwarder %s, finns redan som aktiv E-postadress.';
 $lng['error']['destinationalreadyexist'] = 'Du har redan skapat en forwarder till %s .';
 $lng['error']['destinationiswrong'] = 'Denna forwarder: %s innehåller ogiltiga tecken eller så är den inte komplett adress.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 
 /**
  * Questions
@@ -386,8 +368,6 @@ $lng['mysql']['description'] = 'Här ändras eller skapas MySQL-Databaser.<br />
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
-
-$lng['admin']['cronlastrun'] = 'Konfigurerinsfilerna skapades sist';
 $lng['serversettings']['paging']['title'] = 'Antal rader per sida';
 $lng['serversettings']['paging']['description'] = 'Hur många rader skall det vara på en sida? (0 = Stäng av sidbrytning)';
 $lng['error']['ipstillhasdomains'] = 'IP/Port kombinationen som du vill radera har fortfarande domäner anslutna till sig, Flytta dessa till någon annan IP/Port kombination innan du raderar denna IP/Port kombination.';
@@ -401,9 +381,6 @@ $lng['question']['admin_ip_reallydelete'] = 'Är du säker på att du vill rader
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs and Ports';
 $lng['admin']['ipsandports']['add'] = '[Lägg till IP/Port]';
 $lng['admin']['ipsandports']['edit'] = 'Ändra IP/Port';
-$lng['admin']['ipsandports']['ipandport'] = 'IP/Port';
-$lng['admin']['ipsandports']['ip'] = 'IP';
-$lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
 
@@ -494,10 +471,6 @@ $lng['question']['admin_counters_reallyupdate'] = 'Vill du uppdatera alla status
 $lng['panel']['pathDescription'] = 'Katalogen kommer att skapas om den inte redan finns.';
 
 // ADDED IN 1.2.16-svn6
-
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Varning {NAME},\n\nDu har nu använt {TRAFFICUSED} MB av ditt tillgängliga {TRAFFIC} MB för trafik.\nDetta är mer än 90%.\n\nHälsningar, Froxlor team';
-$lng['mails']['trafficninetypercent']['subject'] = 'Du är på väg att nå din tillåtna trafikgräns';
-$lng['admin']['templates']['trafficninetypercent'] = 'Meddelande till kund när mer än nittio procent av trafiken utnyttjas';
 $lng['admin']['templates']['TRAFFIC'] = 'Ersatt med trafikbegrnsningen som var tilldelad till kunden.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Ersatt med trafikbegrnsningen som var överskriden av kunden.';
 
@@ -517,19 +490,8 @@ $lng['serversettings']['mailpwcleartext']['removelink'] = 'Klicka här för att 
 $lng['question']['admin_cleartextmailpws_reallywipe'] = 'Är du säker på att du vill radera alla okrupterade lösenord från tabellen mail_users? Du kan INTE ändra dig efteråt!';
 $lng['admin']['configfiles']['overview'] = 'Översikt';
 $lng['admin']['configfiles']['wizard'] = 'Guide';
-$lng['admin']['configfiles']['distribution'] = 'Distribution';
-$lng['admin']['configfiles']['service'] = 'Service';
-$lng['admin']['configfiles']['daemon'] = 'Daemon';
-$lng['admin']['configfiles']['http'] = 'Webserver (HTTP)';
-$lng['admin']['configfiles']['dns'] = 'Namnserver (DNS)';
 $lng['admin']['configfiles']['mail'] = 'E-postserver (POP3/IMAP)';
 $lng['admin']['configfiles']['smtp'] = 'E-postserver (SMTP)';
-$lng['admin']['configfiles']['ftp'] = 'FTP-Server';
-$lng['admin']['configfiles']['etc'] = 'Others (System)';
-$lng['admin']['configfiles']['choosedistribution'] = '-- Choose a distribution --';
-$lng['admin']['configfiles']['chooseservice'] = '-- Choose a service --';
-$lng['admin']['configfiles']['choosedaemon'] = '-- Choose a daemon --';
-$lng['admin']['trafficlastrun'] = 'Senaste trafikberäkningen gjordes';
 
 // ADDED IN 1.2.16-svn10
 
@@ -539,8 +501,6 @@ $lng['panel']['back'] = 'Tillbaka';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_log_sql']['title'] = 'Tillfälligt spara loggfiler i databasen';
-$lng['serversettings']['mod_log_sql']['description'] = 'Använd <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> för att spara webfrågor tillfälligt<br /><b>Detta behöver en special <a href="http://files.syscp.org/docs/mod_log_sql/" title="mod_log_sql - documentation">apache-configuration</a>!</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Inkludera PHP via mod_fcgid/suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Använd mod_fcgid/suexec/libnss_mysql för att köra PHP med tillhörande användarkonto.<br/><b>Denna inställning behöver en speciell apache-konfiguration!</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Använd en alternativ E-postadress';
@@ -567,7 +527,6 @@ $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Var skall htp
 // ADDED IN 1.2.16-svn15
 
 $lng['error']['formtokencompromised'] = 'Den säkra anslutningen till Froxlor har avslutats och du har av säkerhetsskäl automatiskt loggats ur.';
-$lng['serversettings']['mysql_access_host']['title'] = 'MySQL-Access-Hosts';
 $lng['serversettings']['mysql_access_host']['description'] = 'En kommaseparerad lista med datornamn som tillåts att kontakta MySQL servern.';
 
 // ADDED IN 1.2.18-svn1
@@ -583,8 +542,6 @@ $lng['admin']['webalizersettings'] = 'Webalizer inställningar';
 $lng['admin']['webalizer']['normal'] = 'Normal';
 $lng['admin']['webalizer']['quiet'] = 'Tyst';
 $lng['admin']['webalizer']['veryquiet'] = 'Väldigt tyst';
-$lng['serversettings']['webalizer_quiet']['title'] = 'Webalizer output';
-$lng['serversettings']['webalizer_quiet']['description'] = 'Verbosity of the webalizer-program';
 
 // ADDED IN 1.2.18-svn3
 
@@ -611,9 +568,6 @@ $lng['ticket']['priority'] = 'Prioritet';
 $lng['ticket']['low'] = '<span class="Ärende_låg">Låg</span>';
 $lng['ticket']['normal'] = '<span class="Ärende_norm">Normal</span>';
 $lng['ticket']['high'] = '<span class="Ärende_hög">Hög</span>';
-$lng['ticket']['unf_low'] = 'Låg';
-$lng['ticket']['unf_normal'] = 'Normal';
-$lng['ticket']['unf_high'] = 'Hög';
 $lng['ticket']['lastchange'] = 'Ändrad';
 $lng['ticket']['lastchange_from'] = 'Från datum (dd.mm.yyyy)';
 $lng['ticket']['lastchange_to'] = 'Till datum (dd.mm.yyyy)';
@@ -664,13 +618,9 @@ $lng['question']['ticket_reallyclose'] = 'Är du säker på att du vill stänga 
 $lng['question']['ticket_reallydelete'] = 'Är du säker på att du vill radera supportärendet "%s"?';
 $lng['question']['ticket_reallydeletecat'] = 'Är du säker på att du vill radera kategorin "%s"?';
 $lng['question']['ticket_reallyarchive'] = 'Är du säker på att du vill flytta supportärendet "%s" till arkivet?';
-$lng['error']['mysubject'] = '\'' . $lng['ticket']['subject'] . '\'';
-$lng['error']['mymessage'] = '\'' . $lng['ticket']['message'] . '\'';
-$lng['error']['mycategory'] = '\'' . $lng['ticket']['category'] . '\'';
 $lng['error']['nomoreticketsavailable'] = 'Du har redan använt alla supportärenden som du fått tilldelade. Kontakta administratören om du behöver fler.';
 $lng['error']['nocustomerforticket'] = 'Det går inte att skapa ett supportärende utan kunder';
 $lng['error']['categoryhastickets'] = 'Denna kategori har fortfarande supportärenden.<br />Du måste radera dessa ärenden innan du kan radera denna kategori';
-$lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
 $lng['admin']['ticketsettings'] = 'Supportärende inställningar';
 $lng['admin']['archivelastrun'] = 'Sista supportärende som arkiverats';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Svara-Inte E-post adress';
@@ -738,5 +688,3 @@ $lng['traffic']['distribution'] = '<font color="#019522">FTP</font> | <font colo
 $lng['traffic']['sumhttp'] = 'Summa HTTP-Trafik i';
 $lng['traffic']['sumftp'] = 'Summa FTP-Trafik i';
 $lng['traffic']['summail'] = 'Summa E-posttrafik i';
-
-?>

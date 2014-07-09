@@ -26,38 +26,23 @@
  *
  * @author Florian Lippert <flo@syscp.org>
  */
-
-function isConfigDir($dir, $ifexists = false)
-{
-	if(file_exists($dir))
-	{
-		if(is_dir($dir))
-		{
+function isConfigDir($dir, $ifexists = false) {
+	if (file_exists($dir)) {
+		if (is_dir($dir)) {
 			$returnval = true;
-		}
-		else
-		{
+		} else {
 			$returnval = false;
 		}
-	}
-	else
-	{
-		if(!$ifexists)
-		{
-			if(substr($dir, -1) == '/')
-			{
+	} else {
+		if (!$ifexists) {
+			if (substr($dir, -1) == '/') {
 				$returnval = true;
-			}
-			else
-			{
+			} else {
 				$returnval = false;
 			}
-		}
-		else
-		{
+		} else {
 			$returnval = false;
 		}
 	}
-
 	return $returnval;
 }

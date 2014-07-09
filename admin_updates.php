@@ -16,26 +16,24 @@
  */
 
 define('AREA', 'admin');
-require ("./lib/init.php");
+require './lib/init.php';
 
-if($page == 'overview')
-{
+if ($page == 'overview') {
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
 
 	/**
 	 * this is a dirty hack but syscp 1.4.2.1 does not
-	 * has any version/dbversion in the database (don't know why)
+	 * have any version/dbversion in the database (don't know why)
 	 * so we have to set them both to run a correct upgrade
 	 */
 	if (!isFroxlor()) {
-		if (!isset($settings['panel']['version'])
-		|| $settings['panel']['version'] == ''
+		if (Settings::Get('panel.version') == null
+			|| Settings::Get('panel.version') == ''
 		) {
-			$settings['panel']['version'] = '1.4.2.1';
-			$db->query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel','version','".$settings['panel']['version']."')");
+			Settings::Set('panel.version', '1.4.2.1');
 		}
-		if (!isset($settings['system']['dbversion'])
-		|| $settings['system']['dbversion'] == ''
+		if (Settings::Get('system.dbversion') == null
+			|| Settings::Get('system.dbversion') == ''
 		) {
 			/**
 			 * for syscp-stable (1.4.2.1) this value has to be 0
@@ -43,82 +41,70 @@ if($page == 'overview')
 			 * and the svn-version has its value in the database
 			 * -> bug #54
 			 */
-			
-			$result = $db->query_first("SELECT `value` FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `varname` = 'dbversion'");
-			
-			if(isset($result['value']))
-			{
-				$settings['system']['dbversion'] = (int)$result['value'];
+			$result_stmt = Database::query("
+				SELECT `value` FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `varname` = 'dbversion'"
+			);
+			$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
+			if (isset($result['value'])) {
+				Settings::Set('system.dbversion', (int)$result['value'], false);
 			} else {
-				$settings['system']['dbversion'] = 0;
+				Settings::Set('system.dbversion', 0, false);
 			}
 		}
 	}
 
-	if(hasUpdates($version))
-	{
+	if (hasUpdates($version)) {
 		$successful_update = false;
 		$message = '';
 
-		if(isset($_POST['send'])
-		&& $_POST['send'] == 'send')
-		{
-			if((isset($_POST['update_preconfig'])
+		if (isset($_POST['send'])
+			&& $_POST['send'] == 'send'
+		) {
+			if ((isset($_POST['update_preconfig'])
 				&& isset($_POST['update_changesagreed'])
 				&& intval($_POST['update_changesagreed']) != 0)
 				|| !isset($_POST['update_preconfig'])
 			) {
-				eval("echo \"" . getTemplate("update/update_start") . "\";");
+				eval("echo \"" . getTemplate('update/update_start') . "\";");
 	
 				include_once './install/updatesql.php';
 	
 				$redirect_url = 'admin_index.php?s=' . $s;
-				eval("echo \"" . getTemplate("update/update_end") . "\";");
+				eval("echo \"" . getTemplate('update/update_end') . "\";");
 	
 				updateCounters();
 				inserttask('1');
 				@chmod('./lib/userdata.inc.php', 0440);
 				
 				$successful_update = true;
-			}
-			else
-			{
-				$message = '<br /><strong style="color:#ff0000;">You have to agree that you have read the update notifications.</strong>';
+			} else {
+				$message = '<br /><strong style="color: red">You have to agree that you have read the update notifications.</strong>';
 			}
 		}
 
-		if(!$successful_update)
-		{
-			$current_version = $settings['panel']['version'];
+		if (!$successful_update) {
+			$current_version = Settings::Get('panel.version');
 			$new_version = $version;
 
 			$ui_text = $lng['update']['update_information']['part_a'];
 			$ui_text = str_replace('%curversion', $current_version, $ui_text);
 			$ui_text = str_replace('%newversion', $new_version, $ui_text);
 			$update_information = $ui_text;
-			
+
 			include_once './install/updates/preconfig.php';
 			$preconfig = getPreConfig($current_version);
-			if($preconfig != '')
-			{
-				$update_information .= '<br />'.$preconfig.$message;
+			if ($preconfig != '') {
+				$update_information .= '<br />' . $preconfig . $message;
 			}
-			
+
 			$update_information .= $lng['update']['update_information']['part_b'];
 
-			eval("echo \"" . getTemplate("update/index") . "\";");
+			eval("echo \"" . getTemplate('update/index') . "\";");
 		}
-	}
-	else
-	{
-		/*
-		 * @TODO version-webcheck check here
-		 */
-
+	} else {
 		$success_message = $lng['update']['noupdatesavail'];
 		$redirect_url = 'admin_index.php?s=' . $s;
-		eval("echo \"" . getTemplate("update/noupdatesavail") . "\";");
+		eval("echo \"" . getTemplate('update/noupdatesavail') . "\";");
 	}
 }
-
-?>

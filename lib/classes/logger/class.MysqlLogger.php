@@ -20,94 +20,92 @@
  * Logger - MySQL-Logger-Class
  */
 
-class MysqlLogger extends AbstractLogger
-{
+class MysqlLogger extends AbstractLogger {
+
 	/**
 	 * Userinfo
 	 * @var array
 	 */
-
 	private $userinfo = array();
-
-	/**
-	 * Database handler
-	 * @var db
-	 */
-
-	private $db = false;
 
 	/**
 	 * Syslogger Objects Array
 	 * @var loggers
 	 */
-
 	static private $loggers = array();
 
 	/**
 	 * Class constructor.
 	 *
 	 * @param array userinfo
-	 * @param array settings
-	 * @param resource database
 	 */
-
-	protected function __construct($userinfo, $settings, $db)
-	{
-		parent::setupLogger($settings);
+	protected function __construct($userinfo) {
+		parent::setupLogger();
 		$this->userinfo = $userinfo;
-		$this->db = $db;
 	}
 
 	/**
 	 * Singleton ftw ;-)
-	 *
 	 */
-
-	static public function getInstanceOf($_usernfo, $_settings, $_db)
-	{
-		if(!isset(self::$loggers[$_usernfo['loginname']]))
-		{
-			self::$loggers[$_usernfo['loginname']] = new MysqlLogger($_usernfo, $_settings, $_db);
+	static public function getInstanceOf($_usernfo) {
+		if (!isset(self::$loggers[$_usernfo['loginname']])) {
+			self::$loggers[$_usernfo['loginname']] = new MysqlLogger($_usernfo);
 		}
-
 		return self::$loggers[$_usernfo['loginname']];
 	}
 
-	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null)
-	{
-		if(parent::isEnabled())
-		{
-			if(parent::getSeverity() <= 1
-			   && $type == LOG_NOTICE)
-			{
+	/**
+	 * logs a given text to all enabled logger-facilities
+	 *
+	 * @param int $action
+	 * @param int $type
+	 * @param string $text
+	 */
+	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
+
+		if (parent::isEnabled()) {
+
+			if (parent::getSeverity() <= 1
+			   && $type == LOG_NOTICE
+			) {
 				return;
 			}
 
-			if(!isset($this->userinfo['loginname'])
-			   || $this->userinfo['loginname'] == '')
-			{
+			if (!isset($this->userinfo['loginname'])
+			   || $this->userinfo['loginname'] == ''
+			) {
 				$name = 'unknown';
-			}
-			else
-			{
-				$name = " (" . $this->userinfo['loginname'] . ")";
+			} else {
+				$name = $this->userinfo['loginname'];
 			}
 
 			$now = time();
 
-			if($text != null
-			   && $text != '')
-			{
-				$this->db->query("INSERT INTO `panel_syslog` (`type`, `date`, `action`, `user`, `text`)
-                          VALUES ('" . (int)$type . "', '" . $now . "', '" . (int)$action . "', '" . $this->db->escape($name) . "', '" . $this->db->escape($text) . "')");
-			}
-			else
-			{
-				$this->db->query("INSERT INTO `panel_syslog` (`type`, `date`, `action`, `userid`, `text`)
-                          VALUES ('" . (int)$type . "', '" . $now . "', '" . (int)$action . "', '" . $this->db->escape($name) . "', 'No text given!!! Check scripts!')");
+			$stmt = Database::prepare("
+					INSERT INTO `panel_syslog` SET
+					`type` = :type,
+					`date` = :now,
+					`action` = :action,
+					`user` = :user,
+					`text` = :text"
+			);
+
+			$ins_data = array(
+					'type' => $type,
+					'now' => $now,
+					'action' => $action,
+					'user' => $name
+			);
+
+			if ($text != null
+			   && $text != ''
+			) {
+				$ins_data['text'] = $text;
+				Database::pexecute($stmt, $ins_data);
+			} else {
+				$ins_data['text'] = 'No text given!!! Check scripts!';
+				Database::pexecute($stmt, $ins_data);
 			}
 		}
 	}
 }
-
-?>

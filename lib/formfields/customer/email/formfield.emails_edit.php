@@ -43,10 +43,10 @@ return array(
 						'value' => $lng['panel']['no'].'&nbsp;[<a href="'.$filename.'?page=accounts&amp;action=add&amp;id='.$result['id'].'&amp;s='.$s.'">'.$lng['emails']['account_add'].'</a>]'
 					),
 					'mail_quota' => array(
-						'visible' => ($result['popaccountid'] != 0 && $settings['system']['mail_quota_enabled']),
+						'visible' => ($result['popaccountid'] != 0 && Settings::Get('system.mail_quota_enabled')),
 						'label' => $lng['customer']['email_quota'],
 						'type' => 'label',
-						'value' => $result['quota'].' '.$lng['panel']['megabyte'].' [<a href="'.$filename.'?page=accounts&amp;action=changequota&amp;id='.$result['id'].'&amp;s='.$s.'">'.$lng['emails']['quota_edit'].'</a>]'
+						'value' => $result['quota'].' MiB [<a href="'.$filename.'?page=accounts&amp;action=changequota&amp;id='.$result['id'].'&amp;s='.$s.'">'.$lng['emails']['quota_edit'].'</a>]'
 					),
 					'mail_catchall' => array(
 						'label' => $lng['emails']['catchall'],

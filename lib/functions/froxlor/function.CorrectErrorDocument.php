@@ -15,56 +15,47 @@
  *
  */
 
-/*
+/**
  * this functions validates a given value as ErrorDocument
  * refs #267
- * 
+ *
  * @param string error-document-string
- * 
+ *
  * @return string error-document-string
- * 
+ *
  */
- function correctErrorDocument($errdoc = null)
- {
- 	global $settings, $idna_convert, $theme;
+function correctErrorDocument($errdoc = null) {
 
- 	if($errdoc !== null && $errdoc != '')
- 	{
- 		// not a URL
- 		if((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:' 
- 			&& strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:')
- 			|| !validateUrl($idna_convert->encode($errdoc)))
- 		{
- 			// a file
- 			if(substr($errdoc, 0, 1) != '"')
- 			{
- 				$errdoc = makeCorrectFile($errdoc);
- 				// apache needs a starting-slash (starting at the domains-docroot)
- 				if(!substr($errdoc, 0, 1) == '/') {
- 					$errdoc = '/'.$errdoc;
- 				}
- 			}
- 			// a string (check for ending ")
- 			else
- 			{
- 				// string won't work for lighty
- 				if($settings['system']['webserver'] == 'lighttpd')
- 				{
- 					standard_error('stringerrordocumentnotvalidforlighty');
- 				}
- 				elseif(substr($errdoc, -1) != '"')
- 				{
- 					$errdoc .= '"';
- 				}
- 			}
- 		}
- 		else
- 		{
- 		 	if($settings['system']['webserver'] == 'lighttpd')
- 			{
- 				standard_error('urlerrordocumentnotvalidforlighty');
- 			}
- 		}
- 	}
- 	return $errdoc;
- }
+	global $idna_convert;
+
+	if ($errdoc !== null && $errdoc != '') {
+		// not a URL
+		if ((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:'
+				&& strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:')
+				|| !validateUrl($idna_convert->encode($errdoc))
+		) {
+			// a file
+			if (substr($errdoc, 0, 1) != '"') {
+				$errdoc = makeCorrectFile($errdoc);
+				// apache needs a starting-slash (starting at the domains-docroot)
+				if (!substr($errdoc, 0, 1) == '/') {
+					$errdoc = '/'.$errdoc;
+				}
+			}
+			// a string (check for ending ")
+			else {
+				// string won't work for lighty
+				if (Settings::Get('system.webserver') == 'lighttpd') {
+					standard_error('stringerrordocumentnotvalidforlighty');
+				} elseif(substr($errdoc, -1) != '"') {
+					$errdoc .= '"';
+				}
+			}
+		} else {
+			if (Settings::Get('system.webserver') == 'lighttpd') {
+				standard_error('urlerrordocumentnotvalidforlighty');
+			}
+		}
+	}
+	return $errdoc;
+}

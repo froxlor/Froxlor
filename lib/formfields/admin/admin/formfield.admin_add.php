@@ -173,17 +173,9 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => ($settings['system']['mail_quota_enabled'] == '1' ? true : false),
+						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'mandatory' => true,
 						'ul_field' => $email_quota_ul
-					),
-					'email_autoresponder' => array(
-						'label' => $lng['customer']['autoresponder'],
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'visible' => ($settings['autoresponder']['autoresponder_active'] == '1' ? true : false),
-						'ul_field' => $email_autoresponder_ul
 					),
 					'ftps' => array(
 						'label' => $lng['customer']['ftps'],
@@ -197,8 +189,16 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => ($settings['ticket']['enabled'] == '1' ? true : false),
+						'visible' => (Settings::Get('ticket.enabled') == '1' ? true : false),
 						'ul_field' => $tickets_ul
+					),
+					'tickets_see_all' => array(
+						'label' => $lng['admin']['tickets_see_all'],
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
 					),
 					'mysqls' => array(
 						'label' => $lng['customer']['mysqls'],
@@ -207,23 +207,6 @@ return array(
 						'maxlength' => 9,
 						'mandatory' => true,
 						'ul_field' => $mysqls_ul
-					),
-					'can_manage_aps_packages' => array(
-						'label' => $lng['aps']['canmanagepackages'],
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array(),
-						'visible' => ($settings['aps']['aps_active'] == '1' ? true : false)
-					),
-					'number_of_aps_packages' => array(
-						'label' => $lng['aps']['numberofapspackages'],
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'visible' => ($settings['aps']['aps_active'] == '1' ? true : false),
-						'ul_field' => $number_of_aps_packages_ul
 					)
 				)
 			)

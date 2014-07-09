@@ -24,20 +24,31 @@
  * @return string The corrected path
  * @author Florian Lippert <flo@syscp.org>
  */
+function makeSecurePath($path) {
 
-function makeSecurePath($path)
-{
-	$search = Array(
+	$search = array(
 		'#/+#',
 		'#\.+#',
 		'#\0+#'
 	);
-	$replace = Array(
+	$replace = array(
 		'/',
 		'.',
 		''
 	);
 	$path = preg_replace($search, $replace, $path);
+	// don't just replace a space with an escaped space
+	// it might be escaped already
+	$path = str_replace("\ ", " ", $path);
 	$path = str_replace(" ", "\ ", $path);
+
+	// check for bad characters, some are allowed with escaping
+	// but we generally don't want them in our directory-names,
+	// thx to aaronmueller for this snipped
+	$badchars = array(':', ';', '|', '&', '>', '<', '`', '$', '~', '?');
+	foreach ($badchars as $bc) {
+		str_replace($bc, "", $path);
+	}
+
 	return $path;
 }

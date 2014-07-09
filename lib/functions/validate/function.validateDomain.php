@@ -22,7 +22,7 @@
  * it consists only of the following characters ([a-z0-9][a-z0-9\-]+\.)+[a-z]{2,4}
  *
  * @param string The domainname which should be checked.
- * @return boolean True if the domain is valid, false otherwise
+ * @return string|boolean the domain-name if the domain is valid, false otherwise
  * @author Florian Lippert <flo@syscp.org>
  * @author Michael Duergner
  *
@@ -42,7 +42,7 @@ function validateDomain($domainname)
 	// a dash (-) in it. As the PHP_VERSION constant
 	// gives also patch-brandings, e.g. '5.3.2-pl0-gentoo'
 	// we just always use our regex
-	$pattern = '/^http:\/\/([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,6}$/i';
+	$pattern = '/^http:\/\/([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z0-9\-]{2,63}$/i';
 	if(preg_match($pattern, $domainname_tmp))
 	{	
 		return $domainname;

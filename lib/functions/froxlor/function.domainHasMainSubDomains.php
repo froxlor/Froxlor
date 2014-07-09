@@ -23,13 +23,15 @@
  *  
  *  @return boolean
  */
-function domainHasMainSubDomains($id = 0)
-{
-	global $db, $theme;
+function domainHasMainSubDomains($id = 0) {
 	
-	$sql = "SELECT COUNT(`id`) as `mainsubs` FROM `".TABLE_PANEL_DOMAINS."` WHERE `ismainbutsubto` = '".(int)$id."'";
-	$result = $db->query_first($sql);
-	if(isset($result['mainsubs'])
+	$result_stmt = Database::prepare("
+		SELECT COUNT(`id`) as `mainsubs` FROM `".TABLE_PANEL_DOMAINS."`
+		WHERE `ismainbutsubto` = :id"
+	);
+	$result = Database::pexecute_first($result_stmt, array('id' => $id));
+
+	if (isset($result['mainsubs'])
 		&& $result['mainsubs'] > 0
 	) {
 		return true;
@@ -45,13 +47,15 @@ function domainHasMainSubDomains($id = 0)
  *  
  *  @return boolean
  */
-function domainMainToSubExists($id = 0)
-{
-	global $db, $theme;
+function domainMainToSubExists($id = 0) {
 	
-	$sql = "SELECT `id` FROM `".TABLE_PANEL_DOMAINS."` WHERE `id` = '".(int)$id."'";
-	$result = $db->query_first($sql);
-	if(isset($result['id'])
+	$result_stmt = Database::prepare("
+		SELECT `id` FROM `".TABLE_PANEL_DOMAINS."` WHERE `id` = :id"
+	);
+	Database::pexecute($result_stmt, array('id' => $id));
+	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
+	if (isset($result['id'])
 		&& $result['id'] > 0
 	) {
 		return true;

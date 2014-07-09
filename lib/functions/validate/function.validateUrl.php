@@ -23,56 +23,52 @@
  * @param string URL to be tested
  * @return bool
  * @author Christian Hoffmann
+ * @author Froxlor team <team@froxlor.org> (2010-)
  *
  */
+function validateUrl($url) {
 
-function validateUrl($url)
-{
 	global $idna_convert, $theme;
 
-	if(strtolower(substr($url, 0, 7)) != "http://"
-	&& strtolower(substr($url, 0, 8)) != "https://")
-	{
+	if (strtolower(substr($url, 0, 7)) != "http://"
+			&& strtolower(substr($url, 0, 8)) != "https://"
+	) {
 		$url = 'http://' . $url;
 	}
-	
+
 	// needs converting
 	$url = $idna_convert->encode($url);
 
 	$pattern = "/^https?:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,4}(\:[0-9]+)?\/?(.+)?$/i";
-	if(preg_match($pattern, $url))
-	{
+	if (preg_match($pattern, $url)) {
 		return true;
 	}
 
 	// not an fqdn
-	if(strtolower(substr($url, 0, 7)) == "http://"
-		|| strtolower(substr($url, 0, 8)) == "https://")
-	{
-		if(strtolower(substr($url, 0, 7)) == "http://")
-		{
+	if (strtolower(substr($url, 0, 7)) == "http://"
+			|| strtolower(substr($url, 0, 8)) == "https://"
+	) {
+		if (strtolower(substr($url, 0, 7)) == "http://") {
 			$ip = strtolower(substr($url, 7));
 		}
 
-		if(strtolower(substr($url, 0, 8)) == "https://")
-		{
+		if (strtolower(substr($url, 0, 8)) == "https://") {
 			$ip = strtolower(substr($url, 8));
 		}
 
 		$ip = substr($ip, 0, strpos($ip, '/'));
-
-		if(validate_ip($ip, true) !== false)
-		{
-			return true;
+		// possible : in IP (when a port is given), #1173
+		// but only if there actually IS ONE
+		if (strpos($ip, ':') !== false) {
+			$ip = substr($ip, 0, strpos($ip, ':'));
 		}
-		else
-		{
+
+		if (validate_ip($ip, true) !== false) {
+			return true;
+		} else {
 			return false;
 		}
-	}
-	else
-	{
+	} else {
 		return false;
 	}
 }
-

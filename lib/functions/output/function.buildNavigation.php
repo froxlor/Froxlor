@@ -26,99 +26,81 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function buildNavigation($navigation, $userinfo)
-{
+function buildNavigation($navigation, $userinfo) {
 	global $theme;
 
 	$returnvalue = '';
-	
-	foreach($navigation as $box)
-	{
-		if((!isset($box['show_element']) || $box['show_element'] === true) &&
-			(!isset($box['required_resources']) || $box['required_resources'] == '' || (isset($userinfo[$box['required_resources']]) && ((int)$userinfo[$box['required_resources']] > 0 || $userinfo[$box['required_resources']] == '-1'))))
-		{
+
+	foreach($navigation as $box) {
+		if ((!isset($box['show_element']) || $box['show_element'] === true) &&
+			(!isset($box['required_resources']) || $box['required_resources'] == '' || (isset($userinfo[$box['required_resources']]) && ((int)$userinfo[$box['required_resources']] > 0 || $userinfo[$box['required_resources']] == '-1')))) {
 			$navigation_links = '';
-			foreach($box['elements'] as $element_id => $element)
-			{
-				if((!isset($element['show_element']) || $element['show_element'] === true) &&
-					(!isset($element['required_resources']) || $element['required_resources'] == '' || (isset($userinfo[$element['required_resources']]) && ((int)$userinfo[$element['required_resources']] > 0 || $userinfo[$element['required_resources']] == '-1'))))
-				{
-					if(isset($element['url']) && trim($element['url']) != '')
-					{
+			foreach ($box['elements'] as $element_id => $element) {
+				if ((!isset($element['show_element']) || $element['show_element'] === true) &&
+					(!isset($element['required_resources']) || $element['required_resources'] == '' || (isset($userinfo[$element['required_resources']]) && ((int)$userinfo[$element['required_resources']] > 0 || $userinfo[$element['required_resources']] == '-1')))) {
+					if (isset($element['url']) && trim($element['url']) != '') {
 						// append sid only to local
-				
-						if(!preg_match('/^https?\:\/\//', $element['url'])
-						   && (isset($userinfo['hash']) && $userinfo['hash'] != ''))
-						{
+
+						if (!preg_match('/^https?\:\/\//', $element['url'])
+						   && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
 							// generate sid with ? oder &
-				
-							if(strpos($element['url'], '?') !== false)
-							{
+
+							if (strpos($element['url'], '?') !== false) {
 								$element['url'].= '&s=' . $userinfo['hash'];
-							}
-							else
-							{
+							} else {
 								$element['url'].= '?s=' . $userinfo['hash'];
 							}
 						}
-				
+
 						$target = '';
-				
-						if(isset($element['new_window']) && $element['new_window'] == true)
-						{
+						if (isset($element['new_window']) && $element['new_window'] == true) {
 							$target = ' target="_blank"';
 						}
-				
-						$completeLink = '<a href="' . htmlspecialchars($element['url']) . '"' . $target . ' class="menu">' . $element['label'] . '</a>';
-					}
-					else
-					{
+
+						$active = '';
+						if (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && isset($_GET['action']) && substr_count($element['url'], "action=" . $_GET['action']) > 0) {
+							$active = ' active';
+						} elseif (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && substr_count($element['url'], "action=") == 0 && !isset($_GET['action'])) {
+							$active = ' active';
+						}
+
+						$completeLink = '<a href="' . htmlspecialchars($element['url']) . '"' . $target . ' class="menu' . $active . '">' . $element['label'] . '</a>';
+					} else {
 						$completeLink = $element['label'];
 					}
-				
+
 					eval("\$navigation_links .= \"" . getTemplate("navigation_link", 1) . "\";");
 				}
 			}
-	
-			if($navigation_links != '')
-			{
-				if(isset($box['url']) && trim($box['url']) != '')
-				{
+
+			if ($navigation_links != '') {
+				if (isset($box['url']) && trim($box['url']) != '') {
 					// append sid only to local
-			
-					if(!preg_match('/^https?\:\/\//', $box['url'])
-					   && (isset($userinfo['hash']) && $userinfo['hash'] != ''))
-					{
+
+					if (!preg_match('/^https?\:\/\//', $box['url']) && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
 						// generate sid with ? oder &
-			
-						if(strpos($box['url'], '?') !== false)
-						{
+
+						if (strpos($box['url'], '?') !== false) {
 							$box['url'].= '&s=' . $userinfo['hash'];
-						}
-						else
-						{
+						} else {
 							$box['url'].= '?s=' . $userinfo['hash'];
 						}
 					}
-			
+
 					$target = '';
-			
-					if(isset($box['new_window']) && $box['new_window'] == true)
-					{
+					if (isset($box['new_window']) && $box['new_window'] == true) {
 						$target = ' target="_blank"';
 					}
-			
+
 					$completeLink = '<a href="' . htmlspecialchars($box['url']) . '"' . $target . ' class="menu">' . $box['label'] . '</a>';
-				}
-				else
-				{
+				} else {
 					$completeLink = $box['label'];
 				}
-			
+
 				eval("\$returnvalue .= \"" . getTemplate("navigation_element", 1) . "\";");
 			}
 		}
 	}
-	
+
 	return $returnvalue;
 }

@@ -18,14 +18,10 @@
  */
 
 define('AREA', 'admin');
-
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-
 $need_db_sql_data = true;
-require ("./lib/init.php");
-require ("./lib/configfiles_index.inc.php");
+require './lib/init.php';
+require './lib/configfiles_index.inc.php';
+
 $distribution = '';
 $distributions_select = '';
 $service = '';
@@ -89,16 +85,20 @@ if($userinfo['change_serversettings'] == '1')
 			'<SQL_UNPRIVILEGED_PASSWORD>' => 'MYSQL_PASSWORD',
 			'<SQL_DB>' => $sql['db'],
 			'<SQL_HOST>' => $sql['host'],
-			'<SERVERNAME>' => $settings['system']['hostname'],
-			'<SERVERIP>' => $settings['system']['ipaddress'],
-			'<NAMESERVERS>' => $settings['system']['nameservers'],
-			'<VIRTUAL_MAILBOX_BASE>' => $settings['system']['vmail_homedir'],
-			'<VIRTUAL_UID_MAPS>' => $settings['system']['vmail_uid'],
-			'<VIRTUAL_GID_MAPS>' => $settings['system']['vmail_gid'],
-			'<SSLPROTOCOLS>' => ($settings['system']['use_ssl'] == '1') ? 'imaps pop3s' : '',
-			'<CUSTOMER_TMP>' => ($settings['system']['mod_fcgid_tmpdir'] != '') ? makeCorrectDir($settings['system']['mod_fcgid_tmpdir']) : '/tmp/',
-			'<BASE_PATH>' => makeCorrectDir(dirname(__FILE__)),
-			'<BIND_CONFIG_PATH>' => makeCorrectDir($settings['system']['bindconf_directory'])
+			'<SERVERNAME>' => Settings::Get('system.hostname'),
+			'<SERVERIP>' => Settings::Get('system.ipaddress'),
+			'<NAMESERVERS>' => Settings::Get('system.nameservers'),
+			'<VIRTUAL_MAILBOX_BASE>' => Settings::Get('system.vmail_homedir'),
+			'<VIRTUAL_UID_MAPS>' => Settings::Get('system.vmail_uid'),
+			'<VIRTUAL_GID_MAPS>' => Settings::Get('system.vmail_gid'),
+			'<SSLPROTOCOLS>' => (Settings::Get('system.use_ssl') == '1') ? 'imaps pop3s' : '',
+			'<CUSTOMER_TMP>' => (Settings::Get('system.mod_fcgid_tmpdir') != '') ? makeCorrectDir(Settings::Get('system.mod_fcgid_tmpdir')) : '/tmp/',
+			'<BASE_PATH>' => makeCorrectDir(FROXLOR_INSTALL_DIR),
+			'<BIND_CONFIG_PATH>' => makeCorrectDir(Settings::Get('system.bindconf_directory')),
+			'<WEBSERVER_RELOAD_CMD>' => Settings::Get('system.apachereload_command'),
+			'<CUSTOMER_LOGS>' => makeCorrectDir(Settings::Get('system.logfiles_directory')),
+			'<FPM_IPCDIR>' => makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
+			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup')
 		);
 		$files = '';
 		$configpage = '';

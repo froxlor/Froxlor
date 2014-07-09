@@ -17,86 +17,72 @@
  *
  */
 
-/**
- * Begin
- */
+$lng['requirements']['title'] = 'Checking system requirements...';
+$lng['requirements']['installed'] = 'installed';
+$lng['requirements']['not_true'] = 'no';
+$lng['requirements']['notfound'] = 'not found';
+$lng['requirements']['notinstalled'] = 'not installed';
+$lng['requirements']['activated'] = 'enabled';
+$lng['requirements']['phpversion'] = 'PHP version >= 5.3';
+$lng['requirements']['phpmagic_quotes_runtime'] = 'magic_quotes_runtime...';
+$lng['requirements']['phpmagic_quotes_runtime_description'] = 'PHP setting "magic_quotes_runtime" must be set to "Off". We have disabled it temporary for now please fix the coresponding php.ini.';
+$lng['requirements']['phppdo'] = 'PHP PDO extension and PDO-MySQL driver...';
+$lng['requirements']['phpxml'] = 'PHP XML-extension...';
+$lng['requirements']['phpfilter'] = 'PHP filter-extension...';
+$lng['requirements']['phpposix'] = 'PHP posix-extension...';
+$lng['requirements']['phpbcmath'] = 'PHP bcmath-extension...';
+$lng['requirements']['phpcurl'] = 'PHP curl-extension...';
+$lng['requirements']['bcmathdescription'] = 'Traffic-calculation related functions will not work correctly!';
+$lng['requirements']['curldescription'] = 'Version-check and news-feed may not work correctly!';
+$lng['requirements']['openbasedir'] = 'open_basedir...';
+$lng['requirements']['openbasedirenabled'] = 'Froxlor will not work properly with open_basedir enabled. Please disable open_basedir for Froxlor in the coresponding php.ini';
+$lng['requirements']['diedbecauseofrequirements'] = 'Cannot install Froxlor without these requirements! Try to fix them and retry.';
+$lng['requirements']['froxlor_succ_checks'] = 'All requirements are satisfied';
 
-$lng['install']['language'] = 'Installation - Language';
-$lng['install']['welcome'] = 'Welcome to Froxlor Installation';
+$lng['install']['lngtitle'] = 'Froxlor install - choose language';
+$lng['install']['language'] = 'Installation language';
+$lng['install']['lngbtn_go'] = 'Change language';
+$lng['install']['title'] = 'Froxlor install - setup';
 $lng['install']['welcometext'] = 'Thank you for choosing Froxlor. Please fill out the following fields with the required information to start the installation.<br /><b>Attention:</b> If the database you chose for Froxlor already exists on your System, it will be erased with all containing data!';
-$lng['install']['database'] = 'Database';
-$lng['install']['mysql_hostname'] = 'MySQL-Hostname';
-$lng['install']['mysql_database'] = 'MySQL-Database';
+$lng['install']['database'] = 'Database connection';
+$lng['install']['mysql_host'] = 'MySQL-Hostname';
+$lng['install']['mysql_database'] = 'Database name';
 $lng['install']['mysql_unpriv_user'] = 'Username for the unprivileged MySQL-account';
 $lng['install']['mysql_unpriv_pass'] = 'Password for the unprivileged MySQL-account';
 $lng['install']['mysql_root_user'] = 'Username for the MySQL-root-account';
 $lng['install']['mysql_root_pass'] = 'Password for the MySQL-root-account';
 $lng['install']['admin_account'] = 'Administrator Account';
 $lng['install']['admin_user'] = 'Administrator Username';
-$lng['install']['admin_pass'] = 'Administrator Password';
-$lng['install']['admin_pass_confirm'] = 'Administrator-Password (confirm)';
+$lng['install']['admin_pass1'] = 'Administrator Password';
+$lng['install']['admin_pass2'] = 'Administrator-Password (confirm)';
 $lng['install']['serversettings'] = 'Server settings';
-$lng['install']['servername'] = 'Server name (FQDN)';
+$lng['install']['servername'] = 'Server name (FQDN, no ip-address)';
 $lng['install']['serverip'] = 'Server IP';
+$lng['install']['webserver'] = 'Webserver';
+$lng['install']['apache2'] = 'Apache 2';
+$lng['install']['lighttpd'] = 'LigHTTPd';
+$lng['install']['nginx'] = 'NGINX';
 $lng['install']['httpuser'] = 'HTTP username';
 $lng['install']['httpgroup'] = 'HTTP groupname';
-$lng['install']['apacheversion'] = 'Apacheversion';
-$lng['install']['next'] = 'Next';
-$lng['install']['installdata'] = 'Installation - Data';
 
-/**
- * Progress
- */
-
-$lng['install']['testing_mysql'] = 'Testing if MySQL-root-username and password are correct...';
-$lng['install']['erasing_old_db'] = 'Erasing old Database...';
-$lng['install']['backup_old_db'] = 'Create backup of the old Database...';
-$lng['install']['backing_up'] = 'Backing up';
-$lng['install']['backing_up_binary_missing'] = '/usr/bin/mysqldump is missing';
-$lng['install']['create_mysqluser_and_db'] = 'Creating MySQL-database and username...';
-$lng['install']['testing_new_db'] = 'Testing if MySQL-database and username have been created correctly...';
-$lng['install']['importing_data'] = 'Importing data into MySQL-database...';
-$lng['install']['changing_data'] = 'Changing imported data...';
-$lng['install']['adding_admin_user'] = 'Adding Administrator Account...';
+$lng['install']['testing_mysql'] = 'Checking MySQL-root access...';
+$lng['install']['testing_mysql_fail'] = 'There seems to be a problem with the database-connection. Cannot continue. Please go back and check your credentials.';
+$lng['install']['backup_old_db'] = 'Creating backup of old database...';
+$lng['install']['backup_binary_missing'] = 'Could not find mysqldump';
+$lng['install']['backup_failed'] = 'Could not backup database';
+$lng['install']['prepare_db'] = 'Preparing database...';
+$lng['install']['create_mysqluser_and_db'] = 'Creating database and username...';
+$lng['install']['testing_new_db'] = 'Testing if database and user have been created correctly...';
+$lng['install']['importing_data'] = 'Importing data...';
+$lng['install']['changing_data'] = 'Adjusting settings...';
+$lng['install']['creating_entries'] = 'Inserting new values...';
+$lng['install']['adding_admin_user'] = 'Creating admin-account...';
 $lng['install']['creating_configfile'] = 'Creating configfile...';
-$lng['install']['creating_configfile_succ'] = 'OK, userdata.inc.php was saved in lib/.';
 $lng['install']['creating_configfile_temp'] = 'File was saved in /tmp/userdata.inc.php, please move to lib/.';
-$lng['install']['creating_configfile_failed'] = 'Cannot create lib/userdata.inc.php, please create it manually with the following data:';
+$lng['install']['creating_configfile_failed'] = 'Could not create lib/userdata.inc.php, please create it manually with the following content:';
 $lng['install']['froxlor_succ_installed'] = 'Froxlor was installed successfully.';
-$lng['install']['click_here_to_login'] = 'Click here to login.';
-$lng['install']['phpmysql'] = 'Testing if PHP MySQL-extension is installed...';
-$lng['install']['phpfilter'] = 'Testing if PHP filter-extension is installed...';
-$lng['install']['diedbecauseofrequirements'] = 'Cannot install Froxlor without these requirements! Aborting...';
-$lng['install']['notinstalled'] = 'not installed!';
-$lng['install']['phpbcmath'] = 'Testing if PHP bcmath-extension is installed...';
-$lng['install']['bcmathdescription'] = 'Traffic-calculation related functions will not work correctly!';
-$lng['install']['openbasedir'] = 'Testing if open_basedir is enabled...';
-$lng['install']['openbasedirenabled'] = 'enabled. Froxlor will not work properly with open_basedir enabled. Please disable open_basedir for Froxlor';
 
-/**
- * Renamed in 1.2.19-svn40
- */
-
-$lng['install']['webserver'] = 'Webserver';
-
-/*
- * Added in Froxlor 0.9
- */
-$lng['install']['phpversion'] = 'Checking for PHP version >= 5.2';
-$lng['install']['phpposix'] = 'Testing if PHP posix-extension is installed...';
-
-/*
- * Added in Froxlor 0.9.4
- */
-$lng['install']['click_here_to_refresh'] = 'Re-check';
-$lng['install']['click_here_to_continue'] = 'Continue installation';
-$lng['install']['froxlor_succ_checks'] = 'All requirements are satisfied';
-
-/*
- * Added in Froxlor 0.9.13
- */
-$lng['install']['phpmagic_quotes_runtime'] = 'Checking whether magic_quotes_runtime is off';
-$lng['install']['active'] = 'no';
-$lng['install']['phpmagic_quotes_runtime_description'] = 'PHP setting "magic_quotes_runtime" must be set to "Off" in order to avoid strange behavior of Froxlor. Disabling it for now (this is only temporary, please fix our php.ini).';
-$lng['install']['phpxml'] = 'Testing if PHP XML-extension is installed...';
-?>
+$lng['click_here_to_refresh'] = 'Click here to check again';
+$lng['click_here_to_goback'] = 'Click here to go back';
+$lng['click_here_to_continue'] = 'Click here to continue';
+$lng['click_here_to_login'] = 'Click here to login.';

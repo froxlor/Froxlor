@@ -81,7 +81,6 @@ $lng['customer']['forwarders'] = 'Transfert(s) e-mail';
 $lng['customer']['ftps'] = 'Accès FTP';
 $lng['customer']['subdomains'] = 'Sous-domaine(s)';
 $lng['customer']['domains'] = 'Domaine(s)';
-$lng['customer']['unlimited'] = 'illimité';
 
 /**
  * Customermenue
@@ -178,10 +177,6 @@ $lng['extras']['view_directory'] = 'Aperçu du dossier';
 $lng['extras']['pathoptions_add'] = 'Ajouter des options sur le dossier';
 $lng['extras']['directory_browsing'] = 'Afficher le contenu des dossiers';
 $lng['extras']['pathoptions_edit'] = 'Modifier les options de dossier';
-$lng['extras']['error404path'] = '404';
-$lng['extras']['error403path'] = '403';
-$lng['extras']['error500path'] = '500';
-$lng['extras']['error401path'] = '401';
 $lng['extras']['errordocument404path'] = 'Emplacement du document "Erreur 404"';
 $lng['extras']['errordocument403path'] = 'Emplacement du document "Erreur 403"';
 $lng['extras']['errordocument500path'] = 'Emplacement du document "Erreur 500"';
@@ -202,7 +197,7 @@ $lng['error']['firstdeleteallsubdomains'] = 'Il faut d\'abord supprimer tous les
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'Vous avez déjà défini une adresse "catchall" pour ce domaine.';
 $lng['error']['ftp_cantdeletemainaccount'] = 'Vous ne pouvez pas supprimer votre accès principal.';
 $lng['error']['login'] = 'Identifiant / mot de passe invalide.';
-$lng['error']['login_blocked'] = 'Cet identifiant a été bloqué à cause de nombreuses tentatives de connexions invalides.<br />Veuillez réessayer dans ' . $settings['login']['deactivatetime'] . ' secondes.';
+$lng['error']['login_blocked'] = 'Cet identifiant a été bloqué à cause de nombreuses tentatives de connexions invalides.<br />Veuillez réessayer dans %s secondes.';
 $lng['error']['notallreqfieldsorerrors'] = 'Vous n\'avez pas rempli toutes les cases obligatoires ou vous les avez remplis avec des informations invalides.';
 $lng['error']['oldpasswordnotcorrect'] = 'L\'ancien mot de passe n\'est pas correct.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'Vous ne pouvez pas distribuer plus de ressources qu\'il n\'en reste.';
@@ -210,17 +205,8 @@ $lng['error']['mustbeurl'] = 'Vous n\'avez pas entré une adresse URL valide.';
 $lng['error']['invalidpath'] = 'Vous n\'avez pas choisi une adresse URL valide (probablement à cause de problèmes avec le listing de dossiers ?)';
 $lng['error']['stringisempty'] = 'Entrée manquante';
 $lng['error']['stringiswrong'] = 'Entrée invalide';
-$lng['error']['myloginname'] = '"' . $lng['login']['username'] . '"';
-$lng['error']['mypassword'] = '"' . $lng['login']['password'] . '"';
-$lng['error']['oldpassword'] = '"' . $lng['changepassword']['old_password'] . '"';
-$lng['error']['newpassword'] = '"' . $lng['changepassword']['new_password'] . '"';
-$lng['error']['newpasswordconfirm'] = '"' . $lng['changepassword']['new_password_confirm'] . '"';
 $lng['error']['newpasswordconfirmerror'] = 'Le nouveau mot de passe et sa confirmation ne sont pas identiques pas.';
-$lng['error']['myname'] = '"' . $lng['customer']['name'] . '"';
-$lng['error']['myfirstname'] = '"' . $lng['customer']['firstname'] . '"';
-$lng['error']['emailadd'] = '"' . $lng['customer']['email'] . '"';
 $lng['error']['mydomain'] = '"domaine"';
-$lng['error']['mydocumentroot'] = '"Documentroot"';
 $lng['error']['loginnameexists'] = 'L\'identifiant "%s" existe déjà.';
 $lng['error']['emailiswrong'] = 'L\'adresse "%s" contient des signes invalides ou est incomplète.';
 $lng['error']['loginnameiswrong'] = 'L\'identifiant "%s" contient des signes invalides.';
@@ -245,7 +231,6 @@ $lng['error']['destinationnonexist'] = 'Veuillez écrire votre adresse de renvoi
 $lng['error']['destinationalreadyexistasmail'] = 'Le renvoi vers l\'adresse "%s" existe déjà comme adresse active.';
 $lng['error']['destinationalreadyexist'] = 'Il existe déjà une réexpédition vers l\'adresse "%s".';
 $lng['error']['destinationiswrong'] = 'L\'adresse "%s" contient des signes invalides ou est incomplète.';
-$lng['error']['domainname'] = $lng['domains']['domainname'];
 $lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer un compte identique au compte système, veuillez réessayer avec un autre nom.';
 
 /**
@@ -404,17 +389,12 @@ $lng['serversettings']['paging']['description'] = 'Nombre de résultats par page
 $lng['error']['ipstillhasdomains'] = 'La combinaison IP / port est encore utilisée, veuillez réassigner le ou les domaines existant(s) avec cette adresse IP / port concerné(s) à une autre combinaison IP / port avant de supprimer celle-ci.';
 $lng['error']['cantdeletedefaultip'] = 'Vous ne pouvez pas supprimer cette combinaison IP / Port, veuillez d\'abord attribuer une autre combinaison IP / Port par défaut à ce revendeur avant de supprimer celle-ci.';
 $lng['error']['cantdeletesystemip'] = 'Vous ne pouvez pas créer, modifier ou supprimer l\'IP du système.';
-$lng['error']['myipaddress'] = '"IP"';
-$lng['error']['myport'] = '"Port"';
 $lng['error']['myipdefault'] = 'Choissez une combinaison IP / port par défaut.';
 $lng['error']['myipnotdouble'] = 'Cette combinaison existe déjà';
 $lng['question']['admin_ip_reallydelete'] = 'Etes-vous sûr de vouloir supprimer l\'adresse IP "%s" ?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs et ports';
 $lng['admin']['ipsandports']['add'] = 'Ajouter une IP / port';
 $lng['admin']['ipsandports']['edit'] = 'Modifier une IP / port';
-$lng['admin']['ipsandports']['ipandport'] = 'IP / Port';
-$lng['admin']['ipsandports']['ip'] = 'IP';
-$lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
 
@@ -505,10 +485,6 @@ $lng['question']['admin_counters_reallyupdate'] = 'Etes-vous sûr de vouloir rec
 $lng['panel']['pathDescription'] = 'Si le dossier n\'existe pas, il sera créé automatiquement.';
 
 // ADDED IN 1.2.16-svn6
-
-$lng['mails']['trafficninetypercent']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVous utilisez {TRAFFICUSED} Mo sur {TRAFFIC} Mo de votre quota de trafic.\nCe dernier est à plus de 90%.\n\nCordialement,\nL\'équipe Froxlor.';
-$lng['mails']['trafficninetypercent']['subject'] = 'Limite de trafic bientôt atteinte.';
-$lng['admin']['templates']['trafficninetypercent'] = 'E-mail de notification pour les utilisateurs, lorsque leur taux de trafic atteint plus de 90%.';
 $lng['admin']['templates']['TRAFFIC'] = 'Sera remplacé par le taux de trafic qui a été attribué à l\'utilisateur.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Sera remplacé par le taux de trafic qui a été consommé par l\'utilisateur.';
 
@@ -549,8 +525,6 @@ $lng['panel']['back'] = 'Retour';
 
 // ADDED IN 1.2.16-svn12
 
-$lng['serversettings']['mod_log_sql']['title'] = 'Sauvegarder temporairement les logs dans la base de données';
-$lng['serversettings']['mod_log_sql']['description'] = 'Utiliser <a href="http://www.outoforder.cc/projects/apache/mod_log_sql/" title="mod_log_sql">mod_log_sql</a> pour sauvegarder temporairement les requètes Web.<br /><b>Cela à besoin d\'une configuration spécifique <a href="http://files.froxlor.org/docs/mod_log_sql/" title="mod_log_sql - documentation">d\'Apache</a> !</b>';
 $lng['serversettings']['mod_fcgid']['title'] = 'Utiliser PHP par mod_fcgid / suexec';
 $lng['serversettings']['mod_fcgid']['description'] = 'Utiliser mod_fcgid / suexec / libnss_mysql pour lancer PHP avec le compte correspondant à l\'utilisateur ?<br/><b>Cela à besoin d\'une configuration spécifique d\'Apache !</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Utiliser une adresse e-mail alternative';
@@ -671,13 +645,9 @@ $lng['question']['ticket_reallyclose'] = 'Etes-vous sûr de vouloir clôturer le
 $lng['question']['ticket_reallydelete'] = 'Etes-vous sûr de vouloir supprimer le billet "%s" ?';
 $lng['question']['ticket_reallydeletecat'] = 'Etes-vous sûr de vouloir supprimer la catégorie "%s" ?';
 $lng['question']['ticket_reallyarchive'] = 'Etes-vous sûr de vouloir archiver le billet "%s" ?';
-$lng['error']['mysubject'] = '"' . $lng['ticket']['subject'] . '"';
-$lng['error']['mymessage'] = '"' . $lng['ticket']['message'] . '"';
-$lng['error']['mycategory'] = '"' . $lng['ticket']['category'] . '"';
 $lng['error']['nomoreticketsavailable'] = 'Vous n\'avez plus de billets de disponibles. Veuillez contacter votre administrateur.';
 $lng['error']['nocustomerforticket'] = 'Ne peut créer de billet sans client';
 $lng['error']['categoryhastickets'] = 'La catégorie possède des billets.<br />Veuillez d\'abord supprimer tous les billets de cette catégorie.';
-$lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopentickets'];
 $lng['admin']['ticketsettings'] = 'Paramètres des billets de support';
 $lng['admin']['archivelastrun'] = 'Derniers billets archivés';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Adresse e-mail de non réponse';
@@ -772,9 +742,6 @@ $lng['logger']['user'] = 'Utilisateur';
 $lng['logger']['truncate'] = 'Vider les logs';
 
 // ADDED IN 1.2.19-svn7
-
-$lng['serversettings']['ssl']['use_ssl'] = 'Utiliser SSL ?';
-$lng['serversettings']['ssl']['ssl_cert_file'] = 'Oû est situé le fichier de certificat ?';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Paramètres par défaut pour créer le certificat';
 $lng['panel']['reseller'] = 'revendeur';
 $lng['panel']['admin'] = 'administrateur';
@@ -798,7 +765,6 @@ $lng['message']['success'] = 'Le message a été envoyé aux destinataires "%s"'
 $lng['message']['noreceipients'] = 'Aucun e-mail n\'a été envoyé car il n\'existe aucun destinataire dans la base de données';
 $lng['admin']['sslsettings'] = 'Paramètres SSL';
 $lng['cronjobs']['notyetrun'] = 'Pas encore lancé';
-$lng['install']['servername_should_be_fqdn'] = 'Le nom du serveur doit être un nom FQDN, pas une adresse IP';
 $lng['serversettings']['default_vhostconf']['title'] = 'Paramètres par défaut pour les vHosts';
 $lng['emails']['quota'] = 'Quota';
 $lng['emails']['noquota'] = 'Pas de quota';
@@ -916,5 +882,3 @@ $lng['domains']['registration_date'] = 'Ajouter à l\'enregistrement';
 $lng['serversettings']['allow_password_reset']['description'] = 'Les clients peuvent réinitialiser leurs mots de passe et il sera envoyé à leurs propres adresses e-mails';
 $lng['serversettings']['allow_password_reset_admin']['title'] = 'Permettre la réinitialisation des mots de passe par les administrateurs';
 $lng['serversettings']['allow_password_reset_admin']['description'] = 'Les administrateurs / revendeurs peuvent réinitialiser leurs mots de passe et il sera envoyé à leurs propres adresses e-mails';
-
-?>

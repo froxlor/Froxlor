@@ -38,9 +38,33 @@ return array(
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					),
-				),
-			),
-		),
+				'system_passwordcryptfunc' => array(
+					'label' => $lng['serversettings']['passwordcryptfunc'],
+					'settinggroup' => 'system',
+					'varname' => 'passwordcryptfunc',
+					'type' => 'option',
+					'default' => 0,
+					'option_mode' => 'one',
+					'option_options' => array(0 => $lng['serversettings']['systemdefault'], 1 => 'MD5', 2 => 'BLOWFISH', 3 => 'SHA-256', 4 => 'SHA-512'),
+					'save_method' => 'storeSettingField',
+					),
+				'system_allow_error_report_admin' => array(
+					'label' => $lng['serversettings']['allow_error_report_admin'],
+					'settinggroup' => 'system',
+					'varname' => 'allow_error_report_admin',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
+				'system_allow_error_report_customer' => array(
+					'label' => $lng['serversettings']['allow_error_report_customer'],
+					'settinggroup' => 'system',
+					'varname' => 'allow_error_report_customer',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					)
+				)
+			)
+		)
 	);
-
-?>

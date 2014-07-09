@@ -18,81 +18,86 @@
  */
 
 define('AREA', 'customer');
+require './lib/init.php';
 
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
+if ($action == 'logout') {
+	$log->logAction(USR_ACTION, LOG_NOTICE, 'logged out');
 
-require ("./lib/init.php");
-
-if($action == 'logout')
-{
-	$log->logAction(USR_ACTION, LOG_NOTICE, "logged out");
-
-	if($settings['session']['allow_multiple_login'] == '1')
-	{
-		$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['customerid'] . "' AND `adminsession` = '0' AND `hash` = '" . $s . "'");
+	$params = array("customerid" => $userinfo['customerid']);
+	if (Settings::Get('session.allow_multiple_login') == '1') {
+		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
+			WHERE `userid` = :customerid
+			AND `adminsession` = '0'
+			AND `hash` = :hash"
+		);
+		$params["hash"] = $s;
+	} else {
+		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
+			WHERE `userid` = :customerid
+			AND `adminsession` = '0'"
+		);
 	}
-	else
-	{
-		$db->query("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = '" . (int)$userinfo['customerid'] . "' AND `adminsession` = '0'");
-	}
+	Database::pexecute($stmt, $params);
 
 	redirectTo('index.php');
 	exit;
 }
 
-if($page == 'overview')
-{
+if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_index");
+
+	$domain_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+		WHERE `customerid` = :customerid
+		AND `parentdomainid` = '0'
+		AND `id` <> :standardsubdomain
+	");
+	Database::pexecute($domain_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));
+
 	$domains = '';
-	$result = $db->query("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `parentdomainid`='0' AND `id` <> '" . (int)$userinfo['standardsubdomain'] . "' ");
 	$domainArray = array();
 
-	while($row = $db->fetch_array($result))
-	{
+	while ($row = $domain_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$domainArray[] = $idna_convert->decode($row['domain']);
 	}
 
 	natsort($domainArray);
-	$domains = implode(', ', $domainArray);
+	$domains = implode(',<br />', $domainArray);
+
+	// standard-subdomain
+	$stdsubdomain = '';
+	if ($userinfo['standardsubdomain'] != '0') {
+		$std_domain_stmt = Database::prepare("
+			SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `customerid` = :customerid
+			AND `id` = :standardsubdomain
+		");
+		$std_domain = Database::pexecute_first($std_domain_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));
+		$stdsubdomain = $std_domain['domain'];
+	}
+
 	$userinfo['email'] = $idna_convert->decode($userinfo['email']);
 	$yesterday = time() - (60 * 60 * 24);
 	$month = date('M Y', $yesterday);
 
-	/*		$traffic=$db->query_first("SELECT SUM(http) AS http_sum, SUM(ftp_up) AS ftp_up_sum, SUM(ftp_down) AS ftp_down_sum, SUM(mail) AS mail_sum FROM ".TABLE_PANEL_TRAFFIC." WHERE year='".date('Y')."' AND month='".date('m')."' AND day<='".date('d')."' AND customerid='".$userinfo['customerid']."'");
-		$userinfo['traffic_used']=$traffic['http_sum']+$traffic['ftp_up_sum']+$traffic['ftp_down_sum']+$traffic['mail_sum'];*/
+	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, Settings::Get('panel.decimal_places'));
+	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, Settings::Get('panel.decimal_places'));
+	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
+	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
+	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains');
 
-	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, $settings['panel']['decimal_places']);
-	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $settings['panel']['decimal_places']);
-	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), $settings['panel']['decimal_places']);
-	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $settings['panel']['decimal_places']);
-	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota email_autoresponder ftps tickets subdomains aps_packages');
-	$opentickets = 0;
-	$opentickets = $db->query_first('SELECT COUNT(`id`) as `count` FROM `' . TABLE_PANEL_TICKETS . '`
-                                   WHERE `customerid` = "' . $userinfo['customerid'] . '"
-                                   AND `answerto` = "0"
-                                   AND (`status` = "0" OR `status` = "2")
-                                   AND `lastreplier`="1"');
-	$awaitingtickets = $opentickets['count'];
-	$awaitingtickets_text = '';
+	$services_enabled = "";
+	$se = array();
+	if ($userinfo['imap'] == '1') $se[] = "IMAP";
+	if ($userinfo['pop3'] == '1') $se[] = "POP3";
+	if ($userinfo['phpenabled'] == '1') $se[] = "PHP";
+	if ($userinfo['perlenabled'] == '1') $se[] = "Perl/CGI";
+	$services_enabled = implode(", ", $se);
 
-	if($opentickets > 0)
-	{
-		$awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="customer_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
-	}
-
-	eval("echo \"" . getTemplate("index/index") . "\";");
-}
-elseif($page == 'change_password')
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+	eval("echo \"" . getTemplate('index/index') . "\";");
+} elseif ($page == 'change_password') {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = validate($_POST['old_password'], 'old password');
-
-		if(md5($old_password) != $userinfo['password'])
-		{
+		if (md5($old_password) != $userinfo['password']) {
 			standard_error('oldpasswordnotcorrect');
 			exit;
 		}
@@ -100,119 +105,211 @@ elseif($page == 'change_password')
 		$new_password = validatePassword($_POST['new_password'], 'new password');
 		$new_password_confirm = validatePassword($_POST['new_password_confirm'], 'new password confirm');
 
-		if($old_password == '')
-		{
+		if ($old_password == '') {
 			standard_error(array('stringisempty', 'oldpassword'));
-		}
-		elseif($new_password == '')
-		{
+		} elseif ($new_password == '') {
 			standard_error(array('stringisempty', 'newpassword'));
-		}
-		elseif($new_password_confirm == '')
-		{
+		} elseif ($new_password_confirm == '') {
 			standard_error(array('stringisempty', 'newpasswordconfirm'));
-		}
-		elseif($new_password != $new_password_confirm)
-		{
+		} elseif ($new_password != $new_password_confirm) {
 			standard_error('newpasswordconfirmerror');
-		}
-		else
-		{
-			$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `password`='" . md5($new_password) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `password`='" . md5($old_password) . "'");
+		} else {
+			// Update user password
+			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+				SET `password` = :newpassword
+				WHERE `customerid` = :customerid
+				AND `password` = :oldpassword"
+			);
+			$params = array(
+				"newpassword" => md5($new_password),
+				"customerid" => $userinfo['customerid'],
+				"oldpassword" => md5($old_password)
+			);
+			Database::pexecute($stmt, $params);
 			$log->logAction(USR_ACTION, LOG_NOTICE, 'changed password');
 
-			if(isset($_POST['change_main_ftp'])
-			   && $_POST['change_main_ftp'] == 'true')
-			{
-				$cryptPassword = makeCryptPassword($db->escape($new_password),1);
-				$db->query("UPDATE `" . TABLE_FTP_USERS . "` SET `password`='" . $db->escape($cryptPassword) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $db->escape($userinfo['loginname']) . "'");
+			// Update ftp password
+			if (isset($_POST['change_main_ftp']) && $_POST['change_main_ftp'] == 'true') {
+				$cryptPassword = makeCryptPassword($new_password);
+				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
+					SET `password` = :password
+					WHERE `customerid` = :customerid
+					AND `username` = :username"
+				);
+				$params = array(
+					"password" => $cryptPassword,
+					"customerid" => $userinfo['customerid'],
+					"username" => $userinfo['loginname']
+				);
+				Database::pexecute($stmt, $params);
 				$log->logAction(USR_ACTION, LOG_NOTICE, 'changed main ftp password');
 			}
 
-			if(isset($_POST['change_webalizer'])
-			   && $_POST['change_webalizer'] == 'true')
-			{
-				if(CRYPT_STD_DES == 1)
-				{
+			// Update webalizer password
+			if (isset($_POST['change_webalizer']) && $_POST['change_webalizer'] == 'true') {
+				if (CRYPT_STD_DES == 1) {
 					$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
 					$new_webalizer_password = crypt($new_password, $saltfordescrypt);
-				}
-				else
-				{
+				} else {
 					$new_webalizer_password = crypt($new_password);
 				}
 
-				$db->query("UPDATE `" . TABLE_PANEL_HTPASSWDS . "` SET `password`='" . $db->escape($new_webalizer_password) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "' AND `username`='" . $db->escape($userinfo['loginname']) . "'");
+				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTPASSWDS . "`
+					SET `password` = :password
+					WHERE `customerid` = :customerid
+					AND `username` = :username"
+				);
+				$params = array(
+					"password" => $new_webalizer_password,
+					"customerid" => $userinfo['customerid'],
+					"username" => $userinfo['loginname']
+				);
+				Database::pexecute($stmt, $params);
 			}
 
-			redirectTo($filename, Array('s' => $s));
+			redirectTo($filename, array('s' => $s));
 		}
+	} else {
+		eval("echo \"" . getTemplate('index/change_password') . "\";");
 	}
-	else
-	{
-		eval("echo \"" . getTemplate("index/change_password") . "\";");
-	}
-}
-elseif($page == 'change_language')
-{
-	if(isset($_POST['send'])
-	   && $_POST['send'] == 'send')
-	{
+} elseif ($page == 'change_language') {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$def_language = validate($_POST['def_language'], 'default language');
+		if (isset($languages[$def_language])) {
+			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+				SET `def_language` = :lang
+				WHERE `customerid` = :customerid"
+			);
+			Database::pexecute($stmt, array("lang" => $def_language, "customerid" => $userinfo['customerid']));
 
-		if(isset($languages[$def_language]))
-		{
-			$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `def_language`='" . $db->escape($def_language) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
-			$db->query("UPDATE `" . TABLE_PANEL_SESSIONS . "` SET `language`='" . $db->escape($def_language) . "' WHERE `hash`='" . $db->escape($s) . "'");
+			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
+				SET `language` = :lang
+				WHERE `hash` = :hash"
+			);
+			Database::pexecute($stmt, array("lang" => $def_language, "hash" => $s));
+
 			$log->logAction(USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
 		}
 
-		redirectTo($filename, Array('s' => $s));
-	}
-	else
-	{
-		$language_options = '';
-
-		$default_lang = $settings['panel']['standardlanguage'];
-		if($userinfo['def_language'] != '') { 
+		redirectTo($filename, array('s' => $s));
+	} else {
+		$default_lang = Settings::Get('panel.standardlanguage');
+		if ($userinfo['def_language'] != '') {
 			$default_lang = $userinfo['def_language'];
 		}
 
-		while(list($language_file, $language_name) = each($languages))
-		{
-			$language_options.= makeoption($language_name, $language_file, $default_lang, true);
+		$language_options = '';
+		while (list($language_file, $language_name) = each($languages)) {
+			$language_options .= makeoption($language_name, $language_file, $default_lang, true);
 		}
 
-		eval("echo \"" . getTemplate("index/change_language") . "\";");
+		eval("echo \"" . getTemplate('index/change_language') . "\";");
 	}
-}
-elseif($page == 'change_theme')
-{
-	if(isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+} elseif ($page == 'change_theme') {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$theme = validate($_POST['theme'], 'theme');
- 
-		$db->query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `theme`='" . $db->escape($theme) . "' WHERE `customerid`='" . (int)$userinfo['customerid'] . "'");
-		$db->query("UPDATE `" . TABLE_PANEL_SESSIONS . "` SET `theme`='" . $db->escape($theme) . "' WHERE `hash`='" . $db->escape($s) . "'");
-		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
-		redirectTo($filename, Array('s' => $s));
-	}
-	else
-	{
-		$theme_options = '';
 
-		$default_theme = $settings['panel']['default_theme'];
-		if($userinfo['theme'] != '') {
+		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
+			SET `theme` = :theme
+			WHERE `customerid` = :customerid"
+		);
+		Database::pexecute($stmt, array("theme" => $theme, "customerid" => $userinfo['customerid']));
+
+		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
+			SET `theme` = :theme
+			WHERE `hash` = :hash"
+		);
+		Database::pexecute($stmt, array("theme" => $theme, "hash" => $s));
+
+		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
+		redirectTo($filename, array('s' => $s));
+	} else {
+		$default_theme = Settings::Get('panel.default_theme');
+		if ($userinfo['theme'] != '') {
 			$default_theme = $userinfo['theme'];
 		}
 
+		$theme_options = '';
 		$themes_avail = getThemes();
-		foreach($themes_avail as $t)
-		{
-			$theme_options.= makeoption($t, $t, $default_theme, true);
+		foreach ($themes_avail as $t => $d) {
+			$theme_options.= makeoption($d, $t, $default_theme, true);
 		}
 
-		eval("echo \"" . getTemplate("index/change_theme") . "\";");
+		eval("echo \"" . getTemplate('index/change_theme') . "\";");
+	}
+
+} elseif ($page == 'send_error_report' && Settings::Get('system.allow_error_report_customer') == '1') {
+
+	// only show this if we really have an exception to report
+	if (isset($_GET['errorid']) && $_GET['errorid'] != '') {
+
+		$errid = $_GET['errorid'];
+		// read error file
+		$err_dir = makeCorrectDir(FROXLOR_INSTALL_DIR."/logs/");
+		$err_file = makeCorrectFile($err_dir."/".$errid."_sql-error.log");
+
+		if (file_exists($err_file)) {
+
+			$error_content = file_get_contents($err_file);
+			$error = explode("|", $error_content);
+
+			$_error = array(
+				'code' => str_replace("\n", "", substr($error[1], 5)),
+				'message' => str_replace("\n", "", substr($error[2], 4)),
+				'file' => str_replace("\n", "", substr($error[3], 5 + strlen(FROXLOR_INSTALL_DIR))),
+				'line' => str_replace("\n", "", substr($error[4], 5)),
+				'trace' => str_replace(FROXLOR_INSTALL_DIR, "", substr($error[5], 6))
+			);
+
+			// build mail-content
+			$mail_body = "Dear froxlor-team,\n\n";
+			$mail_body .= "the following error has been reported by a user:\n\n";
+			$mail_body .= "-------------------------------------------------------------\n";
+			$mail_body .= $_error['code'].' '.$_error['message']."\n\n";
+			$mail_body .= "File: ".$_error['file'].':'.$_error['line']."\n\n";
+			$mail_body .= "Trace:\n".trim($_error['trace'])."\n\n";
+			$mail_body .= "-------------------------------------------------------------\n\n";
+			$mail_body .= "Froxlor-version: ".$version."\n\n";
+			$mail_body .= "End of report";
+			$mail_html = str_replace("\n", "<br />", $mail_body);
+
+			// send actual report to dev-team
+			if (isset($_POST['send'])
+				&& $_POST['send'] == 'send'
+			) {
+				// send mail and say thanks
+				$_mailerror = false;
+				try {
+					$mail->Subject = '[Froxlor] Error report by user';
+					$mail->AltBody = $mail_body;
+					$mail->MsgHTML($mail_html);
+					$mail->AddAddress('error-reports@froxlor.org', 'Froxlor Developer Team');
+					$mail->Send();
+				} catch(phpmailerException $e) {
+					$mailerr_msg = $e->errorMessage();
+					$_mailerror = true;
+				} catch (Exception $e) {
+					$mailerr_msg = $e->getMessage();
+					$_mailerror = true;
+				}
+
+				if ($_mailerror) {
+					// error when reporting an error...LOLFUQ
+					standard_error('send_report_error', $mailerr_msg);
+				}
+
+				// finally remove error from fs
+				@unlink($err_file);
+				redirectTo($filename, array('s' => $s));
+			}
+			// show a nice summary of the error-report
+			// before actually sending anything
+			eval("echo \"" . getTemplate("index/send_error_report") . "\";");
+
+		} else {
+			redirectTo($filename, array('s' => $s));
+		}
+	} else {
+		redirectTo($filename, array('s' => $s));
 	}
 }

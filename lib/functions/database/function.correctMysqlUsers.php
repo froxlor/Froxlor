@@ -17,75 +17,70 @@
  *
  */
 
-function correctMysqlUsers($mysql_access_host_array)
-{
-	global $db, $settings, $sql, $sql_root, $theme;
-	
-	foreach($sql_root as $mysql_server => $mysql_server_details)
-	{
-		$db_root = new db($mysql_server_details['host'], $mysql_server_details['user'], $mysql_server_details['password'], '');
-		unset($mysql_server_details['password']);
+function correctMysqlUsers($mysql_access_host_array) {
 
-		$users = array();
-		$users_result = $db_root->query('SELECT * FROM `mysql`.`user`');
+	global $log;
 
-		while($users_row = $db_root->fetch_array($users_result))
-		{
-			if(!isset($users[$users_row['User']])
-			   || !is_array($users[$users_row['User']]))
-			{
-				$users[$users_row['User']] = array(
-					'password' => $users_row['Password'],
-					'hosts' => array()
-				);
-			}
+	// get sql-root access data
+	Database::needRoot(true);
+	Database::needSqlData();
+	$sql_root = Database::getSqlData();
+	Database::needRoot(false);
 
-			$users[$users_row['User']]['hosts'][] = $users_row['Host'];
-		}
+	$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `".TABLE_PANEL_DATABASES."`");
+	$mysql_servers = '';
+
+	while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+		Database::needRoot(true, $dbserver['dbserver']);
+		Database::needSqlData();
+		$sql_root = Database::getSqlData();
+
+		$dbm = new DbManager($log);
+		$users = $dbm->getManager()->getAllSqlUsers(false);
 
 		$databases = array(
-			$sql['db']
+				$sql_root['db']
 		);
-		$databases_result = $db->query('SELECT * FROM `' . TABLE_PANEL_DATABASES . '` WHERE `dbserver` = \'' . $mysql_server . '\'');
+		$databases_result_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
+			WHERE `dbserver` = :mysqlserver
+		");
+		Database::pexecute($databases_result_stmt, array('mysqlserver' => $dbserver['dbserver']));
 
-		while($databases_row = $db->fetch_array($databases_result))
-		{
+		while ($databases_row = $databases_result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$databases[] = $databases_row['databasename'];
 		}
 
-		foreach($databases as $username)
-		{
-			if(isset($users[$username])
-			   && is_array($users[$username])
-			   && isset($users[$username]['hosts'])
-			   && is_array($users[$username]['hosts']))
-			{
+		foreach ($databases as $username) {
+
+			if (isset($users[$username])
+					&& is_array($users[$username])
+					&& isset($users[$username]['hosts'])
+					&& is_array($users[$username]['hosts'])
+			) {
+
 				$password = $users[$username]['password'];
-				foreach($mysql_access_host_array as $mysql_access_host)
-				{
+
+				foreach ($mysql_access_host_array as $mysql_access_host) {
+
 					$mysql_access_host = trim($mysql_access_host);
 
-					if(!in_array($mysql_access_host, $users[$username]['hosts']))
-					{
-						$db_root->query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $db_root->escape($username)) . '`.* TO `' . $db_root->escape($username) . '`@`' . $db_root->escape($mysql_access_host) . '` IDENTIFIED BY \'password\'');
-						$db_root->query('SET PASSWORD FOR `' . $db_root->escape($username) . '`@`' . $db_root->escape($mysql_access_host) . '` = \'' . $db_root->escape($password) . '\'');
+					if (!in_array($mysql_access_host, $users[$username]['hosts'])) {
+						$dbm->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host, true);
 					}
 				}
 
-				foreach($users[$username]['hosts'] as $mysql_access_host)
-				{
-					if(!in_array($mysql_access_host, $mysql_access_host_array))
-					{
-						$db_root->query('REVOKE ALL PRIVILEGES ON * . * FROM `' . $db_root->escape($username) . '`@`' . $db_root->escape($mysql_access_host) . '`');
-						$db_root->query('REVOKE ALL PRIVILEGES ON `' . str_replace('_', '\_', $db_root->escape($username)) . '` . * FROM `' . $db_root->escape($username) . '`@`' . $db_root->escape($mysql_access_host) . '`');
-						$db_root->query('DELETE FROM `mysql`.`user` WHERE `User` = "' . $db_root->escape($username) . '" AND `Host` = "' . $db_root->escape($mysql_access_host) . '"');
+				foreach ($users[$username]['hosts'] as $mysql_access_host) {
+
+					if (!in_array($mysql_access_host, $mysql_access_host_array)) {
+						$dbm->getManager()->deleteUser($username, $mysql_access_host);
 					}
 				}
 			}
 		}
 
-		$db_root->query('FLUSH PRIVILEGES');
-		$db_root->close();
-		unset($db_root);
+		$dbm->getManager()->flushPrivileges();
+		Database::needRoot(false);
 	}
 }

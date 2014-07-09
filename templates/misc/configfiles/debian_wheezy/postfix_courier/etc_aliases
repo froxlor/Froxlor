@@ -1,0 +1,16 @@
+# /etc/aliases
+mailer-daemon: postmaster
+postmaster: root
+nobody: root
+hostmaster: root
+usenet: root
+news: root
+webmaster: root
+www: root
+ftp: root
+abuse: root
+noc: root
+security: root
+
+# change this to a valid e-mail address you can access
+root:               root@<SERVERNAME>

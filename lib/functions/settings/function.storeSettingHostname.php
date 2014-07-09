@@ -17,30 +17,41 @@
  *
  */
 
-function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)
-{
+function storeSettingHostname($fieldname, $fielddata, $newfieldvalue) {
+
+	global $idna_convert;
+
 	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
-	if($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'hostname')
-	{
-		global $db, $idna_convert, $theme;
+	if ($returnvalue !== false
+		&& is_array($fielddata)
+		&& isset($fielddata['settinggroup'])
+		&& $fielddata['settinggroup'] == 'system'
+		&& isset($fielddata['varname'])
+		&& $fielddata['varname'] == 'hostname'
+	) {
 		$newfieldvalue = $idna_convert->encode($newfieldvalue);
-		
-		$customerstddomains_result = $db->query('SELECT `standardsubdomain` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `standardsubdomain` <> \'0\'');
+
+		$customerstddomains_result_stmt = Database::prepare("
+			SELECT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `standardsubdomain` <> '0'
+		");
+		Database::pexecute($customerstddomains_result_stmt);
+
 		$ids = array();
 
-		while($customerstddomains_row = $db->fetch_array($customerstddomains_result))
-		{
+		while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$ids[] = (int)$customerstddomains_row['standardsubdomain'];
 		}
 
-		if(count($ids) > 0)
-		{
-			$db->query('UPDATE `' . TABLE_PANEL_DOMAINS . '` SET `domain` = REPLACE(`domain`, \'' . $db->escape(getSetting('system', 'hostname')) . '\', \'' . $db->escape($newfieldvalue) . '\') WHERE `id` IN (\'' . implode('\',\'', $ids) . '\')');
+		if (count($ids) > 0) {
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+				`domain` = REPLACE(`domain`, :host, :newval)
+				WHERE `id` IN ('" . implode(', ', $ids) . "')
+			");
+			Database::pexecute($upd_stmt, array('host' => Settings::Get('system.hostname'), 'newval' => $newfieldvalue));
 		}
 	}
-	
+
 	return $returnvalue;
 }
-
-?>

@@ -20,48 +20,30 @@
  * Support Tickets - Tickets-Class
  */
 
-class ticket
-{
+class ticket {
+
 	/**
 	 * Userinfo
 	 * @var array
 	 */
-
 	private $userinfo = array();
-
-	/**
-	 * Database handler
-	 * @var db
-	 */
-
-	private $db = false;
-
-	/**
-	 * Settings array
-	 * @var settings
-	 */
-
-	private $settings = array();
 
 	/**
 	 * Ticket ID
 	 * @var tid
 	 */
-
 	private $tid = - 1;
 
 	/**
 	 * Ticket Data Array
 	 * @var t_data
 	 */
-
 	private $t_data = array();
 
 	/**
 	 * Ticket-Object-Array
 	 * @var tickets
 	 */
-
 	static private $tickets = array();
 
 	/**
@@ -74,16 +56,10 @@ class ticket
 	 * Class constructor.
 	 *
 	 * @param array userinfo
-	 * @param resource database
-	 * @param array settings
 	 * @param int ticket id
 	 */
-
-	private function __construct($userinfo, $db, $settings, $tid = - 1)
-	{
+	private function __construct($userinfo, $tid = - 1) {
 		$this->userinfo = $userinfo;
-		$this->db = $db;
-		$this->settings = $settings;
 		$this->tid = $tid;
 
 		// initialize purifier
@@ -94,36 +70,30 @@ class ticket
 		$this->_purifier = new HTMLPurifier($config);
 
 		// initialize data array
-
 		$this->initData();
 
 		// read data from database
-
 		$this->readData();
 	}
 
 	/**
 	 * Singleton ftw ;-)
 	 *
+	 * @param array userinfo
 	 * @param int ticket id
 	 */
-
-	static public function getInstanceOf($_usernfo, $_db, $_settings, $_tid)
-	{
-		if(!isset(self::$tickets[$_tid]))
-		{
-			self::$tickets[$_tid] = new ticket($_usernfo, $_db, $_settings, $_tid);
+	static public function getInstanceOf($_usernfo, $_tid) {
+		if (!isset(self::$tickets[$_tid])) {
+			self::$tickets[$_tid] = new ticket($_usernfo, $_tid);
 		}
-
 		return self::$tickets[$_tid];
 	}
 
 	/**
 	 * Initialize data-array
 	 */
+	private function initData() {
 
-	private function initData()
-	{
 		$this->Set('customer', 0, true, true);
 		$this->Set('admin', 1, true, true);
 		$this->Set('subject', '', true, true);
@@ -143,13 +113,16 @@ class ticket
 	/**
 	 * Read ticket data from database.
 	 */
+	private function readData() {
 
-	private function readData()
-	{
-		if(isset($this->tid)
-		&& $this->tid != - 1)
-		{
-			$_ticket = $this->db->query_first('SELECT * FROM `' . TABLE_PANEL_TICKETS . '` WHERE `id` = "' . $this->tid . '"');
+		if (isset($this->tid)
+			&& $this->tid != - 1
+		) {
+			$_ticket_stmt = Database::prepare('
+				SELECT * FROM `' . TABLE_PANEL_TICKETS . '` WHERE `id` = :tid'
+			);
+			$_ticket = Database::pexecute_first($_ticket_stmt, array('tid' => $this->tid));
+
 			$this->Set('customer', $_ticket['customerid'], true, false);
 			$this->Set('admin', $_ticket['adminid'], true, false);
 			$this->Set('subject', $_ticket['subject'], true, false);
@@ -170,107 +143,123 @@ class ticket
 	/**
 	 * Insert data to database
 	 */
+	public function Insert() {
 
-	public function Insert()
-	{
-		$this->db->query("INSERT INTO `" . TABLE_PANEL_TICKETS . "`
-                (`customerid`,  
-                 `adminid`,
-                 `category`, 
-                 `priority`, 
-                 `subject`, 
-                 `message`, 
-                 `dt`, 
-                 `lastchange`, 
-                 `ip`, 
-                 `status`, 
-                 `lastreplier`, 
-                 `by`,
-                 `answerto`) 
-                  VALUES 
-                  ('" . (int)$this->Get('customer') . "', 
-                   '" . (int)$this->Get('admin') . "',
-                   '" . (int)$this->Get('category') . "', 
-                   '" . (int)$this->Get('priority') . "', 
-                   '" . $this->db->escape($this->Get('subject')) . "', 
-                   '" . $this->db->escape($this->Get('message')) . "', 
-                   '" . (int)$this->Get('dt') . "', 
-                   '" . (int)$this->Get('lastchange') . "', 
-                   '" . $this->db->escape($this->Get('ip')) . "', 
-                   '" . (int)$this->Get('status') . "',
-                   '" . (int)$this->Get('lastreplier') . "',
-                   '" . (int)$this->Get('by') . "',
-                   '" . (int)$this->Get('answerto') . "');");
-		$this->tid = $this->db->insert_id();
+		$ins_stmt = Database::prepare("
+			INSERT INTO `" . TABLE_PANEL_TICKETS . "` SET
+                `customerid` = :customerid,
+                `adminid` = :adminid,
+                `category` = :category,
+                `priority` = :priority,
+                `subject` = :subject,
+                `message` = :message,
+                `dt` = :dt,
+                `lastchange` = :lastchange,
+                `ip` = :ip,
+                `status` = :status,
+                `lastreplier` = :lastreplier,
+                `by` = :by,
+                `answerto` = :answerto"
+		);
+		$ins_data = array(
+			'customerid' => $this->Get('customer'),
+			'adminid' => $this->Get('admin'),
+			'category' => $this->Get('category'),
+			'priority' => $this->Get('priority'),
+			'subject' => $this->Get('subject'),
+			'message' => $this->Get('message'),
+			'dt' => time(),
+			'lastchange' => time(),
+			'ip' => $this->Get('ip'),
+			'status' => $this->Get('status'),
+			'lastreplier' => $this->Get('lastreplier'),
+			'by' => $this->Get('by'),
+			'answerto' => $this->Get('answerto')
+		);
+		Database::pexecute($ins_stmt, $ins_data);
+		$this->tid = Database::lastInsertId();
 		return true;
 	}
 
 	/**
 	 * Update data in database
 	 */
+	public function Update() {
 
-	public function Update()
-	{
 		// Update "main" ticket
-
-		$this->db->query('UPDATE `' . TABLE_PANEL_TICKETS . '` SET
-                `priority` = "' . (int)$this->Get('priority') . '",  
-                `lastchange` = "' . (int)$this->Get('lastchange') . '", 
-                `status` = "' . (int)$this->Get('status') . '", 
-                `lastreplier` = "' . (int)$this->Get('lastreplier') . '"
-                WHERE `id` = "' . (int)$this->tid . '";');
+		$upd_stmt = Database::prepare('
+			UPDATE `' . TABLE_PANEL_TICKETS . '` SET
+                `priority` = :priority,
+                `lastchange` = :lastchange,
+                `status` = :status,
+                `lastreplier` = :lastreplier
+                WHERE `id` = :tid'
+		);
+		$upd_data = array(
+			'priority' => $this->Get('priority'),
+			'lastchange' => $this->Get('lastchange'),
+			'status' => $this->Get('status'),
+			'lastreplier' => $this->Get('lastreplier'),
+			'tid' => $this->tid
+		);
+		Database::pexecute($upd_stmt, $upd_data);
 		return true;
 	}
 
 	/**
 	 * Moves a ticket to the archive
 	 */
+	public function Archive() {
 
-	public function Archive()
-	{
 		// Update "main" ticket
-
-		$this->db->query('UPDATE `' . TABLE_PANEL_TICKETS . '` SET `archived` = "1" WHERE `id` = "' . (int)$this->tid . '";');
+		$upd_stmt = Database::prepare('
+			UPDATE `' . TABLE_PANEL_TICKETS . '` SET `archived` = "1" WHERE `id` = :tid'
+		);
+		Database::pexecute($upd_stmt, array('tid' => $this->tid));
 
 		// Update "answers" to ticket
-
-		$this->db->query('UPDATE `' . TABLE_PANEL_TICKETS . '` SET `archived` = "1" WHERE `answerto` = "' . (int)$this->tid . '";');
+		$upd_stmt = Database::prepare('
+			UPDATE `' . TABLE_PANEL_TICKETS . '` SET `archived` = "1" WHERE `answerto` = :tid'
+		);
+		Database::pexecute($upd_stmt, array('tid' => $this->tid));
 		return true;
 	}
 
 	/**
 	 * Remove ticket from database
 	 */
+	public function Delete() {
 
-	public function Delete()
-	{
 		// Delete "main" ticket
-
-		$this->db->query('DELETE FROM `' . TABLE_PANEL_TICKETS . '` WHERE `id` = "' . (int)$this->tid . '";');
+		$del_stmt = Database::prepare('
+			DELETE FROM `' . TABLE_PANEL_TICKETS . '` WHERE `id` = :tid'
+		);
+		Database::pexecute($del_stmt, array('tid' => $this->tid));
 
 		// Delete "answers" to ticket"
-
-		$this->db->query('DELETE FROM `' . TABLE_PANEL_TICKETS . '` WHERE `answerto` = "' . (int)$this->tid . '";');
+		$del_stmt = Database::prepare('
+			DELETE FROM `' . TABLE_PANEL_TICKETS . '` WHERE `answerto` = :tid'
+		);
+		Database::pexecute($del_stmt, array('tid' => $this->tid));
 		return true;
 	}
 
 	/**
 	 * Mail notifications
 	 */
-
 	public function sendMail($customerid = - 1, $template_subject = null, $default_subject = null, $template_body = null, $default_body = null)
 	{
 		global $mail, $theme;
 
 		// Some checks are to be made here in the future
-
-		if($customerid != - 1)
-		{
+		if ($customerid != - 1) {
 			// Get e-mail message for customer
+			$usr_stmt = Database::prepare('
+				SELECT `name`, `firstname`, `company`, `email`
+				FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = :customerid'
+			);
+			$usr = Database::pexecute_first($usr_stmt, array('customerid' => $customerid));
 
-			$usr = $this->db->query_first('SELECT `name`, `firstname`, `company`, `email`
-                               FROM `' . TABLE_PANEL_CUSTOMERS . '` 
-                               WHERE `customerid` = "' . (int)$customerid . '"');
 			$replace_arr = array(
 				'FIRSTNAME' => $usr['firstname'],
 				'NAME' => $usr['name'],
@@ -278,32 +267,41 @@ class ticket
 				'SALUTATION' => getCorrectUserSalutation($usr),
 				'SUBJECT' => $this->Get('subject', true)
 			);
-		}
-		else
-		{
+		} else {
 			$replace_arr = array(
 				'SUBJECT' => $this->Get('subject', true)
 			);
 		}
-
-		$result = $this->db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
-                                WHERE `adminid`=\'' . (int)$this->userinfo['adminid'] . '\' 
-                                AND `language`=\'' . $this->db->escape($this->userinfo['def_language']) . '\' 
-                                AND `templategroup`=\'mails\' 
-                                AND `varname`=\'' . $template_subject . '\'');
+		$tpl_seldata = array(
+			'adminid' => $this->userinfo['adminid'],
+			'lang' => $this->userinfo['def_language'],
+			'tplsubject' => $template_subject
+		);
+		$result_stmt = Database::prepare("
+			SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+			WHERE `adminid`= :adminid
+			AND `language`= :lang
+			AND `templategroup`= 'mails' AND `varname`= :tplsubject"
+		);
+		$result = Database::pexecute_first($result_stmt, $tpl_seldata);
 		$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $default_subject), $replace_arr));
-		$result = $this->db->query_first('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
-                                WHERE `adminid`=\'' . (int)$this->userinfo['adminid'] . '\' 
-                                AND `language`=\'' . $this->db->escape($this->userinfo['def_language']) . '\' 
-                                AND `templategroup`=\'mails\' 
-                                AND `varname`=\'' . $template_body . '\'');
+
+		unset($tpl_seldata['tplsubject']);
+		$tpl_seldata['tplmailbody'] = $template_body;
+
+		$result_stmt = Database::prepare("
+			SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+			WHERE `adminid`= :adminid
+			AND `language`= :lang
+			AND `templategroup`= 'mails' AND `varname`= :tplmailbody"
+		);
+		$result = Database::pexecute_first($result_stmt, $tpl_seldata);
 		$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $default_body), $replace_arr));
 
-		if($customerid != - 1)
-		{
+		if ($customerid != - 1) {
 			$_mailerror = false;
 			try {
-				$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
+				$mail->SetFrom(Settings::Get('ticket.noreply_email'), Settings::Get('ticket.noreply_name'));
 				$mail->Subject = $mail_subject;
 				$mail->AltBody = $mail_body;
 				$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
@@ -318,20 +316,22 @@ class ticket
 			}
 
 			if ($_mailerror) {
-				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->db, $this->settings);
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'));
 				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 				standard_error('errorsendingmail', $usr['email']);
 			}
-
 			$mail->ClearAddresses();
-		}
-		else
-		{
-			$admin = $this->db->query_first("SELECT `name`, `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`='" . (int)$this->userinfo['adminid'] . "'");
 
+		} else {
+
+			$admin_stmt = Database::prepare("
+				SELECT `name`, `email` FROM `" . TABLE_PANEL_ADMINS . "`
+				WHERE `adminid` = :adminid"
+			);
+			$admin = Database::pexecute_first($admin_stmt, array('adminid' => $this->userinfo['adminid']));
 			$_mailerror = false;
 			try {
-				$mail->SetFrom($this->settings['ticket']['noreply_email'], $this->settings['ticket']['noreply_name']);
+				$mail->SetFrom(Settings::Get('ticket.noreply_email'), Settings::Get('ticket.noreply_name'));
 				$mail->Subject = $mail_subject;
 				$mail->AltBody = $mail_body;
 				$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
@@ -346,7 +346,7 @@ class ticket
 			}
 
 			if ($_mailerror) {
-				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'), $this->db, $this->settings);
+				$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'ticket_class'));
 				$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 				standard_error('errorsendingmail', $admin['email']);
 			}
@@ -358,68 +358,77 @@ class ticket
 	/**
 	 * Add a support-categories
 	 */
+	static public function addCategory($_category = null, $_admin = 1, $_order = 1) {
 
-	static public function addCategory($_db, $_category = null, $_admin = 1, $_order = 1)
-	{
-		if($_category != null
-		&& $_category != '')
-		{
-			if($_order < 1) {
+		if ($_category != null
+			&& $_category != ''
+		) {
+			if ($_order < 1) {
 				$_order = 1;
 			}
 
-			$_db->query('INSERT INTO `' . TABLE_PANEL_TICKET_CATS . '` SET
-						`name` = "' . $_db->escape($_category) . '", 
-						`adminid` = "' . (int)$_admin . '", 
-						`logicalorder` = "' . (int)$_order . '"');
+			$ins_stmt = Database::prepare("
+				INSERT INTO `" . TABLE_PANEL_TICKET_CATS . "` SET
+					`name` = :name,
+					`adminid` = :adminid,
+					`logicalorder` = :lo"
+			);
+			$ins_data = array(
+				'name' => $_category,
+				'adminid' => $_admin,
+				'lo' => $_order
+			);
+			Database::pexecute($ins_stmt, $ins_data);
 			return true;
 		}
-
 		return false;
 	}
 
 	/**
 	 * Edit a support-categories
 	 */
+	static public function editCategory($_category = null, $_id = 0, $_order = 1) {
 
-	static public function editCategory($_db, $_category = null, $_id = 0, $_order = 1)
-	{
-		if($_category != null
-		&& $_category != ''
-		&& $_id != 0)
-		{
-			if($_order < 1) {
+		if ($_category != null
+			&& $_category != ''
+			&& $_id != 0
+		) {
+			if ($_order < 1) {
 				$_order = 1;
 			}
 
-			$_db->query('UPDATE `' . TABLE_PANEL_TICKET_CATS . '` SET
-					`name` = "' . $_db->escape($_category) . '",
-					`logicalorder` = "' . (int)$_order . '"
-                   WHERE `id` = "' . (int)$_id . '"');
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_TICKET_CATS . "` SET
+					`name` = :name,
+					`logicalorder` = :lo
+                  WHERE `id` = :id
+			");
+			Database::pexecute($upd_stmt, array('name' => $_category, 'lo' => $_order, 'id' => $_id));
 			return true;
 		}
-
 		return false;
 	}
 
 	/**
 	 * Delete a support-categories
 	 */
+	static public function deleteCategory($_id = 0) {
 
-	static public function deleteCategory($_db, $_id = 0)
-	{
-		if($_id != 0)
-		{
-			$result = $_db->query_first('SELECT COUNT(`id`) as `numtickets` FROM `' . TABLE_PANEL_TICKETS . '`
-                                   WHERE `category` = "' . (int)$_id . '"');
+		if ($_id != 0) {
 
-			if($result['numtickets'] == "0")
-			{
-				$_db->query('DELETE FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `id` = "' . (int)$_id . '"');
+			$result_stmt = Database::prepare("
+				SELECT COUNT(`id`) as `numtickets` FROM `" . TABLE_PANEL_TICKETS . "`
+				WHERE `category` = :cat"
+			);
+			$result = Database::pexecute_first($result_stmt, array('cat' => $_id));
+
+			if ($result['numtickets'] == "0") {
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_PANEL_TICKET_CATS . "` WHERE `id` = :id"
+				);
+				Database::pexecute($del_stmt, array('id' => $_id));
 				return true;
-			}
-			else
-			{
+			} else {
 				return false;
 			}
 		}
@@ -430,53 +439,63 @@ class ticket
 	/**
 	 * Return a support-category-name
 	 */
+	static public function getCategoryName($_id = 0) {
 
-	static public function getCategoryName($_db, $_id = 0)
-	{
-		if($_id != 0)
-		{
-			$category = $_db->query_first('SELECT `name` FROM `' . TABLE_PANEL_TICKET_CATS . '` WHERE `id` = "' . (int)$_id . '"');
+		if ($_id != 0) {
+			$stmt = Database::prepare("
+				SELECT `name` FROM `" . TABLE_PANEL_TICKET_CATS . "` WHERE `id` = :id"
+			);
+			$category = Database::pexecute_first($stmt, array('id' => $_id));
 			return $category['name'];
 		}
-
 		return null;
 	}
 
 	/**
 	 * get the highest order number
 	 * 
-	 * @param object $_db database-object
+	 * @param object $_uid admin-id (optional)
 	 * 
 	 * @return int highest order number
 	 */
-	static public function getHighestOrderNumber($_db = null)
-	{
-		$sql = "SELECT MAX(`logicalorder`) as `highestorder` FROM `" . TABLE_PANEL_TICKET_CATS . "`;";
-		$result = $_db->query_first($sql);
+	static public function getHighestOrderNumber($_uid = 0) {
+
+		$where = '';
+		$sel_data = array();
+		if ($_uid > 0) {
+			$where = " WHERE `adminid` = :adminid";
+			$sel_data['adminid'] = $_uid;
+		}
+		$sql = "SELECT MAX(`logicalorder`) as `highestorder` FROM `" . TABLE_PANEL_TICKET_CATS . "`".$where.";";
+		$result_stmt = Database::prepare($sql);
+		$result = Database::pexecute_first($result_stmt, $sel_data);
 		return (isset($result['highestorder']) ? (int)$result['highestorder'] : 0);
 	}
 
 	/**
 	 * returns the last x archived tickets
 	 */
+	static public function getLastArchived($_num = 10, $_admin = 1) {
 
-	static public function getLastArchived($_db, $_num = 10, $_admin = 1)
-	{
-		if($_num > 0)
-		{
+		if ($_num > 0) {
+
 			$archived = array();
 			$counter = 0;
-			$result = $_db->query('SELECT *,
-                              (SELECT COUNT(`sub`.`id`) 
-                                FROM `' . TABLE_PANEL_TICKETS . '` `sub` 
-                                WHERE `sub`.`answerto` = `main`.`id`) as `ticket_answers`  
-                             FROM `' . TABLE_PANEL_TICKETS . '` `main` 
-                             WHERE `main`.`answerto` = "0" 
-                             AND `main`.`archived` = "1" AND `main`.`adminid` = "' . (int)$_admin . '" 
-                             ORDER BY `main`.`lastchange` DESC LIMIT 0, ' . (int)$_num);
+			$result_stmt = Database::prepare("
+				SELECT *, (
+					SELECT COUNT(`sub`.`id`)
+					FROM `" . TABLE_PANEL_TICKETS . "` `sub`
+					WHERE `sub`.`answerto` = `main`.`id`
+				) as `ticket_answers`
+				FROM `" . TABLE_PANEL_TICKETS . "` `main`
+				WHERE `main`.`answerto` = '0' AND `main`.`archived` = '1'
+				AND `main`.`adminid` = :adminid
+				ORDER BY `main`.`lastchange` DESC LIMIT 0, ".(int)$_num
+			);
+			Database::pexecute($result_stmt, array('adminid' => $_admin));
 
-			while($row = $_db->fetch_array($result))
-			{
+			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+
 				$archived[$counter]['id'] = $row['id'];
 				$archived[$counter]['customerid'] = $row['customerid'];
 				$archived[$counter]['adminid'] = $row['adminid'];
@@ -493,12 +512,9 @@ class ticket
 				$counter++;
 			}
 
-			if(isset($archived[0]['id']))
-			{
+			if (isset($archived[0]['id'])) {
 				return $archived;
-			}
-			else
-			{
+			} else {
 				return false;
 			}
 		}
@@ -506,138 +522,141 @@ class ticket
 
 	/**
 	 * Returns a sql-statement to search the archive
+	 * including necessary parameter-array for PDO
+	 *
+	 * @return array 0 = query, 1 = params-array
 	 */
-
-	static public function getArchiveSearchStatement($db, $subject = NULL, $priority = NULL, $fromdate = NULL, $todate = NULL, $message = NULL, $customer = - 1, $admin = 1, $categories = NULL)
+	static public function getArchiveSearchStatement($subject = null, $priority = null, $fromdate = null, $todate = null, $message = null, $customer = - 1, $admin = 1, $categories = null)
 	{
-		$query = 'SELECT `main`.*,
-                (SELECT COUNT(`sub`.`id`) FROM `' . TABLE_PANEL_TICKETS . '` `sub` 
-                 WHERE `sub`.`answerto` = `main`.`id`) as `ticket_answers` 
-              FROM `' . TABLE_PANEL_TICKETS . '` `main` 
-              WHERE `main`.`archived` = "1" AND `main`.`adminid` = "' . (int)$admin . '" ';
+		$search_params = array();
 
-		if($subject != NULL
-		&& $subject != '')
-		{
-			$query.= 'AND `main`.`subject` LIKE "' . $db->escape("%$subject%") . '" ';
+		$query = "
+			SELECT `main`.*, (
+				SELECT COUNT(`sub`.`id`) FROM `" . TABLE_PANEL_TICKETS . "` `sub`
+				WHERE `sub`.`answerto` = `main`.`id`
+			) as `ticket_answers`
+			FROM `" . TABLE_PANEL_TICKETS . "` `main`
+			WHERE `main`.`archived` = '1' AND `main`.`adminid` = :admin"
+		;
+
+		$search_params['admin'] = $admin;
+
+		if ($subject != NULL
+			&& $subject != ''
+		) {
+			$query .= " AND `main`.`subject` LIKE :subject";
+			$search_params['subject'] = "%".$subject."%";
 		}
 
-		if($priority != NULL
-		&& isset($priority[0])
-		&& $priority[0] != '')
-		{
-			if(isset($priority[1])
-			&& $priority[1] != '')
-			{
-				if(isset($priority[2])
-				&& $priority[2] != '')
-				{
-					$query.= 'AND (`main`.`priority` = "1"
-                     OR `main`.`priority` = "2" 
-                     OR `main`.`priority` = "3") ';
+		if ($priority != null
+			&& isset($priority[0])
+			&& $priority[0] != ''
+		) {
+
+			if (isset($priority[1])
+				&& $priority[1] != ''
+			) {
+
+				if (isset($priority[2])
+					&& $priority[2] != ''
+				) {
+
+					$query .= " AND (`main`.`priority` = '1' OR `main`.`priority` = '2' OR `main`.`priority` = '3')";
+
+				} else {
+
+					$query .= " AND (`main`.`priority` = '1' OR `main`.`priority` = '1')";
 				}
-				else
-				{
-					$query.= 'AND (`main`.`priority` = "1"
-                     OR `main`.`priority` = "2") ';
-				}
+
+			} elseif (isset($priority[2])
+				&& $priority[2] != ''
+			) {
+
+				$query .= " AND (`main`.`priority` = '1' OR `main`.`priority` = '3')";
+
+			} else {
+				$query .= " AND `main`.`priority` = '1'";
 			}
-			elseif(isset($priority[2])
-			&& $priority[2] != '')
-			{
-				$query.= 'AND (`main`.`priority` = "1"
-                     OR `main`.`priority` = "3") ';
+
+		} elseif($priority != null
+			&& isset($priority[1])
+			&& $priority[1] != ''
+		) {
+			if (isset($priority[2])
+				&& $priority[2] != ''
+			) {
+				$query .= " AND (`main`.`priority` = '2' OR `main`.`priority` = '3')";
+			} else {
+				$query .= " AND `main`.`priority` = '2'";
 			}
-			else
-			{
-				$query.= 'AND `main`.`priority` = "1" ';
-			}
-		}
-		elseif($priority != NULL
-		&& isset($priority[1])
-		&& $priority[1] != '')
-		{
-			if(isset($priority[2])
-			&& $priority[2] != '')
-			{
-				$query.= 'AND (`main`.`priority` = "2" OR `main`.`priority` = "3") ';
-			}
-			else
-			{
-				$query.= 'AND `main`.`priority` = "2" ';
-			}
-		}
-		elseif($priority != NULL)
-		{
-			if(isset($priority[3])
-			&& $priority[3] != '')
-			{
-				$query.= 'AND `main`.`priority` = "3" ';
+
+		} elseif($priority != null) {
+
+			if (isset($priority[3])
+				&& $priority[3] != ''
+			) {
+				$query .= " AND `main`.`priority` = '3'";
 			}
 		}
 
-		if($fromdate != NULL
-		&& $fromdate > 0)
-		{
-			$query.= 'AND `main`.`lastchange` > "' . $db->escape(strtotime($fromdate)) . '" ';
+		if ($fromdate != null
+			&& $fromdate > 0
+		) {
+			$query .= " AND `main`.`lastchange` > :fromdate";
+			$search_params['fromdate'] = strtotime($fromdate);
 		}
 
-		if($todate != NULL
-		&& $todate > 0)
-		{
-			$query.= 'AND `main`.`lastchange` < "' . $db->escape(strtotime($todate)) . '" ';
+		if ($todate != null
+			&& $todate > 0
+		) {
+			$query .= " AND `main`.`lastchange` < :todate";
+			$search_params['todate'] = strtotime($todate);
 		}
 
-		if($message != NULL
-		&& $message != '')
-		{
-			$query.= 'AND `main`.`message` LIKE "' . $db->escape("%$message%") . '" ';
+		if ($message != null
+			&& $message != ''
+		) {
+			$query .= " AND `main`.`message` LIKE :message";
+			$search_params['message'] = "%".$message."%";
 		}
 
-		if($customer != - 1)
-		{
-			$query.= 'AND `main`.`customerid` = "' . (int)$customer . '" ';
+		if ($customer != - 1) {
+			$query .= " AND `main`.`customerid` = :customer";
+			$search_params['customer'] = $customer;
 		}
 
-		if($categories != NULL)
-		{
+		if ($categories != null) {
+
 			$cats = array();
-			foreach($categories as $index => $catid)
-			{
-				if ($catid != "")
-				{
+			foreach ($categories as $index => $catid) {
+				if ($catid != "") {
 					$cats[] = $catid;
 				}
 			}
 
-			if (count($cats) > 0)
-			{
-				$query.= 'AND (';
+			if (count($cats) > 0) {
+				$query .= " AND (";
 			}
 
-			foreach($cats as $catid)
-			{
-				if(isset($catid)
-				&& $catid > 0)
-				{
-					$query.= '`main`.`category` = "' . (int)$catid . '" OR ';
+			foreach ($cats as $catid) {
+				if (isset($catid) && $catid > 0) {
+					$query .= "`main`.`category` = :catid_".$catid." OR ";
+					$search_params['catid_'.$catid] = $catid;
 				}
 			}
 
-			if (count($cats) > 0)
-			{
+			if (count($cats) > 0) {
 				$query = substr($query, 0, strlen($query) - 3);
-				$query.= ') ';
+				$query .= ") ";
 			}
 		}
 
-		return $query;
+		return array('0' => $query, '1' => $search_params);
 	}
 
 	/**
 	 * Get statustext by status-no
 	 */
-
 	static public function getStatusText($_lng, $_status = 0)
 	{
 		switch($_status)
@@ -660,7 +679,6 @@ class ticket
 	/**
 	 * Get prioritytext by priority-no
 	 */
-
 	static public function getPriorityText($_lng, $_priority = 0)
 	{
 		switch($_priority)
@@ -698,23 +716,23 @@ class ticket
 		return $str;
 	}
 
-	/*
+	/**
 	 * function customerHasTickets
 	 *
-	 * @param	object	mysql-db-object
 	 * @param	int		customer-id
 	 *
 	 * @return	array/bool	array of ticket-ids if customer has any, else false
 	 */
-	static public function customerHasTickets($_db = null, $_cid = 0)
-	{
-		if($_cid != 0)
-		{
-			$result = $_db->query('SELECT `id` FROM `' . TABLE_PANEL_TICKETS . '` WHERE `customerid` ="'.(int)$_cid.'"');
+	static public function customerHasTickets($_cid = 0) {
+
+		if ($_cid != 0) {
+			$result_stmt = Database::prepare("
+				SELECT `id` FROM `" . TABLE_PANEL_TICKETS . "` WHERE `customerid` = :cid"
+			);
+			Database::pexecute($result_stmt, array('cid' => $_cid));
 
 			$tickets = array();
-			while($row = $_db->fetch_array($result))
-			{
+			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$tickets[] = $row['id'];
 			}
 
@@ -727,33 +745,24 @@ class ticket
 	/**
 	 * Get a data-var
 	 */
+	public function Get($_var = '', $_vartrusted = false) {
 
-	public function Get($_var = '', $_vartrusted = false)
-	{
-		if($_var != '')
-		{
-			if(!$_vartrusted)
-			{
+		if ($_var != '') {
+			if (!$_vartrusted) {
 				$_var = htmlspecialchars($_var);
 			}
 
-			if(isset($this->t_data[$_var]))
-			{
-				if(strtolower($_var) == 'message')
-				{
+			if (isset($this->t_data[$_var])) {
+				if (strtolower($_var) == 'message') {
+					// avoid double line-breaks, #1413
+					$this->t_data[$_var] = str_replace("<br />\n", "\n", $this->t_data[$_var]);
 					return nl2br($this->t_data[$_var]);
-				}
-				elseif(strtolower($_var) == 'subject')
-				{
+				} elseif(strtolower($_var) == 'subject') {
 					return nl2br($this->t_data[$_var]);
-				}
-				else
-				{
+				} else {
 					return $this->t_data[$_var];
 				}
-			}
-			else
-			{
+			} else {
 				return null;
 			}
 		}
@@ -762,24 +771,22 @@ class ticket
 	/**
 	 * Set a data-var
 	 */
+	public function Set($_var = '', $_value = '', $_vartrusted = false, $_valuetrusted = false) {
 
-	public function Set($_var = '', $_value = '', $_vartrusted = false, $_valuetrusted = false)
-	{
-		if($_var != ''
-		&& $_value != '')
-		{
-			if(!$_vartrusted)
-			{
+		if ($_var != ''
+			&& $_value != ''
+		) {
+			if (!$_vartrusted) {
 				$_var = $this->_purifier->purify($_var);
 			}
 
-			if(!$_valuetrusted)
-			{
+			if (!$_valuetrusted) {
 				$_value = $this->_purifier->purify($_value);
 			}
 
-			if(strtolower($_var) == 'message' || strtolower($_var) == 'subject')
-			{
+			if (strtolower($_var) == 'message'
+				|| strtolower($_var) == 'subject'
+			) {
 				$_value = $this->convertLatin1ToHtml($_value);
 			}
 
@@ -787,5 +794,3 @@ class ticket
 		}
 	}
 }
-
-?>

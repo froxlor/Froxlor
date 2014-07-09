@@ -34,10 +34,10 @@ return array(
 						'value' => $result['description'],
 					),
 					'mysql_server' => array(
-						'visible' => (1 < count($sql_root) ? true : false),
+						'visible' => (1 < $count_mysqlservers ? true : false),
 						'label' => $lng['mysql']['mysql_server'],
 						'type' => 'label',
-						'value' => $sql_root[$result['dbserver']]['caption']
+						'value' => $sql_root['caption']
 					),
 					'mysql_password' => array(
 						'label' => $lng['changepassword']['new_password_ifnotempty'],

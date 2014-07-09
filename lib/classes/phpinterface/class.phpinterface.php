@@ -19,19 +19,7 @@
  *
  */
 
-class phpinterface
-{
-	/**
-	 * Database handler
-	 * @var object
-	 */
-	private $_db = false;
-
-	/**
-	 * Settings array
-	 * @var array
-	 */
-	private $_settings = array();
+class phpinterface {
 
 	/**
 	 * Domain-Data array
@@ -54,10 +42,7 @@ class phpinterface
 	/**
 	 * main constructor
 	 */
-	public function __construct($db, $settings, $domain)
-	{
-		$this->_db = $db;
-		$this->_settings = $settings;
+	public function __construct($domain) {
 		$this->_domain = $domain;
 		$this->_setInterface();
 	}
@@ -66,8 +51,7 @@ class phpinterface
 	 * returns the interface-object
 	 * from where we can control it
 	 */
-	public function getInterface()
-	{
+	public function getInterface() {
 		return $this->_interface;
 	}
 	
@@ -76,16 +60,13 @@ class phpinterface
 	 * php-interface: fcgid or php-fpm
 	 * sets private $_interface variable
 	 */
-	private function _setInterface()
-	{
+	private function _setInterface() {
 		// php-fpm
-		if((int)$this->_settings['phpfpm']['enabled'] == 1)
-		{
-			$this->_interface = new phpinterface_fpm($this->_db, $this->_settings, $this->_domain);
-		}
-		elseif((int)$this->_settings['system']['mod_fcgid'] == 1)
-		{
-			$this->_interface = new phpinterface_fcgid($this->_db, $this->_settings, $this->_domain);
+		if ((int)Settings::Get('phpfpm.enabled') == 1) {
+			$this->_interface = new phpinterface_fpm($this->_domain);
+
+		} elseif ((int)Settings::Get('system.mod_fcgid') == 1) {
+			$this->_interface = new phpinterface_fcgid($this->_domain);
 		}
 	}
 
@@ -96,23 +77,20 @@ class phpinterface
 	 * 
 	 * @return array
 	 */
-	public function getPhpConfig($php_config_id)
-	{
+	public function getPhpConfig($php_config_id) {
+
 		$php_config_id = intval($php_config_id);
 
 		// If domain has no config, we will use the default one.
-
-		if($php_config_id == 0)
-		{
+		if ($php_config_id == 0) {
 			$php_config_id = 1;
 		}
 
-		if(!isset($this->php_configs_cache[$php_config_id]))
-		{
-			$this->_php_configs_cache[$php_config_id] = $this->_db->query_first(
-				"SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` 
-				WHERE `id` = " . (int)$php_config_id
+		if (!isset($this->php_configs_cache[$php_config_id])) {
+			$stmt = Database::prepare("
+					SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id"
 			);
+			$this->_php_configs_cache[$php_config_id] = Database::pexecute_first($stmt, array('id' => $php_config_id));
 		}
 
 		return $this->_php_configs_cache[$php_config_id];

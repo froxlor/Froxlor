@@ -21,92 +21,73 @@
  * Class to manage paging system
  * @package Functions
  */
+class paging {
 
-class paging
-{
 	/**
 	 * Userinfo
 	 * @var array
 	 */
-
-	var $userinfo = array();
-
-	/**
-	 * Database handler
-	 * @var db
-	 */
-
-	var $db = false;
+	private $userinfo = array();
 
 	/**
 	 * MySQL-Table
 	 * @var string
 	 */
-
-	var $table = '';
+	private $table = '';
 
 	/**
 	 * Fields with description which should be selectable
 	 * @var array
 	 */
-
-	var $fields = array();
+	private $fields = array();
 
 	/**
 	 * Entries per page
 	 * @var int
 	 */
-
-	var $entriesperpage = 0;
+	private $entriesperpage = 0;
 
 	/**
 	 * Number of entries of table
 	 * @var int
 	 */
-
-	var $entries = 0;
+	private $entries = 0;
 
 	/**
 	 * Sortorder, asc or desc
 	 * @var string
 	 */
-
-	var $sortorder = 'asc';
+	public $sortorder = 'asc';
 
 	/**
 	 * Sortfield
 	 * @var string
 	 */
-
-	var $sortfield = '';
+	public $sortfield = '';
 
 	/**
 	 * Searchfield
 	 * @var string
 	 */
-
-	var $searchfield = '';
+	private $searchfield = '';
 
 	/**
 	 * Searchtext
 	 * @var string
 	 */
-
-	var $searchtext = '';
+	private $searchtext = '';
 
 	/**
 	 * Pagenumber
 	 * @var int
 	 */
-
-	var $pageno = 0;
+	private $pageno = 0;
 
 	/**
 	 * Switch natsorting on/off
 	 * @var bool
 	 */
-
-	var $natSorting = false;
+	private $natSorting = false;
 
 	/**
 	 * Class constructor. Loads settings from request or from userdata and saves them to session.
@@ -114,20 +95,26 @@ class paging
 	 * @param array userinfo
 	 * @param string Name of Table
 	 * @param array Fields, in format array( 'fieldname_in_mysql' => 'field_caption' )
-	 * @param int entries per page
-	 * @param bool Switch natsorting on/off (global, affects all calls of sort)
+	 * @param int *deprecated* entries per page
+	 * @param bool *deprecated* Switch natsorting on/off (global, affects all calls of sort)
+	 * @param int $default_field default sorting-field-index
+	 * @param string $default_order default sorting order 'asc' or 'desc'
+	 *
 	 */
+	public function __construct($userinfo, $table, $fields, $entriesperpage = 0, $natSorting = false, $default_field = 0, $default_order = 'asc') {
 
-	function paging($userinfo, $db, $table, $fields, $entriesperpage, $natSorting = false)
-	{
+		// entries per page and natsorting-flag are not
+		// passed as parameter anymore, because these are
+		// from the settings anyway
+		$entriesperpage = Settings::Get('panel.paging');
+		$natSorting = Settings::Get('panel.natsorting');
+
 		$this->userinfo = $userinfo;
 
-		if(!is_array($this->userinfo['lastpaging']))
-		{
+		if (!is_array($this->userinfo['lastpaging'])) {
 			$this->userinfo['lastpaging'] = unserialize($this->userinfo['lastpaging']);
 		}
 
-		$this->db = $db;
 		$this->table = $table;
 		$this->fields = $fields;
 		$this->entriesperpage = $entriesperpage;
@@ -135,64 +122,57 @@ class paging
 		$checklastpaging = (isset($this->userinfo['lastpaging']['table']) && $this->userinfo['lastpaging']['table'] == $this->table);
 		$this->userinfo['lastpaging']['table'] = $this->table;
 
-		if(isset($_REQUEST['sortorder'])
-		   && (strtolower($_REQUEST['sortorder']) == 'desc' || strtolower($_REQUEST['sortorder']) == 'asc'))
-		{
+		if (isset($_REQUEST['sortorder'])
+			&& (strtolower($_REQUEST['sortorder']) == 'desc'
+			|| strtolower($_REQUEST['sortorder']) == 'asc')
+		) {
 			$this->sortorder = strtolower($_REQUEST['sortorder']);
-		}
-		else
-		{
-			if($checklastpaging
-			   && isset($this->userinfo['lastpaging']['sortorder'])
-			   && (strtolower($this->userinfo['lastpaging']['sortorder']) == 'desc' || strtolower($this->userinfo['lastpaging']['sortorder']) == 'asc'))
-			{
+
+		} else {
+
+			if ($checklastpaging
+				&& isset($this->userinfo['lastpaging']['sortorder'])
+				&& (strtolower($this->userinfo['lastpaging']['sortorder']) == 'desc'
+				|| strtolower($this->userinfo['lastpaging']['sortorder']) == 'asc')
+			) {
 				$this->sortorder = strtolower($this->userinfo['lastpaging']['sortorder']);
-			}
-			else
-			{
-				$this->sortorder = 'asc';
+
+			} else {
+				$this->sortorder = $default_order;
 			}
 		}
 
 		$this->userinfo['lastpaging']['sortorder'] = $this->sortorder;
 
-		if(isset($_REQUEST['sortfield'])
-		   && isset($fields[$_REQUEST['sortfield']]))
-		{
+		if (isset($_REQUEST['sortfield'])
+			&& isset($fields[$_REQUEST['sortfield']])
+		) {
 			$this->sortfield = $_REQUEST['sortfield'];
-		}
-		else
-		{
-			if($checklastpaging
-			   && isset($this->userinfo['lastpaging']['sortfield'])
-			   && isset($fields[$this->userinfo['lastpaging']['sortfield']]))
-			{
+		} else {
+			if ($checklastpaging
+				&& isset($this->userinfo['lastpaging']['sortfield'])
+				&& isset($fields[$this->userinfo['lastpaging']['sortfield']])
+			) {
 				$this->sortfield = $this->userinfo['lastpaging']['sortfield'];
-			}
-			else
-			{
+			} else {
 				$fieldnames = array_keys($fields);
-				$this->sortfield = $fieldnames[0];
+				$this->sortfield = $fieldnames[$default_field];
 			}
 		}
 
 		$this->userinfo['lastpaging']['sortfield'] = $this->sortfield;
 
-		if(isset($_REQUEST['searchfield'])
-		   && isset($fields[$_REQUEST['searchfield']]))
-		{
+		if (isset($_REQUEST['searchfield'])
+			&& isset($fields[$_REQUEST['searchfield']])
+		) {
 			$this->searchfield = $_REQUEST['searchfield'];
-		}
-		else
-		{
-			if($checklastpaging
-			   && isset($this->userinfo['lastpaging']['searchfield'])
-			   && isset($fields[$this->userinfo['lastpaging']['searchfield']]))
-			{
+		} else {
+			if ($checklastpaging
+				&& isset($this->userinfo['lastpaging']['searchfield'])
+				&& isset($fields[$this->userinfo['lastpaging']['searchfield']])
+			) {
 				$this->searchfield = $this->userinfo['lastpaging']['searchfield'];
-			}
-			else
-			{
+			} else {
 				$fieldnames = array_keys($fields);
 				$this->searchfield = $fieldnames[0];
 			}
@@ -200,49 +180,56 @@ class paging
 
 		$this->userinfo['lastpaging']['searchfield'] = $this->searchfield;
 
-		if(isset($_REQUEST['searchtext'])
-		   && (preg_match('/[-_@\p{L}\p{N}*.]+$/u', $_REQUEST['searchtext']) || $_REQUEST['searchtext'] === ''))
-		{
-			$this->searchtext = $_REQUEST['searchtext'];
-		}
-		else
-		{
-			if($checklastpaging
-			   && isset($this->userinfo['lastpaging']['searchtext'])
-			   && preg_match('/[-_@\p{L}\p{N}*.]+$/u', $this->userinfo['lastpaging']['searchtext']))
-			{
+		if (isset($_REQUEST['searchtext'])
+			&& (preg_match('/[-_@\p{L}\p{N}*.]+$/u', $_REQUEST['searchtext'])
+			|| $_REQUEST['searchtext'] === '')
+		) {
+			$this->searchtext = trim($_REQUEST['searchtext']);
+		} else {
+			if ($checklastpaging
+				&& isset($this->userinfo['lastpaging']['searchtext'])
+				&& preg_match('/[-_@\p{L}\p{N}*.]+$/u', $this->userinfo['lastpaging']['searchtext'])
+			) {
 				$this->searchtext = $this->userinfo['lastpaging']['searchtext'];
-			}
-			else
-			{
+			} else {
 				$this->searchtext = '';
 			}
 		}
 
 		$this->userinfo['lastpaging']['searchtext'] = $this->searchtext;
 
-		if(isset($_REQUEST['pageno'])
-		   && intval($_REQUEST['pageno']) != 0)
-		{
+		if (isset($_REQUEST['pageno'])
+			&& intval($_REQUEST['pageno']) != 0
+		) {
 			$this->pageno = intval($_REQUEST['pageno']);
-		}
-		else
-		{
-			if($checklastpaging
-			   && isset($this->userinfo['lastpaging']['pageno'])
-			   && intval($this->userinfo['lastpaging']['pageno']) != 0)
-			{
+		} else {
+			if ($checklastpaging
+				&& isset($this->userinfo['lastpaging']['pageno'])
+				&& intval($this->userinfo['lastpaging']['pageno']) != 0
+			) {
 				$this->pageno = intval($this->userinfo['lastpaging']['pageno']);
-			}
-			else
-			{
+			} else {
 				$this->pageno = 1;
 			}
 		}
 
 		$this->userinfo['lastpaging']['pageno'] = $this->pageno;
-		$query = 'UPDATE `' . TABLE_PANEL_SESSIONS . '` SET `lastpaging`="' . $this->db->escape(serialize($this->userinfo['lastpaging'])) . '" WHERE `hash`="' . $this->db->escape($userinfo['hash']) . '"  AND `userid` = "' . $this->db->escape($userinfo['userid']) . '"  AND `ipaddress` = "' . $this->db->escape($userinfo['ipaddress']) . '"  AND `useragent` = "' . $this->db->escape($userinfo['useragent']) . '"  AND `adminsession` = "' . $this->db->escape($userinfo['adminsession']) . '" ';
-		$this->db->query($query);
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
+			`lastpaging` = :lastpaging
+			WHERE `hash` = :hash  AND `userid` = :userid
+			AND `ipaddress` = :ipaddr AND `useragent` = :ua
+			AND `adminsession` = :adminsession
+		");
+		$upd_data = array(
+			'lastpaging' => serialize($this->userinfo['lastpaging']),
+			'hash' => $userinfo['hash'],
+			'userid' => $userinfo['userid'],
+			'ipaddr' => $userinfo['ipaddress'],
+			'ua' => $userinfo['useragent'],
+			'adminsession' => $userinfo['adminsession']
+		);
+		Database::pexecute($upd_stmt, $upd_data);
 	}
 
 	/**
@@ -250,13 +237,11 @@ class paging
 	 *
 	 * @param int entries
 	 */
+	public function setEntries($entries) {
 
-	function setEntries($entries)
-	{
 		$this->entries = $entries;
 
-		if(($this->pageno - 1) * $this->entriesperpage > $this->entries)
-		{
+		if (($this->pageno - 1) * $this->entriesperpage > $this->entries) {
 			$this->pageno = 1;
 		}
 
@@ -269,9 +254,7 @@ class paging
 	 * @param int number of row
 	 * @return bool to display or not to display, that's the question
 	 */
-
-	function checkDisplay($count)
-	{
+	public function checkDisplay($count) {
 		$begin = (intval($this->pageno) - 1) * intval($this->entriesperpage);
 		$end = (intval($this->pageno) * intval($this->entriesperpage));
 		return (($count >= $begin && $count < $end) || $this->entriesperpage == 0);
@@ -283,30 +266,21 @@ class paging
 	 * @param bool should returned condition code start with WHERE (false) or AND (true)?
 	 * @return string the condition code
 	 */
-
-	function getSqlWhere($append = false)
-	{
-		if($this->searchtext != '')
-		{
-			if($append == true)
-			{
+	public function getSqlWhere($append = false) {
+		if ($this->searchtext != '') {
+			if ($append == true) {
 				$condition = ' AND ';
-			}
-			else
-			{
+			} else {
 				$condition = ' WHERE ';
 			}
 
 			$searchfield = explode('.', $this->searchfield);
-			foreach($searchfield as $id => $field)
-			{
-				if(substr($field, -1, 1) != '`')
-				{
+			foreach ($searchfield as $id => $field) {
+				if (substr($field, -1, 1) != '`') {
 					$field.= '`';
 				}
 
-				if($field{0} != '`')
-				{
+				if ($field{0} != '`') {
 					$field = '`' . $field;
 				}
 
@@ -314,11 +288,41 @@ class paging
 			}
 
 			$searchfield = implode('.', $searchfield);
-			$searchtext = str_replace('*', '%', $this->searchtext);
-			$condition.= $searchfield . ' LIKE "' . $this->db->escape($searchtext) . '" ';
-		}
-		else
-		{
+			
+			$ops = array('<', '>', '=');
+			
+			// check if we use an operator or not
+			$useOper = 0;
+			$oper = "=";
+			if (in_array(substr($this->searchtext, 0, 1), $ops)) {
+				$useOper = 1;
+				$oper = substr($this->searchtext, 0, 1);
+			}
+			
+			// check for diskspace and whether searchtext is a number
+			// in any other case the logical-operators would make no sense
+			if (strpos($searchfield, 'diskspace') > 0 && is_numeric(substr($this->searchtext, $useOper))) {
+				// anything with diskspace is *1024
+				$searchtext = ((int)substr($this->searchtext, $useOper))*1024;
+				$useOper = 1;
+			} elseif (strpos($searchfield, 'traffic') > 0 && is_numeric(substr($this->searchtext, $useOper))) {
+				// anything with traffic is *1024*1024
+				$searchtext = ((int)substr($this->searchtext, $useOper))*1024*1024;
+				$useOper = 1;
+			} else {
+				// any other field
+				$searchtext = substr($this->searchtext, $useOper);
+			}
+			
+			if ($useOper == 1 && is_numeric(substr($this->searchtext, $useOper))) {
+				// now as we use >, < or = we use the given operator and not LIKE
+				$condition.= $searchfield . " ".$oper." " . Database::quote($searchtext);
+			} else {
+				$searchtext = str_replace('*', '%', $this->searchtext);
+				$condition.= $searchfield . " LIKE " . Database::quote($searchtext);
+			}
+			
+		} else {
 			$condition = '';
 		}
 
@@ -331,19 +335,15 @@ class paging
 	 * @param bool Switch natsorting on/off (local, affects just this call)
 	 * @return string the "order by"-code
 	 */
+	public function getSqlOrderBy($natSorting = null) {
 
-	function getSqlOrderBy($natSorting = null)
-	{
 		$sortfield = explode('.', $this->sortfield);
-		foreach($sortfield as $id => $field)
-		{
-			if(substr($field, -1, 1) != '`')
-			{
+		foreach ($sortfield as $id => $field) {
+			if (substr($field, -1, 1) != '`') {
 				$field.= '`';
 			}
 
-			if($field{0} != '`')
-			{
+			if ($field{0} != '`') {
 				$field = '`' . $field;
 			}
 
@@ -353,15 +353,17 @@ class paging
 		$sortfield = implode('.', $sortfield);
 		$sortorder = strtoupper($this->sortorder);
 
-		if($natSorting == true
-		   || ($natSorting === null && $this->natSorting == true))
-		{
+		if ($natSorting == true
+			|| ($natSorting === null && $this->natSorting == true)
+		) {
 			// Acts similar to php's natsort(), found in one comment at http://my.opera.com/cpr/blog/show.dml/160556
-
-			$sortcode = 'ORDER BY CONCAT( IF( ASCII( LEFT( ' . $sortfield . ', 5 ) ) > 57, LEFT( ' . $sortfield . ', 1 ), \'0\' ), IF( ASCII( RIGHT( ' . $sortfield . ', 1 ) ) > 57, LPAD( ' . $sortfield . ', 255, \'0\' ), LPAD( CONCAT( ' . $sortfield . ', \'-\' ), 255, \'0\' ) ) ) ' . $sortorder;
-		}
-		else
-		{
+			$sortcode = "ORDER BY CONCAT( IF( ASCII( LEFT( " . $sortfield . ", 5 ) ) > 57,
+				LEFT( " . $sortfield . ", 1 ), 0 ),
+				IF( ASCII( RIGHT( " . $sortfield . ", 1 ) ) > 57,
+					LPAD( " . $sortfield . ", 255, '0' ),
+					LPAD( CONCAT( " . $sortfield . ", '-' ), 255, '0' )
+				)) " . $sortorder;
+		} else {
 			$sortcode = 'ORDER BY ' . $sortfield . ' ' . $sortorder;
 		}
 
@@ -373,13 +375,10 @@ class paging
 	 *
 	 * @return string always empty
 	 */
-
-	function getSqlLimit()
-	{
+	public function getSqlLimit() {
 		/**
 		 * currently not in use
 		 */
-
 		return '';
 	}
 
@@ -389,21 +388,18 @@ class paging
 	 * @param array Language array
 	 * @return string the html sortcode
 	 */
+	public function getHtmlSortCode($lng, $break = false) {
 
-	function getHtmlSortCode($lng, $break = false)
-	{
 		$sortcode = '';
 		$fieldoptions = '';
 		$orderoptions = '';
 
-		foreach($this->fields as $fieldname => $fieldcaption)
-		{
+		foreach ($this->fields as $fieldname => $fieldcaption) {
 			$fieldoptions.= makeoption($fieldcaption, $fieldname, $this->sortfield, true, true);
 		}
 
 		$breakorws = ($break ? '<br />' : '&nbsp;');
-		foreach(array('asc' => $lng['panel']['ascending'], 'desc' => $lng['panel']['decending']) as $sortordertype => $sortorderdescription)
-		{
+		foreach (array('asc' => $lng['panel']['ascending'], 'desc' => $lng['panel']['decending']) as $sortordertype => $sortorderdescription) {
 			$orderoptions.= makeoption($sortorderdescription, $sortordertype, $this->sortorder, true, true);
 		}
 
@@ -418,24 +414,20 @@ class paging
 	 * @param string If set, only this field will be returned
 	 * @return mixed An array or a string (if field is set) of html code of arrows
 	 */
+	public function getHtmlArrowCode($baseurl, $field = '') {
 
-	function getHtmlArrowCode($baseurl, $field = '')
-	{
 		global $theme;
 
-		if($field != ''
-		   && isset($this->fields[$field]))
-		{
+		if ($field != ''
+			&& isset($this->fields[$field])
+		) {
 			$baseurl = htmlspecialchars($baseurl);
 			$fieldname = htmlspecialchars($field);
 			eval("\$arrowcode =\"" . getTemplate("misc/htmlarrowcode", '1') . "\";");
-		}
-		else
-		{
+		} else {
 			$baseurl = htmlspecialchars($baseurl);
 			$arrowcode = array();
-			foreach($this->fields as $fieldname => $fieldcaption)
-			{
+			foreach ($this->fields as $fieldname => $fieldcaption) {
 				$fieldname = htmlspecialchars($fieldname);
 				eval("\$arrowcode[\$fieldname] =\"" . getTemplate("misc/htmlarrowcode", '1') . "\";");
 			}
@@ -450,14 +442,12 @@ class paging
 	 * @param array Language array
 	 * @return string the html searchcode
 	 */
+	public function getHtmlSearchCode($lng) {
 
-	function getHtmlSearchCode($lng)
-	{
 		$searchcode = '';
 		$fieldoptions = '';
 		$searchtext = htmlspecialchars($this->searchtext);
-		foreach($this->fields as $fieldname => $fieldcaption)
-		{
+		foreach ($this->fields as $fieldname => $fieldcaption) {
 			$fieldoptions.= makeoption($fieldcaption, $fieldname, $this->searchfield, true, true);
 		}
 		eval("\$searchcode =\"" . getTemplate("misc/htmlsearchcode", '1') . "\";");
@@ -470,61 +460,42 @@ class paging
 	 * @param string URL to use as base for links
 	 * @return string the html pagingcode
 	 */
-
-	function getHtmlPagingCode($baseurl)
-	{
-		if($this->entriesperpage == 0)
-		{
+	public function getHtmlPagingCode($baseurl) {
+		if ($this->entriesperpage == 0) {
 			return '';
-		}
-		else
-		{
+		} else {
 			$pages = intval($this->entries / $this->entriesperpage);
 		}
 
-		if($this->entries % $this->entriesperpage != 0)
-		{
+		if ($this->entries % $this->entriesperpage != 0) {
 			$pages++;
 		}
 
-		if($pages > 1)
-		{
-			$start = $this->pageno - 4;
+		if ($pages > 1) {
 
-			if($start < 1)
-			{
+			$start = $this->pageno - 4;
+			if ($start < 1) {
 				$start = 1;
 			}
 
 			$stop = $this->pageno + 4;
-
-			if($stop > $pages)
-			{
+			if ($stop > $pages) {
 				$stop = $pages;
 			}
 
 			$pagingcode = '<a href="' . htmlspecialchars($baseurl) . '&amp;pageno=1">&laquo;</a> <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) - 1) == 0 ? '1' : intval($this->pageno) - 1) . '">&lt;</a>&nbsp;';
-			for ($i = $start;$i <= $stop;$i++)
-			{
-				if($i != $this->pageno)
-				{
+			for ($i = $start;$i <= $stop;$i++) {
+				if ($i != $this->pageno) {
 					$pagingcode.= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . $i . '">' . $i . '</a>&nbsp;';
-				}
-				else
-				{
+				} else {
 					$pagingcode.= ' <strong>' . $i . '</strong>&nbsp;';
 				}
 			}
-
 			$pagingcode.= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) + 1) > $pages ? $pages : intval($this->pageno) + 1) . '">&gt;</a> <a href="' . $baseurl . '&amp;pageno=' . $pages . '">&raquo;</a>';
-		}
-		else
-		{
+		} else {
 			$pagingcode = '';
 		}
 
 		return $pagingcode;
 	}
 }
-
-?>

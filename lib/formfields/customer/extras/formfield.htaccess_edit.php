@@ -44,14 +44,14 @@ return array(
 						'value' => $result['error404path']
 					),
 					'error403path' => array(
-						'visible' => ($settings['system']['webserver'] == 'apache2'),
+						'visible' => (Settings::Get('system.webserver') == 'apache2'),
 						'label' => $lng['extras']['errordocument403path'],
 						'desc' => $lng['panel']['descriptionerrordocument'],
 						'type' => 'text',
 						'value' => $result['error403path']
 					),
 					'error500path' => array(
-						'visible' => ($settings['system']['webserver'] == 'apache2'),
+						'visible' => (Settings::Get('system.webserver') == 'apache2'),
 						'label' => $lng['extras']['errordocument500path'],
 						'desc' => $lng['panel']['descriptionerrordocument'],
 						'type' => 'text',

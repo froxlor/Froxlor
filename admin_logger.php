@@ -18,53 +18,44 @@
  */
 
 define('AREA', 'admin');
+require './lib/init.php';
 
-/**
- * Include our init.php, which manages Sessions, Language etc.
- */
-
-require ("./lib/init.php");
-
-if($page == 'log'
-   && $userinfo['change_serversettings'] == '1')
-{
-	if($action == '')
-	{
+if ($page == 'log'
+   && $userinfo['change_serversettings'] == '1'
+) {
+	if ($action == '') {
 		$fields = array(
 			'date' => $lng['logger']['date'],
 			'type' => $lng['logger']['type'],
 			'user' => $lng['logger']['user'],
 			'text' => $lng['logger']['action']
 		);
-		$paging = new paging($userinfo, $db, TABLE_PANEL_LOG, $fields, $settings['panel']['paging'], $settings['panel']['natsorting']);
-		$paging->sortfield = 'date';
-		$paging->sortorder = 'desc';
-		$result = $db->query('SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy() . ' ' . $paging->getSqlLimit());
-		$paging->setEntries($db->num_rows($result));
+		$paging = new paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc');
+		$result_stmt = Database::query('
+			SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy() . ' ' . $paging->getSqlLimit()
+		);
+		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$clog = array();
 
-		while($row = $db->fetch_array($result))
-		{
-			if(!isset($clog[$row['action']])
-			   || !is_array($clog[$row['action']]))
-			{
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+			if (!isset($clog[$row['action']])
+				|| !is_array($clog[$row['action']])
+			) {
 				$clog[$row['action']] = array();
 			}
-
 			$clog[$row['action']][$row['logid']] = $row;
 		}
 
-		if($paging->sortfield == 'date'
-		   && $paging->sortorder == 'desc')
-		{
+		if ($paging->sortfield == 'date'
+			&& $paging->sortorder == 'desc'
+		) {
 			krsort($clog);
-		}
-		else
-		{
+		} else {
 			ksort($clog);
 		}
 
@@ -72,50 +63,47 @@ if($page == 'log'
 		$count = 0;
 		$log_count = 0;
 		$log = '';
-		foreach($clog as $action => $logrows)
-		{
+		foreach ($clog as $action => $logrows) {
 			$_action = 0;
-			foreach($logrows as $row)
-			{
-				if($paging->checkDisplay($i))
-				{
+			foreach ($logrows as $row) {
+				if ($paging->checkDisplay($i)) {
 					$row = htmlentities_array($row);
 					$row['date'] = date("d.m.y H:i:s", $row['date']);
 
-					if($_action != $action)
-					{
-						switch($action)
-						{
+					if ($_action != $action) {
+						switch ($action) {
 							case USR_ACTION:
 								$_action = $lng['admin']['customer'];
 								break;
 							case RES_ACTION:
-								$_action = 'Reseller';
+								$_action = $lng['logger']['reseller'];
 								break;
 							case ADM_ACTION:
-								$_action = 'Administrator';
+								$_action = $lng['logger']['admin'];
 								break;
 							case CRON_ACTION:
-								$_action = 'Cronjob';
+								$_action = $lng['logger']['cron'];
+								break;
+							case LOGIN_ACTION:
+								$_action = $lng['logger']['login'];
 								break;
 							case LOG_ERROR:
-								$_action = 'Internal';
+								$_action = $lng['logger']['intern'];
 								break;
 							default:
-								$_action = 'Unknown';
+								$_action = $lng['logger']['unknown'];
 								break;
 						}
 
 						$row['action'] = $_action;
-						eval("\$log.=\"" . getTemplate("logger/logger_action") . "\";");
+						eval("\$log.=\"" . getTemplate('logger/logger_action') . "\";");
 					}
 
 					$log_count++;
 					$type = $row['type'];
 					$_type = 'unknown';
 
-					switch($type)
-					{
+					switch ($type) {
 						case LOG_INFO:
 							$_type = 'Information';
 							break;
@@ -137,32 +125,29 @@ if($page == 'log'
 					}
 
 					$row['type'] = $_type;
-					eval("\$log.=\"" . getTemplate("logger/logger_log") . "\";");
+					eval("\$log.=\"" . getTemplate('logger/logger_log') . "\";");
 					$count++;
 					$_action = $action;
 				}
 			}
-
 			$i++;
 		}
 
-		eval("echo \"" . getTemplate("logger/logger") . "\";");
-	}
-	elseif($action == 'truncate')
-	{
-		if(isset($_POST['send'])
-		   && $_POST['send'] == 'send')
-		{
-			$yesterday = time() - (60 * 10);
+		eval("echo \"" . getTemplate('logger/logger') . "\";");
 
-			/* (60*60*24); */
+	} elseif ($action == 'truncate') {
 
-			$db->query("DELETE FROM `" . TABLE_PANEL_LOG . "` WHERE `date` < '" . $yesterday . "'");
-			$log->logAction(ADM_ACTION, LOG_WARNING, "truncated the system-log (mysql)");
-			redirectTo($filename, Array('page' => $page, 's' => $s));
-		}
-		else
-		{
+		if (isset($_POST['send'])
+		   && $_POST['send'] == 'send'
+		) {
+			$truncatedate = time() - (60 * 10);
+			$trunc_stmt = Database::prepare("
+				DELETE FROM `" . TABLE_PANEL_LOG . "` WHERE `date` < :trunc"
+			);
+			Database::pexecute($trunc_stmt, array('trunc' => $truncatedate));
+			$log->logAction(ADM_ACTION, LOG_WARNING, 'truncated the system-log (mysql)');
+			redirectTo($filename, array('page' => $page, 's' => $s));
+		} else {
 			ask_yesno('logger_reallytruncate', $filename, array('page' => $page, 'action' => $action), TABLE_PANEL_LOG);
 		}
 	}

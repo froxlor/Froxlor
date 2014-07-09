@@ -17,62 +17,58 @@
  *
  */
 
-function storeSettingField($fieldname, $fielddata, $newfieldvalue)
-{
-	if(is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] != '' && isset($fielddata['varname']) && $fielddata['varname'] != '')
-	{
+function storeSettingField($fieldname, $fielddata, $newfieldvalue) {
 
-		if(saveSetting($fielddata['settinggroup'], $fielddata['varname'], $newfieldvalue) != false)
-		{
+	if (is_array($fielddata)
+			&& isset($fielddata['settinggroup'])
+			&& $fielddata['settinggroup'] != ''
+			&& isset($fielddata['varname'])
+			&& $fielddata['varname'] != ''
+	) {
+		if (Settings::Set($fielddata['settinggroup'].'.'.$fielddata['varname'], $newfieldvalue) !== false) {
 			/*
 			 * when fielddata[cronmodule] is set, this means enable/disable a cronjob
-			 */
-			if(isset($fielddata['cronmodule']) && $fielddata['cronmodule'] != '')
-			{
+			*/
+			if (isset($fielddata['cronmodule'])
+					&& $fielddata['cronmodule'] != ''
+			) {
 				toggleCronStatus($fielddata['cronmodule'], $newfieldvalue);
 			}
 
 			/*
 			 * satisfy dependencies
-			 */
-			if(isset($fielddata['dependency']) && is_array($fielddata['dependency']))
-			{
-				if((int)$fielddata['dependency']['onlyif'] == (int)$newfieldvalue)
-				{
+			*/
+			if (isset($fielddata['dependency'])
+					&& is_array($fielddata['dependency'])
+			) {
+				if ((int)$fielddata['dependency']['onlyif'] == (int)$newfieldvalue) {
 					storeSettingField($fielddata['dependency']['fieldname'], $fielddata['dependency']['fielddata'], $newfieldvalue);
 				}
 			}
 
 			return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
-		}
-		else
-		{
+		} else {
 			return false;
 		}
-	}
-	else
-	{
+	} else {
 		return false;
 	}
 }
 
-function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue)
-{
-	if(is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] != '' && isset($fielddata['varname']) && $fielddata['varname'] != '')
-	{
-		if(saveSetting($fielddata['settinggroup'], $fielddata['varname'], $newfieldvalue) != false)
-		{
+function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue) {
+
+	if (is_array($fielddata)
+			&& isset($fielddata['settinggroup'])
+			&& $fielddata['settinggroup'] != ''
+			&& isset($fielddata['varname'])
+			&& $fielddata['varname'] != ''
+	) {
+		if (Settings::Set($fielddata['settinggroup'].'.'.$fielddata['varname'], $newfieldvalue) !== false) {
 			return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
-		}
-		else
-		{
+		} else {
 			return false;
 		}
-	}
-	else
-	{
+	} else {
 		return false;
 	}
 }
-
-?>

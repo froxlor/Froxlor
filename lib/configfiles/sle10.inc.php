@@ -18,8 +18,8 @@
  */
 
 // Try to guess user/group from settings' email UID/GID
-$vmail_user=posix_getpwuid($settings['system']['vmail_uid']);
-$vmail_group=posix_getgrgid($settings['system']['vmail_gid']);
+$vmail_user=posix_getpwuid(Settings::Get('system.vmail_uid'));
+$vmail_group=posix_getgrgid(Settings::Get('system.vmail_gid'));
 
 /* If one of them are not set, call it 'vmail' and suggest creating user/group
  * in scripts. */
@@ -34,52 +34,52 @@ if ($vmail_group === false) {
 	$vmail_groupname=$vmail_group['name'];
 }
 
-return Array(
-	'sle_10' => Array(
-		'label' => 'SUSE Linux Enterprise 10',
-		'services' => Array(
-			'http' => Array(
+return array(
+	'sle_10' => array(
+		'label' => 'SUSE Linux Enterprise 10 (deprecated)',
+		'services' => array(
+			'http' => array(
 				'label' => $lng['admin']['configfiles']['http'],
-				'daemons' => Array(
-					'apache' => Array(
+				'daemons' => array(
+					'apache' => array(
 						'label' => 'Apache',
-						'commands' => Array(
+						'commands' => array(
 							$configcommand['vhost'],
 							$configcommand['diroptions'],
 							$configcommand['include'],
-							'mkdir -p ' . $settings['system']['documentroot_prefix'],
-							'mkdir -p ' . $settings['system']['logfiles_directory'],
-							($settings['system']['deactivateddocroot'] != '') ? 'mkdir -p ' . $settings['system']['deactivateddocroot'] : ''
+							'mkdir -p ' . Settings::Get('system.documentroot_prefix'),
+							'mkdir -p ' . Settings::Get('system.logfiles_directory'),
+							(Settings::Get('system.deactivateddocroot') != '') ? 'mkdir -p ' . Settings::Get('system.deactivateddocroot') : ''
 						),
-						'restart' => Array(
+						'restart' => array(
 							'/etc/init.d/apache2 restart'
 						)
 					),
 				)
 			),
-			'dns' => Array(
+			'dns' => array(
 				'label' => $lng['admin']['configfiles']['dns'],
-				'daemons' => Array(
-					'bind' => Array(
+				'daemons' => array(
+					'bind' => array(
 						'label' => 'Bind9',
-						'commands' => Array(
-							'echo "include \"' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf\";" >> /etc/named.conf',
-							'touch ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
-							'chown named:0 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf',
-							'chmod 0600 ' . $settings['system']['bindconf_directory'] . 'froxlor_bind.conf'
+						'commands' => array(
+							'echo "include \"' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf\";" >> /etc/named.conf',
+							'touch ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf',
+							'chown named:0 ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf',
+							'chmod 0600 ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'/etc/init.d/named restart'
 						)
 					),
 				)
 			),
-			'smtp' => Array(
+			'smtp' => array(
 				'label' => $lng['admin']['configfiles']['smtp'],
-				'daemons' => Array(
-					'postfix' => Array(
+				'daemons' => array(
+					'postfix' => array(
 						'label' => 'Postfix',
-						'files' => Array(
+						'files' => array(
 							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
 							'etc_postfix_mysql-virtual_alias_maps.cf' => '/etc/postfix/mysql-virtual_alias_maps.cf',
 							'etc_postfix_mysql-virtual_mailbox_domains.cf' => '/etc/postfix/mysql-virtual_mailbox_domains.cf',
@@ -87,11 +87,11 @@ return Array(
 							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf',
 							'usr_lib_sasl2_smtpd.conf' => '/usr/lib/sasl2/smtpd.conf'
 						),
-						'commands' => Array(
-							($vmail_group === false) ? 'groupadd -g ' . $settings['system']['vmail_gid'] . ' ' . $vmail_groupname : '',
-							($vmail_user === false) ? 'useradd -u ' . $settings['system']['vmail_uid'] . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
-							'mkdir -p ' . $settings['system']['vmail_homedir'],
-							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . $settings['system']['vmail_homedir'],
+						'commands' => array(
+							($vmail_group === false) ? 'groupadd -g ' . Settings::Get('system.vmail_gid') . ' ' . $vmail_groupname : '',
+							($vmail_user === false) ? 'useradd -u ' . Settings::Get('system.vmail_uid') . ' -g ' . $vmail_groupname . ' ' . $vmail_username : '',
+							'mkdir -p ' . Settings::Get('system.vmail_homedir'),
+							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . Settings::Get('system.vmail_homedir'),
 							'mkdir -p /var/spool/postfix/etc/pam.d',
 							'touch /etc/postfix/mysql-virtual_alias_maps.cf',
 							'touch /etc/postfix/mysql-virtual_mailbox_domains.cf',
@@ -109,75 +109,75 @@ return Array(
 							'chgrp postfix /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chgrp postfix /usr/lib/sasl2/smtpd.conf'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'newaliases',
 							'/etc/init.d/postfix restart'
 						)
 					),
-					'postfix_mxaccess' => Array(
+					'postfix_mxaccess' => array(
 						'label' => 'Postfix MX-Access (anti spam)',
-						'files' => Array(
+						'files' => array(
 							'etc_postfix_mx_access' => '/etc/postfix/mx_access',
 							'etc_postfix_main.cf' => '/etc/postfix/main.cf'
 						),
-						'commands_1' => Array(
+						'commands_1' => array(
 							'postmap /etc/postfix/mx_access'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'/etc/init.d/postfix restart'
 						)
 					)
 				)
 			),
-			'mail' => Array(
+			'mail' => array(
 				'label' => $lng['admin']['configfiles']['mail'],
-				'daemons' => Array(
-					'courier' => Array(
+				'daemons' => array(
+					'courier' => array(
 						'label' => 'Courier',
-						'files' => Array(
+						'files' => array(
 							'etc_authlib_authdaemonrc' => '/etc/authlib/authdaemonrc',
 							'etc_authlib_authmysqlrc' => '/etc/authlib/authmysqlrc'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'/etc/init.d/courier-authdaemon restart',
 							'/etc/init.d/courier-pop restart'
 						)
 					),
 				)
 			),
-			'ftp' => Array(
+			'ftp' => array(
 				'label' => $lng['admin']['configfiles']['ftp'],
-				'daemons' => Array(
-					'proftpd' => Array(
+				'daemons' => array(
+					'proftpd' => array(
 						'label' => 'ProFTPd',
-						'files' => Array(
+						'files' => array(
 							'etc_proftpd_modules.conf' => '/etc/proftpd/modules.conf',
 							'etc_proftpd_proftpd.conf' => '/etc/proftpd/proftpd.conf'
 						),
-						'restart' => Array(
+						'restart' => array(
 							'/etc/init.d/proftpd restart'
 						)
 					),
 				)
 			),
-			'etc' => Array(
+			'etc' => array(
 				'label' => $lng['admin']['configfiles']['etc'],
-				'daemons' => Array(
-					'cron' => Array(
+				'daemons' => array(
+					'cron' => array(
 						'label' => 'Crond (cronscript)',
-						'files' => Array(
+						'files' => array(
 							'etc_cron.d_froxlor' => '/etc/cron.d/froxlor'
 						),
-						'restart' => Array(
-							'/etc/init.d/cron restart'
+						'restart' => array(
+							Settings::Get('system.crondreload')
 						)
 					),
-					'awstats' => Array(
+					'awstats' => array(
 						'label' => 'Awstats',
-						'commands' => Array(
-							'awstats_configure.pl',
-							makeCorrectFile($settings['system']['awstats_conf'].'/awstats.conf').' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf'),
-							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile($settings['system']['awstats_conf'].'/awstats.model.conf')
+						'commands' => array(
+							'mv '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.conf').' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'# Please make sure you deactivate awstats own cronjob as Froxlor handles that itself'
 						)
 					)
 				)

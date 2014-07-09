@@ -40,14 +40,14 @@ return array(
 						'value' => generatePassword(),
 					),
 					'email_quota' => array(
-						'visible' => ($settings['system']['mail_quota_enabled'] == '1' ? true : false),
+						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'label' => $lng['emails']['quota'],
-						'desc' => $lng['panel']['megabyte'],
+						'desc' => "MiB",
 						'type' => 'text',
 						'value' => $quota
 					),
 					'alternative_email' => array(
-						'visible' => ($settings['panel']['sendalternativemail'] == '1' ? true : false),
+						'visible' => (Settings::Get('panel.sendalternativemail') == '1' ? true : false),
 						'label' => $lng['emails']['alternative_emailaddress'],
 						'type' => 'text'
 					)

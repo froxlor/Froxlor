@@ -16,61 +16,59 @@
  * @package    Logger
  *
  * @link       http://www.nutime.de/
- * 
+ *
  * Logger - SysLog-Logger-Class
  */
 
-class SysLogger extends AbstractLogger
-{
+class SysLogger extends AbstractLogger {
+
 	/**
 	 * Userinfo
 	 * @var array
 	 */
-
 	private $userinfo = array();
 
 	/**
 	 * Syslogger Objects Array
 	 * @var loggers
-	 */
-
+	*/
 	static private $loggers = array();
 
 	/**
 	 * Class constructor.
 	 *
 	 * @param array userinfo
-	 * @param array settings
-	 */
-
-	protected function __construct($userinfo, $settings)
-	{
-		parent::setupLogger($settings);
+	*/
+	protected function __construct($userinfo) {
+		parent::setupLogger();
 		$this->userinfo = $userinfo;
 	}
 
 	/**
 	 * Singleton ftw ;-)
-	 *
 	 */
-
-	static public function getInstanceOf($_usernfo, $_settings)
-	{
-		if(!isset(self::$loggers[$_usernfo['loginname']]))
-		{
-			self::$loggers[$_usernfo['loginname']] = new SysLogger($_usernfo, $_settings);
+	static public function getInstanceOf($_usernfo) {
+		if (!isset(self::$loggers[$_usernfo['loginname']])) {
+			self::$loggers[$_usernfo['loginname']] = new SysLogger($_usernfo);
 		}
-
 		return self::$loggers[$_usernfo['loginname']];
 	}
 
-	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null)
-	{
-		if(parent::isEnabled())
-		{
-			if(parent::getSeverity() <= 1
-			   && $type == LOG_NOTICE)
-			{
+	/**
+	 * logs a given text to all enabled logger-facilities
+	 *
+	 * @param int $action
+	 * @param int $type
+	 * @param string $text
+	 */
+	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
+
+		global $lng;
+		if (parent::isEnabled()) {
+
+			if (parent::getSeverity() <= 1
+					&& $type == LOG_NOTICE
+			) {
 				return;
 			}
 
@@ -79,50 +77,49 @@ class SysLogger extends AbstractLogger
 			switch($action)
 			{
 				case USR_ACTION:
-					$_action = 'customer';
+					$_action = $lng['admin']['customer'];
 					break;
 				case RES_ACTION:
-					$_action = 'reseller';
+					$_action = $lng['logger']['reseller'];
 					break;
 				case ADM_ACTION:
-					$_action = 'administrator';
+					$_action = $lng['logger']['admin'];
 					break;
 				case CRON_ACTION:
-					$_action = 'cronjob';
+					$_action = $lng['logger']['cron'];
+					break;
+				case LOGIN_ACTION:
+					$_action = $lng['logger']['login'];
 					break;
 				case LOG_ERROR:
-					$_action = 'internal';
+					$_action = $lng['logger']['intern'];
 					break;
 				default:
-					$_action = 'unknown';
+					$_action = $lng['logger']['unknown'];
 					break;
 			}
 
-			if(!isset($this->userinfo['loginname'])
-			   || $this->userinfo['loginname'] == '')
-			{
+			if (!isset($this->userinfo['loginname'])
+					|| $this->userinfo['loginname'] == ''
+			) {
 				$name = 'unknown';
 			}
 			else
 			{
-				$name = " (" . $this->userinfo['loginname'] . ")";
+				$name = $this->userinfo['loginname'];
 			}
 
 			openlog("Froxlor", LOG_NDELAY, LOG_USER);
 
-			if($text != null
-			   && $text != '')
-			{
-				syslog((int)$type, "[" . ucfirst($_action) . " Action" . $name . "] " . $text);
-			}
-			else
-			{
-				syslog((int)$type, "[" . ucfirst($_action) . " Action" . $name . "] No text given!!! Check scripts!");
+			if ($text != null
+					&& $text != ''
+			) {
+				syslog((int)$type, "[" . ucfirst($_action) . " Action " . $name . "] " . $text);
+			} else {
+				syslog((int)$type, "[" . ucfirst($_action) . " Action " . $name . "] No text given!!! Check scripts!");
 			}
 
 			closelog();
 		}
 	}
 }
-
-?>

@@ -32,6 +32,14 @@ return array(
 					'save_method' => 'storeSettingField',
 					'plausibility_check_method' => 'checkPathConflicts'
 					),
+				'system_documentroot_use_default_value' => array(
+					'label' => $lng['serversettings']['documentroot_use_default_value'],
+					'settinggroup' => 'system',
+					'varname' => 'documentroot_use_default_value',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
 				'system_ipaddress' => array(
 					'label' => $lng['serversettings']['ipaddress'],
 					'settinggroup' => 'system',
@@ -152,17 +160,7 @@ return array(
 					'default' => 90,
 					'save_method' => 'storeSettingField',
 					),
-				'system_debug_cron' => array(
-					'label' => $lng['serversettings']['cron']['debug'],
-					'settinggroup' => 'system',
-					'varname' => 'debug_cron',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					),
 				),
 			),
 		),
 	);
-
-?>
