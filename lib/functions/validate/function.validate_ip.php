@@ -46,12 +46,17 @@ function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
  *
  * @return mixed 	ip address on success, false on failure
  */
-function validate_ip2($ip, $return_bool = false, $lng = 'invalidip') {
+function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false) {
 
 	if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)
 			|| filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
 			&& filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE)
 	) {
+		return $ip;
+	}
+
+	// special case where localhost ip is allowed (mysql-access-hosts for example)
+	if ($allow_localhost && $ip == '127.0.0.1') {
 		return $ip;
 	}
 

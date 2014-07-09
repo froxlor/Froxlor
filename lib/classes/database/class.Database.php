@@ -333,8 +333,7 @@ class Database {
 			require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
 
 			// le format
-			if (self::$_needroot == true
-				&& isset($sql['root_user'])
+			if (isset($sql['root_user'])
 				&& isset($sql['root_password'])
 				&& (!isset($sql_root) || !is_array($sql_root))
 			) {

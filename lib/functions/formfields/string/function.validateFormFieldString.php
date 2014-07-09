@@ -21,7 +21,7 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 {
 	if(isset($fielddata['string_delimiter']) && $fielddata['string_delimiter'] != '')
 	{
-		$newfieldvalues = explode($fielddata['string_delimiter'], $newfieldvalue);
+		$newfieldvalues = array_map('trim', explode($fielddata['string_delimiter'], $newfieldvalue));
 		unset($fielddata['string_delimiter']);
 
 		$returnvalue = true;
