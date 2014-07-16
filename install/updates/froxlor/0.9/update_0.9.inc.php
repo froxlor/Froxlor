@@ -2791,3 +2791,13 @@ if (isFroxlorVersion('0.9.33-dev1')) {
 
 	updateToVersion('0.9.33-dev2');
 }
+
+if (isFroxlorVersion('0.9.33-dev2')) {
+	showUpdateStep("Updating from 0.9.33-dev2 to 0.9.33-dev3", false);
+
+	showUpdateStep("Adding settings for documentroot_suffix");
+	Settings::AddNew("system.documentroot_suffix", isset($_POST['system_documentroot_suffix']) ? $_POST['system_documentroot_suffix'] : '');
+	lastStepStatus(0);
+
+	updateToVersion('0.9.33-dev3');
+}

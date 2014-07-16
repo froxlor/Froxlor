@@ -467,18 +467,18 @@ class apache {
 		if ($domain['speciallogfile'] == '1') {
 			$statDomain = ($domain['parentdomainid'] == '0') ? $domain['domain'] : $domain['parentdomain'];
 			if (Settings::Get('system.awstats_enabled') == '1') {
-				$stats_text .= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $statDomain) . '"' . "\n";
+				$stats_text .= '  Alias /awstats "' . makeCorrectFile($domain['customerroot']. Settings::Get('system.documentroot_suffix') . '/awstats/' . $statDomain) . '"' . "\n";
 				$stats_text .= '  Alias /awstats-icon "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
 			} else {
-				$stats_text .= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $statDomain) . '"' . "\n";
+				$stats_text .= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . Settings::Get('system.documentroot_suffix') . '/webalizer/' . $statDomain) . '"' . "\n";
 			}
 		} else {
 			if ($domain['customerroot'] != $domain['documentroot']) {
 				if (Settings::Get('system.awstats_enabled') == '1') {
-					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
+					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . Settings::Get('system.documentroot_suffix') . '/awstats/' . $domain['domain']) . '"' . "\n";
 					$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
 				} else {
-					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer') . '"' . "\n";
+					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . Settings::Get('system.documentroot_suffix') . '/webalizer') . '"' . "\n";
 				}
 			}
 			// if the docroots are equal, we still have to set an alias for awstats

@@ -103,19 +103,19 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			// stats directory
 			if (Settings::Get('system.awstats_enabled') == '1') {
 				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
-				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
+				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . Settings::Get('system.documentroot_suffix') . 'awstats'));
 				// in case we changed from the other stats -> remove old
 				// (yes i know, the stats are lost - that's why you should not change all the time!)
-				if (file_exists($userhomedir . 'webalizer')) {
-					safe_exec('rm -rf ' . escapeshellarg($userhomedir . 'webalizer'));
+				if (file_exists($userhomedir . Settings::Get('system.documentroot_suffix') . 'webalizer')) {
+					safe_exec('rm -rf ' . escapeshellarg($userhomedir .Settings::Get('system.documentroot_suffix') . 'webalizer'));
 				}
 			} else {
-				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
-				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
+				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . Settings::Get('system.documentroot_suffix') . 'webalizer'));
+				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . Settings::Get('system.documentroot_suffix') . 'webalizer'));
 				// in case we changed from the other stats -> remove old
 				// (yes i know, the stats are lost - that's why you should not change all the time!)
-				if (file_exists($userhomedir . 'awstats')) {
-					safe_exec('rm -rf ' . escapeshellarg($userhomedir . 'awstats'));
+				if (file_exists($userhomedir . Settings::Get('system.documentroot_suffix') . 'awstats')) {
+					safe_exec('rm -rf ' . escapeshellarg($userhomedir . Settings::Get('system.documentroot_suffix') . 'awstats'));
 				}
 			}
 

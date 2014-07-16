@@ -411,6 +411,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'lastaccountnumber', '0'),
 	('system', 'lastguid', '9999'),
 	('system', 'documentroot_prefix', '/var/customers/webs/'),
+	('system', 'documentroot_suffix', ''),
 	('system', 'logfiles_directory', '/var/customers/logs/'),
 	('system', 'ipaddress', 'SERVERIP'),
 	('system', 'apachereload_command', '/etc/init.d/apache2 reload'),
