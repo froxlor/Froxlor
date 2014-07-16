@@ -130,7 +130,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			//check if admin of customer has added template for new customer directories
 			if ((int)$row['data']['store_defaultindex'] == 1) {
-				storeDefaultIndex($row['data']['loginname'], $userhomedir, $cronlog, true);
+				storeDefaultIndex($row['data']['loginname'], $userhomedir . Settings::Get('system.documentroot_suffix'), $cronlog, true);
 			}
 
 			// strip of last slash of paths to have correct chown results
