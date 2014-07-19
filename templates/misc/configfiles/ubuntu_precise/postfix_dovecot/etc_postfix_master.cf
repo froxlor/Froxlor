@@ -1,4 +1,4 @@
 # Add these lines to be able to use dovecot as delivery agent
 # Dovecot LDA
 dovecot	  unix	-	n	n	-	-	pipe
-	flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -c /etc/dovecot/conf.d/01-dovecot-postfix.conf -d ${recipient}
+	flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -c /etc/dovecot/dovecot.conf -d ${recipient}
