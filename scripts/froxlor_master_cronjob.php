@@ -47,6 +47,8 @@ for ($x = 1; $x < count($argv); $x++) {
 			// really force re-generating of config-files by
 			// inserting task 1
 			inserttask('1');
+			// also regenerate cron.d-file
+			inserttask('99');
 			addToQueue($jobs_to_run, $crontasks);
 			$lastrun_update['tasks'] = $crontasks;
 		}
