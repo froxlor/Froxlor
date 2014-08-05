@@ -39,8 +39,6 @@ return array(
 			'http' => array(
 				'label' => $lng['admin']['configfiles']['http'],
 				'daemons' => array(
-
-					// Begin: Nginx Config
 					'nginx' => array(
 						'label' => 'Nginx Webserver',
 						'commands_1' => array(
@@ -58,7 +56,7 @@ return array(
 						'commands_2' => array(
 							$configcommand['vhost'],
 							$configcommand['diroptions'],
-							(Settings::Get('system.deactivateddocroot') != '') ? 'mkdir -p '. Settings::Get('system.deactivateddocroot') : null,
+							(Settings::Get('system.deactivateddocroot') != '') ? 'mkdir -p ' . Settings::Get('system.deactivateddocroot') : '',
 							'mkdir -p '. Settings::Get('system.documentroot_prefix'),
 							'mkdir -p '. Settings::Get('system.mod_fcgid_tmpdir'),
 							'mkdir -p '. Settings::Get('system.logfiles_directory'),
@@ -71,8 +69,6 @@ return array(
 							'/usr/local/etc/rc.d/nginx restart'
 						)
 					),
-					// End: Nginx Config
-
 					'apache2' => array(
 						'label' => 'Apache2 Webserver',
 						'commands' => array(

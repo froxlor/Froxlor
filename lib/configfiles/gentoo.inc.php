@@ -101,7 +101,7 @@ return array(
 						'commands_2' => array(
 							'mkdir -p ' . Settings::Get('system.documentroot_prefix'),
 							'mkdir -p ' . Settings::Get('system.logfiles_directory'),
-							'mkdir -p ' . Settings::Get('system.deactivateddocroot'),
+							(Settings::Get('system.deactivateddocroot') != '') ? 'mkdir -p ' . Settings::Get('system.deactivateddocroot') : '',
 							'mkdir -p ' . Settings::Get('system.mod_fcgid_tmpdir'),
 							'chmod 1777 ' . Settings::Get('system.mod_fcgid_tmpdir'),
 							'chmod u+x /etc/init.d/php-fcgi',
