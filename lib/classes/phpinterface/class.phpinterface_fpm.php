@@ -140,6 +140,13 @@ class phpinterface_fpm {
 			$fpm_config.= 'pm.max_children = '.$fpm_children."\n";
 
 			if ($fpm_pm == 'dynamic') {
+				// honor max_children
+				if ($fpm_children < $fpm_min_spare_servers) {
+					$fpm_min_spare_servers = $fpm_children;
+				}
+				if ($fpm_children < $fpm_max_spare_servers) {
+					$fpm_max_spare_servers = $fpm_children;
+				}
 				// failsafe, refs #955
 				if ($fpm_start_servers < $fpm_min_spare_servers) {
 					$fpm_start_servers = $fpm_min_spare_servers;
