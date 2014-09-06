@@ -342,34 +342,38 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 		$usedquota = getFilesystemQuota();
 
-		// Select all customers Froxlor knows about
-		$result_stmt = Database::query("SELECT `guid`, `loginname`, `diskspace` FROM `" . TABLE_PANEL_CUSTOMERS . "`;");
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			// We do not want to set a quota for root by accident
-			if ($row['guid'] != 0) {
-				// The user has no quota in Froxlor, but on the filesystem
-				if (($row['diskspace'] == 0 || $row['diskspace'] == -1024)
-					&& $usedquota[$row['guid']]['block']['hard'] != 0
-				) {
-					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Disabling quota for " . $row['loginname']);
-					if (isFreeBSD()) {
-						safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -e " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')) . ":0:0 " . $row['guid']);
-					} else {
-						safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -u " . $row['guid'] . " -bl 0 -q 0 " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')));
+		// Fixed: PHP Notice:  Undefined offset
+		if(is_array($usedquota) && count($usedquota) > 0)
+		{
+			// Select all customers Froxlor knows about
+			$result_stmt = Database::query("SELECT `guid`, `loginname`, `diskspace` FROM `" . TABLE_PANEL_CUSTOMERS . "`;");
+			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+				// We do not want to set a quota for root by accident
+				if ($row['guid'] != 0) {
+					// The user has no quota in Froxlor, but on the filesystem
+					if (($row['diskspace'] == 0 || $row['diskspace'] == -1024)
+						&& $usedquota[$row['guid']]['block']['hard'] != 0
+					) {
+						$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Disabling quota for " . $row['loginname']);
+						if (isFreeBSD()) {
+							safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -e " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')) . ":0:0 " . $row['guid']);
+						} else {
+							safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -u " . $row['guid'] . " -bl 0 -q 0 " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')));
+						}
+					}
+					// The user quota in Froxlor is different than on the filesystem
+					elseif ($row['diskspace'] != $usedquota[$row['guid']]['block']['hard']
+						&& $row['diskspace'] != -1024
+					) {
+						$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Setting quota for " . $row['loginname'] . " from " . $usedquota[$row['guid']]['block']['hard'] . " to " . $row['diskspace']);
+						if (isFreeBSD()) {
+							safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -e " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')) . ":" . $row['diskspace'] . ":" . $row['diskspace'] . " " . $row['guid']);
+						} else {
+							safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -u " . $row['guid'] . " -bl " . $row['diskspace'] . " -q " . $row['diskspace'] . " " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')));
+						}
 					}
 				}
-				// The user quota in Froxlor is different than on the filesystem
-				elseif ($row['diskspace'] != $usedquota[$row['guid']]['block']['hard']
-					&& $row['diskspace'] != -1024
-				) {
-					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Setting quota for " . $row['loginname'] . " from " . $usedquota[$row['guid']]['block']['hard'] . " to " . $row['diskspace']);
-					if (isFreeBSD()) {
-						safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -e " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')) . ":" . $row['diskspace'] . ":" . $row['diskspace'] . " " . $row['guid']);
-					} else {
-						safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -u " . $row['guid'] . " -bl " . $row['diskspace'] . " -q " . $row['diskspace'] . " " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')));
-					}
-				}
-			}
+			}	
 		}
 	}
 }
