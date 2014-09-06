@@ -70,7 +70,8 @@ class phpinterface_fpm {
 					'date.timezone',
 					'sendmail_path',
 					'session.gc_divisor',
-					'session.gc_probability'
+					'session.gc_probability',
+					'error_log'
 			),
 			'php_admin_flag' => array(
 					'allow_call_time_pass_reference',
@@ -83,7 +84,8 @@ class phpinterface_fpm {
 					'report_memleaks',
 					'register_argc_argv',
 					'file_uploads',
-					'allow_url_fopen'
+					'allow_url_fopen',
+					'log_errors'
 			)
 	);
 
