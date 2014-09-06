@@ -342,9 +342,8 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 		$usedquota = getFilesystemQuota();
 
-		// Fixed: PHP Notice:  Undefined offset
-		if(is_array($usedquota) && count($usedquota) > 0)
-		{
+		// Check whether we really have entries to check
+		if (is_array($usedquota) && count($usedquota) > 0) {
 			// Select all customers Froxlor knows about
 			$result_stmt = Database::query("SELECT `guid`, `loginname`, `diskspace` FROM `" . TABLE_PANEL_CUSTOMERS . "`;");
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
