@@ -35,57 +35,77 @@ class phpinterface_fpm {
 
 	/**
 	 * defines what can be used for pool-config from php.ini
+	 * Mostly taken from http://php.net/manual/en/ini.list.php
+	 *
 	 * @var array
 	*/
 	private $_ini = array(
 			'php_value' => array(
-					'error_reporting',
-					'max_execution_time',
-					'include_path',
-					'upload_max_filesize',
-					'log_errors_max_len'
+				'auto_append_file',
+				'auto_prepend_file',
+				'date.timezone',
+				'default_charset',
+				'error_reporting',
+				'include_path',
+				'log_errors_max_len',
+				'max_execution_time',
+				'session.cookie_domain',
+				'session.cookie_lifetime',
+				'session.cookie_path',
+				'session.name',
+				'session.serialize_handler',
+				'upload_max_filesize',
+				'xmlrpc_error_number'
 			),
 			'php_flag' => array(
-					'short_open_tag',
-					'asp_tags',
-					'display_errors',
-					'display_startup_errors',
-					'log_errors',
-					'track_errors',
-					'html_errors',
-					'magic_quotes_gpc',
-					'magic_quotes_runtime',
-					'magic_quotes_sybase'
+				'asp_tags',
+				'display_errors',
+				'display_startup_errors',
+				'html_errors',
+				'log_errors',
+				'magic_quotes_gpc',
+				'magic_quotes_runtime',
+				'magic_quotes_sybase',
+				'session.auto_start',
+				'session.cookie_secure',
+				'session.use_cookies',
+				'short_open_tag',
+				'track_errors',
+				'xmlrpc_errors'
 			),
 			'php_admin_value' => array(
-					'open_basedir',
-					'precision',
-					'output_buffering',
-					'disable_functions',
-					'max_input_time',
-					'memory_limit',
-					'post_max_size',
-					'variables_order',
-					'gpc_order',
-					'date.timezone',
-					'sendmail_path',
-					'session.gc_divisor',
-					'session.gc_probability',
-					'error_log'
+				'cgi.redirect_status_env',
+				'date.timezone',
+				'disable_classes',
+				'disable_functions',
+				'error_log',
+				'gpc_order',
+				'max_input_time',
+				'memory_limit',
+				'open_basedir',
+				'output_buffering',
+				'post_max_size',
+				'precision',
+				'sendmail_path',
+				'session.gc_divisor',
+				'session.gc_probability',
+				'variables_order'
 			),
 			'php_admin_flag' => array(
-					'allow_call_time_pass_reference',
-					'allow_url_fopen',
-					'cgi.force_redirect',
-					'enable_dl',
-					'expose_php',
-					'ignore_repeated_errors',
-					'ignore_repeated_source',
-					'report_memleaks',
-					'register_argc_argv',
-					'file_uploads',
-					'allow_url_fopen',
-					'log_errors'
+				'allow_call_time_pass_reference',
+				'allow_url_fopen',
+				'allow_url_include',
+				'auto_detect_line_endings',
+				'cgi.fix_pathinfo',
+				'cgi.force_redirect',
+				'enable_dl',
+				'expose_php',
+				'file_uploads',
+				'ignore_repeated_errors',
+				'ignore_repeated_source',
+				'log_errors',
+				'register_argc_argv',
+				'report_memleaks'
 			)
 	);
 
