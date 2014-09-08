@@ -197,19 +197,21 @@ class nginx {
 					$this->nginx_data[$vhost_filename].=$this->composeSslSettings($row_ipsandports);
 				}
 
-				$this->nginx_data[$vhost_filename] .= "\t".'location ~ \.php$ {'."\n";
-				$this->nginx_data[$vhost_filename] .= "\t\t".' if (!-f $request_filename) {'."\n";
-				$this->nginx_data[$vhost_filename] .= "\t\t\t".'return 404;'."\n";
-				$this->nginx_data[$vhost_filename] .= "\t\t".'}'."\n";
-				$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_index index.php;'."\n";
-				$this->nginx_data[$vhost_filename] .= "\t\t".'include '.Settings::Get('nginx.fastcgiparams').';'."\n";
-				$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
+				$this->nginx_data[$vhost_filename] .= "\tlocation ~ \.php {\n";
+				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
+				$this->nginx_data[$vhost_filename] .= "\t\tinclude fastcgi_params;\n";
+				$this->nginx_data[$vhost_filename] .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
+				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
+				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
+				$this->nginx_data[$vhost_filename] .= "\t\tif (!-e \$document_root\$fastcgi_script_name) {\n";
+				$this->nginx_data[$vhost_filename] .= "\t\t\treturn 404;\n";
+				$this->nginx_data[$vhost_filename] .= "\t\t}\n";
+				
 				if ($row_ipsandports['ssl'] == '1') {
-					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_param HTTPS on;'."\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param HTTPS on;\n";
 				}
-				if ((int)Settings::Get('phpfpm.enabled') == 1
-					&& (int)Settings::Get('phpfpm.enabled_ownvhost') == 1
-				) {
+				
+				if ((int)Settings::Get('phpfpm.enabled') == 1 && (int)Settings::Get('phpfpm.enabled_ownvhost') == 1) {
 					$domain = array(
 						'id' => 'none',
 						'domain' => Settings::Get('system.hostname'),
@@ -222,14 +224,17 @@ class nginx {
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath,
 					);
-
+					
 					$php = new phpinterface($domain);
-					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ';' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass unix:".$php->getInterface()->getSocketFile().";\n";
 				} else {
-					$this->nginx_data[$vhost_filename] .= "\t\t".'fastcgi_pass ' . Settings::Get('system.nginx_php_backend') . ';' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass ".Settings::Get('system.nginx_php_backend').";\n";
 				}
-				$this->nginx_data[$vhost_filename] .= "\t".'}'."\n";
-				$this->nginx_data[$vhost_filename] .= '}' . "\n\n";
+				
+				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_index index.php;\n";
+				$this->nginx_data[$vhost_filename] .= "\t}\n";
+				
+				$this->nginx_data[$vhost_filename] .= "}\n\n";
 				// End of Froxlor server{}-part
 			}
 		}
@@ -731,21 +736,25 @@ class nginx {
 	protected function composePhpOptions($domain, $ssl_vhost = false) {
 		$phpopts = '';
 		if ($domain['phpenabled'] == '1') {
-			$phpopts = "\t".'location ~ \.php$ {'."\n";
-			$phpopts.= "\t\t".'try_files $uri =404;'."\n";
-			$phpopts.= "\t\t".'fastcgi_split_path_info ^(.+\.php)(/.+)$;'."\n";
-			$phpopts.= "\t\t".'fastcgi_index index.php;'."\n";
-			$phpopts.= "\t\t".'fastcgi_pass ' . Settings::Get('system.nginx_php_backend') . ';' . "\n";
-			$phpopts.= "\t\t".'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;'."\n";
-			$phpopts.= "\t\t".'include '.Settings::Get('nginx.fastcgiparams').';'."\n";
+			$phpopts = "\tlocation ~ \.php {\n";
+			$phpopts .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
+			$phpopts .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
+			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
+			$phpopts .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
+			$phpopts .= "\t\tif (!-e \$document_root\$fastcgi_script_name) {\n";
+			$phpopts .= "\t\t\treturn 404;\n";
+			$phpopts .= "\t\t}\n";
+			$phpopts .= "\t\tfastcgi_pass ".Settings::Get('system.nginx_php_backend').";\n";
+			$phpopts .= "\t\tfastcgi_index index.php;\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
-				$phpopts.= "\t\t".'fastcgi_param HTTPS on;'."\n";
+				$phpopts .= "\t\tfastcgi_param HTTPS on;\n";
 			}
-			$phpopts.= "\t".'}'."\n";
+			$phpopts .= "\t}\n\n";
+			
 		}
 		return $phpopts;
 	}
-
+	
 
 	protected function getWebroot($domain, $ssl) {
 		$webroot_text = '';
