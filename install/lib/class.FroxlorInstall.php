@@ -285,7 +285,6 @@ class FroxlorInstall {
 			$message = $this->_lng['install']['froxlor_succ_installed'];
 			$link = '../index.php';
 			$linktext = $this->_lng['click_here_to_login'];
-			inserttask('99');
 		}
 
 		eval("\$navigation .= \"" . $this->_getTemplate("pagebottom") . "\";");
@@ -479,6 +478,9 @@ class FroxlorInstall {
 		$ts = mktime(1, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
 		$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_used_tickets_reset.php';");
 		$db->query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = '".$ts."' WHERE `cronfile` ='cron_ticketarchive.php';");
+
+		// insert task 99 to generate a correct cron.d-file automatically
+		$db->query("INSERT INTO `".TABLE_PANEL_TASKS."` SET `type` = '99';");
 
 		$content .= $this->_status_message('green', 'OK');
 
