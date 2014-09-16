@@ -631,7 +631,7 @@ class nginx {
 				$this->vhost_root_autoindex = false;
 			} else {
 				$path_options .= "\t".'location ' . $path . ' {' . "\n";
-				if ($this->vhost_root_autoindex) {
+				if ($this->vhost_root_autoindex || $row['options_indexes'] != '0') {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
 				}
