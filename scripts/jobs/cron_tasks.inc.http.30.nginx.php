@@ -606,7 +606,9 @@ class nginx {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
 				}
-				$path_options.= "\t\t" . 'index    index.php index.html index.htm;'."\n";
+				else {
+					$path_options.= "\t\t" . 'index    index.php index.html index.htm;'."\n";
+				}
 				//     $path_options.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 				// check if we have a htpasswd for this path
 				// (damn nginx does not like more than one
@@ -637,7 +639,9 @@ class nginx {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
 				}
-				$path_options .= "\t\t" . 'index    index.php index.html index.htm;'."\n";
+				else {
+					$path_options .= "\t\t" . 'index    index.php index.html index.htm;'."\n";
+				}
 				$path_options .= "\t".'} ' . "\n";
 			}
 			//   }
