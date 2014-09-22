@@ -598,13 +598,17 @@ class nginx {
 
 			$path_options .= "\t".'# '.$path."\n";
 			if ($path == '/') {
-				$this->vhost_root_autoindex = true;
+				if ($row['options_indexes'] != '0') {
+					$this->vhost_root_autoindex = true;
+				}
 				$path_options .= "\t".'location ' . $path . ' {' . "\n";
 				if ($this->vhost_root_autoindex) {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
 				}
-				$path_options.= "\t\t" . 'index    index.php index.html index.htm;'."\n";
+				else {
+					$path_options.= "\t\t" . 'index    index.php index.html index.htm;'."\n";
+				}
 				//     $path_options.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 				// check if we have a htpasswd for this path
 				// (damn nginx does not like more than one
@@ -631,11 +635,13 @@ class nginx {
 				$this->vhost_root_autoindex = false;
 			} else {
 				$path_options .= "\t".'location ' . $path . ' {' . "\n";
-				if ($this->vhost_root_autoindex) {
+				if ($this->vhost_root_autoindex || $row['options_indexes'] != '0') {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
 				}
-				$path_options .= "\t\t" . 'index    index.php index.html index.htm;'."\n";
+				else {
+					$path_options .= "\t\t" . 'index    index.php index.html index.htm;'."\n";
+				}
 				$path_options .= "\t".'} ' . "\n";
 			}
 			//   }
