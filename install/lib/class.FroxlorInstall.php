@@ -850,14 +850,16 @@ class FroxlorInstall {
 			$content .= $this->_status_message('green', PHP_VERSION);
 		}
 
-		// Check if magic_quotes_runtime is active
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpmagic_quotes_runtime']);
-		if (get_magic_quotes_runtime()) {
-			// deactivate it
-			set_magic_quotes_runtime(false);
-			$content .= $this->_status_message('orange', $this->_lng['requirements']['not_true'] . "<br />". $this->_lng['requirements']['phpmagic_quotes_runtime_description']);
-		} else {
-			$content .= $this->_status_message('green', 'off');
+		// Check if magic_quotes_runtime is active | get_magic_quotes_runtime() is always FALSE since 5.4
+		if (version_compare("5.4.0", PHP_VERSION, "<")) {
+			$content .= $this->_status_message('begin', $this->_lng['requirements']['phpmagic_quotes_runtime']);
+			if (get_magic_quotes_runtime()) {
+				// deactivate it
+				set_magic_quotes_runtime(false);
+				$content .= $this->_status_message('orange', $this->_lng['requirements']['not_true'] . "<br />". $this->_lng['requirements']['phpmagic_quotes_runtime_description']);
+			} else {
+				$content .= $this->_status_message('green', 'off');
+			}
 		}
 
 		// check for php_pdo and pdo_mysql

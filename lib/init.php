@@ -121,27 +121,30 @@ $idna_convert = new idna_convert_wrapper();
 /**
  * disable magic_quotes_runtime if enabled
  */
-if (get_magic_quotes_runtime()) {
-	// deactivate
-	set_magic_quotes_runtime(false);
-}
-
-/**
- * Reverse magic_quotes_gpc=on to have clean GPC data again
- */
-if (get_magic_quotes_gpc()) {
-	$in = array(&$_GET, &$_POST, &$_COOKIE);
-
-	while (list($k, $v) = each($in)) {
-		foreach ($v as $key => $val) {
-			if (!is_array($val)) {
-				$in[$k][$key] = stripslashes($val);
-				continue;
-			}
-			$in[] = & $in[$k][$key];
-		}
+// since 5.4 get_magic_quotes_runtime() and get_magic_quotes_gpc() return always FALSE
+if (version_compare("5.4.0", PHP_VERSION, "<")) {
+	if (get_magic_quotes_runtime()) {
+		// deactivate
+		set_magic_quotes_runtime(false);
 	}
-	unset($in);
+
+	/**
+	 * Reverse magic_quotes_gpc=on to have clean GPC data again
+	 */
+	if (get_magic_quotes_gpc()) {
+		$in = array(&$_GET, &$_POST, &$_COOKIE);
+	
+		while (list($k, $v) = each($in)) {
+			foreach ($v as $key => $val) {
+				if (!is_array($val)) {
+					$in[$k][$key] = stripslashes($val);
+					continue;
+				}
+				$in[] = & $in[$k][$key];
+			}
+		}
+		unset($in);
+	}
 }
 
 /**

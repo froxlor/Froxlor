@@ -700,7 +700,7 @@ class lighttpd {
 		Database::pexecute($alias_domains_stmt, array('domainid' => $domain['id']));
 
 		while (($alias_domain = $alias_domains_stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
-			$alias_domain_name = ereg_replace('\.', '\.', $alias_domain['domain']);
+			$alias_domain_name = str_replace('.', '\.', $alias_domain['domain']);
 
 			if ($alias_domain['iswildcarddomain'] == '1') {
 				$server_string[] = '(?:^|\.)' . $alias_domain_name . '$';
