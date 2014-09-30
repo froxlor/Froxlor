@@ -1,0 +1,8 @@
+user = <SQL_UNPRIVILEGED_USER>
+password = <SQL_UNPRIVILEGED_PASSWORD>
+dbname = <SQL_DB>
+table = mail_virtual
+select_field = destination
+where_field = email
+additional_conditions = and TRIM(destination) <> ''
+hosts = <SQL_HOST> 
