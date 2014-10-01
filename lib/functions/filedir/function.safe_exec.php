@@ -20,24 +20,27 @@
 /**
  * Wrapper around the exec command.
  *
- * @param string exec_string String to be executed
+ * @param string $exec_string command to be executed
+ * @param string $return_value referenced variable where the output is stored
+ * @param array $allowedChars optional array of allowed characters in path/command
  * 
- * @return string The result of the exec()
+ * @return string result of exec()
  */
-function safe_exec($exec_string, &$return_value = false) {
+function safe_exec($exec_string, &$return_value = false, $allowedChars = null) {
 
-	// check for bad signs in execute command
-	if ((stristr($exec_string, ';'))
-	   || (stristr($exec_string, '|'))
-	   || (stristr($exec_string, '&'))
-	   || (stristr($exec_string, '>'))
-	   || (stristr($exec_string, '<'))
-	   || (stristr($exec_string, '`'))
-	   || (stristr($exec_string, '$'))
-	   || (stristr($exec_string, '~'))
-	   || (stristr($exec_string, '?'))
-	) {
-		die('SECURITY CHECK FAILED!' . "\n" . 'The execute string "' . htmlspecialchars($exec_string) . '" is a possible security risk!' . "\n" . 'Please check your whole server for security problems by hand!' . "\n");
+	$disallowed = array(';', '|', '&', '>', '<', '`', '$', '~', '?');
+
+	$acheck = false;
+	if ($allowedChars != null && is_array($allowedChars) && count($allowedChars) > 0) {
+		$acheck = true;
+	}
+
+	foreach ($disallowed as $dc) {
+		if ($acheck && in_array($dc, $allowedChars)) continue;
+		// check for bad signs in execute command
+		if (stristr($exec_string, $dc)) {
+			die("SECURITY CHECK FAILED!\nThe execute string '" . $exec_string . "' is a possible security risk!\nPlease check your whole server for security problems by hand!\n");
+		}
 	}
 
 	// execute the command and return output
