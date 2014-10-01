@@ -148,7 +148,8 @@ class phpinterface_fpm {
 				$fpm_config.= 'listen.owner = '.$this->_domain['loginname']."\n";
 				$fpm_config.= 'listen.group = '.$this->_domain['loginname']."\n";
 			}
-			$fpm_config.= 'listen.mode = 0666'."\n";
+			// see #1418 why this is 0660
+			$fpm_config.= 'listen.mode = 0660'."\n";
 
 			if ($this->_domain['loginname'] == 'froxlor.panel') {
 				$fpm_config.= 'user = '.$this->_domain['guid']."\n";
