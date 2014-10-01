@@ -845,6 +845,10 @@ if ($page == 'customers'
 							$_stdsubdomain = $loginname . '.' . Settings::Get('system.hostname');
 						}
 
+						if (Settings::Get('system.documentroot_suffix') != '') {
+                                                        $documentroot = makeCorrectDir($documentroot . Settings::Get('system.documentroot_suffix'));
+                                                }
+
 						$ins_data = array(
 							'domain' => $_stdsubdomain,
 							'customerid' => $customerid,
@@ -1181,11 +1185,17 @@ if ($page == 'customers'
 							$_stdsubdomain = $result['loginname'] . '.' . Settings::Get('system.hostname');
 						}
 
+						if (Settings::Get('system.documentroot_suffix') != '') {
+                                                        $_documentroot = makeCorrectDir($result['documentroot'] . Settings::Get('system.documentroot_suffix'));
+                                                } else {
+							$_documentroot = $result['documentroot'];
+						}
+
 						$ins_data = array(
 								'domain' => $_stdsubdomain,
 								'customerid' => $result['customerid'],
 								'adminid' => $userinfo['adminid'],
-								'docroot' => $result['documentroot'],
+								'docroot' => $_documentroot,
 								'adddate' => date('Y-m-d')
 						);
 						$ins_stmt = Database::prepare("

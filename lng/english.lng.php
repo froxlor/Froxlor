@@ -1823,3 +1823,7 @@ $lng['error']['passwordshouldnotbeusername'] = 'The password should not be the s
 $lng['admin']['customer_show_news_feed'] = "Show custom newsfeed on customer-dashboard";
 $lng['admin']['customer_news_feed_url'] = "RSS-Feed for the custom newsfeed";
 $lng['serversettings']['dns_createhostnameentry'] = "Create bind-zone/config for system hostname";
+$lng['serversettings']['documentroot_suffix']['title'] = 'Documentroot suffix';
+$lng['serversettings']['documentroot_suffix']['description'] = 'Should the document root be in a subdirectory?';
+$lng['serversettings']['custom_dirs']['title'] = 'Custom Subdirectories';
+$lng['serversettings']['custom_dirs']['description'] = 'Comma-separated list of subdirectories that should be created for all customers.<br /><br />Example:<br />files/,tmp/,backup/';

@@ -32,6 +32,22 @@ return array(
 					'save_method' => 'storeSettingField',
 					'plausibility_check_method' => 'checkPathConflicts'
 					),
+				'system_documentroot_suffix' => array(
+					'label' => $lng['serversettings']['documentroot_suffix'],
+					'settinggroup' => 'system',
+					'varname' => 'documentroot_suffix',
+					'type' => 'string',
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					),
+				'system_custom_dirs' => array(
+					'label' => $lng['serversettings']['custom_dirs'],
+					'settinggroup' => 'system',
+					'varname' => 'custom_dirs',
+					'type' => 'string',
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					),
 				'system_documentroot_use_default_value' => array(
 					'label' => $lng['serversettings']['documentroot_use_default_value'],
 					'settinggroup' => 'system',

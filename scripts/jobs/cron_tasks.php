@@ -100,22 +100,27 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$userhomedir = makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $row['data']['loginname'] . '/');
 			$usermaildir = makeCorrectDir(Settings::Get('system.vmail_homedir') . '/' . $row['data']['loginname'] . '/');
 
+			foreach (explode(',',Settings::Get('system.custom_dirs')) as $subdir) {
+				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . $subdir));
+				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . $subdir));
+			}
+
 			// stats directory
 			if (Settings::Get('system.awstats_enabled') == '1') {
-				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
-				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
+				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . Settings::Get('system.documentroot_suffix') . 'awstats'));
+				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . Settings::Get('system.documentroot_suffix') . 'awstats'));
 				// in case we changed from the other stats -> remove old
 				// (yes i know, the stats are lost - that's why you should not change all the time!)
-				if (file_exists($userhomedir . 'webalizer')) {
-					safe_exec('rm -rf ' . escapeshellarg($userhomedir . 'webalizer'));
+				if (file_exists($userhomedir . Settings::Get('system.documentroot_suffix') . 'webalizer')) {
+					safe_exec('rm -rf ' . escapeshellarg($userhomedir .Settings::Get('system.documentroot_suffix') . 'webalizer'));
 				}
 			} else {
-				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
-				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
+				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . Settings::Get('system.documentroot_suffix') . 'webalizer'));
+				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . Settings::Get('system.documentroot_suffix') . 'webalizer'));
 				// in case we changed from the other stats -> remove old
 				// (yes i know, the stats are lost - that's why you should not change all the time!)
-				if (file_exists($userhomedir . 'awstats')) {
-					safe_exec('rm -rf ' . escapeshellarg($userhomedir . 'awstats'));
+				if (file_exists($userhomedir . Settings::Get('system.documentroot_suffix') . 'awstats')) {
+					safe_exec('rm -rf ' . escapeshellarg($userhomedir . Settings::Get('system.documentroot_suffix') . 'awstats'));
 				}
 			}
 
@@ -125,7 +130,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			//check if admin of customer has added template for new customer directories
 			if ((int)$row['data']['store_defaultindex'] == 1) {
-				storeDefaultIndex($row['data']['loginname'], $userhomedir, $cronlog, true);
+				storeDefaultIndex($row['data']['loginname'], $userhomedir . Settings::Get('system.documentroot_suffix'), $cronlog, true);
 			}
 
 			// strip of last slash of paths to have correct chown results

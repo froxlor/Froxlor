@@ -2791,3 +2791,23 @@ if (isFroxlorVersion('0.9.33-dev1')) {
 
 	updateToVersion('0.9.33-dev2');
 }
+
+if (isFroxlorVersion('0.9.33-dev2')) {
+	showUpdateStep("Updating from 0.9.33-dev2 to 0.9.33-dev3", false);
+
+	showUpdateStep("Adding settings for documentroot_suffix");
+	Settings::AddNew("system.documentroot_suffix", isset($_POST['system_documentroot_suffix']) ? $_POST['system_documentroot_suffix'] : '');
+	lastStepStatus(0);
+
+	updateToVersion('0.9.33-dev3');
+}
+
+if (isFroxlorVersion('0.9.33-dev3')) {
+	showUpdateStep("Updating from 0.9.33-dev3 to 0.9.33-dev4", false);
+
+	showUpdateStep("Adding settings for custom_dirs");
+	Settings::AddNew("system.custom_dirs", isset($_POST['system_custom_dirs']) ? $_POST['system_custom_dirs'] : '');
+	lastStepStatus(0);
+
+	updateToVersion('0.9.33-dev4');
+}

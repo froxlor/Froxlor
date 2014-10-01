@@ -272,6 +272,8 @@ if ($page == 'overview') {
 					// set default path to subdomain or domain name
 					if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $completedomain);
+					} elseif (Settings::Get('system.documentroot_suffix') != '') {
+						$path = makeCorrectDir($userinfo['documentroot'] . '/' . Settings::Get('system.documentroot_suffix'));
 					} else {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 					}
@@ -479,6 +481,8 @@ if ($page == 'overview') {
 					// set default path to subdomain or domain name
 					if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $result['domain']);
+					} elseif (Settings::Get('system.documentroot_suffix') != '') {
+						$path = makeCorrectDir($userinfo['documentroot'] . '/' . Settings::Get('system.documentroot_suffix'));
 					} else {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 					}

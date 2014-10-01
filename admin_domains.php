@@ -357,6 +357,10 @@ if ($page == 'domains'
 				if (Settings::Get('system.documentroot_use_default_value') == 1) {
 					$path_suffix = '/'.$domain;
 				}
+				// set default path to DocumentRoot suffix if there is one
+				elseif (Settings::Get('system.documentroot_suffix') != '') {
+					$path_suffix = '/'.Settings::Get('system.documentroot_suffix');
+				}
 				$documentroot = makeCorrectDir($customer['documentroot'] . $path_suffix);
 
 				$registration_date = trim($_POST['registration_date']);
@@ -401,6 +405,11 @@ if ($page == 'domains'
 						&& (Settings::Get('system.documentroot_use_default_value') == 1)
 					) {
 						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $domain);
+					} elseif (isset($_POST['documentroot'])
+                                                && ($_POST['documentroot'] == '')
+                                                && (Settings::Get('system.documentroot_suffix') != '')
+					) {
+						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . Settings::Get('system.documentroot_suffix'));
 					}
 
 				} else {
@@ -1183,6 +1192,8 @@ if ($page == 'domains'
 						// set default path to subdomain or domain name
 						if (Settings::Get('system.documentroot_use_default_value') == 1) {
 							$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
+						} elseif (Settings::Get('system.documentroot_suffix') != '') {
+							$path_suffix = '/'.Settings::Get('system.documentroot_suffix');
 						} else {
 							$documentroot = $customer['documentroot'];
 						}
