@@ -122,7 +122,7 @@ $idna_convert = new idna_convert_wrapper();
  * disable magic_quotes_runtime if enabled
  */
 // since 5.4 get_magic_quotes_runtime() and get_magic_quotes_gpc() return always FALSE
-if (version_compare("5.4.0", PHP_VERSION, "<")) {
+if (version_compare(PHP_VERSION, "5.4.0", "<")) {
 	if (get_magic_quotes_runtime()) {
 		// deactivate
 		set_magic_quotes_runtime(false);

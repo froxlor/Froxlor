@@ -851,7 +851,7 @@ class FroxlorInstall {
 		}
 
 		// Check if magic_quotes_runtime is active | get_magic_quotes_runtime() is always FALSE since 5.4
-		if (version_compare("5.4.0", PHP_VERSION, "<")) {
+		if (version_compare(PHP_VERSION, "5.4.0", "<")) {
 			$content .= $this->_status_message('begin', $this->_lng['requirements']['phpmagic_quotes_runtime']);
 			if (get_magic_quotes_runtime()) {
 				// deactivate it
