@@ -696,7 +696,7 @@ class nginx {
 	protected function getHtpasswds($domain) {
 
 		$result_stmt = Database::prepare("
-			SELECT DISTINCT *
+			SELECT *
 			FROM `" . TABLE_PANEL_HTPASSWDS . "` AS a
 			JOIN `" . TABLE_PANEL_DOMAINS . "` AS b USING (`customerid`)
 			WHERE b.customerid = :customerid AND b.domain = :domain
@@ -733,6 +733,10 @@ class nginx {
 				$x++;
 			}
 		}
+
+		// Remove duplicate entries
+		$returnval = array_map("unserialize", array_unique(array_map("serialize", $returnval)));
+
 		return $returnval;
 	}
 
