@@ -745,9 +745,7 @@ class nginx {
 			$phpopts .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
 			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
 			$phpopts .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
-			$phpopts .= "\t\tif (!-e \$document_root\$fastcgi_script_name) {\n";
-			$phpopts .= "\t\t\treturn 404;\n";
-			$phpopts .= "\t\t}\n";
+			$phpopts .= "\t\ttry_files \$fastcgi_script_name =404;\n";
 			$phpopts .= "\t\tfastcgi_pass ".Settings::Get('system.nginx_php_backend').";\n";
 			$phpopts .= "\t\tfastcgi_index index.php;\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
