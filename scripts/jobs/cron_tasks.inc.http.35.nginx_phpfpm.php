@@ -29,9 +29,7 @@ class nginx_phpfpm extends nginx
 			$php_options_text .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
 			$php_options_text .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
 			$php_options_text .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
-			$php_options_text .= "\t\tif (!-e \$document_root\$fastcgi_script_name) {\n";
-			$php_options_text .= "\t\t\treturn 404;\n";
-			$php_options_text .= "\t\t}\n";
+			$php_options_text .= "\t\ttry_files \$fastcgi_script_name =404;\n";
 			$php_options_text .= "\t\tfastcgi_pass unix:".$php->getInterface()->getSocketFile().";\n";
 			$php_options_text .= "\t\tfastcgi_index index.php;\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {

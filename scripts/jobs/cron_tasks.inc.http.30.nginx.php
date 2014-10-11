@@ -203,9 +203,7 @@ class nginx {
 				$this->nginx_data[$vhost_filename] .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
-				$this->nginx_data[$vhost_filename] .= "\t\tif (!-e \$document_root\$fastcgi_script_name) {\n";
-				$this->nginx_data[$vhost_filename] .= "\t\t\treturn 404;\n";
-				$this->nginx_data[$vhost_filename] .= "\t\t}\n";
+				$this->nginx_data[$vhost_filename] .= "\t\ttry_files \$fastcgi_script_name =404;\n";
 				
 				if ($row_ipsandports['ssl'] == '1') {
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param HTTPS on;\n";
