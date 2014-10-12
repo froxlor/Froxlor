@@ -425,7 +425,7 @@ class nginx {
 				$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
 
 				if ($domain['specialsettings'] != "") {
-					$vhost_content .= $domain['specialsettings'] . "\n";
+					$vhost_content = $this->mergeVhostCustom($vhost_content, $domain['specialsettings']);
 				}
 
 				if ($_vhost_content != '') {
@@ -439,75 +439,73 @@ class nginx {
 		}
 		$vhost_content .= '}' . "\n\n";
 
-		return $this->mergeVhostBlocks($vhost_content);
+		return $vhost_content;
 	}
 
+	protected function mergeVhostCustom($vhost_frx, $vhost_usr) {
+		// Clean froxlor defined settings
+		$vhost_frx = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_frx)))); // Break into array items
 
-	protected function mergeVhostBlocks($vhost_content) {
-		$vhost_content = str_replace("\r", "\n", $vhost_content); // Remove windows linebreaks
-		$vhost_content = preg_replace('/^[\s\t]*#.*/m', "", $vhost_content); // Remove comments
-		$vhost_content = str_replace(array("{", "}"), array("{\n", "\n}"), $vhost_content); // Break blocks into lines
-		$vhost_content = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_content))));
-		$vhost_content = array_filter($vhost_content, create_function('$a','return preg_match("#\S#", $a);'));
+		// Clean user defined settings
+		$vhost_usr = str_replace("\r", "\n", $vhost_usr); // Remove windows linebreaks
+		$vhost_usr = preg_replace('/^[\s\t]*#.*/m', "", $vhost_usr); // Remove comments
+		$vhost_usr = str_replace(array("{", "}"), array("{\n", "\n}"), $vhost_usr); // Break blocks into lines
+		$vhost_usr = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_usr)))); // Break into array items
+		$vhost_usr = array_filter($vhost_usr, create_function('$a','return preg_match("#\S#", $a);')); // Remove empty lines
 
-		// Merge similar blocks
-		$new_vhost_content = array();
-		$isOpen = false;
-		$addAfter = false;
-		foreach ($vhost_content as $line) {
+		// Cycle through the user defined settings
+		$currentBlock = array();
+		$blockLevel = 0;
+		foreach ($vhost_usr as $line) {
 			$line = trim($line);
+			$currentBlock[] = $line;
 
-			if (substr_count($line, "{") != 0 && substr_count($line, "}") == 0 && substr_count($line, "server") == 0 && $isOpen === false) {
-				$isOpen = true;
-				$addAfter = array_search($line, $new_vhost_content);
-				if ($addAfter === false) {
-					$new_vhost_content[] = $line;
-				}
-			} elseif ($isOpen === true) {
-				if (substr_count($line, "}") != 0 && substr_count($line, "{") == 0) {
-					$isOpen = false;
-					if ($addAfter === false) {
-						$new_vhost_content[] = "}";
-					} else {
-						$addAfter = false;
+			if (strpos($line, "{") !== false) {
+				$blockLevel++;
+			}
+			if (strpos($line, "}") !== false && $blockLevel > 0) {
+				$blockLevel--;
+			}
+
+			if ($line == "}" && $blockLevel == 0) {
+				if (in_array($currentBlock[0], $vhost_frx)) {
+					// Add to existing block
+					$pos = array_search($currentBlock[0], $vhost_frx);
+					do {
+						$pos++;
+					} while ($vhost_frx[$pos] != "}");
+
+					for ($i = 1; $i < count($currentBlock) - 1; $i++) {
+						array_splice($vhost_frx, $pos + $i - 2, 0, $currentBlock[$i]);
 					}
 				} else {
-					if ($addAfter != false) {
-						for ($i = $addAfter; $i < count($new_vhost_content); $i++) {
-							if ($new_vhost_content[$i] == "}") {
-								$addAt = $i;
-								break;
-							}
-						}
-						array_splice($new_vhost_content, $addAt, 0, $line);
-					} else {
-						$new_vhost_content[] = $line;
-					}
+					// Add to end
+					array_splice($vhost_frx, count($vhost_frx), 0, $currentBlock);
 				}
-			} else {
-				$new_vhost_content[] = $line;
+				$currentBlock = array();
+			} elseif ($blockLevel == 0) {
+				array_splice($vhost_frx, count($vhost_frx), 0, $currentBlock);
+				$currentBlock = array();
 			}
 		}
 
-		// Fix idention
 		$nextLevel = 0;
-		for ($i = 0; $i < count($new_vhost_content); $i++) {
-			if (substr_count($new_vhost_content[$i], "}") != 0 && substr_count($new_vhost_content[$i], "{") == 0) {
+		for ($i = 0; $i < count($vhost_frx); $i++) {
+			if (substr_count($vhost_frx[$i], "}") != 0 && substr_count($vhost_frx[$i], "{") == 0) {
 				$nextLevel -= 1;
 			}
 			if ($nextLevel > 0) {
 				for ($j = 0; $j < $nextLevel; $j++) {
-					$new_vhost_content[$i] = "	" . $new_vhost_content[$i];
+					$vhost_frx[$i] = "	" . $vhost_frx[$i];
 				}
 			}
-			if (substr_count($new_vhost_content[$i], "{") != 0 && substr_count($new_vhost_content[$i], "}") == 0) {
+			if (substr_count($vhost_frx[$i], "{") != 0 && substr_count($vhost_frx[$i], "}") == 0) {
 				$nextLevel += 1;
 			}
 		}
 
-		return implode("\n", $new_vhost_content);
+		return implode("\n", $vhost_frx);
 	}
-
 
 	protected function composeSslSettings($domain) {
 
