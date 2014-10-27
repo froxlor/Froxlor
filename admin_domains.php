@@ -1697,7 +1697,9 @@ if ($page == 'domains'
 						Database::pexecute($ins_stmt, array('rowid' => $row['id'], 'ipportid' => $ipportid));
 					}
 					foreach ($ssl_ipandports as $ssl_ipportid) {
-						Database::pexecute($ins_stmt, array('rowid' => $row['id'], 'ipportid' => $ssl_ipportid));
+						if ($ssl_ipportid > 0) {
+							Database::pexecute($ins_stmt, array('rowid' => $row['id'], 'ipportid' => $ssl_ipportid));
+						}
 					}
 				}
 

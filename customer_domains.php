@@ -406,6 +406,7 @@ if ($page == 'overview') {
 				$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL
 					AND `d`.`id` <> `c`.`standardsubdomain`
+					AND `d`.`parentdomainid` = '0'
 					AND `d`.`customerid`=`c`.`customerid`
 					AND `d`.`email_only`='0'
 					AND `d`.`customerid`= :customerid
@@ -607,6 +608,7 @@ if ($page == 'overview') {
 					WHERE `d`.`aliasdomain` IS NULL
 					AND `d`.`id` <> :id
 					AND `c`.`standardsubdomain` <> `d`.`id`
+					AND `d`.`parentdomainid` = '0'
 					AND `d`.`customerid` = :customerid
 					AND `c`.`customerid` = `d`.`customerid`
 					AND `d`.`id` = `dip`.`id_domain`
