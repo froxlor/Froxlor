@@ -531,7 +531,7 @@ class nginx {
 		if ($domain['ssl_cert_file'] != '') {
 			// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
 			//$sslsettings .= "\t" . 'ssl on;' . "\n";
-			$sslsettings .= "\t" . 'ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;' . "\n";
+			$sslsettings .= "\t" . 'ssl_protocols TLSv1 TLSv1.1 TLSv1.2;' . "\n";
 			$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
 			$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
 			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain['ssl_cert_file']) . ';' . "\n";

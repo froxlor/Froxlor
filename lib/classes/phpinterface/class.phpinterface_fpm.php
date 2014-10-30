@@ -55,7 +55,8 @@ class phpinterface_fpm {
 				'session.name',
 				'session.serialize_handler',
 				'upload_max_filesize',
-				'xmlrpc_error_number'
+				'xmlrpc_error_number',
+				'session.auto_start',
 			),
 			'php_flag' => array(
 				'asp_tags',
@@ -65,8 +66,7 @@ class phpinterface_fpm {
 				'log_errors',
 				'magic_quotes_gpc',
 				'magic_quotes_runtime',
-				'magic_quotes_sybase',
-				'session.auto_start',
+				'magic_quotes_sybase',				
 				'session.cookie_secure',
 				'session.use_cookies',
 				'short_open_tag',

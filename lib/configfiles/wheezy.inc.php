@@ -439,6 +439,7 @@ return array(
 							'a2enmod suexec fastcgi actions',
 							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'groupadd -f '.Settings::Get('phpfpm.vhost_httpgroup') : null,
 							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'useradd -s /bin/false -g '.Settings::Get('phpfpm.vhost_httpgroup').' '.Settings::Get('phpfpm.vhost_httpuser') : null,
+							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'usermod -aG '.Settings::Get('phpfpm.vhost_httpgroup').' '.Settings::Get('system.httpuser') : null,
 							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'chown -R '.Settings::Get('phpfpm.vhost_httpuser').':'.Settings::Get('phpfpm.vhost_httpgroup').' '.FROXLOR_INSTALL_DIR : null,
 							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'a2dismod php5' : null
 						),
