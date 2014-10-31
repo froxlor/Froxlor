@@ -32,9 +32,14 @@ function checkCrondConfigurationFile() {
 	if ($num_results > 0) {
 
 		// get all crons and their intervals
-		$cronfile = "# automatically generated cron-configuration by froxlor\n";
-		$cronfile.= "# do not manually edit this file as it will be re-generated periodically.\n";
-		$cronfile.= "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n#\n";
+		if (isFreeBSD()) {
+			// FreeBSD does not need a header as we are writing directly to the crontab
+			$cronfile = "\n";
+		} else {
+			$cronfile = "# automatically generated cron-configuration by froxlor\n";
+			$cronfile.= "# do not manually edit this file as it will be re-generated periodically.\n";
+			$cronfile.= "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n#\n";
+		}
 
 		// get all the crons
 		$result_stmt = Database::query("
@@ -90,10 +95,37 @@ function checkCrondConfigurationFile() {
 			}
 		}
 
+		if (isFreeBSD()) {
+			// FreeBSD handles the cron-stuff in another way. We need to directly
+			// write to the crontab file as there is not cron.d/froxlor file
+			// (settings for system.cronconfig should be set correctly of course)
+			$crontab = file_get_contents(Settings::Get("system.cronconfig"));
+
+			if ($crontab === false) {
+				die("Oh snap, we cannot read the crontab file. This should not happen.\nPlease check the path and permissions, the cron will keep trying if you don't stop the cron-service.\n\n");
+			}
+
+			// now parse out / replace our entries
+			$crontablines = explode("\n", $crontab);
+			$newcrontab = "";
+			foreach ($crontablines as $ctl) {
+				$ctl = trim($ctl);
+				if (!empty($ctl) && !preg_match("/(.*)froxlor_master_cronjob\.php(.*)/", $ctl)) {
+					$newcrontab .= $ctl."\n";
+				}
+			}
+
+			// re-assemble old-content + new froxlor-content
+			$newcrontab .= $cronfile;
+
+			// now continue with writing the file
+			$cronfile = $newcrontab;
+		}
+
 		// write the file
 		if (file_put_contents(Settings::Get("system.cronconfig"), $cronfile) === false) {
 			// oh snap cannot create new crond-file
-			die("Oh snap, we cannot create the cron.d file. This should not happen.\nPlease check the path and permissions, the cron will keep trying if you don't stop the cron-service.\n\n");
+			die("Oh snap, we cannot create the cron-file. This should not happen.\nPlease check the path and permissions, the cron will keep trying if you don't stop the cron-service.\n\n");
 		}
 		// correct permissions
 		chmod(Settings::Get("system.cronconfig"), 0640);
