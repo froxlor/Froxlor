@@ -280,10 +280,14 @@ if ($action == 'login') {
 		$lastscript = "";
 		if (isset($_REQUEST['script']) && $_REQUEST['script'] != "") {
 			$lastscript = $_REQUEST['script'];
+
+			if (!file_exists(__DIR__."/".$lastscript)) {
+				$lastscript = "";
+			}
 		}
 		$lastqrystr = "";
 		if (isset($_REQUEST['qrystr']) && $_REQUEST['qrystr'] != "") {
-			$lastqrystr = $_REQUEST['qrystr'];
+			$lastqrystr = strip_tags($_REQUEST['qrystr']);
 		}
 
 		eval("echo \"" . getTemplate('login') . "\";");

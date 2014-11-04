@@ -28,19 +28,25 @@ header('Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
 // Prevent inline - JS to be executed (i.e. XSS) in browsers which support this,
 // Inline-JS is no longer allowed and used
 // See: http://people.mozilla.org/~bsterne/content-security-policy/index.html
-header("X-Content-Security-Policy: allow 'self'; frame-ancestors 'none'");
+// New stuff see: https://www.owasp.org/index.php/List_of_useful_HTTP_headers and https://www.owasp.org/index.php/Content_Security_Policy
+$csp_content = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; reflected-xss block;";
+header("Content-Security-Policy: ".$csp_content);
+header("X-Content-Security-Policy: ".$csp_content);
+header("X-WebKit-CSP: ".$csp_content);
+
+header("X-XSS-Protection: 1; mode=block");
 
 // Don't allow to load Froxlor in an iframe to prevent i.e. clickjacking
-header('X-Frame-Options: DENY');
+header("X-Frame-Options: DENY");
 
 // If Froxlor was called via HTTPS -> enforce it for the next time
 if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
-	header('Strict-Transport-Security: max-age=500');
+	header("Strict-Transport-Security: max-age=500");
 }
 
 // Internet Explorer shall not guess the Content-Type, see:
 // http://blogs.msdn.com/ie/archive/2008/07/02/ie8-security-part-v-comprehensive-protection.aspx
-header('X-Content-Type-Options: nosniff' );
+header("X-Content-Type-Options: nosniff");
 
 // ensure that default timezone is set
 if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get")) {
