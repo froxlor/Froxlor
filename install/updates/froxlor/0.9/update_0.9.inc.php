@@ -2791,3 +2791,17 @@ if (isFroxlorVersion('0.9.33-dev1')) {
 
 	updateToVersion('0.9.33-dev2');
 }
+
+if (isFroxlorVersion('0.9.33-dev2')) {
+	showUpdateStep("Updating from 0.9.33-dev2 to 0.9.33-dev3", false);
+
+	showUpdateStep("Adding settings for password-generation options");
+	Settings::AddNew("panel.password_alpha_lower", '1');
+	Settings::AddNew("panel.password_alpha_upper", '1');
+	Settings::AddNew("panel.password_numeric", '0');
+	Settings::AddNew("panel.password_special_char_required", '0');
+	Settings::AddNew("panel.password_special_char", '!?<>§$%&+#=@');
+	lastStepStatus(0);
+
+	updateToVersion('0.9.33-dev3');
+}

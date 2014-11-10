@@ -19,8 +19,28 @@
  * Generates a random password
  */
 function generatePassword() {
-	return substr(
-		base64_encode(sha1(md5(uniqid(microtime(), 1))).md5(uniqid(microtime(), 1)).sha1(md5(uniqid(microtime(), 1)))),
-		rand(5, 50), (Settings::Get('panel.password_min_length') > 0 ? Settings::Get('panel.password_min_length') : 10)
-	);
+	$alpha_lower = 'abcdefghijklmnopqrstuvwxyz';
+	$alpha_upper = strtoupper($alpha_lower);
+	$numeric = '0123456789';
+	$special = Settings::Get('panel.password_special_char');
+	$length = Settings::Get('panel.password_min_length') > 3 ? Settings::Get('panel.password_min_length') : 10;
+
+	$pw = str_shuffle($alpha_lower);
+	$n = floor(($length)/4);
+
+	if (Settings::Get('panel.password_alpha_upper')) {
+		$pw .= substr(str_shuffle($alpha_upper), 0, $n);
+	}
+
+	if (Settings::Get('panel.password_numeric')) {
+		$pw .= substr(str_shuffle($numeric), 0, $n);
+	}
+
+	if (Settings::Get('panel.password_special_char_required')) {
+		$pw .= substr(str_shuffle($special), 0, $n);
+	}
+
+	$pw = substr($pw, -$length);
+
+	return str_shuffle($pw);
 }

@@ -47,6 +47,7 @@ return array(
 					'mysql_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
+						'visible' => (Settings::Get('panel.password_regex') == ''),
 						'value' => generatePassword(),
 					)
 				)
