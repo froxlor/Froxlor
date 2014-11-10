@@ -54,6 +54,12 @@ function getFormFieldOutput($fieldname, $fielddata) {
 			}
 		}
 
+		// visible = Settings::Get('phpfpm.enabled') for example would result in false if not enabled
+		// and therefore not shown as intended
+		if (isset($fielddata['visible'])) {
+			$do_show = $fielddata['visible'];
+		}
+
 		if ($do_show) {
 			$returnvalue = call_user_func('getFormFieldOutput' . ucfirst($fielddata['type']), $fieldname, $fielddata);
 		}
