@@ -2803,5 +2803,9 @@ if (isFroxlorVersion('0.9.33-dev2')) {
 	Settings::AddNew("panel.password_special_char", '!?<>§$%&+#=@');
 	lastStepStatus(0);
 
+	showUpdateStep("Adding settings for fpm-apache2.4-mod_proxy integration");
+	Settings::AddNew("phpfpm.use_mod_proxy", '0');
+	lastStepStatus(0);
+
 	updateToVersion('0.9.33-dev3');
 }

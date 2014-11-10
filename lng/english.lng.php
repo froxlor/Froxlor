@@ -1833,3 +1833,5 @@ $lng['serversettings']['panel_password_special_char_required']['title'] = 'Speci
 $lng['serversettings']['panel_password_special_char_required']['description'] = 'Password must contain at least one of the characters defined below.';
 $lng['serversettings']['panel_password_special_char']['title'] = 'Special characters list';
 $lng['serversettings']['panel_password_special_char']['description'] = 'One of these characters is required if the above option is set.';
+$lng['phpfpm']['use_mod_proxy']['title'] = 'Use mod_proxy / mod_proxy_fcgi';
+$lng['phpfpm']['use_mod_proxy']['description'] = 'Activate to use php-fpm via mod_proxy_fcgi. Requires at least apache-2.4.9';

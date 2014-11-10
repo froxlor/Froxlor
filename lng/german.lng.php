@@ -1557,3 +1557,5 @@ $lng['serversettings']['panel_password_special_char_required']['title'] = 'Sonde
 $lng['serversettings']['panel_password_special_char_required']['description'] = 'Das Passwort muss mindestens eines der untenstehenden Sonderzeichen enthalten';
 $lng['serversettings']['panel_password_special_char']['title'] = 'Sonderzeichen-Liste';
 $lng['serversettings']['panel_password_special_char']['description'] = 'Mindestens eines dieser Sonderzeichen muss in dem Passwort vorkommen, sofern die Sonderzeichen-Option aktiviert ist.';
+$lng['phpfpm']['use_mod_proxy']['title'] = 'Verwende mod_proxy / mod_proxy_fcgi';
+$lng['phpfpm']['use_mod_proxy']['description'] = 'Diese Option kann aktiviert werden, um php-fpm via mod_proxy_fcgi einzubinden. Dies setzt mindestens apache-2.4.9 voraus';

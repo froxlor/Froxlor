@@ -259,23 +259,34 @@ class apache {
 					if ($row_ipsandports['ssl']) {
 						$srvName = substr(md5($ipport),0,4).'.ssl-fpm.external';
 					}
-					$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName .' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
-					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
-					$file_extensions = explode(' ', $phpconfig['file_extensions']);
-					$this->virtualhosts_data[$vhosts_filename] .= '   <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
-					$this->virtualhosts_data[$vhosts_filename] .= '     AddHandler php5-fastcgi .php'. "\n";
-					$this->virtualhosts_data[$vhosts_filename] .= '     Action php5-fastcgi /fastcgiphp' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '      Options +ExecCGI' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '    </FilesMatch>' . "\n";
-					// >=apache-2.4 enabled?
-					if (Settings::Get('system.apache24') == '1') {
-						$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+					
+					// mod_proxy stuff for apache-2.4
+					if (Settings::Get('system.apache24') == '1'
+							&& Settings::Get('phpfpm.use_mod_proxy') == '1'
+					) {
+						$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.php$>'. "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost/'. "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
+					
 					} else {
-						$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName .' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
+						$file_extensions = explode(' ', $phpconfig['file_extensions']);
+						$this->virtualhosts_data[$vhosts_filename] .= '   <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '     AddHandler php5-fastcgi .php'. "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '     Action php5-fastcgi /fastcgiphp' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '      Options +ExecCGI' . "\n";
+						$this->virtualhosts_data[$vhosts_filename].= '    </FilesMatch>' . "\n";
+						// >=apache-2.4 enabled?
+						if (Settings::Get('system.apache24') == '1') {
+							$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+						} else {
+							$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
+						}
+						$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . $srvName . "\n";
 					}
-					$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
-					$this->virtualhosts_data[$vhosts_filename] .= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . $srvName . "\n";
 				}
 
 				/**

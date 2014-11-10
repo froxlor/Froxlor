@@ -404,6 +404,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('phpfpm', 'defaultini', '1'),
 	('phpfpm', 'vhost_defaultini', '2'),
 	('phpfpm', 'fastcgi_ipcdir', '/var/lib/apache2/fastcgi/'),
+	('phpfpm', 'use_mod_proxy', '0'),
 	('nginx', 'fastcgiparams', '/etc/nginx/fastcgi_params'),
 	('system', 'lastaccountnumber', '0'),
 	('system', 'lastguid', '9999'),

@@ -39,22 +39,33 @@ class apache_fcgid extends apache
 				if (customerHasPerlEnabled($domain['customerid'])) {
 					$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
 				}
-				$php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile()  . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
-				$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
-				$php_options_text.= '    <FilesMatch "\.php$">' . "\n";
-				$php_options_text.= '      SetHandler php5-fastcgi'. "\n";
-				$php_options_text.= '      Action php5-fastcgi /fastcgiphp' . "\n";
-				$php_options_text.= '      Options +ExecCGI' . "\n";
-				$php_options_text.= '    </FilesMatch>' . "\n";
-				// >=apache-2.4 enabled?
-				if (Settings::Get('system.apache24') == '1') {
-					$php_options_text.= '    Require all granted' . "\n";
+				
+				// mod_proxy stuff for apache-2.4
+				if (Settings::Get('system.apache24') == '1'
+					&& Settings::Get('phpfpm.use_mod_proxy') == '1'
+				) {
+					$php_options_text.= '  <FilesMatch \.php$>'. "\n";
+					$php_options_text.= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost/'. "\n";
+					$php_options_text.= '  </FilesMatch>' . "\n";
+
 				} else {
-					$php_options_text.= '    Order allow,deny' . "\n";
-					$php_options_text.= '    allow from all' . "\n";
+					$php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile()  . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
+					$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
+					$php_options_text.= '    <FilesMatch "\.php$">' . "\n";
+					$php_options_text.= '      SetHandler php5-fastcgi'. "\n";
+					$php_options_text.= '      Action php5-fastcgi /fastcgiphp' . "\n";
+					$php_options_text.= '      Options +ExecCGI' . "\n";
+					$php_options_text.= '    </FilesMatch>' . "\n";
+					// >=apache-2.4 enabled?
+					if (Settings::Get('system.apache24') == '1') {
+						$php_options_text.= '    Require all granted' . "\n";
+					} else {
+						$php_options_text.= '    Order allow,deny' . "\n";
+						$php_options_text.= '    allow from all' . "\n";
+					}
+					$php_options_text.= '  </Directory>' . "\n";
+					$php_options_text.= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . $srvName . "\n";
 				}
-				$php_options_text.= '  </Directory>' . "\n";
-				$php_options_text.= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . $srvName . "\n";
 			}
 			else
 			{
