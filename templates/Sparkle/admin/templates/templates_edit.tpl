@@ -109,8 +109,8 @@ $header
 					<td>{$lng['admin']['templates']['USERNAME']}</td>
 				</tr>
 				<tr>
-					<td><em>{PASSWORD}</em></td>
-					<td>{$lng['admin']['templates']['PASSWORD']}</td>
+					<td><em>{LINK}</em></td>
+					<td>{$lng['admin']['templates']['LINK']}</td>
 				</tr>
 				<tr>
 					<td colspan="2">
