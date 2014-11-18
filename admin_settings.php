@@ -143,7 +143,14 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			eval("\$phpinfohtml .= \"" . getTemplate("settings/phpinfo/phpinfo_table") . "\";");
 		}
 		$phpinfo = $phpinfohtml;
+	} else {
+	    $phpinfo = 'No PHP configuration data available.';
+
+        if (function_exists('phpversion')) {
+            $phpinfo .= ' You are currently running version ' . phpversion();
+        }
 	}
+
 	eval("echo \"" . getTemplate("settings/phpinfo") . "\";");
 
 } elseif($page == 'rebuildconfigs'
