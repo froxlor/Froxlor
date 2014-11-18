@@ -1835,3 +1835,4 @@ $lng['serversettings']['panel_password_special_char']['title'] = 'Special charac
 $lng['serversettings']['panel_password_special_char']['description'] = 'One of these characters is required if the above option is set.';
 $lng['phpfpm']['use_mod_proxy']['title'] = 'Use mod_proxy / mod_proxy_fcgi';
 $lng['phpfpm']['use_mod_proxy']['description'] = 'Activate to use php-fpm via mod_proxy_fcgi. Requires at least apache-2.4.9';
+$lng['error']['no_phpinfo'] = 'Sorry, unable to read phpinfo()';

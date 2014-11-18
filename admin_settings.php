@@ -105,14 +105,14 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 } elseif($page == 'phpinfo'
 	&& $userinfo['change_serversettings'] == '1'
 ) {
-		ob_start();
-		phpinfo();
-		$phpinfo = array('phpinfo' => array());
-		if (preg_match_all(
-				'#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
-				ob_get_clean(), $matches, PREG_SET_ORDER
-			)
-		) {
+	ob_start();
+	phpinfo();
+	$phpinfo = array('phpinfo' => array());
+	if (preg_match_all(
+			'#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
+			ob_get_clean(), $matches, PREG_SET_ORDER
+		)
+	) {
 		foreach ($matches as $match) {
 			$end = array_keys($phpinfo);
 			$end = end($end);
@@ -143,6 +143,8 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			eval("\$phpinfohtml .= \"" . getTemplate("settings/phpinfo/phpinfo_table") . "\";");
 		}
 		$phpinfo = $phpinfohtml;
+	} else {
+		standard_error($lng['error']['no_phpinfo']);
 	}
 	eval("echo \"" . getTemplate("settings/phpinfo") . "\";");
 
