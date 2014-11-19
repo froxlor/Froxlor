@@ -419,7 +419,7 @@ class nginx {
 				) {
 					$vhost_content.= $this->composeSslSettings($domain);
 				}
-				$vhost_content.= $this->create_pathOptions($domain);
+				$vhost_content = $this->mergeVhostCustom($vhost_content, $this->create_pathOptions($domain));
 				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
 
 				$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
@@ -429,11 +429,11 @@ class nginx {
 				}
 
 				if ($_vhost_content != '') {
-					$vhost_content .= $_vhost_content;
+					$vhost_content = $this->mergeVhostCustom($vhost_content, $_vhost_content);
 				}
 
 				if (Settings::Get('system.default_vhostconf') != '') {
-					$vhost_content .= Settings::Get('system.default_vhostconf') . "\n";
+					$vhost_content = $this->mergeVhostCustom($vhost_content, Settings::Get('system.default_vhostconf')."\n");
 				}
 			}
 		}
@@ -445,6 +445,7 @@ class nginx {
 	protected function mergeVhostCustom($vhost_frx, $vhost_usr) {
 		// Clean froxlor defined settings
 		$vhost_frx = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_frx)))); // Break into array items
+		$vhost_frx = array_map("trim", $vhost_frx); // remove unnecessary whitespaces
 
 		// Clean user defined settings
 		$vhost_usr = str_replace("\r", "\n", $vhost_usr); // Remove windows linebreaks
@@ -476,7 +477,7 @@ class nginx {
 					} while ($vhost_frx[$pos] != "}");
 
 					for ($i = 1; $i < count($currentBlock) - 1; $i++) {
-						array_splice($vhost_frx, $pos + $i - 2, 0, $currentBlock[$i]);
+						array_splice($vhost_frx, $pos + $i - 1, 0, $currentBlock[$i]);
 					}
 				} else {
 					// Add to end
