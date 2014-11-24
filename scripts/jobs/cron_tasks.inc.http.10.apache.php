@@ -265,7 +265,7 @@ class apache {
 							&& Settings::Get('phpfpm.use_mod_proxy') == '1'
 					) {
 						$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.php$>'. "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost/'. "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost'. "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
 					
 					} else {
