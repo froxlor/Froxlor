@@ -1000,6 +1000,24 @@ if ($page == 'customers'
 		}
 		$result = Database::pexecute_first($result_stmt, $result_data);
 
+		/*
+		 * information for moving customer
+		 */
+		$available_admins_stmt = Database::prepare("
+                        SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
+                        WHERE (`customers` = '-1' OR `customers` < `customers_used`)"
+		);
+		Database::pexecute($available_admins_stmt);
+		$admin_select = makeoption("-----", 0, true, true, true);
+		$admin_select_cnt = 0;
+		while ($available_admin = $available_admins_stmt->fetch()) {
+			$admin_select .= makeoption($available_admin['name']." (".$available_admin['loginname'].")", $available_admin['adminid'], null, true, true);
+			$admin_select_cnt++;
+		}
+		/*
+		 * end of moving customer stuff
+		 */
+
 		if ($result['loginname'] != '') {
 
 			if (isset($_POST['send'])
@@ -1019,6 +1037,8 @@ if ($page == 'customers'
 				$def_language = validate($_POST['def_language'], 'default language');
 				$password = validate($_POST['new_customer_password'], 'new password');
 				$gender = intval_ressource($_POST['gender']);
+
+				$move_to_admin = intval_ressource($_POST['move_to_admin']);
 
 				$diskspace = intval_ressource($_POST['diskspace']);
 				if (isset($_POST['diskspace_ul'])) {
@@ -1498,6 +1518,17 @@ if ($page == 'customers'
 					$admin_update_query.= " WHERE `adminid` = '" . (int)$result['adminid'] . "'";
 					Database::query($admin_update_query);
 					$log->logAction(ADM_ACTION, LOG_INFO, "edited user '" . $result['loginname'] . "'");
+
+					/*
+					 * move customer to another admin/reseller; #1166
+					 */
+					if ($move_to_admin > 0 && $move_to_admin != $result['adminid']) {
+						$move_result = moveCustomerToAdmin($id, $move_to_admin);
+						if ($move_result != true) {
+							standard_error('moveofcustomerfailed', $move_result);
+						}
+					}
+
 					$redirect_props = Array(
 						'page' => $page,
 						's' => $s

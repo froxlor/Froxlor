@@ -1836,3 +1836,7 @@ $lng['serversettings']['panel_password_special_char']['description'] = 'One of t
 $lng['phpfpm']['use_mod_proxy']['title'] = 'Use mod_proxy / mod_proxy_fcgi';
 $lng['phpfpm']['use_mod_proxy']['description'] = 'Activate to use php-fpm via mod_proxy_fcgi. Requires at least apache-2.4.9';
 $lng['error']['no_phpinfo'] = 'Sorry, unable to read phpinfo()';
+
+$lng['admin']['movetoadmin'] = 'Move customer';
+$lng['admin']['movecustomertoadmin'] = 'Move customer to the selected admin/reseller<br /><small>Leave this empty for no change.<br />If the desired admin does not show up in the list, his customer-limit has been reached.</small>';
+$lng['error']['moveofcustomerfailed'] = 'Moving the customer to the selected admin/reseller failed. Keep in mind that all other changes to the customer were applied successfully at this stage.<br><br>Error-message: %s';
