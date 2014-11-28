@@ -748,7 +748,7 @@ class apache {
 			$code = getDomainRedirectCode($domain['id']);
 			$modrew_red = '';
 			if ($code != '') {
-				$modrew_red = '[R='. $code . ';L]';
+				$modrew_red = '[R='. $code . ';L,NE]';
 			}
 
 			// redirect everything, not only root-directory, #541
