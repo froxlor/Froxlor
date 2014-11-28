@@ -1043,3 +1043,308 @@ div.right {
 .grid-offset-1-2 {
 	margin-left: 50%;
 }
+
+/* PROGRESS */
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="0"] {
+  width: 0%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="1"] {
+  width: 1%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="2"] {
+  width: 2%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="3"] {
+  width: 3%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="4"] {
+  width: 4%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="5"] {
+  width: 5%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="6"] {
+  width: 6%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="7"] {
+  width: 7%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="8"] {
+  width: 8%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="9"] {
+  width: 9%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="10"] {
+  width: 10%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="11"] {
+  width: 11%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="12"] {
+  width: 12%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="13"] {
+  width: 13%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="14"] {
+  width: 14%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="15"] {
+  width: 15%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="16"] {
+  width: 16%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="17"] {
+  width: 17%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="18"] {
+  width: 18%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="19"] {
+  width: 19%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="20"] {
+  width: 20%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="21"] {
+  width: 21%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="22"] {
+  width: 22%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="23"] {
+  width: 23%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="24"] {
+  width: 24%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="25"] {
+  width: 25%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="26"] {
+  width: 26%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="27"] {
+  width: 27%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="28"] {
+  width: 28%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="29"] {
+  width: 29%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="30"] {
+  width: 30%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="31"] {
+  width: 31%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="32"] {
+  width: 32%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="33"] {
+  width: 33%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="34"] {
+  width: 34%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="35"] {
+  width: 35%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="36"] {
+  width: 36%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="37"] {
+  width: 37%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="38"] {
+  width: 38%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="39"] {
+  width: 39%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="40"] {
+  width: 40%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="41"] {
+  width: 41%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="42"] {
+  width: 42%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="43"] {
+  width: 43%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="44"] {
+  width: 44%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="45"] {
+  width: 45%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="46"] {
+  width: 46%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="47"] {
+  width: 47%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="48"] {
+  width: 48%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="49"] {
+  width: 49%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="50"] {
+  width: 50%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="51"] {
+  width: 51%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="52"] {
+  width: 52%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="53"] {
+  width: 53%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="54"] {
+  width: 54%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="55"] {
+  width: 55%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="56"] {
+  width: 56%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="57"] {
+  width: 57%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="58"] {
+  width: 58%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="59"] {
+  width: 59%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="60"] {
+  width: 60%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="61"] {
+  width: 61%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="62"] {
+  width: 62%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="63"] {
+  width: 63%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="64"] {
+  width: 64%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="65"] {
+  width: 65%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="66"] {
+  width: 66%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="67"] {
+  width: 67%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="68"] {
+  width: 68%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="69"] {
+  width: 69%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="70"] {
+  width: 70%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="71"] {
+  width: 71%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="72"] {
+  width: 72%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="73"] {
+  width: 73%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="74"] {
+  width: 74%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="75"] {
+  width: 75%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="76"] {
+  width: 76%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="77"] {
+  width: 77%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="78"] {
+  width: 78%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="79"] {
+  width: 79%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="80"] {
+  width: 80%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="81"] {
+  width: 81%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="82"] {
+  width: 82%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="83"] {
+  width: 83%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="84"] {
+  width: 84%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="85"] {
+  width: 85%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="86"] {
+  width: 86%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="87"] {
+  width: 87%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="88"] {
+  width: 88%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="89"] {
+  width: 89%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="90"] {
+  width: 90%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="91"] {
+  width: 91%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="92"] {
+  width: 92%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="93"] {
+  width: 93%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="94"] {
+  width: 94%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="95"] {
+  width: 95%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="96"] {
+  width: 96%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="97"] {
+  width: 97%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="98"] {
+  width: 98%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="99"] {
+  width: 99%;
+}
+.bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="100"] {
+  width: 100%;
+}
