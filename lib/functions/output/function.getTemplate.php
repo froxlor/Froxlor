@@ -26,51 +26,42 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function getTemplate($template, $noarea = 0)
-{
+function getTemplate($template, $noarea = 0) {
+
 	global $templatecache, $theme;
 
-	if(!isset($theme) || $theme == '')
-	{
-		$theme = 'Froxlor';
+	$fallback_theme = 'Sparkle';
+
+	if (!isset($theme) || $theme == '') {
+		$theme = $fallback_theme;
 	}
 
-	if($noarea != 1)
-	{
+	if ($noarea != 1) {
 		$template = AREA . '/' . $template;
 	}
 
-	if(!isset($templatecache[$theme][$template]))
-	{
+	if (!isset($templatecache[$theme][$template])) {
+
 		$filename = './templates/' . $theme . '/' . $template . '.tpl';
 
-		if(file_exists($filename)
-		   && is_readable($filename))
-		{
-			$templatefile = addcslashes(file_get_contents($filename), '"\\');
+		// check the current selected theme for the template
+		$templatefile = _checkAndParseTpl($filename);
 
-			// loop through template more than once in case we have an "if"-statement in another one
+		if ($templatefile == false && $theme != $fallback_theme) {
+			// check fallback
+			$filename = './templates/' . $fallback_theme . '/' . $template . '.tpl';
+			$templatefile = _checkAndParseTpl($filename);
 
-			while(preg_match('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', $templatefile))
-			{
-				$templatefile = preg_replace('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', '".( ($1) ? ("$2") : ("$4") )."', $templatefile);
+			if ($templatefile == false) {
+				// check for old layout
+				$filename = './templates/' . $template . '.tpl';
+				$templatefile = _checkAndParseTpl($filename);
+
+				if ($templatefile == false) {
+					// not found
+					$templatefile = 'TEMPLATE NOT FOUND: ' . $filename;
+				}
 			}
-		}
-		elseif(file_exists('./templates/' . $template . '.tpl') && is_readable('./templates/' . $template . '.tpl'))
-		{
-			$filename = './templates/' . $template . '.tpl';
-			$templatefile = addcslashes(file_get_contents($filename), '"\\');
-			 
-			// loop through template more than once in case we have an "if"-statement in another one
-			 
-			while(preg_match('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', $templatefile))
-			{
-				$templatefile = preg_replace('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', '".( ($1) ? ("$2") : ("$4") )."', $templatefile);
-			}
-		}
-		else
-		{
-			$templatefile = 'TEMPLATE NOT FOUND: ' . $filename;
 		}
 
 		$output = $templatefile; // Minify_HTML::minify($templatefile, array('cssMinifier', 'jsMinifier'));
@@ -78,4 +69,31 @@ function getTemplate($template, $noarea = 0)
 	}
 
 	return $templatecache[$theme][$template];
+}
+
+/**
+ * check whether a tpl file exists and if so, return it's content or else return false
+ *
+ * @param string $filename
+ *
+ * @return string|bool content on success, else false
+ */
+function _checkAndParseTpl($filename) {
+
+	$templatefile = "";
+
+	if (file_exists($filename)
+		&& is_readable($filename)
+	) {
+
+		$templatefile = addcslashes(file_get_contents($filename), '"\\');
+
+		// loop through template more than once in case we have an "if"-statement in another one
+		while (preg_match('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', $templatefile)) {
+			$templatefile = preg_replace('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', '".( ($1) ? ("$2") : ("$4") )."', $templatefile);
+		}
+
+		return $templatefile;
+	}
+	return false;
 }
