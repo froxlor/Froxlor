@@ -49,13 +49,13 @@ function getTemplate($template, $noarea = 0) {
 
 		if ($templatefile == false && $theme != $fallback_theme) {
 			// check fallback
-			$filename = './templates/' . $fallback_theme . '/' . $template . '.tpl';
-			$templatefile = _checkAndParseTpl($filename);
+			$_filename = './templates/' . $fallback_theme . '/' . $template . '.tpl';
+			$templatefile = _checkAndParseTpl($_filename);
 
 			if ($templatefile == false) {
 				// check for old layout
-				$filename = './templates/' . $template . '.tpl';
-				$templatefile = _checkAndParseTpl($filename);
+				$_filename = './templates/' . $template . '.tpl';
+				$templatefile = _checkAndParseTpl($_filename);
 
 				if ($templatefile == false) {
 					// not found
