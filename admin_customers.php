@@ -95,7 +95,7 @@ if ($page == 'customers'
 				 */
 				//For Disk usage
 				if ($row['diskspace'] > 0) {
-					$disk_percent = round(($row['diskspace_used']*100)/$row['diskspace'], 2);
+					$disk_percent = round(($row['diskspace_used']*100)/$row['diskspace'], 0);
 					$disk_doublepercent = round($disk_percent*2, 2);
 				} else {
 					$disk_percent = 0;
@@ -103,7 +103,7 @@ if ($page == 'customers'
 				}
 
 				if ($row['traffic'] > 0) {
-					$traffic_percent = round(($row['traffic_used']*100)/$row['traffic'], 2);
+					$traffic_percent = round(($row['traffic_used']*100)/$row['traffic'], 0);
 					$traffic_doublepercent = round($traffic_percent*2, 2);
 				} else {
 					$traffic_percent = 0;
