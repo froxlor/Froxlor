@@ -619,7 +619,7 @@ class nginx {
 							break;
 						default:
 							if ($single['path'] == '/') {
-								$path_options .= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+								$path_options .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 								$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 								// remove already used entries so we do not have doubles
 								unset($htpasswds[$idx]);
@@ -679,7 +679,7 @@ class nginx {
 					break;
 				default:
 					$path_options .= "\t" . 'location ' . makeCorrectDir($single['path']) . ' {' . "\n";
-					$path_options .= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+					$path_options .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 					$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 					$path_options .= "\t".'}' . "\n";
 				}
@@ -728,6 +728,7 @@ class nginx {
 
 				$returnval[$x]['path'] = $path;
 				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
+				$returnval[$x]['authname'] = $row_htpasswds['authname'];
 				$returnval[$x]['usrf'] = $htpasswd_filename;
 				$x++;
 			}
@@ -819,7 +820,7 @@ class nginx {
 		}
 
 		$stats_text .= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";
-		$stats_text .= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+		$stats_text .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 		$stats_text .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 		$stats_text .= "\t" . '}' . "\n\n";
 
