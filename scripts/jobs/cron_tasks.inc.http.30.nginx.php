@@ -950,7 +950,8 @@ class nginx {
 		fwrite($this->debugHandler, '  nginx::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
-		if (!isConfigDir(Settings::Get('system.apacheconf_vhost'))) {
+		$vhostDir = new frxDirectory(Settings::Get('system.apacheconf_vhost'));
+		if (!$vhostDir->isConfigDir()) {
 			// Save one big file
 			$vhosts_file = '';
 
