@@ -9,6 +9,8 @@
 	</if>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>
+	<script type="text/javascript" src="js/plugins/jquery.tablesorter.sizeparser.min.js"></script>
 	<!--[if lt IE 9]><script type="text/javascript" src="js/html5shiv.min.js"></script><![endif]-->
 	<if isset($intrafficpage)>
 	<!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->

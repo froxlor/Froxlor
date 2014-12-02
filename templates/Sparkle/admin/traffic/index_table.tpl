@@ -1,6 +1,6 @@
 	<h3>{$lng['traffic']['trafficoverview']}&nbsp;{$overview['type']}&nbsp;{$overview['year']}</h3>
 	<section>
-	<table class="full" id="stats{$overview['year']}">
+	<table class="full" id="stats{$overview['year']}" data-toggle="table">
 		<thead>
 			<tr>
 				<th>{$overview['type']}</th>
@@ -26,38 +26,5 @@
 		</tfoot>
 	</table>
 	</section>
-	<script type="text/javascript">
-		var myTextExtraction = function(node)  
-		{  
-		    // extract data from markup and return it  
-		    if(node.innerHTML != '-') {
-			return 1 + node.innerHTML.substr(0,node.innerHTML.length); 
-		    } else {
-			return '0 B';
-		    }
-		} 
-		$(document).ready(function() 
-		{ 
-			$("#stats{$overview['year']}").tablesorter( {
-				textExtraction: myTextExtraction,
-				headers: {
-					1: {sorter: 'filesize'},
-					2: {sorter: 'filesize'},
-					3: {sorter: 'filesize'},
-					4: {sorter: 'filesize'},
-					5: {sorter: 'filesize'},
-					6: {sorter: 'filesize'},
-					7: {sorter: 'filesize'},
-					8: {sorter: 'filesize'},
-					9: {sorter: 'filesize'},
-					10: {sorter: 'filesize'},
-					11: {sorter: 'filesize'},
-					12: {sorter: 'filesize'}
-				},
-			});
-		} 
-		); 
-	</script>
 	<br />
 	<br />
-

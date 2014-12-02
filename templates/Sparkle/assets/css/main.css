@@ -1044,6 +1044,26 @@ div.right {
 	margin-left: 50%;
 }
 
+/* TABLESORTER */
+.tablesorter-header-inner {
+	margin-left: 15px;
+}
+table thead th.tablesorter-headerUnSorted {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+table thead th.tablesorter-headerAsc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+table thead th.tablesorter-headerDesc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
 /* PROGRESS */
 .bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="0"] {
   width: 0%;
