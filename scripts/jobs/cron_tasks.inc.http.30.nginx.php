@@ -1013,6 +1013,8 @@ class nginx {
 				foreach ($this->htpasswds_data as $htpasswd_filename => $htpasswd_file) {
 					$this->known_htpasswdsfilenames[] = basename($htpasswd_filename);
 					$htpasswd_file_handler = fopen($htpasswd_filename, 'w');
+					// Filter duplicate pairs of username and password
+					$htpasswd_file = implode("\n", array_unique(explode("\n", $htpasswd_file)));
 					fwrite($htpasswd_file_handler, $htpasswd_file);
 					fclose($htpasswd_file_handler);
 				}
