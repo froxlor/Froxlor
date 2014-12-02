@@ -419,7 +419,7 @@ class nginx {
 				) {
 					$vhost_content.= $this->composeSslSettings($domain);
 				}
-				$vhost_content = $this->mergeVhostCustom($vhost_content, $this->create_pathOptions($domain));
+				$vhost_content = $this->mergeVhostCustom($vhost_content, $this->create_pathOptions($domain)) . "\n";
 				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
 
 				$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
@@ -619,7 +619,7 @@ class nginx {
 							break;
 						default:
 							if ($single['path'] == '/') {
-								$path_options .= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+								$path_options .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 								$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 								// remove already used entries so we do not have doubles
 								unset($htpasswds[$idx]);
@@ -679,7 +679,7 @@ class nginx {
 					break;
 				default:
 					$path_options .= "\t" . 'location ' . makeCorrectDir($single['path']) . ' {' . "\n";
-					$path_options .= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+					$path_options .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 					$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 					$path_options .= "\t".'}' . "\n";
 				}
@@ -728,6 +728,7 @@ class nginx {
 
 				$returnval[$x]['path'] = $path;
 				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
+				$returnval[$x]['authname'] = $row_htpasswds['authname'];
 				$returnval[$x]['usrf'] = $htpasswd_filename;
 				$x++;
 			}
@@ -819,7 +820,7 @@ class nginx {
 		}
 
 		$stats_text .= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";
-		$stats_text .= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+		$stats_text .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 		$stats_text .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 		$stats_text .= "\t" . '}' . "\n\n";
 
@@ -950,7 +951,8 @@ class nginx {
 		fwrite($this->debugHandler, '  nginx::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
-		if (!isConfigDir(Settings::Get('system.apacheconf_vhost'))) {
+		$vhostDir = new frxDirectory(Settings::Get('system.apacheconf_vhost'));
+		if (!$vhostDir->isConfigDir()) {
 			// Save one big file
 			$vhosts_file = '';
 

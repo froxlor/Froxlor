@@ -48,11 +48,11 @@ $header
 					</td>
 				</tr>
 				<tr>
-					<td><i>{SALUTATION}</em></td>
+					<td><em>{SALUTATION}</em></td>
 					<td>{$lng['admin']['templates']['SALUTATION']}</td>
 				</tr>
 				<tr>
-					<td><i>{FIRSTNAME}</em></td>
+					<td><em>{FIRSTNAME}</em></td>
 					<td>{$lng['admin']['templates']['FIRSTNAME']}</td>
 				</tr>
 				<tr>
