@@ -41,7 +41,7 @@ header("X-Frame-Options: DENY");
 
 // If Froxlor was called via HTTPS -> enforce it for the next time
 if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
-	header("Strict-Transport-Security: max-age=500");
+	header("Strict-Transport-Security: max-age=15768000");
 }
 
 // Internet Explorer shall not guess the Content-Type, see:
