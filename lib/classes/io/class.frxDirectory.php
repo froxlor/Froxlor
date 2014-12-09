@@ -40,7 +40,7 @@ class frxDirectory {
 	 * @param string $dir
 	 */
 	public function __construct($dir = null) {
-		$this->_dir = makeCorrectDir($dir);
+		$this->_dir = $dir;
 	}
 
 	/**
@@ -50,7 +50,7 @@ class frxDirectory {
 		$uo_stmt = Database::prepare("
 			SELECT COUNT(`id`) as `usropts` FROM `".TABLE_PANEL_HTACCESS."` WHERE `path` = :dir
 		");
-		$uo_res = Database::pexecute_first($uo_stmt, array('dir' => $this->_dir));
+		$uo_res = Database::pexecute_first($uo_stmt, array('dir' => makeCorrectDir($this->_dir)));
 		if ($uo_res != false && isset($uo_res['usropts'])) {
 			return ($uo_res['usropts'] > 0 ? true : false);
 		}
@@ -64,7 +64,7 @@ class frxDirectory {
 		$up_stmt = Database::prepare("
 			SELECT COUNT(`id`) as `usrprot` FROM `".TABLE_PANEL_HTPASSWDS."` WHERE `path` = :dir
 		");
-		$up_res = Database::pexecute_first($up_stmt, array('dir' => $this->_dir));
+		$up_res = Database::pexecute_first($up_stmt, array('dir' => makeCorrectDir($this->_dir)));
 		if ($up_res != false && isset($up_res['usrprot'])) {
 			return ($up_res['usrprot'] > 0 ? true : false);
 		}
