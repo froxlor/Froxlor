@@ -196,7 +196,7 @@ class Settings {
 	public function pFlush() {
 		if (is_array(self::$_updatedata) && count(self::$_updatedata) > 0) {
 			// save all un-saved changes to the settings
-			foreach ($self::$_updatedata as $group => $vargroup) {
+			foreach (self::$_updatedata as $group => $vargroup) {
 				foreach ($vargroup as $varname => $value) {
 					$this->_storeSetting($group, $varname, $value);
 				}
