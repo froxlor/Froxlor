@@ -145,4 +145,12 @@ $(document).ready(function() {
 			});
 		}
 	});
+	// Mail Templates
+	var mailTemplate = $("#mailTemplate").html();
+	$("#mailLanguage").change(function() {
+		var mailLanguage = $(this).val();
+		var mailOptions = $(mailTemplate).filter(function() { return !$(this).attr("id") || $(this).attr("id") == mailLanguage; });
+		$("#mailTemplate").html(mailOptions);
+	});
+	$("#mailLanguage").trigger("change");
 });

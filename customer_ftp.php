@@ -266,7 +266,7 @@ if ($page == 'overview') {
 						);
 						Database::pexecute($result_stmt, array("adminid" => $userinfo['adminid'], "lang" => $def_language));
 						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['customer']['ftp_add']['infomail_subject']), $replace_arr));
+						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['new_ftpaccount_by_customer']['subject']), $replace_arr));
 
 						$def_language = $userinfo['def_language'];
 						$result_stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
@@ -277,7 +277,7 @@ if ($page == 'overview') {
 						);
 						Database::pexecute($result_stmt, array("adminid" => $userinfo['adminid'], "lang" => $def_language));
 						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['customer']['ftp_add']['infomail_body']['main']), $replace_arr));
+						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['new_ftpaccount_by_customer']['mailbody']), $replace_arr));
 
 						$_mailerror = false;
 						try {

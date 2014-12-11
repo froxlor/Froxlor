@@ -848,8 +848,8 @@ $lng['login']['presend'] = 'Réinitialiser le mot de passe';
 $lng['login']['email'] = 'Adresse e-mail';
 $lng['login']['remind'] = 'Réinitialiser mon mot de passe';
 $lng['login']['usernotfound'] = 'Erreur : utilisateur inconnu !';
-$lng['pwdreminder']['subject'] = 'Froxlor - réinitialisation du mot de passe';
-$lng['pwdreminder']['body'] = 'Bonjour %s,\n\nVotre mot de passe pour Froxlor a été réinitialiser !\nLe nouveau mot de passe est : %p\n\nCordialement,\nL\'équipe Froxlor.';
+$lng['mails']['password_reset']['subject'] = 'réinitialisation du mot de passe';
+$lng['mails']['password_reset']['mailbody'] = 'Bonjour {USERNAME},\n\nVotre mot de passe pour Froxlor a été réinitialiser !\nLe nouveau mot de passe est : {LINK}\n\nCordialement,\nL\'équipe Froxlor.';
 $lng['pwdreminder']['success'] = 'Mot de passe correctement réinitialiser.<br />Vous devriez recevoir un e-mail avec votre nouveau mot de passe d\'ici quelques minutes.';
 
 // ADDED IN 1.2.19-svn18

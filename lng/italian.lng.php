@@ -820,8 +820,8 @@ $lng['login']['presend'] = 'Reimposta la password';
 $lng['login']['email'] = 'Indirizzo E-mail';
 $lng['login']['remind'] = 'Reimposta la mia password';
 $lng['login']['usernotfound'] = 'Utente non trovata!';
-$lng['pwdreminder']['subject'] = 'Froxlor - Reimposta password';
-$lng['pwdreminder']['body'] = 'Salve %s,\n\nla tua password froxlor è stata reimpostata!\nLa nuova password è: %p\n\nGrazie,\n Team Froxlor';
+$lng['mails']['password_reset']['subject'] = 'Reimposta password';
+$lng['mails']['password_reset']['mailbody'] = 'Salve {USERNAME},\n\nla tua password froxlor è stata reimpostata!\nLa nuova password è: {LINK}\n\nGrazie,\n Team Froxlor';
 $lng['pwdreminder']['success'] = 'La password è stata reimpostata con successo.<br />A questo punto riceverai una email con la nuova password.';
 
 // ADDED IN 1.2.19-svn18
@@ -1102,8 +1102,8 @@ $lng['serversettings']['stdsubdomainhost']['description'] = 'Quale hostname dovr
 $lng['ftp']['account_edit'] = 'Modifica acocunt FTP';
 $lng['ftp']['editpassdescription'] = 'Imposta una nuova password o lascia vuoto per non cambiarla.';
 $lng['customer']['sendinfomail'] = 'Inviami i dati via email';
-$lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Nuovo database creato';
-$lng['customer']['mysql_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nhai appena aggiunto un nuovo database. Ecco le informazioni inserite:\n\nNome database: {DB_NAME}\nPassword: {DB_PASS}\nDescrizione: {DB_DESC}\nDB-Hostname: {DB_SRV}\n{PMA_URI}\nCordiali Saluti, Team Froxlor";
+$lng['mails']['new_database_by_customer']['subject'] = '[Froxlor] Nuovo database creato';
+$lng['mails']['new_database_by_customer']['mailbody'] = "Hello {CUST_NAME},\n\nhai appena aggiunto un nuovo database. Ecco le informazioni inserite:\n\nNome database: {DB_NAME}\nPassword: {DB_PASS}\nDescrizione: {DB_DESC}\nDB-Hostname: {DB_SRV}\n{PMA_URI}\nCordiali Saluti, Team Froxlor";
 $lng['serversettings']['awstats_path'] = 'Percorso a AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'Cartella della configurazione di AWStats';
 $lng['error']['overviewsettingoptionisnotavalidfield'] = 'Woops, un campo che dovrebbe essere mostrato come opzione in Impostazioni-Principale non è un tipo esclusivo. Si possono rimproverare gli sviluppatori per questo. Questo non deve accadere!';
@@ -1141,8 +1141,8 @@ $lng['serversettings']['ftpserver']['desc'] = 'Se pureftpd è selezionato i file
 $lng['serversettings']['ftpprefix']['description'] = 'Che prefisso vuoi che per gli account ftp?<br/><b>Se si modifica questo devi anche modificare il limite (Quota) della query SQL nel file di configurazione del server FTP nel caso in cui venga usata!</b> ';
 
 // ADDED IN FROXLOR 0.9.7-svn1
-$lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] Nuovo utente ftp creato';
-$lng['customer']['ftp_add']['infomail_body']['main'] = "Salve {CUST_NAME},\n\nhai appena aggiunto un nuovo utente ftp. Ecco le informazioni inserite:\n\nNome utente: {USR_NAME}\nPassword: {USR_PASS}\nPercorso: {USR_PATH}\n\nCordiali Saluti, Team Froxlor";
+$lng['mails']['new_ftpaccount_by_customer']['subject'] = 'Nuovo utente ftp creato';
+$lng['mails']['new_ftpaccount_by_customer']['mailbody'] = "Salve {CUST_NAME},\n\nhai appena aggiunto un nuovo utente ftp. Ecco le informazioni inserite:\n\nNome utente: {USR_NAME}\nPassword: {USR_PASS}\nPercorso: {USR_PATH}\n\nCordiali Saluti, Team Froxlor";
 $lng['domains']['redirectifpathisurl'] = 'Codice di redirezione (Predefinito: vuoto)';
 $lng['domains']['redirectifpathisurlinfo'] = 'È necessario selezionare uno di questi se hai inserito un URL come percorso';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Permetti ai clienti le redirezioni';
@@ -1301,8 +1301,8 @@ $lng['admin']['templates']['DISKAVAILABLE'] = 'Sostituito con il spazio utilizza
 $lng['admin']['templates']['DISKUSED'] = 'Sostituito con il spazio utilizzato in MB, che è stato esaurito da parte del cliente.';
 $lng['serversettings']['dropdown'] = 'Dropdown';
 $lng['serversettings']['manual'] = 'Manuale';
-$lng['mails']['webmaxpercent']['mailbody'] = 'Salve {NAME},\n\nhai utilizzato {DISKUSED} MB di {DISKAVAILABLE} MB di spazio disponibile.\nQuesto è più del {MAX_PERCENT}%.\n\nCordiali Saluti, il Team Froxlor';
-$lng['mails']['webmaxpercent']['subject'] = 'Raggiungere il limite di spazio su disco';
+$lng['mails']['diskmaxpercent']['mailbody'] = 'Salve {NAME},\n\nhai utilizzato {DISKUSED} MB di {DISKAVAILABLE} MB di spazio disponibile.\nQuesto è più del {MAX_PERCENT}%.\n\nCordiali Saluti, il Team Froxlor';
+$lng['mails']['diskmaxpercent']['subject'] = 'Raggiungere il limite di spazio su disco';
 $lng['mysql']['database_edit'] = 'Modifica database';
 
 // ADDED IN FROXLOR 0.9.18

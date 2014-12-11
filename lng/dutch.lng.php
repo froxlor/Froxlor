@@ -793,8 +793,8 @@ $lng['login']['presend'] = 'Wachtwoord opnieuw instellen';
 $lng['login']['email'] = 'E-mailadres';
 $lng['login']['remind'] = 'Mijn wachtwoord opnieuw instellen';
 $lng['login']['usernotfound'] = 'Gebruiker niet gevonden!';
-$lng['pwdreminder']['subject'] = 'Froxlor - Wachtwoord opnieuw instellen';
-$lng['pwdreminder']['body'] = 'Hallo %s,\n\nuw wachtwoord voor Froxlor is opnieuw ingesteld!\nHet nieuwe wachtwoord is: %p\n\nMet vriendelijke groet,\nuw beheerder';
+$lng['mails']['password_reset']['subject'] = 'Wachtwoord opnieuw instellen';
+$lng['mails']['password_reset']['mailbody'] = 'Hallo {USERNAME},\n\nuw wachtwoord voor Froxlor is opnieuw ingesteld!\nHet nieuwe wachtwoord is: {LINK}\n\nMet vriendelijke groet,\nuw beheerder';
 $lng['pwdreminder']['success'] = 'Wachtwoord opnieuw ingesteld.<br />U ontvangt spoedig een e-mail met uw nieuwe wachtwoord.';
 
 // ADDED IN 1.2.19-svn18
@@ -1070,8 +1070,8 @@ $lng['serversettings']['stdsubdomainhost']['description'] = 'Welke hostnaam dien
 $lng['ftp']['account_edit'] = 'FTP account aanpassen';
 $lng['ftp']['editpassdescription'] = 'Nieuw wachtwoord of leeg voor het oude wachtwoord.';
 $lng['customer']['sendinfomail'] = 'Stuur gegevens naar mij via e-mail';
-$lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Nieuwe database aangemaakt';
-$lng['customer']['mysql_add']['infomail_body']['main'] = "Geachte {CUST_NAME},\n\nu hebt zojuist een nieuwe database aangemaakt. Hier zijn nogmaals de ingevoerde gegevens:\n\nNaam database: {DB_NAME}\nWachtwoord: {DB_PASS}\nBeschrijving: {DB_DESC}\nHostnaam database: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nMet vriendelijke groet, uw beheerder";
+$lng['mails']['new_database_by_customer']['subject'] = '[Froxlor] Nieuwe database aangemaakt';
+$lng['mails']['new_database_by_customer']['mailbody'] = "Geachte {CUST_NAME},\n\nu hebt zojuist een nieuwe database aangemaakt. Hier zijn nogmaals de ingevoerde gegevens:\n\nNaam database: {DB_NAME}\nWachtwoord: {DB_PASS}\nBeschrijving: {DB_DESC}\nHostnaam database: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nMet vriendelijke groet, uw beheerder";
 $lng['serversettings']['awstats_path'] = 'Pad naar \'awstats_buildstaticpages.pl\' van AWStats';
 $lng['serversettings']['awstats_conf'] = 'AWStats configuratiepad';
 $lng['error']['overviewsettingoptionisnotavalidfield'] = 'Woops, a field that should be displayed as an option in the settings-overview is not an excepted type. You can blame the developers for this. This should not happen!';
@@ -1109,8 +1109,8 @@ $lng['serversettings']['ftpserver']['desc'] = 'Indien PureFTPD geselecteerd is, 
 $lng['serversettings']['ftpprefix']['description'] = 'Welk voorvoegsel dienen nieuwe FTP-accounts te krijgen?<br/><b>Indien u dit wijzigt, dient ook de query voor Quota in het configuratiebestand van de FTP-server aan te passen!</b> ';
 
 // ADDED IN FROXLOR 0.9.7-svn1
-$lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] Nieuwe FTP-gebruiker aangemaakt';
-$lng['customer']['ftp_add']['infomail_body']['main'] = "Geachte {CUST_NAME},\n\nu hebt zojuist een nieuwe FTP-gebruiker aangemaakt. Hier is de opgegeven informatie:\n\nGebruikersnaam: {USR_NAME}\nWachtwoord: {USR_PASS}\nPad: {USR_PATH}\n\nMet vriendelijke groet, uw beheerder";
+$lng['mails']['new_ftpaccount_by_customer']['subject'] = 'Nieuwe FTP-gebruiker aangemaakt';
+$lng['mails']['new_ftpaccount_by_customer']['mailbody'] = "Geachte {CUST_NAME},\n\nu hebt zojuist een nieuwe FTP-gebruiker aangemaakt. Hier is de opgegeven informatie:\n\nGebruikersnaam: {USR_NAME}\nWachtwoord: {USR_PASS}\nPad: {USR_PATH}\n\nMet vriendelijke groet, uw beheerder";
 $lng['domains']['redirectifpathisurl'] = 'Doorverwijzingscode (standaard: leegt)';
 $lng['domains']['redirectifpathisurlinfo'] = 'U dient deze alleen op te geven indien u een URL als pad hebt opgegeven';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Klanten toestaan doorverwijzingen te maken';

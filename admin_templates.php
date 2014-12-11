@@ -214,24 +214,23 @@ if ($action == '') {
 		&& $_POST['prepare'] == 'prepare'
 	) {
 		//email templates
-		$language = validate($_POST['language'], 'language');
-		$templates = array();
-		$result_stmt = Database::prepare("
-			SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
-			WHERE `adminid`= :adminid AND `language`= :lang
-			AND `templategroup` = 'mails' AND `varname` LIKE '%_subject'"
-		);
-		Database::pexecute($result_stmt, array('adminid' => $userinfo['adminid'], 'lang' => $language));
+		$language = validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect');
+		$template = validate($_POST['template'], 'template');
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$templates[] = str_replace('_subject', '', $row['varname']);
+		$lng_bak = $lng;
+		foreach ($langs['English'] as $key => $value) {
+			include_once makeSecurePath($value['file']);
+		}
+		if ($language != 'English') {
+			foreach ($langs[$language] as $key => $value) {
+				include makeSecurePath($value['file']);
+			}
 		}
 
-		$templates = array_diff($available_templates, $templates);
-		$template_options = '';
-		foreach ($templates as $template) {
-			$template_options.= makeoption($lng['admin']['templates'][$template], $template, NULL, true);
-		}
+		$subject = $lng['mails'][$template]['subject'];
+		$body = str_replace('\n', "\n", $lng['mails'][$template]['mailbody']);
+
+		$lng = $lng_bak;
 
 		$template_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/templates/formfield.template_add.php';
 		$template_add_form = htmlform::genHTMLForm($template_add_data);
@@ -328,6 +327,7 @@ if ($action == '') {
 		//email templates
 		$add = false;
 		$language_options = '';
+		$template_options = '';
 
 		while (list($language_file, $language_name) = each($languages)) {
 			$templates = array();
@@ -344,7 +344,13 @@ if ($action == '') {
 
 			if (count(array_diff($available_templates, $templates)) > 0) {
 				$add = true;
-				$language_options.= makeoption($language_name, $language_file, $userinfo['language'], true);
+				$language_options.= makeoption($language_name, $language_file, $userinfo['language'], true, true);
+
+				$templates = array_diff($available_templates, $templates);
+
+				foreach ($templates as $template) {
+					$template_options.= makeoption($lng['admin']['templates'][$template], $template, NULL, true, true, $language_file) . "\n";
+				}
 			}
 		}
 
