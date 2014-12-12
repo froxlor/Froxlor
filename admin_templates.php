@@ -449,6 +449,8 @@ if ($action == '') {
 			);
 			Database::pexecute($result_stmt, array('id' => $mailbodyid));
 			$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+			
+			$template_name = str_replace('_mailbody', '', $result['varname']);
 
 			$result = htmlentities_array($result);
 			$mailbody = $result['value'];

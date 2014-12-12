@@ -42,7 +42,7 @@ $header
 				</tr>
 			</thead>
 			<tbody>
-				<if ($action == 'createcustomer')>
+				<if ($template_name == 'createcustomer')>
 					<tr>
 						<td><em>{SALUTATION}</em></td>
 						<td>{$lng['admin']['templates']['SALUTATION']}</td>
@@ -68,7 +68,7 @@ $header
 						<td>{$lng['admin']['templates']['PASSWORD']}</td>
 					</tr>
 				</if>
-				<if ($action == 'pop_success')>
+				<if ($template_name == 'pop_success')>
 					<tr>
 						<td><em>{EMAIL}</em></td>
 						<td>{$lng['admin']['templates']['EMAIL']}</td>
@@ -89,7 +89,7 @@ $header
 					</tr>
 					</if>
 				</if>
-				<if ($action == 'password_reset')>
+				<if ($template_name == 'password_reset')>
 					<tr>
 						<td><em>{SALUTATION}</em></td>
 						<td>{$lng['admin']['templates']['SALUTATION']}</td>
@@ -103,7 +103,7 @@ $header
 						<td>{$lng['admin']['templates']['LINK']}</td>
 					</tr>
 				</if>
-				<if ($action == 'trafficmaxpercent')>
+				<if ($template_name == 'trafficmaxpercent')>
 					<tr>
 						<td><em>{TRAFFIC}</em></td>
 						<td>{$lng['admin']['templates']['TRAFFIC']}</td>
@@ -121,7 +121,7 @@ $header
 						<td>{$lng['admin']['templates']['USAGE_PERCENT']}</td>
 					</tr>
 				</if>
-				<if ($action == 'diskmaxpercent')>
+				<if ($template_name == 'diskmaxpercent')>
 					<tr>
 						<td><em>{DISKAVAILABLE}</em></td>
 						<td>{$lng['admin']['templates']['DISKAVAILABLE']}</td>
@@ -139,8 +139,8 @@ $header
 						<td>{$lng['admin']['templates']['USAGE_PERCENT']}</td>
 					</tr>
 				</if>
-				<if ($action == 'new_ticket_by_customer') || ($action == 'new_ticket_for_customer') || ($action == 'new_ticket_by_staff')
-						|| ($action == 'new_reply_ticket_by_customer') || ($action == 'new_reply_ticket_by_staff') >
+				<if ($template_name == 'new_ticket_by_customer') || ($template_name == 'new_ticket_for_customer') || ($template_name == 'new_ticket_by_staff')
+						|| ($template_name == 'new_reply_ticket_by_customer') || ($template_name == 'new_reply_ticket_by_staff') >
 					<tr>
 						<td><em>{SUBJECT}</em></td>
 						<td>{$lng['admin']['templates']['SUBJECT']}</td>
@@ -162,7 +162,7 @@ $header
 						<td>{$lng['admin']['templates']['COMPANY']}</td>
 					</tr>
 				</if>
-				<if ($action == 'new_database_by_customer')>
+				<if ($template_name == 'new_database_by_customer')>
 					<tr>
 						<td><em>{SALUTATION}</em></td>
 						<td>{$lng['admin']['templates']['SALUTATION']}</td>
@@ -188,7 +188,7 @@ $header
 						<td>{$lng['admin']['templates']['PMA_URI']}</td>
 					</tr>
 				</if>
-				<if ($action == 'new_ftpaccount_by_customer')>
+				<if ($template_name == 'new_ftpaccount_by_customer')>
 					<tr>
 						<td><em>{SALUTATION}</em></td>
 						<td>{$lng['admin']['templates']['SALUTATION']}</td>
