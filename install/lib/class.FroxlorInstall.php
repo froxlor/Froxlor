@@ -567,7 +567,7 @@ class FroxlorInstall {
 
 		// we have to create a new user and database for the froxlor unprivileged mysql access
 		$content .= $this->_status_message('begin', $this->_lng['install']['create_mysqluser_and_db']);
-		$ins_stmt = $db_root->prepare("CREATE DATABASE `".str_replace('`', '', $this->_data['mysql_database'])."`");
+		$ins_stmt = $db_root->prepare("CREATE DATABASE `".str_replace('`', '', $this->_data['mysql_database'])."` CHARACTER SET=utf8 COLLATE=utf8_general_ci");
 		$ins_stmt->execute();
 
 		$mysql_access_host_array = array_map('trim', explode(',', $this->_data['mysql_access_host']));

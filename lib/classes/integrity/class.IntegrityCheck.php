@@ -59,6 +59,41 @@ class IntegrityCheck {
 	}
 
 	/**
+	 * check whether the froxlor database and its tables are in utf-8 character-set
+	 *
+	 * @param bool $fix fix db charset/collation if not utf8
+	 *
+	 * @return boolean
+	 */
+	public function DatabaseCharset($fix = false) {
+
+		// get characterset
+		$cs_stmt = Database::prepare('SELECT default_character_set_name FROM information_schema.SCHEMATA WHERE schema_name = :dbname');
+		$resp = Database::pexecute_first($cs_stmt, array('dbname' => Database::getDbName()));
+		$charset = isset($resp['default_character_set_name']) ? $resp['default_character_set_name'] : null;
+		if (!empty($charset) && strtolower($charset) != 'utf8') {
+			if ($fix) {
+				// fix database
+				Database::query('ALTER DATABASE `' . Database::getDbName() . '` CHARACTER SET utf8 COLLATE utf8_general_ci');
+				// fix all tables
+				$handle = Database::query('SHOW TABLES');
+				while ($row = $handle->fetch(PDO::FETCH_ASSOC)) {
+					foreach ($row as $table) {
+						Database::query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
+					}
+				}
+			} else {
+				return false;
+			}
+		}
+
+		if ($fix) {
+			return $this->DatabaseCharset();
+		}
+		return true;
+	}
+
+	/**
 	 * Check the integrity of the domain to ip/port - association
 	 * @param $fix Fix everything found directly
 	 */
