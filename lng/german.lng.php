@@ -381,7 +381,11 @@ $lng['serversettings']['mxservers']['description'] = 'Eine durch Komma getrenne 
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
+<<<<<<< HEAD
 $lng['mysql']['description'] = 'Hier können Sie MySQL-Datenbanken anlegen und löschen.<br />Die Änderungen werden sofort wirksam und die Datenbanken sind sofort benutzbar.<br />Im Menü finden Sie einen Link zu phpMyAdmin, mit dem Sie Ihre Datenbankinhalte komfortabel bearbeiten können.<br /><br />Die Zugangsdaten sind wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br />Hostname: <b><SQL_HOST></b><br />Benutzername: <b><i>Datenbankname</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b><br />Datenbank: <b><i>Datenbankname</i></b>';
+=======
+$lng['mysql']['description'] = 'Hier können Sie MySQL-Datenbanken anlegen und löschen.<br />Die Änderungen werden sofort wirksam und die Datenbanken sind sofort benutzbar.<br />Im Menü finden Sie einen Link zu phpMyAdmin, mit dem Sie Ihre Datenbankinhalte komfortabel bearbeiten können.<br /><br />Die Zugangsdaten lauten wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br />Hostname: <b><SQL_HOST></b><br />Benutzername: <b><i>Datenbankname</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b><br />Datenbank: <b><i>Datenbankname</i></b>';
+>>>>>>> c6caadb8d32a616a5505aced0b9f43c1d4ab16ca
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
@@ -1170,8 +1174,13 @@ $lng['serversettings']['ftpserver']['desc'] = 'Wenn pureftpd ausgewählt ist, we
 $lng['serversettings']['ftpprefix']['description'] = 'Welchen Präfix sollen die FTP-Benutzerkonten haben?<br/><b>Wenn du das änderst, musst du auch das Quota-SQL-Query in der FTP-Server-Config ändern, solltest du FTP-Quotas benutzen!</b>';
 
 // ADDED IN FROXLOR 0.9.7-svn1
+<<<<<<< HEAD
 $lng['mails']['new_ftpaccount_by_customer']['subject'] = 'Neuer FTP-Benutzer erstellt';
 $lng['mails']['new_ftpaccount_by_customer']['mailbody'] = "Hallo {CUST_NAME},\n\ndu hast gerade einen neuen FTP-Benutzer angelegt. Hier die angegebenen Informationen:\n\nBenutzername: {USR_NAME}\nPasswort: {USR_PASS}\nPfad: {USR_PATH}\n\nVielen Dank, Ihr Administrator";
+=======
+$lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] Neuer FTP-Benutzer erstellt';
+$lng['customer']['ftp_add']['infomail_body']['main'] = "Hallo {CUST_NAME},\n\ndu hast gerade einen neuen FTP-Benutzer angelegt. Hier die angegebenen Informationen:\n\nBenutzername: {USR_NAME}\nPasswort: {USR_PASS}\nPfad: {USR_PATH}\n\nVielen Dank, Ihr Administrator";
+>>>>>>> c6caadb8d32a616a5505aced0b9f43c1d4ab16ca
 $lng['domains']['redirectifpathisurl'] = 'Redirect-Code (Standard: leer)';
 $lng['domains']['redirectifpathisurlinfo'] = 'Der Redirect-Code kann gewählt werden, wenn der eingegebene Pfad eine URL ist';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Erlaube Kunden-Redirect';
@@ -1540,6 +1549,7 @@ $lng['serversettings']['system_croncmdline']['description'] = 'Befehl zum Ausfü
 $lng['error']['cannotdeletehostnamephpconfig'] = 'Diese PHP-Konfiguration ist dem Froxlor-Vhost zugewiesen und kann daher nicht gelöscht werden.';
 $lng['error']['cannotdeletedefaultphpconfig'] = 'Diese PHP-Konfiguration ist als Standard hinterlegt und kann daher nicht gelöscht werden.';
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Erlaube automatische Datenbank-Aktualisierungen';
+<<<<<<< HEAD
 $lng['serversettings']['system_cron_allowautoupdate']['description'] = '<strong style="color:red;">WARNUNG:</strong> Diese Einstellung erlaubt es dem Cronjob die Prüfung der Dateien- und Datenbank-Version zu umgehen und bei einem Versions-Unterschied die Datenbank-Aktualisierungen automatisiert auszuführen.<br /><br/><div style="color:red;">Das automatische Update setzt für neue Einstellungen und Änderungen immer die default-Werte. Diese müssen nicht zwingend zu dem genutzten System passen. Bitte zwei mal nachdenken, bevor diese Option aktiviert wird.</div>';
 $lng['error']['passwordshouldnotbeusername'] = 'Das Passwort sollte nicht mit dem Benutzernamen übereinstimmen.';
 
@@ -1560,3 +1570,6 @@ $lng['serversettings']['panel_password_special_char']['description'] = 'Mindeste
 $lng['phpfpm']['use_mod_proxy']['title'] = 'Verwende mod_proxy / mod_proxy_fcgi';
 $lng['phpfpm']['use_mod_proxy']['description'] = 'Diese Option kann aktiviert werden, um php-fpm via mod_proxy_fcgi einzubinden. Dies setzt mindestens apache-2.4.9 voraus';
 $lng['error']['no_phpinfo'] = 'Entschuldigung, es ist nicht möglich die phpinfo() auszulesen.';
+=======
+$lng['serversettings']['system_cron_allowautoupdate']['description'] = '<strong style="color:red">WARNUNG:</strong> Diese Einstellung erlaubt es dem Cronjob die Prüfung der Dateien- und Datenbank-Version zu umgehen und bei einem Versions-Unterschied die Datenbank-Aktualisierungen automatisiert auszuführen.<br /><br /><div style="color:red">Das automatische Update setzt für neue Einstellungen und Änderungen immer die default-Werte. Diese müssen nicht zwingend zu dem genutzten System passen. Bitte zwei mal nachdenken, bevor diese Option aktiviert wird.</div>';
+>>>>>>> c6caadb8d32a616a5505aced0b9f43c1d4ab16ca
