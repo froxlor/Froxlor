@@ -21,6 +21,9 @@
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['domain_add']}</a>
+					&nbsp;
+					<img src="templates/{$theme}/assets/img/icons/archive.png" alt="" />&nbsp;
+					<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'import'))}">{$lng['domains']['domain_import']}</a>
 				</div>
 				</if>
 	

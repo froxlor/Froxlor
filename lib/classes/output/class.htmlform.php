@@ -123,6 +123,8 @@ class htmlform
 				return self::_textArea($fieldname, $data); break;
 			case 'checkbox':
 				return self::_checkbox($fieldname, $data); break;
+			case 'file':
+				return self::_file($fieldname, $data); break;
 		}
 	}
 
@@ -286,6 +288,32 @@ class htmlform
 		}
 
 		return $output;
+	}
+
+	private static function _file($fieldname = '', $data = array())
+	{
+		$return = '';
+		$extras = '';
+		if(isset($data['maxlength'])) {
+			$extras .= ' maxlength="'.$data['maxlength'].'"';
+		}
+
+		// add support to save reloaded forms
+		if (isset($data['value'])) {
+			$value = $data['value'];
+		} elseif (isset($_SESSION['requestData'][$fieldname])) {
+			$value = $_SESSION['requestData'][$fieldname];
+		} else {
+			$value = '';
+		}
+
+		if(isset($data['display']) && $data['display'] != '')
+		{
+			$ulfield = '<strong>'.$data['display'].'</strong>';
+		}
+
+		eval("\$return = \"" . getTemplate("misc/form/input_file", "1") . "\";");
+		return $return;
 	}
 
 }

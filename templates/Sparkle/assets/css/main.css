@@ -590,7 +590,7 @@ input[type="password"] {
 /*
  *  BUTTONS
  */
-input[type="button"],input[type="submit"],input[type="reset"] {
+input[type="button"],input[type="submit"],input[type="reset"],input[type="file"] {
 	margin:0 5px;
 	padding:5px 14px;
 	outline:0;
@@ -635,6 +635,11 @@ input[class="submit"]:active,input[class="yesbutton"]:active {
 input[class="nobutton"],input[type="reset"] {
 	color:#fff;
 	background-color:#d84a38;
+}
+
+input[type="file"] {
+	background-color:#FFFFFF;
+	padding-left:0px;
 }
 
 input[class="nobutton"]:hover,input[type="reset"]:hover {

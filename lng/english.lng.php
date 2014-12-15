@@ -1840,3 +1840,12 @@ $lng['error']['no_phpinfo'] = 'Sorry, unable to read phpinfo()';
 $lng['admin']['movetoadmin'] = 'Move customer';
 $lng['admin']['movecustomertoadmin'] = 'Move customer to the selected admin/reseller<br /><small>Leave this empty for no change.<br />If the desired admin does not show up in the list, his customer-limit has been reached.</small>';
 $lng['error']['moveofcustomerfailed'] = 'Moving the customer to the selected admin/reseller failed. Keep in mind that all other changes to the customer were applied successfully at this stage.<br><br>Error-message: %s';
+
+$lng['domains']['domain_import'] = 'Import Domains';
+$lng['domains']['import_separator'] = 'Separator';
+$lng['domains']['import_offset'] = 'Offset';
+$lng['domains']['import_file'] = 'CSV-File';
+$lng['success']['domain_import_successfully'] = 'Successfully imported %s domains.';
+$lng['error']['domain_import_error'] = 'Following error occurred while importing domains: %s';
+$lng['admin']['note'] = 'Note';
+$lng['domains']['import_description'] = 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc">http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc</a>';

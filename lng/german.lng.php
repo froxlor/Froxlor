@@ -1560,3 +1560,16 @@ $lng['serversettings']['panel_password_special_char']['description'] = 'Mindeste
 $lng['phpfpm']['use_mod_proxy']['title'] = 'Verwende mod_proxy / mod_proxy_fcgi';
 $lng['phpfpm']['use_mod_proxy']['description'] = 'Diese Option kann aktiviert werden, um php-fpm via mod_proxy_fcgi einzubinden. Dies setzt mindestens apache-2.4.9 voraus';
 $lng['error']['no_phpinfo'] = 'Entschuldigung, es ist nicht möglich die phpinfo() auszulesen.';
+
+$lng['admin']['movetoadmin'] = 'Kunde verschieben';
+$lng['admin']['movecustomertoadmin'] = 'Verschiebe den Kunden zum angegebenen Admin/Reseller<br /><small>Leerlassen für keine Änderung.<br />Wird der gewünschte Admin/Reseller hier nicht aufgelistet, hat er sein Kunden-Kontigent erreicht.</small>';
+$lng['error']['moveofcustomerfailed'] = 'Das Verschieben des Kunden ist fehlgeschlagen. Alle übrigen Änderungen wurden durchgeführt und gespeichert.<br><br>Fehlermeldung: %s';
+
+$lng['domains']['domain_import'] = 'Domains importieren';
+$lng['domains']['import_separator'] = 'Trennzeichen';
+$lng['domains']['import_offset'] = 'Versatz (offset)';
+$lng['domains']['import_file'] = 'CSV-Datei';
+$lng['success']['domain_import_successfully'] = 'Erfolgreich %s Domains importiert.';
+$lng['error']['domain_import_error'] = 'Der folgende Fehler trat beim Importieren der Domains auf: %s';
+$lng['admin']['note'] = 'Hinweis';
+$lng['domains']['import_description'] = 'Detaillierte Informationen über den Aufbau der Importdatei und einen erfolgreichen Import gibt es hier: <a href="http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc">http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc</a>';
