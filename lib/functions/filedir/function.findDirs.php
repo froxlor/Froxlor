@@ -21,70 +21,33 @@
  * Returns an array of found directories
  *
  * This function checks every found directory if they match either $uid or $gid, if they do
- * the found directory is valid. It uses recursive function calls to find subdirectories. Due
- * to the recursive behauviour this function may consume much memory.
+ * the found directory is valid. It uses recursive-iterators to find subdirectories.
  *
- * @param  string   path       The path to start searching in
- * @param  integer  uid        The uid which must match the found directories
- * @param  integer  gid        The gid which must match the found direcotries
- * @param  array    _fileList  recursive transport array !for internal use only!
- * @return array    Array of found valid pathes
+ * @param  string $path the path to start searching in
+ * @param  int $uid the uid which must match the found directories
+ * @param  int $gid the gid which must match the found direcotries
  *
- * @author Martin Burchert  <martin.burchert@syscp.de>
- * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
+ * @return array Array of found valid pathes
  */
+function findDirs($path, $uid, $gid) {
 
-function findDirs($path, $uid, $gid)
-{
-	$list = array(
-		$path
-	);
-	$_fileList = array();
+	$_fileList = array ();
+	$path = makeCorrectDir($path);
 
-	while(sizeof($list) > 0)
-	{
-		$path = array_pop($list);
-		$path = makeCorrectDir($path);
+	// valid directory?
+	if (is_dir($path)) {
+		// create RecursiveIteratorIterator
+		$its = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 		
-		if(!is_readable($path) || !is_executable($path))
-		{
-			//return $_fileList;
-			// only 'skip' this directory, #611
-			continue;
-		}
-
-		$dh = opendir($path);
-
-		if($dh === false)
-		{
-			/*
-			 * this should never be called because we checked
-			 * 'is_readable' before...but we never know what might happen
-			 */
-			standard_error('cannotreaddir', $path);
-			return null;
-		}
-		else
-		{
-			while(false !== ($file = @readdir($dh)))
-			{
-				if($file == '.'
-				   && (fileowner($path . '/' . $file) == $uid || filegroup($path . '/' . $file) == $gid))
-				{
-					$_fileList[] = makeCorrectDir($path);
-				}
-
-				if(is_dir($path . '/' . $file)
-				   && $file != '..'
-				   && $file != '.')
-				{
-					array_push($list, $path . '/' . $file);
-				}
+		// check every file
+		foreach ($its as $fullFileName => $it) {
+			if ($it->isDir()
+				&& (fileowner($fullFileName) == $uid || filegroup($fullFileName) == $gid)
+			) {
+				$_fileList[] = makeCorrectDir(dirname($fullFileName));
 			}
-
-			@closedir($dh);
 		}
 	}
 
-	return $_fileList;
+	return array_unique($_fileList);
 }
