@@ -2,5 +2,5 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 expansion_limit = 1
-query = select gid from mail_users where email = '%s'
-hosts = <SQL_HOST> 
+hosts = <SQL_HOST>
+query = SELECT gid FROM mail_users WHERE email = '%s'

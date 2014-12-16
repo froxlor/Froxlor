@@ -2,5 +2,5 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 expansion_limit = 1
-query = select (quota*1024*1024) from mail_users where email = '%s'
 hosts = <SQL_HOST>
+query = SELECT (quota*1024*1024) FROM mail_users WHERE email = '%s'
