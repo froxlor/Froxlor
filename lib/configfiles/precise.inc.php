@@ -299,7 +299,7 @@ return array(
 					'dovecot' => array(
 						'label' => 'Dovecot',
 						'commands_1' => array(
-							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix dovecot-mysql mail-stack-delivery'
+							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix dovecot-mysql  dovecot-managesieved dovecot-sieve mail-stack-delivery'
 						),
 						'files' => array(
 
