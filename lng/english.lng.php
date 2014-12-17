@@ -1848,4 +1848,4 @@ $lng['domains']['import_file'] = 'CSV-File';
 $lng['success']['domain_import_successfully'] = 'Successfully imported %s domains.';
 $lng['error']['domain_import_error'] = 'Following error occurred while importing domains: %s';
 $lng['admin']['note'] = 'Note';
-$lng['domains']['import_description'] = 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc">http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc</a>';
+$lng['domains']['import_description'] = 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc" target="_blank">http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc</a>';
