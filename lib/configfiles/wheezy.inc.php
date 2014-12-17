@@ -299,7 +299,7 @@ return array(
 					'dovecot' => array(
 						'label' => 'Dovecot',
 						'commands_1' => array(
-							'apt-get install dovecot-imapd dovecot-pop3d dovecot-mysql'
+							'apt-get install dovecot-imapd dovecot-pop3d dovecot-mysql dovecot-managesieved dovecot-sieve'
 						),
 						'files' => array(
 							'etc_dovecot_conf.d_10-auth.conf' => '/etc/dovecot/conf.d/10-auth.conf',
@@ -308,6 +308,8 @@ return array(
 							'etc_dovecot_conf.d_15-lda.conf' => '/etc/dovecot/conf.d/15-lda.conf',
 							'etc_dovecot_conf.d_20-imap.conf' => '/etc/dovecot/conf.d/20-imap.conf',
 							'etc_dovecot_conf.d_20-pop3.conf' => '/etc/dovecot/conf.d/20-pop3.conf',
+							'etc_dovecot_conf.d_20-managesieve.conf' => '/etc/dovecot/20-managesieve.conf',
+							'etc_dovecot_conf.d_90-sieve.conf' => '/etc/dovecot/90-sieve.conf',
 							'etc_dovecot_dovecot.conf' => '/etc/dovecot/dovecot.conf',
 							'etc_dovecot_dovecot-sql.conf.ext' => '/etc/dovecot/dovecot-sql.conf.ext'
 						),
