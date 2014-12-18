@@ -36,18 +36,27 @@ function findDirs($path, $uid, $gid) {
 
 	// valid directory?
 	if (is_dir($path)) {
-		// create RecursiveIteratorIterator
-		$its = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
-		
-		// check every file
-		foreach ($its as $fullFileName => $it) {
-			if ($it->isDir()
-				&& (fileowner($fullFileName) == $uid || filegroup($fullFileName) == $gid)
-			) {
-				$_fileList[] = makeCorrectDir(dirname($fullFileName));
+		try {
+			// create RecursiveIteratorIterator
+			$its = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+			// we can limit the recursion-depth, but will it be helpful or
+			// will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
+			// let's keep this in mind and see whether it will be useful
+			// @TODO
+			// $its->setMaxDepth(2);
+
+			// check every file
+			foreach ($its as $fullFileName => $it) {
+				if ($it->isDir() && (fileowner($fullFileName) == $uid || filegroup($fullFileName) == $gid)) {
+					$_fileList[] = makeCorrectDir(dirname($fullFileName));
+				}
 			}
+		} catch (UnexpectedValueException $e) {
+			// this is thrown if the directory is not found or not readble etc.
+			// just ignore and keep going
 		}
 	}
 
 	return array_unique($_fileList);
+
 }
