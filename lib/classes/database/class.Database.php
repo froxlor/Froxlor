@@ -364,6 +364,7 @@ class Database {
 					// replace values
 					$err_hint = str_replace("<TEXT>", $error_message, $err_hint);
 					$err_hint = str_replace("<DEBUG>", $error_trace, $err_hint);
+					$err_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $err_hint);
 
 					$err_report_html = '';
 					if (is_array($userinfo) && (

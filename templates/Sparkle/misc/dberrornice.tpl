@@ -50,7 +50,7 @@
 </div>
 <footer>
 	<span>
-		Froxlor &copy; 2009-2013 by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a>
+		Froxlor &copy; 2009-<CURRENT_YEAR> by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a>
 	</span>
 </footer>
 </body>

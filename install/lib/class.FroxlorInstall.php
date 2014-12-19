@@ -982,6 +982,7 @@ class FroxlorInstall {
 			) {
 				// use sparkle theme for the notice
 				$installed_hint = file_get_contents($this->_basepath.'/templates/Sparkle/misc/alreadyinstalledhint.tpl');
+				$installed_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $installed_hint);
 				die($installed_hint);
 			}
 		}
