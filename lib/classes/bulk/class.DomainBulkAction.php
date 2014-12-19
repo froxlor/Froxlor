@@ -125,10 +125,11 @@ class DomainBulkAction {
 		if ($userinfo['domains'] == "-1") {
 			$dom_unlimited = true;
 		} else {
-			$domains_used = (int)$userinfo['domains_used'];
-			$domains_avail = (int)$userinfo['domains'];
 			$dom_unlimited = false;
 		}
+
+		$domains_used = (int)$userinfo['domains_used'];
+		$domains_avail = (int)$userinfo['domains'];
 		
 		if (empty($separator) || strlen($separator) != 1) {
 			throw new Exception("Invalid separator specified: '" . $separator . "'");
