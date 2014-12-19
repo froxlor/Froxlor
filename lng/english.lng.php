@@ -853,7 +853,7 @@ $lng['login']['email'] = 'E-mail address';
 $lng['login']['remind'] = 'Reset my password';
 $lng['login']['usernotfound'] = 'User not found!';
 $lng['mails']['password_reset']['subject'] = 'Password reset';
-$lng['mails']['password_reset']['mailbody'] = 'Hello {USERNAME},\n\nhere is your link for setting a new password. This link is valid for the next 24 hours.\n\n{LINK}\n\nThank you,\nyour administrator';
+$lng['mails']['password_reset']['mailbody'] = 'Hello {SALUTATION},\n\nhere is your link for setting a new password. This link is valid for the next 24 hours.\n\n{LINK}\n\nThank you,\nyour administrator';
 $lng['pwdreminder']['success'] = 'Password reset successfully requested. Please follow the instructions in the email you received.';
 
 // ADDED IN 1.2.19-svn18

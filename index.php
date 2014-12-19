@@ -370,6 +370,10 @@ if ($action == 'forgotpwd') {
 					// this can be a fixed value to avoid potential exploiting by modifying headers
 					$host = Settings::Get('system.hostname'); // $_SERVER['HTTP_HOST'];
 					$port = $_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '';
+					// don't add :443 when https is used, as it is default (and just looks weird!)
+					if ($protocol == 'https' && $_SERVER['SERVER_PORT'] == '443') {
+						$port = '';
+					}
 					// there can be only one script to handle this so we can use a fixed value here
 					$script = "/index.php"; // $_SERVER['SCRIPT_NAME'];
 					if (Settings::Get('system.froxlordirectlyviahostname') == 0) {
@@ -379,7 +383,7 @@ if ($action == 'forgotpwd') {
 
 					$replace_arr = array(
 						'SALUTATION' => getCorrectUserSalutation($user),
-						'USERNAME' => $user['loginname'],
+						'USERNAME' => $loginname,
 						'LINK' => $activationlink
 					);
 
@@ -409,7 +413,7 @@ if ($action == 'forgotpwd') {
 						$mail->Subject = $mail_subject;
 						$mail->AltBody = $mail_body;
 						$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-						$mail->AddAddress($user['email'], $user['firstname'] . ' ' . $user['name']);
+						$mail->AddAddress($user['email'], getCorrectUserSalutation($user));
 						$mail->Send();
 					} catch(phpmailerException $e) {
 						$mailerr_msg = $e->errorMessage();
