@@ -103,7 +103,9 @@ class DomainBulkAction {
 	 */
 	public function __construct($import_file = null, $customer_id = 0) {
 
-		$this->_impFile = makeCorrectFile($import_file);
+		if (!empty($import_file)) {
+			$this->_impFile = makeCorrectFile($import_file);
+		}
 		$this->_custId = $customer_id;
 	
 	}
@@ -135,10 +137,14 @@ class DomainBulkAction {
 			throw new Exception("Invalid separator specified: '" . $separator . "'");
 		}
 		
-		if (! is_numeric($offset) || $offset < 0) {
+		if (! is_int($offset) || $offset < 0) {
 			throw new Exception("Invalid offset specified");
 		}
-		
+
+		if ($this->_custId <= 0) {
+			throw new Exception("Invalid customer selected");
+		}
+
 		$this->_readCustomerData();
 		
 		if (is_null($this->_custData)) {
