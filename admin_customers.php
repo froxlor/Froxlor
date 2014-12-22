@@ -119,6 +119,15 @@ if ($page == 'customers'
 
 				$row = str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps tickets subdomains');
 				$row = htmlentities_array($row);
+
+				// fix progress-bars if value is >100%
+				if ($disk_percent > 100) {
+					$disk_percent = 100;
+				}
+				if ($traffic_percent > 100) {
+					$traffic_percent = 100;
+				}
+
 				eval("\$customers.=\"" . getTemplate("customers/customers_customer") . "\";");
 				$count++;
 			}
