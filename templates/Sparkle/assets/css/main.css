@@ -307,6 +307,10 @@ aside.right {
 	width:150px;
 }
 
+.overviewsearch + table {
+	clear:right;
+}
+
 .overviewadd {
 	padding:10px;
 	font-weight:700;
