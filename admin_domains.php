@@ -579,14 +579,20 @@ if ($page == 'domains'
 				if ($aliasdomain != 0) {
 					// Overwrite given ipandports with these of the "main" domain
 					$ipandports = array();
+					$ssl_ipandports = array();
 					$origipresult_stmt = Database::prepare("
 						SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP ."`
 						WHERE `id_domain` = :id"
 					);
 					Database::pexecute($origipresult_stmt, array('id' => $aliasdomain));
-
+					$ipdata_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id` = :ipid");
 					while ($origip = $origipresult_stmt->fetch(PDO::FETCH_ASSOC)) {
-						$ipandports[] = $origip['id_ipandports'];
+						$_origip_tmp = Database::pexecute_first($ipdata_stmt, array('ipid' => $origip['id_ipandports']));
+						if ($_origip_tmp['ssl'] == 0) {
+							$ipandports[] = $origip['id_ipandports'];
+						} else {
+							$ssl_ipandports[] = $origip['id_ipandports'];
+						}
 					}
 
 					$aliasdomain_check_stmt = Database::prepare("
