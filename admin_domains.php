@@ -595,6 +595,12 @@ if ($page == 'domains'
 						}
 					}
 
+					if (count($ssl_ipandports) == 0) {
+						// we need this for the serialize
+						// if ssl is disabled or no ssl-ip/port exists
+						$ssl_ipandports[] = -1;
+					}
+
 					$aliasdomain_check_stmt = Database::prepare("
 						SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 						WHERE `d`.`customerid` = :customerid
@@ -787,16 +793,17 @@ if ($page == 'domains'
 					);
 					Database::pexecute($upd_stmt, array('adminid' => $adminid));
 
+					$ins_stmt = Database::prepare("
+						INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+						`id_domain` = :domainid,
+						`id_ipandports` = :ipandportsid
+					");
+
 					foreach ($ipandports as $ipportid) {
 						$ins_data = array(
 							'domainid' => $domainid,
 							'ipandportsid' => $ipportid
 						);
-						$ins_stmt = Database::prepare("
-							INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
-							`id_domain` = :domainid,
-							`id_ipandports` = :ipandportsid
-						");
 						Database::pexecute($ins_stmt, $ins_data);
 					}
 
@@ -806,11 +813,6 @@ if ($page == 'domains'
 								'domainid' => $domainid,
 								'ipandportsid' => $ssl_ipportid
 							);
-							$ins_stmt = Database::prepare("
-								INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
-								`id_domain` = :domainid,
-								`id_ipandports` = :ipandportsid
-							");
 							Database::pexecute($ins_stmt, $ins_data);
 						}
 					}
@@ -1381,6 +1383,13 @@ if ($page == 'domains'
 							$ssl_ipandports[] = $origip['id_ipandports'];
 						}
 					}
+
+					if (count($ssl_ipandports) == 0) {
+						// we need this for the serialize
+						// if ssl is disabled or no ssl-ip/port exists
+						$ssl_ipandports[] = -1;
+					}
+
 					$aliasdomain_check_stmt = Database::prepare("
 						SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 						WHERE `d`.`customerid` = :customerid
