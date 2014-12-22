@@ -833,7 +833,21 @@ if ($page == 'customers'
 							'guid' => $guid,
 							'members' => $loginname.','.Settings::Get('system.httpuser')
 					);
+
+					// also, add froxlor-local user to ftp-group (if exists!) to
+					// allow access to customer-directories from within the panel, which
+					// is necessary when pathedit = Dropdown
+					if ((int)Settings::Get('system.mod_fcgid_ownvhost') == 1 || (int)Settings::Get('phpfpm.enabled_ownvhost') == 1) {
+						if ((int)Settings::Get('system.mod_fcgid') == 1) {
+							$local_user = Settings::Get('system.mod_fcgid_httpuser');
+						} else {
+							$local_user = Settings::Get('phpfpm.vhost_httpuser');
+						}
+						$ins_data['members'] .= ','.$local_user;
+					}
+
 					Database::pexecute($ins_stmt, $ins_data);
+
 					// FTP-Quotatallies
 					$ins_stmt = Database::prepare("
 						INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` SET `name` = :name, `quota_type` = 'user', `bytes_in_used` = '0',
