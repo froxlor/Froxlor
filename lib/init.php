@@ -406,6 +406,7 @@ if (isset($userinfo['loginname'])
 /**
  * Fills variables for navigation, header and footer
  */
+$navigation = "";
 if (AREA == 'admin' || AREA == 'customer') {
 	if (hasUpdates($version)) {
 		/*
