@@ -15,6 +15,15 @@
  *
  */
 
+if (!defined('AREA')
+		|| (defined('AREA') && AREA != 'admin')
+		|| !isset($userinfo['loginname'])
+		|| (isset($userinfo['loginname']) && $userinfo['loginname'] == '')
+) {
+	header('Location: ../../../../index.php');
+	exit;
+}
+
 if (isFroxlorVersion('0.9-r0')) {
 
 	showUpdateStep("Updating from 0.9-r0 to 0.9-r1", false);
