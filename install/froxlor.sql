@@ -226,15 +226,15 @@ CREATE TABLE `panel_domains` (
   `zonefile` varchar(255) NOT NULL default '',
   `dkim` tinyint(1) NOT NULL default '0',
   `dkim_id` int(11) unsigned NOT NULL default '0',
-  `dkim_privkey` text NOT NULL default '',
-  `dkim_pubkey` text NOT NULL default '',
+  `dkim_privkey` text,
+  `dkim_pubkey` text,
   `wwwserveralias` tinyint(1) NOT NULL default '1',
   `parentdomainid` int(11) unsigned NOT NULL default '0',
   `openbasedir` tinyint(1) NOT NULL default '0',
   `openbasedir_path` tinyint(1) NOT NULL default '0',
   `speciallogfile` tinyint(1) NOT NULL default '0',
   `ssl_redirect` tinyint(4) NOT NULL default '0',
-  `specialsettings` text NOT NULL,
+  `specialsettings` text,
   `deactivated` tinyint(1) NOT NULL default '0',
   `bindserial` varchar(10) NOT NULL default '2000010100',
   `add_date` int( 11 ) NOT NULL default '0',
@@ -260,12 +260,12 @@ CREATE TABLE `panel_ipsandports` (
   `namevirtualhost_statement` tinyint(1) NOT NULL default '0',
   `vhostcontainer` tinyint(1) NOT NULL default '0',
   `vhostcontainer_servername_statement` tinyint(1) NOT NULL default '0',
-  `specialsettings` text NOT NULL default '',
+  `specialsettings` text,
   `ssl` tinyint(4) NOT NULL default '0',
   `ssl_cert_file` varchar(255) NOT NULL,
   `ssl_key_file` varchar(255) NOT NULL,
   `ssl_ca_file` varchar(255) NOT NULL,
-  `default_vhostconf_domain` text NOT NULL,
+  `default_vhostconf_domain` text,
   `ssl_cert_chainfile` varchar(255) NOT NULL,
   `docroot` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
@@ -535,14 +535,14 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%&+#=@'),
-	('panel', 'version', '0.9.33-dev3');
+	('panel', 'version', '0.9.33-rc1');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
 CREATE TABLE `panel_tasks` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `type` int(11) NOT NULL default '0',
-  `data` text NOT NULL default '',
+  `data` text NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -815,8 +815,8 @@ CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `domainid` int(11) NOT NULL,
   `ssl_cert_file` text NOT NULL,
   `ssl_key_file` text NOT NULL,
-  `ssl_ca_file` text NOT NULL,
-  `ssl_cert_chainfile` text NOT NULL,
+  `ssl_ca_file` text,
+  `ssl_cert_chainfile` text,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 

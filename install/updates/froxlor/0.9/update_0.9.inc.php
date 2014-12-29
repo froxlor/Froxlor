@@ -2818,3 +2818,19 @@ if (isFroxlorVersion('0.9.33-dev2')) {
 
 	updateToVersion('0.9.33-dev3');
 }
+
+if (isFroxlorVersion('0.9.33-dev3')) {
+	showUpdateStep("Updating from 0.9.33-dev3 to 0.9.33-rc1", false);
+
+	showUpdateStep("Updating database-scheme");
+	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` MODIFY `dkim_privkey` text");
+	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` MODIFY `dkim_pubkey` text");
+	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` MODIFY `specialsettings` text");
+	Database::query("ALTER TABLE `".TABLE_PANEL_IPSANDPORTS."` MODIFY `specialsettings` text");
+	Database::query("ALTER TABLE `".TABLE_PANEL_IPSANDPORTS."` MODIFY `default_vhostconf_domain` text");
+	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_ca_file` text");
+	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_cert_chainfile` text");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.33-rc1');
+}
