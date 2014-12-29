@@ -332,6 +332,9 @@ class Database {
 			// include userdata.inc.php
 			require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
 
+			// fallback
+			$theme = 'Sparkle';
+
 			// le format
 			if (isset($sql['root_user'])
 				&& isset($sql['root_password'])

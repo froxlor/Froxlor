@@ -12,12 +12,12 @@
 <body>
 <div class="loginpage">
 	
-	<article class="login bradius">
+	<article class="errorbox bradius">
 		<header class="dark">
 			<img src="templates/Sparkle/assets/img/logo.png" alt="Froxlor Server Management Panel" />
 		</header>
 
-		<section class="loginsec">
+		<section class="errorsec">
 			<div class="errorcontainer bradius">
 				<div class="errortitle">Whoops!</div>
 				<div class="error">
