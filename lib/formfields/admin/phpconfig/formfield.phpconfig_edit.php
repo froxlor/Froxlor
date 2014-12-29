@@ -81,7 +81,7 @@ return array(
 						'value' => $result['fpm_reqslow']
 					),
 					'phpsettings' => array(
-						'style' => 'vertical-align:top;',
+						'style' => 'align-top',
 						'label' => $lng['admin']['phpsettings']['phpinisettings'],
 						'type' => 'textarea',
 						'cols' => 80,

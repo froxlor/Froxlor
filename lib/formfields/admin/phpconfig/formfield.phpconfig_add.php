@@ -78,7 +78,7 @@ return array(
 						'value' => '5s'
 					),
 					'phpsettings' => array(
-						'style' => 'vertical-align:top;',
+						'style' => 'align-top',
 						'label' => $lng['admin']['phpsettings']['phpinisettings'],
 						'type' => 'textarea',
 						'cols' => 80,

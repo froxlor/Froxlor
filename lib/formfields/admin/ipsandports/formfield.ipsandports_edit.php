@@ -72,7 +72,7 @@ return array(
 						'value' => $result['docroot']
 					),
 					'specialsettings' => array(
-						'style' => 'vertical-align:top;',
+						'style' => 'align-top',
 						'label' => $lng['admin']['ownvhostsettings'],
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
 						'type' => 'textarea',
@@ -95,7 +95,7 @@ return array(
 				'image' => 'icons/ipsports_edit.png',
 				'fields' => array(
 					'default_vhostconf_domain' => array(
-						'style' => 'vertical-align:top;',
+						'style' => 'align-top',
 						'label' => $lng['admin']['ipsandports']['default_vhostconf_domain'],
 						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
 						'type' => 'textarea',

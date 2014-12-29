@@ -1119,12 +1119,12 @@ $lng['ticket']['orderdesc'] = 'Qui è possibile definire il tuo ordine logico pe
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Abilita errordocuments in automatico per tutti i clienti';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'File/URL per l\'errore 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="red">Non supportato in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'File/URL per l\'errore 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="red">Non supportato in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'File/URL per l\'errore 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'File/URL per l\'errore 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Non supportato in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Priorità predefinita per il supporto ticket';

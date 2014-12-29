@@ -989,6 +989,12 @@ label.nobr {
 .green {
 	color: green;
 }
+.orange {
+	color: orange;
+}
+.blue {
+	color: blue;
+}
 
 .phpinfo, .overflow {
 	overflow: scroll;
@@ -1377,3 +1383,26 @@ table thead th.tablesorter-headerDesc {
 .bar[aria-valuemax="100"][aria-valuemin="0"][aria-valuenow="100"] {
   width: 100%;
 }
+
+.update-step {
+  margin-left: 5em;
+  font-weight: bold;
+}
+
+.update-step-ok { color: #1dcd00; }
+.update-step-warn { color: #db7100; }
+.update-step-err { color: #ff0000; }
+.update-step-unknown { color: #000000; }
+
+.align-top { vertical-align:top; }
+
+.code-block {
+  width: 500px;
+  border: 1px solid #ccc;
+  padding: 4px;
+}
+
+.install-block { width: 65%; }
+.install-step { width: 250px; }
+.install-h3 { text-align: center; }
+.install-text { margin: 20px 20px 0 !important; }

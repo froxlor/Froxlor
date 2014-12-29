@@ -692,25 +692,25 @@ class FroxlorInstall {
 		$formdata .= $this->_getSectionItemString('mysql_database', true);
 		// unpriv-user has to be different from root
 		if ($this->_data['mysql_unpriv_user'] == $this->_data['mysql_root_user']) {
-			$style = 'color:blue;';
+			$style = 'blue';
 		} else { $style = '';
 		}
 		$formdata .= $this->_getSectionItemString('mysql_unpriv_user', true, $style);
 		// is we posted and no password was given -> red
 		if (!empty($_POST['installstep']) && $this->_data['mysql_unpriv_pass'] == '') {
-			$style = 'color:red;';
+			$style = 'red';
 		} else { $style = '';
 		}
 		$formdata .= $this->_getSectionItemString('mysql_unpriv_pass', true, $style, 'password');
 		// unpriv-user has to be different from root
 		if ($this->_data['mysql_unpriv_user'] == $this->_data['mysql_root_user']) {
-			$style = 'color:blue;';
+			$style = 'blue';
 		} else { $style = '';
 		}
 		$formdata .= $this->_getSectionItemString('mysql_root_user', true, $style);
 		// is we posted and no password was given -> red
 		if (!empty($_POST['installstep']) && $this->_data['mysql_root_pass'] == '') {
-			$style = 'color:red;';
+			$style = 'red';
 		} else { $style = '';
 		}
 		$formdata .= $this->_getSectionItemString('mysql_root_pass', true, $style, 'password');
@@ -1064,9 +1064,9 @@ class FroxlorInstall {
 	 */
 	private function _status_message($case, $text) {
 		if ($case == 'begin') {
-			return '<tr><td style="width: 250px;">'.$text;
+			return '<tr><td class="install-step">'.$text;
 		} else {
-			return '</td><td><span style="color:'.$case.';">'.$text.'</span></td></tr>';
+			return '</td><td><span class="'.$case.'">'.$text.'</span></td></tr>';
 		}
 	}
 

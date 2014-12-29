@@ -65,7 +65,7 @@ class htmlform
 					if ($nexto === false || (isset($fielddata['next_to']) && $nexto['field'] != $fielddata['next_to'])) {
 						$label = $fielddata['label'];
 						$desc = (isset($fielddata['desc']) ? $fielddata['desc'] : '');
-						$style = (isset($fielddata['style']) ? ' style="'.$fielddata['style'].'"' : '');
+						$style = (isset($fielddata['style']) ? ' class="'.$fielddata['style'].'"' : '');
 						$mandatory = self::_getMandatoryFlag($fielddata);
 						$data_field = self::_parseDataField($fieldname, $fielddata);
 						//$data_field = str_replace("\n", "", $data_field);
@@ -132,11 +132,11 @@ class htmlform
 	{
 		if(isset($data['mandatory']))
 		{
-			return '&nbsp;<span style="color:#ff0000;">*</span>';
+			return '&nbsp;<span class="red">*</span>';
 		}
 		elseif(isset($data['mandatory_ex']))
 		{
-			return '&nbsp;<span style="color:#ff0000;">**</span>';
+			return '&nbsp;<span class="red">**</span>';
 		}
 		return '';
 	}

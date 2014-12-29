@@ -690,7 +690,7 @@ $lng['serversettings']['ticket']['noreply_name'] = 'Ticket e-mail sendername';
 // ADDED IN 1.2.19-svn1
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'Configuration directory';
-$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/<br /><br /><div style="color:red;">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
+$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/<br /><br /><div class="red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Temp directory';
 
 // ADDED IN 1.2.19-svn3
@@ -809,7 +809,7 @@ $lng['admin']['allips'] = 'All IP\'s';
 $lng['panel']['nosslipsavailable'] = 'There are currently no ssl ip/port combinations for this server';
 $lng['ticket']['by'] = 'by';
 $lng['dkim']['use_dkim']['title'] = 'Activate DKIM support?';
-$lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em style="color:red;font-weight:bold;">Note: DKIM is only supported using dkim-filter, not opendkim (yet)</em>';
+$lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em class="red">Note: DKIM is only supported using dkim-filter, not opendkim (yet)</em>';
 $lng['error']['invalidmysqlhost'] = 'Invalid MySQL host address: %s';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'You cannot enable Webalizer and AWstats at the same time, please chose one of them';
 $lng['serversettings']['webalizer_enabled'] = 'Enable webalizer statistics';
@@ -1157,12 +1157,12 @@ $lng['ticket']['orderdesc'] = 'Here you can define your own logical order for th
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Enable default errordocuments for all customers';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'File/URL for error 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red;">Not supported in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="red">Not supported in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'File/URL for error 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red;">Not supported in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="red">Not supported in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'File/URL for error 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'File/URL for error 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red;">Not supported in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Not supported in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Default support-ticket priority';
@@ -1681,7 +1681,7 @@ $lng['serversettings']['catchall_enabled']['description']  = 'Do you want to pro
 
 // ADDED IN 0.9.28.svn6
 $lng['serversettings']['apache_24']['title'] = 'Use modifications for Apache 2.4';
-$lng['serversettings']['apache_24']['description'] = '<strong style="color:red;">ATTENTION:</strong> use only if you acutally have apache version 2.4 or higher installed<br />otherwise your webserver will not be able to start';
+$lng['serversettings']['apache_24']['description'] = '<strong class="red">ATTENTION:</strong> use only if you acutally have apache version 2.4 or higher installed<br />otherwise your webserver will not be able to start';
 $lng['admin']['tickets_see_all'] = 'Can see all ticket-categories?';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Path to fastcgi_params file';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Specify the path to nginx\'s fastcgi_params file including filename';
@@ -1726,14 +1726,14 @@ $lng['error']['sslcertificateinvalidcertkeypair'] = 'The given private-key does 
 $lng['error']['sslcertificateinvalidca'] = 'The given CA certificate data does not seem to be a valid certificate';
 $lng['error']['sslcertificateinvalidchain'] = 'The given certificate chain data does not seem to be a valid certificate';
 $lng['serversettings']['customerssl_directory']['title'] = 'Webserver customer-ssl certificates-directory';
-$lng['serversettings']['customerssl_directory']['description'] = 'Where should customer-specified ssl-certificates be created?<br /><br /><div style="color:red;">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
+$lng['serversettings']['customerssl_directory']['description'] = 'Where should customer-specified ssl-certificates be created?<br /><br /><div class="red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
 $lng['admin']['note'] = 'Please note';
 $lng['admin']['phpfpm.ininote'] = 'Not all values you may want to define can be used in the php-fpm pool configuration';
 
 // Added in Froxlor 0.9.30
 $lng['crondesc']['cron_mailboxsize'] = 'Calculating of mailbox-sizes';
 $lng['domains']['ipandport_multi']['title'] = 'IP address(es)';
-$lng['domains']['ipandport_multi']['description'] = 'Specify one or more IP address for the domain.<br /><br /><div style="color:red;">NOTE: IP addresses cannot be changed when the domain is configured as <strong>alias-domain</strong> of another domain.</div>';
+$lng['domains']['ipandport_multi']['description'] = 'Specify one or more IP address for the domain.<br /><br /><div class="red">NOTE: IP addresses cannot be changed when the domain is configured as <strong>alias-domain</strong> of another domain.</div>';
 $lng['domains']['ipandport_ssl_multi']['title'] = 'SSL IP address(es)';
 $lng['domains']['ssl_redirect']['title'] = 'SSL redirect';
 $lng['domains']['ssl_redirect']['description'] = 'This option creates redirects for non-ssl vhosts so that all requests are redirected to the SSL-vhost.<br /><br />e.g. a request to <strong>http</strong>://domain.tld/ will redirect you to <strong>https</strong>://domain.tld/';
@@ -1816,7 +1816,7 @@ $lng['serversettings']['system_croncmdline']['description'] = 'Command to execut
 $lng['error']['cannotdeletehostnamephpconfig'] = 'This PHP-configuration is used by the Froxlor-vhost and cannot be deleted.';
 $lng['error']['cannotdeletedefaultphpconfig'] = 'This PHP-configuration is set as default and cannot be deleted.';
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Allow automatic database updates';
-$lng['serversettings']['system_cron_allowautoupdate']['description'] = '<div style="color:red;"><b>ATTENTION:</b></div> This settings allows the cronjob to bypass the version-check of froxlors files and database and runs the database-updates in case a version-mismatch occurs.<br><br><div style="color:red;">Auto-update will always set default values for new settings or changes. This might not always suite your system. Please think twice before activating this option</div>';
+$lng['serversettings']['system_cron_allowautoupdate']['description'] = '<div class="red"><b>ATTENTION:</b></div> This settings allows the cronjob to bypass the version-check of froxlors files and database and runs the database-updates in case a version-mismatch occurs.<br><br><div class="red">Auto-update will always set default values for new settings or changes. This might not always suite your system. Please think twice before activating this option</div>';
 $lng['error']['passwordshouldnotbeusername'] = 'The password should not be the same as the username.';
 
 // Added in Froxlor 0.9.33
