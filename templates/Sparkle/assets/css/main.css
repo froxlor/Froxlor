@@ -1401,8 +1401,3 @@ table thead th.tablesorter-headerDesc {
   border: 1px solid #ccc;
   padding: 4px;
 }
-
-.install-block { width: 65%; }
-.install-step { width: 250px; }
-.install-h3 { text-align: center; }
-.install-text { margin: 20px 20px 0 !important; }
