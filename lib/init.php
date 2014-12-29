@@ -487,7 +487,6 @@ if (Settings::Get('ticket.enabled') == '1') {
 	}
 }
 
-$webfont = str_replace('+', ' ', Settings::Get('panel.webfont'));
 $js = "";
 if (array_key_exists('js', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['js'])) {
 	foreach ($_themeoptions['variants'][$themevariant]['js'] as $jsfile) {

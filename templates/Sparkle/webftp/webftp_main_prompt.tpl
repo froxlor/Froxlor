@@ -1,11 +1,3 @@
-<style type="text/css">
-<!--
-.Stil1 {
-color: #FF0000;
-font-weight: bold;
-}
--->
-</style>
 <table cellpadding="0" cellspacing="0" class="bradius">
 	<tr>
 		<td colspan="10" align="left"><span class="Stil1">{$action_text|escape:'htmlall'|nl2br}</span></td>

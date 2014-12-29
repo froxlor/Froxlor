@@ -7,9 +7,6 @@
 	<meta name="robots" content="noindex, nofollow, noarchive" />
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	{/if}
-	{if $use_webfonts == 1}
-		<link href="//fonts.googleapis.com/css?family={$webfont}" rel="stylesheet">
-	{/if}
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<link href="templates/{$theme}/assets/img/touchicon.png" rel="shortcut" />
 	<link href="templates/{$theme}/assets/img/touchicon.png" rel="apple-touch-icon" />
@@ -19,11 +16,6 @@
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/main.js"></script>
 	<title>{$title}Froxlor Server Management Panel</title>
-	{if $use_webfonts == 1}
-	<style type="text/css">
-		body { font-family: {$webfont}, 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif; }
-	</style>
-	{/if}
 </head>
 <body>
 

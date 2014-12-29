@@ -83,8 +83,6 @@ if (file_exists($hl_path.'/logo_custom.png')) {
 $smarty->assign('header_logo', $header_logo);
 $smarty->assign('theme', $theme);
 $smarty->assign('no_robots', Settings::Get('panel.no_robots'));
-$smarty->assign('use_webfonts', Settings::Get('panel.use_webfonts'));
-$smarty->assign('webfont', Settings::Get('panel.webfont'));
 $smarty->assign('show_version_login', Settings::Get('admin.show_version_login'));
 $smarty->assign('show_version_footer', Settings::Get('admin.show_version_footer'));
 $smarty->assign('version', Settings::Get('panel.version'));

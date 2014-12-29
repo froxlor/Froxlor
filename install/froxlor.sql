@@ -525,8 +525,6 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'allow_preset', '1'),
 	('panel', 'allow_preset_admin', '0'),
 	('panel', 'password_regex', ''),
-	('panel', 'use_webfonts', '0'),
-	('panel', 'webfont', 'Numans'),
 	('panel', 'phpconfigs_hidestdsubdomain', '0'),
 	('panel', 'allow_theme_change_admin', '1'),
 	('panel', 'allow_theme_change_customer', '1'),

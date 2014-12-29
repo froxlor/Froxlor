@@ -21,9 +21,6 @@
 	<script type="text/javascript" src="templates/{$theme}/assets/js/tipper.min.js"></script>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/jcanvas.min.js"></script>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/circular.js"></script>
-	<if Settings::Get('panel.use_webfonts') == '1'>
-		<link href="//fonts.googleapis.com/css?family={$webfont}" rel="stylesheet">
-	</if>
 	{$css}
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/assets/css/main_ie.css" type="text/css" /><![endif]-->
 	<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
@@ -32,11 +29,6 @@
 	<link href="templates/{$theme}/assets/img/touchicon.png" rel="shortcut" />
 	<link href="templates/{$theme}/assets/img/touchicon.png" rel="apple-touch-icon" />
 	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
-	<if Settings::Get('panel.use_webfonts') == '1'>
-	<style type="text/css">
-		body { font-family: {$webfont}, 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif; }
-	</style>
-	</if>
 </head>
 <body>
 

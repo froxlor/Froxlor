@@ -2832,5 +2832,10 @@ if (isFroxlorVersion('0.9.33-dev3')) {
 	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_cert_chainfile` text");
 	lastStepStatus(0);
 
+	showUpdateStep("Removing old settings");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup`='panel' AND `varname` = 'use_webfonts';");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup`='panel' AND `varname` = 'webfont';");
+	lastStepStatus(0);
+
 	updateToVersion('0.9.33-rc1');
 }

@@ -1685,10 +1685,6 @@ $lng['serversettings']['apache_24']['description'] = '<strong class="red">ATTENT
 $lng['admin']['tickets_see_all'] = 'Can see all ticket-categories?';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Path to fastcgi_params file';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Specify the path to nginx\'s fastcgi_params file including filename';
-$lng['serversettings']['enablewebfonts']['title'] = 'Enable usage of a google webfont for the panel';
-$lng['serversettings']['enablewebfonts']['description'] = 'If enabled, the defined webfont is being used for the font-display';
-$lng['serversettings']['definewebfont']['title'] = 'Define a <a href="http://www.google.com/webfonts" rel="external">google-webfont</a> for the panel';
-$lng['serversettings']['definewebfont']['description'] = 'If enabled, this wefont will be used for the font-display.<br />Note: replace spaces with the "+" sign, e.g. "Open+Sans"';
 
 // Added in Froxlor 0.9.28-rc2
 $lng['serversettings']['documentroot_use_default_value']['title'] = 'Use domain name as default value for DocumentRoot path';
