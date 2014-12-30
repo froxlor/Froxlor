@@ -2837,5 +2837,18 @@ if (isFroxlorVersion('0.9.33-dev3')) {
 	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup`='panel' AND `varname` = 'webfont';");
 	lastStepStatus(0);
 
+	showUpdateStep("Adding local froxlor group to customer groups");
+	if ((int)Settings::Get('system.mod_fcgid_ownvhost') == 1 || (int)Settings::Get('phpfpm.enabled_ownvhost') == 1) {
+		if ((int)Settings::Get('system.mod_fcgid') == 1) {
+			$local_user = Settings::Get('system.mod_fcgid_httpuser');
+		} else {
+			$local_user = Settings::Get('phpfpm.vhost_httpuser');
+		}
+		Database::query("UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, ',".$local_user."');");
+		lastStepStatus(0);
+	} else {
+		lastStepStatus(1, "not needed");
+	}
+
 	updateToVersion('0.9.33-rc1');
 }
