@@ -1061,7 +1061,7 @@ if ($page == 'customers'
 				$password = validate($_POST['new_customer_password'], 'new password');
 				$gender = intval_ressource($_POST['gender']);
 
-				$move_to_admin = intval_ressource($_POST['move_to_admin']);
+				$move_to_admin = isset($_POST['move_to_admin']) ? intval_ressource($_POST['move_to_admin']) : 0;
 
 				$diskspace = intval_ressource($_POST['diskspace']);
 				if (isset($_POST['diskspace_ul'])) {
