@@ -98,7 +98,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 				&& !in_array(Settings::Get('system.httpuser'), $groupinfo['members'])
 			) {
 				// webserver has no access, add it
-				safe_exec('usermod -aG ' . escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup')." ".Settings::Get('system.httpuser')));
+				safe_exec('usermod -a -G ' . escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup'))." ".escapeshellarg(Settings::Get('system.httpuser')));
 			}
 		}
 
