@@ -59,9 +59,13 @@ if (function_exists('pcntl_fork')) {
 	}
 
 } else {
-	fwrite($debugHandler,"PHP compiled without pcntl. Not forking traffic-cron, this may take a long time!");
+	if (extension_loaded('pcntl')) {
+		$msg = "PHP compiled with pcntl but pcntl_fork function is not available.";
+	} else {
+		$msg = "PHP compiled without pcntl.";
+	}
+	fwrite($debugHandler, $msg." Not forking traffic-cron, this may take a long time!");
 }
-
 
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_traffic.inc.functions.php');
 
