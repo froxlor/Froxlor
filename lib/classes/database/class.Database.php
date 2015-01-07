@@ -260,10 +260,15 @@ class Database {
 		$attributes = array('ATTR_ERRMODE' => 'ERRMODE_EXCEPTION');
 
 		$dbconf["dsn"] = array(
-				'host' => $host,
 				'dbname' => $sql["db"],
 				'charset' => 'utf8'
 		);
+
+		if (!validateDomain($host) && !validate_ip2($host, true)) {
+			$dbconf["dsn"]['unix_socket'] = makeCorrectFile($host);
+		} else {
+			$dbconf["dsn"]['host'] = $host;
+		}
 
 		self::$_dbname = $sql["db"];
 
