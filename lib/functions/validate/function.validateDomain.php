@@ -22,39 +22,34 @@
  * it consists only of the following characters ([a-z0-9][a-z0-9\-]+\.)+[a-z]{2,4}
  *
  * @param string The domainname which should be checked.
- * @return string|boolean the domain-name if the domain is valid, false otherwise
- * @author Florian Lippert <flo@syscp.org>
- * @author Michael Duergner
  *
+ * @return string|boolean the domain-name if the domain is valid, false otherwise
  */
+function validateDomain($domainname) {
 
-function validateDomain($domainname)
-{
 	// we add http:// because this makes a domain valid for the filter;
-
 	$domainname_tmp = 'http://' . $domainname;
 
-	// If FILTER_VALIDATE_URL is good, but FILTER_VALIDATE_URL with FILTER_FLAG_PATH_REQUIRED or FILTER_FLAG_QUERY_REQUIRED is also good, it isn't just a domain.
-	// This is a ugly hack, maybe a good regex would be better?
-
-	// there is a bug in php 5.2.13 - 5.3.2 which
-	// lets filter_var fail if the domain has
-	// a dash (-) in it. As the PHP_VERSION constant
-	// gives also patch-brandings, e.g. '5.3.2-pl0-gentoo'
 	// we just always use our regex
 	$pattern = '/^http:\/\/([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z0-9\-]{2,63}$/i';
-	if(preg_match($pattern, $domainname_tmp))
-	{	
+	if (preg_match($pattern, $domainname_tmp)) {
 		return $domainname;
 	}
+
 	return false;
 }
 
-function validateLocalHostname($hostname)
-{
+/**
+ * validate a local-hostname by regex
+ *
+ * @param string $hostname
+ *
+ * @return string|boolean hostname on success, else false
+ */
+function validateLocalHostname($hostname) {
+
 	$pattern = '/^([a-zA-Z0-9\-])+$/i';
-	if(preg_match($pattern, $hostname))
-	{	
+	if (preg_match($pattern, $hostname)) {
 		return $hostname;
 	}
 	return false;
