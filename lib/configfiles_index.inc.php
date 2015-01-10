@@ -45,6 +45,7 @@ $configfiles = array();
 $configfiles = array_merge(
 	include $cfgPath . 'wheezy.inc.php',
 	include $cfgPath . 'squeeze.inc.php',
+	include $cfgPath . 'trusty.inc.php',
 	include $cfgPath . 'precise.inc.php',
 	include $cfgPath . 'lucid.inc.php',
 	include $cfgPath . 'gentoo.inc.php',
