@@ -33,7 +33,7 @@ $lng['panel']['emptyfordefault'] = 'Leer für Standardeinstellung.';
 $lng['panel']['path'] = 'Pfad';
 $lng['panel']['toggle'] = 'Umschalten';
 $lng['panel']['next'] = 'Weiter';
-$lng['panel']['dirsmissing'] = 'Verzeichnisse nicht verfügbar oder lesbar';
+$lng['panel']['dirsmissing'] = 'Das angegebene Verzeichnis konnte nicht gefunden werden.';
 
 /**
  * Login
@@ -311,7 +311,6 @@ $lng['admin']['templates']['subject'] = 'Betreff';
 $lng['admin']['templates']['mailbody'] = 'Mailtext';
 $lng['admin']['templates']['createcustomer'] = 'Willkommensmail für neue Kunden';
 $lng['admin']['templates']['pop_success'] = 'Willkommensmail für neue E-Mail-Konten';
-$lng['admin']['wwwserveralias'] = '\'www.\'-ServerAlias hinzufügen';
 $lng['admin']['templates']['template_replace_vars'] = 'Variablen, die in den Vorlagen ersetzt werden:';
 $lng['admin']['templates']['SALUTATION'] = 'Wird mit einer korrekten Anrede des Kunden ersetzt.';
 $lng['admin']['templates']['FIRSTNAME'] = 'Wird mit dem Vornamen des Kunden ersetzt.';
@@ -332,7 +331,7 @@ $lng['serversettings']['accountprefix']['description'] = 'Welchen Präfix sollen
 $lng['serversettings']['mysqlprefix']['title'] = 'MySQL-Präfix';
 $lng['serversettings']['mysqlprefix']['description'] = 'Welchen Präfix sollen die MySQL-Benutzerkonten haben?</br>Mit "RANDOM" als Wert wird ein 3-stelliger Zufallswert als Präfix verwendet.';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP-Präfix';
-$lng['serversettings']['ftpprefix']['description'] = 'Welchen Präfix sollen die FTP-Benutzerkonten haben?';
+$lng['serversettings']['ftpprefix']['description'] = 'Welchen Präfix sollen die FTP-Benutzerkonten haben?<br/><b>Falls FTP-Quoatas verwendet werden, ist es notwendig das Quota-SQL-Query in der FTP-Server-Config ebenfalls zu ändern!</b>';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Heimatverzeichnis';
 $lng['serversettings']['documentroot_prefix']['description'] = 'Wo sollen die Heimatverzeichnisse der Kunden liegen?';
 $lng['serversettings']['logfiles_directory']['title'] = 'Webserver-Logdateien-Verzeichnis';
@@ -441,7 +440,7 @@ $lng['domains']['statstics'] = 'Statistiken';
 $lng['panel']['ascending'] = 'aufsteigend';
 $lng['panel']['decending'] = 'absteigend';
 $lng['panel']['search'] = 'Suche';
-$lng['panel']['used'] = 'benutzt';
+$lng['panel']['used'] = 'genutzt';
 
 // ADDED IN 1.2.14-rc3
 
@@ -596,7 +595,6 @@ $lng['ticket']['ticket_editcateory'] = 'Support-Kategorie bearbeiten';
 $lng['ticket']['ticket_view'] = 'Ticketverlauf ansehen';
 $lng['ticket']['ticketcount'] = 'Anzahl Tickets';
 $lng['ticket']['ticket_answers'] = 'Antworten';
-$lng['ticket']['lastchange'] = 'Letzte Aktualisierung';
 $lng['ticket']['subject'] = 'Betreff';
 $lng['ticket']['status'] = 'Status';
 $lng['ticket']['lastreplier'] = 'Letzte Antwort';
@@ -1006,14 +1004,12 @@ $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Wieviele PH
 
 // fix bug #1124
 $lng['admin']['webserver'] = 'Webserver';
-$lng['error']['admin_domain_emailsystemhostname'] = 'Der Server-Hostname kann leider nicht als E-Mail-Domain verwendet werden.';
 
 // ADDED IN FROXLOR 0.9
 
 $lng['admin']['spfsettings'] = 'Domain-SPF-Einstellungen';
 $lng['spf']['use_spf'] = 'Aktiviere SPF für Domains?';
 $lng['spf']['spf_entry'] = 'SPF-Eintrag für alle Domains';
-$lng['panel']['dirsmissing'] = 'Das angegebene Verzeichnis konnte nicht gefunden werden.';
 $lng['panel']['toomanydirs'] = 'Zu viele Unterverzeichnisse. Weiche auf manuelle Verzeichniseingabe aus.';
 $lng['panel']['abort'] = 'Abbrechen';
 $lng['serversettings']['cron']['debug']['title'] = 'Debuggen des Cronscripts';
@@ -1165,9 +1161,6 @@ $lng['serversettings']['mod_fcgid']['defaultini'] = 'Voreingestellte PHP-Konfigu
 $lng['admin']['ftpserver'] = 'FTP-Server';
 $lng['admin']['ftpserversettings'] = 'FTP-Server-Einstellungen';
 $lng['serversettings']['ftpserver']['desc'] = 'Wenn pureftpd ausgewählt ist, werden die .ftpquota Dateien für das Quota erstellt und täglich aktualisiert.';
-
-// CHANGED IN FROXLOR 0.9.6-svn5
-$lng['serversettings']['ftpprefix']['description'] = 'Welchen Präfix sollen die FTP-Benutzerkonten haben?<br/><b>Wenn du das änderst, musst du auch das Quota-SQL-Query in der FTP-Server-Config ändern, solltest du FTP-Quotas benutzen!</b>';
 
 // ADDED IN FROXLOR 0.9.7-svn1
 $lng['mails']['new_ftpaccount_by_customer']['subject'] = 'Neuer FTP-Benutzer erstellt';
@@ -1448,7 +1441,6 @@ $lng['error']['sslcertificateinvalidca'] = 'Das angegebene CA-Zertifikat scheint
 $lng['error']['sslcertificateinvalidchain'] = 'Das angegebene CertificateChainFile scheint nicht gültig zu sein.';
 $lng['serversettings']['customerssl_directory']['title'] = 'Webserver-Kunden-SSL-Zertifikatsverzeichnis';
 $lng['serversettings']['customerssl_directory']['description'] = 'Wo sollen kundenspezifizierte SSL-Zertifikate erstellt werden?<br /><br /><div class="red">ACHTUNG: Der Inhalt dieses Ordners wird regelmäßig geleert, daher sollten dort keinerlei Daten manuell abgelegt werden.</div>';
-$lng['admin']['note'] = 'Bitte beachten';
 $lng['admin']['phpfpm.ininote'] = 'Nicht alle gewünschten Werte können in der php-fpm-pool-Konfiguration verwendet werden.';
 
 // Added in Froxlor 0.9.30
@@ -1469,7 +1461,6 @@ $lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Dies ist eine
 
 // Added in Froxlor 0.9.31
 $lng['panel']['dashboard'] = 'Dashboard';
-$lng['panel']['used'] = 'genutzt';
 $lng['panel']['assigned'] = 'zugewiesen';
 $lng['panel']['available'] = 'verfügbar';
 $lng['customer']['services'] = 'Dienste';
