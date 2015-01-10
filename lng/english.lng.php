@@ -33,7 +33,7 @@ $lng['panel']['emptyfordefault'] = 'empty for defaults';
 $lng['panel']['path'] = 'Path';
 $lng['panel']['toggle'] = 'Toggle';
 $lng['panel']['next'] = 'next';
-$lng['panel']['dirsmissing'] = 'The given directory could not be found.';
+$lng['panel']['dirsmissing'] = 'Can not find or read the directory!';
 
 /**
  * Login
