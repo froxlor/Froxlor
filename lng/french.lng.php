@@ -231,7 +231,8 @@ $lng['error']['destinationnonexist'] = 'Veuillez écrire votre adresse de renvoi
 $lng['error']['destinationalreadyexistasmail'] = 'Le renvoi vers l\'adresse "%s" existe déjà comme adresse active.';
 $lng['error']['destinationalreadyexist'] = 'Il existe déjà une réexpédition vers l\'adresse "%s".';
 $lng['error']['destinationiswrong'] = 'L\'adresse "%s" contient des signes invalides ou est incomplète.';
-$lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer un compte identique au compte système, veuillez réessayer avec un autre nom.';
+//  $lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer un compte identique au compte système, veuillez réessayer avec un autre nom.';
+$lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer de compte ressemblant aux comptes système (ex : "%s"). Veuillez entrer un autre nom de compte.';
 
 /**
  * Questions
@@ -457,7 +458,6 @@ $lng['serversettings']['phpappendopenbasedir']['description'] = 'Liste de dossie
 
 // CHANGED IN 1.2.15-rc1
 
-$lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer de compte ressemblant aux comptes système (ex : "%s"). Veuillez entrer un autre nom de compte.';
 $lng['error']['youcantdeleteyourself'] = 'Vous ne pouvez pas supprimer votre propre compte pour des raisons évidente de sécurité ...';
 $lng['error']['youcanteditallfieldsofyourself'] = 'Note : Vous ne pouvez pas éditer tous les champs de votre propre compte pour des raisons de sécurité.';
 
@@ -587,7 +587,8 @@ $lng['ticket']['ticket_editcateory'] = 'Editer la catégorie';
 $lng['ticket']['ticket_view'] = 'Voir l\'historique du billet';
 $lng['ticket']['ticketcount'] = 'Billets';
 $lng['ticket']['ticket_answers'] = 'Réponses';
-$lng['ticket']['lastchange'] = 'Dernière action';
+// $lng['ticket']['lastchange'] = 'Dernière action';
+$lng['ticket']['lastchange'] = 'Dernier changement';
 $lng['ticket']['subject'] = 'Sujet';
 $lng['ticket']['status'] = 'Etat';
 $lng['ticket']['lastreplier'] = 'Dernière réponse de';
@@ -595,7 +596,6 @@ $lng['ticket']['priority'] = 'Priorité';
 $lng['ticket']['low'] = 'Basse';
 $lng['ticket']['normal'] = 'Normale';
 $lng['ticket']['high'] = 'Haute';
-$lng['ticket']['lastchange'] = 'Dernier changement';
 $lng['ticket']['lastchange_from'] = 'Depuis (jj.mm.aaaa)';
 $lng['ticket']['lastchange_to'] = 'Jusqu\'au (jj.mm.aaaa)';
 $lng['ticket']['category'] = 'Catégorie';
