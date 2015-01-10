@@ -20,6 +20,11 @@ function phpErrHandler($errno, $errstr, $errfile, $errline, array $errcontext) {
 
 	if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 		global $theme;
+
+		// fallback
+		if (empty($theme)) {
+			$theme = "Sparkle";
+		}
 		// if we're not on the shell, output a nicer error-message
 		$err_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$theme.'/misc/phperrornice.tpl');
 		// replace values

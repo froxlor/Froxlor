@@ -31,6 +31,14 @@ function buildNavigation($navigation, $userinfo) {
 
 	$returnvalue = '';
 
+	// sanitize user-given input (url-manipulation)
+	if (isset($_GET['page']) && is_array($_GET['page'])) {
+		$_GET['page'] = (string)$_GET['page'][0];
+	}
+	if (isset($_GET['action']) && is_array($_GET['action'])) {
+		$_GET['action'] = (string)$_GET['action'][0];
+	}
+
 	foreach($navigation as $box) {
 		if ((!isset($box['show_element']) || $box['show_element'] === true) &&
 			(!isset($box['required_resources']) || $box['required_resources'] == '' || (isset($userinfo[$box['required_resources']]) && ((int)$userinfo[$box['required_resources']] > 0 || $userinfo[$box['required_resources']] == '-1')))) {

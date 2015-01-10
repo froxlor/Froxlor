@@ -1,4 +1,4 @@
-<h3 style="color:{$msgcolor};text-align: center">{$message}</h3>
+<h3 class="install-h3 {$msgcolor}">{$message}</h3>
 <aside>
 	<a href="{$link}">{$linktext}</a>
 </aside>

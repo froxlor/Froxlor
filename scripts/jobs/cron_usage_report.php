@@ -239,8 +239,8 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 		$mail_subject = 'Trafficreport ' . date("m/y", $yesterday) . ' for ' . $row['name'];
 		$mail_body = 'Trafficreport ' . date("m/y", $yesterday) . ' for ' . $row['name'] . "\n";
-		$mail_body.= '---------------------------------------------' . "\n";
-		$mail_body.= 'Loginname       Traffic used (Percent) | Traffic available' . "\n";
+		$mail_body.= '---------------------------------------------------------------' . "\n";
+		$mail_body.= 'Loginname       Traffic used  (Percent) | Traffic available' . "\n";
 		$customers_stmt = Database::prepare("
 			SELECT `c`.*,
 			(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
@@ -257,15 +257,36 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		Database::pexecute($customers_stmt, $customers_data);
 
 		while ($customer = $customers_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$t = $customer['traffic_used_total']/1048576;
 			if ($customer['traffic'] > 0) {
-				$mail_body.= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-12d', $customer['traffic_used_total']) . ' (' . sprintf('%00.3f%%', (($customer['traffic_used_total'] * 100) / $customer['traffic'])) . ')   ' . $customer['traffic'] . "\n";
+				$p = (($customer['traffic_used_total'] * 100) / $customer['traffic'] );
+				$tg = $customer['traffic']/1048576;
+				$str = sprintf('%00.1f GB  ( %00.1f %% )', $t, $p);
+				$mail_body.= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . sprintf('%00.1f GB', $tg) . "\n";
+			} else if ($customer['traffic'] == 0) {
+				$str = sprintf('%00.1f GB  (   -   )', $t);
+				$mail_body.= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . '0' . "\n";
 			} else {
-				$mail_body.= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-12d', $customer['traffic_used_total']) . ' (' . sprintf('%00.3f%%', $customer['traffic_used_total']) . ')   ' . $customer['traffic'] . "\n";
+				$str = sprintf('%00.1f GB  (   -   )', $t);
+				$mail_body.= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . 'unlimited' . "\n";
 			}
 		}
 
-		$mail_body.= '---------------------------------------------' . "\n";
-		$mail_body.= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-12d', $row['traffic_used_total']) . ' (' . sprintf('%00.3f%%', (($row['traffic_used_total'] * 100) / $row['traffic'])) . ')   ' . $row['traffic'] . "\n";
+		$mail_body.= '---------------------------------------------------------------' . "\n";
+
+		$t = $row['traffic_used_total']/1048576;
+		if ($row['traffic'] > 0) {
+			$p = (($row['traffic_used_total'] * 100) / $row['traffic']);
+			$tg = $row['traffic']/1048576;
+			$str = sprintf('%00.1f GB  ( %00.1f %% )', $t, $p);
+			$mail_body.= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . sprintf('%00.1f GB', $tg) . "\n";
+		} else if ($row['traffic'] == 0) {
+			$str = sprintf('%00.1f GB  (   -   )', $t);
+			$mail_body.= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . '0' . "\n";
+		} else {
+			$str = sprintf('%00.1f GB  (   -   )', $t);
+			$mail_body.= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . 'unlimited' . "\n";
+		}
 
 		$_mailerror = false;
 		try {

@@ -567,7 +567,7 @@ class FroxlorInstall {
 
 		// we have to create a new user and database for the froxlor unprivileged mysql access
 		$content .= $this->_status_message('begin', $this->_lng['install']['create_mysqluser_and_db']);
-		$ins_stmt = $db_root->prepare("CREATE DATABASE `".str_replace('`', '', $this->_data['mysql_database'])."`");
+		$ins_stmt = $db_root->prepare("CREATE DATABASE `".str_replace('`', '', $this->_data['mysql_database'])."` CHARACTER SET=utf8 COLLATE=utf8_general_ci");
 		$ins_stmt->execute();
 
 		$mysql_access_host_array = array_map('trim', explode(',', $this->_data['mysql_access_host']));
@@ -692,25 +692,25 @@ class FroxlorInstall {
 		$formdata .= $this->_getSectionItemString('mysql_database', true);
 		// unpriv-user has to be different from root
 		if ($this->_data['mysql_unpriv_user'] == $this->_data['mysql_root_user']) {
-			$style = 'color:blue;';
+			$style = 'blue';
 		} else { $style = '';
 		}
 		$formdata .= $this->_getSectionItemString('mysql_unpriv_user', true, $style);
 		// is we posted and no password was given -> red
 		if (!empty($_POST['installstep']) && $this->_data['mysql_unpriv_pass'] == '') {
-			$style = 'color:red;';
+			$style = 'red';
 		} else { $style = '';
 		}
 		$formdata .= $this->_getSectionItemString('mysql_unpriv_pass', true, $style, 'password');
 		// unpriv-user has to be different from root
 		if ($this->_data['mysql_unpriv_user'] == $this->_data['mysql_root_user']) {
-			$style = 'color:blue;';
+			$style = 'blue';
 		} else { $style = '';
 		}
 		$formdata .= $this->_getSectionItemString('mysql_root_user', true, $style);
 		// is we posted and no password was given -> red
 		if (!empty($_POST['installstep']) && $this->_data['mysql_root_pass'] == '') {
-			$style = 'color:red;';
+			$style = 'red';
 		} else { $style = '';
 		}
 		$formdata .= $this->_getSectionItemString('mysql_root_pass', true, $style, 'password');
@@ -982,6 +982,7 @@ class FroxlorInstall {
 			) {
 				// use sparkle theme for the notice
 				$installed_hint = file_get_contents($this->_basepath.'/templates/Sparkle/misc/alreadyinstalledhint.tpl');
+				$installed_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $installed_hint);
 				die($installed_hint);
 			}
 		}
@@ -1063,9 +1064,9 @@ class FroxlorInstall {
 	 */
 	private function _status_message($case, $text) {
 		if ($case == 'begin') {
-			return '<tr><td style="width: 250px;">'.$text;
+			return '<tr><td class="install-step">'.$text;
 		} else {
-			return '</td><td><span style="color:'.$case.';">'.$text.'</span></td></tr>';
+			return '</td><td><span class="'.$case.'">'.$text.'</span></td></tr>';
 		}
 	}
 

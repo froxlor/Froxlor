@@ -34,7 +34,8 @@ $lng['panel']['emptyfordefault'] = 'lasciare vuoto per l\'impostazione di defaul
 $lng['panel']['path'] = 'Percorso';
 $lng['panel']['toggle'] = 'Cambia';
 $lng['panel']['next'] = 'Prossimo';
-$lng['panel']['dirsmissing'] = 'Impossibile trovare o leggere la directory!';
+//  $lng['panel']['dirsmissing'] = 'Impossibile trovare o leggere la directory!';
+$lng['panel']['dirsmissing'] = 'La cartella fornita non è stata trovata.';
 
 /**
  * Login
@@ -153,7 +154,8 @@ $lng['ftp']['account_add'] = 'Crea account';
  * MySQL
  */
 
-$lng['mysql']['description'] = 'Qui puoi creare e modificare i tuoi database MySQL.<br />I cambiamenti sono effettuati in tempo reale e i databases si possono usare immediatamente.<br />Nel menù di sinistra trovi il tool phpMyAdmin con il quale potrai comodamente amministrare i tuoi databases attraverso il tuo web-browser.<br /><br />Per utilizzare i database nei vostri script PHP, utilizzate le seguenti impostazioni: (I dati scritti in <i>corsivo</i> vanno cambiati con i tuoi!)<br />Hostname: <b><SQL_HOST></b><br />Username: <b><i>L\'username scelto</i></b><br />Password: <b><i>La password scelta per quell\'username</i></b><br />Database: <b><i>Nome del database</i></b>';
+//  $lng['mysql']['description'] = 'Qui puoi creare e modificare i tuoi database MySQL.<br />I cambiamenti sono effettuati in tempo reale e i databases si possono usare immediatamente.<br />Nel menù di sinistra trovi il tool phpMyAdmin con il quale potrai comodamente amministrare i tuoi databases attraverso il tuo web-browser.<br /><br />Per utilizzare i database nei vostri script PHP, utilizzate le seguenti impostazioni: (I dati scritti in <i>corsivo</i> vanno cambiati con i tuoi!)<br />Hostname: <b><SQL_HOST></b><br />Username: <b><i>L\'username scelto</i></b><br />Password: <b><i>La password scelta per quell\'username</i></b><br />Database: <b><i>Nome del database</i></b>';
+$lng['mysql']['description'] = 'Qui puoi creare e modificare il tuo database MySQL<br />Le modifiche sono istantanee e puoi usare subito il database.<br />Nel menù a sinistra trovi phpMyAdmin con cui puoi amministrare il tuo database.<br /><br />Per usare i database nei tuoi script php usa le seguenti impostazioni: (Le parole in <i>corsivo</i> devono essere modificate con quello che hai scritto!)<br />Hostname: <b><SQL_HOST></b><br />Utente: <b><i>Nome database</i></b><br />Password: <b><i>La password che hai scelto</i></b><br />Database: <b><i>Nome database</i></b>';
 $lng['mysql']['databasename'] = 'Nome database';
 $lng['mysql']['databasedescription'] = 'Descrizione database';
 $lng['mysql']['database_create'] = 'Crea database';
@@ -311,7 +313,7 @@ $lng['admin']['templates']['NAME'] = 'Rimpiazzato con il cognome del cliente.';
 $lng['admin']['templates']['USERNAME'] = 'Rimpiazzato con il nome utente dell\'account.';
 $lng['admin']['templates']['PASSWORD'] = 'Rimpiazzato con la password dell\'account.';
 $lng['admin']['templates']['EMAIL'] = 'Rimapiazzato con l\'indirizzo dell\'account.';
-$lng['admin']['webserver'] = 'Server Web';
+$lng['admin']['webserver'] = 'Webserver';
 
 /**
  * Serversettings
@@ -324,7 +326,7 @@ $lng['serversettings']['accountprefix']['description'] = 'Che prefisso dovrebber
 $lng['serversettings']['mysqlprefix']['title'] = 'Prefisso SQL';
 $lng['serversettings']['mysqlprefix']['description'] = 'Che prefisso dovrebbero avere i database SQL?';
 $lng['serversettings']['ftpprefix']['title'] = 'Prefisso FTP';
-$lng['serversettings']['ftpprefix']['description'] = 'Che prefisso dovrebbero avere gli account FTP?';
+$lng['serversettings']['ftpprefix']['description'] = 'Che prefisso vuoi che per gli account ftp?<br/><b>Se si modifica questo devi anche modificare il limite (Quota) della query SQL nel file di configurazione del server FTP nel caso in cui venga usata!</b> ';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Cartella dati web';
 $lng['serversettings']['documentroot_prefix']['description'] = 'Dove devono essere immagazzinati tutti i dati web?';
 $lng['serversettings']['logfiles_directory']['title'] = 'Cartella logfiles';
@@ -368,12 +370,6 @@ $lng['serversettings']['mxservers']['title'] = 'MX servers';
 $lng['serversettings']['mxservers']['description'] = 'Lista dei server mx (separati dalla virgola) numero spazio hostname (es. \'10 mx.example.com\').';
 
 /**
- * CHANGED BETWEEN 1.2.12 and 1.2.13
- */
-
-$lng['mysql']['description'] = 'Qui puoi creare e modificare il tuo database MySQL<br />Le modifiche sono istantanee e puoi usare subito il database.<br />Nel menù a sinistra trovi phpMyAdmin con cui puoi amministrare il tuo database.<br /><br />Per usare i database nei tuoi script php usa le seguenti impostazioni: (Le parole in <i>corsivo</i> devono essere modificate con quello che hai scritto!)<br />Hostname: <b><SQL_HOST></b><br />Utente: <b><i>Nome database</i></b><br />Password: <b><i>La password che hai scelto</i></b><br />Database: <b><i>Nome database</i></b>';
-
-/**
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
 
@@ -386,7 +382,9 @@ $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Porta\'';
 $lng['error']['myipdefault'] = 'Devi selezionare una combinazione IP/Porta che diventerà default.';
 $lng['error']['myipnotdouble'] = 'Questa combinazione IP/Porta esiste già.';
-$lng['error']['admin_domain_emailsystemhostname'] = 'Non puoi usare l\'hostname del server come dominio email';
+// $lng['error']['admin_domain_emailsystemhostname'] = 'Non puoi usare l\'hostname del server come dominio email';
+// $lng['error']['admin_domain_emailsystemhostname'] = 'L\'hostname del server non può essere utilizzato come dominio email.';
+$lng['error']['admin_domain_emailsystemhostname'] = 'Spiacente, l\'hostname di sistema non può essere usato come dominio di un cliente';
 $lng['question']['admin_ip_reallydelete'] = 'Vuoi veramente eliminare l\'indirizzo IP %s?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IP e Porte';
 $lng['admin']['ipsandports']['add'] = 'Aggiungi IP/Porta';
@@ -403,7 +401,7 @@ $lng['question']['admin_domain_reallydocrootoutofcustomerroot'] = 'Sei sicuro di
 // ADDED IN 1.2.14-rc1
 
 $lng['admin']['memorylimitdisabled'] = 'Disabilitato';
-$lng['error']['loginnameissystemaccount'] = 'Non puoi creare account con nomi simili agli account di sistema. Per favore cambia il nome dell\'account.';
+$lng['error']['loginnameissystemaccount'] = 'Non puoi creare account che siano analoghi a quelli di sistema (per esempio quelli che iniziano con "%s"). Digita un\'altro nome account.';
 $lng['domain']['openbasedirpath'] = 'Percorso OpenBasedir';
 $lng['domain']['docroot'] = 'Percorso del campo sopra';
 $lng['domain']['homedir'] = 'Cartella Home';
@@ -456,7 +454,6 @@ $lng['serversettings']['phpappendopenbasedir']['description'] = 'Questi percorsi
 
 // CHANGED IN 1.2.15-rc1
 
-$lng['error']['loginnameissystemaccount'] = 'Non puoi creare account che siano analoghi a quelli di sistema (per esempio quelli che iniziano con "%s"). Digita un\'altro nome account.';
 $lng['error']['youcantdeleteyourself'] = 'Non puoi cancellare te stesso per motivi di sicurezza.';
 $lng['error']['youcanteditallfieldsofyourself'] = 'Nota: non puoi modificare tutti i campi del tuo account per motivi di sicurezza.';
 
@@ -578,7 +575,8 @@ $lng['ticket']['ticket_editcateory'] = 'Modifica categoria';
 $lng['ticket']['ticket_view'] = 'Visualizza il corso del ticket';
 $lng['ticket']['ticketcount'] = 'Ticket';
 $lng['ticket']['ticket_answers'] = 'Risposte';
-$lng['ticket']['lastchange'] = 'Ultima azione';
+// $lng['ticket']['lastchange'] = 'Ultima azione';
+$lng['ticket']['lastchange'] = 'Ultima modifica';
 $lng['ticket']['subject'] = 'Soggetto';
 $lng['ticket']['status'] = 'Stato';
 $lng['ticket']['lastreplier'] = 'Ultimo che ha risposto';
@@ -586,7 +584,6 @@ $lng['ticket']['priority'] = 'Priorità';
 $lng['ticket']['low'] = 'Bassa';
 $lng['ticket']['normal'] = 'Normale';
 $lng['ticket']['high'] = 'Alta';
-$lng['ticket']['lastchange'] = 'Ultima modifica';
 $lng['ticket']['lastchange_from'] = 'Dalla data (dd.mm.yyyy)';
 $lng['ticket']['lastchange_to'] = 'Alla data (dd.mm.yyyy)';
 $lng['ticket']['category'] = 'Categoria';
@@ -820,8 +817,8 @@ $lng['login']['presend'] = 'Reimposta la password';
 $lng['login']['email'] = 'Indirizzo E-mail';
 $lng['login']['remind'] = 'Reimposta la mia password';
 $lng['login']['usernotfound'] = 'Utente non trovata!';
-$lng['pwdreminder']['subject'] = 'Froxlor - Reimposta password';
-$lng['pwdreminder']['body'] = 'Salve %s,\n\nla tua password froxlor è stata reimpostata!\nLa nuova password è: %p\n\nGrazie,\n Team Froxlor';
+$lng['mails']['password_reset']['subject'] = 'Reimposta password';
+$lng['mails']['password_reset']['mailbody'] = 'Salve {USERNAME},\n\nla tua password froxlor è stata reimpostata!\nLa nuova password è: {LINK}\n\nGrazie,\n Team Froxlor';
 $lng['pwdreminder']['success'] = 'La password è stata reimpostata con successo.<br />A questo punto riceverai una email con la nuova password.';
 
 // ADDED IN 1.2.19-svn18
@@ -971,10 +968,6 @@ $lng['admin']['mod_fcgid_maxrequests']['title'] = 'Richieste PHP massime per que
 $lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Richieste massime per dominio';
 $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Quante richieste dovrebbero essere permesse per dominio?';
 
-// fix bug #1124
-$lng['admin']['webserver'] = 'Webserver';
-$lng['error']['admin_domain_emailsystemhostname'] = 'L\'hostname del server non può essere utilizzato come dominio email.';
-
 // ADDED IN 1.4.2.1-1
 
 $lng['mysql']['mysql_server'] = 'Server MySQL';
@@ -1002,7 +995,6 @@ $lng['success']['settingssaved'] = 'Le impostazioni sono state salvate con succe
 $lng['admin']['spfsettings'] = 'Impostazioni Dominio SPF';
 $lng['spf']['use_spf'] = 'Attiva SPF per i domini?';
 $lng['spf']['spf_entry'] = 'Impostazioni SPF per tutti i domini';
-$lng['panel']['dirsmissing'] = 'La cartella fornita non è stata trovata.';
 $lng['panel']['toomanydirs'] = 'Troppe sottocartelle. Rifare tornando indietro nella selezione manuale della cartella.';
 $lng['panel']['abort'] = 'Termina';
 $lng['serversettings']['cron']['debug']['title'] = 'Debug Cronscript';
@@ -1102,8 +1094,8 @@ $lng['serversettings']['stdsubdomainhost']['description'] = 'Quale hostname dovr
 $lng['ftp']['account_edit'] = 'Modifica acocunt FTP';
 $lng['ftp']['editpassdescription'] = 'Imposta una nuova password o lascia vuoto per non cambiarla.';
 $lng['customer']['sendinfomail'] = 'Inviami i dati via email';
-$lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] Nuovo database creato';
-$lng['customer']['mysql_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nhai appena aggiunto un nuovo database. Ecco le informazioni inserite:\n\nNome database: {DB_NAME}\nPassword: {DB_PASS}\nDescrizione: {DB_DESC}\nDB-Hostname: {DB_SRV}\n{PMA_URI}\nCordiali Saluti, Team Froxlor";
+$lng['mails']['new_database_by_customer']['subject'] = '[Froxlor] Nuovo database creato';
+$lng['mails']['new_database_by_customer']['mailbody'] = "Hello {CUST_NAME},\n\nhai appena aggiunto un nuovo database. Ecco le informazioni inserite:\n\nNome database: {DB_NAME}\nPassword: {DB_PASS}\nDescrizione: {DB_DESC}\nDB-Hostname: {DB_SRV}\n{PMA_URI}\nCordiali Saluti, Team Froxlor";
 $lng['serversettings']['awstats_path'] = 'Percorso a AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'Cartella della configurazione di AWStats';
 $lng['error']['overviewsettingoptionisnotavalidfield'] = 'Woops, un campo che dovrebbe essere mostrato come opzione in Impostazioni-Principale non è un tipo esclusivo. Si possono rimproverare gli sviluppatori per questo. Questo non deve accadere!';
@@ -1119,12 +1111,12 @@ $lng['ticket']['orderdesc'] = 'Qui è possibile definire il tuo ordine logico pe
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Abilita errordocuments in automatico per tutti i clienti';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'File/URL per l\'errore 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="red">Non supportato in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'File/URL per l\'errore 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="red">Non supportato in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'File/URL per l\'errore 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'File/URL per l\'errore 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red">Non supportato in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Non supportato in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Priorità predefinita per il supporto ticket';
@@ -1137,12 +1129,9 @@ $lng['admin']['ftpserver'] = 'Server FTP';
 $lng['admin']['ftpserversettings'] = 'Impostazioni del Server FTP';
 $lng['serversettings']['ftpserver']['desc'] = 'Se pureftpd è selezionato i file .ftpquota per i limiti dell\'utente sono creati e aggiornati giornalmente';
 
-// CHANGED IN FROXLOR 0.9.6-svn6
-$lng['serversettings']['ftpprefix']['description'] = 'Che prefisso vuoi che per gli account ftp?<br/><b>Se si modifica questo devi anche modificare il limite (Quota) della query SQL nel file di configurazione del server FTP nel caso in cui venga usata!</b> ';
-
 // ADDED IN FROXLOR 0.9.7-svn1
-$lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] Nuovo utente ftp creato';
-$lng['customer']['ftp_add']['infomail_body']['main'] = "Salve {CUST_NAME},\n\nhai appena aggiunto un nuovo utente ftp. Ecco le informazioni inserite:\n\nNome utente: {USR_NAME}\nPassword: {USR_PASS}\nPercorso: {USR_PATH}\n\nCordiali Saluti, Team Froxlor";
+$lng['mails']['new_ftpaccount_by_customer']['subject'] = 'Nuovo utente ftp creato';
+$lng['mails']['new_ftpaccount_by_customer']['mailbody'] = "Salve {CUST_NAME},\n\nhai appena aggiunto un nuovo utente ftp. Ecco le informazioni inserite:\n\nNome utente: {USR_NAME}\nPassword: {USR_PASS}\nPercorso: {USR_PATH}\n\nCordiali Saluti, Team Froxlor";
 $lng['domains']['redirectifpathisurl'] = 'Codice di redirezione (Predefinito: vuoto)';
 $lng['domains']['redirectifpathisurlinfo'] = 'È necessario selezionare uno di questi se hai inserito un URL come percorso';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Permetti ai clienti le redirezioni';
@@ -1301,8 +1290,8 @@ $lng['admin']['templates']['DISKAVAILABLE'] = 'Sostituito con il spazio utilizza
 $lng['admin']['templates']['DISKUSED'] = 'Sostituito con il spazio utilizzato in MB, che è stato esaurito da parte del cliente.';
 $lng['serversettings']['dropdown'] = 'Dropdown';
 $lng['serversettings']['manual'] = 'Manuale';
-$lng['mails']['webmaxpercent']['mailbody'] = 'Salve {NAME},\n\nhai utilizzato {DISKUSED} MB di {DISKAVAILABLE} MB di spazio disponibile.\nQuesto è più del {MAX_PERCENT}%.\n\nCordiali Saluti, il Team Froxlor';
-$lng['mails']['webmaxpercent']['subject'] = 'Raggiungere il limite di spazio su disco';
+$lng['mails']['diskmaxpercent']['mailbody'] = 'Salve {NAME},\n\nhai utilizzato {DISKUSED} MB di {DISKAVAILABLE} MB di spazio disponibile.\nQuesto è più del {MAX_PERCENT}%.\n\nCordiali Saluti, il Team Froxlor';
+$lng['mails']['diskmaxpercent']['subject'] = 'Raggiungere il limite di spazio su disco';
 $lng['mysql']['database_edit'] = 'Modifica database';
 
 // ADDED IN FROXLOR 0.9.18
@@ -1342,4 +1331,4 @@ $lng['traffic']['months']['dec'] = 'Dic';
 $lng['traffic']['months']['total'] = 'Totale';
 $lng['traffic']['details'] = 'Dettagli';
 $lng['menue']['traffic']['table'] = 'Traffico';
-$lng['error']['admin_domain_emailsystemhostname'] = 'Spiacente, l\'hostname di sistema non può essere usato come dominio di un cliente';
+

@@ -32,16 +32,19 @@ return array(
 					),
 					'template' => array(
 						'label' => $lng['admin']['templates']['action'],
-						'type' => 'select',
-						'select_var' => $template_options
+						'type' => 'hidden',
+						'value' => $template,
+						'display' => $lng['admin']['templates'][$template]
 					),
 					'subject' => array(
 						'label' => $lng['admin']['templates']['subject'],
-						'type' => 'text'
+						'type' => 'text',
+						'value' => $subject
 					),
 					'mailbody' => array(
 						'label' => $lng['admin']['templates']['mailbody'],
 						'type' => 'textarea',
+						'value' => $body,
 						'cols' => 60,
 						'rows' => 12
 					)

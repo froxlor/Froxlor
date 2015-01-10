@@ -110,11 +110,13 @@ function showUpdateStep($task = null, $needs_status = true) {
 
 	global $updatelog, $filelog;
 
+	if (!$needs_status) echo "<b>";
+
 	// output
 	echo $task;
 
 	if (!$needs_status) {
-		echo "<br />";
+		echo "</b><br />";
 	}
 
 	$updatelog->logAction(ADM_ACTION, LOG_WARNING, $task);
@@ -139,24 +141,24 @@ function lastStepStatus($status = -1, $message = '') {
 
 		case 0:
 			$status_sign = ($message != '') ? '['.$message.']' : '[OK]';
-			$status_color = '1dcd00';
+			$status_color = 'ok';
 			break;
 		case 1:
 			$status_sign = ($message != '') ? '['.$message.']' : '[??]';
-			$status_color = 'db7100';
+			$status_color = 'warn';
 			break;
 		case 2:
 			$status_sign = ($message != '') ? '['.$message.']' : '[!!]';
-			$status_color = 'ff0000';
+			$status_color = 'err';
 			break;
 		default:
 			$status_sign = '[unknown]';
-			$status_color = '000000';
+			$status_color = 'unknown';
 			break;
 	}
 
 	// output
-	echo "<span style=\"margin-left: 5em; font-weight: bold; color: #".$status_color."\">".$status_sign."</span><br />";
+	echo "<span class=\"update-step update-step-".$status_color."\">".$status_sign."</span><br />";
 
 	if ($status == -1 || $status == 2) {
 		$updatelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');

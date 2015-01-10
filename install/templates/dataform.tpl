@@ -1,4 +1,4 @@
-		<p style="margin: 20px 20px 0 !important">{$this->_lng['install']['title']}</p>
+		<p class="install-text">{$this->_lng['install']['title']}</p>
 		<form action="{$formaction}" method="get">
 			<fieldset>
 				{$formdata}

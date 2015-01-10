@@ -79,7 +79,7 @@ if ($page == 'overview') {
 				
 				$successful_update = true;
 			} else {
-				$message = '<br /><strong style="color: red">You have to agree that you have read the update notifications.</strong>';
+				$message = '<br /><strong class="red">You have to agree that you have read the update notifications.</strong>';
 			}
 		}
 

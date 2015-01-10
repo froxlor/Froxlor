@@ -230,7 +230,12 @@ class apache {
 						$this->virtualhosts_data[$vhosts_filename].= '    </FilesMatch>' . "\n";
 						// >=apache-2.4 enabled?
 						if (Settings::Get('system.apache24') == '1') {
-							$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
+							$mypath_dir = new frxDirectory($mypath);
+							// only create the require all granted if there is not active directory-protection
+							// for this path, as this would be the first require and therefore grant all access
+							if ($mypath_dir->isUserProtected() == false) {
+								$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
+							}
 						} else {
 							$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
 							$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
@@ -265,7 +270,7 @@ class apache {
 							&& Settings::Get('phpfpm.use_mod_proxy') == '1'
 					) {
 						$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.php$>'. "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost/'. "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost'. "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
 					
 					} else {
@@ -279,7 +284,12 @@ class apache {
 						$this->virtualhosts_data[$vhosts_filename].= '    </FilesMatch>' . "\n";
 						// >=apache-2.4 enabled?
 						if (Settings::Get('system.apache24') == '1') {
-							$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+							$mypath_dir = new frxDirectory($mypath);
+							// only create the require all granted if there is not active directory-protection
+							// for this path, as this would be the first require and therefore grant all access
+							if ($mypath_dir->isUserProtected() == false) {
+								$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+							}
 						} else {
 							$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
@@ -748,7 +758,7 @@ class apache {
 			$code = getDomainRedirectCode($domain['id']);
 			$modrew_red = '';
 			if ($code != '') {
-				$modrew_red = '[R='. $code . ';L]';
+				$modrew_red = '[R='. $code . ';L,NE]';
 			}
 
 			// redirect everything, not only root-directory, #541
@@ -941,7 +951,12 @@ class apache {
 					$this->diroptions_data[$diroptions_filename] .= '  AddHandler cgi-script .cgi .pl' . "\n";
 					// >=apache-2.4 enabled?
 					if (Settings::Get('system.apache24') == '1') {
-						$this->diroptions_data[$diroptions_filename] .= '  Require all granted' . "\n";
+						$mypath_dir = new frxDirectory($row_diroptions['path']);
+						// only create the require all granted if there is not active directory-protection
+						// for this path, as this would be the first require and therefore grant all access
+						if ($mypath_dir->isUserProtected() == false) {
+							$this->diroptions_data[$diroptions_filename] .= '  Require all granted' . "\n";
+						}
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= '  Order allow,deny' . "\n";
 						$this->diroptions_data[$diroptions_filename] .= '  Allow from all' . "\n";
@@ -1018,7 +1033,8 @@ class apache {
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_diroptions'));
 
 		if (count($this->diroptions_data) > 0) {
-			if (!isConfigDir(Settings::Get('system.apacheconf_diroptions'))) {
+			$optsDir = new frxDirectory(Settings::Get('system.apacheconf_diroptions'));
+			if (!$optsDir->isConfigDir()) {
 				// Save one big file
 				$diroptions_file = '';
 
@@ -1065,7 +1081,8 @@ class apache {
 				umask($umask);
 			}
 
-			if (isConfigDir(Settings::Get('system.apacheconf_htpasswddir'), true)) {
+			$htpasswdDir = new frxDirectory(Settings::Get('system.apacheconf_htpasswddir'));
+			if ($htpasswdDir->isConfigDir(true)) {
 				foreach ($this->htpasswds_data as $htpasswd_filename => $htpasswd_file) {
 					$this->known_htpasswdsfilenames[] = basename($htpasswd_filename);
 					$htpasswd_file_handler = fopen($htpasswd_filename, 'w');
@@ -1084,7 +1101,8 @@ class apache {
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
 		if (count($this->virtualhosts_data) > 0) {
-			if (!isConfigDir(Settings::Get('system.apacheconf_vhost'))) {
+			$vhostDir = new frxDirectory(Settings::Get('system.apacheconf_vhost'));
+			if (!$vhostDir->isConfigDir()) {
 				// Save one big file
 				$vhosts_file = '';
 

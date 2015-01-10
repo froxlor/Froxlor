@@ -65,7 +65,7 @@ class htmlform
 					if ($nexto === false || (isset($fielddata['next_to']) && $nexto['field'] != $fielddata['next_to'])) {
 						$label = $fielddata['label'];
 						$desc = (isset($fielddata['desc']) ? $fielddata['desc'] : '');
-						$style = (isset($fielddata['style']) ? ' style="'.$fielddata['style'].'"' : '');
+						$style = (isset($fielddata['style']) ? ' class="'.$fielddata['style'].'"' : '');
 						$mandatory = self::_getMandatoryFlag($fielddata);
 						$data_field = self::_parseDataField($fieldname, $fielddata);
 						//$data_field = str_replace("\n", "", $data_field);
@@ -123,6 +123,8 @@ class htmlform
 				return self::_textArea($fieldname, $data); break;
 			case 'checkbox':
 				return self::_checkbox($fieldname, $data); break;
+			case 'file':
+				return self::_file($fieldname, $data); break;
 		}
 	}
 
@@ -130,11 +132,11 @@ class htmlform
 	{
 		if(isset($data['mandatory']))
 		{
-			return '&nbsp;<span style="color:#ff0000;">*</span>';
+			return '&nbsp;<span class="red">*</span>';
 		}
 		elseif(isset($data['mandatory_ex']))
 		{
-			return '&nbsp;<span style="color:#ff0000;">**</span>';
+			return '&nbsp;<span class="red">**</span>';
 		}
 		return '';
 	}
@@ -286,6 +288,32 @@ class htmlform
 		}
 
 		return $output;
+	}
+
+	private static function _file($fieldname = '', $data = array())
+	{
+		$return = '';
+		$extras = '';
+		if(isset($data['maxlength'])) {
+			$extras .= ' maxlength="'.$data['maxlength'].'"';
+		}
+
+		// add support to save reloaded forms
+		if (isset($data['value'])) {
+			$value = $data['value'];
+		} elseif (isset($_SESSION['requestData'][$fieldname])) {
+			$value = $_SESSION['requestData'][$fieldname];
+		} else {
+			$value = '';
+		}
+
+		if(isset($data['display']) && $data['display'] != '')
+		{
+			$ulfield = '<strong>'.$data['display'].'</strong>';
+		}
+
+		eval("\$return = \"" . getTemplate("misc/form/input_file", "1") . "\";");
+		return $return;
 	}
 
 }

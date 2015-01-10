@@ -333,7 +333,7 @@ $lng['serversettings']['accountprefix']['description'] = 'Which prefix should cu
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL Prefix';
 $lng['serversettings']['mysqlprefix']['description'] = 'Which prefix should MySQL accounts have?</br>Use "RANDOM" as value to get a 3-digit random prefix';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP Prefix';
-$lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?';
+$lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?<br/><b>If you change this you also have to change the Quota SQL Query in your FTP Server config file in case you use it!</b> ';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Home directory';
 $lng['serversettings']['documentroot_prefix']['description'] = 'Where should all home directories be stored?';
 $lng['serversettings']['logfiles_directory']['title'] = 'Logfiles directory';
@@ -397,7 +397,7 @@ $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Port\'';
 $lng['error']['myipdefault'] = 'You need to select an IP/Port combination that should become default.';
 $lng['error']['myipnotdouble'] = 'This IP/Port combination already exists.';
-$lng['error']['admin_domain_emailsystemhostname'] = 'Sorry. You can not use the Server Hostname as email domain';
+$lng['error']['admin_domain_emailsystemhostname'] = 'The server-hostname cannot be used as email-domain.';
 $lng['question']['admin_ip_reallydelete'] = 'Do you really want to delete the IP address %s?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs and Ports';
 $lng['admin']['ipsandports']['add'] = 'Add IP/Port';
@@ -598,7 +598,6 @@ $lng['ticket']['ticket_editcateory'] = 'Edit category';
 $lng['ticket']['ticket_view'] = 'View ticketcourse';
 $lng['ticket']['ticketcount'] = 'Tickets';
 $lng['ticket']['ticket_answers'] = 'Replies';
-$lng['ticket']['lastchange'] = 'Last action';
 $lng['ticket']['subject'] = 'Subject';
 $lng['ticket']['status'] = 'Status';
 $lng['ticket']['lastreplier'] = 'Last replier';
@@ -690,7 +689,7 @@ $lng['serversettings']['ticket']['noreply_name'] = 'Ticket e-mail sendername';
 // ADDED IN 1.2.19-svn1
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'Configuration directory';
-$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/<br /><br /><div style="color:red;">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
+$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/<br /><br /><div class="red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Temp directory';
 
 // ADDED IN 1.2.19-svn3
@@ -809,7 +808,7 @@ $lng['admin']['allips'] = 'All IP\'s';
 $lng['panel']['nosslipsavailable'] = 'There are currently no ssl ip/port combinations for this server';
 $lng['ticket']['by'] = 'by';
 $lng['dkim']['use_dkim']['title'] = 'Activate DKIM support?';
-$lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em style="color:red;font-weight:bold;">Note: DKIM is only supported using dkim-filter, not opendkim (yet)</em>';
+$lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em class="red">Note: DKIM is only supported using dkim-filter, not opendkim (yet)</em>';
 $lng['error']['invalidmysqlhost'] = 'Invalid MySQL host address: %s';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'You cannot enable Webalizer and AWstats at the same time, please chose one of them';
 $lng['serversettings']['webalizer_enabled'] = 'Enable webalizer statistics';
@@ -852,8 +851,8 @@ $lng['login']['presend'] = 'Reset password';
 $lng['login']['email'] = 'E-mail address';
 $lng['login']['remind'] = 'Reset my password';
 $lng['login']['usernotfound'] = 'User not found!';
-$lng['pwdreminder']['subject'] = 'Froxlor - Password reset';
-$lng['pwdreminder']['body'] = 'Hello %s,\n\nhere is your link for setting a new password. This link is valid for the next 24 hours.\n\n%a\n\nThank you,\nyour administrator';
+$lng['mails']['password_reset']['subject'] = 'Password reset';
+$lng['mails']['password_reset']['mailbody'] = 'Hello {SALUTATION},\n\nhere is your link for setting a new password. This link is valid for the next 24 hours.\n\n{LINK}\n\nThank you,\nyour administrator';
 $lng['pwdreminder']['success'] = 'Password reset successfully requested. Please follow the instructions in the email you received.';
 
 // ADDED IN 1.2.19-svn18
@@ -955,7 +954,7 @@ $lng['admin']['phpconfig']['domain'] = 'Will be replaced with the domain.';
 $lng['admin']['phpconfig']['customer'] = 'Will be replaced with the loginname of the customer who owns this domain.';
 $lng['admin']['phpconfig']['admin'] = 'Will be replaced with the loginname of the admin who owns this domain.';
 $lng['login']['backtologin'] = 'Back to login';
-$lng['serversettings']['mod_fcgid']['starter']['title'] = 'Processes per Domain';
+$lng['serversettings']['mod_fcgid']['starter']['title'] = 'Processes per domain';
 $lng['serversettings']['mod_fcgid']['starter']['description'] = 'How many processes should be started/allowed per domain? The value 0 is recommended cause PHP will then manage the amount of processes itself very efficiently.';
 $lng['serversettings']['mod_fcgid']['wrapper']['title'] = 'Wrapper in Vhosts';
 $lng['serversettings']['mod_fcgid']['wrapper']['description'] = 'How should the wrapper be included in the Vhosts';
@@ -1005,10 +1004,6 @@ $lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maximum php requests for this
 $lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximum Requests per domain';
 $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'How many requests should be allowed per domain?';
 
-// fix bug #1124
-$lng['admin']['webserver'] = 'Webserver';
-$lng['error']['admin_domain_emailsystemhostname'] = 'The server-hostname cannot be used as email-domain.';
-
 // ADDED IN 1.4.2.1-1
 
 $lng['mysql']['mysql_server'] = 'MySQL-Server';
@@ -1040,7 +1035,6 @@ $lng['success']['settingssaved'] = 'The settings have been successfully saved.';
 $lng['admin']['spfsettings'] = 'Domain SPF settings';
 $lng['spf']['use_spf'] = 'Activate SPF for domains?';
 $lng['spf']['spf_entry'] = 'SPF entry for all domains';
-$lng['panel']['dirsmissing'] = 'The given directory could not be found.';
 $lng['panel']['toomanydirs'] = 'Too many subdirectories. Falling back to manual path-select.';
 $lng['panel']['abort'] = 'Abort';
 $lng['serversettings']['cron']['debug']['title'] = 'Cronscript debugging';
@@ -1140,8 +1134,8 @@ $lng['serversettings']['stdsubdomainhost']['description'] = 'What hostname shoul
 $lng['ftp']['account_edit'] = 'Edit ftp account';
 $lng['ftp']['editpassdescription'] = 'Set new password or leave blank for no change.';
 $lng['customer']['sendinfomail'] = 'Send data via email to me';
-$lng['customer']['mysql_add']['infomail_subject'] = '[Froxlor] New database created';
-$lng['customer']['mysql_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nyou have just added a new database. Here is the entered information:\n\nDatabasename: {DB_NAME}\nPassword: {DB_PASS}\nDescription: {DB_DESC}\nDB-Hostname: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nYours sincerely, your administrator";
+$lng['mails']['new_database_by_customer']['subject'] = '[Froxlor] New database created';
+$lng['mails']['new_database_by_customer']['mailbody'] = "Hello {CUST_NAME},\n\nyou have just added a new database. Here is the entered information:\n\nDatabasename: {DB_NAME}\nPassword: {DB_PASS}\nDescription: {DB_DESC}\nDB-Hostname: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nYours sincerely, your administrator";
 $lng['serversettings']['awstats_path'] = 'Path to AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'AWStats configuration path';
 $lng['error']['overviewsettingoptionisnotavalidfield'] = 'Woops, a field that should be displayed as an option in the settings-overview is not an excepted type. You can blame the developers for this. This should not happen!';
@@ -1157,12 +1151,12 @@ $lng['ticket']['orderdesc'] = 'Here you can define your own logical order for th
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Enable default errordocuments for all customers';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'File/URL for error 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div style="color:red;">Not supported in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="red">Not supported in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'File/URL for error 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div style="color:red;">Not supported in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="red">Not supported in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'File/URL for error 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'File/URL for error 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div style="color:red;">Not supported in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Not supported in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Default support-ticket priority';
@@ -1175,12 +1169,9 @@ $lng['admin']['ftpserver'] = 'FTP Server';
 $lng['admin']['ftpserversettings'] = 'FTP Server settings';
 $lng['serversettings']['ftpserver']['desc'] = 'If pureftpd is selected the .ftpquota files for user quotas are created and updated daily';
 
-// CHANGED IN FROXLOR 0.9.6-svn6
-$lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?<br/><b>If you change this you also have to change the Quota SQL Query in your FTP Server config file in case you use it!</b> ';
-
 // ADDED IN FROXLOR 0.9.7-svn1
-$lng['customer']['ftp_add']['infomail_subject'] = '[Froxlor] New ftp-user created';
-$lng['customer']['ftp_add']['infomail_body']['main'] = "Hello {CUST_NAME},\n\nyou have just added a new ftp-user. Here is the entered information:\n\nUsername: {USR_NAME}\nPassword: {USR_PASS}\nPath: {USR_PATH}\n\nYours sincerely, your administrator";
+$lng['mails']['new_ftpaccount_by_customer']['subject'] = 'New ftp-user created';
+$lng['mails']['new_ftpaccount_by_customer']['mailbody'] = "Hello {CUST_NAME},\n\nyou have just added a new ftp-user. Here is the entered information:\n\nUsername: {USR_NAME}\nPassword: {USR_PASS}\nPath: {USR_PATH}\n\nYours sincerely, your administrator";
 $lng['domains']['redirectifpathisurl'] = 'Redirect code (default: empty)';
 $lng['domains']['redirectifpathisurlinfo'] = 'You only need to select one of these if you entered an URL as path';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Allow customer redirects';
@@ -1336,8 +1327,8 @@ $lng['admin']['templates']['DISKAVAILABLE'] = 'Replaced with the diskusage in MB
 $lng['admin']['templates']['DISKUSED'] = 'Replaced with the diskusage in MB, which was exhausted by the customer.';
 $lng['serversettings']['dropdown'] = 'Dropdown';
 $lng['serversettings']['manual'] = 'Manual';
-$lng['mails']['webmaxpercent']['mailbody'] = 'Dear {NAME},\n\nyou used {DISKUSED} MB of your available {DISKAVAILABLE} MB of diskspace.\nThis is more than {MAX_PERCENT}%.\n\nYours sincerely, your administrator';
-$lng['mails']['webmaxpercent']['subject'] = 'Reaching your diskspace limit';
+$lng['mails']['diskmaxpercent']['mailbody'] = 'Dear {NAME},\n\nyou used {DISKUSED} MB of your available {DISKAVAILABLE} MB of diskspace.\nThis is more than {MAX_PERCENT}%.\n\nYours sincerely, your administrator';
+$lng['mails']['diskmaxpercent']['subject'] = 'Reaching your diskspace limit';
 $lng['mysql']['database_edit'] = 'Edit database';
 
 // ADDED IN FROXLOR 0.9.18
@@ -1377,7 +1368,6 @@ $lng['traffic']['months']['dec'] = 'Dec';
 $lng['traffic']['months']['total'] = 'Total';
 $lng['traffic']['details'] = 'Details';
 $lng['menue']['traffic']['table'] = 'Traffic';
-$lng['error']['admin_domain_emailsystemhostname'] = 'Sorry, the system - hostname may not be used as a customer domain';
 
 // ADDED IN FROXLOR 0.9.21
 $lng['gender']['title'] = 'Title';
@@ -1681,14 +1671,10 @@ $lng['serversettings']['catchall_enabled']['description']  = 'Do you want to pro
 
 // ADDED IN 0.9.28.svn6
 $lng['serversettings']['apache_24']['title'] = 'Use modifications for Apache 2.4';
-$lng['serversettings']['apache_24']['description'] = '<strong style="color:red;">ATTENTION:</strong> use only if you acutally have apache version 2.4 or higher installed<br />otherwise your webserver will not be able to start';
+$lng['serversettings']['apache_24']['description'] = '<strong class="red">ATTENTION:</strong> use only if you acutally have apache version 2.4 or higher installed<br />otherwise your webserver will not be able to start';
 $lng['admin']['tickets_see_all'] = 'Can see all ticket-categories?';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Path to fastcgi_params file';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Specify the path to nginx\'s fastcgi_params file including filename';
-$lng['serversettings']['enablewebfonts']['title'] = 'Enable usage of a google webfont for the panel';
-$lng['serversettings']['enablewebfonts']['description'] = 'If enabled, the defined webfont is being used for the font-display';
-$lng['serversettings']['definewebfont']['title'] = 'Define a <a href="http://www.google.com/webfonts" rel="external">google-webfont</a> for the panel';
-$lng['serversettings']['definewebfont']['description'] = 'If enabled, this wefont will be used for the font-display.<br />Note: replace spaces with the "+" sign, e.g. "Open+Sans"';
 
 // Added in Froxlor 0.9.28-rc2
 $lng['serversettings']['documentroot_use_default_value']['title'] = 'Use domain name as default value for DocumentRoot path';
@@ -1726,14 +1712,13 @@ $lng['error']['sslcertificateinvalidcertkeypair'] = 'The given private-key does 
 $lng['error']['sslcertificateinvalidca'] = 'The given CA certificate data does not seem to be a valid certificate';
 $lng['error']['sslcertificateinvalidchain'] = 'The given certificate chain data does not seem to be a valid certificate';
 $lng['serversettings']['customerssl_directory']['title'] = 'Webserver customer-ssl certificates-directory';
-$lng['serversettings']['customerssl_directory']['description'] = 'Where should customer-specified ssl-certificates be created?<br /><br /><div style="color:red;">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
-$lng['admin']['note'] = 'Please note';
+$lng['serversettings']['customerssl_directory']['description'] = 'Where should customer-specified ssl-certificates be created?<br /><br /><div class="red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
 $lng['admin']['phpfpm.ininote'] = 'Not all values you may want to define can be used in the php-fpm pool configuration';
 
 // Added in Froxlor 0.9.30
 $lng['crondesc']['cron_mailboxsize'] = 'Calculating of mailbox-sizes';
 $lng['domains']['ipandport_multi']['title'] = 'IP address(es)';
-$lng['domains']['ipandport_multi']['description'] = 'Specify one or more IP address for the domain.<br /><br /><div style="color:red;">NOTE: IP addresses cannot be changed when the domain is configured as <strong>alias-domain</strong> of another domain.</div>';
+$lng['domains']['ipandport_multi']['description'] = 'Specify one or more IP address for the domain.<br /><br /><div class="red">NOTE: IP addresses cannot be changed when the domain is configured as <strong>alias-domain</strong> of another domain.</div>';
 $lng['domains']['ipandport_ssl_multi']['title'] = 'SSL IP address(es)';
 $lng['domains']['ssl_redirect']['title'] = 'SSL redirect';
 $lng['domains']['ssl_redirect']['description'] = 'This option creates redirects for non-ssl vhosts so that all requests are redirected to the SSL-vhost.<br /><br />e.g. a request to <strong>http</strong>://domain.tld/ will redirect you to <strong>https</strong>://domain.tld/';
@@ -1749,7 +1734,6 @@ $lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'This is a lis
 
 // Added in Froxlor 0.9.31
 $lng['panel']['dashboard'] = 'Dashboard';
-$lng['panel']['used'] = 'used';
 $lng['panel']['assigned'] = 'assigned';
 $lng['panel']['available'] = 'available';
 $lng['customer']['services'] = 'Services';
@@ -1816,7 +1800,7 @@ $lng['serversettings']['system_croncmdline']['description'] = 'Command to execut
 $lng['error']['cannotdeletehostnamephpconfig'] = 'This PHP-configuration is used by the Froxlor-vhost and cannot be deleted.';
 $lng['error']['cannotdeletedefaultphpconfig'] = 'This PHP-configuration is set as default and cannot be deleted.';
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Allow automatic database updates';
-$lng['serversettings']['system_cron_allowautoupdate']['description'] = '<div style="color:red;"><b>ATTENTION:</b></div> This settings allows the cronjob to bypass the version-check of froxlors files and database and runs the database-updates in case a version-mismatch occurs.<br><br><div style="color:red;">Auto-update will always set default values for new settings or changes. This might not always suite your system. Please think twice before activating this option</div>';
+$lng['serversettings']['system_cron_allowautoupdate']['description'] = '<div class="red"><b>ATTENTION:</b></div> This settings allows the cronjob to bypass the version-check of froxlors files and database and runs the database-updates in case a version-mismatch occurs.<br><br><div class="red">Auto-update will always set default values for new settings or changes. This might not always suite your system. Please think twice before activating this option</div>';
 $lng['error']['passwordshouldnotbeusername'] = 'The password should not be the same as the username.';
 
 // Added in Froxlor 0.9.33
@@ -1835,3 +1819,17 @@ $lng['serversettings']['panel_password_special_char']['title'] = 'Special charac
 $lng['serversettings']['panel_password_special_char']['description'] = 'One of these characters is required if the above option is set.';
 $lng['phpfpm']['use_mod_proxy']['title'] = 'Use mod_proxy / mod_proxy_fcgi';
 $lng['phpfpm']['use_mod_proxy']['description'] = 'Activate to use php-fpm via mod_proxy_fcgi. Requires at least apache-2.4.9';
+$lng['error']['no_phpinfo'] = 'Sorry, unable to read phpinfo()';
+
+$lng['admin']['movetoadmin'] = 'Move customer';
+$lng['admin']['movecustomertoadmin'] = 'Move customer to the selected admin/reseller<br /><small>Leave this empty for no change.<br />If the desired admin does not show up in the list, his customer-limit has been reached.</small>';
+$lng['error']['moveofcustomerfailed'] = 'Moving the customer to the selected admin/reseller failed. Keep in mind that all other changes to the customer were applied successfully at this stage.<br><br>Error-message: %s';
+
+$lng['domains']['domain_import'] = 'Import Domains';
+$lng['domains']['import_separator'] = 'Separator';
+$lng['domains']['import_offset'] = 'Offset';
+$lng['domains']['import_file'] = 'CSV-File';
+$lng['success']['domain_import_successfully'] = 'Successfully imported %s domains.';
+$lng['error']['domain_import_error'] = 'Following error occurred while importing domains: %s';
+$lng['admin']['note'] = 'Note';
+$lng['domains']['import_description'] = 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc" target="_blank">http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc</a>';

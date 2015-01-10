@@ -1,5 +1,4 @@
 @charset "UTF-8";
-
 /* RESET */
 html,body,div,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,p,blockquote,fieldset,input { margin:0; padding:0; }
 h1,h2,h3,h4,h5,h6,pre,code,address,caption,cite,code,em,strong,th { font-size:1em; font-weight:400; font-style:normal; }
@@ -11,10 +10,10 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { 
 
 /* TYPE */
 html,body {
-	font:12px/18px Helvetica,Arial,Verdana,sans-serif;
-	background-color:#f2f2f2;
-	color:#333;
-	-webkit-font-smoothing: antialiased;
+	font:12px/18px 'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,Verdana,sans-serif;
+	background-color: #f5f5f5;
+	color:#444;
+	-webkit-font-smoothing: subpixel-antialiased;
 }
 
 body {
@@ -557,3 +556,12 @@ select.dropdown {
 	background-color: #35aa47;
 	height:5px;
 }
+
+.red { color: #ff0000; }
+.green { color: green; }
+.orange { color: orange; }
+.blue { color: blue; }
+.install-block { width: 65%; }
+.install-step { width: 250px; }
+.install-h3 { text-align: center; }
+.install-text { margin: 20px 20px 0 !important; }

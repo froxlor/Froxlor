@@ -29,7 +29,7 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function makeoption($title, $value, $selvalue = NULL, $title_trusted = false, $value_trusted = false)
+function makeoption($title, $value, $selvalue = NULL, $title_trusted = false, $value_trusted = false, $id = NULL)
 {
 	if($selvalue !== NULL
 	   && ((is_array($selvalue) && in_array($value, $selvalue)) || $value == $selvalue))
@@ -51,6 +51,11 @@ function makeoption($title, $value, $selvalue = NULL, $title_trusted = false, $v
 		$value = htmlspecialchars($value);
 	}
 
-	$option = '<option value="' . $value . '" ' . $selected . ' >' . $title . '</option>';
+	$id_str = ' ';
+	if($id !== NULL) {
+		$id_str = 'id="' . $id . '"';
+	}
+
+	$option = '<option value="' . $value . '" ' . $id_str . $selected . ' >' . $title . '</option>';
 	return $option;
 }

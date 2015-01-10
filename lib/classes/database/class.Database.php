@@ -260,10 +260,15 @@ class Database {
 		$attributes = array('ATTR_ERRMODE' => 'ERRMODE_EXCEPTION');
 
 		$dbconf["dsn"] = array(
-				'host' => $host,
 				'dbname' => $sql["db"],
 				'charset' => 'utf8'
 		);
+
+		if (!validateLocalHostname($host) && !validate_ip2($host, true, 'invalidip', true)) {
+			$dbconf["dsn"]['unix_socket'] = makeCorrectFile($host);
+		} else {
+			$dbconf["dsn"]['host'] = $host;
+		}
 
 		self::$_dbname = $sql["db"];
 
@@ -332,6 +337,9 @@ class Database {
 			// include userdata.inc.php
 			require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
 
+			// fallback
+			$theme = 'Sparkle';
+
 			// le format
 			if (isset($sql['root_user'])
 				&& isset($sql['root_password'])
@@ -364,6 +372,7 @@ class Database {
 					// replace values
 					$err_hint = str_replace("<TEXT>", $error_message, $err_hint);
 					$err_hint = str_replace("<DEBUG>", $error_trace, $err_hint);
+					$err_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $err_hint);
 
 					$err_report_html = '';
 					if (is_array($userinfo) && (

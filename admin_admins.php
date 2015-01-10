@@ -68,7 +68,7 @@ if ($page == 'admins'
 				// percent-values for progressbar
 				// For Disk usage
 				if ($row['diskspace'] > 0) {
-					$disk_percent = round(($row['diskspace_used']*100)/$row['diskspace'], 2);
+					$disk_percent = round(($row['diskspace_used']*100)/$row['diskspace'], 0);
 					$disk_doublepercent = round($disk_percent*2, 2);
 				} else {
 					$disk_percent = 0;
@@ -76,11 +76,19 @@ if ($page == 'admins'
 				}
 				// For Traffic usage
 				if ($row['traffic'] > 0) {
-					$traffic_percent = round(($row['traffic_used']*100)/$row['traffic'], 2);
+					$traffic_percent = round(($row['traffic_used']*100)/$row['traffic'], 0);
 					$traffic_doublepercent = round($traffic_percent*2, 2);
 				} else {
 					$traffic_percent = 0;
 					$traffic_doublepercent = 0;
+				}
+
+				// fix progress-bars if value is >100%
+				if ($disk_percent > 100) {
+					$disk_percent = 100;
+				}
+				if ($traffic_percent > 100) {
+					$traffic_percent = 100;
 				}
 
 				$row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains tickets');

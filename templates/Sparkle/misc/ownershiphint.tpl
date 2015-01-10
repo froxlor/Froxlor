@@ -6,25 +6,18 @@
 	<link rel="stylesheet" href="templates/Sparkle/assets/css/main.css" />
 	<!--[if IE]><link rel="stylesheet" href="templates/Sparkle/assets/css/main_ie.css" /><![endif]-->
 	<!--[if lt IE 9]><script src="js/html5shiv.min.js"></script><![endif]-->
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="templates/Sparkle/assets/js/main.js"></script>
 	<link href="templates/Sparkle/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<title>Froxlor Server Management Panel - Installation</title>
-	<style type="text/css">
-	body {
-        font-family: Verdana, Geneva, sans-serif;
-	}
-	</style>
 </head>
 <body>
 <div class="loginpage">
 	
-	<article class="login bradius">
+	<article class="errorbox bradius">
 		<header class="dark">
 			<img src="templates/Sparkle/assets/img/logo.png" alt="Froxlor Server Management Panel" />
 		</header>
 
-		<section class="loginsec">
+		<section class="errorsec">
 			<div class="errorcontainer bradius">
 				<div class="errortitle">Whoops!</div>
 				<div class="error">
@@ -45,7 +38,7 @@
 </div>
 <footer>
 	<span>
-		Froxlor &copy; 2009-2013 by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a>
+		Froxlor &copy; 2009-<CURRENT_YEAR> by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a>
 	</span>
 </footer>
 </body>

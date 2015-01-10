@@ -440,7 +440,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 		$description = 'This version introduces a lot of profound changes:';
 		$description .= '<br /><ul><li>Improving the whole template system</li><li>Full UTF-8 support</li><li><strong>Removing support for the former default theme \'Classic\'</strong></li></ul>';
 		$description .= '<br /><br />Notice: This update will <strong>alter your Froxlor database to use UTF-8</strong> as default charset. ';
-		$description .= 'Even though this is already tested, we <span style="color:#ff0000;font-weight:bold;">strongly recommend</span> to ';
+		$description .= 'Even though this is already tested, we <span class="red">strongly recommend</span> to ';
 		$description .= 'test this update in a testing environment using your existing data.<br /><br />';
 
 		$question = '<strong>Select your preferred Classic Theme replacement:</strong>&nbsp;';
@@ -560,7 +560,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 		) {
 			$has_preconfig = true;
 			$description  = 'The PHP-FPM implementation for apache2 has changed. Please look for the "<b>fastcgi.conf</b>" (Debian/Ubuntu) or "<b>70_fastcgi.conf</b>" (Gentoo) within /etc/apache2/ and change it as shown below:<br /><br />';
-			$description .= '<pre style="width:500px;border:1px solid #ccc;padding:4px;">&lt;IfModule mod_fastcgi.c&gt;
+			$description .= '<pre class="code-block">&lt;IfModule mod_fastcgi.c&gt;
     FastCgiIpcDir /var/lib/apache2/fastcgi/
     &lt;Location "/fastcgiphp"&gt;
         Order Deny,Allow

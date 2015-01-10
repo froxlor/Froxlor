@@ -41,7 +41,7 @@ return array(
 						'value' => htmlentities($row['name']),
 					),
 					'message' => array(
-						'style' => 'vertical-align:top;',
+						'style' => 'align-top',
 						'label' => $lng['ticket']['message'],
 						'type' => 'textarea',
 						'cols' => 60,

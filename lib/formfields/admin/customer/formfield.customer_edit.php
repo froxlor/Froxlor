@@ -252,6 +252,18 @@ return array(
 						'value' => array($result['perlenabled'])
 					)
 				)
+			),
+			'section_d' => array(
+				'title' => $lng['admin']['movetoadmin'],
+				'image' => 'icons/user_edit.png',
+				'visible' => ($admin_select_cnt > 1),
+				'fields' => array(
+					'move_to_admin' => array(
+						'label' => $lng['admin']['movecustomertoadmin'],
+						'type' => 'select',
+						'select_var' => $admin_select
+					)
+				)
 			)
 		)
 	)

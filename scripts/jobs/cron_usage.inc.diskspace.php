@@ -81,11 +81,11 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			'varname' => 'diskmaxpercent_subject'
 		);
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
+		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
 
 		$result2_data['varname'] = 'diskmaxpercent_mailbody';
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
+		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
 
 		$_mailerror = false;
 		try {
@@ -171,11 +171,11 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			'varname' => 'diskmaxpercent_subject'
 		);
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['subject']), $replace_arr));
+		$mail_subject = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
 
 		$result2_data['varname'] = 'diskmaxpercent_mailbody';
 		$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['webmaxpercent']['mailbody']), $replace_arr));
+		$mail_body = html_entity_decode(replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
 
 		$_mailerror = false;
 		try {

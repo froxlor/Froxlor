@@ -3,4 +3,4 @@ $header
 		<header>
 			<h2>{$lng['update']['update']}</h2>
 		</header>
-		<section "update_progess">
+		<section class="update_progess">

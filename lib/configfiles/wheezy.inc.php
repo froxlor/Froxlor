@@ -432,16 +432,16 @@ return array(
 					'php-fpm' => array(
 						'label' => 'PHP-FPM',
 						'commands' => array(
-							'# add "non-free" after all occurances of "main" in /etc/apt/sources.list',
-							'# this is needed for libapache2-mod-fastcgi to install',
-							'apt-get install apache2-suexec libapache2-mod-fastcgi php5-fpm',
+							(Settings::Get('system.webserver') == 'apache2') ? '# add "non-free" after all occurances of "main" in /etc/apt/sources.list' : null,
+							(Settings::Get('system.webserver') == 'apache2') ? '# this is needed for libapache2-mod-fastcgi to install' : null,
+							'apt-get install '.((Settings::Get('system.webserver') == 'apache2') ? 'apache2-suexec libapache2-mod-fastcgi ' : '') . 'php5-fpm',
 							'rm /etc/php5/fpm/pool.d/www.conf',
-							'a2enmod suexec fastcgi actions',
+							(Settings::Get('system.webserver') == 'apache2') ? 'a2enmod suexec fastcgi actions' : null,
 							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'groupadd -f '.Settings::Get('phpfpm.vhost_httpgroup') : null,
 							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'useradd -s /bin/false -g '.Settings::Get('phpfpm.vhost_httpgroup').' '.Settings::Get('phpfpm.vhost_httpuser') : null,
 							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'usermod -aG '.Settings::Get('phpfpm.vhost_httpgroup').' '.Settings::Get('system.httpuser') : null,
 							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'chown -R '.Settings::Get('phpfpm.vhost_httpuser').':'.Settings::Get('phpfpm.vhost_httpgroup').' '.FROXLOR_INSTALL_DIR : null,
-							(Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'a2dismod php5' : null
+							(Settings::Get('system.webserver') == 'apache2' && Settings::Get('phpfpm.enabled_ownvhost') == '1') ? 'a2dismod php5' : null
 						),
 						'restart' => array(
 							Settings::Get('system.apachereload_command')

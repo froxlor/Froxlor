@@ -26,7 +26,7 @@
  * @author Froxlor team <team@froxlor.org> (2010-)
  */
 function updateCounters($returndebuginfo = false) {
-	global $theme;
+
 	$returnval = array();
 
 	if($returndebuginfo === true) {
@@ -36,94 +36,25 @@ function updateCounters($returndebuginfo = false) {
 		);
 	}
 
-	$admin_resources = array();
-
 	// Customers
-
 	$customers_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` ORDER BY `customerid`');
-	Database::pexecute($customers_stmt, array());
+	Database::pexecute($customers_stmt);
 
-	while($customer = $customers_stmt->fetch(PDO::FETCH_ASSOC)) {
-		if(!isset($admin_resources[$customer['adminid']])) {
-			$admin_resources[$customer['adminid']] = Array();
+	$admin_resources = array();
+	while ($customer = $customers_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+		$cur_adm = $customer['adminid'];
+
+		// initialize admin-resources array for admin $customer['adminid']
+		if (!isset($admin_resources[$cur_adm])) {
+			$admin_resources[$cur_adm] = array();
 		}
 
-		if(!isset($admin_resources[$customer['adminid']]['diskspace_used'])) {
-			$admin_resources[$customer['adminid']]['diskspace_used'] = 0;
-		}
+		_addResourceCountEx($admin_resources[$cur_adm], $customer, 'diskspace_used', 'diskspace');
+		_addResourceCountEx($admin_resources[$cur_adm], $customer, 'traffic_used', 'traffic_used'); // !!! yes, USED and USED
 
-		if(($customer['diskspace'] / 1024) != '-1') {
-			$admin_resources[$customer['adminid']]['diskspace_used']+= intval_ressource($customer['diskspace']);
-		}
-
-		if(!isset($admin_resources[$customer['adminid']]['traffic_used'])) {
-			$admin_resources[$customer['adminid']]['traffic_used'] = 0;
-		}
-
-		$admin_resources[$customer['adminid']]['traffic_used']+= $customer['traffic_used'];
-
-		if(!isset($admin_resources[$customer['adminid']]['mysqls_used'])) {
-			$admin_resources[$customer['adminid']]['mysqls_used'] = 0;
-		}
-
-		if($customer['mysqls'] != '-1') {
-			$admin_resources[$customer['adminid']]['mysqls_used']+= intval_ressource($customer['mysqls']);
-		}
-
-		if(!isset($admin_resources[$customer['adminid']]['ftps_used'])) {
-			$admin_resources[$customer['adminid']]['ftps_used'] = 0;
-		}
-
-		if($customer['ftps'] != '-1') {
-			$admin_resources[$customer['adminid']]['ftps_used']+= intval_ressource($customer['ftps']);
-		}
-
-		if(!isset($admin_resources[$customer['adminid']]['tickets_used'])) {
-			$admin_resources[$customer['adminid']]['tickets_used'] = 0;
-		}
-
-		if($customer['tickets'] != '-1') {
-			$admin_resources[$customer['adminid']]['tickets_used']+= intval_ressource($customer['tickets']);
-		}
-
-		if(!isset($admin_resources[$customer['adminid']]['emails_used'])) {
-			$admin_resources[$customer['adminid']]['emails_used'] = 0;
-		}
-
-		if($customer['emails'] != '-1') {
-			$admin_resources[$customer['adminid']]['emails_used']+= intval_ressource($customer['emails']);
-		}
-
-		if(!isset($admin_resources[$customer['adminid']]['email_accounts_used'])) {
-			$admin_resources[$customer['adminid']]['email_accounts_used'] = 0;
-		}
-
-		if($customer['email_accounts'] != '-1') {
-			$admin_resources[$customer['adminid']]['email_accounts_used']+= intval_ressource($customer['email_accounts']);
-		}
-
-		if(!isset($admin_resources[$customer['adminid']]['email_forwarders_used'])) {
-			$admin_resources[$customer['adminid']]['email_forwarders_used'] = 0;
-		}
-
-		if($customer['email_forwarders'] != '-1') {
-			$admin_resources[$customer['adminid']]['email_forwarders_used']+= intval_ressource($customer['email_forwarders']);
-		}
-
-		if(!isset($admin_resources[$customer['adminid']]['email_quota_used'])) {
-			$admin_resources[$customer['adminid']]['email_quota_used'] = 0;
-		}
-
-		if($customer['email_quota'] != '-1') {
-			$admin_resources[$customer['adminid']]['email_quota_used']+= intval_ressource($customer['email_quota']);
-		}
-
-		if(!isset($admin_resources[$customer['adminid']]['subdomains_used'])) {
-			$admin_resources[$customer['adminid']]['subdomains_used'] = 0;
-		}
-
-		if($customer['subdomains'] != '-1') {
-			$admin_resources[$customer['adminid']]['subdomains_used']+= intval_ressource($customer['subdomains']);
+		foreach (array('mysqls', 'ftps', 'emails', 'email_accounts', 'tickets', 'email_forwarders', 'email_quota', 'subdomains') as $field) {
+			_addResourceCount($admin_resources[$cur_adm], $customer, $field.'_used', $field);
 		}
 
 		$customer_mysqls_stmt = Database::prepare('SELECT COUNT(*) AS `number_mysqls` FROM `' . TABLE_PANEL_DATABASES . '`
@@ -206,7 +137,6 @@ function updateCounters($returndebuginfo = false) {
 	}
 
 	// Admins
-
 	$admins_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_ADMINS . '` ORDER BY `adminid`');
 	Database::pexecute($admins_stmt, array());
 
@@ -219,69 +149,16 @@ function updateCounters($returndebuginfo = false) {
 		$admin_domains = Database::pexecute_first($admin_domains_stmt, array("aid" => $admin['adminid']));
 		$admin['domains_used_new'] = $admin_domains['number_domains'];
 
-		if(!isset($admin_resources[$admin['adminid']])) {
-			$admin_resources[$admin['adminid']] = Array();
+		$cur_adm = $admin['adminid'];
+
+		if (!isset($admin_resources[$cur_adm])) {
+			$admin_resources[$cur_adm] = array();
 		}
 
-		if(!isset($admin_resources[$admin['adminid']]['diskspace_used'])) {
-			$admin_resources[$admin['adminid']]['diskspace_used'] = 0;
+		foreach (array('diskspace_used', 'traffic_used', 'mysqls_used', 'ftps_used', 'emails_used', 'email_accounts_used', 'tickets_used', 'email_forwarders_used', 'email_quota_used', 'subdomains_used') as $field) {
+			_initArrField($field, $admin_resources[$cur_adm], 0);
+			$admin[$field.'_new'] = $admin_resources[$cur_adm][$field];
 		}
-
-		$admin['diskspace_used_new'] = $admin_resources[$admin['adminid']]['diskspace_used'];
-
-		if(!isset($admin_resources[$admin['adminid']]['traffic_used'])) {
-			$admin_resources[$admin['adminid']]['traffic_used'] = 0;
-		}
-
-		$admin['traffic_used_new'] = $admin_resources[$admin['adminid']]['traffic_used'];
-
-		if(!isset($admin_resources[$admin['adminid']]['mysqls_used'])) {
-			$admin_resources[$admin['adminid']]['mysqls_used'] = 0;
-		}
-
-		$admin['mysqls_used_new'] = $admin_resources[$admin['adminid']]['mysqls_used'];
-
-		if(!isset($admin_resources[$admin['adminid']]['ftps_used'])) {
-			$admin_resources[$admin['adminid']]['ftps_used'] = 0;
-		}
-
-		$admin['ftps_used_new'] = $admin_resources[$admin['adminid']]['ftps_used'];
-
-		if(!isset($admin_resources[$admin['adminid']]['emails_used'])) {
-			$admin_resources[$admin['adminid']]['emails_used'] = 0;
-		}
-
-		$admin['emails_used_new'] = $admin_resources[$admin['adminid']]['emails_used'];
-
-		if(!isset($admin_resources[$admin['adminid']]['email_accounts_used'])) {
-			$admin_resources[$admin['adminid']]['email_accounts_used'] = 0;
-		}
-
-		$admin['email_accounts_used_new'] = $admin_resources[$admin['adminid']]['email_accounts_used'];
-
-		if(!isset($admin_resources[$admin['adminid']]['tickets_used'])) {
-			$admin_resources[$admin['adminid']]['tickets_used'] = 0;
-		}
-
-		$admin['tickets_used_new'] = $admin_resources[$admin['adminid']]['tickets_used'];
-
-		if(!isset($admin_resources[$admin['adminid']]['email_forwarders_used'])) {
-			$admin_resources[$admin['adminid']]['email_forwarders_used'] = 0;
-		}
-
-		$admin['email_forwarders_used_new'] = $admin_resources[$admin['adminid']]['email_forwarders_used'];
-
-		if(!isset($admin_resources[$admin['adminid']]['email_quota_used'])) {
-			$admin_resources[$admin['adminid']]['email_quota_used'] = 0;
-		}
-
-		$admin['email_quota_used_new'] = $admin_resources[$admin['adminid']]['email_quota_used'];
-
-		if(!isset($admin_resources[$admin['adminid']]['subdomains_used'])) {
-			$admin_resources[$admin['adminid']]['subdomains_used'] = 0;
-		}
-
-		$admin['subdomains_used_new'] = $admin_resources[$admin['adminid']]['subdomains_used'];
 
 		$stmt = Database::prepare('UPDATE `' . TABLE_PANEL_ADMINS . '` 
 			SET `customers_used` = :customers_used,
@@ -298,6 +175,7 @@ function updateCounters($returndebuginfo = false) {
 				`traffic_used` = :traffic_used
 			WHERE `adminid` = :aid'
 		);
+
 		$params = array(
 			"customers_used" => $admin['customers_used_new'],
 			"domains_used" => $admin['domains_used_new'],
@@ -321,4 +199,60 @@ function updateCounters($returndebuginfo = false) {
 	}
 
 	return $returnval;
+}
+
+/**
+ * initialize a field-value of an array if not yet initialized
+ *
+ * @param string $field
+ * @param array $arr reference
+ * @param int $init_value
+ *
+ * @return void
+ */
+function _initArrField($field = null, &$arr, $init_value = 0) {
+	if (!isset($arr[$field])) {
+		$arr[$field] = $init_value;
+	}
+}
+
+/**
+ * if the customer does not have unlimited resources, add the used resources
+ * to the admin-resource-counter
+ *
+ * @param array $arr reference
+ * @param array $customer_arr
+ * @param string $used_field
+ * @param string $field
+ *
+ * @return void
+ */
+function _addResourceCount(&$arr, $customer_arr, $used_field = null, $field = null) {
+	_initArrField($used_field, $arr, 0);
+	if ($customer_arr[$field] != '-1') {
+		$arr[$used_field] += intval($customer_arr[$used_field]);
+	}
+}
+
+/**
+ * if the customer does not have unlimited resources, add the used resources
+ * to the admin-resource-counter
+ * Special function wrapper for diskspace and traffic as they need to
+ * be calculated otherwise to get the -1 for unlimited
+ *
+ * @param array $arr reference
+ * @param array $customer_arr
+ * @param string $used_field
+ * @param string $field
+ *
+ * @return void
+ */
+function _addResourceCountEx(&$arr, $customer_arr, $used_field = null, $field = null) {
+	_initArrField($used_field, $arr, 0);
+	if ($field == 'diskspace' && ($customer_arr[$field] / 1024) != '-1') {
+		$arr[$used_field] += intval($customer_arr[$used_field]);
+	}
+	elseif ($field == 'traffic_used') {
+		$arr[$used_field] += intval($customer_arr[$used_field]);
+	}
 }

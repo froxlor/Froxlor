@@ -419,7 +419,7 @@ class nginx {
 				) {
 					$vhost_content.= $this->composeSslSettings($domain);
 				}
-				$vhost_content.= $this->create_pathOptions($domain);
+				$vhost_content = $this->mergeVhostCustom($vhost_content, $this->create_pathOptions($domain)) . "\n";
 				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
 
 				$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
@@ -429,11 +429,11 @@ class nginx {
 				}
 
 				if ($_vhost_content != '') {
-					$vhost_content .= $_vhost_content;
+					$vhost_content = $this->mergeVhostCustom($vhost_content, $_vhost_content);
 				}
 
 				if (Settings::Get('system.default_vhostconf') != '') {
-					$vhost_content .= Settings::Get('system.default_vhostconf') . "\n";
+					$vhost_content = $this->mergeVhostCustom($vhost_content, Settings::Get('system.default_vhostconf')."\n");
 				}
 			}
 		}
@@ -445,6 +445,7 @@ class nginx {
 	protected function mergeVhostCustom($vhost_frx, $vhost_usr) {
 		// Clean froxlor defined settings
 		$vhost_frx = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_frx)))); // Break into array items
+		$vhost_frx = array_map("trim", $vhost_frx); // remove unnecessary whitespaces
 
 		// Clean user defined settings
 		$vhost_usr = str_replace("\r", "\n", $vhost_usr); // Remove windows linebreaks
@@ -476,7 +477,7 @@ class nginx {
 					} while ($vhost_frx[$pos] != "}");
 
 					for ($i = 1; $i < count($currentBlock) - 1; $i++) {
-						array_splice($vhost_frx, $pos + $i - 2, 0, $currentBlock[$i]);
+						array_splice($vhost_frx, $pos + $i - 1, 0, $currentBlock[$i]);
 					}
 				} else {
 					// Add to end
@@ -618,7 +619,7 @@ class nginx {
 							break;
 						default:
 							if ($single['path'] == '/') {
-								$path_options .= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+								$path_options .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 								$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 								// remove already used entries so we do not have doubles
 								unset($htpasswds[$idx]);
@@ -678,7 +679,7 @@ class nginx {
 					break;
 				default:
 					$path_options .= "\t" . 'location ' . makeCorrectDir($single['path']) . ' {' . "\n";
-					$path_options .= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+					$path_options .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 					$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 					$path_options .= "\t".'}' . "\n";
 				}
@@ -727,6 +728,7 @@ class nginx {
 
 				$returnval[$x]['path'] = $path;
 				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
+				$returnval[$x]['authname'] = $row_htpasswds['authname'];
 				$returnval[$x]['usrf'] = $htpasswd_filename;
 				$x++;
 			}
@@ -818,7 +820,7 @@ class nginx {
 		}
 
 		$stats_text .= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";
-		$stats_text .= "\t\t" . 'auth_basic            "Restricted Area";' . "\n";
+		$stats_text .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 		$stats_text .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
 		$stats_text .= "\t" . '}' . "\n\n";
 
@@ -949,7 +951,8 @@ class nginx {
 		fwrite($this->debugHandler, '  nginx::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
-		if (!isConfigDir(Settings::Get('system.apacheconf_vhost'))) {
+		$vhostDir = new frxDirectory(Settings::Get('system.apacheconf_vhost'));
+		if (!$vhostDir->isConfigDir()) {
 			// Save one big file
 			$vhosts_file = '';
 
@@ -1010,6 +1013,8 @@ class nginx {
 				foreach ($this->htpasswds_data as $htpasswd_filename => $htpasswd_file) {
 					$this->known_htpasswdsfilenames[] = basename($htpasswd_filename);
 					$htpasswd_file_handler = fopen($htpasswd_filename, 'w');
+					// Filter duplicate pairs of username and password
+					$htpasswd_file = implode("\n", array_unique(explode("\n", $htpasswd_file)));
 					fwrite($htpasswd_file_handler, $htpasswd_file);
 					fclose($htpasswd_file_handler);
 				}

@@ -45,7 +45,7 @@ return array(
 						'select_var' => $categories
 					),
 					'message' => array(
-						'style' => 'vertical-align:top;',
+						'style' => 'align-top',
 						'label' => $lng['ticket']['message'],
 						'type' => 'textarea',
 						'cols' => 60,

@@ -29,7 +29,7 @@ header('Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
 // Inline-JS is no longer allowed and used
 // See: http://people.mozilla.org/~bsterne/content-security-policy/index.html
 // New stuff see: https://www.owasp.org/index.php/List_of_useful_HTTP_headers and https://www.owasp.org/index.php/Content_Security_Policy
-$csp_content = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; reflected-xss block;";
+$csp_content = "default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self'; reflected-xss block;";
 header("Content-Security-Policy: ".$csp_content);
 header("X-Content-Security-Policy: ".$csp_content);
 header("X-WebKit-CSP: ".$csp_content);
@@ -41,7 +41,7 @@ header("X-Frame-Options: DENY");
 
 // If Froxlor was called via HTTPS -> enforce it for the next time
 if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
-	header("Strict-Transport-Security: max-age=500");
+	header("Strict-Transport-Security: max-age=15768000");
 }
 
 // Internet Explorer shall not guess the Content-Type, see:
@@ -78,6 +78,7 @@ define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
 // check whether the userdata file exists
 if (!file_exists(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
 	$config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
+	$config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
 	die($config_hint);
 }
 
@@ -92,6 +93,7 @@ if (!is_readable(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
 	$owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
 	$owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
 	$owner_hint = str_replace("<FROXLOR_INSTALL_DIR>", FROXLOR_INSTALL_DIR, $owner_hint);
+	$owner_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $owner_hint);
 	// show
 	die($owner_hint);
 }
@@ -105,6 +107,7 @@ if (!isset($sql)
    || !is_array($sql)
 ) {
 	$config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
+	$config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
 	die($config_hint);
 }
 
@@ -403,6 +406,7 @@ if (isset($userinfo['loginname'])
 /**
  * Fills variables for navigation, header and footer
  */
+$navigation = "";
 if (AREA == 'admin' || AREA == 'customer') {
 	if (hasUpdates($version)) {
 		/*
@@ -483,7 +487,6 @@ if (Settings::Get('ticket.enabled') == '1') {
 	}
 }
 
-$webfont = str_replace('+', ' ', Settings::Get('panel.webfont'));
 $js = "";
 if (array_key_exists('js', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['js'])) {
 	foreach ($_themeoptions['variants'][$themevariant]['js'] as $jsfile) {

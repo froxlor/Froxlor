@@ -28,7 +28,7 @@
 function getPreConfig($current_version)
 {
 	$has_preconfig = false;
-	$return = '<div class="preconfig"><h3 style="color:#ff0000;">PLEASE NOTE - Important update notifications</h3>';
+	$return = '<div class="preconfig"><h3 class="red">PLEASE NOTE - Important update notifications</h3>';
 
 	include_once makeCorrectFile(dirname(__FILE__).'/preconfig/0.9/preconfig_0.9.inc.php');
 	parseAndOutputPreconfig($has_preconfig, $return, $current_version);

@@ -826,7 +826,8 @@ class lighttpd {
 		fwrite($this->debugHandler, '  lighttpd::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
-		if (!isConfigDir(Settings::Get('system.apacheconf_vhost'))) {
+		$vhostDir = new frxDirectory(Settings::Get('system.apacheconf_vhost'));
+		if (!$vhostDir->isConfigDir()) {
 			// Save one big file
 			$vhosts_file = '';
 
@@ -871,7 +872,8 @@ class lighttpd {
 		}
 
 		// Write the diroptions
-		if (isConfigDir(Settings::Get('system.apacheconf_htpasswddir'))) {
+		$htpasswdDir = new frxDirectory(Settings::Get('system.apacheconf_htpasswddir'));
+		if ($htpasswdDir->isConfigDir()) {
 			foreach ($this->needed_htpasswds as $key => $data) {
 				if (!is_dir(Settings::Get('system.apacheconf_htpasswddir'))) {
 					mkdir(makeCorrectDir(Settings::Get('system.apacheconf_htpasswddir')));

@@ -86,6 +86,22 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 		} else {
 			echo "Please check you Webserver settings\n";
 		}
+
+		// if we use php-fpm and have a local user for froxlor, we need to
+		// add the webserver-user to the local-group in order to allow the webserver
+		// to access the fpm-socket
+		if (Settings::Get('phpfpm.enabled') == 1 && function_exists("posix_getgrnam")) {
+			// get group info about the local-user's group (e.g. froxlorlocal)
+			$groupinfo = posix_getgrnam(Settings::Get('phpfpm.vhost_httpgroup'));
+			// check group members
+			if (isset($groupinfo['members'])
+				&& !in_array(Settings::Get('system.httpuser'), $groupinfo['members'])
+			) {
+				// webserver has no access, add it
+				safe_exec('usermod -a -G ' . escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup'))." ".escapeshellarg(Settings::Get('system.httpuser')));
+			}
+		}
+
 	}
 
 	/**

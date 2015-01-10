@@ -95,7 +95,7 @@ if ($page == 'customers'
 				 */
 				//For Disk usage
 				if ($row['diskspace'] > 0) {
-					$disk_percent = round(($row['diskspace_used']*100)/$row['diskspace'], 2);
+					$disk_percent = round(($row['diskspace_used']*100)/$row['diskspace'], 0);
 					$disk_doublepercent = round($disk_percent*2, 2);
 				} else {
 					$disk_percent = 0;
@@ -103,7 +103,7 @@ if ($page == 'customers'
 				}
 
 				if ($row['traffic'] > 0) {
-					$traffic_percent = round(($row['traffic_used']*100)/$row['traffic'], 2);
+					$traffic_percent = round(($row['traffic_used']*100)/$row['traffic'], 0);
 					$traffic_doublepercent = round($traffic_percent*2, 2);
 				} else {
 					$traffic_percent = 0;
@@ -119,6 +119,15 @@ if ($page == 'customers'
 
 				$row = str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps tickets subdomains');
 				$row = htmlentities_array($row);
+
+				// fix progress-bars if value is >100%
+				if ($disk_percent > 100) {
+					$disk_percent = 100;
+				}
+				if ($traffic_percent > 100) {
+					$traffic_percent = 100;
+				}
+
 				eval("\$customers.=\"" . getTemplate("customers/customers_customer") . "\";");
 				$count++;
 			}
@@ -824,7 +833,21 @@ if ($page == 'customers'
 							'guid' => $guid,
 							'members' => $loginname.','.Settings::Get('system.httpuser')
 					);
+
+					// also, add froxlor-local user to ftp-group (if exists!) to
+					// allow access to customer-directories from within the panel, which
+					// is necessary when pathedit = Dropdown
+					if ((int)Settings::Get('system.mod_fcgid_ownvhost') == 1 || (int)Settings::Get('phpfpm.enabled_ownvhost') == 1) {
+						if ((int)Settings::Get('system.mod_fcgid') == 1) {
+							$local_user = Settings::Get('system.mod_fcgid_httpuser');
+						} else {
+							$local_user = Settings::Get('phpfpm.vhost_httpuser');
+						}
+						$ins_data['members'] .= ','.$local_user;
+					}
+
 					Database::pexecute($ins_stmt, $ins_data);
+
 					// FTP-Quotatallies
 					$ins_stmt = Database::prepare("
 						INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` SET `name` = :name, `quota_type` = 'user', `bytes_in_used` = '0',
@@ -1000,6 +1023,24 @@ if ($page == 'customers'
 		}
 		$result = Database::pexecute_first($result_stmt, $result_data);
 
+		/*
+		 * information for moving customer
+		 */
+		$available_admins_stmt = Database::prepare("
+                        SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
+                        WHERE (`customers` = '-1' OR `customers` < `customers_used`)"
+		);
+		Database::pexecute($available_admins_stmt);
+		$admin_select = makeoption("-----", 0, true, true, true);
+		$admin_select_cnt = 0;
+		while ($available_admin = $available_admins_stmt->fetch()) {
+			$admin_select .= makeoption($available_admin['name']." (".$available_admin['loginname'].")", $available_admin['adminid'], null, true, true);
+			$admin_select_cnt++;
+		}
+		/*
+		 * end of moving customer stuff
+		 */
+
 		if ($result['loginname'] != '') {
 
 			if (isset($_POST['send'])
@@ -1019,6 +1060,8 @@ if ($page == 'customers'
 				$def_language = validate($_POST['def_language'], 'default language');
 				$password = validate($_POST['new_customer_password'], 'new password');
 				$gender = intval_ressource($_POST['gender']);
+
+				$move_to_admin = isset($_POST['move_to_admin']) ? intval_ressource($_POST['move_to_admin']) : 0;
 
 				$diskspace = intval_ressource($_POST['diskspace']);
 				if (isset($_POST['diskspace_ul'])) {
@@ -1498,6 +1541,17 @@ if ($page == 'customers'
 					$admin_update_query.= " WHERE `adminid` = '" . (int)$result['adminid'] . "'";
 					Database::query($admin_update_query);
 					$log->logAction(ADM_ACTION, LOG_INFO, "edited user '" . $result['loginname'] . "'");
+
+					/*
+					 * move customer to another admin/reseller; #1166
+					 */
+					if ($move_to_admin > 0 && $move_to_admin != $result['adminid']) {
+						$move_result = moveCustomerToAdmin($id, $move_to_admin);
+						if ($move_result != true) {
+							standard_error('moveofcustomerfailed', $move_result);
+						}
+					}
+
 					$redirect_props = Array(
 						'page' => $page,
 						's' => $s

@@ -370,6 +370,10 @@ if ($action == 'forgotpwd') {
 					// this can be a fixed value to avoid potential exploiting by modifying headers
 					$host = Settings::Get('system.hostname'); // $_SERVER['HTTP_HOST'];
 					$port = $_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '';
+					// don't add :443 when https is used, as it is default (and just looks weird!)
+					if ($protocol == 'https' && $_SERVER['SERVER_PORT'] == '443') {
+						$port = '';
+					}
 					// there can be only one script to handle this so we can use a fixed value here
 					$script = "/index.php"; // $_SERVER['SCRIPT_NAME'];
 					if (Settings::Get('system.froxlordirectlyviahostname') == 0) {
@@ -379,11 +383,9 @@ if ($action == 'forgotpwd') {
 
 					$replace_arr = array(
 						'SALUTATION' => getCorrectUserSalutation($user),
-						'USERNAME' => $user['loginname'],
+						'USERNAME' => $loginname,
 						'LINK' => $activationlink
 					);
-
-					$body = strtr($lng['pwdreminder']['body'], array('%s' => $user['firstname'] . ' ' . $user['name'], '%a' => $activationlink));
 
 					$def_language = ($user['def_language'] != '') ? $user['def_language'] : Settings::Get('panel.standardlanguage');
 					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
@@ -394,7 +396,7 @@ if ($action == 'forgotpwd') {
 					);
 					Database::pexecute($result_stmt, array("adminid" => $user['adminid'], "lang" => $def_language));
 					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-					$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['pwdreminder']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['subject']), $replace_arr));
 
 					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
 						WHERE `adminid`= :adminid
@@ -404,14 +406,14 @@ if ($action == 'forgotpwd') {
 					);
 					Database::pexecute($result_stmt, array("adminid" => $user['adminid'], "lang" => $def_language));
 					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-					$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $body), $replace_arr));
+					$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					try {
 						$mail->Subject = $mail_subject;
 						$mail->AltBody = $mail_body;
 						$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-						$mail->AddAddress($user['email'], $user['firstname'] . ' ' . $user['name']);
+						$mail->AddAddress($user['email'], getCorrectUserSalutation($user));
 						$mail->Send();
 					} catch(phpmailerException $e) {
 						$mailerr_msg = $e->errorMessage();

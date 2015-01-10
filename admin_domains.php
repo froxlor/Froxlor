@@ -579,14 +579,26 @@ if ($page == 'domains'
 				if ($aliasdomain != 0) {
 					// Overwrite given ipandports with these of the "main" domain
 					$ipandports = array();
+					$ssl_ipandports = array();
 					$origipresult_stmt = Database::prepare("
 						SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP ."`
 						WHERE `id_domain` = :id"
 					);
 					Database::pexecute($origipresult_stmt, array('id' => $aliasdomain));
-
+					$ipdata_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id` = :ipid");
 					while ($origip = $origipresult_stmt->fetch(PDO::FETCH_ASSOC)) {
-						$ipandports[] = $origip['id_ipandports'];
+						$_origip_tmp = Database::pexecute_first($ipdata_stmt, array('ipid' => $origip['id_ipandports']));
+						if ($_origip_tmp['ssl'] == 0) {
+							$ipandports[] = $origip['id_ipandports'];
+						} else {
+							$ssl_ipandports[] = $origip['id_ipandports'];
+						}
+					}
+
+					if (count($ssl_ipandports) == 0) {
+						// we need this for the serialize
+						// if ssl is disabled or no ssl-ip/port exists
+						$ssl_ipandports[] = -1;
 					}
 
 					$aliasdomain_check_stmt = Database::prepare("
@@ -781,16 +793,17 @@ if ($page == 'domains'
 					);
 					Database::pexecute($upd_stmt, array('adminid' => $adminid));
 
+					$ins_stmt = Database::prepare("
+						INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+						`id_domain` = :domainid,
+						`id_ipandports` = :ipandportsid
+					");
+
 					foreach ($ipandports as $ipportid) {
 						$ins_data = array(
 							'domainid' => $domainid,
 							'ipandportsid' => $ipportid
 						);
-						$ins_stmt = Database::prepare("
-							INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
-							`id_domain` = :domainid,
-							`id_ipandports` = :ipandportsid
-						");
 						Database::pexecute($ins_stmt, $ins_data);
 					}
 
@@ -800,11 +813,6 @@ if ($page == 'domains'
 								'domainid' => $domainid,
 								'ipandportsid' => $ssl_ipportid
 							);
-							$ins_stmt = Database::prepare("
-								INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
-								`id_domain` = :domainid,
-								`id_ipandports` = :ipandportsid
-							");
 							Database::pexecute($ins_stmt, $ins_data);
 						}
 					}
@@ -1361,13 +1369,27 @@ if ($page == 'domains'
 				if ($aliasdomain != 0) {
 					// Overwrite given ipandports with these of the "main" domain
 					$ipandports = array();
+					$ssl_ipandports = array();
 					$origipresult_stmt = Database::prepare("
 						SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP ."` WHERE `id_domain` = :aliasdomain
 					");
 					Database::pexecute($origipresult_stmt, array('aliasdomain' => $aliasdomain));
+					$ipdata_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` WHERE `id` = :ipid");
 					while ($origip = $origipresult_stmt->fetch(PDO::FETCH_ASSOC)) {
-						$ipandports[] = $origip['id_ipandports'];
+						$_origip_tmp = Database::pexecute_first($ipdata_stmt, array('ipid' => $origip['id_ipandports']));
+						if ($_origip_tmp['ssl'] == 0) {
+							$ipandports[] = $origip['id_ipandports'];
+						} else {
+							$ssl_ipandports[] = $origip['id_ipandports'];
+						}
 					}
+
+					if (count($ssl_ipandports) == 0) {
+						// we need this for the serialize
+						// if ssl is disabled or no ssl-ip/port exists
+						$ssl_ipandports[] = -1;
+					}
+
 					$aliasdomain_check_stmt = Database::prepare("
 						SELECT `d`.`id` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 						WHERE `d`.`customerid` = :customerid
@@ -1880,6 +1902,61 @@ if ($page == 'domains'
 
 				eval("echo \"" . getTemplate("domains/domains_edit") . "\";");
 			}
+		}
+	} elseif($action == 'import') {
+
+		if (isset($_POST['send'])
+			&& $_POST['send'] == 'send'
+		) {
+
+			$customerid = intval($_POST['customerid']);
+			$separator = validate($_POST['separator'], 'separator');
+			$offset = validate($_POST['offset'], 'offset', "/[0-9]/i");
+
+			$file_name = $_FILES['file']['tmp_name'];
+
+			$result = array();
+
+			try {
+				$bulk = new DomainBulkAction($file_name, $customerid);
+				$result = $bulk->doImport($separator, $offset);
+			} catch (Exception $e) {
+				standard_error('domain_import_error', $e->getMessage());
+			}
+
+			// @FIXME find a way to display $result['notice'] here somehow,
+			//        as it might be important if you've reached your maximum allocation of domains
+
+			// update customer/admin counters
+			updateCounters(false);
+
+			$result_str = $result['imported'] . ' / ' . $result['all'];
+			standard_success('domain_import_successfully', $result_str, array('filename' => $filename, 'action' => '', 'page' => 'domains'));
+		} else {
+			$customers = makeoption($lng['panel']['please_choose'], 0, 0, true);
+			$result_customers_stmt = Database::prepare("
+				SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
+				FROM `" . TABLE_PANEL_CUSTOMERS . "` " .
+				($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int)$userinfo['adminid'] . "' ") .
+				" ORDER BY `name` ASC"
+			);
+			$params = array();
+			if ($userinfo['customers_see_all'] == '0') {
+				$params['adminid'] = $userinfo['adminid'];
+			}
+			Database::pexecute($result_customers_stmt, $params);
+
+			while ($row_customer = $result_customers_stmt->fetch(PDO::FETCH_ASSOC)) {
+				$customers.= makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
+			}
+
+			$domain_import_data = include_once dirname(__FILE__).'/lib/formfields/admin/domains/formfield.domains_import.php';
+			$domain_import_form = htmlform::genHTMLForm($domain_import_data);
+
+			$title = $domain_import_data['domain_import']['title'];
+			$image = $domain_import_data['domain_import']['image'];
+
+			eval("echo \"" . getTemplate("domains/domains_import") . "\";");
 		}
 	}
 }

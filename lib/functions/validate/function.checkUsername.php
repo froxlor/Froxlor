@@ -31,7 +31,11 @@ function checkUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalue
 	) {
 		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 	} else {
-		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'accountprefixiswrong');
+		$errmsg = 'accountprefixiswrong';
+		if ($fieldname == 'customer_mysqlprefix') {
+			$errmsg = 'mysqlprefixiswrong';
+		}
+		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, $errmsg);
 	}
 	return $returnvalue;
 }
