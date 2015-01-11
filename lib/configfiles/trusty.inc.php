@@ -292,8 +292,9 @@ return array(
 							'etc_courier_authmysqlrc' => '/etc/courier/authmysqlrc'
 						),
 						'restart' => array(
-							'/etc/init.d/courier-authdaemon restart',
-							'/etc/init.d/courier-pop restart'
+							'service courier-authdaemon restart',
+							'service courier-pop restart',
+							'service courier-imap restart'
 						)
 					),
 					'dovecot' => array(
