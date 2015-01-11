@@ -89,7 +89,7 @@ return array(
 					'nginx' => array(
 						'label' => 'Nginx Webserver',
 						'commands_1' => array(
-							'apt-get install nginx php5-cgi',
+							'apt-get install nginx php5-cgi php5-cli',
 						),
 						'files' => array(
 							'etc_nginx_nginx.conf' => '/etc/nginx/nginx.conf',
