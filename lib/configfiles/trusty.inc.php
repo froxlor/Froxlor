@@ -282,11 +282,24 @@ return array(
 			'mail' => array(
 				'label' => $lng['admin']['configfiles']['mail'],
 				'daemons' => array(
-
+					'courier' => array(
+						'label' => 'Courier',
+						'commands' => array(
+							'apt-get install courier-pop courier-imap courier-authlib-mysql'
+						),
+						'files' => array(
+							'etc_courier_authdaemonrc' => '/etc/courier/authdaemonrc',
+							'etc_courier_authmysqlrc' => '/etc/courier/authmysqlrc'
+						),
+						'restart' => array(
+							'/etc/init.d/courier-authdaemon restart',
+							'/etc/init.d/courier-pop restart'
+						)
+					),
 					'dovecot' => array(
 						'label' => 'Dovecot',
 						'commands_1' => array(
-							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix dovecot-mysql mail-stack-delivery'
+							'apt-get install dovecot-imapd dovecot-pop3d dovecot-mysql mail-stack-delivery'
 						),
 						'files' => array(
 
