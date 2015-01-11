@@ -333,7 +333,7 @@ $lng['serversettings']['accountprefix']['description'] = 'Which prefix should cu
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL Prefix';
 $lng['serversettings']['mysqlprefix']['description'] = 'Which prefix should MySQL accounts have?</br>Use "RANDOM" as value to get a 3-digit random prefix';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP Prefix';
-$lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?';
+$lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?<br/><b>If you change this you also have to change the Quota SQL Query in your FTP Server config file in case you use it!</b> ';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Home directory';
 $lng['serversettings']['documentroot_prefix']['description'] = 'Where should all home directories be stored?';
 $lng['serversettings']['logfiles_directory']['title'] = 'Logfiles directory';
@@ -397,7 +397,7 @@ $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Port\'';
 $lng['error']['myipdefault'] = 'You need to select an IP/Port combination that should become default.';
 $lng['error']['myipnotdouble'] = 'This IP/Port combination already exists.';
-$lng['error']['admin_domain_emailsystemhostname'] = 'Sorry. You can not use the Server Hostname as email domain';
+$lng['error']['admin_domain_emailsystemhostname'] = 'The server-hostname cannot be used as email-domain.';
 $lng['question']['admin_ip_reallydelete'] = 'Do you really want to delete the IP address %s?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs and Ports';
 $lng['admin']['ipsandports']['add'] = 'Add IP/Port';
@@ -598,7 +598,6 @@ $lng['ticket']['ticket_editcateory'] = 'Edit category';
 $lng['ticket']['ticket_view'] = 'View ticketcourse';
 $lng['ticket']['ticketcount'] = 'Tickets';
 $lng['ticket']['ticket_answers'] = 'Replies';
-$lng['ticket']['lastchange'] = 'Last action';
 $lng['ticket']['subject'] = 'Subject';
 $lng['ticket']['status'] = 'Status';
 $lng['ticket']['lastreplier'] = 'Last replier';
@@ -1005,10 +1004,6 @@ $lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maximum php requests for this
 $lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximum Requests per domain';
 $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'How many requests should be allowed per domain?';
 
-// fix bug #1124
-$lng['admin']['webserver'] = 'Webserver';
-$lng['error']['admin_domain_emailsystemhostname'] = 'The server-hostname cannot be used as email-domain.';
-
 // ADDED IN 1.4.2.1-1
 
 $lng['mysql']['mysql_server'] = 'MySQL-Server';
@@ -1040,7 +1035,6 @@ $lng['success']['settingssaved'] = 'The settings have been successfully saved.';
 $lng['admin']['spfsettings'] = 'Domain SPF settings';
 $lng['spf']['use_spf'] = 'Activate SPF for domains?';
 $lng['spf']['spf_entry'] = 'SPF entry for all domains';
-$lng['panel']['dirsmissing'] = 'The given directory could not be found.';
 $lng['panel']['toomanydirs'] = 'Too many subdirectories. Falling back to manual path-select.';
 $lng['panel']['abort'] = 'Abort';
 $lng['serversettings']['cron']['debug']['title'] = 'Cronscript debugging';
@@ -1174,9 +1168,6 @@ $lng['serversettings']['mod_fcgid']['defaultini'] = 'Default PHP configuration f
 $lng['admin']['ftpserver'] = 'FTP Server';
 $lng['admin']['ftpserversettings'] = 'FTP Server settings';
 $lng['serversettings']['ftpserver']['desc'] = 'If pureftpd is selected the .ftpquota files for user quotas are created and updated daily';
-
-// CHANGED IN FROXLOR 0.9.6-svn6
-$lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?<br/><b>If you change this you also have to change the Quota SQL Query in your FTP Server config file in case you use it!</b> ';
 
 // ADDED IN FROXLOR 0.9.7-svn1
 $lng['mails']['new_ftpaccount_by_customer']['subject'] = 'New ftp-user created';
@@ -1377,7 +1368,6 @@ $lng['traffic']['months']['dec'] = 'Dec';
 $lng['traffic']['months']['total'] = 'Total';
 $lng['traffic']['details'] = 'Details';
 $lng['menue']['traffic']['table'] = 'Traffic';
-$lng['error']['admin_domain_emailsystemhostname'] = 'Sorry, the system - hostname may not be used as a customer domain';
 
 // ADDED IN FROXLOR 0.9.21
 $lng['gender']['title'] = 'Title';
@@ -1723,7 +1713,6 @@ $lng['error']['sslcertificateinvalidca'] = 'The given CA certificate data does n
 $lng['error']['sslcertificateinvalidchain'] = 'The given certificate chain data does not seem to be a valid certificate';
 $lng['serversettings']['customerssl_directory']['title'] = 'Webserver customer-ssl certificates-directory';
 $lng['serversettings']['customerssl_directory']['description'] = 'Where should customer-specified ssl-certificates be created?<br /><br /><div class="red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
-$lng['admin']['note'] = 'Please note';
 $lng['admin']['phpfpm.ininote'] = 'Not all values you may want to define can be used in the php-fpm pool configuration';
 
 // Added in Froxlor 0.9.30
@@ -1745,7 +1734,6 @@ $lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'This is a lis
 
 // Added in Froxlor 0.9.31
 $lng['panel']['dashboard'] = 'Dashboard';
-$lng['panel']['used'] = 'used';
 $lng['panel']['assigned'] = 'assigned';
 $lng['panel']['available'] = 'available';
 $lng['customer']['services'] = 'Services';
