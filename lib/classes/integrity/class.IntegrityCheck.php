@@ -23,11 +23,19 @@ class IntegrityCheck {
 	// Store all available checks
 	public $available = array();
 
+	// logger object
+	private $_log = null;
+
 	/**
 	 * Constructor
 	 * Parses all available checks into $this->available 
 	 */
 	public function __construct() {
+		global $userinfo;
+		if (!isset($userinfo) || !is_array($userinfo)) {
+			$userinfo = array('loginname' => 'integrity-check');
+		}
+		$this->_log = FroxlorLogger::getInstanceOf($userinfo);
 		$this->available = get_class_methods($this);
 		unset($this->available[array_search('__construct', $this->available)]);
 		unset($this->available[array_search('checkAll', $this->available)]);
@@ -72,6 +80,7 @@ class IntegrityCheck {
 		$resp = Database::pexecute_first($cs_stmt, array('dbname' => Database::getDbName()));
 		$charset = isset($resp['default_character_set_name']) ? $resp['default_character_set_name'] : null;
 		if (!empty($charset) && strtolower($charset) != 'utf8') {
+			$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "database charset seems to be different from UTF-8, integrity-check can fix that");
 			if ($fix) {
 				// fix database
 				Database::query('ALTER DATABASE `' . Database::getDbName() . '` CHARACTER SET utf8 COLLATE utf8_general_ci');
@@ -82,6 +91,7 @@ class IntegrityCheck {
 						Database::query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
 					}
 				}
+				$this->_log->logAction(ADM_ACTION, LOG_WARNING, "database charset was different from UTF-8, inegrity-check fixed that");
 			} else {
 				return false;
 			}
@@ -148,14 +158,18 @@ class IntegrityCheck {
 			if (!array_key_exists($row['id_ipandports'], $ips)) { 
 				if ($fix) {
 					Database::pexecute($del_stmt, array('domainid' => $row['id_domain'], 'ipandportid' => $row['id_ipandports']));
+					$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found an ip/port-id in domain <> ip table which does not exist, integrity check fixed this");
 				} else {
+					$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found an ip/port-id in domain <> ip table which does not exist, integrity check can fix this");
 					return false;
 				}
 			}
 			if (!array_key_exists($row['id_domain'], $domains)) {
 				if ($fix) {
 					Database::pexecute($del_stmt, array('domainid' => $row['id_domain'], 'ipandportid' => $row['id_ipandports']));
+					$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a domain-id in domain <> ip table which does not exist, integrity check fixed this");
 				} else {
+					$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a domain-id in domain <> ip table which does not exist, integrity check can fix this");
 					return false; 
 				}
 			}
@@ -168,7 +182,9 @@ class IntegrityCheck {
 			if (!array_key_exists($domainid, $ipstodomains)) {
 				if ($fix) {
 					Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipandportid' => $admips[$adminid]));
+					$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a domain-id with no entry in domain <> ip table, integrity check fixed this");
 				} else {
+					$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a domain-id with no entry in domain <> ip table, integrity check can fix this");
 					return false;
 				}
 			}
@@ -236,8 +252,10 @@ class IntegrityCheck {
 			if ($fix) {
 				// We make a blanket update to all subdomains of this parentdomain, doesn't matter which one is wrong, all have to be disabled
 				Database::pexecute($upd_stmt, array('domainid' => $id));
+				$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a subdomain with ssl_redirect=1 but parent-domain has ssl=0, integrity check fixed this");
 			} else {
 				// It's just the check, let the function fail
+				$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a subdomain with ssl_redirect=1 but parent-domain has ssl=0, integrity check can fix this");
 				return false;
 			}
 		}
