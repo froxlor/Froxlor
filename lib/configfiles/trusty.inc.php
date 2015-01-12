@@ -302,14 +302,9 @@ return array(
 							'apt-get install dovecot-imapd dovecot-pop3d dovecot-mysql mail-stack-delivery'
 						),
 						'files' => array(
-
 							'etc_dovecot_conf.d_01_mail_stack_delivery.conf' => '/etc/dovecot/conf.d/01-mail-stack-delivery.conf',
 							'etc_dovecot_conf.d_10_auth.conf' => '/etc/dovecot/conf.d/10-auth.conf',
-							'etc_dovecot_conf.d_auth-sql.conf.ext' => '/etc/dovecot/conf.d/auth-sql.conf.ext',
 							'etc_dovecot_dovecot-sql.conf.ext' => '/etc/dovecot/dovecot-sql.conf.ext'
-						),
-						'commands_2' => array(
-							'chmod 0640 /etc/dovecot/dovecot-sql.conf.ext'
 						),
 						'restart' => array(
 							'service dovecot restart'
