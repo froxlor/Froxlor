@@ -632,7 +632,7 @@ if ($page == 'customers'
 					}
 
 					if ($password == '') {
-						$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
+						$password = generatePassword();
 					}
 
 					$_theme = Settings::Get('panel.default_theme');
