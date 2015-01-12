@@ -89,7 +89,7 @@ return array(
 					'nginx' => array(
 						'label' => 'Nginx Webserver',
 						'commands_1' => array(
-							'apt-get install nginx php5-cgi',
+							'apt-get install nginx php5-cgi php5-cli',
 						),
 						'files' => array(
 							'etc_nginx_nginx.conf' => '/etc/nginx/nginx.conf',
@@ -299,17 +299,12 @@ return array(
 					'dovecot' => array(
 						'label' => 'Dovecot',
 						'commands_1' => array(
-							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix dovecot-mysql mail-stack-delivery'
+							'apt-get install dovecot-imapd dovecot-pop3d dovecot-mysql mail-stack-delivery'
 						),
 						'files' => array(
-
 							'etc_dovecot_conf.d_01_mail_stack_delivery.conf' => '/etc/dovecot/conf.d/01-mail-stack-delivery.conf',
 							'etc_dovecot_conf.d_10_auth.conf' => '/etc/dovecot/conf.d/10-auth.conf',
-							'etc_dovecot_conf.d_auth-sql.conf.ext' => '/etc/dovecot/conf.d/auth-sql.conf.ext',
 							'etc_dovecot_dovecot-sql.conf.ext' => '/etc/dovecot/dovecot-sql.conf.ext'
-						),
-						'commands_2' => array(
-							'chmod 0640 /etc/dovecot/dovecot-sql.conf.ext'
 						),
 						'restart' => array(
 							'service dovecot restart'
@@ -369,7 +364,7 @@ return array(
 							'etc_cron.d_froxlor' => '/etc/cron.d/froxlor'
 						),
 						'restart' => array(
-							Settings::Get('system.crondreload')
+							'service cron reload'
 						)
 					),
 					'awstats' => array(
