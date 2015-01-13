@@ -24,18 +24,18 @@ class nginx_phpfpm extends nginx
 			$php = new phpinterface($domain);
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
 			
-			$php_options_text = "\tlocation ~ \.php {\n";
-			$php_options_text .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
-			$php_options_text .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
-			$php_options_text .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
-			$php_options_text .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
-			$php_options_text .= "\t\ttry_files \$fastcgi_script_name =404;\n";
-			$php_options_text .= "\t\tfastcgi_pass unix:".$php->getInterface()->getSocketFile().";\n";
-			$php_options_text .= "\t\tfastcgi_index index.php;\n";
+			$php_options_text = "\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
+			$php_options_text .= "\t\t" . 'try_files $1 = 404;' . "\n\n";
+			$php_options_text .= "\t\t" . 'include ' . Settings::Get('nginx.fastcgiparams') . ";\n";
+			$php_options_text .= "\t\t" . 'fastcgi_split_path_info ^(.+\.php)(/.+)\$;' . "\n";
+			$php_options_text .= "\t\t" . 'fastcgi_param SCRIPT_FILENAME $document_root$1;' . "\n";
+			$php_options_text .= "\t\t" . 'fastcgi_param PATH_INFO $2;' . "\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
-				$php_options_text .= "\t\tfastcgi_param HTTPS on;\n";
+				$php_options_text .= "\t\t" . 'fastcgi_param HTTPS on;' . "\n";
 			}
-			$php_options_text .= "\t}\n\n";	
+			$php_options_text .= "\t\t" . 'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ";\n";
+			$php_options_text .= "\t\t" . 'fastcgi_index index.php;' . "\n";
+			$php_options_text .= "\t}\n\n";
 			
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
