@@ -132,6 +132,7 @@ CREATE TABLE `panel_admins` (
   `reportsent` tinyint(4) unsigned NOT NULL default '0',
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
+  `custom_notes_show` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -192,6 +193,7 @@ CREATE TABLE `panel_customers` (
   `perlenabled` tinyint(1) NOT NULL default '0',
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
+  `custom_notes_show` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;

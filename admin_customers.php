@@ -419,6 +419,9 @@ if ($page == 'customers'
 				$def_language = validate($_POST['def_language'], 'default language');
 				$gender = intval_ressource($_POST['gender']);
 
+				$custom_notes = validate(str_replace("\r\n", "\n", $_POST['custom_notes']), 'custom_notes', '/^[^\0]*$/');
+				$custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+
 				$diskspace = intval_ressource($_POST['diskspace']);
 				if (isset($_POST['diskspace_ul'])) {
 					$diskspace = - 1;
@@ -671,7 +674,9 @@ if ($page == 'customers'
 						'imap' => $email_imap,
 						'pop3' => $email_pop3,
 						'perlenabled' => $perlenabled,
-						'theme' => $_theme
+						'theme' => $_theme,
+						'custom_notes' => $custom_notes,
+						'custom_notes_show' => $custom_notes_show
 					);
 
 					$ins_stmt = Database::prepare("
@@ -708,7 +713,9 @@ if ($page == 'customers'
 						`imap` = :imap,
 						`pop3` = :pop3,
 						`perlenabled` = :perlenabled,
-						`theme` = :theme"
+						`theme` = :theme,
+						`custom_notes` = :custom_notes,
+						`custom_notes_show` = :custom_notes_show"
 					);
 					Database::pexecute($ins_stmt, $ins_data);
 
@@ -1065,6 +1072,9 @@ if ($page == 'customers'
 
 				$move_to_admin = isset($_POST['move_to_admin']) ? intval_ressource($_POST['move_to_admin']) : 0;
 
+				$custom_notes = validate(str_replace("\r\n", "\n", $_POST['custom_notes']), 'custom_notes', '/^[^\0]*$/');
+				$custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+
 				$diskspace = intval_ressource($_POST['diskspace']);
 				if (isset($_POST['diskspace_ul'])) {
 					$diskspace = - 1;
@@ -1400,7 +1410,9 @@ if ($page == 'customers'
 						'phpenabled' => $phpenabled,
 						'imap' => $email_imap,
 						'pop3' => $email_pop3,
-						'perlenabled' => $perlenabled
+						'perlenabled' => $perlenabled,
+						'custom_notes' => $custom_notes,
+						'custom_notes_show' => $custom_notes_show
 					);
 					$upd_stmt = Database::prepare("
 						UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
@@ -1431,7 +1443,9 @@ if ($page == 'customers'
 						`email_quota` = :email_quota,
 						`imap` = :imap,
 						`pop3` = :pop3,
-						`perlenabled` = :perlenabled
+						`perlenabled` = :perlenabled,
+						`custom_notes` = :custom_notes,
+						`custom_notes_show` = :custom_notes_show
 						WHERE `customerid` = :customerid"
 					);
 					Database::pexecute($upd_stmt, $upd_data);

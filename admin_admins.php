@@ -201,6 +201,9 @@ if ($page == 'admins'
 			$name = validate($_POST['name'], 'name');
 			$email = $idna_convert->encode(validate($_POST['email'], 'email'));
 
+			$custom_notes = validate(str_replace("\r\n", "\n", $_POST['custom_notes']), 'custom_notes', '/^[^\0]*$/');
+			$custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+
 			$loginname = validate($_POST['loginname'], 'loginname');
 			$password = validate($_POST['admin_password'], 'password');
 			$password = validatePassword($password);
@@ -391,7 +394,9 @@ if ($page == 'admins'
 					'tickets_see_all' => $tickets_see_all,
 					'mysqls' => $mysqls,
 					'ip' => $ipaddress,
-					'theme' => $_theme
+					'theme' => $_theme,
+					'custom_notes' => $custom_notes,
+					'custom_notes_show' => $custom_notes_show
 				);
 
 				$ins_stmt = Database::prepare("
@@ -419,7 +424,9 @@ if ($page == 'admins'
 					`tickets_see_all` = :tickets_see_all,
 					`mysqls` = :mysqls,
 					`ip` = :ip,
-					`theme` = :theme
+					`theme` = :theme,
+					`custom_notes` = :custom_notes,
+					`custom_notes_show` = :custom_notes_show
 				");
 				Database::pexecute($ins_stmt, $ins_data);
 
@@ -489,6 +496,9 @@ if ($page == 'admins'
 			) {
 				$name = validate($_POST['name'], 'name');
 				$email = $idna_convert->encode(validate($_POST['email'], 'email'));
+
+				$custom_notes = validate(str_replace("\r\n", "\n", $_POST['custom_notes']), 'custom_notes', '/^[^\0]*$/');
+				$custom_notes_show = intval_ressource($_POST['custom_notes_show']);
 
 				if ($result['adminid'] == $userinfo['userid']) {
 
@@ -724,6 +734,8 @@ if ($page == 'admins'
 						'mysqls' => $mysqls,
 						'ip' => $ipaddress,
 						'deactivated' => $deactivated,
+						'custom_notes' => $custom_notes,
+						'custom_notes_show' => $custom_notes_show,
 						'adminid' => $id
 					);
 
@@ -751,7 +763,9 @@ if ($page == 'admins'
 						`tickets_see_all` = :tickets_see_all,
 						`mysqls` = :mysqls,
 						`ip` = :ip,
-						`deactivated` = :deactivated
+						`deactivated` = :deactivated,
+						`custom_notes` = :custom_notes,
+						`custom_notes_show` = :custom_notes_show
 						WHERE `adminid` = :adminid
 					");
 					Database::pexecute($upd_stmt, $upd_data);

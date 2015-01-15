@@ -232,6 +232,11 @@ $header
 				            <td>{$userinfo['email']}</td>
 				        </tr>
 				        </if>
+				        <if $userinfo['custom_notes'] != '' && $userinfo['custom_notes_show'] == '1'>
+				        <tr>
+				            <td colspan="2">{$userinfo['custom_notes']}</td>
+				        </tr>
+				        </if>
 					</tbody>
 			    </table>
 			</div>

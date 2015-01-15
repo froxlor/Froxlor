@@ -179,6 +179,14 @@ $header
 				</table>
 				</if>
 
+				<if $userinfo['custom_notes'] != '' && $userinfo['custom_notes_show'] == '1'>
+				<table class="dboarditem full" id="customnotes">
+					<tbody>
+						<tr><td>{$userinfo['custom_notes']}</td></tr>
+					</tbody>
+				</table>
+				</if>
+
 				<table class="dboarditem">
 					<thead>
 						<tr>

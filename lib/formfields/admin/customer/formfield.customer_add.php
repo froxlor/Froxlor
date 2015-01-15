@@ -130,6 +130,14 @@ return array(
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12
+					),
+					'custom_notes_show' => array(
+						'label' => $lng['usersettings']['custom_notes']['show'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array()
 					)
 				)
 			),

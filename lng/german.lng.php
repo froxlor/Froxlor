@@ -1562,3 +1562,4 @@ $lng['admin']['note'] = 'Hinweis';
 $lng['domains']['import_description'] = 'Detaillierte Informationen über den Aufbau der Importdatei und einen erfolgreichen Import gibt es hier: <a href="http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc" target="_blank">http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc</a> (englisch)';
 $lng['usersettings']['custom_notes']['title'] = 'Eigene Notizen';
 $lng['usersettings']['custom_notes']['description'] = 'Hier können Notizen je nach Lust und Laune eingetragen werden. Diese werden in der Administrator/Kunden-Übersicht bei dem jeweiligen Benutzer angezeigt.';
+$lng['usersettings']['custom_notes']['show'] = 'Zeige die Notizen auf dem Dashboard des Benutzers';
