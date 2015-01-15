@@ -219,7 +219,7 @@ if ($page == 'overview') {
 							'DB_NAME' => $username,
 							'DB_PASS' => $password,
 							'DB_DESC' => $databasedescription,
-							'DB_SRV' => $sql_root['caption'],
+							'DB_SRV' => $sql_root['host'],
 							'PMA_URI' => $pma
 						);
 
