@@ -40,6 +40,10 @@ $(document).ready(function() {
 	$(".tipper").tipper({
 		direction: "right"
 	});
+	// Enable notes
+	$(".notes").click(function() {
+		$("#notes_" + $(this).attr("data-id")).toggle("slow");
+	})
 	// Enable reset search click
 	$(".resetsearch").click(function() {
 		$(".searchtext").val("");

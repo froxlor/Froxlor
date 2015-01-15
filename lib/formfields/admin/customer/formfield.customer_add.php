@@ -122,6 +122,14 @@ return array(
 					'customernumber' => array(
 						'label' => $lng['customer']['customernumber'],
 						'type' => 'text'
+					),
+					'custom_notes' => array(
+						'style' => 'align-top',
+						'label' => $lng['usersettings']['custom_notes']['title'],
+						'desc' => $lng['usersettings']['custom_notes']['description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12
 					)
 				)
 			),

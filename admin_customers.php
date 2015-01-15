@@ -128,6 +128,8 @@ if ($page == 'customers'
 					$traffic_percent = 100;
 				}
 
+				$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
+
 				eval("\$customers.=\"" . getTemplate("customers/customers_customer") . "\";");
 				$count++;
 			}

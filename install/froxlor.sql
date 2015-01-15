@@ -131,6 +131,7 @@ CREATE TABLE `panel_admins` (
   `loginfail_count` int(11) unsigned NOT NULL default '0',
   `reportsent` tinyint(4) unsigned NOT NULL default '0',
   `theme` varchar(255) NOT NULL default 'Sparkle',
+  `custom_notes` text,
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -190,6 +191,7 @@ CREATE TABLE `panel_customers` (
   `imap` tinyint(1) NOT NULL default '1',
   `perlenabled` tinyint(1) NOT NULL default '0',
   `theme` varchar(255) NOT NULL default 'Sparkle',
+  `custom_notes` text,
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -532,7 +534,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_alpha_upper', '1'),
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
-	('panel', 'password_special_char', '!?<>§$%&+#=@'),
+	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.33-rc1');
 
 

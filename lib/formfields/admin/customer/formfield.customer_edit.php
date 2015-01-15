@@ -130,6 +130,15 @@ return array(
 						'label' => $lng['customer']['customernumber'],
 						'type' => 'text',
 						'value' => $result['customernumber']
+					),
+					'custom_notes' => array(
+						'style' => 'align-top',
+						'label' => $lng['usersettings']['custom_notes']['title'],
+						'desc' => $lng['usersettings']['custom_notes']['description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12,
+						'value' => $result['custom_notes']
 					)
 				)
 			),

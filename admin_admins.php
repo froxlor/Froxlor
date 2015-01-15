@@ -93,6 +93,9 @@ if ($page == 'admins'
 
 				$row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains tickets');
 				$row = htmlentities_array($row);
+
+				$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
+
 				eval("\$admins.=\"" . getTemplate("admins/admins_admin") . "\";");
 				$count++;
 			}

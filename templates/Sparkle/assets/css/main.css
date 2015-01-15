@@ -1401,3 +1401,7 @@ table thead th.tablesorter-headerDesc {
   border: 1px solid #ccc;
   padding: 4px;
 }
+
+.notes_block {
+  display: none;
+}
