@@ -85,6 +85,8 @@ if ($page == 'overview') {
 	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains');
 
+	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
+
 	$services_enabled = "";
 	$se = array();
 	if ($userinfo['imap'] == '1') $se[] = "IMAP";

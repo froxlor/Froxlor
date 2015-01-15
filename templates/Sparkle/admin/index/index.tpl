@@ -180,7 +180,7 @@ $header
 				</if>
 
 				<if $userinfo['custom_notes'] != '' && $userinfo['custom_notes_show'] == '1'>
-				<table class="dboarditem full" id="customnotes">
+				<table class="dboarditem full">
 					<tbody>
 						<tr><td>{$userinfo['custom_notes']}</td></tr>
 					</tbody>
