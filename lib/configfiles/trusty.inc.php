@@ -364,7 +364,7 @@ return array(
 							'etc_cron.d_froxlor' => '/etc/cron.d/froxlor'
 						),
 						'restart' => array(
-							'service cron reload'
+							Settings::Get('system.crondreload')
 						)
 					),
 					'awstats' => array(
