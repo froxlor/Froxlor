@@ -43,6 +43,7 @@ if ($optsDir->isConfigDir()) {
 $cfgPath = 'lib/configfiles/';
 $configfiles = array();
 $configfiles = array_merge(
+	include $cfgPath . 'rhel7.inc.php',
 	include $cfgPath . 'wheezy.inc.php',
 	include $cfgPath . 'squeeze.inc.php',
 	include $cfgPath . 'precise.inc.php',
