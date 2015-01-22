@@ -1,0 +1,25 @@
+#
+# ATTENTION - this is not the full postfix-main.cf file
+#
+# it only provides additional configuration-entries!
+#
+
+#
+# look for the follow statement
+#
+smtpd_recipient_restrictions = permit_mynetworks,
+	permit_sasl_authenticated,
+	reject_unauth_destination,
+	reject_unauth_pipelining,
+	reject_non_fqdn_recipient
+
+#
+# and extend it with the following line
+# so it looks like this
+#
+smtpd_recipient_restrictions = permit_mynetworks,
+	permit_sasl_authenticated,
+	reject_unauth_destination,
+	reject_unauth_pipelining,
+	reject_non_fqdn_recipient,
+	check_recipient_mx_access cidr:/etc/postfix/mx_access
