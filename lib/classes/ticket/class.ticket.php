@@ -47,12 +47,6 @@ class ticket {
 	static private $tickets = array();
 
 	/**
-	 * HTML purifier
-	 * @var purifier
-	 */
-	private $purifier = null;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array userinfo
@@ -61,13 +55,6 @@ class ticket {
 	private function __construct($userinfo, $tid = - 1) {
 		$this->userinfo = $userinfo;
 		$this->tid = $tid;
-
-		// initialize purifier
-		require_once dirname(dirname(__FILE__)).'/htmlpurifier/library/HTMLPurifier.auto.php';
-		$config = HTMLPurifier_Config::createDefault();
-		$config->set('Core.Encoding', 'UTF-8'); //htmlpurifier uses utf-8 anyway as default
-		$config->set('HTML.Doctype', 'XHTML 1.0 Transitional');
-		$this->_purifier = new HTMLPurifier($config);
 
 		// initialize data array
 		$this->initData();
@@ -777,11 +764,11 @@ class ticket {
 			&& $_value != ''
 		) {
 			if (!$_vartrusted) {
-				$_var = $this->_purifier->purify($_var);
+				$_var = strip_tags($_var);
 			}
 
 			if (!$_valuetrusted) {
-				$_value = $this->_purifier->purify($_value);
+				$_value = strip_tags($_value, '<br />');
 			}
 
 			if (strtolower($_var) == 'message'

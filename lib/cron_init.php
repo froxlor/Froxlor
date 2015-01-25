@@ -166,9 +166,6 @@ if (((int)Settings::Get('system.mod_fcgid') == 1 && (int)Settings::Get('system.m
 	safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($_mypath));
 }
 
-// be sure HTMLPurifier's cache folder is writable
-safe_exec('chmod -R 0755 '.escapeshellarg(dirname(__FILE__).'/classes/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer'));
-
 // Initialize logging
 $cronlog = FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'));
 fwrite($debugHandler, 'Logger has been included' . "\n");
