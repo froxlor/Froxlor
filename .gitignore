@@ -1,4 +1,3 @@
-lib/classes/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer/*/
 templates/*
 logs/*
 install/update.log

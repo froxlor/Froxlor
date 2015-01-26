@@ -92,8 +92,10 @@ if ($page == 'overview') {
 				}
 
 				$row['subject'] = html_entity_decode($row['subject']);
-				if (strlen($row['subject']) > 20) {
-					$row['subject'] = substr($row['subject'], 0, 17) . '...';
+				if (strlen($row['subject']) > 30) {
+					$ts = wordwrap($row['subject'], 30, "|");
+					$ts = explode("|", $ts);
+					$row['subject'] = $ts[0]. '...';
 				}
 
 				eval("\$tickets.=\"" . getTemplate("tickets/tickets_tickets") . "\";");
