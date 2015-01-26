@@ -71,10 +71,12 @@ function buildNavigation($navigation, $userinfo) {
 						} elseif (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && substr_count($element['url'], "action=") == 0 && !isset($_GET['action'])) {
 							$active = ' active';
 						}
-
-						$completeLink = '<a href="' . htmlspecialchars($element['url']) . '"' . $target . ' class="menu' . $active . '">' . $element['label'] . '</a>';
+						
+						$navurl = htmlspecialchars($element['url']);
+						$navlabel = $element['label'];
 					} else {
-						$completeLink = $element['label'];
+						$navurl = htmlspecialchars($element['url']);
+						$navlabel = $element['label'];
 					}
 
 					eval("\$navigation_links .= \"" . getTemplate("navigation_link", 1) . "\";");
@@ -82,6 +84,7 @@ function buildNavigation($navigation, $userinfo) {
 			}
 
 			if ($navigation_links != '') {
+				$target = '';
 				if (isset($box['url']) && trim($box['url']) != '') {
 					// append sid only to local
 
@@ -95,14 +98,15 @@ function buildNavigation($navigation, $userinfo) {
 						}
 					}
 
-					$target = '';
 					if (isset($box['new_window']) && $box['new_window'] == true) {
 						$target = ' target="_blank"';
 					}
-
-					$completeLink = '<a href="' . htmlspecialchars($box['url']) . '"' . $target . ' class="menu">' . $box['label'] . '</a>';
+					
+					$navurl = htmlspecialchars($box['url']);
+					$navlabel = $box['label'];
 				} else {
-					$completeLink = $box['label'];
+					$navurl = "#";
+					$navlabel = $box['label'];
 				}
 
 				eval("\$returnvalue .= \"" . getTemplate("navigation_element", 1) . "\";");
