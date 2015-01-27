@@ -32,12 +32,14 @@ if (function_exists("date_default_timezone_set")
 }
 
 $basename = basename($_SERVER['PHP_SELF'], '.php');
+$crontype = "";
 if (isset($argv) && is_array($argv) && count($argv) > 1) {
 	for($x=1;$x < count($argv);$x++) {
 		if (substr(strtolower($argv[$x]), 0, 2) == '--'
 			&& strlen($argv[$x]) > 3
 		) {
-			$basename .= "-".substr(strtolower($argv[$x]), 2);
+			$crontype = substr(strtolower($argv[$x]), 2);
+			$basename .= "-".$crontype;
 			break;
 		}
 	}
@@ -52,57 +54,15 @@ $lockfile = $lockdir . $lockfName;
 // froxlor installation isn't in /var/www/froxlor
 define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
 
+
 // create and open the lockfile!
 $keepLockFile = false;
 $debugHandler = fopen($lockfile, 'w');
 fwrite($debugHandler, 'Setting Lockfile to ' . $lockfile . "\n");
 fwrite($debugHandler, 'Setting Froxlor installation path to ' . FROXLOR_INSTALL_DIR . "\n");
 
-// open the lockfile directory and scan for existing lockfiles
-$lockDirHandle = opendir($lockdir);
-
-while ($fName = readdir($lockDirHandle)) {
-
-	if ($lockFilename == substr($fName, 0, strlen($lockFilename))
-		&& $lockfName != $fName
-	) {
-		// Check if last run jailed out with an exception
-		$croncontent = file($lockdir . $fName);
-		$lastline = $croncontent[(count($croncontent) - 1)];
-
-		if ($lastline == '=== Keep lockfile because of exception ===') {
-			fclose($debugHandler);
-			unlink($lockfile);
-			die('Last cron jailed out with an exception. Exiting...' . "\n" . 'Take a look into the contents of ' . $lockdir . $fName . '* for more information!' . "\n");
-		}
-
-		// Check if cron is running or has died.
-		$check_pid = substr(strstr($fName, "-"), 1);
-		system("kill -CHLD " . (int)$check_pid . " 1> /dev/null 2> /dev/null", $check_pid_return);
-
-		if ($check_pid_return == 1) {
-			// Result:      Existing lockfile/pid isnt running
-			//              Most likely it has died
-			//
-			// Action:      Remove it and continue
-			//
-			fwrite($debugHandler, 'Previous cronjob didn\'t exit clean. PID: ' . $check_pid . "\n");
-			fwrite($debugHandler, 'Removing lockfile: ' . $lockdir . $fName . "\n");
-			unlink($lockdir . $fName);
-
-		} else {
-			// Result:      A Cronscript with this pid
-			//              is still running
-			// Action:      remove my own Lock and die
-			//
-			// close the current lockfile
-			fclose($debugHandler);
-
-			// ... and delete it
-			unlink($lockfile);
-			die('There is already a Cronjob in progress. Exiting...' . "\n" . 'Take a look into the contents of ' . $lockdir . $lockFilename . '* for more information!' . "\n");
-		}
-	}
+if (!file_exists(FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php')) {
+	die("Froxlor does not seem to be installed yet - skipping cronjob");
 }
 
 // Includes the Usersettings eg. MySQL-Username/Passwort etc.
@@ -138,6 +98,53 @@ try {
 }
 
 fwrite($debugHandler, 'Database-connection established' . "\n");
+
+// open the lockfile directory and scan for existing lockfiles
+$lockDirHandle = opendir($lockdir);
+
+while ($fName = readdir($lockDirHandle)) {
+
+	if ($lockFilename == substr($fName, 0, strlen($lockFilename))
+			&& $lockfName != $fName
+	) {
+		// Check if last run jailed out with an exception
+		$croncontent = file($lockdir . $fName);
+		$lastline = $croncontent[(count($croncontent) - 1)];
+
+		if ($lastline == '=== Keep lockfile because of exception ===') {
+			fclose($debugHandler);
+			unlink($lockfile);
+			dieWithMail('Last cron jailed out with an exception. Exiting...' . "\n" . 'Take a look into the contents of ' . $lockdir . $fName . '* for more information!' . "\n");
+		}
+
+		// Check if cron is running or has died.
+		$check_pid = substr(strstr($fName, "-"), 1);
+		system("kill -CHLD " . (int)$check_pid . " 1> /dev/null 2> /dev/null", $check_pid_return);
+
+		if ($check_pid_return == 1) {
+			// Result:      Existing lockfile/pid isnt running
+			//              Most likely it has died
+			//
+			// Action:      Remove it and continue
+			//
+			fwrite($debugHandler, 'Previous cronjob didn\'t exit clean. PID: ' . $check_pid . "\n");
+			fwrite($debugHandler, 'Removing lockfile: ' . $lockdir . $fName . "\n");
+			unlink($lockdir . $fName);
+
+		} else {
+			// Result:      A Cronscript with this pid
+			//              is still running
+			// Action:      remove my own Lock and die
+			//
+			// close the current lockfile
+			fclose($debugHandler);
+
+			// ... and delete it
+			unlink($lockfile);
+			dieWithMail('There is already a Cronjob for '.$crontype.' in progress. Exiting...' . "\n" . 'Take a look into the contents of ' . $lockdir . $lockFilename . '* for more information!' . "\n");
+		}
+	}
+}
 
 /**
  * if using fcgid or fpm for froxlor-vhost itself, we have to check
@@ -185,7 +192,7 @@ if (Settings::Get('panel.version') == null
 		$errormessage.= "Possible reason: Froxlor update\n";
 		$errormessage.= "Information: Current version in database: ".Settings::Get('panel.version')." - version of Froxlor files: ".$version."\n";
 		$errormessage.= "Solution: Please visit your Foxlor admin interface for further information.\n";
-		die($errormessage);
+		dieWithMail($errormessage);
 	}
 
 	if (Settings::Get('system.cron_allowautoupdate') == 1) {
