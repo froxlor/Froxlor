@@ -19,8 +19,6 @@
 
 /**
  * Make crypted password from clear text password
- * @param string Password to be crypted
- * @return string encrypted password
  *
  * @author Michal Wojcik <m.wojcik@sonet3.pl>
  * @author Michael Kaufmann <mkaufmann@nutime.de>
@@ -29,12 +27,16 @@
  * 0 - default crypt (depenend on system configuration)
  * 1 - MD5 $1$
  * 2 - BLOWFISH $2a$ | $2y$07$ (on php 5.3.7+)
- * 3 - SHA-256 $5$
+ * 3 - SHA-256 $5$ (default)
  * 4 - SHA-512 $6$
+ *
+ * @param string $password Password to be crypted
+ *
+ * @return string encrypted password
  */
 function makeCryptPassword ($password) {
 
-	$type = Settings::Get('system.passwordcryptfunc') !== null ? (int)Settings::Get('system.passwordcryptfunc') : 1;
+	$type = Settings::Get('system.passwordcryptfunc') !== null ? (int)Settings::Get('system.passwordcryptfunc') : 3;
 
 	switch ($type) {
 		case 0:
