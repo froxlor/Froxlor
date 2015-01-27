@@ -864,7 +864,7 @@ label.nobr {
 	margin-bottom:5px;
 }
 
-/* NEWSFEED */
+/* NEWSFEED
 #newsfeed {
 	display: none;
 }
@@ -899,6 +899,45 @@ label.nobr {
 .newsitem small {
 	font-size:8px;
 	color:gray;
+}*/
+.newsfeed {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.newsfeed li {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #999;
+}
+
+.newsfeed li:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom: none;
+}
+
+.newsfeed li.left .newsfeed-body {
+    margin-left: 60px;
+}
+
+.newsfeed li.right .newsfeed-body {
+    margin-right: 60px;
+}
+
+.newsfeed li .newsfeed-body p {
+    margin: 0;
+}
+
+.panel .slidedown .glyphicon,
+.newsfeed .glyphicon {
+    margin-right: 5px;
+}
+
+.newsfeed-panel .panel-body {
+    height: 350px;
+    overflow-y: scroll;
 }
 
 /* TIPPER */

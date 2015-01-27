@@ -174,7 +174,12 @@ $header
 							<th>News</th>
 						</tr>
 					</thead>
-					<tbody id="newsfeeditems">
+					<tbody>
+						<tr>
+							<td>
+								<ul class="newsfeed" id="newsfeeditems"></ul>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				</if>
