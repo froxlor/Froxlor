@@ -2852,3 +2852,27 @@ if (isFroxlorVersion('0.9.33-dev3')) {
 
 	updateToVersion('0.9.33-rc1');
 }
+
+if (isFroxlorVersion('0.9.33-rc1')) {
+	showUpdateStep("Updating from 0.9.33-rc1 to 0.9.33-rc2", false);
+
+	showUpdateStep("Add new setting for sending cron-errors via mail");
+	$sendcronerrors = isset($_POST['system_send_cron_errors']) ? (int)$_POST['system_send_cron_errors'] : "0";
+	Settings::addNew('system.send_cron_errors', $sendcronerrors);
+	lastStepStatus(0);
+
+	showUpdateStep("Add new custom-notes field for admins and customer");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `custom_notes` text AFTER `theme`");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `custom_notes_show` tinyint(1) NOT NULL default '0' AFTER `custom_notes`");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `custom_notes` text AFTER `theme`");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `custom_notes_show` tinyint(1) NOT NULL default '0' AFTER `custom_notes`");
+	lastStepStatus(0);
+
+	// go from varchar(50) to varchar(255) because of some hashes that are longer than that
+	showUpdateStep("Updating table structure of admins and customers");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` MODIFY `password` varchar(255) NOT NULL default ''");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` MODIFY `password` varchar(255) NOT NULL default ''");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.33-rc2');
+}

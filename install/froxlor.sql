@@ -91,7 +91,7 @@ DROP TABLE IF EXISTS `panel_admins`;
 CREATE TABLE `panel_admins` (
   `adminid` int(11) unsigned NOT NULL auto_increment,
   `loginname` varchar(50) NOT NULL default '',
-  `password` varchar(50) NOT NULL default '',
+  `password` varchar(255) NOT NULL default '',
   `name` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `def_language` varchar(255) NOT NULL default '',
@@ -143,7 +143,7 @@ DROP TABLE IF EXISTS `panel_customers`;
 CREATE TABLE `panel_customers` (
   `customerid` int(11) unsigned NOT NULL auto_increment,
   `loginname` varchar(50) NOT NULL default '',
-  `password` varchar(50) NOT NULL default '',
+  `password` varchar(255) NOT NULL default '',
   `adminid` int(11) unsigned NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
   `firstname` varchar(255) NOT NULL default '',
@@ -492,7 +492,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'phpreload_command', ''),
 	('system', 'apache24', '0'),
 	('system', 'documentroot_use_default_value', '0'),
-	('system', 'passwordcryptfunc', '1'),
+	('system', 'passwordcryptfunc', '3'),
 	('system', 'axfrservers', ''),
 	('system', 'customer_ssl_path', '/etc/ssl/froxlor-custom/'),
 	('system', 'allow_error_report_admin', '1'),
@@ -507,6 +507,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'croncmdline', '/usr/bin/nice -n 5 /usr/bin/php5 -q'),
 	('system', 'cron_allowautoupdate', '0'),
 	('system', 'dns_createhostnameentry', '0'),
+	('system', 'send_cron_errors', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -537,7 +538,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.33-rc1');
+	('panel', 'version', '0.9.33-rc2');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

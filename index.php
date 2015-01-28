@@ -118,7 +118,7 @@ if ($action == 'login') {
 		if ($userinfo['loginfail_count'] >= Settings::Get('login.maxloginattempts') && $userinfo['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))) {
 			redirectTo('index.php', array('showmessage' => '3'));
 			exit;
-		} elseif ($userinfo['password'] == md5($password)) {
+		} elseif (validatePasswordLogin($userinfo, $password, $table, $uid)) {
 			// login correct
 			// reset loginfail_counter, set lastlogin_succ
 			$stmt = Database::prepare("UPDATE $table
