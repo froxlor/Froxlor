@@ -49,6 +49,19 @@ $(document).ready(function() {
 		$(".searchtext").val("");
 		$(".submitsearch").click();
 	});
+	// Make inputs with enabled unlimited checked disabled
+	$("input[name$='_ul']").each(function() {
+		var fieldname = $(this).attr("name").substring(0, $(this).attr("name").length - 3);
+		$("input[name='" + fieldname + "']").prop({
+			disabled: $(this).is(":checked")
+		});
+	});
+	$("input[name$='_ul']").change(function() {
+		var fieldname = $(this).attr("name").substring(0, $(this).attr("name").length - 3);
+		$("input[name='" + fieldname + "']").prop({
+			disabled: $(this).is(":checked")
+		}).focus();
+	});
 	// Height of divs fix
 	var snheight = $('#sidenavigation').height();
 	var mainheight = $('#maincontent').height();

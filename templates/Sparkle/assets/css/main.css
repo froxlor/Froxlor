@@ -573,6 +573,11 @@ input {
 	border-radius:3px;
 }
 
+input[disabled] {
+	cursor: not-allowed;
+	background-color: #eee;
+}
+
 textarea {
 	background:#fff url(../img/icons/text_align_left.png) no-repeat 5px 4px;
 	color: #333;
