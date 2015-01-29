@@ -44,7 +44,7 @@
  *
  * Unicode input might be given as either UTF-8 string, UCS-4 string or UCS-4 array.
  * Unicode output is available in the same formats.
- * You can select your preferred format via {@link set_paramter()}.
+ * You can select your preferred format via {@link set_parameter()}.
  *
  * ACE input and output is always expected to be ASCII.
  *
@@ -80,7 +80,7 @@ class idna_convert
 
     protected static $_mb_string_overload = null;
 
-    // See {@link set_paramter()} for details of how to change the following
+    // See {@link set_parameter()} for details of how to change the following
     // settings from within your script / application
     protected $_api_encoding = 'utf8';   // Default input charset is UTF-8
     protected $_allow_overlong = false;  // Overlong UTF-8 encodings are forbidden
@@ -630,7 +630,7 @@ class idna_convert
             } elseif (($this->_idn_version == '2003') && isset(self::$NP['replacemaps'][$v])) {
                 // There's a decomposition mapping for that code point
                 // Decompositions only in version 2003 (original) of IDNA
-                foreach ($this->_apply_cannonical_ordering(self::$NP['replacemaps'][$v]) as $out) {
+                foreach ($this->_apply_canonical_ordering(self::$NP['replacemaps'][$v]) as $out) {
                     $output[] = (int) $out;
                 }
             } else {
@@ -747,7 +747,7 @@ class idna_convert
      * @param    array      Decomposed UCS4 sequence
      * @return   array      Ordered USC4 sequence
      */
-    protected function _apply_cannonical_ordering($input)
+    protected function _apply_canonical_ordering($input)
     {
         $swap = true;
         $size = count($input);
