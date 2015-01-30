@@ -27,13 +27,16 @@ if(@php_sapi_name() != 'cli'
 }
 
 // Check argument count
+/*
 if (sizeof($argv) != 2) {
 	print_help($argv);
 	exit;
 }
+*/
 
 // Load the contents of the given path
 $path = $argv[1];
+$_f = isset($argv[2]) ? $argv[2] : null;
 $files = array();
 
 if ($dh = opendir($path)) {
@@ -43,7 +46,9 @@ if ($dh = opendir($path)) {
 		   && !is_dir($file)
 		   && preg_match('/(.+)\.lng\.php/i', $file)
 		) {
-			$files[$file] = str_replace('//', '/', $path . '/' . $file);
+			if (is_null($_f) || (!is_null($_f) && ($file == $_f || $file == $baseLanguage))) {
+				$files[$file] = str_replace('//', '/', $path . '/' . $file);
+			}
 		}
 	}
 
