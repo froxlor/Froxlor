@@ -60,6 +60,13 @@ class DomainBulkAction {
 	 * @var array
 	 */
 	private $_knownIpPort = null;
+
+	/**
+	 * array of known IP's to check against
+	 *
+	 * @var array
+	 */
+	private $_knownIpPortChk = null;
 	
 	/**
 	 * array of fields to import to panel_domains
@@ -319,6 +326,13 @@ class DomainBulkAction {
 		
 		// save iplist
 		$iplist = $domain_data['ips'];
+		$iplist_arr = array_unique(explode(",", $iplist));
+		$knownIPsCheck = array_unique($this->_knownIpPortChk);
+		// check whether we actually have at least one of the used IP's in our system
+		$result_iplist = array_intersect($iplist_arr, $knownIPsCheck);
+		// write back iplist
+		$iplist = implode(",", $result_iplist);
+
 		// dont need that for the domain-insert-statement
 		unset($domain_data['ips']);
 		
@@ -445,6 +459,7 @@ class DomainBulkAction {
 		$this->_knownIpPort = array ();
 		while ($ipp = $knownip_stmt->fetch()) {
 			$this->_knownIpPort[$ipp['ip']][] = $ipp;
+			$this->_knownIpPortChk[] = $ipp['ip'];
 		}
 	
 	}

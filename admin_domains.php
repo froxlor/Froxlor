@@ -1911,7 +1911,7 @@ if ($page == 'domains'
 
 			$customerid = intval($_POST['customerid']);
 			$separator = validate($_POST['separator'], 'separator');
-			$offset = validate($_POST['offset'], 'offset', "/[0-9]/i");
+			$offset = (int)validate($_POST['offset'], 'offset', "/[0-9]/i");
 
 			$file_name = $_FILES['file']['tmp_name'];
 
