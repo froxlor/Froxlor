@@ -64,7 +64,7 @@ function getTemplate($template, $noarea = 0) {
 			}
 		}
 
-		$output = $templatefile; // Minify_HTML::minify($templatefile, array('cssMinifier', 'jsMinifier'));
+		$output = $templatefile;
 		$templatecache[$theme][$template] = $output;
 	}
 
