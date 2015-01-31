@@ -51,6 +51,6 @@ define('TABLE_PANEL_DOMAIN_SSL_SETTINGS', 'domain_ssl_settings');
 define('TABLE_DOMAINTOIP', 'panel_domaintoip');
 
 // VERSION INFO
-$version = '0.9.33-rc2';
+$version = '0.9.33-rc3';
 $dbversion = '2';
 $branding = '';
