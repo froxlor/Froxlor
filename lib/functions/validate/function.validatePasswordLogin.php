@@ -60,19 +60,18 @@ function validatePasswordLogin($userinfo = null, $password = null, $table = 'pan
 		}
 	}
 
-	// check for update of hash
-	if ($update_hash) {
-		$upd_stmt = Database::prepare("
-			UPDATE " . $table . " SET `password` = :newpasswd WHERE `" . $uid . "` = :uid
-		");
-		$params = array (
-				'newpasswd' => makeCryptPassword($password),
-				'uid' => $userinfo[$uid]
-		);
-		Database::pexecute($upd_stmt, $params);
-	}
-
 	if ($pwd_hash == $pwd_check) {
+		// check for update of hash
+		if ($update_hash) {
+			$upd_stmt = Database::prepare("
+				UPDATE " . $table . " SET `password` = :newpasswd WHERE `" . $uid . "` = :uid
+			");
+			$params = array (
+					'newpasswd' => makeCryptPassword($password),
+					'uid' => $userinfo[$uid]
+			);
+			Database::pexecute($upd_stmt, $params);
+		}
 		return true;
 	}
 	return false;
