@@ -372,7 +372,8 @@ class FroxlorInstall {
 		$content .= $this->_status_message('begin', $this->_lng['install']['adding_admin_user']);
 		$ins_data = array(
 				'loginname' => $this->_data['admin_user'],
-				'password' => md5($this->_data['admin_pass1']),
+				/* use SHA256 default crypt */
+				'password' => crypt($this->_data['admin_pass1'], '$5$'. md5(uniqid(microtime(), 1)) . md5(uniqid(microtime(), 1))),
 				'email' => 'admin@' . $this->_data['servername'],
 				'deflang' => $this->_languages[$this->_activelng]
 		);
