@@ -1838,3 +1838,4 @@ $lng['usersettings']['custom_notes']['description'] = 'Feel free to put any note
 $lng['usersettings']['custom_notes']['show'] = 'Show your notes on the dashboard of the user';
 $lng['serversettings']['system_send_cron_errors']['title'] = 'Send cron-errors to froxlor-admin via e-mail';
 $lng['serversettings']['system_send_cron_errors']['description'] = 'Chose whether you want to receive an e-mail on cronjob errors. Keep in mind that this can lead to an e-mail being sent every 5 minutes depending on the error and your cronjob settings.';
+$lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID and PHP-FPM cannot be activated at the same time';
