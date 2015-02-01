@@ -255,8 +255,6 @@ class DomainBulkAction {
 	 * adds a single domain to the database using the given array
 	 *
 	 * @param array $domain_data        	
-	 * @param object $ins_stmt prepared PDO-statement to insert into panel_domains
-	 * @param object $ipp_ins_stmt prepared PDO-statement to insert into panel_domaintoip
 	 *        	
 	 * @return int last-inserted id or false on error
 	 */
