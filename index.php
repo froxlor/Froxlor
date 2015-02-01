@@ -511,7 +511,7 @@ if ($action == 'resetpwd') {
 								WHERE `customerid` = :userid"
 							);
 						}
-						Database::pexecute($stmt, array("newpassword" => md5($new_password), "userid" => $result['userid']));
+						Database::pexecute($stmt, array("newpassword" => makeCryptPassword($new_password), "userid" => $result['userid']));
 
 						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'));
 						$rstlog->logAction(USR_ACTION, LOG_NOTICE, "changed password using password reset.");
