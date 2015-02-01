@@ -645,7 +645,7 @@ if ($page == 'customers'
 					$ins_data = array(
 						'adminid' => $userinfo['adminid'],
 						'loginname' => $loginname,
-						'passwd' => md5($password),
+						'passwd' => makeCryptPassword($password),
 						'name' => $name,
 						'firstname' => $firstname,
 						'gender' => $gender,
@@ -1215,7 +1215,7 @@ if ($page == 'customers'
 
 					if ($password != '') {
 						$password = validatePassword($password);
-						$password = md5($password);
+						$password = makeCryptPassword($password);
 					} else {
 						$password = $result['password'];
 					}
