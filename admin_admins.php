@@ -372,7 +372,7 @@ if ($page == 'admins'
 
 				$ins_data = array(
 					'loginname' => $loginname,
-					'password' => md5($password),
+					'password' => makeCryptPassword($password),
 					'name' => $name,
 					'email' => $email,
 					'lang' => $def_language,
@@ -637,7 +637,7 @@ if ($page == 'admins'
 				} else {
 					if ($password != '') {
 						$password = validatePassword($password);
-						$password = md5($password);
+						$password = makeCryptPassword($password);
 					} else {
 						$password = $result['password'];
 					}

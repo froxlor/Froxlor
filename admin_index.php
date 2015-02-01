@@ -199,7 +199,7 @@ if ($page == 'overview') {
 	) {
 		$old_password = validate($_POST['old_password'], 'old password');
 
-		if (md5($old_password) != $userinfo['password']) {
+		if (!validatePasswordLogin($userinfo,$old_password,TABLE_PANEL_ADMINS,'adminid')) {
 			standard_error('oldpasswordnotcorrect');
 			exit;
 		}
@@ -219,13 +219,11 @@ if ($page == 'overview') {
 			$chgpwd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_ADMINS . "`
 				SET `password`= :newpasswd
-				WHERE `adminid`= :adminid
-				AND `password`= :oldpasswd"
+				WHERE `adminid`= :adminid"
 			);
 			Database::pexecute($chgpwd_stmt, array(
-				'newpasswd' => md5($new_password),
-				'adminid' => (int)$userinfo['adminid'],
-				'oldpasswd' => md5($old_password)
+				'newpasswd' => makeCryptPassword($new_password),
+				'adminid' => (int)$userinfo['adminid']
 			));
 			$log->logAction(ADM_ACTION, LOG_NOTICE, 'changed password');
 			redirectTo($filename, Array('s' => $s));
