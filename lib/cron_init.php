@@ -118,7 +118,7 @@ while ($fName = readdir($lockDirHandle)) {
 		}
 
 		// Check if cron is running or has died.
-		$check_pid = substr(strstr($fName, "-"), 1);
+		$check_pid = substr(strrchr($fName, "-"), 1);
 		system("kill -CHLD " . (int)$check_pid . " 1> /dev/null 2> /dev/null", $check_pid_return);
 
 		if ($check_pid_return == 1) {
