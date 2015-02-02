@@ -987,32 +987,8 @@ if ($page == 'customers'
 				}
 
 			} else {
-				$language_options = '';
-
-				while (list($language_file, $language_name) = each($languages)) {
-					$language_options.= makeoption($language_name, $language_file, Settings::Get('panel.standardlanguage'), true);
-				}
-
-				$diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				$traffic_ul = makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				$subdomains_ul = makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				$emails_ul = makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				$email_accounts_ul = makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				$email_forwarders_ul = makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				$email_quota_ul = makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-				$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-
-				$gender_options = makeoption($lng['gender']['undef'], 0, true, true, true);
-				$gender_options .= makeoption($lng['gender']['male'], 1, null, true, true);
-				$gender_options .= makeoption($lng['gender']['female'], 2, null, true, true);
-
-				$customer_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/customer/formfield.customer_add.php';
-				$customer_add_form = htmlform::genHTMLForm($customer_add_data);
-
-				$title = $customer_add_data['customer_add']['title'];
-				$image = $customer_add_data['customer_add']['image'];
+				$customer_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.customer.php';
+				$customer_add_form = HTMLform2::genHTMLform($customer_add_data, true);
 
 				eval("echo \"" . getTemplate("customers/customers_add") . "\";");
 			}
@@ -1577,78 +1553,15 @@ if ($page == 'customers'
 				}
 
 			} else {
-				$language_options = '';
-
-				while (list($language_file, $language_name) = each($languages)) {
-					$language_options.= makeoption($language_name, $language_file, $result['def_language'], true);
-				}
-
 				$dec_places = Settings::Get('panel.decimal_places');
 				$result['traffic'] = round($result['traffic'] / (1024 * 1024), $dec_places);
 				$result['diskspace'] = round($result['diskspace'] / 1024, $dec_places);
 				$result['email'] = $idna_convert->decode($result['email']);
 
-				$diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, $result['diskspace'], true, true);
-				if ($result['diskspace'] == '-1') {
-					$result['diskspace'] = '';
-				}
-
-				$traffic_ul = makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, $result['traffic'], true, true);
-				if ($result['traffic'] == '-1') {
-					$result['traffic'] = '';
-				}
-
-				$subdomains_ul = makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, $result['subdomains'], true, true);
-				if ($result['subdomains'] == '-1') {
-					$result['subdomains'] = '';
-				}
-
-				$emails_ul = makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, $result['emails'], true, true);
-				if ($result['emails'] == '-1') {
-					$result['emails'] = '';
-				}
-
-				$email_accounts_ul = makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, $result['email_accounts'], true, true);
-				if ($result['email_accounts'] == '-1') {
-					$result['email_accounts'] = '';
-				}
-
-				$email_forwarders_ul = makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, $result['email_forwarders'], true, true);
-				if ($result['email_forwarders'] == '-1') {
-					$result['email_forwarders'] = '';
-				}
-
-				$email_quota_ul = makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, $result['email_quota'], true, true);
-				if ($result['email_quota'] == '-1') {
-					$result['email_quota'] = '';
-				}
-
-				$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, $result['ftps'], true, true);
-				if ($result['ftps'] == '-1') {
-					$result['ftps'] = '';
-				}
-
-				$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, $result['tickets'], true, true);
-				if ($result['tickets'] == '-1') {
-					$result['tickets'] = '';
-				}
-
-				$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, $result['mysqls'], true, true);
-				if ($result['mysqls'] == '-1') {
-					$result['mysqls'] = '';
-				}
-
 				$result = htmlentities_array($result);
 
-				$gender_options = makeoption($lng['gender']['undef'], 0, ($result['gender'] == '0' ? true : false), true, true);
-				$gender_options .= makeoption($lng['gender']['male'], 1, ($result['gender'] == '1' ? true : false), true, true);
-				$gender_options .= makeoption($lng['gender']['female'], 2, ($result['gender'] == '2' ? true : false), true, true);
-
-				$customer_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/customer/formfield.customer_edit.php';
-				$customer_edit_form = htmlform::genHTMLForm($customer_edit_data);
-
-				$title = $customer_edit_data['customer_edit']['title'];
-				$image = $customer_edit_data['customer_edit']['image'];
+				$customer_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.customer.php';
+				$customer_edit_form = HTMLform2::genHTMLform($customer_edit_data);
 
 				eval("echo \"" . getTemplate("customers/customers_edit") . "\";");
 			}

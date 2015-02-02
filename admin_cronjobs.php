@@ -122,11 +122,8 @@ if ($page == 'cronjobs' || $page == 'overview') {
 					$change_cronfile = true;
 				}
 
-				$cronjobs_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/cronjobs/formfield.cronjobs_edit.php';
-				$cronjobs_edit_form = htmlform::genHTMLForm($cronjobs_edit_data);
-
-				$title = $cronjobs_edit_data['cronjobs_edit']['title'];
-				$image = $cronjobs_edit_data['cronjobs_edit']['image'];
+				$cronjobs_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.cronjobs.php';
+				$cronjobs_edit_form = HTMLform2::genHTMLForm($cronjobs_edit_data);
 
 				eval("echo \"" . getTemplate('cronjobs/cronjob_edit') . "\";");
 			}

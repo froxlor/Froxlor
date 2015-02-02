@@ -1,0 +1,1 @@
+<textarea {$attributes}>{$value}</textarea>
