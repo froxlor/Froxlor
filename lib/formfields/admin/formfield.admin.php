@@ -22,18 +22,13 @@ return array(
 			'loginname' => array(
 				'label' => $lng['login']['username'],
 				'type' => (isset($result['loginname'])) ? 'static' : 'text',
-				'mandatory' => true,
-				'value' => $result['loginname'],
-			),
+				'mandatory' => true,			),
 			'deactivated' => array(
 				'label' => $lng['admin']['deactivated_user'],
 				'type' => 'checkbox',
 				'value' => '1',
 				'sublabel' => $lng['panel']['yes'],
-				'visible' => (isset($result['loginname']) && $result['adminid'] != $userinfo['userid']) ? true : false,
-				'attributes' => array(
-					'checked' => ($result['deactivated'] != 0)
-				)
+				'visible' => (isset($result['loginname']) && $result['adminid'] != $userinfo['userid']),
 			),
 			'admin_password' => array(
 				'label' => $lng['login']['password'],
@@ -46,7 +41,6 @@ return array(
 				'type' => 'text',
 				'visible' => (Settings::Get('panel.password_regex') == ''),
 				'value' => generatePassword(),
-				'default' => generatePassword(),
 				'attributes' => array(
 					'readonly' => true
 				)
@@ -55,8 +49,7 @@ return array(
 				'label' => $lng['login']['language'],
 				'type' => 'select',
 				'generate' => 'languages',
-				'default' => Settings::Get('panel.standardlanguage'),
-				'selected' => $result['def_language']
+				'selected' => Settings::Get('panel.standardlanguage')
 			)
 		)
 	),
@@ -66,20 +59,17 @@ return array(
 			'name' => array(
 				'label' => $lng['customer']['name'],
 				'type' => 'text',
-				'mandatory' => true,
-				'value' => $result['name']
+				'mandatory' => true
 			),
 			'email' => array(
 				'label' => $lng['customer']['email'],
 				'type' => 'email',
-				'mandatory' => true,
-				'value' => $result['email']
+				'mandatory' => true
 			),
 			'custom_notes' => array(
 				'label' => $lng['usersettings']['custom_notes']['title'],
 				'desc' => $lng['usersettings']['custom_notes']['description'],
 				'type' => 'textarea',
-				'value' => $result['custom_notes'],
 				'attributes' => array(
 					'cols' => 60,
 					'rows' => 12
@@ -89,17 +79,13 @@ return array(
 				'label' => $lng['usersettings']['custom_notes']['show'],
 				'type' => 'checkbox',
 				'sublabel' => $lng['panel']['yes'],
-				'value' => '1',
-				'default' => false,
-				'attributes' => array(
-					'checked' => ($result['custom_notes_show'] != '0')
-				)
+				'value' => '1'
 			)
 		)
 	),
 	'servicedata' => array(
 		'title' => $lng['admin']['servicedata'],
-		'visible' => ($result['adminid'] != $userinfo['userid']),
+		'visible' => (isset($result['adminid']) && $result['adminid'] != $userinfo['userid']),
 		'fields' => array(
 			'ipaddress' => array(
 				'label' => $lng['serversettings']['ipaddress']['title'],
@@ -110,16 +96,12 @@ return array(
 				'label' => $lng['admin']['change_serversettings'],
 				'type' => 'checkbox',
 				'sublabel' => $lng['panel']['yes'],
-				'value' => 1,
-				'attributes' => array(
-					'checked' => ($result['change_serversettings'] != '0')
-				)
+				'value' => 1
 			),
 			'customers' => array(
 				'label' => $lng['admin']['customers'],
 				'type' => 'textul',
-				'default' => 0,
-				'value' => $result['customers'],
+				'value' => 0,
 				'mandatory' => true,
 				'attributes' => array(
 					'maxlength' => 9
@@ -129,16 +111,12 @@ return array(
 				'label' => $lng['admin']['customers_see_all'],
 				'type' => 'checkbox',
 				'sublabel' => $lng['panel']['yes'],
-				'value' => '1',
-				'attributes' => array(
-					'checked' => ($result['customers_see_all'] != 0)
-				)
+				'value' => '1'
 			),
 			'domains' => array(
 				'label' => $lng['admin']['domains'],
 				'type' => 'textul',
-				'default' => 0,
-				'value' => $result['domains'],
+				'value' => 0,
 				'mandatory' => true,
 				'attributes' => array(
 					'maxlength' => 9
@@ -148,25 +126,18 @@ return array(
 				'label' => $lng['admin']['domains_see_all'],
 				'type' => 'checkbox',
 				'sublabel' => $lng['panel']['yes'],
-				'value' => '1',
-				'attributes' => array(
-					'checked' => ($result['domains_see_all'] != 0)
-				)
+				'value' => '1'
 			),
 			'caneditphpsettings' => array(
 				'label' => $lng['admin']['caneditphpsettings'],
 				'type' => 'checkbox',
 				'sublabel' => $lng['panel']['yes'],
-				'value' => '1',
-				'attributes' => array(
-					'checked' => ($result['caneditphpsettings'] != 0)
-				)
+				'value' => '1'
 			),
 			'diskspace' => array(
 				'label' => $lng['customer']['diskspace'],
 				'type' => 'textul',
-				'value' => $result['diskspace'],
-				'default' => 0,
+				'value' => 0,
 				'mandatory' => true,
 				'attributes' => array(
 					'maxlength' => 6
@@ -175,8 +146,7 @@ return array(
 			'traffic' => array(
 				'label' => $lng['customer']['traffic'],
 				'type' => 'textul',
-				'value' => $result['traffic'],
-				'default' => 0,
+				'value' => 0,
 				'mandatory' => true,
 				'attributes' => array(
 					'maxlength' => 4
@@ -185,8 +155,7 @@ return array(
 			'subdomains' => array(
 				'label' => $lng['customer']['subdomains'],
 				'type' => 'textul',
-				'default' => 0,
-				'value' => $result['subdomains'],
+				'value' => 0,
 				'mandatory' => true,
 				'attributes' => array(
 					'maxlength' => 9
@@ -195,8 +164,7 @@ return array(
 			'emails' => array(
 				'label' => $lng['customer']['emails'],
 				'type' => 'textul',
-				'default' => 0,
-				'value' => $result['emails'],
+				'value' => 0,
 				'mandatory' => true,
 				'attributes' => array(
 					'maxlength' => 9
@@ -205,8 +173,7 @@ return array(
 			'email_accounts' => array(
 				'label' => $lng['customer']['accounts'],
 				'type' => 'textul',
-				'default' => 0,
-				'value' => $result['email_accounts'],
+				'value' => 0,
 				'mandatory' => true,
 				'attributes' => array(
 					'maxlength' => 9
@@ -215,8 +182,7 @@ return array(
 			'email_forwarders' => array(
 				'label' => $lng['customer']['forwarders'],
 				'type' => 'textul',
-				'default' => 0,
-				'value' => $result['email_forwarders'],
+				'value' => 0,
 				'mandatory' => true,
 				'attributes' => array(
 					'maxlength' => 9
@@ -225,8 +191,7 @@ return array(
 			'email_quota' => array(
 				'label' => $lng['customer']['email_quota'],
 				'type' => 'textul',
-				'default' => 0,
-				'value' => $result['email_quota'],
+				'value' => 0,
 				'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 				'mandatory' => true,
 				'attributes' => array(
@@ -236,8 +201,7 @@ return array(
 			'ftps' => array(
 				'label' => $lng['customer']['ftps'],
 				'type' => 'textul',
-				'default' => 0,
-				'value' => $result['ftps'],
+				'value' => 0,
 				'attributes' => array(
 					'maxlength' => 9
 				)
@@ -245,8 +209,7 @@ return array(
 			'tickets' => array(
 				'label' => $lng['customer']['tickets'],
 				'type' => 'textul',
-				'default' => 0,
-				'value' => $result['tickets'],
+				'value' => 0,
 				'visible' => (Settings::Get('ticket.enabled') == '1' ? true : false),
 				'attributes' => array(
 					'maxlength' => 9
@@ -256,16 +219,12 @@ return array(
 				'label' => $lng['admin']['tickets_see_all'],
 				'type' => 'checkbox',
 				'sublabel' => $lng['panel']['yes'],
-				'value' => '1',
-				'attributes' => array(
-					'checked' => ($result['tickets_see_all'] != '0')
-				)
+				'value' => '1'
 			),
 			'mysqls' => array(
 				'label' => $lng['customer']['mysqls'],
 				'type' => 'textul',
-				'default' => 0,
-				'value' => $result['mysqls'],
+				'value' => 0,
 				'mandatory' => true,
 				'attributes' => array(
 					'maxlength' => 9

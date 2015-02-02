@@ -21,21 +21,16 @@ return array(
 			'cronfile' => array(
 				'label' => 'Cronjob',
 				'type' => ($change_cronfile == 1 ? 'text' : 'static'),
-				'value' => $result['cronfile']
 			),
 			'isactive' => array(
 				'label' => $lng['admin']['activated'],
 				'type' => 'checkbox',
 				'sublabel' => $lng['panel']['yes'],
 				'value' => 1,
-				'attributes' => array(
-					'checked' => ($result['isactive'] != 0) ? true : false
-				)
 			),
 			'interval_value' => array(
 				'label' => $lng['cronjob']['cronjobintervalv'],
-				'type' => 'text',
-				'value' => $interval_value
+				'type' => 'text'
 			),
 			'interval_interval' => array(
 				'label' => $lng['cronjob']['cronjobinterval'],

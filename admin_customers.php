@@ -988,7 +988,7 @@ if ($page == 'customers'
 
 			} else {
 				$customer_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.customer.php';
-				$customer_add_form = HTMLform2::genHTMLform($customer_add_data, true);
+				$customer_add_form = HTMLform2::genHTMLform($customer_add_data);
 
 				eval("echo \"" . getTemplate("customers/customers_add") . "\";");
 			}
@@ -1561,7 +1561,7 @@ if ($page == 'customers'
 				$result = htmlentities_array($result);
 
 				$customer_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.customer.php';
-				$customer_edit_form = HTMLform2::genHTMLform($customer_edit_data);
+				$customer_edit_form = HTMLform2::genHTMLform($customer_edit_data, $result);
 
 				eval("echo \"" . getTemplate("customers/customers_edit") . "\";");
 			}

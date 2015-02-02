@@ -26,10 +26,10 @@ class HTMLform2 {
 	 * @access public
 	 * @static
 	 * @param array $formdata (default: array())
-	 * @param int $newForm (default: 0)
+	 * @param array $data (default: array())
 	 * @return void
 	 */
-	public static function genHTMLform($formdata = array(), $newForm = false) {
+	public static function genHTMLform($formdata = array(), $data = array()) {
 		global $lng, $theme;
 		self::$_form = '';
 		
@@ -47,24 +47,19 @@ class HTMLform2 {
 					if (isset($fielddata['visible'])) {
 						if ($fielddata['visible'] == false) {
 							continue;
-						} elseif ($fielddata['visible'] === 'new' && $newForm == false) {
+						} elseif ($fielddata['visible'] === 'new' && !empty($data)) {
 							continue;
-						} elseif ($fielddata['visible'] === 'edit' && $newForm == true) {
+						} elseif ($fielddata['visible'] === 'edit' && empty($data)) {
 							continue;
 						}
 					}
 					
-					// Set value to default val if new form
-					if ($newForm) {
-						$fielddata = self::_checkForValue($fielddata);
+					// Set value if given
+					if (!empty($data)) {
+						$fielddata = self::_setValue($fieldname, $fielddata, $data);
 					}
 					
 					$field = self::_parseDataField($fieldname, $fielddata);
-					
-					// Addons
-					foreach ($fielddata['addons'] as $addonname => $addondata) {
-						$field .= self::_parseDataField($addonname, $addondata);
-					}
 					
 					$label = $fielddata['label'] . self::_getMandatoryFlag($fielddata);
 					if (isset($fielddata['desc']) && $fielddata['desc'] != "") {
@@ -82,29 +77,19 @@ class HTMLform2 {
 		return self::$_form;
 	}
 	
-	private static function _checkForValue($fielddata) {
-		switch($fielddata['type']) {
-			case 'checkbox':
-				if (isset($fielddata['default'])) {
-					$fielddata['attributes']['checked'] = $fielddata['default'];
-				} else {
-					$fielddata['attributes']['checked'] = false;
-				}				
-				break;
-			case 'select':
-				if (isset($fielddata['default'])) {
-					$fielddata['selected'] = $fielddata['default'];
-				} else {
-					unset($fielddata['selected']);
-				}
-				break;
-			default:
-				if (isset($fielddata['default'])) {
-					$fielddata['value'] = $fielddata['default'];
-				} else {
-					unset($fielddata['value']);
-				}
-				break;
+	private static function _setValue($fieldname, $fielddata, $data) {
+		if (isset($data[$fieldname])) {
+			switch($fielddata['type']) {
+				case 'checkbox':
+					$fielddata['attributes']['checked'] = ($data[$fieldname] == 1) ? true : false;			
+					break;
+				case 'select':
+					$fielddata['selected'] = $data[$fieldname];
+					break;
+				default:
+					$fielddata['value'] = $data[$fieldname];
+					break;
+			}
 		}
 		
 		return $fielddata;
@@ -399,8 +384,8 @@ class HTMLform2 {
 		$attributes = self::_parseAttributes($fieldname, $fielddata);
 		unset($attributes['value']);
 		$attributes = self::_glueAttributes($attributes);
-		
-		$value = $fielddata['value'];
+
+		$value = isset($fielddata['value']) ? $fielddata['value'] : "";
 		eval("\$return = \"" . getTemplate("htmlform/textarea", "1") . "\";");
 		return $return;
 	}

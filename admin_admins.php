@@ -454,7 +454,7 @@ if ($page == 'admins'
 			}
 
 			$admin_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.admin.php';
-			$admin_add_form = HTMLform2::genHTMLForm($admin_add_data, true);
+			$admin_add_form = HTMLform2::genHTMLForm($admin_add_data);
 
 			eval("echo \"" . getTemplate("admins/admins_add") . "\";");
 		}
@@ -779,7 +779,7 @@ if ($page == 'admins'
 				$result = htmlentities_array($result);
 
 				$admin_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.admin.php';
-				$admin_edit_form = HTMLform2::genHTMLForm($admin_edit_data);
+				$admin_edit_form = HTMLform2::genHTMLForm($admin_edit_data, $result);
 
 				eval("echo \"" . getTemplate("admins/admins_edit") . "\";");
 			}
