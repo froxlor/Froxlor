@@ -34,13 +34,13 @@ class ConfigParser {
 	 * @var array 
 	 */
 	private $services = array();
-	
+
 	/**
 	 * Store the parsed SimpleXMLElement for usage
 	 * @var SimpleXMLElement
 	 */
 	private $xml;
-	
+
 	/**
 	 * Memorize if we already parsed the XML
 	 * @var bool
@@ -64,7 +64,7 @@ class ConfigParser {
 	 * @var bool
 	 */
 	public $deprecated = false;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -76,6 +76,7 @@ class ConfigParser {
 		if (!is_readable($filename)) {
 			throw new Exception('File not readable');
 		}
+
 		$this->xml = simplexml_load_file($filename);
 		if ($this->xml === false) {
 			$error = '';
@@ -102,15 +103,17 @@ class ConfigParser {
 			}
 		}
 	}
-	
+
 	/**
 	 * Parse the XML and populate $this->services
-	 * @return void
+	 * @return bool
 	 */
 	private function _parse() {
+		// We only want to parse the stuff one time
 		if ($this->isparsed == true) {
 			return true;
 		}
+
 		// Get all services
 		$services = $this->xml->xpath('//services/service');
 		foreach ($services as $service) {
@@ -125,12 +128,12 @@ class ConfigParser {
 				}
 			}
 		}
-		
-		// Switch parsed - indicator
+
+		// Switch flag to indicate we parsed our data
 		$this->isparsed = true;
 		return true;
 	}
-	
+
 	/**
 	 * Return all services defined by the XML
 	 * 
@@ -140,7 +143,7 @@ class ConfigParser {
 	public function getServices() {
 		// Let's parse this shit(!)
 		$this->_parse();
-		
+
 		// Return our carefully searched for services
 		return $this->services;
 	}

@@ -31,17 +31,41 @@
  * @package    Classes
  */
 class ConfigDaemon {
+	/**
+	 * Holding the commands for this daemon
+	 * @var array
+	 */
 	private $orders = array();
-	
-	private $fullxml;
-	
-	private $daemon;
-	
-	private $xpath;
-	
-	public $title;
 
+	/**
+	 * Store the parsed SimpleXMLElement for usage
+	 * @var SimpleXMLElement
+	 */
+	private $fullxml;
+
+	/**
+	 * Memorize if we already parsed the XML
+	 * @var bool
+	 */
 	private $isparsed = false;
+
+	/**
+	 * Sub - area of the full - XML only holding the daemon - data we are interessted in
+	 * @var SimpleXMLElement
+	 */
+	private $daemon;
+
+	/**
+	 * xpath leading to this daemon in the full XML
+	 * @var string
+	 */
+	private $xpath;
+
+	/**
+	 * Human - readable title of this service
+	 * @var string
+	 */
+	public $title;
 
 	public function __construct($xml, $xpath) {
 		$this->fullxml = $xml;
@@ -53,12 +77,18 @@ class ConfigDaemon {
 		}
 	}
 
+	/**
+	 * Parse the XML and populate $this->orders
+	 * @return bool
+	 */
 	private function _parse() {
-		if ($this->isparsed) {
-			return;
+		// We only want to parse the stuff one time
+		if ($this->isparsed == true) {
+			return true;
 		}
+
 		$preparsed = array();
-		// First: let's handle push everything into an array and expand all includes
+		// First: let's push everything into an array and expand all includes
 		foreach ($this->daemon[0]->children() as $order) {
 			switch((string)$order->getName()) {
 				case "install":
@@ -94,9 +124,27 @@ class ConfigDaemon {
 				}
 			}
 		}
+
+		// Switch flag to indicate we parsed our data
 		$this->isparsed = true;
+		return true;
 	}
-	
+
+	/**
+	 * Get config for this daemon
+	 *
+	 * The returned array will be an array of array, each sub-array looking like this:
+	 * array('type' => 'install|file|command', 'content' => '<TEXT>')
+	 * If the type is "file", an additional "name" - element will be added to the array
+	 * To configure a daemon, the steps in the array must be followed in order
+	 *
+	 * @return array
+	 */
+	public function getConfig() {
+		$this->_parse();
+		return $this->orders;
+	}
+
 	/**
 	 * Parse a single order and return it in a format for easier usage
 	 *
@@ -119,7 +167,7 @@ class ConfigDaemon {
 
 		return $parsedorder;
 	}
-	
+
 	/**
 	 * Parse a install - order and return it in a format for easier usage
 	 *
@@ -131,6 +179,7 @@ class ConfigDaemon {
 		if ($order->count() == 0) {
 			return array('type' => 'install', 'content' => (string)$order);
 		}
+
 		// Hold the results
 		$visibility = 1;
 		$content = '';
@@ -140,14 +189,14 @@ class ConfigDaemon {
 				case "content": $content = $this->_parseContent((string)$child); break;
 			}
 		}
-		
+
 		if ($visibility > 0) {
 			return array('type' => 'install', 'content' => $content);
 		} else {
 			return '';
 		}
 	}
-	
+
 	/**
 	 * Parse a command - order and return it in a format for easier usage
 	 *
@@ -159,6 +208,7 @@ class ConfigDaemon {
 		if ($order->count() == 0) {
 			return array('type' => 'command', 'content' => (string)$order);
 		}
+
 		// Hold the results
 		$visibility = 1;
 		$content = '';
@@ -168,7 +218,7 @@ class ConfigDaemon {
 				case "content": $content = $this->_parseContent((string)$child); break;
 			}
 		}
-		
+
 		if ($visibility > 0) {
 			return array('type' => 'command', 'content' => $content);
 		} else {
@@ -187,6 +237,7 @@ class ConfigDaemon {
 		if ($order->count() == 0) {
 			return array('type' => 'file', 'content' => (string)$order, 'name' => $attributes['name']);
 		}
+
 		// Hold the results
 		$visibility = 1;
 		$content = '';
@@ -204,10 +255,10 @@ class ConfigDaemon {
 		if (array_key_exists('backup', $attributes)) {
 			$return[] = array('type' => 'command', 'content' => 'mv "' . $attributes['name'] . '" "' . $attributes['name'] . '.frx.bak"');
 		}
-		
+
 		// Now the content of the file can be written
 		$return[] = array('type' => 'file', 'content' => $content, 'name' => $attributes['name']);
-		
+
 		// Let's check if the mode of the file should be changed
 		if (array_key_exists('chmod', $attributes)) {
 			$return[] = array('type' => 'command', 'content' => 'chmod ' . $attributes['chmod'] . ' "' . $attributes['name'] . '"');
@@ -253,10 +304,12 @@ class ConfigDaemon {
 		foreach($order->attributes() as $key => $value) {
 			$attributes[(string)$key] = (string)$value;
 		}
+
 		$order = $this->_parseContent((string)$order);
 		if (!array_key_exists('mode', $attributes)) {
 			throw new \Exception('"<visibility>' . $order . '</visibility>" is missing mode');
 		}
+
 		switch ($attributes['mode']) {
 			case "isfile": if (!is_file($order)) { return -1; }; break;
 			case "isdir": if (!is_dir($order)) { return -1; }; break;
@@ -267,11 +320,5 @@ class ConfigDaemon {
 			case "groupexists": if (true) { return 0; }; break;
 		}
 		return 0;
-	}
-
-	public function getConfig() {
-		$this->_parse();
-		return $this->orders;
-		
 	}
 }

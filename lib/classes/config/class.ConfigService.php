@@ -31,28 +31,56 @@
  * @package    Classes
  */
 class ConfigService {
+	/**
+	 * Holding the available daemons in this service
+	 * @var array 
+	 */
 	private $daemons = array();
-	
+
+	/**
+	 * Store the parsed SimpleXMLElement for usage
+	 * @var SimpleXMLElement
+	 */
 	private $fullxml;
-	
-	private $service;
-	
+
+	/**
+	 * Memorize if we already parsed the XML
+	 * @var bool
+	 */
+	private $isparsed = false;
+
+	/**
+	 * xpath leading to this service in the full XML
+	 * @var string
+	 */
 	private $xpath;
-	
+
+	/**
+	 * Human - readable title of this service
+	 * @var string
+	 */
 	public $title;
-	
+
 	public function __construct($xml, $xpath) {
 		$this->fullxml = $xml;
 		$this->xpath = $xpath;
-		$this->service = $this->fullxml->xpath($this->xpath);
-		$attributes = $this->service[0]->attributes();
+		$service = $this->fullxml->xpath($this->xpath);
+		$attributes = $service[0]->attributes();
 		if ($attributes['title'] != '') {
 			$this->title = (string)$attributes['title'];
 		}
-		$this->parse();
 	}
 
-	private function parse() {
+	/**
+	 * Parse the XML and populate $this->daemons
+	 * @return bool
+	 */
+	private function _parse() {
+		// We only want to parse the stuff one time
+		if ($this->isparsed == true) {
+			return true;
+		}
+
 		$daemons = $this->fullxml->xpath($this->xpath . '/daemon');
 		foreach ($daemons as $daemon) {
 			if ($daemon->getName() == 'comment') {
@@ -81,9 +109,14 @@ class ConfigService {
 			}
 			$this->daemons[$name] = new ConfigDaemon($this->fullxml, $this->xpath . "/daemon" . $nametag . $versiontag);
 		}
+
+		// Switch flag to indicate we parsed our data
+		$this->isparsed = true;
+		return true;
 	}
-	
+
 	public function getDaemons() {
+		$this->_parse();
 		return $this->daemons;
 	}
 }
