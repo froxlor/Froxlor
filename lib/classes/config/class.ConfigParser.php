@@ -42,6 +42,30 @@ class ConfigParser {
 	private $xml;
 	
 	/**
+	 * Memorize if we already parsed the XML
+	 * @var bool
+	 */
+	private $isparsed = false;
+
+	/**
+	 * Name of the distribution this configuration is for
+	 * @var string
+	 */
+	public $distributionName = '';
+
+	/**
+	 * Version of the distribution this configuration is for
+	 * @var string
+	 */
+	public $distributionVersion = '';
+
+	/**
+	 * Show if this configuration is deprecated
+	 * @var bool
+	 */
+	public $deprecated = false;
+	
+	/**
 	 * Constructor
 	 * 
 	 * Initialize the XML - ConfigParser
@@ -58,16 +82,35 @@ class ConfigParser {
 			foreach(libxml_get_errors() as $error) {
 				$error .= "\t" . $error->message;
 			}
-			throw new Exception($error);
+			throw new \Exception($error);
 		}
-		$this->parse();
+		
+		// Let's see if we can find a <distribution> block in the XML
+		$distribution = $this->xml->xpath('//distribution');
+
+		// No distribution found - can't use this file
+		if (!is_array($distribution)) {
+			throw new \Exception('Invalid XML, no distribution found');
+		}
+
+		// Search for attributes we understand
+		foreach($distribution[0]->attributes() as $key => $value) {
+			switch ((string)$key) {
+				case "name": $this->distributionName = (string)$value; break;
+				case "version": $this->distributionVersion = (string)$value; break;
+				case "deprecated": (string)$value == 'true' ? $this->deprecated = true : $this->deprecated = false; break;
+			}
+		}
 	}
 	
 	/**
 	 * Parse the XML and populate $this->services
 	 * @return void
 	 */
-	private function parse() {
+	private function _parse() {
+		if ($this->isparsed == true) {
+			return true;
+		}
 		// Get all services
 		$services = $this->xml->xpath('//services/service');
 		foreach ($services as $service) {
@@ -82,6 +125,10 @@ class ConfigParser {
 				}
 			}
 		}
+		
+		// Switch parsed - indicator
+		$this->isparsed = true;
+		return true;
 	}
 	
 	/**
@@ -91,6 +138,10 @@ class ConfigParser {
 	 * @return array
 	 */
 	public function getServices() {
+		// Let's parse this shit(!)
+		$this->_parse();
+		
+		// Return our carefully searched for services
 		return $this->services;
 	}
 }
