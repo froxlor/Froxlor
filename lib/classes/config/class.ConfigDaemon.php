@@ -177,7 +177,7 @@ class ConfigDaemon {
 	private function _parseInstall($order, $attributes) {
 		// No sub - elements, so the content can be returned directly
 		if ($order->count() == 0) {
-			return array('type' => 'install', 'content' => (string)$order);
+			return array('type' => 'install', 'content' => $this->_parseContent((string)$order));
 		}
 
 		// Hold the results
@@ -186,12 +186,12 @@ class ConfigDaemon {
 		foreach($order->children() as $child) {
 			switch((string)$child->getName()) {
 				case "visibility": $visibility += $this->_checkVisibility($child); break;
-				case "content": $content = $this->_parseContent((string)$child); break;
+				case "content": $content = (string)$child; break;
 			}
 		}
 
 		if ($visibility > 0) {
-			return array('type' => 'install', 'content' => $content);
+			return array('type' => 'install', 'content' => $this->_parseContent($content));
 		} else {
 			return '';
 		}
@@ -206,7 +206,7 @@ class ConfigDaemon {
 	private function _parseCommand($order, $attributes) {
 		// No sub - elements, so the content can be returned directly
 		if ($order->count() == 0) {
-			return array('type' => 'command', 'content' => (string)$order);
+			return array('type' => 'command', 'content' => $this->_parseContent((string)$order));
 		}
 
 		// Hold the results
@@ -215,12 +215,12 @@ class ConfigDaemon {
 		foreach($order->children() as $child) {
 			switch((string)$child->getName()) {
 				case "visibility": $visibility += $this->_checkVisibility($child); break;
-				case "content": $content = $this->_parseContent((string)$child); break;
+				case "content": $content = (string)$child; break;
 			}
 		}
 
 		if ($visibility > 0) {
-			return array('type' => 'command', 'content' => $content);
+			return array('type' => 'command', 'content' => $this->_parseContent($content));
 		} else {
 			return '';
 		}
@@ -235,7 +235,7 @@ class ConfigDaemon {
 	private function _parseFile($order, $attributes) {
 		// No sub - elements, so the content can be returned directly
 		if ($order->count() == 0) {
-			return array('type' => 'file', 'content' => (string)$order, 'name' => $attributes['name']);
+			return array('type' => 'file', 'content' => (string)$order, 'name' => $this->_parseContent($attributes['name']));
 		}
 
 		// Hold the results
@@ -244,7 +244,7 @@ class ConfigDaemon {
 		foreach($order->children() as $child) {
 			switch((string)$child->getName()) {
 				case "visibility": $visibility += $this->_checkVisibility($child); break;
-				case "content": $content = $this->_parseContent((string)$child); break;
+				case "content": $content = (string)$child; break;
 			}
 		}
 
@@ -253,20 +253,20 @@ class ConfigDaemon {
 		// @TODO: Maybe have a backup - space somewhere?
 		// @TODO: Use IO - class
 		if (array_key_exists('backup', $attributes)) {
-			$return[] = array('type' => 'command', 'content' => 'mv "' . $attributes['name'] . '" "' . $attributes['name'] . '.frx.bak"');
+			$return[] = array('type' => 'command', 'content' => 'mv "' . $this->_parseContent($attributes['name']) . '" "' . $this->_parseContent($attributes['name']) . '.frx.bak"');
 		}
 
 		// Now the content of the file can be written
-		$return[] = array('type' => 'file', 'content' => $content, 'name' => $attributes['name']);
+		$return[] = array('type' => 'file', 'content' => $this->_parseContent($content), 'name' => $this->_parseContent($attributes['name']));
 
 		// Let's check if the mode of the file should be changed
 		if (array_key_exists('chmod', $attributes)) {
-			$return[] = array('type' => 'command', 'content' => 'chmod ' . $attributes['chmod'] . ' "' . $attributes['name'] . '"');
+			$return[] = array('type' => 'command', 'content' => 'chmod ' . $attributes['chmod'] . ' "' . $this->_parseContent($attributes['name']) . '"');
 		}
 
 		// Let's check if the owner of the file should be changed
 		if (array_key_exists('chown', $attributes)) {
-			$return[] = array('type' => 'command', 'content' => 'chown ' . $attributes['chown'] . ' "' . $attributes['name'] . '"');
+			$return[] = array('type' => 'command', 'content' => 'chown ' . $attributes['chown'] . ' "' . $this->_parseContent($attributes['name']) . '"');
 		}
 
 		if ($visibility > 0) {
@@ -282,7 +282,7 @@ class ConfigDaemon {
 	 * @return string $content w/o placeholder
 	 */
 	private function _parseContent($content) {
-		return preg_replace_callback('/{{(.*)}}/Ui', function ($matches) {
+		$content = preg_replace_callback('/\{\{(.*)\}\}/Ui', function ($matches) {
 			if (preg_match('/^settings\.(.*)$/', $matches[1], $match)) {
 				return Settings::Get($match[1]);
 			} elseif (preg_match('/^lng\.(.*)$/', $matches[1], $match)) {
@@ -292,6 +292,7 @@ class ConfigDaemon {
 				return ${$lngvar};
 			}
 		}, $content);
+		return $content;
 	}
 
 	/**
@@ -302,7 +303,7 @@ class ConfigDaemon {
 	private function _checkVisibility($order) {
 		$attributes = array();
 		foreach($order->attributes() as $key => $value) {
-			$attributes[(string)$key] = (string)$value;
+			$attributes[(string)$key] = $this->_parseContent((string)$value);
 		}
 
 		$order = $this->_parseContent((string)$order);
@@ -310,12 +311,14 @@ class ConfigDaemon {
 			throw new \Exception('"<visibility>' . $order . '</visibility>" is missing mode');
 		}
 
+		var_dump($attributes['mode'], $order);
 		switch ($attributes['mode']) {
 			case "isfile": if (!is_file($order)) { return -1; }; break;
 			case "isdir": if (!is_dir($order)) { return -1; }; break;
 			case "isdir": if (!is_dir($order)) { return -1; }; break;
 			case "false": if ($order == true) { return -1; }; break;
 			case "true": if ($order == false) { return -1; }; break;
+			case "notempty": if ($order == "") { return -1; }; break;
 			case "userexists": if (true) { return 0; }; break;
 			case "groupexists": if (true) { return 0; }; break;
 		}
