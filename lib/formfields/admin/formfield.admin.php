@@ -22,7 +22,8 @@ return array(
 			'loginname' => array(
 				'label' => $lng['login']['username'],
 				'type' => (isset($result['loginname'])) ? 'static' : 'text',
-				'mandatory' => true,			),
+				'mandatory' => true,
+			),
 			'deactivated' => array(
 				'label' => $lng['admin']['deactivated_user'],
 				'type' => 'checkbox',

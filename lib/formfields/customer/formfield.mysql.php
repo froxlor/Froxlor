@@ -26,6 +26,7 @@ return array(
 				'label' => $lng['mysql']['mysql_server'],
 				'type' => (isset($result)) ? 'select' : 'text',
 				'visible' => (1 < $count_mysqlservers ? true : false),
+		
 			),
 			'mysql_password' => array(
 				'label' => $lng['login']['password'],
@@ -39,6 +40,9 @@ return array(
 				'type' => 'text',
 				'visible' => (Settings::Get('panel.password_regex') == ''),
 				'value' => generatePassword(),
+				'attributes' => array(
+					'readonly' => true
+				)
 			),
 			'sendinfomail' => array(
 				'label' => $lng['customer']['sendinfomail'],

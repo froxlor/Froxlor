@@ -67,7 +67,16 @@ class HTMLform2 {
 					} else {
 						$desc = '';
 					}
-					eval("self::\$_form .= \"" . getTemplate("htmlform/skeleton", "1") . "\";");
+					
+					switch($fielddata['type']) {
+						case 'checkbox':
+							eval("self::\$_form .= \"" . getTemplate("htmlform/skeleton_checkbox", "1") . "\";");
+							break;
+						default:
+							eval("self::\$_form .= \"" . getTemplate("htmlform/skeleton", "1") . "\";");
+							break;
+					}
+
 				}
 			}
 		}
@@ -263,14 +272,14 @@ class HTMLform2 {
 		$checkboxdata = array(
 			//'label' => $lng['admin']['stdsubdomain_add'].'?',
 			'type' => 'checkbox',
-			'sublabel' => $lng['customer']['unlimited'],
+			'label' => $lng['customer']['unlimited'],
 			'value' => '-1',
 			'attributes' => array(
 				'checked' => ($fielddata['value'] == '-1') ? true : false
 			)
 		);
 		
-		$checkbox = self::_inputCheckbox($fieldname . "_ul", $checkboxdata);
+		$checkbox = self::_inputCheckbox($fieldname . "_ul", $checkboxdata, false);
 		
 		eval("\$return = \"" . getTemplate("htmlform/textul", "1") . "\";");
 		
@@ -306,12 +315,12 @@ class HTMLform2 {
 	 * @param array $fielddata (default: array())
 	 * @return void
 	 */
-	private static function _inputCheckbox($fieldname, $fielddata = array()) {
+	private static function _inputCheckbox($fieldname, $fielddata = array(), $labelHidden = true) {
 		$attributes = self::_parseAttributes($fieldname, $fielddata);
 		$attributes['type'] = $fielddata['type'];
 		$attributes = self::_glueAttributes($attributes);
 		
-		$sublabel = $fielddata['sublabel'];
+		$label = $fielddata['label'];
 		eval("\$return = \"" . getTemplate("htmlform/checkbox", "1") . "\";");
 		return $return;
 	}
