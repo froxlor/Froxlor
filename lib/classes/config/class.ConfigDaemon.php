@@ -311,7 +311,6 @@ class ConfigDaemon {
 			throw new \Exception('"<visibility>' . $order . '</visibility>" is missing mode');
 		}
 
-		var_dump($attributes['mode'], $order);
 		switch ($attributes['mode']) {
 			case "isfile": if (!is_file($order)) { return -1; }; break;
 			case "isdir": if (!is_dir($order)) { return -1; }; break;
