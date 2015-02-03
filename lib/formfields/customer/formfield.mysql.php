@@ -26,7 +26,7 @@ return array(
 				'label' => $lng['mysql']['mysql_server'],
 				'type' => (isset($result)) ? 'select' : 'text',
 				'visible' => (1 < $count_mysqlservers ? true : false),
-		
+				'values' => (isset($mysql_servers)) ? $mysql_servers : ""
 			),
 			'mysql_password' => array(
 				'label' => $lng['login']['password'],
