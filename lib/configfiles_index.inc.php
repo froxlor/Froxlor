@@ -24,12 +24,14 @@ $optsDir = new frxDirectory(Settings::Get('system.apacheconf_diroptions'));
 
 if ($vhostDir->isConfigDir()) {
 	$configcommand['vhost'] = 'mkdir -p ' . Settings::Get('system.apacheconf_vhost');
-	$configcommand['include'] = 'echo -e "\\nInclude ' . makeCorrectDir(Settings::Get('system.apacheconf_vhost')) . '*.conf" >> ' . makeCorrectFile(makeCorrectDir('/etc/apache2/httpd.conf'));
 	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude_shell "cat ' . makeCorrectDir(Settings::Get('system.apacheconf_vhost')) . '*.conf"\' >> /etc/lighttpd/lighttpd.conf';
+	// this is only used for SUSE - can we check whether this is still needed?
+	$configcommand['include'] = 'echo -e "\\nInclude ' . makeCorrectDir(Settings::Get('system.apacheconf_vhost')) . '*.conf" >> ' . makeCorrectFile(makeCorrectDir('/etc/apache2/httpd.conf'));
 } else {
 	$configcommand['vhost'] = 'touch ' . Settings::Get('system.apacheconf_vhost');
-	$configcommand['include'] = 'echo -e "\\nInclude ' . Settings::Get('system.apacheconf_vhost') . '" >> ' . makeCorrectFile('/etc/apache2/httpd.conf');
 	$configcommand['v_inclighty'] = 'echo -e \'\\ninclude "' . Settings::Get('system.apacheconf_vhost') . '"\' >> /etc/lighttpd/lighttpd.conf';
+	// this is only used for SUSE - can we check whether this is still needed?
+	$configcommand['include'] = 'echo -e "\\nInclude ' . Settings::Get('system.apacheconf_vhost') . '" >> ' . makeCorrectFile('/etc/apache2/httpd.conf');
 }
 
 if ($optsDir->isConfigDir()) {

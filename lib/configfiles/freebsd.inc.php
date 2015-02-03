@@ -383,7 +383,7 @@ return array(
 							'sed -i.bak \'s/^LogSeparator/# LogSeparator/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'sed -i.bak \'s/^SiteDomain/# SiteDomain/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
-							'sed -i.bak \'s/^DirIcons=\"\/awstatsicons\"/DirIcons=\"\/awstats-icon\"/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'# Please make sure you deactivate awstats own cronjob as Froxlor handles that itself'
 						)
 					),

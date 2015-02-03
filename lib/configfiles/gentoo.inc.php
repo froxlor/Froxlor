@@ -24,14 +24,14 @@ $vmail_group=posix_getgrgid(Settings::Get('system.vmail_gid'));
 /* If one of them are not set, call it 'vmail' and suggest creating user/group
  * in scripts. */
 if ($vmail_user === false) {
-	$vmail_username="vmail";
+    $vmail_username="vmail";
 } else {
-	$vmail_username=$vmail_user['name'];
+    $vmail_username=$vmail_user['name'];
 }
 if ($vmail_group === false) {
-	$vmail_groupname="vmail";
+    $vmail_groupname="vmail";
 } else {
-	$vmail_groupname=$vmail_group['name'];
+    $vmail_groupname=$vmail_group['name'];
 }
 
 return array(
@@ -188,6 +188,7 @@ return array(
 							'chown -R '.$vmail_username.':'.$vmail_groupname.' ' . Settings::Get('system.vmail_homedir'),
 							'chmod 0750 ' . Settings::Get('system.vmail_homedir'),
 							'mv /etc/postfix/main.cf /etc/postfix/main.cf.gentoo',
+						    'mv /etc/postfix/master.cf /etc/postfix/master.cf.gentoo',
 							'touch /etc/postfix/{main,master}.cf',
 							'chown root:root /etc/postfix/{main,master}.cf',
 							'chmod 0644 /etc/postfix/{main,master}.cf',
@@ -433,5 +434,3 @@ milter_default_action = accept" >> /etc/postfix/main.cf',
 		)
 	)
 );
-
-?>

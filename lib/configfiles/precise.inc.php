@@ -379,6 +379,7 @@ return array(
 							'cp /usr/share/awstats/tools/awstats_buildstaticpages.pl '.makeCorrectDir(Settings::Get('system.awstats_path')),
 							'mv '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.conf').' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'# Please make sure you deactivate awstats own cronjob as Froxlor handles that itself',
 							'rm /etc/cron.d/awstats'
 						),
@@ -418,5 +419,3 @@ return array(
 		)
 	)
 );
-
-?>
