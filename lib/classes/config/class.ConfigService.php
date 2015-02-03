@@ -67,7 +67,7 @@ class ConfigService {
 		$service = $this->fullxml->xpath($this->xpath);
 		$attributes = $service[0]->attributes();
 		if ($attributes['title'] != '') {
-			$this->title = (string)$attributes['title'];
+			$this->title = $this->_parseContent((string)$attributes['title']);
 		}
 	}
 
@@ -113,6 +113,30 @@ class ConfigService {
 		// Switch flag to indicate we parsed our data
 		$this->isparsed = true;
 		return true;
+	}
+
+	/**
+	 * Replace placeholders with content
+	 * @param string $content
+	 * @return string $content w/o placeholder
+	 */
+	private function _parseContent($content) {
+		$content = preg_replace_callback('/\{\{(.*)\}\}/Ui', function ($matches) {
+			if (preg_match('/^settings\.(.*)$/', $matches[1], $match)) {
+				return Settings::Get($match[1]);
+			} elseif (preg_match('/^lng\.(.*)(?:\.(.*)(?:\.(.*)))$/U', $matches[1], $match)) {
+				global $lng;
+				if (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '' && isset($match[3]) && $match[3] != '') {
+					return $lng[$match[1]][$match[2]][$match[3]];
+				} elseif (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '') {
+					return $lng[$match[1]][$match[2]];
+				} elseif (isset($match[1]) && $match[1] != '') {
+					return $lng[$match[1]];
+				}
+				return '';
+			}
+		}, $content);
+		return $content;
 	}
 
 	public function getDaemons() {
