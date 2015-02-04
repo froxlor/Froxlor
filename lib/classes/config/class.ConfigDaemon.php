@@ -233,18 +233,17 @@ class ConfigDaemon {
 	 * @return array|string
 	 */
 	private function _parseFile($order, $attributes) {
+		$visibility = 1;
 		// No sub - elements, so the content can be returned directly
 		if ($order->count() == 0) {
-			return array('type' => 'file', 'content' => (string)$order, 'name' => $this->_parseContent($attributes['name']));
-		}
-
-		// Hold the results
-		$visibility = 1;
-		$content = '';
-		foreach($order->children() as $child) {
-			switch((string)$child->getName()) {
-				case "visibility": $visibility += $this->_checkVisibility($child); break;
-				case "content": $content = (string)$child; break;
+			$content = (string)$order;
+		} else {
+			// Hold the results
+			foreach($order->children() as $child) {
+				switch((string)$child->getName()) {
+					case "visibility": $visibility += $this->_checkVisibility($child); break;
+					case "content": $content = (string)$child; break;
+				}
 			}
 		}
 
@@ -257,7 +256,11 @@ class ConfigDaemon {
 		}
 
 		// Now the content of the file can be written
-		$return[] = array('type' => 'file', 'content' => $this->_parseContent($content), 'name' => $this->_parseContent($attributes['name']));
+		if (isset($attributes['mode'])) {
+			$return[] = array('type' => 'file', 'content' => $this->_parseContent($content), 'name' => $this->_parseContent($attributes['name']), 'mode' => $this->_parseContent($attributes['mode']));
+		} else {
+			$return[] = array('type' => 'file', 'content' => $this->_parseContent($content), 'name' => $this->_parseContent($attributes['name']));
+		}
 
 		// Let's check if the mode of the file should be changed
 		if (array_key_exists('chmod', $attributes)) {
