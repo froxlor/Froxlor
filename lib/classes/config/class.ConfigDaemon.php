@@ -334,6 +334,8 @@ class ConfigDaemon {
 			case "notempty": if ($order == "") { $return = -1; }; break;
 			case "userexists": if (posix_getpwnam($order) === false) { $return = -1; }; break;
 			case "groupexists": if (posix_getgrnam($order) === false) { $return = -1; }; break;
+			case "usernotexists": if (is_array(posix_getpwnam($order))) { $return = -1; }; break;
+			case "groupnotexists": if (is_array(posix_getgrnam($order))) { $return = -1; }; break;
 			case "equals": $return = (isset($attributes['value']) && $attributes['value'] == $order ? 0 : -1); break;
 		}
 		return $return;
