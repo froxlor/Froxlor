@@ -329,12 +329,11 @@ class ConfigDaemon {
 		switch ($attributes['mode']) {
 			case "isfile": if (!is_file($order)) { $return = -1; }; break;
 			case "isdir": if (!is_dir($order)) { $return = -1; }; break;
-			case "isdir": if (!is_dir($order)) { $return = -1; }; break;
 			case "false": if ($order == true) { $return = -1; }; break;
 			case "true": if ($order == false) { $return = -1; }; break;
 			case "notempty": if ($order == "") { $return = -1; }; break;
-			case "userexists": if (true) { $return = 0; }; break;
-			case "groupexists": if (true) { $return = 0; }; break;
+			case "userexists": if (posix_getpwnam($order) === false) { $return = -1; }; break;
+			case "groupexists": if (posix_getgrnam($order) === false) { $return = -1; }; break;
 			case "equals": $return = (isset($attributes['value']) && $attributes['value'] == $order ? 0 : -1); break;
 		}
 		return $return;
