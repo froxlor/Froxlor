@@ -177,7 +177,7 @@ class ConfigDaemon {
 	private function _parseInstall($order, $attributes) {
 		// No sub - elements, so the content can be returned directly
 		if ($order->count() == 0) {
-			return array('type' => 'install', 'content' => $this->_parseContent((string)$order));
+			return array('type' => 'install', 'content' => $this->_parseContent(trim((string)$order)));
 		}
 
 		// Hold the results
@@ -186,7 +186,7 @@ class ConfigDaemon {
 		foreach($order->children() as $child) {
 			switch((string)$child->getName()) {
 				case "visibility": $visibility += $this->_checkVisibility($child); break;
-				case "content": $content = (string)$child; break;
+				case "content": $content = trim((string)$child); break;
 			}
 		}
 
@@ -206,7 +206,7 @@ class ConfigDaemon {
 	private function _parseCommand($order, $attributes) {
 		// No sub - elements, so the content can be returned directly
 		if ($order->count() == 0) {
-			return array('type' => 'command', 'content' => $this->_parseContent((string)$order));
+			return array('type' => 'command', 'content' => $this->_parseContent(trim((string)$order)));
 		}
 
 		// Hold the results
@@ -215,7 +215,7 @@ class ConfigDaemon {
 		foreach($order->children() as $child) {
 			switch((string)$child->getName()) {
 				case "visibility": $visibility += $this->_checkVisibility($child); break;
-				case "content": $content = (string)$child; break;
+				case "content": $content = trim((string)$child); break;
 			}
 		}
 
@@ -317,10 +317,10 @@ class ConfigDaemon {
 	private function _checkVisibility($order) {
 		$attributes = array();
 		foreach($order->attributes() as $key => $value) {
-			$attributes[(string)$key] = $this->_parseContent((string)$value);
+			$attributes[(string)$key] = $this->_parseContent(trim((string)$value));
 		}
 
-		$order = $this->_parseContent((string)$order);
+		$order = $this->_parseContent(trim((string)$order));
 		if (!array_key_exists('mode', $attributes)) {
 			throw new \Exception('"<visibility>' . $order . '</visibility>" is missing mode');
 		}
