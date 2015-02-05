@@ -29,7 +29,7 @@ class HTMLform2 {
 	 * @param array $data (default: array())
 	 * @return void
 	 */
-	public static function genHTMLform($formdata = array(), $data = array()) {
+	public static function genHTMLform($formdata = array(), $data = false) {
 		global $lng, $theme;
 		self::$_form = '';
 		
@@ -47,9 +47,9 @@ class HTMLform2 {
 					if (isset($fielddata['visible'])) {
 						if ($fielddata['visible'] == false) {
 							continue;
-						} elseif ($fielddata['visible'] === 'new' && !empty($data)) {
+						} elseif ($fielddata['visible'] === 'new' && is_array($data)) {
 							continue;
-						} elseif ($fielddata['visible'] === 'edit' && empty($data)) {
+						} elseif ($fielddata['visible'] === 'edit' && !is_array($data)) {
 							continue;
 						}
 					}
@@ -263,25 +263,26 @@ class HTMLform2 {
 		global $lng;
 		
 		// Input
-		$inputdata = $fielddata;
-		$inputdata['value'] = ($inputdata['value'] == -1) ? '' : $inputdata['value'];
-		$inputdata['type'] = "text";
-		$input = self::_input($fieldname, $inputdata);
-		
+		$attributes_input = self::_parseAttributes($fieldname, $fielddata);
+		$attributes_input['type'] = "text";
+		$attributes_input['value'] = ($fielddata['value'] == '-1') ? '' : $fielddata['value'];
+		$attributes_input = self::_glueAttributes($attributes_input);
+				
 		// Checkbox
 		$checkboxdata = array(
-			//'label' => $lng['admin']['stdsubdomain_add'].'?',
-			'type' => 'checkbox',
 			'label' => $lng['customer']['unlimited'],
+			'type' => 'checkbox',
 			'value' => '-1',
 			'attributes' => array(
 				'checked' => ($fielddata['value'] == '-1') ? true : false
 			)
 		);
+		$attributes_checkbox = self::_parseAttributes($fieldname . "_ul", $checkboxdata);
+		$attributes_checkbox['type'] = $checkboxdata['type'];
+		$attributes_checkbox = self::_glueAttributes($attributes_checkbox);
+		$label_checkbox = $checkboxdata['label'];
 		
-		$checkbox = self::_inputCheckbox($fieldname . "_ul", $checkboxdata, false);
-		
-		eval("\$return = \"" . getTemplate("htmlform/textul", "1") . "\";");
+		eval("\$return = \"" . getTemplate("htmlform/inputul", "1") . "\";");
 		
 		return $return;
 	}
