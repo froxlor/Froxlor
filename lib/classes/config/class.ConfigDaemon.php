@@ -298,6 +298,12 @@ class ConfigDaemon {
 					return $lng[$match[1]];
 				}
 				return '';
+			} elseif (preg_match('/^const\.(.*)$/', $matches[1], $match)) {
+				if (defined($match[1])) {
+					return constant($match[1]);
+				} else {
+					return '';
+				}
 			}
 		}, $content);
 		return $content;
@@ -319,16 +325,18 @@ class ConfigDaemon {
 			throw new \Exception('"<visibility>' . $order . '</visibility>" is missing mode');
 		}
 
+		$return = 0;
 		switch ($attributes['mode']) {
-			case "isfile": if (!is_file($order)) { return -1; }; break;
-			case "isdir": if (!is_dir($order)) { return -1; }; break;
-			case "isdir": if (!is_dir($order)) { return -1; }; break;
-			case "false": if ($order == true) { return -1; }; break;
-			case "true": if ($order == false) { return -1; }; break;
-			case "notempty": if ($order == "") { return -1; }; break;
-			case "userexists": if (true) { return 0; }; break;
-			case "groupexists": if (true) { return 0; }; break;
+			case "isfile": if (!is_file($order)) { $return = -1; }; break;
+			case "isdir": if (!is_dir($order)) { $return = -1; }; break;
+			case "isdir": if (!is_dir($order)) { $return = -1; }; break;
+			case "false": if ($order == true) { $return = -1; }; break;
+			case "true": if ($order == false) { $return = -1; }; break;
+			case "notempty": if ($order == "") { $return = -1; }; break;
+			case "userexists": if (true) { $return = 0; }; break;
+			case "groupexists": if (true) { $return = 0; }; break;
+			case "equals": $return = (isset($attributes['value']) && $attributes['value'] == $order ? 0 : -1); break;
 		}
-		return 0;
+		return $return;
 	}
 }
