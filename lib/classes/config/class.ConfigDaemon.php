@@ -107,6 +107,37 @@ class ConfigDaemon {
 						$preparsed[] = $include;
 					}
 					break;
+				// The next 3 are groupings, <visibility> MUST come first in this to work properly
+				case "commands":
+				case "files":
+				case "installs":
+					// Hold the results
+					$visibility = 1;
+					foreach($order->children() as $child) {
+						switch((string)$child->getName()) {
+							case "visibility": $visibility += $this->_checkVisibility($child); break;
+							case "install":
+							case "file":
+							case "command":
+								if ($visibility > 0) {
+									 $preparsed[] = $child;
+								}
+								break;
+							case "include":
+								// Includes, get the part we want via xpath
+								$includes = $this->fullxml->xpath((string)$chile);
+								foreach ($includes[0] as $include) {
+									// The "include" is also a child, so just skip it, would make a mess later
+									if ((string)$include->getName() == 'include') {
+										continue;
+									}
+									$preparsed[] = $include;
+								}
+								break;
+							default: continue;
+						}
+					}
+					break;
 				default: continue;
 			}
 		}
