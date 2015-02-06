@@ -1,4 +1,3 @@
 
 # added for Froxlor
-spamassassin	unix	-	n	n	-	-	pipe flags=R user=spamd argv=/usr/bin/spamc -e /usr/sbin/sendmail -oi -f ${sender} ${recipient}
 dovecot			unix	-	n	n	-	-	pipe flags=DRhu user=vmail:mail argv=/usr/libexec/dovecot/deliver -f ${sender} -d ${recipient}
