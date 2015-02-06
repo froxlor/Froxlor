@@ -48,7 +48,7 @@ return array(
 							(Settings::Get('system.deactivateddocroot') != '') ? 'mkdir -p ' . Settings::Get('system.deactivateddocroot') : ''
 						),
 						'restart' => array(
-							'/usr/bin/systemctl reload-or-restart httpd.service'
+							'systemctl reload-or-restart httpd.service'
 						)
 					),
 				),
@@ -72,7 +72,7 @@ return array(
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
 							'touch /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chown root:root /etc/postfix/mysql-*.cf',
-							'chmod 0644 /etc/postfix/mysql-*.cf',
+							'chmod 0600 /etc/postfix/mysql-*.cf',
 						),
 						'files' => array(
 							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
@@ -99,11 +99,12 @@ return array(
 							'systemctl enable dovecot.service',
 						),
 						'commands' => array(
-							'yum install dovecot dovecot-mysql dovecot-pigeonhole',
+							'touch /etc/dovecot/dovecot-sql.conf.ext',
+							'chmod 0600 /etc/dovecot/dovecot-sql.conf.ext',
 						),
 						'files' => array(
 							'etc_dovecot_dovecot.conf' => '/etc/dovecot/dovecot.conf',
-							'etc_dovecot_dovecot-sql.conf.ext' => '/etc/dovecot/dovecot.conf.ext',
+							'etc_dovecot_dovecot-sql.conf.ext' => '/etc/dovecot/dovecot-sql.conf.ext',
 							'etc_dovecot_conf.d_10-auth.conf' => '/etc/dovecot/conf.d/10-auth.conf',
 							'etc_dovecot_conf.d_10-logging.conf' => '/etc/dovecot/conf.d/10-logging.conf',
 							'etc_dovecot_conf.d_10-mail.conf' => '/etc/dovecot/conf.d/10-mail.conf',
