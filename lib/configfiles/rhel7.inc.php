@@ -72,7 +72,7 @@ return array(
 							'touch /etc/postfix/mysql-virtual_mailbox_maps.cf',
 							'touch /etc/postfix/mysql-virtual_sender_permissions.cf',
 							'chown root:root /etc/postfix/mysql-*.cf',
-							'chmod 0644 /etc/postfix/mysql-*.cf',
+							'chmod 0600 /etc/postfix/mysql-*.cf',
 						),
 						'files' => array(
 							'etc_postfix_main.cf' => '/etc/postfix/main.cf',
