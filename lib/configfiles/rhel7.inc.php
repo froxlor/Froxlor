@@ -97,13 +97,17 @@ return array(
 						'commands_install' => array(
 							'yum install dovecot dovecot-mysql dovecot-pigeonhole',
 							'systemctl enable dovecot.service',
+							'touch /etc/dovecot/dovecot-sql.conf.ext',
+							'chmod 0600 /etc/dovecot/dovecot-sql.conf.ext',
 						),
 						'commands' => array(
 							'yum install dovecot dovecot-mysql dovecot-pigeonhole',
+							'touch /etc/dovecot/dovecot-sql.conf.ext',
+							'chmod 0600 /etc/dovecot/dovecot-sql.conf.ext',
 						),
 						'files' => array(
 							'etc_dovecot_dovecot.conf' => '/etc/dovecot/dovecot.conf',
-							'etc_dovecot_dovecot-sql.conf.ext' => '/etc/dovecot/dovecot.conf.ext',
+							'etc_dovecot_dovecot-sql.conf.ext' => '/etc/dovecot/dovecot-sql.conf.ext',
 							'etc_dovecot_conf.d_10-auth.conf' => '/etc/dovecot/conf.d/10-auth.conf',
 							'etc_dovecot_conf.d_10-logging.conf' => '/etc/dovecot/conf.d/10-logging.conf',
 							'etc_dovecot_conf.d_10-mail.conf' => '/etc/dovecot/conf.d/10-mail.conf',
