@@ -48,7 +48,7 @@ return array(
 							(Settings::Get('system.deactivateddocroot') != '') ? 'mkdir -p ' . Settings::Get('system.deactivateddocroot') : ''
 						),
 						'restart' => array(
-							'/usr/bin/systemctl reload-or-restart httpd.service'
+							'systemctl reload-or-restart httpd.service'
 						)
 					),
 				),
@@ -97,11 +97,8 @@ return array(
 						'commands_install' => array(
 							'yum install dovecot dovecot-mysql dovecot-pigeonhole',
 							'systemctl enable dovecot.service',
-							'touch /etc/dovecot/dovecot-sql.conf.ext',
-							'chmod 0600 /etc/dovecot/dovecot-sql.conf.ext',
 						),
 						'commands' => array(
-							'yum install dovecot dovecot-mysql dovecot-pigeonhole',
 							'touch /etc/dovecot/dovecot-sql.conf.ext',
 							'chmod 0600 /etc/dovecot/dovecot-sql.conf.ext',
 						),
