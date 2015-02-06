@@ -1,3 +1,9 @@
+# Postfix programs paths settings
+command_directory = /usr/sbin
+daemon_directory = /usr/libexec/postfix
+program_directory = /usr/libexec/postfix
+sendmail_path = /usr/sbin/sendmail
+
 ## General Postfix configuration
 # should be the default domain from your provider eg. "server100.provider.tld"
 mydomain = <SERVERNAME>
@@ -30,12 +36,12 @@ smtpd_recipient_restrictions = permit_mynetworks,
 smtpd_sender_restrictions = permit_mynetworks,
 	reject_sender_login_mismatch,
 	permit_sasl_authenticated, 
-	reject_unknown_helo_hostname, 
+	reject_unknown_hostname,
 	reject_unknown_recipient_domain, 
 	reject_unknown_sender_domain
 smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
-	reject_unknown_client_hostname
+	reject_unknown_hostname
 smtpd_relay_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
 	defer_unauth_destination
@@ -59,6 +65,7 @@ virtual_gid_maps = mysql:/etc/postfix/mysql-virtual_gid_maps.cf
 
 # Local delivery settings
 local_transport = local
+alias_database = hash:/etc/mail/aliases
 alias_maps = $alias_database
 
 # Default Mailbox size, is set to 0 which means unlimited!
