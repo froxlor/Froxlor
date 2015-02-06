@@ -283,7 +283,7 @@ class ConfigDaemon {
 		// @TODO: Maybe have a backup - space somewhere?
 		// @TODO: Use IO - class
 		if (array_key_exists('backup', $attributes)) {
-			$return[] = array('type' => 'command', 'content' => 'mv "' . $this->_parseContent($attributes['name']) . '" "' . $this->_parseContent($attributes['name']) . '.frx.bak"');
+			$return[] = array('type' => 'command', 'content' => 'mv "' . $this->_parseContent($attributes['name']) . '" "' . $this->_parseContent($attributes['name']) . '.frx.bak"', 'file' => $this->_parseContent($attributes['name']));
 		}
 
 		// Now the content of the file can be written
@@ -295,12 +295,12 @@ class ConfigDaemon {
 
 		// Let's check if the mode of the file should be changed
 		if (array_key_exists('chmod', $attributes)) {
-			$return[] = array('type' => 'command', 'content' => 'chmod ' . $attributes['chmod'] . ' "' . $this->_parseContent($attributes['name']) . '"');
+			$return[] = array('type' => 'command', 'content' => 'chmod ' . $attributes['chmod'] . ' "' . $this->_parseContent($attributes['name']) . '"', 'file' => $this->_parseContent($attributes['name']));
 		}
 
 		// Let's check if the owner of the file should be changed
 		if (array_key_exists('chown', $attributes)) {
-			$return[] = array('type' => 'command', 'content' => 'chown ' . $attributes['chown'] . ' "' . $this->_parseContent($attributes['name']) . '"');
+			$return[] = array('type' => 'command', 'content' => 'chown ' . $attributes['chown'] . ' "' . $this->_parseContent($attributes['name']) . '"', 'file' => $this->_parseContent($attributes['name']));
 		}
 
 		if ($visibility > 0) {
