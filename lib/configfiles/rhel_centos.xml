@@ -2387,7 +2387,7 @@ aliases:	files nisplus
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/nscd restart]]></command>
+					<command><![CDATA[systemctl reload-or-restart nscd.service]]></command>
 				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">
