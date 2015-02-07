@@ -83,8 +83,8 @@ return array(
 							'etc_postfix_mysql-virtual_sender_permissions.cf' => '/etc/postfix/mysql-virtual_sender_permissions.cf'
 						),
 						'restart' => array(
-							'systemctl reload-or-restart postfix.service',
-							'newaliases'
+							'newaliases',
+							'systemctl reload-or-restart postfix.service'
 						)
 					),
 				)
