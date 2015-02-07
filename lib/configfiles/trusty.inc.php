@@ -292,8 +292,8 @@ return array(
 							'etc_courier_authmysqlrc' => '/etc/courier/authmysqlrc'
 						),
 						'restart' => array(
-							'/etc/init.d/courier-authdaemon restart',
-							'/etc/init.d/courier-pop restart'
+							'service courier-authdaemon restart',
+							'service courier-pop restart'
 						)
 					),
 					'dovecot' => array(
@@ -326,7 +326,7 @@ return array(
 							'etc_proftpd_proftpd.conf' => '/etc/proftpd/proftpd.conf'
 						),
 						'restart' => array(
-							'/etc/init.d/proftpd restart'
+							'service proftpd restart'
 						)
 					),
 					'pure-ftpd' => array(
