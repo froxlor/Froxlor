@@ -420,7 +420,10 @@ if ($page == 'customers'
 				$gender = intval_ressource($_POST['gender']);
 
 				$custom_notes = validate(str_replace("\r\n", "\n", $_POST['custom_notes']), 'custom_notes', '/^[^\0]*$/');
-				$custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+				$custom_notes_show = 0;
+				if (isset($_POST['custom_notes_show'])) {
+				    $custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+				}
 
 				$diskspace = intval_ressource($_POST['diskspace']);
 				if (isset($_POST['diskspace_ul'])) {
@@ -1073,7 +1076,10 @@ if ($page == 'customers'
 				$move_to_admin = isset($_POST['move_to_admin']) ? intval_ressource($_POST['move_to_admin']) : 0;
 
 				$custom_notes = validate(str_replace("\r\n", "\n", $_POST['custom_notes']), 'custom_notes', '/^[^\0]*$/');
-				$custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+				$custom_notes_show = $result['custom_notes_show'];
+				if (isset($_POST['custom_notes_show'])) {
+				    $custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+				}
 
 				$diskspace = intval_ressource($_POST['diskspace']);
 				if (isset($_POST['diskspace_ul'])) {
