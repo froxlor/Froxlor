@@ -264,7 +264,7 @@ class Database {
 				'charset' => 'utf8'
 		);
 
-		if (!validateLocalHostname($host) && !validate_ip2($host, true, 'invalidip', true)) {
+		if (!validateLocalHostname($host) && !validate_ip2($host, true, 'invalidip', true, true)) {
 			$dbconf["dsn"]['unix_socket'] = makeCorrectFile($host);
 		} else {
 			$dbconf["dsn"]['host'] = $host;

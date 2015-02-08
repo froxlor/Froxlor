@@ -23,7 +23,7 @@ function checkMysqlAccessHost($fieldname, $fielddata, $newfieldvalue, $allnewfie
 
 	foreach ($mysql_access_host_array as $host_entry) {
 
-		if (validate_ip2($host_entry, true, 'invalidip', true) == false
+		if (validate_ip2($host_entry, true, 'invalidip', true, true) == false
 		   && validateDomain($host_entry) == false
 		   && validateLocalHostname($host_entry) == false
 		   && $host_entry != '%'
