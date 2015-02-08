@@ -2892,3 +2892,31 @@ if (isFroxlorVersion('0.9.33-rc3')) {
         updateToVersion('0.9.33');
 
 }
+
+if (isFroxlorVersion('0.9.33')) {
+
+    showUpdateStep("Updating from 0.9.33 to 0.9.34-dev1");
+
+    showUpdateStep("Updating table structure of domains");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` MODIFY `parentdomainid` int(11) NOT NULL default '0'");
+    lastStepStatus(0);
+
+    showUpdateStep("Updating stored email-templates");
+    $chk_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_TEMPLATES."` WHERE `templategroup` = 'mails'");
+    Database::pexecute($chk_stmt);
+    // do we have any?
+    if ($chk_stmt->rowCount() > 0) {
+        // prepare update-statement
+        $upd_stmt = Database::prepare("UPDATE `".TABLE_PANEL_TEMPLATES."` SET `language` = :lang WHERE `id` = :id");
+        // get each row
+        while ($row = $chk_stmt->fetch()) {
+           // let htmlentities run over the language name and update the entry
+           Database::pexecute($upd_stmt, array('lang' => htmlentities($row['language'])), false);
+        }
+        lastStepStatus(0);
+    } else {
+        lastStepStatus(1, "not needed");
+    }
+
+    updateToVersion('0.9.34-dev1');
+}

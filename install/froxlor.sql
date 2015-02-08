@@ -233,7 +233,7 @@ CREATE TABLE `panel_domains` (
   `dkim_privkey` text,
   `dkim_pubkey` text,
   `wwwserveralias` tinyint(1) NOT NULL default '1',
-  `parentdomainid` int(11) unsigned NOT NULL default '0',
+  `parentdomainid` int(11) NOT NULL default '0',
   `openbasedir` tinyint(1) NOT NULL default '0',
   `openbasedir_path` tinyint(1) NOT NULL default '0',
   `speciallogfile` tinyint(1) NOT NULL default '0',
@@ -538,7 +538,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.33');
+	('panel', 'version', '0.9.34-dev1');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
