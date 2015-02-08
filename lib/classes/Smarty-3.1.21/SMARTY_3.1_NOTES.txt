@@ -50,7 +50,7 @@ The escape modifier now knows the $double_encode option, which will
 prevent entities from being encoded again.
 
 The capitalize modifier now know the $lc_rest option, which makes sure
-all letters following a captial letter are lower-cased.
+all letters following a capital letter are lower-cased.
 
 The count_sentences modifier now accepts (.?!) as
 legitimate endings of a sentence - previously only (.) was

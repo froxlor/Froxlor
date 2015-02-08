@@ -377,7 +377,7 @@ msgstr "Die Datei '%1$s' konnte nicht gespeichert werden!"
 #: webftp.php:747
 #: webftp.php:693
 #, php-format
-msgid "File '%1$s' was saved succesfully!"
+msgid "File '%1$s' was saved successfully!"
 msgstr "Die Datei '%1$s' wurde erfolgreich gespeichert!"
 
 #: webftp.php:754

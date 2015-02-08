@@ -45,7 +45,7 @@ class IntegrityCheck {
 	}
 
 	/**
-	 * Check all occuring integrity problems at once
+	 * Check all occurring integrity problems at once
 	 */
 	public function checkAll() {
 		$integrityok = true;
@@ -56,7 +56,7 @@ class IntegrityCheck {
 	}
 
 	/**
-	 * Fix all occuring integrity problems at once with default settings
+	 * Fix all occurring integrity problems at once with default settings
 	 */
 	public function fixAll() {
 		$integrityok = true;

@@ -19,7 +19,7 @@
 
 		<section class="errorsec">
 			<div class="errorcontainer bradius">
-				<div class="errortitle">A database error occured</div>
+				<div class="errortitle">A database error occurred</div>
 				<div class="error">
 					<p><TEXT></p>
 					<p>&nbsp;</p>

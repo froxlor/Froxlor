@@ -260,7 +260,7 @@ Example: {$object->method1($x)->method2($y)}
 {for} tag added for looping (replacement for {section} tag):
 {for $x=0, $y=count($foo); $x<$y; $x++}  ....  {/for}
 Any number of statements can be used separated by comma as the first
-inital expression at {for}.
+initial expression at {for}.
 
 {for $x = $start to $end step $step} ... {/for}is in the SVN now .
 You can use also

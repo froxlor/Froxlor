@@ -44,10 +44,10 @@ class idna_convert_wrapper
 	 * Encode a domain name, a email address or a list of one of both.
 	 *
 	 * @param string May be either a single domain name, e single email address or a list of one
-	 * seperated either by ',', ';' or ' '.
+	 * separated either by ',', ';' or ' '.
 	 *
 	 * @return string Returns either a single domain name, a single email address or a list of one of
-	 * both seperated by the same string as the input.
+	 * both separated by the same string as the input.
 	 */
 
 	public function encode($to_encode)
@@ -59,10 +59,10 @@ class idna_convert_wrapper
 	 * Decode a domain name, a email address or a list of one of both.
 	 *
 	 * @param string May be either a single domain name, e single email address or a list of one
-	 * seperated either by ',', ';' or ' '.
+	 * separated either by ',', ';' or ' '.
 	 *
 	 * @return string Returns either a single domain name, a single email address or a list of one of
-	 * both seperated by the same string as the input.
+	 * both separated by the same string as the input.
 	 */
 
 	public function decode($to_decode)
@@ -71,7 +71,7 @@ class idna_convert_wrapper
 	}
 
 	/**
-	 * Do the real de- or encoding. First checks if a list is submitted and seperates it. Afterwards sends
+	 * Do the real de- or encoding. First checks if a list is submitted and separates it. Afterwards sends
 	 * each entry to the idna converter to do the converting.
 	 *
 	 * @param string May be either 'decode' or 'encode'.

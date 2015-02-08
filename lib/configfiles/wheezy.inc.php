@@ -435,7 +435,7 @@ return array(
 					'php-fpm' => array(
 						'label' => 'PHP-FPM',
 						'commands' => array(
-							(Settings::Get('system.webserver') == 'apache2') ? '# add "non-free" after all occurances of "main" in /etc/apt/sources.list' : null,
+							(Settings::Get('system.webserver') == 'apache2') ? '# add "non-free" after all occurrences of "main" in /etc/apt/sources.list' : null,
 							(Settings::Get('system.webserver') == 'apache2') ? '# this is needed for libapache2-mod-fastcgi to install' : null,
 							'apt-get install '.((Settings::Get('system.webserver') == 'apache2') ? 'apache2-suexec libapache2-mod-fastcgi ' : '') . 'php5-fpm',
 							'rm /etc/php5/fpm/pool.d/www.conf',

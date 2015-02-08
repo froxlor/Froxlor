@@ -18,7 +18,7 @@
  */
 
 /**
- * Replaces all occurences of variables defined in the second argument
+ * Replaces all occurrences of variables defined in the second argument
  * in the first argument with their values.
  *
  * @param string The string that should be searched for variables

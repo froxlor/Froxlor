@@ -133,7 +133,7 @@ msgstr ""
 
 #: webftp.php:693
 #, php-format
-msgid "File '%1$s' was saved succesfully!"
+msgid "File '%1$s' was saved successfully!"
 msgstr ""
 
 #: webftp.php:700

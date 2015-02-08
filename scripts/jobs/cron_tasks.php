@@ -230,7 +230,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 					&& filegroup($maildir) == Settings::Get('system.vmail_gid')
 				) {
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
-					// mail-adress allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
+					// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 					$return = false;
 					safe_exec('rm -rf '.escapeshellarg($maildir), $return, array('|', '&', '`', '$', '~', '?'));
 				}
@@ -303,7 +303,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 					&& filegroup($maildir) == Settings::Get('system.vmail_gid')
 				) {
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
-					// mail-adress allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
+					// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 					$return = false;
 					safe_exec('rm -rf '.escapeshellarg($maildir), $return, array('|', '&', '`', '$', '~', '?'));
 
@@ -320,7 +320,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 						&& filegroup($maildir_old) == Settings::Get('system.vmail_gid')
 					) {
 						$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir_old));
-						// mail-adress allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
+						// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 						$return = false;
 						safe_exec('rm -rf '.escapeshellarg($maildir_old), $return, array('|', '&', '`', '$', '~', '?'));
 					}

@@ -35,7 +35,7 @@ while ($maildir = $maildirs_stmt->fetch(PDO::FETCH_ASSOC)) {
 	if (file_exists($_maildir)
 		&& is_dir($_maildir)
 	) {
-		// mail-adress allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
+		// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 		$return = false;
 		$back = safe_exec('du -sk ' . escapeshellarg($_maildir), $return, array('|', '&', '`', '$', '~', '?'));
 		foreach ($back as $backrow) {

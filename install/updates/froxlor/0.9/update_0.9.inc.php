@@ -1961,7 +1961,7 @@ if (isFroxlorVersion('0.9.28-svn2')) {
 	showUpdateStep("Updating from 0.9.28-svn2 to 0.9.28-svn3");
 	lastStepStatus(0);
 
-	// change lenght of passwd column
+	// change length of passwd column
 	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` MODIFY `password` varchar(128) NOT NULL default ''");
 
 	// Add default setting for vmail_maildirname if not already in place

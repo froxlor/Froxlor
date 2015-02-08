@@ -203,7 +203,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase
             }
             throw $e;
         }
-        // compiling succeded
+        // compiling succeeded
         if (!$this->source->recompiled && $this->compiler->write_compiled_code) {
             // write compiled template
             $_filepath = $this->compiled->filepath;
