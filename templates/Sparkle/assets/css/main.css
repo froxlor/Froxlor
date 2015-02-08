@@ -1449,3 +1449,7 @@ table thead th.tablesorter-headerDesc {
 .notes_block {
   display: none;
 }
+
+.nolbr {
+	white-space: nowrap;
+}
