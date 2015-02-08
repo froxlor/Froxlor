@@ -202,7 +202,10 @@ if ($page == 'admins'
 			$email = $idna_convert->encode(validate($_POST['email'], 'email'));
 
 			$custom_notes = validate(str_replace("\r\n", "\n", $_POST['custom_notes']), 'custom_notes', '/^[^\0]*$/');
-			$custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+			$custom_notes_show = 0;
+			if (isset($_POST['custom_notes_show'])) {
+			    $custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+			}
 
 			$loginname = validate($_POST['loginname'], 'loginname');
 			$password = validate($_POST['admin_password'], 'password');
@@ -477,7 +480,10 @@ if ($page == 'admins'
 				$email = $idna_convert->encode(validate($_POST['email'], 'email'));
 
 				$custom_notes = validate(str_replace("\r\n", "\n", $_POST['custom_notes']), 'custom_notes', '/^[^\0]*$/');
-				$custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+				$custom_notes_show = $result['custom_notes_show'];
+				if (isset($_POST['custom_notes_show'])) {
+				    $custom_notes_show = intval_ressource($_POST['custom_notes_show']);
+				}
 
 				if ($result['adminid'] == $userinfo['userid']) {
 
