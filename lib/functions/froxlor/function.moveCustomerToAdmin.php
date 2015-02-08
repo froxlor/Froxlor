@@ -7,7 +7,7 @@
  * @param int $id customer-id
  * @param int $adminid target-admin-id
  *
- * @return true on sucess, error-message on failure
+ * @return true on success, error-message on failure
  */
 function moveCustomerToAdmin($id = 0, $adminid = 0) {
 	if ($id <= 0 || $adminid <= 0) {

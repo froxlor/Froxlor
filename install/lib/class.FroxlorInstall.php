@@ -1039,7 +1039,7 @@ class FroxlorInstall {
 	private function _getTemplate($template = null) {
 		// build filename
 		$filename = $this->_basepath.'/install/templates/' . $template . '.tpl';
-		// check existance
+		// check existence
 		if(file_exists($filename)
 				&& is_readable($filename)
 		) {
@@ -1222,7 +1222,7 @@ class FroxlorInstall {
 		// we don't actually care about the matches preg gives us.
 		$matches = array();
 
-		// this is faster than calling count($oktens) every time thru the loop.
+		// this is faster than calling count($tokens) every time through the loop.
 		$token_count = count($tokens);
 		for ($i = 0; $i < $token_count; $i++) {
 			// Don't wanna add an empty string as the last thing in the array.

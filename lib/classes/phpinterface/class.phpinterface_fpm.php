@@ -269,7 +269,7 @@ class phpinterface_fpm {
 				$is = explode("=", $inisection);
 				foreach ($this->_ini as $sec => $possibles) {
 					if (in_array(trim($is[0]), $possibles)) {
-						// check explictly for open_basedir
+						// check explicitly for open_basedir
 						if (trim($is[0]) == 'open_basedir' && $openbasedir == '') {
 							continue;
 						}

@@ -491,7 +491,7 @@ if (isset($_GET['logoff']) || isset($_POST['logoff'])) {
 						$errormessage = sprintf(_('File \'%1$s\' couldn\'t be saved!') . "\n", $file);
 					}
 					else {
-						$successmessage = sprintf(_('File \'%1$s\' was saved succesfully!') . "\n", $file);
+						$successmessage = sprintf(_('File \'%1$s\' was saved successfully!') . "\n", $file);
 					}
 					unlink($downloadDir .  killslashes(html_entity_decode($file))."_".$s);
 				}

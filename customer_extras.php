@@ -270,7 +270,7 @@ if ($page == 'overview') {
 			if ($paging->checkDisplay($i)) {
 				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
 					$row['path'] = substr($row['path'], strlen($userinfo['documentroot']));
-					// don't show nothing wehn it's the docroot, show slash
+					// don't show nothing when it's the docroot, show slash
 					if ($row['path'] == '') { $row['path'] = '/'; }
 				}
 
@@ -445,7 +445,7 @@ if ($page == 'overview') {
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
 					$result['path'] = substr($result['path'], strlen($userinfo['documentroot']));
-					// don't show nothing wehn it's the docroot, show slash
+					// don't show nothing when it's the docroot, show slash
 					if ($result['path'] == '') { $result['path'] = '/'; }
 				}
 

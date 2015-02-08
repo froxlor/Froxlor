@@ -122,7 +122,7 @@ while ($fName = readdir($lockDirHandle)) {
 		system("kill -CHLD " . (int)$check_pid . " 1> /dev/null 2> /dev/null", $check_pid_return);
 
 		if ($check_pid_return == 1) {
-			// Result:      Existing lockfile/pid isnt running
+			// Result:      Existing lockfile/pid isn't running
 			//              Most likely it has died
 			//
 			// Action:      Remove it and continue
@@ -188,7 +188,7 @@ if (Settings::Get('panel.version') == null
 		 */
 		fclose($debugHandler);
 		unlink($lockfile);
-		$errormessage = "Version of file doesnt match version of database. Exiting...\n\n";
+		$errormessage = "Version of file doesn't match version of database. Exiting...\n\n";
 		$errormessage.= "Possible reason: Froxlor update\n";
 		$errormessage.= "Information: Current version in database: ".Settings::Get('panel.version')." - version of Froxlor files: ".$version."\n";
 		$errormessage.= "Solution: Please visit your Foxlor admin interface for further information.\n";

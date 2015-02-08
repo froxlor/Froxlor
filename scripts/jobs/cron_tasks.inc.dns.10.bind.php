@@ -231,7 +231,7 @@ class bind {
 				$ip_a_records[] = "AAAA\t\t" . $ip['ip'];
 			}
 			else {
-				return ";Error in at least one IP Adress (".$ip['ip']."), could not create zonefile!";
+				return ";Error in at least one IP Address (".$ip['ip']."), could not create zonefile!";
 			}
 		}
 

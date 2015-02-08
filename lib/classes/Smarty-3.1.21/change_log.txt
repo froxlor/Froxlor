@@ -784,7 +784,7 @@
 - bugfix complete empty inline subtemplates did fail
 
 15/06/2011
-- bugfix template variables where not accessable within inline subtemplates
+- bugfix template variables where not accessible within inline subtemplates
 
 12/06/2011
 - bugfix removed unneeded merging of template variable when fetching includled subtemplates
@@ -1122,7 +1122,7 @@
 17/11/2010
 - bugfix on {call} with variable function name
 - bugfix on {block} if name did contain '-'
-- bugfix in function.fetch.php , referece to undefined $smarty
+- bugfix in function.fetch.php , reference to undefined $smarty
 
 16/11/2010
 - bugfix whitespace in front of "<?php" in smarty_internal_compile_private_block_plugin.php
@@ -1629,7 +1629,7 @@ request_use_auto_globals
 - bugfix for custom delimiter at extends resource and {extends} tag
 
 01/05/2010
-- bugfix sha1() calculations at extends resource and some general improvments on sha1() handling 
+- bugfix sha1() calculations at extends resource and some general improvements on sha1() handling
 
 
 01/03/2010
@@ -1722,7 +1722,7 @@ request_use_auto_globals
 - bugfix for {$foo.$x.$y.$z}
 
 12/01/2009
-- fixed parsing of names of special formated tags like if,elseif,while,for,foreach
+- fixed parsing of names of special formatted tags like if,elseif,while,for,foreach
 - removed direct access to constants in templates because of some syntax problems
 - removed cache resource plugin for mysql from the distribution
 - replaced most hard errors (exceptions) by softerrors(trigger_error) in plugins
@@ -1986,7 +1986,7 @@ NOTICE: existing compiled template and cache files must be deleted
 - added global variable SCRIPT_NAME
 
 08/21/2009
-- fixed problems whitespace in conjuction with custom delimiters
+- fixed problems whitespace in conjunction with custom delimiters
 - Smarty tags can now be used as value anywhere
 
 08/18/2009
@@ -2389,7 +2389,7 @@ NOTICE: existing compiled template and cache files must be deleted
 12/30/2008
 - added compiler support of registered object 
 - added backtick support in doubled quoted strings for backward compatibility
-- some minor bug fixes and improvments
+- some minor bug fixes and improvements
 
 12/23/2008
 - fixed problem of not working "not" operator in if-expressions

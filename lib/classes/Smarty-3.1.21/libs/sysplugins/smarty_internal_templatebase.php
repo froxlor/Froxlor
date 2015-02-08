@@ -231,7 +231,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data
             if ($this->smarty->debugging) {
                 Smarty_Internal_Debug::end_render($_template);
             }
-            // write to cache when nessecary
+            // write to cache when necessary
             if (!$_template->source->recompiled && ($_template->caching == Smarty::CACHING_LIFETIME_SAVED || $_template->caching == Smarty::CACHING_LIFETIME_CURRENT)) {
                 if ($this->smarty->debugging) {
                     Smarty_Internal_Debug::start_cache($_template);

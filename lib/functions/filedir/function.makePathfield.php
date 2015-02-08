@@ -18,14 +18,14 @@
  */
 
 /**
- * Returns a valid html tag for the choosen $fieldType for pathes
+ * Returns a valid html tag for the chosen $fieldType for paths
  *
  * @param string  path      The path to start searching in
  * @param integer uid       The uid which must match the found directories
  * @param integer gid       The gid which must match the found direcotries
  * @param string  value     the value for the input-field
  *
- * @return string   The html tag for the choosen $fieldType
+ * @return string   The html tag for the chosen $fieldType
  *
  * @author Martin Burchert  <martin.burchert@syscp.de>
  * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
