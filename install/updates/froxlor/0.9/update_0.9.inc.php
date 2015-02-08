@@ -2918,5 +2918,14 @@ if (isFroxlorVersion('0.9.33')) {
         lastStepStatus(1, "not needed");
     }
 
+    showUpdateStep("Updating language descriptions to be in the native language");
+    $upd_stmt = Database::prepare("UPDATE `".TABLE_PANEL_LANGUAGE."` SET `language` = :lang WHERE `iso` = :iso");
+    Database::pexecute($upd_stmt, array('lang' => 'Fran&ccedil;ais', 'iso' => 'fr'), false);
+    Database::pexecute($upd_stmt, array('lang' => 'Portugu&ecirc;s', 'iso' => 'pt'), false);
+    Database::pexecute($upd_stmt, array('lang' => 'Italiano', 'iso' => 'it'), false);
+    Database::pexecute($upd_stmt, array('lang' => 'Nederlands', 'iso' => 'nl'), false);
+    Database::pexecute($upd_stmt, array('lang' => 'Svenska', 'iso' => 'sv'), false);
+    lastStepStatus(0);
+
     updateToVersion('0.9.34-dev1');
 }
