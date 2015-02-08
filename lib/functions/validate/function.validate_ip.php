@@ -44,13 +44,21 @@ function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
 /**
  * Checks whether it is a valid ip
  *
- * @return mixed 	ip address on success, false on failure
+ * @param string $ip ip-address to check
+ * @param bool $return_bool whether to return bool or call standard_error()
+ * @param string $lng index for error-message (if $return_bool is false)
+ * @param bool $allow_localhost whether to allow 127.0.0.1
+ * @param bool $allow_priv whether to allow private network addresses
+ *
+ * @return string|bool ip address on success, false on failure
  */
-function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false) {
+function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false) {
+
+    $filter_lan = $allow_priv ? FILTER_FLAG_NO_RES_RANGE : (FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE);
 
 	if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)
 			|| filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
-			&& filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE)
+			&& filter_var($ip, FILTER_VALIDATE_IP, $filter_lan)
 	) {
 		return $ip;
 	}
