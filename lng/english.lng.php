@@ -215,7 +215,7 @@ $lng['error']['nolanguageselect'] = 'No language selected.';
 $lng['error']['nosubjectcreate'] = 'You must define a topic for this mail template.';
 $lng['error']['nomailbodycreate'] = 'You must define a mail-text for this mail template.';
 $lng['error']['templatenotfound'] = 'Template was not found.';
-$lng['error']['alltemplatesdefined'] = 'You cant define more templates, all languages are supported already.';
+$lng['error']['alltemplatesdefined'] = 'You can\'t define more templates, all languages are supported already.';
 $lng['error']['wwwnotallowed'] = 'www is not allowed for subdomains.';
 $lng['error']['subdomainiswrong'] = 'The subdomain %s contains invalid characters.';
 $lng['error']['domaincantbeempty'] = 'The domain-name can not be empty.';
@@ -376,7 +376,7 @@ $lng['serversettings']['pathedit']['description'] = 'Should a path be selected b
 $lng['serversettings']['nameservers']['title'] = 'Nameservers';
 $lng['serversettings']['nameservers']['description'] = 'A comma separated list containing the hostnames of all nameservers. The first one will be the primary one.';
 $lng['serversettings']['mxservers']['title'] = 'MX servers';
-$lng['serversettings']['mxservers']['description'] = 'A comma seperated list containing a pair of a number and a hostname separated by whitespace (e.g. \'10 mx.example.com\') containing the mx servers.';
+$lng['serversettings']['mxservers']['description'] = 'A comma separated list containing a pair of a number and a hostname separated by whitespace (e.g. \'10 mx.example.com\') containing the mx servers.';
 
 /**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
@@ -1024,7 +1024,7 @@ $lng['serversettings']['ssl']['ssl_ca_file']['description'] = 'Client authentifi
 $lng['error']['usernamealreadyexists'] = 'The username %s already exists.';
 
 $lng['error']['plausibilitychecknotunderstood'] = 'Answer of plausibility check not understood.';
-$lng['error']['errorwhensaving'] = 'An error occured when saving the field %s';
+$lng['error']['errorwhensaving'] = 'An error occurred when saving the field %s';
 
 $lng['success']['success'] = 'Information';
 $lng['success']['clickheretocontinue'] = 'Click here to continue';
@@ -1344,7 +1344,7 @@ $lng['emails']['back_to_overview'] = 'Back to overview';
 // ADDED IN FROXLOR 0.9.20
 $lng['error']['user_banned'] = 'Your account has been locked. Please contact your administrator for further information.';
 $lng['serversettings']['validate_domain'] = 'Validate domain names';
-$lng['login']['combination_not_found'] = 'Combination of user and email adress not found.';
+$lng['login']['combination_not_found'] = 'Combination of user and email address not found.';
 $lng['customer']['generated_pwd'] = 'Password suggestion';
 $lng['customer']['usedmax'] = 'Used / Max';
 $lng['admin']['traffic'] = 'Traffic';
