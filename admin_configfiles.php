@@ -71,7 +71,11 @@ if ($userinfo['change_serversettings'] == '1') {
             
             if ($daemon == "") {
                 foreach ($daemons as $di => $dd) {
-                    $daemons_select .= makeoption($dd->title, $di);
+                    $title = $dd->title;
+                    if ($dd->default) {
+                        $title = $title." ".$lng['panel']['default'];
+                    }
+                    $daemons_select .= makeoption($title, $di);
                 }
             }
         } else {
@@ -83,14 +87,24 @@ if ($userinfo['change_serversettings'] == '1') {
         
         // show list of available distro's
         $distros = glob($config_dir . '*.xml');
+        // tmp array
+        $distributions_select_data = array();
         // read in all the distros
         foreach ($distros as $_distribution) {
             // get configparser object
             $dist = new ConfigParser($_distribution);
             // get distro-info
             $dist_display = getCompleteDistroName($dist);
+            // store in tmp array
+            $distributions_select_data[$dist_display] = str_replace(".xml", "", strtolower(basename($_distribution)));
+        }
+        
+        // sort by distribution name
+        ksort($distributions_select_data);
+        
+        foreach ($distributions_select_data as $dist_display => $dist_index) {
             // create select-box-option
-            $distributions_select .= makeoption($dist_display, str_replace(".xml", "", strtolower(basename($_distribution))));
+            $distributions_select .= makeoption($dist_display, $dist_index);
         }
     }
     

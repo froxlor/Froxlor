@@ -66,6 +66,12 @@ class ConfigDaemon {
 	 * @var string
 	 */
 	public $title;
+	
+	/**
+	 * Whether this is the default daemon of the service-category
+	 * @var boolean
+	 */
+	public $default;
 
 	public function __construct($xml, $xpath) {
 		$this->fullxml = $xml;
@@ -74,6 +80,9 @@ class ConfigDaemon {
 		$attributes = $this->daemon[0]->attributes();
 		if ($attributes['title'] != '') {
 			$this->title = $this->_parseContent((string)$attributes['title']);
+		}
+		if (isset($attributes['default'])) {
+		    $this->default = ($attributes['default'] == true);
 		}
 	}
 

@@ -3745,7 +3745,7 @@ plugin {
 					<command><![CDATA[/etc/init.d/dovecot restart]]></command>
 				</daemon>
 				<!-- Courier -->
-				<daemon name="courier" title="Courier" default="true">
+				<daemon name="courier" title="Courier">
 					<install><![CDATA[apt-get install courier-pop courier-imap courier-authlib-mysql]]></install>
 					<file name="/etc/courier/authdaemonrc" chown="root:0" chmod="0600"
 						backup="true">
