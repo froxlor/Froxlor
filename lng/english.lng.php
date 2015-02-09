@@ -300,9 +300,6 @@ $lng['admin']['deactivated_user'] = 'Deactivate user';
 $lng['admin']['sendpassword'] = 'Send password';
 $lng['admin']['ownvhostsettings'] = 'Own vHost-settings';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configuration';
-$lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Please change the following files or create them with<br />the following content if they do not exist.<br /><b>Please note:</b> The MySQL-password has not been replaced for security reasons.<br />Please replace "MYSQL_PASSWORD" on your own. If you forgot your MySQL-password<br />you\'ll find it in "lib/userdata.inc.php".';
-$lng['admin']['configfiles']['commands'] = '<b>Commands:</b> Please execute the following commands in a shell.';
-$lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Please execute the following commands in a shell in order to reload the new configuration.';
 $lng['admin']['templates']['templates'] = 'Email-templates';
 $lng['admin']['templates']['template_add'] = 'Add template';
 $lng['admin']['templates']['template_edit'] = 'Edit template';
@@ -1839,3 +1836,8 @@ $lng['usersettings']['custom_notes']['show'] = 'Show your notes on the dashboard
 $lng['serversettings']['system_send_cron_errors']['title'] = 'Send cron-errors to froxlor-admin via e-mail';
 $lng['serversettings']['system_send_cron_errors']['description'] = 'Chose whether you want to receive an e-mail on cronjob errors. Keep in mind that this can lead to an e-mail being sent every 5 minutes depending on the error and your cronjob settings.';
 $lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID and PHP-FPM cannot be activated at the same time';
+
+// Added in Froxlor 0.9.34
+$lng['admin']['configfiles']['legend'] = 'You are about to configure a service/daemon. The following legend explains the nomenclature.';
+$lng['admin']['configfiles']['commands'] = '<span class="red">Commands:</span> These commands are to be executed line by line as root-user in a shell.<br>It is safe to copy the whole block and paste it into the shell.';
+$lng['admin']['configfiles']['files'] = '<span class="red">Configfiles:</span> This is an example of the contents of a configuration file.<br>The commands before these textfields should open an editor with the target file.<br>Just copy and paste the contents into the editor and save the file.<br><br><span class="red">Please note:</span> The MySQL-password has not been replaced for security reasons. Please replace "MYSQL_PASSWORD" on your own. If you forgot your MySQL-password you\'ll find it in "lib/userdata.inc.php"';

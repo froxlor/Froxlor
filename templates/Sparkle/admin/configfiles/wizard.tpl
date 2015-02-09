@@ -17,11 +17,31 @@ $header
 					<table class="tiny center">
 						<tr>
 							<td><b>{$lng['admin']['configfiles']['distribution']}:</b></td>
-							<td><if $distribution != ''><input type="hidden" name="distribution" value="$distribution"/><a href="{$linker->getLink(array('section' => 'configfiles', 'page' => $page))}">{$configfiles[$distribution]['label']}</a><else><select id="config_distribution" name="distribution"><option value="choose">{$lng['admin']['configfiles']['choosedistribution']}</option>{$distributions_select}</select></if></td>
+							<td>
+								<if $distribution != ''>
+									<input type="hidden" name="distribution" value="$distribution"/>
+									<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => $page))}">{$dist_display}</a>
+								<else>
+									<select id="config_distribution" name="distribution">
+										<option value="choose">{$lng['admin']['configfiles']['choosedistribution']}</option>
+										{$distributions_select}
+									</select>
+								</if>
+							</td>
 						</tr>
 						<tr>
 							<td><b>{$lng['admin']['configfiles']['service']}:</b></td>
-							<td><if $service != ''><input type="hidden" name="service" value="$service"/><a href="{$linker->getLink(array('section' => 'configfiles', 'page' => $page, 'distribution' => $distribution))}">{$configfiles[$distribution]['services'][$service]['label']}</a><else><select id="config_service" name="service"><option value="choose">{$lng['admin']['configfiles']['chooseservice']}</option>{$services_select}</select></if></td>
+							<td>
+								<if $service != ''>
+									<input type="hidden" name="service" value="$service"/>
+									<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => $page, 'distribution' => $distribution))}">{$services[$service]->title}</a>
+								<else>
+									<select id="config_service" name="service">
+										<option value="choose">{$lng['admin']['configfiles']['chooseservice']}</option>
+										{$services_select}
+									</select>
+								</if>
+							</td>
 						</tr>
 						<tr>
 							<td><b>{$lng['admin']['configfiles']['daemon']}:</b></td>

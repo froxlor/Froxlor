@@ -299,9 +299,6 @@ $lng['admin']['deactivated_user'] = 'Benutzer sperren';
 $lng['admin']['sendpassword'] = 'Passwort zusenden';
 $lng['admin']['ownvhostsettings'] = 'Eigene vHost-Einstellungen';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Konfiguration';
-$lng['admin']['configfiles']['files'] = '<strong>Konfigurationsdateien:</strong> Bitte ändern Sie die entsprechenden Konfigurationsdateien oder legen Sie mit dem folgenden Inhalt neu an, falls sie nicht existieren.<br /><strong>Beachten Sie:</strong> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt. Bitte ersetzen Sie "MYSQL_PASSWORD" manuell durch das entsprechende Passwort. Falls Sie es vergessen haben sollten, finden Sie es in der Datei "lib/userdata.inc.php".';
-$lng['admin']['configfiles']['commands'] = '<strong>Kommandos:</strong> Bitte führen Sie die folgenden Kommandos in einer Shell aus.';
-$lng['admin']['configfiles']['restart'] = '<strong>Neustart:</strong> Bitte führen Sie die folgenden Kommandos zum Neuladen der Konfigurationsdateien in einer Shell aus.';
 $lng['admin']['templates']['templates'] = 'E-Mail-Vorlagen';
 $lng['admin']['templates']['template_add'] = 'Vorlage hinzufügen';
 $lng['admin']['templates']['template_edit'] = 'Vorlage bearbeiten';
@@ -1566,3 +1563,8 @@ $lng['usersettings']['custom_notes']['show'] = 'Zeige die Notizen auf dem Dashbo
 $lng['serversettings']['system_send_cron_errors']['title'] = 'Sende Cron-Fehler via E-Mail an den Froxlor-Admin';
 $lng['serversettings']['system_send_cron_errors']['description'] = 'Gib an, ob bei einem Cron-Fehler eine E-Mail versendet werden soll. Beachte das es je nach Fehler und Cronjob-Einstellungen dazu kommen kann, dass diese E-Mail alle 5 Minuten gesendet wird.';
 $lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID und PHP-FPM können nicht gleichzeitig aktiviert werden.';
+
+// Added in Froxlor 0.9.34
+$lng['admin']['configfiles']['legend'] = 'Du konfigurierst nun einen Service/Daemon. Die folgende Legende zeigen unsere Nomenklatur.';
+$lng['admin']['configfiles']['commands'] = '<span class="red">Kommandos:</span> Die angezeigten Befehle müssen als Benutzer root in einer Shell ausgeführt werden.<br>Es kann auch problemlos der ganze Block kopiert und in die Shell eingefügt werden.';
+$lng['admin']['configfiles']['files'] = '<span class="red">Konfigurationsdateien:</span> Dies ist der Inhalt einer Konfigurationsdatei.<br />Der Befehl direkt vor dem Textfeld sollte einen Editor mit der Zeildatei öffnen.<br>Der Inhalt kann nun einfach kopiert und in den Editor eingefügt und die Datei gespeichert werden.<br><br><span class="red">Beachten Sie:</span> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt. Bitte ersetzen Sie "MYSQL_PASSWORD" manuell durch das entsprechende Passwort. Falls Sie es vergessen haben sollten, finden Sie es in der Datei "lib/userdata.inc.php".';
