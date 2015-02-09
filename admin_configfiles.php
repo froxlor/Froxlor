@@ -145,6 +145,7 @@ if ($userinfo['change_serversettings'] == '1') {
                         eval("\$commands_post=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
                     }
                     eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_subfileblock") . "\";");
+                    $commands = '';
                     $commands_pre = '';
                     $commands_post = '';
                     break;
