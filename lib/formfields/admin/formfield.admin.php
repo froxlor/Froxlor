@@ -29,7 +29,7 @@ return array(
 				'type' => 'checkbox',
 				'value' => '1',
 				'sublabel' => $lng['panel']['yes'],
-				'visible' => (isset($result['loginname']) && $result['adminid'] != $userinfo['userid']),
+				'visible' => (!isset($result['adminid']) || (isset($result['adminid']) && $result['adminid'] != $userinfo['userid'])),
 			),
 			'admin_password' => array(
 				'label' => $lng['login']['password'],
@@ -86,7 +86,7 @@ return array(
 	),
 	'servicedata' => array(
 		'title' => $lng['admin']['servicedata'],
-		'visible' => (isset($result['adminid']) && $result['adminid'] != $userinfo['userid']),
+		'visible' => (!isset($result['adminid']) || (isset($result['adminid']) && $result['adminid'] != $userinfo['userid'])),
 		'fields' => array(
 			'ipaddress' => array(
 				'label' => $lng['serversettings']['ipaddress']['title'],
