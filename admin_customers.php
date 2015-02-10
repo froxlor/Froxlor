@@ -1040,7 +1040,7 @@ if ($page == 'customers'
 		 */
 		$available_admins_stmt = Database::prepare("
                         SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
-                        WHERE (`customers` = '-1' OR `customers` < `customers_used`)"
+                        WHERE (`customers` = '-1' OR `customers` > `customers_used`)"
 		);
 		Database::pexecute($available_admins_stmt);
 		$admin_select = makeoption("-----", 0, true, true, true);
