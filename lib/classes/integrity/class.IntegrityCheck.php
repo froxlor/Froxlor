@@ -91,7 +91,7 @@ class IntegrityCheck {
 						Database::query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
 					}
 				}
-				$this->_log->logAction(ADM_ACTION, LOG_WARNING, "database charset was different from UTF-8, inegrity-check fixed that");
+				$this->_log->logAction(ADM_ACTION, LOG_WARNING, "database charset was different from UTF-8, integrity-check fixed that");
 			} else {
 				return false;
 			}
