@@ -1454,13 +1454,36 @@ table thead th.tablesorter-headerDesc {
 	white-space: nowrap;
 }
 
+.pushbot {
+	margin-bottom: 20px;
+}
+
+.info {
+	border-radius: 3px;
+	border: 1px solid #d1d5d8;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
 .shell {
 	font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
 	color: #bbb;
 	background-color: #333;
-	border: 1px solid #000;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	border-radius: 2px; 
+	border: 1px solid #d1d5d8;
+	border-radius: 3px; 
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+fieldset.file {
+	border:1px solid #d1d5d8;
+	border-radius: 3px;
+	padding: 5px;
+}
+
+.filecontent {
+	font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+	border: 1px solid #d1d5d8;
+	border-radius: 3px; 
 	padding: 10px;
 }

@@ -10,27 +10,22 @@ $header
 		</header>
 
 		<section>
-			<table class="full" id="howto">
-				<tr>
-					<th>{$lng['admin']['configfiles']['legend']}</th>
-					<th class="right">[close]</th>
-				</tr>
-				<tr>
-					<th>{$lng['admin']['configfiles']['commands']}</th>
-					<td><pre class="shell">
+			<div class="info">
+				<p>{$lng['admin']['configfiles']['legend']}</p><br />
+				<p>
+					{$lng['admin']['configfiles']['commands']}<br />
+					<pre class="shell">
 chmod u+x example-script.sh
-./example-script.sh</pre></td>
-				</tr>
-				<tr>
-					<th>{$lng['admin']['configfiles']['files']}</th>
-					<td>
-						<pre class="filecontent">Lorem ipsum dolor sit amet,
+./example-script.sh</pre>
+				</p><br />
+				<p>
+					{$lng['admin']['configfiles']['files']}<br />
+					<pre class="filecontent">Lorem ipsum dolor sit amet,
 consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
 ut labore et dolore magna aliquyam erat, sed diam voluptua.
 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</pre>
-					</td>
-				</tr>
-			</table>
+				</p>
+			</div>
 		</section>
 
 		<section>
