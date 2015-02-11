@@ -2305,12 +2305,12 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 					<file name="/etc/libnss-mysql.cfg" chown="root:root" chmod="0600"
 						backup="true">
 						<content><![CDATA[
-getpwnam    SELECT username,'x',uid,gid,'MySQL User',homedir,shell \
+getpwnam    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
             WHERE username='%1$s' \
             AND login_enabled = 'Y' \
             LIMIT 1
-getpwuid    SELECT username,'x',uid,gid,'MySQL User',homedir,shell \
+getpwuid    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
             WHERE uid='%1$u' \
             AND login_enabled = 'Y' \
@@ -2320,7 +2320,7 @@ getspnam    SELECT username,password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999'
             WHERE username='%1$s' \
             AND login_enabled = 'Y' \
             LIMIT 1
-getpwent    SELECT username,'x',uid,gid,'MySQL User',homedir,shell \
+getpwent    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users
 getspent    SELECT username,password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999','7','-1','-1','0' \
             FROM ftp_users

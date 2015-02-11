@@ -1433,12 +1433,12 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 					<file name="/etc/libnss-mysql.cfg" chown="root:root" chmod="0600"
 						backup="true">
 						<content><![CDATA[
-getpwnam    SELECT username,'x',uid,gid,'MySQL User',homedir,shell \
+getpwnam    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
             WHERE username='%1$s' \
             AND login_enabled = 'Y' \
             LIMIT 1
-getpwuid    SELECT username,'x',uid,gid,'MySQL User',homedir,shell \
+getpwuid    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
             WHERE uid='%1$u' \
             AND login_enabled = 'Y' \
@@ -1448,7 +1448,7 @@ getspnam    SELECT username,password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999'
             WHERE username='%1$s' \
             AND login_enabled = 'Y' \
             LIMIT 1
-getpwent    SELECT username,'x',uid,gid,'MySQL User',homedir,shell \
+getpwent    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users
 getspent    SELECT username,password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999','7','-1','-1','0' \
             FROM ftp_users
@@ -1477,6 +1477,11 @@ socket		/var/run/mysqld/mysqld.sock
 ]]>
 						</content>
 					</file>
+					<command>
+						<!-- if a socket is set for the db-server use it -->
+						<visibility mode="notempty">{{sql.socket}}</visibility>
+						<content><![CDATA[sed -i.bak \'s|^\\(socket\\).*$|\\1\\"{{sql.socket}}\\"|\' /etc/libnss-mysql.cfg]]></content>
+					</command>
 					<file name="/etc/libnss-mysql-root.cfg" chown="root:root"
 						chmod="0600" backup="true">
 						<content><![CDATA[
