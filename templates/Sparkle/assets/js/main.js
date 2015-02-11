@@ -64,17 +64,7 @@ $(document).ready(function() {
 	});
 	// Enable autoselect in configfules
 	$(".shell, .filecontent").click(function() {
-		if (window.getSelection) {
-		selection = window.getSelection();
-			range = document.createRange();
-			range.selectNodeContents(this);
-			selection.removeAllRanges();
-			selection.addRange(range);
-		} else if (document.body.createTextRange) {
-			range = document.body.createTextRange();
-			range.moveToElementText(this);
-			range.select();
-		}
+		$(this).select();
 	});
 	// Height of divs fix
 	var snheight = $('#sidenavigation').height();

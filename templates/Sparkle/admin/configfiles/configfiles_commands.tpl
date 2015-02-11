@@ -1,3 +1,3 @@
 <div class="pushbot">
-	<pre class="shell">{$commands}</pre>
+	<textarea class="shell" rows="{$numbrows}" readonly>{$commands}</textarea>
 </div>
