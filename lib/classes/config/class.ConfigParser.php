@@ -54,6 +54,12 @@ class ConfigParser {
 	public $distributionName = '';
 
 	/**
+	 * Codename of the distribution this configuration is for
+	 * @var string
+	 */
+	public $distributionCodename = '';
+
+	/**
 	 * Version of the distribution this configuration is for
 	 * @var string
 	 */
@@ -99,6 +105,7 @@ class ConfigParser {
 			switch ((string)$key) {
 				case "name": $this->distributionName = (string)$value; break;
 				case "version": $this->distributionVersion = (string)$value; break;
+				case "codename": $this->distributionCodename = (string)$value; break;
 				case "deprecated": (string)$value == 'true' ? $this->deprecated = true : $this->deprecated = false; break;
 			}
 		}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
-	<distribution name="Debian" version="Wheezy, 7.x">
+	<distribution name="Debian" codename="Wheezy" version="7.x">
 		<services>
 			<!-- HTTP -->
 			<service type="http" title="{{lng.admin.configfiles.http}}">

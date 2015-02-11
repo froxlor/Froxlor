@@ -195,6 +195,9 @@ function getCompleteDistroName($cparser)
 {
     // get distro-info
     $dist_display = $cparser->distributionName;
+    if ($cparser->distributionCodename != '') {
+        $dist_display .= " ".$cparser->distributionCodename;
+    }
     if ($cparser->distributionVersion != '') {
         $dist_display .= " (" . $cparser->distributionVersion . ")";
     }
