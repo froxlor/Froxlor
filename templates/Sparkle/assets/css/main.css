@@ -1465,25 +1465,25 @@ table thead th.tablesorter-headerDesc {
 	margin-bottom: 20px;
 }
 
-.shell {
+.shell, .filecontent {
 	font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
-	color: #bbb;
-	background-color: #333;
 	border: 1px solid #d1d5d8;
 	border-radius: 3px; 
 	padding: 10px;
-	margin-bottom: 20px;
+	background-image: none;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.shell {
+	color: #bbb;
+	background-color: #333;
 }
 
 fieldset.file {
 	border:1px solid #d1d5d8;
 	border-radius: 3px;
 	padding: 5px;
-}
-
-.filecontent {
-	font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
-	border: 1px solid #d1d5d8;
-	border-radius: 3px; 
-	padding: 10px;
 }
