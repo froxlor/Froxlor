@@ -185,7 +185,6 @@ function getFileContentContainer($file_content, &$replace_arr, $realname)
     if ($file_content != '') {
         $file_content = strtr($file_content, $replace_arr);
         $file_content = htmlspecialchars($file_content);
-        $numbrows = count(explode("\n", $file_content));
         eval("\$files=\"" . getTemplate("configfiles/configfiles_file") . "\";");
     }
     return $files;

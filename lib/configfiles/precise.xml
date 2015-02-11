@@ -283,8 +283,13 @@ exit "$RETVAL"
 						</content>
 					</file>
 					<include>//service[@type='http']/general/commands</include>
-					<command><![CDATA[chmod u+x /etc/init.d/php-fcgi]]></command>
-					<command><![CDATA[/etc/init.d/php-fcgi restart]]></command>
+					<command>
+						<visibility mode="false">{{settings.phpfpm.enabled}}
+						</visibility>
+						<visibility mode="false">{{settings.system.mod_fcgid}}
+						</visibility>
+						<content><![CDATA[/etc/init.d/php-fcgi restart]]></content>
+					</command>
 					<command><![CDATA[/etc/init.d/nginx restart]]></command>
 				</daemon>
 			</service>
