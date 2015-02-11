@@ -2913,6 +2913,11 @@ socket		/var/run/mysqld/mysqld.sock
 ]]>
 						</content>
 					</file>
+					<command>
+						<!-- if a socket is set for the db-server use it -->
+						<visibility mode="notempty">{{sql.socket}}</visibility>
+						<content><![CDATA[sed -i.bak \'s|^\\(socket\\).*$|\\1\\"{{sql.socket}}\\"|\' /etc/libnss-mysql.cfg]]></content>
+					</command>
 					<file name="/etc/libnss-mysql-root.cfg" chown="root:root"
 						chmod="0600" backup="true">
 						<content><![CDATA[

@@ -25,6 +25,7 @@ if ($userinfo['change_serversettings'] == '1') {
         '<SQL_UNPRIVILEGED_PASSWORD>' => 'MYSQL_PASSWORD',
         '<SQL_DB>' => $sql['db'],
         '<SQL_HOST>' => $sql['host'],
+        '<SQL_SOCKET>' => isset($sql['socket']) ? $sql['socket'] : null,
         '<SERVERNAME>' => Settings::Get('system.hostname'),
         '<SERVERIP>' => Settings::Get('system.ipaddress'),
         '<NAMESERVERS>' => Settings::Get('system.nameservers'),
@@ -122,6 +123,8 @@ if ($userinfo['change_serversettings'] == '1') {
         $commands = '';
         foreach ($confarr as $idx => $action) {
             if ($lasttype != '' && $lasttype != $action['type']) {
+                $commands = trim($commands);
+                $numbrows = count(explode("\n", $commands));
                 eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
                 $lasttype = '';
                 $commands = '';
@@ -152,10 +155,12 @@ if ($userinfo['change_serversettings'] == '1') {
                     $realname = $action['name'];
                     $commands = trim($commands_pre);
                     if ($commands != "") {
+                        $numbrows = count(explode("\n", $commands));
                         eval("\$commands_pre=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
                     }
                     $commands = trim($commands_post);
                     if ($commands != "") {
+                        $numbrows = count(explode("\n", $commands));
                         eval("\$commands_post=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
                     }
                     eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_subfileblock") . "\";");
@@ -167,6 +172,7 @@ if ($userinfo['change_serversettings'] == '1') {
         }
         $commands = trim($commands);
         if ($commands != '') {
+            $numbrows = count(explode("\n", $commands));
             eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
         }
         eval("echo \"" . getTemplate("configfiles/configfiles") . "\";");
@@ -182,9 +188,11 @@ if ($userinfo['change_serversettings'] == '1') {
 function getFileContentContainer($file_content, &$replace_arr, $realname)
 {
     $files = "";
+    $file_content = trim($file_content);
     if ($file_content != '') {
         $file_content = strtr($file_content, $replace_arr);
         $file_content = htmlspecialchars($file_content);
+        $numbrows = count(explode("\n", $file_content));
         eval("\$files=\"" . getTemplate("configfiles/configfiles_file") . "\";");
     }
     return $files;

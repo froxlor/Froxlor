@@ -62,6 +62,11 @@ class ConfigDaemon {
 	private $xpath;
 
 	/**
+	 * cache of sql-data if used
+	 */
+    private $_sqldata_cache = null;
+
+	/**
 	 * Human - readable title of this service
 	 * @var string
 	 */
@@ -349,6 +354,16 @@ class ConfigDaemon {
 				} else {
 					return '';
 				}
+			} elseif (preg_match('/^sql\.(.*)$/', $matches[1], $match)) {
+				if (is_null($this->_sqldata_cache)) {
+				    // read in sql-data (if exists)
+				    if (file_exists(FROXLOR_INSTALL_DIR."/lib/userdata.inc.php")) {
+				        require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+				        unset($sql_root);
+				        $this->_sqldata_cache = $sql;
+				    }
+				}
+				return isset($this->_sqldata_cache[$match[1]]) ? $this->_sqldata_cache[$match[1]] : '';
 			}
 		}, $content);
 		return $content;

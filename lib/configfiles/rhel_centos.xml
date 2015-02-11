@@ -2350,6 +2350,12 @@ password	<SQL_UNPRIVILEGED_PASSWORD>
 ]]>
 						</content>
 					</file>
+					<commands>
+						<!-- if a socket is set for the db-server use it -->
+						<visibility mode="notempty">{{sql.socket}}</visibility>
+						<command><![CDATA[sed -i.bak \'s/^#socket/socket/\' /etc/libnss-mysql.cfg]]></command>
+						<command><![CDATA[sed -i.bak \'s|^\\(socket\\).*$|\\1\\"{{sql.socket}}\\"|\' /etc/libnss-mysql.cfg]]></command>
+					</commands>
 					<file name="/etc/libnss-mysql-root.cfg" chown="root:root"
 						chmod="0600" backup="true">
 						<content><![CDATA[
