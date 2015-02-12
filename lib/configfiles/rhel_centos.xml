@@ -238,7 +238,7 @@ alias_maps = $alias_database
 ## TLS for outgoing mails from the server to another server
 #smtp_tls_security_level = may
 #smtp_tls_note_starttls_offer = yes
-## TLS for email client
+## TLS for incoming connections (clients or other mail servers)
 #smtpd_tls_security_level = may
 #smtpd_tls_cert_file = /etc/ssl/server/<SERVERNAME>.pem
 #smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt

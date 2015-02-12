@@ -1092,7 +1092,7 @@ virtual_mailbox_limit = 0
 ## TLS for outgoing mails from the server to another server
 #smtp_use_tls = yes
 #smtp_tls_note_starttls_offer = yes
-## TLS for email client
+## TLS for incoming connections (clients or other mail servers)
 #smtpd_tls_cert_file = /etc/ssl/server/server.pem
 #smtpd_tls_key_file = /etc/ssl/server/server.key
 #smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
