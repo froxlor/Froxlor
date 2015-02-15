@@ -250,7 +250,7 @@ class phpinterface_fpm {
 
 			$php_ini_variables = array(
 					'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
-					'PEAR_DIR' => Settings::Get('system.mod_fcgid_peardir'),
+					'PEAR_DIR' => Settings::Get('phpfpm.peardir'),
 					'TMP_DIR' => $this->getTempDir(),
 					'CUSTOMER_EMAIL' => $this->_domain['email'],
 					'ADMIN_EMAIL' => $admin['email'],
