@@ -256,7 +256,7 @@ debugger_command =
 						backup="true" mode="append">
 						<content><![CDATA[
 # added for Froxlor
-dovecot			unix	-	n	n	-	-	pipe flags=DRhu user=vmail:mail argv=/usr/libexec/dovecot/deliver -f ${sender} -d ${recipient}
+dovecot			unix	-	n	n	-	-	pipe flags=DRhu user=vmail:vmail argv=/usr/libexec/dovecot/deliver -f ${sender} -d ${recipient}
 ]]>
 						</content>
 					</file>
