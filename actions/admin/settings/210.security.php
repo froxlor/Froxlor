@@ -45,7 +45,7 @@ return array(
 					'type' => 'option',
 					'default' => 0,
 					'option_mode' => 'one',
-					'option_options' => array(0 => $lng['serversettings']['systemdefault'], 1 => 'MD5', 2 => 'BLOWFISH', 3 => 'SHA-256', 4 => 'SHA-512'),
+					'option_options_method' => 'getAvailablePasswordHashes',
 					'save_method' => 'storeSettingField',
 					),
 				'system_allow_error_report_admin' => array(
