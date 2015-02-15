@@ -449,7 +449,7 @@ class nginx {
 
 		// Clean user defined settings
 		$vhost_usr = str_replace("\r", "\n", $vhost_usr); // Remove windows linebreaks
-		$vhost_usr = str_replace(array("{", "}"), array("{\n", "\n}"), $vhost_usr); // Break blocks into lines
+		$vhost_usr = str_replace(array("{ ", " }"), array("{\n", "\n}"), $vhost_usr); // Break blocks into lines
 		$vhost_usr = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_usr)))); // Break into array items
 		$vhost_usr = array_filter($vhost_usr, create_function('$a','return preg_match("#\S#", $a);')); // Remove empty lines
 
