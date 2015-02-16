@@ -156,10 +156,12 @@ class HTMLform2 {
 		$attributes['id'] = $fieldname;
 		
 		// value
-		if (isset($_SESSION['requestData'][$fieldname])) {
-			$attributes['value'] = $_SESSION['requestData'][$fieldname];
-		} elseif (isset($fielddata['value'])) {
-			$attributes['value'] = $fielddata['value'];
+		if ($fielddata['type'] != 'select') {
+			if (isset($_SESSION['requestData'][$fieldname])) {
+				$attributes['value'] = $_SESSION['requestData'][$fieldname];
+			} elseif (isset($fielddata['value'])) {
+				$attributes['value'] = $fielddata['value'];
+			}
 		}
 		
 		if (isset($fielddata['attributes'])) {
@@ -369,7 +371,7 @@ class HTMLform2 {
 		if (is_array($fielddata['values'])) {
 			foreach($fielddata['values'] as $value) {
 				$selected = "";
-				if ((isset($value['selected']) && $value['selected'] == true) || (isset($fielddata['default']) && $value['value'] == $fielddata['default'])) {
+				if ((isset($value['selected']) && $value['selected'] == true) || (isset($fielddata['value']) && $value['value'] == $fielddata['value'])) {
 					$selected = " selected";
 				}
 				$values .= "<option value=\"{$value['value']}\"$selected>{$value['label']}</option>";
@@ -378,6 +380,10 @@ class HTMLform2 {
 			$values = $fielddata['values'];
 		}
 		eval("\$return = \"" . getTemplate("htmlform/select", "1") . "\";");
+		
+		if (isset($fielddata['attributes']['multiple']) && $fielddata['attributes']['multiple'] == true) {
+			$return = str_replace("name=\"$fieldname\"", "name=\"{$fieldname}[]\"", $return);	
+		}
 		return $return;
 	}
 	
