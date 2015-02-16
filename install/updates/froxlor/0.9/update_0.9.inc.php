@@ -2895,7 +2895,15 @@ if (isFroxlorVersion('0.9.33-rc3')) {
 
 if (isFroxlorVersion('0.9.33')) {
 
-    showUpdateStep("Updating from 0.9.33 to 0.9.34-dev1");
+    showUpdateStep("Updating from 0.9.33 to 0.9.33.1");
+    lastStepStatus(0);
+    updateToVersion('0.9.33.1');
+
+}
+
+if (isFroxlorVersion('0.9.33.1')) {
+
+    showUpdateStep("Updating from 0.9.33.1 to 0.9.34-dev1");
 
     showUpdateStep("Updating table structure of domains");
     Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` MODIFY `parentdomainid` int(11) NOT NULL default '0'");
