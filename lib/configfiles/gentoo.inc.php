@@ -410,7 +410,8 @@ milter_default_action = accept" >> /etc/postfix/main.cf',
 							'rc-update add nscd default'
 						),
 						'restart' => array(
-							'/etc/init.d/nscd restart'
+							'/etc/init.d/nscd restart',
+							'nscd --invalidate=group'
 						)
 					),
 					'logrotate' => array(

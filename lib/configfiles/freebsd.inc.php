@@ -403,7 +403,8 @@ return array(
 							'chmod 600 /usr/local/etc/libnss-mysql.cfg /usr/local/etc/libnss-mysql-root.cfg'
 						),
 						'restart' => array(
-							'sh /etc/rc.d/nscd restart'
+							'sh /etc/rc.d/nscd restart',
+                                                        'nscd --invalidate=group'
 						)
 					),
 					'logrotate' => array(

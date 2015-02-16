@@ -392,7 +392,8 @@ return array(
 							'etc_nsswitch.conf' => '/etc/nsswitch.conf',
 						),
 						'restart' => array(
-							'/etc/init.d/nscd restart'
+							'/etc/init.d/nscd restart',
+                                                        'nscd --invalidate=group'
 						)
 					),
 					'logrotate' => array(

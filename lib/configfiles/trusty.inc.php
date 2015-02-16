@@ -390,7 +390,8 @@ return array(
 							'etc_nsswitch.conf' => '/etc/nsswitch.conf',
 						),
 						'restart' => array(
-							'service nscd restart'
+							'service nscd restart',
+                                                        'nscd --invalidate=group'
 						)
 					),
 					'logrotate' => array(
