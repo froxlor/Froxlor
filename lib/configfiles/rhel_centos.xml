@@ -2394,6 +2394,8 @@ aliases:	files nisplus
 						</content>
 					</file>
 					<command><![CDATA[systemctl reload-or-restart nscd.service]]></command>
+					<!-- clear group chache -->
+					<command><![CDATA[nscd --invalidate=group]]></command>
 				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">

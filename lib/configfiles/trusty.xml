@@ -1494,6 +1494,8 @@ aliases:     files
 						</content>
 					</file>
 					<command><![CDATA[service nscd restart]]></command>
+					<!-- clear group chache -->
+					<command><![CDATA[nscd --invalidate=group]]></command>
 				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">

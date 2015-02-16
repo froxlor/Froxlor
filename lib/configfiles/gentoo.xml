@@ -2953,6 +2953,8 @@ aliases:     files
 					</file>
 					<command><![CDATA[rc-update add nscd default]]></command>
 					<command><![CDATA[/etc/init.d/nscd restart]]></command>
+					<!-- clear group chache -->
+					<command><![CDATA[nscd --invalidate=group]]></command>
 				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">
