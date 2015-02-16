@@ -14,16 +14,17 @@ $header
 				<p>{$lng['admin']['configfiles']['legend']}</p><br />
 				<p>
 					{$lng['admin']['configfiles']['commands']}<br />
-					<pre class="shell">
+					<textarea class="shell" rows="2" readonly>
 chmod u+x example-script.sh
-./example-script.sh</pre>
+./example-script.sh</textarea>
 				</p><br />
 				<p>
 					{$lng['admin']['configfiles']['files']}<br />
-					<pre class="filecontent">Lorem ipsum dolor sit amet,
+					<textarea class="filecontent" rows="5">Lorem ipsum dolor sit amet,
 consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
-ut labore et dolore magna aliquyam erat, sed diam voluptua.
-At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</pre>
+ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
+eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
+no sea takimata sanctus est Lorem ipsum dolor sit amet.</textarea>
 				</p>
 			</div>
 		</section>

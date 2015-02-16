@@ -1454,10 +1454,6 @@ table thead th.tablesorter-headerDesc {
 	white-space: nowrap;
 }
 
-.pushbot {
-	margin-bottom: 20px;
-}
-
 .info {
 	border-radius: 3px;
 	border: 1px solid #d1d5d8;
@@ -1486,4 +1482,5 @@ fieldset.file {
 	border:1px solid #d1d5d8;
 	border-radius: 3px;
 	padding: 5px;
+	margin-bottom: 10px;
 }
