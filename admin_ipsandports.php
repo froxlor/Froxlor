@@ -259,11 +259,10 @@ if ($page == 'ipsandports'
 
 		} else {
 
-			$ipsandports_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_add.php';
-			$ipsandports_add_form = htmlform::genHTMLForm($ipsandports_add_data);
+			$ipsandports_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.ipsandports.php';
+			$ipsandports_add_form = HTMLform2::genHTMLForm($ipsandports_add_data);
 
-			$title = $ipsandports_add_data['ipsandports_add']['title'];
-			$image = $ipsandports_add_data['ipsandports_add']['image'];
+			$title = $lng['admin']['ipsandports']['add'];
 
 			eval("echo \"" . getTemplate("ipsandports/ipsandports_add") . "\";");
 		}
@@ -420,11 +419,10 @@ if ($page == 'ipsandports'
 
 				$result = htmlentities_array($result);
 
-				$ipsandports_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
-				$ipsandports_edit_form = htmlform::genHTMLForm($ipsandports_edit_data);
+				$ipsandports_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.ipsandports.php';
+				$ipsandports_edit_form = HTMLform2::genHTMLForm($ipsandports_edit_data, $result);
 	
-				$title = $ipsandports_edit_data['ipsandports_edit']['title'];
-				$image = $ipsandports_edit_data['ipsandports_edit']['image'];
+				$title = $lng['admin']['ipsandports']['edit'];
 
 				eval("echo \"" . getTemplate("ipsandports/ipsandports_edit") . "\";");
 			}
