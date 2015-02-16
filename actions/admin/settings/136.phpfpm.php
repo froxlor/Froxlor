@@ -44,7 +44,7 @@ return array(
 					'varname' => 'vhost_httpuser',
 					'type' => 'string',
 					'default' => 'froxlorlocal',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingWebserverFcgidFpmUser'
 					),
 				'system_phpfpm_httpgroup' => array(
 					'label' => $lng['phpfpm']['vhost_httpgroup'],

@@ -112,7 +112,7 @@ return array(
 					'varname' => 'mod_fcgid_httpuser',
 					'type' => 'string',
 					'default' => 'froxlorlocal',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingWebserverFcgidFpmUser',
 					'websrv_avail' => array('apache2')
 					),
 				'system_mod_fcgid_httpgroup' => array(

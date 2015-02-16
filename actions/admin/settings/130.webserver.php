@@ -49,7 +49,7 @@ return array(
 					'varname' => 'httpuser',
 					'type' => 'string',
 					'default' => 'www-data',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingWebserverFcgidFpmUser',
 					),
 				'system_httpgroup' => array(
 					'label' => $lng['admin']['webserver_group'],
