@@ -1862,8 +1862,6 @@ if ($page == 'domains'
 					$ssl_ipsandports[] = array('label' => $row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'] . '<br />', 'value' => $row_ssl_ipandport['id']);
 				}
 
-				$result['specialsettings'] = $result['specialsettings'];
-
 				// create serveralias options
 				$serveraliasoptions = "";
 				$_value = '2';
