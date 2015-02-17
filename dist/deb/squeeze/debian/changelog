@@ -1,3 +1,9 @@
+froxlor (0.9.33.1-1+squeeze1) oldstable; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 16 Feb 2015 21:51:14 +0100
+
 froxlor (0.9.33-1+squeeze1) oldstable; urgency=low
 
   * new upstream release
