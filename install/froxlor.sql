@@ -508,6 +508,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'cron_allowautoupdate', '0'),
 	('system', 'dns_createhostnameentry', '0'),
 	('system', 'send_cron_errors', '0'),
+	('system', 'apacheitksupport', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -538,7 +539,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.34-dev1');
+	('panel', 'version', '0.9.34-dev2');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -816,10 +817,10 @@ DROP TABLE IF EXISTS `domain_ssl_settings`;
 CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `id` int(5) NOT NULL auto_increment,
   `domainid` int(11) NOT NULL,
-  `ssl_cert_file` text NOT NULL,
-  `ssl_key_file` text NOT NULL,
-  `ssl_ca_file` text,
-  `ssl_cert_chainfile` text,
+  `ssl_cert_file` mediumtext NOT NULL,
+  `ssl_key_file` mediumtext NOT NULL,
+  `ssl_ca_file` mediumtext,
+  `ssl_cert_chainfile` mediumtext,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 

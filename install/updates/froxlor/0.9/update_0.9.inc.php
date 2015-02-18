@@ -2937,3 +2937,22 @@ if (isFroxlorVersion('0.9.33.1')) {
 
     updateToVersion('0.9.34-dev1');
 }
+
+if (isFroxlorVersion('0.9.34-dev1')) {
+
+    showUpdateStep("Updating from 0.9.34-dev1 to 0.9.34-dev2");
+
+    showUpdateStep("Adding new settings for apache-itk-mpm");
+    Settings::AddNew("system.apacheitksupport", '0');
+    lastStepStatus(0);
+
+    showUpdateStep("Increase text-field size of domain-ssl table");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_cert_file` mediumtext NOT NULL");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_key_file` mediumtext NOT NULL");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_ca_file` mediumtext NOT NULL");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_cert_chainfile` mediumtext NOT NULL");
+    lastStepStatus(0);
+
+    updateToVersion('0.9.34-dev2');
+
+}
