@@ -407,6 +407,16 @@ class apache {
 			$php_options_text .= '  php_flag engine off' . "\n";
 		}
 
+		/**
+		 * check for apache-itk-support, #1400
+		 * why is this here? Because it only works with mod_php
+		 */
+		if (Settings::get('system.apacheitksupport') == 1) {
+		    $vhost_content.= '  <IfModule mpm_itk_module>' . "\n";
+		    $vhost_content.= '    AssignUserID '. $domain['loginname'] . ' ' . $domain['loginname'] . "\n";
+		    $vhost_content.= '  </IfModule>' . "\n";
+		}
+
 		return $php_options_text;
 	}
 
