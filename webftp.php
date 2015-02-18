@@ -664,15 +664,24 @@ if (isset($_GET['logoff']) || isset($_POST['logoff'])) {
 				$body .= $smarty->fetch('webftp/webftp_main_multiple.tpl');
 			}
 		}
-		$smarty->assign('completeLink', '<a href="webftp.php?logoff=true">' . _('Logout') . '</a>');
-		$navlinks = $smarty->fetch('navigation_link.tpl');
-		$smarty->assign('completeLink', '<a href="webftp.php?webftp.php?action=mode&amp;mode=FTP_BINARY&amp;currentDir=' . $currentDir . '">' . _('Switch to BINARY mode') . '</a>');
-		$navlinks .= $smarty->fetch('navigation_link.tpl');
-		$smarty->assign('completeLink', '<a href="webftp.php?webftp.php?action=mode&amp;mode=FTP_ASCII&amp;currentDir=' . $currentDir . '">' . _('Switch to ASCII mode') . '</a>');
-		$navlinks .= $smarty->fetch('navigation_link.tpl');
-		$smarty->assign('completeLink', _('Main'));
-		$smarty->assign('navigation_links', $navlinks);
-		$smarty->assign('navigation', $smarty->fetch('navigation_element.tpl'));
+
+                $smarty->assign('target', '');
+                $smarty->assign('active', '');
+
+                $smarty->assign('navurl', 'webftp.php?logoff=true');
+                $smarty->assign('navlabel', _('Logout'));
+                $navlinks = $smarty->fetch('navigation_link.tpl');
+                $smarty->assign('navurl', 'webftp.php?webftp.php?action=mode&amp;mode=FTP_BINARY&amp;currentDir=' . $currentDir);
+                $smarty->assign('navlabel', _('Switch to BINARY mode'));
+                $navlinks .= $smarty->fetch('navigation_link.tpl');
+                $smarty->assign('navurl', 'webftp.php?webftp.php?action=mode&amp;mode=FTP_ASCII&amp;currentDir=' . $currentDir);
+                $smarty->assign('navlabel', _('Switch to ASCII mode'));
+                $navlinks .= $smarty->fetch('navigation_link.tpl');
+                $smarty->assign('navlabel', _('Main'));
+                $smarty->assign('navurl', "#");
+                $smarty->assign('navigation_links', $navlinks);
+                $smarty->assign('navigation', $smarty->fetch('webftp/webftp_navigation_element.tpl'));
+
 	}
 	else {
 		$smarty->assign('errormessage', _('Login failed, please try again') . "\n");
