@@ -266,4 +266,113 @@ class IntegrityCheck {
 			return true;
 		}
 	}
+
+	/**
+	 * check whether the webserveruser is in
+	 * the customers groups when fcgid / php-fpm is used
+	 *
+	 * @param bool $fix fix member/groups
+	 *
+	 * @return boolean
+	 */
+	public function WebserverGroupMemberForFcgidPhpFpm($fix = false) {
+
+	    if (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0) {
+	        return true;
+	    }
+
+	    // get all customers that don't have the webserver-user in their group
+	    $cwg_stmt = Database::prepare("
+	       SELECT `id` FROM `".TABLE_FTP_GROUPS."` WHERE NOT FIND_IN_SET(:webserveruser, `members`)
+	    ");
+	    Database::pexecute($cwg_stmt, array('webserveruser' => Settings::Get('system.httpuser')));
+
+	    if ($cwg_stmt->rowCount > 0) {
+	        $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers are missing the webserver-user as group-member, integrity-check can fix that");
+	        if ($fix) {
+	            // prepare update statement
+	            $upd_stmt = Database::prepare("
+	                UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, :additionaluser)
+	                WHERE `id` = :id
+	            ");
+	            $upd_data = array('additionaluser' => ",".Settings::Get('system.httpuser'));
+
+                while ($cwg_row = $cwg_stmt->fetch()) {
+                   $upd_data['id'] = $cwg_row['id'];
+                   Database::pexecute($upd_stmt, $upd_data);
+                }
+                $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers were missing the webserver-user as group-member, integrity-check fixed that");
+	        } else {
+	            return false;
+	        }
+	    }
+
+	    if ($fix) {
+	        return $this->WebserverGroupMemberForFcgidPhpFpm();
+	    }
+	    return true;
+	}
+
+	/**
+	 * check whether the local froxlor user is in
+	 * the customers groups when fcgid / php-fpm and
+	 * fcgid/fpm in froxlor vhost is used
+	 *
+	 * @param bool $fix fix member/groups
+	 *
+	 * @return boolean
+	 */
+	public function FroxlorLocalGroupMemberForFcgidPhpFpm($fix = false) {
+
+	    if (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0) {
+	        return true;
+	    }
+
+	    if (Settings::get('system.mod_fcgid') == 1) {
+	        if (Settings::get('system.mod_fcgid_ownvhost') == 0) {
+                return true;
+	        } else {
+	            $localuser = Settings::Get('system.mod_fcgid_httpuser');
+	        }
+	    }
+
+        if (Settings::get('phpfpm.enabled') == 1) {
+            if (Settings::get('phpfpm.enabled_ownvhost') == 0) {
+                return true;
+            } else {
+                $localuser = Settings::Get('phpfpm.vhost_httpuser');
+            }
+	    }
+
+	    // get all customers that don't have the webserver-user in their group
+	    $cwg_stmt = Database::prepare("
+	       SELECT `id` FROM `".TABLE_FTP_GROUPS."` WHERE NOT FIND_IN_SET(:localuser, `members`)
+	    ");
+	    Database::pexecute($cwg_stmt, array('localuser' => $localuser));
+
+	    if ($cwg_stmt->rowCount > 0) {
+	        $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers are missing the local froxlor-user as group-member, integrity-check can fix that");
+	        if ($fix) {
+	            // prepare update statement
+	            $upd_stmt = Database::prepare("
+	                UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, :additionaluser)
+	                WHERE `id` = :id
+	            ");
+	            $upd_data = array('additionaluser' => ",".$localuser);
+
+	            while ($cwg_row = $cwg_stmt->fetch()) {
+	                $upd_data['id'] = $cwg_row['id'];
+	                Database::pexecute($upd_stmt, $upd_data);
+	            }
+	            $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers were missing the local froxlor-user as group-member, integrity-check fixed that");
+	        } else {
+	            return false;
+	        }
+	    }
+
+	    if ($fix) {
+	        return $this->FroxlorLocalGroupMemberForFcgidPhpFpm();
+	    }
+	    return true;
+	}
 }
