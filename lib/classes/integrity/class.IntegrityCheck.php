@@ -287,7 +287,7 @@ class IntegrityCheck {
 	    ");
 	    Database::pexecute($cwg_stmt, array('webserveruser' => Settings::Get('system.httpuser')));
 
-	    if ($cwg_stmt->rowCount > 0) {
+	    if ($cwg_stmt->rowCount() > 0) {
 	        $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers are missing the webserver-user as group-member, integrity-check can fix that");
 	        if ($fix) {
 	            // prepare update statement
@@ -350,7 +350,7 @@ class IntegrityCheck {
 	    ");
 	    Database::pexecute($cwg_stmt, array('localuser' => $localuser));
 
-	    if ($cwg_stmt->rowCount > 0) {
+	    if ($cwg_stmt->rowCount() > 0) {
 	        $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers are missing the local froxlor-user as group-member, integrity-check can fix that");
 	        if ($fix) {
 	            // prepare update statement
