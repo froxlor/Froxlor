@@ -50,7 +50,4 @@ define('TABLE_PANEL_DOMAINREDIRECTS', 'domain_redirect_codes');
 define('TABLE_PANEL_DOMAIN_SSL_SETTINGS', 'domain_ssl_settings');
 define('TABLE_DOMAINTOIP', 'panel_domaintoip');
 
-// VERSION INFO
-$version = '0.9.34-dev2';
-$dbversion = '2';
-$branding = '';
+require dirname(__FILE__).'/version.inc.php';

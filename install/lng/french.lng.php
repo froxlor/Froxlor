@@ -32,6 +32,7 @@ $lng['requirements']['phpfilter'] = 'extension PHP filter ...';
 $lng['requirements']['phpposix'] = 'extension PHP posix ...';
 $lng['requirements']['phpbcmath'] = 'extension PHP bcmath ...';
 $lng['requirements']['phpcurl'] = 'extension PHP curl...';
+$lng['requirements']['phpmbstring'] = 'extension PHP mbstring...';
 $lng['requirements']['bcmathdescription'] = 'Les fonctions de calcul de traffic ne fonctionneront pas correctement!';
 $lng['requirements']['curldescription'] = 'Les vérifications de version et les flux d\'information peuvent ne pas fonctionner correctement!';
 $lng['requirements']['openbasedir'] = 'open_basedir...';

@@ -686,4 +686,18 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 		$question.= makeyesno('system_send_cron_errors', '1', '0', '0').'<br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_version, '0.9.34-dev3')) {
+	    $has_preconfig = true;
+	    $description = 'Froxlor now requires the PHP mbstring-extension as we need to be multibyte-character safe in some cases';
+	    $question = '<strong>PHP mbstring</strong> is currently: ';
+	    if (!extension_loaded('mbstring')) {
+	        $question .= '<span class="red">not installed/loaded</span>';
+	        $question .= '<br>Please install the PHP mbstring extension in order to finish the update';
+	    } else {
+	        $question .= '<span class="green">installed/loaded</span>';
+	    }
+	    $question .= '<br>';
+	    eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

@@ -903,6 +903,16 @@ class FroxlorInstall {
 			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
 		}
 
+		// check for bstring-extension
+		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpmbstring']);
+
+		if (!extension_loaded('mbstring')) {
+		    $content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
+		    $_die = true;
+		} else {
+		    $content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
+		}
+
 		// check for bcmath extension
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpbcmath']);
 

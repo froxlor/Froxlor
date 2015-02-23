@@ -2887,9 +2887,9 @@ if (isFroxlorVersion('0.9.33-rc2')) {
 
 if (isFroxlorVersion('0.9.33-rc3')) {
 
-        showUpdateStep("Updating from 0.9.33-rc3 to 0.9.33 final");
-        lastStepStatus(0);
-        updateToVersion('0.9.33');
+    showUpdateStep("Updating from 0.9.33-rc3 to 0.9.33 final");
+    lastStepStatus(0);
+    updateToVersion('0.9.33');
 
 }
 
@@ -2903,7 +2903,7 @@ if (isFroxlorVersion('0.9.33')) {
 
 if (isFroxlorVersion('0.9.33.1')) {
 
-    showUpdateStep("Updating from 0.9.33.1 to 0.9.34-dev1");
+    showUpdateStep("Updating from 0.9.33.1 to 0.9.34-dev1", false);
 
     showUpdateStep("Updating table structure of domains");
     Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` MODIFY `parentdomainid` int(11) NOT NULL default '0'");
@@ -2940,7 +2940,7 @@ if (isFroxlorVersion('0.9.33.1')) {
 
 if (isFroxlorVersion('0.9.34-dev1')) {
 
-    showUpdateStep("Updating from 0.9.34-dev1 to 0.9.34-dev2");
+    showUpdateStep("Updating from 0.9.34-dev1 to 0.9.34-dev2", false);
 
     showUpdateStep("Adding new settings for apache-itk-mpm");
     Settings::AddNew("system.apacheitksupport", '0');
@@ -2955,4 +2955,22 @@ if (isFroxlorVersion('0.9.34-dev1')) {
 
     updateToVersion('0.9.34-dev2');
 
+}
+
+if (isFroxlorVersion('0.9.34-dev2')) {
+
+    showUpdateStep("Updating from 0.9.34-dev2 to 0.9.34-dev3", false);
+
+    $do_update = true;
+    showUpdateStep("Checking for required PHP mbstring-extension");
+    if (!extension_loaded('mbstring')) {
+        $do_update = false;
+        lastStepStatus(2, 'not installed');
+    } else {
+        lastStepStatus(0);
+    }
+
+    if ($do_update) {
+        updateToVersion('0.9.34-dev3');
+    }
 }
