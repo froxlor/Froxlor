@@ -2,7 +2,7 @@
         <h4>
                 {if $navurl != '#'}
                         <a href="{$navurl}" {$target} class="menu">{$navlabel}</a>
-                <{else}
+                {else}
                         {$navlabel}
                 {/if}
         </h4>
