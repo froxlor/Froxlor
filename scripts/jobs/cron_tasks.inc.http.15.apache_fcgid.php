@@ -58,7 +58,12 @@ class apache_fcgid extends apache
 					$php_options_text.= '    </FilesMatch>' . "\n";
 					// >=apache-2.4 enabled?
 					if (Settings::Get('system.apache24') == '1') {
-						$php_options_text.= '    Require all granted' . "\n";
+					    $mypath_dir = new frxDirectory($domain['documentroot']);
+					    // only create the require all granted if there is not active directory-protection
+					    // for this path, as this would be the first require and therefore grant all access
+					    if ($mypath_dir->isUserProtected() == false) {
+						    $php_options_text.= '    Require all granted' . "\n";
+					    }
 					} else {
 						$php_options_text.= '    Order allow,deny' . "\n";
 						$php_options_text.= '    allow from all' . "\n";
@@ -90,7 +95,12 @@ class apache_fcgid extends apache
 					$php_options_text.= '    </FilesMatch>' . "\n";
 					// >=apache-2.4 enabled?
 					if (Settings::Get('system.apache24') == '1') {
-						$php_options_text.= '    Require all granted' . "\n";
+					    $mypath_dir = new frxDirectory($domain['documentroot']);
+					    // only create the require all granted if there is not active directory-protection
+					    // for this path, as this would be the first require and therefore grant all access
+					    if ($mypath_dir->isUserProtected() == false) {
+						    $php_options_text.= '    Require all granted' . "\n";
+					    }
 					} else {
 						$php_options_text.= '    Order allow,deny' . "\n";
 						$php_options_text.= '    allow from all' . "\n";
