@@ -49,7 +49,7 @@ function getFormOverviewGroupOutput($groupname, $groupdetails) {
 
 				if($fielddetails['type'] == 'option')
 				{
-					$options_array = $fielddetails['option_options'];		
+					$options_array = $fielddetails['option_options'];
 					$options = '';
 					foreach($options_array as $value => $vtitle)
 					{
@@ -82,7 +82,7 @@ function getFormOverviewGroupOutput($groupname, $groupdetails) {
 		if (!in_array($websrv, $groupdetails['websrv_avail'])) {
 			$do_show = false;
 		}
-	}	
+	}
 
 	if ($do_show) {
 		eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
