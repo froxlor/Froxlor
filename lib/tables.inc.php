@@ -21,6 +21,7 @@ define('TABLE_FTP_GROUPS', 'ftp_groups');
 define('TABLE_FTP_USERS', 'ftp_users');
 define('TABLE_FTP_QUOTALIMITS', 'ftp_quotalimits');
 define('TABLE_FTP_QUOTATALLIES', 'ftp_quotatallies');
+define('TABLE_MAIL_AUTORESPONDER', 'mail_autoresponder');
 define('TABLE_MAIL_USERS', 'mail_users');
 define('TABLE_MAIL_VIRTUAL', 'mail_virtual');
 define('TABLE_PANEL_ACTIVATION', 'panel_activation');
