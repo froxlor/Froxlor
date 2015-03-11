@@ -3318,6 +3318,7 @@ service auth {
   unix_listener auth-client {
     mode = 0660
     user = mail
+    group = Debian-exim
   }
 
   # Auth process is run as this user.
