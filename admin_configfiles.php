@@ -74,7 +74,7 @@ if ($userinfo['change_serversettings'] == '1') {
                 foreach ($daemons as $di => $dd) {
                     $title = $dd->title;
                     if ($dd->default) {
-                        $title = $title." ".$lng['panel']['default'];
+                        $title = $title." (".strtolower($lng['panel']['default']).")";
                     }
                     $daemons_select .= makeoption($title, $di);
                 }
