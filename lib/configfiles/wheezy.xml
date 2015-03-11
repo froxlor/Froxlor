@@ -111,22 +111,22 @@ include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
 					<command>
 						<visibility mode="isdir">{{settings.system.apacheconf_vhost}}
 						</visibility>
-						<content><![CDATA[echo -e \'\\ninclude_shell "cat {{settings.system.apacheconf_vhost}}*.conf"\' >> /etc/lighttpd/lighttpd.conf]]></content>
+						<content><![CDATA[echo -e '\\ninclude_shell "cat {{settings.system.apacheconf_vhost}}*.conf"' >> /etc/lighttpd/lighttpd.conf]]></content>
 					</command>
 					<command>
 						<visibility mode="isfile">{{settings.system.apacheconf_vhost}}
 						</visibility>
-						<content><![CDATA[echo -e \'\\ninclude "{{settings.system.apacheconf_vhost}}"\' >> /etc/lighttpd/lighttpd.conf]]></content>
+						<content><![CDATA[echo -e '\\ninclude "{{settings.system.apacheconf_vhost}}"' >> /etc/lighttpd/lighttpd.conf]]></content>
 					</command>
 					<command>
 						<visibility mode="isdir">{{settings.system.apacheconf_diroptions}}
 						</visibility>
-						<content><![CDATA[echo -e \'\\ninclude_shell "cat {{settings.system.apacheconf_diroptions}}*.conf"\' >> /etc/lighttpd/lighttpd.conf]]></content>
+						<content><![CDATA[echo -e '\\ninclude_shell "cat {{settings.system.apacheconf_diroptions}}*.conf"' >> /etc/lighttpd/lighttpd.conf]]></content>
 					</command>
 					<command>
 						<visibility mode="isfile">{{settings.system.apacheconf_diroptions}}
 						</visibility>
-						<content><![CDATA[echo -e \'\\ninclude "{{settings.system.apacheconf_diroptions}}"\' >> /etc/lighttpd/lighttpd.conf]]></content>
+						<content><![CDATA[echo -e '\\ninclude "{{settings.system.apacheconf_diroptions}}"' >> /etc/lighttpd/lighttpd.conf]]></content>
 					</command>
 					<command><![CDATA[lighty-disable-mod cgi]]></command>
 					<command><![CDATA[lighty-disable-mod fastcgi]]></command>
@@ -5295,8 +5295,8 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 					<install><![CDATA[apt-get install awstats]]></install>
 					<command><![CDATA[cp /usr/share/awstats/tools/awstats_buildstaticpages.pl {{settings.system.awstats_path}}]]></command>
 					<command><![CDATA[mv {{settings.system.awstats_conf}}/awstats.conf {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
-					<command><![CDATA[sed -i.bak \'s/^DirData/# DirData/\' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
-					<command><![CDATA[sed -i.bak \'s|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|\' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
+					<command><![CDATA[sed -i.bak 's/^DirData/# DirData/' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
+					<command><![CDATA[sed -i.bak 's|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
 					<command><![CDATA[rm /etc/cron.d/awstats]]></command>
 				</daemon>
 				<!-- libnss-mysql -->
@@ -5353,9 +5353,9 @@ port        3306
 					<commands>
 						<!-- if a socket is set for the db-server use it -->
 						<visibility mode="notempty">{{sql.socket}}</visibility>
-						<command><![CDATA[sed -i.bak \'s/^port/#port/\' /etc/libnss-mysql.cfg]]></command>
-						<command><![CDATA[sed -i.bak \'s/^#socket/socket/\' /etc/libnss-mysql.cfg]]></command>
-						<command><![CDATA[sed -i.bak \'s|^\\(socket\\).*$|\\1\\"{{sql.socket}}\\"|\' /etc/libnss-mysql.cfg]]></command>
+						<command><![CDATA[sed -i.bak 's/^port/#port/' /etc/libnss-mysql.cfg]]></command>
+						<command><![CDATA[sed -i.bak 's/^#socket/socket/' /etc/libnss-mysql.cfg]]></command>
+						<command><![CDATA[sed -i.bak 's|^\\(socket\\).*$|\\1\\"{{sql.socket}}\\"|' /etc/libnss-mysql.cfg]]></command>
 					</commands>
 					<file name="/etc/libnss-mysql-root.cfg" chown="root:root"
 						chmod="0600" backup="true">

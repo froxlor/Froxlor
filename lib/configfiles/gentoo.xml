@@ -139,22 +139,22 @@ fastcgi.server = (
 					<command>
 						<visibility mode="isdir">{{settings.system.apacheconf_vhost}}
 						</visibility>
-						<content><![CDATA[echo -e \'\\ninclude_shell "cat {{settings.system.apacheconf_vhost}}*.conf"\' >> /etc/lighttpd/lighttpd.conf]]></content>
+						<content><![CDATA[echo -e '\\ninclude_shell "cat {{settings.system.apacheconf_vhost}}*.conf"' >> /etc/lighttpd/lighttpd.conf]]></content>
 					</command>
 					<command>
 						<visibility mode="isfile">{{settings.system.apacheconf_vhost}}
 						</visibility>
-						<content><![CDATA[echo -e \'\\ninclude "{{settings.system.apacheconf_vhost}}"\' >> /etc/lighttpd/lighttpd.conf]]></content>
+						<content><![CDATA[echo -e '\\ninclude "{{settings.system.apacheconf_vhost}}"' >> /etc/lighttpd/lighttpd.conf]]></content>
 					</command>
 					<command>
 						<visibility mode="isdir">{{settings.system.apacheconf_diroptions}}
 						</visibility>
-						<content><![CDATA[echo -e \'\\ninclude_shell "cat {{settings.system.apacheconf_diroptions}}*.conf"\' >> /etc/lighttpd/lighttpd.conf]]></content>
+						<content><![CDATA[echo -e '\\ninclude_shell "cat {{settings.system.apacheconf_diroptions}}*.conf"' >> /etc/lighttpd/lighttpd.conf]]></content>
 					</command>
 					<command>
 						<visibility mode="isfile">{{settings.system.apacheconf_diroptions}}
 						</visibility>
-						<content><![CDATA[echo -e \'\\ninclude "{{settings.system.apacheconf_diroptions}}"\' >> /etc/lighttpd/lighttpd.conf]]></content>
+						<content><![CDATA[echo -e '\\ninclude "{{settings.system.apacheconf_diroptions}}"' >> /etc/lighttpd/lighttpd.conf]]></content>
 					</command>
 					<command><![CDATA[rc-update add lighttpd default]]></command>
 					<command><![CDATA[/etc/init.d/lighttpd restart]]></command>
@@ -2859,8 +2859,8 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 				<!-- AWstats -->
 				<daemon name="awstats" title="Awstats (webalizer alternative)">
 					<install><![CDATA[emerge www-misc/awstats]]></install>
-					<command><![CDATA[sed -i.bak \'s/^DirData/# DirData/\' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
-					<command><![CDATA[sed -i.bak \'s|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|\' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
+					<command><![CDATA[sed -i.bak 's/^DirData/# DirData/' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
+					<command><![CDATA[sed -i.bak 's|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
 					<command><![CDATA[rm /etc/cron.d/awstats]]></command>
 				</daemon>
 				<!-- libnss-mysql -->
@@ -2916,7 +2916,7 @@ socket		/var/run/mysqld/mysqld.sock
 					<command>
 						<!-- if a socket is set for the db-server use it -->
 						<visibility mode="notempty">{{sql.socket}}</visibility>
-						<content><![CDATA[sed -i.bak \'s|^\\(socket\\).*$|\\1\\"{{sql.socket}}\\"|\' /etc/libnss-mysql.cfg]]></content>
+						<content><![CDATA[sed -i.bak 's|^\\(socket\\).*$|\\1\\"{{sql.socket}}\\"|' /etc/libnss-mysql.cfg]]></content>
 					</command>
 					<file name="/etc/libnss-mysql-root.cfg" chown="root:root"
 						chmod="0600" backup="true">
