@@ -11,7 +11,7 @@
 
  Look for:
 
- $rcmail_config['password_db_dsn'] = 'mysql://froxlor:MYSQL_PASSWORD@localhost/froxlor';
+ $config['password_db_dsn'] = 'mysql://froxlor:MYSQL_PASSWORD@localhost/froxlor';
 
  and replace MYSQL_PASSWORD with the password for the froxlor-database-user.
 
