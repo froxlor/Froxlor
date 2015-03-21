@@ -573,6 +573,11 @@ input {
 	border-radius:3px;
 }
 
+input[disabled] {
+	cursor: not-allowed;
+	background-color: #eee;
+}
+
 textarea {
 	background:#fff url(../img/icons/text_align_left.png) no-repeat 5px 4px;
 	color: #333;
@@ -864,7 +869,7 @@ label.nobr {
 	margin-bottom:5px;
 }
 
-/* NEWSFEED */
+/* NEWSFEED
 #newsfeed {
 	display: none;
 }
@@ -899,6 +904,45 @@ label.nobr {
 .newsitem small {
 	font-size:8px;
 	color:gray;
+}*/
+.newsfeed {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.newsfeed li {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #999;
+}
+
+.newsfeed li:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom: none;
+}
+
+.newsfeed li.left .newsfeed-body {
+    margin-left: 60px;
+}
+
+.newsfeed li.right .newsfeed-body {
+    margin-right: 60px;
+}
+
+.newsfeed li .newsfeed-body p {
+    margin: 0;
+}
+
+.panel .slidedown .glyphicon,
+.newsfeed .glyphicon {
+    margin-right: 5px;
+}
+
+.newsfeed-panel .panel-body {
+    height: 350px;
+    overflow-y: scroll;
 }
 
 /* TIPPER */
@@ -1400,4 +1444,43 @@ table thead th.tablesorter-headerDesc {
   width: 500px;
   border: 1px solid #ccc;
   padding: 4px;
+}
+
+.notes_block {
+  display: none;
+}
+
+.nolbr {
+	white-space: nowrap;
+}
+
+.info {
+	border-radius: 3px;
+	border: 1px solid #d1d5d8;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+.shell, .filecontent {
+	font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+	border: 1px solid #d1d5d8;
+	border-radius: 3px; 
+	padding: 10px;
+	background-image: none;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.shell {
+	color: #bbb;
+	background-color: #333;
+}
+
+fieldset.file {
+	border:1px solid #d1d5d8;
+	border-radius: 3px;
+	padding: 5px;
+	margin-bottom: 10px;
 }

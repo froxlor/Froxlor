@@ -43,13 +43,23 @@ return array(
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('apache2')
 					),
+			    'system_apache_itksupport' => array(
+			        'label' => $lng['serversettings']['apache_itksupport'],
+			        'settinggroup' => 'system',
+			        'varname' => 'apacheitksupport',
+			        'type' => 'bool',
+			        'default' => false,
+			        'save_method' => 'storeSettingField',
+			        'visible' => (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0),
+			        'websrv_avail' => array('apache2')
+			    ),
 				'system_httpuser' => array(
 					'label' => $lng['admin']['webserver_user'],
 					'settinggroup' => 'system',
 					'varname' => 'httpuser',
 					'type' => 'string',
 					'default' => 'www-data',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingWebserverFcgidFpmUser',
 					),
 				'system_httpgroup' => array(
 					'label' => $lng['admin']['webserver_group'],

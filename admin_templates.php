@@ -214,7 +214,7 @@ if ($action == '') {
 		&& $_POST['prepare'] == 'prepare'
 	) {
 		//email templates
-		$language = validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect');
+		$language = htmlentities(validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
 		$template = validate($_POST['template'], 'template');
 
 		$lng_bak = $lng;
@@ -244,7 +244,7 @@ if ($action == '') {
 		&& $_POST['send'] == 'send'
 	) {
 		//email templates
-		$language = validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect');
+		$language = htmlentities(validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
 		$template = validate($_POST['template'], 'template');
 		$subject = validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
 		$mailbody = validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
@@ -452,6 +452,8 @@ if ($action == '') {
 			
 			$template_name = str_replace('_mailbody', '', $result['varname']);
 
+			// don't escape the already escaped language-string so save up before htmlentities()
+			$language = $result['language'];
 			$result = htmlentities_array($result);
 			$mailbody = $result['value'];
 

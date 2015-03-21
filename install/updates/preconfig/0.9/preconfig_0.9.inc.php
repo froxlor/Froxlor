@@ -663,7 +663,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 		$description  = 'You can enable/disable the display/usage of the custom newsfeed for customers.<br /><br />';
 		$question = '<strong>Do you want to enable the custom newsfeed for customer? (default: no):</strong>&nbsp;';
 		$question.= makeyesno('customer_show_news_feed', '1', '0', '0').'<br />';
-		$question.= '<strong>You have to set the URL for your RSS-feed here, if you have choosen to enable the custom newsfeed on the customer-dashboard:</strong>&nbsp;';
+		$question.= '<strong>You have to set the URL for your RSS-feed here, if you have chosen to enable the custom newsfeed on the customer-dashboard:</strong>&nbsp;';
 		$question.= '<input type="text" class="text" name="customer_news_feed_url" value="" /><br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
@@ -679,4 +679,25 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 		}
 	}
 
+	if (versionInUpdate($current_version, '0.9.33-rc2')) {
+		$has_preconfig = true;
+		$description  = 'You can chose whether you want to receive an e-mail on cronjob errors. Keep in mind that this can lead to an e-mail being sent every 5 minutes.<br /><br />';
+		$question = '<strong>Do you want to receive cron-errors via mail? (default: no):</strong>&nbsp;';
+		$question.= makeyesno('system_send_cron_errors', '1', '0', '0').'<br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_version, '0.9.34-dev3')) {
+	    $has_preconfig = true;
+	    $description = 'Froxlor now requires the PHP mbstring-extension as we need to be multibyte-character safe in some cases';
+	    $question = '<strong>PHP mbstring</strong> is currently: ';
+	    if (!extension_loaded('mbstring')) {
+	        $question .= '<span class="red">not installed/loaded</span>';
+	        $question .= '<br>Please install the PHP mbstring extension in order to finish the update';
+	    } else {
+	        $question .= '<span class="green">installed/loaded</span>';
+	    }
+	    $question .= '<br>';
+	    eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

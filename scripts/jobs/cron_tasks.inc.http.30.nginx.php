@@ -437,7 +437,7 @@ class nginx {
 				}
 			}
 		}
-		$vhost_content .= '}' . "\n\n";
+		$vhost_content .= "\n}\n\n";
 
 		return $vhost_content;
 	}
@@ -449,8 +449,7 @@ class nginx {
 
 		// Clean user defined settings
 		$vhost_usr = str_replace("\r", "\n", $vhost_usr); // Remove windows linebreaks
-		$vhost_usr = preg_replace('/^[\s\t]*#.*/m', "", $vhost_usr); // Remove comments
-		$vhost_usr = str_replace(array("{", "}"), array("{\n", "\n}"), $vhost_usr); // Break blocks into lines
+		$vhost_usr = str_replace(array("{ ", " }"), array("{\n", "\n}"), $vhost_usr); // Break blocks into lines
 		$vhost_usr = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_usr)))); // Break into array items
 		$vhost_usr = array_filter($vhost_usr, create_function('$a','return preg_match("#\S#", $a);')); // Remove empty lines
 
@@ -494,6 +493,7 @@ class nginx {
 		for ($i = 0; $i < count($vhost_frx); $i++) {
 			if (substr_count($vhost_frx[$i], "}") != 0 && substr_count($vhost_frx[$i], "{") == 0) {
 				$nextLevel -= 1;
+				$vhost_frx[$i] .= "\n";
 			}
 			if ($nextLevel > 0) {
 				for ($j = 0; $j < $nextLevel; $j++) {

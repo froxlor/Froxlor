@@ -2,8 +2,8 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/mysql_add_big.png" alt="{$title}" />&nbsp;
-				{$title}
+				<img src="templates/{$theme}/assets/img/icons/mysql_add_big.png" />&nbsp;
+				{$lng['mysql']['database_create']}
 			</h2>
 		</header>
 

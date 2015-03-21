@@ -27,7 +27,7 @@
  * @param  int $uid the uid which must match the found directories
  * @param  int $gid the gid which must match the found direcotries
  *
- * @return array Array of found valid pathes
+ * @return array Array of found valid paths
  */
 function findDirs($path, $uid, $gid) {
 

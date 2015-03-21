@@ -174,7 +174,20 @@ $header
 							<th>News</th>
 						</tr>
 					</thead>
-					<tbody id="newsfeeditems">
+					<tbody>
+						<tr>
+							<td>
+								<ul class="newsfeed" id="newsfeeditems"></ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</if>
+
+				<if $userinfo['custom_notes'] != '' && $userinfo['custom_notes_show'] == '1'>
+				<table class="dboarditem full">
+					<tbody>
+						<tr><td>{$userinfo['custom_notes']}</td></tr>
 					</tbody>
 				</table>
 				</if>

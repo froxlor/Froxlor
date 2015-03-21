@@ -40,10 +40,31 @@ $(document).ready(function() {
 	$(".tipper").tipper({
 		direction: "right"
 	});
+	// Enable notes
+	$(".notes").click(function() {
+		$("#notes_" + $(this).attr("data-id")).toggle("slow");
+	});
 	// Enable reset search click
 	$(".resetsearch").click(function() {
 		$(".searchtext").val("");
 		$(".submitsearch").click();
+	});
+	// Make inputs with enabled unlimited checked disabled
+	$("input[name$='_ul']").each(function() {
+		var fieldname = $(this).attr("name").substring(0, $(this).attr("name").length - 3);
+		$("input[name='" + fieldname + "']").prop({
+			disabled: $(this).is(":checked")
+		});
+	});
+	$("input[name$='_ul']").change(function() {
+		var fieldname = $(this).attr("name").substring(0, $(this).attr("name").length - 3);
+		$("input[name='" + fieldname + "']").prop({
+			disabled: $(this).is(":checked")
+		}).focus();
+	});
+	// Enable autoselect in configfules
+	$(".shell, .filecontent").click(function() {
+		$(this).select();
 	});
 	// Height of divs fix
 	var snheight = $('#sidenavigation').height();
@@ -54,11 +75,13 @@ $(document).ready(function() {
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
 		var urlParams = decodeURI(window.location.search.substring(1));
-		if (urlParams === false | urlParams === '') return null;
+		if (urlParams === false || urlParams === '') {
+			return null;
+		}
 		var vars = urlParams.split("&");
 		for (var i = 0; i < vars.length; i++) {
 			var pair = vars[i].split("=");
-			if (pair[0] == key) {
+			if (pair[0] === key) {
 				return pair[1];
 			}
 		}
@@ -89,14 +112,14 @@ $(document).ready(function() {
 	});
 	// Speciallogfile popup dialog
 	$('input[name=speciallogfile]').click(function() {
-		if ($.getQueryVariable("page") == "domains" && $.getQueryVariable("action") == "edit") {
+		if ($.getQueryVariable("page") === "domains" && $.getQueryVariable("action") === "edit") {
 			$speciallogdialog.dialog("open");
 			$(".ui-dialog-titlebar").hide();
 		}
 	});
 	$('#speciallogyesbutton').click(function() {
 		$speciallogdialog.dialog("close");
-		if ($('#delete_stats').val().toLowerCase() != $('#delete_statistics_str').val().toLowerCase()) {
+		if ($('#delete_stats').val().toLowerCase() !== $('#delete_statistics_str').val().toLowerCase()) {
 			$("#speciallogverified").val("0");
 			if ($('input[name=speciallogfile]').prop("checked") !== false) {
 				$('input[name=speciallogfile]').attr("checked", false);
@@ -117,30 +140,54 @@ $(document).ready(function() {
 		}
 	});
 	// Tablesorting on admin traffic
-	$("table").each(function(index) {
-		if ($(this).data("toggle") == "table") {
+	$("table").each(function() {
+		if ($(this).data("toggle") === "table") {
 			$(this).tablesorter({
 				textExtraction: (function(node) {
 					// extract data from markup and return it
-					if (node.innerText != '-') {
+					if (node.innerText !== "-") {
 						return node.innerText;
 					} else {
 						return '0 B';
 					}
 				}),
 				headers: {
-					1: { sorter: 'filesize' },
-					2: { sorter: 'filesize' },
-					3: { sorter: 'filesize' },
-					4: { sorter: 'filesize' },
-					5: { sorter: 'filesize' },
-					6: { sorter: 'filesize' },
-					7: { sorter: 'filesize' },
-					8: { sorter: 'filesize' },
-					9: { sorter: 'filesize' },
-					10: { sorter: 'filesize' },
-					11: { sorter: 'filesize' },
-					12: { sorter: 'filesize' }
+					1: {
+						sorter: 'filesize'
+					},
+					2: {
+						sorter: 'filesize'
+					},
+					3: {
+						sorter: 'filesize'
+					},
+					4: {
+						sorter: 'filesize'
+					},
+					5: {
+						sorter: 'filesize'
+					},
+					6: {
+						sorter: 'filesize'
+					},
+					7: {
+						sorter: 'filesize'
+					},
+					8: {
+						sorter: 'filesize'
+					},
+					9: {
+						sorter: 'filesize'
+					},
+					10: {
+						sorter: 'filesize'
+					},
+					11: {
+						sorter: 'filesize'
+					},
+					12: {
+						sorter: 'filesize'
+					}
 				},
 			});
 		}
@@ -149,7 +196,9 @@ $(document).ready(function() {
 	var mailTemplate = $("#mailTemplate").html();
 	$("#mailLanguage").change(function() {
 		var mailLanguage = $(this).val();
-		var mailOptions = $(mailTemplate).filter(function() { return !$(this).attr("id") || $(this).attr("id") == mailLanguage; });
+		var mailOptions = $(mailTemplate).filter(function() {
+			return !$(this).attr("id") || $(this).attr("id") === mailLanguage;
+		});
 		$("#mailTemplate").html(mailOptions);
 	});
 	$("#mailLanguage").trigger("change");

@@ -91,7 +91,7 @@ DROP TABLE IF EXISTS `panel_admins`;
 CREATE TABLE `panel_admins` (
   `adminid` int(11) unsigned NOT NULL auto_increment,
   `loginname` varchar(50) NOT NULL default '',
-  `password` varchar(50) NOT NULL default '',
+  `password` varchar(255) NOT NULL default '',
   `name` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `def_language` varchar(255) NOT NULL default '',
@@ -131,6 +131,8 @@ CREATE TABLE `panel_admins` (
   `loginfail_count` int(11) unsigned NOT NULL default '0',
   `reportsent` tinyint(4) unsigned NOT NULL default '0',
   `theme` varchar(255) NOT NULL default 'Sparkle',
+  `custom_notes` text,
+  `custom_notes_show` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -141,7 +143,7 @@ DROP TABLE IF EXISTS `panel_customers`;
 CREATE TABLE `panel_customers` (
   `customerid` int(11) unsigned NOT NULL auto_increment,
   `loginname` varchar(50) NOT NULL default '',
-  `password` varchar(50) NOT NULL default '',
+  `password` varchar(255) NOT NULL default '',
   `adminid` int(11) unsigned NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
   `firstname` varchar(255) NOT NULL default '',
@@ -190,6 +192,8 @@ CREATE TABLE `panel_customers` (
   `imap` tinyint(1) NOT NULL default '1',
   `perlenabled` tinyint(1) NOT NULL default '0',
   `theme` varchar(255) NOT NULL default 'Sparkle',
+  `custom_notes` text,
+  `custom_notes_show` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -229,7 +233,7 @@ CREATE TABLE `panel_domains` (
   `dkim_privkey` text,
   `dkim_pubkey` text,
   `wwwserveralias` tinyint(1) NOT NULL default '1',
-  `parentdomainid` int(11) unsigned NOT NULL default '0',
+  `parentdomainid` int(11) NOT NULL default '0',
   `openbasedir` tinyint(1) NOT NULL default '0',
   `openbasedir_path` tinyint(1) NOT NULL default '0',
   `speciallogfile` tinyint(1) NOT NULL default '0',
@@ -488,7 +492,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'phpreload_command', ''),
 	('system', 'apache24', '0'),
 	('system', 'documentroot_use_default_value', '0'),
-	('system', 'passwordcryptfunc', '1'),
+	('system', 'passwordcryptfunc', '3'),
 	('system', 'axfrservers', ''),
 	('system', 'customer_ssl_path', '/etc/ssl/froxlor-custom/'),
 	('system', 'allow_error_report_admin', '1'),
@@ -503,6 +507,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'croncmdline', '/usr/bin/nice -n 5 /usr/bin/php5 -q'),
 	('system', 'cron_allowautoupdate', '0'),
 	('system', 'dns_createhostnameentry', '0'),
+	('system', 'send_cron_errors', '0'),
+	('system', 'apacheitksupport', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -532,8 +538,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_alpha_upper', '1'),
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
-	('panel', 'password_special_char', '!?<>§$%&+#=@'),
-	('panel', 'version', '0.9.33-rc1');
+	('panel', 'password_special_char', '!?<>§$%+#=@'),
+	('panel', 'version', '0.9.34-dev3');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -645,11 +651,11 @@ CREATE TABLE `panel_languages` (
 INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
     (1, 'Deutsch', 'de', 'lng/german.lng.php'),
     (2, 'English', 'en', 'lng/english.lng.php'),
-    (3, 'Français', 'fr', 'lng/french.lng.php'),
+    (3, 'Fran&ccedil;ais', 'fr', 'lng/french.lng.php'),
     (4, 'Portugu&ecirc;s', 'pt', 'lng/portugues.lng.php'),
-    (5, 'Italian', 'it', 'lng/italian.lng.php'),
-    (6, 'Dutch', 'nl', 'lng/dutch.lng.php'),
-    (7, 'Swedish', 'sv', 'lng/swedish.lng.php');
+    (5, 'Italiano', 'it', 'lng/italian.lng.php'),
+    (6, 'Nederlands', 'nl', 'lng/dutch.lng.php'),
+    (7, 'Svenska', 'sv', 'lng/swedish.lng.php');
 
 
 
@@ -811,10 +817,10 @@ DROP TABLE IF EXISTS `domain_ssl_settings`;
 CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `id` int(5) NOT NULL auto_increment,
   `domainid` int(11) NOT NULL,
-  `ssl_cert_file` text NOT NULL,
-  `ssl_key_file` text NOT NULL,
-  `ssl_ca_file` text,
-  `ssl_cert_chainfile` text,
+  `ssl_cert_file` mediumtext NOT NULL,
+  `ssl_key_file` mediumtext NOT NULL,
+  `ssl_ca_file` mediumtext,
+  `ssl_cert_chainfile` mediumtext,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 

@@ -1961,7 +1961,7 @@ if (isFroxlorVersion('0.9.28-svn2')) {
 	showUpdateStep("Updating from 0.9.28-svn2 to 0.9.28-svn3");
 	lastStepStatus(0);
 
-	// change lenght of passwd column
+	// change length of passwd column
 	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` MODIFY `password` varchar(128) NOT NULL default ''");
 
 	// Add default setting for vmail_maildirname if not already in place
@@ -2851,4 +2851,126 @@ if (isFroxlorVersion('0.9.33-dev3')) {
 	}
 
 	updateToVersion('0.9.33-rc1');
+}
+
+if (isFroxlorVersion('0.9.33-rc1')) {
+	showUpdateStep("Updating from 0.9.33-rc1 to 0.9.33-rc2", false);
+
+	showUpdateStep("Add new setting for sending cron-errors via mail");
+	$sendcronerrors = isset($_POST['system_send_cron_errors']) ? (int)$_POST['system_send_cron_errors'] : "0";
+	Settings::addNew('system.send_cron_errors', $sendcronerrors);
+	lastStepStatus(0);
+
+	showUpdateStep("Add new custom-notes field for admins and customer");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `custom_notes` text AFTER `theme`");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` ADD `custom_notes_show` tinyint(1) NOT NULL default '0' AFTER `custom_notes`");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `custom_notes` text AFTER `theme`");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `custom_notes_show` tinyint(1) NOT NULL default '0' AFTER `custom_notes`");
+	lastStepStatus(0);
+
+	// go from varchar(50) to varchar(255) because of some hashes that are longer than that
+	showUpdateStep("Updating table structure of admins and customers");
+	Database::query("ALTER TABLE `".TABLE_PANEL_ADMINS."` MODIFY `password` varchar(255) NOT NULL default ''");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` MODIFY `password` varchar(255) NOT NULL default ''");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.33-rc2');
+}
+
+if (isFroxlorVersion('0.9.33-rc2')) {
+
+	showUpdateStep("Updating from 0.9.33-rc2 to 0.9.33-rc3");
+	lastStepStatus(0);
+	updateToVersion('0.9.33-rc3');
+
+}
+
+if (isFroxlorVersion('0.9.33-rc3')) {
+
+    showUpdateStep("Updating from 0.9.33-rc3 to 0.9.33 final");
+    lastStepStatus(0);
+    updateToVersion('0.9.33');
+
+}
+
+if (isFroxlorVersion('0.9.33')) {
+
+    showUpdateStep("Updating from 0.9.33 to 0.9.33.1");
+    lastStepStatus(0);
+    updateToVersion('0.9.33.1');
+
+}
+
+if (isFroxlorVersion('0.9.33.1')) {
+
+    showUpdateStep("Updating from 0.9.33.1 to 0.9.34-dev1", false);
+
+    showUpdateStep("Updating table structure of domains");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` MODIFY `parentdomainid` int(11) NOT NULL default '0'");
+    lastStepStatus(0);
+
+    showUpdateStep("Updating stored email-templates");
+    $chk_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_TEMPLATES."` WHERE `templategroup` = 'mails'");
+    Database::pexecute($chk_stmt);
+    // do we have any?
+    if ($chk_stmt->rowCount() > 0) {
+        // prepare update-statement
+        $upd_stmt = Database::prepare("UPDATE `".TABLE_PANEL_TEMPLATES."` SET `language` = :lang WHERE `id` = :id");
+        // get each row
+        while ($row = $chk_stmt->fetch()) {
+           // let htmlentities run over the language name and update the entry
+           Database::pexecute($upd_stmt, array('lang' => htmlentities($row['language'])), false);
+        }
+        lastStepStatus(0);
+    } else {
+        lastStepStatus(1, "not needed");
+    }
+
+    showUpdateStep("Updating language descriptions to be in the native language");
+    $upd_stmt = Database::prepare("UPDATE `".TABLE_PANEL_LANGUAGE."` SET `language` = :lang WHERE `iso` = :iso");
+    Database::pexecute($upd_stmt, array('lang' => 'Fran&ccedil;ais', 'iso' => 'fr'), false);
+    Database::pexecute($upd_stmt, array('lang' => 'Portugu&ecirc;s', 'iso' => 'pt'), false);
+    Database::pexecute($upd_stmt, array('lang' => 'Italiano', 'iso' => 'it'), false);
+    Database::pexecute($upd_stmt, array('lang' => 'Nederlands', 'iso' => 'nl'), false);
+    Database::pexecute($upd_stmt, array('lang' => 'Svenska', 'iso' => 'sv'), false);
+    lastStepStatus(0);
+
+    updateToVersion('0.9.34-dev1');
+}
+
+if (isFroxlorVersion('0.9.34-dev1')) {
+
+    showUpdateStep("Updating from 0.9.34-dev1 to 0.9.34-dev2", false);
+
+    showUpdateStep("Adding new settings for apache-itk-mpm");
+    Settings::AddNew("system.apacheitksupport", '0');
+    lastStepStatus(0);
+
+    showUpdateStep("Increase text-field size of domain-ssl table");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_cert_file` mediumtext NOT NULL");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_key_file` mediumtext NOT NULL");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_ca_file` mediumtext NOT NULL");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` MODIFY `ssl_cert_chainfile` mediumtext NOT NULL");
+    lastStepStatus(0);
+
+    updateToVersion('0.9.34-dev2');
+
+}
+
+if (isFroxlorVersion('0.9.34-dev2')) {
+
+    showUpdateStep("Updating from 0.9.34-dev2 to 0.9.34-dev3", false);
+
+    $do_update = true;
+    showUpdateStep("Checking for required PHP mbstring-extension");
+    if (!extension_loaded('mbstring')) {
+        $do_update = false;
+        lastStepStatus(2, 'not installed');
+    } else {
+        lastStepStatus(0);
+    }
+
+    if ($do_update) {
+        updateToVersion('0.9.34-dev3');
+    }
 }

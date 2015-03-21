@@ -372,7 +372,8 @@ class FroxlorInstall {
 		$content .= $this->_status_message('begin', $this->_lng['install']['adding_admin_user']);
 		$ins_data = array(
 				'loginname' => $this->_data['admin_user'],
-				'password' => md5($this->_data['admin_pass1']),
+				/* use SHA256 default crypt */
+				'password' => crypt($this->_data['admin_pass1'], '$5$'. md5(uniqid(microtime(), 1)) . md5(uniqid(microtime(), 1))),
 				'email' => 'admin@' . $this->_data['servername'],
 				'deflang' => $this->_languages[$this->_activelng]
 		);
@@ -902,6 +903,16 @@ class FroxlorInstall {
 			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
 		}
 
+		// check for bstring-extension
+		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpmbstring']);
+
+		if (!extension_loaded('mbstring')) {
+		    $content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
+		    $_die = true;
+		} else {
+		    $content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
+		}
+
 		// check for bcmath extension
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpbcmath']);
 
@@ -1038,7 +1049,7 @@ class FroxlorInstall {
 	private function _getTemplate($template = null) {
 		// build filename
 		$filename = $this->_basepath.'/install/templates/' . $template . '.tpl';
-		// check existance
+		// check existence
 		if(file_exists($filename)
 				&& is_readable($filename)
 		) {
@@ -1221,7 +1232,7 @@ class FroxlorInstall {
 		// we don't actually care about the matches preg gives us.
 		$matches = array();
 
-		// this is faster than calling count($oktens) every time thru the loop.
+		// this is faster than calling count($tokens) every time through the loop.
 		$token_count = count($tokens);
 		for ($i = 0; $i < $token_count; $i++) {
 			// Don't wanna add an empty string as the last thing in the array.

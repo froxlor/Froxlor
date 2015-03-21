@@ -107,7 +107,7 @@ return array(
 					'settinggroup' => 'panel',
 					'varname' => 'password_special_char',
 					'type' => 'string',
-					'default' => '!?<>§$%&+#=@',
+					'default' => '!?<>§$%+#=@',
 					'save_method' => 'storeSettingField',
 					),
 				'panel_password_regex' => array(

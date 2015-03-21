@@ -1862,8 +1862,6 @@ if ($page == 'domains'
 					$ssl_ipsandports[] = array('label' => $row_ssl_ipandport['ip'] . ':' . $row_ssl_ipandport['port'] . '<br />', 'value' => $row_ssl_ipandport['id']);
 				}
 
-				$result['specialsettings'] = $result['specialsettings'];
-
 				// create serveralias options
 				$serveraliasoptions = "";
 				$_value = '2';
@@ -1911,7 +1909,7 @@ if ($page == 'domains'
 
 			$customerid = intval($_POST['customerid']);
 			$separator = validate($_POST['separator'], 'separator');
-			$offset = validate($_POST['offset'], 'offset', "/[0-9]/i");
+			$offset = (int)validate($_POST['offset'], 'offset', "/[0-9]/i");
 
 			$file_name = $_FILES['file']['tmp_name'];
 

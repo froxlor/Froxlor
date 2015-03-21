@@ -331,6 +331,31 @@ return array(
 						'restart' => array(
 							'/usr/local/etc/rc.d/proftpd restart'
 						)
+					),
+					'pure-ftpd' => array (
+						'label' => 'Pure-FTPd',
+						'commands_1' => array (
+							'cd /usr/ports/ftp/pure-ftpd',
+							'make config',
+							'# select LARGEFILE,MYSQL,PAM,PRIVSEP,SENDFILE,THROTTLING,TLS,UTF8,VIRTUALCHROOT',
+							'make install clean'
+						),
+						'commands_2' => array(
+							'touch /usr/local/etc/pure-ftpd.conf',
+							'touch /usr/local/etc/pureftpd-mysql.conf',
+							'chown root:0 /usr/local/etc/pure-ftpd.conf',
+							'chown root:0 /usr/local/etc/pureftpd-mysql.conf',
+							'chmod 0600 /usr/local/etc/pure-ftpd.conf',
+							'chmod 0600 /usr/local/etc/pureftpd-mysql.conf',
+							'echo "pure-ftpd_enable="YES" >> /etc/rc.conf'
+						),
+						'files' => array(
+							'usr_local_etc_pure-ftpd.conf' => '/usr/local/etc/pure-ftpd.conf',
+							'usr_local_etc_pureftpd-mysql.conf' => '/usr/local/etc/pureftpd-mysql.conf'
+						),
+						'restart' => array(
+							'service pure-ftpd restart'
+						)
 					)
 				)
 			),
@@ -358,7 +383,7 @@ return array(
 							'sed -i.bak \'s/^LogSeparator/# LogSeparator/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'sed -i.bak \'s/^SiteDomain/# SiteDomain/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
-							'sed -i.bak \'s/^DirIcons=\"\/awstatsicons\"/DirIcons=\"\/awstats-icon\"/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'# Please make sure you deactivate awstats own cronjob as Froxlor handles that itself'
 						)
 					),

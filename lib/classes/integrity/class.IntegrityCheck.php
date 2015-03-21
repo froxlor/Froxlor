@@ -23,11 +23,19 @@ class IntegrityCheck {
 	// Store all available checks
 	public $available = array();
 
+	// logger object
+	private $_log = null;
+
 	/**
 	 * Constructor
 	 * Parses all available checks into $this->available 
 	 */
 	public function __construct() {
+		global $userinfo;
+		if (!isset($userinfo) || !is_array($userinfo)) {
+			$userinfo = array('loginname' => 'integrity-check');
+		}
+		$this->_log = FroxlorLogger::getInstanceOf($userinfo);
 		$this->available = get_class_methods($this);
 		unset($this->available[array_search('__construct', $this->available)]);
 		unset($this->available[array_search('checkAll', $this->available)]);
@@ -37,7 +45,7 @@ class IntegrityCheck {
 	}
 
 	/**
-	 * Check all occuring integrity problems at once
+	 * Check all occurring integrity problems at once
 	 */
 	public function checkAll() {
 		$integrityok = true;
@@ -48,7 +56,7 @@ class IntegrityCheck {
 	}
 
 	/**
-	 * Fix all occuring integrity problems at once with default settings
+	 * Fix all occurring integrity problems at once with default settings
 	 */
 	public function fixAll() {
 		$integrityok = true;
@@ -72,6 +80,7 @@ class IntegrityCheck {
 		$resp = Database::pexecute_first($cs_stmt, array('dbname' => Database::getDbName()));
 		$charset = isset($resp['default_character_set_name']) ? $resp['default_character_set_name'] : null;
 		if (!empty($charset) && strtolower($charset) != 'utf8') {
+			$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "database charset seems to be different from UTF-8, integrity-check can fix that");
 			if ($fix) {
 				// fix database
 				Database::query('ALTER DATABASE `' . Database::getDbName() . '` CHARACTER SET utf8 COLLATE utf8_general_ci');
@@ -82,6 +91,7 @@ class IntegrityCheck {
 						Database::query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
 					}
 				}
+				$this->_log->logAction(ADM_ACTION, LOG_WARNING, "database charset was different from UTF-8, integrity-check fixed that");
 			} else {
 				return false;
 			}
@@ -148,14 +158,18 @@ class IntegrityCheck {
 			if (!array_key_exists($row['id_ipandports'], $ips)) { 
 				if ($fix) {
 					Database::pexecute($del_stmt, array('domainid' => $row['id_domain'], 'ipandportid' => $row['id_ipandports']));
+					$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found an ip/port-id in domain <> ip table which does not exist, integrity check fixed this");
 				} else {
+					$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found an ip/port-id in domain <> ip table which does not exist, integrity check can fix this");
 					return false;
 				}
 			}
 			if (!array_key_exists($row['id_domain'], $domains)) {
 				if ($fix) {
 					Database::pexecute($del_stmt, array('domainid' => $row['id_domain'], 'ipandportid' => $row['id_ipandports']));
+					$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a domain-id in domain <> ip table which does not exist, integrity check fixed this");
 				} else {
+					$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a domain-id in domain <> ip table which does not exist, integrity check can fix this");
 					return false; 
 				}
 			}
@@ -168,7 +182,9 @@ class IntegrityCheck {
 			if (!array_key_exists($domainid, $ipstodomains)) {
 				if ($fix) {
 					Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipandportid' => $admips[$adminid]));
+					$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a domain-id with no entry in domain <> ip table, integrity check fixed this");
 				} else {
+					$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a domain-id with no entry in domain <> ip table, integrity check can fix this");
 					return false;
 				}
 			}
@@ -236,8 +252,10 @@ class IntegrityCheck {
 			if ($fix) {
 				// We make a blanket update to all subdomains of this parentdomain, doesn't matter which one is wrong, all have to be disabled
 				Database::pexecute($upd_stmt, array('domainid' => $id));
+				$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a subdomain with ssl_redirect=1 but parent-domain has ssl=0, integrity check fixed this");
 			} else {
 				// It's just the check, let the function fail
+				$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a subdomain with ssl_redirect=1 but parent-domain has ssl=0, integrity check can fix this");
 				return false;
 			}
 		}
@@ -247,5 +265,114 @@ class IntegrityCheck {
 		} else {
 			return true;
 		}
+	}
+
+	/**
+	 * check whether the webserveruser is in
+	 * the customers groups when fcgid / php-fpm is used
+	 *
+	 * @param bool $fix fix member/groups
+	 *
+	 * @return boolean
+	 */
+	public function WebserverGroupMemberForFcgidPhpFpm($fix = false) {
+
+	    if (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0) {
+	        return true;
+	    }
+
+	    // get all customers that don't have the webserver-user in their group
+	    $cwg_stmt = Database::prepare("
+	       SELECT `id` FROM `".TABLE_FTP_GROUPS."` WHERE NOT FIND_IN_SET(:webserveruser, `members`)
+	    ");
+	    Database::pexecute($cwg_stmt, array('webserveruser' => Settings::Get('system.httpuser')));
+
+	    if ($cwg_stmt->rowCount() > 0) {
+	        $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers are missing the webserver-user as group-member, integrity-check can fix that");
+	        if ($fix) {
+	            // prepare update statement
+	            $upd_stmt = Database::prepare("
+	                UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, :additionaluser)
+	                WHERE `id` = :id
+	            ");
+	            $upd_data = array('additionaluser' => ",".Settings::Get('system.httpuser'));
+
+                while ($cwg_row = $cwg_stmt->fetch()) {
+                   $upd_data['id'] = $cwg_row['id'];
+                   Database::pexecute($upd_stmt, $upd_data);
+                }
+                $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers were missing the webserver-user as group-member, integrity-check fixed that");
+	        } else {
+	            return false;
+	        }
+	    }
+
+	    if ($fix) {
+	        return $this->WebserverGroupMemberForFcgidPhpFpm();
+	    }
+	    return true;
+	}
+
+	/**
+	 * check whether the local froxlor user is in
+	 * the customers groups when fcgid / php-fpm and
+	 * fcgid/fpm in froxlor vhost is used
+	 *
+	 * @param bool $fix fix member/groups
+	 *
+	 * @return boolean
+	 */
+	public function FroxlorLocalGroupMemberForFcgidPhpFpm($fix = false) {
+
+	    if (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0) {
+	        return true;
+	    }
+
+	    if (Settings::get('system.mod_fcgid') == 1) {
+	        if (Settings::get('system.mod_fcgid_ownvhost') == 0) {
+                return true;
+	        } else {
+	            $localuser = Settings::Get('system.mod_fcgid_httpuser');
+	        }
+	    }
+
+        if (Settings::get('phpfpm.enabled') == 1) {
+            if (Settings::get('phpfpm.enabled_ownvhost') == 0) {
+                return true;
+            } else {
+                $localuser = Settings::Get('phpfpm.vhost_httpuser');
+            }
+	    }
+
+	    // get all customers that don't have the webserver-user in their group
+	    $cwg_stmt = Database::prepare("
+	       SELECT `id` FROM `".TABLE_FTP_GROUPS."` WHERE NOT FIND_IN_SET(:localuser, `members`)
+	    ");
+	    Database::pexecute($cwg_stmt, array('localuser' => $localuser));
+
+	    if ($cwg_stmt->rowCount() > 0) {
+	        $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers are missing the local froxlor-user as group-member, integrity-check can fix that");
+	        if ($fix) {
+	            // prepare update statement
+	            $upd_stmt = Database::prepare("
+	                UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, :additionaluser)
+	                WHERE `id` = :id
+	            ");
+	            $upd_data = array('additionaluser' => ",".$localuser);
+
+	            while ($cwg_row = $cwg_stmt->fetch()) {
+	                $upd_data['id'] = $cwg_row['id'];
+	                Database::pexecute($upd_stmt, $upd_data);
+	            }
+	            $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers were missing the local froxlor-user as group-member, integrity-check fixed that");
+	        } else {
+	            return false;
+	        }
+	    }
+
+	    if ($fix) {
+	        return $this->FroxlorLocalGroupMemberForFcgidPhpFpm();
+	    }
+	    return true;
 	}
 }

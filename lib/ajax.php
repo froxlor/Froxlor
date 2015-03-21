@@ -25,6 +25,8 @@ require './userdata.inc.php';
 require './tables.inc.php';
 require './classes/database/class.Database.php';
 require './classes/settings/class.Settings.php';
+require './functions/validate/function.validate_ip.php';
+require './functions/validate/function.validateDomain.php';
 
 if(isset($_POST['action'])) {
 	$action = $_POST['action'];
@@ -72,7 +74,19 @@ if ($action == "newsfeed") {
 			$content = preg_replace("/[\r\n]+/", " ", strip_tags($item->description));
 			$content = substr($content, 0, 150) . "...";
 
-			echo "<tr class=\"newsitem\"><td><small>" . $date . "</small><br /><a href=\"" . $link . "\" target=\"_blank\"><b>" . $title . "</b><br />" . $content . "</a></td></tr>";
+			echo "<li class=\"clearfix\">
+                <div class=\"newsfeed-body clearfix\">
+                    <div class=\"header\">
+                        <strong class=\"primary-font\"><a href=\"{$link}\" target=\"_blank\">{$title}</a></strong>
+                        <small class=\"pull-right text-muted\">
+                            <i class=\"fa fa-clock-o fa-fw\"></i> {$date}
+                        </small>
+                    </div>
+                    <p>
+                        {$content}
+                    </p>
+                </div>
+            </li>";
 		}
 	} else {
 		echo "";

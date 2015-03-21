@@ -66,12 +66,21 @@
 		</a>&nbsp;
 		<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'delete', 'id' => $row['customerid']))}">
 			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
-		</a>&nbsp;
-		<if $islocked == 1>
-		<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'unlock', 'id' => $row['customerid']))}">
-			<img src="templates/{$theme}/assets/img/icons/unlock.png" alt="{$lng['panel']['unlock']}" title="{$lng['panel']['unlock']}" />
 		</a>
+		<if $islocked == 1>
+			&nbsp;<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'unlock', 'id' => $row['customerid']))}">
+				<img src="templates/{$theme}/assets/img/icons/unlock.png" alt="{$lng['panel']['unlock']}" title="{$lng['panel']['unlock']}" />
+			</a>
+		</if>
+		<if $row['custom_notes'] != ''>
+			&nbsp;<img src="templates/{$theme}/assets/img/icons/info.png" class="notes" data-id="{$row['loginname']}" alt="{$lng['usersettings']['custom_notes']['title']}" title="{$lng['usersettings']['custom_notes']['title']}" />
 		</if>
 	</td>
-
 </tr>
+<if $row['custom_notes'] != ''>
+	<tr class="notes_block" id="notes_{$row['loginname']}">
+		<td colspan="6">
+			{$row['custom_notes']}
+		</td>
+	</tr>
+</if>

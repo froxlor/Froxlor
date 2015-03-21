@@ -118,16 +118,24 @@ if ($action == 'login') {
 		if ($userinfo['loginfail_count'] >= Settings::Get('login.maxloginattempts') && $userinfo['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))) {
 			redirectTo('index.php', array('showmessage' => '3'));
 			exit;
-		} elseif ($userinfo['password'] == md5($password)) {
-			// login correct
-			// reset loginfail_counter, set lastlogin_succ
-			$stmt = Database::prepare("UPDATE $table
-				SET `lastlogin_succ`= :lastlogin_succ, `loginfail_count`='0'
-				WHERE `$uid`= :uid"
-			);
-			Database::pexecute($stmt, array("lastlogin_succ" => time(), "uid" => $userinfo[$uid]));
-			$userinfo['userid'] = $userinfo[$uid];
-			$userinfo['adminsession'] = $adminsession;
+		} elseif (validatePasswordLogin($userinfo, $password, $table, $uid)) {
+		    // only show "you're banned" if the login was successfull
+		    // because we don't want to publish that the user does exist
+		    if ($userinfo['deactivated']) {
+		        unset($userinfo);
+		        redirectTo('index.php', array('showmessage' => '5'));
+		        exit;
+		    } else {
+		        // login correct
+		        // reset loginfail_counter, set lastlogin_succ
+		        $stmt = Database::prepare("UPDATE $table
+		              SET `lastlogin_succ`= :lastlogin_succ, `loginfail_count`='0'
+		              WHERE `$uid`= :uid"
+		        );
+		        Database::pexecute($stmt, array("lastlogin_succ" => time(), "uid" => $userinfo[$uid]));
+		        $userinfo['userid'] = $userinfo[$uid];
+		        $userinfo['adminsession'] = $adminsession;
+		    }
 		} else {
 			// login incorrect
 			$stmt = Database::prepare("UPDATE $table
@@ -269,6 +277,9 @@ if ($action == 'login') {
 		case 7:
 			$message = $lng['pwdreminder']['wrongcode'];
 			break;
+		case 8:
+		    $message = $lng['pwdreminder']['notallowed'];
+		    break;
 		}
 
 		$update_in_progress = '';
@@ -326,8 +337,8 @@ if ($action == 'forgotpwd') {
 
 			/* Check whether user is banned */
 			if ($user['deactivated']) {
-				$message = $lng['pwdreminder']['notallowed'];
-				redirectTo('index.php', array('showmessage' => '5'));
+				redirectTo('index.php', array('showmessage' => '8'));
+				exit;
 			}
 
 			if (($adminchecked && Settings::Get('panel.allow_preset_admin') == '1') || $adminchecked == false) {
@@ -511,7 +522,7 @@ if ($action == 'resetpwd') {
 								WHERE `customerid` = :userid"
 							);
 						}
-						Database::pexecute($stmt, array("newpassword" => md5($new_password), "userid" => $result['userid']));
+						Database::pexecute($stmt, array("newpassword" => makeCryptPassword($new_password), "userid" => $result['userid']));
 
 						$rstlog = FroxlorLogger::getInstanceOf(array('loginname' => 'password_reset'));
 						$rstlog->logAction(USR_ACTION, LOG_NOTICE, "changed password using password reset.");

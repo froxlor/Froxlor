@@ -451,7 +451,7 @@ if ($page == 'overview') {
 						standard_error('passwordshouldnotbeusername');
 					} else {
 						if ($password == '') {
-							$password = substr(md5(uniqid(microtime(), 1)), 12, 6);
+							$password = generatePassword();
 						}
 
 						$cryptPassword = makeCryptPassword($password);

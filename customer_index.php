@@ -85,6 +85,8 @@ if ($page == 'overview') {
 	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains');
 
+	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
+
 	$services_enabled = "";
 	$se = array();
 	if ($userinfo['imap'] == '1') $se[] = "IMAP";
@@ -97,7 +99,7 @@ if ($page == 'overview') {
 } elseif ($page == 'change_password') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = validate($_POST['old_password'], 'old password');
-		if (md5($old_password) != $userinfo['password']) {
+		if (!validatePasswordLogin($userinfo,$old_password,TABLE_PANEL_CUSTOMERS,'customerid')) {
 			standard_error('oldpasswordnotcorrect');
 			exit;
 		}
@@ -117,13 +119,11 @@ if ($page == 'overview') {
 			// Update user password
 			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
 				SET `password` = :newpassword
-				WHERE `customerid` = :customerid
-				AND `password` = :oldpassword"
+				WHERE `customerid` = :customerid"
 			);
 			$params = array(
-				"newpassword" => md5($new_password),
-				"customerid" => $userinfo['customerid'],
-				"oldpassword" => md5($old_password)
+				"newpassword" => makeCryptPassword($new_password),
+				"customerid" => $userinfo['customerid']
 			);
 			Database::pexecute($stmt, $params);
 			$log->logAction(USR_ACTION, LOG_NOTICE, 'changed password');

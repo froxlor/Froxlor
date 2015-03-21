@@ -230,6 +230,12 @@ if ($page == 'overview') {
 				$domain_check = Database::pexecute_first($domain_stmt, array("domain" => $domain, "customerid" => $userinfo['customerid']));
 
 				$completedomain = $subdomain . '.' . $domain;
+
+				if ($completedomain == Settings::Get('system.hostname')) {
+					standard_error('admin_domain_emailsystemhostname');
+					exit;
+				}
+
 				$completedomain_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `domain` = :domain
 					AND `customerid` = :customerid

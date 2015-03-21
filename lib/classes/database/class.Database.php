@@ -224,7 +224,7 @@ class Database {
 				&& isset($sql['root_password'])
 				&& (!isset($sql_root) || !is_array($sql_root))
 		) {
-			$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+			$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'socket' => (isset($sql['socket']) ? $sql['socket'] : null), 'user' => $sql['root_user'], 'password' => $sql['root_password']));
 			unset($sql['root_user']);
 			unset($sql['root_password']);
 		}
@@ -235,11 +235,13 @@ class Database {
 			$user = $sql_root[self::$_dbserver]['user'];
 			$password = $sql_root[self::$_dbserver]['password'];
 			$host = $sql_root[self::$_dbserver]['host'];
+			$socket = isset($sql_root[self::$_dbserver]['socket']) ? $sql_root[self::$_dbserver]['socket'] : null;
 		} else {
 			$caption = 'localhost';
 			$user = $sql["user"];
 			$password = $sql["password"];
 			$host = $sql["host"];
+			$socket = isset($sql['socket']) ? $sql['socket'] : null;
 		}
 
 		// save sql-access-data if needed
@@ -248,6 +250,7 @@ class Database {
 					'user' => $user,
 					'passwd' => $password,
 					'host' => $host,
+					'socket' => $socket,
 					'db' => $sql["db"],
 					'caption' => $caption
 			);
@@ -264,8 +267,8 @@ class Database {
 				'charset' => 'utf8'
 		);
 
-		if (!validateLocalHostname($host) && !validate_ip2($host, true, 'invalidip', true)) {
-			$dbconf["dsn"]['unix_socket'] = makeCorrectFile($host);
+		if ($socket != null) {
+			$dbconf["dsn"]['unix_socket'] = makeCorrectFile($socket);
 		} else {
 			$dbconf["dsn"]['host'] = $host;
 		}
@@ -345,7 +348,7 @@ class Database {
 				&& isset($sql['root_password'])
 				&& (!isset($sql_root) || !is_array($sql_root))
 			) {
-				$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+				$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'socket' => (isset($sql['socket']) ? $sql['socket'] : null), 'user' => $sql['root_user'], 'password' => $sql['root_password']));
 			}
 
 			// hide username/password in messages

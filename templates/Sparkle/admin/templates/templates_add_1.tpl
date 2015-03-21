@@ -26,7 +26,8 @@ $header
 						</tr>
 						<tfoot>
 							<tr>
-								<td colspan="2" align="center"><input type="submit" value="{$lng['panel']['next']}" /></td>
+								<td align="left"><input type="reset" value="{$lng['panel']['cancel']}" class="historyback" /></td>
+								<td align="right"><input type="submit" value="{$lng['panel']['next']}" /></td>
 							</tr>
 						</tfoot>
 					</table>

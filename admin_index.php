@@ -140,6 +140,8 @@ if ($page == 'overview') {
 	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $dec_places);
 	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains');
 
+	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
+
 	$cron_last_runs = getCronjobsLastRun();
 	$outstanding_tasks = getOutstandingTasks();
 
@@ -197,7 +199,7 @@ if ($page == 'overview') {
 	) {
 		$old_password = validate($_POST['old_password'], 'old password');
 
-		if (md5($old_password) != $userinfo['password']) {
+		if (!validatePasswordLogin($userinfo,$old_password,TABLE_PANEL_ADMINS,'adminid')) {
 			standard_error('oldpasswordnotcorrect');
 			exit;
 		}
@@ -217,13 +219,11 @@ if ($page == 'overview') {
 			$chgpwd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_ADMINS . "`
 				SET `password`= :newpasswd
-				WHERE `adminid`= :adminid
-				AND `password`= :oldpasswd"
+				WHERE `adminid`= :adminid"
 			);
 			Database::pexecute($chgpwd_stmt, array(
-				'newpasswd' => md5($new_password),
-				'adminid' => (int)$userinfo['adminid'],
-				'oldpasswd' => md5($old_password)
+				'newpasswd' => makeCryptPassword($new_password),
+				'adminid' => (int)$userinfo['adminid']
 			));
 			$log->logAction(ADM_ACTION, LOG_NOTICE, 'changed password');
 			redirectTo($filename, Array('s' => $s));

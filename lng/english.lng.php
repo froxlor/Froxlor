@@ -215,7 +215,7 @@ $lng['error']['nolanguageselect'] = 'No language selected.';
 $lng['error']['nosubjectcreate'] = 'You must define a topic for this mail template.';
 $lng['error']['nomailbodycreate'] = 'You must define a mail-text for this mail template.';
 $lng['error']['templatenotfound'] = 'Template was not found.';
-$lng['error']['alltemplatesdefined'] = 'You cant define more templates, all languages are supported already.';
+$lng['error']['alltemplatesdefined'] = 'You can\'t define more templates, all languages are supported already.';
 $lng['error']['wwwnotallowed'] = 'www is not allowed for subdomains.';
 $lng['error']['subdomainiswrong'] = 'The subdomain %s contains invalid characters.';
 $lng['error']['domaincantbeempty'] = 'The domain-name can not be empty.';
@@ -300,9 +300,6 @@ $lng['admin']['deactivated_user'] = 'Deactivate user';
 $lng['admin']['sendpassword'] = 'Send password';
 $lng['admin']['ownvhostsettings'] = 'Own vHost-settings';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configuration';
-$lng['admin']['configfiles']['files'] = '<b>Configfiles:</b> Please change the following files or create them with<br />the following content if they do not exist.<br /><b>Please note:</b> The MySQL-password has not been replaced for security reasons.<br />Please replace "MYSQL_PASSWORD" on your own. If you forgot your MySQL-password<br />you\'ll find it in "lib/userdata.inc.php".';
-$lng['admin']['configfiles']['commands'] = '<b>Commands:</b> Please execute the following commands in a shell.';
-$lng['admin']['configfiles']['restart'] = '<b>Restart:</b> Please execute the following commands in a shell in order to reload the new configuration.';
 $lng['admin']['templates']['templates'] = 'Email-templates';
 $lng['admin']['templates']['template_add'] = 'Add template';
 $lng['admin']['templates']['template_edit'] = 'Edit template';
@@ -376,7 +373,7 @@ $lng['serversettings']['pathedit']['description'] = 'Should a path be selected b
 $lng['serversettings']['nameservers']['title'] = 'Nameservers';
 $lng['serversettings']['nameservers']['description'] = 'A comma separated list containing the hostnames of all nameservers. The first one will be the primary one.';
 $lng['serversettings']['mxservers']['title'] = 'MX servers';
-$lng['serversettings']['mxservers']['description'] = 'A comma seperated list containing a pair of a number and a hostname separated by whitespace (e.g. \'10 mx.example.com\') containing the mx servers.';
+$lng['serversettings']['mxservers']['description'] = 'A comma separated list containing a pair of a number and a hostname separated by whitespace (e.g. \'10 mx.example.com\') containing the mx servers.';
 
 /**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
@@ -397,7 +394,7 @@ $lng['error']['myipaddress'] = '\'IP\'';
 $lng['error']['myport'] = '\'Port\'';
 $lng['error']['myipdefault'] = 'You need to select an IP/Port combination that should become default.';
 $lng['error']['myipnotdouble'] = 'This IP/Port combination already exists.';
-$lng['error']['admin_domain_emailsystemhostname'] = 'The server-hostname cannot be used as email-domain.';
+$lng['error']['admin_domain_emailsystemhostname'] = 'The server-hostname cannot be used as customer-domain.';
 $lng['question']['admin_ip_reallydelete'] = 'Do you really want to delete the IP address %s?';
 $lng['admin']['ipsandports']['ipsandports'] = 'IPs and Ports';
 $lng['admin']['ipsandports']['add'] = 'Add IP/Port';
@@ -1024,7 +1021,7 @@ $lng['serversettings']['ssl']['ssl_ca_file']['description'] = 'Client authentifi
 $lng['error']['usernamealreadyexists'] = 'The username %s already exists.';
 
 $lng['error']['plausibilitychecknotunderstood'] = 'Answer of plausibility check not understood.';
-$lng['error']['errorwhensaving'] = 'An error occured when saving the field %s';
+$lng['error']['errorwhensaving'] = 'An error occurred when saving the field %s';
 
 $lng['success']['success'] = 'Information';
 $lng['success']['clickheretocontinue'] = 'Click here to continue';
@@ -1344,7 +1341,7 @@ $lng['emails']['back_to_overview'] = 'Back to overview';
 // ADDED IN FROXLOR 0.9.20
 $lng['error']['user_banned'] = 'Your account has been locked. Please contact your administrator for further information.';
 $lng['serversettings']['validate_domain'] = 'Validate domain names';
-$lng['login']['combination_not_found'] = 'Combination of user and email adress not found.';
+$lng['login']['combination_not_found'] = 'Combination of user and email address not found.';
 $lng['customer']['generated_pwd'] = 'Password suggestion';
 $lng['customer']['usedmax'] = 'Used / Max';
 $lng['admin']['traffic'] = 'Traffic';
@@ -1741,7 +1738,7 @@ $lng['serversettings']['phpfpm_settings']['ipcdir']['title'] = 'FastCGI IPC dire
 $lng['serversettings']['phpfpm_settings']['ipcdir']['description'] = 'The directory where the php-fpm sockets will be stored by the webserver.<br />This directory has to be readable for the webserver';
 $lng['panel']['news'] = 'News';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using the SSL redirect is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
-$lng['error']['fcgidstillenableddeadlock'] = 'FCGID is currently active.<br />Please deactivate it before switching to another webserver than Apache2';
+$lng['error']['fcgidstillenableddeadlock'] = 'FCGID is currently active.<br />Please deactivate it before switching to another webserver than Apache2 or lighttpd';
 $lng['error']['send_report_title'] = 'Send error report';
 $lng['error']['send_report_desc'] = 'Thank you for reporting this error and helping us to froxlor improve froxlor.<br />This is the email which will be sent to the froxlor developer team:';
 $lng['error']['send_report'] = 'Send report';
@@ -1833,3 +1830,16 @@ $lng['success']['domain_import_successfully'] = 'Successfully imported %s domain
 $lng['error']['domain_import_error'] = 'Following error occurred while importing domains: %s';
 $lng['admin']['note'] = 'Note';
 $lng['domains']['import_description'] = 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc" target="_blank">http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc</a>';
+$lng['usersettings']['custom_notes']['title'] = 'Custom notes';
+$lng['usersettings']['custom_notes']['description'] = 'Feel free to put any notes you want/need in here. They will show up in the admin/customer overview for the corresponding user.';
+$lng['usersettings']['custom_notes']['show'] = 'Show your notes on the dashboard of the user';
+$lng['serversettings']['system_send_cron_errors']['title'] = 'Send cron-errors to froxlor-admin via e-mail';
+$lng['serversettings']['system_send_cron_errors']['description'] = 'Chose whether you want to receive an e-mail on cronjob errors. Keep in mind that this can lead to an e-mail being sent every 5 minutes depending on the error and your cronjob settings.';
+$lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID and PHP-FPM cannot be activated at the same time';
+
+// Added in Froxlor 0.9.34
+$lng['admin']['configfiles']['legend'] = 'You are about to configure a service/daemon. The following legend explains the nomenclature.';
+$lng['admin']['configfiles']['commands'] = '<span class="red">Commands:</span> These commands are to be executed line by line as root-user in a shell. It is safe to copy the whole block and paste it into the shell.';
+$lng['admin']['configfiles']['files'] = '<span class="red">Configfiles:</span> This is an example of the contents of a configuration file. The commands before these textfields should open an editor with the target file. Just copy and paste the contents into the editor and save the file.<br><br><span class="red">Please note:</span> The MySQL-password has not been replaced for security reasons. Please replace "MYSQL_PASSWORD" on your own. If you forgot your MySQL-password you\'ll find it in "lib/userdata.inc.php"';
+$lng['serversettings']['apache_itksupport']['title'] = 'Use modifications for Apache ITK-MPM';
+$lng['serversettings']['apache_itksupport']['description'] = '<strong class="red">ATTENTION:</strong> use only if you acutally have apache itk-mpm enabled<br />otherwise your webserver will not be able to start';

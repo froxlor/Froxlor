@@ -1,5 +1,4 @@
-<p>
-	<label><b>{$realname}</b></label><br />
-	<textarea rows="<if $numbrows <= 10 >{$numbrows}</if><if 10 < $numbrows >10</if>" cols="70" readonly="readonly" id="selectall">{$file_content}</textarea>
-</p>
-
+<div class="pushbot">
+	<textarea class="shell" rows="1" readonly>&dollar;EDITOR {$realname}</textarea>
+	<textarea class="filecontent" rows="<if $numbrows <=20 >{$numbrows}<else>21</if>" readonly>{$file_content}</textarea>
+</div>

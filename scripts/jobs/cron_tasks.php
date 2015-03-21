@@ -98,7 +98,11 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 				&& !in_array(Settings::Get('system.httpuser'), $groupinfo['members'])
 			) {
 				// webserver has no access, add it
-				safe_exec('usermod -a -G ' . escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup'))." ".escapeshellarg(Settings::Get('system.httpuser')));
+				if (isFreeBSD()) {
+					safe_exec('pw user mod '.escapeshellarg(Settings::Get('system.httpuser')).' -G '.escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup')));
+				} else {
+					safe_exec('usermod -a -G ' . escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup')).' '.escapeshellarg(Settings::Get('system.httpuser')));
+				}
 			}
 		}
 
@@ -226,7 +230,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 					&& filegroup($maildir) == Settings::Get('system.vmail_gid')
 				) {
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
-					// mail-adress allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
+					// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 					$return = false;
 					safe_exec('rm -rf '.escapeshellarg($maildir), $return, array('|', '&', '`', '$', '~', '?'));
 				}
@@ -299,7 +303,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 					&& filegroup($maildir) == Settings::Get('system.vmail_gid')
 				) {
 					$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
-					// mail-adress allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
+					// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 					$return = false;
 					safe_exec('rm -rf '.escapeshellarg($maildir), $return, array('|', '&', '`', '$', '~', '?'));
 
@@ -316,7 +320,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 						&& filegroup($maildir_old) == Settings::Get('system.vmail_gid')
 					) {
 						$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir_old));
-						// mail-adress allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
+						// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 						$return = false;
 						safe_exec('rm -rf '.escapeshellarg($maildir_old), $return, array('|', '&', '`', '$', '~', '?'));
 					}

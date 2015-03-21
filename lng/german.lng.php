@@ -299,9 +299,6 @@ $lng['admin']['deactivated_user'] = 'Benutzer sperren';
 $lng['admin']['sendpassword'] = 'Passwort zusenden';
 $lng['admin']['ownvhostsettings'] = 'Eigene vHost-Einstellungen';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Konfiguration';
-$lng['admin']['configfiles']['files'] = '<strong>Konfigurationsdateien:</strong> Bitte ändern Sie die entsprechenden Konfigurationsdateien oder legen Sie mit dem folgenden Inhalt neu an, falls sie nicht existieren.<br /><strong>Beachten Sie:</strong> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt. Bitte ersetzen Sie "MYSQL_PASSWORD" manuell durch das entsprechende Passwort. Falls Sie es vergessen haben sollten, finden Sie es in der Datei "lib/userdata.inc.php".';
-$lng['admin']['configfiles']['commands'] = '<strong>Kommandos:</strong> Bitte führen Sie die folgenden Kommandos in einer Shell aus.';
-$lng['admin']['configfiles']['restart'] = '<strong>Neustart:</strong> Bitte führen Sie die folgenden Kommandos zum Neuladen der Konfigurationsdateien in einer Shell aus.';
 $lng['admin']['templates']['templates'] = 'E-Mail-Vorlagen';
 $lng['admin']['templates']['template_add'] = 'Vorlage hinzufügen';
 $lng['admin']['templates']['template_edit'] = 'Vorlage bearbeiten';
@@ -1468,7 +1465,7 @@ $lng['serversettings']['phpfpm_settings']['ipcdir']['title'] = 'FastCGI IPC Verz
 $lng['serversettings']['phpfpm_settings']['ipcdir']['description'] = 'In dieses Verzeichnis werden die php-fpm Sockets vom Webserver abgelegt.<br />Das Verzeichnis muss für den Webserver lesbar sein.';
 $lng['panel']['news'] = 'Neuigkeiten';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Eine SSL-Weiterleitung ist nur möglich, wenn der Domain mindestens eine IP/Port Kombination zugewiesen wurde, bei der SSL aktiviert ist.';
-$lng['error']['fcgidstillenableddeadlock'] = 'FCGID ist derzeit aktiviert.<br />Bitte deaktiviere es, um einen anderen Webserver als Apache2 auswählen zu können.';
+$lng['error']['fcgidstillenableddeadlock'] = 'FCGID ist derzeit aktiviert.<br />Bitte deaktiviere es, um einen anderen Webserver als Apache2 oder lighttpd auswählen zu können.';
 $lng['error']['send_report_title'] = 'Fehler melden';
 $lng['error']['send_report_desc'] = 'Danke, dass Sie uns diesen Fehler melden und damit helfen Froxlor zu verbessern.<br />Folgender Bericht wird per Mail an das Froxlor Entwickler Team gesendet.';
 $lng['error']['send_report'] = 'Fehlerbericht senden';
@@ -1560,3 +1557,16 @@ $lng['success']['domain_import_successfully'] = 'Erfolgreich %s Domains importie
 $lng['error']['domain_import_error'] = 'Der folgende Fehler trat beim Importieren der Domains auf: %s';
 $lng['admin']['note'] = 'Hinweis';
 $lng['domains']['import_description'] = 'Detaillierte Informationen über den Aufbau der Importdatei und einen erfolgreichen Import gibt es hier: <a href="http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc" target="_blank">http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc</a> (englisch)';
+$lng['usersettings']['custom_notes']['title'] = 'Eigene Notizen';
+$lng['usersettings']['custom_notes']['description'] = 'Hier können Notizen je nach Lust und Laune eingetragen werden. Diese werden in der Administrator/Kunden-Übersicht bei dem jeweiligen Benutzer angezeigt.';
+$lng['usersettings']['custom_notes']['show'] = 'Zeige die Notizen auf dem Dashboard des Benutzers';
+$lng['serversettings']['system_send_cron_errors']['title'] = 'Sende Cron-Fehler via E-Mail an den Froxlor-Admin';
+$lng['serversettings']['system_send_cron_errors']['description'] = 'Gib an, ob bei einem Cron-Fehler eine E-Mail versendet werden soll. Beachte das es je nach Fehler und Cronjob-Einstellungen dazu kommen kann, dass diese E-Mail alle 5 Minuten gesendet wird.';
+$lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID und PHP-FPM können nicht gleichzeitig aktiviert werden.';
+
+// Added in Froxlor 0.9.34
+$lng['admin']['configfiles']['legend'] = 'Du konfigurierst nun einen Service/Daemon. Die folgende Legende zeigt unsere Nomenklatur.';
+$lng['admin']['configfiles']['commands'] = '<span class="red">Kommandos:</span> Die angezeigten Befehle müssen als Benutzer root in einer Shell ausgeführt werden. Es kann auch problemlos der ganze Block kopiert und in die Shell eingefügt werden.';
+$lng['admin']['configfiles']['files'] = '<span class="red">Konfigurationsdateien:</span> Dies ist der Inhalt einer Konfigurationsdatei. Der Befehl direkt vor dem Textfeld sollte einen Editor mit der Zeildatei öffnen. Der Inhalt kann nun einfach kopiert und in den Editor eingefügt und die Datei gespeichert werden.<br><br><span class="red">Beachten Sie:</span> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt. Bitte ersetzen Sie "MYSQL_PASSWORD" manuell durch das entsprechende Passwort. Falls Sie es vergessen haben sollten, finden Sie es in der Datei "lib/userdata.inc.php".';
+$lng['serversettings']['apache_itksupport']['title'] = 'Anpassungen für Apache ITK-MPM verwenden';
+$lng['serversettings']['apache_itksupport']['description'] = '<div class="red">Achtung: Bitte nur verwenden, wenn wirklich Apache itk-mpm verwendet wird, ansonsten wird der Webserver nicht starten.</div>';

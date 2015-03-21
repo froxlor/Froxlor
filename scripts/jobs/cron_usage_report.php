@@ -24,9 +24,15 @@ $yesterday = time() - (60 * 60 * 24);
  * Initialize the mailingsystem
  */
 $mail = new PHPMailer(true);
-
 $mail->CharSet = "UTF-8";
-$mail->SetFrom(Settings::Get('panel.adminmail'), 'Froxlor Administrator');
+
+if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
+	// set return-to address and custom sender-name, see #76
+	$mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+	if (Settings::Get('panel.adminmail_return') != '') {
+		$mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
+	}
+}
 
 // Warn the customers at xx% traffic-usage
 

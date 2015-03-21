@@ -21,6 +21,7 @@ define('TABLE_FTP_GROUPS', 'ftp_groups');
 define('TABLE_FTP_USERS', 'ftp_users');
 define('TABLE_FTP_QUOTALIMITS', 'ftp_quotalimits');
 define('TABLE_FTP_QUOTATALLIES', 'ftp_quotatallies');
+define('TABLE_MAIL_AUTORESPONDER', 'mail_autoresponder');
 define('TABLE_MAIL_USERS', 'mail_users');
 define('TABLE_MAIL_VIRTUAL', 'mail_virtual');
 define('TABLE_PANEL_ACTIVATION', 'panel_activation');
@@ -50,7 +51,4 @@ define('TABLE_PANEL_DOMAINREDIRECTS', 'domain_redirect_codes');
 define('TABLE_PANEL_DOMAIN_SSL_SETTINGS', 'domain_ssl_settings');
 define('TABLE_DOMAINTOIP', 'panel_domaintoip');
 
-// VERSION INFO
-$version = '0.9.33-rc1';
-$dbversion = '2';
-$branding = '';
+require dirname(__FILE__).'/version.inc.php';

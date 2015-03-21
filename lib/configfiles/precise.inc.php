@@ -299,7 +299,7 @@ return array(
 					'dovecot' => array(
 						'label' => 'Dovecot',
 						'commands_1' => array(
-							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix dovecot-mysql mail-stack-delivery'
+							'apt-get install dovecot-imapd dovecot-pop3d dovecot-postfix dovecot-mysql  dovecot-managesieved dovecot-sieve mail-stack-delivery'
 						),
 						'files' => array(
 
@@ -379,6 +379,7 @@ return array(
 							'cp /usr/share/awstats/tools/awstats_buildstaticpages.pl '.makeCorrectDir(Settings::Get('system.awstats_path')),
 							'mv '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.conf').' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'sed -i.bak \'s/^DirData/# DirData/\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
+							'sed -i.bak \'s|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|\' '.makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.model.conf'),
 							'# Please make sure you deactivate awstats own cronjob as Froxlor handles that itself',
 							'rm /etc/cron.d/awstats'
 						),
@@ -418,5 +419,3 @@ return array(
 		)
 	)
 );
-
-?>

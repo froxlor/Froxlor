@@ -156,7 +156,12 @@ $header
 							<th>News</th>
 						</tr>
 					</thead>
-					<tbody id="newsfeeditems">
+					<tbody>
+						<tr>
+							<td>
+								<ul class="newsfeed" id="newsfeeditems"></ul>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				</if>
@@ -230,6 +235,11 @@ $header
 				        <tr>
 				            <td>{$lng['customer']['email']}:</td>
 				            <td>{$userinfo['email']}</td>
+				        </tr>
+				        </if>
+				        <if $userinfo['custom_notes'] != '' && $userinfo['custom_notes_show'] == '1'>
+				        <tr>
+				            <td colspan="2">{$userinfo['custom_notes']}</td>
 				        </tr>
 				        </if>
 					</tbody>

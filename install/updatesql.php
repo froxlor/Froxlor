@@ -59,12 +59,12 @@ if (isFroxlor()) {
 
 	$integrity = new IntegrityCheck();
 	if (!$integrity->checkAll()) {
-		lastStepStatus(2, 'Monkeys ate the integrity');
+		lastStepStatus(1, 'Monkeys ate the integrity');
 		showUpdateStep("Trying to remove monkeys, feeding bananas");
 		if(!$integrity->fixAll()) {
-			lastStepStatus(2, 'Some monkeys just would not move');
+			lastStepStatus(2, 'Some monkeys just would not move, you should contact team@froxlor.org');
 		} else {
-			lastStepStatus(0);
+			lastStepStatus(0, 'Integrity restored');
 		}
 	} else {
 		lastStepStatus(0);
