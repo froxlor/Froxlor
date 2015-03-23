@@ -409,7 +409,7 @@ class nginx {
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 
 			$vhost_content .= $this->getLogFiles($domain);
-			$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
+                        $vhost_content .= $this->getWebroot($domain, $ssl_vhost);
 
 			if ($this->_deactivated == false) {
 
@@ -423,6 +423,19 @@ class nginx {
 				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
 
 				$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
+
+                                // check if vhost config template setted and merge it
+				if ($domain['vhostsettingid'] != 0) {
+                                        $vhostsettings_stmt = Database::prepare(
+                                                "SELECT `description`, `vhostsettings` FROM ".TABLE_PANEL_VHOSTCONFIGS."
+                                                WHERE `id` = :id LIMIT 1;"
+                                        );
+                                        $vhostconfig = Database::pexecute_first($vhostsettings_stmt, array('id' => $domain['vhostsettingid']));
+                                        
+                                        // replace {SOCKET} var with unix socket
+                                        $php = new phpinterface($domain);
+					$vhost_content = $this->mergeVhostCustom($vhost_content, str_replace("{SOCKET}", $php->getInterface()->getSocketFile(), $vhostconfig['vhostsettings']))."\n";
+				}
 
 				if ($domain['specialsettings'] != "") {
 					$vhost_content = $this->mergeVhostCustom($vhost_content, $domain['specialsettings']);
@@ -775,20 +788,23 @@ class nginx {
 			$webroot_text .= "\t".'root     '.makeCorrectDir($domain['documentroot']).';'."\n";
 			$this->_deactivated = false;
 		}
+                
+                // write directive only when vhost_usedefaultlocation is activated in panel domain settings
+                if ($domain['vhost_usedefaultlocation'] == '1') {
+                    $webroot_text .= "\n\t".'location / {'."\n";
+                    $webroot_text .= "\t\t".'index    index.php index.html index.htm;'."\n";
+                    $webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 
-		$webroot_text .= "\n\t".'location / {'."\n";
-		$webroot_text .= "\t\t".'index    index.php index.html index.htm;'."\n";
-		$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
+                    if ($this->vhost_root_autoindex) {
+                            $webroot_text .= "\t\t".'autoindex on;'."\n";
+                            $this->vhost_root_autoindex = false;
+                    }
 
-		if ($this->vhost_root_autoindex) {
-			$webroot_text .= "\t\t".'autoindex on;'."\n";
-			$this->vhost_root_autoindex = false;
-		}
-
-		$webroot_text .= "\t".'}'."\n\n";
-		$webroot_text .= "\tlocation @rewrites {\n";
-		$webroot_text .= "\t\trewrite ^ /index.php last;\n";
-		$webroot_text .= "\t}\n\n";
+                    $webroot_text .= "\t".'}'."\n\n";
+                    $webroot_text .= "\tlocation @rewrites {\n";
+                    $webroot_text .= "\t\trewrite ^ /index.php last;\n";
+                    $webroot_text .= "\t}\n\n";
+                }
 
 		return $webroot_text;
 	}
