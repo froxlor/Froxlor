@@ -145,6 +145,22 @@ return array(
 						),
 						'value' => array($result['speciallogfile'])
 					),
+					'vhost_usedefaultlocation' => array(
+						'label' => $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['title'],
+						'desc' => $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['vhost_usedefaultlocation'])
+					),
+					'vhostsettingid' => array(
+						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
+						'label' => $lng['admin']['ownvhostconfig'],
+                                                'desc' => $lng['serversettings']['default_vhostconf']['description'],
+						'type' => 'select',
+						'select_var' => $vhostconfigs
+					),
 					'specialsettings' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
 						'style' => 'align-top',
