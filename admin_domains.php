@@ -415,6 +415,7 @@ if ($page == 'domains'
 				}
 
                                 $vhostsettingid = 0;
+                                $vhost_usedefaultlocation = 0;
 				if ($userinfo['caneditphpsettings'] == '1'
 					|| $userinfo['change_serversettings'] == '1'
 				) {
@@ -426,6 +427,7 @@ if ($page == 'domains'
 					) {
 						$phpsettingid = (int)$_POST['phpsettingid'];
 						$vhostsettingid = (int)$_POST['vhostsettingid'];
+						$vhost_usedefaultlocation = (int)$_POST['vhost_usedefaultlocation'];
 						$phpsettingid_check_stmt = Database::prepare("
 							SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`
 							WHERE `id` = :phpsettingid"
