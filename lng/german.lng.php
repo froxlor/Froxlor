@@ -1570,3 +1570,19 @@ $lng['admin']['configfiles']['commands'] = '<span class="red">Kommandos:</span> 
 $lng['admin']['configfiles']['files'] = '<span class="red">Konfigurationsdateien:</span> Dies ist der Inhalt einer Konfigurationsdatei. Der Befehl direkt vor dem Textfeld sollte einen Editor mit der Zeildatei öffnen. Der Inhalt kann nun einfach kopiert und in den Editor eingefügt und die Datei gespeichert werden.<br><br><span class="red">Beachten Sie:</span> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt. Bitte ersetzen Sie "MYSQL_PASSWORD" manuell durch das entsprechende Passwort. Falls Sie es vergessen haben sollten, finden Sie es in der Datei "lib/userdata.inc.php".';
 $lng['serversettings']['apache_itksupport']['title'] = 'Anpassungen für Apache ITK-MPM verwenden';
 $lng['serversettings']['apache_itksupport']['description'] = '<div class="red">Achtung: Bitte nur verwenden, wenn wirklich Apache itk-mpm verwendet wird, ansonsten wird der Webserver nicht starten.</div>';
+
+// VHost Konfiguration added 22.03.2015 by Mewes Hans-Peter
+$lng['menue']['vhostsettings']['maintitle'] = 'VHost-Konfigurationen';
+$lng['admin']['vhostsettings']['title'] = 'VHost-Konfiguration';
+$lng['admin']['vhostsettings']['description'] = 'Kurzbeschreibung';
+$lng['admin']['vhostsettings']['activedomains'] = 'In Verwendung für Domain(s)';
+$lng['admin']['vhostsettings']['addnew'] = 'Neue Konfiguration erstellen';
+$lng['admin']['vhostsettings']['addsettings'] = 'VHost Konfiguration erstellen';
+$lng['admin']['vhostsettings']['editsettings'] = 'VHost Konfiguration bearbeiten';
+$lng['admin']['vhostsettings']['vhostsettings'] = 'Eigene VHost Konfiguration';
+$lng['admin']['vhostconfig']['template_replace_vars'] = 'Variablen, welche in den VHost Vorlagen ersetzt werden:';
+$lng['admin']['vhostconfig']['socket_dir'] = 'Wird mit dem Unix Socket Pfad ersetzt (z.B. /var/run/nginx/domain.socket';
+$lng['admin']['vhostconfig']['vhost_usedefaultlocation']['title'] = 'Standard VHost location directive verwenden';
+$lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'] = 'Wenn aktiviert, werden die Standard VHost directiven wie <br>location / { ... }<br> location @rewrites { ... }<br> location ~ ^(.+?\.php)(/.*)?$ { ... }<br> nicht in die Konfigurationsdatei geschrieben. Sinnvoll wenn eine eigene VHost Konfiguration Vorlage verwendet werden soll.';
+$lng['question']['vhostsetting_reallydelete'] = 'Wollen Sie wirklich diese VHost Vorlage löschen?';
+$lng['admin']['ownvhostconfig'] = 'Eigene VHost Konfiguration';
