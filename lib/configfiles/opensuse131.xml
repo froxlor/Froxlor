@@ -8,25 +8,21 @@
 				<general>
 					<commands index="1">
 						<command>
-							<visibility mode="isdir">{{settings.system.apacheconf_vhost}}
-							</visibility>
+							<visibility mode="isdir">{{settings.system.apacheconf_vhost}}</visibility>
 							<content><![CDATA[mkdir -p {{settings.system.apacheconf_vhost}}]]></content>
 						</command>
 						<command>
-							<visibility mode="isfile">{{settings.system.apacheconf_vhost}}
-							</visibility>
+							<visibility mode="isfile">{{settings.system.apacheconf_vhost}}</visibility>
 							<content><![CDATA[touch {{settings.system.apacheconf_vhost}}]]></content>
 						</command>
 						<command><![CDATA[chown root:0 {{settings.system.apacheconf_vhost}}]]></command>
 						<command><![CDATA[chmod 0600 {{settings.system.apacheconf_vhost}}]]></command>
 						<command>
-							<visibility mode="isdir">{{settings.system.apacheconf_diroptions}}
-							</visibility>
+							<visibility mode="isdir">{{settings.system.apacheconf_diroptions}}</visibility>
 							<content><![CDATA[mkdir -p {{settings.system.apacheconf_diroptions}}]]></content>
 						</command>
 						<command>
-							<visibility mode="isfile">{{settings.system.apacheconf_diroptions}}
-							</visibility>
+							<visibility mode="isfile">{{settings.system.apacheconf_diroptions}}</visibility>
 							<content><![CDATA[touch {{settings.system.apacheconf_diroptions}}]]></content>
 						</command>
 						<command><![CDATA[chown root:0 {{settings.system.apacheconf_diroptions}}]]></command>
@@ -36,16 +32,14 @@
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
 						<command><![CDATA[chmod 1777 {{settings.system.mod_fcgid_tmpdir}}]]></command>
 						<command>
-							<visibility mode="notempty">{{settings.system.deactivateddocroot}}
-							</visibility>
+							<visibility mode="notempty">{{settings.system.deactivateddocroot}}</visibility>
 							<content><![CDATA['mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
 						<command><![CDATA[a2dismod userdir]]></command>
 					</commands>
 				</general>
 				<!-- HTTP Apache -->
-				<daemon name="apache" version="2.4" title="Apache 2.4"
-					default="true">
+				<daemon name="apache" version="2.4" title="Apache 2.4" default="true">
 					<include>//service[@type='http']/general/commands</include>
 					<command><![CDATA[systemctl reload-or-restart apache2.service]]></command>
 				</daemon>
@@ -56,13 +50,11 @@
 				<general>
 					<commands index="1">
 						<command>
-							<visibility mode="groupnotexists">{{settings.system.vmail_gid}}
-							</visibility>
+							<visibility mode="groupnotexists">{{settings.system.vmail_gid}}</visibility>
 							<content><![CDATA[groupadd -g {{settings.system.vmail_gid}} vmail]]></content>
 						</command>
 						<command>
-							<visibility mode="usernotexists">{{settings.system.vmail_uid}}
-							</visibility>
+							<visibility mode="usernotexists">{{settings.system.vmail_uid}}</visibility>
 							<content><![CDATA[useradd -u {{settings.system.vmail_uid}} -g vmail vmail]]></content>
 						</command>
 					</commands>
@@ -154,8 +146,7 @@ query = SELECT gid FROM mail_users WHERE email = '%s'
 					</commands>
 				</general>
 				<!-- postfix with dovecot -->
-				<daemon name="postfix_dovecot" version="2.9" title="Postfix with dovecot"
-					default="true">
+				<daemon name="postfix_dovecot" version="2.9" title="Postfix with Dovecot" default="true">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>
 					<include>//service[@type='smtp']/general/installs[@index=1]
