@@ -643,7 +643,7 @@ if (isFroxlorVersion('0.9.6-svn5')) {
 			WHERE loginname = SUBSTRING_INDEX('" . $row_ftp_users['username'] . "', '" . Settings::Get('customer.ftpprefix') . "', 1);"
 		);
 		$row_ftp_quota = $result_ftp_quota_stmt->fetch(PDO::FETCH_ASSOC);
-		Database::query("INSERT INTO `ftp_quotatallies` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $row_ftp_users['username'] . "', 'user', '" . $row_ftp_quota[0] . "'*1024, '0', '0', '0', '0', '0');");
+		Database::query("INSERT INTO `ftp_quotatallies` (`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`) VALUES ('" . $row_ftp_users['username'] . "', 'user', '" . $row_ftp_quota['diskspace_used'] . "'*1024, '0', '0', '0', '0', '0');");
 	}
 
 	lastStepStatus(0);
@@ -800,6 +800,7 @@ if (isFroxlorVersion('0.9.9')) {
 		);
 		Database::pexecute($stmt, array(':user' => $update_httpuser));
 		lastStepStatus(0);
+		Settings::Set('system.httpuser', $update_httpuser);
 	}
 
 	if ($update_httpgroup !== false) {
@@ -813,6 +814,7 @@ if (isFroxlorVersion('0.9.9')) {
 		);
 		Database::pexecute($stmt, array(':grp' => $update_httpgroup));
 		lastStepStatus(0);
+		Settings::Set('system.httpgroup', $update_httpgroup);
 	}
 
 	$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'debug_cron'");
@@ -1428,7 +1430,7 @@ if (isFroxlorVersion('0.9.16')) {
 		`lastrun` = :lastrun,
 		`isactive` = :isactive"
 	);
-	Database::pexecute($stmt, array('lastrun' => $clastrun, 'isactive' => update_system_report_enable));
+	Database::pexecute($stmt, array('lastrun' => $clastrun, 'isactive' => $update_system_report_enable));
 	lastStepStatus(0);
 
 	showUpdateStep("Updating various database-fields");
