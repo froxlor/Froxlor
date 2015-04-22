@@ -412,9 +412,9 @@ class apache {
 		 * why is this here? Because it only works with mod_php
 		 */
 		if (Settings::get('system.apacheitksupport') == 1) {
-		    $vhost_content.= '  <IfModule mpm_itk_module>' . "\n";
-		    $vhost_content.= '    AssignUserID '. $domain['loginname'] . ' ' . $domain['loginname'] . "\n";
-		    $vhost_content.= '  </IfModule>' . "\n";
+		    $php_options_text .= '  <IfModule mpm_itk_module>' . "\n";
+		    $php_options_text .= '    AssignUserID '. $domain['loginname'] . ' ' . $domain['loginname'] . "\n";
+		    $php_options_text .= '  </IfModule>' . "\n";
 		}
 
 		return $php_options_text;
