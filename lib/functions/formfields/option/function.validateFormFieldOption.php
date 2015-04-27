@@ -23,6 +23,12 @@ function validateFormFieldOption($fieldname, $fielddata, $newfieldvalue)
 	
 	if(isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple')
 	{
+		if (isset($fielddata['option_mode_empty']) && $fielddata['option_mode_empty'] == true) {
+			if (empty($newfieldvalue)) {
+				return true;
+			}
+		}
+			
 		$options = explode(',', $newfieldvalue);
 		foreach($options as $option)
 		{
