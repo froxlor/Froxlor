@@ -82,14 +82,18 @@ function isFroxlorVersion($to_check = null) {
  * checks if a given version is not equal the current one
  *
  * @param string $to_check version to check
+ * @param bool $check_plugins (optional) should plugins be skipped
  *
  * @return bool true if version to check does not match, else false
  */
-function hasUpdates($to_check = null) {
+function hasUpdates($to_check = null, $check_plugins = true) {
 
 	if (Settings::Get('panel.version') == null
 			|| Settings::Get('panel.version') != $to_check
 	) {
+		return true;
+	}
+	if ($check_plugins && FroxlorPlugins::getInstance()->hasUpdates()) {
 		return true;
 	}
 	return false;

@@ -403,6 +403,8 @@ if (isset($userinfo['loginname'])
 	$log = FroxlorLogger::getInstanceOf($userinfo);
 }
 
+$froxlorplugins = FroxlorPlugins::getInstance();
+
 /**
  * Fills variables for navigation, header and footer
  */

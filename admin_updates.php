@@ -113,6 +113,20 @@ if ($page == 'overview') {
 
 			eval("echo \"" . getTemplate('update/index') . "\";");
 		}
+	} else if (FroxlorPlugins::getInstance()->hasUpdates()) {
+		eval("echo \"" . getTemplate('update/update_start') . "\";");
+		$plugins = FroxlorPlugins::getInstance()->getPlugins();
+		foreach($plugins as $plugin) {
+			if ($plugin->hasUpdate()) {
+				$ui_text = $lng['plugins']['plugin']['updatetext'];
+				$ui_text = str_replace('%pluginname', $plugin->name, $ui_text);
+				$ui_text = str_replace('%newversion', $plugin->version, $ui_text);
+				echo "$ui_text<br />\n";
+				$plugin->install();
+			}
+		}
+		$redirect_url = 'admin_index.php?s=' . $s;
+		eval("echo \"" . getTemplate('update/update_end') . "\";");
 	} else {
 		$success_message = $lng['update']['noupdatesavail'];
 		$redirect_url = 'admin_index.php?s=' . $s;
