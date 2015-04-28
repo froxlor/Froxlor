@@ -154,8 +154,10 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			if (Settings::Get('system.customerdir_group_webserver') == '1') {
 				$grpid = Settings::Get('system.httpgroup');
+				$mode = '2750';
 			} else {
 				$grpid = (int)$row['data']['gid'];
+				$mode = '0750';
 			}
 
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)$row['data']['uid'] . ':' . $grpid . ' ' . escapeshellarg($userhomedir));
@@ -164,7 +166,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			// don't allow others to access the directory (webserver will be the group via libnss-mysql)
 			if (Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) {
 				// fcgid or fpm
-				safe_exec('chmod 0750 ' . escapeshellarg($userhomedir));
+				safe_exec('chmod ' . $mode . ' ' . escapeshellarg($userhomedir));
 			} else {
 				// mod_php -> no libnss-mysql -> no webserver-user in group
 				safe_exec('chmod 0755 ' . escapeshellarg($userhomedir));

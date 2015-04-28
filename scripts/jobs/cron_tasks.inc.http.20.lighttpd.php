@@ -399,12 +399,10 @@ class lighttpd {
 
 		} else {
 			if (Settings::Get('system.customerdir_group_webserver') == '1') {
-				$grpid = Settings::Get('system.httpgroup');
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], Settings::Get('system.httpgroup'), true, true, true);
 			} else {
-				$grpid = $domain['guid'];
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 			}
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $grpid, true, true);
-
 			$only_webroot = false;
 			if ($ssl_vhost === false
 				&& $domain['ssl_redirect'] == '1'

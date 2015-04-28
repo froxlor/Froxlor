@@ -407,12 +407,10 @@ class nginx {
 			$vhost_content .= "\t".'rewrite ^(.*) '.$uri.'$1 permanent;'."\n";
 		} else {
 			if (Settings::Get('system.customerdir_group_webserver') == '1') {
-				$grpid = Settings::Get('system.httpgroup');
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], Settings::Get('system.httpgroup'), true, false, true);
 			} else {
-				$grpid = $domain['guid'];
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 			}
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $grpid, true);
-
 			$vhost_content .= $this->getLogFiles($domain);
 			$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
 

@@ -785,11 +785,10 @@ class apache {
 
 		} else {
 			if (Settings::Get('system.customerdir_group_webserver') == '1') {
-				$grpid = Settings::Get('system.httpgroup');
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], Settings::Get('system.httpgroup'), true, true, true);
 			} else {
-				$grpid = $domain['guid'];
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true, true);
 			}
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $grpid, true, true);
 			$vhost_content .= $this->getWebroot($domain);
 			if ($this->_deactivated == false) {
 				$vhost_content .= $this->composePhpOptions($domain,$ssl_vhost);
