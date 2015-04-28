@@ -96,7 +96,7 @@ function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeind
 					}
 				}
 
-				safe_exec('chown -R ' . (int)$uid . ':' . (int)$gid . ' ' . escapeshellarg($sdir));
+				safe_exec('chown -R ' . (int)$uid . ':' . $gid . ' ' . escapeshellarg($sdir));
 			}
 		}
 	}

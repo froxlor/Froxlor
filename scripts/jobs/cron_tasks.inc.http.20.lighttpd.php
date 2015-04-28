@@ -398,8 +398,12 @@ class lighttpd {
 			$vhost_content.= '  )' . "\n";
 
 		} else {
-
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
+			if (Settings::Get('system.customerdir_group_webserver') == '1') {
+				$grpid = Settings::Get('system.httpgroup');
+			} else {
+				$grpid = $domain['guid'];
+			}
+			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $grpid, true, true);
 
 			$only_webroot = false;
 			if ($ssl_vhost === false
