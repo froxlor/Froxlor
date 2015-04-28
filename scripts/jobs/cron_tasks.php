@@ -121,7 +121,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$usermaildir = makeCorrectDir(Settings::Get('system.vmail_homedir') . '/' . $row['data']['loginname'] . '/');
 
 			// stats directory
-			if (Settings::Get('system.awstats_enabled') == '1') {
+            if (Settings::Get('system.awstats_enabled') == '1') {
 				$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
 				safe_exec('mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
 				// in case we changed from the other stats -> remove old
@@ -153,7 +153,14 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$usermaildir = (substr($usermaildir, 0, -1) == '/') ? substr($usermaildir, 0, -1) : $usermaildir;
 
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($userhomedir));
-			safe_exec('chown -R ' . (int)$row['data']['uid'] . ':' . (int)$row['data']['gid'] . ' ' . escapeshellarg($userhomedir));
+
+            if (Settings::Get('system.customerdir_group_webserver') == '1') {
+                $grpid = Settings::Get('system.httpgroup');
+            } else {
+                $grpid = (int)$row['data']['gid'];
+            }
+
+            safe_exec('chown -R ' . (int)$row['data']['uid'] . ':' . $grpid . ' ' . escapeshellarg($userhomedir));
 			// don't allow others to access the directory (webserver will be the group via libnss-mysql)
 			if (Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) {
 				// fcgid or fpm

@@ -2976,3 +2976,12 @@ if (isFroxlorVersion('0.9.34-dev2')) {
         updateToVersion('0.9.34-dev3');
     }
 }
+
+if (isFroxlorVersion('0.9.34-dev3')) {
+
+    showUpdateStep("Updating from 0.9.34-dev3 to 0.9.34-dev4", false);
+
+    showUpdateStep("Adding new setting for customer dir group");
+    Database::query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'customerdir_group_webserver', `value` = '0';");
+    updateToVersion('0.9.34-dev4');
+}
