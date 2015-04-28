@@ -447,6 +447,9 @@ if (AREA == 'admin' || AREA == 'customer') {
 		$navigation = buildNavigation($navigation_data['admin'], $userinfo);
 	} else {
 		$navigation_data = loadConfigArrayDir('lib/navigation/');
+		FroxlorEvent::CreateNavigation(array(
+			'navigation' => &$navigation_data
+		));
 		$navigation = buildNavigation($navigation_data[AREA], $userinfo);
 	}
 	unset($navigation_data);
@@ -551,3 +554,5 @@ if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 		$mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
 	}
 }
+
+FroxlorEvent::InitDone();
