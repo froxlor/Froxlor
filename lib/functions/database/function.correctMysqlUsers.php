@@ -17,70 +17,59 @@
  *
  */
 
-function correctMysqlUsers($mysql_access_host_array) {
+/**
+ * loop over all mysql databases and create/delete users according to $access_hosts.
+ *
+ * This function is called when system.mysql_access_hosts or system.ipaddress is changed
+ *
+ * @param array $access_hosts list of hosts from which mysql access should be allowed
+ */
+function correctMysqlUsers($access_hosts) {
 
 	global $log;
-
-	// get sql-root access data
-	Database::needRoot(true);
-	Database::needSqlData();
-	$sql_root = Database::getSqlData();
 	Database::needRoot(false);
+	$databases_stmt = Database::query("SELECT * FROM `".TABLE_PANEL_DATABASES."` ORDER BY `dbserver`");
+	$current_server = -1;
+	$flush_privileges = false;
+	$dbm = null;
 
-	$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `".TABLE_PANEL_DATABASES."`");
-	$mysql_servers = '';
+	while ($dbdata = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-	while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
-
-		Database::needRoot(true, $dbserver['dbserver']);
-		Database::needSqlData();
-		$sql_root = Database::getSqlData();
-
-		$dbm = new DbManager($log);
-		$users = $dbm->getManager()->getAllSqlUsers(false);
-
-		$databases = array(
-				$sql_root['db']
-		);
-		$databases_result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
-			WHERE `dbserver` = :mysqlserver
-		");
-		Database::pexecute($databases_result_stmt, array('mysqlserver' => $dbserver['dbserver']));
-
-		while ($databases_row = $databases_result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$databases[] = $databases_row['databasename'];
+		// next server?
+		if ($current_server != $dbdata['dbserver']) {
+			// flush privileges if necessary
+			if ($flush_privileges) {
+				$dbm->getManager()->flushPrivileges();
+			}
+			// connect to the server which hosts this database
+			Database::needRoot(true, $dbdata['dbserver'], true);
+			$dbm = new DbManager($log);
 		}
 
-		foreach ($databases as $username) {
+		// get the list of users belonging to this database
+		$users = $dbm->getManager()->getAllSqlUsers(false, $dbdata['databasename']);
 
-			if (isset($users[$username])
-					&& is_array($users[$username])
-					&& isset($users[$username]['hosts'])
-					&& is_array($users[$username]['hosts'])
-			) {
-
-				$password = $users[$username]['password'];
-
-				foreach ($mysql_access_host_array as $mysql_access_host) {
-
-					$mysql_access_host = trim($mysql_access_host);
-
-					if (!in_array($mysql_access_host, $users[$username]['hosts'])) {
-						$dbm->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host, true);
-					}
-				}
-
-				foreach ($users[$username]['hosts'] as $mysql_access_host) {
-
-					if (!in_array($mysql_access_host, $mysql_access_host_array)) {
-						$dbm->getManager()->deleteUser($username, $mysql_access_host);
-					}
+		// compare required access hosts with actual data
+		foreach ($users as $username=>$data) {
+			$hosts_to_create = $access_hosts;
+			foreach($data['hosts'] as $host) {
+				if (($key = array_search($host, $hosts_to_create))!== false) {
+					// host is already in access_hosts, no need to create
+					unset($hosts_to_create[$key]);
+				} else {
+					// host not in access_hosts, remove it
+					$dbm->getManager()->deleteUser($username, $host);
+					$flush_privileges = true;
 				}
 			}
+			// create missing host permissions
+			foreach($hosts_to_create as $host) {
+				$dbm->getManager()->grantPrivilegesTo($username, $data['password'], $host, true);
+			}
 		}
-
-		$dbm->getManager()->flushPrivileges();
-		Database::needRoot(false);
 	}
+	if ($flush_privileges) {
+		$dbm->getManager()->flushPrivileges();
+	}
+	Database::needRoot(false);
 }

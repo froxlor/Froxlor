@@ -23,8 +23,15 @@ function checkMysqlAccessHost($fieldname, $fielddata, $newfieldvalue, $allnewfie
 
 	foreach ($mysql_access_host_array as $host_entry) {
 
-		if (validate_ip2($host_entry, true, 'invalidip', true, true) == false
-		   && validateDomain($host_entry) == false
+		// in mysql access host, using wildcard ('%') is allowed, but
+		// the filters won't accept that. By replacing the first wildcard
+		// with a '0', we can create "valid" entries:
+		//   192.168.1.% becomes 192.168.1.0, which is valid
+		//   %.somehost.com becomes 0.somehost.com, which is also valid
+		$host_entry_test = preg_replace('/%/', '0', $host_entry, 1);
+
+		if (validate_ip2($host_entry_test, true, 'invalidip', true, true) == false
+		   && validateDomain($host_entry_test) == false
 		   && validateLocalHostname($host_entry) == false
 		   && $host_entry != '%'
 		) {

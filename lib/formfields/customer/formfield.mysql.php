@@ -24,7 +24,7 @@ return array(
 			),
 			'mysql_server' => array(
 				'label' => $lng['mysql']['mysql_server'],
-				'type' => (isset($result)) ? 'select' : 'text',
+				'type' => (isset($mysql_servers)) ? 'select' : 'text',
 				'visible' => (1 < $count_mysqlservers ? true : false),
 				'values' => (isset($mysql_servers)) ? $mysql_servers : ""
 			),

@@ -61,15 +61,15 @@ if ($page == 'overview') {
 		$count = 0;
 		$mysqls = '';
 
-		$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `".TABLE_PANEL_DATABASES."`");
-		$dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC);
-		$count_mysqlservers = $dbserver['numservers'];
-
 		// Begin root-session
 		Database::needRoot(true);
+		$sql_root = Database::getSecuredSqlRootArrayFromUserDataFile();
+		$count_mysqlservers = count($sql_root);
+
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
 				$row = htmlentities_array($row);
+				Database::needRoot(true, $row['dbserver'], true);
 				$mbdata_stmt = Database::prepare("SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
 					WHERE table_schema = :table_schema
 					GROUP BY table_schema"
@@ -98,8 +98,7 @@ if ($page == 'overview') {
 		if (isset($result['databasename']) && $result['databasename'] != '') {
 
 			Database::needRoot(true, $result['dbserver']);
-			Database::needSqlData();
-			$sql_root = Database::getSqlData();
+			$sql_root = Database::getSecuredSqlRootArrayFromUserDataFile();
 			Database::needRoot(false);
 
 			if (!isset($sql_root[$result['dbserver']]) || !is_array($sql_root[$result['dbserver']])) {
@@ -108,12 +107,13 @@ if ($page == 'overview') {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				// Begin root-session
-				Database::needRoot(true, $result['dbserver']);
+				Database::needRoot(true, $result['dbserver'], true);
 				$dbm = new DbManager($log);
 				$dbm->getManager()->deleteDatabase($result['databasename']);
-				$log->logAction(USR_ACTION, LOG_INFO, "deleted database '" . $result['databasename'] . "'");
 				Database::needRoot(false);
 				// End root-session
+				$log->logAction(USR_ACTION, LOG_INFO, "deleted database '" . $result['databasename'] . "'");
+
 
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DATABASES . "`
 					WHERE `customerid` = :customerid
@@ -152,18 +152,18 @@ if ($page == 'overview') {
 				if ($password == '') {
 					standard_error(array('stringisempty', 'mypassword'));
 				} else {
-					$dbserver = 0;
-					$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `".TABLE_PANEL_DATABASES."`");
-					$_dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC);
-					$count_mysqlservers = $_dbserver['numservers'];
-					if ($count_mysqlservers > 1) {
-						$dbserver = validate($_POST['mysql_server'], html_entity_decode($lng['mysql']['mysql_server']), '', '', 0);
-						Database::needRoot(true, $dbserver);
-						Database::needSqlData();
-						$sql_root = Database::getSqlData();
-						Database::needRoot(false);
-						if (!isset($sql_root) || !is_array($sql_root)) {
-							$dbserver = 0;
+
+					$dbserver = validate($_POST['mysql_server'], html_entity_decode($lng['mysql']['mysql_server']), '', '', 0);
+					Database::needRoot(true);
+					$sql_root = Database::getSecuredSqlRootArrayFromUserDataFile();
+					Database::needRoot(false);
+					if (!isset($sql_root) || !is_array($sql_root) || !isset($sql_root[$dbserver])
+										  || !is_array($sql_root[$dbserver]) || @$sql_root[$dbserver]['hidden']) {
+						// user did not select a server, or the selected server is hidden
+						// just use the first server which is not hidden
+						foreach ($sql_root as $dbserverKey => $dbserver) {
+							if (!@$dbserver['hidden'])
+								$dbserver = $dbserverKey;
 						}
 					}
 
@@ -175,7 +175,8 @@ if ($page == 'overview') {
 					$username = $dbm->createDatabase(
 						$userinfo['loginname'],
 						$password,
-						$userinfo['mysql_lastaccountnumber']
+						$userinfo['mysql_lastaccountnumber'],
+						$dbserver
 					);
 
 					// we've checked against the password in dbm->createDatabase
@@ -208,18 +209,13 @@ if ($page == 'overview') {
 							$pma = Settings::Get('panel.phpmyadmin_url');
 						}
 
-						Database::needRoot(true, $dbserver);
-						Database::needSqlData();
-						$sql_root = Database::getSqlData();
-						Database::needRoot(false);
-
 						$replace_arr = array(
 							'SALUTATION' => getCorrectUserSalutation($userinfo),
 							'CUST_NAME' => getCorrectUserSalutation($userinfo), // < keep this for compatibility
 							'DB_NAME' => $username,
 							'DB_PASS' => $password,
 							'DB_DESC' => $databasedescription,
-							'DB_SRV' => $sql_root['host'],
+							'DB_SRV' => $sql_root[$dbserver]['caption'],
 							'PMA_URI' => $pma
 						);
 
@@ -271,15 +267,15 @@ if ($page == 'overview') {
 				}
 			} else {
 
-				$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `".TABLE_PANEL_DATABASES."`");
 				$mysql_servers = '';
+				Database::needRoot(true);
+				$sql_root = Database::getSecuredSqlRootArrayFromUserDataFile();
 				$count_mysqlservers = 0;
-				while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
-					Database::needRoot(true, $dbserver['dbserver']);
-					Database::needSqlData();
-					$sql_root = Database::getSqlData();
-					$mysql_servers .= makeoption($sql_root['caption'], $dbserver['dbserver']);
-					$count_mysqlservers++;
+				foreach ($sql_root as $dbserverKey => $dbserver) {
+					if (!@$dbserver['hidden']) {
+						$mysql_servers .= makeoption($dbserver['caption'], $dbserverKey);
+						$count_mysqlservers++;
+					}
 				}
 				Database::needRoot(false);
 
@@ -298,6 +294,9 @@ if ($page == 'overview') {
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 		if (isset($result['databasename']) && $result['databasename'] != '') {
+			Database::needRoot(true);
+			$sql_root = Database::getSecuredSqlRootArrayFromUserDataFile();
+			Database::needRoot(false);
 			if (!isset($sql_root[$result['dbserver']]) || !is_array($sql_root[$result['dbserver']])) {
 				$result['dbserver'] = 0;
 			}
@@ -314,7 +313,7 @@ if ($page == 'overview') {
 					}
 
 					// Begin root-session
-					Database::needRoot(true);
+					Database::needRoot(true, $result['dbserver'], true);
 					foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 						$stmt = Database::prepare("SET PASSWORD FOR :dbname@:host = PASSWORD(:password)");
 						$params = array(
@@ -343,14 +342,9 @@ if ($page == 'overview') {
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 
-				$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `".TABLE_PANEL_DATABASES."`");
-				$dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC);
-				$count_mysqlservers = $dbserver['numservers'];
-
-				Database::needRoot(true, $result['dbserver']);
-				Database::needSqlData();
-				$sql_root = Database::getSqlData();
-				Database::needRoot(false);
+				// since it is not possible to move a database to another server,
+				// don't show the selection dropdown
+				$count_mysqlservers = 1;
 
 				$result['mysql_servers'] = isset($sql_root['caption']) ?  $sql_root['caption'] : '';
 				$mysql_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/formfield.mysql.php';

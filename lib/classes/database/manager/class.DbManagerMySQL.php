@@ -160,17 +160,17 @@ class DbManagerMySQL {
 	 * return an array of all usernames used in that DBMS
 	 *
 	 * @param bool $user_only if false, * will be selected from mysql.user and slightly different array will be generated
-	 *
+	 * @param string $username_pattern select only users where username matches $pattern
 	 * @return array
 	 */
-	public function getAllSqlUsers($user_only = true) {
+	public function getAllSqlUsers($user_only = true, $username_pattern='%') {
 
 		if ($user_only == false) {
-			$result_stmt = Database::prepare('SELECT * FROM mysql.user');
+			$result_stmt = Database::prepare('SELECT * FROM mysql.user WHERE `User` like :pattern');
 		} else {
-			$result_stmt = Database::prepare('SELECT `User` FROM mysql.user');
+			$result_stmt = Database::prepare('SELECT `User` FROM mysql.user WHERE `User` like :pattern');
 		}
-		Database::pexecute($result_stmt);
+		Database::pexecute($result_stmt, array('pattern'=>$username_pattern));
 		$allsqlusers = array();
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($user_only == false) {

@@ -113,7 +113,7 @@ while ($databases_list_row = $databases_list_result_stmt->fetch(PDO::FETCH_ASSOC
 while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	if ($last_dbserver != $row_database['dbserver']) {
-		Database::needRoot(true, $row_database['dbserver']);
+		Database::needRoot(true, $row_database['dbserver'], true);
 		$last_dbserver = $row_database['dbserver'];
 
 		$database_list = array();

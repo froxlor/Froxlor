@@ -264,7 +264,7 @@ if ($page == 'customers'
 				while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 					if ($last_dbserver != $row_database['dbserver']) {
-						Database::needRoot(true, $row_database['dbserver']);
+						Database::needRoot(true, $row_database['dbserver'], true);
 						$dbm->getManager()->flushPrivileges();
 						$last_dbserver = $row_database['dbserver'];
 					}
@@ -1324,8 +1324,8 @@ if ($page == 'customers'
 						while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 							if ($last_dbserver != $row_database['dbserver']) {
+								Database::needRoot(true, $row_database['dbserver'], true);
 								$dbm->getManager()->flushPrivileges();
-								Database::needRoot(true, $row_database['dbserver']);
 								$last_dbserver = $row_database['dbserver'];
 							}
 

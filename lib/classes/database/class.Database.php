@@ -60,6 +60,11 @@ class Database {
 	private static $_sqldata = null;
 
 	/**
+	 * create link without database
+	 */
+	private static $_linkWithoutDatabase = false;
+
+	/**
 	 * Wrapper for PDOStatement::execute so we can catch the PDOException
 	 * and display the error nicely on the panel
 	 *
@@ -117,11 +122,13 @@ class Database {
 	 *
 	 * @param bool $needroot
 	 * @param int $dbserver optional
+	 * @param bool $linkWithoutDatabase
 	 */
-	public static function needRoot($needroot = false, $dbserver = 0) {
+	public static function needRoot($needroot = false, $dbserver = 0, $linkWithoutDatabase = false) {
 		// force re-connecting to the db with corresponding user
 		// and set the $dbserver (mostly to 0 = default)
 		self::_setServer($dbserver);
+		self::_setLinkWithoutDatabase($linkWithoutDatabase);
 		self::$_needroot = $needroot;
 	}
 
@@ -196,15 +203,23 @@ class Database {
 	}
 
 	/**
+	 * set if the link should be with database (relevant for root-connection to external servers e.g. to create databases)
+	 *
+	 * @param boolean $linkWithoutDatabase default false means the dsn for the database link will contain a database name
+	 */
+	private static function _setLinkWithoutDatabase($linkWithoutDatabase = false) {
+		self::$_linkWithoutDatabase = $linkWithoutDatabase;
+		self::$_link = null;
+	}
+
+	/**
 	 * function that will be called on every static call
 	 * which connects to the database if necessary
 	 *
-	 * @param bool $root
 	 *
 	 * @return object
 	 */
 	private static function getDB() {
-
 		if (!extension_loaded('pdo') || in_array("mysql", PDO::getAvailableDrivers()) == false) {
 			self::_showerror(new Exception("The php PDO extension or PDO-MySQL driver is not available"));
 		}
@@ -215,18 +230,12 @@ class Database {
 			return self::$_link;
 		}
 
-		// include userdata.inc.php
-		require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+		// get the data from user data file
+		$sql_root = self::getSqlRootArrayFromUserDataFile();
+		$sql = self::getSqlArrayFromUserDataFile();
 
-		// le format
-		if (self::$_needroot == true
-				&& isset($sql['root_user'])
-				&& isset($sql['root_password'])
-				&& (!isset($sql_root) || !is_array($sql_root))
-		) {
-			$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'socket' => (isset($sql['socket']) ? $sql['socket'] : null), 'user' => $sql['root_user'], 'password' => $sql['root_password']));
-			unset($sql['root_user']);
-			unset($sql['root_password']);
+		if (self::$_needroot && !is_array($sql_root)) {
+			self::_showerror(new Exception("No data available in array sql_root."));
 		}
 
 		// either root or unprivileged user
@@ -279,6 +288,14 @@ class Database {
 
 		self::$_dbname = $sql["db"];
 
+		// for a connection to an external database server e.g. to create a new database
+		// we must not specify the froxlor database
+		if (self::$_linkWithoutDatabase == true) {
+			unset(self::$_sqldata['db']);
+			unset($dbconf["dsn"]['dbname']);
+			self::$_dbname = null;
+		}
+
 		// add options to dsn-string
 		foreach ($dbconf["dsn"] as $k => $v) {
 			$dsn .= $k."=".$v.";";
@@ -302,6 +319,61 @@ class Database {
 		// return PDO instance
 		return self::$_link;
 	}
+
+
+	/**
+	 * function that returns only the sql root data from user data file
+	 *
+	 * @return array
+	 */
+	private function getSqlRootArrayFromUserDataFile() {
+		// include userdata.inc.php
+		require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+
+		// le format
+		if (isset($sql['root_user'])
+			&& isset($sql['root_password'])
+			&& (!isset($sql_root) || !is_array($sql_root))
+		) {
+			$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+		}
+		return $sql_root;
+	}
+
+	/**
+	 * function that returns only the sql array from user data file
+	 * without root_user and root_password
+	 *
+	 * @return array
+	 */
+	private function getSqlArrayFromUserDataFile() {
+		// include userdata.inc.php
+		require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+
+		if (isset($sql['root_user'])){
+			unset($sql['root_user']);
+		}
+		if (isset($sql['root_password'])) {
+			unset($sql['root_password']);
+		}
+		return $sql;
+	}
+
+	/**
+	 * function that returns the sql root data from user data file
+	 * without user and passwort
+	 *
+	 * @return array
+	 */
+	public static function getSecuredSqlRootArrayFromUserDataFile() {
+		$sql_root = self::getSqlRootArrayFromUserDataFile();
+		foreach ($sql_root as $key => $dbserver) {
+			unset($sql_root[$key]['user']);
+			unset($sql_root[$key]['password']);
+		}
+		return $sql_root;
+	}
+
 
 	/**
 	 * display a nice error if it occurs and log everything
@@ -340,20 +412,9 @@ class Database {
 		@fclose($errlog);
 
 		if ($showerror) {
-
-			// include userdata.inc.php
-			require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
-
-			// fallback
-			$theme = 'Sparkle';
-
-			// le format
-			if (isset($sql['root_user'])
-				&& isset($sql['root_password'])
-				&& (!isset($sql_root) || !is_array($sql_root))
-			) {
-				$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'socket' => (isset($sql['socket']) ? $sql['socket'] : null), 'user' => $sql['root_user'], 'password' => $sql['root_password']));
-			}
+			// get the data from user data file
+			$sql_root = self::getSqlRootArrayFromUserDataFile();
+			$sql = self::getSqlArrayFromUserDataFile();
 
 			// hide username/password in messages
 			$error_message = $error->getMessage();
