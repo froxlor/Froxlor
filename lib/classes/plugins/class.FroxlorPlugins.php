@@ -16,8 +16,6 @@
  *
  */
 
-define('FROXLOR_PLUGINS_DIR', FROXLOR_INSTALL_DIR. '/plugins/');
-
 class FroxlorPlugins {
 	/**
 	 * current plugins object
@@ -40,21 +38,35 @@ class FroxlorPlugins {
 	private $_plugins_active = array();
 
 	/**
+	 * Directory with loadable plugins 
+	 * @var string
+	 */
+	private $_plugins_dir = '';
+	
+	/**
 	 * private constructor
 	 */
 	private function __construct() {
-		$path = FROXLOR_PLUGINS_DIR;
+		$this->_plugins_dir = FROXLOR_INSTALL_DIR. '/plugins/';
+	}
+	
+	public static function init() {
+		$obj = self::getInstance();
+		$obj->loadPlugins();
+	}
+	
+	public function loadPlugins() {
 		$activated = trim((string)Settings::Get('plugins.active'));
 		if ($activated != '') {
 			$this->_plugins_active = array_map('trim', explode(',', $activated));
 			
 			foreach($this->_plugins_active as $pluginname) {
 				if (!class_exists($pluginname, false)) {
-					$filename = "$path/$pluginname/$pluginname.php";
+					$filename = $this->_plugins_dir."$pluginname/$pluginname.php";
 					require $filename;
 				}
 				$plugin = new $pluginname();
-				$this->_plugins[$plugin->ID] = $plugin;
+				$this->_plugins[$plugin->getID()] = $plugin;
 			}
 		}
 	}
@@ -79,6 +91,17 @@ class FroxlorPlugins {
 	}
 	
 	/**
+	 * Return plugin directory
+	 * 
+	 * @param string $id ID
+	 * @return string
+	 */
+	public function getPluginDir($id) {
+		$path = $this->_plugins_dir.$id.'/';
+		return $path;
+	}
+	
+	/**
 	 * Check if any active plugin has updates
 	 * 
 	 * @return boolean
@@ -98,8 +121,12 @@ class FroxlorPlugins {
 	 * @return FroxlorPlugins
 	 */
 	public static function getInstance() {
-		// do we got an object already?
+		static $instances = 0;
 		if (self::$_obj == null) {
+			if ($instances > 0) {
+				throw new Exception('Circular reference while construction detected');
+			}
+			$instances++;
 			self::$_obj = new self();
 		}
 		// return it
@@ -129,18 +156,16 @@ class FroxlorPlugins {
 	public function getAvailablePlugins() {
 		$plugins = array();
 		
-		$path = FROXLOR_PLUGINS_DIR;
-		
-		if (!is_dir($path)) {
+		if (!is_dir($this->_plugins_dir)) {
 			return $plugins;
 		}
 		
-		$its = new DirectoryIterator($path);
+		$its = new DirectoryIterator($this->_plugins_dir);
 
 		foreach ($its as $it) {
 			if ($it->isDir() && !$it->isDot()) {
 				$id = $it->getBasename();
-				if (file_exists("$path/$id/$id.php")) {
+				if (file_exists($this->_plugins_dir."$id/$id.php")) {
 					$plugins[$id] = $this->_inspecPlugin($id);
 				}
 			}
@@ -150,9 +175,8 @@ class FroxlorPlugins {
 	}
 	
 	protected function _inspecPlugin($id) {
-		$path = FROXLOR_PLUGINS_DIR;
 		if (!class_exists($id, false)) {
-			$filename = "$path/$id/$id.php";
+			$filename = $this->_plugins_dir."$id/$id.php";
 			require_once $filename;
 		}
 		

@@ -30,7 +30,21 @@ class FroxlorPluginSettings {
 		$fullname = $this->pluginid.'.'.$name;
 		return Settings::Get($fullname);
 	}
-	
+
+	/**
+	 * Shorthand for version checks/set (used a lot)
+	 * @param string $version (optional) for setting
+	 * @return string|null
+	 */
+	public function version($version = null) {
+		$fullname = $this->pluginid.'.version';
+		if (is_null($version)) {
+			return Settings::Get($fullname);
+		} else {
+			return Settings::Set($fullname, $version);
+		}
+	}
+
 	/**
 	 * update a setting / set a new value for plugin
 	 *

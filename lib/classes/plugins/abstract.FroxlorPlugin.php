@@ -17,7 +17,7 @@
  */
 
 abstract class FroxlorPlugin {
-	public $ID;
+	protected $ID;
 	
 	/**
 	 * Version of plugin
@@ -27,10 +27,15 @@ abstract class FroxlorPlugin {
 	
 	/**
 	 * Settings for this plugin
-	 * @var FroxlorPluginSetting
+	 * @var FroxlorPluginSettings
 	 */
-	public $settings = null;
+	protected $settings = null;
 	
+	/**
+	 * text service
+	 * @var FroxlorPluginText
+	 */
+	protected $text = null;
 
 	/**
 	 * Basic constructor filling ID and prepare setting
@@ -39,14 +44,51 @@ abstract class FroxlorPlugin {
 		$this->ID = get_class($this);
 		$this->settings = new FroxlorPluginSettings($this->ID);
 		$this->_checkPlugin();
+		
+		$textService = new FroxlorPluginText($this->ID);
+		$this->text = $textService;
+		
+		$_eventLoadLanguage = function ($eventData) use ($textService) {
+			$textService->loadLang($eventData['language']);
+		};
+		FroxlorEvent::listen(FroxlorEvent::LoadLanguage, $_eventLoadLanguage);
+		
+		$this->_register_events();
 	}
-	
+
+	/**
+	 * Get the Plugin ID
+	 * @return string 
+	 */
+	public function getID() {
+		return $this->ID;
+	}
+
+	/**
+	 * Check if this Plugin is well-formed
+	 * @throws Exception
+	 */
 	protected function _checkPlugin() {
 		if (empty($this->version) || empty($this->name)) {
 			throw new Exception('Plugin '.$this->ID.' needs valid version and name property!');
 		}
 	}
-	
+
+	/**
+	 * Register all event* Methods as event listener
+	 */
+	protected function _register_events() {
+		if (!$this->hasUpdate()) {
+			$methods = get_class_methods($this);
+			foreach ($methods as $method) {
+				if (strpos($method, 'event') === 0) {
+					$eventname = substr($method, 5);
+					FroxlorEvent::listen($eventname, array($this, $method));
+				}
+			}
+		}
+	}
+
 	/**
 	 * Return true if this plugin needs to be installed/updated
 	 * @return boolean

@@ -402,8 +402,10 @@ if (isset($userinfo['loginname'])
 	//Initialize logging
 	$log = FroxlorLogger::getInstanceOf($userinfo);
 }
-
-$froxlorplugins = FroxlorPlugins::getInstance();
+FroxlorPlugins::init();
+FroxlorEvent::LoadLanguage(array(
+	'language' => $language
+));
 
 /**
  * Fills variables for navigation, header and footer

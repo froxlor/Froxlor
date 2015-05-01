@@ -23,9 +23,14 @@ class FroxlorEventConstantsDeprecated {
  * All current possible core events
  */
 class FroxlorEventConstants extends FroxlorEventConstantsDeprecated {
+	const LoadLanguage = 'LoadLanguage';
 	const CreateNavigation = 'CreateNavigation';
+	const ServerSettings = 'ServerSettings';
 	const InitDone = 'InitDone';
 	
 	const CronInitDone = 'CronInitDone';
+	const CronForce = 'CronForce';
+	const CronTaskRunPre = 'CronTaskRunPre';
+	const CronTaskRunPost = 'CronTaskRunPost';
 
 }
