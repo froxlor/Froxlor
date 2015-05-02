@@ -1978,6 +1978,7 @@ $lng['error']['mailaccistobedeleted'] = "Another account with the same name (%s)
 
 // Added for Plugin Support
 $lng['plugins']['plugins'] = 'Plugins';
+$lng['plugins']['update'] = 'Update Plugins';
 $lng['plugins']['active']['title'] = 'Enabled Plugins(s)';
 $lng['plugins']['active']['description'] = 'Active plugins. To select multiple plugins, hold down CTRL while selecting, or unselect all<br />';
 

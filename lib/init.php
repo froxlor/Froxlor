@@ -446,6 +446,13 @@ if (AREA == 'admin' || AREA == 'customer') {
 				),
 			),
 		);
+		if (FroxlorPlugins::getInstance()->hasUpdates()) {
+			$navigation_data['admin']['server']['elements'][] = array (
+				'url' => 'admin_updates.php?page=plugins',
+				'label' => $lng['plugins']['update'],
+				'required_resources' => 'change_serversettings',
+			);
+		}
 		$navigation = buildNavigation($navigation_data['admin'], $userinfo);
 	} else {
 		$navigation_data = loadConfigArrayDir('lib/navigation/');

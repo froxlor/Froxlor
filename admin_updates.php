@@ -18,6 +18,47 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
+class AdminUpdatePluginsPage {
+	public function showUpdatePlugins() {
+		global $header, $footer, $lng, $s;
+		if (FroxlorPlugins::getInstance()->hasUpdates()) {
+			$lng['update']['update'] = $lng['plugins']['update'];
+			eval("echo \"" . getTemplate('update/update_start') . "\";");
+		
+			// We simple act as Logger instance here to show update messages
+			FroxlorPlugins::getInstance()->installUpdates($this);
+
+			$redirect_url = 'admin_index.php?s=' . $s;
+			eval("echo \"" . getTemplate('update/update_end') . "\";");
+		} else {
+			$success_message = $lng['update']['noupdatesavail'];
+			$redirect_url = 'admin_index.php?s=' . $s;
+			eval("echo \"" . getTemplate('update/noupdatesavail') . "\";");
+		}
+	}
+	
+	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
+		switch ($type) {
+			case LOG_INFO:
+			case LOG_NOTICE:
+				$status_type = 'ok';
+				break;
+			case LOG_WARNING:
+				$text = '[WARN] '.$text;
+				$status_type = 'warn';
+				break;
+			case LOG_ERR:
+			case LOG_CRIT:
+			default:
+				$text = '[ERROR] '.$text;
+				$status_type = 'err';
+				break;
+		}
+		echo "<span class=\"update-step update-step-$status_type\">$text</span><br />";
+	}
+	
+	
+}
 if ($page == 'overview') {
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
 
@@ -113,23 +154,12 @@ if ($page == 'overview') {
 
 			eval("echo \"" . getTemplate('update/index') . "\";");
 		}
-	} else if (FroxlorPlugins::getInstance()->hasUpdates()) {
-		eval("echo \"" . getTemplate('update/update_start') . "\";");
-		$plugins = FroxlorPlugins::getInstance()->getPlugins();
-		foreach($plugins as $plugin) {
-			if ($plugin->hasUpdate()) {
-				$ui_text = $lng['plugins']['plugin']['updatetext'];
-				$ui_text = str_replace('%pluginname', $plugin->name, $ui_text);
-				$ui_text = str_replace('%newversion', $plugin->version, $ui_text);
-				echo "$ui_text<br />\n";
-				$plugin->install();
-			}
-		}
-		$redirect_url = 'admin_index.php?s=' . $s;
-		eval("echo \"" . getTemplate('update/update_end') . "\";");
 	} else {
 		$success_message = $lng['update']['noupdatesavail'];
 		$redirect_url = 'admin_index.php?s=' . $s;
 		eval("echo \"" . getTemplate('update/noupdatesavail') . "\";");
 	}
+} elseif ($page == 'plugins' && $userinfo['change_serversettings'] == '1') {
+	$pageobj = new AdminUpdatePluginsPage();
+	$pageobj->showUpdatePlugins();
 }

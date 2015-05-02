@@ -116,6 +116,35 @@ class FroxlorPlugins {
 	}
 	
 	/**
+	 * Perfom any pending install updates
+	 * 
+	 * @param object $extralogger (optional) 
+	 * @return boolean
+	 */
+	public function installUpdates($extralogger = null) {
+		$ret = true;
+	
+		$allloggers = array();
+		$allloggers[] = FroxlorLogger::getInstanceOf(array('loginname' => 'plugininstaller'));
+		if ($extralogger) {
+			$allloggers[] = $extralogger;
+		}
+		$logger = new LoggerTee($allloggers);
+		
+		foreach ($this->_plugins as $plugin) {
+			if (!$plugin->hasUpdate()) {
+				continue;
+			}
+			$logger->logAction(ADM_ACTION, LOG_NOTICE, "Updateing {$plugin->name} to {$plugin->version}");
+			$logger->setPreText($plugin->name.': ');
+			if (!$plugin->install($logger)) {
+				$ret = false;
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * return instance of singleton
 	 *
 	 * @return FroxlorPlugins

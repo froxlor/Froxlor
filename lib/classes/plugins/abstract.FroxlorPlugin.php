@@ -18,6 +18,12 @@
 
 abstract class FroxlorPlugin {
 	protected $ID;
+
+	/**
+	 * Plugin name
+	 * @var string
+	 */
+	public $name = '';
 	
 	/**
 	 * Version of plugin
@@ -110,8 +116,12 @@ abstract class FroxlorPlugin {
 	
 	/**
 	 * Called when installing/updating seems necessary
+	 * 
+	 * @param object $logger
+	 * @return boolean
 	 */
-	public function install() {
+	public function install($logger) {
 		$this->settings->Set('version', $this->version);
+		return true;
 	}
 }
