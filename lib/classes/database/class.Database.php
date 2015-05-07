@@ -236,12 +236,14 @@ class Database {
 			$password = $sql_root[self::$_dbserver]['password'];
 			$host = $sql_root[self::$_dbserver]['host'];
 			$socket = isset($sql_root[self::$_dbserver]['socket']) ? $sql_root[self::$_dbserver]['socket'] : null;
+			$port = isset($sql_root[self::$_dbserver]['port']) ? $sql_root[self::$_dbserver]['port'] : '3306';
 		} else {
 			$caption = 'localhost';
 			$user = $sql["user"];
 			$password = $sql["password"];
 			$host = $sql["host"];
 			$socket = isset($sql['socket']) ? $sql['socket'] : null;
+			$port = isset($sql['port']) ? $sql['port'] : '3306';
 		}
 
 		// save sql-access-data if needed
@@ -250,6 +252,7 @@ class Database {
 					'user' => $user,
 					'passwd' => $password,
 					'host' => $host,
+					'port' => $port,
 					'socket' => $socket,
 					'db' => $sql["db"],
 					'caption' => $caption
@@ -271,6 +274,7 @@ class Database {
 			$dbconf["dsn"]['unix_socket'] = makeCorrectFile($socket);
 		} else {
 			$dbconf["dsn"]['host'] = $host;
+			$dbconf["dsn"]['port'] = $port;
 		}
 
 		self::$_dbname = $sql["db"];
