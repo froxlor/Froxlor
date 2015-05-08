@@ -164,6 +164,8 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		// Using nameserver, insert a task which rebuilds the server config
 		inserttask('4');
 
+		FroxlorEvent::RebuildConfigs();
+
 		standard_success('rebuildingconfigs', '', array('filename' => 'admin_index.php'));
 
 	} else {

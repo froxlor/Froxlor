@@ -26,6 +26,8 @@ class FroxlorEventConstants extends FroxlorEventConstantsDeprecated {
 	const LoadLanguage = 'LoadLanguage';
 	const CreateNavigation = 'CreateNavigation';
 	const ServerSettings = 'ServerSettings';
+	const RebuildConfigs = 'RebuildConfigs';
+	
 	const InitDone = 'InitDone';
 	
 	const CronInitDone = 'CronInitDone';
@@ -33,4 +35,5 @@ class FroxlorEventConstants extends FroxlorEventConstantsDeprecated {
 	const CronTaskRunPre = 'CronTaskRunPre';
 	const CronTaskRunPost = 'CronTaskRunPost';
 
+	const ApacheVHost = 'ApacheVHost';
 }

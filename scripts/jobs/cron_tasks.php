@@ -44,6 +44,10 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$row['data'] = unserialize($row['data']);
 	}
 
+	FroxlorEvent::CronTaskRunPre(array(
+		'row' => &$row
+	));
+	
 	/**
 	 * TYPE=1 MEANS TO REBUILD APACHE VHOSTS.CONF
 	 */
@@ -397,6 +401,13 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 				}
 			}	
 		}
+	}
+	
+	// FIXME: Type 10 overwrites row
+	if ($row['type'] != '10') {
+		FroxlorEvent::CronTaskRunPost(array(
+			'row' => $row
+		));
 	}
 }
 

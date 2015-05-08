@@ -53,6 +53,9 @@ for ($x = 1; $x < count($argv); $x++) {
 			inserttask('4');
 			// also regenerate cron.d-file
 			inserttask('99');
+			
+			FroxlorEvent::CronForce();
+			
 			addToQueue($jobs_to_run, $crontasks);
 			$lastrun_update['tasks'] = $crontasks;
 		}
