@@ -116,12 +116,20 @@ abstract class FroxlorPlugin {
 	
 	/**
 	 * Called when installing/updating seems necessary
-	 * 
-	 * @param object $logger
 	 * @return boolean
 	 */
-	public function install($logger) {
+	public function install() {
 		$this->settings->Set('version', $this->version);
 		return true;
+	}
+
+	/**
+	 * Logs a plugin message
+	 * 
+	 * @param int $type LOG_*
+	 * @param string $message
+	 */
+	public function log($type = LOG_NOTICE, $message = null) {
+		FroxlorPlugins::logPluginMessage($this->ID, $type, $message);
 	}
 }

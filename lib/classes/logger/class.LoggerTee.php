@@ -29,6 +29,10 @@ class LoggerTee {
 		$this->loggerinstances = (array)$loggers;
 	}
 	
+	public function addLogger($logger) {
+		$this->loggerinstances[] = $logger;
+	}
+	
 	public function setPreText($text) {
 		$this->preText = $text;
 	}

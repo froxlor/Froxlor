@@ -44,10 +44,24 @@ class FroxlorPlugins {
 	private $_plugins_dir = '';
 	
 	/**
+	 * Active logger for plugins
+	 * @var AbstractLogger 
+	 */
+	private $_logger = null;
+	
+	/**
+	 * Current log action
+	 * @var int USR_ACTION|RES_ACTION|ADM_ACTION|CRON_ACTION|LOGIN_ACTION|LOG_ERROR
+	 *
+	 */
+	private $_logAction = LOG_ERROR;
+	
+	/**
 	 * private constructor
 	 */
 	private function __construct() {
 		$this->_plugins_dir = FROXLOR_INSTALL_DIR. '/plugins/';
+		$this->_selectLogger();
 	}
 	
 	public static function init() {
@@ -123,25 +137,24 @@ class FroxlorPlugins {
 	 */
 	public function installUpdates($extralogger = null) {
 		$ret = true;
-	
-		$allloggers = array();
-		$allloggers[] = FroxlorLogger::getInstanceOf(array('loginname' => 'plugininstaller'));
+		$oldlogger = $this->_logger;
+		$this->_logger = new LoggerTee(array($oldlogger));
+		
 		if ($extralogger) {
-			$allloggers[] = $extralogger;
+			$this->_logger->addLogger($extralogger);
 		}
-		$logger = new LoggerTee($allloggers);
 		
 		foreach ($this->_plugins as $plugin) {
 			if (!$plugin->hasUpdate()) {
 				continue;
 			}
-			$logger->logAction(ADM_ACTION, LOG_NOTICE, "Updateing {$plugin->name} to {$plugin->version}");
-			$logger->setPreText($plugin->name.': ');
-			if (!$plugin->install($logger)) {
+			$this->_logger->logAction(ADM_ACTION, LOG_NOTICE, "Updateing {$plugin->name} to {$plugin->version}");
+			if (!$plugin->install()) {
 				$ret = false;
 			}
 		}
-		return true;
+		$this->_logger = $oldlogger;
+		return $ret;
 	}
 	
 	/**
@@ -218,5 +231,88 @@ class FroxlorPlugins {
 			'version' => isset($props['version']) ? $props['version'] : '?'
 		);
 		return $plugin;
+	}
+	
+	
+	/**
+	 * Selects a logger and log action based on current environment
+	 * MASTER_CRONJOB, AREA
+	 * 
+	 */
+	private function _selectLogger() {
+		global $log, $debugHandler;
+		if (defined('MASTER_CRONJOB')) {
+			$debugLogger = new FroxlorPluginsDebugLog($debugHandler);
+			$this->_logger = new LoggerTee(array(
+				$debugLogger, 
+				FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'))
+			));
+			$this->_logAction = CRON_ACTION;
+		} elseif (defined('AREA')) {
+			$this->_logger = $log;
+			$areatoaction = array(
+				'admin' => ADM_ACTION,
+				'customer' => USR_ACTION,
+				'login' => LOGIN_ACTION,
+			);
+			if (array_key_exists(AREA, $areatoaction)) {
+				$this->_logAction = $areatoaction[AREA];
+			}
+		} else {
+			$this->_logger = FroxlorLogger::getInstanceOf(array('loginname' => 'plugins'));
+		}
+	}
+	
+	/**
+	 * Routes a plugin message to the current logger
+	 * 
+	 * @param string $id Plugin ID
+	 * @param int $type LOG_*
+	 * @param string $message
+	 */
+	public static function logPluginMessage($id, $type, $message) {
+		$obj = self::getInstance();
+		$obj->_logger->logAction($obj->_logAction, $type, $id.': '.$message);
+	}
+}
+
+
+
+/**
+ * writes log messages to $debugHandler
+ */
+class FroxlorPluginsDebugLog {
+	private $debugHandler;
+	
+	public function __construct($debugHandler) {
+		$this->debugHandler = $debugHandler;
+	}
+
+	public function logAction ($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
+		if ($text) {
+			$prefix = '';
+			switch($type)
+			{
+				case LOG_INFO:
+					$prefix = '';
+					break;
+				case LOG_NOTICE:
+					$prefix = '';
+					break;
+				case LOG_WARNING:
+					$prefix = '[WARN] ';
+					break;
+				case LOG_ERR:
+					$prefix = '[ERROR] ';
+					break;
+				case LOG_CRIT:
+					$prefix = '[ERROR][CRITICAL] ';
+					break;
+				default:
+					$prefix = '[??] ';
+					break;
+			}
+			fwrite($this->debugHandler, $prefix.$text."\n");
+		}
 	}
 }
