@@ -48,6 +48,16 @@ class apache_fcgid extends apache
 					$php_options_text.= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost'. "\n";
 					$php_options_text.= '  </FilesMatch>' . "\n";
 
+					$mypath_dir = new frxDirectory($domain['documentroot']);
+
+				    // only create the require all granted if there is not active directory-protection
+				    // for this path, as this would be the first require and therefore grant all access
+				    if ($mypath_dir->isUserProtected() == false) {
+						$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
+					    $php_options_text.= '    Require all granted' . "\n";
+						$php_options_text.= '  </Directory>' . "\n";
+				    }
+
 				} else {
 					$php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile()  . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
 					$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
