@@ -326,7 +326,7 @@ class Database {
 	 *
 	 * @return array
 	 */
-	private function getSqlRootArrayFromUserDataFile() {
+	private static function getSqlRootArrayFromUserDataFile() {
 		// include userdata.inc.php
 		require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
 
@@ -346,7 +346,7 @@ class Database {
 	 *
 	 * @return array
 	 */
-	private function getSqlArrayFromUserDataFile() {
+	private static function getSqlArrayFromUserDataFile() {
 		// include userdata.inc.php
 		require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
 
