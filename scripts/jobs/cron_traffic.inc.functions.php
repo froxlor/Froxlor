@@ -52,7 +52,7 @@ function awstatsDoSingleDomain($domain, $outputdir) {
 		// the default selection is 'current',
 		// so link the latest dir to it
 		$new_current = makeCorrectFile($outputdir . '/current');
-		safe_exec('ln -fs ' . escapeshellarg($staticOutputdir) . ' ' . escapeshellarg($new_current));
+		safe_exec('ln -fTs ' . escapeshellarg($staticOutputdir) . ' ' . escapeshellarg($new_current));
 
 		//statistics file looks like: 'awstats[month][year].[domain].txt'
 		$file = makeCorrectFile($staticOutputdir.'/awstats'.date('mY', time()).'.'.$domain.'.txt');
