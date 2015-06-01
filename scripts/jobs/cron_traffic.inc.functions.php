@@ -26,10 +26,11 @@ function awstatsDoSingleDomain($domain, $outputdir) {
 
 	if (file_exists($domainconfig)) {
 
-		$outputdir = makeCorrectDir($outputdir . '/' . $domain);
+		$outputdir       = makeCorrectDir($outputdir . '/' . $domain);
+		$staticOutputdir = makeCorrectDir($outputdir . '/' . date('Y') . '-' . date('m'));
 
-		if (!is_dir($outputdir)) {
-			safe_exec('mkdir -p ' . escapeshellarg($outputdir));
+		if (!is_dir($staticOutputdir)) {
+			safe_exec('mkdir -p ' . escapeshellarg($staticOutputdir));
 		}
 
 		//check for correct path of awstats_buildstaticpages.pl
@@ -42,19 +43,19 @@ function awstatsDoSingleDomain($domain, $outputdir) {
 			exit;
 		}
 
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '".$domain."' (Output: '".$outputdir."')");
-		safe_exec($awbsp.' -awstatsprog='.escapeshellarg($awprog).' -update -month=' . date('n') . ' -year=' . date('Y') . ' -config=' . $domain . ' -dir='.escapeshellarg($outputdir));
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '".$domain."' (Output: '".$staticOutputdir."')");
+		safe_exec($awbsp.' -awstatsprog='.escapeshellarg($awprog).' -update -month=' . date('m') . ' -year=' . date('Y') . ' -config=' . $domain . ' -dir='.escapeshellarg($staticOutputdir));
 
-		// index file is saved like 'awstats.[domain].html',
-		// so link a index.html to it
-		$original_index = makeCorrectFile($outputdir.'/awstats.'.$domain.'.html');
-		$new_index = makeCorrectFile($outputdir.'/index.html');
-		if (!file_exists($new_index)) {
-			safe_exec('ln -s '.escapeshellarg($original_index).' '.escapeshellarg($new_index));
-		}
+		// update our awstats index files
+		awstatsGenerateIndex($domain, $outputdir);
+
+		// the default selection is 'current',
+		// so link the latest dir to it
+		$new_current = makeCorrectFile($outputdir . '/current');
+		safe_exec('ln -fs ' . escapeshellarg($staticOutputdir) . ' ' . escapeshellarg($new_current));
 
 		//statistics file looks like: 'awstats[month][year].[domain].txt'
-		$file = makeCorrectFile($outputdir.'/awstats'.date('mY', time()).'.'.$domain.'.txt');
+		$file = makeCorrectFile($staticOutputdir.'/awstats'.date('mY', time()).'.'.$domain.'.txt');
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '".$file."'");
 
 		if (file_exists($file)) {
