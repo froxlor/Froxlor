@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>Navigation</title>
+    <style type="text/css">
+        /* Include some of the Froxlor Theming */
+        html,body {
+            margin: 0;
+            height: 100%;
+            font: 12px/18px 'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,Verdana,sans-serif;
+            color: #444;
+            text-align: center;
+            background: none repeat scroll 0% 0% rgba(240, 242, 244, 0.85);
+            border-bottom: 1px solid #DDD;
+            box-sizing: border-box;
+            -webkit-font-smoothing: subpixel-antialiased;
+        }
+        select {
+            padding: 6px 4px 7px 24px;
+            color: #333;
+            border: 1px solid #d9d9d9;
+            margin: 5px 5px 5px 0;
+            border-radius: 3px;
+            background: url(data:image/png;base64,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) no-repeat 9px;
+            min-width: 170px;
+            text-indent: 0.01px;
+            text-overflow: '';
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+    </style>
+    <script>
+        function change_page() {
+            top.mainFrame.location= document.periodForm.periodSelect.value + '/awstats.{SITE_DOMAIN}.html';
+        }
+    </script>
+</head>
+
+<body>
+    <form action="#" id="periodForm" method="get" name="periodForm">
+        <b>Select period</b>
+        <select name="periodSelect" onchange="change_page()">
+            <option value="current">Current</option>
+            {SELECT_ENTRIES}
+        </select>
+    </form>
+</body>
+</html>

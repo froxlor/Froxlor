@@ -38,7 +38,7 @@ function createAWStatsConf($logFile, $siteDomain, $hostAliases, $customerDocroot
 	}
 	// chown created folder, #258
 	makeChownWithNewStats($awstats_params);
-	
+
 	// weird but could happen...
 	if (!is_dir(Settings::Get('system.awstats_conf'))) {
 		safe_exec('mkdir -p '.escapeshellarg(Settings::Get('system.awstats_conf')));
@@ -62,9 +62,9 @@ function createAWStatsConf($logFile, $siteDomain, $hostAliases, $customerDocroot
 
 	// File names
 	$domain_file = makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.' . $siteDomain . '.conf');
-	$model_file = FROXLOR_INSTALL_DIR.'/templates/misc/awstatsmodel/awstats.froxlor.model.conf';
+	$model_file = FROXLOR_INSTALL_DIR.'/templates/misc/awstats/awstats.froxlor.model.conf';
 	$model_file = makeCorrectFile($model_file);
-	
+
 	// Test if the file exists
 	if (file_exists($domain_file)) {
 		// Check for the generated header - if this is a manual modification we won't update
