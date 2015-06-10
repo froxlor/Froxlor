@@ -2,8 +2,8 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/user_add_big.png" />&nbsp;
-				{$lng['admin']['admin_add']}
+				<img src="templates/{$theme}/assets/img/icons/user_add_big.png" alt="{$title}" />&nbsp;
+				{$title}
 			</h2>
 		</header>
 

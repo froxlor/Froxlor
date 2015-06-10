@@ -107,7 +107,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 
 				// interval
 				$interval_nfo = explode(' ', $result['interval']);
-				$result['interval_value'] = $interval_nfo[0];
+				$interval_value = $interval_nfo[0];
 
 				$interval_interval = '';
 				$interval_interval .= makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
@@ -122,8 +122,11 @@ if ($page == 'cronjobs' || $page == 'overview') {
 					$change_cronfile = true;
 				}
 
-				$cronjobs_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.cronjobs.php';
-				$cronjobs_edit_form = HTMLform2::genHTMLForm($cronjobs_edit_data, $result);
+				$cronjobs_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/cronjobs/formfield.cronjobs_edit.php';
+				$cronjobs_edit_form = htmlform::genHTMLForm($cronjobs_edit_data);
+
+				$title = $cronjobs_edit_data['cronjobs_edit']['title'];
+				$image = $cronjobs_edit_data['cronjobs_edit']['image'];
 
 				eval("echo \"" . getTemplate('cronjobs/cronjob_edit') . "\";");
 			}

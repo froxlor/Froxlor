@@ -121,9 +121,9 @@ if ($page == 'overview') {
 					$fpm_reqslowtimeout = 0;
 				}
 				elseif (Settings::Get('phpfpm.enabled') == 1) {
-					$fpm_enableslowlog = isset($_POST['fpm_slowlog']) ? (int)$_POST['fpm_slowlog'] : 0;
-					$fpm_reqtermtimeout = validate($_POST['fpm_reqterm'], 'fpm_reqterm', '/^([0-9]+)(|s|m|h|d)$/');
-					$fpm_reqslowtimeout = validate($_POST['fpm_reqslow'], 'fpm_reqslow', '/^([0-9]+)(|s|m|h|d)$/');
+					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int)$_POST['phpfpm_enable_slowlog'] : 0;
+					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
+					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					// disable fcgid stuff
 					$binary = '/usr/bin/php-cgi';
 					$file_extensions = 'php';
@@ -171,10 +171,11 @@ if ($page == 'overview') {
 				$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = 1");
 				$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-				$phpconfig_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.phpconfig.php';
-				$phpconfig_add_form = HTMLform2::genHTMLForm($phpconfig_add_data);
+				$phpconfig_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/phpconfig/formfield.phpconfig_add.php';
+				$phpconfig_add_form = htmlform::genHTMLForm($phpconfig_add_data);
 
-				$title = $lng['admin']['phpsettings']['addsettings'];
+				$title = $phpconfig_add_data['phpconfig_add']['title'];
+				$image = $phpconfig_add_data['phpconfig_add']['image'];
 
 				eval("echo \"" . getTemplate("phpconfig/overview_add") . "\";");
 			}
@@ -270,9 +271,9 @@ if ($page == 'overview') {
 					$fpm_reqslowtimeout = 0;
 				}
 				elseif (Settings::Get('phpfpm.enabled') == 1) {
-					$fpm_enableslowlog = isset($_POST['fpm_slowlog']) ? (int)$_POST['fpm_slowlog'] : 0;
-					$fpm_reqtermtimeout = validate($_POST['fpm_reqterm'], 'fpm_reqterm', '/^([0-9]+)(|s|m|h|d)$/');
-					$fpm_reqslowtimeout = validate($_POST['fpm_reqslow'], 'fpm_reqslow', '/^([0-9]+)(|s|m|h|d)$/');
+					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int)$_POST['phpfpm_enable_slowlog'] : 0;
+					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
+					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					// disable fcgid stuff
 					$binary = '/usr/bin/php-cgi';
 					$file_extensions = 'php';
@@ -319,10 +320,11 @@ if ($page == 'overview') {
 
 			} else {
 
-				$phpconfig_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.phpconfig.php';
-				$phpconfig_edit_form = HTMLform2::genHTMLForm($phpconfig_edit_data, $result);
+				$phpconfig_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/phpconfig/formfield.phpconfig_edit.php';
+				$phpconfig_edit_form = htmlform::genHTMLForm($phpconfig_edit_data);
 
-				$title = $lng['admin']['phpsettings']['editsettings'];
+				$title = $phpconfig_edit_data['phpconfig_edit']['title'];
+				$image = $phpconfig_edit_data['phpconfig_edit']['image'];
 
 				eval("echo \"" . getTemplate("phpconfig/overview_edit") . "\";");
 			}

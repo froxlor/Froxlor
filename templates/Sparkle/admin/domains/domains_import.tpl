@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/domain_add_big.png" alt="{$title}" />&nbsp;
-				{$lng['domains']['domain_import']}
+				{$title}
 			</h2>
 		</header>
 
