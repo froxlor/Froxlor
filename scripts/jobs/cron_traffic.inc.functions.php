@@ -55,7 +55,7 @@ function awstatsDoSingleDomain($domain, $outputdir) {
 		safe_exec('ln -fTs ' . escapeshellarg($staticOutputdir) . ' ' . escapeshellarg($new_current));
 
 		//statistics file looks like: 'awstats[month][year].[domain].txt'
-		$file = makeCorrectFile($staticOutputdir.'/awstats'.date('mY', time()).'.'.$domain.'.txt');
+		$file = makeCorrectFile($outputdir.'/awstats'.date('mY', time()).'.'.$domain.'.txt');
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '".$file."'");
 
 		if (file_exists($file)) {
