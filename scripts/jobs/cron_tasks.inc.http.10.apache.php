@@ -392,8 +392,16 @@ class apache {
 		if ($domain['phpenabled'] == '1') {
 			// This vHost has PHP enabled and we are using the regular mod_php
 
-			if ($domain['openbasedir'] == '1') {
-				$_phpappendopenbasedir = appendOpenBasedirPath($domain['customerroot'], true);
+            if ($domain['openbasedir'] == '1')
+            {
+                if ($domain['openbasedir_path'] == '1' || strstr($domain['documentroot'], ":") !== false)
+                {
+                    $_phpappendopenbasedir = appendOpenBasedirPath($domain['customerroot'], true);
+                }
+                else
+                {
+                    $_phpappendopenbasedir = appendOpenBasedirPath($domain['documentroot'], true);
+                }
 
 				$_custom_openbasedir = explode(':', Settings::Get('system.phpappendopenbasedir'));
 				foreach ($_custom_openbasedir as $cobd) {
