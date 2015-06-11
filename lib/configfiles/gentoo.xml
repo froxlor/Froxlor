@@ -68,8 +68,24 @@
 					<command><![CDATA[/etc/init.d/apache2 restart]]></command>
 				</daemon>
 				<daemon name="apache" version="2.4" title="Apache 2.4">
-					<include>//service[@type='http']/daemon[@name='apache'][@version='2.2']
-					</include>
+					<include>//service[@type='http']/general/commands</include>
+					<file name="/etc/apache2/modules.d/70_fastcgi.conf">
+						<visibility mode="true">{{settings.phpfpm.enabled}}
+						</visibility>
+						<content><![CDATA[
+<IfModule mod_fastcgi.c>
+    FastCgiIpcDir <FPM_IPCDIR>
+
+    <Location "/fastcgiphp">
+		Require all granted
+        Require env REDIRECT_STATUS
+    </Location>
+</IfModule>
+]]>
+						</content>
+					</file>
+					<command><![CDATA[rc-update add apache2 default]]></command>
+					<command><![CDATA[/etc/init.d/apache2 restart]]></command>
 				</daemon>
 				<!-- HTTP Lighttpd -->
 				<daemon name="lighttpd" title="LigHTTPd">
