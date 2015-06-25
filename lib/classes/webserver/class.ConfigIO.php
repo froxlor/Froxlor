@@ -93,7 +93,7 @@ class ConfigIO {
 		if ($dir !== false)
 			$configdirs[] = makeCorrectDir($dir);
 
-		$dir = $this->_getFile('system', 'apacheconf_diroptions')
+		$dir = $this->_getFile('system', 'apacheconf_diroptions');
 		if ($dir !== false)
 			$configdirs[] = makeCorrectDir($dir);
 
