@@ -337,7 +337,7 @@ class Database {
 		) {
 			$sql_root = array(0 => array('caption' => 'Default',
 										 'host' => $sql['host'],
-										 'port' => isset($sql['port'])?$sql['port']:'3306',
+										 'port' => array_key_exists('port', $sql) ? $sql['port'] : '3306',
 										 'user' => $sql['root_user'],
 										 'password' => $sql['root_password']));
 		}
