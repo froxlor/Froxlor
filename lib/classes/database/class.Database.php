@@ -335,7 +335,11 @@ class Database {
 			&& isset($sql['root_password'])
 			&& (!isset($sql_root) || !is_array($sql_root))
 		) {
-			$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+			$sql_root = array(0 => array('caption' => 'Default',
+										 'host' => $sql['host'],
+										 'port' => isset($sql['port'])?$sql['port']:'3306',
+										 'user' => $sql['root_user'],
+										 'password' => $sql['root_password']));
 		}
 		return $sql_root;
 	}
