@@ -426,6 +426,11 @@ class Database {
 			$error_trace = str_replace($sql['password'], 'DB_UNPRIV_PWD', $error_trace);
 			$error_trace = str_replace($sql_root[0]['password'], 'DB_ROOT_PWD', $error_trace);
 
+			if ($error->getCode() == 2003) {
+			    $error_message = "Unable to connect to database. Either the mysql-server is not running or your user/password is wrong.";
+			    $error_trace = "";
+			}
+
 			// clean up sensitive data
 			unset($sql);
 			unset($sql_root);

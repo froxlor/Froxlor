@@ -89,8 +89,13 @@ class ConfigIO {
 
 		// get directories
 		$configdirs = array();
-		$configdirs[] = makeCorrectDir($this->_getFile('system', 'apacheconf_vhost'));
-		$configdirs[] = makeCorrectDir($this->_getFile('system', 'apacheconf_diroptions'));
+		$dir = $this->_getFile('system', 'apacheconf_vhost');
+		if ($dir !== false)
+			$configdirs[] = makeCorrectDir($dir);
+
+		$dir = $this->_getFile('system', 'apacheconf_diroptions');
+		if ($dir !== false)
+			$configdirs[] = makeCorrectDir($dir);
 
 		// file pattern
 		$pattern = "/^([0-9]){2}_(froxlor|syscp)_(.+)\.conf$/";
