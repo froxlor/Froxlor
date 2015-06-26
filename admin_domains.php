@@ -397,7 +397,7 @@ if ($page == 'domains'
 							$documentroot = $_POST['documentroot'];
 						}
 					} elseif (isset($_POST['documentroot'])
-						&& ($_POST['documentroot'] == '') 
+						&& ($_POST['documentroot'] == '')
 						&& (Settings::Get('system.documentroot_use_default_value') == 1)
 					) {
 						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $domain);
@@ -832,7 +832,7 @@ if ($page == 'domains'
 					SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
 					FROM `" . TABLE_PANEL_CUSTOMERS . "` " .
 					($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int)$userinfo['adminid'] . "' ") .
-					" ORDER BY `name` ASC"
+					" ORDER BY COALESCE(NULLIF(`name`,''), `company`) ASC"
 				);
 				$params = array();
 				if ($userinfo['customers_see_all'] == '0') {
