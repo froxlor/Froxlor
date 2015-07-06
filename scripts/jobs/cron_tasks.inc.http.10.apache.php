@@ -17,7 +17,9 @@
  *
  */
 
-class apache {
+include('../classes/class.HttpConfigBase.php');
+
+class apache extends HttpConfigBase {
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
@@ -42,7 +44,6 @@ class apache {
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
-		$this->templateVars = array();
 	}
 
 
@@ -315,7 +316,10 @@ class apache {
 				 */
 
 				if ($row_ipsandports['specialsettings'] != '') {
-					$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings']) . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate(
+							$row_ipsandports['specialsettings'],
+							$row_ipsandports,
+							$domain) . "\n";
 				}
 
 				if ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
@@ -630,26 +634,6 @@ class apache {
 	}
 
 	/**
-	 * process special config as template, by substituting {VARIABLE} with the
-	 * respective value.
-	 *
-	 * The following variables are known at the moment:
-	 *
-	 * {DOMAIN}         - domain name
-	 * {IP}             - IP for this domain
-	 * {PORT}           - Port for this domain
-	 * {CUSTOMER}       - customer name
-	 * {IS_SSL}         - '1' if domain/ip is ssl, '' otherwise
-	 * {DOCROOT}        - document root for this domain
-	 *
-	 * @param $template
-	 * @return string
-	 */
-	protected function processSpecialConfigTemplate($template) {
-		return replace_variables($template, $this->templateVars);
-	}
-
-	/**
 	 * We compose the virtualhost entry for one domain
 	 */
 	protected function getVhostContent($domain, $ssl_vhost = false) {
@@ -680,14 +664,6 @@ class apache {
 		$_vhost_content = '';
 		while ($ipandport = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-			// set up template variables for specialconfig processing
-			$this->templateVars['DOMAIN'] = $domain['domain'];
-			$this->templateVars['CUSTOMER'] = $domain['loginname'];
-			$this->templateVars['IP'] = $ipandport['ip'];
-			$this->templateVars['PORT'] = $ipandport['port'];
-			$this->templateVars['IS_SSL'] = $domain['ssl'];
-			$this->templateVars['DOCROOT'] = $domain['documentroot'];
-
 			$ipport = '';
 			$domain['ip'] = $ipandport['ip'];
 			$domain['port'] = $ipandport['port'];
@@ -711,7 +687,10 @@ class apache {
 			}
 
 			if ($ipandport['default_vhostconf_domain'] != '') {
-				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain']) . "\n";
+				$_vhost_content .= $this->processSpecialConfigTemplate(
+										$ipandport['default_vhostconf_domain'],
+										$ipandport,
+										$domain) . "\n";
 			}
 			$ipportlist .= $ipport;
 		}
@@ -821,7 +800,10 @@ class apache {
 			$vhost_content .= $this->getLogfiles($domain);
 
 			if ($domain['specialsettings'] != '') {
-				$vhost_content .= $this->processSpecialConfigTemplate($domain['specialsettings']) . "\n";
+				$vhost_content .= $this->processSpecialConfigTemplate(
+						$domain['specialsettings'],
+						$ipandport,
+						$domain) . "\n";
 			}
 
 			if ($_vhost_content != '') {
@@ -829,7 +811,10 @@ class apache {
 			}
 
 			if (Settings::Get('system.default_vhostconf') != '') {
-				$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_vhostconf')) . "\n";
+				$vhost_content .= $this->processSpecialConfigTemplate(
+						Settings::Get('system.default_vhostconf'),
+						$ipandport,
+						$domain) . "\n";
 			}
 		}
 

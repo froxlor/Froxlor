@@ -18,7 +18,9 @@
  * @TODO ssl-redirect to non-standard port
  */
 
-class lighttpd {
+include('../classes/class.HttpConfigBase.php');
+
+class lighttpd extends HttpConfigBase {
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
@@ -145,7 +147,11 @@ class lighttpd {
 				}
 
 				if ($row_ipsandports['specialsettings'] != '') {
-					$this->lighttpd_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";
+					$this->lighttpd_data[$vhost_filename].= $this->processSpecialConfigTemplate(
+							$row_ipsandports['specialsettings'],
+							$row_ipsandports,
+							$domain
+					). "\n";
 				}
 
 				$this->lighttpd_data[$vhost_filename].= '}' . "\n";
@@ -439,15 +445,24 @@ class lighttpd {
 					$vhost_content.= $this->getSslSettings($domain, $ssl_vhost);
 
 					if ($domain['specialsettings'] != "") {
-						$vhost_content.= $domain['specialsettings'] . "\n";
+						$vhost_content.= $this->processSpecialConfigTemplate(
+								$domain['specialsettings'],
+								$ipandport,
+								$domain). "\n";
 					}
 
 					if ($ipandport['default_vhostconf_domain'] != '') {
-						$vhost_content.= $ipandport['default_vhostconf_domain'] . "\n";
+						$vhost_content.= $this->processSpecialConfigTemplate(
+								$ipandport['default_vhostconf_domain'],
+								$ipandport,
+								$domain) . "\n";
 					}
 
 					if (Settings::Get('system.default_vhostconf') != '') {
-						$vhost_content.= Settings::Get('system.default_vhostconf') . "\n";
+						$vhost_content.= $this->processSpecialConfigTemplate(
+							Settings::Get('system.default_vhostconf'),
+								$ipandport,
+								$domain). "\n";
 					}
 				}
 				$vhost_content.= $this->getLogFiles($domain);
