@@ -18,7 +18,7 @@
  * @TODO ssl-redirect to non-standard port
  */
 
-include('../classes/class.HttpConfigBase.php');
+require_once(dirname(__FILE__).'/../classes/class.HttpConfigBase.php');
 
 class lighttpd extends HttpConfigBase {
 	private $logger = false;

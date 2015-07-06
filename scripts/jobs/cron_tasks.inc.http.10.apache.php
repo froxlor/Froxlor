@@ -17,7 +17,7 @@
  *
  */
 
-include('../classes/class.HttpConfigBase.php');
+require_once(dirname(__FILE__).'/../classes/class.HttpConfigBase.php');
 
 class apache extends HttpConfigBase {
 	private $logger = false;
