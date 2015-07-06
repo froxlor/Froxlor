@@ -637,9 +637,10 @@ class apache {
 	 *
 	 * {DOMAIN}         - domain name
 	 * {IP}             - IP for this domain
-	 * {PORT}           - Port for the domain
+	 * {PORT}           - Port for this domain
 	 * {CUSTOMER}       - customer name
 	 * {IS_SSL}         - '1' if domain/ip is ssl, '' otherwise
+	 * {DOCROOT}        - document root for this domain
 	 *
 	 * @param $template
 	 * @return string
@@ -685,6 +686,7 @@ class apache {
 			$this->templateVars['IP'] = $ipandport['ip'];
 			$this->templateVars['PORT'] = $ipandport['port'];
 			$this->templateVars['IS_SSL'] = $domain['ssl'];
+			$this->templateVars['DOCROOT'] = $domain['documentroot'];
 
 			$ipport = '';
 			$domain['ip'] = $ipandport['ip'];
