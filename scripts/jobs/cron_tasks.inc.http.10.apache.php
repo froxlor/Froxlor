@@ -318,8 +318,10 @@ class apache extends HttpConfigBase {
 				if ($row_ipsandports['specialsettings'] != '') {
 					$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate(
 							$row_ipsandports['specialsettings'],
-							$row_ipsandports,
-							$domain) . "\n";
+							$domain,
+							$row_ipsandports['ip'],
+							$row_ipsandports['port'],
+							$row_ipsandports['ssl'] == '1') . "\n";
 				}
 
 				if ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
@@ -689,8 +691,10 @@ class apache extends HttpConfigBase {
 			if ($ipandport['default_vhostconf_domain'] != '') {
 				$_vhost_content .= $this->processSpecialConfigTemplate(
 										$ipandport['default_vhostconf_domain'],
-										$ipandport,
-										$domain) . "\n";
+										$domain,
+										$domain['ip'],
+										$domain['port'],
+										$ssl_vhost) . "\n";
 			}
 			$ipportlist .= $ipport;
 		}
@@ -802,8 +806,10 @@ class apache extends HttpConfigBase {
 			if ($domain['specialsettings'] != '') {
 				$vhost_content .= $this->processSpecialConfigTemplate(
 						$domain['specialsettings'],
-						$ipandport,
-						$domain) . "\n";
+						$domain,
+						$domain['ip'],
+						$domain['port'],
+						$ssl_vhost) . "\n";
 			}
 
 			if ($_vhost_content != '') {
@@ -813,8 +819,10 @@ class apache extends HttpConfigBase {
 			if (Settings::Get('system.default_vhostconf') != '') {
 				$vhost_content .= $this->processSpecialConfigTemplate(
 						Settings::Get('system.default_vhostconf'),
-						$ipandport,
-						$domain) . "\n";
+						$domain,
+						$domain['ip'],
+						$domain['port'],
+						$ssl_vhost) . "\n";
 			}
 		}
 

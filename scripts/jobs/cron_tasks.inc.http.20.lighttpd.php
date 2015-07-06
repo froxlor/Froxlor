@@ -149,8 +149,10 @@ class lighttpd extends HttpConfigBase {
 				if ($row_ipsandports['specialsettings'] != '') {
 					$this->lighttpd_data[$vhost_filename].= $this->processSpecialConfigTemplate(
 							$row_ipsandports['specialsettings'],
-							$row_ipsandports,
-							$domain
+							$domain,
+							$row_ipsandports['ip'],
+							$row_ipsandports['port'],
+							$row_ipsandports['ssl'] == '1'
 					). "\n";
 				}
 
@@ -447,22 +449,28 @@ class lighttpd extends HttpConfigBase {
 					if ($domain['specialsettings'] != "") {
 						$vhost_content.= $this->processSpecialConfigTemplate(
 								$domain['specialsettings'],
-								$ipandport,
-								$domain). "\n";
+								$domain,
+								$domain['ip'],
+								$domain['port'],
+								$ssl_vhost). "\n";
 					}
 
 					if ($ipandport['default_vhostconf_domain'] != '') {
 						$vhost_content.= $this->processSpecialConfigTemplate(
 								$ipandport['default_vhostconf_domain'],
-								$ipandport,
-								$domain) . "\n";
+								$domain,
+								$domain['ip'],
+								$domain['port'],
+								$ssl_vhost) . "\n";
 					}
 
 					if (Settings::Get('system.default_vhostconf') != '') {
 						$vhost_content.= $this->processSpecialConfigTemplate(
 							Settings::Get('system.default_vhostconf'),
-								$ipandport,
-								$domain). "\n";
+								$domain,
+								$domain['ip'],
+								$domain['port'],
+								$ssl_vhost). "\n";
 					}
 				}
 				$vhost_content.= $this->getLogFiles($domain);

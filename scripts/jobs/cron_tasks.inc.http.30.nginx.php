@@ -191,10 +191,12 @@ class nginx extends HttpConfigBase {
 				if ($row_ipsandports['specialsettings'] != '') {
 					$this->nginx_data[$vhost_filename].= $this->processSpecialConfigTemplate(
 							$row_ipsandports['specialsettings'],
-							$row_ipsandports,
 							array('domain'=> Settings::Get('system.hostname'),
 								  'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
-								  'documentroot'=> $mypath)). "\n";
+								  'documentroot'=> $mypath),
+							$row_ipsandports['ip'],
+							$row_ipsandports['port'],
+							$row_ipsandports['ssl'] == '1'). "\n";
 				}
 
 				/**
@@ -372,8 +374,10 @@ class nginx extends HttpConfigBase {
 			if ($ipandport['default_vhostconf_domain'] != '') {
 				$_vhost_content .= $this->processSpecialConfigTemplate(
 						$ipandport['default_vhostconf_domain'],
-						$ipandport,
-						$domain). "\n";
+						$domain,
+						$domain['ip'],
+						$domain['port'],
+						$ssl_vhost). "\n";
 			}
 
 			$vhost_content.= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ';' . "\n";
@@ -437,8 +441,10 @@ class nginx extends HttpConfigBase {
 				if ($domain['specialsettings'] != "") {
 					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate(
 						$domain['specialsettings'],
-						$ipandport,
-						$domain
+						$domain,
+						$domain['ip'],
+						$domain['port'],
+						$ssl_vhost
 					));
 				}
 
@@ -450,8 +456,10 @@ class nginx extends HttpConfigBase {
 					$vhost_content = $this->mergeVhostCustom($vhost_content,
 						$this->processSpecialConfigTemplate(
 							Settings::Get('system.default_vhostconf'),
-							$ipandport,
-							$domain)."\n");
+							$domain,
+							$domain['ip'],
+							$domain['port'],
+							$ssl_vhost)."\n");
 				}
 			}
 		}

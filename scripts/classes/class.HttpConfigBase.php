@@ -23,13 +23,13 @@ class HttpConfigBase {
 	 * @param $template
 	 * @return string
 	 */
-	protected function processSpecialConfigTemplate($template, $ipandport, $domain) {
+	protected function processSpecialConfigTemplate($template, $domain, $ip, $port, $is_ssl_vhost) {
 		$templateVars = array(
 			'DOMAIN' => $domain['domain'],
 			'CUSTOMER' => $domain['loginname'],
-			'IP' => $ipandport['ip'],
-			'PORT' => $ipandport['port'],
-			'IS_SSL' => ($domain['ssl'])?'ssl':'',
+			'IP' => $ip,
+			'PORT' => $port,
+			'IS_SSL' => ($is_ssl_vhost)?'ssl':'',
 			'DOCROOT' => $domain['documentroot']
 		);
 		return replace_variables($template, $templateVars);
