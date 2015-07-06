@@ -17,7 +17,7 @@ class HttpConfigBase {
 	 * {IP}             - IP for this domain
 	 * {PORT}           - Port for this domain
 	 * {CUSTOMER}       - customer name
-	 * {IS_SSL}         - '1' if domain/ip is ssl, '' otherwise
+	 * {IS_SSL}         - evaluates to 'ssl' if domain/ip is ssl, otherwise it is an empty string
 	 * {DOCROOT}        - document root for this domain
 	 *
 	 * @param $template
@@ -29,7 +29,7 @@ class HttpConfigBase {
 			'CUSTOMER' => $domain['loginname'],
 			'IP' => $ipandport['ip'],
 			'PORT' => $ipandport['port'],
-			'IS_SSL' => $domain['ssl'],
+			'IS_SSL' => ($domain['ssl'])?'ssl':'',
 			'DOCROOT' => $domain['documentroot']
 		);
 		return replace_variables($template, $templateVars);
