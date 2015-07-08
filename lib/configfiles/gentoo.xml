@@ -2692,8 +2692,8 @@ SQLNamedQuery insert-quota-tally INSERT "%{0}, %{1}, %{2}, %{3}, %{4},%{5}, %{6}
 #TLSLog						/var/log/proftpd-tls.log
 #TLSProtocol					SSLv23
 #TLSTimeoutHandshake				120
-# Really important for WinClients
-#TLSOptions					NoCertRequest
+# Really important for WinClients and some clients
+#TLSOptions					NoCertRequest NoSessionReuseRequired
 #TLSRSACertificateFile		/etc/ssl/server/<SERVERNAME>.crt
 #TLSRSACertificateKeyFile	/etc/ssl/server/<SERVERNAME>.key
 # Authenticate client that want to use FTP over TLS?
