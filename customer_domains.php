@@ -460,7 +460,7 @@ if ($page == 'overview') {
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
 			WHERE `d`.`customerid` = :customerid
 			AND `d`.`id` = :id
-			AND ((`d`.`parentdomainid` NOT NULL
+			AND ((`d`.`parentdomainid` IS NOT NULL
 					AND `pd`.`id` = `d`.`parentdomainid`)
 				OR (`d`.`parentdomainid` IS NULL
 					AND `pd`.`id` = `d`.`id`))

@@ -420,7 +420,7 @@ if ($page == 'overview') {
 			);
 			$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
 
-			if (isset($result['email']) && $result['email'] != '' && $result['popaccountid'] == '0') {
+			if (isset($result['email']) && $result['email'] != '' && $result['popaccountid'] == null) {
 				if (isset($_POST['send']) && $_POST['send'] == 'send') {
 					$email_full = $result['email_full'];
 					$username = $idna_convert->decode($email_full);

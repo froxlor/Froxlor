@@ -99,7 +99,7 @@ function updateCounters($returndebuginfo = false) {
 		$customer_tickets = Database::pexecute_first($customer_tickets_stmt, array("cid" => $customer['customerid']));
 		$customer['tickets_used_new'] = (int)$customer_tickets['number_tickets'];
 		
-		$customer_subdomains_stmt = Database::prepare('SELECT COUNT(*) AS `number_subdomains` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `customerid` = :cid AND `parentdomainid` NOT NULL');
+		$customer_subdomains_stmt = Database::prepare('SELECT COUNT(*) AS `number_subdomains` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `customerid` = :cid AND `parentdomainid` IS NOT NULL');
 		$customer_subdomains = Database::pexecute_first($customer_subdomains_stmt, array("cid" => $customer['customerid']));
 		$customer['subdomains_used_new'] = (int)$customer_subdomains['number_subdomains'];
 		
