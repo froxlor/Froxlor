@@ -307,6 +307,7 @@ if ($page == 'overview') {
 					// ssl ip/port assigned to the domain
 					if (domainHasSslIpPort($domain_check['id']) == true) {
 						$ssl_redirect = '1';
+						$_doredirect = true;
 					} else {
 						standard_error('sslredirectonlypossiblewithsslipport');
 					}
@@ -548,6 +549,7 @@ if ($page == 'overview') {
 					// ssl ip/port assigned to the domain
 					if (domainHasSslIpPort($id) == true) {
 						$ssl_redirect = '1';
+						$_doredirect = true;
 					} else {
 						standard_error('sslredirectonlypossiblewithsslipport');
 					}
