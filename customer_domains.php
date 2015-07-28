@@ -102,6 +102,11 @@ if ($page == 'overview') {
 			if ($row['parentdomainid'] == 0) {
 				$domain_sort_array[$sortkey][$sortkey] = $row;
 			} else {
+				// when searching and the results are subdomains only, we need to get
+				// the parent domain to this subdomain
+				if (!isset($domain_id_array[$row['parentdomainid']])) {
+				    $domain_id_array[$row['parentdomainid']] = "[parent-domain]";
+				}
 				$domain_sort_array[$domain_id_array[$row['parentdomainid']]][$sortkey] = $row;
 			}
 		}
@@ -117,13 +122,16 @@ if ($page == 'overview') {
 		$i = 0;
 		foreach ($domain_sort_array as $sortkey => $domain_array) {
 			if ($paging->checkDisplay($i)) {
-				$row = htmlentities_array($domain_array[$sortkey]);
-				if (Settings::Get('system.awstats_enabled') == '1') {
-					$statsapp = 'awstats';
-				} else {
-					$statsapp = 'webalizer';
+
+				if (isset($domain_array[$sortkey])) {
+					$row = htmlentities_array($domain_array[$sortkey]);
+					if (Settings::Get('system.awstats_enabled') == '1') {
+					   $statsapp = 'awstats';
+					} else {
+					   $statsapp = 'webalizer';
+					}
+					eval("\$domains.=\"" . getTemplate("domains/domains_delimiter") . "\";");
 				}
-				eval("\$domains.=\"" . getTemplate("domains/domains_delimiter") . "\";");
 
 				if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'asc') {
 					ksort($domain_array);
