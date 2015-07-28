@@ -59,7 +59,7 @@ if ($page == 'overview') {
 			$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
 			$row['domainalias'] = $idna_convert->decode($row['domainalias']);
 
-			if ($row['parentdomainid'] != null && $row['caneditdomain'] == '1') {
+			if ($row['parentdomainid'] == null && $row['caneditdomain'] == '1') {
 				$parentdomains_count++;
 			}
 
