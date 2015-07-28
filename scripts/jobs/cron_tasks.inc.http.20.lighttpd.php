@@ -299,7 +299,7 @@ class lighttpd {
 				$_pos = strrpos($_tmp_path, '/');
 				$_inc_path = substr($_tmp_path, $_pos+1);
 
-				// subdomain
+				// maindomain
 				if ((int)$domain['parentdomainid'] == 0
 					&& isCustomerStdSubdomain((int)$domain['id']) == false
 					&& ((int)$domain['ismainbutsubto'] == 0
@@ -314,9 +314,10 @@ class lighttpd {
 				) {
 					$vhost_no = '51';
 				}
-				// main domain
+				// subdomains
 				else {
-					$vhost_no = '52';
+					// number of dots in a domain specifies it's position (and depth of subdomain) starting at 89 going downwards on higher depth
+					$vhost_no = (string)(90 - substr_count($domain['domain'], ".") + 1);
 				}
 
 				if ($ssl == '1') {
