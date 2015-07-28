@@ -48,7 +48,7 @@ if ($page == 'overview') {
 
 	$domain_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
 		WHERE `customerid` = :customerid
-		AND `parentdomainid` = '0'
+		AND `parentdomainid` IS NULL
 		AND `id` <> :standardsubdomain
 	");
 	Database::pexecute($domain_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));

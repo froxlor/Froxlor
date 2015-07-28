@@ -805,7 +805,7 @@ class nginx {
 		}
 
 		// if this is a parentdomain, we use this domain-name
-		if ($domain['parentdomainid'] == '0') {
+		if ($domain['parentdomainid'] == null) {
 			$alias_dir = makeCorrectDir($alias_dir.'/'.$domain['domain']);
 		} else {
 			$alias_dir = makeCorrectDir($alias_dir.'/'.$domain['parentdomain']);
@@ -840,7 +840,7 @@ class nginx {
 
 		$speciallogfile = '';
 		if ($domain['speciallogfile'] == '1') {
-			if ($domain['parentdomainid'] == '0') {
+			if ($domain['parentdomainid'] == null) {
 				$speciallogfile = '-' . $domain['domain'];
 			} else {
 				$speciallogfile = '-' . $domain['parentdomain'];

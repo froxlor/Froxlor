@@ -73,7 +73,7 @@ if ($page == 'overview') {
 
 	$number_domains_stmt = Database::prepare("
 		SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "`
-		WHERE `parentdomainid`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
+		WHERE `parentdomainid` IS NULL " . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
 	);
 	$number_domains = Database::pexecute_first($number_domains_stmt, array('adminid' => $userinfo['adminid']));
 

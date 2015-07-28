@@ -4,5 +4,6 @@ install/update.log
 .buildpath
 .project
 .settings/
+.idea
 *.diff
 *~

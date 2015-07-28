@@ -141,7 +141,7 @@ if ($page == 'overview') {
 					$result['destination'] = explode(' ', $result['destination']);
 					$number_forwarders = count($result['destination']);
 
-					if ($result['popaccountid'] != 0) {
+					if ($result['popaccountid'] != null) {
 						// Free the Quota used by the email account
 						if (Settings::Get('system.mail_quota_enabled') == 1) {
 							$stmt = Database::prepare("SELECT `quota` FROM `" . TABLE_MAIL_USERS . "`
@@ -627,7 +627,7 @@ if ($page == 'overview') {
 		);
 		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
 
-		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
+		if (isset($result['popaccountid']) && $result['popaccountid'] != null) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$password = validate($_POST['email_password'], 'password');
 
@@ -682,7 +682,7 @@ if ($page == 'overview') {
 		);
 		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
 
-		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
+		if (isset($result['popaccountid']) && $result['popaccountid'] != null) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$quota = (int)validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong');
 
@@ -747,7 +747,7 @@ if ($page == 'overview') {
 
 				$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_VIRTUAL . "`
 					SET `destination` = :dest,
-						`popaccountid` = '0'
+						`popaccountid` = NULL
 					WHERE `customerid`= :cid
 					AND `id`= :id"
 				);

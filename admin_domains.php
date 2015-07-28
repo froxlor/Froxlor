@@ -58,7 +58,7 @@ if ($page == 'domains'
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
-			WHERE `d`.`parentdomainid`='0' " .
+			WHERE `d`.`parentdomainid` IS NULL " .
 			($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid ") .
 			" " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
@@ -921,7 +921,7 @@ if ($page == 'domains'
 				$domains = makeoption($lng['domains']['noaliasdomain'], 0, NULL, true);
 				$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
-					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0" . $standardsubdomains .
+					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` IS NULL" . $standardsubdomains .
 					($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
 					AND `d`.`customerid`=`c`.`customerid` ORDER BY `loginname`, `domain` ASC
 				");
@@ -938,7 +938,7 @@ if ($page == 'domains'
 				$subtodomains = makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
 				$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
-					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0 AND `d`.`ismainbutsubto` = 0 " . $standardsubdomains .
+					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` IS NULL AND `d`.`ismainbutsubto` = 0 " . $standardsubdomains .
 					($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
 					AND `d`.`customerid`=`c`.`customerid` ORDER BY `loginname`, `domain` ASC
 				");
@@ -989,7 +989,7 @@ if ($page == 'domains'
 
 		$result_stmt = Database::prepare("
 			SELECT `d`.*, `c`.`customerid` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
-			WHERE `d`.`parentdomainid` = '0' AND `d`.`id` = :id" .
+			WHERE `d`.`parentdomainid` IS NULL AND `d`.`id` = :id" .
 			($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid")
 		);
 		$params = array('id' => $id);
@@ -1794,7 +1794,7 @@ if ($page == 'domains'
 
 				$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`  FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
-					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = '0' AND `d`.`id` <> :id
+					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` IS NULL AND `d`.`id` <> :id
 					AND `c`.`standardsubdomain`<>`d`.`id` AND `d`.`customerid` = :customerid AND `c`.`customerid`=`d`.`customerid`
 					ORDER BY `d`.`domain` ASC
 				");
@@ -1807,7 +1807,7 @@ if ($page == 'domains'
 				$subtodomains = makeoption($lng['domains']['nosubtomaindomain'], 0, null, true);
 				$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
-					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = '0' AND `d`.`id` <> :id
+					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` IS NULL AND `d`.`id` <> :id
 					AND `c`.`standardsubdomain`<>`d`.`id` AND `c`.`customerid`=`d`.`customerid`".
 					($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
 					ORDER BY `d`.`domain` ASC

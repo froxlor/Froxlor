@@ -61,14 +61,14 @@ return array(
 						'select_var' => $redirectcode
 					),
 					'selectserveralias' => array(
-						'visible' => (($result['parentdomainid'] == '0' && $userinfo['subdomains'] != '0') ? true : false),
+						'visible' => (($result['parentdomainid'] == null && $userinfo['subdomains'] != '0') ? true : false),
 						'label' => $lng['admin']['selectserveralias'],
 						'desc' => $lng['admin']['selectserveralias_desc'],
 						'type' => 'select',
 						'select_var' => $serveraliasoptions
 					),
 					'isemaildomain' => array(
-						'visible' => ((( $result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2' ) && $result['parentdomainid'] != '0') ? true : false),
+						'visible' => ((( $result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2' ) && $result['parentdomainid'] != null) ? true : false),
 						'label' => 'Emaildomain',
 						'type' => 'checkbox',
 						'values' => array(

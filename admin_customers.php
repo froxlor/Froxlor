@@ -77,7 +77,7 @@ if ($page == 'customers'
 					SELECT COUNT(`id`) AS `domains`
 					FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `customerid` = :cid
-					AND `parentdomainid` = '0'
+					AND `parentdomainid` IS NULL
 					AND `id`<> :stdd"
 				);
 				Database::pexecute($domains_stmt, array('cid' => $row['customerid'], 'stdd' => $row['standardsubdomain']));
@@ -892,7 +892,7 @@ if ($page == 'customers'
 							`domain` = :domain,
 							`customerid` = :customerid,
 							`adminid` = :adminid,
-							`parentdomainid` = '0',
+							`parentdomainid` = NULL,
 							`documentroot` = :docroot,
 							`zonefile` = '',
 							`isemaildomain` = '0',
@@ -1230,7 +1230,7 @@ if ($page == 'customers'
 							`domain` = :domain,
 							`customerid` = :customerid,
 							`adminid` = :adminid,
-							`parentdomainid` = '0',
+							`parentdomainid` = NULL,
 							`documentroot` = :docroot,
 							`zonefile` = '',
 							`isemaildomain` = '0',

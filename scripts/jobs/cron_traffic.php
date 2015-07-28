@@ -89,7 +89,7 @@ while ($row_domainlist = $result_domainlist_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	$domainlist[$row_domainlist['customerid']][$row_domainlist['id']] = $row_domainlist['domain'];
 
-	if ($row_domainlist['parentdomainid'] == '0'
+	if ($row_domainlist['parentdomainid'] == null
 		&& $row_domainlist['speciallogfile'] == '1'
 	) {
 		if (!isset($speciallogfile_domainlist[$row_domainlist['customerid']])) {

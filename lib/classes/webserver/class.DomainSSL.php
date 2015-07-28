@@ -46,7 +46,7 @@ class DomainSSL {
 				|| $dom_certs['ssl_cert_file'] == ''
 		) {
 			// maybe its parent?
-			if ($domain['parentdomainid'] != 0) {
+			if ($domain['parentdomainid'] != null) {
 				$dom_certs = Database::pexecute_first($dom_certs_stmt, array('domid' => $domain['parentdomainid']));
 			}
 		}

@@ -497,7 +497,7 @@ class lighttpd {
 
 		$speciallogfile = '';
 		if ($domain['speciallogfile'] == '1') {
-			if ($domain['parentdomainid'] == '0') {
+			if ($domain['parentdomainid'] == null) {
 				$speciallogfile = '-' . $domain['domain'];
 			} else {
 				$speciallogfile = '-' . $domain['parentdomain'];
@@ -784,7 +784,7 @@ class lighttpd {
 		$stats_text = '';
 
 		if ($domain['speciallogfile'] == '1') {
-			if ($domain['parentdomainid'] == '0') {
+			if ($domain['parentdomainid'] == null) {
 				if (Settings::Get('system.awstats_enabled') == '1') {
 					$stats_text.= '  alias.url = ( "/awstats/" => "'.makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']).'" )' . "\n";
 					$stats_text.= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";

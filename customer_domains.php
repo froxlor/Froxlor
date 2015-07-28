@@ -59,7 +59,7 @@ if ($page == 'overview') {
 			$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
 			$row['domainalias'] = $idna_convert->decode($row['domainalias']);
 
-			if ($row['parentdomainid'] == '0' && $row['caneditdomain'] == '1') {
+			if ($row['parentdomainid'] != null && $row['caneditdomain'] == '1') {
 				$parentdomains_count++;
 			}
 
@@ -76,7 +76,7 @@ if ($page == 'overview') {
 				$row['domain_hascert'] = 1;
 			} else {
 				// check if it's parent has one set (shared)
-				if ($row['parentdomainid'] != 0) {
+				if ($row['parentdomainid'] != null) {
 					$ssl_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` = :domainid");
 					Database::pexecute($ssl_stmt, array("domainid" => $row['parentdomainid']));
 					$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
@@ -99,7 +99,7 @@ if ($page == 'overview') {
 
 		$domain_sort_array = array();
 		foreach ($domain_array as $sortkey => $row) {
-			if ($row['parentdomainid'] == 0) {
+			if ($row['parentdomainid'] == null) {
 				$domain_sort_array[$sortkey][$sortkey] = $row;
 			} else {
 				$domain_sort_array[$domain_id_array[$row['parentdomainid']]][$sortkey] = $row;
@@ -223,7 +223,7 @@ if ($page == 'overview') {
 				$domain_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `domain` = :domain
 					AND `customerid` = :customerid
-					AND `parentdomainid` = '0'
+					AND `parentdomainid` IS NULL
 					AND `email_only` = '0'
 					AND `caneditdomain` = '1'"
 				);
@@ -396,7 +396,7 @@ if ($page == 'overview') {
 			} else {
 				$stmt = Database::prepare("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `customerid` = :customerid
-					AND `parentdomainid` = '0'
+					AND `parentdomainid` IS NULL
 					AND `email_only` = '0'
 					AND `caneditdomain` = '1'
 					ORDER BY `domain` ASC"
@@ -412,7 +412,7 @@ if ($page == 'overview') {
 				$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL
 					AND `d`.`id` <> `c`.`standardsubdomain`
-					AND `d`.`parentdomainid` = '0'
+					AND `d`.`parentdomainid` IS NULL
 					AND `d`.`customerid`=`c`.`customerid`
 					AND `d`.`email_only`='0'
 					AND `d`.`customerid`= :customerid
@@ -460,9 +460,9 @@ if ($page == 'overview') {
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
 			WHERE `d`.`customerid` = :customerid
 			AND `d`.`id` = :id
-			AND ((`d`.`parentdomainid`!='0'
+			AND ((`d`.`parentdomainid` NOT NULL
 					AND `pd`.`id` = `d`.`parentdomainid`)
-				OR (`d`.`parentdomainid`='0'
+				OR (`d`.`parentdomainid` IS NULL
 					AND `pd`.`id` = `d`.`id`))
 			AND `d`.`caneditdomain`='1'");
 		$result = Database::pexecute_first($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
@@ -498,7 +498,7 @@ if ($page == 'overview') {
 
 				$aliasdomain = intval($_POST['alias']);
 
-				if (isset($_POST['selectserveralias']) && $result['parentdomainid'] == '0' ) {
+				if (isset($_POST['selectserveralias']) && $result['parentdomainid'] == null ) {
 					$iswildcarddomain = ($_POST['selectserveralias'] == '0') ? '1' : '0';
 					$wwwserveralias = ($_POST['selectserveralias'] == '1') ? '1' : '0';
 				} else {
@@ -614,7 +614,7 @@ if ($page == 'overview') {
 					WHERE `d`.`aliasdomain` IS NULL
 					AND `d`.`id` <> :id
 					AND `c`.`standardsubdomain` <> `d`.`id`
-					AND `d`.`parentdomainid` = '0'
+					AND `d`.`parentdomainid` IS NULL
 					AND `d`.`customerid` = :customerid
 					AND `c`.`customerid` = `d`.`customerid`
 					AND `d`.`id` = `dip`.`id_domain`

@@ -2976,3 +2976,209 @@ if (isFroxlorVersion('0.9.34-dev2')) {
         updateToVersion('0.9.34-dev3');
     }
 }
+
+if (isFroxlorVersion('0.9.34-dev3')) {
+	showUpdateStep("Updating from 0.9.34-dev3 to 0.9.34-dev4", false);
+
+$sql= <<<'EOT'
+START TRANSACTION;
+
+ALTER TABLE `cronjobs_run` ENGINE=InnoDB;
+ALTER TABLE `domain_ssl_settings` ENGINE=InnoDB;
+ALTER TABLE `domain_redirect_codes` ENGINE=InnoDB;
+ALTER TABLE `ftp_groups` ENGINE=InnoDB;
+ALTER TABLE `ftp_quotalimits` ENGINE=InnoDB;
+ALTER TABLE `ftp_quotatallies` ENGINE=InnoDB;
+ALTER TABLE `ftp_users` ENGINE=InnoDB;
+ALTER TABLE `mail_users` ENGINE=InnoDB;
+ALTER TABLE `mail_virtual` ENGINE=InnoDB;
+ALTER TABLE `panel_activation` ENGINE=InnoDB;
+ALTER TABLE `panel_admins` ENGINE=InnoDB;
+ALTER TABLE `panel_customers` ENGINE=InnoDB;
+ALTER TABLE `panel_databases` ENGINE=InnoDB;
+ALTER TABLE `panel_diskspace` ENGINE=InnoDB;
+ALTER TABLE `panel_diskspace_admins` ENGINE=InnoDB;
+ALTER TABLE `panel_domains` ENGINE=InnoDB;
+ALTER TABLE `panel_domaintoip` ENGINE=InnoDB;
+ALTER TABLE `panel_htaccess` ENGINE=InnoDB;
+ALTER TABLE `panel_htpasswds` ENGINE=InnoDB;
+ALTER TABLE `panel_ipsandports` ENGINE=InnoDB;
+ALTER TABLE `panel_languages` ENGINE=InnoDB;
+ALTER TABLE `panel_phpconfigs` ENGINE=InnoDB;
+ALTER TABLE `panel_sessions` ENGINE=InnoDB;
+ALTER TABLE `panel_settings` ENGINE=InnoDB;
+ALTER TABLE `panel_syslog` ENGINE=InnoDB;
+ALTER TABLE `panel_tasks` ENGINE=InnoDB;
+ALTER TABLE `panel_templates` ENGINE=InnoDB;
+ALTER TABLE `panel_ticket_categories` ENGINE=InnoDB;
+ALTER TABLE `panel_tickets` ENGINE=InnoDB;
+ALTER TABLE `panel_traffic` ENGINE=InnoDB;
+ALTER TABLE `panel_traffic_admins` ENGINE=InnoDB;
+ALTER TABLE `redirect_codes` ENGINE=InnoDB;
+
+ALTER TABLE `ftp_groups`
+    MODIFY COLUMN `customerid` INT(11) UNSIGNED NOT NULL,
+    DROP KEY `customerid`,
+    ADD FOREIGN KEY `fk_customer` (`customerid`)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `ftp_users`
+    MODIFY COLUMN `customerid` INT(11) UNSIGNED NOT NULL,
+    DROP KEY `customerid`,
+    ADD FOREIGN KEY `fk_customer` (customerid)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `mail_users`
+    MODIFY COLUMN `customerid` INT(11) UNSIGNED NOT NULL,
+    MODIFY COLUMN `domainid` INT(11) UNSIGNED NULL,
+    ADD FOREIGN KEY `fk_customer` (customerid)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    ADD FOREIGN KEY `fk_domain` (domainid)
+        REFERENCES panel_domains(id)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+UPDATE `mail_virtual` SET popaccountid=NULL WHERE popaccountid='0' OR popaccountid='';
+ALTER TABLE `mail_virtual`
+    MODIFY COLUMN `customerid` INT(11) UNSIGNED NOT NULL,
+    MODIFY COLUMN `domainid` INT(11) UNSIGNED NOT NULL,
+    MODIFY COLUMN `popaccountid` INT(11),
+    ADD FOREIGN KEY `fk_customer` (customerid)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    ADD FOREIGN KEY `fk_domain` (domainid)
+        REFERENCES panel_domains(id)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    ADD FOREIGN KEY `fk_account` (popaccountid)
+        REFERENCES mail_users(id)
+        ON UPDATE CASCADE ON DELETE SET NULL;
+
+ALTER TABLE `panel_customers`
+    ADD FOREIGN KEY `fk_admin` (adminid)
+        REFERENCES panel_admins(adminid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `panel_databases`
+    MODIFY COLUMN `customerid` INT(11) UNSIGNED NOT NULL,
+    ADD FOREIGN KEY `fk_customer` (customerid)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `panel_domains`
+    MODIFY COLUMN `parentdomainid` INT(11) UNSIGNED NULL,
+    MODIFY COLUMN `aliasdomain` INT(11) UNSIGNED NULL;
+UPDATE panel_domains SET parentdomainid = NULL WHERE parentdomainid='0';
+UPDATE panel_domains SET aliasdomain = NULL WHERE aliasdomain='0';
+ALTER TABLE `panel_domains`
+    DROP KEY `customerid`,
+    DROP KEY `parentdomain`,
+    ADD FOREIGN KEY `fk_admin` (adminid)
+        REFERENCES panel_admins(adminid)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    ADD FOREIGN KEY `fk_customer` (customerid)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    ADD FOREIGN KEY `fk_parent` (parentdomainid)
+        REFERENCES panel_domains(id)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    ADD FOREIGN KEY `fk_alias` (aliasdomain)
+        REFERENCES panel_domains(id)
+        ON UPDATE CASCADE ON DELETE SET NULL,
+    ADD FOREIGN KEY `fk_phpsetting` (phpsettingid)
+        REFERENCES panel_phpconfigs(id)
+        ON UPDATE CASCADE;
+/* TODO: are panel_domains.ipandport and panel_domains.ssl_ipandport still used? */
+
+ALTER TABLE `panel_htaccess`
+    ADD FOREIGN KEY `fk_customer` (customerid)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `panel_htpasswds`
+    DROP KEY `customerid`,
+    ADD FOREIGN KEY `fk_customerid` (customerid)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+/* NOTE: panel_sessions.userid points either to panel_admins or
+   panel_customers, so we can't use foreign key */
+
+ALTER TABLE `panel_templates`
+    MODIFY COLUMN `adminid` INT(11) UNSIGNED NOT NULL,
+    DROP KEY `adminid`,
+    ADD FOREIGN KEY `fk_admin` (adminid)
+        REFERENCES panel_admins(adminid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `panel_traffic`
+    DROP KEY `customerid`,
+    ADD FOREIGN KEY `fk_customer` (customerid)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `panel_traffic_admins`
+    DROP KEY `adminid`,
+    ADD FOREIGN KEY `fk_admin` (adminid)
+        REFERENCES panel_admins(adminid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `panel_diskspace`
+    DROP KEY `customerid`,
+    ADD FOREIGN KEY `fk_customer` (customerid)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `panel_diskspace_admins`
+    DROP KEY `adminid`,
+    ADD FOREIGN KEY `fk_admin` (adminid)
+        REFERENCES panel_admins(adminid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `panel_tickets`
+    MODIFY COLUMN `adminid` INT(11) UNSIGNED NOT NULL,
+    MODIFY COLUMN `customerid` INT(11) UNSIGNED NOT NULL,
+    DROP KEY `customerid`,
+    ADD FOREIGN KEY `fk_admin` (adminid)
+        REFERENCES panel_admins(adminid)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    ADD FOREIGN KEY `fk_customer` (customerid)
+        REFERENCES panel_customers(customerid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `panel_ticket_categories`
+    MODIFY COLUMN `adminid` INT(11) UNSIGNED NOT NULL,
+    ADD FOREIGN KEY `fk_admin` (adminid)
+        REFERENCES panel_admins(adminid)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `domain_redirect_codes`
+    ADD FOREIGN KEY `fk_redirect` (`rid`)
+        REFERENCES redirect_codes(id)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    ADD FOREIGN KEY `fk_domain` (did)
+        REFERENCES panel_domains(id)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `domain_ssl_settings`
+    MODIFY COLUMN `domainid` INT(11) UNSIGNED NOT NULL,
+    ADD FOREIGN KEY `fk_domain` (domainid)
+        REFERENCES panel_domains(id)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `panel_domaintoip`
+    ADD FOREIGN KEY `fk_domain` (id_domain)
+        REFERENCES panel_domains(id)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    ADD FOREIGN KEY `fk_ipandport` (id_ipandports)
+        REFERENCES panel_ipsandports(id)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+COMMIT;
+
+EOT;
+;
+	Database::query($sql);
+	updateToVersion('0.9.34-dev4');
+}

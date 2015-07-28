@@ -31,19 +31,19 @@ return array(
 						'value' => $result['email_full']
 					),
 					'account_yes' => array(
-						'visible' => ($result['popaccountid'] != 0 ? true : false),
+						'visible' => ($result['popaccountid'] != null ? true : false),
 						'label' => $lng['emails']['account'],
 						'type' => 'label',
 						'value' => $lng['panel']['yes'].'&nbsp;[<a href="'.$filename.'?page=accounts&amp;action=changepw&amp;id='.$result['id'].'&amp;s='.$s.'">'.$lng['menue']['main']['changepassword'].'</a>] [<a href="'.$filename.'?page=accounts&amp;action=delete&amp;id='.$result['id'].'&amp;s='.$s.'">'.$lng['emails']['account_delete'].'</a>]'
 					),
 					'account_no' => array(
-						'visible' => ($result['popaccountid'] == 0 ? true : false),
+						'visible' => ($result['popaccountid'] == null ? true : false),
 						'label' => $lng['emails']['account'],
 						'type' => 'label',
 						'value' => $lng['panel']['no'].'&nbsp;[<a href="'.$filename.'?page=accounts&amp;action=add&amp;id='.$result['id'].'&amp;s='.$s.'">'.$lng['emails']['account_add'].'</a>]'
 					),
 					'mail_quota' => array(
-						'visible' => ($result['popaccountid'] != 0 && Settings::Get('system.mail_quota_enabled')),
+						'visible' => ($result['popaccountid'] != null && Settings::Get('system.mail_quota_enabled')),
 						'label' => $lng['customer']['email_quota'],
 						'type' => 'label',
 						'value' => $result['quota'].' MiB [<a href="'.$filename.'?page=accounts&amp;action=changequota&amp;id='.$result['id'].'&amp;s='.$s.'">'.$lng['emails']['quota_edit'].'</a>]'

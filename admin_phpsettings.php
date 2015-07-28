@@ -41,7 +41,7 @@ if ($page == 'overview') {
 
 			$query = "SELECT * FROM `".TABLE_PANEL_DOMAINS."`
 					WHERE `phpsettingid` = :id
-					AND `parentdomainid` = '0'";
+					AND `parentdomainid` IS NULL";
 
 			if ((int)$userinfo['domains_see_all'] == 0) {
 				$query .= " AND `adminid` = :adminid";
