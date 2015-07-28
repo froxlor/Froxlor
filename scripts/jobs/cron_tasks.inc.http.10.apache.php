@@ -780,7 +780,6 @@ class apache {
 			$vhost_content .= '    RewriteRule ^/(.*) '. $corrected_docroot.'$1 ' . $modrew_red . "\n";
 			$vhost_content .= '  </IfModule>' . "\n";
 
-			$code = getDomainRedirectCode($domain['id']);
 			$vhost_content .= '  Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
 
 		} else {
