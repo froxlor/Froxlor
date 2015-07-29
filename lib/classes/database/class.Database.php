@@ -346,11 +346,10 @@ class Database {
 		if (!file_exists($sl_dir)) {
 			@mkdir($sl_dir, 0755);
 		}
-		$sl_file = makeCorrectFile($sl_dir."/sql-error.log");
-		$sqllog = @fopen($sl_file, 'a');
-		@fwrite($sqllog, date('d.m.Y H:i', time())." --- ".str_replace("\n", " ", $error_message)."\n");
-		@fwrite($sqllog, date('d.m.Y H:i', time())." --- DEBUG: \n".$error_trace."\n");
-		@fclose($sqllog);
+		openlog("froxlor", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+		syslog(LOG_WARNING, str_replace("\n", " ", $error_message));
+		syslog(LOG_WARNING, str_replace("\n", " ", "--- DEBUG: ".$error_trace));
+		closelog();
 
 		/**
 		 * log error for reporting
@@ -400,7 +399,7 @@ class Database {
 					die($err_hint);
 				}
 			}
-			die("We are sorry, but a MySQL - error occurred. The administrator may find more information in in the sql-error.log in the logs/ directory");
+			die("We are sorry, but a MySQL - error occurred. The administrator may find more information in the syslog");
 		}
 	}
 }
