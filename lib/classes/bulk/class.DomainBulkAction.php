@@ -301,7 +301,7 @@ class DomainBulkAction
             ), '', $domain_data['aliasdomain']));
             // validate alias-domain
             if (! validateDomain($domain_data['aliasdomain'])) {
-                // invalid-domain lol - skip to be sure we dont add anything weird
+                // invalid-domain lol - skip to be sure we don't add anything weird
                 return false;
             }
             // does the domain we want to be an alias of exists?
@@ -409,12 +409,12 @@ class DomainBulkAction
         // write back iplist
         $iplist = implode(",", $result_iplist);
         
-        // dont need that for the domain-insert-statement
+        // don't need that for the domain-insert-statement
         unset($domain_data['ips']);
         
         // remember use_ssl value
         $use_ssl = (bool)$domain_data['use_ssl'];
-        // dont need that for the domain-insert-statement
+        // don't need that for the domain-insert-statement
         unset($domain_data['use_ssl']);
         
         // finally ADD the domain to panel_domains
@@ -480,7 +480,7 @@ class DomainBulkAction
                 $tmp_arr = explode($separator, $line);
                 $data_arr = array();
                 foreach ($tmp_arr as $idx => $data) {
-                    // dont include more fields that the ones we use
+                    // don't include more fields than the ones we use
                     if ($idx > (count($this->_required_fields) - 4)) // off-by-one + 3 auto-values
                         break;
                     $data_arr[$this->_required_fields[$idx]] = $data;

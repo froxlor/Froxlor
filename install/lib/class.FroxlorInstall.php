@@ -1238,7 +1238,7 @@ class FroxlorInstall {
 		// this is faster than calling count($tokens) every time through the loop.
 		$token_count = count($tokens);
 		for ($i = 0; $i < $token_count; $i++) {
-			// Don't wanna add an empty string as the last thing in the array.
+			// Don't want to add an empty string as the last thing in the array.
 			if (($i != ($token_count - 1))
 					|| (strlen($tokens[$i] > 0))
 			) {

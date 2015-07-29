@@ -178,7 +178,7 @@ class ConfigIO {
 		$awstatsclean['path'] = $this->_getFile('system', 'awstats_conf');
 
 		/**
-		 * dont do anyting if the directory not exists
+		 * don't do anything if the directory does not exist
 		 * (e.g. awstats not installed yet or whatever)
 		 * fixes #45
 		*/
@@ -187,7 +187,7 @@ class ConfigIO {
 			while ($awstatsclean['entry'] = $awstatsclean['dir']->read()) {
 				$awstatsclean['fullentry'] = makeCorrectFile($awstatsclean['path'].'/'.$awstatsclean['entry']);
 				/**
-				 * dont do anything if the file does not exist
+				 * don't do anything if the file does not exist
 				*/
 				if (@file_exists($awstatsclean['fullentry'])) {
 					$awstatsclean['fh'] = fopen($awstatsclean['fullentry'], 'r');

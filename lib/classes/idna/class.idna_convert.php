@@ -43,7 +43,7 @@
  *
  * Unicode input might be given as either UTF-8 string, UCS-4 string or UCS-4 array.
  * Unicode output is available in the same formats.
- * You can select your preferred format via {@link set_paramter()}.
+ * You can select your preferred format via {@link set_parameter()}.
  *
  * ACE input and output is always expected to be ASCII.
  *
@@ -79,7 +79,7 @@ class idna_convert {
     protected $_scount = 11172; // _lcount * _tcount * _vcount
     protected $_error = false;
     protected static $_mb_string_overload = null;
-    // See {@link set_paramter()} for details of how to change the following
+    // See {@link set_parameter()} for details of how to change the following
     // settings from within your script / application
     protected $_api_encoding = 'utf8';   // Default input charset is UTF-8
     protected $_allow_overlong = false;  // Overlong UTF-8 encodings are forbidden
@@ -393,9 +393,9 @@ class idna_convert {
     }
 
     /**
-     * Use this method to get the last error ocurred
+     * Use this method to get the last error occurred
      * @param    void
-     * @return   string   The last error, that occured
+     * @return   string   The last error, that occurred
      */
     public function get_last_error()
     {
@@ -421,7 +421,7 @@ class idna_convert {
             $this->_error('The given encoded string was empty');
             return false;
         }
-        // Find last occurence of the delimiter
+        // Find last occurrence of the delimiter
         $delim_pos = strrpos($encoded, '-');
         if ($delim_pos > self::byteLength($this->_punycode_prefix)) {
             for ($k = self::byteLength($this->_punycode_prefix); $k < $delim_pos; ++$k) {
@@ -622,7 +622,7 @@ class idna_convert {
         // Mapping
         // Walking through the input array, performing the required steps on each of
         // the input chars and putting the result into the output array
-        // While mapping required chars we apply the cannonical ordering
+        // While mapping required chars we apply the canonical ordering
         foreach ($input as $v) {
             // Map to nothing == skip that code point
             if (in_array($v, self::$NP['map_nothing'])) {
@@ -646,11 +646,11 @@ class idna_convert {
                     $output[] = (int) $out;
                 }
             } elseif (($this->_idn_version == '2003') && isset(self::$NP['replacemaps_2003'][$v])) {
-                foreach ($this->_apply_cannonical_ordering(self::$NP['replacemaps_2003'][$v]) as $out) {
+                foreach ($this->_apply_canonical_ordering(self::$NP['replacemaps_2003'][$v]) as $out) {
                     $output[] = (int) $out;
                 }
             } elseif (($this->_idn_version == '2008') && isset(self::$NP['replacemaps'][$v])) {
-                foreach ($this->_apply_cannonical_ordering(self::$NP['replacemaps'][$v]) as $out) {
+                foreach ($this->_apply_canonical_ordering(self::$NP['replacemaps'][$v]) as $out) {
                     $output[] = (int) $out;
                 }
             } else {
@@ -773,11 +773,11 @@ class idna_convert {
     }
 
     /**
-     * Applies the cannonical ordering of a decomposed UCS4 sequence
+     * Applies the canonical ordering of a decomposed UCS4 sequence
      * @param    array      Decomposed UCS4 sequence
      * @return   array      Ordered USC4 sequence
      */
-    protected function _apply_cannonical_ordering($input)
+    protected function _apply_canonical_ordering($input)
     {
         $swap = true;
         $size = count($input);
