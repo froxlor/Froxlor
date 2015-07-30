@@ -29,7 +29,7 @@ class HttpConfigBase {
 			'CUSTOMER' => $domain['loginname'],
 			'IP' => $ip,
 			'PORT' => $port,
-			'IS_SSL' => ($is_ssl_vhost)?'ssl':'',
+			'SCHEME' => ($is_ssl_vhost)?'https':'http',
 			'DOCROOT' => $domain['documentroot']
 		);
 		return replace_variables($template, $templateVars);

@@ -312,6 +312,32 @@ class Database {
 	private static function _showerror($error, $showerror = true) {
 		global $userinfo, $theme, $linker;
 
+		// include userdata.inc.php
+		require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+
+		// le format
+		if (isset($sql['root_user'])
+		    && isset($sql['root_password'])
+		    && (!isset($sql_root) || !is_array($sql_root))
+		) {
+		    $sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'socket' => (isset($sql['socket']) ? $sql['socket'] : null), 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+		}
+
+		// hide username/password in messages
+		$error_message = $error->getMessage();
+		$error_trace = $error->getTraceAsString();
+		// error-message
+		$error_message = str_replace($sql['password'], 'DB_UNPRIV_PWD', $error_message);
+		$error_message = str_replace($sql_root[0]['password'], 'DB_ROOT_PWD', $error_message);
+		// error-trace
+		$error_trace = str_replace($sql['password'], 'DB_UNPRIV_PWD', $error_trace);
+		$error_trace = str_replace($sql_root[0]['password'], 'DB_ROOT_PWD', $error_trace);
+
+		if ($error->getCode() == 2003) {
+		    $error_message = "Unable to connect to database. Either the mysql-server is not running or your user/password is wrong.";
+		    $error_trace = "";
+		}
+
 		/**
 		 * log to a file, so we can actually ask people for the error
 		 * (no one seems to find the stuff in the syslog)
@@ -320,11 +346,10 @@ class Database {
 		if (!file_exists($sl_dir)) {
 			@mkdir($sl_dir, 0755);
 		}
-		$sl_file = makeCorrectFile($sl_dir."/sql-error.log");
-		$sqllog = @fopen($sl_file, 'a');
-		@fwrite($sqllog, date('d.m.Y H:i', time())." --- ".str_replace("\n", " ", $error->getMessage())."\n");
-		@fwrite($sqllog, date('d.m.Y H:i', time())." --- DEBUG: \n".$error->getTraceAsString()."\n");
-		@fclose($sqllog);
+		openlog("froxlor", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+		syslog(LOG_WARNING, str_replace("\n", " ", $error_message));
+		syslog(LOG_WARNING, str_replace("\n", " ", "--- DEBUG: ".$error_trace));
+		closelog();
 
 		/**
 		 * log error for reporting
@@ -333,42 +358,16 @@ class Database {
 		$err_file = makeCorrectFile($sl_dir."/".$errid."_sql-error.log");
 		$errlog = @fopen($err_file, 'w');
 		@fwrite($errlog, "|CODE ".$error->getCode()."\n");
-		@fwrite($errlog, "|MSG ".$error->getMessage()."\n");
+		@fwrite($errlog, "|MSG ".$error_message."\n");
 		@fwrite($errlog, "|FILE ".$error->getFile()."\n");
 		@fwrite($errlog, "|LINE ".$error->getLine()."\n");
-		@fwrite($errlog, "|TRACE\n".$error->getTraceAsString()."\n");
+		@fwrite($errlog, "|TRACE\n".$error_trace."\n");
 		@fclose($errlog);
 
 		if ($showerror) {
 
-			// include userdata.inc.php
-			require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
-
 			// fallback
 			$theme = 'Sparkle';
-
-			// le format
-			if (isset($sql['root_user'])
-				&& isset($sql['root_password'])
-				&& (!isset($sql_root) || !is_array($sql_root))
-			) {
-				$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'socket' => (isset($sql['socket']) ? $sql['socket'] : null), 'user' => $sql['root_user'], 'password' => $sql['root_password']));
-			}
-
-			// hide username/password in messages
-			$error_message = $error->getMessage();
-			$error_trace = $error->getTraceAsString();
-			// error-message
-			$error_message = str_replace($sql['password'], 'DB_UNPRIV_PWD', $error_message);
-			$error_message = str_replace($sql_root[0]['password'], 'DB_ROOT_PWD', $error_message);
-			// error-trace
-			$error_trace = str_replace($sql['password'], 'DB_UNPRIV_PWD', $error_trace);
-			$error_trace = str_replace($sql_root[0]['password'], 'DB_ROOT_PWD', $error_trace);
-
-			if ($error->getCode() == 2003) {
-			    $error_message = "Unable to connect to database. Either the mysql-server is not running or your user/password is wrong.";
-			    $error_trace = "";
-			}
 
 			// clean up sensitive data
 			unset($sql);
@@ -400,7 +399,7 @@ class Database {
 					die($err_hint);
 				}
 			}
-			die("We are sorry, but a MySQL - error occurred. The administrator may find more information in in the sql-error.log in the logs/ directory");
+			die("We are sorry, but a MySQL - error occurred. The administrator may find more information in the syslog");
 		}
 	}
 }
