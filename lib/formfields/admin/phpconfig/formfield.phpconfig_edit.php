@@ -57,6 +57,13 @@ return array(
 						'type' => 'text',
 						'value' => ((int)$result['mod_fcgid_maxrequests'] != - 1 ? $result['mod_fcgid_maxrequests'] : '')
 					),
+				    'mod_fcgid_umask' => array(
+				        'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
+				        'label' => $lng['admin']['mod_fcgid_umask']['title'],
+				        'type' => 'text',
+				        'maxlength' => 3,
+				        'value' => $result['mod_fcgid_umask']
+				    ),
 					'phpfpm_enable_slowlog' => array(
 						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
 						'label' => $lng['admin']['phpsettings']['enable_slowlog'],
