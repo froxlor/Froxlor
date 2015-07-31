@@ -17,7 +17,9 @@
  *
  */
 
-class apache {
+require_once(dirname(__FILE__).'/../classes/class.HttpConfigBase.php');
+
+class apache extends HttpConfigBase {
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
@@ -42,7 +44,6 @@ class apache {
 		$this->logger = $logger;
 		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
-
 	}
 
 
@@ -315,7 +316,12 @@ class apache {
 				 */
 
 				if ($row_ipsandports['specialsettings'] != '') {
-					$this->virtualhosts_data[$vhosts_filename] .= $row_ipsandports['specialsettings'] . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate(
+							$row_ipsandports['specialsettings'],
+							$domain,
+							$row_ipsandports['ip'],
+							$row_ipsandports['port'],
+							$row_ipsandports['ssl'] == '1') . "\n";
 				}
 
 				if ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
@@ -664,7 +670,6 @@ class apache {
 		return $vhost_filename;
 	}
 
-
 	/**
 	 * We compose the virtualhost entry for one domain
 	 */
@@ -719,7 +724,12 @@ class apache {
 			}
 
 			if ($ipandport['default_vhostconf_domain'] != '') {
-				$_vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
+				$_vhost_content .= $this->processSpecialConfigTemplate(
+										$ipandport['default_vhostconf_domain'],
+										$domain,
+										$domain['ip'],
+										$domain['port'],
+										$ssl_vhost) . "\n";
 			}
 			$ipportlist .= $ipport;
 		}
@@ -828,7 +838,12 @@ class apache {
 			$vhost_content .= $this->getLogfiles($domain);
 
 			if ($domain['specialsettings'] != '') {
-				$vhost_content .= $domain['specialsettings'] . "\n";
+				$vhost_content .= $this->processSpecialConfigTemplate(
+						$domain['specialsettings'],
+						$domain,
+						$domain['ip'],
+						$domain['port'],
+						$ssl_vhost) . "\n";
 			}
 
 			if ($_vhost_content != '') {
@@ -836,7 +851,12 @@ class apache {
 			}
 
 			if (Settings::Get('system.default_vhostconf') != '') {
-				$vhost_content .= Settings::Get('system.default_vhostconf') . "\n";
+				$vhost_content .= $this->processSpecialConfigTemplate(
+						Settings::Get('system.default_vhostconf'),
+						$domain,
+						$domain['ip'],
+						$domain['port'],
+						$ssl_vhost) . "\n";
 			}
 		}
 
