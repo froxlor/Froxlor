@@ -52,7 +52,7 @@ class phpinterface_fcgid {
 		$starter_file.= "# starter created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $this->_domain['domain'] . "' with id #" . $this->_domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
 		$starter_file.= "# Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
 		$starter_file.= "#\n\n";
-		$starter_file.= "umask 022\n";
+		$starter_file.= "umask ".$phpconfig['mod_fcgid_umask']."\n";
 		$starter_file.= "PHPRC=" . escapeshellarg($this->getConfigDir()) . "\n";
 		$starter_file.= "export PHPRC\n";
 
