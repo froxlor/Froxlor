@@ -53,7 +53,7 @@ if ($page == 'overview') {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
 				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
-					$row['path'] = substr($row['path'], strlen($userinfo['documentroot']));
+					$row['path'] = substr($row['path'], strlen($userinfo['documentroot']) - 1);
 				}
 
 				$row = htmlentities_array($row);
@@ -86,7 +86,7 @@ if ($page == 'overview') {
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
-					$result['path'] = substr($result['path'], strlen($userinfo['documentroot']));
+					$result['path'] = substr($result['path'], strlen($userinfo['documentroot']) - 1);
 				}
 
 				ask_yesno('extras_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['username'] . ' (' . $result['path'] . ')');
@@ -302,11 +302,11 @@ if ($page == 'overview') {
 					AND `id`= :id"
 				);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-				$log->logAction(USR_ACTION, LOG_INFO, "deleted htaccess for '" . str_replace($userinfo['documentroot'], '', $result['path']) . "'");
+				$log->logAction(USR_ACTION, LOG_INFO, "deleted htaccess for '" . str_replace($userinfo['documentroot'], '/', $result['path']) . "'");
 				inserttask('1');
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
-				ask_yesno('extras_reallydelete_pathoptions', $filename, array('id' => $id, 'page' => $page, 'action' => $action), str_replace($userinfo['documentroot'], '', $result['path']));
+				ask_yesno('extras_reallydelete_pathoptions', $filename, array('id' => $id, 'page' => $page, 'action' => $action), str_replace($userinfo['documentroot'], '/', $result['path']));
 			}
 		}
 	} elseif ($action == 'add') {
@@ -438,7 +438,7 @@ if ($page == 'overview') {
 						"id" => $id
 					);
 					Database::pexecute($stmt, $params);
-					$log->logAction(USR_ACTION, LOG_INFO, "edited htaccess for '" . str_replace($userinfo['documentroot'], '', $result['path']) . "'");
+					$log->logAction(USR_ACTION, LOG_INFO, "edited htaccess for '" . str_replace($userinfo['documentroot'], '/', $result['path']) . "'");
 				}
 
 				redirectTo($filename, array('page' => $page, 's' => $s));
