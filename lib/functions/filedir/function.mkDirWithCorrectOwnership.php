@@ -56,6 +56,11 @@ function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeind
 			$within_homedir = false;
 		}
 
+		if(empty($subdir))
+		{
+			return $returncode;
+		}
+
 		$subdir = makeCorrectDir($subdir);
 		$subdirs = array();		
 
