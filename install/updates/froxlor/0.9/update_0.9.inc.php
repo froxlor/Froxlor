@@ -2905,7 +2905,15 @@ if (isFroxlorVersion('0.9.33')) {
 
 if (isFroxlorVersion('0.9.33.1')) {
 
-    showUpdateStep("Updating from 0.9.33.1 to 0.9.34-dev1", false);
+        showUpdateStep("Updating from 0.9.33.1 to 0.9.33.2");
+        lastStepStatus(0);
+        updateToVersion('0.9.33.2');
+
+}
+
+if (isFroxlorVersion('0.9.33.2')) {
+
+    showUpdateStep("Updating from 0.9.33.2 to 0.9.34-dev1", false);
 
     showUpdateStep("Updating table structure of domains");
     Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` MODIFY `parentdomainid` int(11) NOT NULL default '0'");
@@ -2975,4 +2983,16 @@ if (isFroxlorVersion('0.9.34-dev2')) {
     if ($do_update) {
         updateToVersion('0.9.34-dev3');
     }
+}
+
+
+if (isFroxlorVersion('0.9.34-dev3')) {
+
+    showUpdateStep("Updating from 0.9.34-dev3 to 0.9.34-dev4", false);
+
+    showUpdateStep("Adding field umask to phpconfig table");
+    Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `mod_fcgid_umask` varchar(15) NOT NULL DEFAULT '022' AFTER `mod_fcgid_maxrequests`");
+    lastStepStatus(0);
+
+    updateToVersion('0.9.34-dev4');
 }

@@ -283,6 +283,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	foreach ($integrity->available as $id => $check) {
 		$displayid = $id + 1;
 		$result = $integrity->$check();
+		$checkdesc = $lng['integrity_check'][$check];
 		eval("\$integritycheck.=\"" . getTemplate("settings/integritycheck_row") . "\";");
 	}
 	eval("echo \"" . getTemplate("settings/integritycheck") . "\";");

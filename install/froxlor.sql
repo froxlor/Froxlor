@@ -539,7 +539,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.34-dev3');
+	('panel', 'version', '0.9.34-dev4');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -713,6 +713,7 @@ CREATE TABLE `panel_phpconfigs` (
   `file_extensions` varchar(255) NOT NULL,
   `mod_fcgid_starter` int(4) NOT NULL DEFAULT '-1',
   `mod_fcgid_maxrequests` int(4) NOT NULL DEFAULT '-1',
+  `mod_fcgid_umask` varchar(15) NOT NULL DEFAULT '022',
   `fpm_slowlog` tinyint(1) NOT NULL default '0',
   `fpm_reqterm` varchar(15) NOT NULL default '60s',
   `fpm_reqslow` varchar(15) NOT NULL default '5s',
