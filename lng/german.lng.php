@@ -1575,7 +1575,10 @@ $lng['integrity_check']['DomainIpTable'] = 'IP &lt;&dash;&gt; Domain Verkn&uuml;
 $lng['integrity_check']['SubdomainSslRedirect'] = 'Falsches SSL-redirect Flag bei nicht-ssl Domains';
 $lng['integrity_check']['FroxlorLocalGroupMemberForFcgidPhpFpm'] = 'froxlor-Benutzer in Kunden Gruppen (f&uuml;r FCGID/php-fpm)';
 $lng['integrity_check']['WebserverGroupMemberForFcgidPhpFpm'] = 'Webserver-Benutzer in Kunden Gruppen (f&uuml;r FCGID/php-fpm)';
+$lng['admin']['specialsettings_replacements'] = "Die folgenden Variablen können verwendet werden:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code><br/>";
+$lng['serversettings']['default_vhostconf']['description'] = 'Der Inhalt dieses Feldes wird direkt in den IP/Port-vHost-Container übernommen. '.$lng['admin']['specialsettings_replacements'].'<br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
+$lng['serversettings']['default_vhostconf_domain']['description'] = 'Der Inhalt dieses Feldes wird direkt in jeden Domain-vHost-Container übernommen. '. $lng['admin']['specialsettings_replacements'].'<strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
+$lng['admin']['mod_fcgid_umask']['title'] = 'Umask (Standard: 022)';
 
 // Added in Froxlor 0.9.35
 $lng['serversettings']['customerdir_group_webserver'] = "<strong>Verwende Webserver-Gruppe für Kundenverzeichnisse</strong><br>Setzt den Eigentümer der Kundenverzeichnisse auf <code>user:webserver</code> (statt <code>user:user</code>)";
-

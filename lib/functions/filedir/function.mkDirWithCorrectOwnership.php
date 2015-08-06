@@ -47,7 +47,7 @@ function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeind
 
 		if(substr($dirToCreate, 0, strlen($homeDir)) == $homeDir)
 		{
-			$subdir = substr($dirToCreate, strlen($homeDir));
+			$subdir = substr($dirToCreate, strlen($homeDir) - 1);
 			$within_homedir = true;
 		}
 		else

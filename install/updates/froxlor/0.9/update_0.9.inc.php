@@ -2987,9 +2987,20 @@ if (isFroxlorVersion('0.9.34-dev2')) {
 
 if (isFroxlorVersion('0.9.34-dev3')) {
 
-    showUpdateStep("Updating from 0.9.34-dev3 to 0.9.34-dev4", false);
+	showUpdateStep("Updating from 0.9.34-dev3 to 0.9.34-dev4", false);
+
+	showUpdateStep("Adding field umask to phpconfig table");
+	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `mod_fcgid_umask` varchar(15) NOT NULL DEFAULT '022' AFTER `mod_fcgid_maxrequests`");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.34-dev4');
+}
+
+if (isFroxlorVersion('0.9.34-dev4')) {
+
+    showUpdateStep("Updating from 0.9.34-dev4 to 0.9.34-dev5", false);
 
     showUpdateStep("Adding new setting for customer dir group");
     Settings::AddNew('system.customerdir_group_webserver', '0');
-    updateToVersion('0.9.34-dev4');
+    updateToVersion('0.9.34-dev5');
 }
