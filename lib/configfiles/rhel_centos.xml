@@ -2120,7 +2120,7 @@ ControlsLog			/var/log/proftpd/controls.log
   TLSRSACertificateFile		/etc/pki/tls/certs/proftpd.pem
   TLSRSACertificateKeyFile	/etc/pki/tls/certs/proftpd.pem
   TLSCipherSuite		ALL:!ADH:!DES
-  TLSOptions			NoCertRequest
+  TLSOptions			NoCertRequest NoSessionReuseRequired
   TLSVerifyClient		off
   #TLSRenegotiate		ctrl 3600 data 512000 required off timeout 300
   TLSLog			/var/log/proftpd/tls.log

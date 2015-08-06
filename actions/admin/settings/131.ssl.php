@@ -37,7 +37,7 @@ return array(
 									'varname' => 'ssl_cipher_list',
 									'type' => 'string',
 									'string_emptyallowed' => false,
-									'default' => 'ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH',
+									'default' => 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128',
 									'save_method' => 'storeSettingField',
 							),
 							'system_ssl_cert_file' => array(

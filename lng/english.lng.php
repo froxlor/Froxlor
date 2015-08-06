@@ -1727,7 +1727,7 @@ $lng['domains']['serveraliasoption_www'] = 'WWW (www.domain.tld)';
 $lng['domains']['serveraliasoption_none'] = 'No alias';
 $lng['error']['givendirnotallowed'] = 'The given directory in field %s is not allowed.';
 $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Configure the allowed SSL ciphers';
-$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'This is a list of ciphers that you want (or don\'t want) to use when talking SSL. For a list of ciphers and how to include/exclude them, see sections "CIPHER LIST FORMAT" and "CIPHER STRINGS" on <a href="http://openssl.org/docs/apps/ciphers.html">the man-page for ciphers</a>.<br /><br /><b>Default value is:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
+$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'This is a list of ciphers that you want (or don\'t want) to use when talking SSL. For a list of ciphers and how to include/exclude them, see sections "CIPHER LIST FORMAT" and "CIPHER STRINGS" on <a href="http://openssl.org/docs/apps/ciphers.html">the man-page for ciphers</a>.<br /><br /><b>Default value is:</b><pre>ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128</pre>';
 
 // Added in Froxlor 0.9.31
 $lng['panel']['dashboard'] = 'Dashboard';
@@ -1843,4 +1843,12 @@ $lng['admin']['configfiles']['commands'] = '<span class="red">Commands:</span> T
 $lng['admin']['configfiles']['files'] = '<span class="red">Configfiles:</span> This is an example of the contents of a configuration file. The commands before these textfields should open an editor with the target file. Just copy and paste the contents into the editor and save the file.<br><br><span class="red">Please note:</span> The MySQL-password has not been replaced for security reasons. Please replace "MYSQL_PASSWORD" on your own. If you forgot your MySQL-password you\'ll find it in "lib/userdata.inc.php"';
 $lng['serversettings']['apache_itksupport']['title'] = 'Use modifications for Apache ITK-MPM';
 $lng['serversettings']['apache_itksupport']['description'] = '<strong class="red">ATTENTION:</strong> use only if you acutally have apache itk-mpm enabled<br />otherwise your webserver will not be able to start';
+$lng['integrity_check']['DatabaseCharset'] = 'Characterset of database (should be UTF-8)';
+$lng['integrity_check']['DomainIpTable'] = 'IP &lt;&dash;&gt; domain references';
+$lng['integrity_check']['SubdomainSslRedirect'] = 'False SSL-redirect flag for non-ssl domains';
+$lng['integrity_check']['FroxlorLocalGroupMemberForFcgidPhpFpm'] = 'froxlor-user in the customer groups (for FCGID/php-fpm)';
+$lng['integrity_check']['WebserverGroupMemberForFcgidPhpFpm'] = 'Webserver-user in the customer groups (for FCGID/php-fpm)';
+
+// Added in Froxlor 0.9.35
 $lng['serversettings']['customerdir_group_webserver'] = "<strong>Use webserver group for customer directory</strong><br>Sets <code>user:webserver</code> as owner for customer folders (instead of <code>user:user</code>)";
+
