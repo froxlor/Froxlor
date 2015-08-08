@@ -3154,6 +3154,7 @@ ALTER TABLE `panel_ticket_categories`
         ON UPDATE CASCADE ON DELETE CASCADE;
 
 ALTER TABLE `domain_redirect_codes`
+    ADD PRIMARY KEY `pk` (`rid`,`did`),
     ADD FOREIGN KEY `fk_redirect` (`rid`)
         REFERENCES redirect_codes(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
@@ -3174,6 +3175,12 @@ ALTER TABLE `panel_domaintoip`
     ADD FOREIGN KEY `fk_ipandport` (id_ipandports)
         REFERENCES panel_ipsandports(id)
         ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE `ftp_quotalimits`
+	ADD PRIMARY KEY `pk` (`name`, `quota_type`);
+
+ALTER TABLE `ftp_quotatallies`
+	ADD PRIMARY KEY `pk` (`name`, `quota_type`);
 
 COMMIT;
 

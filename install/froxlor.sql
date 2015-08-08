@@ -816,7 +816,8 @@ CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
   `bytes_xfer_avail` float NOT NULL,
   `files_in_avail` int(10) unsigned NOT NULL,
   `files_out_avail` int(10) unsigned NOT NULL,
-  `files_xfer_avail` int(10) unsigned NOT NULL
+  `files_xfer_avail` int(10) unsigned NOT NULL,
+  PRIMARY KEY `pk` (`name`, `quota_type`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
@@ -835,7 +836,8 @@ CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
   `bytes_xfer_used` float NOT NULL,
   `files_in_used` int(10) unsigned NOT NULL,
   `files_out_used` int(10) unsigned NOT NULL,
-  `files_xfer_used` int(10) unsigned NOT NULL
+  `files_xfer_used` int(10) unsigned NOT NULL,
+  PRIMARY KEY `pk` (`name`, `quota_type`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
@@ -864,7 +866,7 @@ DROP TABLE IF EXISTS `domain_redirect_codes`;
 CREATE TABLE IF NOT EXISTS `domain_redirect_codes` (
   `rid` int(5) NOT NULL,
   `did` int(11) unsigned NOT NULL,
-  UNIQUE KEY `rc` (`rid`, `did`),
+  PRIMARY KEY `rc` (`rid`, `did`),
   FOREIGN KEY `fk_redirect` (rid)
     REFERENCES redirect_codes(id)
     ON UPDATE CASCADE ON DELETE CASCADE,
