@@ -1,6 +1,6 @@
 		<tr>
 			<td>{$displayid}</td>
-			<td>{$check}</td>
+			<td>{$checkdesc}</td>
 			<td>
 				<if $result == '1'>
 					<span class="green">OK</span>

@@ -15,7 +15,9 @@
  *
  */
 
-class nginx {
+require_once(dirname(__FILE__).'/../classes/class.HttpConfigBase.php');
+
+class nginx extends HttpConfigBase {
 	private $logger = false;
 	private $debugHandler = false;
 	private $idnaConvert = false;
@@ -151,7 +153,7 @@ class nginx {
 					if ($row_ipsandports['ssl_ca_file'] == '') {
 						$row_ipsandports['ssl_ca_file'] = Settings::Get('system.ssl_ca_file');
 					}
-					if ($row_ipsandports['ssl_cert_file'] != '') {
+					if ($row_ipsandports['ssl_cert_file'] != '' && file_exists($row_ipsandports['ssl_cert_file'])) {
 						$ssl_vhost = true;
 					}
 				}
@@ -187,13 +189,21 @@ class nginx {
 				$this->nginx_data[$vhost_filename] .= "\t".'}'."\n";
 
 				if ($row_ipsandports['specialsettings'] != '') {
-					$this->nginx_data[$vhost_filename].= $row_ipsandports['specialsettings'] . "\n";
+					$this->nginx_data[$vhost_filename].= $this->processSpecialConfigTemplate(
+							$row_ipsandports['specialsettings'],
+							array('domain'=> Settings::Get('system.hostname'),
+								  'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
+								  'documentroot'=> $mypath),
+							$row_ipsandports['ip'],
+							$row_ipsandports['port'],
+							$row_ipsandports['ssl'] == '1'). "\n";
 				}
 
 				/**
 				 * SSL config options
 				 */
 				if ($row_ipsandports['ssl'] == '1') {
+				    $row_ipsandports['domain'] = Settings::Get('system.hostname');
 					$this->nginx_data[$vhost_filename].=$this->composeSslSettings($row_ipsandports);
 				}
 
@@ -289,14 +299,15 @@ class nginx {
 			&& ((int)$domain['ismainbutsubto'] == 0
 				|| domainMainToSubExists($domain['ismainbutsubto']) == false)
 		) {
-			$vhost_no = '22';
+			$vhost_no = '35';
 		} elseif ((int)$domain['parentdomainid'] == 0
 			&& isCustomerStdSubdomain((int)$domain['id']) == false
 			&& (int)$domain['ismainbutsubto'] > 0
 		) {
-			$vhost_no = '21';
+			$vhost_no = '30';
 		} else {
-			$vhost_no = '20';
+			// number of dots in a domain specifies it's position (and depth of subdomain) starting at 29 going downwards on higher depth
+			$vhost_no = (string)(30 - substr_count($domain['domain'], ".") + 1);
 		}
 
 		if ($ssl_vhost === true) {
@@ -363,7 +374,12 @@ class nginx {
 			}
 
 			if ($ipandport['default_vhostconf_domain'] != '') {
-				$_vhost_content .= $ipandport['default_vhostconf_domain'] . "\n";
+				$_vhost_content .= $this->processSpecialConfigTemplate(
+						$ipandport['default_vhostconf_domain'],
+						$domain,
+						$domain['ip'],
+						$domain['port'],
+						$ssl_vhost). "\n";
 			}
 
 			$vhost_content.= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ';' . "\n";
@@ -425,7 +441,13 @@ class nginx {
 				$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
 
 				if ($domain['specialsettings'] != "") {
-					$vhost_content = $this->mergeVhostCustom($vhost_content, $domain['specialsettings']);
+					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate(
+						$domain['specialsettings'],
+						$domain,
+						$domain['ip'],
+						$domain['port'],
+						$ssl_vhost
+					));
 				}
 
 				if ($_vhost_content != '') {
@@ -433,7 +455,13 @@ class nginx {
 				}
 
 				if (Settings::Get('system.default_vhostconf') != '') {
-					$vhost_content = $this->mergeVhostCustom($vhost_content, Settings::Get('system.default_vhostconf')."\n");
+					$vhost_content = $this->mergeVhostCustom($vhost_content,
+						$this->processSpecialConfigTemplate(
+							Settings::Get('system.default_vhostconf'),
+							$domain,
+							$domain['ip'],
+							$domain['port'],
+							$ssl_vhost)."\n");
 				}
 			}
 		}
@@ -530,20 +558,39 @@ class nginx {
 		}
 
 		if ($domain['ssl_cert_file'] != '') {
-			// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
-			//$sslsettings .= "\t" . 'ssl on;' . "\n";
-			$sslsettings .= "\t" . 'ssl_protocols TLSv1 TLSv1.1 TLSv1.2;' . "\n";
-			$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
-			$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
-			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain['ssl_cert_file']) . ';' . "\n";
-
-			if ($domain['ssl_key_file'] != '') {
-				$sslsettings .= "\t" . 'ssl_certificate_key ' .makeCorrectFile($domain['ssl_key_file']) . ';' .  "\n";
-			}
-
-			if ($domain['ssl_ca_file'] != '') {
-				$sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain['ssl_ca_file']) . ';' . "\n";
-			}
+		    
+		    // check for existence, #1485
+		    if (!file_exists($domain['ssl_cert_file'])) {
+		        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain['domain'] . ' :: certificate file "'.$domain['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
+		        echo $domain['domain'] . ' :: certificate file "'.$domain['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
+		    } else {
+    			// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
+    			//$sslsettings .= "\t" . 'ssl on;' . "\n";
+    			$sslsettings .= "\t" . 'ssl_protocols TLSv1 TLSv1.1 TLSv1.2;' . "\n";
+    			$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
+    			$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
+    			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain['ssl_cert_file']) . ';' . "\n";
+    
+    			if ($domain['ssl_key_file'] != '') {
+    			    // check for existence, #1485
+    			    if (!file_exists($row_ipsandports['ssl_key_file'])) {
+    			        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $ipport . ' :: certificate key file "'.$domain['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
+    			        echo $ipport . ' :: certificate key file "'.$domain['ssl_key_file'].'" does not exist! SSL-directives might not be working'."\n";
+    			    } else {
+    				    $sslsettings .= "\t" . 'ssl_certificate_key ' .makeCorrectFile($domain['ssl_key_file']) . ';' .  "\n";
+    			    }
+    			}
+    
+    			if ($domain['ssl_ca_file'] != '') {
+    			    // check for existence, #1485
+    			    if (!file_exists($row_ipsandports['ssl_ca_file'])) {
+    			        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain['domain'] . ' :: certificate CA file "'.$domain['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
+    			        echo $domain['domain'] . ' :: certificate CA file "'.$domain['ssl_ca_file'].'" does not exist! SSL-directives might not be working'."\n";
+    			    } else {
+    				    $sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain['ssl_ca_file']) . ';' . "\n";
+    			    }
+    			}
+		    }
 		}
 
 		return $sslsettings;

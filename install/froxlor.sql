@@ -551,7 +551,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mod_fcgid_defaultini_ownvhost', '2'),
 	('system', 'awstats_icons', '/usr/share/awstats/icon/'),
 	('system', 'ssl_cert_chainfile', ''),
-	('system', 'ssl_cipher_list', 'ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH'),
+	('system', 'ssl_cipher_list', 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128'),
 	('system', 'nginx_php_backend', '127.0.0.1:8888'),
 	('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock'),
 	('system', 'phpreload_command', ''),
@@ -604,7 +604,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.34-dev3');
+	('panel', 'version', '0.9.35-dev1');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -779,6 +779,24 @@ CREATE TABLE IF NOT EXISTS `panel_syslog` (
   `text` text NOT NULL,
   PRIMARY KEY  (`logid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+
+DROP TABLE IF EXISTS `panel_phpconfigs`;
+CREATE TABLE `panel_phpconfigs` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `description` varchar(50) NOT NULL,
+  `binary` varchar(255) NOT NULL,
+  `file_extensions` varchar(255) NOT NULL,
+  `mod_fcgid_starter` int(4) NOT NULL DEFAULT '-1',
+  `mod_fcgid_maxrequests` int(4) NOT NULL DEFAULT '-1',
+  `mod_fcgid_umask` varchar(15) NOT NULL DEFAULT '022',
+  `fpm_slowlog` tinyint(1) NOT NULL default '0',
+  `fpm_reqterm` varchar(15) NOT NULL default '60s',
+  `fpm_reqslow` varchar(15) NOT NULL default '5s',
+  `phpsettings` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
