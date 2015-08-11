@@ -938,7 +938,7 @@ if ($page == 'domains'
 				$subtodomains = makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
 				$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
-					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` IS NULL AND `d`.`ismainbutsubto` = 0 " . $standardsubdomains .
+					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` IS NULL AND `d`.`ismainbutsubto` IS NULL " . $standardsubdomains .
 					($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
 					AND `d`.`customerid`=`c`.`customerid` ORDER BY `loginname`, `domain` ASC
 				");

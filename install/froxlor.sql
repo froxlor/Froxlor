@@ -206,7 +206,7 @@ DROP TABLE IF EXISTS `panel_domains`;
 CREATE TABLE `panel_domains` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `domain` varchar(255) NOT NULL default '',
-  `adminid` int(11) unsigned NOT NULL default '0',
+  `adminid` int(11) unsigned default NULL,
   `customerid` int(11) unsigned NOT NULL default '0',
   `aliasdomain` int(11) unsigned NULL,
   `documentroot` varchar(255) NOT NULL default '',
@@ -222,7 +222,7 @@ CREATE TABLE `panel_domains` (
   `dkim_privkey` text,
   `dkim_pubkey` text,
   `wwwserveralias` tinyint(1) NOT NULL default '1',
-  `parentdomainid` int(11) unsigned NULL,
+  `parentdomainid` int(11) unsigned default NULL,
   `openbasedir` tinyint(1) NOT NULL default '0',
   `openbasedir_path` tinyint(1) NOT NULL default '0',
   `speciallogfile` tinyint(1) NOT NULL default '0',
@@ -235,7 +235,7 @@ CREATE TABLE `panel_domains` (
   `phpsettingid` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1',
   `mod_fcgid_starter` int(4) default '-1',
   `mod_fcgid_maxrequests` int(4) default '-1',
-  `ismainbutsubto` int(11) unsigned NOT NULL default '0',
+  `ismainbutsubto` int(11) unsigned default NULL,
   PRIMARY KEY  (`id`),
   KEY `domain` (`domain`),
   FOREIGN KEY `fk_admin` (adminid) 
@@ -245,6 +245,9 @@ CREATE TABLE `panel_domains` (
     REFERENCES panel_customers(customerid)
     ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY `fk_parent` (parentdomainid)
+    REFERENCES panel_domains(id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY `fk_mainsub` (ismainbutsubto)
     REFERENCES panel_domains(id)
     ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY `fk_alias` (aliasdomain)
@@ -735,7 +738,7 @@ INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
 DROP TABLE IF EXISTS `panel_tickets`;
 CREATE TABLE `panel_tickets` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `customerid` int(11) unsigned NOT NULL,
+  `customerid` int(11) unsigned NULL,
   `adminid` int(11) unsigned NOT NULL,
   `category` smallint(5) unsigned NOT NULL default '1',
   `priority` enum('1','2','3') NOT NULL default '3',
