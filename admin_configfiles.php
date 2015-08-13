@@ -115,6 +115,8 @@ if ($userinfo['change_serversettings'] == '1') {
         
         $configpage = '';
         
+        $distro_editor = $configfiles->distributionEditor;
+
         $commands_pre = "";
         $commands_file = "";
         $commands_post = "";
