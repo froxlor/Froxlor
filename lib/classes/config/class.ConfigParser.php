@@ -66,6 +66,12 @@ class ConfigParser {
 	public $distributionVersion = '';
 
 	/**
+	 * Recommended editor
+	 * @var string
+	 */
+	public $distributionEditor = '/bin/nano';
+
+	/**
 	 * Show if this configuration is deprecated
 	 * @var bool
 	 */
@@ -106,6 +112,7 @@ class ConfigParser {
 				case "name": $this->distributionName = (string)$value; break;
 				case "version": $this->distributionVersion = (string)$value; break;
 				case "codename": $this->distributionCodename = (string)$value; break;
+				case "defaulteditor": $this->distributionEditor = (string)$value; break;
 				case "deprecated": (string)$value == 'true' ? $this->deprecated = true : $this->deprecated = false; break;
 			}
 		}
