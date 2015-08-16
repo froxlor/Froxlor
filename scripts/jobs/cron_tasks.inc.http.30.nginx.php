@@ -536,58 +536,58 @@ class nginx extends HttpConfigBase {
 		return implode("\n", $vhost_frx);
 	}
 
-	protected function composeSslSettings($domain) {
+	protected function composeSslSettings($domain_or_ip) {
 
 		$sslsettings = '';
 
-		if ($domain['ssl_cert_file'] == '') {
-			$domain['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
+		if ($domain_or_ip['ssl_cert_file'] == '') {
+			$domain_or_ip['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 		}
 
-		if ($domain['ssl_key_file'] == '') {
-			$domain['ssl_key_file'] = Settings::Get('system.ssl_key_file');
+		if ($domain_or_ip['ssl_key_file'] == '') {
+			$domain_or_ip['ssl_key_file'] = Settings::Get('system.ssl_key_file');
 		}
 
-		if ($domain['ssl_ca_file'] == '') {
-			$domain['ssl_ca_file'] = Settings::Get('system.ssl_ca_file');
+		if ($domain_or_ip['ssl_ca_file'] == '') {
+			$domain_or_ip['ssl_ca_file'] = Settings::Get('system.ssl_ca_file');
 		}
 
 		// #418
-		if ($domain['ssl_cert_chainfile'] == '') {
-			$domain['ssl_cert_chainfile'] = Settings::Get('system.ssl_cert_chainfile');
+		if ($domain_or_ip['ssl_cert_chainfile'] == '') {
+			$domain_or_ip['ssl_cert_chainfile'] = Settings::Get('system.ssl_cert_chainfile');
 		}
 
-		if ($domain['ssl_cert_file'] != '') {
+		if ($domain_or_ip['ssl_cert_file'] != '') {
 		    
 		    // check for existence, #1485
-		    if (!file_exists($domain['ssl_cert_file'])) {
-		        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain['domain'] . ' :: certificate file "'.$domain['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
-		        echo $domain['domain'] . ' :: certificate file "'.$domain['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
+		    if (!file_exists($domain_or_ip['ssl_cert_file'])) {
+		        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
+		        echo $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
 		    } else {
     			// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
     			//$sslsettings .= "\t" . 'ssl on;' . "\n";
     			$sslsettings .= "\t" . 'ssl_protocols TLSv1 TLSv1.1 TLSv1.2;' . "\n";
     			$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
     			$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
-    			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain['ssl_cert_file']) . ';' . "\n";
+    			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
     
-    			if ($domain['ssl_key_file'] != '') {
+    			if ($domain_or_ip['ssl_key_file'] != '') {
     			    // check for existence, #1485
-    			    if (!file_exists($row_ipsandports['ssl_key_file'])) {
-    			        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $ipport . ' :: certificate key file "'.$domain['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
-    			        echo $ipport . ' :: certificate key file "'.$domain['ssl_key_file'].'" does not exist! SSL-directives might not be working'."\n";
+    			    if (!file_exists($domain_or_ip['ssl_key_file'])) {
+    			        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain_or_ip['domain'] . ' :: certificate key file "'.$domain_or_ip['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
+    			        echo $domain_or_ip['domain'] . ' :: certificate key file "'.$domain_or_ip['ssl_key_file'].'" does not exist! SSL-directives might not be working'."\n";
     			    } else {
-    				    $sslsettings .= "\t" . 'ssl_certificate_key ' .makeCorrectFile($domain['ssl_key_file']) . ';' .  "\n";
+    				    $sslsettings .= "\t" . 'ssl_certificate_key ' .makeCorrectFile($domain_or_ip['ssl_key_file']) . ';' .  "\n";
     			    }
     			}
     
-    			if ($domain['ssl_ca_file'] != '') {
+    			if ($domain_or_ip['ssl_ca_file'] != '') {
     			    // check for existence, #1485
-    			    if (!file_exists($row_ipsandports['ssl_ca_file'])) {
-    			        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain['domain'] . ' :: certificate CA file "'.$domain['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
-    			        echo $domain['domain'] . ' :: certificate CA file "'.$domain['ssl_ca_file'].'" does not exist! SSL-directives might not be working'."\n";
+    			    if (!file_exists($domain_or_ip['ssl_ca_file'])) {
+    			        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain_or_ip['domain'] . ' :: certificate CA file "'.$domain_or_ip['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
+    			        echo $domain_or_ip['domain'] . ' :: certificate CA file "'.$domain_or_ip['ssl_ca_file'].'" does not exist! SSL-directives might not be working'."\n";
     			    } else {
-    				    $sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain['ssl_ca_file']) . ';' . "\n";
+    				    $sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain_or_ip['ssl_ca_file']) . ';' . "\n";
     			    }
     			}
 		    }
