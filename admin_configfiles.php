@@ -115,6 +115,8 @@ if ($userinfo['change_serversettings'] == '1') {
         
         $configpage = '';
         
+        $distro_editor = $configfiles->distributionEditor;
+
         $commands_pre = "";
         $commands_file = "";
         $commands_post = "";
@@ -140,7 +142,7 @@ if ($userinfo['change_serversettings'] == '1') {
                     break;
                 case "file":
                     if (array_key_exists('content', $action)) {
-                        $commands_file = getFileContentContainer($action['content'], $replace_arr, $action['name']);
+                        $commands_file = getFileContentContainer($action['content'], $replace_arr, $action['name'], $distro_editor);
                     } elseif (array_key_exists('subcommands', $action)) {
                         foreach ($action['subcommands'] as $fileaction) {
                             if (array_key_exists('execute', $fileaction) && $fileaction['execute'] == "pre") {
@@ -148,7 +150,7 @@ if ($userinfo['change_serversettings'] == '1') {
                             } elseif (array_key_exists('execute', $fileaction) && $fileaction['execute'] == "post") {
                                 $commands_post .= $fileaction['content'] . "\n";
                             } elseif ($fileaction['type'] == 'file') {
-                                $commands_file = getFileContentContainer($fileaction['content'], $replace_arr, $action['name']);
+                                $commands_file = getFileContentContainer($fileaction['content'], $replace_arr, $action['name'], $distro_editor);
                             }
                         }
                     }
@@ -185,7 +187,7 @@ if ($userinfo['change_serversettings'] == '1') {
 }
 
 // helper functions
-function getFileContentContainer($file_content, &$replace_arr, $realname)
+function getFileContentContainer($file_content, &$replace_arr, $realname, $distro_editor)
 {
     $files = "";
     $file_content = trim($file_content);

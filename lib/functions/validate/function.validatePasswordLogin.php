@@ -32,6 +32,8 @@
  */
 function validatePasswordLogin($userinfo = null, $password = null, $table = 'panel_customers', $uid = 'customerid') {
 
+	global $version;
+
 	$systype = 3; // SHA256
 	if (Settings::Get('system.passwordcryptfunc') !== null) {
 		$systype = (int)Settings::Get('system.passwordcryptfunc');
@@ -62,8 +64,9 @@ function validatePasswordLogin($userinfo = null, $password = null, $table = 'pan
 
 	if ($pwd_hash == $pwd_check) {
 
-		// check for update of hash
-		if ($update_hash) {
+		// check for update of hash (only if our database is ready to handle the bigger string)
+		$is_ready = (version_compare2("0.9.33", $version) <= 0 ? true : false);
+		if ($update_hash && $is_ready) {
 			$upd_stmt = Database::prepare("
 				UPDATE " . $table . " SET `password` = :newpasswd WHERE `" . $uid . "` = :uid
 			");

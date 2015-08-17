@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
-	<distribution name="Debian" codename="Jessie" version="8.x">
+	<distribution name="Debian" codename="Jessie" version="8.x" defaulteditor="/usr/bin/nano">
 		<services>
 			<!-- HTTP -->
 			<service type="http" title="{{lng.admin.configfiles.http}}">
