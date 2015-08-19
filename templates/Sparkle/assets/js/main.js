@@ -53,13 +53,13 @@ $(document).ready(function() {
 	$("input[name$='_ul']").each(function() {
 		var fieldname = $(this).attr("name").substring(0, $(this).attr("name").length - 3);
 		$("input[name='" + fieldname + "']").prop({
-			disabled: $(this).is(":checked")
+			readonly: $(this).is(":checked")
 		});
 	});
 	$("input[name$='_ul']").change(function() {
 		var fieldname = $(this).attr("name").substring(0, $(this).attr("name").length - 3);
 		$("input[name='" + fieldname + "']").prop({
-			disabled: $(this).is(":checked")
+			readonly: $(this).is(":checked")
 		}).focus();
 	});
 	// Enable autoselect in configfules

@@ -573,7 +573,7 @@ input {
 	border-radius:3px;
 }
 
-input[disabled] {
+input[disabled], input[readonly] {
 	cursor: not-allowed;
 	background-color: #eee;
 }
