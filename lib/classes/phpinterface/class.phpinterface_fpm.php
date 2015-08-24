@@ -83,6 +83,7 @@ class phpinterface_fpm {
 				'error_log',
 				'gpc_order',
 				'max_input_time',
+				'max_input_vars',
 				'memory_limit',
 				'open_basedir',
 				'output_buffering',
