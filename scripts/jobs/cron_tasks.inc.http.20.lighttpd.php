@@ -420,9 +420,11 @@ class lighttpd extends HttpConfigBase {
 			$vhost_content.= '  )' . "\n";
 
 		} else {
-
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
-
+			if (Settings::Get('system.customerdir_group_webserver') == '1') {
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], Settings::Get('system.httpgroup'), true, true, true);
+			} else {
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
+			}
 			$only_webroot = false;
 			if ($ssl_vhost === false
 				&& $domain['ssl_redirect'] == '1'

@@ -820,8 +820,11 @@ class apache extends HttpConfigBase {
 			$vhost_content .= '  Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
 
 		} else {
-
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
+			if (Settings::Get('system.customerdir_group_webserver') == '1') {
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], Settings::Get('system.httpgroup'), true, true, true);
+			} else {
+				mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true, true);
+			}
 			$vhost_content .= $this->getWebroot($domain);
 			if ($this->_deactivated == false) {
 				$vhost_content .= $this->composePhpOptions($domain,$ssl_vhost);

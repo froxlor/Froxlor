@@ -35,7 +35,7 @@
  * @author Martin Burchert <martin.burchert@syscp.org>
  */
 
-function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeindex = false, $allow_notwithinhomedir = false)
+function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeindex = false, $allow_notwithinhomedir = false, $setgid = false)
 {
 	$returncode = true;
 
@@ -96,7 +96,10 @@ function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeind
 					}
 				}
 
-				safe_exec('chown -R ' . (int)$uid . ':' . (int)$gid . ' ' . escapeshellarg($sdir));
+				safe_exec('chown -R ' . (int)$uid . ':' . $gid . ' ' . escapeshellarg($sdir));
+				if ($setgid) {
+					safe_exec('chmod g+s ' . escapeshellarg($sdir));
+				}
 			}
 		}
 	}

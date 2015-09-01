@@ -63,8 +63,16 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
-					)
-				)
+					),
+                'system_customerdir_group_webserver' => array(
+                    'label' => $lng['serversettings']['customerdir_group_webserver'],
+                    'settinggroup' => 'system',
+                    'varname' => 'customerdir_group_webserver',
+                    'type' => 'bool',
+                    'default' => false,
+                    'save_method' => 'storeSettingField',
+                ),
+            )
 			)
 		)
 	);

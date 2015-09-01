@@ -1852,3 +1852,6 @@ $lng['admin']['specialsettings_replacements'] = "You can use the following varia
 $lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into this ip/port vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['serversettings']['default_vhostconf_domain']['description'] = 'The content of this field will be included into the domain vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (default: 022)';
+
+// Added in Froxlor 0.9.35
+$lng['serversettings']['customerdir_group_webserver'] = "<strong>Use webserver group for customer directory</strong><br>Sets <code>user:webserver</code> as owner for customer folders (instead of <code>user:user</code>)";
