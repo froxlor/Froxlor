@@ -1,5 +1,0 @@
-user = <SQL_UNPRIVILEGED_USER>
-password = <SQL_UNPRIVILEGED_PASSWORD>
-dbname = <SQL_DB> 
-hosts = <SQL_HOST> 
-query = SELECT destination FROM mail_virtual WHERE email = '%s' AND TRIM(destination) <> ''

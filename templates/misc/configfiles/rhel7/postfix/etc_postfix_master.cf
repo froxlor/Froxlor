@@ -1,3 +1,0 @@
-
-# added for Froxlor
-dovecot			unix	-	n	n	-	-	pipe flags=DRhu user=vmail:mail argv=/usr/libexec/dovecot/deliver -f ${sender} -d ${recipient}
