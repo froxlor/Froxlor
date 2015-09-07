@@ -239,6 +239,16 @@ fastcgi_param  REDIRECT_STATUS    200;
 						</visibility>
 						<content><![CDATA[
 #!/bin/bash
+### BEGIN INIT INFO
+# Provides:          php-fcgi
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: php-fcgi initscript
+# Description:       Custom php-fcgi initscript for Froxlor    
+### END INIT INFO
+
 BIND="127.0.0.1:8888"
 USER="www-data"
 PHP_FCGI_CHILDREN="15"

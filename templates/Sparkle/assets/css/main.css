@@ -573,7 +573,7 @@ input {
 	border-radius:3px;
 }
 
-input[disabled] {
+input[disabled], input[readonly] {
 	cursor: not-allowed;
 	background-color: #eee;
 }
@@ -587,7 +587,7 @@ textarea {
 	border-radius:3px;
 }
 
-input[type="text"],input[type="password"] {
+input[type="text"],input[type="password"],input[type="text"] {
 	width:400px;
 	margin-top: 5px;
 }
