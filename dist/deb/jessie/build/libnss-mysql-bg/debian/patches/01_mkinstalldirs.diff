@@ -1,0 +1,20 @@
+From: <elacour@home-dn.net>
+Subject: Fix bad mkinstalldirs call
+
+--- ./Makefile.am
++++ ./Makefile.am
+@@ -27,12 +27,12 @@ EXTRA_DIST = FAQ UPGRADING DEBUGGING libnss-mysql.spec src/*.sym \
+ 
+ install-data-hook:
+ 	@if test ! -f ${DESTDIR}${sysconfdir}/libnss-mysql.cfg; then \
+-		${srcdir}/aux/mkinstalldirs ${DESTDIR}${sysconfdir}; \
++		$(mkinstalldirs) ${DESTDIR}${sysconfdir}; \
+ 		${INSTALL_DATA} ${srcdir}/sample/@OS@/libnss-mysql.cfg \
+ 			${DESTDIR}${sysconfdir}/libnss-mysql.cfg; \
+ 	fi
+ 	@if test ! -f ${DESTDIR}${sysconfdir}/libnss-mysql-root.cfg; then \
+-		${srcdir}/aux/mkinstalldirs ${DESTDIR}${sysconfdir}; \
++		$(mkinstalldirs) ${DESTDIR}${sysconfdir}; \
+ 		${INSTALL_DATA} -m 600 ${srcdir}/sample/@OS@/libnss-mysql-root.cfg \
+ 			${DESTDIR}${sysconfdir}/libnss-mysql-root.cfg; \
+ 	fi

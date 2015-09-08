@@ -1,0 +1,72 @@
+libnss-mysql-bg (1.5-3) unstable; urgency=low
+
+  * Add patch from Harald Weidner to follow the Debian policy in the way shadow
+    passwords are handled (make use of group shadow) (closes: #641404)
+  * Remove deprecated dpatch and upgrade to packaging format "3.0 quilt"
+    (closes: #664438)
+  * Update to Standards-Version to 3.9.3 and debhelper to 9.
+  * Use mysql_config to find mysql libdir when libmysqlclient is multi-arch
+    (closes: #649938)
+  * Lintian cleanup (ancient-autotools-helper-file,
+    debhelper-but-no-misc-depends, package-name-doesnt-match-sonames,
+    spelling-error-in-description)
+
+ -- Emmanuel Lacour <elacour@home-dn.net>  Wed, 18 Apr 2012 11:49:33 +0200
+
+libnss-mysql-bg (1.5-2) unstable; urgency=low
+
+  * debian/rules: add binary-indep target (closes: #395712)
+  * debian/control: update Standards-Version
+  * debian/compat, debian/control: update debhelper compat
+  * debian/patchs/02_autotools.dpatch: update libtool/autoconf/aclocal files
+    (closes: #542076)
+
+ -- Emmanuel Lacour <elacour@home-dn.net>  Wed, 19 Aug 2009 09:58:05 +0200
+
+libnss-mysql-bg (1.5-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/control: built with libmysqlclient15-dev (closes: #343773)
+  * debian/control: typo (closes: #300017)
+
+ -- Emmanuel Lacour <elacour@home-dn.net>  Sun, 12 Feb 2006 21:03:46 +0100
+
+libnss-mysql-bg (1.3-2) unstable; urgency=high
+
+  * debian/control: built with libmysqlclient12-dev.
+    (for libmysqlclient10 -> libmysqlclient12 transition)
+  * debian/control: move "Section" from "Package" to "Source" section.
+
+ -- Emmanuel Lacour <elacour@home-dn.net>  Sun,  6 Mar 2005 19:49:59 +0100
+
+libnss-mysql-bg (1.3-1) unstable; urgency=low
+
+  * New upstream release 
+
+ -- Emmanuel Lacour <elacour@home-dn.net>  Mon, 22 Nov 2004 19:35:00 +0100
+
+libnss-mysql-bg (1.2-3) unstable; urgency=low
+
+  * Built with libmysqlclient10-dev. closes: #274492 
+
+ -- Emmanuel Lacour <elacour@home-dn.net>  Sun,  3 Oct 2004 22:55:43 +0200
+
+libnss-mysql-bg (1.2-2) unstable; urgency=low
+
+  * debian/control: fix Standards-Version and description
+  * debian/rules: cleanup config.log on in "clean" target
+
+ -- Emmanuel Lacour <elacour@home-dn.net>  Sun, 29 Aug 2004 11:44:28 +0200
+
+libnss-mysql-bg (1.2-1) unstable; urgency=low
+
+  * New upstream release 
+
+ -- Emmanuel Lacour <elacour@home-dn.net>  Sat, 28 Aug 2004 18:51:16 +0200
+
+libnss-mysql-bg (1.0-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Emmanuel Lacour <elacour@home-dn.net>  Sun, 21 Sep 2003 15:35:49 +0200
+

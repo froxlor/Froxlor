@@ -1,0 +1,38 @@
+From: <hweidner@gmx.net>
+Subject: Add check for egid to properly works like "shadow" enabled authentications
+
+--- libnss-mysql-bg-1.5/src/lookup.c       2011-09-13 09:28:30.000000000 +0200
++++ libnss-mysql-bg-1.5/src/lookup.c    2011-09-13 09:47:16.000000000 +0200
+@@ -21,6 +21,8 @@
+ #include "nss_mysql.h"
+ #include <stdio.h>      /* snprintf () */
+ #include <string.h>     /* strcpy () */
++#include <sys/types.h>
++#include <grp.h>
+
+ extern conf_t conf;
+
+@@ -131,12 +133,22 @@
+   int attempts = MAX_QUERY_ATTEMPTS;    /* Attempt # (countdown) */
+   static uid_t euid = -1;               /* Last known euid for change detect */
+   uid_t cur_euid;                       /* CURRENT euid */
++  gid_t cur_egid;                      /* CURRENT egid */
++  gid_t shadow_gid;                    /* gid for group shadow (usually 42 on Debian) */
+
+   DENTER
+
+   cur_euid = geteuid ();
++
++  /* Get shadow gid, if needed */
++  if(cur_euid != 0) {
++    cur_egid = getegid ();
++    struct group *grp = getgrnam("shadow");
++    shadow_gid = (grp ? grp->gr_gid : -1);
++  }
++
+   D ("%s: restricted = %d, cur_euid = %u", FUNCNAME, restricted, cur_euid);
+-  if (restricted == ntrue && cur_euid != 0)
++  if (restricted == ntrue && cur_euid != 0 && (shadow_gid == -1 || cur_egid != shadow_gid))
+     DSRETURN (NSS_NOTFOUND)
+
+    /* Make sure euid hasn't changed, thus changing our access abilities */

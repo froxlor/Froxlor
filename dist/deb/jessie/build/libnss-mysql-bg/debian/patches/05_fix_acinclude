@@ -1,0 +1,27 @@
+From: <elacour@home-dn.net>
+Subject: Use mysql_config to find mysql multi-arch libs
+
+Index: libnss-mysql-bg-1.5/acinclude.m4
+===================================================================
+--- libnss-mysql-bg-1.5.orig/acinclude.m4	2012-04-18 10:20:01.205313859 +0200
++++ libnss-mysql-bg-1.5/acinclude.m4	2012-04-18 11:18:19.681344131 +0200
+@@ -80,6 +80,19 @@
+     fi
+ done
+ 
++dnl Get dir from mysql_config (for multi-arch libs)
++MYSQL_CONFIG=`which mysql_config`
++if test -n "$MYSQL_CONFIG" -a -x "$MYSQL_CONFIG"
++then
++    MYSQL_LIB_DIR=`$MYSQL_CONFIG --variable=pkglibdir`
++dnl Old versions of mysql_config does not have "--variable" option
++    if test $? -ne 0
++    then
++        MYSQL_LIB_DIR=`mysql_config --libs | sed 's/^.*-L\([[^ ]]\+\).*$/\1/'`
++    fi
++fi
++
++
+ if test -n "$MYSQL_LIB_DIR"
+ then
+     AC_MSG_RESULT([$MYSQL_LIB_DIR])

@@ -1,0 +1,23 @@
+Source: libnss-mysql-bg
+Section: admin
+Priority: optional
+Maintainer: Froxlor Release Team <release@froxlor.org>
+Build-Depends: debhelper (>= 9), libmysqlclient-dev, quilt (>= 0.40), autotools-dev, dh-autoreconf
+Standards-Version: 3.9.3
+
+Package: libnss-mysql-bg
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: mysql-server, libpam-mysql
+Conflicts: libnss-mysql
+Description: NSS module for using MySQL as a naming service
+ libnss-mysql-bg provides a Name Service Switch module that allows MySQL
+ to act as a name service.
+ .
+ Its configuration is very flexible by allowing to set an SQL query per NSS
+ call (getpwnam, getpwuid, ...). You would use it instead of the other
+ "libnss-mysql" package for building an NSS over an existing database (used for
+ another purpose like groupware, ...).
+ .
+ It currently supports storage of passwd, group and shadow information.
