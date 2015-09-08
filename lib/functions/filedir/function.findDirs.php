@@ -36,27 +36,38 @@ function findDirs($path, $uid, $gid) {
 
 	// valid directory?
 	if (is_dir($path)) {
-		try {
-			// create RecursiveIteratorIterator
-			$its = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
-			// we can limit the recursion-depth, but will it be helpful or
-			// will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
-			// let's keep this in mind and see whether it will be useful
-			// @TODO
-			// $its->setMaxDepth(2);
+		// create RecursiveIteratorIterator
+		$its = new RecursiveIteratorIterator(new IgnorantRecursiveDirectoryIterator($path));
+		// we can limit the recursion-depth, but will it be helpful or
+		// will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
+		// let's keep this in mind and see whether it will be useful
+		// @TODO
+		// $its->setMaxDepth(2);
 
-			// check every file
-			foreach ($its as $fullFileName => $it) {
-				if ($it->isDir() && (fileowner($fullFileName) == $uid || filegroup($fullFileName) == $gid)) {
-					$_fileList[] = makeCorrectDir(dirname($fullFileName));
-				}
+		// check every file
+		foreach ($its as $fullFileName => $it) {
+			if ($it->isDir() && (fileowner($fullFileName) == $uid || filegroup($fullFileName) == $gid)) {
+				$_fileList[] = makeCorrectDir(dirname($fullFileName));
 			}
-		} catch (UnexpectedValueException $e) {
-			// this is thrown if the directory is not found or not readble etc.
-			// just ignore and keep going
 		}
 	}
 
 	return array_unique($_fileList);
 
 }
+
+/**
+* If you use RecursiveDirectoryIterator with RecursiveIteratorIterator and run
+* into UnexpectedValueException you may use this little hack to ignore those
+* directories, such as lost+found on linux.
+* (User "antennen" @ http://php.net/manual/en/class.recursivedirectoryiterator.php#101654)
+**/
+class IgnorantRecursiveDirectoryIterator extends RecursiveDirectoryIterator {
+    function getChildren() {
+        try {
+            return new IgnorantRecursiveDirectoryIterator($this->getPathname());
+        } catch(UnexpectedValueException $e) {
+            return new RecursiveArrayIterator(array());
+        }
+    }
+}.
