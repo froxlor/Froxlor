@@ -297,7 +297,12 @@ class ConfigDaemon {
 		// @TODO: Maybe have a backup - location somewhere central?
 		// @TODO: Use IO - class
 		if (array_key_exists('backup', $attributes)) {
-			$return[] = array('type' => 'command', 'content' => 'mv "' . $this->_parseContent($attributes['name']) . '" "' . $this->_parseContent($attributes['name']) . '.frx.bak"', 'execute' => "pre");
+		    if (array_key_exists('mode', $attributes) && $attributes['mode'] == 'append') {
+		        $cmd = 'cp';
+		    } else {
+		        $cmd = 'mv';
+		    }
+		    $return[] = array('type' => 'command', 'content' => $cmd.' "' . $this->_parseContent($attributes['name']) . '" "' . $this->_parseContent($attributes['name']) . '.frx.bak"', 'execute' => "pre");
 		}
 
 		// Now the content of the file can be written
