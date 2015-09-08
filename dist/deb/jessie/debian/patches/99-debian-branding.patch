@@ -5,4 +5,4 @@
  
  // Distribution branding-tag (used for Debian etc.)
 -$branding = '';
-+$branding = '-1+wheezy1';
++$branding = '-1';

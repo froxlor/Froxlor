@@ -1,8 +1,8 @@
-froxlor (0.9.34-1+wheezy1) oldstable; urgency=low
+froxlor (0.9.34-1) stable; urgency=low
 
   * new upstream release
 
- -- Froxlor Release Team <release@froxlor.org>  Tue, 08 Sep 2015 08:09:27 +0200
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 08 Sep 2015 08:43:12 +0200
 
 froxlor (0.9.33.2-1) oldstable; urgency=low
 
@@ -319,3 +319,4 @@ froxlor (0.9-1) unstable; urgency=low
   * Initial release
 
  -- Froxlor Release Team <release@froxlor.org>  Mon, 01 Feb 2010 13:18:05 +0100
+
