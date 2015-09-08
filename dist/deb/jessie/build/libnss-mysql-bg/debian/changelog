@@ -1,3 +1,14 @@
+libnss-mysql-bg (1.5-3+frx1) stable; urgency=medium
+
+  * merge from sid
+  * d/control
+    - Use ${misc:Pre-Depends} instead of hardcoding
+      multiarch-support.
+    - s/libmysqlclient15-dev/libmysqlclient-dev/ to fix
+      FTBFS (Closes: #790453)
+
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 08 Sep 2015 10:42:37 +0200
+
 libnss-mysql-bg (1.5-3) unstable; urgency=low
 
   * Add patch from Harald Weidner to follow the Debian policy in the way shadow
