@@ -311,7 +311,7 @@ exit "$RETVAL"
 					<command><![CDATA[echo "include \"{{settings.system.bindconf_directory}}froxlor_bind.conf\";" >> /etc/bind/named.conf]]></command>
 					<command><![CDATA[touch {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[chown root:bind {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
-					<command><![CDATA[chmod 0600 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
+					<command><![CDATA[chmod 0644 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[/etc/init.d/bind9 restart]]></command>
 				</daemon>
 				<daemon name="powerdns" title="PowerDNS via bind-backend">

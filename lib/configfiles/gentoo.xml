@@ -345,7 +345,7 @@ mail	IN		A	<SERVERIP>
 					<command><![CDATA[echo "include \"{{settings.system.bindconf_directory}}froxlor_bind.conf\";" >> /etc/bind/named.conf]]></command>
 					<command><![CDATA[touch {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[chown named:0 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
-					<command><![CDATA[chmod 0600 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
+					<command><![CDATA[chmod 0644 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[rc-update add named default]]></command>
 					<command><![CDATA[/etc/init.d/named restart]]></command>
 				</daemon>
