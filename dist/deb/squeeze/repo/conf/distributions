@@ -1,8 +1,0 @@
-Origin: froxlor.org
-Label: Froxlor
-Suite: oldoldstable
-Codename: squeeze
-Architectures: amd64 armel i386
-Components: main
-Description: Froxlor repository
-SignWith: release@froxlor.org

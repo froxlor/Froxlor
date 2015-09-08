@@ -1,8 +1,0 @@
-froxlor (0.9.33.2-1+squeeze1) oldoldstable; urgency=low
-
-  this will be the last release in the oldstable suite
-  squeeze support will be terminated after 0.9.33
-  users are advised to upgrade to wheezy if they
-  wish to receive support and package updates beyond 0.9.33
-
- -- Froxlor Release Team <release@froxlor.org>  Thu, 30 Jul 2015 01:30:06 +0200
