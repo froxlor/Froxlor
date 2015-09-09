@@ -30,11 +30,11 @@ function validateUsername($username, $unix_names = 1, $mysql_max = '') {
 
 	if ($unix_names == 0) {
 		if (strpos($username, '--') === false) {
-			return (preg_match('/^[a-z][a-z0-9\-_]{1,' . (int)($mysql_max - 1) . '}[a-z0-9]{1}$/Di', $username) != false);
+			return (preg_match('/^[a-z][a-z0-9\-_]{0,' . (int)($mysql_max - 1) . '}[a-z0-9]{1}$/Di', $username) != false);
 		} else {
 			return false;
 		}
 	} else {
-		return (preg_match('/^[a-z][a-z0-9]{1,' . $mysql_max . '}$/Di', $username) != false);
+		return (preg_match('/^[a-z][a-z0-9]{0,' . $mysql_max . '}$/Di', $username) != false);
 	}
 }
