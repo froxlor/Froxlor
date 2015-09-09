@@ -70,4 +70,4 @@ class IgnorantRecursiveDirectoryIterator extends RecursiveDirectoryIterator {
             return new RecursiveArrayIterator(array());
         }
     }
-}.
+}
