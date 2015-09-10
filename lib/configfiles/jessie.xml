@@ -342,7 +342,7 @@ exit "$RETVAL"
 					<install><![CDATA[apt-get install bind9]]></install>
 					<command><![CDATA[echo "include \"{{settings.system.bindconf_directory}}froxlor_bind.conf\";" >> /etc/bind/named.conf.local]]></command>
 					<command><![CDATA[touch {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
-					<command><![CDATA[chown 0:bind {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
+					<command><![CDATA[chown bind:0 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[chmod 0644 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[/etc/init.d/bind9 restart]]></command>
 				</daemon>
@@ -914,11 +914,11 @@ bind-check-interval=180
 						<command><![CDATA[mkdir -p /var/spool/postfix/var/run/mysqld]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.vmail_homedir}}]]></command>
 						<command><![CDATA[chown -R {{settings.system.vmail_uid}}:{{settings.system.vmail_gid}} {{settings.system.vmail_homedir}}]]></command>
-						<command><![CDATA[chmod 0755  {{settings.system.vmail_homedir}}]]></command>
+						<command><![CDATA[chmod 0750  {{settings.system.vmail_homedir}}]]></command>
 					</commands>
 					<files index="0">
 						<file name="/etc/postfix/mysql-virtual_alias_maps.cf" chown="root:postfix"
-							chmod="0644">
+							chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -929,7 +929,7 @@ query = SELECT destination FROM mail_virtual WHERE email = '%s' AND trim(destina
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_mailbox_domains.cf"
-							chown="root:postfix" chmod="0644">
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -940,7 +940,7 @@ query = SELECT domain FROM panel_domains WHERE domain = '%s' AND isemaildomain =
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_mailbox_maps.cf"
-							chown="root:postfix" chmod="0644">
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -952,7 +952,7 @@ query = SELECT CONCAT(homedir,maildir) FROM mail_users WHERE email = '%s'
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_sender_permissions.cf"
-							chown="root:postfix" chmod="0644">
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -963,7 +963,7 @@ query = SELECT DISTINCT username FROM mail_users WHERE email in ((SELECT mail_vi
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_uid_maps.cf" chown="root:postfix"
-							chmod="0644">
+							chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -975,7 +975,7 @@ query = SELECT uid FROM mail_users WHERE email = '%s'
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_gid_maps.cf" chown="root:postfix"
-							chmod="0644">
+							chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -3847,7 +3847,7 @@ UPLOADGID=
 			<service type="system" title="{{lng.admin.configfiles.etc}}">
 				<!-- Cronjob -->
 				<daemon name="cron" title="Cronjob for froxlor" mandatory="true">
-					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0644">
+					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0640">
 						<content><![CDATA[
 #
 # Set PATH, otherwise restart-scripts won't find start-stop-daemon
