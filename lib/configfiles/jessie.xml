@@ -342,7 +342,7 @@ exit "$RETVAL"
 					<install><![CDATA[apt-get install bind9]]></install>
 					<command><![CDATA[echo "include \"{{settings.system.bindconf_directory}}froxlor_bind.conf\";" >> /etc/bind/named.conf.local]]></command>
 					<command><![CDATA[touch {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
-					<command><![CDATA[chown bind:0 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
+					<command><![CDATA[chown 0:bind {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[chmod 0644 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[/etc/init.d/bind9 restart]]></command>
 				</daemon>
@@ -914,11 +914,11 @@ bind-check-interval=180
 						<command><![CDATA[mkdir -p /var/spool/postfix/var/run/mysqld]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.vmail_homedir}}]]></command>
 						<command><![CDATA[chown -R {{settings.system.vmail_uid}}:{{settings.system.vmail_gid}} {{settings.system.vmail_homedir}}]]></command>
-						<command><![CDATA[chmod 0750  {{settings.system.vmail_homedir}}]]></command>
+						<command><![CDATA[chmod 0755  {{settings.system.vmail_homedir}}]]></command>
 					</commands>
 					<files index="0">
 						<file name="/etc/postfix/mysql-virtual_alias_maps.cf" chown="root:postfix"
-							chmod="0640">
+							chmod="0644">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -929,7 +929,7 @@ query = SELECT destination FROM mail_virtual WHERE email = '%s' AND trim(destina
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_mailbox_domains.cf"
-							chown="root:postfix" chmod="0640">
+							chown="root:postfix" chmod="0644">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -940,7 +940,7 @@ query = SELECT domain FROM panel_domains WHERE domain = '%s' AND isemaildomain =
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_mailbox_maps.cf"
-							chown="root:postfix" chmod="0640">
+							chown="root:postfix" chmod="0644">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -952,7 +952,7 @@ query = SELECT CONCAT(homedir,maildir) FROM mail_users WHERE email = '%s'
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_sender_permissions.cf"
-							chown="root:postfix" chmod="0640">
+							chown="root:postfix" chmod="0644">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -963,7 +963,7 @@ query = SELECT DISTINCT username FROM mail_users WHERE email in ((SELECT mail_vi
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_uid_maps.cf" chown="root:postfix"
-							chmod="0640">
+							chmod="0644">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -975,7 +975,7 @@ query = SELECT uid FROM mail_users WHERE email = '%s'
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_gid_maps.cf" chown="root:postfix"
-							chmod="0640">
+							chmod="0644">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -1655,40 +1655,40 @@ debugger_command =
 # sendmail_path: The full pathname of the Postfix sendmail command.
 # This is the Sendmail-compatible mail posting interface.
 # 
-sendmail_path =
+sendmail_path = /usr/sbin/sendmail
 
 # newaliases_path: The full pathname of the Postfix newaliases command.
 # This is the Sendmail-compatible command to build alias databases.
 #
-newaliases_path =
+newaliases_path = /usr/bin/newaliases
 
 # mailq_path: The full pathname of the Postfix mailq command.  This
 # is the Sendmail-compatible mail queue listing command.
 # 
-mailq_path =
+mailq_path = /usr/bin/mailq
 
 # setgid_group: The group for mail submission and queue management
 # commands.  This must be a group name with a numerical group ID that
 # is not shared with other accounts, not even with the Postfix account.
 #
-setgid_group =
+setgid_group = postdrop
 
 # html_directory: The location of the Postfix HTML documentation.
 #
-html_directory =
+html_directory = no
 
 # manpage_directory: The location of the Postfix on-line manual pages.
 #
-manpage_directory =
+manpage_directory = /usr/share/man
 
 # sample_directory: The location of the Postfix sample configuration files.
 # This parameter is obsolete as of Postfix 2.1.
 #
-sample_directory =
+sample_directory = /usr/share/doc/postfix
 
 # readme_directory: The location of the Postfix README files.
 #
-readme_directory =
+readme_directory = /usr/share/doc/postfix
 inet_protocols = ipv4
 
 append_dot_mydomain = no
@@ -1904,7 +1904,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 					</installs>
 					<files index="1">
 						<file name="/etc/dovecot/dovecot.conf" chown="root:root"
-							chmod="0640" backup="true">
+							chmod="0644" backup="true">
 							<content><![CDATA[
 ## Dovecot configuration file
 
@@ -2161,7 +2161,7 @@ password_query = SELECT username AS user, password_enc AS password, CONCAT(homed
 							</content>
 						</file>
 						<file name="/etc/dovecot/conf.d/10-auth.conf" chown="root:0"
-							chmod="0640" backup="true">
+							chmod="0644" backup="true">
 							<content><![CDATA[
 ##
 ## Authentication processes
@@ -2295,7 +2295,7 @@ auth_mechanisms = plain login
 							</content>
 						</file>
 						<file name="/etc/dovecot/conf.d/10-mail.conf" chown="root:0"
-							chmod="0640" backup="true">
+							chmod="0644" backup="true">
 							<content><![CDATA[
 ##
 ## Mailbox locations and namespaces
@@ -2672,7 +2672,7 @@ mail_access_groups = vmail
 							</content>
 						</file>
 						<file name="/etc/dovecot/conf.d/10-master.conf" chown="root:0"
-							chmod="0640" backup="true">
+							chmod="0644" backup="true">
 							<content><![CDATA[
 #default_process_limit = 100
 #default_client_limit = 1000
@@ -2806,7 +2806,7 @@ service dict {
 							</content>
 						</file>
 						<file name="/etc/dovecot/conf.d/15-lda.conf" chown="root:0"
-							chmod="0640" backup="true">
+							chmod="0644" backup="true">
 							<content><![CDATA[
 ##
 ## LDA specific settings (also used by LMTP)
@@ -2860,7 +2860,7 @@ protocol lda {
 							</content>
 						</file>
 						<file name="/etc/dovecot/conf.d/20-imap.conf" chown="root:0"
-							chmod="0640" backup="true">
+							chmod="0644" backup="true">
 							<content><![CDATA[
 ##
 ## IMAP specific settings
@@ -2927,7 +2927,7 @@ protocol imap {
 							</content>
 						</file>
 						<file name="/etc/dovecot/conf.d/20-managesieve.conf" chown="root:0"
-							chmod="0640" backup="true">
+							chmod="0644" backup="true">
 							<content><![CDATA[
 ##
 ## ManageSieve specific settings
@@ -3009,7 +3009,7 @@ protocol sieve {
 							</content>
 						</file>
 						<file name="/etc/dovecot/conf.d/20-pop3.conf" chown="root:0"
-							chmod="0640" backup="true">
+							chmod="0644" backup="true">
 							<content><![CDATA[
 ##
 ## POP3 specific settings
@@ -3113,7 +3113,7 @@ protocol pop3 {
 							</content>
 						</file>
 						<file name="/etc/dovecot/conf.d/90-sieve.conf" chown="root:0"
-							chmod="0640" backup="true">
+							chmod="0644" backup="true">
 							<content><![CDATA[
 ##
 ## Settings for the Sieve interpreter
@@ -3663,7 +3663,7 @@ no
 						</content>
 					</file>
 					<file name="/etc/pure-ftpd/db/mysql.conf" chown="root:0"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ##############################################
 #                                            #
@@ -3847,7 +3847,7 @@ UPLOADGID=
 			<service type="system" title="{{lng.admin.configfiles.etc}}">
 				<!-- Cronjob -->
 				<daemon name="cron" title="Cronjob for froxlor" mandatory="true">
-					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0640">
+					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0644">
 						<content><![CDATA[
 #
 # Set PATH, otherwise restart-scripts won't find start-stop-daemon
