@@ -299,6 +299,20 @@ class apache extends HttpConfigBase {
 						$this->virtualhosts_data[$vhosts_filename] .= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . $srvName . "\n";
 					}
 				}
+                else
+                {
+                    // mod_php
+                    $domain = array(
+                        'id' => 'none',
+                        'domain' => Settings::Get('system.hostname'),
+                        'adminid' => 1, /* first admin-user (superadmin) */
+                        'guid' => Settings::Get('system.httpuser'),
+                        'openbasedir' => 0,
+                        'email' => Settings::Get('panel.adminmail'),
+                        'loginname' => 'froxlor.panel',
+                        'documentroot' => $mypath
+                    );
+                }
 
 				/**
 				 * dirprotection, see #72
