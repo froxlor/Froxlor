@@ -788,7 +788,18 @@ class nginx extends HttpConfigBase {
 
 				$returnval[$x]['path'] = $path;
 				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
-				$returnval[$x]['authname'] = $row_htpasswds['authname'];
+
+				// Ensure there is only one auth name per password block, otherwise
+				// the directives are inserted multiple times -> invalid config
+				$authname = $row_htpasswds['authname'];
+				for ($i = 0; $i < $x; $i++) {
+					if ($returnval[$i]['usrf'] == $htpasswd_filename) {
+						$authname = $returnval[$i]['authname'];
+						break;
+					}
+				}
+				$returnval[$x]['authname'] = $authname;
+
 				$returnval[$x]['usrf'] = $htpasswd_filename;
 				$x++;
 			}
