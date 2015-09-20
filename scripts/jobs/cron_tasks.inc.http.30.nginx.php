@@ -427,7 +427,7 @@ class nginx extends HttpConfigBase {
 			if (substr($uri, -1) == '/') {
 				$uri = substr($uri, 0, -1);
 			}
-			$vhost_content .= "\t".'rewrite ^(.*) '.$uri.'$1 permanent;'."\n";
+			$vhost_content .= "\t".'return 301 '.$uri.'$request_uri;'."\n";
 		} else {
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 
