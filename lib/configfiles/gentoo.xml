@@ -3116,16 +3116,19 @@ getpwnam    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
             WHERE username='%1$s' \
             AND login_enabled = 'Y' \
+            ORDER BY LENGTH(username) \
             LIMIT 1
 getpwuid    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
             WHERE uid='%1$u' \
             AND login_enabled = 'Y' \
+            ORDER BY LENGTH(username) \
             LIMIT 1
 getspnam    SELECT username,password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999','7','-1','-1','0' \
             FROM ftp_users \
             WHERE username='%1$s' \
             AND login_enabled = 'Y' \
+            ORDER BY LENGTH(username) \
             LIMIT 1
 getpwent    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users
