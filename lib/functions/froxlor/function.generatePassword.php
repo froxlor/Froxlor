@@ -17,39 +17,42 @@
 
 /**
  * Generates a random password
+ *
+ * @param boolean $isSalt
+ *            optional, create a hash for a salt used in makeCryptPassword because crypt() does not like some special characters in its salts, default is false
  */
-function generatePassword()
+function generatePassword($isSalt = false)
 {
     $alpha_lower = 'abcdefghijklmnopqrstuvwxyz';
     $alpha_upper = strtoupper($alpha_lower);
     $numeric = '0123456789';
     $special = Settings::Get('panel.password_special_char');
     $length = Settings::Get('panel.password_min_length') > 3 ? Settings::Get('panel.password_min_length') : 10;
-
+    
     $pw = special_shuffle($alpha_lower);
     $n = floor(($length) / 4);
-
+    
     if (Settings::Get('panel.password_alpha_upper')) {
         $pw .= mb_substr(special_shuffle($alpha_upper), 0, $n);
     }
-
+    
     if (Settings::Get('panel.password_numeric')) {
         $pw .= mb_substr(special_shuffle($numeric), 0, $n);
     }
-
-    if (Settings::Get('panel.password_special_char_required')) {
+    
+    if (Settings::Get('panel.password_special_char_required') && !$isSalt) {
         $pw .= mb_substr(special_shuffle($special), 0, $n);
     }
-
+    
     $pw = mb_substr($pw, - $length);
-
+    
     return special_shuffle($pw);
 }
 
 /**
  * multibyte-character safe shuffle function
  *
- * @param string $str
+ * @param string $str            
  *
  * @return string
  */

@@ -43,25 +43,25 @@ function makeCryptPassword ($password) {
 			$cryptPassword = crypt($password);
 			break;
 		case 1:
-			$cryptPassword = crypt($password, '$1$' . generatePassword().  generatePassword());
+			$cryptPassword = crypt($password, '$1$' . generatePassword(true).  generatePassword(true));
 			break;
 		case 2:
 			if (version_compare(phpversion(), '5.3.7', '<')) {
-				$cryptPassword = crypt($password, '$2a$' . generatePassword().  generatePassword());
+				$cryptPassword = crypt($password, '$2a$' . generatePassword(true).  generatePassword(true));
 			} else {
 				// Blowfish hashing with a salt as follows: "$2a$", "$2x$" or "$2y$",
 				// a two digit cost parameter, "$", and 22 characters from the alphabet "./0-9A-Za-z"
 				$cryptPassword = crypt(
 					$password,
-					'$2y$07$' . substr(generatePassword().generatePassword().generatePassword(), 0, 22)
+					'$2y$07$' . substr(generatePassword(true).generatePassword(true).generatePassword(true), 0, 22)
 				);
 			}
 			break;
 		case 3:
-			$cryptPassword = crypt($password, '$5$' . generatePassword().  generatePassword());
+			$cryptPassword = crypt($password, '$5$' . generatePassword(true).  generatePassword(true));
 			break;
 		case 4:
-			$cryptPassword = crypt($password, '$6$' . generatePassword().  generatePassword());
+			$cryptPassword = crypt($password, '$6$' . generatePassword(true).  generatePassword(true));
 			break;
 		default:
 			$cryptPassword = crypt($password);
