@@ -32,7 +32,7 @@ require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.35.nginx_
 fwrite($debugHandler, '  cron_tasks: Searching for tasks to do' . "\n");
 $cronlog->logAction(CRON_ACTION, LOG_INFO, "Searching for tasks to do");
 $result_tasks_stmt = Database::query("
-	SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` ORDER BY `id` ASC
+	SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` <> '99' ORDER BY `id` ASC
 ");
 $num_results = Database::num_rows();
 $resultIDs = array();
