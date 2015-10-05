@@ -17,6 +17,9 @@
  *
  */
 
+// check for cron.d-generation task and create it if necessary
+checkCrondConfigurationFile();
+
 if (Settings::Get('logger.log_cron') == '1') {
 	$cronlog->setCronLog(0);
 	fwrite($debugHandler, 'Logging for cron has been shutdown' . "\n");

@@ -219,6 +219,3 @@ $cronscriptDebug = (Settings::Get('system.debug_cron') == '1') ? true : false;
 
 // Create a new idna converter
 $idna_convert = new idna_convert_wrapper();
-
-// check for cron.d-generation task and create it if necessary
-checkCrondConfigurationFile();
