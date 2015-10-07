@@ -918,7 +918,7 @@ bind-check-interval=180
 					</commands>
 					<files index="0">
 						<file name="/etc/postfix/mysql-virtual_alias_maps.cf" chown="root:postfix"
-							chmod="0644">
+							chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -929,7 +929,7 @@ query = SELECT destination FROM mail_virtual WHERE email = '%s' AND trim(destina
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_mailbox_domains.cf"
-							chown="root:postfix" chmod="0644">
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -940,7 +940,7 @@ query = SELECT domain FROM panel_domains WHERE domain = '%s' AND isemaildomain =
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_mailbox_maps.cf"
-							chown="root:postfix" chmod="0644">
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -952,7 +952,7 @@ query = SELECT CONCAT(homedir,maildir) FROM mail_users WHERE email = '%s'
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_sender_permissions.cf"
-							chown="root:postfix" chmod="0644">
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -963,7 +963,7 @@ query = SELECT DISTINCT username FROM mail_users WHERE email in ((SELECT mail_vi
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_uid_maps.cf" chown="root:postfix"
-							chmod="0644">
+							chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -975,7 +975,7 @@ query = SELECT uid FROM mail_users WHERE email = '%s'
 							</content>
 						</file>
 						<file name="/etc/postfix/mysql-virtual_gid_maps.cf" chown="root:postfix"
-							chmod="0644">
+							chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -2012,7 +2012,7 @@ dict {
 							</content>
 						</file>
 						<file name="/etc/dovecot/dovecot-sql.conf.ext" chown="root:root"
-							chmod="0644" backup="true">
+							chmod="0600" backup="true">
 							<content><![CDATA[
 # This file is commonly accessed via passdb {} or userdb {} section in
 # conf.d/auth-sql.conf.ext
@@ -3253,7 +3253,7 @@ plugin {
 				<!-- Proftpd -->
 				<daemon name="proftpd" title="ProFTPd" default="true">
 					<install><![CDATA[apt-get install proftpd-basic proftpd-mod-mysql]]></install>
-					<file name="/etc/proftpd/proftpd.conf" chown="root:0" chmod="0644"
+					<file name="/etc/proftpd/proftpd.conf" chown="root:0" chmod="0600"
 						backup="true">
 						<content><![CDATA[
 #
@@ -3550,7 +3550,7 @@ LoadModule mod_ifsession.c
 ]]>
 						</content>
 					</file>
-					<file name="/etc/proftpd/sql.conf" chown="root:0" chmod="0644"
+					<file name="/etc/proftpd/sql.conf" chown="root:0" chmod="0600"
 						backup="true">
 						<content><![CDATA[
 #
@@ -3847,7 +3847,7 @@ UPLOADGID=
 			<service type="system" title="{{lng.admin.configfiles.etc}}">
 				<!-- Cronjob -->
 				<daemon name="cron" title="Cronjob for froxlor" mandatory="true">
-					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0644">
+					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0640">
 						<content><![CDATA[
 #
 # Set PATH, otherwise restart-scripts won't find start-stop-daemon
@@ -3880,7 +3880,7 @@ wget http://ftp.us.debian.org/debian/pool/main/libn/libnss-mysql-bg/libnss-mysql
 dpkg -i libnss-mysql-bg_1.5-4_`dpkg --print-architecture`.deb
 rm libnss-mysql-bg_1.5-4_`dpkg --print-architecture`.deb
 ]]></install>
-					<file name="/etc/libnss-mysql.cfg" chown="root:root" chmod="0644"
+					<file name="/etc/libnss-mysql.cfg" chown="root:root" chmod="0600"
 						backup="true">
 						<content><![CDATA[
 getpwnam    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
@@ -3939,7 +3939,7 @@ port        3306
 						<command><![CDATA[sed -i.bak 's|^\\(socket\\).*$|\\1\\"{{sql.socket}}\\"|' /etc/libnss-mysql.cfg]]></command>
 					</commands>
 					<file name="/etc/libnss-mysql-root.cfg" chown="root:root"
-						chmod="0644" backup="true">
+						chmod="0600" backup="true">
 						<content><![CDATA[
 username	<SQL_UNPRIVILEGED_USER>
 password	<SQL_UNPRIVILEGED_PASSWORD>
