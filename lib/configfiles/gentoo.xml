@@ -38,7 +38,7 @@
 						<command>
 							<visibility mode="notempty">{{settings.system.deactivateddocroot}}
 							</visibility>
-							<content><![CDATA['mkdir -p {{settings.system.deactivateddocroot}}]]></content>
+							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
 					</commands>
 				</general>
@@ -3256,7 +3256,7 @@ aliases:     files
 						<command>
 							<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 							</visibility>
-							<content><![CDATA[a2dismod php5]]></content>
+							<content><![CDATA[# remove "-D PHP5" from /etc/conf.d/apache2]]></content>
 						</command>
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the 
@@ -3280,7 +3280,7 @@ aliases:     files
 					<commands index="2">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
-						<command><![CDATA[a2enmod suexec fastcgi]]></command>
+						<command><![CDATA[# add "-D FASTCGI -D SUEXEC" to /etc/conf.d/apache2]]></command>
 					</commands>
 					<commands index="3">
 						<visibility mode="true">{{settings.phpfpm.enabled_ownvhost}}
@@ -3295,7 +3295,7 @@ aliases:     files
 						</visibility>
 						<visibility mode="true">{{settings.phpfpm.enabled_ownvhost}}
 						</visibility>
-						<command><![CDATA[a2dismod php5]]></command>
+						<command><![CDATA[# remove "-D PHP5" from /etc/conf.d/apache2]]></command>
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
