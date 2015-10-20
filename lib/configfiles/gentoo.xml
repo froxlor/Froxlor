@@ -1010,7 +1010,7 @@ root:               root@<SERVERNAME>
 				</general>
 				<!-- postfix with dovecot -->
 				<daemon name="postfix_dovecot" version="2.x"
-					title="Postfix 2 with dovecot" default="true">
+					title="Postfix 2 with dovecot">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>
 					<command><![CDATA[echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use]]></command>
@@ -1158,7 +1158,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 				</daemon>
 				<!-- postfix with dovecot -->
 				<daemon name="postfix_dovecot" version="3.x"
-					title="Postfix 3 with dovecot">
+					title="Postfix 3 with dovecot" default="true">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>
 					<command><![CDATA[echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use]]></command>
