@@ -855,7 +855,11 @@ if ($page == 'customers'
 						} else {
 							$local_user = Settings::Get('phpfpm.vhost_httpuser');
 						}
-						$ins_data['members'] .= ','.$local_user;
+						// check froxlor-local user membership in ftp-group
+						// without this check addition may duplicate user in list if httpuser == local_user
+						if (strpos($ins_data['members'], $local_user) !== false) {
+							$ins_data['members'] .= ','.$local_user;
+						}
 					}
 
 					Database::pexecute($ins_stmt, $ins_data);
