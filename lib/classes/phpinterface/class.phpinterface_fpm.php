@@ -58,6 +58,7 @@ class phpinterface_fpm {
 				'upload_max_filesize',
 				'xmlrpc_error_number',
 				'session.auto_start',
+				'always_populate_raw_post_data'
 			),
 			'php_flag' => array(
 				'asp_tags',
