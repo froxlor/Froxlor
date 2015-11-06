@@ -511,7 +511,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mailtraffic_enabled', '1'),
 	('system', 'cronconfig', '/etc/cron.d/froxlor'),
 	('system', 'crondreload', '/etc/init.d/cron reload'),
-	('system', 'croncmdline', '/usr/bin/nice -n 5 /usr/bin/php5 -q'),
+	('system', 'croncmdline', '/usr/bin/nice -n 5 /usr/bin/php -q'),
 	('system', 'cron_allowautoupdate', '0'),
 	('system', 'dns_createhostnameentry', '0'),
 	('system', 'send_cron_errors', '0'),
