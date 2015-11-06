@@ -470,7 +470,7 @@ class FroxlorInstall {
 			$this->_updateSetting($upd_stmt, '/etc/nginx/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
 			$this->_updateSetting($upd_stmt, '/etc/init.d/nginx reload', 'system', 'apachereload_command');
 			$this->_updateSetting($upd_stmt, '/etc/nginx/nginx.pem', 'system', 'ssl_cert_file');
-			$this->_updateSetting($upd_stmt, '/var/run/nginx/', 'phpfpm', 'fastcgi_ipcdir');
+			$this->_updateSetting($upd_stmt, '/var/run/', 'phpfpm', 'fastcgi_ipcdir');
 		}
 		
 		$this->_updateSetting($upd_stmt, dirname(dirname(dirname(__FILE__))), 'system', 'letsencryptchallengepath');
