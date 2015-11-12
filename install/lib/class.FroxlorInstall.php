@@ -454,7 +454,9 @@ class FroxlorInstall {
 		$this->_updateSetting($upd_stmt, $this->_data['httpgroup'], 'system', 'httpgroup');
 
 		// necessary changes for webservers != apache2
-		if ($this->_data['webserver'] == "lighttpd") {
+		if ($this->_data['webserver'] == "apache24") {
+		    $this->_updateSetting($upd_stmt, '1', 'system', 'apache24');
+		} elseif ($this->_data['webserver'] == "lighttpd") {
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/conf-enabled/', 'system', 'apacheconf_vhost');
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/froxlor-diroptions/', 'system', 'apacheconf_diroptions');
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
@@ -766,6 +768,7 @@ class FroxlorInstall {
 		}
 		// apache
 		$formdata .= $this->_getSectionItemCheckbox('apache2', ($this->_data['webserver'] == 'apache2'), $websrvstyle);
+		$formdata .= $this->_getSectionItemCheckbox('apache24', ($this->_data['webserver'] == 'apache24'), $websrvstyle);
 		// lighttpd
 		$formdata .= $this->_getSectionItemCheckbox('lighttpd', ($this->_data['webserver'] == 'lighttpd'), $websrvstyle);
 		// nginx

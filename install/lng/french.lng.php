@@ -61,6 +61,7 @@ $lng['install']['servername'] = 'Nom du serveur (FQDN, pas d\'adresse IP)';
 $lng['install']['serverip'] = 'Adresse IP du serveur';
 $lng['install']['webserver'] = 'Serveur Web';
 $lng['install']['apache2'] = 'Apache 2';
+$lng['install']['apache24'] = 'Apache 2.4';
 $lng['install']['lighttpd'] = 'LigHTTPd';
 $lng['install']['nginx'] = 'NGINX';
 $lng['install']['httpuser'] = 'Nom d\'utilisateur HTTP';
