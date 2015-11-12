@@ -785,6 +785,10 @@ select[multiple="multiple"] {
 	background-color:#dd514c;
 }
 
+.progress-warn .bar {
+	background-color:#e6b64e;
+}
+
 .maintable {
 	width:90%;
 }

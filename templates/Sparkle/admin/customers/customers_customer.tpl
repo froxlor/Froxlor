@@ -30,9 +30,15 @@
 							<div class="bar" aria-valuenow="{$disk_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 						</div>
 					<else>
-						<div class="progress tipper" title="{$row['diskspace_used']} MiB {$lng['panel']['used']}, {$row['diskspace']} MiB {$lng['panel']['assigned']}">
-							<div class="bar" aria-valuenow="{$disk_percent}" aria-valuemin="0" aria-valuemax="100"></div>
-						</div>
+						<if (($row['diskspace']/100)*((int)Settings::Get('system.report_webmax') - 15)) < $row['diskspace_used']>
+							<div class="progress progress-warn tipper" title="{$row['diskspace_used']} MiB {$lng['panel']['used']}, {$row['diskspace']} MiB {$lng['panel']['assigned']}">
+								<div class="bar" aria-valuenow="{$disk_percent}" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+						<else>
+							<div class="progress tipper" title="{$row['diskspace_used']} MiB {$lng['panel']['used']}, {$row['diskspace']} MiB {$lng['panel']['assigned']}">
+								<div class="bar" aria-valuenow="{$disk_percent}" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+						</if>
 					</if>
 				<else>
 					<div class="progress">∞
@@ -48,9 +54,15 @@
 							<div class="bar" aria-valuenow="{$traffic_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 						</div>
 					<else>
-						<div class="progress tipper" title="{$row['traffic_used']} GiB {$lng['panel']['used']}, {$row['traffic']} GiB {$lng['panel']['assigned']}">
-							<div class="bar" aria-valuenow="{$traffic_percent}" aria-valuemin="0" aria-valuemax="100"></div>
-						</div>
+						<if (($row['traffic']/100)*((int)Settings::Get('system.report_trafficmax') - 15)) < $row['traffic_used']>
+							<div class="progress progress-warn tipper" title="{$row['traffic_used']} GiB {$lng['panel']['used']}, {$row['traffic']} GiB {$lng['panel']['assigned']}">
+								<div class="bar" aria-valuenow="{$traffic_percent}" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+						<else>
+							<div class="progress tipper" title="{$row['traffic_used']} GiB {$lng['panel']['used']}, {$row['traffic']} GiB {$lng['panel']['assigned']}">
+								<div class="bar" aria-valuenow="{$traffic_percent}" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+						</if>
 					</if>
 				<else>
 					<div class="progress">∞
