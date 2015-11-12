@@ -739,7 +739,7 @@ sql_select: SELECT password FROM mail_users WHERE username='%u@%r' OR email='%u@
 				<!-- Dovecot -->
 				<daemon name="dovecot" version="2" title="Dovecot" default="true">
 					<install><![CDATA[apt-get install dovecot-imapd dovecot-pop3d dovecot-mysql mail-stack-delivery]]></install>
-					<file name="/etc/dovecot/conf.d/01-mail-stack-delivery.conf"
+					<file name="/etc/dovecot/conf.d/99-mail-stack-delivery.conf"
 						chown="root:root" chmod="0644" backup="true">
 						<content><![CDATA[
 # Some general options
