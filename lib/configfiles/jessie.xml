@@ -3789,7 +3789,7 @@ MySQLGetQTASZ  SELECT panel_customers.diskspace/1024 AS QuotaSize FROM panel_cus
 
 # If you're using a transactionnal storage engine, you can enable SQL
 # transactions to avoid races. Leave this commented if you are using the
-# traditionnal MyIsam engine.
+# traditional MyIsam engine.
 
 # MySQLTransactions On
 ]]>
@@ -4022,7 +4022,7 @@ aliases:     files
 					<commands index="1">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
-						<command><![CDATA[# add "non-free" after all occurances of "main" in /etc/apt/sources.list]]></command>
+						<command><![CDATA[# add "non-free" after all occurrences of "main" in /etc/apt/sources.list]]></command>
 						<command><![CDATA[# this is needed for libapache2-mod-fastcgi to install]]></command>
 					</commands>
 					<install>

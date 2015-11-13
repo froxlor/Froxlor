@@ -201,10 +201,10 @@ if (Settings::Get('panel.version') == null
 		 */
 		$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Automatic update is activated and we are going to proceed without any notices');
 		$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'all new settings etc. will be stored with the default value, that might not always be right for your system!');
-		$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'If you dont want this to happen in the future consider removing the --allow-autoupdate flag from the cronjob');
+		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "If you don't want this to happen in the future consider removing the --allow-autoupdate flag from the cronjob");
 		fwrite($debugHandler, '*** WARNING *** - Automatic update is activated and we are going to proceed without any notices' . "\n");
 		fwrite($debugHandler, '*** WARNING *** - all new settings etc. will be stored with the default value, that might not always be right for your system!' . "\n");
-		fwrite($debugHandler, '*** WARNING *** - If you dont want this to happen in the future consider removing the --allow-autoupdate flag from the cronjob' . "\n");
+		fwrite($debugHandler, "*** WARNING *** - If you don't want this to happen in the future consider removing the --allow-autoupdate flag from the cronjob\n");
 		// including update procedures
 		include_once FROXLOR_INSTALL_DIR.'/install/updatesql.php';
 		// pew - everything went better than expected

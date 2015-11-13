@@ -119,7 +119,7 @@ if ($action == 'login') {
 			redirectTo('index.php', array('showmessage' => '3'));
 			exit;
 		} elseif (validatePasswordLogin($userinfo, $password, $table, $uid)) {
-		    // only show "you're banned" if the login was successfull
+		    // only show "you're banned" if the login was successful
 		    // because we don't want to publish that the user does exist
 		    if ($userinfo['deactivated']) {
 		        unset($userinfo);
