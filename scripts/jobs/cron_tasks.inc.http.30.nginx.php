@@ -419,6 +419,14 @@ class nginx extends HttpConfigBase {
 			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
 		}
 
+		// create ssl settings first since they are required for normal and redirect vhosts
+		if ($ssl_vhost === true
+			&& $domain['ssl'] == '1'
+			&& Settings::Get('system.use_ssl') == '1'
+		) {
+			$vhost_content.= "\n" . $this->composeSslSettings($domain) . "\n";
+		}
+
 		// if the documentroot is an URL we just redirect
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$uri = $this->idnaConvert->encode($domain['documentroot']);
@@ -434,12 +442,6 @@ class nginx extends HttpConfigBase {
 
 			if ($this->_deactivated == false) {
 
-				if ($ssl_vhost === true
-					&& $domain['ssl'] == '1'
-					&& Settings::Get('system.use_ssl') == '1'
-				) {
-					$vhost_content.= $this->composeSslSettings($domain);
-				}
 				$vhost_content = $this->mergeVhostCustom($vhost_content, $this->create_pathOptions($domain)) . "\n";
 				$vhost_content.= $this->composePhpOptions($domain, $ssl_vhost);
 
