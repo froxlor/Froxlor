@@ -190,7 +190,7 @@ if ($page == 'domains'
 					SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE (`id` = :id OR `parentdomainid` = :id ".$rsd_sql.") AND `isemaildomain` = '1'"
 				);
-				$subResult = Database::pexecute($subresult_stmt, array('id' => $id));
+				Database::pexecute($subresult_stmt, array('id' => $id));
 				$idString = array();
 				$paramString = array();
 				while ($subRow = $subresult_stmt->fetch(PDO::FETCH_ASSOC)) {
