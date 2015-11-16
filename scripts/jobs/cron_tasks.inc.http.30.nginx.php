@@ -178,8 +178,8 @@ class nginx extends HttpConfigBase {
 				}
 
 				$this->nginx_data[$vhost_filename] .= "\t".'root     '.$mypath.';'."\n";
+				$this->nginx_data[$vhost_filename] .= "\t".'index    index.php index.html index.htm;'."\n\n";
 				$this->nginx_data[$vhost_filename] .= "\t".'location / {'."\n";
-				$this->nginx_data[$vhost_filename] .= "\t\t".'index    index.php index.html index.htm;'."\n";
 				$this->nginx_data[$vhost_filename] .= "\t".'}'."\n";
 
 				if ($row_ipsandports['specialsettings'] != '') {
@@ -665,9 +665,6 @@ class nginx extends HttpConfigBase {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
 				}
-				else {
-					$path_options.= "\t\t" . 'index    index.php index.html index.htm;'."\n";
-				}
 				//     $path_options.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 				// check if we have a htpasswd for this path
 				// (damn nginx does not like more than one
@@ -700,9 +697,6 @@ class nginx extends HttpConfigBase {
 				if ($this->vhost_root_autoindex || $row['options_indexes'] != '0') {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
-				}
-				else {
-					$path_options .= "\t\t" . 'index    index.php index.html index.htm;'."\n";
 				}
 				$path_options .= "\t".'} ' . "\n";
 			}
@@ -848,8 +842,8 @@ class nginx extends HttpConfigBase {
 			$this->_deactivated = false;
 		}
 
+		$webroot_text .= "\t" . 'index    index.php index.html index.htm;'."\n";
 		$webroot_text .= "\n\t".'location / {'."\n";
-		$webroot_text .= "\t\t".'index    index.php index.html index.htm;'."\n";
 		$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 
 		if ($this->vhost_root_autoindex) {
