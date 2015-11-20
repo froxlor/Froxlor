@@ -44,9 +44,9 @@ function appendOpenBasedirPath($path = '', $first = false) {
 
 	if($path != ''
 		&& $path != '/'
-		&& !preg_match("#^/dev#i", $path)                                                       
-		&& !preg_match("#^/proc#i", $path)                                                                             
-		&& !preg_match("#^/etc#i", $path)                                                                                                       
+		&& (!preg_match("#^/dev#i", $path) || preg_match("#^/dev/urandom#i", $path))
+		&& !preg_match("#^/proc#i", $path)
+		&& !preg_match("#^/etc#i", $path)
 		&& !preg_match("#^/sys#i", $path)
 		&& !preg_match("#:#", $path)
 	) {
