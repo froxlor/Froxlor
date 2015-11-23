@@ -74,7 +74,9 @@ class phpinterface_fpm {
 				'session.use_cookies',
 				'short_open_tag',
 				'track_errors',
-				'xmlrpc_errors'
+				'xmlrpc_errors',
+				'suhosin.session.encrypt',
+                'mbstring.func_overload'				
 			),
 			'php_admin_value' => array(
 				'cgi.redirect_status_env',
