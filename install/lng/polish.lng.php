@@ -19,7 +19,7 @@
  //-----    eSalamandra.com.pl  ------//
  */
 
-$lng['requirements']['title'] = 'Sprawdzanie wymagań systemowych...'; 
+$lng['requirements']['title'] = 'Sprawdzanie wymagań systemowych...';
 $lng['requirements']['installed'] = 'Zainstalowane';
 $lng['requirements']['not_true'] = 'Fałsz';
 $lng['requirements']['notfound'] = 'Nie znaleziono';
