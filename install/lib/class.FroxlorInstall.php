@@ -67,7 +67,7 @@ class FroxlorInstall {
 			'german' => 'Deutsch',
 			'english' => 'English',
 			'french' => 'Français',
-			'polish' => 'Polish',
+			'polish' => 'Polski'
 	);
 
 	/**

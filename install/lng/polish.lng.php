@@ -86,7 +86,6 @@ $lng['install']['creating_configfile'] = 'Tworzenie pliku konfiguracyjnego...';
 $lng['install']['creating_configfile_temp'] = 'Plik został zapisany w /tmp/userdata.inc.php, proszę przenieść go do lib/.';
 $lng['install']['creating_configfile_failed'] = 'Nie można utworzyć lib/userdata.inc.php, proszę utworzyć go ręcznie z następująca zawartością :';
 $lng['install']['froxlor_succ_installed'] = 'Froxlor został zainstalowany pomyślnie.';
-
 $lng['click_here_to_refresh'] = 'Naciśnij tutaj aby sprawdzić ponownie';
 $lng['click_here_to_goback'] = 'Naciśnij tutaj aby wrócić';
 $lng['click_here_to_continue'] = 'Naciśnij tutaj aby kontynuować';
