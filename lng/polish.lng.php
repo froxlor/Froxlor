@@ -21,7 +21,7 @@
  * Global
  */
 
-$lng['translator'] = 'translator';
+$lng['translator'] = 'Czauderna Tomasz - https://esalamandra.com.pl';
 $lng['panel']['edit'] = 'Edytuj';
 $lng['panel']['delete'] = 'Usuń';
 $lng['panel']['create'] = 'Utwórz';
