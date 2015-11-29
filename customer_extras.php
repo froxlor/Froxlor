@@ -297,6 +297,22 @@ if ($page == 'overview') {
 
 		if (isset($result['customerid']) && $result['customerid'] != '' && $result['customerid'] == $userinfo['customerid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+				// do we have to remove the symlink and folder in suexecpath?
+				if ((int)Settings::Get('perl.suexecworkaround') == 1) {
+					$loginname = getCustomerDetail($result['customerid'], 'loginname');
+					$suexecpath = makeCorrectDir(Settings::Get('perl.suexecpath').'/'.$loginname.'/'.md5($result['path']).'/');
+					$perlsymlink = makeCorrectFile($result['path'].'/cgi-bin');
+					// remove symlink
+					if (file_exists($perlsymlink)) {
+						safe_exec('rm -f '.escapeshellarg($perlsymlink));
+						$log->logAction(USR_ACTION, LOG_DEBUG, "deleted suexecworkaround symlink '" . $perlsymlink . "'");
+					}
+					// remove folder in suexec-path
+					if (file_exists($suexecpath)) {
+						safe_exec('rm -rf '.escapeshellarg($suexecpath));
+						$log->logAction(USR_ACTION, LOG_DEBUG, "deleted suexecworkaround path '" . $suexecpath . "'");
+					}
+				}
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTACCESS . "`
 					WHERE `customerid`= :customerid
 					AND `id`= :id"
