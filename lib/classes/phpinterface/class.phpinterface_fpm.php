@@ -58,7 +58,16 @@ class phpinterface_fpm {
 				'upload_max_filesize',
 				'xmlrpc_error_number',
 				'session.auto_start',
-				'always_populate_raw_post_data'
+				'always_populate_raw_post_data',
+				'suhosin.session.cryptkey',
+				'suhosin.session.cryptraddr',
+				'suhosin.session.checkraddr',
+				'suhosin.cookie.cryptkey',
+				'suhosin.cookie.plainlist',
+				'suhosin.cookie.cryptraddr',
+				'suhosin.cookie.checkraddr',
+				'suhosin.executor.func.blacklist',
+				'suhosin.executor.eval.whitelist'
 			),
 			'php_flag' => array(
 				'asp_tags',
@@ -75,7 +84,14 @@ class phpinterface_fpm {
 				'short_open_tag',
 				'track_errors',
 				'xmlrpc_errors',
+				'suhosin.simulation',
 				'suhosin.session.encrypt',
+				'suhosin.session.cryptua',
+				'suhosin.session.cryptdocroot',
+				'suhosin.cookie.encrypt',
+				'suhosin.cookie.cryptua',
+				'suhosin.cookie.cryptdocroot',
+				'suhosin.executor.disable_eval',
                 'mbstring.func_overload'				
 			),
 			'php_admin_value' => array(
