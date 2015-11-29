@@ -1060,7 +1060,7 @@ class apache extends HttpConfigBase {
 						if (!file_exists($perlsymlink)) {
 							safe_exec('ln -s '.escapeshellarg($suexecpath).' '.escapeshellarg($perlsymlink));
 						}
-						safe_exec('chown '.escapeshellarg($row_diroptions['guid']).':'.escapeshellarg($row_diroptions['guid']).' '.escapeshellarg($perlsymlink));
+						safe_exec('chown -h '.escapeshellarg($row_diroptions['guid']).':'.escapeshellarg($row_diroptions['guid']).' '.escapeshellarg($perlsymlink));
 					}
 				} else {
 					// if no perl-execution is enabled but the workaround is,
