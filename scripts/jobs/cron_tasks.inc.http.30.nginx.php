@@ -206,14 +206,17 @@ class nginx extends HttpConfigBase {
 				    $row_ipsandports['domain'] = Settings::Get('system.hostname');
 					$this->nginx_data[$vhost_filename].=$this->composeSslSettings($row_ipsandports);
 				}
-
+				
 				$this->nginx_data[$vhost_filename] .= "\tlocation ~ \.php {\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
-				$this->nginx_data[$vhost_filename] .= "\t\tinclude fastcgi_params;\n";
+				$this->nginx_data[$vhost_filename] .= "\t\ttry_files \$fastcgi_script_name =404;\n\n";
+				$this->nginx_data[$vhost_filename] .= "\t\t# Bypass the fact that try_files resets \$fastcgi_path_info\n";
+				$this->nginx_data[$vhost_filename] .= "\t\t# see: http://trac.nginx.org/nginx/ticket/321\n";
+				$this->nginx_data[$vhost_filename] .= "\t\tset \$path_info \$fastcgi_path_info;\n";
+				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$path_info;\n\n";
+				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_index index.php;\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
-				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
-				$this->nginx_data[$vhost_filename] .= "\t\ttry_files \$fastcgi_script_name =404;\n";
 				
 				if ($row_ipsandports['ssl'] == '1') {
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param HTTPS on;\n";
@@ -239,7 +242,6 @@ class nginx extends HttpConfigBase {
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass ".Settings::Get('system.nginx_php_backend').";\n";
 				}
 				
-				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_index index.php;\n";
 				$this->nginx_data[$vhost_filename] .= "\t}\n";
 				
 				$this->nginx_data[$vhost_filename] .= "}\n\n";
@@ -797,21 +799,27 @@ class nginx extends HttpConfigBase {
 
 	protected function composePhpOptions($domain, $ssl_vhost = false) {
 		$phpopts = '';
+		
 		if ($domain['phpenabled'] == '1') {
-			$phpopts = "\tlocation ~ \.php {\n";
+			$phpopts .= "\tlocation ~ \.php {\n";
 			$phpopts .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
+			$phpopts .= "\t\ttry_files \$fastcgi_script_name =404;\n\n";
+			$phpopts .= "\t\t# Bypass the fact that try_files resets \$fastcgi_path_info\n";
+			$phpopts .= "\t\t# see: http://trac.nginx.org/nginx/ticket/321\n";
+			$phpopts .= "\t\tset \$path_info \$fastcgi_path_info;\n";
+			$phpopts .= "\t\tfastcgi_param PATH_INFO \$path_info;\n\n";
+			$phpopts .= "\t\tfastcgi_index index.php;\n";
 			$phpopts .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
 			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
-			$phpopts .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
-			$phpopts .= "\t\ttry_files \$fastcgi_script_name =404;\n";
-			$phpopts .= "\t\tfastcgi_pass ".Settings::Get('system.nginx_php_backend').";\n";
-			$phpopts .= "\t\tfastcgi_index index.php;\n";
+			
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
 				$phpopts .= "\t\tfastcgi_param HTTPS on;\n";
 			}
-			$phpopts .= "\t}\n\n";
 			
+			$phpopts .= "\t\tfastcgi_pass ".Settings::Get('system.nginx_php_backend').";\n";
+			$phpopts .= "\t}\n\n";
 		}
+		
 		return $phpopts;
 	}
 	
