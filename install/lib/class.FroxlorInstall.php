@@ -67,7 +67,11 @@ class FroxlorInstall {
 			'german' => 'Deutsch',
 			'english' => 'English',
 			'french' => 'Français',
+<<<<<<< af10fe69bd5116e0fcafd4bbe8e3cd14bf471075
 			'polish' => 'Polish'
+=======
+			'polish' => 'Polish',
+>>>>>>> Upadte files to show Polish language and froxlor.sql
 	);
 
 	/**
