@@ -21,7 +21,7 @@
  * Global
  */
 
-$lng['translator'] = 'translator';
+$lng['translator'] = 'Czauderna Tomasz - esalamandra.com.pl';
 $lng['panel']['edit'] = 'Edytuj';
 $lng['panel']['delete'] = 'Usuń';
 $lng['panel']['create'] = 'Utwórz';
@@ -109,7 +109,7 @@ $lng['changepassword']['old_password'] = 'Stare hasło';
 $lng['changepassword']['new_password'] = 'Nowe hasło';
 $lng['changepassword']['new_password_confirm'] = 'Potwierdź hasło';
 $lng['changepassword']['new_password_ifnotempty'] = 'nowe hasło (puste = bez zmian)';
-$lng['changepassword']['also_change_ftp'] = ' również zmienia hasło do głównego konta FTP';
+$lng['changepassword']['also_change_ftp'] = 'również zmienia hasło do głównego konta FTP';
 
 /**
  * Domains
@@ -1416,7 +1416,7 @@ $lng['country']['KY'] = "Kajmany";
 $lng['country']['CF'] = "Central African Republic";
 $lng['country']['TD'] = "Czad";
 $lng['country']['CL'] = "Chile";
-$lng['country']['CN'] =" Chiny ";
+$lng['country']['CN'] = "Chiny";
 $lng['country']['CX'] = "Christmas Island";
 $lng['country']['CC'] = "Cocos (Keeling)";
 $lng['country']['CO'] = "Kolumbia";
@@ -1846,7 +1846,7 @@ $lng['integrity_check']['FroxlorLocalGroupMemberForFcgidPhpFpm'] = 'Użytkonik f
 $lng['integrity_check']['WebserverGroupMemberForFcgidPhpFpm'] = 'Użytkownik Serwer web w grupie klientów (for FCGID/php-fpm)';
 $lng['admin']['specialsettings_replacements'] = "Możesz użyć następujących zmiennych: <br/> <code> {DOMAIN} </ code>, <code> {docroot} </ code>, <code> {CUSTOMER} </ code>, <code> {IP} </ code>, <code> {PORT} </ code>, <code> {SCHEME} </ code> <br/>";
 $lng['serversettings']['default_vhostconf']['description'] = 'Treść tego pola zostanie włączona do kontenera vHost ip/port. ';
-$lng['admin']['specialsettings_replacements'].' Uwaga: Kod nie jest sprawdzany pod kątem jakiekolwiek błędów. Jeśli zawiera błędy, serwer WWW może się nie uruchomić ponownie!';
+$lng['admin']['specialsettings_replacements'] = ' Uwaga: Kod nie jest sprawdzany pod kątem jakiekolwiek błędów. Jeśli zawiera błędy, serwer WWW może się nie uruchomić ponownie!';
 $lng['serversettings']['default_vhostconf_domain']['description'] = 'Treść tego pola zostanie włączona do kontenera vhosta z domeną. ';
 $lng['admin']['specialsettings_replacements'].' Uwaga: Kod nie jest sprawdzany pod kątem jakiekolwiek błędów. Jeśli zawiera błędy, serwer WWW może się nie uruchomić ponownie!';
 $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (Domyśnie: 022)';
