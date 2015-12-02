@@ -5,5 +5,5 @@ install/update.log
 .project
 .settings/
 *.diff
-*~
-lng/ToDo
+*~o
+
