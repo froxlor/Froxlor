@@ -738,29 +738,29 @@ if ($page == 'overview') {
 			}
 
 			// verify certificate content
-			if ($do_verify) {
+			if ($do_verify && Settings::Get('system.ssl_customers_set_paths') != '1') {
 				// array openssl_x509_parse ( mixed $x509cert [, bool $shortnames = true ] )
 				// openssl_x509_parse() returns information about the supplied x509cert, including fields such as
 				// subject name, issuer name, purposes, valid from and valid to dates etc.
-				$cert_content = openssl_x509_parse(Settings::Get('system.ssl_customers_set_paths') == '1' ? file_get_contents($ssl_cert_file) : $ssl_cert_file);
+				$cert_content = openssl_x509_parse($ssl_cert_file);
 
 				if (is_array($cert_content) && isset($cert_content['subject']) && isset($cert_content['subject']['CN'])) {
 					// bool openssl_x509_check_private_key ( mixed $cert , mixed $key )
 					// Checks whether the given key is the private key that corresponds to cert.
-					if (openssl_x509_check_private_key(Settings::Get('system.ssl_customers_set_paths') == '1' ? file_get_contents($ssl_cert_file) : $ssl_cert_file, Settings::Get('system.ssl_customers_set_paths') == '1' ? file_get_contents($ssl_key_file) : $ssl_key_file) === false) {
+					if (openssl_x509_check_private_key($ssl_cert_file, $ssl_key_file) === false) {
 						standard_error('sslcertificateinvalidcertkeypair');
 					}
 
 					// check optional stuff
 					if ($ssl_ca_file != '') {
-						$ca_content = openssl_x509_parse(Settings::Get('system.ssl_customers_set_paths') == '1' ? file_get_contents($ssl_ca_file) : $ssl_ca_file);
+						$ca_content = openssl_x509_parse($ssl_ca_file);
 						if (!is_array($ca_content)) {
 							// invalid
 							standard_error('sslcertificateinvalidca');
 						}
 					}
 					if ($ssl_cert_chainfile != '') {
-						$chain_content = openssl_x509_parse(Settings::Get('system.ssl_customers_set_paths') == '1' ? file_get_contents($ssl_cert_chainfile) : $ssl_cert_chainfile);
+						$chain_content = openssl_x509_parse($ssl_cert_chainfile);
 						if (!is_array($chain_content)) {
 							// invalid
 							standard_error('sslcertificateinvalidchain');
