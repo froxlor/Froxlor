@@ -752,6 +752,7 @@ $lng['serversettings']['ssl']['use_ssl']['description'] = 'Erlaubt die Nutzung v
 $lng['serversettings']['ssl']['ssl_cert_file']['title'] = 'Pfad zum SSL-Zertifikat';
 $lng['serversettings']['ssl']['ssl_cert_file']['description'] = 'Geben Sie den Pfad inklusive Dateinamen des Zertifikats an (meist .crt or .pem).';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Standardwerte zum Erstellen eines Zertifikats';
+$lng['serversettings']['ssl']['customers_set_paths'] = 'Kunden erlauben direkt Dateipfade einzustellen, anstatt Dateiinhalte zu kopieren.';
 $lng['panel']['reseller'] = 'Reseller';
 $lng['panel']['admin'] = 'Administrator';
 $lng['panel']['customer'] = 'Kunde/n';

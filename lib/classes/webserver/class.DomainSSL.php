@@ -56,6 +56,15 @@ class DomainSSL {
 				&& isset($dom_certs['ssl_cert_file'])
 				&& $dom_certs['ssl_cert_file'] != ''
 		) {
+			if (Settings::Get('system.ssl_customers_set_paths') == '1')
+			{
+				$domain['ssl_cert_file'] = $dom_certs['ssl_cert_file'];
+				$domain['ssl_key_file'] = $dom_certs['ssl_key_file'];
+				$domain['ssl_ca_file'] = $dom_certs['ssl_ca_file'];
+				$domain['ssl_cert_chainfile'] = $dom_certs['ssl_cert_chainfile'];
+				return;
+			}
+			
 			// get destination path
 			$sslcertpath = makeCorrectDir(Settings::Get('system.customer_ssl_path'));
 			// create path if it does not exist

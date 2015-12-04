@@ -79,6 +79,14 @@ return array(
 									'string_emptyallowed' => true,
 									'default' => '',
 									'save_method' => 'storeSettingField',
+							),
+							'system_ssl_customers_set_paths' => array(
+									'label' => $lng['serversettings']['ssl']['customers_set_paths'],
+									'settinggroup' => 'system',
+									'varname' => 'ssl_customers_set_paths',
+									'type' => 'bool',
+									'default' => false,
+									'save_method' => 'storeSettingField'
 							)
 					)
 			)

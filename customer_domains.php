@@ -821,7 +821,10 @@ if ($page == 'overview') {
 
 		$result = htmlentities_array($result);
 
-		$ssleditor_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domain_ssleditor.php';
+		if (Settings::Get('system.ssl_customers_set_paths') == '1')
+			$ssleditor_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domain_ssleditor_paths.php';
+		else
+			$ssleditor_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domain_ssleditor.php';
 		$ssleditor_form = htmlform::genHTMLForm($ssleditor_data);
 
 		$title = $ssleditor_data['domain_ssleditor']['title'];

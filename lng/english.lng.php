@@ -755,6 +755,7 @@ $lng['serversettings']['ssl']['use_ssl']['description'] = 'Check this if you wan
 $lng['serversettings']['ssl']['ssl_cert_file']['title'] = 'Path to the SSL certificate';
 $lng['serversettings']['ssl']['ssl_cert_file']['description'] = 'Specify the path including the filename of the .crt or .pem file (main certificate)';
 $lng['serversettings']['ssl']['openssl_cnf'] = 'Defaults for creating the Cert file';
+$lng['serversettings']['ssl']['customers_set_paths'] = 'Allow customers to point to file paths directly instead of pasting contents.';
 $lng['panel']['reseller'] = 'reseller';
 $lng['panel']['admin'] = 'admin';
 $lng['panel']['customer'] = 'customer/s';
