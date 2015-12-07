@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 /**
  * This file is part of the Froxlor project.
@@ -66,7 +66,8 @@ class FroxlorInstall {
 	private $_languages = array(
 			'german' => 'Deutsch',
 			'english' => 'English',
-			'french' => 'Français'
+			'french' => 'Français',
+			'polish' => 'Polish'
 	);
 
 	/**
