@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /**
  * This file is part of the Froxlor project.
@@ -1416,11 +1416,8 @@ $lng['country']['KY'] = "Kajmany";
 $lng['country']['CF'] = "Central African Republic";
 $lng['country']['TD'] = "Czad";
 $lng['country']['CL'] = "Chile";
-<<<<<<< af10fe69bd5116e0fcafd4bbe8e3cd14bf471075
 $lng['country']['CN'] = "Chiny";
-=======
-$lng['country']['CN'] =" Chiny ";
->>>>>>> Upadte files to show Polish language and froxlor.sql
+$lng['country']['CN'] = "Chiny";
 $lng['country']['CX'] = "Christmas Island";
 $lng['country']['CC'] = "Cocos (Keeling)";
 $lng['country']['CO'] = "Kolumbia";
