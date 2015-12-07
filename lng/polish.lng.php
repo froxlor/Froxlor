@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /**
  * This file is part of the Froxlor project.
@@ -1416,6 +1416,7 @@ $lng['country']['KY'] = "Kajmany";
 $lng['country']['CF'] = "Central African Republic";
 $lng['country']['TD'] = "Czad";
 $lng['country']['CL'] = "Chile";
+$lng['country']['CN'] = "Chiny";
 $lng['country']['CN'] = "Chiny";
 $lng['country']['CX'] = "Christmas Island";
 $lng['country']['CC'] = "Cocos (Keeling)";
