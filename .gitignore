@@ -5,6 +5,7 @@ install/update.log
 .project
 .settings/
 *.diff
+<<<<<<< HEAD
 <<<<<<< fbcd28c02d1024a87ab7100f9516be201d0bc50f
 <<<<<<< f99cba31aa693715207b38f1d552503e139f29f7
 *~
@@ -26,11 +27,28 @@ lng/ToDo
 
 >>>>>>> Backup traslation ~60%
 =======
+=======
+<<<<<<< HEAD
+*~o
+
+=======
+<<<<<<< HEAD
+*~
+lng/ToDo
+>>>>>>> f0c9d4ea4cbaf4b1441462807d3d20e83a76fb83
 <<<<<<< 45995f472eb42692fc0921563b43bcbd3d19b561
 
 =======
 >>>>>>> Lang backup
+<<<<<<< HEAD
 >>>>>>> gitignore
 =======
 
 >>>>>>> Backup traslation ~60%
+=======
+=======
+*~o
+
+>>>>>>> 9595f778ba9eb2d649f59b303b0b2de7e4ebe7ff
+>>>>>>> 2f4d9e908cef071f816a50e5b7174e4bc85b979c
+>>>>>>> f0c9d4ea4cbaf4b1441462807d3d20e83a76fb83
