@@ -5,4 +5,5 @@ install/update.log
 .project
 .settings/
 *.diff
-*~
+*~o
+
