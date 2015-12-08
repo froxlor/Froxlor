@@ -5,5 +5,19 @@ install/update.log
 .project
 .settings/
 *.diff
+<<<<<<< HEAD
 *~o
 
+=======
+<<<<<<< HEAD
+*~
+lng/ToDo
+<<<<<<< 45995f472eb42692fc0921563b43bcbd3d19b561
+
+=======
+>>>>>>> Lang backup
+=======
+*~o
+
+>>>>>>> 9595f778ba9eb2d649f59b303b0b2de7e4ebe7ff
+>>>>>>> 2f4d9e908cef071f816a50e5b7174e4bc85b979c
