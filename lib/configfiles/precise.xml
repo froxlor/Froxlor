@@ -544,7 +544,7 @@ dovecot_destination_recipient_limit = 1
 smtpd_sasl_path = private/dovecot-auth
 
 # Virtual delivery settings
-virtual_mailbox_base = <VIRTUAL_MAILBOX_BASE>
+virtual_mailbox_base = /
 virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
 virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
 virtual_alias_maps = mysql:/etc/postfix/mysql-virtual_alias_maps.cf
