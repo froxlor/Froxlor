@@ -141,7 +141,7 @@ if ($page == 'overview') {
 
 				foreach ($domain_array as $row) {
 					if (strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
-						$row['documentroot'] = makeCorrectDir(substr($row['documentroot'], strlen($userinfo['documentroot']) - 1));
+						$row['documentroot'] = makeCorrectDir(substr($row['documentroot'], strlen($userinfo['documentroot'])));
 					}
 
 					// get ssl-ips if activated
