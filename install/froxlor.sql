@@ -247,6 +247,7 @@ CREATE TABLE `panel_domains` (
   `mod_fcgid_starter` int(4) default '-1',
   `mod_fcgid_maxrequests` int(4) default '-1',
   `ismainbutsubto` int(11) unsigned NOT NULL default '0',
+  `hhvm` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
