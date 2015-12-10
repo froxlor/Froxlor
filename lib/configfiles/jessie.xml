@@ -4023,7 +4023,7 @@ aliases:     files
           			<install><![CDATA[echo deb http://dl.hhvm.com/debian jessie main | sudo tee /etc/apt/sources.list.d/hhvm.list]]></install>
           			<install><![CDATA[sudo apt-get update]]></install>
           			<install><![CDATA[sudo apt-get install hhvm]]></install>
-				<command><![CDATA[hhvm -m daemon -c server.ini -d hhvm.server.type=fastcgi -d hhvm.server.port=9000]]></command>
+				<command><![CDATA[ /usr/bin/hhvm --config /etc/hhvm/php.ini --config /etc/hhvm/server.ini --user www-data --mode daemon -vPidFile=/var/run/hhvm/pid]]></command>
 				</daemon>
 				<!-- PHP-FPM -->
 				<daemon name="php-fpm" title="PHP-FPM (alternative to mod_php)">
