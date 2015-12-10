@@ -91,6 +91,16 @@ return array(
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
 						'select_var' => $openbasedir
+					),
+					'hhvm' => array(
+						'visible' => (Settings::Get('system.can_use_hhvm') == '1'),
+						'label' => $lng['domains']['hhvm']['title'],
+						'desc' => $lng['domains']['hhvm']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['hhvm'])
 					)
 				)
 			)
