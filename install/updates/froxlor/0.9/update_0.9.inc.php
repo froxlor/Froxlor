@@ -3002,7 +3002,7 @@ if (isFroxlorVersion('0.9.34-dev4')) {
     showUpdateStep("Updating from 0.9.34-dev4 to 0.9.34-dev5", false);
 
     showUpdateStep("Adding field hhvm to domains table");
-    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `hhvm` int(1) NOT NULL DEFAULT '0`");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `hhvm` int(1) NOT NULL DEFAULT 0");
     lastStepStatus(0);
 
     updateToVersion('0.9.34-dev5');
