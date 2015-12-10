@@ -1579,3 +1579,6 @@ $lng['admin']['specialsettings_replacements'] = "Die folgenden Variablen können
 $lng['serversettings']['default_vhostconf']['description'] = 'Der Inhalt dieses Feldes wird direkt in den IP/Port-vHost-Container übernommen. '.$lng['admin']['specialsettings_replacements'].'<br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
 $lng['serversettings']['default_vhostconf_domain']['description'] = 'Der Inhalt dieses Feldes wird direkt in jeden Domain-vHost-Container übernommen. '. $lng['admin']['specialsettings_replacements'].'<strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
 $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (Standard: 022)';
+
+// HHVM Patch
+$lng['serversettings']['mod_fcgid']['hhvm'] = 'HHVM statt PHP verwenden';
