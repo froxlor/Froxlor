@@ -4017,6 +4017,14 @@ aliases:     files
 						dirty work -->
 					<command><![CDATA[php {{const.FROXLOR_INSTALL_DIR}}/scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
+				<!-- HHVM -->
+				<daemon name="hhvm" title="HHVM (HipHop Virtual Machine)">
+				<install><![CDATA[sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449]]></install>
+          			<install><![CDATA[echo deb http://dl.hhvm.com/debian jessie main | sudo tee /etc/apt/sources.list.d/hhvm.list]]></install>
+          			<install><![CDATA[sudo apt-get update]]></install>
+          			<install><![CDATA[sudo apt-get install hhvm]]></install>
+				<command><![CDATA[hhvm -m daemon -c server.ini -d hhvm.server.type=fastcgi -d hhvm.server.port=9000]]></command>
+				</daemon>
 				<!-- PHP-FPM -->
 				<daemon name="php-fpm" title="PHP-FPM (alternative to mod_php)">
 					<commands index="1">
