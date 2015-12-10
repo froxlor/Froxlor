@@ -465,7 +465,7 @@ if ($page == 'overview') {
 	} elseif ($action == 'edit' && $id != 0) {
 
 		$stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`,
-			`d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `pd`.`subcanemaildomain`
+			`d`.`hhvm`, `d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `pd`.`subcanemaildomain`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
 			WHERE `d`.`customerid` = :customerid
 			AND `d`.`id` = :id
@@ -475,7 +475,6 @@ if ($page == 'overview') {
 					AND `pd`.`id` = `d`.`id`))
 			AND `d`.`caneditdomain`='1'");
 		$result = Database::pexecute_first($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-
 		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain`= :aliasdomain");
 		$alias_check = Database::pexecute_first($alias_stmt, array("aliasdomain" => $result['id']));
 		$alias_check = $alias_check['count'];
@@ -543,6 +542,12 @@ if ($page == 'overview') {
 				} else {
 					$openbasedir_path = '0';
 				}
+				
+				if (isset($_POST["hhvm"]) && $_POST["hhvm"] == "1") {
+          $hhvm = 1;
+				} else {
+          $hhvm = 0;
+        }
 
 				if (isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
 					// a ssl-redirect only works of there actually is a
@@ -580,7 +585,8 @@ if ($page == 'overview') {
 						|| $iswildcarddomain != $result['iswildcarddomain']
 						|| $aliasdomain != $result['aliasdomain']
 						|| $openbasedir_path != $result['openbasedir_path']
-						|| $ssl_redirect != $result['ssl_redirect']) {
+						|| $ssl_redirect != $result['ssl_redirect']
+						|| $hhvm != $result["hhvm"] ) {
 						$log->logAction(USR_ACTION, LOG_INFO, "edited domain '" . $idna_convert->decode($result['domain']) . "'");
 
 						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
@@ -590,7 +596,8 @@ if ($page == 'overview') {
 							`iswildcarddomain`= :iswildcarddomain,
 							`aliasdomain`= :aliasdomain,
 							`openbasedir_path`= :openbasedir_path,
-							`ssl_redirect`= :ssl_redirect
+							`ssl_redirect`= :ssl_redirect,
+							`hhvm` = :hhvm
 							WHERE `customerid`= :customerid
 							AND `id`= :id"
 						);
@@ -601,6 +608,7 @@ if ($page == 'overview') {
 							"iswildcarddomain" => $iswildcarddomain,
 							"aliasdomain" => ($aliasdomain != 0 && $alias_check == 0) ? $aliasdomain : null,
 							"openbasedir_path" => $openbasedir_path,
+							"hhvm" => $hhvm,
 							"ssl_redirect" => $ssl_redirect,
 							"customerid" => $userinfo['customerid'],
 							"id" => $id
