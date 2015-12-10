@@ -1582,3 +1582,5 @@ $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (Standard: 022)';
 
 // HHVM Patch
 $lng['serversettings']['mod_fcgid']['hhvm'] = 'Kunden können HHVM statt PHP verwenden';
+$lng['domains']['hhvm']['title'] = "HHVM verwenden";
+$lng['domains']['hhvm']['description'] = "Auswählen um HHVM statt PHP zu verwenden.";
