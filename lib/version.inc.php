@@ -17,6 +17,7 @@
 
 // Main version variable
 $version = '0.9.34+shsh-1';
+$upstreamversion = '0.9.34';
 
 // Database version (unused, old stuff from SysCP)
 $dbversion = '2';
