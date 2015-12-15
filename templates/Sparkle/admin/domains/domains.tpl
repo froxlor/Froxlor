@@ -24,6 +24,12 @@
 					&nbsp;
 					<img src="templates/{$theme}/assets/img/icons/archive.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'import'))}">{$lng['domains']['domain_import']}</a>
+                                        &nbsp;
+                                        <a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' =>'terminated'))}">{$lng['domains']['domain_terminated']}</a>
+                                        &nbsp;
+                                        <a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' =>'expired'))}">{$lng['domains']['domain_expired']}</a>
+                                        &nbsp;
+                                        <a href="{$linker->getLink(array('section' => 'domains', 'page' => $page))}">{$lng['domains']['domain_domains']}</a>
 				</div>
 				</if>
 	
@@ -33,6 +39,7 @@
 							<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>
 							<th>{$lng['admin']['ipsandports']['ip']}</th>
 							<th>{$lng['admin']['customer']}&nbsp;{$arrowcode['c.loginname']}</th>
+                                                        <th>{$lng['domains']['registration_date_tbl']}<br/>{$lng['domains']['termination_date_tbl']}</th>
 							<th>{$lng['panel']['options']}</th>
 						</tr>
 					</thead>

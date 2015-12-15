@@ -3004,3 +3004,13 @@ if (isFroxlorVersion('0.9.34-dev4')) {
 
     updateToVersion('0.9.34');
 }
+
+if (isFroxlorVersion('0.9.34')) {
+
+    showUpdateStep("Updating from 0.9.34 to 0.9.34+shsh-1");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `termination_date` date NOT NULL AFTER `registration_date`");
+    lastStepStatus(0);
+
+    updateToVersion('0.9.34+shsh-1');
+}
+

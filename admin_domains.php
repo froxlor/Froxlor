@@ -27,7 +27,7 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == 'domains'
-   || $page == 'overview'
+   || $page == 'overview' 
 ) {
 	// Let's see how many customers we have
 	$stmt = Database::prepare("
@@ -40,7 +40,7 @@ if ($page == 'domains'
 	$countcustomers = Database::pexecute_first($stmt, $params);
 	$countcustomers = (int)$countcustomers['countcustomers'];
 
-	if ($action == '') {
+	if ($action == '' || $action == 'terminated' || $action == 'expired') {
 
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
 		$fields = array(
@@ -59,9 +59,13 @@ if ($page == 'domains'
 			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
 			WHERE `d`.`parentdomainid`='0' " .
-			($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid ") .
+			($action == 'terminated' ? " AND `d`.`termination_date` > '0000-00-00'" : "" ).
+                        ($action == 'expired' ? " AND `d`.`termination_date` > '0000-00-00' AND `d`.`termination_date` < curdate() " : "" ).
+                        ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid ") .
 			" " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
+                
+                
 		$params = array();
 		if ($userinfo['customers_see_all'] == '0') {
 			$params['adminid'] = $userinfo['adminid'];
@@ -96,6 +100,25 @@ if ($page == 'domains'
 				}
 			}
 			$row['ipandport'] = substr($row['ipandport'], 0, -1);
+                        $row['registration_date'] = str_replace("0000-00-00", "", $row['registration_date']);
+                        $row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
+                        
+                        if($row['termination_date'] != '')
+                        {
+                            $cdate = strtotime($row['termination_date'] . " 23:59:59");
+                            $today = time();
+                            
+                            if($cdate < $today)
+                            {
+                                $row['termination_css'] = 'expired';
+                            }
+                            else
+                                {
+                                $row['termination_css'] = 'termination';
+                            }
+                        }
+                        
+                        
 
 			if (!isset($domain_array[$row['domain']])) {
 				$domain_array[$row['domain']] = $row;
@@ -361,6 +384,9 @@ if ($page == 'domains'
 
 				$registration_date = trim($_POST['registration_date']);
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
+
+                                $termination_date = trim($_POST['termination_date']);
+				$termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
 				if ($userinfo['change_serversettings'] == '1') {
 
@@ -702,6 +728,7 @@ if ($page == 'domains'
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 						'specialsettings' => $specialsettings,
 						'registration_date' => $registration_date,
+                                                'termination_date' => $termination_date,
 						'issubof' => $issubof
 					);
 
@@ -748,6 +775,7 @@ if ($page == 'domains'
 						'ssl_redirect' => $ssl_redirect,
 						'add_date' => time(),
 						'registration_date' => $registration_date,
+                                                'termination_date' => $termination_date,
 						'phpsettingid' => $phpsettingid,
 						'mod_fcgid_starter' => $mod_fcgid_starter,
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
@@ -779,6 +807,7 @@ if ($page == 'domains'
 						`ssl_redirect` = :ssl_redirect,
 						`add_date` = :add_date,
 						`registration_date` = :registration_date,
+                                                `termination_date` = :termination_date,
 						`phpsettingid` = :phpsettingid,
 						`mod_fcgid_starter` = :mod_fcgid_starter,
 						`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
@@ -1139,6 +1168,8 @@ if ($page == 'domains'
 				$caneditdomain = isset($_POST['caneditdomain']) ? intval($_POST['caneditdomain']) : 0;
 				$registration_date = trim($_POST['registration_date']);
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
+                                $termination_date = trim($_POST['termination_date']);
+				$termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
 				$isemaildomain = 0;
 				if (isset($_POST['isemaildomain'])) {
@@ -1439,6 +1470,7 @@ if ($page == 'domains'
 					'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 					'specialsettings' => $specialsettings,
 					'registration_date' => $registration_date,
+                                        'termination_date' => $termination_date,
 					'issubof' => $issubof,
 					'speciallogfile' => $speciallogfile,
 					'speciallogverified' => $speciallogverified,
@@ -1612,6 +1644,7 @@ if ($page == 'domains'
 				$update_data['mod_fcgid_maxrequests'] = $mod_fcgid_maxrequests;
 				$update_data['specialsettings'] = $specialsettings;
 				$update_data['registration_date'] = $registration_date;
+                                $update_data['termination_date'] = $termination_date;
 				$update_data['ismainbutsubto'] = $issubof;
 				$update_data['id'] = $id;
 
@@ -1638,6 +1671,7 @@ if ($page == 'domains'
 					`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
 					`specialsettings` = :specialsettings,
 					`registration_date` = :registration_date,
+                                        `termination_date` = :termination_date,
 					`ismainbutsubto` = :ismainbutsubto
 					WHERE `id` = :id
 				");

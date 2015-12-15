@@ -29,6 +29,7 @@
 						<tr>
 							<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>
 							<th>{$lng['panel']['path']}</th>
+                                                        <th>{$lng['domains']['registration_date_tbl']}<br/>{$lng['domains']['termination_date_tbl']}</th>
 							<th>{$lng['panel']['options']}</th>
 						</tr>
 					</thead>

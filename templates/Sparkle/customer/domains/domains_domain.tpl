@@ -1,9 +1,15 @@
-<tr>
+<if $row['termination_date'] != ''>
+    <tr class="{$row['termination_css']}">
+</if>
+<if $row['termination_date'] == ''>
+    <tr>
+</if>
 	<td><a href="http://{$row['domain']}" target="_blank">{$row['domain']}</a></td>
 	<td>
 		<if $row['aliasdomain'] == ''>{$row['documentroot']}</if>
 		<if isset($row['aliasdomainid']) && $row['aliasdomainid'] != 0>{$lng['domains']['aliasdomain']} {$row['aliasdomain']}</if>
 	</td>
+        <td>{$row['registration_date']}<br/>{$row['termination_date']}</td>
 	<td>
 		<if $row['caneditdomain'] == '1'>
 			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $row['id']))}">

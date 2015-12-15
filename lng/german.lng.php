@@ -1579,3 +1579,12 @@ $lng['admin']['specialsettings_replacements'] = "Die folgenden Variablen können
 $lng['serversettings']['default_vhostconf']['description'] = 'Der Inhalt dieses Feldes wird direkt in den IP/Port-vHost-Container übernommen. '.$lng['admin']['specialsettings_replacements'].'<br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
 $lng['serversettings']['default_vhostconf_domain']['description'] = 'Der Inhalt dieses Feldes wird direkt in jeden Domain-vHost-Container übernommen. '. $lng['admin']['specialsettings_replacements'].'<strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
 $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (Standard: 022)';
+
+
+// Added inf Froxlor 0.9.35-shd-dev1
+$lng['domains']['termination_date'] = 'Kündigung vorgemerkt zum';
+$lng['domains']['termination_date_tbl'] = 'gekündigt zum';
+$lng['domains']['registration_date_tbl'] = 'registriert seit';
+$lng['domains']['domain_terminated'] = 'gekündigte Domains';
+$lng['domains']['domain_expired'] = 'abgelaufene Domains';
+$lng['domains']['domain_domains'] = 'alle Domains';

@@ -548,6 +548,16 @@ tr.disabled td, tr.disabled td a {
 	color:#cfcfcf;
 }
 
+tr.termination td, tr.termination td a {
+	background-color:#ffa000;
+        
+}
+
+tr.expired td, tr.expired td a {
+	background-color:#ff0000;
+        
+}
+
 /* ADMIN/CUSTOMER BARS */
 .overviewcustomerextras {
 	line-height:15px;

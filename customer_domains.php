@@ -36,7 +36,7 @@ if ($page == 'overview') {
 			'd.domain' => $lng['domains']['domainname']
 		);
 		$paging = new paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
-		$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias` FROM `" . TABLE_PANEL_DOMAINS . "` `d`
+		$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`registration_date`, `d`.`termination_date`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias` FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
 			WHERE `d`.`customerid`= :customerid
@@ -86,6 +86,23 @@ if ($page == 'overview') {
 					}
 				}
 			}
+                        $row['registration_date'] = str_replace("0000-00-00", "", $row['registration_date']);
+                        $row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
+                        
+                        if($row['termination_date'] != '')
+                        {
+                            $cdate = strtotime($row['termination_date'] . " 23:59:59");
+                            $today = time();
+                            
+                            if($cdate < $today)
+                            {
+                                $row['termination_css'] = 'expired';
+                            }
+                            else
+                                {
+                                $row['termination_css'] = 'termination';
+                            }
+                        }
 
 			$domains_count++;
 			$domain_array[$row['domain']] = $row;

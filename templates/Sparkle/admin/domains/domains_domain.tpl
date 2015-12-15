@@ -1,13 +1,21 @@
-<tr>
+<if $row['termination_date'] != ''>
+    <tr class="{$row['termination_css']}">
+</if>
+<if $row['termination_date'] == ''>
+    <tr>
+</if>
+
 	<td>{$row['domain']}
 		<if (isset($row['standardsubdomain']) && $row['standardsubdomain'] == $row['id'])>
 			&nbsp;({$lng['admin']['stdsubdomain']})
 		</if>
 	</td>
 	<td>{$row['ipandport']}</td>
+        
 	<td>{$row['customername']}&nbsp;
 		(<a href="{$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $row['customerid']))}" rel="external">{$row['loginname']}</a>)
 	</td>
+        <td>{$row['registration_date']}<br/>{$row['termination_date']}</td>
 	<td>
 		<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'edit', 'id' => $row['id']))}">
 			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" title="{$lng['panel']['edit']}" />
