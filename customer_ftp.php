@@ -57,7 +57,7 @@ if ($page == 'overview') {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
 				if (strpos($row['homedir'], $userinfo['documentroot']) === 0) {
-					$row['documentroot'] = substr($row['homedir'], strlen($userinfo['documentroot']));
+					$row['documentroot'] = substr($row['homedir'], strlen($userinfo['documentroot']) -1);
 				} else {
 					$row['documentroot'] = $row['homedir'];
 				}

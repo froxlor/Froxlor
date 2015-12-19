@@ -25,6 +25,7 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 function makeCorrectDir($dir) {
+    
 
 	assert('is_string($dir) && strlen($dir) > 0 /* $dir does not look like an actual folder name */');
 
