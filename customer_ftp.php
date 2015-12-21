@@ -417,7 +417,7 @@ if ($page == 'overview') {
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				if (strpos($result['homedir'], $userinfo['documentroot']) === 0) {
-					$homedir = str_replace($userinfo['documentroot'], "/", $row['homedir']);
+					$homedir = str_replace($userinfo['documentroot'], "/", $result['homedir']);
 				} else {
 					$homedir = $result['homedir'];
 				}
