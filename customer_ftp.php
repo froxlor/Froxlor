@@ -254,7 +254,7 @@ if ($page == 'overview') {
 							'CUST_NAME' => getCorrectUserSalutation($userinfo), // < keep this for compatibility
 							'USR_NAME' => $username,
 							'USR_PASS' => $password,
-							'USR_PATH' => makeCorrectDir(substr($path, strlen($userinfo['documentroot'])))
+							'USR_PATH' => makeCorrectDir(str_replace($userinfo['documentroot'], "/", $path))
 						);
 
 						$def_language = $userinfo['def_language'];
@@ -417,7 +417,7 @@ if ($page == 'overview') {
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				if (strpos($result['homedir'], $userinfo['documentroot']) === 0) {
-					$homedir = substr($result['homedir'], strlen($userinfo['documentroot']));
+					$homedir = str_replace($userinfo['documentroot'], "/", $row['homedir']);
 				} else {
 					$homedir = $result['homedir'];
 				}
