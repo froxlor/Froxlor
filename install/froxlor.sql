@@ -228,6 +228,7 @@ CREATE TABLE `panel_domains` (
   `subcanemaildomain` tinyint(1) NOT NULL default '0',
   `caneditdomain` tinyint(1) NOT NULL default '1',
   `zonefile` varchar(255) NOT NULL default '',
+  `dnsrecords` text,
   `dkim` tinyint(1) NOT NULL default '0',
   `dkim_id` int(11) unsigned NOT NULL default '0',
   `dkim_privkey` text,

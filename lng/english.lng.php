@@ -318,6 +318,7 @@ $lng['admin']['templates']['USERNAME'] = 'Replaced with the customers account us
 $lng['admin']['templates']['PASSWORD'] = 'Replaced with the customers account password.';
 $lng['admin']['templates']['EMAIL'] = 'Replaced with the address of the POP3/IMAP account.';
 $lng['admin']['webserver'] = 'Webserver';
+$lng['admin']['dnsrecords'] = 'Own DNS-Records which should be saved in the zonefile<br /><strong>Attention:</strong> The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 
 /**
  * Serversettings

@@ -193,6 +193,15 @@ return array(
 						'label' => 'Zonefile',
 						'desc' => $lng['panel']['emptyfordefault'],
 						'type' => 'text'
+					),
+					'dnsrecords' => array(
+						'style' => 'align-top',
+						'label' => 'DNS-Records',
+						'desc' => $lng['admin']['dnsrecords'],
+						'type' => 'textarea',
+						'value' => $result['dnsrecords'],
+						'cols' => 60,
+						'rows' => 12
 					)
 				)
 			),

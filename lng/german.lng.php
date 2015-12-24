@@ -316,6 +316,7 @@ $lng['admin']['templates']['COMPANY'] = 'Wird mit dem Firmennamen des Kunden ers
 $lng['admin']['templates']['USERNAME'] = 'Wird mit dem Benutzernamen des neuen Kundenkontos ersetzt.';
 $lng['admin']['templates']['PASSWORD'] = 'Wird mit dem Passwort des neuen Kundenkontos ersetzt.';
 $lng['admin']['templates']['EMAIL'] = 'Wird mit der Adresse des neuen E-Mail-Kontos ersetzt.';
+$lng['admin']['dnsrecords'] = 'Eigene DNS-Records welche in der Zonefile gespeichert werden sollen<br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der DNS-Server könnte nicht mehr starten!';
 
 /**
  * Serversettings

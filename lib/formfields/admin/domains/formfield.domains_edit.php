@@ -218,6 +218,15 @@ return array(
 						'desc' => $lng['panel']['emptyfordefault'],
 						'type' => 'text',
 						'value' => $result['zonefile']
+					),
+					'dnsrecords' => array(
+						'style' => 'align-top',
+						'label' => 'DNS-Records',
+						'desc' => $lng['admin']['dnsrecords'],
+						'type' => 'textarea',
+						'value' => $result['dnsrecords'],
+						'cols' => 60,
+						'rows' => 12
 					)
 				)
 			),

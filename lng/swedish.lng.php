@@ -301,6 +301,7 @@ $lng['admin']['templates']['NAME'] = 'Ändra till kundens efternamn.';
 $lng['admin']['templates']['USERNAME'] = 'Ändra till kundens kontonamns användarnamn.';
 $lng['admin']['templates']['PASSWORD'] = 'Ändra till kundens kontonamns lösenord.';
 $lng['admin']['templates']['EMAIL'] = 'Ändra till adressen för POP3/IMAP kontot.';
+$lng['admin']['dnsrecords'] = 'Own DNS-Records which should be saved in the zonefile<br /><strong>Attention:</strong> The code won\'t be checked for any errors. If it contains errors, webserver might not start again!'; // ToDo: Translante
 
 /**
  * Serversettings

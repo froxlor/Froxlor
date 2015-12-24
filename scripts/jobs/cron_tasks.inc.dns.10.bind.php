@@ -365,6 +365,17 @@ class bind {
 				$zonefile.= $record . "\tIN\t" . $ip_a_record . "\n";
 			}
 		}
+		
+		// Append custom DNS-Records
+		$domain_stmt = Database::prepare("
+			SELECT `dnsrecords` FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `id` = :domainid
+		");
+		Database::pexecute($domain_stmt, array('domainid' => $domain['id']));
+						
+		while ($dnsrecords = $domain_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$zonefile .= $dnsrecords['dnsrecords'];
+		}
 
 		return $zonefile;
 	}
