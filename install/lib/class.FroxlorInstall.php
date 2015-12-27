@@ -455,6 +455,7 @@ class FroxlorInstall {
 
 		// necessary changes for webservers != apache2
 		if ($this->_data['webserver'] == "apache24") {
+		    $this->_updateSetting($upd_stmt, 'apache2', 'system', 'webserver');
 		    $this->_updateSetting($upd_stmt, '1', 'system', 'apache24');
 		} elseif ($this->_data['webserver'] == "lighttpd") {
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/conf-enabled/', 'system', 'apacheconf_vhost');
