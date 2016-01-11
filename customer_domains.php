@@ -738,7 +738,7 @@ if ($page == 'overview') {
 			}
 
 			// verify certificate content
-			if ($do_verify) {
+			if ($do_verify && Settings::Get('system.ssl_customers_set_paths') != '1') {
 				// array openssl_x509_parse ( mixed $x509cert [, bool $shortnames = true ] )
 				// openssl_x509_parse() returns information about the supplied x509cert, including fields such as
 				// subject name, issuer name, purposes, valid from and valid to dates etc.
@@ -821,7 +821,10 @@ if ($page == 'overview') {
 
 		$result = htmlentities_array($result);
 
-		$ssleditor_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domain_ssleditor.php';
+		if (Settings::Get('system.ssl_customers_set_paths') == '1')
+			$ssleditor_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domain_ssleditor_paths.php';
+		else
+			$ssleditor_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domain_ssleditor.php';
 		$ssleditor_form = htmlform::genHTMLForm($ssleditor_data);
 
 		$title = $ssleditor_data['domain_ssleditor']['title'];
