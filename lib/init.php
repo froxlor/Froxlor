@@ -505,11 +505,12 @@ if (array_key_exists('css', $_themeoptions['variants'][$themevariant]) && is_arr
 	}
 }
 eval("\$header = \"" . getTemplate('header', '1') . "\";");
-unset($js);
-unset($css);
 
 $current_year = date('Y', time());
 eval("\$footer = \"" . getTemplate('footer', '1') . "\";");
+
+unset($js);
+unset($css);
 
 if (isset($_POST['action'])) {
 	$action = $_POST['action'];

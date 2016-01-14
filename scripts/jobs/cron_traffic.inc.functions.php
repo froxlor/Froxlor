@@ -131,8 +131,8 @@ function awstatsGenerateIndex($domain, $outputdir) {
 
 	// Write the index file
 	{
-		// 'index.html' used to be a symlink
-		unlink(makeCorrectFile($outputdir . '/' . 'index.html'));
+		// 'index.html' used to be a symlink (ignore errors in case this is the first run and no index.html exists yet)
+		@unlink(makeCorrectFile($outputdir . '/' . 'index.html'));
 
 		$awstats_index_file = fopen(makeCorrectFile($outputdir . '/' . 'index.html'), 'w');
 		$awstats_index_tpl  = fopen($index_file, 'r');
