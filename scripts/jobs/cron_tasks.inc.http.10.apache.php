@@ -818,6 +818,13 @@ class apache extends HttpConfigBase {
 					$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
 				}
 			}
+			else
+			{
+			    // if there is no cert-file specified but we are generating a ssl-vhost,
+			    // we should return an empty string because this vhost would suck dick, ref #1583
+			    $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
+			    return '# no ssl-certificate was specified for this domain, therefore no explicit vhost is being generated';
+			}
 		}
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
