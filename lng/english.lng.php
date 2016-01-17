@@ -1852,3 +1852,34 @@ $lng['admin']['specialsettings_replacements'] = "You can use the following varia
 $lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into this ip/port vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['serversettings']['default_vhostconf_domain']['description'] = 'The content of this field will be included into the domain vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (default: 022)';
+
+// Added for apcuinfo
+$lng['admin']['apcuinfo'] = 'APCu info';
+$lng['error']['no_apcuinfo'] = 'No cache info available. APCu does not appear to be running.';
+$lng['apcuinfo']['clearcache'] = 'Clear APCu cache';
+$lng['apcuinfo']['generaltitle'] = 'General Cache Information';
+$lng['apcuinfo']['version'] = 'APCu Version';
+$lng['apcuinfo']['phpversion'] = 'PHP Version';
+$lng['apcuinfo']['host'] = 'APCu Host';
+$lng['apcuinfo']['sharedmem'] = 'Shared Memory';
+$lng['apcuinfo']['sharedmemval'] = '%d Segment(s) with %s (%s memory)';
+$lng['apcuinfo']['start'] = 'Start Time';
+$lng['apcuinfo']['uptime'] = 'Uptime';
+$lng['apcuinfo']['upload'] = 'File Upload Support';
+$lng['apcuinfo']['cachetitle'] = 'Cache Information';
+$lng['apcuinfo']['cvar'] = 'Cached Variables';
+$lng['apcuinfo']['hit'] = 'Hits';
+$lng['apcuinfo']['miss'] = 'Misses';
+$lng['apcuinfo']['reqrate'] = 'Request Rate (hits, misses)';
+$lng['apcuinfo']['creqsec'] = 'cache requests/second';
+$lng['apcuinfo']['hitrate'] = 'Hit Rate';
+$lng['apcuinfo']['missrate'] = 'Miss Rate';
+$lng['apcuinfo']['insrate'] = 'Insert Rate';
+$lng['apcuinfo']['cachefull'] = 'Cache full count';
+$lng['apcuinfo']['runtime'] = 'Runtime Settings';
+$lng['apcuinfo']['memnote'] = 'Memory Usage <font size=-2>(multiple slices indicate fragments)</font>';
+$lng['apcuinfo']['free'] = 'Free';
+$lng['apcuinfo']['used'] = 'Used';
+$lng['apcuinfo']['hitmiss'] = 'Hits & Misses';
+$lng['apcuinfo']['detailmem'] = 'Detailed Memory Usage and Fragmentation';
+$lng['apcuinfo']['fragment'] = 'Fragmentation';
