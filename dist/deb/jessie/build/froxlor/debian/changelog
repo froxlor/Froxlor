@@ -1,3 +1,9 @@
+froxlor (0.9.34.2-1) stable; urgency=medium
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 18 Jan 2016 12:43:26 +0100
+
 froxlor (0.9.34-1) stable; urgency=low
 
   * new upstream release
