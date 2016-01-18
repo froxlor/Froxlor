@@ -73,6 +73,15 @@ if ($page == 'showinfo'
     $uptime_duration = duration($cache['start_time']);
     $size_vars = bsize($cache['mem_size']);
 
+    // check for possible empty values that are used in the templates
+    if (!isset($cache['file_upload_progress'])) {
+        $cache['file_upload_progress'] = $lng['logger']['unknown'];
+    }
+
+    if (!isset($cache['num_expunges'])) {
+        $cache['num_expunges'] = $lng['logger']['unknown'];
+    }
+
     $runtimelines = '';
     foreach (ini_get_all('apcu') as $name => $v) {
         $value = $v['local_value'];
