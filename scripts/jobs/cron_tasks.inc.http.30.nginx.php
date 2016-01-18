@@ -328,8 +328,9 @@ class nginx extends HttpConfigBase {
 			return '';
 		}
 
-		// check whether the customer is deactivated an NO docroot for deactivated users has been set
-		if ($domain['deactivated'] == '1' && empty(Settings::Get('system.deactivateddocroot'))) {
+		// check whether the customer is deactivated an NO docroot for deactivated users has been set#
+		$ddr = Settings::Get('system.deactivateddocroot');
+		if ($domain['deactivated'] == '1' && empty($ddr)) {
 		    return '# Customer deactivated and a docroot for deactivated users hasn\'t been set.' . "\n";
 		}
 

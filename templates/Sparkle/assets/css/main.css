@@ -56,6 +56,11 @@ img.small {
 	height:30px;
 }
 
+img.responsive {
+	max-width: 100%;
+        height: auto;
+}
+
 h1 {
 	display:none;
 	font-size: 2em;

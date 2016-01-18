@@ -216,6 +216,14 @@ return array (
 					'required_resources' => 'change_serversettings',
 				),
 				array (
+					'url' => 'admin_apcuinfo.php?page=showinfo',
+					'label' => $lng['admin']['apcuinfo'],
+					'required_resources' => 'change_serversettings',
+					'show_element' => (
+						function_exists('apcu_cache_info') === true
+					),
+				),
+				array (
 					'url' => 'admin_ipsandports.php?page=ipsandports',
 					'label' => $lng['admin']['ipsandports']['ipsandports'],
 					'required_resources' => 'change_serversettings',

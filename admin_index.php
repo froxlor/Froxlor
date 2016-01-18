@@ -87,7 +87,7 @@ if ($page == 'overview') {
 		|| (isset($lookfornewversion) && $lookfornewversion == 'yes')
 	) {
                 
-		$update_check_uri = 'http://version.froxlor.org/Froxlor/legacy/' . $upstreamversion;
+		$update_check_uri = 'http://version.froxlor.org/Froxlor/legacy/' . $version;
 
 		if (ini_get('allow_url_fopen')) {
 			$latestversion = @file($update_check_uri);
