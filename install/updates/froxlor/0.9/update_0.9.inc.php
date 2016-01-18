@@ -3014,3 +3014,11 @@ if (isFroxlorVersion('0.9.34')) {
     updateToVersion('0.9.34+shsh-1');
 }
 
+if (isFroxlorVersion('0.9.34+shsh-1')) {
+    
+    showUpdateStep("Updating from 0.9.34+shsh-1 to 0.9.34.1+shsh-1");
+    lastStepStatus(0);
+
+    updateToVersion('0.9.34.1+shsh-1');
+}
+
