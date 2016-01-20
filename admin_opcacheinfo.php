@@ -117,7 +117,7 @@ if ($page == 'showinfo'
         $usedstringstr=bsize($usedstring);
         $freestring=@$opcache_status['interned_strings_usage']['free_memory'] ?: 0;
         $freestringstr=bsize($freestring);
-        $totalstring=$totalstring+$freestring;
+        $totalstring=$usedstring+$freestring;
         $stringbuffer=array(
             'total' => bsize($totalstring),
             'used' => $usedstringstr . ($totalstring>0 ? sprintf(" (%.1f %%)", $usedstring/$totalstring*100) : ''),
