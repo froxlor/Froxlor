@@ -995,7 +995,7 @@ $lng['admin']['phpserversettings'] = 'PHP-Einstellungen';
 $lng['admin']['phpsettings']['binary'] = 'PHP-Binary';
 $lng['admin']['phpsettings']['file_extensions'] = 'Dateiendungen';
 $lng['admin']['phpsettings']['file_extensions_note'] = '(ohne Punkt, durch Leerzeichen getrennt)';
-$lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maxmale PHP-Requests für diese Domain (leer für Standardwert)';
+$lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maximale PHP-Requests für diese Domain (leer für Standardwert)';
 $lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximale Requests pro Domain';
 $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Wieviele PHP-Requests pro Domain sollen erlaubt werden?';
 
