@@ -200,8 +200,6 @@ http {
 					</file>
 					<file name="/etc/nginx/fastcgi_params">
 						<content><![CDATA[
-fastcgi_index index.php;
-
 fastcgi_connect_timeout 65;
 fastcgi_send_timeout    180;
 fastcgi_read_timeout    180;
