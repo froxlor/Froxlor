@@ -224,6 +224,14 @@ return array (
 					),
 				),
 				array (
+					'url' => 'admin_opcacheinfo.php?page=showinfo',
+					'label' => $lng['admin']['opcacheinfo'],
+					'required_resources' => 'change_serversettings',
+					'show_element' => (
+						function_exists('opcache_get_configuration') === true
+					),
+				),
+				array (
 					'url' => 'admin_ipsandports.php?page=ipsandports',
 					'label' => $lng['admin']['ipsandports']['ipsandports'],
 					'required_resources' => 'change_serversettings',
