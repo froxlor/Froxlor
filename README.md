@@ -51,7 +51,7 @@ http://files.froxlor.org/releases/froxlor-latest.tar.gz [MD5](http://files.froxl
 [HowTo](http://redmine.froxlor.org/projects/froxlor/wiki/Installationdebian)
 
 /etc/apt/sources.list.d/froxlor.list
-> deb http://debian.froxlor.org [squeeze|wheezy] main
+> deb http://debian.froxlor.org {wheezy|jessie} main
 
 ### Gentoo repository
 
