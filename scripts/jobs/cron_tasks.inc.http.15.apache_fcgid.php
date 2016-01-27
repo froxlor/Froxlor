@@ -93,16 +93,22 @@ class apache_fcgid extends apache
 				else
 				{
 					$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
-					$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
-					$file_extensions = explode(' ', $phpconfig['file_extensions']);
-					$php_options_text.= '    <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
-					$php_options_text.= '      SetHandler fcgid-script' . "\n";
-					foreach($file_extensions as $file_extension)
-					{
-						$php_options_text.= '      FcgidWrapper ' . $php->getInterface()->getStarterFile() . ' .' . $file_extension . "\n";
+					if( $domain["hhvm"] && Settings::Get('system.mod_fcgid_hhvm') == 1 ){
+						$php_options_text.= '	ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/'.makeCorrectDir($domain['documentroot'])."\$1 \n";
 					}
-					$php_options_text.= '      Options +ExecCGI' . "\n";
-					$php_options_text.= '    </FilesMatch>' . "\n";
+					$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
+					// Disable for HHVM
+					if( !$domain["hhvm"] && Settings::Get('system.mod_fcgid_hhvm') == 1 ){
+						$file_extensions = explode(' ', $phpconfig['file_extensions']);
+						$php_options_text.= '    <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
+						$php_options_text.= '      SetHandler fcgid-script' . "\n";
+						foreach($file_extensions as $file_extension)
+						{
+							$php_options_text.= '      FcgidWrapper ' . $php->getInterface()->getStarterFile() . ' .' . $file_extension . "\n";
+						}
+						$php_options_text.= '      Options +ExecCGI' . "\n";
+						$php_options_text.= '    </FilesMatch>' . "\n";
+					}
 					// >=apache-2.4 enabled?
 					if (Settings::Get('system.apache24') == '1') {
 					    $mypath_dir = new frxDirectory($domain['documentroot']);

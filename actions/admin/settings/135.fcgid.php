@@ -135,6 +135,15 @@ return array(
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('apache2')
 					),
+					'system_mod_fcgid_hhvm' => array(
+					'label' => $lng['serversettings']['mod_fcgid']['hhvm'],
+					'settinggroup' => 'system',
+					'varname' => 'mod_fcgid_hhvm',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array('apache2')
+					),
 				'system_mod_fcgid_idle_timeout' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['idle_timeout'],
 					'settinggroup' => 'system',
