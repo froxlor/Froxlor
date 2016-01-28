@@ -37,7 +37,7 @@ function randomStr($length)
             $pr_bits .= @fread($fp, $length);
             @fclose($fp);
         } else {
-            $pr_bits = substr(rand(time()).rand(time()), 0, $length);
+            $pr_bits = substr(rand(time(), getrandmax()).rand(time(), getrandmax()), 0, $length);
         }
         return $pr_bits;
     }
