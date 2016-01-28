@@ -345,8 +345,8 @@ if ($action == 'forgotpwd') {
 				if ($user !== false) {
 					// build a activation code
 					$timestamp = time();
-					$first = substr(md5($user['loginname'] . $timestamp . rand(0, $timestamp)), 0, 15);
-					$third = substr(md5($user['email'] . $timestamp . rand(0, $timestamp)), -15);
+					$first = substr(md5($user['loginname'] . $timestamp . randomStr(16)), 0, 15);
+					$third = substr(md5($user['email'] . $timestamp . randomStr(16)), -15);
 					$activationcode = $first . $timestamp . $third . substr(md5($third . $timestamp), 0, 10);
 
 					// Drop all existing activation codes for this user
