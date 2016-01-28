@@ -47,7 +47,7 @@ function makeSecurePath($path) {
 	// thx to aaronmueller for this snipped
 	$badchars = array(':', ';', '|', '&', '>', '<', '`', '$', '~', '?');
 	foreach ($badchars as $bc) {
-		str_replace($bc, "", $path);
+		$path = str_replace($bc, "", $path);
 	}
 
 	return $path;
