@@ -50,6 +50,10 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 		try {
 			# Initialize Lescript with documentroot
 			$le = new lescript($certrow['documentroot'], $debugHandler);
+			
+			# Initialize Lescript
+			$le->initAccount();
+			
 			# Request the new certificate (old key may be used)
 			$return = $le->signDomains($domains, $certrow['ssl_key_file']);
 			

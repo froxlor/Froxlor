@@ -34,16 +34,14 @@ class lescript
     public $countryCode = 'DE';
     public $state = "Germany";
 
-    private $certificatesDir;
     private $webRootDir;
 
     private $debugHandler;
     private $client;
     private $accountKeyPath;
 
-    public function __construct($certificatesDir, $webRootDir, $debugHandler)
+    public function __construct($webRootDir, $debugHandler)
     {
-        $this->certificatesDir = $certificatesDir;
         $this->webRootDir = $webRootDir;
         $this->debugHandler = $debugHandler;
         $this->client = new Client($this->ca);
@@ -59,9 +57,9 @@ class lescript
             // ---------------------------------------------
 
             $this->log('Starting new account registration');
-            list($private, $public) = $this->generateKey();
-            Settings::Set('system.leprivatekey', $private);
-            Settings::Set('system.lepublickey', $public);
+            $keys = $this->generateKey();
+            Settings::Set('system.leprivatekey', $keys['private']);
+            Settings::Set('system.lepublickey', $keys['public']);
             $this->postNewReg();
             $this->log('New account certificate registered');
 
@@ -174,7 +172,8 @@ class lescript
 
         // generate private key for domain if not exist
         if(!is_null($domainkey)) {
-            list($domainkey, $public) = $this->generateKey();
+            $keys = $this->generateKey();
+            $domainkey = $keys['private'];
         }
 
         // load domain key
@@ -243,11 +242,6 @@ class lescript
     {
         $pem = chunk_split(base64_encode($body), 64, "\n");
         return "-----BEGIN CERTIFICATE-----\n" . $pem . "-----END CERTIFICATE-----\n";
-    }
-
-    private function getDomainPath($domain)
-    {
-        return $this->certificatesDir.'/'.$domain.'/';
     }
 
     private  function postNewReg()
