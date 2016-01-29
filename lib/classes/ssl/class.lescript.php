@@ -357,7 +357,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 
     protected function log($message)
     {
-        fwrite($this->debugHandler, 'letsencrypt ' . $message);
+        fwrite($this->debugHandler, 'letsencrypt ' . $message . "\n");
     }
 }
 
