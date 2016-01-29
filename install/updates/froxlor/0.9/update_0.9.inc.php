@@ -3020,3 +3020,18 @@ if (isFroxlorVersion('0.9.34.1')) {
 
     updateToVersion('0.9.34.2');
 }
+
+if (isFroxlorVersion('0.9.34.2')) {
+
+    showUpdateStep("Updating from 0.9.34.2 to 0.9.35-dev1");
+    lastStepStatus(0);
+    showUpdateStep("Adding Let's encrypt - certificate fields");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` ADD `letsencrypt` INT NOT NULL DEFAULT '0' AFTER `ssl_cert_chainfile`");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` ADD `expirationdate` DATETIME NULL AFTER `letsencrypt`;");
+    Settings::AddNew("system.leprivatekey", 'unset');
+    Settings::AddNew("system.lepublickey", 'unset');
+    lastStepStatus(0);
+
+    updateToVersion('0.9.35-dev1');
+}
+
