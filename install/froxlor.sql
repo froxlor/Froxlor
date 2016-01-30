@@ -194,8 +194,8 @@ CREATE TABLE `panel_customers` (
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
-  `lepublickey` text DEFAULT NULL,
-  `leprivatekey` text DEFAULT NULL,
+  `lepublickey` mediumtext DEFAULT NULL,
+  `leprivatekey` mediumtext DEFAULT NULL,
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -249,6 +249,7 @@ CREATE TABLE `panel_domains` (
   `mod_fcgid_starter` int(4) default '-1',
   `mod_fcgid_maxrequests` int(4) default '-1',
   `ismainbutsubto` int(11) unsigned NOT NULL default '0',
+  `letsencrypt` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -826,7 +827,6 @@ CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `ssl_key_file` mediumtext NOT NULL,
   `ssl_ca_file` mediumtext,
   `ssl_cert_chainfile` mediumtext,
-  `letsencrypt` int(11) NOT NULL DEFAULT '0',
   `expirationdate` datetime DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;

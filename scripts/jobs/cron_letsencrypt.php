@@ -31,6 +31,7 @@ $upd_stmt = Database::prepare("
 	UPDATE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` SET `ssl_cert_file` = :crt, `ssl_key_file` = :key, `ssl_ca_file` = :ca, expirationdate = :expirationdate WHERE `id` = :id
 ");
 
+$changedetected = 0;
 while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	// Only renew let's encrypt certificate for domains where a documentroot
@@ -81,10 +82,19 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 					'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t']),
 					'id' => $certrow['id'])
 			);
+
+			$changedetected = 1;
+
 		} catch (\Exception $e) {
 			fwrite($debugHandler, 'letsencrypt exception: ' . $e->getMessage() . "\n");
 		}
 	} else {
 		fwrite($debugHandler, 'letsencrypt skipped because documentroot ' . $certrow['documentroot'] . ' does not exist' . "\n");
 	}
+}
+
+// If we have a change in a certificate, we need to update the webserver - configs
+// This is easiest done by just creating a new task ;)
+if ($changedetected) {
+	inserttask(1);
 }

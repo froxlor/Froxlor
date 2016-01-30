@@ -3025,12 +3025,11 @@ if (isFroxlorVersion('0.9.34.2')) {
 
     showUpdateStep("Updating from 0.9.34.2 to 0.9.35-dev1");
     lastStepStatus(0);
-    showUpdateStep("Adding Let's encrypt - certificate fields");
-    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` ADD `letsencrypt` INT NOT NULL DEFAULT '0' AFTER `ssl_cert_chainfile`");
-    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` ADD `expirationdate` DATETIME NULL AFTER `letsencrypt`;");
-    Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `lepublickey` TEXT DEFAULT NULL AFTER `custom_notes_show`");
-    Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `leprivatekey` TEXT DEFAULT NULL AFTER `lepublickey`;");
-    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `letsencrypt` INT NOT NULL DEFAULT '0' AFTER `ismainbutsubto`;");
+    showUpdateStep("Adding Let's Encrypt - certificate fields");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` ADD `expirationdate` DATETIME NULL AFTER `ssl_cert_chainfile`;");
+    Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `lepublickey` MEDIUMTEXT DEFAULT NULL AFTER `custom_notes_show`");
+    Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `leprivatekey` MEDIUMTEXT DEFAULT NULL AFTER `lepublickey`;");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `letsencrypt` TINYINT(1) NOT NULL DEFAULT '0' AFTER `ismainbutsubto`;");
     Settings::AddNew("system.leprivatekey", 'unset');
     Settings::AddNew("system.lepublickey", 'unset');
     lastStepStatus(0);
