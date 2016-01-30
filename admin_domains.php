@@ -565,6 +565,11 @@ if ($page == 'domains'
 					$ssl_ipandports[] = -1;
 				}
 
+				// We can't enable let's encrypt for wildcard - domains
+				if ($serveraliasoption == '0') {
+					$letsencrypt = 0;
+				}
+
 				if (!preg_match('/^https?\:\/\//', $documentroot)) {
 					if (strstr($documentroot, ":") !== false) {
 						standard_error('pathmaynotcontaincolon');
@@ -1342,6 +1347,11 @@ if ($page == 'domains'
 					$ssl_ipandports[] = -1;
 				}
 
+				// We can't enable let's encrypt for wildcard domains
+				if ($serveraliasoption == '0') {
+					$letsencrypt = '0';
+				}
+
 				if (!preg_match('/^https?\:\/\//', $documentroot)) {
 					$documentroot = makeCorrectDir($documentroot);
 				}
@@ -1889,6 +1899,7 @@ if ($page == 'domains'
 				$_value = '2';
 				if ($result['iswildcarddomain'] == '1') {
 					$_value = '0';
+					$letsencrypt = 0;
 				} elseif ($result['wwwserveralias'] == '1') {
 					$_value = '1';
 				}
