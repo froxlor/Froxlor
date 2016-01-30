@@ -31,16 +31,16 @@ $upd_stmt = Database::prepare("
 
 while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-	# Only renew let's encrypt certificate for domains where a documentroot
-	# already exists
+	// Only renew let's encrypt certificate for domains where a documentroot
+	// already exists
 	if (file_exists($certrow['documentroot'])
 		&& is_dir($certrow['documentroot'])
 	) {
 		fwrite($debugHandler, "updating " . $certrow['domain'] . "\n");
-		# Parse the old certificate
+		// Parse the old certificate
 		$x509data = openssl_x509_parse($certrow['ssl_cert_file']);
 		
-		# We are interessted in the old SAN - data
+		// We are interessted in the old SAN - data
 		$san = explode(', ', $x509data['extensions']['subjectAltName']);
 		$domains = array();
 		foreach($san as $dnsname) {
@@ -48,19 +48,19 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 		}
 		
 		try {
-			# Initialize Lescript with documentroot
+			// Initialize Lescript with documentroot
 			$le = new lescript($certrow['documentroot'], $debugHandler);
 			
-			# Initialize Lescript
+			// Initialize Lescript
 			$le->initAccount();
 			
-			# Request the new certificate (old key may be used)
+			// Request the new certificate (old key may be used)
 			$return = $le->signDomains($domains, $certrow['ssl_key_file']);
 			
-			# We are interessted in the expirationdate
+			// We are interessted in the expirationdate
 			$newcert = openssl_x509_parse($return['crt']);
 			
-			# Store the new data
+			// Store the new data
 			Database::pexecute($upd_stmt, array(
 					'crt' => $return['crt'],
 					'key' => $return['key'],
@@ -69,9 +69,9 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 					'id' => $certrow['id'])
 			);
 		} catch (\Exception $e) {
-			fwrite($debugHandler, 'letsencrypt exception: ' . $e->getMessage());
+			fwrite($debugHandler, 'letsencrypt exception: ' . $e->getMessage() . "\n");
 		}
 	} else {
-		fwrite($debugHandler, 'documentroot ' . $certrow['documentroot'] . ' does not exist' . "\n");
+		fwrite($debugHandler, 'letsencrypt skipped because documentroot ' . $certrow['documentroot'] . ' does not exist' . "\n");
 	}
 }

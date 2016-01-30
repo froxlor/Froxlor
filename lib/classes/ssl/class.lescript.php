@@ -1,34 +1,34 @@
 <?php
-# Copyright (c) 2015, Stanislav Humplik <sh@analogic.cz>
-# All rights reserved.
-# 
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
-#     * Redistributions of source code must retain the above copyright
-#       notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright
-#       notice, this list of conditions and the following disclaimer in the
-#       documentation and/or other materials provided with the distribution.
-#     * Neither the name of the <organization> nor the
-#       names of its contributors may be used to endorse or promote products
-#       derived from this software without specific prior written permission.
-# 
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// Copyright (c) 2015, Stanislav Humplik <sh@analogic.cz>
+// All rights reserved.
+// 
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the <organization> nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# This file is copied from https://github.com/analogic/lescript
-# and modified to work without files and integrate in Froxlor
+// This file is copied from https://github.com/analogic/lescript
+// and modified to work without files and integrate in Froxlor
 class lescript
 {
-    #public $ca = 'https://acme-v01.api.letsencrypt.org';
+    //public $ca = 'https://acme-v01.api.letsencrypt.org';
     public $ca = 'https://acme-staging.api.letsencrypt.org'; // testing
     public $license = 'https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf';
     public $countryCode = 'DE';
@@ -38,7 +38,7 @@ class lescript
 
     private $debugHandler;
     private $client;
-    private $accountKeyPath;
+    private $accountKey;
 
     public function __construct($webRootDir, $debugHandler)
     {
@@ -49,9 +49,9 @@ class lescript
 
     public function initAccount()
     {
-    
-        $private = Settings::Get('system.leprivatekey');
-        if (!$private || $private == 'unset') {
+        // Let's see if we have the private accountkey
+        $this->accountKey = Settings::Get('system.leprivatekey');
+        if (!$this->accountKey || $this->accountKey == 'unset') {
 
             // generate and save new private key for account
             // ---------------------------------------------
@@ -60,6 +60,7 @@ class lescript
             $keys = $this->generateKey();
             Settings::Set('system.leprivatekey', $keys['private']);
             Settings::Set('system.lepublickey', $keys['public']);
+            $this->accountKey = $keys['private'];
             $this->postNewReg();
             $this->log('New account certificate registered');
 
@@ -74,7 +75,7 @@ class lescript
     {
         $this->log('Starting certificate generation process for domains');
 
-        $privateAccountKey = openssl_pkey_get_private(Settings::Get('system.leprivatekey'));
+        $privateAccountKey = openssl_pkey_get_private($this->accountKey);
         $accountKeyDetails = openssl_pkey_get_details($privateAccountKey);
 
         // start domains authentication
@@ -148,6 +149,8 @@ class lescript
             );
 
             // waiting loop
+            // we wait for a maximum of 30 seconds to avoid endless loops
+            $count = 0;
             do {
                 if(empty($result['status']) || $result['status'] == "invalid") {
                     throw new \RuntimeException("Verification ended with error: ".json_encode($result));
@@ -157,11 +160,12 @@ class lescript
                 if(!$ended) {
                     $this->log("Verification pending, sleeping 1s");
                     sleep(1);
+                    $count++;
                 }
 
                 $result = $this->client->get($location);
 
-            } while (!$ended);
+            } while (!$ended && $count < 30);
 
             $this->log("Verification ended with status: ${result['status']}");
             @unlink($tokenPath);
@@ -225,16 +229,11 @@ class lescript
 
         if(empty($certificates)) throw new \RuntimeException('No certificates generated');
 
-        $this->log("Saving fullchain.pem");
         $fullchain = implode("\n", $certificates);
-
-        $this->log("Saving cert.pem");
         $crt = array_shift($certificates);
-
-        $this->log("Saving chain.pem");
         $chain = implode("\n", $certificates);
 
-        $this->log("Done !!§§!");
+        $this->log("Done, returning new certificates and key");
         return array('fullchain' => $fullchain, 'crt' => $crt, 'chain' => $chain, 'key' => $privateDomainKey);
     }
 
@@ -320,7 +319,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 
     private function signedRequest($uri, array $payload)
     {
-        $privateKey = openssl_pkey_get_private(Settings::Get('system.leprivatekey'));
+        $privateKey = openssl_pkey_get_private($this->accountKey);
         $details = openssl_pkey_get_details($privateKey);
 
         $header = array(
