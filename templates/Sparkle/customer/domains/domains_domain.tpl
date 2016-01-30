@@ -21,7 +21,7 @@
 			</a>&nbsp;
 		</if>
 		<if $row['letsencrypt'] == '1'>
-			<img src="templates/{$theme}/assets/img/icons/ssl_customer.png" alt="{$lng['panel']['letsencrypt']}" title="{$lng['panel']['letsencrypt']}" />
+			<img src="templates/{$theme}/assets/img/icons/ssl_letsencrypt.png" alt="{$lng['panel']['letsencrypt']}" title="{$lng['panel']['letsencrypt']}" />
 		</if>
 		<if $row['parentdomainid'] == '0' && !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
 			({$lng['domains']['isassigneddomain']})&nbsp;
