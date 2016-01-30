@@ -71,10 +71,10 @@ if ($page == 'overview') {
 			$ssl_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` = :domainid");
 			Database::pexecute($ssl_stmt, array("domainid" => $row['id']));
 			$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
-			if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '' && $row['letsencrypt'] == 0) {
+			if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
 				// own certificate (ssl_customer_green)
 				$row['domain_hascert'] = 1;
-			} elseif ($row['letsencrypt'] == 0) {
+			} else {
 				// check if it's parent has one set (shared)
 				if ($row['parentdomainid'] != 0) {
 					$ssl_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` = :domainid");
@@ -146,7 +146,7 @@ if ($page == 'overview') {
 
 					// get ssl-ips if activated
 					$show_ssledit = false;
-					if (Settings::Get('system.use_ssl') == '1' && domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1') {
+					if (Settings::Get('system.use_ssl') == '1' && domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
 						$show_ssledit = true;
 					}
 					$row = htmlentities_array($row);
