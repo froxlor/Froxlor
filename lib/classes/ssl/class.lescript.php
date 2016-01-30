@@ -59,7 +59,7 @@ class lescript
             $this->log('Starting new account registration');
             $keys = $this->generateKey();
             $upd_stmt = Database::prepare("
-                UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `lepublickey` = :public AND `leprivatekey` = :private WHERE `customerid` = :customerid;
+                UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `lepublickey` = :public, `leprivatekey` = :private WHERE `customerid` = :customerid;
             ");
             Database::pexecute($upd_stmt, array('public' => $keys['public'], 'private' => $keys['private'], 'customerid' => $certrow['customerid']));
             $this->accountKey = $keys['private'];
