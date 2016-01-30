@@ -74,7 +74,7 @@ if ($page == 'overview') {
 			if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '' && $row['letsencrypt'] == 0) {
 				// own certificate (ssl_customer_green)
 				$row['domain_hascert'] = 1;
-			} else {
+			} elseif ($row['letsencrypt'] == 0) {
 				// check if it's parent has one set (shared)
 				if ($row['parentdomainid'] != 0) {
 					$ssl_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` WHERE `domainid` = :domainid");
