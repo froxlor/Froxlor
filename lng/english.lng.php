@@ -1924,3 +1924,9 @@ $lng['opcacheinfo']['blacklist'] = 'Blacklist';
 $lng['opcacheinfo']['novalue'] = '<i>no value</i>';
 $lng['opcacheinfo']['true'] = '<i>true</i>';
 $lng['opcacheinfo']['false'] = '<i>false</i>';
+
+// Added for let's encrypt
+$lng['domains']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
+$lng['domains']['letsencrypt']['description'] = 'Get a free certificate from Let\'s Encrypt. This certificate will be created and renewed automatically';
+$lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using Let\'s Encrypt is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
+$lng['panel']['letsencrypt'] = 'Using Let\'s encrypt';

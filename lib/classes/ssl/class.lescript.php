@@ -75,6 +75,11 @@ class lescript
 
     public function signDomains(array $domains, $domainkey = null)
     {
+    
+        if (!$this->accountKey) {
+            throw new \RuntimeException("Account not initiated");
+        }
+
         $this->log('Starting certificate generation process for domains');
 
         $privateAccountKey = openssl_pkey_get_private($this->accountKey);

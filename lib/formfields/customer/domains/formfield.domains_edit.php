@@ -86,6 +86,16 @@ return array(
 									),
 						'value' => array($result['ssl_redirect'])
 					),
+					'useletsencrypt' => array(
+						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? (domainHasSslIpPort($result['id']) ? true : false) : false) : false),
+						'label' => $lng['domains']['letsencrypt']['title'],
+						'desc' => $lng['domains']['letsencrypt']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array($result['letsencrypt'])
+					),
 					'openbasedir_path' => array(
 						'visible' => ($result['openbasedir'] == '1') ? true : false,
 						'label' => $lng['domain']['openbasedirpath'],

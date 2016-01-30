@@ -21,10 +21,10 @@
 fwrite($debugHandler, "updating let's encrypt certificates\n");
 
 $certificates_stmt = Database::query("
-	SELECT domssl.`id`, domssl.`ssl_cert_file`, domssl.`ssl_key_file`, domssl.`ssl_ca_file`, dom.`domain`, dom.`iswildcarddomain`, dom.`wwwserveralias`, dom.`documentroot`,
-		cust.`leprivatekey`, cust.`lepublickey`, cust.customerid
-	FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` as domssl, `" . TABLE_PANEL_DOMAINS . "` as dom, `" . TABLE_PANEL_CUSTOMERS . "` as cust
-	WHERE domssl.domainid = dom.id AND dom.customerid = cust.customerid AND domssl.letsencrypt = 1
+	SELECT domssl.`id`, domssl.expirationdate, domssl.`ssl_cert_file`, domssl.`ssl_key_file`, domssl.`ssl_ca_file`, dom.`domain`, dom.`iswildcarddomain`, dom.`wwwserveralias`,
+	dom.`documentroot`, cust.`leprivatekey`, cust.`lepublickey`, cust.customerid
+	FROM `".TABLE_PANEL_CUSTOMERS."` as cust, `".TABLE_PANEL_DOMAINS."` dom LEFT JOIN `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` domssl ON (dom.id = domssl.domainid)
+	WHERE dom.customerid = cust.customerid AND dom.letsencrypt = 1 AND (domssl.expirationdate < DATE_ADD(NOW(), INTERVAL 30 DAY) OR domssl.expirationdate IS NULL)
 ");
 
 $upd_stmt = Database::prepare("
@@ -39,14 +39,25 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 		&& is_dir($certrow['documentroot'])
 	) {
 		fwrite($debugHandler, "updating " . $certrow['domain'] . "\n");
-		// Parse the old certificate
-		$x509data = openssl_x509_parse($certrow['ssl_cert_file']);
 		
-		// We are interessted in the old SAN - data
-		$san = explode(', ', $x509data['extensions']['subjectAltName']);
-		$domains = array();
-		foreach($san as $dnsname) {
-			$domains[] = substr($dnsname, 4);
+		if ($certrow['ssl_cert_file']) {
+			fwrite($debugHandler, "letsencrypt using old key / SAN for " . $certrow['domain'] . "\n");
+			// Parse the old certificate
+			$x509data = openssl_x509_parse($certrow['ssl_cert_file']);
+			
+			// We are interessted in the old SAN - data
+			$san = explode(', ', $x509data['extensions']['subjectAltName']);
+			$domains = array();
+			foreach($san as $dnsname) {
+				$domains[] = substr($dnsname, 4);
+			}
+		} else {
+			fwrite($debugHandler, "letsencrypt generating new key / SAN for " . $certrow['domain'] . "\n");
+			$domains = array($certrow['domain']);
+			// Add www.<domain> for SAN
+			if ($certrow['wwwserveralias'] == 1) {
+				$domains[] = 'www.' . $certrow['domain'];
+			}
 		}
 		
 		try {
