@@ -21,8 +21,10 @@
 fwrite($debugHandler, "updating let's encrypt certificates\n");
 
 $certificates_stmt = Database::query("
-	SELECT domssl.`id`, domssl.`ssl_cert_file`, domssl.`ssl_key_file`, domssl.`ssl_ca_file`, dom.`domain`, dom.`iswildcarddomain`, dom.`wwwserveralias`, dom.`documentroot`
-	FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` as domssl, `" . TABLE_PANEL_DOMAINS . "` as dom WHERE domssl.domainid = dom.id AND domssl.letsencrypt = 1
+	SELECT domssl.`id`, domssl.`ssl_cert_file`, domssl.`ssl_key_file`, domssl.`ssl_ca_file`, dom.`domain`, dom.`iswildcarddomain`, dom.`wwwserveralias`, dom.`documentroot`,
+		cust.`leprivatekey`, cust.`lepublickey`, cust.customerid
+	FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` as domssl, `" . TABLE_PANEL_DOMAINS . "` as dom, `" . TABLE_PANEL_CUSTOMERS . "` as cust
+	WHERE domssl.domainid = dom.id AND dom.customerid = cust.customerid AND domssl.letsencrypt = 1
 ");
 
 $upd_stmt = Database::prepare("
@@ -52,7 +54,7 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$le = new lescript($certrow['documentroot'], $debugHandler);
 			
 			// Initialize Lescript
-			$le->initAccount();
+			$le->initAccount($certrow);
 			
 			// Request the new certificate (old key may be used)
 			$return = $le->signDomains($domains, $certrow['ssl_key_file']);

@@ -194,6 +194,8 @@ CREATE TABLE `panel_customers` (
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
+  `lepublickey` text DEFAULT NULL,
+  `leprivatekey` text DEFAULT NULL,
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -825,7 +827,7 @@ CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `ssl_ca_file` mediumtext,
   `ssl_cert_chainfile` mediumtext,
   `letsencrypt` int(11) NOT NULL DEFAULT '0',
-  `expirationdate` datetime DEFAULT NULL
+  `expirationdate` datetime DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 

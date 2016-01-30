@@ -3028,6 +3028,8 @@ if (isFroxlorVersion('0.9.34.2')) {
     showUpdateStep("Adding Let's encrypt - certificate fields");
     Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` ADD `letsencrypt` INT NOT NULL DEFAULT '0' AFTER `ssl_cert_chainfile`");
     Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` ADD `expirationdate` DATETIME NULL AFTER `letsencrypt`;");
+    Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `lepublickey` TEXT DEFAULT NULL AFTER `custom_notes_show`");
+    Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `leprivatekey` TEXT DEFAULT NULL AFTER `lepublickey`;");
     Settings::AddNew("system.leprivatekey", 'unset');
     Settings::AddNew("system.lepublickey", 'unset');
     lastStepStatus(0);

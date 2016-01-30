@@ -47,10 +47,10 @@ class lescript
         $this->client = new Client($this->ca);
     }
 
-    public function initAccount()
+    public function initAccount($certrow)
     {
         // Let's see if we have the private accountkey
-        $this->accountKey = Settings::Get('system.leprivatekey');
+        $this->accountKey = $certrow['leprivatekey'];
         if (!$this->accountKey || $this->accountKey == 'unset') {
 
             // generate and save new private key for account
@@ -58,8 +58,10 @@ class lescript
 
             $this->log('Starting new account registration');
             $keys = $this->generateKey();
-            Settings::Set('system.leprivatekey', $keys['private']);
-            Settings::Set('system.lepublickey', $keys['public']);
+            $upd_stmt = Database::prepare("
+                UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `lepublickey` = :public AND `leprivatekey` = :private WHERE `customerid` = :customerid;
+            ");
+            Database::pexecute($upd_stmt, array('public' => $keys['public'], 'private' => $keys['private'], 'customerid' => $certrow['customerid']));
             $this->accountKey = $keys['private'];
             $this->postNewReg();
             $this->log('New account certificate registered');
