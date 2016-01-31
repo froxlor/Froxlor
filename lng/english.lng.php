@@ -1927,6 +1927,6 @@ $lng['opcacheinfo']['false'] = '<i>false</i>';
 
 // Added for let's encrypt
 $lng['domains']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
-$lng['domains']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically. <b>This is not possible for wildcard - domains</b>';
+$lng['domains']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong>This is not possible for wildcard - domains';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using Let\'s Encrypt is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
 $lng['panel']['letsencrypt'] = 'Using Let\'s encrypt';
