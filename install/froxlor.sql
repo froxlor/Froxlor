@@ -752,7 +752,8 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, 
 	(3, 'froxlor/ticket', 'used_tickets_reset', '1 DAY', '1', 'cron_ticketsreset'),
 	(4, 'froxlor/ticket', 'ticketarchive', '1 MONTH', '1', 'cron_ticketarchive'),
 	(5, 'froxlor/reports', 'usage_report', '1 DAY', '1', 'cron_usage_report'),
-	(6, 'froxlor/core', 'mailboxsize', '6 HOUR', '1', 'cron_mailboxsize');
+	(6, 'froxlor/core', 'mailboxsize', '6 HOUR', '1', 'cron_mailboxsize'),
+	(7, 'froxlor/letsencrypt', 'letsencrypt', '5 MINUTE', '1', 'cron_letsencrypt');
 
 
 
