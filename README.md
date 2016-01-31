@@ -71,3 +71,6 @@ This has 2 known side-effects at the moment:
 * After creating a domain, it will have the default certificate for a short time (by default 5 minutes until the cronjob runs the next time)
 
 It may be possible to fix these issues, but they are not a priority at the moment
+
+**By default the testing version of Let's Encrypt is used**. To activate the production version, change the `$ca` in `lib/classes/ssl/class.lescript.php`
+to `https://acme-v01.api.letsencrypt.org`.
