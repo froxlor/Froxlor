@@ -3032,17 +3032,17 @@ if (isFroxlorVersion('0.9.34.2')) {
     Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `letsencrypt` TINYINT(1) NOT NULL DEFAULT '0' AFTER `ismainbutsubto`;");
     Settings::AddNew("system.leprivatekey", 'unset');
     Settings::AddNew("system.lepublickey", 'unset');
-	showUpdateStep("Adding new cron-module for web- and traffic-reporting");
-	$stmt = Database::prepare("
-		INSERT INTO `" . TABLE_PANEL_CRONRUNS . "` SET
-		`module` = 'froxlor/letsencrypt',
-		`cronfile` = 'letsencrypt',
-		`interval` = '5 MINUTE',
-		`desc_lng_key` = 'cron_letsencrypt',
-		`lastrun` = DATE_SUB(NOW(), INTERVAL 5 MINUTE),
-		`isactive` = 1"
-	);
-	Database::pexecute($stmt);
+    showUpdateStep("Adding new cron-module for Let's encrypt");
+    $stmt = Database::prepare("
+        INSERT INTO `" . TABLE_PANEL_CRONRUNS . "` SET
+        `module` = 'froxlor/letsencrypt',
+        `cronfile` = 'letsencrypt',
+        `interval` = '5 MINUTE',
+        `desc_lng_key` = 'cron_letsencrypt',
+        `lastrun` = DATE_SUB(NOW(), INTERVAL 5 MINUTE),
+        `isactive` = 1"
+    );
+    Database::pexecute($stmt);
     lastStepStatus(0);
 
     updateToVersion('0.9.35-dev1');
