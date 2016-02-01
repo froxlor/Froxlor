@@ -22,7 +22,7 @@ fwrite($debugHandler, "updating let's encrypt certificates\n");
 
 $certificates_stmt = Database::query("
 	SELECT domssl.`id`, domssl.`domainid`, domssl.expirationdate, domssl.`ssl_cert_file`, domssl.`ssl_key_file`, domssl.`ssl_ca_file`, dom.`domain`, dom.`iswildcarddomain`, dom.`wwwserveralias`,
-	dom.`documentroot`, cust.`leprivatekey`, cust.`lepublickey`, cust.customerid
+	dom.`documentroot`, dom.`id` as 'domainid', cust.`leprivatekey`, cust.`lepublickey`, cust.customerid
 	FROM `".TABLE_PANEL_CUSTOMERS."` as cust, `".TABLE_PANEL_DOMAINS."` dom LEFT JOIN `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` domssl ON (dom.id = domssl.domainid)
 	WHERE dom.customerid = cust.customerid AND dom.letsencrypt = 1 AND (domssl.expirationdate < DATE_ADD(NOW(), INTERVAL 30 DAY) OR domssl.expirationdate IS NULL)
 ");

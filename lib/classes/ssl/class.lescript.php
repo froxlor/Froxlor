@@ -182,7 +182,7 @@ class lescript
         // ----------------------
 
         // generate private key for domain if not exist
-        if(!is_null($domainkey)) {
+        if(empty($domainkey)) {
             $keys = $this->generateKey();
             $domainkey = $keys['private'];
         }
