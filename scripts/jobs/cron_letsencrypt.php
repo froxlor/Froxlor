@@ -85,7 +85,7 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			$changedetected = 1;
 
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			fwrite($debugHandler, 'letsencrypt exception: ' . $e->getMessage() . "\n");
 		}
 	} else {
