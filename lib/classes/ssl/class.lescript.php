@@ -241,7 +241,7 @@ class lescript
         $chain = implode("\n", $certificates);
 
         $this->log("Done, returning new certificates and key");
-        return array('fullchain' => $fullchain, 'crt' => $crt, 'chain' => $chain, 'key' => $privateDomainKey);
+        return array('fullchain' => $fullchain, 'crt' => $crt, 'chain' => $chain, 'key' => $domainkey);
     }
 
     private function parsePemFromBody($body)
