@@ -88,6 +88,7 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$changedetected = 1;
 
 		} catch (Exception $e) {
+			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ": " . $e->getMessage());
 			fwrite($debugHandler, 'letsencrypt exception: ' . $e->getMessage() . "\n");
 		}
 	} else {
