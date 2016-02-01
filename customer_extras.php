@@ -53,7 +53,7 @@ if ($page == 'overview') {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
 				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
-					$row['path'] = substr($row['path'], strlen($userinfo['documentroot']) - 1);
+				    $row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
 				}
 
 				$row = htmlentities_array($row);
@@ -86,7 +86,7 @@ if ($page == 'overview') {
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
-					$result['path'] = substr($result['path'], strlen($userinfo['documentroot']) - 1);
+				    $result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
 				}
 
 				ask_yesno('extras_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['username'] . ' (' . $result['path'] . ')');
@@ -224,7 +224,7 @@ if ($page == 'overview') {
 				}
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
-					$result['path'] = substr($result['path'], strlen($userinfo['documentroot']));
+					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
 				}
 
 				$result = htmlentities_array($result);
@@ -269,9 +269,7 @@ if ($page == 'overview') {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
 				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
-					$row['path'] = substr($row['path'], strlen($userinfo['documentroot']));
-					// don't show nothing when it's the docroot, show slash
-					if ($row['path'] == '') { $row['path'] = '/'; }
+					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
 				}
 
 				$row['options_indexes'] = str_replace('1', $lng['panel']['yes'], $row['options_indexes']);
@@ -460,9 +458,7 @@ if ($page == 'overview') {
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
-					$result['path'] = substr($result['path'], strlen($userinfo['documentroot']));
-					// don't show nothing when it's the docroot, show slash
-					if ($result['path'] == '') { $result['path'] = '/'; }
+					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
 				}
 
 				$result['error404path'] = $result['error404path'];

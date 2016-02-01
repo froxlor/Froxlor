@@ -73,6 +73,15 @@ if ($page == 'showinfo'
     $uptime_duration = duration($cache['start_time']);
     $size_vars = bsize($cache['mem_size']);
 
+    // check for possible empty values that are used in the templates
+    if (!isset($cache['file_upload_progress'])) {
+        $cache['file_upload_progress'] = $lng['logger']['unknown'];
+    }
+
+    if (!isset($cache['num_expunges'])) {
+        $cache['num_expunges'] = $lng['logger']['unknown'];
+    }
+
     $runtimelines = '';
     foreach (ini_get_all('apcu') as $name => $v) {
         $value = $v['local_value'];
@@ -334,7 +343,7 @@ function fill_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $co
 
 
     if (function_exists("imagefilledarc")) {
-        // exists only if GD 2.0.1 is avaliable
+        // exists only if GD 2.0.1 is available
         imagefilledarc($im, $centerX + 1, $centerY + 1, $diameter, $diameter, $start, $end, $color1, IMG_ARC_PIE);
         imagefilledarc($im, $centerX, $centerY, $diameter, $diameter, $start, $end, $color2, IMG_ARC_PIE);
         imagefilledarc($im, $centerX, $centerY, $diameter, $diameter, $start, $end, $color1, IMG_ARC_NOFILL | IMG_ARC_EDGED);
