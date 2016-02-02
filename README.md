@@ -8,15 +8,17 @@ Developed by experienced server administrators, this panel simplifies the effort
 
 ## Additional Features
 
-* Terminationdate for domains. 
-** orange background color in domainlist (admin/customer) for terminated but not expired domains
-** red background color in domainlist (admin/customer) for expired domains
+* Terminationdate for domains.  
+  orange background color in domainlist (admin/customer) for terminated but not expired domains  
+  red background color in domainlist (admin/customer) for expired domains
 
 ## Installation
 
 1. Ensure that your webserver serves /var/www
-2. Clone from GitHub  
+2. Clone from GitHub
+  
 > git clone https://github.com/megaspatz/Froxlor.git froxlor  
+
 3. Point your browser to http://[ip-of-webserver]/froxlor
 4. Follow the installer
 5. Login as administrator
