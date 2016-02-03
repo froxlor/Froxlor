@@ -1588,3 +1588,10 @@ $lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifika
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Die Nutzung von Let\'s Encrypt ist nur m&ouml;glich, wenn die Domain mindestens eine IP/Port - Kombination mit aktiviertem SSL zugewiesen hat.';
 $lng['panel']['letsencrypt'] = 'Benutzt Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'aktualisiert Let\'s Encrypt Zertifikate';
+$lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt Umgebung";
+$lng['serversettings']['letsencryptca']['description'] = "Let's Encrypt - Umgebung, welche genutzt wird um Zertifikate zu bestellen.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt befindet sich noch im Test</strong>";
+$lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt L&auml;ndercode";
+$lng['serversettings']['letsencryptcountrycode']['description'] = "2 - stelliger L&auml;ndercode, welcher benutzt wird um Let's Encrypt - Zertifikate zu bestellen.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt befindet sich noch im Test</strong>";
+$lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt Bundesland";
+$lng['serversettings']['letsencryptstate']['description'] = "Bundesland, welches benutzt wird um Let's Encrypt - Zertifikate zu bestellen.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt befindet sich noch im Test</strong>";
+

@@ -3048,3 +3048,16 @@ if (isFroxlorVersion('0.9.34.2')) {
     updateToVersion('0.9.35-dev1');
 }
 
+if (isFroxlorVersion('0.9.35-dev1')) {
+
+    showUpdateStep("Updating from 0.9.35-dev1 to 0.9.35-dev2");
+    lastStepStatus(0);
+    showUpdateStep("Adding Let's Encrypt - settings");
+    Settings::AddNew("system.letsencryptca", 'testing');
+    Settings::AddNew("system.letsencryptcountrycode", 'DE');
+    Settings::AddNew("system.letsencryptstate", 'Germany');
+    lastStepStatus(0);
+
+    updateToVersion('0.9.35-dev2');
+}
+

@@ -514,6 +514,9 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'apacheitksupport', '0'),
 	('system', 'leprivatekey', 'unset'),
 	('system', 'lepublickey', 'unset'),
+	('system', 'letsencryptca', 'testing'),
+	('system', 'letsencryptcountrycode', 'DE'),
+	('system', 'letsencryptstate', 'Germany'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -544,7 +547,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.35-dev1');
+	('panel', 'version', '0.9.35-dev2');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

@@ -28,11 +28,7 @@
 // and modified to work without files and integrate in Froxlor
 class lescript
 {
-    //public $ca = 'https://acme-v01.api.letsencrypt.org';
-    public $ca = 'https://acme-staging.api.letsencrypt.org'; // testing
     public $license = 'https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf';
-    public $countryCode = 'DE';
-    public $state = "Germany";
 
     private $webRootDir;
 
@@ -44,7 +40,12 @@ class lescript
     {
         $this->webRootDir = $webRootDir;
         $this->debugHandler = $debugHandler;
-        $this->client = new Client($this->ca);
+        if (Settings::Get('system.letsencryptca') == 'production') {
+            $ca = 'https://acme-v01.api.letsencrypt.org';
+        } else {
+            $ca = 'https://acme-staging.api.letsencrypt.org';
+        }
+        $this->client = new Client($ca);
     }
 
     public function initAccount($certrow)
@@ -291,8 +292,8 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
         $csr = openssl_csr_new(
             array(
                 "CN" => $domain,
-                "ST" => $this->state,
-                "C" => $this->countryCode,
+                "ST" => Settings::Get('system.letsencryptstate'),
+                "C" => Settings::Get('system.letsencryptcountrycode'),
                 "O" => "Unknown",
             ),
             $privateKey,

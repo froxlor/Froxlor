@@ -1933,3 +1933,10 @@ $lng['customer']['letsencrypt']['description'] = 'Get a free certificate from <a
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using Let\'s Encrypt is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
 $lng['panel']['letsencrypt'] = 'Using Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'updating Let\'s Encrypt certificates';
+$lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt environment";
+$lng['serversettings']['letsencryptca']['description'] = "Environment to be used for Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt country code";
+$lng['serversettings']['letsencryptcountrycode']['description'] = "2 letter country code used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt state";
+$lng['serversettings']['letsencryptstate']['description'] = "Sate used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+

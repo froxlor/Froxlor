@@ -79,7 +79,35 @@ return array(
 									'string_emptyallowed' => true,
 									'default' => '',
 									'save_method' => 'storeSettingField',
-							)
+							),
+							'system_letsencryptca' => array(
+									'label' => $lng['serversettings']['letsencryptca'],
+									'settinggroup' => 'system',
+									'varname' => 'letsencryptca',
+									'type' => 'option',
+									'default' => 'testing',
+									'option_mode' => 'one',
+									'option_options' => array('testing' => 'https://acme-staging.api.letsencrypt.org (Test)', 'production' => 'https://acme-v01.api.letsencrypt.org (Live)'),
+									'save_method' => 'storeSettingField',
+							),
+							'system_letsencryptcountrycode' => array(
+									'label' => $lng['serversettings']['letsencryptcountrycode'],
+									'settinggroup' => 'system',
+									'varname' => 'letsencryptcountrycode',
+									'type' => 'string',
+									'string_emptyallowed' => false,
+									'default' => 'DE',
+									'save_method' => 'storeSettingField',
+							),
+							'system_letsencryptstate' => array(
+									'label' => $lng['serversettings']['letsencryptstate'],
+									'settinggroup' => 'system',
+									'varname' => 'letsencryptstate',
+									'type' => 'string',
+									'string_emptyallowed' => false,
+									'default' => 'Germany',
+									'save_method' => 'storeSettingField',
+							),
 					)
 			)
 		)
