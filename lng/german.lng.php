@@ -1582,7 +1582,7 @@ $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (Standard: 022)';
 
 // Added for let's encrypt
 $lng['admin']['letsencrypt']['title'] = 'Benutze Let\'s Encrypt';
-$lng['admin']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verl&auml;nger.<br><strong class="red">ACHTUNG:</strong>Dies ist nicht m&ouml;glich mit Wildcard - Domains. Dieses Feature befindet sich noch im Test.';
+$lng['admin']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verl&auml;nger.<br><strong class="red">ACHTUNG:</strong>Wenn Wildcards aktiviert sind, wird diese Option automatisch deaktiviert. Dieses Feature befindet sich noch im Test.';
 $lng['customer']['letsencrypt']['title'] = 'Benutze Let\'s Encrypt';
 $lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verl&auml;ngert.<br><string class="red">ACHTUNG:</strong>Dieses Feature befindet sich noch im Test.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Die Nutzung von Let\'s Encrypt ist nur m&ouml;glich, wenn die Domain mindestens eine IP/Port - Kombination mit aktiviertem SSL zugewiesen hat.';
