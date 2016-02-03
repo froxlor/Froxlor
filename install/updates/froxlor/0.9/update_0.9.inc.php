@@ -3039,7 +3039,7 @@ if (isFroxlorVersion('0.9.34.2')) {
         `cronfile` = 'letsencrypt',
         `interval` = '5 MINUTE',
         `desc_lng_key` = 'cron_letsencrypt',
-        `lastrun` = DATE_SUB(NOW(), INTERVAL 5 MINUTE),
+        `lastrun` = NOW(),
         `isactive` = 1"
     );
     Database::pexecute($stmt);
