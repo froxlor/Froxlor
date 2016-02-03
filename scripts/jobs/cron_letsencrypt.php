@@ -28,7 +28,7 @@ $certificates_stmt = Database::query("
 ");
 
 $upd_stmt = Database::prepare("
-	REPLACE INTO `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` SET `id` = :id, `domainid` = :domainid, `ssl_cert_file` = :crt, `ssl_key_file` = :key, `ssl_ca_file` = :ca, expirationdate = :expirationdate
+	REPLACE INTO `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` SET `id` = :id, `domainid` = :domainid, `ssl_cert_file` = :crt, `ssl_key_file` = :key, `ssl_ca_file` = :ca, `ssl_cert_chainfile` = :fullchain, expirationdate = :expirationdate
 ");
 
 $changedetected = 0;
@@ -80,7 +80,8 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 					'domainid' => $certrow['domainid'],
 					'crt' => $return['crt'],
 					'key' => $return['key'],
-					'ca' => $return['fullchain'],
+					'ca' => $return['chain'],
+					'fullchain' => $return['fullchain'],
 					'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
 				)
 			);
