@@ -86,6 +86,8 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 				)
 			);
 
+			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
+
 			$changedetected = 1;
 
 		} catch (Exception $e) {
