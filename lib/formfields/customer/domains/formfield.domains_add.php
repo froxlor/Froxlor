@@ -70,6 +70,16 @@ return array(
 									),
 						'value' => array()
 					),
+					'letsencrypt' => array(
+						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
+						'label' => $lng['customer']['letsencrypt']['title'],
+						'desc' => $lng['customer']['letsencrypt']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'value' => array()
+					),
 					'openbasedir_path' => array(
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
