@@ -124,6 +124,16 @@ return array(
 						),
 						'value' => array($result['ssl_redirect'])
 					),
+					'letsencrypt' => array(
+						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
+						'label' => $lng['admin']['letsencrypt']['title'],
+						'desc' => $lng['admin']['letsencrypt']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['letsencrypt'])
+					),
 					'no_ssl_available_info' => array(
 						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports == '' ? true : false) : false),
 						'label' => 'SSL',

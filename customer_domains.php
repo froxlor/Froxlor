@@ -36,7 +36,7 @@ if ($page == 'overview') {
 			'd.domain' => $lng['domains']['domainname']
 		);
 		$paging = new paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
-		$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias` FROM `" . TABLE_PANEL_DOMAINS . "` `d`
+		$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`letsencrypt`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias` FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
 			WHERE `d`.`customerid`= :customerid
@@ -146,7 +146,7 @@ if ($page == 'overview') {
 
 					// get ssl-ips if activated
 					$show_ssledit = false;
-					if (Settings::Get('system.use_ssl') == '1' && domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1') {
+					if (Settings::Get('system.use_ssl') == '1' && domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
 						$show_ssledit = true;
 					}
 					$row = htmlentities_array($row);
@@ -303,13 +303,24 @@ if ($page == 'overview') {
 
 				$ssl_redirect = '0';
 				if (isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
-					// a ssl-redirect only works of there actually is a
+					// a ssl-redirect only works if there actually is a
 					// ssl ip/port assigned to the domain
 					if (domainHasSslIpPort($domain_check['id']) == true) {
 						$ssl_redirect = '1';
 						$_doredirect = true;
 					} else {
 						standard_error('sslredirectonlypossiblewithsslipport');
+					}
+				}
+
+				$letsencrypt = '0';
+				if (isset($_POST['letsencrypt']) && $_POST['letsencrypt'] == '1') {
+					// let's encrypt only works if there actually is a
+					// ssl ip/port assigned to the domain
+					if (domainHasSslIpPort($domain_check['id']) == true) {
+						$letsencrypt = '1';
+					} else {
+						standard_error('letsencryptonlypossiblewithsslipport');
 					}
 				}
 
@@ -354,7 +365,8 @@ if ($page == 'overview') {
 						`speciallogfile` = :speciallogfile,
 						`specialsettings` = :specialsettings,
 						`ssl_redirect` = :ssl_redirect,
-						`phpsettingid` = :phpsettingid"
+						`phpsettingid` = :phpsettingid,
+						`letsencrypt` = :letsencrypt"
 					);
 					$params = array(
 						"customerid" => $userinfo['customerid'],
@@ -370,7 +382,8 @@ if ($page == 'overview') {
 						"speciallogfile" => $domain_check['speciallogfile'],
 						"specialsettings" => $domain_check['specialsettings'],
 						"ssl_redirect" => $ssl_redirect,
-						"phpsettingid" => $phpsid_result['phpsettingid']
+						"phpsettingid" => $phpsid_result['phpsettingid'],
+						"letsencrypt" => $letsencrypt
 					);
 					Database::pexecute($stmt, $params);
 
@@ -403,7 +416,7 @@ if ($page == 'overview') {
 					redirectTo($filename, array('page' => $page, 's' => $s));
 				}
 			} else {
-				$stmt = Database::prepare("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "`
+				$stmt = Database::prepare("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain`,`letsencrypt` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `customerid` = :customerid
 					AND `parentdomainid` = '0'
 					AND `email_only` = '0'
@@ -465,7 +478,7 @@ if ($page == 'overview') {
 	} elseif ($action == 'edit' && $id != 0) {
 
 		$stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`,
-			`d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `pd`.`subcanemaildomain`
+			`d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `d`.`letsencrypt`, `pd`.`subcanemaildomain`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
 			WHERE `d`.`customerid` = :customerid
 			AND `d`.`id` = :id
@@ -545,7 +558,7 @@ if ($page == 'overview') {
 				}
 
 				if (isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
-					// a ssl-redirect only works of there actually is a
+					// a ssl-redirect only works if there actually is a
 					// ssl ip/port assigned to the domain
 					if (domainHasSslIpPort($id) == true) {
 						$ssl_redirect = '1';
@@ -555,6 +568,18 @@ if ($page == 'overview') {
 					}
 				} else {
 					$ssl_redirect = '0';
+				}
+
+				if (isset($_POST['letsencrypt']) && $_POST['letsencrypt'] == '1') {
+					// let's encrypt only works if there actually is a
+					// ssl ip/port assigned to the domain
+					if (domainHasSslIpPort($id) == true) {
+						$letsencrypt = '1';
+					} else {
+						standard_error('letsencryptonlypossiblewithsslipport');
+					}
+				} else {
+					$letsencrypt = '0';
 				}
 
 				if ($path == '') {
@@ -580,7 +605,8 @@ if ($page == 'overview') {
 						|| $iswildcarddomain != $result['iswildcarddomain']
 						|| $aliasdomain != $result['aliasdomain']
 						|| $openbasedir_path != $result['openbasedir_path']
-						|| $ssl_redirect != $result['ssl_redirect']) {
+						|| $ssl_redirect != $result['ssl_redirect']
+						|| $letsencrypt != $result['letsencrypt']) {
 						$log->logAction(USR_ACTION, LOG_INFO, "edited domain '" . $idna_convert->decode($result['domain']) . "'");
 
 						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
@@ -590,7 +616,8 @@ if ($page == 'overview') {
 							`iswildcarddomain`= :iswildcarddomain,
 							`aliasdomain`= :aliasdomain,
 							`openbasedir_path`= :openbasedir_path,
-							`ssl_redirect`= :ssl_redirect
+							`ssl_redirect`= :ssl_redirect,
+							`letsencrypt`= :letsencrypt
 							WHERE `customerid`= :customerid
 							AND `id`= :id"
 						);
@@ -602,6 +629,7 @@ if ($page == 'overview') {
 							"aliasdomain" => ($aliasdomain != 0 && $alias_check == 0) ? $aliasdomain : null,
 							"openbasedir_path" => $openbasedir_path,
 							"ssl_redirect" => $ssl_redirect,
+							"letsencrypt" => $letsencrypt,
 							"customerid" => $userinfo['customerid'],
 							"id" => $id
 						);

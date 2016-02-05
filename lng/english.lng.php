@@ -1924,3 +1924,19 @@ $lng['opcacheinfo']['blacklist'] = 'Blacklist';
 $lng['opcacheinfo']['novalue'] = '<i>no value</i>';
 $lng['opcacheinfo']['true'] = '<i>true</i>';
 $lng['opcacheinfo']['false'] = '<i>false</i>';
+
+// Added for let's encrypt
+$lng['admin']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
+$lng['admin']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong>If wildcards are enabled, this option will automatically be disabled. This feature is still in beta.';
+$lng['customer']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
+$lng['customer']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><string class="red">ATTENTION:"</strong>This feature is still in beta.';
+$lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using Let\'s Encrypt is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
+$lng['panel']['letsencrypt'] = 'Using Let\'s encrypt';
+$lng['crondesc']['cron_letsencrypt'] = 'updating Let\'s Encrypt certificates';
+$lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt environment";
+$lng['serversettings']['letsencryptca']['description'] = "Environment to be used for Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt country code";
+$lng['serversettings']['letsencryptcountrycode']['description'] = "2 letter country code used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt state";
+$lng['serversettings']['letsencryptstate']['description'] = "State used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+

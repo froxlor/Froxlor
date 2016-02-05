@@ -516,6 +516,11 @@ if ($page == 'domains'
 						$ssl_redirect = (int)$_POST['ssl_redirect'];
 					}
 
+					$letsencrypt = 0;
+					if (isset($_POST['letsencrypt'])) {
+						$letsencrypt = (int)$_POST['letsencrypt'];
+					}
+
 					$ssl_ipandports = array();
 					if (isset($_POST['ssl_ipandport']) && !is_array($_POST['ssl_ipandport'])) {
 						$_POST['ssl_ipandport'] = unserialize($_POST['ssl_ipandport']);
@@ -547,15 +552,22 @@ if ($page == 'domains'
 						}
 					} else {
 						$ssl_redirect = 0;
+						$letsencrypt = 0;
 						// we need this for the serialize
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = -1;
 					}
 				} else {
 					$ssl_redirect = 0;
+					$letsencrypt = 0;
 					// we need this for the serialize
 					// if ssl is disabled or no ssl-ip/port exists
 					$ssl_ipandports[] = -1;
+				}
+
+				// We can't enable let's encrypt for wildcard - domains
+				if ($serveraliasoption == '0') {
+					$letsencrypt = 0;
 				}
 
 				if (!preg_match('/^https?\:\/\//', $documentroot)) {
@@ -702,7 +714,8 @@ if ($page == 'domains'
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 						'specialsettings' => $specialsettings,
 						'registration_date' => $registration_date,
-						'issubof' => $issubof
+						'issubof' => $issubof,
+						'letsencrypt' => $letsencrypt
 					);
 
 					$security_questions = array(
@@ -751,7 +764,8 @@ if ($page == 'domains'
 						'phpsettingid' => $phpsettingid,
 						'mod_fcgid_starter' => $mod_fcgid_starter,
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
-						'ismainbutsubto' => $issubof
+						'ismainbutsubto' => $issubof,
+						'letsencrypt' => $letsencrypt
 					);
 
 					$ins_stmt = Database::prepare("
@@ -782,7 +796,8 @@ if ($page == 'domains'
 						`phpsettingid` = :phpsettingid,
 						`mod_fcgid_starter` = :mod_fcgid_starter,
 						`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
-						`ismainbutsubto` = :ismainbutsubto
+						`ismainbutsubto` = :ismainbutsubto,
+						`letsencrypt` = :letsencrypt
 					");
 					Database::pexecute($ins_stmt, $ins_data);
 					$domainid = Database::lastInsertId();
@@ -1288,6 +1303,11 @@ if ($page == 'domains'
 						$ssl_redirect = (int)$_POST['ssl_redirect'];
 					}
 
+					$letsencrypt = 0;
+					if (isset($_POST['letsencrypt'])) {
+						$letsencrypt = (int)$_POST['letsencrypt'];
+					}
+
 					$ssl_ipandports = array();
 					if (isset($_POST['ssl_ipandport']) && !is_array($_POST['ssl_ipandport'])) {
 						$_POST['ssl_ipandport'] = unserialize($_POST['ssl_ipandport']);
@@ -1314,15 +1334,22 @@ if ($page == 'domains'
 						}
 					} else {
 						$ssl_redirect = 0;
+						$letsencrypt = 0;
 						// we need this for the serialize
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = -1;
 					}
 				} else {
 					$ssl_redirect = 0;
+					$letsencrypt = 0;
 					// we need this for the serialize
 					// if ssl is disabled or no ssl-ip/port exists
 					$ssl_ipandports[] = -1;
+				}
+
+				// We can't enable let's encrypt for wildcard domains
+				if ($serveraliasoption == '0') {
+					$letsencrypt = '0';
 				}
 
 				if (!preg_match('/^https?\:\/\//', $documentroot)) {
@@ -1443,7 +1470,8 @@ if ($page == 'domains'
 					'speciallogfile' => $speciallogfile,
 					'speciallogverified' => $speciallogverified,
 					'ipandport' => serialize($ipandports),
-					'ssl_ipandport' => serialize($ssl_ipandports)
+					'ssl_ipandport' => serialize($ssl_ipandports),
+					'letsencrypt' => $letsencrypt
 				);
 
 				$security_questions = array(
@@ -1478,6 +1506,7 @@ if ($page == 'domains'
 					|| $issubof != $result['ismainbutsubto']
 					|| $email_only != $result['email_only']
 					|| ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1')
+					|| $letsencrypt != $result['letsencrypt']
 				) {
 					inserttask('1');
 				}
@@ -1613,6 +1642,7 @@ if ($page == 'domains'
 				$update_data['specialsettings'] = $specialsettings;
 				$update_data['registration_date'] = $registration_date;
 				$update_data['ismainbutsubto'] = $issubof;
+				$update_data['letsencrypt'] = $letsencrypt;
 				$update_data['id'] = $id;
 
 				$update_stmt = Database::prepare("
@@ -1638,7 +1668,8 @@ if ($page == 'domains'
 					`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
 					`specialsettings` = :specialsettings,
 					`registration_date` = :registration_date,
-					`ismainbutsubto` = :ismainbutsubto
+					`ismainbutsubto` = :ismainbutsubto,
+					`letsencrypt` = :letsencrypt
 					WHERE `id` = :id
 				");
 				Database::pexecute($update_stmt, $update_data);
@@ -1653,9 +1684,10 @@ if ($page == 'domains'
 
 				// if we have no more ssl-ip's for this domain,
 				// all its subdomains must have "ssl-redirect = 0"
+				// and disable let's encrypt
 				$update_sslredirect = '';
 				if (count($ssl_ipandports) == 1 && $ssl_ipandports[0] == -1) {
-					$update_sslredirect = ", `ssl_redirect` = '0' ";
+					$update_sslredirect = ", `ssl_redirect` = '0', `letsencrypt` = '0' ";
 				}
 
 				$_update_stmt = Database::prepare("
@@ -1867,6 +1899,7 @@ if ($page == 'domains'
 				$_value = '2';
 				if ($result['iswildcarddomain'] == '1') {
 					$_value = '0';
+					$letsencrypt = 0;
 				} elseif ($result['wwwserveralias'] == '1') {
 					$_value = '1';
 				}

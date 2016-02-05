@@ -194,6 +194,8 @@ CREATE TABLE `panel_customers` (
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
+  `lepublickey` mediumtext DEFAULT NULL,
+  `leprivatekey` mediumtext DEFAULT NULL,
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -247,6 +249,7 @@ CREATE TABLE `panel_domains` (
   `mod_fcgid_starter` int(4) default '-1',
   `mod_fcgid_maxrequests` int(4) default '-1',
   `ismainbutsubto` int(11) unsigned NOT NULL default '0',
+  `letsencrypt` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -509,6 +512,11 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'dns_createhostnameentry', '0'),
 	('system', 'send_cron_errors', '0'),
 	('system', 'apacheitksupport', '0'),
+	('system', 'leprivatekey', 'unset'),
+	('system', 'lepublickey', 'unset'),
+	('system', 'letsencryptca', 'testing'),
+	('system', 'letsencryptcountrycode', 'DE'),
+	('system', 'letsencryptstate', 'Germany'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -539,7 +547,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.34.2');
+	('panel', 'version', '0.9.35-dev2');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -747,7 +755,8 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, 
 	(3, 'froxlor/ticket', 'used_tickets_reset', '1 DAY', '1', 'cron_ticketsreset'),
 	(4, 'froxlor/ticket', 'ticketarchive', '1 MONTH', '1', 'cron_ticketarchive'),
 	(5, 'froxlor/reports', 'usage_report', '1 DAY', '1', 'cron_usage_report'),
-	(6, 'froxlor/core', 'mailboxsize', '6 HOUR', '1', 'cron_mailboxsize');
+	(6, 'froxlor/core', 'mailboxsize', '6 HOUR', '1', 'cron_mailboxsize'),
+	(7, 'froxlor/letsencrypt', 'letsencrypt', '5 MINUTE', '1', 'cron_letsencrypt');
 
 
 
@@ -822,6 +831,7 @@ CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `ssl_key_file` mediumtext NOT NULL,
   `ssl_ca_file` mediumtext,
   `ssl_cert_chainfile` mediumtext,
+  `expirationdate` datetime DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 

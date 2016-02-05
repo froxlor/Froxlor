@@ -99,7 +99,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			) {
 				// webserver has no access, add it
 				if (isFreeBSD()) {
-					safe_exec('pw user mod '.escapeshellarg(Settings::Get('system.httpuser')).' -G '.escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup')));
+					safe_exec('pw usermod '.escapeshellarg(Settings::Get('system.httpuser')).' -G '.escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup')));
 				} else {
 					safe_exec('usermod -a -G ' . escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup')).' '.escapeshellarg(Settings::Get('system.httpuser')));
 				}
