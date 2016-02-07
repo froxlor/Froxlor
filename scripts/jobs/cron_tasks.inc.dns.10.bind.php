@@ -333,10 +333,11 @@ class bind {
 		}
 
 		$records[] = '@';
-		$records[] = 'www';
 
 		if ($domain['iswildcarddomain'] == '1') {
 			$records[] = '*';
+		} else if ($domain['wwwserveralias'] == '1') {
+			$records[] = 'www';
 		}
 
 		if (!$froxlorhost) {
