@@ -76,9 +76,12 @@ class bind {
 
 		$this->_known_filenames = array();
 
-		$bindconf_file = '# ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";
+		$bindconf_file = '# ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf' . "\n" .
+				'# Created ' . date('d.m.Y H:i') . "\n" .
+				'# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";
 		$result_domains_stmt = Database::query("
-			SELECT `d`.`id`, `d`.`domain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`customerid`, `d`.`zonefile`, `d`.`bindserial`, `d`.`dkim`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `c`.`loginname`, `c`.`guid`
+			SELECT `d`.`id`, `d`.`domain`, `d`.`isemaildomain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`customerid`,
+				`d`.`zonefile`, `d`.`bindserial`, `d`.`dkim`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `c`.`loginname`, `c`.`guid`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 			WHERE `d`.`isbinddomain` = '1' ORDER BY `d`.`domain` ASC
 		");
@@ -93,6 +96,7 @@ class bind {
 			$hostname_arr = array(
 				'id' => 'none',
 				'domain' => Settings::Get('system.hostname'),
+				'isemaildomain' => Settings::Get('system.dns_createmailentry'),
 				'customerid' => 'none',
 				'loginname' => 'froxlor.panel',
 				'bindserial' => date('Ymd').'00',
@@ -268,38 +272,40 @@ class bind {
 			}
 		}
 
-		if (count($this->mxservers) == 0) {
-			$zonefile.= '@	IN	MX	10 mail' . "\n";
-			$records[] = 'mail';
-			if ($domain['iswildcarddomain'] != '1') {
-				$records[] = 'imap';
-				$records[] = 'smtp';
-				$records[] = 'pop3';
-			}
-		} else {
-			foreach ($this->mxservers as $mxserver) {
-				$zonefile.= '@    IN    MX    ' . trim($mxserver) . "\n";
-			}
-
-			if (Settings::Get('system.dns_createmailentry') == '1') {
+		if ($domain['isemaildomain'] === '1') {
+			if (count($this->mxservers) == 0) {
+				$zonefile.= '@	IN	MX	10 mail' . "\n";
 				$records[] = 'mail';
 				if ($domain['iswildcarddomain'] != '1') {
 					$records[] = 'imap';
 					$records[] = 'smtp';
 					$records[] = 'pop3';
 				}
-			}
-		}
+			} else {
+				foreach ($this->mxservers as $mxserver) {
+					$zonefile.= '@    IN    MX    ' . trim($mxserver) . "\n";
+				}
 
-		/*
-		 * @TODO domain-based spf-settings
-		*/
-		if (Settings::Get('spf.use_spf') == '1'
-			/*&& $domain['spf'] == '1' */
-		) {
-			$zonefile.= Settings::Get('spf.spf_entry') . "\n";
-			if (in_array('mail', $records)) {
-				$zonefile.= str_replace('@', 'mail', Settings::Get('spf.spf_entry')) . "\n";
+				if (Settings::Get('system.dns_createmailentry') == '1') {
+					$records[] = 'mail';
+					if ($domain['iswildcarddomain'] != '1') {
+						$records[] = 'imap';
+						$records[] = 'smtp';
+						$records[] = 'pop3';
+					}
+				}
+			}
+
+			/*
+			 * @TODO domain-based spf-settings
+			*/
+			if (Settings::Get('spf.use_spf') == '1'
+				/*&& $domain['spf'] == '1' */
+			) {
+				$zonefile.= Settings::Get('spf.spf_entry') . "\n";
+				if (in_array('mail', $records)) {
+					$zonefile.= str_replace('@', 'mail', Settings::Get('spf.spf_entry')) . "\n";
+				}
 			}
 		}
 
