@@ -198,7 +198,7 @@ class IntegrityCheck {
 	}
 
 	/**
-	 * Check if all subdomain have ssl-redirect = 0 if domain has no ssl-port
+	 * Check if all subdomains have ssl-redirect = 0 if domain has no ssl-port
 	 * @param $fix Fix everything found directly
 	 */
 	public function SubdomainSslRedirect($fix = false) {
