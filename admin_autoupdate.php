@@ -1,14 +1,21 @@
 <?php
 
 /**
- * This file is part of the Froxlor-Autoupdate project.
- * Copyright (c) 2013 NuTime UG (haftungsbeschraenkt).
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2016 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Michael Kaufmann, NuTime UG (haftungsbeschraenkt) <mkaufmann@nutime.de> (2016-)
- * @license    non-free
- * @package    Auto-Update
- * @version    0.1
+ * @author     Michael Kaufmann <mkaufmann@nutime.de>
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    Frontend
+ *
+ * @since      0.9.35
+ *
  */
 
 define('AREA', 'admin');
