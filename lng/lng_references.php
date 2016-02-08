@@ -38,3 +38,6 @@ $lng['error']['notmorethanxopentickets'] = $lng['ticket']['notmorethanxopenticke
  * other language-strings which need no translation
  */
 $lng['domains']['ipandport_ssl_multi']['description'] = $lng['domains']['ipandport_multi']['description'];
+
+$lng['success']['noupdatesavail'] = $lng['update']['noupdatesavail'];
+$lng['error']['autoupdate_3'] = $lng['error']['customized_version'];

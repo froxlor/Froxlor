@@ -174,15 +174,20 @@ return array (
 					'required_resources' => 'customers',
 				),
 				array (
-					'url' => 'admin_domains.php?page=domains',
-					'label' => $lng['admin']['domains'],
-					'required_resources' => 'domains',
-				),
-				array (
 					'url' => 'admin_admins.php?page=admins',
 					'label' => $lng['admin']['admins'],
 					'required_resources' => 'change_serversettings',
 				),
+			    array (
+			        'url' => 'admin_domains.php?page=domains',
+			        'label' => $lng['admin']['domains'],
+			        'required_resources' => 'domains',
+			    ),
+			    array (
+			        'url' => 'admin_ipsandports.php?page=ipsandports',
+			        'label' => $lng['admin']['ipsandports']['ipsandports'],
+			        'required_resources' => 'change_serversettings',
+			    ),
 			),
 		),
 		'traffic' => array (
@@ -211,32 +216,6 @@ return array (
 					'required_resources' => 'change_serversettings',
 				),
 				array (
-					'url' => 'admin_settings.php?page=phpinfo',
-					'label' => $lng['admin']['phpinfo'],
-					'required_resources' => 'change_serversettings',
-				),
-				array (
-					'url' => 'admin_apcuinfo.php?page=showinfo',
-					'label' => $lng['admin']['apcuinfo'],
-					'required_resources' => 'change_serversettings',
-					'show_element' => (
-						function_exists('apcu_cache_info') === true
-					),
-				),
-				array (
-					'url' => 'admin_opcacheinfo.php?page=showinfo',
-					'label' => $lng['admin']['opcacheinfo'],
-					'required_resources' => 'change_serversettings',
-					'show_element' => (
-						function_exists('opcache_get_configuration') === true
-					),
-				),
-				array (
-					'url' => 'admin_ipsandports.php?page=ipsandports',
-					'label' => $lng['admin']['ipsandports']['ipsandports'],
-					'required_resources' => 'change_serversettings',
-				),
-				array (
 					'url' => 'admin_cronjobs.php?page=overview',
 					'label' => $lng['admin']['cron']['cronsettings'],
 					'required_resources' => 'change_serversettings',
@@ -256,16 +235,48 @@ return array (
 					'label' => $lng['admin']['integritycheck'],
 					'required_resources' => 'change_serversettings',
 				),
-				array (
-					'url' => 'admin_phpsettings.php?page=overview',
-					'label' => $lng['menue']['phpsettings']['maintitle'],
-					'show_element' => (
-						Settings::Get('system.mod_fcgid') == true ||
-						Settings::Get('phpfpm.enabled') == true
-					),
-				),
+			    array (
+			        'url' => 'admin_autoupdate.php?page=overview',
+			        'label' => $lng['admin']['autoupdate'],
+			        'required_resources' => 'change_serversettings',
+			    ),
 			),
 		),
+	    'server_php' => array (
+	        'label' => $lng['admin']['server_php'],
+	        'required_resources' => 'change_serversettings',
+	        'elements' => array (
+	            array (
+	                'url' => 'admin_phpsettings.php?page=overview',
+	                'label' => $lng['menue']['phpsettings']['maintitle'],
+	                'show_element' => (
+	                    Settings::Get('system.mod_fcgid') == true ||
+	                    Settings::Get('phpfpm.enabled') == true
+	                ),
+	            ),
+	            array (
+	                'url' => 'admin_settings.php?page=phpinfo',
+	                'label' => $lng['admin']['phpinfo'],
+	                'required_resources' => 'change_serversettings',
+	            ),
+	            array (
+	                'url' => 'admin_apcuinfo.php?page=showinfo',
+	                'label' => $lng['admin']['apcuinfo'],
+	                'required_resources' => 'change_serversettings',
+	                'show_element' => (
+	                    function_exists('apcu_cache_info') === true
+	                ),
+	            ),
+	            array (
+	                'url' => 'admin_opcacheinfo.php?page=showinfo',
+	                'label' => $lng['admin']['opcacheinfo'],
+	                'required_resources' => 'change_serversettings',
+	                'show_element' => (
+	                    function_exists('opcache_get_configuration') === true
+	                ),
+	            ),
+	        ),
+	    ),
 		'misc' => array (
 			'label' => $lng['admin']['misc'],
 			'elements' => array (

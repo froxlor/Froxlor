@@ -1940,3 +1940,17 @@ $lng['serversettings']['letsencryptcountrycode']['description'] = "2 letter coun
 $lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt state";
 $lng['serversettings']['letsencryptstate']['description'] = "State used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
 
+// Autoupdate
+$lng['admin']['autoupdate'] = 'Auto-Update';
+$lng['error']['customized_version'] = 'It looks like your Froxlor installation has been customized, no support sorry.';
+$lng['error']['autoupdate_0'] = 'Unknown error';
+$lng['error']['autoupdate_1'] = 'PHP setting allow_url_fopen is disabled. Autoupdate needs this setting to be enabled in the php.ini';
+$lng['error']['autoupdate_2'] = 'PHP extension Zlib not found, please ensure it is installed and activated';
+$lng['error']['autoupdate_4'] = 'The froxlor archive could not be stored to the disk :(';
+$lng['error']['autoupdate_5'] = 'version.froxlor.org returned inacceptable values :(';
+$lng['error']['autoupdate_6'] = 'Woops, there was no (valid) version given to download :(';
+$lng['error']['autoupdate_7'] = 'The downloaded archive could not be found :(';
+$lng['error']['autoupdate_8'] = 'The archive could not be extraxted :(';
+$lng['error']['autoupdate_9'] = 'The MD5 sum of the downloaded file is not correct. Please try to update again.';
+
+$lng['admin']['server_php'] = 'PHP';
