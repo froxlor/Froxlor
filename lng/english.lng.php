@@ -1848,6 +1848,7 @@ $lng['integrity_check']['DomainIpTable'] = 'IP &lt;&dash;&gt; domain references'
 $lng['integrity_check']['SubdomainSslRedirect'] = 'False SSL-redirect flag for non-ssl domains';
 $lng['integrity_check']['FroxlorLocalGroupMemberForFcgidPhpFpm'] = 'froxlor-user in the customer groups (for FCGID/php-fpm)';
 $lng['integrity_check']['WebserverGroupMemberForFcgidPhpFpm'] = 'Webserver-user in the customer groups (for FCGID/php-fpm)';
+$lng['integrity_check']['SubdomainLetsencrypt'] = 'Main domains with no SSL-Port assigned don\'t have any subdomains with active SSL redirect';
 $lng['admin']['specialsettings_replacements'] = "You can use the following variables:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code><br/>";
 $lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into this ip/port vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['serversettings']['default_vhostconf_domain']['description'] = 'The content of this field will be included into the domain vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
