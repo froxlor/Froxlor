@@ -17,6 +17,7 @@
  *
  */
 function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue) {
+	$defaultips_old = Settings::Get('system.defaultip');
 
 	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
@@ -40,13 +41,27 @@ function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue) {
 		}
 
 		if (count($ids) > 0) {
-			$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_DOMAINTOIP . "` SET
-				`id_ipandports` = :newval
-				WHERE `id_domain` IN ('" . implode(', ', $ids) . "')
-				AND `id_ipandports` = :defaultip
+			$defaultips_new = explode(',', $newfieldvalue);
+
+			// Delete the existing mappings linking to default IPs
+			$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_DOMAINTOIP . "`
+					WHERE `id_domain` IN (" . implode(', ', $ids) . ")
+					AND `id_ipandports` IN (" . $defaultips_old . ")
 			");
-			Database::pexecute($upd_stmt, array('newval' => $newfieldvalue, 'defaultip' => Settings::Get('system.defaultip')));
+			Database::pexecute($del_stmt);
+
+			// Insert the new mappings
+			$ins_stmt = Database::prepare("
+				INSERT INTO `" . TABLE_DOMAINTOIP . "`
+				SET `id_domain` = :domainid, `id_ipandports` = :ipandportid
+			");
+
+			foreach ($ids as $id) {
+				foreach ($defaultips_new as $defaultip_new) {
+					Database::pexecute($ins_stmt, array('domainid' => $id, 'ipandportid' => $defaultip_new));
+				}
+			}
 		}
 	}
 

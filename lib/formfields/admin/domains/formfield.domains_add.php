@@ -97,7 +97,7 @@ return array(
 						'desc' => $lng['domains']['ipandport_multi']['description'],
 						'type' => 'checkbox',
 						'values' => $ipsandports,
-						'value' => array(Settings::Get('system.defaultip')),
+						'value' => explode(',', Settings::Get('system.defaultip')),
 						'is_array' => 1,
 						'mandatory' => true
 					),

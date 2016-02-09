@@ -55,7 +55,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'defaultip',
 					'type' => 'option',
-					'option_mode' => 'one',
+					'option_mode' => 'multiple',
 					'option_options_method' => 'getIpPortCombinations',
 					'default' => '',
 					'save_method' => 'storeSettingDefaultIp',
