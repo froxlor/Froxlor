@@ -47,7 +47,7 @@ function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue) {
 			$del_stmt = Database::prepare("
 					DELETE FROM `" . TABLE_DOMAINTOIP . "`
 					WHERE `id_domain` IN (" . implode(', ', $ids) . ")
-					AND `id_ipandports` IN (" . $defaultips_old . ")
+					AND `id_ipandports` IN (" . $defaultips_old . ", " . $newfieldvalue . ")
 			");
 			Database::pexecute($del_stmt);
 
