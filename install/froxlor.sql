@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS `ftp_groups`;
+﻿DROP TABLE IF EXISTS `ftp_groups`;
 CREATE TABLE `ftp_groups` (
   `id` int(20) NOT NULL auto_increment,
   `groupname` varchar(60) NOT NULL default '',
@@ -645,7 +645,8 @@ INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
     (4, 'Portugu&ecirc;s', 'pt', 'lng/portugues.lng.php'),
     (5, 'Italian', 'it', 'lng/italian.lng.php'),
     (6, 'Dutch', 'nl', 'lng/dutch.lng.php'),
-    (7, 'Swedish', 'sv', 'lng/swedish.lng.php');
+    (7, 'Swedish', 'sv', 'lng/swedish.lng.php'),
+    (8, 'Polish', 'pl', 'lng/polish.lng.php');
 
 
 
