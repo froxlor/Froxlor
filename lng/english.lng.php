@@ -1968,3 +1968,5 @@ $lng['admin']['server_php'] = 'PHP';
 // Added for Termination-date
 $lng['domains']['termination_date'] = 'Date of termination';
 $lng['domains']['termination_date_overview'] = 'canceled until ';
+
+$lng['panel']['set'] = 'Apply';

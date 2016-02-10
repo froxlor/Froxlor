@@ -1498,7 +1498,7 @@ $lng['logger']['cron'] = "Cronjob";
 $lng['logger']['login'] = "Login";
 $lng['logger']['intern'] = "Intern";
 $lng['logger']['unknown'] = "Unbekannt";
-$lng['serversettings']['mailtraffic_enabled']['title'] = "Analysiere Mailtraffic"; 
+$lng['serversettings']['mailtraffic_enabled']['title'] = "Analysiere Mailtraffic";
 $lng['serversettings']['mailtraffic_enabled']['description'] = "Aktiviere das analysieren der Logdateien des Mailsystems um den verbrauchten Traffic zu berechnen";
 $lng['serversettings']['mdaserver']['title'] = "Typ des MDA";
 $lng['serversettings']['mdaserver']['description'] = "Der eingesetzte Mail Delivery Server";
@@ -1608,3 +1608,5 @@ $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>Die SSL-Umleitung ist
 // Added for Termination-date
 $lng['domains']['termination_date'] = 'K&uuml;ndigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gek&uuml;ndigt zum ';
+
+$lng['panel']['set'] = 'Setzen';
