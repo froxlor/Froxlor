@@ -78,7 +78,6 @@ return array(
 						'label' => $lng['domains']['termination_date'],
 						'desc' => $lng['panel']['dateformat'],
 						'type' => 'text',
-						'value' => $result['termination_date'],
 						'size' => 10
 					)
 				)
