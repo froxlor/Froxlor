@@ -814,7 +814,7 @@ if ($page == 'domains'
 						`ssl_redirect` = :ssl_redirect,
 						`add_date` = :add_date,
 						`registration_date` = :registration_date,
-                                                `termination_date` => :termination_date,
+                                                `termination_date` = :termination_date,
 						`phpsettingid` = :phpsettingid,
 						`mod_fcgid_starter` = :mod_fcgid_starter,
 						`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
