@@ -1,8 +1,19 @@
-<tr>
+<if $row['termination_date'] != ''>
+    <tr class="{$row['termination_css']}">
+</if>
+<if $row['termination_date'] == ''>
+    <tr>
+</if>
+
+
 	<td>{$row['domain']}
 		<if (isset($row['standardsubdomain']) && $row['standardsubdomain'] == $row['id'])>
 			&nbsp;({$lng['admin']['stdsubdomain']})
 		</if>
+                <if $row['termination_date'] != ''>
+                    <br><small><div class="red">({$lng['domains']['termination_date_overview']} {$row['termination_date']})</div></small>
+            </if>
+
 	</td>
 	<td>{$row['ipandport']}</td>
 	<td>{$row['customername']}&nbsp;

@@ -1596,3 +1596,6 @@ $lng['serversettings']['letsencryptcountrycode']['description'] = "2 - stelliger
 $lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt Bundesland";
 $lng['serversettings']['letsencryptstate']['description'] = "Bundesland, welches benutzt wird um Let's Encrypt - Zertifikate zu bestellen.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt befindet sich noch im Test</strong>";
 
+// Added for Termination-date
+$lng['domains']['termination_date'] = 'K&uuml;ndigungsdatum';
+$lng['domains']['termination_date_overview'] = 'gek&uuml;ndigt zum ';

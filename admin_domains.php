@@ -96,6 +96,22 @@ if ($page == 'domains'
 				}
 			}
 			$row['ipandport'] = substr($row['ipandport'], 0, -1);
+                        $row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
+                        
+                        if($row['termination_date'] != "")
+                        {
+                            $cdate = strtotime($row['termination_date'] . " 23:59:59");
+                            $today = time();
+
+                            if($cdate < $today)
+                            {
+                                $row['termination_css'] = 'domain-expired';
+                            }
+                            else
+                                {
+                                $row['termination_css'] = 'domain-canceled';
+                            }
+                        }
 
 			if (!isset($domain_array[$row['domain']])) {
 				$domain_array[$row['domain']] = $row;
@@ -361,6 +377,9 @@ if ($page == 'domains'
 
 				$registration_date = trim($_POST['registration_date']);
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
+
+                                $termination_date = trim($_POST['termination_date']);
+                                $termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
 				if ($userinfo['change_serversettings'] == '1') {
 
@@ -714,6 +733,7 @@ if ($page == 'domains'
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 						'specialsettings' => $specialsettings,
 						'registration_date' => $registration_date,
+                                                'termination_date' => $termination_date,
 						'issubof' => $issubof,
 						'letsencrypt' => $letsencrypt
 					);
@@ -761,6 +781,7 @@ if ($page == 'domains'
 						'ssl_redirect' => $ssl_redirect,
 						'add_date' => time(),
 						'registration_date' => $registration_date,
+                                                'termination_date' => $termination_date,
 						'phpsettingid' => $phpsettingid,
 						'mod_fcgid_starter' => $mod_fcgid_starter,
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
@@ -793,6 +814,7 @@ if ($page == 'domains'
 						`ssl_redirect` = :ssl_redirect,
 						`add_date` = :add_date,
 						`registration_date` = :registration_date,
+                                                `termination_date` => :termination_date,
 						`phpsettingid` = :phpsettingid,
 						`mod_fcgid_starter` = :mod_fcgid_starter,
 						`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
@@ -1154,6 +1176,8 @@ if ($page == 'domains'
 				$caneditdomain = isset($_POST['caneditdomain']) ? intval($_POST['caneditdomain']) : 0;
 				$registration_date = trim($_POST['registration_date']);
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
+                                $termination_date = trim($_POST['termination_date']);
+                                $termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
 				$isemaildomain = 0;
 				if (isset($_POST['isemaildomain'])) {
@@ -1466,7 +1490,7 @@ if ($page == 'domains'
 					'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 					'specialsettings' => $specialsettings,
 					'registration_date' => $registration_date,
-					'issubof' => $issubof,
+                                        'termination_date' => $termination_date,					'issubof' => $issubof,
 					'speciallogfile' => $speciallogfile,
 					'speciallogverified' => $speciallogverified,
 					'ipandport' => serialize($ipandports),
@@ -1641,6 +1665,7 @@ if ($page == 'domains'
 				$update_data['mod_fcgid_maxrequests'] = $mod_fcgid_maxrequests;
 				$update_data['specialsettings'] = $specialsettings;
 				$update_data['registration_date'] = $registration_date;
+                                $update_data['termination_date'] = $termination_date;
 				$update_data['ismainbutsubto'] = $issubof;
 				$update_data['letsencrypt'] = $letsencrypt;
 				$update_data['id'] = $id;
@@ -1668,6 +1693,7 @@ if ($page == 'domains'
 					`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
 					`specialsettings` = :specialsettings,
 					`registration_date` = :registration_date,
+                                        `termination_date` = :termination_date,
 					`ismainbutsubto` = :ismainbutsubto,
 					`letsencrypt` = :letsencrypt
 					WHERE `id` = :id

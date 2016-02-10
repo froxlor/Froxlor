@@ -3061,3 +3061,11 @@ if (isFroxlorVersion('0.9.35-dev1')) {
     updateToVersion('0.9.35-dev2');
 }
 
+if (isFroxlorVersion('0.9.35-dev2')) {
+    
+    showUpdateStep("Updating from 0.9.35-dev2 to 0.9.35-dev3");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `termination_date` date NOT NULL AFTER `registration_date`");
+    lastStepStatus(0);
+
+    updateToVersion('0.9.35-dev3');
+}
