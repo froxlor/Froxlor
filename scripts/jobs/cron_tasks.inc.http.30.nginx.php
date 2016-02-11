@@ -209,7 +209,6 @@ class nginx extends HttpConfigBase {
 
 				$this->nginx_data[$vhost_filename] .= "\tlocation ~ \.php {\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
-				$this->nginx_data[$vhost_filename] .= "\t\tinclude fastcgi_params;\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
