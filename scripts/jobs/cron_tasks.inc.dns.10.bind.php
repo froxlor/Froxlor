@@ -25,6 +25,7 @@ class bind {
 	public $axfrservers = array();
 
 	private $_known_filenames = array();
+	private $_bindconf_file = '';
 
 	public function __construct($logger, $debugHandler) {
 
@@ -76,19 +77,21 @@ class bind {
 
 		$this->_known_filenames = array();
 
-		$bindconf_file = '# ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf' . "\n" .
+		$this->_bindconf_file = '# ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf' . "\n" .
 				'# Created ' . date('d.m.Y H:i') . "\n" .
 				'# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n";
 		$result_domains_stmt = Database::query("
 			SELECT `d`.`id`, `d`.`domain`, `d`.`isemaildomain`, `d`.`iswildcarddomain`, `d`.`wwwserveralias`, `d`.`customerid`,
-				`d`.`zonefile`, `d`.`bindserial`, `d`.`dkim`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `c`.`loginname`, `c`.`guid`
+				`d`.`zonefile`, `d`.`bindserial`, `d`.`dkim`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `d`.`ismainbutsubto`,
+				`c`.`loginname`, `c`.`guid`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 			WHERE `d`.`isbinddomain` = '1' ORDER BY `d`.`domain` ASC
 		");
 
-		// customer-domains
+		// don't use fetchall() to be able to set the first column to the domain id and use it later on to set the rows'
+		// array of direct children without having to search the outer array
 		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$bindconf_file .= $this->_generateDomainConfig($domain);
+			$domains[$domain["id"]] = $domain;
 		}
 
 		// frolxor-hostname (#1090)
@@ -102,13 +105,59 @@ class bind {
 				'bindserial' => date('Ymd').'00',
 				'dkim' => '0',
 				'iswildcarddomain' => '1',
-				'zonefile' => ''
+				'ismainbutsubto' => '0',
+				'zonefile' => '',
+				'froxlorhost' => '1'
 			);
-			$bindconf_file .= $this->_generateDomainConfig($hostname_arr, true);
+			$domains['none'] = $hostname_arr;
+		}
+
+		// collect domain IDs of direct child domains as arrays in ['children'] column
+		foreach (array_keys($domains) as $key) {
+			if (!isset($domains[$key]['children'])) {
+				$domains[$key]['children'] = array();
+			}
+			if ($domains[$key]['ismainbutsubto'] > 0) {
+				if (isset($domains[  $domains[$key]['ismainbutsubto']  ])) {
+					$domains[  $domains[$key]['ismainbutsubto']  ]['children'][] = $domains[$key]['id'];
+				} else {
+					$this->logger->logAction(CRON_ACTION, LOG_ERR,
+						'Database inconsistency: domain ' . $domain['domain'] . ' (ID #' . $key .
+						') is set to to be subdomain to non-existent domain ID #' .
+						$domains[$key]['ismainbutsubto'] .
+						'. No DNS record(s) will be created for this domain.');
+				}
+			}
+		}
+
+		fwrite($this->debugHandler,
+			str_pad('domId', 9, ' ') . str_pad('domain', 40, ' ') .
+			'ismainbutsubto ' . str_pad('parent domain', 40, ' ') .
+			"list of child domain ids\n");
+		foreach ($domains as $domain) {
+			fwrite($this->debugHandler,
+				str_pad($domain['id'], 9, ' ') .
+				str_pad($domain['domain'], 40, ' ') .
+				str_pad($domain['ismainbutsubto'], 15, ' ') .
+				str_pad(((isset($domains[  $domain['ismainbutsubto']   ])) ?
+						$domains[  $domain['ismainbutsubto']   ]['domain'] :
+						'-'), 40, ' '));
+			foreach ($domain['children'] as $child) {
+				fwrite($this->debugHandler, '$child, ');
+			}
+			fwrite($this->debugHandler, "\n");
+		}
+
+		foreach ($domains as $domain) {
+			if ($domain['ismainbutsubto'] > 0) {
+				// domains with ismainbutsubto>0 are handled by recursion within walkDomainList()
+				continue;
+			}
+			$this->walkDomainList($domain, $domains);
 		}
 
 		$bindconf_file_handler = fopen(makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
-		fwrite($bindconf_file_handler, $bindconf_file);
+		fwrite($bindconf_file_handler, $this->_bindconf_file);
 		fclose($bindconf_file_handler);
 		fwrite($this->debugHandler, '  cron_tasks: Task4 - froxlor_bind.conf written' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
@@ -137,25 +186,40 @@ class bind {
 		}
 	}
 
-	private function _generateDomainConfig($domain = array(), $froxlorhost = false) {
+	private function walkDomainList($domain, $domains) {
+		$zonefile = '';
+		$subzones = '';
 
-		$bindconf_file = '';
+		foreach($domain['children'] as $child_domain_id) {
+			$subzones.= $this->walkDomainList($domains[$child_domain_id], $domains);
+		}
 
-		fwrite($this->debugHandler, '  cron_tasks: Task4 - Writing ' . $domain['id'] . '::' . $domain['domain'] . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Writing ' . $domain['id'] . '::' . $domain['domain']);
-
-		if ($domain['zonefile'] == '') {
-			$zonefile = $this->generateZone($domain, $froxlorhost);
+		if ($domain['ismainbutsubto'] == 0 &&  $domain['zonefile'] == '') {
+			$zonefile = $this->generateZone($domain);
 			$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
 			$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
 			$this->_known_filenames[] = basename($zonefile_name);
 			$zonefile_handler = fopen($zonefile_name, 'w');
-			fwrite($zonefile_handler, $zonefile);
+			fwrite($zonefile_handler, $zonefile.$subzones);
 			fclose($zonefile_handler);
 			fwrite($this->debugHandler, '  cron_tasks: Task4 - `' . $zonefile_name . '` zone written' . "\n");
+		} else {
+			return $this->generateZone($domain);
 		}
 
-		$bindconf_file.= '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
+		if ($zonefile !== '') {
+			$this->_bindconf_file .= $this->_generateDomainConfig($domain);
+		}
+	}
+
+	private function _generateDomainConfig($domain = array()) {
+		if (isset($domain['froxlorhost']) && $domain['froxlorhost'] === '1') {
+			$froxlorhost = true;
+		} else {
+			$froxlorhost = false;
+		}
+
+		$bindconf_file = '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
 		$bindconf_file.= 'zone "' . $domain['domain'] . '" in {' . "\n";
 		$bindconf_file.= '	type master;' . "\n";
 		$bindconf_file.= '	file "' . makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']) . '";' . "\n";
@@ -191,15 +255,19 @@ class bind {
 	}
 
 	/**
-	 * generate bind zone content. If froxlorhost is true,
-	 * we will use ALL available IP addresses
+	 * generate bind zone content.
 	 *
 	 * @param array $domain
-	 * @param boolean $froxlorhost
 	 *
 	 * @return string
 	 */
-	protected function generateZone($domain, $froxlorhost = false) {
+	protected function generateZone($domain) {
+		if (isset($domain['froxlorhost']) && $domain['froxlorhost'] === '1') {
+			$froxlorhost = true;
+		} else {
+			$froxlorhost = false;
+		}
+
 		// Array to save all ips needed in the records (already including IN A/AAAA)
 		$ip_a_records = array();
 		// Array to save DNS records
@@ -239,37 +307,41 @@ class bind {
 			}
 		}
 
-		$date = date('Ymd');
-		$bindserial = (preg_match('/^' . $date . '/', $domain['bindserial']) ? $domain['bindserial'] + 1 : $date . '00');
+		if ($domain['ismainbutsubto'] == 0) {
+			$date = date('Ymd');
+			$bindserial = (preg_match('/^' . $date . '/', $domain['bindserial']) ? $domain['bindserial'] + 1 : $date . '00');
 
-		if (!$froxlorhost) {
-			$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
-				`bindserial` = :serial
-				 WHERE `id` = :id
-			");
-			Database::pexecute($upd_stmt, array('serial' => $bindserial, 'id' => $domain['id']));
-		}
+			if (!$froxlorhost) {
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+					`bindserial` = :serial
+					 WHERE `id` = :id
+				");
+				Database::pexecute($upd_stmt, array('serial' => $bindserial, 'id' => $domain['id']));
+			}
 
-		$zonefile = '$TTL ' . (int)Settings::Get('system.defaultttl') . "\n";
-		if (count($this->nameservers) == 0) {
-			$zonefile.= '@ IN SOA ns ' . str_replace('@', '.', Settings::Get('panel.adminmail')) . '. (' . "\n";
-		} else {
-			$zonefile.= '@ IN SOA ' . $this->nameservers[0]['hostname'] . ' ' . str_replace('@', '.', Settings::Get('panel.adminmail')) . '. (' . "\n";
-		}
+			$zonefile = '$TTL ' . (int)Settings::Get('system.defaultttl') . "\n";
+			if (count($this->nameservers) == 0) {
+				$zonefile.= '@ IN SOA ns ' . str_replace('@', '.', Settings::Get('panel.adminmail')) . '. (' . "\n";
+			} else {
+				$zonefile.= '@ IN SOA ' . $this->nameservers[0]['hostname'] . ' ' . str_replace('@', '.', Settings::Get('panel.adminmail')) . '. (' . "\n";
+			}
 
-		$zonefile.= '	' . $bindserial . ' ; serial' . "\n" . '	8H ; refresh' . "\n" . '	2H ; retry' . "\n" . '	1W ; expiry' . "\n" . '	11h) ; minimum' . "\n";
+			$zonefile.= '	' . $bindserial . ' ; serial' . "\n" . '	8H ; refresh' . "\n" . '	2H ; retry' . "\n" . '	1W ; expiry' . "\n" . '	11h) ; minimum' . "\n";
 
-		// no nameservers given, use all if the A/AAAA entries
-		if (count($this->nameservers) == 0) {
-			$zonefile .= '@    IN    NS    ns' . "\n";
-			foreach ($ip_a_records as $ip_a_record) {
-				$zonefile .= 'ns    IN    ' . $ip_a_record . "\n";
+			// no nameservers given, use all of the A/AAAA entries
+			if (count($this->nameservers) == 0) {
+				$zonefile .= '@    IN    NS    ns' . "\n";
+				foreach ($ip_a_records as $ip_a_record) {
+					$zonefile .= 'ns    IN    ' . $ip_a_record . "\n";
+				}
+			} else {
+				foreach ($this->nameservers as $nameserver) {
+					$zonefile.= '@    IN    NS    ' . trim($nameserver['hostname']) . "\n";
+				}
 			}
 		} else {
-			foreach ($this->nameservers as $nameserver) {
-				$zonefile.= '@    IN    NS    ' . trim($nameserver['hostname']) . "\n";
-			}
+			$zonefile = '$ORIGIN ' . $domain["domain"] . ".\n";
 		}
 
 		if ($domain['isemaildomain'] === '1') {
@@ -317,7 +389,7 @@ class bind {
 		if (!$froxlorhost) {
 			$nssubdomains_stmt = Database::prepare("
 				SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
-				WHERE `isbinddomain` = '1' AND `domain` LIKE :domain
+				WHERE `isbinddomain` = '1' AND `ismainbutsubto` = '0' AND `domain` LIKE :domain
 			");
 			Database::pexecute($nssubdomains_stmt, array('domain' => '%.' . $domain['domain']));
 
