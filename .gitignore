@@ -1,0 +1,8 @@
+templates/*
+logs/*
+install/update.log
+.buildpath
+.project
+.settings/
+*.diff
+*~
