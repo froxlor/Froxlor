@@ -104,6 +104,7 @@ return array(
 					),
                                         'authcode' => array(
 						'label' => $lng['domains']['authcode'],
+                                                'desc' => $lng['domains']['authcode_desc'],
 						'type' => 'label',
 						'value' => $result['authcode']
 					)

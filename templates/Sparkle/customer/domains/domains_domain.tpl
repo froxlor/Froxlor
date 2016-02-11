@@ -9,7 +9,7 @@
                     <br><small><div class="red">({$lng['domains']['termination_date_overview']} {$row['termination_date']})</div></small>
             </if>
         </td>
-        <td>{$row['authcode']}</td>
+        
 	<td>
 		<if $row['aliasdomain'] == ''>{$row['documentroot']}</if>
 		<if isset($row['aliasdomainid']) && $row['aliasdomainid'] != 0>{$lng['domains']['aliasdomain']} {$row['aliasdomain']}</if>
