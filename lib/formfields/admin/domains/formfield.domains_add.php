@@ -73,6 +73,12 @@ return array(
 						'desc' => $lng['panel']['dateformat'],
 						'type' => 'text',
 						'size' => 10
+					),
+                                        'termination_date' => array(
+						'label' => $lng['domains']['termination_date'],
+						'desc' => $lng['panel']['dateformat'],
+						'type' => 'text',
+						'size' => 10
 					)
 				)
 			),

@@ -1955,3 +1955,7 @@ $lng['error']['autoupdate_8'] = 'The archive could not be extraxted :(';
 $lng['error']['autoupdate_9'] = 'The MD5 sum of the downloaded file is not correct. Please try to update again.';
 
 $lng['admin']['server_php'] = 'PHP';
+
+// Added for Termination-date
+$lng['domains']['termination_date'] = 'Date of termination';
+$lng['domains']['termination_date_overview'] = 'canceled until ';

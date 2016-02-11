@@ -1,5 +1,14 @@
-<tr>
-	<td><a href="http://{$row['domain']}" target="_blank">{$row['domain']}</a></td>
+<if $row['termination_date'] != ''>
+    <tr class="{$row['termination_css']}">
+</if>
+<if $row['termination_date'] == ''>
+    <tr>
+</if>
+	<td><a href="http://{$row['domain']}" target="_blank">{$row['domain']}</a>
+            <if $row['termination_date'] != ''>
+                    <br><small><div class="red">({$lng['domains']['termination_date_overview']} {$row['termination_date']})</div></small>
+            </if>
+        </td>
 	<td>
 		<if $row['aliasdomain'] == ''>{$row['documentroot']}</if>
 		<if isset($row['aliasdomainid']) && $row['aliasdomainid'] != 0>{$lng['domains']['aliasdomain']} {$row['aliasdomain']}</if>
