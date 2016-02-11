@@ -90,6 +90,13 @@ return array(
 						'type' => 'text',
 						'value' => $result['termination_date'],
 						'size' => 10
+					),
+                                        'authcode' => array(
+						'label' => $lng['domains']['authcode'],
+                                                'desc' => $lng['domains']['authcode_desc'],
+						'type' => 'text',
+                                                'value' => $result['authcode'],
+                                                'size' => 16
 					)
 				)
 			),
