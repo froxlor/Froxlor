@@ -3095,3 +3095,26 @@ if (isFroxlorVersion('0.9.35-dev4')) {
 
 	updateToVersion('0.9.35-dev5');
 }
+
+if (isFroxlorVersion('0.9.35-dev5')) {
+
+	showUpdateStep("Updating from 0.9.35-dev5 to 0.9.35-dev6", false);
+
+	showUpdateStep("Adding new panel_vhostconfigs table");
+	Database::query("DROP TABLE IF EXISTS `panel_vhostconfigs`;");
+	$sql = "CREATE TABLE `" . TABLE_PANEL_VHOSTCONFIGS . "` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `description` varchar(50) NOT NULL,
+      `vhostsettings` text NOT NULL,
+      PRIMARY KEY (`id`)
+    ) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new fields to panel_domains table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS ."` ADD `vhost_usedefaultlocation` tinyint(1) NOT NULL default '1' AFTER `ssl_redirect`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS ."` ADD `vhostsettingid` tinyint(11) NOT NULL default '0' AFTER `vhost_usedefaultlocation`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.35-dev6');
+}
