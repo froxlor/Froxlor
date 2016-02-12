@@ -73,4 +73,4 @@ This has 2 known side-effects at the moment:
 It may be possible to fix these issues, but they are not a priority at the moment
 
 **By default the testing environment of Let's Encrypt is used**. This issues certificates which will not be signed by a known certificate authority.
-To activate the production system, change the `$ca` in `lib/classes/ssl/class.lescript.php` to `https://acme-v01.api.letsencrypt.org`.
+To activate the production system, change the `Let's Encrypt environment` in `Settings` -> `SSL settings` to `https://acme-v01.api.letsencrypt.org (Live)`.
