@@ -1599,3 +1599,6 @@ $lng['serversettings']['letsencryptstate']['description'] = "Bundesland, welches
 // Added for Termination-date
 $lng['domains']['termination_date'] = 'K&uuml;ndigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gek&uuml;ndigt zum ';
+
+// Authcode
+$lng['domains']['authcode_desc'] = 'AuthCode oft auch AuthInfo genannt';

@@ -15,7 +15,7 @@
             </if>
 
 	</td>
-	<td>{$row['ipandport']}</td>
+        <td>{$row['ipandport']}</td>
 	<td>{$row['customername']}&nbsp;
 		(<a href="{$linker->getLink(array('section' => 'customers', 'page' => 'customers', 'action' => 'su', 'id' => $row['customerid']))}" rel="external">{$row['loginname']}</a>)
 	</td>
