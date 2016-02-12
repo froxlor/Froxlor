@@ -62,6 +62,7 @@ if ($page == 'overview') {
 				}
 			}
 
+			$query .= " ORDER BY domain ASC";
 			$domainresult_stmt = Database::prepare($query);
 			Database::pexecute($domainresult_stmt, $query_params);
 
