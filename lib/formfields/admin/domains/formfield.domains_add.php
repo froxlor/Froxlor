@@ -157,7 +157,7 @@ return array(
 						'values' => array(
 							array ('label' => $lng['panel']['yes'], 'value' => '1')
 						),
-						'value' => array()
+						'value' => array('1')
 					),
 					'vhostsettingid' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
