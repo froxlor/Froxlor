@@ -167,7 +167,7 @@ class lighttpd extends HttpConfigBase {
 				    
 				    // check for existence, #1485
 				    if (!file_exists($row_ipsandports['ssl_cert_file'])) {
-				        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $ip.':'.$port . ' :: certificate file "'.$row_ipsandports['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
+				        $this->logger->logAction(CRON_ACTION, LOG_ERR, $ip.':'.$port . ' :: certificate file "'.$row_ipsandports['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
 				        echo $ip.':'.$port . ' :: certificate file "'.$row_ipsandports['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
 				    } else {
     					$this->lighttpd_data[$vhost_filename].= 'ssl.engine = "enable"' . "\n";
@@ -179,7 +179,7 @@ class lighttpd extends HttpConfigBase {
     					if ($row_ipsandports['ssl_ca_file'] != '') {
     					    // check for existence, #1485
     					    if (!file_exists($row_ipsandports['ssl_ca_file'])) {
-    					        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $ip.':'.$port . ' :: certificate CA file "'.$row_ipsandports['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
+    					        $this->logger->logAction(CRON_ACTION, LOG_ERR, $ip.':'.$port . ' :: certificate CA file "'.$row_ipsandports['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
     					        echo $ip.':'.port . ' :: certificate CA file "'.$row_ipsandports['ssl_ca_file'].'" does not exist! SSL-directives might not be working'."\n";
     					    } else {
     						  $this->lighttpd_data[$vhost_filename].= 'ssl.ca-file = "' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . '"' . "\n";
