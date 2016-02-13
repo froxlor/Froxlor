@@ -52,6 +52,18 @@ class lighttpd extends HttpConfigBase {
 		}
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::reload: reloading lighttpd');
 		safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
+
+		// Config test
+		$return = -999;
+		$out = safe_exec('lighttpd -t -f /etc/lighttpd/lighttpd.conf 2>&1 ', $return, [ '&','>' ]);
+		if ($return > 0 && is_array($out) && count($out) > 0) {
+			// Always log this error, regardless of the settings
+			$log = Settings::Get('logger.log_cron');
+			Settings::Set('logger.log_cron', 1);
+
+			$this->logger->logAction(CRON_ACTION, LOG_ERR, 'configuration error: ' . implode("\n", $out));
+			Settings::Set('logger.log_cron', $log);
+		}
 	}
 
 
