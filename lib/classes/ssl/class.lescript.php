@@ -278,7 +278,7 @@ class lescript
 'HOME = .
 RANDFILE = $ENV::HOME/.rnd
 [ req ]
-default_bits = 2048
+default_bits = 4096
 default_keyfile = privkey.pem
 distinguished_name = req_distinguished_name
 req_extensions = v3_req
