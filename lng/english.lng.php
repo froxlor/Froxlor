@@ -1887,7 +1887,7 @@ $lng['apcuinfo']['detailmem'] = 'Detailed Memory Usage and Fragmentation';
 $lng['apcuinfo']['fragment'] = 'Fragmentation';
 
 // Added for opcache info
-$lng['admin']['opcacheinfo'] = 'OPcache info';
+$lng['admin']['opcacheinfo'] = 'OPcache Info';
 $lng['error']['no_opcacheinfo'] = 'No cache info available. OPCache does not appear to be running.';
 $lng['opcacheinfo']['generaltitle'] = 'General Information';
 $lng['opcacheinfo']['resetcache'] = 'Reset OPcache';
