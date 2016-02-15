@@ -29,6 +29,10 @@ if (isset($_POST['id'])) {
 if ($page == 'ipsandports'
 	|| $page == 'overview'
 ) {
+	// Do not display attributes that are not used by the current webserver
+	$websrv = Settings::Get('system.webserver');
+	$is_nginx = ($websrv == 'nginx');
+	$is_apache = ($websrv == 'apache2');
 
 	if ($action == '') {
 
