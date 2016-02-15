@@ -38,7 +38,7 @@
 						<command>
 							<visibility mode="notempty">{{settings.system.deactivateddocroot}}
 							</visibility>
-							<content><![CDATA['mkdir -p {{settings.system.deactivateddocroot}}]]></content>
+							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
 						<command><![CDATA[a2dismod userdir]]></command>
 					</commands>

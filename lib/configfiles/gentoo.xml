@@ -3242,7 +3242,7 @@ aliases:     files
 					<commands index="2">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
-						<command><![CDATA[a2enmod suexec fcgid]]></command>
+						<command><![CDATA[# add "-D SUEXEC -D FCGID" to /etc/conf.d/apache2]]></command>
 					</commands>
 					<commands index="3">
 						<visibility mode="true">{{settings.system.mod_fcgid_ownvhost}}
