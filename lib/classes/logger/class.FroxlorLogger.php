@@ -104,30 +104,30 @@ class FroxlorLogger {
 			return;
 		}
 
-		if (self::$crondebug_flag) {
-			switch($type) {
-				case LOG_INFO:
-					$_type = 'information';
-					break;
-				case LOG_NOTICE:
-					$_type = 'notice';
-					break;
-				case LOG_WARNING:
-					$_type = 'warning';
-					break;
-				case LOG_ERR:
-					$_type = 'error';
-					break;
-				case LOG_CRIT:
-					$_type = 'critical';
-					break;
-				case LOG_DEBUG:
-					$_type = 'debug';
-					break;
-				default:
-					$_type = 'unknown';
-					break;
-			}
+		switch($type) {
+			case LOG_INFO:
+				$_type = 'information';
+				break;
+			case LOG_NOTICE:
+				$_type = 'notice';
+				break;
+			case LOG_WARNING:
+				$_type = 'warning';
+				break;
+			case LOG_ERR:
+				$_type = 'error';
+				break;
+			case LOG_CRIT:
+				$_type = 'critical';
+				break;
+			case LOG_DEBUG:
+				$_type = 'debug';
+				break;
+			default:
+				$_type = 'unknown';
+				break;
+		}
+		if (self::$crondebug_flag || $type <= LOG_WARNING) { # more severe levels have smaller numbers
 			echo "[".$_type."] ".$text.PHP_EOL;
 		}
 
