@@ -585,8 +585,8 @@ if ($page == 'domains'
 				}
 
 				// We can't enable let's encrypt for wildcard - domains
-				if ($serveraliasoption == '0') {
-					$letsencrypt = 0;
+				if ($serveraliasoption == '0' && $letsencrypt == '1') {
+				    standard_error('nowildcardwithletsencrypt');
 				}
 
 				if (!preg_match('/^https?\:\/\//', $documentroot)) {
@@ -1372,8 +1372,8 @@ if ($page == 'domains'
 				}
 
 				// We can't enable let's encrypt for wildcard domains
-				if ($serveraliasoption == '0') {
-					$letsencrypt = '0';
+				if ($serveraliasoption == '0' && $letsencrypt == '1') {
+					standard_error('nowildcardwithletsencrypt');
 				}
 
 				if (!preg_match('/^https?\:\/\//', $documentroot)) {
