@@ -191,13 +191,11 @@ class FroxlorLogger {
 
 		$_cronlog = (int)$_cronlog;
 
-		if ($_cronlog != 0
-		   && $_cronlog != 1
-		) {
+		if ($_cronlog < 0 || $_cronlog > 2) {
 			$_cronlog = 0;
 		}
 		Settings::Set('logger.log_cron', $_cronlog);
-		return true;
+		return $_cronlog;
 	}
 
 	/**
