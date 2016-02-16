@@ -46,6 +46,7 @@ class lescript
             $ca = 'https://acme-staging.api.letsencrypt.org';
         }
         $this->client = new Client($ca);
+        $this->log("Using '$ca' to generate certificate");
     }
 
     public function initAccount($certrow)
@@ -368,7 +369,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 
     protected function log($message)
     {
-        fwrite($this->debugHandler, 'letsencrypt ' . $message . "\n");
+        $this->debugHandler->logAction(CRON_ACTION, LOG_INFO, "letsencrypt " . $message);
     }
 }
 

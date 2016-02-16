@@ -106,6 +106,9 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			}
 		}
 
+		// Tell the Let's Encrypt cron it's okay to generate the certificate and enable the redirect afterwards
+		$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `ssl_redirect` = '3' WHERE `ssl_redirect` = '2'");
+		Database::pexecute($upd_stmt);
 	}
 
 	/**

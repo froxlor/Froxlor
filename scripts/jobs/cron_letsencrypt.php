@@ -18,17 +18,21 @@
  *
  */
 
-fwrite($debugHandler, "updating let's encrypt certificates\n");
+$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificates");
 
 $certificates_stmt = Database::query("
 	SELECT domssl.`id`, domssl.`domainid`, domssl.expirationdate, domssl.`ssl_cert_file`, domssl.`ssl_key_file`, domssl.`ssl_ca_file`, dom.`domain`, dom.`iswildcarddomain`, dom.`wwwserveralias`,
-	dom.`documentroot`, dom.`id` as 'domainid', cust.`leprivatekey`, cust.`lepublickey`, cust.customerid
+	dom.`documentroot`, dom.`id` as 'domainid', dom.`ssl_redirect`, cust.`leprivatekey`, cust.`lepublickey`, cust.customerid
 	FROM `".TABLE_PANEL_CUSTOMERS."` as cust, `".TABLE_PANEL_DOMAINS."` dom LEFT JOIN `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` domssl ON (dom.id = domssl.domainid)
 	WHERE dom.customerid = cust.customerid AND dom.letsencrypt = 1 AND (domssl.expirationdate < DATE_ADD(NOW(), INTERVAL 30 DAY) OR domssl.expirationdate IS NULL)
 ");
 
-$upd_stmt = Database::prepare("
+$updcert_stmt = Database::prepare("
 	REPLACE INTO `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` SET `id` = :id, `domainid` = :domainid, `ssl_cert_file` = :crt, `ssl_key_file` = :key, `ssl_ca_file` = :ca, `ssl_cert_chainfile` = :fullchain, expirationdate = :expirationdate
+");
+
+$upddom_stmt = Database::prepare("
+	UPDATE `".TABLE_PANEL_DOMAINS."` SET `ssl_redirect` = '1' WHERE `id` = :domainid
 ");
 
 $changedetected = 0;
@@ -37,12 +41,13 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 	// Only renew let's encrypt certificate for domains where a documentroot
 	// already exists
 	if (file_exists($certrow['documentroot'])
-		&& is_dir($certrow['documentroot'])
+		&& is_dir($certrow['documentroot']
+		&& $certrow['ssl_redirect'] != 2)
 	) {
-		fwrite($debugHandler, "updating " . $certrow['domain'] . "\n");
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Updating " . $certrow['domain']);
 		
 		if ($certrow['ssl_cert_file']) {
-			fwrite($debugHandler, "letsencrypt using old key / SAN for " . $certrow['domain'] . "\n");
+			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "letsencrypt using old key / SAN for " . $certrow['domain']);
 			// Parse the old certificate
 			$x509data = openssl_x509_parse($certrow['ssl_cert_file']);
 			
@@ -53,7 +58,7 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$domains[] = substr($dnsname, 4);
 			}
 		} else {
-			fwrite($debugHandler, "letsencrypt generating new key / SAN for " . $certrow['domain'] . "\n");
+			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "letsencrypt generating new key / SAN for " . $certrow['domain']);
 			$domains = array($certrow['domain']);
 			// Add www.<domain> for SAN
 			if ($certrow['wwwserveralias'] == 1) {
@@ -63,7 +68,7 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 		
 		try {
 			// Initialize Lescript with documentroot
-			$le = new lescript($certrow['documentroot'], $debugHandler);
+			$le = new lescript($certrow['documentroot'], $cronlog);
 			
 			// Initialize Lescript
 			$le->initAccount($certrow);
@@ -75,7 +80,7 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$newcert = openssl_x509_parse($return['crt']);
 			
 			// Store the new data
-			Database::pexecute($upd_stmt, array(
+			Database::pexecute($updcert_stmt, array(
 					'id' => $certrow['id'],
 					'domainid' => $certrow['domainid'],
 					'crt' => $return['crt'],
@@ -85,6 +90,13 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 					'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
 				)
 			);
+			
+			if ($certrow['ssl_redirect'] == 3) {
+				Database::pexecute($upddom_stmt, array(
+						'domainid' => $certrow['domainid']
+					)
+				);
+			}
 
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
 
@@ -92,10 +104,11 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 		} catch (Exception $e) {
 			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ": " . $e->getMessage());
-			fwrite($debugHandler, 'letsencrypt exception: ' . $e->getMessage() . "\n");
 		}
+	} elseif ($certrow['ssl_redirect'] == '2') {
+		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['ssl_redirect'] . " due to an enabled ssl_redirect");
 	} else {
-		fwrite($debugHandler, 'letsencrypt skipped because documentroot ' . $certrow['documentroot'] . ' does not exist' . "\n");
+		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['ssl_redirect'] . " due to a missing documentroot");
 	}
 }
 

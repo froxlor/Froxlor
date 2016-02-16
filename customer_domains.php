@@ -340,6 +340,11 @@ if ($page == 'overview') {
 					}
 				}
 
+				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
+				if ($ssl_redirect > 0 && $letsencrypt == 1) {
+					$ssl_redirect = 2;
+				}
+
 				if ($path == '') {
 					standard_error('patherror');
 				} elseif ($subdomain == '') {
@@ -598,6 +603,11 @@ if ($page == 'overview') {
 					$letsencrypt = '0';
 				}
 
+				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
+				if ($ssl_redirect > 0 && $letsencrypt == 1 && $result['letsencrypt'] != $letsencrypt) {
+					$ssl_redirect = 2;
+				}
+
 				if ($path == '') {
 					standard_error('patherror');
 				} else {
@@ -714,6 +724,10 @@ if ($page == 'overview') {
 				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
 					$ssl_ipsandports = 'notempty';
 				}
+
+				// Fudge the result for ssl_redirect to hide the Let's Encrypt steps
+				$result['temporary_ssl_redirect'] = $result['ssl_redirect'];
+				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
 
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true);
 

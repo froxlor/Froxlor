@@ -124,7 +124,7 @@ return array(
 					'ssl_redirect' => array(
 						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
 						'label' => $lng['domains']['ssl_redirect']['title'],
-						'desc' => $lng['domains']['ssl_redirect']['description'],
+						'desc' => $lng['domains']['ssl_redirect']['description'] . ($result['temporary_ssl_redirect'] > 1 ? $lng['domains']['ssl_redirect_temporarilydisabled'] : ''),
 						'type' => 'checkbox',
 						'values' => array(
 							array ('label' => $lng['panel']['yes'], 'value' => '1')

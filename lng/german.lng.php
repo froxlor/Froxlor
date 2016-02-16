@@ -1596,6 +1596,7 @@ $lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt L&aum
 $lng['serversettings']['letsencryptcountrycode']['description'] = "2 - stelliger L&auml;ndercode, welcher benutzt wird um Let's Encrypt - Zertifikate zu bestellen.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt befindet sich noch im Test</strong>";
 $lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt Bundesland";
 $lng['serversettings']['letsencryptstate']['description'] = "Bundesland, welches benutzt wird um Let's Encrypt - Zertifikate zu bestellen.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt befindet sich noch im Test</strong>";
+$lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>Die SSL-Umleitung ist, w&auml;hrend ein neues Let's Encrypt - Zertifikat erstellt wird, tempor&auml;r deaktiviert. Die Umleitung wird nach der Zertifikatserstellung wieder aktiviert.";
 
 // Added for Termination-date
 $lng['domains']['termination_date'] = 'K&uuml;ndigungsdatum';

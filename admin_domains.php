@@ -589,6 +589,11 @@ if ($page == 'domains'
 				    standard_error('nowildcardwithletsencrypt');
 				}
 
+				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
+				if ($ssl_redirect > 0 && $letsencrypt == 1) {
+					$ssl_redirect = 2;
+				}
+
 				if (!preg_match('/^https?\:\/\//', $documentroot)) {
 					if (strstr($documentroot, ":") !== false) {
 						standard_error('pathmaynotcontaincolon');
@@ -1176,8 +1181,8 @@ if ($page == 'domains'
 				$caneditdomain = isset($_POST['caneditdomain']) ? intval($_POST['caneditdomain']) : 0;
 				$registration_date = trim($_POST['registration_date']);
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
-                                $termination_date = trim($_POST['termination_date']);
-                                $termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
+				$termination_date = trim($_POST['termination_date']);
+				$termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
 				$isemaildomain = 0;
 				if (isset($_POST['isemaildomain'])) {
@@ -1376,6 +1381,11 @@ if ($page == 'domains'
 					standard_error('nowildcardwithletsencrypt');
 				}
 
+				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
+				if ($ssl_redirect > 0 && $letsencrypt == 1 && $result['letsencrypt'] != $letsencrypt) {
+					$ssl_redirect = 2;
+				}
+
 				if (!preg_match('/^https?\:\/\//', $documentroot)) {
 					$documentroot = makeCorrectDir($documentroot);
 				}
@@ -1490,7 +1500,8 @@ if ($page == 'domains'
 					'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 					'specialsettings' => $specialsettings,
 					'registration_date' => $registration_date,
-                                        'termination_date' => $termination_date,					'issubof' => $issubof,
+					'termination_date' => $termination_date,
+					'issubof' => $issubof,
 					'speciallogfile' => $speciallogfile,
 					'speciallogverified' => $speciallogverified,
 					'ipandport' => serialize($ipandports),
@@ -1665,7 +1676,7 @@ if ($page == 'domains'
 				$update_data['mod_fcgid_maxrequests'] = $mod_fcgid_maxrequests;
 				$update_data['specialsettings'] = $specialsettings;
 				$update_data['registration_date'] = $registration_date;
-                                $update_data['termination_date'] = $termination_date;
+				$update_data['termination_date'] = $termination_date;
 				$update_data['ismainbutsubto'] = $issubof;
 				$update_data['letsencrypt'] = $letsencrypt;
 				$update_data['id'] = $id;
@@ -1693,7 +1704,7 @@ if ($page == 'domains'
 					`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
 					`specialsettings` = :specialsettings,
 					`registration_date` = :registration_date,
-                                        `termination_date` = :termination_date,
+					`termination_date` = :termination_date,
 					`ismainbutsubto` = :ismainbutsubto,
 					`letsencrypt` = :letsencrypt
 					WHERE `id` = :id
@@ -1929,6 +1940,11 @@ if ($page == 'domains'
 				} elseif ($result['wwwserveralias'] == '1') {
 					$_value = '1';
 				}
+
+				// Fudge the result for ssl_redirect to hide the Let's Encrypt steps
+				$result['temporary_ssl_redirect'] = $result['ssl_redirect'];
+				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
+				
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', $_value, true, true);
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', $_value, true, true);

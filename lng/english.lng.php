@@ -1941,6 +1941,7 @@ $lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt count
 $lng['serversettings']['letsencryptcountrycode']['description'] = "2 letter country code used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
 $lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt state";
 $lng['serversettings']['letsencryptstate']['description'] = "State used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>The SSL redirect is temporarily deactivated while a new Let's Encrypt certificate is generated. It will be activated again after the certificate was generated.";
 
 // Autoupdate
 $lng['admin']['autoupdate'] = 'Auto-Update';
