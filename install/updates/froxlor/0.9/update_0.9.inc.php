@@ -1897,7 +1897,7 @@ if (isFroxlorVersion('0.9.28-svn1')) {
 
 	$handle = Database::query("SELECT `language` FROM `panel_languages` WHERE `iso`='foo'");
 
-	while ($langauge = $handle->fetch(PDO::FETCH_ASSOC)) {
+	while ($language = $handle->fetch(PDO::FETCH_ASSOC)) {
 		switch ($language) {
 			case "Deutsch":
 				Database::query("UPDATE `panel_languages` SET `iso`='de' WHERE `language` = 'Deutsch'");
@@ -3062,7 +3062,7 @@ if (isFroxlorVersion('0.9.35-dev1')) {
 }
 
 if (isFroxlorVersion('0.9.35-dev2')) {
-    
+
     showUpdateStep("Updating from 0.9.35-dev2 to 0.9.35-dev3");
     Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `termination_date` date NOT NULL AFTER `registration_date`");
     lastStepStatus(0);
