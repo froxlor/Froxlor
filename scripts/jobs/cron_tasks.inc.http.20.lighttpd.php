@@ -22,7 +22,6 @@ require_once(dirname(__FILE__).'/../classes/class.HttpConfigBase.php');
 
 class lighttpd extends HttpConfigBase {
 	private $logger = false;
-	private $debugHandler = false;
 	private $idnaConvert = false;
 
 	// protected
@@ -40,9 +39,8 @@ class lighttpd extends HttpConfigBase {
 	 */
 	private $_deactivated = false;
 
-	public function __construct($logger, $debugHandler, $idnaConvert) {
+	public function __construct($logger, $idnaConvert) {
 		$this->logger = $logger;
-		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
 	}
 

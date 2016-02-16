@@ -19,7 +19,6 @@ require_once(dirname(__FILE__).'/../classes/class.HttpConfigBase.php');
 
 class nginx extends HttpConfigBase {
 	private $logger = false;
-	private $debugHandler = false;
 	private $idnaConvert = false;
 	private $nginx_server = array();
 
@@ -40,9 +39,8 @@ class nginx extends HttpConfigBase {
 	 */
 	private $_deactivated = false;
 
-	public function __construct($logger, $debugHandler, $idnaConvert, $nginx_server=array()) {
+	public function __construct($logger, $idnaConvert, $nginx_server=array()) {
 		$this->logger = $logger;
-		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
 		$this->nginx_server = $nginx_server;
 	}

@@ -19,7 +19,6 @@
 
 class bind {
 	public $logger = false;
-	public $debugHandler = false;
 	public $nameservers = array();
 	public $mxservers = array();
 	public $axfrservers = array();
@@ -27,10 +26,9 @@ class bind {
 	private $_known_filenames = array();
 	private $_bindconf_file = '';
 
-	public function __construct($logger, $debugHandler) {
+	public function __construct($logger) {
 
 		$this->logger = $logger;
-		$this->debugHandler = $debugHandler;
 
 		if (Settings::Get('system.nameservers') != '') {
 			$nameservers = explode(',', Settings::Get('system.nameservers'));
