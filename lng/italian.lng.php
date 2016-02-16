@@ -1802,5 +1802,3 @@ $lng['domains']['import_description'] = 'Per ottenere informazioni dettagliate s
 $lng['usersettings']['custom_notes']['title'] = 'Note personali';
 $lng['usersettings']['custom_notes']['description'] = 'Sentiti libero di inserire qualsi nota vuoi o necessiti qui. Apparirano nel riepilogo dell\'amministratore/cliente perl \'utente corrispondente.';
 $lng['usersettings']['custom_notes']['show'] = 'Mostra le tue note nel cruscotto dell\'utente';
-$lng['serversettings']['system_send_cron_errors']['title'] = 'Inviaa gli errori cron all \'amministratore di froxlor via e-mail';
-$lng['serversettings']['system_send_cron_errors']['description'] = 'Scegli se ricevere una email sugli errori di cronjob. Ricorda che questo potrebbe causare l\'invio di una mail ogni 5 minuti in dipendenza all \'errore e alle tue impostazioni di cronjob.';

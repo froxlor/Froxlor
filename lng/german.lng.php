@@ -1563,8 +1563,6 @@ $lng['domains']['import_description'] = 'Detaillierte Informationen über den Au
 $lng['usersettings']['custom_notes']['title'] = 'Eigene Notizen';
 $lng['usersettings']['custom_notes']['description'] = 'Hier können Notizen je nach Lust und Laune eingetragen werden. Diese werden in der Administrator/Kunden-Übersicht bei dem jeweiligen Benutzer angezeigt.';
 $lng['usersettings']['custom_notes']['show'] = 'Zeige die Notizen auf dem Dashboard des Benutzers';
-$lng['serversettings']['system_send_cron_errors']['title'] = 'Sende Cron-Fehler via E-Mail an den Froxlor-Admin';
-$lng['serversettings']['system_send_cron_errors']['description'] = 'Gib an, ob bei einem Cron-Fehler eine E-Mail versendet werden soll. Beachte das es je nach Fehler und Cronjob-Einstellungen dazu kommen kann, dass diese E-Mail alle 5 Minuten gesendet wird.';
 $lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID und PHP-FPM können nicht gleichzeitig aktiviert werden.';
 
 // Added in Froxlor 0.9.34
