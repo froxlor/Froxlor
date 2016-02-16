@@ -25,11 +25,12 @@ $lastrun_update = array();
 /**
  * check for --help
  */
-if (isset($argv[1]) && strtolower($argv[1]) == '--help') {
+if (count($argv) < 2 || (isset($argv[1]) && strtolower($argv[1]) == '--help')) {
 	echo "\n*** Froxlor Master Cronjob ***\n\n";
 	echo "Below are possible parameters for this file\n\n";
-	echo "--[cronname]\t\t\tincludes the given cron-file\n";
-	echo "--force\t\t\tforces re-generating of config-files (webserver, nameserver, etc.)\n\n";
+	echo "--[cronname]\t\tincludes the given cron-file\n";
+	echo "--force\t\t\tforces re-generating of config-files (webserver, nameserver, etc.)\n";
+	echo "--debug\t\t\toutput debug information about what is going on to STDOUT.\n\n";
 }
 
 /**
@@ -37,6 +38,7 @@ if (isset($argv[1]) && strtolower($argv[1]) == '--help') {
  *
  * --[cronname] include [cronname]
  * --force to include cron_tasks even if it's not its turn
+ * --debug to output debug information
  */
 for ($x = 1; $x < count($argv); $x++) {
 	// check argument
@@ -54,6 +56,9 @@ for ($x = 1; $x < count($argv); $x++) {
 			addToQueue($jobs_to_run, $crontasks);
 			$lastrun_update['tasks'] = $crontasks;
 		}
+		elseif (strtolower($argv[$x]) == '--debug') {
+		    define('CRON_DEBUG_FLAG', 1);
+		}
 		// --[cronname]
 		elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {
 			if (strlen($argv[$x]) > 3) {
@@ -64,6 +69,8 @@ for ($x = 1; $x < count($argv); $x++) {
 		}
 	}
 }
+
+$cronlog->setCronDebugFlag(defined('CRON_DEBUG_FLAG'));
 
 // do we have anything to include?
 if (count($jobs_to_run) > 0) {

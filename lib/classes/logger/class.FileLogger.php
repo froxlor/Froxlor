@@ -125,6 +125,9 @@ class FileLogger extends AbstractLogger {
 				case LOG_CRIT:
 					$_type = 'critical';
 					break;
+				case LOG_DEBUG:
+					$_type = 'debug';
+					break;
 				default:
 					$_type = 'unknown';
 					break;
