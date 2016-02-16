@@ -1454,7 +1454,7 @@ $lng['domains']['serveraliasoption_www'] = 'www (www.domain.tld)';
 $lng['domains']['serveraliasoption_none'] = 'Kein Alias';
 $lng['error']['givendirnotallowed'] = 'Das angegebene Verzeichnis im Feld %s ist nicht erlaubt.';
 $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Erlaubte SSL Ciphers festlegen';
-$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Dies ist eine Liste von Ciphers die genutzt werden sollen (oder auch nicht genutzt werden sollen) wenn eine SSL Verbindung besteht. Eine Liste aller Ciphers und wie diese hinzugefügt/ausgeschlossen werden ist in den Abschnitten "CIPHER LIST FORMAT" und "CIPHER STRINGS" in <a href="http://openssl.org/docs/apps/ciphers.html">der man-page für Ciphers</a> zu finden.<br /><br /><b>Standard-Wert ist:</b><pre>ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128</pre>';
+$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Dies ist eine Liste von Ciphers, die genutzt werden sollen (oder auch nicht genutzt werden sollen), wenn eine SSL Verbindung besteht. Eine Liste aller Ciphers und wie diese hinzugefügt/ausgeschlossen werden ist in den Abschnitten "CIPHER LIST FORMAT" und "CIPHER STRINGS" in <a href="http://openssl.org/docs/apps/ciphers.html">der man-page für Ciphers</a> zu finden.<br /><br /><b>Standard-Wert ist:</b><pre>ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128</pre>';
 
 // Added in Froxlor 0.9.31
 $lng['panel']['dashboard'] = 'Dashboard';
@@ -1476,9 +1476,9 @@ $lng['pwdreminder']['wrongcode'] = 'Der verwendete Aktivierungscode ist entweder
 $lng['admin']['templates']['LINK'] = 'Wird mit dem Link zum Zurücksetzen des Passworts ersetzt.';
 $lng['pwdreminder']['choosenew'] = 'Neues Passwort auswählen';
 $lng['serversettings']['allow_error_report_admin']['title'] = 'Erlaube Administrator/Reseller das Melden von Datenbankfehlern an Froxlor';
-$lng['serversettings']['allow_error_report_admin']['description'] = 'Bitte beachten: Senden Sie zu keiner Zeit irgendwelche datenschutzrelevanten/persönliche (Kunden-)Daten an uns!';
-$lng['serversettings']['allow_error_report_customer']['title'] = 'Erlaube Kunden das Melden von Datenbankfehler an Froxlor';
-$lng['serversettings']['allow_error_report_customer']['description'] = 'Bitte beachten: Senden Sie zu keiner Zeit irgendwelche datenschutzrelevanten/persönliche (Kunden-)Daten an uns!';
+$lng['serversettings']['allow_error_report_admin']['description'] = 'Bitte beachten: Senden Sie zu keiner Zeit irgendwelche datenschutzrelevanten/persönlichen (Kunden-)Daten an uns!';
+$lng['serversettings']['allow_error_report_customer']['title'] = 'Erlaube Kunden das Melden von Datenbankfehlern an Froxlor';
+$lng['serversettings']['allow_error_report_customer']['description'] = 'Bitte beachten: Senden Sie zu keiner Zeit irgendwelche datenschutzrelevanten/persönlichen (Kunden-)Daten an uns!';
 $lng['admin']['phpsettings']['enable_slowlog'] = 'FPM-slowlog pro Domain aktivieren';
 $lng['admin']['phpsettings']['request_terminate_timeout'] = 'request_terminate_timeout';
 $lng['admin']['phpsettings']['request_slowlog_timeout'] = 'request_slowlog_timeout';
@@ -1561,13 +1561,13 @@ $lng['usersettings']['custom_notes']['title'] = 'Eigene Notizen';
 $lng['usersettings']['custom_notes']['description'] = 'Hier können Notizen je nach Lust und Laune eingetragen werden. Diese werden in der Administrator/Kunden-Übersicht bei dem jeweiligen Benutzer angezeigt.';
 $lng['usersettings']['custom_notes']['show'] = 'Zeige die Notizen auf dem Dashboard des Benutzers';
 $lng['serversettings']['system_send_cron_errors']['title'] = 'Sende Cron-Fehler via E-Mail an den Froxlor-Admin';
-$lng['serversettings']['system_send_cron_errors']['description'] = 'Gib an, ob bei einem Cron-Fehler eine E-Mail versendet werden soll. Beachte das es je nach Fehler und Cronjob-Einstellungen dazu kommen kann, dass diese E-Mail alle 5 Minuten gesendet wird.';
+$lng['serversettings']['system_send_cron_errors']['description'] = 'Gib an, ob bei einem Cron-Fehler eine E-Mail versendet werden soll. Beachte, dass es je nach Fehler und Cronjob-Einstellungen dazu kommen kann, dass diese E-Mail alle 5 Minuten gesendet wird.';
 $lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID und PHP-FPM können nicht gleichzeitig aktiviert werden.';
 
 // Added in Froxlor 0.9.34
 $lng['admin']['configfiles']['legend'] = 'Du konfigurierst nun einen Service/Daemon. Die folgende Legende zeigt unsere Nomenklatur.';
 $lng['admin']['configfiles']['commands'] = '<span class="red">Kommandos:</span> Die angezeigten Befehle müssen als Benutzer root in einer Shell ausgeführt werden. Es kann auch problemlos der ganze Block kopiert und in die Shell eingefügt werden.';
-$lng['admin']['configfiles']['files'] = '<span class="red">Konfigurationsdateien:</span> Dies ist der Inhalt einer Konfigurationsdatei. Der Befehl direkt vor dem Textfeld sollte einen Editor mit der Zeildatei öffnen. Der Inhalt kann nun einfach kopiert und in den Editor eingefügt und die Datei gespeichert werden.<br><br><span class="red">Beachten Sie:</span> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt. Bitte ersetzen Sie "MYSQL_PASSWORD" manuell durch das entsprechende Passwort. Falls Sie es vergessen haben sollten, finden Sie es in der Datei "lib/userdata.inc.php".';
+$lng['admin']['configfiles']['files'] = '<span class="red">Konfigurationsdateien:</span> Dies ist der Inhalt einer Konfigurationsdatei. Der Befehl direkt vor dem Textfeld sollte einen Editor mit der Zieldatei öffnen. Der Inhalt kann nun einfach kopiert und in den Editor eingefügt und die Datei gespeichert werden.<br><br><span class="red">Beachten Sie:</span> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt. Bitte ersetzen Sie "MYSQL_PASSWORD" manuell durch das entsprechende Passwort. Falls Sie es vergessen haben sollten, finden Sie es in der Datei "lib/userdata.inc.php".';
 $lng['serversettings']['apache_itksupport']['title'] = 'Anpassungen für Apache ITK-MPM verwenden';
 $lng['serversettings']['apache_itksupport']['description'] = '<div class="red">Achtung: Bitte nur verwenden, wenn wirklich Apache itk-mpm verwendet wird, ansonsten wird der Webserver nicht starten.</div>';
 $lng['integrity_check']['DatabaseCharset'] = 'Characterset der Datenbank (sollte UTF-8 sein)';
