@@ -106,7 +106,7 @@ class lescript
                 throw new RuntimeException("No challenges received for $domain. Whole response: ".json_encode($response));
             }
 
-            // choose http-01 challange only
+            // choose http-01 challenge only
             $challenge = array_reduce($response['challenges'], function($v, $w) { return $v ? $v : ($w['type'] == 'http-01' ? $w : false); });
             if(!$challenge) throw new RuntimeException("HTTP Challenge for $domain is not available. Whole response: ".json_encode($response));
 

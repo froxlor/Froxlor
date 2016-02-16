@@ -97,7 +97,7 @@ if ($page == 'overview') {
 // download the new archive
 elseif ($page == 'getdownload') {
 
-	// retreive the new version from the form
+	// retrieve the new version from the form
 	$newversion = isset($_POST['newversion']) ? $_POST['newversion'] : null;
 
 	// valid?
@@ -193,7 +193,7 @@ elseif ($page == 'extract') {
 // display error
 elseif ($page == 'error') {
 
-	// retreive error-number via url-parameter
+	// retrieve error-number via url-parameter
 	$errno = isset($_GET['errno']) ? (int)$_GET['errno'] : 0;
 
 	// 1 = no allow_url_fopen
