@@ -20,6 +20,5 @@
 /**
  * RESET USED TICKETS COUNTER
  */
-fwrite($debugHandler, 'Resetting customers used ticket counter' . "\n");
 $cronlog->logAction(CRON_ACTION, LOG_INFO, "Resetting customers used ticket counter");
 Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `tickets_used` = '0'");

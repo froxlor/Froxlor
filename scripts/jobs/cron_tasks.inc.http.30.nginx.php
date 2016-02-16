@@ -49,8 +49,7 @@ class nginx extends HttpConfigBase {
 
 
 	public function reload() {
-		fwrite($this->debugHandler, '   nginx::reload: reloading nginx' . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading nginx');
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: reloading nginx');
 		safe_exec(Settings::Get('system.apachereload_command'));
 
 		/**
@@ -59,12 +58,10 @@ class nginx extends HttpConfigBase {
 		if (Settings::Get('system.phpreload_command') != ''
 			&& (int)Settings::Get('phpfpm.enabled') == 0
 		) {
-			fwrite($this->debugHandler, '   nginx::reload: restarting php processes' . "\n");
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'restarting php processes');
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: restarting php processes');
 			safe_exec(Settings::Get('system.phpreload_command'));
 		} elseif ((int)Settings::Get('phpfpm.enabled') == 1) {
-			fwrite($this->debugHandler, '   nginx::reload: reloading php-fpm' . "\n");
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: reloading php-fpm');
 			safe_exec(escapeshellcmd(Settings::Get('phpfpm.reload')));
 		}
 	}
@@ -128,8 +125,7 @@ class nginx extends HttpConfigBase {
 			}
 			$port = $row_ipsandports['port'];
 
-			fwrite($this->debugHandler, '  nginx::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port . "\n");
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ip . ":" . $port);
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port);
 			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
 			if (!isset($this->nginx_data[$vhost_filename])) {
@@ -1002,8 +998,7 @@ class nginx extends HttpConfigBase {
 
 
 	public function writeConfigs() {
-		fwrite($this->debugHandler, '  nginx::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, "nginx::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
 		$vhostDir = new frxDirectory(Settings::Get('system.apacheconf_vhost'));
 		if (!$vhostDir->isConfigDir()) {
@@ -1029,8 +1024,7 @@ class nginx extends HttpConfigBase {
 			fclose($vhosts_file_handler);
 		} else {
 			if (!file_exists(Settings::Get('system.apacheconf_vhost'))) {
-				fwrite($this->debugHandler, '  nginx::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))) . "\n");
-				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'nginx::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 				safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
@@ -1058,8 +1052,6 @@ class nginx extends HttpConfigBase {
 				mkdir(Settings::Get('system.apacheconf_htpasswddir'), 0751);
 				umask($umask);
 			} elseif (!is_dir(Settings::Get('system.apacheconf_htpasswddir'))) {
-				fwrite($this->debugHandler, '  cron_tasks: WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!' . "\n");
-				echo 'WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!';
 				$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!');
 			}
 

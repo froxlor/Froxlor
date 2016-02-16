@@ -30,7 +30,7 @@ if (function_exists('pcntl_fork')) {
 			$TrafficPidStatus = $TrafficPidStatus ? false : true;
 		}
 		if ($TrafficPidStatus) {
-			fwrite($debugHandler,"Traffic Run already in progress\n");
+			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Traffic Run already in progress');
 			return 1;
 		}
 	}
@@ -49,7 +49,6 @@ if (function_exists('pcntl_fork')) {
 	elseif ($TrafficPid == 0) {
 		posix_setsid();
 		fclose($debugHandler);
-		$debugHandler = fopen("/tmp/froxlor_traffic.log", "w");
 		// re-create db
 		Database::needRoot(false);
 	}
@@ -64,7 +63,7 @@ if (function_exists('pcntl_fork')) {
 	} else {
 		$msg = "PHP compiled without pcntl.";
 	}
-	fwrite($debugHandler, $msg." Not forking traffic-cron, this may take a long time!");
+	$cronlog->logAction(CRON_ACTION, LOG_INFO, $msg." Not forking traffic-cron, this may take a long time!");
 }
 
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_traffic.inc.functions.php');
@@ -72,7 +71,7 @@ require_once makeCorrectFile(dirname(__FILE__) . '/cron_traffic.inc.functions.ph
 /**
  * TRAFFIC AND DISKUSAGE MESSURE
  */
-fwrite($debugHandler, 'Traffic run started...' . "\n");
+$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Traffic run started...');
 $admin_traffic = array();
 $domainlist = array();
 $speciallogfile_domainlist = array();
@@ -164,7 +163,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	/**
 	 * HTTP-Traffic
 	 */
-	fwrite($debugHandler, 'http traffic for ' . $row['loginname'] . ' started...' . "\n");
+	$cronlog->logAction(CRON_ACTION, LOG_INFO, 'http traffic for ' . $row['loginname'] . ' started...');
 	$httptraffic = 0;
 
 	if (isset($domainlist[$row['customerid']])
@@ -225,7 +224,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	/**
 	 * FTP-Traffic
 	 */
-	fwrite($debugHandler, 'ftp traffic for ' . $row['loginname'] . ' started...' . "\n");
+	$cronlog->logAction(CRON_ACTION, LOG_INFO, 'ftp traffic for ' . $row['loginname'] . ' started...');
 	$ftptraffic_stmt = Database::prepare("
 		SELECT SUM(`up_bytes`) AS `up_bytes_sum`, SUM(`down_bytes`) AS `down_bytes_sum`
 		FROM `" . TABLE_FTP_USERS . "` WHERE `customerid` = :customerid
@@ -249,7 +248,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 */
 	$mailtraffic = 0;
 	if (Settings::Get("system.mailtraffic_enabled")) {
-		fwrite($debugHandler, 'mail traffic usage for ' . $row['loginname'] . " started...\n");
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'mail traffic usage for ' . $row['loginname'] . " started...");
 
 		$currentDate = date("Y-m-d");
 
@@ -294,7 +293,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	/**
 	 * Total Traffic
 	 */
-	fwrite($debugHandler, 'total traffic for ' . $row['loginname'] . ' started' . "\n");
+	$cronlog->logAction(CRON_ACTION, LOG_INFO, 'total traffic for ' . $row['loginname'] . ' started');
 	$current_traffic = array();
 	$current_traffic['http'] = floatval($httptraffic);
 	$current_traffic['ftp_up'] = floatval(($ftptraffic['up_bytes_sum'] / 1024));
@@ -355,7 +354,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	/**
 	 * WebSpace-Usage
 	 */
-	fwrite($debugHandler, 'calculating webspace usage for ' . $row['loginname'] . "\n");
+	$cronlog->logAction(CRON_ACTION, LOG_INFO, 'calculating webspace usage for ' . $row['loginname']);
 	$webspaceusage = 0;
 
 	// Using repquota, it's faster using this tool than using du traversing the complete directory
@@ -381,14 +380,14 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			unset($back);
 
 		} else {
-			fwrite($debugHandler, 'documentroot ' . $row['documentroot'] . ' does not exist' . "\n");
+			$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'documentroot ' . $row['documentroot'] . ' does not exist');
 		}
 	}
 
 	/**
 	 * MailSpace-Usage
 	 */
-	fwrite($debugHandler, 'calculating mailspace usage for ' . $row['loginname'] . "\n");
+	$cronlog->logAction(CRON_ACTION, LOG_INFO, 'calculating mailspace usage for ' . $row['loginname']);
 	$emailusage = 0;
 
 	$maildir = makeCorrectDir(Settings::Get('system.vmail_homedir') . $row['loginname']);
@@ -402,13 +401,13 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		unset($back);
 
 	} else {
-		fwrite($debugHandler, 'maildir ' . $maildir . ' does not exist' . "\n");
+		$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'maildir ' . $maildir . ' does not exist');
 	}
 
 	/**
 	 * MySQLSpace-Usage
 	 */
-	fwrite($debugHandler, 'calculating mysqlspace usage for ' . $row['loginname'] . "\n");
+	$cronlog->logAction(CRON_ACTION, LOG_INFO, 'calculating mysqlspace usage for ' . $row['loginname']);
 	$mysqlusage = 0;
 
 	if (isset($mysqlusage_all[$row['customerid']])) {
