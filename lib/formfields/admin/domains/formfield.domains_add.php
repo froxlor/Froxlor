@@ -79,7 +79,13 @@ return array(
 						'desc' => $lng['panel']['dateformat'],
 						'type' => 'text',
 						'size' => 10
-					)
+					),
+                                        'authcode' => array(
+                                        'label' => $lng['domains']['authcode'],
+                                        'desc' => $lng['domains']['authcode_desc'],
+                                        'type' => 'text',
+                                        'size' => 16
+                                         )
 				)
 			),
 			'section_b' => array(

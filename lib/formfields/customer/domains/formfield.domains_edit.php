@@ -101,7 +101,12 @@ return array(
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
 						'select_var' => $openbasedir
-					)
+					),
+                                        'authcode' => array(
+                                        'label' => $lng['domains']['authcode'],
+                                        'type' => 'label',
+                                        'value' => $result['authcode']
+                                        )
 				)
 			)
 		)

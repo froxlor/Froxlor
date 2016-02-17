@@ -380,7 +380,9 @@ if ($page == 'domains'
 
                                 $termination_date = trim($_POST['termination_date']);
                                 $termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
-
+                                
+                                $authcode = trim($_POST['authcode']);
+                                 
 				if ($userinfo['change_serversettings'] == '1') {
 
 					$caneditdomain = isset($_POST['caneditdomain']) ? intval($_POST['caneditdomain']) : 0;
@@ -739,6 +741,7 @@ if ($page == 'domains'
 						'specialsettings' => $specialsettings,
 						'registration_date' => $registration_date,
                                                 'termination_date' => $termination_date,
+                                                'authcode' => $authcode,
 						'issubof' => $issubof,
 						'letsencrypt' => $letsencrypt
 					);
@@ -787,6 +790,7 @@ if ($page == 'domains'
 						'add_date' => time(),
 						'registration_date' => $registration_date,
                                                 'termination_date' => $termination_date,
+                                                'authcode' => $authcode,
 						'phpsettingid' => $phpsettingid,
 						'mod_fcgid_starter' => $mod_fcgid_starter,
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
@@ -820,6 +824,7 @@ if ($page == 'domains'
 						`add_date` = :add_date,
 						`registration_date` = :registration_date,
                                                 `termination_date` = :termination_date,
+                                                 `authcode`= :authcode,
 						`phpsettingid` = :phpsettingid,
 						`mod_fcgid_starter` = :mod_fcgid_starter,
 						`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
@@ -1184,6 +1189,8 @@ if ($page == 'domains'
 				$termination_date = trim($_POST['termination_date']);
 				$termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array('0000-00-00', '0', ''));
 
+                                $authcode = trim($_POST['authcode']);
+                                
 				$isemaildomain = 0;
 				if (isset($_POST['isemaildomain'])) {
 					$isemaildomain = intval($_POST['isemaildomain']);
@@ -1501,6 +1508,7 @@ if ($page == 'domains'
 					'specialsettings' => $specialsettings,
 					'registration_date' => $registration_date,
 					'termination_date' => $termination_date,
+                                        'authcode' => $authcode,
 					'issubof' => $issubof,
 					'speciallogfile' => $speciallogfile,
 					'speciallogverified' => $speciallogverified,
@@ -1677,6 +1685,7 @@ if ($page == 'domains'
 				$update_data['specialsettings'] = $specialsettings;
 				$update_data['registration_date'] = $registration_date;
 				$update_data['termination_date'] = $termination_date;
+                                $update_data['authcode'] = $authcode;
 				$update_data['ismainbutsubto'] = $issubof;
 				$update_data['letsencrypt'] = $letsencrypt;
 				$update_data['id'] = $id;
@@ -1705,6 +1714,7 @@ if ($page == 'domains'
 					`specialsettings` = :specialsettings,
 					`registration_date` = :registration_date,
 					`termination_date` = :termination_date,
+                                        `authcode`= :authcode,
 					`ismainbutsubto` = :ismainbutsubto,
 					`letsencrypt` = :letsencrypt
 					WHERE `id` = :id
