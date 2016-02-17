@@ -988,7 +988,7 @@ class apache extends HttpConfigBase {
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= "\n";
 					}
-					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Setting Options +Indexes');
+					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Setting Options +Indexes for ' . $row_diroptions['path']);
 				}
 
 				if (isset($row_diroptions['options_indexes'])
@@ -1005,7 +1005,7 @@ class apache extends HttpConfigBase {
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= "\n";
 					}
-					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Setting Options -Indexes');
+					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Setting Options -Indexes for ' . $row_diroptions['path']);
 				}
 
 				$statusCodes = array('404', '403', '500');
@@ -1041,7 +1041,7 @@ class apache extends HttpConfigBase {
 						$this->diroptions_data[$diroptions_filename] .= '  Order allow,deny' . "\n";
 						$this->diroptions_data[$diroptions_filename] .= '  Allow from all' . "\n";
 					}
-					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Enabling perl execution');
+					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Enabling perl execution for ' . $row_diroptions['path']);
 
 					// check for suexec-workaround, #319
 					if ((int)Settings::Get('perl.suexecworkaround') == 1) {
