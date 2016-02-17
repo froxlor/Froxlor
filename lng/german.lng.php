@@ -735,7 +735,10 @@ $lng['serversettings']['logger']['types']['title'] = 'Log-Art(en)';
 $lng['serversettings']['logger']['types']['description'] = 'Wählen Sie hier die gewünschten Logtypen. Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt<br />Mögliche Logtypen sind: syslog, file, mysql';
 $lng['serversettings']['logger']['logfile'] = 'Log-Datei Pfad inklusive Dateinamen';
 $lng['error']['logerror'] = 'Log-Fehler: "%s"';
-$lng['serversettings']['logger']['logcron'] = 'Logge Cronjobs (einen Durchgang)';
+$lng['serversettings']['logger']['logcron'] = 'Logge Cronjobs';
+$lng['serversettings']['logger']['logcronoption']['never'] = 'Nie';
+$lng['serversettings']['logger']['logcronoption']['once'] = 'Einmalig';
+$lng['serversettings']['logger']['logcronoption']['always'] = 'Immer';
 $lng['question']['logger_reallytruncate'] = 'Wollen Sie die Tabelle "%s" wirklich leeren?';
 $lng['admin']['loggersystem'] = 'System-Logging';
 $lng['menue']['logger']['logger'] = 'System-Logging';
@@ -1560,8 +1563,6 @@ $lng['domains']['import_description'] = 'Detaillierte Informationen über den Au
 $lng['usersettings']['custom_notes']['title'] = 'Eigene Notizen';
 $lng['usersettings']['custom_notes']['description'] = 'Hier können Notizen je nach Lust und Laune eingetragen werden. Diese werden in der Administrator/Kunden-Übersicht bei dem jeweiligen Benutzer angezeigt.';
 $lng['usersettings']['custom_notes']['show'] = 'Zeige die Notizen auf dem Dashboard des Benutzers';
-$lng['serversettings']['system_send_cron_errors']['title'] = 'Sende Cron-Fehler via E-Mail an den Froxlor-Admin';
-$lng['serversettings']['system_send_cron_errors']['description'] = 'Gib an, ob bei einem Cron-Fehler eine E-Mail versendet werden soll. Beachte, dass es je nach Fehler und Cronjob-Einstellungen dazu kommen kann, dass diese E-Mail alle 5 Minuten gesendet wird.';
 $lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID und PHP-FPM können nicht gleichzeitig aktiviert werden.';
 
 // Added in Froxlor 0.9.34

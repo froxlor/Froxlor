@@ -18,7 +18,7 @@
  *
  */
 
-fwrite($debugHandler, "calculating mailspace usage\n");
+$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'calculating mailspace usage');
 
 $maildirs_stmt = Database::query("
 	SELECT `id`, CONCAT(`homedir`, `maildir`) AS `maildirpath` FROM `".TABLE_MAIL_USERS."` ORDER BY `id`
@@ -50,6 +50,6 @@ while ($maildir = $maildirs_stmt->fetch(PDO::FETCH_ASSOC)) {
 		unset($back);
 		Database::pexecute($upd_stmt, array('size' => $emailusage, 'id' => $maildir['id']));
 	} else {
-		fwrite($debugHandler, 'maildir ' . $_maildir . ' does not exist' . "\n");
+		$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'maildir ' . $_maildir . ' does not exist');
 	}
 }

@@ -105,34 +105,12 @@ class FroxlorLogger {
 		}
 
 		if (self::$crondebug_flag) {
-			switch($type) {
-				case LOG_INFO:
-					$_type = 'information';
-					break;
-				case LOG_NOTICE:
-					$_type = 'notice';
-					break;
-				case LOG_WARNING:
-					$_type = 'warning';
-					break;
-				case LOG_ERR:
-					$_type = 'error';
-					break;
-				case LOG_CRIT:
-					$_type = 'critical';
-					break;
-				case LOG_DEBUG:
-					$_type = 'debug';
-					break;
-				default:
-					$_type = 'unknown';
-					break;
-			}
-			echo "[".$_type."] ".$text.PHP_EOL;
+			echo "[".getLogLevelDesc($type)."] ".$text.PHP_EOL;
 		}
 
 		if (Settings::Get('logger.log_cron') == '0'
 		   && $action == CRON_ACTION
+           && $type > 4 // warnings, errors and critical mesages WILL be logged
 		) {
 			return;
 		}
@@ -191,13 +169,11 @@ class FroxlorLogger {
 
 		$_cronlog = (int)$_cronlog;
 
-		if ($_cronlog != 0
-		   && $_cronlog != 1
-		) {
+		if ($_cronlog < 0 || $_cronlog > 2) {
 			$_cronlog = 0;
 		}
 		Settings::Set('logger.log_cron', $_cronlog);
-		return true;
+		return $_cronlog;
 	}
 
 	/**

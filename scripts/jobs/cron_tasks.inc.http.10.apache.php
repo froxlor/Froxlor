@@ -21,7 +21,6 @@ require_once(dirname(__FILE__).'/../classes/class.HttpConfigBase.php');
 
 class apache extends HttpConfigBase {
 	private $logger = false;
-	private $debugHandler = false;
 	private $idnaConvert = false;
 
 	// protected
@@ -40,21 +39,18 @@ class apache extends HttpConfigBase {
 	 */
 	private $_deactivated = false;
 
-	public function __construct($logger, $debugHandler, $idnaConvert) {
+	public function __construct($logger, $idnaConvert) {
 		$this->logger = $logger;
-		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
 	}
 
 
 	public function reload() {
 		if ((int)Settings::Get('phpfpm.enabled') == 1) {
-			fwrite($this->debugHandler, '   apache::reload: reloading php-fpm' . "\n");
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: reloading php-fpm');
 			safe_exec(escapeshellcmd(Settings::Get('phpfpm.reload')));
 		}
-		fwrite($this->debugHandler, '   apache::reload: reloading apache' . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading apache');
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: reloading apache');
 		safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
 	}
 
@@ -76,8 +72,7 @@ class apache extends HttpConfigBase {
 		) {
 			// if we use fcgid or php-fpm we don't need this file
 			if (file_exists($vhosts_filename)) {
-				fwrite($this->debugHandler, '  apache::_createStandardDirectoryEntry: unlinking ' . basename($vhosts_filename) . "\n");
-				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'unlinking ' . basename($vhosts_filename));
+				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'apache::_createStandardDirectoryEntry: unlinking ' . basename($vhosts_filename));
 				unlink(makeCorrectFile($vhosts_filename));
 			}
 		} else {
@@ -147,8 +142,7 @@ class apache extends HttpConfigBase {
 				$ipport = $row_ipsandports['ip'] . ':' . $row_ipsandports['port'];
 			}
 
-			fwrite($this->debugHandler, '  apache::createIpPort: creating ip/port settings for  ' . $ipport . "\n");
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ipport);
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::createIpPort: creating ip/port settings for  ' . $ipport);
 			$vhosts_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
 			if (!isset($this->virtualhosts_data[$vhosts_filename])) {
@@ -895,8 +889,7 @@ class apache extends HttpConfigBase {
 		$domains = WebserverBase::getVhostsToCreate();
 		foreach ($domains as $domain) {
 
-			fwrite($this->debugHandler, '  apache::createVirtualHosts: creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname'] . "\n");
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname']);
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::createVirtualHosts: creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname']);
 			$vhosts_filename = $this->getVhostFilename($domain);
 
 			// Apply header
@@ -995,7 +988,7 @@ class apache extends HttpConfigBase {
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= "\n";
 					}
-					fwrite($this->debugHandler, '  cron_tasks: Task3 - Setting Options +Indexes' . "\n");
+					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Setting Options +Indexes');
 				}
 
 				if (isset($row_diroptions['options_indexes'])
@@ -1012,7 +1005,7 @@ class apache extends HttpConfigBase {
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= "\n";
 					}
-					fwrite($this->debugHandler, '  cron_tasks: Task3 - Setting Options -Indexes' . "\n");
+					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Setting Options -Indexes');
 				}
 
 				$statusCodes = array('404', '403', '500');
@@ -1048,7 +1041,7 @@ class apache extends HttpConfigBase {
 						$this->diroptions_data[$diroptions_filename] .= '  Order allow,deny' . "\n";
 						$this->diroptions_data[$diroptions_filename] .= '  Allow from all' . "\n";
 					}
-					fwrite($this->debugHandler, '  cron_tasks: Task3 - Enabling perl execution' . "\n");
+					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Enabling perl execution');
 
 					// check for suexec-workaround, #319
 					if ((int)Settings::Get('perl.suexecworkaround') == 1) {
@@ -1116,8 +1109,7 @@ class apache extends HttpConfigBase {
 	 */
 	public function writeConfigs() {
 		// Write diroptions
-		fwrite($this->debugHandler, '  apache::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_diroptions') . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_diroptions'));
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_diroptions'));
 
 		if (count($this->diroptions_data) > 0) {
 			$optsDir = new frxDirectory(Settings::Get('system.apacheconf_diroptions'));
@@ -1138,8 +1130,7 @@ class apache extends HttpConfigBase {
 				fclose($diroptions_file_handler);
 			} else {
 				if (!file_exists(Settings::Get('system.apacheconf_diroptions'))) {
-					fwrite($this->debugHandler, '  apache::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))) . "\n");
-					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))));
+					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'apache::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))));
 					safe_exec('mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))));
 				}
 
@@ -1157,8 +1148,7 @@ class apache extends HttpConfigBase {
 		}
 
 		// Write htpasswds
-		fwrite($this->debugHandler, '  apache::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_htpasswddir') . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_htpasswddir'));
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_htpasswddir'));
 
 		if (count($this->htpasswds_data) > 0) {
 			if (!file_exists(Settings::Get('system.apacheconf_htpasswddir'))) {
@@ -1177,15 +1167,12 @@ class apache extends HttpConfigBase {
 					fclose($htpasswd_file_handler);
 				}
 			} else {
-				fwrite($this->debugHandler, '  cron_tasks: WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!' . "\n");
-				echo 'WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!';
 				$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!');
 			}
 		}
 
 		// Write virtualhosts
-		fwrite($this->debugHandler, '  apache::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
 		if (count($this->virtualhosts_data) > 0) {
 			$vhostDir = new frxDirectory(Settings::Get('system.apacheconf_vhost'));
@@ -1218,8 +1205,7 @@ class apache extends HttpConfigBase {
 				fclose($vhosts_file_handler);
 			} else {
 				if (!file_exists(Settings::Get('system.apacheconf_vhost'))) {
-					fwrite($this->debugHandler, '  apache::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))) . "\n");
-					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'apache::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 					safe_exec('mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 				}
 

@@ -65,8 +65,14 @@ return array(
 					'label' => $lng['serversettings']['logger']['logcron'],
 					'settinggroup' => 'logger',
 					'varname' => 'log_cron',
-					'type' => 'bool',
-					'default' => false,
+					'type' => 'option',
+					'default' => 0,
+					'option_mode' => 'one',
+					'option_options' => array(
+							0 => $lng['serversettings']['logger']['logcronoption']['never'],
+							1 => $lng['serversettings']['logger']['logcronoption']['once'],
+							2 => $lng['serversettings']['logger']['logcronoption']['always']
+						),
 					'save_method' => 'storeSettingField',
 					),
 				),

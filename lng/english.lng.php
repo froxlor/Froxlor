@@ -738,7 +738,10 @@ $lng['serversettings']['logger']['types']['title'] = 'Log-type(s)';
 $lng['serversettings']['logger']['types']['description'] = 'Specify logtypes. To select multiple types, hold down CTRL while selecting.<br />Available logtypes are: syslog, file, mysql';
 $lng['serversettings']['logger']['logfile'] = 'Logfile path including filename';
 $lng['error']['logerror'] = 'Log-Error: %s';
-$lng['serversettings']['logger']['logcron'] = 'Log cronjobs (one run)';
+$lng['serversettings']['logger']['logcron'] = 'Log cronjobs';
+$lng['serversettings']['logger']['logcronoption']['never'] = 'Never';
+$lng['serversettings']['logger']['logcronoption']['once'] = 'Once';
+$lng['serversettings']['logger']['logcronoption']['always'] = 'Always';
 $lng['question']['logger_reallytruncate'] = 'Do you really want to truncate the table "%s"?';
 $lng['admin']['loggersystem'] = 'System-logging';
 $lng['menue']['logger']['logger'] = 'System-logging';
@@ -1833,8 +1836,6 @@ $lng['domains']['import_description'] = 'Detailed information about the structur
 $lng['usersettings']['custom_notes']['title'] = 'Custom notes';
 $lng['usersettings']['custom_notes']['description'] = 'Feel free to put any notes you want/need in here. They will show up in the admin/customer overview for the corresponding user.';
 $lng['usersettings']['custom_notes']['show'] = 'Show your notes on the dashboard of the user';
-$lng['serversettings']['system_send_cron_errors']['title'] = 'Send cron-errors to froxlor-admin via e-mail';
-$lng['serversettings']['system_send_cron_errors']['description'] = 'Choose whether you want to receive an e-mail on cronjob errors. Keep in mind that this can lead to an e-mail being sent every 5 minutes depending on the error and your cronjob settings.';
 $lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID and PHP-FPM cannot be activated at the same time';
 
 // Added in Froxlor 0.9.34

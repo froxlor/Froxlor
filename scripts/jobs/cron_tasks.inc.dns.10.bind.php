@@ -19,7 +19,6 @@
 
 class bind {
 	public $logger = false;
-	public $debugHandler = false;
 	public $nameservers = array();
 	public $mxservers = array();
 	public $axfrservers = array();
@@ -27,10 +26,9 @@ class bind {
 	private $_known_filenames = array();
 	private $_bindconf_file = '';
 
-	public function __construct($logger, $debugHandler) {
+	public function __construct($logger) {
 
 		$this->logger = $logger;
-		$this->debugHandler = $debugHandler;
 
 		if (Settings::Get('system.nameservers') != '') {
 			$nameservers = explode(',', Settings::Get('system.nameservers'));
@@ -67,7 +65,6 @@ class bind {
 
 
 	public function writeConfigs() {
-		fwrite($this->debugHandler, '  cron_tasks: Task4 started - Rebuilding froxlor_bind.conf' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Rebuilding froxlor_bind.conf');
 
 		if (!file_exists(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/'))) {
@@ -130,22 +127,20 @@ class bind {
 			}
 		}
 
-		fwrite($this->debugHandler,
+		$this->logger->logAction(CRON_ACTION, LOG_DEBUG,
 			str_pad('domId', 9, ' ') . str_pad('domain', 40, ' ') .
 			'ismainbutsubto ' . str_pad('parent domain', 40, ' ') .
-			"list of child domain ids\n");
+			"list of child domain ids");
 		foreach ($domains as $domain) {
-			fwrite($this->debugHandler,
+			$logLine =
 				str_pad($domain['id'], 9, ' ') .
 				str_pad($domain['domain'], 40, ' ') .
 				str_pad($domain['ismainbutsubto'], 15, ' ') .
 				str_pad(((isset($domains[  $domain['ismainbutsubto']   ])) ?
 						$domains[  $domain['ismainbutsubto']   ]['domain'] :
-						'-'), 40, ' '));
-			foreach ($domain['children'] as $child) {
-				fwrite($this->debugHandler, '$child, ');
-			}
-			fwrite($this->debugHandler, "\n");
+						'-'), 40, ' ') .
+				join(', ', $domain['children']);
+			$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $logLine);
 		}
 
 		foreach ($domains as $domain) {
@@ -159,10 +154,8 @@ class bind {
 		$bindconf_file_handler = fopen(makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
 		fwrite($bindconf_file_handler, $this->_bindconf_file);
 		fclose($bindconf_file_handler);
-		fwrite($this->debugHandler, '  cron_tasks: Task4 - froxlor_bind.conf written' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
 		safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
-		fwrite($this->debugHandler, '  cron_tasks: Task4 - Bind9 reloaded' . "\n");
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
 		$domains_dir = makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/');
 
@@ -178,12 +171,12 @@ class bind {
 					&& !in_array($domain_filename, $this->_known_filenames)
 					&& is_file($full_filename)
 					&& file_exists($full_filename)) {
-					fwrite($this->debugHandler, '  cron_tasks: Task4 - unlinking ' . $domain_filename . "\n");
 					$this->logger->logAction(CRON_ACTION, LOG_WARNING, 'Deleting ' . $domain_filename);
 					unlink(makeCorrectFile($domains_dir . '/' . $domain_filename));
 				}
 			}
 		}
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
 	}
 
 	private function walkDomainList($domain, $domains) {
@@ -202,7 +195,7 @@ class bind {
 			$zonefile_handler = fopen($zonefile_name, 'w');
 			fwrite($zonefile_handler, $zonefile.$subzones);
 			fclose($zonefile_handler);
-			fwrite($this->debugHandler, '  cron_tasks: Task4 - `' . $zonefile_name . '` zone written' . "\n");
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` zone written');
 		} else {
 			return $this->generateZone($domain);
 		}
@@ -600,7 +593,6 @@ class bind {
 			fclose($dkimkeys_file_handler);
 
 			safe_exec(escapeshellcmd(Settings::Get('dkim.dkimrestart_command')));
-			fwrite($this->debugHandler, '  cron_tasks: Task4 - Dkim-milter reloaded' . "\n");
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Dkim-milter reloaded');
 		}
 	}
