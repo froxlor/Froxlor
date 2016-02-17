@@ -124,6 +124,11 @@ return array (
 					'url' => 'customer_extras.php?page=htaccess',
 					'label' => $lng['menue']['extras']['pathoptions'],
 				),
+			    array (
+			        'url' => 'customer_logger.php?page=log',
+			        'label' => $lng['menue']['logger']['logger'],
+			        'show_element' => ( Settings::Get('logger.enabled') == true )
+			    ),
 			),
 		),
 		'traffic' => array (
@@ -220,6 +225,12 @@ return array (
 					'label' => $lng['admin']['cron']['cronsettings'],
 					'required_resources' => 'change_serversettings',
 				),
+			    array (
+			        'url' => 'admin_logger.php?page=log',
+			        'label' => $lng['menue']['logger']['logger'],
+			        'required_resources' => 'change_serversettings',
+			        'show_element' => ( Settings::Get('logger.enabled') == true ),
+			    ),
 				array (
 					'url' => 'admin_settings.php?page=rebuildconfigs',
 					'label' => $lng['admin']['rebuildconf'],
@@ -283,12 +294,6 @@ return array (
 				array (
 					'url' => 'admin_templates.php?page=email',
 					'label' => $lng['admin']['templates']['email'],
-				),
-				array (
-					'url' => 'admin_logger.php?page=log',
-					'label' => $lng['menue']['logger']['logger'],
-					'required_resources' => 'change_serversettings',
-					'show_element' => ( Settings::Get('logger.enabled') == true ),
 				),
 				array (
 					'url' => 'admin_message.php?page=message',

@@ -106,32 +106,7 @@ class FileLogger extends AbstractLogger {
 					break;
 			}
 
-			$_type = 'unknown';
-
-			switch($type)
-			{
-				case LOG_INFO:
-					$_type = 'information';
-					break;
-				case LOG_NOTICE:
-					$_type = 'notice';
-					break;
-				case LOG_WARNING:
-					$_type = 'warning';
-					break;
-				case LOG_ERR:
-					$_type = 'error';
-					break;
-				case LOG_CRIT:
-					$_type = 'critical';
-					break;
-				case LOG_DEBUG:
-					$_type = 'debug';
-					break;
-				default:
-					$_type = 'unknown';
-					break;
-			}
+			$_type = getLogLevelDesc($type);
 
 			if(!isset($this->userinfo['loginname'])
 					|| $this->userinfo['loginname'] == '')
