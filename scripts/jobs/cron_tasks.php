@@ -29,8 +29,7 @@ require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.35.nginx_
 /**
  * LOOK INTO TASKS TABLE TO SEE IF THERE ARE ANY UNDONE JOBS
  */
-fwrite($debugHandler, '  cron_tasks: Searching for tasks to do' . "\n");
-$cronlog->logAction(CRON_ACTION, LOG_INFO, "Searching for tasks to do");
+$cronlog->logAction(CRON_ACTION, LOG_INFO, "cron_tasks: Searching for tasks to do");
 $result_tasks_stmt = Database::query("
 	SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` <> '99' ORDER BY `id` ASC
 ");
@@ -73,7 +72,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 				}
 			}
 
-			$webserver = new $websrv($cronlog, $debugHandler, $idna_convert);
+			$webserver = new $websrv($cronlog, $idna_convert);
 		}
 
 		if (isset($webserver)) {
@@ -115,8 +114,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 * TYPE=2 MEANS TO CREATE A NEW HOME AND CHOWN
 	 */
 	elseif ($row['type'] == '2') {
-		fwrite($debugHandler, '  cron_tasks: Task2 started - create new home' . "\n");
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task2 started - create new home');
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'cron_tasks: Task2 started - create new home');
 
 		if (is_array($row['data'])) {
 			// define paths
@@ -175,7 +173,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 */
 	elseif ($row['type'] == '4' && (int)Settings::Get('system.bind_enable') != 0) {
 		if (!isset($nameserver)) {
-			$nameserver = new bind($cronlog, $debugHandler);
+			$nameserver = new bind($cronlog);
 		}
 
 		if (Settings::Get('dkim.use_dkim') == '1') {
@@ -204,8 +202,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 * TYPE=6 MEANS THAT A CUSTOMER HAS BEEN DELETED AND THAT WE HAVE TO REMOVE ITS FILES
 	 */
 	elseif ($row['type'] == '6') {
-		fwrite($debugHandler, '  cron_tasks: Task6 started - deleting customer data' . "\n");
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task6 started - deleting customer data');
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'cron_tasks: Task6 started - deleting customer data');
 
 		if (is_array($row['data'])) {
 			if (isset($row['data']['loginname'])) {
@@ -271,8 +268,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 * TYPE=7 Customer deleted an email account and wants the data to be deleted on the filesystem
 	 */
 	elseif ($row['type'] == '7') {
-		fwrite($debugHandler, '  cron_tasks: Task7 started - deleting customer e-mail data' . "\n");
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task7 started - deleting customer e-mail data');
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'cron_tasks: Task7 started - deleting customer e-mail data');
 
 		if (is_array($row['data'])) {
 
@@ -337,8 +333,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 * refs #293
 	 */
 	elseif ($row['type'] == '8') {
-		fwrite($debugHandler, '  cron_tasks: Task8 started - deleting customer ftp homedir' . "\n");
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task8 started - deleting customer ftp homedir');
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'cron_tasks: Task8 started - deleting customer ftp homedir');
 
 		if (is_array($row['data'])) {
 
@@ -366,8 +361,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 */
 	elseif ($row['type'] == '10' && (int)Settings::Get('system.diskquota_enabled') != 0) {
 
-		fwrite($debugHandler, '  cron_tasks: Task10 started - setting filesystem quota' . "\n");
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Task10 started - setting filesystem quota');
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'cron_tasks: Task10 started - setting filesystem quota');
 
 		$usedquota = getFilesystemQuota();
 

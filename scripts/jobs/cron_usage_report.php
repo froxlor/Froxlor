@@ -17,7 +17,7 @@
  *
  */
 
-fwrite($debugHandler, 'Web- and Traffic-usage reporting started...' . "\n");
+$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Web- and Traffic-usage reporting started...');
 $yesterday = time() - (60 * 60 * 24);
 
 /**

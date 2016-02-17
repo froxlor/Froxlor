@@ -3069,3 +3069,13 @@ if (isFroxlorVersion('0.9.35-dev2')) {
 
     updateToVersion('0.9.35-dev3');
 }
+
+if (isFroxlorVersion('0.9.35-dev3')) {
+
+	// remove unused settingjj
+	showUpdateStep("Removing unused setting &quot;Send cron-errors to froxlor-admin via e-mail&quot;");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'send_cron_errors';");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.35-dev4');
+}

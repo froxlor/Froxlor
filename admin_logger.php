@@ -100,31 +100,7 @@ if ($page == 'log'
 					}
 
 					$log_count++;
-					$type = $row['type'];
-					$_type = 'unknown';
-
-					switch ($type) {
-						case LOG_INFO:
-							$_type = 'Information';
-							break;
-						case LOG_NOTICE:
-							$_type = 'Notice';
-							break;
-						case LOG_WARNING:
-							$_type = 'Warning';
-							break;
-						case LOG_ERR:
-							$_type = 'Error';
-							break;
-						case LOG_CRIT:
-							$_type = 'Critical';
-							break;
-						default:
-							$_type = 'Unknown';
-							break;
-					}
-
-					$row['type'] = $_type;
+					$row['type'] = getLogLevelDesc($row['type']);
 					eval("\$log.=\"" . getTemplate('logger/logger_log') . "\";");
 					$count++;
 					$_action = $action;

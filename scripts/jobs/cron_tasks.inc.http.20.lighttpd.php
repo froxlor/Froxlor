@@ -22,7 +22,6 @@ require_once(dirname(__FILE__).'/../classes/class.HttpConfigBase.php');
 
 class lighttpd extends HttpConfigBase {
 	private $logger = false;
-	private $debugHandler = false;
 	private $idnaConvert = false;
 
 	// protected
@@ -40,21 +39,18 @@ class lighttpd extends HttpConfigBase {
 	 */
 	private $_deactivated = false;
 
-	public function __construct($logger, $debugHandler, $idnaConvert) {
+	public function __construct($logger, $idnaConvert) {
 		$this->logger = $logger;
-		$this->debugHandler = $debugHandler;
 		$this->idnaConvert = $idnaConvert;
 	}
 
 
 	public function reload() {
 		if ((int)Settings::Get('phpfpm.enabled') == 1) {
-			fwrite($this->debugHandler, '   lighttpd::reload: reloading php-fpm' . "\n");
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading php-fpm');
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::reload: reloading php-fpm');
 			safe_exec(escapeshellcmd(Settings::Get('phpfpm.reload')));
 		}
-		fwrite($this->debugHandler, '   lighttpd::reload: reloading lighttpd' . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'reloading lighttpd');
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::reload: reloading lighttpd');
 		safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
 	}
 
@@ -73,8 +69,7 @@ class lighttpd extends HttpConfigBase {
 				$ipv6 = '';
 			}
 
-			fwrite($this->debugHandler, '  lighttpd::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port . "\n");
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'creating ip/port settings for  ' . $ip . ":" . $port);
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port);
 			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
 			if (!isset($this->lighttpd_data[$vhost_filename])) {
@@ -861,8 +856,7 @@ class lighttpd extends HttpConfigBase {
 
 
 	public function writeConfigs() {
-		fwrite($this->debugHandler, '  lighttpd::writeConfigs: rebuilding ' . Settings::Get('system.apacheconf_vhost') . "\n");
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, "rebuilding " . Settings::Get('system.apacheconf_vhost'));
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, "lighttpd::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
 		$vhostDir = new frxDirectory(Settings::Get('system.apacheconf_vhost'));
 		if (!$vhostDir->isConfigDir()) {
@@ -889,8 +883,7 @@ class lighttpd extends HttpConfigBase {
 			fclose($vhosts_file_handler);
 		} else {
 			if (!file_exists(Settings::Get('system.apacheconf_vhost'))) {
-				fwrite($this->debugHandler, '  lighttpd::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))) . "\n");
-				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'lighttpd::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 				safe_exec('mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
