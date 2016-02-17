@@ -106,9 +106,9 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ": " . $e->getMessage());
 		}
 	} elseif ($certrow['ssl_redirect'] == '2') {
-		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['ssl_redirect'] . " due to an enabled ssl_redirect");
+		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
 	} else {
-		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['ssl_redirect'] . " due to a missing documentroot");
+		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to a missing documentroot");
 	}
 }
 
