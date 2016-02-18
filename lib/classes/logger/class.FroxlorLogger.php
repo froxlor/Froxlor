@@ -110,7 +110,7 @@ class FroxlorLogger {
 
 		if (Settings::Get('logger.log_cron') == '0'
 		   && $action == CRON_ACTION
-           && $type > 4 // warnings, errors and critical mesages WILL be logged
+           && $type > LOG_WARNING // warnings, errors and critical mesages WILL be logged
 		) {
 			return;
 		}
