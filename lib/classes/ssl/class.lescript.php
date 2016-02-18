@@ -166,6 +166,7 @@ class lescript
             $count = 0;
             do {
                 if(empty($result['status']) || $result['status'] == "invalid") {
+	                @unlink($tokenPath);
                     throw new \RuntimeException("Verification ended with error: ".json_encode($result));
                 }
                 $ended = !($result['status'] === "pending");
