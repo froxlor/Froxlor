@@ -38,8 +38,7 @@ $upddom_stmt = Database::prepare("
 $changedetected = 0;
 while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-	// Only renew let's encrypt certificate for domains where a documentroot
-	// already exists
+	// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 	if ($certrow['ssl_redirect'] != 2)
 	{
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Updating " . $certrow['domain']);
