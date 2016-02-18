@@ -32,14 +32,14 @@ class lescript
 
     private $webRootDir;
 
-    private $debugHandler;
+    private $logger;
     private $client;
     private $accountKey;
 
-    public function __construct($webRootDir, $debugHandler)
+    public function __construct($webRootDir, $logger)
     {
         $this->webRootDir = $webRootDir;
-        $this->debugHandler = $debugHandler;
+        $this->logger = $logger;
         if (Settings::Get('system.letsencryptca') == 'production') {
             $ca = 'https://acme-v01.api.letsencrypt.org';
         } else {
@@ -370,7 +370,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 
     protected function log($message)
     {
-        $this->debugHandler->logAction(CRON_ACTION, LOG_INFO, "letsencrypt " . $message);
+        $this->logger->logAction(CRON_ACTION, LOG_INFO, "letsencrypt " . $message);
     }
 }
 
