@@ -65,6 +65,16 @@
 ]]>
 						</content>
 					</file>
+					<file name="/etc/apache2/conf-enabled/acme.conf">
+						<content><![CDATA[
+Alias "/.well-known/acme-challenge" "{{const.FROXLOR_INSTALL_DIR}}/.well-known/acme-challenge"
+<Directory "/var/www/.well-known/acme-challenge">
+	Order Deny,Allow
+	Deny from All
+</Directory>
+]]>
+						</content>
+					</file>
 					<command><![CDATA[service apache2 restart]]></command>
 				</daemon>
 				<daemon name="apache" version="2.4" title="Apache 2.4">
