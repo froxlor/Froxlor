@@ -40,10 +40,8 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	// Only renew let's encrypt certificate for domains where a documentroot
 	// already exists
-	if (file_exists($certrow['documentroot'])
-		&& is_dir($certrow['documentroot'])
-		&& $certrow['ssl_redirect'] != 2
-	) {
+	if ($certrow['ssl_redirect'] != 2)
+	{
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Updating " . $certrow['domain']);
 		
 		if ($certrow['ssl_cert_file']) {
@@ -105,10 +103,8 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 		} catch (Exception $e) {
 			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ": " . $e->getMessage());
 		}
-	} elseif ($certrow['ssl_redirect'] == '2') {
-		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
 	} else {
-		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to a missing documentroot");
+		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
 	}
 }
 
