@@ -68,7 +68,7 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 		
 		try {
 			// Initialize Lescript with documentroot
-			$le = new lescript($certrow['documentroot'], $cronlog);
+			$le = new lescript($cronlog);
 			
 			// Initialize Lescript
 			$le->initAccount($certrow);

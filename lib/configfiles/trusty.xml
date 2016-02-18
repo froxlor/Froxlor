@@ -85,6 +85,15 @@
 ]]>
 						</content>
 					</file>
+					<file name="/etc/apache2/conf-enabled/acme.conf">
+						<content><![CDATA[
+Alias "/.well-known/acme-challenge" "{{const.FROXLOR_INSTALL_DIR}}/.well-known/acme-challenge"
+<Directory "/var/www/.well-known/acme-challenge">
+	Require all granted
+</Directory>
+]]>
+						</content>
+					</file>
 					<command><![CDATA[service apache2 restart]]></command>
 				</daemon>
 				<!-- HTTP Lighttpd -->
@@ -145,6 +154,8 @@ fastcgi.server = (
 		)
 	)
 )
+
+alias.url           += ("/.well-known/acme-challenge/" => "{{const.FROXLOR_INSTALL_DIR}}/.well-known/acme-challenge/")
 
 #### external configuration files
 ## mimetype mapping
@@ -247,6 +258,18 @@ fastcgi_param  SERVER_NAME        $server_name;
 
 # PHP only, required if PHP was built with --enable-force-cgi-redirect
 fastcgi_param  REDIRECT_STATUS    200;
+]]>
+						</content>
+					</file>
+					<file name="/etc/nginx/conf.d/acme.conf">
+						<content><![CDATA[
+location /.well-known/acme-challenge {
+	alias {{const.FROXLOR_INSTALL_DIR}};
+
+	location ~ /.well-known/acme-challenge/(.*) {
+		default_type text/plain;
+	}
+}
 ]]>
 						</content>
 					</file>

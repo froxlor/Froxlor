@@ -30,15 +30,12 @@ class lescript
 {
     public $license = 'https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf';
 
-    private $webRootDir;
-
     private $logger;
     private $client;
     private $accountKey;
 
-    public function __construct($webRootDir, $logger)
+    public function __construct($logger)
     {
-        $this->webRootDir = $webRootDir;
         $this->logger = $logger;
         if (Settings::Get('system.letsencryptca') == 'production') {
             $ca = 'https://acme-v01.api.letsencrypt.org';
@@ -103,7 +100,7 @@ class lescript
             );
 
             if (!array_key_exists('challenges', $response)) {
-	        throw new RuntimeException("No challenges received for $domain. Whole response: ".json_encode($response));
+                throw new RuntimeException("No challenges received for $domain. Whole response: ".json_encode($response));
             }
 
             // choose http-01 challange only
@@ -117,7 +114,7 @@ class lescript
             // 2. saving authentication token for web verification
             // ---------------------------------------------------
 
-            $directory = $this->webRootDir.'/.well-known/acme-challenge';
+            $directory = FROXLOR_INSTALL_DIR.'/.well-known/acme-challenge';
             $tokenPath = $directory.'/'.$challenge['token'];
 
             if(!file_exists($directory) && !@mkdir($directory, 0755, true)) {
