@@ -41,8 +41,8 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 	// Only renew let's encrypt certificate for domains where a documentroot
 	// already exists
 	if (file_exists($certrow['documentroot'])
-		&& is_dir($certrow['documentroot']
-		&& $certrow['ssl_redirect'] != 2)
+		&& is_dir($certrow['documentroot'])
+		&& $certrow['ssl_redirect'] != 2
 	) {
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Updating " . $certrow['domain']);
 		
