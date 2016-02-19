@@ -227,6 +227,13 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($del_stmt, array('domainid' => $id));
 
+				// remove certificate from domain_ssl_settings, fixes #1596
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
+					WHERE `domainid` = :domainid"
+				);
+				Database::pexecute($del_stmt, array('domainid' => $id));
+
 				inserttask('1');
 
 				// Using nameserver, insert a task which rebuilds the server config
