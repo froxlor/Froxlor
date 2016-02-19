@@ -104,13 +104,14 @@ class FroxlorLogger {
 			return;
 		}
 
-		if (self::$crondebug_flag) {
+		if (self::$crondebug_flag
+			|| ($action == CRON_ACTION && $type <= LOG_WARNING)) {
 			echo "[".getLogLevelDesc($type)."] ".$text.PHP_EOL;
 		}
 
 		if (Settings::Get('logger.log_cron') == '0'
-		   && $action == CRON_ACTION
-           && $type > LOG_WARNING // warnings, errors and critical mesages WILL be logged
+			&& $action == CRON_ACTION
+			&& $type > LOG_WARNING // warnings, errors and critical mesages WILL be logged
 		) {
 			return;
 		}
