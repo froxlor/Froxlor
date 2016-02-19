@@ -75,7 +75,7 @@ class lescript
         }
     }
 
-    public function signDomains(array $domains, $domainkey = null)
+    public function signDomains(array $domains, $domainkey = null, $csr = null)
     {
 
         if (!$this->accountKey) {
@@ -117,7 +117,7 @@ class lescript
             // 2. saving authentication token for web verification
             // ---------------------------------------------------
 
-            $directory = FROXLOR_INSTALL_DIR.'/.well-known/acme-challenge';
+            $directory = Settings::Get('system.letsencryptchallengepath').'/.well-known/acme-challenge';
             $tokenPath = $directory.'/'.$challenge['token'];
 
             if(!file_exists($directory) && !@mkdir($directory, 0755, true)) {
@@ -190,7 +190,7 @@ class lescript
         // ----------------------
 
         // generate private key for domain if not exist
-        if(empty($domainkey)) {
+        if(empty($domainkey) || Settings::Get('system.letsencryptreuseold') == 0) {
             $keys = $this->generateKey();
             $domainkey = $keys['private'];
         }
@@ -199,11 +199,15 @@ class lescript
         $privateDomainKey = openssl_pkey_get_private($domainkey);
 
         $this->client->getLastLinks();
+        
+        if (empty($csrfile) || Settings::Get('system.letsencryptreuseold') == 0) {
+            $csr = $this->generateCSR($privateDomainKey, $domains);
+        }
 
         // request certificates creation
         $result = $this->signedRequest(
             "/acme/new-cert",
-            array('resource' => 'new-cert', 'csr' => $this->generateCSR($privateDomainKey, $domains))
+            array('resource' => 'new-cert', 'csr' => $csr)
         );
         if ($this->client->getLastCode() !== 201) {
             throw new \RuntimeException("Invalid response code: ".$this->client->getLastCode().", ".json_encode($result));
@@ -249,7 +253,7 @@ class lescript
         $chain = implode("\n", $certificates);
 
         $this->log("Done, returning new certificates and key");
-        return array('fullchain' => $fullchain, 'crt' => $crt, 'chain' => $chain, 'key' => $domainkey);
+        return array('fullchain' => $fullchain, 'crt' => $crt, 'chain' => $chain, 'key' => $domainkey, 'csr' => $csr);
     }
 
     private function parsePemFromBody($body)
@@ -281,7 +285,7 @@ class lescript
 'HOME = .
 RANDFILE = $ENV::HOME/.rnd
 [ req ]
-default_bits = 4096
+default_bits = ' . Settings::Get('system.letsencryptkeysize') . '
 default_keyfile = privkey.pem
 distinguished_name = req_distinguished_name
 req_extensions = v3_req
@@ -320,7 +324,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
     {
         $res = openssl_pkey_new(array(
             "private_key_type" => OPENSSL_KEYTYPE_RSA,
-            "private_key_bits" => 4096,
+            "private_key_bits" => Settings::Get('system.letsencryptkeysize'),
         ));
 
         if(!openssl_pkey_export($res, $privateKey)) {

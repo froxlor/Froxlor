@@ -472,6 +472,8 @@ class FroxlorInstall {
 			$this->_updateSetting($upd_stmt, '/etc/nginx/nginx.pem', 'system', 'ssl_cert_file');
 			$this->_updateSetting($upd_stmt, '/var/run/nginx/', 'phpfpm', 'fastcgi_ipcdir');
 		}
+		
+		$this->_updateSetting($upd_stmt, dirname(dirname(dirname(__FILE__))), 'system', 'letsencryptchallengepath');
 
 		// insert the lastcronrun to be the installation date
 		$this->_updateSetting($upd_stmt, time(), 'system', 'lastcronrun');

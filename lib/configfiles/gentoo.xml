@@ -66,8 +66,8 @@
 					</file>
 					<file name="/etc/apache2/modules.d/80_acme.conf">
 						<content><![CDATA[
-Alias "/.well-known/acme-challenge" "{{const.FROXLOR_INSTALL_DIR}}/.well-known/acme-challenge"
-<Directory "/var/www/.well-known/acme-challenge">
+Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
+<Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
 	Order allow,deny
 	Allow from all
 </Directory>
@@ -96,8 +96,8 @@ Alias "/.well-known/acme-challenge" "{{const.FROXLOR_INSTALL_DIR}}/.well-known/a
 					</file>
 					<file name="/etc/apache2/modules.d/80_acme.conf">
 						<content><![CDATA[
-Alias "/.well-known/acme-challenge" "{{const.FROXLOR_INSTALL_DIR}}/.well-known/acme-challenge"
-<Directory "/var/www/.well-known/acme-challenge">
+Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
+<Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
 	Require all granted
 </Directory>
 ]]>
@@ -126,6 +126,7 @@ server.modules = (
 	"mod_auth",
 	"mod_fastcgi",
 	"mod_cgi",
+	"mod_setenv",
 	"mod_accesslog"
 )
 
@@ -168,7 +169,7 @@ fastcgi.server = (
 	)
 )
 
-alias.url           += ("/.well-known/acme-challenge/" => "{{const.FROXLOR_INSTALL_DIR}}/.well-known/acme-challenge/")
+alias.url           += ("/.well-known/acme-challenge/" => "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge/")
 
 ]]>
 						</content>
@@ -265,7 +266,7 @@ fastcgi_param  REDIRECT_STATUS    200;
 					<file name="/etc/nginx/conf.d/acme.conf">
 						<content><![CDATA[
 location /.well-known/acme-challenge {
-	alias {{const.FROXLOR_INSTALL_DIR}};
+	alias {{settings.system.letsencryptchallengepath}};
 
 	location ~ /.well-known/acme-challenge/(.*) {
 		default_type text/plain;

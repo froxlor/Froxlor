@@ -41,6 +41,7 @@
 							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
 						<command><![CDATA[a2dismod userdir]]></command>
+						<command><![CDATA[a2enmod headers]]></command>
 					</commands>
 				</general>
 				<!-- HTTP Apache -->
@@ -49,8 +50,8 @@
 					<include>//service[@type='http']/general/commands</include>
 					<file name="/etc/httpd/conf.d/acme.conf">
 						<content><![CDATA[
-Alias "/.well-known/acme-challenge" "{{const.FROXLOR_INSTALL_DIR}}/.well-known/acme-challenge"
-<Directory "/var/www/.well-known/acme-challenge">
+Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
+<Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
 	Require all granted
 </Directory>
 ]]>

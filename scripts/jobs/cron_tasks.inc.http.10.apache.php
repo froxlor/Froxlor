@@ -811,6 +811,19 @@ class apache extends HttpConfigBase {
 				if ($domain['ssl_cert_chainfile'] != '') {
 					$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
 				}
+				
+				if ($domain['hsts'] > 0) {
+					$vhost_content .= '  <IfModule mod_headers.c>' . "\n";
+					$vhost_content .= '    Header always set Strict-Transport-Security "max-age=' . $domain['hsts'];
+					if ($domain['hsts_sub'] == 1) {
+						$vhost_content .= '; includeSubdomains';
+					}
+					if ($domain['hsts_preload'] == 1) {
+						$vhost_content .= '; preload';
+					}
+					$vhost_content .= '"' . "\n";
+					$vhost_content .= '  </IfModule>' . "\n";
+				}
 			}
 			else
 			{

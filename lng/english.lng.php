@@ -1942,6 +1942,12 @@ $lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt count
 $lng['serversettings']['letsencryptcountrycode']['description'] = "2 letter country code used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
 $lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt state";
 $lng['serversettings']['letsencryptstate']['description'] = "State used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptchallengepath']['title'] = "Path for Let's Encrypt challenges";
+$lng['serversettings']['letsencryptchallengepath']['description'] = "Directory where the Let's Encrypt challenges should be offered from via a global alias.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptkeysize']['title'] = "Key size for new Let's Encrypt certificates";
+$lng['serversettings']['letsencryptkeysize']['description'] = "Size of the key in Bits for new Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptreuseold']['title'] = "Re-use Let's Encrypt key / CSR";
+$lng['serversettings']['letsencryptreuseold']['description'] = "If activated, the same key and CSR will be used for every renew, otherwise a new key / CSR will be generated every time.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>The SSL redirect is temporarily deactivated while a new Let's Encrypt certificate is generated. It will be activated again after the certificate was generated.";
 
 // Autoupdate

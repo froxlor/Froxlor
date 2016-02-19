@@ -41,6 +41,7 @@
 							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
 						<command><![CDATA[a2dismod userdir]]></command>
+						<command><![CDATA[a2enmod headers]]></command>
 					</commands>
 				</general>
 				<!-- HTTP Apache -->
@@ -67,8 +68,8 @@
 					</file>
 					<file name="/etc/apache2/conf-enabled/acme.conf">
 						<content><![CDATA[
-Alias "/.well-known/acme-challenge" "{{const.FROXLOR_INSTALL_DIR}}/.well-known/acme-challenge"
-<Directory "/var/www/.well-known/acme-challenge">
+Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
+<Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
 	Order allow,deny
 	Allow from all
 </Directory>
@@ -97,6 +98,7 @@ server.modules = (
 	"mod_auth",
 	"mod_fastcgi",
 	"mod_cgi",
+	"mod_setenv",
 	"mod_accesslog"
 )
 
@@ -136,7 +138,7 @@ fastcgi.server = (
 	)
 )
 
-alias.url           += ("/.well-known/acme-challenge/" => "{{const.FROXLOR_INSTALL_DIR}}/.well-known/acme-challenge/")
+alias.url           += ("/.well-known/acme-challenge/" => "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge/")
 
 #### external configuration files
 ## mimetype mapping
@@ -245,7 +247,7 @@ fastcgi_param  REDIRECT_STATUS    200;
 					<file name="/etc/nginx/conf.d/acme.conf">
 						<content><![CDATA[
 location /.well-known/acme-challenge {
-	alias {{const.FROXLOR_INSTALL_DIR}};
+	alias {{settings.system.letsencryptchallengepath}};
 
 	location ~ /.well-known/acme-challenge/(.*) {
 		default_type text/plain;

@@ -591,6 +591,18 @@ class nginx extends HttpConfigBase {
     				    $sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain_or_ip['ssl_ca_file']) . ';' . "\n";
     			    }
     			}
+    			
+				if ($domain['hsts'] > 0) {
+
+					$vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain['hsts'];
+					if ($domain['hsts_sub'] == 1) {
+						$vhost_content .= '; includeSubdomains';
+					}
+					if ($domain['hsts_preload'] == 1) {
+						$vhost_content .= '; preload';
+					}
+					$vhost_content .= '";' . "\n";
+				}
 		    }
 		}
 

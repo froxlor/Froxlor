@@ -3079,3 +3079,19 @@ if (isFroxlorVersion('0.9.35-dev3')) {
 
 	updateToVersion('0.9.35-dev4');
 }
+
+
+if (isFroxlorVersion('0.9.35-dev4')) {
+
+	showUpdateStep("Adding more Let's Encrypt settings");
+    Settings::AddNew("system.letsencryptchallengepath", FROXLOR_INSTALL_DIR);
+    Settings::AddNew("system.letsencryptkeysize", '4096');
+    Settings::AddNew("system.letsencryptreuseold", 0);
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` ADD `ssl_csr_file` MEDIUMTEXT AFTER `ssl_cert_chainfile`;");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `hsts` VARCHAR(10) NOT NULL DEFAULT '0' AFTER `letsencrypt`");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `hsts_sub` TINYINT(1) NOT NULL DEFAULT '0' AFTER `hsts`");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` ADD `hsts_preload` TINYINT(1) NOT NULL DEFAULT '1' AFTER `hsts_sub`");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.35-dev5');
+}
