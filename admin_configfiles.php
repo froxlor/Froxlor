@@ -43,9 +43,9 @@ if ($userinfo['change_serversettings'] == '1') {
     );
     
     // get distro from URL param
-    $distribution = isset($_GET['distribution']) ? $_GET['distribution'] : "";
-    $service = isset($_GET['service']) ? $_GET['service'] : "";
-    $daemon = isset($_GET['daemon']) ? $_GET['daemon'] : "";
+    $distribution = (isset($_GET['distribution']) && $_GET['distribution'] != 'choose') ? $_GET['distribution'] : "";
+    $service = (isset($_GET['service']) && $_GET['service'] != 'choose') ? $_GET['service'] : "";
+    $daemon = (isset($_GET['daemon']) && $_GET['daemon'] != 'choose') ? $_GET['daemon'] : "";
     $distributions_select = "";
     $services_select = "";
     $daemons_select = "";
