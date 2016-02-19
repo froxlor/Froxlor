@@ -6,3 +6,4 @@ install/update.log
 .settings/
 *.diff
 *~
+.well-known
