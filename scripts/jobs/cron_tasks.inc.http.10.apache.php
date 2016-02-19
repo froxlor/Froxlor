@@ -354,7 +354,7 @@ class apache extends HttpConfigBase {
 
 					    // check for existence, #1485
 					    if (!file_exists($row_ipsandports['ssl_cert_file'])) {
-					        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $ipport . ' :: certificate file "'.$row_ipsandports['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
+					        $this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate file "'.$row_ipsandports['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
 					        echo $ipport . ' :: certificate file "'.$row_ipsandports['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
 					    } else {
 
@@ -369,7 +369,7 @@ class apache extends HttpConfigBase {
                             if ($row_ipsandports['ssl_key_file'] != '') {
                                 // check for existence, #1485
                                 if (!file_exists($row_ipsandports['ssl_key_file'])) {
-                                    $this->logger->logAction(CRON_ACTION, LOG_ERROR, $ipport . ' :: certificate key file "'.$row_ipsandports['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
+                                    $this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate key file "'.$row_ipsandports['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
                                     echo $ipport . ' :: certificate key file "'.$row_ipsandports['ssl_key_file'].'" does not exist! SSL-directives might not be working'."\n";
                                 } else {
                                     $this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateKeyFile ' . makeCorrectFile($row_ipsandports['ssl_key_file']) . "\n";
@@ -379,7 +379,7 @@ class apache extends HttpConfigBase {
                             if ($row_ipsandports['ssl_ca_file'] != '') {
                                 // check for existence, #1485
                                 if (!file_exists($row_ipsandports['ssl_ca_file'])) {
-                                    $this->logger->logAction(CRON_ACTION, LOG_ERROR, $ipport . ' :: certificate CA file "'.$row_ipsandports['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
+                                    $this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate CA file "'.$row_ipsandports['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
                                     echo $ipport . ' :: certificate CA file "'.$row_ipsandports['ssl_ca_file'].'" does not exist! SSL-directives might not be working'."\n";
                                 } else {
                                     $this->virtualhosts_data[$vhosts_filename] .= ' SSLCACertificateFile ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . "\n";
@@ -390,7 +390,7 @@ class apache extends HttpConfigBase {
                             if ($row_ipsandports['ssl_cert_chainfile'] != '') {
                                 // check for existence, #1485
                                 if (!file_exists($row_ipsandports['ssl_cert_chainfile'])) {
-                                    $this->logger->logAction(CRON_ACTION, LOG_ERROR, $ipport . ' :: certificate chain file "'.$row_ipsandports['ssl_cert_chainfile'].'" does not exist! Cannot create ssl-directives');
+                                    $this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate chain file "'.$row_ipsandports['ssl_cert_chainfile'].'" does not exist! Cannot create ssl-directives');
                                     echo $ipport . ' :: certificate chain file "'.$row_ipsandports['ssl_cert_chainfile'].'" does not exist! SSL-directives might not be working'."\n";
                                 } else {
                                     $this->virtualhosts_data[$vhosts_filename] .= '  SSLCertificateChainFile ' . makeCorrectFile($row_ipsandports['ssl_cert_chainfile']) . "\n";
@@ -829,7 +829,7 @@ class apache extends HttpConfigBase {
 			{
 			    // if there is no cert-file specified but we are generating a ssl-vhost,
 			    // we should return an empty string because this vhost would suck dick, ref #1583
-			    $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
+			    $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
 			    return '# no ssl-certificate was specified for this domain, therefore no explicit vhost is being generated';
 			}
 		}
