@@ -145,6 +145,7 @@ class lescript
 
             // simple self check
             if($payload !== trim(@file_get_contents($uri))) {
+                @unlink($tokenPath);
                 throw new \RuntimeException("Please check $uri - token not available");
             }
 
