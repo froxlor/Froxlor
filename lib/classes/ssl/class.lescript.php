@@ -57,10 +57,13 @@ class lescript
 
             $this->log('Starting new account registration');
             $keys = $this->generateKey();
-            $upd_stmt = Database::prepare("
-                UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `lepublickey` = :public, `leprivatekey` = :private WHERE `customerid` = :customerid;
-            ");
-            Database::pexecute($upd_stmt, array('public' => $keys['public'], 'private' => $keys['private'], 'customerid' => $certrow['customerid']));
+            // Only store the accountkey in production, in staging always generate a new key
+            if (Settings::Get('system.letsencryptca') == 'production') {
+	            $upd_stmt = Database::prepare("
+	                UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `lepublickey` = :public, `leprivatekey` = :private WHERE `customerid` = :customerid;
+	            ");
+	            Database::pexecute($upd_stmt, array('public' => $keys['public'], 'private' => $keys['private'], 'customerid' => $certrow['customerid']));
+            }
             $this->accountKey = $keys['private'];
             $this->postNewReg();
             $this->log('New account certificate registered');
