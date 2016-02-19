@@ -42,12 +42,12 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 	if ($certrow['ssl_redirect'] != 2)
 	{
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Updating " . $certrow['domain']);
-		
+
 		if ($certrow['ssl_cert_file']) {
 			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "letsencrypt using old key / SAN for " . $certrow['domain']);
 			// Parse the old certificate
 			$x509data = openssl_x509_parse($certrow['ssl_cert_file']);
-			
+
 			// We are interessted in the old SAN - data
 			$san = explode(', ', $x509data['extensions']['subjectAltName']);
 			$domains = array();
@@ -62,20 +62,20 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$domains[] = 'www.' . $certrow['domain'];
 			}
 		}
-		
+
 		try {
 			// Initialize Lescript with documentroot
 			$le = new lescript($cronlog);
-			
+
 			// Initialize Lescript
 			$le->initAccount($certrow);
-			
+
 			// Request the new certificate (old key may be used)
 			$return = $le->signDomains($domains, $certrow['ssl_key_file']);
-			
+
 			// We are interessted in the expirationdate
 			$newcert = openssl_x509_parse($return['crt']);
-			
+
 			// Store the new data
 			Database::pexecute($updcert_stmt, array(
 					'id' => $certrow['id'],
@@ -87,7 +87,7 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 					'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
 				)
 			);
-			
+
 			if ($certrow['ssl_redirect'] == 3) {
 				Database::pexecute($upddom_stmt, array(
 						'domainid' => $certrow['domainid']

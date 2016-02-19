@@ -1,7 +1,7 @@
 <?php
 // Copyright (c) 2015, Stanislav Humplik <sh@analogic.cz>
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
 //     * Redistributions of source code must retain the above copyright
@@ -12,7 +12,7 @@
 //     * Neither the name of the <organization> nor the
 //       names of its contributors may be used to endorse or promote products
 //       derived from this software without specific prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 // ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -59,10 +59,10 @@ class lescript
             $keys = $this->generateKey();
             // Only store the accountkey in production, in staging always generate a new key
             if (Settings::Get('system.letsencryptca') == 'production') {
-	            $upd_stmt = Database::prepare("
-	                UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `lepublickey` = :public, `leprivatekey` = :private WHERE `customerid` = :customerid;
-	            ");
-	            Database::pexecute($upd_stmt, array('public' => $keys['public'], 'private' => $keys['private'], 'customerid' => $certrow['customerid']));
+                    $upd_stmt = Database::prepare("
+                    UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `lepublickey` = :public, `leprivatekey` = :private WHERE `customerid` = :customerid;
+                ");
+                Database::pexecute($upd_stmt, array('public' => $keys['public'], 'private' => $keys['private'], 'customerid' => $certrow['customerid']));
             }
             $this->accountKey = $keys['private'];
             $this->postNewReg();
@@ -77,7 +77,7 @@ class lescript
 
     public function signDomains(array $domains, $domainkey = null)
     {
-    
+
         if (!$this->accountKey) {
             throw new \RuntimeException("Account not initiated");
         }
@@ -145,6 +145,7 @@ class lescript
 
             // simple self check
             if($payload !== trim(@file_get_contents($uri))) {
+                @unlink($tokenPath);
                 throw new \RuntimeException("Please check $uri - token not available");
             }
 
@@ -166,7 +167,7 @@ class lescript
             $count = 0;
             do {
                 if(empty($result['status']) || $result['status'] == "invalid") {
-	                @unlink($tokenPath);
+                    @unlink($tokenPath);
                     throw new \RuntimeException("Verification ended with error: ".json_encode($result));
                 }
                 $ended = !($result['status'] === "pending");
