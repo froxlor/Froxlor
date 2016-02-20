@@ -348,7 +348,7 @@ class phpinterface_fpm {
 	public function getSocketFile($createifnotexists = true) {
 
 		$socketdir = makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir'));
-		$socket = makeCorrectFile($socketdir.'/'.$this->_domain['loginname'].'-'.$this->_domain['domain'].'-php-fpm.socket');
+		$socket = strtolower(makeCorrectFile($socketdir.'/'.$this->_domain['loginname'].'-'.$this->_domain['domain'].'-php-fpm.socket'));
 
 		if (!is_dir($socketdir) && $createifnotexists) {
 			safe_exec('mkdir -p '.escapeshellarg($socketdir));
