@@ -111,7 +111,7 @@ server.errorlog      = var.logdir  + "/error.log"
 
 server.indexfiles    = ("index.php", "index.html",
 						"index.htm", "default.htm")
-						
+
 server.name			 = "<SERVERNAME>"
 server.port          = 80
 server.bind          = "<SERVERIP>"
@@ -270,7 +270,7 @@ location /.well-known/acme-challenge {
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: php-fcgi initscript
-# Description:       Custom php-fcgi initscript for Froxlor    
+# Description:       Custom php-fcgi initscript for Froxlor
 ### END INIT INFO
 
 BIND="127.0.0.1:8888"
@@ -542,9 +542,9 @@ smtpd_recipient_restrictions = permit_mynetworks,
 	reject_non_fqdn_recipient
 smtpd_sender_restrictions = permit_mynetworks,
 	reject_sender_login_mismatch,
-	permit_sasl_authenticated, 
-	reject_unknown_helo_hostname, 
-	reject_unknown_recipient_domain, 
+	permit_sasl_authenticated,
+	reject_unknown_helo_hostname,
+	reject_unknown_recipient_domain,
 	reject_unknown_sender_domain
 smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
@@ -552,7 +552,7 @@ smtpd_client_restrictions = permit_mynetworks,
 
 # Postfix 2.10 requires this option. Postfix < 2.10 ignores this.
 # The option is intentionally left empty.
-smtpd_relay_restrictions = 
+smtpd_relay_restrictions =
 
 # Maximum size of Message in bytes (50MB)
 message_size_limit = 52428800
@@ -660,9 +660,9 @@ smtpd_recipient_restrictions = permit_mynetworks,
 	reject_non_fqdn_recipient
 smtpd_sender_restrictions = permit_mynetworks,
 	reject_sender_login_mismatch,
-	permit_sasl_authenticated, 
-	reject_unknown_helo_hostname, 
-	reject_unknown_recipient_domain, 
+	permit_sasl_authenticated,
+	reject_unknown_helo_hostname,
+	reject_unknown_recipient_domain,
 	reject_unknown_sender_domain
 smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
@@ -670,7 +670,7 @@ smtpd_client_restrictions = permit_mynetworks,
 
 # Postfix 2.10 requires this option. Postfix < 2.10 ignores this.
 # The option is intentionally left empty.
-smtpd_relay_restrictions = 
+smtpd_relay_restrictions =
 
 # Maximum size of Message in bytes (50MB)
 message_size_limit = 52428800
@@ -761,7 +761,7 @@ protocol imap {
         mail_plugins = quota imap_quota
         mail_max_userip_connections = 10
 	imap_client_workarounds = delay-newmail
-	
+
 	# IMAP logout format string:
 	#  %i - total number of bytes read from client
 	#  %o - total number of bytes sent to client
@@ -774,7 +774,7 @@ protocol pop3 {
         pop3_client_workarounds = outlook-no-nuls oe-ns-eoh
 	pop3_uidl_format = UID%u-%v
 	mail_plugins = quota
-	
+
 	# POP3 logout format string:
 	# %i - total number of bytes read from client
 	# %o - total number of bytes sent to client
@@ -866,7 +866,7 @@ service auth {
 
 # Default realm/domain to use if none was specified. This is used for both
 # SASL realms and appending @domain to username in plaintext logins.
-#auth_default_realm = 
+#auth_default_realm =
 
 # List of allowed characters in username. If the user-given username contains
 # a character not listed in here, the login automatically fails. This is just
@@ -909,7 +909,7 @@ service auth {
 # Kerberos keytab to use for the GSSAPI mechanism. Will use the system
 # default (usually /etc/krb5.keytab) if not specified. You may need to change
 # the auth service to run as root to be able to read this file.
-#auth_krb5_keytab = 
+#auth_krb5_keytab =
 
 # Do NTLM and GSS-SPNEGO authentication using Samba's winbind daemon and
 # ntlm_auth helper. <doc/wiki/Authentication/Mechanisms/Winbind.txt>
@@ -924,9 +924,9 @@ service auth {
 # Require a valid SSL client certificate or the authentication fails.
 #auth_ssl_require_client_cert = no
 
-# Take the username from client's SSL certificate, using 
+# Take the username from client's SSL certificate, using
 # X509_NAME_get_text_by_NID() which returns the subject's DN's
-# CommonName. 
+# CommonName.
 #auth_ssl_username_from_cert = no
 
 # Space separated list of wanted authentication mechanisms:
@@ -1104,7 +1104,7 @@ MYSQL_AUXOPTIONS_FIELD CONCAT("allowimap=",imap,",allowpop3=",pop3)
 #
 # /etc/proftpd/proftpd.conf -- This is a basic ProFTPD configuration file.
 # To really apply changes reload proftpd after modifications.
-# 
+#
 
 # Includes DSO modules
 Include /etc/proftpd/modules.conf
@@ -1130,7 +1130,7 @@ ListOptions                	"-l"
 
 DenyFilter			\*.*/
 
-# Use this to jail all users in their homes 
+# Use this to jail all users in their homes
 # DefaultRoot			~
 
 # Users require a valid shell listed in /etc/shells to login.
@@ -1204,7 +1204,7 @@ Ratios off
 
 # Delay engine reduces impact of the so-called Timing Attack described in
 # http://security.lss.hr/index.php?page=details&ID=LSS-2004-10-02
-# It is on by default. 
+# It is on by default.
 <IfModule mod_delay.c>
 DelayEngine off
 </IfModule>
@@ -1261,7 +1261,7 @@ LoadModule mod_sql.c
 #LoadModule mod_ldap.c
 
 #
-# 'SQLBackend mysql' or 'SQLBackend postgres' directives are required 
+# 'SQLBackend mysql' or 'SQLBackend postgres' directives are required
 # to have SQL authorization working. You can also comment out the
 # unused module here, in alternative.
 #
@@ -1446,7 +1446,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 #
 # Please check that all following paths are correct
 #
-*/5 * * * *	root	/usr/bin/nice -n 5 /usr/bin/php5 -q <BASE_PATH>scripts/froxlor_master_cronjob.php
+*/5 * * * *	root	/usr/bin/nice -n 5 /usr/bin/php -q <BASE_PATH>scripts/froxlor_master_cronjob.php
 ]]>
 						</content>
 					</file>
@@ -1529,7 +1529,7 @@ password	<SQL_UNPRIVILEGED_PASSWORD>
 					</file>
 					<file name="/etc/nsswitch.conf" backup="true">
 						<content><![CDATA[
-# Make sure that `passwd`, `group` and `shadow` have mysql in their lines 
+# Make sure that `passwd`, `group` and `shadow` have mysql in their lines
 # You should place mysql at the end, so that it is queried after the other mechanisams
 #
 passwd:         compat mysql
@@ -1594,7 +1594,7 @@ aliases:     files
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
 						<command><![CDATA[a2dismod php5]]></command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the 
+					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
 					<command><![CDATA[php {{const.FROXLOR_INSTALL_DIR}}/scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
@@ -1632,7 +1632,7 @@ aliases:     files
 						</visibility>
 						<command><![CDATA[a2dismod php5]]></command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the 
+					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
 					<command><![CDATA[php {{const.FROXLOR_INSTALL_DIR}}/scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>

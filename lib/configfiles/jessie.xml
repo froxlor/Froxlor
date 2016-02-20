@@ -3881,7 +3881,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 #
 # Please check that all following paths are correct
 #
-*/5 * * * *	root	/usr/bin/nice -n 5 /usr/bin/php5 -q <BASE_PATH>scripts/froxlor_master_cronjob.php
+*/5 * * * *	root	/usr/bin/nice -n 5 /usr/bin/php -q <BASE_PATH>scripts/froxlor_master_cronjob.php
 ]]>
 						</content>
 					</file>
