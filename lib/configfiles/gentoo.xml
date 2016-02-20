@@ -2892,6 +2892,7 @@ AllowRetrieveRestart		on
 ListOptions				"-al"
 DisplayChdir			.message
 UseIPv6				off
+RLimitChroot off
 
 # Modules settings
 #DelayEngine				off
