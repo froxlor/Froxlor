@@ -271,6 +271,8 @@ class nginx extends HttpConfigBase {
 					&& !is_dir(Settings::Get('system.apacheconf_vhost')))
 				|| is_dir(Settings::Get('system.apacheconf_vhost'))
 			) {
+				$domain['nonexistinguri'] = '/' . md5(uniqid(microtime(), 1)) . '.htm';
+
 				// Create non-ssl host
 				$this->nginx_data[$vhost_filename].= $this->getVhostContent($domain, false);
 				if ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1') {
@@ -681,6 +683,9 @@ class nginx extends HttpConfigBase {
 							if ($single['path'] == '/') {
 								$path_options .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 								$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
+								$path_options .= "\t\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
+								$path_options .= "\t\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
+								$path_options .= "\t\t" . '}' . "\n";
 								// remove already used entries so we do not have doubles
 								unset($htpasswds[$idx]);
 							}
@@ -741,6 +746,9 @@ class nginx extends HttpConfigBase {
 					$path_options .= "\t" . 'location ' . makeCorrectDir($single['path']) . ' {' . "\n";
 					$path_options .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 					$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
+					$path_options .= "\t\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
+					$path_options .= "\t\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
+					$path_options .= "\t\t" . '}' . "\n";
 					$path_options .= "\t".'}' . "\n";
 				}
 				//}
@@ -804,7 +812,11 @@ class nginx extends HttpConfigBase {
 	protected function composePhpOptions($domain, $ssl_vhost = false) {
 		$phpopts = '';
 		if ($domain['phpenabled'] == '1') {
-			$phpopts = "\tlocation ~ \.php {\n";
+			$phpopts  = "\tlocation ~ \.php {\n";
+			$phpopts .= "\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
+			$phpopts .= "\t" . '}' . "\n\n";
+
+			$phpopts .= "\tlocation @php {\n";
 			$phpopts .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
 			$phpopts .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
 			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
