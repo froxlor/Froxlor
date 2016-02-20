@@ -1829,8 +1829,7 @@ iterate_query = SELECT username AS user FROM mail_users
 # This is the ProFTPD configuration file
 #
 # See: http://www.proftpd.org/docs/directives/linked/by-name.html
-#
-RLimitChroot off
+
 # Security-Enhanced Linux (SELinux) Notes:
 #
 # In Fedora and Red Hat Enterprise Linux, ProFTPD runs confined by SELinux
