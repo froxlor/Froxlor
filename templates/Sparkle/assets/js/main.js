@@ -202,4 +202,19 @@ $(document).ready(function() {
 		$("#mailTemplate").html(mailOptions);
 	});
 	$("#mailLanguage").trigger("change");
+
+	// Config files
+	var configfileTextareas = $("textarea.filecontent, textarea.shell");
+	var lastPw = "MYSQL_PASSWORD";
+	$("#configfiles_setmysqlpw").submit(function(event) {
+		event.preventDefault();
+		var inputVal = $("#configfiles_mysqlpw").val();
+		if (!inputVal.trim()) {
+			inputVal = "MYSQL_PASSWORD";
+		}
+		configfileTextareas.each(function() {
+			this.value = this.value.replace(lastPw, inputVal);
+		});
+		lastPw = inputVal;
+	});
 });
