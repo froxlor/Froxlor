@@ -4389,7 +4389,7 @@ MYSQL_AUXOPTIONS_FIELD	CONCAT("allowimap=",imap,",allowpop3=",pop3)
 # To really apply changes, reload proftpd after modifications, if
 # it runs in daemon mode. It is not required in inetd/xinetd mode.
 # 
-
+RLimitChroot off
 # Includes DSO modules
 Include /etc/proftpd/modules.conf
 
