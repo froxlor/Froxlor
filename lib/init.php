@@ -275,7 +275,7 @@ foreach ($langs as $key => $value) {
 	$languages[$key] = $key;
 }
 
-// set default langauge before anything else to
+// set default language before anything else to
 // ensure that we can display messages
 $language = Settings::Get('panel.standardlanguage');
 
