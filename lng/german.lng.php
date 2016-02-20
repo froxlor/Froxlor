@@ -906,7 +906,7 @@ $lng['customer']['email_pop3'] = 'POP3';
 $lng['customer']['mail_quota'] = 'E-Mail-Kontingent';
 $lng['panel']['megabyte'] = 'Megabyte';
 $lng['emails']['quota_edit'] = 'E-Mail-Kontingent ändern';
-$lng['panel']['not_supported'] = 'Nicht unterstüzt in: ';
+$lng['panel']['not_supported'] = 'Nicht unterstützt in: ';
 $lng['error']['allocatetoomuchquota'] = 'Sie versuchen "%s" MB Kontingent zu zuweisen, haben aber nicht genug übrig.';
 
 $lng['error']['missingfields'] = 'Es wurden nicht alle Felder augefüllt.';
@@ -1144,12 +1144,12 @@ $lng['ticket']['orderdesc'] = 'Hier kann eine logische Sortierung für die Ticke
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Verwende Standard-Fehlerdokumente für alle Kunden';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'Datei/URL für Fehler 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="red">Nicht unterstüzt in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="red">Nicht unterstützt in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'Datei/URL für Fehler 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="red">Nicht unterstüzt in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="red">Nicht unterstützt in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Datei/URL für Fehler 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Datei/URL für Fehler 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Nicht unterstüzt in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Nicht unterstützt in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Voreingestellte Support-Ticket Priorität';
