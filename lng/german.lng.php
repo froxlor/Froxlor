@@ -1609,10 +1609,9 @@ $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>Die SSL-Umleitung ist
 $lng['domains']['termination_date'] = 'K&uuml;ndigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gek&uuml;ndigt zum ';
 
-<<<<<<< HEAD
+$lng['panel']['set'] = 'Setzen';
+
 
 //Authcode
 $lng['domains']['authcode_desc'] = 'AuthCode oft auch AuthInfo genannt';
-=======
-$lng['panel']['set'] = 'Setzen';
->>>>>>> upstream/master
+
