@@ -15,7 +15,7 @@
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Integrity
  *
- * IntegrityCheck - class 
+ * IntegrityCheck - class
  */
 
 class IntegrityCheck {
@@ -28,7 +28,7 @@ class IntegrityCheck {
 
 	/**
 	 * Constructor
-	 * Parses all available checks into $this->available 
+	 * Parses all available checks into $this->available
 	 */
 	public function __construct() {
 		global $userinfo;
@@ -41,7 +41,7 @@ class IntegrityCheck {
 		unset($this->available[array_search('checkAll', $this->available)]);
 		unset($this->available[array_search('fixAll', $this->available)]);
 		sort($this->available);
-		
+
 	}
 
 	/**
@@ -130,9 +130,9 @@ class IntegrityCheck {
 			while ($row = $adm_stmt->fetch(PDO::FETCH_ASSOC)) {
 				if ($row['ip'] < 0 || is_null($row['ip']) || empty($row['ip'])) {
 					// Admin uses default-IP
-					$admips[$row['adminid']] = Settings::Get('system.defaultip');
+					$admips[$row['adminid']] = explode(',', Settings::Get('system.defaultip'));
 				} else {
-					$admips[$row['adminid']] = $row['ip'];
+					$admips[$row['adminid']] = [ $row['ip'] ];
 				}
 			}
 		}
@@ -143,19 +143,19 @@ class IntegrityCheck {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$ips[$row['id']] = $row['ip'] . ':' . $row['port'];
 		}
-		
+
 		// Cache all configured domains
 		$result_stmt = Database::prepare("SELECT `id`, `adminid` FROM `" . TABLE_PANEL_DOMAINS . "` ORDER BY `id` ASC");
 		Database::pexecute($result_stmt);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$domains[$row['id']] = $row['adminid'];
 		}
-		
+
 		// Check if every domain to ip/port - association is valid in TABLE_DOMAINTOIP
 		$result_stmt = Database::prepare("SELECT `id_domain`, `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "`");
 		Database::pexecute($result_stmt);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if (!array_key_exists($row['id_ipandports'], $ips)) { 
+			if (!array_key_exists($row['id_ipandports'], $ips)) {
 				if ($fix) {
 					Database::pexecute($del_stmt, array('domainid' => $row['id_domain'], 'ipandportid' => $row['id_ipandports']));
 					$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found an ip/port-id in domain <> ip table which does not exist, integrity check fixed this");
@@ -170,18 +170,20 @@ class IntegrityCheck {
 					$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a domain-id in domain <> ip table which does not exist, integrity check fixed this");
 				} else {
 					$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a domain-id in domain <> ip table which does not exist, integrity check can fix this");
-					return false; 
+					return false;
 				}
 			}
 			// Save one IP/Port combination per domain, so we know, if one domain is missing an IP
 			$ipstodomains[$row['id_domain']] = $row['id_ipandports'];
 		}
-		
+
 		// Check that all domains have at least one IP/Port combination
 		foreach ($domains as $domainid => $adminid) {
 			if (!array_key_exists($domainid, $ipstodomains)) {
 				if ($fix) {
-					Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipandportid' => $admips[$adminid]));
+					foreach ($admips[$adminid] as $defaultip) {
+						Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipandportid' => $defaultip));
+					}
 					$this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a domain-id with no entry in domain <> ip table, integrity check fixed this");
 				} else {
 					$this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a domain-id with no entry in domain <> ip table, integrity check can fix this");
@@ -220,7 +222,7 @@ class IntegrityCheck {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$ips[$row['id']] = $row['ip'] . ':' . $row['port'];
 		}
-		
+
 		// Cache all configured domains
 		$result_stmt = Database::prepare("SELECT `id`, `parentdomainid`, `ssl_redirect` FROM `" . TABLE_PANEL_DOMAINS . "` ORDER BY `id` ASC");
 		$ip_stmt = Database::prepare("SELECT `id_domain`, `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :domainid");
@@ -232,7 +234,7 @@ class IntegrityCheck {
 				Database::pexecute($ip_stmt, array('domainid' => $row['id']));
 				while ($iprow = $ip_stmt->fetch(PDO::FETCH_ASSOC)) {
 					// If the parentdomain has an ip/port assigned which we know is SSL enabled, set the parentdomain to "true"
-					if (array_key_exists($iprow['id_ipandports'], $ips)) { $parentdomains[$row['id']] = true; } 
+					if (array_key_exists($iprow['id_ipandports'], $ips)) { $parentdomains[$row['id']] = true; }
 				}
 			} elseif ($row['ssl_redirect'] == 1)  {
 				// All subdomains with enabled ssl_redirect enabled are stored
@@ -240,14 +242,14 @@ class IntegrityCheck {
 				$subdomains[$row['parentdomainid']][] = $row['id'];
 			}
 		}
-		
+
 		// Check if every parentdomain with enabled ssl_redirect as SSL enabled
 		foreach ($parentdomains as $id => $sslavailable) {
 			// This parentdomain has no subdomains
 			if (!isset($subdomains[$id])) { continue; }
 			// This parentdomain has SSL enabled, doesn't matter what status the subdomains have
 			if ($sslavailable) { continue; }
-			
+
 			// At this point only parentdomains reside which have ssl_redirect enabled subdomains
 			if ($fix) {
 				// We make a blanket update to all subdomains of this parentdomain, doesn't matter which one is wrong, all have to be disabled
@@ -259,7 +261,7 @@ class IntegrityCheck {
 				return false;
 			}
 		}
-		
+
 		if ($fix) {
 			return $this->SubdomainSslRedirect();
 		} else {

@@ -913,10 +913,13 @@ if ($page == 'customers'
 						$domainid = Database::lastInsertId();
 
 						// set ip <-> domain connection
+						$defaultips = explode(',', Settings::Get('system.defaultip'));
 						$ins_stmt = Database::prepare("
-							INSERT INTO `".TABLE_DOMAINTOIP."` SET `id_domain` = :domainid, `id_ipandports` = :ipid"
+							  INSERT INTO `" . TABLE_DOMAINTOIP . "` SET `id_domain` = :domainid, `id_ipandports` = :ipid"
 						);
-						Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => Settings::Get('system.defaultip')));
+						foreach ($defaultips as $defaultip) {
+							Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => $defaultip));
+						}
 
 						$upd_stmt = Database::prepare("
 							UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `standardsubdomain` = :domainid WHERE `customerid` = :customerid"
@@ -937,7 +940,7 @@ if ($page == 'customers'
 							SELECT ip, port FROM `".TABLE_PANEL_IPSANDPORTS."`
 							WHERE `id` = :defaultip
 						");
-						$srv_ip = Database::pexecute_first($srv_ip_stmt, array('defaultip' => Settings::Get('system.defaultip')));
+						$srv_ip = Database::pexecute_first($srv_ip_stmt, array('defaultip' => reset(explode(',', Settings::Get('system.defaultip')))));
 
 						$replace_arr = array(
 							'FIRSTNAME' => $firstname,
@@ -1272,10 +1275,13 @@ if ($page == 'customers'
 						$domainid = Database::lastInsertId();
 
 						// set ip <-> domain connection
+						$defaultips = explode(',', Settings::Get('system.defaultip'));
 						$ins_stmt = Database::prepare("
-							INSERT INTO `".TABLE_DOMAINTOIP."` SET `id_domain` = :domainid, `id_ipandports` = :ipid"
+							  INSERT INTO `" . TABLE_DOMAINTOIP . "` SET `id_domain` = :domainid, `id_ipandports` = :ipid"
 						);
-						Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => Settings::Get('system.defaultip')));
+						foreach ($defaultips as $defaultip) {
+							Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => $defaultip));
+						}
 
 						$upd_stmt = Database::prepare("
 							UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `standardsubdomain` = :domainid WHERE `customerid` = :customerid"
