@@ -914,10 +914,10 @@ if ($page == 'customers'
 
 						// set ip <-> domain connection
 						$defaultips = explode(',', Settings::Get('system.defaultip'));
-						foreach ($defaultips as $defaultip) {
-							$ins_stmt = Database::prepare("
+						$ins_stmt = Database::prepare("
 							  INSERT INTO `" . TABLE_DOMAINTOIP . "` SET `id_domain` = :domainid, `id_ipandports` = :ipid"
-							);
+						);
+						foreach ($defaultips as $defaultip) {
 							Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => $defaultip));
 						}
 
@@ -1276,10 +1276,10 @@ if ($page == 'customers'
 
 						// set ip <-> domain connection
 						$defaultips = explode(',', Settings::Get('system.defaultip'));
-						foreach ($defaultips as $defaultip) {
-							$ins_stmt = Database::prepare("
+						$ins_stmt = Database::prepare("
 							  INSERT INTO `" . TABLE_DOMAINTOIP . "` SET `id_domain` = :domainid, `id_ipandports` = :ipid"
-							);
+						);
+						foreach ($defaultips as $defaultip) {
 							Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipid' => $defaultip));
 						}
 
