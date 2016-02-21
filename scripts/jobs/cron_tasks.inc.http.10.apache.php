@@ -52,6 +52,20 @@ class apache extends HttpConfigBase {
 		}
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: reloading apache');
 		safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
+
+		// Config test
+		$return = -999;
+		$cmds = [ 'apache2ctl', 'apache2', 'httpd2', 'httpd', 'apache' ];
+		foreach ($cmds as $cmd) {
+			$out = safe_exec($cmd . ' -t 2>&1 ', $return, [ '&','>' ]);
+			if ($return == 127) {
+				continue;
+			} else if ($return > 0 && is_array($out) && count($out) > 0) {
+				$this->logger->logAction(CRON_ACTION, LOG_ERR, 'configuration error: ' . implode("\n", $out));
+			}
+
+			break;
+		}
 	}
 
 
@@ -261,7 +275,7 @@ class apache extends HttpConfigBase {
 					if ($row_ipsandports['ssl']) {
 						$srvName = substr(md5($ipport),0,4).'.ssl-fpm.external';
 					}
-					
+
 					// mod_proxy stuff for apache-2.4
 					if (Settings::Get('system.apache24') == '1'
 							&& Settings::Get('phpfpm.use_mod_proxy') == '1'
@@ -269,7 +283,7 @@ class apache extends HttpConfigBase {
 						$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.php$>'. "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost'. "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
-					
+
 					} else {
 						$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName .' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
@@ -814,7 +828,7 @@ class apache extends HttpConfigBase {
 				if ($domain['ssl_cert_chainfile'] != '') {
 					$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
 				}
-				
+
 				if ($domain['hsts'] > 0) {
 					$vhost_content .= '  <IfModule mod_headers.c>' . "\n";
 					$vhost_content .= '    Header always set Strict-Transport-Security "max-age=' . $domain['hsts'];

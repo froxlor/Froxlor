@@ -101,6 +101,7 @@ if ($page == 'log'
 
 					$log_count++;
 					$row['type'] = getLogLevelDesc($row['type']);
+					$row['text'] = nl2br($row['text']);
 					eval("\$log.=\"" . getTemplate('logger/logger_log') . "\";");
 					$count++;
 					$_action = $action;
