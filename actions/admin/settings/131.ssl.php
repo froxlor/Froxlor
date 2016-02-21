@@ -108,6 +108,32 @@ return array(
 									'default' => 'Germany',
 									'save_method' => 'storeSettingField',
 							),
+							'system_letsencryptchallengepath' => array(
+									'label' => $lng['serversettings']['letsencryptchallengepath'],
+									'settinggroup' => 'system',
+									'varname' => 'letsencryptchallengepath',
+									'type' => 'string',
+									'string_emptyallowed' => false,
+									'default' => FROXLOR_INSTALL_DIR,
+									'save_method' => 'storeSettingField',
+							),
+							'system_letsencryptkeysize' => array(
+									'label' => $lng['serversettings']['letsencryptkeysize'],
+									'settinggroup' => 'system',
+									'varname' => 'letsencryptkeysize',
+									'type' => 'int',
+									'int_min' => 2048,
+									'default' => 4096,
+									'save_method' => 'storeSettingField',
+							),
+							'system_letsencryptreuseold' => array(
+									'label' => $lng['serversettings']['letsencryptreuseold'],
+									'settinggroup' => 'system',
+									'varname' => 'letsencryptreuseold',
+									'type' => 'bool',
+									'default' => false,
+									'save_method' => 'storeSettingField',
+							),
 					)
 			)
 		)

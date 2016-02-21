@@ -178,8 +178,8 @@ class nginx extends HttpConfigBase {
 				}
 
 				$this->nginx_data[$vhost_filename] .= "\t".'root     '.$mypath.';'."\n";
+				$this->nginx_data[$vhost_filename] .= "\t".'index    index.php index.html index.htm;'."\n\n";
 				$this->nginx_data[$vhost_filename] .= "\t".'location / {'."\n";
-				$this->nginx_data[$vhost_filename] .= "\t\t".'index    index.php index.html index.htm;'."\n";
 				$this->nginx_data[$vhost_filename] .= "\t".'}'."\n";
 
 				if ($row_ipsandports['specialsettings'] != '') {
@@ -271,6 +271,8 @@ class nginx extends HttpConfigBase {
 					&& !is_dir(Settings::Get('system.apacheconf_vhost')))
 				|| is_dir(Settings::Get('system.apacheconf_vhost'))
 			) {
+				$domain['nonexistinguri'] = '/' . md5(uniqid(microtime(), 1)) . '.htm';
+
 				// Create non-ssl host
 				$this->nginx_data[$vhost_filename].= $this->getVhostContent($domain, false);
 				if ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1') {
@@ -427,7 +429,7 @@ class nginx extends HttpConfigBase {
 			if (substr($uri, -1) == '/') {
 				$uri = substr($uri, 0, -1);
 			}
-			$vhost_content .= "\t".'rewrite ^(.*) '.$uri.'$1 permanent;'."\n";
+			$vhost_content .= "\t".'return 301 '.$uri.'$request_uri;'."\n";
 		} else {
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 
@@ -562,20 +564,21 @@ class nginx extends HttpConfigBase {
 		    
 		    // check for existence, #1485
 		    if (!file_exists($domain_or_ip['ssl_cert_file'])) {
-		        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
+		        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
 		        echo $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
 		    } else {
     			// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
     			//$sslsettings .= "\t" . 'ssl on;' . "\n";
     			$sslsettings .= "\t" . 'ssl_protocols TLSv1 TLSv1.1 TLSv1.2;' . "\n";
     			$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
+					$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
     			$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
     			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
     
     			if ($domain_or_ip['ssl_key_file'] != '') {
     			    // check for existence, #1485
     			    if (!file_exists($domain_or_ip['ssl_key_file'])) {
-    			        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain_or_ip['domain'] . ' :: certificate key file "'.$domain_or_ip['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
+    			        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate key file "'.$domain_or_ip['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
     			        echo $domain_or_ip['domain'] . ' :: certificate key file "'.$domain_or_ip['ssl_key_file'].'" does not exist! SSL-directives might not be working'."\n";
     			    } else {
     				    $sslsettings .= "\t" . 'ssl_certificate_key ' .makeCorrectFile($domain_or_ip['ssl_key_file']) . ';' .  "\n";
@@ -585,12 +588,24 @@ class nginx extends HttpConfigBase {
     			if ($domain_or_ip['ssl_ca_file'] != '') {
     			    // check for existence, #1485
     			    if (!file_exists($domain_or_ip['ssl_ca_file'])) {
-    			        $this->logger->logAction(CRON_ACTION, LOG_ERROR, $domain_or_ip['domain'] . ' :: certificate CA file "'.$domain_or_ip['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
+    			        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate CA file "'.$domain_or_ip['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
     			        echo $domain_or_ip['domain'] . ' :: certificate CA file "'.$domain_or_ip['ssl_ca_file'].'" does not exist! SSL-directives might not be working'."\n";
     			    } else {
     				    $sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain_or_ip['ssl_ca_file']) . ';' . "\n";
     			    }
     			}
+    			
+				if ($domain['hsts'] > 0) {
+
+					$vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain['hsts'];
+					if ($domain['hsts_sub'] == 1) {
+						$vhost_content .= '; includeSubdomains';
+					}
+					if ($domain['hsts_preload'] == 1) {
+						$vhost_content .= '; preload';
+					}
+					$vhost_content .= '";' . "\n";
+				}
 		    }
 		}
 
@@ -651,9 +666,6 @@ class nginx extends HttpConfigBase {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
 				}
-				else {
-					$path_options.= "\t\t" . 'index    index.php index.html index.htm;'."\n";
-				}
 				//     $path_options.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 				// check if we have a htpasswd for this path
 				// (damn nginx does not like more than one
@@ -669,6 +681,9 @@ class nginx extends HttpConfigBase {
 							if ($single['path'] == '/') {
 								$path_options .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 								$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
+								$path_options .= "\t\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
+								$path_options .= "\t\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
+								$path_options .= "\t\t" . '}' . "\n";
 								// remove already used entries so we do not have doubles
 								unset($htpasswds[$idx]);
 							}
@@ -683,9 +698,6 @@ class nginx extends HttpConfigBase {
 				if ($this->vhost_root_autoindex || $row['options_indexes'] != '0') {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
-				}
-				else {
-					$path_options .= "\t\t" . 'index    index.php index.html index.htm;'."\n";
 				}
 				$path_options .= "\t".'} ' . "\n";
 			}
@@ -729,6 +741,9 @@ class nginx extends HttpConfigBase {
 					$path_options .= "\t" . 'location ' . makeCorrectDir($single['path']) . ' {' . "\n";
 					$path_options .= "\t\t" . 'auth_basic            "' . $single['authname']  . '";' . "\n";
 					$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';'."\n";
+					$path_options .= "\t\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
+					$path_options .= "\t\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
+					$path_options .= "\t\t" . '}' . "\n";
 					$path_options .= "\t".'}' . "\n";
 				}
 				//}
@@ -776,7 +791,18 @@ class nginx extends HttpConfigBase {
 
 				$returnval[$x]['path'] = $path;
 				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
-				$returnval[$x]['authname'] = $row_htpasswds['authname'];
+
+				// Ensure there is only one auth name per password block, otherwise
+				// the directives are inserted multiple times -> invalid config
+				$authname = $row_htpasswds['authname'];
+				for ($i = 0; $i < $x; $i++) {
+					if ($returnval[$i]['usrf'] == $htpasswd_filename) {
+						$authname = $returnval[$i]['authname'];
+						break;
+					}
+				}
+				$returnval[$x]['authname'] = $authname;
+
 				$returnval[$x]['usrf'] = $htpasswd_filename;
 				$x++;
 			}
@@ -792,7 +818,11 @@ class nginx extends HttpConfigBase {
 	protected function composePhpOptions($domain, $ssl_vhost = false) {
 		$phpopts = '';
 		if ($domain['phpenabled'] == '1') {
-			$phpopts = "\tlocation ~ \.php {\n";
+			$phpopts  = "\tlocation ~ \.php {\n";
+			$phpopts .= "\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
+			$phpopts .= "\t" . '}' . "\n\n";
+
+			$phpopts .= "\tlocation @php {\n";
 			$phpopts .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
 			$phpopts .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
 			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
@@ -824,8 +854,8 @@ class nginx extends HttpConfigBase {
 			$this->_deactivated = false;
 		}
 
+		$webroot_text .= "\t" . 'index    index.php index.html index.htm;'."\n";
 		$webroot_text .= "\n\t".'location / {'."\n";
-		$webroot_text .= "\t\t".'index    index.php index.html index.htm;'."\n";
 		$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 
 		if ($this->vhost_root_autoindex) {

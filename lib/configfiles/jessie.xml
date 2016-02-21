@@ -41,6 +41,7 @@
 							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
 						<command><![CDATA[a2dismod userdir]]></command>
+						<command><![CDATA[a2enmod headers]]></command>
 					</commands>
 				</general>
 				<!-- HTTP Apache -->
@@ -67,6 +68,15 @@
 ]]>
 						</content>
 					</file>
+					<file name="/etc/apache2/conf-enabled/acme.conf">
+						<content><![CDATA[
+Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
+<Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
+	Require all granted
+</Directory>
+]]>
+						</content>
+					</file>
 					<command><![CDATA[/etc/init.d/apache2 restart]]></command>
 				</daemon>
 				<!-- HTTP Lighttpd -->
@@ -80,6 +90,7 @@ server.modules = (
 	"mod_compress",
 	"mod_redirect",
 	"mod_rewrite",
+	"mod_setenv",
 )
 
 server.document-root        = "/var/www"
@@ -97,6 +108,8 @@ static-file.exclude-extensions = ( ".php", ".pl", ".fcgi" )
 
 compress.cache-dir          = "/var/cache/lighttpd/compress/"
 compress.filetype           = ( "application/javascript", "text/css", "text/html", "text/plain" )
+
+alias.url                  += ("/.well-known/acme-challenge/" => "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge/")
 
 # default listening port for IPv6 falls back to the IPv4 port
 include_shell "/usr/share/lighttpd/use-ipv6.pl " + server.port
@@ -269,6 +282,18 @@ fastcgi_param  SERVER_NAME        $server_name;
 
 # PHP only, required if PHP was built with --enable-force-cgi-redirect
 fastcgi_param  REDIRECT_STATUS    200;
+]]>
+						</content>
+					</file>
+					<file name="/etc/nginx/conf.d/acme.conf">
+						<content><![CDATA[
+location /.well-known/acme-challenge {
+	alias {{settings.system.letsencryptchallengepath}};
+
+	location ~ /.well-known/acme-challenge/(.*) {
+		default_type text/plain;
+	}
+}
 ]]>
 						</content>
 					</file>
@@ -3856,7 +3881,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 #
 # Please check that all following paths are correct
 #
-*/5 * * * *	root	/usr/bin/nice -n 5 /usr/bin/php5 -q <BASE_PATH>scripts/froxlor_master_cronjob.php
+*/5 * * * *	root	/usr/bin/nice -n 5 /usr/bin/php -q <BASE_PATH>scripts/froxlor_master_cronjob.php
 ]]>
 						</content>
 					</file>

@@ -29,6 +29,10 @@ if (isset($_POST['id'])) {
 if ($page == 'ipsandports'
 	|| $page == 'overview'
 ) {
+	// Do not display attributes that are not used by the current webserver
+	$websrv = Settings::Get('system.webserver');
+	$is_nginx = ($websrv == 'nginx');
+	$is_apache = ($websrv == 'apache2');
 
 	if ($action == '') {
 
@@ -79,7 +83,7 @@ if ($page == 'ipsandports'
 			$result_checkdomain = Database::pexecute_first($result_checkdomain_stmt, array('id' => $id));
 
 			if ($result_checkdomain['id'] == '') {
-				if ($result['id'] != Settings::Get('system.defaultip')) {
+				if (!in_array($result['id'], explode(',', Settings::Get('system.defaultip')))) {
 
 					$result_sameipotherport_stmt = Database::prepare("
 						SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
@@ -320,7 +324,7 @@ if ($page == 'ipsandports'
 					$ssl_ca_file = '';
 					$ssl_cert_chainfile = '';
 				}
-				
+
 				if ($listen_statement != '1') {
 					$listen_statement = '0';
 				}
@@ -340,7 +344,7 @@ if ($page == 'ipsandports'
 				if ($ssl != '1') {
 					$ssl = '0';
 				}
-				
+
 				if ($ssl_cert_file != '') {
 					$ssl_cert_file = makeCorrectFile($ssl_cert_file);
 				}
@@ -422,7 +426,7 @@ if ($page == 'ipsandports'
 
 				$ipsandports_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
 				$ipsandports_edit_form = htmlform::genHTMLForm($ipsandports_edit_data);
-	
+
 				$title = $ipsandports_edit_data['ipsandports_edit']['title'];
 				$image = $ipsandports_edit_data['ipsandports_edit']['image'];
 

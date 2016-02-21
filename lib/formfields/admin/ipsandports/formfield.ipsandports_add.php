@@ -40,6 +40,7 @@ return array(
 				'image' => 'icons/ipsports_add.png',
 				'fields' => array(
 					'listen_statement' => array(
+						'visible' => !$is_nginx,
 						'label' => $lng['admin']['ipsandports']['create_listen_statement'],
 						'type' => 'checkbox',
 						'values' => array(
@@ -48,6 +49,7 @@ return array(
 						'value' => array('1')
 					),
 					'namevirtualhost_statement' => array(
+						'visible' => $is_apache,
 						'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
 						'type' => 'checkbox',
 						'values' => array(
@@ -77,6 +79,7 @@ return array(
 						'rows' => 12
 					),
 					'vhostcontainer_servername_statement' => array(
+						'visible' => $is_apache,
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
 						'type' => 'checkbox',
 						'values' => array(

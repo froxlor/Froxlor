@@ -11,7 +11,7 @@
  *
  * @return void|boolean
  */
-function phpErrHandler($errno, $errstr, $errfile, $errline, array $errcontext) {
+function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 
 	if (!(error_reporting() & $errno)) {
 		// This error code is not included in error_reporting

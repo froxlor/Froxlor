@@ -34,7 +34,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'croncmdline',
 					'type' => 'string',
-					'default' => '/usr/bin/nice -n 5 /usr/bin/php5 -q',
+					'default' => '/usr/bin/nice -n 5 /usr/bin/php -q',
 					'save_method' => 'storeSettingField',
 					),
 				'system_crondreload' => array(

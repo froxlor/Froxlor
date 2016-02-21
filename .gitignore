@@ -6,3 +6,6 @@ install/update.log
 .settings/
 *.diff
 *~
+.well-known
+.idea
+*.iml

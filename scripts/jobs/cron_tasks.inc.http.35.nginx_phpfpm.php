@@ -25,6 +25,10 @@ class nginx_phpfpm extends nginx
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
 			
 			$php_options_text = "\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
+			$php_options_text .= "\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
+			$php_options_text .= "\t" . '}' . "\n\n";
+
+			$php_options_text .= "\t" . 'location @php {' . "\n";
 			$php_options_text .= "\t\t" . 'try_files $1 = 404;' . "\n\n";
 			$php_options_text .= "\t\t" . 'include ' . Settings::Get('nginx.fastcgiparams') . ";\n";
 			$php_options_text .= "\t\t" . 'fastcgi_split_path_info ^(.+\.php)(/.+)\$;' . "\n";

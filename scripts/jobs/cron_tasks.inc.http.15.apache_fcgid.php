@@ -55,6 +55,7 @@ class apache_fcgid extends apache
 				    if ($mypath_dir->isUserProtected() == false) {
 						$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
 					    $php_options_text.= '    Require all granted' . "\n";
+						$php_options_text.= '    AllowOverride All' . "\n";
 						$php_options_text.= '  </Directory>' . "\n";
 				    }
 
@@ -73,6 +74,7 @@ class apache_fcgid extends apache
 					    // for this path, as this would be the first require and therefore grant all access
 					    if ($mypath_dir->isUserProtected() == false) {
 						    $php_options_text.= '    Require all granted' . "\n";
+							$php_options_text.= '    AllowOverride All' . "\n";
 					    }
 					} else {
 						$php_options_text.= '    Order allow,deny' . "\n";
@@ -110,6 +112,7 @@ class apache_fcgid extends apache
 					    // for this path, as this would be the first require and therefore grant all access
 					    if ($mypath_dir->isUserProtected() == false) {
 						    $php_options_text.= '    Require all granted' . "\n";
+							$php_options_text.= '    AllowOverride All' . "\n";
 					    }
 					} else {
 						$php_options_text.= '    Order allow,deny' . "\n";

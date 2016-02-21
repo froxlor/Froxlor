@@ -252,6 +252,9 @@ CREATE TABLE `panel_domains` (
   `mod_fcgid_maxrequests` int(4) default '-1',
   `ismainbutsubto` int(11) unsigned NOT NULL default '0',
   `letsencrypt` tinyint(1) NOT NULL default '0',
+  `hsts` varchar(10) NOT NULL default '0',
+  `hsts_sub` tinyint(1) NOT NULL default '0',
+  `hsts_preload` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -509,7 +512,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mailtraffic_enabled', '1'),
 	('system', 'cronconfig', '/etc/cron.d/froxlor'),
 	('system', 'crondreload', '/etc/init.d/cron reload'),
-	('system', 'croncmdline', '/usr/bin/nice -n 5 /usr/bin/php5 -q'),
+	('system', 'croncmdline', '/usr/bin/nice -n 5 /usr/bin/php -q'),
 	('system', 'cron_allowautoupdate', '0'),
 	('system', 'dns_createhostnameentry', '0'),
 	('system', 'send_cron_errors', '0'),
@@ -519,6 +522,9 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'letsencryptca', 'testing'),
 	('system', 'letsencryptcountrycode', 'DE'),
 	('system', 'letsencryptstate', 'Germany'),
+	('system', 'letsencryptchallengepath', '/var/www/froxlor'),
+	('system', 'letsencryptkeysize', '4096'),
+	('system', 'letsencryptreuseold', 0),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -549,7 +555,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.35-dev4');
+	('panel', 'version', '0.9.35-dev5');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -833,6 +839,7 @@ CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `ssl_key_file` mediumtext NOT NULL,
   `ssl_ca_file` mediumtext,
   `ssl_cert_chainfile` mediumtext,
+  `ssl_csr_file` mediumtext,
   `expirationdate` datetime DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;

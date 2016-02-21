@@ -1,7 +1,7 @@
 <?php
 // Copyright (c) 2015, Stanislav Humplik <sh@analogic.cz>
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
 //     * Redistributions of source code must retain the above copyright
@@ -12,7 +12,7 @@
 //     * Neither the name of the <organization> nor the
 //       names of its contributors may be used to endorse or promote products
 //       derived from this software without specific prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 // ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,16 +30,13 @@ class lescript
 {
     public $license = 'https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf';
 
-    private $webRootDir;
-
-    private $debugHandler;
+    private $logger;
     private $client;
     private $accountKey;
 
-    public function __construct($webRootDir, $debugHandler)
+    public function __construct($logger)
     {
-        $this->webRootDir = $webRootDir;
-        $this->debugHandler = $debugHandler;
+        $this->logger = $logger;
         if (Settings::Get('system.letsencryptca') == 'production') {
             $ca = 'https://acme-v01.api.letsencrypt.org';
         } else {
@@ -60,10 +57,13 @@ class lescript
 
             $this->log('Starting new account registration');
             $keys = $this->generateKey();
-            $upd_stmt = Database::prepare("
-                UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `lepublickey` = :public, `leprivatekey` = :private WHERE `customerid` = :customerid;
-            ");
-            Database::pexecute($upd_stmt, array('public' => $keys['public'], 'private' => $keys['private'], 'customerid' => $certrow['customerid']));
+            // Only store the accountkey in production, in staging always generate a new key
+            if (Settings::Get('system.letsencryptca') == 'production') {
+                    $upd_stmt = Database::prepare("
+                    UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `lepublickey` = :public, `leprivatekey` = :private WHERE `customerid` = :customerid;
+                ");
+                Database::pexecute($upd_stmt, array('public' => $keys['public'], 'private' => $keys['private'], 'customerid' => $certrow['customerid']));
+            }
             $this->accountKey = $keys['private'];
             $this->postNewReg();
             $this->log('New account certificate registered');
@@ -75,9 +75,9 @@ class lescript
         }
     }
 
-    public function signDomains(array $domains, $domainkey = null)
+    public function signDomains(array $domains, $domainkey = null, $csr = null)
     {
-    
+
         if (!$this->accountKey) {
             throw new \RuntimeException("Account not initiated");
         }
@@ -103,10 +103,10 @@ class lescript
             );
 
             if (!array_key_exists('challenges', $response)) {
-	        throw new RuntimeException("No challenges received for $domain. Whole response: ".json_encode($response));
+                throw new RuntimeException("No challenges received for $domain. Whole response: ".json_encode($response));
             }
 
-            // choose http-01 challange only
+            // choose http-01 challenge only
             $challenge = array_reduce($response['challenges'], function($v, $w) { return $v ? $v : ($w['type'] == 'http-01' ? $w : false); });
             if(!$challenge) throw new RuntimeException("HTTP Challenge for $domain is not available. Whole response: ".json_encode($response));
 
@@ -117,7 +117,7 @@ class lescript
             // 2. saving authentication token for web verification
             // ---------------------------------------------------
 
-            $directory = $this->webRootDir.'/.well-known/acme-challenge';
+            $directory = Settings::Get('system.letsencryptchallengepath').'/.well-known/acme-challenge';
             $tokenPath = $directory.'/'.$challenge['token'];
 
             if(!file_exists($directory) && !@mkdir($directory, 0755, true)) {
@@ -145,6 +145,7 @@ class lescript
 
             // simple self check
             if($payload !== trim(@file_get_contents($uri))) {
+                @unlink($tokenPath);
                 throw new \RuntimeException("Please check $uri - token not available");
             }
 
@@ -166,6 +167,7 @@ class lescript
             $count = 0;
             do {
                 if(empty($result['status']) || $result['status'] == "invalid") {
+                    @unlink($tokenPath);
                     throw new \RuntimeException("Verification ended with error: ".json_encode($result));
                 }
                 $ended = !($result['status'] === "pending");
@@ -188,7 +190,7 @@ class lescript
         // ----------------------
 
         // generate private key for domain if not exist
-        if(empty($domainkey)) {
+        if(empty($domainkey) || Settings::Get('system.letsencryptreuseold') == 0) {
             $keys = $this->generateKey();
             $domainkey = $keys['private'];
         }
@@ -197,11 +199,15 @@ class lescript
         $privateDomainKey = openssl_pkey_get_private($domainkey);
 
         $this->client->getLastLinks();
+        
+        if (empty($csrfile) || Settings::Get('system.letsencryptreuseold') == 0) {
+            $csr = $this->generateCSR($privateDomainKey, $domains);
+        }
 
         // request certificates creation
         $result = $this->signedRequest(
             "/acme/new-cert",
-            array('resource' => 'new-cert', 'csr' => $this->generateCSR($privateDomainKey, $domains))
+            array('resource' => 'new-cert', 'csr' => $csr)
         );
         if ($this->client->getLastCode() !== 201) {
             throw new \RuntimeException("Invalid response code: ".$this->client->getLastCode().", ".json_encode($result));
@@ -247,7 +253,7 @@ class lescript
         $chain = implode("\n", $certificates);
 
         $this->log("Done, returning new certificates and key");
-        return array('fullchain' => $fullchain, 'crt' => $crt, 'chain' => $chain, 'key' => $domainkey);
+        return array('fullchain' => $fullchain, 'crt' => $crt, 'chain' => $chain, 'key' => $domainkey, 'csr' => $csr);
     }
 
     private function parsePemFromBody($body)
@@ -279,7 +285,7 @@ class lescript
 'HOME = .
 RANDFILE = $ENV::HOME/.rnd
 [ req ]
-default_bits = 4096
+default_bits = ' . Settings::Get('system.letsencryptkeysize') . '
 default_keyfile = privkey.pem
 distinguished_name = req_distinguished_name
 req_extensions = v3_req
@@ -318,7 +324,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
     {
         $res = openssl_pkey_new(array(
             "private_key_type" => OPENSSL_KEYTYPE_RSA,
-            "private_key_bits" => 4096,
+            "private_key_bits" => Settings::Get('system.letsencryptkeysize'),
         ));
 
         if(!openssl_pkey_export($res, $privateKey)) {
@@ -369,7 +375,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 
     protected function log($message)
     {
-        $this->debugHandler->logAction(CRON_ACTION, LOG_INFO, "letsencrypt " . $message);
+        $this->logger->logAction(CRON_ACTION, LOG_INFO, "letsencrypt " . $message);
     }
 }
 

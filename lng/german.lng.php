@@ -334,7 +334,7 @@ $lng['serversettings']['documentroot_prefix']['description'] = 'Wo sollen die He
 $lng['serversettings']['logfiles_directory']['title'] = 'Webserver-Logdateien-Verzeichnis';
 $lng['serversettings']['logfiles_directory']['description'] = 'Wo sollen die Logdateien des Webservers liegen?';
 $lng['serversettings']['ipaddress']['title'] = 'IP-Adresse';
-$lng['serversettings']['ipaddress']['description'] = 'Welche IP-Adresse hat der Server?';
+$lng['serversettings']['ipaddress']['description'] = 'Welche Haupt-IP-Adresse hat der Server?';
 $lng['serversettings']['hostname']['title'] = 'Hostname';
 $lng['serversettings']['hostname']['description'] = 'Welchen Hostnamen hat der Server?';
 $lng['serversettings']['apachereload_command']['title'] = 'Webserver-Reload-Command';
@@ -432,7 +432,7 @@ $lng['error']['webmailiswrong'] = 'Die "Webmail-URL" ist keine gültige URL.';
 $lng['error']['webftpiswrong'] = 'Die "WebFTP-URL" ist keine gültige URL.';
 $lng['domains']['hasaliasdomains'] = 'Hat Aliasdomain(s)';
 $lng['serversettings']['defaultip']['title'] = 'Standard-IP/Port';
-$lng['serversettings']['defaultip']['description'] = 'Welche IP/Port-Kombination soll standardmäßig verwendet werden?';
+$lng['serversettings']['defaultip']['description'] = 'Welche IP/Port-Kombination sollen standardmäßig verwendet werden?';
 $lng['domains']['statstics'] = 'Statistiken';
 $lng['panel']['ascending'] = 'aufsteigend';
 $lng['panel']['decending'] = 'absteigend';
@@ -906,7 +906,7 @@ $lng['customer']['email_pop3'] = 'POP3';
 $lng['customer']['mail_quota'] = 'E-Mail-Kontingent';
 $lng['panel']['megabyte'] = 'Megabyte';
 $lng['emails']['quota_edit'] = 'E-Mail-Kontingent ändern';
-$lng['panel']['not_supported'] = 'Nicht unterstüzt in: ';
+$lng['panel']['not_supported'] = 'Nicht unterstützt in: ';
 $lng['error']['allocatetoomuchquota'] = 'Sie versuchen "%s" MB Kontingent zu zuweisen, haben aber nicht genug übrig.';
 
 $lng['error']['missingfields'] = 'Es wurden nicht alle Felder augefüllt.';
@@ -1144,12 +1144,12 @@ $lng['ticket']['orderdesc'] = 'Hier kann eine logische Sortierung für die Ticke
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Verwende Standard-Fehlerdokumente für alle Kunden';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'Datei/URL für Fehler 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="red">Nicht unterstüzt in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="red">Nicht unterstützt in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'Datei/URL für Fehler 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="red">Nicht unterstüzt in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="red">Nicht unterstützt in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Datei/URL für Fehler 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Datei/URL für Fehler 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Nicht unterstüzt in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Nicht unterstützt in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn4
 $lng['serversettings']['ticket']['default_priority'] = 'Voreingestellte Support-Ticket Priorität';
@@ -1498,7 +1498,7 @@ $lng['logger']['cron'] = "Cronjob";
 $lng['logger']['login'] = "Login";
 $lng['logger']['intern'] = "Intern";
 $lng['logger']['unknown'] = "Unbekannt";
-$lng['serversettings']['mailtraffic_enabled']['title'] = "Analysiere Mailtraffic"; 
+$lng['serversettings']['mailtraffic_enabled']['title'] = "Analysiere Mailtraffic";
 $lng['serversettings']['mailtraffic_enabled']['description'] = "Aktiviere das analysieren der Logdateien des Mailsystems um den verbrauchten Traffic zu berechnen";
 $lng['serversettings']['mdaserver']['title'] = "Typ des MDA";
 $lng['serversettings']['mdaserver']['description'] = "Der eingesetzte Mail Delivery Server";
@@ -1584,25 +1584,35 @@ $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (Standard: 022)';
 
 // Added for let's encrypt
 $lng['admin']['letsencrypt']['title'] = 'Benutze Let\'s Encrypt';
-$lng['admin']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verl&auml;nger.<br><strong class="red">ACHTUNG:</strong>Wenn Wildcards aktiviert sind, wird diese Option automatisch deaktiviert. Dieses Feature befindet sich noch im Test.';
+$lng['admin']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><strong class="red">ACHTUNG:</strong>Wenn Wildcards aktiviert sind, wird diese Option automatisch deaktiviert. Dieses Feature befindet sich noch im Test.';
 $lng['customer']['letsencrypt']['title'] = 'Benutze Let\'s Encrypt';
-$lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verl&auml;ngert.<br><string class="red">ACHTUNG:</strong>Dieses Feature befindet sich noch im Test.';
-$lng['error']['sslredirectonlypossiblewithsslipport'] = 'Die Nutzung von Let\'s Encrypt ist nur m&ouml;glich, wenn die Domain mindestens eine IP/Port - Kombination mit aktiviertem SSL zugewiesen hat.';
+$lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><string class="red">ACHTUNG:</strong>Dieses Feature befindet sich noch im Test.';
+$lng['error']['sslredirectonlypossiblewithsslipport'] = 'Die Nutzung von Let\'s Encrypt ist nur möglich, wenn die Domain mindestens eine IP/Port - Kombination mit aktiviertem SSL zugewiesen hat.';
 $lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt kann (noch) nicht mit Wildcard-Domains umgehen. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
 $lng['panel']['letsencrypt'] = 'Benutzt Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'aktualisiert Let\'s Encrypt Zertifikate';
 $lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt Umgebung";
-$lng['serversettings']['letsencryptca']['description'] = "Let's Encrypt - Umgebung, welche genutzt wird um Zertifikate zu bestellen.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt befindet sich noch im Test</strong>";
-$lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt L&auml;ndercode";
-$lng['serversettings']['letsencryptcountrycode']['description'] = "2 - stelliger L&auml;ndercode, welcher benutzt wird um Let's Encrypt - Zertifikate zu bestellen.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt befindet sich noch im Test</strong>";
+$lng['serversettings']['letsencryptca']['description'] = "Let's Encrypt - Umgebung, welche genutzt wird um Zertifikate zu bestellen.<br><strong class=\"red\">ACHTUNG:</strong>Let's Encrypt befindet sich noch im Test";
+$lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt Ländercode";
+$lng['serversettings']['letsencryptcountrycode']['description'] = "2 - stelliger Ländercode, welcher benutzt wird um Let's Encrypt - Zertifikate zu bestellen.<br><strong class=\"red\">ACHTUNG:</strong>Let's Encrypt befindet sich noch im Test";
 $lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt Bundesland";
-$lng['serversettings']['letsencryptstate']['description'] = "Bundesland, welches benutzt wird um Let's Encrypt - Zertifikate zu bestellen.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt befindet sich noch im Test</strong>";
-$lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>Die SSL-Umleitung ist, w&auml;hrend ein neues Let's Encrypt - Zertifikat erstellt wird, tempor&auml;r deaktiviert. Die Umleitung wird nach der Zertifikatserstellung wieder aktiviert.";
+$lng['serversettings']['letsencryptstate']['description'] = "Bundesland, welches benutzt wird um Let's Encrypt - Zertifikate zu bestellen.<br><strong class=\"red\">ACHTUNG:</strong>Let's Encrypt befindet sich noch im Test";
+$lng['serversettings']['letsencryptchallengepath']['title'] = "Verzeichnis für Let's Encrypt challenges";
+$lng['serversettings']['letsencryptchallengepath']['description'] = "Let's Encrypt challenges werden aus diesem Verzeichnis über einen globalen Alias ausgeliefert.<br><strong class=\"red\">ACHTUNG:</strong>Let's Encrypt befindet sich noch im Test";
+$lng['serversettings']['letsencryptkeysize']['title'] = "Schlüsselgröße für neue Let's Encrypt Zertifikate";
+$lng['serversettings']['letsencryptkeysize']['description'] = "Größe des Schlüssels in Bit für neue Let's Encrypt Zertifikate.<br><strong class=\"red\">ACHTUNG:</strong>Let's Encrypt befindet sich noch im Test";
+$lng['serversettings']['letsencryptreuseold']['title'] = "Let's Encrypt Schlüssel / CSR wiederverwenden";
+$lng['serversettings']['letsencryptreuseold']['description'] = "Wenn dies aktiviet ist, werden der alte Schlüssel und CSR bei jeder Verlängerung verwendet, andernfalls wird ein neues Paar generiert.<br><strong class=\"red\">ACHTUNG:</strong>Let's Encrypt befindet sich noch im Test";
+$lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>Die SSL-Umleitung ist, während ein neues Let's Encrypt - Zertifikat erstellt wird, temporär deaktiviert. Die Umleitung wird nach der Zertifikatserstellung wieder aktiviert.";
 
 // Added for Termination-date
 $lng['domains']['termination_date'] = 'K&uuml;ndigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gek&uuml;ndigt zum ';
 
+<<<<<<< HEAD
 
 //Authcode
 $lng['domains']['authcode_desc'] = 'AuthCode oft auch AuthInfo genannt';
+=======
+$lng['panel']['set'] = 'Setzen';
+>>>>>>> upstream/master

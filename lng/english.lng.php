@@ -336,7 +336,7 @@ $lng['serversettings']['documentroot_prefix']['description'] = 'Where should all
 $lng['serversettings']['logfiles_directory']['title'] = 'Logfiles directory';
 $lng['serversettings']['logfiles_directory']['description'] = 'Where should all log files be stored?';
 $lng['serversettings']['ipaddress']['title'] = 'IP-address';
-$lng['serversettings']['ipaddress']['description'] = 'What\'s the IP-address of this server?';
+$lng['serversettings']['ipaddress']['description'] = 'What\'s the main IP-address of this server?';
 $lng['serversettings']['hostname']['title'] = 'Hostname';
 $lng['serversettings']['hostname']['description'] = 'What\'s the Hostname of this server?';
 $lng['serversettings']['apachereload_command']['title'] = 'Webserver reload command';
@@ -435,7 +435,7 @@ $lng['error']['webmailiswrong'] = 'The webmail-link is not a valid link.';
 $lng['error']['webftpiswrong'] = 'The WebFTP-link is not a valid link.';
 $lng['domains']['hasaliasdomains'] = 'Has alias domain(s)';
 $lng['serversettings']['defaultip']['title'] = 'Default IP/Port';
-$lng['serversettings']['defaultip']['description'] = 'What\'s the default IP/Port combination?';
+$lng['serversettings']['defaultip']['description'] = 'Select all IP-addresses you want to use as default for new domains';
 $lng['domains']['statstics'] = 'Usage Statistics';
 $lng['panel']['ascending'] = 'ascending';
 $lng['panel']['decending'] = 'decending';
@@ -1887,7 +1887,7 @@ $lng['apcuinfo']['detailmem'] = 'Detailed Memory Usage and Fragmentation';
 $lng['apcuinfo']['fragment'] = 'Fragmentation';
 
 // Added for opcache info
-$lng['admin']['opcacheinfo'] = 'OPcache info';
+$lng['admin']['opcacheinfo'] = 'OPcache Info';
 $lng['error']['no_opcacheinfo'] = 'No cache info available. OPCache does not appear to be running.';
 $lng['opcacheinfo']['generaltitle'] = 'General Information';
 $lng['opcacheinfo']['resetcache'] = 'Reset OPcache';
@@ -1942,6 +1942,12 @@ $lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt count
 $lng['serversettings']['letsencryptcountrycode']['description'] = "2 letter country code used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
 $lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt state";
 $lng['serversettings']['letsencryptstate']['description'] = "State used to generate Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptchallengepath']['title'] = "Path for Let's Encrypt challenges";
+$lng['serversettings']['letsencryptchallengepath']['description'] = "Directory where the Let's Encrypt challenges should be offered from via a global alias.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptkeysize']['title'] = "Key size for new Let's Encrypt certificates";
+$lng['serversettings']['letsencryptkeysize']['description'] = "Size of the key in Bits for new Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptreuseold']['title'] = "Re-use Let's Encrypt key / CSR";
+$lng['serversettings']['letsencryptreuseold']['description'] = "If activated, the same key and CSR will be used for every renew, otherwise a new key / CSR will be generated every time.<br><strong class=\"red\">ATTENTION:</strong>Let's Encrypt is still in beta</strong>";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>The SSL redirect is temporarily deactivated while a new Let's Encrypt certificate is generated. It will be activated again after the certificate was generated.";
 
 // Autoupdate
@@ -1963,6 +1969,7 @@ $lng['admin']['server_php'] = 'PHP';
 $lng['domains']['termination_date'] = 'Date of termination';
 $lng['domains']['termination_date_overview'] = 'canceled until ';
 
+$lng['panel']['set'] = 'Apply';
 // Authcode
 $lng['domains']['authcode'] = 'AuthCode';
 $lng['domains']['authcode_desc'] = 'AuthCode also known as AuthInfo'; 
