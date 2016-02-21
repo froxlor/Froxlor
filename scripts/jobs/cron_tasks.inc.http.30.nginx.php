@@ -56,12 +56,7 @@ class nginx extends HttpConfigBase {
 		if ($return > 0 && is_array($out) && count($out) > 1) {
 			array_pop($out); // Strip last line with "test failed"
 
-			// Always log this error, regardless of the settings
-			$log = Settings::Get('logger.log_cron');
-			Settings::Set('logger.log_cron', 1);
-
 			$this->logger->logAction(CRON_ACTION, LOG_ERR, 'configuration error: ' . implode("\n", $out));
-			Settings::Set('logger.log_cron', $log);
 		}
 
 		/**
@@ -221,11 +216,11 @@ class nginx extends HttpConfigBase {
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
 				$this->nginx_data[$vhost_filename] .= "\t\ttry_files \$fastcgi_script_name =404;\n";
-				
+
 				if ($row_ipsandports['ssl'] == '1') {
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param HTTPS on;\n";
 				}
-				
+
 				if ((int)Settings::Get('phpfpm.enabled') == 1 && (int)Settings::Get('phpfpm.enabled_ownvhost') == 1) {
 					$domain = array(
 						'id' => 'none',
@@ -239,16 +234,16 @@ class nginx extends HttpConfigBase {
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath,
 					);
-					
+
 					$php = new phpinterface($domain);
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass unix:".$php->getInterface()->getSocketFile().";\n";
 				} else {
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass ".Settings::Get('system.nginx_php_backend').";\n";
 				}
-				
+
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_index index.php;\n";
 				$this->nginx_data[$vhost_filename] .= "\t}\n";
-				
+
 				$this->nginx_data[$vhost_filename] .= "}\n\n";
 				// End of Froxlor server{}-part
 			}
@@ -575,7 +570,7 @@ class nginx extends HttpConfigBase {
 		}
 
 		if ($domain_or_ip['ssl_cert_file'] != '') {
-		    
+
 		    // check for existence, #1485
 		    if (!file_exists($domain_or_ip['ssl_cert_file'])) {
 		        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
@@ -587,7 +582,7 @@ class nginx extends HttpConfigBase {
     			$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
     			$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
     			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
-    
+
     			if ($domain_or_ip['ssl_key_file'] != '') {
     			    // check for existence, #1485
     			    if (!file_exists($domain_or_ip['ssl_key_file'])) {
@@ -597,7 +592,7 @@ class nginx extends HttpConfigBase {
     				    $sslsettings .= "\t" . 'ssl_certificate_key ' .makeCorrectFile($domain_or_ip['ssl_key_file']) . ';' .  "\n";
     			    }
     			}
-    
+
     			if ($domain_or_ip['ssl_ca_file'] != '') {
     			    // check for existence, #1485
     			    if (!file_exists($domain_or_ip['ssl_ca_file'])) {
@@ -607,7 +602,7 @@ class nginx extends HttpConfigBase {
     				    $sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain_or_ip['ssl_ca_file']) . ';' . "\n";
     			    }
     			}
-    			
+
 				if ($domain['hsts'] > 0) {
 
 					$vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain['hsts'];
@@ -842,11 +837,11 @@ class nginx extends HttpConfigBase {
 				$phpopts .= "\t\tfastcgi_param HTTPS on;\n";
 			}
 			$phpopts .= "\t}\n\n";
-			
+
 		}
 		return $phpopts;
 	}
-	
+
 
 	protected function getWebroot($domain, $ssl) {
 		$webroot_text = '';

@@ -57,12 +57,7 @@ class lighttpd extends HttpConfigBase {
 		$return = -999;
 		$out = safe_exec('lighttpd -t -f /etc/lighttpd/lighttpd.conf 2>&1 ', $return, [ '&','>' ]);
 		if ($return > 0 && is_array($out) && count($out) > 0) {
-			// Always log this error, regardless of the settings
-			$log = Settings::Get('logger.log_cron');
-			Settings::Set('logger.log_cron', 1);
-
 			$this->logger->logAction(CRON_ACTION, LOG_ERR, 'configuration error: ' . implode("\n", $out));
-			Settings::Set('logger.log_cron', $log);
 		}
 	}
 
@@ -176,7 +171,7 @@ class lighttpd extends HttpConfigBase {
 				}
 
 				if ($row_ipsandports['ssl_cert_file'] != '') {
-				    
+
 				    // check for existence, #1485
 				    if (!file_exists($row_ipsandports['ssl_cert_file'])) {
 				        $this->logger->logAction(CRON_ACTION, LOG_ERR, $ip.':'.$port . ' :: certificate file "'.$row_ipsandports['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
@@ -187,7 +182,7 @@ class lighttpd extends HttpConfigBase {
     					$this->lighttpd_data[$vhost_filename].= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
     					$this->lighttpd_data[$vhost_filename].= 'ssl.honor-cipher-order = "enable"' . "\n";
     					$this->lighttpd_data[$vhost_filename].= 'ssl.pemfile = "' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . '"' . "\n";
-    
+
     					if ($row_ipsandports['ssl_ca_file'] != '') {
     					    // check for existence, #1485
     					    if (!file_exists($row_ipsandports['ssl_ca_file'])) {
@@ -520,7 +515,7 @@ class lighttpd extends HttpConfigBase {
 			}
 
 			if ($domain['ssl_cert_file'] != '') {
-			    
+
 				$ssl_settings.= 'ssl.engine = "enable"' . "\n";
 				$ssl_settings.= 'ssl.use-sslv2 = "disable"' . "\n";
 				$ssl_settings.= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
@@ -530,7 +525,7 @@ class lighttpd extends HttpConfigBase {
 				if ($domain['ssl_ca_file'] != '') {
 					$ssl_settings.= 'ssl.ca-file = "' . makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
 				}
-				
+
 				if ($domain['hsts'] > 0) {
 
 					$vhost_content .= '$HTTP["scheme"] == "https" { setenv.add-response-header  = ( "Strict-Transport-Security" => "max-age=' . $domain['hsts'];
