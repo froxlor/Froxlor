@@ -422,6 +422,7 @@ class nginx extends HttpConfigBase {
 		) {
 			$vhost_content.= "\n" . $this->composeSslSettings($domain) . "\n";
 		}
+		$vhost_content.= "\t".'include /etc/nginx/acme.conf;'."\n";
 
 		// if the documentroot is an URL we just redirect
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
@@ -567,7 +568,7 @@ class nginx extends HttpConfigBase {
 		        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
 		        echo $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
 		    } else {
-    			// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
+			// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
     			//$sslsettings .= "\t" . 'ssl on;' . "\n";
     			$sslsettings .= "\t" . 'ssl_protocols TLSv1 TLSv1.1 TLSv1.2;' . "\n";
     			$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
@@ -595,13 +596,13 @@ class nginx extends HttpConfigBase {
     			    }
     			}
     			
-				if ($domain['hsts'] > 0) {
+				if (isset($domain_or_ip['hsts']) && $domain_or_ip['hsts'] > 0) {
 
-					$vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain['hsts'];
-					if ($domain['hsts_sub'] == 1) {
+					$vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain_or_ip['hsts'];
+					if ($domain_or_ip['hsts_sub'] == 1) {
 						$vhost_content .= '; includeSubdomains';
 					}
-					if ($domain['hsts_preload'] == 1) {
+					if ($domain_or_ip['hsts_preload'] == 1) {
 						$vhost_content .= '; preload';
 					}
 					$vhost_content .= '";' . "\n";
