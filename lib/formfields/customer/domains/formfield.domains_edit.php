@@ -103,9 +103,10 @@ return array(
 						'select_var' => $openbasedir
 					),
                                         'authcode' => array(
-                                        'label' => $lng['domains']['authcode'],
-                                        'type' => 'label',
-                                        'value' => $result['authcode']
+                                                'label' => $lng['domains']['authcode'],
+                                                'type' => 'label',
+                                                'value' => $result['authcode'],
+                                                'visible' => (!empty($result['authcode']))
                                         )
 				)
 			)
