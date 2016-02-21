@@ -571,6 +571,7 @@ class nginx extends HttpConfigBase {
     			//$sslsettings .= "\t" . 'ssl on;' . "\n";
     			$sslsettings .= "\t" . 'ssl_protocols TLSv1 TLSv1.1 TLSv1.2;' . "\n";
     			$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
+					$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
     			$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
     			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
     
