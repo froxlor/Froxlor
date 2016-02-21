@@ -56,7 +56,7 @@ if ($dh = opendir($path)) {
 } else {
 	print "ERROR: The path you requested cannot be read! \n ";
 	print "\n";
-	print_help();
+	print_help($argv);
 	exit;
 }
 
@@ -64,7 +64,7 @@ if ($dh = opendir($path)) {
 if (!isset($files[$baseLanguage])) {
 	print "ERROR: The baselanguage cannot be found! \n";
 	print "\n";
-	print_help();
+	print_help($argv);
 	exit;
 }
 
