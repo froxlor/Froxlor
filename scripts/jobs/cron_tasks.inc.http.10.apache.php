@@ -84,6 +84,7 @@ class apache extends HttpConfigBase {
 			// >=apache-2.4 enabled?
 			if (Settings::Get('system.apache24') == '1') {
 				$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
+				$this->virtualhosts_data[$vhosts_filename].= '    AllowOverride All' . "\n";
 			} else {
 				$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
 				$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
@@ -230,6 +231,7 @@ class apache extends HttpConfigBase {
 							// for this path, as this would be the first require and therefore grant all access
 							if ($mypath_dir->isUserProtected() == false) {
 								$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
+								$this->virtualhosts_data[$vhosts_filename].= '    AllowOverride All' . "\n";
 							}
 						} else {
 							$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
@@ -284,6 +286,7 @@ class apache extends HttpConfigBase {
 							// for this path, as this would be the first require and therefore grant all access
 							if ($mypath_dir->isUserProtected() == false) {
 								$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+								$this->virtualhosts_data[$vhosts_filename] .= '    AllowOverride All' . "\n";
 							}
 						} else {
 							$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
@@ -1049,6 +1052,7 @@ class apache extends HttpConfigBase {
 						// for this path, as this would be the first require and therefore grant all access
 						if ($mypath_dir->isUserProtected() == false) {
 							$this->diroptions_data[$diroptions_filename] .= '  Require all granted' . "\n";
+							//$this->diroptions_data[$diroptions_filename] .= '  AllowOverride All' . "\n";
 						}
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= '  Order allow,deny' . "\n";
