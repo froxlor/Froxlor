@@ -285,10 +285,10 @@ fastcgi_param  REDIRECT_STATUS    200;
 ]]>
 						</content>
 					</file>
-					<file name="/etc/nginx/conf.d/acme.conf">
+					<file name="/etc/nginx/acme.conf">
 						<content><![CDATA[
 location /.well-known/acme-challenge {
-	alias {{settings.system.letsencryptchallengepath}};
+	alias {{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge;
 
 	location ~ /.well-known/acme-challenge/(.*) {
 		default_type text/plain;
