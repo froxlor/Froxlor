@@ -46,7 +46,6 @@ if (!function_exists('apcu_cache_info') ||
         !function_exists('apcu_sma_info')
 ) {
     standard_error($lng['error']['no_apcuinfo']);
-    exit();
 }
 
 if ($page == 'showinfo'

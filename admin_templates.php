@@ -201,7 +201,6 @@ if ($action == '') {
 
 	} else {
 		standard_error('templatenotfound');
-		exit;
 	}
 
 } elseif($action == 'add') {
@@ -358,7 +357,6 @@ if ($action == '') {
 			eval("echo \"" . getTemplate("templates/templates_add_1") . "\";");
 		} else {
 			standard_error('alltemplatesdefined');
-			exit;
 		}
 
 	} else {
@@ -371,7 +369,6 @@ if ($action == '') {
 
 		if (Database::num_rows() == count($file_templates)) {
 			standard_error('alltemplatesdefined');
-			exit;
 
 		} else {
 
@@ -514,6 +511,5 @@ if ($action == '') {
 
 	} else {
 		standard_error('templatenotfound');
-		exit;
 	}
 }

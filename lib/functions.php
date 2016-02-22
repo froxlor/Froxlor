@@ -42,11 +42,6 @@ function includeFunctions($dirname)
 	closedir($dirhandle);
 }
 
-function exportDetails($fielddata, $newfieldvalue)
-{
-	print_r($newfieldvalue);
-}
-
 Autoloader::init();
 
 /**

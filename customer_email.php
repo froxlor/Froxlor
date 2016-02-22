@@ -244,7 +244,6 @@ if ($page == 'overview') {
 					standard_error('emailexistalready', $email_full);
 				} elseif ($email_check['email'] == $email) {
 					standard_error('youhavealreadyacatchallforthisdomain');
-					exit;
 				} else {
 					$stmt = Database::prepare("INSERT INTO `" . TABLE_MAIL_VIRTUAL . "`
 						(`customerid`, `email`, `email_full`, `iscatchall`, `domainid`)
@@ -377,7 +376,6 @@ if ($page == 'overview') {
 
 					if ($email_check['email'] == $email) {
 						standard_error('youhavealreadyacatchallforthisdomain');
-						exit;
 					} else {
 						$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_VIRTUAL . "`
 							SET `email` = :email , `iscatchall` = '1'
@@ -461,7 +459,9 @@ if ($page == 'overview') {
 						$maildirname=trim(Settings::Get('system.vmail_maildirname'));
 						// Add trailing slash to Maildir if needed
 						$maildirpath=$maildirname;
-						if (!empty($maildirname) and substr($maildirname,-1) != "/") $maildirpath.="/";
+						if (!empty($maildirname) && substr($maildirname,-1) != "/") {
+							$maildirpath.="/";
+						}
 
 						$stmt = Database::prepare("INSERT INTO `" . TABLE_MAIL_USERS . "`
 							(`customerid`, `email`, `username`, " . (Settings::Get('system.mailpwcleartext') == '1' ? '`password`, ' : '') . " `password_enc`, `homedir`, `maildir`, `uid`, `gid`, `domainid`, `postfix`, `quota`, `imap`, `pop3`) ".
@@ -633,11 +633,9 @@ if ($page == 'overview') {
 
 				if ($password == '') {
 					standard_error(array('stringisempty', 'mypassword'));
-					exit;
 				}
 				elseif ($password == $result['email_full']) {
 					standard_error('passwordshouldnotbeusername');
-					exit;
 				}
 
 				$password = validatePassword($password);

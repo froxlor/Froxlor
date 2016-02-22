@@ -155,7 +155,6 @@ if ($page == 'admins'
 		if ($result['loginname'] != '') {
 			if ($result['adminid'] == $userinfo['userid']) {
 				standard_error('youcantdeleteyourself');
-				exit;
 			}
 
 			if (isset($_POST['send'])

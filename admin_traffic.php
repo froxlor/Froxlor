@@ -27,7 +27,6 @@ if ($action == 'logout') {
 	);
 	Database::pexecute($logout_stmt, array('adminid' => $userinfo['adminid']));
 	redirectTo('index.php');
-	exit;
 }
 
 if (isset($_POST['id'])) {

@@ -87,21 +87,17 @@ if ($page == 'overview') {
 				}
 			}
                         
-                        $row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
-                        if($row['termination_date'] != "")
-                        {
-                            $cdate = strtotime($row['termination_date'] . " 23:59:59");
-                            $today = time();
+			$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
+			if($row['termination_date'] != "") {
+				$cdate = strtotime($row['termination_date'] . " 23:59:59");
+				$today = time();
 
-                            if($cdate < $today)
-                            {
-                                $row['termination_css'] = 'domain-expired';
-                            }
-                            else
-                                {
-                                $row['termination_css'] = 'domain-canceled';
-                            }
-                        }
+				if($cdate < $today) {
+					$row['termination_css'] = 'domain-expired';
+				} else {
+					$row['termination_css'] = 'domain-canceled';
+				}
+			}
 
 			$domains_count++;
 			$domain_array[$row['domain']] = $row;
@@ -264,7 +260,6 @@ if ($page == 'overview') {
 
 				if ($completedomain == Settings::Get('system.hostname')) {
 					standard_error('admin_domain_emailsystemhostname');
-					exit;
 				}
 
 				$completedomain_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`

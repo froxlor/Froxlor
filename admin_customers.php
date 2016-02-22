@@ -554,7 +554,6 @@ if ($page == 'customers'
 				   || ($subdomains == '-1' && $userinfo['subdomains'] != '-1')
 				) {
 					standard_error('youcantallocatemorethanyouhave');
-					exit;
 				}
 
 				// Either $name and $firstname or the $company must be inserted
@@ -1208,7 +1207,6 @@ if ($page == 'customers'
 				   || ($subdomains == '-1' && $userinfo['subdomains'] != '-1')
 				) {
 					standard_error('youcantallocatemorethanyouhave');
-					exit;
 				}
 
 				// Either $name and $firstname or the $company must be inserted

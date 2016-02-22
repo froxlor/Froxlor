@@ -301,7 +301,6 @@ if ($page == 'domains'
 
 				if ($_POST['domain'] == Settings::Get('system.hostname')) {
 					standard_error('admin_domain_emailsystemhostname');
-					exit;
 				}
 
 				$domain = $idna_convert->encode(preg_replace(array('/\:(\d)+$/', '/^https?\:\/\//'), '', validate($_POST['domain'], 'domain')));
@@ -756,7 +755,6 @@ if ($page == 'domains'
 								|| $_POST[$question_name] != $question_name
 							) {
 								ask_yesno('admin_domain_' . $question_name, $filename, $params, $question_nr);
-								exit;
 							}
 						}
 						$question_nr++;
@@ -1520,7 +1518,6 @@ if ($page == 'domains'
 							|| $_POST[$question_name] != $question_name
 						) {
 							ask_yesno('admin_domain_' . $question_name, $filename, $params);
-							exit;
 						}
 					}
 				}

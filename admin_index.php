@@ -42,7 +42,6 @@ if ($action == 'logout')  {
 	Database::pexecute($stmt, $params);
 
 	redirectTo('index.php');
-	exit;
 }
 
 if (isset($_POST['id'])) {
@@ -201,7 +200,6 @@ if ($page == 'overview') {
 
 		if (!validatePasswordLogin($userinfo,$old_password,TABLE_PANEL_ADMINS,'adminid')) {
 			standard_error('oldpasswordnotcorrect');
-			exit;
 		}
 
 		$new_password = validate($_POST['new_password'], 'new password');

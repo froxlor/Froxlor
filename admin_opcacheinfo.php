@@ -35,7 +35,6 @@ if ($action == 'reset' &&
 if (!function_exists('opcache_get_configuration')
 ) {
     standard_error($lng['error']['no_opcacheinfo']);
-    exit();
 }
 
 if ($page == 'showinfo'
