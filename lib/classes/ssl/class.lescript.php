@@ -324,7 +324,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
     {
         $res = openssl_pkey_new(array(
             "private_key_type" => OPENSSL_KEYTYPE_RSA,
-            "private_key_bits" => Settings::Get('system.letsencryptkeysize'),
+            "private_key_bits" => (int)Settings::Get('system.letsencryptkeysize'),
         ));
 
         if(!openssl_pkey_export($res, $privateKey)) {
