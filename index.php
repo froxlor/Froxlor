@@ -226,7 +226,11 @@ if ($action == 'login') {
 					redirectTo('admin_updates.php', array('s' => $s));
 				} else {
 					if (isset($_POST['script']) && $_POST['script'] != "") {
-						redirectTo($_POST['script'], $qryparams);
+						if (preg_match("/customer\_/", $_POST['script']) === 1) {
+							redirectTo('admin_customers.php', array("page" => "customers"));
+						} else {
+							redirectTo($_POST['script'], $qryparams);
+						}
 					} else {
 						redirectTo('admin_index.php', $qryparams);
 					}
