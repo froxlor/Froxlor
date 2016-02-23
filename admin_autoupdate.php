@@ -22,9 +22,9 @@ define('AREA', 'admin');
 require './lib/init.php';
 
 // define update-uri
-define('UPDATE_URI', "http://version.froxlor.org/Froxlor/legacy/" . $version);
-define('RELEASE_URI', "http://autoupdate.froxlor.org/froxlor-{version}.zip");
-define('MD5SUM_URI', "http://autoupdate.froxlor.org/froxlor-{version}.zip.md5");
+define('UPDATE_URI', "https://version.froxlor.org/Froxlor/legacy/" . $version);
+define('RELEASE_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip");
+define('CHECKSUM_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip.sha256");
 
 // check for allow_url_fopen
 if (ini_get('allow_url_fopen') === false) {
@@ -105,8 +105,8 @@ elseif ($page == 'getdownload') {
 
 		// define files to get
 		$toLoad = str_replace('{version}', $newversion, RELEASE_URI);
-		$toCheck = str_replace('{version}', $newversion, MD5SUM_URI);
-		
+		$toCheck = str_replace('{version}', $newversion, CHECKSUM_URI);
+
 		// get archive data
 		$newArchive = @file_get_contents($toLoad);
 
@@ -133,8 +133,8 @@ elseif ($page == 'getdownload') {
 
 		// close file-handle
 		fclose($fh);
-		
-		// validate MD5
+
+		// validate the integrity of the downloaded file
 		$_shouldsum = @file_get_contents($toCheck);
 		if (!empty($_shouldsum)) {
 		    $_t = explode(" ", $_shouldsum);
@@ -142,8 +142,8 @@ elseif ($page == 'getdownload') {
 		} else {
 		    $shouldsum = null;
 		}
-		$filesum = md5_file($localArchive);
-		
+		$filesum = hash_file('sha256', $localArchive);
+
 		if ($filesum != $shouldsum) {
 		    redirectTo($filename, array('s' => $s, 'page' => 'error', 'errno' => 9));
 		}
@@ -204,6 +204,6 @@ elseif ($page == 'error') {
 	// 6 = download without valid version
 	// 7 = local archive does not exist
 	// 8 = could not extract archive
-	// 9 = md5 mismatch
+	// 9 = checksum mismatch
 	standard_error ('autoupdate_'.$errno);
 }
