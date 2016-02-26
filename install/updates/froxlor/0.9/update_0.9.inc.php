@@ -3103,11 +3103,11 @@ if (isFroxlorVersion('0.9.35-dev5')) {
 	showUpdateStep("Adding new panel_vhostconfigs table");
 	Database::query("DROP TABLE IF EXISTS `panel_vhostconfigs`;");
 	$sql = "CREATE TABLE `" . TABLE_PANEL_VHOSTCONFIGS . "` (
-      `id` int(11) NOT NULL AUTO_INCREMENT,
-      `description` varchar(50) NOT NULL,
-      `vhostsettings` text NOT NULL,
-      PRIMARY KEY (`id`)
-    ) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+			`id` int(11) NOT NULL AUTO_INCREMENT,
+			`description` varchar(50) NOT NULL,
+			`vhostsettings` text NOT NULL,
+			PRIMARY KEY (`id`)
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
 	Database::query($sql);
 	lastStepStatus(0);
 

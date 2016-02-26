@@ -1985,5 +1985,5 @@ $lng['admin']['vhostconfig']['ip'] = 'Will be replaced with the IP address of th
 $lng['admin']['vhostconfig']['port'] = 'Will be replaced with the port number of the Vhost.';
 $lng['admin']['vhostconfig']['scheme'] = 'Will be set to <strong>http</strong> or <strong>https</strong> in case SSL / TLS is activated for the Vhost.';
 $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['title'] = 'Use the standard Vhost location directives';
-$lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'] = 'If activated, the standard Vhost location directives, such as <br>location / { ... }<br> location @rewrites { ... }<br> location ~ ^(.+?\.php)(/.*)?$ { ... }<br> are excluded from the Vhost configuration file.';
+$lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'] = 'If deactivated, the standard Vhost location directives, such as <br>location / { ... }<br> location @rewrites { ... }<br> location ~ ^(.+?\.php)(/.*)?$ { ... }<br> are excluded from the Vhost configuration file.';
 $lng['question']['vhostsetting_reallydelete'] = 'Do you really want to delete the Vhost template?';

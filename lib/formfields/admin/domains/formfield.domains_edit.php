@@ -84,7 +84,7 @@ return array(
 						'value' => $result['registration_date'],
 						'size' => 10
 					),
-                                        'termination_date' => array(
+          'termination_date' => array(
 						'label' => $lng['domains']['termination_date'],
 						'desc' => $lng['panel']['dateformat'],
 						'type' => 'text',
@@ -163,6 +163,7 @@ return array(
 						'value' => array($result['speciallogfile'])
 					),
 					'vhost_usedefaultlocation' => array(
+						'visible' => (Settings::Get('system.webserver') == 'nginx' ? true : false),
 						'label' => $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['title'],
 						'desc' => $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'],
 						'type' => 'checkbox',

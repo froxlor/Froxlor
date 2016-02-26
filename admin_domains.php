@@ -97,7 +97,7 @@ if ($page == 'domains'
 			}
 			$row['ipandport'] = substr($row['ipandport'], 0, -1);
                         $row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
-                        
+
                         if($row['termination_date'] != "")
                         {
                             $cdate = strtotime($row['termination_date'] . " 23:59:59");
@@ -434,7 +434,7 @@ if ($page == 'domains'
 				}
 
 				$vhostsettingid = 0;
-				$vhost_usedefaultlocation = 0;
+				$vhost_usedefaultlocation = 1;
 				if ($userinfo['caneditphpsettings'] == '1'
 					|| $userinfo['change_serversettings'] == '1'
 				) {
@@ -446,7 +446,7 @@ if ($page == 'domains'
 					) {
 						$phpsettingid = (int)$_POST['phpsettingid'];
 						$vhostsettingid = (int)$_POST['vhostsettingid'];
-						$vhost_usedefaultlocation = (int)$_POST['vhost_usedefaultlocation'];
+						$vhost_usedefaultlocation = isset($_POST['vhost_usedefaultlocation']) ? (int)$_POST['vhost_usedefaultlocation'] : 1;
 						$phpsettingid_check_stmt = Database::prepare("
 							SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`
 							WHERE `id` = :phpsettingid"
@@ -1288,7 +1288,7 @@ if ($page == 'domains'
 					) {
 						$phpsettingid = (int)$_POST['phpsettingid'];
 						$vhostsettingid = (int)$_POST['vhostsettingid'];
-						$vhost_usedefaultlocation = (int)$_POST['vhost_usedefaultlocation'];
+						$vhost_usedefaultlocation = isset($_POST['vhost_usedefaultlocation']) ? (int)$_POST['vhost_usedefaultlocation'] : $vhost_usedefaultlocation;
 						$phpsettingid_check_stmt = Database::prepare("
 							SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :phpid
 						");
@@ -1979,7 +1979,7 @@ if ($page == 'domains'
 				// Fudge the result for ssl_redirect to hide the Let's Encrypt steps
 				$result['temporary_ssl_redirect'] = $result['ssl_redirect'];
 				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
-				
+
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', $_value, true, true);
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', $_value, true, true);

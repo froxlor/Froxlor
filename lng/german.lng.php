@@ -1625,5 +1625,5 @@ $lng['admin']['vhostconfig']['ip'] = 'Wird mit der IP-Adresse des Vhosts ersetzt
 $lng['admin']['vhostconfig']['port'] = 'Wird mit dem Port des Vhosts ersetzt.';
 $lng['admin']['vhostconfig']['scheme'] = 'Wird mit <strong>http</strong> bzw. mit <strong>https</strong> ersetzt, sofern der Vhost SSL/TLS aktiviert hat.';
 $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['title'] = 'Standard VHost location-Direktiven verwenden';
-$lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'] = 'Wenn aktiviert, werden die Standard VHost-Direktiven wie <br>location / { ... }<br> location @rewrites { ... }<br> location ~ ^(.+?\.php)(/.*)?$ { ... }<br> nicht in die Konfigurationsdatei geschrieben.';
+$lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'] = 'Wenn deaktiviert, werden Standard VHost-Direktiven wie <br>location / { ... }<br> location @rewrites { ... }<br> location ~ ^(.+?\.php)(/.*)?$ { ... }<br> nicht in die Konfigurationsdatei geschrieben.';
 $lng['question']['vhostsetting_reallydelete'] = 'Wollen Sie diese VHost-Vorlage wirklich löschen?';

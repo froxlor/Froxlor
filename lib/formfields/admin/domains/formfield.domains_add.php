@@ -151,6 +151,7 @@ return array(
 						'value' => array()
 					),
 					'vhost_usedefaultlocation' => array(
+						'visible' => (Settings::Get('system.webserver') == 'nginx' ? true : false),
 						'label' => $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['title'],
 						'desc' => $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'],
 						'type' => 'checkbox',
