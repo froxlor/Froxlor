@@ -444,6 +444,24 @@ class nginx extends HttpConfigBase {
 
 				$vhost_content.= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
 
+				// check if vhost config template is set and if so, merge it
+				if ($domain['vhostsettingid'] != 0) {
+					$vhostsettings_stmt = Database::prepare("SELECT `description`, `vhostsettings` FROM " . TABLE_PANEL_VHOSTCONFIGS . " WHERE `id` = :id LIMIT 1;");
+					$vhostconfig = Database::pexecute_first($vhostsettings_stmt, array('id' => $domain['vhostsettingid']));
+
+					// replace {SOCKET} var with unix socket
+					$php = new phpinterface($domain);
+					$vhostconfig['vhostsettings'] = str_replace("{SOCKET}", $php->getInterface()->getSocketFile(), $vhostconfig['vhostsettings']);
+
+					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate(
+						$vhostconfig['vhostsettings'],
+						$domain,
+						$domain['ip'],
+						$domain['port'],
+						$ssl_vhost
+					));
+				}
+
 				if ($domain['specialsettings'] != "") {
 					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate(
 						$domain['specialsettings'],
@@ -855,19 +873,22 @@ class nginx extends HttpConfigBase {
 			$this->_deactivated = false;
 		}
 
-		$webroot_text .= "\t" . 'index    index.php index.html index.htm;'."\n";
-		$webroot_text .= "\n\t".'location / {'."\n";
-		$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
+		// write directives only when vhost_usedefaultlocation is activated in panel domain settings
+		if ($domain['vhost_usedefaultlocation'] == '1') {
+			$webroot_text .= "\t" . 'index    index.php index.html index.htm;'."\n";
+			$webroot_text .= "\n\t" . 'location / {' . "\n";
+			$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;' . "\n";
 
-		if ($this->vhost_root_autoindex) {
-			$webroot_text .= "\t\t".'autoindex on;'."\n";
-			$this->vhost_root_autoindex = false;
+			if ($this->vhost_root_autoindex) {
+				$webroot_text .= "\t\t" . 'autoindex on;' . "\n";
+				$this->vhost_root_autoindex = false;
+			}
+
+			$webroot_text .= "\t" . '}' . "\n\n";
+			$webroot_text .= "\tlocation @rewrites {\n";
+			$webroot_text .= "\t\trewrite ^ /index.php last;\n";
+			$webroot_text .= "\t}\n\n";
 		}
-
-		$webroot_text .= "\t".'}'."\n\n";
-		$webroot_text .= "\tlocation @rewrites {\n";
-		$webroot_text .= "\t\trewrite ^ /index.php last;\n";
-		$webroot_text .= "\t}\n\n";
 
 		return $webroot_text;
 	}

@@ -45,6 +45,7 @@ define('TABLE_PANEL_TICKETS', 'panel_tickets');
 define('TABLE_PANEL_TICKET_CATS', 'panel_ticket_categories');
 define('TABLE_PANEL_LOG', 'panel_syslog');
 define('TABLE_PANEL_PHPCONFIGS', 'panel_phpconfigs');
+define('TABLE_PANEL_VHOSTCONFIGS', 'panel_vhostconfigs');
 define('TABLE_PANEL_CRONRUNS', 'cronjobs_run');
 define('TABLE_PANEL_REDIRECTCODES', 'redirect_codes');
 define('TABLE_PANEL_DOMAINREDIRECTS', 'domain_redirect_codes');

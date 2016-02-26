@@ -1610,3 +1610,20 @@ $lng['domains']['termination_date'] = 'K&uuml;ndigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gek&uuml;ndigt zum ';
 
 $lng['panel']['set'] = 'Setzen';
+
+// Added for Vhost templates
+$lng['menue']['vhostsettings']['maintitle'] = 'VHost-Konfigurationen';
+$lng['admin']['vhostsettings']['title'] = 'VHost-Konfiguration';
+$lng['admin']['vhostsettings']['addnew'] = 'Neue Konfiguration erstellen';
+$lng['admin']['vhostsettings']['addsettings'] = 'VHost-Konfiguration erstellen';
+$lng['admin']['vhostsettings']['editsettings'] = 'VHost-Konfiguration bearbeiten';
+$lng['admin']['vhostsettings']['vhostsettings'] = 'Vordefinierte VHost-Konfiguration';
+$lng['admin']['vhostsettings']['novhostsettings'] = 'Keine VHost-Konfiguration';
+$lng['admin']['vhostconfig']['socket_dir'] = 'Wird mit dem jeweiligen Unix Socket Pfad ersetzt (z.B. /var/run/domain-php-fpm.socket).';
+$lng['admin']['vhostconfig']['docroot'] = 'Wird mit dem DocumentRoot ersetzt.';
+$lng['admin']['vhostconfig']['ip'] = 'Wird mit der IP-Adresse des Vhosts ersetzt.';
+$lng['admin']['vhostconfig']['port'] = 'Wird mit dem Port des Vhosts ersetzt.';
+$lng['admin']['vhostconfig']['scheme'] = 'Wird mit <strong>http</strong> bzw. mit <strong>https</strong> ersetzt, sofern der Vhost SSL/TLS aktiviert hat.';
+$lng['admin']['vhostconfig']['vhost_usedefaultlocation']['title'] = 'Standard VHost location-Direktiven verwenden';
+$lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'] = 'Wenn deaktiviert, werden Standard VHost-Direktiven wie <br>location / { ... }<br> location @rewrites { ... }<br> location ~ ^(.+?\.php)(/.*)?$ { ... }<br> nicht in die Konfigurationsdatei geschrieben.';
+$lng['question']['vhostsetting_reallydelete'] = 'Wollen Sie diese VHost-Vorlage wirklich löschen?';

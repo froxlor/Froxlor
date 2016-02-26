@@ -23,24 +23,27 @@ class nginx_phpfpm extends nginx
 		if ($domain['phpenabled'] == '1') {
 			$php = new phpinterface($domain);
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
-			
-			$php_options_text = "\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
-			$php_options_text .= "\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
-			$php_options_text .= "\t" . '}' . "\n\n";
 
-			$php_options_text .= "\t" . 'location @php {' . "\n";
-			$php_options_text .= "\t\t" . 'try_files $1 = 404;' . "\n\n";
-			$php_options_text .= "\t\t" . 'include ' . Settings::Get('nginx.fastcgiparams') . ";\n";
-			$php_options_text .= "\t\t" . 'fastcgi_split_path_info ^(.+\.php)(/.+)\$;' . "\n";
-			$php_options_text .= "\t\t" . 'fastcgi_param SCRIPT_FILENAME $document_root$1;' . "\n";
-			$php_options_text .= "\t\t" . 'fastcgi_param PATH_INFO $2;' . "\n";
-			if ($domain['ssl'] == '1' && $ssl_vhost) {
-				$php_options_text .= "\t\t" . 'fastcgi_param HTTPS on;' . "\n";
+			// write directives only when vhost_usedefaultlocation is activated in panel domain settings
+			if ($domain['vhost_usedefaultlocation'] == '1') {
+				$php_options_text = "\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
+				$php_options_text .= "\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
+				$php_options_text .= "\t" . '}' . "\n\n";
+
+				$php_options_text .= "\t" . 'location @php {' . "\n";
+				$php_options_text .= "\t\t" . 'try_files $1 = 404;' . "\n\n";
+				$php_options_text .= "\t\t" . 'include ' . Settings::Get('nginx.fastcgiparams') . ";\n";
+				$php_options_text .= "\t\t" . 'fastcgi_split_path_info ^(.+\.php)(/.+)\$;' . "\n";
+				$php_options_text .= "\t\t" . 'fastcgi_param SCRIPT_FILENAME $document_root$1;' . "\n";
+				$php_options_text .= "\t\t" . 'fastcgi_param PATH_INFO $2;' . "\n";
+				if ($domain['ssl'] == '1' && $ssl_vhost) {
+					$php_options_text .= "\t\t" . 'fastcgi_param HTTPS on;' . "\n";
+				}
+				$php_options_text .= "\t\t" . 'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ";\n";
+				$php_options_text .= "\t\t" . 'fastcgi_index index.php;' . "\n";
+				$php_options_text .= "\t}\n\n";
 			}
-			$php_options_text .= "\t\t" . 'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ";\n";
-			$php_options_text .= "\t\t" . 'fastcgi_index index.php;' . "\n";
-			$php_options_text .= "\t}\n\n";
-			
+
 			// create starter-file | config-file
 			$php->getInterface()->createConfig($phpconfig);
 
@@ -54,7 +57,7 @@ class nginx_phpfpm extends nginx
 
 		return $php_options_text;
 	}
-	
+
 
 	public function createOwnVhostStarter() {
 		if (Settings::Get('phpfpm.enabled') == '1'
