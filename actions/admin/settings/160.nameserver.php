@@ -73,7 +73,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'axfrservers',
 					'type' => 'string',
-					'string_type' => 'validate_ip',
+					'string_type' => 'validate_ip_incl_private',
 					'string_delimiter' => ',',
 					'string_emptyallowed' => true,
 					'default' => '',
