@@ -197,7 +197,7 @@ class phpinterface_fpm {
 					$fpm_start_servers = $fpm_min_spare_servers;
 				}
 				if ($fpm_start_servers > $fpm_max_spare_servers) {
-					$fpm_start_servers = $fpm_start_servers - (($fpm_start_servers - $fpm_max_spare_servers) + 1);
+					$fpm_start_servers = $fpm_max_spare_servers;
 				}
 				$fpm_config.= 'pm.start_servers = '.$fpm_start_servers."\n";
 				$fpm_config.= 'pm.min_spare_servers = '.$fpm_min_spare_servers."\n";
