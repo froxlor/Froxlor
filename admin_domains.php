@@ -1245,6 +1245,7 @@ if ($page == 'domains'
 					}
 
 					$specialsettings = validate(str_replace("\r\n", "\n", $_POST['specialsettings']), 'specialsettings', '/^[^\0]*$/');
+					$ssfs = (isset($_POST['specialsettingsforsubdomains']) && intval($_POST['specialsettingsforsubdomains']) == 1) ? 1 : 0;
 					$documentroot = validate($_POST['documentroot'], 'documentroot');
 
 					if ($documentroot == '') {
@@ -1268,6 +1269,7 @@ if ($page == 'domains'
 					$zonefile = $result['zonefile'];
 					$dkim = $result['dkim'];
 					$specialsettings = $result['specialsettings'];
+					$ssfs = (empty($specialsettings) ? 0 : 1);
 					$documentroot = $result['documentroot'];
 				}
 
@@ -1522,6 +1524,7 @@ if ($page == 'domains'
 					'mod_fcgid_starter' => $mod_fcgid_starter,
 					'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 					'specialsettings' => $specialsettings,
+					'specialsettingsforsubdomains' => $ssfs,
 					'registration_date' => $registration_date,
 					'termination_date' => $termination_date,
 					'issubof' => $issubof,
