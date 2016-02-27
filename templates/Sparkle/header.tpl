@@ -21,6 +21,7 @@
 	<script type="text/javascript" src="templates/{$theme}/assets/js/tipper.min.js"></script>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/jcanvas.min.js"></script>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/circular.js"></script>
+	<script type="text/javascript" src="templates/{$theme}/assets/js/autosize.min.js"></script>
 	{$css}
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/assets/css/main_ie.css" type="text/css" /><![endif]-->
 	<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css"/>

@@ -217,4 +217,6 @@ $(document).ready(function() {
 		});
 		lastPw = inputVal;
 	});
+
+	autosize($('textarea.shell'));
 });
