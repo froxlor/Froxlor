@@ -193,6 +193,11 @@ return array (
 			        'label' => $lng['admin']['ipsandports']['ipsandports'],
 			        'required_resources' => 'change_serversettings',
 			    ),
+			    array (
+			        'url' => 'admin_settings.php?page=updatecounters',
+			        'label' => $lng['admin']['updatecounters'],
+			        'required_resources' => 'change_serversettings',
+			    ),
 			),
 		),
 		'traffic' => array (
@@ -236,24 +241,6 @@ return array (
 					'label' => $lng['admin']['rebuildconf'],
 					'required_resources' => 'change_serversettings',
 				),
-				array (
-					'url' => 'admin_settings.php?page=updatecounters',
-					'label' => $lng['admin']['updatecounters'],
-					'required_resources' => 'change_serversettings',
-				),
-				array (
-					'url' => 'admin_settings.php?page=integritycheck',
-					'label' => $lng['admin']['integritycheck'],
-					'required_resources' => 'change_serversettings',
-				),
-				array (
-					'url' => 'admin_vhostsettings.php?page=overview',
-					'label' => $lng['menue']['vhostsettings']['maintitle'],
-					'show_element' => (
-						Settings::Get('system.mod_fcgid') == true ||
-						Settings::Get('phpfpm.enabled') == true
-					),
-				),
 			    array (
 			        'url' => 'admin_autoupdate.php?page=overview',
 			        'label' => $lng['admin']['autoupdate'],
@@ -261,6 +248,24 @@ return array (
 			    ),
 			),
 		),
+	    'templates' => array (
+            'label' => $lng['admin']['server_templates'],
+	        'elements' => array (
+	            array (
+	                'url' => 'admin_vhostsettings.php?page=overview',
+	                'label' => $lng['menue']['vhostsettings']['maintitle'],
+	                'show_element' => (
+	                    Settings::Get('system.mod_fcgid') == true ||
+	                    Settings::Get('phpfpm.enabled') == true
+	                ),
+	                'required_resources' => 'change_serversettings'
+	            ),
+	            array (
+	                'url' => 'admin_templates.php?page=email',
+	                'label' => $lng['admin']['templates']['email'],
+	            ),
+	        )
+	    ),
 	    'server_php' => array (
 	        'label' => $lng['admin']['server_php'],
 	        'required_resources' => 'change_serversettings',
@@ -299,10 +304,11 @@ return array (
 		'misc' => array (
 			'label' => $lng['admin']['misc'],
 			'elements' => array (
-				array (
-					'url' => 'admin_templates.php?page=email',
-					'label' => $lng['admin']['templates']['email'],
-				),
+			    array (
+			        'url' => 'admin_settings.php?page=integritycheck',
+			        'label' => $lng['admin']['integritycheck'],
+			        'required_resources' => 'change_serversettings',
+			    ),
 				array (
 					'url' => 'admin_message.php?page=message',
 					'label' => $lng['admin']['message'],

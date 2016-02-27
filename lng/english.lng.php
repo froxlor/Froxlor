@@ -1987,3 +1987,5 @@ $lng['admin']['vhostconfig']['scheme'] = 'Will be set to <strong>http</strong> o
 $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['title'] = 'Use the standard Vhost location directives';
 $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'] = 'If deactivated, the standard Vhost location directives, such as <br>location / { ... }<br> location @rewrites { ... }<br> location ~ ^(.+?\.php)(/.*)?$ { ... }<br> are excluded from the Vhost configuration file.';
 $lng['question']['vhostsetting_reallydelete'] = 'Do you really want to delete the Vhost template?';
+
+$lng['admin']['server_templates'] = 'Templates';

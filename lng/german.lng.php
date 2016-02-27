@@ -1627,3 +1627,5 @@ $lng['admin']['vhostconfig']['scheme'] = 'Wird mit <strong>http</strong> bzw. mi
 $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['title'] = 'Standard VHost location-Direktiven verwenden';
 $lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'] = 'Wenn deaktiviert, werden Standard VHost-Direktiven wie <br>location / { ... }<br> location @rewrites { ... }<br> location ~ ^(.+?\.php)(/.*)?$ { ... }<br> nicht in die Konfigurationsdatei geschrieben.';
 $lng['question']['vhostsetting_reallydelete'] = 'Wollen Sie diese VHost-Vorlage wirklich löschen?';
+
+$lng['admin']['server_templates'] = 'Vorlagen';
