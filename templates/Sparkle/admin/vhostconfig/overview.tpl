@@ -19,8 +19,9 @@ $header
 					<tr>
 						<th>{$lng['admin']['phpsettings']['description']}</th>
 						<th>{$lng['admin']['phpsettings']['activedomains']}</th>
+						<th>{$lng['admin']['webserver']}</th>
 						<th>{$lng['panel']['options']}</th>
-                                        </tr>
+					</tr>
 				</thead>
 				<tbody>
 					$tablecontent

@@ -29,6 +29,11 @@ return array(
 						'type' => 'text',
 						'maxlength' => 50
 					),
+					'webserver' => array(
+						'label' => $lng['admin']['webserver'],
+						'type' => 'select',
+						'select_var' => $webserver_options
+					),
 					'vhostsettings' => array(
 						'style' => 'align-top',
 						'label' => $lng['admin']['vhostsettings']['vhostsettings'],

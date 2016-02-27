@@ -3124,3 +3124,15 @@ if (isFroxlorVersion('0.9.35-dev5')) {
 
 	updateToVersion('0.9.35-dev6');
 }
+
+if (isFroxlorVersion('0.9.35-dev6')) {
+
+	showUpdateStep("Updating from 0.9.35-dev6 to 0.9.35-dev7", false);
+
+	showUpdateStep("Adding a new field to the panel_vhostconfigs table");
+	$webserver = Settings::Get('system.webserver');
+	Database::query("ALTER TABLE `" . TABLE_PANEL_VHOSTCONFIGS ."` ADD `webserver` VARCHAR(255) NOT NULL DEFAULT '" . $webserver . "' AFTER `vhostsettings`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.35-dev7');
+}

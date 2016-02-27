@@ -556,7 +556,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.35-dev6');
+	('panel', 'version', '0.9.35-dev7');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -858,5 +858,6 @@ CREATE TABLE IF NOT EXISTS `panel_vhostconfigs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `description` varchar(50) NOT NULL,
   `vhostsettings` text NOT NULL,
+  `webserver` varchar(255) NOT NULL default '',
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
