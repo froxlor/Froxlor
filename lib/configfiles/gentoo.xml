@@ -139,7 +139,7 @@ server.errorlog      = var.logdir  + "/error.log"
 
 server.indexfiles    = ("index.php", "index.html",
 						"index.htm", "default.htm")
-						
+
 server.name			 = "<SERVERNAME>"
 server.port          = 80
 server.bind          = "<SERVERIP>"
@@ -351,27 +351,27 @@ exit "$RETVAL"
 					<install><![CDATA[emerge net-dns/bind]]></install>
 					<file name="/etc/bind/default.zone">
 						<content><![CDATA[
-$TTL 1W 
-@ IN SOA ns root ( 
-	2015020101 ; serial 
-	8H ; refresh 
-	2H ; retry 
-	1W ; expiry 
-	11h) ; minimum 
+$TTL 1W
+@ IN SOA ns root (
+	2015020101 ; serial
+	8H ; refresh
+	2H ; retry
+	1W ; expiry
+	11h) ; minimum
 
-	IN		NS		ns 
-	IN		MX		10 mail 
+	IN		NS		ns
+	IN		MX		10 mail
 
-	IN		A		<SERVERIP> 
-	IN		MX		10 mail 
+	IN		A		<SERVERIP>
+	IN		MX		10 mail
 
 *	IN		A		<SERVERIP>
-	IN		MX		10 mail 
+	IN		MX		10 mail
 
-ns	IN		A		<SERVERIP> 
+ns	IN		A		<SERVERIP>
 
 mail	IN		A	<SERVERIP>
-		IN		MX	10 mail 
+		IN		MX	10 mail
 ]]>
 						</content>
 					</file>
@@ -1091,9 +1091,9 @@ smtpd_recipient_restrictions = permit_mynetworks,
 	reject_non_fqdn_recipient
 smtpd_sender_restrictions = permit_mynetworks,
 	reject_sender_login_mismatch,
-	permit_sasl_authenticated, 
-	reject_unknown_hostname, 
-	reject_unknown_recipient_domain, 
+	permit_sasl_authenticated,
+	reject_unknown_hostname,
+	reject_unknown_recipient_domain,
 	reject_unknown_sender_domain
 smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
@@ -1392,9 +1392,9 @@ smtpd_recipient_restrictions = permit_mynetworks,
 	reject_non_fqdn_recipient
 smtpd_sender_restrictions = permit_mynetworks,
 	reject_sender_login_mismatch,
-	permit_sasl_authenticated, 
-	reject_unknown_hostname, 
-	reject_unknown_recipient_domain, 
+	permit_sasl_authenticated,
+	reject_unknown_hostname,
+	reject_unknown_recipient_domain,
 	reject_unknown_sender_domain
 smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
@@ -1489,7 +1489,7 @@ mail_debug = no
 protocols = imap pop3 sieve
 
 ### SSL Settings
-### After you obtained an SSL-certificate enable ssl here and 
+### After you obtained an SSL-certificate enable ssl here and
 ### set disable_plaintext_auth to yes (see above)
 ssl = no
 #ssl_cert = </etc/ssl/server/<SERVERNAME>.pem
@@ -1502,7 +1502,7 @@ passdb {
 
 plugin {
 	quota = maildir:User Quota
-	
+
 	# Sieve-Configuration
 	sieve = ~/sieve/.dovecot.sieve
 	sieve_dir = ~/sieve
@@ -1541,7 +1541,7 @@ userdb {
 
 protocol imap {
 	mail_plugins = quota imap_quota
-	
+
 	# IMAP logout format string:
 	#  %i - total number of bytes read from client
 	#  %o - total number of bytes sent to client
@@ -1551,7 +1551,7 @@ protocol imap {
 protocol pop3 {
 	mail_plugins = quota
 	pop3_uidl_format = UID%u-%v
-	
+
 	# POP3 logout format string:
 	# %i - total number of bytes read from client
 	# %o - total number of bytes sent to client
@@ -1696,7 +1696,7 @@ protocol sieve {
 #
 # location = [<type>:]path[;<option>[=<value>][;...]]
 #
-# If the type prefix is omitted, the script location type is 'file' and the 
+# If the type prefix is omitted, the script location type is 'file' and the
 # location is interpreted as a local filesystem path pointing to a Sieve script
 # file or directory. Refer to Pigeonhole wiki or INSTALL file for more
 # information.
@@ -1707,7 +1707,7 @@ plugin {
   # delivery. The "include" extension uses this location for retrieving
   # :personal" scripts. This is also where the  ManageSieve service will store
   # the user's scripts, if supported.
-  # 
+  #
   # Currently only the 'file:' location type supports ManageSieve operation.
   # Other location types like 'dict:' and 'ldap:' can currently only
   # be used as a read-only script source ().
@@ -1727,15 +1727,15 @@ plugin {
   #     script.
   #sieve_default = /var/lib/dovecot/sieve/default.sieve
 
-  # The name by which the default Sieve script (as configured by the 
-  # sieve_default setting) is visible to the user through ManageSieve. 
-  #sieve_default_name = 
+  # The name by which the default Sieve script (as configured by the
+  # sieve_default setting) is visible to the user through ManageSieve.
+  #sieve_default_name =
 
   # Location for ":global" include scripts as used by the "include" extension.
   #sieve_global =
 
   # Location Sieve of scripts that need to be executed before the user's
-  # personal script. If a 'file' location path points to a directory, all the 
+  # personal script. If a 'file' location path points to a directory, all the
   # Sieve scripts contained therein (with the proper `.sieve' extension) are
   # executed. The order of execution within that directory is determined by the
   # file names, using a normal 8bit per-character comparison.
@@ -2552,7 +2552,7 @@ POP3_TLS_REQUIRED=0
 COURIERTLS=/usr/sbin/couriertls
 
 ##NAME: TLS_PROTOCOL:0
-# 
+#
 # TLS_PROTOCOL sets the protocol version.  The possible versions are:
 #
 # SSL2 - SSLv2
@@ -2562,7 +2562,7 @@ COURIERTLS=/usr/sbin/couriertls
 TLS_PROTOCOL=SSL3
 
 ##NAME: TLS_STARTTLS_PROTOCOL:0
-# 
+#
 # TLS_STARTTLS_PROTOCOL is used instead of TLS_PROTOCOL for the POP3 STARTTLS
 # extension, as opposed to POP3 over SSL on port 995.
 #
@@ -2756,7 +2756,7 @@ IMAP_TLS_REQUIRED=0
 COURIERTLS=/usr/sbin/couriertls
 
 ##NAME: TLS_PROTOCOL:0
-# 
+#
 # TLS_PROTOCOL sets the protocol version.  The possible versions are:
 #
 # SSL2 - SSLv2
@@ -2766,7 +2766,7 @@ COURIERTLS=/usr/sbin/couriertls
 TLS_PROTOCOL=SSL3
 
 ##NAME: TLS_STARTTLS_PROTOCOL:0
-# 
+#
 # TLS_STARTTLS_PROTOCOL is used instead of TLS_PROTOCOL for the IMAP STARTTLS
 # extension, as opposed to IMAP over SSL on port 993.
 #
@@ -2871,6 +2871,11 @@ MAILDIRPATH=.maildir
 				<daemon name="proftpd" title="ProFTPd" default="true">
 					<command><![CDATA[echo "net-ftp/proftpd mysql" >> /etc/portage/package.use]]></command>
 					<install><![CDATA[emerge net-ftp/proftpd]]></install>
+					<commands>
+						<command><![CDATA[[ -f /etc/ssl/certs/proftpd.crt ] || openssl req -new -x509 -newkey rsa:4096 -days 3650 -nodes -out /etc/ssl/certs/proftpd.crt -keyout /etc/ssl/private/proftpd.key -subj "/C=US/ST=Some-State/O=Internet Widgits Pty Ltd/CN=<SERVERNAME>"]]></command>
+						<command><![CDATA[[ -f /etc/ssl/certs/proftpd_ec.crt ] || openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp521r1) -keyout /etc/ssl/private/proftpd_ec.key -out /etc/ssl/certs/proftpd_ec.crt -days 3650 -subj "/C=US/ST=Some-State/O=Internet Widgits Pty Ltd/CN=<SERVERNAME>"]]></command>
+						<command><![CDATA[chmod 0600 /etc/ssl/private/proftpd.key /etc/ssl/private/proftpd_ec.key]]></command>
+					</commands>
 					<file name="/etc/proftpd/proftpd.conf" chown="root:0" chmod="0600"
 						backup="true">
 						<content><![CDATA[
@@ -2947,20 +2952,23 @@ SQLNamedQuery update-quota-tally UPDATE "bytes_in_used = bytes_in_used + %{0}, b
 SQLNamedQuery insert-quota-tally INSERT "%{0}, %{1}, %{2}, %{3}, %{4},%{5}, %{6}, %{7}" ftp_quotatallies
 
 # TLS settings
-#<IfModule mod_tls.c>
-#TLSEngine					on
-#TLSLog						/var/log/proftpd-tls.log
-#TLSProtocol					SSLv23
-#TLSTimeoutHandshake				120
+<IfModule mod_tls.c>
+TLSEngine on
+TLSLog /var/log/proftpd-tls.log
+TLSProtocol TLSv1 TLSv1.1 TLSv1.2
+#TLSTimeoutHandshake 120
 # Really important for WinClients and some clients
-#TLSOptions					NoCertRequest NoSessionReuseRequired
-#TLSRSACertificateFile		/etc/ssl/server/<SERVERNAME>.crt
-#TLSRSACertificateKeyFile	/etc/ssl/server/<SERVERNAME>.key
+TLSOptions NoCertRequest NoSessionReuseRequired
+TLSRSACertificateFile /etc/ssl/certs/proftpd.crt
+TLSRSACertificateKeyFile /etc/ssl/private/proftpd.key
+TLSECCertificateFile /etc/ssl/certs/proftpd_ec.crt
+TLSECCertificateKeyFile /etc/ssl/private/proftpd_ec.key
+
 # Authenticate client that want to use FTP over TLS?
-#TLSVerifyClient			off
+TLSVerifyClient off
 # Uncomment the following line to force tls login
-#TLSRequired				off
-#</IfModule>
+#TLSRequired on
+</IfModule>
 
 # LOG settings
 # Logging Formats
@@ -3207,7 +3215,7 @@ password	<SQL_UNPRIVILEGED_PASSWORD>
 					</file>
 					<file name="/etc/nsswitch.conf" backup="true">
 						<content><![CDATA[
-# Make sure that `passwd`, `group` and `shadow` have mysql in their lines 
+# Make sure that `passwd`, `group` and `shadow` have mysql in their lines
 # You should place mysql at the end, so that it is queried after the other mechanisams
 #
 passwd:         compat mysql
@@ -3292,7 +3300,7 @@ aliases:     files
 							<content><![CDATA[# remove "-D PHP5" from /etc/conf.d/apache2]]></content>
 						</command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the 
+					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
 					<command><![CDATA[php {{const.FROXLOR_INSTALL_DIR}}/scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
@@ -3330,7 +3338,7 @@ aliases:     files
 						</visibility>
 						<command><![CDATA[# remove "-D PHP5" from /etc/conf.d/apache2]]></command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the 
+					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
 					<command><![CDATA[php {{const.FROXLOR_INSTALL_DIR}}/scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
