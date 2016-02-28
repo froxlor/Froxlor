@@ -85,6 +85,8 @@ class bind {
 			WHERE `d`.`isbinddomain` = '1' ORDER BY `d`.`domain` ASC
 		");
 
+		$domains = array();
+
 		// don't use fetchall() to be able to set the first column to the domain id and use it later on to set the rows'
 		// array of direct children without having to search the outer array
 		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -107,6 +109,11 @@ class bind {
 				'froxlorhost' => '1'
 			);
 			$domains['none'] = $hostname_arr;
+		}
+
+		if (empty($domains)) {
+		    $this->logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+		    return;
 		}
 
 		// collect domain IDs of direct child domains as arrays in ['children'] column
