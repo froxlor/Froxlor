@@ -1110,7 +1110,7 @@ MYSQL_AUXOPTIONS_FIELD CONCAT("allowimap=",imap,",allowpop3=",pop3)
 # /etc/proftpd/proftpd.conf -- This is a basic ProFTPD configuration file.
 # To really apply changes reload proftpd after modifications.
 #
-
+RLimitChroot off
 # Includes DSO modules
 Include /etc/proftpd/modules.conf
 

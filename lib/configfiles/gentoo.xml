@@ -2899,7 +2899,8 @@ DisplayChdir			.message
 UseIPv6				off
 
 # Modules settings
-#DelayEngine				off
+#DelayEngine			off
+RLimitChroot 			off
 
 # Timeout settings
 TimeoutLogin			120

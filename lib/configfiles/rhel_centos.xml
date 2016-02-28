@@ -381,7 +381,6 @@ dict {
 # matches the local IP (ie. you're connecting from the same computer), the
 # connection is considered secure and plaintext authentication is allowed.
 # See also ssl=required setting.
-#disable_plaintext_auth = yes
 disable_plaintext_auth = no
 
 # Authentication cache size (e.g. 10M). 0 means it's disabled. Note that
@@ -1829,7 +1828,7 @@ iterate_query = SELECT username AS user FROM mail_users
 # This is the ProFTPD configuration file
 #
 # See: http://www.proftpd.org/docs/directives/linked/by-name.html
-
+RLimitChroot off
 # Security-Enhanced Linux (SELinux) Notes:
 #
 # In Fedora and Red Hat Enterprise Linux, ProFTPD runs confined by SELinux

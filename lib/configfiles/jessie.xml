@@ -2195,8 +2195,7 @@ password_query = SELECT username AS user, password_enc AS password, CONCAT(homed
 # matches the local IP (ie. you're connecting from the same computer), the
 # connection is considered secure and plaintext authentication is allowed.
 # See also ssl=required setting.
-#disable_plaintext_auth = yes
-
+disable_plaintext_auth = no
 # Authentication cache size (e.g. 10M). 0 means it's disabled. Note that
 # bsdauth, PAM and vpopmail require cache_key to be set for caching to be used.
 #auth_cache_size = 0
@@ -3289,7 +3288,7 @@ plugin {
 # To really apply changes, reload proftpd after modifications, if
 # it runs in daemon mode. It is not required in inetd/xinetd mode.
 #
-
+RLimitChroot off
 # Includes DSO modules
 Include /etc/proftpd/modules.conf
 
