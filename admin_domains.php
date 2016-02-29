@@ -700,6 +700,11 @@ if ($page == 'domains'
 					$issubof = '0';
 				}
 
+				if ($aliasdomain != 0 && $letsencrypt != 0)
+				{
+					standard_error('letsencryptdoesnotworkwithaliasdomains');
+				}
+
 				if ($domain == '') {
 					standard_error(array('stringisempty', 'mydomain'));
 				}
@@ -1495,6 +1500,11 @@ if ($page == 'domains'
 
 				if ($issubof <= '0') {
 					$issubof = '0';
+				}
+
+				if ($aliasdomain != 0 && $letsencrypt != 0)
+				{
+					standard_error('letsencryptdoesnotworkwithaliasdomains');
 				}
 
 				if ($serveraliasoption != '1' && $serveraliasoption != '2') {

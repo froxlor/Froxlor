@@ -342,6 +342,11 @@ if ($page == 'overview') {
 					}
 				}
 
+				if ($aliasdomain != 0 && $letsencrypt != 0)
+				{
+					standard_error('letsencryptdoesnotworkwithaliasdomains');
+				}
+
 				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
 				if ($ssl_redirect > 0 && $letsencrypt == 1) {
 					$ssl_redirect = 2;
@@ -603,6 +608,11 @@ if ($page == 'overview') {
 					}
 				} else {
 					$letsencrypt = '0';
+				}
+
+				if ($aliasdomain != 0 && $letsencrypt != 0)
+				{
+					standard_error('letsencryptdoesnotworkwithaliasdomains');
 				}
 
 				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
