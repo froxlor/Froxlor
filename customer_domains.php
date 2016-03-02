@@ -615,6 +615,11 @@ if ($page == 'overview') {
 					standard_error('letsencryptdoesnotworkwithaliasdomains');
 				}
 
+				// We can't enable let's encrypt for wildcard - domains
+				if ($iswildcarddomain == '1' && $letsencrypt == '1') {
+				    standard_error('nowildcardwithletsencrypt');
+				}
+
 				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
 				if ($ssl_redirect > 0 && $letsencrypt == 1 && $result['letsencrypt'] != $letsencrypt) {
 					$ssl_redirect = 2;
