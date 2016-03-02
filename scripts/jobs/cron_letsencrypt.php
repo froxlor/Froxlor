@@ -18,11 +18,11 @@
  *
  */
 
-$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificates");
+$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updating Let's Encrypt certificates");
 
 $certificates_stmt = Database::query("
 	SELECT domssl.`id`, domssl.`domainid`, domssl.expirationdate, domssl.`ssl_cert_file`, domssl.`ssl_key_file`, domssl.`ssl_ca_file`, domssl.`ssl_csr_file`, dom.`domain`, dom.`iswildcarddomain`, dom.`wwwserveralias`,
-	dom.`documentroot`, dom.`id` as 'domainid', dom.`ssl_redirect`, cust.`leprivatekey`, cust.`lepublickey`, cust.customerid
+	dom.`documentroot`, dom.`id` as 'domainid', dom.`ssl_redirect`, cust.`leprivatekey`, cust.`lepublickey`, cust.customerid, cust.loginname
 	FROM `".TABLE_PANEL_CUSTOMERS."` as cust, `".TABLE_PANEL_DOMAINS."` dom LEFT JOIN `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` domssl ON (dom.id = domssl.domainid)
 	WHERE dom.customerid = cust.customerid AND dom.letsencrypt = 1 AND (domssl.expirationdate < DATE_ADD(NOW(), INTERVAL 30 DAY) OR domssl.expirationdate IS NULL)
 ");
@@ -37,6 +37,9 @@ $upddom_stmt = Database::prepare("
 
 $changedetected = 0;
 while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+    // set logger to corresponding loginname for the log to appear in the users system-log
+    $cronlog = FroxlorLogger::getInstanceOf(array('loginname' => $certrow['loginname']));
 
 	// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 	if ($certrow['ssl_redirect'] != 2)
@@ -113,3 +116,7 @@ while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
 if ($changedetected) {
 	inserttask(1);
 }
+
+// reset logger
+$cronlog = FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'));
+$cronlog->logAction(CRON_ACTION, LOG_INFO, "Let's Encrypt certificates have been updated");
