@@ -520,7 +520,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'apacheitksupport', '0'),
 	('system', 'leprivatekey', 'unset'),
 	('system', 'lepublickey', 'unset'),
-	('system', 'letsencryptca', 'testing'),
+	('system', 'letsencryptca', 'production'),
 	('system', 'letsencryptcountrycode', 'DE'),
 	('system', 'letsencryptstate', 'Germany'),
 	('system', 'letsencryptchallengepath', '/var/www/froxlor'),

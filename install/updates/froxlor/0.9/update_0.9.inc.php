@@ -3053,7 +3053,7 @@ if (isFroxlorVersion('0.9.35-dev1')) {
     showUpdateStep("Updating from 0.9.35-dev1 to 0.9.35-dev2", false);
 
     showUpdateStep("Adding Let's Encrypt - settings");
-    Settings::AddNew("system.letsencryptca", 'testing');
+    Settings::AddNew("system.letsencryptca", 'production');
     Settings::AddNew("system.letsencryptcountrycode", 'DE');
     Settings::AddNew("system.letsencryptstate", 'Germany');
     lastStepStatus(0);
