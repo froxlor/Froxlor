@@ -254,6 +254,10 @@ return array (
 	            array (
 	                'url' => 'admin_vhostsettings.php?page=overview',
 	                'label' => $lng['menue']['vhostsettings']['maintitle'],
+	                'show_element' => (
+	                    Settings::Get('system.mod_fcgid') == true ||
+	                    Settings::Get('phpfpm.enabled') == true
+	                ),
 	                'required_resources' => 'change_serversettings'
 	            ),
 	            array (
