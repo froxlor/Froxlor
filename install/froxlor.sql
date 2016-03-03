@@ -240,8 +240,6 @@ CREATE TABLE `panel_domains` (
   `openbasedir_path` tinyint(1) NOT NULL default '0',
   `speciallogfile` tinyint(1) NOT NULL default '0',
   `ssl_redirect` tinyint(4) NOT NULL default '0',
-  `vhost_usedefaultlocation` tinyint(1) NOT NULL default '1',
-  `vhostsettingid` tinyint(11) NOT NULL default '0',
   `specialsettings` text,
   `deactivated` tinyint(1) NOT NULL default '0',
   `bindserial` varchar(10) NOT NULL default '2000010100',
@@ -785,7 +783,7 @@ CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
 
 
 
-INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES
+INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES 
 	('froxlor', 'user', 'false', 'hard', 0, 0, 0, 0, 0, 0);
 
 
@@ -853,10 +851,3 @@ CREATE TABLE IF NOT EXISTS `panel_domaintoip` (
   PRIMARY KEY (`id_domain`,`id_ipandports`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
-DROP TABLE IF EXISTS `panel_vhostconfigs`;
-CREATE TABLE IF NOT EXISTS `panel_vhostconfigs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` varchar(50) NOT NULL,
-  `vhostsettings` text NOT NULL,
-  PRIMARY KEY (`id`)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;

@@ -866,19 +866,6 @@ class apache extends HttpConfigBase {
 			}
 			$vhost_content .= $this->getLogfiles($domain);
 
-			// check if vhost config template is set and if so, merge it
-			if ($domain['vhostsettingid'] != 0) {
-				$vhostsettings_stmt = Database::prepare("SELECT `description`, `vhostsettings` FROM " . TABLE_PANEL_VHOSTCONFIGS . " WHERE `id` = :id LIMIT 1;");
-				$vhostconfig = Database::pexecute_first($vhostsettings_stmt, array('id' => $domain['vhostsettingid']));
-
-				$vhost_content .= $this->processSpecialConfigTemplate(
-						$vhostconfig['vhostsettings'],
-						$domain,
-						$domain['ip'],
-						$domain['port'],
-						$ssl_vhost) . "\n";
-			}
-
 			if ($domain['specialsettings'] != '') {
 				$vhost_content .= $this->processSpecialConfigTemplate(
 						$domain['specialsettings'],
