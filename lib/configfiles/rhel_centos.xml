@@ -180,7 +180,7 @@ query = SELECT gid FROM mail_users WHERE email = '%s'
 mydomain = <SERVERNAME>
 
 # should be different from $mydomain eg. "mail.$mydomain"
-myhostname = mail.$mydomain
+myhostname = $mydomain
 
 mydestination = $myhostname,
 	$mydomain,
