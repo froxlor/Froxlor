@@ -961,7 +961,7 @@ data_directory = /var/lib/postfix
 # for the case of a subdomain, $mydomain *must* be equal to $myhostname,
 # otherwise you cannot use the main domain for virtual transport.
 # also check the note about $mydomain below.
-myhostname = mail.$mydomain
+myhostname = $mydomain
 #myhostname = virtual.domain.tld
 
 # The mydomain parameter specifies the local internet domain name.
