@@ -545,7 +545,7 @@ root:               root@<SERVERNAME>
 mydomain = <SERVERNAME>
 
 # should be different from $mydomain eg. "mail.$mydomain"
-myhostname = mail.$mydomain
+myhostname = $mydomain
 
 mydestination = $myhostname,
 	$mydomain,
