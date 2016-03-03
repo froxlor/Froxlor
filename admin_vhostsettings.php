@@ -28,17 +28,17 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == 'overview') {
-	$supported_webservers = [ 'apache2' => 'Apache 2', 'lighttpd' => 'ligHTTPd', 'nginx' => 'Nginx' ];
-
 	if ($action == '') {
 		$tablecontent = '';
 		$count = 0;
 		$result = Database::query("SELECT * FROM `" . TABLE_PANEL_VHOSTCONFIGS . "` ORDER BY description ASC");
 
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+			$domainresult = false;
 			$query_params = array('id' => $row['id']);
 
-			$query = "SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
+			$query = "SELECT * FROM `".TABLE_PANEL_DOMAINS."`
 					WHERE `vhostsettingid` = :id
 					AND `parentdomainid` = '0'";
 
@@ -76,72 +76,90 @@ if ($page == 'overview') {
 				$domains = $lng['admin']['phpsettings']['notused'];
 			}
 
-			$webserver = str_replace(array_keys($supported_webservers), array_values($supported_webservers), $row['webserver']);
+			// check whether this is our default config
+			if ((Settings::Get('system.mod_fcgid') == '1'
+					&& Settings::Get('system.mod_fcgid_defaultini') == $row['id'])
+				|| (Settings::Get('phpfpm.enabled') == '1'
+					&& Settings::Get('phpfpm.defaultini') == $row['id'])
+			) {
+				$row['description'] = '<b>'.$row['description'].'</b>';
+			}
 
 			$count++;
 			eval("\$tablecontent.=\"" . getTemplate("vhostconfig/overview_overview") . "\";");
 		}
 
 		eval("echo \"" . getTemplate("vhostconfig/overview") . "\";");
+	}
 
-	} else if ($action == 'add') {
+	if ($action == 'add') {
 
-		if ((int)$userinfo['change_serversettings'] != 1) {
-			standard_error('nopermissionsorinvalidid');
-		}
+		if ((int)$userinfo['change_serversettings'] == 1) {
 
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$description = validate($_POST['description'], 'description');
-			$vhostsettings = validate(trim(str_replace("\r\n", "\n", $_POST['vhostsettings'])), 'vhostsettings', '/^[^\0]*$/');
-			$webserver = validate($_POST['webserver'], 'webserver', '/^(' . implode("|", array_keys($supported_webservers)) . ')$/');
+			if (isset($_POST['send'])
+				&& $_POST['send'] == 'send'
+			) {
+				$description = validate($_POST['description'], 'description');
+				$vhostsettings = validate(trim(str_replace("\r\n", "\n", $_POST['vhostsettings'])), 'vhostsettings', '/^[^\0]*$/');
 
-			if (strlen($description) == 0 || strlen($description) > 50) {
-				standard_error('descriptioninvalid');
+				if (strlen($description) == 0
+					|| strlen($description) > 50
+				) {
+					standard_error('descriptioninvalid');
+				}
+
+				$ins_stmt = Database::prepare("
+					INSERT INTO `" . TABLE_PANEL_VHOSTCONFIGS . "` SET
+						`description` = :desc,
+						`vhostsettings` = :vhostsettings"
+				);
+				$ins_data = array(
+					'desc' => $description,
+					'vhostsettings' => $vhostsettings
+				);
+				Database::pexecute($ins_stmt, $ins_data);
+
+				inserttask('1');
+				$log->logAction(ADM_ACTION, LOG_INFO, "vhost config setting with description '" . $description . "' has been created by '" . $userinfo['loginname'] . "'");
+				redirectTo($filename, array('page' => $page, 's' => $s));
+
+			} else {
+
+				$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_VHOSTCONFIGS . "` WHERE `id` = 1");
+				$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
+				$vhostconfig_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/vhostconfig/formfield.vhostconfig_add.php';
+				$vhostconfig_add_form = htmlform::genHTMLForm($vhostconfig_add_data);
+
+				$title = $vhostconfig_add_data['vhostconfig_add']['title'];
+				$image = $vhostconfig_add_data['vhostconfig_add']['image'];
+
+				eval("echo \"" . getTemplate("vhostconfig/overview_add") . "\";");
 			}
-
-			$ins_stmt = Database::prepare("
-				INSERT INTO `" . TABLE_PANEL_VHOSTCONFIGS . "` SET
-					`description` = :description,
-					`vhostsettings` = :vhostsettings,
-					`webserver` = :webserver
-			");
-			$ins_data = array('description' => $description, 'vhostsettings' => $vhostsettings, 'webserver' => $webserver);
-			Database::pexecute($ins_stmt, $ins_data);
-
-			inserttask('1');
-			$log->logAction(ADM_ACTION, LOG_INFO, "vhost config setting with description '" . $description . "' has been created by '" . $userinfo['loginname'] . "'");
-			redirectTo($filename, array('page' => $page, 's' => $s));
 
 		} else {
-			$webserver_options = '';
-			while (list($webserver, $webserver_friendlyName) = each($supported_webservers)) {
-				$webserver_options .= makeoption($webserver_friendlyName, $webserver, Settings::Get('system.webserver'), true);
-			}
-
-			$vhostconfig_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/vhostconfig/formfield.vhostconfig_add.php';
-			$vhostconfig_add_form = htmlform::genHTMLForm($vhostconfig_add_data);
-
-			$title = $vhostconfig_add_data['vhostconfig_add']['title'];
-			$image = $vhostconfig_add_data['vhostconfig_add']['image'];
-
-			eval("echo \"" . getTemplate("vhostconfig/overview_add") . "\";");
+			standard_error('nopermissionsorinvalidid');
 		}
-	} else if ($action == 'delete') {
+	}
+
+	if ($action == 'delete') {
 
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_VHOSTCONFIGS . "` WHERE `id` = :id"
 		);
 		$result = Database::pexecute_first($result_stmt, array('id' => $id));
 
-		if ($result['id'] != 0 && $result['id'] == $id && (int)$userinfo['change_serversettings'] == 1) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				// Remove a reference to this template from all domains using it
-				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
-					`vhostsettingid` = 0 WHERE `vhostsettingid` = :id"
-				);
-				Database::pexecute($upd_stmt, array('id' => $id));
+		if ($result['id'] != 0
+			&& $result['id'] == $id
+			&& (int)$userinfo['change_serversettings'] == 1
+		) {
 
-				$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_VHOSTCONFIGS . "` WHERE `id` = :id");
+			if (isset($_POST['send'])
+				&& $_POST['send'] == 'send'
+			) {
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_PANEL_VHOSTCONFIGS . "` WHERE `id` = :id"
+				);
 				Database::pexecute($del_stmt, array('id' => $id));
 
 				inserttask('1');
@@ -154,31 +172,43 @@ if ($page == 'overview') {
 		} else {
 			standard_error('nopermissionsorinvalidid');
 		}
-	} else if ($action == 'edit') {
+	}
+
+	if ($action == 'edit') {
 
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_VHOSTCONFIGS . "` WHERE `id` = :id"
 		);
 		$result = Database::pexecute_first($result_stmt, array('id' => $id));
 
-		if ($result['id'] != 0 && $result['id'] == $id && (int)$userinfo['change_serversettings'] == 1) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if ($result['id'] != 0
+			&& $result['id'] == $id
+			&& (int)$userinfo['change_serversettings'] == 1
+		) {
+
+			if (isset($_POST['send'])
+				&& $_POST['send'] == 'send'
+			) {
 				$description = validate($_POST['description'], 'description');
 				$vhostsettings = validate(trim(str_replace("\r\n", "\n", $_POST['vhostsettings'])), 'vhostsettings', '/^[^\0]*$/');
-				$webserver = validate($_POST['webserver'], 'webserver', '/^(' . implode("|", array_keys($supported_webservers)) . ')$/');
 
-				if (strlen($description) == 0 || strlen($description) > 50) {
+				if (strlen($description) == 0
+					|| strlen($description) > 50
+				) {
 					standard_error('descriptioninvalid');
 				}
 
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_VHOSTCONFIGS . "` SET
-						`description` = :description,
-						`vhostsettings` = :vhostsettings,
-						`webserver` = :webserver
+						`description` = :desc,
+						`vhostsettings` = :vhostsettings
 					WHERE `id` = :id"
 				);
-				$upd_data = array('description' => $description, 'vhostsettings' => $vhostsettings, 'webserver' => $webserver, 'id' => $id);
+				$upd_data = array(
+						'desc' => $description,
+						'vhostsettings' => $vhostsettings,
+						'id' => $id
+				);
 				Database::pexecute($upd_stmt, $upd_data);
 
 				inserttask('1');
@@ -186,10 +216,6 @@ if ($page == 'overview') {
 				redirectTo($filename, array('page' => $page, 's' => $s));
 
 			} else {
-				$webserver_options = '';
-				while (list($webserver, $webserver_friendlyName) = each($supported_webservers)) {
-					$webserver_options .= makeoption($webserver_friendlyName, $webserver, $result['webserver'], true);
-				}
 
 				$vhostconfig_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/vhostconfig/formfield.vhostconfig_edit.php';
 				$vhostconfig_edit_form = htmlform::genHTMLForm($vhostconfig_edit_data);
@@ -199,6 +225,7 @@ if ($page == 'overview') {
 
 				eval("echo \"" . getTemplate("vhostconfig/overview_edit") . "\";");
 			}
+
 		} else {
 			standard_error('nopermissionsorinvalidid');
 		}
