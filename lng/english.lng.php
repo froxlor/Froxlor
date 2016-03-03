@@ -1971,22 +1971,4 @@ $lng['domains']['termination_date'] = 'Date of termination';
 $lng['domains']['termination_date_overview'] = 'canceled until ';
 
 $lng['panel']['set'] = 'Apply';
-
-// Added for Vhost templates
-$lng['menue']['vhostsettings']['maintitle'] = 'VHost Configurations';
-$lng['admin']['vhostsettings']['title'] = 'VHost Configuration';
-$lng['admin']['vhostsettings']['addnew'] = 'Add new configuration';
-$lng['admin']['vhostsettings']['addsettings'] = 'Create a VHost configuration';
-$lng['admin']['vhostsettings']['editsettings'] = 'Edit a VHost configuration';
-$lng['admin']['vhostsettings']['vhostsettings'] = 'Predefined VHost configuration';
-$lng['admin']['vhostsettings']['novhostsettings'] = 'No predefined VHost configuration';
-$lng['admin']['vhostconfig']['socket_dir'] = 'Will be replaced with the corresponding Unix socket path, e.g. /var/run/domain-php-fpm.socket.';
-$lng['admin']['vhostconfig']['docroot'] = 'Will be replaced with the DocumentRoot.';
-$lng['admin']['vhostconfig']['ip'] = 'Will be replaced with the IP address of the Vhost.';
-$lng['admin']['vhostconfig']['port'] = 'Will be replaced with the port number of the Vhost.';
-$lng['admin']['vhostconfig']['scheme'] = 'Will be set to <strong>http</strong> or <strong>https</strong> in case SSL / TLS is activated for the Vhost.';
-$lng['admin']['vhostconfig']['vhost_usedefaultlocation']['title'] = 'Use the standard Vhost location directives';
-$lng['admin']['vhostconfig']['vhost_usedefaultlocation']['desc'] = 'If deactivated, the standard Vhost location directives, such as <br>location / { ... }<br> location @rewrites { ... }<br> location ~ ^(.+?\.php)(/.*)?$ { ... }<br> are excluded from the Vhost configuration file.';
-$lng['question']['vhostsetting_reallydelete'] = 'Do you really want to delete the Vhost template?';
-
 $lng['admin']['server_templates'] = 'Templates';
