@@ -30,11 +30,6 @@ return array(
 						'maxlength' => 50,
 						'value' => $result['description']
 					),
-					'webserver' => array(
-						'label' => $lng['admin']['webserver'],
-						'type' => 'select',
-						'select_var' => $webserver_options
-					),
 					'vhostsettings' => array(
 						'style' => 'align-top',
 						'label' => $lng['admin']['vhostsettings']['vhostsettings'],

@@ -858,6 +858,5 @@ CREATE TABLE IF NOT EXISTS `panel_vhostconfigs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `description` varchar(50) NOT NULL,
   `vhostsettings` text NOT NULL,
-  `webserver` varchar(255) NOT NULL default '',
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;

@@ -1017,8 +1017,7 @@ if ($page == 'domains'
 
 				// vhost configs
 				$vhostconfigs = '';
-				$configsvhost = Database::prepare("SELECT * FROM `" . TABLE_PANEL_VHOSTCONFIGS . "` WHERE `webserver` = :webserver ORDER BY description ASC");
-				Database::pexecute($configsvhost, array('webserver' => Settings::Get('system.webserver')));
+				$configsvhost = Database::query("SELECT * FROM `" . TABLE_PANEL_VHOSTCONFIGS . "` ORDER BY description ASC");
 
 				$vhostconfigs.= makeoption($lng['admin']['vhostsettings']['novhostsettings'], 0);
 				while ($row = $configsvhost->fetch(PDO::FETCH_ASSOC)) {
@@ -2011,9 +2010,7 @@ if ($page == 'domains'
 
 				// vhost configs
 				$vhostconfigs = '';
-				$vhostconfigs_result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_VHOSTCONFIGS . "` WHERE `webserver` = :webserver ORDER BY description ASC");
-				Database::pexecute($vhostconfigs_result_stmt, array('webserver' => Settings::Get('system.webserver')));
-
+				$vhostconfigs_result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_VHOSTCONFIGS . "` ORDER BY description ASC");
 				$vhostconfigs .= makeoption($lng['admin']['vhostsettings']['novhostsettings'], 0);
 				while ($vhostconfig_row = $vhostconfigs_result_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$vhostconfigs .= makeoption($vhostconfig_row['description'], $vhostconfig_row['id'], $result['vhostsettingid'], true, true);
