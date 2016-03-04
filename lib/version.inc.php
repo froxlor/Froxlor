@@ -16,7 +16,7 @@
  */
 
 // Main version variable
-$version = '0.9.35-rc1';
+$version = '0.9.35-rc2';
 
 // Database version (unused, old stuff from SysCP)
 $dbversion = '2';
