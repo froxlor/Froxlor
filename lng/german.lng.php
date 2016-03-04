@@ -1487,7 +1487,9 @@ $lng['admin']['templates']['SERVER_HOSTNAME'] = 'Wird mit dem System-Hostname (U
 $lng['admin']['templates']['SERVER_IP'] = 'Wird mit der Standard-System-IP-Adresse ersetzt';
 $lng['admin']['templates']['SERVER_PORT'] = 'Wird mit dem Standard-Port ersetzt';
 $lng['admin']['templates']['DOMAINNAME'] = 'Wird mit der Standardsubdomain des Kunden ersetzt (kann leer sein, wenn keine erstellt werden soll)';
-$lng['admin']['show_news_feed'] = 'Zeige Newsfeed im Admin-Dashboard';
+$lng['admin']['show_news_feed']['title'] = 'Zeige Newsfeed im Admin-Dashboard';
+$lng['admin']['show_news_feed']['description'] = 'Aktiviere diese Option, um das offizielle Froxlor newsfeed auf deinem Dashboard anzuzeigen und verpasse keine wichtigen Informationen oder Release-Announcements.';
+$lng['panel']['newsfeed_disabled'] = 'Das Newsfeed ist deaktiviert. Klicke das Editier-Icon, um zu den Einstellungen zu gelangen.';
 
 // Added in Froxlfor 0.9.32
 $lng['logger']['reseller'] = "Reseller";
@@ -1529,8 +1531,9 @@ $lng['serversettings']['system_cron_allowautoupdate']['description'] = '<strong 
 $lng['error']['passwordshouldnotbeusername'] = 'Das Passwort sollte nicht mit dem Benutzernamen übereinstimmen.';
 
 // Added in Froxlor 0.9.33
-$lng['admin']['customer_show_news_feed'] = "Zeige benutzerdefinierten Newsfeed im Kunden-Dashboard";
-$lng['admin']['customer_news_feed_url'] = "RSS-Feed für den benutzerdefinierten Newsfeed";
+$lng['admin']['customer_show_news_feed'] = "Zeige Newsfeed im Kunden-Dashboard";
+$lng['admin']['customer_news_feed_url']['title'] = "Benutzerdefiniertes RSS-Feed";
+$lng['admin']['customer_news_feed_url']['description'] = "Hier kann ein eigenes RSS-Feed angegeben werden, welches den Kunden auf dem Dashboard angezeigt wird.<br /><small>Leerlassen um das offizielle Froxlor Newsfeed zu verwenden.</small>";
 $lng['serversettings']['dns_createhostnameentry'] = "Erstelle bind-Zone/Konfiguration für den System-Hostnamen";
 $lng['serversettings']['panel_password_alpha_lower']['title'] = 'Kleinbuchstaben';
 $lng['serversettings']['panel_password_alpha_lower']['description'] = 'Das Passwort muss mindestens einen Kleinbuchstaben (a-z) enthalten.';

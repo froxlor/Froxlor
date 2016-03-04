@@ -182,7 +182,7 @@ return array(
 					'settinggroup' => 'admin',
 					'varname' => 'show_news_feed',
 					'type' => 'bool',
-					'default' => true,
+					'default' => false,
 					'save_method' => 'storeSettingField',
 					),
 				'customer_show_news_feed' => array(
@@ -190,7 +190,7 @@ return array(
 					'settinggroup' => 'customer',
 					'varname' => 'show_news_feed',
 					'type' => 'bool',
-					'default' => true,
+					'default' => false,
 					'save_method' => 'storeSettingField',
 					),
 				'customer_news_feed_url' => array(
