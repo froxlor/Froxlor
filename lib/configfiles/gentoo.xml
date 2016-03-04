@@ -1061,11 +1061,11 @@ program_directory = /usr/libexec/postfix
 sendmail_path = /usr/sbin/sendmail
 
 ## General Postfix configuration
-# should be the default domain from your provider eg. "server100.provider.tld"
+# FQDN from Froxlor
 mydomain = <SERVERNAME>
 
-# should be different from $mydomain eg. "mail.$mydomain"
-myhostname = mail.$mydomain
+# set myhostname to $mydomain because Froxlor alrady uses a FQDN
+myhostname = $mydomain
 
 mydestination = $myhostname,
 	$mydomain,
