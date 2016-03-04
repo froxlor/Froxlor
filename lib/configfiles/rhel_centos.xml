@@ -176,11 +176,11 @@ query = SELECT gid FROM mail_users WHERE email = '%s'
 						backup="true">
 						<content><![CDATA[
 ## General Postfix configuration
-
+# FQDN from Froxlor
 mydomain = <SERVERNAME>
 
-# should be different from $mydomain eg. "mail.$mydomain"
-myhostname = mail.$mydomain
+# set myhostname to $mydomain because Froxlor alrady uses a FQDN
+myhostname = $mydomain
 
 mydestination = $myhostname,
 	$mydomain,

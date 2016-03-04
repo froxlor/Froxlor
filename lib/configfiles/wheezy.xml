@@ -950,28 +950,11 @@ data_directory = /var/lib/postfix
 #default_privs = nobody
 
 # INTERNET HOST AND DOMAIN NAMES
-#
-# The myhostname parameter specifies the internet hostname of this
-# mail system. The default is to use the fully-qualified domain name
-# from gethostname(). $myhostname is used as a default value for many
-# other configuration parameters.
-#
-# Froxlor Note: $myhostname can and should be the same as $mydomain as long as
-# you don't intend to send mail to it (it will be considered local, not virtual)
-# for the case of a subdomain, $mydomain *must* be equal to $myhostname,
-# otherwise you cannot use the main domain for virtual transport.
-# also check the note about $mydomain below.
-myhostname = mail.$mydomain
-#myhostname = virtual.domain.tld
-
-# The mydomain parameter specifies the local internet domain name.
-# The default is to use $myhostname minus the first component.
-# $mydomain is used as a default value for many other configuration
-# parameters.
-#
-# Froxlor Note: We are using a default here but that may or may not make sense,
-# depending on your dns configuration, please check yourself.
+# FQDN from Froxlor
 mydomain = <SERVERNAME>
+
+# set myhostname to $mydomain because Froxlor alrady uses a FQDN
+myhostname = $mydomain
 
 # SENDING MAIL
 #
