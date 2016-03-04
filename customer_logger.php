@@ -34,7 +34,8 @@ if ($page == 'log'
 			SELECT * FROM `' . TABLE_PANEL_LOG . '` WHERE `user` = :loginname ' . $paging->getSqlWhere(true) . ' ' . $paging->getSqlOrderBy() . ' ' . $paging->getSqlLimit()
 		);
 		Database::pexecute($result_stmt, array("loginname" => $userinfo['loginname']));
-		$paging->setEntries(Database::num_rows());
+		$logs_count = Database::num_rows();
+		$paging->setEntries($logs_count);
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
@@ -105,6 +106,7 @@ if ($page == 'log'
 					$count++;
 					$_action = $action;
 				}
+				$i++;
 			}
 			$i++;
 		}
