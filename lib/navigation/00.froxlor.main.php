@@ -248,15 +248,6 @@ return array (
 			    ),
 			),
 		),
-	    'templates' => array (
-            'label' => $lng['admin']['server_templates'],
-	        'elements' => array (
-	            array (
-	                'url' => 'admin_templates.php?page=email',
-	                'label' => $lng['admin']['templates']['email'],
-	            ),
-	        )
-	    ),
 	    'server_php' => array (
 	        'label' => $lng['admin']['server_php'],
 	        'required_resources' => 'change_serversettings',
@@ -299,6 +290,10 @@ return array (
 			        'url' => 'admin_settings.php?page=integritycheck',
 			        'label' => $lng['admin']['integritycheck'],
 			        'required_resources' => 'change_serversettings',
+			    ),
+			    array (
+			        'url' => 'admin_templates.php?page=email',
+			        'label' => $lng['admin']['templates']['email'],
 			    ),
 				array (
 					'url' => 'admin_message.php?page=message',

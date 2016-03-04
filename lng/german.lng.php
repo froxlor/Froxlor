@@ -1166,7 +1166,7 @@ $lng['serversettings']['ftpserver']['desc'] = 'Wenn pureftpd ausgewählt ist, we
 $lng['mails']['new_ftpaccount_by_customer']['subject'] = 'Neuer FTP-Benutzer erstellt';
 $lng['mails']['new_ftpaccount_by_customer']['mailbody'] = "Hallo {CUST_NAME},\n\ndu hast gerade einen neuen FTP-Benutzer angelegt. Hier die angegebenen Informationen:\n\nBenutzername: {USR_NAME}\nPasswort: {USR_PASS}\nPfad: {USR_PATH}\n\nVielen Dank, Ihr Administrator";
 $lng['domains']['redirectifpathisurl'] = 'Redirect-Code (Standard: leer)';
-$lng['domains']['redirectifpathisurlinfo'] = 'Der Redirect-Code kann gewählt werden, wenn der eingegebene Pfad eine URL ist';
+$lng['domains']['redirectifpathisurlinfo'] = 'Der Redirect-Code kann gewählt werden, wenn der eingegebene Pfad eine URL ist.<br/><strong class="red">HINWEIS:</strong>Änderungen werden nur wirksam wenn der Pfad eine URL ist.';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Erlaube Kunden-Redirect';
 $lng['serversettings']['customredirect_enabled']['description'] = 'Erlaubt es Kunden den HTTP-Status Code für einen Redirect zu wählen';
 $lng['serversettings']['customredirect_default']['title'] = 'Standard-Redirect';
@@ -1586,7 +1586,7 @@ $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (Standard: 022)';
 $lng['admin']['letsencrypt']['title'] = 'Benutze Let\'s Encrypt';
 $lng['admin']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><strong class="red">ACHTUNG:</strong>Wenn Wildcards aktiviert sind, wird diese Option automatisch deaktiviert. Dieses Feature befindet sich noch im Test.';
 $lng['customer']['letsencrypt']['title'] = 'Benutze Let\'s Encrypt';
-$lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><string class="red">ACHTUNG:</strong>Dieses Feature befindet sich noch im Test.';
+$lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><strong class="red">ACHTUNG:</strong>Dieses Feature befindet sich noch im Test.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Die Nutzung von Let\'s Encrypt ist nur möglich, wenn die Domain mindestens eine IP/Port - Kombination mit aktiviertem SSL zugewiesen hat.';
 $lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt kann (noch) nicht mit Wildcard-Domains umgehen. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
 $lng['error']['letsencryptdoesnotworkwithaliasdomains'] = "Die Nutzung von Let's Encrypt ist mit AliasDomains derzeit nicht möglich. Bitte Let's Encrypt oder AliasDomain deaktivieren";
@@ -1611,4 +1611,3 @@ $lng['domains']['termination_date'] = 'K&uuml;ndigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gek&uuml;ndigt zum ';
 
 $lng['panel']['set'] = 'Setzen';
-$lng['admin']['server_templates'] = 'Vorlagen';
