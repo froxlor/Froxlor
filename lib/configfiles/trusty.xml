@@ -541,10 +541,10 @@ root:               root@<SERVERNAME>
 						backup="true">
 						<content><![CDATA[
 ## General Postfix configuration
-# should be the default domain from your provider eg. "server100.provider.tld"
+# FQDN from Froxlor
 mydomain = <SERVERNAME>
 
-# should be different from $mydomain eg. "mail.$mydomain"
+# set myhostname to $mydomain because Froxlor alrady uses a FQDN
 myhostname = $mydomain
 
 mydestination = $myhostname,
