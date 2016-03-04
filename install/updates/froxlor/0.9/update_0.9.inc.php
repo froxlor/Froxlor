@@ -3139,8 +3139,24 @@ if (isFroxlorVersion('0.9.35-dev6')) {
 
 if (isFroxlorVersion('0.9.35-dev7')) {
 
-    showUpdateStep("Updating from 0.9.35-dev7 to 0.9.35-rc1");
-    lastStepStatus(0);
+	showUpdateStep("Updating from 0.9.35-dev7 to 0.9.35-rc1");
+	lastStepStatus(0);
 
-    updateToVersion('0.9.35-rc1');
+	updateToVersion('0.9.35-rc1');
+}
+
+if (isFroxlorVersion('0.9.35-rc1')) {
+
+	showUpdateStep("Updating from 0.9.35-rc1 to 0.9.35-rc2");
+
+	showUpdateStep("Dropping table panel_vhostconfigs");
+	Database::query("DROP TABLE `panel_vhostconfigs`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Removing fields from table panel_domains");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS ."` DROP `vhost_usedefaultlocation`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS ."` DROP `vhostsettingid`;");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.35-rc2');
 }
