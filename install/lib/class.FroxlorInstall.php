@@ -160,6 +160,7 @@ class FroxlorInstall {
 		$this->_getPostField('admin_user', 'admin');
 		$this->_getPostField('admin_pass1');
 		$this->_getPostField('admin_pass2');
+		$this->_getPostField('activate_newsfeed', 1);
 		$posixusername = posix_getpwuid(posix_getuid());
 		$this->_getPostField('httpuser', $posixusername['name']);
 		$posixgroup = posix_getgrgid(posix_getgid());
@@ -473,6 +474,7 @@ class FroxlorInstall {
 			$this->_updateSetting($upd_stmt, '/var/run/', 'phpfpm', 'fastcgi_ipcdir');
 		}
 		
+		$this->_updateSetting($upd_stmt, $this->_data['activate_newsfeed'], 'admin', 'show_news_feed');
 		$this->_updateSetting($upd_stmt, dirname(dirname(dirname(__FILE__))), 'system', 'letsencryptchallengepath');
 
 		// insert the lastcronrun to be the installation date
@@ -746,6 +748,8 @@ class FroxlorInstall {
 		} else { $style = '';
 		}
 		$formdata .= $this->_getSectionItemString('admin_pass2', true, $style, 'password');
+		// activate newsfeed?
+		$formdata .= $this->_getSectionItemYesNo('activate_newsfeed', true);
 
 		/**
 		 * Server data
@@ -819,10 +823,10 @@ class FroxlorInstall {
 	}
 
 	/**
-	 * generate form checkbox field
+	 * generate form radio field for webserver-selection
 	 *
 	 * @param string $fieldname
-	 * @param boolean $required
+	 * @param boolean $checked
 	 * @param string $style
 	 *
 	 * @return string
@@ -835,6 +839,25 @@ class FroxlorInstall {
 		$sectionitem = "";
 		eval("\$sectionitem .= \"" . $this->_getTemplate("dataitemchk") . "\";");
 		return $sectionitem;
+	}
+
+	/**
+	 * generate form checkbox field
+	 *
+	 * @param string $fieldname
+	 * @param boolean $checked
+	 * @param string $style
+	 *
+	 * @return string
+	 */
+	private function _getSectionItemYesNo($fieldname = null, $checked = false, $style = "") {
+	    $fieldlabel = $this->_lng['install'][$fieldname];
+	    if ($checked) {
+	        $checked = 'checked="checked"';
+	    }
+	    $sectionitem = "";
+	    eval("\$sectionitem .= \"" . $this->_getTemplate("dataitemyesno") . "\";");
+	    return $sectionitem;
 	}
 
 	/**

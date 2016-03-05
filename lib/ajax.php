@@ -40,7 +40,7 @@ if ($action == "newsfeed") {
 	if (isset($_GET['role']) && $_GET['role'] == "customer") {
 		$feed = Settings::Get("customer.news_feed_url");
 	} else {
-		$feed = "http://inside.froxlor.org/news/";
+		$feed = "https://inside.froxlor.org/news/";
 	}
 
 	if (function_exists("simplexml_load_file") == false) {

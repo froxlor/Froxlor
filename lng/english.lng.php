@@ -1762,7 +1762,7 @@ $lng['admin']['templates']['SERVER_IP'] = 'Replaces the default server ip-addres
 $lng['admin']['templates']['SERVER_PORT'] = 'Replaces the default server port';
 $lng['admin']['templates']['DOMAINNAME'] = 'Replaces the customers standard-subdomain (can be empty if none is generated)';
 $lng['admin']['show_news_feed']['title'] = 'Show news-feed on admin-dashboard';
-$lng['admin']['show_news_feed']['description'] = 'Enable this to show the official froxlor newsfeed on your dashboard and never miss important information or release-announcements.';
+$lng['admin']['show_news_feed']['description'] = 'Enable this to show the official froxlor newsfeed (https://inside.froxlor.org/news/) on your dashboard and never miss important information or release-announcements.';
 $lng['panel']['newsfeed_disabled'] = 'The newsfeed is disabled. Click the edit icon to go to the settings.';
 
 // Added in Froxlor 0.9.32
@@ -1807,7 +1807,7 @@ $lng['error']['passwordshouldnotbeusername'] = 'The password should not be the s
 // Added in Froxlor 0.9.33
 $lng['admin']['customer_show_news_feed'] = "Show newsfeed on customer-dashboard";
 $lng['admin']['customer_news_feed_url']['title'] = "Use custom RSS-feed";
-$lng['admin']['customer_news_feed_url']['description'] = "Specify a custom RSS-feed that will be shown to your customers on their dashboard.<br /><small>Leave this empty to use the official froxlor newsfeed.</small>";
+$lng['admin']['customer_news_feed_url']['description'] = "Specify a custom RSS-feed that will be shown to your customers on their dashboard.<br /><small>Leave this empty to use the official froxlor newsfeed (https://inside.froxlor.org/news/).</small>";
 $lng['serversettings']['dns_createhostnameentry'] = "Create bind-zone/config for system hostname";
 $lng['serversettings']['panel_password_alpha_lower']['title'] = 'Lowercase character';
 $lng['serversettings']['panel_password_alpha_lower']['description'] = 'Password must contain at least one lowercase letter (a-z).';
