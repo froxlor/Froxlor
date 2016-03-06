@@ -268,6 +268,13 @@ if ($page == 'domains'
 				);
 				Database::pexecute($del_stmt, array('domainid' => $id));
 
+				// remove certificate from domain_ssl_settings, fixes #1596
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
+					WHERE `domainid` = :domainid"
+				);
+				Database::pexecute($del_stmt, array('domainid' => $id));
+
 				$log->logAction(ADM_ACTION, LOG_INFO, "deleted domain/subdomains (#" . $result['id'] . ")");
 				updateCounters();
 				inserttask('1');
