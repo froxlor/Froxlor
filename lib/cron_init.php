@@ -177,8 +177,7 @@ if (((int)Settings::Get('system.mod_fcgid') == 1 && (int)Settings::Get('system.m
 $cronlog = FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'));
 fwrite($debugHandler, 'Logger has been included' . "\n");
 
-if (Settings::Get('panel.version') == null
-	|| Settings::Get('panel.version') != $version
+if (hasUpdates($version) || hasDbUpdates($dbversion)
 ) {
 	if (Settings::Get('system.cron_allowautoupdate') == null
 		|| Settings::Get('system.cron_allowautoupdate') == 0
@@ -190,7 +189,7 @@ if (Settings::Get('panel.version') == null
 		unlink($lockfile);
 		$errormessage = "Version of file doesn't match version of database. Exiting...\n\n";
 		$errormessage.= "Possible reason: Froxlor update\n";
-		$errormessage.= "Information: Current version in database: ".Settings::Get('panel.version')." - version of Froxlor files: ".$version."\n";
+		$errormessage.= "Information: Current version in database: ".Settings::Get('panel.version')." (DB: ".Settings::Get('panel.db_version').") - version of Froxlor files: ".$version." (DB: ".$dbversion.")\n";
 		$errormessage.= "Solution: Please visit your Foxlor admin interface for further information.\n";
 		dieWithMail($errormessage);
 	}

@@ -18,8 +18,8 @@
 // Main version variable
 $version = '0.9.35-rc1';
 
-// Database version (unused, old stuff from SysCP)
-$dbversion = '2';
+// Database version (YYYYMMDDC where C is a daily counter)
+$dbversion = '201603070';
 
 // Distribution branding-tag (used for Debian etc.)
 $branding = '';

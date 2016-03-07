@@ -24,7 +24,7 @@
  *
  * @return null
  */
-function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
+function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $current_db_version) {
 
 	global $lng;
 
@@ -698,6 +698,14 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version) {
 	        $question .= '<span class="green">installed/loaded</span>';
 	    }
 	    $question .= '<br>';
+	    eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
+
+	if (versionInUpdate($current_db_version, '201603070')) {
+	    $has_preconfig = true;
+	    $description  = 'You can chose whether you want to enable or disable our Let\'s Encrypt implementation.<br /><br />';
+	    $question = '<strong>Do you want to enable Let\'s Encrypt? (default: yes):</strong>&nbsp;';
+	    $question.= makeyesno('enable_letsencrypt', '1', '0', '1').'<br />';
 	    eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 }

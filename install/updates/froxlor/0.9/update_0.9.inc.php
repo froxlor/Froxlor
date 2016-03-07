@@ -3144,3 +3144,20 @@ if (isFroxlorVersion('0.9.35-dev7')) {
 
     updateToVersion('0.9.35-rc1');
 }
+
+if (isFroxlorVersion('0.9.35-rc1')) {
+
+    Settings::AddNew("panel.db_version", "201603070");
+
+    showUpdateStep("Removing unused table and fields from database");
+    Database::query("DROP TABLE IF EXISTS `panel_vhostconfigs`;");
+    Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS ."` DROP `vhost_usedefaultlocation`;");
+    Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS ."` DROP `vhostsettingid`;");
+    lastStepStatus(0);
+
+    showUpdateStep("Adding new setting to enable/disable Let's Encrypt");
+    $enable_letsencrypt = isset($_POST['enable_letsencrypt']) ? (int)$_POST['enable_letsencrypt'] : "1";
+    Settings::AddNew("system.leenabled", $enable_letsencrypt);
+    lastStepStatus(0);
+
+}

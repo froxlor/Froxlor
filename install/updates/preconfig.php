@@ -21,17 +21,18 @@
  * outputs various content before the update process
  * can be continued (askes for agreement whatever is being asked)
  *
- * @param string version
+ * @param string $current_version
+ * @param int $current_db_version
  *
  * @return string
  */
-function getPreConfig($current_version)
+function getPreConfig($current_version, $current_db_version)
 {
 	$has_preconfig = false;
 	$return = '<div class="preconfig"><h3 class="red">PLEASE NOTE - Important update notifications</h3>';
 
 	include_once makeCorrectFile(dirname(__FILE__).'/preconfig/0.9/preconfig_0.9.inc.php');
-	parseAndOutputPreconfig($has_preconfig, $return, $current_version);
+	parseAndOutputPreconfig($has_preconfig, $return, $current_version, $current_db_version);
 
 	$return .= '<br /><br />'.makecheckbox('update_changesagreed', '<strong>I have read the update notifications above and I am aware of the changes made to my system.</strong>', '1', true, '0', true);
 	$return .= '</div>';

@@ -54,7 +54,7 @@ if ($page == 'overview') {
 		}
 	}
 
-	if (hasUpdates($version)) {
+	if (hasDbUpdates($dbversion)) {
 		$successful_update = false;
 		$message = '';
 
@@ -85,15 +85,26 @@ if ($page == 'overview') {
 
 		if (!$successful_update) {
 			$current_version = Settings::Get('panel.version');
+			$current_db_version = Settings::Get('panel.dbversion');
+			if (empty($current_db_version)) {
+			    $current_db_version = "0";
+			}
 			$new_version = $version;
+			$new_db_version = $dbversion;
 
 			$ui_text = $lng['update']['update_information']['part_a'];
-			$ui_text = str_replace('%curversion', $current_version, $ui_text);
-			$ui_text = str_replace('%newversion', $new_version, $ui_text);
+			if ($version != $current_version) {
+			     $ui_text = str_replace('%curversion', $current_version, $ui_text);
+			     $ui_text = str_replace('%newversion', $new_version, $ui_text);
+			} else {
+			    // show db version
+			    $ui_text = str_replace('%curversion', $current_db_version, $ui_text);
+			    $ui_text = str_replace('%newversion', $new_db_version, $ui_text);
+			}
 			$update_information = $ui_text;
 
 			include_once './install/updates/preconfig.php';
-			$preconfig = getPreConfig($current_version);
+			$preconfig = getPreConfig($current_version, $current_db_version);
 			if ($preconfig != '') {
 				$update_information .= '<br />' . $preconfig . $message;
 			}

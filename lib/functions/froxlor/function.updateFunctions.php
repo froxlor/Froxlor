@@ -188,3 +188,65 @@ function validateUpdateLogFile($filename) {
 	}
 	return '/tmp/froxlor_update.log';
 }
+
+/**
+ * Function isDatabaseVersion
+ *
+ * checks if a given database-version is the current one
+ *
+ * @param int $to_check version to check
+ *
+ * @return bool true if version to check matches, else false
+ */
+function isDatabaseVersion($to_check = null) {
+
+    if (Settings::Get('panel.frontend') == 'froxlor'
+        && Settings::Get('panel.db_version') == $to_check
+        ) {
+            return true;
+        }
+        return false;
+}
+
+/**
+ * Function hasUpdates
+ *
+ * checks if a given database-version is not equal the current one
+ *
+ * @param int $to_check version to check
+ *
+ * @return bool true if version to check does not match, else false
+ */
+function hasDbUpdates($to_check = null) {
+
+    if (Settings::Get('panel.db_version') == null
+        || Settings::Get('panel.db_version') != $to_check
+        ) {
+            return true;
+        }
+        return false;
+}
+
+/**
+ * Function updateToDbVersion
+ *
+ * updates the panel.version field
+ * to the given value (no checks here!)
+ *
+ * @param string $new_version new-version
+ *
+ * @return bool true on success, else false
+ */
+function updateToDbVersion($new_version = null) {
+
+    if ($new_version !== null && $new_version != '') {
+        $upd_stmt = Database::prepare("
+				UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = :newversion
+				WHERE `settinggroup` = 'panel' AND `varname` = 'db_version'"
+            );
+        Database::pexecute($upd_stmt, array('newversion' => $new_version));
+        Settings::Set('panel.db_version', $new_version);
+        return true;
+    }
+    return false;
+}

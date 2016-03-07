@@ -74,7 +74,7 @@ return array(
 						'type' => 'text',
 						'size' => 10
 					),
-                                        'termination_date' => array(
+					'termination_date' => array(
 						'label' => $lng['domains']['termination_date'],
 						'desc' => $lng['panel']['dateformat'],
 						'type' => 'text',
@@ -120,7 +120,7 @@ return array(
 						'value' => array()
 					),
 					'letsencrypt' => array(
-						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
+						'visible' => (Settings::Get('system.use_ssl') == '1' ? (Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? true : false) : false) : false),
 						'label' => $lng['admin']['letsencrypt']['title'],
 						'desc' => $lng['admin']['letsencrypt']['description'],
 						'type' => 'checkbox',

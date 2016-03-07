@@ -80,6 +80,15 @@ return array(
 									'default' => '',
 									'save_method' => 'storeSettingField',
 							),
+							'system_leenabled' => array(
+							        'label' => $lng['serversettings']['leenabled'],
+							        'settinggroup' => 'system',
+							        'varname' => 'leenabled',
+							        'type' => 'bool',
+							        'default' => false,
+							        'cronmodule' => 'froxlor/letsencrypt',
+							        'save_method' => 'storeSettingField'
+							),
 							'system_letsencryptca' => array(
 									'label' => $lng['serversettings']['letsencryptca'],
 									'settinggroup' => 'system',

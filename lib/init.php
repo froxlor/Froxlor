@@ -408,7 +408,7 @@ if (isset($userinfo['loginname'])
  */
 $navigation = "";
 if (AREA == 'admin' || AREA == 'customer') {
-	if (hasUpdates($version)) {
+	if (hasUpdates($version) || hasDbUpdates($dbversion)) {
 		/*
 		 * if froxlor-files have been updated
 		 * but not yet configured by the admin
