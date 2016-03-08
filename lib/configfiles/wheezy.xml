@@ -71,7 +71,7 @@
 Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
 <Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
 	Order Deny,Allow
-	Deny from All
+	Allow from All
 </Directory>
 ]]>
 						</content>
