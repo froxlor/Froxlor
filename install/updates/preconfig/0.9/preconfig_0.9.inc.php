@@ -703,7 +703,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 
 	if (versionInUpdate($current_db_version, '201603070')) {
 	    $has_preconfig = true;
-	    $description  = 'You can chose whether you want to enable or disable our Let\'s Encrypt implementation.<br /><br />';
+	    $description  = 'You can chose whether you want to enable or disable our Let\'s Encrypt implementation.<br />Please remember that you need to go through the webserver-configuration when enabled because this feature needs a special configuration.<br /><br />';
 	    $question = '<strong>Do you want to enable Let\'s Encrypt? (default: yes):</strong>&nbsp;';
 	    $question.= makeyesno('enable_letsencrypt', '1', '0', '1').'<br />';
 	    eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
