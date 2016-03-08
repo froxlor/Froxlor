@@ -36,7 +36,8 @@ $upddom_stmt = Database::prepare("
 ");
 
 $changedetected = 0;
-while ($certrow = $certificates_stmt->fetch(PDO::FETCH_ASSOC)) {
+$certrows = $certificates_stmt->fetchAll(PDO::FETCH_ASSOC);
+foreach($certrows AS $certrow) {
 
     // set logger to corresponding loginname for the log to appear in the users system-log
     $cronlog = FroxlorLogger::getInstanceOf(array('loginname' => $certrow['loginname']));
