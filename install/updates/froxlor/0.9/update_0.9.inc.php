@@ -3158,7 +3158,7 @@ if (isFroxlorVersion('0.9.35-rc1')) {
     showUpdateStep("Adding new setting to enable/disable Let's Encrypt");
     $enable_letsencrypt = isset($_POST['enable_letsencrypt']) ? (int)$_POST['enable_letsencrypt'] : "1";
     Settings::AddNew("system.leenabled", $enable_letsencrypt);
-    Database::query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `active` = '".$enable_letsencrypt."' WHERE `cronfile` = 'letsencrypt'");
+    Database::query("UPDATE `".TABLE_PANEL_CRONRUNS."` SET `isactive` = '".$enable_letsencrypt."' WHERE `cronfile` = 'letsencrypt'");
     lastStepStatus(0);
 
 }

@@ -145,8 +145,14 @@ class lescript
 
             // simple self check
             if($payload !== trim(@file_get_contents($uri))) {
+		$errmsg = json_encode(error_get_last());
+		if ($errmsg != "null") {
+			$errmsg = "; PHP error: " . $errmsg;
+		} else {
+			$errmsg = "";
+		}
                 @unlink($tokenPath);
-                throw new \RuntimeException("Please check $uri - token not available");
+                throw new \RuntimeException("Please check $uri - token not available" . $errmsg);
             }
 
             $this->log("Sending request to challenge");
