@@ -70,8 +70,8 @@
 						<content><![CDATA[
 Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
 <Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
-	Order Deny,Allow
-	Deny from All
+	Order allow,deny
+	Allow from all
 </Directory>
 ]]>
 						</content>
