@@ -65,6 +65,8 @@
 						</content>
 					</file>
 					<file name="/etc/apache2/modules.d/80_acme.conf">
+						<visibility mode="true">{{settings.system.leenabled}}
+						</visibility>
 						<content><![CDATA[
 Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
 <Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
@@ -95,6 +97,8 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 						</content>
 					</file>
 					<file name="/etc/apache2/modules.d/80_acme.conf">
+						<visibility mode="true">{{settings.system.leenabled}}
+						</visibility>
 						<content><![CDATA[
 Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
 <Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
@@ -264,6 +268,8 @@ fastcgi_param  REDIRECT_STATUS    200;
 						</content>
 					</file>
 					<file name="/etc/nginx/acme.conf">
+						<visibility mode="true">{{settings.system.leenabled}}
+						</visibility>
 						<content><![CDATA[
 location /.well-known/acme-challenge {
 	alias {{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge;

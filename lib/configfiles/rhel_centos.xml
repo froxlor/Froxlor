@@ -49,6 +49,8 @@
 					default="true">
 					<include>//service[@type='http']/general/commands</include>
 					<file name="/etc/httpd/conf.d/acme.conf">
+						<visibility mode="true">{{settings.system.leenabled}}
+						</visibility>
 						<content><![CDATA[
 Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
 <Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
