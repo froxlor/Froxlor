@@ -1969,9 +1969,7 @@ $lng['error']['autoupdate_8'] = 'The archive could not be extracted :(';
 $lng['error']['autoupdate_9'] = 'The downloaded file did not pass the integrity check. Please try to update again.';
 
 $lng['admin']['server_php'] = 'PHP';
-
-// Added for Termination-date
 $lng['domains']['termination_date'] = 'Date of termination';
 $lng['domains']['termination_date_overview'] = 'canceled until ';
-
 $lng['panel']['set'] = 'Apply';
+$lng['customer']['selectserveralias_addinfo'] = 'This option can be set when editing the domain. Its initial value is inherited from the parent-domain.';

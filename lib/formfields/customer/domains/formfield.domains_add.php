@@ -60,6 +60,12 @@ return array(
 						'type' => 'select',
 						'select_var' => isset($redirectcode) ? $redirectcode : null
 					),
+					'selectserveralias' => array(
+						'label' => $lng['admin']['selectserveralias'],
+						'desc' => $lng['admin']['selectserveralias_desc'],
+						'type' => 'label',
+						'value' => $lng['customer']['selectserveralias_addinfo']
+					),
 					'ssl_redirect' => array(
 						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
 						'label' => $lng['domains']['ssl_redirect']['title'],

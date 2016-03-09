@@ -1609,8 +1609,20 @@ $lng['serversettings']['leenabled']['title'] = "Let's Encrypt verwenden";
 $lng['serversettings']['leenabled']['description'] = "Wenn dies aktiviert ist, können Kunden durch Froxlor automatisch generierte und verlängerbare Let's Encrypt SSL-Zertifikate für Domains mit SSL IP/port nutzen.<br /><br />Bitte die Webserver-Konfiguration beachten wenn aktiviert, da dieses Feature eine spezielle Konfiguration benötigt.";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>Die SSL-Umleitung ist, während ein neues Let's Encrypt - Zertifikat erstellt wird, temporär deaktiviert. Die Umleitung wird nach der Zertifikatserstellung wieder aktiviert.";
 
-// Added for Termination-date
-$lng['domains']['termination_date'] = 'K&uuml;ndigungsdatum';
-$lng['domains']['termination_date_overview'] = 'gek&uuml;ndigt zum ';
+// Autoupdate
+$lng['admin']['autoupdate'] = 'Auto-Update';
+$lng['error']['customized_version'] = 'Es scheint als wäre die Froxlor Installation angepasst worden. Kein Support, sorry.';
+$lng['error']['autoupdate_0'] = 'Unbekannter Fehler';
+$lng['error']['autoupdate_1'] = 'PHP Einstellung allow_url_fopen ist deaktiviert. Autoupdate benötigt diese Option, bitte in der php.ini aktivieren.';
+$lng['error']['autoupdate_2'] = 'PHP Extension Zlib nicht gefunden, bitte prüfen, ob diese installiert und aktiviert ist.';
+$lng['error']['autoupdate_4'] = 'Das froxlor Archiv konnte nicht auf der Festplatte gespeichert werden :(';
+$lng['error']['autoupdate_5'] = 'version.froxlor.org gab ungültige Werte zurück :(';
+$lng['error']['autoupdate_6'] = 'Woops, keine (gültige) Version angegeben für den Download :(';
+$lng['error']['autoupdate_7'] = 'Das heruntergeladene Archiv konnte nicht gefunden werden :(';
+$lng['error']['autoupdate_8'] = 'Das Archiv konnte nicht entpackt werden :(';
+$lng['error']['autoupdate_9'] = 'Die heruntergeladene Datei konnte nicht verifiziert werden. Bitte erneut versuchen zu aktualisierenkann ich nochg,m.';
 
+$lng['domains']['termination_date'] = 'Kündigungsdatum';
+$lng['domains']['termination_date_overview'] = 'gekündigt zum ';
 $lng['panel']['set'] = 'Setzen';
+$lng['customer']['selectserveralias_addinfo'] = 'Diese Option steht beim Bearbeiten der Domain zur Verfügung. Als Initial-Wert wird die Einstellung der Hauptdomain vererbt.';
