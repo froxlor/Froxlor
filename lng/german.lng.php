@@ -1620,7 +1620,7 @@ $lng['error']['autoupdate_5'] = 'version.froxlor.org gab ungültige Werte zurüc
 $lng['error']['autoupdate_6'] = 'Woops, keine (gültige) Version angegeben für den Download :(';
 $lng['error']['autoupdate_7'] = 'Das heruntergeladene Archiv konnte nicht gefunden werden :(';
 $lng['error']['autoupdate_8'] = 'Das Archiv konnte nicht entpackt werden :(';
-$lng['error']['autoupdate_9'] = 'Die heruntergeladene Datei konnte nicht verifiziert werden. Bitte erneut versuchen zu aktualisierenkann ich nochg,m.';
+$lng['error']['autoupdate_9'] = 'Die heruntergeladene Datei konnte nicht verifiziert werden. Bitte erneut versuchen zu aktualisieren.';
 
 $lng['domains']['termination_date'] = 'Kündigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gekündigt zum ';
