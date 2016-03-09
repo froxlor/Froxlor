@@ -35,14 +35,17 @@ class bind {
 			foreach ($nameservers as $nameserver) {
 				// DNS servers might be multi homed; allow transfer from all ip
 				// addresses of the DNS server
-                $nameserver_ips = gethostbynamel(trim($nameserver));
-				if (substr($nameserver, -1, 1) != '.') {
-					$nameserver.= '.';
+				$nameserver_ips = gethostbynamel(trim($nameserver));
+				// ignore invalid responses
+				if (is_array($nameserver_ips)) {
+					if (substr($nameserver, -1, 1) != '.') {
+						$nameserver.= '.';
+					}
+					$this->nameservers[] = array(
+						'hostname' => trim($nameserver),
+						'ips' => $nameserver_ips
+					);
 				}
-				$this->nameservers[] = array(
-					'hostname' => trim($nameserver),
-                    'ips' => $nameserver_ips
-				);
 			}
 		}
 
@@ -235,9 +238,9 @@ class bind {
 			// put nameservers in allow-transfer
 			if (count($this->nameservers) > 0) {
 				foreach ($this->nameservers as $ns) {
-                    foreach($ns["ips"] as $ip) {
-                        $bindconf_file.= '		' . $ip . ";\n";
-                    }
+					foreach($ns["ips"] as $ip) {
+						$bindconf_file.= '		' . $ip . ";\n";
+					}
 				}
 			}
 			// AXFR server #100
