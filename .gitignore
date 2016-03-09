@@ -9,3 +9,4 @@ install/update.log
 .well-known
 .idea
 *.iml
+*.bak
