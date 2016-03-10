@@ -412,10 +412,11 @@ if ($page == 'overview') {
 				standard_error('notallowedtouseaccounts');
 			}
 
-			$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid`, `domainid` FROM `" . TABLE_MAIL_VIRTUAL . "`
-				WHERE `customerid`= :cid
-				AND `id`= :id"
-			);
+			$stmt = Database::prepare("
+			    SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid`, `domainid`
+			    FROM `" . TABLE_MAIL_VIRTUAL . "`
+			    WHERE `customerid`= :cid AND `id`= :id
+			");
 			$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
 
 			if (isset($result['email']) && $result['email'] != '' && $result['popaccountid'] == '0') {
@@ -595,7 +596,7 @@ if ($page == 'overview') {
 
 							if ($_mailerror) {
 								$log->logAction(USR_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-								standard_error(array('errorsendingmail', $alternative_email));
+								standard_error(array('errorsendingmail'), $alternative_email);
 							}
 
 							$mail->ClearAddresses();
@@ -604,6 +605,11 @@ if ($page == 'overview') {
 						redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 					}
 				} else {
+
+					if (checkMailAccDeletionState($result['email_full'])) {
+					   standard_error(array('mailaccistobedeleted'), $result['email_full']);
+					}
+
 					$result['email_full'] = $idna_convert->decode($result['email_full']);
 					$result = htmlentities_array($result);
 					$quota = Settings::Get('system.mail_quota');
