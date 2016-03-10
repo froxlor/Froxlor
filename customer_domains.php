@@ -86,7 +86,7 @@ if ($page == 'overview') {
 					}
 				}
 			}
-                        
+
 			$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
 			if($row['termination_date'] != "") {
 				$cdate = strtotime($row['termination_date'] . " 23:59:59");
@@ -548,7 +548,7 @@ if ($page == 'overview') {
 
 				$aliasdomain = intval($_POST['alias']);
 
-				if (isset($_POST['selectserveralias']) && $result['parentdomainid'] == '0' ) {
+				if (isset($_POST['selectserveralias'])) {
 					$iswildcarddomain = ($_POST['selectserveralias'] == '0') ? '1' : '0';
 					$wwwserveralias = ($_POST['selectserveralias'] == '1') ? '1' : '0';
 				} else {
