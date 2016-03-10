@@ -749,7 +749,7 @@ if ($page == 'domains'
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 						'specialsettings' => $specialsettings,
 						'registration_date' => $registration_date,
-                                                'termination_date' => $termination_date,
+						'termination_date' => $termination_date,
 						'issubof' => $issubof,
 						'letsencrypt' => $letsencrypt
 					);
