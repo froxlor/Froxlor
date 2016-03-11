@@ -33,19 +33,23 @@ class bind {
 		if (Settings::Get('system.nameservers') != '') {
 			$nameservers = explode(',', Settings::Get('system.nameservers'));
 			foreach ($nameservers as $nameserver) {
+				$nameserver = trim($nameserver);
 				// DNS servers might be multi homed; allow transfer from all ip
 				// addresses of the DNS server
-				$nameserver_ips = gethostbynamel(trim($nameserver));
-				// ignore invalid responses
-				if (is_array($nameserver_ips)) {
-					if (substr($nameserver, -1, 1) != '.') {
-						$nameserver.= '.';
-					}
-					$this->nameservers[] = array(
-						'hostname' => trim($nameserver),
-						'ips' => $nameserver_ips
-					);
+				$nameserver_ips = gethostbynamel($nameserver);
+				// append dot to hostname
+				if (substr($nameserver, -1, 1) != '.') {
+					$nameserver.= '.';
 				}
+				// ignore invalid responses
+				if (!is_array($nameserver_ips)) {
+					// act like gethostbyname() and return unmodified hostname on error
+					$nameserver_ips = array($nameserver);
+				}
+				$this->nameservers[] = array(
+					'hostname' => $nameserver,
+					'ips' => $nameserver_ips
+				);
 			}
 		}
 
