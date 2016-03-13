@@ -4024,7 +4024,7 @@ aliases:     files
 					<command><![CDATA[nscd --invalidate=group]]></command>
 					<file /><!-- separate the following mkdir command from the previous nscd -->
 					<command>
-						<visibility mode="notisdir" value="apache2">/etc/insserv/overrides</visibility>
+						<visibility mode="notisdir">/etc/insserv/overrides</visibility>
 						<content><![CDATA[mkdir -p /etc/insserv/overrides]]></content>
 					</command>
 					<file name="/etc/insserv/overrides/apache2" chown="root:root" chmod="0644">
