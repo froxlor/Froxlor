@@ -4022,6 +4022,72 @@ aliases:     files
 					<command><![CDATA[/etc/init.d/nscd restart]]></command>
 					<!-- clear group chache -->
 					<command><![CDATA[nscd --invalidate=group]]></command>
+					<file /><!-- separate the following mkdir command from the previous nscd -->
+					<command>
+						<visibility mode="notisdir" value="apache2">/etc/insserv/overrides</visibility>
+						<content><![CDATA[mkdir -p /etc/insserv/overrides]]></content>
+					</command>
+					<file name="/etc/insserv/overrides/apache2" chown="root:root" chmod="0644">
+						<visibility mode="equals" value="apache2">{{settings.system.webserver}}</visibility>
+						<content><![CDATA[
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          apache2
+# Required-Start:    $local_fs $remote_fs $network $syslog nscd
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/stop apache2 web server
+### END INIT INFO
+]]>
+						</content>
+					</file>
+					<file name="/etc/insserv/overrides/lighttpd" chown="root:root" chmod="0644">
+						<visibility mode="equals" value="lighttpd">{{settings.system.webserver}}</visibility>
+						<content><![CDATA[
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          lighttpd
+# Required-Start:    $local_fs $remote_fs $network $syslog nscd
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Should-Start:      fam
+# Should-Stop:       fam
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start the lighttpd web server.
+### END INIT INFO
+]]>
+						</content>
+					</file>
+					<file name="/etc/insserv/overrides/nginx" chown="root:root" chmod="0644">
+						<visibility mode="equals" value="nginx">{{settings.system.webserver}}</visibility>
+						<content><![CDATA[
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:       nginx
+# Required-Start:    $local_fs $remote_fs $network $syslog $named nscd
+# Required-Stop:     $local_fs $remote_fs $network $syslog $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the nginx web server
+### END INIT INFO
+]]>
+						</content>
+					</file>
+					<file name="/etc/insserv/overrides/nscd" chown="root:root" chmod="0644">
+						<content><![CDATA[
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          nscd
+# Required-Start:    $remote_fs $syslog mysql
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts the Name Service Cache Daemon
+### END INIT INFO
+]]>
+						</content>
+					</file>
 				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">
