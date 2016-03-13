@@ -393,7 +393,9 @@ class ConfigDaemon {
 		$return = 0;
 		switch ($attributes['mode']) {
 			case "isfile": if (!is_file($order)) { $return = -1; }; break;
+			case "notisfile": if (is_file($order)) { $return = -1; }; break;
 			case "isdir": if (!is_dir($order)) { $return = -1; }; break;
+			case "notisdir": if (is_dir($order)) { $return = -1; }; break;
 			case "false": if ($order == true) { $return = -1; }; break;
 			case "true": if ($order == false) { $return = -1; }; break;
 			case "notempty": if ($order == "") { $return = -1; }; break;
