@@ -67,16 +67,16 @@ if ($page == 'overview') {
 				|| !isset($_POST['update_preconfig'])
 			) {
 				eval("echo \"" . getTemplate('update/update_start') . "\";");
-	
+
 				include_once './install/updatesql.php';
-	
+
 				$redirect_url = 'admin_index.php?s=' . $s;
 				eval("echo \"" . getTemplate('update/update_end') . "\";");
-	
+
 				updateCounters();
 				inserttask('1');
 				@chmod('./lib/userdata.inc.php', 0440);
-				
+
 				$successful_update = true;
 			} else {
 				$message = '<br /><strong class="red">You have to agree that you have read the update notifications.</strong>';
@@ -85,7 +85,7 @@ if ($page == 'overview') {
 
 		if (!$successful_update) {
 			$current_version = Settings::Get('panel.version');
-			$current_db_version = Settings::Get('panel.dbversion');
+			$current_db_version = Settings::Get('panel.db_version');
 			if (empty($current_db_version)) {
 			    $current_db_version = "0";
 			}
