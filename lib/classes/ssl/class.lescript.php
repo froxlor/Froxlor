@@ -102,6 +102,13 @@ class lescript
                 array("resource" => "new-authz", "identifier" => array("type" => "dns", "value" => $domain))
             );
 
+            // if response is not an array but a string, it's most likely a server-error, e.g.
+            // <HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>An error occurred while processing your request.
+            // <p>Reference&#32;&#35;179&#46;d8be1402&#46;1458059103&#46;3613c4db</BODY></HTML>
+            if (!is_array($response)) {
+                throw new RuntimeException("Invalid response from LE for domain $domain. Whole response: ".$response);
+            }
+
             if (!array_key_exists('challenges', $response)) {
                 throw new RuntimeException("No challenges received for $domain. Whole response: ".json_encode($response));
             }
@@ -205,7 +212,7 @@ class lescript
         $privateDomainKey = openssl_pkey_get_private($domainkey);
 
         $this->client->getLastLinks();
-        
+
         if (empty($csrfile) || Settings::Get('system.letsencryptreuseold') == 0) {
             $csr = $this->generateCSR($privateDomainKey, $domains);
         }
