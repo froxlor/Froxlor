@@ -3162,3 +3162,12 @@ if (isFroxlorVersion('0.9.35-rc1')) {
     lastStepStatus(0);
 
 }
+
+if (isDatabaseVersion('201603070')) {
+
+	showUpdateStep("Adding new php.ini directive to php-configurations: opcache.restrict_api");
+	Database::query("UPDATE `" . TABLE_PANEL_PHPCONFIGS ."` SET `phpsettings` = CONCAT(`phpsettings`, 'opcache.restrict_api = \"{DOCUMENT_ROOT}\"\r\n');");
+	lastStepStatus(0);
+
+	updateToDbVersion('201603150');
+}

@@ -92,7 +92,7 @@ class phpinterface_fpm {
 				'suhosin.cookie.cryptua',
 				'suhosin.cookie.cryptdocroot',
 				'suhosin.executor.disable_eval',
-                'mbstring.func_overload'				
+				'mbstring.func_overload'
 			),
 			'php_admin_value' => array(
 				'cgi.redirect_status_env',
@@ -111,7 +111,9 @@ class phpinterface_fpm {
 				'sendmail_path',
 				'session.gc_divisor',
 				'session.gc_probability',
-				'variables_order'
+				'variables_order',
+				'opcache.log_verbosity_level',
+				'opcache.restrict_api'
 			),
 			'php_admin_flag' => array(
 				'allow_call_time_pass_reference',
@@ -127,7 +129,15 @@ class phpinterface_fpm {
 				'ignore_repeated_source',
 				'log_errors',
 				'register_argc_argv',
-				'report_memleaks'
+				'report_memleaks',
+				'opcache.enable',
+				'opcache.consistency_checks',
+				'opcache.dups_fix',
+				'opcache.load_comments',
+				'opcache.revalidate_path',
+				'opcache.save_comments',
+				'opcache.use_cwd',
+				'opcache.validate_timestamps'
 			)
 	);
 
@@ -267,7 +277,6 @@ class phpinterface_fpm {
 			$fpm_config.= 'php_admin_value[upload_tmp_dir] = ' . makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/') . "\n";
 
 			$admin = $this->_getAdminData($this->_domain['adminid']);
-
 			$php_ini_variables = array(
 					'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
 					'PEAR_DIR' => Settings::Get('phpfpm.peardir'),
@@ -278,7 +287,9 @@ class phpinterface_fpm {
 					'CUSTOMER' => $this->_domain['loginname'],
 					'ADMIN' => $admin['loginname'],
 					'OPEN_BASEDIR' => $openbasedir,
-					'OPEN_BASEDIR_C' => ''
+					'OPEN_BASEDIR_C' => '',
+					'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
+					'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot'])
 			);
 
 			$phpini = replace_variables($phpconfig['phpsettings'], $php_ini_variables);

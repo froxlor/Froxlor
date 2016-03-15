@@ -153,15 +153,16 @@ class phpinterface_fcgid {
 		$php_ini_variables = array(
 				'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
 				'PEAR_DIR' => Settings::Get('system.mod_fcgid_peardir'),
-				'OPEN_BASEDIR' => $openbasedir,
-				'OPEN_BASEDIR_C' => $openbasedirc,
-				'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.hpappendopenbasedir'),
 				'TMP_DIR' => $this->getTempDir(),
 				'CUSTOMER_EMAIL' => $this->_domain['email'],
 				'ADMIN_EMAIL' => $admin['email'],
 				'DOMAIN' => $this->_domain['domain'],
 				'CUSTOMER' => $this->_domain['loginname'],
-				'ADMIN' => $admin['loginname']
+				'ADMIN' => $admin['loginname'],
+				'OPEN_BASEDIR' => $openbasedir,
+				'OPEN_BASEDIR_C' => $openbasedirc,
+				'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
+				'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot'])
 		);
 
 		//insert a small header for the file

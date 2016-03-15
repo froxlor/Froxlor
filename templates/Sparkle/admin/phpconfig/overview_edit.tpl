@@ -80,6 +80,10 @@ $header
 					<td><em>{ADMIN}</em></td>
 					<td>{$lng['admin']['phpconfig']['admin']}</td>
 				</tr>
+				<tr>
+					<td><em>{DOCUMENT_ROOT}</em></td>
+					<td>{$lng['admin']['phpconfig']['docroot']}</td>
+				</tr>
 			</tbody>
 			</table>
 
