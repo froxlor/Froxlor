@@ -23,6 +23,9 @@
 		<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'edit', 'id' => $row['id']))}">
 			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" title="{$lng['panel']['edit']}" />
 		</a>
+		<if $row['letsencrypt'] == '1'>
+			<img src="templates/{$theme}/assets/img/icons/ssl_letsencrypt.png" alt="{$lng['panel']['letsencrypt']}" title="{$lng['panel']['letsencrypt']}" />
+		</if>
 		<if !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
 			<if !(isset($row['standardsubdomain']) && $row['standardsubdomain'] == $row['id'])>
 				&nbsp;<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'delete', 'id' => $row['id']))}">
