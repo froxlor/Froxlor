@@ -54,7 +54,7 @@ if ($page == 'domains'
 		$paging = new paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
 		$domains = '';
 		$result_stmt = Database::prepare("
-			SELECT `d`.*, `c`.`loginname`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain` , `ad`.`letsencrypt`
+			SELECT `d`.*, `c`.`loginname`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
