@@ -454,7 +454,8 @@ if ($page == 'overview') {
 						}
 
 						$cryptPassword = makeCryptPassword($password);
-
+                        $ssha512_salt = substr(str_replace('+','.',base64_encode(md5(mt_rand(), true))),0,16);
+>                       $password_ssha512b64 = "{SSHA512.b64}" . base64_encode(hash('sha512', $password . $ssha512_salt, true) . $ssha512_salt);
 						$email_user=substr($email_full,0,strrpos($email_full,"@"));
 						$email_domain=substr($email_full,strrpos($email_full,"@")+1);
 						$maildirname=trim(Settings::Get('system.vmail_maildirname'));
@@ -482,7 +483,7 @@ if ($page == 'overview') {
 							"imap" => $userinfo['imap'],
 							"pop3" => $userinfo['pop3']
 						);
-						if (Settings::Get('system.mailpwcleartext') == '1') { $params["password"] = $password; }
+						if (Settings::Get('system.mailpwcleartext') == '1') { $params["password"] = $password_ssha512b64; }
 						Database::pexecute($stmt, $params);
 
 						$popaccountid = Database::lastInsertId();
@@ -648,6 +649,9 @@ if ($page == 'overview') {
 
 				$log->logAction(USR_ACTION, LOG_NOTICE, "changed email password for '" . $result['email_full'] . "'");
 				$cryptPassword = makeCryptPassword($password);
+				$ssha512_salt = substr(str_replace('+','.',base64_encode(md5(mt_rand(), true))),0,16);
+                $password_ssha512b64 = "{SSHA512.b64}" . base64_encode(hash('sha512', $password . $ssha512_salt, true) . $ssha512_salt);
+
 				$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "`
 					SET " . (Settings::Get('system.mailpwcleartext') == '1' ? "`password` = :password, " : '') . "
 						`password_enc`= :password_enc
@@ -659,7 +663,7 @@ if ($page == 'overview') {
 					"cid" => $userinfo['customerid'],
 					"id" => $result['popaccountid']
 				);
-				if (Settings::Get('system.mailpwcleartext') == '1') { $params["password"] = $password; }
+				if (Settings::Get('system.mailpwcleartext') == '1') { $params["password"] = $password_ssha512b64; }
 				Database::pexecute($stmt, $params);
 
 				redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
