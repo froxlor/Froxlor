@@ -454,8 +454,8 @@ if ($page == 'overview') {
 						}
 
 						$cryptPassword = makeCryptPassword($password);
-                        $ssha512_salt = substr(str_replace('+','.',base64_encode(md5(mt_rand(), true))),0,16);
->                       $password_ssha512b64 = "{SSHA512.b64}" . base64_encode(hash('sha512', $password . $ssha512_salt, true) . $ssha512_salt);
+                                                $ssha512_salt = substr(str_replace('+','.',base64_encode(md5(mt_rand(), true))),0,16)
+                                            	$password_ssha512b64 = "{SSHA512.b64}" . base64_encode(hash('sha512', $password . $ssha512_salt, true) . $ssha512_salt);
 						$email_user=substr($email_full,0,strrpos($email_full,"@"));
 						$email_domain=substr($email_full,strrpos($email_full,"@")+1);
 						$maildirname=trim(Settings::Get('system.vmail_maildirname'));
