@@ -184,6 +184,8 @@ class Settings {
 					'value' => $value
 			);
 			Database::pexecute($ins_stmt, $ins_data);
+			// also set new value to internal array and make it available
+			self::$_data[$sstr[0]][$sstr[1]] = $value;
 			return true;
 		}
 		return false;
