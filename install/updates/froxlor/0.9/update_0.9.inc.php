@@ -3145,7 +3145,7 @@ if (isFroxlorVersion('0.9.35-dev7')) {
     updateToVersion('0.9.35-rc1');
 }
 
-if (isFroxlorVersion('0.9.35-rc1') && isDatabaseVersion('0')) {
+if (isFroxlorVersion('0.9.35-rc1') && isDatabaseVersion(null)) {
 
     Settings::AddNew("panel.db_version", "201603070");
 
