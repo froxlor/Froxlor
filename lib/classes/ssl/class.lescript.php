@@ -50,7 +50,7 @@ class lescript
     {
         // Let's see if we have the private accountkey
         $this->accountKey = $certrow['leprivatekey'];
-        if (!$this->accountKey || $this->accountKey == 'unset') {
+        if (!$this->accountKey || $this->accountKey == 'unset' || Settings::Get('system.letsencryptca') != 'production') {
 
             // generate and save new private key for account
             // ---------------------------------------------
