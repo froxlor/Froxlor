@@ -83,6 +83,7 @@ class FroxlorPlugins {
 				$this->_plugins[$plugin->getID()] = $plugin;
 			}
 		}
+		FroxlorEvent::listen(FroxlorEvent::GetServiceConfiguration, array($this, 'event_GetServiceConfiguration'));
 	}
 	
 	/**
@@ -233,6 +234,26 @@ class FroxlorPlugins {
 		return $plugin;
 	}
 	
+	
+	public function event_GetServiceConfiguration($eventdata) {
+		if (!is_array($eventdata['distribution'])) {
+			return;
+		}
+		$distribution = $eventdata['distribution'];
+		if (empty($distribution['name'])) {
+			return;
+		}
+		$dname = makeSecurePath(strtolower($distribution['name']));
+		$dcodename = makeSecurePath(strtolower($distribution['codename']));
+		foreach ($this->_plugins as $plugin) {
+			$config_dir = $this->getPluginDir($plugin->getID()).'configfiles/';
+			if (!empty($dcodename) && file_exists($config_dir.$dcodename.'.xml')) {
+				$eventdata['files'][] = $config_dir.$dcodename.'.xml';
+			} else if (file_exists($config_dir.$dname.'.xml')) {
+				$eventdata['files'][] = $config_dir.$dname.'.xml';
+			}
+		}
+	}
 	
 	/**
 	 * Selects a logger and log action based on current environment

@@ -28,6 +28,8 @@ class FroxlorEventConstants extends FroxlorEventConstantsDeprecated {
 	const ServerSettings = 'ServerSettings';
 	const RebuildConfigs = 'RebuildConfigs';
 	
+	const GetServiceConfiguration = 'GetServiceConfiguration';
+
 	const InitDone = 'InitDone';
 	
 	const CronInitDone = 'CronInitDone';

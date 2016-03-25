@@ -143,4 +143,9 @@ class ConfigService {
 		$this->_parse();
 		return $this->daemons;
 	}
+	
+	public function merge(ConfigService $cs) {
+		$this->_parse();
+		$this->daemons = array_merge($this->daemons, $cs->getDaemons());
+	}
 }

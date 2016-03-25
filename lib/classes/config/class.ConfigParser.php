@@ -161,4 +161,16 @@ class ConfigParser {
 		// Return our carefully searched for services
 		return $this->services;
 	}
+	
+	public function merge(ConfigParser $cf) {
+		$this->_parse();
+		$newservices = $cf->getServices();
+		foreach ($newservices as $key => $newservice) {
+			if (isset($this->services[$key])) {
+				$this->services[$key]->merge($newservice);
+			} else {
+				$this->services[$key] = clone $newservice;
+			}
+		}
+	}
 }
