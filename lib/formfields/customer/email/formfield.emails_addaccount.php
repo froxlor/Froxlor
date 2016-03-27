@@ -29,6 +29,16 @@ return array(
 						'type' => 'label',
 						'value' => $result['email_full']
 					),
+					'owner_lastname' => array(
+						'visible' => (Settings::Get('panel.mailacc_with_name') == '1' ? true : false),
+                                                'label'   => $lng['customer']['name'],
+                                                'type'    => 'text',
+                                        ),
+					'owner_firstname' => array(
+						'visible' => (Settings::Get('panel.mailacc_with_name') == '1' ? true : false),
+                                                'label'   => $lng['customer']['firstname'],
+                                                'type'    => 'text',
+                                        ),
 					'email_password' => array(
 						'label' => $lng['login']['password'],
 						'type' => 'password',

@@ -30,6 +30,12 @@ return array(
 						'type' => 'label',
 						'value' => $result['email_full']
 					),
+					'owner_name' => array(
+						'visible' => ($result['popaccountid'] != 0 ? true : false) && (Settings::Get('panel.mailacc_with_name') == '1' ? true : false),
+						'label' => $lng['customer']['name'],
+						'type' => 'label',
+						'value' => $result['firstname']." ".$result['lastname'].'&nbsp;[<a href="'.$filename.'?page=accounts&amp;action=changename&amp;id='.$result['id'].'&amp;s='.$s.'">'.$lng['menue']['main']['changename'].'</a>]'
+					),
 					'account_yes' => array(
 						'visible' => ($result['popaccountid'] != 0 ? true : false),
 						'label' => $lng['emails']['account'],

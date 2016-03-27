@@ -61,6 +61,14 @@ return array(
 					'string_emptyallowed' => true,
 					'save_method' => 'storeSettingField',
 					),
+				'panel_mailacc_with_name' => array(
+					'label' => $lng['serversettings']['mailacc_with_name'],
+					'settinggroup' => 'panel',
+					'varname' => 'mailacc_with_name',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
 				'panel_sendalternativemail' => array(
 					'label' => $lng['serversettings']['sendalternativemail'],
 					'settinggroup' => 'panel',
