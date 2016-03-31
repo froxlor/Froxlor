@@ -34,6 +34,10 @@ class FroxlorEventConstants extends FroxlorEventConstantsDeprecated {
 	
 	const CronInitDone = 'CronInitDone';
 	const CronForce = 'CronForce';
+	
+	const CronRunPre = 'CronRunPre';
+	const CronRunPost = 'CronRunPost';
+	
 	const CronTaskRunPre = 'CronTaskRunPre';
 	const CronTaskRunPost = 'CronTaskRunPost';
 
