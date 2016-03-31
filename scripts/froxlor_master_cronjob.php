@@ -76,8 +76,10 @@ if (count($jobs_to_run) > 0) {
 	// include all jobs we want to execute
 	foreach ($jobs_to_run as $cron) {
 		updateLastRunOfCron($cron);
+		FroxlorEvent::CronRunPre(array('cron' => $cron));
 		$cronfile = getCronFile($cron);
 		require_once $cronfile;
+		FroxlorEvent::CronRunPost(array('cron' => $cron));
 	}
 }
 
