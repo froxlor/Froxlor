@@ -61,6 +61,10 @@ class FroxlorPlugins {
 	 */
 	private function __construct() {
 		$this->_plugins_dir = FROXLOR_INSTALL_DIR. '/plugins/';
+		$plugindir = trim((string)Settings::Get('plugins.directory'));
+		if (!empty($plugindir)) {
+			$this->_plugins_dir = makeSecurePath($plugindir.'/');
+		}
 		$this->_selectLogger();
 	}
 	

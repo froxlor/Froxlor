@@ -19,6 +19,14 @@ return array(
 		'plugins' => array(
 			'title' => $lng['plugins']['plugins'],
 			'fields' => array(
+					'plugins_directory' => array(
+						'label' => $lng['plugins']['directory'],
+						'settinggroup' => 'plugins',
+						'varname' => 'directory',
+						'type' => 'string',
+						'default' => '',
+						'save_method' => 'storeSettingFieldOptional',
+					),	
 					'plugins_active' => array(
 						'label' => $lng['plugins']['active'],
 						'settinggroup' => 'plugins',
