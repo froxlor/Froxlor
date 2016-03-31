@@ -77,6 +77,10 @@ class FroxlorPlugins {
 			foreach($this->_plugins_active as $pluginname) {
 				if (!class_exists($pluginname, false)) {
 					$filename = $this->_plugins_dir."$pluginname/$pluginname.php";
+					if (!file_exists($filename)) {
+						// TODO: Tell admin plugin is missing?
+						continue;
+					}
 					require $filename;
 				}
 				$plugin = new $pluginname();
