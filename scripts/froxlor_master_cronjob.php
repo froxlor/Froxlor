@@ -20,7 +20,6 @@ define('MASTER_CRONJOB', 1);
 include_once dirname(dirname(__FILE__)) . '/lib/cron_init.php';
 
 $jobs_to_run = array();
-$lastrun_update = array();
 
 /**
  * check for --help
@@ -45,7 +44,6 @@ for ($x = 1; $x < count($argv); $x++) {
 	if (isset($argv[$x])) {
 		// --force
 		if (strtolower($argv[$x]) == '--force') {
-			$crontasks = makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/jobs/cron_tasks.php');
 			// really force re-generating of config-files by
 			// inserting task 1
 			inserttask('1');
@@ -56,8 +54,7 @@ for ($x = 1; $x < count($argv); $x++) {
 			
 			FroxlorEvent::CronForce();
 			
-			addToQueue($jobs_to_run, $crontasks);
-			$lastrun_update['tasks'] = $crontasks;
+			addToQueue($jobs_to_run, 'tasks');
 		}
 		elseif (strtolower($argv[$x]) == '--debug') {
 		    define('CRON_DEBUG_FLAG', 1);
@@ -65,9 +62,8 @@ for ($x = 1; $x < count($argv); $x++) {
 		// --[cronname]
 		elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {
 			if (strlen($argv[$x]) > 3) {
-				$cronfile = makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/jobs/cron_'.substr(strtolower($argv[$x]), 2).'.php');
-				addToQueue($jobs_to_run, $cronfile);
-				$lastrun_update[substr(strtolower($argv[$x]), 2)] = $cronfile;
+				$cronname = substr(strtolower($argv[$x]), 2);
+				addToQueue($jobs_to_run, $cronname);
 			}
 		}
 	}
@@ -79,8 +75,9 @@ $cronlog->setCronDebugFlag(defined('CRON_DEBUG_FLAG'));
 if (count($jobs_to_run) > 0) {
 	// include all jobs we want to execute
 	foreach ($jobs_to_run as $cron) {
-		updateLastRunOfCron($lastrun_update, $cron);
-		require_once $cron;
+		updateLastRunOfCron($cron);
+		$cronfile = getCronFile($cron);
+		require_once $cronfile;
 	}
 }
 
@@ -98,21 +95,22 @@ checkLastGuid();
 include_once FROXLOR_INSTALL_DIR . '/lib/cron_shutdown.php';
 
 // -- helper function
-function addToQueue(&$jobs_to_run, $cronfile = null, $checkExists = true) {
-	if ($checkExists == false || ($checkExists && file_exists($cronfile))) {
-		if (!in_array($cronfile, $jobs_to_run)) {
-			array_unshift($jobs_to_run, $cronfile);
+function getCronFile($cronname) {
+	return makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/jobs/cron_'.$cronname.'.php');
+}
+
+function addToQueue(&$jobs_to_run, $cronname) {
+	if (!in_array($cronname, $jobs_to_run)) {
+		$cronfile = getCronFile($cronname);
+		if (file_exists($cronfile)) {
+			array_unshift($jobs_to_run, $cronname);
 		}
 	}
 }
 
-function updateLastRunOfCron($update_arr, $cronfile) {
-	foreach ($update_arr as $cron => $cronf) {
-		if ($cronf == $cronfile) {
-			$upd_stmt = Database::prepare("
-				UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = UNIX_TIMESTAMP() WHERE `cronfile` = :cron;
-			");
-			Database::pexecute($upd_stmt, array('cron' => $cron));
-		}
-	}
+function updateLastRunOfCron($cronname) {
+	$upd_stmt = Database::prepare("
+		UPDATE `".TABLE_PANEL_CRONRUNS."` SET `lastrun` = UNIX_TIMESTAMP() WHERE `cronfile` = :cron;
+	");
+	Database::pexecute($upd_stmt, array('cron' => $cronname));
 }
