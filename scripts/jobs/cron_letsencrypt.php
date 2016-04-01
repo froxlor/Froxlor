@@ -54,7 +54,7 @@ foreach($certrows AS $certrow) {
 		}
 		
 		// Check for existing Cert and Let's Encrypt as issuer
-		if ($x509data && $x509data['issuer']['O'] != "Let's Encrypt") {
+		if ($x509data && $x509data['issuer']['O'] == "Let's Encrypt") {
 			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "letsencrypt using old key / SAN for " . $certrow['domain']);
 			
 			// We are interessted in the old SAN - data
