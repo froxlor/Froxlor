@@ -393,11 +393,13 @@ if ($page == 'domains'
 
 					$isbinddomain = '0';
 					$zonefile = '';
+					$dnsrecords = '';
 					if (Settings::Get('system.bind_enable') == '1') {
 						if (isset($_POST['isbinddomain'])) {
 							$isbinddomain = intval($_POST['isbinddomain']);
 						}
 						$zonefile = validate($_POST['zonefile'], 'zonefile');
+						$dnsrecords = validate($_POST['dnsrecords'], 'dnsrecords');
 					}
 
 					if (isset($_POST['dkim'])) {
@@ -435,6 +437,7 @@ if ($page == 'domains'
 					}
 					$caneditdomain = '1';
 					$zonefile = '';
+					$dnsrecords = '';
 					$dkim = '1';
 					$specialsettings = '';
 				}
@@ -737,6 +740,7 @@ if ($page == 'domains'
 						'subcanemaildomain' => $subcanemaildomain,
 						'caneditdomain' => $caneditdomain,
 						'zonefile' => $zonefile,
+						'dnsrecords' => $dnsrecords,
 						'dkim' => $dkim,
 						'speciallogfile' => $speciallogfile,
 						'selectserveralias' => $serveraliasoption,
@@ -782,6 +786,7 @@ if ($page == 'domains'
 						'documentroot' => $documentroot,
 						'aliasdomain' => ($aliasdomain != 0 ? $aliasdomain : null),
 						'zonefile' => $zonefile,
+						'dnsrecords' => $dnsrecords,
 						'dkim' => $dkim,
 						'wwwserveralias' => $wwwserveralias,
 						'iswildcarddomain' => $iswildcarddomain,
@@ -812,6 +817,7 @@ if ($page == 'domains'
 						`documentroot` = :documentroot,
 						`aliasdomain` = :aliasdomain,
 						`zonefile` = :zonefile,
+						`dnsrecords` = :dnsrecords,
 						`dkim` = :dkim,
 						`dkim_id` = '0',
 						`dkim_privkey` = '',
@@ -1222,6 +1228,7 @@ if ($page == 'domains'
 				if ($userinfo['change_serversettings'] == '1') {
 					$isbinddomain = $result['isbinddomain'];
 					$zonefile = $result['zonefile'];
+						$dnsrecords = validate(str_replace("\r\n", "\n", $_POST['dnsrecords']), 'dnsrecords', '/^[^\0]*$/');
 					if (Settings::Get('system.bind_enable') == '1') {
 						if (isset($_POST['isbinddomain'])) {
 							$isbinddomain = (int)$_POST['isbinddomain'];
@@ -1229,6 +1236,7 @@ if ($page == 'domains'
 							$isbinddomain = 0;
 						}
 						$zonefile = validate($_POST['zonefile'], 'zonefile');
+						$dnsrecords = validate(str_replace("\r\n", "\n", $_POST['dnsrecords']), 'dnsrecords', '/^[^\0]*$/');
 					}
 
 					if (Settings::Get('dkim.use_dkim') == '1') {
@@ -1260,6 +1268,7 @@ if ($page == 'domains'
 				} else {
 					$isbinddomain = $result['isbinddomain'];
 					$zonefile = $result['zonefile'];
+					$dnsrecords = validate(str_replace("\r\n", "\n", $_POST['dnsrecords']), 'dnsrecords', '/^[^\0]*$/');
 					$dkim = $result['dkim'];
 					$specialsettings = $result['specialsettings'];
 					$ssfs = (empty($specialsettings) ? 0 : 1);
@@ -1508,6 +1517,7 @@ if ($page == 'domains'
 					'subcanemaildomain' => $subcanemaildomain,
 					'caneditdomain' => $caneditdomain,
 					'zonefile' => $zonefile,
+					'dnsrecords' => $dnsrecords,
 					'dkim' => $dkim,
 					'selectserveralias' => $serveraliasoption,
 					'ssl_redirect' => $ssl_redirect,
@@ -1569,6 +1579,7 @@ if ($page == 'domains'
 
 				if ($isbinddomain != $result['isbinddomain']
 					|| $zonefile != $result['zonefile']
+					|| $dnsrecords != $result['dnsrecords']
 					|| $dkim != $result['dkim']
 				) {
 					inserttask('4');
@@ -1684,6 +1695,7 @@ if ($page == 'domains'
 				$update_data['dkim'] = $dkim;
 				$update_data['caneditdomain'] = $caneditdomain;
 				$update_data['zonefile'] = $zonefile;
+				$update_data['dnsrecords'] = $dnsrecords;
 				$update_data['wwwserveralias'] = $wwwserveralias;
 				$update_data['iswildcarddomain'] = $iswildcarddomain;
 				$update_data['openbasedir'] = $openbasedir;
@@ -1712,6 +1724,7 @@ if ($page == 'domains'
 					`dkim` = :dkim,
 					`caneditdomain` = :caneditdomain,
 					`zonefile` = :zonefile,
+					`dnsrecords` = :dnsrecords,
 					`wwwserveralias` = :wwwserveralias,
 					`iswildcarddomain` = :iswildcarddomain,
 					`openbasedir` = :openbasedir,

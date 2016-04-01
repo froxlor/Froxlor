@@ -309,6 +309,7 @@ $lng['admin']['templates']['USERNAME'] = 'Rimpiazzato con il nome utente dell\'a
 $lng['admin']['templates']['PASSWORD'] = 'Rimpiazzato con la password dell\'account.';
 $lng['admin']['templates']['EMAIL'] = 'Rimapiazzato con l\'indirizzo dell\'account.';
 $lng['admin']['webserver'] = 'Webserver';
+$lng['admin']['dnsrecords'] = 'Own DNS-Records which should be saved in the zonefile<br /><strong>Attention:</strong> The code won\'t be checked for any errors. If it contains errors, webserver might not start again!'; // ToDo: Translante
 
 /**
  * Serversettings

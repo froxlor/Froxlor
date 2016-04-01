@@ -312,6 +312,7 @@ $lng['admin']['templates']['NAME'] = 'Altere para o nome do cliente.';
 $lng['admin']['templates']['USERNAME'] = 'Altere para nome da conta do cliente.';
 $lng['admin']['templates']['PASSWORD'] = 'Altere com a senha da conta do cliente.';
 $lng['admin']['templates']['EMAIL'] = 'Altere com os dados do servidor POP3/IMAP.';
+$lng['admin']['dnsrecords'] = 'Own DNS-Records which should be saved in the zonefile<br /><strong>Attention:</strong> The code won\'t be checked for any errors. If it contains errors, webserver might not start again!'; // ToDo: Translante
 
 /**
  * Serversettings

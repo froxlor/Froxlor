@@ -283,6 +283,7 @@ $lng['admin']['templates']['NAME'] = 'Vervangen door de naam van de klant.';
 $lng['admin']['templates']['USERNAME'] = 'Vervangen door de gebruikersnaam van de klant.';
 $lng['admin']['templates']['PASSWORD'] = 'Vervangen door het wachtwoord van de klant.';
 $lng['admin']['templates']['EMAIL'] = 'Vervangen door het adres van het POP3/IMAP account.';
+$lng['admin']['dnsrecords'] = 'Own DNS-Records which should be saved in the zonefile<br /><strong>Attention:</strong> The code won\'t be checked for any errors. If it contains errors, webserver might not start again!'; // ToDo: Translante
 
 /**
  * Serversettings
