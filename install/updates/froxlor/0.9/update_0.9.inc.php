@@ -3171,3 +3171,16 @@ if (isDatabaseVersion('201603070')) {
 
 	updateToDbVersion('201603150');
 }
+
+if (isDatabaseVersion('201603150')) {
+
+        showUpdateStep("Adding new mailacc_with_name setting to table panel_settings");
+	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET `settinggroup` = 'panel', `varname` = 'mailacc_with_name', `value` = '';");
+        lastStepStatus(0);
+	
+        showUpdateStep("Alter table mail_users to be able to hold first and lastname for a mailbox");
+	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS ."` ADD COLUMN `firstname` VARCHAR(128) NOT NULL AFTER `username`, ADD COLUMN `lastname` VARCHAR(128) NOT NULL AFTER `firstname`;");
+        lastStepStatus(0);
+
+        updateToDbVersion('201603270');
+}

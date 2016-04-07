@@ -1628,3 +1628,8 @@ $lng['domains']['termination_date_overview'] = 'gekündigt zum ';
 $lng['panel']['set'] = 'Setzen';
 $lng['customer']['selectserveralias_addinfo'] = 'Diese Option steht beim Bearbeiten der Domain zur Verfügung. Als Initial-Wert wird die Einstellung der Hauptdomain vererbt.';
 $lng['error']['mailaccistobedeleted'] = "Ein vorheriges Konto mit dem gleichen Namen (%s) wird aktuell noch gelöscht und kann daher derzeit nicht angelegt werden";
+
+// Added for 'Mail Account with Name'
+$lng['menue']['main']['changename'] = 'Name ändern';
+$lng['serversettings']['mailacc_with_name']['title'] = "Emailkonten mit Vor- und Nachname erstellen";
+$lng['serversettings']['mailacc_with_name']['description'] = 'Beim Anlegen eines neuen Email-Kontos kann ein Name für den Eigentümer des Kontos hinterlegt werden.';

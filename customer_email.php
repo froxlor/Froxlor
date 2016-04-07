@@ -300,7 +300,7 @@ if ($page == 'overview') {
 			standard_error('allresourcesused');
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-		$stmt = Database::prepare("SELECT `v`.`id`, `v`.`email`, `v`.`email_full`, `v`.`iscatchall`, `v`.`destination`, `v`.`customerid`, `v`.`popaccountid`, `u`.`quota`
+		$stmt = Database::prepare("SELECT `v`.`id`, `v`.`email`, `v`.`email_full`, `v`.`iscatchall`, `v`.`destination`, `v`.`customerid`, `v`.`popaccountid`, `u`.`quota`, `u`.`lastname`, `u`.`firstname`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` `v`
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` `u`
 			ON(`v`.`popaccountid` = `u`.`id`)
@@ -422,6 +422,8 @@ if ($page == 'overview') {
 			if (isset($result['email']) && $result['email'] != '' && $result['popaccountid'] == '0') {
 				if (isset($_POST['send']) && $_POST['send'] == 'send') {
 					$email_full = $result['email_full'];
+					$owner_firstname = $_POST['owner_firstname'];
+					$owner_lastname = $_POST['owner_lastname'];
 					$username = $idna_convert->decode($email_full);
 					$password = validate($_POST['email_password'], 'password');
 					$password = validatePassword($password);
@@ -438,6 +440,18 @@ if ($page == 'overview') {
 						}
 					} else {
 						$quota = 0;
+					}
+
+					if (Settings::Get('panel.mailacc_with_name') == 1) {
+						if ($owner_firstname == '') {
+							standard_error(array('stringisempty', 'owner_firstname')); // TODO: "owner_firstname" correct ersetzten!
+						}
+						elseif ($owner_lastname == '') {
+							standard_error(array('stringisempty', 'owner_lastname')); // TODO: "owner_firstname" correct ersetzten!
+						}
+					} else {
+						$owner_firstname = '';
+						$owner_lastname = '';
 					}
 
 					if ($email_full == '') {
@@ -465,13 +479,15 @@ if ($page == 'overview') {
 						}
 
 						$stmt = Database::prepare("INSERT INTO `" . TABLE_MAIL_USERS . "`
-							(`customerid`, `email`, `username`, " . (Settings::Get('system.mailpwcleartext') == '1' ? '`password`, ' : '') . " `password_enc`, `homedir`, `maildir`, `uid`, `gid`, `domainid`, `postfix`, `quota`, `imap`, `pop3`) ".
-							"VALUES (:cid, :email, :username, " . (Settings::Get('system.mailpwcleartext') == '1' ? ":password, " : '') . ":password_enc, :homedir, :maildir, :uid, :gid, :domainid, 'y', :quota, :imap, :pop3)"
+							(`customerid`, `email`, `username`, `firstname`, `lastname`, " . (Settings::Get('system.mailpwcleartext') == '1' ? '`password`, ' : '') . " `password_enc`, `homedir`, `maildir`, `uid`, `gid`, `domainid`, `postfix`, `quota`, `imap`, `pop3`) ".
+							"VALUES (:cid, :email, :username, :owner_firstname, :owner_lastname, " . (Settings::Get('system.mailpwcleartext') == '1' ? ":password, " : '') . ":password_enc, :homedir, :maildir, :uid, :gid, :domainid, 'y', :quota, :imap, :pop3)"
 						);
 						$params = array(
 							"cid" => $userinfo['customerid'],
 							"email" => $email_full,
 							"username" => $username,
+							"owner_firstname" => $owner_firstname,
+							"owner_lastname" => $owner_lastname,
 							"password_enc" => $cryptPassword,
 							"homedir" => Settings::Get('system.vmail_homedir'),
 							"maildir" => $userinfo['loginname'] . '/' . $email_domain . "/" . $email_user . "/" . $maildirpath,
@@ -626,6 +642,52 @@ if ($page == 'overview') {
 		} else {
 			standard_error(array('allresourcesused', 'allocatetoomuchquota'), $quota);
 		}
+	} elseif ($action == 'changename' && $id != 0) {
+		$stmt = Database::prepare("SELECT `v`.`id`, `v`.`email`, `v`.`email_full`, `v`.`iscatchall`, `v`.`destination`, `v`.`customerid`, `v`.`popaccountid`, `u`.`quota`, `u`.`lastname`, `u`.`firstname`
+			FROM `" . TABLE_MAIL_VIRTUAL . "` `v`
+			LEFT JOIN `" . TABLE_MAIL_USERS . "` `u`
+			ON(`v`.`popaccountid` = `u`.`id`)
+			WHERE `v`.`customerid`= :cid
+			AND `v`.`id`= :id"
+		);
+		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
+	
+		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			$owner_lastname = $_POST['owner_lastname'];
+			$owner_firstname = $_POST['owner_firstname'];
+
+			if ($owner_firstname == '') {
+				standard_error(array('stringisempty', 'owner_firstname')); // TODO
+			}
+			elseif ($owner_lastname == '') {
+				standard_error(array('stringisempty', 'owner_lastname')); // TODO
+			}
+
+			$log->logAction(USR_ACTION, LOG_NOTICE, "changed name for '" . $result['email_full'] . "'");
+			$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "`
+				SET     `firstname`= :owner_firstname,
+					`lastname`= :owner_lastname
+				WHERE `customerid`= :cid
+				AND `id`= :id"
+			);
+			$params = array(
+				"owner_lastname" => $owner_lastname,
+				"owner_firstname" => $owner_firstname,
+				"cid" => $userinfo['customerid'],
+				"id" => $result['popaccountid']
+			);
+			Database::pexecute($stmt, $params);
+			redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
+		} else {
+			$result = htmlentities_array($result);
+
+			$result['email_full'] = $idna_convert->decode($result['email']);
+			$account_changename_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_accountchangename.php';
+			$account_changename_form = htmlform::genHTMLForm($account_changename_data);
+
+			eval("echo \"" . getTemplate("email/account_changename") . "\";");
+		}
+
 	} elseif ($action == 'changepw' && $id != 0) {
 		$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid` FROM `" . TABLE_MAIL_VIRTUAL . "`
 			WHERE `customerid`= :cid

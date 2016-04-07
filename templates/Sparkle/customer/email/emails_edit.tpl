@@ -8,7 +8,6 @@ $header
 	</header>
 
 	<section>
-
 		<form action="{$linker->getLink(array('section' => 'email'))}" method="post" enctype="application/x-www-form-urlencoded">
 			<table class="full">
 				<thead>
