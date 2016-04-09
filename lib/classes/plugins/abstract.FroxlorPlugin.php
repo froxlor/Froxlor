@@ -43,6 +43,13 @@ abstract class FroxlorPlugin {
 	 */
 	protected $text = null;
 
+
+	/**
+	 * template service
+	 * @var FroxlorPluginTemplate
+	 */
+	protected $tpl = null;
+	
 	/**
 	 * Basic constructor filling ID and prepare setting
 	 */
@@ -59,6 +66,7 @@ abstract class FroxlorPlugin {
 		};
 		FroxlorEvent::listen(FroxlorEvent::LoadLanguage, $_eventLoadLanguage);
 		
+		$this->tpl = new FroxlorPluginTemplate($this->ID);	
 		$this->_register_events();
 	}
 

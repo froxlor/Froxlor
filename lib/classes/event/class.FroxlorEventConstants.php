@@ -26,6 +26,8 @@ class FroxlorEventConstants extends FroxlorEventConstantsDeprecated {
 	const LoadLanguage = 'LoadLanguage';
 	const CreateNavigation = 'CreateNavigation';
 	const ServerSettings = 'ServerSettings';
+	const PluginPage = 'PluginPage';
+	
 	const RebuildConfigs = 'RebuildConfigs';
 	
 	const GetServiceConfiguration = 'GetServiceConfiguration';
