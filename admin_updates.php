@@ -95,7 +95,7 @@ if ($page == 'overview') {
 		}
 	}
 
-	if (hasDbUpdates($dbversion)) {
+	if (hasDbUpdates($dbversion) || hasUpdates($version)) {
 		$successful_update = false;
 		$message = '';
 

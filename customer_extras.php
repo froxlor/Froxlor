@@ -53,9 +53,9 @@ if ($page == 'overview') {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
 				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
-				    $row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
+					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
 				}
-
+				$row['path'] = makeCorrectDir($row['path']);
 				$row = htmlentities_array($row);
 				eval("\$htpasswds.=\"" . getTemplate("extras/htpasswds_htpasswd") . "\";");
 				$count++;
@@ -271,7 +271,7 @@ if ($page == 'overview') {
 				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
 					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
 				}
-
+				$row['path'] = makeCorrectDir($row['path']);
 				$row['options_indexes'] = str_replace('1', $lng['panel']['yes'], $row['options_indexes']);
 				$row['options_indexes'] = str_replace('0', $lng['panel']['no'], $row['options_indexes']);
 				$row['options_cgi'] = str_replace('1', $lng['panel']['yes'], $row['options_cgi']);
