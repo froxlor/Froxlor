@@ -318,6 +318,7 @@ $lng['admin']['templates']['USERNAME'] = 'Replaced with the customers account us
 $lng['admin']['templates']['PASSWORD'] = 'Replaced with the customers account password.';
 $lng['admin']['templates']['EMAIL'] = 'Replaced with the address of the POP3/IMAP account.';
 $lng['admin']['webserver'] = 'Webserver';
+$lng['admin']['bindzonewarning'] = $lng['panel']['emptyfordefault'] . '<br /><strong class="red">ATTENTION:</strong> If you use a zonefile you will have to manage all required records for all sub-zones manually as well.';
 
 /**
  * Serversettings
