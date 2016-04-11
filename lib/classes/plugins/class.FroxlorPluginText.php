@@ -16,7 +16,7 @@
  *
  */
 
-class FroxlorPluginText {
+class FroxlorPluginText implements ArrayAccess {
 	private $pluginid;
 	/**
 	 * The language file directory
@@ -68,4 +68,23 @@ class FroxlorPluginText {
 		}
 		return $ptr;
 	}
+
+	public function offsetExists($offset) {
+		global $lng;
+		return array_key_exists($offset, $lng[$this->pluginid]);
+	}
+
+	public function offsetGet($offset) {
+		global $lng;
+		return $lng[$this->pluginid][$offset];
+	}
+
+	public function offsetSet($offset, $value) {
+		throw new Exception("Setting language string '$offset' not allowed");
+	}
+
+	public function offsetUnset($offset) {
+		throw new Exception("Unsetting language string '$offset' not allowed");
+	}
+
 }
