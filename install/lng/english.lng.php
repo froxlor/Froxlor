@@ -34,7 +34,6 @@ $lng['requirements']['phpbcmath'] = 'PHP bcmath-extension...';
 $lng['requirements']['phpcurl'] = 'PHP curl-extension...';
 $lng['requirements']['phpmbstring'] = 'PHP mbstring-extension...';
 $lng['requirements']['bcmathdescription'] = 'Traffic-calculation related functions will not work correctly!';
-$lng['requirements']['curldescription'] = 'Version-check and news-feed may not work correctly!';
 $lng['requirements']['openbasedir'] = 'open_basedir...';
 $lng['requirements']['openbasedirenabled'] = 'Froxlor will not work properly with open_basedir enabled. Please disable open_basedir for Froxlor in the coresponding php.ini';
 $lng['requirements']['diedbecauseofrequirements'] = 'Cannot install Froxlor without these requirements! Try to fix them and retry.';
