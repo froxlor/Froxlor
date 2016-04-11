@@ -44,7 +44,7 @@ EOT;
 		
 // Note: To keep line numbers of eval in sync with tpl, keep anything on first line until $innertpl
 $fnccode = <<<EOT
-function(\$tpldata) { extract(\$tpldata, EXTR_REFS | EXTR_SKIP); extract(\$GLOBALS, EXTR_REFS | EXTR_SKIP); \$_tpl_result = "{$innertpl}";
+function(\$tpldata, \$lngplugin) { extract(\$tpldata, EXTR_REFS | EXTR_SKIP); extract(\$GLOBALS, EXTR_REFS | EXTR_SKIP); \$_tpl_result = "{$innertpl}";
 	return \$_tpl_result;
 };
 EOT;
@@ -63,9 +63,10 @@ EOT;
 	}
 	
 	public function show($tplname, $tpldata = array()) {
+		global $lng;
 		if (file_exists($this->templatedir.$tplname.'.tpl')) {
 			$fnc = $this->_createTPLFunction($this->templatedir.$tplname.'.tpl');
-			echo $fnc($tpldata);
+			echo $fnc($tpldata, $lng[$this->pluginid]);
 		} else {
 			$output = getTemplate($tplname, 1);
 			extract($tpldata, EXTR_REFS | EXTR_SKIP);
