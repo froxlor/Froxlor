@@ -1495,11 +1495,21 @@ fieldset.file {
 }
 
 .domain-canceled {
-    /* Color copied from .warningcontainer */
-    background-color: #fffecc;
+	/* Color copied from .warningcontainer */
+	background-color: #fffecc;
 }
 
 .domain-expired {
-    /* Color copied from .errorcontainer */
-    background-color: rgb(242, 222, 222);
+	/* Color copied from .errorcontainer */
+	background-color: rgb(242, 222, 222);
+}
+
+.domain-hostname {
+	background-color: rgb(53, 106, 160);
+	color: #ddd;
+	font-weight: bold;
+}
+
+table.hl tbody tr.domain-hostname:hover {
+	background-color: rgb(64, 150, 238);
 }
