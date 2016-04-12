@@ -2491,10 +2491,6 @@ if (isFroxlorVersion('0.9.30-rc1')) {
 	Database::query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ssl_cipher_list', `value` = 'ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH'");
 	lastStepStatus(0);
 
-        showUpdateStep("Adding ssl-protocols setting");
-        Database::query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ssl_protocols', `value` = 'TLSv1,TLSv1.1,TLSv1.2'");
-        lastStepStatus(0);
-
 	updateToVersion('0.9.30');
 }
 
@@ -3295,4 +3291,13 @@ if (isFroxlorVersion('0.9.35')) {
 	lastStepStatus(0);
 
 	updateToVersion('0.9.35.1');
+}
+
+if (isDatabaseVersion('201603150')) {
+
+	showUpdateStep("Adding ssl-protocols setting");
+	Database::query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ssl_protocols', `value` = 'TLSv1,TLSv1.1,TLSv1.2'");
+	lastStepStatus(0);
+
+	updateToDbVersion('201604120');
 }
