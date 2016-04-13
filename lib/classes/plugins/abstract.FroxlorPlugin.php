@@ -51,12 +51,20 @@ abstract class FroxlorPlugin {
 	protected $tpl = null;
 	
 	/**
+	 * plugin logger service
+	 * @var FroxlorPluginLog 
+	 */
+	protected $logger = null;
+	
+	/**
 	 * Basic constructor filling ID and prepare setting
 	 */
 	public function __construct() {
 		$this->ID = get_class($this);
 		$this->settings = new FroxlorPluginSettings($this->ID);
 		$this->_checkPlugin();
+		
+		$this->logger = new FroxlorPluginLog($this->ID);
 		
 		$textService = new FroxlorPluginText($this->ID);
 		$this->text = $textService;
