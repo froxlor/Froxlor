@@ -939,7 +939,8 @@ if ($page == 'customers'
 							SELECT ip, port FROM `".TABLE_PANEL_IPSANDPORTS."`
 							WHERE `id` = :defaultip
 						");
-						$srv_ip = Database::pexecute_first($srv_ip_stmt, array('defaultip' => reset(explode(',', Settings::Get('system.defaultip')))));
+						$default_ips = Settings::Get('system.defaultip');
+						$srv_ip = Database::pexecute_first($srv_ip_stmt, array('defaultip' => reset(explode(',', $default_ips))));
 
 						$replace_arr = array(
 							'FIRSTNAME' => $firstname,
