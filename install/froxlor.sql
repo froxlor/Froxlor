@@ -493,6 +493,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mod_fcgid_defaultini_ownvhost', '2'),
 	('system', 'awstats_icons', '/usr/share/awstats/icon/'),
 	('system', 'ssl_cert_chainfile', ''),
+	('system', 'ssl_protocols', 'TLSv1,TLSv1.1,TLSv1.2'),
 	('system', 'ssl_cipher_list', 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128'),
 	('system', 'nginx_php_backend', '127.0.0.1:8888'),
 	('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock'),
@@ -556,7 +557,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.35.1'),
-	('panel', 'db_version', '201603150');
+	('panel', 'db_version', '201604120');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

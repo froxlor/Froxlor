@@ -1730,6 +1730,8 @@ $lng['domains']['serveraliasoption_none'] = 'No alias';
 $lng['error']['givendirnotallowed'] = 'The given directory in field %s is not allowed.';
 $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Configure the allowed SSL ciphers';
 $lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'This is a list of ciphers that you want (or don\'t want) to use when talking SSL. For a list of ciphers and how to include/exclude them, see sections "CIPHER LIST FORMAT" and "CIPHER STRINGS" on <a href="http://openssl.org/docs/apps/ciphers.html">the man-page for ciphers</a>.<br /><br /><b>Default value is:</b><pre>ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128</pre>';
+$lng['serversettings']['ssl']['ssl_protocols']['title'] = 'Configure the TLS protocol version';
+$lng['serversettings']['ssl']['ssl_protocols']['description'] = 'This is a list of ssl protocols that you want (or don\'t want) to use when talking SSL. <b>Notice:</b> Some older browsers may not support the newest protcol versions. <br /><br /><b>Default value is:</b><pre>TLSv1, TLSv1.1, TLSv1.2</pre>';
 
 // Added in Froxlor 0.9.31
 $lng['panel']['dashboard'] = 'Dashboard';

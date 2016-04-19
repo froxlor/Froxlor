@@ -31,6 +31,16 @@ return array(
 									'save_method' => 'storeSettingField',
 									'overview_option' => true
 							),
+                                                       'system_ssl_protocols' => array(
+                                                                        'label' => $lng['serversettings']['ssl']['ssl_protocols'],
+                                                                        'settinggroup' => 'system',
+                                                                        'varname' => 'ssl_protocols',
+                                                                        'type' => 'option',
+                                                                        'default' => 'TLSv1,TLSv1.1,TLSv1.2',
+                                                                        'option_mode' => 'multiple',
+                                                                        'option_options' => array('TLSv1' => 'TLSv1', 'TLSv1.1' => 'TLSv1.1', 'TLSv1.2' => 'TLSv1.2'),
+                                                                        'save_method' => 'storeSettingField',
+                                                        ),
 							'system_ssl_cipher_list' => array(
 									'label' => $lng['serversettings']['ssl']['ssl_cipher_list'],
 									'settinggroup' => 'system',

@@ -3292,3 +3292,14 @@ if (isFroxlorVersion('0.9.35')) {
 
 	updateToVersion('0.9.35.1');
 }
+
+if (isDatabaseVersion('201603150')) {
+
+	Settings::AddNew("system.ssl_protocols", "TLSv1,TLSv1.1,TLSv1.2");
+	
+	showUpdateStep("Adding ssl_protocols setting");
+	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET `settinggroup` = 'system', `varname` = 'ssl_protocols', `value` = 'TLSv1,TLSv1.1,TLSv1.2'");
+	lastStepStatus(0);
+
+	updateToDbVersion('201604120');
+}

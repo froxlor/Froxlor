@@ -572,9 +572,7 @@ class nginx extends HttpConfigBase {
 		        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
 		        echo $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
 		    } else {
-			// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
-    			//$sslsettings .= "\t" . 'ssl on;' . "\n";
-    			$sslsettings .= "\t" . 'ssl_protocols TLSv1 TLSv1.1 TLSv1.2;' . "\n";
+			$sslsettings .= "\t" . 'ssl_protocols ' . str_replace(","," ",Settings::Get('system.ssl_protocols')) . ';' . "\n";
     			$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
 					$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
     			$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
