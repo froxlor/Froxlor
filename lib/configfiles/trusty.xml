@@ -1363,8 +1363,8 @@ TLSLog                                  /var/log/proftpd/tls.log
 TLSProtocol                             TLSv1 TLSv1.1 TLSv1.2
 TLSRSACertificateFile                   /etc/ssl/certs/proftpd.crt
 TLSRSACertificateKeyFile                /etc/ssl/private/proftpd.key
-TLSECCertificateFile                    /etc/ssl/certs/proftpd_ec.crt
-TLSECCertificateKeyFile                 /etc/ssl/private/proftpd_ec.key
+#TLSECCertificateFile                    /etc/ssl/certs/proftpd_ec.crt
+#TLSECCertificateKeyFile                 /etc/ssl/private/proftpd_ec.key
 TLSOptions                              NoCertRequest NoSessionReuseRequired
 TLSVerifyClient                         off
 
