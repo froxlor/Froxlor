@@ -15,6 +15,7 @@ $header
 				<input type="hidden" name="action" value="$action" />
 				<input type="hidden" name="id" value="$id" />
 				<input type="hidden" name="send" value="send" />
+				<input type="password" name="fakepwd" class="input-fake" />
 			
 				<table class="full">
 					{$customer_edit_form}
