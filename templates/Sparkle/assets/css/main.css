@@ -1513,3 +1513,9 @@ fieldset.file {
 table.hl tbody tr.domain-hostname:hover {
 	background-color: rgb(64, 150, 238);
 }
+.input-fake{
+  visibility:hidden;
+  position:absolute;
+  width:0;
+  height:0;
+}
