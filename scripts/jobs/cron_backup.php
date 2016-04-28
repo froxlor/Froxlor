@@ -106,3 +106,8 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	// remove entry
 	Database::pexecute($del_stmt, array('id' => $row['id']));
 }
+
+if (function_exists('pcntl_fork')) {
+	@unlink($BackupLock);
+	die();
+}
