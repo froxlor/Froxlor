@@ -1974,3 +1974,12 @@ $lng['domains']['termination_date_overview'] = 'canceled until ';
 $lng['panel']['set'] = 'Apply';
 $lng['customer']['selectserveralias_addinfo'] = 'This option can be set when editing the domain. Its initial value is inherited from the parent-domain.';
 $lng['error']['mailaccistobedeleted'] = "Another account with the same name (%s) is currently being deleted and can therefore not be added at this moment.";
+
+$lng['menue']['extras']['backup'] = 'Backup';
+$lng['extras']['backup'] = 'Create backup';
+$lng['extras']['backup_web'] = 'Backup web-data';
+$lng['extras']['backup_mail'] = 'Backup mail-data';
+$lng['extras']['backup_dbs'] = 'Backup databases';
+$lng['error']['customerhasongoingbackupjob'] = 'There is already a backup job waiting to be processed, please be patient.';
+$lng['success']['backupscheduled'] = 'Your backup job has been scheduled. Please wait for it to be processed';
+$lng['crondesc']['cron_backup'] = 'Process backup jobs';

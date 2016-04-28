@@ -3292,3 +3292,21 @@ if (isFroxlorVersion('0.9.35')) {
 
 	updateToVersion('0.9.35.1');
 }
+
+if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201603150')) {
+
+	showUpdateStep("Adding new backup-cron entry");
+	$stmt = Database::prepare("
+		INSERT INTO `" . TABLE_PANEL_CRONRUNS . "` SET
+		`module` = 'froxlor/backup',
+		`cronfile` = 'backup',
+		`interval` = '1 DAY',
+		`desc_lng_key` = 'cron_backup',
+		`lastrun` = 0,
+		`isactive` = 0"
+	);
+	Database::pexecute($stmt);
+	lastStepStatus(0);
+
+	updateToDbVersion('201604270');
+}

@@ -101,5 +101,10 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data = serialize($data);
 		Database::pexecute($ins_stmt, array('type' => '8', 'data' => $data));
 
+	} elseif ($type == '20'
+		&& is_array($param1)
+	) {
+		$data = serialize($param1);
+		Database::pexecute($ins_stmt, array('type' => '20', 'data' => $data));
 	}
 }

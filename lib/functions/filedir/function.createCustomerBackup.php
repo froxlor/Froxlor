@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2016 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    Functions
+ *
+ */
+
+/**
+ * depending on the give choice, the customers web-data, email-data and databases are being backup'ed
+ *
+ * @param array $data
+ *
+ * @return void
+ *
+ */
+function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog)
+{
+	$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Creating Backup for user "'.$data['loginname'].'"');
+
+	// create tmp folder
+	$tmpdir = makeCorrectDir($data['destdir'] . '/.tmp/');
+	$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating tmp-folder "'.$tmpdir.'"');
+	$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mkdir -p ' . escapeshellarg($tmpdir));
+	safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
+	$create_backup_tar = false;
+
+	// MySQL databases
+	if ($data['backup_dbs'] == 1) {
+
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating mysql-folder "'.makeCorrectDir($tmpdir . '/mysql').'"');
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mkdir -p ' . escapeshellarg(makeCorrectDir($tmpdir . '/mysql')));
+		safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir($tmpdir . '/mysql')));
+
+		// get all customer database-names
+		$sel_stmt = Database::prepare("SELECT `databasename` FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :cid");
+		Database::pexecute($sel_stmt, array(
+			'cid' => $data['customerid']
+		));
+
+		Database::needRoot(true);
+		Database::needSqlData();
+		$sql_root = Database::getSqlData();
+		Database::needRoot(false);
+
+		while ($row = $sel_stmt->fetch()) {
+			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mysqldump -u ' . escapeshellarg($sql_root['user']) . ' -pXXXXX ' . $row['databasename'] . ' > ' . makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'));
+			$bool_false = false;
+			safe_exec('mysqldump -u ' . escapeshellarg($sql_root['user']) . ' -p' . $sql_root['passwd'] . ' ' . $row['databasename'] . ' > ' . makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'), $bool_false, array('>'));
+			$create_backup_tar = true;
+		}
+
+		unset($sql_root);
+	}
+
+	// E-mail data
+	if ($data['backup_mail'] == 1) {
+
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating mail-folder "'.makeCorrectDir($tmpdir . '/mail').'"');
+		safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir($tmpdir . '/mail')));
+
+		// get all customer mail-accounts
+		$sel_stmt = Database::prepare("SELECT CONCAT(`homedir`, `maildir`) as acc_path FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid` = :cid");
+		Database::pexecute($sel_stmt, array(
+			'cid' => $data['customerid']
+		));
+
+		$tar_file_list = "";
+		while ($row = $sel_stmt->fetch()) {
+			$tar_file_list .= $row['acc_path'] . " ";
+		}
+
+		if (! empty($tar_file_list)) {
+			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfvz ' . escapeshellarg(makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' ' . escapeshellarg(trim($tar_file_list)));
+			safe_exec('tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' ' . escapeshellarg(trim($tar_file_list)));
+			$create_backup_tar = true;
+		}
+	}
+
+	// Web data
+	if ($data['backup_web'] == 1) {
+
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating web-folder "'.makeCorrectDir($tmpdir . '/web').'"');
+		safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir($tmpdir . '/web')));
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfvz ' . escapeshellarg(makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude ' . escapeshellarg($tmpdir) .' ' . escapeshellarg($customerdocroot));
+		safe_exec('tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude ' . escapeshellarg($tmpdir) .' ' . escapeshellarg($customerdocroot));
+		$create_backup_tar = true;
+	}
+
+	if ($create_backup_tar)
+	{
+		$backup_file = makeCorrectFile($tmpdir . '/' . $data['loginname'] . '-backup_' . date('YmdHi', time()) . '.tar.gz');
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Creating backup-file "'.$backup_file.'"');
+		// pack all archives in tmp-dir to one
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfvz ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($tmpdir));
+		safe_exec('tar cfz ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($tmpdir));
+		// move to destination directory
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mv ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($data['destdir']));
+		safe_exec('mv ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($data['destdir']));
+		// remove tmp-files
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> rm -rf '.escapeshellarg($tmpdir));
+		safe_exec('rm -rf '.escapeshellarg($tmpdir));
+		// set owner to customer
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> chown -R ' . (int)$data['uid'] . ':' . (int)$data['gid'] . ' ' . escapeshellarg($data['destdir']));
+		safe_exec('chown -R ' . (int)$data['uid'] . ':' . (int)$data['gid'] . ' ' . escapeshellarg($data['destdir']));
+	}
+}

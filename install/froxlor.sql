@@ -556,7 +556,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.35.1'),
-	('panel', 'db_version', '201603150');
+	('panel', 'db_version', '201604270');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -765,7 +765,8 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, 
 	(4, 'froxlor/ticket', 'ticketarchive', '1 MONTH', '1', 'cron_ticketarchive'),
 	(5, 'froxlor/reports', 'usage_report', '1 DAY', '1', 'cron_usage_report'),
 	(6, 'froxlor/core', 'mailboxsize', '6 HOUR', '1', 'cron_mailboxsize'),
-	(7, 'froxlor/letsencrypt', 'letsencrypt', '5 MINUTE', '0', 'cron_letsencrypt');
+	(7, 'froxlor/letsencrypt', 'letsencrypt', '5 MINUTE', '0', 'cron_letsencrypt'),
+	(8, 'froxlor/backup', 'backup', '1 DAY', '1', 'cron_backup');
 
 
 

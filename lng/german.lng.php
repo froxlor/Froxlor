@@ -1627,3 +1627,12 @@ $lng['domains']['termination_date_overview'] = 'gekündigt zum ';
 $lng['panel']['set'] = 'Setzen';
 $lng['customer']['selectserveralias_addinfo'] = 'Diese Option steht beim Bearbeiten der Domain zur Verfügung. Als Initial-Wert wird die Einstellung der Hauptdomain vererbt.';
 $lng['error']['mailaccistobedeleted'] = "Ein vorheriges Konto mit dem gleichen Namen (%s) wird aktuell noch gelöscht und kann daher derzeit nicht angelegt werden";
+
+$lng['menue']['extras']['backup'] = 'Sicherung';
+$lng['extras']['backup'] = 'Sicherung erstellen';
+$lng['extras']['backup_web'] = 'Web-Daten sichern';
+$lng['extras']['backup_mail'] = 'E-Mail Daten sichern';
+$lng['extras']['backup_dbs'] = 'Datenbanken sichern';
+$lng['error']['customerhasongoingbackupjob'] = 'Es gibt noch einen austehenden Backup-Job. Bitte haben Sie etwas Geduld.';
+$lng['success']['backupscheduled'] = 'Ihre Sicherung wurde erfolgreich geplant. Bitte warten Sie nun, bis diese abgearbeitet wurde.';
+$lng['crondesc']['cron_backup'] = 'Ausstehende Sicherungen erstellen';
