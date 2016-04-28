@@ -74,7 +74,7 @@ function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog)
 		safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir($tmpdir . '/mail')));
 
 		// get all customer mail-accounts
-		$sel_stmt = Database::prepare("SELECT `homedir`, CONCAT(`homedir`, `maildir`) as acc_path FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid` = :cid");
+		$sel_stmt = Database::prepare("SELECT `homedir`, `maildir` FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid` = :cid");
 		Database::pexecute($sel_stmt, array(
 			'cid' => $data['customerid']
 		));
@@ -82,7 +82,7 @@ function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog)
 		$tar_file_list = "";
 		$mail_homedir = "";
 		while ($row = $sel_stmt->fetch()) {
-			$tar_file_list .= $row['acc_path'] . " ";
+			$tar_file_list .= "./".$row['maildir'] . " ";
 			$mail_homedir = $row['homedir'];
 		}
 
@@ -98,8 +98,8 @@ function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog)
 
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating web-folder "'.makeCorrectDir($tmpdir . '/web').'"');
 		safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir($tmpdir . '/web')));
-		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude=' . escapeshellarg($tmpdir.'/*') .' --exclude=' . escapeshellarg($tmpdir) .' ' . escapeshellarg($customerdocroot).' -C '.escapeshellarg($customerdocroot));
-		safe_exec('tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude=' . escapeshellarg($tmpdir.'/*') .' --exclude=' . escapeshellarg($tmpdir) .' ' . escapeshellarg($customerdocroot).' -C '.escapeshellarg($customerdocroot));
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude=' . escapeshellarg(str_replace($customerdocroot, "./", makeCorrectFile($tmpdir.'/*'))) .' --exclude=' . escapeshellarg(str_replace($customerdocroot, "./", substr(makeCorrectDir($tmpdir), 0, -1))) .' -C '.escapeshellarg($customerdocroot). ' .');
+		safe_exec('tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude=' . escapeshellarg(str_replace($customerdocroot, "./", makeCorrectFile($tmpdir.'/*'))) .' --exclude=' . escapeshellarg(str_replace($customerdocroot, "./", substr(makeCorrectFile($tmpdir), 0, -1))) .' -C '.escapeshellarg($customerdocroot).' .');
 		$create_backup_tar_data .= './web ';
 	}
 
