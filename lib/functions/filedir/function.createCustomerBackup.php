@@ -61,7 +61,7 @@ function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog)
 		}
 
 		if ($has_dbs) {
-			$create_backup_tar_data .= makeCorrectDir($tmpdir . '/mysql')." ";
+			$create_backup_tar_data .= './mysql ';
 		}
 
 		unset($sql_root);
@@ -87,9 +87,9 @@ function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog)
 		}
 
 		if (! empty($tar_file_list)) {
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfvz ' . escapeshellarg(makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' ' . escapeshellarg(trim($tar_file_list)).' -C '.escapeshellarg($tmpdir));
-			safe_exec('tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' ' . escapeshellarg(trim($tar_file_list)).' -C '.escapeshellarg($tmpdir));
-			$create_backup_tar_data .= makeCorrectDir($tmpdir . '/mail')." ";
+			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfvz ' . escapeshellarg(makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' ' . escapeshellarg(trim($tar_file_list)).' -C '.escapeshellarg($mail_homedir));
+			safe_exec('tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' ' . escapeshellarg(trim($tar_file_list)).' -C '.escapeshellarg($mail_homedir));
+			$create_backup_tar_data .= './mail ';
 		}
 	}
 
@@ -98,9 +98,9 @@ function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog)
 
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating web-folder "'.makeCorrectDir($tmpdir . '/web').'"');
 		safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir($tmpdir . '/web')));
-		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude ' . escapeshellarg($tmpdir) .' ' . escapeshellarg($customerdocroot).' -C '.escapeshellarg($customerdocroot));
-		safe_exec('tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude ' . escapeshellarg($tmpdir) .' ' . escapeshellarg($customerdocroot).' -C '.escapeshellarg($customerdocroot));
-		$create_backup_tar_data .= makeCorrectDir($tmpdir . '/web')." ";
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude=' . escapeshellarg($tmpdir.'/*') .' --exclude=' . escapeshellarg($tmpdir) .' ' . escapeshellarg($customerdocroot).' -C '.escapeshellarg($customerdocroot));
+		safe_exec('tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude=' . escapeshellarg($tmpdir.'/*') .' --exclude=' . escapeshellarg($tmpdir) .' ' . escapeshellarg($customerdocroot).' -C '.escapeshellarg($customerdocroot));
+		$create_backup_tar_data .= './web ';
 	}
 
 	if (!empty($create_backup_tar_data))
@@ -108,8 +108,8 @@ function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog)
 		$backup_file = makeCorrectFile($tmpdir . '/' . $data['loginname'] . '-backup_' . date('YmdHi', time()) . '.tar.gz');
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Creating backup-file "'.$backup_file.'"');
 		// pack all archives in tmp-dir to one
-		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg($backup_file) . ' ' . escapeshellarg(trim($create_backup_tar_data)).' -C '.escapeshellarg($tmpdir));
-		safe_exec('tar cfz ' . escapeshellarg($backup_file) . ' ' . escapeshellarg(trim($create_backup_tar_data)).' -C '.escapeshellarg($tmpdir));
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg($backup_file) . ' -C '.escapeshellarg($tmpdir).' '.trim($create_backup_tar_data));
+		safe_exec('tar cfz ' . escapeshellarg($backup_file) . ' -C '.escapeshellarg($tmpdir).' '.trim($create_backup_tar_data));
 		// move to destination directory
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mv ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($data['destdir']));
 		safe_exec('mv ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($data['destdir']));
