@@ -1983,3 +1983,6 @@ $lng['extras']['backup_dbs'] = 'Backup databases';
 $lng['error']['customerhasongoingbackupjob'] = 'There is already a backup job waiting to be processed, please be patient.';
 $lng['success']['backupscheduled'] = 'Your backup job has been scheduled. Please wait for it to be processed';
 $lng['crondesc']['cron_backup'] = 'Process backup jobs';
+$lng['error']['backupfunctionnotenabled'] = 'The backup function is not enabled';
+$lng['serversettings']['backupenabled']['title'] = "Enable backup for customers";
+$lng['serversettings']['backupenabled']['description'] = "If activated, the customer will be able to schedule backup jobs (cron-backup) which generates an archive within his docroot (subdirectory chosable by customer)";

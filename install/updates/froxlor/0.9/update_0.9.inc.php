@@ -3295,7 +3295,9 @@ if (isFroxlorVersion('0.9.35')) {
 
 if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201603150')) {
 
-	showUpdateStep("Adding new backup-cron entry");
+	showUpdateStep("Adding new backup settings and cron");
+	$enable_backup = isset($_POST['enable_backup']) ? (int) $_POST['enable_backup'] : "0";
+	Settings::AddNew("system.backupenabled", $enable_backup);
 	$stmt = Database::prepare("
 		INSERT INTO `" . TABLE_PANEL_CRONRUNS . "` SET
 		`module` = 'froxlor/backup',
@@ -3303,9 +3305,9 @@ if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201603150')) {
 		`interval` = '1 DAY',
 		`desc_lng_key` = 'cron_backup',
 		`lastrun` = 0,
-		`isactive` = 0"
+		`isactive` = :isactive"
 	);
-	Database::pexecute($stmt);
+	Database::pexecute($stmt, array('isactive' => $enable_backup));
 	lastStepStatus(0);
 
 	updateToDbVersion('201604270');

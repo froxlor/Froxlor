@@ -132,6 +132,7 @@ return array (
 				array (
 					'url' => 'customer_extras.php?page=backup',
 					'label' => $lng['menue']['extras']['backup'],
+					'show_element' => ( Settings::Get('system.backupenabled') == true ),
 				),
 			),
 		),

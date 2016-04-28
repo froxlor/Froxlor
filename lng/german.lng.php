@@ -1636,3 +1636,6 @@ $lng['extras']['backup_dbs'] = 'Datenbanken sichern';
 $lng['error']['customerhasongoingbackupjob'] = 'Es gibt noch einen austehenden Backup-Job. Bitte haben Sie etwas Geduld.';
 $lng['success']['backupscheduled'] = 'Ihre Sicherung wurde erfolgreich geplant. Bitte warten Sie nun, bis diese abgearbeitet wurde.';
 $lng['crondesc']['cron_backup'] = 'Ausstehende Sicherungen erstellen';
+$lng['error']['backupfunctionnotenabled'] = 'Die Sicherungs-Funktion is nicht aktiviert';
+$lng['serversettings']['backupenabled']['title'] = "Backup für Kunden aktivieren";
+$lng['serversettings']['backupenabled']['description'] = "Wenn dies aktiviert ist, kann der Kunde Sicherungen planen (cron-backup) welche ein Archiv in sein Heimatverzeichnis ablegt (Unterordner vom Kunden wählbar)";

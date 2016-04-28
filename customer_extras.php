@@ -519,65 +519,73 @@ if ($page == 'overview') {
 		}
 	}
 } elseif ($page == 'backup') {
-	if ($action == '') {
-		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
 
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+	if (Settings::Get('system.backupenabled') == 1)
+	{
+		if ($action == '') {
+			$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
 
-			if (! $_POST['path']) {
-				standard_error('invalidpath');
-			}
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-			$path = makeCorrectDir(validate($_POST['path'], 'path'));
-			$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-
-			$backup_dbs = isset($_POST['backup_dbs']) ? intval($_POST['backup_dbs']) : 0;
-			$backup_mail = isset($_POST['backup_mail']) ? intval($_POST['backup_mail']) : 0;
-			$backup_web = isset($_POST['backup_web']) ? intval($_POST['backup_web']) : 0;
-
-			if ($backup_dbs != '1') {
-				$backup_dbs = '0';
-			}
-
-			if ($backup_mail != '1') {
-				$backup_mail = '0';
-			}
-
-			if ($backup_web != '1') {
-				$backup_web = '0';
-			}
-
-			$task_data = array(
-				'customerid' => $userinfo['customerid'],
-				'uid' => $userinfo['guid'],
-				'gid' => $userinfo['guid'],
-				'loginname' => $userinfo['loginname'],
-				'destdir' => $path,
-				'backup_dbs' => $backup_dbs,
-				'backup_mail' => $backup_mail,
-				'backup_web' => $backup_web
-			);
-			inserttask('20', $task_data);
-
-			standard_success('backupscheduled');
-		} else {
-
-			// check whether there is a backup-job for this customer
-			$sel_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_TASKS."` WHERE `type` = '20'");
-			Database::pexecute($sel_stmt);
-			while ($entry = $sel_stmt->fetch())
-			{
-				$data = unserialize($entry['data']);
-				if ($data['customerid'] == $userinfo['customerid']) {
-					standard_error('customerhasongoingbackupjob');
+				if (! $_POST['path']) {
+					standard_error('invalidpath');
 				}
+
+				$path = makeCorrectDir(validate($_POST['path'], 'path'));
+				$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
+
+				$backup_dbs = isset($_POST['backup_dbs']) ? intval($_POST['backup_dbs']) : 0;
+				$backup_mail = isset($_POST['backup_mail']) ? intval($_POST['backup_mail']) : 0;
+				$backup_web = isset($_POST['backup_web']) ? intval($_POST['backup_web']) : 0;
+
+				if ($backup_dbs != '1') {
+					$backup_dbs = '0';
+				}
+
+				if ($backup_mail != '1') {
+					$backup_mail = '0';
+				}
+
+				if ($backup_web != '1') {
+					$backup_web = '0';
+				}
+
+				$task_data = array(
+					'customerid' => $userinfo['customerid'],
+					'uid' => $userinfo['guid'],
+					'gid' => $userinfo['guid'],
+					'loginname' => $userinfo['loginname'],
+					'destdir' => $path,
+					'backup_dbs' => $backup_dbs,
+					'backup_mail' => $backup_mail,
+					'backup_web' => $backup_web
+				);
+				inserttask('20', $task_data);
+
+				standard_success('backupscheduled');
+			} else {
+
+				// check whether there is a backup-job for this customer
+				$sel_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_TASKS."` WHERE `type` = '20'");
+				Database::pexecute($sel_stmt);
+				while ($entry = $sel_stmt->fetch())
+				{
+					$data = unserialize($entry['data']);
+					if ($data['customerid'] == $userinfo['customerid']) {
+						standard_error('customerhasongoingbackupjob');
+					}
+				}
+				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
+				$backup_form = htmlform::genHTMLForm($backup_data);
+				$title = $backup_data['backup']['title'];
+				$image = $backup_data['backup']['image'];
+				eval("echo \"" . getTemplate("extras/backup") . "\";");
 			}
-			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
-			$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
-			$backup_form = htmlform::genHTMLForm($backup_data);
-			$title = $backup_data['backup']['title'];
-			$image = $backup_data['backup']['image'];
-			eval("echo \"" . getTemplate("extras/backup") . "\";");
 		}
+	}
+	else
+	{
+		standard_error('backupfunctionnotenabled');
 	}
 }
