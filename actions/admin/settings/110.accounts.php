@@ -183,11 +183,19 @@ return array(
 								'varname' => 'allow_preset',
 							),
 							'onlyif' => 1
-						)
-					),
+					)
+				),
+				'system_backupenabled' => array(
+					'label' => $lng['serversettings']['backupenabled'],
+					'settinggroup' => 'system',
+					'varname' => 'backupenabled',
+					'type' => 'bool',
+					'default' => false,
+					'cronmodule' => 'froxlor/backup',
+					'save_method' => 'storeSettingField'
 				),
 			),
 		),
-	);
+	)
+);
 
-?>
