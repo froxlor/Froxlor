@@ -560,6 +560,7 @@ if ($page == 'overview') {
 					'backup_mail' => $backup_mail,
 					'backup_web' => $backup_web
 				);
+				// schedule backup job
 				inserttask('20', $task_data);
 
 				standard_success('backupscheduled');

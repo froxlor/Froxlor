@@ -30,6 +30,11 @@ return array(
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
 					),
+					'path_protection_info' => array(
+						'label' => $lng['extras']['path_protection_label'],
+						'type' => 'label',
+						'value' => $lng['extras']['path_protection_info']
+					),
 					'backup_web' => array(
 						'label' => $lng['extras']['backup_web'],
 						'type' => 'checkbox',
