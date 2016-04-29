@@ -183,8 +183,7 @@ return array(
 								'varname' => 'allow_preset',
 							),
 							'onlyif' => 1
-						)
-					),
+					)
 				),
 				'system_backupenabled' => array(
 					'label' => $lng['serversettings']['backupenabled'],
@@ -197,6 +196,6 @@ return array(
 				),
 			),
 		),
-	);
+	)
+);
 
-?>
