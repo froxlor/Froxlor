@@ -730,7 +730,7 @@ if ($page == 'overview') {
 					AND `dip`.`id_ipandports`
 					IN (SELECT `id_ipandports` FROM `".TABLE_DOMAINTOIP."`
 						WHERE `id_domain` = :id)
-					GROUP BY `d`.`domain`
+					GROUP BY `d`.`id`, `d`.`domain`
 					ORDER BY `d`.`domain` ASC"
 				);
 				Database::pexecute($domains_stmt, array("id" => $result['id'], "customerid" => $userinfo['customerid']));
