@@ -82,13 +82,13 @@ function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog)
 		$tar_file_list = "";
 		$mail_homedir = "";
 		while ($row = $sel_stmt->fetch()) {
-			$tar_file_list .= "./".$row['maildir'] . " ";
+			$tar_file_list .= escapeshellarg("./".$row['maildir']) . " ";
 			$mail_homedir = $row['homedir'];
 		}
 
 		if (! empty($tar_file_list)) {
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfvz ' . escapeshellarg(makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' ' . escapeshellarg(trim($tar_file_list)).' -C '.escapeshellarg($mail_homedir));
-			safe_exec('tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' ' . escapeshellarg(trim($tar_file_list)).' -C '.escapeshellarg($mail_homedir));
+			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfvz ' . escapeshellarg(makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' -C '.escapeshellarg($mail_homedir) . ' ' . trim($tar_file_list));
+			safe_exec('tar cfz ' . escapeshellarg(makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' -C '.escapeshellarg($mail_homedir) . ' ' . trim($tar_file_list));
 			$create_backup_tar_data .= './mail ';
 		}
 	}

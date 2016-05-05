@@ -1641,3 +1641,4 @@ $lng['serversettings']['backupenabled']['title'] = "Backup für Kunden aktiviere
 $lng['serversettings']['backupenabled']['description'] = "Wenn dies aktiviert ist, kann der Kunde Sicherungen planen (cron-backup) welche ein Archiv in sein Heimatverzeichnis ablegt (Unterordner vom Kunden wählbar)";
 $lng['extras']['path_protection_label'] = '<strong class="red">Wichtig</strong>';
 $lng['extras']['path_protection_info'] = '<strong class="red">Wir raten dringend dazu den angegebenen Pfad zu schützen, siehe "Extras" -> "Verzeichnisschutz"</strong>';
+$lng['tasks']['backup_customerfiles'] = 'Datensicherung für Kunde %loginname%';

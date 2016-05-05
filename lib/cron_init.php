@@ -129,7 +129,7 @@ while ($fName = readdir($lockDirHandle)) {
 			//
 			fwrite($debugHandler, 'Previous cronjob didn\'t exit clean. PID: ' . $check_pid . "\n");
 			fwrite($debugHandler, 'Removing lockfile: ' . $lockdir . $fName . "\n");
-			unlink($lockdir . $fName);
+			@unlink($lockdir . $fName);
 
 		} else {
 			// Result:      A Cronscript with this pid

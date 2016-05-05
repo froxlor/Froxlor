@@ -525,6 +525,17 @@ if ($page == 'overview') {
 		if ($action == '') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
 
+			// check whether there is a backup-job for this customer
+			$sel_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_TASKS."` WHERE `type` = '20'");
+			Database::pexecute($sel_stmt);
+			while ($entry = $sel_stmt->fetch())
+			{
+				$data = unserialize($entry['data']);
+				if ($data['customerid'] == $userinfo['customerid']) {
+					standard_error('customerhasongoingbackupjob');
+				}
+			}
+
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 				if (! $_POST['path']) {
@@ -566,16 +577,6 @@ if ($page == 'overview') {
 				standard_success('backupscheduled');
 			} else {
 
-				// check whether there is a backup-job for this customer
-				$sel_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_TASKS."` WHERE `type` = '20'");
-				Database::pexecute($sel_stmt);
-				while ($entry = $sel_stmt->fetch())
-				{
-					$data = unserialize($entry['data']);
-					if ($data['customerid'] == $userinfo['customerid']) {
-						standard_error('customerhasongoingbackupjob');
-					}
-				}
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
 				$backup_form = htmlform::genHTMLForm($backup_data);
