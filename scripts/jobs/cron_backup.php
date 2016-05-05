@@ -75,7 +75,8 @@ $result_tasks_stmt = Database::query("
 
 $del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `id` = :id");
 
-while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
+$all_jobs = $result_tasks_stmt->fetchAll();
+foreach ($all_jobs as $row) {
 
 	if ($row['data'] != '') {
 		$row['data'] = unserialize($row['data']);
