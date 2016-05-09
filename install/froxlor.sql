@@ -858,7 +858,7 @@ CREATE TABLE IF NOT EXISTS `panel_domaintoip` (
 
 DROP TABLE IF EXISTS `domain_dns_entries`;
 CREATE TABLE `domain_dns_entries` (
-  `id` int(20) NOT NULL,
+  `id` int(20) NOT NULL auto_increment,
   `domain_id` int(15) NOT NULL,
   `record` varchar(255) NOT NULL,
   `type` varchar(10) NOT NULL DEFAULT 'A',
