@@ -68,8 +68,29 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		$errors[] = $lng['error']['dns_arec_noipv4'];
 	} elseif ($type == 'AAAA' && filter_var($content, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
 		$errors[] = $lng['errors']['dns_aaaarec_noipv6'];
-	} elseif ($type == 'MX' && empty($prio)) {
-		$errors[] = $lng['error']['dns_mx_prioempty'];
+	} elseif ($type == 'MX') {
+		if ($prio === null || $prio < 0) {
+			$errors[] = $lng['error']['dns_mx_prioempty'];
+		}
+		// check for trailing dot
+		if (substr($content, - 1) == '.') {
+			// remove it for checks
+			$content = substr($content, 0, - 1);
+		}
+		if (! validateDomain($content)) {
+			$errors[] = $lng['error']['dns_mx_needdom'];
+		} else {
+			// check whether there is a CNAME-record for the same resource
+			foreach ($dom_entries as $existing_entries) {
+				$fqdn = $existing_entries['record'] . '.' . $domain;
+				if ($existing_entries['type'] == 'CNAME' && $fqdn == $content) {
+					$errors[] = $lng['error']['dns_mx_noalias'];
+					break;
+				}
+			}
+		}
+		// append trailing dot (again)
+		$content .= '.';
 	} elseif ($type == 'CNAME') {
 		// check for trailing dot
 		if (substr($content, - 1) == '.') {
@@ -103,14 +124,17 @@ if ($action == 'add_record' && ! empty($_POST)) {
 			// remove it for checks
 			$content = substr($content, 0, - 1);
 		}
-		//
-		if (! validateDomain($content)) {
+		// check only last part of content, as it can look like:
+		// _service._proto.name. TTL class SRV priority weight port target.
+		$_split_content = explode(" ", $content);
+		$target = trim($_split_content[count($_split_content)-1]);
+		if (! validateDomain($target)) {
 			$errors[] = $lng['error']['dns_srv_needdom'];
 		} else {
 			// check whether there is a CNAME-record for the same resource
 			foreach ($dom_entries as $existing_entries) {
 				$fqdn = $existing_entries['record'] . '.' . $domain;
-				if ($existing_entries['type'] == 'CNAME' && $fqdn == $content) {
+				if ($existing_entries['type'] == 'CNAME' && $fqdn == $target) {
 					$errors[] = $lng['error']['dns_srv_noalias'];
 					break;
 				}

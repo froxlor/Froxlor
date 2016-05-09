@@ -1989,3 +1989,16 @@ $lng['serversettings']['backupenabled']['description'] = "If activated, the cust
 $lng['extras']['path_protection_label'] = '<strong class="red">Important</strong>';
 $lng['extras']['path_protection_info'] = '<strong class="red">We strongly recommend protecting the given path, see "Extras" -> "Directory protection"</strong>';
 $lng['tasks']['backup_customerfiles'] = 'Backup job for customer %loginname%';
+
+$lng['error']['dns_content_empty'] = 'No content given';
+$lng['error']['dns_arec_noipv4'] = 'No valid IP address for A-record given';
+$lng['error']['dns_mx_prioempty'] = 'Invalid MX priority given';
+$lng['error']['dns_mx_needdom'] = 'The MX content value must be a valid domain-name';
+$lng['error']['dns_mx_noalias'] = 'The MX-content value cannot be an CNAME entry.';
+$lng['error']['dns_cname_invaliddom'] = 'Invalid domain-name for CNAME record';
+$lng['error']['dns_cname_nomorerr'] = 'There already exists a resource-record with the same record-name. It cannot be used as CNAME.';
+$lng['error']['dns_srv_needdom'] = 'The SRV target value must be a valid domain-name';
+$lng['error']['dns_srv_noalias'] = 'The SRV-target value cannot be an CNAME entry.';
+$lng['error']['dns_duplicate_entry'] = 'Record already exists';
+$lng['success']['dns_record_added'] = 'Record added successfully';
+$lng['success']['dns_record_deleted'] = 'Record deleted successfully';
