@@ -169,7 +169,8 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			// clear NSCD cache if using fcgid or fpm, #1570
 			if (Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
-				safe_exec('nscd -i group 1> /dev/null', false, array('>'));
+				$false_val = false;
+				safe_exec('nscd -i group 1> /dev/null', $false_val, array('>'));
 			}
 		}
 	}
