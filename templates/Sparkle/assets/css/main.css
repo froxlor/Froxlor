@@ -601,6 +601,12 @@ input[type="password"] {
 	background:#fff url(../img/icons/lock.png) no-repeat 5px 4px;
 }
 
+input[class="small"] {
+	width:auto;
+	margin-top: 5px;
+}
+
+
 /*
  *  BUTTONS
  */
@@ -1512,4 +1518,20 @@ fieldset.file {
 
 table.hl tbody tr.domain-hostname:hover {
 	background-color: rgb(64, 150, 238);
+}
+
+td.size-5 {
+	width: 5%;
+}
+
+td.size-10 {
+	width: 10%;
+}
+
+td.size-20 {
+	width: 20%;
+}
+
+td.size-50 {
+	width: 50%;
 }

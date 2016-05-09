@@ -3312,3 +3312,26 @@ if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201603150')) {
 
 	updateToDbVersion('201604270');
 }
+
+if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201604270')) {
+
+	showUpdateStep("Adding new dns related tables and settings");
+	$enable_dns = isset($_POST['enable_dns']) ? (int) $_POST['enable_dns'] : "0";
+	Settings::AddNew("system.dnsenabled", $enable_dns);
+
+	Database::query("DROP TABLE IF EXISTS `domain_dns_entries`;");
+	$sql = "CREATE TABLE `domain_dns_entries` (
+		`id` int(20) NOT NULL,
+		`domain_id` int(15) NOT NULL,
+		`record` varchar(255) NOT NULL,
+		`type` varchar(10) NOT NULL DEFAULT 'A',
+		`content` text NOT NULL,
+		`ttl` int(11) NOT NULL DEFAULT '18000',
+		`prio` int(11) DEFAULT NULL,
+		PRIMARY KEY (`id`)
+		) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	lastStepStatus(0);
+
+	updateToDbVersion('201605090');
+}

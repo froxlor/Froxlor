@@ -2061,6 +2061,9 @@ elseif (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
 			eval("echo \"" . getTemplate("domains/domains_import") . "\";");
 		}
 	}
+} elseif ($page == 'domaindnseditor') {
+
+	require_once __DIR__.'/dns_editor.php';
 }
 
 function formatDomainEntry(&$row, &$idna_convert)

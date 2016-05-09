@@ -557,7 +557,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.35.1'),
-	('panel', 'db_version', '201604270');
+	('panel', 'db_version', '201605090');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -853,5 +853,18 @@ CREATE TABLE IF NOT EXISTS `panel_domaintoip` (
   `id_domain` int(11) unsigned NOT NULL,
   `id_ipandports` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_domain`,`id_ipandports`)
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+DROP TABLE IF EXISTS `domain_dns_entries`;
+CREATE TABLE `domain_dns_entries` (
+  `id` int(20) NOT NULL,
+  `domain_id` int(15) NOT NULL,
+  `record` varchar(255) NOT NULL,
+  `type` varchar(10) NOT NULL DEFAULT 'A',
+  `content` text NOT NULL,
+  `ttl` int(11) NOT NULL DEFAULT '18000',
+  `prio` int(11) DEFAULT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
