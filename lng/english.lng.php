@@ -1990,8 +1990,10 @@ $lng['extras']['path_protection_label'] = '<strong class="red">Important</strong
 $lng['extras']['path_protection_info'] = '<strong class="red">We strongly recommend protecting the given path, see "Extras" -> "Directory protection"</strong>';
 $lng['tasks']['backup_customerfiles'] = 'Backup job for customer %loginname%';
 
+$lng['error']['dns_domain_nodns'] = 'DNS is not enabled for this domain';
 $lng['error']['dns_content_empty'] = 'No content given';
 $lng['error']['dns_arec_noipv4'] = 'No valid IP address for A-record given';
+$lng['error']['dns_aaaarec_noipv6'] = 'No valid IP address for AAAA-record given';
 $lng['error']['dns_mx_prioempty'] = 'Invalid MX priority given';
 $lng['error']['dns_mx_needdom'] = 'The MX content value must be a valid domain-name';
 $lng['error']['dns_mx_noalias'] = 'The MX-content value cannot be an CNAME entry.';

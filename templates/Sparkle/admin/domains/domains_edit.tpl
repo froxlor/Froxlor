@@ -4,7 +4,9 @@ $header
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/domain_edit_big.png" alt="{$title}" />&nbsp;
 				{$title}
-				&nbsp;(<small><a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $id))}">edit DNS</a></small>)
+				<if $result['isbinddomain'] == '1'>
+					&nbsp;(<small><a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $id))}">edit DNS</a></small>)
+				</if>
 			</h2>
 		</header>
 

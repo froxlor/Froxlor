@@ -18,7 +18,7 @@ if (! defined('AREA'))
  */
 
 // This file is being included in admin_domains and customer_domains
-	// and therefore does not need to require lib/init.php
+// and therefore does not need to require lib/init.php
 
 $domain_id = isset($_GET['domain_id']) ? (int) $_GET['domain_id'] : null;
 
@@ -29,10 +29,14 @@ $content = isset($_POST['record']['content']) ? trim($_POST['record']['content']
 $ttl = isset($_POST['record']['ttl']) ? (int) $_POST['record']['ttl'] : 18000;
 
 // get domain-name
-$dom_stmt = Database::prepare("SELECT domain FROM `" . TABLE_PANEL_DOMAINS . "` WHERE id = :did");
+$dom_stmt = Database::prepare("SELECT domain, isbinddomain FROM `" . TABLE_PANEL_DOMAINS . "` WHERE id = :did");
 $domain = Database::pexecute_first($dom_stmt, array(
 	'did' => $domain_id
 ));
+
+if ($domain['isbinddomain'] != '0') {
+	standard_error('dns_domain_nodns');
+}
 $domain = $idna_convert->decode($domain['domain']);
 
 // select all entries
@@ -67,7 +71,7 @@ if ($action == 'add_record' && ! empty($_POST)) {
 	if ($type == 'A' && filter_var($content, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
 		$errors[] = $lng['error']['dns_arec_noipv4'];
 	} elseif ($type == 'AAAA' && filter_var($content, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
-		$errors[] = $lng['errors']['dns_aaaarec_noipv6'];
+		$errors[] = $lng['error']['dns_aaaarec_noipv6'];
 	} elseif ($type == 'MX') {
 		if ($prio === null || $prio < 0) {
 			$errors[] = $lng['error']['dns_mx_prioempty'];
