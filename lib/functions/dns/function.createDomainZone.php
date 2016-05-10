@@ -95,7 +95,7 @@ function createDomainZone($domain_id)
 
 	// now generate all records and unset the required entries we have
 	foreach ($dom_entries as $entry) {
-		if (array_key_exists($entry['type'], $required_entries) && $required_entries[$entry['type']][md5($entry['record'])] == $entry['record']) {
+		if (array_key_exists($entry['type'], $required_entries) && array_key_exists(md5($entry['record']), $required_entries[$entry['type']])) {
 			unset($required_entries[$entry['type']][md5($entry['record'])]);
 		}
 		$zonefile .= formatEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'], $entry['ttl']);
@@ -180,8 +180,6 @@ function createDomainZone($domain_id)
 			}
 		}
 	}
-
-	var_dump($required_entries);
 
 	return $zonefile;
 }

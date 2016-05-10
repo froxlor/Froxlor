@@ -221,11 +221,11 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		// success message (inline)
 		$success_message = $lng['success']['dns_record_added'];
 
-		unset($record);
-		unset($type);
-		unset($prio);
-		unset($content);
-		unset($ttl);
+		$record = "";
+		$type = 'A';
+		$prio = "";
+		$content = "";
+		$ttl = "";
 	} else {
 		// show $errors
 		$errors = implode("<br>", $errors);
