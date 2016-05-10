@@ -283,4 +283,6 @@ foreach ($type_select_values as $_type) {
 }
 
 eval("\$record_list=\"" . getTemplate("dns_editor/list", true) . "\";");
+
+$zonefile = createDomainZone($domain_id);
 eval("echo \"" . getTemplate("dns_editor/index", true) . "\";");

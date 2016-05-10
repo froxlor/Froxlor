@@ -25,4 +25,8 @@ $header
 		</section>
 
 	</article>
+
+	<br><br>
+	<textarea rows="20" class="filecontent">{$zonefile}</textarea>
+
 $footer
