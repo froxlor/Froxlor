@@ -940,7 +940,8 @@ if ($page == 'customers'
 							WHERE `id` = :defaultip
 						");
 						$default_ips = Settings::Get('system.defaultip');
-						$srv_ip = Database::pexecute_first($srv_ip_stmt, array('defaultip' => reset(explode(',', $default_ips))));
+						$default_ips = explode(',', $default_ips);
+						$srv_ip = Database::pexecute_first($srv_ip_stmt, array('defaultip' => reset($default_ips)));
 
 						$replace_arr = array(
 							'FIRSTNAME' => $firstname,
