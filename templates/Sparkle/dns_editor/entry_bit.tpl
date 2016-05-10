@@ -1,7 +1,7 @@
 <tr>
 	<td>{$entry['record']}</td>
 	<td>{$entry['type']}</td>
-	<td><if $entry['prio'] <= 0>&nbsp;<else>{$entry['prio']}</if></td>
+	<td><if ($entry['prio'] <= 0 && $entry['type'] != 'MX' && $entry['type'] != 'SRV')>&nbsp;<else>{$entry['prio']}</if></td>
 	<td>{$entry['content']}</td>
 	<td>{$entry['ttl']}</td>
 	<td>

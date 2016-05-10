@@ -18,7 +18,7 @@ if (! defined('AREA'))
  */
 
 // This file is being included in admin_domains and customer_domains
-// and therefore does not need to require lib/init.php
+	// and therefore does not need to require lib/init.php
 
 $domain_id = isset($_GET['domain_id']) ? (int) $_GET['domain_id'] : null;
 
@@ -34,7 +34,7 @@ $domain = Database::pexecute_first($dom_stmt, array(
 	'did' => $domain_id
 ));
 
-if ($domain['isbinddomain'] != '0') {
+if ($domain['isbinddomain'] != '1') {
 	standard_error('dns_domain_nodns');
 }
 $domain = $idna_convert->decode($domain['domain']);
@@ -114,6 +114,17 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		}
 		// append trailing dot (again)
 		$content .= '.';
+	} elseif ($type == 'NS') {
+		// check for trailing dot
+		if (substr($content, - 1) == '.') {
+			// remove it for checks
+			$content = substr($content, 0, - 1);
+		}
+		if (! validateDomain($content)) {
+			$errors[] = $lng['error']['dns_ns_invaliddom'];
+		}
+		// append trailing dot (again)
+		$content .= '.';
 	} elseif ($type == 'TXT' && ! empty($content)) {
 		// check that TXT content is enclosed in " "
 		if (substr($content, 0, 1) != '"') {
@@ -123,6 +134,9 @@ if ($action == 'add_record' && ! empty($_POST)) {
 			$content .= '"';
 		}
 	} elseif ($type == 'SRV') {
+		if ($prio === null || $prio < 0) {
+			$errors[] = $lng['error']['dns_srv_prioempty'];
+		}
 		// check for trailing dot
 		if (substr($content, - 1) == '.') {
 			// remove it for checks
@@ -131,7 +145,11 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		// check only last part of content, as it can look like:
 		// _service._proto.name. TTL class SRV priority weight port target.
 		$_split_content = explode(" ", $content);
-		$target = trim($_split_content[count($_split_content)-1]);
+		// SRV content must be [weight] [port] [target]
+		if (count($_split_content) != 3) {
+			$errors[] = $lng['error']['dns_srv_invalidcontent'];
+		}
+		$target = trim($_split_content[count($_split_content) - 1]);
 		if (! validateDomain($target)) {
 			$errors[] = $lng['error']['dns_srv_needdom'];
 		} else {
@@ -167,9 +185,9 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		// sort by key
 		ksort($check_entry);
 		// format integer fields to real integer (as they are read as string from the DB)
-		$check_entry['prio'] = (int)$check_entry['prio'];
-		$check_entry['ttl'] = (int)$check_entry['ttl'];
-		$check_entry['domain_id'] = (int)$check_entry['domain_id'];
+		$check_entry['prio'] = (int) $check_entry['prio'];
+		$check_entry['ttl'] = (int) $check_entry['ttl'];
+		$check_entry['domain_id'] = (int) $check_entry['domain_id'];
 		// serialize both
 		$check_entry = serialize($check_entry);
 		$new = serialize($new_entry);
@@ -202,6 +220,12 @@ if ($action == 'add_record' && ! empty($_POST)) {
 
 		// success message (inline)
 		$success_message = $lng['success']['dns_record_added'];
+
+		unset($record);
+		unset($type);
+		unset($prio);
+		unset($content);
+		unset($ttl);
 	} else {
 		// show $errors
 		$errors = implode("<br>", $errors);
@@ -238,6 +262,7 @@ $entriescount = 0;
 if (! empty($dom_entries)) {
 	$entriescount = count($dom_entries);
 	foreach ($dom_entries as $entry) {
+		$entry['content'] = wordwrap($entry['content'], 100, '<br>', true);
 		eval("\$existing_entries.=\"" . getTemplate("dns_editor/entry_bit", true) . "\";");
 	}
 }
