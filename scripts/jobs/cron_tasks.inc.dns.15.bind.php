@@ -85,7 +85,7 @@ class bind2
 
 		// check for subfolder in bind-config-directory
 		if (! file_exists(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/'))) {
-			$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
+			$this->_logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
 			safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
 		}
 
@@ -117,7 +117,7 @@ class bind2
 		}
 
 		if (empty($domains)) {
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
 			return;
 		}
 
@@ -130,13 +130,14 @@ class bind2
 				$isFroxlorHostname = true;
 			}
 			// create zone-file
-			$zonefile = createDomainZone($domain, $isFroxlorHostname);
+			$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for '.$domain['domain']);
+			$zonefile = createDomainZone($domain['id'], $isFroxlorHostname);
 			$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
 			$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
 			$zonefile_handler = fopen($zonefile_name, 'w');
 			fwrite($zonefile_handler, $zonefile);
 			fclose($zonefile_handler);
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` zone written');
+			$this->_logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` zone written');
 
 			// generate config
 			$bindconf_file .= $this->_generateDomainConfig($domain);
@@ -146,35 +147,37 @@ class bind2
 		$bindconf_file_handler = fopen(makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
 		fwrite($bindconf_file_handler, $bindconf_file);
 		fclose($bindconf_file_handler);
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
 
 		// reload Bind
 		safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
 	}
 
 	private function _generateDomainConfig($domain = array())
 	{
+		$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns config for '.$domain['domain']);
+
 		$bindconf_file = '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
 		$bindconf_file .= 'zone "' . $domain['domain'] . '" in {' . "\n";
 		$bindconf_file .= '	type master;' . "\n";
 		$bindconf_file .= '	file "' . makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']) . '";' . "\n";
 		$bindconf_file .= '	allow-query { any; };' . "\n";
 
-		if (count($this->nameservers) > 0 || count($this->axfrservers) > 0) {
+		if (count($this->_ns) > 0 || count($this->_axfr) > 0) {
 			// open allow-transfer
 			$bindconf_file .= '	allow-transfer {' . "\n";
 			// put nameservers in allow-transfer
-			if (count($this->nameservers) > 0) {
-				foreach ($this->nameservers as $ns) {
+			if (count($this->_ns) > 0) {
+				foreach ($this->_ns as $ns) {
 					foreach ($ns["ips"] as $ip) {
 						$bindconf_file .= '		' . $ip . ";\n";
 					}
 				}
 			}
 			// AXFR server #100
-			if (count($this->axfrservers) > 0) {
-				foreach ($this->axfrservers as $axfrserver) {
+			if (count($this->_axfr) > 0) {
+				foreach ($this->_axfr as $axfrserver) {
 					if (validate_ip($axfrserver, true) !== false) {
 						$bindconf_file .= '		' . $axfrserver . ';' . "\n";
 					}
