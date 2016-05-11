@@ -33,21 +33,6 @@ function createDomainZone($domain_id)
 	));
 	$dom_entries = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-	// @TODO alias domains
-
-	// TODO for now, dummy time-periods
-	$soa_content = getPrimaryNs($dom_entries) . " " . str_replace('@', '.', Settings::Get('panel.adminmail')) . ". (" . PHP_EOL;
-	$soa_content .= $domain['bindserial'] . "\t; serial" . PHP_EOL;
-	$soa_content .= "1800\t; refresh (30 mins)" . PHP_EOL;
-	$soa_content .= "900\t; retry (15 mins)" . PHP_EOL;
-	$soa_content .= "604800\t; expire (7 days)" . PHP_EOL;
-	$soa_content .= "1200\t)\t; minimum (20 mins)";
-
-	// create Zone
-	$zonefile = "\$TTL " . (int) Settings::Get('system.defaultttl') . PHP_EOL;
-	$zonefile .= "\$ORIGIN " . $domain['domain'] . "." . PHP_EOL;
-	$zonefile .= formatEntry('@', 'SOA', $soa_content);
-
 	// check for required records
 	$required_entries = array();
 
@@ -93,10 +78,17 @@ function createDomainZone($domain_id)
 		}
 	}
 
+	$primary_ns = null;
+	$zonefile = "";
+
 	// now generate all records and unset the required entries we have
 	foreach ($dom_entries as $entry) {
 		if (array_key_exists($entry['type'], $required_entries) && array_key_exists(md5($entry['record']), $required_entries[$entry['type']])) {
 			unset($required_entries[$entry['type']][md5($entry['record'])]);
+		}
+		if (empty($primary_ns) && $entry['type'] == 'NS') {
+			// use the first NS entry as primary ns
+			$primary_ns = $entry['content'];
 		}
 		$zonefile .= formatEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'], $entry['ttl']);
 	}
@@ -145,6 +137,10 @@ function createDomainZone($domain_id)
 					foreach ($required_entries as $type => $records) {
 						if ($type == 'NS') {
 							foreach ($records as $record) {
+								if (empty($primary_ns)) {
+									// use the first NS entry as primary ns
+									$primary_ns = $nameserver;
+								}
 								$zonefile .= formatEntry($record, 'NS', $nameserver);
 							}
 						}
@@ -181,6 +177,24 @@ function createDomainZone($domain_id)
 		}
 	}
 
+	if (empty($primary_ns)) {
+		// TODO log error: no NS given, use system-hostname
+		$primary_ns = Settings::Get('system.hostname');
+	}
+
+	// TODO for now, dummy time-periods
+	$soa_content = $primary_ns . " " . str_replace('@', '.', Settings::Get('panel.adminmail')) . ". (" . PHP_EOL;
+	$soa_content .= $domain['bindserial'] . "\t; serial" . PHP_EOL;
+	$soa_content .= "1800\t; refresh (30 mins)" . PHP_EOL;
+	$soa_content .= "900\t; retry (15 mins)" . PHP_EOL;
+	$soa_content .= "604800\t; expire (7 days)" . PHP_EOL;
+	$soa_content .= "1200\t)\t; minimum (20 mins)";
+
+	$_zonefile = "\$TTL " . (int) Settings::Get('system.defaultttl') . PHP_EOL;
+	$_zonefile .= "\$ORIGIN " . $domain['domain'] . "." . PHP_EOL;
+	$_zonefile .= formatEntry('@', 'SOA', $soa_content);
+	$zonefile = $_zonefile.$zonefile;
+
 	return $zonefile;
 }
 
@@ -196,16 +210,4 @@ function addRequiredEntry($record = '@', $type = 'A', &$required)
 		$required[$type] = array();
 	}
 	$required[$type][md5($record)] = $record;
-}
-
-function getPrimaryNs($dom_entries)
-{
-	// go through all records and use the first NS record as primary NS
-	foreach ($dom_entries as $entry) {
-		if ($entry['type'] == 'NS') {
-			return $entry['content'];
-		}
-	}
-	// FIXME use default from settings somehow if none given?
-	return 'no.dns-server.given.tld.';
 }
