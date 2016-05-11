@@ -127,9 +127,9 @@ function createDomainZone($domain_id)
 						}
 					}
 				}
-				unset($required_entries['A']);
-				unset($required_entries['AAAA']);
 			}
+			unset($required_entries['A']);
+			unset($required_entries['AAAA']);
 		}
 
 		// NS records

@@ -59,6 +59,8 @@ if ($action == 'add_record' && ! empty($_POST)) {
 
 	$record = strtolower($record);
 
+	// TODO regex validate record and content for invalid characters
+
 	if ($ttl <= 0) {
 		$ttl = 18000;
 	}
