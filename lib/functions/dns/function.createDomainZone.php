@@ -14,7 +14,7 @@
  * @package Functions
  *
  */
-function createDomainZone($domain_id)
+function createDomainZone($domain_id, $froxlorhostname = false)
 {
 	// get domain-name
 	$dom_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE id = :did");
@@ -78,6 +78,20 @@ function createDomainZone($domain_id)
 		}
 	}
 
+	// additional required records for main-but-subdomain-to
+	$mainbutsub_stmt = Database::prepare("
+		SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+		WHERE `ismainbutsubto` = :domainid
+	");
+	Database::pexecute($mainbutsub_stmt, array(
+		'domainid' => $domain_id
+	));
+
+	while ($mainbutsubtodomain = $mainbutsub_stmt->fetch(PDO::FETCH_ASSOC)) {
+		// Add NS entry for subdomain-records of "main-but-subdomain-to"-domains, they get their own Zone
+		addRequiredEntry(str_replace('.' . $domain['domain'], '', $mainbutsubtodomain['domain']), 'NS', $required_entries);
+	}
+
 	$primary_ns = null;
 	$zonefile = "";
 
@@ -98,12 +112,19 @@ function createDomainZone($domain_id)
 
 		// A / AAAA records
 		if (array_key_exists("A", $required_entries) || array_key_exists("AAAA", $required_entries)) {
-			$result_ip_stmt = Database::prepare("
-				SELECT `p`.`ip` AS `ip`
-				FROM `" . TABLE_PANEL_IPSANDPORTS . "` `p`, `" . TABLE_DOMAINTOIP . "` `di`
-				WHERE `di`.`id_domain` = :domainid AND `p`.`id` = `di`.`id_ipandports`
-				GROUP BY `p`.`ip`;
-			");
+			if ($froxlorhostname) {
+				// use all available IP's for the froxlor-hostname
+				$result_ip_stmt = Database::prepare("
+					SELECT `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` GROUP BY `ip`
+				");
+			} else {
+				$result_ip_stmt = Database::prepare("
+					SELECT `p`.`ip` AS `ip`
+					FROM `" . TABLE_PANEL_IPSANDPORTS . "` `p`, `" . TABLE_DOMAINTOIP . "` `di`
+					WHERE `di`.`id_domain` = :domainid AND `p`.`id` = `di`.`id_ipandports`
+					GROUP BY `p`.`ip`;
+				");
+			}
 			Database::pexecute($result_ip_stmt, array(
 				'domainid' => $domain_id
 			));
