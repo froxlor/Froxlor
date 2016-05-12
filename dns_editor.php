@@ -129,12 +129,7 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		$content .= '.';
 	} elseif ($type == 'TXT' && ! empty($content)) {
 		// check that TXT content is enclosed in " "
-		if (substr($content, 0, 1) != '"') {
-			$content = '"' . $content;
-		}
-		if (substr($content, - 1) != '"') {
-			$content .= '"';
-		}
+		$content = encloseTXTContent($content);
 	} elseif ($type == 'SRV') {
 		if ($prio === null || $prio < 0) {
 			$errors[] = $lng['error']['dns_srv_prioempty'];

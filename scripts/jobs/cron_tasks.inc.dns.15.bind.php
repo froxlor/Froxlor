@@ -130,7 +130,7 @@ class bind2
 				$isFroxlorHostname = true;
 			}
 			// create zone-file
-			$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for '.$domain['domain']);
+			$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for ' . $domain['domain']);
 			$zonefile = createDomainZone($domain['id'], $isFroxlorHostname);
 			$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
 			$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
@@ -154,9 +154,89 @@ class bind2
 		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
 	}
 
+	public function writeDKIMconfigs()
+	{
+		if (Settings::Get('dkim.use_dkim') == '1') {
+			if (! file_exists(makeCorrectDir(Settings::Get('dkim.dkim_prefix')))) {
+				$this->_logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir -p ' . escapeshellarg(makeCorrectDir(Settings::Get('dkim.dkim_prefix'))));
+				safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir(Settings::Get('dkim.dkim_prefix'))));
+			}
+
+			$dkimdomains = '';
+			$dkimkeys = '';
+			$result_domains_stmt = Database::query("
+				SELECT `id`, `domain`, `dkim`, `dkim_id`, `dkim_pubkey`, `dkim_privkey`
+				FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `dkim` = '1' ORDER BY `id` ASC
+			");
+
+			while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+				$privkey_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id']);
+				$pubkey_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id'] . '.public');
+
+				if ($domain['dkim_privkey'] == '' || $domain['dkim_pubkey'] == '') {
+					$max_dkim_id_stmt = Database::query("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
+					$max_dkim_id = $max_dkim_id_stmt->fetch(PDO::FETCH_ASSOC);
+					$domain['dkim_id'] = (int) $max_dkim_id['max_dkim_id'] + 1;
+					$privkey_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id']);
+					safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . Settings::Get('dkim.dkim_keylength'));
+					$domain['dkim_privkey'] = file_get_contents($privkey_filename);
+					safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
+					$pubkey_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id'] . '.public');
+					safe_exec('openssl rsa -in ' . escapeshellarg($privkey_filename) . ' -pubout -outform pem -out ' . escapeshellarg($pubkey_filename));
+					$domain['dkim_pubkey'] = file_get_contents($pubkey_filename);
+					safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
+					$upd_stmt = Database::prepare("
+						UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+						`dkim_id` = :dkimid,
+						`dkim_privkey` = :privkey,
+						`dkim_pubkey` = :pubkey
+						WHERE `id` = :id
+					");
+					$upd_data = array(
+						'dkimid' => $domain['dkim_id'],
+						'privkey' => $domain['dkim_privkey'],
+						'pubkey' => $domain['dkim_pubkey'],
+						'id' => $domain['id']
+					);
+					Database::pexecute($upd_stmt, $upd_data);
+				}
+
+				if (! file_exists($privkey_filename) && $domain['dkim_privkey'] != '') {
+					$privkey_file_handler = fopen($privkey_filename, "w");
+					fwrite($privkey_file_handler, $domain['dkim_privkey']);
+					fclose($privkey_file_handler);
+					safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
+				}
+
+				if (! file_exists($pubkey_filename) && $domain['dkim_pubkey'] != '') {
+					$pubkey_file_handler = fopen($pubkey_filename, "w");
+					fwrite($pubkey_file_handler, $domain['dkim_pubkey']);
+					fclose($pubkey_file_handler);
+					safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
+				}
+
+				$dkimdomains .= $domain['domain'] . "\n";
+				$dkimkeys .= "*@" . $domain['domain'] . ":" . $domain['domain'] . ":" . $privkey_filename . "\n";
+			}
+
+			$dkimdomains_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/' . Settings::Get('dkim.dkim_domains'));
+			$dkimdomains_file_handler = fopen($dkimdomains_filename, "w");
+			fwrite($dkimdomains_file_handler, $dkimdomains);
+			fclose($dkimdomains_file_handler);
+			$dkimkeys_filename = makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/' . Settings::Get('dkim.dkim_dkimkeys'));
+			$dkimkeys_file_handler = fopen($dkimkeys_filename, "w");
+			fwrite($dkimkeys_file_handler, $dkimkeys);
+			fclose($dkimkeys_file_handler);
+
+			safe_exec(escapeshellcmd(Settings::Get('dkim.dkimrestart_command')));
+			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Dkim-milter reloaded');
+		}
+	}
+
 	private function _generateDomainConfig($domain = array())
 	{
-		$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns config for '.$domain['domain']);
+		$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns config for ' . $domain['domain']);
 
 		$bindconf_file = '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
 		$bindconf_file .= 'zone "' . $domain['domain'] . '" in {' . "\n";
@@ -197,7 +277,7 @@ class bind2
 	{
 		$config_dir = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/domains/');
 
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone files from '.$config_dir);
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone files from ' . $config_dir);
 
 		// check directory
 		if (@is_dir($config_dir)) {

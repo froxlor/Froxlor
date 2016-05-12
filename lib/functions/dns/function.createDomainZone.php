@@ -47,11 +47,10 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	if ($domain['iswildcarddomain'] == '1') {
 		addRequiredEntry('*', 'A', $required_entries);
 		addRequiredEntry('*', 'AAAA', $required_entries);
-	} else
-		if ($domain['wwwserveralias'] == '1') {
-			addRequiredEntry('www', 'A', $required_entries);
-			addRequiredEntry('www', 'AAAA', $required_entries);
-		}
+	} elseif ($domain['wwwserveralias'] == '1') {
+		addRequiredEntry('www', 'A', $required_entries);
+		addRequiredEntry('www', 'AAAA', $required_entries);
+	}
 
 	// additional required records for subdomains
 	$subdomains_stmt = Database::prepare("
@@ -92,13 +91,33 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 		addRequiredEntry(str_replace('.' . $domain['domain'], '', $mainbutsubtodomain['domain']), 'NS', $required_entries);
 	}
 
+	// additional required records for SPF and DKIM if activated
+	if (Settings::Get('spf.use_spf') == '1') {
+		// check for SPF content later
+		addRequiredEntry('@SPF@', 'TXT', $required_entries);
+	}
+	if (Settings::Get('dkim.use_dkim') == '1') {
+		// check for DKIM content later
+		addRequiredEntry('dkim_' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
+		// check for ASDP
+		if (Settings::Get('dkim.dkim_add_adsp') == "1") {
+			addRequiredEntry('_adsp._domainkey', 'TXT', $required_entries);
+		}
+	}
+
 	$primary_ns = null;
 	$zonefile = "";
 
 	// now generate all records and unset the required entries we have
 	foreach ($dom_entries as $entry) {
 		if (array_key_exists($entry['type'], $required_entries) && array_key_exists(md5($entry['record']), $required_entries[$entry['type']])) {
-			unset($required_entries[$entry['type']][md5($entry['record'])]);
+			// check for SPF entry if required
+			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && strtolower(substr($entry['content'], 0, 7)) == '"v=spf1') {
+				// unset special spf required-entry
+				unset($required_entries[$entry['type']][md5("@SPF@")]);
+			} else {
+				unset($required_entries[$entry['type']][md5($entry['record'])]);
+			}
 		}
 		if (empty($primary_ns) && $entry['type'] == 'NS') {
 			// use the first NS entry as primary ns
@@ -115,7 +134,7 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 			if ($froxlorhostname) {
 				// use all available IP's for the froxlor-hostname
 				$result_ip_stmt = Database::prepare("
-					SELECT `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` GROUP BY `ip`
+					SELECT `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` GROUP BY `ip`
 				");
 			} else {
 				$result_ip_stmt = Database::prepare("
@@ -196,6 +215,29 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 				unset($required_entries['MX']);
 			}
 		}
+
+		// TXT (SPF and DKIM)
+		if (array_key_exists("TXT", $required_entries)) {
+
+			if (Settings::Get('dkim.use_dkim') == '1') {
+				$dkim_entries = generateDkimEntries($domain);
+			}
+
+			foreach ($required_entries as $type => $records) {
+				if ($type == 'TXT') {
+					foreach ($records as $record) {
+						if ($record == '@SPF@') {
+							$txt_content = Settings::Get('spf.spf_entry');
+							$zonefile .= formatEntry('@', 'TXT', encloseTXTContent($txt_content));
+						} elseif ($record == 'dkim_' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
+							$zonefile .= formatEntry($record, 'TXT', encloseTXTContent($dkim_entries[0]));
+						} elseif ($record == '_adsp._domainkey' && ! empty($dkim_entries) && isset($dkim_entries[1])) {
+							$zonefile .= formatEntry($record, 'TXT', encloseTXTContent($dkim_entries[1]));
+						}
+					}
+				}
+			}
+		}
 	}
 
 	if (empty($primary_ns)) {
@@ -214,7 +256,7 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	$_zonefile = "\$TTL " . (int) Settings::Get('system.defaultttl') . PHP_EOL;
 	$_zonefile .= "\$ORIGIN " . $domain['domain'] . "." . PHP_EOL;
 	$_zonefile .= formatEntry('@', 'SOA', $soa_content);
-	$zonefile = $_zonefile.$zonefile;
+	$zonefile = $_zonefile . $zonefile;
 
 	return $zonefile;
 }
@@ -227,8 +269,91 @@ function formatEntry($record = '@', $type = 'A', $content = null, $prio = 0, $tt
 
 function addRequiredEntry($record = '@', $type = 'A', &$required)
 {
-	if (!isset($required[$type])) {
+	if (! isset($required[$type])) {
 		$required[$type] = array();
 	}
 	$required[$type][md5($record)] = $record;
+}
+
+function generateDkimEntries($domain)
+{
+	$zone_dkim = array();
+
+	if (Settings::Get('dkim.use_dkim') == '1' && $domain['dkim'] == '1' && $domain['dkim_pubkey'] != '') {
+		// start
+		$dkim_txt = 'v=DKIM1;';
+
+		// algorithm
+		$algorithm = explode(',', Settings::Get('dkim.dkim_algorithm'));
+		$alg = '';
+		foreach ($algorithm as $a) {
+			if ($a == 'all') {
+				break;
+			} else {
+				$alg .= $a . ':';
+			}
+		}
+
+		if ($alg != '') {
+			$alg = substr($alg, 0, - 1);
+			$dkim_txt .= 'h=' . $alg . ';';
+		}
+
+		// notes
+		if (trim(Settings::Get('dkim.dkim_notes') != '')) {
+			$dkim_txt .= 'n=' . trim(Settings::Get('dkim.dkim_notes')) . ';';
+		}
+
+		// key
+		$dkim_txt .= 'k=rsa;p=' . trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))) . ';';
+
+		// service-type
+		if (Settings::Get('dkim.dkim_servicetype') == '1') {
+			$dkim_txt .= 's=email;';
+		}
+
+		// end-part
+		$dkim_txt .= 't=s';
+
+		// split if necessary
+		$txt_record_split = '';
+		$lbr = 50;
+		for ($pos = 0; $pos <= strlen($dkim_txt) - 1; $pos += $lbr) {
+			$txt_record_split .= (($pos == 0) ? '("' : "\t\t\t\t\t \"") . substr($dkim_txt, $pos, $lbr) . (($pos >= strlen($dkim_txt) - $lbr) ? '")' : '"') . "\n";
+		}
+
+		// dkim-entry
+		$zone_dkim[] = $txt_record_split;
+
+		// adsp-entry
+		if (Settings::Get('dkim.dkim_add_adsp') == "1") {
+			$adsp = '"dkim=';
+			switch ((int) Settings::Get('dkim.dkim_add_adsppolicy')) {
+				case 0:
+					$adsp .= 'unknown"';
+					break;
+				case 1:
+					$adsp .= 'all"';
+					break;
+				case 2:
+					$adsp .= 'discardable"';
+					break;
+			}
+			$zone_dkim[] = $adsp;
+		}
+	}
+
+	return $zone_dkim;
+}
+
+function encloseTXTContent($txt_content)
+{
+	// check that TXT content is enclosed in " "
+	if (substr($txt_content, 0, 1) != '"') {
+		$txt_content = '"' . $txt_content;
+	}
+	if (substr($txt_content, - 1) != '"') {
+		$txt_content .= '"';
+	}
+	return $txt_content;
 }

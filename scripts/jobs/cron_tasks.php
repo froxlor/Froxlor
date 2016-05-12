@@ -187,7 +187,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$nameserver = new $bindclass($cronlog);
 		}
 
-		if (Settings::Get('dkim.use_dkim') == '1' && $bindclass == 'bind') {
+		if (Settings::Get('dkim.use_dkim') == '1') {
 			$nameserver->writeDKIMconfigs();
 		}
 
