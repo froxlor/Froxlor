@@ -228,7 +228,12 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 							$txt_content = Settings::Get('spf.spf_entry');
 							$zonefile .= formatEntry('@', 'TXT', encloseTXTContent($txt_content));
 						} elseif ($record == 'dkim_' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
-							$zonefile .= formatEntry($record, 'TXT', encloseTXTContent($dkim_entries[0]));
+							// check for multiline entry
+							$multiline = false;
+							if (substr($dkim_entries[0], 0, 1) == '(') {
+								$multiline = true;
+							}
+							$zonefile .= formatEntry($record, 'TXT', encloseTXTContent($dkim_entries[0], $multiline));
 						} elseif ($record == '_adsp._domainkey' && ! empty($dkim_entries) && isset($dkim_entries[1])) {
 							$zonefile .= formatEntry($record, 'TXT', encloseTXTContent($dkim_entries[1]));
 						}
@@ -344,14 +349,17 @@ function generateDkimEntries($domain)
 	return $zone_dkim;
 }
 
-function encloseTXTContent($txt_content)
+function encloseTXTContent($txt_content, $isMultiLine = false)
 {
 	// check that TXT content is enclosed in " "
-	if (substr($txt_content, 0, 1) != '"') {
-		$txt_content = '"' . $txt_content;
-	}
-	if (substr($txt_content, - 1) != '"') {
-		$txt_content .= '"';
+	if ($isMultiLine == false)
+	{
+		if (substr($txt_content, 0, 1) != '"') {
+			$txt_content = '"' . $txt_content;
+		}
+		if (substr($txt_content, - 1) != '"') {
+			$txt_content .= '"';
+		}
 	}
 	return $txt_content;
 }
