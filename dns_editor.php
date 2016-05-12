@@ -223,6 +223,9 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		$prio = "";
 		$content = "";
 		$ttl = "";
+
+		// re-generate bind configs
+		inserttask('4');
 	} else {
 		// show $errors
 		$errors = implode("<br>", $errors);
@@ -247,6 +250,9 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		unset($_t);
 		// success message (inline)
 		$success_message = $lng['success']['dns_record_deleted'];
+
+		// re-generate bind configs
+		inserttask('4');
 	}
 }
 
