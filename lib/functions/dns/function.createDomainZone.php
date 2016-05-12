@@ -111,13 +111,11 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	// now generate all records and unset the required entries we have
 	foreach ($dom_entries as $entry) {
 		if (array_key_exists($entry['type'], $required_entries) && array_key_exists(md5($entry['record']), $required_entries[$entry['type']])) {
-			// check for SPF entry if required
-			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && strtolower(substr($entry['content'], 0, 7)) == '"v=spf1') {
-				// unset special spf required-entry
-				unset($required_entries[$entry['type']][md5("@SPF@")]);
-			} else {
-				unset($required_entries[$entry['type']][md5($entry['record'])]);
-			}
+			unset($required_entries[$entry['type']][md5($entry['record'])]);
+		}
+		if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && strtolower(substr($entry['content'], 0, 7)) == '"v=spf1') {
+			// unset special spf required-entry
+			unset($required_entries[$entry['type']][md5("@SPF@")]);
 		}
 		if (empty($primary_ns) && $entry['type'] == 'NS') {
 			// use the first NS entry as primary ns
