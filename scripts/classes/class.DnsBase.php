@@ -17,7 +17,7 @@ abstract class DnsBase {
 
 	abstract public function writeConfigs();
 
-	protected function __construct($logger)
+	public function __construct($logger)
 	{
 		$this->_logger = $logger;
 
