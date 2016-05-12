@@ -376,7 +376,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('admin', 'show_version_login', '0'),
 	('admin', 'show_version_footer', '0'),
 	('spf', 'use_spf', '0'),
-	('spf', 'spf_entry', '@	IN	TXT	"v=spf1 a mx -all"'),
+	('spf', 'spf_entry', '"v=spf1 a mx -all"'),
 	('dkim', 'dkim_algorithm', 'all'),
 	('dkim', 'dkim_add_adsp', '1'),
 	('dkim', 'dkim_keylength', '1024'),
@@ -557,7 +557,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.35.1'),
-	('panel', 'db_version', '201605090');
+	('panel', 'db_version', '201605120');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

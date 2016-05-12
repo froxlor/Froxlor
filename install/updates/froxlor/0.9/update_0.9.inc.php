@@ -3335,3 +3335,15 @@ if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201604270')) {
 
 	updateToDbVersion('201605090');
 }
+
+if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201605090')) {
+
+	showUpdateStep("Adjusting SPF record setting");
+	$current_spf = Settings::Get('spf.spf_entry');
+	// @	IN	TXT	"v=spf1 a mx -all"
+	$new_spf = substr($current_spf, strpos($current_spf, '"'));
+	Settings::Set('spf.spf_entry', $new_spf, true);
+	lastStepStatus(0);
+
+	updateToDbVersion('201605120');
+}
