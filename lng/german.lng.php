@@ -1662,3 +1662,4 @@ $lng['success']['dns_record_added'] = 'Eintrag erfolgreich hinzugefügt';
 $lng['success']['dns_record_deleted'] = 'Eintrag erfolgreich entfernt';
 $lng['dnseditor']['edit'] = 'DNS editieren';
 $lng['dnseditor']['records'] = 'Einträge';
+$lng['error']['dns_notfoundorallowed'] = 'Domain nicht gefunden oder keine Berechtigung';

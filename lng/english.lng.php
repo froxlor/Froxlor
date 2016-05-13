@@ -2009,3 +2009,4 @@ $lng['success']['dns_record_added'] = 'Record added successfully';
 $lng['success']['dns_record_deleted'] = 'Record deleted successfully';
 $lng['dnseditor']['edit'] = 'edit DNS';
 $lng['dnseditor']['records'] = 'records';
+$lng['error']['dns_notfoundorallowed'] = 'Domain not found or no permission';

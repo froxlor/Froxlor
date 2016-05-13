@@ -29,15 +29,7 @@ $content = isset($_POST['record']['content']) ? trim($_POST['record']['content']
 $ttl = isset($_POST['record']['ttl']) ? (int) $_POST['record']['ttl'] : 18000;
 
 // get domain-name
-$dom_stmt = Database::prepare("SELECT domain, isbinddomain FROM `" . TABLE_PANEL_DOMAINS . "` WHERE id = :did");
-$domain = Database::pexecute_first($dom_stmt, array(
-	'did' => $domain_id
-));
-
-if ($domain['isbinddomain'] != '1') {
-	standard_error('dns_domain_nodns');
-}
-$domain = $idna_convert->decode($domain['domain']);
+$domain = getAllowedDomainEntry($domain_id, AREA, $userinfo, $idna_convert);
 
 // select all entries
 $sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE domain_id = :did");
