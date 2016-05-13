@@ -2061,7 +2061,7 @@ elseif (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
 			eval("echo \"" . getTemplate("domains/domains_import") . "\";");
 		}
 	}
-} elseif ($page == 'domaindnseditor') {
+} elseif ($page == 'domaindnseditor' && Settings::Get('system.dnsenabled') == '1') {
 
 	require_once __DIR__.'/dns_editor.php';
 }

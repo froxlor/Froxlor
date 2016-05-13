@@ -716,4 +716,12 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$question.= makeyesno('enable_backup', '1', '0', '0').'<br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_db_version, '201605090')) {
+		$has_preconfig = true;
+		$description  = 'You can chose whether you want to enable or disable our DNS editor<br /><br />';
+		$question = '<strong>Do you want to enable the DNS editor? (default: no):</strong>&nbsp;';
+		$question.= makeyesno('enable_dns', '1', '0', '0').'<br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

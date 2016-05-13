@@ -181,7 +181,11 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 */
 	elseif ($row['type'] == '4' && (int)Settings::Get('system.bind_enable') != 0) {
 
-		$bindclass ="bind2";
+		$bindclass ="bind";
+
+		if (Settings::Get('system.dnsenabled') == '1') {
+			$bindclass = "bind2";
+		}
 
 		if (!isset($nameserver)) {
 			$nameserver = new $bindclass($cronlog);

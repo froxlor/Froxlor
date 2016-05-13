@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/domain_edit_big.png" alt="" />&nbsp;
-				DNS Editor&nbsp;(<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $domain_id))}">{$domain}</a>, {$entriescount} records)
+				DNS Editor&nbsp;(<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $domain_id))}">{$domain}</a>, {$entriescount} {$lng['dnseditor']['records']})
 			</h2>
 		</header>
 		

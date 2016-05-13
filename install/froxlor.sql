@@ -526,6 +526,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'letsencryptreuseold', 0),
 	('system', 'leenabled', '0'),
 	('system', 'backupenabled', '0'),
+	('system', 'dnsenabled', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),

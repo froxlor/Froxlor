@@ -2007,3 +2007,5 @@ $lng['error']['dns_srv_noalias'] = 'The SRV-target value cannot be an CNAME entr
 $lng['error']['dns_duplicate_entry'] = 'Record already exists';
 $lng['success']['dns_record_added'] = 'Record added successfully';
 $lng['success']['dns_record_deleted'] = 'Record deleted successfully';
+$lng['dnseditor']['edit'] = 'edit DNS';
+$lng['dnseditor']['records'] = 'records';
