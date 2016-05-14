@@ -861,17 +861,17 @@ class nginx extends HttpConfigBase {
 
 		$webroot_text .= "\t" . 'index    index.php index.html index.htm;'."\n";
 		$webroot_text .= "\n\t".'location / {'."\n";
-		$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
+		// $webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 
 		if ($this->vhost_root_autoindex) {
 			$webroot_text .= "\t\t".'autoindex on;'."\n";
 			$this->vhost_root_autoindex = false;
 		}
 
-		$webroot_text .= "\t".'}'."\n\n";
-		$webroot_text .= "\tlocation @rewrites {\n";
-		$webroot_text .= "\t\trewrite ^ /index.php last;\n";
-		$webroot_text .= "\t}\n\n";
+		// $webroot_text .= "\t".'}'."\n\n";
+		// $webroot_text .= "\tlocation @rewrites {\n";
+		// $webroot_text .= "\t\trewrite ^ /index.php last;\n";
+		// $webroot_text .= "\t}\n\n";
 
 		return $webroot_text;
 	}
