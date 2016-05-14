@@ -24,18 +24,18 @@ function getAllowedDomainEntry($domain_id, $area = 'customer', $userinfo, &$idna
 	$where_clause = '';
 	if ($area == 'admin') {
 		if ($userinfo['domains_see_all'] != '1') {
-			$where_clause = '`adminid` = :uid';
+			$where_clause = '`adminid` = :uid AND ';
 			$dom_data['uid'] = $userinfo['userid'];
 		}
 	} else {
-		$where_clause = '`customerid` = :uid';
+		$where_clause = '`customerid` = :uid AND ';
 		$dom_data['uid'] = $userinfo['userid'];
 	}
 
 	$dom_stmt = Database::prepare("
 		SELECT domain, isbinddomain
 		FROM `" . TABLE_PANEL_DOMAINS . "`
-		WHERE " . $where_clause . " AND id = :did
+		WHERE " . $where_clause . " id = :did
 	");
 	$domain = Database::pexecute_first($dom_stmt, $dom_data);
 
