@@ -4022,7 +4022,7 @@ aliases:     files
 					<command><![CDATA[/etc/init.d/nscd restart]]></command>
 					<!-- clear group chache -->
 					<command><![CDATA[nscd --invalidate=group]]></command>
-					<file /><!-- separate the following mkdir command from the previous nscd -->
+					<!-- @TODO separate the following mkdir command from the previous nscd -->
 					<command>
 						<visibility mode="notisdir">/etc/insserv/overrides</visibility>
 						<content><![CDATA[mkdir -p /etc/insserv/overrides]]></content>
