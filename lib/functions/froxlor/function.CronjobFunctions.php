@@ -108,6 +108,15 @@ function getOutstandingTasks() {
 		elseif ($row['type'] == '10') {
 			$task_desc = $lng['tasks']['diskspace_set_quota'];
 		}
+		// deleting user-files
+		elseif ($row['type'] == '20') {
+			$loginname = '';
+			if (is_array($row['data'])) {
+				$loginname = $row['data']['loginname'];
+			}
+			$task_desc = $lng['tasks']['backup_customerfiles'];
+			$task_desc = str_replace('%loginname%', $loginname, $task_desc);
+		}
 		// re-generating of cron.d-file
 		elseif ($row['type'] == '99') {
 			$task_desc = $lng['tasks']['regenerating_crond'];

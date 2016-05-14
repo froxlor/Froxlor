@@ -708,4 +708,12 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 	    $question.= makeyesno('enable_letsencrypt', '1', '0', '1').'<br />';
 	    eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_db_version, '201604270')) {
+		$has_preconfig = true;
+		$description  = 'You can chose whether you want to enable or disable our backup function.<br /><br />';
+		$question = '<strong>Do you want to enable Backup? (default: no):</strong>&nbsp;';
+		$question.= makeyesno('enable_backup', '1', '0', '0').'<br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }

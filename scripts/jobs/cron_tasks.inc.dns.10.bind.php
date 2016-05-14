@@ -121,8 +121,8 @@ class bind {
 		}
 
 		if (empty($domains)) {
-		    $this->logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
-		    return;
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+			return;
 		}
 
 		// collect domain IDs of direct child domains as arrays in ['children'] column
@@ -203,20 +203,23 @@ class bind {
 			$subzones.= $this->walkDomainList($domains[$child_domain_id], $domains);
 		}
 
-		if ($domain['ismainbutsubto'] == 0 &&  $domain['zonefile'] == '') {
-			$zonefile = $this->generateZone($domain);
-			$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
-			$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
-			$this->_known_filenames[] = basename($zonefile_name);
-			$zonefile_handler = fopen($zonefile_name, 'w');
-			fwrite($zonefile_handler, $zonefile.$subzones);
-			fclose($zonefile_handler);
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` zone written');
+		if ($domain['zonefile'] == '') {
+			if ($domain['ismainbutsubto'] == 0) {
+				$zonefile = $this->generateZone($domain);
+				$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
+				$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
+				$this->_known_filenames[] = basename($zonefile_name);
+				$zonefile_handler = fopen($zonefile_name, 'w');
+				fwrite($zonefile_handler, $zonefile.$subzones);
+				fclose($zonefile_handler);
+				$this->logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` zone written');
+				$this->_bindconf_file .= $this->_generateDomainConfig($domain);
+			} else {
+				return $this->generateZone($domain);
+			}
 		} else {
-			return $this->generateZone($domain);
-		}
-
-		if ($zonefile !== '') {
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Added zonefile ' . $domain['zonefile'] . ' for domain ' . $domain['domain'] .
+					' - Note that you will also have to handle ALL records for ALL subdomains.');
 			$this->_bindconf_file .= $this->_generateDomainConfig($domain);
 		}
 	}

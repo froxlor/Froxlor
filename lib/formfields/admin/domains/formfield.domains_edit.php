@@ -84,7 +84,7 @@ return array(
 						'value' => $result['registration_date'],
 						'size' => 10
 					),
-                                        'termination_date' => array(
+					'termination_date' => array(
 						'label' => $lng['domains']['termination_date'],
 						'desc' => $lng['panel']['dateformat'],
 						'type' => 'text',
@@ -232,7 +232,7 @@ return array(
 					),
 					'zonefile' => array(
 						'label' => 'Zonefile',
-						'desc' => $lng['panel']['emptyfordefault'],
+						'desc' => $lng['admin']['bindzonewarning'],
 						'type' => 'text',
 						'value' => $result['zonefile']
 					)

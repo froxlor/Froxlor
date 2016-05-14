@@ -315,6 +315,7 @@ $lng['admin']['templates']['COMPANY'] = 'Wird mit dem Firmennamen des Kunden ers
 $lng['admin']['templates']['USERNAME'] = 'Wird mit dem Benutzernamen des neuen Kundenkontos ersetzt.';
 $lng['admin']['templates']['PASSWORD'] = 'Wird mit dem Passwort des neuen Kundenkontos ersetzt.';
 $lng['admin']['templates']['EMAIL'] = 'Wird mit der Adresse des neuen E-Mail-Kontos ersetzt.';
+$lng['admin']['bindzonewarning'] = $lng['panel']['emptyfordefault'] . '<br /><strong class="red">WARNUNG:</strong> Bei der Verwendung einer Zonendatei müssen alle benötigten Records aller Subdomains ebenfalls manuell verwaltet werden.';
 
 /**
  * Serversettings
@@ -344,8 +345,6 @@ $lng['serversettings']['bindconf_directory']['title'] = 'Bind-Config-Directory';
 $lng['serversettings']['bindconf_directory']['description'] = 'Wo liegen die Bind-Konfigurationsdateien?';
 $lng['serversettings']['bindreload_command']['title'] = 'Bind-Reload-Command';
 $lng['serversettings']['bindreload_command']['description'] = 'Wie heißt das Skript zum Neuladen der Bind-Konfigurationsdateien?';
-$lng['serversettings']['binddefaultzone']['title'] = 'Bind-Default-Zone';
-$lng['serversettings']['binddefaultzone']['description'] = 'Wie heißt die Default-Zone für alle Domains?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mail-UID';
 $lng['serversettings']['vmail_uid']['description'] = 'Welche UID sollen die E-Mails haben?';
 $lng['serversettings']['vmail_gid']['title'] = 'Mail-GID';
@@ -1628,3 +1627,18 @@ $lng['domains']['termination_date_overview'] = 'gekündigt zum ';
 $lng['panel']['set'] = 'Setzen';
 $lng['customer']['selectserveralias_addinfo'] = 'Diese Option steht beim Bearbeiten der Domain zur Verfügung. Als Initial-Wert wird die Einstellung der Hauptdomain vererbt.';
 $lng['error']['mailaccistobedeleted'] = "Ein vorheriges Konto mit dem gleichen Namen (%s) wird aktuell noch gelöscht und kann daher derzeit nicht angelegt werden";
+
+$lng['menue']['extras']['backup'] = 'Sicherung';
+$lng['extras']['backup'] = 'Sicherung erstellen';
+$lng['extras']['backup_web'] = 'Web-Daten sichern';
+$lng['extras']['backup_mail'] = 'E-Mail Daten sichern';
+$lng['extras']['backup_dbs'] = 'Datenbanken sichern';
+$lng['error']['customerhasongoingbackupjob'] = 'Es gibt noch einen austehenden Backup-Job. Bitte haben Sie etwas Geduld.';
+$lng['success']['backupscheduled'] = 'Ihre Sicherung wurde erfolgreich geplant. Bitte warten Sie nun, bis diese abgearbeitet wurde.';
+$lng['crondesc']['cron_backup'] = 'Ausstehende Sicherungen erstellen';
+$lng['error']['backupfunctionnotenabled'] = 'Die Sicherungs-Funktion is nicht aktiviert';
+$lng['serversettings']['backupenabled']['title'] = "Backup für Kunden aktivieren";
+$lng['serversettings']['backupenabled']['description'] = "Wenn dies aktiviert ist, kann der Kunde Sicherungen planen (cron-backup) welche ein Archiv in sein Heimatverzeichnis ablegt (Unterordner vom Kunden wählbar)";
+$lng['extras']['path_protection_label'] = '<strong class="red">Wichtig</strong>';
+$lng['extras']['path_protection_info'] = '<strong class="red">Wir raten dringend dazu den angegebenen Pfad zu schützen, siehe "Extras" -> "Verzeichnisschutz"</strong>';
+$lng['tasks']['backup_customerfiles'] = 'Datensicherung für Kunde %loginname%';
