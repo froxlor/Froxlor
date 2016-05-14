@@ -31,6 +31,14 @@ return array(
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
 					),
+				'system_dnsenabled' => array(
+					'label' => $lng['serversettings']['dnseditorenable'],
+					'settinggroup' => 'system',
+					'varname' => 'dnsenabled',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+					),
 				'system_bindconf_directory' => array(
 					'label' => $lng['serversettings']['bindconf_directory'],
 					'settinggroup' => 'system',

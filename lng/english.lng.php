@@ -2010,3 +2010,5 @@ $lng['success']['dns_record_deleted'] = 'Record deleted successfully';
 $lng['dnseditor']['edit'] = 'edit DNS';
 $lng['dnseditor']['records'] = 'records';
 $lng['error']['dns_notfoundorallowed'] = 'Domain not found or no permission';
+$lng['serversettings']['dnseditorenable']['title'] = 'Enable DNS editor';
+$lng['serversettings']['dnseditorenable']['description'] = 'Allows admins and customer to manage domain dns entries';

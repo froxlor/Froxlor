@@ -1663,3 +1663,5 @@ $lng['success']['dns_record_deleted'] = 'Eintrag erfolgreich entfernt';
 $lng['dnseditor']['edit'] = 'DNS editieren';
 $lng['dnseditor']['records'] = 'Einträge';
 $lng['error']['dns_notfoundorallowed'] = 'Domain nicht gefunden oder keine Berechtigung';
+$lng['serversettings']['dnseditorenable']['title'] = 'DNS Editor aktivieren';
+$lng['serversettings']['dnseditorenable']['description'] = 'Erlaubt es Admins und Kunden die DNS Einträge Ihrer Domains zu verwalten';
