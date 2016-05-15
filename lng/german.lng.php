@@ -1665,3 +1665,4 @@ $lng['dnseditor']['records'] = 'Einträge';
 $lng['error']['dns_notfoundorallowed'] = 'Domain nicht gefunden oder keine Berechtigung';
 $lng['serversettings']['dnseditorenable']['title'] = 'DNS Editor aktivieren';
 $lng['serversettings']['dnseditorenable']['description'] = 'Erlaubt es Admins und Kunden die DNS Einträge Ihrer Domains zu verwalten';
+$lng['dns']['howitworks'] = 'Hier können DNS Einträge für die Domain verwaltet werden. Beachte das Froxlor automatisch NS/MX/A/AAAA Einträge generiert. Die benutzerdefinierten Einträge werden bevorzugt, nur fehlende Einträge werden automatisch generiert.';
