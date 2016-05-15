@@ -29,20 +29,55 @@ if (! extension_loaded('curl')) {
 
 $certificates_stmt = Database::query(
 	"
-	SELECT domssl.`id`, domssl.`domainid`, domssl.expirationdate, domssl.`ssl_cert_file`, domssl.`ssl_key_file`, domssl.`ssl_ca_file`, domssl.`ssl_csr_file`, dom.`domain`, dom.`iswildcarddomain`, dom.`wwwserveralias`,
-	dom.`documentroot`, dom.`id` as 'domainid', dom.`ssl_redirect`, cust.`leprivatekey`, cust.`lepublickey`, cust.customerid, cust.loginname
-	FROM `" . TABLE_PANEL_CUSTOMERS . "` as cust, `" . TABLE_PANEL_DOMAINS . "` dom LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` domssl ON (dom.id = domssl.domainid)
-	WHERE dom.customerid = cust.customerid AND dom.letsencrypt = 1 AND (domssl.expirationdate < DATE_ADD(NOW(), INTERVAL 30 DAY) OR domssl.expirationdate IS NULL)
-");
+		SELECT
+			domssl.`id`,
+			domssl.`domainid`,
+			domssl.expirationdate,
+			domssl.`ssl_cert_file`,
+			domssl.`ssl_key_file`,
+			domssl.`ssl_ca_file`,
+			domssl.`ssl_csr_file`,
+			dom.`domain`,
+			dom.`iswildcarddomain`,
+			dom.`wwwserveralias`,
+			dom.`documentroot`,
+			dom.`id` AS 'domainid',
+			dom.`ssl_redirect`,
+			cust.`leprivatekey`,
+			cust.`lepublickey`,
+			cust.`customerid`,
+			cust.`loginname`
+		FROM
+			`" . TABLE_PANEL_CUSTOMERS . "` AS cust,
+			`" . TABLE_PANEL_DOMAINS . "` AS dom
+		LEFT JOIN
+			`" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` AS domssl ON
+				dom.`id` = domssl.`domainid`
+		WHERE
+			dom.`customerid` = cust.`customerid`
+			AND dom.`letsencrypt` = 1
+			AND (
+				domssl.`expirationdate` < DATE_ADD(NOW(), INTERVAL 30 DAY)
+				OR domssl.`expirationdate` IS NULL
+			)
+	");
 
 $updcert_stmt = Database::prepare(
 	"
-	REPLACE INTO `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` SET `id` = :id, `domainid` = :domainid, `ssl_cert_file` = :crt, `ssl_key_file` = :key, `ssl_ca_file` = :ca, `ssl_cert_chainfile` = :chain, `ssl_csr_file` = :csr, expirationdate = :expirationdate
-");
+		REPLACE INTO
+			`" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
+		SET
+			`id` = :id,
+			`domainid` = :domainid,
+			`ssl_cert_file` = :crt,
+			`ssl_key_file` = :key,
+			`ssl_ca_file` = :ca,
+			`ssl_cert_chainfile` = :chain,
+			`ssl_csr_file` = :csr,
+			`expirationdate` = :expirationdate
+	");
 
-$upddom_stmt = Database::prepare("
-	UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `ssl_redirect` = '1' WHERE `id` = :domainid
-");
+$upddom_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `ssl_redirect` = '1' WHERE `id` = :domainid");
 
 $changedetected = 0;
 $certrows = $certificates_stmt->fetchAll(PDO::FETCH_ASSOC);
