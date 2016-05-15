@@ -41,7 +41,7 @@ class DnsEntry
 
 	public function __toString()
 	{
-		$result = $this->record . "\t" . $this->ttl . "\t" . $this->class . "\t" . $this->type . "\t" . (($this->prio >= 0 && ($this->type == 'MX' || $this->type == 'SRV')) ? $this->prio . "\t" : "") . $this->content . PHP_EOL;
+		$result = $this->record . "\t" . $this->ttl . "\t" . $this->class . "\t" . $this->type . "\t" . (($this->priority >= 0 && ($this->type == 'MX' || $this->type == 'SRV')) ? $this->priority . "\t" : "") . $this->content . PHP_EOL;
 		return $result;
 	}
 }
