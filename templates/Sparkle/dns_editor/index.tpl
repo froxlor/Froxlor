@@ -7,6 +7,13 @@ $header
 			</h2>
 		</header>
 		
+		<div class="messagewrapperfull">
+		<div class="warningcontainer bradius">
+			<div class="warningtitle">{$lng['admin']['warning']}</div>
+			<div class="warning">{$lng['dns']['howitworks']}</div>
+		</div>
+		</div>
+
 		<if !empty($errors)>
 		<div class="errorcontainer bradius">
 			<div class="errortitle">{$lng['error']['error']}</div>

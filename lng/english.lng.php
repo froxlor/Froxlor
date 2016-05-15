@@ -2012,3 +2012,4 @@ $lng['dnseditor']['records'] = 'records';
 $lng['error']['dns_notfoundorallowed'] = 'Domain not found or no permission';
 $lng['serversettings']['dnseditorenable']['title'] = 'Enable DNS editor';
 $lng['serversettings']['dnseditorenable']['description'] = 'Allows admins and customer to manage domain dns entries';
+$lng['dns']['howitworks'] = 'Here you can manage DNS entries for your domain. Note that froxlor will automatically generate NS/MX/A/AAAA records for you. The custom entries are prefered, only missing entries will be automatically generated.';

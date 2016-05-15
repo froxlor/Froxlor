@@ -106,7 +106,7 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	}
 
 	$primary_ns = null;
-	$zonefile = "";
+	$zonerecords = array();
 
 	// now generate all records and unset the required entries we have
 	foreach ($dom_entries as $entry) {
@@ -121,7 +121,7 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 			// use the first NS entry as primary ns
 			$primary_ns = $entry['content'];
 		}
-		$zonefile .= formatEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'], $entry['ttl']);
+		$zonerecords[] = new DnsEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'], $entry['ttl']);
 	}
 
 	// add missing required entries
@@ -151,9 +151,9 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 				foreach ($required_entries as $type => $records) {
 					foreach ($records as $record) {
 						if ($type == 'A' && filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
-							$zonefile .= formatEntry($record, 'A', $ip['ip']);
+							$zonerecords[] = new DnsEntry($record, 'A', $ip['ip']);
 						} elseif ($type == 'AAAA' && filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
-							$zonefile .= formatEntry($record, 'AAAA', $ip['ip']);
+							$zonerecords[] = new DnsEntry($record, 'AAAA', $ip['ip']);
 						}
 					}
 				}
@@ -179,7 +179,7 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 									// use the first NS entry as primary ns
 									$primary_ns = $nameserver;
 								}
-								$zonefile .= formatEntry($record, 'NS', $nameserver);
+								$zonerecords[] = new DnsEntry($record, 'NS', $nameserver);
 							}
 						}
 					}
@@ -205,7 +205,7 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 					foreach ($required_entries as $type => $records) {
 						if ($type == 'MX') {
 							foreach ($records as $record) {
-								$zonefile .= formatEntry($record, 'MX', $mx_details[1], $mx_details[0]);
+								$zonerecords[] = new DnsEntry($record, 'MX', $mx_details[1], $mx_details[0]);
 							}
 						}
 					}
@@ -226,16 +226,16 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 					foreach ($records as $record) {
 						if ($record == '@SPF@') {
 							$txt_content = Settings::Get('spf.spf_entry');
-							$zonefile .= formatEntry('@', 'TXT', encloseTXTContent($txt_content));
+							$zonerecords[] = new DnsEntry('@', 'TXT', encloseTXTContent($txt_content));
 						} elseif ($record == 'dkim_' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
 							// check for multiline entry
 							$multiline = false;
 							if (substr($dkim_entries[0], 0, 1) == '(') {
 								$multiline = true;
 							}
-							$zonefile .= formatEntry($record, 'TXT', encloseTXTContent($dkim_entries[0], $multiline));
+							$zonerecords[] = new DnsEntry($record, 'TXT', encloseTXTContent($dkim_entries[0], $multiline));
 						} elseif ($record == '_adsp._domainkey' && ! empty($dkim_entries) && isset($dkim_entries[1])) {
-							$zonefile .= formatEntry($record, 'TXT', encloseTXTContent($dkim_entries[1]));
+							$zonerecords[] = new DnsEntry($record, 'TXT', encloseTXTContent($dkim_entries[1]));
 						}
 					}
 				}
@@ -256,18 +256,12 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	$soa_content .= "604800\t; expire (7 days)" . PHP_EOL;
 	$soa_content .= "1200\t)\t; minimum (20 mins)";
 
-	$_zonefile = "\$TTL " . (int) Settings::Get('system.defaultttl') . PHP_EOL;
-	$_zonefile .= "\$ORIGIN " . $domain['domain'] . "." . PHP_EOL;
-	$_zonefile .= formatEntry('@', 'SOA', $soa_content);
-	$zonefile = $_zonefile . $zonefile;
+	$soa_record = new DnsEntry('@', 'SOA', $soa_content);
+	array_unshift($zonerecords, $soa_record);
 
-	return $zonefile;
-}
+	$zone = new DnsZone((int) Settings::Get('system.defaultttl'), $domain['domain'], $zonerecords);
 
-function formatEntry($record = '@', $type = 'A', $content = null, $prio = 0, $ttl = 18000, $class = 'IN')
-{
-	$result = $record . "\t" . $ttl . "\t" . $class . "\t" . $type . "\t" . (($prio >= 0 && ($type == 'MX' || $type == 'SRV')) ? $prio . "\t" : "") . $content . PHP_EOL;
-	return $result;
+	return (string)$zone;
 }
 
 function addRequiredEntry($record = '@', $type = 'A', &$required)
