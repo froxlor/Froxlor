@@ -56,11 +56,16 @@ foreach ($certrows as $certrow) {
 	if ($certrow['ssl_redirect'] != 2) {
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Updating " . $certrow['domain']);
 
+		// Extract old SAN-data
+		$x509data = false;
 		if ($certrow['ssl_cert_file']) {
+			$x509data = openssl_x509_parse($certrow['ssl_cert_file']);			
+		}
+		
+		// Check for existing Cert and Let's Encrypt as issuer
+		if ($x509data && $x509data['issuer']['O'] == "Let's Encrypt") {
 			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "letsencrypt using old key / SAN for " . $certrow['domain']);
-			// Parse the old certificate
-			$x509data = openssl_x509_parse($certrow['ssl_cert_file']);
-
+			
 			// We are interessted in the old SAN - data
 			$san = explode(', ', $x509data['extensions']['subjectAltName']);
 			$domains = array();
