@@ -35,6 +35,10 @@ $certificates_stmt = Database::query("
 	WHERE dom.customerid = cust.customerid AND dom.letsencrypt = 1 AND (domssl.expirationdate < DATE_ADD(NOW(), INTERVAL 30 DAY) OR domssl.expirationdate IS NULL)
 ");
 
+$aliascert_stmt = Database::prepare("
+	SELECT dom.`id` as domainid, dom.`domain`, dom.`iswildcarddomain`, dom.`wwwserveralias` FROM `" . TABLE_PANEL_DOMAINS . "` as dom WHERE dom.`aliasdomain` = :id
+");
+
 $updcert_stmt = Database::prepare("
 	REPLACE INTO `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` SET `id` = :id, `domainid` = :domainid, `ssl_cert_file` = :crt, `ssl_key_file` = :key, `ssl_ca_file` = :ca, `ssl_cert_chainfile` = :chain, `ssl_csr_file` = :csr, expirationdate = :expirationdate
 ");
@@ -75,6 +79,19 @@ foreach ($certrows as $certrow) {
 			// Add www.<domain> for SAN
 			if ($certrow['wwwserveralias'] == 1) {
 				$domains[] = 'www.' . $certrow['domain'];
+			}
+			
+			Database::pexecute($aliascert_stmt, array('id' =>
+				$certrow['domainid']
+			));
+			
+			$aliasdomains = $aliascert_stmt->fetchAll(PDO::FETCH_ASSOC);
+			foreach ($aliasdomains as $aliasdomain) {
+				$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "letsencrypt adding alias domain " . $aliasdomain['domain']);
+				$domains[] = $aliasdomain['domain'];
+				if ($aliasdomain['wwwserveralias'] == 1) {
+					$domains[] = 'www.' . $aliasdomain['domain'];
+				}
 			}
 		}
 

@@ -218,7 +218,7 @@ class lescript
 
 		$this->client->getLastLinks();
 
-		if (empty($csrfile) || Settings::Get('system.letsencryptreuseold') == 0) {
+		if (empty($csr) || Settings::Get('system.letsencryptreuseold') == 0) {
 			$csr = $this->generateCSR($privateDomainKey, $domains);
 		}
 
