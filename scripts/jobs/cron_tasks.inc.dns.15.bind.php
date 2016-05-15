@@ -46,7 +46,8 @@ class bind2 extends DnsBase
 				}
 				// create zone-file
 				$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for ' . $domain['domain']);
-				$zonefile = createDomainZone($domain['id'], $isFroxlorHostname);
+				$zone = createDomainZone($domain['id'], $isFroxlorHostname);
+				$zonefile = (string)$zone;
 				$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
 				$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
 				$zonefile_handler = fopen($zonefile_name, 'w');

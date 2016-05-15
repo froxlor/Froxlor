@@ -259,9 +259,9 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	$soa_record = new DnsEntry('@', 'SOA', $soa_content);
 	array_unshift($zonerecords, $soa_record);
 
-	$zone = new DnsZone((int) Settings::Get('system.defaultttl'), $domain['domain'], $zonerecords);
+	$zone = new DnsZone((int) Settings::Get('system.defaultttl'), $domain['domain'], $domain['bindserial'], $zonerecords);
 
-	return (string)$zone;
+	return $zone;
 }
 
 function addRequiredEntry($record = '@', $type = 'A', &$required)

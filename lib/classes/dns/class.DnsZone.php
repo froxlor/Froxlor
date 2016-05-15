@@ -21,12 +21,15 @@ class DnsZone
 
 	public $origin;
 
+	public $serial;
+
 	public $records;
 
-	public function __construct($ttl = 18000, $origin = '', $records = null)
+	public function __construct($ttl = 18000, $origin = '', $serial = '', $records = null)
 	{
 		$this->ttl = $ttl;
 		$this->origin = $origin;
+		$this->serial = $serial;
 		$this->records = $records;
 	}
 
