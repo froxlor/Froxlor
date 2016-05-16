@@ -227,9 +227,7 @@ class lescript
 
 		$this->client->getLastLinks();
 
-		if (empty($csrfile) || Settings::Get('system.letsencryptreuseold') == 0) {
-			$csr = $this->generateCSR($privateDomainKey, $domains);
-		}
+		$csr = $this->generateCSR($privateDomainKey, $domains);
 
 		// request certificates creation
 		$result = $this->signedRequest("/acme/new-cert", array(

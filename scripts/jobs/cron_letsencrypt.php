@@ -92,26 +92,13 @@ foreach ($certrows as $certrow) {
 	if ($certrow['ssl_redirect'] != 2) {
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Updating " . $certrow['domain']);
 
-		if ($certrow['ssl_cert_file']) {
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "letsencrypt using old key / SAN for " . $certrow['domain']);
-			// Parse the old certificate
-			$x509data = openssl_x509_parse($certrow['ssl_cert_file']);
-
-			// We are interessted in the old SAN - data
-			$san = explode(', ', $x509data['extensions']['subjectAltName']);
-			$domains = array();
-			foreach ($san as $dnsname) {
-				$domains[] = substr($dnsname, 4);
-			}
-		} else {
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "letsencrypt generating new key / SAN for " . $certrow['domain']);
-			$domains = array(
-				$certrow['domain']
-			);
-			// Add www.<domain> for SAN
-			if ($certrow['wwwserveralias'] == 1) {
-				$domains[] = 'www.' . $certrow['domain'];
-			}
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "letsencrypt generating SAN list for " . $certrow['domain']);
+		$domains = array(
+			$certrow['domain']
+		);
+		// Add www.<domain> for SAN
+		if ($certrow['wwwserveralias'] == 1) {
+			$domains[] = 'www.' . $certrow['domain'];
 		}
 
 		try {
