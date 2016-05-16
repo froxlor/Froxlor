@@ -1,5 +1,4 @@
 <?php
-
 if (! defined('MASTER_CRONJOB'))
 	die('You cannot access this file directly!');
 
@@ -25,17 +24,19 @@ $cronlog->logAction(CRON_ACTION, LOG_INFO, "Updating Let's Encrypt certificates"
 
 if (! extension_loaded('curl')) {
 	$cronlog->logAction(CRON_ACTION, LOG_ERR, "Let's Encrypt requires the php cURL extension to be installed.");
-	exit;
+	exit();
 }
 
-$certificates_stmt = Database::query("
+$certificates_stmt = Database::query(
+	"
 	SELECT domssl.`id`, domssl.`domainid`, domssl.expirationdate, domssl.`ssl_cert_file`, domssl.`ssl_key_file`, domssl.`ssl_ca_file`, domssl.`ssl_csr_file`, dom.`domain`, dom.`iswildcarddomain`, dom.`wwwserveralias`,
 	dom.`documentroot`, dom.`id` as 'domainid', dom.`ssl_redirect`, cust.`leprivatekey`, cust.`lepublickey`, cust.customerid, cust.loginname
 	FROM `" . TABLE_PANEL_CUSTOMERS . "` as cust, `" . TABLE_PANEL_DOMAINS . "` dom LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` domssl ON (dom.id = domssl.domainid)
 	WHERE dom.customerid = cust.customerid AND dom.letsencrypt = 1 AND (domssl.expirationdate < DATE_ADD(NOW(), INTERVAL 30 DAY) OR domssl.expirationdate IS NULL)
 ");
 
-$updcert_stmt = Database::prepare("
+$updcert_stmt = Database::prepare(
+	"
 	REPLACE INTO `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` SET `id` = :id, `domainid` = :domainid, `ssl_cert_file` = :crt, `ssl_key_file` = :key, `ssl_ca_file` = :ca, `ssl_cert_chainfile` = :chain, `ssl_csr_file` = :csr, expirationdate = :expirationdate
 ");
 
@@ -92,16 +93,17 @@ foreach ($certrows as $certrow) {
 			$newcert = openssl_x509_parse($return['crt']);
 
 			// Store the new data
-			Database::pexecute($updcert_stmt, array(
-				'id' => $certrow['id'],
-				'domainid' => $certrow['domainid'],
-				'crt' => $return['crt'],
-				'key' => $return['key'],
-				'ca' => $return['chain'],
-				'chain' => $return['chain'],
-				'csr' => $return['csr'],
-				'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
-			));
+			Database::pexecute($updcert_stmt,
+				array(
+					'id' => $certrow['id'],
+					'domainid' => $certrow['domainid'],
+					'crt' => $return['crt'],
+					'key' => $return['key'],
+					'ca' => $return['chain'],
+					'chain' => $return['chain'],
+					'csr' => $return['csr'],
+					'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
+				));
 
 			if ($certrow['ssl_redirect'] == 3) {
 				Database::pexecute($upddom_stmt, array(
@@ -113,10 +115,12 @@ foreach ($certrows as $certrow) {
 
 			$changedetected = 1;
 		} catch (Exception $e) {
-			$cronlog->logAction(CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ": " . $e->getMessage());
+			$cronlog->logAction(CRON_ACTION, LOG_ERR,
+				"Could not get Let's Encrypt certificate for " . $certrow['domain'] . ": " . $e->getMessage());
 		}
 	} else {
-		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
+		$cronlog->logAction(CRON_ACTION, LOG_WARNING,
+			"Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
 	}
 }
 

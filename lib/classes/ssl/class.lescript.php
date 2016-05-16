@@ -62,14 +62,15 @@ class lescript
 			$keys = $this->generateKey();
 			// Only store the accountkey in production, in staging always generate a new key
 			if (Settings::Get('system.letsencryptca') == 'production') {
-				$upd_stmt = Database::prepare("
-                    UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private WHERE `customerid` = :customerid;
-                ");
-				Database::pexecute($upd_stmt, array(
-					'public' => $keys['public'],
-					'private' => $keys['private'],
-					'customerid' => $certrow['customerid']
-				));
+				$upd_stmt = Database::prepare(
+					"UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private " .
+						 "WHERE `customerid` = :customerid;");
+				Database::pexecute($upd_stmt,
+					array(
+						'public' => $keys['public'],
+						'private' => $keys['private'],
+						'customerid' => $certrow['customerid']
+					));
 			}
 			$this->accountKey = $keys['private'];
 			$this->postNewReg();
@@ -101,13 +102,14 @@ class lescript
 
 			$this->log("Requesting challenge for $domain");
 
-			$response = $this->signedRequest("/acme/new-authz", array(
-				"resource" => "new-authz",
-				"identifier" => array(
-					"type" => "dns",
-					"value" => $domain
-				)
-			));
+			$response = $this->signedRequest("/acme/new-authz",
+				array(
+					"resource" => "new-authz",
+					"identifier" => array(
+						"type" => "dns",
+						"value" => $domain
+					)
+				));
 
 			// if response is not an array but a string, it's most likely a server-error, e.g.
 			// <HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>An error occurred while processing your request.
@@ -121,9 +123,10 @@ class lescript
 			}
 
 			// choose http-01 challenge only
-			$challenge = array_reduce($response['challenges'], function ($v, $w) {
-				return $v ? $v : ($w['type'] == 'http-01' ? $w : false);
-			});
+			$challenge = array_reduce($response['challenges'],
+				function ($v, $w) {
+					return $v ? $v : ($w['type'] == 'http-01' ? $w : false);
+				});
 			if (! $challenge)
 				throw new RuntimeException("HTTP Challenge for $domain is not available. Whole response: " . json_encode($response));
 
@@ -145,8 +148,7 @@ class lescript
 				"e" => Base64UrlSafeEncoder::encode($accountKeyDetails["rsa"]["e"]),
 				"kty" => "RSA",
 				"n" => Base64UrlSafeEncoder::encode($accountKeyDetails["rsa"]["n"])
-			)
-			;
+			);
 			$payload = $challenge['token'] . '.' . Base64UrlSafeEncoder::encode(hash('sha256', json_encode($header), true));
 
 			file_put_contents($tokenPath, $payload);
@@ -174,12 +176,13 @@ class lescript
 			$this->log("Sending request to challenge");
 
 			// send request to challenge
-			$result = $this->signedRequest($challenge['uri'], array(
-				"resource" => "challenge",
-				"type" => "http-01",
-				"keyAuthorization" => $payload,
-				"token" => $challenge['token']
-			));
+			$result = $this->signedRequest($challenge['uri'],
+				array(
+					"resource" => "challenge",
+					"type" => "http-01",
+					"keyAuthorization" => $payload,
+					"token" => $challenge['token']
+				));
 
 			// waiting loop
 			// we wait for a maximum of 30 seconds to avoid endless loops
@@ -306,7 +309,8 @@ class lescript
 		$tmpConfPath = $tmpConfMeta["uri"];
 
 		// workaround to get SAN working
-		fwrite($tmpConf, 'HOME = .
+		fwrite($tmpConf,
+			'HOME = .
 RANDFILE = $ENV::HOME/.rnd
 [ req ]
 default_bits = ' . Settings::Get('system.letsencryptkeysize') . '
@@ -320,15 +324,16 @@ basicConstraints = CA:FALSE
 subjectAltName = ' . $san . '
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 
-		$csr = openssl_csr_new(array(
-			"CN" => $domain,
-			"ST" => Settings::Get('system.letsencryptstate'),
-			"C" => Settings::Get('system.letsencryptcountrycode'),
-			"O" => "Unknown"
-		), $privateKey, array(
-			"config" => $tmpConfPath,
-			"digest_alg" => "sha256"
-		));
+		$csr = openssl_csr_new(
+			array(
+				"CN" => $domain,
+				"ST" => Settings::Get('system.letsencryptstate'),
+				"C" => Settings::Get('system.letsencryptcountrycode'),
+				"O" => "Unknown"
+			), $privateKey, array(
+				"config" => $tmpConfPath,
+				"digest_alg" => "sha256"
+			));
 
 		if (! $csr)
 			throw new \RuntimeException("CSR couldn't be generated! " . openssl_error_string());
@@ -343,10 +348,11 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 
 	private function generateKey()
 	{
-		$res = openssl_pkey_new(array(
-			"private_key_type" => OPENSSL_KEYTYPE_RSA,
-			"private_key_bits" => (int) Settings::Get('system.letsencryptkeysize')
-		));
+		$res = openssl_pkey_new(
+			array(
+				"private_key_type" => OPENSSL_KEYTYPE_RSA,
+				"private_key_bits" => (int) Settings::Get('system.letsencryptkeysize')
+			));
 
 		if (! openssl_pkey_export($res, $privateKey)) {
 			throw new \RuntimeException("Key export failed!");
