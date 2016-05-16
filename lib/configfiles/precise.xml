@@ -40,8 +40,6 @@
 							</visibility>
 							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
-						<command><![CDATA[a2dismod userdir]]></command>
-						<command><![CDATA[a2enmod headers]]></command>
 					</commands>
 				</general>
 				<!-- HTTP Apache -->
@@ -49,6 +47,8 @@
 					default="true">
 					<install><![CDATA[apt-get install apache2]]></install>
 					<include>//service[@type='http']/general/commands</include>
+					<command><![CDATA[a2dismod userdir]]></command>
+					<command><![CDATA[a2enmod headers]]></command>
 					<file name="/etc/apache2/mods-enabled/fastcgi.conf">
 						<visibility mode="true">{{settings.phpfpm.enabled}}
 						</visibility>
