@@ -40,14 +40,14 @@
 							</visibility>
 							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
-						<command><![CDATA[a2dismod userdir]]></command>
-						<command><![CDATA[a2enmod headers]]></command>
 					</commands>
 				</general>
 				<!-- HTTP Apache -->
 				<daemon name="apache" version="2.4" title="Apache 2.4" default="true">
 					<install><![CDATA[apt-get install apache2]]></install>
 					<include>//service[@type='http']/general/commands</include>
+					<command><![CDATA[a2dismod userdir]]></command>
+					<command><![CDATA[a2enmod headers]]></command>
 					<command>
 						<visibility mode="true">{{settings.phpfpm.enabled}}
 						</visibility>
