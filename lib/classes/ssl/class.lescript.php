@@ -73,6 +73,12 @@ class lescript
 					));
 			}
 			$this->accountKey = $keys['private'];
+
+			$response = $this->postNewReg();
+			if ($this->client->getLastCode() != 201) {
+				throw new \RuntimeException("Account not initialized, probably due to rate limiting. Whole response: " . $response);
+			}
+
 			$this->postNewReg();
 			$this->log('New account certificate registered');
 		} else {
@@ -84,7 +90,7 @@ class lescript
 	public function signDomains(array $domains, $domainkey = null, $csr = null)
 	{
 		if (! $this->accountKey) {
-			throw new \RuntimeException("Account not initiated");
+			throw new \RuntimeException("Account not initialized");
 		}
 
 		$this->log('Starting certificate generation process for domains');
