@@ -504,7 +504,7 @@ if ($page == 'overview') {
 	} elseif ($action == 'edit' && $id != 0) {
 
 		$stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`,
-			`d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `d`.`letsencrypt`, `pd`.`subcanemaildomain`
+			`d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `d`.`dkim_id`, `d`.`dkim_pubkey`, `d`.`letsencrypt`, `pd`.`subcanemaildomain`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
 			WHERE `d`.`customerid` = :customerid
 			AND `d`.`id` = :id
@@ -710,6 +710,12 @@ if ($page == 'overview') {
 					ORDER BY `d`.`domain` ASC"
 				);
 				Database::pexecute($domains_stmt, array("id" => $result['id'], "customerid" => $userinfo['customerid']));
+				
+				$dkim = generateDKIM( array(
+					'domain' => $result['domain'],
+					'dkim_id' => $result['dkim_id'],
+					'dkim_pubkey' => $result['dkim_pubkey']
+				) );
 
 				while ($row_domain = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$domains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);

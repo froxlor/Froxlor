@@ -101,7 +101,31 @@ return array(
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
 						'select_var' => $openbasedir
-					)
+					),
+					'dkim_host' => array(
+						'visible' => $dkim,
+						'label' => 'DKIM Host',
+						'type' => 'label',
+						'value' => $dkim['dkim_host'],
+					),
+					'dkim_record' => array(
+						'visible' => $dkim,
+						'label' => 'DKIM Record',
+						'type' => 'textarea',
+						'value' => $dkim['dkim_record'],
+					),
+					'adsp_host' => array(
+						'visible' => ( !empty( $dkim['adsp_host'] ) ) ? true : false,
+						'label' => 'ADSP Host',
+						'type' => 'label',
+						'value' => $dkim['adsp_host'],
+					),
+					'adsp_record' => array(
+						'visible' => ( !empty( $dkim['adsp_record'] ) ) ? true : false,
+						'label' => 'ADSP Record',
+						'type' => 'label',
+						'value' => $dkim['adsp_record'],
+					),
 				)
 			)
 		)
