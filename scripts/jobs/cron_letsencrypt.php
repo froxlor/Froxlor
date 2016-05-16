@@ -38,7 +38,6 @@ $certificates_stmt = Database::query(
 			domssl.`ssl_ca_file`,
 			domssl.`ssl_csr_file`,
 			dom.`domain`,
-			dom.`iswildcarddomain`,
 			dom.`wwwserveralias`,
 			dom.`documentroot`,
 			dom.`id` AS 'domainid',
@@ -56,10 +55,25 @@ $certificates_stmt = Database::query(
 		WHERE
 			dom.`customerid` = cust.`customerid`
 			AND dom.`letsencrypt` = 1
+			AND dom.`aliasdomain` IS NULL
+			AND dom.`iswildcarddomain` = 0
 			AND (
 				domssl.`expirationdate` < DATE_ADD(NOW(), INTERVAL 30 DAY)
 				OR domssl.`expirationdate` IS NULL
 			)
+	");
+
+$aliasdomains_stmt = Database::prepare(
+	"
+		SELECT
+			dom.`id` as domainid,
+			dom.`domain`,
+			dom.`wwwserveralias`
+		FROM `" . TABLE_PANEL_DOMAINS . "` AS dom
+		WHERE
+			dom.`aliasdomain` = :id
+			AND dom.`letsencrypt` = 1
+			AND dom.`iswildcarddomain` = 0
 	");
 
 $updcert_stmt = Database::prepare(
@@ -92,13 +106,28 @@ foreach ($certrows as $certrow) {
 	if ($certrow['ssl_redirect'] != 2) {
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Updating " . $certrow['domain']);
 
-		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "letsencrypt generating SAN list for " . $certrow['domain']);
+		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Adding SAN entry: " . $certrow['domain']);
 		$domains = array(
 			$certrow['domain']
 		);
-		// Add www.<domain> for SAN
+		// add www.<domain> to SAN list
 		if ($certrow['wwwserveralias'] == 1) {
+			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Adding SAN entry: www." . $certrow['domain']);
 			$domains[] = 'www.' . $certrow['domain'];
+		}
+
+		// add alias domains (and possibly www.<aliasdomain>) to SAN list
+		Database::pexecute($aliasdomains_stmt, array(
+			'id' => $certrow['domainid']
+		));
+		$aliasdomains = $aliasdomains_stmt->fetchAll(PDO::FETCH_ASSOC);
+		foreach ($aliasdomains as $aliasdomain) {
+			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Adding SAN entry: " . $aliasdomain['domain']);
+			$domains[] = $aliasdomain['domain'];
+			if ($aliasdomain['wwwserveralias'] == 1) {
+				$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Adding SAN entry: www." . $aliasdomain['domain']);
+				$domains[] = 'www.' . $aliasdomain['domain'];
+			}
 		}
 
 		try {
