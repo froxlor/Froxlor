@@ -245,6 +245,8 @@ if ($page == 'domains' || $page == 'overview') {
 					'domainid' => $id
 				));
 
+				triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $log);
+
 				$log->logAction(ADM_ACTION, LOG_INFO, "deleted domain/subdomains (#" . $result['id'] . ")");
 				updateCounters();
 				inserttask('1');
@@ -672,10 +674,6 @@ if ($page == 'domains' || $page == 'overview') {
 					$issubof = '0';
 				}
 
-				if ($aliasdomain != 0 && $letsencrypt != 0) {
-					standard_error('letsencryptdoesnotworkwithaliasdomains');
-				}
-
 				if ($domain == '') {
 					standard_error(array(
 						'stringisempty',
@@ -843,6 +841,9 @@ elseif (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
 							Database::pexecute($ins_stmt, $ins_data);
 						}
 					}
+
+					triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
+
 					$log->logAction(ADM_ACTION, LOG_INFO, "added domain '" . $domain . "'");
 					inserttask('1');
 
@@ -1472,10 +1473,6 @@ elseif (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
 					$issubof = '0';
 				}
 
-				if ($aliasdomain != 0 && $letsencrypt != 0) {
-					standard_error('letsencryptdoesnotworkwithaliasdomains');
-				}
-
 				if ($serveraliasoption != '1' && $serveraliasoption != '2') {
 					$serveraliasoption = '0';
 				}
@@ -1802,6 +1799,15 @@ elseif (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
 						}
 					}
 				}
+				if ($result['aliasdomain'] != $aliasdomain) {
+					// trigger when domain id for alias destination has changed: both for old and new destination
+					triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $log);
+					triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
+				} else
+					if ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
+						// or when wwwserveralias or letsencrypt was changed
+						triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
+					}
 
 				$log->logAction(ADM_ACTION, LOG_INFO, "edited domain #" . $id);
 				redirectTo($filename, array(

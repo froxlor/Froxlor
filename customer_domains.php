@@ -171,7 +171,7 @@ if ($page == 'overview') {
 
 		eval("echo \"" . getTemplate("domains/domainlist") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
-		$stmt = Database::prepare("SELECT `id`, `customerid`, `domain`, `documentroot`, `isemaildomain`, `parentdomainid` FROM `" . TABLE_PANEL_DOMAINS . "`
+		$stmt = Database::prepare("SELECT `id`, `customerid`, `domain`, `documentroot`, `isemaildomain`, `parentdomainid`, `aliasdomain` FROM `" . TABLE_PANEL_DOMAINS . "`
 			WHERE `customerid` = :customerid
 			AND `id` = :id"
 		);
@@ -196,6 +196,8 @@ if ($page == 'overview') {
 						standard_error('domains_cantdeletedomainwithemail');
 					}
 				}
+
+				triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $log);
 
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted subdomain '" . $idna_convert->decode($result['domain']) . "'");
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE
@@ -290,6 +292,7 @@ if ($page == 'overview') {
 						ORDER BY `d`.`domain` ASC;"
 					);
 					$aliasdomain_check = Database::pexecute_first($aliasdomain_stmt, array("id" => $aliasdomain, "customerid" => $userinfo['customerid']));
+					triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
 				}
 
 				if (isset($_POST['url']) && $_POST['url'] != '' && validateUrl($idna_convert->encode($_POST['url']))) {
@@ -340,11 +343,6 @@ if ($page == 'overview') {
 					} else {
 						standard_error('letsencryptonlypossiblewithsslipport');
 					}
-				}
-
-				if ($aliasdomain != 0 && $letsencrypt != 0)
-				{
-					standard_error('letsencryptdoesnotworkwithaliasdomains');
 				}
 
 				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
@@ -610,11 +608,6 @@ if ($page == 'overview') {
 					$letsencrypt = '0';
 				}
 
-				if ($aliasdomain != 0 && $letsencrypt != 0)
-				{
-					standard_error('letsencryptdoesnotworkwithaliasdomains');
-				}
-
 				// We can't enable let's encrypt for wildcard - domains
 				if ($iswildcarddomain == '1' && $letsencrypt == '1') {
 				    standard_error('nowildcardwithletsencrypt');
@@ -677,6 +670,17 @@ if ($page == 'overview') {
 							"id" => $id
 						);
 						Database::pexecute($stmt, $params);
+
+						if ($result['aliasdomain'] != $aliasdomain) {
+							// trigger when domain id for alias destination has changed: both for old and new destination
+							triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $log);
+							triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
+						} else
+							if ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
+								// or when wwwserveralias or letsencrypt was changed
+								triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
+							}
+
 						inserttask('1');
 
 						// Using nameserver, insert a task which rebuilds the server config

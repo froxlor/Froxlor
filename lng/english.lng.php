@@ -1936,7 +1936,6 @@ $lng['customer']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
 $lng['customer']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong> This feature is still in beta.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using Let\'s Encrypt is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
 $lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt cannot (yet) handle wildcard-domains. Please set the ServerAlias to WWW or disable it completely';
-$lng['error']['letsencryptdoesnotworkwithaliasdomains'] = "Usage of Let's Encrypt is not possible for aliasdomains at the moment. Please disable Let's Encrypt or AliasDomain";
 $lng['panel']['letsencrypt'] = 'Using Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'updating Let\'s Encrypt certificates';
 $lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt environment";
@@ -1949,8 +1948,8 @@ $lng['serversettings']['letsencryptchallengepath']['title'] = "Path for Let's En
 $lng['serversettings']['letsencryptchallengepath']['description'] = "Directory where the Let's Encrypt challenges should be offered from via a global alias.<br><strong class=\"red\">ATTENTION:</strong> Let's Encrypt is still in beta</strong>";
 $lng['serversettings']['letsencryptkeysize']['title'] = "Key size for new Let's Encrypt certificates";
 $lng['serversettings']['letsencryptkeysize']['description'] = "Size of the key in Bits for new Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong> Let's Encrypt is still in beta</strong>";
-$lng['serversettings']['letsencryptreuseold']['title'] = "Re-use Let's Encrypt key / CSR";
-$lng['serversettings']['letsencryptreuseold']['description'] = "If activated, the same key and CSR will be used for every renew, otherwise a new key / CSR will be generated every time.<br><strong class=\"red\">ATTENTION:</strong> Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptreuseold']['title'] = "Re-use Let's Encrypt key";
+$lng['serversettings']['letsencryptreuseold']['description'] = "If activated, the same key will be used for every renew, otherwise a new key will be generated every time.<br><strong class=\"red\">ATTENTION:</strong> Let's Encrypt is still in beta</strong>";
 $lng['serversettings']['leenabled']['title'] = "Enable Let's Encrypt";
 $lng['serversettings']['leenabled']['description'] = "If activated, customers are able to let froxlor automatically generate and renew Let's Encrypt ssl-certificates for domains with a ssl IP/port.<br /><br />Please remember that you need to go through the webserver-configuration when eabled because this feature needs a special configuration.";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>The SSL redirect is temporarily deactivated while a new Let's Encrypt certificate is generated. It will be activated again after the certificate was generated.";
