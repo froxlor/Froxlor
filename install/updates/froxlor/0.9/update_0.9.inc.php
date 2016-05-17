@@ -3313,7 +3313,7 @@ if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201603150')) {
 	updateToDbVersion('201604270');
 }
 
-if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201604270')) {
+if (isDatabaseVersion('201604270')) {
 
 	showUpdateStep("Adding new dns related tables and settings");
 	$enable_dns = isset($_POST['enable_dns']) ? (int) $_POST['enable_dns'] : "0";
@@ -3336,7 +3336,7 @@ if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201604270')) {
 	updateToDbVersion('201605090');
 }
 
-if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201605090')) {
+if (isDatabaseVersion('201605090')) {
 
 	showUpdateStep("Adjusting SPF record setting");
 	$current_spf = Settings::Get('spf.spf_entry');
@@ -3346,4 +3346,14 @@ if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201605090')) {
 	lastStepStatus(0);
 
 	updateToDbVersion('201605120');
+}
+
+if (isDatabaseVersion('201605120')) {
+
+	showUpdateStep("Adding new dns-server setting");
+	$new_dns_daemon = isset($_POST['new_dns_daemon']) ? $_POST['new_dns_daemon'] : "bind";
+	Settings::AddNew("system.dns_server", $new_dns_daemon);
+	lastStepStatus(0);
+
+	updateToDbVersion('201605170');
 }

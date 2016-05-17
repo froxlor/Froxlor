@@ -92,16 +92,18 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	}
 
 	// additional required records for SPF and DKIM if activated
-	if (Settings::Get('spf.use_spf') == '1') {
-		// check for SPF content later
-		addRequiredEntry('@SPF@', 'TXT', $required_entries);
-	}
-	if (Settings::Get('dkim.use_dkim') == '1') {
-		// check for DKIM content later
-		addRequiredEntry('dkim_' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
-		// check for ASDP
-		if (Settings::Get('dkim.dkim_add_adsp') == "1") {
-			addRequiredEntry('_adsp._domainkey', 'TXT', $required_entries);
+	if ($domain['isemaildomain'] == '1') {
+		if (Settings::Get('spf.use_spf') == '1') {
+			// check for SPF content later
+			addRequiredEntry('@SPF@', 'TXT', $required_entries);
+		}
+		if (Settings::Get('dkim.use_dkim') == '1') {
+			// check for DKIM content later
+			addRequiredEntry('dkim_' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
+			// check for ASDP
+			if (Settings::Get('dkim.dkim_add_adsp') == "1") {
+				addRequiredEntry('_adsp._domainkey', 'TXT', $required_entries);
+			}
 		}
 	}
 
@@ -275,8 +277,7 @@ function addRequiredEntry($record = '@', $type = 'A', &$required)
 function encloseTXTContent($txt_content, $isMultiLine = false)
 {
 	// check that TXT content is enclosed in " "
-	if ($isMultiLine == false)
-	{
+	if ($isMultiLine == false) {
 		if (substr($txt_content, 0, 1) != '"') {
 			$txt_content = '"' . $txt_content;
 		}

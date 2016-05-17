@@ -39,6 +39,16 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField'
 					),
+				'system_dns_server' => array(
+					'label' => $lng['serversettings']['dns_server'],
+					'settinggroup' => 'system',
+					'varname' => 'dns_server',
+					'type' => 'option',
+					'default' => 'bind',
+					'option_mode' => 'one',
+					'option_options' => array('bind' => 'Bind9', 'pdns' => 'PowerDNS'),
+					'save_method' => 'storeSettingField'
+				),
 				'system_bindconf_directory' => array(
 					'label' => $lng['serversettings']['bindconf_directory'],
 					'settinggroup' => 'system',

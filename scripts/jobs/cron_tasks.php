@@ -181,14 +181,10 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 */
 	elseif ($row['type'] == '4' && (int)Settings::Get('system.bind_enable') != 0) {
 
-		$bindclass ="bind";
-
-		if (Settings::Get('system.dnsenabled') == '1') {
-			$bindclass = "bind2";
-		}
+		$dnssrv = Settings::Get('system.dns_server');
 
 		if (!isset($nameserver)) {
-			$nameserver = new $bindclass($cronlog);
+			$nameserver = new $dnssrv($cronlog);
 		}
 
 		if (Settings::Get('dkim.use_dkim') == '1') {
