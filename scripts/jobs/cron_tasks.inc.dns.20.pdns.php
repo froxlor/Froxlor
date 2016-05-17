@@ -44,7 +44,7 @@ class pdns extends DnsBase
 				}
 				// create zone-file
 				$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for ' . $domain['domain']);
-				$zone = createDomainZone($domain['id'], $isFroxlorHostname);
+				$zone = createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
 
 				$dom_id = $this->_insertZone($zone->origin, $zone->serial);
 				$this->_insertRecords($dom_id, $zone->records);

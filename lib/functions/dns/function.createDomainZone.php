@@ -16,22 +16,33 @@
  */
 function createDomainZone($domain_id, $froxlorhostname = false)
 {
-	// get domain-name
-	$dom_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE id = :did");
-	$domain = Database::pexecute_first($dom_stmt, array(
-		'did' => $domain_id
-	));
+	if (!$froxlorhostname)
+	{
+		// get domain-name
+		$dom_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE id = :did");
+		$domain = Database::pexecute_first($dom_stmt, array(
+			'did' => $domain_id
+		));
+	}
+	else
+	{
+		$domain = $domain_id;
+	}
 
 	if ($domain['isbinddomain'] != '1') {
 		return;
 	}
 
-	// select all entries
-	$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE domain_id = :did ORDER BY id ASC");
-	Database::pexecute($sel_stmt, array(
-		'did' => $domain_id
-	));
-	$dom_entries = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
+	$dom_entries = array();
+	if (!$froxlorhostname)
+	{
+		// select all entries
+		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE domain_id = :did ORDER BY id ASC");
+		Database::pexecute($sel_stmt, array(
+			'did' => $domain_id
+		));
+		$dom_entries = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
 
 	// check for required records
 	$required_entries = array();
@@ -52,43 +63,46 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 		addRequiredEntry('www', 'AAAA', $required_entries);
 	}
 
-	// additional required records for subdomains
-	$subdomains_stmt = Database::prepare("
-		SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
-		WHERE `parentdomainid` = :domainid
-	");
-	Database::pexecute($subdomains_stmt, array(
-		'domainid' => $domain_id
-	));
+	if (!$froxlorhostname)
+	{
+		// additional required records for subdomains
+		$subdomains_stmt = Database::prepare("
+			SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `parentdomainid` = :domainid
+		");
+		Database::pexecute($subdomains_stmt, array(
+			'domainid' => $domain_id
+		));
 
-	while ($subdomain = $subdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
-		// Listing domains is enough as there currently is no support for choosing
-		// different ips for a subdomain => use same IPs as toplevel
-		addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
-		addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
+		while ($subdomain = $subdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
+			// Listing domains is enough as there currently is no support for choosing
+			// different ips for a subdomain => use same IPs as toplevel
+			addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
+			addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
 
-		// Check whether to add a www.-prefix
-		if ($domain['iswildcarddomain'] == '1') {
-			addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
-			addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
-		} elseif ($domain['wwwserveralias'] == '1') {
-			addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
-			addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
+			// Check whether to add a www.-prefix
+			if ($domain['iswildcarddomain'] == '1') {
+				addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
+				addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
+			} elseif ($domain['wwwserveralias'] == '1') {
+				addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
+				addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
+			}
 		}
-	}
 
-	// additional required records for main-but-subdomain-to
-	$mainbutsub_stmt = Database::prepare("
-		SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
-		WHERE `ismainbutsubto` = :domainid
-	");
-	Database::pexecute($mainbutsub_stmt, array(
-		'domainid' => $domain_id
-	));
+		// additional required records for main-but-subdomain-to
+		$mainbutsub_stmt = Database::prepare("
+			SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `ismainbutsubto` = :domainid
+		");
+		Database::pexecute($mainbutsub_stmt, array(
+			'domainid' => $domain_id
+		));
 
-	while ($mainbutsubtodomain = $mainbutsub_stmt->fetch(PDO::FETCH_ASSOC)) {
-		// Add NS entry for subdomain-records of "main-but-subdomain-to"-domains, they get their own Zone
-		addRequiredEntry(str_replace('.' . $domain['domain'], '', $mainbutsubtodomain['domain']), 'NS', $required_entries);
+		while ($mainbutsubtodomain = $mainbutsub_stmt->fetch(PDO::FETCH_ASSOC)) {
+			// Add NS entry for subdomain-records of "main-but-subdomain-to"-domains, they get their own Zone
+			addRequiredEntry(str_replace('.' . $domain['domain'], '', $mainbutsubtodomain['domain']), 'NS', $required_entries);
+		}
 	}
 
 	// additional required records for SPF and DKIM if activated
@@ -136,6 +150,7 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 				$result_ip_stmt = Database::prepare("
 					SELECT `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` GROUP BY `ip`
 				");
+				Database::pexecute($result_ip_stmt);
 			} else {
 				$result_ip_stmt = Database::prepare("
 					SELECT `p`.`ip` AS `ip`
@@ -143,10 +158,10 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 					WHERE `di`.`id_domain` = :domainid AND `p`.`id` = `di`.`id_ipandports`
 					GROUP BY `p`.`ip`;
 				");
+				Database::pexecute($result_ip_stmt, array(
+					'domainid' => $domain_id
+				));
 			}
-			Database::pexecute($result_ip_stmt, array(
-				'domainid' => $domain_id
-			));
 			$all_ips = $result_ip_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 			foreach ($all_ips as $ip) {

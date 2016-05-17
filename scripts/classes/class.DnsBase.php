@@ -1,11 +1,13 @@
 <?php
+
 /***
  * Class DnsBase
  *
  * Base class for all DNS server configs
  *
  */
-abstract class DnsBase {
+abstract class DnsBase
+{
 
 	protected $_logger = false;
 
@@ -81,6 +83,7 @@ abstract class DnsBase {
 			$hostname_arr = array(
 				'id' => 'none',
 				'domain' => Settings::Get('system.hostname'),
+				'isbinddomain' => '1',
 				'isemaildomain' => Settings::Get('system.dns_createmailentry'),
 				'customerid' => 'none',
 				'loginname' => 'froxlor.panel',
@@ -181,5 +184,4 @@ abstract class DnsBase {
 			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Dkim-milter reloaded');
 		}
 	}
-
 }
