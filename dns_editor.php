@@ -51,7 +51,24 @@ if ($action == 'add_record' && ! empty($_POST)) {
 
 	$record = strtolower($record);
 
-	// TODO regex validate record and content for invalid characters
+	if ($record != '@' && $record != '*')
+	{
+		// validate record
+		if (strpos($record, '--') !== false) {
+			$errors[] = $lng['error']['domain_nopunycode'];
+		}
+		else
+		{
+			$record = $idna_convert->encode($record);
+			$check_dom = $record.'.example.com';
+			if (!validateDomain($check_dom))
+			{
+				$errors[] = sprintf($lng['error']['subdomainiswrong'], $idna_convert->decode($record));
+			}
+		}
+	}
+
+	// TODO regex validate content for invalid characters
 
 	if ($ttl <= 0) {
 		$ttl = 18000;

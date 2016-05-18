@@ -266,7 +266,7 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	}
 
 	// TODO for now, dummy time-periods
-	$soa_content = $primary_ns . " " . str_replace('@', '.', Settings::Get('panel.adminmail')) . ". (" . PHP_EOL;
+	$soa_content = $primary_ns . " " . escapeSoaAdminMail(Settings::Get('panel.adminmail')) . " (" . PHP_EOL;
 	$soa_content .= $domain['bindserial'] . "\t; serial" . PHP_EOL;
 	$soa_content .= "1800\t; refresh (30 mins)" . PHP_EOL;
 	$soa_content .= "900\t; retry (15 mins)" . PHP_EOL;
@@ -301,4 +301,11 @@ function encloseTXTContent($txt_content, $isMultiLine = false)
 		}
 	}
 	return $txt_content;
+}
+
+function escapeSoaAdminMail($email)
+{
+	$mail_parts = explode("@", $email);
+	$escpd_mail = str_replace(".", "\.", $mail_parts[0]).".".$mail_parts[1].".";
+	return $escpd_mail;
 }
