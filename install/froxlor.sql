@@ -191,6 +191,7 @@ CREATE TABLE `panel_customers` (
   `pop3` tinyint(1) NOT NULL default '1',
   `imap` tinyint(1) NOT NULL default '1',
   `perlenabled` tinyint(1) NOT NULL default '0',
+  `dnsenabled` tinyint(1) NOT NULL default '0'
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
@@ -559,7 +560,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.36'),
-	('panel', 'db_version', '201605170');
+	('panel', 'db_version', '201605180');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
