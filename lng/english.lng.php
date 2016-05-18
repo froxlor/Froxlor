@@ -2017,3 +2017,4 @@ $lng['serversettings']['dns_server']['description'] = 'Remember that daemons hav
 
 $lng['error']['domain_nopunycode'] = 'You must not specify punycode (IDNA). The domain will automatically be converted';
 $lng['admin']['dnsenabled'] = 'Enable DNS editor';
+$lng['error']['dns_record_toolong'] = 'Records/labels can only be up to 63 characters';

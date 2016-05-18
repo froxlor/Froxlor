@@ -65,6 +65,10 @@ if ($action == 'add_record' && ! empty($_POST)) {
 			{
 				$errors[] = sprintf($lng['error']['subdomainiswrong'], $idna_convert->decode($record));
 			}
+			if (strlen($record) > 63)
+			{
+				$errors[] = $lng['error']['dns_record_toolong'];
+			}
 		}
 	}
 

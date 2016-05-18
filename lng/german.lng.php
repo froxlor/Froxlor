@@ -1670,3 +1670,4 @@ $lng['serversettings']['dns_server']['description'] = 'Dienste müssen mit den f
 
 $lng['error']['domain_nopunycode'] = 'Die Eingabe von Punycode (IDNA) ist nicht notwendig. Die Domain wird automatisch konvertiert.';
 $lng['admin']['dnsenabled'] = 'Zugriff auf DNS Editor';
+$lng['error']['dns_record_toolong'] = 'Records/Labels können maximal 63 Zeichen lang sein';
