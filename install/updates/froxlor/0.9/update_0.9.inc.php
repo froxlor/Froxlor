@@ -3372,5 +3372,5 @@ if (isDatabaseVersion('201605170')) {
 	Database::query("ALTER TABLE `panel_customers` ADD `dnsenabled` tinyint(1) NOT NULL default '0' AFTER `perlenabled`;");
 	lastStepStatus(0);
 
-	updateToDbVersion('201605170');
+	updateToDbVersion('201605180');
 }
