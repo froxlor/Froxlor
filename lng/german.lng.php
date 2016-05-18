@@ -1667,3 +1667,5 @@ $lng['serversettings']['dnseditorenable']['description'] = 'Erlaubt es Admins un
 $lng['dns']['howitworks'] = 'Hier können DNS Einträge für die Domain verwaltet werden. Beachte das Froxlor automatisch NS/MX/A/AAAA Einträge generiert. Die benutzerdefinierten Einträge werden bevorzugt, nur fehlende Einträge werden automatisch generiert.';
 $lng['serversettings']['dns_server']['title'] = 'DNS Server Dienst';
 $lng['serversettings']['dns_server']['description'] = 'Dienste müssen mit den froxlor Konfigurationstemplates konfiguriert werden';
+
+$lng['error']['domain_nopunycode'] = 'Die Eingabe von Punycode (IDNA) ist nicht notwendig. Die Domain wird automatisch konvertiert.';

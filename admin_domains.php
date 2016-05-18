@@ -282,10 +282,23 @@ if ($page == 'domains' || $page == 'overview') {
 					standard_error('admin_domain_emailsystemhostname');
 				}
 
+				if (strpos($_POST['domain'], '--') !== false) {
+					standard_error('domain_nopunycode');
+				}
+
 				$domain = $idna_convert->encode(preg_replace(array(
 					'/\:(\d)+$/',
 					'/^https?\:\/\//'
 				), '', validate($_POST['domain'], 'domain')));
+
+				// Check whether domain validation is enabled and if, validate the domain
+				if (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
+					standard_error(array(
+						'stringiswrong',
+						'mydomain'
+					));
+				}
+
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
 
 				$isemaildomain = 0;
@@ -677,12 +690,6 @@ if ($page == 'domains' || $page == 'overview') {
 				if ($domain == '') {
 					standard_error(array(
 						'stringisempty',
-						'mydomain'
-					));
-				} // Check whether domain validation is enabled and if, validate the domain
-elseif (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
-					standard_error(array(
-						'stringiswrong',
 						'mydomain'
 					));
 				} elseif ($documentroot == '') {
