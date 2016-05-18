@@ -247,6 +247,11 @@ if ($page == 'overview') {
 	} elseif ($action == 'add') {
 		if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+
+				if (strpos($_POST['subdomain'], '--') !== false) {
+					standard_error('domain_nopunycode');
+				}
+
 				$subdomain = $idna_convert->encode(preg_replace(array('/\:(\d)+$/', '/^https?\:\/\//'), '', validate($_POST['subdomain'], 'subdomain', '', 'subdomainiswrong')));
 				$domain = $idna_convert->encode($_POST['domain']);
 				$domain_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
