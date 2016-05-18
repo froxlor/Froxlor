@@ -724,7 +724,6 @@ if ($page == 'customers'
 						`mysqls` = :mysqls,
 						`standardsubdomain` = '0',
 						`phpenabled` = :phpenabled,
-						`dnsenabled` = :dnsenabled,
 						`imap` = :imap,
 						`pop3` = :pop3,
 						`perlenabled` = :perlenabled,
@@ -1484,7 +1483,7 @@ if ($page == 'customers'
 						`imap` = :imap,
 						`pop3` = :pop3,
 						`perlenabled` = :perlenabled,
-						`dnsenabled` = :dnsenabled
+						`dnsenabled` = :dnsenabled,
 						`custom_notes` = :custom_notes,
 						`custom_notes_show` = :custom_notes_show
 						WHERE `customerid` = :customerid"
