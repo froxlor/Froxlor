@@ -3313,6 +3313,14 @@ if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201603150')) {
 	updateToDbVersion('201604270');
 }
 
+if (isFroxlorVersion('0.9.35.1')) {
+
+	showUpdateStep("Updating from 0.9.35.1 to 0.9.36 final");
+	lastStepStatus(0);
+
+	updateToVersion('0.9.36');
+}
+
 if (isDatabaseVersion('201604270')) {
 
 	showUpdateStep("Adding new dns related tables and settings");
