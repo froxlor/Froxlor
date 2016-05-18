@@ -1988,3 +1988,5 @@ $lng['serversettings']['backupenabled']['description'] = "If activated, the cust
 $lng['extras']['path_protection_label'] = '<strong class="red">Important</strong>';
 $lng['extras']['path_protection_info'] = '<strong class="red">We strongly recommend protecting the given path, see "Extras" -> "Directory protection"</strong>';
 $lng['tasks']['backup_customerfiles'] = 'Backup job for customer %loginname%';
+
+$lng['error']['domain_nopunycode'] = 'You must not specify punycode (IDNA). The domain will automatically be converted';
