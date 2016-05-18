@@ -30,8 +30,9 @@ require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.35.nginx_
  * LOOK INTO TASKS TABLE TO SEE IF THERE ARE ANY UNDONE JOBS
  */
 $cronlog->logAction(CRON_ACTION, LOG_INFO, "cron_tasks: Searching for tasks to do");
+// no type 99 (regenerate cron.d-file) and no type 20 (customer backup)
 $result_tasks_stmt = Database::query("
-	SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` <> '99' ORDER BY `id` ASC
+	SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` <> '99' AND `type` <> '20' ORDER BY `id` ASC
 ");
 $num_results = Database::num_rows();
 $resultIDs = array();
@@ -169,6 +170,12 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			}
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)Settings::Get('system.vmail_uid') . ':' . (int)Settings::Get('system.vmail_gid') . ' ' . escapeshellarg($usermaildir));
 			safe_exec('chown -R ' . (int)Settings::Get('system.vmail_uid') . ':' . (int)Settings::Get('system.vmail_gid') . ' ' . escapeshellarg($usermaildir));
+
+			// clear NSCD cache if using fcgid or fpm, #1570
+			if (Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
+				$false_val = false;
+				safe_exec('nscd -i group 1> /dev/null', $false_val, array('>'));
+			}
 		}
 	}
 
@@ -399,7 +406,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 						}
 					}
 				}
-			}	
+			}
 		}
 	}
 	

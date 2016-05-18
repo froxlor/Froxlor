@@ -40,8 +40,6 @@
 							</visibility>
 							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
-						<command><![CDATA[a2dismod userdir]]></command>
-						<command><![CDATA[a2enmod headers]]></command>
 					</commands>
 				</general>
 				<!-- HTTP Apache -->

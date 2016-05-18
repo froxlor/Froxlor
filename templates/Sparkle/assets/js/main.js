@@ -70,7 +70,7 @@ $(document).ready(function() {
 	var snheight = $('#sidenavigation').height();
 	var mainheight = $('#maincontent').height();
 	if (snheight > mainheight && !$('#newsfeed').length) {
-		$('#maincontent').height(snheight);
+		$('#maincontent').css("min-height", snheight);
 	}
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {

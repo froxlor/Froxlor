@@ -57,7 +57,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			$settings_part = false;
 			$only_enabledisable = true;
 		}
-		
+
 		// check if the session timeout is too low #815
 		if (isset($_POST['session_sessiontimeout'])
 			&& $_POST['session_sessiontimeout'] < 60
@@ -163,6 +163,8 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		inserttask('10');
 		// Using nameserver, insert a task which rebuilds the server config
 		inserttask('4');
+		// cron.d file
+		inserttask('99');
 
 		FroxlorEvent::RebuildConfigs();
 

@@ -124,11 +124,16 @@ return array (
 					'url' => 'customer_extras.php?page=htaccess',
 					'label' => $lng['menue']['extras']['pathoptions'],
 				),
-			    array (
-			        'url' => 'customer_logger.php?page=log',
-			        'label' => $lng['menue']['logger']['logger'],
-			        'show_element' => ( Settings::Get('logger.enabled') == true )
-			    ),
+				array (
+					'url' => 'customer_logger.php?page=log',
+					'label' => $lng['menue']['logger']['logger'],
+					'show_element' => ( Settings::Get('logger.enabled') == true )
+				),
+				array (
+					'url' => 'customer_extras.php?page=backup',
+					'label' => $lng['menue']['extras']['backup'],
+					'show_element' => ( Settings::Get('system.backupenabled') == true ),
+				),
 			),
 		),
 		'traffic' => array (

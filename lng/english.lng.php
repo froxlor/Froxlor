@@ -318,6 +318,7 @@ $lng['admin']['templates']['USERNAME'] = 'Replaced with the customers account us
 $lng['admin']['templates']['PASSWORD'] = 'Replaced with the customers account password.';
 $lng['admin']['templates']['EMAIL'] = 'Replaced with the address of the POP3/IMAP account.';
 $lng['admin']['webserver'] = 'Webserver';
+$lng['admin']['bindzonewarning'] = $lng['panel']['emptyfordefault'] . '<br /><strong class="red">ATTENTION:</strong> If you use a zonefile you will have to manage all required records for all sub-zones manually as well.';
 
 /**
  * Serversettings
@@ -347,8 +348,6 @@ $lng['serversettings']['bindconf_directory']['title'] = 'Bind config directory';
 $lng['serversettings']['bindconf_directory']['description'] = 'Where should bind configfiles be saved?';
 $lng['serversettings']['bindreload_command']['title'] = 'Bind reload command';
 $lng['serversettings']['bindreload_command']['description'] = 'What\'s the bind command to reload bind configfiles?';
-$lng['serversettings']['binddefaultzone']['title'] = 'Bind default zone';
-$lng['serversettings']['binddefaultzone']['description'] = 'What\'s the name of the default zone?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mails-UID';
 $lng['serversettings']['vmail_uid']['description'] = 'Which UserID should mails have?';
 $lng['serversettings']['vmail_gid']['title'] = 'Mails-GID';
@@ -1937,7 +1936,6 @@ $lng['customer']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
 $lng['customer']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong> This feature is still in beta.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using Let\'s Encrypt is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
 $lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt cannot (yet) handle wildcard-domains. Please set the ServerAlias to WWW or disable it completely';
-$lng['error']['letsencryptdoesnotworkwithaliasdomains'] = "Usage of Let's Encrypt is not possible for aliasdomains at the moment. Please disable Let's Encrypt or AliasDomain";
 $lng['panel']['letsencrypt'] = 'Using Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'updating Let\'s Encrypt certificates';
 $lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt environment";
@@ -1950,8 +1948,8 @@ $lng['serversettings']['letsencryptchallengepath']['title'] = "Path for Let's En
 $lng['serversettings']['letsencryptchallengepath']['description'] = "Directory where the Let's Encrypt challenges should be offered from via a global alias.<br><strong class=\"red\">ATTENTION:</strong> Let's Encrypt is still in beta</strong>";
 $lng['serversettings']['letsencryptkeysize']['title'] = "Key size for new Let's Encrypt certificates";
 $lng['serversettings']['letsencryptkeysize']['description'] = "Size of the key in Bits for new Let's Encrypt certificates.<br><strong class=\"red\">ATTENTION:</strong> Let's Encrypt is still in beta</strong>";
-$lng['serversettings']['letsencryptreuseold']['title'] = "Re-use Let's Encrypt key / CSR";
-$lng['serversettings']['letsencryptreuseold']['description'] = "If activated, the same key and CSR will be used for every renew, otherwise a new key / CSR will be generated every time.<br><strong class=\"red\">ATTENTION:</strong> Let's Encrypt is still in beta</strong>";
+$lng['serversettings']['letsencryptreuseold']['title'] = "Re-use Let's Encrypt key";
+$lng['serversettings']['letsencryptreuseold']['description'] = "If activated, the same key will be used for every renew, otherwise a new key will be generated every time.<br><strong class=\"red\">ATTENTION:</strong> Let's Encrypt is still in beta</strong>";
 $lng['serversettings']['leenabled']['title'] = "Enable Let's Encrypt";
 $lng['serversettings']['leenabled']['description'] = "If activated, customers are able to let froxlor automatically generate and renew Let's Encrypt ssl-certificates for domains with a ssl IP/port.<br /><br />Please remember that you need to go through the webserver-configuration when eabled because this feature needs a special configuration.";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>The SSL redirect is temporarily deactivated while a new Let's Encrypt certificate is generated. It will be activated again after the certificate was generated.";
@@ -1975,6 +1973,24 @@ $lng['domains']['termination_date_overview'] = 'canceled until ';
 $lng['panel']['set'] = 'Apply';
 $lng['customer']['selectserveralias_addinfo'] = 'This option can be set when editing the domain. Its initial value is inherited from the parent-domain.';
 $lng['error']['mailaccistobedeleted'] = "Another account with the same name (%s) is currently being deleted and can therefore not be added at this moment.";
+
+$lng['menue']['extras']['backup'] = 'Backup';
+$lng['extras']['backup'] = 'Create backup';
+$lng['extras']['backup_web'] = 'Backup web-data';
+$lng['extras']['backup_mail'] = 'Backup mail-data';
+$lng['extras']['backup_dbs'] = 'Backup databases';
+$lng['error']['customerhasongoingbackupjob'] = 'There is already a backup job waiting to be processed, please be patient.';
+$lng['success']['backupscheduled'] = 'Your backup job has been scheduled. Please wait for it to be processed';
+$lng['crondesc']['cron_backup'] = 'Process backup jobs';
+$lng['error']['backupfunctionnotenabled'] = 'The backup function is not enabled';
+$lng['serversettings']['backupenabled']['title'] = "Enable backup for customers";
+$lng['serversettings']['backupenabled']['description'] = "If activated, the customer will be able to schedule backup jobs (cron-backup) which generates an archive within his docroot (subdirectory chosable by customer)";
+$lng['extras']['path_protection_label'] = '<strong class="red">Important</strong>';
+$lng['extras']['path_protection_info'] = '<strong class="red">We strongly recommend protecting the given path, see "Extras" -> "Directory protection"</strong>';
+$lng['tasks']['backup_customerfiles'] = 'Backup job for customer %loginname%';
+
+$lng['error']['domain_nopunycode'] = 'You must not specify punycode (IDNA). The domain will automatically be converted';
+
 
 // Added for Plugin Support
 $lng['plugins']['plugins'] = 'Plugins';

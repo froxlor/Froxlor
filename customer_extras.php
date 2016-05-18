@@ -16,7 +16,6 @@
  * @package    Panel
  *
  */
-
 define('AREA', 'customer');
 require './lib/init.php';
 
@@ -38,9 +37,10 @@ if ($page == 'overview') {
 		);
 		$paging = new paging($userinfo, TABLE_PANEL_HTPASSWDS, $fields);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
-			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
-		);
-		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
+			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+		Database::pexecute($result_stmt, array(
+			"customerid" => $userinfo['customerid']
+		));
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
@@ -58,38 +58,49 @@ if ($page == 'overview') {
 				$row['path'] = makeCorrectDir($row['path']);
 				$row = htmlentities_array($row);
 				eval("\$htpasswds.=\"" . getTemplate("extras/htpasswds_htpasswd") . "\";");
-				$count++;
+				$count ++;
 			}
 
-			$i++;
+			$i ++;
 		}
 
 		eval("echo \"" . getTemplate("extras/htpasswds") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
 			WHERE `customerid`= :customerid
-			AND `id`= :id"
-		);
-		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+			AND `id`= :id");
+		Database::pexecute($result_stmt, array(
+			"customerid" => $userinfo['customerid'],
+			"id" => $id
+		));
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 		if (isset($result['username']) && $result['username'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTPASSWDS . "`
 					WHERE `customerid`= :customerid
-					AND `id`= :id"
-				);
-				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+					AND `id`= :id");
+				Database::pexecute($stmt, array(
+					"customerid" => $userinfo['customerid'],
+					"id" => $id
+				));
 
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
 				inserttask('1');
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
-				    $result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
+					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
 				}
 
-				ask_yesno('extras_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['username'] . ' (' . $result['path'] . ')');
+				ask_yesno('extras_reallydelete', $filename, array(
+					'id' => $id,
+					'page' => $page,
+					'action' => $action
+				), $result['username'] . ' (' . $result['path'] . ')');
 			}
 		}
 	} elseif ($action == 'add') {
@@ -104,8 +115,7 @@ if ($page == 'overview') {
 			$username_path_check_stmt = Database::prepare("SELECT `id`, `username`, `path` FROM `" . TABLE_PANEL_HTPASSWDS . "`
 				WHERE `username`= :username
 				AND `path`= :path
-				AND `customerid`= :customerid"
-			);
+				AND `customerid`= :customerid");
 			$params = array(
 				"username" => $username,
 				"path" => $path,
@@ -121,16 +131,22 @@ if ($page == 'overview') {
 				$password = crypt($_POST['directory_password']);
 			}
 
-			if (!$_POST['path']) {
+			if (! $_POST['path']) {
 				standard_error('invalidpath');
 			}
 
 			if ($username == '') {
-				standard_error(array('stringisempty', 'myloginname'));
+				standard_error(array(
+					'stringisempty',
+					'myloginname'
+				));
 			} elseif ($username_path_check['username'] == $username && $username_path_check['path'] == $path) {
 				standard_error('userpathcombinationdupe');
 			} elseif ($_POST['directory_password'] == '') {
-				standard_error(array('stringisempty', 'mypassword'));
+				standard_error(array(
+					'stringisempty',
+					'mypassword'
+				));
 			} elseif ($path == '') {
 				standard_error('patherror');
 			} elseif ($_POST['directory_password'] == $username) {
@@ -141,8 +157,7 @@ if ($page == 'overview') {
 					`username` = :username,
 					`password` = :password,
 					`path` = :path,
-					`authname` = :authname"
-				);
+					`authname` = :authname");
 				$params = array(
 					"customerid" => $userinfo['customerid'],
 					"username" => $username,
@@ -153,12 +168,15 @@ if ($page == 'overview') {
 				Database::pexecute($stmt, $params);
 				$log->logAction(USR_ACTION, LOG_INFO, "added htpasswd for '" . $username . " (" . $path . ")'");
 				inserttask('1');
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			}
 		} else {
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
-			$htpasswd_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htpasswd_add.php';
+			$htpasswd_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htpasswd_add.php';
 			$htpasswd_add_form = htmlform::genHTMLForm($htpasswd_add_data);
 
 			$title = $htpasswd_add_data['htpasswd_add']['title'];
@@ -169,9 +187,11 @@ if ($page == 'overview') {
 	} elseif ($action == 'edit' && $id != 0) {
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
 			WHERE `customerid`= :customerid
-			AND `id`= :id"
-		);
-		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+			AND `id`= :id");
+		Database::pexecute($result_stmt, array(
+			"customerid" => $userinfo['customerid'],
+			"id" => $id
+		));
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 		if (isset($result['username']) && $result['username'] != '') {
@@ -208,19 +228,21 @@ if ($page == 'overview') {
 				}
 
 				if ($pwd_sql != '' || $auth_sql != '') {
-					if ($pwd_sql !='' && $auth_sql != '') {
-						$pwd_sql.= ', ';
+					if ($pwd_sql != '' && $auth_sql != '') {
+						$pwd_sql .= ', ';
 					}
 
 					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTPASSWDS . "`
-						SET ".$pwd_sql.$auth_sql."
+						SET " . $pwd_sql . $auth_sql . "
 						WHERE `customerid`= :customerid
-						AND `id`= :id"
-					);
+						AND `id`= :id");
 					Database::pexecute($stmt, $params);
 					$log->logAction(USR_ACTION, LOG_INFO, "edited htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
 					inserttask('1');
-					redirectTo($filename, array('page' => $page, 's' => $s));
+					redirectTo($filename, array(
+						'page' => $page,
+						's' => $s
+					));
 				}
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
@@ -229,7 +251,7 @@ if ($page == 'overview') {
 
 				$result = htmlentities_array($result);
 
-				$htpasswd_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htpasswd_edit.php';
+				$htpasswd_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htpasswd_edit.php';
 				$htpasswd_edit_form = htmlform::genHTMLForm($htpasswd_edit_data);
 
 				$title = $htpasswd_edit_data['htpasswd_edit']['title'];
@@ -252,9 +274,10 @@ if ($page == 'overview') {
 		);
 		$paging = new paging($userinfo, TABLE_PANEL_HTACCESS, $fields);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
-		);
-		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
+			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+		Database::pexecute($result_stmt, array(
+			"customerid" => $userinfo['customerid']
+		));
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
@@ -278,49 +301,60 @@ if ($page == 'overview') {
 				$row['options_cgi'] = str_replace('0', $lng['panel']['no'], $row['options_cgi']);
 				$row = htmlentities_array($row);
 				eval("\$htaccess.=\"" . getTemplate("extras/htaccess_htaccess") . "\";");
-				$count++;
+				$count ++;
 			}
 
-			$i++;
+			$i ++;
 		}
 
 		eval("echo \"" . getTemplate("extras/htaccess") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
 			WHERE `customerid` = :customerid
-			AND `id` = :id"
-		);
-		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+			AND `id` = :id");
+		Database::pexecute($result_stmt, array(
+			"customerid" => $userinfo['customerid'],
+			"id" => $id
+		));
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 		if (isset($result['customerid']) && $result['customerid'] != '' && $result['customerid'] == $userinfo['customerid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				// do we have to remove the symlink and folder in suexecpath?
-				if ((int)Settings::Get('perl.suexecworkaround') == 1) {
+				if ((int) Settings::Get('perl.suexecworkaround') == 1) {
 					$loginname = getCustomerDetail($result['customerid'], 'loginname');
-					$suexecpath = makeCorrectDir(Settings::Get('perl.suexecpath').'/'.$loginname.'/'.md5($result['path']).'/');
-					$perlsymlink = makeCorrectFile($result['path'].'/cgi-bin');
+					$suexecpath = makeCorrectDir(Settings::Get('perl.suexecpath') . '/' . $loginname . '/' . md5($result['path']) . '/');
+					$perlsymlink = makeCorrectFile($result['path'] . '/cgi-bin');
 					// remove symlink
 					if (file_exists($perlsymlink)) {
-						safe_exec('rm -f '.escapeshellarg($perlsymlink));
+						safe_exec('rm -f ' . escapeshellarg($perlsymlink));
 						$log->logAction(USR_ACTION, LOG_DEBUG, "deleted suexecworkaround symlink '" . $perlsymlink . "'");
 					}
 					// remove folder in suexec-path
 					if (file_exists($suexecpath)) {
-						safe_exec('rm -rf '.escapeshellarg($suexecpath));
+						safe_exec('rm -rf ' . escapeshellarg($suexecpath));
 						$log->logAction(USR_ACTION, LOG_DEBUG, "deleted suexecworkaround path '" . $suexecpath . "'");
 					}
 				}
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTACCESS . "`
 					WHERE `customerid`= :customerid
-					AND `id`= :id"
-				);
-				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+					AND `id`= :id");
+				Database::pexecute($stmt, array(
+					"customerid" => $userinfo['customerid'],
+					"id" => $id
+				));
 				$log->logAction(USR_ACTION, LOG_INFO, "deleted htaccess for '" . str_replace($userinfo['documentroot'], '/', $result['path']) . "'");
 				inserttask('1');
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			} else {
-				ask_yesno('extras_reallydelete_pathoptions', $filename, array('id' => $id, 'page' => $page, 'action' => $action), str_replace($userinfo['documentroot'], '/', $result['path']));
+				ask_yesno('extras_reallydelete_pathoptions', $filename, array(
+					'id' => $id,
+					'page' => $page,
+					'action' => $action
+				), str_replace($userinfo['documentroot'], '/', $result['path']));
 			}
 		}
 	} elseif ($action == 'add') {
@@ -330,16 +364,18 @@ if ($page == 'overview') {
 			$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
 			$path_dupe_check_stmt = Database::prepare("SELECT `id`, `path` FROM `" . TABLE_PANEL_HTACCESS . "`
 				WHERE `path`= :path
-				AND `customerid`= :customerid"
-			);
-			Database::pexecute($path_dupe_check_stmt, array("path" => $path, "customerid" => $userinfo['customerid']));
+				AND `customerid`= :customerid");
+			Database::pexecute($path_dupe_check_stmt, array(
+				"path" => $path,
+				"customerid" => $userinfo['customerid']
+			));
 			$path_dupe_check = $path_dupe_check_stmt->fetch(PDO::FETCH_ASSOC);
 
-			if (!$_POST['path']) {
+			if (! $_POST['path']) {
 				standard_error('invalidpath');
 			}
 
-			if (isset($_POST['options_cgi']) && (int)$_POST['options_cgi'] != 0) {
+			if (isset($_POST['options_cgi']) && (int) $_POST['options_cgi'] != 0) {
 				$options_cgi = '1';
 			} else {
 				$options_cgi = '0';
@@ -372,8 +408,7 @@ if ($page == 'overview') {
 					`error404path` = :error404path,
 					`error403path` = :error403path,
 					`error500path` = :error500path,
-					`options_cgi` = :options_cgi'
-				);
+					`options_cgi` = :options_cgi');
 				$params = array(
 					"customerid" => $userinfo['customerid'],
 					"path" => $path,
@@ -387,13 +422,16 @@ if ($page == 'overview') {
 
 				$log->logAction(USR_ACTION, LOG_INFO, "added htaccess for '" . $path . "'");
 				inserttask('1');
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			}
 		} else {
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 			$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
 
-			$htaccess_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htaccess_add.php';
+			$htaccess_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_add.php';
 			$htaccess_add_form = htmlform::genHTMLForm($htaccess_add_data);
 
 			$title = $htaccess_add_data['htaccess_add']['title'];
@@ -404,9 +442,11 @@ if ($page == 'overview') {
 	} elseif (($action == 'edit') && ($id != 0)) {
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
 			WHERE `customerid` = :customerid
-			AND `id` = :id"
-		);
-		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
+			AND `id` = :id");
+		Database::pexecute($result_stmt, array(
+			"customerid" => $userinfo['customerid'],
+			"id" => $id
+		));
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 		if ((isset($result['customerid'])) && ($result['customerid'] != '') && ($result['customerid'] == $userinfo['customerid'])) {
@@ -426,12 +466,7 @@ if ($page == 'overview') {
 				$error403path = correctErrorDocument($_POST['error403path']);
 				$error500path = correctErrorDocument($_POST['error500path']);
 
-				if (($option_indexes != $result['options_indexes'])
-					|| ($error404path != $result['error404path'])
-					|| ($error403path != $result['error403path'])
-					|| ($error500path != $result['error500path'])
-					|| ($options_cgi != $result['options_cgi'])
-				) {
+				if (($option_indexes != $result['options_indexes']) || ($error404path != $result['error404path']) || ($error403path != $result['error403path']) || ($error500path != $result['error500path']) || ($options_cgi != $result['options_cgi'])) {
 					inserttask('1');
 					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTACCESS . "`
 						SET `options_indexes` = :options_indexes,
@@ -440,8 +475,7 @@ if ($page == 'overview') {
 						`error500path` = :error500path,
 						`options_cgi` = :options_cgi
 						WHERE `customerid` = :customerid
-						AND `id` = :id"
-					);
+						AND `id` = :id");
 					$params = array(
 						"customerid" => $userinfo['customerid'],
 						"options_indexes" => $_POST['options_indexes'] == '1' ? '1' : '0',
@@ -455,7 +489,10 @@ if ($page == 'overview') {
 					$log->logAction(USR_ACTION, LOG_INFO, "edited htaccess for '" . str_replace($userinfo['documentroot'], '/', $result['path']) . "'");
 				}
 
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
 					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
@@ -466,12 +503,12 @@ if ($page == 'overview') {
 				$result['error500path'] = $result['error500path'];
 				$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
 				/*
-				$options_indexes = makeyesno('options_indexes', '1', '0', $result['options_indexes']);
-				$options_cgi = makeyesno('options_cgi', '1', '0', $result['options_cgi']);
-				*/
+				 * $options_indexes = makeyesno('options_indexes', '1', '0', $result['options_indexes']);
+				 * $options_cgi = makeyesno('options_cgi', '1', '0', $result['options_cgi']);
+				 */
 				$result = htmlentities_array($result);
 
-				$htaccess_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/extras/formfield.htaccess_edit.php';
+				$htaccess_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_edit.php';
 				$htaccess_edit_form = htmlform::genHTMLForm($htaccess_edit_data);
 
 				$title = $htaccess_edit_data['htaccess_edit']['title'];
@@ -480,5 +517,77 @@ if ($page == 'overview') {
 				eval("echo \"" . getTemplate("extras/htaccess_edit") . "\";");
 			}
 		}
+	}
+} elseif ($page == 'backup') {
+
+	if (Settings::Get('system.backupenabled') == 1)
+	{
+		if ($action == '') {
+			$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
+
+			// check whether there is a backup-job for this customer
+			$sel_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_TASKS."` WHERE `type` = '20'");
+			Database::pexecute($sel_stmt);
+			while ($entry = $sel_stmt->fetch())
+			{
+				$data = unserialize($entry['data']);
+				if ($data['customerid'] == $userinfo['customerid']) {
+					standard_error('customerhasongoingbackupjob');
+				}
+			}
+
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+
+				if (! $_POST['path']) {
+					standard_error('invalidpath');
+				}
+
+				$path = makeCorrectDir(validate($_POST['path'], 'path'));
+				$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
+
+				$backup_dbs = isset($_POST['backup_dbs']) ? intval($_POST['backup_dbs']) : 0;
+				$backup_mail = isset($_POST['backup_mail']) ? intval($_POST['backup_mail']) : 0;
+				$backup_web = isset($_POST['backup_web']) ? intval($_POST['backup_web']) : 0;
+
+				if ($backup_dbs != '1') {
+					$backup_dbs = '0';
+				}
+
+				if ($backup_mail != '1') {
+					$backup_mail = '0';
+				}
+
+				if ($backup_web != '1') {
+					$backup_web = '0';
+				}
+
+				$task_data = array(
+					'customerid' => $userinfo['customerid'],
+					'uid' => $userinfo['guid'],
+					'gid' => $userinfo['guid'],
+					'loginname' => $userinfo['loginname'],
+					'destdir' => $path,
+					'backup_dbs' => $backup_dbs,
+					'backup_mail' => $backup_mail,
+					'backup_web' => $backup_web
+				);
+				// schedule backup job
+				inserttask('20', $task_data);
+
+				standard_success('backupscheduled');
+			} else {
+
+				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
+				$backup_form = htmlform::genHTMLForm($backup_data);
+				$title = $backup_data['backup']['title'];
+				$image = $backup_data['backup']['image'];
+				eval("echo \"" . getTemplate("extras/backup") . "\";");
+			}
+		}
+	}
+	else
+	{
+		standard_error('backupfunctionnotenabled');
 	}
 }
