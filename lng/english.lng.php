@@ -2016,3 +2016,4 @@ $lng['serversettings']['dns_server']['title'] = 'DNS server daemon';
 $lng['serversettings']['dns_server']['description'] = 'Remember that daemons have to be configured using froxlors configuration templates';
 
 $lng['error']['domain_nopunycode'] = 'You must not specify punycode (IDNA). The domain will automatically be converted';
+$lng['admin']['dnsenabled'] = 'Enable DNS editor';

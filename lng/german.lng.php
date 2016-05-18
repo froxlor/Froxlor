@@ -1669,3 +1669,4 @@ $lng['serversettings']['dns_server']['title'] = 'DNS Server Dienst';
 $lng['serversettings']['dns_server']['description'] = 'Dienste müssen mit den froxlor Konfigurationstemplates konfiguriert werden';
 
 $lng['error']['domain_nopunycode'] = 'Die Eingabe von Punycode (IDNA) ist nicht notwendig. Die Domain wird automatisch konvertiert.';
+$lng['admin']['dnsenabled'] = 'Zugriff auf DNS Editor';

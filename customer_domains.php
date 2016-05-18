@@ -232,6 +232,13 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($del_stmt, array('domainid' => $id));
 
+				// remove possible existing DNS entries
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_DOMAIN_DNS . "`
+					WHERE `domain_id` = :domainid
+				");
+				Database::pexecute($del_stmt, array('domainid' => $id));
+
 				inserttask('1');
 
 				// Using nameserver, insert a task which rebuilds the server config

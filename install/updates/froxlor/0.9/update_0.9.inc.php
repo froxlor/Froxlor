@@ -3365,3 +3365,12 @@ if (isDatabaseVersion('201605120')) {
 
 	updateToDbVersion('201605170');
 }
+
+if (isDatabaseVersion('201605170')) {
+
+	showUpdateStep("Adding new dns-editor setting for customers");
+	Database::query("ALTER TABLE `panel_customers` ADD `dnsenabled` tinyint(1) NOT NULL default '0' AFTER `perlenabled`;");
+	lastStepStatus(0);
+
+	updateToDbVersion('201605170');
+}
