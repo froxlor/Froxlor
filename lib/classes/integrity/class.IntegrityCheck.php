@@ -132,7 +132,7 @@ class IntegrityCheck {
 					// Admin uses default-IP
 					$admips[$row['adminid']] = explode(',', Settings::Get('system.defaultip'));
 				} else {
-					$admips[$row['adminid']] = [ $row['ip'] ];
+					$admips[$row['adminid']] = array($row['ip']);
 				}
 			}
 		}
@@ -292,7 +292,7 @@ class IntegrityCheck {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$ips[$row['id']] = $row['ip'] . ':' . $row['port'];
 		}
-		
+
 		// Cache all configured domains
 		$result_stmt = Database::prepare("SELECT `id`, `parentdomainid`, `letsencrypt` FROM `" . TABLE_PANEL_DOMAINS . "` ORDER BY `id` ASC");
 		$ip_stmt = Database::prepare("SELECT `id_domain`, `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :domainid");
@@ -304,7 +304,7 @@ class IntegrityCheck {
 				Database::pexecute($ip_stmt, array('domainid' => $row['id']));
 				while ($iprow = $ip_stmt->fetch(PDO::FETCH_ASSOC)) {
 					// If the parentdomain has an ip/port assigned which we know is SSL enabled, set the parentdomain to "true"
-					if (array_key_exists($iprow['id_ipandports'], $ips)) { $parentdomains[$row['id']] = true; } 
+					if (array_key_exists($iprow['id_ipandports'], $ips)) { $parentdomains[$row['id']] = true; }
 				}
 			} elseif ($row['letsencrypt'] == 1)  {
 				// All subdomains with enabled letsencrypt enabled are stored
@@ -312,14 +312,14 @@ class IntegrityCheck {
 				$subdomains[$row['parentdomainid']][] = $row['id'];
 			}
 		}
-		
+
 		// Check if every parentdomain with enabled letsencrypt as SSL enabled
 		foreach ($parentdomains as $id => $sslavailable) {
 			// This parentdomain has no subdomains
 			if (!isset($subdomains[$id])) { continue; }
 			// This parentdomain has SSL enabled, doesn't matter what status the subdomains have
 			if ($sslavailable) { continue; }
-			
+
 			// At this point only parentdomains reside which have letsencrypt enabled subdomains
 			if ($fix) {
 				// We make a blanket update to all subdomains of this parentdomain, doesn't matter which one is wrong, all have to be disabled
@@ -331,7 +331,7 @@ class IntegrityCheck {
 				return false;
 			}
 		}
-		
+
 		if ($fix) {
 			return $this->SubdomainLetsencrypt();
 		} else {
