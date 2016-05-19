@@ -142,7 +142,7 @@ class pdns extends DnsBase
 	private function _connectToPdnsDb()
 	{
 		// get froxlor pdns config
-		$cf = Settings::Get('system.bindconf_directory').'/pdns_froxlor.conf';
+		$cf = Settings::Get('system.bindconf_directory').'/froxlor/pdns_froxlor.conf';
 		$config = makeCorrectFile($cf);
 
 		if (!file_exists($config))

@@ -396,7 +396,7 @@ mail	IN		A	<SERVERIP>
 #################################
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
-allow-axfr-ips=<NAMESERVERS>
+# allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -908,15 +908,17 @@ version-string=powerdns
 #
 # webserver-print-arguments=no
 
-# include froxlor-bind-specific config
-include=/etc/powerdns/pdns_froxlor.conf
+# include froxlor-specific config
+include-dir=/etc/powerdns/froxlor/
 ]]>
 						</content>
 					</file>
-					<file name="/etc/powerdns/pdns_froxlor.conf" chown="root:0"
+					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
+					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf" chown="root:0"
 						chmod="644">
 						<content><![CDATA[
 # mysql-settings / you need to create the power-dns database for yourself!
+launch=gmysql
 gmysql-host=127.0.0.1
 gmysql-port=3306
 gmysql-dbname=pdns
@@ -936,7 +938,7 @@ gmysql-password=
 #################################
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
-allow-axfr-ips=<NAMESERVERS>
+# allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -1449,11 +1451,12 @@ version-string=powerdns
 # webserver-print-arguments=no
 
 # include froxlor-bind-specific config
-include=/etc/powerdns/pdns_froxlor.conf
+include-dir=/etc/powerdns/froxlor/
 ]]>
 						</content>
 					</file>
-					<file name="/etc/powerdns/pdns_froxlor.conf" chown="root:0"
+					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
+					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf" chown="root:0"
 						chmod="644">
 						<content><![CDATA[
 #local-ipv6=YOUR_IPv6_(if_any)
