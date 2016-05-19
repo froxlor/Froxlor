@@ -90,7 +90,8 @@ class pdns extends DnsBase
 			`content` = :content,
 			`ttl` = :ttl,
 			`prio` = :prio,
-			`disabled` = '0'
+			`disabled` = '0',
+			`change_date` = UNIX_TIMESTAMP()
 		");
 
 		foreach ($records as $record)
