@@ -10,7 +10,7 @@ Vcs-Browser: https://github.com/Froxlor/Froxlor/tree/extras/dist/deb
 
 Package: froxlor
 Architecture: all
-Depends: apache2 | lighttpd | nginx, php5 | php5-cgi, php5-cli, php5-mysqlnd | php5-mysql, mysql-server | mariadb-server, mysql-client | mariadb-client, mysql-common | mariadb-common, webalizer | awstats
+Depends: apache2 | lighttpd | nginx, php5 | php5-cgi, php5-cli, php5-curl, php5-mysqlnd | php5-mysql, mysql-server | mariadb-server, mysql-client | mariadb-client, mysql-common | mariadb-common, webalizer | awstats
 Recommends: postfix-mysql | exim4-daemon-heavy, libsasl2-modules-sql, maildrop, courier-authlib-mysql | dovecot-common, courier-imap | dovecot-imapd, courier-pop | dovecot-pop3d, php5-gd, php5-imap, proftpd-mod-mysql | pure-ftpd-mysql, bind9 | pdns-server
 Description: Server Management Panel
  Froxlor, the Server Management Panel is a server
