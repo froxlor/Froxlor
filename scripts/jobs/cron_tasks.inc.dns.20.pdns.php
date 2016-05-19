@@ -47,7 +47,7 @@ class pdns extends DnsBase
 				$zone = createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
 
 				$dom_id = $this->_insertZone($zone->origin, $zone->serial);
-				$this->_insertRecords($dom_id, $zone->records);
+				$this->_insertRecords($dom_id, $zone->records, $zone->origin);
 				$this->_insertAllowedTransfers($dom_id);
 
 				$this->_logger->logAction(CRON_ACTION, LOG_INFO, '`' . $domain['domain'] . '` zone written');
@@ -80,7 +80,7 @@ class pdns extends DnsBase
 		return $lastid;
 	}
 
-	private function _insertRecords($domainid = 0, $records)
+	private function _insertRecords($domainid = 0, $records, $origin)
 	{
 		$ins_stmt = $this->pdns_db->prepare("
 			INSERT INTO records set
@@ -96,9 +96,17 @@ class pdns extends DnsBase
 
 		foreach ($records as $record)
 		{
+			if ($record->record == '@') {
+				$_record = $origin;
+			}
+			else
+			{
+				$_record = $record->record.".".$origin;
+			}
+
 			$ins_data = array(
 				'did' => $domainid,
-				'rec' => $record->record,
+				'rec' => $_record,
 				'type' => $record->type,
 				'content' => $record->content,
 				'ttl' => $record->ttl,
