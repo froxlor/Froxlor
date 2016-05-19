@@ -147,8 +147,8 @@ class pdns extends DnsBase
 
 		if (!file_exists($config))
 		{
-			$this->_logger->logAction(CRON_ACTION, LOG_ERROR, 'PowerDNS configuration file not found. Did you go through the configuration templates?');
-			die('PowerDNS configuration file not found. Did you go through the configuration templates?');
+			$this->_logger->logAction(CRON_ACTION, LOG_ERROR, 'PowerDNS configuration file ('.$config.') not found. Did you go through the configuration templates?');
+			die('PowerDNS configuration file ('.$config.') not found. Did you go through the configuration templates?'.PHP_EOL);
 		}
 		$lines = file($config);
 		$mysql_data = array();

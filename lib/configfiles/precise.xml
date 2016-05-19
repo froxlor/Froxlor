@@ -342,7 +342,43 @@ exit "$RETVAL"
 					<command><![CDATA[chmod 0644 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[/etc/init.d/bind9 restart]]></command>
 				</daemon>
-				<daemon name="powerdns" title="PowerDNS via bind-backend">
+				<daemon name="powerdns" title="PowerDNS (standalone)">
+					<install><![CDATA[apt-get install pdns-server pdns-backend-mysql]]></install>
+					<file name="/etc/powerdns/pdns.conf" backup="true">
+						<content><![CDATA[
+allow-recursion=127.0.0.1
+config-dir=/etc/powerdns
+daemon=yes
+guardian=yes
+lazy-recursion=yes
+local-port=53
+master=yes
+module-dir=/usr/lib/powerdns
+setgid=pdns
+setuid=pdns
+socket-dir=/var/run
+version-string=powerdns
+include-dir=/etc/powerdns/froxlor/
+]]>
+						</content>
+					</file>
+					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf" chown="root:0"
+						chmod="644">
+						<content><![CDATA[
+# mysql-settings / you need to create the power-dns database for yourself!
+launch=gmysql
+gmysql-host=127.0.0.1
+gmysql-port=3306
+gmysql-dbname=pdns
+gmysql-user=powerdns
+gmysql-group=client
+gmysql-password=
+]]>
+						</content>
+					</file>
+					<command><![CDATA[/etc/init.d/pdns restart]]></command>
+				</daemon>
+				<daemon name="powerdns_bind" title="PowerDNS via bind-backend">
 					<install><![CDATA[apt-get install pdns-server]]></install>
 					<file name="/etc/powerdns/pdns.conf" backup="true">
 						<content><![CDATA[
