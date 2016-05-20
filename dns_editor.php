@@ -144,11 +144,6 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		if ($prio === null || $prio < 0) {
 			$errors[] = $lng['error']['dns_srv_prioempty'];
 		}
-		// check for trailing dot
-		if (substr($content, - 1) == '.') {
-			// remove it for checks
-			$content = substr($content, 0, - 1);
-		}
 		// check only last part of content, as it can look like:
 		// _service._proto.name. TTL class SRV priority weight port target.
 		$_split_content = explode(" ", $content);
@@ -157,6 +152,13 @@ if ($action == 'add_record' && ! empty($_POST)) {
 			$errors[] = $lng['error']['dns_srv_invalidcontent'];
 		}
 		$target = trim($_split_content[count($_split_content) - 1]);
+		if ($target != '.') {
+			// check for trailing dot
+			if (substr($target, - 1) == '.') {
+				// remove it for checks
+				$target = substr($target, 0, - 1);
+			}
+		}
 		if (! validateDomain($target)) {
 			$errors[] = $lng['error']['dns_srv_needdom'];
 		} else {
@@ -170,7 +172,9 @@ if ($action == 'add_record' && ! empty($_POST)) {
 			}
 		}
 		// append trailing dot (again)
-		$content .= '.';
+		if ($target != '.') {
+			$content .= '.';
+		}
 	}
 
 	$new_entry = array(
