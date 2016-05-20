@@ -51,22 +51,19 @@ if ($action == 'add_record' && ! empty($_POST)) {
 
 	$record = strtolower($record);
 
-	if ($record != '@' && $record != '*')
-	{
+	if ($record != '@' && $record != '*') {
 		// validate record
 		if (strpos($record, '--') !== false) {
 			$errors[] = $lng['error']['domain_nopunycode'];
-		}
-		else
-		{
+		} else {
 			$record = $idna_convert->encode($record);
-			$check_dom = $record.'.example.com';
-			if (!validateDomain($check_dom))
-			{
-				$errors[] = sprintf($lng['error']['subdomainiswrong'], $idna_convert->decode($record));
+			if ($type != 'SRV' && $type != 'TXT') {
+				$check_dom = $record . '.example.com';
+				if (! validateDomain($check_dom)) {
+					$errors[] = sprintf($lng['error']['subdomainiswrong'], $idna_convert->decode($record));
+				}
 			}
-			if (strlen($record) > 63)
-			{
+			if (strlen($record) > 63) {
 				$errors[] = $lng['error']['dns_record_toolong'];
 			}
 		}
@@ -301,5 +298,5 @@ foreach ($type_select_values as $_type) {
 eval("\$record_list=\"" . getTemplate("dns_editor/list", true) . "\";");
 
 $zone = createDomainZone($domain_id);
-$zonefile = (string)$zone;
+$zonefile = (string) $zone;
 eval("echo \"" . getTemplate("dns_editor/index", true) . "\";");
