@@ -159,7 +159,7 @@ if ($action == 'add_record' && ! empty($_POST)) {
 				$target = substr($target, 0, - 1);
 			}
 		}
-		if (! validateDomain($target)) {
+		if ($target != '.' && ! validateDomain($target)) {
 			$errors[] = $lng['error']['dns_srv_needdom'];
 		} else {
 			// check whether there is a CNAME-record for the same resource
