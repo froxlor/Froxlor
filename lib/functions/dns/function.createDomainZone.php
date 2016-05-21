@@ -292,12 +292,21 @@ function addRequiredEntry($record = '@', $type = 'A', &$required)
 function encloseTXTContent($txt_content, $isMultiLine = false)
 {
 	// check that TXT content is enclosed in " "
-	if ($isMultiLine == false) {
+	if ($isMultiLine == false && Settings::Get('system.dns_server') != 'pdns') {
 		if (substr($txt_content, 0, 1) != '"') {
 			$txt_content = '"' . $txt_content;
 		}
 		if (substr($txt_content, - 1) != '"') {
 			$txt_content .= '"';
+		}
+	}
+	if (Settings::Get('system.dns_server') == 'pdns') {
+		// no quotation for PowerDNS
+		if (substr($txt_content, 0, 1) == '"') {
+			$txt_content = substr($txt_content, 1);
+		}
+		if (substr($txt_content, - 1) == '"') {
+			$txt_content = substr($txt_content, 0, -1);
 		}
 	}
 	return $txt_content;
