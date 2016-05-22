@@ -7,6 +7,15 @@ $header
 			</h2>
 		</header>
 
+		<if !empty($existing_backupJob)>
+			<div class="messagewrapperfull">
+			<div class="warningcontainer bradius">
+				<div class="warningtitle">{$lng['admin']['warning']}</div>
+				<div class="warning">{$lng['error']['customerhasongoingbackupjob']}</div>
+			</div>
+			</div>
+		</if>
+
 		<section>
 
 			<form action="{$linker->getLink(array('section' => 'extras'))}" method="post" enctype="application/x-www-form-urlencoded">

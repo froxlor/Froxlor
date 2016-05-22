@@ -1981,6 +1981,7 @@ $lng['extras']['backup_mail'] = 'Backup mail-data';
 $lng['extras']['backup_dbs'] = 'Backup databases';
 $lng['error']['customerhasongoingbackupjob'] = 'There is already a backup job waiting to be processed, please be patient.';
 $lng['success']['backupscheduled'] = 'Your backup job has been scheduled. Please wait for it to be processed';
+$lng['success']['backupaborted'] = 'Your scheduled backup has been cancelled';
 $lng['crondesc']['cron_backup'] = 'Process backup jobs';
 $lng['error']['backupfunctionnotenabled'] = 'The backup function is not enabled';
 $lng['serversettings']['backupenabled']['title'] = "Enable backup for customers";
