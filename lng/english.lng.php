@@ -256,9 +256,9 @@ $lng['question']['admin_customer_alsoremoveftphomedir'] = 'Also remove FTP-user 
  * Mails
  */
 
-$lng['mails']['pop_success']['mailbody'] = 'Hello,\n\nyour mail account {EMAIL}\nwas set up successfully.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, your administrator';
+$lng['mails']['pop_success']['mailbody'] = 'Hello,\n\nYour mail account {EMAIL}\nwas set up successfully.\n\nThis is an automatically created\ne-mail, please do not answer.\n\nYours sincerely, your administrator';
 $lng['mails']['pop_success']['subject'] = 'Mail account set up successfully';
-$lng['mails']['createcustomer']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nhere is your account information:\n\nUsername: {USERNAME}\nPassword: {PASSWORD}\n\nThank you,\nyour administrator';
+$lng['mails']['createcustomer']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nHere is your account information:\n\nUsername: {USERNAME}\nPassword: {PASSWORD}\n\nThank you,\nyour administrator';
 $lng['mails']['createcustomer']['subject'] = 'Account information';
 
 /**
@@ -537,7 +537,7 @@ $lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with t
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
-$lng['mails']['pop_success_alternative']['mailbody'] = 'Hello,\n\nyour Mail account {EMAIL}\nwas set up successfully.\nYour password is {PASSWORD}.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, your administrator';
+$lng['mails']['pop_success_alternative']['mailbody'] = 'Hello,\n\nYour Mail account {EMAIL}\nwas set up successfully.\nYour password is {PASSWORD}.\n\nThis is an automatically created\ne-mail, please do not answer.\n\nYours sincerely, your administrator';
 $lng['mails']['pop_success_alternative']['subject'] = 'Mail account set up successfully';
 $lng['admin']['templates']['pop_success_alternative'] = 'Welcome mail for new email accounts sent to alternative address';
 $lng['admin']['templates']['EMAIL_PASSWORD'] = 'Replaced with the POP3/IMAP account password.';
@@ -637,15 +637,15 @@ $lng['admin']['templates']['new_ticket_by_customer'] = 'Admin-notification for a
 $lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Admin-notification for a ticket-reply by a customer';
 $lng['admin']['templates']['new_ticket_by_staff'] = 'Customer-notification for a ticket opened by a staff';
 $lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Customer-notification for a ticket-reply by a staff';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nyour support-ticket with the subject "{SUBJECT}" has been sent.\n\nYou will be notified when your ticket has been answered.\n\nThank you,\nyour administrator';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nYour support-ticket with the subject "{SUBJECT}" has been sent.\n\nYou will be notified when your ticket has been answered.\n\nThank you,\nyour administrator';
 $lng['mails']['new_ticket_for_customer']['subject'] = 'Your support ticket has been sent';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hello admin,\n\na new support-ticket with the subject "{SUBJECT}" has been submitted.\n\nPlease login to open the ticket.\n\nThank you,\nyour administrator';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hello admin,\n\nA new support-ticket with the subject "{SUBJECT}" has been submitted.\n\nPlease login to open the ticket.\n\nThank you,\nyour administrator';
 $lng['mails']['new_ticket_by_customer']['subject'] = 'New support ticket submitted';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hello admin,\n\nthe support-ticket "{SUBJECT}" has been answered by a customer.\n\nPlease login to open the ticket.\n\nThank you,\nyour administrator';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hello admin,\n\nThe support-ticket "{SUBJECT}" has been answered by a customer.\n\nPlease login to open the ticket.\n\nThank you,\nyour administrator';
 $lng['mails']['new_reply_ticket_by_customer']['subject'] = 'New reply to support ticket';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\na support-ticket with the subject "{SUBJECT}" has been opened for you.\n\nPlease login to open the ticket.\n\nThank you,\nyour administrator';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nA support-ticket with the subject "{SUBJECT}" has been opened for you.\n\nPlease login to open the ticket.\n\nThank you,\nyour administrator';
 $lng['mails']['new_ticket_by_staff']['subject'] = 'New support ticket submitted';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nthe support-ticket with the subject "{SUBJECT}" has been answered by our staff.\n\nPlease login to view the ticket.\n\nThank you,\nyour administrator';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nThe support-ticket with the subject "{SUBJECT}" has been answered by our staff.\n\nPlease login to view the ticket.\n\nThank you,\nyour administrator';
 $lng['mails']['new_reply_ticket_by_staff']['subject'] = 'New reply to support ticket';
 $lng['question']['ticket_reallyclose'] = 'Do you really want to close the ticket "%s"?';
 $lng['question']['ticket_reallydelete'] = 'Do you really want to delete the ticket "%s"?';
@@ -850,7 +850,7 @@ $lng['login']['email'] = 'E-mail address';
 $lng['login']['remind'] = 'Reset my password';
 $lng['login']['usernotfound'] = 'User not found!';
 $lng['mails']['password_reset']['subject'] = 'Password reset';
-$lng['mails']['password_reset']['mailbody'] = 'Hello {SALUTATION},\n\nhere is your link for setting a new password. This link is valid for the next 24 hours.\n\n{LINK}\n\nThank you,\nyour administrator';
+$lng['mails']['password_reset']['mailbody'] = 'Hello {SALUTATION},\n\nHere is your link for setting a new password. This link is valid for the next 24 hours.\n\n{LINK}\n\nThank you,\nyour administrator';
 $lng['pwdreminder']['success'] = 'Password reset successfully requested. Please follow the instructions in the email you received.';
 
 // ADDED IN 1.2.19-svn18
@@ -1134,7 +1134,7 @@ $lng['ftp']['account_edit'] = 'Edit ftp account';
 $lng['ftp']['editpassdescription'] = 'Set new password or leave blank for no change.';
 $lng['customer']['sendinfomail'] = 'Send data via email to me';
 $lng['mails']['new_database_by_customer']['subject'] = '[Froxlor] New database created';
-$lng['mails']['new_database_by_customer']['mailbody'] = "Hello {CUST_NAME},\n\nyou have just added a new database. Here is the entered information:\n\nDatabasename: {DB_NAME}\nPassword: {DB_PASS}\nDescription: {DB_DESC}\nDB-Hostname: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nYours sincerely, your administrator";
+$lng['mails']['new_database_by_customer']['mailbody'] = "Hello {CUST_NAME},\n\nYou have just added a new database. Here is the entered information:\n\nDatabasename: {DB_NAME}\nPassword: {DB_PASS}\nDescription: {DB_DESC}\nDB-Hostname: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nYours sincerely, your administrator";
 $lng['serversettings']['awstats_path'] = 'Path to AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'AWStats configuration path';
 $lng['error']['overviewsettingoptionisnotavalidfield'] = 'Woops, a field that should be displayed as an option in the settings-overview is not an excepted type. You can blame the developers for this. This should not happen!';
@@ -1170,7 +1170,7 @@ $lng['serversettings']['ftpserver']['desc'] = 'If pureftpd is selected the .ftpq
 
 // ADDED IN FROXLOR 0.9.7-svn1
 $lng['mails']['new_ftpaccount_by_customer']['subject'] = 'New ftp-user created';
-$lng['mails']['new_ftpaccount_by_customer']['mailbody'] = "Hello {CUST_NAME},\n\nyou have just added a new ftp-user. Here is the entered information:\n\nUsername: {USR_NAME}\nPassword: {USR_PASS}\nPath: {USR_PATH}\n\nYours sincerely, your administrator";
+$lng['mails']['new_ftpaccount_by_customer']['mailbody'] = "Hello {CUST_NAME},\n\nYou have just added a new ftp-user. Here is the entered information:\n\nUsername: {USR_NAME}\nPassword: {USR_PASS}\nPath: {USR_PATH}\n\nYours sincerely, your administrator";
 $lng['domains']['redirectifpathisurl'] = 'Redirect code (default: empty)';
 $lng['domains']['redirectifpathisurlinfo'] = 'You only need to select one of these if you entered an URL as path<br/><strong class="red">NOTE:</strong>Changes are only applied if the given path is an URL.';
 $lng['serversettings']['customredirect_enabled']['title'] = 'Allow customer redirects';
@@ -1316,7 +1316,7 @@ $lng['crondesc']['cron_usage_report'] = 'Web- and traffic-reports';
 $lng['serversettings']['report']['report'] = 'Enable sending of reports about web- and traffic-usage';
 $lng['serversettings']['report']['webmax'] = 'Warning-level in percent for webspace';
 $lng['serversettings']['report']['trafficmax'] = 'Warning-level in percent for traffic';
-$lng['mails']['trafficmaxpercent']['mailbody'] = 'Dear {NAME},\n\nyou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\nThis is more than {MAX_PERCENT}%.\n\nYours sincerely, your administrator';
+$lng['mails']['trafficmaxpercent']['mailbody'] = 'Dear {NAME},\n\nYou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\nThis is more than {MAX_PERCENT}%.\n\nYours sincerely, your administrator';
 $lng['mails']['trafficmaxpercent']['subject'] = 'Reaching your traffic limit';
 $lng['admin']['templates']['trafficmaxpercent'] = 'Notification mail for customers when given maximum of percent of traffic is exhausted';
 $lng['admin']['templates']['MAX_PERCENT'] = 'Replaced with the diskusage/traffic limit for sending reports in percent.';
@@ -1326,7 +1326,7 @@ $lng['admin']['templates']['DISKAVAILABLE'] = 'Replaced with the diskusage in MB
 $lng['admin']['templates']['DISKUSED'] = 'Replaced with the diskusage in MB, which was exhausted by the customer.';
 $lng['serversettings']['dropdown'] = 'Dropdown';
 $lng['serversettings']['manual'] = 'Manual';
-$lng['mails']['diskmaxpercent']['mailbody'] = 'Dear {NAME},\n\nyou used {DISKUSED} MB of your available {DISKAVAILABLE} MB of diskspace.\nThis is more than {MAX_PERCENT}%.\n\nYours sincerely, your administrator';
+$lng['mails']['diskmaxpercent']['mailbody'] = 'Dear {NAME},\n\nYou used {DISKUSED} MB of your available {DISKAVAILABLE} MB of diskspace.\nThis is more than {MAX_PERCENT}%.\n\nYours sincerely, your administrator';
 $lng['mails']['diskmaxpercent']['subject'] = 'Reaching your diskspace limit';
 $lng['mysql']['database_edit'] = 'Edit database';
 
