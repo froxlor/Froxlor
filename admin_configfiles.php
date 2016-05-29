@@ -20,6 +20,16 @@ require './lib/init.php';
 
 if ($userinfo['change_serversettings'] == '1') {
 
+	$customer_tmpdir = '/tmp/';
+	if (Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_tmpdir') != '')
+	{
+		$customer_tmpdir = Settings::Get('system.mod_fcgid_tmpdir');
+	}
+	elseif (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.tmpdir') != '')
+	{
+		$customer_tmpdir = Settings::Get('phpfpm.tmpdir');
+	}
+
 	$replace_arr = Array(
 		'<SQL_UNPRIVILEGED_USER>' => $sql['user'],
 		'<SQL_UNPRIVILEGED_PASSWORD>' => 'MYSQL_PASSWORD',
@@ -33,7 +43,7 @@ if ($userinfo['change_serversettings'] == '1') {
 		'<VIRTUAL_UID_MAPS>' => Settings::Get('system.vmail_uid'),
 		'<VIRTUAL_GID_MAPS>' => Settings::Get('system.vmail_gid'),
 		'<SSLPROTOCOLS>' => (Settings::Get('system.use_ssl') == '1') ? 'imaps pop3s' : '',
-		'<CUSTOMER_TMP>' => (Settings::Get('system.mod_fcgid_tmpdir') != '') ? makeCorrectDir(Settings::Get('system.mod_fcgid_tmpdir')) : '/tmp/',
+		'<CUSTOMER_TMP>' => makeCorrectDir($customer_tmpdir),
 		'<BASE_PATH>' => makeCorrectDir(FROXLOR_INSTALL_DIR),
 		'<BIND_CONFIG_PATH>' => makeCorrectDir(Settings::Get('system.bindconf_directory')),
 		'<WEBSERVER_RELOAD_CMD>' => Settings::Get('system.apachereload_command'),
