@@ -267,7 +267,16 @@ return array(
 							array ('label' => $lng['panel']['yes'], 'value' => '1')
 						),
 						'value' => array($result['perlenabled'])
-					)
+					),
+					'dnsenabled' => array(
+						'label' => $lng['admin']['dnsenabled'].'?',
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['dnsenabled']),
+						'visible' => (Settings::Get('system.dnsenabled') == '1' ? true : false)
+					),
 				)
 			),
 			'section_d' => array(

@@ -245,6 +245,15 @@ if ($page == 'domains' || $page == 'overview') {
 					'domainid' => $id
 				));
 
+				// remove possible existing DNS entries
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_DOMAIN_DNS . "`
+					WHERE `domain_id` = :domainid
+				");
+				Database::pexecute($del_stmt, array(
+					'domainid' => $id
+				));
+
 				triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $log);
 
 				$log->logAction(ADM_ACTION, LOG_INFO, "deleted domain/subdomains (#" . $result['id'] . ")");
@@ -2074,6 +2083,9 @@ if ($page == 'domains' || $page == 'overview') {
 			eval("echo \"" . getTemplate("domains/domains_import") . "\";");
 		}
 	}
+} elseif ($page == 'domaindnseditor' && Settings::Get('system.dnsenabled') == '1') {
+
+	require_once __DIR__.'/dns_editor.php';
 }
 
 function formatDomainEntry(&$row, &$idna_convert)

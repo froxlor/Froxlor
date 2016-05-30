@@ -278,11 +278,13 @@ if ($page == 'customers'
 				Database::pexecute($stmt, array('id' => $id));
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
-				// first gather all domain-id's to clean up panel_domaintoip accordingly
+				// first gather all domain-id's to clean up panel_domaintoip and dns-entries accordingly
 				$did_stmt = Database::prepare("SELECT `id` FROM `".TABLE_PANEL_DOMAINS."` WHERE `customerid` = :id");
 				Database::pexecute($did_stmt, array('id' => $id));
 				while ($row = $did_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$stmt = Database::prepare("DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :did");
+					Database::pexecute($stmt, array('did' => $row['id']));
+					$stmt = Database::prepare("DELETE FROM `" . TABLE_DOMAIN_DNS . "` WHERE `domain_id` = :did");
 					Database::pexecute($stmt, array('did' => $row['id']));
 				}
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
@@ -526,6 +528,11 @@ if ($page == 'customers'
 					$perlenabled = intval($_POST['perlenabled']);
 				}
 
+				$dnsenabled = 0;
+				if (isset($_POST['dnsenabled'])) {
+					$dnsenabled = intval($_POST['dnsenabled']);
+				}
+
 				$store_defaultindex = 0;
 				if (isset($_POST['store_defaultindex'])) {
 					$store_defaultindex = intval($_POST['store_defaultindex']);
@@ -638,6 +645,10 @@ if ($page == 'customers'
 						$perlenabled = '1';
 					}
 
+					if ($dnsenabled != '0') {
+						$dnsenabled = '1';
+					}
+
 					if ($password == '') {
 						$password = generatePassword();
 					}
@@ -676,6 +687,7 @@ if ($page == 'customers'
 						'imap' => $email_imap,
 						'pop3' => $email_pop3,
 						'perlenabled' => $perlenabled,
+						'dnsenabled' => $dnsenabled,
 						'theme' => $_theme,
 						'custom_notes' => $custom_notes,
 						'custom_notes_show' => $custom_notes_show
@@ -715,6 +727,7 @@ if ($page == 'customers'
 						`imap` = :imap,
 						`pop3` = :pop3,
 						`perlenabled` = :perlenabled,
+						`dnsenabled` = :dnsenabled,
 						`theme` = :theme,
 						`custom_notes` = :custom_notes,
 						`custom_notes_show` = :custom_notes_show"
@@ -1186,6 +1199,11 @@ if ($page == 'customers'
 					$perlenabled = intval($_POST['perlenabled']);
 				}
 
+				$dnsenabled = 0;
+				if (isset($_POST['dnsenabled'])) {
+					$dnsenabled = intval($_POST['dnsenabled']);
+				}
+
 				$diskspace = $diskspace * 1024;
 				$traffic = $traffic * 1024 * 1024;
 
@@ -1317,6 +1335,10 @@ if ($page == 'customers'
 						$perlenabled = '1';
 					}
 
+					if ($dnsenabled != '0') {
+						$dnsenabled = '1';
+					}
+
 					if ($phpenabled != $result['phpenabled']
 						|| $perlenabled != $result['perlenabled']
 					) {
@@ -1427,6 +1449,7 @@ if ($page == 'customers'
 						'imap' => $email_imap,
 						'pop3' => $email_pop3,
 						'perlenabled' => $perlenabled,
+						'dnsenabled' => $dnsenabled,
 						'custom_notes' => $custom_notes,
 						'custom_notes_show' => $custom_notes_show
 					);
@@ -1460,6 +1483,7 @@ if ($page == 'customers'
 						`imap` = :imap,
 						`pop3` = :pop3,
 						`perlenabled` = :perlenabled,
+						`dnsenabled` = :dnsenabled,
 						`custom_notes` = :custom_notes,
 						`custom_notes_show` = :custom_notes_show
 						WHERE `customerid` = :customerid"

@@ -344,10 +344,10 @@ $lng['serversettings']['apachereload_command']['title'] = 'Webserver reload comm
 $lng['serversettings']['apachereload_command']['description'] = 'What\'s the webserver command to reload configfiles?';
 $lng['serversettings']['bindenable']['title'] = 'Enable Nameserver';
 $lng['serversettings']['bindenable']['description'] = 'Here the Nameserver can be enabled and disabled globaly.';
-$lng['serversettings']['bindconf_directory']['title'] = 'Bind config directory';
-$lng['serversettings']['bindconf_directory']['description'] = 'Where should bind configfiles be saved?';
-$lng['serversettings']['bindreload_command']['title'] = 'Bind reload command';
-$lng['serversettings']['bindreload_command']['description'] = 'What\'s the bind command to reload bind configfiles?';
+$lng['serversettings']['bindconf_directory']['title'] = 'Dns server config directory';
+$lng['serversettings']['bindconf_directory']['description'] = 'Where should dns-server configfiles be saved?';
+$lng['serversettings']['bindreload_command']['title'] = 'DNS server reload command';
+$lng['serversettings']['bindreload_command']['description'] = 'What\'s the command to reload the dns server daemon?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mails-UID';
 $lng['serversettings']['vmail_uid']['description'] = 'Which UserID should mails have?';
 $lng['serversettings']['vmail_gid']['title'] = 'Mails-GID';
@@ -1990,4 +1990,32 @@ $lng['extras']['path_protection_label'] = '<strong class="red">Important</strong
 $lng['extras']['path_protection_info'] = '<strong class="red">We strongly recommend protecting the given path, see "Extras" -> "Directory protection"</strong>';
 $lng['tasks']['backup_customerfiles'] = 'Backup job for customer %loginname%';
 
+$lng['error']['dns_domain_nodns'] = 'DNS is not enabled for this domain';
+$lng['error']['dns_content_empty'] = 'No content given';
+$lng['error']['dns_arec_noipv4'] = 'No valid IP address for A-record given';
+$lng['error']['dns_aaaarec_noipv6'] = 'No valid IP address for AAAA-record given';
+$lng['error']['dns_mx_prioempty'] = 'Invalid MX priority given';
+$lng['error']['dns_mx_needdom'] = 'The MX content value must be a valid domain-name';
+$lng['error']['dns_mx_noalias'] = 'The MX-content value cannot be an CNAME entry.';
+$lng['error']['dns_cname_invaliddom'] = 'Invalid domain-name for CNAME record';
+$lng['error']['dns_cname_nomorerr'] = 'There already exists a resource-record with the same record-name. It cannot be used as CNAME.';
+$lng['error']['dns_ns_invaliddom'] = 'Invalid domain-name for NS record';
+$lng['error']['dns_srv_prioempty'] = 'Invalid SRV priority given';
+$lng['error']['dns_srv_invalidcontent'] = 'Invalid SRV content, must contain of fields weight, port and target, e.g.: 5 5060 sipserver.example.com.';
+$lng['error']['dns_srv_needdom'] = 'The SRV target value must be a valid domain-name';
+$lng['error']['dns_srv_noalias'] = 'The SRV-target value cannot be an CNAME entry.';
+$lng['error']['dns_duplicate_entry'] = 'Record already exists';
+$lng['success']['dns_record_added'] = 'Record added successfully';
+$lng['success']['dns_record_deleted'] = 'Record deleted successfully';
+$lng['dnseditor']['edit'] = 'edit DNS';
+$lng['dnseditor']['records'] = 'records';
+$lng['error']['dns_notfoundorallowed'] = 'Domain not found or no permission';
+$lng['serversettings']['dnseditorenable']['title'] = 'Enable DNS editor';
+$lng['serversettings']['dnseditorenable']['description'] = 'Allows admins and customer to manage domain dns entries';
+$lng['dns']['howitworks'] = 'Here you can manage DNS entries for your domain. Note that froxlor will automatically generate NS/MX/A/AAAA records for you. The custom entries are prefered, only missing entries will be automatically generated.';
+$lng['serversettings']['dns_server']['title'] = 'DNS server daemon';
+$lng['serversettings']['dns_server']['description'] = 'Remember that daemons have to be configured using froxlors configuration templates';
+
 $lng['error']['domain_nopunycode'] = 'You must not specify punycode (IDNA). The domain will automatically be converted';
+$lng['admin']['dnsenabled'] = 'Enable DNS editor';
+$lng['error']['dns_record_toolong'] = 'Records/labels can only be up to 63 characters';

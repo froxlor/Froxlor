@@ -19,6 +19,7 @@
 
 // necessary includes
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.dns.10.bind.php');
+require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.dns.20.pdns.php');
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.10.apache.php');
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.15.apache_fcgid.php');
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.20.lighttpd.php');
@@ -179,8 +180,11 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 * TYPE=4 MEANS THAT SOMETHING IN THE BIND CONFIG HAS CHANGED. REBUILD froxlor_bind.conf IF BIND IS ENABLED
 	 */
 	elseif ($row['type'] == '4' && (int)Settings::Get('system.bind_enable') != 0) {
+
+		$dnssrv = Settings::Get('system.dns_server');
+
 		if (!isset($nameserver)) {
-			$nameserver = new bind($cronlog);
+			$nameserver = new $dnssrv($cronlog);
 		}
 
 		if (Settings::Get('dkim.use_dkim') == '1') {

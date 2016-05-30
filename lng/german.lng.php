@@ -341,10 +341,10 @@ $lng['serversettings']['apachereload_command']['title'] = 'Webserver-Reload-Comm
 $lng['serversettings']['apachereload_command']['description'] = 'Wie heißt das Skript zum Neuladen der Webserver-Konfigurationsdateien?';
 $lng['serversettings']['bindenable']['title'] = 'Nameserver aktivieren';
 $lng['serversettings']['bindenable']['description'] = 'Hier können Sie den Nameserver global aktivieren bzw. deaktivieren.';
-$lng['serversettings']['bindconf_directory']['title'] = 'Bind-Config-Directory';
-$lng['serversettings']['bindconf_directory']['description'] = 'Wo liegen die Bind-Konfigurationsdateien?';
-$lng['serversettings']['bindreload_command']['title'] = 'Bind-Reload-Command';
-$lng['serversettings']['bindreload_command']['description'] = 'Wie heißt das Skript zum Neuladen der Bind-Konfigurationsdateien?';
+$lng['serversettings']['bindconf_directory']['title'] = 'DNS-Server Konfigurationsordner';
+$lng['serversettings']['bindconf_directory']['description'] = 'Wo liegen die DNS-Server Konfigurationsdateien?';
+$lng['serversettings']['bindreload_command']['title'] = 'DNS-Server Reload-Befehl';
+$lng['serversettings']['bindreload_command']['description'] = 'Wie heißt das Skript zum Neuladen der DNS-Server Konfigurationsdateien?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mail-UID';
 $lng['serversettings']['vmail_uid']['description'] = 'Welche UID sollen die E-Mails haben?';
 $lng['serversettings']['vmail_gid']['title'] = 'Mail-GID';
@@ -1643,4 +1643,32 @@ $lng['extras']['path_protection_label'] = '<strong class="red">Wichtig</strong>'
 $lng['extras']['path_protection_info'] = '<strong class="red">Wir raten dringend dazu den angegebenen Pfad zu schützen, siehe "Extras" -> "Verzeichnisschutz"</strong>';
 $lng['tasks']['backup_customerfiles'] = 'Datensicherung für Kunde %loginname%';
 
+$lng['error']['dns_domain_nodns'] = 'DNS ist für diese Domain nicht aktiviert';
+$lng['error']['dns_content_empty'] = 'Keinen Inhalt angegeben';
+$lng['error']['dns_arec_noipv4'] = 'Kein gültige IP Adresse für A-Eintrag angegeben';
+$lng['error']['dns_aaaarec_noipv6'] = 'Kein gültige IP Adresse für AAAA-Eintrag angegeben';
+$lng['error']['dns_mx_prioempty'] = 'Ungültige MX Priorität angegeben';
+$lng['error']['dns_mx_needdom'] = 'Der Wert des MX Eintrags muss ein gültiger Domainname sein';
+$lng['error']['dns_mx_noalias'] = 'Der MX Eintrag darf kein CNAME Eintrag sein.';
+$lng['error']['dns_cname_invaliddom'] = 'Ungültiger Domain-Name für CNAME Eintrag';
+$lng['error']['dns_cname_nomorerr'] = 'Es existiert bereits ein Eintrag mit dem gleichen Namen. Dieser Eintrag kann daher nicht für CNAME genutzt werden.';
+$lng['error']['dns_ns_invaliddom'] = 'Ungültiger Domain-Name für NS Eintrag';
+$lng['error']['dns_srv_prioempty'] = 'Ungültige SRV Priorität angegeben';
+$lng['error']['dns_srv_invalidcontent'] = 'Ungültiger Wert des SRV Eintrags, dieser muss aus den Feldern: weight, port und target, bestehen. Bsp.: 5 5060 sipserver.example.com.';
+$lng['error']['dns_srv_needdom'] = 'Der Wert des SRV Eintrags muss ein gültiger Domainname sein';
+$lng['error']['dns_srv_noalias'] = 'Der SRV Eintrag darf kein CNAME Eintrag sein..';
+$lng['error']['dns_duplicate_entry'] = 'Eintrag existiert bereits';
+$lng['success']['dns_record_added'] = 'Eintrag erfolgreich hinzugefügt';
+$lng['success']['dns_record_deleted'] = 'Eintrag erfolgreich entfernt';
+$lng['dnseditor']['edit'] = 'DNS editieren';
+$lng['dnseditor']['records'] = 'Einträge';
+$lng['error']['dns_notfoundorallowed'] = 'Domain nicht gefunden oder keine Berechtigung';
+$lng['serversettings']['dnseditorenable']['title'] = 'DNS Editor aktivieren';
+$lng['serversettings']['dnseditorenable']['description'] = 'Erlaubt es Admins und Kunden die DNS Einträge Ihrer Domains zu verwalten';
+$lng['dns']['howitworks'] = 'Hier können DNS Einträge für die Domain verwaltet werden. Beachte das Froxlor automatisch NS/MX/A/AAAA Einträge generiert. Die benutzerdefinierten Einträge werden bevorzugt, nur fehlende Einträge werden automatisch generiert.';
+$lng['serversettings']['dns_server']['title'] = 'DNS Server Dienst';
+$lng['serversettings']['dns_server']['description'] = 'Dienste müssen mit den froxlor Konfigurationstemplates konfiguriert werden';
+
 $lng['error']['domain_nopunycode'] = 'Die Eingabe von Punycode (IDNA) ist nicht notwendig. Die Domain wird automatisch konvertiert.';
+$lng['admin']['dnsenabled'] = 'Zugriff auf DNS Editor';
+$lng['error']['dns_record_toolong'] = 'Records/Labels können maximal 63 Zeichen lang sein';

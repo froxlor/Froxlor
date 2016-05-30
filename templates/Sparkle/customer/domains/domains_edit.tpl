@@ -4,6 +4,9 @@ $header
 		<h2>
 			<img src="templates/{$theme}/assets/img/icons/domain_edit_big.png" alt="{$title}" />&nbsp;
 			{$title}
+			<if $result['isbinddomain'] == '1' && $userinfo['dnsenabled'] == '1' && Settings::Get('system.dnsenabled') == '1'>
+				&nbsp;(<small><a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $id))}">{$lng['dnseditor']['edit']}</a></small>)
+			</if>
 		</h2>
 	</header>
 

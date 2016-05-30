@@ -3320,3 +3320,57 @@ if (isFroxlorVersion('0.9.35.1')) {
 
 	updateToVersion('0.9.36');
 }
+
+if (isDatabaseVersion('201604270')) {
+
+	showUpdateStep("Adding new dns related tables and settings");
+	$enable_dns = isset($_POST['enable_dns']) ? (int) $_POST['enable_dns'] : "0";
+	Settings::AddNew("system.dnsenabled", $enable_dns);
+
+	Database::query("DROP TABLE IF EXISTS `domain_dns_entries`;");
+	$sql = "CREATE TABLE `domain_dns_entries` (
+		`id` int(20) NOT NULL auto_increment,
+		`domain_id` int(15) NOT NULL,
+		`record` varchar(255) NOT NULL,
+		`type` varchar(10) NOT NULL DEFAULT 'A',
+		`content` text NOT NULL,
+		`ttl` int(11) NOT NULL DEFAULT '18000',
+		`prio` int(11) DEFAULT NULL,
+		PRIMARY KEY (`id`)
+		) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	lastStepStatus(0);
+
+	updateToDbVersion('201605090');
+}
+
+if (isDatabaseVersion('201605090')) {
+
+	showUpdateStep("Adjusting SPF record setting");
+	$current_spf = Settings::Get('spf.spf_entry');
+	// @	IN	TXT	"v=spf1 a mx -all"
+	$new_spf = substr($current_spf, strpos($current_spf, '"'));
+	Settings::Set('spf.spf_entry', $new_spf, true);
+	lastStepStatus(0);
+
+	updateToDbVersion('201605120');
+}
+
+if (isDatabaseVersion('201605120')) {
+
+	showUpdateStep("Adding new dns-server setting");
+	$new_dns_daemon = isset($_POST['new_dns_daemon']) ? $_POST['new_dns_daemon'] : "bind";
+	Settings::AddNew("system.dns_server", $new_dns_daemon);
+	lastStepStatus(0);
+
+	updateToDbVersion('201605170');
+}
+
+if (isDatabaseVersion('201605170')) {
+
+	showUpdateStep("Adding new dns-editor setting for customers");
+	Database::query("ALTER TABLE `panel_customers` ADD `dnsenabled` tinyint(1) NOT NULL default '0' AFTER `perlenabled`;");
+	lastStepStatus(0);
+
+	updateToDbVersion('201605180');
+}

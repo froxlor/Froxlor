@@ -232,6 +232,13 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($del_stmt, array('domainid' => $id));
 
+				// remove possible existing DNS entries
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_DOMAIN_DNS . "`
+					WHERE `domain_id` = :domainid
+				");
+				Database::pexecute($del_stmt, array('domainid' => $id));
+
 				inserttask('1');
 
 				// Using nameserver, insert a task which rebuilds the server config
@@ -508,7 +515,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 
-		$stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`,
+		$stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`isbinddomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`,
 			`d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `d`.`letsencrypt`, `pd`.`subcanemaildomain`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
 			WHERE `d`.`customerid` = :customerid
@@ -913,4 +920,7 @@ if ($page == 'overview') {
 
 		eval("echo \"" . getTemplate("domains/domain_ssleditor") . "\";");
 	}
+} elseif ($page == 'domaindnseditor' && $userinfo['dnsenabled'] == '1' && Settings::Get('system.dnsenabled') == '1') {
+
+	require_once __DIR__.'/dns_editor.php';
 }
