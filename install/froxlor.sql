@@ -191,7 +191,7 @@ CREATE TABLE `panel_customers` (
   `pop3` tinyint(1) NOT NULL default '1',
   `imap` tinyint(1) NOT NULL default '1',
   `perlenabled` tinyint(1) NOT NULL default '0',
-  `dnsenabled` tinyint(1) NOT NULL default '0'
+  `dnsenabled` tinyint(1) NOT NULL default '0',
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
