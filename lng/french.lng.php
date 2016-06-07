@@ -427,7 +427,7 @@ $lng['serversettings']['defaultip']['title'] = 'IP / Port par défaut';
 $lng['serversettings']['defaultip']['description'] = 'Quel est l\'IP / Port par défaut ?';
 $lng['domains']['statstics'] = 'Fréquentation';
 $lng['panel']['ascending'] = 'ascendant';
-$lng['panel']['decending'] = 'descendant';
+$lng['panel']['descending'] = 'descendant';
 $lng['panel']['search'] = 'Rechercher';
 $lng['panel']['used'] = 'utilisé';
 

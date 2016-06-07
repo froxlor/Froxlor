@@ -433,7 +433,7 @@ $lng['serversettings']['defaultip']['title'] = 'Standard-IP/Port';
 $lng['serversettings']['defaultip']['description'] = 'Welche IP/Port-Kombination sollen standardmäßig verwendet werden?';
 $lng['domains']['statstics'] = 'Statistiken';
 $lng['panel']['ascending'] = 'aufsteigend';
-$lng['panel']['decending'] = 'absteigend';
+$lng['panel']['descending'] = 'absteigend';
 $lng['panel']['search'] = 'Suche';
 $lng['panel']['used'] = 'genutzt';
 

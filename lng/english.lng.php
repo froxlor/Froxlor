@@ -437,7 +437,7 @@ $lng['serversettings']['defaultip']['title'] = 'Default IP/Port';
 $lng['serversettings']['defaultip']['description'] = 'Select all IP-addresses you want to use as default for new domains';
 $lng['domains']['statstics'] = 'Usage Statistics';
 $lng['panel']['ascending'] = 'ascending';
-$lng['panel']['decending'] = 'decending';
+$lng['panel']['descending'] = 'descending';
 $lng['panel']['search'] = 'Search';
 $lng['panel']['used'] = 'used';
 
