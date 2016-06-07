@@ -22,17 +22,17 @@
  */
 
 $lng['translator'] = '';
-$lng['panel']['edit'] = 'edit';
-$lng['panel']['delete'] = 'delete';
-$lng['panel']['create'] = 'create';
-$lng['panel']['save'] = 'save';
-$lng['panel']['yes'] = 'yes';
-$lng['panel']['no'] = 'no';
+$lng['panel']['edit'] = 'Edit';
+$lng['panel']['delete'] = 'Delete';
+$lng['panel']['create'] = 'Create';
+$lng['panel']['save'] = 'Save';
+$lng['panel']['yes'] = 'Yes';
+$lng['panel']['no'] = 'No';
 $lng['panel']['emptyfornochanges'] = 'empty for no changes';
 $lng['panel']['emptyfordefault'] = 'empty for defaults';
 $lng['panel']['path'] = 'Path';
 $lng['panel']['toggle'] = 'Toggle';
-$lng['panel']['next'] = 'next';
+$lng['panel']['next'] = 'Next';
 $lng['panel']['dirsmissing'] = 'Can not find or read the directory!';
 
 /**
@@ -477,7 +477,7 @@ $lng['serversettings']['deactivateddocroot']['description'] = 'When a user is de
 
 // ADDED IN 1.2.16-svn4
 
-$lng['panel']['reset'] = 'discard changes';
+$lng['panel']['reset'] = 'Discard changes';
 $lng['admin']['accountsettings'] = 'Account settings';
 $lng['admin']['panelsettings'] = 'Panel settings';
 $lng['admin']['systemsettings'] = 'System settings';
@@ -1273,7 +1273,7 @@ $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'] = 'Mostly CA_B
 $lng['admin']['ipsandports']['docroot']['title'] = 'Custom docroot (empty = point to Froxlor)';
 $lng['admin']['ipsandports']['docroot']['description'] = 'You can define a custom document-root (the destination for a request) for this ip/port combination here.<br /><strong>ATTENTION:</strong> Please be careful with what you enter here!';
 $lng['serversettings']['login_domain_login'] = 'Allow login with domains';
-$lng['panel']['unlock'] = 'unlock';
+$lng['panel']['unlock'] = 'Unlock';
 $lng['question']['customer_reallyunlock'] = 'Do you really want to unlock customer %s?';
 
 // ADDED IN FROXLOR 0.9.15
@@ -1733,8 +1733,8 @@ $lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'This is a lis
 
 // Added in Froxlor 0.9.31
 $lng['panel']['dashboard'] = 'Dashboard';
-$lng['panel']['assigned'] = 'assigned';
-$lng['panel']['available'] = 'available';
+$lng['panel']['assigned'] = 'Assigned';
+$lng['panel']['available'] = 'Available';
 $lng['customer']['services'] = 'Services';
 $lng['serversettings']['phpfpm_settings']['ipcdir']['title'] = 'FastCGI IPC directory';
 $lng['serversettings']['phpfpm_settings']['ipcdir']['description'] = 'The directory where the php-fpm sockets will be stored by the webserver.<br />This directory has to be readable for the webserver';
