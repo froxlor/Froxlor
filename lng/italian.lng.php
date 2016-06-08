@@ -422,7 +422,7 @@ $lng['serversettings']['defaultip']['title'] = 'IP/Porta default';
 $lng['serversettings']['defaultip']['description'] = 'Qual\'è la combinazione IP/Porta default?';
 $lng['domains']['statstics'] = 'Statistiche d\'utilizzo';
 $lng['panel']['ascending'] = 'ascendente';
-$lng['panel']['decending'] = 'discendente';
+$lng['panel']['descending'] = 'discendente';
 $lng['panel']['search'] = 'Cerca';
 $lng['panel']['used'] = 'utilizzato';
 
