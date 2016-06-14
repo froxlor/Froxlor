@@ -713,7 +713,11 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 	    $has_preconfig = true;
 	    $description  = 'You can chose which TLS versions will be enabled for all your webservers SSL vhosts.<br /><br />';
 	    $question = '<strong>Please select the desired TLS versions below (default: TLSv1,TLSv1.1,TLSv1.2):</strong>&nbsp;';
-	    $question .= '<input type="text" id="update_ssl_protocols" value="TLSv1,TLSv1.1,TLSv1.2"/>'
+	    $question .= '<select name="update_ssl_protocols[]" multiple="multiple">';
+	    $options = makeoption('TLSv1', 'TLSv1', 'TLSv1');
+	    $options .= makeoption('TLSv1.1', 'TLSv1.1', 'TLSv1.1');
+	    $options .= makeoption('TLSv1.2', 'TLSv1.2', 'TLSv1.2');
+	    $question .= $options.'</select>';
 	    eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 }
