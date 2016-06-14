@@ -711,13 +711,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 	
 	if(versionInUpdate($current_db_version, '201603150')) {
 	    $has_preconfig = true;
-	    $description  = 'You can chose which TLS versions will be enabled for your webservers SSL setup.<br />Please select the desired TLS versions below.<br /><br />';
-	    $question = '<strong>Do you want to enable Let\'s Encrypt? (default: yes):</strong>&nbsp;';
-	    $question .= '<select name="update_ssl_protocols">';
-	    $options = makeoption('TLSv1', 'TLSv1', 'TLSv1');
-	    $options = makeoption('TLSv1.1', 'TLSv1.1', 'TLSv1.1');
-	    $options = makeoption('TLSv1.2', 'TLSv1.2', 'TLSv1.2');
-	    $question .= $options.'</select>';
+	    $description  = 'You can chose which TLS versions will be enabled for all your webservers SSL vhosts.<br /><br />';
+	    $question = '<strong>Please select the desired TLS versions below (default: TLSv1,TLSv1.1,TLSv1.2):</strong>&nbsp;';
+	    $question .= '<input type="text" id="update_ssl_protocols" value="TLSv1,TLSv1.1,TLSv1.2"/>'
 	    eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 }
