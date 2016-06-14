@@ -3298,7 +3298,7 @@ if (isDatabaseVersion('201603150')) {
 	Settings::AddNew("system.ssl_protocols", "TLSv1,TLSv1.1,TLSv1.2");
 	
 	showUpdateStep("Adding ssl_protocols setting");
-	$update_ssl_protocols = isset($_POST['update_ssl_protocols']) ? $_POST['update_ssl_protocols'] : "TLSv1,TLSv1.1,TLSv1.2";
+	$update_ssl_protocols = isset($_POST['update_ssl_protocols']) ? implode(',', $_POST['update_ssl_protocols']) : "TLSv1,TLSv1.1,TLSv1.2";
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET `settinggroup` = 'system', `varname` = 'ssl_protocols', `value` = '" . $update_ssl_protocols ."'");
 	lastStepStatus(0);
 
