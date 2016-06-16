@@ -17,11 +17,12 @@
  *
  */
 
+// Source for updates: https://github.com/phlylabs/idna-convert.git
+
 /**
  * Class for wrapping a specific idna conversion class and offering a standard interface
  * @package Functions
  */
-
 class idna_convert_wrapper
 {
 	/**
@@ -37,7 +38,11 @@ class idna_convert_wrapper
 
 	public function __construct()
 	{
-		$this->idna_converter = new idna_convert();
+		// Instantiate it
+		//$this->idna_converter = new idna_convert(array('idn_version' => '2008', 'encode_german_sz' => false));
+
+		// use this when using new version of IdnaConverter (which does not work yet)
+		$this->idna_converter = new Mso\IdnaConvert\IdnaConvert();
 	}
 
 	/**
@@ -52,7 +57,9 @@ class idna_convert_wrapper
 
 	public function encode($to_encode)
 	{
-		return $this->_do_action('encode', $to_encode);
+		$to_encode = $this->is_utf8($to_encode) ? $to_encode : utf8_encode($to_encode);
+		return $this->idna_converter->encode($to_encode);
+		//return $this->_do_action('encode', $to_encode);
 	}
 
 	/**
@@ -67,7 +74,45 @@ class idna_convert_wrapper
 
 	public function decode($to_decode)
 	{
-		return $this->_do_action('decode', $to_decode);
+		return $this->idna_converter->decode($to_decode);
+		//return $this->_do_action('decode', $to_decode);
+	}
+
+	/**
+	 * check whether a string is utf-8 encoded or not
+	 *
+	 * @param string $string
+	 *
+	 * @return boolean
+	 */
+	public function is_utf8($string = null) {
+
+		if (function_exists("mb_detect_encoding")) {
+			if (mb_detect_encoding($string, 'UTF-8, ISO-8859-1') === 'UTF-8') {
+				return true;
+			}
+			return false;
+		}
+		$strlen = strlen($string);
+		for ($i = 0; $i < $strlen; $i ++) {
+			$ord = ord($string[$i]);
+			if ($ord < 0x80)
+				continue; // 0bbbbbbb
+				elseif (($ord & 0xE0) === 0xC0 && $ord > 0xC1)
+				$n = 1; // 110bbbbb (exkl C0-C1)
+				elseif (($ord & 0xF0) === 0xE0)
+				$n = 2; // 1110bbbb
+				elseif (($ord & 0xF8) === 0xF0 && $ord < 0xF5)
+				$n = 3; // 11110bbb (exkl F5-FF)
+				else
+					return false; // ungültiges UTF-8-Zeichen
+					for ($c = 0; $c < $n; $c ++) // $n Folgebytes? // 10bbbbbb
+						if (++ $i === $strlen || (ord($string[$i]) & 0xC0) !== 0x80)
+							// ungültiges UTF-8-Zeichen
+							return false;
+		}
+		// kein ungültiges UTF-8-Zeichen gefunden
+		return true;
 	}
 
 	/**
@@ -141,5 +186,3 @@ class idna_convert_wrapper
 		return implode($sepchar, $strings);
 	}
 }
-
-?>
