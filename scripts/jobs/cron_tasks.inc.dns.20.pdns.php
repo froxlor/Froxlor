@@ -34,31 +34,34 @@ class pdns extends DnsBase
 
 		$domains = $this->getDomainList();
 
-		if (! empty($domains)) {
-
-			foreach ($domains as $domain) {
-				// check for system-hostname
-				$isFroxlorHostname = false;
-				if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
-					$isFroxlorHostname = true;
-				}
-				// create zone-file
-				$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for ' . $domain['domain']);
-				$zone = createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
-
-				$dom_id = $this->_insertZone($zone->origin, $zone->serial);
-				$this->_insertRecords($dom_id, $zone->records, $zone->origin);
-				$this->_insertAllowedTransfers($dom_id);
-
-				$this->_logger->logAction(CRON_ACTION, LOG_INFO, '`' . $domain['domain'] . '` zone written');
-			}
-
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Database updated');
-
-			// reload Bind
-			safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'pdns reloaded');
+		if (empty($domains)) {
+			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+			return;
 		}
+
+
+		foreach ($domains as $domain) {
+			// check for system-hostname
+			$isFroxlorHostname = false;
+			if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
+				$isFroxlorHostname = true;
+			}
+			// create zone-file
+			$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for ' . $domain['domain']);
+			$zone = createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
+
+			$dom_id = $this->_insertZone($zone->origin, $zone->serial);
+			$this->_insertRecords($dom_id, $zone->records, $zone->origin);
+			$this->_insertAllowedTransfers($dom_id);
+
+			$this->_logger->logAction(CRON_ACTION, LOG_INFO, '`' . $domain['domain'] . '` zone written');
+		}
+
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Database updated');
+
+		// reload Bind
+		safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'pdns reloaded');
 	}
 
 	private function _cleanZonefiles()

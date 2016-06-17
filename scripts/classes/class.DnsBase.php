@@ -98,7 +98,6 @@ abstract class DnsBase
 		}
 
 		if (empty($domains)) {
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
 			return null;
 		}
 

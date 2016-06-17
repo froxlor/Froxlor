@@ -35,40 +35,43 @@ class bind extends DnsBase
 
 		$domains = $this->getDomainList();
 
-		if (! empty($domains)) {
-			$bindconf_file = '# ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n\n";
-
-			foreach ($domains as $domain) {
-				// check for system-hostname
-				$isFroxlorHostname = false;
-				if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
-					$isFroxlorHostname = true;
-				}
-				// create zone-file
-				$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for ' . $domain['domain']);
-				$zone = createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
-				$zonefile = (string)$zone;
-				$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
-				$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
-				$zonefile_handler = fopen($zonefile_name, 'w');
-				fwrite($zonefile_handler, $zonefile);
-				fclose($zonefile_handler);
-				$this->_logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` zone written');
-
-				// generate config
-				$bindconf_file .= $this->_generateDomainConfig($domain);
-			}
-
-			// write config
-			$bindconf_file_handler = fopen(makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
-			fwrite($bindconf_file_handler, $bindconf_file);
-			fclose($bindconf_file_handler);
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
-
-			// reload Bind
-			safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
+		if (empty($domains)) {
+			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+			return;
 		}
+
+		$bindconf_file = '# ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n\n";
+
+		foreach ($domains as $domain) {
+			// check for system-hostname
+			$isFroxlorHostname = false;
+			if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
+				$isFroxlorHostname = true;
+			}
+			// create zone-file
+			$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for ' . $domain['domain']);
+			$zone = createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
+			$zonefile = (string)$zone;
+			$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
+			$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
+			$zonefile_handler = fopen($zonefile_name, 'w');
+			fwrite($zonefile_handler, $zonefile);
+			fclose($zonefile_handler);
+			$this->_logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` zone written');
+
+			// generate config
+			$bindconf_file .= $this->_generateDomainConfig($domain);
+		}
+
+		// write config
+		$bindconf_file_handler = fopen(makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
+		fwrite($bindconf_file_handler, $bindconf_file);
+		fclose($bindconf_file_handler);
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
+
+		// reload Bind
+		safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
 	}
 
 	private function _generateDomainConfig($domain = array())
