@@ -272,9 +272,22 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 		$primary_ns = Settings::Get('system.hostname');
 	}
 
-	// TODO for now, dummy time-periods
+	$date = date('Ymd');
+	$domain['bindserial'] = (preg_match('/^' . $date . '/', $domain['bindserial']) ?
+		$domain['bindserial'] + 1 :
+		$date . '00');
+	if (!$froxlorhostname) {
+		$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+				`bindserial` = :serial
+				 WHERE `id` = :id
+			");
+		Database::pexecute($upd_stmt, array('serial' => $domain['bindserial'], 'id' => $domain['id']));
+	}
+
 	$soa_content = $primary_ns . " " . escapeSoaAdminMail(Settings::Get('panel.adminmail')) . " (" . PHP_EOL;
 	$soa_content .= $domain['bindserial'] . "\t; serial" . PHP_EOL;
+	// TODO for now, dummy time-periods
 	$soa_content .= "1800\t; refresh (30 mins)" . PHP_EOL;
 	$soa_content .= "900\t; retry (15 mins)" . PHP_EOL;
 	$soa_content .= "604800\t; expire (7 days)" . PHP_EOL;
