@@ -19,6 +19,8 @@ if (! defined('MASTER_CRONJOB'))
 class bind extends DnsBase
 {
 
+	private $_bindconf_file = "";
+
 	public function writeConfigs()
 	{
 		// tell the world what we are doing
@@ -43,35 +45,67 @@ class bind extends DnsBase
 		$bindconf_file = '# ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n\n";
 
 		foreach ($domains as $domain) {
+			if ($domain['ismainbutsubto'] > 0) {
+				// domains with ismainbutsubto>0 are handled by recursion within walkDomainList()
+				continue;
+			}
+			$this->walkDomainList($domain, $domains);
+		}
+
+		$bindconf_file_handler = fopen(makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
+		fwrite($bindconf_file_handler, $this->_bindconf_file);
+		fclose($bindconf_file_handler);
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
+		safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
+		$domains_dir = makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/');
+
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
+	}
+
+
+	private function walkDomainList($domain, $domains)
+	{
+		$zoneContent = '';
+		$subzones = '';
+
+		foreach ($domain['children'] as $child_domain_id) {
+			$subzones .= $this->walkDomainList($domains[$child_domain_id], $domains);
+		}
+
+		if ($domain['zonefile'] == '') {
 			// check for system-hostname
 			$isFroxlorHostname = false;
 			if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
 				$isFroxlorHostname = true;
 			}
-			// create zone-file
-			$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for ' . $domain['domain']);
-			$zone = createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
-			$zonefile = (string)$zone;
-			$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
-			$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
-			$zonefile_handler = fopen($zonefile_name, 'w');
-			fwrite($zonefile_handler, $zonefile);
-			fclose($zonefile_handler);
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` zone written');
 
-			// generate config
-			$bindconf_file .= $this->_generateDomainConfig($domain);
+			if ($domain['ismainbutsubto'] == 0) {
+				$zoneContent = (string) createDomainZone(($domain['id'] == 'none') ?
+					$domain :
+					$domain['id'],
+					$isFroxlorHostname);
+				$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
+				$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' .
+					$domain['zonefile']);
+				$zonefile_handler = fopen($zonefile_name, 'w');
+				fwrite($zonefile_handler, $zoneContent . $subzones);
+				fclose($zonefile_handler);
+				$this->_logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` written');
+				$this->_bindconf_file .= $this->_generateDomainConfig($domain);
+			} else {
+				return (string) createDomainZone(($domain['id'] == 'none') ?
+					$domain :
+					$domain['id'],
+					$isFroxlorHostname,
+					true);
+			}
+		} else {
+			$this->_logger->logAction(CRON_ACTION, LOG_INFO,
+				'Added zonefile ' . $domain['zonefile'] . ' for domain ' . $domain['domain'] .
+					 ' - Note that you will also have to handle ALL records for ALL subdomains.');
+			$this->_bindconf_file .= $this->_generateDomainConfig($domain);
 		}
-
-		// write config
-		$bindconf_file_handler = fopen(makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
-		fwrite($bindconf_file_handler, $bindconf_file);
-		fclose($bindconf_file_handler);
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
-
-		// reload Bind
-		safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
 	}
 
 	private function _generateDomainConfig($domain = array())
