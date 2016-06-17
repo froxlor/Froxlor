@@ -52,6 +52,13 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	addRequiredEntry('@', 'NS', $required_entries);
 	if ($domain['isemaildomain'] === '1') {
 		addRequiredEntry('@', 'MX', $required_entries);
+		if (Settings::Get('system.dns_createmailentry')) {
+			foreach(['imap', 'pop3', 'mail', 'smtp'] as $record) {
+				foreach(['AAAA', 'A'] as $type) {
+					addRequiredEntry($record, $type, $required_entries);
+				}
+			}
+		}
 	}
 
 	// additional required records by setting
