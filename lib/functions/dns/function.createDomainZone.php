@@ -67,7 +67,7 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	{
 		// additional required records for subdomains
 		$subdomains_stmt = Database::prepare("
-			SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+			SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `" . TABLE_PANEL_DOMAINS . "`
 			WHERE `parentdomainid` = :domainid
 		");
 		Database::pexecute($subdomains_stmt, array(
@@ -81,10 +81,10 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 			addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
 
 			// Check whether to add a www.-prefix
-			if ($domain['iswildcarddomain'] == '1') {
+			if ($subdomain['iswildcarddomain'] == '1') {
 				addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
 				addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
-			} elseif ($domain['wwwserveralias'] == '1') {
+			} elseif ($subdomain['wwwserveralias'] == '1') {
 				addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
 				addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
 			}
