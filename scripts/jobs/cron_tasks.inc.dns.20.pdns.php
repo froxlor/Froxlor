@@ -47,11 +47,9 @@ class pdns extends DnsBase
 			$this->walkDomainList($domain, $domains);
 		}
 
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Database updated');
-
-		// reload Bind
-		safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'pdns reloaded');
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
+		$this->reloadDaemon();
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
 	}
 
 	private function walkDomainList($domain, $domains)

@@ -56,10 +56,7 @@ class bind extends DnsBase
 		fwrite($bindconf_file_handler, $this->_bindconf_file);
 		fclose($bindconf_file_handler);
 		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
-		safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Bind9 reloaded');
-		$domains_dir = makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/');
-
+		$this->reloadDaemon();
 		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
 	}
 

@@ -162,6 +162,20 @@ abstract class DnsBase
 			return $domains;
 	}
 
+	public function reloadDaemon()
+	{
+		// reload DNS daemon
+		$cmd = Settings::Get('system.bindreload_command');
+		$cmdStatus = 1;
+		safe_exec(escapeshellcmd($cmd), $cmdStatus);
+		if ($cmdStatus === 0) {
+			$this->_logger->logAction(CRON_ACTION, LOG_INFO, Settings::Get('system.dns_server') . ' daemon reloaded');
+		} else {
+			$this->_logger->logAction(CRON_ACTION, LOG_ERR, 'Error while running `' . $cmd .
+				'`: exit code (' . $cmdStatus . ') - please check your system logs');
+		}
+	}
+
 	public function writeDKIMconfigs()
 	{
 		if (Settings::Get('dkim.use_dkim') == '1') {
