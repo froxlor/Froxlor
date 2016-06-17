@@ -69,14 +69,38 @@ abstract class DnsBase
 
 	protected function getDomainList()
 	{
-		// get all Domains
-		$result_domains_stmt = Database::query("
-			SELECT `d`.`id`, `d`.`domain`, `d`.`customerid`, `d`.`zonefile`, `c`.`loginname`, `c`.`guid`
-			FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
-			WHERE `d`.`isbinddomain` = '1' ORDER BY `d`.`domain` ASC
+		$result_domains_stmt = Database::query(
+			"
+			SELECT
+				`d`.`id`,
+				`d`.`domain`,
+				`d`.`isemaildomain`,
+				`d`.`iswildcarddomain`,
+				`d`.`wwwserveralias`,
+				`d`.`customerid`,
+				`d`.`zonefile`,
+				`d`.`bindserial`,
+				`d`.`dkim`,
+				`d`.`dkim_id`,
+				`d`.`dkim_pubkey`,
+				`d`.`ismainbutsubto`,
+				`c`.`loginname`,
+				`c`.`guid`
+			FROM
+				`" . TABLE_PANEL_DOMAINS . "` `d`
+			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
+			WHERE
+				`d`.`isbinddomain` = '1'
+			ORDER BY
+				`d`.`domain` ASC
 		");
 
-		$domains = $result_domains_stmt->fetchAll(PDO::FETCH_ASSOC);
+		$domains = array();
+		// don't use fetchall() to be able to set the first column to the domain id and use it later on to set the rows'
+		// array of direct children without having to search the outer array
+		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$domains[$domain["id"]] = $domain;
+		}
 
 		// frolxor-hostname (#1090)
 		if (Settings::get('system.dns_createhostnameentry') == 1) {
@@ -101,7 +125,41 @@ abstract class DnsBase
 			return null;
 		}
 
-		return $domains;
+		// collect domain IDs of direct child domains as arrays in ['children'] column
+		foreach (array_keys($domains) as $key) {
+			if (! isset($domains[$key]['children'])) {
+				$domains[$key]['children'] = array();
+			}
+			if ($domains[$key]['ismainbutsubto'] > 0) {
+				if (isset($domains[  $domains[$key]['ismainbutsubto']  ])) {
+					$domains[  $domains[$key]['ismainbutsubto']  ]['children'][] = $domains[$key]['id'];
+				} else {
+					$this->_logger->logAction(CRON_ACTION, LOG_ERR,
+						'Database inconsistency: domain ' . $domain['domain'] . ' (ID #' . $key .
+						') is set to to be subdomain to non-existent domain ID #' .
+						$domains[$key]['ismainbutsubto'] .
+						'. No DNS record(s) will be created for this domain.');
+				}
+			}
+		}
+
+		$this->_logger->logAction(CRON_ACTION, LOG_DEBUG,
+			str_pad('domId', 9, ' ') . str_pad('domain', 40, ' ') .
+			'ismainbutsubto ' . str_pad('parent domain', 40, ' ') .
+			"list of child domain ids");
+			foreach ($domains as $domain) {
+				$logLine =
+				str_pad($domain['id'], 9, ' ') .
+				str_pad($domain['domain'], 40, ' ') .
+				str_pad($domain['ismainbutsubto'], 15, ' ') .
+				str_pad(((isset($domains[  $domain['ismainbutsubto']  ])) ?
+					$domains[  $domain['ismainbutsubto']  ]['domain'] :
+					'-'), 40, ' ') .
+					join(', ', $domain['children']);
+					$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, $logLine);
+			}
+
+			return $domains;
 	}
 
 	public function writeDKIMconfigs()
