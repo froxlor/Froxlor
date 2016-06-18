@@ -14,7 +14,7 @@
  * @package Functions
  *
  */
-function createDomainZone($domain_id, $froxlorhostname = false)
+function createDomainZone($domain_id, $froxlorhostname = false, $isMainButSubTo = false)
 {
 	if (!$froxlorhostname)
 	{
@@ -49,9 +49,18 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 
 	addRequiredEntry('@', 'A', $required_entries);
 	addRequiredEntry('@', 'AAAA', $required_entries);
-	addRequiredEntry('@', 'NS', $required_entries);
+	if (! $isMainButSubTo) {
+		addRequiredEntry('@', 'NS', $required_entries);
+	}
 	if ($domain['isemaildomain'] === '1') {
 		addRequiredEntry('@', 'MX', $required_entries);
+		if (Settings::Get('system.dns_createmailentry')) {
+			foreach(['imap', 'pop3', 'mail', 'smtp'] as $record) {
+				foreach(['AAAA', 'A'] as $type) {
+					addRequiredEntry($record, $type, $required_entries);
+				}
+			}
+		}
 	}
 
 	// additional required records by setting
@@ -67,7 +76,7 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 	{
 		// additional required records for subdomains
 		$subdomains_stmt = Database::prepare("
-			SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
+			SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `" . TABLE_PANEL_DOMAINS . "`
 			WHERE `parentdomainid` = :domainid
 		");
 		Database::pexecute($subdomains_stmt, array(
@@ -81,27 +90,13 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 			addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
 
 			// Check whether to add a www.-prefix
-			if ($domain['iswildcarddomain'] == '1') {
+			if ($subdomain['iswildcarddomain'] == '1') {
 				addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
 				addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
-			} elseif ($domain['wwwserveralias'] == '1') {
+			} elseif ($subdomain['wwwserveralias'] == '1') {
 				addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
 				addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
 			}
-		}
-
-		// additional required records for main-but-subdomain-to
-		$mainbutsub_stmt = Database::prepare("
-			SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
-			WHERE `ismainbutsubto` = :domainid
-		");
-		Database::pexecute($mainbutsub_stmt, array(
-			'domainid' => $domain_id
-		));
-
-		while ($mainbutsubtodomain = $mainbutsub_stmt->fetch(PDO::FETCH_ASSOC)) {
-			// Add NS entry for subdomain-records of "main-but-subdomain-to"-domains, they get their own Zone
-			addRequiredEntry(str_replace('.' . $domain['domain'], '', $mainbutsubtodomain['domain']), 'NS', $required_entries);
 		}
 	}
 
@@ -265,16 +260,31 @@ function createDomainZone($domain_id, $froxlorhostname = false)
 		$primary_ns = Settings::Get('system.hostname');
 	}
 
-	// TODO for now, dummy time-periods
-	$soa_content = $primary_ns . " " . escapeSoaAdminMail(Settings::Get('panel.adminmail')) . " (" . PHP_EOL;
-	$soa_content .= $domain['bindserial'] . "\t; serial" . PHP_EOL;
-	$soa_content .= "1800\t; refresh (30 mins)" . PHP_EOL;
-	$soa_content .= "900\t; retry (15 mins)" . PHP_EOL;
-	$soa_content .= "604800\t; expire (7 days)" . PHP_EOL;
-	$soa_content .= "1200\t)\t; minimum (20 mins)";
+	if (! $isMainButSubTo) {
+		$date = date('Ymd');
+		$domain['bindserial'] = (preg_match('/^' . $date . '/', $domain['bindserial']) ?
+			$domain['bindserial'] + 1 :
+			$date . '00');
+		if (!$froxlorhostname) {
+			$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+					`bindserial` = :serial
+					 WHERE `id` = :id
+				");
+			Database::pexecute($upd_stmt, array('serial' => $domain['bindserial'], 'id' => $domain['id']));
+		}
 
-	$soa_record = new DnsEntry('@', 'SOA', $soa_content);
-	array_unshift($zonerecords, $soa_record);
+		$soa_content = $primary_ns . " " . escapeSoaAdminMail(Settings::Get('panel.adminmail')) . " (" . PHP_EOL;
+		$soa_content .= $domain['bindserial'] . "\t; serial" . PHP_EOL;
+		// TODO for now, dummy time-periods
+		$soa_content .= "1800\t; refresh (30 mins)" . PHP_EOL;
+		$soa_content .= "900\t; retry (15 mins)" . PHP_EOL;
+		$soa_content .= "604800\t; expire (7 days)" . PHP_EOL;
+		$soa_content .= "1200\t)\t; minimum (20 mins)";
+
+		$soa_record = new DnsEntry('@', 'SOA', $soa_content);
+		array_unshift($zonerecords, $soa_record);
+	}
 
 	$zone = new DnsZone((int) Settings::Get('system.defaultttl'), $domain['domain'], $domain['bindserial'], $zonerecords);
 

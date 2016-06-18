@@ -30,38 +30,72 @@ class pdns extends DnsBase
 		$this->_connectToPdnsDb();
 
 		// clean up
-		$this->_cleanZonefiles();
+		$this->_clearZoneTables();
 
 		$domains = $this->getDomainList();
 
-		if (! empty($domains)) {
+		if (empty($domains)) {
+			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+			return;
+		}
 
-			foreach ($domains as $domain) {
-				// check for system-hostname
-				$isFroxlorHostname = false;
-				if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
-					$isFroxlorHostname = true;
-				}
-				// create zone-file
-				$this->_logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns zone for ' . $domain['domain']);
-				$zone = createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
+		foreach ($domains as $domain) {
+			if ($domain['ismainbutsubto'] > 0) {
+				// domains with ismainbutsubto>0 are handled by recursion within walkDomainList()
+				continue;
+			}
+			$this->walkDomainList($domain, $domains);
+		}
 
-				$dom_id = $this->_insertZone($zone->origin, $zone->serial);
-				$this->_insertRecords($dom_id, $zone->records, $zone->origin);
-				$this->_insertAllowedTransfers($dom_id);
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
+		$this->reloadDaemon();
+		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
+	}
 
-				$this->_logger->logAction(CRON_ACTION, LOG_INFO, '`' . $domain['domain'] . '` zone written');
+	private function walkDomainList($domain, $domains)
+	{
+		$zoneContent = '';
+		$subzones = array();
+
+		foreach ($domain['children'] as $child_domain_id) {
+			$subzones[] = $this->walkDomainList($domains[$child_domain_id], $domains);
+		}
+
+		if ($domain['zonefile'] == '') {
+			// check for system-hostname
+			$isFroxlorHostname = false;
+			if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
+				$isFroxlorHostname = true;
 			}
 
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Database updated');
-
-			// reload Bind
-			safe_exec(escapeshellcmd(Settings::Get('system.bindreload_command')));
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'pdns reloaded');
+			if ($domain['ismainbutsubto'] == 0) {
+				$zoneContent = createDomainZone(($domain['id'] == 'none') ?
+					$domain :
+					$domain['id'],
+					$isFroxlorHostname);
+				if (count($subzones)) {
+					array_push($zoneContent->records, ...$subzones);
+				}
+				$pdnsDomId = $this->_insertZone($zoneContent->origin, $zoneContent->serial);
+				$this->_insertRecords($pdnsDomId, $zoneContent->records, $zoneContent->origin);
+				$this->_insertAllowedTransfers($pdnsDomId);
+				$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
+			} else {
+				return createDomainZone(($domain['id'] == 'none') ?
+					$domain :
+					$domain['id'],
+					$isFroxlorHostname,
+					true);
+			}
+		} else {
+			$this->_logger->logAction(CRON_ACTION, LOG_ERROR,
+				'Zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' .
+				$domain['domain'] . ')');
+			$this->_bindconf_file .= $this->_generateDomainConfig($domain);
 		}
 	}
 
-	private function _cleanZonefiles()
+	private function _clearZoneTables()
 	{
 		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
 
@@ -96,6 +130,11 @@ class pdns extends DnsBase
 
 		foreach ($records as $record)
 		{
+			if ($record instanceof DnsZone) {
+				$this->_insertRecords($domainid, $record->records, $record->origin);
+				continue;
+			}
+
 			if ($record->record == '@') {
 				$_record = $origin;
 			}
