@@ -80,7 +80,7 @@ class UnicodeTranscoder implements UnicodeTranscoderInterface
 
         $output = [];
         $out_len = 0;
-        $inp_len = strlen($input);
+        $inp_len = self::byteLength($input);
         $mode = 'next';
         $test = 'none';
         for ($k = 0; $k < $inp_len; ++$k) {
@@ -200,7 +200,7 @@ class UnicodeTranscoder implements UnicodeTranscoderInterface
     {
         $output = [];
         $out_len = 0;
-        $inp_len = strlen($input);
+        $inp_len = self::byteLength($input);
         $mode = 'd';
         $b64 = '';
 
@@ -322,7 +322,7 @@ class UnicodeTranscoder implements UnicodeTranscoderInterface
     {
         $output = [];
 
-        $inp_len = strlen($input);
+        $inp_len = self::byteLength($input);
         // Input length must be dividable by 4
         if ($inp_len % 4) {
             throw new \InvalidArgumentException('Input UCS4 string is broken');
@@ -339,5 +339,20 @@ class UnicodeTranscoder implements UnicodeTranscoderInterface
         }
 
         return $output;
+    }
+
+    /**
+     * Gets the length of a string in bytes even if mbstring function
+     * overloading is turned on
+     *
+     * @param string $string the string for which to get the length.
+     * @return integer the length of the string in bytes.
+     */
+    protected static function byteLength($string)
+    {
+        if ((extension_loaded('mbstring') && (ini_get('mbstring.func_overload') & 0x02) === 0x02)) {
+            return mb_strlen($string, '8bit');
+        }
+        return strlen((binary) $string);
     }
 }
