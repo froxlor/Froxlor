@@ -38,7 +38,7 @@ setPermissions() {
 	fi
 }
 
-echoNoticetoCallFroxlor() {
+echoNoticeToCallFroxlor() {
 	printf "Please run Froxlor by opening it via your web browser:\n"
 	printf "http://<YOURIP>/froxlor/\n"
 }
@@ -46,7 +46,7 @@ echoNoticetoCallFroxlor() {
 case "$1" in
     configure)
 	setPermissions
-	echoNoticetoCallFroxlor
+	echoNoticeToCallFroxlor
 
 	find /tmp/ -type f -name 'froxlordir*' -delete;
     ;;
