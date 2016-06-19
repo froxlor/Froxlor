@@ -114,7 +114,7 @@ return array(
 									'varname' => 'letsencryptstate',
 									'type' => 'string',
 									'string_emptyallowed' => false,
-									'default' => 'Germany',
+									'default' => 'Hessen',
 									'save_method' => 'storeSettingField',
 							),
 							'system_letsencryptchallengepath' => array(

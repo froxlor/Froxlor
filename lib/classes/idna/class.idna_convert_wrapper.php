@@ -39,10 +39,12 @@ class idna_convert_wrapper
 	public function __construct()
 	{
 		// Instantiate it
-		//$this->idna_converter = new idna_convert(array('idn_version' => '2008', 'encode_german_sz' => false));
-
-		// use this when using new version of IdnaConverter (which does not work yet)
-		$this->idna_converter = new Mso\IdnaConvert\IdnaConvert();
+		if (version_compare("5.6.0", PHP_VERSION, ">=")) {
+			$this->idna_converter = new idna_convert(array('idn_version' => '2008', 'encode_german_sz' => false));
+		} else {
+			// use this when using new version of IdnaConverter (which does not work yet)
+			$this->idna_converter = new Mso\IdnaConvert\IdnaConvert();
+		}
 	}
 
 	/**
@@ -57,9 +59,12 @@ class idna_convert_wrapper
 
 	public function encode($to_encode)
 	{
-		$to_encode = $this->is_utf8($to_encode) ? $to_encode : utf8_encode($to_encode);
-		return $this->idna_converter->encode($to_encode);
-		//return $this->_do_action('encode', $to_encode);
+		if (version_compare("5.6.0", PHP_VERSION, ">=")) {
+			return $this->_do_action('encode', $to_encode);
+		} else {
+			$to_encode = $this->is_utf8($to_encode) ? $to_encode : utf8_encode($to_encode);
+			return $this->idna_converter->encode($to_encode);
+		}
 	}
 
 	/**
@@ -74,8 +79,11 @@ class idna_convert_wrapper
 
 	public function decode($to_decode)
 	{
-		return $this->idna_converter->decode($to_decode);
-		//return $this->_do_action('decode', $to_decode);
+		if (version_compare("5.6.0", PHP_VERSION, ">=")) {
+			return $this->_do_action('decode', $to_decode);
+		} else {
+			return $this->idna_converter->decode($to_decode);
+		}
 	}
 
 	/**

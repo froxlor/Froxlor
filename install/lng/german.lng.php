@@ -24,6 +24,7 @@ $lng['requirements']['notfound'] = 'nicht gefunden';
 $lng['requirements']['notinstalled'] = 'nicht installiert';
 $lng['requirements']['activated'] = 'ist aktiviert.';
 $lng['requirements']['phpversion'] = 'PHP Version >= 5.3';
+$lng['requirements']['newerphpprefered'] = 'Passt, aber php-5.6 wird bevorzugt.';
 $lng['requirements']['phpmagic_quotes_runtime'] = 'magic_quotes_runtime';
 $lng['requirements']['phpmagic_quotes_runtime_description'] = 'Die PHP Einstellung "magic_quotes_runtime" muss deaktiviert sein ("Off"). Die Einstellung wurde temporär deaktiviert, bitte ändern Sie diese in der entsprechenden php.ini.';
 $lng['requirements']['phppdo'] = 'PHP PDO Erweiterung und PDO-MySQL Treiber...';

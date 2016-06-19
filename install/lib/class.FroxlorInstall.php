@@ -908,7 +908,11 @@ class FroxlorInstall
 			$content .= $this->_status_message('red', $this->_lng['requirements']['notfound'] . ' (' . PHP_VERSION . ')');
 			$_die = true;
 		} else {
-			$content .= $this->_status_message('green', PHP_VERSION);
+			if (version_compare("5.6.0", PHP_VERSION, ">=")) {
+				$content .= $this->_status_message('orange', $this->_lng['requirements']['newerphpprefered'] . ' (' .PHP_VERSION . ')');
+			} else {
+				$content .= $this->_status_message('green', PHP_VERSION);
+			}
 		}
 
 		// Check if magic_quotes_runtime is active | get_magic_quotes_runtime() is always FALSE since 5.4
