@@ -74,7 +74,9 @@ class pdns extends DnsBase
 					$domain['id'],
 					$isFroxlorHostname);
 				if (count($subzones)) {
-					array_push($zoneContent->records, ...$subzones);
+					foreach ($subzones as $subzone) {
+						$zoneContent->records[] = $subzone;
+					}
 				}
 				$pdnsDomId = $this->_insertZone($zoneContent->origin, $zoneContent->serial);
 				$this->_insertRecords($pdnsDomId, $zoneContent->records, $zoneContent->origin);
