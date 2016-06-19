@@ -77,9 +77,30 @@ class Punycode implements PunycodeInterface
         $this->UnicodeTranscoder = $UnicodeTranscoder;
     }
 
+    /**
+     * Returns the used prefix for punycode-encoded strings
+     * @return string
+     */
     public function getPunycodePrefix()
     {
         return self::punycodePrefix;
+    }
+
+    /**
+     * Checks, whether or not the provided string is a valid punycode string
+     * @param string $encoded
+     * @return boolean
+     */
+    public function validate($encoded) {
+        // Check for existence of the prefix
+        if (strpos($encoded, self::punycodePrefix) !== 0) {
+            return false;
+        }
+        // If nothing is left after the prefix, it is hopeless
+        if (strlen(trim($encoded)) <= strlen(self::punycodePrefix)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -89,19 +110,11 @@ class Punycode implements PunycodeInterface
      */
     public function decode($encoded)
     {
-        $decoded = [];
-        // find the Punycode prefix
-        if (!preg_match('!^' . preg_quote(self::punycodePrefix, '!') . '!', $encoded)) {
-        	// *** froxlor patch ***
-        	return $encoded;
-        	// *** end froxlor patch ***
-            throw new \InvalidArgumentException('This is not a punycode string');
-        }
-        $encode_test = preg_replace('!^' . preg_quote(self::punycodePrefix, '!') . '!', '', $encoded);
-        // If nothing left after removing the prefix, it is hopeless
-        if (!$encode_test) {
+        if (!$this->validate($encoded)) {
             return false;
         }
+
+        $decoded = [];
         // Find last occurence of the delimiter
         $delim_pos = strrpos($encoded, '-');
         if ($delim_pos > self::byteLength(self::punycodePrefix)) {

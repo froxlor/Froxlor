@@ -54,12 +54,10 @@ namespace Mso\IdnaConvert;
 
 class IdnaConvert {
 
-    const Version = '1.0.2';
+    const Version = '1.1.0';
     const SubVersion = 'main';
 
     // Internal settings, do not touch!
-    const PunycodePrefix = 'xn--';
-
     protected $encoding = 'utf8';          // Default input charset is UTF-8
     protected $strictMode = false;         // Behave strict or not
     protected $idnVersion = '2008';          // Can be either 2003 (old) or 2008 (default)
@@ -203,21 +201,17 @@ class IdnaConvert {
             list ($email_pref, $input) = explode('@', $input, 2);
             $arr = explode('.', $input);
             foreach ($arr as $k => $v) {
-                if (preg_match('!^' . preg_quote(self::PunycodePrefix, '!') . '!', $v)) {
-                    $conv = $punyCode->decode($v);
-                    if ($conv) {
-                        $arr[$k] = $conv;
-                    }
+                $conv = $punyCode->decode($v);
+                if ($conv) {
+                    $arr[$k] = $conv;
                 }
             }
             $input = join('.', $arr);
             $arr = explode('.', $email_pref);
             foreach ($arr as $k => $v) {
-                if (preg_match('!^' . preg_quote(self::PunycodePrefix, '!') . '!', $v)) {
-                    $conv = $punyCode->decode($v);
-                    if ($conv) {
-                        $arr[$k] = $conv;
-                    }
+                $conv = $punyCode->decode($v);
+                if ($conv) {
+                    $arr[$k] = $conv;
                 }
             }
             $email_pref = join('.', $arr);
@@ -248,7 +242,9 @@ class IdnaConvert {
                 $arr = explode('.', $input);
                 foreach ($arr as $k => $v) {
                     $conv = $punyCode->decode($v);
-                    $arr[$k] = ($conv) ? $conv : $v;
+                    if ($conv) {
+                        $arr[$k] = $conv;
+                    }
                 }
                 $return = join('.', $arr);
             }
