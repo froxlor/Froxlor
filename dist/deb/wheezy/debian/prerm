@@ -21,7 +21,7 @@ case "$1" in
     upgrade|deconfigure)
 	if [ -d /var/www/froxlor ]; then
 		owner="$(stat -c %U /var/www/froxlor/)"
-		group="$(stat -c %G /var/www/froxlor/)"	
+		group="$(stat -c %G /var/www/froxlor/)"
 
 		if [ "${owner}" != "" ] && [ "$group" != "" ]; then
 			find /tmp/ -type f -name 'froxlordir*' -delete
