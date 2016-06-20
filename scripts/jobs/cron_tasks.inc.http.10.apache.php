@@ -851,10 +851,16 @@ class apache extends HttpConfigBase {
 			if (!$ssl_vhost) {
 				$vhost_content .= '    RewriteCond %{HTTPS} off' . "\n";
 			}
+			if ($domain['letsencrypt']) {
+				$vhost_content .= '    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/' . "\n";
+			}
 			$vhost_content .= '    RewriteRule ^/(.*) '. $corrected_docroot.'$1' . $modrew_red . "\n";
 			$vhost_content .= '  </IfModule>' . "\n";
 
-			$vhost_content .= '  Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
+			if (!$domain['letsencrypt']) {
+				// With lets'encryp we can't support redirects without mod_rewrite
+				$vhost_content .= '  Redirect ' . $code . ' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
+			}
 
 		} else {
 
