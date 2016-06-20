@@ -16,6 +16,11 @@
  *
  */
 
+// Check if we're in the CLI
+if(@php_sapi_name() !== 'cli') {
+	die('This script will only work in the shell.');
+}
+
 // give control to command line handler
 try {
 	CmdLineHandler::processParameters($argc, $argv);

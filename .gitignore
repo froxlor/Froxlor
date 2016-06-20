@@ -1,6 +1,7 @@
-templates/*
-logs/*
 install/update.log
+templates/*
+lib/userdata.inc.php
+logs/*
 .buildpath
 .project
 .settings/
@@ -9,3 +10,8 @@ install/update.log
 .well-known
 .idea
 *.iml
+
+!templates/Froxlor/
+!templates/Sparkle/
+!templates/misc/
+templates/Froxlor/assets/img/logo_custom.png
