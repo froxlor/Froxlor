@@ -671,7 +671,7 @@ class nginx extends HttpConfigBase {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
 				}
-				//     $path_options.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
+
 				// check if we have a htpasswd for this path
 				// (damn nginx does not like more than one
 				// 'location'-part with the same path)
@@ -859,23 +859,16 @@ class nginx extends HttpConfigBase {
 			$this->_deactivated = false;
 		}
 
+		$webroot_text .= "\n\t".'location / {'."\n";
+
 		if ($domain['phpenabled'] == '1')
 		{
 			$webroot_text .= "\t" . 'index    index.php index.html index.htm;'."\n";
+			$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
 		}
 		else
 		{
 			$webroot_text .= "\t" . 'index    index.html index.htm;'."\n";
-		}
-		$webroot_text .= "\n\t".'location / {'."\n";
-		$webroot_text .= "\t\t" . 'try_files $uri $uri/';
-		if ($domain['phpenabled'] == '1')
-		{
-			$webroot_text .= ' @rewrites;'."\n";
-		}
-		else
-		{
-			$webroot_text .= ";\n";
 		}
 
 		if ($this->vhost_root_autoindex) {
