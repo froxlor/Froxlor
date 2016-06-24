@@ -23,7 +23,7 @@ CREATE TABLE `ftp_users` (
   `shell` varchar(255) NOT NULL default '/bin/false',
   `login_enabled` enum('N','Y') NOT NULL default 'N',
   `login_count` int(15) NOT NULL default '0',
-  `last_login` datetime NOT NULL default '0000-00-00 00:00:00',
+  `last_login` datetime default NULL,
   `up_count` int(15) NOT NULL default '0',
   `up_bytes` bigint(30) NOT NULL default '0',
   `down_count` int(15) NOT NULL default '0',
@@ -272,7 +272,7 @@ CREATE TABLE `panel_ipsandports` (
   `namevirtualhost_statement` tinyint(1) NOT NULL default '0',
   `vhostcontainer` tinyint(1) NOT NULL default '0',
   `vhostcontainer_servername_statement` tinyint(1) NOT NULL default '0',
-  `specialsettings` text,
+  `specialsettings` text default NULL,
   `ssl` tinyint(4) NOT NULL default '0',
   `ssl_cert_file` varchar(255) NOT NULL,
   `ssl_key_file` varchar(255) NOT NULL,
@@ -560,14 +560,14 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.36'),
-	('panel', 'db_version', '201605180');
+	('panel', 'db_version', '201606190');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
 CREATE TABLE `panel_tasks` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `type` int(11) NOT NULL default '0',
-  `data` text NOT NULL,
+  `data` text,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 

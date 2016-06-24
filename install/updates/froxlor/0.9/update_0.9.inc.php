@@ -3369,8 +3369,19 @@ if (isDatabaseVersion('201605120')) {
 if (isDatabaseVersion('201605170')) {
 
 	showUpdateStep("Adding new dns-editor setting for customers");
-	Database::query("ALTER TABLE `panel_customers` ADD `dnsenabled` tinyint(1) NOT NULL default '0' AFTER `perlenabled`;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `dnsenabled` tinyint(1) NOT NULL default '0' AFTER `perlenabled`;");
 	lastStepStatus(0);
 
 	updateToDbVersion('201605180');
+}
+
+if (isDatabaseVersion('201605180')) {
+
+	showUpdateStep("Changing tables to be more mysql strict-mode compatible");
+	Database::query("ALTER TABLE `".TABLE_FTP_USERS."` CHANGE `last_login` `last_login` DATETIME NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_IPSANDPORTS."` CHANGE `specialsettings` `specialsettings` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_TASKS."` CHANGE `data` `data` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
+	lastStepStatus(0);
+
+	updateToDbVersion('201606190');
 }
