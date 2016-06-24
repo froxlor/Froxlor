@@ -566,7 +566,6 @@ guardian=yes
 # include-dir	Include *.conf files from this directory
 #
 # include-dir=
-include-dir=/etc/powerdns/pdns.d
 
 #################################
 # launch	Which backends to launch and order to query them in
@@ -893,7 +892,8 @@ version-string=powerdns
 #
 # webserver-print-arguments=no
 
-include-dir=/etc/powerdns/froxlor
+# include froxlor-bind-specific config
+include-dir=/etc/powerdns/froxlor/
 ]]>
 						</content>
 					</file>
@@ -1107,7 +1107,6 @@ guardian=yes
 # include-dir	Include *.conf files from this directory
 #
 # include-dir=
-include-dir=/etc/powerdns/pdns.d
 
 #################################
 # launch	Which backends to launch and order to query them in
@@ -1434,10 +1433,15 @@ version-string=powerdns
 # webserver-print-arguments	If the webserver should print arguments
 #
 # webserver-print-arguments=no
+
+# include froxlor-bind-specific config
+include-dir=/etc/powerdns/froxlor/
 ]]>
 						</content>
 					</file>
-					<file name="/etc/powerdns/pdns.d/bindbackend.conf" backup="true">
+					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
+					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf" chown="root:root"
+						chmod="600">
 						<content><![CDATA[
 # Bind backend configuration
 
