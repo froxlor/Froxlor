@@ -118,6 +118,8 @@ class pdns extends DnsBase
 
 	private function _insertRecords($domainid = 0, $records, $origin)
 	{
+		$changedate = date('Ymds', time());
+
 		$ins_stmt = $this->pdns_db->prepare("
 			INSERT INTO records set
 			`domain_id` = :did,
@@ -127,7 +129,7 @@ class pdns extends DnsBase
 			`ttl` = :ttl,
 			`prio` = :prio,
 			`disabled` = '0',
-			`change_date` = UNIX_TIMESTAMP()
+			`change_date` = :changedate
 		");
 
 		foreach ($records as $record)
@@ -151,7 +153,8 @@ class pdns extends DnsBase
 				'type' => $record->type,
 				'content' => $record->content,
 				'ttl' => $record->ttl,
-				'prio' => $record->priority
+				'prio' => $record->priority,
+				'changedate' => $changedate
 			);
 			$ins_stmt->execute($ins_data);
 		}
