@@ -81,13 +81,23 @@ class apache extends HttpConfigBase {
 			}
 
 			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . makeCorrectDir(Settings::Get('system.documentroot_prefix')) . '">' . "\n";
-			// >=apache-2.4 enabled?
-			if (Settings::Get('system.apache24') == '1') {
-				$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
-				$this->virtualhosts_data[$vhosts_filename].= '    AllowOverride All' . "\n";
-			} else {
-				$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
-				$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+
+			// check for custom values, see #1638
+			$custom_opts = Settings::Get('system.apacheglobaldiropt');
+			if (!empty($custom_opts))
+			{
+				$this->virtualhosts_data[$vhosts_filename].= $custom_opts;
+			}
+			else
+			{
+				// >=apache-2.4 enabled?
+				if (Settings::Get('system.apache24') == '1') {
+					$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '    AllowOverride All' . "\n";
+				} else {
+					$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
+					$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+				}
 			}
 			$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
 		}
