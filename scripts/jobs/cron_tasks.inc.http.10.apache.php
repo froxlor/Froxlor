@@ -86,7 +86,7 @@ class apache extends HttpConfigBase {
 			$custom_opts = Settings::Get('system.apacheglobaldiropt');
 			if (!empty($custom_opts))
 			{
-				$this->virtualhosts_data[$vhosts_filename].= $custom_opts;
+				$this->virtualhosts_data[$vhosts_filename].= $custom_opts . "\n";
 			}
 			else
 			{
