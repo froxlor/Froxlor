@@ -1293,8 +1293,10 @@ $lng['phpfpm']['ownvhost']['description'] = 'Wenn verwendet, wird Froxlor selbst
 // ADDED IN FROXLOR 0.9.17
 $lng['crondesc']['cron_usage_report'] = 'Webspace- und Trafficreport';
 $lng['serversettings']['report']['report'] = 'Aktiviere das Senden von Reports über Webspace- und Trafficverbrauch';
-$lng['serversettings']['report']['webmax'] = 'Warn-Level in Prozent für Webspace';
-$lng['serversettings']['report']['trafficmax'] = 'Warn-Level in Prozent für Traffic';
+$lng['serversettings']['report']['webmax']['title'] = 'Warn-Level in Prozent für Webspace';
+$lng['serversettings']['report']['webmax']['description'] = 'Gültige Werte sind von 0 bis 150. Der Wert 0 deaktiviert diesen Report.';
+$lng['serversettings']['report']['trafficmax']['title'] = 'Warn-Level in Prozent für Traffic';
+$lng['serversettings']['report']['trafficmax']['description'] = 'Gültige Werte sind von 0 bis 150. Der Wert 0 deaktiviert diesen Report.';
 $lng['mails']['trafficmaxpercent']['mailbody'] = 'Sehr geehrte(r) {NAME},\n\nSie haben bereits {TRAFFICUSED} MB von Ihren insgesamt {TRAFFIC} MB Traffic verbraucht.\nDies sind mehr als {MAX_PERCENT}%.\n\nVielen Dank,\nIhr Administrator';
 $lng['mails']['trafficmaxpercent']['subject'] = 'Sie erreichen bald Ihr Traffic-Limit';
 $lng['admin']['templates']['trafficmaxpercent'] = 'Hinweismail für Kunden, wenn sie die angegebenen Prozent des Traffics verbraucht haben';
