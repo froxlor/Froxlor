@@ -3385,3 +3385,12 @@ if (isDatabaseVersion('201605180')) {
 
 	updateToDbVersion('201606190');
 }
+
+if (isDatabaseVersion('201606190')) {
+
+	showUpdateStep("Adding new setting for mod_php users to specify content of the global directory options file");
+	Settings::AddNew("system.apacheglobaldiropt", "");
+	lastStepStatus(0);
+
+	updateToDbVersion('201607140');
+}
