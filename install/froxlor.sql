@@ -560,7 +560,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.36'),
+	('panel', 'version', '0.9.37-rc1'),
 	('panel', 'db_version', '201607140');
 
 
