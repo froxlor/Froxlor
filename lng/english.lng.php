@@ -375,6 +375,14 @@ $lng['serversettings']['mxservers']['title'] = 'MX servers';
 $lng['serversettings']['mxservers']['description'] = 'A comma separated list containing a pair of a number and a hostname separated by whitespace (e.g. \'10 mx.example.com\') containing the mx servers.';
 
 /**
+ * Added in froxlor 0.9.7-rc1
+ **/
+
+$lng['serversettings']['panel_customer_hide_options']['title'] = 'Hide certain options in customer panel';
+$lng['serversettings']['panel_customer_hide_options']['description'] = 'Select options to hide in customer panel. To select multiple options, hold down CTRL while selecting.';
+
+
+/**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
