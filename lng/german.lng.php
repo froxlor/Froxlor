@@ -1676,5 +1676,5 @@ $lng['admin']['dnsenabled'] = 'Zugriff auf DNS Editor';
 $lng['error']['dns_record_toolong'] = 'Records/Labels können maximal 63 Zeichen lang sein';
 
 // Added in froxlor 0.9.37-rc1
-$lng['serversettings']['panel_customer_hide_options']['title'] = 'Optionen im Kundenbereich ausblenden';
-$lng['serversettings']['panel_customer_hide_options']['description'] = 'Wählen Sie hier die gewünschten Optionen aus, welche im Kundenbereich ausgeblendet werden sollen. Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt.';
+$lng['serversettings']['panel_customer_hide_options']['title'] = 'Menüpunkte und Traffic-Charts im Kundenbereich ausblenden';
+$lng['serversettings']['panel_customer_hide_options']['description'] = 'Wählen Sie hier die gewünschten Menüpunkte und Traffic-Charts aus, welche im Kundenbereich ausgeblendet werden sollen. Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt.';
