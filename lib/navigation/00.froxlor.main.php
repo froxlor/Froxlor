@@ -48,7 +48,7 @@ return array (
 		'email' => array (
 			'url' => 'customer_email.php',
 			'label' => $lng['menue']['email']['email'],
-			'show_element' => ( !in_array('email',explode(',',Settings::Get('panel.customer_hide_options'))) ),
+			'show_element' => ( !Settings::IsInList('panel.customer_hide_options','email') ),
 			'elements' => array (
 				array (
 					'url' => 'customer_email.php?page=emails',
@@ -72,7 +72,7 @@ return array (
 		'mysql' => array (
 			'url' => 'customer_mysql.php',
 			'label' => $lng['menue']['mysql']['mysql'],
-			'show_element' => ( !in_array('mysql',explode(',',Settings::Get('panel.customer_hide_options'))) ),
+			'show_element' => ( !Settings::IsInList('panel.customer_hide_options','mysql') ),
 			'elements' => array (
 				array (
 					'url' => 'customer_mysql.php?page=mysqls',
@@ -91,7 +91,7 @@ return array (
 		'domains' => array (
 			'url' => 'customer_domains.php',
 			'label' => $lng['menue']['domains']['domains'],
-			'show_element' => ( !in_array('domains',explode(',',Settings::Get('panel.customer_hide_options'))) ),
+			'show_element' => ( !Settings::IsInList('panel.customer_hide_options','domains') ),
 			'elements' => array (
 				array (
 					'url' => 'customer_domains.php?page=domains',
@@ -102,7 +102,7 @@ return array (
 		'ftp' => array (
 			'url' => 'customer_ftp.php',
 			'label' => $lng['menue']['ftp']['ftp'],
-			'show_element' => ( !in_array('ftp',explode(',',Settings::Get('panel.customer_hide_options'))) ),
+			'show_element' => ( !Settings::IsInList('panel.customer_hide_options','ftp') ),
 			'elements' => array (
 				array (
 					'url' => 'customer_ftp.php?page=accounts',
@@ -119,34 +119,34 @@ return array (
 		'extras' => array (
 			'url' => 'customer_extras.php',
 			'label' => $lng['menue']['extras']['extras'],
-			'show_element' => ( !in_array('extras',explode(',',Settings::Get('panel.customer_hide_options'))) ),
+			'show_element' => ( !Settings::IsInList('panel.customer_hide_options','extras') ),
 			'elements' => array (
 				array (
 					'url' => 'customer_extras.php?page=htpasswds',
 					'label' => $lng['menue']['extras']['directoryprotection'],
-					'show_element' => ( !in_array('extras.directoryprotection',explode(',',Settings::Get('panel.customer_hide_options'))) ),
+					'show_element' => ( !Settings::IsInList('panel.customer_hide_options','extras.directoryprotection') ),
 				),
 				array (
 					'url' => 'customer_extras.php?page=htaccess',
 					'label' => $lng['menue']['extras']['pathoptions'],
-					'show_element' => ( !in_array('extras.pathoptions',explode(',',Settings::Get('panel.customer_hide_options'))) ),
+					'show_element' => ( !Settings::IsInList('panel.customer_hide_options','extras.pathoptions') ),
 				),
 				array (
 					'url' => 'customer_logger.php?page=log',
 					'label' => $lng['menue']['logger']['logger'],
-					'show_element' => ( Settings::Get('logger.enabled') == true ) && ( !in_array('extras.logger',explode(',',Settings::Get('panel.customer_hide_options'))) )
+					'show_element' => ( Settings::Get('logger.enabled') == true ) && ( !Settings::IsInList('panel.customer_hide_options','extras.logger') ),
 				),
 				array (
 					'url' => 'customer_extras.php?page=backup',
 					'label' => $lng['menue']['extras']['backup'],
-					'show_element' => ( Settings::Get('system.backupenabled') == true ),
+					'show_element' => ( Settings::Get('system.backupenabled') == true )  && ( !Settings::IsInList('panel.customer_hide_options','extras.backup') ),
 				),
 			),
 		),
 		'traffic' => array (
 			'url' => 'customer_traffic.php',
 			'label' => $lng['menue']['traffic']['traffic'],
-			'show_element' => ( !in_array('traffic',explode(',',Settings::Get('panel.customer_hide_options'))) ),
+			'show_element' => ( !Settings::IsInList('panel.customer_hide_options','traffic') ),
 			'elements' => array (
 				array (
 					'url' => 'customer_traffic.php?page=current',

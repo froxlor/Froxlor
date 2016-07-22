@@ -37,15 +37,15 @@ $header
 	</form>
 	
 	<div id="charts" class="hidden">
-		<if !in_array('traffic.http',explode(',',Settings::Get('panel.customer_hide_options')))>
+		<if !Settings::IsInList('panel.customer_hide_options','traffic.http')>
 			<h3>HTTP {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['http']})</h3>
 			<div id="httpchart" class="trafficchart"></div>
 		</if>			
-		<if !in_array('traffic.ftp',explode(',',Settings::Get('panel.customer_hide_options')))>
+		<if !Settings::IsInList('panel.customer_hide_options','traffic.ftp')>
 			<h3>FTP {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['ftp']})</h3>
 			<div id="ftpchart" class="trafficchart"></div>
 		</if>			
-		<if !in_array('traffic.mail',explode(',',Settings::Get('panel.customer_hide_options')))>
+		<if !Settings::IsInList('panel.customer_hide_options','traffic.mail')>
 			<h3>Mail {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['mail']})</h3>
 			<div id="mailchart" class="trafficchart"></div>
 		</if>			
