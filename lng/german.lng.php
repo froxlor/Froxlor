@@ -372,14 +372,6 @@ $lng['serversettings']['mxservers']['title'] = 'MX-Server';
 $lng['serversettings']['mxservers']['description'] = 'Eine durch Komma getrenne Liste, die ein Paar mit einer Nummer und den Hostnamen einen MX-Servers, getrennt durch ein Leerzeichen, enthält (z. B. \'10 mx.example.tld\').';
 
 /**
- * Added in froxlor 0.9.7-rc1
- **/
-
-$lng['serversettings']['panel_customer_hide_options']['title'] = 'Optionen im Kundenbereich ausblenden';
-$lng['serversettings']['panel_customer_hide_options']['description'] = 'Wählen Sie hier die gewünschten Optionen aus, welche im Kundenbereich ausgeblendet werden sollen. Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt.';
-
-
-/**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
@@ -1682,3 +1674,7 @@ $lng['serversettings']['dns_server']['description'] = 'Dienste müssen mit den f
 $lng['error']['domain_nopunycode'] = 'Die Eingabe von Punycode (IDNA) ist nicht notwendig. Die Domain wird automatisch konvertiert.';
 $lng['admin']['dnsenabled'] = 'Zugriff auf DNS Editor';
 $lng['error']['dns_record_toolong'] = 'Records/Labels können maximal 63 Zeichen lang sein';
+
+// Added in froxlor 0.9.37-rc1
+$lng['serversettings']['panel_customer_hide_options']['title'] = 'Optionen im Kundenbereich ausblenden';
+$lng['serversettings']['panel_customer_hide_options']['description'] = 'Wählen Sie hier die gewünschten Optionen aus, welche im Kundenbereich ausgeblendet werden sollen. Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt.';
