@@ -3402,3 +3402,12 @@ if (isFroxlorVersion('0.9.36')) {
 
 	updateToVersion('0.9.37-rc1');
 }
+
+if (isDatabaseVersion('201607140')) {
+
+	showUpdateStep("Adding new setting to hide certain options in customer panel");
+	Settings::AddNew("panel.customer_hide_options", "");
+	lastStepStatus(0);
+	
+	updateToDbVersion('201607210');
+}

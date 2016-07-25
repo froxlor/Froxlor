@@ -2021,3 +2021,8 @@ $lng['serversettings']['dns_server']['description'] = 'Remember that daemons hav
 $lng['error']['domain_nopunycode'] = 'You must not specify punycode (IDNA). The domain will automatically be converted';
 $lng['admin']['dnsenabled'] = 'Enable DNS editor';
 $lng['error']['dns_record_toolong'] = 'Records/labels can only be up to 63 characters';
+
+// Added in froxlor 0.9.7-rc1
+$lng['serversettings']['panel_customer_hide_options']['title'] = 'Hide menu items and traffic charts in customer panel';
+$lng['serversettings']['panel_customer_hide_options']['description'] = 'Select items to hide in customer panel. To select multiple options, hold down CTRL while selecting.';
+
