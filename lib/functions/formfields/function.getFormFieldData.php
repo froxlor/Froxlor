@@ -21,7 +21,8 @@ function getFormFieldData($fieldname, $fielddata, &$input)
 {
 	if(is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('getFormFieldData' . ucfirst($fielddata['type'])))
 	{
-		$newfieldvalue = call_user_func('getFormFieldData' . ucfirst($fielddata['type']), $fieldname, $fielddata, $input);
+		$gfdFunc = 'getFormFieldData' . ucfirst($fielddata['type']);
+		$newfieldvalue = $gfdFunc($fieldname, $fielddata, $input);
 	}
 	else
 	{
@@ -38,6 +39,6 @@ function getFormFieldData($fieldname, $fielddata, &$input)
 			$newfieldvalue = false;
 		}
 	}
-	
+
 	return trim($newfieldvalue);
 }
