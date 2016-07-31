@@ -40,8 +40,6 @@
 							</visibility>
 							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
-						<command><![CDATA[a2dismod userdir]]></command>
-						<command><![CDATA[a2enmod headers]]></command>
 					</commands>
 				</general>
 				<!-- HTTP Apache -->
@@ -49,6 +47,8 @@
 					default="true">
 					<install><![CDATA[apt-get install apache2]]></install>
 					<include>//service[@type='http']/general/commands</include>
+					<command><![CDATA[a2dismod userdir]]></command>
+					<command><![CDATA[a2enmod headers]]></command>
 					<file name="/etc/apache2/mods-enabled/fastcgi.conf">
 						<visibility mode="true">{{settings.phpfpm.enabled}}
 						</visibility>
@@ -83,6 +83,8 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 				<daemon name="apache" version="2.4" title="Apache 2.4">
 					<install><![CDATA[apt-get install apache2]]></install>
 					<include>//service[@type='http']/general/commands</include>
+					<command><![CDATA[a2dismod userdir]]></command>
+					<command><![CDATA[a2enmod headers]]></command>
 					<file name="/etc/apache2/mods-enabled/fastcgi.conf">
 						<visibility mode="true">{{settings.phpfpm.enabled}}
 						</visibility>
@@ -373,10 +375,49 @@ exit "$RETVAL"
 					<command><![CDATA[chmod 0644 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[service bind9 restart]]></command>
 				</daemon>
-				<daemon name="powerdns" title="PowerDNS via bind-backend">
+				<daemon name="powerdns" title="PowerDNS (standalone)">
+					<install><![CDATA[apt-get install pdns-server pdns-backend-mysql]]></install>
+					<file name="/etc/powerdns/pdns.conf" backup="true" chmod="600">
+						<content><![CDATA[
+allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS>
+allow-recursion=127.0.0.1
+config-dir=/etc/powerdns
+daemon=yes
+guardian=yes
+lazy-recursion=yes
+local-port=53
+master=yes
+module-dir=/usr/lib/powerdns
+setgid=pdns
+setuid=pdns
+socket-dir=/var/run
+version-string=powerdns
+include-dir=/etc/powerdns/froxlor/
+]]>
+						</content>
+					</file>
+					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
+					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf" chown="root:root"
+						chmod="600">
+						<content><![CDATA[
+# mysql-settings / you need to create the power-dns database for yourself!
+launch=gmysql
+gmysql-host=127.0.0.1
+gmysql-port=3306
+gmysql-dbname=pdns
+gmysql-user=powerdns
+gmysql-group=client
+gmysql-password=
+]]>
+						</content>
+					</file>
+					<command><![CDATA[service pdns restart]]></command>
+				</daemon>
+				<daemon name="powerdns_bind" title="PowerDNS via bind-backend">
 					<install><![CDATA[apt-get install pdns-server]]></install>
 					<file name="/etc/powerdns/pdns.conf" backup="true">
 						<content><![CDATA[
+allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS>
 allow-recursion=127.0.0.1
 config-dir=/etc/powerdns
 daemon=yes
@@ -392,12 +433,13 @@ socket-dir=/var/run
 version-string=powerdns
 bind-config=<BIND_CONFIG_PATH>named.conf
 bind-check-interval=300
-include=/etc/powerdns/pdns_froxlor.conf
+include-dir=/etc/powerdns/froxlor/
 ]]>
 						</content>
 					</file>
-					<file name="/etc/powerdns/pdns_froxlor.conf" chown="root:0"
-						chmod="644">
+					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
+					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf" chown="root:root"
+						chmod="600">
 						<content><![CDATA[
 allow-axfr-ips=<NAMESERVERS>
 #local-ipv6=YOUR_IPv6_(if_any)
@@ -1363,8 +1405,8 @@ TLSLog                                  /var/log/proftpd/tls.log
 TLSProtocol                             TLSv1 TLSv1.1 TLSv1.2
 TLSRSACertificateFile                   /etc/ssl/certs/proftpd.crt
 TLSRSACertificateKeyFile                /etc/ssl/private/proftpd.key
-TLSECCertificateFile                    /etc/ssl/certs/proftpd_ec.crt
-TLSECCertificateKeyFile                 /etc/ssl/private/proftpd_ec.key
+#TLSECCertificateFile                    /etc/ssl/certs/proftpd_ec.crt
+#TLSECCertificateKeyFile                 /etc/ssl/private/proftpd_ec.key
 TLSOptions                              NoCertRequest NoSessionReuseRequired
 TLSVerifyClient                         off
 

@@ -310,8 +310,6 @@ $lng['serversettings']['bindconf_directory']['title'] = 'Bind configuratie map';
 $lng['serversettings']['bindconf_directory']['description'] = 'Waar staan de bind configuratie bestanden?';
 $lng['serversettings']['bindreload_command']['title'] = 'Bind reload commando';
 $lng['serversettings']['bindreload_command']['description'] = 'Wat is het command om bind te herladen?';
-$lng['serversettings']['binddefaultzone']['title'] = 'Bind default zone';
-$lng['serversettings']['binddefaultzone']['description'] = 'Wat is de naam van de default zone?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mails-Uid';
 $lng['serversettings']['vmail_uid']['description'] = 'Welk UserID moeten de e-mails hebben?';
 $lng['serversettings']['vmail_gid']['title'] = 'Mails-Gid';
@@ -396,7 +394,7 @@ $lng['serversettings']['defaultip']['title'] = 'Standaard IP/Poort';
 $lng['serversettings']['defaultip']['description'] = 'Wat is de standaard IP/Poort combinatie?';
 $lng['domains']['statstics'] = 'Gebruiks Statistieken';
 $lng['panel']['ascending'] = 'oplopend';
-$lng['panel']['decending'] = 'aflopend';
+$lng['panel']['descending'] = 'aflopend';
 $lng['panel']['search'] = 'Zoeken';
 $lng['panel']['used'] = 'gebruikt';
 

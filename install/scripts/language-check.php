@@ -19,10 +19,7 @@
 $baseLanguage = 'english.lng.php';
 
 // Check if we're in the CLI
-if(@php_sapi_name() != 'cli'
-   && @php_sapi_name() != 'cgi'
-   && @php_sapi_name() != 'cgi-fcgi'
-) {
+if(@php_sapi_name() !== 'cli') {
 	die('This script will only work in the shell.');
 }
 

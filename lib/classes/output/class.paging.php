@@ -399,7 +399,7 @@ class paging {
 		}
 
 		$breakorws = ($break ? '<br />' : '&nbsp;');
-		foreach (array('asc' => $lng['panel']['ascending'], 'desc' => $lng['panel']['decending']) as $sortordertype => $sortorderdescription) {
+		foreach (array('asc' => $lng['panel']['ascending'], 'desc' => $lng['panel']['descending']) as $sortordertype => $sortorderdescription) {
 			$orderoptions.= makeoption($sortorderdescription, $sortordertype, $this->sortorder, true, true);
 		}
 

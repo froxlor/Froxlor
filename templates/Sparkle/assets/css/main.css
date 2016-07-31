@@ -601,6 +601,12 @@ input[type="password"] {
 	background:#fff url(../img/icons/lock.png) no-repeat 5px 4px;
 }
 
+input[class="small"] {
+	width:auto;
+	margin-top: 5px;
+}
+
+
 /*
  *  BUTTONS
  */
@@ -1495,11 +1501,37 @@ fieldset.file {
 }
 
 .domain-canceled {
-    /* Color copied from .warningcontainer */
-    background-color: #fffecc;
+	/* Color copied from .warningcontainer */
+	background-color: #fffecc;
 }
 
 .domain-expired {
-    /* Color copied from .errorcontainer */
-    background-color: rgb(242, 222, 222);
+	/* Color copied from .errorcontainer */
+	background-color: rgb(242, 222, 222);
+}
+
+.domain-hostname {
+	background-color: rgb(53, 106, 160);
+	color: #ddd;
+	font-weight: bold;
+}
+
+table.hl tbody tr.domain-hostname:hover {
+	background-color: rgb(64, 150, 238);
+}
+
+td.size-5 {
+	width: 5%;
+}
+
+td.size-10 {
+	width: 10%;
+}
+
+td.size-20 {
+	width: 20%;
+}
+
+td.size-50 {
+	width: 50%;
 }

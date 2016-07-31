@@ -336,8 +336,6 @@ $lng['serversettings']['bindconf_directory']['title'] = 'Cartella configurazione
 $lng['serversettings']['bindconf_directory']['description'] = 'Dove sono i file di configurazione per Bind?';
 $lng['serversettings']['bindreload_command']['title'] = 'Comando riavvio Bind';
 $lng['serversettings']['bindreload_command']['description'] = 'Qual\'è il comando per riavviare Bind?';
-$lng['serversettings']['binddefaultzone']['title'] = 'Zona di default Bind';
-$lng['serversettings']['binddefaultzone']['description'] = 'Qual\'è il nome della zona di default Bind?';
 $lng['serversettings']['vmail_uid']['title'] = 'UID Email';
 $lng['serversettings']['vmail_uid']['description'] = 'Che UserID dovrebbe avere l\'utente che gestisce le Email?';
 $lng['serversettings']['vmail_gid']['title'] = 'GID Email';
@@ -424,7 +422,7 @@ $lng['serversettings']['defaultip']['title'] = 'IP/Porta default';
 $lng['serversettings']['defaultip']['description'] = 'Qual\'è la combinazione IP/Porta default?';
 $lng['domains']['statstics'] = 'Statistiche d\'utilizzo';
 $lng['panel']['ascending'] = 'ascendente';
-$lng['panel']['decending'] = 'discendente';
+$lng['panel']['descending'] = 'discendente';
 $lng['panel']['search'] = 'Cerca';
 $lng['panel']['used'] = 'utilizzato';
 

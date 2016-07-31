@@ -113,7 +113,11 @@ class phpinterface_fpm {
 				'session.gc_probability',
 				'variables_order',
 				'opcache.log_verbosity_level',
-				'opcache.restrict_api'
+				'opcache.restrict_api',
+				'opcache.revalidate_freq',
+				'opcache.max_accelerated_files',
+				'opcache.memory_consumption',
+				'opcache.interned_strings_buffer'
 			),
 			'php_admin_flag' => array(
 				'allow_call_time_pass_reference',
@@ -137,7 +141,8 @@ class phpinterface_fpm {
 				'opcache.revalidate_path',
 				'opcache.save_comments',
 				'opcache.use_cwd',
-				'opcache.validate_timestamps'
+				'opcache.validate_timestamps',
+				'opcache.fast_shutdown'
 			)
 	);
 

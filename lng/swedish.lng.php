@@ -328,8 +328,6 @@ $lng['serversettings']['bindconf_directory']['title'] = 'Bind konfigurationskata
 $lng['serversettings']['bindconf_directory']['description'] = 'Vilken sökväg skall det vara till bind:s konfigurationsfiler?';
 $lng['serversettings']['bindreload_command']['title'] = 'Ange sökvägen till programmet som laddar om Bind (reload bind) konfigurationsfiler?';
 $lng['serversettings']['bindreload_command']['description'] = 'Ange sökvägen till programmet som laddar om Bind (reload bind) konfigurationsfiler?';
-$lng['serversettings']['binddefaultzone']['title'] = 'Bind standard zone';
-$lng['serversettings']['binddefaultzone']['description'] = 'Vad är namnet på standard zonen?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mails-UID';
 $lng['serversettings']['vmail_uid']['description'] = 'Vilket användarID (UserID) ska E-posten ha?';
 $lng['serversettings']['vmail_gid']['title'] = 'Mails-GID';
@@ -414,7 +412,7 @@ $lng['serversettings']['defaultip']['title'] = 'Förvald IP/Port';
 $lng['serversettings']['defaultip']['description'] = 'Vilken är den förvalda IP/Port kombinationen?';
 $lng['domains']['statstics'] = 'Användarstatistik';
 $lng['panel']['ascending'] = 'Stigande';
-$lng['panel']['decending'] = 'Fallande';
+$lng['panel']['descending'] = 'Fallande';
 $lng['panel']['search'] = 'Sök';
 $lng['panel']['used'] = 'använd';
 

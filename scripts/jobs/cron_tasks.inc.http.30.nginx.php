@@ -155,7 +155,7 @@ class nginx extends HttpConfigBase {
 				/**
 				 * this HAS to be set for the default host in nginx or else no vhost will work
 				 */
-				$this->nginx_data[$vhost_filename] .= "\t". 'listen    ' . $ip . ':' . $port . ' default'. ($ssl_vhost == true ? ' ssl' : '') . ';' . "\n";
+				$this->nginx_data[$vhost_filename] .= "\t". 'listen    ' . $ip . ':' . $port . ' default_server'. ($ssl_vhost == true ? ' ssl' : '') . ';' . "\n";
 
 				$this->nginx_data[$vhost_filename] .= "\t".'# Froxlor default vhost' . "\n";
 				$this->nginx_data[$vhost_filename] .= "\t".'server_name    ' . Settings::Get('system.hostname') . ';' . "\n";
@@ -207,11 +207,11 @@ class nginx extends HttpConfigBase {
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
 				$this->nginx_data[$vhost_filename] .= "\t\ttry_files \$fastcgi_script_name =404;\n";
-				
+
 				if ($row_ipsandports['ssl'] == '1') {
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param HTTPS on;\n";
 				}
-				
+
 				if ((int)Settings::Get('phpfpm.enabled') == 1 && (int)Settings::Get('phpfpm.enabled_ownvhost') == 1) {
 					$domain = array(
 						'id' => 'none',
@@ -225,16 +225,16 @@ class nginx extends HttpConfigBase {
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath,
 					);
-					
+
 					$php = new phpinterface($domain);
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass unix:".$php->getInterface()->getSocketFile().";\n";
 				} else {
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass ".Settings::Get('system.nginx_php_backend').";\n";
 				}
-				
+
 				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_index index.php;\n";
 				$this->nginx_data[$vhost_filename] .= "\t}\n";
-				
+
 				$this->nginx_data[$vhost_filename] .= "}\n\n";
 				// End of Froxlor server{}-part
 			}
@@ -422,7 +422,11 @@ class nginx extends HttpConfigBase {
 		) {
 			$vhost_content.= "\n" . $this->composeSslSettings($domain) . "\n";
 		}
-		$vhost_content.= "\t".'include /etc/nginx/acme.conf;'."\n";
+
+		if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.leenabled') == '1')
+		{
+			$vhost_content.= "\t".'include /etc/nginx/acme.conf;'."\n";
+		}
 
 		// if the documentroot is an URL we just redirect
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
@@ -562,7 +566,7 @@ class nginx extends HttpConfigBase {
 		}
 
 		if ($domain_or_ip['ssl_cert_file'] != '') {
-		    
+
 		    // check for existence, #1485
 		    if (!file_exists($domain_or_ip['ssl_cert_file'])) {
 		        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
@@ -575,7 +579,7 @@ class nginx extends HttpConfigBase {
 					$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
     			$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
     			$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
-    
+
     			if ($domain_or_ip['ssl_key_file'] != '') {
     			    // check for existence, #1485
     			    if (!file_exists($domain_or_ip['ssl_key_file'])) {
@@ -585,7 +589,7 @@ class nginx extends HttpConfigBase {
     				    $sslsettings .= "\t" . 'ssl_certificate_key ' .makeCorrectFile($domain_or_ip['ssl_key_file']) . ';' .  "\n";
     			    }
     			}
-    
+
     			if ($domain_or_ip['ssl_ca_file'] != '') {
     			    // check for existence, #1485
     			    if (!file_exists($domain_or_ip['ssl_ca_file'])) {
@@ -595,7 +599,7 @@ class nginx extends HttpConfigBase {
     				    $sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain_or_ip['ssl_ca_file']) . ';' . "\n";
     			    }
     			}
-    			
+
 				if (isset($domain_or_ip['hsts']) && $domain_or_ip['hsts'] > 0) {
 
 					$vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain_or_ip['hsts'];
@@ -667,7 +671,7 @@ class nginx extends HttpConfigBase {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
 				}
-				//     $path_options.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
+
 				// check if we have a htpasswd for this path
 				// (damn nginx does not like more than one
 				// 'location'-part with the same path)
@@ -835,11 +839,11 @@ class nginx extends HttpConfigBase {
 				$phpopts .= "\t\tfastcgi_param HTTPS on;\n";
 			}
 			$phpopts .= "\t}\n\n";
-			
+
 		}
 		return $phpopts;
 	}
-	
+
 
 	protected function getWebroot($domain, $ssl) {
 		$webroot_text = '';
@@ -855,9 +859,17 @@ class nginx extends HttpConfigBase {
 			$this->_deactivated = false;
 		}
 
-		$webroot_text .= "\t" . 'index    index.php index.html index.htm;'."\n";
 		$webroot_text .= "\n\t".'location / {'."\n";
-		$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
+
+		if ($domain['phpenabled'] == '1')
+		{
+			$webroot_text .= "\t" . 'index    index.php index.html index.htm;'."\n";
+			$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
+		}
+		else
+		{
+			$webroot_text .= "\t" . 'index    index.html index.htm;'."\n";
+		}
 
 		if ($this->vhost_root_autoindex) {
 			$webroot_text .= "\t\t".'autoindex on;'."\n";
@@ -865,9 +877,12 @@ class nginx extends HttpConfigBase {
 		}
 
 		$webroot_text .= "\t".'}'."\n\n";
-		$webroot_text .= "\tlocation @rewrites {\n";
-		$webroot_text .= "\t\trewrite ^ /index.php last;\n";
-		$webroot_text .= "\t}\n\n";
+		if ($domain['phpenabled'] == '1')
+		{
+			$webroot_text .= "\tlocation @rewrites {\n";
+			$webroot_text .= "\t\trewrite ^ /index.php last;\n";
+			$webroot_text .= "\t}\n\n";
+		}
 
 		return $webroot_text;
 	}

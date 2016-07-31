@@ -302,7 +302,7 @@ if ($action == 'login') {
 		}
 		$lastqrystr = "";
 		if (isset($_REQUEST['qrystr']) && $_REQUEST['qrystr'] != "") {
-			$lastqrystr = strip_tags($_REQUEST['qrystr']);
+			$lastqrystr = htmlspecialchars($_REQUEST['qrystr'], ENT_QUOTES);
 		}
 
 		eval("echo \"" . getTemplate('login') . "\";");

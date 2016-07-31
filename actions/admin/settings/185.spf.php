@@ -34,7 +34,7 @@ return array(
 					'settinggroup' => 'spf',
 					'varname' => 'spf_entry',
 					'type' => 'string',
-					'default' => '@	IN	TXT	"v=spf1 a mx -all"',
+					'default' => '"v=spf1 a mx -all"',
 					'save_method' => 'storeSettingField'
 					)
 				)

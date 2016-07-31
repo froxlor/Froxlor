@@ -344,8 +344,6 @@ $lng['serversettings']['bindconf_directory']['title'] = 'Emplacement du dossier 
 $lng['serversettings']['bindconf_directory']['description'] = 'Oû doit être stocké la configuration de Bind / Named ?';
 $lng['serversettings']['bindreload_command']['title'] = 'Commande de rechargement de Bind / Named';
 $lng['serversettings']['bindreload_command']['description'] = 'Quelle est la commande pour recharger / redémarrer Bind / Named ?';
-$lng['serversettings']['binddefaultzone']['title'] = 'Nom du fichier de zone par défaut Bind / Named';
-$lng['serversettings']['binddefaultzone']['description'] = 'Quel est le nom du fichier de zone par défaut pour Bind / Named ?';
 $lng['serversettings']['vmail_uid']['title'] = 'UID des e-mails';
 $lng['serversettings']['vmail_uid']['description'] = 'Quel UID doivent avoir les e-mails ?';
 $lng['serversettings']['vmail_gid']['title'] = 'GID des e-mails';
@@ -429,7 +427,7 @@ $lng['serversettings']['defaultip']['title'] = 'IP / Port par défaut';
 $lng['serversettings']['defaultip']['description'] = 'Quel est l\'IP / Port par défaut ?';
 $lng['domains']['statstics'] = 'Fréquentation';
 $lng['panel']['ascending'] = 'ascendant';
-$lng['panel']['decending'] = 'descendant';
+$lng['panel']['descending'] = 'descendant';
 $lng['panel']['search'] = 'Rechercher';
 $lng['panel']['used'] = 'utilisé';
 
