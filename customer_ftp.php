@@ -20,6 +20,12 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+// redirect if this customer page is hidden via settings
+if (Settings::IsInList('panel.customer_hide_options','ftp')) {
+	redirectTo('customer_index.php');
+	exit;
+}
+
 $id = 0;
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);

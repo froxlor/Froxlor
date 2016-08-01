@@ -19,6 +19,12 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+// redirect if this customer page is hidden via settings
+if (Settings::IsInList('panel.customer_hide_options','extras')) {
+	redirectTo('customer_index.php');
+	exit;
+}
+
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
 } elseif (isset($_GET['id'])) {
@@ -29,6 +35,13 @@ if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras");
 	eval("echo \"" . getTemplate("extras/extras") . "\";");
 } elseif ($page == 'htpasswds') {
+
+	// redirect if this customer sub-page is hidden via settings
+	if (Settings::IsInList('panel.customer_hide_options','extras.directoryprotection')) {
+		redirectTo('customer_index.php');
+		exit;
+	}
+
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::htpasswds");
 		$fields = array(
@@ -262,6 +275,13 @@ if ($page == 'overview') {
 		}
 	}
 } elseif ($page == 'htaccess') {
+
+	// redirect if this customer sub-page is hidden via settings
+	if (Settings::IsInList('panel.customer_hide_options','extras.pathoptions')) {
+		redirectTo('customer_index.php');
+		exit;
+	}
+
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::htaccess");
 		$fields = array(
@@ -519,6 +539,12 @@ if ($page == 'overview') {
 		}
 	}
 } elseif ($page == 'backup') {
+
+	// redirect if this customer sub-page is hidden via settings
+	if (Settings::IsInList('panel.customer_hide_options','extras.backup')) {
+		redirectTo('customer_index.php');
+		exit;
+	}
 
 	if (Settings::Get('system.backupenabled') == 1)
 	{

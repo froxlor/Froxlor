@@ -20,6 +20,12 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+// redirect if this customer page is hidden via settings
+if (Settings::IsInList('panel.customer_hide_options','domains')) {
+	redirectTo('customer_index.php');
+	exit;
+}
+
 if (isset($_POST['id'])) {
 
 	$id = intval($_POST['id']);
