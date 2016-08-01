@@ -23,7 +23,6 @@ require './lib/init.php';
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options','mysql')) {
 	redirectTo('customer_index.php');
-	exit;
 }
 
 // get sql-root access data
