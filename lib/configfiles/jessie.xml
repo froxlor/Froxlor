@@ -4696,7 +4696,7 @@ aliases:     files
 					<commands index="3">
 						<visibility mode="true">{{settings.phpfpm.enabled_ownvhost}}
 						</visibility>
-						<visibility mode="usernotexists">{{settings.phpfpm.vhost_httpuser}}
+						<visibility mode="usernamenotexists">{{settings.phpfpm.vhost_httpuser}}
 						</visibility>
 						<command><![CDATA[groupadd -f {{settings.phpfpm.vhost_httpgroup}}]]></command>
 						<command><![CDATA[useradd -s /bin/false -g {{settings.phpfpm.vhost_httpgroup}} {{settings.phpfpm.vhost_httpuser}}]]></command>

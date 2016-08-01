@@ -71,7 +71,7 @@ class ConfigDaemon {
 	 * @var string
 	 */
 	public $title;
-	
+
 	/**
 	 * Whether this is the default daemon of the service-category
 	 * @var boolean
@@ -321,7 +321,7 @@ class ConfigDaemon {
 		if (array_key_exists('chown', $attributes)) {
 			$return[] = array('type' => 'command', 'content' => 'chown ' . $attributes['chown'] . ' "' . $this->_parseContent($attributes['name']) . '"', 'execute' => "post");
 		}
-		
+
 		// If we have more than 1 element, we want to group this stuff for easier processing later
 		if (count($return) > 1) {
 			$return = array('type' => 'file', 'subcommands' => $return, 'name' => $this->_parseContent($attributes['name']));
@@ -399,10 +399,11 @@ class ConfigDaemon {
 			case "false": if ($order == true) { $return = -1; }; break;
 			case "true": if ($order == false) { $return = -1; }; break;
 			case "notempty": if ($order == "") { $return = -1; }; break;
-			case "userexists": if (posix_getpwnam($order) === false) { $return = -1; }; break;
-			case "groupexists": if (posix_getgrnam($order) === false) { $return = -1; }; break;
-			case "usernotexists": if (is_array(posix_getpwnam($order))) { $return = -1; }; break;
-			case "groupnotexists": if (is_array(posix_getgrnam($order))) { $return = -1; }; break;
+			case "userexists": if (posix_getpwuid($order) === false) { $return = -1; }; break;
+			case "groupexists": if (posix_getgrgid($order) === false) { $return = -1; }; break;
+			case "usernotexists": if (is_array(posix_getpwuid($order))) { $return = -1; }; break;
+			case "groupnotexists": if (is_array(posix_getgrgid($order))) { $return = -1; }; break;
+			case "usernamenotexists": if (is_array(posix_getpwnam($order))) { $return = -1; }; break;
 			case "equals": $return = (isset($attributes['value']) && $attributes['value'] == $order ? 0 : -1); break;
 		}
 		return $return;
