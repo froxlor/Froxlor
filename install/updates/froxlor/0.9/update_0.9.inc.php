@@ -3397,9 +3397,7 @@ if (isDatabaseVersion('201606190')) {
 
 if (isFroxlorVersion('0.9.36')) {
 
-	showUpdateStep("Updating from 0.9.36 to 0.9.37-rc1");
-	lastStepStatus(0);
-
+	showUpdateStep("Updating from 0.9.36 to 0.9.37-rc1", false);
 	updateToVersion('0.9.37-rc1');
 }
 
@@ -3408,6 +3406,12 @@ if (isDatabaseVersion('201607140')) {
 	showUpdateStep("Adding new setting to hide certain options in customer panel");
 	Settings::AddNew("panel.customer_hide_options", "");
 	lastStepStatus(0);
-	
+
 	updateToDbVersion('201607210');
+}
+
+if (isFroxlorVersion('0.9.37-rc1')) {
+
+	showUpdateStep("Updating from 0.9.37-rc1 to 0.9.37 final", false);
+	updateToVersion('0.9.37');
 }
