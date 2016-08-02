@@ -20,7 +20,7 @@
 		<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'edit', 'id' => $row['id']))}">
 			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" title="{$lng['panel']['edit']}" />
 		</a>
-		<if $row['isbinddomain'] == '1' && Settings::Get('system.dnsenabled') == '1'>
+		<if $row['isbinddomain'] == '1' && Settings::Get('system.bind_enable') == '1' && Settings::Get('system.dnsenabled') == '1'>
 			&nbsp;<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $row['id']))}">
 				<img src="templates/{$theme}/assets/img/icons/dns_edit.png" alt="{$lng['dnseditor']['edit']}" title="{$lng['dnseditor']['edit']}" />
 			</a>
