@@ -1,8 +1,7 @@
 # can't use the debian package for them, too old
-froxlor binary: embedded-javascript-library var/www/froxlor/js/excanvas.min.js please use libjs-excanvas
-froxlor binary: embedded-javascript-library var/www/froxlor/js/jquery.min.js please use libjs-jquery
-froxlor binary: embedded-javascript-library var/www/froxlor/js/jquery.tablesorter.min.js please use libjs-jquery-tablesorter
-froxlor binary: embedded-php-library var/www/froxlor/lib/classes/phpmailer/class.PHPMailer.php please use libphp-phpmailer
+froxlor binary: embedded-javascript-library var/www/froxlor/js/jquery.min.js
+froxlor binary: embedded-javascript-library var/www/froxlor/js/jquery.tablesorter.min.js
+froxlor binary: embedded-php-library var/www/froxlor/lib/classes/phpmailer/class.PHPMailer.php
 
 froxlor binary: possibly-insecure-handling-of-tmp-files-in-maintainer-script prerm:28
 
