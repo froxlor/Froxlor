@@ -85,7 +85,7 @@ if ($page == 'overview') {
 			}
 			elseif ($isnewerversion == 0) {
 				// all good
-			    standard_success ('noupdatesavail');
+				standard_success ('noupdatesavail');
 			} else {
 				standard_error ('customized_version');
 			}
@@ -122,7 +122,7 @@ elseif ($page == 'getdownload') {
 
 		// remove old archive
 		if (file_exists($localArchive)) {
-		    @unlink($localArchive);
+			@unlink($localArchive);
 		}
 
 		// store archive
@@ -137,15 +137,15 @@ elseif ($page == 'getdownload') {
 		// validate the integrity of the downloaded file
 		$_shouldsum = @file_get_contents($toCheck);
 		if (!empty($_shouldsum)) {
-		    $_t = explode(" ", $_shouldsum);
-		    $shouldsum = $_t[0];
+			$_t = explode(" ", $_shouldsum);
+			$shouldsum = $_t[0];
 		} else {
-		    $shouldsum = null;
+			$shouldsum = null;
 		}
 		$filesum = hash_file('sha256', $localArchive);
 
 		if ($filesum != $shouldsum) {
-		    redirectTo($filename, array('s' => $s, 'page' => 'error', 'errno' => 9));
+			redirectTo($filename, array('s' => $s, 'page' => 'error', 'errno' => 9));
 		}
 
 		// to the next step
@@ -166,8 +166,8 @@ elseif ($page == 'extract') {
 		$zip = new ZipArchive;
 		$res = $zip->open($localArchive);
 		if ($res === true) {
-		    $log->logAction(ADM_ACTION, LOG_NOTICE, "Extracting ".$localArchive." to ".dirname(FROXLOR_INSTALL_DIR));
-			$zip->extractTo(dirname(FROXLOR_INSTALL_DIR));
+			$log->logAction(ADM_ACTION, LOG_NOTICE, "Extracting ".$localArchive." to ".FROXLOR_INSTALL_DIR);
+			$zip->extractTo(FROXLOR_INSTALL_DIR);
 			$zip->close();
 			// success - remove unused archive
 			@unlink($localArchive);
