@@ -600,17 +600,16 @@ class nginx extends HttpConfigBase {
     			    }
     			}
 
-				if (isset($domain_or_ip['hsts']) && $domain_or_ip['hsts'] > 0) {
-
-					$vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain_or_ip['hsts'];
-					if ($domain_or_ip['hsts_sub'] == 1) {
-						$vhost_content .= '; includeSubdomains';
-					}
-					if ($domain_or_ip['hsts_preload'] == 1) {
-						$vhost_content .= '; preload';
-					}
-					$vhost_content .= '";' . "\n";
-				}
+			if (isset($domain_or_ip['hsts']) && $domain_or_ip['hsts'] > 0) {
+    			    $vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain_or_ip['hsts'];
+    			    if ($domain_or_ip['hsts_sub'] == 1) {
+    				    $vhost_content .= '; includeSubdomains';
+    			    }
+    			    if ($domain_or_ip['hsts_preload'] == 1) {
+    				    $vhost_content .= '; preload';
+    			    }
+    			    $vhost_content .= '";' . "\n";
+			}
 		    }
 		}
 
