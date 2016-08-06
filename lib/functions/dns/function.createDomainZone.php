@@ -205,6 +205,7 @@ function createDomainZone($domain_id, $froxlorhostname = false, $isMainButSubTo 
 			if (Settings::Get('system.mxservers') != '') {
 				$mxservers = explode(',', Settings::Get('system.mxservers'));
 				foreach ($mxservers as $mxserver) {
+					$mxserver = trim($mxserver);
 					if (substr($mxserver, - 1, 1) != '.') {
 						$mxserver .= '.';
 					}
