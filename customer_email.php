@@ -205,7 +205,8 @@ if ($page == 'overview') {
 		if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				$email_part = $_POST['email_part'];
-				$domain = $idna_convert->encode(validate($_POST['domain'], 'domain'));
+				// domain does not need idna encoding as the value of the select-box is already Punycode
+				$domain = validate($_POST['domain'], 'domain');
 				$stmt = Database::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `domain`= :domain
 					AND `customerid`= :customerid
