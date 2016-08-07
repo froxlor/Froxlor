@@ -61,32 +61,38 @@ class pdns extends DnsBase
 			$subzones[] = $this->walkDomainList($domains[$child_domain_id], $domains);
 		}
 
+		if ($domain['zonefile'] == '') {
 		// check for system-hostname
-		$isFroxlorHostname = false;
-		if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
-			$isFroxlorHostname = true;
-		}
-
-		if ($domain['ismainbutsubto'] == 0) {
-			$zoneContent = createDomainZone(($domain['id'] == 'none') ?
-				$domain :
-				$domain['id'],
-				$isFroxlorHostname);
-			if (count($subzones)) {
-				foreach ($subzones as $subzone) {
-					$zoneContent->records[] = $subzone;
-				}
+			$isFroxlorHostname = false;
+			if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
+				$isFroxlorHostname = true;
 			}
-			$pdnsDomId = $this->_insertZone($zoneContent->origin, $zoneContent->serial);
-			$this->_insertRecords($pdnsDomId, $zoneContent->records, $zoneContent->origin);
-			$this->_insertAllowedTransfers($pdnsDomId);
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
+
+			if ($domain['ismainbutsubto'] == 0) {
+				$zoneContent = createDomainZone(($domain['id'] == 'none') ?
+					$domain :
+					$domain['id'],
+					$isFroxlorHostname);
+				if (count($subzones)) {
+					foreach ($subzones as $subzone) {
+						$zoneContent->records[] = $subzone;
+					}
+				}
+				$pdnsDomId = $this->_insertZone($zoneContent->origin, $zoneContent->serial);
+				$this->_insertRecords($pdnsDomId, $zoneContent->records, $zoneContent->origin);
+				$this->_insertAllowedTransfers($pdnsDomId);
+				$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
+			} else {
+				return createDomainZone(($domain['id'] == 'none') ?
+					$domain :
+					$domain['id'],
+					$isFroxlorHostname,
+					true);
+			}
 		} else {
-			return createDomainZone(($domain['id'] == 'none') ?
-				$domain :
-				$domain['id'],
-				$isFroxlorHostname,
-				true);
+			$this->_logger->logAction(CRON_ACTION, LOG_ERROR,
+				'Custom zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' .
+				$domain['domain'] . ')');
 		}
 	}
 
