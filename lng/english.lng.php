@@ -22,17 +22,17 @@
  */
 
 $lng['translator'] = '';
-$lng['panel']['edit'] = 'edit';
-$lng['panel']['delete'] = 'delete';
-$lng['panel']['create'] = 'create';
-$lng['panel']['save'] = 'save';
-$lng['panel']['yes'] = 'yes';
-$lng['panel']['no'] = 'no';
+$lng['panel']['edit'] = 'Edit';
+$lng['panel']['delete'] = 'Delete';
+$lng['panel']['create'] = 'Create';
+$lng['panel']['save'] = 'Save';
+$lng['panel']['yes'] = 'Yes';
+$lng['panel']['no'] = 'No';
 $lng['panel']['emptyfornochanges'] = 'empty for no changes';
 $lng['panel']['emptyfordefault'] = 'empty for defaults';
 $lng['panel']['path'] = 'Path';
 $lng['panel']['toggle'] = 'Toggle';
-$lng['panel']['next'] = 'next';
+$lng['panel']['next'] = 'Next';
 $lng['panel']['dirsmissing'] = 'Can not find or read the directory!';
 
 /**
@@ -344,10 +344,10 @@ $lng['serversettings']['apachereload_command']['title'] = 'Webserver reload comm
 $lng['serversettings']['apachereload_command']['description'] = 'What\'s the webserver command to reload configfiles?';
 $lng['serversettings']['bindenable']['title'] = 'Enable Nameserver';
 $lng['serversettings']['bindenable']['description'] = 'Here the Nameserver can be enabled and disabled globaly.';
-$lng['serversettings']['bindconf_directory']['title'] = 'Bind config directory';
-$lng['serversettings']['bindconf_directory']['description'] = 'Where should bind configfiles be saved?';
-$lng['serversettings']['bindreload_command']['title'] = 'Bind reload command';
-$lng['serversettings']['bindreload_command']['description'] = 'What\'s the bind command to reload bind configfiles?';
+$lng['serversettings']['bindconf_directory']['title'] = 'Dns server config directory';
+$lng['serversettings']['bindconf_directory']['description'] = 'Where should dns-server configfiles be saved?';
+$lng['serversettings']['bindreload_command']['title'] = 'DNS server reload command';
+$lng['serversettings']['bindreload_command']['description'] = 'What\'s the command to reload the dns server daemon?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mails-UID';
 $lng['serversettings']['vmail_uid']['description'] = 'Which UserID should mails have?';
 $lng['serversettings']['vmail_gid']['title'] = 'Mails-GID';
@@ -437,7 +437,7 @@ $lng['serversettings']['defaultip']['title'] = 'Default IP/Port';
 $lng['serversettings']['defaultip']['description'] = 'Select all IP-addresses you want to use as default for new domains';
 $lng['domains']['statstics'] = 'Usage Statistics';
 $lng['panel']['ascending'] = 'ascending';
-$lng['panel']['decending'] = 'decending';
+$lng['panel']['descending'] = 'descending';
 $lng['panel']['search'] = 'Search';
 $lng['panel']['used'] = 'used';
 
@@ -477,7 +477,7 @@ $lng['serversettings']['deactivateddocroot']['description'] = 'When a user is de
 
 // ADDED IN 1.2.16-svn4
 
-$lng['panel']['reset'] = 'discard changes';
+$lng['panel']['reset'] = 'Discard changes';
 $lng['admin']['accountsettings'] = 'Account settings';
 $lng['admin']['panelsettings'] = 'Panel settings';
 $lng['admin']['systemsettings'] = 'System settings';
@@ -779,8 +779,11 @@ $lng['message']['noreceipients'] = 'No e-mail has been sent because there are no
 $lng['admin']['sslsettings'] = 'SSL settings';
 $lng['cronjobs']['notyetrun'] = 'Not yet run';
 $lng['serversettings']['default_vhostconf']['title'] = 'Default vHost-settings';
-$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into this ip/port vHost container directly. Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
-$lng['serversettings']['default_vhostconf_domain']['description'] = 'The content of this field will be included into the domain vHost container directly. Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
+$lng['admin']['specialsettings_replacements'] = "You can use the following variables:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code><br/>";
+$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into this ip/port vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
+$lng['serversettings']['apache_globaldiropt']['title'] = 'Directory options for customer-prefix';
+$lng['serversettings']['apache_globaldiropt']['description'] = 'The content of this field will be included into the 05_froxlor_dirfix_nofcgid.conf apache config. If empty, the default value is used:<br><br>apache >=2.4<br><code>Require all granted<br>AllowOverride All</code><br><br>apache <=2.2<br><code>Order allow,deny<br>allow from all</code>';
+$lng['serversettings']['default_vhostconf_domain']['description'] = 'The content of this field will be included into the domain vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['error']['invalidip'] = 'Invalid IP address: %s';
 $lng['serversettings']['decimal_places'] = 'Number of decimal places in traffic/webspace output';
 
@@ -1273,7 +1276,7 @@ $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'] = 'Mostly CA_B
 $lng['admin']['ipsandports']['docroot']['title'] = 'Custom docroot (empty = point to Froxlor)';
 $lng['admin']['ipsandports']['docroot']['description'] = 'You can define a custom document-root (the destination for a request) for this ip/port combination here.<br /><strong>ATTENTION:</strong> Please be careful with what you enter here!';
 $lng['serversettings']['login_domain_login'] = 'Allow login with domains';
-$lng['panel']['unlock'] = 'unlock';
+$lng['panel']['unlock'] = 'Unlock';
 $lng['question']['customer_reallyunlock'] = 'Do you really want to unlock customer %s?';
 
 // ADDED IN FROXLOR 0.9.15
@@ -1314,8 +1317,10 @@ $lng['phpfpm']['ownvhost']['description'] = 'If enabled, Froxlor will also be ru
 // ADDED IN FROXLOR 0.9.17
 $lng['crondesc']['cron_usage_report'] = 'Web- and traffic-reports';
 $lng['serversettings']['report']['report'] = 'Enable sending of reports about web- and traffic-usage';
-$lng['serversettings']['report']['webmax'] = 'Warning-level in percent for webspace';
-$lng['serversettings']['report']['trafficmax'] = 'Warning-level in percent for traffic';
+$lng['serversettings']['report']['webmax']['title'] = 'Warning-level in percent for webspace';
+$lng['serversettings']['report']['webmax']['description'] = 'Valid values are 0 up to 150. Setting this value to 0 disables this report.';
+$lng['serversettings']['report']['trafficmax']['title'] = 'Warning-level in percent for traffic';
+$lng['serversettings']['report']['trafficmax']['description'] = 'Valid values are 0 up to 150. Setting this value to 0 disables this report.';
 $lng['mails']['trafficmaxpercent']['mailbody'] = 'Dear {NAME},\n\nyou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\nThis is more than {MAX_PERCENT}%.\n\nYours sincerely, your administrator';
 $lng['mails']['trafficmaxpercent']['subject'] = 'Reaching your traffic limit';
 $lng['admin']['templates']['trafficmaxpercent'] = 'Notification mail for customers when given maximum of percent of traffic is exhausted';
@@ -1733,8 +1738,8 @@ $lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'This is a lis
 
 // Added in Froxlor 0.9.31
 $lng['panel']['dashboard'] = 'Dashboard';
-$lng['panel']['assigned'] = 'assigned';
-$lng['panel']['available'] = 'available';
+$lng['panel']['assigned'] = 'Assigned';
+$lng['panel']['available'] = 'Available';
 $lng['customer']['services'] = 'Services';
 $lng['serversettings']['phpfpm_settings']['ipcdir']['title'] = 'FastCGI IPC directory';
 $lng['serversettings']['phpfpm_settings']['ipcdir']['description'] = 'The directory where the php-fpm sockets will be stored by the webserver.<br />This directory has to be readable for the webserver';
@@ -1852,9 +1857,6 @@ $lng['integrity_check']['SubdomainSslRedirect'] = 'False SSL-redirect flag for n
 $lng['integrity_check']['FroxlorLocalGroupMemberForFcgidPhpFpm'] = 'froxlor-user in the customer groups (for FCGID/php-fpm)';
 $lng['integrity_check']['WebserverGroupMemberForFcgidPhpFpm'] = 'Webserver-user in the customer groups (for FCGID/php-fpm)';
 $lng['integrity_check']['SubdomainLetsencrypt'] = 'Main domains with no SSL-Port assigned don\'t have any subdomains with active SSL redirect';
-$lng['admin']['specialsettings_replacements'] = "You can use the following variables:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code><br/>";
-$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into this ip/port vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
-$lng['serversettings']['default_vhostconf_domain']['description'] = 'The content of this field will be included into the domain vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (default: 022)';
 
 // Added for apcuinfo
@@ -1981,6 +1983,7 @@ $lng['extras']['backup_mail'] = 'Backup mail-data';
 $lng['extras']['backup_dbs'] = 'Backup databases';
 $lng['error']['customerhasongoingbackupjob'] = 'There is already a backup job waiting to be processed, please be patient.';
 $lng['success']['backupscheduled'] = 'Your backup job has been scheduled. Please wait for it to be processed';
+$lng['success']['backupaborted'] = 'Your scheduled backup has been cancelled';
 $lng['crondesc']['cron_backup'] = 'Process backup jobs';
 $lng['error']['backupfunctionnotenabled'] = 'The backup function is not enabled';
 $lng['serversettings']['backupenabled']['title'] = "Enable backup for customers";
@@ -1989,8 +1992,39 @@ $lng['extras']['path_protection_label'] = '<strong class="red">Important</strong
 $lng['extras']['path_protection_info'] = '<strong class="red">We strongly recommend protecting the given path, see "Extras" -> "Directory protection"</strong>';
 $lng['tasks']['backup_customerfiles'] = 'Backup job for customer %loginname%';
 
-$lng['error']['domain_nopunycode'] = 'You must not specify punycode (IDNA). The domain will automatically be converted';
+$lng['error']['dns_domain_nodns'] = 'DNS is not enabled for this domain';
+$lng['error']['dns_content_empty'] = 'No content given';
+$lng['error']['dns_arec_noipv4'] = 'No valid IP address for A-record given';
+$lng['error']['dns_aaaarec_noipv6'] = 'No valid IP address for AAAA-record given';
+$lng['error']['dns_mx_prioempty'] = 'Invalid MX priority given';
+$lng['error']['dns_mx_needdom'] = 'The MX content value must be a valid domain-name';
+$lng['error']['dns_mx_noalias'] = 'The MX-content value cannot be an CNAME entry.';
+$lng['error']['dns_cname_invaliddom'] = 'Invalid domain-name for CNAME record';
+$lng['error']['dns_cname_nomorerr'] = 'There already exists a resource-record with the same record-name. It cannot be used as CNAME.';
+$lng['error']['dns_ns_invaliddom'] = 'Invalid domain-name for NS record';
+$lng['error']['dns_srv_prioempty'] = 'Invalid SRV priority given';
+$lng['error']['dns_srv_invalidcontent'] = 'Invalid SRV content, must contain of fields weight, port and target, e.g.: 5 5060 sipserver.example.com.';
+$lng['error']['dns_srv_needdom'] = 'The SRV target value must be a valid domain-name';
+$lng['error']['dns_srv_noalias'] = 'The SRV-target value cannot be an CNAME entry.';
+$lng['error']['dns_duplicate_entry'] = 'Record already exists';
+$lng['success']['dns_record_added'] = 'Record added successfully';
+$lng['success']['dns_record_deleted'] = 'Record deleted successfully';
+$lng['dnseditor']['edit'] = 'edit DNS';
+$lng['dnseditor']['records'] = 'records';
+$lng['error']['dns_notfoundorallowed'] = 'Domain not found or no permission';
+$lng['serversettings']['dnseditorenable']['title'] = 'Enable DNS editor';
+$lng['serversettings']['dnseditorenable']['description'] = 'Allows admins and customer to manage domain dns entries';
+$lng['dns']['howitworks'] = 'Here you can manage DNS entries for your domain. Note that froxlor will automatically generate NS/MX/A/AAAA records for you. The custom entries are prefered, only missing entries will be automatically generated.';
+$lng['serversettings']['dns_server']['title'] = 'DNS server daemon';
+$lng['serversettings']['dns_server']['description'] = 'Remember that daemons have to be configured using froxlors configuration templates';
 
+$lng['error']['domain_nopunycode'] = 'You must not specify punycode (IDNA). The domain will automatically be converted';
+$lng['admin']['dnsenabled'] = 'Enable DNS editor';
+$lng['error']['dns_record_toolong'] = 'Records/labels can only be up to 63 characters';
+
+// Added in froxlor 0.9.7-rc1
+$lng['serversettings']['panel_customer_hide_options']['title'] = 'Hide menu items and traffic charts in customer panel';
+$lng['serversettings']['panel_customer_hide_options']['description'] = 'Select items to hide in customer panel. To select multiple options, hold down CTRL while selecting.';
 
 // Added for Plugin Support
 $lng['plugins']['plugins'] = 'Plugins';

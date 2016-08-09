@@ -257,7 +257,15 @@ return array(
 						'values' => array(
 										array ('label' => $lng['panel']['yes'], 'value' => '1')
 									)
-					)
+					),
+					'dnsenabled' => array(
+						'label' => $lng['admin']['dnsenabled'].'?',
+						'type' => 'checkbox',
+						'values' => array(
+										array ('label' => $lng['panel']['yes'], 'value' => '1')
+									),
+						'visible' => (Settings::Get('system.dnsenabled') == '1' ? true : false)
+					),
 				)
 			)
 		)

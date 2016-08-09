@@ -1,14 +1,15 @@
 <if $row['termination_date'] != ''>
-    <tr class="{$row['termination_css']}">
+	<tr class="{$row['termination_css']}">
 </if>
 <if $row['termination_date'] == ''>
-    <tr>
+	<tr>
 </if>
-	<td><a href="http://{$row['domain']}" target="_blank">{$row['domain']}</a>
-            <if $row['termination_date'] != ''>
-                    <br><small><div class="red">({$lng['domains']['termination_date_overview']} {$row['termination_date']})</div></small>
-            </if>
-        </td>
+	<td>
+		<a href="http://{$row['domain']}" target="_blank">{$row['domain']}</a>
+		<if $row['termination_date'] != ''>
+			<br><small><div class="red">({$lng['domains']['termination_date_overview']} {$row['termination_date']})</div></small>
+		</if>
+	</td>
 	<td>
 		<if $row['aliasdomain'] == ''>{$row['documentroot']}</if>
 		<if isset($row['aliasdomainid']) && $row['aliasdomainid'] != 0>{$lng['domains']['aliasdomain']} {$row['aliasdomain']}</if>
@@ -22,6 +23,11 @@
 		<if $row['parentdomainid'] != '0' && !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
 			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'delete', 'id' => $row['id']))}">
 				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
+			</a>&nbsp;
+		</if>
+		<if $row['isbinddomain'] == '1' && $userinfo['dnsenabled'] == '1' && $row['caneditdomain'] == '1' && Settings::Get('system.bind_enable') == '1' && Settings::Get('system.dnsenabled') == '1'>
+			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $row['id']))}">
+				<img src="templates/{$theme}/assets/img/icons/dns_edit.png" alt="{$lng['dnseditor']['edit']}" title="{$lng['dnseditor']['edit']}" />
 			</a>&nbsp;
 		</if>
 		<if $show_ssledit == 1>

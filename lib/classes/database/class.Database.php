@@ -323,15 +323,18 @@ class Database {
 		    $sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'socket' => (isset($sql['socket']) ? $sql['socket'] : null), 'user' => $sql['root_user'], 'password' => $sql['root_password']));
 		}
 
+		$substitutions = array(
+			$sql['password'] => 'DB_UNPRIV_PWD',
+			$sql_root[0]['password'] => 'DB_ROOT_PWD',
+		);
+
 		// hide username/password in messages
 		$error_message = $error->getMessage();
 		$error_trace = $error->getTraceAsString();
 		// error-message
-		$error_message = str_replace($sql['password'], 'DB_UNPRIV_PWD', $error_message);
-		$error_message = str_replace($sql_root[0]['password'], 'DB_ROOT_PWD', $error_message);
+		$error_message = self::_substitute($error_message, $substitutions);
 		// error-trace
-		$error_trace = str_replace($sql['password'], 'DB_UNPRIV_PWD', $error_trace);
-		$error_trace = str_replace($sql_root[0]['password'], 'DB_ROOT_PWD', $error_trace);
+		$error_trace = self::_substitute($error_trace, $substitutions);
 
 		if ($error->getCode() == 2003) {
 		    $error_message = "Unable to connect to database. Either the mysql-server is not running or your user/password is wrong.";
@@ -365,6 +368,9 @@ class Database {
 		@fclose($errlog);
 
 		if ($showerror) {
+			if (empty($sql['debug'])) {
+				$error_trace = '';
+			}
 
 			// fallback
 			$theme = 'Sparkle';
@@ -401,5 +407,59 @@ class Database {
 			}
 			die("We are sorry, but a MySQL - error occurred. The administrator may find more information in the syslog");
 		}
+	}
+
+	/**
+	 * Substitutes patterns in content.
+	 *
+	 * @param string $content
+	 * @param array $substitutions
+	 * @param int $minLength
+	 * @return string
+	 */
+	private static function _substitute($content, array $substitutions, $minLength = 6) {
+		$replacements = array();
+
+		foreach ($substitutions as $search => $replace) {
+			$replacements = $replacements + self::_createShiftedSubstitutions($search, $replace, $minLength);
+		}
+
+		$content = str_replace(
+			array_keys($replacements),
+			array_values($replacements),
+			$content
+		);
+
+		return $content;
+	}
+
+	/**
+	 * Creates substitutions, shifted by length, e.g.
+	 *
+	 * _createShiftedSubstitutions('abcdefgh', 'value', 4):
+	 *   array(
+	 *     'abcdefgh' => 'value',
+	 *     'abcdefg' => 'value',
+	 *     'abcdef' => 'value',
+	 *     'abcde' => 'value',
+	 *     'abcd' => 'value',
+	 *   )
+	 *
+	 * @param string $search
+	 * @param string $replace
+	 * @param int $minLength
+	 * @return array
+	 */
+	private static function _createShiftedSubstitutions($search, $replace, $minLength) {
+		$substitutions = array();
+		$length = strlen($search);
+
+		if ($length > $minLength) {
+			for ($shiftedLength = $length; $shiftedLength >= $minLength; $shiftedLength--) {
+				$substitutions[substr($search, 0, $shiftedLength)] = $replace;
+			}
+		}
+
+		return $substitutions;
 	}
 }

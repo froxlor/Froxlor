@@ -20,6 +20,11 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+// redirect if this customer page is hidden via settings
+if (Settings::IsInList('panel.customer_hide_options','domains')) {
+	redirectTo('customer_index.php');
+}
+
 if (isset($_POST['id'])) {
 
 	$id = intval($_POST['id']);
@@ -327,7 +332,7 @@ if ($page == 'overview') {
 
 				$subject = $subticket->Get('subject');
 				$message = $subticket->Get('message');
-				
+
 				$row2 = htmlentities_array($row2);
 				eval("\$ticket_replies.=\"" . getTemplate("tickets/tickets_tickets_list") . "\";");
 			}

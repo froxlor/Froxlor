@@ -394,7 +394,7 @@ $lng['serversettings']['defaultip']['title'] = 'Standaard IP/Poort';
 $lng['serversettings']['defaultip']['description'] = 'Wat is de standaard IP/Poort combinatie?';
 $lng['domains']['statstics'] = 'Gebruiks Statistieken';
 $lng['panel']['ascending'] = 'oplopend';
-$lng['panel']['decending'] = 'aflopend';
+$lng['panel']['descending'] = 'aflopend';
 $lng['panel']['search'] = 'Zoeken';
 $lng['panel']['used'] = 'gebruikt';
 

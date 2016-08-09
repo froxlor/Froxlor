@@ -19,6 +19,11 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+// redirect if this customer page is hidden via settings
+if (Settings::IsInList('panel.customer_hide_options','extras')) {
+	redirectTo('customer_index.php');
+}
+
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
 } elseif (isset($_GET['id'])) {
@@ -29,6 +34,12 @@ if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras");
 	eval("echo \"" . getTemplate("extras/extras") . "\";");
 } elseif ($page == 'htpasswds') {
+
+	// redirect if this customer sub-page is hidden via settings
+	if (Settings::IsInList('panel.customer_hide_options','extras.directoryprotection')) {
+		redirectTo('customer_index.php');
+	}
+
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::htpasswds");
 		$fields = array(
@@ -262,6 +273,12 @@ if ($page == 'overview') {
 		}
 	}
 } elseif ($page == 'htaccess') {
+
+	// redirect if this customer sub-page is hidden via settings
+	if (Settings::IsInList('panel.customer_hide_options','extras.pathoptions')) {
+		redirectTo('customer_index.php');
+	}
+
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::htaccess");
 		$fields = array(
@@ -520,19 +537,36 @@ if ($page == 'overview') {
 	}
 } elseif ($page == 'backup') {
 
+	// redirect if this customer sub-page is hidden via settings
+	if (Settings::IsInList('panel.customer_hide_options','extras.backup')) {
+		redirectTo('customer_index.php');
+	}
+
 	if (Settings::Get('system.backupenabled') == 1)
 	{
+		if ($action == 'abort' && isset($_POST['send']) && $_POST['send'] == 'send') {
+			$log->logAction(USR_ACTION, LOG_NOTICE, "customer_extras::backup - aborted scheduled backupjob");
+			$entry = isset($_POST['backup_job_entry']) ? (int)$_POST['backup_job_entry'] : 0;
+			if ($entry > 0) {
+				$del_stmt = Database::prepare("DELETE FROM `".TABLE_PANEL_TASKS."` WHERE `id` = :tid");
+				Database::pexecute($del_stmt, array('tid' => $entry));
+				standard_success('backupaborted');
+			}
+			redirectTo($filename, array('page' => $page, 'action' => '', 's' => $s));
+		}
 		if ($action == '') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
 
 			// check whether there is a backup-job for this customer
 			$sel_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_TASKS."` WHERE `type` = '20'");
 			Database::pexecute($sel_stmt);
+			$existing_backupJob = null;
 			while ($entry = $sel_stmt->fetch())
 			{
 				$data = unserialize($entry['data']);
 				if ($data['customerid'] == $userinfo['customerid']) {
-					standard_error('customerhasongoingbackupjob');
+					$existing_backupJob = $entry;
+					break;
 				}
 			}
 
@@ -577,11 +611,24 @@ if ($page == 'overview') {
 				standard_success('backupscheduled');
 			} else {
 
+				if (!empty($existing_backupJob)) {
+					$action = "abort";
+					$row = unserialize($entry['data']);
+					$row['path'] = makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['destdir']));
+					$row['backup_web'] = ($row['backup_web'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
+					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
+					$row['backup_dbs'] = ($row['backup_dbs'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
+				}
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
 				$backup_form = htmlform::genHTMLForm($backup_data);
 				$title = $backup_data['backup']['title'];
 				$image = $backup_data['backup']['image'];
+
+				if (!empty($existing_backupJob)) {
+					// overwrite backup_form after we took everything from it we needed
+					eval("\$backup_form = \"" . getTemplate("extras/backup_listexisting") . "\";");
+				}
 				eval("echo \"" . getTemplate("extras/backup") . "\";");
 			}
 		}

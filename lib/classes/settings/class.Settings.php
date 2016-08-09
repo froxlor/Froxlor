@@ -125,6 +125,23 @@ class Settings {
 	}
 
 	/**
+	 * tests if a setting-value that i s a comma separated list contains an entry
+	 *
+	 * @param string $setting a group and a varname separated by a dot (group.varname)
+	 * @param string $entry the entry that is expected to be in the list
+	 *
+	 * @return boolean true, if the list contains $entry
+	 */
+	public function pIsInList($setting = null, $entry = null) {
+		$s=Settings::Get($setting);
+		if ($s==null) {
+			return false;
+		}
+		$slist = explode(",",$s);
+		return in_array($entry, $slist);
+	}
+
+	/**
 	 * update a setting / set a new value
 	 *
 	 * @param string $setting a group and a varname separated by a dot (group.varname)

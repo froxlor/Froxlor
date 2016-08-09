@@ -412,7 +412,7 @@ $lng['serversettings']['defaultip']['title'] = 'Förvald IP/Port';
 $lng['serversettings']['defaultip']['description'] = 'Vilken är den förvalda IP/Port kombinationen?';
 $lng['domains']['statstics'] = 'Användarstatistik';
 $lng['panel']['ascending'] = 'Stigande';
-$lng['panel']['decending'] = 'Fallande';
+$lng['panel']['descending'] = 'Fallande';
 $lng['panel']['search'] = 'Sök';
 $lng['panel']['used'] = 'använd';
 

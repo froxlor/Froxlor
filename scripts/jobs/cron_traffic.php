@@ -139,7 +139,7 @@ while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 		// sum up result
 		$mysqlusage_all[$row_database['customerid']] += floatval($mysql_usage_row['customerusage']);
 	} else {
-		echo "Seems like the database " . $row_database['databasename'] . " had been removed manually.\n";
+		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Seems like the database " . $row_database['databasename'] . " had been removed manually.");
 	}
 }
 

@@ -600,17 +600,16 @@ class nginx extends HttpConfigBase {
     			    }
     			}
 
-				if (isset($domain_or_ip['hsts']) && $domain_or_ip['hsts'] > 0) {
-
-					$vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain_or_ip['hsts'];
-					if ($domain_or_ip['hsts_sub'] == 1) {
-						$vhost_content .= '; includeSubdomains';
-					}
-					if ($domain_or_ip['hsts_preload'] == 1) {
-						$vhost_content .= '; preload';
-					}
-					$vhost_content .= '";' . "\n";
-				}
+			if (isset($domain_or_ip['hsts']) && $domain_or_ip['hsts'] > 0) {
+    			    $vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain_or_ip['hsts'];
+    			    if ($domain_or_ip['hsts_sub'] == 1) {
+    				    $vhost_content .= '; includeSubdomains';
+    			    }
+    			    if ($domain_or_ip['hsts_preload'] == 1) {
+    				    $vhost_content .= '; preload';
+    			    }
+    			    $vhost_content .= '";' . "\n";
+			}
 		    }
 		}
 
@@ -671,7 +670,7 @@ class nginx extends HttpConfigBase {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
 				}
-				//     $path_options.= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
+
 				// check if we have a htpasswd for this path
 				// (damn nginx does not like more than one
 				// 'location'-part with the same path)
@@ -859,9 +858,17 @@ class nginx extends HttpConfigBase {
 			$this->_deactivated = false;
 		}
 
-		$webroot_text .= "\t" . 'index    index.php index.html index.htm;'."\n";
 		$webroot_text .= "\n\t".'location / {'."\n";
-		$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
+
+		if ($domain['phpenabled'] == '1')
+		{
+			$webroot_text .= "\t" . 'index    index.php index.html index.htm;'."\n";
+			$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;'."\n";
+		}
+		else
+		{
+			$webroot_text .= "\t" . 'index    index.html index.htm;'."\n";
+		}
 
 		if ($this->vhost_root_autoindex) {
 			$webroot_text .= "\t\t".'autoindex on;'."\n";
@@ -869,9 +876,12 @@ class nginx extends HttpConfigBase {
 		}
 
 		$webroot_text .= "\t".'}'."\n\n";
-		$webroot_text .= "\tlocation @rewrites {\n";
-		$webroot_text .= "\t\trewrite ^ /index.php last;\n";
-		$webroot_text .= "\t}\n\n";
+		if ($domain['phpenabled'] == '1')
+		{
+			$webroot_text .= "\tlocation @rewrites {\n";
+			$webroot_text .= "\t\trewrite ^ /index.php last;\n";
+			$webroot_text .= "\t}\n\n";
+		}
 
 		return $webroot_text;
 	}
