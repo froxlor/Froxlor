@@ -29,10 +29,10 @@ class pdns extends DnsBase
 		// connect to db
 		$this->_connectToPdnsDb();
 
-		// clean up
-		$this->_clearZoneTables();
-
 		$domains = $this->getDomainList();
+
+		// clean up
+		$this->_clearZoneTables($domains);
 
 		if (empty($domains)) {
 			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
@@ -96,13 +96,25 @@ class pdns extends DnsBase
 		}
 	}
 
-	private function _clearZoneTables()
+	private function _clearZoneTables($domains = null)
 	{
 		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
 
-		$this->pdns_db->query("TRUNCATE TABLE `records`");
-		$this->pdns_db->query("TRUNCATE TABLE `domains`");
-		$this->pdns_db->query("TRUNCATE TABLE `domainmetadata`");
+		$pdns_domains_stmt = $this->pdns_db->prepare("SELECT `id`, `name` FROM `domains` WHERE `name` = :domain");
+
+		$del_rec_stmt = $this->pdns_db->prepare("DELETE FROM `records` WHERE `domain_id` = :did");
+		$del_meta_stmt = $this->pdns_db->prepare("DELETE FROM `domainmetadata` WHERE `domain_id` = :did");
+		$del_dom_stmt = $this->pdns_db->prepare("DELETE FROM `domains` WHERE `id` = :did");
+
+		foreach ($domains as $domain)
+		{
+			$pdns_domains_stmt->execute(array('domain' => $domain['domain']));
+			$pdns_domain = $pdns_domains_stmt->fetch(\PDO::FETCH_ASSOC);
+
+			$del_rec_stmt->execute(array('did' => $pdns_domain['id']));
+			$del_meta_stmt->execute(array('did' => $pdns_domain['id']));
+			$del_dom_stmt->execute(array('did' => $pdns_domain['id']));
+		}
 	}
 
 	private function _insertZone($domainname, $serial = 0)
