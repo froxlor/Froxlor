@@ -104,23 +104,28 @@ class pdns extends DnsBase
 
 		$del_rec_stmt = $this->pdns_db->prepare("DELETE FROM `records` WHERE `domain_id` = :did");
 		$del_meta_stmt = $this->pdns_db->prepare("DELETE FROM `domainmetadata` WHERE `domain_id` = :did");
-		$del_dom_stmt = $this->pdns_db->prepare("DELETE FROM `domains` WHERE `id` = :did");
+		$del_dom_stmt = $this->pdns_db->prepare("DELETE FROM `domains` WHERE `id` = :did"); 
 
 		foreach ($domains as $domain)
 		{
 			$pdns_domains_stmt->execute(array('domain' => $domain['domain']));
 			$pdns_domain = $pdns_domains_stmt->fetch(\PDO::FETCH_ASSOC);
-
-			$del_rec_stmt->execute(array('did' => $pdns_domain['id']));
-			$del_meta_stmt->execute(array('did' => $pdns_domain['id']));
-			$del_dom_stmt->execute(array('did' => $pdns_domain['id']));
+			// Only delete domains which have froxlor or nothing set as account
+			// so we don't delete domains not managed by us
+			if ($pdns_domain['account'] == 'froxlor' || $pdns_domain['account'] == '') {
+				$del_rec_stmt->execute(array('did' => $pdns_domain['id']));
+				$del_meta_stmt->execute(array('did' => $pdns_domain['id']));
+				$del_dom_stmt->execute(array('did' => $pdns_domain['id']));
+			} else {
+				$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Ignored domain '.$domain['domain'].' because we do not manage it');
+			}
 		}
 	}
 
 	private function _insertZone($domainname, $serial = 0)
 	{
 		$ins_stmt = $this->pdns_db->prepare("
-			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = 'NATIVE'
+			INSERT INTO domains set `name` = :domainname, `type` = 'MASTER', `account` = 'froxlor'
 		");
 		$ins_stmt->execute(array('domainname' => $domainname, 'serial' => $serial));
 		$lastid = $this->pdns_db->lastInsertId();
