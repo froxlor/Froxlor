@@ -1,6 +1,6 @@
 <?php
 if (! defined('MASTER_CRONJOB'))
-	die('You cannot access this file directly!');
+        die('You cannot access this file directly!');
 
 /**
  * This file is part of the Froxlor project.
@@ -19,255 +19,276 @@ if (! defined('MASTER_CRONJOB'))
 class pdns extends DnsBase
 {
 
-	private $pdns_db = null;
+        private $pdns_db = null;
 
-	public function writeConfigs()
-	{
-		// tell the world what we are doing
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Refreshing DNS database');
+        public function writeConfigs()
+        {
+                // tell the world what we are doing
+                $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Refreshing DNS database');
 
-		// connect to db
-		$this->_connectToPdnsDb();
+                // connect to db
+                $this->_connectToPdnsDb();
 
-		$domains = $this->getDomainList();
+                $domains = $this->getDomainList();
 
-		// clean up
-		$this->_clearZoneTables($domains);
+                if (empty($domains)) {
+                        $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+                        return;
+                }
 
-		if (empty($domains)) {
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
-			return;
-		}
+                foreach ($domains as $domain) {
+                        if ($domain['ismainbutsubto'] > 0) {
+                                // domains with ismainbutsubto>0 are handled by recursion within walkDomainList()
+                                continue;
+                        }
+                        $this->walkDomainList($domain, $domains);
+                }
 
-		foreach ($domains as $domain) {
-			if ($domain['ismainbutsubto'] > 0) {
-				// domains with ismainbutsubto>0 are handled by recursion within walkDomainList()
-				continue;
-			}
-			$this->walkDomainList($domain, $domains);
-		}
+                $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
+                $this->reloadDaemon();
+                $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
+        }
 
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
-		$this->reloadDaemon();
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
-	}
+        private function walkDomainList($domain, $domains)
+        {
+                $zoneContent = '';
+                $subzones = array();
 
-	private function walkDomainList($domain, $domains)
-	{
-		$zoneContent = '';
-		$subzones = array();
+                foreach ($domain['children'] as $child_domain_id) {
+                        $subzones[] = $this->walkDomainList($domains[$child_domain_id], $domains);
+                }
 
-		foreach ($domain['children'] as $child_domain_id) {
-			$subzones[] = $this->walkDomainList($domains[$child_domain_id], $domains);
-		}
+                if ($domain['zonefile'] == '') {
+                        // check for system-hostname
+                        $isFroxlorHostname = false;
+                        if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
+                                $isFroxlorHostname = true;
+                        }
 
-		if ($domain['zonefile'] == '') {
-		// check for system-hostname
-			$isFroxlorHostname = false;
-			if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
-				$isFroxlorHostname = true;
-			}
+                        if ($domain['ismainbutsubto'] == 0) {
+                                $zoneContent = createDomainZone(($domain['id'] == 'none') ?
+                                        $domain :
+                                        $domain['id'],
+                                        $isFroxlorHostname);
+                                if (count($subzones)) {
+                                        foreach ($subzones as $subzone) {
+                                                $zoneContent->records[] = $subzone;
+                                        }
+                                }
+                                try {
+                                        $this->_clearZoneTables($domain['domain']);
+                                        $pdnsDomId = $this->_insertZone($zoneContent->origin, $zoneContent->serial);
+                                        $this->_insertRecords($pdnsDomId, $zoneContent->records, $zoneContent->origin);
+                                        $this->_insertAllowedTransfers($pdnsDomId);
+                                        $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
+                                } catch (Exception $e) {
+                                        $this->_logger->logAction(CRON_ACTION, LOG_INFO, '['.$domain['domain'].']'.$e->getMessage());
+                                }
+                        } else {
+                                return createDomainZone(($domain['id'] == 'none') ?
+                                        $domain :
+                                        $domain['id'],
+                                        $isFroxlorHostname,
+                                        true);
+                        }
+                } else {
+                        $this->_logger->logAction(CRON_ACTION, LOG_ERROR,
+                                'Zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' .
+                                $domain['domain'] . ')');
+                        $this->_bindconf_file .= $this->_generateDomainConfig($domain);
+                }
+        }
 
-			if ($domain['ismainbutsubto'] == 0) {
-				$zoneContent = createDomainZone(($domain['id'] == 'none') ?
-					$domain :
-					$domain['id'],
-					$isFroxlorHostname);
-				if (count($subzones)) {
-					foreach ($subzones as $subzone) {
-						$zoneContent->records[] = $subzone;
-					}
-				}
-				$pdnsDomId = $this->_insertZone($zoneContent->origin, $zoneContent->serial);
-				$this->_insertRecords($pdnsDomId, $zoneContent->records, $zoneContent->origin);
-				$this->_insertAllowedTransfers($pdnsDomId);
-				$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
-			} else {
-				return createDomainZone(($domain['id'] == 'none') ?
-					$domain :
-					$domain['id'],
-					$isFroxlorHostname,
-					true);
-			}
-		} else {
-			$this->_logger->logAction(CRON_ACTION, LOG_ERROR,
-				'Custom zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' .
-				$domain['domain'] . ')');
-		}
-	}
+        private function _clearZoneTables($domain)
+        {
+                $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
 
-	private function _clearZoneTables($domains = null)
-	{
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
+                $pdns_domains_stmt = $this->pdns_db->prepare("SELECT `id`, `name`, `account` FROM `domains` WHERE `name` = :domain");
 
-		$pdns_domains_stmt = $this->pdns_db->prepare("SELECT `id`, `name` FROM `domains` WHERE `name` = :domain");
+                $del_rec_stmt = $this->pdns_db->prepare("DELETE FROM `records` WHERE `domain_id` = :did");
+                $del_meta_stmt = $this->pdns_db->prepare("DELETE FROM `domainmetadata` WHERE `domain_id` = :did");
+                $del_dom_stmt = $this->pdns_db->prepare("DELETE FROM `domains` WHERE `id` = :did");
 
-		$del_rec_stmt = $this->pdns_db->prepare("DELETE FROM `records` WHERE `domain_id` = :did");
-		$del_meta_stmt = $this->pdns_db->prepare("DELETE FROM `domainmetadata` WHERE `domain_id` = :did");
-		$del_dom_stmt = $this->pdns_db->prepare("DELETE FROM `domains` WHERE `id` = :did"); 
+                $pdns_domains_stmt->execute(array('domain' => $domain));
+                $pdns_domain = $pdns_domains_stmt->fetch(\PDO::FETCH_ASSOC);
+                 // Only delete domains which have froxlor or nothing set as account
+                 // so we don't delete domains not managed by us
+                if ($pdns_domain['account'] == 'froxlor' || $pdns_domain['account'] == '') {
+                        $del_rec_stmt->execute(array('did' => $pdns_domain['id']));
+                        $del_meta_stmt->execute(array('did' => $pdns_domain['id']));
+                        $del_dom_stmt->execute(array('did' => $pdns_domain['id']));
+                } else {
+                        throw new Exception("Domain $domain not managed by Froxlor");
+                }
+        }
 
-		foreach ($domains as $domain)
-		{
-			$pdns_domains_stmt->execute(array('domain' => $domain['domain']));
-			$pdns_domain = $pdns_domains_stmt->fetch(\PDO::FETCH_ASSOC);
-			// Only delete domains which have froxlor or nothing set as account
-			// so we don't delete domains not managed by us
-			if ($pdns_domain['account'] == 'froxlor' || $pdns_domain['account'] == '') {
-				$del_rec_stmt->execute(array('did' => $pdns_domain['id']));
-				$del_meta_stmt->execute(array('did' => $pdns_domain['id']));
-				$del_dom_stmt->execute(array('did' => $pdns_domain['id']));
-			} else {
-				$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Ignored domain '.$domain['domain'].' because we do not manage it');
-			}
-		}
-	}
+        private function _insertZone($domainname, $serial = 0)
+        {
+                $ins_stmt = $this->pdns_db->prepare("
+                        INSERT IGNORE INTO domains set `name` = :domainname, `type` = 'MASTER', `account` = 'froxlor'
+                ");
+                $ins_stmt->execute(array('domainname' => $domainname));
+                $lastid = $this->pdns_db->lastInsertId();
+                return $lastid;
+        }
 
-	private function _insertZone($domainname, $serial = 0)
-	{
-		$ins_stmt = $this->pdns_db->prepare("
-			INSERT INTO domains set `name` = :domainname, `type` = 'MASTER', `account` = 'froxlor'
-		");
-		$ins_stmt->execute(array('domainname' => $domainname, 'serial' => $serial));
-		$lastid = $this->pdns_db->lastInsertId();
-		return $lastid;
-	}
+        private function _insertRecords($domainid = 0, $records, $origin)
+        {
+                $changedate = date('Ymds', time());
 
-	private function _insertRecords($domainid = 0, $records, $origin)
-	{
-		$changedate = date('Ymds', time());
+                $ins_stmt = $this->pdns_db->prepare("
+                        INSERT INTO records set
+                        `domain_id` = :did,
+                        `name` = :rec,
+                        `type` = :type,
+                        `content` = :content,
+                        `ttl` = :ttl,
+                        `prio` = :prio,
+                        `disabled` = '0',
+                        `change_date` = :changedate
+                ");
 
-		$ins_stmt = $this->pdns_db->prepare("
-			INSERT INTO records set
-			`domain_id` = :did,
-			`name` = :rec,
-			`type` = :type,
-			`content` = :content,
-			`ttl` = :ttl,
-			`prio` = :prio,
-			`disabled` = '0',
-			`change_date` = :changedate
-		");
+                foreach ($records as $record)
+                {
+                        if ($record instanceof DnsZone) {
+                                $this->_insertRecords($domainid, $record->records, $record->origin);
+                                continue;
+                        }
 
-		foreach ($records as $record)
-		{
-			if ($record instanceof DnsZone) {
-				$this->_insertRecords($domainid, $record->records, $record->origin);
-				continue;
-			}
+                        if ($record->record == '@') {
+                                $_record = $origin;
+                        }
+                        else
+                        {
+                                $_record = $record->record.".".$origin;
+                        }
 
-			if ($record->record == '@') {
-				$_record = $origin;
-			}
-			else
-			{
-				$_record = $record->record.".".$origin;
-			}
+                        $ins_data = array(
+                                'did' => $domainid,
+                                'rec' => $_record,
+                                'type' => $record->type,
+                                'content' => $record->content,
+                                'ttl' => $record->ttl,
+                                'prio' => $record->priority,
+                                'changedate' => $changedate
+                        );
+                        if ($record->type == "SOA") {
+                                $ins_data['content'] = $this->_fixSOARecord($ins_data['content']);
+                        }
 
-			$ins_data = array(
-				'did' => $domainid,
-				'rec' => $_record,
-				'type' => $record->type,
-				'content' => $record->content,
-				'ttl' => $record->ttl,
-				'prio' => $record->priority,
-				'changedate' => $changedate
-			);
-			$ins_stmt->execute($ins_data);
-		}
-	}
+                        $ins_stmt->execute($ins_data);
+                }
+        }
 
-	private function _insertAllowedTransfers($domainid)
-	{
-		$ins_stmt = $this->pdns_db->prepare("
-			INSERT INTO domainmetadata set `domain_id` = :did, `kind` = 'ALLOW-AXFR-FROM', `content` = :value
-		");
+        private function _fixSOARecord($soa) {
+                $match_bind = "/^([a-zA-Z.0-9]+)(?:\s+)([a-zA-Z.0-9]+)(?:\s+)\((?:\s|;.*\r+\n)*(\d+)(?:\s|;.*\n|;.*\r\n)+(\d+)(?:\s|;.*\n|;.*\r\n)+(\d+)(?:\s|;.*\n|;.*\r\n)+(\d+)(?:\s|;.*\n|;.*\r\n)+(\d+)(?:\s|;.*\n|;.*\r\n)+\).*$/";
+                $match_pdns = "/^([a-zA-Z.0-9]+)(?:\s+)([a-zA-Z.0-9]+)(?:\s+)(\d+)(?:\s+)(\d+)(?:\s+)(\d+)(?:\s+)(\d+)(?:\s+)(\d+)(?:\s+)$/";
+                $matches_bind = array();
+                $matches_pdns = preg_match_all($match_pdns, $soa);
+                if ($matches_pdns == 1) {
+                        // SOA Mathces PDNS format, do nothing
+                        return $soa;
+                }
+                $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Updated SOA for PDNS');
+                preg_match($match_bind, $soa, $matches_bind);
+                array_shift($matches_bind);
+                $new_soa = join(" ", $matches_bind);
+                return $new_soa;
+        }
 
-		$ins_data = array(
-			'did' => $domainid
-		);
+        private function _insertAllowedTransfers($domainid)
+        {
+                $ins_stmt = $this->pdns_db->prepare("
+                        INSERT INTO domainmetadata set `domain_id` = :did, `kind` = 'ALLOW-AXFR-FROM', `content` = :value
+                ");
 
-		if (count($this->_ns) > 0 || count($this->_axfr) > 0) {
-			// put nameservers in allow-transfer
-			if (count($this->_ns) > 0) {
-				foreach ($this->_ns as $ns) {
-					foreach ($ns["ips"] as $ip) {
-						$ins_data['value'] = $ip;
-						$ins_stmt->execute($ins_data);
-					}
-				}
-			}
-			// AXFR server #100
-			if (count($this->_axfr) > 0) {
-				foreach ($this->_axfr as $axfrserver) {
-					if (validate_ip($axfrserver, true) !== false) {
-						$ins_data['value'] = $axfrserver;
-						$ins_stmt->execute($ins_data);
-					}
-				}
-			}
-		}
-	}
+                $ins_data = array(
+                        'did' => $domainid
+                );
 
-	private function _connectToPdnsDb()
-	{
-		// get froxlor pdns config
-		$cf = Settings::Get('system.bindconf_directory').'/froxlor/pdns_froxlor.conf';
-		$config = makeCorrectFile($cf);
+                if (count($this->_ns) > 0 || count($this->_axfr) > 0) {
+                        // put nameservers in allow-transfer
+                        if (count($this->_ns) > 0) {
+                                foreach ($this->_ns as $ns) {
+                                        foreach ($ns["ips"] as $ip) {
+                                                $ins_data['value'] = $ip;
+                                                $ins_stmt->execute($ins_data);
+                                        }
+                                }
+                        }
+                        // AXFR server #100
+                        if (count($this->_axfr) > 0) {
+                                foreach ($this->_axfr as $axfrserver) {
+                                        if (validate_ip($axfrserver, true) !== false) {
+                                                $ins_data['value'] = $axfrserver;
+                                                $ins_stmt->execute($ins_data);
+                                        }
+                                }
+                        }
+                }
+        }
 
-		if (!file_exists($config))
-		{
-			$this->_logger->logAction(CRON_ACTION, LOG_ERROR, 'PowerDNS configuration file ('.$config.') not found. Did you go through the configuration templates?');
-			die('PowerDNS configuration file ('.$config.') not found. Did you go through the configuration templates?'.PHP_EOL);
-		}
-		$lines = file($config);
-		$mysql_data = array();
-		foreach ($lines as $line)
-		{
-			$line = trim($line);
-			if (strtolower(substr($line, 0, 6)) == 'gmysql')
-			{
-				$namevalue = explode("=", $line);
-				$mysql_data[$namevalue[0]] = $namevalue[1];
-			}
-		}
+        private function _connectToPdnsDb()
+        {
+                // get froxlor pdns config
+                $cf = Settings::Get('system.bindconf_directory').'/froxlor/pdns_froxlor.conf';
+                $config = makeCorrectFile($cf);
 
-		// build up connection string
-		$driver = 'mysql';
-		$dsn = $driver.":";
-		$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'set names utf8');
-		$attributes = array('ATTR_ERRMODE' => 'ERRMODE_EXCEPTION');
-		$dbconf = array();
+                if (!file_exists($config))
+                {
+                        $this->_logger->logAction(CRON_ACTION, LOG_ERROR, 'PowerDNS configuration file ('.$config.') not found. Did you go through the configuration templates?');
+                        die('PowerDNS configuration file ('.$config.') not found. Did you go through the configuration templates?'.PHP_EOL);
+                }
+                $lines = file($config);
+                $mysql_data = array();
+                foreach ($lines as $line)
+                {
+                        $line = trim($line);
+                        if (strtolower(substr($line, 0, 6)) == 'gmysql')
+                        {
+                                $namevalue = explode("=", $line);
+                                $mysql_data[$namevalue[0]] = $namevalue[1];
+                        }
+                }
 
-		$dbconf["dsn"] = array(
-			'dbname' => $mysql_data["gmysql-dbname"],
-			'charset' => 'utf8'
-		);
+                // build up connection string
+                $driver = 'mysql';
+                $dsn = $driver.":";
+                $options = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'set names utf8');
+                $attributes = array('ATTR_ERRMODE' => 'ERRMODE_EXCEPTION');
+                $dbconf = array();
 
-		if (isset($mysql_data['gmysql-socket']) && !empty($mysql_data['gmysql-socket'])) {
-			$dbconf["dsn"]['unix_socket'] = makeCorrectFile($mysql_data['gmysql-socket']);
-		} else {
-			$dbconf["dsn"]['host'] = $mysql_data['gmysql-host'];
-			$dbconf["dsn"]['port'] = $mysql_data['gmysql-port'];
-		}
+                $dbconf["dsn"] = array(
+                        'dbname' => $mysql_data["gmysql-dbname"],
+                        'charset' => 'utf8'
+                );
 
-		// add options to dsn-string
-		foreach ($dbconf["dsn"] as $k => $v) {
-			$dsn .= $k."=".$v.";";
-		}
+                if (isset($mysql_data['gmysql-socket']) && !empty($mysql_data['gmysql-socket'])) {
+                        $dbconf["dsn"]['unix_socket'] = makeCorrectFile($mysql_data['gmysql-socket']);
+                } else {
+                        $dbconf["dsn"]['host'] = $mysql_data['gmysql-host'];
+                        $dbconf["dsn"]['port'] = $mysql_data['gmysql-port'];
+                }
 
-		// clean up
-		unset($dbconf);
+                // add options to dsn-string
+                foreach ($dbconf["dsn"] as $k => $v) {
+                        $dsn .= $k."=".$v.";";
+                }
 
-		// try to connect
-		try {
-			$this->pdns_db = new PDO($dsn, $mysql_data['gmysql-user'], $mysql_data['gmysql-password'], $options);
-		} catch (PDOException $e) {
-			die($e->getMessage());
-		}
+                // clean up
+                unset($dbconf);
 
-		// set attributes
-		foreach ($attributes as $k => $v) {
-			$this->pdns_db->setAttribute(constant("PDO::".$k), constant("PDO::".$v));
-		}
-	}
+                // try to connect
+                try {
+                        $this->pdns_db = new PDO($dsn, $mysql_data['gmysql-user'], $mysql_data['gmysql-password'], $options);
+                } catch (PDOException $e) {
+                        die($e->getMessage());
+                }
+
+                // set attributes
+                foreach ($attributes as $k => $v) {
+                        $this->pdns_db->setAttribute(constant("PDO::".$k), constant("PDO::".$v));
+                }
+        }
 }
+
