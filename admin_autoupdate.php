@@ -32,7 +32,7 @@ if (ini_get('allow_url_fopen') === false) {
 }
 
 // check for archive-stuff
-if (function_exists('gzopen') === false) {
+if (! extension_loaded('zip')) {
 	redirectTo($filename, array('s' => $s, 'page' => 'error', 'errno' => 2));
 }
 
