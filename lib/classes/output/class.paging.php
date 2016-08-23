@@ -319,6 +319,8 @@ class paging {
 				$condition.= $searchfield . " ".$oper." " . Database::quote($searchtext);
 			} else {
 				$searchtext = str_replace('*', '%', $this->searchtext);
+				// append wildcards if user did not enter any
+				if (strpos($searchtext,'%') === false) $searchtext='%'.$searchtext.'%';
 				$condition.= $searchfield . " LIKE " . Database::quote($searchtext);
 			}
 			
