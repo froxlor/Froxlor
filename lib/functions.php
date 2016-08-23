@@ -43,6 +43,7 @@ function includeFunctions($dirname)
 }
 
 Autoloader::init();
+FroxlorEvent::init();
 
 /**
  * Class Autoloader

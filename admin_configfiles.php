@@ -19,7 +19,6 @@ define('AREA', 'admin');
 require './lib/init.php';
 
 if ($userinfo['change_serversettings'] == '1') {
-
 	$customer_tmpdir = '/tmp/';
 	if (Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_tmpdir') != '')
 	{
@@ -70,6 +69,20 @@ if ($userinfo['change_serversettings'] == '1') {
 		// create configparser object
 		$configfiles = new ConfigParser($config_dir . '/' . $distribution . ".xml");
 
+		$additionalfiles = array();
+		FroxlorEvent::GetServiceConfiguration(array(
+			'distribution' => array(
+				'name' => $configfiles->distributionName,
+				'codename' => $configfiles->distributionCodename,
+				'version' => $configfiles->distributionVersion
+			),
+			'files' => &$additionalfiles
+		));
+		foreach ($additionalfiles as $additionalfile) {
+			$secondparser = new ConfigParser($additionalfile);
+			$configfiles->merge($secondparser);
+		}
+	
 		// get distro-info
 		$dist_display = getCompleteDistroName($configfiles);
 

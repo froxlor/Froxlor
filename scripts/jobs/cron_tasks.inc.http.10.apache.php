@@ -897,6 +897,11 @@ class apache extends HttpConfigBase {
 						$domain['port'],
 						$ssl_vhost) . "\n";
 			}
+			FroxlorEvent::ApacheVHost(array(
+				'domain' => $domain,
+				'ssl_vhost' => $ssl_vhost,
+				'vhost_content' => &$vhost_content
+			));
 		}
 
 		$vhost_content .= '</VirtualHost>' . "\n";

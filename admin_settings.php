@@ -28,6 +28,9 @@ Database::needRoot(false);
 
 if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	$settings_data = loadConfigArrayDir('./actions/admin/settings/');
+	FroxlorEvent::ServerSettings(array(
+		'data' => &$settings_data['groups']
+	));
 	$settings = loadSettings($settings_data);
 
 	if (isset($_POST['send'])
@@ -162,6 +165,8 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		inserttask('4');
 		// cron.d file
 		inserttask('99');
+
+		FroxlorEvent::RebuildConfigs();
 
 		standard_success('rebuildingconfigs', '', array('filename' => 'admin_index.php'));
 

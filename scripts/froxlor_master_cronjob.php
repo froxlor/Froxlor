@@ -51,6 +51,9 @@ for ($x = 1; $x < count($argv); $x++) {
 			inserttask('4');
 			// also regenerate cron.d-file
 			inserttask('99');
+			
+			FroxlorEvent::CronForce();
+			
 			addToQueue($jobs_to_run, 'tasks');
 		}
 		elseif (strtolower($argv[$x]) == '--debug') {
@@ -73,8 +76,10 @@ if (count($jobs_to_run) > 0) {
 	// include all jobs we want to execute
 	foreach ($jobs_to_run as $cron) {
 		updateLastRunOfCron($cron);
+		FroxlorEvent::CronRunPre(array('cron' => $cron));
 		$cronfile = getCronFile($cron);
 		require_once $cronfile;
+		FroxlorEvent::CronRunPost(array('cron' => $cron));
 	}
 }
 

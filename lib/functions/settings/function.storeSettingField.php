@@ -55,6 +55,26 @@ function storeSettingField($fieldname, $fielddata, $newfieldvalue) {
 	}
 }
 
+
+/**
+ * If the setting is missing, add the new setting to the database
+ */
+function storeSettingFieldOptional($fieldname, $fielddata, $newfieldvalue) {
+	if (is_array($fielddata)
+			&& isset($fielddata['settinggroup'])
+			&& $fielddata['settinggroup'] != ''
+			&& isset($fielddata['varname'])
+			&& $fielddata['varname'] != ''
+	) {
+		if (Settings::Get($fielddata['settinggroup'].'.'.$fielddata['varname']) === null) {
+			Settings::AddNew($fielddata['settinggroup'].'.'.$fielddata['varname'], $newfieldvalue);
+		}
+		return storeSettingField($fieldname, $fielddata, $newfieldvalue);
+	}
+		
+	return false;
+}
+
 function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue) {
 
 	if (is_array($fielddata)

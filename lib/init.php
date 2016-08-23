@@ -402,6 +402,10 @@ if (isset($userinfo['loginname'])
 	//Initialize logging
 	$log = FroxlorLogger::getInstanceOf($userinfo);
 }
+FroxlorPlugins::init();
+FroxlorEvent::LoadLanguage(array(
+	'language' => $language
+));
 
 /**
  * Fills variables for navigation, header and footer
@@ -442,9 +446,19 @@ if (AREA == 'admin' || AREA == 'customer') {
 				),
 			),
 		);
+		if (FroxlorPlugins::getInstance()->hasUpdates()) {
+			$navigation_data['admin']['server']['elements'][] = array (
+				'url' => 'admin_updates.php?page=plugins',
+				'label' => $lng['plugins']['update'],
+				'required_resources' => 'change_serversettings',
+			);
+		}
 		$navigation = buildNavigation($navigation_data['admin'], $userinfo);
 	} else {
 		$navigation_data = loadConfigArrayDir('lib/navigation/');
+		FroxlorEvent::CreateNavigation(array(
+			'navigation' => &$navigation_data
+		));
 		$navigation = buildNavigation($navigation_data[AREA], $userinfo);
 	}
 	unset($navigation_data);
@@ -549,3 +563,5 @@ if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 		$mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
 	}
 }
+
+FroxlorEvent::InitDone();

@@ -202,6 +202,9 @@ class Settings {
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			// also set new value to internal array and make it available
+			if (!isset(self::$_data[$sstr[0]])) {
+				self::$_data[$sstr[0]] = array();
+			}
 			self::$_data[$sstr[0]][$sstr[1]] = $value;
 			return true;
 		}

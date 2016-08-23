@@ -218,3 +218,6 @@ $cronscriptDebug = (Settings::Get('system.debug_cron') == '1') ? true : false;
 
 // Create a new idna converter
 $idna_convert = new idna_convert_wrapper();
+
+FroxlorPlugins::init();
+FroxlorEvent::CronInitDone();

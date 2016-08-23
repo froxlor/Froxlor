@@ -2026,3 +2026,15 @@ $lng['error']['dns_record_toolong'] = 'Records/labels can only be up to 63 chara
 $lng['serversettings']['panel_customer_hide_options']['title'] = 'Hide menu items and traffic charts in customer panel';
 $lng['serversettings']['panel_customer_hide_options']['description'] = 'Select items to hide in customer panel. To select multiple options, hold down CTRL while selecting.';
 
+// Added for Plugin Support
+$lng['plugins']['plugins'] = 'Plugins';
+$lng['plugins']['update'] = 'Update Plugins';
+
+$lng['plugins']['directory']['title'] = 'Plugin directory';
+$lng['plugins']['directory']['description'] = 'Location of loadable froxlor plugins (empty = use default location)';
+
+$lng['plugins']['active']['title'] = 'Enabled Plugins(s)';
+$lng['plugins']['active']['description'] = 'Active plugins. To select multiple plugins, hold down CTRL while selecting, or unselect all<br />';
+
+
+$lng['plugins']['plugin']['updatetext'] = 'Updating Plugin <strong>%pluginname</strong> to version <strong>%newversion</strong>';
