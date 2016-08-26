@@ -3415,3 +3415,13 @@ if (isFroxlorVersion('0.9.37-rc1')) {
 	showUpdateStep("Updating from 0.9.37-rc1 to 0.9.37 final", false);
 	updateToVersion('0.9.37');
 }
+
+if (isDatabaseVersion('201607210')) {
+
+	showUpdateStep("Adding new settings for customer shell option");
+	Settings::AddNew("system.allow_customer_shell", "0");
+	Settings::AddNew("system.available_shells", "");
+	lastStepStatus(0);
+
+	updateToDbVersion('201608260');
+}

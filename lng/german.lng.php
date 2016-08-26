@@ -1678,3 +1678,9 @@ $lng['error']['dns_record_toolong'] = 'Records/Labels können maximal 63 Zeichen
 // Added in froxlor 0.9.37-rc1
 $lng['serversettings']['panel_customer_hide_options']['title'] = 'Menüpunkte und Traffic-Charts im Kundenbereich ausblenden';
 $lng['serversettings']['panel_customer_hide_options']['description'] = 'Wählen Sie hier die gewünschten Menüpunkte und Traffic-Charts aus, welche im Kundenbereich ausgeblendet werden sollen. Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt.';
+
+// Added in froxlor 0.9.37.1
+$lng['serversettings']['allow_allow_customer_shell']['title'] = 'Erlaube Kunden für FTP Benutzer eine Shell auszuwählen';
+$lng['serversettings']['allow_allow_customer_shell']['description'] = '<strong class="red">Bitte beachten: Shell Zugriff gestattet dem Benutzer verschiedene Programme auf Ihrem System auszuführen. Mit großer Vorsicht verwenden. Bitte aktiviere dies nur wenn WIRKLICH bekannt ist, was das bedeutet!!!</strong>';
+$lng['serversettings']['available_shells']['title'] = 'Liste der verfügbaren Shells';
+$lng['serversettings']['available_shells']['description'] = 'Komme-getrennte Liste von Shells die der Kunde für seine FTP-Konten wählen kann.<br><br>Hinweis: Die Standard-Shell <strong>/bin/false</strong> wird immer eine Auswahlmöglichkeit sein (wenn aktiviert), auch wenn diese Einstellung leer ist. Sie ist in jedem Fall der Standardwert für alle FTP-Konten';

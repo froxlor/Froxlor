@@ -530,6 +530,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'dnsenabled', '0'),
 	('system', 'dns_server', 'bind'),
 	('system', 'apacheglobaldiropt', ''),
+	('system', 'allow_customer_shell', '0'),
+	('system', 'available_shells', ''),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -561,7 +563,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.37'),
-	('panel', 'db_version', '201607210');
+	('panel', 'db_version', '201608260');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

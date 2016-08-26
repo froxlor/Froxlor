@@ -2022,7 +2022,13 @@ $lng['error']['domain_nopunycode'] = 'You must not specify punycode (IDNA). The 
 $lng['admin']['dnsenabled'] = 'Enable DNS editor';
 $lng['error']['dns_record_toolong'] = 'Records/labels can only be up to 63 characters';
 
-// Added in froxlor 0.9.7-rc1
+// Added in froxlor 0.9.37-rc1
 $lng['serversettings']['panel_customer_hide_options']['title'] = 'Hide menu items and traffic charts in customer panel';
 $lng['serversettings']['panel_customer_hide_options']['description'] = 'Select items to hide in customer panel. To select multiple options, hold down CTRL while selecting.';
 
+// Added in froxlor 0.9.37.1
+$lng['serversettings']['allow_allow_customer_shell']['title'] = 'Allow customers to enable shell access for ftp-users';
+$lng['serversettings']['allow_allow_customer_shell']['description'] = '<strong class="red">Please note: Shell access allows the user to execute various binaries on your system. Use with extrem caution. Please only activate this if you REALLY know what you are doing!!!</strong>';
+$lng['serversettings']['available_shells']['title'] = 'List of available shells';
+$lng['serversettings']['available_shells']['description'] = 'Comma seperated list of shells that are available for the customer to chose from for their ftp-users.<br><br>Note that the default shell <strong>/bin/false</strong> will always be a choice (if enabled), even if this setting is empty. It is the default value for ftp-users in any case';
+$lng['panel']['shell'] = 'Shell';

@@ -64,6 +64,12 @@ return array(
 									),
 						'value' => array()
 					),
+					'shell' => array(
+						'visible' => (Settings::Get('system.allow_customer_shell') == '1' ? true : false),
+						'label' => $lng['panel']['shell'],
+						'type' => 'select',
+						'select_var' => (isset($shells) ? $shells : ""),
+					)
 				)
 			)
 		)

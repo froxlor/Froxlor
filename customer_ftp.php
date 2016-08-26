@@ -45,7 +45,7 @@ if ($page == 'overview') {
 		);
 		$paging = new paging($userinfo, TABLE_FTP_USERS, $fields);
 
-		$result_stmt = Database::prepare("SELECT `id`, `username`, `description`, `homedir` FROM `" . TABLE_FTP_USERS . "`
+		$result_stmt = Database::prepare("SELECT `id`, `username`, `description`, `homedir`, `shell` FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
 		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
@@ -158,6 +158,10 @@ if ($page == 'overview') {
 				$path = validate($_POST['path'], 'path');
 				$password = validate($_POST['ftp_password'], 'password');
 				$password = validatePassword($password);
+				$shell = "/bin/false";
+				if (Settings::Get('system.allow_customer_shell') == '1') {
+					$shell = isset($_POST['shell']) ? validate($_POST['shell'], 'shell') : '/bin/false';
+				}
 
 				$sendinfomail = isset($_POST['sendinfomail']) ? 1 : 0;
 				if ($sendinfomail != 1) {
@@ -205,8 +209,8 @@ if ($page == 'overview') {
 					$cryptPassword = makeCryptPassword($password);
 
 					$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
-						(`customerid`, `username`, `description`, `password`, `homedir`, `login_enabled`, `uid`, `gid`)
-						VALUES (:customerid, :username, :description, :password, :homedir, 'y', :guid, :guid)"
+						(`customerid`, `username`, `description`, `password`, `homedir`, `login_enabled`, `uid`, `gid`, `shell`)
+						VALUES (:customerid, :username, :description, :password, :homedir, 'y', :guid, :guid, :shell)"
 					);
 					$params = array(
 						"customerid" => $userinfo['customerid'],
@@ -214,7 +218,8 @@ if ($page == 'overview') {
 						"description" => $description,
 						"password" => $cryptPassword,
 						"homedir" => $path,
-						"guid" => $userinfo['guid']
+						"guid" => $userinfo['guid'],
+						"shell" => $shell
 					);
 					Database::pexecute($stmt, $params);
 
@@ -334,6 +339,18 @@ if ($page == 'overview') {
 					}
 				}
 
+				if (Settings::Get('system.allow_customer_shell') == '1') {
+					$shells = makeoption("/bin/false", "/bin/false", "/bin/false");
+					$shells_avail = Settings::Get('system.available_shells');
+					if (!empty($shells_avail)) {
+						$shells_avail = explode(",", $shells_avail);
+						$shells_avail = array_map("trim", $shells_avail);
+						foreach ($shells_avail as $_shell) {
+							$shells .= makeoption($_shell, $_shell, "/bin/false");
+						}
+					}
+				}
+
 				//$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
 
 				$ftp_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/ftp/formfield.ftp_add.php';
@@ -346,7 +363,7 @@ if ($page == 'overview') {
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT `id`, `username`, `description`, `homedir`, `uid`, `gid` FROM `" . TABLE_FTP_USERS . "`
+		$result_stmt = Database::prepare("SELECT `id`, `username`, `description`, `homedir`, `uid`, `gid`, `shell` FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid` = :customerid
 			AND `id` = :id"
 		);
@@ -357,6 +374,11 @@ if ($page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				// @FIXME use a good path-validating regex here (refs #1231)
 				$path = validate($_POST['path'], 'path');
+
+				$shell = "/bin/false";
+				if (Settings::Get('system.allow_customer_shell') == '1') {
+					$shell = isset($_POST['shell']) ? validate($_POST['shell'], 'shell') : '/bin/false';
+				}
 
 				$_setnewpass = false;
 				if (isset($_POST['ftp_password']) && $_POST['ftp_password'] != '') {
@@ -411,11 +433,11 @@ if ($page == 'overview') {
 				$log->logAction(USR_ACTION, LOG_INFO, "edited ftp-account '" . $result['username'] . "'");
 				$description = validate($_POST['ftp_description'], 'description');
 				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
-					SET `description` = :desc
+					SET `description` = :desc, `shell` = :shell
 					WHERE `customerid` = :customerid
 					AND `id` = :id"
 				);
-				Database::pexecute($stmt, array("desc" => $description, "customerid" => $userinfo['customerid'], "id" => $id));
+				Database::pexecute($stmt, array("desc" => $description, "shell" => $shell, "customerid" => $userinfo['customerid'], "id" => $id));
 
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
@@ -438,6 +460,18 @@ if ($page == 'overview') {
 
 					while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 						$domains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['domain']);
+					}
+				}
+
+				if (Settings::Get('system.allow_customer_shell') == '1') {
+					$shells = makeoption("/bin/false", "/bin/false", $result['shell']);
+					$shells_avail = Settings::Get('system.available_shells');
+					if (!empty($shells_avail)) {
+						$shells_avail = explode(",", $shells_avail);
+						$shells_avail = array_map("trim", $shells_avail);
+						foreach ($shells_avail as $_shell) {
+							$shells .= makeoption($_shell, $_shell, $result['shell']);
+						}
 					}
 				}
 

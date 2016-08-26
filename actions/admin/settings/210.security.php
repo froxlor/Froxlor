@@ -63,6 +63,23 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
+					),
+				'system_allow_customer_shell' => array(
+					'label' => $lng['serversettings']['allow_allow_customer_shell'],
+					'settinggroup' => 'system',
+					'varname' => 'allow_customer_shell',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					),
+				'system_available_shells' => array(
+					'label' => $lng['serversettings']['available_shells'],
+					'settinggroup' => 'system',
+					'varname' => 'available_shells',
+					'type' => 'string',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField',
 					)
 				)
 			)
