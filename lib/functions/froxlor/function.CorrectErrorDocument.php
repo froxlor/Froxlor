@@ -32,7 +32,7 @@ function correctErrorDocument($errdoc = null) {
 		// not a URL
 		if ((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:'
 				&& strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:')
-				|| !validateUrl($idna_convert->encode($errdoc))
+				|| !validateUrl($errdoc)
 		) {
 			// a file
 			if (substr($errdoc, 0, 1) != '"') {

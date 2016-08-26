@@ -312,14 +312,14 @@ if ($page == 'overview') {
 					triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
 				}
 
-				if (isset($_POST['url']) && $_POST['url'] != '' && validateUrl($idna_convert->encode($_POST['url']))) {
+				if (isset($_POST['url']) && $_POST['url'] != '' && validateUrl($_POST['url'])) {
 					$path = $_POST['url'];
 					$_doredirect = true;
 				} else {
 					$path = validate($_POST['path'], 'path');
 				}
 
-				if (!preg_match('/^https?\:\/\//', $path) || !validateUrl($idna_convert->encode($path))) {
+				if (!preg_match('/^https?\:\/\//', $path) || !validateUrl($path)) {
 					// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
 					if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
@@ -539,14 +539,14 @@ if ($page == 'overview') {
 
 		if (isset($result['customerid']) && $result['customerid'] == $userinfo['customerid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				if (isset($_POST['url']) && $_POST['url'] != '' && validateUrl($idna_convert->encode($_POST['url']))) {
+				if (isset($_POST['url']) && $_POST['url'] != '' && validateUrl($_POST['url'])) {
 					$path = $_POST['url'];
 					$_doredirect = true;
 				} else {
 					$path = validate($_POST['path'], 'path');
 				}
 
-				if (!preg_match('/^https?\:\/\//', $path) || !validateUrl($idna_convert->encode($path))) {
+				if (!preg_match('/^https?\:\/\//', $path) || !validateUrl($path)) {
 					// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
 					if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
@@ -732,7 +732,7 @@ if ($page == 'overview') {
 					$domains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
 				}
 
-				if (preg_match('/^https?\:\/\//', $result['documentroot']) && validateUrl($idna_convert->encode($result['documentroot']))) {
+				if (preg_match('/^https?\:\/\//', $result['documentroot']) && validateUrl($result['documentroot'])) {
 					if (Settings::Get('panel.pathedit') == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
 						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
