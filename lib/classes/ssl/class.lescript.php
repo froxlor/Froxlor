@@ -176,7 +176,9 @@ class lescript
 			$this->log("Token for $domain saved at $tokenPath and should be available at $uri");
 
 			// simple self check
-			if ($payload !== trim(@file_get_contents($uri))) {
+			$selfcheckContextOptions = array('http' => array('header' => "User Agent: Froxlor"));
+			$selfcheckContext = stream_context_create($selfcheckContextOptions);
+			if ($payload !== trim(@file_get_contents($uri, false, $selfcheckContext))) {
 				$errmsg = json_encode(error_get_last());
 				if ($errmsg != "null") {
 					$errmsg = "; PHP error: " . $errmsg;
