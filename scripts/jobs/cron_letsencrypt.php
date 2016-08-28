@@ -132,7 +132,7 @@ foreach ($certrows as $certrow) {
 
 		try {
 			// Initialize Lescript with documentroot
-			$le = new lescript($cronlog);
+			$le = new lescript($cronlog, $version);
 
 			// Initialize Lescript
 			$le->initAccount($certrow);
