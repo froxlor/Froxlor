@@ -189,7 +189,7 @@ class lescript
 					$errmsg = "";
 				}
 				@unlink($tokenPath);
-				throw new \RuntimeException("Please check $uri - token not available" . $errmsg);
+				$cronlog->logAction(CRON_ACTION, LOG_ERR,"letsencrypt Please check $uri - token not available" . $errmsg);
 			}
 
 			$this->log("Sending request to challenge");
