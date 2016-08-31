@@ -265,7 +265,7 @@ if ($page == 'overview') {
 				}
 
 				$subdomain = $idna_convert->encode(preg_replace(array('/\:(\d)+$/', '/^https?\:\/\//'), '', validate($_POST['subdomain'], 'subdomain', '', 'subdomainiswrong')));
-				$domain = $idna_convert->encode($_POST['domain']);
+				$domain = $_POST['domain'];
 				$domain_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `domain` = :domain
 					AND `customerid` = :customerid
