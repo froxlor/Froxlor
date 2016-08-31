@@ -30,7 +30,7 @@ class lescript
 {
 
 	// https://letsencrypt.org/repository/
-	public $license = 'https://letsencrypt.org/documents/LE-SA-v1.1.1-August-1-2016.pdf';
+	public $license;
 
 	private $logger;
 
@@ -79,8 +79,9 @@ class lescript
 			if ($this->client->getLastCode() != 201) {
 				throw new \RuntimeException("Account not initialized, probably due to rate limiting. Whole response: " . json_encode($response));
 			}
-
-			$this->postNewReg();
+			$this->license = $this->client->getAgreementURL();
+			
+			$this->postRegAgreement(parse_url($this->client->getLastLocation(), PHP_URL_PATH));
 			$this->log('New account certificate registered');
 		} else {
 
@@ -316,6 +317,16 @@ class lescript
 		));
 	}
 
+	private function postRegAgreement($uri)
+	{
+		$this->log('Accepting agreement at URL: ' . $this->license);
+
+		return $this->signedRequest($uri, array(
+			'resource' => 'reg',
+			'agreement' => $this->license
+		));
+	}
+
 	private function generateCSR($privateKey, array $domains)
 	{
 		$domain = reset($domains);
@@ -517,6 +528,13 @@ class Client
 		preg_match_all('~Link: <(.+)>;rel="up"~', $this->lastHeader, $matches);
 		return $matches[1];
 	}
+
+	public function getAgreementURL()
+	{
+		preg_match_all('~Link: <(.+)>;rel="terms-of-service"~', $this->lastHeader, $matches);
+		return $matches[1][0];
+	}
+
 }
 
 class Base64UrlSafeEncoder
