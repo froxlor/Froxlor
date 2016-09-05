@@ -81,7 +81,10 @@ class lescript
 			}
 			$this->license = $this->client->getAgreementURL();
 			
-			$this->postRegAgreement(parse_url($this->client->getLastLocation(), PHP_URL_PATH));
+			// Terms of Servce are optional according to ACME specs; if no ToS are presented, no need to update registration
+			if (!empty($this->license)) { 
+				$this->postRegAgreement(parse_url($this->client->getLastLocation(), PHP_URL_PATH)); 
+			}
 			$this->log('New account certificate registered');
 		} else {
 
