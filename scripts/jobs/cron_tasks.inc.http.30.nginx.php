@@ -150,6 +150,35 @@ class nginx extends HttpConfigBase {
 					if ($row_ipsandports['ssl_cert_file'] != '' && file_exists($row_ipsandports['ssl_cert_file'])) {
 						$ssl_vhost = true;
 					}
+
+					$domain = array(
+						'id' => 0,
+						'domain' => Settings::Get('system.hostname'),
+						'adminid' => 1, /* first admin-user (superadmin) */
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath
+					);
+
+					// override corresponding array values
+					$domain['ssl_cert_file'] = $row_ipsandports['ssl_cert_file'];
+					$domain['ssl_key_file'] = $row_ipsandports['ssl_key_file'];
+					$domain['ssl_ca_file'] = $row_ipsandports['ssl_ca_file'];
+					$domain['ssl_cert_chainfile'] = $row_ipsandports['ssl_cert_chainfile'];
+
+					// SSL STUFF
+					$dssl = new DomainSSL();
+					// this sets the ssl-related array-indices in the $domain array
+					// if the domain has customer-defined ssl-certificates
+					$dssl->setDomainSSLFilesArray($domain);
+
+					if ($domain['ssl_cert_file'] != '' && file_exists($domain['ssl_cert_file'])) {
+						// override corresponding array values
+						$row_ipsandports['ssl_cert_file'] = $domain['ssl_cert_file'];
+						$row_ipsandports['ssl_key_file'] = $domain['ssl_key_file'];
+						$row_ipsandports['ssl_ca_file'] = $domain['ssl_ca_file'];
+						$row_ipsandports['ssl_cert_chainfile'] = $domain['ssl_cert_chainfile'];
+						$ssl_vhost = true;
+					}
 				}
 
 				/**
@@ -414,6 +443,9 @@ class nginx extends HttpConfigBase {
 
 			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
 		}
+
+		// avoid using any whitespaces
+		$domain['documentroot'] = trim($domain['documentroot']);
 
 		// create ssl settings first since they are required for normal and redirect vhosts
 		if ($ssl_vhost === true

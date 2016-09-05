@@ -363,12 +363,32 @@ class apache extends HttpConfigBase {
 						$row_ipsandports['ssl_cert_chainfile'] = Settings::Get('system.ssl_cert_chainfile');
 					}
 
-					if ($row_ipsandports['ssl_cert_file'] != '') {
+					$domain = array(
+						'id' => 0,
+						'domain' => Settings::Get('system.hostname'),
+						'adminid' => 1, /* first admin-user (superadmin) */
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath,
+					);
+
+					// override corresponding array values
+					$domain['ssl_cert_file'] = $row_ipsandports['ssl_cert_file'];
+					$domain['ssl_key_file'] = $row_ipsandports['ssl_key_file'];
+					$domain['ssl_ca_file'] = $row_ipsandports['ssl_ca_file'];
+					$domain['ssl_cert_chainfile'] = $row_ipsandports['ssl_cert_chainfile'];
+
+					// SSL STUFF
+					$dssl = new DomainSSL();
+					// this sets the ssl-related array-indices in the $domain array
+					// if the domain has customer-defined ssl-certificates
+					$dssl->setDomainSSLFilesArray($domain);
+
+					if ($domain['ssl_cert_file'] != '') {
 
 						// check for existence, #1485
-						if (!file_exists($row_ipsandports['ssl_cert_file'])) {
-							$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate file "'.$row_ipsandports['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
-							echo $ipport . ' :: certificate file "'.$row_ipsandports['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
+						if (!file_exists($domain['ssl_cert_file'])) {
+							$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate file "'.$domain['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
+							echo $ipport . ' :: certificate file "'.$domain['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
 						} else {
 
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
@@ -377,36 +397,36 @@ class apache extends HttpConfigBase {
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLVerifyDepth 10' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateFile ' . makeCorrectFile($row_ipsandports['ssl_cert_file']) . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
 
-							if ($row_ipsandports['ssl_key_file'] != '') {
+							if ($domain['ssl_key_file'] != '') {
 								// check for existence, #1485
-								if (!file_exists($row_ipsandports['ssl_key_file'])) {
-									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate key file "'.$row_ipsandports['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
-									echo $ipport . ' :: certificate key file "'.$row_ipsandports['ssl_key_file'].'" does not exist! SSL-directives might not be working'."\n";
+								if (!file_exists($domain['ssl_key_file'])) {
+									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate key file "'.$domain['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
+									echo $ipport . ' :: certificate key file "'.$domain['ssl_key_file'].'" does not exist! SSL-directives might not be working'."\n";
 								} else {
-									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateKeyFile ' . makeCorrectFile($row_ipsandports['ssl_key_file']) . "\n";
+									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
 								}
 							}
 
-							if ($row_ipsandports['ssl_ca_file'] != '') {
+							if ($domain['ssl_ca_file'] != '') {
 								// check for existence, #1485
-								if (!file_exists($row_ipsandports['ssl_ca_file'])) {
-									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate CA file "'.$row_ipsandports['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
-									echo $ipport . ' :: certificate CA file "'.$row_ipsandports['ssl_ca_file'].'" does not exist! SSL-directives might not be working'."\n";
+								if (!file_exists($domain['ssl_ca_file'])) {
+									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate CA file "'.$domain['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
+									echo $ipport . ' :: certificate CA file "'.$domain['ssl_ca_file'].'" does not exist! SSL-directives might not be working'."\n";
 								} else {
-									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCACertificateFile ' . makeCorrectFile($row_ipsandports['ssl_ca_file']) . "\n";
+									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
 								}
 							}
 
 							// #418
-							if ($row_ipsandports['ssl_cert_chainfile'] != '') {
+							if ($domain['ssl_cert_chainfile'] != '') {
 								// check for existence, #1485
-								if (!file_exists($row_ipsandports['ssl_cert_chainfile'])) {
-									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate chain file "'.$row_ipsandports['ssl_cert_chainfile'].'" does not exist! Cannot create ssl-directives');
-									echo $ipport . ' :: certificate chain file "'.$row_ipsandports['ssl_cert_chainfile'].'" does not exist! SSL-directives might not be working'."\n";
+								if (!file_exists($domain['ssl_cert_chainfile'])) {
+									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate chain file "'.$domain['ssl_cert_chainfile'].'" does not exist! Cannot create ssl-directives');
+									echo $ipport . ' :: certificate chain file "'.$domain['ssl_cert_chainfile'].'" does not exist! SSL-directives might not be working'."\n";
 								} else {
-									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateChainFile ' . makeCorrectFile($row_ipsandports['ssl_cert_chainfile']) . "\n";
+									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
 								}
 							}
 						}
@@ -844,6 +864,9 @@ class apache extends HttpConfigBase {
 				return '# no ssl-certificate was specified for this domain, therefore no explicit vhost is being generated';
 			}
 		}
+
+		// avoid using any whitespaces
+		$domain['documentroot'] = trim($domain['documentroot']);
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$corrected_docroot = $this->idnaConvert->encode($domain['documentroot']);

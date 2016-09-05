@@ -2032,3 +2032,7 @@ $lng['serversettings']['allow_allow_customer_shell']['description'] = '<strong c
 $lng['serversettings']['available_shells']['title'] = 'List of available shells';
 $lng['serversettings']['available_shells']['description'] = 'Comma seperated list of shells that are available for the customer to chose from for their ftp-users.<br><br>Note that the default shell <strong>/bin/false</strong> will always be a choice (if enabled), even if this setting is empty. It is the default value for ftp-users in any case';
 $lng['panel']['shell'] = 'Shell';
+$lng['serversettings']['le_froxlor_enabled']['title'] = "Enable Let's Encrypt for the froxlor vhost";
+$lng['serversettings']['le_froxlor_enabled']['description'] = "If activated, the froxlor vhost will automatically be secured using a Let's Encrypt certificate.";
+$lng['serversettings']['le_froxlor_redirect']['title'] = "Enable SSL-redirect for the froxlor vhost";
+$lng['serversettings']['le_froxlor_redirect']['description'] = "If activated, all http requests to your froxlor will be redirected to the corresponding SSL site.";

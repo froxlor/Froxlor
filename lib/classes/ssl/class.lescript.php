@@ -53,7 +53,7 @@ class lescript
 		$this->log("Using '$ca' to generate certificate");
 	}
 
-	public function initAccount($certrow)
+	public function initAccount($certrow, $isFroxlorVhost = false)
 	{
 		// Let's see if we have the private accountkey
 		$this->accountKey = $certrow['leprivatekey'];
@@ -66,12 +66,17 @@ class lescript
 			$keys = $this->generateKey();
 			// Only store the accountkey in production, in staging always generate a new key
 			if (Settings::Get('system.letsencryptca') == 'production') {
-				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private " . "WHERE `customerid` = :customerid;");
-				Database::pexecute($upd_stmt, array(
-					'public' => $keys['public'],
-					'private' => $keys['private'],
-					'customerid' => $certrow['customerid']
-				));
+				if ($isFroxlorVhost) {
+					Settings::Set('system.lepublickey', $keys['public']);
+					Settings::Set('system.leprivatekey', $keys['private']);
+				} else {
+					$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private " . "WHERE `customerid` = :customerid;");
+					Database::pexecute($upd_stmt, array(
+						'public' => $keys['public'],
+						'private' => $keys['private'],
+						'customerid' => $certrow['customerid']
+					));
+				}
 			}
 			$this->accountKey = $keys['private'];
 
@@ -80,10 +85,10 @@ class lescript
 				throw new \RuntimeException("Account not initialized, probably due to rate limiting. Whole response: " . json_encode($response));
 			}
 			$this->license = $this->client->getAgreementURL();
-			
+
 			// Terms of Servce are optional according to ACME specs; if no ToS are presented, no need to update registration
-			if (!empty($this->license)) { 
-				$this->postRegAgreement(parse_url($this->client->getLastLocation(), PHP_URL_PATH)); 
+			if (!empty($this->license)) {
+				$this->postRegAgreement(parse_url($this->client->getLastLocation(), PHP_URL_PATH));
 			}
 			$this->log('New account certificate registered');
 		} else {

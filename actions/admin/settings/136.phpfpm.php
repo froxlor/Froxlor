@@ -35,7 +35,7 @@ return array(
 					'settinggroup' => 'phpfpm',
 					'varname' => 'enabled_ownvhost',
 					'type' => 'bool',
-					'default' => false,
+					'default' => true,
 					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_httpuser' => array(

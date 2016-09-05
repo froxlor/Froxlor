@@ -81,13 +81,29 @@ return array(
 									'save_method' => 'storeSettingField',
 							),
 							'system_leenabled' => array(
-							        'label' => $lng['serversettings']['leenabled'],
-							        'settinggroup' => 'system',
-							        'varname' => 'leenabled',
-							        'type' => 'bool',
-							        'default' => false,
-							        'cronmodule' => 'froxlor/letsencrypt',
-							        'save_method' => 'storeSettingField'
+									'label' => $lng['serversettings']['leenabled'],
+									'settinggroup' => 'system',
+									'varname' => 'leenabled',
+									'type' => 'bool',
+									'default' => false,
+									'cronmodule' => 'froxlor/letsencrypt',
+									'save_method' => 'storeSettingField'
+							),
+							'system_le_froxlor_enabled' => array(
+								'label' => $lng['serversettings']['le_froxlor_enabled'],
+								'settinggroup' => 'system',
+								'varname' => 'le_froxlor_enabled',
+								'type' => 'bool',
+								'default' => false,
+								'save_method' => 'storeSettingField'
+							),
+							'system_le_froxlor_redirect' => array(
+								'label' => $lng['serversettings']['le_froxlor_redirect'],
+								'settinggroup' => 'system',
+								'varname' => 'le_froxlor_redirect',
+								'type' => 'bool',
+								'default' => false,
+								'save_method' => 'storeSettingField'
 							),
 							'system_letsencryptca' => array(
 									'label' => $lng['serversettings']['letsencryptca'],

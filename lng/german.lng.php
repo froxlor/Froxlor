@@ -1684,3 +1684,7 @@ $lng['serversettings']['allow_allow_customer_shell']['title'] = 'Erlaube Kunden 
 $lng['serversettings']['allow_allow_customer_shell']['description'] = '<strong class="red">Bitte beachten: Shell Zugriff gestattet dem Benutzer verschiedene Programme auf Ihrem System auszuführen. Mit großer Vorsicht verwenden. Bitte aktiviere dies nur wenn WIRKLICH bekannt ist, was das bedeutet!!!</strong>';
 $lng['serversettings']['available_shells']['title'] = 'Liste der verfügbaren Shells';
 $lng['serversettings']['available_shells']['description'] = 'Komme-getrennte Liste von Shells die der Kunde für seine FTP-Konten wählen kann.<br><br>Hinweis: Die Standard-Shell <strong>/bin/false</strong> wird immer eine Auswahlmöglichkeit sein (wenn aktiviert), auch wenn diese Einstellung leer ist. Sie ist in jedem Fall der Standardwert für alle FTP-Konten';
+$lng['serversettings']['le_froxlor_enabled']['title'] = "Let's Encrypt für den froxlor Vhost verwenden";
+$lng['serversettings']['le_froxlor_enabled']['description'] = "Wenn dies aktiviert ist, erstellt froxlor für seinen vhost automatisch ein Let's Encrypt Zertifikat.";
+$lng['serversettings']['le_froxlor_redirect']['title'] = "SSL-Weiterleitung für den froxlor Vhost aktivieren";
+$lng['serversettings']['le_froxlor_redirect']['description'] = "Wenn dies aktiviert ist, werden alle HTTP Anfragen an die entsprechende SSL Seite weitergeleitet.";

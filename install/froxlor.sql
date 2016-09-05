@@ -521,7 +521,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'lepublickey', 'unset'),
 	('system', 'letsencryptca', 'production'),
 	('system', 'letsencryptcountrycode', 'DE'),
-	('system', 'letsencryptstate', 'Germany'),
+	('system', 'letsencryptstate', 'Hessen'),
 	('system', 'letsencryptchallengepath', '/var/www/froxlor'),
 	('system', 'letsencryptkeysize', '4096'),
 	('system', 'letsencryptreuseold', 0),
@@ -532,6 +532,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'apacheglobaldiropt', ''),
 	('system', 'allow_customer_shell', '0'),
 	('system', 'available_shells', ''),
+	('system', 'le_froxlor_enabled', '0'),
+	('system', 'le_froxlor_redirect', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -563,7 +565,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.37'),
-	('panel', 'db_version', '201608260');
+	('panel', 'db_version', '201609050');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

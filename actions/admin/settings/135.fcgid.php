@@ -102,7 +102,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_ownvhost',
 					'type' => 'bool',
-					'default' => false,
+					'default' => true,
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array('apache2')
 					),

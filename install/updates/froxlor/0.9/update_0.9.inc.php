@@ -3425,3 +3425,13 @@ if (isDatabaseVersion('201607210')) {
 
 	updateToDbVersion('201608260');
 }
+
+if (isDatabaseVersion('201608260')) {
+
+	showUpdateStep("Adding new settings to use Let's Encrypt for froxlor");
+	Settings::AddNew("system.le_froxlor_enabled", "0");
+	Settings::AddNew("system.le_froxlor_redirect", "0");
+	lastStepStatus(0);
+
+	updateToDbVersion('201609050');
+}
