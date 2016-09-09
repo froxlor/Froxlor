@@ -457,7 +457,8 @@ class nginx extends HttpConfigBase {
 
 		if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.leenabled') == '1')
 		{
-			$vhost_content.= "\t".'include /etc/nginx/acme.conf;'."\n";
+			$acmeConfFilename = Settings::Get('system.letsencryptacmeconf');
+			$vhost_content.= "\t".'include "' . $acmeConfFilename . '";'."\n";
 		}
 
 		// if the documentroot is an URL we just redirect
