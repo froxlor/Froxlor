@@ -165,7 +165,7 @@ if (Settings::Get('system.le_froxlor_enabled') == '1') {
 				$le->initAccount($certrow, true);
 
 				// Request the new certificate (old key may be used)
-				$return = $le->signDomains($domains, $certrow['ssl_key_file'], $certrow['ssl_csr_file']);
+				$return = $le->signDomains($domains, $certrow['ssl_key_file']);
 
 				// We are interessted in the expirationdate
 				$newcert = openssl_x509_parse($return['crt']);
@@ -246,7 +246,7 @@ foreach ($certrows as $certrow) {
 			$le->initAccount($certrow);
 
 			// Request the new certificate (old key may be used)
-			$return = $le->signDomains($domains, $certrow['ssl_key_file'], $certrow['ssl_csr_file']);
+			$return = $le->signDomains($domains, $certrow['ssl_key_file']);
 
 			// We are interessted in the expirationdate
 			$newcert = openssl_x509_parse($return['crt']);
