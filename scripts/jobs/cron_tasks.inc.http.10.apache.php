@@ -369,6 +369,7 @@ class apache extends HttpConfigBase {
 						'adminid' => 1, /* first admin-user (superadmin) */
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath,
+						'parentdomainid' => 0,
 					);
 
 					// override corresponding array values

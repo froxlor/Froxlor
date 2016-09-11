@@ -174,7 +174,8 @@ class lighttpd extends HttpConfigBase
 					'domain' => Settings::Get('system.hostname'),
 					'adminid' => 1, /* first admin-user (superadmin) */
 					'loginname' => 'froxlor.panel',
-					'documentroot' => $mypath
+					'documentroot' => $mypath,
+					'parentdomainid' => 0,
 				);
 
 				// override corresponding array values
