@@ -151,7 +151,7 @@ if (Settings::Get('system.le_froxlor_enabled') == '1') {
 
 		// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 		if ($certrow['ssl_redirect'] != 2) {
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Updating " . $certrow['domain']);
+			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updating " . $certrow['domain']);
 
 			$cronlog = FroxlorLogger::getInstanceOf(array(
 				'loginname' => $certrow['loginname']
@@ -165,7 +165,7 @@ if (Settings::Get('system.le_froxlor_enabled') == '1') {
 				$le->initAccount($certrow, true);
 
 				// Request the new certificate (old key may be used)
-				$return = $le->signDomains($domains, $certrow['ssl_key_file'], $certrow['ssl_csr_file']);
+				$return = $le->signDomains($domains, $certrow['ssl_key_file']);
 
 				// We are interessted in the expirationdate
 				$newcert = openssl_x509_parse($return['crt']);
@@ -212,15 +212,15 @@ foreach ($certrows as $certrow) {
 
 	// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 	if ($certrow['ssl_redirect'] != 2) {
-		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Updating " . $certrow['domain']);
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updating " . $certrow['domain']);
 
-		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Adding SAN entry: " . $certrow['domain']);
+		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: " . $certrow['domain']);
 		$domains = array(
 			$certrow['domain']
 		);
 		// add www.<domain> to SAN list
 		if ($certrow['wwwserveralias'] == 1) {
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Adding SAN entry: www." . $certrow['domain']);
+			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: www." . $certrow['domain']);
 			$domains[] = 'www.' . $certrow['domain'];
 		}
 
@@ -230,10 +230,10 @@ foreach ($certrows as $certrow) {
 		));
 		$aliasdomains = $aliasdomains_stmt->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($aliasdomains as $aliasdomain) {
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Adding SAN entry: " . $aliasdomain['domain']);
+			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: " . $aliasdomain['domain']);
 			$domains[] = $aliasdomain['domain'];
 			if ($aliasdomain['wwwserveralias'] == 1) {
-				$cronlog->logAction(CRON_ACTION, LOG_DEBUG, "Adding SAN entry: www." . $aliasdomain['domain']);
+				$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: www." . $aliasdomain['domain']);
 				$domains[] = 'www.' . $aliasdomain['domain'];
 			}
 		}
@@ -246,7 +246,7 @@ foreach ($certrows as $certrow) {
 			$le->initAccount($certrow);
 
 			// Request the new certificate (old key may be used)
-			$return = $le->signDomains($domains, $certrow['ssl_key_file'], $certrow['ssl_csr_file']);
+			$return = $le->signDomains($domains, $certrow['ssl_key_file']);
 
 			// We are interessted in the expirationdate
 			$newcert = openssl_x509_parse($return['crt']);
