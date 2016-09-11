@@ -134,6 +134,8 @@ class nginx extends HttpConfigBase {
 
 				$this->nginx_data[$vhost_filename] .= 'server { ' . "\n";
 
+				$mypath = $this->getMyPath($row_ipsandports);
+
 				// check for ssl before anything else so
 				// we know whether it's an ssl vhost or not
 				$ssl_vhost = false;
@@ -191,26 +193,28 @@ class nginx extends HttpConfigBase {
 				$this->nginx_data[$vhost_filename] .= "\t".'server_name    ' . Settings::Get('system.hostname') . ';' . "\n";
 				$this->nginx_data[$vhost_filename] .= "\t".'access_log      /var/log/nginx/access.log;' . "\n";
 
-				$mypath = '';
-
-				// no custom docroot set?
-				if ($row_ipsandports['docroot'] == '') {
-					// check whether the hostname should directly point to
-					// the froxlor-installation or not
-					if (Settings::Get('system.froxlordirectlyviahostname')) {
-						$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+				$is_redirect = false;
+				// check for SSL redirect
+				if ($row_ipsandports['ssl'] == '0' && Settings::Get('system.le_froxlor_redirect') == '1') {
+					$is_redirect = true;
+					// check whether froxlor uses Let's Encrypt and not cert is being generated yet
+					// or a renew is ongoing - disable redirect
+					if (System::Get('system.le_froxlor_enabled') && ($this->froxlorVhostHasLetsEncryptCert() == false || $this->froxlorVhostLetsEncryptNeedsRenew())) {
+						$this->nginx_data[$vhost_filename] .= '# temp. disabled ssl-redirect due to Let\'s Encrypt certificate generation.' . PHP_EOL;
+						$is_redirect = false;
 					} else {
-						$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
+						$_sslport = $this->checkAlternativeSslPort();
+						$mypath = 'https://' . Settings::Get('system.hostname') . $_sslport . '/';
+						$this->nginx_data[$vhost_filename] .= "\t".'return 301 '.$mypath.'$request_uri;'."\n";
 					}
-				} else {
-					// user-defined docroot, #417
-					$mypath = makeCorrectDir($row_ipsandports['docroot']);
 				}
 
-				$this->nginx_data[$vhost_filename] .= "\t".'root     '.$mypath.';'."\n";
-				$this->nginx_data[$vhost_filename] .= "\t".'index    index.php index.html index.htm;'."\n\n";
-				$this->nginx_data[$vhost_filename] .= "\t".'location / {'."\n";
-				$this->nginx_data[$vhost_filename] .= "\t".'}'."\n";
+				if (!$is_redirect) {
+					$this->nginx_data[$vhost_filename] .= "\t".'root     '.$mypath.';'."\n";
+					$this->nginx_data[$vhost_filename] .= "\t".'index    index.php index.html index.htm;'."\n\n";
+					$this->nginx_data[$vhost_filename] .= "\t".'location / {'."\n";
+					$this->nginx_data[$vhost_filename] .= "\t".'}'."\n";
+				}
 
 				if ($row_ipsandports['specialsettings'] != '') {
 					$this->nginx_data[$vhost_filename].= $this->processSpecialConfigTemplate(
@@ -227,43 +231,45 @@ class nginx extends HttpConfigBase {
 				 * SSL config options
 				 */
 				if ($row_ipsandports['ssl'] == '1') {
-				    $row_ipsandports['domain'] = Settings::Get('system.hostname');
+					$row_ipsandports['domain'] = Settings::Get('system.hostname');
 					$this->nginx_data[$vhost_filename].=$this->composeSslSettings($row_ipsandports);
 				}
 
-				$this->nginx_data[$vhost_filename] .= "\tlocation ~ \.php {\n";
-				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
-				$this->nginx_data[$vhost_filename] .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
-				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
-				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
-				$this->nginx_data[$vhost_filename] .= "\t\ttry_files \$fastcgi_script_name =404;\n";
+				if (!$is_redirect) {
+					$this->nginx_data[$vhost_filename] .= "\tlocation ~ \.php {\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tinclude ".Settings::Get('nginx.fastcgiparams').";\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
+					$this->nginx_data[$vhost_filename] .= "\t\ttry_files \$fastcgi_script_name =404;\n";
 
-				if ($row_ipsandports['ssl'] == '1') {
-					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param HTTPS on;\n";
+					if ($row_ipsandports['ssl'] == '1') {
+						$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param HTTPS on;\n";
+					}
+
+					if ((int)Settings::Get('phpfpm.enabled') == 1 && (int)Settings::Get('phpfpm.enabled_ownvhost') == 1) {
+						$domain = array(
+							'id' => 'none',
+							'domain' => Settings::Get('system.hostname'),
+							'adminid' => 1, /* first admin-user (superadmin) */
+							'mod_fcgid_starter' => -1,
+							'mod_fcgid_maxrequests' => -1,
+							'guid' => Settings::Get('phpfpm.vhost_httpuser'),
+							'openbasedir' => 0,
+							'email' => Settings::Get('panel.adminmail'),
+							'loginname' => 'froxlor.panel',
+							'documentroot' => $mypath,
+						);
+
+						$php = new phpinterface($domain);
+						$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass unix:".$php->getInterface()->getSocketFile().";\n";
+					} else {
+						$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass ".Settings::Get('system.nginx_php_backend').";\n";
+					}
+
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_index index.php;\n";
+					$this->nginx_data[$vhost_filename] .= "\t}\n";
 				}
-
-				if ((int)Settings::Get('phpfpm.enabled') == 1 && (int)Settings::Get('phpfpm.enabled_ownvhost') == 1) {
-					$domain = array(
-						'id' => 'none',
-						'domain' => Settings::Get('system.hostname'),
-						'adminid' => 1, /* first admin-user (superadmin) */
-						'mod_fcgid_starter' => -1,
-						'mod_fcgid_maxrequests' => -1,
-						'guid' => Settings::Get('phpfpm.vhost_httpuser'),
-						'openbasedir' => 0,
-						'email' => Settings::Get('panel.adminmail'),
-						'loginname' => 'froxlor.panel',
-						'documentroot' => $mypath,
-					);
-
-					$php = new phpinterface($domain);
-					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass unix:".$php->getInterface()->getSocketFile().";\n";
-				} else {
-					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_pass ".Settings::Get('system.nginx_php_backend').";\n";
-				}
-
-				$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_index index.php;\n";
-				$this->nginx_data[$vhost_filename] .= "\t}\n";
 
 				$this->nginx_data[$vhost_filename] .= "}\n\n";
 				// End of Froxlor server{}-part

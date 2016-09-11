@@ -100,57 +100,69 @@ class lighttpd extends HttpConfigBase
 				$this->lighttpd_data[$vhost_filename] .= '# Froxlor default vhost' . "\n";
 				$this->lighttpd_data[$vhost_filename] .= '$HTTP["host"] =~ "^(?:www\.|)' . $myhost . '$" {' . "\n";
 
-				if ($row_ipsandports['docroot'] == '') {
-					if (Settings::Get('system.froxlordirectlyviahostname')) {
-						$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
-					} else {
-						$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
-					}
-				} else {
-					// user-defined docroot, #417
-					$mypath = makeCorrectDir($row_ipsandports['docroot']);
-				}
+				$mypath = $this->getMyPath($row_ipsandports);
 
 				$this->lighttpd_data[$vhost_filename] .= '  server.document-root = "' . $mypath . '"' . "\n";
 
-				/**
-				 * dirprotection, see #72
-				 *
-				 * @todo use better regex for this, deferred until 0.9.5
-				 *
-				 *       $this->lighttpd_data[$vhost_filename].= ' $HTTP["url"] =~ "^/(.+)\/(.+)\.php" {' . "\n";
-				 *       $this->lighttpd_data[$vhost_filename].= ' url.access-deny = ("")' . "\n";
-				 *       $this->lighttpd_data[$vhost_filename].= ' }' . "\n";
-				 */
+				$is_redirect = false;
+				// check for SSL redirect
+				if ($row_ipsandports['ssl'] == '0' && Settings::Get('system.le_froxlor_redirect') == '1') {
+					$is_redirect = true;
+					// check whether froxlor uses Let's Encrypt and not cert is being generated yet
+					// or a renew is ongoing - disable redirect
+					if (System::Get('system.le_froxlor_enabled') && ($this->froxlorVhostHasLetsEncryptCert() == false || $this->froxlorVhostLetsEncryptNeedsRenew())) {
+						$this->lighttpd_data[$vhost_filename] .= '# temp. disabled ssl-redirect due to Let\'s Encrypt certificate generation.' . PHP_EOL;
+						$is_redirect = false;
+					} else {
+						$_sslport = $this->checkAlternativeSslPort();
+						$mypath = 'https://' . Settings::Get('system.hostname') . $_sslport . '/';
 
-				/**
-				 * own php-fpm vhost
-				 */
-				if ((int) Settings::Get('phpfpm.enabled') == 1) {
-					$domain = array(
-						'id' => 'none',
-						'domain' => Settings::Get('system.hostname'),
-						'adminid' => 1, /* first admin-user (superadmin) */
-						'mod_fcgid_starter' => - 1,
-						'mod_fcgid_maxrequests' => - 1,
-						'guid' => Settings::Get('phpfpm.vhost_httpuser'),
-						'openbasedir' => 0,
-						'email' => Settings::Get('panel.adminmail'),
-						'loginname' => 'froxlor.panel',
-						'documentroot' => $mypath
-					);
+						$this->lighttpd_data[$vhost_filename] .= '  url.redirect = (' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= '     "^/(.*)$" => "' . $mypath . '$1"' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= '  )' . "\n";
+					}
+				}
 
-					$php = new phpinterface($domain);
+				if (!$is_redirect) {
+					/**
+					 * dirprotection, see #72
+					 *
+					 * @todo use better regex for this, deferred until 0.9.5
+					 *
+					 *       $this->lighttpd_data[$vhost_filename].= ' $HTTP["url"] =~ "^/(.+)\/(.+)\.php" {' . "\n";
+					 *       $this->lighttpd_data[$vhost_filename].= ' url.access-deny = ("")' . "\n";
+					 *       $this->lighttpd_data[$vhost_filename].= ' }' . "\n";
+					 */
 
-					$this->lighttpd_data[$vhost_filename] .= '  fastcgi.server = ( ' . "\n";
-					$this->lighttpd_data[$vhost_filename] .= "\t" . '".php" => (' . "\n";
-					$this->lighttpd_data[$vhost_filename] .= "\t\t" . '"localhost" => (' . "\n";
-					$this->lighttpd_data[$vhost_filename] .= "\t\t" . '"socket" => "' . $php->getInterface()->getSocketFile() . '",' . "\n";
-					$this->lighttpd_data[$vhost_filename] .= "\t\t" . '"check-local" => "enable",' . "\n";
-					$this->lighttpd_data[$vhost_filename] .= "\t\t" . '"disable-time" => 1' . "\n";
-					$this->lighttpd_data[$vhost_filename] .= "\t" . ')' . "\n";
-					$this->lighttpd_data[$vhost_filename] .= "\t" . ')' . "\n";
-					$this->lighttpd_data[$vhost_filename] .= '  )' . "\n";
+					/**
+					 * own php-fpm vhost
+					 */
+					if ((int) Settings::Get('phpfpm.enabled') == 1) {
+						$domain = array(
+							'id' => 'none',
+							'domain' => Settings::Get('system.hostname'),
+							'adminid' => 1, /* first admin-user (superadmin) */
+							'mod_fcgid_starter' => - 1,
+							'mod_fcgid_maxrequests' => - 1,
+							'guid' => Settings::Get('phpfpm.vhost_httpuser'),
+							'openbasedir' => 0,
+							'email' => Settings::Get('panel.adminmail'),
+							'loginname' => 'froxlor.panel',
+							'documentroot' => $mypath
+						);
+
+						$php = new phpinterface($domain);
+
+						$this->lighttpd_data[$vhost_filename] .= '  fastcgi.server = ( ' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= "\t" . '".php" => (' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= "\t\t" . '"localhost" => (' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= "\t\t" . '"socket" => "' . $php->getInterface()->getSocketFile() . '",' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= "\t\t" . '"check-local" => "enable",' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= "\t\t" . '"disable-time" => 1' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= "\t" . ')' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= "\t" . ')' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= '  )' . "\n";
+					}
 				}
 
 				if ($row_ipsandports['specialsettings'] != '') {

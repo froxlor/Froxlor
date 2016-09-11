@@ -97,44 +97,6 @@ return array(
 					'option_options_method' => 'getPhpConfigs',
 					'save_method' => 'storeSettingField',
 					),
-				'system_mod_fcgid_enabled_ownvhost' => array(
-					'label' => $lng['serversettings']['mod_fcgid_ownvhost'],
-					'settinggroup' => 'system',
-					'varname' => 'mod_fcgid_ownvhost',
-					'type' => 'bool',
-					'default' => true,
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array('apache2')
-					),
-				'system_mod_fcgid_httpuser' => array(
-					'label' => $lng['admin']['mod_fcgid_user'],
-					'settinggroup' => 'system',
-					'varname' => 'mod_fcgid_httpuser',
-					'type' => 'string',
-					'default' => 'froxlorlocal',
-					'save_method' => 'storeSettingWebserverFcgidFpmUser',
-					'websrv_avail' => array('apache2')
-					),
-				'system_mod_fcgid_httpgroup' => array(
-					'label' => $lng['admin']['mod_fcgid_group'],
-					'settinggroup' => 'system',
-					'varname' => 'mod_fcgid_httpgroup',
-					'type' => 'string',
-					'default' => 'froxlorlocal',
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array('apache2')
-					),
-				'system_mod_fcgid_defaultini_ownvhost' => array(
-					'label' => $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'],
-					'settinggroup' => 'system',
-					'varname' => 'mod_fcgid_defaultini_ownvhost',
-					'type' => 'option',
-					'default' => '2',
-					'option_mode' => 'one',
-					'option_options_method' => 'getPhpConfigs',
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array('apache2')
-					),
 				'system_mod_fcgid_idle_timeout' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['idle_timeout'],
 					'settinggroup' => 'system',

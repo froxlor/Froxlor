@@ -2036,3 +2036,4 @@ $lng['serversettings']['le_froxlor_enabled']['title'] = "Enable Let's Encrypt fo
 $lng['serversettings']['le_froxlor_enabled']['description'] = "If activated, the froxlor vhost will automatically be secured using a Let's Encrypt certificate.";
 $lng['serversettings']['le_froxlor_redirect']['title'] = "Enable SSL-redirect for the froxlor vhost";
 $lng['serversettings']['le_froxlor_redirect']['description'] = "If activated, all http requests to your froxlor will be redirected to the corresponding SSL site.";
+$lng['admin']['froxlorvhost'] = 'Froxlor VirtualHost settings';

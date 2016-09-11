@@ -69,14 +69,6 @@ return array(
 					'save_method' => 'storeSettingHostname',
 					'plausibility_check_method' => 'checkHostname',
 					),
-				'system_froxlordirectlyviahostname' => array(
-					'label' => $lng['serversettings']['froxlordirectlyviahostname'],
-					'settinggroup' => 'system',
-					'varname' => 'froxlordirectlyviahostname',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					),
 				'system_validatedomain' => array(
 					'label' => $lng['serversettings']['validate_domain'],
 					'settinggroup' => 'system',

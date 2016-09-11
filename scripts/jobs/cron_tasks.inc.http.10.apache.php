@@ -1,4 +1,7 @@
-<?php if (!defined('MASTER_CRONJOB')) die('You cannot access this file directly!');
+<?php
+
+if (! defined('MASTER_CRONJOB'))
+	die('You cannot access this file directly!');
 
 /**
  * This file is part of the Froxlor project.
@@ -9,26 +12,34 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
+ * @copyright (c) the authors
+ * @author Florian Lippert <flo@syscp.org> (2003-2009)
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Cron
  *
  */
 
-require_once(dirname(__FILE__).'/../classes/class.HttpConfigBase.php');
+require_once (dirname(__FILE__) . '/../classes/class.HttpConfigBase.php');
 
-class apache extends HttpConfigBase {
+class apache extends HttpConfigBase
+{
+
 	private $logger = false;
+
 	private $idnaConvert = false;
 
 	// protected
 	protected $known_vhostfilenames = array();
+
 	protected $known_diroptionsfilenames = array();
+
 	protected $known_htpasswdsfilenames = array();
+
 	protected $virtualhosts_data = array();
+
 	protected $diroptions_data = array();
+
 	protected $htpasswds_data = array();
 
 	/**
@@ -39,14 +50,15 @@ class apache extends HttpConfigBase {
 	 */
 	private $_deactivated = false;
 
-	public function __construct($logger, $idnaConvert) {
+	public function __construct($logger, $idnaConvert)
+	{
 		$this->logger = $logger;
 		$this->idnaConvert = $idnaConvert;
 	}
 
-
-	public function reload() {
-		if ((int)Settings::Get('phpfpm.enabled') == 1) {
+	public function reload()
+	{
+		if ((int) Settings::Get('phpfpm.enabled') == 1) {
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: reloading php-fpm');
 			safe_exec(escapeshellcmd(Settings::Get('phpfpm.reload')));
 		}
@@ -54,11 +66,11 @@ class apache extends HttpConfigBase {
 		safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
 	}
 
-
 	/**
 	 * define a standard <Directory>-statement, bug #32
 	 */
-	private function _createStandardDirectoryEntry() {
+	private function _createStandardDirectoryEntry()
+	{
 		$vhosts_folder = '';
 		if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
 			$vhosts_folder = makeCorrectDir(Settings::Get('system.apacheconf_vhost'));
@@ -67,53 +79,43 @@ class apache extends HttpConfigBase {
 		}
 		$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_dirfix_nofcgid.conf');
 
-		if (Settings::Get('system.mod_fcgid') == '1'
-			|| Settings::Get('phpfpm.enabled') == '1'
-		) {
+		if (Settings::Get('system.mod_fcgid') == '1' || Settings::Get('phpfpm.enabled') == '1') {
 			// if we use fcgid or php-fpm we don't need this file
 			if (file_exists($vhosts_filename)) {
 				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'apache::_createStandardDirectoryEntry: unlinking ' . basename($vhosts_filename));
 				unlink(makeCorrectFile($vhosts_filename));
 			}
 		} else {
-			if (!isset($this->virtualhosts_data[$vhosts_filename])) {
+			if (! isset($this->virtualhosts_data[$vhosts_filename])) {
 				$this->virtualhosts_data[$vhosts_filename] = '';
 			}
 
-			$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . makeCorrectDir(Settings::Get('system.documentroot_prefix')) . '">' . "\n";
+			$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . makeCorrectDir(Settings::Get('system.documentroot_prefix')) . '">' . "\n";
 
 			// check for custom values, see #1638
 			$custom_opts = Settings::Get('system.apacheglobaldiropt');
-			if (!empty($custom_opts))
-			{
-				$this->virtualhosts_data[$vhosts_filename].= $custom_opts . "\n";
-			}
-			else
-			{
+			if (! empty($custom_opts)) {
+				$this->virtualhosts_data[$vhosts_filename] .= $custom_opts . "\n";
+			} else {
 				// >=apache-2.4 enabled?
 				if (Settings::Get('system.apache24') == '1') {
-					$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '    AllowOverride All' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '    AllowOverride All' . "\n";
 				} else {
-					$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
-					$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
 				}
 			}
-			$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
+			$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 		}
 	}
-
 
 	/**
 	 * define a default ErrorDocument-statement, bug #unknown-yet
 	 */
-	private function _createStandardErrorHandler() {
-		if (Settings::Get('defaultwebsrverrhandler.enabled') == '1'
-			&& (Settings::Get('defaultwebsrverrhandler.err401') != ''
-				|| Settings::Get('defaultwebsrverrhandler.err403') != ''
-				|| Settings::Get('defaultwebsrverrhandler.err404') != ''
-				|| Settings::Get('defaultwebsrverrhandler.err500') != '')
-		) {
+	private function _createStandardErrorHandler()
+	{
+		if (Settings::Get('defaultwebsrverrhandler.enabled') == '1' && (Settings::Get('defaultwebsrverrhandler.err401') != '' || Settings::Get('defaultwebsrverrhandler.err403') != '' || Settings::Get('defaultwebsrverrhandler.err404') != '' || Settings::Get('defaultwebsrverrhandler.err500') != '')) {
 			$vhosts_folder = '';
 			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
 				$vhosts_folder = makeCorrectDir(Settings::Get('system.apacheconf_vhost'));
@@ -123,17 +125,22 @@ class apache extends HttpConfigBase {
 
 			$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
 
-			if (!isset($this->virtualhosts_data[$vhosts_filename])) {
+			if (! isset($this->virtualhosts_data[$vhosts_filename])) {
 				$this->virtualhosts_data[$vhosts_filename] = '';
 			}
 
-			$statusCodes = array('401', '403', '404', '500');
+			$statusCodes = array(
+				'401',
+				'403',
+				'404',
+				'500'
+			);
 			foreach ($statusCodes as $statusCode) {
 				if (Settings::Get('defaultwebsrverrhandler.err' . $statusCode) != '') {
 					$defhandler = Settings::Get('defaultwebsrverrhandler.err' . $statusCode);
-					if (!validateUrl($defhandler)) {
-						if (substr($defhandler, 0, 1) != '"' && substr($defhandler, -1, 1) != '"') {
-							$defhandler = '"'.makeCorrectFile($defhandler).'"';
+					if (! validateUrl($defhandler)) {
+						if (substr($defhandler, 0, 1) != '"' && substr($defhandler, - 1, 1) != '"') {
+							$defhandler = '"' . makeCorrectFile($defhandler) . '"';
 						}
 					}
 					$this->virtualhosts_data[$vhosts_filename] .= 'ErrorDocument ' . $statusCode . ' ' . $defhandler . "\n";
@@ -142,8 +149,8 @@ class apache extends HttpConfigBase {
 		}
 	}
 
-
-	public function createIpPort() {
+	public function createIpPort()
+	{
 		$result_ipsandports_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC");
 
 		while ($row_ipsandports = $result_ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -156,7 +163,7 @@ class apache extends HttpConfigBase {
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::createIpPort: creating ip/port settings for  ' . $ipport);
 			$vhosts_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
-			if (!isset($this->virtualhosts_data[$vhosts_filename])) {
+			if (! isset($this->virtualhosts_data[$vhosts_filename])) {
 				$this->virtualhosts_data[$vhosts_filename] = '';
 			}
 
@@ -170,7 +177,7 @@ class apache extends HttpConfigBase {
 				if (Settings::Get('system.apache24') == '1') {
 					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, $ipport . ' :: namevirtualhost-statement no longer needed for apache-2.4');
 				} else {
-					$this->virtualhosts_data[$vhosts_filename].= 'NameVirtualHost ' . $ipport . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= 'NameVirtualHost ' . $ipport . "\n";
 					$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted namevirtualhost-statement');
 				}
 			}
@@ -178,171 +185,180 @@ class apache extends HttpConfigBase {
 			if ($row_ipsandports['vhostcontainer'] == '1') {
 				$this->virtualhosts_data[$vhosts_filename] .= '<VirtualHost ' . $ipport . '>' . "\n";
 
-				if ($row_ipsandports['docroot'] == '') {
-					/**
-					 * add 'real'-vhost content here, like doc-root :)
-					 */
-					if (Settings::Get('system.froxlordirectlyviahostname')) {
-						$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
-					} else {
-						$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
-					}
-				} else {
-					// user-defined docroot, #417
-					$mypath = makeCorrectDir($row_ipsandports['docroot']);
-				}
+				$mypath = $this->getMyPath($row_ipsandports);
 
-				$this->virtualhosts_data[$vhosts_filename] .= 'DocumentRoot "'.$mypath.'"'."\n";
+				$this->virtualhosts_data[$vhosts_filename] .= 'DocumentRoot "' . $mypath . '"' . "\n";
 
 				if ($row_ipsandports['vhostcontainer_servername_statement'] == '1') {
 					$this->virtualhosts_data[$vhosts_filename] .= ' ServerName ' . Settings::Get('system.hostname') . "\n";
 				}
 
-				// create fcgid <Directory>-Part (starter is created in apache_fcgid)
-				if (Settings::Get('system.mod_fcgid_ownvhost') == '1'
-					&& Settings::Get('system.mod_fcgid') == '1'
-				) {
-					$configdir = makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/froxlor.panel/' . Settings::Get('system.hostname'));
-					$this->virtualhosts_data[$vhosts_filename] .= '  FcgidIdleTimeout ' . Settings::Get('system.mod_fcgid_idle_timeout') . "\n";
-					if ((int)Settings::Get('system.mod_fcgid_wrapper') == 0) {
-						$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_httpuser') . '" "' . Settings::Get('system.mod_fcgid_httpgroup') . '"' . "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '  ScriptAlias /php/ ' . $configdir . "\n";
+				$is_redirect = false;
+				// check for SSL redirect
+				if ($row_ipsandports['ssl'] == '0' && Settings::Get('system.le_froxlor_redirect') == '1') {
+					$is_redirect = true;
+					// check whether froxlor uses Let's Encrypt and not cert is being generated yet
+					// or a renew is ongoing - disable redirect
+					if (System::Get('system.le_froxlor_enabled') && ($this->froxlorVhostHasLetsEncryptCert() == false || $this->froxlorVhostLetsEncryptNeedsRenew())) {
+						$this->virtualhosts_data[$vhosts_filename] .= '# temp. disabled ssl-redirect due to Let\'s Encrypt certificate generation.' . PHP_EOL;
+						$is_redirect = false;
 					} else {
+						$_sslport = $this->checkAlternativeSslPort();
+
+						$mypath = 'https://' . Settings::Get('system.hostname') . $_sslport . '/';
+						$code = '301';
+						$modrew_red = ' [R=' . $code . ';L,NE]';
+
+						// redirect everything, not only root-directory, #541
+						$this->virtualhosts_data[$vhosts_filename] .= '  <IfModule mod_rewrite.c>' . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '    RewriteEngine On' . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '    RewriteCond %{HTTPS} off' . "\n";
+						if (System::Get('system.le_froxlor_enabled') == '1') {
+							$this->virtualhosts_data[$vhosts_filename] .= '    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge' . "\n";
+						}
+						$this->virtualhosts_data[$vhosts_filename] .= '    RewriteRule ^/(.*) ' . $mypath . '$1' . $modrew_red . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '  </IfModule>' . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '  <IfModule !mod_rewrite.c>' . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '    Redirect ' . $code . ' / ' . $mypath . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '  </IfModule>' . "\n";
+					}
+				}
+
+				if (!$is_redirect) {
+					// create fcgid <Directory>-Part (starter is created in apache_fcgid)
+					if (Settings::Get('system.mod_fcgid_ownvhost') == '1' && Settings::Get('system.mod_fcgid') == '1') {
+						$configdir = makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/froxlor.panel/' . Settings::Get('system.hostname'));
+						$this->virtualhosts_data[$vhosts_filename] .= '  FcgidIdleTimeout ' . Settings::Get('system.mod_fcgid_idle_timeout') . "\n";
+						if ((int) Settings::Get('system.mod_fcgid_wrapper') == 0) {
+							$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_httpuser') . '" "' . Settings::Get('system.mod_fcgid_httpgroup') . '"' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  ScriptAlias /php/ ' . $configdir . "\n";
+						} else {
+							$domain = array(
+								'id' => 'none',
+								'domain' => Settings::Get('system.hostname'),
+								'adminid' => 1, /* first admin-user (superadmin) */
+								'mod_fcgid_starter' => - 1,
+								'mod_fcgid_maxrequests' => - 1,
+								'guid' => Settings::Get('phpfpm.vhost_httpuser'),
+								'openbasedir' => 0,
+								'email' => Settings::Get('panel.adminmail'),
+								'loginname' => 'froxlor.panel',
+								'documentroot' => $mypath
+							);
+							$php = new phpinterface($domain);
+							$phpconfig = $php->getPhpConfig(Settings::Get('system.mod_fcgid_defaultini_ownvhost'));
+
+							$starter_filename = makeCorrectFile($configdir . '/php-fcgi-starter');
+							$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_httpuser') . '" "' . Settings::Get('system.mod_fcgid_httpgroup') . '"' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
+							$file_extensions = explode(' ', $phpconfig['file_extensions']);
+							$this->virtualhosts_data[$vhosts_filename] .= '    <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '      SetHandler fcgid-script' . "\n";
+							foreach ($file_extensions as $file_extension) {
+								$this->virtualhosts_data[$vhosts_filename] .= '      FcgidWrapper ' . $starter_filename . ' .' . $file_extension . "\n";
+							}
+							$this->virtualhosts_data[$vhosts_filename] .= '      Options +ExecCGI' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '    </FilesMatch>' . "\n";
+							// >=apache-2.4 enabled?
+							if (Settings::Get('system.apache24') == '1') {
+								$mypath_dir = new frxDirectory($mypath);
+								// only create the require all granted if there is not active directory-protection
+								// for this path, as this would be the first require and therefore grant all access
+								if ($mypath_dir->isUserProtected() == false) {
+									$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+									$this->virtualhosts_data[$vhosts_filename] .= '    AllowOverride All' . "\n";
+								}
+							} else {
+								$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
+								$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
+							}
+							$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+						}
+					}					// create php-fpm <Directory>-Part (config is created in apache_fcgid)
+					elseif (Settings::Get('phpfpm.enabled') == '1') {
 						$domain = array(
 							'id' => 'none',
 							'domain' => Settings::Get('system.hostname'),
 							'adminid' => 1, /* first admin-user (superadmin) */
-							'mod_fcgid_starter' => -1,
-							'mod_fcgid_maxrequests' => -1,
+						'mod_fcgid_starter' => - 1,
+							'mod_fcgid_maxrequests' => - 1,
 							'guid' => Settings::Get('phpfpm.vhost_httpuser'),
 							'openbasedir' => 0,
 							'email' => Settings::Get('panel.adminmail'),
 							'loginname' => 'froxlor.panel',
 							'documentroot' => $mypath
 						);
+
 						$php = new phpinterface($domain);
-						$phpconfig = $php->getPhpConfig(Settings::Get('system.mod_fcgid_defaultini_ownvhost'));
-
-						$starter_filename = makeCorrectFile($configdir . '/php-fcgi-starter');
-						$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_httpuser') . '" "' . Settings::Get('system.mod_fcgid_httpgroup') . '"' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '  <Directory "' . $mypath . '">' . "\n";
-						$file_extensions = explode(' ', $phpconfig['file_extensions']);
-						$this->virtualhosts_data[$vhosts_filename].= '    <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '      SetHandler fcgid-script' . "\n";
-						foreach ($file_extensions as $file_extension) {
-							$this->virtualhosts_data[$vhosts_filename].= '      FcgidWrapper ' . $starter_filename . ' .' . $file_extension . "\n";
+						$phpconfig = $php->getPhpConfig(Settings::Get('phpfpm.vhost_defaultini'));
+						$srvName = substr(md5($ipport), 0, 4) . '.fpm.external';
+						if ($row_ipsandports['ssl']) {
+							$srvName = substr(md5($ipport), 0, 4) . '.ssl-fpm.external';
 						}
-						$this->virtualhosts_data[$vhosts_filename].= '      Options +ExecCGI' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '    </FilesMatch>' . "\n";
-						// >=apache-2.4 enabled?
-						if (Settings::Get('system.apache24') == '1') {
-							$mypath_dir = new frxDirectory($mypath);
-							// only create the require all granted if there is not active directory-protection
-							// for this path, as this would be the first require and therefore grant all access
-							if ($mypath_dir->isUserProtected() == false) {
-								$this->virtualhosts_data[$vhosts_filename].= '    Require all granted' . "\n";
-								$this->virtualhosts_data[$vhosts_filename].= '    AllowOverride All' . "\n";
-							}
+
+						// mod_proxy stuff for apache-2.4
+						if (Settings::Get('system.apache24') == '1' && Settings::Get('phpfpm.use_mod_proxy') == '1') {
+							$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.php$>' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile() . '|fcgi://localhost' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
 						} else {
-							$this->virtualhosts_data[$vhosts_filename].= '    Order allow,deny' . "\n";
-							$this->virtualhosts_data[$vhosts_filename].= '    allow from all' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
+							$file_extensions = explode(' ', $phpconfig['file_extensions']);
+							$this->virtualhosts_data[$vhosts_filename] .= '   <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '     AddHandler php5-fastcgi .php' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '     Action php5-fastcgi /fastcgiphp' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '      Options +ExecCGI' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '    </FilesMatch>' . "\n";
+							// >=apache-2.4 enabled?
+							if (Settings::Get('system.apache24') == '1') {
+								$mypath_dir = new frxDirectory($mypath);
+								// only create the require all granted if there is not active directory-protection
+								// for this path, as this would be the first require and therefore grant all access
+								if ($mypath_dir->isUserProtected() == false) {
+									$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+									$this->virtualhosts_data[$vhosts_filename] .= '    AllowOverride All' . "\n";
+								}
+							} else {
+								$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
+								$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
+							}
+							$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . $srvName . "\n";
 						}
-						$this->virtualhosts_data[$vhosts_filename].= '  </Directory>' . "\n";
-					}
-				}
-				// create php-fpm <Directory>-Part (config is created in apache_fcgid)
-				elseif (Settings::Get('phpfpm.enabled') == '1') {
-					$domain = array(
-						'id' => 'none',
-						'domain' => Settings::Get('system.hostname'),
-						'adminid' => 1, /* first admin-user (superadmin) */
-						'mod_fcgid_starter' => -1,
-						'mod_fcgid_maxrequests' => -1,
-						'guid' => Settings::Get('phpfpm.vhost_httpuser'),
-						'openbasedir' => 0,
-						'email' => Settings::Get('panel.adminmail'),
-						'loginname' => 'froxlor.panel',
-						'documentroot' => $mypath,
-					);
-
-					$php = new phpinterface($domain);
-					$phpconfig = $php->getPhpConfig(Settings::Get('phpfpm.vhost_defaultini'));
-					$srvName = substr(md5($ipport),0,4).'.fpm.external';
-					if ($row_ipsandports['ssl']) {
-						$srvName = substr(md5($ipport),0,4).'.ssl-fpm.external';
-					}
-
-					// mod_proxy stuff for apache-2.4
-					if (Settings::Get('system.apache24') == '1'
-							&& Settings::Get('phpfpm.use_mod_proxy') == '1'
-					) {
-						$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.php$>'. "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost'. "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
-
 					} else {
-						$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName .' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
-						$file_extensions = explode(' ', $phpconfig['file_extensions']);
-						$this->virtualhosts_data[$vhosts_filename] .= '   <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '     AddHandler php5-fastcgi .php'. "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '     Action php5-fastcgi /fastcgiphp' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '      Options +ExecCGI' . "\n";
-						$this->virtualhosts_data[$vhosts_filename].= '    </FilesMatch>' . "\n";
-						// >=apache-2.4 enabled?
-						if (Settings::Get('system.apache24') == '1') {
-							$mypath_dir = new frxDirectory($mypath);
-							// only create the require all granted if there is not active directory-protection
-							// for this path, as this would be the first require and therefore grant all access
-							if ($mypath_dir->isUserProtected() == false) {
-								$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
-								$this->virtualhosts_data[$vhosts_filename] .= '    AllowOverride All' . "\n";
-							}
-						} else {
-							$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
-						}
-						$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
-						$this->virtualhosts_data[$vhosts_filename] .= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . $srvName . "\n";
-					}
-				}
-                else
-                {
-                    // mod_php
-                    $domain = array(
-                        'id' => 'none',
-                        'domain' => Settings::Get('system.hostname'),
-                        'adminid' => 1, /* first admin-user (superadmin) */
+						// mod_php
+						$domain = array(
+							'id' => 'none',
+							'domain' => Settings::Get('system.hostname'),
+							'adminid' => 1, /* first admin-user (superadmin) */
                         'guid' => Settings::Get('system.httpuser'),
-                        'openbasedir' => 0,
-                        'email' => Settings::Get('panel.adminmail'),
-                        'loginname' => 'froxlor.panel',
-                        'documentroot' => $mypath
-                    );
-                }
+							'openbasedir' => 0,
+							'email' => Settings::Get('panel.adminmail'),
+							'loginname' => 'froxlor.panel',
+							'documentroot' => $mypath
+						);
+					}
+				} // end of ssl-redirect check
 
 				/**
 				 * dirprotection, see #72
-				 * @TODO deferred until 0.9.5, needs more testing
-				 $this->virtualhosts_data[$vhosts_filename] .= "\t<Directory \"'.$mypath.'(images|packages|templates)\">\n";
-				 $this->virtualhosts_data[$vhosts_filename] .= "\t\tAllow from all\n";
-				 $this->virtualhosts_data[$vhosts_filename] .= "\t\tOptions -Indexes\n";
-				 $this->virtualhosts_data[$vhosts_filename] .= "\t</Directory>\n";
-
-				 $this->virtualhosts_data[$vhosts_filename] .= "\t<Directory \"'.$mypath.'*\">\n";
-				 $this->virtualhosts_data[$vhosts_filename] .= "\t\tOrder Deny,Allow\n";
-				 $this->virtualhosts_data[$vhosts_filename] .= "\t\tDeny from All\n";
-				 $this->virtualhosts_data[$vhosts_filename] .= "\t</Directory>\n";
-				 * end of dirprotection
+				 *
+				 * @todo deferred until 0.9.5, needs more testing
+				 *       $this->virtualhosts_data[$vhosts_filename] .= "\t<Directory \"'.$mypath.'(images|packages|templates)\">\n";
+				 *       $this->virtualhosts_data[$vhosts_filename] .= "\t\tAllow from all\n";
+				 *       $this->virtualhosts_data[$vhosts_filename] .= "\t\tOptions -Indexes\n";
+				 *       $this->virtualhosts_data[$vhosts_filename] .= "\t</Directory>\n";
+				 *
+				 *       $this->virtualhosts_data[$vhosts_filename] .= "\t<Directory \"'.$mypath.'*\">\n";
+				 *       $this->virtualhosts_data[$vhosts_filename] .= "\t\tOrder Deny,Allow\n";
+				 *       $this->virtualhosts_data[$vhosts_filename] .= "\t\tDeny from All\n";
+				 *       $this->virtualhosts_data[$vhosts_filename] .= "\t</Directory>\n";
+				 *       end of dirprotection
 				 */
 
 				if ($row_ipsandports['specialsettings'] != '') {
-					$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate(
-							$row_ipsandports['specialsettings'],
-							$domain,
-							$row_ipsandports['ip'],
-							$row_ipsandports['port'],
-							$row_ipsandports['ssl'] == '1') . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 				}
 
 				if ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
@@ -369,7 +385,7 @@ class apache extends HttpConfigBase {
 						'adminid' => 1, /* first admin-user (superadmin) */
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath,
-						'parentdomainid' => 0,
+						'parentdomainid' => 0
 					);
 
 					// override corresponding array values
@@ -387,9 +403,9 @@ class apache extends HttpConfigBase {
 					if ($domain['ssl_cert_file'] != '') {
 
 						// check for existence, #1485
-						if (!file_exists($domain['ssl_cert_file'])) {
-							$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate file "'.$domain['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
-							echo $ipport . ' :: certificate file "'.$domain['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
+						if (! file_exists($domain['ssl_cert_file'])) {
+							$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
+							echo $ipport . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create SSL-directives' . "\n";
 						} else {
 
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
@@ -402,9 +418,9 @@ class apache extends HttpConfigBase {
 
 							if ($domain['ssl_key_file'] != '') {
 								// check for existence, #1485
-								if (!file_exists($domain['ssl_key_file'])) {
-									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate key file "'.$domain['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
-									echo $ipport . ' :: certificate key file "'.$domain['ssl_key_file'].'" does not exist! SSL-directives might not be working'."\n";
+								if (! file_exists($domain['ssl_key_file'])) {
+									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate key file "' . $domain['ssl_key_file'] . '" does not exist! Cannot create ssl-directives');
+									echo $ipport . ' :: certificate key file "' . $domain['ssl_key_file'] . '" does not exist! SSL-directives might not be working' . "\n";
 								} else {
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
 								}
@@ -412,9 +428,9 @@ class apache extends HttpConfigBase {
 
 							if ($domain['ssl_ca_file'] != '') {
 								// check for existence, #1485
-								if (!file_exists($domain['ssl_ca_file'])) {
-									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate CA file "'.$domain['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
-									echo $ipport . ' :: certificate CA file "'.$domain['ssl_ca_file'].'" does not exist! SSL-directives might not be working'."\n";
+								if (! file_exists($domain['ssl_ca_file'])) {
+									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! Cannot create ssl-directives');
+									echo $ipport . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! SSL-directives might not be working' . "\n";
 								} else {
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
 								}
@@ -423,9 +439,9 @@ class apache extends HttpConfigBase {
 							// #418
 							if ($domain['ssl_cert_chainfile'] != '') {
 								// check for existence, #1485
-								if (!file_exists($domain['ssl_cert_chainfile'])) {
-									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate chain file "'.$domain['ssl_cert_chainfile'].'" does not exist! Cannot create ssl-directives');
-									echo $ipport . ' :: certificate chain file "'.$domain['ssl_cert_chainfile'].'" does not exist! SSL-directives might not be working'."\n";
+								if (! file_exists($domain['ssl_cert_chainfile'])) {
+									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate chain file "' . $domain['ssl_cert_chainfile'] . '" does not exist! Cannot create ssl-directives');
+									echo $ipport . ' :: certificate chain file "' . $domain['ssl_cert_chainfile'] . '" does not exist! SSL-directives might not be working' . "\n";
 								} else {
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
 								}
@@ -451,7 +467,6 @@ class apache extends HttpConfigBase {
 		$this->_createStandardErrorHandler();
 	}
 
-
 	/**
 	 * We put together the needed php options in the virtualhost entries
 	 *
@@ -460,29 +475,26 @@ class apache extends HttpConfigBase {
 	 *
 	 * @return string
 	 */
-	protected function composePhpOptions($domain, $ssl_vhost = false) {
+	protected function composePhpOptions($domain, $ssl_vhost = false)
+	{
 		$php_options_text = '';
 
 		if ($domain['phpenabled'] == '1') {
 			// This vHost has PHP enabled and we are using the regular mod_php
 
-            if ($domain['openbasedir'] == '1')
-            {
-                if ($domain['openbasedir_path'] == '1' || strstr($domain['documentroot'], ":") !== false)
-                {
-                    $_phpappendopenbasedir = appendOpenBasedirPath($domain['customerroot'], true);
-                }
-                else
-                {
-                    $_phpappendopenbasedir = appendOpenBasedirPath($domain['documentroot'], true);
-                }
+			if ($domain['openbasedir'] == '1') {
+				if ($domain['openbasedir_path'] == '1' || strstr($domain['documentroot'], ":") !== false) {
+					$_phpappendopenbasedir = appendOpenBasedirPath($domain['customerroot'], true);
+				} else {
+					$_phpappendopenbasedir = appendOpenBasedirPath($domain['documentroot'], true);
+				}
 
 				$_custom_openbasedir = explode(':', Settings::Get('system.phpappendopenbasedir'));
 				foreach ($_custom_openbasedir as $cobd) {
 					$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 				}
 
-				$php_options_text .= '  php_admin_value open_basedir "' . $_phpappendopenbasedir . '"'."\n";
+				$php_options_text .= '  php_admin_value open_basedir "' . $_phpappendopenbasedir . '"' . "\n";
 			}
 		} else {
 			$php_options_text .= '  # PHP is disabled for this vHost' . "\n";
@@ -494,22 +506,22 @@ class apache extends HttpConfigBase {
 		 * why is this here? Because it only works with mod_php
 		 */
 		if (Settings::get('system.apacheitksupport') == 1) {
-		    $php_options_text .= '  <IfModule mpm_itk_module>' . "\n";
-		    $php_options_text .= '    AssignUserID '. $domain['loginname'] . ' ' . $domain['loginname'] . "\n";
-		    $php_options_text .= '  </IfModule>' . "\n";
+			$php_options_text .= '  <IfModule mpm_itk_module>' . "\n";
+			$php_options_text .= '    AssignUserID ' . $domain['loginname'] . ' ' . $domain['loginname'] . "\n";
+			$php_options_text .= '  </IfModule>' . "\n";
 		}
 
 		return $php_options_text;
 	}
 
-
-	public function createOwnVhostStarter() {}
-
+	public function createOwnVhostStarter()
+	{}
 
 	/**
 	 * We collect all servernames and Aliases
 	 */
-	protected function getServerNames($domain) {
+	protected function getServerNames($domain)
+	{
 		$servernames_text = '  ServerName ' . $domain['domain'] . "\n";
 
 		$server_alias = '';
@@ -528,7 +540,9 @@ class apache extends HttpConfigBase {
 			FROM `" . TABLE_PANEL_DOMAINS . "`
 			WHERE `aliasdomain`= :domainid
 		");
-		Database::pexecute($alias_domains_stmt, array('domainid' => $domain['id']));
+		Database::pexecute($alias_domains_stmt, array(
+			'domainid' => $domain['id']
+		));
 
 		while (($alias_domain = $alias_domains_stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
 			$server_alias = '  ServerAlias ' . $alias_domain['domain'];
@@ -548,18 +562,16 @@ class apache extends HttpConfigBase {
 		return $servernames_text;
 	}
 
-
 	/**
 	 * Let's get the webroot
 	 */
-	protected function getWebroot($domain) {
+	protected function getWebroot($domain)
+	{
 		$webroot_text = '';
 		$domain['customerroot'] = makeCorrectDir($domain['customerroot']);
 		$domain['documentroot'] = makeCorrectDir($domain['documentroot']);
 
-		if ($domain['deactivated'] == '1'
-			&& Settings::Get('system.deactivateddocroot') != ''
-		) {
+		if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
 			$webroot_text .= '  # Using docroot for deactivated users...' . "\n";
 			$webroot_text .= '  DocumentRoot "' . makeCorrectDir(Settings::Get('system.deactivateddocroot')) . "\"\n";
 			$this->_deactivated = true;
@@ -571,11 +583,11 @@ class apache extends HttpConfigBase {
 		return $webroot_text;
 	}
 
-
 	/**
 	 * Lets set the text part for the stats software
 	 */
-	protected function getStats($domain) {
+	protected function getStats($domain)
+	{
 		$stats_text = '';
 
 		if ($domain['speciallogfile'] == '1') {
@@ -589,31 +601,29 @@ class apache extends HttpConfigBase {
 		} else {
 			if ($domain['customerroot'] != $domain['documentroot']) {
 				if (Settings::Get('system.awstats_enabled') == '1') {
-					$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
-					$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
+					$stats_text .= '  Alias /awstats "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
+					$stats_text .= '  Alias /awstats-icon "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
 				} else {
-					$stats_text.= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer') . '"' . "\n";
+					$stats_text .= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer') . '"' . "\n";
 				}
-			}
-			// if the docroots are equal, we still have to set an alias for awstats
+			}			// if the docroots are equal, we still have to set an alias for awstats
 			// because the stats are in /awstats/[domain], not just /awstats/
 			// also, the awstats-icons are someplace else too!
 			// -> webalizer does not need this!
 			elseif (Settings::Get('system.awstats_enabled') == '1') {
-				$stats_text.= '  Alias /awstats "' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
-				$stats_text.= '  Alias /awstats-icon "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
+				$stats_text .= '  Alias /awstats "' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
+				$stats_text .= '  Alias /awstats-icon "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
 			}
 		}
 
 		return $stats_text;
 	}
 
-
 	/**
 	 * Lets set the logfiles
 	 */
-	protected function getLogfiles($domain) {
-
+	protected function getLogfiles($domain)
+	{
 		$logfiles_text = '';
 
 		if ($domain['speciallogfile'] == '1') {
@@ -640,10 +650,10 @@ class apache extends HttpConfigBase {
 		chgrp($access_log, Settings::Get('system.httpgroup'));
 
 		$logfiles_text .= '  ErrorLog "' . $error_log . "\"\n";
-		$logfiles_text .= '  CustomLog "' . $access_log .'" combined' . "\n";
+		$logfiles_text .= '  CustomLog "' . $access_log . '" combined' . "\n";
 
 		if (Settings::Get('system.awstats_enabled') == '1') {
-			if ((int)$domain['parentdomainid'] == 0) {
+			if ((int) $domain['parentdomainid'] == 0) {
 				// prepare the aliases and subdomains for stats config files
 				$server_alias = '';
 				$alias_domains_stmt = Database::prepare("
@@ -651,7 +661,9 @@ class apache extends HttpConfigBase {
 					FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `aliasdomain` = :domainid OR `parentdomainid` = :domainid
 				");
-				Database::pexecute($alias_domains_stmt, array('domainid' => $domain['id']));
+				Database::pexecute($alias_domains_stmt, array(
+					'domainid' => $domain['id']
+				));
 
 				while (($alias_domain = $alias_domains_stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
 
@@ -682,31 +694,24 @@ class apache extends HttpConfigBase {
 		return $logfiles_text;
 	}
 
-
 	/**
 	 * Get the filename for the virtualhost
 	 */
-	protected function getVhostFilename($domain, $ssl_vhost = false) {
-		if ((int)$domain['parentdomainid'] == 0
-			&& isCustomerStdSubdomain((int)$domain['id']) == false
-			&& ((int)$domain['ismainbutsubto'] == 0
-				|| domainMainToSubExists($domain['ismainbutsubto']) == false)
-		) {
+	protected function getVhostFilename($domain, $ssl_vhost = false)
+	{
+		if ((int) $domain['parentdomainid'] == 0 && isCustomerStdSubdomain((int) $domain['id']) == false && ((int) $domain['ismainbutsubto'] == 0 || domainMainToSubExists($domain['ismainbutsubto']) == false)) {
 			$vhost_no = '35';
-		} elseif ((int)$domain['parentdomainid'] == 0
-			&& isCustomerStdSubdomain((int)$domain['id']) == false
-			&& (int)$domain['ismainbutsubto'] > 0
-		) {
+		} elseif ((int) $domain['parentdomainid'] == 0 && isCustomerStdSubdomain((int) $domain['id']) == false && (int) $domain['ismainbutsubto'] > 0) {
 			$vhost_no = '30';
 		} else {
 			// number of dots in a domain specifies it's position (and depth of subdomain) starting at 29 going downwards on higher depth
-			$vhost_no = (string)(30 - substr_count($domain['domain'], ".") + 1);
+			$vhost_no = (string) (30 - substr_count($domain['domain'], ".") + 1);
 		}
 
 		if ($ssl_vhost === true) {
-			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/'.$vhost_no.'_froxlor_ssl_vhost_' . $domain['domain'] . '.conf');
+			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/' . $vhost_no . '_froxlor_ssl_vhost_' . $domain['domain'] . '.conf');
 		} else {
-			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/'.$vhost_no.'_froxlor_normal_vhost_' . $domain['domain'] . '.conf');
+			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/' . $vhost_no . '_froxlor_normal_vhost_' . $domain['domain'] . '.conf');
 		}
 
 		return $vhost_filename;
@@ -715,20 +720,16 @@ class apache extends HttpConfigBase {
 	/**
 	 * We compose the virtualhost entry for one domain
 	 */
-	protected function getVhostContent($domain, $ssl_vhost = false) {
-		if ($ssl_vhost === true
-			&& ($domain['ssl_redirect'] != '1'
-				&& $domain['ssl'] != '1')
-		) {
+	protected function getVhostContent($domain, $ssl_vhost = false)
+	{
+		if ($ssl_vhost === true && ($domain['ssl_redirect'] != '1' && $domain['ssl'] != '1')) {
 			return '';
 		}
 
-		$query = "SELECT * FROM `".TABLE_PANEL_IPSANDPORTS."` `i`, `".TABLE_DOMAINTOIP."` `dip`
+		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` `i`, `" . TABLE_DOMAINTOIP . "` `dip`
 			WHERE dip.id_domain = :domainid AND i.id = dip.id_ipandports ";
 
-		if ($ssl_vhost === true
-			&& ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')
-		) {
+		if ($ssl_vhost === true && ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')) {
 			// by ordering by cert-file the row with filled out SSL-Fields will be shown last, thus it is enough to fill out 1 set of SSL-Fields
 			$query .= "AND i.ssl = '1' ORDER BY i.ssl_cert_file ASC;";
 		} else {
@@ -737,7 +738,9 @@ class apache extends HttpConfigBase {
 
 		$vhost_content = '';
 		$result_stmt = Database::prepare($query);
-		Database::pexecute($result_stmt, array('domainid' => $domain['id']));
+		Database::pexecute($result_stmt, array(
+			'domainid' => $domain['id']
+		));
 
 		$ipportlist = '';
 		$_vhost_content = '';
@@ -760,29 +763,21 @@ class apache extends HttpConfigBase {
 			}
 
 			if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-				$ipport = '['.$domain['ip'].']:'.$domain['port']. ' ';
+				$ipport = '[' . $domain['ip'] . ']:' . $domain['port'] . ' ';
 			} else {
-				$ipport = $domain['ip'].':'.$domain['port'].' ';
+				$ipport = $domain['ip'] . ':' . $domain['port'] . ' ';
 			}
 
 			if ($ipandport['default_vhostconf_domain'] != '') {
-				$_vhost_content .= $this->processSpecialConfigTemplate(
-										$ipandport['default_vhostconf_domain'],
-										$domain,
-										$domain['ip'],
-										$domain['port'],
-										$ssl_vhost) . "\n";
+				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
 			$ipportlist .= $ipport;
 		}
 
 		$vhost_content .= '<VirtualHost ' . trim($ipportlist) . '>' . "\n";
-		$vhost_content.= $this->getServerNames($domain);
+		$vhost_content .= $this->getServerNames($domain);
 
-		if (($ssl_vhost == false
-				&& $domain['ssl'] == '1'
-				&& $domain['ssl_redirect'] == '1')
-		) {
+		if (($ssl_vhost == false && $domain['ssl'] == '1' && $domain['ssl_redirect'] == '1')) {
 			// We must not check if our port differs from port 443,
 			// but if there is a destination-port != 443
 			$_sslport = '';
@@ -790,25 +785,24 @@ class apache extends HttpConfigBase {
 			// ordered by ssl-certificate (if any) so that the ip/port combo
 			// with certificate is used
 			$ssldestport_stmt = Database::prepare("
-				SELECT `ip`.`port` FROM ".TABLE_PANEL_IPSANDPORTS." `ip`
-				LEFT JOIN `".TABLE_DOMAINTOIP."` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
+				SELECT `ip`.`port` FROM " . TABLE_PANEL_IPSANDPORTS . " `ip`
+				LEFT JOIN `" . TABLE_DOMAINTOIP . "` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
 				WHERE `dip`.`id_domain` = :domainid
 				AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
 				ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;
 			");
-			$ssldestport = Database::pexecute_first($ssldestport_stmt, array('domainid' => $domain['id']));
+			$ssldestport = Database::pexecute_first($ssldestport_stmt, array(
+				'domainid' => $domain['id']
+			));
 
 			if ($ssldestport['port'] != '') {
-				$_sslport = ":".$ssldestport['port'];
+				$_sslport = ":" . $ssldestport['port'];
 			}
 
 			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
 		}
 
-		if ($ssl_vhost === true
-			&& $domain['ssl'] == '1'
-			&& Settings::Get('system.use_ssl') == '1'
-		) {
+		if ($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
 			if ($domain['ssl_cert_file'] == '') {
 				$domain['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 			}
@@ -876,41 +870,35 @@ class apache extends HttpConfigBase {
 			$code = getDomainRedirectCode($domain['id']);
 			$modrew_red = '';
 			if ($code != '') {
-				$modrew_red = ' [R='. $code . ';L,NE]';
+				$modrew_red = ' [R=' . $code . ';L,NE]';
 			}
 
 			// redirect everything, not only root-directory, #541
-			$vhost_content .= '  <IfModule mod_rewrite.c>'."\n";
+			$vhost_content .= '  <IfModule mod_rewrite.c>' . "\n";
 			$vhost_content .= '    RewriteEngine On' . "\n";
-			if (!$ssl_vhost) {
+			if (! $ssl_vhost) {
 				$vhost_content .= '    RewriteCond %{HTTPS} off' . "\n";
 			}
 			if ($domain['letsencrypt'] == '1') {
 				$vhost_content .= '    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge' . "\n";
 			}
-			$vhost_content .= '    RewriteRule ^/(.*) '. $corrected_docroot.'$1' . $modrew_red . "\n";
+			$vhost_content .= '    RewriteRule ^/(.*) ' . $corrected_docroot . '$1' . $modrew_red . "\n";
 			$vhost_content .= '  </IfModule>' . "\n";
-			$vhost_content .= '  <IfModule !mod_rewrite.c>'."\n";
-			$vhost_content .= '    Redirect '.$code.' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
+			$vhost_content .= '  <IfModule !mod_rewrite.c>' . "\n";
+			$vhost_content .= '    Redirect ' . $code . ' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
 			$vhost_content .= '  </IfModule>' . "\n";
-
 		} else {
 
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 			$vhost_content .= $this->getWebroot($domain);
 			if ($this->_deactivated == false) {
-				$vhost_content .= $this->composePhpOptions($domain,$ssl_vhost);
+				$vhost_content .= $this->composePhpOptions($domain, $ssl_vhost);
 				$vhost_content .= $this->getStats($domain);
 			}
 			$vhost_content .= $this->getLogfiles($domain);
 
 			if ($domain['specialsettings'] != '') {
-				$vhost_content .= $this->processSpecialConfigTemplate(
-						$domain['specialsettings'],
-						$domain,
-						$domain['ip'],
-						$domain['port'],
-						$ssl_vhost) . "\n";
+				$vhost_content .= $this->processSpecialConfigTemplate($domain['specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
 
 			if ($_vhost_content != '') {
@@ -918,12 +906,7 @@ class apache extends HttpConfigBase {
 			}
 
 			if (Settings::Get('system.default_vhostconf') != '') {
-				$vhost_content .= $this->processSpecialConfigTemplate(
-						Settings::Get('system.default_vhostconf'),
-						$domain,
-						$domain['ip'],
-						$domain['port'],
-						$ssl_vhost) . "\n";
+				$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_vhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
 		}
 
@@ -932,12 +915,11 @@ class apache extends HttpConfigBase {
 		return $vhost_content;
 	}
 
-
 	/**
 	 * We compose the virtualhost entries for the domains
 	 */
-	public function createVirtualHosts() {
-
+	public function createVirtualHosts()
+	{
 		$domains = WebserverBase::getVhostsToCreate();
 		foreach ($domains as $domain) {
 
@@ -947,11 +929,9 @@ class apache extends HttpConfigBase {
 			// Apply header
 			$this->virtualhosts_data[$vhosts_filename] = '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
 
-			if ($domain['deactivated'] != '1'
-				|| Settings::Get('system.deactivateddocroot') != ''
-			) {
+			if ($domain['deactivated'] != '1' || Settings::Get('system.deactivateddocroot') != '') {
 				// Create vhost without ssl
-				$this->virtualhosts_data[$vhosts_filename].= $this->getVhostContent($domain, false);
+				$this->virtualhosts_data[$vhosts_filename] .= $this->getVhostContent($domain, false);
 
 				if ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1') {
 					// Adding ssl stuff if enabled
@@ -965,11 +945,11 @@ class apache extends HttpConfigBase {
 		}
 	}
 
-
 	/**
 	 * We compose the diroption entries for the paths
 	 */
-	public function createFileDirOptions() {
+	public function createFileDirOptions()
+	{
 		$result_stmt = Database::query("
 			SELECT `htac`.*, `c`.`guid`, `c`.`documentroot` AS `customerroot`
 			FROM `" . TABLE_PANEL_HTACCESS . "` `htac`
@@ -979,10 +959,7 @@ class apache extends HttpConfigBase {
 		$diroptions = array();
 
 		while ($row_diroptions = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if ($row_diroptions['customerid'] != 0
-				&& isset($row_diroptions['customerroot'])
-				&& $row_diroptions['customerroot'] != ''
-			) {
+			if ($row_diroptions['customerid'] != 0 && isset($row_diroptions['customerroot']) && $row_diroptions['customerroot'] != '') {
 				$diroptions[$row_diroptions['path']] = $row_diroptions;
 				$diroptions[$row_diroptions['path']]['htpasswds'] = array();
 			}
@@ -996,11 +973,8 @@ class apache extends HttpConfigBase {
 		");
 
 		while ($row_htpasswds = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if ($row_htpasswds['customerid'] != 0
-				&& isset($row_htpasswds['customerroot'])
-				&& $row_htpasswds['customerroot'] != ''
-			) {
-				if (!isset($diroptions[$row_htpasswds['path']]) || !is_array($diroptions[$row_htpasswds['path']])) {
+			if ($row_htpasswds['customerid'] != 0 && isset($row_htpasswds['customerroot']) && $row_htpasswds['customerroot'] != '') {
+				if (! isset($diroptions[$row_htpasswds['path']]) || ! is_array($diroptions[$row_htpasswds['path']])) {
 					$diroptions[$row_htpasswds['path']] = array();
 				}
 
@@ -1017,7 +991,7 @@ class apache extends HttpConfigBase {
 			mkDirWithCorrectOwnership($row_diroptions['customerroot'], $row_diroptions['path'], $row_diroptions['guid'], $row_diroptions['guid']);
 			$diroptions_filename = makeCorrectFile(Settings::Get('system.apacheconf_diroptions') . '/40_froxlor_diroption_' . md5($row_diroptions['path']) . '.conf');
 
-			if (!isset($this->diroptions_data[$diroptions_filename])) {
+			if (! isset($this->diroptions_data[$diroptions_filename])) {
 				$this->diroptions_data[$diroptions_filename] = '';
 			}
 
@@ -1026,59 +1000,48 @@ class apache extends HttpConfigBase {
 
 				$this->diroptions_data[$diroptions_filename] .= '<Directory "' . $row_diroptions['path'] . '">' . "\n";
 
-				if (isset($row_diroptions['options_indexes'])
-					&& $row_diroptions['options_indexes'] == '1'
-				) {
+				if (isset($row_diroptions['options_indexes']) && $row_diroptions['options_indexes'] == '1') {
 					$this->diroptions_data[$diroptions_filename] .= '  Options +Indexes';
 
 					// add perl options if enabled
-					if ($cperlenabled
-						&& isset($row_diroptions['options_cgi'])
-						&& $row_diroptions['options_cgi'] == '1'
-					) {
-						$this->diroptions_data[$diroptions_filename] .= ' +ExecCGI -MultiViews +SymLinksIfOwnerMatch +FollowSymLinks'."\n";
+					if ($cperlenabled && isset($row_diroptions['options_cgi']) && $row_diroptions['options_cgi'] == '1') {
+						$this->diroptions_data[$diroptions_filename] .= ' +ExecCGI -MultiViews +SymLinksIfOwnerMatch +FollowSymLinks' . "\n";
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= "\n";
 					}
 					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Setting Options +Indexes for ' . $row_diroptions['path']);
 				}
 
-				if (isset($row_diroptions['options_indexes'])
-					&& $row_diroptions['options_indexes'] == '0'
-				) {
+				if (isset($row_diroptions['options_indexes']) && $row_diroptions['options_indexes'] == '0') {
 					$this->diroptions_data[$diroptions_filename] .= '  Options -Indexes';
 
 					// add perl options if enabled
-					if ($cperlenabled
-						&& isset($row_diroptions['options_cgi'])
-						&& $row_diroptions['options_cgi'] == '1'
-					) {
-						$this->diroptions_data[$diroptions_filename] .= ' +ExecCGI -MultiViews +SymLinksIfOwnerMatch +FollowSymLinks'."\n";
+					if ($cperlenabled && isset($row_diroptions['options_cgi']) && $row_diroptions['options_cgi'] == '1') {
+						$this->diroptions_data[$diroptions_filename] .= ' +ExecCGI -MultiViews +SymLinksIfOwnerMatch +FollowSymLinks' . "\n";
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= "\n";
 					}
 					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Setting Options -Indexes for ' . $row_diroptions['path']);
 				}
 
-				$statusCodes = array('404', '403', '500');
+				$statusCodes = array(
+					'404',
+					'403',
+					'500'
+				);
 				foreach ($statusCodes as $statusCode) {
-					if (isset($row_diroptions['error' . $statusCode . 'path'])
-						&& $row_diroptions['error' . $statusCode . 'path'] != ''
-					) {
+					if (isset($row_diroptions['error' . $statusCode . 'path']) && $row_diroptions['error' . $statusCode . 'path'] != '') {
 						$defhandler = $row_diroptions['error' . $statusCode . 'path'];
-						if (!validateUrl($defhandler)) {
-							if (substr($defhandler, 0, 1) != '"' && substr($defhandler, -1, 1) != '"') {
-								$defhandler = '"'.makeCorrectFile($defhandler).'"';
+						if (! validateUrl($defhandler)) {
+							if (substr($defhandler, 0, 1) != '"' && substr($defhandler, - 1, 1) != '"') {
+								$defhandler = '"' . makeCorrectFile($defhandler) . '"';
 							}
 						}
-						$this->diroptions_data[$diroptions_filename].= '  ErrorDocument ' . $statusCode . ' ' . $defhandler . "\n";
+						$this->diroptions_data[$diroptions_filename] .= '  ErrorDocument ' . $statusCode . ' ' . $defhandler . "\n";
 					}
 				}
 
-				if ($cperlenabled
-					&& isset($row_diroptions['options_cgi'])
-					&& $row_diroptions['options_cgi'] == '1'
-				) {
+				if ($cperlenabled && isset($row_diroptions['options_cgi']) && $row_diroptions['options_cgi'] == '1') {
 					$this->diroptions_data[$diroptions_filename] .= '  AllowOverride None' . "\n";
 					$this->diroptions_data[$diroptions_filename] .= '  AddHandler cgi-script .cgi .pl' . "\n";
 					// >=apache-2.4 enabled?
@@ -1088,7 +1051,7 @@ class apache extends HttpConfigBase {
 						// for this path, as this would be the first require and therefore grant all access
 						if ($mypath_dir->isUserProtected() == false) {
 							$this->diroptions_data[$diroptions_filename] .= '  Require all granted' . "\n";
-							//$this->diroptions_data[$diroptions_filename] .= '  AllowOverride All' . "\n";
+							// $this->diroptions_data[$diroptions_filename] .= ' AllowOverride All' . "\n";
 						}
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= '  Order allow,deny' . "\n";
@@ -1097,39 +1060,39 @@ class apache extends HttpConfigBase {
 					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Enabling perl execution for ' . $row_diroptions['path']);
 
 					// check for suexec-workaround, #319
-					if ((int)Settings::Get('perl.suexecworkaround') == 1) {
+					if ((int) Settings::Get('perl.suexecworkaround') == 1) {
 						// symlink this directory to suexec-safe-path
 						$loginname = getCustomerDetail($row_diroptions['customerid'], 'loginname');
-						$suexecpath = makeCorrectDir(Settings::Get('perl.suexecpath').'/'.$loginname.'/'.md5($row_diroptions['path']).'/');
+						$suexecpath = makeCorrectDir(Settings::Get('perl.suexecpath') . '/' . $loginname . '/' . md5($row_diroptions['path']) . '/');
 
-						if (!file_exists($suexecpath)) {
-							safe_exec('mkdir -p '.escapeshellarg($suexecpath));
-							safe_exec('chown -R '.escapeshellarg($row_diroptions['guid']).':'.escapeshellarg($row_diroptions['guid']).' '.escapeshellarg($suexecpath));
+						if (! file_exists($suexecpath)) {
+							safe_exec('mkdir -p ' . escapeshellarg($suexecpath));
+							safe_exec('chown -R ' . escapeshellarg($row_diroptions['guid']) . ':' . escapeshellarg($row_diroptions['guid']) . ' ' . escapeshellarg($suexecpath));
 						}
 
 						// symlink to {$givenpath}/cgi-bin
 						// NOTE: symlinks are FILES, so do not append a / here
-						$perlsymlink = makeCorrectFile($row_diroptions['path'].'/cgi-bin');
-						if (!file_exists($perlsymlink)) {
-							safe_exec('ln -s '.escapeshellarg($suexecpath).' '.escapeshellarg($perlsymlink));
+						$perlsymlink = makeCorrectFile($row_diroptions['path'] . '/cgi-bin');
+						if (! file_exists($perlsymlink)) {
+							safe_exec('ln -s ' . escapeshellarg($suexecpath) . ' ' . escapeshellarg($perlsymlink));
 						}
-						safe_exec('chown -h '.escapeshellarg($row_diroptions['guid']).':'.escapeshellarg($row_diroptions['guid']).' '.escapeshellarg($perlsymlink));
+						safe_exec('chown -h ' . escapeshellarg($row_diroptions['guid']) . ':' . escapeshellarg($row_diroptions['guid']) . ' ' . escapeshellarg($perlsymlink));
 					}
 				} else {
 					// if no perl-execution is enabled but the workaround is,
 					// we have to remove the symlink and folder in suexecpath
-					if ((int)Settings::Get('perl.suexecworkaround') == 1) {
+					if ((int) Settings::Get('perl.suexecworkaround') == 1) {
 						$loginname = getCustomerDetail($row_diroptions['customerid'], 'loginname');
-						$suexecpath = makeCorrectDir(Settings::Get('perl.suexecpath').'/'.$loginname.'/'.md5($row_diroptions['path']).'/');
-						$perlsymlink = makeCorrectFile($row_diroptions['path'].'/cgi-bin');
+						$suexecpath = makeCorrectDir(Settings::Get('perl.suexecpath') . '/' . $loginname . '/' . md5($row_diroptions['path']) . '/');
+						$perlsymlink = makeCorrectFile($row_diroptions['path'] . '/cgi-bin');
 
 						// remove symlink
 						if (file_exists($perlsymlink)) {
-							safe_exec('rm -f '.escapeshellarg($perlsymlink));
+							safe_exec('rm -f ' . escapeshellarg($perlsymlink));
 						}
 						// remove folder in suexec-path
 						if (file_exists($suexecpath)) {
-							safe_exec('rm -rf '.escapeshellarg($suexecpath));
+							safe_exec('rm -rf ' . escapeshellarg($suexecpath));
 						}
 					}
 				}
@@ -1137,7 +1100,7 @@ class apache extends HttpConfigBase {
 				if (count($row_diroptions['htpasswds']) > 0) {
 					$htpasswd_filename = makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $row_diroptions['customerid'] . '-' . md5($row_diroptions['path']) . '.htpasswd');
 
-					if (!isset($this->htpasswds_data[$htpasswd_filename])) {
+					if (! isset($this->htpasswds_data[$htpasswd_filename])) {
 						$this->htpasswds_data[$htpasswd_filename] = '';
 					}
 
@@ -1146,7 +1109,7 @@ class apache extends HttpConfigBase {
 					}
 
 					$this->diroptions_data[$diroptions_filename] .= '  AuthType Basic' . "\n";
-					$this->diroptions_data[$diroptions_filename] .= '  AuthName "'.$row_htpasswd['authname'].'"' . "\n";
+					$this->diroptions_data[$diroptions_filename] .= '  AuthName "' . $row_htpasswd['authname'] . '"' . "\n";
 					$this->diroptions_data[$diroptions_filename] .= '  AuthUserFile ' . $htpasswd_filename . "\n";
 					$this->diroptions_data[$diroptions_filename] .= '  require valid-user' . "\n";
 				}
@@ -1156,22 +1119,22 @@ class apache extends HttpConfigBase {
 		}
 	}
 
-
 	/**
 	 * We write the configs
 	 */
-	public function writeConfigs() {
+	public function writeConfigs()
+	{
 		// Write diroptions
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_diroptions'));
 
 		if (count($this->diroptions_data) > 0) {
 			$optsDir = new frxDirectory(Settings::Get('system.apacheconf_diroptions'));
-			if (!$optsDir->isConfigDir()) {
+			if (! $optsDir->isConfigDir()) {
 				// Save one big file
 				$diroptions_file = '';
 
 				foreach ($this->diroptions_data as $diroptions_filename => $diroptions_content) {
-					$diroptions_file.= $diroptions_content . "\n\n";
+					$diroptions_file .= $diroptions_content . "\n\n";
 				}
 
 				$diroptions_filename = Settings::Get('system.apacheconf_diroptions');
@@ -1182,7 +1145,7 @@ class apache extends HttpConfigBase {
 				fwrite($diroptions_file_handler, $diroptions_file);
 				fclose($diroptions_file_handler);
 			} else {
-				if (!file_exists(Settings::Get('system.apacheconf_diroptions'))) {
+				if (! file_exists(Settings::Get('system.apacheconf_diroptions'))) {
 					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'apache::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))));
 					safe_exec('mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))));
 				}
@@ -1204,7 +1167,7 @@ class apache extends HttpConfigBase {
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_htpasswddir'));
 
 		if (count($this->htpasswds_data) > 0) {
-			if (!file_exists(Settings::Get('system.apacheconf_htpasswddir'))) {
+			if (! file_exists(Settings::Get('system.apacheconf_htpasswddir'))) {
 				$umask = umask();
 				umask(0000);
 				mkdir(Settings::Get('system.apacheconf_htpasswddir'), 0751);
@@ -1229,24 +1192,24 @@ class apache extends HttpConfigBase {
 
 		if (count($this->virtualhosts_data) > 0) {
 			$vhostDir = new frxDirectory(Settings::Get('system.apacheconf_vhost'));
-			if (!$vhostDir->isConfigDir()) {
+			if (! $vhostDir->isConfigDir()) {
 				// Save one big file
 				$vhosts_file = '';
 
 				// sort by filename so the order is:
-				// 1. subdomains                  x-29
-				// 2. subdomains as main-domains  30
-				// 3. main-domains                35
+				// 1. subdomains x-29
+				// 2. subdomains as main-domains 30
+				// 3. main-domains 35
 				// #437
 				ksort($this->virtualhosts_data);
 
 				foreach ($this->virtualhosts_data as $vhosts_filename => $vhost_content) {
-					$vhosts_file.= $vhost_content . "\n\n";
+					$vhosts_file .= $vhost_content . "\n\n";
 				}
 
 				// Include diroptions file in case it exists
 				if (file_exists(Settings::Get('system.apacheconf_diroptions'))) {
-					$vhosts_file.= "\n" . 'Include ' . Settings::Get('system.apacheconf_diroptions') . "\n\n";
+					$vhosts_file .= "\n" . 'Include ' . Settings::Get('system.apacheconf_diroptions') . "\n\n";
 				}
 
 				$vhosts_filename = Settings::Get('system.apacheconf_vhost');
@@ -1257,7 +1220,7 @@ class apache extends HttpConfigBase {
 				fwrite($vhosts_file_handler, $vhosts_file);
 				fclose($vhosts_file_handler);
 			} else {
-				if (!file_exists(Settings::Get('system.apacheconf_vhost'))) {
+				if (! file_exists(Settings::Get('system.apacheconf_vhost'))) {
 					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'apache::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 					safe_exec('mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 				}
@@ -1275,6 +1238,4 @@ class apache extends HttpConfigBase {
 			}
 		}
 	}
-
-
 }
