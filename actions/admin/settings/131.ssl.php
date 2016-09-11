@@ -105,6 +105,15 @@ return array(
 								'default' => false,
 								'save_method' => 'storeSettingField'
 							),
+							'system_letsencryptacmeconf' => array(
+									'label' => $lng['serversettings']['letsencryptacmeconf'],
+									'settinggroup' => 'system',
+									'varname' => 'letsencryptacmeconf',
+									'type' => 'string',
+									'string_emptyallowed' => false,
+									'default' => '/etc/acme.conf',
+									'save_method' => 'storeSettingField',
+							),
 							'system_letsencryptca' => array(
 									'label' => $lng['serversettings']['letsencryptca'],
 									'settinggroup' => 'system',
