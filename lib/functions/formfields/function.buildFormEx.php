@@ -49,7 +49,7 @@ function buildFormEx($form, $part = '') {
 					$do_show = $groupdetails['visible'];
 				}
 
-				if ($do_show) {
+				//if ($do_show) {
 					if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
 						$fields .= getFormGroupOutput($groupname, $groupdetails);
 					}
@@ -66,7 +66,7 @@ function buildFormEx($form, $part = '') {
 							$fields .= getFormFieldOutput($fieldname, $fielddetails);
 						}
 					}
-				}
+				//}
 			}
 		}
 	}

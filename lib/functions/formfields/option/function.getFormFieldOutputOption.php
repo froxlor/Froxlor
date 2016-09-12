@@ -17,10 +17,10 @@
  *
  */
 
-function getFormFieldOutputOption($fieldname, $fielddata)
+function getFormFieldOutputOption($fieldname, $fielddata, $do_show = true)
 {
 	$returnvalue = '';
-	
+
 	if(isset($fielddata['option_options']) && is_array($fielddata['option_options']) && !empty($fielddata['option_options']))
 	{
 		if(isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple')

@@ -17,7 +17,7 @@
  *
  */
 
-function getFormFieldOutputString($fieldname, $fielddata)
+function getFormFieldOutputString($fieldname, $fielddata, $do_show = true)
 {
 	$label = $fielddata['label'];
 	$value = htmlentities($fielddata['value']);

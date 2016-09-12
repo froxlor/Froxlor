@@ -17,7 +17,7 @@
  *
  */
 
-function getFormFieldOutputInt($fieldname, $fielddata)
+function getFormFieldOutputInt($fieldname, $fielddata, $do_show = true)
 {
-	return getFormFieldOutputString($fieldname, $fielddata);
+	return getFormFieldOutputString($fieldname, $fielddata, $do_show);
 }

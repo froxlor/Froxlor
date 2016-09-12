@@ -17,12 +17,12 @@
  *
  */
 
-function getFormFieldOutputDate($fieldname, $fielddata)
+function getFormFieldOutputDate($fieldname, $fielddata, $do_show = true)
 {
 	if(isset($fielddata['date_timestamp']) && $fielddata['date_timestamp'] === true)
 	{
 		$fielddata['value'] = date('Y-m-d', $fielddata['value']);
 	}
 
-	return getFormFieldOutputString($fieldname, $fielddata);
+	return getFormFieldOutputString($fieldname, $fielddata, $do_show);
 }

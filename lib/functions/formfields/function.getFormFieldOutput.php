@@ -19,6 +19,8 @@
 
 function getFormFieldOutput($fieldname, $fielddata) {
 
+	global $lng;
+
 	$returnvalue = '';
 	if (is_array($fielddata)
 		&& isset($fielddata['type'])
@@ -51,6 +53,7 @@ function getFormFieldOutput($fieldname, $fielddata) {
 			$websrv = Settings::Get('system.webserver');
 			if (!in_array($websrv, $fielddata['websrv_avail'])) {
 				$do_show = false;
+				$fielddata['label'].= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $fielddata['websrv_avail']));
 			}
 		}
 
@@ -59,11 +62,14 @@ function getFormFieldOutput($fieldname, $fielddata) {
 		// be false due to websrv_avail
 		if (isset($fielddata['visible']) && $do_show) {
 			$do_show = $fielddata['visible'];
+			if (!$do_show) {
+				$fielddata['label'].= $lng['serversettings']['option_unavailable'];
+			}
 		}
 
-		if ($do_show) {
-			$returnvalue = call_user_func('getFormFieldOutput' . ucfirst($fielddata['type']), $fieldname, $fielddata);
-		}
+		//if ($do_show) {
+			$returnvalue = call_user_func('getFormFieldOutput' . ucfirst($fielddata['type']), $fieldname, $fielddata, $do_show);
+		//}
 	}
 	return $returnvalue;
 }

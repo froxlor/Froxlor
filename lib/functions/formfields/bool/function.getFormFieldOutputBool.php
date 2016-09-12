@@ -17,7 +17,7 @@
  *
  */
 
-function getFormFieldOutputBool($fieldname, $fielddata)
+function getFormFieldOutputBool($fieldname, $fielddata, $do_show = true)
 {
 	$label = $fielddata['label'];
 	$boolswitch = makeYesNo($fieldname, '1', '0', $fielddata['value']);

@@ -81,11 +81,13 @@ function getFormOverviewGroupOutput($groupname, $groupdetails) {
 		$websrv = Settings::Get('system.webserver');
 		if (!in_array($websrv, $groupdetails['websrv_avail'])) {
 			$do_show = false;
+			$title .= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $groupdetails['websrv_avail']));
+			// hack disabled flag into select-box
+			$option = str_replace('<select class', '<select disabled="disabled" class', $option);
 		}
 	}
 
-	if ($do_show) {
-		eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
-	}
+	eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
+
 	return $group;
 }

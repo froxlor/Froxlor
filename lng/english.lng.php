@@ -2037,3 +2037,5 @@ $lng['serversettings']['le_froxlor_enabled']['description'] = "If activated, the
 $lng['serversettings']['le_froxlor_redirect']['title'] = "Enable SSL-redirect for the froxlor vhost";
 $lng['serversettings']['le_froxlor_redirect']['description'] = "If activated, all http requests to your froxlor will be redirected to the corresponding SSL site.";
 $lng['admin']['froxlorvhost'] = 'Froxlor VirtualHost settings';
+$lng['serversettings']['option_unavailable_websrv'] = '<br><em class="red">Availble only for: %s</em>';
+$lng['serversettings']['option_unavailable'] = '<br><em class="red">Option not availble due to other settings.</em>';

@@ -17,7 +17,7 @@
  *
  */
 
-function getFormFieldOutputHiddenString($fieldname, $fielddata)
+function getFormFieldOutputHiddenString($fieldname, $fielddata, $do_show = true)
 {
 	$label = $fielddata['label'];
 	$value = htmlentities($fielddata['value']);
