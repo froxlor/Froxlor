@@ -679,4 +679,14 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$question .= $dnsdaemons . '</select>';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_db_version, '201609120')) {
+		if (Settings::Get('system.leenabled') == 1) {
+			$has_preconfig = true;
+			$description = 'You can now customize the path to your acme.conf file (global alias for Let\'s Encrypt). If you already set up Let\'s Encrypt and the acme.conf file, please set this to the complete path to the file!<br /><br />';
+			$question = '<strong>Path to the acme.conf alias-file.</strong><br />';
+			$question .= '<input type="text" class="text" name="acmeconffile" value="/etc/apache2/conf-enabled/acme.conf" /><br />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
 }

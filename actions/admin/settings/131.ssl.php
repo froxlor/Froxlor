@@ -88,6 +88,15 @@ return array(
 					'cronmodule' => 'froxlor/letsencrypt',
 					'save_method' => 'storeSettingField'
 				),
+				'system_letsencryptacmeconf' => array(
+					'label' => $lng['serversettings']['letsencryptacmeconf'],
+					'settinggroup' => 'system',
+					'varname' => 'letsencryptacmeconf',
+					'type' => 'string',
+					'string_type' => 'file',
+					'default' => '/etc/apache2/conf-enabled/acme.conf',
+					'save_method' => 'storeSettingField',
+				),
 				'system_letsencryptca' => array(
 					'label' => $lng['serversettings']['letsencryptca'],
 					'settinggroup' => 'system',

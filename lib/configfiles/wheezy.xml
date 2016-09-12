@@ -66,7 +66,7 @@
 ]]>
 						</content>
 					</file>
-					<file name="/etc/apache2/conf.d/acme.conf">
+					<file name="{{settings.system.letsencryptacmeconf}}">
 						<visibility mode="true">{{settings.system.leenabled}}
 						</visibility>
 						<content><![CDATA[
@@ -100,7 +100,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 ]]>
 						</content>
 					</file>
-					<file name="/etc/apache2/conf-enabled/acme.conf">
+					<file name="{{settings.system.letsencryptacmeconf}}">
 						<visibility mode="true">{{settings.system.leenabled}}
 						</visibility>
 						<content><![CDATA[
@@ -319,7 +319,7 @@ fastcgi_param  REDIRECT_STATUS    200;
 ]]>
 						</content>
 					</file>
-					<file name="/etc/nginx/acme.conf">
+					<file name="{{settings.system.letsencryptacmeconf}}">
 						<visibility mode="true">{{settings.system.leenabled}}
 						</visibility>
 						<content><![CDATA[

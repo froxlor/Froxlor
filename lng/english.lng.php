@@ -2039,3 +2039,5 @@ $lng['serversettings']['le_froxlor_redirect']['description'] = "If activated, al
 $lng['admin']['froxlorvhost'] = 'Froxlor VirtualHost settings';
 $lng['serversettings']['option_unavailable_websrv'] = '<br><em class="red">Availble only for: %s</em>';
 $lng['serversettings']['option_unavailable'] = '<br><em class="red">Option not availble due to other settings.</em>';
+$lng['serversettings']['letsencryptacmeconf']['title'] = "Path to the acme.conf snippet";
+$lng['serversettings']['letsencryptacmeconf']['description'] = "File name of the config snippet which allows the web server to serve the acme challenge.";

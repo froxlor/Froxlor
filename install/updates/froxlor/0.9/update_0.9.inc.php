@@ -3435,3 +3435,19 @@ if (isDatabaseVersion('201608260')) {
 
 	updateToDbVersion('201609050');
 }
+
+if (isDatabaseVersion('201609050')) {
+
+	showUpdateStep("Adding new settings for acme.conf (Let's Encrypt)");
+	// get user-chosen value
+	$websrv_default = "/etc/apache2/conf-enabled/acme.conf";
+	if (Settings::Get('system.webserver') == 'nginx') {
+		$websrv_default = "/etc/nginx/acme.conf";
+	}
+	$acmeconffile = isset($_POST['acmeconffile']) ? $_POST['acmeconffile'] : $websrv_default;
+	$acmeconffile = makeCorrectFile($acmeconffile);
+	Settings::AddNew("system.letsencryptacmeconf", $acmeconffile);
+	lastStepStatus(0);
+
+	updateToDbVersion('201609120');
+}

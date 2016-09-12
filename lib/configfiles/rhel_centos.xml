@@ -46,7 +46,7 @@
 				<daemon name="apache" version="2.4" title="Apache 2.4"
 					default="true">
 					<include>//service[@type='http']/general/commands</include>
-					<file name="/etc/httpd/conf.d/acme.conf">
+					<file name="{{settings.system.letsencryptacmeconf}}">
 						<visibility mode="true">{{settings.system.leenabled}}
 						</visibility>
 						<content><![CDATA[
