@@ -64,7 +64,7 @@ class HttpConfigBase
 			}
 		} else {
 			// user-defined docroot, #417
-			$mypath = makeCorrectDir($row_ipsandports['docroot']);
+			$mypath = makeCorrectDir($ip_port['docroot']);
 		}
 		return $mypath;
 	}
