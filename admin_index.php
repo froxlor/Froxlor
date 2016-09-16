@@ -144,6 +144,15 @@ if ($page == 'overview') {
 	$cron_last_runs = getCronjobsLastRun();
 	$outstanding_tasks = getOutstandingTasks();
 
+	$system_hostname = gethostname();
+	$meminfo= explode("\n", @file_get_contents("/proc/meminfo"));
+	$memory = "";
+	for ($i = 0; $i < sizeof($meminfo); ++$i) {
+		if (substr($meminfo[$i], 0, 3) === "Mem") {
+			$memory.= $meminfo[$i] . PHP_EOL;
+		}
+	}
+
 	if (function_exists('sys_getloadavg')) {
 		$loadArray = sys_getloadavg();
 		$load = number_format($loadArray[0], 2, '.', '') . " / " . number_format($loadArray[1], 2, '.', '') . " / " . number_format($loadArray[2], 2, '.', '');
