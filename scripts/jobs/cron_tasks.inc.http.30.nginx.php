@@ -610,7 +610,6 @@ class nginx extends HttpConfigBase {
 		    // check for existence, #1485
 		    if (!file_exists($domain_or_ip['ssl_cert_file'])) {
 		        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create ssl-directives');
-		        echo $domain_or_ip['domain'] . ' :: certificate file "'.$domain_or_ip['ssl_cert_file'].'" does not exist! Cannot create SSL-directives'."\n";
 		    } else {
 			// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
     			//$sslsettings .= "\t" . 'ssl on;' . "\n";
@@ -624,7 +623,6 @@ class nginx extends HttpConfigBase {
     			    // check for existence, #1485
     			    if (!file_exists($domain_or_ip['ssl_key_file'])) {
     			        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate key file "'.$domain_or_ip['ssl_key_file'].'" does not exist! Cannot create ssl-directives');
-    			        echo $domain_or_ip['domain'] . ' :: certificate key file "'.$domain_or_ip['ssl_key_file'].'" does not exist! SSL-directives might not be working'."\n";
     			    } else {
     				    $sslsettings .= "\t" . 'ssl_certificate_key ' .makeCorrectFile($domain_or_ip['ssl_key_file']) . ';' .  "\n";
     			    }
@@ -634,7 +632,6 @@ class nginx extends HttpConfigBase {
     			    // check for existence, #1485
     			    if (!file_exists($domain_or_ip['ssl_ca_file'])) {
     			        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate CA file "'.$domain_or_ip['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
-    			        echo $domain_or_ip['domain'] . ' :: certificate CA file "'.$domain_or_ip['ssl_ca_file'].'" does not exist! SSL-directives might not be working'."\n";
     			    } else {
     				    $sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain_or_ip['ssl_ca_file']) . ';' . "\n";
     			    }
