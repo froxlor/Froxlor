@@ -212,6 +212,10 @@ $header
 					</thead>
 					<tbody>
 						<tr>
+							<td>{$lng['admin']['hostname']}:</td>
+							<td>{$system_hostname}</td>
+						</tr>
+						<tr>
 							<td>{$lng['admin']['serversoftware']}:</td>
 							<td>{$_SERVER['SERVER_SOFTWARE']}</td>
 						</tr>
@@ -226,6 +230,10 @@ $header
 						<tr>
 							<td>{$lng['admin']['webserverinterface']}:</td>
 							<td>$webserverinterface</td>
+						</tr>
+						<tr>
+							<td>{$lng['admin']['memory']}:</td>
+							<td><pre>$memory</pre></td>
 						</tr>
 						<tr>
 							<td>{$lng['admin']['sysload']}:</td>
