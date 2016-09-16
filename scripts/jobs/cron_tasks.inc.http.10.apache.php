@@ -405,7 +405,6 @@ class apache extends HttpConfigBase
 						// check for existence, #1485
 						if (! file_exists($domain['ssl_cert_file'])) {
 							$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
-							echo $ipport . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create SSL-directives' . "\n";
 						} else {
 
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
@@ -420,7 +419,6 @@ class apache extends HttpConfigBase
 								// check for existence, #1485
 								if (! file_exists($domain['ssl_key_file'])) {
 									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate key file "' . $domain['ssl_key_file'] . '" does not exist! Cannot create ssl-directives');
-									echo $ipport . ' :: certificate key file "' . $domain['ssl_key_file'] . '" does not exist! SSL-directives might not be working' . "\n";
 								} else {
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
 								}
@@ -430,7 +428,6 @@ class apache extends HttpConfigBase
 								// check for existence, #1485
 								if (! file_exists($domain['ssl_ca_file'])) {
 									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! Cannot create ssl-directives');
-									echo $ipport . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! SSL-directives might not be working' . "\n";
 								} else {
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
 								}
@@ -441,7 +438,6 @@ class apache extends HttpConfigBase
 								// check for existence, #1485
 								if (! file_exists($domain['ssl_cert_chainfile'])) {
 									$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate chain file "' . $domain['ssl_cert_chainfile'] . '" does not exist! Cannot create ssl-directives');
-									echo $ipport . ' :: certificate chain file "' . $domain['ssl_cert_chainfile'] . '" does not exist! SSL-directives might not be working' . "\n";
 								} else {
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
 								}
