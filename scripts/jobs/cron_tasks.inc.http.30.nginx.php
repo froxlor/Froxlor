@@ -628,15 +628,6 @@ class nginx extends HttpConfigBase {
     			    }
     			}
 
-    			if ($domain_or_ip['ssl_ca_file'] != '') {
-    			    // check for existence, #1485
-    			    if (!file_exists($domain_or_ip['ssl_ca_file'])) {
-    			        $this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate CA file "'.$domain_or_ip['ssl_ca_file'].'" does not exist! Cannot create ssl-directives');
-    			    } else {
-    				    $sslsettings.= "\t" . 'ssl_client_certificate ' . makeCorrectFile($domain_or_ip['ssl_ca_file']) . ';' . "\n";
-    			    }
-    			}
-
 			if (isset($domain_or_ip['hsts']) && $domain_or_ip['hsts'] > 0) {
     			    $vhost_content .= 'add_header Strict-Transport-Security "max-age=' . $domain_or_ip['hsts'];
     			    if ($domain_or_ip['hsts_sub'] == 1) {
