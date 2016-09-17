@@ -166,7 +166,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 				$subresult_stmt = Database::prepare("
 					SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE (`id` = :id OR `parentdomainid` = :id " . $rsd_sql . ") AND `isemaildomain` = '1'");
+					WHERE (`id` = :id OR `parentdomainid` = :id " . $rsd_sql . ")");
 				Database::pexecute($subresult_stmt, array(
 					'id' => $id
 				));
