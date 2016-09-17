@@ -189,6 +189,20 @@ if ($page == 'domains' || $page == 'overview') {
 					$log->logAction(ADM_ACTION, LOG_NOTICE, "deleted domain/s from mail-tables");
 				}
 
+				// if mainbutsubto-domains are not to be deleted, re-assign the (ismainbutsubto value of the main
+				// domain which is being deleted) as their new ismainbutsubto value
+				if ($remove_subbutmain_domains !== 1) {
+					$upd_stmt = Database::prepare("
+						UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+						`ismainbutsubto` = :newIsMainButSubtoValue
+						WHERE `ismainbutsubto` = :deletedMainDomainId
+						");
+					Database::pexecute($upd_stmt, array(
+						'newIsMainButSubtoValue' => $result['ismainbutsubto'],
+						'deletedMainDomainId' => $id,
+					));
+				}
+
 				$del_stmt = Database::prepare("
 					DELETE FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `id` = :id OR `parentdomainid` = :id " . $rsd_sql);
