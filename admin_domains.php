@@ -195,7 +195,6 @@ if ($page == 'domains' || $page == 'overview') {
 				Database::pexecute($del_stmt, array(
 					'id' => $id
 				));
-				$deleted_domains = $del_stmt->rowCount();
 
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
