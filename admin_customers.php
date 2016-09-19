@@ -869,7 +869,7 @@ if ($page == 'customers'
 						}
 						// check froxlor-local user membership in ftp-group
 						// without this check addition may duplicate user in list if httpuser == local_user
-						if (strpos($ins_data['members'], $local_user) !== false) {
+						if (strpos($ins_data['members'], $local_user) == false) {
 							$ins_data['members'] .= ','.$local_user;
 						}
 					}
