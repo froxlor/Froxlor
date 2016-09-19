@@ -523,7 +523,7 @@ class lighttpd extends HttpConfigBase
 
 					$vhost_content .= '$HTTP["scheme"] == "https" { setenv.add-response-header  = ( "Strict-Transport-Security" => "max-age=' . $domain['hsts'];
 					if ($domain['hsts_sub'] == 1) {
-						$vhost_content .= '; includeSubdomains';
+						$vhost_content .= '; includeSubDomains';
 					}
 					if ($domain['hsts_preload'] == 1) {
 						$vhost_content .= '; preload';

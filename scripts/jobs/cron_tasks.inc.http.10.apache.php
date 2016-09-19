@@ -840,7 +840,7 @@ class apache extends HttpConfigBase
 					$vhost_content .= '  <IfModule mod_headers.c>' . "\n";
 					$vhost_content .= '    Header always set Strict-Transport-Security "max-age=' . $domain['hsts'];
 					if ($domain['hsts_sub'] == 1) {
-						$vhost_content .= '; includeSubdomains';
+						$vhost_content .= '; includeSubDomains';
 					}
 					if ($domain['hsts_preload'] == 1) {
 						$vhost_content .= '; preload';
