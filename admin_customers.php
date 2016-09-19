@@ -84,6 +84,15 @@ if ($page == 'customers'
 				$domains = $domains_stmt->fetch(PDO::FETCH_ASSOC);
 				$row['domains'] = intval($domains['domains']);
 				$dec_places = Settings::Get('panel.decimal_places');
+
+				// get disk-space usages for web, mysql and mail
+				$usages_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DISKSPACE."` WHERE `customerid` = :cid ORDER BY `stamp` DESC LIMIT 1");
+				$usages = Database::pexecute_first($usages_stmt, array('cid' => $row['customerid']));
+
+				$row['webspace_used'] = round($usages['webspace'] / 1024, $dec_places);
+				$row['mailspace_used'] = round($usages['mail'] / 1024, $dec_places);
+				$row['dbspace_used'] = round($usages['mysql'] / 1024, $dec_places);
+
 				$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $dec_places);
 				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $dec_places);
 				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $dec_places);

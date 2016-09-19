@@ -78,8 +78,15 @@ if ($page == 'overview') {
 	$yesterday = time() - (60 * 60 * 24);
 	$month = date('M Y', $yesterday);
 
+	// get disk-space usages for web, mysql and mail
+	$usages_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DISKSPACE."` WHERE `customerid` = :cid ORDER BY `stamp` DESC LIMIT 1");
+	$usages = Database::pexecute_first($usages_stmt, array('cid' => $userinfo['customerid']));
+
 	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, Settings::Get('panel.decimal_places'));
-	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, Settings::Get('panel.decimal_places'));
+	$userinfo['diskspace_used'] = round($usages['webspace'] / 1024, Settings::Get('panel.decimal_places'));
+	$userinfo['mailspace_used'] = round($usages['mail'] / 1024, Settings::Get('panel.decimal_places'));
+	$userinfo['dbspace_used'] = round($usages['mysql'] / 1024, Settings::Get('panel.decimal_places'));
+
 	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps tickets subdomains');

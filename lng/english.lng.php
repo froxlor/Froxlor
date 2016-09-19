@@ -71,6 +71,7 @@ $lng['customer']['ftps'] = 'FTP-accounts';
 $lng['customer']['subdomains'] = 'Subdomains';
 $lng['customer']['domains'] = 'Domains';
 $lng['customer']['unlimited'] = '∞';
+$lng['customer']['mib'] = 'MiB';
 
 /**
  * Customermenue

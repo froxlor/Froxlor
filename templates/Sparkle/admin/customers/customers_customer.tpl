@@ -26,16 +26,16 @@
 				<span>Webspace:</span>
 				<if $row['diskspace'] != 'UL'>
 					<if (($row['diskspace']/100)*(int)Settings::Get('system.report_webmax')) < $row['diskspace_used']>
-						<div class="progress progress-danger tipper" title="{$row['diskspace_used']} MiB {$lng['panel']['used']}, {$row['diskspace']} MiB {$lng['panel']['assigned']}">
+						<div class="progress progress-danger tipper" title="{$lng['panel']['used']}:<br>web: {$row['webspace_used']} {$lng['customer']['mib']}<br>mail: {$row['mailspace_used']} {$lng['customer']['mib']}<br>mysql: {$row['dbspace_used']} MiB<br><br>{$lng['panel']['assigned']}:<br>{$row['diskspace']} {$lng['customer']['mib']}">
 							<div class="bar" aria-valuenow="{$disk_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 						</div>
 					<else>
 						<if (($row['diskspace']/100)*((int)Settings::Get('system.report_webmax') - 15)) < $row['diskspace_used']>
-							<div class="progress progress-warn tipper" title="{$row['diskspace_used']} MiB {$lng['panel']['used']}, {$row['diskspace']} MiB {$lng['panel']['assigned']}">
+							<div class="progress progress-warn tipper" title="{$lng['panel']['used']}:<br>web: {$row['webspace_used']} {$lng['customer']['mib']}<br>mail: {$row['mailspace_used']} {$lng['customer']['mib']}<br>mysql: {$row['dbspace_used']} MiB<br><br>{$lng['panel']['assigned']}:<br>{$row['diskspace']} {$lng['customer']['mib']}">
 								<div class="bar" aria-valuenow="{$disk_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 							</div>
 						<else>
-							<div class="progress tipper" title="{$row['diskspace_used']} MiB {$lng['panel']['used']}, {$row['diskspace']} MiB {$lng['panel']['assigned']}">
+							<div class="progress tipper" title="{$lng['panel']['used']}:<br>web: {$row['webspace_used']} {$lng['customer']['mib']}<br>mail: {$row['mailspace_used']} {$lng['customer']['mib']}<br>mysql: {$row['dbspace_used']} MiB<br><br>{$lng['panel']['assigned']}:<br>{$row['diskspace']} {$lng['customer']['mib']}">
 								<div class="bar" aria-valuenow="{$disk_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 							</div>
 						</if>

@@ -71,8 +71,9 @@ $header
 					<small>
 						{$userinfo['email_accounts_used']} {$lng['panel']['used']}<br />
 						<if $userinfo['email_accounts'] != '∞'>
-						{$userinfo['email_accounts']} {$lng['panel']['available']}
+						{$userinfo['email_accounts']} {$lng['panel']['available']}<br />
 						</if>
+						{$userinfo['mailspace_used']} {$lng['customer']['mib']}
 					</small>
 				</div>
 				</if>
@@ -113,8 +114,9 @@ $header
 					<small>
 						{$userinfo['mysqls_used']} {$lng['panel']['used']}<br />
 						<if $userinfo['mysqls'] != '∞'>
-						{$userinfo['mysqls']} {$lng['panel']['available']}
+						{$userinfo['mysqls']} {$lng['panel']['available']}<br />
 						</if>
+						{$userinfo['dbspace_used']} {$lng['customer']['mib']}
 					</small>
 				</div>
 				</if>
@@ -248,4 +250,3 @@ $header
 		</div>
 	</article>
 $footer
-
