@@ -34,6 +34,18 @@ function dieWithMail($message, $subject = "[froxlor] Cronjob error") {
 		$_mail = new PHPMailer(true);
 		$_mail->CharSet = "UTF-8";
 
+		if (Settings::Get('system.mail_use_smtp')) {
+			$_mail->isSMTP();
+			$_mail->Host = Settings::Get('system.mail_smtp_host');
+			$_mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
+			$_mail->Username = Settings::Get('system.mail_smtp_user');
+			$_mail->Password = Settings::Get('system.mail_smtp_passwd');
+			if (Settings::Get('system.mail_smtp_usetls')) {
+				$_mail->SMTPSecure = 'tls';
+			}
+			$_mail->Port = Settings::Get('system.mail_smtp_port');
+		}
+
 		if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 			// set return-to address and custom sender-name, see #76
 			$_mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));

@@ -142,7 +142,7 @@ if (version_compare(PHP_VERSION, "5.4.0", "<")) {
 	 */
 	if (get_magic_quotes_gpc()) {
 		$in = array(&$_GET, &$_POST, &$_COOKIE);
-	
+
 		while (list($k, $v) = each($in)) {
 			foreach ($v as $key => $val) {
 				if (!is_array($val)) {
@@ -265,7 +265,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	// versions didn't have that and it will
 	// lead to a lot of undfined variables
 	// before the admin can even update
-	if (isset($row['iso'])) { 
+	if (isset($row['iso'])) {
 		$iso[$row['iso']] = $row['language'];
 	}
 }
@@ -541,6 +541,18 @@ if ($page == '') {
  */
 $mail = new PHPMailer(true);
 $mail->CharSet = "UTF-8";
+
+if (Settings::Get('system.mail_use_smtp')) {
+	$mail->isSMTP();
+	$mail->Host = Settings::Get('system.mail_smtp_host');
+	$mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
+	$mail->Username = Settings::Get('system.mail_smtp_user');
+	$mail->Password = Settings::Get('system.mail_smtp_passwd');
+	if (Settings::Get('system.mail_smtp_usetls')) {
+		$mail->SMTPSecure = 'tls';
+	}
+	$mail->Port = Settings::Get('system.mail_smtp_port');
+}
 
 if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 	// set return-to address and custom sender-name, see #76

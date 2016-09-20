@@ -3451,3 +3451,27 @@ if (isDatabaseVersion('201609050')) {
 
 	updateToDbVersion('201609120');
 }
+
+if (isDatabaseVersion('201609120')) {
+
+	showUpdateStep("Adding new SMTP settings for emails sent by froxlor");
+	// get user-chosen value
+	$smtp_enable = isset($_POST['smtp_enable']) ? (int) $_POST['smtp_enable'] : 0;
+	$smtp_host = isset($_POST['smtp_host']) ? $_POST['smtp_host'] : "localhost";
+	$smtp_port = isset($_POST['smtp_port']) ? (int)$_POST['smtp_port'] : 25;
+	$smtp_usetls = isset($_POST['smtp_usetls']) ? (int) $_POST['smtp_usetls'] : 1;
+	$smtp_useauth = isset($_POST['smtp_auth']) ? (int) $_POST['smtp_auth'] : 1;
+	$smtp_user = isset($_POST['smtp_user']) ? $_POST['smtp_user'] : "";
+	$smtp_passwd = isset($_POST['smtp_passwd']) ? $_POST['smtp_passwd'] : "";
+
+	Settings::AddNew("system.mail_use_smtp", $smtp_enable);
+	Settings::AddNew("system.mail_smtp_host", $smtp_host);
+	Settings::AddNew("system.mail_smtp_port", $smtp_port);
+	Settings::AddNew("system.mail_smtp_usetls", $smtp_usetls);
+	Settings::AddNew("system.mail_smtp_auth", $smtp_useauth);
+	Settings::AddNew("system.mail_smtp_user", $smtp_user);
+	Settings::AddNew("system.mail_smtp_passwd", $smtp_passwd);
+	lastStepStatus(0);
+
+	updateToDbVersion('201609200');
+}

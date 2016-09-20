@@ -535,6 +535,13 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'le_froxlor_enabled', '0'),
 	('system', 'le_froxlor_redirect', '0'),
 	('system', 'letsencryptacmeconf', '/etc/apache2/conf-enabled/acme.conf'),
+	('system', 'mail_use_smtp', '0'),
+	('system', 'mail_smtp_host', 'localhost'),
+	('system', 'mail_smtp_port', '25'),
+	('system', 'mail_smtp_usetls', '1'),
+	('system', 'mail_smtp_auth', '1'),
+	('system', 'mail_smtp_user', ''),
+	('system', 'mail_smtp_passwd', ''),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -566,7 +573,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.37'),
-	('panel', 'db_version', '201609120');
+	('panel', 'db_version', '201609200');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

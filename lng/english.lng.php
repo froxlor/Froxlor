@@ -2042,7 +2042,12 @@ $lng['serversettings']['option_unavailable_websrv'] = '<br><em class="red">Avail
 $lng['serversettings']['option_unavailable'] = '<br><em class="red">Option not availble due to other settings.</em>';
 $lng['serversettings']['letsencryptacmeconf']['title'] = "Path to the acme.conf snippet";
 $lng['serversettings']['letsencryptacmeconf']['description'] = "File name of the config snippet which allows the web server to serve the acme challenge.";
-
-// Added in froxlor 0.9.38
 $lng['admin']['hostname'] = 'Hostname';
 $lng['admin']['memory'] = 'Memory usage';
+$lng['serversettings']['mail_use_smtp'] = 'Set mailer to use SMTP';
+$lng['serversettings']['mail_smtp_host'] = 'Specify SMTP server';
+$lng['serversettings']['mail_smtp_usetls'] = 'Enable TLS encryption';
+$lng['serversettings']['mail_smtp_auth'] = 'Enable SMTP authentication';
+$lng['serversettings']['mail_smtp_port'] = 'TCP port to connect to';
+$lng['serversettings']['mail_smtp_user'] = 'SMTP username';
+$lng['serversettings']['mail_smtp_passwd'] = 'SMTP password';

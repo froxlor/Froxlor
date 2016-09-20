@@ -689,4 +689,24 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
+
+	if (versionInUpdate($current_db_version, '201609200')) {
+		$has_preconfig = true;
+		$description = 'Specify SMTP settings which froxlor should use to send mail (optional)<br /><br />';
+		$question = '<strong>Enable sending mails via SMTP?</strong><br />';
+		$question .= makeyesno('smtp_enable', '1', '0', '0') . '<br />';
+		$question .= '<strong>Enable sending mails via SMTP?</strong><br />';
+		$question .= '<input type="text" class="text" name="smtp_host" value="localhost" /><br />';
+		$question .= '<strong>TCP port to connect to?</strong><br />';
+		$question .= '<input type="text" class="text" name="smtp_port" value="25" /><br />';
+		$question .= '<strong>Enable TLS encryption?</strong><br />';
+		$question .= makeyesno('smtp_usetls', '1', '0', '1') . '<br />';
+		$question .= '<strong>Enable SMTP authentication?</strong><br />';
+		$question .= makeyesno('smtp_auth', '1', '0', '1') . '<br />';
+		$question .= '<strong>SMTP user?</strong><br />';
+		$question .= '<input type="text" class="text" name="smtp_user" value="" /><br />';
+		$question .= '<strong>SMTP password?</strong><br />';
+		$question .= '<input type="password" class="text" name="smtp_passwd" value="" /><br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }
