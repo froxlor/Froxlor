@@ -277,6 +277,13 @@ if ($page == 'overview') {
 
 				$completedomain = $subdomain . '.' . $domain;
 
+				if (Settings::Get('system.validate_domain') && ! validateDomain($completedomain)) {
+					standard_error(array(
+						'stringiswrong',
+						'mydomain'
+					));
+				}
+
 				if ($completedomain == Settings::Get('system.hostname')) {
 					standard_error('admin_domain_emailsystemhostname');
 				}
