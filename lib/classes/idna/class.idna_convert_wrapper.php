@@ -67,6 +67,16 @@ class idna_convert_wrapper
 		}
 	}
 
+	public function encode_uri($to_encode)
+	{
+		if (version_compare("5.6.0", PHP_VERSION, ">=")) {
+			return $this->_do_action('encode', $to_encode);
+		} else {
+			$to_encode = $this->is_utf8($to_encode) ? $to_encode : utf8_encode($to_encode);
+			return $this->idna_converter->encodeUri($to_encode);
+		}
+	}
+
 	/**
 	 * Decode a domain name, a email address or a list of one of both.
 	 *

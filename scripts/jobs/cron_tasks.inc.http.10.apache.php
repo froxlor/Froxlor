@@ -860,7 +860,7 @@ class apache extends HttpConfigBase
 		$domain['documentroot'] = trim($domain['documentroot']);
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$corrected_docroot = $this->idnaConvert->encode($domain['documentroot']);
+			$corrected_docroot = $this->idnaConvert->encode_uri($domain['documentroot']);
 
 			// Get domain's redirect code
 			$code = getDomainRedirectCode($domain['id']);
@@ -881,7 +881,7 @@ class apache extends HttpConfigBase
 			$vhost_content .= '    RewriteRule ^/(.*) ' . $corrected_docroot . '$1' . $modrew_red . "\n";
 			$vhost_content .= '  </IfModule>' . "\n";
 			$vhost_content .= '  <IfModule !mod_rewrite.c>' . "\n";
-			$vhost_content .= '    Redirect ' . $code . ' / ' . $this->idnaConvert->encode($domain['documentroot']) . "\n";
+			$vhost_content .= '    Redirect ' . $code . ' / ' . $corrected_docroot . "\n";
 			$vhost_content .= '  </IfModule>' . "\n";
 		} else {
 

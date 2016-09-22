@@ -430,7 +430,7 @@ class lighttpd extends HttpConfigBase
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$vhost_content .= '  url.redirect = (' . "\n";
-			$vhost_content .= '     "^/(.*)$" => "' . $this->idnaConvert->encode($domain['documentroot']) . '$1"' . "\n";
+			$vhost_content .= '     "^/(.*)$" => "' . $this->idnaConvert->encode_uri($domain['documentroot']) . '$1"' . "\n";
 			$vhost_content .= '  )' . "\n";
 		} else {
 
