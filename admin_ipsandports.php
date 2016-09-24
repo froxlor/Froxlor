@@ -33,6 +33,7 @@ if ($page == 'ipsandports'
 	$websrv = Settings::Get('system.webserver');
 	$is_nginx = ($websrv == 'nginx');
 	$is_apache = ($websrv == 'apache2');
+	$is_apache24 = $is_apache && (Settings::Get('system.apache24') === '1');
 
 	if ($action == '') {
 

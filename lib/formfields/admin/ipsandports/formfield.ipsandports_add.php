@@ -49,7 +49,7 @@ return array(
 						'value' => array('1')
 					),
 					'namevirtualhost_statement' => array(
-						'visible' => $is_apache,
+						'visible' => $is_apache && !$is_apache24,
 						'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
 						'type' => 'checkbox',
 						'values' => array(
