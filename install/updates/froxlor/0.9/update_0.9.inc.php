@@ -3321,6 +3321,14 @@ if (isFroxlorVersion('0.9.35.1')) {
 	updateToVersion('0.9.36');
 }
 
+if (isFroxlorVersion('0.9.37')) {
+	showUpdateStep("Updating from 0.9.37 to 0.9.38", false);
+	showUpdateStep("Adding unique key to ipsandports table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD UNIQUE KEY `ip_port` (`ip`,`port`)");
+	lastStepStatus(0);
+	updateToVersion('0.9.38');
+}
+
 if (isDatabaseVersion('201604270')) {
 
 	showUpdateStep("Adding new dns related tables and settings");
