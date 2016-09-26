@@ -95,6 +95,10 @@ return array(
 				array(
 					'url' => 'customer_domains.php?page=domains',
 					'label' => $lng['menue']['domains']['settings']
+				),
+				array(
+					'url' => 'customer_domains.php?page=sslcertificates',
+					'label' => $lng['domains']['ssl_certificates']
 				)
 			)
 		),
@@ -198,6 +202,11 @@ return array(
 				array(
 					'url' => 'admin_domains.php?page=domains',
 					'label' => $lng['admin']['domains'],
+					'required_resources' => 'domains'
+				),
+				array(
+					'url' => 'admin_domains.php?page=sslcertificates',
+					'label' => $lng['domains']['ssl_certificates'],
 					'required_resources' => 'domains'
 				),
 				array(

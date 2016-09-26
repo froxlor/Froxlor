@@ -1702,3 +1702,7 @@ $lng['serversettings']['mail_smtp_auth'] = 'Nutze SMTP Authentifizierung';
 $lng['serversettings']['mail_smtp_port'] = 'TCP Port für SMTP';
 $lng['serversettings']['mail_smtp_user'] = 'SMTP Benutzer';
 $lng['serversettings']['mail_smtp_passwd'] = 'SMTP Passwort';
+$lng['domains']['ssl_certificates'] = 'SSL Zertifikate';
+$lng['domains']['ssl_certificate_removed'] = 'Das Zertifikat mit der ID #%s wurde erfolgreich gelöscht.';
+$lng['domains']['ssl_certificate_error'] = "Fehler beim Lesen des Zertifikats für die Domain: %s";
+$lng['domains']['no_ssl_certificates'] = "Es wurden keine SSL-Zertifikate gefunden";

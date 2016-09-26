@@ -2051,3 +2051,7 @@ $lng['serversettings']['mail_smtp_auth'] = 'Enable SMTP authentication';
 $lng['serversettings']['mail_smtp_port'] = 'TCP port to connect to';
 $lng['serversettings']['mail_smtp_user'] = 'SMTP username';
 $lng['serversettings']['mail_smtp_passwd'] = 'SMTP password';
+$lng['domains']['ssl_certificates'] = 'SSL certificates';
+$lng['domains']['ssl_certificate_removed'] = 'The certificate with the id #%s has been removed successfully';
+$lng['domains']['ssl_certificate_error'] = "Error reading certificate for domain: %s";
+$lng['domains']['no_ssl_certificates'] = "There are no domains with SSL certificate";

@@ -935,4 +935,9 @@ if ($page == 'overview') {
 } elseif ($page == 'domaindnseditor' && $userinfo['dnsenabled'] == '1' && Settings::Get('system.dnsenabled') == '1') {
 
 	require_once __DIR__.'/dns_editor.php';
+
+} elseif ($page == 'sslcertificates') {
+
+	require_once __DIR__.'/ssl_certificates.php';
+
 }
