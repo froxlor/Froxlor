@@ -115,8 +115,7 @@ if (!is_null($month) && !is_null($year)) {
 	$result_stmt = Database::prepare("SELECT `month`, `year`, SUM(`http`) AS http, SUM(`ftp_up`) AS ftp_up, SUM(`ftp_down`) AS ftp_down, SUM(`mail`) AS mail
 		FROM `" . TABLE_PANEL_TRAFFIC . "`
 		WHERE `customerid` = :customerid
-		GROUP BY CONCAT(`year`,`month`)
-		ORDER BY CONCAT(`year`,`month`) DESC
+		GROUP BY `year` DESC, `month` DESC
 		LIMIT 12"
 	);
 	Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));

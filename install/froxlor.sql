@@ -66,7 +66,7 @@ CREATE TABLE `mail_virtual` (
   `id` int(11) NOT NULL auto_increment,
   `email` varchar(255) NOT NULL default '',
   `email_full` varchar(255) NOT NULL default '',
-  `destination` text NOT NULL,
+  `destination` text NOT NULL default '',
   `domainid` int(11) NOT NULL default '0',
   `customerid` int(11) NOT NULL default '0',
   `popaccountid` int(11) NOT NULL default '0',
@@ -245,8 +245,8 @@ CREATE TABLE `panel_domains` (
   `deactivated` tinyint(1) NOT NULL default '0',
   `bindserial` varchar(10) NOT NULL default '2000010100',
   `add_date` int( 11 ) NOT NULL default '0',
-  `registration_date` date NOT NULL,
-  `termination_date` date NOT NULL,
+  `registration_date` date DEFAULT NULL,
+  `termination_date` date DEFAULT NULL,
   `phpsettingid` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1',
   `mod_fcgid_starter` int(4) default '-1',
   `mod_fcgid_maxrequests` int(4) default '-1',
@@ -573,7 +573,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'version', '0.9.37'),
-	('panel', 'db_version', '201609200');
+	('panel', 'db_version', '201609240');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

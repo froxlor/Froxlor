@@ -3475,3 +3475,14 @@ if (isDatabaseVersion('201609120')) {
 
 	updateToDbVersion('201609200');
 }
+
+if (isDatabaseVersion('201609200')) {
+
+    showUpdateStep("Changing tables to be more mysql strict-mode compatible");
+    Database::query("ALTER TABLE `".TABLE_MAIL_VIRTUAL."` CHANGE `destination` `destination` TEXT NOT NULL DEFAULT '';");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` CHANGE `registration_date` `registration_date` DATE NULL DEFAULT NULL;");
+    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` CHANGE `termination_date` `termination_date` DATE NULL DEFAULT NULL;");
+    lastStepStatus(0);
+
+    updateToDbVersion('201609240');
+}
