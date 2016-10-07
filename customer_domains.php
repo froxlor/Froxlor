@@ -695,7 +695,7 @@ if ($page == 'overview') {
 							`letsencrypt`= :letsencrypt,
 							`hsts` = :hsts,
 							`hsts_sub` = :hsts_sub,
-							`hsts_preload` = :hsts_preload,
+							`hsts_preload` = :hsts_preload
 							WHERE `customerid`= :customerid
 							AND `id`= :id"
 						);
