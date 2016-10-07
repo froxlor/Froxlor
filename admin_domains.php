@@ -584,12 +584,23 @@ if ($page == 'domains' || $page == 'overview') {
 								$ssl_ipandports[] = $ssl_ipandport;
 							}
 						}
+
+						// HSTS
+						$hsts_maxage = isset($_POST['hsts_maxage']) ? (int)$_POST['hsts_maxage'] : 0;
+						$hsts_sub = isset($_POST['hsts_sub']) && (int)$_POST['hsts_sub'] == 1 ? 1 : 0;
+						$hsts_preload = isset($_POST['hsts_preload']) && (int)$_POST['hsts_preload'] == 1 ? 1 : 0;
+
 					} else {
 						$ssl_redirect = 0;
 						$letsencrypt = 0;
 						// we need this for the serialize
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = - 1;
+
+						// HSTS
+						$hsts_maxage = 0;
+						$hsts_sub = 0;
+						$hsts_preload = 0;
 					}
 				} else {
 					$ssl_redirect = 0;
@@ -597,6 +608,11 @@ if ($page == 'domains' || $page == 'overview') {
 					// we need this for the serialize
 					// if ssl is disabled or no ssl-ip/port exists
 					$ssl_ipandports[] = - 1;
+
+					// HSTS
+					$hsts_maxage = 0;
+					$hsts_sub = 0;
+					$hsts_preload = 0;
 				}
 
 				// We can't enable let's encrypt for wildcard - domains
@@ -760,7 +776,10 @@ if ($page == 'domains' || $page == 'overview') {
 						'registration_date' => $registration_date,
 						'termination_date' => $termination_date,
 						'issubof' => $issubof,
-						'letsencrypt' => $letsencrypt
+						'letsencrypt' => $letsencrypt,
+						'hsts' => $hsts_maxage,
+						'hsts_sub' => $hsts_sub,
+						'hsts_preload' => $hsts_preload
 					);
 
 					$security_questions = array(
@@ -808,7 +827,10 @@ if ($page == 'domains' || $page == 'overview') {
 						'mod_fcgid_starter' => $mod_fcgid_starter,
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 						'ismainbutsubto' => $issubof,
-						'letsencrypt' => $letsencrypt
+						'letsencrypt' => $letsencrypt,
+						'hsts' => $hsts_maxage,
+						'hsts_sub' => $hsts_sub,
+						'hsts_preload' => $hsts_preload
 					);
 
 					$ins_stmt = Database::prepare("
@@ -836,12 +858,15 @@ if ($page == 'domains' || $page == 'overview') {
 						`ssl_redirect` = :ssl_redirect,
 						`add_date` = :add_date,
 						`registration_date` = :registration_date,
-                                                `termination_date` = :termination_date,
+						`termination_date` = :termination_date,
 						`phpsettingid` = :phpsettingid,
 						`mod_fcgid_starter` = :mod_fcgid_starter,
 						`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
 						`ismainbutsubto` = :ismainbutsubto,
-						`letsencrypt` = :letsencrypt
+						`letsencrypt` = :letsencrypt,
+						`hsts` = :hsts,
+						`hsts_sub` = :hsts_sub,
+						`hsts_preload` = :hsts_preload
 					");
 					Database::pexecute($ins_stmt, $ins_data);
 					$domainid = Database::lastInsertId();
@@ -1398,12 +1423,23 @@ if ($page == 'domains' || $page == 'overview') {
 								$ssl_ipandports[] = $ssl_ipandport;
 							}
 						}
+
+						// HSTS
+						$hsts_maxage = isset($_POST['hsts_maxage']) ? (int)$_POST['hsts_maxage'] : 0;
+						$hsts_sub = isset($_POST['hsts_sub']) && (int)$_POST['hsts_sub'] == 1 ? 1 : 0;
+						$hsts_preload = isset($_POST['hsts_preload']) && (int)$_POST['hsts_preload'] == 1 ? 1 : 0;
+
 					} else {
 						$ssl_redirect = 0;
 						$letsencrypt = 0;
 						// we need this for the serialize
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = - 1;
+
+						// HSTS
+						$hsts_maxage = 0;
+						$hsts_sub = 0;
+						$hsts_preload = 0;
 					}
 				} else {
 					$ssl_redirect = 0;
@@ -1411,6 +1447,11 @@ if ($page == 'domains' || $page == 'overview') {
 					// we need this for the serialize
 					// if ssl is disabled or no ssl-ip/port exists
 					$ssl_ipandports[] = - 1;
+
+					// HSTS
+					$hsts_maxage = 0;
+					$hsts_sub = 0;
+					$hsts_preload = 0;
 				}
 
 				// We can't enable let's encrypt for wildcard domains
@@ -1548,7 +1589,10 @@ if ($page == 'domains' || $page == 'overview') {
 					'speciallogverified' => $speciallogverified,
 					'ipandport' => serialize($ipandports),
 					'ssl_ipandport' => serialize($ssl_ipandports),
-					'letsencrypt' => $letsencrypt
+					'letsencrypt' => $letsencrypt,
+					'hsts' => $hsts_maxage,
+					'hsts_sub' => $hsts_sub,
+					'hsts_preload' => $hsts_preload
 				);
 
 				$security_questions = array(
@@ -1708,6 +1752,9 @@ if ($page == 'domains' || $page == 'overview') {
 				$update_data['termination_date'] = $termination_date;
 				$update_data['ismainbutsubto'] = $issubof;
 				$update_data['letsencrypt'] = $letsencrypt;
+				$update_data['hsts'] = $hsts_maxage;
+				$update_data['hsts_sub'] = $hsts_sub;
+				$update_data['hsts_preload'] = $hsts_preload;
 				$update_data['id'] = $id;
 
 				$update_stmt = Database::prepare("
@@ -1735,7 +1782,10 @@ if ($page == 'domains' || $page == 'overview') {
 					`registration_date` = :registration_date,
 					`termination_date` = :termination_date,
 					`ismainbutsubto` = :ismainbutsubto,
-					`letsencrypt` = :letsencrypt
+					`letsencrypt` = :letsencrypt,
+					`hsts` = :hsts,
+					`hsts_sub` = :hsts_sub,
+					`hsts_preload` = :hsts_preload
 					WHERE `id` = :id
 				");
 				Database::pexecute($update_stmt, $update_data);

@@ -374,6 +374,11 @@ if ($page == 'overview') {
 					$ssl_redirect = 2;
 				}
 
+				// HSTS
+				$hsts_maxage = isset($_POST['hsts_maxage']) ? (int)$_POST['hsts_maxage'] : 0;
+				$hsts_sub = isset($_POST['hsts_sub']) && (int)$_POST['hsts_sub'] == 1 ? 1 : 0;
+				$hsts_preload = isset($_POST['hsts_preload']) && (int)$_POST['hsts_preload'] == 1 ? 1 : 0;
+
 				if ($path == '') {
 					standard_error('patherror');
 				} elseif ($subdomain == '') {
@@ -416,7 +421,10 @@ if ($page == 'overview') {
 						`specialsettings` = :specialsettings,
 						`ssl_redirect` = :ssl_redirect,
 						`phpsettingid` = :phpsettingid,
-						`letsencrypt` = :letsencrypt"
+						`letsencrypt` = :letsencrypt,
+						`hsts` = :hsts,
+						`hsts_sub` = :hsts_sub,
+						`hsts_preload` = :hsts_preload"
 					);
 					$params = array(
 						"customerid" => $userinfo['customerid'],
@@ -433,7 +441,10 @@ if ($page == 'overview') {
 						"specialsettings" => $domain_check['specialsettings'],
 						"ssl_redirect" => $ssl_redirect,
 						"phpsettingid" => $phpsid_result['phpsettingid'],
-						"letsencrypt" => $letsencrypt
+						"letsencrypt" => $letsencrypt,
+						"hsts" => $hsts_maxage,
+						"hsts_sub" => $hsts_sub,
+						"hsts_preload" => $hsts_preload
 					);
 					Database::pexecute($stmt, $params);
 
@@ -527,8 +538,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 
-		$stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`isbinddomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`,
-			`d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `d`.`letsencrypt`, `pd`.`subcanemaildomain`
+		$stmt = Database::prepare("SELECT `d`.*, `pd`.`subcanemaildomain`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
 			WHERE `d`.`customerid` = :customerid
 			AND `d`.`id` = :id
@@ -634,13 +644,18 @@ if ($page == 'overview') {
 
 				// We can't enable let's encrypt for wildcard - domains
 				if ($iswildcarddomain == '1' && $letsencrypt == '1') {
-				    standard_error('nowildcardwithletsencrypt');
+					standard_error('nowildcardwithletsencrypt');
 				}
 
 				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
 				if ($ssl_redirect > 0 && $letsencrypt == 1 && $result['letsencrypt'] != $letsencrypt) {
 					$ssl_redirect = 2;
 				}
+
+				// HSTS
+				$hsts_maxage = isset($_POST['hsts_maxage']) ? (int)$_POST['hsts_maxage'] : 0;
+				$hsts_sub = isset($_POST['hsts_sub']) && (int)$_POST['hsts_sub'] == 1 ? 1 : 0;
+				$hsts_preload = isset($_POST['hsts_preload']) && (int)$_POST['hsts_preload'] == 1 ? 1 : 0;
 
 				if ($path == '') {
 					standard_error('patherror');
@@ -677,7 +692,10 @@ if ($page == 'overview') {
 							`aliasdomain`= :aliasdomain,
 							`openbasedir_path`= :openbasedir_path,
 							`ssl_redirect`= :ssl_redirect,
-							`letsencrypt`= :letsencrypt
+							`letsencrypt`= :letsencrypt,
+							`hsts` = :hsts,
+							`hsts_sub` = :hsts_sub,
+							`hsts_preload` = :hsts_preload,
 							WHERE `customerid`= :customerid
 							AND `id`= :id"
 						);
@@ -690,6 +708,9 @@ if ($page == 'overview') {
 							"openbasedir_path" => $openbasedir_path,
 							"ssl_redirect" => $ssl_redirect,
 							"letsencrypt" => $letsencrypt,
+							"hsts" => $hsts_maxage,
+							"hsts_sub" => $hsts_sub,
+							"hsts_preload" => $hsts_preload,
 							"customerid" => $userinfo['customerid'],
 							"id" => $id
 						);
