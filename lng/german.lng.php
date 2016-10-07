@@ -1679,7 +1679,7 @@ $lng['error']['dns_record_toolong'] = 'Records/Labels können maximal 63 Zeichen
 $lng['serversettings']['panel_customer_hide_options']['title'] = 'Menüpunkte und Traffic-Charts im Kundenbereich ausblenden';
 $lng['serversettings']['panel_customer_hide_options']['description'] = 'Wählen Sie hier die gewünschten Menüpunkte und Traffic-Charts aus, welche im Kundenbereich ausgeblendet werden sollen. Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt.';
 
-// Added in froxlor 0.9.37.1
+// Added in froxlor 0.9.38-rc1
 $lng['serversettings']['allow_allow_customer_shell']['title'] = 'Erlaube Kunden für FTP Benutzer eine Shell auszuwählen';
 $lng['serversettings']['allow_allow_customer_shell']['description'] = '<strong class="red">Bitte beachten: Shell Zugriff gestattet dem Benutzer verschiedene Programme auf Ihrem System auszuführen. Mit großer Vorsicht verwenden. Bitte aktiviere dies nur wenn WIRKLICH bekannt ist, was das bedeutet!!!</strong>';
 $lng['serversettings']['available_shells']['title'] = 'Liste der verfügbaren Shells';
@@ -1706,3 +1706,10 @@ $lng['domains']['ssl_certificates'] = 'SSL Zertifikate';
 $lng['domains']['ssl_certificate_removed'] = 'Das Zertifikat mit der ID #%s wurde erfolgreich gelöscht.';
 $lng['domains']['ssl_certificate_error'] = "Fehler beim Lesen des Zertifikats für die Domain: %s";
 $lng['domains']['no_ssl_certificates'] = "Es wurden keine SSL-Zertifikate gefunden";
+$lng['admin']['webserversettings_ssl'] = 'Webserver SSL-Einstellungen';
+$lng['admin']['domain_hsts_maxage']['title'] = 'HTTP Strict Transport Security (HSTS)';
+$lng['admin']['domain_hsts_maxage']['description'] = '"max-age" Wert für den Strict-Transport-Security Header<br>Der Wert <i>0</i> deaktiviert HSTS für diese Domain. Meist wird der Wert <i>31536000</i> gerne genutzt (ein Jahr).';
+$lng['admin']['domain_hsts_incsub']['title'] = 'Inkludiere HSTS für jede Subdomain';
+$lng['admin']['domain_hsts_incsub']['description'] = 'Die optionale "includeSubDomains" Direktive, wenn vorhanden, signalisiert dem UA, dass die HSTS that the HSTS Regel für diese Domain und auch jede Subdomain dieser gilt.';
+$lng['admin']['domain_hsts_preload']['title'] = 'Füge Domain in die <a href="https://hstspreload.appspot.com/" target="_blank">HSTS preload Liste</a> hinzu';
+$lng['admin']['domain_hsts_preload']['description'] = 'Wenn die Domain in die HSTS preload Liste, verwaltet von Chrome (und genutzt von Firefox und Safari), hinzugefügt werden soll, dann aktiviere diese Einstellung.<br>Die preload-Direktive zu senden kann PERMANTENTE KONSEQUENZEN haben und dazu führen, dass Benutzer auf diese Domain und auch Subdomains nicht zugreifen können.<br>Beachte Details unter <a href="hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> bevor ein Header mit "preload" gesendet wird.';

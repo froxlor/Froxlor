@@ -3478,11 +3478,26 @@ if (isDatabaseVersion('201609120')) {
 
 if (isDatabaseVersion('201609200')) {
 
-    showUpdateStep("Changing tables to be more mysql strict-mode compatible");
-    Database::query("ALTER TABLE `".TABLE_MAIL_VIRTUAL."` CHANGE `destination` `destination` TEXT NOT NULL DEFAULT '';");
-    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` CHANGE `registration_date` `registration_date` DATE NULL DEFAULT NULL;");
-    Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` CHANGE `termination_date` `termination_date` DATE NULL DEFAULT NULL;");
-    lastStepStatus(0);
+	showUpdateStep("Changing tables to be more mysql strict-mode compatible");
+	Database::query("ALTER TABLE `".TABLE_MAIL_VIRTUAL."` CHANGE `destination` `destination` TEXT NOT NULL DEFAULT '';");
+	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` CHANGE `registration_date` `registration_date` DATE NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` CHANGE `termination_date` `termination_date` DATE NULL DEFAULT NULL;");
+	lastStepStatus(0);
 
-    updateToDbVersion('201609240');
+	updateToDbVersion('201609240');
+}
+
+if (isDatabaseVersion('201609240')) {
+
+	showUpdateStep("Add HSTS settings for froxlor-vhost");
+	Settings::AddNew("system.hsts_maxage", 0);
+	Settings::AddNew("system.hsts_incsub", 0);
+	Settings::AddNew("system.hsts_preload", 0);
+	lastStepStatus(0);
+
+	showUpdateStep("Settings HSTS default values for all domains (deactivated)");
+	Database::query("UPDATE `".TABLE_PANEL_DOMAINS."` SET `hsts_sub` = '0', `hsts_preload` = '0';");
+	lastStepStatus(0);
+
+	updateToDbVersion('201610070');
 }

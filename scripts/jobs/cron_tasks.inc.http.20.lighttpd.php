@@ -519,7 +519,7 @@ class lighttpd extends HttpConfigBase
 					$ssl_settings .= 'ssl.ca-file = "' . makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
 				}
 
-				if ($domain['hsts'] > 0) {
+				if ($domain['hsts'] >= 0) {
 
 					$vhost_content .= '$HTTP["scheme"] == "https" { setenv.add-response-header  = ( "Strict-Transport-Security" => "max-age=' . $domain['hsts'];
 					if ($domain['hsts_sub'] == 1) {

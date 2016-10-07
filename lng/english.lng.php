@@ -2027,7 +2027,7 @@ $lng['error']['dns_record_toolong'] = 'Records/labels can only be up to 63 chara
 $lng['serversettings']['panel_customer_hide_options']['title'] = 'Hide menu items and traffic charts in customer panel';
 $lng['serversettings']['panel_customer_hide_options']['description'] = 'Select items to hide in customer panel. To select multiple options, hold down CTRL while selecting.';
 
-// Added in froxlor 0.9.37.1
+// Added in froxlor 0.9.38-rc1
 $lng['serversettings']['allow_allow_customer_shell']['title'] = 'Allow customers to enable shell access for ftp-users';
 $lng['serversettings']['allow_allow_customer_shell']['description'] = '<strong class="red">Please note: Shell access allows the user to execute various binaries on your system. Use with extrem caution. Please only activate this if you REALLY know what you are doing!!!</strong>';
 $lng['serversettings']['available_shells']['title'] = 'List of available shells';
@@ -2055,3 +2055,10 @@ $lng['domains']['ssl_certificates'] = 'SSL certificates';
 $lng['domains']['ssl_certificate_removed'] = 'The certificate with the id #%s has been removed successfully';
 $lng['domains']['ssl_certificate_error'] = "Error reading certificate for domain: %s";
 $lng['domains']['no_ssl_certificates'] = "There are no domains with SSL certificate";
+$lng['admin']['webserversettings_ssl'] = 'Webserver SSL settings';
+$lng['admin']['domain_hsts_maxage']['title'] = 'HTTP Strict Transport Security (HSTS)';
+$lng['admin']['domain_hsts_maxage']['description'] = 'Specify the max-age value for the Strict-Transport-Security header<br>The value <i>0</i> will disable HSTS for the domain. Most user set a value of <i>31536000</i> (one year).';
+$lng['admin']['domain_hsts_incsub']['title'] = 'Include HSTS for any subdomain';
+$lng['admin']['domain_hsts_incsub']['description'] = 'The optional "includeSubDomains" directive, if present, signals the UA that the HSTS Policy applies to this HSTS Host as well as any subdomains of the host\'s domain name.';
+$lng['admin']['domain_hsts_preload']['title'] = 'Include domain in <a href="https://hstspreload.appspot.com/" target="_blank">HSTS preload list</a>';
+$lng['admin']['domain_hsts_preload']['description'] = 'If you would like this domain to be included in the HSTS preload list maintained by Chrome (and used by Firefox and Safari), then use activate this.<br>Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains.<br>Please read the details at <a href="hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> before sending the header with "preload".';

@@ -122,6 +122,8 @@ class htmlform
 				return self::_checkbox($fieldname, $data); break;
 			case 'file':
 				return self::_file($fieldname, $data); break;
+			case 'int':
+				return self::_int($fieldname, $data); break;
 		}
 	}
 
@@ -313,4 +315,29 @@ class htmlform
 		return $return;
 	}
 
+	private static function _int($fieldname = '', $data = array())
+	{
+		$return = '';
+		$extras = '';
+		if(isset($data['int_min'])) {
+			$extras .= ' min="'.$data['int_min'].'"';
+		}
+		if(isset($data['int_max'])) {
+			$extras .= ' max="'.$data['int_max'].'"';
+		}
+
+		// add support to save reloaded forms
+		if (isset($data['value'])) {
+			$value = $data['value'];
+		} elseif (isset($_SESSION['requestData'][$fieldname])) {
+			$value = $_SESSION['requestData'][$fieldname];
+		} else {
+			$value = '';
+		}
+
+		$type = 'number';
+		$ulfield = '';
+		eval("\$return = \"" . getTemplate("misc/form/input_text", "1") . "\";");
+		return $return;
+	}
 }
