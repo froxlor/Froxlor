@@ -217,7 +217,9 @@ class nginx extends HttpConfigBase
 					} else {
 						$_sslport = $this->checkAlternativeSslPort();
 						$mypath = 'https://' . Settings::Get('system.hostname') . $_sslport . '/';
-						$this->nginx_data[$vhost_filename] .= "\t" . 'return 301 ' . $mypath . '$request_uri;' . "\n";
+						$this->nginx_data[$vhost_filename] .= "\t" . 'if ($request_uri !~ "^/\.well-known/acme-challenge/\w+$") {' . "\n";
+						$this->nginx_data[$vhost_filename] .= "\t\t" . 'return 301 ' . $mypath . '$request_uri;' . "\n";
+						$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 					}
 				}
 
@@ -458,7 +460,9 @@ class nginx extends HttpConfigBase
 			if (substr($uri, - 1) == '/') {
 				$uri = substr($uri, 0, - 1);
 			}
-			$vhost_content .= "\t" . 'return 301 ' . $uri . '$request_uri;' . "\n";
+			$vhost_content .= "\t" . 'if ($request_uri !~ "^/\.well-known/acme-challenge/\w+$") {' . "\n";
+			$vhost_content .= "\t\t" . 'return 301 ' . $uri . '$request_uri;' . "\n";
+			$vhost_content .= "\t" . '}' . "\n";
 		} else {
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 
