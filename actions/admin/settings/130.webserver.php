@@ -260,11 +260,7 @@ return array(
 					'varname' => 'enabled',
 					'type' => 'bool',
 					'default' => false,
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array(
-						'apache2',
-						'lighttpd'
-					)
+					'save_method' => 'storeSettingField'
 				),
 				'customredirect_default' => array(
 					'label' => $lng['serversettings']['customredirect_default'],
@@ -274,11 +270,7 @@ return array(
 					'default' => '1',
 					'option_mode' => 'one',
 					'option_options_method' => 'getRedirectCodes',
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array(
-						'apache2',
-						'lighttpd'
-					)
+					'save_method' => 'storeSettingField'
 				)
 			)
 		)
