@@ -54,7 +54,7 @@ return array(
 						'value' => $urlvalue
 					),
 					'redirectcode' => array(
-						'visible' => ((Settings::Get('system.webserver') == 'apache2' && Settings::Get('customredirect.enabled') == '1') ? true : false),
+						'visible' => ((Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('customredirect.enabled') == '1') ? true : false),
 						'label' => $lng['domains']['redirectifpathisurl'],
 						'desc' => $lng['domains']['redirectifpathisurlinfo'],
 						'type' => 'select',
