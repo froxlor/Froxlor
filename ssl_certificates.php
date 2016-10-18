@@ -119,6 +119,18 @@ if (count($all_certs) == 0) {
 					$isValid = false;
 				}
 
+				$san_list = "";
+				if (isset($cert_data['extensions']['subjectAltName']) && !empty($cert_data['extensions']['subjectAltName'])) {
+					$SANs = explode(",", $cert_data['extensions']['subjectAltName']);
+					$SANs = array_map('trim', $SANs);
+					foreach ($SANs as $san) {
+						$san = str_replace("DNS:", "", $san);
+						if ($san != $cert_data['subject']['CN'] && strpos($san, "othername:") === false) {
+							$san_list .= $san."<br>";
+						}
+					}
+				}
+
 				$row = htmlentities_array($cert);
 				eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_cert", true) . "\";");
 			} else {
