@@ -64,7 +64,12 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false) {
 				$_field = '';
 				foreach ($dirList as $key => $dir) {
 					if (strpos($dir, $path) === 0) {
-						$dir = makeCorrectDir(substr($dir, strlen($path)));
+						$dir = substr($dir, strlen($path));
+						// docroot cut off of current directory == empty -> directory is the docroot
+						if (empty($dir)) {
+							$dir = '/';
+						}
+						$dir = makeCorrectDir($dir);
 					}
 					$_field.= makeoption($dir, $dir, $value);
 				}
