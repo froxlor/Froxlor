@@ -183,6 +183,10 @@ class apache extends HttpConfigBase
 			}
 
 			if ($row_ipsandports['vhostcontainer'] == '1') {
+
+				$without_vhost = $this->virtualhosts_data[$vhosts_filename];
+				$close_vhost = true;
+
 				$this->virtualhosts_data[$vhosts_filename] .= '<VirtualHost ' . $ipport . '>' . "\n";
 
 				$mypath = $this->getMyPath($row_ipsandports);
@@ -332,7 +336,7 @@ class apache extends HttpConfigBase
 							'id' => 'none',
 							'domain' => Settings::Get('system.hostname'),
 							'adminid' => 1, /* first admin-user (superadmin) */
-                        'guid' => Settings::Get('system.httpuser'),
+							'guid' => Settings::Get('system.httpuser'),
 							'openbasedir' => 0,
 							'email' => Settings::Get('panel.adminmail'),
 							'loginname' => 'froxlor.panel',
@@ -443,10 +447,19 @@ class apache extends HttpConfigBase
 								}
 							}
 						}
+					} else {
+						// if there is no cert-file specified but we are generating a ssl-vhost,
+						// we should return an empty string because this vhost would suck dick, ref #1583
+						$this->logger->logAction(CRON_ACTION, LOG_ERR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
+						$this->virtualhosts_data[$vhosts_filename] = $without_vhost;
+						$this->virtualhosts_data[$vhosts_filename] .= '# no ssl-certificate was specified for this domain, therefore no explicit vhost-container is being generated';
+						$close_vhost = false;
 					}
 				}
 
-				$this->virtualhosts_data[$vhosts_filename] .= '</VirtualHost>' . "\n";
+				if ($close_vhost) {
+					$this->virtualhosts_data[$vhosts_filename] .= '</VirtualHost>' . "\n";
+				}
 				$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted vhostcontainer');
 			}
 			unset($vhosts_filename);
