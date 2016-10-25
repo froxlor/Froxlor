@@ -1227,7 +1227,7 @@ if ($page == 'domains' || $page == 'overview') {
 					$adminid = $result['adminid'];
 				}
 
-				$aliasdomain = intval($_POST['alias']);
+				$aliasdomain = isset($_POST['alias']) ? intval($_POST['alias']) : 0;
 				$issubof = intval($_POST['issubof']);
 				$subcanemaildomain = intval($_POST['subcanemaildomain']);
 				$caneditdomain = isset($_POST['caneditdomain']) ? intval($_POST['caneditdomain']) : 0;

@@ -96,7 +96,7 @@ if (count($all_certs) == 0) {
 
 			$cert_data = openssl_x509_parse($cert['ssl_cert_file']);
 
-			$cert['domain'] = $idna_convert->encode($cert['domain']);
+			$cert['domain'] = $idna_convert->decode($cert['domain']);
 
 			$adminCustomerLink = "";
 			if (AREA == 'admin') {

@@ -1,5 +1,4 @@
 <?php
-
 if (! defined('MASTER_CRONJOB'))
 	die('You cannot access this file directly!');
 
@@ -228,7 +227,7 @@ class apache extends HttpConfigBase
 					}
 				}
 
-				if (!$is_redirect) {
+				if (! $is_redirect) {
 					// create fcgid <Directory>-Part (starter is created in apache_fcgid)
 					if (Settings::Get('system.mod_fcgid_ownvhost') == '1' && Settings::Get('system.mod_fcgid') == '1') {
 						$configdir = makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/froxlor.panel/' . Settings::Get('system.hostname'));
@@ -278,13 +277,14 @@ class apache extends HttpConfigBase
 							}
 							$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 						}
-					}					// create php-fpm <Directory>-Part (config is created in apache_fcgid)
+					}
 					elseif (Settings::Get('phpfpm.enabled') == '1') {
+						// create php-fpm <Directory>-Part (config is created in apache_fcgid)
 						$domain = array(
 							'id' => 'none',
 							'domain' => Settings::Get('system.hostname'),
 							'adminid' => 1, /* first admin-user (superadmin) */
-						'mod_fcgid_starter' => - 1,
+							'mod_fcgid_starter' => - 1,
 							'mod_fcgid_maxrequests' => - 1,
 							'guid' => Settings::Get('phpfpm.vhost_httpuser'),
 							'openbasedir' => 0,
@@ -615,10 +615,10 @@ class apache extends HttpConfigBase
 				} else {
 					$stats_text .= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer') . '"' . "\n";
 				}
-			}			// if the docroots are equal, we still have to set an alias for awstats
-			// because the stats are in /awstats/[domain], not just /awstats/
-			// also, the awstats-icons are someplace else too!
-			// -> webalizer does not need this!
+			} // if the docroots are equal, we still have to set an alias for awstats
+			  // because the stats are in /awstats/[domain], not just /awstats/
+			  // also, the awstats-icons are someplace else too!
+			  // -> webalizer does not need this!
 			elseif (Settings::Get('system.awstats_enabled') == '1') {
 				$stats_text .= '  Alias /awstats "' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
 				$stats_text .= '  Alias /awstats-icon "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
@@ -873,7 +873,7 @@ class apache extends HttpConfigBase
 		$domain['documentroot'] = trim($domain['documentroot']);
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$corrected_docroot = $this->idnaConvert->encode_uri($domain['documentroot']);
+			$corrected_docroot = $domain['documentroot'];
 
 			// prevent empty return-cde
 			$code = "301";
