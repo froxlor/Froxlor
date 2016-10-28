@@ -141,8 +141,7 @@ if (Settings::Get('system.le_froxlor_enabled') == '1') {
 
 	if ($insert_or_update_required) {
 		$domains = array(
-			$certrow['domain'],
-			'www.' . $certrow['domain']
+			$certrow['domain']
 		);
 
 		// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
