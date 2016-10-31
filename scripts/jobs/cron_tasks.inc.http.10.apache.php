@@ -412,7 +412,7 @@ class apache extends HttpConfigBase
 						} else {
 
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol ALL -SSLv2 -SSLv3' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol -ALL +TLSv1.0 +TLSv1.2' . "\n";
 							// this makes it more secure, thx to Marcel (08/2013)
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
@@ -830,7 +830,7 @@ class apache extends HttpConfigBase
 
 			if ($domain['ssl_cert_file'] != '') {
 				$vhost_content .= '  SSLEngine On' . "\n";
-				$vhost_content .= '  SSLProtocol ALL -SSLv2 -SSLv3' . "\n";
+				$vhost_content .= '  SSLProtocol -ALL +TLSv1.0 +TLSv1.2' . "\n";
 				// this makes it more secure, thx to Marcel (08/2013)
 				$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
 				$vhost_content .= '  SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
