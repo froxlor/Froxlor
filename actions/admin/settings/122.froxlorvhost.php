@@ -39,7 +39,7 @@ return array(
 					'varname' => 'le_froxlor_enabled',
 					'type' => 'bool',
 					'default' => false,
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingClearCertificates',
 					'visible' => Settings::Get('system.leenabled')
 				),
 				'system_le_froxlor_redirect' => array(

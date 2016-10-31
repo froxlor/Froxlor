@@ -1081,8 +1081,12 @@ if ($page == 'domains' || $page == 'overview') {
 	} elseif ($action == 'edit' && $id != 0) {
 
 		$result_stmt = Database::prepare("
-			SELECT `d`.*, `c`.`customerid` FROM `" . TABLE_PANEL_DOMAINS . "` `d` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
-			WHERE `d`.`parentdomainid` = '0' AND `d`.`id` = :id" . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid"));
+			SELECT `d`.*, `c`.`customerid`
+			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
+			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
+			WHERE `d`.`parentdomainid` = '0'
+			AND `d`.`id` = :id" . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid")
+		);
 		$params = array(
 			'id' => $id
 		);
@@ -1638,6 +1642,16 @@ if ($page == 'domains' || $page == 'overview') {
 						'id' => $id
 					));
 					$log->logAction(ADM_ACTION, LOG_NOTICE, "deleted domain #" . $id . " from mail-tables");
+				}
+
+				// check whether LE has been disabled, so we remove the certificate
+				if ($letsencrypt == '0' && $result['letsencrypt'] == '1')  {
+					$del_stmt = Database::prepare("
+						DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :id
+					");
+					Database::pexecute($del_stmt, array(
+						'id' => $id
+					));
 				}
 
 				$updatechildren = '';

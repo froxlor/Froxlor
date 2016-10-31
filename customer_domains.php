@@ -720,11 +720,20 @@ if ($page == 'overview') {
 							// trigger when domain id for alias destination has changed: both for old and new destination
 							triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $log);
 							triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
-						} else
-							if ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
-								// or when wwwserveralias or letsencrypt was changed
-								triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
-							}
+						} elseif ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
+							// or when wwwserveralias or letsencrypt was changed
+							triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
+						}
+
+						// check whether LE has been disabled, so we remove the certificate
+						if ($letsencrypt == '0' && $result['letsencrypt'] == '1')  {
+							$del_stmt = Database::prepare("
+								DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :id
+							");
+							Database::pexecute($del_stmt, array(
+								'id' => $id
+							));
+						}
 
 						inserttask('1');
 
