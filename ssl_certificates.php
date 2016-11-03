@@ -95,12 +95,9 @@ if (count($all_certs) == 0) {
 
 			if (empty($cert['domain']) || empty($cert['ssl_cert_file'])) {
 				// no domain found to the entry or empty entry - safely delete it from the DB
-				/*
 				Database::pexecute($del_stmt, array(
 					'id' => $cert['id']
 				));
-				*/
-				echo "no domain found to the entry or empty entry - safely delete it from the DB";
 				continue;
 			}
 
