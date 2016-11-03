@@ -777,7 +777,7 @@ if ($page == 'domains' || $page == 'overview') {
 						'termination_date' => $termination_date,
 						'issubof' => $issubof,
 						'letsencrypt' => $letsencrypt,
-						'hsts' => $hsts_maxage,
+						'hsts_maxage' => $hsts_maxage,
 						'hsts_sub' => $hsts_sub,
 						'hsts_preload' => $hsts_preload
 					);
@@ -1402,6 +1402,11 @@ if ($page == 'domains' || $page == 'overview') {
 						$letsencrypt = (int) $_POST['letsencrypt'];
 					}
 
+					// HSTS
+					$hsts_maxage = isset($_POST['hsts_maxage']) ? (int)$_POST['hsts_maxage'] : 0;
+					$hsts_sub = isset($_POST['hsts_sub']) && (int)$_POST['hsts_sub'] == 1 ? 1 : 0;
+					$hsts_preload = isset($_POST['hsts_preload']) && (int)$_POST['hsts_preload'] == 1 ? 1 : 0;
+
 					$ssl_ipandports = array();
 					if (isset($_POST['ssl_ipandport']) && ! is_array($_POST['ssl_ipandport'])) {
 						$_POST['ssl_ipandport'] = unserialize($_POST['ssl_ipandport']);
@@ -1427,11 +1432,6 @@ if ($page == 'domains' || $page == 'overview') {
 								$ssl_ipandports[] = $ssl_ipandport;
 							}
 						}
-
-						// HSTS
-						$hsts_maxage = isset($_POST['hsts_maxage']) ? (int)$_POST['hsts_maxage'] : 0;
-						$hsts_sub = isset($_POST['hsts_sub']) && (int)$_POST['hsts_sub'] == 1 ? 1 : 0;
-						$hsts_preload = isset($_POST['hsts_preload']) && (int)$_POST['hsts_preload'] == 1 ? 1 : 0;
 
 					} else {
 						$ssl_redirect = 0;
@@ -1594,7 +1594,7 @@ if ($page == 'domains' || $page == 'overview') {
 					'ipandport' => serialize($ipandports),
 					'ssl_ipandport' => serialize($ssl_ipandports),
 					'letsencrypt' => $letsencrypt,
-					'hsts' => $hsts_maxage,
+					'hsts_maxage' => $hsts_maxage,
 					'hsts_sub' => $hsts_sub,
 					'hsts_preload' => $hsts_preload
 				);
@@ -1615,7 +1615,7 @@ if ($page == 'domains' || $page == 'overview') {
 				$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
 				$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
 
-				if ($documentroot != $result['documentroot'] || $ssl_redirect != $result['ssl_redirect'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $openbasedir != $result['openbasedir'] || $phpsettingid != $result['phpsettingid'] || $mod_fcgid_starter != $result['mod_fcgid_starter'] || $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests'] || $specialsettings != $result['specialsettings'] || $aliasdomain != $result['aliasdomain'] || $issubof != $result['ismainbutsubto'] || $email_only != $result['email_only'] || ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1') || $letsencrypt != $result['letsencrypt']) {
+				if ($documentroot != $result['documentroot'] || $ssl_redirect != $result['ssl_redirect'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $openbasedir != $result['openbasedir'] || $phpsettingid != $result['phpsettingid'] || $mod_fcgid_starter != $result['mod_fcgid_starter'] || $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests'] || $specialsettings != $result['specialsettings'] || $aliasdomain != $result['aliasdomain'] || $issubof != $result['ismainbutsubto'] || $email_only != $result['email_only'] || ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1') || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload']) {
 					inserttask('1');
 				}
 

@@ -578,7 +578,7 @@ if ($page == 'overview') {
 					$_doredirect = true;
 				}
 
-				$aliasdomain = intval($_POST['alias']);
+				$aliasdomain = isset($_POST['alias']) ? intval($_POST['alias']) : 0;
 
 				if (isset($_POST['selectserveralias'])) {
 					$iswildcarddomain = ($_POST['selectserveralias'] == '0') ? '1' : '0';
@@ -681,7 +681,11 @@ if ($page == 'overview') {
 						|| $aliasdomain != $result['aliasdomain']
 						|| $openbasedir_path != $result['openbasedir_path']
 						|| $ssl_redirect != $result['ssl_redirect']
-						|| $letsencrypt != $result['letsencrypt']) {
+						|| $letsencrypt != $result['letsencrypt']
+						|| $hsts_maxage != $result['hsts']
+						|| $hsts_sub != $result['hsts_sub']
+						|| $hsts_preload != $result['hsts_preload']
+					) {
 						$log->logAction(USR_ACTION, LOG_INFO, "edited domain '" . $idna_convert->decode($result['domain']) . "'");
 
 						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
