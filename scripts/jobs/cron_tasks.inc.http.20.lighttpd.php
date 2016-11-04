@@ -431,7 +431,7 @@ class lighttpd extends HttpConfigBase
 		$domain['documentroot'] = trim($domain['documentroot']);
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$uri = $this->idnaConvert->encode_uri($domain['documentroot']);
+			$uri = $domain['documentroot'];
 			// prevent empty return-cde
 			$code = "301";
 			// Get domain's redirect code

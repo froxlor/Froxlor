@@ -456,7 +456,7 @@ class nginx extends HttpConfigBase
 
 		// if the documentroot is an URL we just redirect
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$uri = $this->idnaConvert->encode_uri($domain['documentroot']);
+			$uri = $domain['documentroot'];
 			if (substr($uri, - 1) == '/') {
 				$uri = substr($uri, 0, - 1);
 			}
