@@ -2,6 +2,7 @@
 	<td><strong>{$row['description']}</strong></td>
 	<td>{$domains}</td>
 	<td>{$row['binary']}</td>
+	<td>{$row['configdir']}</td>
 	<td>{$row['file_extensions']}</td>
 	<td>
 		<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'edit', 'id' => $row['id']))}">

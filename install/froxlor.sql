@@ -748,6 +748,7 @@ CREATE TABLE `panel_phpconfigs` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `description` varchar(50) NOT NULL,
   `binary` varchar(255) NOT NULL,
+  `configdir` varchar(255) NOT NULL,
   `file_extensions` varchar(255) NOT NULL,
   `mod_fcgid_starter` int(4) NOT NULL DEFAULT '-1',
   `mod_fcgid_maxrequests` int(4) NOT NULL DEFAULT '-1',
