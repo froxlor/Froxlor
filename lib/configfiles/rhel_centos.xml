@@ -2339,7 +2339,7 @@ getspent    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup =
             FROM ftp_users
 getgrnam    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup = 'system' and varname = 'mod_fcgid_system_prefix' LIMIT 1), groupname),'x',gid \
             FROM ftp_groups \
-            WHERE groupname=substring('%1$s', 1+CHARACTER_LENGTH((SELECT value FROM panel_settings WHERE settinggroup = 'system' AND varname = 'mod_fcgid_system_prefix' LIMIT 1)))
+            WHERE groupname=substring('%1$s', 1+CHARACTER_LENGTH((SELECT value FROM panel_settings WHERE settinggroup = 'system' AND varname = 'mod_fcgid_system_prefix' LIMIT 1))) \
             LIMIT 1
 getgrgid    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup = 'system' and varname = 'mod_fcgid_system_prefix' LIMIT 1), groupname),'x',gid \
             FROM ftp_groups \
