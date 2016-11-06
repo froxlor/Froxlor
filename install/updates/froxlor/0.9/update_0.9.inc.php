@@ -3502,6 +3502,14 @@ if (isDatabaseVersion('201609240')) {
 	updateToDbVersion('201610070');
 }
 
+if (isDatabaseVersion('201610070')) {
+	showUpdateStep("Add fcgid special system prefix option for vhosts");
+	Settings::AddNew("system.mod_fcgid_system_prefix", "");
+	lastStepStatus(0);
+
+	updateToDbVersion('201611060');
+}
+
 if (isFroxlorVersion('0.9.37')) {
 
 	showUpdateStep("Updating from 0.9.37 to 0.9.38-rc1", false);
