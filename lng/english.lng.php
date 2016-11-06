@@ -2062,6 +2062,7 @@ $lng['admin']['domain_hsts_incsub']['title'] = 'Include HSTS for any subdomain';
 $lng['admin']['domain_hsts_incsub']['description'] = 'The optional "includeSubDomains" directive, if present, signals the UA that the HSTS Policy applies to this HSTS Host as well as any subdomains of the host\'s domain name.';
 $lng['admin']['domain_hsts_preload']['title'] = 'Include domain in <a href="https://hstspreload.appspot.com/" target="_blank">HSTS preload list</a>';
 $lng['admin']['domain_hsts_preload']['description'] = 'If you would like this domain to be included in the HSTS preload list maintained by Chrome (and used by Firefox and Safari), then use activate this.<br>Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains.<br>Please read the details at <a href="hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> before sending the header with "preload".';
-
 $lng['serversettings']['nginx_http2_support']['title'] = 'Nginx HTTP2 Support';
 $lng['serversettings']['nginx_http2_support']['description'] = 'enable http2 support for ssl. ENABLE ONLY IF YOUR Nginx SUPPORT THIS FEATURE. (version 1.9.5+)';
+$lng['serversettings']['mod_fcgid']['username_prefix']['title'] = 'Prefix added to the username';
+$lng['serversettings']['mod_fcgid']['username_prefix']['description'] = 'This setting avoids username collisions.';

@@ -450,6 +450,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'last_archive_run', '000000'),
 	('system', 'mod_fcgid_configdir', '/var/www/php-fcgi-scripts'),
 	('system', 'mod_fcgid_tmpdir', '/var/customers/tmp'),
+	('system', 'mod_fcgid_system_prefix', ''),
 	('system', 'ssl_cert_file', '/etc/apache2/apache2.pem'),
 	('system', 'use_ssl', '0'),
 	('system', 'default_vhostconf', ''),
