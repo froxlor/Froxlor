@@ -267,15 +267,6 @@ class phpinterface_fpm {
 
 					$openbasedir .= appendOpenBasedirPath($this->getTempDir());
 					$openbasedir .= $_phpappendopenbasedir;
-
-					$openbasedir = explode(':', $openbasedir);
-					$clean_openbasedir = array();
-					foreach ($openbasedir as $number => $path) {
-						if (trim($path) != '/') {
-							$clean_openbasedir[] = makeCorrectDir($path);
-						}
-					}
-					$openbasedir = implode(':', $clean_openbasedir);
 				}
 			}
 			$fpm_config.= 'php_admin_value[session.save_path] = ' . makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/') . "\n";
