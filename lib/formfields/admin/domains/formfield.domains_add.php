@@ -202,6 +202,14 @@ return array(
 				'image' => 'icons/domain_add.png',
 				'visible' => (($userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1') ? true : false),
 				'fields' => array(
+                                        'phpenabled' => array(
+                                                'label' => $lng['admin']['phpenabled'],
+                                                'type' => 'checkbox',
+                                                'values' => array(
+                                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
+                                                ),
+                                                'value' => array('1')
+                                        ),
 					'openbasedir' => array(
 						'label' => 'OpenBasedir',
 						'type' => 'checkbox',
