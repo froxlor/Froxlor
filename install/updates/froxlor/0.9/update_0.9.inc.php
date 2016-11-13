@@ -3502,15 +3502,6 @@ if (isDatabaseVersion('201609240')) {
 	updateToDbVersion('201610070');
 }
 
-if (isDatabaseVersion('201610070')) {
-
-        showUpdateStep("Updating database table definition for panel_domains");
-        Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `phpenabled` tinyint(1) NOT NULL default '1' AFTER `parentdomainid`;");
-        lastStepStatus(0);
-
-	updateToDbVersion('201611130');
-}
-
 if (isFroxlorVersion('0.9.37')) {
 
 	showUpdateStep("Updating from 0.9.37 to 0.9.38-rc1", false);
@@ -3521,4 +3512,13 @@ if (isFroxlorVersion('0.9.38-rc1')) {
 
 	showUpdateStep("Updating from 0.9.38-rc1 to 0.9.38-rc2", false);
 	updateToVersion('0.9.38-rc2');
+}
+
+if (isDatabaseVersion('201610070')) {
+
+        showUpdateStep("Updating database table definition for panel_domains");
+        Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `phpenabled` tinyint(1) NOT NULL default '1' AFTER `parentdomainid`;");
+        lastStepStatus(0);
+
+        updateToDbVersion('201611130');
 }
