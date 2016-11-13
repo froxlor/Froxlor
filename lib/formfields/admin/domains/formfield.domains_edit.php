@@ -231,7 +231,7 @@ return array(
                                                 'values' => array(
                                                         array ('label' => $lng['panel']['yes'], 'value' => '1')
                                                 ),
-                                                'value' => array('1')
+						'value' => array($result['phpenabled'])
                                         ),
 					'openbasedir' => array(
 						'label' => 'OpenBasedir',
