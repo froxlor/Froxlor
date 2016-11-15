@@ -194,10 +194,8 @@ class pdns extends DnsBase
 			// AXFR server #100
 			if (count($this->_axfr) > 0) {
 				foreach ($this->_axfr as $axfrserver) {
-					if (validate_ip($axfrserver, true) !== false) {
-						$ins_data['value'] = $axfrserver;
-						$ins_stmt->execute($ins_data);
-					}
+					$ins_data['value'] = $axfrserver;
+					$ins_stmt->execute($ins_data);
 				}
 			}
 		}

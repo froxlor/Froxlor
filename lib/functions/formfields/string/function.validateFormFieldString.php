@@ -122,7 +122,7 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
                         $newfieldvalue = '';
                         $returnvalue = 'stringmustntbeempty';
                     } else {
-                        $newfieldvalue = validate_ip2($newfieldvalue, true, true, true);
+                        $newfieldvalue = validate_ip2($newfieldvalue, true, 'invalidip', true, true, true);
                         $returnvalue = ($newfieldvalue !== false ? true : 'invalidip');
                     }
                 }
