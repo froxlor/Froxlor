@@ -3508,6 +3508,12 @@ if (isFroxlorVersion('0.9.37')) {
 	updateToVersion('0.9.38-rc1');
 }
 
+if (isFroxlorVersion('0.9.38-rc1')) {
+
+	showUpdateStep("Updating from 0.9.38-rc1 to 0.9.38-rc2", false);
+	updateToVersion('0.9.38-rc2');
+}
+
 if (isDatabaseVersion('201610070')) {
 	
 	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `configdir` varchar(255) NOT NULL default '' AFTER `binary`;");	

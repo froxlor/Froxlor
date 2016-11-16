@@ -49,23 +49,43 @@ function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
  * @param string $lng index for error-message (if $return_bool is false)
  * @param bool $allow_localhost whether to allow 127.0.0.1
  * @param bool $allow_priv whether to allow private network addresses
+ * @param bool $allow_cidr whether to allow CIDR values e.g. 10.10.10.10/16
  *
  * @return string|bool ip address on success, false on failure
  */
-function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false) {
+function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false) {
 
-    $filter_lan = $allow_priv ? FILTER_FLAG_NO_RES_RANGE : (FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE);
+	$cidr = "";
+	if ($allow_cidr) {
+		$org_ip = $ip;
+		$ip_cidr = explode("/", $ip);
+		if (count($ip_cidr) == 2) {
+			$ip = $ip_cidr[0];
+			$cidr = "/".$ip_cidr[1];
+		} else {
+			$ip = $org_ip;
+		}
+	} elseif (strpos($ip, "/") !== false) {
+		if ($return_bool) {
+			return false;
+		} else {
+			standard_error($lng, $ip);
+			exit();
+		}
+	}
+
+	$filter_lan = $allow_priv ? FILTER_FLAG_NO_RES_RANGE : (FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE);
 
 	if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)
 			|| filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
 			&& filter_var($ip, FILTER_VALIDATE_IP, $filter_lan)
 	) {
-		return $ip;
+		return $ip.$cidr;
 	}
 
 	// special case where localhost ip is allowed (mysql-access-hosts for example)
 	if ($allow_localhost && $ip == '127.0.0.1') {
-		return $ip;
+		return $ip.$cidr;
 	}
 
 	if ($return_bool) {

@@ -135,15 +135,6 @@ class phpinterface_fcgid {
 			$openbasedir .= appendOpenBasedirPath($this->getTempDir());
 			$openbasedir .= $_phpappendopenbasedir;
 
-			$openbasedir = explode(':', $openbasedir);
-			$clean_openbasedir = array();
-			foreach ($openbasedir as $number => $path) {
-				if (trim($path) != '/') {
-					$clean_openbasedir[] = makeCorrectDir($path);
-				}
-			}
-			$openbasedir = implode(':', $clean_openbasedir);
-
 		} else {
 			$openbasedir = 'none';
 			$openbasedirc = ';';
