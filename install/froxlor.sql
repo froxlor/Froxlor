@@ -496,6 +496,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'ssl_cert_chainfile', ''),
 	('system', 'ssl_cipher_list', 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128'),
 	('system', 'nginx_php_backend', '127.0.0.1:8888'),
+        ('system', 'nginx_http2_support', '0'),
 	('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock'),
 	('system', 'phpreload_command', ''),
 	('system', 'apache24', '0'),
