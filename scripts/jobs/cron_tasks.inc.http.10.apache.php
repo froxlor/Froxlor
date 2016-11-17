@@ -62,7 +62,9 @@ class apache extends HttpConfigBase
 			safe_exec(escapeshellcmd(Settings::Get('phpfpm.reload')));
 		}
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: reloading apache');
-		safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
+		foreach(preg_split("/((\r?\n)|(\r\n?))/", Settings::Get('system.apachereload_command')) as $command) {
+			safe_exec(escapeshellcmd($command));
+		}
 	}
 
 	/**

@@ -164,7 +164,7 @@ return array(
 					'label' => $lng['serversettings']['apachereload_command'],
 					'settinggroup' => 'system',
 					'varname' => 'apachereload_command',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '/etc/init.d/apache2 reload',
 					'save_method' => 'storeSettingField'
 				),
