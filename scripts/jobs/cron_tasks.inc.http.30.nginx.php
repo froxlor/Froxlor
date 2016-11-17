@@ -64,9 +64,7 @@ class nginx extends HttpConfigBase
 	public function reload()
 	{
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: reloading nginx');
-		foreach(preg_split("/((\r?\n)|(\r\n?))/", Settings::Get('system.apachereload_command')) as $command) {
-			safe_exec(escapeshellcmd($command));
-		}
+		safe_exec(Settings::Get('system.apachereload_command'));
 
 		/**
 		 * nginx does not auto-spawn fcgi-processes
