@@ -74,7 +74,9 @@ class nginx extends HttpConfigBase
 			safe_exec(Settings::Get('system.phpreload_command'));
 		} elseif ((int) Settings::Get('phpfpm.enabled') == 1) {
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: reloading php-fpm');
-			safe_exec(escapeshellcmd(Settings::Get('phpfpm.reload')));
+			foreach(preg_split("/((\r?\n)|(\r\n?))/", Settings::Get('phpfpm.reload')) as $command) {
+				safe_exec(escapeshellcmd($command));
+			}
 		}
 	}
 
