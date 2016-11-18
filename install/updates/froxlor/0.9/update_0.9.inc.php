@@ -3519,3 +3519,12 @@ if (isFroxlorVersion('0.9.38-rc2')) {
         showUpdateStep("Updating from 0.9.38-rc2 to 0.9.38 final", false);
         updateToVersion('0.9.38');
 }
+
+if (isDatabaseVersion('201610070')) {
+
+	showUpdateStep("Add Nginx http2 setting");
+	Settings::AddNew("system.nginx_http2_support", 0);
+	lastStepStatus(0);
+
+	updateToDbVersion('201611180');
+}
