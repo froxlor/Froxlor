@@ -3550,8 +3550,17 @@ if (isFroxlorVersion('0.9.38.2')) {
 if (isDatabaseVersion('201611180')) {
 
 	showUpdateStep("Add PHP-FPM configdir-option");
-	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `configdir` varchar(255) NOT NULL default '' AFTER `binary`;");	
+	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `configdir` varchar(255) NOT NULL default '' AFTER `binary`;");
 	lastStepStatus(0);
 
 	updateToDbVersion('201611181');
+}
+
+if (isDatabaseVersion('201611181')) {
+
+	showUpdateStep("Add PHP-FPM runscript-option");
+	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `runscript` varchar(255) NOT NULL default '' AFTER `configdir`;");
+	lastStepStatus(0);
+
+	updateToDbVersion('201611182');
 }

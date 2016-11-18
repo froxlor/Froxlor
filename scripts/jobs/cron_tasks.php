@@ -26,6 +26,7 @@ require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.20.lightt
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.25.lighttpd_fcgid.php');
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.30.nginx.php');
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.35.nginx_phpfpm.php');
+require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.40.phpfpm_restart.php');
 
 /**
  * LOOK INTO TASKS TABLE TO SEE IF THERE ARE ANY UNDONE JOBS
@@ -50,6 +51,14 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 * TYPE=1 MEANS TO REBUILD APACHE VHOSTS.CONF
 	 */
 	if ($row['type'] == '1') {
+
+		// get class for phpfpm-restart
+		$phpfpm_restart = new phpfpm_restart($cronlog);
+
+		// if phpfpm is enabled, capture current php-configs
+		if (Settings::Get('phpfpm.enabled') == 1) {
+			$phpfpm_restart->captureCurrentConfigs();
+		}
 
 		// get configuration-I/O object
 		$configio = new ConfigIO();
@@ -84,6 +93,14 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$webserver->writeConfigs();
 			$webserver->createOwnVhostStarter();
 			$webserver->reload();
+
+			if (Settings::Get('phpfpm.enabled') == 1) {
+				// capture current php-configs again
+				$phpfpm_restart->captureCurrentConfigs();
+
+				// run all required restart-scripts
+				$phpfpm_restart->restart();
+			}
 		} else {
 			echo "Please check you Webserver settings\n";
 		}

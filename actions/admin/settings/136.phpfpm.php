@@ -89,7 +89,7 @@ return array(
 					'label' => $lng['serversettings']['phpfpm_settings']['reload'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'reload',
-					'type' => 'text',
+					'type' => 'string',
 					'default' => '/etc/init.d/php-fpm restart',
 					'save_method' => 'storeSettingField'
 					),

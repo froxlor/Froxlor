@@ -45,6 +45,14 @@ return array(
 						'maxlength' => 255,
 						'value' => $result['configdir']
 					),
+					'runscript' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'label' => $lng['admin']['phpsettings']['runscript']['title'],
+						'desc' => $lng['admin']['phpsettings']['runscript']['description'],
+						'type' => 'text',
+						'maxlength' => 255,
+						'value' => $result['runscript']
+					),
 					'file_extensions' => array(
 						'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['phpsettings']['file_extensions'],

@@ -578,7 +578,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.38.3'),
-	('panel', 'db_version', '201611181');
+	('panel', 'db_version', '201611182');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -749,7 +749,8 @@ CREATE TABLE `panel_phpconfigs` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `description` varchar(50) NOT NULL,
   `binary` varchar(255) NOT NULL,
-  `configdir` varchar(255) NOT NULL,
+  `configdir` varchar(255) NOT NULL DEFAULT '',
+  `runscript` varchar(255) NOT NULL DEFAULT '',
   `file_extensions` varchar(255) NOT NULL,
   `mod_fcgid_starter` int(4) NOT NULL DEFAULT '-1',
   `mod_fcgid_maxrequests` int(4) NOT NULL DEFAULT '-1',

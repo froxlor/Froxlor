@@ -118,12 +118,14 @@ if ($page == 'overview') {
 					$mod_fcgid_umask = validate($_POST['mod_fcgid_umask'], 'mod_fcgid_umask', '/^[0-9]*$/');
 					// disable fpm stuff
 					$configdir = '';
+					$runscript = '';
 					$fpm_enableslowlog = 0;
 					$fpm_reqtermtimeout = 0;
 					$fpm_reqslowtimeout = 0;
 				}
 				elseif (Settings::Get('phpfpm.enabled') == 1) {
 					$configdir = validate($_POST['configdir'], 'configdir');
+					$runscript = validate($_POST['runscript'], 'runscript');
 					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int)$_POST['phpfpm_enable_slowlog'] : 0;
 					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
@@ -146,6 +148,7 @@ if ($page == 'overview') {
 						`description` = :desc,
 						`binary` = :binary,
 						`configdir` = :configdir,
+						`runscript` = :runscript,
 						`file_extensions` = :fext,
 						`mod_fcgid_starter` = :starter,
 						`mod_fcgid_maxrequests` = :mreq,
@@ -159,6 +162,7 @@ if ($page == 'overview') {
 					'desc' => $description,
 					'binary' => $binary,
 					'configdir' => $configdir,
+					'runscript' => $runscript,
 					'fext' => $file_extensions,
 					'starter' => $mod_fcgid_starter,
 					'mreq' => $mod_fcgid_maxrequests,
@@ -276,12 +280,14 @@ if ($page == 'overview') {
 					$mod_fcgid_umask = validate($_POST['mod_fcgid_umask'], 'mod_fcgid_umask', '/^[0-9]*$/');
 					// disable fpm stuff
 					$configdir = '';
+					$runscript = '';
 					$fpm_enableslowlog = 0;
 					$fpm_reqtermtimeout = 0;
 					$fpm_reqslowtimeout = 0;
 				}
 				elseif (Settings::Get('phpfpm.enabled') == 1) {
 					$configdir = validate($_POST['configdir'], 'configdir');
+					$runscript = validate($_POST['runscript'], 'runscript');
 					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int)$_POST['phpfpm_enable_slowlog'] : 0;
 					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
@@ -304,6 +310,7 @@ if ($page == 'overview') {
 						`description` = :desc,
 						`binary` = :binary,
 						`configdir` = :configdir,
+						`runscript` = :runscript,
 						`file_extensions` = :fext,
 						`mod_fcgid_starter` = :starter,
 						`mod_fcgid_maxrequests` = :mreq,
@@ -318,6 +325,7 @@ if ($page == 'overview') {
 						'desc' => $description,
 						'binary' => $binary,
 						'configdir' => $configdir,
+						'runscript' => $runscript,
 						'fext' => $file_extensions,
 						'starter' => $mod_fcgid_starter,
 						'mreq' => $mod_fcgid_maxrequests,
