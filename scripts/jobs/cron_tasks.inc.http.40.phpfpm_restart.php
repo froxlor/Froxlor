@@ -37,7 +37,8 @@ class phpfpm_restart
 	
 	public function captureCurrentConfigs() {
 		$result_runscripts_stmt = Database::query("
-			SELECT `runscript` FROM `" . TABLE_PANEL_PHPCONFIGS . "`
+			SELECT `runscript` FROM `" . TABLE_PANEL_PHPCONFIGS . "` phpconfig
+			WHERE EXISTS(SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` as domain WHERE domain.phpsettingid = phpconfig.id)
 		");
 		while ($row = $result_runscripts_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$this->runscripts[$row['runscript']] = true;
