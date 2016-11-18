@@ -3547,11 +3547,11 @@ if (isFroxlorVersion('0.9.38.2')) {
 	updateToVersion('0.9.38.3');
 }
 
-if (isDatabaseVersion('201610070')) {
+if (isDatabaseVersion('201611180')) {
 
 	showUpdateStep("Add PHP-FPM configdir-option");
 	Database::query("ALTER TABLE `".TABLE_PANEL_PHPCONFIGS."` ADD `configdir` varchar(255) NOT NULL default '' AFTER `binary`;");	
 	lastStepStatus(0);
 
-	updateToDbVersion('201611180');
+	updateToDbVersion('201611181');
 }
