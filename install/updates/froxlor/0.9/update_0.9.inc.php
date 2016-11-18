@@ -3516,8 +3516,8 @@ if (isFroxlorVersion('0.9.38-rc1')) {
 
 if (isFroxlorVersion('0.9.38-rc2')) {
 
-        showUpdateStep("Updating from 0.9.38-rc2 to 0.9.38 final", false);
-        updateToVersion('0.9.38');
+	showUpdateStep("Updating from 0.9.38-rc2 to 0.9.38 final", false);
+	updateToVersion('0.9.38');
 }
 
 if (isDatabaseVersion('201610070')) {
@@ -3527,4 +3527,10 @@ if (isDatabaseVersion('201610070')) {
 	lastStepStatus(0);
 
 	updateToDbVersion('201611180');
+}
+
+if (isFroxlorVersion('0.9.38')) {
+
+	showUpdateStep("Updating from 0.9.38 to 0.9.38.1", false);
+	updateToVersion('0.9.38.1');
 }
