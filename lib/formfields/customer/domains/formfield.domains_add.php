@@ -107,7 +107,7 @@ return array(
 						'int_max' => 94608000, // 3-years
 						'value' => 0
 					),
-					'hsts_incsub' => array(
+					'hsts_sub' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_hsts_incsub']['title'],
 						'desc' => $lng['admin']['domain_hsts_incsub']['description'],
