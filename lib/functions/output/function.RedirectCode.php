@@ -16,11 +16,11 @@
 
 /**
  * return an array of all enabled redirect-codes
- * 
+ *
  * @return array array of enabled redirect-codes
  */
 function getRedirectCodesArray() {
-	
+
 	$sql = "SELECT * FROM `".TABLE_PANEL_REDIRECTCODES."` WHERE `enabled` = '1' ORDER BY `id` ASC";
 	$result_stmt = Database::query($sql);
 
@@ -35,13 +35,13 @@ function getRedirectCodesArray() {
 /**
  * return an array of all enabled redirect-codes
  * for the settings form
- * 
+ *
  * @return array array of enabled redirect-codes
  */
 function getRedirectCodes() {
 
 	global $lng;
-	
+
 	$sql = "SELECT * FROM `".TABLE_PANEL_REDIRECTCODES."` WHERE `enabled` = '1' ORDER BY `id` ASC";
 	$result_stmt = Database::query($sql);
 
@@ -54,16 +54,17 @@ function getRedirectCodes() {
 }
 
 /**
- * returns the redirect-code for a given 
+ * returns the redirect-code for a given
  * domain-id
- * 
+ *
  * @param integer $domainid id of the domain
- * 
+ * @param string $default
+ *
  * @return string redirect-code
  */
-function getDomainRedirectCode($domainid = 0) {
+function getDomainRedirectCode($domainid = 0, $default = '') {
 
-	$code = '';
+	$code = $default;
 	if ($domainid > 0) {
 
 		$result_stmt = Database::prepare("
@@ -83,11 +84,11 @@ function getDomainRedirectCode($domainid = 0) {
 }
 
 /**
- * returns the redirect-id for a given 
+ * returns the redirect-id for a given
  * domain-id
- * 
+ *
  * @param integer $domainid id of the domain
- * 
+ *
  * @return integer redirect-code-id
  */
 function getDomainRedirectId($domainid = 0) {
@@ -112,10 +113,10 @@ function getDomainRedirectId($domainid = 0) {
 
 /**
  * adds a redirectcode for a domain
- * 
+ *
  * @param integer $domainid id of the domain to add the code for
- * @param integer $redirect selected redirect-id 
- * 
+ * @param integer $redirect selected redirect-id
+ *
  * @return null
  */
 function addRedirectToDomain($domainid = 0, $redirect = 1) {
@@ -130,10 +131,10 @@ function addRedirectToDomain($domainid = 0, $redirect = 1) {
 /**
  * updates the redirectcode of a domain
  * if redirect-code is false, nothing happens
- * 
+ *
  * @param integer $domainid id of the domain to update
  * @param integer $redirect selected redirect-id or false
- * 
+ *
  * @return null
  */
 function updateRedirectOfDomain($domainid = 0, $redirect = false) {

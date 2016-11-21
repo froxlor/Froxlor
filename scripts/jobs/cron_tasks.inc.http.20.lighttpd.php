@@ -432,10 +432,9 @@ class lighttpd extends HttpConfigBase
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$uri = $domain['documentroot'];
-			// prevent empty return-cde
-			$code = "301";
+
 			// Get domain's redirect code
-			$code = getDomainRedirectCode($domain['id']);
+			$code = getDomainRedirectCode($domain['id'], '301');
 
 			$vhost_content .= '  url.redirect-code = ' . $code. "\n";
 			$vhost_content .= '  url.redirect = (' . "\n";

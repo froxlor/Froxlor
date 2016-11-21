@@ -875,10 +875,8 @@ class apache extends HttpConfigBase
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$corrected_docroot = $domain['documentroot'];
 
-			// prevent empty return-cde
-			$code = "301";
 			// Get domain's redirect code
-			$code = getDomainRedirectCode($domain['id']);
+			$code = getDomainRedirectCode($domain['id'], '301');
 			$modrew_red = '';
 			if ($code != '') {
 				$modrew_red = ' [R=' . $code . ';L,NE]';
