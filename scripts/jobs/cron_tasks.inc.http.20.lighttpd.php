@@ -531,14 +531,14 @@ class lighttpd extends HttpConfigBase
 
 				if ($domain['hsts'] >= 0) {
 
-					$vhost_content .= '$HTTP["scheme"] == "https" { setenv.add-response-header  = ( "Strict-Transport-Security" => "max-age=' . $domain['hsts'];
+					$ssl_settings .= '$HTTP["scheme"] == "https" { setenv.add-response-header  = ( "Strict-Transport-Security" => "max-age=' . $domain['hsts'];
 					if ($domain['hsts_sub'] == 1) {
-						$vhost_content .= '; includeSubDomains';
+						$ssl_settings .= '; includeSubDomains';
 					}
 					if ($domain['hsts_preload'] == 1) {
-						$vhost_content .= '; preload';
+						$ssl_settings .= '; preload';
 					}
-					$vhost_content .= '") }' . "\n";
+					$ssl_settings .= '") }' . "\n";
 				}
 			}
 		}
