@@ -424,7 +424,7 @@ class lighttpd extends HttpConfigBase
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
-			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			$domain['documentroot'] = 'https://%1' . $_sslport . '/';
 		}
 
 		// avoid using any whitespaces
@@ -435,11 +435,13 @@ class lighttpd extends HttpConfigBase
 
 			// Get domain's redirect code
 			$code = getDomainRedirectCode($domain['id'], '301');
-
-			$vhost_content .= '  url.redirect-code = ' . $code. "\n";
-			$vhost_content .= '  url.redirect = (' . "\n";
-			$vhost_content .= '     "^/(.*)$" => "' . $uri . '$1"' . "\n";
-			$vhost_content .= '  )' . "\n";
+            
+            $vhost_content .= '  $HTTP["host"] =~ "^(.*)$" {'. "\n";
+			$vhost_content .= '    url.redirect-code = ' . $code. "\n";
+			$vhost_content .= '    url.redirect = (' . "\n";
+			$vhost_content .= '       "^/(.*)$" => "' . $uri . '$1"' . "\n";
+			$vhost_content .= '    )' . "\n";
+			$vhost_content .= '  }' . "\n";
 		} else {
 
 			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);

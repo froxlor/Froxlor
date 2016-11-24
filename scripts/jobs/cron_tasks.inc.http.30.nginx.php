@@ -447,7 +447,7 @@ class nginx extends HttpConfigBase
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
-			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			$domain['documentroot'] = 'https://$host' . $_sslport . '/';
 		}
 
 		// avoid using any whitespaces
