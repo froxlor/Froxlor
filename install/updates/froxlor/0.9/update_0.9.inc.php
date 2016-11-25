@@ -3549,25 +3549,12 @@ if (isFroxlorVersion('0.9.38.2')) {
 
 if (isDatabaseVersion('201611180')) {
 
-	showUpdateStep("Adding field to reflect let's-encrypt registration status");
+	showUpdateStep("Adding field for let's-encrypt registration status");
 	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` add `leregistered` TINYINT(1) NOT NULL DEFAULT 0;");
 	lastStepStatus(0);
 
-	updateToDbVersion('201611240');
-}
-
-if (isDatabaseVersion('201611240')) {
-
-	showUpdateStep("Adding new setting to reflect let's-encrypt registration status");
-	$stmt = Database::prepare("
-		INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET
-		`settinggroup` = 'system',
-		`varname` = :varname,
-		`value` = :value");
-	Database::pexecute($stmt, array(
-		'varname' => 'leregistered',
-		'value' => '0'
-	));
+	showUpdateStep("Adding system setting for let's-encrypt registration status");
+	Settings::AddNew('system.leregistered', '0');
 	lastStepStatus(0);
 
 	updateToDbVersion('201611241');
