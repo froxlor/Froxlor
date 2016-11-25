@@ -38,6 +38,12 @@ class lescript
 
 	private $accountKey;
 
+	private $customerid;
+
+	private $isFroxlorVhost;
+
+	private $isLeProduction;
+
 	private $version;
 
 	public function __construct($logger, $version = '1')
@@ -57,44 +63,71 @@ class lescript
 	{
 		// Let's see if we have the private accountkey
 		$this->accountKey = $certrow['leprivatekey'];
-		if (! $this->accountKey || $this->accountKey == 'unset' || Settings::Get('system.letsencryptca') != 'production') {
+		$this->customerId = $certrow['customerid'];
+		$this->isFroxlorVhost = $isFroxlorVhost;
+		$this->isLeProduction = (Settings::Get('system.letsencryptca') == 'production');
+
+		$leregistered=$certrow['leregistered'];
+
+		if (! $this->accountKey || $this->accountKey == 'unset' || !$this->isLeProduction) {
 
 			// generate and save new private key for account
 			// ---------------------------------------------
 
-			$this->log('Starting new account registration');
+			$this->log('Creating new account key');
 			$keys = $this->generateKey();
 			// Only store the accountkey in production, in staging always generate a new key
-			if (Settings::Get('system.letsencryptca') == 'production') {
+			if ($this->isLeProduction) {
 				if ($isFroxlorVhost) {
 					Settings::Set('system.lepublickey', $keys['public']);
 					Settings::Set('system.leprivatekey', $keys['private']);
+					Settings::Set('system.leregistered', 0); // key is not registered
 				} else {
-					$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private " . "WHERE `customerid` = :customerid;");
+					$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private, `leregistered` = :registered " . "WHERE `customerid` = :customerid;");
 					Database::pexecute($upd_stmt, array(
 						'public' => $keys['public'],
 						'private' => $keys['private'],
-						'customerid' => $certrow['customerid']
+						'registered' => 0,
+						'customerid' => $this->customerId
 					));
 				}
 			}
+			$leregistered=0;
 			$this->accountKey = $keys['private'];
+		} else {
+			$this->log('Using existing account key');
+		}
 
+		if ($leregistered==0) { // Account not registered
+
+			$this->log('Starting new account registration');
 			$response = $this->postNewReg();
-			if ($this->client->getLastCode() != 201) {
+			if ($this->client->getLastCode() == 409) {
+				$this->log('The key was already registered. Using existing account.');
+			} else if ($this->client->getLastCode() == 201) {
+				$this->log('New account registered.');
+			} else {
 				throw new \RuntimeException("Account not initialized, probably due to rate limiting. Whole response: " . json_encode($response));
 			}
+			$accountUrl=$this->client->getLastLocation();
+
+			$this->log('Accepting lets encrypt Terms of Service');
+
 			$this->license = $this->client->getAgreementURL();
 
-			// Terms of Servce are optional according to ACME specs; if no ToS are presented, no need to update registration
+			// Terms of Service are optional according to ACME specs; if no ToS are presented, no need to update registration
 			if (!empty($this->license)) {
-				$this->postRegAgreement(parse_url($this->client->getLastLocation(), PHP_URL_PATH));
+				$response = $this->postRegAgreement(parse_url($accountUrl, PHP_URL_PATH));
+				if ($this->client->getLastCode() != 202) {
+					throw new \RuntimeException("Terms of Service not accepted. Whole response: " . json_encode($response));
+				}
 			}
-			$this->log('New account certificate registered');
-		} else {
 
-			$this->log('Account already registered. Continuing.');
+			$leregistered=1;
+			$this->setLeRegisteredState($leregistered); // Account registered
+			$this->log('Lets encrypt Terms of Service accepted');
 		}
+
 	}
 
 	/**
@@ -136,11 +169,17 @@ class lescript
 				)
 			));
 
+			if ($this->client->getLastCode() == 403) {
+				$this->log("Got status 403 - setting LE status to unregistered.");
+				$this->setLeRegisteredState(0);
+				throw new RuntimeException("Got 'unauthorized' response - we need to re-register at next run.  Whole response: " . json_encode($response));
+			}
+
 			// if response is not an array but a string, it's most likely a server-error, e.g.
 			// <HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>An error occurred while processing your request.
 			// <p>Reference&#32;&#35;179&#46;d8be1402&#46;1458059103&#46;3613c4db</BODY></HTML>
 			if (! is_array($response)) {
-				throw new RuntimeException("Invalid response from LE for domain $domain. Whole response: " . $response);
+				throw new RuntimeException("Invalid response from LE for domain $domain. Whole response: " . json_encode($response));
 			}
 
 			if (! array_key_exists('challenges', $response)) {
@@ -307,6 +346,21 @@ class lescript
 			'key' => $domainkey,
 			'csr' => $csr
 		);
+	}
+
+	private function setLeRegisteredState($state)
+	{
+		if ($this->isLeProduction) {
+			if ($this->isFroxlorVhost) {
+				Settings::Set('system.leregistered', $state);
+			} else {
+				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `leregistered` = :registered " . "WHERE `customerid` = :customerid;");
+				Database::pexecute($upd_stmt, array(
+					'registered' => $state,
+					'customerid' => $this->customerId
+				));
+			}
+		}
 	}
 
 	private function parsePemFromBody($body)
@@ -537,10 +591,46 @@ class Client
 		return $matches[1];
 	}
 
+	public function getAgreementURLFromLastResponse()
+	{
+		if (preg_match_all('~Link: <(.+)>;rel="terms-of-service"~', $this->lastHeader, $matches)) {
+			return $matches[1][0];
+		}
+		return "";
+	}
+	public function getAgreementURLFromDirectory()
+	{
+		// FIXME: Current license should be found in /directory but LE does not implement this yet
+		// $this->curl('GET', '/directory');
+		return "";
+	}
+	public function getAgreementURLFromTermsUrl()
+	{
+		$this->curl('GET', '/terms');
+		if (preg_match_all('~Location: (.+)~', $this->lastHeader, $matches)) {
+			return trim($matches[1][0]);
+		}
+		return "";
+	}
+
 	public function getAgreementURL()
 	{
-		preg_match_all('~Link: <(.+)>;rel="terms-of-service"~', $this->lastHeader, $matches);
-		return $matches[1][0];
+		// 1. check the header of the last response
+		$license=$this->getAgreementURLFromLastResponse();
+		if (!empty($license)) return $license;
+
+		// 2. query directory for license
+		$license=$this->getAgreementURLFromDirectory();
+		if (!empty($license)) return $license;
+
+		// 3. query /terms endpoint (not ACME standard but implemented by let's enrypt)
+		$license=$this->getAgreementURLFromTermsUrl();
+		if (!empty($license)) return $license;
+
+		// Fallback: use latest known license. This is only valid for let's encrypt and should be removed as soon as there is an official
+		// ACME-endpoint to get the current ToS
+		return "xxxhttps://letsencrypt.org/documents/LE-SA-v1.1.1-August-1-2016.pdf]";
+		// return "";
 	}
 
 }
