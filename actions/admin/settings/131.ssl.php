@@ -164,10 +164,10 @@ return array(
 					'default' => 0,
 					'save_method' => 'storeSettingField'
 				),
-				'system_hsts_incsub' => array(
+				'system_hsts_sub' => array(
 					'label' => $lng['admin']['domain_hsts_incsub'],
 					'settinggroup' => 'system',
-					'varname' => 'hsts_incsub',
+					'varname' => 'hsts_sub',
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField'
