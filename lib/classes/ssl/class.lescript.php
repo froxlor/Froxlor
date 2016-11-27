@@ -629,7 +629,7 @@ class Client
 
 		// Fallback: use latest known license. This is only valid for let's encrypt and should be removed as soon as there is an official
 		// ACME-endpoint to get the current ToS
-		return "xxxhttps://letsencrypt.org/documents/LE-SA-v1.1.1-August-1-2016.pdf]";
+		return "https://letsencrypt.org/documents/LE-SA-v1.1.1-August-1-2016.pdf";
 		// return "";
 	}
 
