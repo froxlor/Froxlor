@@ -544,7 +544,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mail_smtp_user', ''),
 	('system', 'mail_smtp_passwd', ''),
 	('system', 'hsts_maxage', '0'),
-	('system', 'hsts_sub', '0'),
+	('system', 'hsts_incsub', '0'),
 	('system', 'hsts_preload', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),

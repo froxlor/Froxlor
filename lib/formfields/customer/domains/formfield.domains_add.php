@@ -76,10 +76,9 @@ return array(
 			'section_bssl' => array(
 				'title' => $lng['admin']['webserversettings_ssl'],
 				'image' => 'icons/domain_add.png',
-				'visible' => Settings::Get('system.use_ssl') == '1' ? true : false,
+				'visible' => Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false,
 				'fields' => array(
 					'ssl_redirect' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['domains']['ssl_redirect']['title'],
 						'desc' => $lng['domains']['ssl_redirect']['description'],
 						'type' => 'checkbox',
@@ -89,7 +88,7 @@ return array(
 						'value' => array()
 					),
 					'letsencrypt' => array(
-						'visible' => (Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
+						'visible' => (Settings::Get('system.leenabled') == '1' ? true : false),
 						'label' => $lng['customer']['letsencrypt']['title'],
 						'desc' => $lng['customer']['letsencrypt']['description'],
 						'type' => 'checkbox',
@@ -99,7 +98,6 @@ return array(
 						'value' => array()
 					),
 					'hsts_maxage' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_hsts_maxage']['title'],
 						'desc' => $lng['admin']['domain_hsts_maxage']['description'],
 						'type' => 'int',
@@ -108,7 +106,6 @@ return array(
 						'value' => 0
 					),
 					'hsts_sub' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_hsts_incsub']['title'],
 						'desc' => $lng['admin']['domain_hsts_incsub']['description'],
 						'type' => 'checkbox',
@@ -118,7 +115,6 @@ return array(
 						'value' => array()
 					),
 					'hsts_preload' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_hsts_preload']['title'],
 						'desc' => $lng['admin']['domain_hsts_preload']['description'],
 						'type' => 'checkbox',
