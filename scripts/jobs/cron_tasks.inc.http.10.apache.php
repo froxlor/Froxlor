@@ -344,6 +344,15 @@ class apache extends HttpConfigBase
 						);
 					}
 				} // end of ssl-redirect check
+				else
+				{
+					// fallback of froxlor domain-data for processSpecialConfigTemplate()
+					$domain = array(
+						'domain' => Settings::Get('system.hostname'),
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath
+					);
+				}
 
 				/**
 				 * dirprotection, see #72
