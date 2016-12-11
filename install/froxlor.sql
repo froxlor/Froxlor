@@ -197,7 +197,7 @@ CREATE TABLE `panel_customers` (
   `custom_notes_show` tinyint(1) NOT NULL default '0',
   `lepublickey` mediumtext default NULL,
   `leprivatekey` mediumtext default NULL,
-  `leregistered` tinyint(1) NOT NULL default '0'
+  `leregistered` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
