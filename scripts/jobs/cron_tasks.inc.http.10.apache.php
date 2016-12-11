@@ -497,7 +497,7 @@ class apache extends HttpConfigBase
 	{
 		$php_options_text = '';
 
-		if ($domain['phpenabled'] == '1') {
+		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 			// This vHost has PHP enabled and we are using the regular mod_php
 
 			if ($domain['openbasedir'] == '1') {

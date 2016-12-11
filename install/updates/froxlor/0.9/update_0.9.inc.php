@@ -3552,3 +3552,12 @@ if (isFroxlorVersion('0.9.38.3')) {
 	showUpdateStep("Updating from 0.9.38.3 to 0.9.38.4", false);
 	updateToVersion('0.9.38.4');
 }
+
+if (isDatabaseVersion('201611180')) {
+
+        showUpdateStep("Updating database table definition for panel_domains");
+        Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `phpenabled` tinyint(1) NOT NULL default '1' AFTER `parentdomainid`;");
+        lastStepStatus(0);
+
+        updateToDbVersion('201612110');
+}

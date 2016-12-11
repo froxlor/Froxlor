@@ -31,8 +31,9 @@ class WebserverBase {
 		$query = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
 				`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`,
 				`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
-				`c`.`phpenabled` AS `phpenabled`, `d`.`mod_fcgid_starter`,
-				`d`.`mod_fcgid_maxrequests`
+				`c`.`phpenabled` AS `phpenabled_customer`,
+				`d`.`phpenabled` AS `phpenabled_vhost`,
+				`d`.`mod_fcgid_starter`,`d`.`mod_fcgid_maxrequests`
 				FROM `".TABLE_PANEL_DOMAINS."` `d`
 
 				LEFT JOIN `".TABLE_PANEL_CUSTOMERS."` `c` USING(`customerid`)

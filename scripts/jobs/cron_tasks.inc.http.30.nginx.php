@@ -846,7 +846,7 @@ class nginx extends HttpConfigBase
 	protected function composePhpOptions($domain, $ssl_vhost = false)
 	{
 		$phpopts = '';
-		if ($domain['phpenabled'] == '1') {
+		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 			$phpopts = "\tlocation ~ \.php {\n";
 			$phpopts .= "\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
 			$phpopts .= "\t" . '}' . "\n\n";
@@ -882,7 +882,7 @@ class nginx extends HttpConfigBase
 
 		$webroot_text .= "\n\t" . 'location / {' . "\n";
 
-		if ($domain['phpenabled'] == '1') {
+		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 			$webroot_text .= "\t" . 'index    index.php index.html index.htm;' . "\n";
 			$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;' . "\n";
 		} else {
@@ -895,7 +895,7 @@ class nginx extends HttpConfigBase
 		}
 
 		$webroot_text .= "\t" . '}' . "\n\n";
-		if ($domain['phpenabled'] == '1') {
+		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 			$webroot_text .= "\tlocation @rewrites {\n";
 			$webroot_text .= "\t\trewrite ^ /index.php last;\n";
 			$webroot_text .= "\t}\n\n";
