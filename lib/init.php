@@ -39,11 +39,6 @@ header("X-XSS-Protection: 1; mode=block");
 // Don't allow to load Froxlor in an iframe to prevent i.e. clickjacking
 header("X-Frame-Options: DENY");
 
-// If Froxlor was called via HTTPS -> enforce it for the next time
-if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
-	header("Strict-Transport-Security: max-age=15768000");
-}
-
 // Internet Explorer shall not guess the Content-Type, see:
 // http://blogs.msdn.com/ie/archive/2008/07/02/ie8-security-part-v-comprehensive-protection.aspx
 header("X-Content-Type-Options: nosniff");
@@ -126,6 +121,24 @@ require FROXLOR_INSTALL_DIR.'/lib/tables.inc.php';
  * Create a new idna converter
  */
 $idna_convert = new idna_convert_wrapper();
+
+/**
+ * If Froxlor was called via HTTPS -> enforce it for the next time by settings HSTS header according to settings
+ */
+if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
+	$maxage = Settings::Get('system.hsts_maxage');
+	if (empty($maxage)) {
+		$maxage = 0;
+	}
+	$hsts_header = "Strict-Transport-Security: max-age=".$maxage;
+	if (Settings::Get('system.hsts_incsub') == '1') {
+		$hsts_header .= "; includeSubDomains";
+	}
+	if (Settings::Get('system.hsts_preload') == '1') {
+		$hsts_header .= "; preload";
+	}
+	header($hsts_header);
+}
 
 /**
  * disable magic_quotes_runtime if enabled

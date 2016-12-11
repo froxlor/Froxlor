@@ -162,7 +162,25 @@ class lighttpd extends HttpConfigBase
 						$this->lighttpd_data[$vhost_filename] .= "\t" . ')' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= "\t" . ')' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= '  )' . "\n";
+					} else {
+						$domain = array(
+							'id' => 'none',
+							'domain' => Settings::Get('system.hostname'),
+							'adminid' => 1, /* first admin-user (superadmin) */
+							'guid' => Settings::Get('system.httpuser'),
+							'openbasedir' => 0,
+							'email' => Settings::Get('panel.adminmail'),
+							'loginname' => 'froxlor.panel',
+							'documentroot' => $mypath
+						);
 					}
+				} else {
+					// fallback of froxlor domain-data for processSpecialConfigTemplate()
+					$domain = array(
+						'domain' => Settings::Get('system.hostname'),
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath
+					);
 				}
 
 				if ($row_ipsandports['specialsettings'] != '') {
@@ -210,7 +228,9 @@ class lighttpd extends HttpConfigBase
 						echo $ip . ':' . $port . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create SSL-directives' . "\n";
 					} else {
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.engine = "enable"' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= 'ssl.use-compression = "disable"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.use-sslv2 = "disable"' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= 'ssl.use-sslv3 = "disable"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.honor-cipher-order = "enable"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.pemfile = "' . makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
@@ -422,15 +442,21 @@ class lighttpd extends HttpConfigBase
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
-			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			$domain['documentroot'] = 'https://%1' . $_sslport . '/';
 		}
 
 		// avoid using any whitespaces
 		$domain['documentroot'] = trim($domain['documentroot']);
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
+			$uri = $domain['documentroot'];
+
+			// Get domain's redirect code
+			$code = getDomainRedirectCode($domain['id'], '301');
+
+			$vhost_content .= '  url.redirect-code = ' . $code. "\n";
 			$vhost_content .= '  url.redirect = (' . "\n";
-			$vhost_content .= '     "^/(.*)$" => "' . $this->idnaConvert->encode_uri($domain['documentroot']) . '$1"' . "\n";
+			$vhost_content .= '     "^/(.*)$" => "' . $uri . '$1"' . "\n";
 			$vhost_content .= '  )' . "\n";
 		} else {
 
@@ -510,7 +536,9 @@ class lighttpd extends HttpConfigBase
 			if ($domain['ssl_cert_file'] != '') {
 
 				$ssl_settings .= 'ssl.engine = "enable"' . "\n";
+				$ssl_settings .= 'ssl.use-compression = "disable"' . "\n";
 				$ssl_settings .= 'ssl.use-sslv2 = "disable"' . "\n";
+				$ssl_settings .= 'ssl.use-sslv3 = "disable"' . "\n";
 				$ssl_settings .= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
 				$ssl_settings .= 'ssl.honor-cipher-order = "enable"' . "\n";
 				$ssl_settings .= 'ssl.pemfile = "' . makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
@@ -519,16 +547,16 @@ class lighttpd extends HttpConfigBase
 					$ssl_settings .= 'ssl.ca-file = "' . makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
 				}
 
-				if ($domain['hsts'] > 0) {
+				if ($domain['hsts'] >= 0) {
 
-					$vhost_content .= '$HTTP["scheme"] == "https" { setenv.add-response-header  = ( "Strict-Transport-Security" => "max-age=' . $domain['hsts'];
+					$ssl_settings .= '$HTTP["scheme"] == "https" { setenv.add-response-header  = ( "Strict-Transport-Security" => "max-age=' . $domain['hsts'];
 					if ($domain['hsts_sub'] == 1) {
-						$vhost_content .= '; includeSubDomains';
+						$ssl_settings .= '; includeSubDomains';
 					}
 					if ($domain['hsts_preload'] == 1) {
-						$vhost_content .= '; preload';
+						$ssl_settings .= '; preload';
 					}
-					$vhost_content .= '") }' . "\n";
+					$ssl_settings .= '") }' . "\n";
 				}
 			}
 		}

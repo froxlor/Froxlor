@@ -20,7 +20,7 @@
 function validateFormFieldOption($fieldname, $fielddata, $newfieldvalue)
 {
 	$returnvalue = true;
-	
+
 	if(isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple')
 	{
 		$options = explode(',', $newfieldvalue);
@@ -33,13 +33,16 @@ function validateFormFieldOption($fieldname, $fielddata, $newfieldvalue)
 	{
 		$returnvalue = isset($fielddata['option_options'][$newfieldvalue]);
 	}
-	
+
 	if($returnvalue === true)
 	{
 		return true;
 	}
 	else
 	{
+		if (isset($fielddata['option_emptyallowed']) && $fielddata['option_emptyallowed']) {
+			return true;
+		}
 		return 'not in option';
 	}
 }

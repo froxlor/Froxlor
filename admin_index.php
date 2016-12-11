@@ -369,7 +369,8 @@ if ($page == 'overview') {
 			$mail_body .= "File: ".$_error['file'].':'.$_error['line']."\n\n";
 			$mail_body .= "Trace:\n".trim($_error['trace'])."\n\n";
 			$mail_body .= "-------------------------------------------------------------\n\n";
-			$mail_body .= "Froxlor-version: ".$version."\n\n";
+			$mail_body .= "Froxlor-version: ".$version."\n";
+			$mail_body .= "DB-version: ".$dbversion."\n\n";
 			$mail_body .= "End of report";
 			$mail_html = nl2br($mail_body);
 

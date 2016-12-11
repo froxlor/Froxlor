@@ -1,5 +1,4 @@
 <?php
-
 if (! defined('MASTER_CRONJOB'))
 	die('You cannot access this file directly!');
 
@@ -183,6 +182,10 @@ class apache extends HttpConfigBase
 			}
 
 			if ($row_ipsandports['vhostcontainer'] == '1') {
+
+				$without_vhost = $this->virtualhosts_data[$vhosts_filename];
+				$close_vhost = true;
+
 				$this->virtualhosts_data[$vhosts_filename] .= '<VirtualHost ' . $ipport . '>' . "\n";
 
 				$mypath = $this->getMyPath($row_ipsandports);
@@ -224,7 +227,7 @@ class apache extends HttpConfigBase
 					}
 				}
 
-				if (!$is_redirect) {
+				if (! $is_redirect) {
 					// create fcgid <Directory>-Part (starter is created in apache_fcgid)
 					if (Settings::Get('system.mod_fcgid_ownvhost') == '1' && Settings::Get('system.mod_fcgid') == '1') {
 						$configdir = makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/froxlor.panel/' . Settings::Get('system.hostname'));
@@ -274,13 +277,14 @@ class apache extends HttpConfigBase
 							}
 							$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 						}
-					}					// create php-fpm <Directory>-Part (config is created in apache_fcgid)
+					}
 					elseif (Settings::Get('phpfpm.enabled') == '1') {
+						// create php-fpm <Directory>-Part (config is created in apache_fcgid)
 						$domain = array(
 							'id' => 'none',
 							'domain' => Settings::Get('system.hostname'),
 							'adminid' => 1, /* first admin-user (superadmin) */
-						'mod_fcgid_starter' => - 1,
+							'mod_fcgid_starter' => - 1,
 							'mod_fcgid_maxrequests' => - 1,
 							'guid' => Settings::Get('phpfpm.vhost_httpuser'),
 							'openbasedir' => 0,
@@ -332,7 +336,7 @@ class apache extends HttpConfigBase
 							'id' => 'none',
 							'domain' => Settings::Get('system.hostname'),
 							'adminid' => 1, /* first admin-user (superadmin) */
-                        'guid' => Settings::Get('system.httpuser'),
+							'guid' => Settings::Get('system.httpuser'),
 							'openbasedir' => 0,
 							'email' => Settings::Get('panel.adminmail'),
 							'loginname' => 'froxlor.panel',
@@ -340,6 +344,15 @@ class apache extends HttpConfigBase
 						);
 					}
 				} // end of ssl-redirect check
+				else
+				{
+					// fallback of froxlor domain-data for processSpecialConfigTemplate()
+					$domain = array(
+						'domain' => Settings::Get('system.hostname'),
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath
+					);
+				}
 
 				/**
 				 * dirprotection, see #72
@@ -408,7 +421,7 @@ class apache extends HttpConfigBase
 						} else {
 
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol ALL -SSLv2 -SSLv3' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol -ALL +TLSv1 +TLSv1.2' . "\n";
 							// this makes it more secure, thx to Marcel (08/2013)
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
@@ -443,10 +456,19 @@ class apache extends HttpConfigBase
 								}
 							}
 						}
+					} else {
+						// if there is no cert-file specified but we are generating a ssl-vhost,
+						// we should return an empty string because this vhost would suck dick, ref #1583
+						$this->logger->logAction(CRON_ACTION, LOG_ERR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
+						$this->virtualhosts_data[$vhosts_filename] = $without_vhost;
+						$this->virtualhosts_data[$vhosts_filename] .= '# no ssl-certificate was specified for this domain, therefore no explicit vhost-container is being generated';
+						$close_vhost = false;
 					}
 				}
 
-				$this->virtualhosts_data[$vhosts_filename] .= '</VirtualHost>' . "\n";
+				if ($close_vhost) {
+					$this->virtualhosts_data[$vhosts_filename] .= '</VirtualHost>' . "\n";
+				}
 				$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted vhostcontainer');
 			}
 			unset($vhosts_filename);
@@ -475,7 +497,7 @@ class apache extends HttpConfigBase
 	{
 		$php_options_text = '';
 
-		if ($domain['phpenabled'] == '1') {
+		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 			// This vHost has PHP enabled and we are using the regular mod_php
 
 			if ($domain['openbasedir'] == '1') {
@@ -602,10 +624,10 @@ class apache extends HttpConfigBase
 				} else {
 					$stats_text .= '  Alias /webalizer "' . makeCorrectFile($domain['customerroot'] . '/webalizer') . '"' . "\n";
 				}
-			}			// if the docroots are equal, we still have to set an alias for awstats
-			// because the stats are in /awstats/[domain], not just /awstats/
-			// also, the awstats-icons are someplace else too!
-			// -> webalizer does not need this!
+			} // if the docroots are equal, we still have to set an alias for awstats
+			  // because the stats are in /awstats/[domain], not just /awstats/
+			  // also, the awstats-icons are someplace else too!
+			  // -> webalizer does not need this!
 			elseif (Settings::Get('system.awstats_enabled') == '1') {
 				$stats_text .= '  Alias /awstats "' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
 				$stats_text .= '  Alias /awstats-icon "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
@@ -795,7 +817,7 @@ class apache extends HttpConfigBase
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
-			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			$domain['documentroot'] = 'https://%{HTTP_HOST}' . $_sslport . '/';
 		}
 
 		if ($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
@@ -817,7 +839,7 @@ class apache extends HttpConfigBase
 
 			if ($domain['ssl_cert_file'] != '') {
 				$vhost_content .= '  SSLEngine On' . "\n";
-				$vhost_content .= '  SSLProtocol ALL -SSLv2 -SSLv3' . "\n";
+				$vhost_content .= '  SSLProtocol -ALL +TLSv1 +TLSv1.2' . "\n";
 				// this makes it more secure, thx to Marcel (08/2013)
 				$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
 				$vhost_content .= '  SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
@@ -836,7 +858,7 @@ class apache extends HttpConfigBase
 					$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
 				}
 
-				if ($domain['hsts'] > 0) {
+				if ($domain['hsts'] >= 0) {
 					$vhost_content .= '  <IfModule mod_headers.c>' . "\n";
 					$vhost_content .= '    Header always set Strict-Transport-Security "max-age=' . $domain['hsts'];
 					if ($domain['hsts_sub'] == 1) {
@@ -860,10 +882,10 @@ class apache extends HttpConfigBase
 		$domain['documentroot'] = trim($domain['documentroot']);
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$corrected_docroot = $this->idnaConvert->encode_uri($domain['documentroot']);
+			$corrected_docroot = $domain['documentroot'];
 
 			// Get domain's redirect code
-			$code = getDomainRedirectCode($domain['id']);
+			$code = getDomainRedirectCode($domain['id'], '301');
 			$modrew_red = '';
 			if ($code != '') {
 				$modrew_red = ' [R=' . $code . ';L,NE]';

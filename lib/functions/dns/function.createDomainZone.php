@@ -275,13 +275,11 @@ function createDomainZone($domain_id, $froxlorhostname = false, $isMainButSubTo 
 			Database::pexecute($upd_stmt, array('serial' => $domain['bindserial'], 'id' => $domain['id']));
 		}
 
-		$soa_content = $primary_ns . " " . escapeSoaAdminMail(Settings::Get('panel.adminmail')) . " (" . PHP_EOL;
-		$soa_content .= $domain['bindserial'] . "\t; serial" . PHP_EOL;
+		// PowerDNS does not like multi-line-format
+		$soa_content = $primary_ns . " " . escapeSoaAdminMail(Settings::Get('panel.adminmail')) . " ";
+		$soa_content .= $domain['bindserial'] . " ";
 		// TODO for now, dummy time-periods
-		$soa_content .= "1800\t; refresh (30 mins)" . PHP_EOL;
-		$soa_content .= "900\t; retry (15 mins)" . PHP_EOL;
-		$soa_content .= "604800\t; expire (7 days)" . PHP_EOL;
-		$soa_content .= "1200\t)\t; minimum (20 mins)";
+		$soa_content .= "1800 900 604800 1200";
 
 		$soa_record = new DnsEntry('@', 'SOA', $soa_content);
 		array_unshift($zonerecords, $soa_record);

@@ -17,27 +17,57 @@
  *
  */
 
+
 /**
  * Returns an array of found directories
  *
  * This function checks every found directory if they match either $uid or $gid, if they do
  * the found directory is valid. It uses recursive-iterators to find subdirectories.
  *
- * @param  string $path the path to start searching in
- * @param  int $uid the uid which must match the found directories
- * @param  int $gid the gid which must match the found direcotries
+ * @param string $path
+ *        	the path to start searching in
+ * @param int $uid
+ *        	the uid which must match the found directories
+ * @param int $gid
+ *        	the gid which must match the found direcotries
  *
  * @return array Array of found valid paths
  */
-function findDirs($path, $uid, $gid) {
-
-	$_fileList = array ();
+function findDirs($path, $uid, $gid)
+{
+	$_fileList = array();
 	$path = makeCorrectDir($path);
 
 	// valid directory?
 	if (is_dir($path)) {
+
+		// Will exclude everything under these directories
+		$exclude = array(
+			'awstats',
+			'webalizer'
+		);
+
+		/**
+		 *
+		 * @param SplFileInfo $file
+		 * @param mixed $key
+		 * @param RecursiveCallbackFilterIterator $iterator
+		 * @return bool True if you need to recurse or if the item is acceptable
+		 */
+		$filter = function ($file, $key, $iterator) use ($exclude) {
+			if (in_array($file->getFilename(), $exclude)) {
+				return false;
+			}
+			return true;
+		};
+
 		// create RecursiveIteratorIterator
-		$its = new RecursiveIteratorIterator(new IgnorantRecursiveDirectoryIterator($path));
+		$its = new RecursiveIteratorIterator(
+			new RecursiveCallbackFilterIterator(
+				new IgnorantRecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
+				$filter
+			)
+		);
 		// we can limit the recursion-depth, but will it be helpful or
 		// will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
 		// let's keep this in mind and see whether it will be useful
@@ -50,24 +80,27 @@ function findDirs($path, $uid, $gid) {
 				$_fileList[] = makeCorrectDir(dirname($fullFileName));
 			}
 		}
+		$_fileList[] = $path;
 	}
 
 	return array_unique($_fileList);
-
 }
 
 /**
-* If you use RecursiveDirectoryIterator with RecursiveIteratorIterator and run
-* into UnexpectedValueException you may use this little hack to ignore those
-* directories, such as lost+found on linux.
-* (User "antennen" @ http://php.net/manual/en/class.recursivedirectoryiterator.php#101654)
-**/
-class IgnorantRecursiveDirectoryIterator extends RecursiveDirectoryIterator {
-    function getChildren() {
-        try {
-            return new IgnorantRecursiveDirectoryIterator($this->getPathname());
-        } catch(UnexpectedValueException $e) {
-            return new RecursiveArrayIterator(array());
-        }
-    }
+ * If you use RecursiveDirectoryIterator with RecursiveIteratorIterator and run
+ * into UnexpectedValueException you may use this little hack to ignore those
+ * directories, such as lost+found on linux.
+ * (User "antennen" @ http://php.net/manual/en/class.recursivedirectoryiterator.php#101654)
+ */
+class IgnorantRecursiveDirectoryIterator extends RecursiveDirectoryIterator
+{
+
+	function getChildren()
+	{
+		try {
+			return new IgnorantRecursiveDirectoryIterator($this->getPathname());
+		} catch (UnexpectedValueException $e) {
+			return new RecursiveArrayIterator(array());
+		}
+	}
 }

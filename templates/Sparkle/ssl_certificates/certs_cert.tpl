@@ -5,6 +5,7 @@
 	</td>
 	<td>
 		{$cert_data['subject']['CN']}
+		<if !empty($san_list)><br>SAN: {$san_list}</if>
 	</td>
 	<td>
 		{$cert_data['issuer']['O']}

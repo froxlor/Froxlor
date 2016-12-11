@@ -113,40 +113,6 @@ return array(
 						'is_array' => 1,
 						'mandatory' => true
 					),
-					'ssl_ipandport' => array(
-						'label' => $lng['domains']['ipandport_ssl_multi']['title'],
-						'desc' => $lng['domains']['ipandport_ssl_multi']['description'],
-						'type' => 'checkbox',
-						'values' => $ssl_ipsandports,
-						'value' => $usedips,
-						'is_array' => 1
-					),
-					'ssl_redirect' => array(
-						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => $lng['domains']['ssl_redirect']['title'],
-						'desc' => $lng['domains']['ssl_redirect']['description'] . ($result['temporary_ssl_redirect'] > 1 ? $lng['domains']['ssl_redirect_temporarilydisabled'] : ''),
-						'type' => 'checkbox',
-						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
-						),
-						'value' => array($result['ssl_redirect'])
-					),
-					'letsencrypt' => array(
-						'visible' => (Settings::Get('system.use_ssl') == '1' ? (Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? true : false) : false) : false),
-						'label' => $lng['admin']['letsencrypt']['title'],
-						'desc' => $lng['admin']['letsencrypt']['description'],
-						'type' => 'checkbox',
-						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
-						),
-						'value' => array($result['letsencrypt'])
-					),
-					'no_ssl_available_info' => array(
-						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports == '' ? true : false) : false),
-						'label' => 'SSL',
-						'type' => 'label',
-						'value' => $lng['panel']['nosslipsavailable']
-					),
 					'selectserveralias' => array(
 						'label' => $lng['admin']['selectserveralias'],
 						'desc' => $lng['admin']['selectserveralias_desc'],
@@ -184,11 +150,89 @@ return array(
 					)
 				)
 			),
+			'section_bssl' => array(
+				'title' => $lng['admin']['webserversettings_ssl'],
+				'image' => 'icons/domain_edit.png',
+				'visible' => Settings::Get('system.use_ssl') == '1' ? true : false,
+				'fields' => array(
+					'ssl_ipandport' => array(
+						'label' => $lng['domains']['ipandport_ssl_multi']['title'],
+						'desc' => $lng['domains']['ipandport_ssl_multi']['description'],
+						'type' => 'checkbox',
+						'values' => $ssl_ipsandports,
+						'value' => $usedips,
+						'is_array' => 1
+					),
+					'ssl_redirect' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false),
+						'label' => $lng['domains']['ssl_redirect']['title'],
+						'desc' => $lng['domains']['ssl_redirect']['description'] . ($result['temporary_ssl_redirect'] > 1 ? $lng['domains']['ssl_redirect_temporarilydisabled'] : ''),
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['ssl_redirect'])
+					),
+					'letsencrypt' => array(
+						'visible' => (Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
+						'label' => $lng['admin']['letsencrypt']['title'],
+						'desc' => $lng['admin']['letsencrypt']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['letsencrypt'])
+					),
+					'no_ssl_available_info' => array(
+						'visible' => ($ssl_ipsandports == '' ? true : false),
+						'label' => 'SSL',
+						'type' => 'label',
+						'value' => $lng['panel']['nosslipsavailable']
+					),
+					'hsts_maxage' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false),
+						'label' => $lng['admin']['domain_hsts_maxage']['title'],
+						'desc' => $lng['admin']['domain_hsts_maxage']['description'],
+						'type' => 'int',
+						'int_min' => 0,
+						'int_max' => 94608000, // 3-years
+						'value' => $result['hsts']
+					),
+					'hsts_sub' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false),
+						'label' => $lng['admin']['domain_hsts_incsub']['title'],
+						'desc' => $lng['admin']['domain_hsts_incsub']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['hsts_sub'])
+					),
+					'hsts_preload' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false),
+						'label' => $lng['admin']['domain_hsts_preload']['title'],
+						'desc' => $lng['admin']['domain_hsts_preload']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['hsts_preload'])
+					),
+				)
+			),
 			'section_c' => array(
 				'title' => $lng['admin']['phpserversettings'],
 				'image' => 'icons/domain_edit.png',
 				'visible' => (($userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1') ? true : false),
 				'fields' => array(
+                                        'phpenabled' => array(
+                                                'label' => $lng['admin']['phpenabled'],
+                                                'type' => 'checkbox',
+                                                'values' => array(
+                                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
+                                                ),
+						'value' => array($result['phpenabled'])
+                                        ),
 					'openbasedir' => array(
 						'label' => 'OpenBasedir',
 						'type' => 'checkbox',

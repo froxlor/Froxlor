@@ -129,9 +129,7 @@ class bind extends DnsBase
 			// AXFR server #100
 			if (count($this->_axfr) > 0) {
 				foreach ($this->_axfr as $axfrserver) {
-					if (validate_ip($axfrserver, true) !== false) {
-						$bindconf_file .= '		' . $axfrserver . ';' . "\n";
-					}
+					$bindconf_file .= '		' . $axfrserver . ';' . "\n";
 				}
 			}
 			// close allow-transfer

@@ -179,6 +179,17 @@ return array(
 						'nginx'
 					)
 				),
+				'system_nginx_http2_support' => array(
+					'label' => $lng['serversettings']['nginx_http2_support'],
+					'settinggroup' => 'system',
+					'varname' => 'nginx_http2_support',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array(
+						'nginx'
+					)
+				),
 				'system_nginx_php_backend' => array(
 					'label' => $lng['serversettings']['nginx_php_backend'],
 					'settinggroup' => 'system',
@@ -260,11 +271,7 @@ return array(
 					'varname' => 'enabled',
 					'type' => 'bool',
 					'default' => false,
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array(
-						'apache2',
-						'lighttpd'
-					)
+					'save_method' => 'storeSettingField'
 				),
 				'customredirect_default' => array(
 					'label' => $lng['serversettings']['customredirect_default'],
@@ -274,11 +281,7 @@ return array(
 					'default' => '1',
 					'option_mode' => 'one',
 					'option_options_method' => 'getRedirectCodes',
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array(
-						'apache2',
-						'lighttpd'
-					)
+					'save_method' => 'storeSettingField'
 				)
 			)
 		)

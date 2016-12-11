@@ -66,7 +66,7 @@ CREATE TABLE `mail_virtual` (
   `id` int(11) NOT NULL auto_increment,
   `email` varchar(255) NOT NULL default '',
   `email_full` varchar(255) NOT NULL default '',
-  `destination` text NOT NULL,
+  `destination` text NOT NULL default '',
   `domainid` int(11) NOT NULL default '0',
   `customerid` int(11) NOT NULL default '0',
   `popaccountid` int(11) NOT NULL default '0',
@@ -195,8 +195,9 @@ CREATE TABLE `panel_customers` (
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
-  `lepublickey` mediumtext DEFAULT NULL,
-  `leprivatekey` mediumtext DEFAULT NULL,
+  `lepublickey` mediumtext default NULL,
+  `leprivatekey` mediumtext default NULL,
+  `leregistered` tinyint(1) NOT NULL default '0'
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -237,6 +238,7 @@ CREATE TABLE `panel_domains` (
   `dkim_pubkey` text,
   `wwwserveralias` tinyint(1) NOT NULL default '1',
   `parentdomainid` int(11) NOT NULL default '0',
+  `phpenabled` tinyint(1) NOT NULL default '0',
   `openbasedir` tinyint(1) NOT NULL default '0',
   `openbasedir_path` tinyint(1) NOT NULL default '0',
   `speciallogfile` tinyint(1) NOT NULL default '0',
@@ -245,8 +247,8 @@ CREATE TABLE `panel_domains` (
   `deactivated` tinyint(1) NOT NULL default '0',
   `bindserial` varchar(10) NOT NULL default '2000010100',
   `add_date` int( 11 ) NOT NULL default '0',
-  `registration_date` date NOT NULL,
-  `termination_date` date NOT NULL,
+  `registration_date` date DEFAULT NULL,
+  `termination_date` date DEFAULT NULL,
   `phpsettingid` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1',
   `mod_fcgid_starter` int(4) default '-1',
   `mod_fcgid_maxrequests` int(4) default '-1',
@@ -254,7 +256,7 @@ CREATE TABLE `panel_domains` (
   `letsencrypt` tinyint(1) NOT NULL default '0',
   `hsts` varchar(10) NOT NULL default '0',
   `hsts_sub` tinyint(1) NOT NULL default '0',
-  `hsts_preload` tinyint(1) NOT NULL default '1',
+  `hsts_preload` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -497,6 +499,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'ssl_cert_chainfile', ''),
 	('system', 'ssl_cipher_list', 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128'),
 	('system', 'nginx_php_backend', '127.0.0.1:8888'),
+	('system', 'nginx_http2_support', '0'),
 	('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock'),
 	('system', 'phpreload_command', ''),
 	('system', 'apache24', '0'),
@@ -543,6 +546,10 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mail_smtp_auth', '1'),
 	('system', 'mail_smtp_user', ''),
 	('system', 'mail_smtp_passwd', ''),
+	('system', 'hsts_maxage', '0'),
+	('system', 'hsts_incsub', '0'),
+	('system', 'hsts_preload', '0'),
+	('system', 'leregistered', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -573,8 +580,9 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_numeric', '0'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
-	('panel', 'version', '0.9.37'),
-	('panel', 'db_version', '201609200');
+	('panel', 'customer_hide_options', ''),
+	('panel', 'version', '0.9.38.4'),
+	('panel', 'db_version', '201612110');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

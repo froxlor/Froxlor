@@ -54,7 +54,7 @@ return array(
 						'type' => 'text'
 					),
 					'redirectcode' => array(
-						'visible' => ((Settings::Get('system.webserver') == 'apache2' && Settings::Get('customredirect.enabled') == '1') ? true : false),
+						'visible' => (Settings::Get('customredirect.enabled') == '1' ? true : false),
 						'label' => $lng['domains']['redirectifpathisurl'],
 						'desc' => $lng['domains']['redirectifpathisurlinfo'],
 						'type' => 'select',
@@ -66,33 +66,65 @@ return array(
 						'type' => 'label',
 						'value' => $lng['customer']['selectserveralias_addinfo']
 					),
-					'ssl_redirect' => array(
-						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
-						'label' => $lng['domains']['ssl_redirect']['title'],
-						'desc' => $lng['domains']['ssl_redirect']['description'],
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array()
-					),
-					'letsencrypt' => array(
-						'visible' => (Settings::Get('system.use_ssl') == '1' ? (Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? true : false) : false) : false),
-						'label' => $lng['customer']['letsencrypt']['title'],
-						'desc' => $lng['customer']['letsencrypt']['description'],
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array()
-					),
 					'openbasedir_path' => array(
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
 						'select_var' => $openbasedir
 					)
 				)
-			)
+			),
+			'section_bssl' => array(
+				'title' => $lng['admin']['webserversettings_ssl'],
+				'image' => 'icons/domain_add.png',
+				'visible' => Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false,
+				'fields' => array(
+					'ssl_redirect' => array(
+						'label' => $lng['domains']['ssl_redirect']['title'],
+						'desc' => $lng['domains']['ssl_redirect']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array()
+					),
+					'letsencrypt' => array(
+						'visible' => (Settings::Get('system.leenabled') == '1' ? true : false),
+						'label' => $lng['customer']['letsencrypt']['title'],
+						'desc' => $lng['customer']['letsencrypt']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array()
+					),
+					'hsts_maxage' => array(
+						'label' => $lng['admin']['domain_hsts_maxage']['title'],
+						'desc' => $lng['admin']['domain_hsts_maxage']['description'],
+						'type' => 'int',
+						'int_min' => 0,
+						'int_max' => 94608000, // 3-years
+						'value' => 0
+					),
+					'hsts_sub' => array(
+						'label' => $lng['admin']['domain_hsts_incsub']['title'],
+						'desc' => $lng['admin']['domain_hsts_incsub']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array()
+					),
+					'hsts_preload' => array(
+						'label' => $lng['admin']['domain_hsts_preload']['title'],
+						'desc' => $lng['admin']['domain_hsts_preload']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array()
+					),
+				),
+			),
 		)
 	)
 );

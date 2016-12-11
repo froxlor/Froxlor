@@ -374,6 +374,11 @@ if ($page == 'overview') {
 					$ssl_redirect = 2;
 				}
 
+				// HSTS
+				$hsts_maxage = isset($_POST['hsts_maxage']) ? (int)$_POST['hsts_maxage'] : 0;
+				$hsts_sub = isset($_POST['hsts_sub']) && (int)$_POST['hsts_sub'] == 1 ? 1 : 0;
+				$hsts_preload = isset($_POST['hsts_preload']) && (int)$_POST['hsts_preload'] == 1 ? 1 : 0;
+
 				if ($path == '') {
 					standard_error('patherror');
 				} elseif ($subdomain == '') {
@@ -416,7 +421,10 @@ if ($page == 'overview') {
 						`specialsettings` = :specialsettings,
 						`ssl_redirect` = :ssl_redirect,
 						`phpsettingid` = :phpsettingid,
-						`letsencrypt` = :letsencrypt"
+						`letsencrypt` = :letsencrypt,
+						`hsts` = :hsts,
+						`hsts_sub` = :hsts_sub,
+						`hsts_preload` = :hsts_preload"
 					);
 					$params = array(
 						"customerid" => $userinfo['customerid'],
@@ -433,7 +441,10 @@ if ($page == 'overview') {
 						"specialsettings" => $domain_check['specialsettings'],
 						"ssl_redirect" => $ssl_redirect,
 						"phpsettingid" => $phpsid_result['phpsettingid'],
-						"letsencrypt" => $letsencrypt
+						"letsencrypt" => $letsencrypt,
+						"hsts" => $hsts_maxage,
+						"hsts_sub" => $hsts_sub,
+						"hsts_preload" => $hsts_preload
 					);
 					Database::pexecute($stmt, $params);
 
@@ -506,7 +517,12 @@ if ($page == 'overview') {
 
 				// check if we at least have one ssl-ip/port, #1179
 				$ssl_ipsandports = '';
-				$ssl_ip_stmt = Database::prepare("SELECT COUNT(*) as countSSL FROM `panel_ipsandports` WHERE `ssl`='1'");
+				$ssl_ip_stmt = Database::prepare("
+					SELECT COUNT(*) as countSSL
+					FROM `".TABLE_PANEL_IPSANDPORTS."` pip
+					LEFT JOIN `".TABLE_DOMAINTOIP."` dti ON dti.id_ipandports = pip.id
+					WHERE pip.`ssl`='1'
+				");
 				Database::pexecute($ssl_ip_stmt);
 				$resultX = $ssl_ip_stmt->fetch(PDO::FETCH_ASSOC);
 				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
@@ -527,8 +543,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 
-		$stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isemaildomain`, `d`.`isbinddomain`, `d`.`wwwserveralias`, `d`.`iswildcarddomain`,
-			`d`.`parentdomainid`, `d`.`ssl_redirect`, `d`.`aliasdomain`, `d`.`openbasedir`, `d`.`openbasedir_path`, `d`.`letsencrypt`, `pd`.`subcanemaildomain`
+		$stmt = Database::prepare("SELECT `d`.*, `pd`.`subcanemaildomain`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_DOMAINS . "` `pd`
 			WHERE `d`.`customerid` = :customerid
 			AND `d`.`id` = :id
@@ -568,7 +583,7 @@ if ($page == 'overview') {
 					$_doredirect = true;
 				}
 
-				$aliasdomain = intval($_POST['alias']);
+				$aliasdomain = isset($_POST['alias']) ? intval($_POST['alias']) : 0;
 
 				if (isset($_POST['selectserveralias'])) {
 					$iswildcarddomain = ($_POST['selectserveralias'] == '0') ? '1' : '0';
@@ -634,13 +649,18 @@ if ($page == 'overview') {
 
 				// We can't enable let's encrypt for wildcard - domains
 				if ($iswildcarddomain == '1' && $letsencrypt == '1') {
-				    standard_error('nowildcardwithletsencrypt');
+					standard_error('nowildcardwithletsencrypt');
 				}
 
 				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
 				if ($ssl_redirect > 0 && $letsencrypt == 1 && $result['letsencrypt'] != $letsencrypt) {
 					$ssl_redirect = 2;
 				}
+
+				// HSTS
+				$hsts_maxage = isset($_POST['hsts_maxage']) ? (int)$_POST['hsts_maxage'] : 0;
+				$hsts_sub = isset($_POST['hsts_sub']) && (int)$_POST['hsts_sub'] == 1 ? 1 : 0;
+				$hsts_preload = isset($_POST['hsts_preload']) && (int)$_POST['hsts_preload'] == 1 ? 1 : 0;
 
 				if ($path == '') {
 					standard_error('patherror');
@@ -666,7 +686,11 @@ if ($page == 'overview') {
 						|| $aliasdomain != $result['aliasdomain']
 						|| $openbasedir_path != $result['openbasedir_path']
 						|| $ssl_redirect != $result['ssl_redirect']
-						|| $letsencrypt != $result['letsencrypt']) {
+						|| $letsencrypt != $result['letsencrypt']
+						|| $hsts_maxage != $result['hsts']
+						|| $hsts_sub != $result['hsts_sub']
+						|| $hsts_preload != $result['hsts_preload']
+					) {
 						$log->logAction(USR_ACTION, LOG_INFO, "edited domain '" . $idna_convert->decode($result['domain']) . "'");
 
 						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
@@ -677,7 +701,10 @@ if ($page == 'overview') {
 							`aliasdomain`= :aliasdomain,
 							`openbasedir_path`= :openbasedir_path,
 							`ssl_redirect`= :ssl_redirect,
-							`letsencrypt`= :letsencrypt
+							`letsencrypt`= :letsencrypt,
+							`hsts` = :hsts,
+							`hsts_sub` = :hsts_sub,
+							`hsts_preload` = :hsts_preload
 							WHERE `customerid`= :customerid
 							AND `id`= :id"
 						);
@@ -690,6 +717,9 @@ if ($page == 'overview') {
 							"openbasedir_path" => $openbasedir_path,
 							"ssl_redirect" => $ssl_redirect,
 							"letsencrypt" => $letsencrypt,
+							"hsts" => $hsts_maxage,
+							"hsts_sub" => $hsts_sub,
+							"hsts_preload" => $hsts_preload,
 							"customerid" => $userinfo['customerid'],
 							"id" => $id
 						);
@@ -699,11 +729,20 @@ if ($page == 'overview') {
 							// trigger when domain id for alias destination has changed: both for old and new destination
 							triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $log);
 							triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
-						} else
-							if ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
-								// or when wwwserveralias or letsencrypt was changed
-								triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
-							}
+						} elseif ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
+							// or when wwwserveralias or letsencrypt was changed
+							triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
+						}
+
+						// check whether LE has been disabled, so we remove the certificate
+						if ($letsencrypt == '0' && $result['letsencrypt'] == '1')  {
+							$del_stmt = Database::prepare("
+								DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :id
+							");
+							Database::pexecute($del_stmt, array(
+								'id' => $id
+							));
+						}
 
 						inserttask('1');
 
@@ -730,7 +769,7 @@ if ($page == 'overview') {
 					AND `dip`.`id_ipandports`
 					IN (SELECT `id_ipandports` FROM `".TABLE_DOMAINTOIP."`
 						WHERE `id_domain` = :id)
-					GROUP BY `d`.`domain`
+					GROUP BY `d`.`id`, `d`.`domain`
 					ORDER BY `d`.`domain` ASC"
 				);
 				Database::pexecute($domains_stmt, array("id" => $result['id'], "customerid" => $userinfo['customerid']));
@@ -763,8 +802,13 @@ if ($page == 'overview') {
 
 				// check if we at least have one ssl-ip/port, #1179
 				$ssl_ipsandports = '';
-				$ssl_ip_stmt = Database::prepare("SELECT COUNT(*) as countSSL FROM `panel_ipsandports` WHERE `ssl`='1'");
-				Database::pexecute($ssl_ip_stmt);
+				$ssl_ip_stmt = Database::prepare("
+					SELECT COUNT(*) as countSSL
+					FROM `".TABLE_PANEL_IPSANDPORTS."` pip
+					LEFT JOIN `".TABLE_DOMAINTOIP."` dti ON dti.id_ipandports = pip.id
+					WHERE `dti`.`id_domain` = :id_domain AND pip.`ssl`='1'
+				");
+				Database::pexecute($ssl_ip_stmt, array("id_domain" => $result['id']));
 				$resultX = $ssl_ip_stmt->fetch(PDO::FETCH_ASSOC);
 				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
 					$ssl_ipsandports = 'notempty';

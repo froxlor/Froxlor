@@ -234,6 +234,7 @@ return array(
 					'type' => 'option',
 					'default' => '',
 					'option_mode' => 'multiple',
+					'option_emptyallowed' => true,
 					'option_options' => array(
 						'email'                       => $lng['menue']['email']['email'],
 						'mysql'                       => $lng['menue']['mysql']['mysql'],

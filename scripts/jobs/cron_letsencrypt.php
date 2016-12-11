@@ -43,6 +43,7 @@ $certificates_stmt = Database::query("
 			dom.`ssl_redirect`,
 			cust.`leprivatekey`,
 			cust.`lepublickey`,
+			cust.`leregistered`,
 			cust.`customerid`,
 			cust.`loginname`
 		FROM
@@ -103,6 +104,7 @@ if (Settings::Get('system.le_froxlor_enabled') == '1') {
 		'documentroot' => FROXLOR_INSTALL_DIR,
 		'leprivatekey' => Settings::Get('system.leprivatekey'),
 		'lepublickey' => Settings::Get('system.lepublickey'),
+		'leregistered' => Settings::Get('system.leregistered'),
 		'ssl_redirect' => Settings::Get('system.le_froxlor_redirect'),
 		'expirationdate' => null,
 		'ssl_cert_file' => null,
@@ -141,8 +143,7 @@ if (Settings::Get('system.le_froxlor_enabled') == '1') {
 
 	if ($insert_or_update_required) {
 		$domains = array(
-			$certrow['domain'],
-			'www.' . $certrow['domain']
+			$certrow['domain']
 		);
 
 		// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
