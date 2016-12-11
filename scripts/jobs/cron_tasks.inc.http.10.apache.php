@@ -817,7 +817,7 @@ class apache extends HttpConfigBase
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
-			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			$domain['documentroot'] = 'https://%{HTTP_HOST}' . $_sslport . '/';
 		}
 
 		if ($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {

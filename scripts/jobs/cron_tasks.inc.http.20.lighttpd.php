@@ -442,7 +442,7 @@ class lighttpd extends HttpConfigBase
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
-			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			$domain['documentroot'] = 'https://%1' . $_sslport . '/';
 		}
 
 		// avoid using any whitespaces
