@@ -3555,9 +3555,17 @@ if (isFroxlorVersion('0.9.38.3')) {
 
 if (isDatabaseVersion('201611180')) {
 
-        showUpdateStep("Updating database table definition for panel_domains");
-        Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `phpenabled` tinyint(1) NOT NULL default '1' AFTER `parentdomainid`;");
-        lastStepStatus(0);
+	showUpdateStep("Updating database table definition for panel_domains");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `phpenabled` tinyint(1) NOT NULL default '1' AFTER `parentdomainid`;");
+	lastStepStatus(0);
 
-        updateToDbVersion('201612110');
+	showUpdateStep("Adding field for let's-encrypt registration status");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` add `leregistered` TINYINT(1) NOT NULL DEFAULT 0;");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding system setting for let's-encrypt registration status");
+	Settings::AddNew('system.leregistered', '0');
+	lastStepStatus(0);
+
+	updateToDbVersion('201612110');
 }
