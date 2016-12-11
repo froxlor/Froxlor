@@ -3567,5 +3567,9 @@ if (isDatabaseVersion('201611180')) {
 	Settings::AddNew('system.leregistered', '0');
 	lastStepStatus(0);
 
+  showUpdateStep("Adding unique key to ipsandports table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD UNIQUE KEY `ip_port` (`ip`,`port`)");
+	lastStepStatus(0);
+  
 	updateToDbVersion('201612110');
 }
