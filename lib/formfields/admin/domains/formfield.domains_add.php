@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'domain_add' => array(
 		'title' => $lng['admin']['domain_add'],
@@ -27,20 +26,20 @@ return array(
 					'domain' => array(
 						'label' => 'Domain',
 						'type' => 'text',
-						'mandatory' => true,
+						'mandatory' => true
 					),
 					'customerid' => array(
 						'label' => $lng['admin']['customer'],
 						'type' => 'select',
 						'select_var' => $customers,
-						'mandatory' => true,
+						'mandatory' => true
 					),
 					'adminid' => array(
 						'visible' => ($userinfo['customers_see_all'] == '1' ? true : false),
 						'label' => $lng['admin']['admin'],
 						'type' => 'select',
 						'select_var' => $admins,
-						'mandatory' => true,
+						'mandatory' => true
 					),
 					'alias' => array(
 						'label' => $lng['domains']['aliasdomain'],
@@ -58,9 +57,14 @@ return array(
 						'desc' => $lng['admin']['domain_editable']['desc'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'add_date' => array(
 						'label' => $lng['domains']['add_date'],
@@ -112,7 +116,10 @@ return array(
 						'desc' => $lng['admin']['speciallogfile']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					),
@@ -146,7 +153,10 @@ return array(
 						'desc' => $lng['domains']['ssl_redirect']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					),
@@ -156,7 +166,10 @@ return array(
 						'desc' => $lng['admin']['letsencrypt']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					),
@@ -181,7 +194,10 @@ return array(
 						'desc' => $lng['admin']['domain_hsts_incsub']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					),
@@ -191,46 +207,59 @@ return array(
 						'desc' => $lng['admin']['domain_hsts_preload']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
-					),
-				),
+					)
+				)
 			),
 			'section_c' => array(
 				'title' => $lng['admin']['phpserversettings'],
 				'image' => 'icons/domain_add.png',
 				'visible' => (($userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1') ? true : false),
 				'fields' => array(
-                                        'phpenabled' => array(
-                                                'label' => $lng['admin']['phpenabled'],
-                                                'type' => 'checkbox',
-                                                'values' => array(
-                                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                                ),
-                                                'value' => array('1')
-                                        ),
 					'openbasedir' => array(
 						'label' => 'OpenBasedir',
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
+					),
+					'phpenabled' => array(
+						'label' => $lng['admin']['phpenabled'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						)
 					),
 					'phpsettingid' => array(
-						'visible' => (((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) ? true : false),
+						'visible' => (((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) ? true : false),
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
 						'select_var' => $phpconfigs
 					),
 					'mod_fcgid_starter' => array(
-						'visible' => ((int)Settings::Get('system.mod_fcgid') == 1 ? true : false),
+						'visible' => ((int) Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_starter']['title'],
 						'type' => 'text'
 					),
 					'mod_fcgid_maxrequests' => array(
-						'visible' => ((int)Settings::Get('system.mod_fcgid') == 1 ? true : false),
+						'visible' => ((int) Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
 						'type' => 'text'
 					)
@@ -245,9 +274,14 @@ return array(
 						'label' => 'Nameserver',
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'zonefile' => array(
 						'label' => 'Zonefile',
@@ -264,15 +298,23 @@ return array(
 						'label' => $lng['admin']['emaildomain'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'email_only' => array(
 						'label' => $lng['admin']['email_only'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					),
@@ -286,9 +328,14 @@ return array(
 						'label' => 'DomainKeys',
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					)
 				)
 			)
