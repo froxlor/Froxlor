@@ -344,6 +344,15 @@ class apache extends HttpConfigBase
 						);
 					}
 				} // end of ssl-redirect check
+				else
+				{
+					// fallback of froxlor domain-data for processSpecialConfigTemplate()
+					$domain = array(
+						'domain' => Settings::Get('system.hostname'),
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath
+					);
+				}
 
 				/**
 				 * dirprotection, see #72
@@ -488,7 +497,7 @@ class apache extends HttpConfigBase
 	{
 		$php_options_text = '';
 
-		if ($domain['phpenabled'] == '1') {
+		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 			// This vHost has PHP enabled and we are using the regular mod_php
 
 			if ($domain['openbasedir'] == '1') {
@@ -808,7 +817,7 @@ class apache extends HttpConfigBase
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
-			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			$domain['documentroot'] = 'https://%{HTTP_HOST}' . $_sslport . '/';
 		}
 
 		if ($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {

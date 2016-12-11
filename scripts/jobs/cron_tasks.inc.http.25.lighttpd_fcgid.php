@@ -21,7 +21,7 @@ class lighttpd_fcgid extends lighttpd
 	{
 		$php_options_text = '';
 
-		if($domain['phpenabled'] == '1')
+		if($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1')
 		{
 			$php = new phpinterface($domain);
 			$phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);

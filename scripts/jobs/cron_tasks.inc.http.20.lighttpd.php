@@ -162,7 +162,25 @@ class lighttpd extends HttpConfigBase
 						$this->lighttpd_data[$vhost_filename] .= "\t" . ')' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= "\t" . ')' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= '  )' . "\n";
+					} else {
+						$domain = array(
+							'id' => 'none',
+							'domain' => Settings::Get('system.hostname'),
+							'adminid' => 1, /* first admin-user (superadmin) */
+							'guid' => Settings::Get('system.httpuser'),
+							'openbasedir' => 0,
+							'email' => Settings::Get('panel.adminmail'),
+							'loginname' => 'froxlor.panel',
+							'documentroot' => $mypath
+						);
 					}
+				} else {
+					// fallback of froxlor domain-data for processSpecialConfigTemplate()
+					$domain = array(
+						'domain' => Settings::Get('system.hostname'),
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath
+					);
 				}
 
 				if ($row_ipsandports['specialsettings'] != '') {
@@ -424,7 +442,7 @@ class lighttpd extends HttpConfigBase
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
-			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			$domain['documentroot'] = 'https://%1' . $_sslport . '/';
 		}
 
 		// avoid using any whitespaces

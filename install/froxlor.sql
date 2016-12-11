@@ -237,6 +237,7 @@ CREATE TABLE `panel_domains` (
   `dkim_pubkey` text,
   `wwwserveralias` tinyint(1) NOT NULL default '1',
   `parentdomainid` int(11) NOT NULL default '0',
+  `phpenabled` tinyint(1) NOT NULL default '0',
   `openbasedir` tinyint(1) NOT NULL default '0',
   `openbasedir_path` tinyint(1) NOT NULL default '0',
   `speciallogfile` tinyint(1) NOT NULL default '0',
@@ -544,7 +545,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mail_smtp_user', ''),
 	('system', 'mail_smtp_passwd', ''),
 	('system', 'hsts_maxage', '0'),
-	('system', 'hsts_sub', '0'),
+	('system', 'hsts_incsub', '0'),
 	('system', 'hsts_preload', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
@@ -577,8 +578,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
-	('panel', 'version', '0.9.38.3'),
-	('panel', 'db_version', '201611180');
+	('panel', 'version', '0.9.38.4'),
+	('panel', 'db_version', '201612110');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
