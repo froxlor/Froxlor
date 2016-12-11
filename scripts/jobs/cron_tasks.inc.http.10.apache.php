@@ -344,6 +344,15 @@ class apache extends HttpConfigBase
 						);
 					}
 				} // end of ssl-redirect check
+				else
+				{
+					// fallback of froxlor domain-data for processSpecialConfigTemplate()
+					$domain = array(
+						'domain' => Settings::Get('system.hostname'),
+						'loginname' => 'froxlor.panel',
+						'documentroot' => $mypath
+					);
+				}
 
 				/**
 				 * dirprotection, see #72
@@ -808,7 +817,7 @@ class apache extends HttpConfigBase
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
-			$domain['documentroot'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			$domain['documentroot'] = 'https://%{HTTP_HOST}' . $_sslport . '/';
 		}
 
 		if ($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
@@ -875,10 +884,8 @@ class apache extends HttpConfigBase
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$corrected_docroot = $domain['documentroot'];
 
-			// prevent empty return-cde
-			$code = "301";
 			// Get domain's redirect code
-			$code = getDomainRedirectCode($domain['id']);
+			$code = getDomainRedirectCode($domain['id'], '301');
 			$modrew_red = '';
 			if ($code != '') {
 				$modrew_red = ' [R=' . $code . ';L,NE]';

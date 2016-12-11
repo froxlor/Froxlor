@@ -27,7 +27,7 @@ $header
 							<th>{$lng['admin']['ipsandports']['ip']}&nbsp;{$arrowcode['ip']}</th>
 							<th>{$lng['admin']['ipsandports']['port']}&nbsp;{$arrowcode['port']}</th>
 							<if !$is_nginx><th>Listen</th></if>
-							<if $is_apache><th>NameVirtualHost</th></if>
+							<if $is_apache && !$is_apache24><th>NameVirtualHost</th></if>
 							<th>vHost-Container</th>
 							<th>Specialsettings</th>
 							<if $is_apache><th>ServerName</th></if>

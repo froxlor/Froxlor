@@ -153,33 +153,7 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'system_hsts_maxage' => array(
-					'label' => $lng['admin']['domain_hsts_maxage'],
-					'settinggroup' => 'system',
-					'varname' => 'hsts_maxage',
-					'type' => 'int',
-					'int_min' => 0,
-					'int_max' => 94608000, // 3-years
-					'default' => 0,
-					'save_method' => 'storeSettingField'
-				),
-				'system_hsts_incsub' => array(
-					'label' => $lng['admin']['domain_hsts_incsub'],
-					'settinggroup' => 'system',
-					'varname' => 'hsts_incsub',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField'
-				),
-				'system_hsts_preload' => array(
-					'label' => $lng['admin']['domain_hsts_preload'],
-					'settinggroup' => 'system',
-					'varname' => 'hsts_preload',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField'
-				),
+				)
 			)
 		)
 	)

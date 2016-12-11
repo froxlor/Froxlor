@@ -3514,11 +3514,50 @@ if (isFroxlorVersion('0.9.38-rc1')) {
 	updateToVersion('0.9.38-rc2');
 }
 
+if (isFroxlorVersion('0.9.38-rc2')) {
+
+	showUpdateStep("Updating from 0.9.38-rc2 to 0.9.38 final", false);
+	updateToVersion('0.9.38');
+}
+
 if (isDatabaseVersion('201610070')) {
+
+	showUpdateStep("Add Nginx http2 setting");
+	Settings::AddNew("system.nginx_http2_support", 0);
+	lastStepStatus(0);
+
+	updateToDbVersion('201611180');
+}
+
+if (isFroxlorVersion('0.9.38')) {
+
+	showUpdateStep("Updating from 0.9.38 to 0.9.38.1", false);
+	updateToVersion('0.9.38.1');
+}
+
+if (isFroxlorVersion('0.9.38.1')) {
+
+	showUpdateStep("Updating from 0.9.38.1 to 0.9.38.2", false);
+	updateToVersion('0.9.38.2');
+}
+
+if (isFroxlorVersion('0.9.38.2')) {
+
+	showUpdateStep("Updating from 0.9.38.2 to 0.9.38.3", false);
+	updateToVersion('0.9.38.3');
+}
+
+if (isFroxlorVersion('0.9.38.3')) {
+
+	showUpdateStep("Updating from 0.9.38.3 to 0.9.38.4", false);
+	updateToVersion('0.9.38.4');
+}
+
+if (isDatabaseVersion('201611180')) {
 
         showUpdateStep("Updating database table definition for panel_domains");
         Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `phpenabled` tinyint(1) NOT NULL default '1' AFTER `parentdomainid`;");
         lastStepStatus(0);
 
-        updateToDbVersion('201611130');
+        updateToDbVersion('201612110');
 }
