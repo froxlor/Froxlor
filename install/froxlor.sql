@@ -195,8 +195,9 @@ CREATE TABLE `panel_customers` (
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
-  `lepublickey` mediumtext DEFAULT NULL,
-  `leprivatekey` mediumtext DEFAULT NULL,
+  `lepublickey` mediumtext default NULL,
+  `leprivatekey` mediumtext default NULL,
+  `leregistered` tinyint(1) NOT NULL default '0'
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -547,6 +548,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'hsts_maxage', '0'),
 	('system', 'hsts_incsub', '0'),
 	('system', 'hsts_preload', '0'),
+	('system', 'leregistered', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
