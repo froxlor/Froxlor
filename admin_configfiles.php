@@ -30,6 +30,19 @@ if ($userinfo['change_serversettings'] == '1') {
 		$customer_tmpdir = Settings::Get('phpfpm.tmpdir');
 	}
 
+	// try to convert namserver hosts to ip's
+	$ns_ips = "";
+	if (Settings::Get('system.nameservers') != '') {
+		$nameservers = explode(',', Settings::Get('system.nameservers'));
+		foreach ($nameservers as $nameserver) {
+			$nameserver = trim($nameserver);
+			$nameserver_ips = gethostbynamel($nameserver);
+			if (is_array($nameserver_ips) && count($nameserver_ips) > 0) {
+				$ns_ips .= implode(",", $nameserver_ips);
+			}
+		}
+	}
+
 	$replace_arr = Array(
 		'<SQL_UNPRIVILEGED_USER>' => $sql['user'],
 		'<SQL_UNPRIVILEGED_PASSWORD>' => 'MYSQL_PASSWORD',
@@ -39,6 +52,8 @@ if ($userinfo['change_serversettings'] == '1') {
 		'<SERVERNAME>' => Settings::Get('system.hostname'),
 		'<SERVERIP>' => Settings::Get('system.ipaddress'),
 		'<NAMESERVERS>' => Settings::Get('system.nameservers'),
+		'<NAMESERVERS_IP>' => $ns_ips,
+		'<AXFRSERVERS>' => Settings::Get('system.axfrservers'),
 		'<VIRTUAL_MAILBOX_BASE>' => Settings::Get('system.vmail_homedir'),
 		'<VIRTUAL_UID_MAPS>' => Settings::Get('system.vmail_uid'),
 		'<VIRTUAL_GID_MAPS>' => Settings::Get('system.vmail_gid'),
