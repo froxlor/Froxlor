@@ -86,6 +86,7 @@ class Settings {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			self::$_data[$row['settinggroup']][$row['varname']] = $row['value'];
 		}
+		return true;
 	}
 
 	/**
@@ -161,10 +162,16 @@ class Settings {
 			if ($instant_save) {
 				$this->_storeSetting($sstr[0], $sstr[1], $value);
 			} else {
-				if (!is_array(self::$_data[$sstr[0]])) {
+				// set temporary data for usage
+				if (!isset(self::$_data[$sstr[0]]) || !is_array(self::$_data[$sstr[0]])) {
 					self::$_data[$sstr[0]] = array();
 				}
 				self::$_data[$sstr[0]][$sstr[1]] = $value;
+				// set update-data when invoking Flush()
+				if (!isset(self::$_updatedata[$sstr[0]]) || !is_array(self::$_updatedata[$sstr[0]])) {
+					self::$_updatedata[$sstr[0]] = array();
+				}
+				self::$_updatedata[$sstr[0]][$sstr[1]] = $value;
 			}
 			return true;
 		}
@@ -223,8 +230,9 @@ class Settings {
 			// now empty the array
 			self::$_updatedata = array();
 			// re-read in all settings
-			$this->_readSettings();
+			return $this->_readSettings();
 		}
+		return false;
 	}
 
 	/**
