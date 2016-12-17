@@ -419,14 +419,21 @@ class apache extends HttpConfigBase
 						if (! file_exists($domain['ssl_cert_file'])) {
 							$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
 						} else {
-
+							// 
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol -ALL +TLSv1 +TLSv1.2' . "\n";
-							// this makes it more secure, thx to Marcel (08/2013)
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1' . "\n";
+							// this makes it more secure, thx to Marcel (08/2013), updated 12/2016
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCompression Off' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLSessionTickets Off' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLVerifyDepth 10' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
+							// OCSP
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLUseStapling On' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLStaplingResponderTimeout 5' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLStaplingReturnResponderErrors Off' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLStaplingCache shmcb:/var/run/ocsp(128000)' . "\n";
 
 							if ($domain['ssl_key_file'] != '') {
 								// check for existence, #1485
