@@ -2315,37 +2315,37 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 					<file name="/etc/libnss-mysql.cfg" chown="root:root" chmod="0600"
 						backup="true">
 						<content><![CDATA[
-getpwnam    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
+getpwnam    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup = 'system' AND varname = 'mod_fcgid_system_prefix' LIMIT 1), username),'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
-            WHERE username='%1$s' \
+            WHERE username=substring('%1$s', 1+CHARACTER_LENGTH((SELECT value FROM panel_settings WHERE settinggroup = 'system' AND varname = 'mod_fcgid_system_prefix' LIMIT 1))) \
             AND login_enabled = 'Y' \
             ORDER BY LENGTH(username) \
             LIMIT 1
-getpwuid    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
+getpwuid    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup = 'system' and varname = 'mod_fcgid_system_prefix' LIMIT 1), username),'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
             WHERE uid='%1$u' \
             AND login_enabled = 'Y' \
             ORDER BY LENGTH(username) \
             LIMIT 1
-getspnam    SELECT username,password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999','7','-1','-1','0' \
+getspnam    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup = 'system' and varname = 'mod_fcgid_system_prefix' LIMIT 1), username),password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999','7','-1','-1','0' \
             FROM ftp_users \
-            WHERE username='%1$s' \
+            WHERE username=substring('%1$s', 1+CHARACTER_LENGTH((SELECT value FROM panel_settings WHERE settinggroup = 'system' AND varname = 'mod_fcgid_system_prefix' LIMIT 1))) \
             AND login_enabled = 'Y' \
             ORDER BY LENGTH(username) \
             LIMIT 1
-getpwent    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
+getpwent    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup = 'system' and varname = 'mod_fcgid_system_prefix' LIMIT 1), username),'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users
-getspent    SELECT username,password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999','7','-1','-1','0' \
+getspent    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup = 'system' and varname = 'mod_fcgid_system_prefix' LIMIT 1), username),password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999','7','-1','-1','0' \
             FROM ftp_users
-getgrnam    SELECT groupname,'x',gid \
+getgrnam    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup = 'system' and varname = 'mod_fcgid_system_prefix' LIMIT 1), groupname),'x',gid \
             FROM ftp_groups \
-            WHERE groupname='%1$s' \
+            WHERE groupname=substring('%1$s', 1+CHARACTER_LENGTH((SELECT value FROM panel_settings WHERE settinggroup = 'system' AND varname = 'mod_fcgid_system_prefix' LIMIT 1))) \
             LIMIT 1
-getgrgid    SELECT groupname,'x',gid \
+getgrgid    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup = 'system' and varname = 'mod_fcgid_system_prefix' LIMIT 1), groupname),'x',gid \
             FROM ftp_groups \
             WHERE gid='%1$u' \
             LIMIT 1
-getgrent    SELECT groupname,'x',gid \
+getgrent    SELECT CONCAT((SELECT value FROM panel_settings WHERE settinggroup = 'system' and varname = 'mod_fcgid_system_prefix' LIMIT 1), groupname),'x',gid \
             FROM ftp_groups
 memsbygid   SELECT members \
             FROM ftp_groups \

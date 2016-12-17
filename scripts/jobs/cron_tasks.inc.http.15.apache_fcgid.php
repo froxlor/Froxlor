@@ -37,7 +37,7 @@ class apache_fcgid extends apache
 				// #1317 - perl is executed via apache and therefore, when using fpm, does not know the user
 				// which perl is supposed to run as, hence the need for Suexec need
 				if (customerHasPerlEnabled($domain['customerid'])) {
-					$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
+					$php_options_text.= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_system_prefix') . $domain['loginname'] . '" "' . Settings::Get('system.mod_fcgid_system_prefix') . $domain['loginname'] . '"' . "\n";
 				}
 				
 				// mod_proxy stuff for apache-2.4
@@ -87,14 +87,15 @@ class apache_fcgid extends apache
 			else
 			{
 				$php_options_text.= '  FcgidIdleTimeout ' . Settings::Get('system.mod_fcgid_idle_timeout') . "\n";
+				$php_options_text.= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_system_prefix') . $domain['loginname'] . '" "' . Settings::Get('system.mod_fcgid_system_prefix') . $domain['loginname'] . '"' . "\n";
+
 				if((int)Settings::Get('system.mod_fcgid_wrapper') == 0)
 				{
-					$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
+
 					$php_options_text.= '  ScriptAlias /php/ ' . $php->getInterface()->getConfigDir() . "\n";
 				}
 				else
 				{
-					$php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
 					$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
 					$file_extensions = explode(' ', $phpconfig['file_extensions']);
 					$php_options_text.= '    <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
