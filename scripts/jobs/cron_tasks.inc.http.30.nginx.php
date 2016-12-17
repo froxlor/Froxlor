@@ -617,7 +617,7 @@ class nginx extends HttpConfigBase
 				$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
 				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
 				$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
-				
+
 				if ($domain_or_ip['ssl_key_file'] != '') {
 					// check for existence, #1485
 					if (! file_exists($domain_or_ip['ssl_key_file'])) {
