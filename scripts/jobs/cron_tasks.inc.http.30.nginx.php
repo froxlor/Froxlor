@@ -626,10 +626,6 @@ class nginx extends HttpConfigBase
 						$sslsettings .= "\t" . 'ssl_certificate_key ' . makeCorrectFile($domain_or_ip['ssl_key_file']) . ';' . "\n";
 					}
 				}
-				
-				// OCSP
-				$sslsettings .= "\t" . 'ssl_stapling on;' . "\n";
-				$sslsettings .= "\t" . 'ssl_stapling_verify on;' . "\n";
 
 				if (isset($domain_or_ip['hsts']) && $domain_or_ip['hsts'] >= 0) {
 					$sslsettings .= 'add_header Strict-Transport-Security "max-age=' . $domain_or_ip['hsts'];
