@@ -11,8 +11,8 @@ Developed by experienced server administrators, this panel simplifies the effort
 3. Point your browser to http://[ip-of-webserver]/froxlor
 4. Follow the installer
 5. Login as administrator
-6. Adjust "Server > Settings" according to your needs
-7. Choose your distribution under "Server > Configuration"
+6. Adjust "System > Settings" according to your needs
+7. Choose your distribution under "System > Configuration"
 8. Follow the steps for your services
 9. Have fun!
 
