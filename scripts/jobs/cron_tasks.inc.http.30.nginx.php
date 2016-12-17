@@ -609,12 +609,15 @@ class nginx extends HttpConfigBase
 			} else {
 				// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
 				// $sslsettings .= "\t" . 'ssl on;' . "\n";
-				$sslsettings .= "\t" . 'ssl_protocols TLSv1 TLSv1.2;' . "\n";
+				$sslsettings .= "\t" . 'ssl_session_timeout 1d;' . "\n";
+				$sslsettings .= "\t" . 'ssl_session_cache shared:SSL:50m;' . "\n";
+				$sslsettings .= "\t" . 'ssl_session_tickets off;' . "\n";
+				$sslsettings .= "\t" . 'ssl_protocols TLSv1.2;' . "\n";
 				$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
 				$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
 				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
 				$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
-
+				
 				if ($domain_or_ip['ssl_key_file'] != '') {
 					// check for existence, #1485
 					if (! file_exists($domain_or_ip['ssl_key_file'])) {
@@ -623,6 +626,10 @@ class nginx extends HttpConfigBase
 						$sslsettings .= "\t" . 'ssl_certificate_key ' . makeCorrectFile($domain_or_ip['ssl_key_file']) . ';' . "\n";
 					}
 				}
+				
+				// OCSP
+				$sslsettings .= "\t" . 'ssl_stapling on;' . "\n";
+				$sslsettings .= "\t" . 'ssl_stapling_verify on;' . "\n";
 
 				if (isset($domain_or_ip['hsts']) && $domain_or_ip['hsts'] >= 0) {
 					$sslsettings .= 'add_header Strict-Transport-Security "max-age=' . $domain_or_ip['hsts'];
