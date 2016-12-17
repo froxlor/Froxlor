@@ -279,7 +279,7 @@ function createDomainZone($domain_id, $froxlorhostname = false, $isMainButSubTo 
 		$soa_content = $primary_ns . " " . escapeSoaAdminMail(Settings::Get('panel.adminmail')) . " ";
 		$soa_content .= $domain['bindserial'] . " ";
 		// TODO for now, dummy time-periods
-		$soa_content .= "1800 900 604800 1200";
+		$soa_content .= "3600 900 604800 1200";
 
 		$soa_record = new DnsEntry('@', 'SOA', $soa_content);
 		array_unshift($zonerecords, $soa_record);
