@@ -419,7 +419,7 @@ class apache extends HttpConfigBase
 						if (! file_exists($domain['ssl_cert_file'])) {
 							$this->logger->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
 						} else {
-							// 
+
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1' . "\n";
 							// this makes it more secure, thx to Marcel (08/2013), updated 12/2016
