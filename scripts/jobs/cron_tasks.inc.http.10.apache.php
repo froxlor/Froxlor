@@ -429,11 +429,6 @@ class apache extends HttpConfigBase
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLVerifyDepth 10' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
-							// OCSP
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLUseStapling On' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLStaplingResponderTimeout 5' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLStaplingReturnResponderErrors Off' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLStaplingCache shmcb:/var/run/ocsp(128000)' . "\n";
 
 							if ($domain['ssl_key_file'] != '') {
 								// check for existence, #1485
