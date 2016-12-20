@@ -517,7 +517,12 @@ if ($page == 'overview') {
 
 				// check if we at least have one ssl-ip/port, #1179
 				$ssl_ipsandports = '';
-				$ssl_ip_stmt = Database::prepare("SELECT COUNT(*) as countSSL FROM `panel_ipsandports` WHERE `ssl`='1'");
+				$ssl_ip_stmt = Database::prepare("
+					SELECT COUNT(*) as countSSL
+					FROM `".TABLE_PANEL_IPSANDPORTS."` pip
+					LEFT JOIN `".TABLE_DOMAINTOIP."` dti ON dti.id_ipandports = pip.id
+					WHERE pip.`ssl`='1'
+				");
 				Database::pexecute($ssl_ip_stmt);
 				$resultX = $ssl_ip_stmt->fetch(PDO::FETCH_ASSOC);
 				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
@@ -797,8 +802,13 @@ if ($page == 'overview') {
 
 				// check if we at least have one ssl-ip/port, #1179
 				$ssl_ipsandports = '';
-				$ssl_ip_stmt = Database::prepare("SELECT COUNT(*) as countSSL FROM `panel_ipsandports` WHERE `ssl`='1'");
-				Database::pexecute($ssl_ip_stmt);
+				$ssl_ip_stmt = Database::prepare("
+					SELECT COUNT(*) as countSSL
+					FROM `".TABLE_PANEL_IPSANDPORTS."` pip
+					LEFT JOIN `".TABLE_DOMAINTOIP."` dti ON dti.id_ipandports = pip.id
+					WHERE `dti`.`id_domain` = :id_domain AND pip.`ssl`='1'
+				");
+				Database::pexecute($ssl_ip_stmt, array("id_domain" => $result['id']));
 				$resultX = $ssl_ip_stmt->fetch(PDO::FETCH_ASSOC);
 				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
 					$ssl_ipsandports = 'notempty';

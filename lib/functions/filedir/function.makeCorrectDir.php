@@ -26,7 +26,11 @@
  */
 function makeCorrectDir($dir) {
 
-	assert('is_string($dir) && strlen($dir) > 0', 'Value "' . $dir .'" does not look like an actual folder name');
+	if (version_compare("5.4.6", PHP_VERSION, ">")) {
+		assert('is_string($dir) && strlen($dir) > 0 /* $dir does not look like an actual folder name */');
+	} else {
+		assert('is_string($dir) && strlen($dir) > 0', 'Value "' . $dir .'" does not look like an actual folder name');
+	}
 
 	$dir = trim($dir);
 

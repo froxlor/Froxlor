@@ -195,8 +195,9 @@ CREATE TABLE `panel_customers` (
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
-  `lepublickey` mediumtext DEFAULT NULL,
-  `leprivatekey` mediumtext DEFAULT NULL,
+  `lepublickey` mediumtext default NULL,
+  `leprivatekey` mediumtext default NULL,
+  `leregistered` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -237,6 +238,7 @@ CREATE TABLE `panel_domains` (
   `dkim_pubkey` text,
   `wwwserveralias` tinyint(1) NOT NULL default '1',
   `parentdomainid` int(11) NOT NULL default '0',
+  `phpenabled` tinyint(1) NOT NULL default '0',
   `openbasedir` tinyint(1) NOT NULL default '0',
   `openbasedir_path` tinyint(1) NOT NULL default '0',
   `speciallogfile` tinyint(1) NOT NULL default '0',
@@ -280,7 +282,8 @@ CREATE TABLE `panel_ipsandports` (
   `default_vhostconf_domain` text,
   `ssl_cert_chainfile` varchar(255) NOT NULL,
   `docroot` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `ip_port` (`ip`,`port`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
@@ -544,8 +547,9 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mail_smtp_user', ''),
 	('system', 'mail_smtp_passwd', ''),
 	('system', 'hsts_maxage', '0'),
-	('system', 'hsts_sub', '0'),
+	('system', 'hsts_incsub', '0'),
 	('system', 'hsts_preload', '0'),
+	('system', 'leregistered', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -577,8 +581,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
-	('panel', 'version', '0.9.38.3'),
-	('panel', 'db_version', '201611182');
+	('panel', 'version', '0.9.38.4'),
+	('panel', 'db_version', '201612110');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

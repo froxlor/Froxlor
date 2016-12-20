@@ -396,7 +396,8 @@ mail	IN		A	<SERVERIP>
 #################################
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
-allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS>
+allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
+# add these entries to the list if any speficied: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -938,7 +939,8 @@ gmysql-password=
 #################################
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
-allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS>
+allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
+# add these entries to the list if any speficied: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.

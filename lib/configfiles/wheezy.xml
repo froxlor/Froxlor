@@ -424,7 +424,8 @@ exit "$RETVAL"
 # allow-axfr-ips    If enabled, restrict zonetransfers to originate from these
 #                   IP addresses
 #
-allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS>
+allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
+# add these entries to the list if any speficied: <AXFRSERVERS>
 
 #################################
 # allow-recursion	List of netmasks that are allowed to recurse
@@ -763,7 +764,8 @@ gmysql-password=
 # allow-axfr-ips    If enabled, restrict zonetransfers to originate from these
 #                   IP addresses
 #
-allow-axfr-ips=<NAMESERVERS>
+allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
+# add these entries to the list if any speficied: <AXFRSERVERS>
 
 #################################
 # allow-recursion	List of netmasks that are allowed to recurse

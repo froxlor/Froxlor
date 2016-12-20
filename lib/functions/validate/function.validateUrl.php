@@ -37,7 +37,11 @@ function validateUrl($url) {
 	}
 
 	// needs converting
-	$url = $idna_convert->encode($url);
+	try {
+		$url = $idna_convert->encode($url);
+	} catch (Exception $e) {
+		return false;
+	}
 
 	$pattern = "/^https?:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,4}(\:[0-9]+)?\/?(.+)?$/i";
 	if (preg_match($pattern, $url)) {

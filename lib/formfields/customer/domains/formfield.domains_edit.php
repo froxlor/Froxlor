@@ -87,10 +87,9 @@ return array(
 			'section_bssl' => array(
 				'title' => $lng['admin']['webserversettings_ssl'],
 				'image' => 'icons/domain_edit.png',
-				'visible' => Settings::Get('system.use_ssl') == '1' ? true : false,
+				'visible' => Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? (domainHasSslIpPort($result['id']) ? true : false) : false) : false,
 				'fields' => array(
 					'ssl_redirect' => array(
-						'visible' => (Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? (domainHasSslIpPort($result['id']) ? true : false) : false) : false),
 						'label' => $lng['domains']['ssl_redirect']['title'],
 						'desc' => $lng['domains']['ssl_redirect']['description'] . ($result['temporary_ssl_redirect'] > 1 ? $lng['domains']['ssl_redirect_temporarilydisabled'] : ''),
 						'type' => 'checkbox',
@@ -100,7 +99,7 @@ return array(
 						'value' => array($result['ssl_redirect'])
 					),
 					'letsencrypt' => array(
-						'visible' => (Settings::Get('system.use_ssl') == '1' ? (Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? (domainHasSslIpPort($result['id']) ? true : false) : false) : false) : false),
+						'visible' => Settings::Get('system.leenabled') == '1' ? true : false,
 						'label' => $lng['customer']['letsencrypt']['title'],
 						'desc' => $lng['customer']['letsencrypt']['description'],
 						'type' => 'checkbox',
@@ -110,7 +109,6 @@ return array(
 						'value' => array($result['letsencrypt'])
 					),
 					'hsts_maxage' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_hsts_maxage']['title'],
 						'desc' => $lng['admin']['domain_hsts_maxage']['description'],
 						'type' => 'int',
@@ -119,7 +117,6 @@ return array(
 						'value' => $result['hsts']
 					),
 					'hsts_sub' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_hsts_incsub']['title'],
 						'desc' => $lng['admin']['domain_hsts_incsub']['description'],
 						'type' => 'checkbox',
@@ -129,7 +126,6 @@ return array(
 						'value' => array($result['hsts_sub'])
 					),
 					'hsts_preload' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_hsts_preload']['title'],
 						'desc' => $lng['admin']['domain_hsts_preload']['description'],
 						'type' => 'checkbox',

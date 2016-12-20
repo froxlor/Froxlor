@@ -3564,3 +3564,30 @@ if (isDatabaseVersion('201611181')) {
 
 	updateToDbVersion('201611182');
 }
+
+if (isFroxlorVersion('0.9.38.3')) {
+
+	showUpdateStep("Updating from 0.9.38.3 to 0.9.38.4", false);
+	updateToVersion('0.9.38.4');
+}
+
+if (isDatabaseVersion('201611181')) {
+
+	showUpdateStep("Updating database table definition for panel_domains");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `phpenabled` tinyint(1) NOT NULL default '1' AFTER `parentdomainid`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding field for let's-encrypt registration status");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` add `leregistered` TINYINT(1) NOT NULL DEFAULT 0;");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding system setting for let's-encrypt registration status");
+	Settings::AddNew('system.leregistered', '0');
+	lastStepStatus(0);
+
+  showUpdateStep("Adding unique key to ipsandports table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD UNIQUE KEY `ip_port` (`ip`,`port`)");
+	lastStepStatus(0);
+  
+	updateToDbVersion('201612110');
+}

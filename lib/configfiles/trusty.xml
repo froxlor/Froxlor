@@ -379,7 +379,8 @@ exit "$RETVAL"
 					<install><![CDATA[apt-get install pdns-server pdns-backend-mysql]]></install>
 					<file name="/etc/powerdns/pdns.conf" backup="true" chmod="600">
 						<content><![CDATA[
-allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS>
+allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
+# add these entries to the list if any speficied: <AXFRSERVERS>
 allow-recursion=127.0.0.1
 config-dir=/etc/powerdns
 daemon=yes
@@ -417,7 +418,8 @@ gmysql-password=
 					<install><![CDATA[apt-get install pdns-server]]></install>
 					<file name="/etc/powerdns/pdns.conf" backup="true">
 						<content><![CDATA[
-allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS>
+allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
+# add these entries to the list if any speficied: <AXFRSERVERS>
 allow-recursion=127.0.0.1
 config-dir=/etc/powerdns
 daemon=yes
@@ -441,7 +443,8 @@ include-dir=/etc/powerdns/froxlor/
 					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf" chown="root:root"
 						chmod="600">
 						<content><![CDATA[
-allow-axfr-ips=<NAMESERVERS>
+allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
+# add these entries to the list if any speficied: <AXFRSERVERS>
 #local-ipv6=YOUR_IPv6_(if_any)
 bind-config=<BIND_CONFIG_PATH>named.conf
 bind-check-interval=180
