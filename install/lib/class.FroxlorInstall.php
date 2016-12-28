@@ -177,8 +177,12 @@ class FroxlorInstall
 		}
 
 		// check system-hostname to be a FQDN
-		if ($this->_validate_ip($this->_data['servername'], true) !== false) {
+		if ($this->_validate_ip($this->_data['servername']) !== false) {
 			$this->_data['servername'] = '';
+		}
+
+		if (empty($this->_data['serverip'] || $this->_validate_ip($this->_data['serverip']) == false)) {
+			return false;
 		}
 
 		if (isset($_POST['installstep']) && $_POST['installstep'] == '1' && $this->_data['admin_pass1'] == $this->_data['admin_pass2'] && $this->_data['admin_pass1'] != '' && $this->_data['admin_pass2'] != '' && $this->_data['mysql_unpriv_pass'] != '' && $this->_data['mysql_root_pass'] != '' && $this->_data['servername'] != '' && $this->_data['serverip'] != '' && $this->_data['httpuser'] != '' && $this->_data['httpgroup'] != '' && $this->_data['mysql_unpriv_user'] != $this->_data['mysql_root_user']) {
@@ -781,7 +785,7 @@ class FroxlorInstall
 		}
 		$formdata .= $this->_getSectionItemString('servername', true, $style);
 		// serverip
-		if (! empty($_POST['installstep']) && $this->_data['serverip'] == '') {
+		if (! empty($_POST['installstep']) && ($this->_data['serverip'] == '' || $this->_validate_ip($this->_data['serverip']) == false)) {
 			$style = 'color:red;';
 		} else {
 			$style = '';
