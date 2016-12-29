@@ -274,6 +274,35 @@ class ConfigIO {
 			}
 		}
 
+		// remove all custom directories
+		$result = Database::query("SELECT configdir FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `configdir` != ''");
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			
+			$configdir = $row['configdir'];			
+			if (@file_exists($configdir)) {
+
+				// check if the path is "secure" (non-root)
+				if(empty(trim("/\t ", $configdir)))
+					continue;
+					
+				$configdir = makeCorrectDir($configdir);
+
+				if (@is_dir($configdir)) {
+					
+					// now get rid of old stuff
+					foreach (scandir($configdir) as $configfile) {
+						
+						if ($configfile == '.' || $configfile == '..') {
+							continue;
+						}
+						
+						safe_exec('rm '. makeCorrectFile($configdir . '/' . $configfile));
+					}
+				}
+			}
+			
+		}
+		
 		// also remove aliasconfigdir #1273
 		$aliasconfigdir = $this->_getFile('phpfpm', 'aliasconfigdir');
 		if ($aliasconfigdir !== false) {

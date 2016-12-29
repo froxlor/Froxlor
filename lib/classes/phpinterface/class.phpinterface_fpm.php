@@ -116,6 +116,7 @@ class phpinterface_fpm {
 				'opcache.restrict_api',
 				'opcache.revalidate_freq',
 				'opcache.max_accelerated_files',
+				'opcache.max_wasted_percentage',
 				'opcache.memory_consumption',
 				'opcache.interned_strings_buffer'
 			),
@@ -135,6 +136,7 @@ class phpinterface_fpm {
 				'register_argc_argv',
 				'report_memleaks',
 				'opcache.enable',
+				'opcache.enable_cli',
 				'opcache.consistency_checks',
 				'opcache.dups_fix',
 				'opcache.load_comments',
@@ -160,8 +162,8 @@ class phpinterface_fpm {
 	 */
 	public function createConfig($phpconfig) {
 
-		$fh = @fopen($this->getConfigFile(), 'w');
-
+		$fh = @fopen($this->getConfigFile($phpconfig), 'w');
+		
 		if ($fh) {
 			$fpm_pm = Settings::Get('phpfpm.pm');
 			$fpm_children = (int)Settings::Get('phpfpm.max_children');
@@ -333,11 +335,21 @@ class phpinterface_fpm {
 	 *
 	 * @return string the full path to the file
 	 */
-	public function getConfigFile($createifnotexists = true) {
-
-		$configdir = makeCorrectDir(Settings::Get('phpfpm.configdir'));
+	public function getConfigFile($phpconfig, $createifnotexists = true) {
+	
+		if (is_bool($phpconfig)) {
+			$createifnotexists = $phpconfig;
+			$phpconfig = '';
+		}
+	
+		if (empty($phpconfig['configdir'])) {
+			$configdir = makeCorrectDir(Settings::Get('phpfpm.configdir'));
+		} else {
+			$configdir = makeCorrectDir($phpconfig['configdir']);			
+		}
+		
 		$config = makeCorrectFile($configdir.'/'.$this->_domain['domain'].'.conf');
-
+		
 		if (!is_dir($configdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
 		}

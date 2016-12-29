@@ -57,10 +57,12 @@ class apache extends HttpConfigBase
 
 	public function reload()
 	{
-		if ((int) Settings::Get('phpfpm.enabled') == 1) {
+		/* if ((int) Settings::Get('phpfpm.enabled') == 1) {
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: reloading php-fpm');
-			safe_exec(escapeshellcmd(Settings::Get('phpfpm.reload')));
-		}
+			foreach(preg_split("/((\r?\n)|(\r\n?))/", Settings::Get('phpfpm.reload')) as $command) {
+				safe_exec(escapeshellcmd($command));
+			}
+		} */
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: reloading apache');
 		safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
 	}

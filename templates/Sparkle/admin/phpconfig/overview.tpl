@@ -20,6 +20,7 @@ $header
 						<th>{$lng['admin']['phpsettings']['description']}</th>
 						<th>{$lng['admin']['phpsettings']['activedomains']}</th>
 						<th>{$lng['admin']['phpsettings']['binary']}</th>
+						<th>{$lng['admin']['phpsettings']['configdir']['title']}</th>
 						<th>{$lng['admin']['phpsettings']['file_extensions']}</th>
 						<th>{$lng['panel']['options']}</th>
 				</thead>
