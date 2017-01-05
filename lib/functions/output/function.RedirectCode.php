@@ -77,7 +77,7 @@ function getDomainRedirectCode($domainid = 0, $default = '') {
 		if (is_array($result)
 			&& isset($result['redirect'])
 		) {
-			$code = ($result['redirect'] == '---') ? '' : $result['redirect'];
+			$code = ($result['redirect'] == '---') ? $default : $result['redirect'];
 		}
 	}
 	return $code;
