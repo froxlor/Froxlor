@@ -23,14 +23,32 @@ if (! defined('AREA'))
 $del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE id = :id");
 $success_message = "";
 
-// do the delete and then just showa success-message and the certificates list again
+// do the delete and then just show a success-message and the certificates list again
 if ($action == 'delete') {
 	$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 	if ($id > 0) {
-		Database::pexecute($del_stmt, array(
-			'id' => $id
-		));
-		$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
+		if (AREA == 'customer') {
+			$chk_stmt = Database::prepare("
+				SELECT d.domain FROM `".TABLE_PANEL_DOMAINS."` d
+				LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s ON s.domainid = d.id
+				WHERE s.`id` = :id AND d.`customerid` = :cid
+			");
+			$chk = Database::pexecute_first($chk_stmt, array(
+				'id' => $id,
+				'cid' => $userinfo['customerid']
+			));
+			if ($chk !== false) {
+				Database::pexecute($del_stmt, array(
+					'id' => $id
+				));
+				$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
+			}
+		} else {
+			Database::pexecute($del_stmt, array(
+				'id' => $id
+			));
+			$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
+		}
 	}
 }
 
