@@ -3570,6 +3570,12 @@ if (isDatabaseVersion('201611180')) {
   showUpdateStep("Adding unique key to ipsandports table");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD UNIQUE KEY `ip_port` (`ip`,`port`)");
 	lastStepStatus(0);
-  
+
 	updateToDbVersion('201612110');
+}
+
+if (isFroxlorVersion('0.9.38.4')) {
+
+	showUpdateStep("Updating from 0.9.38.4 to 0.9.38.5", false);
+	updateToVersion('0.9.38.5');
 }

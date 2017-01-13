@@ -581,7 +581,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
-	('panel', 'version', '0.9.38.4'),
+	('panel', 'version', '0.9.38.5'),
 	('panel', 'db_version', '201612110');
 
 
