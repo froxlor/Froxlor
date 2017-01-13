@@ -27,9 +27,10 @@ $success_message = "";
 if ($action == 'delete') {
 	$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 	if ($id > 0) {
+		$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
 		if (AREA == 'customer') {
 			$chk_stmt = Database::prepare("
-				SELECT d.domain FROM `".TABLE_PANEL_DOMAINS."` d
+				SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` d
 				LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s ON s.domainid = d.id
 				WHERE s.`id` = :id AND d.`customerid` = :cid
 			");
@@ -37,13 +38,18 @@ if ($action == 'delete') {
 				'id' => $id,
 				'cid' => $userinfo['customerid']
 			));
-			if ($chk !== false) {
-				Database::pexecute($del_stmt, array(
-					'id' => $id
-				));
-				$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
-			}
-		} else {
+		} elseif (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
+			$chk_stmt = Database::prepare("
+				SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` d
+				LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s ON s.domainid = d.id
+				WHERE s.`id` = :id AND d.`adminid` = :aid
+			");
+			$chk = Database::pexecute_first($chk_stmt, array(
+				'id' => $id,
+				'aid' => $userinfo['adminid']
+			));
+		}
+		if ($chk !== false) {
 			Database::pexecute($del_stmt, array(
 				'id' => $id
 			));
@@ -90,7 +96,9 @@ $certificates = "";
 if (count($all_certs) == 0) {
 	$message = $lng['domains']['no_ssl_certificates'];
 	$sortcode = "";
-	$arrowcode = array('d.domain' => '');
+	$arrowcode = array(
+		'd.domain' => ''
+	);
 	$searchcode = "";
 	$pagingcode = "";
 	eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_error", true) . "\";");
@@ -145,13 +153,13 @@ if (count($all_certs) == 0) {
 				}
 
 				$san_list = "";
-				if (isset($cert_data['extensions']['subjectAltName']) && !empty($cert_data['extensions']['subjectAltName'])) {
+				if (isset($cert_data['extensions']['subjectAltName']) && ! empty($cert_data['extensions']['subjectAltName'])) {
 					$SANs = explode(",", $cert_data['extensions']['subjectAltName']);
 					$SANs = array_map('trim', $SANs);
 					foreach ($SANs as $san) {
 						$san = str_replace("DNS:", "", $san);
 						if ($san != $cert_data['subject']['CN'] && strpos($san, "othername:") === false) {
-							$san_list .= $san."<br>";
+							$san_list .= $san . "<br>";
 						}
 					}
 				}
