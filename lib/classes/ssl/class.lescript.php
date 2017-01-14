@@ -63,7 +63,7 @@ class lescript
 	{
 		// Let's see if we have the private accountkey
 		$this->accountKey = $certrow['leprivatekey'];
-		$this->customerId = $certrow['customerid'];
+		$this->customerId = (!$isFroxlorVhost ? $certrow['customerid'] : null);
 		$this->isFroxlorVhost = $isFroxlorVhost;
 		$this->isLeProduction = (Settings::Get('system.letsencryptca') == 'production');
 
