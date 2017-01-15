@@ -181,7 +181,7 @@ class FroxlorInstall
 			$this->_data['servername'] = '';
 		}
 
-		if (empty($this->_data['serverip'] || $this->_validate_ip($this->_data['serverip']) == false)) {
+		if (empty($this->_data['serverip']) || $this->_validate_ip($this->_data['serverip']) == false) {
 			return false;
 		}
 

@@ -16,7 +16,7 @@
  */
 
 // Main version variable
-$version = '0.9.38.5';
+$version = '0.9.38.6';
 
 // Database version (YYYYMMDDC where C is a daily counter)
 $dbversion = '201612110';
