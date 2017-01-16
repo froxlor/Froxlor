@@ -421,9 +421,11 @@ class apache extends HttpConfigBase
 						} else {
 
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol -ALL +TLSv1 +TLSv1.2' . "\n";
-							// this makes it more secure, thx to Marcel (08/2013)
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1' . "\n";
+							// this makes it more secure, thx to Marcel (08/2013), updated 12/2016
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCompression Off' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLSessionTickets Off' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLVerifyDepth 10' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
