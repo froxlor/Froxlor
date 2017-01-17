@@ -2065,3 +2065,8 @@ $lng['admin']['domain_hsts_preload']['description'] = 'If you would like this do
 
 $lng['serversettings']['nginx_http2_support']['title'] = 'Nginx HTTP2 Support';
 $lng['serversettings']['nginx_http2_support']['description'] = 'enable http2 support for ssl. ENABLE ONLY IF YOUR Nginx SUPPORT THIS FEATURE. (version 1.9.5+)';
+
+$lng['serversettings']['ssl']['use_stapling']['title'] = 'Use OCSP stapling';
+$lng['serversettings']['ssl']['use_stapling']['description'] = 'Accelerates the client check for revoked server certificates.';
+$lng['serversettings']['ssl']['stapling_cache']['title'] = 'OCSP stapling cache';
+$lng['serversettings']['ssl']['stapling_cache']['description'] = 'Local path for server-side cache.';

@@ -430,6 +430,14 @@ class apache extends HttpConfigBase
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLVerifyDepth 10' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
 
+							# OCSP Stapling
+							if ((int) Settings::Get('system.ssl_use_stapling') === 1) {
+								$this->virtualhosts_data[$vhosts_filename] .= ' SSLUseStapling on' . "\n";
+								$this->virtualhosts_data[$vhosts_filename] .= ' SSLStaplingResponderTimeout 5' . "\n";
+								$this->virtualhosts_data[$vhosts_filename] .= ' SSLStaplingReturnResponderErrors Off' . "\n";
+								$this->virtualhosts_data[$vhosts_filename] .= ' SSLStaplingCache shmcb:' . Settings::Get('system.ssl_stapling_cache')  . '(128000)' . "\n";
+							}
+
 							if ($domain['ssl_key_file'] != '') {
 								// check for existence, #1485
 								if (! file_exists($domain['ssl_key_file'])) {
