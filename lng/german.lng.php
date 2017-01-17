@@ -1713,3 +1713,8 @@ $lng['admin']['domain_hsts_incsub']['title'] = 'Inkludiere HSTS für jede Subdom
 $lng['admin']['domain_hsts_incsub']['description'] = 'Die optionale "includeSubDomains" Direktive, wenn vorhanden, signalisiert dem UA, dass die HSTS Regel für diese Domain und auch jede Subdomain dieser gilt.';
 $lng['admin']['domain_hsts_preload']['title'] = 'Füge Domain in die <a href="https://hstspreload.appspot.com/" target="_blank">HSTS preload Liste</a> hinzu';
 $lng['admin']['domain_hsts_preload']['description'] = 'Wenn die Domain in die HSTS preload Liste, verwaltet von Chrome (und genutzt von Firefox und Safari), hinzugefügt werden soll, dann aktiviere diese Einstellung.<br>Die preload-Direktive zu senden kann PERMANTENTE KONSEQUENZEN haben und dazu führen, dass Benutzer auf diese Domain und auch Subdomains nicht zugreifen können.<br>Beachte Details unter <a href="https://hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> bevor ein Header mit "preload" gesendet wird.';
+
+$lng['serversettings']['ssl']['use_stapling']['title'] = 'OCSP Stapling verwenden';
+$lng['serversettings']['ssl']['use_stapling']['description'] = 'Beschleunigt die Client-Prüfung auf zurückgezogene Zertifikate.';
+$lng['serversettings']['ssl']['stapling_cache']['title'] = 'OCSP Stapling Cache';
+$lng['serversettings']['ssl']['stapling_cache']['description'] = 'Lokaler Pfad für den serverseitigen Cache.';

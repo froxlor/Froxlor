@@ -153,6 +153,23 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField'
+				),
+				'system_ssl_use_stapling' => array(
+					'label' => $lng['serversettings']['ssl']['use_stapling'],
+					'settinggroup' => 'system',
+					'varname' => 'ssl_use_stapling',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField'
+				),
+				'system_ssl_stapling_cache' => array(
+					'label' => $lng['serversettings']['ssl']['stapling_cache'],
+					'settinggroup' => 'system',
+					'varname' => 'ssl_stapling_cache',
+					'type' => 'string',
+					'string_emptyallowed' => false,
+					'default' => '/var/run/ocsp',
+					'save_method' => 'storeSettingField'
 				)
 			)
 		)

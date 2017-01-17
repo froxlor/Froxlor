@@ -470,6 +470,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mod_fcgid_maxrequests', '250'),
 	('system', 'ssl_key_file','/etc/apache2/apache2.key'),
 	('system', 'ssl_ca_file', ''),
+	('system', 'ssl_use_stapling', '0'),
+	('system', 'ssl_stapling_cache', '/var/run/ocsp'),
 	('system', 'debug_cron', '0'),
 	('system', 'store_index_file_subs', '1'),
 	('system', 'stdsubdomain', ''),
