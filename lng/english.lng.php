@@ -2065,3 +2065,5 @@ $lng['admin']['domain_hsts_preload']['description'] = 'If you would like this do
 
 $lng['serversettings']['nginx_http2_support']['title'] = 'Nginx HTTP2 Support';
 $lng['serversettings']['nginx_http2_support']['description'] = 'enable http2 support for ssl. ENABLE ONLY IF YOUR Nginx SUPPORT THIS FEATURE. (version 1.9.5+)';
+
+$lng['error']['noipportgiven'] = 'No IP/port given';
