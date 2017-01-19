@@ -2,8 +2,8 @@ Index: froxlor/lib/version.inc.php
 ===================================================================
 --- froxlor.orig/lib/version.inc.php
 +++ froxlor/lib/version.inc.php
-@@ -22,4 +22,4 @@ $version = '0.9.38.4';
- $dbversion = '201611180';
+@@ -22,4 +22,4 @@ $version = '0.9.38.5';
+ $dbversion = '201612110';
  
  // Distribution branding-tag (used for Debian etc.)
 -$branding = '';
