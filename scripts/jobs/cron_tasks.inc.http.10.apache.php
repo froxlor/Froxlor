@@ -502,7 +502,9 @@ class apache extends HttpConfigBase
 
 		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 			// This vHost has PHP enabled and we are using the regular mod_php
-
+			$cmail = getCustomerDetail($domain['customerid'], 'email');
+			$php_options_text .= '  php_admin_value sendmail_path "/usr/sbin/sendmail -t -f '.$cmail.'"' . PHP_EOL;
+			
 			if ($domain['openbasedir'] == '1') {
 				if ($domain['openbasedir_path'] == '1' || strstr($domain['documentroot'], ":") !== false) {
 					$_phpappendopenbasedir = appendOpenBasedirPath($domain['customerroot'], true);
