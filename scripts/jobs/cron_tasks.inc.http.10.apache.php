@@ -597,6 +597,16 @@ class apache extends HttpConfigBase
 		if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
 			$webroot_text .= '  # Using docroot for deactivated users...' . "\n";
 			$webroot_text .= '  DocumentRoot "' . makeCorrectDir(Settings::Get('system.deactivateddocroot')) . "\"\n";
+			$webroot_text .= '  <Directory "' . makeCorrectDir(Settings::Get('system.deactivateddocroot')) . '">' . "\n";
+			// >=apache-2.4 enabled?
+			if (Settings::Get('system.apache24') == '1') {
+				$webroot_text .= '    Require all granted' . "\n";
+				$webroot_text .= '    AllowOverride All' . "\n";
+			} else {
+				$webroot_text .= '    Order allow,deny' . "\n";
+				$webroot_text .= '    allow from all' . "\n";
+			}
+			$webroot_text .= '  </Directory>' . "\n";
 			$this->_deactivated = true;
 		} else {
 			$webroot_text .= '  DocumentRoot "' . $domain['documentroot'] . "\"\n";
