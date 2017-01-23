@@ -910,7 +910,8 @@ if ($page == 'customers'
 							'customerid' => $customerid,
 							'adminid' => $userinfo['adminid'],
 							'docroot' => $documentroot,
-							'adddate' => date('Y-m-d')
+							'adddate' => date('Y-m-d'),
+							'phpenabled' => $phpenabled
 						);
 						$ins_stmt = Database::prepare("
 							INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
@@ -928,6 +929,7 @@ if ($page == 'customers'
 							`dkim_id` = '0',
 							`dkim_privkey` = '',
 							`dkim_pubkey` = '',
+							`phpenabled` = :phpenabled,
 							`add_date` = :adddate"
 						);
 						Database::pexecute($ins_stmt, $ins_data);
