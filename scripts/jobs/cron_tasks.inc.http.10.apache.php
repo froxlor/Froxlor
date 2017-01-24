@@ -810,6 +810,7 @@ class apache extends HttpConfigBase
 		$vhost_content .= '<VirtualHost ' . trim($ipportlist) . '>' . "\n";
 		$vhost_content .= $this->getServerNames($domain);
 
+		$domain['documentroot_norewrite'] = $domain['documentroot'];
 		if (($ssl_vhost == false && $domain['ssl'] == '1' && $domain['ssl_redirect'] == '1')) {
 			// We must not check if our port differs from port 443,
 			// but if there is a destination-port != 443
@@ -833,6 +834,7 @@ class apache extends HttpConfigBase
 			}
 
 			$domain['documentroot'] = 'https://%{HTTP_HOST}' . $_sslport . '/';
+			$domain['documentroot_norewrite'] = 'https://' . $domain['domain'] . $_sslport . '/';
 		}
 
 		if ($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
@@ -921,7 +923,7 @@ class apache extends HttpConfigBase
 			$vhost_content .= '    RewriteRule ^/(.*) ' . $corrected_docroot . '$1' . $modrew_red . "\n";
 			$vhost_content .= '  </IfModule>' . "\n";
 			$vhost_content .= '  <IfModule !mod_rewrite.c>' . "\n";
-			$vhost_content .= '    Redirect ' . $code . ' / ' . $corrected_docroot . "\n";
+			$vhost_content .= '    Redirect ' . $code . ' / ' . $domain['documentroot_norewrite'] . "\n";
 			$vhost_content .= '  </IfModule>' . "\n";
 		} else {
 
