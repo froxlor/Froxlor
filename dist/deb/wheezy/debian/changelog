@@ -1,3 +1,9 @@
+froxlor (0.9.38.7-1+wheezy1) oldstable; urgency=low
+
+  * new upstream release
+
+ -- Froxlor Release Team <release@froxlor.org>  Tue, 24 Jan 2017 12:48:46 +0100
+
 froxlor (0.9.38.6-1+wheezy1) oldstable; urgency=low
 
   * new upstream release
