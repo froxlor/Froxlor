@@ -57,12 +57,16 @@ if ($action == 'add_record' && ! empty($_POST)) {
 			$errors[] = $lng['error']['domain_nopunycode'];
 		} else {
 			$record = $idna_convert->encode($record);
+			/*
+			 * see https://redmine.froxlor.org/issues/1697
+			 *
 			if ($type != 'SRV' && $type != 'TXT') {
 				$check_dom = $record . '.example.com';
 				if (! validateDomain($check_dom)) {
 					$errors[] = sprintf($lng['error']['subdomainiswrong'], $idna_convert->decode($record));
 				}
 			}
+			*/
 			if (strlen($record) > 63) {
 				$errors[] = $lng['error']['dns_record_toolong'];
 			}
