@@ -57,6 +57,40 @@ class DbManager {
 	/**
 	 * creates a new database and a user with the
 	 * same name with all privileges granted on the db.
+	 * 
+	 * @param string $username
+	 * @param string $password
+	 *
+	 * @return string|bool $username if successful or false of username is equal to the password
+	 */
+	public function createDatabaseAndUser($username, $password) {
+		// don't use a password that is the same as the username
+		if ($username == $password) {
+			return false;
+		}
+
+		Database::needRoot(true);
+
+		// now create the database itself
+		$this->getManager()->createDatabase($username);
+		$this->_log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
+
+		// and give permission to the user on every access-host we have
+		foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
+			$this->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host);
+			$this->_log->logAction(USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
+		}
+
+		$this->getManager()->flushPrivileges();
+
+		Database::needRoot(false);
+
+		return $username;
+	}
+
+	/**
+	 * creates a new database and a user with the
+	 * same name with all privileges granted on the db.
 	 * DB-name and user-name are being generated and
 	 * the password for the user will be set
 	 *
@@ -89,17 +123,7 @@ class DbManager {
 			return false;
 		}
 
-		// now create the database itself
-		$this->getManager()->createDatabase($username);
-		$this->_log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
-
-		// and give permission to the user on every access-host we have
-		foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
-			$this->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host);
-			$this->_log->logAction(USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
-		}
-
-		$this->getManager()->flushPrivileges();
+		$username = $this->createDatabaseAndUser($username, $password);
 
 		Database::needRoot(false);
 
