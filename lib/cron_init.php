@@ -205,6 +205,7 @@ if (hasUpdates($version) || hasDbUpdates($dbversion)
 		fwrite($debugHandler, '*** WARNING *** - all new settings etc. will be stored with the default value, that might not always be right for your system!' . "\n");
 		fwrite($debugHandler, "*** WARNING *** - If you don't want this to happen in the future consider removing the --allow-autoupdate flag from the cronjob\n");
 		// including update procedures
+		define('_CRON_UPDATE', 1);
 		include_once FROXLOR_INSTALL_DIR.'/install/updatesql.php';
 		// pew - everything went better than expected
 		$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Automatic update done - you should check your settings to be sure everything is fine');
