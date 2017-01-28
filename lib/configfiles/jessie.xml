@@ -4469,9 +4469,9 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 				<!-- libnss-mysql -->
 				<daemon name="libnss" title="libnss-mysql (required for FCGID/php-fpm/mpm-itk)">
 					<install><![CDATA[apt-get install nscd
-wget http://debian.froxlor.org/pool/main/libn/libnss-mysql-bg/libnss-mysql-bg_1.5-3%2Bfrx1_amd64.deb
-dpkg -i libnss-mysql-bg_1.5-3%2Bfrx1_amd64.deb
-rm libnss-mysql-bg_1.5-3%2Bfrx1_amd64.deb
+wget http://debian.froxlor.org/pool/main/libn/libnss-mysql-bg/libnss-mysql-bg_1.5-3+frx1_amd64.deb
+dpkg -i libnss-mysql-bg_1.5-3+frx1_amd64.deb
+rm libnss-mysql-bg_1.5-3+frx1_amd64.deb
 ]]></install>
 					<file name="/etc/libnss-mysql.cfg" chown="root:root" chmod="0600"
 						backup="true">
