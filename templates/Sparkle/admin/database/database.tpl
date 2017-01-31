@@ -62,7 +62,7 @@ $header
 			<if ($userinfo['domains_used'] < $userinfo['domains'] || $userinfo['domains'] == '-1') && 15 < $count && 0 < $countcustomers >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['domain_add']}</a>
+				<a href="{$linker->getLink(array('section' => 'databases', 'page' => $page, 'action' => 'add'))}">{$lng['mysql']['database_create']}</a>
 			</div>
 			</if>
 
