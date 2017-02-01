@@ -73,10 +73,17 @@ class lighttpd extends HttpConfigBase
 			if (filter_var($row_ipsandports['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ip = '[' . $row_ipsandports['ip'] . ']';
 				$port = $row_ipsandports['port'];
-				$ipv6 = 'server.use-ipv6 = "enable"' . "\n";
 			} else {
 				$ip = $row_ipsandports['ip'];
 				$port = $row_ipsandports['port'];
+			}
+
+			$internalip = $row_ipsandports['internalip'] ? $row_ipsandports['internalip'] : $row_ipsandports['ip'];
+			$internalport = $row_ipsandports['internalport'] ? $row_ipsandports['internalport'] : $row_ipsandports['port'];
+			if (filter_var($internalip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$internalip = '[' . $internalip . ']';
+				$ipv6 = 'server.use-ipv6 = "enable"' . "\n";
+			} else {
 				$ipv6 = '';
 			}
 
@@ -87,11 +94,11 @@ class lighttpd extends HttpConfigBase
 				$this->lighttpd_data[$vhost_filename] = '';
 			}
 
-			$this->lighttpd_data[$vhost_filename] .= '$SERVER["socket"] == "' . $ip . ':' . $port . '" {' . "\n";
+			$this->lighttpd_data[$vhost_filename] .= '$SERVER["socket"] == "' . $internalip . ':' . $internalport . '" {' . "\n";
 
 			if ($row_ipsandports['listen_statement'] == '1') {
-				$this->lighttpd_data[$vhost_filename] .= 'server.port = ' . $port . "\n";
-				$this->lighttpd_data[$vhost_filename] .= 'server.bind = "' . $ip . '"' . "\n";
+				$this->lighttpd_data[$vhost_filename] .= 'server.port = ' . $internalport . "\n";
+				$this->lighttpd_data[$vhost_filename] .= 'server.bind = "' . $internalip . '"' . "\n";
 				$this->lighttpd_data[$vhost_filename] .= $ipv6;
 			}
 
@@ -485,6 +492,8 @@ class lighttpd extends HttpConfigBase
 
 					$domain['ip'] = $ipandport['ip'];
 					$domain['port'] = $ipandport['port'];
+					$domain['internalip'] = $ipandport['internalip'] ? $ipandport['internalip'] : $ipandport['ip'];
+					$domain['internalport'] = $ipandport['internalport'] ? $ipandport['internalport'] : $ipandport['port'];
 					$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
 					$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
 					$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];

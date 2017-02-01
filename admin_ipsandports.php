@@ -149,6 +149,8 @@ if ($page == 'ipsandports'
 
 			$ip = validate_ip($_POST['ip']);
 			$port = validate($_POST['port'], 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array('stringisempty', 'myport'));
+			$internalip = validate_ip($_POST['internalip']);
+			$internalport = validate($_POST['internalport'], 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array('stringisempty', 'myport'));
 			$listen_statement = isset($_POST['listen_statement']) ? 1 : 0;
 			$namevirtualhost_statement = isset($_POST['namevirtualhost_statement']) ? 1 : 0;
 			$vhostcontainer = isset($_POST['vhostcontainer']) ? 1 : 0;
@@ -225,8 +227,9 @@ if ($page == 'ipsandports'
 				$ins_stmt = Database::prepare("
 					INSERT INTO `" . TABLE_PANEL_IPSANDPORTS . "`
 					SET
-						`ip` = :ip, `port` = :port, `listen_statement` = :ls,
-						`namevirtualhost_statement` = :nvhs, `vhostcontainer` = :vhc,
+						`ip` = :ip, `port` = :port, `internalip` = :internalip, 
+						`internalport` = :internalport,	`listen_statement` = :ls, 
+						`namevirtualhost_statement` = :nvhs, `vhostcontainer` = :vhc, 
 						`vhostcontainer_servername_statement` = :vhcss,
 						`specialsettings` = :ss, `ssl` = :ssl,
 						`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
@@ -236,6 +239,8 @@ if ($page == 'ipsandports'
 				$ins_data = array(
 					'ip' => $ip,
 					'port' => $port,
+					'internalip' => $internalip,
+					'internalport' => $internalport,
 					'ls' => $listen_statement,
 					'nvhs' => $namevirtualhost_statement,
 					'vhc' => $vhostcontainer,
@@ -289,6 +294,8 @@ if ($page == 'ipsandports'
 
 				$ip = validate_ip($_POST['ip']);
 				$port = validate($_POST['port'], 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array('stringisempty', 'myport'));
+				$internalip = validate_ip($_POST['internalip']);
+				$internalport = validate($_POST['internalport'], 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array('stringisempty', 'myport'));
 				$listen_statement = isset($_POST['listen_statement']) ? 1 : 0;
 				$namevirtualhost_statement = isset($_POST['namevirtualhost_statement']) ? 1 : 0;
 				$vhostcontainer = isset($_POST['vhostcontainer']) ? 1 : 0;
@@ -384,7 +391,8 @@ if ($page == 'ipsandports'
 					$upd_stmt = Database::prepare("
 						UPDATE `" . TABLE_PANEL_IPSANDPORTS . "`
 						SET
-							`ip` = :ip, `port` = :port, `listen_statement` = :ls,
+							`ip` = :ip, `port` = :port, `internalip` = :internalip, 
+							`internalport` = :internalport,	`listen_statement` = :ls, 
 							`namevirtualhost_statement` = :nvhs, `vhostcontainer` = :vhc,
 							`vhostcontainer_servername_statement` = :vhcss,
 							`specialsettings` = :ss, `ssl` = :ssl,
@@ -396,6 +404,8 @@ if ($page == 'ipsandports'
 					$upd_data = array(
 						'ip' => $ip,
 						'port' => $port,
+						'internalip' => $internalip,
+						'internalport' => $internalport,
 						'ls' => $listen_statement,
 						'nvhs' => $namevirtualhost_statement,
 						'vhc' => $vhostcontainer,
