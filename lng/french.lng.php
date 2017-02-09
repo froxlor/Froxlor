@@ -569,18 +569,18 @@ $lng['serversettings']['webalizer_quiet']['description'] = 'Verbosité du progra
 
 $lng['ticket']['admin_email'] = 'root@localhost';
 $lng['ticket']['noreply_email'] = 'billets@froxlor';
-$lng['admin']['ticketsystem'] = 'Système de billets';
-$lng['menue']['ticket']['ticket'] = 'Billets de support';
+$lng['admin']['ticketsystem'] = 'Système de tickets';
+$lng['menue']['ticket']['ticket'] = 'Tickets support';
 $lng['menue']['ticket']['categories'] = 'Catégories de support';
-$lng['menue']['ticket']['archive'] = 'Archives de billets';
+$lng['menue']['ticket']['archive'] = 'Archives de tickets';
 $lng['ticket']['description'] = 'Entrez une description !';
-$lng['ticket']['ticket_new'] = 'Ouvrir un nouveau billet';
-$lng['ticket']['ticket_reply'] = 'Réponse au billet';
-$lng['ticket']['ticket_reopen'] = 'Réouvrir le billet';
+$lng['ticket']['ticket_new'] = 'Ouvrir un nouveau ticket';
+$lng['ticket']['ticket_reply'] = 'Réponse au ticket';
+$lng['ticket']['ticket_reopen'] = 'Réouvrir le ticket';
 $lng['ticket']['ticket_newcateory'] = 'Créer une nouvelle catégorie';
 $lng['ticket']['ticket_editcateory'] = 'Editer la catégorie';
-$lng['ticket']['ticket_view'] = 'Voir l\'historique du billet';
-$lng['ticket']['ticketcount'] = 'Billets';
+$lng['ticket']['ticket_view'] = 'Voir l\'historique du ticket';
+$lng['ticket']['ticketcount'] = 'Tickets';
 $lng['ticket']['ticket_answers'] = 'Réponses';
 // $lng['ticket']['lastchange'] = 'Dernière action';
 $lng['ticket']['lastchange'] = 'Dernier changement';
@@ -601,8 +601,8 @@ $lng['ticket']['answer'] = 'Répondre';
 $lng['ticket']['close'] = 'Fermer';
 $lng['ticket']['reopen'] = 'Réouvrir';
 $lng['ticket']['archive'] = 'Archive';
-$lng['ticket']['ticket_delete'] = 'Effacer le billet';
-$lng['ticket']['lastarchived'] = 'Billets récemment archivés';
+$lng['ticket']['ticket_delete'] = 'Effacer le ticket';
+$lng['ticket']['lastarchived'] = 'Tickets récemment archivés';
 $lng['ticket']['archivedtime'] = 'Archivé';
 $lng['ticket']['open'] = 'Ouvert';
 $lng['ticket']['wait_reply'] = 'Attente d\'une réponse';
@@ -610,43 +610,43 @@ $lng['ticket']['replied'] = 'Répondu';
 $lng['ticket']['closed'] = 'Fermé';
 $lng['ticket']['staff'] = 'L\'équipe';
 $lng['ticket']['customer'] = 'Client';
-$lng['ticket']['old_tickets'] = 'Messages du billet';
+$lng['ticket']['old_tickets'] = 'Messages du ticket';
 $lng['ticket']['search'] = 'Rechercher dans les archives';
 $lng['ticket']['nocustomer'] = 'Aucun choix';
 $lng['ticket']['archivesearch'] = 'Résultat de la recherche dans les archives';
-$lng['ticket']['noresults'] = 'Aucun billet trouvé';
-$lng['ticket']['notmorethanxopentickets'] = 'Pour éviter les abus, vous ne pouvez avoir plus de %s billets ouverts';
+$lng['ticket']['noresults'] = 'Aucun ticket trouvé';
+$lng['ticket']['notmorethanxopentickets'] = 'Pour éviter les abus, vous ne pouvez avoir plus de %s tickets ouverts';
 $lng['ticket']['supportstatus'] = 'Etat du support';
 $lng['ticket']['supportavailable'] = '<span class="ticket_low">Nos équipes de support sont disponibles et prètes à vous assister.</span>';
 $lng['ticket']['supportnotavailable'] = '<span class="ticket_high">Nos équipes de support ne sont actuellement pas disponibles.</span>';
-$lng['admin']['templates']['ticket'] = 'E-mail de notification pour les billets de support';
-$lng['admin']['templates']['SUBJECT'] = 'Sera remplacé par le sujet du billet de support.';
-$lng['admin']['templates']['new_ticket_for_customer'] = 'Informe le client que le billet a été envoyé';
-$lng['admin']['templates']['new_ticket_by_customer'] = 'Notifie l\'administrateur qu\'un nouveau billet a été ouvert par un client';
-$lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Notifie l\'administrateur d\'une réponse du client au billet';
-$lng['admin']['templates']['new_ticket_by_staff'] = 'Informe le client qu\'un billet a été ouvert par l\'équipe de support';
-$lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Informe le client d\'une réponse de l\'équipe de support au billet';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVotre demande de billet de support ayant comme sujet "{SUBJECT}" a été envoyé.\n\nVous receverez une notification lorsque votre billet aura une réponse.\n\nMerci,\nL\'équipe Froxlor.';
-$lng['mails']['new_ticket_for_customer']['subject'] = 'Votre billet de support a été envoyé';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Bonjour administrateur,\n\nUn nouveau billet de support ayant comme sujet "{SUBJECT}" a été ouvert.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nl\'équipe Froxlor.';
-$lng['mails']['new_ticket_by_customer']['subject'] = 'Nouveau billet de support soumis';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Bonjour administrateur,\n\nLe billet de support "{SUBJECT}" a reçu une réponse de la part du client.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\'équipe Froxlor.';
-$lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nouvelle réponse au billet de support';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nUn billet de support ayant comme sujet "{SUBJECT}" a été ouvert pour vous par notre équipe.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\'équipe Froxlor.';
+$lng['admin']['templates']['ticket'] = 'E-mail de notification pour les tickets de support';
+$lng['admin']['templates']['SUBJECT'] = 'Sera remplacé par le sujet du ticket de support.';
+$lng['admin']['templates']['new_ticket_for_customer'] = 'Informe le client que le ticket a été envoyé';
+$lng['admin']['templates']['new_ticket_by_customer'] = 'Notifie l\'administrateur qu\'un nouveau ticket a été ouvert par un client';
+$lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Notifie l\'administrateur d\'une réponse du client au ticket';
+$lng['admin']['templates']['new_ticket_by_staff'] = 'Informe le client qu\'un ticket a été ouvert par l\'équipe de support';
+$lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Informe le client d\'une réponse de l\'équipe de support au ticket';
+$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVotre demande de ticket de support ayant comme sujet "{SUBJECT}" a été envoyé.\n\nVous receverez une notification lorsque votre billet aura une réponse.\n\nMerci,\nL\'équipe Froxlor.';
+$lng['mails']['new_ticket_for_customer']['subject'] = 'Votre ticket de support a été envoyé';
+$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Bonjour administrateur,\n\nUn nouveau ticket de support ayant comme sujet "{SUBJECT}" a été ouvert.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nl\'équipe Froxlor.';
+$lng['mails']['new_ticket_by_customer']['subject'] = 'Nouveau ticket de support soumis';
+$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Bonjour administrateur,\n\nLe ticket de support "{SUBJECT}" a reçu une réponse de la part du client.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\'équipe Froxlor.';
+$lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nouvelle réponse au ticket de support';
+$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nUn ticket de support ayant comme sujet "{SUBJECT}" a été ouvert pour vous par notre équipe.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\'équipe Froxlor.';
 $lng['mails']['new_ticket_by_staff']['subject'] = 'Nouvelle demande de support soumise';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nLe billet de support ayant comme sujet "{SUBJECT}" a reçu une réponse par notre équipe.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\équipe Froxlor.';
-$lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Nouvelle réponse au billet de support';
-$lng['question']['ticket_reallyclose'] = 'Etes-vous sûr de vouloir clôturer le billet "%s" ?';
-$lng['question']['ticket_reallydelete'] = 'Etes-vous sûr de vouloir supprimer le billet "%s" ?';
+$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nLe ticket de support ayant comme sujet "{SUBJECT}" a reçu une réponse par notre équipe.\n\nVeuillez vous connecter pour consulter le billet.\n\nMerci,\nL\équipe Froxlor.';
+$lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Nouvelle réponse au ticket de support';
+$lng['question']['ticket_reallyclose'] = 'Etes-vous sûr de vouloir clôturer le ticket "%s" ?';
+$lng['question']['ticket_reallydelete'] = 'Etes-vous sûr de vouloir supprimer le ticket "%s" ?';
 $lng['question']['ticket_reallydeletecat'] = 'Etes-vous sûr de vouloir supprimer la catégorie "%s" ?';
-$lng['question']['ticket_reallyarchive'] = 'Etes-vous sûr de vouloir archiver le billet "%s" ?';
-$lng['error']['nomoreticketsavailable'] = 'Vous n\'avez plus de billets de disponibles. Veuillez contacter votre administrateur.';
-$lng['error']['nocustomerforticket'] = 'Ne peut créer de billet sans client';
-$lng['error']['categoryhastickets'] = 'La catégorie possède des billets.<br />Veuillez d\'abord supprimer tous les billets de cette catégorie.';
-$lng['admin']['ticketsettings'] = 'Paramètres des billets de support';
-$lng['admin']['archivelastrun'] = 'Derniers billets archivés';
+$lng['question']['ticket_reallyarchive'] = 'Etes-vous sûr de vouloir archiver le ticket "%s" ?';
+$lng['error']['nomoreticketsavailable'] = 'Vous n\'avez plus de tickets de disponibles. Veuillez contacter votre administrateur.';
+$lng['error']['nocustomerforticket'] = 'Impossible de créer un ticket sans clients dans la base';
+$lng['error']['categoryhastickets'] = 'La catégorie possède des tickets.<br />Veuillez d\'abord supprimer tous les tickets de cette catégorie.';
+$lng['admin']['ticketsettings'] = 'Paramètres des tickets de support';
+$lng['admin']['archivelastrun'] = 'Derniers tickets archivés';
 $lng['serversettings']['ticket']['noreply_email']['title'] = 'Adresse e-mail de non réponse';
-$lng['serversettings']['ticket']['noreply_email']['description'] = 'L\'adresse e-mail de l\'expéditeur de notification pour les billets de support, quelque chose du type no-reply@domaine.com';
+$lng['serversettings']['ticket']['noreply_email']['description'] = 'L\'adresse e-mail de l\'expéditeur de notification pour les tickets de support, quelque chose du type no-reply@domaine.com';
 $lng['serversettings']['ticket']['worktime_begin']['title'] = 'Début du support (hh:mm)';
 $lng['serversettings']['ticket']['worktime_begin']['description'] = 'Horaire de début du support';
 $lng['serversettings']['ticket']['worktime_end']['title'] = 'Fin du support (hh:mm)';
@@ -655,21 +655,21 @@ $lng['serversettings']['ticket']['worktime_sat'] = 'Support disponible le samedi
 $lng['serversettings']['ticket']['worktime_sun'] = 'Support disponible le dimanche ?';
 $lng['serversettings']['ticket']['worktime_all']['title'] = 'Aucune limite horaire pour le support';
 $lng['serversettings']['ticket']['worktime_all']['description'] = 'Si "Oui", les options pour le début et la fin du support seront écrasés.';
-$lng['serversettings']['ticket']['archiving_days'] = 'Après combien de jours un billet fermé sera automatiquement archivé ?';
-$lng['customer']['tickets'] = 'Billet de support';
+$lng['serversettings']['ticket']['archiving_days'] = 'Après combien de jours un ticket fermé sera automatiquement archivé ?';
+$lng['customer']['tickets'] = 'Ticket de support';
 
 // ADDED IN 1.2.18-svn4
 
 $lng['admin']['domain_nocustomeraddingavailable'] = 'Il n\'est acutellement pas possible d\'ajouter de domaines. Vous devez d\'abord ajouter un client.';
-$lng['serversettings']['ticket']['enable'] = 'Activer le système de billets';
-$lng['serversettings']['ticket']['concurrentlyopen'] = 'Combien  de billets peuvent être ouverts au même moment ?';
+$lng['serversettings']['ticket']['enable'] = 'Activer le système de tickets';
+$lng['serversettings']['ticket']['concurrentlyopen'] = 'Combien  de tickets peuvent être ouverts au même moment ?';
 $lng['error']['norepymailiswrong'] = 'L\'adresse de "non réponse" n\'est pas bonne. Une adresse e-mail valide doit être entrée.';
-$lng['error']['tadminmailiswrong'] = 'L\'adresse de "l\'administrateur de billets" n\'est pas bonne. Une adresse e-mail valide doit être entrée.';
-$lng['ticket']['awaitingticketreply'] = 'Vous avez %s billet(s) de support non répondu(s).';
+$lng['error']['tadminmailiswrong'] = 'L\'adresse de "l\'administrateur de tickets" n\'est pas bonne. Une adresse e-mail valide doit être entrée.';
+$lng['ticket']['awaitingticketreply'] = 'Vous avez %s ticket(s) de support non répondu(s).';
 
 // ADDED IN 1.2.18-svn5
 
-$lng['serversettings']['ticket']['noreply_name'] = 'Nom de l\'expéditeur e-mail des billets';
+$lng['serversettings']['ticket']['noreply_name'] = 'Nom de l\'expéditeur e-mail des tickets';
 
 // ADDED IN 1.2.19-svn1
 
@@ -679,8 +679,8 @@ $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Dossier temporaire pou
 
 // ADDED IN 1.2.19-svn3
 
-$lng['serversettings']['ticket']['reset_cycle']['title'] = 'Intervalle de réinitialisation des billets utilisés';
-$lng['serversettings']['ticket']['reset_cycle']['description'] = 'Remettre le compteur de billets à 0 dans le temps imparti';
+$lng['serversettings']['ticket']['reset_cycle']['title'] = 'Intervalle de réinitialisation des tickets utilisés';
+$lng['serversettings']['ticket']['reset_cycle']['description'] = 'Remettre le compteur de tickets à 0 dans le temps imparti';
 $lng['admin']['tickets']['daily'] = 'Journalière';
 $lng['admin']['tickets']['weekly'] = 'Hebdomadaire';
 $lng['admin']['tickets']['monthly'] = 'Mensuelle';
