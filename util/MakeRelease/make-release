@@ -7,16 +7,16 @@ WORKDIR="./"
 
 if [ -z $1 ]; then
     echo You need to specify the version to be released:
-    echo make-release 1.2.3[-rc4|-dev4|.4]
+    echo "make-release 1.2.3[-rc4|-dev4|.4]"
     exit
 fi
 
 echo == Releasing version $1 ==
 
 if [ -e $WORKDIR/$1 ]; then
-        echo "-- removing old directory --"
-        rm -rf $WORKDIR/$1
-        echo "done"
+	echo "-- removing old directory --"
+	rm -rf $WORKDIR/$1
+	echo "done"
 fi
 echo -n "-- making dir --"
 mkdir -p $WORKDIR/$1
@@ -32,7 +32,7 @@ echo "done"
 
 echo "-- tagging $1 in git --"
 # -s -> sign with private key
-# when signing (-s) we need to export GPG_TTY
+# when signing -s we need to export GPG_TTY
 export GPG_TTY=`tty`
 # -a -> no sign (annotated)
 git tag -s $1 -m "tagging release $1"
@@ -46,6 +46,7 @@ echo "done"
 echo "-- pushing tag to github --"
 git push --tags
 echo "done"
+
 echo -- setting general permissions --
 find -exec chmod ugo+r,u+w,go-w {} \;
 
@@ -55,14 +56,10 @@ find -type f -exec chmod ugo-x {} \;
 echo -- setting general directory permissions --
 find -type d -exec chmod ugo+x {} \;
 
-echo -- setting +w on special directories --
-chmod ug+w ./temp ./packages
-
-echo -- setting special permissions for HTMLPurifier --
-chmod -R 0755 ./lib/classes/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer
-
-echo -- creating archive using git archive command --
+echo -- creating archives using git archive command --
 git archive --format=tar.gz --prefix=froxlor/ $1 > ../froxlor-$1.tar.gz
+# zip for autoupdate
+git archive --format=zip --prefix= $1 > ../froxlor-$1.zip
 
 echo "-- cding up --"
 cd ..
@@ -70,6 +67,7 @@ cd ..
 echo -n "-- generating checksums --"
 md5sum froxlor-$1.tar.gz > froxlor-$1.tar.gz.md5
 sha1sum froxlor-$1.tar.gz > froxlor-$1.tar.gz.sha1
+sha256sum froxlor-$1.zip > froxlor-$1.zip.sha256
 echo "-- done --"
 
 echo -n "-- removing unused WORKDIR --"
