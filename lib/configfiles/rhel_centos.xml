@@ -2089,7 +2089,7 @@ LoadModule mod_ctrls_admin.c
 # (http://www.castaglia.org/proftpd/modules/mod_vroot.html)
 # Using this module rather than the kernel's chroot() system call works
 # around issues with PAM and chroot (http://bugzilla.redhat.com/506735)
-LoadModule mod_vroot.c
+# LoadModule mod_vroot.c
 #
 # Provide a flexible way of specifying that certain configuration directives
 # only apply to certain sessions, based on credentials such as connection
