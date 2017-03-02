@@ -33,9 +33,7 @@ class phpfpm_restart
 	
 	public function __construct($logger) {
 		$this->logger = $logger;
-	}
-	
-	public function captureCurrentConfigs() {
+		
 		$result_runscripts_stmt = Database::query("
 			SELECT `runscript` FROM `" . TABLE_PANEL_PHPCONFIGS . "` phpconfig
 			WHERE EXISTS(SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` as domain WHERE domain.phpsettingid = phpconfig.id)

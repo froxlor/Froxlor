@@ -55,11 +55,6 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 		// get class for phpfpm-restart
 		$phpfpm_restart = new phpfpm_restart($cronlog);
 
-		// if phpfpm is enabled, capture current php-configs
-		if (Settings::Get('phpfpm.enabled') == 1) {
-			$phpfpm_restart->captureCurrentConfigs();
-		}
-
 		// get configuration-I/O object
 		$configio = new ConfigIO();
 		// clean up old configs
@@ -95,9 +90,6 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$webserver->reload();
 
 			if (Settings::Get('phpfpm.enabled') == 1) {
-				// capture current php-configs again
-				$phpfpm_restart->captureCurrentConfigs();
-
 				// run all required restart-scripts
 				$phpfpm_restart->restart();
 			}
