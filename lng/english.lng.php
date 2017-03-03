@@ -2066,5 +2066,5 @@ $lng['serversettings']['nginx_http2_support']['title'] = 'Nginx HTTP2 Support';
 $lng['serversettings']['nginx_http2_support']['description'] = 'enable http2 support for ssl. ENABLE ONLY IF YOUR Nginx SUPPORT THIS FEATURE. (version 1.9.5+)';
 $lng['admin']['phpsettings']['configdir']['title'] = 'Configuration directory';
 $lng['admin']['phpsettings']['configdir']['description'] = 'Directory which contains the php-fpm configurations. If empty the default directory will be selected';
-$lng['admin']['phpsettings']['runscript']['title'] = 'FPM run-script-path';
-$lng['admin']['phpsettings']['runscript']['description'] = '<strong>Without reload, restart, stop or start</strong>, just the path.<br/> Script which will be used to restart the FPM. If empty, the default command will be executed';
+$lng['admin']['phpsettings']['runscript']['title'] = 'FPM init-script';
+$lng['admin']['phpsettings']['runscript']['description'] = 'Specify the init-script without parameters, e.g. <strong>"/etc/init.d/php7-fpm"</strong>';
