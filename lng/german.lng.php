@@ -1715,5 +1715,5 @@ $lng['admin']['domain_hsts_preload']['title'] = 'Füge Domain in die <a href="ht
 $lng['admin']['domain_hsts_preload']['description'] = 'Wenn die Domain in die HSTS preload Liste, verwaltet von Chrome (und genutzt von Firefox und Safari), hinzugefügt werden soll, dann aktiviere diese Einstellung.<br>Die preload-Direktive zu senden kann PERMANTENTE KONSEQUENZEN haben und dazu führen, dass Benutzer auf diese Domain und auch Subdomains nicht zugreifen können.<br>Beachte Details unter <a href="hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> bevor ein Header mit "preload" gesendet wird.';
 $lng['admin']['phpsettings']['configdir']['title'] = 'Einstellungs-Pfad';
 $lng['admin']['phpsettings']['configdir']['description'] = 'Pfad welcher die php-fpm-Konfigurationen beinhaltet. Wenn leer wird der Standard-Pfad verwendet';
-$lng['admin']['phpsettings']['runscript']['title'] = 'FPM Run-Script-Pfad';
-$lng['admin']['phpsettings']['runscript']['description'] = '<strong>Ohne reload, restart, stop oder start</strong>, nur der Pfad.<br/> Script welches zum Neustarten vom FPM-Server benutzt wird. Wenn leer wird der Standard-Befehl ausgeführt.';
+$lng['admin']['phpsettings']['runscript']['title'] = 'FPM Init-Script';
+$lng['admin']['phpsettings']['runscript']['description'] = 'Init-Script ohne Parameter angeben, z.B. <strong>"/etc/init.d/php7-fpm"</strong>';
