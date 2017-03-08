@@ -30,11 +30,12 @@ if ($page == 'log'
 			'user' => $lng['logger']['user'],
 			'text' => $lng['logger']['action']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc');
-		$result_stmt = Database::query('
-			SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy() . ' ' . $paging->getSqlLimit()
-		);
-		$logs_count = Database::num_rows();
+		$paging = new paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
+		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy();
+		$result_stmt = Database::query($query . ' ' . $paging->getSqlLimit());
+		$result_cnt_stmt = Database::query($query);
+		$res_cnt = $result_cnt_stmt->fetch(PDO::FETCH_ASSOC);
+		$logs_count = $res_cnt['resultrows'];
 		$paging->setEntries($logs_count);
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
@@ -67,7 +68,7 @@ if ($page == 'log'
 		foreach ($clog as $action => $logrows) {
 			$_action = 0;
 			foreach ($logrows as $row) {
-				if ($paging->checkDisplay($i)) {
+				// if ($paging->checkDisplay($i)) {
 					$row = htmlentities_array($row);
 					$row['date'] = date("d.m.y H:i:s", $row['date']);
 
@@ -105,7 +106,7 @@ if ($page == 'log'
 					eval("\$log.=\"" . getTemplate('logger/logger_log') . "\";");
 					$count++;
 					$_action = $action;
-				}
+				// }
 				$i++;
 			}
 			$i++;

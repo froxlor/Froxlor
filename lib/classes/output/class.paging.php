@@ -88,6 +88,8 @@ class paging {
 	 * @var bool
 	 */
 	private $natSorting = false;
+	
+	private $_limit = 0;
 
 	/**
 	 * Class constructor. Loads settings from request or from userdata and saves them to session.
@@ -101,7 +103,7 @@ class paging {
 	 * @param string $default_order default sorting order 'asc' or 'desc'
 	 *
 	 */
-	public function __construct($userinfo, $table, $fields, $entriesperpage = 0, $natSorting = false, $default_field = 0, $default_order = 'asc') {
+	public function __construct($userinfo, $table, $fields, $entriesperpage = 0, $natSorting = false, $default_field = 0, $default_order = 'asc', $limit = 0) {
 
 		// entries per page and natsorting-flag are not
 		// passed as parameter anymore, because these are
@@ -230,6 +232,8 @@ class paging {
 			'adminsession' => $userinfo['adminsession']
 		);
 		Database::pexecute($upd_stmt, $upd_data);
+		
+		$this->_limit = $limit;
 	}
 
 	/**
@@ -378,6 +382,11 @@ class paging {
 	 * @return string always empty
 	 */
 	public function getSqlLimit() {
+
+		if ($this->_limit > 0) {
+			$_offset = ($this->pageno - 1) * $this->_limit;
+			return ' LIMIT '.$_offset.','.$this->_limit;
+		}
 		/**
 		 * currently not in use
 		 */

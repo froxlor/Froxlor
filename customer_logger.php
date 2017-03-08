@@ -16,17 +16,15 @@
  * @package    Panel
  *
  */
-
 define('AREA', 'customer');
 require './lib/init.php';
 
 // redirect if this customer page is hidden via settings
-if (Settings::IsInList('panel.customer_hide_options','extras.logger')) {
+if (Settings::IsInList('panel.customer_hide_options', 'extras.logger')) {
 	redirectTo('customer_index.php');
 }
 
-if ($page == 'log'
-) {
+if ($page == 'log') {
 	if ($action == '') {
 		$fields = array(
 			'date' => $lng['logger']['date'],
@@ -34,89 +32,86 @@ if ($page == 'log'
 			'user' => $lng['logger']['user'],
 			'text' => $lng['logger']['action']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc');
-		$result_stmt = Database::prepare('
-			SELECT * FROM `' . TABLE_PANEL_LOG . '` WHERE `user` = :loginname ' . $paging->getSqlWhere(true) . ' ' . $paging->getSqlOrderBy() . ' ' . $paging->getSqlLimit()
-		);
-		Database::pexecute($result_stmt, array("loginname" => $userinfo['loginname']));
-		$logs_count = Database::num_rows();
+		$paging = new paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
+		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` WHERE `user` = :loginname ' . $paging->getSqlWhere(true) . ' ' . $paging->getSqlOrderBy();
+		$result_stmt = Database::prepare($query . ' ' . $paging->getSqlLimit());
+		Database::pexecute($result_stmt, array(
+			"loginname" => $userinfo['loginname']
+		));
+		$result_cnt_stmt = Database::query($query);
+		$res_cnt = $result_cnt_stmt->fetch(PDO::FETCH_ASSOC);
+		$logs_count = $res_cnt['resultrows'];
 		$paging->setEntries($logs_count);
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$clog = array();
-
+		
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-
-			if (!isset($clog[$row['action']])
-				|| !is_array($clog[$row['action']])
-			) {
+			
+			if (! isset($clog[$row['action']]) || ! is_array($clog[$row['action']])) {
 				$clog[$row['action']] = array();
 			}
 			$clog[$row['action']][$row['logid']] = $row;
 		}
-
-		if ($paging->sortfield == 'date'
-			&& $paging->sortorder == 'desc'
-		) {
+		
+		if ($paging->sortfield == 'date' && $paging->sortorder == 'desc') {
 			krsort($clog);
 		} else {
 			ksort($clog);
 		}
-
+		
 		$i = 0;
 		$count = 0;
 		$log_count = 0;
 		$log = '';
 		foreach ($clog as $action => $logrows) {
-			$_action = 0;
 			foreach ($logrows as $row) {
-				if ($paging->checkDisplay($i)) {
-					$row = htmlentities_array($row);
-					$row['date'] = date("d.m.y H:i:s", $row['date']);
-
-					if ($_action != $action) {
-						switch ($action) {
-							case USR_ACTION:
-								$_action = $lng['admin']['customer'];
-								break;
-							case RES_ACTION:
-								$_action = $lng['logger']['reseller'];
-								break;
-							case ADM_ACTION:
-								$_action = $lng['logger']['admin'];
-								break;
-							case CRON_ACTION:
-								$_action = $lng['logger']['cron'];
-								break;
-							case LOGIN_ACTION:
-								$_action = $lng['logger']['login'];
-								break;
-							case LOG_ERROR:
-								$_action = $lng['logger']['intern'];
-								break;
-							default:
-								$_action = $lng['logger']['unknown'];
-								break;
-						}
-
-						$row['action'] = $_action;
-						eval("\$log.=\"" . getTemplate('logger/logger_action') . "\";");
+				// if ($paging->checkDisplay($i)) {
+				$row = htmlentities_array($row);
+				$row['date'] = date("d.m.y H:i:s", $row['date']);
+				
+				if ($_action != $action) {
+					switch ($action) {
+						case USR_ACTION:
+							$_action = $lng['admin']['customer'];
+							break;
+						case RES_ACTION:
+							$_action = $lng['logger']['reseller'];
+							break;
+						case ADM_ACTION:
+							$_action = $lng['logger']['admin'];
+							break;
+						case CRON_ACTION:
+							$_action = $lng['logger']['cron'];
+							break;
+						case LOGIN_ACTION:
+							$_action = $lng['logger']['login'];
+							break;
+						case LOG_ERROR:
+							$_action = $lng['logger']['intern'];
+							break;
+						default:
+							$_action = $lng['logger']['unknown'];
+							break;
 					}
-
-					$log_count++;
-					$row['type'] = getLogLevelDesc($row['type']);
-					eval("\$log.=\"" . getTemplate('logger/logger_log') . "\";");
-					$count++;
-					$_action = $action;
+					
+					$row['action'] = $_action;
+					eval("\$log.=\"" . getTemplate('logger/logger_action') . "\";");
 				}
-				$i++;
+				
+				$log_count ++;
+				$row['type'] = getLogLevelDesc($row['type']);
+				eval("\$log.=\"" . getTemplate('logger/logger_log') . "\";");
+				$count ++;
+				$_action = $action;
+				// }
+				$i ++;
 			}
-			$i++;
+			$i ++;
 		}
-
+		
 		eval("echo \"" . getTemplate('logger/logger') . "\";");
-
 	}
 }
