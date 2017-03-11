@@ -1972,7 +1972,7 @@ $lng['error']['autoupdate_9'] = 'The downloaded file did not pass the integrity 
 
 $lng['admin']['server_php'] = 'PHP';
 $lng['domains']['termination_date'] = 'Date of termination';
-$lng['domains']['termination_date_overview'] = 'canceled until ';
+$lng['domains']['termination_date_overview'] = 'terminated as of ';
 $lng['panel']['set'] = 'Apply';
 $lng['customer']['selectserveralias_addinfo'] = 'This option can be set when editing the domain. Its initial value is inherited from the parent-domain.';
 $lng['error']['mailaccistobedeleted'] = "Another account with the same name (%s) is currently being deleted and can therefore not be added at this moment.";
