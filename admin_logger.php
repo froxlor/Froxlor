@@ -34,8 +34,7 @@ if ($page == 'log'
 		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy();
 		$result_stmt = Database::query($query . ' ' . $paging->getSqlLimit());
 		$result_cnt_stmt = Database::query($query);
-		$res_cnt = $result_cnt_stmt->fetch(PDO::FETCH_ASSOC);
-		$logs_count = $res_cnt['resultrows'];
+		$logs_count = $result_cnt_stmt->rowCount();
 		$paging->setEntries($logs_count);
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);

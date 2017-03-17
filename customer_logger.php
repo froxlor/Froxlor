@@ -38,9 +38,11 @@ if ($page == 'log') {
 		Database::pexecute($result_stmt, array(
 			"loginname" => $userinfo['loginname']
 		));
-		$result_cnt_stmt = Database::query($query);
+		$result_cnt_stmt = Database::query($query, array(
+			"loginname" => $userinfo['loginname']
+		));
 		$res_cnt = $result_cnt_stmt->fetch(PDO::FETCH_ASSOC);
-		$logs_count = $res_cnt['resultrows'];
+		$logs_count = $result_cnt_stmt->rowCount();
 		$paging->setEntries($logs_count);
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
