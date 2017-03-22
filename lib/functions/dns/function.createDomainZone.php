@@ -123,6 +123,12 @@ function createDomainZone($domain_id, $froxlorhostname = false, $isMainButSubTo 
 	foreach ($dom_entries as $entry) {
 		if (array_key_exists($entry['type'], $required_entries) && array_key_exists(md5($entry['record']), $required_entries[$entry['type']])) {
 			unset($required_entries[$entry['type']][md5($entry['record'])]);
+    			// unset required AAAA entry if there is custom A entry with same name and vice versa
+			if ($entry['type'] == 'A' && array_key_exists(md5($entry['record']), $required_entries['AAAA'])) {
+			    unset($required_entries['AAAA'][md5($entry['record'])]);
+			} elseif ($entry['type'] == 'AAAA' && array_key_exists(md5($entry['record']), $required_entries['A'])) {
+			    unset($required_entries['A'][md5($entry['record'])]);
+			}
 		}
 		if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && strtolower(substr($entry['content'], 0, 7)) == '"v=spf1') {
 			// unset special spf required-entry
