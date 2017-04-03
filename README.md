@@ -17,7 +17,7 @@ Developed by experienced server administrators, this panel simplifies the effort
 9. Have fun!
 
 ### Detailed installation
-https://github.com/Froxlor/Froxlor/wiki
+https://github.com/Froxlor/Froxlor/wiki/Install-froxlor-from-tarball
 
 ## Help
 
