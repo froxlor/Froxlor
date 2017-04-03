@@ -17,7 +17,7 @@ Developed by experienced server administrators, this panel simplifies the effort
 9. Have fun!
 
 ### Detailed installation
-http://redmine.froxlor.org/projects/froxlor/wiki/Installationtarball
+https://github.com/Froxlor/Froxlor/wiki
 
 ## Help
 
@@ -35,7 +35,7 @@ The community is located on http://forum.froxlor.org
 ### Wiki
 
 More documentation may be found in the froxlor - wiki:
-http://redmine.froxlor.org/projects/froxlor/wiki
+https://github.com/Froxlor/Froxlor/wiki
 
 ## License
 
@@ -48,14 +48,14 @@ http://files.froxlor.org/releases/froxlor-latest.tar.gz [MD5](http://files.froxl
 
 ### Debian repository
 
-[HowTo](http://redmine.froxlor.org/projects/froxlor/wiki/Installationdebian)
+[HowTo](https://github.com/Froxlor/Froxlor/wiki/Install-froxlor-on-debian)
 
 /etc/apt/sources.list.d/froxlor.list
 > deb http://debian.froxlor.org {wheezy|jessie} main
 
 ### Gentoo repository
 
-[HowTo](http://redmine.froxlor.org/projects/froxlor/wiki/Installationgentoo)
+[HowTo](https://github.com/Froxlor/Froxlor/wiki/Install-froxlor-on-gentoo)
 
 http://files.froxlor.org/gentoo/repositories.xml
 
