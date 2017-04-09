@@ -529,7 +529,7 @@ $lng['panel']['back'] = 'Zurück';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_fcgid']['title'] = 'PHP über mod_fcgid/suexec einbinden';
-$lng['serversettings']['mod_fcgid']['description'] = 'PHP wird unter dem Benutzer des Kunden ausgeführt.<br /><br /><b>Dies benötigt eine spezielle Webserver-Konfiguration für Apache, siehe <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_fcgid">FCGID-Handbuch</a>.</b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'PHP wird unter dem Benutzer des Kunden ausgeführt.<br /><br /><b>Dies benötigt eine spezielle Webserver-Konfiguration für Apache, siehe <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-fcgid">FCGID-Handbuch</a>.</b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Alternative E-Mail-Adresse benutzen';
 $lng['serversettings']['sendalternativemail']['description'] = 'Während des Erstellens eines Accounts das Passwort an eine andere E-Mail-Adresse senden';
 $lng['emails']['alternative_emailaddress'] = 'Alternative E-Mail-Adresse';
@@ -1075,7 +1075,7 @@ $lng['dkim']['dkim_notes']['description'] = 'Eine Notiz, welche für Menschen in
 $lng['dkim']['dkim_add_adsp']['title'] = 'DKIM-ADSP Eintrag hinzufügen';
 $lng['dkim']['dkim_add_adsp']['description'] = 'Wenn unsicher oder unbekannt, belassen sie es auf "aktiviert"';
 $lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP-Richtlinie';
-$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Mehr Informationen zu dieser Einstellung (englisch) <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-dkim-adsp-policies">DKIM-ADSP-Policies</a>';
+$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Mehr Informationen zu dieser Einstellung (englisch) <a target="blank" href="https://en.wikipedia.org/wiki/Author_Domain_Signing_Practices">DKIM-ADSP-Policies</a>';
 
 $lng['admin']['cron']['cronsettings'] = 'Cronjob-Einstellungen';
 $lng['cron']['cronname'] = 'Cronjob-Name';
@@ -1271,7 +1271,7 @@ $lng['error']['intvaluetoolow'] = 'Die angegebene Zahl ist zu klein (Feld "%s")'
 $lng['error']['intvaluetoohigh'] = 'Die angegebene Zahl ist zu groß (Feld "%s")';
 $lng['admin']['phpfpm_settings'] = 'PHP-FPM';
 $lng['serversettings']['phpfpm']['title'] = 'Aktiviere PHP-FPM';
-$lng['serversettings']['phpfpm']['description'] = '<b>Dies benötigt eine spezielle Webserver-Konfiguration, siehe FPM-Handbuch für <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_phpfpm">Apache2</a> oder <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookNginx_phpfpm">nginx</a></b>';
+$lng['serversettings']['phpfpm']['description'] = '<b>Dies benötigt eine spezielle Webserver-Konfiguration, siehe FPM-Handbuch für <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-php-fpm">Apache2</a> oder <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/nginx-with-php-fpm">nginx</a></b>';
 $lng['serversettings']['phpfpm_settings']['configdir'] = 'Pfad zu php-fpm-Konfigurationen';
 $lng['serversettings']['phpfpm_settings']['aliasconfigdir'] = 'Alias-Ordner der php-fpm Konfiguration';
 $lng['serversettings']['phpfpm_settings']['reload'] = 'Kommando zum Neustarten von php-fpm';
@@ -1565,7 +1565,7 @@ $lng['domains']['import_file'] = 'CSV-Datei';
 $lng['success']['domain_import_successfully'] = 'Erfolgreich %s Domains importiert.';
 $lng['error']['domain_import_error'] = 'Der folgende Fehler trat beim Importieren der Domains auf: %s';
 $lng['admin']['note'] = 'Hinweis';
-$lng['domains']['import_description'] = 'Detaillierte Informationen über den Aufbau der Importdatei und einen erfolgreichen Import gibt es hier: <a href="http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc" target="_blank">http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc</a> (englisch)';
+$lng['domains']['import_description'] = 'Detaillierte Informationen über den Aufbau der Importdatei und einen erfolgreichen Import gibt es hier: <a href="https://github.com/Froxlor/Froxlor/wiki/Domain-import-documenation" target="_blank">https://github.com/Froxlor/Froxlor/wiki/Domain-import-documenation</a> (englisch)';
 $lng['usersettings']['custom_notes']['title'] = 'Eigene Notizen';
 $lng['usersettings']['custom_notes']['description'] = 'Hier können Notizen je nach Lust und Laune eingetragen werden. Diese werden in der Administrator/Kunden-Übersicht bei dem jeweiligen Benutzer angezeigt.';
 $lng['usersettings']['custom_notes']['show'] = 'Zeige die Notizen auf dem Dashboard des Benutzers';

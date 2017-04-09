@@ -1031,7 +1031,7 @@ $lng['dkim']['dkim_notes']['description'] = 'Notities die van belang kunnen zijn
 $lng['dkim']['dkim_add_adsp']['title'] = 'DKIM ADSP toevoegen';
 $lng['dkim']['dkim_add_adsp']['description'] = 'Indien u niet weet wat dit is, laat het op "actief" staan.';
 $lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP beleid';
-$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Voor meer informatie inzake deze instelling zie <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-dkim-adsp-policies">DKIM ADSP policies</a>';
+$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Voor meer informatie inzake deze instelling zie <a target="blank" href="https://en.wikipedia.org/wiki/Author_Domain_Signing_Practices">DKIM ADSP policies</a>';
 
 $lng['admin']['cron']['cronsettings'] = 'Instellingen cron-taken';
 $lng['cron']['cronname'] = 'naam cron-taak';
@@ -1146,7 +1146,7 @@ $lng['serversettings']['perl_path']['description'] = 'Alleen relevant voor light
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
 $lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'FCGID inschakelen voor de VHost voor Froxlor';
-$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Indien ingeschakeld wordt Froxlor ook uitgevoerd onder een lokale gebruiker<br /><strong>Let op:</strong>Dit vereist handmatige configuratie, zie <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_fcgid">FCGID - handbook</a>';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Indien ingeschakeld wordt Froxlor ook uitgevoerd onder een lokale gebruiker<br /><strong>Let op:</strong>Dit vereist handmatige configuratie, zie <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-fcgid">FCGID - handbook</a>';
 $lng['admin']['mod_fcgid_user'] = 'Lokale gebruiker voor FCGID (Froxlor vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Lokale groep voor FCGID (Froxlor vhost)';
 
