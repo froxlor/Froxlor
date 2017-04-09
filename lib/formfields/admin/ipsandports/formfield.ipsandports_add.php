@@ -32,6 +32,17 @@ return array(
 						'label' => $lng['admin']['ipsandports']['port'],
 						'type' => 'text',
 						'size' => 5
+					),
+					'internalip' => array(
+						'label' => $lng['admin']['ipsandports']['internalip']['title'],
+						'desc' => $lng['admin']['ipsandports']['internalip']['description'],
+						'type' => 'text'
+					),
+					'internalport' => array(
+						'label' => $lng['admin']['ipsandports']['internalport']['title'],
+						'desc' => $lng['admin']['ipsandports']['internalport']['description'],
+						'type' => 'text',
+						'size' => 5
 					)
 				)
 			),

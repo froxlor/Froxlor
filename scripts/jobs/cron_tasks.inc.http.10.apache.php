@@ -159,6 +159,14 @@ class apache extends HttpConfigBase
 				$ipport = $row_ipsandports['ip'] . ':' . $row_ipsandports['port'];
 			}
 
+			$internalip = $row_ipsandports['internalip'] ? $row_ipsandports['internalip'] : $row_ipsandports['ip'];
+			$internalport = $row_ipsandports['internalport'] ? $row_ipsandports['internalport'] : $row_ipsandports['port'];
+			if (filter_var($internalip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$internalipport = '[' . $internalip . ']:' . $internalport;
+			} else {
+				$internalipport = $internalip . ':' . $internalport;
+			}
+
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::createIpPort: creating ip/port settings for  ' . $ipport);
 			$vhosts_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
@@ -167,7 +175,7 @@ class apache extends HttpConfigBase
 			}
 
 			if ($row_ipsandports['listen_statement'] == '1') {
-				$this->virtualhosts_data[$vhosts_filename] .= 'Listen ' . $ipport . "\n";
+				$this->virtualhosts_data[$vhosts_filename] .= 'Listen ' . $internalipport . "\n";
 				$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted listen-statement');
 			}
 
@@ -176,7 +184,7 @@ class apache extends HttpConfigBase
 				if (Settings::Get('system.apache24') == '1') {
 					$this->logger->logAction(CRON_ACTION, LOG_NOTICE, $ipport . ' :: namevirtualhost-statement no longer needed for apache-2.4');
 				} else {
-					$this->virtualhosts_data[$vhosts_filename] .= 'NameVirtualHost ' . $ipport . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= 'NameVirtualHost ' . $internalipport . "\n";
 					$this->logger->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted namevirtualhost-statement');
 				}
 			}
@@ -186,7 +194,7 @@ class apache extends HttpConfigBase
 				$without_vhost = $this->virtualhosts_data[$vhosts_filename];
 				$close_vhost = true;
 
-				$this->virtualhosts_data[$vhosts_filename] .= '<VirtualHost ' . $ipport . '>' . "\n";
+				$this->virtualhosts_data[$vhosts_filename] .= '<VirtualHost ' . $internalipport . '>' . "\n";
 
 				$mypath = $this->getMyPath($row_ipsandports);
 
@@ -782,6 +790,8 @@ class apache extends HttpConfigBase
 			$ipport = '';
 			$domain['ip'] = $ipandport['ip'];
 			$domain['port'] = $ipandport['port'];
+			$domain['internalip'] = $ipandport['internalip'] ? $ipandport['internalip'] : $ipandport['ip'];
+			$domain['internalport'] = $ipandport['internalport'] ? $ipandport['internalport'] : $ipandport['port'];
 			if ($domain['ssl'] == '1') {
 				$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
 				$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
@@ -795,16 +805,16 @@ class apache extends HttpConfigBase
 				$dssl->setDomainSSLFilesArray($domain);
 			}
 
-			if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-				$ipport = '[' . $domain['ip'] . ']:' . $domain['port'] . ' ';
+			if (filter_var($domain['internalip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$internalipport = '[' . $domain['internalip'] . ']:' . $domain['internalport'] . ' ';
 			} else {
-				$ipport = $domain['ip'] . ':' . $domain['port'] . ' ';
+				$internalipport = $domain['internalip'] . ':' . $domain['internalport'] . ' ';
 			}
 
 			if ($ipandport['default_vhostconf_domain'] != '') {
 				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
-			$ipportlist .= $ipport;
+			$ipportlist .= $internalipport;
 		}
 
 		$vhost_content .= '<VirtualHost ' . trim($ipportlist) . '>' . "\n";

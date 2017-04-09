@@ -2067,3 +2067,8 @@ $lng['serversettings']['nginx_http2_support']['title'] = 'Nginx HTTP2 Support';
 $lng['serversettings']['nginx_http2_support']['description'] = 'enable http2 support for ssl. ENABLE ONLY IF YOUR Nginx SUPPORT THIS FEATURE. (version 1.9.5+)';
 
 $lng['error']['noipportgiven'] = 'No IP/port given';
+
+$lng['admin']['ipsandports']['internalip']['title'] = 'Internal IP';
+$lng['admin']['ipsandports']['internalip']['description'] = 'If the server is behind a NAT / firewall / proxy, you can set a different IP for webserver binding';
+$lng['admin']['ipsandports']['internalport']['title'] = 'Internal port';
+$lng['admin']['ipsandports']['internalport']['description'] = 'If the server is behind a NAT / firewall / proxy, you can set a different port for webserver binding';

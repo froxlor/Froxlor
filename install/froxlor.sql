@@ -270,6 +270,8 @@ CREATE TABLE `panel_ipsandports` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `ip` varchar(39) NOT NULL default '',
   `port` int(5) NOT NULL default '80',
+  `internalip` varchar(39) NOT NULL default '',
+  `internalport` int(5) NOT NULL default '0',
   `listen_statement` tinyint(1) NOT NULL default '0',
   `namevirtualhost_statement` tinyint(1) NOT NULL default '0',
   `vhostcontainer` tinyint(1) NOT NULL default '0',

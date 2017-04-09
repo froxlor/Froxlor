@@ -135,6 +135,12 @@ class nginx extends HttpConfigBase
 			}
 			$port = $row_ipsandports['port'];
 
+			$internalip = $row_ipsandports['internalip'] ? $row_ipsandports['internalip'] : $row_ipsandports['ip'];
+			if (filter_var($internalip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$internalip = '[' . $internalip . ']';
+			} 
+			$internalport = $row_ipsandports['internalport'] ? $row_ipsandports['internalport'] : $row_ipsandports['port'];
+
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port);
 			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
@@ -201,7 +207,7 @@ class nginx extends HttpConfigBase
 				/**
 				 * this HAS to be set for the default host in nginx or else no vhost will work
 				 */
-				$this->nginx_data[$vhost_filename] .= "\t" . 'listen    ' . $ip . ':' . $port . ' default_server' . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
+				$this->nginx_data[$vhost_filename] .= "\t" . 'listen    ' . $internalip . ':' . $internalport . ' default_server' . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
 
 				$this->nginx_data[$vhost_filename] .= "\t" . '# Froxlor default vhost' . "\n";
 				$this->nginx_data[$vhost_filename] .= "\t" . 'server_name    ' . Settings::Get('system.hostname') . ';' . "\n";
@@ -395,6 +401,8 @@ class nginx extends HttpConfigBase
 
 			$domain['ip'] = $ipandport['ip'];
 			$domain['port'] = $ipandport['port'];
+			$domain['internalip'] = $ipandport['internalip'] ? $ipandport['internalip'] : $ipandport['ip'];
+			$domain['internalport'] = $ipandport['internalport'] ? $ipandport['internalport'] : $ipandport['port'];
 			if ($domain['ssl'] == '1') {
 				$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
 				$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
@@ -408,10 +416,10 @@ class nginx extends HttpConfigBase
 				$dssl->setDomainSSLFilesArray($domain);
 			}
 
-			if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-				$ipport = '[' . $domain['ip'] . ']:' . $domain['port'];
+			if (filter_var($domain['internalip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$internalipport = '[' . $domain['internalip'] . ']:' . $domain['internalport'];
 			} else {
-				$ipport = $domain['ip'] . ':' . $domain['port'];
+				$internalipport = $domain['internalip'] . ':' . $domain['internalport'];
 			}
 
 			if ($ipandport['default_vhostconf_domain'] != '') {
@@ -420,7 +428,7 @@ class nginx extends HttpConfigBase
 
             $http2 = $ssl_vhost == true && Settings::Get('system.nginx_http2_support') == '1';
 
-            $vhost_content .= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
+            $vhost_content .= "\t" . 'listen ' . $internalipport . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
 		}
 
 		// get all server-names
