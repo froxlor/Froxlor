@@ -205,6 +205,11 @@ return array(
 					'required_resources' => 'domains'
 				),
 				array(
+					'url' => 'admin_databases.php?page=databases',
+					'label' => $lng['admin']['databases'],
+					'required_resources' => 'mysqls'
+				),
+				array(
 					'url' => 'admin_domains.php?page=sslcertificates',
 					'label' => $lng['domains']['ssl_certificates'],
 					'required_resources' => 'domains'
