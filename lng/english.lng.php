@@ -2067,3 +2067,10 @@ $lng['serversettings']['nginx_http2_support']['title'] = 'Nginx HTTP2 Support';
 $lng['serversettings']['nginx_http2_support']['description'] = 'enable http2 support for ssl. ENABLE ONLY IF YOUR Nginx SUPPORT THIS FEATURE. (version 1.9.5+)';
 
 $lng['error']['noipportgiven'] = 'No IP/port given';
+
+// Added in froxlor 0.9.38.8
+$lng['admin']['domain_ocsp_stapling']['title'] = 'OCSP stapling';
+$lng['admin']['domain_ocsp_stapling']['description'] = 'See <a target="_blank" href="https://en.wikipedia.org/wiki/OCSP_stapling">Wikipedia</a> for a detailed explanation of OCSP stapling';
+$lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] = '<br /><strong class="red">WARNING:</strong> Nginx version 1.3.7 or above is required for OCSP stapling. If your version is older, the webserver will NOT start correctly while OCSP stapling is enabled!';
+$lng['serversettings']['ssl']['apache24_ocsp_cache_path']['title'] = 'Apache 2.4: path to the OCSP stapling cache';
+$lng['serversettings']['ssl']['apache24_ocsp_cache_path']['description'] = 'Configures the cache used to store OCSP responses which get included in TLS handshakes.';

@@ -634,6 +634,14 @@ class nginx extends HttpConfigBase
 					}
 					$sslsettings .= '";' . "\n";
 				}
+
+				if ((isset($domain_or_ip['ocsp_stapling']) && $domain_or_ip['ocsp_stapling'] == "1") ||
+						(isset($domain_or_ip['letsencrypt']) && $domain_or_ip['letsencrypt'] == "1") ) {
+					$sslsettings .= "\t" . 'ssl_stapling on;' . "\n";
+					$sslsettings .= "\t" . 'ssl_stapling_verify on;' . "\n";
+					$sslsettings .= "\t" . 'ssl_trusted_certificate ' .
+							makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
+				}
 			}
 		}
 

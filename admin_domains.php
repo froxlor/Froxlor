@@ -595,6 +595,9 @@ if ($page == 'domains' || $page == 'overview') {
 						$hsts_sub = isset($_POST['hsts_sub']) && (int)$_POST['hsts_sub'] == 1 ? 1 : 0;
 						$hsts_preload = isset($_POST['hsts_preload']) && (int)$_POST['hsts_preload'] == 1 ? 1 : 0;
 
+						// OCSP stapling
+						$ocsp_stapling = isset($_POST['ocsp_stapling']) && (int)$_POST['ocsp_stapling'] == 1 ? 1 : 0;
+
 					} else {
 						$ssl_redirect = 0;
 						$letsencrypt = 0;
@@ -606,6 +609,9 @@ if ($page == 'domains' || $page == 'overview') {
 						$hsts_maxage = 0;
 						$hsts_sub = 0;
 						$hsts_preload = 0;
+
+						// OCSP stapling
+						$ocsp_stapling = 0;
 					}
 				} else {
 					$ssl_redirect = 0;
@@ -618,6 +624,9 @@ if ($page == 'domains' || $page == 'overview') {
 					$hsts_maxage = 0;
 					$hsts_sub = 0;
 					$hsts_preload = 0;
+
+					// OCSP stapling
+					$ocsp_stapling = 0;
 				}
 
 				// We can't enable let's encrypt for wildcard - domains
@@ -789,7 +798,8 @@ if ($page == 'domains' || $page == 'overview') {
 						'letsencrypt' => $letsencrypt,
 						'hsts_maxage' => $hsts_maxage,
 						'hsts_sub' => $hsts_sub,
-						'hsts_preload' => $hsts_preload
+						'hsts_preload' => $hsts_preload,
+						'ocsp_stapling' => $ocsp_stapling,
 					);
 
 					$security_questions = array(
@@ -841,7 +851,8 @@ if ($page == 'domains' || $page == 'overview') {
 						'letsencrypt' => $letsencrypt,
 						'hsts' => $hsts_maxage,
 						'hsts_sub' => $hsts_sub,
-						'hsts_preload' => $hsts_preload
+						'hsts_preload' => $hsts_preload,
+						'ocsp_stapling' => $ocsp_stapling,
 					);
 
 					$ins_stmt = Database::prepare("
@@ -878,7 +889,8 @@ if ($page == 'domains' || $page == 'overview') {
 						`letsencrypt` = :letsencrypt,
 						`hsts` = :hsts,
 						`hsts_sub` = :hsts_sub,
-						`hsts_preload` = :hsts_preload
+						`hsts_preload` = :hsts_preload,
+						`ocsp_stapling` = :ocsp_stapling
 					");
 					Database::pexecute($ins_stmt, $ins_data);
 					$domainid = Database::lastInsertId();
@@ -1421,6 +1433,9 @@ if ($page == 'domains' || $page == 'overview') {
 					$hsts_sub = isset($_POST['hsts_sub']) && (int)$_POST['hsts_sub'] == 1 ? 1 : 0;
 					$hsts_preload = isset($_POST['hsts_preload']) && (int)$_POST['hsts_preload'] == 1 ? 1 : 0;
 
+					// OCSP stapling
+					$ocsp_stapling = isset($_POST['ocsp_stapling']) && (int)$_POST['ocsp_stapling'] == 1 ? 1 : 0;
+
 					$ssl_ipandports = array();
 					if (isset($_POST['ssl_ipandport']) && ! is_array($_POST['ssl_ipandport'])) {
 						$_POST['ssl_ipandport'] = unserialize($_POST['ssl_ipandport']);
@@ -1458,6 +1473,9 @@ if ($page == 'domains' || $page == 'overview') {
 						$hsts_maxage = 0;
 						$hsts_sub = 0;
 						$hsts_preload = 0;
+
+						// OCSP stapling
+						$ocsp_stapling = 0;
 					}
 				} else {
 					$ssl_redirect = 0;
@@ -1470,6 +1488,9 @@ if ($page == 'domains' || $page == 'overview') {
 					$hsts_maxage = 0;
 					$hsts_sub = 0;
 					$hsts_preload = 0;
+
+					// OCSP stapling
+					$ocsp_stapling = 0;
 				}
 
 				// We can't enable let's encrypt for wildcard domains
@@ -1615,7 +1636,8 @@ if ($page == 'domains' || $page == 'overview') {
 					'letsencrypt' => $letsencrypt,
 					'hsts_maxage' => $hsts_maxage,
 					'hsts_sub' => $hsts_sub,
-					'hsts_preload' => $hsts_preload
+					'hsts_preload' => $hsts_preload,
+					'ocsp_stapling' => $ocsp_stapling,
 				);
 
 				$security_questions = array(
@@ -1634,7 +1656,27 @@ if ($page == 'domains' || $page == 'overview') {
 				$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
 				$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
 
-				if ($documentroot != $result['documentroot'] || $ssl_redirect != $result['ssl_redirect'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $phpenabled != $result['phpenabled'] || $openbasedir != $result['openbasedir'] || $phpsettingid != $result['phpsettingid'] || $mod_fcgid_starter != $result['mod_fcgid_starter'] || $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests'] || $specialsettings != $result['specialsettings'] || $aliasdomain != $result['aliasdomain'] || $issubof != $result['ismainbutsubto'] || $email_only != $result['email_only'] || ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1') || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload']) {
+				if (
+					$documentroot != $result['documentroot'] ||
+					$ssl_redirect != $result['ssl_redirect'] ||
+					$wwwserveralias != $result['wwwserveralias'] ||
+					$iswildcarddomain != $result['iswildcarddomain'] ||
+					$phpenabled != $result['phpenabled'] ||
+					$openbasedir != $result['openbasedir'] ||
+					$phpsettingid != $result['phpsettingid'] ||
+					$mod_fcgid_starter != $result['mod_fcgid_starter'] ||
+					$mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests'] ||
+					$specialsettings != $result['specialsettings'] ||
+					$aliasdomain != $result['aliasdomain'] ||
+					$issubof != $result['ismainbutsubto'] ||
+					$email_only != $result['email_only'] ||
+					($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1') ||
+					$letsencrypt != $result['letsencrypt'] ||
+					$hsts_maxage != $result['hsts'] ||
+					$hsts_sub != $result['hsts_sub'] ||
+					$hsts_preload != $result['hsts_preload'] ||
+					$ocsp_stapling != $result['ocsp_stapling']
+				) {
 					inserttask('1');
 				}
 
@@ -1789,6 +1831,7 @@ if ($page == 'domains' || $page == 'overview') {
 				$update_data['hsts'] = $hsts_maxage;
 				$update_data['hsts_sub'] = $hsts_sub;
 				$update_data['hsts_preload'] = $hsts_preload;
+				$update_data['ocsp_stapling'] = $ocsp_stapling;
 				$update_data['id'] = $id;
 
 				$update_stmt = Database::prepare("
@@ -1820,7 +1863,8 @@ if ($page == 'domains' || $page == 'overview') {
 					`letsencrypt` = :letsencrypt,
 					`hsts` = :hsts,
 					`hsts_sub` = :hsts_sub,
-					`hsts_preload` = :hsts_preload
+					`hsts_preload` = :hsts_preload,
+					`ocsp_stapling` = :ocsp_stapling
 					WHERE `id` = :id
 				");
 				Database::pexecute($update_stmt, $update_data);

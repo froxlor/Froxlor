@@ -257,6 +257,7 @@ CREATE TABLE `panel_domains` (
   `hsts` varchar(10) NOT NULL default '0',
   `hsts_sub` tinyint(1) NOT NULL default '0',
   `hsts_preload` tinyint(1) NOT NULL default '0',
+  `ocsp_stapling` tinyint(1) DEFAULT '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -503,6 +504,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock'),
 	('system', 'phpreload_command', ''),
 	('system', 'apache24', '0'),
+	('system', 'apache24_ocsp_cache_path', 'shmcb:/var/run/apache2/ocsp-stapling.cache(131072)'),
 	('system', 'documentroot_use_default_value', '0'),
 	('system', 'passwordcryptfunc', '3'),
 	('system', 'axfrservers', ''),
@@ -582,7 +584,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.38.7'),
-	('panel', 'db_version', '201612110');
+	('panel', 'db_version', '201704100');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

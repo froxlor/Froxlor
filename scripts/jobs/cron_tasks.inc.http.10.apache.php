@@ -107,6 +107,17 @@ class apache extends HttpConfigBase
 			}
 			$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 		}
+
+		$ocsp_cache_filename = makeCorrectFile($vhosts_folder . '/03_froxlor_ocsp_cache.conf');
+		if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.apache24') == 1) {
+			$this->virtualhosts_data[$ocsp_cache_filename] = 'SSLStaplingCache ' .
+					Settings::Get('system.apache24_ocsp_cache_path') . "\n";
+		} else {
+			if (file_exists($ocsp_cache_filename)) {
+				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'apache::_createStandardDirectoryEntry: unlinking ' . basename($ocsp_cache_filename));
+				unlink(makeCorrectFile($ocsp_cache_filename));
+			}
+		}
 	}
 
 	/**
@@ -504,7 +515,7 @@ class apache extends HttpConfigBase
 			// This vHost has PHP enabled and we are using the regular mod_php
 			$cmail = getCustomerDetail($domain['customerid'], 'email');
 			$php_options_text .= '  php_admin_value sendmail_path "/usr/sbin/sendmail -t -f '.$cmail.'"' . PHP_EOL;
-			
+
 			if ($domain['openbasedir'] == '1') {
 				if ($domain['openbasedir_path'] == '1' || strstr($domain['documentroot'], ":") !== false) {
 					$_phpappendopenbasedir = appendOpenBasedirPath($domain['customerroot'], true);
@@ -876,6 +887,12 @@ class apache extends HttpConfigBase
 
 				if ($domain['ssl_cert_chainfile'] != '') {
 					$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
+				}
+
+				if (Settings::Get('system.apache24') == '1' && isset($domain['ocsp_stapling']) &&
+						$domain['ocsp_stapling'] == '1')
+				{
+					$vhost_content .= '  SSLUseStapling on' . PHP_EOL;
 				}
 
 				if ($domain['hsts'] >= 0) {
