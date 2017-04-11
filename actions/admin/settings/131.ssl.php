@@ -79,6 +79,18 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
+				'system_apache24_ocsp_cache_path' => array(
+					'label' => $lng['serversettings']['ssl']['apache24_ocsp_cache_path'],
+					'settinggroup' => 'system',
+					'varname' => 'apache24_ocsp_cache_path',
+					'type' => 'string',
+					'string_type' => 'string',
+					'string_emptyallowed' => false,
+					'default' => '',
+					'visible' => Settings::Get('system.webserver') == "apache2" &&
+							Settings::Get('system.apache24') == 1,
+					'save_method' => 'storeSettingField'
+				),
 				'system_leenabled' => array(
 					'label' => $lng['serversettings']['leenabled'],
 					'settinggroup' => 'system',

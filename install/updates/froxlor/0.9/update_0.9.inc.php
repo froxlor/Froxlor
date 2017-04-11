@@ -3593,3 +3593,17 @@ if (isFroxlorVersion('0.9.38.6')) {
 	showUpdateStep("Updating from 0.9.38.6 to 0.9.38.7", false);
 	updateToVersion('0.9.38.7');
 }
+
+if (isDatabaseVersion('201612110')) {
+
+	showUpdateStep("Adding field for OCSP stapling");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS .
+		"` ADD `ocsp_stapling` TINYINT(1) NOT NULL DEFAULT '0';");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding default setting for Apache 2.4 OCSP cache path");
+	Settings::AddNew('system.apache24_ocsp_cache_path', 'shmcb:/var/run/apache2/ocsp-stapling.cache(131072)');
+	lastStepStatus(0);
+
+	updateToDbVersion('201704100');
+}

@@ -251,7 +251,26 @@ return array(
 						'value' => array(
 							$result['hsts_preload']
 						)
-					)
+					),
+					'ocsp_stapling' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false) &&
+								Settings::Get('system.webserver') != 'lighttpd',
+						'label' => $lng['admin']['domain_ocsp_stapling']['title'],
+						'desc' => $lng['admin']['domain_ocsp_stapling']['description'] .
+								(Settings::Get('system.webserver') == 'nginx' ?
+								$lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] :
+								""),
+						'type' => 'checkbox',
+						'values' => array(
+							array (
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['ocsp_stapling']
+						)
+					),
 				)
 			),
 			'section_c' => array(
