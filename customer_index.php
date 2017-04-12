@@ -172,7 +172,7 @@ if ($page == 'overview') {
 				Database::pexecute($stmt, $params);
 			}
 
-			redirectTo($filename, array('s' => $s));
+			redirectTo($filename);
 		}
 	} else {
 		eval("echo \"" . getTemplate('index/change_password') . "\";");
@@ -196,7 +196,7 @@ if ($page == 'overview') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
 		}
 
-		redirectTo($filename, array('s' => $s));
+		redirectTo($filename);
 	} else {
 		$default_lang = Settings::Get('panel.standardlanguage');
 		if ($userinfo['def_language'] != '') {
@@ -227,7 +227,7 @@ if ($page == 'overview') {
 		Database::pexecute($stmt, array("theme" => $theme, "hash" => $s));
 
 		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
-		redirectTo($filename, array('s' => $s));
+		redirectTo($filename);
 	} else {
 		$default_theme = Settings::Get('panel.default_theme');
 		if ($userinfo['theme'] != '') {
@@ -306,16 +306,16 @@ if ($page == 'overview') {
 
 				// finally remove error from fs
 				@unlink($err_file);
-				redirectTo($filename, array('s' => $s));
+				redirectTo($filename);
 			}
 			// show a nice summary of the error-report
 			// before actually sending anything
 			eval("echo \"" . getTemplate("index/send_error_report") . "\";");
 
 		} else {
-			redirectTo($filename, array('s' => $s));
+			redirectTo($filename);
 		}
 	} else {
-		redirectTo($filename, array('s' => $s));
+		redirectTo($filename);
 	}
 }

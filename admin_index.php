@@ -233,7 +233,7 @@ if ($page == 'overview') {
 				'adminid' => (int)$userinfo['adminid']
 			));
 			$log->logAction(ADM_ACTION, LOG_NOTICE, 'changed password');
-			redirectTo($filename, Array('s' => $s));
+			redirectTo($filename);
 		}
 	} else {
 		eval("echo \"" . getTemplate("index/change_password") . "\";");
@@ -269,7 +269,7 @@ if ($page == 'overview') {
 		}
 
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "changed his/her default language to '" . $def_language . "'");
-		redirectTo($filename, array('s' => $s));
+		redirectTo($filename);
 
 	} else {
 
@@ -315,7 +315,7 @@ if ($page == 'overview') {
 		));
 
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "changed his/her theme to '" . $theme . "'");
-		redirectTo($filename, array('s' => $s));
+		redirectTo($filename);
 
 	} else {
 
@@ -401,16 +401,16 @@ if ($page == 'overview') {
 
 				// finally remove error from fs
 				@unlink($err_file);
-				redirectTo($filename, array('s' => $s));
+				redirectTo($filename);
 			}
 			// show a nice summary of the error-report
 			// before actually sending anything
 			eval("echo \"" . getTemplate("index/send_error_report") . "\";");
 
 		} else {
-			redirectTo($filename, array('s' => $s));
+			redirectTo($filename);
 		}
 	} else {
-		redirectTo($filename, array('s' => $s));
+		redirectTo($filename);
 	}
 }

@@ -83,9 +83,9 @@ if ($page == 'tickets'
 		$num_rows = Database::num_rows();
 		$paging->setEntries($num_rows);
 		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 		$ctickets = array();
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -494,9 +494,9 @@ if ($page == 'tickets'
 		$numrows = Database::num_rows();
 		$paging->setEntries($numrows);
 		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 		$i = 0;
 		$count = 0;
 		$ticketcategories = '';
@@ -644,9 +644,9 @@ if ($page == 'tickets'
 			$result_stmt = Database::prepare($query . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 			Database::pexecute($result_stmt, $archive_params);
 			$sortcode = $paging->getHtmlSortCode($lng);
-			$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+			$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 			$searchcode = $paging->getHtmlSearchCode($lng);
-			$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+			$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 			$ctickets = array();
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {

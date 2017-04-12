@@ -52,9 +52,9 @@ if ($page == 'overview') {
 		$ftps_count = Database::num_rows();
 		$paging->setEntries($ftps_count);
 		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 		$i = 0;
 		$count = 0;
 		$accounts = '';

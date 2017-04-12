@@ -52,9 +52,9 @@ if ($page == 'overview') {
 		$emailscount = Database::num_rows();
 		$paging->setEntries($emailscount);
 		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 		$emails = array();
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {

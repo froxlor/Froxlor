@@ -48,9 +48,9 @@ if ($page == 'admins'
 		$numrows_admins = Database::num_rows();
 		$paging->setEntries($numrows_admins);
 		$sortcode = $paging->getHtmlSortCode($lng, true);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 		$i = 0;
 		$count = 0;
 
@@ -138,7 +138,7 @@ if ($page == 'admins'
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			$log->logAction(ADM_ACTION, LOG_INFO, "switched adminuser and is now '" . $destination_admin . "'");
-			redirectTo('admin_index.php', array('s' => $s));
+			redirectTo('admin_index.php');
 
 		} else {
 			redirectTo('index.php', array('action' => 'login'));

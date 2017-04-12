@@ -54,9 +54,9 @@ if ($page == 'overview') {
 		));
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 		$i = 0;
 		$count = 0;
 		$htpasswds = '';
@@ -297,9 +297,9 @@ if ($page == 'overview') {
 		));
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 		$i = 0;
 		$count = 0;
 		$htaccess = '';

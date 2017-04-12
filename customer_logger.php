@@ -45,9 +45,9 @@ if ($page == 'log') {
 		$logs_count = $result_cnt_stmt->rowCount();
 		$paging->setEntries($logs_count);
 		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 		$clog = array();
 		
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {

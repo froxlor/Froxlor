@@ -35,8 +35,6 @@ class linker {
 		$this->hostname = $hostname;
 		$this->port = $port;
 		$this->filename = $file;
-		// @TODO: Remove this
-		$this->args['s'] = $sessionid;
 	}
 
 	public function __set($key, $value) {
@@ -66,10 +64,7 @@ class linker {
 	}
 
 	public function delAll() {
-		// Just resetting the array
-		// Until the sessionid can be removed: save it
-		// @TODO: Remove this
-		$this->args = array('s' => $this->args['s']);
+		$this->args = array();
 	}
 
 	public function getLink() {

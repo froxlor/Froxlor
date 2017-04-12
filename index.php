@@ -126,6 +126,7 @@ if ($action == 'login') {
 		        redirectTo('index.php', array('showmessage' => '5'));
 		        exit;
 		    } else {
+		        $_SESSION['loggedin'] = true;
 		        // login correct
 		        // reset loginfail_counter, set lastlogin_succ
 		        $stmt = Database::prepare("UPDATE $table
@@ -154,8 +155,6 @@ if ($action == 'login') {
 		}
 
 		if (isset($userinfo['userid']) && $userinfo['userid'] != '') {
-			$s = md5(uniqid(microtime(), 1));
-
 			if (isset($_POST['language'])) {
 				$language = validate($_POST['language'], 'language');
 				if ($language == 'profile') {
@@ -219,11 +218,10 @@ if ($action == 'login') {
 			if (isset($_POST['qrystr']) && $_POST['qrystr'] != "") {
 				parse_str(urldecode($_POST['qrystr']), $qryparams);
 			}
-			$qryparams['s'] = $s;
 
 			if ($userinfo['adminsession'] == '1') {
 				if (hasUpdates($version) || hasDbUpdates($dbversion)) {
-					redirectTo('admin_updates.php', array('s' => $s));
+					redirectTo('admin_updates.php');
 				} else {
 					if (isset($_POST['script']) && $_POST['script'] != "") {
 						if (preg_match("/customer\_/", $_POST['script']) === 1) {

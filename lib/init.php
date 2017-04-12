@@ -185,15 +185,14 @@ unset($customerid);
 unset($adminid);
 unset($s);
 
-if (isset($_POST['s'])) {
-	$s = $_POST['s'];
-	$nosession = 0;
-} elseif (isset($_GET['s'])) {
-	$s = $_GET['s'];
-	$nosession = 0;
-} else {
-	$s = '';
-	$nosession = 1;
+ini_set("session.name", "s");
+ini_set("url_rewriter.tags", "");
+session_start();
+$s = session_id();
+$nosession = 1;
+
+if (isset($_SESSION['loggedin'])) {
+    $nosession = 0;
 }
 
 $timediff = time() - Settings::Get('session.sessiontimeout');
@@ -204,15 +203,7 @@ Database::pexecute($del_stmt, array('timediff' => $timediff));
 
 $userinfo = array();
 
-if (isset($s)
-   && $s != ""
-   && $nosession != 1
-) {
-	ini_set("session.name", "s");
-	ini_set("url_rewriter.tags", "");
-	ini_set("session.use_cookies", false);
-	session_id($s);
-	session_start();
+if (!$nosession) {
 	$query = "SELECT `s`.*, `u`.* FROM `" . TABLE_PANEL_SESSIONS . "` `s` LEFT JOIN `";
 
 	if (AREA == 'admin') {

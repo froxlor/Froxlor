@@ -177,7 +177,7 @@ elseif ($page == 'extract') {
 		}
 
 		// redirect to update-page?
-		redirectTo('admin_updates.php', array('s' => $s));
+		redirectTo('admin_updates.php');
 	}
 
 	if (!file_exists($localArchive)) {
