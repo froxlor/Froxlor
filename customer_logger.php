@@ -38,7 +38,8 @@ if ($page == 'log') {
 		Database::pexecute($result_stmt, array(
 			"loginname" => $userinfo['loginname']
 		));
-		$result_cnt_stmt = Database::query($query, array(
+		$result_cnt_stmt = Database::prepare($query);
+		Database::pexecute($result_cnt_stmt, array(
 			"loginname" => $userinfo['loginname']
 		));
 		$res_cnt = $result_cnt_stmt->fetch(PDO::FETCH_ASSOC);
@@ -69,6 +70,7 @@ if ($page == 'log') {
 		$log_count = 0;
 		$log = '';
 		foreach ($clog as $action => $logrows) {
+			$_action = 0;
 			foreach ($logrows as $row) {
 				// if ($paging->checkDisplay($i)) {
 				$row = htmlentities_array($row);
