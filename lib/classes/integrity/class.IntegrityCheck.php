@@ -85,11 +85,10 @@ class IntegrityCheck {
 				// fix database
 				Database::query('ALTER DATABASE `' . Database::getDbName() . '` CHARACTER SET utf8 COLLATE utf8_general_ci');
 				// fix all tables
-				$handle = Database::query('SHOW TABLES');
-				while ($row = $handle->fetch(PDO::FETCH_ASSOC)) {
-					foreach ($row as $table) {
-						Database::query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
-					}
+				$handle = Database::query('SHOW FULL TABLES WHERE Table_type != "VIEW"');
+				while ($row = $handle->fetch(PDO::FETCH_BOTH)) {
+					$table = $row[0];
+					Database::query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
 				}
 				$this->_log->logAction(ADM_ACTION, LOG_WARNING, "database charset was different from UTF-8, integrity-check fixed that");
 			} else {
