@@ -910,7 +910,7 @@ if ($page == 'customers'
 							'customerid' => $customerid,
 							'adminid' => $userinfo['adminid'],
 							'docroot' => $documentroot,
-							'adddate' => date('Y-m-d'),
+							'adddate' => time(),
 							'phpenabled' => $phpenabled
 						);
 						$ins_stmt = Database::prepare("
@@ -1283,7 +1283,7 @@ if ($page == 'customers'
 								'customerid' => $result['customerid'],
 								'adminid' => $userinfo['adminid'],
 								'docroot' => $result['documentroot'],
-								'adddate' => date('Y-m-d')
+								'adddate' => time()
 						);
 						$ins_stmt = Database::prepare("
 							INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
