@@ -86,7 +86,7 @@ return array(
 					'type' => 'string',
 					'string_type' => 'string',
 					'string_emptyallowed' => false,
-					'default' => '',
+					'default' => 'shmcb:/var/run/apache2/ocsp-stapling.cache(131072)',
 					'visible' => Settings::Get('system.webserver') == "apache2" &&
 							Settings::Get('system.apache24') == 1,
 					'save_method' => 'storeSettingField'
