@@ -19,7 +19,7 @@
 $version = '0.9.38.7';
 
 // Database version (YYYYMMDDC where C is a daily counter)
-$dbversion = '201704100';
+$dbversion = '201705050';
 
 // Distribution branding-tag (used for Debian etc.)
 $branding = '';

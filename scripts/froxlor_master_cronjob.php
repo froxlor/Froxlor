@@ -68,6 +68,9 @@ for ($x = 1; $x < count($argv); $x++) {
 
 $cronlog->setCronDebugFlag(defined('CRON_DEBUG_FLAG'));
 
+$tasks_cnt_stmt = Database::query("SELECT COUNT(*) as jobcnt FROM `panel_tasks`");
+$tasks_cnt = $tasks_cnt_stmt->fetch(PDO::FETCH_ASSOC);
+
 // do we have anything to include?
 if (count($jobs_to_run) > 0) {
 	// include all jobs we want to execute
@@ -75,6 +78,21 @@ if (count($jobs_to_run) > 0) {
 		updateLastRunOfCron($cron);
 		$cronfile = getCronFile($cron);
 		require_once $cronfile;
+	}
+
+	if ($tasks_cnt['jobcnt'] > 0)
+	{
+		if (Settings::Get('system.nssextrausers') == 1)
+		{
+			include_once makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/classes/class.Extrausers.php');
+			Extrausers::generateFiles($cronlog);
+		}
+
+		// clear NSCD cache if using fcgid or fpm, #1570
+		if (Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
+			$false_val = false;
+			safe_exec('nscd -i group 1> /dev/null', $false_val, array('>'));
+		}
 	}
 }
 

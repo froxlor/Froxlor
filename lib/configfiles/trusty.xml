@@ -1642,6 +1642,42 @@ aliases:     files
 					<!-- clear group chache -->
 					<command><![CDATA[nscd --invalidate=group]]></command>
 				</daemon>
+				<!-- libnss-extrausers -->
+				<daemon name="libnssextrausers" title="libnss-extrausers (alternative to libnss-mysql, required for FCGID/php-fpm/mpm-itk)">
+					<install><![CDATA[apt-get install nscd libnss-extrausers]]></install>
+					<commands index="1">
+						<command><![CDATA[mkdir -p /var/lib/extrausers]]></command>
+						<command><![CDATA[touch /var/lib/extrausers/{passwd,group,shadow}]]></command>
+					</commands>
+					<file name="/etc/nsswitch.conf" backup="true">
+						<content><![CDATA[
+# Make sure that `passwd`, `group` and `shadow` have mysql in their lines
+# You should place mysql at the end, so that it is queried after the other mechanisams
+#
+passwd:         compat extrausers
+group:          compat extrausers
+shadow:         compat extrausers
+
+hosts:       files dns
+networks:    files dns
+
+services:    db files
+protocols:   db files
+rpc:         db files
+ethers:      db files
+netmasks:    files
+netgroup:    files
+bootparams:  files
+
+automount:   files
+aliases:     files
+]]>
+						</content>
+					</file>
+					<command><![CDATA[/etc/init.d/nscd restart]]></command>
+					<!-- clear group chache -->
+					<command><![CDATA[nscd --invalidate=group]]></command>
+				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">
 					<install><![CDATA[apt-get install logrotate]]></install>

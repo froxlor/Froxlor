@@ -3607,3 +3607,13 @@ if (isDatabaseVersion('201612110')) {
 
 	updateToDbVersion('201704100');
 }
+
+if (isDatabaseVersion('201704100')) {
+
+	showUpdateStep("Adding new setting for libnss-extrausers");
+	$system_nssextrausers= isset($_POST['system_nssextrausers']) ? (int) $_POST['system_nssextrausers'] : 0;
+	Settings::AddNew('system.nssextrausers', $system_nssextrausers);
+	lastStepStatus(0);
+
+	updateToDbVersion('201705050');
+}

@@ -168,6 +168,13 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int)Settings::Get('system.vmail_uid') . ':' . (int)Settings::Get('system.vmail_gid') . ' ' . escapeshellarg($usermaildir));
 			safe_exec('chown -R ' . (int)Settings::Get('system.vmail_uid') . ':' . (int)Settings::Get('system.vmail_gid') . ' ' . escapeshellarg($usermaildir));
 
+			if (Settings::Get('system.nssextrausers') == 1)
+			{
+				// explicitly create files after user has been created to avoid unknown user issues for apache/php-fpm when task#1 runs after this
+				include_once makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/classes/class.Extrausers.php');
+				Extrausers::generateFiles($cronlog);
+			}
+
 			// clear NSCD cache if using fcgid or fpm, #1570
 			if (Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
 				$false_val = false;

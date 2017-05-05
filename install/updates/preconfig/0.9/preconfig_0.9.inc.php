@@ -709,4 +709,12 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$question .= '<input type="password" class="text" name="smtp_passwd" value="" /><br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_db_version, '201705050')) {
+		$has_preconfig = true;
+		$description = 'DEBIAN/UBUNTU ONLY: Enable usage of libnss-extrausers as alternative to libnss-mysql (NOTE: if enabled, go through the configuration steps right after the update!!!)<br /><br />';
+		$question = '<strong>Enable usage of libnss-extrausers?</strong><br />';
+		$question .= makeyesno('system_nssextrausers', '1', '0', '0') . '<br />';
+		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+	}
 }
