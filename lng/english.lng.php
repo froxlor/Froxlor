@@ -2074,3 +2074,5 @@ $lng['admin']['domain_ocsp_stapling']['description'] = 'See <a target="_blank" h
 $lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] = '<br /><strong class="red">WARNING:</strong> Nginx version 1.3.7 or above is required for OCSP stapling. If your version is older, the webserver will NOT start correctly while OCSP stapling is enabled!';
 $lng['serversettings']['ssl']['apache24_ocsp_cache_path']['title'] = 'Apache 2.4: path to the OCSP stapling cache';
 $lng['serversettings']['ssl']['apache24_ocsp_cache_path']['description'] = 'Configures the cache used to store OCSP responses which get included in TLS handshakes.';
+$lng['serversettings']['nssextrausers']['title'] = 'Use libnss-extrausers instead of libnss-mysql';
+$lng['serversettings']['nssextrausers']['description'] = 'Do not read users from the database but from files. Please only activate if you have already gone through the required configuration steps (system -> libnss-extrausers).<br><strong class="red">For Debian/Ubuntu only (or if you have compiled libnss-extrausers yourself!)</strong>';

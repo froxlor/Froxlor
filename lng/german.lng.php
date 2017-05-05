@@ -1725,3 +1725,5 @@ $lng['admin']['domain_ocsp_stapling']['description'] = 'Siehe <a target="_blank"
 $lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] = '<br /><strong class="red">WARNUNG:</strong> Nginx unterstützt OCSP-Stapling erst ab Version 1.3.7. Wenn Ihre Version älter ist, wird der Webserver bei aktiviertem OCSP-Stapling NICHT korrekt starten.';
 $lng['serversettings']['ssl']['apache24_ocsp_cache_path']['title'] = 'Apache 2.4: Pfad zum OCSP-Stapling-Cache';
 $lng['serversettings']['ssl']['apache24_ocsp_cache_path']['description'] = 'Konfiguriert den Cache-Pfad zum Zwischenspeichern der OCSP-Antworten,<br />die an TLS-Handshakes angehängt werden.';
+$lng['serversettings']['nssextrausers']['title'] = 'Verwende libnss-extrausers anstatt libnss-mysql';
+$lng['serversettings']['nssextrausers']['description'] = 'Lese Benutzer nicht direkt aus der Datenbank sondern über Dateien, bitte nur aktivieren, wenn die entsprechende Konfiguration vorgenommen wurde (System -> libnss-extrausers).<br><strong class="red">Nur für Debian/Ubuntu (oder wenn libnss-extrausers manuell kompiliert wurde!)</strong>';
