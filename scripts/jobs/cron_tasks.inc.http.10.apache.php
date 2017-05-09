@@ -253,7 +253,7 @@ class apache extends HttpConfigBase
 								'adminid' => 1, /* first admin-user (superadmin) */
 								'mod_fcgid_starter' => - 1,
 								'mod_fcgid_maxrequests' => - 1,
-								'guid' => Settings::Get('phpfpm.vhost_httpuser'),
+								'guid' => Settings::Get('system.mod_fcgid_httpuser'),
 								'openbasedir' => 0,
 								'email' => Settings::Get('panel.adminmail'),
 								'loginname' => 'froxlor.panel',

@@ -846,7 +846,7 @@ if ($page == 'admins'
 
 				$ipaddress = makeoption($lng['admin']['allips'], "-1", $result['ip']);
 				$ipsandports_stmt = Database::query("
-					SELECT `id`, `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` GROUP BY `ip` ORDER BY `ip`, `port` ASC
+					SELECT `id`, `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` GROUP BY `id`, `ip` ORDER BY `ip`, `port` ASC
 				");
 
 				while ($row = $ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
