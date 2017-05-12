@@ -115,7 +115,7 @@ while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 		Database::needRoot(true, $row_database['dbserver']);
 		$last_dbserver = $row_database['dbserver'];
 
-		$database_list = array();
+		$databases_list = array();
 		$databases_list_result_stmt = Database::query("SHOW DATABASES");
 		while ($databases_list_row = $databases_list_result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$databases_list[] = strtolower($databases_list_row['Database']);
@@ -501,9 +501,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		Database::pexecute($result_quota_stmt, array('customerid' => $row['customerid']));
 
 		// get correct user
-		if (Settings::Get('system.mod_fcgid') == 1
-			&& $row['deactivated'] == '0'
-		) {
+		if ((Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) && $row['deactivated'] == '0') {
 			$user = $row['loginname'];
 			$group = $row['loginname'];
 		} else {
