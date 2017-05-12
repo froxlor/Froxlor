@@ -205,12 +205,12 @@ $(document).ready(function() {
 
 	// Config files
 	var configfileTextareas = $("textarea.filecontent, textarea.shell");
-	var lastPw = "MYSQL_PASSWORD";
+	var lastPw = "FROXLOR_MYSQL_PASSWORD";
 	$("#configfiles_setmysqlpw").submit(function(event) {
 		event.preventDefault();
 		var inputVal = $("#configfiles_mysqlpw").val();
 		if (!inputVal.trim()) {
-			inputVal = "MYSQL_PASSWORD";
+			inputVal = "FROXLOR_MYSQL_PASSWORD";
 		}
 		configfileTextareas.each(function() {
 			this.value = this.value.replace(lastPw, inputVal);

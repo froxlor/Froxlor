@@ -45,7 +45,7 @@ if ($userinfo['change_serversettings'] == '1') {
 
 	$replace_arr = Array(
 		'<SQL_UNPRIVILEGED_USER>' => $sql['user'],
-		'<SQL_UNPRIVILEGED_PASSWORD>' => 'MYSQL_PASSWORD',
+		'<SQL_UNPRIVILEGED_PASSWORD>' => 'FROXLOR_MYSQL_PASSWORD',
 		'<SQL_DB>' => $sql['db'],
 		'<SQL_HOST>' => $sql['host'],
 		'<SQL_SOCKET>' => isset($sql['socket']) ? $sql['socket'] : null,

@@ -27,7 +27,7 @@ eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
 no sea takimata sanctus est Lorem ipsum dolor sit amet.</textarea>
 				</p>
 				<form id="configfiles_setmysqlpw" action="#">
-					MYSQL_PASSWORD: <input type="text" class="text" id="configfiles_mysqlpw" name="configfiles_mysqlpw" value="" />
+					FROXLOR_MYSQL_PASSWORD: <input type="text" class="text" id="configfiles_mysqlpw" name="configfiles_mysqlpw" value="" />
 					<input type="submit" value="{$lng['panel']['set']}" />
 				</form>
 			</div>
