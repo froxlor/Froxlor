@@ -33,7 +33,8 @@ $lng['panel']['emptyfordefault'] = 'leeg laten voor de standaard instellingen';
 $lng['panel']['path'] = 'Pad';
 $lng['panel']['toggle'] = 'In- of uitschalen';
 $lng['panel']['next'] = 'volgende';
-$lng['panel']['dirsmissing'] = 'Kan de map niet lezen of vinden!';
+// $lng['panel']['dirsmissing'] = 'Kan de map niet lezen of vinden!';
+$lng['panel']['dirsmissing'] = 'De opgegeven map bestaat niet.';
 
 /**
  * Login
@@ -295,7 +296,8 @@ $lng['serversettings']['accountprefix']['description'] = 'Welk voorvoegsel moet 
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL Voorvoegsel';
 $lng['serversettings']['mysqlprefix']['description'] = 'Welk voorvoegsel moet een mysql account hebben?';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP Voorvoegsel';
-$lng['serversettings']['ftpprefix']['description'] = 'Welk voorvoegsel moet een FTP account hebben?';
+//  $lng['serversettings']['ftpprefix']['description'] = 'Welk voorvoegsel moet een FTP account hebben?';
+$lng['serversettings']['ftpprefix']['description'] = 'Welk voorvoegsel dienen nieuwe FTP-accounts te krijgen?<br/><b>Indien u dit wijzigt, dient ook de query voor Quota in het configuratiebestand van de FTP-server aan te passen!</b> ';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Document map';
 $lng['serversettings']['documentroot_prefix']['description'] = 'Waar zullen alle gegeven opgeslagen worden?';
 $lng['serversettings']['logfiles_directory']['title'] = 'Logfiles map';
@@ -542,7 +544,8 @@ $lng['ticket']['ticket_editcateory'] = 'Categorie bewerken';
 $lng['ticket']['ticket_view'] = 'Ticketverloop weergeven';
 $lng['ticket']['ticketcount'] = 'Tickets';
 $lng['ticket']['ticket_answers'] = 'Antwoorden';
-$lng['ticket']['lastchange'] = 'Laatste actie';
+//  $lng['ticket']['lastchange'] = 'Laatste actie';
+$lng['ticket']['lastchange'] = 'Laatste wijziging';
 $lng['ticket']['subject'] = 'Onderwerp';
 $lng['ticket']['status'] = 'Status';
 $lng['ticket']['lastreplier'] = 'Laatste beantwoorder';
@@ -550,7 +553,6 @@ $lng['ticket']['priority'] = 'Prioriteit';
 $lng['ticket']['low'] = 'Laag';
 $lng['ticket']['normal'] = 'Normaal';
 $lng['ticket']['high'] = 'Hoog';
-$lng['ticket']['lastchange'] = 'Laatste wijziging';
 $lng['ticket']['lastchange_from'] = 'Datum vanaf (dd.mm.yyyy)';
 $lng['ticket']['lastchange_to'] = 'Datum tot (dd.mm.yyyy)';
 $lng['ticket']['category'] = 'Categorie';
@@ -966,7 +968,6 @@ $lng['success']['settingssaved'] = 'De instellingen zijn opgeslagen.';
 $lng['admin']['spfsettings'] = 'SPF-instellingen domein';
 $lng['spf']['use_spf'] = 'SPF voor domeinen activeren?';
 $lng['spf']['spf_entry'] = 'SPF regel voor alle domeinen';
-$lng['panel']['dirsmissing'] = 'De opgegeven map bestaat niet.';
 $lng['panel']['toomanydirs'] = 'Teveel submappen. Er wordt teruggevallen op handmatige invoer.';
 $lng['panel']['abort'] = 'Afbreken';
 $lng['serversettings']['cron']['debug']['title'] = 'Foutopsporing cronscript';
@@ -1100,9 +1101,6 @@ $lng['serversettings']['mod_fcgid']['defaultini'] = 'Standaard PHP-configuratie 
 $lng['admin']['ftpserver'] = 'FTP Server';
 $lng['admin']['ftpserversettings'] = 'Instellingen FTP-server';
 $lng['serversettings']['ftpserver']['desc'] = 'Indien PureFTPD geselecteerd is, worden .ftpquota bestanden dagelijks aangemaakt en/of bijgewerkt';
-
-// CHANGED IN FROXLOR 0.9.6-svn6
-$lng['serversettings']['ftpprefix']['description'] = 'Welk voorvoegsel dienen nieuwe FTP-accounts te krijgen?<br/><b>Indien u dit wijzigt, dient ook de query voor Quota in het configuratiebestand van de FTP-server aan te passen!</b> ';
 
 // ADDED IN FROXLOR 0.9.7-svn1
 $lng['mails']['new_ftpaccount_by_customer']['subject'] = 'Nieuwe FTP-gebruiker aangemaakt';
