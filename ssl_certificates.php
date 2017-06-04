@@ -105,9 +105,9 @@ if (count($all_certs) == 0) {
 } else {
 	$paging->setEntries(count($all_certs));
 	$sortcode = $paging->getHtmlSortCode($lng);
-	$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+	$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 	$searchcode = $paging->getHtmlSearchCode($lng);
-	$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+	$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 
 	foreach ($all_certs as $idx => $cert) {
 		if ($paging->checkDisplay($idx)) {

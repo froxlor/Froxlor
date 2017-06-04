@@ -70,7 +70,7 @@ if ($page == 'overview') {
 
 				include_once './install/updatesql.php';
 
-				$redirect_url = 'admin_index.php?s=' . $s;
+				$redirect_url = 'admin_index.php';
 				eval("echo \"" . getTemplate('update/update_end') . "\";");
 
 				updateCounters();
@@ -115,7 +115,7 @@ if ($page == 'overview') {
 		}
 	} else {
 		$success_message = $lng['update']['noupdatesavail'];
-		$redirect_url = 'admin_index.php?s=' . $s;
+		$redirect_url = 'admin_index.php';
 		eval("echo \"" . getTemplate('update/noupdatesavail') . "\";");
 	}
 }

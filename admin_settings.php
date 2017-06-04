@@ -206,7 +206,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		$log->logAction(ADM_ACTION, LOG_WARNING, "wiped all cleartext mail passwords");
 		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password` = '';");
 		Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '0' WHERE `settinggroup` = 'system' AND `varname` = 'mailpwcleartext'");
-		redirectTo($filename, array('s' => $s));
+		redirectTo($filename);
 
 	} else {
 		ask_yesno('admin_cleartextmailpws_reallywipe', $filename, array('page' => $page));
@@ -225,7 +225,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		// Set the quota to 0 which means unlimited
 		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `quota` = '0';");
 		Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_quota_used` = '0'");
-		redirectTo($filename, array('s' => $s));
+		redirectTo($filename);
 
 	} else {
 		ask_yesno('admin_quotas_reallywipe', $filename, array('page' => $page));
@@ -263,7 +263,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		// Update the Customer, if the used quota is bigger than the allowed quota
 		Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_quota` = `email_quota_used` WHERE `email_quota` < `email_quota_used`");
 		$log->logAction(ADM_ACTION, LOG_WARNING, 'enforcing mailquota to all customers: ' . Settings::Get('system.mail_quota') . ' MB');
-		redirectTo($filename, array('s' => $s));
+		redirectTo($filename);
 
 	} else {
 		ask_yesno('admin_quotas_reallyenforce', $filename, array('page' => $page));

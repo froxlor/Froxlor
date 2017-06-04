@@ -63,9 +63,9 @@ if ($page == 'customers'
 		$num_rows = Database::num_rows();
 		$paging->setEntries($num_rows);
 		$sortcode = $paging->getHtmlSortCode($lng, true);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page);
 		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page);
 		$i = 0;
 		$count = 0;
 
@@ -152,33 +152,34 @@ if ($page == 'customers'
 	} elseif($action == 'su'
 	       && $id != 0
 	) {
-		$result_stmt = Database::prepare("
+        $result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `customerid` = :id" .
 			($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
 		);
-		$params = array('id' => $id);
-		if ($userinfo['customers_see_all'] == '0') {
-			$params['adminid'] = $userinfo['adminid'];
-		}
-		$result = Database::pexecute_first($result_stmt, $params);
+        $params = array('id' => $id);
+        if ($userinfo['customers_see_all'] == '0') {
+            $params['adminid'] = $userinfo['adminid'];
+        }
+        $result = Database::pexecute_first($result_stmt, $params);
 
-		$destination_user = $result['loginname'];
+        $destination_user = $result['loginname'];
 
-		if ($destination_user != '') {
+        if ($destination_user != '') {
 
-			if ($result['deactivated'] == '1') {
-				standard_error("usercurrentlydeactivated", $destination_user);
-			}
-			$result_stmt = Database::prepare("
+            if ($result['deactivated'] == '1') {
+                standard_error("usercurrentlydeactivated", $destination_user);
+            }
+            $result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_SESSIONS . "`
 				WHERE `userid` = :id
 				AND `hash` = :hash"
 			);
-			$result = Database::pexecute_first($result_stmt, array('id' => $userinfo['userid'], 'hash' => $s));
+            $result = Database::pexecute_first($result_stmt, array('id' => $userinfo['userid'], 'hash' => $s));
 
-			$s = md5(uniqid(microtime(), 1));
-			$insert = Database::prepare("
+            session_regenerate_id(true);
+            $s = session_id();
+            $insert = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_SESSIONS . "` SET
 					`hash` = :hash,
 					`userid` = :id,
@@ -188,7 +189,7 @@ if ($page == 'customers'
 					`language` = :lang,
 					`adminsession` = '0'"
 				);
-			Database::pexecute($insert, array(
+            Database::pexecute($insert, array(
 				'hash' => $s,
 				'id' => $id,
 				'ip' => $result['ipaddress'],
@@ -196,14 +197,14 @@ if ($page == 'customers'
 				'lastact' => time(),
 				'lang' => $result['language']
 			));
-			$log->logAction(ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");
+            $log->logAction(ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");
 
-			$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
+            $target = (isset($_GET['target']) ? $_GET['target'] : 'index');
 			$redirect = "customer_".$target.".php";
 			if (!file_exists(FROXLOR_INSTALL_DIR."/".$redirect)) {
 				$redirect = "customer_index.php";
 			}
-			redirectTo($redirect, array('s' => $s), true);
+			redirectTo($redirect, [], true);
 
 		} else {
 			redirectTo('index.php', array('action' => 'login'));
