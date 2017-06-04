@@ -128,6 +128,9 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		if (substr($content, - 1) == '.') {
 			// remove it for checks
 			$content = substr($content, 0, - 1);
+		} else {
+			// add domain name
+			$content .= '.' . $domain;
 		}
 		if (! validateDomain($content)) {
 			$errors[] = $lng['error']['dns_cname_invaliddom'];
