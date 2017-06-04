@@ -56,7 +56,19 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		if (strpos($record, '--') !== false) {
 			$errors[] = $lng['error']['domain_nopunycode'];
 		} else {
+			// check for wildcard-record
+			$add_wildcard_again = false;
+			if (substr($record, 0, 2) == '*.') {
+				$record = substr($record, 2);
+				$add_wildcard_again = true;
+			}
+			// convert entry
 			$record = $idna_convert->encode($record);
+
+			if ($add_wildcard_again) {
+				$record = '*.'.$record;
+			}
+
 			/*
 			 * see https://redmine.froxlor.org/issues/1697
 			 *
@@ -175,8 +187,8 @@ if ($action == 'add_record' && ! empty($_POST)) {
 				}
 			}
 		}
-		// append trailing dot (again)
-		if ($target != '.') {
+		// append trailing dot if there's none
+		if (substr($content, - 1) != '.') {
 			$content .= '.';
 		}
 	}
