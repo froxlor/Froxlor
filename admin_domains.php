@@ -306,7 +306,7 @@ if ($page == 'domains' || $page == 'overview') {
 					standard_error('admin_domain_emailsystemhostname');
 				}
 
-				if (strpos($_POST['domain'], '--') !== false) {
+				if (substr($_POST['domain'], 0, 4) == 'xn--') {
 					standard_error('domain_nopunycode');
 				}
 
