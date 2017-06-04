@@ -10,6 +10,8 @@ logs/*
 .well-known
 .idea
 *.iml
+.php_cs.cache
+/vendor
 
 !templates/Froxlor/
 !templates/Sparkle/
