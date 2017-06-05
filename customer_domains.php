@@ -260,7 +260,7 @@ if ($page == 'overview') {
 		if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-				if (strpos($_POST['subdomain'], '--') !== false) {
+				if (substr($_POST['subdomain'], 0, 4) == 'xn--') {
 					standard_error('domain_nopunycode');
 				}
 
