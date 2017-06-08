@@ -498,7 +498,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'mod_fcgid_defaultini_ownvhost', '2'),
 	('system', 'awstats_icons', '/usr/share/awstats/icon/'),
 	('system', 'ssl_cert_chainfile', ''),
-	('system', 'ssl_cipher_list', 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128'),
+	('system', 'ssl_cipher_list', 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH'),
 	('system', 'nginx_php_backend', '127.0.0.1:8888'),
 	('system', 'nginx_http2_support', '0'),
 	('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock'),
