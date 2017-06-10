@@ -3617,3 +3617,11 @@ if (isDatabaseVersion('201704100')) {
 
 	updateToDbVersion('201705050');
 }
+
+if (isDatabaseVersion('201705050')) {
+	showUpdateStep("Adding new setting for webserver log format");
+	Settings::AddNew('system.logfiles_format', 'combined');
+	lastStepStatus(0);
+
+	updateToDbVersion('201706100');
+}

@@ -205,7 +205,9 @@ class nginx extends HttpConfigBase
 
 				$this->nginx_data[$vhost_filename] .= "\t" . '# Froxlor default vhost' . "\n";
 				$this->nginx_data[$vhost_filename] .= "\t" . 'server_name    ' . Settings::Get('system.hostname') . ';' . "\n";
-				$this->nginx_data[$vhost_filename] .= "\t" . 'access_log      /var/log/nginx/access.log;' . "\n";
+
+				$log_format = Settings::Get('system.logfiles_format');
+				$this->nginx_data[$vhost_filename] .= "\t" . 'access_log      /var/log/nginx/access.log ' . $log_format . ';' . "\n";
 
 				if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.leenabled') == '1' && Settings::Get('system.le_froxlor_enabled') == '1') {
 					$acmeConfFilename = Settings::Get('system.letsencryptacmeconf');
@@ -989,7 +991,9 @@ class nginx extends HttpConfigBase
 		chown($access_log, Settings::Get('system.httpuser'));
 		chgrp($access_log, Settings::Get('system.httpgroup'));
 
-		$logfiles_text .= "\t" . 'access_log    ' . $access_log . ' combined;' . "\n";
+		$log_format = Settings::Get('system.logfiles_format');
+
+		$logfiles_text .= "\t" . 'access_log    ' . $access_log . ' ' . $log_format .';' . "\n";
 		$logfiles_text .= "\t" . 'error_log    ' . $error_log . ' error;' . "\n";
 
 		if (Settings::Get('system.awstats_enabled') == '1') {

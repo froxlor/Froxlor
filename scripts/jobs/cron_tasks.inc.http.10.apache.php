@@ -693,8 +693,10 @@ class apache extends HttpConfigBase
 		chown($access_log, Settings::Get('system.httpuser'));
 		chgrp($access_log, Settings::Get('system.httpgroup'));
 
+		$log_format = Settings::Get('system.logfiles_format');
+
 		$logfiles_text .= '  ErrorLog "' . $error_log . "\"\n";
-		$logfiles_text .= '  CustomLog "' . $access_log . '" combined' . "\n";
+		$logfiles_text .= '  CustomLog "' . $access_log . '" ' . $log_format . "\n";
 
 		if (Settings::Get('system.awstats_enabled') == '1') {
 			if ((int) $domain['parentdomainid'] == 0) {
