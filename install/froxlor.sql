@@ -586,7 +586,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.38.7'),
-	('panel', 'db_version', '201706101');
+	('panel', 'db_version', '201706100');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
