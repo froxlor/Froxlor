@@ -134,6 +134,12 @@ if ($page == 'overview') {
 				// refs #293
 				if (isset($_POST['delete_userfiles']) && (int)$_POST['delete_userfiles'] == 1) {
 					inserttask('8', $userinfo['loginname'], $result['homedir']);
+				} else {
+					if (Settings::Get('system.nssextrausers') == 1)
+					{
+						// this is used so that the libnss-extrausers cron is fired
+						inserttask(5);
+					}
 				}
 
 				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
@@ -431,6 +437,7 @@ if ($page == 'overview') {
 				}
 
 				$log->logAction(USR_ACTION, LOG_INFO, "edited ftp-account '" . $result['username'] . "'");
+				inserttask(5);
 				$description = validate($_POST['ftp_description'], 'description');
 				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
 					SET `description` = :desc, `shell` = :shell
