@@ -78,19 +78,9 @@ class lescript
 			$keys = $this->generateKey();
 			// Only store the accountkey in production, in staging always generate a new key
 			if ($this->isLeProduction) {
-				if ($isFroxlorVhost) {
 					Settings::Set('system.lepublickey', $keys['public']);
 					Settings::Set('system.leprivatekey', $keys['private']);
 					Settings::Set('system.leregistered', 0); // key is not registered
-				} else {
-					$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private, `leregistered` = :registered " . "WHERE `customerid` = :customerid;");
-					Database::pexecute($upd_stmt, array(
-						'public' => $keys['public'],
-						'private' => $keys['private'],
-						'registered' => 0,
-						'customerid' => $this->customerId
-					));
-				}
 			}
 			$leregistered=0;
 			$this->accountKey = $keys['private'];
@@ -351,15 +341,7 @@ class lescript
 	private function setLeRegisteredState($state)
 	{
 		if ($this->isLeProduction) {
-			if ($this->isFroxlorVhost) {
-				Settings::Set('system.leregistered', $state);
-			} else {
-				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `leregistered` = :registered " . "WHERE `customerid` = :customerid;");
-				Database::pexecute($upd_stmt, array(
-					'registered' => $state,
-					'customerid' => $this->customerId
-				));
-			}
+			Settings::Set('system.leregistered', $state);
 		}
 	}
 

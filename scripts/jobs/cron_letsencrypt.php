@@ -41,9 +41,6 @@ $certificates_stmt = Database::query("
 			dom.`documentroot`,
 			dom.`id` AS 'domainid',
 			dom.`ssl_redirect`,
-			cust.`leprivatekey`,
-			cust.`lepublickey`,
-			cust.`leregistered`,
 			cust.`customerid`,
 			cust.`loginname`
 		FROM
@@ -195,6 +192,10 @@ if (Settings::Get('system.le_froxlor_enabled') == '1') {
 // customer domains
 $certrows = $certificates_stmt->fetchAll(PDO::FETCH_ASSOC);
 foreach ($certrows as $certrow) {
+
+	$certrow['leprivatekey'] = Settings::Get('system.leprivatekey');
+	$certrow['lepublickey'] = Settings::Get('system.lepublickey');
+	$certrow['leregistered'] = Settings::Get('system.leregistered');
 
 	// set logger to corresponding loginname for the log to appear in the users system-log
 	$cronlog = FroxlorLogger::getInstanceOf(array(
