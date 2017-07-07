@@ -227,10 +227,9 @@ class lescript
 			$this->log("Token for $domain saved at $tokenPath and should be available at $uri");
 
 			// simple self check
-			$selfcheckContextOptions = array('http' => array('header' => "User-Agent: Froxlor/".$this->version));
-			$selfcheckContext = stream_context_create($selfcheckContextOptions);
-			if ($payload !== trim(@file_get_contents($uri, false, $selfcheckContext))) {
-				$errmsg = json_encode(error_get_last());
+			$payload = $this->getUrlContent($uri);
+			if (isset($payload['error']) && $payload['error'] === TRUE) {
+				$errmsg = isset($payload['error_message']) ? $payload['error_message'] : json_encode(error_get_last());
 				if ($errmsg != "null") {
 					$errmsg = "; PHP error: " . $errmsg;
 				} else {
@@ -246,7 +245,7 @@ class lescript
 			$result = $this->signedRequest($challenge['uri'], array(
 				"resource" => "challenge",
 				"type" => "http-01",
-				"keyAuthorization" => $payload,
+				"keyAuthorization" => isset($payload['data']) ? $payload['data'] : '',
 				"token" => $challenge['token']
 			));
 
@@ -494,6 +493,35 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 	{
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, "letsencrypt " . $message);
 	}
+
+    /**
+     * Ask PHP Curl do fetch data from given URL.
+     *
+     * @param string $url - The URL to grab data from
+     *
+     * @return mixed
+     */
+    protected function getUrlContent($url){
+        $r = [
+            'error' => TRUE,
+            'error_message' => '',
+            'data' => '',
+        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if($httpcode>=200 && $httpcode<300) {
+            $r['data'] = $data;
+            $r['error'] = FALSE;
+        } else {
+            $r['error_message'] = curl_error($ch);
+        }
+        curl_close($ch);
+        return $r;
+    }
 }
 
 class Client
