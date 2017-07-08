@@ -238,6 +238,7 @@ class lescript
 				}
 				@unlink($tokenPath);
 				$this->logger->logAction(CRON_ACTION, LOG_ERR, "letsencrypt Please check $uri - token not available" . $errmsg);
+				continue;
 			}
 
 			$this->log("Sending request to challenge");
