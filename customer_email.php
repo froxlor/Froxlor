@@ -164,7 +164,7 @@ if ($page == 'overview') {
 						Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $result['popaccountid']));
 						$update_users_query_addon .= " , `email_accounts_used` = `email_accounts_used` - 1 ";
 						$number_forwarders-= 1;
-						$log->logAction(USR_ACTION, LOG_NOTICE, "deleted forwarder for email address '" . $result['email'] . "'");
+						$log->logAction(USR_ACTION, LOG_INFO, "deleted forwarder for email address '" . $result['email'] . "'");
 					}
 				} else {
 					$number_forwarders = 0;
@@ -652,7 +652,7 @@ if ($page == 'overview') {
 
 				$password = validatePassword($password);
 
-				$log->logAction(USR_ACTION, LOG_NOTICE, "changed email password for '" . $result['email_full'] . "'");
+				$log->logAction(USR_ACTION, LOG_INFO, "changed email password for '" . $result['email_full'] . "'");
 				$cryptPassword = makeCryptPassword($password);
 				$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "`
 					SET " . (Settings::Get('system.mailpwcleartext') == '1' ? "`password` = :password, " : '') . "
@@ -699,7 +699,7 @@ if ($page == 'overview') {
 				if ($userinfo['email_quota'] != '-1' && ($quota == 0 || ($quota + $userinfo['email_quota_used'] - $result['quota']) > $userinfo['email_quota'])) {
 					standard_error('allocatetoomuchquota', $quota);
 				} else {
-					$log->logAction(USR_ACTION, LOG_NOTICE, "updated quota for email address '" . $result['email'] . "' to " . $quota . " MB");
+					$log->logAction(USR_ACTION, LOG_INFO, "updated quota for email address '" . $result['email'] . "' to " . $quota . " MB");
 					$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "`
 						SET `quota` = :quota
 						WHERE `id` = :id
@@ -834,7 +834,7 @@ if ($page == 'overview') {
 						);
 						Database::pexecute($stmt, array("cid" => $userinfo['customerid']));
 
-						$log->logAction(USR_ACTION, LOG_NOTICE, "added email forwarder for '" . $result['email_full'] . "'");
+						$log->logAction(USR_ACTION, LOG_INFO, "added email forwarder for '" . $result['email_full'] . "'");
 						redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 					}
 				} else {
@@ -895,7 +895,7 @@ if ($page == 'overview') {
 					);
 					Database::pexecute($stmt, array("cid" => $userinfo['customerid']));
 
-					$log->logAction(USR_ACTION, LOG_NOTICE, "deleted email forwarder for '" . $result['email_full'] . "'");
+					$log->logAction(USR_ACTION, LOG_INFO, "deleted email forwarder for '" . $result['email_full'] . "'");
 					redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 				} else {
 					ask_yesno('email_reallydelete_forwarder', $filename, array('id' => $id, 'forwarderid' => $forwarderid, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']) . ' -> ' . $idna_convert->decode($forwarder));
