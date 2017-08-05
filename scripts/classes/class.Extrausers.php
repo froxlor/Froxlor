@@ -33,6 +33,13 @@ class Extrausers
 		$shadow = '/var/lib/extrausers/shadow';
 		$sql = "SELECT username,password FROM ftp_users ORDER BY gid ASC";
 		self::_generateFile($shadow, $sql, $cronlog);
+
+		// set correct permissions
+		@chmod('/var/lib/extrausers/', 0755);
+		@chmod('/var/lib/extrausers/passwd', 0644);
+		@chmod('/var/lib/extrausers/group', 0644);
+		@chmod('/var/lib/extrausers/shadow', 0640);
+
 	}
 
 	private static function _generateFile($file, $query, &$cronlog)
