@@ -112,6 +112,14 @@ return array(
 					'default' => '/var/customers/logs/',
 					'save_method' => 'storeSettingField'
 				),
+				'system_logfiles_format' => array(
+					'label' => $lng['serversettings']['logfiles_format'],
+					'settinggroup' => 'system',
+					'varname' => 'logfiles_format',
+					'type' => 'string',
+					'default' => 'combined',
+					'save_method' => 'storeSettingField'
+				),
 				'system_customersslpath' => array(
 					'label' => $lng['serversettings']['customerssl_directory'],
 					'settinggroup' => 'system',
