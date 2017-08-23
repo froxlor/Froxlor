@@ -3617,3 +3617,11 @@ if (isDatabaseVersion('201704100')) {
 
 	updateToDbVersion('201705050');
 }
+
+if (isDatabaseVersion('201705050')) {
+
+	showUpdateStep("Removing per customer let's encrypt accounts");
+	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` DROP `leregistered`, DROP `lepublickey`, DROP `leprivatekey`;");
+	lastStepStatus(0);
+	updateToDbVersion('201707020');
+}
