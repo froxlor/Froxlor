@@ -99,6 +99,7 @@ class DomainBulkAction
 /* 22 */	'hsts_preload',
 /* 23 */	'ocsp_stapling',
 /* 24 */	'phpenabled',
+/* 25 */	'http2',
 	    /* automatically added */
 		'adminid',
         'customerid',
@@ -212,7 +213,8 @@ class DomainBulkAction
 				`hsts_sub` = :hsts_sub,
 				`hsts_preload` = :hsts_preload,
 				`ocsp_stapling` = :ocsp_stapling,
-				`phpenabled` = :phpenabled
+				`phpenabled` = :phpenabled,
+				`http2` = :http2
 		");
         
         // prepare insert statement for ip/port <> domain
@@ -369,6 +371,14 @@ class DomainBulkAction
 		}
 		if ($domain_data['ocsp_stapling'] != 1) {
 			$domain_data['ocsp_stapling'] = 0;
+		}
+
+		if ($domain_data['phpenabled'] != 1) {
+			$domain_data['phpenabled'] = 0;
+		}
+
+		if ($domain_data['http2'] != 1) {
+			$domain_data['http2'] = 0;
 		}
 
         // add to known domains
