@@ -434,6 +434,9 @@ class apache extends HttpConfigBase
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol -ALL +TLSv1 +TLSv1.2' . "\n";
 							if (Settings::Get('system.apache24') == '1') {
+								if (Settings::Get('system.http2_support') == '1') {
+									$this->virtualhosts_data[$vhosts_filename] .= ' Protocols h2 http/1.1' . "\n";
+								}
 								$this->virtualhosts_data[$vhosts_filename] .= ' SSLCompression Off' . "\n";
 							}
 							// this makes it more secure, thx to Marcel (08/2013)
@@ -869,6 +872,9 @@ class apache extends HttpConfigBase
 				$vhost_content .= '  SSLEngine On' . "\n";
 				$vhost_content .= '  SSLProtocol -ALL +TLSv1 +TLSv1.2' . "\n";
 				if (Settings::Get('system.apache24') == '1') {
+					if (isset($domain['http2']) && $domain['http2'] == '1') {
+						$vhost_content .= ' Protocols h2 http/1.1' . "\n";
+					}
 					$vhost_content .= '  SSLCompression Off' . "\n";
 				}
 				// this makes it more secure, thx to Marcel (08/2013)

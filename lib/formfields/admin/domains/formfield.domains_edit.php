@@ -207,6 +207,21 @@ return array(
 							$result['letsencrypt']
 						)
 					),
+					'http2' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false) && Settings::Get('system.webserver') != 'lighttpd',
+						'label' => $lng['admin']['domain_http2']['title'],
+						'desc' => $lng['admin']['domain_http2']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array (
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['http2']
+						)
+					),
 					'no_ssl_available_info' => array(
 						'visible' => ($ssl_ipsandports == '' ? true : false),
 						'label' => 'SSL',

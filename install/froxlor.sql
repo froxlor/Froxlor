@@ -258,6 +258,7 @@ CREATE TABLE `panel_domains` (
   `hsts_sub` tinyint(1) NOT NULL default '0',
   `hsts_preload` tinyint(1) NOT NULL default '0',
   `ocsp_stapling` tinyint(1) DEFAULT '0',
+  `http2` tinyint(1) DEFAULT '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -500,7 +501,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'ssl_cert_chainfile', ''),
 	('system', 'ssl_cipher_list', 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128'),
 	('system', 'nginx_php_backend', '127.0.0.1:8888'),
-	('system', 'nginx_http2_support', '0'),
+	('system', 'http2_support', '0'),
 	('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock'),
 	('system', 'phpreload_command', ''),
 	('system', 'apache24', '0'),
@@ -585,7 +586,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.38.7'),
-	('panel', 'db_version', '201705050');
+	('panel', 'db_version', '201708240');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

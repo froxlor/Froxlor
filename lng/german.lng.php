@@ -1714,8 +1714,8 @@ $lng['admin']['domain_hsts_incsub']['description'] = 'Die optionale "includeSubD
 $lng['admin']['domain_hsts_preload']['title'] = 'Füge Domain in die <a href="https://hstspreload.appspot.com/" target="_blank">HSTS preload Liste</a> hinzu';
 $lng['admin']['domain_hsts_preload']['description'] = 'Wenn die Domain in die HSTS preload Liste, verwaltet von Chrome (und genutzt von Firefox und Safari), hinzugefügt werden soll, dann aktiviere diese Einstellung.<br>Die preload-Direktive zu senden kann PERMANTENTE KONSEQUENZEN haben und dazu führen, dass Benutzer auf diese Domain und auch Subdomains nicht zugreifen können.<br>Beachte Details unter <a href="https://hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> bevor ein Header mit "preload" gesendet wird.';
 
-$lng['serversettings']['nginx_http2_support']['title'] = 'Nginx HTTP2 Unterstützung';
-$lng['serversettings']['nginx_http2_support']['description'] = 'Aktiviere http2 Unterstützung für SSL. NUR AKTIVIEREN, WENN nginx DIESE FUNKTION UNTERSTÜTZT (version 1.9.5+)';
+$lng['serversettings']['http2_support']['title'] = 'HTTP2 Unterstützung';
+$lng['serversettings']['http2_support']['description'] = 'Aktiviere HTTP2 Unterstützung für SSL.<br><em class="red">NUR AKTIVIEREN, WENN DER WEBSERVER DIESE FUNKTION UNTERSTÜTZT (nginx version 1.9.5+, apache2 version 2.4.17+)</em>';
 
 $lng['error']['noipportgiven'] = 'Keine IP/Port angegeben';
 
@@ -1727,3 +1727,5 @@ $lng['serversettings']['ssl']['apache24_ocsp_cache_path']['title'] = 'Apache 2.4
 $lng['serversettings']['ssl']['apache24_ocsp_cache_path']['description'] = 'Konfiguriert den Cache-Pfad zum Zwischenspeichern der OCSP-Antworten,<br />die an TLS-Handshakes angehängt werden.';
 $lng['serversettings']['nssextrausers']['title'] = 'Verwende libnss-extrausers anstatt libnss-mysql';
 $lng['serversettings']['nssextrausers']['description'] = 'Lese Benutzer nicht direkt aus der Datenbank sondern über Dateien, bitte nur aktivieren, wenn die entsprechende Konfiguration vorgenommen wurde (System -> libnss-extrausers).<br><strong class="red">Nur für Debian/Ubuntu (oder wenn libnss-extrausers manuell kompiliert wurde!)</strong>';
+$lng['admin']['domain_http2']['title'] = 'HTTP2 Unterstützung';
+$lng['admin']['domain_http2']['description'] = 'Siehe <a target="_blank" href="https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol#HTTP.2F2">Wikipedia</a> für eine ausführliche Beschreibung von HTTP2';

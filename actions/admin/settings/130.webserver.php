@@ -179,17 +179,6 @@ return array(
 						'nginx'
 					)
 				),
-				'system_nginx_http2_support' => array(
-					'label' => $lng['serversettings']['nginx_http2_support'],
-					'settinggroup' => 'system',
-					'varname' => 'nginx_http2_support',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array(
-						'nginx'
-					)
-				),
 				'system_nginx_php_backend' => array(
 					'label' => $lng['serversettings']['nginx_php_backend'],
 					'settinggroup' => 'system',

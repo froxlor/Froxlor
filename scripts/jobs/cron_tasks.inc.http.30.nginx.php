@@ -196,7 +196,7 @@ class nginx extends HttpConfigBase
 					}
 				}
 
-				$http2 = $ssl_vhost == true && Settings::Get('system.nginx_http2_support') == '1';
+				$http2 = $ssl_vhost == true && Settings::Get('system.http2_support') == '1';
 
 				/**
 				 * this HAS to be set for the default host in nginx or else no vhost will work
@@ -418,7 +418,7 @@ class nginx extends HttpConfigBase
 				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
 
-            $http2 = $ssl_vhost == true && Settings::Get('system.nginx_http2_support') == '1';
+			$http2 = $ssl_vhost == true && (isset($domain['http2']) && $domain['http2'] == '1');
 
             $vhost_content .= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
 		}
