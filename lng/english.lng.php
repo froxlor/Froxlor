@@ -2078,3 +2078,5 @@ $lng['serversettings']['nssextrausers']['title'] = 'Use libnss-extrausers instea
 $lng['serversettings']['nssextrausers']['description'] = 'Do not read users from the database but from files. Please only activate if you have already gone through the required configuration steps (system -> libnss-extrausers).<br><strong class="red">For Debian/Ubuntu only (or if you have compiled libnss-extrausers yourself!)</strong>';
 $lng['admin']['domain_http2']['title'] = 'HTTP2 support';
 $lng['admin']['domain_http2']['description'] = 'See <a target="_blank" href="https://en.wikipedia.org/wiki/HTTP/2">Wikipedia</a> for a detailed explanation of HTTP2';
+$lng['admin']['testmail'] = 'SMTP test';
+$lng['success']['testmailsent'] = 'Test mail sent successfully';

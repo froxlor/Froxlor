@@ -290,3 +290,68 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	}
 	eval("echo \"" . getTemplate("settings/integritycheck") . "\";");
 }
+elseif ($page == 'testmail')
+{
+		if (isset($_POST['send']) && $_POST['send'] == 'send')
+		{
+			$test_addr = isset($_POST['test_addr']) ? $_POST['test_addr'] : null;
+
+			/**
+			 * Initialize the mailingsystem
+			 */
+			$testmail = new PHPMailer(true);
+			$testmail->CharSet = "UTF-8";
+
+			if (Settings::Get('system.mail_use_smtp')) {
+				$testmail->isSMTP();
+				$testmail->Host = Settings::Get('system.mail_smtp_host');
+				$testmail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
+				$testmail->Username = Settings::Get('system.mail_smtp_user');
+				$testmail->Password = Settings::Get('system.mail_smtp_passwd');
+				if (Settings::Get('system.mail_smtp_usetls')) {
+					$testmail->SMTPSecure = 'tls';
+				}
+				$testmail->Port = Settings::Get('system.mail_smtp_port');
+			}
+
+			$_mailerror = false;
+			if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
+				// set return-to address and custom sender-name, see #76
+				$testmail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+				if (Settings::Get('panel.adminmail_return') != '') {
+					$testmail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
+				}
+
+				try {
+					$testmail->Subject = "Froxlor Test-Mail";
+					$mail_body = "Yay, this worked :)";
+					$testmail->AltBody = $mail_body;
+					$testmail->MsgHTML(str_replace("\n", "<br />", $mail_body));
+					$testmail->AddAddress($test_addr);
+					$testmail->Send();
+				} catch(phpmailerException $e) {
+					$mailerr_msg = $e->errorMessage();
+					$_mailerror = true;
+				} catch (Exception $e) {
+					$mailerr_msg = $e->getMessage();
+					$_mailerror = true;
+				}
+
+				if (!$_mailerror) {
+					// success
+					$mail->ClearAddresses();
+					standard_success('testmailsent', '', array('filename' => 'admin_settings.php', 'page' => 'testmail'));
+				}
+			} else {
+				// invalid sender e-mail
+				$mailerr_msg = "Invalid sender e-mail address: ".Settings::Get('panel.adminmail');
+				$_mailerror = true;
+			}
+		}
+
+		$mail_smtp_user = Settings::Get('system.mail_smtp_user');
+		$mail_smtp_host = Settings::Get('system.mail_smtp_host');
+		$mail_smtp_port = Settings::Get('system.mail_smtp_port');
+
+		eval("echo \"" . getTemplate("settings/testmail") . "\";");
+}
