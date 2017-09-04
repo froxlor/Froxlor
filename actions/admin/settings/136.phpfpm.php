@@ -159,15 +159,7 @@ return array(
 					'default' => false,
 					'visible' => Settings::Get('system.apache24'),
 					'save_method' => 'storeSettingField'
-					),
-				'system_nssextrausers' => array(
-					'label' => $lng['serversettings']['nssextrausers'],
-					'settinggroup' => 'system',
-					'varname' => 'nssextrausers',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField'
-					),
+					)
 				),
 			),
 		),

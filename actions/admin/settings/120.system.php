@@ -94,6 +94,14 @@ return array(
 					'plausibility_check_method' => 'checkMysqlAccessHost',
 					'save_method' => 'storeSettingMysqlAccessHost',
 					),
+				'system_nssextrausers' => array(
+					'label' => $lng['serversettings']['nssextrausers'],
+					'settinggroup' => 'system',
+					'varname' => 'nssextrausers',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+					),
 				'system_index_file_extension' => array(
 					'label' => $lng['serversettings']['index_file_extension'],
 					'settinggroup' => 'system',

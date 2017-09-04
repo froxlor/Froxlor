@@ -104,15 +104,7 @@ return array(
 					'type' => 'int',
 					'default' => 30,
 					'save_method' => 'storeSettingField'
-					),
-				'system_nssextrausers' => array(
-					'label' => $lng['serversettings']['nssextrausers'],
-					'settinggroup' => 'system',
-					'varname' => 'nssextrausers',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField'
-					),
+					)
 				)
 			)
 		)
