@@ -2223,6 +2223,8 @@ if ($page == 'domains' || $page == 'overview') {
 
 			// update customer/admin counters
 			updateCounters(false);
+			inserttask('1');
+			inserttask('4');
 
 			$result_str = $result['imported'] . ' / ' . $result['all'];
 			standard_success('domain_import_successfully', $result_str, array(

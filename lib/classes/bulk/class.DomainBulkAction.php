@@ -187,13 +187,14 @@ class DomainBulkAction
         }
         
         // preapre insert statement as it is used a few times
+        // leave out aliasdomain for now, cause empty = NULL value which cannot be
+        // added this easily using prepared statements
         $this->_ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
 				`domain` = :domain,
 				`adminid` = :adminid,
 				`customerid` = :customerid,
 				`documentroot` = :documentroot,
-                `aliasdomain` = :aliasdomain,
 				`isbinddomain` = :isbinddomain,
 				`isemaildomain` = :isemaildomain,
 				`email_only` = :email_only,
@@ -307,6 +308,7 @@ class DomainBulkAction
         }
         
         // check for alias-domain
+        $hasAlias = false;
         if (! empty($domain_data['aliasdomain'])) {
             // format
             $domain_data['aliasdomain'] = $idna_convert->encode(preg_replace(array(
@@ -325,6 +327,7 @@ class DomainBulkAction
                 // - we'd better skip
                 return false;
             }
+            $hasAlias = $domain_data['aliasdomain'];
         }
         
         // check for use_ssl and ssl_redirect
@@ -462,13 +465,21 @@ class DomainBulkAction
         $use_ssl = (bool)$domain_data['use_ssl'];
         // don't need that for the domain-insert-statement
         unset($domain_data['use_ssl']);
-        
+        // don't need alias
+        unset($domain_data['aliasdomain']);
+
         // finally ADD the domain to panel_domains
         Database::pexecute($this->_ins_stmt, $domain_data);
         
         // get the newly inserted domain-id
         $domain_id = Database::lastInsertId();
         
+        // add alias if any
+        if ($hasAlias != false) {
+			$alias_stmt = Database::prepare("UPDATE `".TABLE_PANEL_DOMAINS."` SET `aliasdomain` = :aliasdomain WHERE `id` = :did");
+			Database::pexecute($alias_stmt, array('aliasdomain' => $hasAlias, 'did' => $domain_id));
+        }
+
         // insert domain <-> ip/port reference
         if (empty($iplist)) {
             $iplist = Settings::Get('system.ipaddress');
