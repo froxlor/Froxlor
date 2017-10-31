@@ -250,7 +250,7 @@ if ($action == 'login') {
 		$language_options = '';
 		$language_options .= makeoption($lng['login']['profile_lng'], 'profile', 'profile', true, true);
 
-		while (list($language_file, $language_name) = each($languages)) {
+		foreach ($languages as $language_file => $language_name) {
 			$language_options .= makeoption($language_name, $language_file, 'profile', true);
 		}
 

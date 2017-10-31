@@ -96,7 +96,8 @@ if ($page == 'overview') {
 					$row['destination'] = explode(' ', $row['destination']);
 					uasort($row['destination'], 'strcasecmp');
 
-					while (list($dest_id, $destination) = each($row['destination'])) {
+					$dest_list = $row['destination'];
+					foreach ($dest_list as $dest_id => $destination) {
 						$row['destination'][$dest_id] = $idna_convert->decode($row['destination'][$dest_id]);
 
 						if ($row['destination'][$dest_id] == $row['email_full']) {
@@ -323,7 +324,7 @@ if ($page == 'overview') {
 			$forwarders = '';
 			$forwarders_count = 0;
 
-			while (list($dest_id, $destination) = each($result['destination'])) {
+			foreach ($row['destination'] as $dest_id => $destination) {
 				$destination = $idna_convert->decode($destination);
 
 				if ($destination != $result['email_full'] && $destination != '') {

@@ -204,7 +204,7 @@ if ($page == 'overview') {
 		}
 
 		$language_options = '';
-		while (list($language_file, $language_name) = each($languages)) {
+		foreach ($languages as $language_file => $language_name) {
 			$language_options .= makeoption($language_name, $language_file, $default_lang, true);
 		}
 

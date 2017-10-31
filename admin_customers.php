@@ -1024,7 +1024,7 @@ if ($page == 'customers'
 			} else {
 				$language_options = '';
 
-				while (list($language_file, $language_name) = each($languages)) {
+				foreach ($languages as $language_file => $language_name) {
 					$language_options.= makeoption($language_name, $language_file, Settings::Get('panel.standardlanguage'), true);
 				}
 
@@ -1630,7 +1630,7 @@ if ($page == 'customers'
 			} else {
 				$language_options = '';
 
-				while (list($language_file, $language_name) = each($languages)) {
+				foreach ($languages as $language_file => $language_name) {
 					$language_options.= makeoption($language_name, $language_file, $result['def_language'], true);
 				}
 

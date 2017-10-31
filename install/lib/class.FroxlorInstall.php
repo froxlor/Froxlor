@@ -702,7 +702,7 @@ class FroxlorInstall
 		}
 		// language selection
 		$language_options = '';
-		while (list ($language_file, $language_name) = each($this->_languages)) {
+		foreach ($this->_languages as $language_name => $language_file) {
 			$language_options .= makeoption($language_name, $language_file, $this->_activelng, true, true);
 		}
 		// get language-form-template

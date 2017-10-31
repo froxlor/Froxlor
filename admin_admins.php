@@ -440,7 +440,7 @@ if ($page == 'admins'
 		} else {
 
 			$language_options = '';
-			while (list($language_file, $language_name) = each($languages)) {
+			foreach ($languages as $language_file => $language_name) {
 				$language_options.= makeoption($language_name, $language_file, $userinfo['language'], true);
 			}
 
@@ -840,7 +840,7 @@ if ($page == 'admins'
 				}
 
 				$language_options = '';
-				while (list($language_file, $language_name) = each($languages)) {
+				foreach ($languages as $language_file => $language_name) {
 					$language_options.= makeoption($language_name, $language_file, $result['def_language'], true);
 				}
 

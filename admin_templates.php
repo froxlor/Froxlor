@@ -99,7 +99,7 @@ if ($action == '') {
 	}
 
 	$add = false;
-	while (list($language_file, $language_name) = each($languages)) {
+	foreach ($languages as $language_file => $language_name) {
 
 		$templates_done = array();
 		$result_stmt = Database::prepare("
@@ -328,7 +328,7 @@ if ($action == '') {
 		$language_options = '';
 		$template_options = '';
 
-		while (list($language_file, $language_name) = each($languages)) {
+		foreach ($languages as $language_file => $language_name) {
 			$templates = array();
 			$result_stmt = Database::prepare("
 				SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
