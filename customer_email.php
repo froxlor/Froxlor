@@ -324,7 +324,7 @@ if ($page == 'overview') {
 			$forwarders = '';
 			$forwarders_count = 0;
 
-			foreach ($row['destination'] as $dest_id => $destination) {
+			foreach ($result['destination'] as $dest_id => $destination) {
 				$destination = $idna_convert->decode($destination);
 
 				if ($destination != $result['email_full'] && $destination != '') {
