@@ -1,4 +1,6 @@
 # Froxlor
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FFroxlor%2FFroxlor.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FFroxlor%2FFroxlor?ref=badge_shield)
+
 
 The server administration software for your needs.
 Developed by experienced server administrators, this panel simplifies the effort of managing your hosting platform.
@@ -40,6 +42,9 @@ https://github.com/Froxlor/Froxlor/wiki
 ## License
 
 May be found in COPYING
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FFroxlor%2FFroxlor.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FFroxlor%2FFroxlor?ref=badge_large)
 
 ## Downloads
 
