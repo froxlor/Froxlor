@@ -204,7 +204,7 @@ class FroxlorInstall
 		$content .= $this->_status_message('begin', $this->_lng['install']['testing_mysql']);
 
 		$options = array(
-			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8'
+			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
 		);
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";";
 		$fatal_fail = false;
@@ -240,7 +240,7 @@ class FroxlorInstall
 			$content .= $this->_importDatabaseData();
 			// create DB object for new database
 			$options = array(
-				'PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8'
+				'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
 			);
 			$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 			$another_fail = false;
@@ -511,7 +511,7 @@ class FroxlorInstall
 		$content = "";
 		$content .= $this->_status_message('begin', $this->_lng['install']['testing_new_db']);
 		$options = array(
-			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'set names utf8'
+			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
 		);
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 		$fatal_fail = false;

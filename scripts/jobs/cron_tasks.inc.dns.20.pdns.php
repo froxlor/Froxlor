@@ -227,7 +227,7 @@ class pdns extends DnsBase
 		// build up connection string
 		$driver = 'mysql';
 		$dsn = $driver.":";
-		$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'set names utf8');
+		$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"');
 		$attributes = array('ATTR_ERRMODE' => 'ERRMODE_EXCEPTION');
 		$dbconf = array();
 
