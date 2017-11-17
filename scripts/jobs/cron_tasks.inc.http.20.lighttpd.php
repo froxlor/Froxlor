@@ -535,7 +535,8 @@ class lighttpd extends HttpConfigBase
 
 			if ($domain['ssl_cert_file'] != '') {
 
-				$ssl_settings .= 'ssl.engine = "enable"' . "\n";
+				// ssl.engine only necessary once in the ip/port vhost (SERVER['socket'] condition)
+				//$ssl_settings .= 'ssl.engine = "enable"' . "\n";
 				$ssl_settings .= 'ssl.use-compression = "disable"' . "\n";
 				$ssl_settings .= 'ssl.use-sslv2 = "disable"' . "\n";
 				$ssl_settings .= 'ssl.use-sslv3 = "disable"' . "\n";
