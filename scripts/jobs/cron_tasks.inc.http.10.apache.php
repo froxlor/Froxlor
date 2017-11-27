@@ -78,35 +78,27 @@ class apache extends HttpConfigBase
 		}
 		$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_dirfix_nofcgid.conf');
 
-		if (Settings::Get('system.mod_fcgid') == '1' || Settings::Get('phpfpm.enabled') == '1') {
-			// if we use fcgid or php-fpm we don't need this file
-			if (file_exists($vhosts_filename)) {
-				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'apache::_createStandardDirectoryEntry: unlinking ' . basename($vhosts_filename));
-				unlink(makeCorrectFile($vhosts_filename));
-			}
-		} else {
-			if (! isset($this->virtualhosts_data[$vhosts_filename])) {
-				$this->virtualhosts_data[$vhosts_filename] = '';
-			}
-
-			$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . makeCorrectDir(Settings::Get('system.documentroot_prefix')) . '">' . "\n";
-
-			// check for custom values, see #1638
-			$custom_opts = Settings::Get('system.apacheglobaldiropt');
-			if (! empty($custom_opts)) {
-				$this->virtualhosts_data[$vhosts_filename] .= $custom_opts . "\n";
-			} else {
-				// >=apache-2.4 enabled?
-				if (Settings::Get('system.apache24') == '1') {
-					$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
-					$this->virtualhosts_data[$vhosts_filename] .= '    AllowOverride All' . "\n";
-				} else {
-					$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
-					$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
-				}
-			}
-			$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+		if (! isset($this->virtualhosts_data[$vhosts_filename])) {
+			$this->virtualhosts_data[$vhosts_filename] = '';
 		}
+
+		$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . makeCorrectDir(Settings::Get('system.documentroot_prefix')) . '">' . "\n";
+
+		// check for custom values, see #1638
+		$custom_opts = Settings::Get('system.apacheglobaldiropt');
+		if (! empty($custom_opts)) {
+			$this->virtualhosts_data[$vhosts_filename] .= $custom_opts . "\n";
+		} else {
+			// >=apache-2.4 enabled?
+			if (Settings::Get('system.apache24') == '1') {
+				$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+				$this->virtualhosts_data[$vhosts_filename] .= '    AllowOverride All' . "\n";
+			} else {
+				$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
+				$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
+			}
+		}
+		$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 
 		$ocsp_cache_filename = makeCorrectFile($vhosts_folder . '/03_froxlor_ocsp_cache.conf');
 		if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.apache24') == 1) {
