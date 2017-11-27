@@ -236,9 +236,7 @@ class lescript
 				} else {
 					$errmsg = "";
 				}
-				@unlink($tokenPath);
-				$this->logger->logAction(CRON_ACTION, LOG_ERR, "letsencrypt Please check $uri - token not available" . $errmsg);
-				continue;
+				$this->logger->logAction(CRON_ACTION, LOG_WARNING, "[Lets Encrypt self-check] Please check $uri - token seems to be not available. This is just a simple self-check, it might be wrong but consider using this information when Let's Encrypt fails to issue a certificate" . $errmsg);
 			}
 
 			$this->log("Sending request to challenge");
