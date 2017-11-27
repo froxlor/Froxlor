@@ -73,6 +73,8 @@ return array(
 					'varname' => 'peardir',
 					'type' => 'string',
 					'string_type' => 'dir',
+					'string_delimiter' => ':',
+					'string_emptyallowed' => true,
 					'default' => '/usr/share/php/:/usr/share/php5/',
 					'save_method' => 'storeSettingField'
 					),
