@@ -327,15 +327,15 @@ if ($page == 'overview') {
 				}
 
 				if (!preg_match('/^https?\:\/\//', $path) || !validateUrl($path)) {
+					if (strstr($path, ":") !== FALSE) {
+						standard_error('pathmaynotcontaincolon');
+					}
 					// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
 					if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $completedomain);
 					} else {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-					}
-					if (strstr($path, ":") !== FALSE) {
-						standard_error('pathmaynotcontaincolon');
 					}
 				} else {
 					$_doredirect = true;
@@ -571,15 +571,15 @@ if ($page == 'overview') {
 				}
 
 				if (!preg_match('/^https?\:\/\//', $path) || !validateUrl($path)) {
+					if (strstr($path, ":") !== FALSE) {
+						standard_error('pathmaynotcontaincolon');
+					}
 					// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
 					if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $result['domain']);
 					} else {
 						$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-					}
-					if (strstr($path, ":") !== FALSE) {
-						standard_error('pathmaynotcontaincolon');
 					}
 				} else {
 					$_doredirect = true;
