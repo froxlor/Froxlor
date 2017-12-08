@@ -224,7 +224,7 @@ class nginx extends HttpConfigBase
 					} else {
 						$_sslport = $this->checkAlternativeSslPort();
 						$mypath = 'https://' . Settings::Get('system.hostname') . $_sslport . '/';
-						$this->nginx_data[$vhost_filename] .= "\t" . 'if ($request_uri !~ ^/.well-known/acme-challenge/\w+$) {' . "\n";
+						$this->nginx_data[$vhost_filename] .= "\t" . 'if ($request_uri !~ ^/.well-known/acme-challenge/[\w-]+$) {' . "\n";
 						$this->nginx_data[$vhost_filename] .= "\t\t" . 'return 301 ' . $mypath . '$request_uri;' . "\n";
 						$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 					}
@@ -473,7 +473,7 @@ class nginx extends HttpConfigBase
 			// Get domain's redirect code
 			$code = getDomainRedirectCode($domain['id'], '301');
 
-			$vhost_content .= "\t" . 'if ($request_uri !~ ^/.well-known/acme-challenge/\w+$) {' . "\n";
+			$vhost_content .= "\t" . 'if ($request_uri !~ ^/.well-known/acme-challenge/[\w-]+$) {' . "\n";
 			$vhost_content .= "\t\t" . 'return ' . $code .' ' . $uri . '$request_uri;' . "\n";
 			$vhost_content .= "\t" . '}' . "\n";
 		} else {
