@@ -42,6 +42,8 @@ function dieWithMail($message, $subject = "[froxlor] Cronjob error") {
 			$_mail->Password = Settings::Get('system.mail_smtp_passwd');
 			if (Settings::Get('system.mail_smtp_usetls')) {
 				$_mail->SMTPSecure = 'tls';
+			} else {
+				$mail->SMTPAutoTLS = false;
 			}
 			$_mail->Port = Settings::Get('system.mail_smtp_port');
 		}

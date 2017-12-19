@@ -34,6 +34,8 @@ if (Settings::Get('system.mail_use_smtp')) {
 	$mail->Password = Settings::Get('system.mail_smtp_passwd');
 	if (Settings::Get('system.mail_smtp_usetls')) {
 		$mail->SMTPSecure = 'tls';
+	} else {
+		$mail->SMTPAutoTLS = false;
 	}
 	$mail->Port = Settings::Get('system.mail_smtp_port');
 }

@@ -310,6 +310,8 @@ elseif ($page == 'testmail')
 				$testmail->Password = Settings::Get('system.mail_smtp_passwd');
 				if (Settings::Get('system.mail_smtp_usetls')) {
 					$testmail->SMTPSecure = 'tls';
+				} else {
+					$testmail->SMTPAutoTLS = false;
 				}
 				$testmail->Port = Settings::Get('system.mail_smtp_port');
 			}
