@@ -21,7 +21,7 @@ class Extrausers
 	{
 		// passwd
 		$passwd = '/var/lib/extrausers/passwd';
-		$sql = "SELECT username,'x' as password,uid,gid,'Froxlor User' as comment,homedir,shell FROM ftp_users WHERE login_enabled = 'Y' ORDER BY uid ASC";
+		$sql = "SELECT username,'x' as password,uid,gid,'Froxlor User' as comment,homedir,shell, login_enabled FROM ftp_users ORDER BY uid ASC";
 		self::_generateFile($passwd, $sql, $cronlog);
 
 		// group
@@ -39,7 +39,6 @@ class Extrausers
 		@chmod('/var/lib/extrausers/passwd', 0644);
 		@chmod('/var/lib/extrausers/group', 0644);
 		@chmod('/var/lib/extrausers/shadow', 0640);
-
 	}
 
 	private static function _generateFile($file, $query, &$cronlog)
@@ -59,6 +58,11 @@ class Extrausers
 		while ($u = $data_sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 			switch ($type) {
 				case 'passwd':
+					if ($u['login_enabled'] != 'Y') {
+						$u['password'] = '*';
+						$u['shell'] = '/bin/false';
+						$u['comment'] = 'Locked Froxlor User';
+					}
 					$line = $u['username'] . ':' . $u['password'] . ':' . $u['uid'] . ':' . $u['gid'] . ':' . $u['comment'] . ':' . $u['homedir'] . ':' . $u['shell'] . PHP_EOL;
 					break;
 				case 'group':
