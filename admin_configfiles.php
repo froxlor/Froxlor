@@ -82,6 +82,12 @@ if ($userinfo['change_serversettings'] == '1') {
 	$config_dir = makeCorrectDir(FROXLOR_INSTALL_DIR . '/lib/configfiles/');
 
 	if ($distribution != "") {
+
+		if (!file_exists($config_dir . '/' . $distribution . ".xml")) {
+			trigger_error("Unknown distribution, are you playing around with the URL?");
+			exit;
+		}
+
 		// create configparser object
 		$configfiles = new ConfigParser($config_dir . '/' . $distribution . ".xml");
 
@@ -92,6 +98,11 @@ if ($userinfo['change_serversettings'] == '1') {
 		$services = $configfiles->getServices();
 
 		if ($service != "") {
+
+			if (!isset($services[$service])) {
+				trigger_error("Unknown service, are you playing around with the URL?");
+				exit;
+			}
 
 			$daemons = $services[$service]->getDaemons();
 
@@ -135,6 +146,11 @@ if ($userinfo['change_serversettings'] == '1') {
 	}
 
 	if ($distribution != "" && $service != "" && $daemon != "") {
+
+		if (!isset($daemons[$daemon])) {
+			trigger_error("Unknown daemon, are you playing around with the URL?");
+			exit;
+		}
 
 		$confarr = $daemons[$daemon]->getConfig();
 
