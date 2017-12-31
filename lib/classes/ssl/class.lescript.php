@@ -227,16 +227,19 @@ class lescript
 			$this->log("Token for $domain saved at $tokenPath and should be available at $uri");
 
 			// simple self check
-			$selfcheckContextOptions = array('http' => array('header' => "User-Agent: Froxlor/".$this->version));
-			$selfcheckContext = stream_context_create($selfcheckContextOptions);
-			if ($payload !== trim(@file_get_contents($uri, false, $selfcheckContext))) {
-				$errmsg = json_encode(error_get_last());
-				if ($errmsg != "null") {
-					$errmsg = "; PHP error: " . $errmsg;
-				} else {
-					$errmsg = "";
+			if (Settings::Get('system.disable_le_selfcheck') == '0')
+			{
+				$selfcheckContextOptions = array('http' => array('header' => "User-Agent: Froxlor/".$this->version));
+				$selfcheckContext = stream_context_create($selfcheckContextOptions);
+				if ($payload !== trim(@file_get_contents($uri, false, $selfcheckContext))) {
+					$errmsg = json_encode(error_get_last());
+					if ($errmsg != "null") {
+						$errmsg = "; PHP error: " . $errmsg;
+					} else {
+						$errmsg = "";
+					}
+					$this->logger->logAction(CRON_ACTION, LOG_WARNING, "[Lets Encrypt self-check] Please check $uri - token seems to be not available. This is just a simple self-check, it might be wrong but consider using this information when Let's Encrypt fails to issue a certificate" . $errmsg);
 				}
-				$this->logger->logAction(CRON_ACTION, LOG_WARNING, "[Lets Encrypt self-check] Please check $uri - token seems to be not available. This is just a simple self-check, it might be wrong but consider using this information when Let's Encrypt fails to issue a certificate" . $errmsg);
 			}
 
 			$this->log("Sending request to challenge");

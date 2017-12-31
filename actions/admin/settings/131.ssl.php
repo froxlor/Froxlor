@@ -165,6 +165,14 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField'
+				),
+				'system_disable_le_selfcheck' => array(
+					'label' => $lng['serversettings']['disable_le_selfcheck'],
+					'settinggroup' => 'system',
+					'varname' => 'disable_le_selfcheck',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
 				)
 			)
 		)

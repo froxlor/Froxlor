@@ -1731,3 +1731,5 @@ $lng['admin']['domain_http2']['title'] = 'HTTP2 Unterstützung';
 $lng['admin']['domain_http2']['description'] = 'Siehe <a target="_blank" href="https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol#HTTP.2F2">Wikipedia</a> für eine ausführliche Beschreibung von HTTP2';
 $lng['admin']['testmail'] = 'SMTP Test';
 $lng['success']['testmailsent'] = 'Test E-Mail erfolgreich gesendet';
+$lng['serversettings']['disable_le_selfcheck']['title'] = "Deaktiviere Let's Encrypt lokale Selbstprüfung";
+$lng['serversettings']['disable_le_selfcheck']['description'] = "Wenn aktiviert wird Froxlor <strong>keine</strong> Erreichbarkeitsprüfung des Tokens vornehmen. Nötig bei ge-NAT-eten IP's oder Ähnlichem";

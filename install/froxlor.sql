@@ -554,6 +554,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('system', 'hsts_preload', '0'),
 	('system', 'leregistered', '0'),
 	('system', 'nssextrausers', '0'),
+	('system', 'disable_le_selfcheck', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -585,8 +586,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
-	('panel', 'version', '0.9.38.7'),
-	('panel', 'db_version', '201708240');
+	('panel', 'version', '0.9.38.8'),
+	('panel', 'db_version', '201712310');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

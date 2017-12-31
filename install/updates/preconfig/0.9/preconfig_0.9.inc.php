@@ -717,4 +717,14 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$question .= makeyesno('system_nssextrausers', '1', '0', '0') . '<br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
+
+	if (versionInUpdate($current_db_version, '201712310')) {
+		if (Settings::Get('system.leenabled') == 1) {
+			$has_preconfig = true;
+			$description = 'Chose whether you want to disable the Let\'s Encrypt selfcheck as it causes false positives for some onfigurations.<br /><br />';
+			$question = '<strong>Disable Let\'s Encrypt self-check?</strong><br />';
+			$question .= makeyesno('system_disable_le_selfcheck', '1', '0', '0') . '<br />';
+			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
+		}
+	}
 }
