@@ -64,12 +64,21 @@ class Extrausers
 						$u['comment'] = 'Locked Froxlor User';
 					}
 					$line = $u['username'] . ':' . $u['password'] . ':' . $u['uid'] . ':' . $u['gid'] . ':' . $u['comment'] . ':' . $u['homedir'] . ':' . $u['shell'] . PHP_EOL;
+					$permissions = 0644;
+					$user = 'root';
+					$group = 'root';
 					break;
 				case 'group':
 					$line = $u['groupname'] . ':' . $u['password'] . ':' . $u['gid'] . ':' . $u['members'] . PHP_EOL;
+					$permissions = 0644;
+					$user = 'root';
+					$group = 'root';
 					break;
 				case 'shadow':
 					$line = $u['username'] . ':' . $u['password'] . ':' . floor(time() / 86400 - 1) . ':0:99999:7:::' . PHP_EOL;
+					$permissions = 0600;
+					$user = 'root';
+					$group = 'root';
 					break;
 			}
 			$data_content .= $line;
@@ -78,6 +87,21 @@ class Extrausers
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Succesfully wrote ' . $type . ' file');
 		} else {
 			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Error when writing ' . $type . ' file entries');
+		}
+		if (chmod($file,$permissions) !== false) {
+			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Succesfully changed permissions of ' . $type . ' file to ' . $permissions);
+		} else {
+			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Error when changing permissions of ' . $type . ' file to ' . $permissions);
+		}
+		if (chown($file,$user) !== false) {
+			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Succesfully changed user of ' . $type . ' file to ' . $user);
+		} else {
+			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Error when changing user of ' . $type . ' file to ' . $user);
+		}
+		if (chgrp($file,$group) !== false) {
+			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Succesfully changed group of ' . $type . ' file to ' . $group);
+		} else {
+			$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Error when changing group of ' . $type . ' file to ' . $group);
 		}
 	}
 }
