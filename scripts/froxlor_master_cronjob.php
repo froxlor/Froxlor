@@ -91,6 +91,7 @@ if (count($jobs_to_run) > 0) {
 		// clear NSCD cache if using fcgid or fpm, #1570
 		if (Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
 			$false_val = false;
+			safe_exec('nscd -i passwd 1> /dev/null', $false_val, array('>'));
 			safe_exec('nscd -i group 1> /dev/null', $false_val, array('>'));
 		}
 	}
