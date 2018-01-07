@@ -280,6 +280,12 @@ return array(
 					'show_element' => (Settings::Get('system.mod_fcgid') == true || Settings::Get('phpfpm.enabled') == true)
 				),
 				array(
+					'url' => 'admin_phpsettings.php?page=fpmdaemons',
+					'label' => $lng['menue']['phpsettings']['fpmdaemons'],
+					'required_resources' => 'change_serversettings',
+					'show_element' => Settings::Get('phpfpm.enabled') == true
+				),
+				array(
 					'url' => 'admin_settings.php?page=phpinfo',
 					'label' => $lng['admin']['phpinfo'],
 					'required_resources' => 'change_serversettings'

@@ -36,6 +36,12 @@ return array(
 						'maxlength' => 255,
 						'value' => '/usr/bin/php-cgi'
 					),
+					'fpmconfig' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'label' => $lng['admin']['phpsettings']['fpmdesc'],
+						'type' => 'select',
+						'select_var' => $fpmconfigs
+					),
 					'file_extensions' => array(
 						'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['phpsettings']['file_extensions'],

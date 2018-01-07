@@ -940,6 +940,7 @@ $lng['admin']['phpsettings']['phpinisettings'] = 'php.ini settings';
 $lng['error']['nopermissionsorinvalidid'] = 'You don\'t have enough permissions to change these settings or an invalid id was given.';
 $lng['panel']['view'] = 'view';
 $lng['question']['phpsetting_reallydelete'] = 'Do you really want to delete these settings? All domains which use these settings currently will be changed to the default config.';
+$lng['question']['fpmsetting_reallydelete'] = 'Do you really want to delete these php-fpm settings? All php configurations which use these settings currently will be changed to the default config.';
 $lng['admin']['phpsettings']['addnew'] = 'Create new settings';
 $lng['error']['phpsettingidwrong'] = 'A PHP Configuration with this id doesn\'t exist';
 $lng['error']['descriptioninvalid'] = 'The description is too short, too long or contains illegal characters.';
@@ -1001,6 +1002,7 @@ $lng['error']['ipportdoesntexist'] = 'The ip/port combination you have chosen do
 
 $lng['admin']['phpserversettings'] = 'PHP Settings';
 $lng['admin']['phpsettings']['binary'] = 'PHP Binary';
+$lng['admin']['phpsettings']['fpmdesc'] = 'PHP-FPM config';
 $lng['admin']['phpsettings']['file_extensions'] = 'File extensions';
 $lng['admin']['phpsettings']['file_extensions_note'] = '(without dot, separated by spaces)';
 $lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maximum php requests for this domain (empty for default value)';
@@ -1656,7 +1658,7 @@ $lng['traffic']['mail'] = 'Mail (MiB)';
 $lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle Timeout';
 $lng['serversettings']['mod_fcgid']['idle_timeout']['description'] = 'Timeout setting for Mod FastCGI.';
 $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'] = 'Idle Timeout';
-$lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Timeout setting for PHP5 FPM FastCGI.';
+$lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Timeout setting for PHP FPM FastCGI.';
 
 // ADDED IN 0.9.27-svn2
 $lng['panel']['cancel'] = 'Cancel';
@@ -2082,3 +2084,5 @@ $lng['admin']['testmail'] = 'SMTP test';
 $lng['success']['testmailsent'] = 'Test mail sent successfully';
 $lng['serversettings']['disable_le_selfcheck']['title'] = "Disable Let's Encrypt local self-check";
 $lng['serversettings']['disable_le_selfcheck']['description'] = "If activated, froxlor will <strong>not</strong> perform its self-check for token accessability. Needed for NATed IP's or similar.";
+$lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM versions';
+$lng['admin']['phpsettings']['activephpconfigs'] = 'In use for php-config(s)';

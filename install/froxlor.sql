@@ -587,7 +587,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.38.8'),
-	('panel', 'db_version', '201712310');
+	('panel', 'db_version', '201801070');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -753,6 +753,32 @@ CREATE TABLE IF NOT EXISTS `panel_syslog` (
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
+
+DROP TABLE IF EXISTS `panel_fpmdaemons`;
+CREATE TABLE `panel_fpmdaemons` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `description` varchar(50) NOT NULL,
+  `reload_cmd` varchar(255) NOT NULL,
+  `config_dir` varchar(255) NOT NULL,
+  `pm` varchar(15) NOT NULL DEFAULT 'static',
+  `max_children` int(4) NOT NULL DEFAULT '1',
+  `start_servers` int(4) NOT NULL DEFAULT '20',
+  `min_spare_servers` int(4) NOT NULL DEFAULT '5',
+  `max_spare_servers` int(4) NOT NULL DEFAULT '35',
+  `max_requests` int(4) NOT NULL DEFAULT '0',
+  `idle_timeout` int(4) NOT NULL DEFAULT '30',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `reload` (`reload_cmd`),
+  UNIQUE KEY `config` (`config_dir`)
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+
+INSERT INTO `panel_fpmdaemons` (`id`, `description`, `reload_cmd`, `config_dir`) VALUES
+(1, 'System default', 'service php7.0-fpm restart', '/etc/php/7.0/fpm/pool.d/');
+
+
+
 DROP TABLE IF EXISTS `panel_phpconfigs`;
 CREATE TABLE `panel_phpconfigs` (
   `id` int(11) unsigned NOT NULL auto_increment,
@@ -766,7 +792,9 @@ CREATE TABLE `panel_phpconfigs` (
   `fpm_reqterm` varchar(15) NOT NULL default '60s',
   `fpm_reqslow` varchar(15) NOT NULL default '5s',
   `phpsettings` text NOT NULL,
-  PRIMARY KEY  (`id`)
+  `fpmsettingid` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY  (`id`),
+  KEY `fpmsettingid` (`fpmsettingid`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 

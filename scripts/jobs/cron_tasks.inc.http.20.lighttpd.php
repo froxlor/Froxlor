@@ -58,8 +58,15 @@ class lighttpd extends HttpConfigBase
 	public function reload()
 	{
 		if ((int) Settings::Get('phpfpm.enabled') == 1) {
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::reload: reloading php-fpm');
-			safe_exec(escapeshellcmd(Settings::Get('phpfpm.reload')));
+			// get all start/stop commands
+			$startstop_sel = Database::prepare("SELECT reload_cmd FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
+			Database::pexecute($startstop_sel);
+			$restart_cmds = $startstop_sel->fetchAll(PDO::FETCH_ASSOC);
+			// restart all php-fpm instances
+			foreach ($restart_cmds as $restart_cmd) {
+				$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::reload: running ' . $restart_cmd['reload_cmd']);
+				safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
+			}
 		}
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::reload: reloading lighttpd');
 		safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));

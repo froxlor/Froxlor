@@ -3646,3 +3646,73 @@ if (isDatabaseVersion('201708240')) {
 	showUpdateStep("Updating from 0.9.38.7 to 0.9.38.8", false);
 	updateToVersion('0.9.38.8');
 }
+
+if (isDatabaseVersion('201712310')) {
+
+	showUpdateStep("Adding field for fpm-daemon configs");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `fpmsettingid` int(11) NOT NULL DEFAULT '1';");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new fpm-daemons table");
+	Database::query("DROP TABLE IF EXISTS `panel_fpmdaemons`;");
+	$sql = "CREATE TABLE `panel_fpmdaemons` (
+	  `id` int(11) unsigned NOT NULL auto_increment,
+	  `description` varchar(50) NOT NULL,
+	  `reload_cmd` varchar(255) NOT NULL,
+	  `config_dir` varchar(255) NOT NULL,
+	  `pm` varchar(15) NOT NULL DEFAULT 'static',
+	  `max_children` int(4) NOT NULL DEFAULT '1',
+	  `start_servers` int(4) NOT NULL DEFAULT '20',
+	  `min_spare_servers` int(4) NOT NULL DEFAULT '5',
+	  `max_spare_servers` int(4) NOT NULL DEFAULT '35',
+	  `max_requests` int(4) NOT NULL DEFAULT '0',
+	  `idle_timeout` int(4) NOT NULL DEFAULT '30',
+	  PRIMARY KEY  (`id`),
+	  UNIQUE KEY `reload` (`reload_cmd`),
+	  UNIQUE KEY `config` (`config_dir`)
+	) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	lastStepStatus(0);
+
+	showUpdateStep("Converting php-fpm settings to new layout");
+	$ins_stmt = Database::prepare("
+		INSERT INTO `panel_fpmdaemons` SET
+		`id` = 1,
+		`description` = 'System default',
+		`reload_cmd` = :reloadcmd,
+		`config_dir` = :confdir,
+		`pm` = :pm,
+		`max_children` = :maxc,
+		`start_servers` = :starts,
+		`min_spare_servers` = :minss,
+		`max_spare_servers` = :maxss,
+		`max_requests` = :maxr,
+		`idle_timeout` = :it
+	");
+	Database::pexecute($ins_stmt, array(
+		'reloadcmd' => Settings::Get('phpfpm.reload'),
+		'confdir' => Settings::Get('phpfpm.configdir'),
+		'pm' => Settings::Get('phpfpm.pm'),
+		'maxc' => Settings::Get('phpfpm.max_children'),
+		'starts' => Settings::Get('phpfpm.start_servers'),
+		'minss' => Settings::Get('phpfpm.min_spare_servers'),
+		'maxss' => Settings::Get('phpfpm.max_spare_servers'),
+		'maxr' => Settings::Get('phpfpm.max_requests'),
+		'it' => Settings::Get('phpfpm.idle_timeout')
+	));
+	lastStepStatus(0);
+
+	showUpdateStep("Deleting unneeded settings");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'reload'");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'configdir'");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'pm'");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_children'");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'start_servers'");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'min_spare_servers'");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_spare_servers'");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_requests'");
+	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'idle_timeout'");
+	lastStepStatus(0);
+
+	updateToDbVersion('201801070');
+}

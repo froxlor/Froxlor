@@ -17,8 +17,8 @@
  * @since      0.9.31
  *
  */
-
-class WebserverBase {
+class WebserverBase
+{
 
 	/**
 	 * returns an array with all entries required for all
@@ -26,8 +26,8 @@ class WebserverBase {
 	 *
 	 * @return array
 	 */
-	public static function getVhostsToCreate() {
-
+	public static function getVhostsToCreate()
+	{
 		$query = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
 				`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`,
 				`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
@@ -35,20 +35,20 @@ class WebserverBase {
 				`d`.`phpenabled` AS `phpenabled_vhost`,
 				`d`.`mod_fcgid_starter`,`d`.`mod_fcgid_maxrequests`,
 				`d`.`ocsp_stapling`
-				FROM `".TABLE_PANEL_DOMAINS."` `d`
+				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 
-				LEFT JOIN `".TABLE_PANEL_CUSTOMERS."` `c` USING(`customerid`)
-				LEFT JOIN `".TABLE_PANEL_DOMAINS."` `pd` ON (`pd`.`id` = `d`.`parentdomainid`)
+				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
+				LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`)
 
 				WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> '1'
 				ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;
 		";
-
+		
 		$result_domains_stmt = Database::query($query);
-
+		
 		$domains = array();
 		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-
+			
 			// set whole domain
 			$domains[$domain['domain']] = $domain;
 			// set empty-defaults for non-ssl
@@ -57,31 +57,46 @@ class WebserverBase {
 			$domains[$domain['domain']]['ssl_key_file'] = '';
 			$domains[$domain['domain']]['ssl_ca_file'] = '';
 			$domains[$domain['domain']]['ssl_cert_chainfile'] = '';
-
+			
 			// now, if the domain has an ssl ip/port assigned, get
 			// the corresponding information from the db
 			if (domainHasSslIpPort($domain['id'])) {
-
+				
 				$ip_stmt = Database::prepare("
 						SELECT `di`.`id_domain` , `p`.`ssl`, `p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile`
-						FROM `".TABLE_DOMAINTOIP."` `di`, `".TABLE_PANEL_IPSANDPORTS."` `p`
+						FROM `" . TABLE_DOMAINTOIP . "` `di`, `" . TABLE_PANEL_IPSANDPORTS . "` `p`
 						WHERE `p`.`id` = `di`.`id_ipandports`
 						AND `di`.`id_domain` = :domainid
 						AND `p`.`ssl` = '1'
 						");
-				$ssl_ip = Database::pexecute_first($ip_stmt, array('domainid' => $domain['id']));
-
+				$ssl_ip = Database::pexecute_first($ip_stmt, array(
+					'domainid' => $domain['id']
+				));
+				
 				// set ssl info for domain
 				$domains[$domain['domain']]['ssl'] = '1';
 				$domains[$domain['domain']]['ssl_cert_file'] = $ssl_ip['ssl_cert_file'];
 				$domains[$domain['domain']]['ssl_key_file'] = $ssl_ip['ssl_key_file'];
 				$domains[$domain['domain']]['ssl_ca_file'] = $ssl_ip['ssl_ca_file'];
 				$domains[$domain['domain']]['ssl_cert_chainfile'] = $ssl_ip['ssl_cert_chainfile'];
-
+			}
+			
+			// read fpm-config-id if using fpm
+			if ((int) Settings::Get('phpfpm.enabled') == 1) {
+				$fpm_sel_stmt = Database::prepare("
+					SELECT f.id FROM `" . TABLE_PANEL_FPMDAEMONS . "` f
+					LEFT JOIN `" . TABLE_PANEL_PHPCONFIGS . "` p ON p.fpmsettingid = f.id
+					WHERE p.id = :phpconfigid
+				");
+				$fpm_config = Database::pexecute_first($fpm_sel_stmt, array(
+					'phpconfigid' => $domain['phpsettingid']
+				));
+				if ($fpm_config) {
+					$domains[$domain['domain']]['fpm_config_id'] = $fpm_config['id'];
+				}
 			}
 		}
-
+		
 		return $domains;
 	}
-
 }

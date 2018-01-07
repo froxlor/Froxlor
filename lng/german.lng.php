@@ -934,6 +934,7 @@ $lng['admin']['phpsettings']['phpinisettings'] = 'php.ini-Einstellungen';
 $lng['error']['nopermissionsorinvalidid'] = 'Entweder fehlen Ihnen die nötigen Rechte diese Einstellung zu ändern oder es wurde eine ungültige ID übergeben';
 $lng['panel']['view'] = 'ansehen';
 $lng['question']['phpsetting_reallydelete'] = 'Wollen Sie diese PHP-Einstellungen wirklich löschen? Alle Domains die diese Einstellungen bis jetzt verwendet haben, werden dann auf die Standardeinstellungen umgestellt.';
+$lng['question']['fpmsetting_reallydelete'] = 'Wollen Sie diese PHP-FPM Einstellungen wirklich löschen? Alle PHP Konfigurationen die diese Einstellungen bis jetzt verwendet haben, werden dann auf die Standardeinstellungen umgestellt.';
 $lng['admin']['phpsettings']['addnew'] = 'Neue Konfiguration erstellen';
 $lng['error']['phpsettingidwrong'] = 'Eine PHP-Konfiguration mit dieser ID existiert nicht';
 $lng['error']['descriptioninvalid'] = 'Der Beschreibungstext ist zu kurz, zu lang oder enthält ungültige Zeichen';
@@ -997,6 +998,7 @@ $lng['error']['ipportdoesntexist'] = 'Die gewählte IP/Port-Kombination existier
 
 $lng['admin']['phpserversettings'] = 'PHP-Einstellungen';
 $lng['admin']['phpsettings']['binary'] = 'PHP-Binary';
+$lng['admin']['phpsettings']['fpmdesc'] = 'PHP-FPM Config';
 $lng['admin']['phpsettings']['file_extensions'] = 'Dateiendungen';
 $lng['admin']['phpsettings']['file_extensions_note'] = '(ohne Punkt, durch Leerzeichen getrennt)';
 $lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maximale PHP-Requests für diese Domain (leer für Standardwert)';
@@ -1383,7 +1385,7 @@ $lng['traffic']['mail'] = 'Mail (MiB)';
 $lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle-Timeout';
 $lng['serversettings']['mod_fcgid']['idle_timeout']['description'] = 'Timeout-Einstellung für mod_FastCGI.';
 $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'] = 'Idle-Timeout';
-$lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Timeout-Einstellung für PHP5-FPM FastCGI.';
+$lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Timeout-Einstellung für PHP-FPM FastCGI.';
 
 // ADDED IN 0.9.27-svn2
 $lng['admin']['delete_statistics'] = 'Statistiken Löschen';
@@ -1733,3 +1735,5 @@ $lng['admin']['testmail'] = 'SMTP Test';
 $lng['success']['testmailsent'] = 'Test E-Mail erfolgreich gesendet';
 $lng['serversettings']['disable_le_selfcheck']['title'] = "Deaktiviere Let's Encrypt lokale Selbstprüfung";
 $lng['serversettings']['disable_le_selfcheck']['description'] = "Wenn aktiviert wird Froxlor <strong>keine</strong> Erreichbarkeitsprüfung des Tokens vornehmen. Nötig bei ge-NAT-eten IP's oder Ähnlichem";
+$lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM Versionen';
+$lng['admin']['phpsettings']['activephpconfigs'] = 'In Verwendung für PHP-Konfiguration(en)';
