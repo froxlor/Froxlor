@@ -65,7 +65,7 @@ class ConfigIO
 			// now get rid of old stuff
 			// (but append /*.log so we don't delete the directory)
 			$err_dir .= '/*.log';
-			safe_exec('rm -rf ' . makeCorrectFile($err_dir));
+			safe_exec('rm -f ' . makeCorrectFile($err_dir));
 		}
 	}
 
@@ -92,7 +92,7 @@ class ConfigIO
 					// now get rid of old stuff
 					// (but append /* so we don't delete the directory)
 					$configdir .= '/*';
-					safe_exec('rm -rf ' . makeCorrectFile($configdir));
+					safe_exec('rm -f ' . makeCorrectFile($configdir));
 				}
 			}
 		}
@@ -159,7 +159,7 @@ class ConfigIO
 				// now get rid of old stuff
 				// (but append /* so we don't delete the directory)
 				$configdir .= '/*';
-				safe_exec('rm -rf ' . makeCorrectFile($configdir));
+				safe_exec('rm -f ' . makeCorrectFile($configdir));
 			}
 		}
 	}
@@ -269,9 +269,9 @@ class ConfigIO
 			$configdir = makeCorrectDir($configdir['config_dir']);
 			if (@is_dir($configdir)) {
 				// now get rid of old stuff
-				// (but append /* so we don't delete the directory)
-				$configdir .= '/*';
-				safe_exec('rm -rf ' . makeCorrectFile($configdir));
+				// (but append /*.conf so we don't delete the directory)
+				$configdir .= '/*.conf';
+				safe_exec('rm -f ' . makeCorrectFile($configdir));
 			} else {
 				safe_exec('mkdir -p ' . $configdir);
 			}
