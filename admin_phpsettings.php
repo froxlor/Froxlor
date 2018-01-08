@@ -541,7 +541,7 @@ if ($page == 'overview') {
 				}
 				
 				$upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET
+					UPDATE `" . TABLE_PANEL_FPMDAEMONS . "` SET
 					`description` = :desc,
 					`reload_cmd` = :reload_cmd,
 					`config_dir` = :config_dir,
