@@ -1737,3 +1737,5 @@ $lng['serversettings']['disable_le_selfcheck']['title'] = "Deaktiviere Let's Enc
 $lng['serversettings']['disable_le_selfcheck']['description'] = "Wenn aktiviert wird Froxlor <strong>keine</strong> Erreichbarkeitsprüfung des Tokens vornehmen. Nötig bei ge-NAT-eten IP's oder Ähnlichem";
 $lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM Versionen';
 $lng['admin']['phpsettings']['activephpconfigs'] = 'In Verwendung für PHP-Konfiguration(en)';
+$lng['admin']['phpsettingsforsubdomains'] = 'PHP-Config für alle Subdomains übernehmen:';
+$lng['serversettings']['phpsettingsforsubdomains']['description'] = 'Wenn ja, wird die gewählte PHP-Config für alle Subdomains übernommen';

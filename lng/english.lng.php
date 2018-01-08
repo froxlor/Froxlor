@@ -2086,3 +2086,5 @@ $lng['serversettings']['disable_le_selfcheck']['title'] = "Disable Let's Encrypt
 $lng['serversettings']['disable_le_selfcheck']['description'] = "If activated, froxlor will <strong>not</strong> perform its self-check for token accessability. Needed for NATed IP's or similar.";
 $lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM versions';
 $lng['admin']['phpsettings']['activephpconfigs'] = 'In use for php-config(s)';
+$lng['admin']['phpsettingsforsubdomains'] = 'Apply php-config to all subdomains:';
+$lng['serversettings']['phpsettingsforsubdomains']['description'] = 'If yes the chosen php-config will be updated to all subdomains';

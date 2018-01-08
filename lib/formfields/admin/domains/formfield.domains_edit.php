@@ -325,6 +325,21 @@ return array(
 						'type' => 'select',
 						'select_var' => $phpconfigs
 					),
+					'phpsettingsforsubdomains' => array(
+						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
+						'label' => $lng['admin']['phpsettingsforsubdomains'],
+						'desc' => $lng['serversettings']['phpsettingsforsubdomains']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						)
+					),
 					'mod_fcgid_starter' => array(
 						'visible' => ((int) Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_starter']['title'],

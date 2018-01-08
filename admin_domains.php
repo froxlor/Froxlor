@@ -1363,6 +1363,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 					$phpenabled  = isset($_POST['phpenabled']) ? intval($_POST['phpenabled']) : 0;
 					$openbasedir = isset($_POST['openbasedir']) ? intval($_POST['openbasedir']) : 0;
+					$phpfs = (isset($_POST['phpsettingsforsubdomains']) && intval($_POST['phpsettingsforsubdomains']) == 1) ? 1 : 0;
 
 					if ((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
 						$phpsettingid = (int) $_POST['phpsettingid'];
@@ -1392,6 +1393,7 @@ if ($page == 'domains' || $page == 'overview') {
 						}
 					} else {
 						$phpsettingid = $result['phpsettingid'];
+						$phpfs = 1;
 						$mod_fcgid_starter = $result['mod_fcgid_starter'];
 						$mod_fcgid_maxrequests = $result['mod_fcgid_maxrequests'];
 					}
@@ -1399,6 +1401,7 @@ if ($page == 'domains' || $page == 'overview') {
 					$phpenabled = $result['phpenabled'];
 					$openbasedir = $result['openbasedir'];
 					$phpsettingid = $result['phpsettingid'];
+					$phpfs = 1;
 					$mod_fcgid_starter = $result['mod_fcgid_starter'];
 					$mod_fcgid_maxrequests = $result['mod_fcgid_maxrequests'];
 				}
@@ -1637,6 +1640,7 @@ if ($page == 'domains' || $page == 'overview') {
 					'phpenabled' => $phpenabled,
 					'openbasedir' => $openbasedir,
 					'phpsettingid' => $phpsettingid,
+					'phpsettingsforsubdomains' => $phpfs,
 					'mod_fcgid_starter' => $mod_fcgid_starter,
 					'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 					'specialsettings' => $specialsettings,
@@ -1892,10 +1896,17 @@ if ($page == 'domains' || $page == 'overview') {
 				$_update_data['adminid'] = $adminid;
 				$_update_data['phpenabled'] = $phpenabled;
 				$_update_data['openbasedir'] = $openbasedir;
-				$_update_data['phpsettingid'] = $phpsettingid;
 				$_update_data['mod_fcgid_starter'] = $mod_fcgid_starter;
 				$_update_data['mod_fcgid_maxrequests'] = $mod_fcgid_maxrequests;
 				$_update_data['parentdomainid'] = $id;
+
+				// if php config is to be set for all subdomains, check here
+				$update_phpconfig = '';
+				$phpfs = isset($_POST['phpsettingsforsubdomains']) ? 1 : 0;
+				if ($phpfs == 1) {
+					$_update_data['phpsettingid'] = $phpsettingid;
+					$update_phpconfig = ", `phpsettingid` = :phpsettingid";
+				}
 
 				// if we have no more ssl-ip's for this domain,
 				// all its subdomains must have "ssl-redirect = 0"
@@ -1911,10 +1922,9 @@ if ($page == 'domains' || $page == 'overview') {
 					`adminid` = :adminid,
 					`phpenabled` = :phpenabled,
 					`openbasedir` = :openbasedir,
-					`phpsettingid` = :phpsettingid,
 					`mod_fcgid_starter` = :mod_fcgid_starter,
 					`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests
-					" . $upd_specialsettings . $updatechildren . $update_sslredirect . "
+					" . $update_phpconfig . $upd_specialsettings . $updatechildren . $update_sslredirect . "
 					WHERE `parentdomainid` = :parentdomainid
 				");
 				Database::pexecute($_update_stmt, $_update_data);
