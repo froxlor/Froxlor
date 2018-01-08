@@ -160,6 +160,9 @@ class phpinterface_fpm
 	 */
 	public function __construct($domain)
 	{
+		if (!isset($domain['fpm_config_id']) || empty($domain['fpm_config_id'])) {
+			$domain['fpm_config_id'] = 1;
+		}
 		$this->_domain = $domain;
 		$this->_readFpmConfig($domain['fpm_config_id']);
 	}
@@ -354,7 +357,7 @@ class phpinterface_fpm
 	 */
 	public function getConfigFile($createifnotexists = true)
 	{
-		$configdir = $this->_fpm_cfg['config_path'];
+		$configdir = $this->_fpm_cfg['config_dir'];
 		$config = makeCorrectFile($configdir . '/' . $this->_domain['domain'] . '.conf');
 		
 		if (! is_dir($configdir) && $createifnotexists) {

@@ -46,6 +46,22 @@ class WebserverBase
 		
 		$result_domains_stmt = Database::query($query);
 		
+		// prepare IP statement
+		$ip_stmt = Database::prepare("
+			SELECT `di`.`id_domain` , `p`.`ssl`, `p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile`
+			FROM `" . TABLE_DOMAINTOIP . "` `di`, `" . TABLE_PANEL_IPSANDPORTS . "` `p`
+			WHERE `p`.`id` = `di`.`id_ipandports`
+			AND `di`.`id_domain` = :domainid
+			AND `p`.`ssl` = '1'
+		");
+		
+		// prepare fpm-config select query
+		$fpm_sel_stmt = Database::prepare("
+			SELECT f.id FROM `" . TABLE_PANEL_FPMDAEMONS . "` f
+			LEFT JOIN `" . TABLE_PANEL_PHPCONFIGS . "` p ON p.fpmsettingid = f.id
+			WHERE p.id = :phpconfigid
+		");
+		
 		$domains = array();
 		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 			
@@ -61,14 +77,7 @@ class WebserverBase
 			// now, if the domain has an ssl ip/port assigned, get
 			// the corresponding information from the db
 			if (domainHasSslIpPort($domain['id'])) {
-				
-				$ip_stmt = Database::prepare("
-						SELECT `di`.`id_domain` , `p`.`ssl`, `p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile`
-						FROM `" . TABLE_DOMAINTOIP . "` `di`, `" . TABLE_PANEL_IPSANDPORTS . "` `p`
-						WHERE `p`.`id` = `di`.`id_ipandports`
-						AND `di`.`id_domain` = :domainid
-						AND `p`.`ssl` = '1'
-						");
+
 				$ssl_ip = Database::pexecute_first($ip_stmt, array(
 					'domainid' => $domain['id']
 				));
@@ -83,16 +92,15 @@ class WebserverBase
 			
 			// read fpm-config-id if using fpm
 			if ((int) Settings::Get('phpfpm.enabled') == 1) {
-				$fpm_sel_stmt = Database::prepare("
-					SELECT f.id FROM `" . TABLE_PANEL_FPMDAEMONS . "` f
-					LEFT JOIN `" . TABLE_PANEL_PHPCONFIGS . "` p ON p.fpmsettingid = f.id
-					WHERE p.id = :phpconfigid
-				");
+
 				$fpm_config = Database::pexecute_first($fpm_sel_stmt, array(
 					'phpconfigid' => $domain['phpsettingid']
 				));
 				if ($fpm_config) {
 					$domains[$domain['domain']]['fpm_config_id'] = $fpm_config['id'];
+				} else {
+					// fallback
+					$domains[$domain['domain']]['fpm_config_id'] = 1;
 				}
 			}
 		}

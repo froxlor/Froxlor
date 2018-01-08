@@ -287,6 +287,15 @@ class apache extends HttpConfigBase
 							$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 						}
 					} elseif (Settings::Get('phpfpm.enabled') == '1') {
+						// get fpm config
+						$fpm_sel_stmt = Database::prepare("
+							SELECT f.id FROM `" . TABLE_PANEL_FPMDAEMONS . "` f
+							LEFT JOIN `" . TABLE_PANEL_PHPCONFIGS . "` p ON p.fpmsettingid = f.id
+							WHERE p.id = :phpconfigid
+						");
+						$fpm_config = Database::pexecute_first($fpm_sel_stmt, array(
+							'phpconfigid' => Settings::Get('phpfpm.vhost_defaultini')
+						));
 						// create php-fpm <Directory>-Part (config is created in apache_fcgid)
 						$domain = array(
 							'id' => 'none',
@@ -298,7 +307,8 @@ class apache extends HttpConfigBase
 							'openbasedir' => 0,
 							'email' => Settings::Get('panel.adminmail'),
 							'loginname' => 'froxlor.panel',
-							'documentroot' => $mypath
+							'documentroot' => $mypath,
+							'fpm_config_id' => isset($fpm_config['id']) ? $fpm_config['id'] : 1
 						);
 						
 						$php = new phpinterface($domain);
