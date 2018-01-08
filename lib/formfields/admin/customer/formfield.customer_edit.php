@@ -260,6 +260,14 @@ return array(
 						),
 						'value' => array($result['phpenabled'])
 					),
+					'allowed_phpconfigs' => array(
+						'visible' => (((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) ? true : false),
+						'label' => $lng['admin']['phpsettings']['title'],
+						'type' => 'checkbox',
+						'values' => $phpconfigs,
+						'value' => isset($result['allowed_phpconfigs']) && !empty($result['allowed_phpconfigs']) ? json_decode($result['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY) : array(),
+						'is_array' => 1
+					),
 					'perlenabled' => array(
 						'label' => $lng['admin']['perlenabled'].'?',
 						'type' => 'checkbox',

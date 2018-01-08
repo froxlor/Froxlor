@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'customer_add' => array(
 		'title' => $lng['admin']['customer_add'],
@@ -29,20 +28,30 @@ return array(
 						'type' => 'text'
 					),
 					'createstdsubdomain' => array(
-						'label' => $lng['admin']['stdsubdomain_add'].'?',
+						'label' => $lng['admin']['stdsubdomain_add'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array('1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						)
 					),
 					'store_defaultindex' => array(
-						'label' => $lng['admin']['store_defaultindex'].'?',
+						'label' => $lng['admin']['store_defaultindex'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array('1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						)
 					),
 					'new_customer_password' => array(
 						'label' => $lng['login']['password'],
@@ -53,15 +62,20 @@ return array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword(),
+						'value' => generatePassword()
 					),
 					'sendpassword' => array(
 						'label' => $lng['admin']['sendpassword'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array('1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						)
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
@@ -135,7 +149,10 @@ return array(
 						'label' => $lng['usersettings']['custom_notes']['show'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					)
@@ -206,18 +223,28 @@ return array(
 						'label' => $lng['customer']['email_imap'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array('1'),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						),
 						'mandatory' => true
 					),
 					'email_pop3' => array(
 						'label' => $lng['customer']['email_pop3'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array('1'),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						),
 						'mandatory' => true
 					),
 					'ftps' => array(
@@ -244,28 +271,51 @@ return array(
 						'ul_field' => $mysqls_ul
 					),
 					'phpenabled' => array(
-						'label' => $lng['admin']['phpenabled'].'?',
+						'label' => $lng['admin']['phpenabled'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array('1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						)
+					),
+					'allowed_phpconfigs' => array(
+						'visible' => (((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) ? true : false),
+						'label' => $lng['admin']['phpsettings']['title'],
+						'type' => 'checkbox',
+						'values' => $phpconfigs,
+						'value' => ((int) Settings::Get('system.mod_fcgid') == 1 ? array(
+							Settings::Get('system.mod_fcgid_defaultini')
+						) : (int) Settings::Get('phpfpm.enabled') == 1) ? array(
+							Settings::Get('phpfpm.defaultini')
+						) : array(),
+						'is_array' => 1
 					),
 					'perlenabled' => array(
-						'label' => $lng['admin']['perlenabled'].'?',
+						'label' => $lng['admin']['perlenabled'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									)
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						)
 					),
 					'dnsenabled' => array(
-						'label' => $lng['admin']['dnsenabled'].'?',
+						'label' => $lng['admin']['dnsenabled'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'visible' => (Settings::Get('system.dnsenabled') == '1' ? true : false)
-					),
+					)
 				)
 			)
 		)
