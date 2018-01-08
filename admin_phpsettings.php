@@ -402,7 +402,7 @@ if ($page == 'overview') {
 				$description = validate($_POST['description'], 'description');
 				$reload_cmd = validate($_POST['reload_cmd'], 'reload_cmd');
 				$config_dir = validate($_POST['config_dir'], 'config_dir');
-				$pm = validate($_POST['pm'], 'pm');
+				$pm = $_POST['pm'];
 				$max_children = isset($_POST['max_children']) ? (int) $_POST['max_children'] : 0;
 				$start_servers = isset($_POST['start_servers']) ? (int) $_POST['start_servers'] : 0;
 				$min_spare_servers = isset($_POST['min_spare_servers']) ? (int) $_POST['min_spare_servers'] : 0;
@@ -431,7 +431,7 @@ if ($page == 'overview') {
 					'desc' => $description,
 					'reload_cmd' => $reload_cmd,
 					'config_dir' => makeCorrectDir($config_dir),
-					'pm' => pm,
+					'pm' => $pm,
 					'max_children' => $max_children,
 					'start_servers' => $start_servers,
 					'min_spare_servers' => $min_spare_servers,
@@ -528,7 +528,7 @@ if ($page == 'overview') {
 				$description = validate($_POST['description'], 'description');
 				$reload_cmd = validate($_POST['reload_cmd'], 'reload_cmd');
 				$config_dir = validate($_POST['config_dir'], 'config_dir');
-				$pm = validate($_POST['pm'], 'pm');
+				$pm = $_POST['pm'];
 				$max_children = isset($_POST['max_children']) ? (int) $_POST['max_children'] : $result['max_children'];
 				$start_servers = isset($_POST['start_servers']) ? (int) $_POST['start_servers'] : $result['start_servers'];
 				$min_spare_servers = isset($_POST['min_spare_servers']) ? (int) $_POST['min_spare_servers'] : $result['min_spare_servers'];
@@ -558,7 +558,7 @@ if ($page == 'overview') {
 					'desc' => $description,
 					'reload_cmd' => $reload_cmd,
 					'config_dir' => makeCorrectDir($config_dir),
-					'pm' => pm,
+					'pm' => $pm,
 					'max_children' => $max_children,
 					'start_servers' => $start_servers,
 					'min_spare_servers' => $min_spare_servers,

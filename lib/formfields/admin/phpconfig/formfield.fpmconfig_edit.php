@@ -45,8 +45,7 @@ return array(
 					'pm' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['pm'],
 						'type' => 'select',
-						'select_var' => array('static' => 'static', 'dynamic' => 'dynamic', 'ondemand' => 'ondemand'),
-						'value' => $result['pm']
+						'select_var' => $pm_select
 					),
 					'max_children' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['max_children']['title'],
