@@ -70,6 +70,12 @@ return array(
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
 						'select_var' => $openbasedir
+					),
+					'phpsettingid' => array(
+						'visible' => (((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) && $has_phpconfigs ? true : false),
+						'label' => $lng['admin']['phpsettings']['title'],
+						'type' => 'select',
+						'select_var' => $phpconfigs
 					)
 				)
 			),

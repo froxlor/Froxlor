@@ -1077,11 +1077,15 @@ if ($page == 'domains' || $page == 'overview') {
 				}
 
 				$phpconfigs = '';
-				$configs = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
+				$configs = Database::query("
+					SELECT c.*, fc.description as interpreter
+					FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
+					LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fc ON fc.id = c.fpmsettingid
+				");
 
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
 					if ((int) Settings::Get('phpfpm.enabled') == 1) {
-						$phpconfigs .= makeoption($row['description'], $row['id'], Settings::Get('phpfpm.defaultini'), true, true);
+						$phpconfigs .= makeoption($row['description'] . " [".$row['interpreter']."]", $row['id'], Settings::Get('phpfpm.defaultini'), true, true);
 					} else {
 						$phpconfigs .= makeoption($row['description'], $row['id'], Settings::Get('system.mod_fcgid_defaultini'), true, true);
 					}
@@ -2180,10 +2184,18 @@ if ($page == 'domains' || $page == 'overview') {
 				$result['add_date'] = date('Y-m-d', $result['add_date']);
 
 				$phpconfigs = '';
-				$phpconfigs_result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
+				$phpconfigs_result_stmt = Database::query("
+					SELECT c.*, fc.description as interpreter
+					FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
+					LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fc ON fc.id = c.fpmsettingid
+				");
 
 				while ($phpconfigs_row = $phpconfigs_result_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$phpconfigs .= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true);
+					if ((int) Settings::Get('phpfpm.enabled') == 1) {
+						$phpconfigs .= makeoption($phpconfigs_row['description'] . " [".$phpconfigs_row['interpreter']."]", $phpconfigs_row['id'], $result['phpsettingid'], true, true);
+					} else {
+						$phpconfigs .= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true);
+					}
 				}
 
 				$result = htmlentities_array($result);

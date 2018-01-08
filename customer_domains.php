@@ -405,6 +405,10 @@ if ($page == 'overview') {
 						// assign default config
 						$phpsid_result['phpsettingid'] = 1;
 					}
+					// check whether the customer has chosen its own php-config
+					if (isset($_POST['phpsettingid']) && intval($_POST['phpsettingid']) != $phpsid_result['phpsettingid']) {
+						$phpsid_result['phpsettingid'] = intval($_POST['phpsettingid']);
+					}
 
 					$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
 						`customerid` = :customerid,
@@ -534,6 +538,27 @@ if ($page == 'overview') {
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
+				$phpconfigs = '';
+				$has_phpconfigs = false;
+				if (isset($userinfo['allowed_phpconfigs']) && !empty($userinfo['allowed_phpconfigs']))
+				{
+					$has_phpconfigs = true;
+					$allowed_cfg = json_decode($userinfo['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY);
+					$phpconfigs_result_stmt = Database::query("
+						SELECT c.*, fc.description as interpreter
+						FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
+						LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fc ON fc.id = c.fpmsettingid
+						WHERE c.id IN (".implode(", ", $allowed_cfg).")
+					");
+					while ($phpconfigs_row = $phpconfigs_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+						if ((int) Settings::Get('phpfpm.enabled') == 1) {
+							$phpconfigs .= makeoption($phpconfigs_row['description'] . " [".$phpconfigs_row['interpreter']."]", $phpconfigs_row['id'], Settings::Get('phpfpm.defaultini'), true, true);
+						} else {
+							$phpconfigs .= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], Settings::Get('system.mod_fcgid_defaultini'), true, true);
+						}
+					}
+				}
+
 				$subdomain_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domains_add.php';
 				$subdomain_add_form = htmlform::genHTMLForm($subdomain_add_data);
 
@@ -624,6 +649,13 @@ if ($page == 'overview') {
 					$openbasedir_path = '0';
 				}
 
+				// check whether the customer has chosen its own php-config
+				if (isset($_POST['phpsettingid'])) {
+					$phpsettingid = intval($_POST['phpsettingid']);
+				} else {
+					$phpsettingid = $result['phpsettingid'];
+				}
+
 				if (isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
 					// a ssl-redirect only works if there actually is a
 					// ssl ip/port assigned to the domain
@@ -692,6 +724,7 @@ if ($page == 'overview') {
 						|| $hsts_maxage != $result['hsts']
 						|| $hsts_sub != $result['hsts_sub']
 						|| $hsts_preload != $result['hsts_preload']
+						|| $phpsettingid != $result['phpsettingid']
 					) {
 						$log->logAction(USR_ACTION, LOG_INFO, "edited domain '" . $idna_convert->decode($result['domain']) . "'");
 
@@ -706,7 +739,8 @@ if ($page == 'overview') {
 							`letsencrypt`= :letsencrypt,
 							`hsts` = :hsts,
 							`hsts_sub` = :hsts_sub,
-							`hsts_preload` = :hsts_preload
+							`hsts_preload` = :hsts_preload,
+							`phpsettingid` = :phpsettingid
 							WHERE `customerid`= :customerid
 							AND `id`= :id"
 						);
@@ -722,6 +756,7 @@ if ($page == 'overview') {
 							"hsts" => $hsts_maxage,
 							"hsts_sub" => $hsts_sub,
 							"hsts_preload" => $hsts_preload,
+							"phpsettingid" => $phpsettingid,
 							"customerid" => $userinfo['customerid'],
 							"id" => $id
 						);
@@ -844,6 +879,27 @@ if ($page == 'overview') {
 				$result_ipandport['ip'] = '';
 				while ($rowip = $ips_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$result_ipandport['ip'] .= $rowip['ip'] . "<br />";
+				}
+
+				$phpconfigs = '';
+				$has_phpconfigs = false;
+				if (isset($userinfo['allowed_phpconfigs']) && !empty($userinfo['allowed_phpconfigs']))
+				{
+					$has_phpconfigs = true;
+					$allowed_cfg = json_decode($userinfo['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY);
+					$phpconfigs_result_stmt = Database::query("
+						SELECT c.*, fc.description as interpreter
+						FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
+						LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fc ON fc.id = c.fpmsettingid
+						WHERE c.id IN (".implode(", ", $allowed_cfg).")
+					");
+					while ($phpconfigs_row = $phpconfigs_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+						if ((int) Settings::Get('phpfpm.enabled') == 1) {
+							$phpconfigs .= makeoption($phpconfigs_row['description'] . " [".$phpconfigs_row['interpreter']."]", $phpconfigs_row['id'], $result['phpsettingid'], true, true);
+						} else {
+							$phpconfigs .= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true);
+						}
+					}
 				}
 
 				$domainip = $result_ipandport['ip'];

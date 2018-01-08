@@ -3716,3 +3716,12 @@ if (isDatabaseVersion('201712310')) {
 
 	updateToDbVersion('201801070');
 }
+
+if (isDatabaseVersion('201801070')) {
+
+	showUpdateStep("Adding field allowed_phpconfigs for customers");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_phpconfigs` varchar(500) NOT NULL default '';");
+	lastStepStatus(0);
+
+	updateToDbVersion('201801080');
+}

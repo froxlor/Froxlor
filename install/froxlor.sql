@@ -198,6 +198,7 @@ CREATE TABLE `panel_customers` (
   `lepublickey` mediumtext default NULL,
   `leprivatekey` mediumtext default NULL,
   `leregistered` tinyint(1) NOT NULL default '0',
+  `allowed_phpconfigs` varchar(500) NOT NULL default '',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -587,7 +588,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.38.8'),
-	('panel', 'db_version', '201801070');
+	('panel', 'db_version', '201801080');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
