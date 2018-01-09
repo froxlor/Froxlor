@@ -100,6 +100,19 @@ return array(
 					'cronmodule' => 'froxlor/letsencrypt',
 					'save_method' => 'storeSettingField'
 				),
+				'system_leapiversion' => array(
+					'label' => $lng['serversettings']['leapiversion'],
+					'settinggroup' => 'system',
+					'varname' => 'leapiversion',
+					'type' => 'option',
+					'default' => '1',
+					'option_mode' => 'one',
+					'option_options' => array(
+						'1' => 'ACME v1',
+						'2' => 'ACME v2'
+					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_letsencryptacmeconf' => array(
 					'label' => $lng['serversettings']['letsencryptacmeconf'],
 					'settinggroup' => 'system',
@@ -117,8 +130,8 @@ return array(
 					'default' => 'testing',
 					'option_mode' => 'one',
 					'option_options' => array(
-						'testing' => 'https://acme-staging.api.letsencrypt.org (Test)',
-						'production' => 'https://acme-v01.api.letsencrypt.org (Live)'
+						'testing' => 'https://acme-staging'.(Settings::Get('system.leapiversion') == '2' ? '-v02' : '').'.api.letsencrypt.org (Test)',
+						'production' => 'https://acme-v0'.Settings::Get('system.leapiversion').'.api.letsencrypt.org (Live)'
 					),
 					'save_method' => 'storeSettingField'
 				),

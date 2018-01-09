@@ -20,6 +20,12 @@ if (! defined('MASTER_CRONJOB'))
  *
  */
 
+if (Settings::Get('system.leapiversion') == '2') {
+	// use ACME v2 is specified
+	require_once __DIR__ . '/cron_letsencrypt_v2.php';
+	exit;
+}
+
 $cronlog->logAction(CRON_ACTION, LOG_INFO, "Updating Let's Encrypt certificates");
 
 if (! extension_loaded('curl')) {
