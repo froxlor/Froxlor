@@ -1740,5 +1740,5 @@ $lng['admin']['phpsettings']['activephpconfigs'] = 'In Verwendung für PHP-Konfi
 $lng['admin']['phpsettingsforsubdomains'] = 'PHP-Config für alle Subdomains übernehmen:';
 $lng['serversettings']['phpsettingsforsubdomains']['description'] = 'Wenn ja, wird die gewählte PHP-Config für alle Subdomains übernommen';
 $lng['serversettings']['leapiversion']['title'] = "Wähle Let's Encrypt ACME Implementierung";
-$lng['serversettings']['leapiversion']['description'] = "Wähle zwischen ACME v1 und ACME v2 Implementierung von Let's Encrypt. ACME v2 erlaubt Wildcard-Zertifikate.";
+$lng['serversettings']['leapiversion']['description'] = "Wähle zwischen ACME v1 und ACME v2 Implementierung von Let's Encrypt.";
 $lng['error']['nowildcardwithletsencryptv2'] = 'Let\'s Encrypt kann in ACME v2 Wildcard-Domains nur via DNS validieren, sorry. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
