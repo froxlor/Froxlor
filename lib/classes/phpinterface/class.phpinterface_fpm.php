@@ -436,6 +436,27 @@ class phpinterface_fpm
 	}
 
 	/**
+	 * create a dummy fpm pool config with minimal configuration
+	 * (this is used whenever a config directory is empty but needs at least one pool to startup/restart)
+	 *
+	 * @param string $configdir
+	 */
+	public static function createDummyPool($configdir)
+	{
+		if (! is_dir($configdir)) {
+			safe_exec('mkdir -p ' . escapeshellarg($configdir));
+		}
+		$config = makeCorrectFile($configdir . '/dummy.conf');
+		$dummy = "[dummy]
+user = ".Settings::Get('system.httpuser')."
+listen = /run/" . base64_encode($configdir) . "-fpm.sock
+pm = static
+pm.max_children = 1
+";
+		file_put_contents($config, $dummy);
+	}
+
+	/**
 	 * return the admin-data of a specific admin
 	 *
 	 * @param int $adminid

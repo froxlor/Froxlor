@@ -74,11 +74,18 @@ class nginx extends HttpConfigBase
 			safe_exec(Settings::Get('system.phpreload_command'));
 		} elseif ((int) Settings::Get('phpfpm.enabled') == 1) {
 			// get all start/stop commands
-			$startstop_sel = Database::prepare("SELECT reload_cmd FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
+			$startstop_sel = Database::prepare("SELECT reload_cmd, config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
 			Database::pexecute($startstop_sel);
 			$restart_cmds = $startstop_sel->fetchAll(PDO::FETCH_ASSOC);
 			// restart all php-fpm instances
 			foreach ($restart_cmds as $restart_cmd) {
+				// check whether the config dir is empty (no domains uses this daemon)
+				// so we need to create a dummy
+				$isDirEmpty = !(new \FilesystemIterator($restart_cmd['config_dir']))->valid();
+				if ($isDirEmpty) {
+					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
+					phpinterface_fpm::createDummyPool($restart_cmd['config_dir']);
+				}
 				$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: running ' . $restart_cmd['reload_cmd']);
 				safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
 			}
