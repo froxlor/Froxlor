@@ -57,6 +57,7 @@ $certificates_stmt = Database::query("
 			dom.`customerid` = cust.`customerid`
 			AND dom.`letsencrypt` = 1
 			AND dom.`aliasdomain` IS NULL
+			AND dom.`iswildcarddomain` = 0
 			AND (
 				domssl.`expirationdate` < DATE_ADD(NOW(), INTERVAL 30 DAY)
 				OR domssl.`expirationdate` IS NULL
@@ -73,6 +74,7 @@ $aliasdomains_stmt = Database::prepare("
 		WHERE
 			dom.`aliasdomain` = :id
 			AND dom.`letsencrypt` = 1
+			AND dom.`iswildcarddomain` = 0
 	");
 
 $updcert_stmt = Database::prepare("
