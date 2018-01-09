@@ -1742,4 +1742,4 @@ $lng['serversettings']['phpsettingsforsubdomains']['description'] = 'Wenn ja, wi
 $lng['serversettings']['leapiversion']['title'] = "Wähle Let's Encrypt ACME Implementierung";
 $lng['serversettings']['leapiversion']['description'] = "Wähle zwischen ACME v1 und ACME v2 Implementierung von Let's Encrypt.";
 $lng['error']['nowildcardwithletsencryptv2'] = 'Let\'s Encrypt kann in ACME v2 Wildcard-Domains nur via DNS validieren, sorry. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
-$lng['admin']['phpsettings']['pass_authorizationheader'] = 'Füge "-pass-header Authorization" in Vhosts ein';
+$lng['admin']['phpsettings']['pass_authorizationheader'] = 'Füge "-pass-header Authorization" / "CGIPassAuth On" in Vhosts ein';

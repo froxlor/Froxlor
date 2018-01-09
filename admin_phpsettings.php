@@ -124,11 +124,13 @@ if ($page == 'overview') {
 					$fpm_enableslowlog = 0;
 					$fpm_reqtermtimeout = 0;
 					$fpm_reqslowtimeout = 0;
+					$fpm_pass_authorizationheader = 0;
 				} elseif (Settings::Get('phpfpm.enabled') == 1) {
 					$fpm_config_id = intval($_POST['fpmconfig']);
 					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int) $_POST['phpfpm_enable_slowlog'] : 0;
 					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
+					$fpm_pass_authorizationheader = isset($_POST['phpfpm_pass_authorizationheader']) ? (int) $_POST['phpfpm_pass_authorizationheader'] : 0;
 					// disable fcgid stuff
 					$binary = '/usr/bin/php-cgi';
 					$file_extensions = 'php';
@@ -153,7 +155,8 @@ if ($page == 'overview') {
 						`fpm_reqterm` = :fpmreqterm,
 						`fpm_reqslow` = :fpmreqslow,
 						`phpsettings` = :phpsettings,
-						`fpmsettingid` = :fpmsettingid");
+						`fpmsettingid` = :fpmsettingid,
+						`pass_authorizationheader` = :fpmpassauth");
 				$ins_data = array(
 					'desc' => $description,
 					'binary' => $binary,
@@ -165,7 +168,8 @@ if ($page == 'overview') {
 					'fpmreqterm' => $fpm_reqtermtimeout,
 					'fpmreqslow' => $fpm_reqslowtimeout,
 					'phpsettings' => $phpsettings,
-					'fpmsettingid' => $fpm_config_id
+					'fpmsettingid' => $fpm_config_id,
+					'fpmpassauth' => $fpm_pass_authorizationheader
 				);
 				Database::pexecute($ins_stmt, $ins_data);
 				
@@ -283,11 +287,13 @@ if ($page == 'overview') {
 					$fpm_enableslowlog = 0;
 					$fpm_reqtermtimeout = 0;
 					$fpm_reqslowtimeout = 0;
+					$fpm_pass_authorizationheader = 0;
 				} elseif (Settings::Get('phpfpm.enabled') == 1) {
 					$fpm_config_id = intval($_POST['fpmconfig']);
 					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int) $_POST['phpfpm_enable_slowlog'] : 0;
 					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
+					$fpm_pass_authorizationheader = isset($_POST['phpfpm_pass_authorizationheader']) ? (int) $_POST['phpfpm_pass_authorizationheader'] : 0;
 					// disable fcgid stuff
 					$binary = '/usr/bin/php-cgi';
 					$file_extensions = 'php';
@@ -312,7 +318,8 @@ if ($page == 'overview') {
 						`fpm_reqterm` = :fpmreqterm,
 						`fpm_reqslow` = :fpmreqslow,
 						`phpsettings` = :phpsettings,
-						`fpmsettingid` = :fpmsettingid
+						`fpmsettingid` = :fpmsettingid,
+						`pass_authorizationheader` = :fpmpassauth
 					WHERE `id` = :id");
 				$upd_data = array(
 					'desc' => $description,
@@ -326,6 +333,7 @@ if ($page == 'overview') {
 					'fpmreqslow' => $fpm_reqslowtimeout,
 					'phpsettings' => $phpsettings,
 					'fpmsettingid' => $fpm_config_id,
+					'fpmpassauth' => $fpm_pass_authorizationheader,
 					'id' => $id
 				);
 				Database::pexecute($upd_stmt, $upd_data);
