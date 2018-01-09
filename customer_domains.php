@@ -681,8 +681,8 @@ if ($page == 'overview') {
 					$letsencrypt = '0';
 				}
 
-				// We can't enable let's encrypt for wildcard - domains
-				if ($iswildcarddomain == '1' && $letsencrypt == '1') {
+				// We can't enable let's encrypt for wildcard - domains when using acme-v1
+				if ($iswildcarddomain == '1' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
 					standard_error('nowildcardwithletsencrypt');
 				}
 

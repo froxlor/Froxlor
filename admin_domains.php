@@ -633,8 +633,8 @@ if ($page == 'domains' || $page == 'overview') {
 					$ocsp_stapling = 0;
 				}
 
-				// We can't enable let's encrypt for wildcard - domains
-				if ($serveraliasoption == '0' && $letsencrypt == '1') {
+				// We can't enable let's encrypt for wildcard - domains if using acme-v1
+				if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
 					standard_error('nowildcardwithletsencrypt');
 				}
 
@@ -1511,8 +1511,8 @@ if ($page == 'domains' || $page == 'overview') {
 					$ocsp_stapling = 0;
 				}
 
-				// We can't enable let's encrypt for wildcard domains
-				if ($serveraliasoption == '0' && $letsencrypt == '1') {
+				// We can't enable let's encrypt for wildcard domains when using acme-v1
+				if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
 					standard_error('nowildcardwithletsencrypt');
 				}
 

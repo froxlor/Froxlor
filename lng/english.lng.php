@@ -2088,3 +2088,5 @@ $lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM versions';
 $lng['admin']['phpsettings']['activephpconfigs'] = 'In use for php-config(s)';
 $lng['admin']['phpsettingsforsubdomains'] = 'Apply php-config to all subdomains:';
 $lng['serversettings']['phpsettingsforsubdomains']['description'] = 'If yes the chosen php-config will be updated to all subdomains';
+$lng['serversettings']['leapiversion']['title'] = "Chose Let's Encrypt ACME implementation";
+$lng['serversettings']['leapiversion']['description'] = "Chose between ACME v1 and ACME v2 implementation for Let's Encrypt. ACME v2 let's you use wildcard-certificates.";
