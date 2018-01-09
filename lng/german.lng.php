@@ -1593,7 +1593,7 @@ $lng['admin']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat v
 $lng['customer']['letsencrypt']['title'] = 'Benutze Let\'s Encrypt';
 $lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><strong class="red">ACHTUNG:</strong> Dieses Feature befindet sich noch im Test.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Die Nutzung von Let\'s Encrypt ist nur möglich, wenn die Domain mindestens eine IP/Port - Kombination mit aktiviertem SSL zugewiesen hat.';
-$lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt kann (noch) nicht mit Wildcard-Domains umgehen. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
+$lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt kann in ACME v1 nicht mit Wildcard-Domains umgehen. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
 $lng['panel']['letsencrypt'] = 'Benutzt Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'aktualisiert Let\'s Encrypt Zertifikate';
 $lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt Umgebung";
@@ -1741,3 +1741,4 @@ $lng['admin']['phpsettingsforsubdomains'] = 'PHP-Config für alle Subdomains üb
 $lng['serversettings']['phpsettingsforsubdomains']['description'] = 'Wenn ja, wird die gewählte PHP-Config für alle Subdomains übernommen';
 $lng['serversettings']['leapiversion']['title'] = "Wähle Let's Encrypt ACME Implementierung";
 $lng['serversettings']['leapiversion']['description'] = "Wähle zwischen ACME v1 und ACME v2 Implementierung von Let's Encrypt. ACME v2 erlaubt Wildcard-Zertifikate.";
+$lng['error']['nowildcardwithletsencryptv2'] = 'Let\'s Encrypt kann in ACME v2 Wildcard-Domains nur via DNS validieren, sorry. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
