@@ -93,6 +93,15 @@ return array(
 						'maxlength' => 10,
 						'value' => $result['fpm_reqslow']
 					),
+					'phpfpm_pass_authorizationheader' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'label' => $lng['admin']['phpsettings']['pass_authorizationheader'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array($result['pass_authorizationheader'])
+					),
 					'phpsettings' => array(
 						'style' => 'align-top',
 						'label' => $lng['admin']['phpsettings']['phpinisettings'],

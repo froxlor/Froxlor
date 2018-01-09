@@ -330,8 +330,17 @@ class apache extends HttpConfigBase
 							$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.php$>' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile() . '|fcgi://localhost' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
+							if ($phpconfig['pass_authorizationheader'] == '1') {
+								$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
+								$this->virtualhosts_data[$vhosts_filename] .= '      CGIPassAuth On' . "\n";
+								$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+							}
 						} else {
-							$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
+							$addheader = "";
+							if ($phpconfig['pass_authorizationheader'] == '1') {
+								$addheader = " -pass-header Authorization";
+							}
+							$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . $addheader . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
 							$file_extensions = explode(' ', $phpconfig['file_extensions']);
 							$this->virtualhosts_data[$vhosts_filename] .= '   <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";

@@ -3734,3 +3734,12 @@ if (isDatabaseVersion('201801080')) {
 
 	updateToDbVersion('201801090');
 }
+
+if (isDatabaseVersion('201801090')) {
+
+	showUpdateStep("Adding field pass_authorizationheader for php-configs");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `pass_authorizationheader` tinyint(1) NOT NULL default '0';");
+	lastStepStatus(0);
+
+	updateToDbVersion('201801091');
+}

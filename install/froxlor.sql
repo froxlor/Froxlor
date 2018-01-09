@@ -589,7 +589,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.38.8'),
-	('panel', 'db_version', '201801090');
+	('panel', 'db_version', '201801091');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -795,6 +795,7 @@ CREATE TABLE `panel_phpconfigs` (
   `fpm_reqslow` varchar(15) NOT NULL default '5s',
   `phpsettings` text NOT NULL,
   `fpmsettingid` int(11) NOT NULL DEFAULT '1',
+  `pass_authorizationheader` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `fpmsettingid` (`fpmsettingid`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;

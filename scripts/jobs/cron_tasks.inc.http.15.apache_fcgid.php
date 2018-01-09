@@ -54,13 +54,25 @@ class apache_fcgid extends apache
 				    // for this path, as this would be the first require and therefore grant all access
 				    if ($mypath_dir->isUserProtected() == false) {
 						$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
+						if ($phpconfig['pass_authorizationheader'] == '1') {
+							$php_options_text.= '    CGIPassAuth On' . "\n";
+						}
 					    $php_options_text.= '    Require all granted' . "\n";
 						$php_options_text.= '    AllowOverride All' . "\n";
+						$php_options_text.= '  </Directory>' . "\n";
+				    } elseif ($phpconfig['pass_authorizationheader'] == '1') {
+						// allow Pass of Authorization header
+						$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
+						$php_options_text.= '    CGIPassAuth On' . "\n";
 						$php_options_text.= '  </Directory>' . "\n";
 				    }
 
 				} else {
-					$php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile()  . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . "\n";
+					$addheader = "";
+					if ($phpconfig['pass_authorizationheader'] == '1') {
+						$addheader = " -pass-header Authorization";
+					}
+					$php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile()  . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . $addheader . "\n";
 					$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
 					$php_options_text.= '    <FilesMatch "\.php$">' . "\n";
 					$php_options_text.= '      SetHandler php5-fastcgi'. "\n";

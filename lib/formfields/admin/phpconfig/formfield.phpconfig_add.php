@@ -90,6 +90,15 @@ return array(
 						'maxlength' => 10,
 						'value' => '5s'
 					),
+					'phpfpm_pass_authorizationheader' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'label' => $lng['admin']['phpsettings']['pass_authorizationheader'],
+						'type' => 'checkbox',
+						'values' => array(
+							array ('label' => $lng['panel']['yes'], 'value' => '1')
+						),
+						'value' => array()
+					),
 					'phpsettings' => array(
 						'style' => 'align-top',
 						'label' => $lng['admin']['phpsettings']['phpinisettings'],
