@@ -72,7 +72,7 @@ class apache_fcgid extends apache
 					if ($phpconfig['pass_authorizationheader'] == '1') {
 						$addheader = " -pass-header Authorization";
 					}
-					$php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile()  . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . $addheader . "\n";
+					$php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile()  . ' -idle-timeout ' . $phpconfig['fpm_settings']['idle_timeout'] . $addheader . "\n";
 					$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
 					$php_options_text.= '    <FilesMatch "\.php$">' . "\n";
 					$php_options_text.= '      SetHandler php5-fastcgi'. "\n";

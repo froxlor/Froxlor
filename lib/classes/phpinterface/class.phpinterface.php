@@ -91,6 +91,12 @@ class phpinterface {
 					SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id"
 			);
 			$this->_php_configs_cache[$php_config_id] = Database::pexecute_first($stmt, array('id' => $php_config_id));
+			if ((int)Settings::Get('phpfpm.enabled') == 1) {
+				$stmt = Database::prepare("
+					SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id"
+				);
+				$this->_php_configs_cache[$php_config_id]['fpm_settings'] = Database::pexecute_first($stmt, array('id' => $this->_php_configs_cache[$php_config_id]['fpmsettingid']));
+			}
 		}
 
 		return $this->_php_configs_cache[$php_config_id];

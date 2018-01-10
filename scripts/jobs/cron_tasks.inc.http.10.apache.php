@@ -340,7 +340,7 @@ class apache extends HttpConfigBase
 							if ($phpconfig['pass_authorizationheader'] == '1') {
 								$addheader = " -pass-header Authorization";
 							}
-							$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . Settings::Get('phpfpm.idle_timeout') . $addheader . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . $phpconfig['fpm_settings']['idle_timeout'] . $addheader . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
 							$file_extensions = explode(' ', $phpconfig['file_extensions']);
 							$this->virtualhosts_data[$vhosts_filename] .= '   <FilesMatch "\.(' . implode('|', $file_extensions) . ')$">' . "\n";
