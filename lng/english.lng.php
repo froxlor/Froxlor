@@ -2092,3 +2092,5 @@ $lng['serversettings']['leapiversion']['title'] = "Chose Let's Encrypt ACME impl
 $lng['serversettings']['leapiversion']['description'] = "Chose between ACME v1 and ACME v2 implementation for Let's Encrypt.";
 $lng['error']['nowildcardwithletsencryptv2'] = 'Let\'s Encrypt can only validate wildcard-domains by DNS with ACME v2, sorry. Please set the ServerAlias to WWW or disable it completely';
 $lng['admin']['phpsettings']['pass_authorizationheader'] = 'Add "-pass-header Authorization" / "CGIPassAuth On" to vhosts';
+$lng['serversettings']['ssl']['ssl_protocols']['title'] = 'Configure the TLS protocol version';
+$lng['serversettings']['ssl']['ssl_protocols']['description'] = 'This is a list of ssl protocols that you want (or don\'t want) to use when using SSL. <b>Notice:</b> Some older browsers may not support the newest protcol versions.<br /><br /><b>Default value is:</b><pre>TLSv1, TLSv1.2</pre>';

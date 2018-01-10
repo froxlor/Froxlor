@@ -454,7 +454,7 @@ class apache extends HttpConfigBase
 						} else {
 							
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol -ALL +TLSv1 +TLSv1.2' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLProtocol -ALL' . str_replace(","," +", Settings::Get('system.ssl_protocols')) . "\n";
 							if (Settings::Get('system.apache24') == '1') {
 								if (Settings::Get('system.http2_support') == '1') {
 									$this->virtualhosts_data[$vhosts_filename] .= ' Protocols h2 http/1.1' . "\n";
@@ -892,7 +892,7 @@ class apache extends HttpConfigBase
 			
 			if ($domain['ssl_cert_file'] != '') {
 				$vhost_content .= '  SSLEngine On' . "\n";
-				$vhost_content .= '  SSLProtocol -ALL +TLSv1 +TLSv1.2' . "\n";
+				$vhost_content .= '  SSLProtocol -ALL' . str_replace(","," +", Settings::Get('system.ssl_protocols')) . "\n";
 				if (Settings::Get('system.apache24') == '1') {
 					if (isset($domain['http2']) && $domain['http2'] == '1') {
 						$vhost_content .= ' Protocols h2 http/1.1' . "\n";
