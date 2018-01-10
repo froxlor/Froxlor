@@ -51,7 +51,7 @@ class apache_fcgid extends apache
 						$filesmatch .= substr($ext, 1).'|';
 					}
 					// start block, cut off last pipe and close block
-					$filesmatch = '('.substr($filesmatch, 0, -1).')';
+					$filesmatch = '('.str_replace(".", "\.", substr($filesmatch, 0, -1)).')';
 					$php_options_text.= '  <FilesMatch \.'.$filesmatch.'$>'. "\n";
 					$php_options_text.= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost'. "\n";
 					$php_options_text.= '  </FilesMatch>' . "\n";
