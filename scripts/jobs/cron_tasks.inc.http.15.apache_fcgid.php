@@ -82,7 +82,15 @@ class apache_fcgid extends apache
 					}
 					$php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile()  . ' -idle-timeout ' . $phpconfig['fpm_settings']['idle_timeout'] . $addheader . "\n";
 					$php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
-					$php_options_text.= '    <FilesMatch "\.php$">' . "\n";
+					$filesmatch = $phpconfig['fpm_settings']['limit_extensions'];
+					$extensions = explode(" ", $filesmatch);
+					$filesmatch = "";
+					foreach ($extensions as $ext) {
+						$filesmatch .= substr($ext, 1).'|';
+					}
+					// start block, cut off last pipe and close block
+					$filesmatch = '('.str_replace(".", "\.", substr($filesmatch, 0, -1)).')';
+					$php_options_text.= '    <FilesMatch \.'.$filesmatch.'$>'. "\n";
 					$php_options_text.= '      SetHandler php5-fastcgi'. "\n";
 					$php_options_text.= '      Action php5-fastcgi /fastcgiphp' . "\n";
 					$php_options_text.= '      Options +ExecCGI' . "\n";
