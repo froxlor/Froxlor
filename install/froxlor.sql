@@ -590,7 +590,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.38.8'),
-	('panel', 'db_version', '201801100');
+	('panel', 'db_version', '201801101');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -770,6 +770,7 @@ CREATE TABLE `panel_fpmdaemons` (
   `max_spare_servers` int(4) NOT NULL DEFAULT '35',
   `max_requests` int(4) NOT NULL DEFAULT '0',
   `idle_timeout` int(4) NOT NULL DEFAULT '30',
+  `limit_extensions` varchar(255) NOT NULL default '.php',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `reload` (`reload_cmd`),
   UNIQUE KEY `config` (`config_dir`)

@@ -327,7 +327,15 @@ class apache extends HttpConfigBase
 						
 						// mod_proxy stuff for apache-2.4
 						if (Settings::Get('system.apache24') == '1' && Settings::Get('phpfpm.use_mod_proxy') == '1') {
-							$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.php$>' . "\n";
+							$filesmatch = $phpconfig['limit_extensions'];
+							$extensions = explode(" ", $filesmatch);
+							$filesmatch = "";
+							foreach ($extensions as $ext) {
+								$filesmatch .= $ext.'|';
+							}
+							// start block, cut off last pipe and close block
+							$filesmatch = '('.substr($filesmatch, -1).')';
+							$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.'.$filesmatch.'$>'. "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile() . '|fcgi://localhost' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
 							if ($phpconfig['pass_authorizationheader'] == '1') {

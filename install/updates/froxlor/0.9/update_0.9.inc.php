@@ -3752,3 +3752,12 @@ if (isDatabaseVersion('201801091')) {
 
 	updateToDbVersion('201801100');
 }
+
+if (isDatabaseVersion('201801100')) {
+
+	showUpdateStep("Adding field for security.limit_extensions fpm-setting");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_FPMDAEMONS . "` ADD `limit_extensions` varchar(255) NOT NULL default '.php';");
+	lastStepStatus(0);
+
+	updateToDbVersion('201801101');
+}

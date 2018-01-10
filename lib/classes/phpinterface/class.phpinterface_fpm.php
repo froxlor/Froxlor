@@ -192,6 +192,7 @@ class phpinterface_fpm
 			$fpm_max_spare_servers = (int) $this->_fpm_cfg['max_spare_servers'];
 			$fpm_requests = (int) $this->_fpm_cfg['max_requests'];
 			$fpm_process_idle_timeout = (int) $this->_fpm_cfg['idle_timeout'];
+			$fpm_limit_extensions = $this->_fpm_cfg['limit_extensions'];
 			
 			if ($fpm_children == 0) {
 				$fpm_children = 1;
@@ -255,6 +256,7 @@ class phpinterface_fpm
 			}
 			
 			$fpm_config .= ';chroot = ' . makeCorrectDir($this->_domain['documentroot']) . "\n";
+			$fpm_config .= 'security.limit_extensions = '.$fpm_limit_extensions . "\n";
 			
 			$tmpdir = makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/');
 			if (! is_dir($tmpdir)) {

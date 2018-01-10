@@ -417,6 +417,7 @@ if ($page == 'overview') {
 				$max_spare_servers = isset($_POST['max_spare_servers']) ? (int) $_POST['max_spare_servers'] : 0;
 				$max_requests = isset($_POST['max_requests']) ? (int) $_POST['max_requests'] : 0;
 				$idle_timeout = isset($_POST['idle_timeout']) ? (int) $_POST['idle_timeout'] : 0;
+				$limit_extensions = validate($_POST['limit_extensions'], 'limit_extensions');
 				
 				if (strlen($description) == 0 || strlen($description) > 50) {
 					standard_error('descriptioninvalid');
@@ -433,7 +434,8 @@ if ($page == 'overview') {
 					`min_spare_servers` = :min_spare_servers,
 					`max_spare_servers` = :max_spare_servers,
 					`max_requests` = :max_requests,
-					`idle_timeout` = :idle_timeout
+					`idle_timeout` = :idle_timeout,
+					`limit_extensions` = :limit_extensions
 				");
 				$ins_data = array(
 					'desc' => $description,
@@ -445,7 +447,8 @@ if ($page == 'overview') {
 					'min_spare_servers' => $min_spare_servers,
 					'max_spare_servers' => $max_spare_servers,
 					'max_requests' => $max_requests,
-					'idle_timeout' => $idle_timeout
+					'idle_timeout' => $idle_timeout,
+					'limit_extensions' => $limit_extensions
 				);
 				Database::pexecute($ins_stmt, $ins_data);
 				
@@ -543,6 +546,7 @@ if ($page == 'overview') {
 				$max_spare_servers = isset($_POST['max_spare_servers']) ? (int) $_POST['max_spare_servers'] : $result['max_spare_servers'];
 				$max_requests = isset($_POST['max_requests']) ? (int) $_POST['max_requests'] : $result['max_requests'];
 				$idle_timeout = isset($_POST['idle_timeout']) ? (int) $_POST['idle_timeout'] : $result['idle_timeout'];
+				$limit_extensions = validate($_POST['limit_extensions'], 'limit_extensions');
 				
 				if (strlen($description) == 0 || strlen($description) > 50) {
 					standard_error('descriptioninvalid');
@@ -559,7 +563,8 @@ if ($page == 'overview') {
 					`min_spare_servers` = :min_spare_servers,
 					`max_spare_servers` = :max_spare_servers,
 					`max_requests` = :max_requests,
-					`idle_timeout` = :idle_timeout
+					`idle_timeout` = :idle_timeout,
+					`limit_extensions` = :limit_extensions
 					WHERE `id` = :id
 				");
 				$upd_data = array(
@@ -573,6 +578,7 @@ if ($page == 'overview') {
 					'max_spare_servers' => $max_spare_servers,
 					'max_requests' => $max_requests,
 					'idle_timeout' => $idle_timeout,
+					'limit_extensions' => $limit_extensions,
 					'id' => $id
 				);
 				Database::pexecute($upd_stmt, $upd_data);

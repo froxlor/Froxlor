@@ -44,7 +44,15 @@ class apache_fcgid extends apache
 				if (Settings::Get('system.apache24') == '1'
 					&& Settings::Get('phpfpm.use_mod_proxy') == '1'
 				) {
-					$php_options_text.= '  <FilesMatch \.php$>'. "\n";
+					$filesmatch = $phpconfig['limit_extensions'];
+					$extensions = explode(" ", $filesmatch);
+					$filesmatch = "";
+					foreach ($extensions as $ext) {
+						$filesmatch .= $ext.'|';
+					}
+					// start block, cut off last pipe and close block
+					$filesmatch = '('.substr($filesmatch, -1).')';
+					$php_options_text.= '  <FilesMatch \.'.$filesmatch.'$>'. "\n";
 					$php_options_text.= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost'. "\n";
 					$php_options_text.= '  </FilesMatch>' . "\n";
 

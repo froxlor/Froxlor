@@ -82,6 +82,15 @@ return array(
 						'desc' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'],
 						'type' => 'int',
 						'value' => $result['idle_timeout']
+					),
+					'limit_extensions' => array(
+						'label' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'],
+						'type' => 'string',
+						'string_delimiter' => ' ',
+						'string_regexp' => '^\.[a-z]([a-z0-9]+)',
+						'string_emptyallowed' => false,
+						'value' => $result['limit_extensions']
 					)
 				)
 			)
