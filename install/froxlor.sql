@@ -703,7 +703,7 @@ INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
     (1, 'Deutsch', 'de', 'lng/german.lng.php'),
     (2, 'English', 'en', 'lng/english.lng.php'),
     (3, 'Fran&ccedil;ais', 'fr', 'lng/french.lng.php'),
-    (4, 'Portugu&ecirc;s', 'pt', 'lng/portugues.lng.php'),
+    (4, 'Portugu&ecirc;s', 'pt', 'lng/portuguese.lng.php'),
     (5, 'Italiano', 'it', 'lng/italian.lng.php'),
     (6, 'Nederlands', 'nl', 'lng/dutch.lng.php'),
     (7, 'Svenska', 'sv', 'lng/swedish.lng.php');
