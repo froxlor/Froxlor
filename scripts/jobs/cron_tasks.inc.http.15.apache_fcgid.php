@@ -44,7 +44,7 @@ class apache_fcgid extends apache
 				if (Settings::Get('system.apache24') == '1'
 					&& Settings::Get('phpfpm.use_mod_proxy') == '1'
 				) {
-					$filesmatch = $phpconfig['limit_extensions'];
+					$filesmatch = $phpconfig['fpm_settings']['limit_extensions'];
 					$extensions = explode(" ", $filesmatch);
 					$filesmatch = "";
 					foreach ($extensions as $ext) {
