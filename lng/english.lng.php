@@ -1828,7 +1828,7 @@ $lng['serversettings']['panel_password_special_char_required']['description'] = 
 $lng['serversettings']['panel_password_special_char']['title'] = 'Special characters list';
 $lng['serversettings']['panel_password_special_char']['description'] = 'One of these characters is required if the above option is set.';
 $lng['phpfpm']['use_mod_proxy']['title'] = 'Use mod_proxy / mod_proxy_fcgi';
-$lng['phpfpm']['use_mod_proxy']['description'] = 'Activate to use php-fpm via mod_proxy_fcgi. Requires at least apache-2.4.9';
+$lng['phpfpm']['use_mod_proxy']['description'] = '<strong class="red">Must be enabled when using Debian 9.x (Stretch)</strong>. Activate to use php-fpm via mod_proxy_fcgi. Requires at least apache-2.4.9';
 $lng['error']['no_phpinfo'] = 'Sorry, unable to read phpinfo()';
 
 $lng['admin']['movetoadmin'] = 'Move customer';
@@ -1849,9 +1849,9 @@ $lng['usersettings']['custom_notes']['show'] = 'Show your notes on the dashboard
 $lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID and PHP-FPM cannot be activated at the same time';
 
 // Added in Froxlor 0.9.34
-$lng['admin']['configfiles']['legend'] = 'You are about to configure a service/daemon. The following legend explains the nomenclature.';
+$lng['admin']['configfiles']['legend'] = '<h3>You are about to configure a service/daemon</h3>';
 $lng['admin']['configfiles']['commands'] = '<span class="red">Commands:</span> These commands are to be executed line by line as root-user in a shell. It is safe to copy the whole block and paste it into the shell.';
-$lng['admin']['configfiles']['files'] = '<span class="red">Configfiles:</span> This is an example of the contents of a configuration file. The commands before these textfields should open an editor with the target file. Just copy and paste the contents into the editor and save the file.<br><br><span class="red">Please note:</span> The MySQL-password has not been replaced for security reasons. Please replace "FROXLOR_MYSQL_PASSWORD" on your own. If you forgot your MySQL-password you\'ll find it in "lib/userdata.inc.php"';
+$lng['admin']['configfiles']['files'] = '<span class="red">Configfiles:</span> The commands before the textfields should open an editor with the target file. Just copy and paste the contents into the editor and save the file.<br><span class="red">Please note:</span> The MySQL-password has not been replaced for security reasons. Please replace "FROXLOR_MYSQL_PASSWORD" on your own or use the javascript form below to replace it on-site. If you forgot your MySQL-password you\'ll find it in "lib/userdata.inc.php"';
 $lng['serversettings']['apache_itksupport']['title'] = 'Use modifications for Apache ITK-MPM';
 $lng['serversettings']['apache_itksupport']['description'] = '<strong class="red">ATTENTION:</strong> use only if you acutally have apache itk-mpm enabled<br />otherwise your webserver will not be able to start';
 $lng['integrity_check']['DatabaseCharset'] = 'Characterset of database (should be UTF-8)';

@@ -11,25 +11,15 @@ $header
 
 		<section>
 			<div class="info">
-				<p>{$lng['admin']['configfiles']['legend']}</p><br />
+				<p>{$lng['admin']['configfiles']['legend']}</p>
+				<p>{$lng['admin']['configfiles']['commands']}</p>
+				<p>{$lng['admin']['configfiles']['files']}</p>
 				<p>
-					{$lng['admin']['configfiles']['commands']}<br />
-					<textarea class="shell" rows="2" readonly>
-chmod u+x example-script.sh
-./example-script.sh</textarea>
-				</p><br />
-				<p>
-					{$lng['admin']['configfiles']['files']}<br />
-					<textarea class="filecontent" rows="5">Lorem ipsum dolor sit amet,
-consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
-ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
-eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-no sea takimata sanctus est Lorem ipsum dolor sit amet.</textarea>
-				</p>
 				<form id="configfiles_setmysqlpw" action="#">
 					FROXLOR_MYSQL_PASSWORD: <input type="text" class="text" id="configfiles_mysqlpw" name="configfiles_mysqlpw" value="" />
 					<input type="submit" value="{$lng['panel']['set']}" />
 				</form>
+				</p>
 			</div>
 		</section>
 
