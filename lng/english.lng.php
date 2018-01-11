@@ -2096,3 +2096,7 @@ $lng['serversettings']['ssl']['ssl_protocols']['title'] = 'Configure the TLS pro
 $lng['serversettings']['ssl']['ssl_protocols']['description'] = 'This is a list of ssl protocols that you want (or don\'t want) to use when using SSL. <b>Notice:</b> Some older browsers may not support the newest protcol versions.<br /><br /><b>Default value is:</b><pre>TLSv1, TLSv1.2</pre>';
 $lng['serversettings']['phpfpm_settings']['limit_extensions']['title'] = 'Allowed extensions';
 $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'] = 'Limits the extensions of the main script FPM will allow to parse. This can prevent configuration mistakes on the web server side. You should only limit FPM to .php extensions to prevent malicious users to use other extensions to execute php code. Default value: .php';
+$lng['phpfpm']['ini_flags'] = 'Enter possible <strong>php_flag</strong>s for php.ini. One entry per line';
+$lng['phpfpm']['ini_values'] = 'Enter possible <strong>php_value</strong>s for php.ini. One entry per line';
+$lng['phpfpm']['ini_admin_flags'] = 'Enter possible <strong>php_admin_flag</strong>s for php.ini. One entry per line';
+$lng['phpfpm']['ini_admin_values'] = 'Enter possible <strong>php_admin_value</strong>s for php.ini. One entry per line';

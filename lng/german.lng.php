@@ -1747,3 +1747,7 @@ $lng['serversettings']['ssl']['ssl_protocols']['title'] = 'SSL Protokollversion 
 $lng['serversettings']['ssl']['ssl_protocols']['description'] = 'Dies ist eine Liste von SSL/TLS Protokollversionen die genutzt werden sollen (oder auch nicht genutzt werden sollen), wenn SSL verwendet wird. <b>Hinweis:</b> Ältere Browser sind möglicherweise nicht vollständig zum neusten Protokoll kompatibel.<br /><br /><b>Standard-Wert ist:</b><pre>TLSv1, TLSv1.2</pre>';
 $lng['serversettings']['phpfpm_settings']['limit_extensions']['title'] = 'Erlaubte Dateiendungen';
 $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'] = 'Beschränkt die Dateierweiterungen des Haupt-Skripts, das FPM zu parsen erlaubt. Dies kann Konfigurationsfehler auf der Webserverseite verhindern. Sie sollten FPM nur auf .php Erweiterungen beschränken, um zu verhindern, dass bösartige Nutzter andere Erweiterungen verwenden, um PHP Code auszuführen. Standardwert: .php';
+$lng['phpfpm']['ini_flags'] = 'Mögliche <strong>php_flag</strong>s für die php.ini. Pro Zeile eine Direktive';
+$lng['phpfpm']['ini_values'] = 'Mögliche <strong>php_value</strong>s für die php.ini. Pro Zeile eine Direktive';
+$lng['phpfpm']['ini_admin_flags'] = 'Mögliche <strong>php_admin_flag</strong>s für die php.ini. Pro Zeile eine Direktive';
+$lng['phpfpm']['ini_admin_values'] = 'Mögliche <strong>php_admin_value</strong>s für die php.ini. Pro Zeile eine Direktive';

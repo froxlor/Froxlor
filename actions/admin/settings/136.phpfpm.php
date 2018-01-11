@@ -86,7 +86,39 @@ return array(
 					'default' => false,
 					'visible' => Settings::Get('system.apache24'),
 					'save_method' => 'storeSettingField'
-					)
+					),
+				'system_phpfpm_ini_flags' => array(
+					'label' => $lng['phpfpm']['ini_flags'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'ini_flags',
+					'type' => 'text',
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				),
+				'system_phpfpm_ini_values' => array(
+					'label' => $lng['phpfpm']['ini_values'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'ini_values',
+					'type' => 'text',
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				),
+				'system_phpfpm_ini_admin_flags' => array(
+					'label' => $lng['phpfpm']['ini_admin_flags'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'ini_admin_flags',
+					'type' => 'text',
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				),
+				'system_phpfpm_ini_admin_values' => array(
+					'label' => $lng['phpfpm']['ini_admin_values'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'ini_admin_values',
+					'type' => 'text',
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				)
 				),
 			),
 		),

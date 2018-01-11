@@ -423,6 +423,102 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('phpfpm', 'vhost_defaultini', '2'),
 	('phpfpm', 'fastcgi_ipcdir', '/var/lib/apache2/fastcgi/'),
 	('phpfpm', 'use_mod_proxy', '0'),
+	('phpfpm', 'ini_flags', 'asp_tags
+display_errors
+display_startup_errors
+html_errors
+log_errors
+magic_quotes_gpc
+magic_quotes_runtime
+magic_quotes_sybase
+mail.add_x_header
+session.cookie_secure
+session.use_cookies
+short_open_tag
+track_errors
+xmlrpc_errors
+suhosin.simulation
+suhosin.session.encrypt
+suhosin.session.cryptua
+suhosin.session.cryptdocroot
+suhosin.cookie.encrypt
+suhosin.cookie.cryptua
+suhosin.cookie.cryptdocroot
+suhosin.executor.disable_eval
+mbstring.func_overload'),
+	('phpfpm', 'ini_values', 'auto_append_file
+auto_prepend_file
+date.timezone
+default_charset
+error_reporting
+include_path
+log_errors_max_len
+mail.log
+max_execution_time
+session.cookie_domain
+session.cookie_lifetime
+session.cookie_path
+session.name
+session.serialize_handler
+upload_max_filesize
+xmlrpc_error_number
+session.auto_start
+always_populate_raw_post_data
+suhosin.session.cryptkey
+suhosin.session.cryptraddr
+suhosin.session.checkraddr
+suhosin.cookie.cryptkey
+suhosin.cookie.plainlist
+suhosin.cookie.cryptraddr
+suhosin.cookie.checkraddr
+suhosin.executor.func.blacklist
+suhosin.executor.eval.whitelist'),
+	('phpfpm', 'ini_admin_flags', 'allow_call_time_pass_reference
+allow_url_fopen
+allow_url_include
+auto_detect_line_endings
+cgi.fix_pathinfo
+cgi.force_redirect
+enable_dl
+expose_php
+file_uploads
+ignore_repeated_errors
+ignore_repeated_source
+log_errors
+register_argc_argv
+report_memleaks
+opcache.enable
+opcache.consistency_checks
+opcache.dups_fix
+opcache.load_comments
+opcache.revalidate_path
+opcache.save_comments
+opcache.use_cwd
+opcache.validate_timestamps
+opcache.fast_shutdown'),
+	('phpfpm', 'ini_admin_values', 'cgi.redirect_status_env
+date.timezone
+disable_classes
+disable_functions
+error_log
+gpc_order
+max_input_time
+max_input_vars
+memory_limit
+open_basedir
+output_buffering
+post_max_size
+precision
+sendmail_path
+session.gc_divisor
+session.gc_probability
+variables_order
+opcache.log_verbosity_level
+opcache.restrict_api
+opcache.revalidate_freq
+opcache.max_accelerated_files
+opcache.memory_consumption
+opcache.interned_strings_buffer'),
 	('nginx', 'fastcgiparams', '/etc/nginx/fastcgi_params'),
 	('system', 'lastaccountnumber', '0'),
 	('system', 'lastguid', '9999'),
@@ -590,7 +686,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.38.8'),
-	('panel', 'db_version', '201801101');
+	('panel', 'db_version', '201801110');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
