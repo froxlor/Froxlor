@@ -4529,7 +4529,7 @@ aliases:     files
 				</daemon>
 				<!-- FCGID -->
 				<daemon name="fcgid" title="FCGID (alternative to mod_php)">
-					<install><![CDATA[apt-get install apache2-suexec libapache2-mod-fcgid php-cgi]]></install>
+					<install><![CDATA[apt-get install apache2-suexec-pristine libapache2-mod-fcgid php-cgi]]></install>
 					<command><![CDATA[a2enmod suexec fcgid]]></command>
 					<commands index="1">
 						<visibility mode="true">{{settings.system.mod_fcgid_ownvhost}}
@@ -4549,7 +4549,7 @@ aliases:     files
 					<install>
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
-						<content><![CDATA[apt-get install apache2-suexec]]></content>
+						<content><![CDATA[apt-get install apache2-suexec-pristine]]></content>
 					</install>
 					<install><![CDATA[apt-get install php-fpm]]></install>
 					<commands index="2">
