@@ -1208,7 +1208,7 @@ class FroxlorInstall
 			$this->_data['webserver'] = $_POST['webserver'];
 		} else {
 			if (strtoupper(@php_sapi_name()) == "APACHE2HANDLER" || stristr($_SERVER['SERVER_SOFTWARE'], "apache/2")) {
-				$this->_data['webserver'] = 'apache2';
+				$this->_data['webserver'] = 'apache24';
 			} elseif (substr(strtoupper(@php_sapi_name()), 0, 8) == "LIGHTTPD" || stristr($_SERVER['SERVER_SOFTWARE'], "lighttpd")) {
 				$this->_data['webserver'] = 'lighttpd';
 			} elseif (substr(strtoupper(@php_sapi_name()), 0, 8) == "NGINX" || stristr($_SERVER['SERVER_SOFTWARE'], "nginx")) {
