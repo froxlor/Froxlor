@@ -52,7 +52,7 @@ class DnsEntry
 			if (substr($_l, 0, 1) == '"') {
 				$_l = substr($_l, 1);
 			}
-			$_content = '( "' . $_l . '"' . PHP_EOL;
+			$_content = $_l . '"' . PHP_EOL;
 			$_l = array_pop($_contentlines);
 			// check for ending quote
 			if (substr($_l, -1) == '"') {
@@ -63,7 +63,7 @@ class DnsEntry
 				$_content .= "\t\t\t\t" . '"' . $_cl . '"' . PHP_EOL;
 			}
 			// last line
-			$_content .= "\t\t\t\t" . '"'.$_l.'" )';
+			$_content .= "\t\t\t\t" . '"'.$_l;
 		}
 		$result = $this->record . "\t" . $this->ttl . "\t" . $this->class . "\t" . $this->type . "\t" . (($this->priority >= 0 && ($this->type == 'MX' || $this->type == 'SRV')) ? $this->priority . "\t" : "") . $_content . PHP_EOL;
 		return $result;
