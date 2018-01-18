@@ -134,7 +134,7 @@ class DbManagerMySQL {
 	 * @param string $host (unused in mysql)
 	 */
 	public function disableUser($username = null, $host = null) {
-		$stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM `".$row_database['databasename']."`");
+		$stmt = Database::prepare('REVOKE ALL PRIVILEGES, GRANT OPTION FROM `' . $username . '`@`' . $host . '`');
 		Database::pexecute($stmt, array(), false);
 	}
 
