@@ -909,7 +909,7 @@ class apache extends HttpConfigBase
 				$vhost_content .= '  SSLEngine On' . "\n";
 				$vhost_content .= '  SSLProtocol -ALL +' . str_replace(","," +", Settings::Get('system.ssl_protocols')) . "\n";
 				if (Settings::Get('system.apache24') == '1') {
-					if (isset($domain['http2']) && $domain['http2'] == '1') {
+					if (isset($domain['http2']) && $domain['http2'] == '1' && Settings::Get('system.http2_support') == '1') {
 						$vhost_content .= ' Protocols h2 http/1.1' . "\n";
 					}
 					$vhost_content .= '  SSLCompression Off' . "\n";

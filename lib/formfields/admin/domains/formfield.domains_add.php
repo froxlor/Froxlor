@@ -174,7 +174,7 @@ return array(
 						'value' => array()
 					),
 					'http2' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false) && Settings::Get('system.webserver') != 'lighttpd',
+						'visible' => ($ssl_ipsandports != '' ? true : false) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http2_support') == '1',
 						'label' => $lng['admin']['domain_http2']['title'],
 						'desc' => $lng['admin']['domain_http2']['description'],
 						'type' => 'checkbox',
