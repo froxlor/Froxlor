@@ -1751,3 +1751,4 @@ $lng['phpfpm']['ini_flags'] = 'Mögliche <strong>php_flag</strong>s für die php
 $lng['phpfpm']['ini_values'] = 'Mögliche <strong>php_value</strong>s für die php.ini. Pro Zeile eine Direktive';
 $lng['phpfpm']['ini_admin_flags'] = 'Mögliche <strong>php_admin_flag</strong>s für die php.ini. Pro Zeile eine Direktive';
 $lng['phpfpm']['ini_admin_values'] = 'Mögliche <strong>php_admin_value</strong>s für die php.ini. Pro Zeile eine Direktive';
+$lng['serversettings']['phpfpm_settings']['envpath'] = 'Pfade für die PATH Umgebungsvariable. Leerlassen, um keine PATH Umgebungsvariable zu setzen.';

@@ -169,6 +169,10 @@ class phpinterface_fpm
 				$this->getTempDir();
 			}
 			
+			$env_path = Settings::Get('phpfpm.envpath');
+			if (!empty($env_path)) {
+				$fpm_config .= 'env[PATH] = ' . $env_path . "\n";
+			}
 			$fpm_config .= 'env[TMP] = ' . $tmpdir . "\n";
 			$fpm_config .= 'env[TMPDIR] = ' . $tmpdir . "\n";
 			$fpm_config .= 'env[TEMP] = ' . $tmpdir . "\n";

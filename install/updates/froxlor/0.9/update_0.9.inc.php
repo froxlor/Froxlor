@@ -3865,3 +3865,12 @@ opcache.interned_strings_buffer');
 
 	updateToDbVersion('201801110');
 }
+
+if (isDatabaseVersion('201801110')) {
+
+	showUpdateStep("Adding php-fpm php PATH setting for envrironment");
+	Settings::AddNew("phpfpm.envpath",  '/usr/local/bin:/usr/bin:/bin');
+	lastStepStatus(0);
+
+	updateToDbVersion('201801260');
+}

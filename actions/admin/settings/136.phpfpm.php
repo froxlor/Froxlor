@@ -69,6 +69,17 @@ return array(
 					'default' => '/usr/share/php/:/usr/share/php5/',
 					'save_method' => 'storeSettingField'
 					),
+				'system_phpfpm_envpath' => array(
+					'label' => $lng['serversettings']['phpfpm_settings']['envpath'],
+					'settinggroup' => 'phpfpm',
+					'varname' => 'envpath',
+					'type' => 'string',
+					'string_type' => 'dir',
+					'string_delimiter' => ':',
+					'string_emptyallowed' => true,
+					'default' => '/usr/local/bin:/usr/bin:/bin',
+					'save_method' => 'storeSettingField'
+				),
 				'system_phpfpm_fastcgi_ipcdir' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['ipcdir'],
 					'settinggroup' => 'phpfpm',
