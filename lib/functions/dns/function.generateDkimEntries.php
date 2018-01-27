@@ -54,20 +54,8 @@ function generateDkimEntries($domain)
 		// end-part
 		$dkim_txt .= 't=s';
 
-		if (Settings::Get('system.dns_server') == 'pdns') {
-			// PowerDNS does not need/want splitted content
-			$txt_record_split = $dkim_txt;
-		} else {
-			// split if necessary
-			$txt_record_split = '';
-			$lbr = 50;
-			for ($pos = 0; $pos <= strlen($dkim_txt) - 1; $pos += $lbr) {
-				$txt_record_split .= (($pos == 0) ? '("' : "\t\t\t\t\t \"") . substr($dkim_txt, $pos, $lbr) . (($pos >= strlen($dkim_txt) - $lbr) ? '")' : '"') . "\n";
-			}
-		}
-
 		// dkim-entry
-		$zone_dkim[] = $txt_record_split;
+		$zone_dkim[] = $dkim_txt;
 
 		// adsp-entry
 		if (Settings::Get('dkim.dkim_add_adsp') == "1") {
