@@ -233,7 +233,7 @@ abstract class DnsBase
 					$pubkey_file_handler = fopen($pubkey_filename, "w");
 					fwrite($pubkey_file_handler, $domain['dkim_pubkey']);
 					fclose($pubkey_file_handler);
-					safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
+					safe_exec("chmod 0644 " . escapeshellarg($pubkey_filename));
 				}
 
 				$dkimdomains .= $domain['domain'] . "\n";
