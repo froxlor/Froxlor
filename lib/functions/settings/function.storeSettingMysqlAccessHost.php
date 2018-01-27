@@ -16,33 +16,36 @@
  * @package    Functions
  *
  */
-
 function storeSettingMysqlAccessHost($fieldname, $fielddata, $newfieldvalue)
 {
 	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
-	if($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'mysql_access_host')
-	{
+	if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'mysql_access_host') {
 		$mysql_access_host_array = array_map('trim', explode(',', $newfieldvalue));
 
-		if(in_array('127.0.0.1', $mysql_access_host_array)
-		   && !in_array('localhost', $mysql_access_host_array))
-		{
+		if (in_array('127.0.0.1', $mysql_access_host_array) && ! in_array('localhost', $mysql_access_host_array)) {
 			$mysql_access_host_array[] = 'localhost';
 		}
 
-		if(!in_array('127.0.0.1', $mysql_access_host_array)
-		   && in_array('localhost', $mysql_access_host_array))
-		{
+		if (! in_array('127.0.0.1', $mysql_access_host_array) && in_array('localhost', $mysql_access_host_array)) {
 			$mysql_access_host_array[] = '127.0.0.1';
 		}
+
+		// be aware that ipv6 addresses are enclosed in [ ] when passed here
+		$mysql_access_host_array = array_map('cleanMySQLAccessHost', $mysql_access_host_array);
 
 		$mysql_access_host_array = array_unique(array_trim($mysql_access_host_array));
 		$newfieldvalue = implode(',', $mysql_access_host_array);
 		correctMysqlUsers($mysql_access_host_array);
 	}
-	
+
 	return $returnvalue;
 }
 
-?>
+function cleanMySQLAccessHost($value)
+{
+	if (substr($value, 0, 1) == '[' && substr($value, - 1) == ']') {
+		return substr($value, 1, - 1);
+	}
+	return $value;
+}
