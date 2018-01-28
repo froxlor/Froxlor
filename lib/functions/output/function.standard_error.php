@@ -63,3 +63,15 @@ function standard_error($errors = '', $replacer = '') {
 	eval("echo \"" . getTemplate('misc/error', '1') . "\";");
 	exit;
 }
+
+function dynamic_error($message) {
+	global $userinfo, $s, $header, $footer, $lng, $theme;
+	$_SESSION['requestData'] = $_POST;
+	$link = '';
+	if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
+		$link = '<a href="'.htmlentities($_SERVER['HTTP_REFERER']).'">'.$lng['panel']['back'].'</a>';
+	}
+	$error = $message;
+	eval("echo \"" . getTemplate('misc/error', '1') . "\";");
+	exit;
+}

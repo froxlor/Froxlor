@@ -2101,4 +2101,5 @@ $lng['phpfpm']['ini_values'] = 'Enter possible <strong>php_value</strong>s for p
 $lng['phpfpm']['ini_admin_flags'] = 'Enter possible <strong>php_admin_flag</strong>s for php.ini. One entry per line';
 $lng['phpfpm']['ini_admin_values'] = 'Enter possible <strong>php_admin_value</strong>s for php.ini. One entry per line';
 $lng['serversettings']['phpfpm_settings']['envpath'] = 'Paths to add to the PATH environment. Leave empty for no PATH environment variable';
-
+$lng['admin']['configfiles']['importexport'] = 'Import/Export';
+$lng['success']['settingsimported'] = 'Settings imported successfully';

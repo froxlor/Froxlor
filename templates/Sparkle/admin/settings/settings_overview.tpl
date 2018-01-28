@@ -3,7 +3,8 @@
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/settings_big.png" alt="" />&nbsp;
 				{$lng['admin']['serversettings']} &nbsp;
-				[<a href="$filename?page=overview&amp;part=all&amp;s=$s">{$lng['admin']['configfiles']['overview']}</a>]
+				[<a href="$filename?page=overview&amp;part=all&amp;s=$s">{$lng['admin']['configfiles']['overview']}</a>] &nbsp;
+				[<a href="$filename?page=importexport&amp;s=$s">{$lng['admin']['configfiles']['importexport']}</a>]
 			</h2>
 		</header>
 		

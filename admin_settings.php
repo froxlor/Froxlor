@@ -290,6 +290,38 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	}
 	eval("echo \"" . getTemplate("settings/integritycheck") . "\";");
 }
+elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1')
+{
+	if (isset($_GET['action']) && $_GET['action'] == "export") {
+		// export
+		try {
+			$json_export = SImExporter::export();
+		} catch(Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		header('Content-disposition: attachment; filename=Froxlor_settings-'.$version.'-'.$dbversion.'_'.date('d.m.Y').'.json');
+		header('Content-type: application/json');
+		echo $json_export;
+		exit;
+	} elseif (isset($_GET['action']) && $_GET['action'] == "import") {
+		// import
+		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			// get uploaded file
+			if (isset($_FILES["import_file"]["tmp_name"])) {
+				$imp_content = file_get_contents($_FILES["import_file"]["tmp_name"]);
+				try {
+					SImExporter::import($imp_content);
+				} catch(Exception $e) {
+					dynamic_error($e->getMessage());
+				}
+				standard_success('settingsimported', '', array('filename' => 'admin_settings.php'));
+			}
+			dynamic_error("Upload failed");
+		}
+	} else {
+		eval("echo \"" . getTemplate("settings/importexport/index") . "\";");
+	}
+}
 elseif ($page == 'testmail')
 {
 		if (isset($_POST['send']) && $_POST['send'] == 'send')
