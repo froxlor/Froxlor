@@ -66,7 +66,7 @@ CREATE TABLE `mail_virtual` (
   `id` int(11) NOT NULL auto_increment,
   `email` varchar(255) NOT NULL default '',
   `email_full` varchar(255) NOT NULL default '',
-  `destination` text NOT NULL default '',
+  `destination` text,
   `domainid` int(11) NOT NULL default '0',
   `customerid` int(11) NOT NULL default '0',
   `popaccountid` int(11) NOT NULL default '0',
