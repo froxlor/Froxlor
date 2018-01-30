@@ -292,6 +292,11 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 }
 elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1')
 {
+	// check for json-stuff
+	if (! extension_loaded('json')) {
+		standard_error('jsonextensionnotfound');
+	}
+
 	if (isset($_GET['action']) && $_GET['action'] == "export") {
 		// export
 		try {
