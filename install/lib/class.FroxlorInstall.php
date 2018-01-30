@@ -275,7 +275,7 @@ class FroxlorInstall
 		$content .= "</table>";
 		
 		// check if we have unrecoverable errors
-		if ($fatal_fail || $another_fai || $this->_abort) {
+		if ($fatal_fail || $another_fail || $this->_abort) {
 			// D'oh
 			$navigation = '';
 			$msgcolor = 'red';
