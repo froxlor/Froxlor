@@ -157,7 +157,7 @@ if (version_compare(PHP_VERSION, "5.4.0", "<")) {
 		$in = array(&$_GET, &$_POST, &$_COOKIE);
 
 		$_in = $in;
-		foreach ($in as $k => $v) {
+		foreach ($_in as $k => $v) {
 			foreach ($v as $key => $val) {
 				if (!is_array($val)) {
 					$in[$k][$key] = stripslashes($val);
