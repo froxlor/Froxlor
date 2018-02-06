@@ -3874,3 +3874,9 @@ if (isDatabaseVersion('201801110')) {
 
 	updateToDbVersion('201801260');
 }
+
+if (isFroxlorVersion('0.9.38.8')) {
+
+	showUpdateStep("Updating from 0.9.38.8 to 0.9.39 final", false);
+	updateToVersion('0.9.39');
+}
