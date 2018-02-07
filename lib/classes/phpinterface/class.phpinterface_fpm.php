@@ -361,7 +361,7 @@ class phpinterface_fpm
 		$config = makeCorrectFile($configdir . '/dummy.conf');
 		$dummy = "[dummy]
 user = ".Settings::Get('system.httpuser')."
-listen = /run/" . base64_encode($configdir) . "-fpm.sock
+listen = /run/" . md5($configdir) . "-fpm.sock
 pm = static
 pm.max_children = 1
 ";
