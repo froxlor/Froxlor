@@ -1642,8 +1642,8 @@ aliases:     files
 					</commands>
 					<file name="/etc/nsswitch.conf" backup="true">
 						<content><![CDATA[
-# Make sure that `passwd`, `group` and `shadow` have mysql in their lines
-# You should place mysql at the end, so that it is queried after the other mechanisams
+# Make sure that `passwd`, `group` and `shadow` have extrausers in their lines
+# You should place extrausers at the end, so that it is queried after the other mechanisams
 #
 passwd:         compat extrausers
 group:          compat extrausers
