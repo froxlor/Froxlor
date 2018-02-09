@@ -2209,12 +2209,19 @@ if ($page == 'domains' || $page == 'overview') {
 					FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
 					LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fc ON fc.id = c.fpmsettingid
 				");
+				$c_allowed_configs = getCustomerDetail($result['customerid'], 'allowed_phpconfigs');
+				if (!empty($c_allowed_configs)) {
+					$c_allowed_configs = json_decode($c_allowed_configs, true);
+				} else {
+					$c_allowed_configs = array();
+				}
 
 				while ($phpconfigs_row = $phpconfigs_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+					$disabled = !empty($c_allowed_configs) && !in_array($phpconfigs_row['id'], $c_allowed_configs);
 					if ((int) Settings::Get('phpfpm.enabled') == 1) {
-						$phpconfigs .= makeoption($phpconfigs_row['description'] . " [".$phpconfigs_row['interpreter']."]", $phpconfigs_row['id'], $result['phpsettingid'], true, true);
+						$phpconfigs .= makeoption($phpconfigs_row['description'] . " [".$phpconfigs_row['interpreter']."]", $phpconfigs_row['id'], $result['phpsettingid'], true, true, null, $disabled);
 					} else {
-						$phpconfigs .= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true);
+						$phpconfigs .= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true, null, $disabled);
 					}
 				}
 
@@ -2231,6 +2238,13 @@ if ($page == 'domains' || $page == 'overview') {
 				eval("echo \"" . getTemplate("domains/domains_edit") . "\";");
 			}
 		}
+	} elseif ($action == 'jqGetCustomerPHPConfigs') {
+		
+		$customerid = intval($_POST['customerid']);
+		$allowed_phpconfigs = getCustomerDetail($customerid, 'allowed_phpconfigs');
+		echo !empty($allowed_phpconfigs) ? $allowed_phpconfigs : json_encode(array());
+		exit;
+		
 	} elseif ($action == 'import') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {

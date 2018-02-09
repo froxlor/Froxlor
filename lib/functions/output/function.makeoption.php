@@ -29,7 +29,7 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function makeoption($title, $value, $selvalue = NULL, $title_trusted = false, $value_trusted = false, $id = NULL)
+function makeoption($title, $value, $selvalue = NULL, $title_trusted = false, $value_trusted = false, $id = NULL, $disabled = false)
 {
 	if($selvalue !== NULL
 	   && ((is_array($selvalue) && in_array($value, $selvalue)) || $value == $selvalue))
@@ -39,6 +39,10 @@ function makeoption($title, $value, $selvalue = NULL, $title_trusted = false, $v
 	else
 	{
 		$selected = '';
+	}
+	
+	if ($disabled) {
+		$selected .= ' disabled="disabled"';
 	}
 
 	if(!$title_trusted)
