@@ -349,7 +349,7 @@ if ($page == 'overview') {
 				$fpmconfigs = '';
 				$configs = Database::query("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` ORDER BY `description` ASC");
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
-					$fpmconfigs .= makeoption($row['description'], $row['id'], $id, true, true);
+					$fpmconfigs .= makeoption($row['description'], $row['id'], $result['fpmsettingid'], true, true);
 				}
 
 				$phpconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_edit.php';
