@@ -18,7 +18,7 @@
 
 // Load the user settings
 define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
-if (!file_exists('./userdata.inc.php')) {
+if (! file_exists('./userdata.inc.php')) {
 	die();
 }
 require './userdata.inc.php';
@@ -27,10 +27,11 @@ require './classes/database/class.Database.php';
 require './classes/settings/class.Settings.php';
 require './functions/validate/function.validate_ip.php';
 require './functions/validate/function.validateDomain.php';
+require './lib/classes/cURL/class.HttpClient.php';
 
-if(isset($_POST['action'])) {
+if (isset($_POST['action'])) {
 	$action = $_POST['action'];
-} elseif(isset($_GET['action'])) {
+} elseif (isset($_GET['action'])) {
 	$action = $_GET['action'];
 } else {
 	$action = "";
@@ -42,55 +43,62 @@ if ($action == "newsfeed") {
 	} else {
 		$feed = "https://inside.froxlor.org/news/";
 	}
-
+	
 	if (function_exists("simplexml_load_file") == false) {
-		die();
+		outputItem("Newsfeed not available due to missing php-simplexml extension", "Please install the php-simplexml extension in order to view our newsfeed.");
+		exit();
 	}
-
+	
 	if (function_exists('curl_version')) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $feed);
-		curl_setopt($ch, CURLOPT_USERAGENT, 'Froxlor/'.$version);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$output = curl_exec($ch);
-		curl_close($ch);
+		$output = HttpClient::urlGet($feed);
 		$news = simplexml_load_string(trim($output));
 	} else {
-		if (ini_get('allow_url_fopen')) {
-			ini_set('user_agent', 'Froxlor/'.$version);
-			$news = simplexml_load_file($feed, null, LIBXML_NOCDATA);
-		} else {
-			$news = false;
-		}
+		outputItem("Newsfeed not available due to missing php-curl extension", "Please install the php-curl extension in order to view our newsfeed.");
+		exit();
 	}
-
+	
 	if ($news !== false) {
-		for ($i = 0; $i < 3; $i++) {
+		for ($i = 0; $i < 3; $i ++) {
 			$item = $news->channel->item[$i];
-
-			$title = (string)$item->title;
-			$link = (string)$item->link;
+			
+			$title = (string) $item->title;
+			$link = (string) $item->link;
 			$date = date("Y-m-d G:i", strtotime($item->pubDate));
 			$content = preg_replace("/[\r\n]+/", " ", strip_tags($item->description));
 			$content = substr($content, 0, 150) . "...";
-
-			echo "<li class=\"clearfix\">
-                <div class=\"newsfeed-body clearfix\">
-                    <div class=\"header\">
-                        <strong class=\"primary-font\"><a href=\"{$link}\" target=\"_blank\">{$title}</a></strong>
-                        <small class=\"pull-right text-muted\">
-                            <i class=\"fa fa-clock-o fa-fw\"></i> {$date}
-                        </small>
-                    </div>
-                    <p>
-                        {$content}
-                    </p>
-                </div>
-            </li>";
+			
+			outputItem($title, $content, $link, $date);
 		}
 	} else {
 		echo "";
 	}
 } else {
 	echo "No action set.";
+}
+
+function outputItem($title, $content, $link = null, $date = null)
+{
+	echo "<li class=\"clearfix\">
+			<div class=\"newsfeed-body clearfix\">
+				<div class=\"header\">
+					<strong class=\"primary-font\">";
+			if (! empty($link)) {
+				echo "<a href=\"{$link}\" target=\"_blank\">";
+			}
+			echo $title;
+			if (! empty($link)) {
+				echo "</a>";
+			}
+			echo "</strong>";
+			if (! empty($date)) {
+				echo "<small class=\"pull-right text-muted\">
+                            <i class=\"fa fa-clock-o fa-fw\"></i> {$date}
+                        </small>";
+			}
+			echo "</div>
+                    <p>
+                        {$content}
+                    </p>
+                </div>
+            </li>";
 }

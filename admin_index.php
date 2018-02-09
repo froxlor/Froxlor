@@ -86,41 +86,31 @@ if ($page == 'overview') {
 		|| (isset($lookfornewversion) && $lookfornewversion == 'yes')
 	) {
 		$update_check_uri = 'http://version.froxlor.org/Froxlor/legacy/' . $version;
+		$latestversion = HttpClient::urlGet($update_check_uri);
+		$latestversion = explode('|', $latestversion);
 
-		if (ini_get('allow_url_fopen')) {
-			$latestversion = @file($update_check_uri);
+		if (is_array($latestversion)
+			&& count($latestversion) >= 1
+		) {
+			$_version = $latestversion[0];
+			$_message = isset($latestversion[1]) ? $latestversion[1] : '';
+			$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
 
-			if (isset($latestversion[0])) {
-				$latestversion = explode('|', $latestversion[0]);
+			// add the branding so debian guys are not gettings confused
+			// about their version-number
+			$lookfornewversion_lable = $_version.$branding;
+			$lookfornewversion_link = $_link;
+			$lookfornewversion_addinfo = $_message;
 
-				if (is_array($latestversion)
-					&& count($latestversion) >= 1
-				) {
-					$_version = $latestversion[0];
-					$_message = isset($latestversion[1]) ? $latestversion[1] : '';
-					$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
-
-					// add the branding so debian guys are not gettings confused
-					// about their version-number
-					$lookfornewversion_lable = $_version.$branding;
-					$lookfornewversion_link = $_link;
-					$lookfornewversion_addinfo = $_message;
-
-					// not numeric -> error-message
-					if (!preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
-						// check for customized version to not output
-						// "There is a newer version of froxlor" besides the error-message
-						$isnewerversion = 2;
-					} elseif (version_compare2($version, $_version) == -1) {
-						$isnewerversion = 1;
-					} else {
-						$isnewerversion = 0;
-					}
-				} else {
-					redirectTo($update_check_uri.'/pretty', NULL, false);
-				}
+			// not numeric -> error-message
+			if (!preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
+				// check for customized version to not output
+				// "There is a newer version of froxlor" besides the error-message
+				$isnewerversion = 2;
+			} elseif (version_compare2($version, $_version) == -1) {
+				$isnewerversion = 1;
 			} else {
-				redirectTo($update_check_uri.'/pretty', NULL, false);
+				$isnewerversion = 0;
 			}
 		} else {
 			redirectTo($update_check_uri.'/pretty', NULL, false);

@@ -216,9 +216,8 @@ class lescript
 			// simple self check
 			if (Settings::Get('system.disable_le_selfcheck') == '0')
 			{
-				$selfcheckContextOptions = array('http' => array('header' => "User-Agent: Froxlor/".$this->version));
-				$selfcheckContext = stream_context_create($selfcheckContextOptions);
-				if ($payload !== trim(@file_get_contents($uri, false, $selfcheckContext))) {
+				$selfcheckpayload = HttpClient::urlGet($uri);
+				if ($payload !== trim($selfcheckpayload)) {
 					$errmsg = json_encode(error_get_last());
 					if ($errmsg != "null") {
 						$errmsg = "; PHP error: " . $errmsg;
