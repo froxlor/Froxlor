@@ -496,7 +496,7 @@ if ($page == 'overview') {
 				// set default fpm daemon config for all php-config that use this config that is to be deleted
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET
-					`phpsettingid` = '1' WHERE `phpsettingid` = :id");
+					`fpmsettingid` = '1' WHERE `fpmsettingid` = :id");
 				Database::pexecute($upd_stmt, array(
 					'id' => $id
 				));
