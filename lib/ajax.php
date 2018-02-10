@@ -27,7 +27,7 @@ require './classes/database/class.Database.php';
 require './classes/settings/class.Settings.php';
 require './functions/validate/function.validate_ip.php';
 require './functions/validate/function.validateDomain.php';
-require './lib/classes/cURL/class.HttpClient.php';
+require './classes/cURL/class.HttpClient.php';
 
 if (isset($_POST['action'])) {
 	$action = $_POST['action'];
