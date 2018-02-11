@@ -353,7 +353,7 @@ exit "$RETVAL"
 			<!--DNS -->
 			<service type="dns" title="{{lng.admin.configfiles.dns}}">
 				<!--Bind9 -->
-				<daemon name="bind" title="Bind9 nameserver">
+				<daemon name="bind" title="Bind9 nameserver" default="true">
 					<install><![CDATA[emerge net-dns/bind]]></install>
 					<file name="/etc/bind/default.zone">
 						<content><![CDATA[
