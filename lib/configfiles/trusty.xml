@@ -1152,10 +1152,17 @@ MYSQL_AUXOPTIONS_FIELD CONCAT("allowimap=",imap,",allowpop3=",pop3)
 				<!-- Proftpd -->
 				<daemon name="proftpd" title="ProFTPd" default="true">
 					<install><![CDATA[apt-get install proftpd-basic proftpd-mod-mysql]]></install>
-					<commands>
-						<command><![CDATA[[ -f /etc/ssl/certs/proftpd.crt ] || openssl req -new -x509 -newkey rsa:4096 -days 3650 -nodes -out /etc/ssl/certs/proftpd.crt -keyout /etc/ssl/private/proftpd.key -subj "/C=US/ST=Some-State/O=Internet Widgits Pty Ltd/CN=<SERVERNAME>"]]></command>
-						<command><![CDATA[[ -f /etc/ssl/certs/proftpd_ec.crt ] || openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp521r1) -keyout /etc/ssl/private/proftpd_ec.key -out /etc/ssl/certs/proftpd_ec.crt -days 3650 -subj "/C=US/ST=Some-State/O=Internet Widgits Pty Ltd/CN=<SERVERNAME>"]]></command>
-						<command><![CDATA[chmod 0600 /etc/ssl/private/proftpd.key /etc/ssl/private/proftpd_ec.key]]></command>
+					<file name="/etc/proftpd/create-cert.sh" chown="root:0" chmod="0700">
+						<content><![CDATA[#!/bin/bash
+[ -f /etc/ssl/certs/proftpd.crt ] || openssl req -new -x509 -newkey rsa:4096 -days 3650 -nodes -out /etc/ssl/certs/proftpd.crt -keyout /etc/ssl/private/proftpd.key -subj "/C=US/ST=Some-State/O=Internet Widgits Pty Ltd/CN=<SERVERNAME>"
+[ -f /etc/ssl/certs/proftpd_ec.crt ] || openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp521r1) -keyout /etc/ssl/private/proftpd_ec.key -out /etc/ssl/certs/proftpd_ec.crt -days 3650 -subj "/C=US/ST=Some-State/O=Internet Widgits Pty Ltd/CN=<SERVERNAME>"
+chmod 0600 /etc/ssl/private/proftpd.key /etc/ssl/private/proftpd_ec.key
+]]>
+						</content>
+					</file>
+					<commands index="1">
+						<command><![CDATA[/etc/proftpd/create-cert.sh]]></command>
+						<command><![CDATA[rm -f /etc/proftpd/create-cert.sh]]></command>
 					</commands>
 					<file name="/etc/proftpd/proftpd.conf" chown="root:0" chmod="0600"
 						backup="true">
