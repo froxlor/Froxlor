@@ -1764,3 +1764,4 @@ $lng['admin']['plans']['plan_details'] = 'Plan Details';
 $lng['admin']['plans']['add'] = 'Neuen Plan anlegen';
 $lng['admin']['plans']['edit'] = 'Plan editieren';
 $lng['admin']['plans']['use_plan'] = 'Plan übernehmen';
+$lng['question']['plan_reallydelete'] = 'Wollen Sie den Hosting-Plan "%s" wirklich löschen?';

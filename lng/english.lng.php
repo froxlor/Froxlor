@@ -2114,3 +2114,4 @@ $lng['admin']['plans']['plan_details'] = 'Plan details';
 $lng['admin']['plans']['add'] = 'Add new plan';
 $lng['admin']['plans']['edit'] = 'Edit plan';
 $lng['admin']['plans']['use_plan'] = 'Apply plan';
+$lng['question']['plan_reallydelete'] = 'Do you really want to delete the hosting plan %s?';
