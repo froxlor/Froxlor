@@ -150,6 +150,18 @@ return array(
 					)
 				)
 			),
+			'section_cpre' => array(
+				'visible' => !empty($hosting_plans),
+				'title' => $lng['admin']['plans']['use_plan'],
+				'image' => 'icons/user_add.png',
+				'fields' => array(
+					'use_plan' => array(
+						'label' => $lng['admin']['plans']['use_plan'],
+						'type' => 'select',
+						'select_var' => $hosting_plans
+					)
+				)
+			),
 			'section_c' => array(
 				'title' => $lng['admin']['servicedata'],
 				'image' => 'icons/user_edit.png',

@@ -215,6 +215,11 @@ return array(
 					'required_resources' => 'change_serversettings'
 				),
 				array(
+					'url' => 'admin_plans.php?page=overview',
+					'label' => $lng['admin']['plans']['plans'],
+					'required_resources' => 'customers'
+				),
+				array(
 					'url' => 'admin_settings.php?page=updatecounters',
 					'label' => $lng['admin']['updatecounters'],
 					'required_resources' => 'change_serversettings'

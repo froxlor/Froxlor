@@ -1073,6 +1073,20 @@ if ($page == 'customers'
 					}
 				}
 
+				// hosting plans
+				$hosting_plans = "";
+				$plans = Database::query("
+					SELECT *
+					FROM `" . TABLE_PANEL_PLANS . "`
+					ORDER BY name ASC
+				");
+				if (Database::num_rows() > 0){
+					$hosting_plans .= makeoption("---", 0, 0, true, true);
+				}
+				while ($row = $plans->fetch(PDO::FETCH_ASSOC)) {
+					$hosting_plans .= makeoption($row['name'], $row['id'], 0, true, true);
+				}
+
 				$customer_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/customer/formfield.customer_add.php';
 				$customer_add_form = htmlform::genHTMLForm($customer_add_data);
 
@@ -1753,6 +1767,20 @@ if ($page == 'customers'
 							'value' => $row['id']
 						);
 					}
+				}
+
+				// hosting plans
+				$hosting_plans = "";
+				$plans = Database::query("
+					SELECT *
+					FROM `" . TABLE_PANEL_PLANS . "`
+					ORDER BY name ASC
+				");
+				if (Database::num_rows() > 0){
+					$hosting_plans .= makeoption("---", 0, 0, true, true);
+				}
+				while ($row = $plans->fetch(PDO::FETCH_ASSOC)) {
+					$hosting_plans .= makeoption($row['name'], $row['id'], 0, true, true);
 				}
 
 				$customer_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/customer/formfield.customer_edit.php';

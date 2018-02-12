@@ -3892,3 +3892,24 @@ if (isFroxlorVersion('0.9.39.1')) {
 	showUpdateStep("Updating from 0.9.39.1 to 0.9.39.2", false);
 	updateToVersion('0.9.39.2');
 }
+
+if (isDatabaseVersion('201801260')) {
+
+	showUpdateStep("Adding new plans table");
+	Database::query("DROP TABLE IF EXISTS `panel_plans`;");
+	$sql = "CREATE TABLE `panel_plans` (
+	  `id` int(11) NOT NULL auto_increment,
+	  `adminid` int(11) NOT NULL default '0',
+	  `name` varchar(255) NOT NULL default '',
+	  `description` text NOT NULL,
+	  `value` longtext NOT NULL,
+	  `ts` int(15) NOT NULL default '0',
+	  PRIMARY KEY  (id),
+	  KEY adminid (adminid)
+	) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	lastStepStatus(0);
+
+	updateToDbVersion('201802120');
+}
+

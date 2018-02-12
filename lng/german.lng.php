@@ -1754,3 +1754,13 @@ $lng['phpfpm']['ini_admin_values'] = 'Mögliche <strong>php_admin_value</strong>
 $lng['serversettings']['phpfpm_settings']['envpath'] = 'Pfade für die PATH Umgebungsvariable. Leerlassen, um keine PATH Umgebungsvariable zu setzen.';
 $lng['success']['settingsimported'] = 'Einstellungnen erfolgreich importiert';
 $lng['error']['jsonextensionnotfound'] = 'Diese Funktion benötigt die PHP json-Erweiterung.';
+
+// added in froxlor 0.9.39
+$lng['admin']['plans']['name'] = 'Plan Name';
+$lng['admin']['plans']['description'] = 'Beschreibung';
+$lng['admin']['plans']['last_update'] = 'Zuletzt aktualisiert';
+$lng['admin']['plans']['plans'] = 'Hosting Pläne';
+$lng['admin']['plans']['plan_details'] = 'Plan Details';
+$lng['admin']['plans']['add'] = 'Neuen Plan anlegen';
+$lng['admin']['plans']['edit'] = 'Plan editieren';
+$lng['admin']['plans']['use_plan'] = 'Plan übernehmen';

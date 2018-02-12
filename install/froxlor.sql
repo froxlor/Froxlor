@@ -687,7 +687,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.39.2'),
-	('panel', 'db_version', '201801260');
+	('panel', 'db_version', '201802120');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -1026,5 +1026,18 @@ CREATE TABLE `domain_dns_entries` (
   `ttl` int(11) NOT NULL DEFAULT '18000',
   `prio` int(11) DEFAULT NULL,
   PRIMARY KEY  (`id`)
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+DROP TABLE IF EXISTS `panel_plans`;
+CREATE TABLE `panel_plans` (
+  `id` int(11) NOT NULL auto_increment,
+  `adminid` int(11) NOT NULL default '0',
+  `name` varchar(255) NOT NULL default '',
+  `description` text NOT NULL,
+  `value` longtext NOT NULL,
+  `ts` int(15) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY adminid (adminid)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 

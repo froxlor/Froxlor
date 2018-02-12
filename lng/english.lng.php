@@ -2104,3 +2104,13 @@ $lng['serversettings']['phpfpm_settings']['envpath'] = 'Paths to add to the PATH
 $lng['admin']['configfiles']['importexport'] = 'Import/Export';
 $lng['success']['settingsimported'] = 'Settings imported successfully';
 $lng['error']['jsonextensionnotfound'] = 'This feature requires the php json-extension.';
+
+// added in froxlor 0.9.39
+$lng['admin']['plans']['name'] = 'Plan name';
+$lng['admin']['plans']['description'] = 'Description';
+$lng['admin']['plans']['last_update'] = 'Last updated';
+$lng['admin']['plans']['plans'] = 'Hosting plans';
+$lng['admin']['plans']['plan_details'] = 'Plan details';
+$lng['admin']['plans']['add'] = 'Add new plan';
+$lng['admin']['plans']['edit'] = 'Edit plan';
+$lng['admin']['plans']['use_plan'] = 'Apply plan';
