@@ -98,14 +98,14 @@ class SImExporter
 			// when there were changes in the variable-name or similar
 			unset($_data['panel.version']);
 			unset($_data['panel.db_version']);
-			/*
+
 			// store new data
 			foreach ($_data as $index => $value) {
 				Settings::Set($index, $value);
 			}
 			// save to DB
 			Settings::Flush();
-			*/
+
 			// all good
 			return true;
 		}
