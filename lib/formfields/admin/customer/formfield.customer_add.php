@@ -302,9 +302,9 @@ return array(
 						'values' => $phpconfigs,
 						'value' => ((int) Settings::Get('system.mod_fcgid') == 1 ? array(
 							Settings::Get('system.mod_fcgid_defaultini')
-						) : (int) Settings::Get('phpfpm.enabled') == 1) ? array(
+						) : (int) Settings::Get('phpfpm.enabled') == 1 ? array(
 							Settings::Get('phpfpm.defaultini')
-						) : array(),
+						) : array()),
 						'is_array' => 1
 					),
 					'perlenabled' => array(

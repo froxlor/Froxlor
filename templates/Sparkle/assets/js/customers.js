@@ -34,17 +34,18 @@ $(document).ready(function() {
 		        		if (i == 'email_imap' || i == 'email_pop3' || i == 'perlenabled' || i == 'phpenabled' || i == 'dnsenabled') {
 		        			/** handle checkboxes **/
 		        			if (json[i] == 1) {
-		        				$("input[name='"+i+"']").attr('checked', 'checked');
+		        				$("input[name='"+i+"']").prop('checked', true);
 		        			} else {
-		        				$("input[name='"+i+"']").removeAttr('checked');
+		        				$("input[name='"+i+"']").prop('checked', false);
 		        			}
 		        		} else if (i == 'allowed_phpconfigs') {
 		        			/** handle array of values **/
 		        			$("input[name='allowed_phpconfigs[]']").each(function(index) {
-		        				$(this).removeAttr('checked');
+		        				$(this).prop('checked', false);
 		        				for (j in json[i]) {
 		                        	if ($(this).val() == json[i][j]) {
-				        				$(this).attr('checked', 'checked');
+				        				$(this).prop('checked', true);
+				        				break;
 				        			}
 		        				}
 		        			});
@@ -60,7 +61,7 @@ $(document).ready(function() {
 			        		$("input[name='"+i+"']").prop({
 			        			readonly: false
 			        		});
-		        			$("input[name='" + i + "_ul']").removeAttr('checked');
+		        			$("input[name='" + i + "_ul']").prop('checked', false);
 		        		}
 		        	}
 		        },
