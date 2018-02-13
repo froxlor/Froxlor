@@ -1,8 +1,8 @@
 <if $row['termination_css'] != ''>
-	<tr class="{$row['termination_css']}">
+	<tr class="{$row['termination_css']}<if $row['deactivated'] == 1> disabled</if>">
 </if>
 <if $row['termination_css'] == ''>
-	<tr>
+	<tr <if $row['deactivated'] == 1>class="disabled"</if>>
 </if>
 	<td>{$row['domain']}
 		<if (isset($row['standardsubdomain']) && $row['standardsubdomain'] == $row['id'])>
