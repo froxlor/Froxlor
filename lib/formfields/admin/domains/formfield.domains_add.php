@@ -133,7 +133,7 @@ return array(
 						'rows' => 12
 					),
 					'notryfiles' => array(
-						'visible' => (Settings('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
+						'visible' => (Settings::Get('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
 						'label' => $lng['admin']['notryfiles']['title'],
 						'desc' => $lng['admin']['notryfiles']['description'],
 						'type' => 'checkbox',
