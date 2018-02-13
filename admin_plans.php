@@ -244,6 +244,11 @@ if ($page == '' || $page == 'overview') {
 				}
 			}
 			
+			// dummy to avoid unknown variables
+			$language_options = null;
+			$gender_options = null;
+			$hosting_plans = null;
+
 			$plans_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/plans/formfield.plans_add.php';
 			$cust_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_add.php';
 			// unset unneeded stuff
@@ -462,7 +467,31 @@ if ($page == '' || $page == 'overview') {
 						);
 					}
 				}
-				
+
+				// dummy to avoid unknown variables
+				$result['loginname'] = null;
+				$result['documentroot'] = null;
+				$result['standardsubdomain'] = null;
+				$result['deactivated'] = null;
+				$language_options = null;
+				$result['firstname'] = null;
+				$gender_options = null;
+				$result['company'] = null;
+				$result['street'] = null;
+				$result['zipcode'] = null;
+				$result['city'] = null;
+				$result['phone'] = null;
+				$result['fax'] = null;
+				$result['email'] = null;
+				$result['customernumber'] = null;
+				$result['custom_notes'] = null;
+				$result['custom_notes_show'] = null;
+				$hosting_plans = null;
+				$result['imap'] = null;
+				$result['pop3'] = null;
+				$admin_select_cnt = null;
+				$admin_select = null;
+
 				$plans_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/plans/formfield.plans_edit.php';
 				$cust_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_edit.php';
 				// unset unneeded stuff

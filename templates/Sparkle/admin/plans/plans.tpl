@@ -26,7 +26,7 @@ $header
 						<tr>
 							<th>{$lng['admin']['plans']['name']}&nbsp;{$arrowcode['p.name']}</th>
 							<th>{$lng['admin']['plans']['description']}&nbsp;{$arrowcode['p.description']}</th>
-							<th>{$lng['admin']['admin']}&nbsp;{$arrowcode['a.adminname']}</th>
+							<th>{$lng['admin']['admin']}&nbsp;{$arrowcode['adminname']}</th>
 							<th>{$lng['admin']['plans']['last_update']}&nbsp;{$arrowcode['p.ts']}</th>
 							<th>{$lng['panel']['options']}</th>
 						</tr>
