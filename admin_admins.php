@@ -170,6 +170,11 @@ if ($page == 'admins'
 				");
 				Database::pexecute($del_stmt, array('adminid' => $id));
 
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_PANEL_DISKSPACE_ADMINS . "` WHERE `adminid` = :adminid
+				");
+				Database::pexecute($del_stmt, array('adminid' => $id));
+
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
 					`adminid` = :userid WHERE `adminid` = :adminid

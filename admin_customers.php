@@ -307,6 +307,8 @@ if ($page == 'customers'
 				Database::pexecute($stmt, array('id' => $id));
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DISKSPACE . "` WHERE `customerid` = :id");
+				Database::pexecute($stmt, array('id' => $id));
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid` = :id");
 				Database::pexecute($stmt, array('id' => $id));
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid` = :id");
