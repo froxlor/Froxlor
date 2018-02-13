@@ -161,6 +161,21 @@ return array(
 						'value' => array(
 							'1'
 						)
+					),
+					'notryfiles' => array(
+						'visible' => (Settings('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
+						'label' => $lng['admin']['notryfiles']['title'],
+						'desc' => $lng['admin']['notryfiles']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['notryfiles']
+						)
 					)
 				)
 			),

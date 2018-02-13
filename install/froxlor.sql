@@ -260,6 +260,7 @@ CREATE TABLE `panel_domains` (
   `hsts_preload` tinyint(1) NOT NULL default '0',
   `ocsp_stapling` tinyint(1) DEFAULT '0',
   `http2` tinyint(1) DEFAULT '0',
+  `notryfiles` tinyint(1) DEFAULT '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -687,7 +688,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.9.39.2'),
-	('panel', 'db_version', '201802120');
+	('panel', 'db_version', '201802130');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

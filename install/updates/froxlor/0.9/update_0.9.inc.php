@@ -3912,3 +3912,12 @@ if (isDatabaseVersion('201801260')) {
 
 	updateToDbVersion('201802120');
 }
+
+if (isDatabaseVersion('201802120')) {
+
+	showUpdateStep("Adding domain field for try_files flag");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `notryfiles` tinyint(1) DEFAULT '0';");
+	lastStepStatus(0);
+
+	updateToDbVersion('201802130');
+}

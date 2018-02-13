@@ -916,7 +916,9 @@ class nginx extends HttpConfigBase
 
 		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 			$webroot_text .= "\t" . 'index    index.php index.html index.htm;' . "\n";
-			$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;' . "\n";
+			if ($domain['notryfiles'] != 1) {
+				$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;' . "\n";
+			}
 		} else {
 			$webroot_text .= "\t" . 'index    index.html index.htm;' . "\n";
 		}
@@ -927,7 +929,7 @@ class nginx extends HttpConfigBase
 		}
 
 		$webroot_text .= "\t" . '}' . "\n\n";
-		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
+		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1' && $domain['notryfiles'] != 1) {
 			$webroot_text .= "\tlocation @rewrites {\n";
 			$webroot_text .= "\t\trewrite ^ /index.php last;\n";
 			$webroot_text .= "\t}\n\n";
