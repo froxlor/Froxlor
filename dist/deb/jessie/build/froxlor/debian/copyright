@@ -3,11 +3,11 @@ Upstream-Name: froxlor
 Source: http://www.froxlor.org
 
 Files: *
-Copyright: 2010-2016 the Froxlor Team
+Copyright: 2010-2018 the Froxlor Team
 License: GPL-2.0+
 
 Files: debian/*
-Copyright: 2011-2016 Froxlor Release Team <release@froxlor.org>
+Copyright: 2011-2018 Froxlor Release Team <release@froxlor.org>
 License: GPL-2.0+
 
 License: GPL-2.0+
