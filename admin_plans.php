@@ -468,6 +468,9 @@ if ($page == '' || $page == 'overview') {
 					}
 				}
 
+				$result['imap'] = $result['email_imap'];
+				$result['pop3'] = $result['email_pop3'];
+
 				// dummy to avoid unknown variables
 				$result['loginname'] = null;
 				$result['documentroot'] = null;
@@ -487,8 +490,6 @@ if ($page == '' || $page == 'overview') {
 				$result['custom_notes'] = null;
 				$result['custom_notes_show'] = null;
 				$hosting_plans = null;
-				$result['imap'] = null;
-				$result['pop3'] = null;
 				$admin_select_cnt = null;
 				$admin_select = null;
 
