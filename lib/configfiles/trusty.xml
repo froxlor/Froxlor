@@ -761,7 +761,7 @@ smtpd_sasl_local_domain = $myhostname
 broken_sasl_auth_clients = yes
 
 # Virtual delivery settings
-virtual_mailbox_base = <VIRTUAL_MAILBOX_BASE>
+virtual_mailbox_base = /
 virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
 virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
 virtual_alias_maps = mysql:/etc/postfix/mysql-virtual_alias_maps.cf
