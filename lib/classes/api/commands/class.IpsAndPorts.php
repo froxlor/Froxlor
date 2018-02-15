@@ -175,31 +175,31 @@ class IpsAndPorts extends ApiCommand
 			$id = $this->getParam('id');
 			
 			$result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :id
-		");
+				SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :id
+			");
 			$result = Database::pexecute_first($result_stmt, array(
 				'id' => $id
 			), true, true);
 			
-			$ip = validate_ip2($this->getParam('ip'), false, 'invalidip', false, false, false, true);
-			$port = validate($this->getParam('port'), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
+			$ip = validate_ip2($this->getParam('ip', $result['ip']), false, 'invalidip', false, false, false, true);
+			$port = validate($this->getParam('port', $result['port']), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
 				'stringisempty',
 				'myport'
 			), array(), true);
-			$listen_statement = ! empty($this->getParam('listen_statement')) ? 1 : 0;
-			$namevirtualhost_statement = ! empty($this->getParam('namevirtualhost_statement')) ? 1 : 0;
-			$vhostcontainer = ! empty($this->getParam('vhostcontainer')) ? 1 : 0;
-			$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings')), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-			$vhostcontainer_servername_statement = ! empty($this->getParam('vhostcontainer_servername_statement')) ? 1 : 0;
-			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain')), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
-			$docroot = validate($this->getParam('docroot'), 'docroot', '', '', array(), true);
+			$listen_statement = $this->getParam('listen_statement', $result['listen_statement']);
+			$namevirtualhost_statement = $this->getParam('namevirtualhost_statement', $result['namevirtualhost_statement']);
+			$vhostcontainer = $this->getParam('vhostcontainer', $result['vhostcontainer']);
+			$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', $result['specialsettings'])), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+			$vhostcontainer_servername_statement = $this->getParam('vhostcontainer_servername_statement', $result['vhostcontainer_servername_statement']);
+			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', $result['default_vhostconf_domain'])), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
+			$docroot = validate($this->getParam('docroot', $result['docroot']), 'docroot', '', '', array(), true);
 			
 			if ((int) Settings::Get('system.use_ssl') == 1) {
-				$ssl = ! empty($this->getParam('ssl')) ? intval($this->getParam('ssl')) : 0;
-				$ssl_cert_file = validate($this->getParam('ssl_cert_file'), 'ssl_cert_file', '', '', array(), true);
-				$ssl_key_file = validate($this->getParam('ssl_key_file'), 'ssl_key_file', '', '', array(), true);
-				$ssl_ca_file = validate($this->getParam('ssl_ca_file'), 'ssl_ca_file', '', '', array(), true);
-				$ssl_cert_chainfile = validate($this->getParam('ssl_cert_chainfile'), 'ssl_cert_chainfile', '', '', array(), true);
+				$ssl = $this->getParam('ssl', $result['ssl']);
+				$ssl_cert_file = validate($this->getParam('ssl_cert_file', $result['ssl_cert_file']), 'ssl_cert_file', '', '', array(), true);
+				$ssl_key_file = validate($this->getParam('ssl_key_file', $result['ssl_key_file']), 'ssl_key_file', '', '', array(), true);
+				$ssl_ca_file = validate($this->getParam('ssl_ca_file', $result['ssl_ca_file']), 'ssl_ca_file', '', '', array(), true);
+				$ssl_cert_chainfile = validate($this->getParam('ssl_cert_chainfile', $result['ssl_cert_chainfile']), 'ssl_cert_chainfile', '', '', array(), true);
 			} else {
 				$ssl = 0;
 				$ssl_cert_file = '';
@@ -209,22 +209,22 @@ class IpsAndPorts extends ApiCommand
 			}
 			
 			$result_checkfordouble_stmt = Database::prepare("
-			SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-			WHERE `ip` = :ip AND `port` = :port
-		");
+				SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
+				WHERE `ip` = :ip AND `port` = :port
+			");
 			$result_checkfordouble = Database::pexecute_first($result_checkfordouble_stmt, array(
 				'ip' => $ip,
 				'port' => $port
 			));
 			
 			$result_sameipotherport_stmt = Database::prepare("
-			SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-			WHERE `ip` = :ip AND `id` <> :id
-		");
+				SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
+				WHERE `ip` = :ip AND `id` <> :id
+			");
 			$result_sameipotherport = Database::pexecute_first($result_sameipotherport_stmt, array(
 				'ip' => $ip,
 				'id' => $id
-			));
+			), true, true);
 			
 			if ($listen_statement != '1') {
 				$listen_statement = '0';
@@ -275,17 +275,17 @@ class IpsAndPorts extends ApiCommand
 			} else {
 				
 				$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_IPSANDPORTS . "`
-				SET
-				`ip` = :ip, `port` = :port, `listen_statement` = :ls,
-				`namevirtualhost_statement` = :nvhs, `vhostcontainer` = :vhc,
-				`vhostcontainer_servername_statement` = :vhcss,
-				`specialsettings` = :ss, `ssl` = :ssl,
-				`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
-				`ssl_ca_file` = :ssl_ca, `ssl_cert_chainfile` = :ssl_chain,
-				`default_vhostconf_domain` = :dvhd, `docroot` = :docroot
-				WHERE `id` = :id;
-			");
+					UPDATE `" . TABLE_PANEL_IPSANDPORTS . "`
+					SET
+					`ip` = :ip, `port` = :port, `listen_statement` = :ls,
+					`namevirtualhost_statement` = :nvhs, `vhostcontainer` = :vhc,
+					`vhostcontainer_servername_statement` = :vhcss,
+					`specialsettings` = :ss, `ssl` = :ssl,
+					`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
+					`ssl_ca_file` = :ssl_ca, `ssl_cert_chainfile` = :ssl_chain,
+					`default_vhostconf_domain` = :dvhd, `docroot` = :docroot
+					WHERE `id` = :id;
+				");
 				$upd_data = array(
 					'ip' => $ip,
 					'port' => $port,

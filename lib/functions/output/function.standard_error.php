@@ -61,7 +61,7 @@ function standard_error($errors = '', $replacer = '', $throw_exception = false) 
 	}
 
 	if ($throw_exception) {
-		throw new Exception($error);
+		throw new Exception($error, 400);
 	}
 	eval("echo \"" . getTemplate('misc/error', '1') . "\";");
 	exit;
