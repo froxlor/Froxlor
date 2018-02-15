@@ -53,19 +53,49 @@ abstract class ApiCommand
 	}
 
 	/**
+	 * return user-data array
+	 *
+	 * @return array
+	 */
+	protected function getUserData()
+	{
+		return $this->user_data;
+	}
+
+	/**
 	 * receive field from parameter-list
 	 *
 	 * @param string $param
-	 *
+	 * @param mixed $default
+	 *        	set if param is not found
+	 *        	
 	 * @throws Exception
 	 * @return mixed
 	 */
-	protected function getParam($param = null)
+	protected function getParam($param = null, $default = null)
 	{
 		if (isset($this->cmd_params[$param])) {
 			return $this->cmd_params[$param];
 		}
-		return null;
+		return $default;
+	}
+
+	/**
+	 * update value of parameter
+	 *
+	 * @param string $param
+	 * @param mixed $value
+	 *
+	 * @throws Exception
+	 * @return boolean
+	 */
+	protected function updateParam($param, $value = null)
+	{
+		if (isset($this->cmd_params[$param])) {
+			$this->cmd_params[$param] = $value;
+			return true;
+		}
+		throw new Exception("Unable to update parameter '" . $param . "' as it does not exist", 500);
 	}
 
 	/**
@@ -86,7 +116,7 @@ abstract class ApiCommand
 		$response['status_message'] = $status_message;
 		$response['data'] = $data;
 		
-		$json_response = json_encode($response, JSON_PRETTY_PRINT);
+		$json_response = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 		return $json_response;
 	}
 
@@ -95,7 +125,7 @@ abstract class ApiCommand
 	public abstract function get();
 
 	public abstract function add();
-	
+
 	public abstract function update();
 
 	public abstract function delete();

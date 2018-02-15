@@ -321,16 +321,14 @@ class IpsAndPorts extends ApiCommand
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$id = $this->getParam('id');
 			
-			$result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :id
-		");
-			$result = Database::pexecute_first($result_stmt, array(
+			$json_result = IpsAndPorts::getLocal($this->getUserData(), array(
 				'id' => $id
-			), true, true);
+			))->get();
+			$result = json_decode($json_result, true)['data'];
 			
 			$result_checkdomain_stmt = Database::prepare("
-			SELECT `id_domain` as `id` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
-		");
+				SELECT `id_domain` as `id` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
+			");
 			$result_checkdomain = Database::pexecute_first($result_checkdomain_stmt, array(
 				'id' => $id
 			), true, true);

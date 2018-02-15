@@ -13,10 +13,7 @@ if (Settings::Get('api.enabled') != 1) {
 header("Content-Type:application/json");
 
 // get our request
-$request = isset($_GET['request']) ? $_GET['request'] : null;
-if (empty($request)) {
-	$request = isset($_POST['request']) ? $_POST['request'] : null;
-}
+$request = @file_get_contents('php://input');
 
 // check if present
 if (empty($request)) {
@@ -63,7 +60,7 @@ function json_response($status, $status_message, $data = null)
 	$response['status_message'] = $status_message;
 	$response['data'] = $data;
 	
-	$json_response = json_encode($response, JSON_PRETTY_PRINT);
+	$json_response = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 	echo $json_response;
 	exit();
 }
