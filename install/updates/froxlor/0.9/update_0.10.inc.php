@@ -11,15 +11,18 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    System
+ * @package    Install
  *
  */
+if (!defined('_CRON_UPDATE')) {
+	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
+		header('Location: ../../../../index.php');
+		exit();
+	}
+}
 
-// Main version variable
-$version = '0.10.0';
-
-// Database version (YYYYMMDDC where C is a daily counter)
-$dbversion = '201802150';
-
-// Distribution branding-tag (used for Debian etc.)
-$branding = '';
+if (isFroxlorVersion('0.9.39.5')) {
+	
+	showUpdateStep("Updating from 0.9.39.5 to 0.10.0", false);
+	updateToVersion('0.10.0');
+}
