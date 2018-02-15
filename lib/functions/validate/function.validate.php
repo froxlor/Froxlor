@@ -31,7 +31,7 @@
  *
  */
 
-function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array()) {
+function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array(), $throw_exception = false) {
 
 	global $log, $theme;
 
@@ -74,6 +74,6 @@ function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = ar
 		$lng = 'stringformaterror';
 	}
 
-	standard_error($lng, $fieldname);
+	standard_error($lng, $fieldname, $throw_exception);
 	exit;
 }

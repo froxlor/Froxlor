@@ -1042,3 +1042,18 @@ CREATE TABLE `panel_plans` (
   KEY adminid (adminid)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
+
+DROP TABLE IF EXISTS `api_keys`;
+CREATE TABLE `api_keys` (
+  `id` int(11) NOT NULL auto_increment,
+  `adminid` int(11) NOT NULL default '0',
+  `customerid` int(11) NOT NULL default '0',
+  `apikey` varchar(500) NOT NULL default '',
+  `secret` varchar(500) NOT NULL default '',
+  `allowed_from` text NOT NULL,
+  `valid_until` int(15) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY adminid (adminid),
+  KEY customerid (customerid)
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+

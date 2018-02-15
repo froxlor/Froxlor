@@ -67,11 +67,11 @@ class Database {
 	 * @param array $params (optional)
 	 * @param bool $showerror suppress errordisplay (default true)
 	 */
-	public static function pexecute(&$stmt, $params = null, $showerror = true) {
+	public static function pexecute(&$stmt, $params = null, $showerror = true, $json_response = false) {
 		try {
 			$stmt->execute($params);
 		} catch (PDOException $e) {
-			self::_showerror($e, $showerror);
+			self::_showerror($e, $showerror, $json_response);
 		}
 	}
 
@@ -86,8 +86,8 @@ class Database {
 	 *
 	 * @return array
 	 */
-	public static function pexecute_first(&$stmt, $params = null, $showerror = true) {
-		self::pexecute($stmt, $params, $showerror);
+	public static function pexecute_first(&$stmt, $params = null, $showerror = true, $json_response = false) {
+		self::pexecute($stmt, $params, $showerror, $json_response);
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
@@ -309,7 +309,7 @@ class Database {
 	 * @param PDOException $error
 	 * @param bool $showerror if set to false, the error will be logged but we go on
 	 */
-	private static function _showerror($error, $showerror = true) {
+	private static function _showerror($error, $showerror = true, $json_response = false) {
 		global $userinfo, $theme, $linker;
 
 		// include userdata.inc.php
@@ -366,6 +366,10 @@ class Database {
 		@fwrite($errlog, "|LINE ".$error->getLine()."\n");
 		@fwrite($errlog, "|TRACE\n".$error_trace."\n");
 		@fclose($errlog);
+
+		if ($showerror && $json_response) {
+			throw new Exception($error_message, 500);
+		}
 
 		if ($showerror) {
 			if (empty($sql['debug'])) {
