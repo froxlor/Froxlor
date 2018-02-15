@@ -38,7 +38,6 @@ $lng['requirements']['phpzip'] = 'PHP zip-Erweiterung...';
 $lng['requirements']['phpjson'] = 'PHP json-Erweiterung...';
 $lng['requirements']['bcmathdescription'] = 'Traffic-Berechnungs bezogene Funktionen stehen nicht vollständig zur Verfügung!';
 $lng['requirements']['zipdescription'] = 'Die Auto-Update Funktion benötigt die zip Erweiterung.';
-$lng['requirements']['jsondescription'] = 'Die Einstellungen Import/Export Funktion benötigt die json Erweiterung.';
 $lng['requirements']['openbasedir'] = 'open_basedir genutzt wird...';
 $lng['requirements']['openbasedirenabled'] = 'Froxlor wird mit aktiviertem open_basedir nicht vollständig funktionieren. Bitte deaktivieren Sie open_basedir für Froxlor in der entsprechenden php.ini';
 $lng['requirements']['diedbecauseofrequirements'] = 'Kann Froxlor ohne diese Voraussetzungen nicht installieren! Beheben Sie die angezeigten Probleme und versuchen Sie es erneut.';
