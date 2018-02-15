@@ -13,6 +13,8 @@ abstract class ApiCommand
 
 	public function __construct($header = null, $params = null, $userinfo = null)
 	{
+		global $lng;
+		
 		$this->cmd_params = $params;
 		if (! empty($header)) {
 			$this->readUserData($header);
@@ -23,6 +25,41 @@ abstract class ApiCommand
 			throw new Exception("Invalid user data", 500);
 		}
 		$this->logger = FroxlorLogger::getInstanceOf($this->user_data);
+		
+		// query the whole table
+		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
+		
+		$langs = array();
+		// presort languages
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$langs[$row['language']][] = $row;
+		}
+		
+		// set default language before anything else to
+		// ensure that we can display messages
+		$language = Settings::Get('panel.standardlanguage');
+		
+		if (isset($this->user_data['language']) && isset($languages[$this->user_data['language']])) {
+			// default: use language from session, #277
+			$language = $this->user_data['language'];
+		} elseif (isset($this->user_data['def_language'])) {
+			$language = $this->user_data['def_language'];
+		}
+		
+		// include every english language file we can get
+		foreach ($langs['English'] as $key => $value) {
+			include_once makeSecurePath($value['file']);
+		}
+		
+		// now include the selected language if its not english
+		if ($language != 'English') {
+			foreach ($langs[$language] as $key => $value) {
+				include_once makeSecurePath($value['file']);
+			}
+		}
+		
+		// last but not least include language references file
+		include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/lng/lng_references.php');
 	}
 
 	public static function getLocal($userinfo = null, $params = null)
