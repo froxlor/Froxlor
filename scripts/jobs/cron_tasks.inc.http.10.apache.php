@@ -732,10 +732,27 @@ class apache extends HttpConfigBase
 			$speciallogfile = '';
 		}
 		
-		// The normal access/error - logging is enabled
-		$error_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-error.log');
-		$access_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
+		if ($domain['writeerrorlog']) {
+			// The normal access/error - logging is enabled
+			$error_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-error.log');
+			// Create the logfile if it does not exist (fixes #46)
+			touch($error_log);
+			chown($error_log, Settings::Get('system.httpuser'));
+			chgrp($error_log, Settings::Get('system.httpgroup'));
+		} else {
+			$error_log = '/dev/null';
+		}
 		
+		if ($domain['writeaccesslog']) {
+			$access_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
+			// Create the logfile if it does not exist (fixes #46)
+			touch($access_log);
+			chown($access_log, Settings::Get('system.httpuser'));
+			chgrp($access_log, Settings::Get('system.httpgroup'));
+		} else {
+			$access_log = '/dev/null';
+		}
+
 		$logtype = 'combined';
 		if (Settings::Get('system.logfiles_format') != '') {
 			$logtype = 'frx_custom';

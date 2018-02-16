@@ -267,6 +267,8 @@ CREATE TABLE `panel_domains` (
   `ocsp_stapling` tinyint(1) DEFAULT '0',
   `http2` tinyint(1) DEFAULT '0',
   `notryfiles` tinyint(1) DEFAULT '0',
+  `writeaccesslog` tinyint(1) DEFAULT '1',
+  `writeerrorlog` tinyint(1) DEFAULT '1',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -694,7 +696,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201812010');
+	('panel', 'db_version', '201812100');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

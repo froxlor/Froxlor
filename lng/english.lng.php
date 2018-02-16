@@ -1706,6 +1706,10 @@ $lng['error']['setlessthanalreadyused'] = 'You cannot set less resources of \'%s
 $lng['error']['stringmustntbeempty'] = 'The value for the field %s must not be empty';
 $lng['admin']['domain_editable']['title'] = 'Allow editing of domain';
 $lng['admin']['domain_editable']['desc'] = 'If set to yes, the customer is allowed to change several domain-settings.<br />If set to no, nothing can be changed by the customer.';
+$lng['admin']['writeaccesslog']['title'] = 'Write an access log';
+$lng['admin']['writeaccesslog']['description'] = 'Enable this to get an access-log file for this domain';
+$lng['admin']['writeerrorlog']['title'] = 'Write an error log';
+$lng['admin']['writeerrorlog']['description'] = 'Enable this to get an error-log file for this domain';
 
 // Added in Froxlor 0.9.29-dev
 $lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['title'] = 'Hide standard-subdomains in PHP-configuration overview';

@@ -144,6 +144,30 @@ return array(
 							)
 						),
 						'value' => array()
+					),
+					'writeaccesslog' => array(
+						'label' => $lng['admin']['writeaccesslog']['title'],
+						'desc' => $lng['admin']['writeaccesslog']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array('1')
+					),
+					'writeerrorlog' => array(
+						'label' => $lng['admin']['writeerrorlog']['title'],
+						'desc' => $lng['admin']['writeerrorlog']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array('1')
 					)
 				)
 			),
