@@ -26,14 +26,16 @@
  *
  * @return string either the password or an errormessage+exit
  */
-function validatePassword($password = null) {
+function validatePassword($password = null, $json_response = false) {
 	
 	if (Settings::Get('panel.password_min_length') > 0) {
 		$password = validate(
 			$password,
 			Settings::Get('panel.password_min_length'),
 			'/^.{'.(int)Settings::Get('panel.password_min_length').',}$/D',
-			'notrequiredpasswordlength'
+			'notrequiredpasswordlength',
+			array(),
+			$json_response
 		);
 	}
 	
@@ -42,7 +44,9 @@ function validatePassword($password = null) {
 			$password,
 			Settings::Get('panel.password_regex'),
 			Settings::Get('panel.password_regex'),
-			'notrequiredpasswordcomplexity'
+			'notrequiredpasswordcomplexity',
+			array(),
+			$json_response
 		);
 	} else {
 		if (Settings::Get('panel.password_alpha_lower')) {
@@ -50,7 +54,9 @@ function validatePassword($password = null) {
 				$password,
 				'/.*[a-z]+.*/',
 				'/.*[a-z]+.*/',
-				'notrequiredpasswordcomplexity'
+				'notrequiredpasswordcomplexity',
+				array(),
+				$json_response
 			);
 		}
 		if (Settings::Get('panel.password_alpha_upper')) {
@@ -58,7 +64,9 @@ function validatePassword($password = null) {
 				$password,
 				'/.*[A-Z]+.*/',
 				'/.*[A-Z]+.*/',
-				'notrequiredpasswordcomplexity'
+				'notrequiredpasswordcomplexity',
+				array(),
+				$json_response
 			);
 		}
 		if (Settings::Get('panel.password_numeric')) {
@@ -66,7 +74,9 @@ function validatePassword($password = null) {
 				$password,
 				'/.*[0-9]+.*/',
 				'/.*[0-9]+.*/',
-				'notrequiredpasswordcomplexity'
+				'notrequiredpasswordcomplexity',
+				array(),
+				$json_response
 			);
 		}
 		if (Settings::Get('panel.password_special_char_required')) {
@@ -74,7 +84,9 @@ function validatePassword($password = null) {
 				$password,
 				'/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/',
 				'/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/',
-				'notrequiredpasswordcomplexity'
+				'notrequiredpasswordcomplexity',
+				array(),
+				$json_response
 			);
 		}
 	}

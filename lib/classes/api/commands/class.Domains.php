@@ -492,6 +492,7 @@ class Domains extends ApiCommand
 					$issubof = '0';
 				}
 				
+				$idna_convert = new idna_convert_wrapper();
 				if ($domain == '') {
 					standard_error(array(
 						'stringisempty',
@@ -649,6 +650,9 @@ class Domains extends ApiCommand
 					");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 					$domainid = Database::lastInsertId();
+					$ins_data['id'] = $domainid;
+					$domain_ins_data = $ins_data;
+					unset($ins_data);
 					
 					$upd_stmt = Database::prepare("
 						UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` + 1
@@ -688,7 +692,7 @@ class Domains extends ApiCommand
 					inserttask('4');
 					
 					$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added domain '" . $domain . "'");
-					return $this->response(200, "successfull", $ins_data);
+					return $this->response(200, "successfull", $domain_ins_data);
 				}
 			}
 			throw new Exception("No more resources available", 406);

@@ -9,6 +9,8 @@ abstract class ApiCommand
 
 	private $logger = null;
 
+	private $mail = null;
+
 	private $cmd_params = null;
 
 	public function __construct($header = null, $params = null, $userinfo = null)
@@ -20,12 +22,18 @@ abstract class ApiCommand
 			$this->readUserData($header);
 		} elseif (! empty($userinfo)) {
 			$this->user_data = $userinfo;
-			$this->is_admin = ($userinfo['adminsession'] == 1 && $userinfo['adminid'] > 0) ? true : false;
+			$this->is_admin = (isset($userinfo['adminsession']) && $userinfo['adminsession'] == 1 && $userinfo['adminid'] > 0) ? true : false;
 		} else {
 			throw new Exception("Invalid user data", 500);
 		}
 		$this->logger = FroxlorLogger::getInstanceOf($this->user_data);
 		
+		$this->initLang();
+		$this->initMail();
+	}
+
+	private function initLang()
+	{
 		// query the whole table
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
 		
@@ -60,6 +68,37 @@ abstract class ApiCommand
 		
 		// last but not least include language references file
 		include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/lng/lng_references.php');
+	}
+
+	private function initMail()
+	{
+		/**
+		 * Initialize the mailingsystem
+		 */
+		$this->mail = new PHPMailer(true);
+		$this->mail->CharSet = "UTF-8";
+		
+		if (Settings::Get('system.mail_use_smtp')) {
+			$this->mail->isSMTP();
+			$this->mail->Host = Settings::Get('system.mail_smtp_host');
+			$this->mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
+			$this->mail->Username = Settings::Get('system.mail_smtp_user');
+			$this->mail->Password = Settings::Get('system.mail_smtp_passwd');
+			if (Settings::Get('system.mail_smtp_usetls')) {
+				$this->mail->SMTPSecure = 'tls';
+			} else {
+				$this->mail->SMTPAutoTLS = false;
+			}
+			$this->mail->Port = Settings::Get('system.mail_smtp_port');
+		}
+		
+		if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
+			// set return-to address and custom sender-name, see #76
+			$this->mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+			if (Settings::Get('panel.adminmail_return') != '') {
+				$this->mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
+			}
+		}
 	}
 
 	public static function getLocal($userinfo = null, $params = null)
@@ -145,6 +184,16 @@ abstract class ApiCommand
 		return $this->logger;
 	}
 
+	/**
+	 * return mailer instance
+	 *
+	 * @return PHPMailer
+	 */
+	protected function mailer()
+	{
+		return $this->mail;
+	}
+
 	protected function response($status, $status_message, $data = null)
 	{
 		header("HTTP/1.1 " . $status);
@@ -189,6 +238,9 @@ abstract class ApiCommand
 			$this->user_data = Database::pexecute_first($sel_stmt, array(
 				'id' => ($this->is_admin ? $result['adminid'] : $result['customerid'])
 			), true, true);
+			if ($this->is_admin) {
+				$this->user_data['adminsession'] = 1;
+			}
 			return true;
 		}
 		throw new Exception("Invalid API credentials", 400);
