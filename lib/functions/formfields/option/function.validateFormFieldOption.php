@@ -34,7 +34,7 @@ function validateFormFieldOption($fieldname, $fielddata, $newfieldvalue)
 		$returnvalue = isset($fielddata['option_options'][$newfieldvalue]);
 	}
 
-	if($returnvalue === true)
+	if($returnvalue === true || $fielddata['visible'] == false)
 	{
 		return true;
 	}
