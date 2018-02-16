@@ -3,6 +3,8 @@
 abstract class ApiCommand
 {
 
+	private $debug = true;
+
 	private $is_admin = false;
 
 	private $user_data = null;
@@ -27,6 +29,9 @@ abstract class ApiCommand
 			throw new Exception("Invalid user data", 500);
 		}
 		$this->logger = FroxlorLogger::getInstanceOf($this->user_data);
+		if ($this->debug) {
+			$this->logger()->logAction(LOG_ERROR, LOG_DEBUG, json_encode($params, JSON_UNESCAPED_SLASHES));
+		}
 		
 		$this->initLang();
 		$this->initMail();

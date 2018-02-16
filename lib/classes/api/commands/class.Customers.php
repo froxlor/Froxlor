@@ -80,32 +80,32 @@ class Customers extends ApiCommand
 				$custom_notes_show = $this->getParam('custom_notes_show', 0);
 				
 				$diskspace = intval_ressource($this->getParam('diskspace', 0));
-				if ($this->getParam('diskspace_ul', 0) == 1) {
+				if ($this->getParam('diskspace_ul', 0) == -1) {
 					$diskspace = - 1;
 				}
 				
 				$traffic = doubleval_ressource($this->getParam('traffic', 0));
-				if ($this->getParam('traffic_ul', 0) == 1) {
+				if ($this->getParam('traffic_ul', 0) == -1) {
 					$traffic = - 1;
 				}
 				
 				$subdomains = intval_ressource($this->getParam('subdomains', 0));
-				if ($this->getParam('subdomains_ul', 0) == 1) {
+				if ($this->getParam('subdomains_ul', 0) == -1) {
 					$subdomains = - 1;
 				}
 				
 				$emails = intval_ressource($this->getParam('emails', 0));
-				if ($this->getParam('emails_ul', 0) == 1) {
+				if ($this->getParam('emails_ul', 0) == -1) {
 					$emails = - 1;
 				}
 				
 				$email_accounts = intval_ressource($this->getParam('email_accounts', 0));
-				if ($this->getParam('email_accounts_ul', 0) == 1) {
+				if ($this->getParam('email_accounts_ul', 0) == -1) {
 					$email_accounts = - 1;
 				}
 				
 				$email_forwarders = intval_ressource($this->getParam('email_forwarders', 0));
-				if ($this->getParam('email_forwarders_ul', 0) == 1) {
+				if ($this->getParam('email_forwarders_ul', 0) == -1) {
 					$email_forwarders = - 1;
 				}
 				
@@ -114,7 +114,7 @@ class Customers extends ApiCommand
 						'0',
 						''
 					), true);
-					if ($this->getParam('email_quota_ul', 0) == 1) {
+					if ($this->getParam('email_quota_ul', 0) == -1) {
 						$email_quota = - 1;
 					}
 				} else {
@@ -125,13 +125,13 @@ class Customers extends ApiCommand
 				$email_pop3 = $this->getParam('email_pop3', 0);
 				
 				$ftps = intval_ressource($this->getParam('ftps', 0));
-				if ($this->getParam('ftps_ul', 0) == 1) {
+				if ($this->getParam('ftps_ul', 0) == -1) {
 					$ftps = - 1;
 				}
 				
 				if (Settings::Get('ticket.enabled') == '1') {
 					$tickets = intval_ressource($this->getParam('tickets', 0));
-					if ($this->getParam('tickets_ul', 0) == 1) {
+					if ($this->getParam('tickets_ul', 0) == -1) {
 						$tickets = - 1;
 					}
 				} else {
@@ -139,7 +139,7 @@ class Customers extends ApiCommand
 				}
 				
 				$mysqls = intval_ressource($this->getParam('mysqls', 0));
-				if ($this->getParam('mysqls_ul', 0) == 1) {
+				if ($this->getParam('mysqls_ul', 0) == -1) {
 					$mysqls = - 1;
 				}
 				
@@ -219,15 +219,15 @@ class Customers extends ApiCommand
 					
 					// Check if the account already exists
 					$loginname_check_stmt = Database::prepare("
-					SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname` = :loginname
-				");
+						SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname` = :loginname
+					");
 					$loginname_check = Database::pexecute_first($loginname_check_stmt, array(
 						'loginname' => $loginname
 					), true, true);
 					
 					$loginname_check_admin_stmt = Database::prepare("
-					SELECT `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname` = :loginname
-				");
+						SELECT `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname` = :loginname
+					");
 					$loginname_check_admin = Database::pexecute_first($loginname_check_admin_stmt, array(
 						'loginname' => $loginname
 					), true, true);
@@ -311,45 +311,45 @@ class Customers extends ApiCommand
 					);
 					
 					$ins_stmt = Database::prepare("
-					INSERT INTO `" . TABLE_PANEL_CUSTOMERS . "` SET
-					`adminid` = :adminid,
-					`loginname` = :loginname,
-					`password` = :passwd,
-					`name` = :name,
-					`firstname` = :firstname,
-					`gender` = :gender,
-					`company` = :company,
-					`street` = :street,
-					`zipcode` = :zipcode,
-					`city` = :city,
-					`phone` = :phone,
-					`fax` = :fax,
-					`email` = :email,
-					`customernumber` = :customerno,
-					`def_language` = :lang,
-					`documentroot` = :docroot,
-					`guid` = :guid,
-					`diskspace` = :diskspace,
-					`traffic` = :traffic,
-					`subdomains` = :subdomains,
-					`emails` = :emails,
-					`email_accounts` = :email_accounts,
-					`email_forwarders` = :email_forwarders,
-					`email_quota` = :email_quota,
-					`ftps` = :ftps,
-					`tickets` = :tickets,
-					`mysqls` = :mysqls,
-					`standardsubdomain` = '0',
-					`phpenabled` = :phpenabled,
-					`allowed_phpconfigs` = :allowed_phpconfigs,
-					`imap` = :imap,
-					`pop3` = :pop3,
-					`perlenabled` = :perlenabled,
-					`dnsenabled` = :dnsenabled,
-					`theme` = :theme,
-					`custom_notes` = :custom_notes,
-					`custom_notes_show` = :custom_notes_show
-				");
+						INSERT INTO `" . TABLE_PANEL_CUSTOMERS . "` SET
+						`adminid` = :adminid,
+						`loginname` = :loginname,
+						`password` = :passwd,
+						`name` = :name,
+						`firstname` = :firstname,
+						`gender` = :gender,
+						`company` = :company,
+						`street` = :street,
+						`zipcode` = :zipcode,
+						`city` = :city,
+						`phone` = :phone,
+						`fax` = :fax,
+						`email` = :email,
+						`customernumber` = :customerno,
+						`def_language` = :lang,
+						`documentroot` = :docroot,
+						`guid` = :guid,
+						`diskspace` = :diskspace,
+						`traffic` = :traffic,
+						`subdomains` = :subdomains,
+						`emails` = :emails,
+						`email_accounts` = :email_accounts,
+						`email_forwarders` = :email_forwarders,
+						`email_quota` = :email_quota,
+						`ftps` = :ftps,
+						`tickets` = :tickets,
+						`mysqls` = :mysqls,
+						`standardsubdomain` = '0',
+						`phpenabled` = :phpenabled,
+						`allowed_phpconfigs` = :allowed_phpconfigs,
+						`imap` = :imap,
+						`pop3` = :pop3,
+						`perlenabled` = :perlenabled,
+						`dnsenabled` = :dnsenabled,
+						`theme` = :theme,
+						`custom_notes` = :custom_notes,
+						`custom_notes_show` = :custom_notes_show
+					");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 					
 					$customerid = Database::lastInsertId();
@@ -424,12 +424,12 @@ class Customers extends ApiCommand
 					}
 					
 					$ins_stmt = Database::prepare("
-					INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "` SET
-					`customerid` = :customerid,
-					`username` = :username,
-					`password` = :passwd,
-					`path` = :path
-				");
+						INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "` SET
+						`customerid` = :customerid,
+						`username` = :username,
+						`password` = :passwd,
+						`path` = :path
+					");
 					$ins_data = array(
 						'customerid' => $customerid,
 						'username' => $loginname,
@@ -450,9 +450,9 @@ class Customers extends ApiCommand
 					// add FTP-User
 					// @fixme use Ftp-ApiCommand later
 					$ins_stmt = Database::prepare("
-					INSERT INTO `" . TABLE_FTP_USERS . "` SET `customerid` = :customerid, `username` = :username, `description` = :desc,
-					`password` = :passwd, `homedir` = :homedir, `login_enabled` = 'y', `uid` = :guid, `gid` = :guid
-				");
+						INSERT INTO `" . TABLE_FTP_USERS . "` SET `customerid` = :customerid, `username` = :username, `description` = :desc,
+						`password` = :passwd, `homedir` = :homedir, `login_enabled` = 'y', `uid` = :guid, `gid` = :guid
+					");
 					$ins_data = array(
 						'customerid' => $customerid,
 						'username' => $loginname,
@@ -465,8 +465,8 @@ class Customers extends ApiCommand
 					// add FTP-Group
 					// @fixme use Ftp-ApiCommand later
 					$ins_stmt = Database::prepare("
-					INSERT INTO `" . TABLE_FTP_GROUPS . "` SET `customerid` = :customerid, `groupname` = :groupname, `gid` = :guid, `members` = :members
-				");
+						INSERT INTO `" . TABLE_FTP_GROUPS . "` SET `customerid` = :customerid, `groupname` = :groupname, `gid` = :guid, `members` = :members
+					");
 					$ins_data = array(
 						'customerid' => $customerid,
 						'groupname' => $loginname,
@@ -553,13 +553,13 @@ class Customers extends ApiCommand
 						
 						$srv_hostname = Settings::Get('system.hostname');
 						if (Settings::Get('system.froxlordirectlyviahostname') == '0') {
-							$srv_hostname .= '/froxlor';
+							$srv_hostname .= '/'.basename(FROXLOR_INSTALL_DIR);
 						}
 						
 						$srv_ip_stmt = Database::prepare("
-						SELECT ip, port FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-						WHERE `id` = :defaultip
-					");
+							SELECT ip, port FROM `" . TABLE_PANEL_IPSANDPORTS . "`
+							WHERE `id` = :defaultip
+						");
 						$default_ips = Settings::Get('system.defaultip');
 						$default_ips = explode(',', $default_ips);
 						$srv_ip = Database::pexecute_first($srv_ip_stmt, array(
