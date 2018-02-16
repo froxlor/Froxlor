@@ -537,21 +537,9 @@ class Customers extends ApiCommand
 						}
 						
 						if ($domainid > 0) {
-							// set ip <-> domain connection
-							$defaultips = explode(',', Settings::Get('system.defaultip'));
-							$ins_stmt = Database::prepare("
-							INSERT INTO `" . TABLE_DOMAINTOIP . "` SET `id_domain` = :domainid, `id_ipandports` = :ipid
-						");
-							foreach ($defaultips as $defaultip) {
-								Database::pexecute($ins_stmt, array(
-									'domainid' => $domainid,
-									'ipid' => $defaultip
-								), true, true);
-							}
-							
 							$upd_stmt = Database::prepare("
-							UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `standardsubdomain` = :domainid WHERE `customerid` = :customerid
-						");
+								UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `standardsubdomain` = :domainid WHERE `customerid` = :customerid
+							");
 							Database::pexecute($upd_stmt, array(
 								'domainid' => $domainid,
 								'customerid' => $customerid
