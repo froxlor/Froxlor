@@ -343,22 +343,21 @@ if ($page == 'customers'
 		&& $id != 0
 	) {
 
-		$result_data = array('id' => $id);
-		$result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE `customerid` = :id" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid")
-		);
-		if ($userinfo['customers_see_all'] == '0') {
-			$result_data['adminid'] = $userinfo['adminid'];
+		try {
+			$json_result = Customers::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
 		}
-		$result = Database::pexecute_first($result_stmt, $result_data);
+		$result = json_decode($json_result, true)['data'];
 
 		/*
 		 * information for moving customer
 		 */
 		$available_admins_stmt = Database::prepare("
-                        SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
-                        WHERE (`customers` = '-1' OR `customers` > `customers_used`)"
+			SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
+			WHERE (`customers` = '-1' OR `customers` > `customers_used`)"
 		);
 		Database::pexecute($available_admins_stmt);
 		$admin_select = makeoption("-----", 0, true, true, true);

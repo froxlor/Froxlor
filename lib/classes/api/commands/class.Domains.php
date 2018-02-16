@@ -54,7 +54,7 @@ class Domains extends ApiCommand
 			if ($result) {
 				return $this->response(200, "successfull", $result);
 			}
-			throw new Exception("Domain with id #" . $id . " could not be found");
+			throw new Exception("Domain with id #" . $id . " could not be found", 404);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}

@@ -29,16 +29,18 @@ abstract class ApiCommand
 			throw new Exception("Invalid user data", 500);
 		}
 		$this->logger = FroxlorLogger::getInstanceOf($this->user_data);
-		if ($this->debug) {
-			$this->logger()->logAction(LOG_ERROR, LOG_DEBUG, json_encode($params, JSON_UNESCAPED_SLASHES));
-		}
 		
 		$this->initLang();
 		$this->initMail();
+
+		if ($this->debug) {
+			$this->logger()->logAction(LOG_ERROR, LOG_DEBUG, "[API] ".get_called_class().": ".json_encode($params, JSON_UNESCAPED_SLASHES));
+		}
 	}
 
 	private function initLang()
 	{
+		global $lng;
 		// query the whole table
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
 		
