@@ -30,7 +30,7 @@ class SysLogger extends AbstractLogger {
 
 	/**
 	 * Syslogger Objects Array
-	 * @var loggers
+	 * @var SysLogger[]
 	*/
 	static private $loggers = array();
 

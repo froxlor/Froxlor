@@ -37,19 +37,19 @@ abstract class AbstractLogger {
 
 	/** 
 	 * Enable/Disable Logging
-	 * @var logenabled
+	 * @var boolean
 	 */
 	private $logenabled = false;
 
 	/** 
 	 * Enable/Disable Cronjob-Logging
-	 * @var logcronjob
+	 * @var boolean
 	 */
 	private $logcronjob = false;
 
 	/** 
 	 * Loggin-Severity
-	 * @var severity
+	 * @var int
 	 */
 	private $severity = 1;
 
