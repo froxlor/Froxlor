@@ -85,7 +85,7 @@ if ($page == 'overview') {
 	if ((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes')
 		|| (isset($lookfornewversion) && $lookfornewversion == 'yes')
 	) {
-		$update_check_uri = 'http://version.froxlor.org/Froxlor/legacy/' . $version;
+		$update_check_uri = 'http://version.froxlor.org/Froxlor/api/' . $version;
 		$latestversion = HttpClient::urlGet($update_check_uri);
 		$latestversion = explode('|', $latestversion);
 
