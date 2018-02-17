@@ -316,7 +316,7 @@ class Action
 							case "file":
 								if (array_key_exists('content', $action)) {
 									CmdLineHandler::printwarn("Creating file '" . $action['name'] . "'");
-									file_put_contents($action['name'], strtr($action['content'], $replace_arr));
+									file_put_contents($action['name'], trim(strtr($action['content'], $replace_arr)));
 								} elseif (array_key_exists('subcommands', $action)) {
 									foreach ($action['subcommands'] as $fileaction) {
 										if (array_key_exists('execute', $fileaction) && $fileaction['execute'] == "pre") {
@@ -325,7 +325,7 @@ class Action
 											exec(strtr($fileaction['content'], $replace_arr));
 										} elseif ($fileaction['type'] == 'file') {
 											CmdLineHandler::printwarn("Creating file '" . $fileaction['name'] . "'");
-											file_put_contents($fileaction['name'], strtr($fileaction['content'], $replace_arr));
+											file_put_contents($fileaction['name'], trim(strtr($fileaction['content'], $replace_arr)));
 										}
 									}
 								}
