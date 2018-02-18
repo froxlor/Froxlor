@@ -1,8 +1,13 @@
 <?php
 
-class Customers extends ApiCommand
+class Customers extends ApiCommand implements ResourceEntity
 {
 
+	/**
+	 * lists all customer entries
+	 *
+	 * @return array count|list
+	 */
 	public function list()
 	{
 		if ($this->isAdmin()) {
@@ -32,6 +37,14 @@ class Customers extends ApiCommand
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * return a customer entry by id
+	 *
+	 * @param int $id customer-id
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
 	public function get()
 	{
 		if ($this->isAdmin()) {
@@ -655,6 +668,14 @@ class Customers extends ApiCommand
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * delete a customer entry by id
+	 *
+	 * @param int $id customer-id
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
 	public function delete()
 	{
 		if ($this->isAdmin()) {
@@ -880,6 +901,14 @@ class Customers extends ApiCommand
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * unlock a locked customer by id
+	 *
+	 * @param int $id customer-id
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
 	public function unlock()
 	{
 		if ($this->isAdmin()) {

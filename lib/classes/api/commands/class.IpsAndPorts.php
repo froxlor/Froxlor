@@ -1,8 +1,13 @@
 <?php
 
-class IpsAndPorts extends ApiCommand
+class IpsAndPorts extends ApiCommand implements ResourceEntity
 {
 
+	/**
+	 * lists all ip/port entries
+	 *
+	 * @return array count|list
+	 */
 	public function list()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
@@ -23,6 +28,14 @@ class IpsAndPorts extends ApiCommand
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * return an ip/port entry by id
+	 *
+	 * @param int $id ip-port-id
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
 	public function get()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
@@ -314,6 +327,14 @@ class IpsAndPorts extends ApiCommand
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * delete an ip/port entry by id
+	 *
+	 * @param int $id ip-port-id
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
 	public function delete()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {

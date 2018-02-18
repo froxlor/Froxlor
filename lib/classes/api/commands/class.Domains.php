@@ -1,8 +1,13 @@
 <?php
 
-class Domains extends ApiCommand
+class Domains extends ApiCommand implements ResourceEntity
 {
 
+	/**
+	 * lists all domain entries
+	 *
+	 * @return array count|list
+	 */
 	public function list()
 	{
 		if ($this->isAdmin()) {
@@ -32,6 +37,15 @@ class Domains extends ApiCommand
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * return a domain entry by id
+	 *
+	 * @param int $id domain-id
+	 * @param boolean $no_std_subdomain optional, default false
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
 	public function get()
 	{
 		if ($this->isAdmin()) {
@@ -1503,6 +1517,14 @@ class Domains extends ApiCommand
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * delete a domain entry by id
+	 *
+	 * @param int $id domain-id
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
 	public function delete()
 	{
 		if ($this->isAdmin()) {

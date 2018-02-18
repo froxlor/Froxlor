@@ -213,16 +213,6 @@ abstract class ApiCommand
 		return $json_response;
 	}
 
-	public abstract function list();
-
-	public abstract function get();
-
-	public abstract function add();
-
-	public abstract function update();
-
-	public abstract function delete();
-
 	private function readUserData($header = null)
 	{
 		$sel_stmt = Database::prepare("SELECT * FROM `api_keys` WHERE `apikey` = :ak AND `secret` = :as");
