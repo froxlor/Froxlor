@@ -98,14 +98,28 @@ class SImExporter
 			// when there were changes in the variable-name or similar
 			unset($_data['panel.version']);
 			unset($_data['panel.db_version']);
-
+			// validate we got ssl enabled ips when ssl is enabled
+			// otherwise deactivate it
+			if ($_data['system.use_ssl'] == 1) {
+				$result_ssl_ipsandports_stmt = Database::prepare("
+					SELECT COUNT(*) as count_ssl_ip FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ssl`='1'
+				");
+				$result = Database::pexecute_first($result_ssl_ipsandports_stmt);
+				if ($result['count_ssl_ip'] <= 0) {
+					// no ssl-ip -> deactivate
+					$_data['system.use_ssl'] = 0;
+					// deactivate other ssl-related settings
+					$_data['system.leenabled'] = 0;
+					$_data['system.le_froxlor_enabled'] = 0;
+					$_data['system.le_froxlor_redirect'] = 0;
+				}
+			}
 			// store new data
 			foreach ($_data as $index => $value) {
 				Settings::Set($index, $value);
 			}
 			// save to DB
 			Settings::Flush();
-
 			// all good
 			return true;
 		}

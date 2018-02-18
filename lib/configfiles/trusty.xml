@@ -49,6 +49,11 @@
 					<include>//service[@type='http']/general/commands</include>
 					<command><![CDATA[a2dismod userdir]]></command>
 					<command><![CDATA[a2enmod headers]]></command>
+					<command>
+						<visibility mode="true">{{settings.system.use_ssl}}
+						</visibility>
+						<content><![CDATA[a2enmod ssl]]></content>
+					</command>
 					<file name="/etc/apache2/mods-enabled/fastcgi.conf">
 						<visibility mode="true">{{settings.phpfpm.enabled}}
 						</visibility>
@@ -85,6 +90,11 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 					<include>//service[@type='http']/general/commands</include>
 					<command><![CDATA[a2dismod userdir]]></command>
 					<command><![CDATA[a2enmod headers]]></command>
+					<command>
+						<visibility mode="true">{{settings.system.use_ssl}}
+						</visibility>
+						<content><![CDATA[a2enmod ssl]]></content>
+					</command>
 					<file name="/etc/apache2/mods-enabled/fastcgi.conf">
 						<visibility mode="true">{{settings.phpfpm.enabled}}
 						</visibility>
@@ -1760,6 +1770,11 @@ aliases:     files
 						<visibility mode="true">{{settings.phpfpm.enabled_ownvhost}}
 						</visibility>
 						<command><![CDATA[a2dismod php5]]></command>
+					</commands>
+					<commands index="5">
+						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
+						</visibility>
+						<command><![CDATA[/etc/init.d/apache2 restart]]></command>
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
