@@ -140,7 +140,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				$zipcode = validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
 				$city = validate($city, 'city', '', '', array(), true);
 				$phone = validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-				$fax = validate(fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+				$fax = validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 				$idna_convert = new idna_convert_wrapper();
 				$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
 				$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
@@ -659,8 +659,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 			$name = $this->getParam('name', true, $result['name']);
 			$firstname = $this->getParam('firstname', true, $result['firstname']);
-			$company_required = (empty($name) && empty($first));
-			$company = $this->getParam('company', $company_required, $result['company']);
+			$company = $this->getParam('company', true, $result['company']);
 			$street = $this->getParam('street', true, $result['street']);
 			$zipcode = $this->getParam('zipcode', true, $result['zipcode']);
 			$city = $this->getParam('city', true, $result['city']);
@@ -703,7 +702,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$zipcode = validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
 			$city = validate($city, 'city', '', '', array(), true);
 			$phone = validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-			$fax = validate(fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+			$fax = validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 			$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
 			$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
 			$def_language = validate($def_language, 'default language', '', '', array(), true);
@@ -805,7 +804,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					} catch (Exception $e) {
 						$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to delete standard-subdomain: " . $e->getMessage());
 					}
-					$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
+					$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
 					inserttask('1');
 				}
 				
@@ -868,7 +867,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					Database::needRoot(true);
 					$last_dbserver = 0;
 					
-					$dbm = new DbManager($log);
+					$dbm = new DbManager($this->logger());
 					
 					// For each of them
 					while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -897,7 +896,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					$dbm->getManager()->flushPrivileges();
 					Database::needRoot(false);
 					
-					$log->logAction(ADM_ACTION, LOG_INFO, "deactivated user '" . $result['loginname'] . "'");
+					$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] deactivated user '" . $result['loginname'] . "'");
 					inserttask('1');
 				}
 				
@@ -1149,7 +1148,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			Database::needRoot(true);
 			$last_dbserver = 0;
 			
-			$dbm = new DbManager($log);
+			$dbm = new DbManager($this->logger());
 			
 			while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 				if ($last_dbserver != $row_database['dbserver']) {

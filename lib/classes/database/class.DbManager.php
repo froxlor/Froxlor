@@ -49,7 +49,7 @@ class DbManager {
 	 *
 	 * @param FroxlorLogger $log
 	 */
-	public function __construct(&$log = null) {
+	public function __construct($log = null) {
 		$this->_log = $log;
 		$this->_setManager();
 	}
