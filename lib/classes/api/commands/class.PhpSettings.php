@@ -356,7 +356,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			), true, true);
 			
 			inserttask('1');
-			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting '" . $result['description'] . " has been deleted by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);

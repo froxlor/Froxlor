@@ -171,38 +171,26 @@ if ($page == 'overview') {
 } elseif ($page == 'fpmdaemons') {
 	
 	if ($action == '') {
+
+		try {
+			$json_result = FpmDaemons::getLocal($userinfo)->list();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 		
 		$tablecontent = '';
 		$count = 0;
-		$result = Database::query("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` ORDER BY `description` ASC");
-		
-		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			
-			$query_params = array(
-				'id' => $row['id']
-			);
-			
-			$query = "SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `fpmsettingid` = :id";
-			
-			$configresult_stmt = Database::prepare($query);
-			Database::pexecute($configresult_stmt, $query_params);
-			
-			$configs = '';
-			if (Database::num_rows() > 0) {
-				while ($row2 = $configresult_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$configs .= $row2['description'] . '<br/>';
+		if (isset($result['count']) && $result['count'] > 0) {
+			foreach ($result['list'] as $row) {
+				$configs = "";
+				foreach ($row['configs'] as $configused) {
+					$configs .= $configused . "<br>";
 				}
+				$count++;
+				eval("\$tablecontent.=\"" . getTemplate("phpconfig/fpmdaemons_overview") . "\";");
 			}
-			
-			if ($configs == '') {
-				$configs = $lng['admin']['phpsettings']['notused'];
-			}
-			
-			$count ++;
-			eval("\$tablecontent.=\"" . getTemplate("phpconfig/fpmdaemons_overview") . "\";");
 		}
-		
-		$log->logAction(ADM_ACTION, LOG_INFO, "fpm daemons setting overview has been viewed by '" . $userinfo['loginname'] . "'");
 		eval("echo \"" . getTemplate("phpconfig/fpmdaemons") . "\";");
 	}
 	
@@ -211,53 +199,11 @@ if ($page == 'overview') {
 		if ((int) $userinfo['change_serversettings'] == 1) {
 			
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$description = validate($_POST['description'], 'description');
-				$reload_cmd = validate($_POST['reload_cmd'], 'reload_cmd');
-				$config_dir = validate($_POST['config_dir'], 'config_dir');
-				$pm = $_POST['pm'];
-				$max_children = isset($_POST['max_children']) ? (int) $_POST['max_children'] : 0;
-				$start_servers = isset($_POST['start_servers']) ? (int) $_POST['start_servers'] : 0;
-				$min_spare_servers = isset($_POST['min_spare_servers']) ? (int) $_POST['min_spare_servers'] : 0;
-				$max_spare_servers = isset($_POST['max_spare_servers']) ? (int) $_POST['max_spare_servers'] : 0;
-				$max_requests = isset($_POST['max_requests']) ? (int) $_POST['max_requests'] : 0;
-				$idle_timeout = isset($_POST['idle_timeout']) ? (int) $_POST['idle_timeout'] : 0;
-				$limit_extensions = validate($_POST['limit_extensions'], 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/');
-				
-				if (strlen($description) == 0 || strlen($description) > 50) {
-					standard_error('descriptioninvalid');
+				try {
+					FpmDaemons::getLocal($userinfo, $_POST)->add();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-				
-				$ins_stmt = Database::prepare("
-					INSERT INTO `" . TABLE_PANEL_FPMDAEMONS . "` SET
-					`description` = :desc,
-					`reload_cmd` = :reload_cmd,
-					`config_dir` = :config_dir,
-					`pm` = :pm,
-					`max_children` = :max_children,
-					`start_servers` = :start_servers,
-					`min_spare_servers` = :min_spare_servers,
-					`max_spare_servers` = :max_spare_servers,
-					`max_requests` = :max_requests,
-					`idle_timeout` = :idle_timeout,
-					`limit_extensions` = :limit_extensions
-				");
-				$ins_data = array(
-					'desc' => $description,
-					'reload_cmd' => $reload_cmd,
-					'config_dir' => makeCorrectDir($config_dir),
-					'pm' => $pm,
-					'max_children' => $max_children,
-					'start_servers' => $start_servers,
-					'min_spare_servers' => $min_spare_servers,
-					'max_spare_servers' => $max_spare_servers,
-					'max_requests' => $max_requests,
-					'idle_timeout' => $idle_timeout,
-					'limit_extensions' => $limit_extensions
-				);
-				Database::pexecute($ins_stmt, $ins_data);
-				
-				inserttask('1');
-				$log->logAction(ADM_ACTION, LOG_INFO, "fpm-daemon setting with description '" . $description . "' has been created by '" . $userinfo['loginname'] . "'");
 				redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
@@ -283,11 +229,12 @@ if ($page == 'overview') {
 	
 	if ($action == 'delete') {
 		
-		$result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
-		$result = Database::pexecute_first($result_stmt, array(
-			'id' => $id
-		));
+		try {
+			$json_result = FpmDaemons::getLocal($userinfo, array('id' => $id))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 		
 		if ($id == 1) {
 			standard_error('cannotdeletedefaultphpconfig');
@@ -295,24 +242,12 @@ if ($page == 'overview') {
 		
 		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['change_serversettings'] == 1 && $id != 1) // cannot delete the default php.config
 		{
-			
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				// set default fpm daemon config for all php-config that use this config that is to be deleted
-				$upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET
-					`fpmsettingid` = '1' WHERE `fpmsettingid` = :id");
-				Database::pexecute($upd_stmt, array(
-					'id' => $id
-				));
-				
-				$del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
-				Database::pexecute($del_stmt, array(
-					'id' => $id
-				));
-				
-				inserttask('1');
-				$log->logAction(ADM_ACTION, LOG_INFO, "fpm-daemon setting with id #" . (int) $id . " has been deleted by '" . $userinfo['loginname'] . "'");
+				try {
+					FpmDaemons::getLocal($userinfo, $_POST)->delete();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
+				}
 				redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
@@ -331,64 +266,21 @@ if ($page == 'overview') {
 	
 	if ($action == 'edit') {
 		
-		$result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
-		$result = Database::pexecute_first($result_stmt, array(
-			'id' => $id
-		));
+		try {
+			$json_result = FpmDaemons::getLocal($userinfo, array('id' => $id))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 		
 		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['change_serversettings'] == 1) {
 			
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$description = validate($_POST['description'], 'description');
-				$reload_cmd = validate($_POST['reload_cmd'], 'reload_cmd');
-				$config_dir = validate($_POST['config_dir'], 'config_dir');
-				$pm = $_POST['pm'];
-				$max_children = isset($_POST['max_children']) ? (int) $_POST['max_children'] : $result['max_children'];
-				$start_servers = isset($_POST['start_servers']) ? (int) $_POST['start_servers'] : $result['start_servers'];
-				$min_spare_servers = isset($_POST['min_spare_servers']) ? (int) $_POST['min_spare_servers'] : $result['min_spare_servers'];
-				$max_spare_servers = isset($_POST['max_spare_servers']) ? (int) $_POST['max_spare_servers'] : $result['max_spare_servers'];
-				$max_requests = isset($_POST['max_requests']) ? (int) $_POST['max_requests'] : $result['max_requests'];
-				$idle_timeout = isset($_POST['idle_timeout']) ? (int) $_POST['idle_timeout'] : $result['idle_timeout'];
-				$limit_extensions = validate($_POST['limit_extensions'], 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/');
-				
-				if (strlen($description) == 0 || strlen($description) > 50) {
-					standard_error('descriptioninvalid');
+				try {
+					FpmDaemons::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-				
-				$upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_FPMDAEMONS . "` SET
-					`description` = :desc,
-					`reload_cmd` = :reload_cmd,
-					`config_dir` = :config_dir,
-					`pm` = :pm,
-					`max_children` = :max_children,
-					`start_servers` = :start_servers,
-					`min_spare_servers` = :min_spare_servers,
-					`max_spare_servers` = :max_spare_servers,
-					`max_requests` = :max_requests,
-					`idle_timeout` = :idle_timeout,
-					`limit_extensions` = :limit_extensions
-					WHERE `id` = :id
-				");
-				$upd_data = array(
-					'desc' => $description,
-					'reload_cmd' => $reload_cmd,
-					'config_dir' => makeCorrectDir($config_dir),
-					'pm' => $pm,
-					'max_children' => $max_children,
-					'start_servers' => $start_servers,
-					'min_spare_servers' => $min_spare_servers,
-					'max_spare_servers' => $max_spare_servers,
-					'max_requests' => $max_requests,
-					'idle_timeout' => $idle_timeout,
-					'limit_extensions' => $limit_extensions,
-					'id' => $id
-				);
-				Database::pexecute($upd_stmt, $upd_data);
-				
-				inserttask('1');
-				$log->logAction(ADM_ACTION, LOG_INFO, "fpm-daemon setting with description '" . $description . "' has been changed by '" . $userinfo['loginname'] . "'");
 				redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
