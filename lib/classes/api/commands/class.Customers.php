@@ -76,89 +76,90 @@ class Customers extends ApiCommand implements ResourceEntity
 			if ($this->getUserDetail('customers_used') < $this->getUserDetail('customers') || $this->getUserDetail('customers') == '-1') {
 				
 				$idna_convert = new idna_convert_wrapper();
-				$name = validate($this->getParam('name'), 'name', '', '', array(), true);
-				$firstname = validate($this->getParam('firstname'), 'first name', '', '', array(), true);
-				$company = validate($this->getParam('company'), 'company', '', '', array(), true);
-				$street = validate($this->getParam('street'), 'street', '', '', array(), true);
-				$zipcode = validate($this->getParam('zipcode'), 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
-				$city = validate($this->getParam('city'), 'city', '', '', array(), true);
-				$phone = validate($this->getParam('phone'), 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-				$fax = validate($this->getParam('fax'), 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+				$name = validate($this->getParam('name', true, ''), 'name', '', '', array(), true);
+				$firstname = validate($this->getParam('firstname', true, ''), 'first name', '', '', array(), true);
+				$company_required = (empty($name) && empty($first));
+				$company = validate($this->getParam('company', $company_required, ''), 'company', '', '', array(), true);
+				$street = validate($this->getParam('street', true, ''), 'street', '', '', array(), true);
+				$zipcode = validate($this->getParam('zipcode', true, ''), 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
+				$city = validate($this->getParam('city', true, ''), 'city', '', '', array(), true);
+				$phone = validate($this->getParam('phone', true, ''), 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+				$fax = validate($this->getParam('fax', true, ''), 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 				$email = $idna_convert->encode(validate($this->getParam('email'), 'email', '', '', array(), true));
-				$customernumber = validate($this->getParam('customernumber'), 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
-				$def_language = validate($this->getParam('def_language'), 'default language', '', '', array(), true);
-				$gender = intval_ressource($this->getParam('gender', 0));
+				$customernumber = validate($this->getParam('customernumber', true, ''), 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
+				$def_language = validate($this->getParam('def_language', true, ''), 'default language', '', '', array(), true);
+				$gender = intval_ressource($this->getParam('gender', true, 0));
 				
-				$custom_notes = validate(str_replace("\r\n", "\n", $this->getParam('custom_notes', '')), 'custom_notes', '/^[^\0]*$/', '', array(), true);
-				$custom_notes_show = $this->getParam('custom_notes_show', 0);
+				$custom_notes = validate(str_replace("\r\n", "\n", $this->getParam('custom_notes', true, '')), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+				$custom_notes_show = $this->getParam('custom_notes_show', true, 0);
 				
-				$diskspace = intval_ressource($this->getParam('diskspace', 0));
-				if ($this->getParam('diskspace_ul', 0) == -1) {
+				$diskspace = intval_ressource($this->getParam('diskspace', true, 0));
+				if ($this->getParam('diskspace_ul', true, 0) == -1) {
 					$diskspace = - 1;
 				}
 				
-				$traffic = doubleval_ressource($this->getParam('traffic', 0));
-				if ($this->getParam('traffic_ul', 0) == -1) {
+				$traffic = doubleval_ressource($this->getParam('traffic', true, 0));
+				if ($this->getParam('traffic_ul', true, 0) == -1) {
 					$traffic = - 1;
 				}
 				
-				$subdomains = intval_ressource($this->getParam('subdomains', 0));
-				if ($this->getParam('subdomains_ul', 0) == -1) {
+				$subdomains = intval_ressource($this->getParam('subdomains', true, 0));
+				if ($this->getParam('subdomains_ul', true, 0) == -1) {
 					$subdomains = - 1;
 				}
 				
-				$emails = intval_ressource($this->getParam('emails', 0));
-				if ($this->getParam('emails_ul', 0) == -1) {
+				$emails = intval_ressource($this->getParam('emails', true, 0));
+				if ($this->getParam('emails_ul', true, 0) == -1) {
 					$emails = - 1;
 				}
 				
-				$email_accounts = intval_ressource($this->getParam('email_accounts', 0));
-				if ($this->getParam('email_accounts_ul', 0) == -1) {
+				$email_accounts = intval_ressource($this->getParam('email_accounts', true, 0));
+				if ($this->getParam('email_accounts_ul', true, 0) == -1) {
 					$email_accounts = - 1;
 				}
 				
-				$email_forwarders = intval_ressource($this->getParam('email_forwarders', 0));
-				if ($this->getParam('email_forwarders_ul', 0) == -1) {
+				$email_forwarders = intval_ressource($this->getParam('email_forwarders', true, 0));
+				if ($this->getParam('email_forwarders_ul', true, 0) == -1) {
 					$email_forwarders = - 1;
 				}
 				
 				if (Settings::Get('system.mail_quota_enabled') == '1') {
-					$email_quota = validate($this->getParam('email_quota', 0), 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
+					$email_quota = validate($this->getParam('email_quota', true, 0), 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
 						'0',
 						''
 					), true);
-					if ($this->getParam('email_quota_ul', 0) == -1) {
+					if ($this->getParam('email_quota_ul', true, 0) == -1) {
 						$email_quota = - 1;
 					}
 				} else {
 					$email_quota = - 1;
 				}
 				
-				$email_imap = $this->getParam('email_imap', 0);
-				$email_pop3 = $this->getParam('email_pop3', 0);
+				$email_imap = $this->getParam('email_imap', true, 0);
+				$email_pop3 = $this->getParam('email_pop3', true, 0);
 				
-				$ftps = intval_ressource($this->getParam('ftps', 0));
-				if ($this->getParam('ftps_ul', 0) == -1) {
+				$ftps = intval_ressource($this->getParam('ftps', true, 0));
+				if ($this->getParam('ftps_ul', true, 0) == -1) {
 					$ftps = - 1;
 				}
 				
 				if (Settings::Get('ticket.enabled') == '1') {
-					$tickets = intval_ressource($this->getParam('tickets', 0));
-					if ($this->getParam('tickets_ul', 0) == -1) {
+					$tickets = intval_ressource($this->getParam('tickets', true, 0));
+					if ($this->getParam('tickets_ul', true, 0) == -1) {
 						$tickets = - 1;
 					}
 				} else {
 					$tickets = - 1;
 				}
 				
-				$mysqls = intval_ressource($this->getParam('mysqls', 0));
-				if ($this->getParam('mysqls_ul', 0) == -1) {
+				$mysqls = intval_ressource($this->getParam('mysqls', true, 0));
+				if ($this->getParam('mysqls_ul', true, 0) == -1) {
 					$mysqls = - 1;
 				}
 				
-				$createstdsubdomain = $this->getParam('createstdsubdomain', 0);
+				$createstdsubdomain = $this->getParam('createstdsubdomain', true, 0);
 				
-				$password = validate($this->getParam('new_customer_password', ''), 'password', '', '', array(), true);
+				$password = validate($this->getParam('new_customer_password', true, ''), 'password', '', '', array(), true);
 				// only check if not empty,
 				// cause empty == generate password automatically
 				if ($password != '') {
@@ -170,20 +171,20 @@ class Customers extends ApiCommand implements ResourceEntity
 					$gender = 0;
 				}
 				
-				$sendpassword = $this->getParam('sendpassword', 0);
-				$phpenabled = $this->getParam('phpenabled', 0);
+				$sendpassword = $this->getParam('sendpassword', true, 0);
+				$phpenabled = $this->getParam('phpenabled', true, 0);
 				
 				$allowed_phpconfigs = array();
-				if (! empty($this->getParam('allowed_phpconfigs', array())) && is_array($this->getParam('allowed_phpconfigs'))) {
-					foreach ($this->getParam('allowed_phpconfigs') as $allowed_phpconfig) {
+				if (! empty($this->getParam('allowed_phpconfigs', true, array())) && is_array($this->getParam('allowed_phpconfigs', true, array()))) {
+					foreach ($this->getParam('allowed_phpconfigs', true, array()) as $allowed_phpconfig) {
 						$allowed_phpconfig = intval($allowed_phpconfig);
 						$allowed_phpconfigs[] = $allowed_phpconfig;
 					}
 				}
 				
-				$perlenabled = $this->getParam('perlenabled', 0);
-				$dnsenabled = $this->getParam('dnsenabled', 0);
-				$store_defaultindex = $this->getParam('store_defaultindex', 0);
+				$perlenabled = $this->getParam('perlenabled', true, 0);
+				$dnsenabled = $this->getParam('dnsenabled', true, 0);
+				$store_defaultindex = $this->getParam('store_defaultindex', true, 0);
 				
 				$diskspace = $diskspace * 1024;
 				$traffic = $traffic * 1024 * 1024;
@@ -212,7 +213,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					standard_error('emailiswrong', $email, true);
 				} else {
 					
-					if ($this->getParam('new_loginname', '') != '') {
+					if ($this->getParam('new_loginname', true, '') != '') {
 						$accountnumber = intval(Settings::Get('system.lastaccountnumber'));
 						$loginname = validate($this->getParam('new_loginname'), 'loginname', '/^[a-z][a-z0-9\-_]+$/i', '', array(), true);
 						
@@ -672,6 +673,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * delete a customer entry by id
 	 *
 	 * @param int $id customer-id
+	 * @param bool $delete_userfiles optional, default false
 	 *
 	 * @throws Exception
 	 * @return array
@@ -680,6 +682,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id');
+			$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
 			
 			$json_result = Customers::getLocal($this->getUserData(), array(
 				'id' => $id
@@ -872,7 +875,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			// Using nameserver, insert a task which rebuilds the server config
 			inserttask('4');
 			
-			if ($this->getParam('delete_userfiles', 0) == 1) {
+			if ($delete_userfiles == 1) {
 				// insert task to remove the customers files from the filesystem
 				inserttask('6', $result['loginname']);
 			}

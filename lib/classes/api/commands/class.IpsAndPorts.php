@@ -58,25 +58,26 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+
 			$ip = validate_ip2($this->getParam('ip'), false, 'invalidip', false, false, false, true);
-			$port = validate($this->getParam('port'), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
+			$port = validate($this->getParam('port', true, 80), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
 				'stringisempty',
 				'myport'
 			), array(), true);
-			$listen_statement = ! empty($this->getParam('listen_statement')) ? 1 : 0;
-			$namevirtualhost_statement = ! empty($this->getParam('namevirtualhost_statement')) ? 1 : 0;
-			$vhostcontainer = ! empty($this->getParam('vhostcontainer')) ? 1 : 0;
-			$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings')), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-			$vhostcontainer_servername_statement = ! empty($this->getParam('vhostcontainer_servername_statement')) ? 1 : 0;
-			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain')), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
-			$docroot = validate($this->getParam('docroot'), 'docroot', '', '', array(), true);
+			$listen_statement = ! empty($this->getParam('listen_statement', true, 0)) ? 1 : 0;
+			$namevirtualhost_statement = ! empty($this->getParam('namevirtualhost_statement', true, 0)) ? 1 : 0;
+			$vhostcontainer = ! empty($this->getParam('vhostcontainer', true, 0)) ? 1 : 0;
+			$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, '')), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+			$vhostcontainer_servername_statement = ! empty($this->getParam('vhostcontainer_servername_statement', true, 1)) ? 1 : 0;
+			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, '')), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
+			$docroot = validate($this->getParam('docroot', true, ''), 'docroot', '', '', array(), true);
 			
 			if ((int) Settings::Get('system.use_ssl') == 1) {
-				$ssl = ! empty($this->getParam('ssl')) ? intval($this->getParam('ssl')) : 0;
-				$ssl_cert_file = validate($this->getParam('ssl_cert_file'), 'ssl_cert_file', '', '', array(), true);
-				$ssl_key_file = validate($this->getParam('ssl_key_file'), 'ssl_key_file', '', '', array(), true);
-				$ssl_ca_file = validate($this->getParam('ssl_ca_file'), 'ssl_ca_file', '', '', array(), true);
-				$ssl_cert_chainfile = validate($this->getParam('ssl_cert_chainfile'), 'ssl_cert_chainfile', '', '', array(), true);
+				$ssl = ! empty($this->getParam('ssl', true, 0)) ? intval($this->getParam('ssl', true, 0)) : 0;
+				$ssl_cert_file = validate($this->getParam('ssl_cert_file', $ssl, ''), 'ssl_cert_file', '', '', array(), true);
+				$ssl_key_file = validate($this->getParam('ssl_key_file', $ssl, ''), 'ssl_key_file', '', '', array(), true);
+				$ssl_ca_file = validate($this->getParam('ssl_ca_file', true, ''), 'ssl_ca_file', '', '', array(), true);
+				$ssl_cert_chainfile = validate($this->getParam('ssl_cert_chainfile', true, ''), 'ssl_cert_chainfile', '', '', array(), true);
 			} else {
 				$ssl = 0;
 				$ssl_cert_file = '';
@@ -192,25 +193,25 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			))->get();
 			$result = json_decode($json_result, true)['data'];
 			
-			$ip = validate_ip2($this->getParam('ip', $result['ip']), false, 'invalidip', false, false, false, true);
-			$port = validate($this->getParam('port', $result['port']), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
+			$ip = validate_ip2($this->getParam('ip', true, $result['ip']), false, 'invalidip', false, false, false, true);
+			$port = validate($this->getParam('port', true, $result['port']), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
 				'stringisempty',
 				'myport'
 			), array(), true);
-			$listen_statement = $this->getParam('listen_statement', $result['listen_statement']);
-			$namevirtualhost_statement = $this->getParam('namevirtualhost_statement', $result['namevirtualhost_statement']);
-			$vhostcontainer = $this->getParam('vhostcontainer', $result['vhostcontainer']);
-			$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', $result['specialsettings'])), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-			$vhostcontainer_servername_statement = $this->getParam('vhostcontainer_servername_statement', $result['vhostcontainer_servername_statement']);
-			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', $result['default_vhostconf_domain'])), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
-			$docroot = validate($this->getParam('docroot', $result['docroot']), 'docroot', '', '', array(), true);
+			$listen_statement = $this->getParam('listen_statement', true, $result['listen_statement']);
+			$namevirtualhost_statement = $this->getParam('namevirtualhost_statement', true, $result['namevirtualhost_statement']);
+			$vhostcontainer = $this->getParam('vhostcontainer', true, $result['vhostcontainer']);
+			$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, $result['specialsettings'])), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+			$vhostcontainer_servername_statement = $this->getParam('vhostcontainer_servername_statement', true, $result['vhostcontainer_servername_statement']);
+			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain',true,  $result['default_vhostconf_domain'])), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
+			$docroot = validate($this->getParam('docroot', true, $result['docroot']), 'docroot', '', '', array(), true);
 			
 			if ((int) Settings::Get('system.use_ssl') == 1) {
-				$ssl = $this->getParam('ssl', $result['ssl']);
-				$ssl_cert_file = validate($this->getParam('ssl_cert_file', $result['ssl_cert_file']), 'ssl_cert_file', '', '', array(), true);
-				$ssl_key_file = validate($this->getParam('ssl_key_file', $result['ssl_key_file']), 'ssl_key_file', '', '', array(), true);
-				$ssl_ca_file = validate($this->getParam('ssl_ca_file', $result['ssl_ca_file']), 'ssl_ca_file', '', '', array(), true);
-				$ssl_cert_chainfile = validate($this->getParam('ssl_cert_chainfile', $result['ssl_cert_chainfile']), 'ssl_cert_chainfile', '', '', array(), true);
+				$ssl = $this->getParam('ssl', true, $result['ssl']);
+				$ssl_cert_file = validate($this->getParam('ssl_cert_file', $ssl, $result['ssl_cert_file']), 'ssl_cert_file', '', '', array(), true);
+				$ssl_key_file = validate($this->getParam('ssl_key_file', $ssl, $result['ssl_key_file']), 'ssl_key_file', '', '', array(), true);
+				$ssl_ca_file = validate($this->getParam('ssl_ca_file', true, $result['ssl_ca_file']), 'ssl_ca_file', '', '', array(), true);
+				$ssl_cert_chainfile = validate($this->getParam('ssl_cert_chainfile', true, $result['ssl_cert_chainfile']), 'ssl_cert_chainfile', '', '', array(), true);
 			} else {
 				$ssl = 0;
 				$ssl_cert_file = '';

@@ -32,9 +32,9 @@ abstract class ApiCommand
 		
 		$this->initLang();
 		$this->initMail();
-
+		
 		if ($this->debug) {
-			$this->logger()->logAction(LOG_ERROR, LOG_DEBUG, "[API] ".get_called_class().": ".json_encode($params, JSON_UNESCAPED_SLASHES));
+			$this->logger()->logAction(LOG_ERROR, LOG_DEBUG, "[API] " . get_called_class() . ": " . json_encode($params, JSON_UNESCAPED_SLASHES));
 		}
 	}
 
@@ -146,21 +146,72 @@ abstract class ApiCommand
 	}
 
 	/**
-	 * receive field from parameter-list
+	 * get specific parameter from the parameterlist;
+	 * check for existence and != empty if needed.
+	 * Maybe more in the future
 	 *
 	 * @param string $param
+	 *        	parameter to get out of the request-parameter list
+	 * @param bool $optional
+	 *        	default: false
 	 * @param mixed $default
-	 *        	set if param is not found
+	 *        	value which is returned if optional=true and param is not set
 	 *        	
 	 * @throws Exception
 	 * @return mixed
 	 */
-	protected function getParam($param = null, $default = null)
+	protected function getParam($param = null, $optional = false, $default = '')
 	{
-		if (isset($this->cmd_params[$param])) {
-			return $this->cmd_params[$param];
+		// does it exist?
+		if (! isset($this->cmd_params[$param])) {
+			if ($optional === false) {
+				// get module + function for better error-messages
+				$inmod = $this->getModFunctionString();
+				throw new Exception('Requested parameter "' . $param . '" could not be found for "' . $inmod . '"', 404);
+			}
+			return $default;
 		}
-		return $default;
+		// is it empty? - test really on string, as value 0 is being seen as empty by php
+		if ($this->cmd_params[$param] === "") {
+			if ($optional === false) {
+				// get module + function for better error-messages
+				$inmod = $this->getModFunctionString();
+				throw new Exception('Requested parameter "' . $param . '" is empty where it should not be for "' . $inmod . '"', 406);
+			}
+			return '';
+		}
+		// everything else is fine
+		return $this->cmd_params[$param];
+	}
+
+	/**
+	 * returns "module::function()" for better error-messages (missing parameter etc.)
+	 * makes debugging a whole lot more comfortable
+	 *
+	 * @return string
+	 */
+	private function getModFunctionString()
+	{
+		$_c = get_called_class();
+		
+		$level = 2;
+		if (version_compare(PHP_VERSION, "5.4.0", "<")) {
+			$t = debug_backtrace();
+		} else {
+			$t = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		}
+		while (true) {
+			$c = $t[$level]['class'];
+			$f = $t[$level]['function'];
+			if ($c != get_called_class()) {
+				$level ++;
+				if ($level > 5) {
+					break;
+				}
+				continue;
+			}
+			return $c . ':' . $f;
+		}
 	}
 
 	/**

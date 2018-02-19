@@ -40,9 +40,11 @@ class Domains extends ApiCommand implements ResourceEntity
 	/**
 	 * return a domain entry by id
 	 *
-	 * @param int $id domain-id
-	 * @param boolean $no_std_subdomain optional, default false
-	 *
+	 * @param int $id
+	 *        	domain-id
+	 * @param boolean $no_std_subdomain
+	 *        	optional, default false
+	 *        	
 	 * @throws Exception
 	 * @return array
 	 */
@@ -50,7 +52,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id');
-			$no_std_subdomain = $this->getParam('no_std_subdomain', false);
+			$no_std_subdomain = $this->getParam('no_std_subdomain', true, false);
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get domain #" . $id);
 			$result_stmt = Database::prepare("
 				SELECT `d`.*, `c`.`customerid`
@@ -78,11 +80,50 @@ class Domains extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			if ($this->getUserDetail('domains_used') < $this->getUserDetail('domains') || $this->getUserDetail('domains') == '-1') {
 				
-				if ($this->getParam('domain') == Settings::Get('system.hostname')) {
+				// parameters
+				$p_domain = $this->getParam('domain');
+				$customerid = intval($this->getParam('customerid'));
+				$p_ipandports = $this->getParam('ipandport');
+				
+				// optional parameters
+				$adminid = intval($this->getParam('adminid', true, $this->getUserDetail('adminid')));
+				$subcanemaildomain = $this->getParam('subcanemaildomain', true, 0);
+				$isemaildomain = $this->getParam('isemaildomain', true, 0);
+				$email_only = $this->getParam('email_only', true, 0);
+				$serveraliasoption = $this->getParam('selectserveralias', true, 0);
+				$speciallogfile = $this->getParam('speciallogfile', true, 0);
+				$aliasdomain = intval($this->getParam('alias', true, 0));
+				$issubof = intval($this->getParam('issubof', true, 0));
+				$registration_date = trim($this->getParam('registration_date', true, ''));
+				$termination_date = trim($this->getParam('termination_date', true, ''));
+				$caneditdomain = $this->getParam('caneditdomain', true, 0);
+				$isbinddomain = $this->getParam('isbinddomain', true, 0);
+				$zonefile = $this->getParam('zonefile', true, '');
+				$dkim = intval($this->getParam('dkim', true, 0));
+				$specialsettings = $this->getParam('specialsettings', true, '');
+				$notryfiles = $this->getParam('notryfiles', true, 0);
+				$documentroot = $this->getParam('documentroot', true, '');
+				$phpenabled = $this->getParam('phpenabled', true, 0);
+				$openbasedir = $this->getParam('openbasedir', true, 0);
+				$phpsettingid = $this->getParam('phpsettingid', true, 1);
+				$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, - 1);
+				$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, - 1);
+				$ssl_redirect = $this->getParam('ssl_redirect', true, 0);
+				$letsencrypt = $this->getParam('letsencrypt', true, 0);
+				$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, array());
+				$http2 = $this->getParam('http2', true, 0);
+				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
+				$hsts_sub = $this->getParam('hsts_sub', true, 0);
+				$hsts_preload = $this->getParam('hsts_preload', true, 0);
+				$ocsp_stapling = $this->getParam('ocsp_stapling', true, 0);
+				
+				// validation
+				
+				if ($p_domain == Settings::Get('system.hostname')) {
 					standard_error('admin_domain_emailsystemhostname', '', true);
 				}
 				
-				if (substr($this->getParam('domain'), 0, 4) == 'xn--') {
+				if (substr($p_domain, 0, 4) == 'xn--') {
 					standard_error('domain_nopunycode', '', true);
 				}
 				
@@ -90,7 +131,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				$domain = $idna_convert->encode(preg_replace(array(
 					'/\:(\d)+$/',
 					'/^https?\:\/\//'
-				), '', validate($this->getParam('domain'), 'domain')));
+				), '', validate($p_domain, 'domain')));
 				
 				// Check whether domain validation is enabled and if, validate the domain
 				if (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
@@ -100,15 +141,6 @@ class Domains extends ApiCommand implements ResourceEntity
 					), '', true);
 				}
 				
-				$subcanemaildomain = $this->getParam('subcanemaildomain', 0);
-				$isemaildomain = $this->getParam('isemaildomain', 0);
-				$email_only = $this->getParam('email_only', 0);
-				$serveraliasoption = $this->getParam('selectserveralias', 0);
-				$speciallogfile = $this->getParam('speciallogfile', 0);
-				
-				$aliasdomain = intval($this->getParam('alias'));
-				$issubof = intval($this->getParam('issubof'));
-				$customerid = intval($this->getParam('customerid'));
 				$customer_stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
 					WHERE `customerid` = :customerid " . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
@@ -125,8 +157,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 				
 				if ($this->getUserDetail('customers_see_all') == '1') {
-					
-					$adminid = intval($this->getParam('adminid'));
 					$admin_stmt = Database::prepare("
 						SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
 						WHERE `adminid` = :adminid AND (`domains_used` < `domains` OR `domains` = '-1')");
@@ -150,7 +180,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 				$documentroot = makeCorrectDir($customer['documentroot'] . $path_suffix);
 				
-				$registration_date = trim($this->getParam('registration_date', ''));
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 					'0000-00-00',
 					'0',
@@ -160,7 +189,6 @@ class Domains extends ApiCommand implements ResourceEntity
 					$registration_date = null;
 				}
 				
-				$termination_date = trim($this->getParam('termination_date', ''));
 				$termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 					'0000-00-00',
 					'0',
@@ -171,31 +199,23 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 				
 				if ($this->getUserDetail('change_serversettings') == '1') {
-					
-					$caneditdomain = $this->getParam('caneditdomain', 0);
-					
-					$isbinddomain = '0';
-					$zonefile = '';
 					if (Settings::Get('system.bind_enable') == '1') {
-						$isbinddomain = $this->getParam('isbinddomain', 0);
-						$zonefile = validate($this->getParam('zonefile', ''), 'zonefile', '', '', array(), true);
+						$zonefile = validate($zonefile, 'zonefile', '', '', array(), true);
+					} else {
+						$isbinddomain = 0;
+						$zonefile = '';
 					}
 					
-					$dkim = intval($this->getParam('dkim', 0));
-					
-					$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', '')), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-					$notryfiles = $this->getParam('notryfiles', 0);
-					validate($this->getParam('documentroot', ''), 'documentroot', '', '', array(), true);
+					$specialsettings = validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+					validate($documentroot, 'documentroot', '', '', array(), true);
 					
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
-					if ($this->getParam('documentroot', '') != '') {
-						if (substr($this->getParam('documentroot'), 0, 1) != '/' && ! preg_match('/^https?\:\/\//', $this->getParam('documentroot'))) {
-							$documentroot .= '/' . $this->getParam('documentroot');
-						} else {
-							$documentroot = $this->getParam('documentroot');
+					if ($documentroot != '') {
+						if (substr($documentroot, 0, 1) != '/' && ! preg_match('/^https?\:\/\//', $documentroot)) {
+							$documentroot .= '/' . $documentroot;
 						}
-					} elseif ($this->getParam('documentroot', '') == '' && Settings::Get('system.documentroot_use_default_value') == 1) {
+					} elseif ($documentroot == '' && Settings::Get('system.documentroot_use_default_value') == 1) {
 						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $domain);
 					}
 				} else {
@@ -212,11 +232,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				
 				if ($this->getUserDetail('caneditphpsettings') == '1' || $this->getUserDetail('change_serversettings') == '1') {
 					
-					$phpenabled = $this->getParam('phpenabled', 0);
-					$openbasedir = $this->getParam('openbasedir', 0);
-					
 					if ((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
-						$phpsettingid = $this->getParam('phpsettingid', 1);
 						$phpsettingid_check_stmt = Database::prepare("
 							SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`
 							WHERE `id` = :phpsettingid");
@@ -229,11 +245,11 @@ class Domains extends ApiCommand implements ResourceEntity
 						}
 						
 						if ((int) Settings::Get('system.mod_fcgid') == 1) {
-							$mod_fcgid_starter = validate($this->getParam('mod_fcgid_starter', - 1), 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
+							$mod_fcgid_starter = validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
 								'-1',
 								''
 							), true);
-							$mod_fcgid_maxrequests = validate($this->getParam('mod_fcgid_maxrequests', - 1), 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
+							$mod_fcgid_maxrequests = validate($mod_fcgid_maxrequests, 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
 								'-1',
 								''
 							), true);
@@ -282,12 +298,12 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 				
 				$ipandports = array();
-				if (! empty($this->getParam('ipandport')) && ! is_array($this->getParam('ipandport'))) {
-					$this->updateParam('ipandport', unserialize($this->getParam('ipandport')));
+				if (! empty($p_ipandport) && ! is_array($p_ipandports)) {
+					$p_ipandports = unserialize($p_ipandports);
 				}
 				
-				if (! empty($this->getParam('ipandport')) && is_array($this->getParam('ipandport'))) {
-					foreach ($this->getParam('ipandport') as $ipandport) {
+				if (! empty($p_ipandports) && is_array($p_ipandports)) {
+					foreach ($p_ipandports as $ipandport) {
 						$ipandport = intval($ipandport);
 						$ipandport_check_stmt = Database::prepare("
 							SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
@@ -306,18 +322,16 @@ class Domains extends ApiCommand implements ResourceEntity
 					}
 				}
 				
-				if (Settings::Get('system.use_ssl') == "1" && ! empty($this->getParam('ssl_ipandport'))) {
-					$ssl_redirect = $this->getParam('ssl_redirect', 0);
-					$letsencrypt = $this->getParam('letsencrypt', 0);
+				if (Settings::Get('system.use_ssl') == "1" && ! empty($p_ssl_ipandports)) {
 					
 					$ssl_ipandports = array();
-					if (! empty($this->getParam('ssl_ipandport')) && ! is_array($this->getParam('ssl_ipandport'))) {
-						$this->updateParam('ssl_ipandport', unserialize($this->getParam('ssl_ipandport')));
+					if (! empty($p_ssl_ipandports) && ! is_array($p_ssl_ipandports)) {
+						$p_ssl_ipandports = unserialize($p_ssl_ipandports);
 					}
 					
 					// Verify SSL-Ports
-					if (! empty($this->getParam('ssl_ipandport')) && is_array($this->getParam('ssl_ipandport'))) {
-						foreach ($this->getParam('ssl_ipandport') as $ssl_ipandport) {
+					if (! empty($p_ssl_ipandports) && is_array($p_ssl_ipandports)) {
+						foreach ($p_ssl_ipandports as $ssl_ipandport) {
 							if (trim($ssl_ipandport) == "") {
 								continue;
 							}
@@ -341,14 +355,6 @@ class Domains extends ApiCommand implements ResourceEntity
 								$ssl_ipandports[] = $ssl_ipandport;
 							}
 						}
-						
-						$http2 = $this->getParam('http2', 0);
-						// HSTS
-						$hsts_maxage = $this->getParam('hsts_maxage', 0);
-						$hsts_sub = $this->getParam('hsts_sub', 0);
-						$hsts_preload = $this->getParam('hsts_preload', 0);
-						// OCSP stapling
-						$ocsp_stapling = $this->getParam('ocsp_stapling', 0);
 					} else {
 						$ssl_redirect = 0;
 						$letsencrypt = 0;
@@ -717,23 +723,57 @@ class Domains extends ApiCommand implements ResourceEntity
 	public function update()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+			
+			// parameters
 			$id = $this->getParam('id');
 			
+			// get requested domain
 			$json_result = Domains::getLocal($this->getUserData(), array(
 				'id' => $id,
 				'no_std_subdomain' => true
 			))->get();
 			$result = json_decode($json_result, true)['data'];
 			
-			$customer_stmt = Database::prepare("
-				SELECT * FROM " . TABLE_PANEL_CUSTOMERS . " WHERE `customerid` = :customerid
-			");
-			$customer = Database::pexecute_first($customer_stmt, array(
-				'customerid' => $result['customerid']
-			));
+			// optional parameters
+			$p_domain = $this->getParam('domain', true, $result['domain']);
+			$p_ipandports = $this->getParam('ipandport', true, array());
+			$customerid = intval($this->getParam('customerid', true, $result['customerid']));
+			$adminid = intval($this->getParam('adminid', true, $result['adminid']));
 			
-			$customerid = $this->getParam('customerid', $result['customerid']);
+			$subcanemaildomain = $this->getParam('subcanemaildomain', true, $result['subcanemaildomain']);
+			$isemaildomain = $this->getParam('isemaildomain', true, $result['isemaildomain']);
+			$email_only = $this->getParam('email_only', true, $result['email_only']);
+			$p_serveraliasoption = $this->getParam('selectserveralias', true, - 1);
+			$speciallogfile = $this->getParam('speciallogfile', true, $result['speciallogfile']);
+			$speciallogverified = $this->getParam('speciallogverified', true, 0);
+			$aliasdomain = intval($this->getParam('alias', true, $result['aliasdomain']));
+			$issubof = intval($this->getParam('issubof', true, $result['ismainbutsubto']));
+			$registration_date = trim($this->getParam('registration_date', true, $result['registration_date']));
+			$termination_date = trim($this->getParam('termination_date', true, $result['termination_date']));
+			$caneditdomain = $this->getParam('caneditdomain', true, $result['caneditdomain']);
+			$isbinddomain = $this->getParam('isbinddomain', true, $result['isbinddomain']);
+			$zonefile = $this->getParam('zonefile', true, $result['zonefile']);
+			$dkim = intval($this->getParam('dkim', true, $result['dkim']));
+			$specialsettings = $this->getParam('specialsettings', true, $result['specialsettings']);
+			$ssfs = $this->getParam('specialsettingsforsubdomains', true, 0);
+			$notryfiles = $this->getParam('notryfiles', true, $result['notryfiles']);
+			$documentroot = $this->getParam('documentroot', true, $result['documentroot']);
+			$phpenabled = $this->getParam('phpenabled', true, $result['phpenabled']);
+			$phpfs = $this->getParam('phpsettingsforsubdomains', true, 0);
+			$openbasedir = $this->getParam('openbasedir', true, $result['openbasedir']);
+			$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
+			$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, $result['mod_fcgid_starter']);
+			$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, $result['mod_fcgid_maxrequests']);
+			$ssl_redirect = $this->getParam('ssl_redirect', true, $result['ssl_redirect']);
+			$letsencrypt = $this->getParam('letsencrypt', true, $result['letsencrypt']);
+			$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, array());
+			$http2 = $this->getParam('http2', true, $result['http2']);
+			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts_maxage']);
+			$hsts_sub = $this->getParam('hsts_sub', true, $result['hsts_sub']);
+			$hsts_preload = $this->getParam('hsts_preload', true, $result['hsts_preload']);
+			$ocsp_stapling = $this->getParam('ocsp_stapling', true, $result['ocsp_stapling']);
 			
+			// handle change of customer (move domain from customer to customer)
 			if ($customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
 				
 				$customer_stmt = Database::prepare("
@@ -755,7 +795,12 @@ class Domains extends ApiCommand implements ResourceEntity
 					$params['adminid'] = $this->getUserDetail('adminid');
 				}
 				
-				$customer = Database::pexecute_first($customer_stmt, $params, true, true);
+				// get domains customer
+				$json_result = Customers::getLocal($this->getUserData(), array(
+					'id' => $result['customerid']
+				))->get();
+				$customer = json_decode($json_result, true)['data'];
+				
 				if (empty($customer) || $customer['customerid'] != $customerid) {
 					standard_error('customerdoesntexist', '', true);
 				}
@@ -763,16 +808,8 @@ class Domains extends ApiCommand implements ResourceEntity
 				$customerid = $result['customerid'];
 			}
 			
-			$customer_stmt = Database::prepare("
-				SELECT * FROM " . TABLE_PANEL_ADMINS . " WHERE `adminid` = :adminid
-			");
-			$admin = Database::pexecute_first($customer_stmt, array(
-				'adminid' => $result['adminid']
-			), true, true);
-			
+			// handle change of admin (move domain from admin to admin)
 			if ($this->getUserDetail('customers_see_all') == '1') {
-				
-				$adminid = $this->getParam('adminid', $result['adminid']);
 				
 				if ($adminid > 0 && $adminid != $result['adminid'] && Settings::Get('panel.allow_domain_change_admin') == '1') {
 					
@@ -794,11 +831,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				$adminid = $result['adminid'];
 			}
 			
-			$aliasdomain = $this->getParam('alias', $result['aliasdomain']);
-			$issubof = $this->getParam('issubof', $result['ismainbutsubto']);
-			$subcanemaildomain = $this->getParam('subcanemaildomain', $result['subcanemaildomain']);
-			$caneditdomain = $this->getParam('caneditdomain', $result['caneditdomain']);
-			$registration_date = $this->getParam('registration_date', $result['registration_date']);
 			$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 				'0000-00-00',
 				'0',
@@ -807,7 +839,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			if ($registration_date == '0000-00-00') {
 				$registration_date = null;
 			}
-			$termination_date = $this->getParam('termination_date', $result['termination_date']);
 			$termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 				'0000-00-00',
 				'0',
@@ -817,39 +848,31 @@ class Domains extends ApiCommand implements ResourceEntity
 				$termination_date = null;
 			}
 			
-			$isemaildomain = $this->getParam('isemaildomain', $result['isemaildomain']);
-			$email_only = $this->getParam('email_only', $result['email_only']);
-			
 			$serveraliasoption = '2';
 			if ($result['iswildcarddomain'] == '1') {
 				$serveraliasoption = '0';
 			} elseif ($result['wwwserveralias'] == '1') {
 				$serveraliasoption = '1';
 			}
-			if (! empty($this->getParam('selectserveralias'))) {
-				$serveraliasoption = intval($this->getParam('selectserveralias'));
+			if ($p_serveraliasoption > - 1) {
+				$serveraliasoption = $p_serveraliasoption;
 			}
 			
-			$speciallogfile = $this->getParam('speciallogfile', $result['speciallogfile']);
-			
 			if ($this->getUserDetail('change_serversettings') == '1') {
-				$isbinddomain = $result['isbinddomain'];
-				$zonefile = $result['zonefile'];
-				if (Settings::Get('system.bind_enable') == '1') {
-					$isbinddomain = $this->getParam('isbinddomain', $result['isbinddomain']);
-					$zonefile = validate($this->getParam('zonefile', $result['zonefile']), 'zonefile', '', '', array(), true);
+				
+				if (Settings::Get('system.bind_enable') != '1') {
+					$zonefile = validate($zonefile, 'zonefile', '', '', array(), true);
+				} else {
+					$isbinddomain = $result['isbinddomain'];
+					$zonefile = $result['zonefile'];
 				}
 				
-				if (Settings::Get('dkim.use_dkim') == '1') {
-					$dkim = $this->getParam('dkim', $result['dkim']);
-				} else {
+				if (Settings::Get('dkim.use_dkim') != '1') {
 					$dkim = $result['dkim'];
 				}
 				
-				$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', $result['specialsettings'])), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-				$ssfs = $this->getParam('specialsettingsforsubdomains', 0);
-				$notryfiles = $this->getParam('notryfiles', $result['notryfiles']);
-				$documentroot = validate($this->getParam('documentroot', $result['documentroot']), 'documentroot', '', '', array(), true);
+				$specialsettings = validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+				$documentroot = validate($documentroot, 'documentroot', '', '', array(), true);
 				
 				if ($documentroot == '') {
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
@@ -874,17 +897,9 @@ class Domains extends ApiCommand implements ResourceEntity
 				$documentroot = $result['documentroot'];
 			}
 			
-			// @TODO unsure whether this will still work
-			$speciallogverified = $this->getParam('speciallogverified', 0);
-			
 			if ($this->getUserDetail('caneditphpsettings') == '1' || $this->getUserDetail('change_serversettings') == '1') {
 				
-				$phpenabled = $this->getParam('phpenabled', $result['phpenabled']);
-				$openbasedir = $this->getParam('openbasedir', $result['openbasedir']);
-				$phpfs = $this->getParam('phpsettingsforsubdomains', 0);
-				
 				if ((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
-					$phpsettingid = $this->getParam('phpsettingid', $result['phpsettingid']);
 					$phpsettingid_check_stmt = Database::prepare("
 						SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :phpid
 					");
@@ -897,11 +912,11 @@ class Domains extends ApiCommand implements ResourceEntity
 					}
 					
 					if ((int) Settings::Get('system.mod_fcgid') == 1) {
-						$mod_fcgid_starter = validate($this->getParam('mod_fcgid_starter', $result['mod_fcgid_starter']), 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
+						$mod_fcgid_starter = validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
 							'-1',
 							''
 						), true);
-						$mod_fcgid_maxrequests = validate($this->getParam('mod_fcgid_maxrequests', $result['mod_fcgid_maxrequests']), 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
+						$mod_fcgid_maxrequests = validate($mod_fcgid_maxrequests, 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
 							'-1',
 							''
 						), true);
@@ -925,15 +940,15 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 			
 			$ipandports = array();
-			if (! empty($this->getParam('ipandport')) && ! is_array($this->getParam('ipandport'))) {
-				$this->updateParam('ipandport', unserialize($this->getParam('ipandport')));
+			if (! empty($p_ipandports) && ! is_array($p_ipandports)) {
+				$p_ipandports = unserialize($p_ipandports);
 			}
 			
-			if (! empty($this->getParam('ipandport')) && is_array($this->getParam('ipandport'))) {
+			if (! empty($p_ipandports) && is_array($p_ipandports)) {
 				$ipandport_check_stmt = Database::prepare("
 					SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :ipandport
 				");
-				foreach ($this->getParam('ipandport') as $ipandport) {
+				foreach ($p_ipandports as $ipandport) {
 					if (trim($ipandport) == "") {
 						continue;
 					}
@@ -949,20 +964,18 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 			}
 			
-			if (Settings::Get('system.use_ssl') == '1' && ! empty($this->getParam('ssl_ipandport'))) {
+			if (Settings::Get('system.use_ssl') == '1' && ! empty($p_ssl_ipandports)) {
 				$ssl = 1; // if ssl is set and != 0, it can only be 1
-				$ssl_redirect = $this->getParam('ssl_redirect', $result['ssl_redirect']);
-				$letsencrypt = $this->getParam('letsencrypt', $result['letsencrypt']);
 				
 				$ssl_ipandports = array();
-				if (! empty($this->getParam('ssl_ipandport')) && ! is_array($this->getParam('ssl_ipandport'))) {
-					$this->updateParam('ssl_ipandport', unserialize($this->getParam('ssl_ipandport')));
+				if (! empty($p_ssl_ipandports) && ! is_array($p_ssl_ipandports)) {
+					$p_ssl_ipandports = unserialize($p_ssl_ipandports);
 				}
-				if (! empty($this->getParam('ssl_ipandport')) && is_array($this->getParam('ssl_ipandport'))) {
+				if (! empty($p_ssl_ipandports) && is_array($p_ssl_ipandports)) {
 					$ssl_ipandport_check_stmt = Database::prepare("
 						SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :ipandport
 					");
-					foreach ($this->getParam('ssl_ipandport') as $ssl_ipandport) {
+					foreach ($p_ssl_ipandports as $ssl_ipandport) {
 						if (trim($ssl_ipandport) == "") {
 							continue;
 						}
@@ -980,14 +993,6 @@ class Domains extends ApiCommand implements ResourceEntity
 							$ssl_ipandports[] = $ssl_ipandport;
 						}
 					}
-					
-					$http2 = $this->getParam('http2', $result['http2']);
-					// HSTS
-					$hsts_maxage = $this->getParam('hsts_maxage', $result['hsts_maxage']);
-					$hsts_sub = $this->getParam('hsts_sub', $result['hsts_sub']);
-					$hsts_preload = $this->getParam('hsts_preload', $result['hsts_preload']);
-					// OCSP stapling
-					$ocsp_stapling = $this->getParam('ocsp_stapling', $result['ocsp_stapling']);
 				} else {
 					$ssl_redirect = 0;
 					$letsencrypt = 0;
@@ -1304,7 +1309,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			
 			$_update_data = array();
 			
-			$ssfs = $this->getParam('specialsettingsforsubdomains', 0);
 			if ($ssfs == 1) {
 				$_update_data['specialsettings'] = $specialsettings;
 				$upd_specialsettings = ", `specialsettings` = :specialsettings ";
@@ -1404,7 +1408,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			
 			// if php config is to be set for all subdomains, check here
 			$update_phpconfig = '';
-			$phpfs = $this->getParam('phpsettingsforsubdomains', 0);
 			if ($phpfs == 1) {
 				$_update_data['phpsettingid'] = $phpsettingid;
 				$update_phpconfig = ", `phpsettingid` = :phpsettingid";
@@ -1520,8 +1523,10 @@ class Domains extends ApiCommand implements ResourceEntity
 	/**
 	 * delete a domain entry by id
 	 *
-	 * @param int $id domain-id
-	 *
+	 * @param int $id
+	 *        	domain-id
+	 * @param bool $delete_mainsubdomains optional, remove also domains that are subdomains of this domain but added as main domains; default false
+	 *        	
 	 * @throws Exception
 	 * @return array
 	 */
@@ -1529,7 +1534,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id');
-			
+			$remove_subbutmain_domains = $this->getParam('delete_mainsubdomains', true, 0);
+
 			$json_result = Domains::getLocal($this->getUserData(), array(
 				'id' => $id,
 				'no_std_subdomain' => true
@@ -1538,11 +1544,10 @@ class Domains extends ApiCommand implements ResourceEntity
 			
 			// check for deletion of main-domains which are logically subdomains, #329
 			$rsd_sql = '';
-			$remove_subbutmain_domains = $this->getParam('delete_userfiles', 0) ? 1 : 0;
-			if ($remove_subbutmain_domains == 1) {
+			if ($remove_subbutmain_domains) {
 				$rsd_sql .= " OR `ismainbutsubto` = :id";
 			}
-			
+
 			$subresult_stmt = Database::prepare("
 					SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE (`id` = :id OR `parentdomainid` = :id " . $rsd_sql . ")");
