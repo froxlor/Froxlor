@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    Panel
+ *
+ */
 class Customers extends ApiCommand implements ResourceEntity
 {
 
@@ -40,8 +54,9 @@ class Customers extends ApiCommand implements ResourceEntity
 	/**
 	 * return a customer entry by id
 	 *
-	 * @param int $id customer-id
-	 *
+	 * @param int $id
+	 *        	customer-id
+	 *        	
 	 * @throws Exception
 	 * @return array
 	 */
@@ -75,91 +90,72 @@ class Customers extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin()) {
 			if ($this->getUserDetail('customers_used') < $this->getUserDetail('customers') || $this->getUserDetail('customers') == '-1') {
 				
-				$idna_convert = new idna_convert_wrapper();
-				$name = validate($this->getParam('name', true, ''), 'name', '', '', array(), true);
-				$firstname = validate($this->getParam('firstname', true, ''), 'first name', '', '', array(), true);
+				// required parameters
+				$email = $this->getParam('email');
+
+				// parameters
+				$name = $this->getParam('name', true, '');
+				$firstname = $this->getParam('firstname', true, '');
 				$company_required = (empty($name) && empty($first));
-				$company = validate($this->getParam('company', $company_required, ''), 'company', '', '', array(), true);
-				$street = validate($this->getParam('street', true, ''), 'street', '', '', array(), true);
-				$zipcode = validate($this->getParam('zipcode', true, ''), 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
-				$city = validate($this->getParam('city', true, ''), 'city', '', '', array(), true);
-				$phone = validate($this->getParam('phone', true, ''), 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-				$fax = validate($this->getParam('fax', true, ''), 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-				$email = $idna_convert->encode(validate($this->getParam('email'), 'email', '', '', array(), true));
-				$customernumber = validate($this->getParam('customernumber', true, ''), 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
-				$def_language = validate($this->getParam('def_language', true, ''), 'default language', '', '', array(), true);
+				$company = $this->getParam('company', $company_required, '');
+				$street = $this->getParam('street', true, '');
+				$zipcode = $this->getParam('zipcode', true, '');
+				$city = $this->getParam('city', true, '');
+				$phone = $this->getParam('phone', true, '');
+				$fax = $this->getParam('fax', true, '');
+				$customernumber = $this->getParam('customernumber', true, '');
+				$def_language = $this->getParam('def_language', true, '');
 				$gender = intval_ressource($this->getParam('gender', true, 0));
-				
-				$custom_notes = validate(str_replace("\r\n", "\n", $this->getParam('custom_notes', true, '')), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+				$custom_notes = $this->getParam('custom_notes', true, '');
 				$custom_notes_show = $this->getParam('custom_notes_show', true, 0);
 				
-				$diskspace = intval_ressource($this->getParam('diskspace', true, 0));
-				if ($this->getParam('diskspace_ul', true, 0) == -1) {
-					$diskspace = - 1;
-				}
+				$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
+				$traffic = $this->getUlParam('traffic', 'traffic_ul', true, 0);
+				$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, 0);
+				$emails = $this->getUlParam('emails', 'emails_ul', true, 0);
+				$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, 0);
+				$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, 0);
+				$email_quota = $this->getUlParam('email_quota', 'email_quota_ul', true, 0);
+				$email_imap = $this->getParam('email_imap', true, 0);
+				$email_pop3 = $this->getParam('email_pop3', true, 0);
+				$ftps = $this->getUlParam('ftps', 'ftps_ul', true, 0);
+				$tickets = $this->getUlParam('tickets', 'tickets_ul', true, 0);
+				$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
+				$createstdsubdomain = $this->getParam('createstdsubdomain', true, 0);
+				$password = $this->getParam('new_customer_password', true, '');
+				$sendpassword = $this->getParam('sendpassword', true, 0);
+				$phpenabled = $this->getParam('phpenabled', true, 0);
+				$p_allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, array());
+				$perlenabled = $this->getParam('perlenabled', true, 0);
+				$dnsenabled = $this->getParam('dnsenabled', true, 0);
+				$store_defaultindex = $this->getParam('store_defaultindex', true, 0);
+				$loginname = $this->getParam('new_loginname', true, '');
 				
-				$traffic = doubleval_ressource($this->getParam('traffic', true, 0));
-				if ($this->getParam('traffic_ul', true, 0) == -1) {
-					$traffic = - 1;
-				}
+				// validation
+				$idna_convert = new idna_convert_wrapper();
+				$name = validate($name, 'name', '', '', array(), true);
+				$firstname = validate($firstname, 'first name', '', '', array(), true);
+				$company = validate($company, 'company', '', '', array(), true);
+				$street = validate($street, 'street', '', '', array(), true);
+				$zipcode = validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
+				$city = validate($city, 'city', '', '', array(), true);
+				$phone = validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+				$fax = validate(fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+				$idna_convert = new idna_convert_wrapper();
+				$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
+				$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
+				$def_language = validate($def_language, 'default language', '', '', array(), true);
+				$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
 				
-				$subdomains = intval_ressource($this->getParam('subdomains', true, 0));
-				if ($this->getParam('subdomains_ul', true, 0) == -1) {
-					$subdomains = - 1;
-				}
-				
-				$emails = intval_ressource($this->getParam('emails', true, 0));
-				if ($this->getParam('emails_ul', true, 0) == -1) {
-					$emails = - 1;
-				}
-				
-				$email_accounts = intval_ressource($this->getParam('email_accounts', true, 0));
-				if ($this->getParam('email_accounts_ul', true, 0) == -1) {
-					$email_accounts = - 1;
-				}
-				
-				$email_forwarders = intval_ressource($this->getParam('email_forwarders', true, 0));
-				if ($this->getParam('email_forwarders_ul', true, 0) == -1) {
-					$email_forwarders = - 1;
-				}
-				
-				if (Settings::Get('system.mail_quota_enabled') == '1') {
-					$email_quota = validate($this->getParam('email_quota', true, 0), 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
-						'0',
-						''
-					), true);
-					if ($this->getParam('email_quota_ul', true, 0) == -1) {
-						$email_quota = - 1;
-					}
-				} else {
+				if (Settings::Get('system.mail_quota_enabled') != '1') {
 					$email_quota = - 1;
 				}
 				
-				$email_imap = $this->getParam('email_imap', true, 0);
-				$email_pop3 = $this->getParam('email_pop3', true, 0);
-				
-				$ftps = intval_ressource($this->getParam('ftps', true, 0));
-				if ($this->getParam('ftps_ul', true, 0) == -1) {
-					$ftps = - 1;
-				}
-				
-				if (Settings::Get('ticket.enabled') == '1') {
-					$tickets = intval_ressource($this->getParam('tickets', true, 0));
-					if ($this->getParam('tickets_ul', true, 0) == -1) {
-						$tickets = - 1;
-					}
-				} else {
+				if (Settings::Get('ticket.enabled') != '1') {
 					$tickets = - 1;
 				}
 				
-				$mysqls = intval_ressource($this->getParam('mysqls', true, 0));
-				if ($this->getParam('mysqls_ul', true, 0) == -1) {
-					$mysqls = - 1;
-				}
-				
-				$createstdsubdomain = $this->getParam('createstdsubdomain', true, 0);
-				
-				$password = validate($this->getParam('new_customer_password', true, ''), 'password', '', '', array(), true);
+				$password = validate($password, 'password', '', '', array(), true);
 				// only check if not empty,
 				// cause empty == generate password automatically
 				if ($password != '') {
@@ -171,20 +167,13 @@ class Customers extends ApiCommand implements ResourceEntity
 					$gender = 0;
 				}
 				
-				$sendpassword = $this->getParam('sendpassword', true, 0);
-				$phpenabled = $this->getParam('phpenabled', true, 0);
-				
 				$allowed_phpconfigs = array();
-				if (! empty($this->getParam('allowed_phpconfigs', true, array())) && is_array($this->getParam('allowed_phpconfigs', true, array()))) {
-					foreach ($this->getParam('allowed_phpconfigs', true, array()) as $allowed_phpconfig) {
+				if (! empty($p_allowed_phpconfigs) && is_array($p_allowed_phpconfigs)) {
+					foreach ($p_allowed_phpconfigs as $allowed_phpconfig) {
 						$allowed_phpconfig = intval($allowed_phpconfig);
 						$allowed_phpconfigs[] = $allowed_phpconfig;
 					}
 				}
-				
-				$perlenabled = $this->getParam('perlenabled', true, 0);
-				$dnsenabled = $this->getParam('dnsenabled', true, 0);
-				$store_defaultindex = $this->getParam('store_defaultindex', true, 0);
 				
 				$diskspace = $diskspace * 1024;
 				$traffic = $traffic * 1024 * 1024;
@@ -213,9 +202,9 @@ class Customers extends ApiCommand implements ResourceEntity
 					standard_error('emailiswrong', $email, true);
 				} else {
 					
-					if ($this->getParam('new_loginname', true, '') != '') {
+					if ($loginname != '') {
 						$accountnumber = intval(Settings::Get('system.lastaccountnumber'));
-						$loginname = validate($this->getParam('new_loginname'), 'loginname', '/^[a-z][a-z0-9\-_]+$/i', '', array(), true);
+						$loginname = validate($loginname, 'loginname', '/^[a-z][a-z0-9\-_]+$/i', '', array(), true);
 						
 						// Accounts which match systemaccounts are not allowed, filtering them
 						if (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
@@ -567,7 +556,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						
 						$srv_hostname = Settings::Get('system.hostname');
 						if (Settings::Get('system.froxlordirectlyviahostname') == '0') {
-							$srv_hostname .= '/'.basename(FROXLOR_INSTALL_DIR);
+							$srv_hostname .= '/' . basename(FROXLOR_INSTALL_DIR);
 						}
 						
 						$srv_ip_stmt = Database::prepare("
@@ -663,8 +652,466 @@ class Customers extends ApiCommand implements ResourceEntity
 			))->get();
 			$result = json_decode($json_result, true)['data'];
 			
-			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] changed customer '" . $result['loginname'] . "'");
-			return $this->response(200, "successfull", $upd_data);
+			// parameters
+			$move_to_admin = intval_ressource($this->getParam('move_to_admin', true, 0));
+
+			$idna_convert = new idna_convert_wrapper();
+			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
+			$name = $this->getParam('name', true, $result['name']);
+			$firstname = $this->getParam('firstname', true, $result['firstname']);
+			$company_required = (empty($name) && empty($first));
+			$company = $this->getParam('company', $company_required, $result['company']);
+			$street = $this->getParam('street', true, $result['street']);
+			$zipcode = $this->getParam('zipcode', true, $result['zipcode']);
+			$city = $this->getParam('city', true, $result['city']);
+			$phone = $this->getParam('phone', true, $result['phone']);
+			$fax = $this->getParam('fax', true, $result['fax']);
+			$customernumber = $this->getParam('customernumber', true, $result['customernumber']);
+			$def_language = $this->getParam('def_language', true, $result['def_language']);
+			$gender = intval_ressource($this->getParam('gender', true, $result['gender']));
+			$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
+			$custom_notes_show = $this->getParam('custom_notes_show', true, $result['custom_notes_show']);
+
+			$dec_places = Settings::Get('panel.decimal_places');
+			$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, round($result['diskspace'] / 1024, $dec_places));
+			$traffic = $this->getUlParam('traffic', 'traffic_ul', true, round($result['traffic'] / (1024 * 1024), $dec_places));
+			$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, $result['subdomains']);
+			$emails = $this->getUlParam('emails', 'emails_ul', true, $result['emails']);
+			$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, $result['email_accounts']);
+			$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, $result['email_forwarders']);
+			$email_quota = $this->getUlParam('email_quota', 'email_quota_ul', true, $result['email_quota']);
+			$email_imap = $this->getParam('email_imap', true, $result['imap']);
+			$email_pop3 = $this->getParam('email_pop3', true, $result['pop3']);
+			$ftps = $this->getUlParam('ftps', 'ftps_ul', true, $result['ftps']);
+			$tickets = $this->getUlParam('tickets', 'tickets_ul', true, $result['tickets']);
+			$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, $result['mysqls']);
+			$createstdsubdomain = $this->getParam('createstdsubdomain', true, 0);
+			$password = $this->getParam('new_customer_password', true, '');
+			$sendpassword = $this->getParam('sendpassword', true, 0);
+			$phpenabled = $this->getParam('phpenabled', true, $result['phpenabled']);
+			$allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, json_decode($result['allowed_phpconfigs'], true));
+			$perlenabled = $this->getParam('perlenabled', true, $result['perlenabled']);
+			$dnsenabled = $this->getParam('dnsenabled', true, $result['dnsenabled']);
+			$deactivated = $this->getParam('deactivated', true, $result['deactivated']);
+
+			// validation
+			$idna_convert = new idna_convert_wrapper();
+			$name = validate($name, 'name', '', '', array(), true);
+			$firstname = validate($firstname, 'first name', '', '', array(), true);
+			$company = validate($company, 'company', '', '', array(), true);
+			$street = validate($street, 'street', '', '', array(), true);
+			$zipcode = validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
+			$city = validate($city, 'city', '', '', array(), true);
+			$phone = validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+			$fax = validate(fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+			$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
+			$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
+			$def_language = validate($def_language, 'default language', '', '', array(), true);
+			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+
+			if (Settings::Get('system.mail_quota_enabled') != '1') {
+				$email_quota = - 1;
+			}
+
+			if (Settings::Get('ticket.enabled') != '1') {
+				$tickets = - 1;
+			}
+
+			// Either $name and $firstname or the $company must be inserted
+			if ($name == '' && $company == '') {
+				standard_error(array(
+					'stringisempty',
+					'myname'
+				));
+			} elseif ($firstname == '' && $company == '') {
+				standard_error(array(
+					'stringisempty',
+					'myfirstname'
+				));
+			} elseif ($email == '') {
+				standard_error(array(
+					'stringisempty',
+					'emailadd'
+				));
+			} elseif (! validateEmail($email)) {
+				standard_error('emailiswrong', $email);
+			} else {
+				
+				if ($password != '') {
+					$password = validatePassword($password);
+					$password = makeCryptPassword($password);
+				} else {
+					$password = $result['password'];
+				}
+				
+				if ($createstdsubdomain != '1') {
+					$createstdsubdomain = '0';
+				}
+				
+				if ($createstdsubdomain == '1' && $result['standardsubdomain'] == '0') {
+					
+					if (Settings::Get('system.stdsubdomain') !== null && Settings::Get('system.stdsubdomain') != '') {
+						$_stdsubdomain = $result['loginname'] . '.' . Settings::Get('system.stdsubdomain');
+					} else {
+						$_stdsubdomain = $result['loginname'] . '.' . Settings::Get('system.hostname');
+					}
+					
+					$ins_data = array(
+						'domain' => $_stdsubdomain,
+						'customerid' => $result['customerid'],
+						'adminid' => $this->getUserDetail('adminid'),
+						'parentdomainid' => '0',
+						'docroot' => $result['documentroot'],
+						'adddate' => time(),
+						'phpenabled' => $phpenabled,
+						'zonefile' => '',
+						'isemaildomain' => '0',
+						'caneditdomain' => '0',
+						'openbasedir' => '1',
+						'speciallogfile' => '0',
+						'dkim_id' => '0',
+						'dkim_privkey' => '',
+						'dkim_pubkey' => '',
+						'ipandport' => explode(',', Settings::Get('system.defaultip'))
+					);
+					$domainid = - 1;
+					try {
+						$std_domain = Domains::getLocal($this->getUserData(), $ins_data)->add();
+						$domainid = json_decode($std_domain, true)['data']['id'];
+					} catch (Exception $e) {
+						$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
+					}
+					
+					if ($domainid > 0) {
+						$upd_stmt = Database::prepare("
+							UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `standardsubdomain` = :domainid WHERE `customerid` = :customerid
+						");
+						Database::pexecute($upd_stmt, array(
+							'domainid' => $domainid,
+							'customerid' => $result['customerid']
+						), true, true);
+						$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added standardsubdomain for user '" . $result['loginname'] . "'");
+						inserttask('1');
+					}
+				}
+				
+				if ($createstdsubdomain == '0' && $result['standardsubdomain'] != '0') {
+					
+					try {
+						$std_domain = Domains::getLocal($this->getUserData(), array(
+							'id' => $result['standardsubdomain'],
+							'is_stdsubdomain' => 1
+						))->delete();
+					} catch (Exception $e) {
+						$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to delete standard-subdomain: " . $e->getMessage());
+					}
+					$log->logAction(ADM_ACTION, LOG_NOTICE, "automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
+					inserttask('1');
+				}
+				
+				if ($deactivated != '1') {
+					$deactivated = '0';
+				}
+				
+				if ($phpenabled != '0') {
+					$phpenabled = '1';
+				}
+				
+				if ($perlenabled != '0') {
+					$perlenabled = '1';
+				}
+				
+				if ($dnsenabled != '0') {
+					$dnsenabled = '1';
+				}
+				
+				if ($phpenabled != $result['phpenabled'] || $perlenabled != $result['perlenabled']) {
+					inserttask('1');
+				}
+				
+				// activate/deactivate customer services
+				if ($deactivated != $result['deactivated']) {
+					
+					$yesno = (($deactivated) ? 'N' : 'Y');
+					$pop3 = (($deactivated) ? '0' : (int) $result['pop3']);
+					$imap = (($deactivated) ? '0' : (int) $result['imap']);
+					
+					$upd_stmt = Database::prepare("
+							UPDATE `" . TABLE_MAIL_USERS . "` SET `postfix`= :yesno, `pop3` = :pop3, `imap` = :imap WHERE `customerid` = :customerid");
+					Database::pexecute($upd_stmt, array(
+						'yesno' => $yesno,
+						'pop3' => $pop3,
+						'imap' => $imap,
+						'customerid' => $id
+					));
+					
+					$upd_stmt = Database::prepare("
+							UPDATE `" . TABLE_FTP_USERS . "` SET `login_enabled` = :yesno WHERE `customerid` = :customerid");
+					Database::pexecute($upd_stmt, array(
+						'yesno' => $yesno,
+						'customerid' => $id
+					));
+					
+					$upd_stmt = Database::prepare("
+							UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `deactivated`= :deactivated WHERE `customerid` = :customerid");
+					Database::pexecute($upd_stmt, array(
+						'deactivated' => $deactivated,
+						'customerid' => $id
+					));
+					
+					// Retrieve customer's databases
+					$databases_stmt = Database::prepare("SELECT * FROM " . TABLE_PANEL_DATABASES . " WHERE customerid = :customerid ORDER BY `dbserver`");
+					Database::pexecute($databases_stmt, array(
+						'customerid' => $id
+					));
+					
+					Database::needRoot(true);
+					$last_dbserver = 0;
+					
+					$dbm = new DbManager($log);
+					
+					// For each of them
+					while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
+						
+						if ($last_dbserver != $row_database['dbserver']) {
+							$dbm->getManager()->flushPrivileges();
+							Database::needRoot(true, $row_database['dbserver']);
+							$last_dbserver = $row_database['dbserver'];
+						}
+						
+						foreach (array_unique(explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
+							$mysql_access_host = trim($mysql_access_host);
+							
+							// Prevent access, if deactivated
+							if ($deactivated) {
+								// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
+								$dbm->getManager()->disableUser($row_database['databasename'], $mysql_access_host);
+							} else {
+								// Otherwise grant access
+								$dbm->getManager()->enableUser($row_database['databasename'], $mysql_access_host);
+							}
+						}
+					}
+					
+					// At last flush the new privileges
+					$dbm->getManager()->flushPrivileges();
+					Database::needRoot(false);
+					
+					$log->logAction(ADM_ACTION, LOG_INFO, "deactivated user '" . $result['loginname'] . "'");
+					inserttask('1');
+				}
+				
+				// Disable or enable POP3 Login for customers Mail Accounts
+				if ($email_pop3 != $result['pop3']) {
+					$upd_stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "` SET `pop3` = :pop3 WHERE `customerid` = :customerid");
+					Database::pexecute($upd_stmt, array(
+						'pop3' => $email_pop3,
+						'customerid' => $id
+					));
+				}
+				
+				// Disable or enable IMAP Login for customers Mail Accounts
+				if ($email_imap != $result['imap']) {
+					$upd_stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "` SET `imap` = :imap WHERE `customerid` = :customerid");
+					Database::pexecute($upd_stmt, array(
+						'imap' => $email_imap,
+						'customerid' => $id
+					));
+				}
+				
+				$upd_data = array(
+					'customerid' => $id,
+					'passwd' => $password,
+					'name' => $name,
+					'firstname' => $firstname,
+					'gender' => $gender,
+					'company' => $company,
+					'street' => $street,
+					'zipcode' => $zipcode,
+					'city' => $city,
+					'phone' => $phone,
+					'fax' => $fax,
+					'email' => $email,
+					'customerno' => $customernumber,
+					'lang' => $def_language,
+					'diskspace' => $diskspace,
+					'traffic' => $traffic,
+					'subdomains' => $subdomains,
+					'emails' => $emails,
+					'email_accounts' => $email_accounts,
+					'email_forwarders' => $email_forwarders,
+					'email_quota' => $email_quota,
+					'ftps' => $ftps,
+					'tickets' => $tickets,
+					'mysqls' => $mysqls,
+					'deactivated' => $deactivated,
+					'phpenabled' => $phpenabled,
+					'allowed_phpconfigs' => empty($allowed_phpconfigs) ? "" : json_encode($allowed_phpconfigs),
+					'imap' => $email_imap,
+					'pop3' => $email_pop3,
+					'perlenabled' => $perlenabled,
+					'dnsenabled' => $dnsenabled,
+					'custom_notes' => $custom_notes,
+					'custom_notes_show' => $custom_notes_show
+				);
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+					`name` = :name,
+					`firstname` = :firstname,
+					`gender` = :gender,
+					`company` = :company,
+					`street` = :street,
+					`zipcode` = :zipcode,
+					`city` = :city,
+					`phone` = :phone,
+					`fax` = :fax,
+					`email` = :email,
+					`customernumber` = :customerno,
+					`def_language` = :lang,
+					`password` = :passwd,
+					`diskspace` = :diskspace,
+					`traffic` = :traffic,
+					`subdomains` = :subdomains,
+					`emails` = :emails,
+					`email_accounts` = :email_accounts,
+					`email_forwarders` = :email_forwarders,
+					`ftps` = :ftps,
+					`tickets` = :tickets,
+					`mysqls` = :mysqls,
+					`deactivated` = :deactivated,
+					`phpenabled` = :phpenabled,
+					`allowed_phpconfigs` = :allowed_phpconfigs,
+					`email_quota` = :email_quota,
+					`imap` = :imap,
+					`pop3` = :pop3,
+					`perlenabled` = :perlenabled,
+					`dnsenabled` = :dnsenabled,
+					`custom_notes` = :custom_notes,
+					`custom_notes_show` = :custom_notes_show
+					WHERE `customerid` = :customerid
+				");
+				Database::pexecute($upd_stmt, $upd_data);
+				
+				// Using filesystem - quota, insert a task which cleans the filesystem - quota
+				inserttask('10');
+				
+				$admin_update_query = "UPDATE `" . TABLE_PANEL_ADMINS . "` SET `customers_used` = `customers_used` ";
+				
+				if ($mysqls != '-1' || $result['mysqls'] != '-1') {
+					$admin_update_query .= ", `mysqls_used` = `mysqls_used` ";
+					
+					if ($mysqls != '-1') {
+						$admin_update_query .= " + 0" . (int) $mysqls . " ";
+					}
+					if ($result['mysqls'] != '-1') {
+						$admin_update_query .= " - 0" . (int) $result['mysqls'] . " ";
+					}
+				}
+				
+				if ($emails != '-1' || $result['emails'] != '-1') {
+					$admin_update_query .= ", `emails_used` = `emails_used` ";
+					
+					if ($emails != '-1') {
+						$admin_update_query .= " + 0" . (int) $emails . " ";
+					}
+					if ($result['emails'] != '-1') {
+						$admin_update_query .= " - 0" . (int) $result['emails'] . " ";
+					}
+				}
+				
+				if ($email_accounts != '-1' || $result['email_accounts'] != '-1') {
+					$admin_update_query .= ", `email_accounts_used` = `email_accounts_used` ";
+					
+					if ($email_accounts != '-1') {
+						$admin_update_query .= " + 0" . (int) $email_accounts . " ";
+					}
+					if ($result['email_accounts'] != '-1') {
+						$admin_update_query .= " - 0" . (int) $result['email_accounts'] . " ";
+					}
+				}
+				
+				if ($email_forwarders != '-1' || $result['email_forwarders'] != '-1') {
+					$admin_update_query .= ", `email_forwarders_used` = `email_forwarders_used` ";
+					
+					if ($email_forwarders != '-1') {
+						$admin_update_query .= " + 0" . (int) $email_forwarders . " ";
+					}
+					if ($result['email_forwarders'] != '-1') {
+						$admin_update_query .= " - 0" . (int) $result['email_forwarders'] . " ";
+					}
+				}
+				
+				if ($email_quota != '-1' || $result['email_quota'] != '-1') {
+					$admin_update_query .= ", `email_quota_used` = `email_quota_used` ";
+					
+					if ($email_quota != '-1') {
+						$admin_update_query .= " + 0" . (int) $email_quota . " ";
+					}
+					if ($result['email_quota'] != '-1') {
+						$admin_update_query .= " - 0" . (int) $result['email_quota'] . " ";
+					}
+				}
+				
+				if ($subdomains != '-1' || $result['subdomains'] != '-1') {
+					$admin_update_query .= ", `subdomains_used` = `subdomains_used` ";
+					
+					if ($subdomains != '-1') {
+						$admin_update_query .= " + 0" . (int) $subdomains . " ";
+					}
+					if ($result['subdomains'] != '-1') {
+						$admin_update_query .= " - 0" . (int) $result['subdomains'] . " ";
+					}
+				}
+				
+				if ($ftps != '-1' || $result['ftps'] != '-1') {
+					$admin_update_query .= ", `ftps_used` = `ftps_used` ";
+					
+					if ($ftps != '-1') {
+						$admin_update_query .= " + 0" . (int) $ftps . " ";
+					}
+					if ($result['ftps'] != '-1') {
+						$admin_update_query .= " - 0" . (int) $result['ftps'] . " ";
+					}
+				}
+				
+				if ($tickets != '-1' || $result['tickets'] != '-1') {
+					$admin_update_query .= ", `tickets_used` = `tickets_used` ";
+					
+					if ($tickets != '-1') {
+						$admin_update_query .= " + 0" . (int) $tickets . " ";
+					}
+					if ($result['tickets'] != '-1') {
+						$admin_update_query .= " - 0" . (int) $result['tickets'] . " ";
+					}
+				}
+				
+				if (($diskspace / 1024) != '-1' || ($result['diskspace'] / 1024) != '-1') {
+					$admin_update_query .= ", `diskspace_used` = `diskspace_used` ";
+					
+					if (($diskspace / 1024) != '-1') {
+						$admin_update_query .= " + 0" . (int) $diskspace . " ";
+					}
+					if (($result['diskspace'] / 1024) != '-1') {
+						$admin_update_query .= " - 0" . (int) $result['diskspace'] . " ";
+					}
+				}
+				
+				$admin_update_query .= " WHERE `adminid` = '" . (int) $result['adminid'] . "'";
+				Database::query($admin_update_query);
+				$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] edited user '" . $result['loginname'] . "'");
+				
+				/*
+				 * move customer to another admin/reseller; #1166
+				 */
+				if ($move_to_admin > 0 && $move_to_admin != $result['adminid']) {
+					$move_result = moveCustomerToAdmin($id, $move_to_admin);
+					if ($move_result != true) {
+						standard_error('moveofcustomerfailed', $move_result, true);
+					}
+				}
+				
+				return $this->response(200, "successfull", $upd_data);
+			}
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
@@ -672,9 +1119,11 @@ class Customers extends ApiCommand implements ResourceEntity
 	/**
 	 * delete a customer entry by id
 	 *
-	 * @param int $id customer-id
-	 * @param bool $delete_userfiles optional, default false
-	 *
+	 * @param int $id
+	 *        	customer-id
+	 * @param bool $delete_userfiles
+	 *        	optional, default false
+	 *        	
 	 * @throws Exception
 	 * @return array
 	 */
@@ -907,8 +1356,9 @@ class Customers extends ApiCommand implements ResourceEntity
 	/**
 	 * unlock a locked customer by id
 	 *
-	 * @param int $id customer-id
-	 *
+	 * @param int $id
+	 *        	customer-id
+	 *        	
 	 * @throws Exception
 	 * @return array
 	 */

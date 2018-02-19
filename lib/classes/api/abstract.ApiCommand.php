@@ -184,6 +184,16 @@ abstract class ApiCommand
 		return $this->cmd_params[$param];
 	}
 
+	protected function getUlParam($param = null, $ul_field = null, $optional = false, $default = 0)
+	{
+		$param_value = intval_ressource($this->getParam($param, $optional, $default));
+		$ul_field_value = $this->getParam($ul_field, true, 0);
+		if ($ul_field_value != 0) {
+			$param_value = - 1;
+		}
+		return $param_value;
+	}
+
 	/**
 	 * returns "module::function()" for better error-messages (missing parameter etc.)
 	 * makes debugging a whole lot more comfortable

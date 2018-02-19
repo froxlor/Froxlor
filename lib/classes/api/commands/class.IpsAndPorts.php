@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    Panel
+ *
+ */
 class IpsAndPorts extends ApiCommand implements ResourceEntity
 {
 
@@ -31,8 +45,9 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	/**
 	 * return an ip/port entry by id
 	 *
-	 * @param int $id ip-port-id
-	 *
+	 * @param int $id
+	 *        	ip-port-id
+	 *        	
 	 * @throws Exception
 	 * @return array
 	 */
@@ -58,7 +73,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
-
+			
 			$ip = validate_ip2($this->getParam('ip'), false, 'invalidip', false, false, false, true);
 			$port = validate($this->getParam('port', true, 80), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
 				'stringisempty',
@@ -203,7 +218,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			$vhostcontainer = $this->getParam('vhostcontainer', true, $result['vhostcontainer']);
 			$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, $result['specialsettings'])), 'specialsettings', '/^[^\0]*$/', '', array(), true);
 			$vhostcontainer_servername_statement = $this->getParam('vhostcontainer_servername_statement', true, $result['vhostcontainer_servername_statement']);
-			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain',true,  $result['default_vhostconf_domain'])), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
+			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, $result['default_vhostconf_domain'])), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
 			$docroot = validate($this->getParam('docroot', true, $result['docroot']), 'docroot', '', '', array(), true);
 			
 			if ((int) Settings::Get('system.use_ssl') == 1) {
@@ -331,8 +346,9 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	/**
 	 * delete an ip/port entry by id
 	 *
-	 * @param int $id ip-port-id
-	 *
+	 * @param int $id
+	 *        	ip-port-id
+	 *        	
 	 * @throws Exception
 	 * @return array
 	 */

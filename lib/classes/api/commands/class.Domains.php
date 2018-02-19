@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    Panel
+ *
+ */
 class Domains extends ApiCommand implements ResourceEntity
 {
 
@@ -1525,7 +1539,10 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *
 	 * @param int $id
 	 *        	domain-id
-	 * @param bool $delete_mainsubdomains optional, remove also domains that are subdomains of this domain but added as main domains; default false
+	 * @param bool $delete_mainsubdomains
+	 *        	optional, remove also domains that are subdomains of this domain but added as main domains; default false
+	 * @param bool $is_stdsubdomain
+	 *        	optional, default false, specify whether it's a std-subdomain you are deleting as it does not count as subdomain-resource
 	 *        	
 	 * @throws Exception
 	 * @return array
@@ -1534,11 +1551,11 @@ class Domains extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id');
+			$is_stdsubdomain = $this->getParam('is_stdsubdomain', true, 0);
 			$remove_subbutmain_domains = $this->getParam('delete_mainsubdomains', true, 0);
-
+			
 			$json_result = Domains::getLocal($this->getUserData(), array(
-				'id' => $id,
-				'no_std_subdomain' => true
+				'id' => $id
 			))->get();
 			$result = json_decode($json_result, true)['data'];
 			
@@ -1547,7 +1564,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			if ($remove_subbutmain_domains) {
 				$rsd_sql .= " OR `ismainbutsubto` = :id";
 			}
-
+			
 			$subresult_stmt = Database::prepare("
 					SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE (`id` = :id OR `parentdomainid` = :id " . $rsd_sql . ")");
@@ -1595,22 +1612,24 @@ class Domains extends ApiCommand implements ResourceEntity
 			
 			$deleted_domains = $del_stmt->rowCount();
 			
-			$upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
-					`subdomains_used` = `subdomains_used` - :domaincount
-					WHERE `customerid` = :customerid");
-			Database::pexecute($upd_stmt, array(
-				'domaincount' => ($deleted_domains - 1),
-				'customerid' => $result['customerid']
-			), true, true);
-			
-			$upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_ADMINS . "` SET
-					`domains_used` = `domains_used` - 1
-					WHERE `adminid` = :adminid");
-			Database::pexecute($upd_stmt, array(
-				'adminid' => $this->getUserDetail('adminid')
-			), true, true);
+			if ($is_stdsubdomain == 0) {
+				$upd_stmt = Database::prepare("
+						UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+						`subdomains_used` = `subdomains_used` - :domaincount
+						WHERE `customerid` = :customerid");
+				Database::pexecute($upd_stmt, array(
+					'domaincount' => ($deleted_domains - 1),
+					'customerid' => $result['customerid']
+				), true, true);
+				
+				$upd_stmt = Database::prepare("
+						UPDATE `" . TABLE_PANEL_ADMINS . "` SET
+						`domains_used` = `domains_used` - 1
+						WHERE `adminid` = :adminid");
+				Database::pexecute($upd_stmt, array(
+					'adminid' => $this->getUserDetail('adminid')
+				), true, true);
+			}
 			
 			$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET

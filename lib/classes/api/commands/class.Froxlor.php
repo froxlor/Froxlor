@@ -1,19 +1,91 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    Panel
+ *
+ */
 class Froxlor extends ApiCommand
 {
+
+	public function checkUpdate()
+	{
+		global $version, $branding;
+		
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+			// log our actions
+			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
+			
+			// check for new version
+			define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $version);
+			$latestversion = HttpClient::urlGet(UPDATE_URI);
+			$latestversion = explode('|', $latestversion);
+			
+			if (is_array($latestversion) && count($latestversion) >= 1) {
+				$_version = $latestversion[0];
+				$_message = isset($latestversion[1]) ? $latestversion[1] : '';
+				$_link = isset($latestversion[2]) ? $latestversion[2] : '';
+				
+				// add the branding so debian guys are not gettings confused
+				// about their version-number
+				$version_label = $_version . $branding;
+				$version_link = $_link;
+				$message_addinfo = $_message;
+				
+				// not numeric -> error-message
+				if (! preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
+					// check for customized version to not output
+					// "There is a newer version of froxlor" besides the error-message
+					$isnewerversion = - 1;
+				} elseif (version_compare2($version, $_version) == - 1) {
+					// there is a newer version - yay
+					$isnewerversion = 1;
+				} else {
+					// nothing new
+					$isnewerversion = 0;
+				}
+				
+				// anzeige über version-status mit ggfls. formular
+				// zum update schritt #1 -> download
+				if ($isnewerversion == 1) {
+					$text = 'There is a newer version available: "' . $_version . '" (Your current version is: ' . $version . ')';
+					return $this->response(200, "successfull", array(
+						'message' => $text,
+						'link' => $version_link,
+						'additional_info' => $message_addinfo
+					));
+				} elseif ($isnewerversion == 0) {
+					// all good
+					standard_success('noupdatesavail', '', array(), true);
+				} else {
+					standard_error('customized_version', '', true);
+				}
+			}
+		}
+		throw new Exception("Not allowed to execute given command.", 403);
+	}
 
 	/**
 	 * returns a list of all available api functions
 	 *
-	 * @param string $module optional, return list of functions for a specific module
+	 * @param string $module
+	 *        	optional, return list of functions for a specific module
 	 *        	
 	 * @throws Exception
 	 * @return array
 	 */
 	public function listFunctions()
 	{
-		$module = $this->getParam('module');
+		$module = $this->getParam('module', true, '');
 		
 		$functions = array();
 		if ($module != null) {
@@ -87,7 +159,7 @@ class Froxlor extends ApiCommand
 	private function _getParamListFromDoc($module = null, $function = null)
 	{
 		try {
-			// set the module to be in our namespace
+			// set the module
 			$cls = new \ReflectionMethod($module, $function);
 			$comment = $cls->getDocComment();
 			if ($comment == false) {
@@ -95,6 +167,7 @@ class Froxlor extends ApiCommand
 					'head' => 'There is no comment-block for "' . $module . '.' . $function . '"'
 				);
 			}
+
 			$clines = explode("\n", $comment);
 			$result = array();
 			$result['params'] = array();
