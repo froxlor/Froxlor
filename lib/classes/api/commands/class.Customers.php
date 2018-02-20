@@ -97,7 +97,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				$name = $this->getParam('name', true, '');
 				$firstname = $this->getParam('firstname', true, '');
 				$company_required = (! empty($name) && empty($firstname)) || (empty($name) && ! empty($firstname)) || (empty($name) && empty($firstname));
-				$company = $this->getParam('company', $company_required, '');
+				$company = $this->getParam('company', ($company_required ? false : true), '');
 				$street = $this->getParam('street', true, '');
 				$zipcode = $this->getParam('zipcode', true, '');
 				$city = $this->getParam('city', true, '');
