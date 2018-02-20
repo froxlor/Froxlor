@@ -92,11 +92,11 @@ class Customers extends ApiCommand implements ResourceEntity
 				
 				// required parameters
 				$email = $this->getParam('email');
-
+				
 				// parameters
 				$name = $this->getParam('name', true, '');
 				$firstname = $this->getParam('firstname', true, '');
-				$company_required = (empty($name) && empty($firstname));
+				$company_required = (! empty($name) && empty($firstname)) || (empty($name) && ! empty($firstname)) || (empty($name) && empty($firstname));
 				$company = $this->getParam('company', $company_required, '');
 				$street = $this->getParam('street', true, '');
 				$zipcode = $this->getParam('zipcode', true, '');
@@ -654,7 +654,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			
 			// parameters
 			$move_to_admin = intval_ressource($this->getParam('move_to_admin', true, 0));
-
+			
 			$idna_convert = new idna_convert_wrapper();
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 			$name = $this->getParam('name', true, $result['name']);
@@ -670,7 +670,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$gender = intval_ressource($this->getParam('gender', true, $result['gender']));
 			$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
 			$custom_notes_show = $this->getParam('custom_notes_show', true, $result['custom_notes_show']);
-
+			
 			$dec_places = Settings::Get('panel.decimal_places');
 			$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, round($result['diskspace'] / 1024, $dec_places));
 			$traffic = $this->getUlParam('traffic', 'traffic_ul', true, round($result['traffic'] / (1024 * 1024), $dec_places));
@@ -692,7 +692,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$perlenabled = $this->getParam('perlenabled', true, $result['perlenabled']);
 			$dnsenabled = $this->getParam('dnsenabled', true, $result['dnsenabled']);
 			$deactivated = $this->getParam('deactivated', true, $result['deactivated']);
-
+			
 			// validation
 			$idna_convert = new idna_convert_wrapper();
 			$name = validate($name, 'name', '', '', array(), true);
@@ -707,15 +707,15 @@ class Customers extends ApiCommand implements ResourceEntity
 			$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
 			$def_language = validate($def_language, 'default language', '', '', array(), true);
 			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
-
+			
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$email_quota = - 1;
 			}
-
+			
 			if (Settings::Get('ticket.enabled') != '1') {
 				$tickets = - 1;
 			}
-
+			
 			// Either $name and $firstname or the $company must be inserted
 			if ($name == '' && $company == '') {
 				standard_error(array(
