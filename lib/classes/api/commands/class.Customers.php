@@ -52,10 +52,12 @@ class Customers extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * return a customer entry by id
+	 * return a customer entry by either id or loginname
 	 *
 	 * @param int $id
-	 *        	customer-id
+	 *        	optional, the customer-id
+	 * @param string $loginname
+	 *        	optional, the loginname
 	 *        	
 	 * @throws Exception
 	 * @return array
@@ -63,13 +65,20 @@ class Customers extends ApiCommand implements ResourceEntity
 	public function get()
 	{
 		if ($this->isAdmin()) {
-			$id = $this->getParam('id');
+			$id = $this->getParam('id', true, 0);
+			$ln_optional = ($id <= 0 ? false : true);
+			$loginname = $this->getParam('loginname', $ln_optional, '');
+
+			if ($id <= 0 && empty($loginname)) {
+				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
+			}
+
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get customer #" . $id);
 			$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE `customerid` = :id" . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
+			WHERE ".($id > 0 ? "`customerid` = :idln" : "`loginname` = :idln") . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
 			$params = array(
-				'id' => $id
+				'idln' => ($id <= 0 ? $loginname : $id)
 			);
 			if ($this->getUserDetail('customers_see_all') == '0') {
 				$params['adminid'] = $this->getUserDetail('adminid');
@@ -1096,10 +1105,12 @@ class Customers extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * delete a customer entry by id
+	 * delete a customer entry by either id or loginname
 	 *
 	 * @param int $id
-	 *        	customer-id
+	 *        	optional, the customer-id
+	 * @param string $loginname
+	 *        	optional, the loginname
 	 * @param bool $delete_userfiles
 	 *        	optional, default false
 	 *        	
@@ -1109,13 +1120,21 @@ class Customers extends ApiCommand implements ResourceEntity
 	public function delete()
 	{
 		if ($this->isAdmin()) {
-			$id = $this->getParam('id');
+			$id = $this->getParam('id', true, 0);
+			$ln_optional = ($id <= 0 ? false : true);
+			$loginname = $this->getParam('loginname', $ln_optional, '');
 			$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
-			
+
+			if ($id <= 0 && empty($loginname)) {
+				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
+			}
+
 			$json_result = Customers::getLocal($this->getUserData(), array(
-				'id' => $id
+				'id' => $id,
+				'loginname' => $loginname
 			))->get();
 			$result = json_decode($json_result, true)['data'];
+			$id = $result['customerid'];
 			
 			// @fixme use Databases-ApiCommand later
 			$databases_stmt = Database::prepare("

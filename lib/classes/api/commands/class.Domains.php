@@ -52,10 +52,12 @@ class Domains extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * return a domain entry by id
+	 * return a domain entry by either id or domainname
 	 *
 	 * @param int $id
-	 *        	domain-id
+	 *        	optional, the domain-id
+	 * @param string $domainname
+	 *        	optional, the domainname
 	 * @param boolean $no_std_subdomain
 	 *        	optional, default false
 	 *        	
@@ -65,17 +67,30 @@ class Domains extends ApiCommand implements ResourceEntity
 	public function get()
 	{
 		if ($this->isAdmin()) {
-			$id = $this->getParam('id');
+			$id = $this->getParam('id', true, 0);
+			$dn_optional = ($id <= 0 ? false : true);
+			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$no_std_subdomain = $this->getParam('no_std_subdomain', true, false);
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get domain #" . $id);
+
+			if ($id <= 0 && empty($domainname)) {
+				throw new Exception("Either 'id' or 'domainname' parameter must be given", 406);
+			}
+
+			// convert possible idn domain to punycode
+			if (substr($domainname, 0, 4) != 'xn--') {
+				$idna_convert = new idna_convert_wrapper();
+				$domainname = $idna_convert->encode($domainname);
+			}
+
 			$result_stmt = Database::prepare("
 				SELECT `d`.*, `c`.`customerid`
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 				WHERE `d`.`parentdomainid` = '0'
-				AND `d`.`id` = :id" . ($no_std_subdomain ? ' AND `d.`id` <> `c`.`standardsubdomain`' : '') . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid"));
+				AND ".($id > 0 ? "`d`.`id` = :iddn" : "`d`.`domain` = :iddn") . ($no_std_subdomain ? ' AND `d.`id` <> `c`.`standardsubdomain`' : '') . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid"));
 			$params = array(
-				'id' => $id
+				'iddn' => ($id <= 0 ? $domainname : $id)
 			);
 			if ($this->getUserDetail('customers_see_all') == '0') {
 				$params['adminid'] = $this->getUserDetail('adminid');
@@ -1539,10 +1554,12 @@ class Domains extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * delete a domain entry by id
+	 * delete a domain entry by either id or domainname
 	 *
 	 * @param int $id
-	 *        	domain-id
+	 *        	optional, the domain-id
+	 * @param string $domainname
+	 *        	optional, the domainname
 	 * @param bool $delete_mainsubdomains
 	 *        	optional, remove also domains that are subdomains of this domain but added as main domains; default false
 	 * @param bool $is_stdsubdomain
@@ -1554,14 +1571,22 @@ class Domains extends ApiCommand implements ResourceEntity
 	public function delete()
 	{
 		if ($this->isAdmin()) {
-			$id = $this->getParam('id');
+			$id = $this->getParam('id', true, 0);
+			$dn_optional = ($id <= 0 ? false : true);
+			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$is_stdsubdomain = $this->getParam('is_stdsubdomain', true, 0);
 			$remove_subbutmain_domains = $this->getParam('delete_mainsubdomains', true, 0);
-			
+
+			if ($id <= 0 && empty($domainname)) {
+				throw new Exception("Either 'id' or 'domainname' parameter must be given", 406);
+			}
+
 			$json_result = Domains::getLocal($this->getUserData(), array(
-				'id' => $id
+				'id' => $id,
+				'domainname' => $domainname
 			))->get();
 			$result = json_decode($json_result, true)['data'];
+			$id = $result['id'];
 			
 			// check for deletion of main-domains which are logically subdomains, #329
 			$rsd_sql = '';
