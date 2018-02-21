@@ -540,6 +540,7 @@ opcache.interned_strings_buffer'),
 	('system', 'mysql_access_host', 'localhost'),
 	('system', 'lastcronrun', ''),
 	('system', 'defaultip', '1'),
+	('system', 'defaultsslip', ''),
 	('system', 'phpappendopenbasedir', '/tmp/'),
 	('system', 'deactivateddocroot', ''),
 	('system', 'mailpwcleartext', '1'),
@@ -689,7 +690,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201802150');
+	('panel', 'db_version', '201802210');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

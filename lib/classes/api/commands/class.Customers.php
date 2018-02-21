@@ -751,8 +751,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						'adminid' => $this->getUserDetail('adminid'),
 						'docroot' => $result['documentroot'],
 						'phpenabled' => $phpenabled,
-						'openbasedir' => '1',
-						'ipandport' => explode(',', Settings::Get('system.defaultip'))
+						'openbasedir' => '1'
 					);
 					$domainid = - 1;
 					try {

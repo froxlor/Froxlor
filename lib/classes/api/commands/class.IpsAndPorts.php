@@ -370,7 +370,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			), true, true);
 			
 			if ($result_checkdomain['id'] == '') {
-				if (! in_array($result['id'], explode(',', Settings::Get('system.defaultip')))) {
+				if (! in_array($result['id'], explode(',', Settings::Get('system.defaultip'))) && ! in_array($result['id'], explode(',', Settings::Get('system.defaultsslip')))) {
 					
 					$result_sameipotherport_stmt = Database::prepare("
 						SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`

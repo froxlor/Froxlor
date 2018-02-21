@@ -124,7 +124,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, - 1);
 				$ssl_redirect = $this->getParam('ssl_redirect', true, 0);
 				$letsencrypt = $this->getParam('letsencrypt', true, 0);
-				$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, array());
+				$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, explode(',', Settings::Get('system.defaultsslip')));
 				$http2 = $this->getParam('http2', true, 0);
 				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
 				$hsts_sub = $this->getParam('hsts_sub', true, 0);
@@ -312,7 +312,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 
 				if (empty($p_ipandports)) {
-					throw new Exception("No IPs given, unable to add domain (no default IPs set?", 406);
+					throw new Exception("No IPs given, unable to add domain (no default IPs set?)", 406);
 				}
 
 				$ipandports = array();

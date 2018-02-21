@@ -14,7 +14,7 @@
  * @package    Install
  *
  */
-if (!defined('_CRON_UPDATE')) {
+if (! defined('_CRON_UPDATE')) {
 	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
 		header('Location: ../../../../index.php');
 		exit();
@@ -25,4 +25,13 @@ if (isFroxlorVersion('0.9.39.5')) {
 	
 	showUpdateStep("Updating from 0.9.39.5 to 0.10.0", false);
 	updateToVersion('0.10.0');
+}
+
+if (isDatabaseVersion('201802150')) {
+
+	showUpdateStep("Adding new default-ssl-ip setting");
+	Settings::AddNew('system.defaultsslip', '');
+	lastStepStatus(0);
+
+	updateToDbVersion('201802210');
 }

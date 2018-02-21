@@ -184,6 +184,20 @@ abstract class ApiCommand
 		return $this->cmd_params[$param];
 	}
 
+	/**
+	 * get specific parameter which also has and unlimited-field
+	 *
+	 * @param string $param
+	 *        	parameter to get out of the request-parameter list
+	 * @param string $ul_field
+	 *        	parameter to get out of the request-parameter list
+	 * @param bool $optional
+	 *        	default: false
+	 * @param mixed $default
+	 *        	value which is returned if optional=true and param is not set
+	 *        	
+	 * @return mixed
+	 */
 	protected function getUlParam($param = null, $ul_field = null, $optional = false, $default = 0)
 	{
 		$param_value = intval_ressource($this->getParam($param, $optional, $default));

@@ -62,3 +62,7 @@ function getIpPortCombinations($ssl = false) {
 
 	return $system_ipaddress_array;
 }
+
+function getSslIpPortCombinations() {
+	return getIpPortCombinations(true);
+}
