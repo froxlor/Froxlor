@@ -540,6 +540,7 @@ opcache.interned_strings_buffer'),
 	('system', 'mysql_access_host', 'localhost'),
 	('system', 'lastcronrun', ''),
 	('system', 'defaultip', '1'),
+	('system', 'defaultsslip', ''),
 	('system', 'phpappendopenbasedir', '/tmp/'),
 	('system', 'deactivateddocroot', ''),
 	('system', 'mailpwcleartext', '1'),
@@ -656,6 +657,7 @@ opcache.interned_strings_buffer'),
 	('system', 'nssextrausers', '0'),
 	('system', 'disable_le_selfcheck', '0'),
 	('system', 'ssl_protocols', 'TLSv1,TLSv1.2'),
+	('api', 'enabled', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -687,8 +689,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
-	('panel', 'version', '0.9.39.5'),
-	('panel', 'db_version', '201802130');
+	('panel', 'version', '0.10.0'),
+	('panel', 'db_version', '201802210');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -1040,5 +1042,20 @@ CREATE TABLE `panel_plans` (
   `ts` int(15) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY adminid (adminid)
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+DROP TABLE IF EXISTS `api_keys`;
+CREATE TABLE `api_keys` (
+  `id` int(11) NOT NULL auto_increment,
+  `adminid` int(11) NOT NULL default '0',
+  `customerid` int(11) NOT NULL default '0',
+  `apikey` varchar(500) NOT NULL default '',
+  `secret` varchar(500) NOT NULL default '',
+  `allowed_from` text NOT NULL,
+  `valid_until` int(15) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY adminid (adminid),
+  KEY customerid (customerid)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 

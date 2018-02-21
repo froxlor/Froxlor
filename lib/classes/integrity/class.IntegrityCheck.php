@@ -126,10 +126,12 @@ class IntegrityCheck {
 			// Cache all IPs the admins have assigned
 			$adm_stmt = Database::prepare("SELECT `adminid`, `ip` FROM `" . TABLE_PANEL_ADMINS . "` ORDER BY `adminid` ASC");
 			Database::pexecute($adm_stmt);
+			$default_ips = explode(',', Settings::Get('system.defaultip'));
+			$default_ssl_ips = explode(',', Settings::Get('system.defaultsslip'));
 			while ($row = $adm_stmt->fetch(PDO::FETCH_ASSOC)) {
 				if ($row['ip'] < 0 || is_null($row['ip']) || empty($row['ip'])) {
 					// Admin uses default-IP
-					$admips[$row['adminid']] = explode(',', Settings::Get('system.defaultip'));
+					$admips[$row['adminid']] = array_merge($default_ips, $default_ssl_ips);
 				} else {
 					$admips[$row['adminid']] = array($row['ip']);
 				}

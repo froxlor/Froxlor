@@ -3939,3 +3939,29 @@ if (isFroxlorVersion('0.9.39.4')) {
 	showUpdateStep("Updating from 0.9.39.4 to 0.9.39.5", false);
 	updateToVersion('0.9.39.5');
 }
+
+if (isDatabaseVersion('201802130')) {
+
+	showUpdateStep("Adding new api keys table");
+	Database::query("DROP TABLE IF EXISTS `api_keys`;");
+	$sql = "CREATE TABLE `api_keys` (
+	  `id` int(11) NOT NULL auto_increment,
+	  `adminid` int(11) NOT NULL default '0',
+	  `customerid` int(11) NOT NULL default '0',
+	  `apikey` varchar(500) NOT NULL default '',
+	  `secret` varchar(500) NOT NULL default '',
+	  `allowed_from` text NOT NULL,
+	  `valid_until` int(15) NOT NULL default '0',
+	  PRIMARY KEY  (id),
+	  KEY adminid (adminid),
+	  KEY customerid (customerid)
+	) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new api settings");
+	Settings::AddNew('api.enabled', 0);
+	lastStepStatus(0);
+
+	updateToDbVersion('201802150');
+}

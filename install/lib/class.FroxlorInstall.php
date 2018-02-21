@@ -1013,7 +1013,17 @@ class FroxlorInstall
 		} else {
 			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
 		}
+
+		// check for json extension
+		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpjson']);
 		
+		if (! extension_loaded('json')) {
+			$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
+			$_die = true;
+		} else {
+			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
+		}
+
 		// check for bcmath extension
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpbcmath']);
 		
@@ -1028,15 +1038,6 @@ class FroxlorInstall
 		
 		if (! extension_loaded('zip')) {
 			$content .= $this->_status_message('orange', $this->_lng['requirements']['notinstalled'] . "<br />" . $this->_lng['requirements']['zipdescription']);
-		} else {
-			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
-		}
-
-		// check for json extension
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpjson']);
-		
-		if (! extension_loaded('json')) {
-			$content .= $this->_status_message('orange', $this->_lng['requirements']['notinstalled'] . "<br />" . $this->_lng['requirements']['jsondescription']);
 		} else {
 			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
 		}

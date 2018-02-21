@@ -23,7 +23,7 @@
  * @return mixed 	ip address on success, standard_error on failure
  * @deprecated use validate_ip2
  */
-function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
+function validate_ip($ip, $return_bool = false, $lng = 'invalidip', $throw_exception = false) {
 
 	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false
 			&& filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false
@@ -32,7 +32,7 @@ function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
 		if ($return_bool) {
 			return false;
 		} else {
-			standard_error($lng, $ip);
+			standard_error($lng, $ip, $throw_exception);
 			exit();
 		}
 	} else {
@@ -53,7 +53,7 @@ function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
  *
  * @return string|bool ip address on success, false on failure
  */
-function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false) {
+function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $throw_exception = false) {
 
 	$cidr = "";
 	if ($allow_cidr) {
@@ -69,7 +69,7 @@ function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_loca
 		if ($return_bool) {
 			return false;
 		} else {
-			standard_error($lng, $ip);
+			standard_error($lng, $ip, $throw_exception);
 			exit();
 		}
 	}
@@ -91,7 +91,7 @@ function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_loca
 	if ($return_bool) {
 		return false;
 	} else {
-		standard_error($lng, $ip);
+		standard_error($lng, $ip, $throw_exception);
 		exit();
 	}
 }

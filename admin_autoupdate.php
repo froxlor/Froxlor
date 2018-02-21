@@ -21,7 +21,7 @@ define('AREA', 'admin');
 require './lib/init.php';
 
 // define update-uri
-define('UPDATE_URI', "https://version.froxlor.org/Froxlor/legacy/" . $version);
+define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $version);
 define('RELEASE_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip");
 define('CHECKSUM_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip.sha256");
 

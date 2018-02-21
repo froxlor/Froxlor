@@ -30,13 +30,13 @@ class FileLogger extends AbstractLogger {
 
 	/**
 	 * Logfile
-	 * @var logfile
+	 * @var string
 	*/
 	private $logfile = null;
 
 	/**
 	 * Syslogger Objects Array
-	 * @var loggers
+	 * @var FileLogger[]
 	 */
 	static private $loggers = array();
 

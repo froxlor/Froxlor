@@ -48,6 +48,7 @@ class SImExporter
 		'system.mysql_access_host',
 		'system.lastcronrun',
 		'system.defaultip',
+		'system.defaultsslip'.
 		'system.last_tasks_run',
 		'system.last_archive_run',
 		'system.leprivatekey',

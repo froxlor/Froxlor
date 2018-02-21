@@ -60,6 +60,16 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingDefaultIp',
 					),
+				'system_defaultsslip' => array(
+					'label' => $lng['serversettings']['defaultsslip'],
+					'settinggroup' => 'system',
+					'varname' => 'defaultsslip',
+					'type' => 'option',
+					'option_mode' => 'multiple',
+					'option_options_method' => 'getSslIpPortCombinations',
+					'default' => '',
+					'save_method' => 'storeSettingDefaultSslIp',
+					),
 				'system_hostname' => array(
 					'label' => $lng['serversettings']['hostname'],
 					'settinggroup' => 'system',
