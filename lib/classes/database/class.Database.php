@@ -71,7 +71,7 @@ class Database {
 		try {
 			$stmt->execute($params);
 		} catch (PDOException $e) {
-			self::_showerror($e, $showerror, $json_response);
+			self::_showerror($e, $showerror, $json_response, $stmt);
 		}
 	}
 
@@ -309,7 +309,7 @@ class Database {
 	 * @param PDOException $error
 	 * @param bool $showerror if set to false, the error will be logged but we go on
 	 */
-	private static function _showerror($error, $showerror = true, $json_response = false) {
+	private static function _showerror($error, $showerror = true, $json_response = false, PDOStatement $stmt = null) {
 		global $userinfo, $theme, $linker;
 
 		// include userdata.inc.php
@@ -374,6 +374,8 @@ class Database {
 		if ($showerror) {
 			if (empty($sql['debug'])) {
 				$error_trace = '';
+			} elseif (!is_null($stmt)) {
+				$error_trace .= "<br><br>".$stmt->queryString;
 			}
 
 			// fallback

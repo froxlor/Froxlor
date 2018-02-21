@@ -95,23 +95,35 @@ function storeSettingDefaultSslIp($fieldname, $fielddata, $newfieldvalue) {
 		if (count($ids) > 0) {
 			$defaultips_new = explode(',', $newfieldvalue);
 
+			if (!empty($defaultips_old) && !empty($newfieldvalue))
+			{
+				$in_value = $defaultips_old . ", " . $newfieldvalue;
+			} elseif (!empty($defaultips_old) && empty($newfieldvalue))
+			{
+				$in_value = $defaultips_old;
+			} else {
+				$in_value = $newfieldvalue;
+			}
+
 			// Delete the existing mappings linking to default IPs
 			$del_stmt = Database::prepare("
 					DELETE FROM `" . TABLE_DOMAINTOIP . "`
 					WHERE `id_domain` IN (" . implode(', ', $ids) . ")
-					AND `id_ipandports` IN (" . $defaultips_old . ", " . $newfieldvalue . ")
+					AND `id_ipandports` IN (" . $in_value . ")
 			");
 			Database::pexecute($del_stmt);
 
-			// Insert the new mappings
-			$ins_stmt = Database::prepare("
-				INSERT INTO `" . TABLE_DOMAINTOIP . "`
-				SET `id_domain` = :domainid, `id_ipandports` = :ipandportid
-			");
+			if (count($defaultips_new) > 0) {
+				// Insert the new mappings
+				$ins_stmt = Database::prepare("
+					INSERT INTO `" . TABLE_DOMAINTOIP . "`
+					SET `id_domain` = :domainid, `id_ipandports` = :ipandportid
+				");
 
-			foreach ($ids as $id) {
-				foreach ($defaultips_new as $defaultip_new) {
-					Database::pexecute($ins_stmt, array('domainid' => $id, 'ipandportid' => $defaultip_new));
+				foreach ($ids as $id) {
+					foreach ($defaultips_new as $defaultip_new) {
+						Database::pexecute($ins_stmt, array('domainid' => $id, 'ipandportid' => $defaultip_new));
+					}
 				}
 			}
 		}

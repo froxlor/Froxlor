@@ -64,5 +64,6 @@ function getIpPortCombinations($ssl = false) {
 }
 
 function getSslIpPortCombinations() {
-	return getIpPortCombinations(true);
+	global $lng;
+	return array('' => $lng['panel']['none_value']) + getIpPortCombinations(true);
 }
