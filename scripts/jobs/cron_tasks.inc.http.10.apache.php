@@ -66,7 +66,8 @@ class apache extends HttpConfigBase
 			foreach ($restart_cmds as $restart_cmd) {
 				// check whether the config dir is empty (no domains uses this daemon)
 				// so we need to create a dummy
-				$isDirEmpty = !(new \FilesystemIterator($restart_cmd['config_dir']))->valid();
+				$fsi = new \FilesystemIterator($restart_cmd['config_dir']);
+				$isDirEmpty = !$fsi->valid();
 				if ($isDirEmpty) {
 					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
 					phpinterface_fpm::createDummyPool($restart_cmd['config_dir']);

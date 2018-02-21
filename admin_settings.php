@@ -319,6 +319,12 @@ elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1')
 				} catch(Exception $e) {
 					dynamic_error($e->getMessage());
 				}
+				inserttask('1');
+				inserttask('10');
+				// Using nameserver, insert a task which rebuilds the server config
+				inserttask('4');
+				// cron.d file
+				inserttask('99');
 				standard_success('settingsimported', '', array('filename' => 'admin_settings.php'));
 			}
 			dynamic_error("Upload failed");
