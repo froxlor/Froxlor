@@ -27,10 +27,11 @@ class Customers extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list customers");
 			$result_stmt = Database::prepare("
-			SELECT `c`.*, `a`.`loginname` AS `adminname`
-			FROM `" . TABLE_PANEL_CUSTOMERS . "` `c`, `" . TABLE_PANEL_ADMINS . "` `a`
-			WHERE " . ($this->getUserDetail('customers_see_all') ? '' : " `c`.`adminid` = :adminid AND ") . "
-			`c`.`adminid` = `a`.`adminid`
+				SELECT `c`.*, `a`.`loginname` AS `adminname`
+				FROM `" . TABLE_PANEL_CUSTOMERS . "` `c`, `" . TABLE_PANEL_ADMINS . "` `a`
+				WHERE " . ($this->getUserDetail('customers_see_all') ? '' : " `c`.`adminid` = :adminid AND ") . "
+				`c`.`adminid` = `a`.`adminid`
+				ORDER BY `c`.`loginname` ASC
 			");
 			$params = array();
 			if ($this->getUserDetail('customers_see_all') == '0') {
@@ -68,15 +69,14 @@ class Customers extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-
+			
 			if ($id <= 0 && empty($loginname)) {
 				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
 			}
-
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get customer #" . $id);
+			
 			$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE ".($id > 0 ? "`customerid` = :idln" : "`loginname` = :idln") . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
+			WHERE " . ($id > 0 ? "`customerid` = :idln" : "`loginname` = :idln") . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
 			$params = array(
 				'idln' => ($id <= 0 ? $loginname : $id)
 			);
@@ -85,9 +85,11 @@ class Customers extends ApiCommand implements ResourceEntity
 			}
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
+				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get customer '" . $result['loginname'] . "'");
 				return $this->response(200, "successfull", $result);
 			}
-			throw new Exception("Customer with id #" . $id . " could not be found", 404);
+			$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
+			throw new Exception("Customer with " . $key . " could not be found", 404);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
@@ -1124,11 +1126,11 @@ class Customers extends ApiCommand implements ResourceEntity
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
 			$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
-
+			
 			if ($id <= 0 && empty($loginname)) {
 				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
 			}
-
+			
 			$json_result = Customers::getLocal($this->getUserData(), array(
 				'id' => $id,
 				'loginname' => $loginname

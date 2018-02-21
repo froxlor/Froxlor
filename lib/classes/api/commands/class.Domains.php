@@ -72,23 +72,23 @@ class Domains extends ApiCommand implements ResourceEntity
 			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$no_std_subdomain = $this->getParam('no_std_subdomain', true, false);
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get domain #" . $id);
-
+			
 			if ($id <= 0 && empty($domainname)) {
 				throw new Exception("Either 'id' or 'domainname' parameter must be given", 406);
 			}
-
+			
 			// convert possible idn domain to punycode
 			if (substr($domainname, 0, 4) != 'xn--') {
 				$idna_convert = new idna_convert_wrapper();
 				$domainname = $idna_convert->encode($domainname);
 			}
-
+			
 			$result_stmt = Database::prepare("
 				SELECT `d`.*, `c`.`customerid`
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 				WHERE `d`.`parentdomainid` = '0'
-				AND ".($id > 0 ? "`d`.`id` = :iddn" : "`d`.`domain` = :iddn") . ($no_std_subdomain ? ' AND `d.`id` <> `c`.`standardsubdomain`' : '') . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid"));
+				AND " . ($id > 0 ? "`d`.`id` = :iddn" : "`d`.`domain` = :iddn") . ($no_std_subdomain ? ' AND `d.`id` <> `c`.`standardsubdomain`' : '') . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid"));
 			$params = array(
 				'iddn' => ($id <= 0 ? $domainname : $id)
 			);
@@ -99,7 +99,8 @@ class Domains extends ApiCommand implements ResourceEntity
 			if ($result) {
 				return $this->response(200, "successfull", $result);
 			}
-			throw new Exception("Domain with id #" . $id . " could not be found", 404);
+			$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
+			throw new Exception("Domain with " . $key . " could not be found", 404);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
@@ -325,11 +326,11 @@ class Domains extends ApiCommand implements ResourceEntity
 					$additional_ip_condition = '';
 					$aip_param = array();
 				}
-
+				
 				if (empty($p_ipandports)) {
 					throw new Exception("No IPs given, unable to add domain (no default IPs set?)", 406);
 				}
-
+				
 				$ipandports = array();
 				if (! empty($p_ipandport) && ! is_array($p_ipandports)) {
 					$p_ipandports = unserialize($p_ipandports);
@@ -1576,11 +1577,11 @@ class Domains extends ApiCommand implements ResourceEntity
 			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$is_stdsubdomain = $this->getParam('is_stdsubdomain', true, 0);
 			$remove_subbutmain_domains = $this->getParam('delete_mainsubdomains', true, 0);
-
+			
 			if ($id <= 0 && empty($domainname)) {
 				throw new Exception("Either 'id' or 'domainname' parameter must be given", 406);
 			}
-
+			
 			$json_result = Domains::getLocal($this->getUserData(), array(
 				'id' => $id,
 				'domainname' => $domainname
