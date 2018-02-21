@@ -97,9 +97,9 @@ class Domains extends ApiCommand implements ResourceEntity
 				// parameters
 				$p_domain = $this->getParam('domain');
 				$customerid = intval($this->getParam('customerid'));
-				$p_ipandports = $this->getParam('ipandport');
 				
 				// optional parameters
+				$p_ipandports = $this->getParam('ipandport', true, explode(',', Settings::Get('system.defaultip')));
 				$adminid = intval($this->getParam('adminid', true, $this->getUserDetail('adminid')));
 				$subcanemaildomain = $this->getParam('subcanemaildomain', true, 0);
 				$isemaildomain = $this->getParam('isemaildomain', true, 0);
@@ -310,7 +310,11 @@ class Domains extends ApiCommand implements ResourceEntity
 					$additional_ip_condition = '';
 					$aip_param = array();
 				}
-				
+
+				if (empty($p_ipandports)) {
+					throw new Exception("No IPs given, unable to add domain (no default IPs set?", 406);
+				}
+
 				$ipandports = array();
 				if (! empty($p_ipandport) && ! is_array($p_ipandports)) {
 					$p_ipandports = unserialize($p_ipandports);

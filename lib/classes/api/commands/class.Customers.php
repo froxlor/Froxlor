@@ -517,19 +517,9 @@ class Customers extends ApiCommand implements ResourceEntity
 							'domain' => $_stdsubdomain,
 							'customerid' => $customerid,
 							'adminid' => $this->getUserDetail('adminid'),
-							'parentdomainid' => '0',
 							'docroot' => $documentroot,
-							'adddate' => time(),
 							'phpenabled' => $phpenabled,
-							'zonefile' => '',
-							'isemaildomain' => '0',
-							'caneditdomain' => '0',
-							'openbasedir' => '1',
-							'speciallogfile' => '0',
-							'dkim_id' => '0',
-							'dkim_privkey' => '',
-							'dkim_pubkey' => '',
-							'ipandport' => explode(',', Settings::Get('system.defaultip'))
+							'openbasedir' => '1'
 						);
 						$domainid = - 1;
 						try {
@@ -759,18 +749,9 @@ class Customers extends ApiCommand implements ResourceEntity
 						'domain' => $_stdsubdomain,
 						'customerid' => $result['customerid'],
 						'adminid' => $this->getUserDetail('adminid'),
-						'parentdomainid' => '0',
 						'docroot' => $result['documentroot'],
-						'adddate' => time(),
 						'phpenabled' => $phpenabled,
-						'zonefile' => '',
-						'isemaildomain' => '0',
-						'caneditdomain' => '0',
 						'openbasedir' => '1',
-						'speciallogfile' => '0',
-						'dkim_id' => '0',
-						'dkim_privkey' => '',
-						'dkim_pubkey' => '',
 						'ipandport' => explode(',', Settings::Get('system.defaultip'))
 					);
 					$domainid = - 1;
