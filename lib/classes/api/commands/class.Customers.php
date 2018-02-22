@@ -646,12 +646,20 @@ class Customers extends ApiCommand implements ResourceEntity
 	public function update()
 	{
 		if ($this->isAdmin()) {
-			$id = $this->getParam('id');
-			
+			$id = $this->getParam('id', true, 0);
+			$ln_optional = ($id <= 0 ? false : true);
+			$loginname = $this->getParam('loginname', $ln_optional, '');
+
+			if ($id <= 0 && empty($loginname)) {
+				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
+			}
+
 			$json_result = Customers::getLocal($this->getUserData(), array(
-				'id' => $id
+				'id' => $id,
+				'loginname' => $loginname
 			))->get();
 			$result = json_decode($json_result, true)['data'];
+			$id = $result['customerid'];
 			
 			// parameters
 			$move_to_admin = intval_ressource($this->getParam('move_to_admin', true, 0));
@@ -1354,10 +1362,12 @@ class Customers extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * unlock a locked customer by id
+	 * unlock a locked customer by either id or loginname
 	 *
 	 * @param int $id
-	 *        	customer-id
+	 *        	optional, the customer-id
+	 * @param string $loginname
+	 *        	optional, the loginname
 	 *        	
 	 * @throws Exception
 	 * @return array
@@ -1365,12 +1375,20 @@ class Customers extends ApiCommand implements ResourceEntity
 	public function unlock()
 	{
 		if ($this->isAdmin()) {
-			$id = $this->getParam('id');
-			
+			$id = $this->getParam('id', true, 0);
+			$ln_optional = ($id <= 0 ? false : true);
+			$loginname = $this->getParam('loginname', $ln_optional, '');
+
+			if ($id <= 0 && empty($loginname)) {
+				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
+			}
+
 			$json_result = Customers::getLocal($this->getUserData(), array(
-				'id' => $id
+				'id' => $id,
+				'loginname' => $loginname
 			))->get();
 			$result = json_decode($json_result, true)['data'];
+			$id = $result['customerid'];
 			
 			$result_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET

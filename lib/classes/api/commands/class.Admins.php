@@ -95,7 +95,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 * delete a admin entry by either id or loginname
 	 *
 	 * @param int $id
-	 *        	optional, the customer-id
+	 *        	optional, the admin-id
 	 * @param string $loginname
 	 *        	optional, the loginname
 	 * @param bool $delete_userfiles
@@ -109,15 +109,46 @@ class Admins extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * unlock a locked admin by id
+	 * unlock a locked admin by either id or loginname
 	 *
 	 * @param int $id
-	 *        	customer-id
-	 *        	
+	 *        	optional, the admin-id
+	 * @param string $loginname
+	 *        	optional, the loginname
+	 *
 	 * @throws Exception
 	 * @return array
 	 */
 	public function unlock()
 	{
+		if ($this->isAdmin()) {
+			$id = $this->getParam('id', true, 0);
+			$ln_optional = ($id <= 0 ? false : true);
+			$loginname = $this->getParam('loginname', $ln_optional, '');
+
+			if ($id <= 0 && empty($loginname)) {
+				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
+			}
+
+			$json_result = Admins::getLocal($this->getUserData(), array(
+				'id' => $id,
+				'loginname' => $loginname
+			))->get();
+			$result = json_decode($json_result, true)['data'];
+			$id = $result['adminid'];
+
+			$result_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_ADMINS . "` SET
+				`loginfail_count` = '0'
+				WHERE `adminid`= :id
+			");
+			Database::pexecute($result_stmt, array(
+				'id' => $id
+			), true, true);
+
+			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] unlocked admin '" . $result['loginname'] . "'");
+			return $this->response(200, "successfull", $result);
+		}
+		throw new Exception("Not allowed to execute given command.", 403);
 	}
 }
