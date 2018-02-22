@@ -11,7 +11,8 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * @package    API
+ * @since      0.10.0
  *
  */
 class Admins extends ApiCommand implements ResourceEntity

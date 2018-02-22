@@ -11,14 +11,15 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * @package    API
+ * @since      0.10.0
  *
  */
 class FpmDaemons extends ApiCommand implements ResourceEntity
 {
 
 	/**
-	 * lists all php-config entries
+	 * lists all fpm-daemon entries
 	 *
 	 * @return array count|list
 	 */
@@ -66,6 +67,13 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * return a fpm-daemon entry by id
+	 *
+	 * @param int $id fpm-daemon-id
+	 *
+	 * @return array
+	 */
 	public function get()
 	{
 		if ($this->isAdmin()) {
@@ -238,6 +246,14 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * delete a fpm-daemon entry by id
+	 *
+	 * @param int $id fpm-daemon-id
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
 	public function delete()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {

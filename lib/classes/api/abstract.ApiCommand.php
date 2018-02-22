@@ -1,20 +1,76 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    API
+ * @since      0.10.0
+ *
+ */
 abstract class ApiCommand
 {
 
+	/**
+	 * debug flag
+	 *
+	 * @var boolean
+	 */
 	private $debug = true;
 
+	/**
+	 * is admin flag
+	 *
+	 * @var boolean
+	 */
 	private $is_admin = false;
 
+	/**
+	 * internal user data array
+	 *
+	 * @var array
+	 */
 	private $user_data = null;
 
+	/**
+	 * logger interface
+	 *
+	 * @var FroxlorLogger
+	 */
 	private $logger = null;
 
+	/**
+	 * mail interface
+	 *
+	 * @var PHPMailer
+	 */
 	private $mail = null;
 
+	/**
+	 * array of parameters passed to the command
+	 *
+	 * @var array
+	 */
 	private $cmd_params = null;
 
+	/**
+	 *
+	 * @param array $header
+	 *        	optional, passed via API
+	 * @param array $params
+	 *        	optional, array of parameters (var=>value) for the command
+	 * @param array $userinfo
+	 *        	optional, passed via WebInterface (instead of $header)
+	 *        	
+	 * @throws Exception
+	 */
 	public function __construct($header = null, $params = null, $userinfo = null)
 	{
 		global $lng;
@@ -38,6 +94,10 @@ abstract class ApiCommand
 		}
 	}
 
+	/**
+	 * initialize global $lng variable to have
+	 * localized strings available for the ApiCommands
+	 */
 	private function initLang()
 	{
 		global $lng;
@@ -77,6 +137,9 @@ abstract class ApiCommand
 		include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/lng/lng_references.php');
 	}
 
+	/**
+	 * initialize mail interface so an API wide mail-object is available
+	 */
 	private function initMail()
 	{
 		/**
@@ -108,6 +171,18 @@ abstract class ApiCommand
 		}
 	}
 
+	/**
+	 * returns an instance of the wanted ApiCommand (e.g.
+	 * Customers, Domains, etc);
+	 * this is used widely in the WebInterface
+	 *
+	 * @param array $userinfo
+	 *        	array of user-data
+	 * @param array $params
+	 *        	array of parameters for the command
+	 *        	
+	 * @return ApiCommand
+	 */
 	public static function getLocal($userinfo = null, $params = null)
 	{
 		return new static(null, $params, $userinfo);
@@ -276,6 +351,15 @@ abstract class ApiCommand
 		return $this->mail;
 	}
 
+	/**
+	 * return api-compatible response in JSON format and send corresponding http-header
+	 *
+	 * @param int $status
+	 * @param string $status_message
+	 * @param mixed $data
+	 *
+	 * @return string json-encoded response message
+	 */
 	protected function response($status, $status_message, $data = null)
 	{
 		header("HTTP/1.1 " . $status);
@@ -288,6 +372,15 @@ abstract class ApiCommand
 		return $json_response;
 	}
 
+	/**
+	 * read user data from database by api-request-header fields
+	 *
+	 * @param array $header
+	 *        	api-request header
+	 *        	
+	 * @throws Exception
+	 * @return boolean
+	 */
 	private function readUserData($header = null)
 	{
 		$sel_stmt = Database::prepare("SELECT * FROM `api_keys` WHERE `apikey` = :ak AND `secret` = :as");

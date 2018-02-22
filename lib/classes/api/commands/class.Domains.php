@@ -11,7 +11,8 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * @package    API
+ * @since      0.10.0
  *
  */
 class Domains extends ApiCommand implements ResourceEntity
@@ -759,14 +760,22 @@ class Domains extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			
 			// parameters
-			$id = $this->getParam('id');
-			
+			$id = $this->getParam('id', true, 0);
+			$dn_optional = ($id <= 0 ? false : true);
+			$domainname = $this->getParam('domainname', $dn_optional, '');
+
+			if ($id <= 0 && empty($domainname)) {
+				throw new Exception("Either 'id' or 'domainname' parameter must be given", 406);
+			}
+
 			// get requested domain
 			$json_result = Domains::getLocal($this->getUserData(), array(
 				'id' => $id,
+				'domainname' => $domainname,
 				'no_std_subdomain' => true
 			))->get();
 			$result = json_decode($json_result, true)['data'];
+			$id = $result['id'];
 			
 			// optional parameters
 			$p_domain = $this->getParam('domain', true, $result['domain']);

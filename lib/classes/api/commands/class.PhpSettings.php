@@ -11,7 +11,8 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * @package    API
+ * @since      0.10.0
  *
  */
 class PhpSettings extends ApiCommand implements ResourceEntity
@@ -100,6 +101,13 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * return a php-config entry by id
+	 * 
+	 * @param int $id php-settings-id
+	 * 
+	 * @return array
+	 */
 	public function get()
 	{
 		if ($this->isAdmin()) {
@@ -320,6 +328,14 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * delete a php-config entry by id
+	 *
+	 * @param int $id php-config-id
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
 	public function delete()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
