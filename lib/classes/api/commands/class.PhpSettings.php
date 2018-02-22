@@ -19,7 +19,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 {
 
 	/**
-	 * lists all php-config entries
+	 * lists all php-setting entries
 	 *
 	 * @return array count|list
 	 */
@@ -102,7 +102,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * return a php-config entry by id
+	 * return a php-setting entry by id
 	 * 
 	 * @param int $id php-settings-id
 	 * 
@@ -329,9 +329,9 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * delete a php-config entry by id
+	 * delete a php-setting entry by id
 	 *
-	 * @param int $id php-config-id
+	 * @param int $id php-settings-id
 	 *
 	 * @throws Exception
 	 * @return array

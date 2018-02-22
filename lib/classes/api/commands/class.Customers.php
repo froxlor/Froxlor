@@ -144,7 +144,6 @@ class Customers extends ApiCommand implements ResourceEntity
 				$loginname = $this->getParam('new_loginname', true, '');
 				
 				// validation
-				$idna_convert = new idna_convert_wrapper();
 				$name = validate($name, 'name', '', '', array(), true);
 				$firstname = validate($firstname, 'first name', '', '', array(), true);
 				$company = validate($company, 'company', '', '', array(), true);
@@ -233,20 +232,25 @@ class Customers extends ApiCommand implements ResourceEntity
 					}
 					
 					// Check if the account already exists
-					$loginname_check_stmt = Database::prepare("
-						SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname` = :loginname
-					");
-					$loginname_check = Database::pexecute_first($loginname_check_stmt, array(
-						'loginname' => $loginname
-					), true, true);
-					
-					$loginname_check_admin_stmt = Database::prepare("
-						SELECT `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname` = :loginname
-					");
-					$loginname_check_admin = Database::pexecute_first($loginname_check_admin_stmt, array(
-						'loginname' => $loginname
-					), true, true);
-					
+					try {
+						$dup_check_result = Customers::getLocal($this->getUserData(), array(
+							'loginname' => $loginname
+						))->get();
+						$loginname_check = json_decode($dup_check_result, true)['data'];
+					} catch (Exception $e) {
+						$loginname_check = array('loginname' => '');
+					}
+
+					// Check if an admin with the loginname already exists
+					try {
+						$dup_check_result = Admins::getLocal($this->getUserData(), array(
+							'loginname' => $loginname
+						))->get();
+						$loginname_check_admin = json_decode($dup_check_result, true)['data'];
+					} catch (Exception $e) {
+						$loginname_check_admin = array('loginname' => '');
+					}
+
 					if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
 						standard_error('loginnameexists', $loginname, true);
 					} elseif (! validateUsername($loginname, Settings::Get('panel.unix_names'), 14 - strlen(Settings::Get('customer.mysqlprefix')))) {
