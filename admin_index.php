@@ -51,6 +51,7 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == 'overview') {
+
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_index");
 	$overview_stmt = Database::prepare("SELECT COUNT(*) AS `number_customers`,
 				SUM(`diskspace_used`) AS `diskspace_used`,
@@ -403,4 +404,7 @@ if ($page == 'overview') {
 	} else {
 		redirectTo($filename, array('s' => $s));
 	}
+}
+elseif ($page == 'apihelp' && Settings::Get('api.enabled') == 1) {
+	require_once __DIR__ . '/apihelp.php';
 }

@@ -1769,4 +1769,7 @@ $lng['admin']['plans']['use_plan'] = 'Plan übernehmen';
 $lng['question']['plan_reallydelete'] = 'Wollen Sie den Hosting-Plan "%s" wirklich löschen?';
 $lng['admin']['notryfiles']['title'] = 'Keine generierte try_files Anweisung';
 $lng['admin']['notryfiles']['description'] = 'Wähle "Ja", wenn eine eigene try_files Direktive in den "eigenen Vhost Einstellungen" angegeben werden soll (z.B. nötig für manche Wordpress Plugins).';
+
+// added in froxlor 0.10.0
 $lng['panel']['none_value'] = 'Keine';
+$lng['menue']['main']['apihelp'] = 'API Hilfe';

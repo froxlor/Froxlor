@@ -20,7 +20,7 @@ class Froxlor extends ApiCommand
 
 	/**
 	 * checks whether there is a newer version of froxlor available
-	 * 
+	 *
 	 * @throws Exception
 	 * @return string
 	 */
@@ -178,6 +178,7 @@ class Froxlor extends ApiCommand
 			$clines = explode("\n", $comment);
 			$result = array();
 			$result['params'] = array();
+			$param_desc = false;
 			foreach ($clines as $c) {
 				$c = trim($c);
 				// check param-section
@@ -189,6 +190,7 @@ class Froxlor extends ApiCommand
 						'type' => $r[1],
 						'desc' => (isset($r[3]) ? trim($r['3']) : '')
 					);
+					$param_desc = true;
 				} // check return-section
 				elseif (strpos($c, '@return')) {
 					preg_match('/^\*\s\@return\s(\w+)(\s.*)?/', $c, $r);
@@ -201,18 +203,26 @@ class Froxlor extends ApiCommand
 						'desc' => (isset($r[2]) ? trim($r[2]) : '')
 					);
 				} else if (! empty($c) && strpos($c, '@throws') === false) {
-					if (substr($c, 0, 3) == "/**")
+					if (substr($c, 0, 3) == "/**") {
 						continue;
-					if (substr($c, 0, 2) == "*/")
+					}
+					if (substr($c, 0, 2) == "*/") {
 						continue;
-					if (substr($c, 0, 1) == "*")
+					}
+					if (substr($c, 0, 1) == "*") {
 						$c = trim(substr($c, 1));
-					if (empty($c))
-						continue;
-					if (! isset($result['head']) || empty($result['head'])) {
-						$result['head'] = $c . " ";
-					} else {
-						$result['head'] .= $c . " ";
+						if (empty($c)) {
+							continue;
+						}
+						if ($param_desc) {
+							$result['params'][count($result['params']) - 1]['desc'] .= $c;
+						} else {
+							if (! isset($result['head']) || empty($result['head'])) {
+								$result['head'] = $c . " ";
+							} else {
+								$result['head'] .= $c . " ";
+							}
+						}
 					}
 				}
 			}

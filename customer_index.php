@@ -319,3 +319,6 @@ if ($page == 'overview') {
 		redirectTo($filename, array('s' => $s));
 	}
 }
+elseif ($page == 'apihelp' && Settings::Get('api.enabled') == 1) {
+	require_once __DIR__ . '/apihelp.php';
+}
