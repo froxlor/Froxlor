@@ -283,7 +283,12 @@ class htmlform
 					}
 				}
 			}
-			$output .= '<label><input type="checkbox" name="'.$fieldname.$isArray.'" value="'.$val['value'].'" '.$isChecked.'/>'.$key.'</label>';
+			$output .= '<label>';
+			if (empty($isArray)) {
+				$output .= '<input type="hidden" name="'.$fieldname.'" value="0" />';
+			}
+			$output .= '<input type="checkbox" name="'.$fieldname.$isArray.'" value="'.$val['value'].'" '.$isChecked.'/>';
+			$output .= $key.'</label>';
 		}
 
 		return $output;
