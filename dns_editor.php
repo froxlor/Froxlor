@@ -1,6 +1,8 @@
 <?php
-if (! defined('AREA'))
-	die('You cannot access this file directly!');
+if (! defined('AREA')) {
+	header("Location: index.php");
+	exit;
+}
 
 /**
  * This file is part of the Froxlor project.
@@ -18,7 +20,7 @@ if (! defined('AREA'))
  */
 
 // This file is being included in admin_domains and customer_domains
-	// and therefore does not need to require lib/init.php
+// and therefore does not need to require lib/init.php
 
 $domain_id = isset($_GET['domain_id']) ? (int) $_GET['domain_id'] : null;
 

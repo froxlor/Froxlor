@@ -82,6 +82,86 @@ class Froxlor extends ApiCommand
 	}
 
 	/**
+	 * @TODO import settings
+	 */
+	public function importSettings()
+	{}
+
+	/**
+	 * @TODO export settings to file
+	 */
+	public function exportSettings()
+	{}
+
+	/**
+	 * return a list of all settings
+	 *
+	 * @return array count|list
+	 */
+	public function listSettings()
+	{
+		$sel_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` ORDER BY settinggroup ASC, varname ASC
+		");
+		Database::pexecute($sel_stmt, null, true, true);
+		$result = array();
+		while ($row = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$result[] = array(
+				'key' => $row['settinggroup'] . '.' . $row['varname'],
+				'value' => $row['value']
+			);
+		}
+		return $this->response(200, "successfull", array(
+			'count' => count($result),
+			'list' => $result
+		));
+	}
+
+	/**
+	 * return a setting by settinggroup.varname couple
+	 *
+	 * @param string $key
+	 *        	settinggroup.varname couple
+	 *
+	 * @throws Exception
+	 * @return string
+	 */
+	public function getSetting()
+	{
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+			$setting = $this->getParam('key');
+			return $this->response(200, "successfull", Settings::Get($setting));
+		}
+		throw new Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * updates a setting
+	 *
+	 * @param string $key
+	 *        	settinggroup.varname couple
+	 * @param string $value
+	 *        	optional the new value, default is ''
+	 *
+	 * @throws Exception
+	 * @return string
+	 */
+	public function updateSetting()
+	{
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+			$setting = $this->getParam('key');
+			$value = $this->getParam('value', true, '');
+			$oldvalue = Settings::Get($setting);
+			if (is_null($oldvalue)) {
+				throw new Exception("Setting '" . $setting . "' could not be found");
+			}
+			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] Changing setting '" . $setting . "' from '" . $oldvalue . "' to '" . $value . "'");
+			return $this->response(200, "successfull", Settings::Set($setting, $value, true));
+		}
+		throw new Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
 	 * returns a list of all available api functions
 	 *
 	 * @param string $module

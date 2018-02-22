@@ -1,6 +1,8 @@
 <?php
-if (! defined('AREA'))
-	die('You cannot access this file directly!');
+if (! defined('AREA')) {
+	header("Location: index.php");
+	exit;
+}
 
 /**
  * This file is part of the Froxlor project.
@@ -77,10 +79,10 @@ foreach ($output_arr as $module => $functions) {
 		$apihelp .= "<h3>" . ($funcdata['return_type'] == - 1 ? "<span class=\"red\">no-return-type</span>" : $funcdata['return_type']) . "&nbsp;";
 		$apihelp .= "<b>" . $module . ".<span class=\"blue\">" . $function . "</span></b></h3>";
 		// description
-		if (strtoupper(substr($funcdata['head'], 0, 4)) == "TODO")
+		if (strtoupper(substr($funcdata['head'], 0, 5)) == "@TODO")
 			$apihelp .= "<span class=\"red\">";
 		$apihelp .= $funcdata['head'];
-		if (strtoupper(substr($funcdata['head'], 0, 4)) == "TODO")
+		if (strtoupper(substr($funcdata['head'], 0, 5)) == "@TODO")
 			$apihelp .= "</span>";
 		// output ALL the params;
 		if (count($funcdata['params_list']) > 0) {
