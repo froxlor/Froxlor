@@ -199,7 +199,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					standard_error(array(
 						'stringisempty',
 						'myname'
-					));
+					), '', true);
 				} elseif ($firstname == '' && $company == '') {
 					standard_error(array(
 						'stringisempty',
@@ -756,23 +756,23 @@ class Customers extends ApiCommand implements ResourceEntity
 				standard_error(array(
 					'stringisempty',
 					'myname'
-				));
+				), '', true);
 			} elseif ($firstname == '' && $company == '') {
 				standard_error(array(
 					'stringisempty',
 					'myfirstname'
-				));
+				), '', true);
 			} elseif ($email == '') {
 				standard_error(array(
 					'stringisempty',
 					'emailadd'
-				));
+				), '', true);
 			} elseif (! validateEmail($email)) {
-				standard_error('emailiswrong', $email);
+				standard_error('emailiswrong', $email, true);
 			} else {
 				
 				if ($password != '') {
-					$password = validatePassword($password);
+					$password = validatePassword($password, true);
 					$password = makeCryptPassword($password);
 				} else {
 					$password = $result['password'];

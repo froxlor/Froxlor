@@ -86,6 +86,12 @@ abstract class ApiCommand
 		}
 		$this->logger = FroxlorLogger::getInstanceOf($this->user_data);
 		
+		// check whether the user is deactivated
+		if ($this->getUserDetail('deactivated') == 1) {
+			$this->logger()->logAction(LOG_ERROR, LOG_INFO, "[API] User '" . $this->getUserDetail('loginnname') . "' tried to use API but is deactivated");
+			throw new Exception("Account suspended", 406);
+		}
+
 		$this->initLang();
 		$this->initMail();
 		
