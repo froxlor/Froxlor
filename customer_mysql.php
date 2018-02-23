@@ -93,12 +93,15 @@ if ($page == 'overview') {
 		eval("echo \"" . getTemplate('mysql/mysqls') . "\";");
 
 	} elseif ($action == 'delete' && $id != 0) {
-		$result_stmt = Database::prepare('SELECT `id`, `databasename`, `description`, `dbserver` FROM `' . TABLE_PANEL_DATABASES . '`
-			WHERE `customerid`="' . (int)$userinfo['customerid'] . '"
-			AND `id`="' . (int)$id . '"'
-		);
-		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+
+		try {
+			$json_result = Mysqls::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['databasename']) && $result['databasename'] != '') {
 
@@ -112,28 +115,11 @@ if ($page == 'overview') {
 			}
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				// Begin root-session
-				Database::needRoot(true, $result['dbserver']);
-				$dbm = new DbManager($log);
-				$dbm->getManager()->deleteDatabase($result['databasename']);
-				$log->logAction(USR_ACTION, LOG_INFO, "deleted database '" . $result['databasename'] . "'");
-				Database::needRoot(false);
-				// End root-session
-
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DATABASES . "`
-					WHERE `customerid` = :customerid
-					AND `id` = :id"
-				);
-				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-
-				$resetaccnumber = ($userinfo['mysqls_used'] == '1') ? " , `mysql_lastaccountnumber` = '0' " : '';
-
-				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-					SET `mysqls_used` = `mysqls_used` - 1 " . $resetaccnumber . "
-					WHERE `customerid` = :customerid"
-				);
-				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
-
+				try {
+					Mysqls::getLocal($userinfo, $_POST)->delete();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
+				}
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				$dbnamedesc = $result['databasename'];
