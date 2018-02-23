@@ -214,15 +214,11 @@ if ($page == 'overview') {
 		} elseif($new_password != $new_password_confirm) {
 			standard_error('newpasswordconfirmerror');
 		} else {
-			$chgpwd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_ADMINS . "`
-				SET `password`= :newpasswd
-				WHERE `adminid`= :adminid"
-			);
-			Database::pexecute($chgpwd_stmt, array(
-				'newpasswd' => makeCryptPassword($new_password),
-				'adminid' => (int)$userinfo['adminid']
-			));
+			try {
+				Admins::getLocal($userinfo, array('id' => $userinfo['adminid'], 'admin_password' => $new_password))->update();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
 			$log->logAction(ADM_ACTION, LOG_NOTICE, 'changed password');
 			redirectTo($filename, Array('s' => $s));
 		}
@@ -238,16 +234,13 @@ if ($page == 'overview') {
 		$def_language = validate($_POST['def_language'], 'default language');
 
 		if (isset($languages[$def_language])) {
-			$lng_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_ADMINS . "`
-				SET `def_language`= :deflng
-				WHERE `adminid`= :adminid"
-			);
-			Database::pexecute($lng_stmt, array(
-				'deflng' => $def_language,
-				'adminid' => (int)$userinfo['adminid']
-			));
+			try {
+				Admins::getLocal($userinfo, array('id' => $userinfo['adminid'], 'def_language' => $def_language))->update();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
 
+			// also update current session
 			$lng_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_SESSIONS . "`
 				SET `language`= :lng
@@ -258,7 +251,6 @@ if ($page == 'overview') {
 				'hash' => $s
 			));
 		}
-
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "changed his/her default language to '" . $def_language . "'");
 		redirectTo($filename, array('s' => $s));
 
@@ -284,17 +276,13 @@ if ($page == 'overview') {
 		&& $_POST['send'] == 'send'
 	) {
 		$theme = validate($_POST['theme'], 'theme');
+		try {
+			Admins::getLocal($userinfo, array('id' => $userinfo['adminid'], 'theme' => $theme))->update();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
 
-		$theme_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_ADMINS . "`
-				SET `theme`= :theme
-				WHERE `adminid`= :adminid"
-		);
-		Database::pexecute($theme_stmt, array(
-			'theme' => $theme,
-			'adminid' => (int)$userinfo['adminid']
-		));
-
+		// also update current session
 		$theme_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_SESSIONS . "`
 				SET `theme`= :theme

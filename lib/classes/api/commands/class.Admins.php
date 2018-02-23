@@ -313,14 +313,14 @@ class Admins extends ApiCommand implements ResourceEntity
 			$name = $this->getParam('name', true, $result['name']);
 			$idna_convert = new idna_convert_wrapper();
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
+			$password = $this->getParam('admin_password', true, '');
+			$def_language = $this->getParam('def_language', true, $result['def_language']);
 			$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
 			$custom_notes_show = $this->getParam('custom_notes_show', true, $result['custom_notes_show']);
 			$theme = $this->getParam('theme', true, $result['theme']);
 
 			// you cannot edit some of the details of yourself
 			if ($result['adminid'] == $this->getUserDetail('userid')) {
-				$password = '';
-				$def_language = $result['def_language'];
 				$deactivated = $result['deactivated'];
 				$customers = $result['customers'];
 				$domains = $result['domains'];
@@ -341,8 +341,6 @@ class Admins extends ApiCommand implements ResourceEntity
 				$traffic = $result['traffic'];
 				$ipaddress = $result['ip'];
 			} else {
-				$password = $this->getParam('admin_password', true, '');
-				$def_language = $this->getParam('def_language', true, $result['def_language']);
 				$deactivated = $this->getParam('deactivated', true, $result['deactivated']);
 
 				$dec_places = Settings::Get('panel.decimal_places');
@@ -377,6 +375,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			$def_language = validate($def_language, 'default language', '', '', array(), true);
 			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
 			$theme = validate($theme, 'theme', '', '', array(), true);
+			$password = validate($password, 'password', '', '', array(), true);
 
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$email_quota = - 1;
@@ -389,16 +388,6 @@ class Admins extends ApiCommand implements ResourceEntity
 			if (empty($theme)) {
 				$theme = Settings::Get('panel.default_theme');
 			}
-
-			$password = validate($password, 'password', '', '', array(), true);
-			// only check if not empty,
-			// cause empty == generate password automatically
-			if ($password != '') {
-				$password = validatePassword($password, true);
-			}
-
-			$diskspace = $diskspace * 1024;
-			$traffic = $traffic * 1024 * 1024;
 
 			if ($name == '') {
 				standard_error(array(
