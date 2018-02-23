@@ -73,42 +73,57 @@ foreach ($output_arr as $module => $functions) {
 	// sort by function
 	ksort($functions);
 	
+	$apihelp .= "<h2>".$module."</h2><hr /><br>";
+
 	// output ALL the functions
 	foreach ($functions as $function => $funcdata) {
-		$apihelp .= "<blockquote>";
-		$apihelp .= "<h3>" . ($funcdata['return_type'] == - 1 ? "<span class=\"red\">no-return-type</span>" : $funcdata['return_type']) . "&nbsp;";
-		$apihelp .= "<b>" . $module . ".<span class=\"blue\">" . $function . "</span></b></h3>";
+		$apihelp .= "<div class=\"well\">";
+		$apihelp .= "<h3>".$module." - ";
 		// description
-		if (strtoupper(substr($funcdata['head'], 0, 5)) == "@TODO")
+		if (strtoupper(substr($funcdata['head'], 0, 5)) == "@TODO") {
 			$apihelp .= "<span class=\"red\">";
+		}
 		$apihelp .= $funcdata['head'];
-		if (strtoupper(substr($funcdata['head'], 0, 5)) == "@TODO")
+		if (strtoupper(substr($funcdata['head'], 0, 5)) == "@TODO") {
 			$apihelp .= "</span>";
+		}
+		$apihelp .= "</h3>";
+		$apihelp .= "<b>Command"."</b>&nbsp;";
+		$apihelp .= "<span class=\"label\">".$module.".".$function."</span><br>";
+
 		// output ALL the params;
 		if (count($funcdata['params_list']) > 0) {
-			$parms = "<br><br><b>Parameters:</b><br><pre><ul>";
+			$parms = "<br><b>Parameter</b><br>";
+			$parms .= "<table class=\"full hl\">";
+			$parms .= "<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>";
+			$parms .= "<tbody>";
 			// separate and format them
 			foreach ($funcdata['params_list'] as $index => $param) {
-				$parms .= "<li>";
+				$parms .= "<tr><td><pre>";
 				// check whether the parameter is optional
 				if (! empty($param['desc']) && strtolower(substr(trim($param['desc']), 0, 8)) == "optional") {
-					$parms .= "<i>optional</i>&nbsp;";
+					$parms .= "<i>".$param['name']."</i>";
 					$param['desc'] = substr(trim($param['desc']), 8);
 					if (substr($param['desc'], 0, 1) == ',') {
 						$param['desc'] = substr(trim($param['desc']), 1);
 					}
+				} else {
+					$parms .= "<b>".$param['name']."</b>";
 				}
-				$parms .= "<b>" . (strtolower($param['type']) == 'unknown' ? "<span class=\"red\">unknown</span>" : $param['type']) . "&nbsp;<span class=\"orange\">" . $param['name'] . "</span></b>";
+				$parms .= "</pre></td><td>" . (strtolower($param['type']) == 'unknown' ? "<span class=\"red\">unknown</span>" : $param['type'])."</td>";
+				$parms .= "<td>";
 				if (! empty($param['desc'])) {
-					$parms .= "&nbsp;" . trim($param['desc']);
+					$parms .= trim($param['desc']);
 				}
-				$parms .= "<li>";
+				$parms .= "</td>";
+				$parms .= "</tr>";
 			}
-			$apihelp .= "</ul></pre>" . $parms;
+			$parms .= "</tbody></table>";
+			$apihelp .= $parms;
 		}
-		$apihelp .= "</blockquote><br><br>";
+		$apihelp .= "<br><b>Returns</b> " . ($funcdata['return_type'] == - 1 ? "<span class=\"red\">no-return-type</span>" : $funcdata['return_type']);
+		$apihelp .= "</div><br>";
 	}
-	$apihelp .= "<hr />";
 }
 
 eval("echo \"" . getTemplate("apihelp/index", 1) . "\";");
