@@ -706,6 +706,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$perlenabled = $this->getParam('perlenabled', true, $result['perlenabled']);
 			$dnsenabled = $this->getParam('dnsenabled', true, $result['dnsenabled']);
 			$deactivated = $this->getParam('deactivated', true, $result['deactivated']);
+			$theme = $this->getParam('theme', true, $result['theme']);
 			
 			// validation
 			$idna_convert = new idna_convert_wrapper();
@@ -721,6 +722,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
 			$def_language = validate($def_language, 'default language', '', '', array(), true);
 			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+			$theme = validate($theme, 'theme', '', '', array(), true);
 			
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$email_quota = - 1;
@@ -728,6 +730,10 @@ class Customers extends ApiCommand implements ResourceEntity
 			
 			if (Settings::Get('ticket.enabled') != '1') {
 				$tickets = - 1;
+			}
+
+			if (empty($theme)) {
+				$theme = Settings::Get('panel.default_theme');
 			}
 
 			$diskspace = $diskspace * 1024;
@@ -980,7 +986,8 @@ class Customers extends ApiCommand implements ResourceEntity
 					'perlenabled' => $perlenabled,
 					'dnsenabled' => $dnsenabled,
 					'custom_notes' => $custom_notes,
-					'custom_notes_show' => $custom_notes_show
+					'custom_notes_show' => $custom_notes_show,
+					'theme' => $theme
 				);
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
@@ -1015,7 +1022,8 @@ class Customers extends ApiCommand implements ResourceEntity
 					`perlenabled` = :perlenabled,
 					`dnsenabled` = :dnsenabled,
 					`custom_notes` = :custom_notes,
-					`custom_notes_show` = :custom_notes_show
+					`custom_notes_show` = :custom_notes_show,
+					`theme` = :theme
 					WHERE `customerid` = :customerid
 				");
 				Database::pexecute($upd_stmt, $upd_data);
