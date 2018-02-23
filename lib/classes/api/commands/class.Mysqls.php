@@ -98,7 +98,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		}
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			Database::needRoot(true, $dbserver);
+			Database::needRoot(true, $result['dbserver']);
 			$mbdata_stmt = Database::prepare("
 				SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
 				WHERE table_schema = :table_schema
