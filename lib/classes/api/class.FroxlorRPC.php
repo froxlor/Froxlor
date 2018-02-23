@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    API
+ * @since      0.10.0
+ *
+ */
 class FroxlorRPC
 {
 
@@ -48,13 +63,17 @@ class FroxlorRPC
 			if ($result['apikey'] == $key && $result['secret'] == $secret && ($result['valid_until'] == -1 || $result['valid_until'] >= time())) {
 				if (!empty($result['allowed_from'])) {
 					$ip_list = explode(",", $result['allowed_from']);
-					$access_ip = $_SERVER['REMOTE_ADDR'];
-					// @fixme finish me
+					$ip_list = array_map('inet_pton', $ip_list);
+					$access_ip = inet_pton($_SERVER['REMOTE_ADDR']);
+					if (in_array($access_ip, $ip_list)) {
+						return true;
+					}
+				} else {
+					return true;
 				}
-				return true;
 			}
 		}
-		throw new Exception("Invalid authorization credentials", 400);
+		throw new Exception("Invalid authorization credentials", 403);
 	}
 
 	/**

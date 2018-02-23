@@ -52,9 +52,13 @@ exit();
  *
  * @return void
  */
-function json_response($status, $status_message, $data = null)
+function json_response($status, $status_message = '', $data = null)
 {
-	header("HTTP/1.1 " . $status);
+	$resheader = $_SERVER["SERVER_PROTOCOL"] . " " . $status;
+	if (! empty($status_message)) {
+		$resheader .= ' ' . $status_message;
+	}
+	header($resheader);
 	
 	$response['status'] = $status;
 	$response['status_message'] = $status_message;
