@@ -1723,9 +1723,10 @@ td.size-50 {
 	border-radius: 0;
 	text-shadow: none;
 	font-size: 14px;
-	font-weight: normal;
+	font-weight: bold;
 	padding: 3px 5px 3px;
-	background-color: #abbac3 !important
+	background-color: #abbac3 !important;
+	color: #fff !important;
 }
 
 .label[class*="span"][class*="arrow"] {
