@@ -26,14 +26,12 @@ class Froxlor extends ApiCommand
 	 */
 	public function checkUpdate()
 	{
-		global $version, $branding;
-		
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			// log our actions
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
 			
 			// check for new version
-			define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $version);
+			define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $this->version);
 			$latestversion = HttpClient::urlGet(UPDATE_URI);
 			$latestversion = explode('|', $latestversion);
 			
@@ -44,7 +42,7 @@ class Froxlor extends ApiCommand
 				
 				// add the branding so debian guys are not gettings confused
 				// about their version-number
-				$version_label = $_version . $branding;
+				$version_label = $_version . $this->branding;
 				$version_link = $_link;
 				$message_addinfo = $_message;
 				
@@ -53,7 +51,7 @@ class Froxlor extends ApiCommand
 					// check for customized version to not output
 					// "There is a newer version of froxlor" besides the error-message
 					$isnewerversion = - 1;
-				} elseif (version_compare2($version, $_version) == - 1) {
+				} elseif (version_compare2($this->version, $_version) == - 1) {
 					// there is a newer version - yay
 					$isnewerversion = 1;
 				} else {
@@ -64,7 +62,7 @@ class Froxlor extends ApiCommand
 				// anzeige über version-status mit ggfls. formular
 				// zum update schritt #1 -> download
 				if ($isnewerversion == 1) {
-					$text = 'There is a newer version available: "' . $_version . '" (Your current version is: ' . $version . ')';
+					$text = 'There is a newer version available: "' . $_version . '" (Your current version is: ' . $this->version . ')';
 					return $this->response(200, "successfull", array(
 						'message' => $text,
 						'link' => $version_link,
@@ -82,13 +80,15 @@ class Froxlor extends ApiCommand
 	}
 
 	/**
-	 * @TODO import settings
+	 *
+	 * @todo import settings
 	 */
 	public function importSettings()
 	{}
 
 	/**
-	 * @TODO export settings to file
+	 *
+	 * @todo export settings to file
 	 */
 	public function exportSettings()
 	{}
@@ -100,21 +100,24 @@ class Froxlor extends ApiCommand
 	 */
 	public function listSettings()
 	{
-		$sel_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` ORDER BY settinggroup ASC, varname ASC
-		");
-		Database::pexecute($sel_stmt, null, true, true);
-		$result = array();
-		while ($row = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$result[] = array(
-				'key' => $row['settinggroup'] . '.' . $row['varname'],
-				'value' => $row['value']
-			);
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+			$sel_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` ORDER BY settinggroup ASC, varname ASC
+			");
+			Database::pexecute($sel_stmt, null, true, true);
+			$result = array();
+			while ($row = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+				$result[] = array(
+					'key' => $row['settinggroup'] . '.' . $row['varname'],
+					'value' => $row['value']
+				);
+			}
+			return $this->response(200, "successfull", array(
+				'count' => count($result),
+				'list' => $result
+			));
 		}
-		return $this->response(200, "successfull", array(
-			'count' => count($result),
-			'list' => $result
-		));
+		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -122,7 +125,7 @@ class Froxlor extends ApiCommand
 	 *
 	 * @param string $key
 	 *        	settinggroup.varname couple
-	 *
+	 *        	
 	 * @throws Exception
 	 * @return string
 	 */
@@ -142,12 +145,15 @@ class Froxlor extends ApiCommand
 	 *        	settinggroup.varname couple
 	 * @param string $value
 	 *        	optional the new value, default is ''
-	 *
+	 *        	
 	 * @throws Exception
 	 * @return string
 	 */
 	public function updateSetting()
 	{
+		// currently not implemented as it required validation too so no wrong settings are being stored via API
+		throw new Exception("Not available yet.", 501);
+
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$setting = $this->getParam('key');
 			$value = $this->getParam('value', true, '');

@@ -61,6 +61,34 @@ abstract class ApiCommand
 	private $cmd_params = null;
 
 	/**
+	 * language strings array
+	 *
+	 * @var array
+	 */
+	protected $lng = null;
+
+	/**
+	 * froxlor version
+	 *
+	 * @var string
+	 */
+	protected $version = null;
+
+	/**
+	 * froxlor dbversion
+	 *
+	 * @var int
+	 */
+	protected $dbversion = null;
+
+	/**
+	 * froxlor version-branding
+	 *
+	 * @var string
+	 */
+	protected $branding = null;
+
+	/**
 	 *
 	 * @param array $header
 	 *        	optional, passed via API
@@ -73,8 +101,11 @@ abstract class ApiCommand
 	 */
 	public function __construct($header = null, $params = null, $userinfo = null)
 	{
-		global $lng;
-		
+		global $lng, $version, $dbversion, $branding;
+
+		$this->version = $version;
+		$this->dbversion = $dbversion;
+		$this->branding = $branding;
 		$this->cmd_params = $params;
 		if (! empty($header)) {
 			$this->readUserData($header);
@@ -93,6 +124,7 @@ abstract class ApiCommand
 		}
 
 		$this->initLang();
+		$this->lng = $lng;
 		$this->initMail();
 		
 		if ($this->debug) {

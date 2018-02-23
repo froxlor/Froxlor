@@ -52,7 +52,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				}
 				
 				if (empty($configs)) {
-					$configs[] = $lng['admin']['phpsettings']['notused'];
+					$configs[] = $this->lng['admin']['phpsettings']['notused'];
 				}
 				
 				$row['configs'] = $configs;

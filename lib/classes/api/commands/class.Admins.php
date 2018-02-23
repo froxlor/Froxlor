@@ -438,37 +438,37 @@ class Admins extends ApiCommand implements ResourceEntity
 				// than actually used by the admin/reseller
 				$res_warning = "";
 				if ($customers != $result['customers'] && $customers != -1 && $customers < $result['customers_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'customers');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'customers');
 				}
 				if ($domains != $result['domains'] && $domains != -1 && $domains < $result['domains_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'domains');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'domains');
 				}
 				if ($diskspace != $result['diskspace'] && ($diskspace / 1024) != -1 && $diskspace < $result['diskspace_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'diskspace');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'diskspace');
 				}
 				if ($traffic != $result['traffic'] && ($traffic / 1024 / 1024) != -1 && $traffic < $result['traffic_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'traffic');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'traffic');
 				}
 				if ($emails != $result['emails'] && $emails != -1 && $emails < $result['emails_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'emails');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'emails');
 				}
 				if ($email_accounts != $result['email_accounts'] && $email_accounts != -1 && $email_accounts < $result['email_accounts_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email accounts');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'email accounts');
 				}
 				if ($email_forwarders != $result['email_forwarders'] && $email_forwarders != -1 && $email_forwarders < $result['email_forwarders_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email forwarders');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'email forwarders');
 				}
 				if ($email_quota != $result['email_quota'] && $email_quota != -1 && $email_quota < $result['email_quota_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email quota');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'email quota');
 				}
 				if ($ftps != $result['ftps'] && $ftps != -1 && $ftps < $result['ftps_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'ftps');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'ftps');
 				}
 				if ($tickets != $result['tickets'] && $tickets != -1 && $tickets < $result['tickets_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'tickets');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'tickets');
 				}
 				if ($mysqls != $result['mysqls'] && $mysqls != -1 && $mysqls < $result['mysqls_used']) {
-					$res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'mysqls');
+					$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'mysqls');
 				}
 
 				if (!empty($res_warning)) {

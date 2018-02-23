@@ -81,7 +81,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				}
 				
 				if (empty($domains)) {
-					$domains[] = $lng['admin']['phpsettings']['notused'];
+					$domains[] = $this->lng['admin']['phpsettings']['notused'];
 				}
 				
 				// check whether this is our default config

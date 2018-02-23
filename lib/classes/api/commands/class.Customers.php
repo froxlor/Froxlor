@@ -97,8 +97,6 @@ class Customers extends ApiCommand implements ResourceEntity
 
 	public function add()
 	{
-		global $lng;
-		
 		if ($this->isAdmin()) {
 			if ($this->getUserDetail('customers_used') < $this->getUserDetail('customers') || $this->getUserDetail('customers') == '-1') {
 				
@@ -600,7 +598,7 @@ class Customers extends ApiCommand implements ResourceEntity
 							'adminid' => $this->getUserDetail('adminid'),
 							'deflang' => $def_language
 						), true, true);
-						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['createcustomer']['subject']), $replace_arr));
+						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $this->lng['mails']['createcustomer']['subject']), $replace_arr));
 						
 						$result_stmt = Database::prepare("
 						SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
@@ -609,7 +607,7 @@ class Customers extends ApiCommand implements ResourceEntity
 							'adminid' => $this->getUserDetail('adminid'),
 							'deflang' => $def_language
 						), true, true);
-						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['createcustomer']['mailbody']), $replace_arr));
+						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $this->lng['mails']['createcustomer']['mailbody']), $replace_arr));
 						
 						$_mailerror = false;
 						try {
