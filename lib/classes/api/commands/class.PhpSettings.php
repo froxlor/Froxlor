@@ -21,6 +21,8 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	/**
 	 * lists all php-setting entries
 	 *
+	 * @access admin
+	 * @throws Exception
 	 * @return array count|list
 	 */
 	public function list()
@@ -106,6 +108,8 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 * 
 	 * @param int $id php-settings-id
 	 * 
+	 * @access admin
+	 * @throws Exception
 	 * @return array
 	 */
 	public function get()
@@ -127,6 +131,13 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * add new php-settings entry
+	 *
+	 * @access admin
+	 * @throws Exception
+	 * @return array
+	 */
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
@@ -226,6 +237,15 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * update a php-setting entry by given id
+	 *
+	 * @param int $id
+	 *
+	 * @access admin
+	 * @throws Exception::
+	 * @return array
+	 */
 	public function update()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
@@ -333,6 +353,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 *
 	 * @param int $id php-settings-id
 	 *
+	 * @access admin
 	 * @throws Exception
 	 * @return array
 	 */

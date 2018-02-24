@@ -21,6 +21,8 @@ class Admins extends ApiCommand implements ResourceEntity
 	/**
 	 * lists all admin entries
 	 *
+	 * @access admin
+	 * @throws Exception
 	 * @return array count|list
 	 */
 	public function list()
@@ -52,7 +54,8 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	optional, the admin-id
 	 * @param string $loginname
 	 *        	optional, the loginname
-	 *        	
+	 *
+	 * @access admin
 	 * @throws Exception
 	 * @return array
 	 */
@@ -84,6 +87,13 @@ class Admins extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * create a new admin user
+	 *
+	 * @access admin
+	 * @throws Exception
+	 * @return array
+	 */
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
@@ -290,6 +300,18 @@ class Admins extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * update an admin user by given id or loginname
+	 *
+	 * @param int $id
+	 *        	optional, the admin-id
+	 * @param string $loginname
+	 *        	optional, the loginname
+	 *
+	 * @access admin
+	 * @throws Exception
+	 * @return array
+	 */
 	public function update()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
@@ -551,7 +573,8 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	optional, the admin-id
 	 * @param string $loginname
 	 *        	optional, the loginname
-	 *        	
+	 *
+	 * @access admin
 	 * @throws Exception
 	 * @return array
 	 */
@@ -619,7 +642,8 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	optional, the admin-id
 	 * @param string $loginname
 	 *        	optional, the loginname
-	 *        	
+	 *
+	 * @access admin
 	 * @throws Exception
 	 * @return array
 	 */

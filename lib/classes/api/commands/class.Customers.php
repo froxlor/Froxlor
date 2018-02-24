@@ -21,6 +21,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	/**
 	 * lists all customer entries
 	 *
+	 * @access admin
 	 * @return array count|list
 	 */
 	public function list()
@@ -61,20 +62,21 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param string $loginname
 	 *        	optional, the loginname
 	 *        	
+	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
 	 */
 	public function get()
 	{
+		$id = $this->getParam('id', true, 0);
+		$ln_optional = ($id <= 0 ? false : true);
+		$loginname = $this->getParam('loginname', $ln_optional, '');
+
+		if ($id <= 0 && empty($loginname)) {
+			throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
+		}
+
 		if ($this->isAdmin()) {
-			$id = $this->getParam('id', true, 0);
-			$ln_optional = ($id <= 0 ? false : true);
-			$loginname = $this->getParam('loginname', $ln_optional, '');
-			
-			if ($id <= 0 && empty($loginname)) {
-				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
-			}
-			
 			$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE " . ($id > 0 ? "`customerid` = :idln" : "`loginname` = :idln") . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
@@ -84,17 +86,32 @@ class Customers extends ApiCommand implements ResourceEntity
 			if ($this->getUserDetail('customers_see_all') == '0') {
 				$params['adminid'] = $this->getUserDetail('adminid');
 			}
-			$result = Database::pexecute_first($result_stmt, $params, true, true);
-			if ($result) {
-				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get customer '" . $result['loginname'] . "'");
-				return $this->response(200, "successfull", $result);
+		} else {
+			if (($id > 0 && $id != $this->getUserDetail('customerid')) || ! empty($loginname) && $loginname != $this->getUserDetail('loginname')) {
+				throw new Exception("You cannot access data of other customers", 401);
 			}
-			$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
-			throw new Exception("Customer with " . $key . " could not be found", 404);
+			$result_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
+				WHERE " . ($id > 0 ? "`customerid` = :idln" : "`loginname` = :idln"));
+			$params = array(
+				'idln' => ($id <= 0 ? $loginname : $id)
+			);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		$result = Database::pexecute_first($result_stmt, $params, true, true);
+		if ($result) {
+			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get customer '" . $result['loginname'] . "'");
+			return $this->response(200, "successfull", $result);
+		}
+		$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
+		throw new Exception("Customer with " . $key . " could not be found", 404);
 	}
 
+	/**
+	 * create a new customer with default ftp-user and standard-subdomain (if wanted)
+	 *
+	 * @access admin
+	 * @return array
+	 */
 	public function add()
 	{
 		if ($this->isAdmin()) {
@@ -236,7 +253,9 @@ class Customers extends ApiCommand implements ResourceEntity
 						))->get();
 						$loginname_check = json_decode($dup_check_result, true)['data'];
 					} catch (Exception $e) {
-						$loginname_check = array('loginname' => '');
+						$loginname_check = array(
+							'loginname' => ''
+						);
 					}
 
 					// Check if an admin with the loginname already exists
@@ -246,7 +265,9 @@ class Customers extends ApiCommand implements ResourceEntity
 						))->get();
 						$loginname_check_admin = json_decode($dup_check_result, true)['data'];
 					} catch (Exception $e) {
-						$loginname_check_admin = array('loginname' => '');
+						$loginname_check_admin = array(
+							'loginname' => ''
+						);
 					}
 
 					if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
@@ -646,17 +667,29 @@ class Customers extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * update customer entry by either id or loginname
+	 *
+	 * @param int $id
+	 *        	optional, the customer-id
+	 * @param string $loginname
+	 *        	optional, the loginname
+	 *
+	 * @access admin, customer
+	 * @throws Exception
+	 * @return array
+	 */
 	public function update()
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-
+			
 			if ($id <= 0 && empty($loginname)) {
 				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
 			}
-
+			
 			$json_result = Customers::getLocal($this->getUserData(), array(
 				'id' => $id,
 				'loginname' => $loginname
@@ -729,36 +762,18 @@ class Customers extends ApiCommand implements ResourceEntity
 			if (Settings::Get('ticket.enabled') != '1') {
 				$tickets = - 1;
 			}
-
+			
 			if (empty($theme)) {
 				$theme = Settings::Get('panel.default_theme');
 			}
-
+			
 			$diskspace = $diskspace * 1024;
 			$traffic = $traffic * 1024 * 1024;
-
-			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1')
-				|| ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1')
-				|| ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1')
-				|| ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1')
-				|| ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1')
-				|| ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1')
-				|| ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1')
-				|| ((($this->getUserDetail('tickets_used') + $tickets - $result['tickets']) > $this->getUserDetail('tickets')) && $this->getUserDetail('tickets') != '-1')
-				|| ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1')
-				|| (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1')
-				|| ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1')
-				|| ($emails == '-1' && $this->getUserDetail('emails') != '-1')
-				|| ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1')
-				|| ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1')
-				|| ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1')
-				|| ($ftps == '-1' && $this->getUserDetail('ftps') != '-1')
-				|| ($tickets == '-1' && $this->getUserDetail('tickets') != '-1')
-				|| ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')
-			) {
+			
+			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('tickets_used') + $tickets - $result['tickets']) > $this->getUserDetail('tickets')) && $this->getUserDetail('tickets') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($tickets == '-1' && $this->getUserDetail('tickets') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
 				standard_error('youcantallocatemorethanyouhave', '', true);
 			}
-
+			
 			// Either $name and $firstname or the $company must be inserted
 			if ($name == '' && $company == '') {
 				standard_error(array(
@@ -1160,6 +1175,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param bool $delete_userfiles
 	 *        	optional, default false
 	 *        	
+	 * @access admin
 	 * @throws Exception
 	 * @return array
 	 */
@@ -1405,6 +1421,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param string $loginname
 	 *        	optional, the loginname
 	 *        	
+	 * @access admin
 	 * @throws Exception
 	 * @return array
 	 */
@@ -1414,11 +1431,11 @@ class Customers extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-
+			
 			if ($id <= 0 && empty($loginname)) {
 				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
 			}
-
+			
 			$json_result = Customers::getLocal($this->getUserData(), array(
 				'id' => $id,
 				'loginname' => $loginname

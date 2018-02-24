@@ -1,7 +1,7 @@
 <?php
 if (! defined('AREA')) {
 	header("Location: index.php");
-	exit;
+	exit();
 }
 
 /**
@@ -17,12 +17,12 @@ if (! defined('AREA')) {
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Panel
  * @since 0.10.0
- *         
+ *
  */
 
 // This file is being included in admin_index and customer_index
 // and therefore does not need to require lib/init.php
-	
+
 try {
 	$json_result = Froxlor::getLocal($userinfo)->listFunctions();
 } catch (Exception $e) {
@@ -48,7 +48,8 @@ foreach ($m_arr as $module) {
 	$output_arr[$module['module']][$module['function']] = array(
 		'return_type' => (isset($module['return']['type']) && $module['return']['type'] != "" ? $module['return']['type'] : - 1),
 		'params_list' => array(),
-		'head' => $module['head']
+		'head' => $module['head'],
+		'access' => isset($module['access']) ? $module['access'] : null
 	);
 	
 	if (isset($module['params']) && is_array($module['params'])) {
@@ -73,12 +74,12 @@ foreach ($output_arr as $module => $functions) {
 	// sort by function
 	ksort($functions);
 	
-	$apihelp .= "<h2>".$module."</h2><hr /><br>";
+	$apihelp .= "<h2>" . $module . "</h2><hr /><br>";
 
 	// output ALL the functions
 	foreach ($functions as $function => $funcdata) {
 		$apihelp .= "<div class=\"well\">";
-		$apihelp .= "<h3>".$module." - ";
+		$apihelp .= "<h3>" . $module . " - ";
 		// description
 		if (strtoupper(substr($funcdata['head'], 0, 5)) == "@TODO") {
 			$apihelp .= "<span class=\"red\">";
@@ -88,8 +89,12 @@ foreach ($output_arr as $module => $functions) {
 			$apihelp .= "</span>";
 		}
 		$apihelp .= "</h3>";
-		$apihelp .= "<b>Command"."</b>&nbsp;";
-		$apihelp .= "<span class=\"label\">".$module.".".$function."</span><br>";
+		$apihelp .= "<b>Command" . "</b>&nbsp;";
+		$apihelp .= "<span class=\"label\">" . $module . "." . $function . "</span><br>";
+		if (isset($funcdata['access']['groups']) && ! empty($funcdata['access']['groups'])) {
+			$apihelp .= "<br><b>Access:</b>&nbsp;";
+			$apihelp .= $funcdata['access']['groups'] . "<br>";
+		}
 
 		// output ALL the params;
 		if (count($funcdata['params_list']) > 0) {
@@ -102,15 +107,15 @@ foreach ($output_arr as $module => $functions) {
 				$parms .= "<tr><td><pre>";
 				// check whether the parameter is optional
 				if (! empty($param['desc']) && strtolower(substr(trim($param['desc']), 0, 8)) == "optional") {
-					$parms .= "<i>".$param['name']."</i>";
+					$parms .= "<i>" . $param['name'] . "</i>";
 					$param['desc'] = substr(trim($param['desc']), 8);
 					if (substr($param['desc'], 0, 1) == ',') {
 						$param['desc'] = substr(trim($param['desc']), 1);
 					}
 				} else {
-					$parms .= "<b>".$param['name']."</b>";
+					$parms .= "<b>" . $param['name'] . "</b>";
 				}
-				$parms .= "</pre></td><td>" . (strtolower($param['type']) == 'unknown' ? "<span class=\"red\">unknown</span>" : $param['type'])."</td>";
+				$parms .= "</pre></td><td>" . (strtolower($param['type']) == 'unknown' ? "<span class=\"red\">unknown</span>" : $param['type']) . "</td>";
 				$parms .= "<td>";
 				if (! empty($param['desc'])) {
 					$parms .= trim($param['desc']);

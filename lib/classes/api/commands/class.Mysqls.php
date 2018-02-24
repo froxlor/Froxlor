@@ -31,6 +31,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 * @param int $dbserver
 	 *        	optional, specify database-server, default is none
 	 *        	
+	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
 	 */
@@ -130,6 +131,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 * @param string $loginname
 	 *        	optional, admin-only, select dbs of a specific customer by loginname
 	 *        	
+	 * @access admin, customer
 	 * @return array count|list
 	 */
 	public function list()
@@ -220,6 +222,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 * @param int $dbserver
 	 *        	optional, specify database-server, default is none
 	 *        	
+	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
 	 */

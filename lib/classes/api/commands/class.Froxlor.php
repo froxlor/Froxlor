@@ -21,6 +21,7 @@ class Froxlor extends ApiCommand
 	/**
 	 * checks whether there is a newer version of froxlor available
 	 *
+	 * @access admin
 	 * @throws Exception
 	 * @return string
 	 */
@@ -82,6 +83,8 @@ class Froxlor extends ApiCommand
 	/**
 	 *
 	 * @todo import settings
+	 *
+	 * @access admin
 	 */
 	public function importSettings()
 	{}
@@ -89,6 +92,8 @@ class Froxlor extends ApiCommand
 	/**
 	 *
 	 * @todo export settings to file
+	 *
+	 * @access admin
 	 */
 	public function exportSettings()
 	{}
@@ -96,6 +101,8 @@ class Froxlor extends ApiCommand
 	/**
 	 * return a list of all settings
 	 *
+	 * @access admin
+	 * @throws Exception
 	 * @return array count|list
 	 */
 	public function listSettings()
@@ -126,6 +133,7 @@ class Froxlor extends ApiCommand
 	 * @param string $key
 	 *        	settinggroup.varname couple
 	 *        	
+	 * @access admin
 	 * @throws Exception
 	 * @return string
 	 */
@@ -146,6 +154,7 @@ class Froxlor extends ApiCommand
 	 * @param string $value
 	 *        	optional the new value, default is ''
 	 *        	
+	 * @access admin
 	 * @throws Exception
 	 * @return string
 	 */
@@ -153,7 +162,7 @@ class Froxlor extends ApiCommand
 	{
 		// currently not implemented as it required validation too so no wrong settings are being stored via API
 		throw new Exception("Not available yet.", 501);
-
+		
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$setting = $this->getParam('key');
 			$value = $this->getParam('value', true, '');
@@ -173,6 +182,7 @@ class Froxlor extends ApiCommand
 	 * @param string $module
 	 *        	optional, return list of functions for a specific module
 	 *        	
+	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
 	 */
@@ -260,7 +270,7 @@ class Froxlor extends ApiCommand
 					'head' => 'There is no comment-block for "' . $module . '.' . $function . '"'
 				);
 			}
-
+			
 			$clines = explode("\n", $comment);
 			$result = array();
 			$result['params'] = array();
@@ -277,6 +287,15 @@ class Froxlor extends ApiCommand
 						'desc' => (isset($r[3]) ? trim($r['3']) : '')
 					);
 					$param_desc = true;
+				} // check access-section
+				elseif (strpos($c, '@access')) {
+					preg_match('/^\*\s\@access\s(.*)/', $c, $r);
+					if (! isset($r[0]) || empty($r[0])) {
+						$r[1] = 'This function has no restrictions';
+					}
+					$result['access'] = array(
+						'groups' => (isset($r[1]) ? trim($r[1]) : '')
+					);
 				} // check return-section
 				elseif (strpos($c, '@return')) {
 					preg_match('/^\*\s\@return\s(\w+)(\s.*)?/', $c, $r);
@@ -312,6 +331,7 @@ class Froxlor extends ApiCommand
 					}
 				}
 			}
+			$result['head'] =trim($result['head']);
 			return $result;
 		} catch (\ReflectionException $e) {
 			return array();

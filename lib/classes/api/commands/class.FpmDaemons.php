@@ -21,6 +21,8 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	/**
 	 * lists all fpm-daemon entries
 	 *
+	 * @access admin
+	 * @throws Exception
 	 * @return array count|list
 	 */
 	public function list()
@@ -72,6 +74,8 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	 *
 	 * @param int $id fpm-daemon-id
 	 *
+	 * @access admin
+	 * @throws Exception
 	 * @return array
 	 */
 	public function get()
@@ -93,6 +97,13 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * create a new fpm-daemon entry
+	 *
+	 * @access admin
+	 * @throws Exception
+	 * @return array
+	 */
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
@@ -166,6 +177,15 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * update a fpm-daemon entry by given id
+	 *
+	 * @param int $id
+	 *
+	 * @access admin
+	 * @throws Exception
+	 * @return array
+	 */
 	public function update()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
@@ -251,6 +271,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	 *
 	 * @param int $id fpm-daemon-id
 	 *
+	 * @access admin
 	 * @throws Exception
 	 * @return array
 	 */

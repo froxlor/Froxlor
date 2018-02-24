@@ -43,6 +43,7 @@ class ConfigServicesCmd extends CmdLineHandler
 	public static $params = array(
 		'create',
 		'apply',
+		'import-settings',
 		'daemon',
 		'list-daemons',
 		'froxlor-dir',
@@ -67,6 +68,10 @@ class ConfigServicesCmd extends CmdLineHandler
 		self::println("");
 		self::println("--daemon\t\tWhen running --apply you can specify a daemon. This will be the only service that gets configured");
 		self::println("\t\t\tExample: --apply=/path/to/my-config.json --daemon=apache24");
+		self::println("");
+		self::println("");
+		self::println("--import-settings\tImport settings from another froxlor installation. This should be done prior to running --apply or alternatively in the same command together.");
+		self::println("\t\t\tExample: --import-settings=/path/to/Froxlor_settings-[version]-[dbversion]-[date].json");
 		self::println("");
 		self::println("--froxlor-dir\t\tpath to froxlor installation");
 		self::println("\t\t\tExample: --froxlor-dir=/var/www/froxlor/");
@@ -115,10 +120,15 @@ class Action
 		require FROXLOR_INSTALL_DIR . '/lib/tables.inc.php';
 		require FROXLOR_INSTALL_DIR . '/lib/functions.php';
 		require FROXLOR_INSTALL_DIR . '/lib/classes/settings/class.Settings.php';
+		require FROXLOR_INSTALL_DIR . '/lib/classes/settings/class.SImExporter.php';
 		require FROXLOR_INSTALL_DIR . '/lib/classes/config/class.ConfigParser.php';
 		require FROXLOR_INSTALL_DIR . '/lib/classes/config/class.ConfigService.php';
 		require FROXLOR_INSTALL_DIR . '/lib/classes/config/class.ConfigDaemon.php';
 		
+		if (array_key_exists("import-settings", $this->_args)) {
+			$this->_importSettings();
+		}
+
 		if (array_key_exists("create", $this->_args)) {
 			$this->_createConfig();
 		} elseif (array_key_exists("apply", $this->_args)) {
@@ -126,6 +136,20 @@ class Action
 		} elseif (array_key_exists("list-daemons", $this->_args) || array_key_exists("daemon", $this->_args)) {
 			CmdLineHandler::printwarn("--list-daemons and --daemon only work together with --apply");
 		}
+	}
+
+	private function _importSettings()
+	{
+		if (! is_file($this->_args["import-settings"])) {
+			throw new Exception("Given settings file is not a file");
+		} elseif (! file_exists($this->_args["import-settings"])) {
+			throw new Exception("Given settings file cannot be found ('" . $this->_args["import-settings"] . "')");
+		} elseif (! is_readable($this->_args["import-settings"])) {
+			throw new Exception("Given settings file cannot be read ('" . $this->_args["import-settings"] . "')");
+		}
+		$imp_content = file_get_contents($this->_args["import-settings"]);
+		SImExporter::import($imp_content);
+		CmdLineHandler::printsucc("Successfully imported settings from '" . $this->_args["import-settings"] . "'");
 	}
 
 	private function _createConfig()
