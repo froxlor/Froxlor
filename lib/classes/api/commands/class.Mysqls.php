@@ -31,7 +31,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 *        	optional, send created resource-information to customer, default: false
 	 * @param int $customer_id
 	 *        	required when called as admin, not needed when called as customer
-	 *
+	 *        	
 	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
@@ -39,20 +39,20 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	public function add()
 	{
 		if ($this->getUserDetail('mysqls_used') < $this->getUserDetail('mysqls') || $this->getUserDetail('mysqls') == '-1') {
-
+			
 			// required paramters
 			$password = $this->getParam('mysql_password');
-
+			
 			// parameters
 			$dbserver = $this->getParam('mysql_server', true, 0);
 			$databasedescription = $this->getParam('description', true, '');
 			$sendinfomail = $this->getParam('sendinfomail', true, 0);
-
+			
 			// validation
 			$password = validate($password, 'password', '', '', array(), true);
 			$password = validatePassword($password, true);
 			$databasedescription = validate(trim($databasedescription), 'description', '', '', array(), true);
-
+			
 			// validate whether the dbserver exists
 			$dbserver = validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
 			Database::needRoot(true, $dbserver);
@@ -62,18 +62,18 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			if (! isset($sql_root) || ! is_array($sql_root)) {
 				throw new ErrorException("Database server with index #" . $dbserver . " is unknown", 404);
 			}
-
+			
 			if ($password == '') {
 				standard_error(array(
 					'stringisempty',
 					'mysql_password'
 				), '', true);
 			}
-
+			
 			if ($sendinfomail != 1) {
 				$sendinfomail = 0;
 			}
-
+			
 			// get needed customer info to reduce the mysql-usage-counter by one
 			if ($this->isAdmin()) {
 				// get customer id
@@ -89,7 +89,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			} else {
 				$customer_id = $this->getUserDetail('customer_id');
 			}
-
+			
 			$newdb_params = array(
 				'loginname' => ($this->isAdmin() ? $customer['loginname'] : $this->getUserDetail('loginname')),
 				'mysql_lastaccountnumber' => ($this->isAdmin() ? $customer['mysql_lastaccountnumber'] : $this->getUserDetail('mysql_lastaccountnumber'))
@@ -97,12 +97,12 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			// create database, user, set permissions, etc.pp.
 			$dbm = new DbManager($this->logger());
 			$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
-
+			
 			// we've checked against the password in dbm->createDatabase
 			if ($username == false) {
 				standard_error('passwordshouldnotbeusername', '', true);
 			}
-
+			
 			// add database info to froxlor
 			$stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_DATABASES . "`
@@ -121,7 +121,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			Database::pexecute($stmt, $params, true, true);
 			$databaseid = Database::lastInsertId();
 			$params['id'] = $databaseid;
-
+			
 			// update customer usage
 			$stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
@@ -131,7 +131,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			Database::pexecute($stmt, array(
 				"customerid" => ($this->isAdmin() ? $customer['customerid'] : $this->getUserDetail('customerid'))
 			), true, true);
-
+			
 			// update admin usage
 			$stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_ADMINS . "`
@@ -141,20 +141,20 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			Database::pexecute($stmt, array(
 				"adminid" => $this->getUserDetail('adminid')
 			), true, true);
-
+			
 			// send info-mail?
 			if ($sendinfomail == 1) {
 				$pma = $this->lng['admin']['notgiven'];
 				if (Settings::Get('panel.phpmyadmin_url') != '') {
 					$pma = Settings::Get('panel.phpmyadmin_url');
 				}
-
+				
 				Database::needRoot(true, $dbserver);
 				Database::needSqlData();
 				$sql_root = Database::getSqlData();
 				Database::needRoot(false);
 				$userinfo = ($this->isAdmin() ? $customer : $this->getUserData());
-
+				
 				$replace_arr = array(
 					'SALUTATION' => getCorrectUserSalutation($userinfo),
 					'CUST_NAME' => getCorrectUserSalutation($userinfo), // < keep this for compatibility
@@ -164,7 +164,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					'DB_SRV' => $sql_root['host'],
 					'PMA_URI' => $pma
 				);
-
+				
 				$def_language = $userinfo['def_language'];
 				$result_stmt = Database::prepare("
 					SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
@@ -178,7 +178,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					"lang" => $def_language
 				), true, true);
 				$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $this->lng['mails']['new_database_by_customer']['subject']), $replace_arr));
-
+				
 				$result_stmt = Database::prepare("
 					SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 					WHERE `adminid`= :adminid
@@ -191,7 +191,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					"lang" => $def_language
 				));
 				$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $this->lng['mails']['new_database_by_customer']['mailbody']), $replace_arr));
-
+				
 				$_mailerror = false;
 				try {
 					$this->mail->Subject = $mail_subject;
@@ -206,12 +206,12 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					$mailerr_msg = $e->getMessage();
 					$_mailerror = true;
 				}
-
+				
 				if ($_mailerror) {
 					$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
 					standard_error('errorsendingmail', $userinfo['email'], true);
 				}
-
+				
 				$this->mail->ClearAddresses();
 			}
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] added mysql-database '" . $username . "'");
@@ -319,8 +319,126 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		throw new Exception("MySQL database with " . $key . " could not be found", 404);
 	}
 
+	/**
+	 * update a mysql database entry by either id or dbname
+	 *
+	 * @param int $id
+	 *        	optional, the database-id
+	 * @param string $dbname
+	 *        	optional, the databasename
+	 * @param int $dbserver
+	 *        	optional, specify database-server, default is none
+	 * @param string $mysql_password
+	 *        	optional, update password for the database
+	 * @param string $description
+	 *        	optional, description for database
+	 *
+	 * @access admin, customer
+	 * @throws Exception
+	 * @return array
+	 */
 	public function update()
-	{}
+	{
+		$id = $this->getParam('id', true, 0);
+		$dn_optional = ($id <= 0 ? false : true);
+		$dbname = $this->getParam('dbname', $dn_optional, '');
+		$dbserver = $this->getParam('dbserver', true, - 1);
+		
+		if ($id <= 0 && empty($dbname)) {
+			throw new Exception("Either 'id' or 'dbname' parameter must be given", 406);
+		}
+		
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'mysql')) {
+			throw new Exception("You cannot access this resource", 405);
+		}
+		
+		$json_result = Mysqls::getLocal($this->getUserData(), array(
+			'id' => $id,
+			'dbname' => $dbname,
+			'dbserver' => $dbserver
+		))->get();
+		$result = json_decode($json_result, true)['data'];
+		$id = $result['id'];
+		
+		// paramters
+		$password = $this->getParam('mysql_password', true, '');
+		$databasedescription = $this->getParam('description', true, '');
+		
+		// validation
+		$password = validate($password, 'password', '', '', array(), true);
+		$password = validatePassword($password, true);
+		$databasedescription = validate(trim($databasedescription), 'description', '', '', array(), true);
+		
+		// validate whether the dbserver exists
+		$dbserver = validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
+		Database::needRoot(true, $dbserver);
+		Database::needSqlData();
+		$sql_root = Database::getSqlData();
+		Database::needRoot(false);
+		if (! isset($sql_root) || ! is_array($sql_root)) {
+			throw new ErrorException("Database server with index #" . $dbserver . " is unknown", 404);
+		}
+		
+		if ($sendinfomail != 1) {
+			$sendinfomail = 0;
+		}
+		
+		// get needed customer info to reduce the mysql-usage-counter by one
+		if ($this->isAdmin()) {
+			// get customer id
+			$customer_id = $this->getParam('customer_id');
+			$json_result = Customers::getLocal($this->getUserData(), array(
+				'id' => $result['customerid']
+			))->get();
+			$customer = json_decode($json_result, true)['data'];
+			// check whether the customer has enough resources to get the database added
+			if ($customer['mysqls_used'] >= $customer['mysqls'] && $customer['mysqls'] != '-1') {
+				throw new Exception("Customer has no more resources available", 406);
+			}
+		} else {
+			$customer_id = $this->getUserDetail('customer_id');
+		}
+		
+		if ($password != '') {
+			// validate password
+			$password = validatePassword($password, true);
+			
+			if ($password == $result['databasename']) {
+				standard_error('passwordshouldnotbeusername', '', true);
+			}
+			
+			// Begin root-session
+			Database::needRoot(true, $result['dbserver']);
+			foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
+				$stmt = Database::prepare("SET PASSWORD FOR :dbname@:host = PASSWORD(:password)");
+				$params = array(
+					"dbname" => $result['databasename'],
+					"host" => $mysql_access_host,
+					"password" => $password
+				);
+				Database::pexecute($stmt, $params, true, true);
+			}
+			
+			$stmt = Database::prepare("FLUSH PRIVILEGES");
+			Database::pexecute($stmt, null, true, true);
+			Database::needRoot(false);
+			// End root-session
+		}
+		$stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_DATABASES . "`
+			SET `description` = :desc
+			WHERE `customerid` = :customerid
+			AND `id` = :id
+		");
+		$params = array(
+			"desc" => $databasedescription,
+			"customerid" => ($this->isAdmin() ? $customer['customerid'] : $this->getUserDetail('customerid')),
+			"id" => $id
+		);
+		Database::pexecute($stmt, $params, true, true);
+		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] updated mysql-database '" . $result['databasename'] . "'");
+		return $this->response(200, "successfull", $params);
+	}
 
 	/**
 	 * list all databases, if called from an admin, list all databases of all customers you are allowed to view, or specify id or loginname for one specific customer
@@ -444,7 +562,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'mysql')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-
+		
 		$json_result = Mysqls::getLocal($this->getUserData(), array(
 			'id' => $id,
 			'dbname' => $dbname,

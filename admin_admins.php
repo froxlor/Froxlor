@@ -229,7 +229,6 @@ if ($page == 'admins'
 	} elseif($action == 'edit'
 		&& $id != 0
 	) {
-
 		try {
 			$json_result = Admins::getLocal($userinfo, array(
 				'id' => $id

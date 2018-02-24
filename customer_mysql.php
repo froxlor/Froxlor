@@ -172,48 +172,12 @@ if ($page == 'overview') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['databasename']) && $result['databasename'] != '') {
-			if (!isset($sql_root[$result['dbserver']]) || !is_array($sql_root[$result['dbserver']])) {
-				$result['dbserver'] = 0;
-			}
-
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				// Only change Password if it is set, do nothing if it is empty! -- PH 2004-11-29
-				$password = validate($_POST['mysql_password'], 'password');
-				if ($password != '') {
-					// validate password
-					$password = validatePassword($password);
-
-					if ($password == $result['databasename']) {
-						standard_error('passwordshouldnotbeusername');
-					}
-
-					// Begin root-session
-					Database::needRoot(true);
-					foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
-						$stmt = Database::prepare("SET PASSWORD FOR :dbname@:host = PASSWORD(:password)");
-						$params = array(
-							"dbname" => $result['databasename'],
-							"host" => $mysql_access_host,
-							"password" => $password
-						);
-						Database::pexecute($stmt, $params);
-					}
-
-					$stmt = Database::prepare("FLUSH PRIVILEGES");
-					Database::pexecute($stmt);
-					Database::needRoot(false);
-					// End root-session
+				try {
+					$json_result = Mysqls::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				// Update the Database description -- PH 2004-11-29
-				$log->logAction(USR_ACTION, LOG_INFO, "edited database '" . $result['databasename'] . "'");
-				$databasedescription = validate($_POST['description'], 'description');
-				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DATABASES . "`
-					SET `description` = :desc
-					WHERE `customerid` = :customerid
-					AND `id` = :id"
-				);
-				Database::pexecute($stmt, array("desc" => $databasedescription, "customerid" => $userinfo['customerid'], "id" => $id));
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 
