@@ -79,12 +79,14 @@ if ($page == 'overview') {
 
 		eval("echo \"" . getTemplate('ftp/accounts') . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT `id`, `username`, `homedir`, `up_count`, `up_bytes`, `down_count`, `down_bytes` FROM `" . TABLE_FTP_USERS . "`
-			WHERE `customerid` = :customerid
-			AND `id` = :id"
-		);
-		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = Ftps::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['username']) && $result['username'] != $userinfo['loginname']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
@@ -369,12 +371,14 @@ if ($page == 'overview') {
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT `id`, `username`, `description`, `homedir`, `uid`, `gid`, `shell` FROM `" . TABLE_FTP_USERS . "`
-			WHERE `customerid` = :customerid
-			AND `id` = :id"
-		);
-		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = Ftps::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['username']) && $result['username'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {

@@ -56,7 +56,7 @@ function json_response($status, $status_message = '', $data = null)
 {
 	$resheader = $_SERVER["SERVER_PROTOCOL"] . " " . $status;
 	if (! empty($status_message)) {
-		$resheader .= ' ' . $status_message;
+		$resheader .= ' ' . str_replace("\n", " ", $status_message);
 	}
 	header($resheader);
 	

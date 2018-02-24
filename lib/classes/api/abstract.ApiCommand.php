@@ -402,7 +402,7 @@ abstract class ApiCommand
 	{
 		$resheader = $_SERVER["SERVER_PROTOCOL"] . " " . $status;
 		if (! empty($status_message)) {
-			$resheader .= ' ' . $status_message;
+			$resheader .= ' ' . str_replace("\n", " ", $status_message);
 		}
 		header($resheader);
 		
@@ -432,14 +432,17 @@ abstract class ApiCommand
 		), true, true);
 		if ($result) {
 			// admin or customer?
-			if ($result['customerid'] == 0) {
+			if ($result['customerid'] == 0 && $result['adminid'] > 0) {
 				$this->is_admin = true;
 				$table = 'panel_admins';
 				$key = "adminid";
-			} else {
+			} elseif ($result['customerid'] > 0 && $result['adminid'] > 0) {
 				$this->is_admin = false;
 				$table = 'panel_customers';
 				$key = "customerid";
+			} else {
+				// neither adminid is > 0 nor customerid is > 0 - sorry man, no way
+				throw new Exception("Invalid API credentials", 400);
 			}
 			$sel_stmt = Database::prepare("SELECT * FROM `" . $table . "` WHERE `" . $key . "` = :id");
 			$this->user_data = Database::pexecute_first($sel_stmt, array(
