@@ -227,7 +227,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 *        	optional, the database-id
 	 * @param string $dbname
 	 *        	optional, the databasename
-	 * @param int $dbserver
+	 * @param int $mysql_server
 	 *        	optional, specify database-server, default is none
 	 *        	
 	 * @access admin, customer
@@ -239,7 +239,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
 		$dbname = $this->getParam('dbname', $dn_optional, '');
-		$dbserver = $this->getParam('dbserver', true, - 1);
+		$dbserver = $this->getParam('mysql_server', true, - 1);
 		
 		if ($id <= 0 && empty($dbname)) {
 			throw new Exception("Either 'id' or 'dbname' parameter must be given", 406);
@@ -326,7 +326,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 *        	optional, the database-id
 	 * @param string $dbname
 	 *        	optional, the databasename
-	 * @param int $dbserver
+	 * @param int $mysql_server
 	 *        	optional, specify database-server, default is none
 	 * @param string $mysql_password
 	 *        	optional, update password for the database
@@ -342,7 +342,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
 		$dbname = $this->getParam('dbname', $dn_optional, '');
-		$dbserver = $this->getParam('dbserver', true, - 1);
+		$dbserver = $this->getParam('mysql_server', true, - 1);
 		
 		if ($id <= 0 && empty($dbname)) {
 			throw new Exception("Either 'id' or 'dbname' parameter must be given", 406);
@@ -355,7 +355,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$json_result = Mysqls::getLocal($this->getUserData(), array(
 			'id' => $id,
 			'dbname' => $dbname,
-			'dbserver' => $dbserver
+			'mysql_server' => $dbserver
 		))->get();
 		$result = json_decode($json_result, true)['data'];
 		$id = $result['id'];
@@ -443,7 +443,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	/**
 	 * list all databases, if called from an admin, list all databases of all customers you are allowed to view, or specify id or loginname for one specific customer
 	 *
-	 * @param int $dbserver
+	 * @param int $mysql_server
 	 *        	optional, specify dbserver to select from, else use all available
 	 * @param int $customerid
 	 *        	optional, admin-only, select dbs of a specific customer by id
@@ -456,7 +456,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	public function list()
 	{
 		$result = array();
-		$dbserver = $this->getParam('dbserver', true, - 1);
+		$dbserver = $this->getParam('mysql_server', true, - 1);
 		if ($this->isAdmin()) {
 			// if we're an admin, list all databases of all the admins customers
 			// or optionally for one specific customer identified by id or loginname
@@ -541,7 +541,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 *        	optional, the database-id
 	 * @param string $dbname
 	 *        	optional, the databasename
-	 * @param int $dbserver
+	 * @param int $mysql_server
 	 *        	optional, specify database-server, default is none
 	 *        	
 	 * @access admin, customer
@@ -553,7 +553,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
 		$dbname = $this->getParam('dbname', $dn_optional, '');
-		$dbserver = $this->getParam('dbserver', true, - 1);
+		$dbserver = $this->getParam('mysql_server', true, - 1);
 		
 		if ($id <= 0 && empty($dbname)) {
 			throw new Exception("Either 'id' or 'dbname' parameter must be given", 406);
@@ -566,7 +566,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$json_result = Mysqls::getLocal($this->getUserData(), array(
 			'id' => $id,
 			'dbname' => $dbname,
-			'dbserver' => $dbserver
+			'mysql_server' => $dbserver
 		))->get();
 		$result = json_decode($json_result, true)['data'];
 		$id = $result['id'];
