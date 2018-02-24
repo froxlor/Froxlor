@@ -378,11 +378,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		if (! isset($sql_root) || ! is_array($sql_root)) {
 			throw new ErrorException("Database server with index #" . $dbserver . " is unknown", 404);
 		}
-		
-		if ($sendinfomail != 1) {
-			$sendinfomail = 0;
-		}
-		
+
 		// get needed customer info to reduce the mysql-usage-counter by one
 		if ($this->isAdmin()) {
 			// get customer id
@@ -436,6 +432,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			"id" => $id
 		);
 		Database::pexecute($stmt, $params, true, true);
+
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] updated mysql-database '" . $result['databasename'] . "'");
 		return $this->response(200, "successfull", $params);
 	}
@@ -607,6 +604,16 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		Database::pexecute($stmt, array(
 			"customerid" => $customer_id
 		), true, true);
+		// update admin usage
+		$stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_ADMINS . "`
+			SET `mysqls_used` = `mysqls_used` - 1
+			WHERE `adminid` = :adminid
+		");
+		Database::pexecute($stmt, array(
+			"adminid" => ($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')),
+		), true, true);
+
 		return $this->response(200, "successfull", $result);
 	}
 }
