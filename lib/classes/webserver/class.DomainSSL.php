@@ -90,10 +90,10 @@ class DomainSSL {
 					$ssl_files['ssl_cert_chainfile'] = makeCorrectFile($sslcertpath.'/'.$domain['domain'].'_chain.pem');
 				}
 			}
-            if (($dom_certs['ssl_ca_file'] != '') and ($dom_certs['ssl_cert_chainfile'] != '')) {
-					$dom_certs['ssl_cert_fullchainfile'] = trim($dom_certs['ssl_cert_file'])."\n".trim($dom_certs['ssl_cert_chainfile'])."\n".trim($dom_certs['ssl_ca_file'])."\n";
-                    $ssl_files['ssl_cert_fullchainfile'] = makeCorrectFile($sslcertpath.'/'.$domain['domain'].'_fullchain.pem');
-            }
+            		if (($dom_certs['ssl_ca_file'] != '') and ($dom_certs['ssl_cert_chainfile'] != '')) {
+				$dom_certs['ssl_cert_fullchainfile'] = trim($dom_certs['ssl_cert_file'])."\n".trim($dom_certs['ssl_cert_chainfile'])."\n".trim($dom_certs['ssl_ca_file'])."\n";
+                   		$ssl_files['ssl_cert_fullchainfile'] = makeCorrectFile($sslcertpath.'/'.$domain['domain'].'_fullchain.pem');
+            		}
 			// create them on the filesystem
 			foreach ($ssl_files as $type => $filename) {
 				if ($filename != '') {
