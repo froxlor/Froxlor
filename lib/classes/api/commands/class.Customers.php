@@ -1207,12 +1207,16 @@ class Customers extends ApiCommand implements ResourceEntity
 			 * move customer to another admin/reseller; #1166
 			 */
 			if ($move_to_admin > 0 && $move_to_admin != $result['adminid']) {
-				$move_result = moveCustomerToAdmin($id, $move_to_admin);
+				$json_result = Customers::getLocal($this->getUserData(), array(
+					'id' => $result['customerid'],
+					'adminid' => $move_to_admin
+				))->move();
+				$move_result = json_decode($json_result, true)['data'];
 				if ($move_result != true) {
 					standard_error('moveofcustomerfailed', $move_result, true);
 				}
 			}
-
+			
 			return $this->response(200, "successfull", $upd_data);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
@@ -1507,6 +1511,78 @@ class Customers extends ApiCommand implements ResourceEntity
 			
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] unlocked customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
+		}
+		throw new Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * Function to move a given customer to a given admin/reseller
+	 * and update all its references accordingly
+	 *
+	 * @param int $id
+	 *        	customer-id
+	 * @param int $adminid
+	 *        	target-admin-id
+	 *        	
+	 * @access admin
+	 * @throws Exception
+	 * @return bool true on success, error-message on failure
+	 */
+	public function move()
+	{
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
+			$id = $this->getParam('id');
+			$adminid = $this->getParam('adminid');
+			
+			// get customer
+			$json_result = Admins::getLocal($this->getUserData(), array(
+				'id' => $id
+			))->get();
+			$c_result = json_decode($json_result, true)['data'];
+
+			// check if target-admin is the current admin
+			if ($adminid == $c_result['adminid']) {
+				throw new Exception("Cannot move customer to the same admin/reseller as he currently is assigned to", 406);
+			}
+
+			// get target admin
+			$json_result = Customers::getLocal($this->getUserData(), array(
+				'id' => $adminid
+			))->get();
+			$a_result = json_decode($json_result, true)['data'];
+
+			// Update customer entry
+			$updCustomer_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `adminid` = :adminid WHERE `customerid` = :cid
+			");
+			Database::pexecute($updCustomer_stmt, array(
+				'adminid' => $adminid,
+				'cid' => $id
+			), true, true);
+			
+			// Update customer-domains
+			$updDomains_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `adminid` = :adminid WHERE `customerid` = :cid
+			");
+			Database::pexecute($updDomains_stmt, array(
+				'adminid' => $adminid,
+				'cid' => $id
+			), true, true);
+			
+			// Update customer-tickets
+			$updTickets_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_TICKETS . "` SET `adminid` = :adminid WHERE `customerid` = :cid
+			");
+			Database::pexecute($updTickets_stmt, array(
+				'adminid' => $adminid,
+				'cid' => $id
+			), true, true);
+			
+			// now, recalculate the resource-usage for the old and the new admin
+			updateCounters(false);
+
+			$log->logAction(ADM_ACTION, LOG_INFO, "[API] moved user '" . $c_result['loginname'] . "' from admin/reseller '" . $c_result['adminname'] . " to admin/reseller '" . $a_result['loginname'] . "'");
+			return $this->response(200, "successfull", true);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}

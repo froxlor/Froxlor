@@ -61,7 +61,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *        	optional, the domain-id
 	 * @param string $domainname
 	 *        	optional, the domainname
-	 * @param boolean $no_std_subdomain
+	 * @param bool $no_std_subdomain
 	 *        	optional, default false
 	 *
 	 * @access admin
