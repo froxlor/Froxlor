@@ -21,6 +21,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	/**
 	 * lists all domain entries
 	 *
+	 * @access admin
+	 * @throws Exception
 	 * @return array count|list
 	 */
 	public function list()
@@ -61,7 +63,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *        	optional, the domainname
 	 * @param boolean $no_std_subdomain
 	 *        	optional, default false
-	 *        	
+	 *
+	 * @access admin
 	 * @throws Exception
 	 * @return array
 	 */
@@ -106,6 +109,13 @@ class Domains extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * add new domain entry
+	 *
+	 * @access admin
+	 * @throws Exception
+	 * @return array
+	 */
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
@@ -755,6 +765,18 @@ class Domains extends ApiCommand implements ResourceEntity
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
+	/**
+	 * update domain entry by either id or domainname
+	 *
+	 * @param int $id
+	 *        	optional, the domain-id
+	 * @param string $domainname
+	 *        	optional, the domainname
+	 *
+	 * @access admin
+	 * @throws Exception
+	 * @return array
+	 */
 	public function update()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
@@ -1574,7 +1596,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *        	optional, remove also domains that are subdomains of this domain but added as main domains; default false
 	 * @param bool $is_stdsubdomain
 	 *        	optional, default false, specify whether it's a std-subdomain you are deleting as it does not count as subdomain-resource
-	 *        	
+	 *
+	 * @access admin
 	 * @throws Exception
 	 * @return array
 	 */
