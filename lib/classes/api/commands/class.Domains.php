@@ -181,18 +181,12 @@ class Domains extends ApiCommand implements ResourceEntity
 						'mydomain'
 					), '', true);
 				}
-				
-				$customer_stmt = Database::prepare("
-					SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
-					WHERE `customerid` = :customerid " . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
-				$params = array(
-					'customerid' => $customerid
-				);
-				if ($this->getUserDetail('customers_see_all') == '0') {
-					$params['adminid'] = $this->getUserDetail('adminid');
-				}
-				$customer = Database::pexecute_first($customer_stmt, $params, true, true);
-				
+
+				$json_result = Customers::getLocal($this->getUserData(), array(
+					'id' => $customerid
+				))->get();
+				$customer = json_decode($json_result, true)['data'];
+
 				if (empty($customer) || $customer['customerid'] != $customerid) {
 					standard_error('customerdoesntexist', '', true);
 				}
@@ -859,14 +853,9 @@ class Domains extends ApiCommand implements ResourceEntity
 				if ($this->getUserDetail('customers_see_all') == '0') {
 					$params['adminid'] = $this->getUserDetail('adminid');
 				}
-				
-				// get domains customer
-				$json_result = Customers::getLocal($this->getUserData(), array(
-					'id' => $result['customerid']
-				))->get();
-				$customer = json_decode($json_result, true)['data'];
-				
-				if (empty($customer) || $customer['customerid'] != $customerid) {
+
+				$result = Database::pexecute_first($customer_stmt, $params, true, true);
+				if (empty($result) || $result['customerid'] != $customerid) {
 					standard_error('customerdoesntexist', '', true);
 				}
 			} else {
@@ -943,9 +932,9 @@ class Domains extends ApiCommand implements ResourceEntity
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
 					if (Settings::Get('system.documentroot_use_default_value') == 1) {
-						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
+						$documentroot = makeCorrectDir($result['documentroot'] . '/' . $result['domain']);
 					} else {
-						$documentroot = $customer['documentroot'];
+						$documentroot = $result['documentroot'];
 					}
 				}
 				
