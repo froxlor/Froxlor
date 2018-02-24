@@ -47,6 +47,7 @@ foreach ($m_arr as $module) {
 	// set necessary data
 	$output_arr[$module['module']][$module['function']] = array(
 		'return_type' => (isset($module['return']['type']) && $module['return']['type'] != "" ? $module['return']['type'] : - 1),
+		'return_desc' => (isset($module['return']['desc']) && $module['return']['desc'] != "" ? $module['return']['desc'] : - 1),
 		'params_list' => array(),
 		'head' => $module['head'],
 		'access' => isset($module['access']) ? $module['access'] : null
@@ -126,7 +127,7 @@ foreach ($output_arr as $module => $functions) {
 			$parms .= "</tbody></table>";
 			$apihelp .= $parms;
 		}
-		$apihelp .= "<br><b>Returns</b> " . ($funcdata['return_type'] == - 1 ? "<span class=\"red\">no-return-type</span>" : $funcdata['return_type']);
+		$apihelp .= "<br><b>Returns</b> " . ($funcdata['return_type'] == - 1 ? "<span class=\"red\">no-return-type</span>" : $funcdata['return_type']) . ($funcdata['return_desc'] == - 1 ? "" : " ".$funcdata['return_desc']);
 		$apihelp .= "</div><br>";
 	}
 }
