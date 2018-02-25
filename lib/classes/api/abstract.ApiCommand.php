@@ -102,7 +102,7 @@ abstract class ApiCommand
 	public function __construct($header = null, $params = null, $userinfo = null)
 	{
 		global $lng, $version, $dbversion, $branding;
-
+		
 		$this->version = $version;
 		$this->dbversion = $dbversion;
 		$this->branding = $branding;
@@ -116,13 +116,13 @@ abstract class ApiCommand
 			throw new Exception("Invalid user data", 500);
 		}
 		$this->logger = FroxlorLogger::getInstanceOf($this->user_data);
-
+		
 		// check whether the user is deactivated
 		if ($this->getUserDetail('deactivated') == 1) {
 			$this->logger()->logAction(LOG_ERROR, LOG_INFO, "[API] User '" . $this->getUserDetail('loginnname') . "' tried to use API but is deactivated");
 			throw new Exception("Account suspended", 406);
 		}
-
+		
 		$this->initLang();
 		$this->lng = $lng;
 		$this->initMail();
@@ -166,8 +166,14 @@ abstract class ApiCommand
 		
 		// now include the selected language if its not english
 		if ($language != 'English') {
-			foreach ($langs[$language] as $key => $value) {
-				include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
+			if (isset($langs[$language])) {
+				foreach ($langs[$language] as $key => $value) {
+					include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
+				}
+			} else {
+				if ($this->debug) {
+					$this->logger()->logAction(LOG_ERROR, LOG_DEBUG, "[API] unable to include user-language '" . $language . "'. Not found in database.", 404);
+				}
 			}
 		}
 		

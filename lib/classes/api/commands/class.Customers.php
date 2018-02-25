@@ -243,28 +243,18 @@ class Customers extends ApiCommand implements ResourceEntity
 					}
 					
 					// Check if the account already exists
-					try {
-						$dup_check_result = Customers::getLocal($this->getUserData(), array(
-							'loginname' => $loginname
-						))->get();
-						$loginname_check = json_decode($dup_check_result, true)['data'];
-					} catch (Exception $e) {
-						$loginname_check = array(
-							'loginname' => ''
-						);
-					}
+					// do not check via api as we skip any permission checks for this task
+					$loginname_check_stmt = Database::prepare("
+						SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname` = :login
+					");
+					$loginname_check = Database::pexecute_first($loginname_check_stmt, array('login' => $loginname), true, true);
 					
 					// Check if an admin with the loginname already exists
-					try {
-						$dup_check_result = Admins::getLocal($this->getUserData(), array(
-							'loginname' => $loginname
-						))->get();
-						$loginname_check_admin = json_decode($dup_check_result, true)['data'];
-					} catch (Exception $e) {
-						$loginname_check_admin = array(
-							'loginname' => ''
-						);
-					}
+					// do not check via api as we skip any permission checks for this task
+					$loginname_check_admin_stmt = Database::prepare("
+						SELECT `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname` = :login
+					");
+					$loginname_check_admin = Database::pexecute_first($loginname_check_admin_stmt, array('login' => $loginname), true, true);
 					
 					if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
 						standard_error('loginnameexists', $loginname, true);
