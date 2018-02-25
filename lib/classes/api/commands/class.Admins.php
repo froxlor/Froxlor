@@ -280,7 +280,13 @@ class Admins extends ApiCommand implements ResourceEntity
 				$adminid = Database::lastInsertId();
 				$ins_data['adminid'] = $adminid;
 				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added admin '" . $loginname . "'");
-				return $this->response(200, "successfull", $ins_data);
+
+				// get all admin-data for return-array
+				$json_result = Admins::getLocal($this->getUserData(), array(
+					'id' => $adminid
+				))->get();
+				$result = json_decode($json_result, true)['data'];
+				return $this->response(200, "successfull", $result);
 			}
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
@@ -540,9 +546,14 @@ class Admins extends ApiCommand implements ResourceEntity
 					WHERE `adminid` = :adminid
 				");
 				Database::pexecute($upd_stmt, $upd_data, true, true);
-
 				$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] edited admin '" . $result['loginname'] . "'");
-				return $this->response(200, "successfull", $upd_data);
+
+				// get all admin-data for return-array
+				$json_result = Admins::getLocal($this->getUserData(), array(
+					'id' => $adminid
+				))->get();
+				$result = json_decode($json_result, true)['data'];
+				return $this->response(200, "successfull", $result);
 			}
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
@@ -647,6 +658,8 @@ class Admins extends ApiCommand implements ResourceEntity
 			Database::pexecute($result_stmt, array(
 				'id' => $id
 			), true, true);
+			// set the new value for result-array
+			$result['loginfail_count'] = 0;
 			
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] unlocked admin '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);

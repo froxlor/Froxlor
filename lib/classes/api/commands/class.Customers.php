@@ -428,9 +428,8 @@ class Customers extends ApiCommand implements ResourceEntity
 						// update last account number
 						Settings::Set('system.lastaccountnumber', $accountnumber, true);
 					}
-					
+
 					$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] added customer '" . $loginname . "'");
-					$customer_ins_data = $ins_data;
 					unset($ins_data);
 					
 					// insert task to create homedir etc.
@@ -644,9 +643,13 @@ class Customers extends ApiCommand implements ResourceEntity
 						$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically sent password to user '" . $loginname . "'");
 					}
 				}
-				
 				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added customer '" . $loginname . "'");
-				return $this->response(200, "successfull", $customer_ins_data);
+
+				$json_result = Customers::getLocal($this->getUserData(), array(
+					'loginname' => $loginname
+				))->get();
+				$result = json_decode($json_result, true)['data'];
+				return $this->response(200, "successfull", $result);
 			}
 			throw new Exception("No more resources available", 406);
 		}
@@ -1196,8 +1199,12 @@ class Customers extends ApiCommand implements ResourceEntity
 				standard_error('moveofcustomerfailed', $move_result, true);
 			}
 		}
-		
-		return $this->response(200, "successfull", $upd_data);
+
+		$json_result = Customers::getLocal($this->getUserData(), array(
+			'loginname' => $result['customerid']
+		))->get();
+		$result = json_decode($json_result, true)['data'];
+		return $this->response(200, "successfull", $result);
 	}
 
 	/**
@@ -1478,6 +1485,8 @@ class Customers extends ApiCommand implements ResourceEntity
 			Database::pexecute($result_stmt, array(
 				'id' => $id
 			), true, true);
+			// set the new value for result-array
+			$result['loginfail_count'] = 0;
 			
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] unlocked customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
