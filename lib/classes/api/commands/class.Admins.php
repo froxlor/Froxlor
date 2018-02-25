@@ -555,7 +555,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					
 					// get all admin-data for return-array
 					$json_result = Admins::getLocal($this->getUserData(), array(
-						'id' => $adminid
+						'id' => $result['adminid']
 					))->get();
 					$result = json_decode($json_result, true)['data'];
 					return $this->response(200, "successfull", $result);
