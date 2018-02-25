@@ -3939,3 +3939,12 @@ if (isFroxlorVersion('0.9.39.4')) {
 	showUpdateStep("Updating from 0.9.39.4 to 0.9.39.5", false);
 	updateToVersion('0.9.39.5');
 }
+
+if (isDatabaseVersion('201802130')) {
+
+	showUpdateStep("Adding fullchain field to ssl certificates");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` ADD `ssl_fullchain_file` mediumtext AFTER `ssl_csr_file`;");
+	lastStepStatus(0);
+
+	updateToDbVersion('201802250');
+}
