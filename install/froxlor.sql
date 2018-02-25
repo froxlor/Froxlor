@@ -690,7 +690,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201802210');
+	('panel', 'db_version', '201802250');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -1006,6 +1006,7 @@ CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `ssl_ca_file` mediumtext,
   `ssl_cert_chainfile` mediumtext,
   `ssl_csr_file` mediumtext,
+  `ssl_fullchain_file` mediumtext,
   `expirationdate` datetime DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
