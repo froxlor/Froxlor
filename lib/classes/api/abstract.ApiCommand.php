@@ -116,7 +116,7 @@ abstract class ApiCommand
 			throw new Exception("Invalid user data", 500);
 		}
 		$this->logger = FroxlorLogger::getInstanceOf($this->user_data);
-		
+
 		// check whether the user is deactivated
 		if ($this->getUserDetail('deactivated') == 1) {
 			$this->logger()->logAction(LOG_ERROR, LOG_INFO, "[API] User '" . $this->getUserDetail('loginnname') . "' tried to use API but is deactivated");
@@ -161,13 +161,13 @@ abstract class ApiCommand
 		
 		// include every english language file we can get
 		foreach ($langs['English'] as $key => $value) {
-			include_once makeSecurePath($value['file']);
+			include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
 		}
 		
 		// now include the selected language if its not english
 		if ($language != 'English') {
 			foreach ($langs[$language] as $key => $value) {
-				include_once makeSecurePath($value['file']);
+				include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
 			}
 		}
 		
@@ -400,11 +400,13 @@ abstract class ApiCommand
 	 */
 	protected function response($status, $status_message, $data = null)
 	{
-		$resheader = $_SERVER["SERVER_PROTOCOL"] . " " . $status;
-		if (! empty($status_message)) {
-			$resheader .= ' ' . str_replace("\n", " ", $status_message);
+		if (isset($_SERVER["SERVER_PROTOCOL"]) && ! empty($_SERVER["SERVER_PROTOCOL"])) {
+			$resheader = $_SERVER["SERVER_PROTOCOL"] . " " . $status;
+			if (! empty($status_message)) {
+				$resheader .= ' ' . str_replace("\n", " ", $status_message);
+			}
+			header($resheader);
 		}
-		header($resheader);
 		
 		$response['status'] = $status;
 		$response['status_message'] = $status_message;

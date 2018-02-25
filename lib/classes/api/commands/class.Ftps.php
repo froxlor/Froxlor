@@ -45,7 +45,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		
 		$params = array();
 		if ($this->isAdmin()) {
-			if ($this->getUserDetail('customers_see_all') != 1) {
+			if ($this->getUserDetail('customers_see_all') == false) {
 				// if it's a reseller or an admin who cannot see all customers, we need to check
 				// whether the database belongs to one of his customers
 				$json_result = Customers::getLocal($this->getUserData())->list();

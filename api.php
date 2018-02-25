@@ -54,11 +54,13 @@ exit();
  */
 function json_response($status, $status_message = '', $data = null)
 {
-	$resheader = $_SERVER["SERVER_PROTOCOL"] . " " . $status;
-	if (! empty($status_message)) {
-		$resheader .= ' ' . str_replace("\n", " ", $status_message);
+	if (isset($_SERVER["SERVER_PROTOCOL"]) && ! empty($_SERVER["SERVER_PROTOCOL"])) {
+		$resheader = $_SERVER["SERVER_PROTOCOL"] . " " . $status;
+		if (! empty($status_message)) {
+			$resheader .= ' ' . str_replace("\n", " ", $status_message);
+		}
+		header($resheader);
 	}
-	header($resheader);
 	
 	$response['status'] = $status;
 	$response['status_message'] = $status_message;
