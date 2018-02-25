@@ -37,12 +37,8 @@ class Ftps extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id', true, 0);
 		$un_optional = ($id <= 0 ? false : true);
-		$username = $this->getParam('username', $un_optional, '');
-		
-		if ($id <= 0 && empty($username)) {
-			throw new Exception("Either 'id' or 'username' parameter must be given", 406);
-		}
-		
+		$username = trim($this->getParam('username', $un_optional, ''));
+
 		$params = array();
 		if ($this->isAdmin()) {
 			if ($this->getUserDetail('customers_see_all') == false) {

@@ -73,14 +73,9 @@ class Domains extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
 			$dn_optional = ($id <= 0 ? false : true);
-			$domainname = $this->getParam('domainname', $dn_optional, '');
+			$domainname = trim($this->getParam('domainname', $dn_optional, ''));
 			$no_std_subdomain = $this->getParam('no_std_subdomain', true, false);
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get domain #" . $id);
-			
-			if ($id <= 0 && empty($domainname)) {
-				throw new Exception("Either 'id' or 'domainname' parameter must be given", 406);
-			}
-			
+
 			// convert possible idn domain to punycode
 			if (substr($domainname, 0, 4) != 'xn--') {
 				$idna_convert = new idna_convert_wrapper();
@@ -101,6 +96,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
+				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get domain '" . $result['domain'] . "'");
 				return $this->response(200, "successfull", $result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
@@ -778,11 +774,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			// parameters
 			$id = $this->getParam('id', true, 0);
 			$dn_optional = ($id <= 0 ? false : true);
-			$domainname = $this->getParam('domainname', $dn_optional, '');
-
-			if ($id <= 0 && empty($domainname)) {
-				throw new Exception("Either 'id' or 'domainname' parameter must be given", 406);
-			}
+			$domainname = trim($this->getParam('domainname', $dn_optional, ''));
 
 			// get requested domain
 			$json_result = Domains::getLocal($this->getUserData(), array(
@@ -1595,14 +1587,10 @@ class Domains extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
 			$dn_optional = ($id <= 0 ? false : true);
-			$domainname = $this->getParam('domainname', $dn_optional, '');
+			$domainname = trim($this->getParam('domainname', $dn_optional, ''));
 			$is_stdsubdomain = $this->getParam('is_stdsubdomain', true, 0);
 			$remove_subbutmain_domains = $this->getParam('delete_mainsubdomains', true, 0);
-			
-			if ($id <= 0 && empty($domainname)) {
-				throw new Exception("Either 'id' or 'domainname' parameter must be given", 406);
-			}
-			
+
 			$json_result = Domains::getLocal($this->getUserData(), array(
 				'id' => $id,
 				'domainname' => $domainname

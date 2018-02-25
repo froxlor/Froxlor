@@ -63,12 +63,8 @@ class Admins extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id', true, 0);
 		$ln_optional = ($id <= 0 ? false : true);
-		$loginname = $this->getParam('loginname', $ln_optional, '');
-		
-		if ($id <= 0 && empty($loginname)) {
-			throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
-		}
-		
+		$loginname = trim($this->getParam('loginname', $ln_optional, ''));
+
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') == 1 || ($this->getUserDetail('adminid') == $id || $this->getUserDetail('loginname') == $loginname))) {
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
@@ -318,11 +314,7 @@ class Admins extends ApiCommand implements ResourceEntity
 
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
-			$loginname = $this->getParam('loginname', $ln_optional, '');
-
-			if ($id <= 0 && empty($loginname)) {
-				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
-			}
+			$loginname = trim($this->getParam('loginname', $ln_optional, ''));
 
 			$json_result = Admins::getLocal($this->getUserData(), array(
 				'id' => $id,
@@ -583,11 +575,7 @@ class Admins extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
-			$loginname = $this->getParam('loginname', $ln_optional, '');
-
-			if ($id <= 0 && empty($loginname)) {
-				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
-			}
+			$loginname = trim($this->getParam('loginname', $ln_optional, ''));
 
 			$json_result = Admins::getLocal($this->getUserData(), array(
 				'id' => $id,
@@ -652,12 +640,8 @@ class Admins extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
-			$loginname = $this->getParam('loginname', $ln_optional, '');
-			
-			if ($id <= 0 && empty($loginname)) {
-				throw new Exception("Either 'id' or 'loginname' parameter must be given", 406);
-			}
-			
+			$loginname = trim($this->getParam('loginname', $ln_optional, ''));
+
 			$json_result = Admins::getLocal($this->getUserData(), array(
 				'id' => $id,
 				'loginname' => $loginname

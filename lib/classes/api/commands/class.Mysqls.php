@@ -238,13 +238,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
-		$dbname = $this->getParam('dbname', $dn_optional, '');
+		$dbname = trim($this->getParam('dbname', $dn_optional, ''));
 		$dbserver = $this->getParam('mysql_server', true, - 1);
-		
-		if ($id <= 0 && empty($dbname)) {
-			throw new Exception("Either 'id' or 'dbname' parameter must be given", 406);
-		}
-		
+
 		if ($this->isAdmin()) {
 			if ($this->getUserDetail('customers_see_all') != 1) {
 				// if it's a reseller or an admin who cannot see all customers, we need to check
@@ -341,13 +337,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
-		$dbname = $this->getParam('dbname', $dn_optional, '');
+		$dbname = trim($this->getParam('dbname', $dn_optional, ''));
 		$dbserver = $this->getParam('mysql_server', true, - 1);
-		
-		if ($id <= 0 && empty($dbname)) {
-			throw new Exception("Either 'id' or 'dbname' parameter must be given", 406);
-		}
-		
+
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'mysql')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
@@ -549,13 +541,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
-		$dbname = $this->getParam('dbname', $dn_optional, '');
+		$dbname = trim($this->getParam('dbname', $dn_optional, ''));
 		$dbserver = $this->getParam('mysql_server', true, - 1);
-		
-		if ($id <= 0 && empty($dbname)) {
-			throw new Exception("Either 'id' or 'dbname' parameter must be given", 406);
-		}
-		
+
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'mysql')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
