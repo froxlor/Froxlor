@@ -1201,7 +1201,7 @@ class Customers extends ApiCommand implements ResourceEntity
 		}
 
 		$json_result = Customers::getLocal($this->getUserData(), array(
-			'loginname' => $result['customerid']
+			'id' => $result['customerid']
 		))->get();
 		$result = json_decode($json_result, true)['data'];
 		return $this->response(200, "successfull", $result);
