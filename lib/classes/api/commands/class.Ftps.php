@@ -251,11 +251,11 @@ class Ftps extends ApiCommand implements ResourceEntity
 					
 					$_mailerror = false;
 					try {
-						$this->mail->Subject = $mail_subject;
-						$this->mail->AltBody = $mail_body;
-						$this->mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-						$this->mail->AddAddress($customer['email'], getCorrectUserSalutation($customer));
-						$this->mail->Send();
+						$this->mailer()->Subject = $mail_subject;
+						$this->mailer()->AltBody = $mail_body;
+						$this->mailer()->MsgHTML(str_replace("\n", "<br />", $mail_body));
+						$this->mailer()->AddAddress($customer['email'], getCorrectUserSalutation($customer));
+						$this->mailer()->Send();
 					} catch (phpmailerException $e) {
 						$mailerr_msg = $e->errorMessage();
 						$_mailerror = true;
@@ -266,10 +266,10 @@ class Ftps extends ApiCommand implements ResourceEntity
 					
 					if ($_mailerror) {
 						$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
-						standard_error('errorsendingmail', $customer['email']);
+						standard_error('errorsendingmail', $customer['email'], true);
 					}
 					
-					$this->mail->ClearAddresses();
+					$this->mailer()->ClearAddresses();
 				}
 				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] added ftp-user '" . $username . "'");
 				
@@ -475,7 +475,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		$stmt = Database::prepare("DELETE FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = :name");
 		Database::pexecute($stmt, array(
 			"name" => $result['username']
-		), true, tue);
+		), true, true);
 		
 		// remove user itself
 		$stmt = Database::prepare("
@@ -496,9 +496,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 			"username" => "," . $result['username'],
 			"customerid" => $customer_data['customerid']
 		), true, true);
-		
-		$log->logAction(USR_ACTION, LOG_INFO, "deleted ftp-account '" . $result['username'] . "'");
-		
+
 		// refs #293
 		if ($delete_userfiles == 1) {
 			inserttask('8', $customer_data['loginname'], $result['homedir']);
