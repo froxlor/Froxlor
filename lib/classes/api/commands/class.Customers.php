@@ -95,6 +95,10 @@ class Customers extends ApiCommand implements ResourceEntity
 		}
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
+			// check whether the admin does not want the customer to see the notes
+			if (! $this->isAdmin() && $result['custom_notes_show'] != 1) {
+				$result['custom_notes'] = "";
+			}
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
@@ -732,62 +736,24 @@ class Customers extends ApiCommand implements ResourceEntity
 			$def_language = $this->getParam('def_language', true, $result['def_language']);
 			$password = $this->getParam('new_customer_password', true, '');
 			$theme = $this->getParam('theme', true, $result['theme']);
-			
-			// unchangeable parameters for customers
-			$move_to_admin = 0;
-			$idna_convert = new idna_convert_wrapper();
-			$email = $idna_convert->decode($result['email']);
-			$name = $result['name'];
-			$firstname = $result['firstname'];
-			$company = $result['company'];
-			$street = $result['street'];
-			$zipcode = $result['zipcode'];
-			$city = $result['city'];
-			$phone = $result['phone'];
-			$fax = $result['fax'];
-			$customernumber = $result['customernumber'];
-			$gender = $result['gender'];
-			$custom_notes = $result['custom_notes'];
-			$custom_notes_show = $result['custom_notes_show'];
-			
-			$dec_places = Settings::Get('panel.decimal_places');
-			$diskspace = round($result['diskspace'] / 1024, $dec_places);
-			$traffic = round($result['traffic'] / (1024 * 1024), $dec_places);
-			$subdomains = $result['subdomains'];
-			$emails = $result['emails'];
-			$email_accounts = $result['email_accounts'];
-			$email_forwarders = $result['email_forwarders'];
-			$email_quota = $result['email_quota'];
-			$email_imap = $result['imap'];
-			$email_pop3 = $result['pop3'];
-			$ftps = $result['ftps'];
-			$tickets = $result['tickets'];
-			$mysqls = $result['mysqls'];
-			// if we got one, it's true so none will be generated (it exists already)
-			// if not, none will be generated
-			$createstdsubdomain = ($result['standardsubdomain'] > 0 ? 1 : 0);
-			$sendpassword = 0;
-			$phpenabled = $result['phpenabled'];
-			$allowed_phpconfigs = json_decode($result['allowed_phpconfigs'], true);
-			$perlenabled = $result['perlenabled'];
-			$dnsenabled = $result['dnsenabled'];
-			$deactivated = $result['deactivated'];
 		}
 		
 		// validation
-		$idna_convert = new idna_convert_wrapper();
-		$name = validate($name, 'name', '', '', array(), true);
-		$firstname = validate($firstname, 'first name', '', '', array(), true);
-		$company = validate($company, 'company', '', '', array(), true);
-		$street = validate($street, 'street', '', '', array(), true);
-		$zipcode = validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
-		$city = validate($city, 'city', '', '', array(), true);
-		$phone = validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-		$fax = validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-		$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
-		$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
+		if ($this->isAdmin()) {
+			$idna_convert = new idna_convert_wrapper();
+			$name = validate($name, 'name', '', '', array(), true);
+			$firstname = validate($firstname, 'first name', '', '', array(), true);
+			$company = validate($company, 'company', '', '', array(), true);
+			$street = validate($street, 'street', '', '', array(), true);
+			$zipcode = validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
+			$city = validate($city, 'city', '', '', array(), true);
+			$phone = validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+			$fax = validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+			$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
+			$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
+			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+		}
 		$def_language = validate($def_language, 'default language', '', '', array(), true);
-		$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
 		$theme = validate($theme, 'theme', '', '', array(), true);
 		
 		if (Settings::Get('system.mail_quota_enabled') != '1') {
@@ -802,10 +768,11 @@ class Customers extends ApiCommand implements ResourceEntity
 			$theme = Settings::Get('panel.default_theme');
 		}
 		
-		$diskspace = $diskspace * 1024;
-		$traffic = $traffic * 1024 * 1024;
-		
 		if ($this->isAdmin()) {
+
+			$diskspace = $diskspace * 1024;
+			$traffic = $traffic * 1024 * 1024;
+
 			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('tickets_used') + $tickets - $result['tickets']) > $this->getUserDetail('tickets')) && $this->getUserDetail('tickets') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($tickets == '-1' && $this->getUserDetail('tickets') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
 				standard_error('youcantallocatemorethanyouhave', '', true);
 			}
@@ -838,210 +805,224 @@ class Customers extends ApiCommand implements ResourceEntity
 			$password = $result['password'];
 		}
 		
-		if ($createstdsubdomain != '1') {
-			$createstdsubdomain = '0';
-		}
-		
-		if ($createstdsubdomain == '1' && $result['standardsubdomain'] == '0') {
-			
-			if (Settings::Get('system.stdsubdomain') !== null && Settings::Get('system.stdsubdomain') != '') {
-				$_stdsubdomain = $result['loginname'] . '.' . Settings::Get('system.stdsubdomain');
-			} else {
-				$_stdsubdomain = $result['loginname'] . '.' . Settings::Get('system.hostname');
+		if ($this->isAdmin()) {
+			if ($createstdsubdomain != '1') {
+				$createstdsubdomain = '0';
 			}
 			
-			$ins_data = array(
-				'domain' => $_stdsubdomain,
-				'customerid' => $result['customerid'],
-				'adminid' => $this->getUserDetail('adminid'),
-				'docroot' => $result['documentroot'],
-				'phpenabled' => $phpenabled,
-				'openbasedir' => '1'
-			);
-			$domainid = - 1;
-			try {
-				$std_domain = Domains::getLocal($this->getUserData(), $ins_data)->add();
-				$domainid = json_decode($std_domain, true)['data']['id'];
-			} catch (Exception $e) {
-				$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
-			}
-			
-			if ($domainid > 0) {
-				$upd_stmt = Database::prepare("
+			if ($createstdsubdomain == '1' && $result['standardsubdomain'] == '0') {
+				
+				if (Settings::Get('system.stdsubdomain') !== null && Settings::Get('system.stdsubdomain') != '') {
+					$_stdsubdomain = $result['loginname'] . '.' . Settings::Get('system.stdsubdomain');
+				} else {
+					$_stdsubdomain = $result['loginname'] . '.' . Settings::Get('system.hostname');
+				}
+				
+				$ins_data = array(
+					'domain' => $_stdsubdomain,
+					'customerid' => $result['customerid'],
+					'adminid' => $this->getUserDetail('adminid'),
+					'docroot' => $result['documentroot'],
+					'phpenabled' => $phpenabled,
+					'openbasedir' => '1'
+				);
+				$domainid = - 1;
+				try {
+					$std_domain = Domains::getLocal($this->getUserData(), $ins_data)->add();
+					$domainid = json_decode($std_domain, true)['data']['id'];
+				} catch (Exception $e) {
+					$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
+				}
+				
+				if ($domainid > 0) {
+					$upd_stmt = Database::prepare("
 							UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `standardsubdomain` = :domainid WHERE `customerid` = :customerid
 						");
-				Database::pexecute($upd_stmt, array(
-					'domainid' => $domainid,
-					'customerid' => $result['customerid']
-				), true, true);
-				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added standardsubdomain for user '" . $result['loginname'] . "'");
+					Database::pexecute($upd_stmt, array(
+						'domainid' => $domainid,
+						'customerid' => $result['customerid']
+					), true, true);
+					$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added standardsubdomain for user '" . $result['loginname'] . "'");
+					inserttask('1');
+				}
+			}
+			
+			if ($createstdsubdomain == '0' && $result['standardsubdomain'] != '0') {
+				try {
+					$std_domain = Domains::getLocal($this->getUserData(), array(
+						'id' => $result['standardsubdomain'],
+						'is_stdsubdomain' => 1
+					))->delete();
+				} catch (Exception $e) {
+					$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to delete standard-subdomain: " . $e->getMessage());
+				}
+				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
 				inserttask('1');
 			}
-		}
-		
-		if ($createstdsubdomain == '0' && $result['standardsubdomain'] != '0') {
-			try {
-				$std_domain = Domains::getLocal($this->getUserData(), array(
-					'id' => $result['standardsubdomain'],
-					'is_stdsubdomain' => 1
-				))->delete();
-			} catch (Exception $e) {
-				$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to delete standard-subdomain: " . $e->getMessage());
+			
+			if ($deactivated != '1') {
+				$deactivated = '0';
 			}
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
-			inserttask('1');
-		}
-		
-		if ($deactivated != '1') {
-			$deactivated = '0';
-		}
-		
-		if ($phpenabled != '0') {
-			$phpenabled = '1';
-		}
-		
-		if ($perlenabled != '0') {
-			$perlenabled = '1';
-		}
-		
-		if ($dnsenabled != '0') {
-			$dnsenabled = '1';
-		}
-		
-		if ($phpenabled != $result['phpenabled'] || $perlenabled != $result['perlenabled']) {
-			inserttask('1');
-		}
-		
-		// activate/deactivate customer services
-		if ($deactivated != $result['deactivated']) {
 			
-			$yesno = (($deactivated) ? 'N' : 'Y');
-			$pop3 = (($deactivated) ? '0' : (int) $result['pop3']);
-			$imap = (($deactivated) ? '0' : (int) $result['imap']);
+			if ($phpenabled != '0') {
+				$phpenabled = '1';
+			}
 			
-			$upd_stmt = Database::prepare("
+			if ($perlenabled != '0') {
+				$perlenabled = '1';
+			}
+			
+			if ($dnsenabled != '0') {
+				$dnsenabled = '1';
+			}
+			
+			if ($phpenabled != $result['phpenabled'] || $perlenabled != $result['perlenabled']) {
+				inserttask('1');
+			}
+			
+			// activate/deactivate customer services
+			if ($deactivated != $result['deactivated']) {
+				
+				$yesno = (($deactivated) ? 'N' : 'Y');
+				$pop3 = (($deactivated) ? '0' : (int) $result['pop3']);
+				$imap = (($deactivated) ? '0' : (int) $result['imap']);
+				
+				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_MAIL_USERS . "` SET `postfix`= :yesno, `pop3` = :pop3, `imap` = :imap WHERE `customerid` = :customerid
 				");
-			Database::pexecute($upd_stmt, array(
-				'yesno' => $yesno,
-				'pop3' => $pop3,
-				'imap' => $imap,
-				'customerid' => $id
-			));
-			
-			$upd_stmt = Database::prepare("
+				Database::pexecute($upd_stmt, array(
+					'yesno' => $yesno,
+					'pop3' => $pop3,
+					'imap' => $imap,
+					'customerid' => $id
+				));
+				
+				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_FTP_USERS . "` SET `login_enabled` = :yesno WHERE `customerid` = :customerid
 				");
-			Database::pexecute($upd_stmt, array(
-				'yesno' => $yesno,
-				'customerid' => $id
-			));
-			
-			$upd_stmt = Database::prepare("
+				Database::pexecute($upd_stmt, array(
+					'yesno' => $yesno,
+					'customerid' => $id
+				));
+				
+				$upd_stmt = Database::prepare("
 							UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `deactivated`= :deactivated WHERE `customerid` = :customerid");
-			Database::pexecute($upd_stmt, array(
-				'deactivated' => $deactivated,
-				'customerid' => $id
-			));
-			
-			// Retrieve customer's databases
-			$databases_stmt = Database::prepare("SELECT * FROM " . TABLE_PANEL_DATABASES . " WHERE customerid = :customerid ORDER BY `dbserver`");
-			Database::pexecute($databases_stmt, array(
-				'customerid' => $id
-			));
-			
-			Database::needRoot(true);
-			$last_dbserver = 0;
-			
-			$dbm = new DbManager($this->logger());
-			
-			// For each of them
-			while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
+				Database::pexecute($upd_stmt, array(
+					'deactivated' => $deactivated,
+					'customerid' => $id
+				));
 				
-				if ($last_dbserver != $row_database['dbserver']) {
-					$dbm->getManager()->flushPrivileges();
-					Database::needRoot(true, $row_database['dbserver']);
-					$last_dbserver = $row_database['dbserver'];
-				}
+				// Retrieve customer's databases
+				$databases_stmt = Database::prepare("SELECT * FROM " . TABLE_PANEL_DATABASES . " WHERE customerid = :customerid ORDER BY `dbserver`");
+				Database::pexecute($databases_stmt, array(
+					'customerid' => $id
+				));
 				
-				foreach (array_unique(explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
-					$mysql_access_host = trim($mysql_access_host);
+				Database::needRoot(true);
+				$last_dbserver = 0;
+				
+				$dbm = new DbManager($this->logger());
+				
+				// For each of them
+				while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 					
-					// Prevent access, if deactivated
-					if ($deactivated) {
-						// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
-						$dbm->getManager()->disableUser($row_database['databasename'], $mysql_access_host);
-					} else {
-						// Otherwise grant access
-						$dbm->getManager()->enableUser($row_database['databasename'], $mysql_access_host);
+					if ($last_dbserver != $row_database['dbserver']) {
+						$dbm->getManager()->flushPrivileges();
+						Database::needRoot(true, $row_database['dbserver']);
+						$last_dbserver = $row_database['dbserver'];
+					}
+					
+					foreach (array_unique(explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
+						$mysql_access_host = trim($mysql_access_host);
+						
+						// Prevent access, if deactivated
+						if ($deactivated) {
+							// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
+							$dbm->getManager()->disableUser($row_database['databasename'], $mysql_access_host);
+						} else {
+							// Otherwise grant access
+							$dbm->getManager()->enableUser($row_database['databasename'], $mysql_access_host);
+						}
 					}
 				}
+				
+				// At last flush the new privileges
+				$dbm->getManager()->flushPrivileges();
+				Database::needRoot(false);
+				
+				$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] deactivated user '" . $result['loginname'] . "'");
+				inserttask('1');
 			}
 			
-			// At last flush the new privileges
-			$dbm->getManager()->flushPrivileges();
-			Database::needRoot(false);
+			// Disable or enable POP3 Login for customers Mail Accounts
+			if ($email_pop3 != $result['pop3']) {
+				$upd_stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "` SET `pop3` = :pop3 WHERE `customerid` = :customerid");
+				Database::pexecute($upd_stmt, array(
+					'pop3' => $email_pop3,
+					'customerid' => $id
+				));
+			}
 			
-			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] deactivated user '" . $result['loginname'] . "'");
-			inserttask('1');
-		}
-		
-		// Disable or enable POP3 Login for customers Mail Accounts
-		if ($email_pop3 != $result['pop3']) {
-			$upd_stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "` SET `pop3` = :pop3 WHERE `customerid` = :customerid");
-			Database::pexecute($upd_stmt, array(
-				'pop3' => $email_pop3,
-				'customerid' => $id
-			));
-		}
-		
-		// Disable or enable IMAP Login for customers Mail Accounts
-		if ($email_imap != $result['imap']) {
-			$upd_stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "` SET `imap` = :imap WHERE `customerid` = :customerid");
-			Database::pexecute($upd_stmt, array(
-				'imap' => $email_imap,
-				'customerid' => $id
-			));
+			// Disable or enable IMAP Login for customers Mail Accounts
+			if ($email_imap != $result['imap']) {
+				$upd_stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "` SET `imap` = :imap WHERE `customerid` = :customerid");
+				Database::pexecute($upd_stmt, array(
+					'imap' => $email_imap,
+					'customerid' => $id
+				));
+			}
 		}
 		
 		$upd_data = array(
 			'customerid' => $id,
 			'passwd' => $password,
-			'name' => $name,
-			'firstname' => $firstname,
-			'gender' => $gender,
-			'company' => $company,
-			'street' => $street,
-			'zipcode' => $zipcode,
-			'city' => $city,
-			'phone' => $phone,
-			'fax' => $fax,
-			'email' => $email,
-			'customerno' => $customernumber,
 			'lang' => $def_language,
-			'diskspace' => $diskspace,
-			'traffic' => $traffic,
-			'subdomains' => $subdomains,
-			'emails' => $emails,
-			'email_accounts' => $email_accounts,
-			'email_forwarders' => $email_forwarders,
-			'email_quota' => $email_quota,
-			'ftps' => $ftps,
-			'tickets' => $tickets,
-			'mysqls' => $mysqls,
-			'deactivated' => $deactivated,
-			'phpenabled' => $phpenabled,
-			'allowed_phpconfigs' => empty($allowed_phpconfigs) ? "" : json_encode($allowed_phpconfigs),
-			'imap' => $email_imap,
-			'pop3' => $email_pop3,
-			'perlenabled' => $perlenabled,
-			'dnsenabled' => $dnsenabled,
-			'custom_notes' => $custom_notes,
-			'custom_notes_show' => $custom_notes_show,
 			'theme' => $theme
 		);
-		$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+		
+		if ($this->isAdmin()) {
+			$admin_upd_data = array(
+				'name' => $name,
+				'firstname' => $firstname,
+				'gender' => $gender,
+				'company' => $company,
+				'street' => $street,
+				'zipcode' => $zipcode,
+				'city' => $city,
+				'phone' => $phone,
+				'fax' => $fax,
+				'email' => $email,
+				'customerno' => $customernumber,
+				'diskspace' => $diskspace,
+				'traffic' => $traffic,
+				'subdomains' => $subdomains,
+				'emails' => $emails,
+				'email_accounts' => $email_accounts,
+				'email_forwarders' => $email_forwarders,
+				'email_quota' => $email_quota,
+				'ftps' => $ftps,
+				'tickets' => $tickets,
+				'mysqls' => $mysqls,
+				'deactivated' => $deactivated,
+				'phpenabled' => $phpenabled,
+				'allowed_phpconfigs' => empty($allowed_phpconfigs) ? "" : json_encode($allowed_phpconfigs),
+				'imap' => $email_imap,
+				'pop3' => $email_pop3,
+				'perlenabled' => $perlenabled,
+				'dnsenabled' => $dnsenabled,
+				'custom_notes' => $custom_notes,
+				'custom_notes_show' => $custom_notes_show
+			);
+			$upd_data = $upd_data + $admin_upd_data;
+		}
+		
+		$upd_query = "UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+				`def_language` = :lang,
+				`password` = :passwd,
+				`theme` = :theme";
+		
+		if ($this->isAdmin()) {
+			$admin_upd_query = ",
 				`name` = :name,
 				`firstname` = :firstname,
 				`gender` = :gender,
@@ -1053,8 +1034,6 @@ class Customers extends ApiCommand implements ResourceEntity
 				`fax` = :fax,
 				`email` = :email,
 				`customernumber` = :customerno,
-				`def_language` = :lang,
-				`password` = :passwd,
 				`diskspace` = :diskspace,
 				`traffic` = :traffic,
 				`subdomains` = :subdomains,
@@ -1073,10 +1052,11 @@ class Customers extends ApiCommand implements ResourceEntity
 				`perlenabled` = :perlenabled,
 				`dnsenabled` = :dnsenabled,
 				`custom_notes` = :custom_notes,
-				`custom_notes_show` = :custom_notes_show,
-				`theme` = :theme
-				WHERE `customerid` = :customerid
-			");
+				`custom_notes_show` = :custom_notes_show";
+			$upd_query .= $admin_upd_query;
+		}
+		$upd_query .= " WHERE `customerid` = :customerid";
+		$upd_stmt = Database::prepare($upd_query);
 		Database::pexecute($upd_stmt, $upd_data);
 		
 		if ($this->isAdmin()) {
@@ -1193,14 +1173,16 @@ class Customers extends ApiCommand implements ResourceEntity
 		/*
 		 * move customer to another admin/reseller; #1166
 		 */
-		if ($move_to_admin > 0 && $move_to_admin != $result['adminid']) {
-			$json_result = Customers::getLocal($this->getUserData(), array(
-				'id' => $result['customerid'],
-				'adminid' => $move_to_admin
-			))->move();
-			$move_result = json_decode($json_result, true)['data'];
-			if ($move_result != true) {
-				standard_error('moveofcustomerfailed', $move_result, true);
+		if ($this->isAdmin()) {
+			if ($move_to_admin > 0 && $move_to_admin != $result['adminid']) {
+				$json_result = Customers::getLocal($this->getUserData(), array(
+					'id' => $result['customerid'],
+					'adminid' => $move_to_admin
+				))->move();
+				$move_result = json_decode($json_result, true)['data'];
+				if ($move_result != true) {
+					standard_error('moveofcustomerfailed', $move_result, true);
+				}
 			}
 		}
 		
