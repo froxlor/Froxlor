@@ -24,7 +24,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 	 * @param string $ftp_password
 	 *        	password for the created database and database-user
 	 * @param string $path
-	 *        	destination path
+	 *        	destination path relative to the customers-homedir
 	 * @param string $ftp_description
 	 *        	optional, description for ftp-user
 	 * @param bool $sendinfomail
