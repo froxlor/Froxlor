@@ -251,11 +251,11 @@ class Ftps extends ApiCommand implements ResourceEntity
 					
 					$_mailerror = false;
 					try {
-						$mail->Subject = $mail_subject;
-						$mail->AltBody = $mail_body;
-						$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-						$mail->AddAddress($customer['email'], getCorrectUserSalutation($customer));
-						$mail->Send();
+						$this->mail->Subject = $mail_subject;
+						$this->mail->AltBody = $mail_body;
+						$this->mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
+						$this->mail->AddAddress($customer['email'], getCorrectUserSalutation($customer));
+						$this->mail->Send();
 					} catch (phpmailerException $e) {
 						$mailerr_msg = $e->errorMessage();
 						$_mailerror = true;
@@ -269,7 +269,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 						standard_error('errorsendingmail', $customer['email']);
 					}
 					
-					$mail->ClearAddresses();
+					$this->mail->ClearAddresses();
 				}
 				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] added ftp-user '" . $username . "'");
 				
