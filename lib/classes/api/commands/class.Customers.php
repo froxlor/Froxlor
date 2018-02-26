@@ -208,13 +208,8 @@ class Customers extends ApiCommand implements ResourceEntity
 				if (((($this->getUserDetail('diskspace_used') + $diskspace) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('tickets_used') + $tickets) > $this->getUserDetail('tickets')) && $this->getUserDetail('tickets') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($tickets == '-1' && $this->getUserDetail('tickets') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
 					standard_error('youcantallocatemorethanyouhave', '', true);
 				}
-				
-				if ($email == '') {
-					standard_error(array(
-						'stringisempty',
-						'emailadd'
-					), '', true);
-				} elseif (! validateEmail($email)) {
+
+				if (! validateEmail($email)) {
 					standard_error('emailiswrong', $email, true);
 				} else {
 					
@@ -687,7 +682,8 @@ class Customers extends ApiCommand implements ResourceEntity
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 			$name = $this->getParam('name', true, $result['name']);
 			$firstname = $this->getParam('firstname', true, $result['firstname']);
-			$company = $this->getParam('company', true, $result['company']);
+			$company_required = (! empty($name) && empty($firstname)) || (empty($name) && ! empty($firstname)) || (empty($name) && empty($firstname));
+			$company = $this->getParam('company', ($company_required ? false : true), $result['company']);
 			$street = $this->getParam('street', true, $result['street']);
 			$zipcode = $this->getParam('zipcode', true, $result['zipcode']);
 			$city = $this->getParam('city', true, $result['city']);
@@ -767,18 +763,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				standard_error('youcantallocatemorethanyouhave', '', true);
 			}
 			
-			// Either $name and $firstname or the $company must be inserted
-			if ($name == '' && $company == '') {
-				standard_error(array(
-					'stringisempty',
-					'myname'
-				), '', true);
-			} elseif ($firstname == '' && $company == '') {
-				standard_error(array(
-					'stringisempty',
-					'myfirstname'
-				), '', true);
-			} elseif ($email == '') {
+			if ($email == '') {
 				standard_error(array(
 					'stringisempty',
 					'emailadd'
