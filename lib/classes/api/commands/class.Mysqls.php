@@ -440,6 +440,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 *        	optional, admin-only, select dbs of a specific customer by loginname
 	 *        	
 	 * @access admin, customer
+	 * @throws Exception
 	 * @return array count|list
 	 */
 	public function list()
@@ -560,7 +561,6 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		Database::needRoot(true, $result['dbserver']);
 		$dbm = new DbManager($this->logger());
 		$dbm->getManager()->deleteDatabase($result['databasename']);
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] deleted database '" . $result['databasename'] . "'");
 		Database::needRoot(false);
 		// End root-session
 		
@@ -602,6 +602,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			"adminid" => ($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')),
 		), true, true);
 
+		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] deleted database '" . $result['databasename'] . "'");
 		return $this->response(200, "successfull", $result);
 	}
 }

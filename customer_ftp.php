@@ -90,66 +90,11 @@ if ($page == 'overview') {
 
 		if (isset($result['username']) && $result['username'] != $userinfo['loginname']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
-					SET `up_count` = `up_count` + :up_count,
-					`up_bytes` = `up_bytes` + :up_bytes,
-					`down_count` = `down_count` + :down_count,
-					`down_bytes` = `down_bytes` + :down_bytes
-					WHERE `username` = :username"
-				);
-				$params = array(
-					"up_count" => $result['up_count'],
-					"up_bytes" => $result['up_bytes'],
-					"down_count" => $result['down_count'],
-					"down_bytes" => $result['down_bytes'],
-					"username" => $userinfo['loginname']
-				);
-				Database::pexecute($stmt, $params);
-
-				$result_stmt = Database::prepare("SELECT `username`, `homedir` FROM `" . TABLE_FTP_USERS . "`
-					WHERE `customerid` = :customerid
-					AND `id` = :id"
-				);
-				Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-				$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = :name");
-				Database::pexecute($stmt, array("name" => $result['username']));
-
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_FTP_USERS . "`
-					WHERE `customerid` = :customerid
-					AND `id` = :id"
-				);
-				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-
-				$stmt = Database::prepare("
-					UPDATE `" . TABLE_FTP_GROUPS . "` SET
-					`members` = REPLACE(`members`, :username,'')
-					WHERE `customerid` = :customerid
-				");
-				Database::pexecute($stmt, array("username" => ",".$result['username'], "customerid" => $userinfo['customerid']));
-
-				$log->logAction(USR_ACTION, LOG_INFO, "deleted ftp-account '" . $result['username'] . "'");
-
-				$resetaccnumber = ($userinfo['ftps_used'] == '1') ? " , `ftp_lastaccountnumber`='0'" : '';
-
-				// refs #293
-				if (isset($_POST['delete_userfiles']) && (int)$_POST['delete_userfiles'] == 1) {
-					inserttask('8', $userinfo['loginname'], $result['homedir']);
-				} else {
-					if (Settings::Get('system.nssextrausers') == 1)
-					{
-						// this is used so that the libnss-extrausers cron is fired
-						inserttask(5);
-					}
+				try {
+					Ftps::getLocal($userinfo, $_POST)->delete();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-					SET `ftps_used` = `ftps_used` - 1 $resetaccnumber
-					WHERE `customerid` = :customerid"
-				);
-				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
-
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				ask_yesno_withcheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['username']);
