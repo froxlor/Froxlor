@@ -372,7 +372,12 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				inserttask('4');
 				
 				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] changed IP/port from '" . $result['ip'] . ":" . $result['port'] . "' to '" . $ip . ":" . $port . "'");
-				return $this->response(200, "successfull", $upd_data);
+
+				$json_result = IpsAndPorts::getLocal($this->getUserData(), array(
+					'id' => $result['id']
+				))->get();
+				$result = json_decode($json_result, true)['data'];
+				return $this->response(200, "successfull", $result);
 			}
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
@@ -397,7 +402,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				'id' => $id
 			))->get();
 			$result = json_decode($json_result, true)['data'];
-			
+
 			$result_checkdomain_stmt = Database::prepare("
 				SELECT `id_domain` as `id` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
 			");
@@ -405,9 +410,12 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				'id' => $id
 			), true, true);
 			
-			if ($result_checkdomain['id'] == '') {
+			if (empty($result_checkdomain)) {
 				if (! in_array($result['id'], explode(',', Settings::Get('system.defaultip'))) && ! in_array($result['id'], explode(',', Settings::Get('system.defaultsslip')))) {
-					
+
+					// check whether there is the same IP with a different port
+					// in case this ip-address is the system.ipaddress and therefore
+					// when there is one - we have an alternative
 					$result_sameipotherport_stmt = Database::prepare("
 						SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
 						WHERE `ip` = :ip AND `id` <> :id");
@@ -417,37 +425,29 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 					));
 					
 					if (($result['ip'] != Settings::Get('system.ipaddress')) || ($result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport['id'] != '')) {
-						$result_stmt = Database::prepare("
-							SELECT `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-							WHERE `id` = :id");
-						$result = Database::pexecute_first($result_stmt, array(
+
+						$del_stmt = Database::prepare("
+							DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "`
+							WHERE `id` = :id
+						");
+						Database::pexecute($del_stmt, array(
 							'id' => $id
-						));
-						if ($result['ip'] != '') {
-							
-							$del_stmt = Database::prepare("
-								DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-								WHERE `id` = :id
-							");
-							Database::pexecute($del_stmt, array(
-								'id' => $id
-							));
-							
-							// also, remove connections to domains (multi-stack)
-							$del_stmt = Database::prepare("
-								DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
-							");
-							Database::pexecute($del_stmt, array(
-								'id' => $id
-							));
-							
-							inserttask('1');
-							// Using nameserver, insert a task which rebuilds the server config
-							inserttask('4');
-							
-							$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
-							return $this->response(200, "successfull", $result);
-						}
+						), true, true);
+
+						// also, remove connections to domains (multi-stack)
+						$del_stmt = Database::prepare("
+							DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
+						");
+						Database::pexecute($del_stmt, array(
+							'id' => $id
+						), true, true);
+
+						inserttask('1');
+						// Using nameserver, insert a task which rebuilds the server config
+						inserttask('4');
+
+						$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
+						return $this->response(200, "successfull", $result);
 					} else {
 						standard_error('cantdeletesystemip', '', true);
 					}
