@@ -93,7 +93,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 					throw new Exception("Customer has no more resources available", 406);
 				}
 			} else {
-				$customer_id = $this->getUserDetail('customer_id');
+				$customer_id = $this->getUserDetail('customerid');
 				$customer = $this->getUserData();
 			}
 			

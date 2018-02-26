@@ -87,7 +87,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					throw new Exception("Customer has no more resources available", 406);
 				}
 			} else {
-				$customer_id = $this->getUserDetail('customer_id');
+				$customer_id = $this->getUserDetail('customerid');
 			}
 			
 			$newdb_params = array(
@@ -389,7 +389,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 				throw new Exception("Customer has no more resources available", 406);
 			}
 		} else {
-			$customer_id = $this->getUserDetail('customer_id');
+			$customer_id = $this->getUserDetail('customerid');
 		}
 		
 		if ($password != '') {
@@ -585,7 +585,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			$customer_id = $customer['customer_id'];
 		} else {
 			$mysql_used = $this->getUserDetail('mysqls_used');
-			$customer_id = $this->getUserDetail('customer_id');
+			$customer_id = $this->getUserDetail('customerid');
 		}
 		// reduce mysql-usage-counter
 		$resetaccnumber = ($mysql_used == '1') ? " , `mysql_lastaccountnumber` = '0' " : '';
