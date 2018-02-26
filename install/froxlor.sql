@@ -95,7 +95,7 @@ CREATE TABLE `panel_admins` (
   `name` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `def_language` varchar(255) NOT NULL default '',
-  `ip` tinyint(4) NOT NULL default '-1',
+  `ip` varchar(500) NOT NULL default '-1',
   `customers` int(15) NOT NULL default '0',
   `customers_used` int(15) NOT NULL default '0',
   `customers_see_all` tinyint(1) NOT NULL default '0',

@@ -27,10 +27,14 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	 */
 	public function list()
 	{
-		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || ! empty($this->getUserDetail('ip')))) {
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list ips and ports");
+			$ip_where = "";
+			if (!empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != -1) {
+				$ip_where = "WHERE `id` IN (".implode(", ", json_decode($this->getUserDetail('ip'), true)).")";
+			}
 			$result_stmt = Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC
+				SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $ip_where . " ORDER BY `ip` ASC, `port` ASC
 			");
 			Database::pexecute($result_stmt, null, true, true);
 			$result = array();
@@ -50,16 +54,21 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	 *
 	 * @param int $id
 	 *        	ip-port-id
-	 *
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
 	 */
 	public function get()
 	{
-		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || ! empty($this->getUserDetail('ip')))) {
 			$id = $this->getParam('id');
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get ip and port #" . $id);
+			if (!empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != -1) {
+				$allowed_ips = json_decode($this->getUserDetail('ip'), true);
+				if (!in_array($id, $allowed_ips)) {
+					throw new Exception("You cannot access this resource", 405);
+				}
+			}
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :id
 			");
@@ -67,6 +76,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				'id' => $id
 			), true, true);
 			if ($result) {
+				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get ip " . $result['ip'] . " " . $result['port']);
 				return $this->response(200, "successfull", $result);
 			}
 			throw new Exception("IP/port with id #" . $id . " could not be found", 404);
@@ -204,7 +214,12 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				$ip = '[' . $ip . ']';
 			}
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added IP/port '" . $ip . ":" . $port . "'");
-			return $this->response(200, "successfull", $ins_data);
+			// get ip for return-array
+			$json_result = IpsAndPorts::getLocal($this->getUserData(), array(
+				'id' => $ins_data['id']
+			))->get();
+			$result = json_decode($json_result, true)['data'];
+			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
@@ -220,7 +235,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	 */
 	public function update()
 	{
-		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || ! empty($this->getUserDetail('ip')))) {
 			$id = $this->getParam('id');
 			
 			$json_result = IpsAndPorts::getLocal($this->getUserData(), array(
@@ -368,7 +383,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	 *
 	 * @param int $id
 	 *        	ip-port-id
-	 *
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -411,17 +426,17 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 						if ($result['ip'] != '') {
 							
 							$del_stmt = Database::prepare("
-							DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-							WHERE `id` = :id
-						");
+								DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "`
+								WHERE `id` = :id
+							");
 							Database::pexecute($del_stmt, array(
 								'id' => $id
 							));
 							
 							// also, remove connections to domains (multi-stack)
 							$del_stmt = Database::prepare("
-							DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
-						");
+								DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
+							");
 							Database::pexecute($del_stmt, array(
 								'id' => $id
 							));

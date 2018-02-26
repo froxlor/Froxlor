@@ -51,4 +51,18 @@ if (isFroxlorVersion('0.10.0')) {
 	showUpdateStep("Adding new default-ssl-ip setting");
 	Settings::AddNew('system.defaultsslip', '');
 	lastStepStatus(0);
+
+	showUpdateStep("Altering admin ip's field to allow multiple ip addresses");
+	// get all admins for updating the new field
+	$sel_stmt = Database::prepare("SELECT adminid, ip FROM `panel_admins`");
+	Database::pexecute($sel_stmt);
+	$all_admins = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
+	Database::query("ALTER TABLE `panel_admins` MODIFY `ip` varchar(500) NOT NULL default '-1';");
+	$upd_stmt = Database::prepare("UPDATE `panel_admins` SET `ip` = :ip WHERE `adminid` = :adminid");
+	foreach ($all_admins as $adm) {
+		if ($admin['ip'] != -1) {
+			Database::pexecute($upd_stmt, array('ip' => json_encode($adm['ip']), 'adminid' => $adm['adminid']));
+		}
+	}
+	lastStepStatus(0);
 }
