@@ -79,7 +79,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 				// get customer id
 				$customer_id = $this->getParam('customer_id');
 				$json_result = Customers::getLocal($this->getUserData(), array(
-					'id' => $result['customerid']
+					'id' => $customer_id
 				))->get();
 				$customer = json_decode($json_result, true)['data'];
 				// check whether the customer has enough resources to get the database added
@@ -215,7 +215,12 @@ class Mysqls extends ApiCommand implements ResourceEntity
 				$this->mail->ClearAddresses();
 			}
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] added mysql-database '" . $username . "'");
-			return $this->response(200, "successfull", $params);
+			
+			$json_result = Mysqls::getLocal($this->getUserData(), array(
+				'dbname' => $username
+			))->get();
+			$result = json_decode($json_result, true)['data'];
+			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("No more resources available", 406);
 	}
