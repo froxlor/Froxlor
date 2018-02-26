@@ -74,8 +74,9 @@ class Customers extends ApiCommand implements ResourceEntity
 		
 		if ($this->isAdmin()) {
 			$result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE " . ($id > 0 ? "`customerid` = :idln" : "`loginname` = :idln") . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
+			SELECT `c`.*, `a`.`loginname` AS `adminname`
+			FROM `" . TABLE_PANEL_CUSTOMERS . "` `c`, `" . TABLE_PANEL_ADMINS . "` `a`
+			WHERE " . ($id > 0 ? "`c`.`customerid` = :idln" : "`c`.`loginname` = :idln") . ($this->getUserDetail('customers_see_all') ? '' : " AND `c`.`adminid` = :adminid"). " AND `c`.`adminid` = `a`.`adminid`");
 			$params = array(
 				'idln' => ($id <= 0 ? $loginname : $id)
 			);
@@ -1480,19 +1481,22 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin
 	 * @throws Exception
-	 * @return bool true on success, error-message on failure
+	 * @return array
 	 */
 	public function move()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
-			$id = $this->getParam('id');
 			$adminid = $this->getParam('adminid');
+			$id = $this->getParam('id', true, 0);
+			$ln_optional = ($id <= 0 ? false : true);
+			$loginname = $this->getParam('loginname', $ln_optional, '');
 			
-			// get customer
-			$json_result = Admins::getLocal($this->getUserData(), array(
-				'id' => $id
+			$json_result = Customers::getLocal($this->getUserData(), array(
+				'id' => $id,
+				'loginname' => $loginname
 			))->get();
 			$c_result = json_decode($json_result, true)['data'];
+			$id = $c_result['customerid'];
 			
 			// check if target-admin is the current admin
 			if ($adminid == $c_result['adminid']) {
@@ -1500,7 +1504,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			}
 			
 			// get target admin
-			$json_result = Customers::getLocal($this->getUserData(), array(
+			$json_result = Admins::getLocal($this->getUserData(), array(
 				'id' => $adminid
 			))->get();
 			$a_result = json_decode($json_result, true)['data'];
@@ -1535,8 +1539,12 @@ class Customers extends ApiCommand implements ResourceEntity
 			// now, recalculate the resource-usage for the old and the new admin
 			updateCounters(false);
 			
-			$log->logAction(ADM_ACTION, LOG_INFO, "[API] moved user '" . $c_result['loginname'] . "' from admin/reseller '" . $c_result['adminname'] . " to admin/reseller '" . $a_result['loginname'] . "'");
-			return $this->response(200, "successfull", true);
+			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] moved user '" . $c_result['loginname'] . "' from admin/reseller '" . $c_result['adminname'] . " to admin/reseller '" . $a_result['loginname'] . "'");
+			$json_result = Customers::getLocal($this->getUserData(), array(
+				'id' => $c_result['customerid']
+			))->get();
+			$result = json_decode($json_result, true)['data'];
+			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
