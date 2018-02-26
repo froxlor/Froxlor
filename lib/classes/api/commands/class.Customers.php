@@ -70,7 +70,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id', true, 0);
 		$ln_optional = ($id <= 0 ? false : true);
-		$loginname = trim($this->getParam('loginname', $ln_optional, ''));
+		$loginname = $this->getParam('loginname', $ln_optional, '');
 		
 		if ($this->isAdmin()) {
 			$result_stmt = Database::prepare("
@@ -208,18 +208,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					standard_error('youcantallocatemorethanyouhave', '', true);
 				}
 				
-				// Either $name and $firstname or the $company must be inserted
-				if ($name == '' && $company == '') {
-					standard_error(array(
-						'stringisempty',
-						'myname'
-					), '', true);
-				} elseif ($firstname == '' && $company == '') {
-					standard_error(array(
-						'stringisempty',
-						'myfirstname'
-					), '', true);
-				} elseif ($email == '') {
+				if ($email == '') {
 					standard_error(array(
 						'stringisempty',
 						'emailadd'
@@ -680,7 +669,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id', true, 0);
 		$ln_optional = ($id <= 0 ? false : true);
-		$loginname = trim($this->getParam('loginname', $ln_optional, ''));
+		$loginname = $this->getParam('loginname', $ln_optional, '');
 		
 		$json_result = Customers::getLocal($this->getUserData(), array(
 			'id' => $id,
@@ -1212,7 +1201,7 @@ class Customers extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
-			$loginname = trim($this->getParam('loginname', $ln_optional, ''));
+			$loginname = $this->getParam('loginname', $ln_optional, '');
 			$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
 			
 			$json_result = Customers::getLocal($this->getUserData(), array(
@@ -1454,7 +1443,7 @@ class Customers extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
-			$loginname = trim($this->getParam('loginname', $ln_optional, ''));
+			$loginname = $this->getParam('loginname', $ln_optional, '');
 			
 			$json_result = Customers::getLocal($this->getUserData(), array(
 				'id' => $id,

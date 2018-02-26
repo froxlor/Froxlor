@@ -106,6 +106,10 @@ abstract class ApiCommand
 		$this->version = $version;
 		$this->dbversion = $dbversion;
 		$this->branding = $branding;
+
+		if (! is_null($params)) {
+			$params = $this->trimArray($params);
+		}
 		$this->cmd_params = $params;
 		if (! empty($header)) {
 			$this->readUserData($header);
@@ -462,5 +466,16 @@ abstract class ApiCommand
 			return true;
 		}
 		throw new Exception("Invalid API credentials", 400);
+	}
+
+	private function trimArray($input)
+	{
+		if (! is_array($input)) {
+			return trim($input);
+		}
+		return array_map(array(
+			$this,
+			'trimArray'
+		), $input);
 	}
 }

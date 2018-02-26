@@ -73,7 +73,7 @@ class Domains extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
 			$dn_optional = ($id <= 0 ? false : true);
-			$domainname = trim($this->getParam('domainname', $dn_optional, ''));
+			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$no_std_subdomain = $this->getParam('no_std_subdomain', true, false);
 
 			// convert possible idn domain to punycode
@@ -131,8 +131,8 @@ class Domains extends ApiCommand implements ResourceEntity
 				$speciallogfile = $this->getParam('speciallogfile', true, 0);
 				$aliasdomain = intval($this->getParam('alias', true, 0));
 				$issubof = intval($this->getParam('issubof', true, 0));
-				$registration_date = trim($this->getParam('registration_date', true, ''));
-				$termination_date = trim($this->getParam('termination_date', true, ''));
+				$registration_date = $this->getParam('registration_date', true, '');
+				$termination_date = $this->getParam('termination_date', true, '');
 				$caneditdomain = $this->getParam('caneditdomain', true, 0);
 				$isbinddomain = $this->getParam('isbinddomain', true, 0);
 				$zonefile = $this->getParam('zonefile', true, '');
@@ -774,7 +774,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			// parameters
 			$id = $this->getParam('id', true, 0);
 			$dn_optional = ($id <= 0 ? false : true);
-			$domainname = trim($this->getParam('domainname', $dn_optional, ''));
+			$domainname = $this->getParam('domainname', $dn_optional, '');
 
 			// get requested domain
 			$json_result = Domains::getLocal($this->getUserData(), array(
@@ -799,8 +799,8 @@ class Domains extends ApiCommand implements ResourceEntity
 			$speciallogverified = $this->getParam('speciallogverified', true, 0);
 			$aliasdomain = intval($this->getParam('alias', true, $result['aliasdomain']));
 			$issubof = intval($this->getParam('issubof', true, $result['ismainbutsubto']));
-			$registration_date = trim($this->getParam('registration_date', true, $result['registration_date']));
-			$termination_date = trim($this->getParam('termination_date', true, $result['termination_date']));
+			$registration_date = $this->getParam('registration_date', true, $result['registration_date']);
+			$termination_date = $this->getParam('termination_date', true, $result['termination_date']);
 			$caneditdomain = $this->getParam('caneditdomain', true, $result['caneditdomain']);
 			$isbinddomain = $this->getParam('isbinddomain', true, $result['isbinddomain']);
 			$zonefile = $this->getParam('zonefile', true, $result['zonefile']);
@@ -1587,7 +1587,7 @@ class Domains extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
 			$dn_optional = ($id <= 0 ? false : true);
-			$domainname = trim($this->getParam('domainname', $dn_optional, ''));
+			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$is_stdsubdomain = $this->getParam('is_stdsubdomain', true, 0);
 			$remove_subbutmain_domains = $this->getParam('delete_mainsubdomains', true, 0);
 

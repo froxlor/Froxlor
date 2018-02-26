@@ -238,7 +238,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
-		$dbname = trim($this->getParam('dbname', $dn_optional, ''));
+		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, - 1);
 
 		if ($this->isAdmin()) {
@@ -337,7 +337,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
-		$dbname = trim($this->getParam('dbname', $dn_optional, ''));
+		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, - 1);
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'mysql')) {
@@ -541,7 +541,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
-		$dbname = trim($this->getParam('dbname', $dn_optional, ''));
+		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, - 1);
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'mysql')) {
