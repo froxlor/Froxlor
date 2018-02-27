@@ -602,7 +602,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		
 		// decrease ftp-user usage for customer
 		$resetaccnumber = ($customer_data['ftps_used'] == '1') ? " , `ftp_lastaccountnumber`='0'" : '';
-		Customers::decreaseUsage($customer_id, 'ftps_used', $resetaccnumber);
+		Customers::decreaseUsage($customer_data['customerid'], 'ftps_used', $resetaccnumber);
 		// update admin usage
 		Admins::decreaseUsage(($this->isAdmin() ? $customer_data['adminid'] : $this->getUserDetail('adminid')), 'ftps_used');
 		
