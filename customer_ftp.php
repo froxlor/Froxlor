@@ -171,74 +171,11 @@ if ($page == 'overview') {
 
 		if (isset($result['username']) && $result['username'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				// @FIXME use a good path-validating regex here (refs #1231)
-				$path = validate($_POST['path'], 'path');
-
-				$shell = "/bin/false";
-				if (Settings::Get('system.allow_customer_shell') == '1') {
-					$shell = isset($_POST['shell']) ? validate($_POST['shell'], 'shell') : '/bin/false';
+				try {
+					Ftps::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				$_setnewpass = false;
-				if (isset($_POST['ftp_password']) && $_POST['ftp_password'] != '') {
-					$password = validate($_POST['ftp_password'], 'password');
-					$password = validatePassword($password);
-					$_setnewpass = true;
-				}
-
-				if ($_setnewpass) {
-					if ($password == '') {
-						standard_error(array('stringisempty', 'mypassword'));
-					} elseif ($result['username'] == $password) {
-						standard_error('passwordshouldnotbeusername');
-					}
-					$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account password for '" . $result['username'] . "'");
-					$cryptPassword = makeCryptPassword($password);
-
-					$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
-						SET `password` = :password
-						WHERE `customerid` = :customerid
-						AND `id` = :id"
-					);
-					Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id, "password" => $cryptPassword));
-				}
-
-				if ($path != '') {
-					$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-
-					if ($path != $result['homedir']) {
-						if (!file_exists($path)) {
-							// it's the task for "new ftp" but that will
-							// create all directories and correct their permissions
-							inserttask(5);
-						}
-
-						$log->logAction(USR_ACTION, LOG_INFO, "updated ftp-account homdir for '" . $result['username'] . "'");
-
-						$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
-							SET `homedir` = :homedir
-							WHERE `customerid` = :customerid
-							AND `id` = :id"
-						);
-						$params = array(
-							"homedir" => $path,
-							"customerid" => $userinfo['customerid'],
-							"id" => $id
-						);
-						Database::pexecute($stmt, $params);
-					}
-				}
-
-				$log->logAction(USR_ACTION, LOG_INFO, "edited ftp-account '" . $result['username'] . "'");
-				inserttask(5);
-				$description = validate($_POST['ftp_description'], 'description');
-				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
-					SET `description` = :desc, `shell` = :shell
-					WHERE `customerid` = :customerid
-					AND `id` = :id"
-				);
-				Database::pexecute($stmt, array("desc" => $description, "shell" => $shell, "customerid" => $userinfo['customerid'], "id" => $id));
-
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				if (strpos($result['homedir'], $userinfo['documentroot']) === 0) {

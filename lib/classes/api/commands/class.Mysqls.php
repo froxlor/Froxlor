@@ -363,7 +363,6 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		
 		// validation
 		$password = validate($password, 'password', '', '', array(), true);
-		$password = validatePassword($password, true);
 		$databasedescription = validate(trim($databasedescription), 'description', '', '', array(), true);
 		
 		// validate whether the dbserver exists

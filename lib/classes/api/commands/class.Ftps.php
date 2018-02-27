@@ -80,7 +80,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 			}
 			
 			$params = array();
-			// get needed customer info to reduce the mysql-usage-counter by one
+			// get needed customer info to reduce the ftp-user-counter by one
 			if ($this->isAdmin()) {
 				// get customer id
 				$customer_id = $this->getParam('customer_id');
@@ -88,7 +88,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 					'id' => $customer_id
 				))->get();
 				$customer = json_decode($json_result, true)['data'];
-				// check whether the customer has enough resources to get the database added
+				// check whether the customer has enough resources to get the ftp-user added
 				if ($customer['ftps_used'] >= $customer['ftps'] && $customer['ftps'] != '-1') {
 					throw new Exception("Customer has no more resources available", 406);
 				}
@@ -133,11 +133,6 @@ class Ftps extends ApiCommand implements ResourceEntity
 			
 			if (! empty($username_check) && $username_check['username'] = $username) {
 				standard_error('usernamealreadyexists', $username, true);
-			} elseif ($password == '') {
-				standard_error(array(
-					'stringisempty',
-					'mypassword'
-				), '', true);
 			} elseif ($username == $password) {
 				standard_error('passwordshouldnotbeusername', '', true);
 			} else {
@@ -346,7 +341,117 @@ class Ftps extends ApiCommand implements ResourceEntity
 	}
 
 	public function update()
-	{}
+	{
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'ftp')) {
+			throw new Exception("You cannot access this resource", 405);
+		}
+		
+		$id = $this->getParam('id', true, 0);
+		$un_optional = ($id <= 0 ? false : true);
+		$username = $this->getParam('username', $un_optional, '');
+		
+		$json_result = Ftps::getLocal($this->getUserData(), array(
+			'id' => $id,
+			'username' => $username
+		))->get();
+		$result = json_decode($json_result, true)['data'];
+		$id = $result['id'];
+		
+		// parameters
+		$path = $this->getParam('path', true, '');
+		$password = $this->getParam('ftp_password', true, '');
+		$description = $this->getParam('ftp_description', true, $result['description']);
+		$shell = $this->getParam('shell', true, $result['shell']);
+		
+		// validation
+		$password = validate($password, 'password', '', '', array(), true);
+		$description = validate(trim($description), 'description', '', '', array(), true);
+		
+		if (Settings::Get('system.allow_customer_shell') == '1') {
+			$shell = validate(trim($shell), 'shell', '', '', array(), true);
+		} else {
+			$shell = "/bin/false";
+		}
+		
+		$params = array();
+		// get needed customer info to reduce the ftp-user-counter by one
+		if ($this->isAdmin()) {
+			// get customer id
+			$customer_id = $this->getParam('customer_id');
+			$json_result = Customers::getLocal($this->getUserData(), array(
+				'id' => $customer_id
+			))->get();
+			$customer = json_decode($json_result, true)['data'];
+		} else {
+			$customer_id = $this->getUserDetail('customerid');
+			$customer = $this->getUserData();
+		}
+		
+		// password update?
+		if ($password != '') {
+			// validate password
+			$password = validatePassword($password, true);
+			
+			if ($password == $result['username']) {
+				standard_error('passwordshouldnotbeusername', '', true);
+			}
+			$cryptPassword = makeCryptPassword($password);
+			
+			$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
+				SET `password` = :password
+				WHERE `customerid` = :customerid
+				AND `id` = :id
+			");
+			Database::pexecute($stmt, array(
+				"customerid" => $customer['customerid'],
+				"id" => $id,
+				"password" => $cryptPassword
+			), true, true);
+			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] updated ftp-account password for '" . $result['username'] . "'");
+		}
+		
+		// path update?
+		if ($path != '') {
+			$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
+			
+			if ($path != $result['homedir']) {
+				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
+					SET `homedir` = :homedir
+					WHERE `customerid` = :customerid
+					AND `id` = :id
+				");
+				Database::pexecute($stmt, array(
+					"homedir" => $path,
+					"customerid" => $customer['customerid'],
+					"id" => $id
+				), true, true);
+				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] updated ftp-account homdir for '" . $result['username'] . "'");
+			}
+		}
+		// it's the task for "new ftp" but that will
+		// create all directories and correct their permissions
+		inserttask(5);
+		
+		$stmt = Database::prepare("
+			UPDATE `" . TABLE_FTP_USERS . "`
+			SET `description` = :desc, `shell` = :shell
+			WHERE `customerid` = :customerid
+			AND `id` = :id
+		");
+		Database::pexecute($stmt, array(
+			"desc" => $description,
+			"shell" => $shell,
+			"customerid" => $customer['customerid'],
+			"id" => $id
+		), true, true);
+		
+		$json_result = Ftps::getLocal($this->getUserData(), array(
+			'username' => $result['username']
+		))->get();
+		$result = json_decode($json_result, true)['data'];
+		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] updated ftp-user '" . $result['username'] . "'");
+		return $this->response(200, "successfull", $result);
+	}
 
 	/**
 	 * list all ftp-users, if called from an admin, list all ftp-users of all customers you are allowed to view, or specify id or loginname for one specific customer
@@ -496,7 +601,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 			"username" => "," . $result['username'],
 			"customerid" => $customer_data['customerid']
 		), true, true);
-
+		
 		// refs #293
 		if ($delete_userfiles == 1) {
 			inserttask('8', $customer_data['loginname'], $result['homedir']);
