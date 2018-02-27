@@ -330,7 +330,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added subdomain '" . $completedomain . "'");
 			
-			$json_result = Subdomains::getLocal($this->getUserData(), array(
+			$json_result = SubDomains::getLocal($this->getUserData(), array(
 				'id' => $subdomain_id
 			))->get();
 			$result = json_decode($json_result, true)['data'];
@@ -597,23 +597,9 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		inserttask('4');
 		
 		// reduce subdomain-usage-counter
-		$stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-			SET `subdomains_used` = `subdomains_used` - 1
-			WHERE `customerid` = :customerid
-		");
-		Database::pexecute($stmt, array(
-			"customerid" => $customer_id
-		), true, true);
+		Customers::decreaseUsage($customer_id, 'subdomains_used');
 		// update admin usage
-		$stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_ADMINS . "`
-			SET `subdomains_used` = `subdomains_used` - 1
-			WHERE `adminid` = :adminid
-		");
-		Database::pexecute($stmt, array(
-			"adminid" => ($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid'))
-		), true, true);
+		Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'subdomains_used');
 		
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] deleted subdomain '" . $result['domain'] . "'");
 		return $this->response(200, "successfull", $result);

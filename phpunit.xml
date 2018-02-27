@@ -11,8 +11,9 @@
 			<directory>tests/Global</directory>
 			<directory>tests/Admins</directory>
 			<directory>tests/Customers</directory>
-			<directory>tests/SubDomains</directory>
 			<directory>tests/IpsAndPorts</directory>
+			<directory>tests/Domains</directory>
+			<directory>tests/SubDomains</directory>
 			<directory>tests/Ftps</directory>
 		</testsuite>
 	</testsuites>

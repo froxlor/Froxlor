@@ -194,6 +194,8 @@
 			taskname="phpunit">
 			<arg value="--configuration" />
 			<arg path="${basedir}/phpunit.xml" />
+			<arg value="--testsuite" />
+			<arg value="froxlor" />
 		</exec>
 
 		<property name="phpunit.done" value="true" />
@@ -205,6 +207,8 @@
 		<exec executable="${phpunit}" failonerror="true" taskname="phpunit">
 			<arg value="--configuration" />
 			<arg path="${basedir}/phpunit.xml" />
+			<arg value="--testsuite" />
+			<arg value="froxlor" />
 			<arg value="--no-coverage" />
 		</exec>
 

@@ -706,7 +706,6 @@ class Domains extends ApiCommand implements ResourceEntity
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 					$domainid = Database::lastInsertId();
 					$ins_data['id'] = $domainid;
-					$domain_ins_data = $ins_data;
 					unset($ins_data);
 					
 					$upd_stmt = Database::prepare("
@@ -747,7 +746,12 @@ class Domains extends ApiCommand implements ResourceEntity
 					inserttask('4');
 					
 					$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added domain '" . $domain . "'");
-					return $this->response(200, "successfull", $domain_ins_data);
+
+					$json_result = Domains::getLocal($this->getUserData(), array(
+						'domainname' => $domain
+					))->get();
+					$result = json_decode($json_result, true)['data'];
+					return $this->response(200, "successfull", $result);
 				}
 			}
 			throw new Exception("No more resources available", 406);
