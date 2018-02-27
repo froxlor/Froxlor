@@ -15,7 +15,7 @@
  * @since      0.10.0
  *
  */
-class Subdomains extends ApiCommand implements ResourceEntity
+class SubDomains extends ApiCommand implements ResourceEntity
 {
 
 	/**
@@ -31,7 +31,7 @@ class Subdomains extends ApiCommand implements ResourceEntity
 	 *        	optional, destination path relative to the customers-homedir, default is customers-homedir
 	 * @param string $url
 	 *        	optional, overwrites path value with an URL to generate a redirect, alternatively use the path parameter also for URLs
-	 * @param string $openbasedir_path
+	 * @param int $openbasedir_path
 	 *        	optional, either 0 for customers-homedir or 1 for domains-docroot
 	 * @param int $phpsettingid
 	 *        	optional, php-settings-id, if empty the $domain value is used
@@ -116,18 +116,25 @@ class Subdomains extends ApiCommand implements ResourceEntity
 			if ($completedomain == Settings::Get('system.hostname')) {
 				standard_error('admin_domain_emailsystemhostname', '', true);
 			}
-			
+
 			// check whether the domain already exists
-			try {
-				$json_result = SubDomains::getLocal($this->getUserData(), array(
-					'domainname' => $completedomain
-				))->get();
+			$completedomain_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
+				WHERE `domain` = :domain
+				AND `customerid` = :customerid
+				AND `email_only` = '0'
+				AND `caneditdomain` = '1'
+			");
+			$completedomain_check = Database::pexecute_first($completedomain_stmt, array(
+				"domain" => $completedomain,
+				"customerid" => $customer_id
+			), true, true);
+
+			if ($completedomain_check) {
 				// no exception so far - domain exists
 				standard_error('domainexistalready', $completedomain, true);
-			} catch (Exception $e) {
-				// all good, domain does not exist
 			}
-			
+
 			// alias domain checked?
 			if ($aliasdomain != 0) {
 				// also check ip/port combination to be the same, #176
@@ -381,7 +388,7 @@ class Subdomains extends ApiCommand implements ResourceEntity
 			} else {
 				$result_stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE " . ($id > 0 ? "`id` = :iddn" : "`databasename` = :iddn"));
+					WHERE " . ($id > 0 ? "`id` = :iddn" : "`domainname` = :iddn"));
 				$params = array(
 					'iddn' => ($id <= 0 ? $domainname : $id)
 				);
@@ -392,7 +399,7 @@ class Subdomains extends ApiCommand implements ResourceEntity
 			}
 			$result_stmt = Database::prepare("
 				SELECT `id`, `customerid`, `domain`, `documentroot`, `isemaildomain`, `parentdomainid`, `aliasdomain` FROM `" . TABLE_PANEL_DOMAINS . "`
-				WHERE `customerid`= :customerid AND " . ($id > 0 ? "`id` = :iddn" : "`databasename` = :iddn"));
+				WHERE `customerid`= :customerid AND " . ($id > 0 ? "`id` = :iddn" : "`domainname` = :iddn"));
 			$params = array(
 				'customerid' => $this->getUserDetail('customerid'),
 				'iddn' => ($id <= 0 ? $domainname : $id)
