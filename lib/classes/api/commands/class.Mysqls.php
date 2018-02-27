@@ -283,9 +283,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 				}
 			}
 		} else {
-			if ($id != $this->getUserDetail('customerid')) {
-				throw new Exception("You cannot access data of other customers", 401);
-			} elseif (Settings::IsInList('panel.customer_hide_options', 'mysql')) {
+			if (Settings::IsInList('panel.customer_hide_options', 'mysql')) {
 				throw new Exception("You cannot access this resource", 405);
 			}
 			$result_stmt = Database::prepare("

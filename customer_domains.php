@@ -176,79 +176,25 @@ if ($page == 'overview') {
 
 		eval("echo \"" . getTemplate("domains/domainlist") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
-		$stmt = Database::prepare("SELECT `id`, `customerid`, `domain`, `documentroot`, `isemaildomain`, `parentdomainid`, `aliasdomain` FROM `" . TABLE_PANEL_DOMAINS . "`
-			WHERE `customerid` = :customerid
-			AND `id` = :id"
-		);
-		Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = SubDomains::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` = :aliasdomain");
-		Database::pexecute($alias_stmt, array("aliasdomain" => $id));
-		$alias_check = $alias_stmt->fetch(PDO::FETCH_ASSOC);
+		$alias_check = Database::pexecute_first($alias_stmt, array("aliasdomain" => $id));
 
 		if (isset($result['parentdomainid']) && $result['parentdomainid'] != '0' && $alias_check['count'] == 0) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				if ($result['isemaildomain'] == '1') {
-					$emails_stmt = Database::prepare("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_MAIL_VIRTUAL . "`
-						WHERE `customerid` = :customerid
-						AND `domainid` = :domainid"
-					);
-					Database::pexecute($emails_stmt, array("customerid" => $userinfo['customerid'], "domainid" => $id));
-					$emails = $emails_stmt->fetch(PDO::FETCH_ASSOC);
-
-					if ($emails['count'] != '0') {
-						standard_error('domains_cantdeletedomainwithemail');
-					}
+				try {
+					SubDomains::getLocal($userinfo, $_POST)->delete();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $log);
-
-				$log->logAction(USR_ACTION, LOG_INFO, "deleted subdomain '" . $idna_convert->decode($result['domain']) . "'");
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE
-					`customerid` = :customerid
-					AND `id` = :id"
-				);
-				Database::pexecute($stmt, array("customerid" => $userinfo['customerid'], "id" => $id));
-
-				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-					SET `subdomains_used` = `subdomains_used` - 1
-					WHERE `customerid` = :customerid"
-				);
-				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
-
-				// remove connections to ips and domainredirects
-				$del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_DOMAINTOIP . "`
-					WHERE `id_domain` = :domainid"
-				);
-				Database::pexecute($del_stmt, array('domainid' => $id));
-
-				$del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_PANEL_DOMAINREDIRECTS . "`
-					WHERE `did` = :domainid"
-				);
-				Database::pexecute($del_stmt, array('domainid' => $id));
-
-				// remove certificate from domain_ssl_settings, fixes #1596
-				$del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
-					WHERE `domainid` = :domainid"
-				);
-				Database::pexecute($del_stmt, array('domainid' => $id));
-
-				// remove possible existing DNS entries
-				$del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_DOMAIN_DNS . "`
-					WHERE `domain_id` = :domainid
-				");
-				Database::pexecute($del_stmt, array('domainid' => $id));
-
-				inserttask('1');
-
-				// Using nameserver, insert a task which rebuilds the server config
-				inserttask('4');
-
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				ask_yesno('domains_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['domain']));

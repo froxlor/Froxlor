@@ -138,9 +138,7 @@ if ($page == 'domains' || $page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send' && $alias_check['count'] == 0) {
 				
 				try {
-					Domains::getLocal($userinfo, array_merge(array(
-						'id' => $id
-					), $_POST))->delete();
+					Domains::getLocal($userinfo, $_POST)->delete();
 				} catch (Exception $e) {
 					dynamic_error($e->getMessage());
 				}

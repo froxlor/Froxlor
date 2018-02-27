@@ -411,4 +411,3 @@ class CustomersTest extends TestCase
 		$this->assertEquals(2, $result['adminid']);
 	}
 }
-
