@@ -1,3 +1,5 @@
+[![Build Status](http://services.nutime.de:8081/job/froxlor-0.10/lastBuild/buildStatus)](http://services.nutime.de:8081/job/froxlor-0.10/lastBuild)
+
 # Froxlor
 
 The server administration software for your needs.
