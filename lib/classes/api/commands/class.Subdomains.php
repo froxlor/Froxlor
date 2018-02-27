@@ -19,7 +19,9 @@ class Subdomains extends ApiCommand implements ResourceEntity
 {
 
 	public function add()
-	{}
+	{
+		throw new Exception("Not available yet.", 501);
+	}
 
 	/**
 	 * return a subdomain entry by either id or domainname
@@ -97,7 +99,9 @@ class Subdomains extends ApiCommand implements ResourceEntity
 	}
 
 	public function update()
-	{}
+	{
+		throw new Exception("Not available yet.", 501);
+	}
 
 	public function list()
 	{
