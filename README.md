@@ -1,4 +1,4 @@
-[![Build Status](http://services.nutime.de:8081/job/froxlor-0.10/lastBuild/buildStatus)](http://services.nutime.de:8081/job/froxlor-0.10/lastBuild)
+[![Build Status](http://services.nutime.de:8081/job/froxlor-0.10/badge/icon)](http://services.nutime.de:8081/job/froxlor-0.10/)
 
 # Froxlor
 
