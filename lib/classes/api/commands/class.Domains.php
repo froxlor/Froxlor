@@ -1555,7 +1555,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				// trigger when domain id for alias destination has changed: both for old and new destination
 				triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
 				triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
-			} else if ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
+			} elseif ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
 				// or when wwwserveralias or letsencrypt was changed
 				triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 			}

@@ -83,20 +83,24 @@ class Froxlor extends ApiCommand
 	/**
 	 *
 	 * @todo import settings
-	 *
+	 *      
 	 * @access admin
 	 */
 	public function importSettings()
-	{}
+	{
+		throw new Exception("Not available yet.", 501);
+	}
 
 	/**
 	 *
 	 * @todo export settings to file
-	 *
+	 *      
 	 * @access admin
 	 */
 	public function exportSettings()
-	{}
+	{
+		throw new Exception("Not available yet.", 501);
+	}
 
 	/**
 	 * return a list of all settings
@@ -202,7 +206,7 @@ class Froxlor extends ApiCommand
 					array_push($functions, array_merge(array(
 						'module' => $module,
 						'function' => $func->name
-					), $this->_getParamListFromDoc($module, $func->name)));
+					), $this->getParamListFromDoc($module, $func->name)));
 				}
 			}
 		} else {
@@ -234,7 +238,7 @@ class Froxlor extends ApiCommand
 								array_push($functions, array_merge(array(
 									'module' => $matches[1],
 									'function' => $func->name
-								), $this->_getParamListFromDoc($matches[1], $func->name)));
+								), $this->getParamListFromDoc($matches[1], $func->name)));
 							}
 						}
 					}
@@ -259,7 +263,7 @@ class Froxlor extends ApiCommand
 	 * @throws Exception
 	 * @return array|bool
 	 */
-	private function _getParamListFromDoc($module = null, $function = null)
+	private function getParamListFromDoc($module = null, $function = null)
 	{
 		try {
 			// set the module
@@ -307,7 +311,8 @@ class Froxlor extends ApiCommand
 						'type' => $r[1],
 						'desc' => (isset($r[2]) ? trim($r[2]) : '')
 					);
-				} else if (! empty($c) && strpos($c, '@throws') === false) {
+				}
+				elseif (! empty($c) && strpos($c, '@throws') === false) {
 					if (substr($c, 0, 3) == "/**") {
 						continue;
 					}
@@ -331,7 +336,7 @@ class Froxlor extends ApiCommand
 					}
 				}
 			}
-			$result['head'] =trim($result['head']);
+			$result['head'] = trim($result['head']);
 			return $result;
 		} catch (\ReflectionException $e) {
 			return array();

@@ -37,7 +37,9 @@ class CustomersTest extends TestCase
 			'custom_notes' => 'secret',
 			'custom_notes_show' => 0,
 			'gender' => 5,
-			'allowed_phpconfigs' => array(1)
+			'allowed_phpconfigs' => array(
+				1
+			)
 		];
 		
 		$json_result = Customers::getLocal($admin_userdata, $data)->add();
@@ -67,7 +69,7 @@ class CustomersTest extends TestCase
 			'firstname' => 'Test2',
 			'name' => 'Testman2'
 		];
-
+		
 		$this->expectExceptionMessage('Requested parameter "email" is empty where it should not be for "Customers:add"');
 		Customers::getLocal($admin_userdata, $data)->add();
 	}
@@ -127,12 +129,11 @@ class CustomersTest extends TestCase
 			'id' => 1
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-
+		
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
-
+		
 		$json_result = Customers::getLocal($customer_userdata)->list();
-
 	}
 
 	/**
@@ -248,7 +249,7 @@ class CustomersTest extends TestCase
 			'id' => 1,
 			'deactivated' => 0
 		))->update();
-
+		
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'id' => 1
@@ -283,7 +284,7 @@ class CustomersTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-
+		
 		$this->expectExceptionMessage("You cannot allocate more resources than you own for yourself.");
 		// add new customer
 		$data = [
@@ -292,12 +293,12 @@ class CustomersTest extends TestCase
 			'firstname' => 'Test',
 			'name' => 'Testman',
 			'customernumber' => 1338,
-			'subdomains' => -1,
+			'subdomains' => - 1,
 			'new_customer_password' => 'h0lYmo1y'
 		];
 		Customers::getLocal($reseller_userdata, $data)->add();
 	}
-	
+
 	public function testCustomerCustomersDelete()
 	{
 		global $admin_userdata;
@@ -308,7 +309,9 @@ class CustomersTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
-		Customers::getLocal($customer_userdata, array('loginname' => 'test1'))->delete();
+		Customers::getLocal($customer_userdata, array(
+			'loginname' => 'test1'
+		))->delete();
 	}
 
 	public function testResellerCustomersDeleteNotOwned()
@@ -321,7 +324,9 @@ class CustomersTest extends TestCase
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
 		$this->expectExceptionCode(404);
-		Customers::getLocal($reseller_userdata, array('loginname' => 'test1'))->delete();
+		Customers::getLocal($reseller_userdata, array(
+			'loginname' => 'test1'
+		))->delete();
 	}
 
 	public function testAdminCustomersDelete()
@@ -337,11 +342,13 @@ class CustomersTest extends TestCase
 			'new_customer_password' => 'h0lYmo1y'
 		];
 		Customers::getLocal($admin_userdata, $data)->add();
-		$json_result = Customers::getLocal($admin_userdata, array('loginname' => 'test2'))->delete();
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test2'
+		))->delete();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('test2', $result['loginname']);
 	}
-	
+
 	public function testAdminCustomersUnlock()
 	{
 		global $admin_userdata;
@@ -353,7 +360,7 @@ class CustomersTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(0, $result['loginfail_count']);
 	}
-	
+
 	public function testAdminCustomersUnlockNotAllowed()
 	{
 		global $admin_userdata;
@@ -366,7 +373,7 @@ class CustomersTest extends TestCase
 			'loginname' => 'test1'
 		))->unlock();
 	}
-	
+
 	public function testAdminCustomersMoveNotAllowed()
 	{
 		global $admin_userdata;
@@ -380,7 +387,7 @@ class CustomersTest extends TestCase
 			'adminid' => 1
 		))->move();
 	}
-	
+
 	public function testAdminCustomersMoveTargetIsSource()
 	{
 		global $admin_userdata;
@@ -403,5 +410,5 @@ class CustomersTest extends TestCase
 		
 		$this->assertEquals(2, $result['adminid']);
 	}
-
 }
+
