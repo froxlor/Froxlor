@@ -339,25 +339,25 @@ abstract class ApiCommand
 	 */
 	private function getModFunctionString()
 	{
-		$_c = get_called_class();
+		$_class = get_called_class();
 		
 		$level = 2;
 		if (version_compare(PHP_VERSION, "5.4.0", "<")) {
-			$t = debug_backtrace();
+			$trace = debug_backtrace();
 		} else {
-			$t = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		}
 		while (true) {
-			$c = $t[$level]['class'];
-			$f = $t[$level]['function'];
-			if ($c != get_called_class()) {
+			$class = $trace[$level]['class'];
+			$func = $trace[$level]['function'];
+			if ($class != $_class) {
 				$level ++;
 				if ($level > 5) {
 					break;
 				}
 				continue;
 			}
-			return $c . ':' . $f;
+			return $class . ':' . $func;
 		}
 	}
 
@@ -424,6 +424,28 @@ abstract class ApiCommand
 		
 		$json_response = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 		return $json_response;
+	}
+
+	/**
+	 * increase/decrease a resource field for customers/admins
+	 *
+	 * @param string $table
+	 * @param string $keyfield
+	 * @param int $key
+	 * @param string $op
+	 * @param string $resource
+	 * @param string $extra
+	 */
+	protected static function updateResourceUsage($table = null, $keyfield = null, $key = null, $op = '+', $resource = null, $extra = null)
+	{
+		$stmt = Database::prepare("
+			UPDATE `" . $table . "`
+			SET `" . $resource . "` = `" . $resource . "` " . $op . " 1 " . $extra . "
+			WHERE `" . $keyfield . "` = :key
+		");
+		Database::pexecute($stmt, array(
+			'key' => $key
+		), true, true);
 	}
 
 	/**

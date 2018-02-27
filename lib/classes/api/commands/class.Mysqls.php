@@ -62,14 +62,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			if (! isset($sql_root) || ! is_array($sql_root)) {
 				throw new ErrorException("Database server with index #" . $dbserver . " is unknown", 404);
 			}
-			
-			if ($password == '') {
-				standard_error(array(
-					'stringisempty',
-					'mysql_password'
-				), '', true);
-			}
-			
+
 			if ($sendinfomail != 1) {
 				$sendinfomail = 0;
 			}
@@ -123,24 +116,11 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			$params['id'] = $databaseid;
 			
 			// update customer usage
-			$stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-				SET `mysqls_used` = `mysqls_used` + 1, `mysql_lastaccountnumber` = `mysql_lastaccountnumber` + 1
-				WHERE `customerid` = :customerid
-			");
-			Database::pexecute($stmt, array(
-				"customerid" => ($this->isAdmin() ? $customer['customerid'] : $this->getUserDetail('customerid'))
-			), true, true);
+			Customers::increaseUsage(($this->isAdmin() ? $customer['customerid'] : $this->getUserDetail('customerid')), 'mysqls_used');
+			Customers::increaseUsage(($this->isAdmin() ? $customer['customerid'] : $this->getUserDetail('customerid')), 'mysql_lastaccountnumber');
 			
 			// update admin usage
-			$stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_ADMINS . "`
-				SET `mysqls_used` = `mysqls_used` + 1
-				WHERE `adminid` = :adminid
-			");
-			Database::pexecute($stmt, array(
-				"adminid" => $this->getUserDetail('adminid')
-			), true, true);
+			Admins::increaseUsage($this->getUserDetail('adminid'), 'mysqls_used');
 			
 			// send info-mail?
 			if ($sendinfomail == 1) {
@@ -586,23 +566,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		}
 		// reduce mysql-usage-counter
 		$resetaccnumber = ($mysql_used == '1') ? " , `mysql_lastaccountnumber` = '0' " : '';
-		$stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-			SET `mysqls_used` = `mysqls_used` - 1 " . $resetaccnumber . "
-			WHERE `customerid` = :customerid
-		");
-		Database::pexecute($stmt, array(
-			"customerid" => $customer_id
-		), true, true);
+		Customers::decreaseUsage($customer_id, 'mysqls_used', $resetaccnumber);
 		// update admin usage
-		$stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_ADMINS . "`
-			SET `mysqls_used` = `mysqls_used` - 1
-			WHERE `adminid` = :adminid
-		");
-		Database::pexecute($stmt, array(
-			"adminid" => ($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')),
-		), true, true);
+		Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'mysqls_used');
 
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] deleted database '" . $result['databasename'] . "'");
 		return $this->response(200, "successfull", $result);

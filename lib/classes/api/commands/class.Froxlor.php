@@ -311,7 +311,7 @@ class Froxlor extends ApiCommand
 						'type' => $r[1],
 						'desc' => (isset($r[2]) ? trim($r[2]) : '')
 					);
-				}
+				} // check throws-section
 				elseif (! empty($c) && strpos($c, '@throws') === false) {
 					if (substr($c, 0, 3) == "/**") {
 						continue;

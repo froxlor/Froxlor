@@ -183,26 +183,14 @@ class Ftps extends ApiCommand implements ResourceEntity
 					"guid" => $customer['guid']
 				);
 				Database::pexecute($stmt, $params, true, true);
+
+				// update customer usage
+				Customers::increaseUsage($customer_id, 'ftps_used');
+				Customers::increaseUsage($customer_id, 'ftp_lastaccountnumber');
 				
-				$stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-					SET `ftps_used` = `ftps_used` + 1,
-					`ftp_lastaccountnumber` = `ftp_lastaccountnumber` + 1
-					WHERE `customerid` = :customerid
-				");
-				Database::pexecute($stmt, array(
-					"customerid" => $customer_id
-				), true, true);
-				
-				$stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_ADMINS . "`
-					SET `ftps_used` = `ftps_used` + 1
-					WHERE `adminid` = :adminid
-				");
-				Database::pexecute($stmt, array(
-					"adminid" => $customer['adminid']
-				), true, true);
-				
+				// update admin usage
+				Admins::increaseUsage($customer['adminid'], 'ftps_used');
+
 				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added ftp-account '" . $username . " (" . $path . ")'");
 				inserttask(5);
 				
@@ -614,21 +602,9 @@ class Ftps extends ApiCommand implements ResourceEntity
 		
 		// decrease ftp-user usage for customer
 		$resetaccnumber = ($customer_data['ftps_used'] == '1') ? " , `ftp_lastaccountnumber`='0'" : '';
-		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-			SET `ftps_used` = `ftps_used` - 1 $resetaccnumber
-			WHERE `customerid` = :customerid");
-		Database::pexecute($stmt, array(
-			"customerid" => $customer_data['customerid']
-		), true, true);
+		Customers::decreaseUsage($customer_id, 'ftps_used', $resetaccnumber);
 		// update admin usage
-		$stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_ADMINS . "`
-			SET `mysqls_used` = `mysqls_used` - 1
-			WHERE `adminid` = :adminid
-		");
-		Database::pexecute($stmt, array(
-			"adminid" => ($this->isAdmin() ? $customer_data['adminid'] : $this->getUserDetail('adminid'))
-		), true, true);
+		Admins::decreaseUsage(($this->isAdmin() ? $customer_data['adminid'] : $this->getUserDetail('adminid')), 'ftps_used');
 		
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] deleted ftp-user '" . $result['username'] . "'");
 		return $this->response(200, "successfull", $result);

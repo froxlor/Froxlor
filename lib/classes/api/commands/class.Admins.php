@@ -124,7 +124,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			$tickets_see_all = $this->getParam('tickets_see_all', true, 0);
 			$caneditphpsettings = $this->getParam('caneditphpsettings', true, 0);
 			$change_serversettings = $this->getParam('change_serversettings', true, 0);
-			$ipaddress = $this->getParam('ipaddress', true, -1);
+			$ipaddress = $this->getParam('ipaddress', true, - 1);
 			
 			// validation
 			$name = validate($name, 'name', '', '', array(), true);
@@ -244,7 +244,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					'tickets' => $tickets,
 					'tickets_see_all' => $tickets_see_all,
 					'mysqls' => $mysqls,
-					'ip' => empty($ipaddress) ? "" : (is_array($ipaddress) && $ipaddress > 0 ? json_encode($ipaddress) : -1),
+					'ip' => empty($ipaddress) ? "" : (is_array($ipaddress) && $ipaddress > 0 ? json_encode($ipaddress) : - 1),
 					'theme' => $_theme,
 					'custom_notes' => $custom_notes,
 					'custom_notes_show' => $custom_notes_show
@@ -354,7 +354,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					$change_serversettings = $result['change_serversettings'];
 					$diskspace = $result['diskspace'];
 					$traffic = $result['traffic'];
-					$ipaddress = ($result['ip'] != -1 ? json_decode($result['ip'], true) : -1);
+					$ipaddress = ($result['ip'] != - 1 ? json_decode($result['ip'], true) : - 1);
 				} else {
 					$deactivated = $this->getParam('deactivated', true, $result['deactivated']);
 					
@@ -377,7 +377,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					$tickets_see_all = $this->getParam('tickets_see_all', true, $result['tickets_see_all']);
 					$caneditphpsettings = $this->getParam('caneditphpsettings', true, $result['caneditphpsettings']);
 					$change_serversettings = $this->getParam('change_serversettings', true, $result['change_serversettings']);
-					$ipaddress = $this->getParam('ipaddress', true, ($result['ip'] != -1 ? json_decode($result['ip'], true) : -1));
+					$ipaddress = $this->getParam('ipaddress', true, ($result['ip'] != - 1 ? json_decode($result['ip'], true) : - 1));
 					
 					$diskspace = $diskspace * 1024;
 					$traffic = $traffic * 1024 * 1024;
@@ -512,7 +512,7 @@ class Admins extends ApiCommand implements ResourceEntity
 						'tickets' => $tickets,
 						'tickets_see_all' => $tickets_see_all,
 						'mysqls' => $mysqls,
-						'ip' => empty($ipaddress) ? "" : (is_array($ipaddress) && $ipaddress > 0 ? json_encode($ipaddress) : -1),
+						'ip' => empty($ipaddress) ? "" : (is_array($ipaddress) && $ipaddress > 0 ? json_encode($ipaddress) : - 1),
 						'deactivated' => $deactivated,
 						'custom_notes' => $custom_notes,
 						'custom_notes_show' => $custom_notes_show,
@@ -683,5 +683,31 @@ class Admins extends ApiCommand implements ResourceEntity
 			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * increase resource-usage
+	 *
+	 * @param int $customerid
+	 * @param string $resource
+	 * @param string $extra
+	 *        	optional, default empty
+	 */
+	public static function increaseUsage($adminid = 0, $resource = null, $extra = '')
+	{
+		self::updateResourceUsage(TABLE_PANEL_ADMINS, 'adminid', $adminid, '+', $resource, $extra);
+	}
+
+	/**
+	 * decrease resource-usage
+	 *
+	 * @param int $customerid
+	 * @param string $resource
+	 * @param string $extra
+	 *        	optional, default empty
+	 */
+	public static function decreaseUsage($adminid = 0, $resource = null, $extra = '')
+	{
+		self::updateResourceUsage(TABLE_PANEL_ADMINS, 'adminid', $adminid, '-', $resource, $extra);
 	}
 }
