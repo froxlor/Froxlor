@@ -183,10 +183,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				))->get();
 				$customer = json_decode($json_result, true)['data'];
 
-				if (empty($customer) || $customer['customerid'] != $customerid) {
-					standard_error('customerdoesntexist', '', true);
-				}
-				
 				if ($this->getUserDetail('customers_see_all') == '1') {
 					$admin_stmt = Database::prepare("
 						SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
@@ -194,10 +190,6 @@ class Domains extends ApiCommand implements ResourceEntity
 					$admin = Database::pexecute_first($admin_stmt, array(
 						'adminid' => $adminid
 					), true, true);
-					
-					if (empty($admin) || $admin['adminid'] != $adminid) {
-						standard_error('admindoesntexist', '', true);
-					}
 				} else {
 					$adminid = $this->getUserDetail('adminid');
 					$admin = $this->getUserData();

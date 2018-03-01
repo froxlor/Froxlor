@@ -69,7 +69,6 @@ class ConfigServicesCmd extends CmdLineHandler
 		self::println("--daemon\t\tWhen running --apply you can specify a daemon. This will be the only service that gets configured");
 		self::println("\t\t\tExample: --apply=/path/to/my-config.json --daemon=apache24");
 		self::println("");
-		self::println("");
 		self::println("--import-settings\tImport settings from another froxlor installation. This should be done prior to running --apply or alternatively in the same command together.");
 		self::println("\t\t\tExample: --import-settings=/path/to/Froxlor_settings-[version]-[dbversion]-[date].json");
 		self::println("");
