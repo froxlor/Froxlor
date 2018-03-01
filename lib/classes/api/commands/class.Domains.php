@@ -87,7 +87,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 				WHERE `d`.`parentdomainid` = '0'
-				AND " . ($id > 0 ? "`d`.`id` = :iddn" : "`d`.`domain` = :iddn") . ($no_std_subdomain ? ' AND `d.`id` <> `c`.`standardsubdomain`' : '') . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid"));
+				AND " . ($id > 0 ? "`d`.`id` = :iddn" : "`d`.`domain` = :iddn") . ($no_std_subdomain ? ' AND `d`.`id` <> `c`.`standardsubdomain`' : '') . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid"));
 			$params = array(
 				'iddn' => ($id <= 0 ? $domainname : $id)
 			);
@@ -818,7 +818,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$letsencrypt = $this->getParam('letsencrypt', true, $result['letsencrypt']);
 			$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, array());
 			$http2 = $this->getParam('http2', true, $result['http2']);
-			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts_maxage']);
+			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts']);
 			$hsts_sub = $this->getParam('hsts_sub', true, $result['hsts_sub']);
 			$hsts_preload = $this->getParam('hsts_preload', true, $result['hsts_preload']);
 			$ocsp_stapling = $this->getParam('ocsp_stapling', true, $result['ocsp_stapling']);
@@ -985,6 +985,9 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 			
 			$ipandports = array();
+			if (! empty($p_ipandports) && is_numeric($p_ipandports)) {
+				$p_ipandports = array($p_ipandports);
+			}
 			if (! empty($p_ipandports) && ! is_array($p_ipandports)) {
 				$p_ipandports = unserialize($p_ipandports);
 			}
@@ -1006,6 +1009,18 @@ class Domains extends ApiCommand implements ResourceEntity
 					} else {
 						$ipandports[] = $ipandport;
 					}
+				}
+			} else {
+				// set currently used ip's
+				$ipsresult_stmt = Database::prepare("
+					SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :id
+				");
+				Database::pexecute($ipsresult_stmt, array(
+					'id' => $result['id']
+				));
+				$usedips = array();
+				while ($ipsresultrow = $ipsresult_stmt->fetch(PDO::FETCH_ASSOC)) {
+					$ipandports[] = $ipsresultrow['id_ipandports'];
 				}
 			}
 			

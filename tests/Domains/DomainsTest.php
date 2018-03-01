@@ -131,7 +131,22 @@ class DomainsTest extends TestCase
 	}
 	
 	/**
-	 * @depends testAdminDomainsList
+	 * @depends testAdminDomainsAdd
+	 */
+	public function testAdminDomainsUpdate()
+	{
+		global $admin_userdata;
+		$data = [
+			'domainname' => 'test.local',
+			'email_only' => 1
+		];
+		$json_result = Domains::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['email_only']);
+	}
+
+	/**
+	 * @depends testAdminDomainsUpdate
 	 */
 	public function testAdminDomainsDelete()
 	{
