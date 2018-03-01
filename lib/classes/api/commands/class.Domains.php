@@ -114,7 +114,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 */
 	public function add()
 	{
-		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+		if ($this->isAdmin()) {
 			if ($this->getUserDetail('domains_used') < $this->getUserDetail('domains') || $this->getUserDetail('domains') == '-1') {
 				
 				// parameters
@@ -325,7 +325,10 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 				
 				$ipandports = array();
-				if (! empty($p_ipandport) && ! is_array($p_ipandports)) {
+				if (! empty($p_ipandports) && is_numeric($p_ipandports)) {
+					$p_ipandports = array($p_ipandports);
+				}
+				if (! empty($p_ipandports) && ! is_array($p_ipandports)) {
 					$p_ipandports = unserialize($p_ipandports);
 				}
 				

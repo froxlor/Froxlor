@@ -37,6 +37,66 @@ class DomainsTest extends TestCase
 		$this->assertEquals('test.local', $result['list'][0]['domain']);
 	}
 
+	/**
+	 * @depends testAdminDomainsAdd
+	 */
+	public function testResellerDomainsList()
+	{
+		global $admin_userdata;
+		// get reseller
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+		$json_result = Domains::getLocal($reseller_userdata)->list();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(0, $result['count']);
+	}
+
+	public function testResellerDomainsAddWithCanEditPhpSettingsDefaultIp()
+	{
+		global $admin_userdata;
+		// get reseller
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+		$reseller_userdata['caneditphpsettings'] = 1;
+		$data = [
+			'domain' => 'test2.local',
+			'customerid' => 1
+		];
+		// the reseller is not allowed to use the default ip/port
+		$this->expectExceptionMessage("The ip/port combination you have chosen doesn't exist.");
+		Domains::getLocal($reseller_userdata, $data)->add();
+	}
+
+	public function testResellerDomainsAddWithCanEditPhpSettingsAllowedIp()
+	{
+		global $admin_userdata;
+		// first, allow reseller access to ip #3
+		Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller',
+			'ipaddress' => 3
+		))->update();
+		// get reseller
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+		$data = [
+			'domain' => 'test2.local',
+			'customerid' => 1,
+			'ipandport' => 3
+		];
+		$json_result = Domains::getLocal($reseller_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('test2.local', $result['domain']);
+	}
+
 	public function testAdminDomainsAddSysHostname()
 	{
 		global $admin_userdata;
