@@ -264,6 +264,7 @@ foreach ($certrows as $certrow) {
 				'ca' => $return['chain'],
 				'chain' => $return['chain'],
 				'csr' => $return['csr'],
+				'fullchain' => $return['fullchain'],
 				'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
 			));
 
