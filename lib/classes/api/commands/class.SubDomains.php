@@ -388,7 +388,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			} else {
 				$result_stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE " . ($id > 0 ? "`id` = :iddn" : "`domainname` = :iddn"));
+					WHERE " . ($id > 0 ? "`id` = :iddn" : "`domain` = :iddn"));
 				$params = array(
 					'iddn' => ($id <= 0 ? $domainname : $id)
 				);
@@ -398,8 +398,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				throw new Exception("You cannot access this resource", 405);
 			}
 			$result_stmt = Database::prepare("
-				SELECT `id`, `customerid`, `domain`, `documentroot`, `isemaildomain`, `parentdomainid`, `aliasdomain` FROM `" . TABLE_PANEL_DOMAINS . "`
-				WHERE `customerid`= :customerid AND " . ($id > 0 ? "`id` = :iddn" : "`domainname` = :iddn"));
+				SELECT `id`, `customerid`, `domain`, `documentroot`, `isemaildomain`, `parentdomainid`, `aliasdomain`, `caneditdomain` FROM `" . TABLE_PANEL_DOMAINS . "`
+				WHERE `customerid`= :customerid AND " . ($id > 0 ? "`id` = :iddn" : "`domain` = :iddn"));
 			$params = array(
 				'customerid' => $this->getUserDetail('customerid'),
 				'iddn' => ($id <= 0 ? $domainname : $id)
@@ -427,7 +427,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');
 			
-			if (! empty($customer_id) || ! empty($loginname)) {
+			if (! empty($customerid) || ! empty($loginname)) {
 				$json_result = Customers::getLocal($this->getUserData(), array(
 					'id' => $customerid,
 					'loginname' => $loginname

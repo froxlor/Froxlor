@@ -44,14 +44,6 @@ class CustomersTest extends TestCase
 		
 		$json_result = Customers::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
-		$customer_id = $result['customerid'];
-		
-		// get customer and check results
-		$json_result = Customers::getLocal($admin_userdata, array(
-			'id' => $customer_id
-		))->get();
-		$result = json_decode($json_result, true)['data'];
-		
 		$this->assertEquals(1, $result['customerid']);
 		$this->assertEquals('test@froxlor.org', $result['email']);
 		$this->assertEquals(1337, $result['customernumber']);

@@ -116,7 +116,7 @@ class DomainsTest extends TestCase
 			'customerid' => 1
 		];
 		$this->expectExceptionMessage('You must not specify punycode (IDNA). The domain will automatically be converted');
-		$json_result = Domains::getLocal($admin_userdata, $data)->add();
+		Domains::getLocal($admin_userdata, $data)->add();
 	}
 
 	public function testAdminDomainsAddInvalidDomain()
@@ -127,7 +127,7 @@ class DomainsTest extends TestCase
 			'customerid' => 1
 		];
 		$this->expectExceptionMessage("Wrong Input in Field 'Domain'");
-		$json_result = Domains::getLocal($admin_userdata, $data)->add();
+		Domains::getLocal($admin_userdata, $data)->add();
 	}
 	
 	/**

@@ -8,6 +8,45 @@ use PHPUnit\Framework\TestCase;
  */
 class SubDomainsTest extends TestCase
 {
+	public function testCustomerSubDomainsAdd()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		
+		$data = [
+			'subdomain' => 'mysub',
+			'domain' => 'test2.local'
+		];
+		$json_result = SubDomains::getLocal($customer_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('mysub.test2.local', $result['domain']);
+	}
+
+	public function testResellerSubDomainsAdd()
+	{
+		global $admin_userdata;
+		// get reseller
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+		
+		$data = [
+			'subdomain' => 'mysub2',
+			'domain' => 'test2.local',
+			'customer_id' => 1
+		];
+		$json_result = SubDomains::getLocal($reseller_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('mysub2.test2.local', $result['domain']);
+	}
+	
 	public function testCustomerSubDomainsAddNoPunycode()
 	{
 		global $admin_userdata;
@@ -60,5 +99,80 @@ class SubDomainsTest extends TestCase
 		];
 		$this->expectExceptionMessage("Wrong Input in Field 'Domain'");
 		SubDomains::getLocal($customer_userdata, $data)->add();
+	}
+	
+	/**
+	 * @depends testCustomerSubDomainsAdd
+	 */
+	public function testAdminSubDomainsGet()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		
+		$data = [
+			'domainname' => 'mysub.test2.local'
+		];
+		$json_result = SubDomains::getLocal($admin_userdata, $data)->get();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('mysub.test2.local', $result['domain']);
+		$this->assertEquals(1, $result['customerid']);
+	}
+	
+	public function testCustomerSubDomainsList()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$json_result = SubDomains::getLocal($customer_userdata)->list();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(3, $result['count']);
+	}
+	
+	public function testResellerSubDomainsList()
+	{
+		global $admin_userdata;
+		// get reseller
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+		$json_result = SubDomains::getLocal($reseller_userdata)->list();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(3, $result['count']);
+	}
+
+	public function testAdminSubDomainsListWithCustomer()
+	{
+		global $admin_userdata;
+		$json_result = SubDomains::getLocal($admin_userdata, ['loginname' => 'test1'])->list();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(3, $result['count']);
+	}
+	
+	/**
+	 * @depends testCustomerSubDomainsList
+	 */
+	public function testCustomerSubDomainsDelete()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$json_result = SubDomains::getLocal($customer_userdata, ['domainname' => 'mysub.test2.local'])->delete();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('mysub.test2.local', $result['domain']);
+		$this->assertEquals($customer_userdata['customerid'], $result['customerid']);
 	}
 }
