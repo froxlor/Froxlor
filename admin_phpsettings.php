@@ -30,7 +30,7 @@ if ($page == 'overview') {
 	if ($action == '') {
 		
 		try {
-			$json_result = PhpSettings::getLocal($userinfo)->list();
+			$json_result = PhpSettings::getLocal($userinfo)->listing();
 		} catch (Exception $e) {
 			dynamic_error($e->getMessage());
 		}
@@ -173,7 +173,7 @@ if ($page == 'overview') {
 	if ($action == '') {
 
 		try {
-			$json_result = FpmDaemons::getLocal($userinfo)->list();
+			$json_result = FpmDaemons::getLocal($userinfo)->listing();
 		} catch (Exception $e) {
 			dynamic_error($e->getMessage());
 		}

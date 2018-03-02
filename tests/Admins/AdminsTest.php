@@ -77,7 +77,7 @@ class AdminsTest extends TestCase
 	{
 		global $admin_userdata;
 		
-		$json_result = Admins::getLocal($admin_userdata)->list();
+		$json_result = Admins::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
 	}
@@ -114,7 +114,7 @@ class AdminsTest extends TestCase
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		
-		Admins::getLocal($reseller_userdata)->list();
+		Admins::getLocal($reseller_userdata)->listing();
 	}
 
 	public function testAdminAdminsUnlock()

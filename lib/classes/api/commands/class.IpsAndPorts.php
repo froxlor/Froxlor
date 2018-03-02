@@ -25,7 +25,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	 * @throws Exception
 	 * @return array count|list
 	 */
-	public function list()
+	public function listing()
 	{
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || ! empty($this->getUserDetail('ip')))) {
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list ips and ports");

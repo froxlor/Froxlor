@@ -31,7 +31,7 @@ class DomainsTest extends TestCase
 	public function testAdminDomainsList()
 	{
 		global $admin_userdata;
-		$json_result = Domains::getLocal($admin_userdata)->list();
+		$json_result = Domains::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('test.local', $result['list'][0]['domain']);
@@ -49,7 +49,7 @@ class DomainsTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		$json_result = Domains::getLocal($reseller_userdata)->list();
+		$json_result = Domains::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(0, $result['count']);
 	}

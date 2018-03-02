@@ -88,7 +88,7 @@ class CustomersTest extends TestCase
 	{
 		global $admin_userdata;
 		
-		$json_result = Customers::getLocal($admin_userdata)->list();
+		$json_result = Customers::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 	}
@@ -105,7 +105,7 @@ class CustomersTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		$json_result = Customers::getLocal($reseller_userdata)->list();
+		$json_result = Customers::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(0, $result['count']);
 	}
@@ -125,7 +125,7 @@ class CustomersTest extends TestCase
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		
-		$json_result = Customers::getLocal($customer_userdata)->list();
+		$json_result = Customers::getLocal($customer_userdata)->listing();
 	}
 
 	/**

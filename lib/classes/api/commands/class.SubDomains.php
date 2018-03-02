@@ -367,7 +367,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			if ($this->getUserDetail('customers_see_all') != 1) {
 				// if it's a reseller or an admin who cannot see all customers, we need to check
 				// whether the database belongs to one of his customers
-				$json_result = Customers::getLocal($this->getUserData())->list();
+				$json_result = Customers::getLocal($this->getUserData())->listing();
 				$custom_list_result = json_decode($json_result, true)['data']['list'];
 				$customer_ids = array();
 				foreach ($custom_list_result as $customer) {
@@ -419,7 +419,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		throw new Exception("Not available yet.", 501);
 	}
 
-	public function list()
+	public function listing()
 	{
 		if ($this->isAdmin()) {
 			// if we're an admin, list all databases of all the admins customers
@@ -436,7 +436,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					json_decode($json_result, true)['data']
 				);
 			} else {
-				$json_result = Customers::getLocal($this->getUserData())->list();
+				$json_result = Customers::getLocal($this->getUserData())->listing();
 				$custom_list_result = json_decode($json_result, true)['data']['list'];
 			}
 			$customer_ids = array();

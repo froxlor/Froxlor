@@ -230,7 +230,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			if ($this->getUserDetail('customers_see_all') != 1) {
 				// if it's a reseller or an admin who cannot see all customers, we need to check
 				// whether the database belongs to one of his customers
-				$json_result = Customers::getLocal($this->getUserData())->list();
+				$json_result = Customers::getLocal($this->getUserData())->listing();
 				$custom_list_result = json_decode($json_result, true)['data']['list'];
 				$customer_ids = array();
 				foreach ($custom_list_result as $customer) {
@@ -425,7 +425,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 * @throws Exception
 	 * @return array count|list
 	 */
-	public function list()
+	public function listing()
 	{
 		$result = array();
 		$dbserver = $this->getParam('mysql_server', true, - 1);
@@ -444,7 +444,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					json_decode($json_result, true)['data']
 				);
 			} else {
-				$json_result = Customers::getLocal($this->getUserData())->list();
+				$json_result = Customers::getLocal($this->getUserData())->listing();
 				$custom_list_result = json_decode($json_result, true)['data']['list'];
 			}
 			$customer_ids = array();

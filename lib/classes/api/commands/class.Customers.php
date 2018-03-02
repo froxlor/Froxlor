@@ -24,7 +24,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @access admin
 	 * @return array count|list
 	 */
-	public function list()
+	public function listing()
 	{
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list customers");

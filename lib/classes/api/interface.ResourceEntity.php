@@ -18,7 +18,7 @@
 interface ResourceEntity
 {
 
-	public function list();
+	public function listing();
 
 	public function get();
 

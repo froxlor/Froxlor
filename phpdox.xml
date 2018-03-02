@@ -1,6 +1,6 @@
 <phpdox xmlns="http://xml.phpdox.net/config">
-	<project name="froxlor" source="api" workdir="build/phpdox">
-		<collector publiconly="false">
+	<project name="froxlor" source="." workdir="build/phpdox">
+		<collector publiconly="true">
 			<include mask="*.php" />
 		</collector>
 

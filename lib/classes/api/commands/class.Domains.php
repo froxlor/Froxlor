@@ -25,7 +25,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 * @throws Exception
 	 * @return array count|list
 	 */
-	public function list()
+	public function listing()
 	{
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list domains");

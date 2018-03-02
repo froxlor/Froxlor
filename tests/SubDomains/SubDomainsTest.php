@@ -132,7 +132,7 @@ class SubDomainsTest extends TestCase
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		$json_result = SubDomains::getLocal($customer_userdata)->list();
+		$json_result = SubDomains::getLocal($customer_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(3, $result['count']);
 	}
@@ -146,7 +146,7 @@ class SubDomainsTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		$json_result = SubDomains::getLocal($reseller_userdata)->list();
+		$json_result = SubDomains::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(3, $result['count']);
 	}
@@ -154,7 +154,7 @@ class SubDomainsTest extends TestCase
 	public function testAdminSubDomainsListWithCustomer()
 	{
 		global $admin_userdata;
-		$json_result = SubDomains::getLocal($admin_userdata, ['loginname' => 'test1'])->list();
+		$json_result = SubDomains::getLocal($admin_userdata, ['loginname' => 'test1'])->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(3, $result['count']);
 	}

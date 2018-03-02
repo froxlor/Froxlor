@@ -289,7 +289,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 			if ($this->getUserDetail('customers_see_all') == false) {
 				// if it's a reseller or an admin who cannot see all customers, we need to check
 				// whether the database belongs to one of his customers
-				$json_result = Customers::getLocal($this->getUserData())->list();
+				$json_result = Customers::getLocal($this->getUserData())->listing();
 				$custom_list_result = json_decode($json_result, true)['data']['list'];
 				$customer_ids = array();
 				foreach ($custom_list_result as $customer) {
@@ -453,7 +453,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 	 * @throws Exception
 	 * @return array count|list
 	 */
-	public function list()
+	public function listing()
 	{
 		if ($this->isAdmin()) {
 			// if we're an admin, list all ftp-users of all the admins customers
@@ -470,7 +470,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 					json_decode($json_result, true)['data']
 				);
 			} else {
-				$json_result = Customers::getLocal($this->getUserData())->list();
+				$json_result = Customers::getLocal($this->getUserData())->listing();
 				$custom_list_result = json_decode($json_result, true)['data']['list'];
 			}
 			$customer_ids = array();

@@ -11,7 +11,7 @@ class IpsAndPortsTest extends TestCase
 	public function testAdminIpsAndPortsList()
 	{
 		global $admin_userdata;
-		$json_result = IpsAndPorts::getLocal($admin_userdata)->list();
+		$json_result = IpsAndPorts::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('82.149.225.46', $result['list'][0]['ip']);
@@ -29,7 +29,7 @@ class IpsAndPortsTest extends TestCase
 		$reseller_userdata['adminsession'] = 1;
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
-		$json_result = IpsAndPorts::getLocal($reseller_userdata)->list();
+		$json_result = IpsAndPorts::getLocal($reseller_userdata)->listing();
 	}
 
 	public function testAdminIpsAndPortsAdd()
@@ -91,7 +91,7 @@ class IpsAndPortsTest extends TestCase
 		))->update();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		$json_result = IpsAndPorts::getLocal($reseller_userdata)->list();
+		$json_result = IpsAndPorts::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('82.149.225.47', $result['list'][0]['ip']);

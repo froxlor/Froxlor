@@ -77,7 +77,7 @@ class FtpsTest extends TestCase
 	{
 		global $admin_userdata;
 		
-		$json_result = Ftps::getLocal($admin_userdata)->list();
+		$json_result = Ftps::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 	}
@@ -86,7 +86,7 @@ class FtpsTest extends TestCase
 	{
 		global $admin_userdata;
 		
-		$json_result = Ftps::getLocal($admin_userdata, array('loginname' => 'test1'))->list();
+		$json_result = Ftps::getLocal($admin_userdata, array('loginname' => 'test1'))->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('test1', $result['list'][0]['username']);
@@ -101,7 +101,7 @@ class FtpsTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		$json_result = Ftps::getLocal($reseller_userdata)->list();
+		$json_result = Ftps::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('test1', $result['list'][0]['username']);
@@ -115,7 +115,7 @@ class FtpsTest extends TestCase
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		$json_result = Ftps::getLocal($customer_userdata)->list();
+		$json_result = Ftps::getLocal($customer_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('test1', $result['list'][0]['username']);
