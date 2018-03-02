@@ -98,7 +98,7 @@
 			<arg path="${basedir}/build/logs/phploc.csv" />
 			<arg value="--log-xml" />
 			<arg path="${basedir}/build/logs/phploc.xml" />
-			<arg path="${basedir}/lib/classes/" />
+			<arg path="${basedir}/lib/classes/api" />
 			<arg path="${basedir}/tests" />
 		</exec>
 
