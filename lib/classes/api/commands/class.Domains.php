@@ -822,18 +822,63 @@ class Domains extends ApiCommand implements ResourceEntity
 			$hsts_sub = $this->getParam('hsts_sub', true, $result['hsts_sub']);
 			$hsts_preload = $this->getParam('hsts_preload', true, $result['hsts_preload']);
 			$ocsp_stapling = $this->getParam('ocsp_stapling', true, $result['ocsp_stapling']);
+
+			// count subdomain usage of source-domain
+			$subdomains_stmt = Database::prepare("
+				SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE
+				`parentdomainid` = :resultid
+			");
+			$subdomains = Database::pexecute_first($subdomains_stmt, array(
+				'resultid' => $result['id']
+			), true, true);
+			$subdomains = $subdomains['count'];
+
+			// count where this domain is alias domain
+			$alias_check_stmt = Database::prepare("
+				SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE
+				`aliasdomain` = :resultid
+			");
+			$alias_check = Database::pexecute_first($alias_check_stmt, array(
+				'resultid' => $result['id']
+			), true, true);
+			$alias_check = $alias_check['count'];
 			
+			// count where we are used in email-accounts
+			$domain_emails_result_stmt = Database::prepare("
+				SELECT `email`, `email_full`, `destination`, `popaccountid` AS `number_email_forwarders`
+				FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid` = :customerid AND `domainid` = :id
+			");
+			Database::pexecute($domain_emails_result_stmt, array(
+				'customerid' => $result['customerid'],
+				'id' => $result['id']
+			), true, true);
+
+			$emails = Database::num_rows();
+			$email_forwarders = 0;
+			$email_accounts = 0;
+
+			while ($domain_emails_row = $domain_emails_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+				if ($domain_emails_row['destination'] != '') {
+					$domain_emails_row['destination'] = explode(' ', makeCorrectDestination($domain_emails_row['destination']));
+					$email_forwarders += count($domain_emails_row['destination']);
+					if (in_array($domain_emails_row['email_full'], $domain_emails_row['destination'])) {
+						$email_forwarders -= 1;
+						$email_accounts ++;
+					}
+				}
+			}
+
 			// handle change of customer (move domain from customer to customer)
 			if ($customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
-				
+				// check whether target customer has enough resources
 				$customer_stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
 					WHERE `customerid` = :customerid
 					AND (`subdomains_used` + :subdomains <= `subdomains` OR `subdomains` = '-1' )
 					AND (`emails_used` + :emails <= `emails` OR `emails` = '-1' )
 					AND (`email_forwarders_used` + :forwarders <= `email_forwarders` OR `email_forwarders` = '-1' )
-					AND (`email_accounts_used` + :accounts <= `email_accounts` OR `email_accounts` = '-1' ) " . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
-				
+					AND (`email_accounts_used` + :accounts <= `email_accounts` OR `email_accounts` = '-1' ) " . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid")
+				);
 				$params = array(
 					'customerid' => $customerid,
 					'subdomains' => $subdomains,
@@ -844,13 +889,18 @@ class Domains extends ApiCommand implements ResourceEntity
 				if ($this->getUserDetail('customers_see_all') == '0') {
 					$params['adminid'] = $this->getUserDetail('adminid');
 				}
-
-				$result = Database::pexecute_first($customer_stmt, $params, true, true);
-				if (empty($result) || $result['customerid'] != $customerid) {
+				$customer = Database::pexecute_first($customer_stmt, $params, true, true);
+				if (empty($customer) || $customer['customerid'] != $customerid) {
 					standard_error('customerdoesntexist', '', true);
 				}
 			} else {
 				$customerid = $result['customerid'];
+
+				// get customer
+				$json_result = Customers::getLocal($this->getUserData(), array(
+					'id' => $customerid
+				))->get();
+				$customer = json_decode($json_result, true)['data'];
 			}
 			
 			// handle change of admin (move domain from admin to admin)
@@ -923,9 +973,9 @@ class Domains extends ApiCommand implements ResourceEntity
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
 					if (Settings::Get('system.documentroot_use_default_value') == 1) {
-						$documentroot = makeCorrectDir($result['documentroot'] . '/' . $result['domain']);
+						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
 					} else {
-						$documentroot = $result['documentroot'];
+						$documentroot = $customer['documentroot'];
 					}
 				}
 				

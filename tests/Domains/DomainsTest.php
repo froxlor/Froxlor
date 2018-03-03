@@ -148,6 +148,26 @@ class DomainsTest extends TestCase
 	/**
 	 * @depends testAdminDomainsUpdate
 	 */
+	public function testAdminDomainsMoveButUnknownCustomer()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$data = [
+			'domainname' => 'test.local',
+			'customerid' => $customer_userdata['customerid'] + 1
+		];
+		Settings::Set('panel.allow_domain_change_customer', 1);
+		$this->expectExceptionMessage("The customer you have chosen doesn't exist.");
+		Domains::getLocal($admin_userdata, $data)->update();
+	}
+
+	/**
+	 * @depends testAdminDomainsMoveButUnknownCustomer
+	 */
 	public function testAdminDomainsDelete()
 	{
 		global $admin_userdata;
@@ -159,4 +179,5 @@ class DomainsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('test.local', $result['domain']);
 	}
+
 }
