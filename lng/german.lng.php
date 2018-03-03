@@ -1375,7 +1375,7 @@ $lng['admin']['usedmax'] = 'Benutzt / Max.';
 $lng['admin']['used'] = 'Benutzt';
 $lng['mysql']['size'] = 'Datenbankgröße';
 
-$lng['error']['invalidhostname'] = 'Hostname darf nicht leer sein oder nur aus Leerzeichen bestehen';
+$lng['error']['invalidhostname'] = 'Hostname muss eine gültige Domain sein. Er darf weder leer sein noch nur aus Leerzeichen bestehen';
 
 $lng['traffic']['http'] = 'HTTP (MiB)';
 $lng['traffic']['ftp'] = 'FTP (MiB)';
