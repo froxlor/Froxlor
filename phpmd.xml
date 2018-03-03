@@ -9,15 +9,27 @@
 
 	<rule ref="rulesets/design.xml" />
 	<rule ref="rulesets/unusedcode.xml" />
-	<rule ref="rulesets/codesize.xml" />
+
+	<rule ref="rulesets/codesize.xml">
+		<exclude name="CyclomaticComplexity" />
+		<exclude name="ExcessiveMethodLength" />
+	</rule>
 
 	<rule ref="rulesets/naming.xml">
 		<exclude name="ShortVariable" />
+		<exclude name="LongVariable" />
 	</rule>
 
 	<rule ref="rulesets/naming.xml/ShortVariable">
 		<properties>
 			<property name="exceptions" value="id,ip" />
+		</properties>
+	</rule>
+
+	<rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+		<priority>1</priority>
+		<properties>
+			<property name="reportLevel" value="5" />
 		</properties>
 	</rule>
 
