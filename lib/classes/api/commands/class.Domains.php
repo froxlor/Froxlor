@@ -201,7 +201,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				if (Settings::Get('system.documentroot_use_default_value') == 1) {
 					$path_suffix = '/' . $domain;
 				}
-				$documentroot = makeCorrectDir($customer['documentroot'] . $path_suffix);
+				$_documentroot = makeCorrectDir($customer['documentroot'] . $path_suffix);
 				
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 					'0000-00-00',
@@ -236,10 +236,10 @@ class Domains extends ApiCommand implements ResourceEntity
 					// set default path to subdomain or domain name
 					if ($documentroot != '') {
 						if (substr($documentroot, 0, 1) != '/' && ! preg_match('/^https?\:\/\//', $documentroot)) {
-							$documentroot .= '/' . $documentroot;
+							$documentroot = $_documentroot . '/' . $documentroot;
 						}
-					} elseif ($documentroot == '' && Settings::Get('system.documentroot_use_default_value') == 1) {
-						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $domain);
+					} else {
+						$documentroot = $_documentroot;
 					}
 				} else {
 					$isbinddomain = '0';
@@ -251,6 +251,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					$dkim = '0';
 					$specialsettings = '';
 					$notryfiles = '0';
+					$documentroot = $_documentroot;
 				}
 				
 				if ($this->getUserDetail('caneditphpsettings') == '1' || $this->getUserDetail('change_serversettings') == '1') {
@@ -968,7 +969,19 @@ class Domains extends ApiCommand implements ResourceEntity
 				
 				$specialsettings = validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
 				$documentroot = validate($documentroot, 'documentroot', '', '', array(), true);
-				
+
+				// when moving customer and no path is specified, update would normally reuse the current document-root
+				// which would point to the wrong customer, therefore we will re-create that directory
+				if (!empty($documentroot) && $customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
+					if (Settings::Get('system.documentroot_use_default_value') == 1) {
+						$_documentroot = makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
+					} else {
+						$_documentroot = $customer['documentroot'];
+					}
+					// set the customers default docroot
+					$documentroot = $_documentroot;
+				}
+
 				if ($documentroot == '') {
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name

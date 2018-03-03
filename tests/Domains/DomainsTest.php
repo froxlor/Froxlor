@@ -165,8 +165,33 @@ class DomainsTest extends TestCase
 		Domains::getLocal($admin_userdata, $data)->update();
 	}
 
+	public function testAdminDomainsMove()
+	{
+		global $admin_userdata;
+		// add new customer
+		$data = [
+			'new_loginname' => 'test3',
+			'email' => 'test3@froxlor.org',
+			'firstname' => 'Test',
+			'name' => 'Testman',
+			'customernumber' => 1339,
+			'new_customer_password' => 'h0lYmo1y'
+		];
+		$json_result = Customers::getLocal($admin_userdata, $data)->add();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$data = [
+			'domainname' => 'test.local',
+			'customerid' => $customer_userdata['customerid']
+		];
+		$json_result =Domains::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals($customer_userdata['customerid'], $result['customerid']);
+		$this->assertEquals($customer_userdata['documentroot'].'test.local/', $result['documentroot']);
+	}
+
 	/**
-	 * @depends testAdminDomainsMoveButUnknownCustomer
+	 * @depends testAdminDomainsMove
 	 */
 	public function testAdminDomainsDelete()
 	{
@@ -178,6 +203,11 @@ class DomainsTest extends TestCase
 		$json_result = Domains::getLocal($admin_userdata, $data)->delete();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('test.local', $result['domain']);
+
+		// remove customer again
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test3'
+		))->delete();
 	}
 
 }
