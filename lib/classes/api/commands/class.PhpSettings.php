@@ -39,8 +39,6 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			
 			$phpconfigs = array();
 			while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-				
-				$domainresult = false;
 				$query_params = array(
 					'id' => $row['id']
 				);

@@ -710,7 +710,6 @@ class Customers extends ApiCommand implements ResourceEntity
 			$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, $result['mysqls']);
 			$createstdsubdomain = $this->getParam('createstdsubdomain', true, 0);
 			$password = $this->getParam('new_customer_password', true, '');
-			$sendpassword = $this->getParam('sendpassword', true, 0);
 			$phpenabled = $this->getParam('phpenabled', true, $result['phpenabled']);
 			$allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, json_decode($result['allowed_phpconfigs'], true));
 			$perlenabled = $this->getParam('perlenabled', true, $result['perlenabled']);
@@ -1396,7 +1395,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			if ($tickets !== false && isset($tickets[0])) {
 				foreach ($tickets as $ticket) {
 					$now = time();
-					$mainticket = ticket::getInstanceOf($userinfo, (int) $ticket);
+					$mainticket = ticket::getInstanceOf($result, (int) $ticket);
 					$mainticket->Set('lastchange', $now, true, true);
 					$mainticket->Set('lastreplier', '1', true, true);
 					$mainticket->Set('status', '3', true, true);

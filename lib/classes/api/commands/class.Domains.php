@@ -786,7 +786,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			$id = $result['id'];
 			
 			// optional parameters
-			$p_domain = $this->getParam('domain', true, $result['domain']);
 			$p_ipandports = $this->getParam('ipandport', true, array());
 			$customerid = intval($this->getParam('customerid', true, $result['customerid']));
 			$adminid = intval($this->getParam('adminid', true, $result['adminid']));
@@ -1081,15 +1080,12 @@ class Domains extends ApiCommand implements ResourceEntity
 				Database::pexecute($ipsresult_stmt, array(
 					'id' => $result['id']
 				));
-				$usedips = array();
 				while ($ipsresultrow = $ipsresult_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$ipandports[] = $ipsresultrow['id_ipandports'];
 				}
 			}
 			
 			if (Settings::Get('system.use_ssl') == '1' && ! empty($p_ssl_ipandports)) {
-				$ssl = 1; // if ssl is set and != 0, it can only be 1
-				
 				$ssl_ipandports = array();
 				if (! empty($p_ssl_ipandports) && ! is_array($p_ssl_ipandports)) {
 					$p_ssl_ipandports = unserialize($p_ssl_ipandports);

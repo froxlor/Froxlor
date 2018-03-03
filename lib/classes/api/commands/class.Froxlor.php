@@ -63,7 +63,7 @@ class Froxlor extends ApiCommand
 				// anzeige über version-status mit ggfls. formular
 				// zum update schritt #1 -> download
 				if ($isnewerversion == 1) {
-					$text = 'There is a newer version available: "' . $_version . '" (Your current version is: ' . $this->version . ')';
+					$text = 'There is a newer version available: "' . $_version . '" (Your current version is: ' . $version_label . ')';
 					return $this->response(200, "successfull", array(
 						'message' => $text,
 						'link' => $version_link,
@@ -217,7 +217,7 @@ class Froxlor extends ApiCommand
 				// create RecursiveIteratorIterator
 				$its = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
 				// check every file
-				foreach ($its as $fullFileName => $it) {
+				foreach ($its as $it) {
 					// does it match the Filename pattern?
 					$matches = array();
 					if (preg_match("/^class\.(.+)\.php$/i", $it->getFilename(), $matches)) {

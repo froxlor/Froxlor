@@ -117,7 +117,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 				), true, true);
 				
 				if ($ftpdomain_check && $ftpdomain_check['domain'] != $ftpdomain) {
-					standard_error('maindomainnonexist', $domain, true);
+					standard_error('maindomainnonexist', $ftpdomain, true);
 				}
 				$username = $ftpusername . "@" . $ftpdomain;
 			} else {
@@ -152,7 +152,6 @@ class Ftps extends ApiCommand implements ResourceEntity
 					"shell" => $shell
 				);
 				Database::pexecute($stmt, $params, true, true);
-				$ftp_userid = Database::lastInsertId();
 				
 				$result_stmt = Database::prepare("
 					SELECT `bytes_in_used` FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = :name
@@ -360,8 +359,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		} else {
 			$shell = "/bin/false";
 		}
-		
-		$params = array();
+
 		// get needed customer info to reduce the ftp-user-counter by one
 		if ($this->isAdmin()) {
 			// get customer id
@@ -461,7 +459,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');
 			
-			if (! empty($customer_id) || ! empty($loginname)) {
+			if (! empty($customerid) || ! empty($loginname)) {
 				$json_result = Customers::getLocal($this->getUserData(), array(
 					'id' => $customerid,
 					'loginname' => $loginname

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
  */
 class DomainsTest extends TestCase
 {
+
 	public function testAdminDomainsAdd()
 	{
 		global $admin_userdata;
@@ -22,9 +23,9 @@ class DomainsTest extends TestCase
 		];
 		$json_result = Domains::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals($customer_userdata['documentroot'].'test.local/', $result['documentroot']);
+		$this->assertEquals($customer_userdata['documentroot'] . 'test.local/', $result['documentroot']);
 	}
-	
+
 	/**
 	 * @depends testAdminDomainsAdd
 	 */
@@ -107,7 +108,7 @@ class DomainsTest extends TestCase
 		$this->expectExceptionMessage('The server-hostname cannot be used as customer-domain.');
 		$json_result = Domains::getLocal($admin_userdata, $data)->add();
 	}
-	
+
 	public function testAdminDomainsAddNoPunycode()
 	{
 		global $admin_userdata;
@@ -129,7 +130,7 @@ class DomainsTest extends TestCase
 		$this->expectExceptionMessage("Wrong Input in Field 'Domain'");
 		Domains::getLocal($admin_userdata, $data)->add();
 	}
-	
+
 	/**
 	 * @depends testAdminDomainsAdd
 	 */
@@ -179,15 +180,15 @@ class DomainsTest extends TestCase
 		];
 		$json_result = Customers::getLocal($admin_userdata, $data)->add();
 		$customer_userdata = json_decode($json_result, true)['data'];
-
+		
 		$data = [
 			'domainname' => 'test.local',
 			'customerid' => $customer_userdata['customerid']
 		];
-		$json_result =Domains::getLocal($admin_userdata, $data)->update();
+		$json_result = Domains::getLocal($admin_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals($customer_userdata['customerid'], $result['customerid']);
-		$this->assertEquals($customer_userdata['documentroot'].'test.local/', $result['documentroot']);
+		$this->assertEquals($customer_userdata['documentroot'] . 'test.local/', $result['documentroot']);
 	}
 
 	/**
@@ -203,11 +204,10 @@ class DomainsTest extends TestCase
 		$json_result = Domains::getLocal($admin_userdata, $data)->delete();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('test.local', $result['domain']);
-
+		
 		// remove customer again
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test3'
 		))->delete();
 	}
-
 }

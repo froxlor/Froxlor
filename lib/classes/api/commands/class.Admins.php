@@ -103,7 +103,6 @@ class Admins extends ApiCommand implements ResourceEntity
 			$custom_notes = $this->getParam('custom_notes', true, '');
 			$custom_notes_show = $this->getParam('custom_notes_show', true, 0);
 			$password = $this->getParam('admin_password', true, '');
-			$sendpassword = $this->getParam('sendpassword', true, 0);
 			$loginname = $this->getParam('new_loginname', true, '');
 			
 			$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
