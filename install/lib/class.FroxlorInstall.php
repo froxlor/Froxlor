@@ -322,11 +322,12 @@ class FroxlorInstall
 		$userdata .= "?>";
 		
 		// test if we can store the userdata.inc.php in ../lib
-		if ($fp = @fopen(dirname(dirname(dirname(__FILE__))) . '/lib/userdata.inc.php', 'w')) {
+		$userdata_file = dirname(dirname(dirname(__FILE__))) . '/lib/userdata.inc.php';
+		if ($fp = @fopen($userdata_file, 'w')) {
 			$result = @fputs($fp, $userdata, strlen($userdata));
 			@fclose($fp);
 			$content .= $this->_status_message('green', 'OK');
-			chmod('../lib/userdata.inc.php', 0440);
+			chmod($userdata_file, 0440);
 		} elseif ($fp = @fopen('/tmp/userdata.inc.php', 'w')) {
 			$result = @fputs($fp, $userdata, strlen($userdata));
 			@fclose($fp);
