@@ -114,7 +114,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			$config_dir = $this->getParam('config_dir');
 			
 			// parameters
-			$pm = $this->getParam('pm', true, 'static');
+			$pmanager = $this->getParam('pm', true, 'static');
 			$max_children = $this->getParam('max_children', true, 0);
 			$start_servers = $this->getParam('start_servers', true, 0);
 			$min_spare_servers = $this->getParam('min_spare_servers', true, 0);
@@ -127,7 +127,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			$description = validate($description, 'description', '', '', array(), true);
 			$reload_cmd = validate($reload_cmd, 'reload_cmd', '', '', array(), true);
 			$config_dir = validate($config_dir, 'config_dir', '', '', array(), true);
-			if (! in_array($pm, array(
+			if (! in_array($pmanager, array(
 				'static',
 				'dynamic',
 				'ondemand'
@@ -158,7 +158,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				'desc' => $description,
 				'reload_cmd' => $reload_cmd,
 				'config_dir' => makeCorrectDir($config_dir),
-				'pm' => $pm,
+				'pm' => $pmanager,
 				'max_children' => $max_children,
 				'start_servers' => $start_servers,
 				'min_spare_servers' => $min_spare_servers,
@@ -202,7 +202,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			$description = $this->getParam('description', true, $result['description']);
 			$reload_cmd = $this->getParam('reload_cmd', true, $result['reload_cmd']);
 			$config_dir = $this->getParam('config_dir', true, $result['config_dir']);
-			$pm = $this->getParam('pm', true, $result['pm']);
+			$pmanager = $this->getParam('pm', true, $result['pm']);
 			$max_children = $this->getParam('max_children', true, $result['max_children']);
 			$start_servers = $this->getParam('start_servers', true, $result['start_servers']);
 			$min_spare_servers = $this->getParam('min_spare_servers', true, $result['min_spare_servers']);
@@ -215,7 +215,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			$description = validate($description, 'description', '', '', array(), true);
 			$reload_cmd = validate($reload_cmd, 'reload_cmd', '', '', array(), true);
 			$config_dir = validate($config_dir, 'config_dir', '', '', array(), true);
-			if (! in_array($pm, array(
+			if (! in_array($pmanager, array(
 				'static',
 				'dynamic',
 				'ondemand'
@@ -247,7 +247,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				'desc' => $description,
 				'reload_cmd' => $reload_cmd,
 				'config_dir' => makeCorrectDir($config_dir),
-				'pm' => $pm,
+				'pm' => $pmanager,
 				'max_children' => $max_children,
 				'start_servers' => $start_servers,
 				'min_spare_servers' => $min_spare_servers,

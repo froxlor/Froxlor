@@ -432,15 +432,15 @@ abstract class ApiCommand
 	 * @param string $table
 	 * @param string $keyfield
 	 * @param int $key
-	 * @param string $op
+	 * @param string $operator
 	 * @param string $resource
 	 * @param string $extra
 	 */
-	protected static function updateResourceUsage($table = null, $keyfield = null, $key = null, $op = '+', $resource = null, $extra = null)
+	protected static function updateResourceUsage($table = null, $keyfield = null, $key = null, $operator = '+', $resource = null, $extra = null)
 	{
 		$stmt = Database::prepare("
 			UPDATE `" . $table . "`
-			SET `" . $resource . "` = `" . $resource . "` " . $op . " 1 " . $extra . "
+			SET `" . $resource . "` = `" . $resource . "` " . $operator . " 1 " . $extra . "
 			WHERE `" . $keyfield . "` = :key
 		");
 		Database::pexecute($stmt, array(
